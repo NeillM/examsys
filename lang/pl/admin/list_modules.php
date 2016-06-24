@@ -30,4 +30,7 @@ $string['studentcohort'] = 'Grupa studentów';
 $string['currentmodule'] = 'Aktualny Moduł';
 $string['moduleimports'] = 'Importy dla modułu';
 $string['importsummary'] = 'Podsumowanie importu';
+$string['importmodules'] = 'Import modules from SMS';
+$string['importmodulestooltip']  = 'Sync Modules and Module Enrolments with the connected Student Management System';
+$string['externalid'] = 'External ID';
 ?>

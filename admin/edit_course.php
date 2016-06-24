@@ -35,13 +35,13 @@ if (!CourseUtils::courseid_exists($courseID, $mysqli)) {
 $unique_course = true;
 $tmp_course = '';
 
-$result = $mysqli->prepare("SELECT schoolid, name, description FROM courses WHERE id = ? LIMIT 1");
+$result = $mysqli->prepare("SELECT schoolid, name, description, externalid FROM courses WHERE id = ? LIMIT 1");
 $result->bind_param('i', $courseID);
 $result->execute();
-$result->bind_result($current_school, $name, $description);
+$result->bind_result($current_school, $name, $description, $current_externalid);
 $result->fetch();
 $result->close();
-  
+$course_exists = false;
 if (isset($_POST['submit']) and $_POST['course'] != $_POST['old_course']) {
   // Check for unique course name
   $new_course = trim($_POST['course']);
@@ -53,10 +53,7 @@ if (isset($_POST['submit']) and $course_exists == false) {
   $new_school = $_POST['school'];
   $new_description = trim($_POST['description']);
 
-  $result = $mysqli->prepare("UPDATE courses SET name = ?, description = ?, schoolid = ? WHERE id = ?");
-  $result->bind_param('ssii', $new_course, $new_description, $new_school, $courseID);
-  $result->execute();  
-  $result->close();
+  CourseUtils::update_course($courseID, $new_school, $new_course, $new_description, $current_externalid, $mysqli);
   
   $logger = new Logger($mysqli);
   if ($name != $new_course)             $logger->track_change('Course', $courseID, $userObject->get_user_ID(), $name, $new_course, 'code');
@@ -138,9 +135,9 @@ if (isset($_POST['submit']) and $course_exists == false) {
     <tr><td class="field"><?php echo $string['name']; ?></td><td><input type="text" size="70" maxlength="255" name="description" value="<?php echo $description; ?>" required /></td></tr>
     <tr><td class="field"><?php echo $string['school']; ?></td><td><select name="school" required>
     <?php
-      $result = $mysqli->prepare("SELECT schools.id, school, name FROM schools, faculty WHERE schools.facultyID = faculty.id AND school != '' ORDER BY name, school");
+      $result = $mysqli->prepare("SELECT schools.id, schools.code, school, name FROM schools, faculty WHERE schools.facultyID = faculty.id AND school != '' ORDER BY name, school");
       $result->execute();
-      $result->bind_result($schoolid, $school, $faculty);
+      $result->bind_result($schoolid, $code, $school, $faculty);
       
       $old_faculty = '';
       while ($result->fetch()) {
@@ -149,9 +146,9 @@ if (isset($_POST['submit']) and $course_exists == false) {
           echo "<optgroup label=\"$faculty\">\n";
         }
         if ($current_school == $schoolid) {
-          echo "<option value=\"$schoolid\" selected>$school</option>\n";
+          echo "<option value=\"$schoolid\" selected>$code $school</option>\n";
         } else {
-          echo "<option value=\"$schoolid\">$school</option>\n";
+          echo "<option value=\"$schoolid\">$code $school</option>\n";
         }
         $old_faculty = $faculty;
       }
@@ -160,6 +157,7 @@ if (isset($_POST['submit']) and $course_exists == false) {
       
     ?>
     </select></td></tr>
+    <tr><td class="field"><?php echo $string['externalid'] ?></td><td><?php echo $current_externalid; ?></td></tr>
     </table>
     <input type="hidden" name="courseID" value="<?php echo $courseID; ?>" />
     <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"><input type="button" class="cancel" name="home" id="cancel" value="<?php echo $string['cancel'] ?>" /></p>

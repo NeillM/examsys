@@ -26,4 +26,6 @@ $string['editcourse'] = 'Edytuj kurs';
 $string['deletecourse'] = 'Usuń kurs';
 $string['codecourse'] = 'Wprowadź kod stopnia.';
 $string['titlecourse'] = 'Wprowadź tytuł stopnia.';
+$string['importcourses'] = 'Import courses from SMS';
+$string['importcoursestooltip'] = 'Sync Courses with the connected Student Management System';
 ?>

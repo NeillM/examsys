@@ -17,4 +17,6 @@
 $string['editfaculty'] = 'Upravit fakultu';
 $string['warning'] = 'Tento název fakulty již existuje. Vyberte, prosím, jiný.';
 $string['name'] = 'Název';
+$string['externalid'] = 'External ID';
+$string['code'] = 'Faculty Code';
 ?>

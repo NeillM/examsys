@@ -622,22 +622,28 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $insert->execute();
     $insert->close();
     // Add user psermissions.
-    $permissions = array('assessmentmanagement/create' => 'Create/Update paper',
+    $permissions = array('assessmentmanagement/create' => 'Create an assessment',
+        'assessmentmanagement/update' => 'Update an assessment',
         'assessmentmanagement/delete' => 'Delete a paper',
-        'assessmentmanagement/schedule' => 'SChedule a summative assessment',
+        'assessmentmanagement/schedule' => 'Schedule a summative assessment',
         'gradebook' => 'Gradebook',
-        'modulemanagement/create' => 'Create/Update a module',
+        'modulemanagement/create' => 'Create a module',
+        'modulemanagement/update' => 'Update a module',
         'modulemanagement/delete' => 'Delete a module',
         'modulemanagement/enrol' => 'Enrol Users onto a module',
         'modulemanagement/unenrol' => 'UnEnrol Users from a module',
-        'usermanagement/create' => 'Create/Update a user',
+        'usermanagement/create' => 'Create a user',
+        'usermanagement/update' => 'Update a user',
         'usermanagement/delete' => 'Delete a user',
-        'coursemanagement/create' => 'Create/Update a course',
+        'coursemanagement/create' => 'Create a course',
         'coursemanagement/delete' => 'Delete a course',
-        'schoolmanagement/create' => 'Create/Update a school',
+        'coursemanagement/update' => 'Update a course',
+        'schoolmanagement/create' => 'Create a school',
         'schoolmanagement/delete' => 'Delete a school',
-        'facultymanagement/create' => 'Create/Update a faculty',
-        'facultymanagement/delete' => 'Delete a faculty');
+        'schoolmanagement/update' => 'Update a school',
+        'facultymanagement/create' => 'Create a faculty',
+        'facultymanagement/delete' => 'Delete a faculty',
+        'facultymanagement/update' => 'Update a faculty');
     foreach ($permissions as $permission => $description) {
         $insert = self::$db->prepare("INSERT INTO permissions (action, description) VALUES (?, ?)");
         $insert->bind_param('ss', $permission, $description);

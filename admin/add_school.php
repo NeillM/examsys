@@ -26,16 +26,16 @@ require '../include/sysadmin_auth.inc';
 
 $school = '';
 $faculty = '';
-
+$exists = false;
 if (isset($_POST['submit'])) {
   $school = trim($_POST['school']);
   $faculty = trim($_POST['facultyID']);
-
-  if (SchoolUtils::school_exists_in_faculty($faculty, $school, $mysqli)) {
-    $error = 'duplicate';
-  } else {
-    $insert_id = SchoolUtils::add_school($faculty, $school, $mysqli);
-
+  $code = trim($_POST['code']);
+  if ($code != '') {
+    $exists = SchoolUtils::get_schoolid_by_code($code, $mysqli);
+  }
+  if ($exists === false) {
+    $insert_id = SchoolUtils::add_school($faculty, $school, $mysqli, $code);
     header("location: list_schools.php");
     exit();
   }
@@ -43,11 +43,11 @@ if (isset($_POST['submit'])) {
 
 $faculties = 0;
 $faculty_list = array();
-$result = $mysqli->prepare("SELECT id, name FROM faculty WHERE deleted IS NULL ORDER BY name");
+$result = $mysqli->prepare("SELECT id, code, name FROM faculty WHERE deleted IS NULL ORDER BY name");
 $result->execute();
-$result->bind_result($facultyID, $name);
+$result->bind_result($facultyID, $code, $name);
 while ($result->fetch()) {
-  $faculty_list[] = array($facultyID, $name);
+  $faculty_list[] = array($facultyID, $code, $name);
   $faculties++;
 }
 $result->close();
@@ -113,7 +113,7 @@ $result->close();
   <div align="center">
   <form id="theform" name="add_school" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
 <?php
-  if (isset($error) and $error = 'duplicate') {
+  if ($exists) {
 ?>
     <div class="form-error"><?php echo $string['duplicateerror'] ?></div>
 <?php
@@ -125,10 +125,11 @@ $result->close();
     <?php
       foreach ($faculty_list as $faculty) {
         $selected = ($faculty[0] == $faculty) ? ' selected="selected"' : '';
-        echo "<option value=\"{$faculty[0]}\"$selected>{$faculty[1]}</option>\n";
+        echo "<option value=\"{$faculty[0]}\"$selected>{$faculty[1]} {$faculty[2]}</option>\n";
       }
     ?>
     </select></td></tr>
+    <tr><td class="field"><?php echo $string['code'] ?></td><td><input type="text" size="30" maxlength="30" name="code" value=""/></td></tr>
     </table>
     <p><input type="submit" class="ok" name="submit" value="<?php echo $string['add'] ?>" /><input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" /></p>
   </form>

@@ -48,6 +48,15 @@ if (isset($_POST['submit'])) {
             $oauth->add_permission($management . '/delete', $client, false);
         }
     }
+    $updatemanage = array('modulemanagement', 'usermanagement',
+            'coursemanagement', 'schoolmanagement', 'facultymanagement');
+    foreach ($updatemanage as $management) {
+        if (isset($_POST[$management . '/update'])) {
+            $oauth->add_permission($management . '/update', $client, true);
+        } else {
+            $oauth->add_permission($management . '/update', $client, false);
+        }
+    }
     if (isset($_POST['modulemanagement/enrol'])) {
         $oauth->add_permission('modulemanagement/enrol', $client, true);
     } else {

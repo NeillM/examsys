@@ -16,4 +16,6 @@
 
 $string['addfaculty'] = 'Dodaj wydział';
 $string['facultywarning'] = 'Nazwa wydziału już istnieje. Wybierz inną nazwę.';
+$string['code'] = 'Faculty Code';
+$string['name'] = 'Name';
 ?>

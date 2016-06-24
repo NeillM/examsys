@@ -373,6 +373,13 @@ abstract class plugins {
         return $this->requires;
     }
     /**
+     * Get installed version of plugin
+     * @return string value of installed version
+     */
+    public function get_installed_version() {
+        return $this->installedversion;
+    }
+    /**
      * Enable the plugin.
      */
     abstract public function enable_plugin();

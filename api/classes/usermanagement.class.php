@@ -81,12 +81,79 @@ class usermanagement extends \api\abstractmanagement {
     }
     
     /**
-     * Create/Update user
+     * Create user
      * @param array $params create user params
      * @param integer $userid rogo user id linked to web service client
      * @return - success status and user id
      */ 
     public function create($params, $userid) {
+        $langpack = new \langpack();
+        $strings = $langpack->get_strings($this->langcomponent, array('user_invalid_role', 'user_not_created', 'course_does_not_exist', 'user_already_exists'));
+        $error = array();
+        $userexists = false;
+        // Student and Staff users only.
+        $studentroles = array('Student', 'Left', 'Graduate');
+        $staffroles = array('Staff', 'Inactive Staff');
+        $roles = array_merge($studentroles, $staffroles);
+        $checkparameter = array('username', 'password', 'title', 'forename', 'surname', 'email', 'course',
+                    'gender', 'year', 'role', 'studentid', 'initials');
+        // Set defaults if not provided.
+        foreach ($checkparameter as $name) {
+            if (empty($params[$name])) {
+                $params[$name] = '';
+            }
+        }
+
+        if (!in_array($params['role'], $roles)) {
+            $data = array('statuscode' => $this->statuscodes['USER_INVALID_ROLE'], 'status' => $strings['user_invalid_role'], 'id' => null, 'externalid' => null);
+        } else {
+            // Students.
+            if (in_array($params['role'], $studentroles)) {
+                $course = \CourseUtils::course_exists($params['course'], $this->db);
+            // Staff.
+            } else {
+                $staffcourses = array('University Lecturer', 'NHS Lecturer');
+                if (in_array($params['course'], $staffcourses)) {
+                    $course = $params['course'];
+                } else {
+                    $course = false;
+                }
+            }
+
+            if ($course) {
+                // Create.
+                $id = \UserUtils::create_user($params['username'], $params['password'], $params['title'],
+                    $params['forename'], $params['surname'], $params['email'], $params['course'],
+                    $params['gender'], $params['year'], $params['role'], $params['studentid'], $this->db, $params['initials']);
+                if ($id) {
+                    if (!empty($params['modules'])) {
+                        $error = $this->user_modules($id, $params['modules'], $params['role']);
+                    }
+                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'error' => $error, 'externalid' => $params['studentid']);
+                } else {
+                    // Check if user exists, otherwise throw generic error.
+                    $userexists = \UserUtils::username_exists($params['username'], $this->db);
+                    if ($userexists) {
+                        $details = \UserUtils::get_full_details_by_ID($userexists, $this->db);
+                        $data = array('statuscode' => $this->statuscodes['USER_ALREADY_EXISTS'], 'status' => $strings['user_already_exists'], 'id' => $userexists, 'externalid' => $details['studentid']);
+                    } else {
+                        $data = array('statuscode' => $this->statuscodes['USER_NOT_CREATED'], 'status' => $strings['user_not_created'], 'id' => null, 'externalid' => null);
+                    }
+                }
+            } else {
+                $data = array('statuscode' => $this->statuscodes['USER_INVALID_COURSE'], 'status' => $strings['course_does_not_exist'], 'id' => null, 'externalid' => null);
+            }
+        }
+        return $this->get_response($data, 'create', $params['nodeid'], $error);
+    }
+ 
+    /**
+     * Update user
+     * @param array $params update user params
+     * @param integer $userid rogo user id linked to web service client
+     * @return - success status and user id
+     */ 
+    public function update($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('user_invalid_role', 'user_does_not_exist'
             , 'user_not_updated', 'user_not_created', 'course_does_not_exist', 'user_already_exists', 'user_nothing_to_update'));
@@ -123,8 +190,8 @@ class usermanagement extends \api\abstractmanagement {
             
             // If nothing updated return.
             if (!$change) {
-                $data = array('statuscode' => $this->statuscodes['USER_NOTHING_TO_UPDATE'], 'status' => $strings['user_nothing_to_update'], 'id' => null);
-                return $this->get_response($data, 'create', $params['nodeid'], $error);
+                $data = array('statuscode' => $this->statuscodes['USER_NOTHING_TO_UPDATE'], 'status' => $strings['user_nothing_to_update'], 'id' => null, 'externalid' => null);
+                return $this->get_response($data, 'update', $params['nodeid'], $error);
             }
         }
         
@@ -141,10 +208,10 @@ class usermanagement extends \api\abstractmanagement {
         // If parameter id supplied but not a valid user - exception.
         // If parameter id supplied as 0 - exception.
         if ((!$userexists and $params['id']) or (!$userexists and $params['id'] === 0)) {
-            $data = array('statuscode' => $this->statuscodes['USER_DOES_NOT_EXIST'], 'status' => $strings['user_does_not_exist'], 'id' => null);
+            $data = array('statuscode' => $this->statuscodes['USER_DOES_NOT_EXIST'], 'status' => $strings['user_does_not_exist'], 'id' => null, 'externalid' => null);
         } else {
             if (!in_array($params['role'], $roles)) {
-                $data = array('statuscode' => $this->statuscodes['USER_INVALID_ROLE'], 'status' => $strings['user_invalid_role'], 'id' => null);
+                $data = array('statuscode' => $this->statuscodes['USER_INVALID_ROLE'], 'status' => $strings['user_invalid_role'], 'id' => null, 'externalid' => null);
             } else {
                 // Students.
                 if (in_array($params['role'], $studentroles)) {
@@ -161,47 +228,25 @@ class usermanagement extends \api\abstractmanagement {
 
                 if ($course) {
                     // Update.
-                    if ($params['id']) { 
-                        // Something to update.
-                        $update = \UserUtils::update_user($params['id'], $params['username'], $params['password'], $params['title'],
-                                    $params['forename'], $params['surname'], $params['email'], $params['course'],
-                                    $params['gender'], $params['year'], $params['role'], $params['studentid'], $this->db, $params['initials']);
-                        if ($update) {
-                            if (!empty($params['modules'])) {
-                                $error = $this->user_modules($params['id'], $params['modules'], $params['role']);
-                            }
-                            $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
-                        } else {
-                            $data = array('statuscode' => $this->statuscodes['USER_NOT_UPDATED'], 'status' => $strings['user_not_updated'], 'id' => null);
+                    $update = \UserUtils::update_user($params['id'], $params['username'], $params['password'], $params['title'],
+                                $params['forename'], $params['surname'], $params['email'], $params['course'],
+                                $params['gender'], $params['year'], $params['role'], $params['studentid'], $this->db, $params['initials']);
+                    if ($update) {
+                        if (!empty($params['modules'])) {
+                            $error = $this->user_modules($params['id'], $params['modules'], $params['role']);
                         }
-                    // Create.
+                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'externalid' => $details['studentid']);
                     } else {
-                        $id = \UserUtils::create_user($params['username'], $params['password'], $params['title'],
-                            $params['forename'], $params['surname'], $params['email'], $params['course'],
-                            $params['gender'], $params['year'], $params['role'], $params['studentid'], $this->db, $params['initials']);
-                        if ($id) {
-                            if (!empty($params['modules'])) {
-                                $error = $this->user_modules($id, $params['modules'], $params['role']);
-                            }
-                            $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'error' => $error);
-                        } else {
-                            // Check if user exists, otherwise throw generic error.
-                            $userexists = \UserUtils::username_exists($params['username'], $this->db);
-                            if ($userexists) {
-                                $data = array('statuscode' => $this->statuscodes['USER_ALREADY_EXISTS'], 'status' => $strings['user_already_exists'], 'id' => $userexists);
-                            } else {
-                                $data = array('statuscode' => $this->statuscodes['USER_NOT_CREATED'], 'status' => $strings['user_not_created'], 'id' => null);
-                            }
-                        }
-                    } 
+                        $data = array('statuscode' => $this->statuscodes['USER_NOT_UPDATED'], 'status' => $strings['user_not_updated'], 'id' => null, 'externalid' => null);
+                    }
                 } else {
-                    $data = array('statuscode' => $this->statuscodes['USER_INVALID_COURSE'], 'status' => $strings['course_does_not_exist'], 'id' => null);
+                    $data = array('statuscode' => $this->statuscodes['USER_INVALID_COURSE'], 'status' => $strings['course_does_not_exist'], 'id' => null, 'externalid' => null);
                 }
             }
         }
-        return $this->get_response($data, 'create', $params['nodeid'], $error);
+        return $this->get_response($data, 'update', $params['nodeid'], $error);
     }
- 
+
     /**
      * Delete user
      * @param array $parms delete user parameters
@@ -220,18 +265,19 @@ class usermanagement extends \api\abstractmanagement {
         if ($userexists) {
             // Only delete user they have taken no papers
             $inuse = \UserUtils::user_paper_started($params['id'], $this->db);
+            $details = \UserUtils::get_full_details_by_ID($params['id'], $this->db);
             if ($inuse) {
-                $data = array('statuscode' => $this->statuscodes['USER_NOT_DELETED_INUSE'], 'status' => $strings['user_paper_exists'], 'id' => null);
+                $data = array('statuscode' => $this->statuscodes['USER_NOT_DELETED_INUSE'], 'status' => $strings['user_paper_exists'], 'id' => null, 'externalid' => null);
             } else {
                 $deleted = \UserUtils::delete_userID($params['id'], $this->db);
                 if ($deleted) {
-                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
+                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'externalid' => $details['studentid']);
                 } else {
-                    $data = array('statuscode' => $this->statuscodes['USER_NOT_DELETED'], 'status' => $strings['user_not_deleted'], 'id' => null);
+                    $data = array('statuscode' => $this->statuscodes['USER_NOT_DELETED'], 'status' => $strings['user_not_deleted'], 'id' => null, 'externalid' => null);
                 }
             }
         } else {
-             $data = array('statuscode' => $this->statuscodes['USER_DOES_NOT_EXIST'], 'status' => $strings['user_does_not_exist'], 'id' => null);
+             $data = array('statuscode' => $this->statuscodes['USER_DOES_NOT_EXIST'], 'status' => $strings['user_does_not_exist'], 'id' => null, 'externalid' => null);
         }
         return $this->get_response($data, 'delete', $params['nodeid']);
     }  

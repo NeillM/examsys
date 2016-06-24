@@ -17,4 +17,6 @@
 $string['editfaculty'] = 'Edytuj wydział';
 $string['warning'] = 'Nazwa wydziału już istnieje. Wybierz inną nazwę.';
 $string['name'] = 'Nazwa'; 
+$string['externalid'] = 'External ID';
+$string['code'] = 'Faculty Code';
 ?>

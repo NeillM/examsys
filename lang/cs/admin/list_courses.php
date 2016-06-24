@@ -22,4 +22,6 @@ $string['createcourse'] = 'Nový kurz';
 $string['bulkcourseimport'] = 'Nahrát kurz';
 $string['editcourse'] = 'Upravit kurz';
 $string['deletecourse'] = 'Odstranit kurz';
+$string['importcourses'] = 'Import courses from SMS';
+$string['importcoursestooltip'] = 'Sync Courses with the connected Student Management System';
 ?>

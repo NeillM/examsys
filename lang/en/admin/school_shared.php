@@ -23,5 +23,7 @@ $string['name'] = 'Name';
 $string['faculty'] = 'Faculty';
 $string['prompt'] = 'School of';
 $string['enternameofschool'] = 'Please enter name for the school.';
-$string['duplicateerror'] = 'School names must be unique within a faculty';
+$string['duplicateerror'] = 'School codes must be unique';
+$string['externalid'] = 'External ID';
+$string['code'] = 'School Code';
 ?>

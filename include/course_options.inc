@@ -24,6 +24,11 @@
 
 ?>
 <script>
+  $(document).ready(function() {
+      $('#sms').click(function() {
+        $('#sms').append('<img src="../artwork/working.gif" class="busyicon" />');
+     });
+  });
   function editCourse() {
     document.location.href='./edit_course.php?courseID=' + $('#lineID').val();
   }
@@ -52,6 +57,22 @@
 	<div class="menuitem"><a href="#" onclick="editCourse(); return false;"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><?php echo $string['editcourse'] ?></a></div>
 	<div class="menuitem"><a href="#" onclick="deleteCourse(); return false;"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><?php echo $string['deletecourse'] ?></a></div>
 </div>
+
+<?php
+if ($userObject->has_role(array('SysAdmin'))) {
+    $mappingplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
+    if (count($mappingplugin_name) > 0) {
+?>
+<div id="menu1b">
+    <div id="sms" class="menuitem">
+        <a class="help_tip" title="<?php echo $string['importcoursestooltip'] ?>" href="../plugins/SMS/<?php echo $mappingplugin_name[0] ?>/admin/import_courses.php"><img class="sidebar_icon" src="../artwork/sync_16.png" alt="" /><?php echo $string['importcourses'] ?></a>
+    </div>
+</div>
+<?php
+    }
+}
+?>
+
 
 <input type="hidden" name="lineID" id="lineID" value="" />
 </form>

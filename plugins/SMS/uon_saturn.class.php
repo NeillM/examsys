@@ -439,11 +439,7 @@ Class UON_SATURN extends SmsUtils {
       } else {
         $import_type = 'SATURN UK';
       }
-
-      $result = $mysqli->prepare("INSERT INTO sms_imports VALUES (NULL, NOW(), ?, ?, ?, ?, ?, ?, ?)");
-      $result->bind_param('sisisss', $idMod, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type, $session);
-      $result->execute();
-      $result->close();
+      module_utils::log_sms_imports($idMod, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type, $session, $mysqli);
     }
     
     $this->set_enrolement_no($enrolements, $module);

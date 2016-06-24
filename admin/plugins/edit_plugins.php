@@ -61,17 +61,25 @@ if (isset($_POST['submit'])) {
     // Configs.
     foreach ($configObject->get_setting($plugin) as $setting => $value) {
         if ($setting != "installed") {
-            // Password settings are encrypted.
-            if ($setting == "password") {
-                $encryp = new encryp();
-                $value = $encryp->mdecrypt_password($value);
-            }
             $new_value = check_var($setting, 'POST', false, false, true);
-            if ($value != $new_value) {
-                if ($setting == "password") {
-                    $new_value = $encryp->mcrypt_password($new_value);
+            if ($setting == "ssl_verify" or $setting == "validate_schema" ) {
+                if (is_null($new_value) and $value == 1) {
+                    $configObject->set_setting($setting, 0, $plugin);
+                } elseif (!is_null($new_value) and $value == 0) {
+                    $configObject->set_setting($setting, 1, $plugin);
                 }
-                $configObject->set_setting($setting, $new_value, $plugin);
+            } else {
+                // Password settings are encrypted.
+                if ($setting == "password") {
+                    $encryp = new encryp();
+                    $value = $encryp->mdecrypt_password($value);
+                }
+                if ($value != $new_value) {
+                    if ($setting == "password") {
+                        $new_value = $encryp->mcrypt_password($new_value);
+                    }
+                    $configObject->set_setting($setting, $new_value, $plugin);
+                }
             }
         }
     }
@@ -123,7 +131,19 @@ $render->render_admin_content($breadcrumb, $lang);
                         $encryp = new encryp();
                         $value = $encryp->mdecrypt_password($value);
                     }
-                    echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting. "</label></td><td><input type=\"text\" size=\"20\" id=\"" . $setting . "\" name=\"" . $setting . "\" value=\"" . $value . "\" required /></td></tr>";
+                    if ($setting == 'ssl_verify' or $setting == 'validate_schema') {
+                        if ($value == true) { 
+                            echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting . "</label></td><td><input type=\"checkbox\" name=\"" . $setting . "\" id=\"" . $setting . "\" checked/></td></tr>";
+                        } else {
+                            echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting . "</label></td><td><input type=\"checkbox\" name=\"" . $setting . "\" id=\"" . $setting . "\"/></td></tr>";
+                        }
+                    } else {
+                        if ($setting == "password") {
+                            echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting. "</label></td><td><input type=\"password\" size=\"20\" id=\"" . $setting . "\" name=\"" . $setting . "\" value=\"" . $value . "\" /></td></tr>";
+                        } else {
+                            echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting. "</label></td><td><input type=\"text\" size=\"20\" id=\"" . $setting . "\" name=\"" . $setting . "\" value=\"" . $value . "\" /></td></tr>";
+                        }
+                    }
                 }
             }
         ?>

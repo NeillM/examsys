@@ -44,31 +44,93 @@ class schoolmanagement extends \api\abstractmanagement {
         'SCHOOL_NOT_DELETED_INUSE' => 604,
         'SCHOOL_FACULTY_INVALID' => 605,
         'SCHOOL_ALREADY_EXISTS' => 606,
-        'SCHOOL_NOTHING_TO_UPDATE' => 607
+        'SCHOOL_NOTHING_TO_UPDATE' => 607,
+        'SCHOOL_FACULTY_EXTID_INVALID' => 608
     );
         
     /**
-     * Create/Update school
+     * Create school
      * @param array $params school creation parameters
      * @param integer $userid rogo user id linked to web service client
      * @return - success status and school id
      */
     public function create($params, $userid) {
         $langpack = new \langpack();
+        $strings = $langpack->get_strings($this->langcomponent, array('school_not_created', 'school_already_exists', 'faculty_not_supplied' ,'external_faculty_invalid'));
+        $faculty = true;
+        // Get faculty if provided.
+        if (!empty($params['faculty'])) {
+            $facultyid = \FacultyUtils::facultyid_by_name($params['faculty'], $this->db);
+            if (!$facultyid) {
+                $facultyid = \FacultyUtils::add_faculty($params['faculty'], $this->db);
+            }
+        } elseif (isset($params['facultyextid']) and $params['facultyextid'] !== '') {
+            $facultyid = \FacultyUtils::get_facultyid_from_externalid($params['facultyextid'], $this->db);
+            if (!$facultyid) {
+                $data = array('statuscode' => $this->statuscodes['SCHOOL_FACULTY_EXTID_INVALID'], 'status' => $strings['external_faculty_invalid'], 'id' => null, 'externalid' => null);
+                return $this->get_response($data, 'create', $params['nodeid']);
+            }
+        } else {
+            $faculty = false;
+        }
+        // Default null externalid.
+        if (!isset($params['externalid'])) {
+            $params['externalid'] = null;
+        }
+        // Default null code.
+        if (!isset($params['code'])) {
+            $params['code'] = null;
+        }
+        if ($faculty) {
+            if (!empty($params['code'])) {
+                $schoolid = \SchoolUtils::get_schoolid_by_code($params['code'], $this->db);
+            } else {
+                $schoolid = \SchoolUtils::get_school_id_by_name($params['name'], $this->db);
+            }
+            if (!$schoolid) {
+                $id = \SchoolUtils::add_school($facultyid, $params['name'], $this->db, $params['code'], $params['externalid']);
+                if ($id) {
+                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'externalid' => $params['externalid']);
+                } else {
+                    $data = array('statuscode' => $this->statuscodes['SCHOOL_NOT_CREATED'], 'status' => $strings['school_not_created'], 'id' => null, 'externalid' => null);
+                }
+            } else {
+                $details = \SchoolUtils::get_school_details_by_id($schoolid, $this->db);
+                $externalid = $details['externalid'];
+                $data = array('statuscode' => $this->statuscodes['SCHOOL_ALREADY_EXISTS'], 'status' => $strings['school_already_exists'], 'id' => $schoolid, 'externalid' => $externalid);
+            }
+        } else {
+            $data = array('statuscode' => $this->statuscodes['SCHOOL_FACULTY_INVALID'], 'status' => $strings['faculty_not_supplied'], 'id' => null, 'externalid' => null);
+        }
+        return $this->get_response($data, 'create', $params['nodeid']);
+    }
+    
+    /**
+     * Update school
+     * @param array $params school update parameters
+     * @param integer $userid rogo user id linked to web service client
+     * @return - success status and school id
+     */
+    public function update($params, $userid) {
+        $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('school_not_updated', 'school_does_not_exist'
-            , 'school_not_created', 'school_already_exists', 'faculty_not_supplied' , 'school_nothing_to_update'));
+            , 'faculty_not_supplied' , 'school_nothing_to_update', 'external_faculty_invalid'));
         $faculty = true;
         if (!empty($params['id'])) {
             $schoolid = \SchoolUtils::schoolid_exists($params['id'], $this->db);
-            if ($schoolid) {
-                $details = \SchoolUtils::get_school_details_by_id($params['id'], $this->db);
-                // Check if anything has been updated.
-                $checkparameter = array('name');
-                $change = $this->check_if_updated($checkparameter, $details, $params);
-            }
+        } elseif (isset($params['externalid']) and $params['externalid'] !== '') {
+            // Try using external system id to update school.
+            $schoolid = \SchoolUtils::get_schoolid_from_externalid($params['externalid'], $this->db);
+            $params['id'] = $schoolid;
         } else {
-            $params['id'] = false;
             $schoolid = false;
+        }
+        
+        if ($schoolid) {
+            $details = \SchoolUtils::get_school_details_by_id($params['id'], $this->db);
+            // Check if anything has been updated.
+            $checkparameter = array('name', 'code');
+            $change = $this->check_if_updated($checkparameter, $details, $params);
         }
         
         // Get name if not provided.
@@ -78,11 +140,30 @@ class schoolmanagement extends \api\abstractmanagement {
             }
         }
         
+        // Get code if not provided.
+        if ($schoolid and (empty($params['code']))) {
+            if (!isset($params['code'])) {
+                $params['code'] = $details['code'];
+            }
+        }
+        
         // Get faculty if provided.
         if (!empty($params['faculty'])) {
             $facultyid = \FacultyUtils::facultyid_by_name($params['faculty'], $this->db);
             if (!$facultyid) {
                 $facultyid = \FacultyUtils::add_faculty($params['faculty'], $this->db);
+            }
+            // Mark something is to be updated.
+            if ($schoolid) {
+                if ($details['faculty'] != $facultyid) {
+                    $change = true;
+                }
+            }
+        } elseif (!empty($params['facultyextid'])) {
+            $facultyid = \FacultyUtils::get_facultyid_from_externalid($params['facultyextid'], $this->db);
+            if (!$facultyid) {
+                $data = array('statuscode' => $this->statuscodes['SCHOOL_FACULTY_EXTID_INVALID'], 'status' => $strings['external_faculty_invalid'], 'id' => null, 'externalid' => null);
+                return $this->get_response($data, 'update', $params['nodeid']);
             }
             // Mark something is to be updated.
             if ($schoolid) {
@@ -99,41 +180,26 @@ class schoolmanagement extends \api\abstractmanagement {
         
         if ($faculty) {        
             // Update school.
-            if ($params['id']) {
-                if ($schoolid) {
-                    if ($change) {
-                    $update = \SchoolUtils::update_school($params['id'], $facultyid, $params['name'], $this->db);
-                        if ($update) {
-                            $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
-                        } else {
-                            $data = array('statuscode' => $this->statuscodes['SCHOOL_NOT_UPDATED'], 'status' => $strings['school_not_updated'], 'id' => null);
-                        }
+            if ($schoolid) {
+                if ($change) {
+                    $update = \SchoolUtils::update_school($schoolid, $facultyid, $params['name'], $params['code'], $details['externalid'], $this->db);
+                    if ($update) {
+                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $schoolid, 'externalid' => $details['externalid']);
                     } else {
-                        $data = array('statuscode' => $this->statuscodes['SCHOOL_NOTHING_TO_UPDATE'], 'status' => $strings['school_nothing_to_update'], 'id' => null);
+                        $data = array('statuscode' => $this->statuscodes['SCHOOL_NOT_UPDATED'], 'status' => $strings['school_not_updated'], 'id' => null, 'externalid' => null);
                     }
                 } else {
-                    $data = array('statuscode' => $this->statuscodes['SCHOOL_DOES_NOT_EXIST'], 'status' => $strings['school_does_not_exist'], 'id' => null);
+                    $data = array('statuscode' => $this->statuscodes['SCHOOL_NOTHING_TO_UPDATE'], 'status' => $strings['school_nothing_to_update'], 'id' => null, 'externalid' => null);
                 }
-            // Create school.
             } else {
-                $schoolid = \SchoolUtils::get_school_id_by_name($params['name'], $this->db);
-                if (!$schoolid) {
-                    $id = \SchoolUtils::add_school($facultyid, $params['name'], $this->db);
-                    if ($id) {
-                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id);
-                    } else {
-                        $data = array('statuscode' => $this->statuscodes['SCHOOL_NOT_CREATED'], 'status' => $strings['school_not_created'], 'id' => null);
-                    }
-                } else {
-                    $data = array('statuscode' => $this->statuscodes['SCHOOL_ALREADY_EXISTS'], 'status' => $strings['school_already_exists'], 'id' => $schoolid);
-                }
+                $data = array('statuscode' => $this->statuscodes['SCHOOL_DOES_NOT_EXIST'], 'status' => $strings['school_does_not_exist'], 'id' => null, 'externalid' => null);
             }
         } else {
-            $data = array('statuscode' => $this->statuscodes['SCHOOL_FACULTY_INVALID'], 'status' => $strings['faculty_not_supplied'], 'id' => null);
+            $data = array('statuscode' => $this->statuscodes['SCHOOL_FACULTY_INVALID'], 'status' => $strings['faculty_not_supplied'], 'id' => null, 'externalid' => null);
         }
-        return $this->get_response($data, 'create', $params['nodeid']);
+        return $this->get_response($data, 'update', $params['nodeid']);
     }
-    
+
     /**
      * Delete school
      * @param array $parms delete school parameters
@@ -146,24 +212,29 @@ class schoolmanagement extends \api\abstractmanagement {
             , 'school_does_not_exist'));
         if (!empty($params['id'])) {
             $schoolid = \SchoolUtils::schoolid_exists($params['id'], $this->db);
+        } elseif (isset($params['externalid']) and $params['externalid'] !== '') {
+            // Try using external system id to delete school.
+            $params['id'] = \SchoolUtils::get_schoolid_from_externalid($params['externalid'], $this->db);
+            $schoolid = true;
         } else {
             $schoolid = false;
         }
         if ($schoolid) {
+            $details = \SchoolUtils::get_school_details_by_id($params['id'], $this->db);
             // Only delete school if it contains no modules or courses.
             $inuse = \SchoolUtils::school_in_use($params['id'], $this->db);
             if ($inuse) {
-                $data = array('statuscode' => $this->statuscodes['SCHOOL_NOT_DELETED_INUSE'], 'status' => $strings['school_not_deleted_inuse'], 'id' => null);
+                $data = array('statuscode' => $this->statuscodes['SCHOOL_NOT_DELETED_INUSE'], 'status' => $strings['school_not_deleted_inuse'], 'id' => null, 'externalid' => null);
             } else {
                 $deleted = \SchoolUtils::delete_school($params['id'], $this->db);
                 if ($deleted) {
-                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id']);
+                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'externalid' => $details['externalid']);
                 } else {
-                    $data = array('statuscode' => $this->statuscodes['SCHOOL_NOT_DELETED'], 'status' => $strings['school_not_deleted'], 'id' => null);
+                    $data = array('statuscode' => $this->statuscodes['SCHOOL_NOT_DELETED'], 'status' => $strings['school_not_deleted'], 'id' => null, 'externalid' => null);
                 }
             }
         } else {
-             $data = array('statuscode' => $this->statuscodes['SCHOOL_DOES_NOT_EXIST'], 'status' => $strings['school_does_not_exist'], 'id' => null);
+             $data = array('statuscode' => $this->statuscodes['SCHOOL_DOES_NOT_EXIST'], 'status' => $strings['school_does_not_exist'], 'id' => null, 'externalid' => null);
         }
         return $this->get_response($data, 'delete', $params['nodeid']);
     }

@@ -22,4 +22,6 @@ $string['createcourse'] = 'Utwórz nowy kurs';
 $string['bulkcourseimport'] = 'Skomasowany import modułów';  
 $string['editcourse'] = 'Edytuj kurs';
 $string['deletecourse'] = 'Usuń kurs';
+$string['importcourses'] = 'Import courses from SMS';
+$string['importcoursestooltip'] = 'Sync Courses with the connected Student Management System';
 ?>

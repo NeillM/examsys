@@ -12,3 +12,8 @@ faculty:
   -
     id: 1
     name: "faculty"
+    externalid: "ABC"
+  -
+    id: 2
+    name: "faculty"
+    externalid: "DEF"

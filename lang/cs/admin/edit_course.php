@@ -27,4 +27,7 @@ $string['deletecourse'] = 'Odstranit kurz';
 $string['courseentercode'] = 'Zadejte, prosím, Identifikátor kurzu.';
 $string['courseentertitle'] = 'Zadejte, prosím, Název kurzu.';
 $string['coursecodeinuse'] = 'Kurz s kódem %s již existuje. Zadejte, prosím, jiný kód.';
+$string['externalid'] = 'External ID';
+$string['importcourses'] = 'Import courses from SMS';
+$string['importcoursestooltip'] = 'Sync Courses with the connected Student Management System';
 ?>

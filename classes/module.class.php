@@ -101,10 +101,11 @@ Class module {
    * @param integer $add_team_members   - Are team members allowed to add others.
    * @param integer $map_level          - What level to link to in the curriculum map.
    * @param string $academic_year_start - Day the module changes academic year.
+   * @param string $externalid          - External system module id
    *
    * @return boolean - True if module successfully added.
    */
-  public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0, $timed_exams = 0, $exam_q_feedback = 1, $add_team_members = 1, $map_level = 0, $academic_year_start = '07/01') {
+  public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0, $timed_exams = 0, $exam_q_feedback = 1, $add_team_members = 1, $map_level = 0, $academic_year_start = '07/01', $externalid = '') {
     // We need the config object.
     $configObject = Config::get_instance();
     // Return false if missing madatory fields. schoolid is actually a number
@@ -126,8 +127,8 @@ Class module {
       $tmp_checklist = substr($checklist, 1);
     }
 
-    $result = $db->prepare("INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?)");
-    $result->bind_param('ssisssiiiiiiiis', $moduleid, $fullname, $active, $vle_api, $tmp_checklist, $sms_api, $selfEnroll, $schoolID, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start);
+    $result = $db->prepare("INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?)");
+    $result->bind_param('ssisssiiiiiiiiss', $moduleid, $fullname, $active, $vle_api, $tmp_checklist, $sms_api, $selfEnroll, $schoolID, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start, $externalid);
     $result->execute();
     $result->close();
     if ($db->errno != 0) {
@@ -135,13 +136,15 @@ Class module {
     }
 
     $idMod = $db->insert_id;
-    $smsurl = $configObject->get('cfg_sms_url');
-    // If sms import enabled on module and sms_api matches sms integration update enrolements.
-    if ($sms_import == 1 and substr($sms_api, 0, strlen($smsurl)) === $smsurl) {
-      $SMS = SmsUtils::GetSmsUtils();
-      $SMS->update_module_enrolement($moduleid, $idMod, $sms_api, $db);
+    // Old style SMS enrolments.
+    if ($externalid == '') {
+        $smsurl = $configObject->get('cfg_sms_url');
+        // If sms import enabled on module and sms_api matches sms integration update enrolements.
+        if ($sms_import == 1 and substr($sms_api, 0, strlen($smsurl)) === $smsurl) {
+          $SMS = SmsUtils::GetSmsUtils();
+          $SMS->update_module_enrolement($moduleid, $idMod, $sms_api, $db);
+        }
     }
-
     return $idMod;
   }
 
@@ -222,18 +225,19 @@ Class module {
                exam_q_feedback = ?,
                add_team_members = ?,
                map_level = ?,
-               academic_year_start = ?
+               academic_year_start = ?,
+               externalid = ?
             WHERE
               id = ?
             LIMIT 1
             ";
 
     $result = $db->prepare($sql);
-    $result->bind_param('ssisssiiiiiiiisi', $modinfo['moduleid'], $modinfo['fullname'], $modinfo['active'], $modinfo['vle_api'],
+    $result->bind_param('ssisssiiiiiiiissi', $modinfo['moduleid'], $modinfo['fullname'], $modinfo['active'], $modinfo['vle_api'],
                                         $modinfo['checklist'], $modinfo['sms'], $modinfo['selfenroll'], $modinfo['schoolid'],
                                         $modinfo['neg_marking'], $modinfo['ebel_grid_template'], $modinfo['timed_exams'],
                                         $modinfo['exam_q_feedback'], $modinfo['add_team_members'], $modinfo['map_level'],
-                                        $modinfo['academic_year_start'], $modinfo['idMod']);
+                                        $modinfo['academic_year_start'], $modinfo['externalid'], $modinfo['idMod']);
     $res = $result->execute();
 
     // An array to convert DB fields to lang strings argghhh!!!!
@@ -253,6 +257,7 @@ Class module {
                         'add_team_members' => 'addteammembers',
                         'map_level' => 'map_level',
                         'academic_year_start' => 'academicyearstart',
+                        'externalid' => 'externalid'
                         );
 
     if ($res === true ) {
@@ -366,7 +371,8 @@ Class module {
                               exam_q_feedback,
                               add_team_members,
                               map_level,
-                              academic_year_start
+                              academic_year_start,
+                              modules.externalid
                             FROM
                               modules
                             LEFT JOIN
@@ -389,7 +395,7 @@ Class module {
     $result->bind_param('i', $modID);
     $result->execute();
     $result->store_result();
-    $result->bind_result($idMod, $moduleid, $fullname, $school, $active, $vle_api, $checklist, $sms, $selfenroll, $schoolid, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start);
+    $result->bind_result($idMod, $moduleid, $fullname, $school, $active, $vle_api, $checklist, $sms, $selfenroll, $schoolid, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start, $externalid);
 
     $result->fetch();
     if ($result->num_rows == 0) {
@@ -414,7 +420,8 @@ Class module {
                   'exam_q_feedback' => $exam_q_feedback,
                   'add_team_members' => $add_team_members,
                   'map_level' => $map_level,
-                  'academic_year_start' => $academic_year_start);
+                  'academic_year_start' => $academic_year_start,
+                  'externalid' => $externalid);
   }
 
   /**
@@ -668,18 +675,20 @@ Class module {
    * @param integer $schoolid - school module is run under
    * @param string $sms - student management system that create the module
    * @param mysqli $db - db connection
+   * @param string $externalid - external system module id
    * @return bool true on success
    */
-  public static function update_module_by_id($id, $code, $name, $schoolid, $sms, $db) {
+  public static function update_module_by_id($id, $code, $name, $schoolid, $sms, $db, $externalid = '') {
     $sql = "UPDATE modules SET
                moduleid = ?,
                fullname = ?,
                sms = ?,
-               schoolid = ?
+               schoolid = ?,
+               externalid = ?
             WHERE
               id = ?";
     $result = $db->prepare($sql);
-    $result->bind_param('sssii', $code, $name, $sms, $schoolid, $id);
+    $result->bind_param('sssisi', $code, $name, $sms, $schoolid, $externalid, $id);
     $res = $result->execute();
     
     if ($db->errno != 0) {
@@ -707,5 +716,58 @@ Class module {
     }
     $result->close();
     return false;
+  }
+  
+  /**
+   * Get the module id given external id
+   *
+   * @param string $externalid externalid of the module rogo id
+   * @param object $db database connection
+   *
+   * @return int|bool id of school or false
+  */
+  static function get_moduleid_from_externalid($externalid, $db) {
+    $result = $db->prepare("SELECT id FROM modules WHERE externalid = ? AND mod_deleted IS NULL");
+    $result->bind_param('s', $externalid);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($id);
+    $result->fetch();
+    if ($result->num_rows == 0) {
+      $modid = false;
+    } else {
+      $modid = $id;
+    }
+    $result->close();
+    return $modid;
+  }
+  
+  /**
+   * Compare the modules in the external system and rogo
+   * @param array $external list of external system modules
+   * @param mysqli $db db connection
+   * @return array list of modules in rogo but not in external system
+   */
+  static function diff_external_modules_to_internal_modules($external, $db) {
+    $result = $db->prepare("SELECT externalid FROM modules WHERE externalid IS NOT NULL AND mod_deleted IS NULL");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($externalid);
+    $diff = array();
+    while ($result->fetch()) {
+      // Mark for delete if not found in external list.
+      if(!in_array($externalid, $external)) {
+        $diff[] = $externalid;
+      }
+    }
+    $result->close();
+    return $diff;
+  }
+  
+  static function log_sms_imports($idMod, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type, $session, $db) {
+      $result = $db->prepare("INSERT INTO sms_imports VALUES (NULL, NOW(), ?, ?, ?, ?, ?, ?, ?)");
+      $result->bind_param('sisisss', $idMod, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type, $session);
+      $result->execute();
+      $result->close();
   }
 }

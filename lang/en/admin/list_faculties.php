@@ -20,4 +20,7 @@ $string['createfaculty'] = 'Create new Faculty';
 $string['editfaculty'] = 'Edit Faculty';
 $string['deletefaculty'] = 'Delete Faculty';
 $string['schoolno'] = 'School No';
+$string['code'] = 'Code';
+$string['importfaculties'] = 'Import Faculties/Schools from SMS';
+$string['importfacultiestooltip'] = 'Sync Faculties and Schools with the connected Student Management System';
 ?>

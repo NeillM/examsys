@@ -28,13 +28,16 @@ require '../include/errors.inc';
 $duplicate = false;
 if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] == '1')) {
   $add_faculty = trim($_POST['add_faculty']);
+  $code = trim($_POST['code']);
   if ($add_faculty != '') {
-    // Check for existing name
-    if (FacultyUtils::facultyname_exists($add_faculty, $mysqli)) {
-      $duplicate = true;
-    } else {
-      $duplicate = false;
-      FacultyUtils::add_faculty($add_faculty, $mysqli);
+    // Check for existing faculty code
+    if ($code != '') {
+        if (FacultyUtils::get_facultyid_by_code($code, $mysqli)) {
+            $duplicate = true;
+        }
+    }
+    if (!$duplicate) {
+      FacultyUtils::add_faculty($add_faculty, $mysqli, $code);
     }
   }
   if (!$duplicate) {
@@ -57,6 +60,9 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
 <?php
     exit();
   }
+} else {
+    $add_faculty = '';
+    $code = '';
 }
 ?>
 <!DOCTYPE html>
@@ -89,15 +95,17 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
 <body>
 <h1><?php echo $string['addfaculty'] ?></h1>
 <form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
-<div><?php
+<table cellpadding="0" cellspacing="2" border="0">
+<tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" style="width:99%" id="add_faculty" name="add_faculty" maxlength="80" value="<?php echo $add_faculty ?>" required autofocus /></td></tr>
+<?php
 if ($duplicate) {
-  echo '<input type="text" style="width:99%; background-color:#FFC0C0; border:solid 1px #C00000; color:#800000" id="add_faculty" name="add_faculty" value="' . $_POST['add_faculty'] . '" maxlength="80" required autofocus />';
+  echo '<tr><td class="field">' . $string["code"] . '</td><td><input type="text" style="width:99%; background-color:#FFC0C0; border:solid 1px #C00000; color:#800000" name="code" value="' . $code . '" size="30" maxlength="30" required autofocus /></td></tr>';
   echo "<script language=\"JavaScript\">\nalert('" . $string['facultywarning'] . "');\n</script>\n";
 } else {
-  echo '<input type="text" style="width:99%" id="add_faculty" name="add_faculty" maxlength="80" required autofocus />';
+  echo '<tr><td class="field">' . $string["code"] . '</td><td><input type="text" size="30" maxlength="30" name="code" value=""/></td></tr>';
 }
 ?>
-</div>
+</table>
 <div align="right"><input type="submit" name="ok" value="<?php echo $string['ok'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" style="margin-right:0" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" /></div>
 </form>
 

@@ -32,7 +32,7 @@ class plugin_manager {
      * const array not supported in php below 5.6 so using a static
      * @const PLUGINTYPE_WHITELIST
      */
-    private static $PLUGINTYPE_WHITELIST = array('mapping');
+    private static $PLUGINTYPE_WHITELIST = array('mapping', 'SMS');
     /**
      * List available plugins.
      * @return array available plugins (name => namespace)

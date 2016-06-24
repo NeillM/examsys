@@ -24,15 +24,20 @@
 
 ?>
 <script>
+  $(document).ready(function() {
+      $('#sms').click(function() {
+        $('#sms').append('<img src="../artwork/working.gif" class="busyicon" />');
+     });
+  });
   function addFaculty() {
-    facultywin=window.open("add_faculty.php","faculties","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    facultywin=window.open("add_faculty.php","faculties","width=450,height=220,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       facultywin.focus();
     }
   }
 
   function editFaculty() {
-    facultywin=window.open("edit_faculty.php?facultyID=" + $('#lineID').val() + "","faculties","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+    facultywin=window.open("edit_faculty.php?facultyID=" + $('#lineID').val() + "","faculties","width=450,height=220,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     if (window.focus) {
       facultywin.focus();
     }
@@ -62,6 +67,22 @@
 	<div class="menuitem"><a href="#" onclick="editFaculty(); return false;"><img class="sidebar_icon" onclick="editFaculty()" src="../artwork/edit.png" alt="" /><?php echo $string['editfaculty'] ?></a></div>
 	<div class="menuitem"><a href="#" onclick="deleteFaculty(); return false;"><img class="sidebar_icon" onclick="deleteCourse()" src="../artwork/red_cross.png" alt="" /><?php echo $string['deletefaculty'] ?></a></div>
 </div>
+
+
+<?php
+if ($userObject->has_role(array('SysAdmin'))) {
+    $mappingplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
+    if (count($mappingplugin_name) > 0) {
+?>
+<div id="menu1b">
+    <div id="sms" class="menuitem">
+        <a class="help_tip" title="<?php echo $string['importfacultiestooltip'] ?>" href="../plugins/SMS/<?php echo $mappingplugin_name[0] ?>/admin/import_faculties.php"><img class="sidebar_icon" src="../artwork/sync_16.png" alt="" /><?php echo $string['importfaculties'] ?></a>
+    </div>
+</div>
+<?php
+    }
+}
+?>
 
 <input type="hidden" id="lineID" name="lineID" value="" />
 </form>

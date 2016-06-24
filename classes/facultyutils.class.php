@@ -48,6 +48,30 @@ Class FacultyUtils {
   }
   
   /**
+   * Get the faculty id given external id
+   *
+   * @param string $externalid externalid of the faculty rogo id
+   * @param object $db database connection
+   *
+   * @return int|bool id of school or false
+  */
+  static function get_facultyid_from_externalid($externalid, $db) {
+    $result = $db->prepare("SELECT id FROM faculty WHERE externalid = ? AND deleted IS NULL");
+    $result->bind_param('s', $externalid);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($id);
+    $result->fetch();
+    if ($result->num_rows == 0) {
+      $facultyid = false;
+    } else {
+        $facultyid = $id;
+    }
+    $result->close();
+    return $facultyid;
+  }
+  
+  /**
    * Checks if a faculty name already exists.
    * @param string $facultyname - The ID of the faculty to be checked
    * @param object $db        - Link to mysqli
@@ -95,19 +119,44 @@ Class FacultyUtils {
     return $exist;
   }
 
+  /**
+   * Checks if faculty code in use
+   * @param string $code - The code of the faculty to be checked
+   * @param object $db   - Link to mysqli
+   * @return bool        - True if the faculty code already exists
+   */
+  static function get_facultyid_by_code($code, $db) {
+    $result = $db->prepare("SELECT id FROM faculty WHERE code = ?");
+    $result->bind_param('s', $code);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($id);
+    $result->fetch();
+    if ($result->num_rows == 0) {
+      $exist = false;
+    } else {
+      $exist = $id;
+    }
+    $result->free_result();
+    $result->close();
+    return $exist;
+  }
+  
 /**
  * Creates a new faculty.
  * @param string $faculty - The name of the faculty to be added
  * @param object $db      - Link to mysqli
+ * @param string $code    - The code of the faculty to be added
+ * @param string $externalid- The external system id of the faculty to be added
  * @return int            - The last insert number from the database
  */
-  static function add_faculty($faculty, $db) {
+  static function add_faculty($faculty, $db, $code = '', $externalid = '') {
     if (trim($faculty) == '') {
       return false;
     }
   
-    $result = $db->prepare("INSERT INTO faculty(name) VALUES(?)");
-    $result->bind_param('s', $faculty);
+    $result = $db->prepare("INSERT INTO faculty(name, code, externalid) VALUES(?, ?, ?)");
+    $result->bind_param('sss', $faculty, $code, $externalid);
     $result->execute();
     $result->close();
     if ($db->errno != 0) {
@@ -141,17 +190,21 @@ Class FacultyUtils {
    * Update a faculty.
    * @param integer $id     - Faculty id in rogo
    * @param string $faculty - The name of the faculty to be added
+   * @param string $code    - The code of the faculty to be added
+   * @param string $externalid - External sustem id for the faculty
    * @param object $db      - Link to mysqli
    * @return bool           - True on success
   */
-  static function update_faculty($id, $faculty, $db) {
-    // Check if name already in use.
-    $facultyid = FacultyUtils::facultyid_by_name($faculty, $db);
-    if ($facultyid !== false and $facultyid != $id) {
-      return false;
+  static function update_faculty($id, $faculty, $code, $externalid, $db) {
+    // Check if code already in use.
+    if ($code != '') {
+      $facultyid = FacultyUtils::get_facultyid_by_code($code, $db);
+      if ($facultyid !== false and $facultyid != $id) {
+          return false;
+        }
     }
-    $result = $db->prepare("UPDATE faculty SET name = ? WHERE id = ?");
-    $result->bind_param('si', $faculty, $id);
+    $result = $db->prepare("UPDATE faculty SET name = ?, code = ?, externalid = ? WHERE id = ?");
+    $result->bind_param('sssi', $faculty, $code, $externalid, $id);
     $result->execute();
     $result->close();
     if ($db->errno != 0) {
@@ -168,15 +221,15 @@ Class FacultyUtils {
    * @return array details
    */
   static function get_faculty_details_by_id($id, $db) {
-    $result = $db->prepare("SELECT name FROM faculty WHERE id = ?");
+    $result = $db->prepare("SELECT name, code, externalid FROM faculty WHERE id = ?");
     $result->bind_param('i', $id);
     $result->execute();
     $result->store_result();
-    $result->bind_result($name);
+    $result->bind_result($name, $code, $externalid);
     $result->fetch();
     $result->close();
 
-    return array('name' => $name);
+    return array('name' => $name, 'code' => $code, 'externalid' => $externalid);
   }
   
   /**
@@ -193,5 +246,27 @@ Class FacultyUtils {
     $result->fetch();
     $result->close();
     return $count;
+  }
+  
+  /**
+   * Compare the faculties in the external system and rogo
+   * @param array $external list of external system faculties
+   * @param mysqli $db db connection
+   * @return array list of faculties in rogo but not in external system
+   */
+  static function diff_external_faculties_to_internal_faculties($external, $db) {
+    $result = $db->prepare("SELECT externalid FROM faculty WHERE externalid IS NOT NULL AND deleted IS NULL");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($externalid);
+    $diff = array();
+    while ($result->fetch()) {
+      // Mark for delete if not found in external list.
+      if(!in_array($externalid, $external)) {
+        $diff[] = $externalid;
+      }
+    }
+    $result->close();
+    return $diff;
   }
 }

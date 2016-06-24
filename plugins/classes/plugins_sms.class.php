@@ -1,0 +1,53 @@
+<?php
+// This file is part of Rogō
+//
+// Rogō is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogō is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+* SMS plugin functions
+* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+* @copyright Copyright (c) 2016 onwards The University of Nottingham
+*/
+
+namespace plugins;
+
+/**
+ * Abstract SMS class.
+ * 
+ * This class should be extend by classes used define sms plugins.
+ */
+abstract class plugins_sms extends \plugins\plugins {
+    /**
+     * Type of the plugin.
+     * @var string
+     */
+    protected $plugin_type = 'sms';
+    /**
+     * Get enrolments for academic session
+     * @params integer $session academic session to sync enrolments with
+     */
+    abstract public function get_enrolments($session);
+    /**
+     * Get faculties/schools.
+     */
+    abstract public function get_faculties();
+    /**
+     * Get courses.
+     */
+    abstract public function get_courses();
+    /**
+     * Get modules.
+     */
+    abstract public function get_modules();
+}

@@ -40,14 +40,9 @@ if (isset($_POST['submit']) and $unique_course == true) {
   $tmp_school = $_POST['school'];
   $tmp_course = trim($_POST['course']);
   $tmp_description = trim($_POST['description']);
-
-  $result = $mysqli->prepare("INSERT INTO courses VALUES (NULL, ?, ?, NULL, ?)");
-  $result->bind_param('ssi', $tmp_course, $tmp_description, $tmp_school);
-  $result->execute();
-  $result->close();
-  $mysqli->close();
+  CourseUtils::add_course((int)$tmp_school, $tmp_course, $tmp_description, null, $mysqli);
   header("location: list_courses.php");
-	exit();
+  exit();
 } else {
 ?>
 <!DOCTYPE html>
@@ -116,9 +111,9 @@ if (isset($_POST['submit']) and $unique_course == true) {
     <tr><td class="field"><?php echo $string['school'] ?></td><td><select name="school" required>
     <option value=""></option>
     <?php
-      $result = $mysqli->prepare("SELECT schools.id, school, name FROM schools, faculty WHERE schools.facultyID = faculty.id AND schools.deleted IS NULL ORDER BY name, school");
+      $result = $mysqli->prepare("SELECT schools.id, schools.code, school, name FROM schools, faculty WHERE schools.facultyID = faculty.id AND schools.deleted IS NULL ORDER BY name, school");
       $result->execute();
-      $result->bind_result($schoolid, $school, $faculty);
+      $result->bind_result($schoolid, $code, $school, $faculty);
 
       $old_faculty = '';
       while ($result->fetch()) {
@@ -127,9 +122,9 @@ if (isset($_POST['submit']) and $unique_course == true) {
           echo "<optgroup label=\"$faculty\">\n";
         }
         if (isset($_POST['schoolid']) and $_POST['schoolid'] == $school) {
-          echo "<option value=\"$schoolid\" selected>$school</option>\n";
+          echo "<option value=\"$schoolid\" selected>$code $school</option>\n";
         } else {
-          echo "<option value=\"$schoolid\">$school</option>\n";
+          echo "<option value=\"$schoolid\">$code $school</option>\n";
         }
         $old_faculty = $faculty;
       }

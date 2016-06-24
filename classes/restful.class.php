@@ -53,11 +53,16 @@ class restful {
         $response = curl_exec($curl);
         if (curl_errno($curl)) {
             $log = new Logger($this->db);
-            $userObj = $userObject = \UserObject::get_instance();
-            $userid = $userObj->get_user_ID();
-            $username = $userObj->get_username();
+            $userObj = \UserObject::get_instance();
+            if (!is_null($userObj)) {
+                $userid = $userObj->get_user_ID();
+                $username = $userObj->get_username();
+            } else {
+                $userid = 0;
+                $username = '';
+            }
             $errorfile = $_SERVER['PHP_SELF'];
-            $errorline = __LINE__ - 7;
+            $errorline = __LINE__ - 11;
             $log->record_application_warning($userid, $username, 'Connection error: ' . curl_errno($curl) . ' - ' . curl_error($curl), $errorfile, $errorline);
             $response = '';
         }
