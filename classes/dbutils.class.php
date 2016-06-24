@@ -58,6 +58,45 @@ Class DBUtils {
   }
 
   /**
+   * Run Sql via prepare with binded parameters 
+   *
+   * @param string $sql The sql with embeded parameter
+   * @param string $sqltype select|insert|updata
+   * @param Array $bind  The paramter types and value ["is", $param1, $param2]
+   * @return Array|false| Return array of DB record(Array)for select SQL or True for other SQL had been run successfully or False for any error.
+   */
+  public static function run_sql_safe($mysqli, $sql, $bind = array()) {
+      
+      $sqltype = strtolower(substr(trim($sql),0,6)); // select|delete|insert|update
+      $stmt = $mysqli->prepare($sql);
+      if (!empty($bind)){
+          if ( $type = array_shift($bind)) { // Get "iiiss" from $bind
+              call_user_func_array(
+                      array($stmt, 'bind_param' ),
+                      array_merge(array($type), array_map( function( &$item ) { return $item; }, $bind ))
+              );
+          }
+      }
+      if (!$stmt->execute()) {
+          return false;
+      }
+      if ($sqltype === 'select'){
+          $data = $stmt->get_result();
+          $result = array();
+          while($row = $data->fetch_array(MYSQLI_ASSOC)) {
+              array_push($result, $row);
+          }
+          return $result;
+      } else {
+          if ($stmt->affected_rows !== -1) {
+              return true;
+          }
+      }
+      $stmt->close();
+      return false; // Something wrong
+    }
+   
+  /**
    * Checks if the schema for a table supports full text search indexing.
    *
    * @param string $table The name of the table.

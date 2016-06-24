@@ -132,15 +132,15 @@ class UoN_LTI extends BLTI {
         $sql = 'SELECT * FROM ' . $this->parm['table'] . ' WHERE ' .
           ($this->parm['key_column'] ? $this->parm['key_column'] : 'oauth_consumer_key') .
           '=' .
-          "'" . mysql_real_escape_string($oauth_consumer_key) . "'";
-        $result = mysql_query($sql);
-        $num_rows = mysql_num_rows($result);
+          "'" . mysqli_real_escape_string($oauth_consumer_key) . "'";
+        $result = mysqli_query($sql);
+        $num_rows = mysqli_num_rows($result);
         if ($num_rows != 1) {
           $this->message = "Your consumer is not authorized oauth_consumer_key = " . $oauth_consumer_key;
           unset($_SESSION['_lti_context']);
           return;
         } else {
-          while ($row = mysql_fetch_assoc($result)) {
+          while ($row = mysqli_fetch_assoc($result)) {
             $secret = $row[$this->parms['secret_column'] ? $this->parms['secret_column'] : 'secret'];
             $context_id = $row[$this->parms['context_column'] ? $this->parms['context_column'] : 'context_id'];
             if ($context_id) $this->context_id = $context_id;
