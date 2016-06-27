@@ -131,8 +131,8 @@
     </xs:simpleType>
     <xs:simpleType name="year">
         <xs:restriction base="xs:integer">
-            <xs:minInclusive value="1"/>
-            <xs:maxInclusive value="5"/>
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="6"/>
             </xs:restriction>
         </xs:simpleType>
     <xs:simpleType name="role">
