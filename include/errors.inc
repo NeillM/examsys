@@ -103,7 +103,11 @@ function uploadError($errCode) {
  * @param bool    $return_var   If true return the value of the tested variable back
  * @param int     $type         The type of value that is expected.
  *
- * @return void|string|null If mandatory is true we return ihe variable if it exsits, it not mandatory we return null
+ * @return void|mixed If $return_var is true we will return the value if it is present,
+ *                    if the variable is not set and $mandatory is false null will be returned.
+ *                    If $return_var is false nothing will be returned.
+ *                    In all cases if $mandatory is true and the variable is not set then an error
+ *                    page will be displayed and the script will stop processing.
  */
 function check_var($var_name, $method, $mandatory, $headers, $return_var, $type = param::RAW) {
   global $string;
