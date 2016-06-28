@@ -127,11 +127,12 @@
     $error = true;
   }
   // Check memcache.
-  if (!empty($configObject->get('cfg_memcache_host'))) {
+  $hosts = $configObject->get('cfg_memcache_host');
+  if (!empty($hosts)) {
     $port = $configObject->get('cfg_memcache_port');
     $memcache = new Memcache;
     $servers = array();
-    foreach ($configObject->get('cfg_memcache_host') as $memcacheserver) {
+    foreach ($hosts as $memcacheserver) {
         // Add servers.
         $memcache->addServer($memcacheserver, $port);
         $servers[] = $memcacheserver;
