@@ -150,7 +150,7 @@ Class FacultyUtils {
  * @param string $externalid- The external system id of the faculty to be added
  * @return int            - The last insert number from the database
  */
-  static function add_faculty($faculty, $db, $code = '', $externalid = null) {
+  static function add_faculty($faculty, $db, $code = null, $externalid = null) {
     if (trim($faculty) == '') {
       return false;
     }

@@ -23,7 +23,7 @@ $string['name'] = 'Name';
 $string['faculty'] = 'Faculty';
 $string['prompt'] = 'School of';
 $string['enternameofschool'] = 'Please enter name for the school.';
-$string['duplicateerror'] = 'School codes must be unique';
+$string['duplicateerror'] = 'School not unique, please change code or name.';
 $string['externalid'] = 'External ID';
 $string['code'] = 'School Code';
 ?>

@@ -44,9 +44,9 @@ if ($result->num_rows == 0) {
 $result->close();
 
 if (isset($_POST['submit'])) {
-  $school_tmp = trim( $_POST['school']);
-  $faculty = trim( $_POST['faculty']);
-  $code = trim($_POST['code']);
+  $school_tmp = check_var('school', 'POST', true, false, true);
+  $faculty = check_var('faculty', 'POST', true, false, true);
+  $code = check_var('code', 'POST', false, false, true);
   $duplicate = false;
   $changed = ($curr_faculty != $faculty or $school != $school_tmp or $curr_code != $code);
   if (!SchoolUtils::update_school($schoolid, $faculty, $school_tmp, $code, $curr_externalid, $mysqli)) {

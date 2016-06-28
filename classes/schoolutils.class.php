@@ -37,7 +37,7 @@ Class SchoolUtils {
      *
      * @return int              - The ID of the school.
      */
-    static function add_school($facultyID, $school, $db, $code = '', $externalid = '') {
+    static function add_school($facultyID, $school, $db, $code = null, $externalid = null) {
         if ($facultyID === '' or $school === '') {
           return false;
         }
@@ -148,6 +148,28 @@ Class SchoolUtils {
         $stmt->close();
 
         return $school_list;
+    }
+
+    /**
+     * Check if a school name exists in a given Faculty
+     * @param int $facultyID  - ID of faculty to check
+     * @param string $school  - School name to check
+     * @param object $db      - Link to mysqli
+     *
+     * @return bool           - True if school name already exists for the faculty
+     */
+    static function school_exists_in_faculty($facultyID, $school, $db) {
+        $row_no = 0;
+
+        $query = 'SELECT id FROM schools WHERE school = ? AND facultyID = ? AND deleted IS NULL';
+        $stmt = $db->prepare($query);
+        $stmt->bind_param('si', $school, $facultyID);
+        $stmt->execute();
+        $stmt->store_result();
+        $row_no = $stmt->num_rows;
+        $stmt->close();
+
+        return $row_no > 0;
     }
 
     /**
@@ -273,11 +295,13 @@ Class SchoolUtils {
           return false;
         }
         if ($code != '') {
-            $schoolID = SchoolUtils::get_schoolid_by_code($code, $db);
-            // Do not update if school code is in use, unless we are updating that school.
-            if ($schoolID !== false and $schoolID != $id) {
-              return false;
-            }
+          $schoolID = SchoolUtils::get_schoolid_by_code($code, $db);
+        } else {
+          $schoolID = SchoolUtils::school_name_exists($school, $db);
+        }
+        // Do not update if school code/name is in use, unless we are updating that school.
+        if ($schoolID !== false and $schoolID != $id) {
+          return false;
         }
         $result = $db->prepare("UPDATE schools set school = ?, facultyID = ?, code = ?, externalid = ? where id = ?");
         $result->bind_param('sissi', $school, $facultyID, $code, $externalid, $id);

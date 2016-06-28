@@ -23,16 +23,21 @@
 */
 
 require '../include/sysadmin_auth.inc';
+require_once '../include/errors.inc';
 
 $school = '';
 $faculty = '';
 $exists = false;
 if (isset($_POST['submit'])) {
-  $school = trim($_POST['school']);
-  $faculty = trim($_POST['facultyID']);
-  $code = trim($_POST['code']);
-  if ($code != '') {
+  $school = check_var('school', 'POST', true, false, true);
+  $faculty = check_var('facultyID', 'POST', true, false, true);
+  $code = check_var('code', 'POST', false, false, true);
+  if (!is_null($code)) {
     $exists = SchoolUtils::get_schoolid_by_code($code, $mysqli);
+  } else {
+    if (SchoolUtils::school_exists_in_faculty($faculty, $school, $mysqli)) {
+      $exists = true;
+    }
   }
   if ($exists === false) {
     $insert_id = SchoolUtils::add_school($faculty, $school, $mysqli, $code);
