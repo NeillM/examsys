@@ -29,15 +29,15 @@ $facultyID = check_var('facultyID', 'REQUEST', true, false, true);
 
 // Check the Faculty ID actually exists for editing.
 $details = FacultyUtils::get_faculty_details_by_id($facultyID, $mysqli);
-if (!$details['name']) {
+if (is_null($details['name'])) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 $duplicate = false;
 if (isset($_POST['submit'])) {
-  $faculty = $_POST['new_faculty'];
-  $code = $_POST['code'];
+  $faculty = check_var('new_faculty', 'POST', true, false, true);
+  $code = check_var('code', 'POST', false, false, true);
   if (!FacultyUtils::update_faculty($facultyID, $faculty, $code, $details['externalid'], $mysqli)) {
     $duplicate = true;
   } else {

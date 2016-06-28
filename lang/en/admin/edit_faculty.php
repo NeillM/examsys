@@ -15,7 +15,7 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['editfaculty'] = 'Edit Faculty';
-$string['warning'] = 'Faculty code already exists. Please choose a different code.';
+$string['warning'] = 'Faculty not unique. Please choose a different code or name.';
 $string['name'] = 'Name';
 $string['externalid'] = 'External ID';
 $string['code'] = 'Faculty Code';

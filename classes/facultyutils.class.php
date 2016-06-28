@@ -150,7 +150,7 @@ Class FacultyUtils {
  * @param string $externalid- The external system id of the faculty to be added
  * @return int            - The last insert number from the database
  */
-  static function add_faculty($faculty, $db, $code = '', $externalid = '') {
+  static function add_faculty($faculty, $db, $code = '', $externalid = null) {
     if (trim($faculty) == '') {
       return false;
     }
@@ -162,7 +162,6 @@ Class FacultyUtils {
     if ($db->errno != 0) {
       return false;
     }
-
     return $db->insert_id;
   }
   
@@ -201,6 +200,12 @@ Class FacultyUtils {
       $facultyid = FacultyUtils::get_facultyid_by_code($code, $db);
       if ($facultyid !== false and $facultyid != $id) {
           return false;
+        }
+    } else {
+        // Check if name already in use.
+        $facultyid = FacultyUtils::facultyid_by_name($faculty, $db);
+        if ($facultyid !== false and $facultyid != $id) {
+            return false;
         }
     }
     $result = $db->prepare("UPDATE faculty SET name = ?, code = ?, externalid = ? WHERE id = ?");
