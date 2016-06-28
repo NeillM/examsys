@@ -128,14 +128,25 @@
   }
   // Check memcache.
   if (!empty($configObject->get('cfg_memcache_host'))) {
+    $port = $configObject->get('cfg_memcache_port');
     $memcache = new Memcache;
-    // Add server.
-    $memcache->addServer($configObject->get('cfg_memcache_host'), $configObject->get('cfg_memcache_port'));
+    $servers = array();
+    foreach ($configObject->get('cfg_memcache_host') as $memcacheserver) {
+        // Add servers.
+        $memcache->addServer($memcacheserver, $port);
+        $servers[] = $memcacheserver;
+    }
     // Get stats to reforce cache.
     $stats = $memcache->getExtendedStats();
-    // Get status of server.
-    $status = $stats[$configObject->get('cfg_memcache_host') . ':' . $configObject->get('cfg_memcache_port')];
-    if (!$status) {
+    // Get status of servers.
+    $memcacheerror = 0;
+    foreach ($servers as $host) {
+        $status = $stats[$host. ':' . $port];
+        if (!$status) {
+            $memcacheerror++;
+        }
+    }
+    if ($memcacheerror == count($servers)) {
       echo "ERROR::Memcache server failure\n";
       $error = true;
     };
