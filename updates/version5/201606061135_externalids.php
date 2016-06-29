@@ -1,6 +1,6 @@
 <?php
 
-if ($updater_utils->check_version("6.1.0")) {
+if ($updater_utils->check_version("6.2.0")) {
     if (!$updater_utils->has_updated('rogo1829_externalids')) {
         // courses.
         $altersql = "ALTER TABLE courses ADD COLUMN `externalid` varchar(50) NULL DEFAULT NULL";
