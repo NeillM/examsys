@@ -132,7 +132,7 @@ QUERY;
           `description` varchar(255) default NULL,
           `deleted` datetime default NULL,
           `schoolid` int(11) default NULL,
-          `externalid` varchar(50) NULL DEFAULT NULL,
+          `externalid` varchar(50) default NULL,
           PRIMARY KEY (`id`),
           UNIQUE INDEX `externalid` (`externalid`),
           KEY `degree` (`name`),
@@ -216,10 +216,10 @@ QUERY;
     $this->tableList['faculty'] = <<<QUERY
           CREATE TABLE `faculty` (
             `id` int(11) NOT NULL auto_increment,
-            `code` varchar(30) DEFAULT NULL,
+            `code` varchar(30) default NULL,
             `name` varchar(80) default NULL,
             `deleted` datetime default NULL,
-            `externalid` varchar(50) NULL DEFAULT NULL,
+            `externalid` varchar(50) default NULL,
             PRIMARY KEY  (`id`),
             UNIQUE INDEX `code` (`code`),
             UNIQUE INDEX `externalid` (`externalid`)
@@ -708,7 +708,7 @@ QUERY;
           `add_team_members` tinyint(4) default NULL,
           `map_level` smallint(2) NOT NULL DEFAULT '0',
           `academic_year_start` char(5) NOT NULL,
-          `externalid` varchar(50) NULL DEFAULT NULL,
+          `externalid` varchar(50) default NULL,
           PRIMARY KEY (`id`),
           UNIQUE INDEX `externalid` (`externalid`),
           KEY `guideid` (`moduleid`),
@@ -1145,11 +1145,11 @@ QUERY;
     $this->tableList['schools'] = <<<QUERY
         CREATE TABLE `schools` (
           `id` int(11) NOT NULL auto_increment,
-          `code` varchar(30) DEFAULT NULL,
+          `code` varchar(30) default NULL,
           `school` char(255) default NULL,
           `facultyID` int(11) default NULL,
           `deleted` datetime default NULL,
-          `externalid` varchar(50) NULL DEFAULT NULL,
+          `externalid` varchar(50) default NULL,
           PRIMARY KEY (`id`),
           UNIQUE INDEX `code` (`code`),
           UNIQUE INDEX `externalid` (`externalid`),
