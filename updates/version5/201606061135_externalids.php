@@ -52,6 +52,11 @@ if ($updater_utils->check_version("6.1.0")) {
         $updater_utils->execute_query($altersql, true);
         $altersql = "UPDATE permissions set description = 'Create an assessment' WHERE action = 'assessmentmanagement/create'";
         $updater_utils->execute_query($altersql, true);
+        
+        // New type column in config type.
+        $altersql = "ALTER TABLE `config` ADD COLUMN `type` VARCHAR(10) NULL AFTER `value`";
+        $updater_utils->execute_query($altersql, true);
+        
         $updater_utils->record_update('rogo1829_externalids');
     }
 }

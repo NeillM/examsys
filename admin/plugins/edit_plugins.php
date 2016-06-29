@@ -60,24 +60,26 @@ if (isset($_POST['submit'])) {
     }
     // Configs.
     foreach ($configObject->get_setting($plugin) as $setting => $value) {
+        $type = $configObject->get_setting_type($plugin, $setting);
         if ($setting != "installed") {
             $new_value = check_var($setting, 'POST', false, false, true);
-            if ($setting == "password") {
+            if ($type == 'password') {
                 // Password settings are encrypted.
                 $encryp = new encryp();
                 $value = $encryp->mdecrypt_password($value);
-            } else if ($setting == "ssl_verify" or $setting == "validate_schema" ) {
+            } elseif ($type == 'boolean') {
                 if (is_null($new_value) and $value == 1) {
                     $new_value = 0;
                 } elseif (!is_null($new_value) and $value == 0) {
                     $new_value = 1;
                 }
             }
+
             if ($value != $new_value) {
-                if ($setting == "password") {
+                if ($type == 'password') {
                     $new_value = $encryp->mcrypt_password($new_value);
                 }
-                $configObject->set_setting($setting, $new_value, $plugin);
+                $configObject->set_setting($setting, $new_value, $type, $plugin);
             }
         }
     }
@@ -123,15 +125,16 @@ $render->render_admin_content($breadcrumb, $lang);
             }
             echo "<input type=\"hidden\" name=\"pid\" id=\"pid\" value=\"" . $plugin. "\"/>";
             foreach ($configObject->get_setting($plugin) as $setting => $value) {
+                $type = $configObject->get_setting_type($plugin, $setting);
                 if ($setting != "installed") {
-                    if ($setting == 'ssl_verify' or $setting == 'validate_schema') {
+                    if ($type == 'boolean') {
                         if ($value == true) {
                             $checked = "checked";
                         } else {
                             $checked = "";
                         }
                         echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting . "</label></td><td><input type=\"checkbox\" name=\"" . $setting . "\" id=\"" . $setting . "\"" . $checked . "/></td></tr>";
-                    } else if ($setting == "password") {
+                    } elseif ($type == 'password') {
                         // Password settings need to be decrypted.
                         $encryp = new encryp();
                         $value = $encryp->mdecrypt_password($value);

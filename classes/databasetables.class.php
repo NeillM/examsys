@@ -120,6 +120,7 @@ QUERY;
           `component` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'core',
           `setting` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
           `value` text COLLATE utf8_unicode_ci,
+          `type` VARCHAR(10) NULL,
           PRIMARY KEY (`component`,`setting`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;

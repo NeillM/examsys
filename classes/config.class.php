@@ -32,6 +32,8 @@ class Config extends RogoStaticSingleton {
   public $data;
   /** @var array Array of component settings */
   public $settings;
+  /** @var array Array of component setting types */
+  public $settingstype;
   public $xmldata;
   protected static $inst;
   protected static $class_name = 'Config';
@@ -301,18 +303,30 @@ class Config extends RogoStaticSingleton {
   }
 
   /**
+   * Cache a component setting types in the config object's "settingstype" property
+   * @param string $setting
+   * @param string $value
+   * @param string $component
+   */
+  protected function cache_setting_type($setting, $value, $component = 'core') {
+    $this->settingstype[$component][$setting] = $value;
+  }
+  
+  /**
    * Set a particular config setting's value for a particular component
    * @param string $setting The name of the config setting
    * @param string|array $value
+   * @param string $type The type of the config setting
    * @param string $component (Optional) The component to which this setting belongs
    */
-  public function set_setting($setting, $value, $component = 'core') {
+  public function set_setting($setting, $value, $type, $component = 'core') {
     $currentsetting = $this->get_setting($component, $setting);
     $this->cache_setting($setting, $value, $component);
+    $this->cache_setting_type($setting, $type, $component);
     if (!is_null($currentsetting)) {
       $this->update_setting($setting, $value, $component);
     } else {
-      $this->insert_setting($setting, $value, $component);
+      $this->insert_setting($setting, $value, $type, $component);
     }
   }
 
@@ -336,12 +350,13 @@ class Config extends RogoStaticSingleton {
    * Insert a config setting for a particular component
    * @param string $setting The name of the config setting
    * @param string $value The value of the config setting
+   * @param string $type The type of the config setting
    * @param string $component The component to which this config setting belongs
    */
-  protected function insert_setting($setting, $value, $component = 'core') {
+  protected function insert_setting($setting, $value, $type = null, $component = 'core') {
     // Insert Settings.
-    $result = $this->db->prepare("INSERT INTO `config` (`component`, `setting`, `value`) VALUES (?, ?, ?)");
-    $result->bind_param("sss", $component, $setting, $value);
+    $result = $this->db->prepare("INSERT INTO `config` (`component`, `setting`, `value`, `type`) VALUES (?, ?, ?, ?)");
+    $result->bind_param("ssss", $component, $setting, $value, $type);
 
     if ($result->execute()) {
       $result->close();
@@ -368,6 +383,21 @@ class Config extends RogoStaticSingleton {
   }
 
   /**
+   * Get a config setting type for a particular component
+   * @param string $component The component to which this config setting belongs
+   * @param string $setting The name of the config setting (Optional)
+   */
+  public function get_setting_type($component, $setting = null) {
+    $cachedsetting = $this->get_setting_type_from_cache($component, $setting);
+    if (!is_null($cachedsetting)) {
+      return $cachedsetting;
+    }
+    $this->load_settings($component);
+    $cachedsetting = $this->get_setting_type_from_cache($component, $setting);
+    return $cachedsetting;
+  }
+  
+  /**
    * Get setting from cache
    * @param string $component
    * @param string $setting
@@ -385,18 +415,34 @@ class Config extends RogoStaticSingleton {
   }
 
   /**
+   * Get setting type from cache
+   * @param string $component
+   * @param string $setting
+   * @return string|array
+   */
+  protected function get_setting_type_from_cache($component, $setting) {
+    if (is_string($component)) {
+      if (is_string($setting) && isset($this->settingstype[$component]) && isset($this->settingstype[$component][$setting])) {
+        return $this->settingstype[$component][$setting];
+      }
+    }
+    return null;
+  }
+  
+  /**
    * Load all settings for a particular component into the 'settings' property of the config object
    * @param string $component The component to which this config setting belongs
    */
   public function load_settings($component) {
     $setting = null;
     $value = null;
-    $result = $this->db->prepare("SELECT setting, value FROM config WHERE component = ?");
+    $result = $this->db->prepare("SELECT setting, value, type FROM config WHERE component = ?");
     $result->bind_param('s', $component);
-    $result->bind_result($setting, $value);
+    $result->bind_result($setting, $value, $type);
     $result->execute();
     while ($result->fetch()) {
       $this->cache_setting($setting, $value, $component);
+      $this->cache_setting_type($setting, $type, $component);
     }
     $result->close();
   }
