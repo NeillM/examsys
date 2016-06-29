@@ -31,7 +31,18 @@ class usermanagement extends \api\abstractmanagement {
      * Language pack component.
      */
     private $langcomponent = 'api/usermanagement';
-    
+    /**
+     * @var array $studentroles
+     */
+    private static $studentroles = array('Student', 'Left', 'Graduate');
+    /**
+     * @var array $staffroles
+     */
+    private static $staffroles = array('Staff', 'Inactive Staff');
+    /**
+     * @var array $staffcourses
+     */
+    private static $staffcourses = array('University Lecturer', 'NHS Lecturer');
     /**
      * Status codes
      */
@@ -81,6 +92,30 @@ class usermanagement extends \api\abstractmanagement {
     }
     
     /**
+     * Check role is valid.
+     * @param string $params action parameters
+     * @return string|bool course student is enrolled on or staff type if staff, false on error
+     */
+    private function check_roles($params) {
+        $roles = array_merge(self::$studentroles, self::$staffroles);
+        if (!in_array($params['role'], $roles)) {
+            return 'UNKNOWN';
+        } else {
+            // Students.
+            if (in_array($params['role'], self::$studentroles)) {
+                $course = \CourseUtils::course_exists($params['course'], $this->db);
+            // Staff.
+            } else {
+                if (in_array($params['course'], self::$staffcourses)) {
+                    $course = $params['course'];
+                } else {
+                    $course = false;
+                }
+            }
+        }
+        return $course;
+    }
+    /**
      * Create user
      * @param array $params create user params
      * @param integer $userid rogo user id linked to web service client
@@ -91,10 +126,6 @@ class usermanagement extends \api\abstractmanagement {
         $strings = $langpack->get_strings($this->langcomponent, array('user_invalid_role', 'user_not_created', 'course_does_not_exist', 'user_already_exists'));
         $error = array();
         $userexists = false;
-        // Student and Staff users only.
-        $studentroles = array('Student', 'Left', 'Graduate');
-        $staffroles = array('Staff', 'Inactive Staff');
-        $roles = array_merge($studentroles, $staffroles);
         $checkparameter = array('username', 'password', 'title', 'forename', 'surname', 'email', 'course',
                     'gender', 'year', 'role', 'studentid', 'initials');
         // Set defaults if not provided.
@@ -103,46 +134,33 @@ class usermanagement extends \api\abstractmanagement {
                 $params[$name] = '';
             }
         }
-
-        if (!in_array($params['role'], $roles)) {
+        $course = $this->check_roles($params);
+        if ($course === 'UNKNOWN') {
             $data = array('statuscode' => $this->statuscodes['USER_INVALID_ROLE'], 'status' => $strings['user_invalid_role'], 'id' => null, 'externalid' => null);
+            return $this->get_response($data, 'create', $params['nodeid'], array());
+        }
+        if ($course) {
+            // Create.
+            $id = \UserUtils::create_user($params['username'], $params['password'], $params['title'],
+                $params['forename'], $params['surname'], $params['email'], $params['course'],
+                $params['gender'], $params['year'], $params['role'], $params['studentid'], $this->db, $params['initials']);
+            if ($id) {
+                if (!empty($params['modules'])) {
+                    $error = $this->user_modules($id, $params['modules'], $params['role']);
+                }
+                $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'error' => $error, 'externalid' => $params['studentid']);
+            } else {
+                // Check if user exists, otherwise throw generic error.
+                $userexists = \UserUtils::username_exists($params['username'], $this->db);
+                if ($userexists) {
+                    $details = \UserUtils::get_full_details_by_ID($userexists, $this->db);
+                    $data = array('statuscode' => $this->statuscodes['USER_ALREADY_EXISTS'], 'status' => $strings['user_already_exists'], 'id' => $userexists, 'externalid' => $details['studentid']);
+                } else {
+                    $data = array('statuscode' => $this->statuscodes['USER_NOT_CREATED'], 'status' => $strings['user_not_created'], 'id' => null, 'externalid' => null);
+                }
+            }
         } else {
-            // Students.
-            if (in_array($params['role'], $studentroles)) {
-                $course = \CourseUtils::course_exists($params['course'], $this->db);
-            // Staff.
-            } else {
-                $staffcourses = array('University Lecturer', 'NHS Lecturer');
-                if (in_array($params['course'], $staffcourses)) {
-                    $course = $params['course'];
-                } else {
-                    $course = false;
-                }
-            }
-
-            if ($course) {
-                // Create.
-                $id = \UserUtils::create_user($params['username'], $params['password'], $params['title'],
-                    $params['forename'], $params['surname'], $params['email'], $params['course'],
-                    $params['gender'], $params['year'], $params['role'], $params['studentid'], $this->db, $params['initials']);
-                if ($id) {
-                    if (!empty($params['modules'])) {
-                        $error = $this->user_modules($id, $params['modules'], $params['role']);
-                    }
-                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'error' => $error, 'externalid' => $params['studentid']);
-                } else {
-                    // Check if user exists, otherwise throw generic error.
-                    $userexists = \UserUtils::username_exists($params['username'], $this->db);
-                    if ($userexists) {
-                        $details = \UserUtils::get_full_details_by_ID($userexists, $this->db);
-                        $data = array('statuscode' => $this->statuscodes['USER_ALREADY_EXISTS'], 'status' => $strings['user_already_exists'], 'id' => $userexists, 'externalid' => $details['studentid']);
-                    } else {
-                        $data = array('statuscode' => $this->statuscodes['USER_NOT_CREATED'], 'status' => $strings['user_not_created'], 'id' => null, 'externalid' => null);
-                    }
-                }
-            } else {
-                $data = array('statuscode' => $this->statuscodes['USER_INVALID_COURSE'], 'status' => $strings['course_does_not_exist'], 'id' => null, 'externalid' => null);
-            }
+            $data = array('statuscode' => $this->statuscodes['USER_INVALID_COURSE'], 'status' => $strings['course_does_not_exist'], 'id' => null, 'externalid' => null);
         }
         return $this->get_response($data, 'create', $params['nodeid'], $error);
     }
@@ -159,10 +177,6 @@ class usermanagement extends \api\abstractmanagement {
             , 'user_not_updated', 'user_not_created', 'course_does_not_exist', 'user_already_exists', 'user_nothing_to_update'));
         $error = array();
         $userexists = false;
-        // Student and Staff users only.
-        $studentroles = array('Student', 'Left', 'Graduate');
-        $staffroles = array('Staff', 'Inactive Staff');
-        $roles = array_merge($studentroles, $staffroles);
         $checkparameter = array('username', 'password', 'title', 'forename', 'surname', 'email', 'course',
                     'gender', 'year', 'role', 'studentid', 'initials');
                     
@@ -210,38 +224,26 @@ class usermanagement extends \api\abstractmanagement {
         if ((!$userexists and $params['id']) or (!$userexists and $params['id'] === 0)) {
             $data = array('statuscode' => $this->statuscodes['USER_DOES_NOT_EXIST'], 'status' => $strings['user_does_not_exist'], 'id' => null, 'externalid' => null);
         } else {
-            if (!in_array($params['role'], $roles)) {
+            $course = $this->check_roles($params);
+            if ($course === 'UNKNOWN') {
                 $data = array('statuscode' => $this->statuscodes['USER_INVALID_ROLE'], 'status' => $strings['user_invalid_role'], 'id' => null, 'externalid' => null);
+                return $this->get_response($data, 'update', $params['nodeid'], array());
+            }
+            if ($course) {
+                // Update.
+                $update = \UserUtils::update_user($params['id'], $params['username'], $params['password'], $params['title'],
+                            $params['forename'], $params['surname'], $params['email'], $params['course'],
+                            $params['gender'], $params['year'], $params['role'], $params['studentid'], $this->db, $params['initials']);
+                if ($update) {
+                    if (!empty($params['modules'])) {
+                        $error = $this->user_modules($params['id'], $params['modules'], $params['role']);
+                    }
+                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'externalid' => $details['studentid']);
+                } else {
+                    $data = array('statuscode' => $this->statuscodes['USER_NOT_UPDATED'], 'status' => $strings['user_not_updated'], 'id' => null, 'externalid' => null);
+                }
             } else {
-                // Students.
-                if (in_array($params['role'], $studentroles)) {
-                    $course = \CourseUtils::course_exists($params['course'], $this->db);
-                // Staff.
-                } else {
-                    $staffcourses = array('University Lecturer', 'NHS Lecturer');
-                    if (in_array($params['course'], $staffcourses)) {
-                        $course = $params['course'];
-                    } else {
-                        $course = false;
-                    }
-                }
-
-                if ($course) {
-                    // Update.
-                    $update = \UserUtils::update_user($params['id'], $params['username'], $params['password'], $params['title'],
-                                $params['forename'], $params['surname'], $params['email'], $params['course'],
-                                $params['gender'], $params['year'], $params['role'], $params['studentid'], $this->db, $params['initials']);
-                    if ($update) {
-                        if (!empty($params['modules'])) {
-                            $error = $this->user_modules($params['id'], $params['modules'], $params['role']);
-                        }
-                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'externalid' => $details['studentid']);
-                    } else {
-                        $data = array('statuscode' => $this->statuscodes['USER_NOT_UPDATED'], 'status' => $strings['user_not_updated'], 'id' => null, 'externalid' => null);
-                    }
-                } else {
-                    $data = array('statuscode' => $this->statuscodes['USER_INVALID_COURSE'], 'status' => $strings['course_does_not_exist'], 'id' => null, 'externalid' => null);
-                }
+                $data = array('statuscode' => $this->statuscodes['USER_INVALID_COURSE'], 'status' => $strings['course_does_not_exist'], 'id' => null, 'externalid' => null);
             }
         }
         return $this->get_response($data, 'update', $params['nodeid'], $error);
