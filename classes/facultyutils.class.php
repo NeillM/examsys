@@ -205,7 +205,7 @@ Class FacultyUtils {
         // Check if name already in use.
         $facultyid = FacultyUtils::facultyid_by_name($faculty, $db);
         if ($facultyid !== false and $facultyid != $id) {
-            return false;
+          return false;
         }
     }
     $result = $db->prepare("UPDATE faculty SET name = ?, code = ?, externalid = ? WHERE id = ?");
