@@ -57,6 +57,39 @@ class assessmentmanagement extends \api\abstractmanagement {
     );
     
     /**
+     * Check labs
+     * Currently we are working with the lab name as there is no lab management web service.
+     * @param array $labs list of labs we ant assignments to run in
+     * @return array validated list of labs assignment will run in, and any non fatal errors
+     */
+    private function check_labs($labs) {
+        $langpack = new \langpack();
+        $labsarray = array();
+        $labfactory = new \LabFactory($this->db);
+        $error = array();
+        if (!empty($labs)) {
+            foreach ($labs as $lab) {
+                // We allow empty lab elements so labs so the paper can have all labs removed.
+                if ($lab['value'] != '') {
+                    $labid = $labfactory->get_lab_id($lab['value']);
+                    if ($labid) {
+                        $labsarray[] = $labid;
+                    } else {
+                        $error[$lab['id']] = sprintf($langpack->get_string($this->langcomponent, 'paper_invalid_lab'), $lab['value']);
+                    }
+                } else {
+                    $labsarray[] = '';
+                }
+            }
+        }
+        if (count($labsarray) > 0) {
+            $labsstring = implode(',', $labsarray);
+        } else {
+            $labsstring = '';
+        }
+        return array($labsstring, $error);
+    }
+    /**
      * Handle thrown exceptions
      * @param string $exception - the thrown exception
      * @return array containg the relevant status code and status message
@@ -127,32 +160,12 @@ class assessmentmanagement extends \api\abstractmanagement {
             $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_MODULES'], 'status' => $strings['paper_module_error'], 'id' => null);
         } else {
             // Check labs.
-            // Currently we are working with the lab name as there is no lab management web service.
-            $labsarray = array();
-            $labfactory = new \LabFactory($this->db);
-            if (!empty($params['labs'])) {
-                foreach ($params['labs'] as $lab) {
-                    // We allow empty lab elements so labs so the paper can have all labs removed.
-                    if ($lab['value'] != '') {
-                        $labid = $labfactory->get_lab_id($lab['value']);
-                        if ($labid) {
-                            $labsarray[] = $labid;
-                        } else {
-                            $error[$lab['id']] = sprintf($langpack->get_string($this->langcomponent, 'paper_invalid_lab'), $lab['value']);
-                        }
-                    } else {
-                        $labsarray[] = '';
-                    }
-                }
-            }
-            if (count($labsarray) > 0) {
-                $labs = implode(',', $labsarray);
-            } else {
-                $labs = '';
-            }
+            $checklabs = $this->check_labs($params['labs']);
+            $labs = $checklabs[0];
+            $error += $checklabs[1];
             
             if (empty($params['duration'])) {
-                    $params['duration'] = '';
+                $params['duration'] = '';
             }
             // Create exam.
             try {
@@ -269,29 +282,9 @@ class assessmentmanagement extends \api\abstractmanagement {
                 $labs = $details['labs'];
             } else {
                 // Check labs.
-                // Currently we are working with the lab name as there is no lab management web service.
-                $labsarray = array();
-                $labfactory = new \LabFactory($this->db);
-                if (!empty($params['labs'])) {
-                    foreach ($params['labs'] as $lab) {
-                        // We allow empty lab elements so labs so the paper can have all labs removed.
-                        if ($lab['value'] != '') {
-                            $labid = $labfactory->get_lab_id($lab['value']);
-                            if ($labid) {
-                                $labsarray[] = $labid;
-                            } else {
-                                $error[$lab['id']] = sprintf($langpack->get_string($this->langcomponent, 'paper_invalid_lab'), $lab['value']);
-                            }
-                        } else {
-                            $labsarray[] = '';
-                        }
-                    }
-                }
-                if (count($labsarray) > 0) {
-                    $labs = implode(',', $labsarray);
-                } else {
-                    $labs = '';
-                }
+                $checklabs = $this->check_labs($params['labs']);
+                $labs = $checklabs[0];
+                $error += $checklabs[1];
             }
             // Mark something is to be updated.
             if ($paperid) {
