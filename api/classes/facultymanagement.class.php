@@ -62,6 +62,10 @@ class facultymanagement extends \api\abstractmanagement {
             $data = array('statuscode' => $this->statuscodes['FACUTLY_NAME_NOT_SUPPLIED'], 'status' => $strings['faculty_name_not_supplied'], 'id' => null, 'externalid' => null);
         } else {
             // Create faculty.
+            // Check external id unique.
+            if (!empty($params['externalid'])) {
+                $facultyid = \FacultyUtils::get_facultyid_from_externalid($params['externalid'], $this->db);
+            }
             // Check faculty code unique.
             if (!empty($params['code'])) {
                 $facultyid = \FacultyUtils::get_facultyid_by_code($params['code'], $this->db);
@@ -126,25 +130,20 @@ class facultymanagement extends \api\abstractmanagement {
                 $params['code'] = $details['code'];
             }
         }
-        // Name must be supplied.
-        if (!isset($params['name']) or $params['name'] === '') {
-            $data = array('statuscode' => $this->statuscodes['FACUTLY_NAME_NOT_SUPPLIED'], 'status' => $strings['faculty_name_not_supplied'], 'id' => null, 'externalid' => null);
-        } else {
-            // Update faculty.
-            if ($facultyid) {
-                if ($change) {
-                    $update = \FacultyUtils::update_faculty($params['id'], $params['name'], $params['code'], $details['externalid'], $this->db);
-                    if ($update) {
-                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'externalid' => $details['externalid']);
-                    } else {
-                        $data = array('statuscode' => $this->statuscodes['FACUTLY_NOT_UPDATED'], 'status' => $strings['faculty_not_updated'], 'id' => null, 'externalid' => null);
-                    }
+        // Update faculty.
+        if ($facultyid) {
+            if ($change) {
+                $update = \FacultyUtils::update_faculty($params['id'], $params['name'], $params['code'], $details['externalid'], $this->db);
+                if ($update) {
+                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'externalid' => $details['externalid']);
                 } else {
-                    $data = array('statuscode' => $this->statuscodes['FACUTLY_NOTHING_TO_UPDATE'], 'status' => $strings['faculty_nothing_to_update'], 'id' => null, 'externalid' => null);
+                    $data = array('statuscode' => $this->statuscodes['FACUTLY_NOT_UPDATED'], 'status' => $strings['faculty_not_updated'], 'id' => null, 'externalid' => null);
                 }
             } else {
-                $data = array('statuscode' => $this->statuscodes['FACUTLY_DOES_NOT_EXIST'], 'status' => $strings['faculty_does_not_exist'], 'id' => null, 'externalid' => null);
+                $data = array('statuscode' => $this->statuscodes['FACUTLY_NOTHING_TO_UPDATE'], 'status' => $strings['faculty_nothing_to_update'], 'id' => null, 'externalid' => null);
             }
+        } else {
+            $data = array('statuscode' => $this->statuscodes['FACUTLY_DOES_NOT_EXIST'], 'status' => $strings['faculty_does_not_exist'], 'id' => null, 'externalid' => null);
         }
         return $this->get_response($data, 'update', $params['nodeid']);
     }

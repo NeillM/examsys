@@ -208,24 +208,6 @@ class facultymanagementtest extends unittestdatabase {
         $this->assertEquals($responsearray, $faculty->update($params, $userid));
     }
     /**
-     * Test faculty update exception faculty not supplied
-     * @group api
-     */
-    public function test_update_exception_nofaculty() {
-        // Test faculty update - ERROR faculty does not exist
-        $responsearray = $this->update_response_array();
-        $params = $this->update_param_array();
-        $faculty = new \api\facultymanagement($this->db);
-        $userid = 1;
-        $responsearray['statuscode'] = 406;
-        $responsearray['status'] = 'Faculty name not supplied';
-        $responsearray['id'] = null;
-        $params = array(
-            "nodeid" => 1,
-            "id" => 1);
-        $this->assertEquals($responsearray, $faculty->update($params, $userid));
-    }
-    /**
      * Test successful faculty deletion
      * @group api
      */
