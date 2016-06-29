@@ -33,26 +33,46 @@ if ($updater_utils->check_version("6.2.0")) {
         
         // New API perms.
         $insertsql = "INSERT INTO permissions (action, description) VALUES "
-            . "('coursemanagement/update', 'Update a course'), "
-            . "('schoolmanagement/update', 'Update a school'), "
-            . "('facultymanagement/update', 'Update a faculty'), "
-            . "('modulemanagement/update', 'Update a module'), "
-            . "('usermanagement/update', 'Update a user'), "
-            . "('assessmentmanagement/update', 'Update an assessment')";
+            . "('coursemanagement/update', '" . $string['permupdatecourse'] . "'), "
+            . "('schoolmanagement/update', '" . $string['permupdateschool'] . "'), "
+            . "('facultymanagement/update', '" . $string['permupdatefaculty'] . "'), "
+            . "('modulemanagement/update', '" . $string['permupdatemodule'] . "'), "
+            . "('usermanagement/update', '" . $string['permupdateuser'] . "'), "
+            . "('assessmentmanagement/update', '" . $string['permupdateassessment'] . "')";
         $updater_utils->execute_query($insertsql, true);
-        $altersql = "UPDATE permissions set description = 'Create a course' WHERE action = 'coursemanagement/create'";
+        $altersql = "UPDATE permissions set description = '" . $string['permcreatecourse'] . "' WHERE action = 'coursemanagement/create'";
         $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE permissions set description = 'Create a school' WHERE action = 'schoolmanagement/create'";
+        $altersql = "UPDATE permissions set description = '" . $string['permcreateschool'] . "' WHERE action = 'schoolmanagement/create'";
         $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE permissions set description = 'Create a course' WHERE action = 'facultymanagement/create'";
+        $altersql = "UPDATE permissions set description = '" . $string['permcreatefaculty'] . "' WHERE action = 'facultymanagement/create'";
         $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE permissions set description = 'Create a user' WHERE action = 'usermanagement/create'";
+        $altersql = "UPDATE permissions set description = '" . $string['permcreateuser'] . "' WHERE action = 'usermanagement/create'";
         $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE permissions set description = 'Create a module' WHERE action = 'modulemanagement/create'";
+        $altersql = "UPDATE permissions set description = '" . $string['permcreatemodule'] . "' WHERE action = 'modulemanagement/create'";
         $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE permissions set description = 'Create an assessment' WHERE action = 'assessmentmanagement/create'";
+        $altersql = "UPDATE permissions set description = '" . $string['permcreateassessment'] . "' WHERE action = 'assessmentmanagement/create'";
         $updater_utils->execute_query($altersql, true);
-        
+        $altersql = "UPDATE permissions set description = '" . $string['permdeletecourse'] . "' WHERE action = 'coursemanagement/delete'";
+        $updater_utils->execute_query($altersql, true);
+        $altersql = "UPDATE permissions set description = '" . $string['permdeleteschool'] . "' WHERE action = 'schoolmanagement/delete'";
+        $updater_utils->execute_query($altersql, true);
+        $altersql = "UPDATE permissions set description = '" . $string['permdeletefaculty'] . "' WHERE action = 'facultymanagement/delete'";
+        $updater_utils->execute_query($altersql, true);
+        $altersql = "UPDATE permissions set description = '" . $string['permdeleteuser'] . "' WHERE action = 'usermanagement/delete'";
+        $updater_utils->execute_query($altersql, true);
+        $altersql = "UPDATE permissions set description = '" . $string['permdeletemodule'] . "' WHERE action = 'modulemanagement/delete'";
+        $updater_utils->execute_query($altersql, true);
+        $altersql = "UPDATE permissions set description = '" . $string['permdeleteassessment'] . "' WHERE action = 'assessmentmanagement/delete'";
+        $updater_utils->execute_query($altersql, true);
+        $altersql = "UPDATE permissions set description = '" . $string['permenrol'] . "' WHERE action = 'modulemanagement/enrol'";
+        $updater_utils->execute_query($altersql, true);
+        $altersql = "UPDATE permissions set description = '" . $string['permunenrol'] . "' WHERE action = 'modulemanagement/unenrol'";
+        $updater_utils->execute_query($altersql, true);
+        $altersql = "UPDATE permissions set description = '" . $string['permscheduleassessment'] . "' WHERE action = 'assessmentmanagement/schedule'";
+        $updater_utils->execute_query($altersql, true);
+        $altersql = "UPDATE permissions set description = '" . $string['permgradebook'] . "' WHERE action = 'gradebook'";
+        $updater_utils->execute_query($altersql, true);
+        $updater_utils->execute_query($altersql, true);
         // New type column in config type.
         $altersql = "ALTER TABLE `config` ADD COLUMN `type` VARCHAR(10) NULL AFTER `value`";
         $updater_utils->execute_query($altersql, true);

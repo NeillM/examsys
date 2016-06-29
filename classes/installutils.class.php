@@ -606,7 +606,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
    * Load default data needed for rogo to function
    */
   static function loadData() {
-    global $timezone_array;
+    global $string, $timezone_array;
     // Add 3 academic sessions to the the new user started.
     $calendaryear = date('Y');
     $previouscalendaryear = date('Y') - 1;
@@ -622,28 +622,28 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $insert->execute();
     $insert->close();
     // Add user psermissions.
-    $permissions = array('assessmentmanagement/create' => 'Create an assessment',
-        'assessmentmanagement/update' => 'Update an assessment',
-        'assessmentmanagement/delete' => 'Delete a paper',
-        'assessmentmanagement/schedule' => 'Schedule a summative assessment',
-        'gradebook' => 'Gradebook',
-        'modulemanagement/create' => 'Create a module',
-        'modulemanagement/update' => 'Update a module',
-        'modulemanagement/delete' => 'Delete a module',
-        'modulemanagement/enrol' => 'Enrol Users onto a module',
-        'modulemanagement/unenrol' => 'UnEnrol Users from a module',
-        'usermanagement/create' => 'Create a user',
-        'usermanagement/update' => 'Update a user',
-        'usermanagement/delete' => 'Delete a user',
-        'coursemanagement/create' => 'Create a course',
-        'coursemanagement/delete' => 'Delete a course',
-        'coursemanagement/update' => 'Update a course',
-        'schoolmanagement/create' => 'Create a school',
-        'schoolmanagement/delete' => 'Delete a school',
-        'schoolmanagement/update' => 'Update a school',
-        'facultymanagement/create' => 'Create a faculty',
-        'facultymanagement/delete' => 'Delete a faculty',
-        'facultymanagement/update' => 'Update a faculty');
+    $permissions = array('assessmentmanagement/create' => $string['permcreateassessment'],
+        'assessmentmanagement/update' => $string['permupdateassessment'],
+        'assessmentmanagement/delete' => $string['permdeleteassessment'],
+        'assessmentmanagement/schedule' => $string['permscheduleassessment'],
+        'gradebook' => $string['permgradebook'],
+        'modulemanagement/create' => $string['permcreatemodule'],
+        'modulemanagement/update' => $string['permupdatemodule'],
+        'modulemanagement/delete' => $string['permdeletemodule'],
+        'modulemanagement/enrol' => $string['permenrol'],
+        'modulemanagement/unenrol' => $string['permunenrol'],
+        'usermanagement/create' => $string['permcreateuser'],
+        'usermanagement/update' => $string['permupdateuser'],
+        'usermanagement/delete' => $string['permdeleteuser'],
+        'coursemanagement/create' => $string['permcreatecourse'],
+        'coursemanagement/delete' => $string['permdeletecourse'],
+        'coursemanagement/update' => $string['permupdatecourse'],
+        'schoolmanagement/create' => $string['permcreateschool'],
+        'schoolmanagement/delete' => $string['permdeleteschool'],
+        'schoolmanagement/update' => $string['permupdateschool'],
+        'facultymanagement/create' => $string['permcreatefaculty'],
+        'facultymanagement/delete' => $string['permdeletefaculty'],
+        'facultymanagement/update' => $string['permupdatefaculty']);
     foreach ($permissions as $permission => $description) {
         $insert = self::$db->prepare("INSERT INTO permissions (action, description) VALUES (?, ?)");
         $insert->bind_param('ss', $permission, $description);
@@ -660,10 +660,10 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         '301-400', '401-500'));
     $configObject = Config::get_instance();
     $configObject->set_db_object(self::$db);
-    $configObject->set_setting('timezones', $encoded_timezones);
-    $configObject->set_setting('cohort_sizes', $encoded_cohorts);
-    $configObject->set_setting('max_duration', 779);
-    $configObject->set_setting('max_sittings', 6);
+    $configObject->set_setting('timezones', $encoded_timezones, 'json');
+    $configObject->set_setting('cohort_sizes', $encoded_cohorts, 'json');
+    $configObject->set_setting('max_duration', 779, 'integer');
+    $configObject->set_setting('max_sittings', 6, 'integer');
   }
   
   /**
