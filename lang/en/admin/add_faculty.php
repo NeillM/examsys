@@ -18,4 +18,5 @@ $string['addfaculty'] = 'Add Faculty';
 $string['facultywarning'] = 'Faculty not unique. Please choose a different code or name.';
 $string['code'] = 'Faculty Code';
 $string['name'] = 'Name';
+$string['externalid'] = 'External ID';
 ?>

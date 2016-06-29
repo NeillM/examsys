@@ -28,4 +28,5 @@ $string['codecourse'] = 'Please enter a code for the course.';
 $string['titlecourse'] = 'Please enter a title for the course.';
 $string['importcourses'] = 'Import courses from SMS';
 $string['importcoursestooltip'] = 'Sync Courses with the connected Student Management System';
+$string['externalid'] = 'External ID';
 ?>

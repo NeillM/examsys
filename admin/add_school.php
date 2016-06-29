@@ -32,6 +32,7 @@ if (isset($_POST['submit'])) {
   $school = check_var('school', 'POST', true, false, true);
   $faculty = check_var('facultyID', 'POST', true, false, true);
   $code = check_var('code', 'POST', false, false, true);
+  $externalid = check_var('externalid', 'POST', false, false, true);
   if (!is_null($code)) {
     $exists = SchoolUtils::get_schoolid_by_code($code, $mysqli);
   } else {
@@ -40,7 +41,7 @@ if (isset($_POST['submit'])) {
     }
   }
   if ($exists === false) {
-    $insert_id = SchoolUtils::add_school($faculty, $school, $mysqli, $code);
+    $insert_id = SchoolUtils::add_school($faculty, $school, $mysqli, $code, $externalid);
     header("location: list_schools.php");
     exit();
   }
@@ -135,6 +136,7 @@ $result->close();
     ?>
     </select></td></tr>
     <tr><td class="field"><?php echo $string['code'] ?></td><td><input type="text" size="30" maxlength="30" name="code" value=""/></td></tr>
+    <tr><td class="field"><?php echo $string['externalid'] ?></td><td><input type="text" size="30" maxlength="50" name="externalid" value=""></td></tr>
     </table>
     <p><input type="submit" class="ok" name="submit" value="<?php echo $string['add'] ?>" /><input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" /></p>
   </form>

@@ -23,6 +23,7 @@
 */
 
 require '../include/sysadmin_auth.inc';
+require_once '../include/errors.inc';
 
 $unique_course = true;
 if (isset($_POST['submit'])) {
@@ -40,7 +41,8 @@ if (isset($_POST['submit']) and $unique_course == true) {
   $tmp_school = $_POST['school'];
   $tmp_course = trim($_POST['course']);
   $tmp_description = trim($_POST['description']);
-  CourseUtils::add_course((int)$tmp_school, $tmp_course, $tmp_description, null, $mysqli);
+  $externalid = check_var('externalid', 'POST', false, false, true);
+  CourseUtils::add_course((int)$tmp_school, $tmp_course, $tmp_description, $externalid, $mysqli);
   header("location: list_courses.php");
   exit();
 } else {
@@ -132,6 +134,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
       $result->close();
     ?>
     </select></td></tr>
+    <tr><td class="field"><?php echo $string['externalid'] ?></td><td><input type="text" size="30" maxlength="50" name="externalid" value=""></td></tr>
     </table>
     <p><input type="submit" class="ok" name="submit" value="<?php echo $string['add'] ?>"><input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" /></p>
   </form>

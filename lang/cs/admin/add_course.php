@@ -28,4 +28,5 @@ $string['codecourse'] = 'Zadejte, prosím, Identifikátor kurzu.';
 $string['titlecourse'] = 'Zadejte, prosím, Název kurzu.';
 $string['importcourses'] = 'Import courses from SMS';
 $string['importcoursestooltip'] = 'Sync Courses with the connected Student Management System';
+$string['externalid'] = 'External ID';
 ?>

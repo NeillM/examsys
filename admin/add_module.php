@@ -23,6 +23,7 @@
 */
 
 require_once '../include/sysadmin_auth.inc';
+require_once '../include/errors.inc';
 
 $SMS = SMSutils::GetSmsUtils();
 $cfg_sms_sources = array();
@@ -70,6 +71,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   if (isset($_POST['stdset']))    $stdset = true;
   if (isset($_POST['mapping']))   $mapping = true;
   if (isset($_POST['schoolid']))  $schoolid = $_POST['schoolid'];
+  $externalid = check_var('externalid', 'POST', false, false, true);
   if (isset($_POST['vle_api'])) {
     $vle_data = $_POST['vle_api'];
     if ($vle_data == '') {
@@ -105,7 +107,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 
   $ebel_grid_template = $_POST['ebel_grid_template'];
 
-  $modID = module_utils::add_modules($modulecode, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli, $sms_import, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start);
+  $modID = module_utils::add_modules($modulecode, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli, $sms_import, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start, $externalid);
 
   header("location: list_modules.php");
   exit();
@@ -252,6 +254,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     }
     $result->close();
     ?></select></td></tr>
+    <tr><td class="field"><?php echo $string['externalid'] ?></td><td><input type="text" size="30" maxlength="50" name="externalid" value=""></td></tr>
     <tr><td colspan="2" style="text-align:center; padding-top:12px"><input type="submit" class="ok" name="submit" value="<?php echo $string['add'] ?>"><input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" /></td></tr>
 		</table>
 	</form>
