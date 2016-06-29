@@ -105,7 +105,7 @@ Class module {
    *
    * @return boolean - True if module successfully added.
    */
-  public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0, $timed_exams = 0, $exam_q_feedback = 1, $add_team_members = 1, $map_level = 0, $academic_year_start = '07/01', $externalid = '') {
+  public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0, $timed_exams = 0, $exam_q_feedback = 1, $add_team_members = 1, $map_level = 0, $academic_year_start = '07/01', $externalid = null) {
     // We need the config object.
     $configObject = Config::get_instance();
     // Return false if missing madatory fields. schoolid is actually a number
@@ -678,7 +678,7 @@ Class module {
    * @param string $externalid - external system module id
    * @return bool true on success
    */
-  public static function update_module_by_id($id, $code, $name, $schoolid, $sms, $db, $externalid = '') {
+  public static function update_module_by_id($id, $code, $name, $schoolid, $sms, $db, $externalid = null) {
     $sql = "UPDATE modules SET
                moduleid = ?,
                fullname = ?,
