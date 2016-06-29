@@ -307,7 +307,7 @@ Class CourseUtils {
   }
   
   /**
-   * Compare the courses in the exterbnal system and rogo
+   * Compare the courses in the external system and rogo
    * @param array $external list of external system courses
    * @param mysqli $db db connection
    * @return array list of courses in rogo but not in external system
