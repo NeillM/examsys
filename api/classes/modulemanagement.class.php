@@ -63,6 +63,7 @@ class modulemanagement extends \api\abstractmanagement {
     public function enrol($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('user_not_enrolled', 'user_does_not_exist', 'user_already_enrolled'));
+        $userexists = false;
         if (isset($params['userid'])) {
             $userexists = \UserUtils::userid_exists($params['userid'], $this->db);
         } elseif (isset($params['studentid'])) {
@@ -115,6 +116,7 @@ class modulemanagement extends \api\abstractmanagement {
     public function unenrol($params, $userid) {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('user_not_unenrolled', 'user_does_not_exist', 'session_not_supplied'));
+        $userexists = false;
         if (isset($params['userid'])) {
             $userexists = \UserUtils::userid_exists($params['userid'], $this->db);
         } elseif (isset($params['studentid'])) {
@@ -181,11 +183,16 @@ class modulemanagement extends \api\abstractmanagement {
             if (!empty($params['faculty'])) {
                 $schoolid = \SchoolUtils::generate_school_id($params['school'], $params['faculty'], $this->db);
             } else {
-                if (!empty($params['schoolextid'])) {
-                    $data = array('statuscode' => $this->statuscodes['MODULE_INVALID_SCHOOL'], 'status' => $strings['school_not_supplied'], 'id' => null, 'externalid' => null);
-                    return $this->get_response($data, 'create', $params['nodeid']);
-                }
                 $faculty = false;
+            }
+        }
+        // Cheeck if module externalid in use.
+        $modextidinuse = false;
+        if (!empty($params['externalid'])) {
+            $moduleid = \module_utils::get_moduleid_from_externalid($params['externalid'], $this->db);
+            // module externalid in use already
+            if ($moduleid != false) {
+                $modextidinuse = true;
             }
         }
         // Cheeck if module code in use.
@@ -197,7 +204,7 @@ class modulemanagement extends \api\abstractmanagement {
                 $modcodeinuse = true;
             }
         }
-        if ($modcodeinuse) {
+        if ($modcodeinuse or $modextidinuse) {
             $details = \module_utils::get_full_details_by_ID($modid, $this->db);
             $data = array('statuscode' => $this->statuscodes['MODULE_ALREADY_EXISTS'], 'status' => $strings['module_already_exists'], 'id' => $modid, 'externalid' => $details['externalid']);
         } else {
@@ -235,30 +242,41 @@ class modulemanagement extends \api\abstractmanagement {
         $strings = $langpack->get_strings($this->langcomponent, array('module_not_updated', 'module_does_not_exist', 'faculty_not_supplied', 'school_not_supplied', 'module_nothing_to_update',
              'external_school_invalid', 'module_already_exists'));
         $faculty = true;
+        $moduleid = false;
         if (!empty($params['id'])) {
-            $moduleid = \module_utils::get_moduleid_from_id($params['id'], $this->db);
+            $moduleid = (bool) \module_utils::get_moduleid_from_id($params['id'], $this->db);
         } elseif (!empty($params['externalid'])) {
             // Try using external system id to update course.
-            $moduleid = \module_utils::get_moduleid_from_externalid($params['externalid'], $this->db);
+            $moduleid = (bool) \module_utils::get_moduleid_from_externalid($params['externalid'], $this->db);
             $params['id'] = $moduleid;
-        } else {
-            $params['id'] = false;
-            $moduleid = false;
         }
-        if ($moduleid) {
-            $details = \module_utils::get_full_details_by_ID($params['id'], $this->db);
-            // Check if anything has been updated.
-            if (!empty($params['modulecode'])) {
-                $params['moduleid'] = $params['modulecode'];
-            }
-            if (!empty($params['name'])) {
-                $params['fullname'] = $params['name'];
-            }
-            $checkparameter = array('moduleid', 'fullname', 'sms');
-            $change = $this->check_if_updated($checkparameter, $details, $params);
+        
+        if(!$moduleid) {
+            $data = array('statuscode' => $this->statuscodes['MODULE_DOES_NOT_EXIST'], 'status' => $strings['module_does_not_exist'], 'id' => null, 'externalid' => null);
+            return $this->get_response($data, 'update', $params['nodeid']);
         }
+
+        $details = \module_utils::get_full_details_by_ID($params['id'], $this->db);
+        // Check if anything has been updated.
+        if (!empty($params['modulecode'])) {
+            $params['moduleid'] = $params['modulecode'];
+        }
+        if (!empty($params['name'])) {
+            $params['fullname'] = $params['name'];
+        }
+        $checkparameter = array('moduleid', 'fullname', 'sms');
+        $change = $this->check_if_updated($checkparameter, $details, $params);
+
+        // Use external school/faculty id if provided
+        if (isset($params['schoolextid']) and $params['schoolextid'] !== '') {
+            // Get school id if school external id provided.
+            $schoolid = \SchoolUtils::get_schoolid_from_externalid($params['schoolextid'], $this->db);
+            if (!$schoolid) {
+                $data = array('statuscode' => $this->statuscodes['MODULE_SCHOOL_EXTID_INVALID'], 'status' => $strings['external_school_invalid'], 'id' => null, 'externalid' => null);
+                return $this->get_response($data, 'update', $params['nodeid']);
+            }
         // Get school id if school name provided.
-        if (!empty($params['school'])) {
+        } elseif (!empty($params['school'])) {
             $schoolid = \SchoolUtils::school_name_exists($params['school'], $this->db);
             if (!$schoolid) {
                 if (!empty($params['faculty'])) {
@@ -268,27 +286,17 @@ class modulemanagement extends \api\abstractmanagement {
                 }
             }
             // Mark something is to be updated.
-            if ($moduleid) {
-                if ($details['schoolid'] != $schoolid) {
-                    $change = true;
-                }
-            }
-        // Use external school/faculty id if provided
-        } elseif (isset($params['schoolextid']) and $params['schoolextid'] !== '') {
-            // Get school id if school external id provided.
-            $schoolid = \SchoolUtils::get_schoolid_from_externalid($params['schoolextid'], $this->db);
-            if (!$schoolid) {
-                $data = array('statuscode' => $this->statuscodes['MODULE_SCHOOL_EXTID_INVALID'], 'status' => $strings['external_school_invalid'], 'id' => null, 'externalid' => null);
-                return $this->get_response($data, 'update', $params['nodeid']);
+            if ($details['schoolid'] != $schoolid) {
+                $change = true;
             }
         // Get school id if school name not provided.
-        } elseif($moduleid) {
+        } else {
             $schoolid = $details['schoolid'];
         }
         
         // Cheeck if module code in use.
         $modcodeinuse = false;
-        if ($moduleid and !empty($params['modulecode'])) {
+        if (!empty($params['modulecode'])) {
             $modid = \module_utils::get_idMod($params['modulecode'], $this->db);
             // module code in use already
             if ($modid != false) {
@@ -303,42 +311,38 @@ class modulemanagement extends \api\abstractmanagement {
         } else {
             if ($faculty) {
                 // Get module code if not provided.
-                if ($moduleid and empty($params['modulecode'])) {
+                if (empty($params['modulecode'])) {
                     $params['modulecode'] = $details['moduleid'];
                 }
                 // Get name if not provided.
-                if ($moduleid and (empty($params['name']))) {
+                if ((empty($params['name']))) {
                     $params['name'] = $details['fullname'];
                 }
                 
                 // Get student management system if not provided.
-                if ($moduleid and (empty($params['sms']))) {
+                if ((empty($params['sms']))) {
                     $params['sms'] = $details['sms'];
                 }
                 // Get externalid if not provided.
-                if ($moduleid and (!isset($params['externalid']) or $params['externalid'] === '')) {
+                if ((!isset($params['externalid']) or $params['externalid'] === '')) {
                     $params['externalid'] = $details['externalid'];
                 }
                 // Update Module.
-                if ($moduleid) {
-                    if ($change) {
-                        // If faculty supplied, school must be supplied.
-                        if (empty($params['school']) and !empty($params['faculty'])) {
-                            $data = array('statuscode' => $this->statuscodes['MODULE_INVALID_SCHOOL'], 'status' => $strings['school_not_supplied'], 'id' => null, 'externalid' => null);
-                        } else {
-                            $update = \module_utils::update_module_by_id($params['id'], $params['modulecode'], 
-                                $params['name'], $schoolid, $params['sms'], $this->db, $details['externalid']);
-                            if ($update) {
-                                $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'externalid' => $details['externalid']);
-                            } else {
-                                $data = array('statuscode' => $this->statuscodes['MODULE_NOT_UPDATED'], 'status' => $strings['module_not_updated'], 'id' => null, 'externalid' => null);
-                            }
-                        }
+                if ($change) {
+                    // If faculty supplied, school must be supplied.
+                    if (empty($params['school']) and !empty($params['faculty'])) {
+                        $data = array('statuscode' => $this->statuscodes['MODULE_INVALID_SCHOOL'], 'status' => $strings['school_not_supplied'], 'id' => null, 'externalid' => null);
                     } else {
-                        $data = array('statuscode' => $this->statuscodes['MODULE_NOTHING_TO_UPDATE'], 'status' => $strings['module_nothing_to_update'], 'id' => null, 'externalid' => null);
+                        $update = \module_utils::update_module_by_id($params['id'], $params['modulecode'], 
+                            $params['name'], $schoolid, $params['sms'], $this->db, $details['externalid']);
+                        if ($update) {
+                            $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'externalid' => $details['externalid']);
+                        } else {
+                            $data = array('statuscode' => $this->statuscodes['MODULE_NOT_UPDATED'], 'status' => $strings['module_not_updated'], 'id' => null, 'externalid' => null);
+                        }
                     }
                 } else {
-                    $data = array('statuscode' => $this->statuscodes['MODULE_DOES_NOT_EXIST'], 'status' => $strings['module_does_not_exist'], 'id' => null, 'externalid' => null);
+                    $data = array('statuscode' => $this->statuscodes['MODULE_NOTHING_TO_UPDATE'], 'status' => $strings['module_nothing_to_update'], 'id' => null, 'externalid' => null);
                 }
             } else {
                 $data = array('statuscode' => $this->statuscodes['MODULE_INVALID_FACULTY'], 'status' => $strings['faculty_not_supplied'], 'id' => null, 'externalid' => null);
