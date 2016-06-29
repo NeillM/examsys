@@ -59,16 +59,16 @@ class schoolmanagement extends \api\abstractmanagement {
         $strings = $langpack->get_strings($this->langcomponent, array('school_not_created', 'school_already_exists', 'faculty_not_supplied' ,'external_faculty_invalid'));
         $faculty = true;
         // Get faculty if provided.
-        if (!empty($params['faculty'])) {
-            $facultyid = \FacultyUtils::facultyid_by_name($params['faculty'], $this->db);
-            if (!$facultyid) {
-                $facultyid = \FacultyUtils::add_faculty($params['faculty'], $this->db);
-            }
-        } elseif (isset($params['facultyextid']) and $params['facultyextid'] !== '') {
+        if (isset($params['facultyextid']) and $params['facultyextid'] !== '') {
             $facultyid = \FacultyUtils::get_facultyid_from_externalid($params['facultyextid'], $this->db);
             if (!$facultyid) {
                 $data = array('statuscode' => $this->statuscodes['SCHOOL_FACULTY_EXTID_INVALID'], 'status' => $strings['external_faculty_invalid'], 'id' => null, 'externalid' => null);
                 return $this->get_response($data, 'create', $params['nodeid']);
+            }
+        } elseif (!empty($params['faculty'])) {
+            $facultyid = \FacultyUtils::facultyid_by_name($params['faculty'], $this->db);
+            if (!$facultyid) {
+                $facultyid = \FacultyUtils::add_faculty($params['faculty'], $this->db);
             }
         } else {
             $faculty = false;
@@ -86,6 +86,9 @@ class schoolmanagement extends \api\abstractmanagement {
                 $schoolid = \SchoolUtils::get_schoolid_by_code($params['code'], $this->db);
             } else {
                 $schoolid = \SchoolUtils::get_school_id_by_name($params['name'], $this->db);
+            }
+            if (!empty($params['externalid'])) {
+                $schoolid = \SchoolUtils::get_schoolid_from_externalid($params['externalid'], $this->db);
             }
             if (!$schoolid) {
                 $id = \SchoolUtils::add_school($facultyid, $params['name'], $this->db, $params['code'], $params['externalid']);
@@ -131,48 +134,45 @@ class schoolmanagement extends \api\abstractmanagement {
             // Check if anything has been updated.
             $checkparameter = array('name', 'code');
             $change = $this->check_if_updated($checkparameter, $details, $params);
+        } else {
+            $data = array('statuscode' => $this->statuscodes['SCHOOL_DOES_NOT_EXIST'], 'status' => $strings['school_does_not_exist'], 'id' => null, 'externalid' => null);
+            return $this->get_response($data, 'update', $params['nodeid']);
         }
         
         // Get name if not provided.
-        if ($schoolid and (empty($params['name']))) {
+        if (empty($params['name'])) {
             if (!isset($params['name'])) {
                 $params['name'] = $details['name'];
             }
         }
         
         // Get code if not provided.
-        if ($schoolid and (empty($params['code']))) {
-            if (!isset($params['code'])) {
-                $params['code'] = $details['code'];
-            }
+        if (!isset($params['code'])) {
+            $params['code'] = $details['code'];
         }
         
         // Get faculty if provided.
-        if (!empty($params['faculty'])) {
-            $facultyid = \FacultyUtils::facultyid_by_name($params['faculty'], $this->db);
-            if (!$facultyid) {
-                $facultyid = \FacultyUtils::add_faculty($params['faculty'], $this->db);
-            }
-            // Mark something is to be updated.
-            if ($schoolid) {
-                if ($details['faculty'] != $facultyid) {
-                    $change = true;
-                }
-            }
-        } elseif (!empty($params['facultyextid'])) {
+        if (!empty($params['facultyextid'])) {
             $facultyid = \FacultyUtils::get_facultyid_from_externalid($params['facultyextid'], $this->db);
             if (!$facultyid) {
                 $data = array('statuscode' => $this->statuscodes['SCHOOL_FACULTY_EXTID_INVALID'], 'status' => $strings['external_faculty_invalid'], 'id' => null, 'externalid' => null);
                 return $this->get_response($data, 'update', $params['nodeid']);
             }
             // Mark something is to be updated.
-            if ($schoolid) {
-                if ($details['faculty'] != $facultyid) {
-                    $change = true;
-                }
+            if ($details['faculty'] != $facultyid) {
+                $change = true;
+            }
+        } elseif (!empty($params['faculty'])) {
+            $facultyid = \FacultyUtils::facultyid_by_name($params['faculty'], $this->db);
+            if (!$facultyid) {
+                $facultyid = \FacultyUtils::add_faculty($params['faculty'], $this->db);
+            }
+            // Mark something is to be updated.
+            if ($details['faculty'] != $facultyid) {
+                $change = true;
             }
         // Get faculty if not provided.           
-        } elseif ($schoolid and !isset($params['faculty'])) {
+        } elseif (!isset($params['faculty'])) {
             $facultyid = $details['faculty'];
         } else {
             $faculty = false;
@@ -180,19 +180,15 @@ class schoolmanagement extends \api\abstractmanagement {
         
         if ($faculty) {        
             // Update school.
-            if ($schoolid) {
-                if ($change) {
-                    $update = \SchoolUtils::update_school($schoolid, $facultyid, $params['name'], $params['code'], $details['externalid'], $this->db);
-                    if ($update) {
-                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $schoolid, 'externalid' => $details['externalid']);
-                    } else {
-                        $data = array('statuscode' => $this->statuscodes['SCHOOL_NOT_UPDATED'], 'status' => $strings['school_not_updated'], 'id' => null, 'externalid' => null);
-                    }
+            if ($change) {
+                $update = \SchoolUtils::update_school($schoolid, $facultyid, $params['name'], $params['code'], $details['externalid'], $this->db);
+                if ($update) {
+                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $schoolid, 'externalid' => $details['externalid']);
                 } else {
-                    $data = array('statuscode' => $this->statuscodes['SCHOOL_NOTHING_TO_UPDATE'], 'status' => $strings['school_nothing_to_update'], 'id' => null, 'externalid' => null);
+                    $data = array('statuscode' => $this->statuscodes['SCHOOL_NOT_UPDATED'], 'status' => $strings['school_not_updated'], 'id' => null, 'externalid' => null);
                 }
             } else {
-                $data = array('statuscode' => $this->statuscodes['SCHOOL_DOES_NOT_EXIST'], 'status' => $strings['school_does_not_exist'], 'id' => null, 'externalid' => null);
+                $data = array('statuscode' => $this->statuscodes['SCHOOL_NOTHING_TO_UPDATE'], 'status' => $strings['school_nothing_to_update'], 'id' => null, 'externalid' => null);
             }
         } else {
             $data = array('statuscode' => $this->statuscodes['SCHOOL_FACULTY_INVALID'], 'status' => $strings['faculty_not_supplied'], 'id' => null, 'externalid' => null);
