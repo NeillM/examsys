@@ -32,7 +32,7 @@ abstract class plugins_sms extends \plugins\plugins {
      * Type of the plugin.
      * @var string
      */
-    protected $plugin_type = 'sms';
+    protected $plugin_type = 'SMS';
     /**
      * Get all enrolments for academic session
      * @params integer $session academic session to sync enrolments with
