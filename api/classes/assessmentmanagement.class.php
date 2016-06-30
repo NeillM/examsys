@@ -160,9 +160,13 @@ class assessmentmanagement extends \api\abstractmanagement {
             $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_MODULES'], 'status' => $strings['paper_module_error'], 'id' => null);
         } else {
             // Check labs.
-            $checklabs = $this->check_labs($params['labs']);
-            $labs = $checklabs[0];
-            $error += $checklabs[1];
+            if (!empty($params['labs'])) {
+                $checklabs = $this->check_labs($params['labs']);
+                $labs = $checklabs[0];
+                $error += $checklabs[1];
+            } else {
+                $labs = '';
+            }
             
             if (empty($params['duration'])) {
                 $params['duration'] = '';

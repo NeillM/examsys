@@ -3,7 +3,7 @@ schools:
     id: 1
     school: "test update school"
     facultyID: 1
-    code: "TST"
+    code: null
     externalid: "123456"
   -
     id: 2

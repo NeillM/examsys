@@ -48,9 +48,9 @@ class schoolutilstest extends unittestdatabase {
      */
     public function test_update_school() {
         // Check successful update.
-        $this->assertTrue(SchoolUtils::update_school(1, 1, 'test update school', 'TST', '123456', $this->db));
+        $this->assertTrue(SchoolUtils::update_school(1, 1, 'test update school', null, '123456', $this->db));
         // Check unsuccessful update - duplicate name.
-        $this->assertFalse(SchoolUtils::update_school(2, 1, 'test update school', 'TST', '123456', $this->db));
+        $this->assertFalse(SchoolUtils::update_school(2, 1, 'test update school', null, '123456', $this->db));
         // Check unsuccessful update - no school supplied.
         $this->assertFalse(SchoolUtils::update_school(2, 1, '', 'TST2', '678912', $this->db));
         // Check unsuccessful update - no faculty supplied.
