@@ -247,8 +247,8 @@ class modulemanagement extends \api\abstractmanagement {
             $moduleid = (bool) \module_utils::get_moduleid_from_id($params['id'], $this->db);
         } elseif (!empty($params['externalid'])) {
             // Try using external system id to update course.
-            $moduleid = (bool) \module_utils::get_id_from_externalid($params['externalid'], $this->db);
-            $params['id'] = $moduleid;
+            $params['id'] = \module_utils::get_id_from_externalid($params['externalid'], $this->db);;
+            $moduleid = (bool) $params['id'];
         }
         
         if(!$moduleid) {
