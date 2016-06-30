@@ -196,12 +196,7 @@ Class FacultyUtils {
   */
   static function update_faculty($id, $faculty, $code, $externalid, $db) {
     // Check if code already in use.
-    if ($code != '') {
-      $facultyid = FacultyUtils::get_facultyid_by_code($code, $db);
-      if ($facultyid !== false and $facultyid != $id) {
-          return false;
-        }
-    } else {
+    if (is_null($code)) {
         // Check if name already in use.
         $facultyid = FacultyUtils::facultyid_by_name($faculty, $db);
         if ($facultyid !== false and $facultyid != $id) {

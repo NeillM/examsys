@@ -41,12 +41,6 @@ Class SchoolUtils {
         if ($facultyID === '' or $school === '') {
           return false;
         }
-        if ($code != '') {
-            $schoolID = SchoolUtils::get_schoolid_by_code($code, $db);
-            if ($schoolID !== false) {
-              return $schoolID;
-            }
-        }
         $result = $db->prepare("INSERT INTO schools(school, facultyID, code, externalid) VALUES (?, ?, ?, ?)");
         $result->bind_param('siss', $school, $facultyID, $code, $externalid);
         $result->execute();
@@ -294,9 +288,7 @@ Class SchoolUtils {
         if ($facultyID === '' or $school === '') {
           return false;
         }
-        if ($code != '') {
-          $schoolID = SchoolUtils::get_schoolid_by_code($code, $db);
-        } else {
+        if (is_null($code)) {
           $schoolID = SchoolUtils::school_name_exists($school, $db);
         }
         // Do not update if school code/name is in use, unless we are updating that school.
