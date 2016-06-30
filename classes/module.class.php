@@ -726,7 +726,7 @@ Class module {
    *
    * @return int|bool id of school or false
   */
-  static function get_moduleid_from_externalid($externalid, $db) {
+  static function get_id_from_externalid($externalid, $db) {
     $result = $db->prepare("SELECT id FROM modules WHERE externalid = ? AND mod_deleted IS NULL");
     $result->bind_param('s', $externalid);
     $result->execute();
@@ -764,6 +764,18 @@ Class module {
     return $diff;
   }
   
+  /**
+   * Log enrolments and unenrolments into sms_imports table
+   * Note: the table amalgamates data on a daily basis
+   * @param integer $idMod module users were enrolled/unenrolled from
+   * @param integer $enrolements number of users enrolled
+   * @param string $enrolement_details list of users enrolled
+   * @param integer $deletions number of users unenrolled
+   * @param string $deletion_details list of users unenrolled
+   * @param string $import_type sms the import originated from
+   * @param integer $session acedemic year import is related to
+   * @param mysqli $db db connection
+   */
   static function log_sms_imports($idMod, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type, $session, $db) {
       $result = $db->prepare("INSERT INTO sms_imports VALUES (NULL, NOW(), ?, ?, ?, ?, ?, ?, ?)");
       $result->bind_param('sisisss', $idMod, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type, $session);

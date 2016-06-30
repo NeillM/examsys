@@ -81,7 +81,7 @@ class modulemanagement extends \api\abstractmanagement {
                 $modid = $params['moduleid'];
             } elseif (!empty($params['moduleextid'])) {
                 // Try using external system id to enrol.
-                $modid = \module_utils::get_moduleid_from_externalid($params['moduleextid'], $this->db);
+                $modid = \module_utils::get_id_from_externalid($params['moduleextid'], $this->db);
                 if ($modid === false) {
                     $modid = '';
                 }
@@ -128,7 +128,7 @@ class modulemanagement extends \api\abstractmanagement {
                 $modid = $params['moduleid'];
             } elseif (!empty($params['moduleextid'])) {
                 // Try using external system id to enrol.
-                $modid = \module_utils::get_moduleid_from_externalid($params['moduleextid'], $this->db);
+                $modid = \module_utils::get_id_from_externalid($params['moduleextid'], $this->db);
                 if ($modid === false) {
                     $modid = '';
                 }
@@ -189,7 +189,7 @@ class modulemanagement extends \api\abstractmanagement {
         // Cheeck if module externalid in use.
         $modextidinuse = false;
         if (!empty($params['externalid'])) {
-            $moduleid = \module_utils::get_moduleid_from_externalid($params['externalid'], $this->db);
+            $moduleid = \module_utils::get_id_from_externalid($params['externalid'], $this->db);
             // module externalid in use already
             if ($moduleid != false) {
                 $modextidinuse = true;
@@ -247,7 +247,7 @@ class modulemanagement extends \api\abstractmanagement {
             $moduleid = (bool) \module_utils::get_moduleid_from_id($params['id'], $this->db);
         } elseif (!empty($params['externalid'])) {
             // Try using external system id to update course.
-            $moduleid = (bool) \module_utils::get_moduleid_from_externalid($params['externalid'], $this->db);
+            $moduleid = (bool) \module_utils::get_id_from_externalid($params['externalid'], $this->db);
             $params['id'] = $moduleid;
         }
         
@@ -365,7 +365,7 @@ class modulemanagement extends \api\abstractmanagement {
             $moduleid = \module_utils::get_moduleid_from_id($params['id'], $this->db);
         } elseif (isset($params['externalid']) and $params['externalid'] !== '') {
             // Try using external system id to delete module.
-            $moduleid = \module_utils::get_moduleid_from_externalid($params['externalid'], $this->db);
+            $moduleid = \module_utils::get_id_from_externalid($params['externalid'], $this->db);
             $params['id'] = $moduleid;
         } else {
             $moduleid = false;
