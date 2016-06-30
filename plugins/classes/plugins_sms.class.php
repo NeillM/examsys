@@ -34,10 +34,18 @@ abstract class plugins_sms extends \plugins\plugins {
      */
     protected $plugin_type = 'sms';
     /**
-     * Get enrolments for academic session
+     * Get all enrolments for academic session
+     * @params integer $session academic session to sync enrolments with
+     * @params integer $externalid external system module id
+     */
+    abstract public function get_enrolments($session, $externalid = null);
+    /**
+     * Update module in an academic session
+     * Updates module details and enrolments
+     * @params integer $externalid external system module id
      * @params integer $session academic session to sync enrolments with
      */
-    abstract public function get_enrolments($session);
+    abstract public function update_module_enrolments($externalid, $session);
     /**
      * Get faculties/schools.
      */
@@ -48,6 +56,8 @@ abstract class plugins_sms extends \plugins\plugins {
     abstract public function get_courses();
     /**
      * Get modules.
+     * @params integer $externalid external system module id
+     * @params integer $session academic session to sync enrolments with
      */
-    abstract public function get_modules();
+    abstract public function get_modules($externalid = null, $session = null);
 }

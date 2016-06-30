@@ -137,6 +137,7 @@ Class module {
 
     $idMod = $db->insert_id;
     // Old style SMS enrolments.
+    // Note: New style SMS enrolments sync post module addition.
     if ($externalid == '') {
         $smsurl = $configObject->get('cfg_sms_url');
         // If sms import enabled on module and sms_api matches sms integration update enrolements.

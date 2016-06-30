@@ -109,6 +109,17 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 
   $modID = module_utils::add_modules($modulecode, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli, $sms_import, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start, $externalid);
 
+  // New sytle SMS enrolments.
+  $userObj = userObject::get_instance();
+  $mappingplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
+  if (count($mappingplugin_name) > 0) {
+    $smspluginns = 'plugins\SMS\\' . $mappingplugin_name[0] . '\\' . $mappingplugin_name[0];
+    $yearutils = new yearutils($mysqli);
+    $session = $yearutils->get_current_session();
+    $smsplugin = new $smspluginns($mysqli, $userObj->get_user_ID());
+    $smsplugin->update_module_enrolments($externalid, $session);
+  }
+  
   header("location: list_modules.php");
   exit();
 } else {
