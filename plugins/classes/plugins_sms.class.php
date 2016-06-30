@@ -60,4 +60,24 @@ abstract class plugins_sms extends \plugins\plugins {
      * @params integer $session academic session to sync enrolments with
      */
     abstract public function get_modules($externalid = null, $session = null);
+    /**
+     * Check if module import is supported by the plugin
+     * @return array|bool import url and translation strings, false  if module import supported
+     */
+    abstract public function supports_module_import();
+    /**
+     * Check if faculty/school import is supported by the plugin
+     * @return array|bool import url and translation strings, false  if faculty import supported
+     */
+    abstract public function supports_faculty_import();
+    /**
+     * Check if course import is supported by the plugin
+     * @return array|bool import url and translation strings, false  if course import supported
+     */
+    abstract public function supports_course_import();
+    /**
+     * Check if enorlment import is supported by the plugin
+     * @return array|bool import url and translation strings, false  if enrolment import supported
+     */
+    abstract public function supports_enrol_import();
 }

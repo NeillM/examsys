@@ -30,7 +30,5 @@ $string['studentcohort'] = 'Skupina studentů';
 $string['currentmodule'] = 'Aktuální Modul';	
 $string['moduleimports'] = 'Importy Modulu';	
 $string['importsummary'] = 'Přehled k Importu';
-$string['importmodules'] = 'Import modules from SMS';
-$string['importmodulestooltip']  = 'Sync Modules and Module Enrolments with the connected Student Management System';
 $string['externalid'] = 'External ID';
 ?>

@@ -71,15 +71,20 @@
 
 <?php
 if ($userObject->has_role(array('SysAdmin'))) {
-    $mappingplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
-    if (count($mappingplugin_name) > 0) {
+    $smsplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
+    foreach($smsplugin_name as $name) {
+        $smspluginns = 'plugins\SMS\\' . $name . '\\' . $name;
+        $smsplugin = new $smspluginns($mysqli, $userObject->get_user_ID());
+        $facultyimport = $smsplugin->supports_faculty_import();
+        if ($facultyimport !== false) {
 ?>
 <div id="menu1b">
     <div id="sms" class="menuitem">
-        <a class="help_tip" title="<?php echo $string['importfacultiestooltip'] ?>" href="../plugins/SMS/<?php echo $mappingplugin_name[0] ?>/admin/import_faculties.php"><img class="sidebar_icon" src="../artwork/sync_16.png" alt="" /><?php echo $string['importfaculties'] ?></a>
+        <a class="help_tip" title="<?php echo $facultyimport['tooltip'] ?>" href="<?php echo $facultyimport['url'] ?>"><img class="sidebar_icon" src="../artwork/sync_16.png" alt="" /><?php echo $facultyimport['blurb'] ?></a>
     </div>
 </div>
 <?php
+        }
     }
 }
 ?>

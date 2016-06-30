@@ -85,8 +85,8 @@ $next_academic_year = $yearutils->get_academic_session($next_session);
 <div id="menu2">
     <div class="menuitem"><a href="bulk_import_modules.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['bulkmoduleimport'] ?></a></div>
     <?php
-        $mappingplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
-        if ($configObject->get('cfg_sms_api') != '' or count($mappingplugin_name) > 0) {
+        $smsplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
+        if ($configObject->get('cfg_sms_api') != '' or count($smsplugin_name) > 0) {
     ?>
     <div class="menuitem"><a href="sms_import_summary.php"><img class="sidebar_icon" src="../artwork/shortcut_16.png" alt="<?php echo $string['importsummary']; ?>" /><?php echo $string['importsummary'] ?></a></div>
     <?php
@@ -103,11 +103,16 @@ $next_academic_year = $yearutils->get_academic_session($next_session);
 
     <?php
     if ($userObject->has_role(array('SysAdmin'))) {
-        if (count($mappingplugin_name) > 0) {
+        foreach($smsplugin_name as $name) {
+            $smspluginns = 'plugins\SMS\\' . $name. '\\' . $name;
+            $smsplugin = new $smspluginns($mysqli, $userObject->get_user_ID());
+            $moduleimport = $smsplugin->supports_module_import();
+            if ($moduleimport !== false) {
     ?>
-    <div id="sms" class="menuitem"><a class="help_tip" title="<?php echo $string['importmodulestooltip'] ?>" href="../plugins/SMS/<?php echo $mappingplugin_name[0] ?>/admin/import_modules.php?session=<?php echo $current_session ?>"><img class="sidebar_icon" src="../artwork/sync_16.png" alt="" /><?php echo $string['importmodules'] ?> (<?php echo $academic_year ?>)</a></div>
-    <div id="sms2" class="menuitem"><a class="help_tip" title="<?php echo $string['importmodulestooltip'] ?>" href="../plugins/SMS/<?php echo $mappingplugin_name[0] ?>/admin/import_modules.php?session=<?php echo $next_session ?>"><img class="sidebar_icon" src="../artwork/sync_16.png" alt="" /><?php echo $string['importmodules'] ?> (<?php echo $next_academic_year ?>)</a></div>
+    <div id="sms" class="menuitem"><a class="help_tip" title="<?php echo $moduleimport['tooltip'] ?>" href="<?php echo $moduleimport['url'] ?>?session=<?php echo $current_session ?>"><img class="sidebar_icon" src="../artwork/sync_16.png" alt="" /><?php echo $moduleimport['blurb'] ?> (<?php echo $academic_year ?>)</a></div>
+    <div id="sms2" class="menuitem"><a class="help_tip" title="<?php echo $moduleimport['tooltip'] ?>" href="<?php echo $moduleimport['url'] ?>?session=<?php echo $next_session ?>"><img class="sidebar_icon" src="../artwork/sync_16.png" alt="" /><?php echo $moduleimport['blurb'] ?> (<?php echo $next_academic_year ?>)</a></div>
     <?php
+            }
         }
     }
     ?>

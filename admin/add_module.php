@@ -111,14 +111,17 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 
   // New sytle SMS enrolments.
   $userObj = userObject::get_instance();
-  $mappingplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
-  if (count($mappingplugin_name) > 0) {
-    $smspluginns = 'plugins\SMS\\' . $mappingplugin_name[0] . '\\' . $mappingplugin_name[0];
-    $yearutils = new yearutils($mysqli);
-    $session = $yearutils->get_current_session();
-    $smsplugin = new $smspluginns($mysqli, $userObj->get_user_ID());
-    $smsplugin->update_module_enrolments($externalid, $session);
+  $smsplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
+  foreach($smsplugin_name as $name) {
+    $smspluginns = 'plugins\SMS\\' . $name. '\\' . $name;
+    if ($smsplugin->supports_module_import() !== false and $smsplugin->supports_enrol_import() !== false) {
+        $yearutils = new yearutils($mysqli);
+        $session = $yearutils->get_current_session();
+        $smsplugin = new $smspluginns($mysqli, $userObj->get_user_ID());
+        $smsplugin->update_module_enrolments($externalid, $session);
+    }
   }
+  
   
   header("location: list_modules.php");
   exit();

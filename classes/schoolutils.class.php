@@ -290,11 +290,12 @@ Class SchoolUtils {
         }
         if (is_null($code)) {
           $schoolID = SchoolUtils::school_name_exists($school, $db);
+          // Do not update if school name is in use, unless we are updating that school.
+          if ($schoolID !== false and $schoolID != $id) {
+            return false;
+          }
         }
-        // Do not update if school code/name is in use, unless we are updating that school.
-        if ($schoolID !== false and $schoolID != $id) {
-          return false;
-        }
+
         $result = $db->prepare("UPDATE schools set school = ?, facultyID = ?, code = ?, externalid = ? where id = ?");
         $result->bind_param('sissi', $school, $facultyID, $code, $externalid, $id);
         $result->execute();

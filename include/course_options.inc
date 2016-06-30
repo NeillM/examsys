@@ -60,15 +60,20 @@
 
 <?php
 if ($userObject->has_role(array('SysAdmin'))) {
-    $mappingplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
-    if (count($mappingplugin_name) > 0) {
+    $smsplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
+    foreach($smsplugin_name as $name) {
+        $smspluginns = 'plugins\SMS\\' . $name . '\\' . $name;
+        $smsplugin = new $smspluginns($mysqli, $userObject->get_user_ID());
+        $courseimport = $smsplugin->supports_course_import() ;
+        if ($courseimport !== false) {
 ?>
 <div id="menu1b">
     <div id="sms" class="menuitem">
-        <a class="help_tip" title="<?php echo $string['importcoursestooltip'] ?>" href="../plugins/SMS/<?php echo $mappingplugin_name[0] ?>/admin/import_courses.php"><img class="sidebar_icon" src="../artwork/sync_16.png" alt="" /><?php echo $string['importcourses'] ?></a>
+        <a class="help_tip" title="<?php echo $courseimport['tooltip'] ?>" href="<?php echo $courseimport['url'] ?>"><img class="sidebar_icon" src="../artwork/sync_16.png" alt="" /><?php echo $courseimport['blurb'] ?></a>
     </div>
 </div>
 <?php
+        }
     }
 }
 ?>
