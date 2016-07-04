@@ -3,12 +3,12 @@
 if ($updater_utils->check_version("6.2.0")) {
     if (!$updater_utils->has_updated('rogo1829_externalids')) {
         // courses.
-        $altersql = "ALTER TABLE courses ADD COLUMN `externalid` varchar(50) NULL DEFAULT NULL";
+        $altersql = "ALTER TABLE courses ADD COLUMN `externalid` varchar(255) NULL DEFAULT NULL";
         $updater_utils->execute_query($altersql, true);
         $altersql = "ALTER TABLE `courses` ADD UNIQUE INDEX `externalid` (`externalid`)";
         $updater_utils->execute_query($altersql, true);
         // faculty.
-        $altersql = "ALTER TABLE faculty ADD COLUMN `externalid` varchar(50) NULL DEFAULT NULL";
+        $altersql = "ALTER TABLE faculty ADD COLUMN `externalid` varchar(255) NULL DEFAULT NULL";
         $updater_utils->execute_query($altersql, true);
         $altersql = "ALTER TABLE `faculty` ADD UNIQUE INDEX `externalid` (`externalid`)";
         $updater_utils->execute_query($altersql, true);
@@ -17,7 +17,7 @@ if ($updater_utils->check_version("6.2.0")) {
         $altersql = "ALTER TABLE `faculty` ADD UNIQUE INDEX `code` (`code`)";
         $updater_utils->execute_query($altersql, true);
         // schools.
-        $altersql = "ALTER TABLE schools ADD COLUMN `externalid` varchar(50) NULL DEFAULT NULL";
+        $altersql = "ALTER TABLE schools ADD COLUMN `externalid` varchar(255) NULL DEFAULT NULL";
         $updater_utils->execute_query($altersql, true);
         $altersql = "ALTER TABLE `schools` ADD UNIQUE INDEX `externalid` (`externalid`)";
         $updater_utils->execute_query($altersql, true);
@@ -26,7 +26,7 @@ if ($updater_utils->check_version("6.2.0")) {
         $altersql = "ALTER TABLE `schools` ADD UNIQUE INDEX `code` (`code`)";
         $updater_utils->execute_query($altersql, true);
         // modules.
-        $altersql = "ALTER TABLE modules ADD COLUMN `externalid` varchar(50) NULL DEFAULT NULL";
+        $altersql = "ALTER TABLE modules ADD COLUMN `externalid` varchar(255) NULL DEFAULT NULL";
         $updater_utils->execute_query($altersql, true);
         $altersql = "ALTER TABLE `modules` ADD UNIQUE INDEX `externalid` (`externalid`)";
         $updater_utils->execute_query($altersql, true);
