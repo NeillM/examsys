@@ -22,6 +22,7 @@
 * @package
 */
 
+require_once '../../include/errors.inc';
 require_once 'lti_util.php';
 /**
  * Class to support LTI extends upon base LTI from IMS sample implimentation
@@ -128,38 +129,12 @@ class UoN_LTI extends BLTI {
       unset($_SESSION['_lti_context']);
       return;
     } else {
-      if ($this->parm['dbtype'] == 'mysql') {
-        $sql = 'SELECT * FROM ' . $this->parm['table'] . ' WHERE ' .
-          ($this->parm['key_column'] ? $this->parm['key_column'] : 'oauth_consumer_key') .
-          '=' .
-          "'" . mysqli_real_escape_string($oauth_consumer_key) . "'";
-        $result = mysqli_query($sql);
-        $num_rows = mysqli_num_rows($result);
-        if ($num_rows != 1) {
-          $this->message = "Your consumer is not authorized oauth_consumer_key = " . $oauth_consumer_key;
-          unset($_SESSION['_lti_context']);
-          return;
-        } else {
-          while ($row = mysqli_fetch_assoc($result)) {
-            $secret = $row[$this->parms['secret_column'] ? $this->parms['secret_column'] : 'secret'];
-            $context_id = $row[$this->parms['context_column'] ? $this->parms['context_column'] : 'context_id'];
-            if ($context_id) $this->context_id = $context_id;
-            $this->row = $row;
-            break;
-          }
-          if (!is_string($secret)) {
-            $this->message = "Could not retrieve secret oauth_consumer_key=" . $oauth_consumer_key;
-            unset($_SESSION['_lti_context']);
-            return;
-          }
-        }
-      } elseif ($this->parm['dbtype'] == 'mysqli') {
+      if ($this->parm['dbtype'] == 'mysqli') {
         if ($this->db->error) {
           try {
-            throw new Exception("MySQL error $mysqli->error <br /> Query:<br /> $query", $msqli->errno);
+            throw new Exception($string['showerror']);
           } catch (Exception $e) {
-            echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-            echo nl2br($e->getTraceAsString());
+            echo $string['showerror'] . "<br />";
           }
         }
 
@@ -360,10 +335,9 @@ class UoN_LTI extends BLTI {
       $db = $this->db;
       if ($db->error) {
         try {
-          throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
+          throw new Exception($string['showerror']);
         } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
+          echo $string['showerror'] . "<br />";
         }
       }
       $extra = '';
@@ -373,11 +347,10 @@ class UoN_LTI extends BLTI {
       $stmt = $this->db->prepare("SELECT * FROM " . $this->parm['table_prefix'] . "lti_keys $extra");
       if ($db->error) {
         try {
-          throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
+          throw new Exception($string['showerror']);
         }
         catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
+          echo $string['showerror'] . "<br />";
         }
       }
       $stmt->execute();
@@ -425,11 +398,10 @@ class UoN_LTI extends BLTI {
       $db = $this->db;
       if ($db->error) {
         try {
-          throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
+          throw new Exception($string['showerror']);
         }
         catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
+          echo $string['showerror'] . "<br />";
         }
       }
       $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_keys SET oauth_consumer_key = ?, secret = ?, context_id = ?, `name` = ? WHERE id = ?");
@@ -448,11 +420,10 @@ class UoN_LTI extends BLTI {
       $db = $this->db;
       if ($db->error) {
         try {
-          throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
+          throw new Exception($string['showerror']);
         }
         catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
+          echo $string['showerror'] . "<br />";
         }
       }
       $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_keys SET deleted = NOW() WHERE id = ?");
@@ -507,11 +478,10 @@ class UoN_LTI extends BLTI {
       $db = $this->db;
       if ($db->error) {
         try {
-          throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
+          throw new Exception($string['showerror']);
         }
         catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
+          echo $string['showerror'] . "<br />";
         }
       }
       $stmt = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_keys (oauth_consumer_key, secret,context_id, `name`) VALUES (?, ?, ?, ?)");
@@ -532,13 +502,10 @@ class UoN_LTI extends BLTI {
       $stmt = $this->db->prepare("SELECT lti_user_equ, updated_on FROM " . $this->parm['table_prefix'] . "lti_user WHERE lti_user_key = ?");
       if ($this->db->error) {
         try {
-          $a = $this->db->error;
-          $b = $this->db->errno;
-          throw new Exception("MySQL error $a <br /> Query:<br /> $query", $b);
+          throw new Exception($string['showerror']);
         }
         catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
+          echo $string['showerror'] . "<br />";
         }
       }
       $stmt->bind_param('s', $lti_user_key);
@@ -584,13 +551,10 @@ class UoN_LTI extends BLTI {
       $result = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_user set updated_on = NOW() WHERE lti_user_key = ?");
       if ($this->db->error) {
         try {
-          $a = $this->db->error;
-          $b = $this->db->errno;
-          throw new Exception("MySQL error $a <br /> Query:<br /> $query", $b);
+          throw new Exception($string['showerror']);
         }
         catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
+          echo $string['showerror'] . "<br />";
         }
       }
       $result->bind_param('s', $lti_user_key);
@@ -678,11 +642,9 @@ class UoN_LTI extends BLTI {
       $db=$this->db;
       if ($db->error) {
         try {
-          throw new Exception("MySQL error $db->error <br /> Query:<br /> ", $db->errno);
+          throw new Exception($string['showerror']);
         } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
-          exit();
+          echo $string['showerror'] . "<br />";
         }
       }
       $result->bind_param('ss', $lti_context_key, $c_internal_id);
@@ -709,11 +671,9 @@ class UoN_LTI extends BLTI {
       $db=$this->db;
       if ($db->error) {
         try {
-          throw new Exception("MySQL error $db->error <br /> Query:<br /> ", $db->errno);
+          throw new Exception($string['showerror']);
         } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
-          exit();
+          echo $string['showerror'] . "<br />";
         }
       }
       $stmt->bind_param('s', $lti_context_key);

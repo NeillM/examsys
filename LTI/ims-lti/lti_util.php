@@ -1,7 +1,7 @@
 <?php
 
 require_once 'OAuth.php';
-
+require_once '../../include/errors.inc';
 // Returns true if this is a Basic LTI message
 // with minimum values to meet the protocol
 function is_lti_request() {
@@ -67,13 +67,18 @@ class BLTI {
     } elseif (!is_array($parm)) {
       $this->message = 'Constructor requires a secret or database information.';
       return;
-    } else {
-      $sql = 'SELECT * FROM '.$parm['table'].' WHERE '.
-          ($parm['key_column'] ? $parm['key_column'] : 'oauth_consumer_key').
-          '='.
-          "'".mysqli_real_escape_string($oauth_consumer_key)."'";
-      $result = mysqli_query($sql);
-      $num_rows = mysqli_num_rows($result);
+    } else {      
+        
+      $key_column = $parm['key_column'] ? $parm['key_column'] : 'oauth_consumer_key';
+      $oauth_key = mysqli_real_escape_string($oauth_consumer_key);
+      $table = $parm['table'];
+      $sql = "SELECT * FROM  $table WHERE $key_column = ?";
+      $result = $mysqli->prepare($sql);
+      $result->bind_param('i', $oauth_key);
+      $result->execute();
+      $result->store_result();
+      $num_rows = $result->num_rows;
+      
       if ($num_rows != 1) {
         $this->message = 'Your consumer is not authorized oauth_consumer_key=' . $oauth_consumer_key;
         return;

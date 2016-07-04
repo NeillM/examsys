@@ -25,6 +25,8 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
+require_once '../include/errors.inc';
+
 class UserObject extends RogoStaticSingleton {
 
   protected static $inst = NULL;
@@ -829,14 +831,13 @@ class UserObject extends RogoStaticSingleton {
       $notice = UserNotices::get_instance();
       $notice->display_notice('Change DB user failed', $msg, '../artwork/exclamation_64.png', '#C00000', true, false);
       if ($this->db->error) {
-        try {
-          throw new Exception("MySQL error " . $this->db->error ."<br /> ", $this->db->errno);
-        } catch (Exception $e) {
-          echo "<p>Error No: " . $e->getCode() . " - " . $e->getMessage() . "</p>";
-          echo '<p>' . nl2br($e->getTraceAsString()) . '</p>';
-          echo "<body>\n</html>";
-          exit();
-        }
+          try {
+              throw new Exception($string['showerror']);
+          } catch (Exception $e) {
+              echo $string['showerror'] . "<br >";
+              echo "<body>\n</html>";
+              exit();
+          }
       }
     }
   }

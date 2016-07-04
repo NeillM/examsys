@@ -154,7 +154,7 @@ if (isset($_POST['Submit'])) {
 
       // Alter the prefix of any child folders.
       if ($mysqli->error) {
-        echo "<p class=\"error\">Folders Edit Error 2</p>\n<p>Query: " . $editProperties . "</p>\n<p>" . mysqli_error($link_id) . "</p>\n";
+        echo "<p class=\"error\">Folders Edit Error</p>\n<p>" . $string['showerror'] . "</p>\n";
         echo "</body>\n</html>\n";
         exit;
       }

@@ -23,6 +23,7 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
+require_once '../include/errors.inc';
 
 Class UserUtils {
 
@@ -111,12 +112,11 @@ Class UserUtils {
   static function insert_student_id($db, $studentid, $userid) {
     $result = $db->prepare("INSERT INTO sid VALUES(?, ?)");
     if ($db->error) {
-      try {
-        throw new Exception("MySQL error $db->error <br /> Query:<br /> ", $db->errno);
-      } catch (Exception $e) {
-        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-        echo nl2br($e->getTraceAsString());
-      }
+        try {
+            throw new Exception($string['showerror']);
+        } catch (Exception $e) {
+            echo $string['showerror'] . "<br >";
+        }
     }
     $result->bind_param('si', $studentid, $userid);
     $result->execute();

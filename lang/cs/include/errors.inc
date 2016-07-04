@@ -29,4 +29,5 @@ $string['fatalerrormsg1'] = 'Chybí povinná GET proměnná.';
 $string['fatalerrormsg2'] = 'Chybí povinná POST proměnná.';
 $string['fatalerrormsg3'] = 'Chybí povinná REQUEST proměnná.';
 $string['fatalerrorarray'] = 'Chybí proměnná v povinném Poli.';
+$string['showerror'] = 'System error';
 ?>

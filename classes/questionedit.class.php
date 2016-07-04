@@ -23,6 +23,9 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
+
+require_once '../include/errors.inc';
+
 Class QuestionEdit extends RogoObject {
 
   public $id = -1;
@@ -349,10 +352,9 @@ QUERY;
       $success = ($result->affected_rows > -1);
       if ($this->_mysqli->error) {
         try {
-          throw new Exception("MySQL error " . $this->_mysqli->error . "<br /> Query:<br /> $query", $this->_mysqli->errno);
+            throw new Exception($string['showerror']);
         } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
+            echo $string['showerror'] . "<br >";
         }
       }
       if ($success) {

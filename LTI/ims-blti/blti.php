@@ -2,6 +2,7 @@
 
 require_once 'OAuth.php';
 require_once 'TrivialOAuthDataStore.php';
+require_once '../include/errors.inc';
 
 // Returns true if this is a Basic LTI message
 // with minimum values to meet the protocol
@@ -33,11 +34,10 @@ class BLTI {
       $db = $parm['db'];
       if ($db->error) {
         try {
-          throw new Exception("0MySQL error $mysqli->error <br /> Query:<br /> $query", $msqli->errno);
+          throw new Exception($string['showerror']);
         }
         catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
+          echo $string['showerror'] . "<br />";
         }
       }
       $stmt = $db->prepare("UPDATE lti_keys set oauth_consumer_key=?, secret=?, context_id=? , `name`=? WHERE id=?");
@@ -52,11 +52,10 @@ class BLTI {
       $db = $parm['db'];
       if ($db->error) {
         try {
-          throw new Exception("0MySQL error $mysqli->error <br /> Query:<br /> $query", $db->errno);
+          throw new Exception($string['showerror']);
         }
         catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
+          echo $string['showerror'] . "<br />";
         }
       }
       $stmt = $db->prepare("INSERT INTO lti_keys (oauth_consumer_key, secret,context_id, `name`) VALUES (?, ?, ?, ?)");
@@ -115,32 +114,7 @@ class BLTI {
       return;
     } else {
       if (isset($parm['db'])) {
-        if ($parm['dbtype'] == 'mysql') {
-          $sql = 'SELECT * FROM ' . $parm['table'] . ' WHERE ' .
-            ($parm['key_column'] ? $parm['key_column'] : 'oauth_consumer_key') .
-            '=' .
-            "'" . mysqli_real_escape_string($oauth_consumer_key) . "'";
-          $result = mysqli_query($sql);
-          $num_rows = mysqli_num_rows($result);
-          if ($num_rows != 1) {
-            $this->message = "Your consumer is not authorized oauth_consumer_key=" . $oauth_consumer_key;
-            return;
-          } else {
-            while ($row = mysqli_fetch_assoc($result)) {
-              $secret = $row[$parms['secret_column'] ? $parms['secret_column'] : 'secret'];
-              $context_id = $row[$parms['context_column'] ? $parms['context_column'] : 'context_id'];
-              if ($context_id) $this->context_id = $context_id;
-              $this->row = $row;
-              break;
-            }
-            if (!is_string($secret)) {
-              $this->message = "Could not retrieve secret oauth_consumer_key=" . $oauth_consumer_key;
-              return;
-            }
-          }
-        }
-        elseif ($parm['dbtype'] == 'mysqli')
-        {
+        if ($parm['dbtype'] == 'mysqli') {
           $db = $parm['db'];
           if ($db->error) {
             try {

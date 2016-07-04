@@ -339,7 +339,10 @@ if (!isset($_POST['submit'])) {
               $outcomes = json_decode($_POST['outcomes'], true);
 
               $mappings = $mysqli->prepare("SELECT question_id, obj_id FROM relationships WHERE question_id = ? AND idMod = ?");
-              echo $mysqli->error;
+
+              if ($mysqli->error) {
+                  echo $string['showerror'];
+              }
               $mappings->bind_param('ii', $q_IDs[$i], $_GET['module']);
               $mappings->execute();
               $mappings->store_result();

@@ -301,11 +301,10 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
 
         if ($mysqli->error) {
           try {
-            throw new Exception("MySQL error $mysqli->error <br /> Query:<br /> ", $mysqli->errno);
+            throw new Exception($string['showerror']);
           }
           catch (Exception $e) {
-            echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-            echo nl2br($e->getTraceAsString());
+            echo $string['showerror'] . "<br />";
           }
         }
 
@@ -460,7 +459,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
         $bw_oldoid = 0;
         $result->bind_param('iiisiii', $nw_paperid, $nw_qid, $nw_mapid, $nw_calyr, $nw_oldid, $nw_oldpapid, $nw_oldoid);
         if ($mysqli->error) {
-          $error[] = 'mysqli error ' . $mysqli->error;
+          $error[] = $string['showerror'];
         }
         $i=0;
         foreach ($old_qids as $old_id) {
@@ -474,7 +473,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
             $nw_oldoid		= $oldmapid;
             $result->execute();
             if ($mysqli->error) {
-              $error[] = 'mysqli error ' . $mysqli->error;
+              $error[] = $string['showerror'];
             }
           }
           $i++;

@@ -24,6 +24,7 @@
 
   require '../include/sysadmin_auth.inc';
   require '../include/sidebar_menu.inc';
+  require_once '../include/errors.inc';
   set_time_limit (0);
 ?>
 <!DOCTYPE html>
@@ -65,7 +66,7 @@
     while ($table = $getTables->fetch_array(MYSQLI_NUM)) {
       if (isset($_POST[$table[0]]) and $_POST[$table[0]] == 1) {
         if (!$mysqli->query("OPTIMIZE TABLE " . $table[0])) {
-          echo "<div>" . $mysqli->errno . ": " . $mysqli->error . "</div>\n";
+          echo "<div>" . $string['showerror'] . "</div>\n";
         } else {
           echo "<div>" . $table[0] . " " . $string['optimized'] . "</div>\n";
         }

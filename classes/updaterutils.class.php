@@ -24,6 +24,8 @@
 * @package
 */
 
+require_once '../include/errors.inc';
+
 Class UpdaterUtils {
 
   private $mysqli;
@@ -291,10 +293,10 @@ Class UpdaterUtils {
       }
     } elseif ($this->mysqli->warning_count > 0) {
       if ($update_display) echo '</li>';
-      echo '<li class="warning">WARNING: ' . $sql;
+      echo '<li class="warning">WARNING: ' . $string['showerror'];
       $e = $this->mysqli->get_warnings();
       do {
-        echo "<br />Warning No: $e->errno: - $e->message\n";
+        echo "<br />Warning: " . $string['showerror'] . "\n";
       } while ($e->next());
       echo "</li>\n";
     } else {
@@ -302,11 +304,9 @@ Class UpdaterUtils {
       echo '<li class="error">ERROR: ' . $sql;
       if ($this->mysqli->error) {
         try {
-          $err = $this->mysqli->error;
-          $mess = $this->mysqli->errno;
-          throw new Exception("MySQL error $err", $mess);
+            throw new Exception($string['showerror']);
         } catch (Exception $e) {
-          echo "<br />Error No: " . $e->getCode() . " - " . $e->getMessage();
+            echo $string['showerror'] . "<br >";
         }
       }
       echo "</li>\n";
