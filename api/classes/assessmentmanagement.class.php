@@ -77,8 +77,6 @@ class assessmentmanagement extends \api\abstractmanagement {
                     } else {
                         $error[$lab['id']] = sprintf($langpack->get_string($this->langcomponent, 'paper_invalid_lab'), $lab['value']);
                     }
-                } else {
-                    $labsarray[] = '';
                 }
             }
         }
