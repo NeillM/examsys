@@ -87,11 +87,11 @@ if (isset($_POST['submit'])) {
     $result->close(); 
     
     $clientperms = array();
-    $result = $mysqli->prepare("SELECT action, description FROM permissions");
+    $result = $mysqli->prepare("SELECT action FROM permissions");
     $result->execute();
-    $result->bind_result($action, $description);
+    $result->bind_result($action);
     while ($result->fetch()) {
-        $clientperms[$description] = $action;
+        $clientperms[] = $action;
     }
     $result->close();
 }
@@ -146,8 +146,8 @@ $render->render_admin_content($breadcrumb, $lang);
             <tr><td class="field"><?php echo $string['uri'] ?></td><td><input type="text" size="80" maxlength="2000" id="uri" name="uri" value="" required /></td></tr>
             
             <?php
-                foreach ($clientperms as $description => $action) {
-                    echo "<tr><td class=\"field\">" . $string[$description] . "</td><td><input type=\"checkbox\" name=\"" . $action . "\"/></td></tr>"; 
+                foreach ($clientperms as $action) {
+                    echo "<tr><td class=\"field\">" . $string[$action] . "</td><td><input type=\"checkbox\" name=\"" . $action . "\"/></td></tr>"; 
                 }
             ?>
         </table>

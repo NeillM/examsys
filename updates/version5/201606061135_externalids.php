@@ -32,45 +32,16 @@ if ($updater_utils->check_version("6.2.0")) {
         $updater_utils->execute_query($altersql, true);
         
         // New API perms.
-        $insertsql = "INSERT INTO permissions (action, description) VALUES "
-            . "('coursemanagement/update', 'permupdatecourse'), "
-            . "('schoolmanagement/update', 'permupdateschool'), "
-            . "('facultymanagement/update', 'permupdatefaculty'), "
-            . "('modulemanagement/update', 'permupdatemodule'), "
-            . "('usermanagement/update', 'permupdateuser'), "
-            . "('assessmentmanagement/update', 'permupdateassessment')";
+        $insertsql = "INSERT INTO permissions (action) VALUES "
+            . "('coursemanagement/update'), "
+            . "('schoolmanagement/update'), "
+            . "('facultymanagement/update'), "
+            . "('modulemanagement/update'), "
+            . "('usermanagement/update'), "
+            . "('assessmentmanagement/update')";
         $updater_utils->execute_query($insertsql, true);
-        $altersql = "UPDATE permissions set description = 'permcreatecourse' WHERE action = 'coursemanagement/create'";
-        $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE permissions set description = 'permcreateschool' WHERE action = 'schoolmanagement/create'";
-        $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE permissions set description = 'permcreatefaculty' WHERE action = 'facultymanagement/create'";
-        $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE permissions set description = 'permcreateuser' WHERE action = 'usermanagement/create'";
-        $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE permissions set description = 'permcreatemodule' WHERE action = 'modulemanagement/create'";
-        $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE permissions set description = 'permcreateassessment' WHERE action = 'assessmentmanagement/create'";
-        $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE permissions set description = 'permdeletecourse' WHERE action = 'coursemanagement/delete'";
-        $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE permissions set description = 'permdeleteschool' WHERE action = 'schoolmanagement/delete'";
-        $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE permissions set description = 'permdeletefaculty' WHERE action = 'facultymanagement/delete'";
-        $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE permissions set description = 'permdeleteuser' WHERE action = 'usermanagement/delete'";
-        $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE permissions set description = 'permdeletemodule' WHERE action = 'modulemanagement/delete'";
-        $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE permissions set description = 'permdeleteassessment' WHERE action = 'assessmentmanagement/delete'";
-        $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE permissions set description = 'permenrol' WHERE action = 'modulemanagement/enrol'";
-        $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE permissions set description = 'permunenrol' WHERE action = 'modulemanagement/unenrol'";
-        $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE permissions set description = 'permscheduleassessment' WHERE action = 'assessmentmanagement/schedule'";
-        $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE permissions set description = 'permgradebook' WHERE action = 'gradebook'";
+        // Drop perms desc column.
+        $altersql = "ALTER TABLE permissions DROP COLUMN description";
         $updater_utils->execute_query($altersql, true);
         // New type column in config type.
         $altersql = "ALTER TABLE `config` ADD COLUMN `type` VARCHAR(10) NULL AFTER `value`";

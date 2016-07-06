@@ -622,31 +622,31 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $insert->execute();
     $insert->close();
     // Add user psermissions.
-    $permissions = array('assessmentmanagement/create' => 'permcreateassessment',
-        'assessmentmanagement/update' => 'permupdateassessment',
-        'assessmentmanagement/delete' => 'permdeleteassessment',
-        'assessmentmanagement/schedule' => 'permscheduleassessment',
-        'gradebook' => 'permgradebook',
-        'modulemanagement/create' => 'permcreatemodule',
-        'modulemanagement/update' => 'permupdatemodule',
-        'modulemanagement/delete' => 'permdeletemodule',
-        'modulemanagement/enrol' => 'permenrol',
-        'modulemanagement/unenrol' => 'permunenrol',
-        'usermanagement/create' => 'permcreateuser',
-        'usermanagement/update' => 'permupdateuser',
-        'usermanagement/delete' => 'permdeleteuser',
-        'coursemanagement/create' => 'permcreatecourse',
-        'coursemanagement/delete' => 'permdeletecourse',
-        'coursemanagement/update' => 'permupdatecourse',
-        'schoolmanagement/create' => 'permcreateschool',
-        'schoolmanagement/delete' => 'permdeleteschool',
-        'schoolmanagement/update' => 'permupdateschool',
-        'facultymanagement/create' => 'permcreatefaculty',
-        'facultymanagement/delete' => 'permdeletefaculty',
-        'facultymanagement/update' => 'permupdatefaculty');
-    foreach ($permissions as $permission => $description) {
-        $insert = self::$db->prepare("INSERT INTO permissions (action, description) VALUES (?, ?)");
-        $insert->bind_param('ss', $permission, $description);
+    $permissions = array('assessmentmanagement/create',
+        'assessmentmanagement/update',
+        'assessmentmanagement/delete',
+        'assessmentmanagement/schedule',
+        'gradebook',
+        'modulemanagement/create',
+        'modulemanagement/update',
+        'modulemanagement/delete',
+        'modulemanagement/enrol',
+        'modulemanagement/unenrol',
+        'usermanagement/create',
+        'usermanagement/update',
+        'usermanagement/delete',
+        'coursemanagement/create',
+        'coursemanagement/delete',
+        'coursemanagement/update',
+        'schoolmanagement/create',
+        'schoolmanagement/delete',
+        'schoolmanagement/update',
+        'facultymanagement/create',
+        'facultymanagement/delete',
+        'facultymanagement/update');
+    foreach ($permissions as $permission) {
+        $insert = self::$db->prepare("INSERT INTO permissions (action) VALUES (?)");
+        $insert->bind_param('s', $permission);
         $insert->execute();
         $insert->close();
     }
