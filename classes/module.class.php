@@ -746,11 +746,13 @@ Class module {
   /**
    * Compare the modules in the external system and rogo
    * @param array $external list of external system modules
+   * @param string $sms the external student management system that is the source of the modules
    * @param mysqli $db db connection
    * @return array list of modules in rogo but not in external system
    */
-  static function diff_external_modules_to_internal_modules($external, $db) {
-    $result = $db->prepare("SELECT externalid FROM modules WHERE externalid IS NOT NULL AND mod_deleted IS NULL");
+  static function diff_external_modules_to_internal_modules($external, $sms, $db) {
+    $result = $db->prepare("SELECT externalid FROM modules WHERE externalid IS NOT NULL AND sms = ? AND mod_deleted IS NULL");
+    $result->bind_param('s', $sms);
     $result->execute();
     $result->store_result();
     $result->bind_result($externalid);
