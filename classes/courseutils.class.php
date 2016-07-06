@@ -313,19 +313,41 @@ Class CourseUtils {
    * @return array list of courses in rogo but not in external system
    */
   static function diff_external_courses_to_internal_courses($external, $db) {
-    $result = $db->prepare("SELECT externalid FROM courses WHERE externalid IS NOT NULL AND deleted IS NULL");
+    $result = $db->prepare("SELECT id, externalid, deleted FROM courses WHERE externalid IS NOT NULL");
     $result->execute();
     $result->store_result();
-    $result->bind_result($externalid);
+    $result->bind_result($id, $externalid, $deleted);
     $diff = array();
     while ($result->fetch()) {
       // Mark for delete if not found in external list.
       if(!in_array($externalid, $external)) {
         $diff[] = $externalid;
+      } else {
+        // Restore if deleted in Rogo but found in external list.
+        if(!is_null($deleted)) {
+          self::restore_course($db, $id);
+        }
       }
     }
     $result->close();
     return $diff;
+  }
+  
+  /**
+   * Restore course from recycle bin
+   * @param mysqli $db db connection
+   * @param integer $id rogo id of course
+   * @return boolean true on success, false otherwise
+   */
+  static function restore_course($db, $id) {
+    $result = $db->prepare("UPDATE courses set deleted = NULL where id = ?");
+    $result->bind_param('i', $id);
+    $result->execute();
+    $result->close();
+    if ($db->errno != 0) {
+      return false;
+    }
+    return true;
   }
 }
 ?>

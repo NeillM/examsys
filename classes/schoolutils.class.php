@@ -374,18 +374,39 @@ Class SchoolUtils {
    * @return array list of schools in rogo but not in external system
    */
   static function diff_external_schools_to_internal_schools($external, $db) {
-    $result = $db->prepare("SELECT externalid FROM schools WHERE externalid IS NOT NULL AND deleted IS NULL");
+    $result = $db->prepare("SELECT id, externalid, deleted FROM schools WHERE externalid IS NOT NULL");
     $result->execute();
     $result->store_result();
-    $result->bind_result($externalid);
+    $result->bind_result($id, $externalid, $deleted);
     $diff = array();
     while ($result->fetch()) {
       // Mark for delete if not found in external list.
       if(!in_array($externalid, $external)) {
         $diff[] = $externalid;
+      } else {
+        // Restore if deleted in Rogo but found in external list.
+        if(!is_null($deleted)) {
+          self::restore_school($db, $id);
+        }
       }
     }
     $result->close();
     return $diff;
+  }
+  /**
+   * Restore school from recycle bin
+   * @param mysqli $db db connection
+   * @param integer $id rogo id of school
+   * @return boolean true on success, false otherwise
+   */
+  static function restore_school($db, $id) {
+    $result = $db->prepare("UPDATE schools set deleted = NULL where id = ?");
+    $result->bind_param('i', $id);
+    $result->execute();
+    $result->close();
+    if ($db->errno != 0) {
+      return false;
+    }
+    return true;
   }
 }

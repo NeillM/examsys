@@ -751,16 +751,21 @@ Class module {
    * @return array list of modules in rogo but not in external system
    */
   static function diff_external_modules_to_internal_modules($external, $sms, $db) {
-    $result = $db->prepare("SELECT externalid FROM modules WHERE externalid IS NOT NULL AND sms = ? AND mod_deleted IS NULL");
+    $result = $db->prepare("SELECT id, externalid, mod_deleted FROM modules WHERE externalid IS NOT NULL AND sms = ?");
     $result->bind_param('s', $sms);
     $result->execute();
     $result->store_result();
-    $result->bind_result($externalid);
+    $result->bind_result($id, $externalid, $deleted);
     $diff = array();
     while ($result->fetch()) {
       // Mark for delete if not found in external list.
       if(!in_array($externalid, $external)) {
         $diff[] = $externalid;
+      } else {
+        // Restore if deleted in Rogo but found in external list.
+        if(!is_null($deleted)) {
+          self::restore_module($db, $id);
+        }
       }
     }
     $result->close();
@@ -784,5 +789,22 @@ Class module {
       $result->bind_param('sisisss', $idMod, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type, $session);
       $result->execute();
       $result->close();
+  }
+  
+  /**
+   * Restore module from recycle bin
+   * @param mysqli $db db connection
+   * @param integer $id rogo id of module
+   * @return boolean true on success, false otherwise
+   */
+  static function restore_module($db, $id) {
+    $result = $db->prepare("UPDATE modules set mod_deleted = NULL where id = ?");
+    $result->bind_param('i', $id);
+    $result->execute();
+    $result->close();
+    if ($db->errno != 0) {
+      return false;
+    }
+    return true;
   }
 }
