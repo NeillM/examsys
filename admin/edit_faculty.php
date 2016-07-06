@@ -43,7 +43,9 @@ if (isset($_POST['submit'])) {
   } else {
     $logger = new Logger($mysqli);
     if ($details['name'] != $faculty) $logger->track_change('Faculty', $facultyID, $userObject->get_user_ID(), $details['name'], $faculty, $string['name']);
-    if ($details['code'] != $code) $logger->track_change('Faculty', $facultyID, $userObject->get_user_ID(), $details['code'], $code, $string['code']);
+    if ($details['code'] != $code) {
+      $logger->track_change('Faculty', $facultyID, $userObject->get_user_ID(), $details['code'], $code, $string['code']);
+    }
   ?>
 <!DOCTYPE html>
 <html>

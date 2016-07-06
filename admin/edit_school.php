@@ -62,7 +62,9 @@ if (isset($_POST['submit'])) {
       $logger = new Logger($mysqli);
       if ($school != $school_tmp)     $logger->track_change('School', $schoolid, $userObject->get_user_ID(), $school, $school_tmp, $string['name']);
       if ($curr_faculty != $faculty)  $logger->track_change('School', $schoolid, $userObject->get_user_ID(), $curr_faculty, $faculty, $string['faculty']);
-      if ($curr_code != $code)  $logger->track_change('School', $schoolid, $userObject->get_user_ID(), $curr_code, $code, $string['code']);
+      if ($curr_code != $code) {
+        $logger->track_change('School', $schoolid, $userObject->get_user_ID(), $curr_code, $code, $string['code']);
+      }
     }
 
     header("location: list_schools.php");
