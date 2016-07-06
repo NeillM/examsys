@@ -113,7 +113,7 @@ class facultymanagementtest extends unittestdatabase {
         return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "api" . DIRECTORY_SEPARATOR .  "facultymanagementTest" . DIRECTORY_SEPARATOR . $name . ".yml");
     }
     /**
-     * Test successful faculty creation
+     * Test successful faculty creation - external system faculty
      * @group api
      */
     public function test_create() {
@@ -123,6 +123,34 @@ class facultymanagementtest extends unittestdatabase {
         $faculty = new \api\facultymanagement($this->db);
         $userid = 1;
         $responsearray['externalid'] = "xyz";
+        $this->assertEquals($responsearray, $faculty->create($params, $userid));
+    }
+    /**
+     * Test successful faculty creation  - non external system faculty
+     * @group api
+     */
+    public function test_create2() {
+        $responsearray = $this->create_response_array();
+        $params = array(
+            "nodeid" => 1,
+            "name" => 'TEST3',
+            "code" => 'T3');
+        $faculty = new \api\facultymanagement($this->db);
+        $userid = 1;
+        $this->assertEquals($responsearray, $faculty->create($params, $userid));
+    }
+    /**
+     * Test successful faculty creation  - name exits but new code
+     * @group api
+     */
+    public function test_create3() {
+        $responsearray = $this->create_response_array();
+        $params = array(
+            "nodeid" => 1,
+            "name" => 'Test name',
+            "code" => 'T3');
+        $faculty = new \api\facultymanagement($this->db);
+        $userid = 1;
         $this->assertEquals($responsearray, $faculty->create($params, $userid));
     }
     /**
@@ -141,8 +169,26 @@ class facultymanagementtest extends unittestdatabase {
         $responsearray['externalid'] = "abcdef";
         $params = array(
             "nodeid" => 1,
-            "id" => 1,
             "name" => 'Test name');
+        $this->assertEquals($responsearray, $faculty->create($params, $userid));
+    }
+    /**
+     * Test faculty creation exception faculty exists (code exits)
+     * @group api
+     */
+    public function test_create_exception_faculty2() {
+        $responsearray = $this->create_response_array();
+        $params = $this->create_param_array();
+        $faculty = new \api\facultymanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 405;
+        $responsearray['status'] = 'Faculty already exists';
+        $responsearray['id'] = 1;
+        $responsearray['externalid'] = "abcdef";
+        $params = array(
+            "nodeid" => 1,
+            "name" => 'Test name',
+            "code" => 'TEST');
         $this->assertEquals($responsearray, $faculty->create($params, $userid));
     }
     /**
