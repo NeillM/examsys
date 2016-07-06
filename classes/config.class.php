@@ -418,7 +418,7 @@ class Config extends RogoStaticSingleton {
    * Get setting type from cache
    * @param string $component
    * @param string $setting
-   * @return string|array
+   * @return string|null setting or null if not found
    */
   protected function get_setting_type_from_cache($component, $setting) {
     if (is_string($component)) {
