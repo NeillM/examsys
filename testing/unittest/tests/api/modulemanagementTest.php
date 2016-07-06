@@ -202,6 +202,22 @@ class modulemanagementtest extends unittestdatabase {
         $this->assertEquals($responsearray, $module->create($params, $userid));
     }
     /**
+     * Test module creation exception module exists (duplicate externalid - empty string)
+     * @group api
+     */
+    public function test_create_exception_module2() {
+        $responsearray = $this->create_response_array();
+        $params = $this->create_param_array();
+        $module = new \api\modulemanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 505;
+        $responsearray['status'] = 'Module already exists';
+        $responsearray['id'] = 1;
+        $responsearray['externalid'] = '';
+        $params['externalid'] = '';
+        $this->assertEquals($responsearray, $module->create($params, $userid));
+    }
+    /**
      * Test module creation exception invalid faculty
      * @group api
      */

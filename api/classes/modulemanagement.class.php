@@ -186,27 +186,27 @@ class modulemanagement extends \api\abstractmanagement {
                 $faculty = false;
             }
         }
-        // Cheeck if module externalid in use.
+        // Check if module externalid in use.
         $modextidinuse = false;
-        if (!empty($params['externalid'])) {
-            $moduleid = \module_utils::get_id_from_externalid($params['externalid'], $this->db);
+        if (isset($params['externalid'])) {
+            $idMod = \module_utils::get_id_from_externalid($params['externalid'], $this->db);
             // module externalid in use already
-            if ($moduleid != false) {
+            if ($idMod != false) {
                 $modextidinuse = true;
             }
         }
-        // Cheeck if module code in use.
+        // Check if module code in use.
         $modcodeinuse = false;
-        if (!empty($params['modulecode'])) {
-            $modid = \module_utils::get_idMod($params['modulecode'], $this->db);
+        if (!$modextidinuse and !empty($params['modulecode'])) {
+            $idMod = \module_utils::get_idMod($params['modulecode'], $this->db);
             // module code in use already
-            if ($modid != false) {
+            if ($idMod != false) {
                 $modcodeinuse = true;
             }
         }
         if ($modcodeinuse or $modextidinuse) {
-            $details = \module_utils::get_full_details_by_ID($modid, $this->db);
-            $data = array('statuscode' => $this->statuscodes['MODULE_ALREADY_EXISTS'], 'status' => $strings['module_already_exists'], 'id' => $modid, 'externalid' => $details['externalid']);
+            $details = \module_utils::get_full_details_by_ID($idMod, $this->db);
+            $data = array('statuscode' => $this->statuscodes['MODULE_ALREADY_EXISTS'], 'status' => $strings['module_already_exists'], 'id' => $idMod, 'externalid' => $details['externalid']);
         } else {
             if ($faculty) {
                 // Create Module.
