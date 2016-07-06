@@ -102,7 +102,7 @@ class plugin_manager {
                 }
             }
             if ($changed) {
-                $config->set_setting('enabled_plugin', json_encode($newenabled), 'plugin_' . $type);
+                $config->set_setting('enabled_plugin', json_encode($newenabled), Config::JSON, 'plugin_' . $type);
             }
         } else {
             $newenabled = array();

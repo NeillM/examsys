@@ -63,20 +63,19 @@ if (isset($_POST['submit'])) {
         $type = $configObject->get_setting_type($plugin, $setting);
         if ($setting != "installed") {
             $new_value = check_var($setting, 'POST', false, false, true);
-            if ($type == 'password') {
+            if ($type == Config::PASSWORD) {
                 // Password settings are encrypted.
                 $encryp = new encryp();
                 $value = $encryp->mdecrypt_password($value);
-            } elseif ($type == 'boolean') {
-                if (is_null($new_value) and $value == 1) {
+            } elseif ($type == Config::BOOLEAN) {
+                if (empty($new_value)) {
                     $new_value = 0;
-                } elseif (!is_null($new_value) and $value == 0) {
+                } else {
                     $new_value = 1;
                 }
             }
-
             if ($value != $new_value) {
-                if ($type == 'password') {
+                if ($type == Config::PASSWORD) {
                     $new_value = $encryp->mcrypt_password($new_value);
                 }
                 $configObject->set_setting($setting, $new_value, $type, $plugin);
@@ -127,14 +126,14 @@ $render->render_admin_content($breadcrumb, $lang);
             foreach ($configObject->get_setting($plugin) as $setting => $value) {
                 $type = $configObject->get_setting_type($plugin, $setting);
                 if ($setting != "installed") {
-                    if ($type == 'boolean') {
+                    if ($type == Config::BOOLEAN) {
                         if ($value == true) {
                             $checked = "checked";
                         } else {
                             $checked = "";
                         }
                         echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting . "</label></td><td><input type=\"checkbox\" name=\"" . $setting . "\" id=\"" . $setting . "\"" . $checked . "/></td></tr>";
-                    } elseif ($type == 'password') {
+                    } elseif ($type == Config::PASSWORD) {
                         // Password settings need to be decrypted.
                         $encryp = new encryp();
                         $value = $encryp->mdecrypt_password($value);

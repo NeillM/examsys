@@ -51,6 +51,37 @@ class Config extends RogoStaticSingleton {
   
   /** The path to the phpunit config file relative to the root Rogo directory. */
   const PHP_UNIT_CONFIG_FILE = '/config/phpunit.xml';
+  
+  /**
+   * Config setting password type identifier
+   * @var string
+   */
+  const PASSWORD = 'password';
+  /**
+   * Config setting json type identifier
+   * @var string
+   */
+  const JSON = 'json';
+  /**
+   * Config setting string type identifier
+   * @var string
+   */
+  const STRING = 'string';
+  /**
+   * Config setting integer type identifier
+   * @var string
+   */
+  const INTEGER = 'integer';
+  /**
+   * Config setting boolean type identifier
+   * @var string
+   */
+  const BOOLEAN = 'boolean';
+  /**
+   * Config setting url type identifier
+   * @var string
+   */
+  const URL = 'url';
 
   function __toString() {
     return "ConfigObject!";
