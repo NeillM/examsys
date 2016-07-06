@@ -32,14 +32,17 @@ class usermanagement extends \api\abstractmanagement {
      */
     private $langcomponent = 'api/usermanagement';
     /**
+     * List of valid roles for students within Rogo that the API can assign.
      * @var array $studentroles
      */
     private static $studentroles = array('Student', 'Left', 'Graduate');
     /**
+     * List of valid roles for staff members within Rogo that the API can assign.
      * @var array $staffroles
      */
     private static $staffroles = array('Staff', 'Inactive Staff');
     /**
+     * List of valid staff member courses within Rogo that the API can assign.
      * @var array $staffcourses
      */
     private static $staffcourses = array('University Lecturer', 'NHS Lecturer');
@@ -94,7 +97,8 @@ class usermanagement extends \api\abstractmanagement {
     /**
      * Check role is valid.
      * @param string $params action parameters
-     * @return string|bool course student is enrolled on or staff type if staff, false on error
+     * @return string|bool course student is enrolled on or staff type if staff, false if staff member course is invalid,
+     * 'UNKNOWN if user role is invalid.
      */
     private function check_roles($params) {
         $roles = array_merge(self::$studentroles, self::$staffroles);
