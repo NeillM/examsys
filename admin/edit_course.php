@@ -38,25 +38,25 @@ $tmp_course = '';
 $result = $mysqli->prepare("SELECT schoolid, name, description, externalid FROM courses WHERE id = ?");
 $result->bind_param('i', $courseID);
 $result->execute();
-$result->bind_result($current_school, $name, $description, $current_externalid);
+$result->bind_result($current_school, $coursename, $description, $current_externalid);
 $result->fetch();
 $result->close();
 $course_exists = false;
 if (isset($_POST['submit']) and $_POST['course'] != $_POST['old_course']) {
   // Check for unique course name
-  $new_course = trim($_POST['course']);
-  $course_exists = CourseUtils::course_exists($new_course, $mysqli);
+  $tmp_course = trim($_POST['course']);
+  $course_exists = CourseUtils::course_exists($tmp_course, $mysqli);
 }
 
 if (isset($_POST['submit']) and $course_exists == false) {
-  $new_course = trim($_POST['course']);
+  $tmp_course = trim($_POST['course']);
   $new_school = $_POST['school'];
   $new_description = trim($_POST['description']);
 
-  if (CourseUtils::update_course($courseID, $new_school, $new_course, $new_description, $current_externalid, $mysqli)) {
+  if (CourseUtils::update_course($courseID, $new_school, $tmp_course, $new_description, $current_externalid, $mysqli)) {
   
       $logger = new Logger($mysqli);
-      if ($name != $new_course)             $logger->track_change('Course', $courseID, $userObject->get_user_ID(), $name, $new_course, 'code');
+      if ($coursename != $tmp_course)             $logger->track_change('Course', $courseID, $userObject->get_user_ID(), $coursename, $tmp_course, 'code');
       if ($description != $new_description) $logger->track_change('Course', $courseID, $userObject->get_user_ID(), $description, $new_description, 'name');
       if ($current_school != $new_school)   $logger->track_change('Course', $courseID, $userObject->get_user_ID(), $current_school, $new_school, 'school');
   }
@@ -127,22 +127,23 @@ if (isset($_POST['submit']) and $course_exists == false) {
     <table cellpadding="0" cellspacing="2" border="0" style="text-align:left">
     <?php
     if ($unique_course == false) {
-      echo "<tr><td class=\"field\">" . $string['code'] . "</td><td><input type=\"text\" size=\"10\" maxlength=\"255\" name=\"course\" style=\"background-color:#FFD9D9; color:#800000; border:1px solid #800000\" value=\"$tmp_course\" required /><input type=\"hidden\" name=\"old_course\" value=\"$tmp_course\" /></td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['code'] . "</td><td><input type=\"text\" size=\"10\" maxlength=\"255\" name=\"course\" style=\"background-color:#FFD9D9; color:#800000; border:1px solid #800000\" value=\"" . $tmp_course . "\" required /><input type=\"hidden\" name=\"old_course\" value=\"" . $tmp_course . "\" /></td></tr>\n";
     } else {
-      echo "<tr><td class=\"field\">" . $string['code'] . "</td><td><input type=\"text\" size=\"10\" maxlength=\"255\" name=\"course\" value=\"" . $name . "\" /><input type=\"hidden\" name=\"old_course\" value=\"$name\" required /></td></tr>\n";
+      echo "<tr><td class=\"field\">" . $string['code'] . "</td><td><input type=\"text\" size=\"10\" maxlength=\"255\" name=\"course\" value=\"" . $coursename . "\" /><input type=\"hidden\" name=\"old_course\" value=\"" . $coursename . "\" required /></td></tr>\n";
     }
     ?>
     <tr><td class="field"><?php echo $string['name']; ?></td><td><input type="text" size="70" maxlength="255" name="description" value="<?php echo $description; ?>" required /></td></tr>
     <tr><td class="field"><?php echo $string['school']; ?></td><td><select name="school" required>
     <?php
-      $result = $mysqli->prepare("SELECT schools.id, schools.code, school, faculty.code, name FROM schools, faculty WHERE schools.facultyID = faculty.id AND school != '' ORDER BY name, school");
+      $result = $mysqli->prepare("SELECT schools.id, schools.code, school, faculty.code, name FROM schools, faculty WHERE schools.facultyID = faculty.id AND school != '' ORDER BY faculty.code, name, school");
       $result->execute();
       $result->bind_result($schoolid, $code, $school, $facultycode, $faculty);
       
       $old_faculty = '';
+      $old_facultycode = '';
       while ($result->fetch()) {
-        if ($faculty != $old_faculty) {
-          if ($old_faculty != '') echo "</optgroup>\n";
+        if ($facultycode . ' ' . $faculty != $old_facultycode . ' ' . $old_faculty) {
+          if ($old_facultycode . ' ' . $old_faculty != '') echo "</optgroup>\n";
           echo "<optgroup label=\"$facultycode $faculty\">\n";
         }
         if ($current_school == $schoolid) {
@@ -151,6 +152,7 @@ if (isset($_POST['submit']) and $course_exists == false) {
           echo "<option value=\"$schoolid\">$code $school</option>\n";
         }
         $old_faculty = $faculty;
+        $old_facultycode = $facultycode;
       }
       echo "</optgroup>\n";
       $result->close();
