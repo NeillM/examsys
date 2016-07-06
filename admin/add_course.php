@@ -134,7 +134,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
       $result->close();
     ?>
     </select></td></tr>
-    <tr><td class="field"><?php echo $string['externalid'] ?></td><td><input type="text" size="30" maxlength="50" name="externalid" value=""></td></tr>
+    <tr><td class="field"><?php echo $string['externalid'] ?></td><td><input type="text" size="30" maxlength="255" name="externalid" value=""></td></tr>
     </table>
     <p><input type="submit" class="ok" name="submit" value="<?php echo $string['add'] ?>"><input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" /></p>
   </form>

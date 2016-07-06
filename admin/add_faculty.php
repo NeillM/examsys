@@ -116,7 +116,7 @@ if ($duplicate == 'code') {
   echo '<tr><td class="field">' . $string["code"] . '</td><td><input type="text" size="30" maxlength="30" name="code" value=""/></td></tr>';
 }
 ?>
-<tr><td class="field"><?php echo $string['externalid'] ?></td><td><input type="text" size="30" maxlength="50" name="externalid" value=""></td></tr>
+<tr><td class="field"><?php echo $string['externalid'] ?></td><td><input type="text" size="30" maxlength="255" name="externalid" value=""></td></tr>
 </table>
 <div align="right"><input type="submit" name="ok" value="<?php echo $string['ok'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" style="margin-right:0" onclick="window.close();" /><input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" /></div>
 </form>
