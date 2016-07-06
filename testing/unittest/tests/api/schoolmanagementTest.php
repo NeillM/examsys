@@ -128,7 +128,7 @@ class schoolmanagementtest extends unittestdatabase {
         $this->assertEquals($responsearray, $school->create($params, $userid));
     }
     /**
-     * Test school create exception invalid school
+     * Test school create exception invalid school (external system)
      * @group api
      */
     public function test_create_exception_school() {
@@ -144,6 +144,23 @@ class schoolmanagementtest extends unittestdatabase {
         $params = array(
             "nodeid" => 1,
             "name" => 'Test school',
+            "faculty" => 'Test faculty');
+        $this->assertEquals($responsearray, $school->create($params, $userid));
+    }
+    /**
+     * Test school create exception invalid school (non external system)
+     * @group api
+     */
+    public function test_create_exception_school2() {
+        $responsearray = $this->create_response_array();
+        $school = new \api\schoolmanagement($this->db);
+        $userid = 1;
+        $responsearray['statuscode'] = 606;
+        $responsearray['status'] = 'School already exists';
+        $responsearray['id'] = 2;
+        $params = array(
+            "nodeid" => 1,
+            "name" => 'Test school 2',
             "faculty" => 'Test faculty');
         $this->assertEquals($responsearray, $school->create($params, $userid));
     }

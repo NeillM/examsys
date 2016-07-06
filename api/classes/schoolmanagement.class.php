@@ -82,13 +82,14 @@ class schoolmanagement extends \api\abstractmanagement {
             $params['code'] = null;
         }
         if ($faculty) {
-            if (!empty($params['code'])) {
+            $schoolid = false;
+            if (!empty($params['externalid'])) {
+                $schoolid = \SchoolUtils::get_schoolid_from_externalid($params['externalid'], $this->db);
+            }
+            if (!$schoolid and !empty($params['code'])) {
                 $schoolid = \SchoolUtils::get_schoolid_by_code($params['code'], $this->db);
             } else {
                 $schoolid = \SchoolUtils::get_school_id_by_name($params['name'], $this->db);
-            }
-            if (!empty($params['externalid'])) {
-                $schoolid = \SchoolUtils::get_schoolid_from_externalid($params['externalid'], $this->db);
             }
             if (!$schoolid) {
                 $id = \SchoolUtils::add_school($facultyid, $params['name'], $this->db, $params['code'], $params['externalid']);
