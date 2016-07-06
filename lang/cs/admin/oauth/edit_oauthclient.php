@@ -14,11 +14,4 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['oauthkeys'] = 'Autorizační klíče';
-$string['addoauthclient'] = 'Přidat klienta';
-$string['deleteoauthclient'] = 'Odebrat klienta';
-$string['editoauthclient'] = 'Upravit klienta';
-$string['listoauthclient'] = 'Seznam klientů';
-$string['client'] = 'Klient';
-$string['secret'] = 'Heslo';
-$string['uri'] = 'URI';
+require '../../lang/' . $language . '/admin/oauth/add_oauthclient.php';

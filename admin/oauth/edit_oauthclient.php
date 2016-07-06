@@ -47,10 +47,6 @@ if (isset($_POST['submit'])) {
         } else {
             $oauth->set_permission($management . '/delete', $client, false);
         }
-    }
-    $updatemanage = array('modulemanagement', 'usermanagement',
-            'coursemanagement', 'schoolmanagement', 'facultymanagement');
-    foreach ($updatemanage as $management) {
         if (isset($_POST[$management . '/update'])) {
             $oauth->set_permission($management . '/update', $client, true);
         } else {
@@ -94,13 +90,13 @@ if (isset($_POST['submit'])) {
     $result->close();
     
     $clientperms = array();
-    $result = $mysqli->prepare("SELECT p.action, w.access FROM permissions p
+    $result = $mysqli->prepare("SELECT p.action, p.description, w.access FROM permissions p
         LEFT JOIN webservice_permissions w ON p.action = w.action and w.client_id = ?");
     $result->bind_param('s', $client);
     $result->execute();
-    $result->bind_result($action, $access);
+    $result->bind_result($action, $description, $access);
     while ($result->fetch()) {
-        $clientperms[$action] = $access;
+        $clientperms[$action] = array($description, $access);
     }
     $result->close();
 
@@ -149,10 +145,10 @@ $render->render_admin_content($breadcrumb, $lang);
             }
        
             foreach ($clientperms as $action => $access) {
-                if ($access) {
-                    echo "<tr><td class=\"field\">" . $action . "</td><td><input type=\"checkbox\" name=\"" . $action . "\" checked /></td></tr>";
+                if ($access[1]) {
+                    echo "<tr><td class=\"field\">" . $string[$access[0]] . "</td><td><input type=\"checkbox\" name=\"" . $action . "\" checked /></td></tr>";
                 } else {
-                    echo "<tr><td class=\"field\">" . $action . "</td><td><input type=\"checkbox\" name=\"" . $action . "\"/></td></tr>";
+                    echo "<tr><td class=\"field\">" . $string[$access[0]] . "</td><td><input type=\"checkbox\" name=\"" . $action . "\"/></td></tr>";
                 }  
             }
         ?>

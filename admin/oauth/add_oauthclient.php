@@ -47,10 +47,6 @@ if (isset($_POST['submit'])) {
         } else {
             $oauth->add_permission($management . '/delete', $client, false);
         }
-    }
-    $updatemanage = array('modulemanagement', 'usermanagement',
-            'coursemanagement', 'schoolmanagement', 'facultymanagement');
-    foreach ($updatemanage as $management) {
         if (isset($_POST[$management . '/update'])) {
             $oauth->add_permission($management . '/update', $client, true);
         } else {
@@ -91,11 +87,11 @@ if (isset($_POST['submit'])) {
     $result->close(); 
     
     $clientperms = array();
-    $result = $mysqli->prepare("SELECT action FROM permissions");
+    $result = $mysqli->prepare("SELECT action, description FROM permissions");
     $result->execute();
-    $result->bind_result($action);
+    $result->bind_result($action, $description);
     while ($result->fetch()) {
-        $clientperms[] = $action;
+        $clientperms[$description] = $action;
     }
     $result->close();
 }
@@ -150,8 +146,8 @@ $render->render_admin_content($breadcrumb, $lang);
             <tr><td class="field"><?php echo $string['uri'] ?></td><td><input type="text" size="80" maxlength="2000" id="uri" name="uri" value="" required /></td></tr>
             
             <?php
-                foreach ($clientperms as $action) {
-                    echo "<tr><td class=\"field\">" . $action . "</td><td><input type=\"checkbox\" name=\"" . $action . "\"/></td></tr>"; 
+                foreach ($clientperms as $description => $action) {
+                    echo "<tr><td class=\"field\">" . $string[$description] . "</td><td><input type=\"checkbox\" name=\"" . $action . "\"/></td></tr>"; 
                 }
             ?>
         </table>
