@@ -223,14 +223,15 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
     <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" id="fullname" name="fullname" value="<?php echo $module['fullname'] ?>" required /></td></tr>
   <?php
     $old_faculty = '';
+    $old_facultycode = '';
     echo "<tr><td class=\"field\">" . $string['school'] . "</td><td><select id=\"schoolid\" name=\"schoolid\" required>\n<option value=\"\"></option>\n";
-    $result = $mysqli->prepare("SELECT schools.id, schools.code, school, faculty.name FROM schools, faculty WHERE schools.facultyID = faculty.id AND schools.deleted IS NULL ORDER BY faculty.name, school");
+    $result = $mysqli->prepare("SELECT schools.id, schools.code, school, faculty.code, faculty.name FROM schools, faculty WHERE schools.facultyID = faculty.id AND schools.deleted IS NULL ORDER BY faculty.code, faculty.name, school");
     $result->execute();
-    $result->bind_result($id, $code, $list_school, $faculty);
+    $result->bind_result($id, $code, $list_school, $facultycode, $faculty);
     while ($result->fetch()) {
-      if ($old_faculty != $faculty) {
-        if ($old_faculty != '') echo "</optgroup>\n";
-        echo "<optgroup label=\"$faculty\">\n";
+      if ($old_facultycode . ' ' . $old_faculty  != $facultycode . ' ' . $faculty ) {
+        if ($old_facultycode . ' ' . $old_faculty  != '') echo "</optgroup>\n";
+        echo "<optgroup label=\"$facultycode $faculty\">\n";
       }
       if ($module['schoolid'] == $id) {
         echo "<option value=\"$id\" selected>$code $list_school</option>\n";
@@ -238,6 +239,7 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
         echo "<option value=\"$id\">$code $list_school</option>\n";
       }
       $old_faculty = $faculty;
+      $old_facultycode = $facultycode;
     }
     $result->close();
     echo "</optgroup>\n</select></td></tr>\n";

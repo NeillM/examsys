@@ -113,14 +113,15 @@ if (isset($_POST['submit']) and $unique_course == true) {
     <tr><td class="field"><?php echo $string['school'] ?></td><td><select name="school" required>
     <option value=""></option>
     <?php
-      $result = $mysqli->prepare("SELECT schools.id, schools.code, school, faculty.code, name FROM schools, faculty WHERE schools.facultyID = faculty.id AND schools.deleted IS NULL ORDER BY name, school");
+      $result = $mysqli->prepare("SELECT schools.id, schools.code, school, faculty.code, name FROM schools, faculty WHERE schools.facultyID = faculty.id AND schools.deleted IS NULL ORDER BY faculty.code, name, school");
       $result->execute();
       $result->bind_result($schoolid, $code, $school, $facultycode, $faculty);
 
       $old_faculty = '';
+      $old_facultycode = '';
       while ($result->fetch()) {
-        if ($faculty != $old_faculty) {
-          if ($old_faculty != '') echo "</optgroup>\n";
+        if ($facultycode . ' ' . $faculty != $old_facultycode . ' ' . $old_faculty) {
+          if ($old_facultycode . ' ' . $old_faculty != '') echo "</optgroup>\n";
           echo "<optgroup label=\"$facultycode $faculty\">\n";
         }
         if (isset($_POST['schoolid']) and $_POST['schoolid'] == $school) {
@@ -129,6 +130,7 @@ if (isset($_POST['submit']) and $unique_course == true) {
           echo "<option value=\"$schoolid\">$code $school</option>\n";
         }
         $old_faculty = $faculty;
+        $old_facultycode = $facultycode;
       }
       echo "</optgroup>\n";
       $result->close();
