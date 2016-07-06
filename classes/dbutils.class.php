@@ -163,12 +163,7 @@ Class DBUtils {
     $bind_types = array();
     $bind_values = array();
     foreach ($values as $idx => $val) {
-      // Check valid bind_param type.
-      if (preg_match('/^(i|d|s|b)$/', $val[0])) {
-        $bind_types[] = $val[0];
-      } else {
-        return false;
-      }
+      $bind_types[] = $val[0];
       $bind_values[] = $val[1];
     }
 
@@ -224,12 +219,7 @@ Class DBUtils {
     $bind_types = array();
     $bind_values = array();
     foreach ($values as $idx => $val) {
-      // Check valid bind_param type.
-      if (preg_match('/^(i|d|s|b)$/', $val[0])) {
-        $bind_types[] = $val[0];
-      } else {
-        return false;
-      }
+      $bind_types[] = $val[0];
       $bind_values[] = $val[1];
       $selection .= '?, ';
     }
