@@ -76,6 +76,18 @@ if ($updater_utils->check_version("6.2.0")) {
         // New type column in config type.
         $altersql = "ALTER TABLE `config` ADD COLUMN `type` VARCHAR(10) NULL AFTER `value`";
         $updater_utils->execute_query($altersql, true);
+        // Update config table with type.
+        $altersql = "UPDATE `config` SET type = 'json' WHERE setting = 'timezones' AND component = 'core'";
+        $updater_utils->execute_query($altersql, true);
+        $altersql = "UPDATE `config` SET type = 'json' WHERE setting = 'cohort_sizes' AND component = 'core'";
+        $updater_utils->execute_query($altersql, true);
+        $altersql = "UPDATE `config` SET type = 'integer' WHERE setting = 'max_duration' AND component = 'core'";
+        $updater_utils->execute_query($altersql, true);
+        $altersql = "UPDATE `config` SET type = 'integer' WHERE setting = 'max_sittings' AND component = 'core'";
+        $updater_utils->execute_query($altersql, true);
+        $altersql = "UPDATE `config` SET type = null WHERE component = 'plugin_ims'";
+        $updater_utils->execute_query($altersql, true);
+        
         
         $updater_utils->record_update('rogo1829_externalids');
     }

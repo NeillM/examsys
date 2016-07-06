@@ -185,9 +185,9 @@ trait frontend_hooks {
         '301-400', '401-500'));
     $configObject = \Config::get_instance();
     $configObject->set_db_object(state::get_db());
-    $configObject->set_setting('timezones', $encoded_timezones);
-    $configObject->set_setting('cohort_sizes', $encoded_cohorts);
-    $configObject->set_setting('max_duration', 779);
-    $configObject->set_setting('max_sittings', 6);
+    $configObject->set_setting('timezones', $encoded_timezones, 'json');
+    $configObject->set_setting('cohort_sizes', $encoded_cohorts, 'json');
+    $configObject->set_setting('max_duration', 779, 'integer');
+    $configObject->set_setting('max_sittings', 6, 'integer');
   }
 }
