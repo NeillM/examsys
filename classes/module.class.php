@@ -65,13 +65,14 @@ Class module {
   public function get_student_members($calendar_year, $idMod, $db) {
     $members = array();
 
-    $result = $db->prepare("SELECT DISTINCT surname, initials, title, users.id FROM (modules_student, users) WHERE modules_student.userID = users.id AND calendar_year = ? AND idMod = ? ORDER BY surname, initials");
+    $result = $db->prepare("SELECT DISTINCT surname, initials, title, users.id, username, student_id 
+        FROM (modules_student, users, sid) WHERE modules_student.userID = users.id AND users.id = sid.userID AND calendar_year = ? AND idMod = ? ORDER BY surname, initials");
     $result->bind_param('si', $calendar_year, $idMod);
     $result->execute();
     $result->store_result();
-    $result->bind_result($surname, $initials, $title, $userID);
+    $result->bind_result($surname, $initials, $title, $userID, $username, $sid);
     while ($result->fetch()) {
-      $members[] = array('surname'=>$surname, 'initials'=>$initials, 'title'=>$title, 'userID'=>$userID);
+      $members[] = array('surname' => $surname, 'initials' => $initials, 'title' => $title, 'userID' => $userID, 'username' => $username, 'studentid' => $sid);
     }
     $result->close();
 
