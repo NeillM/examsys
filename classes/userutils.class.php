@@ -27,7 +27,7 @@
 Class UserUtils {
 
   static function create_extended_user($username, $title, $forname, $surname, $email, $course, $gender, $year, $role, $sid, $db, $school, $coursedesc, $initials = null, $password = '') {
-    $courseok = CourseUtils::add_course($school, $course, $coursedesc, null, $db);
+    $courseok = CourseUtils::add_course($school, $course, $coursedesc, null, null, $db);
 
     if (($courseok !== true and $course != '') or $username == '' or $surname == '' or $email == '') {
       return false;

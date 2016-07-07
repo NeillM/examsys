@@ -28,6 +28,5 @@ $string['courseentercode'] = 'Wprowadź kod dla stopnia.';
 $string['courseentertitle'] = 'Wprowadź tytuł dla stopnia.';
 $string['coursecodeinuse'] = 'Kod stopnia %s jest już używany. Wprowadź inny kod.';
 $string['externalid'] = 'External ID';
-$string['importcourses'] = 'Import courses from SMS';
-$string['importcoursestooltip'] = 'Sync Courses with the connected Student Management System';
+$string['externalsys'] = 'External System';
 ?>

@@ -34,11 +34,12 @@ Class CourseUtils {
    * @param string $name code of the course e.g. B140
    * @param string $description a title for the course e.g. Neuroscience BSc
    * @param integer $externalid external system id for the course
+   * @param integer $externalsys external system
    * @param object $db database connection
    *
    * @return integer new course id
    */
-  static function add_course($schoolid, $name, $description, $externalid, $db) {
+  static function add_course($schoolid, $name, $description, $externalid, $externalsys, $db) {
 
     if ($name == '') {
       return false;
@@ -55,8 +56,8 @@ Class CourseUtils {
       }
     }
 
-    $result = $db->prepare("INSERT INTO courses (name, description, schoolid, externalid) VALUES (?, ?, ?, ?)");
-    $result->bind_param('ssis', $name, $description, $schoolid, $externalid);
+    $result = $db->prepare("INSERT INTO courses (name, description, schoolid, externalid, externalsys) VALUES (?, ?, ?, ?, ?)");
+    $result->bind_param('ssiss', $name, $description, $schoolid, $externalid, $externalsys);
     $result->execute();
     $result->close();
 
@@ -198,16 +199,16 @@ Class CourseUtils {
    * @return array details
    */
   static function get_course_details_by_id($id, $db) {
-    $result = $db->prepare("SELECT name, description, deleted, schoolid, externalid FROM courses WHERE id = ? LIMIT 1");
+    $result = $db->prepare("SELECT name, description, deleted, schoolid, externalid, externalsys FROM courses WHERE id = ? LIMIT 1");
     $result->bind_param('i', $id);
     $result->execute();
     $result->store_result();
-    $result->bind_result($name, $description, $deleted, $schoolid, $externalid);
+    $result->bind_result($name, $description, $deleted, $schoolid, $externalid, $externalsys);
     if ($result->num_rows == 0) {
       $details = false;
     } else {
       $result->fetch();
-      $details = array('name'=>$name, 'description'=>$description, 'deleted'=>$deleted, 'schoolid'=>$schoolid, 'externalid'=>$externalid);
+      $details = array('name'=>$name, 'description'=>$description, 'deleted'=>$deleted, 'schoolid'=>$schoolid, 'externalid'=>$externalid, 'externalsys' => $externalsys);
     }
     $result->close();
 
@@ -237,19 +238,20 @@ Class CourseUtils {
    * @param integer $schoolid ID of the school the course belongs to
    * @param string $name code of the course e.g. B140
    * @param string $description a title for the course e.g. Neuroscience BSc
-   * @paramm integer $externalid external system id for course
+   * @param integer $externalid external system id for course
+   * @param integer $externalsys external system source
    * @param mysqli $db
    *
    * @return bool success response
    */
-  static function update_course($id, $schoolid, $name, $description, $externalid, $db) {
+  static function update_course($id, $schoolid, $name, $description, $externalid, $externalsys, $db) {
     // Check if name already in use.
     $courseid = CourseUtils::get_course_id($name, $db);
     if ($courseid !== false and $courseid != $id) {
       return false;
     }
-    $result = $db->prepare("UPDATE courses set name = ?, description = ?, schoolid = ?, externalid = ? WHERE id = ?");
-    $result->bind_param('ssisi', $name, $description, $schoolid, $externalid, $id);
+    $result = $db->prepare("UPDATE courses set name = ?, description = ?, schoolid = ?, externalid = ?, externalsys = ? WHERE id = ?");
+    $result->bind_param('ssissi', $name, $description, $schoolid, $externalid, $externalsys, $id);
     $result->execute();
     $result->close();
 
@@ -309,11 +311,13 @@ Class CourseUtils {
   /**
    * Compare the courses in the external system and rogo
    * @param array $external list of external system courses
+   * @param string $sms the external student management system that is the source of the courses
    * @param mysqli $db db connection
    * @return array list of courses in rogo but not in external system
    */
-  static function diff_external_courses_to_internal_courses($external, $db) {
-    $result = $db->prepare("SELECT id, externalid, deleted FROM courses WHERE externalid IS NOT NULL");
+  static function diff_external_courses_to_internal_courses($external, $sms, $db) {
+    $result = $db->prepare("SELECT id, externalid, deleted FROM courses WHERE externalid IS NOT NULL AND externalsys = ?");
+    $result->bind_param('s', $sms);
     $result->execute();
     $result->store_result();
     $result->bind_result($id, $externalid, $deleted);

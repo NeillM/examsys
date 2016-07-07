@@ -35,10 +35,10 @@ if (!CourseUtils::courseid_exists($courseID, $mysqli)) {
 $unique_course = true;
 $tmp_course = '';
 
-$result = $mysqli->prepare("SELECT schoolid, name, description, externalid FROM courses WHERE id = ?");
+$result = $mysqli->prepare("SELECT schoolid, name, description, externalid, externalsys FROM courses WHERE id = ?");
 $result->bind_param('i', $courseID);
 $result->execute();
-$result->bind_result($current_school, $coursename, $description, $current_externalid);
+$result->bind_result($current_school, $coursename, $description, $current_externalid, $current_externalsys);
 $result->fetch();
 $result->close();
 $course_exists = false;
@@ -53,7 +53,7 @@ if (isset($_POST['submit']) and $course_exists == false) {
   $new_school = $_POST['school'];
   $new_description = trim($_POST['description']);
 
-  if (CourseUtils::update_course($courseID, $new_school, $tmp_course, $new_description, $current_externalid, $mysqli)) {
+  if (CourseUtils::update_course($courseID, $new_school, $tmp_course, $new_description, $current_externalid, $current_externalsys, $mysqli)) {
   
       $logger = new Logger($mysqli);
       if ($coursename != $tmp_course)             $logger->track_change('Course', $courseID, $userObject->get_user_ID(), $coursename, $tmp_course, 'code');
@@ -160,6 +160,7 @@ if (isset($_POST['submit']) and $course_exists == false) {
     ?>
     </select></td></tr>
     <tr><td class="field"><?php echo $string['externalid'] ?></td><td><?php echo $current_externalid; ?></td></tr>
+    <tr><td class="field"><?php echo $string['externalsys'] ?></td><td><?php echo $current_externalsys; ?></td></tr>
     </table>
     <input type="hidden" name="courseID" value="<?php echo $courseID; ?>" />
     <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"><input type="button" class="cancel" name="home" id="cancel" value="<?php echo $string['cancel'] ?>" /></p>

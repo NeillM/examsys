@@ -42,7 +42,8 @@ if (isset($_POST['submit']) and $unique_course == true) {
   $tmp_course = trim($_POST['course']);
   $tmp_description = trim($_POST['description']);
   $externalid = check_var('externalid', 'POST', false, false, true);
-  CourseUtils::add_course((int)$tmp_school, $tmp_course, $tmp_description, $externalid, $mysqli);
+  $externalsys = check_var('externalsys', 'POST', false, false, true);
+  CourseUtils::add_course((int)$tmp_school, $tmp_course, $tmp_description, $externalid, $externalsys, $mysqli);
   header("location: list_courses.php");
   exit();
 } else {
@@ -134,6 +135,20 @@ if (isset($_POST['submit']) and $unique_course == true) {
       }
       echo "</optgroup>\n";
       $result->close();
+    ?>
+    </select></td></tr>
+    <tr><td class="field"><?php echo $string['externalsys'] ?></td><td><select name="externalsys">
+    <?php
+      $sms = \plugins\plugins_sms::get_sms($mysqli);
+      echo "<option value=\"\"></option>\n";
+      foreach ($sms as $s) {
+        if (isset($externalsys) and $s == $externalsys) {
+          $selected = "selected";
+        } else {
+          $selected = "";
+        }
+        echo "<option value=\"$s\" $selected>$s</option>\n";
+      }
     ?>
     </select></td></tr>
     <tr><td class="field"><?php echo $string['externalid'] ?></td><td><input type="text" size="30" maxlength="255" name="externalid" value=""></td></tr>

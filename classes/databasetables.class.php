@@ -133,6 +133,7 @@ QUERY;
           `deleted` datetime default NULL,
           `schoolid` int(11) default NULL,
           `externalid` varchar(255) default NULL,
+          `externalsys` varchar(255) default NULL,
           PRIMARY KEY (`id`),
           UNIQUE INDEX `externalid` (`externalid`),
           KEY `degree` (`name`),

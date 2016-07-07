@@ -7,6 +7,8 @@ if ($updater_utils->check_version("6.2.0")) {
         $updater_utils->execute_query($altersql, true);
         $altersql = "ALTER TABLE `courses` ADD UNIQUE INDEX `externalid` (`externalid`)";
         $updater_utils->execute_query($altersql, true);
+        $altersql = "ALTER TABLE `courses` ADD COLUMN `externalsys` VARCHAR(255) NULL DEFAULT NULL AFTER `externalid`";
+        $updater_utils->execute_query($altersql, true);
         // faculty.
         $altersql = "ALTER TABLE faculty ADD COLUMN `externalid` varchar(255) NULL DEFAULT NULL";
         $updater_utils->execute_query($altersql, true);

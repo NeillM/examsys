@@ -39,7 +39,7 @@ class courseutilstest extends unittestdatabase {
      */
     public function test_diff_external_courses_to_internal_courses() {
         $external = array("ABCD", "EFGH", "IJKL");
-        $this->assertEquals(array("WXYZ"), CourseUtils::diff_external_courses_to_internal_courses($external, $this->db));
+        $this->assertEquals(array("WXYZ"), CourseUtils::diff_external_courses_to_internal_courses($external, 'external', $this->db));
     }
     /**
      * Test gettings course id  given external id

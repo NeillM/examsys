@@ -28,6 +28,5 @@ $string['courseentercode'] = 'Please enter a code for the course.';
 $string['courseentertitle'] = 'Please enter a title for the course.';
 $string['coursecodeinuse'] = 'The course code %s is already in use. Please enter an alternative code.';
 $string['externalid'] = 'External ID';
-$string['importcourses'] = 'Import courses from SMS';
-$string['importcoursestooltip'] = 'Sync Courses with the connected Student Management System';
+$string['externalsys'] = 'External System';
 ?>

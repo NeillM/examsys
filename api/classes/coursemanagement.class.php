@@ -127,7 +127,7 @@ class coursemanagement extends \api\abstractmanagement {
                 if ($schoolid == $details['schoolid'] and isset($params['faculty']) and $params['faculty'] !== '') {
                     $data = array('statuscode' => $this->statuscodes['COURSE_INVALID_SCHOOL'], 'status' => $strings['school_not_supplied'], 'id' => null, 'externalid' => null);
                 } else {
-                    $update = \CourseUtils::update_course($params['id'], $schoolid, $params['name'], $params['description'], $params['externalid'], $this->db);
+                    $update = \CourseUtils::update_course($params['id'], $schoolid, $params['name'], $params['description'], $params['externalid'], $details['externalsys'], $this->db);
                     if ($update) {
                         $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'externalid' => $details['externalid']);
                     } else {
@@ -183,7 +183,11 @@ class coursemanagement extends \api\abstractmanagement {
                 if (empty($params['externalid'])) {
                     $params['externalid'] = null;
                 }
-                $id = \CourseUtils::add_course($schoolid, $params['name'], $params['description'], $params['externalid'], $this->db);
+                // Default null externalsys.
+                if (empty($params['externalsys'])) {
+                    $params['externalsys'] = null;
+                }
+                $id = \CourseUtils::add_course($schoolid, $params['name'], $params['description'], $params['externalid'], $params['externalsys'], $this->db);
                 if ($id) {
                     $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'externalid' => $params['externalid']);
                 } else {

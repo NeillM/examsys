@@ -34,6 +34,26 @@ abstract class plugins_sms extends \plugins\plugins {
      */
     protected $plugin_type = 'SMS';
     /**
+     * Get names if sms external systems available to syn with
+     * @param mysqli $db db connection
+     * @return array|bool list of external systems or false if non available
+     */
+    static public function get_sms($db) {
+        $sms = array();
+        $config = \Config::get_instance();
+        $plugins = json_decode($config->get_setting('plugin_sms', 'enabled_plugin'));
+        foreach ($plugins as $p) {
+            $mappingplugin_object = 'plugins\\SMS\\' . $p . '\\' . $p;
+            $smsplugin = new $mappingplugin_object($db);
+            $sms[] = $smsplugin->get_name();
+        }
+        if (count($sms) == 0) {
+            return false;
+        } else {
+            return $sms;
+        }
+    }
+    /**
      * Get all enrolments for academic session
      * @params integer $session academic session to sync enrolments with
      * @params integer $externalid external system module id
@@ -80,4 +100,9 @@ abstract class plugins_sms extends \plugins\plugins {
      * @return array|bool import url and translation strings, false  if enrolment import supported
      */
     abstract public function supports_enrol_import();
+    /**
+     * Get name of sms
+     * @return string name of sms
+     */
+    abstract public function get_name();
 }
