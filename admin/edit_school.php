@@ -30,11 +30,11 @@ $schoolid = check_var('schoolid', 'GET', true, false, true);
 $school = $string['prompt'];
 $faculty = '';
 
-$result = $mysqli->prepare("SELECT school, facultyID, code, externalid FROM schools WHERE id = ? AND deleted IS NULL");
+$result = $mysqli->prepare("SELECT school, facultyID, code, externalid, externalsys FROM schools WHERE id = ? AND deleted IS NULL");
 $result->bind_param('i', $schoolid);
 $result->execute();
 $result->store_result();
-$result->bind_result($school, $curr_faculty, $curr_code, $curr_externalid);
+$result->bind_result($school, $curr_faculty, $curr_code, $curr_externalid, $curr_externalsys);
 $result->fetch();
 if ($result->num_rows == 0) {
   $result->close();
@@ -49,7 +49,7 @@ if (isset($_POST['submit'])) {
   $code = check_var('code', 'POST', false, false, true);
   $duplicate = false;
   $changed = ($curr_faculty != $faculty or $school != $school_tmp or $curr_code != $code);
-  if (!SchoolUtils::update_school($schoolid, $faculty, $school_tmp, $code, $curr_externalid, $mysqli)) {
+  if (!SchoolUtils::update_school($schoolid, $faculty, $school_tmp, $code, $curr_externalid, $curr_externalsys, $mysqli)) {
      $duplicate = true;
   }
 
@@ -161,6 +161,7 @@ $result->close();
     </select></td></tr>
     <tr><td class="field"><?php echo $string['code'] ?></td><td><input type="text" size="30" maxlength="30" name="code" value="<?php echo $curr_code; ?>"/></td></tr>
     <tr><td class="field"><?php echo $string['externalid'] ?></td><td><?php echo $curr_externalid; ?></td></tr>
+    <tr><td class="field"><?php echo $string['externalsys'] ?></td><td><?php echo $curr_externalsys; ?></td></tr>
     </table>
     <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"><input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" /></p>
   </form>

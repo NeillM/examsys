@@ -19,4 +19,5 @@ $string['facultywarning'] = 'Nazwa wydziału już istnieje. Wybierz inną nazwę
 $string['code'] = 'Faculty Code';
 $string['name'] = 'Name';
 $string['externalid'] = 'External ID';
+$string['externalsys'] = 'External System';
 ?>

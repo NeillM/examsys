@@ -19,4 +19,5 @@ $string['facultywarning'] = 'Tento název fakulty již existuje. Vyberte, prosí
 $string['code'] = 'Faculty Code';
 $string['name'] = 'Name';
 $string['externalid'] = 'External ID';
+$string['externalsys'] = 'External System';
 ?>

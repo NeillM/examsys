@@ -148,15 +148,16 @@ Class FacultyUtils {
  * @param object $db      - Link to mysqli
  * @param string $code    - The code of the faculty to be added
  * @param string $externalid- The external system id of the faculty to be added
+ * @param string $externalsys - External system source
  * @return int            - The last insert number from the database
  */
-  static function add_faculty($faculty, $db, $code = null, $externalid = null) {
+  static function add_faculty($faculty, $db, $code = null, $externalid = null, $externalsys = null) {
     if (trim($faculty) == '') {
       return false;
     }
   
-    $result = $db->prepare("INSERT INTO faculty(name, code, externalid) VALUES(?, ?, ?)");
-    $result->bind_param('sss', $faculty, $code, $externalid);
+    $result = $db->prepare("INSERT INTO faculty(name, code, externalid, externalsys) VALUES(?, ?, ?, ?)");
+    $result->bind_param('ssss', $faculty, $code, $externalid, $externalsys);
     $result->execute();
     $result->close();
     if ($db->errno != 0) {
@@ -191,10 +192,11 @@ Class FacultyUtils {
    * @param string $faculty - The name of the faculty to be added
    * @param string $code    - The code of the faculty to be added
    * @param string $externalid - External sustem id for the faculty
+   * @param string $externalsys - External system source
    * @param object $db      - Link to mysqli
    * @return bool           - True on success
   */
-  static function update_faculty($id, $faculty, $code, $externalid, $db) {
+  static function update_faculty($id, $faculty, $code, $externalid, $externalsys, $db) {
     // Check if code already in use.
     if (is_null($code)) {
         // Check if name already in use.
@@ -203,8 +205,8 @@ Class FacultyUtils {
           return false;
         }
     }
-    $result = $db->prepare("UPDATE faculty SET name = ?, code = ?, externalid = ? WHERE id = ?");
-    $result->bind_param('sssi', $faculty, $code, $externalid, $id);
+    $result = $db->prepare("UPDATE faculty SET name = ?, code = ?, externalid = ?, externalsys = ? WHERE id = ?");
+    $result->bind_param('ssssi', $faculty, $code, $externalid, $externalsys, $id);
     $result->execute();
     $result->close();
     if ($db->errno != 0) {
@@ -221,15 +223,15 @@ Class FacultyUtils {
    * @return array details
    */
   static function get_faculty_details_by_id($id, $db) {
-    $result = $db->prepare("SELECT name, code, externalid FROM faculty WHERE id = ?");
+    $result = $db->prepare("SELECT name, code, externalid, externalsys FROM faculty WHERE id = ?");
     $result->bind_param('i', $id);
     $result->execute();
     $result->store_result();
-    $result->bind_result($name, $code, $externalid);
+    $result->bind_result($name, $code, $externalid, $externalsys);
     $result->fetch();
     $result->close();
 
-    return array('name' => $name, 'code' => $code, 'externalid' => $externalid);
+    return array('name' => $name, 'code' => $code, 'externalid' => $externalid, 'externalsys' => $externalsys);
   }
   
   /**
@@ -251,11 +253,13 @@ Class FacultyUtils {
   /**
    * Compare the faculties in the external system and rogo
    * @param array $external list of external system faculties
+   * @param string $sms external system
    * @param mysqli $db db connection
    * @return array list of faculties in rogo but not in external system
    */
-  static function diff_external_faculties_to_internal_faculties($external, $db) {
-    $result = $db->prepare("SELECT id, externalid, deleted FROM faculty WHERE externalid IS NOT NULL");
+  static function diff_external_faculties_to_internal_faculties($external, $sms, $db) {
+    $result = $db->prepare("SELECT id, externalid, deleted FROM faculty WHERE externalid IS NOT NULL and externalsys = ?");
+    $result->bind_param('s', $sms);
     $result->execute();
     $result->store_result();
     $result->bind_result($id, $externalid, $deleted);

@@ -30,6 +30,7 @@ if (isset($_POST['ok'])) {
   $add_faculty = check_var('add_faculty', 'POST', true, false, true);
   $code = check_var('code', 'POST', false, false, true);
   $externalid = check_var('externalid', 'POST', false, false, true);
+  $externalsys = check_var('externalsys', 'POST', false, false, true);
   if (!is_null($add_faculty)) {
     // Check for existing faculty code.
     if (!is_null($code)) {
@@ -43,7 +44,7 @@ if (isset($_POST['ok'])) {
         }
     }
     if ($duplicate === false) {
-      FacultyUtils::add_faculty($add_faculty, $mysqli, $code, $externalid);
+      FacultyUtils::add_faculty($add_faculty, $mysqli, $code, $externalid, $externalsys);
     }
   }
   if (!$duplicate) {
@@ -116,6 +117,20 @@ if ($duplicate == 'code') {
   echo '<tr><td class="field">' . $string["code"] . '</td><td><input type="text" size="30" maxlength="30" name="code" value=""/></td></tr>';
 }
 ?>
+<tr><td class="field"><?php echo $string['externalsys'] ?></td><td><select name="externalsys">
+<?php
+  $sms = \plugins\plugins_sms::get_sms($mysqli);
+  echo "<option value=\"\"></option>\n";
+  foreach ($sms as $s) {
+    if (isset($externalsys) and $s == $externalsys) {
+      $selected = "selected";
+    } else {
+      $selected = "";
+    }
+    echo "<option value=\"$s\" $selected>$s</option>\n";
+  }
+?>
+</select></td></tr>
 <tr><td class="field"><?php echo $string['externalid'] ?></td><td><input type="text" size="30" maxlength="255" name="externalid" value=""></td></tr>
 </table>
 <div align="right"><input type="submit" name="ok" value="<?php echo $string['ok'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" style="margin-right:0" onclick="window.close();" /><input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" /></div>

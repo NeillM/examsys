@@ -25,5 +25,6 @@ $string['prompt'] = 'School of';
 $string['enternameofschool'] = 'Please enter name for the school.';
 $string['duplicateerror'] = 'School not unique, please change code or name.';
 $string['externalid'] = 'External ID';
+$string['externalsys'] = 'External System';
 $string['code'] = 'School Code';
 ?>

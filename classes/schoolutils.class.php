@@ -34,15 +34,16 @@ Class SchoolUtils {
      * @param object $db        - Link to mysqli
      * @param string $code      - code of the new school
      * @param string $external id - external system id of the new school
+     * @param string $externalsys - external system source
      *
      * @return int              - The ID of the school.
      */
-    static function add_school($facultyID, $school, $db, $code = null, $externalid = null) {
+    static function add_school($facultyID, $school, $db, $code = null, $externalid = null, $externalsys = null) {
         if ($facultyID === '' or $school === '') {
           return false;
         }
-        $result = $db->prepare("INSERT INTO schools(school, facultyID, code, externalid) VALUES (?, ?, ?, ?)");
-        $result->bind_param('siss', $school, $facultyID, $code, $externalid);
+        $result = $db->prepare("INSERT INTO schools(school, facultyID, code, externalid, externalsys) VALUES (?, ?, ?, ?, ?)");
+        $result->bind_param('sisss', $school, $facultyID, $code, $externalid, $externalsys);
         $result->execute();
         $result->close();
         if ($db->errno != 0) {
@@ -278,13 +279,14 @@ Class SchoolUtils {
      * @param integer $id  - School id in rogo.
      * @param int $facultyID - ID of the faculty to which the new school belongs.
      * @param string $school - Name of the new school
-     * @param string $externalid - External sustem id for the faculty
+     * @param string $externalid - External system id for the faculty
+     * @param string $externalsys - External system source
      * @param object $db - Link to mysqli
      * @param string $code      - code of the new school
      *
      * @return bool - true on success
      */
-    static function update_school($id, $facultyID, $school, $code, $externalid, $db) {
+    static function update_school($id, $facultyID, $school, $code, $externalid, $externalsys, $db) {
         if ($facultyID === '' or $school === '') {
           return false;
         }
@@ -296,8 +298,8 @@ Class SchoolUtils {
           }
         }
 
-        $result = $db->prepare("UPDATE schools set school = ?, facultyID = ?, code = ?, externalid = ? where id = ?");
-        $result->bind_param('sissi', $school, $facultyID, $code, $externalid, $id);
+        $result = $db->prepare("UPDATE schools set school = ?, facultyID = ?, code = ?, externalid = ?, externalsys= ? where id = ?");
+        $result->bind_param('sisssi', $school, $facultyID, $code, $externalid, $externalsys, $id);
         $result->execute();
         $result->close();
         if ($db->errno != 0) {
@@ -314,15 +316,15 @@ Class SchoolUtils {
    * @return array details
    */
   static function get_school_details_by_id($id, $db) {
-    $result = $db->prepare("SELECT school, code, facultyID, externalid FROM schools WHERE id = ?");
+    $result = $db->prepare("SELECT school, code, facultyID, externalid, externalsys FROM schools WHERE id = ?");
     $result->bind_param('i', $id);
     $result->execute();
     $result->store_result();
-    $result->bind_result($name, $code, $faculty, $externalid);
+    $result->bind_result($name, $code, $faculty, $externalid, $externalsys);
     $result->fetch();
     $result->close();
 
-    return array('name' => $name, 'faculty' => $faculty, 'code' => $code, 'externalid' => $externalid);
+    return array('name' => $name, 'faculty' => $faculty, 'code' => $code, 'externalid' => $externalid, 'externalsys' => $externalsys);
   }
   
   /**
@@ -370,11 +372,13 @@ Class SchoolUtils {
   /**
    * Compare the schools in the external system and rogo
    * @param array $external list of external system schools
+   * @param string $sms list external system syncing schools
    * @param mysqli $db db connection
    * @return array list of schools in rogo but not in external system
    */
-  static function diff_external_schools_to_internal_schools($external, $db) {
-    $result = $db->prepare("SELECT id, externalid, deleted FROM schools WHERE externalid IS NOT NULL");
+  static function diff_external_schools_to_internal_schools($external, $sms, $db) {
+    $result = $db->prepare("SELECT id, externalid, deleted FROM schools WHERE externalid IS NOT NULL and externalsys = ?");
+    $result->bind_param('s', $sms);
     $result->execute();
     $result->store_result();
     $result->bind_result($id, $externalid, $deleted);

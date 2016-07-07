@@ -38,7 +38,7 @@ $duplicate = false;
 if (isset($_POST['submit'])) {
   $faculty = check_var('new_faculty', 'POST', true, false, true);
   $code = check_var('code', 'POST', false, false, true);
-  if (!FacultyUtils::update_faculty($facultyID, $faculty, $code, $details['externalid'], $mysqli)) {
+  if (!FacultyUtils::update_faculty($facultyID, $faculty, $code, $details['externalid'], $details['externalsys'], $mysqli)) {
     $duplicate = true;
   } else {
     $logger = new Logger($mysqli);
@@ -110,6 +110,7 @@ if ($duplicate) {
 ?>
 <tr><td class="field"><?php echo $string["code"] ?></td><td><input type="text" size="30" maxlength="30" name="code" value="<?php echo $details['code']; ?>"/></td></tr>
 <tr><td class="field"><?php echo $string["externalid"] ?></td><td><?php echo $details['externalid']; ?></td></tr>
+<tr><td class="field"><?php echo $string['externalsys'] ?></td><td><?php echo $details['externalsys']; ?></td></tr>
 <input type="hidden" name="facultyID" value="<?php echo $facultyID ?>" />
 </table>
 <div align="right"><input type="submit" name="submit" value="<?php echo $string['ok'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" style="margin-right:0" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /></div>

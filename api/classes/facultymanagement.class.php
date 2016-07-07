@@ -79,11 +79,15 @@ class facultymanagement extends \api\abstractmanagement {
                 if (!isset($params['externalid'])) {
                     $params['externalid'] = null;
                 }
+                // Default null externalsys.
+                if (!isset($params['externalsys'])) {
+                    $params['externalsys'] = null;
+                }
                 // Default null code.
                 if (!isset($params['code'])) {
                     $params['code'] = null;
                 }
-                $id = \FacultyUtils::add_faculty($params['name'], $this->db, $params['code'], $params['externalid']);
+                $id = \FacultyUtils::add_faculty($params['name'], $this->db, $params['code'], $params['externalid'], $params['externalsys']);
                 if ($id) {
                     $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'externalid' => $params['externalid']);
                 } else {
@@ -135,7 +139,7 @@ class facultymanagement extends \api\abstractmanagement {
         // Update faculty.
         if ($facultyid) {
             if ($change) {
-                $update = \FacultyUtils::update_faculty($params['id'], $params['name'], $params['code'], $details['externalid'], $this->db);
+                $update = \FacultyUtils::update_faculty($params['id'], $params['name'], $params['code'], $details['externalid'], $details['externalsys'], $this->db);
                 if ($update) {
                     $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'externalid' => $details['externalid']);
                 } else {

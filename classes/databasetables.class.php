@@ -221,6 +221,7 @@ QUERY;
             `name` varchar(80) default NULL,
             `deleted` datetime default NULL,
             `externalid` varchar(255) default NULL,
+            `externalsys` varchar(255) default NULL,
             PRIMARY KEY  (`id`),
             UNIQUE INDEX `code` (`code`),
             UNIQUE INDEX `externalid` (`externalid`)
@@ -1151,6 +1152,7 @@ QUERY;
           `facultyID` int(11) default NULL,
           `deleted` datetime default NULL,
           `externalid` varchar(255) default NULL,
+          `externalsys` varchar(255) default NULL,
           PRIMARY KEY (`id`),
           UNIQUE INDEX `code` (`code`),
           UNIQUE INDEX `externalid` (`externalid`),

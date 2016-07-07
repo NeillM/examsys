@@ -16,12 +16,16 @@ if ($updater_utils->check_version("6.2.0")) {
         $updater_utils->execute_query($altersql, true);
         $altersql = "ALTER TABLE faculty ADD COLUMN `code` VARCHAR(30) NULL DEFAULT NULL AFTER `id`";
         $updater_utils->execute_query($altersql, true);
+        $altersql = "ALTER TABLE `faculty` ADD COLUMN `externalsys` VARCHAR(255) NULL DEFAULT NULL AFTER `externalid`";
+        $updater_utils->execute_query($altersql, true);
         $altersql = "ALTER TABLE `faculty` ADD UNIQUE INDEX `code` (`code`)";
         $updater_utils->execute_query($altersql, true);
         // schools.
         $altersql = "ALTER TABLE schools ADD COLUMN `externalid` varchar(255) NULL DEFAULT NULL";
         $updater_utils->execute_query($altersql, true);
         $altersql = "ALTER TABLE `schools` ADD UNIQUE INDEX `externalid` (`externalid`)";
+        $updater_utils->execute_query($altersql, true);
+        $altersql = "ALTER TABLE `schools` ADD COLUMN `externalsys` VARCHAR(255) NULL DEFAULT NULL AFTER `externalid`";
         $updater_utils->execute_query($altersql, true);
         $altersql = "ALTER TABLE schools ADD COLUMN `code` VARCHAR(30) NULL DEFAULT NULL AFTER `id`";
         $updater_utils->execute_query($altersql, true);

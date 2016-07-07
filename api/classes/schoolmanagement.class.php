@@ -77,6 +77,10 @@ class schoolmanagement extends \api\abstractmanagement {
         if (!isset($params['externalid'])) {
             $params['externalid'] = null;
         }
+        // Default null externalsys.
+        if (!isset($params['externalsys'])) {
+            $params['externalsys'] = null;
+        }
         // Default null code.
         if (!isset($params['code'])) {
             $params['code'] = null;
@@ -92,7 +96,7 @@ class schoolmanagement extends \api\abstractmanagement {
                 $schoolid = \SchoolUtils::get_school_id_by_name($params['name'], $this->db);
             }
             if (!$schoolid) {
-                $id = \SchoolUtils::add_school($facultyid, $params['name'], $this->db, $params['code'], $params['externalid']);
+                $id = \SchoolUtils::add_school($facultyid, $params['name'], $this->db, $params['code'], $params['externalid'], $params['externalsys']);
                 if ($id) {
                     $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'externalid' => $params['externalid']);
                 } else {
@@ -182,7 +186,7 @@ class schoolmanagement extends \api\abstractmanagement {
         if ($faculty) {        
             // Update school.
             if ($change) {
-                $update = \SchoolUtils::update_school($schoolid, $facultyid, $params['name'], $params['code'], $details['externalid'], $this->db);
+                $update = \SchoolUtils::update_school($schoolid, $facultyid, $params['name'], $params['code'], $details['externalid'], $details['externalsys'], $this->db);
                 if ($update) {
                     $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $schoolid, 'externalid' => $details['externalid']);
                 } else {

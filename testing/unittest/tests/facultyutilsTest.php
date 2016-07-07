@@ -54,6 +54,6 @@ class facultyutilstest extends unittestdatabase {
      */
     public function test_diff_external_faculties_to_internal_faculties() {
         $external = array("ABC", "JKL");
-        $this->assertEquals(array("DEF"), FacultyUtils::diff_external_faculties_to_internal_faculties($external, $this->db));
+        $this->assertEquals(array("DEF"), FacultyUtils::diff_external_faculties_to_internal_faculties($external, 'external', $this->db));
     }
 }
