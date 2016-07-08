@@ -63,15 +63,13 @@ class facultymanagement extends \api\abstractmanagement {
         } else {
             // Create faculty.
             // Check external id unique.
-            $ext = false;
             if (!empty($params['externalid'])) {
                 $facultyid = \FacultyUtils::get_facultyid_from_externalid($params['externalid'], $this->db);
-                $ext = true;
             }
-            // If not an external system faculty. Check faculty code unique.
-            if (!$ext and !empty($params['code'])) {
+            // Check faculty code unique.
+            if (!$facultyid and !empty($params['code'])) {
                 $facultyid = \FacultyUtils::get_facultyid_by_code($params['code'], $this->db);
-            } elseif (!$ext) {
+            } elseif (!$facultyid) {
                 $facultyid = \FacultyUtils::facultyid_by_name($params['name'], $this->db);
             }
             if (!$facultyid) {
