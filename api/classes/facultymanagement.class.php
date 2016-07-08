@@ -62,6 +62,7 @@ class facultymanagement extends \api\abstractmanagement {
             $data = array('statuscode' => $this->statuscodes['FACUTLY_NAME_NOT_SUPPLIED'], 'status' => $strings['faculty_name_not_supplied'], 'id' => null, 'externalid' => null);
         } else {
             // Create faculty.
+            $facultyid = false;
             // Check external id unique.
             if (!empty($params['externalid'])) {
                 $facultyid = \FacultyUtils::get_facultyid_from_externalid($params['externalid'], $this->db);
