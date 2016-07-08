@@ -92,7 +92,7 @@ class schoolmanagement extends \api\abstractmanagement {
             }
             if (!$schoolid and !empty($params['code'])) {
                 $schoolid = \SchoolUtils::get_schoolid_by_code($params['code'], $this->db);
-            } else {
+            } elseif (!$schoolid) {
                 $schoolid = \SchoolUtils::get_school_id_by_name($params['name'], $this->db);
             }
             if (!$schoolid) {

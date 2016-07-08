@@ -71,7 +71,7 @@ class facultymanagement extends \api\abstractmanagement {
             // If not an external system faculty. Check faculty code unique.
             if (!$ext and !empty($params['code'])) {
                 $facultyid = \FacultyUtils::get_facultyid_by_code($params['code'], $this->db);
-            } else {
+            } elseif (!$ext) {
                 $facultyid = \FacultyUtils::facultyid_by_name($params['name'], $this->db);
             }
             if (!$facultyid) {
