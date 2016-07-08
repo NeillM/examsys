@@ -119,6 +119,7 @@ if (isset($_GET['submit'])) {
   if (isset($_GET['graduates']) and $_GET['graduates'] != '') $roles_sql .= " OR roles = 'Graduate'";
   if (isset($_GET['leavers']) and $_GET['leavers'] != '') $roles_sql .= " OR roles = 'left'";
   if (isset($_GET['suspended']) and $_GET['suspended'] != '') $roles_sql .= " OR roles = 'suspended'";
+  if (isset($_GET['locked']) and $_GET['locked'] != '') $roles_sql .= " OR roles = 'locked'";
   if ($roles_sql != '') $roles_sql = '(' . substr($roles_sql,4) . ')';
   if (isset($_GET['leavers']) and $_GET['leavers'] == '' and isset($_GET['staff']) and  $_GET['staff'] != '') $roles_sql .= " AND grade != 'left'";
 

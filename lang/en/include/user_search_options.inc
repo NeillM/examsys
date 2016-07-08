@@ -26,6 +26,7 @@ $string['graduates'] = 'Graduates';
 $string['leavers'] = 'Leavers';
 $string['leftuniversity'] = 'Left University';
 $string['suspended'] = 'Suspended';
+$string['locked'] = 'Locked';
 $string['staff'] = 'Staff';
 $string['staffadmin'] = 'Staff (Admin)';
 $string['staffsysadmin'] = 'Staff (SysAdmin)';

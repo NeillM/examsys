@@ -244,6 +244,7 @@ if ($user_details['gender'] == 'Male') {
   $roles_array[] = 'Graduate';
   $roles_array[] = 'Left';
   $roles_array[] = 'Suspended';
+  $roles_array[] = 'Locked';
 
   foreach ($roles_array as $value) {
     if (substr($value,0,1) == '#') {

@@ -28,6 +28,7 @@ $string['externalexaminer'] = 'Zewnętrzny egzaminator';
 $string['graduate'] = 'Absolwent';
 $string['left'] = 'Skreślony'; //???
 $string['suspended'] = 'Zawieszony';
+$string['locked'] = 'Locked';
 $string['Staff'] = 'Kadra';
 $string['externalauth'] = '[zastosowanie zewnętrznej autoryzacji]';
 $string['gender'] = 'Płeć';

@@ -26,6 +26,7 @@ $string['graduates'] = 'Absolvent';
 $string['leavers'] = 'Odstupující';
 $string['leftuniversity'] = 'Opouští školu';
 $string['suspended'] = 'Suspendován';
+$string['locked'] = 'Locked';
 $string['staff'] = 'Zaměstnanec';
 $string['staffadmin'] = 'Zaměstnanec (Admin)';
 $string['staffsysadmin'] = 'Zaměstnanec (SysAdmin)';

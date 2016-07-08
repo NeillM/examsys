@@ -26,6 +26,7 @@ $string['graduates'] = 'Absolwenci';
 $string['leavers'] = 'Rezygnujący';//????
 $string['leftuniversity'] = 'Opuścił uniwersytet';//????
 $string['suspended'] = 'Zawieszeni';
+$string['locked'] = 'Locked';
 $string['staff'] = 'Pracownicy';
 $string['staffadmin'] = 'Pracownicy administracyjni';
 $string['staffsysadmin'] = 'Pracownik (SysAdmin)';
