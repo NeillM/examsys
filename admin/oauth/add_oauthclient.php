@@ -47,6 +47,11 @@ if (isset($_POST['submit'])) {
         } else {
             $oauth->add_permission($management . '/delete', $client, false);
         }
+        if (isset($_POST[$management . '/update'])) {
+            $oauth->add_permission($management . '/update', $client, true);
+        } else {
+            $oauth->add_permission($management . '/update', $client, false);
+        }
     }
     if (isset($_POST['modulemanagement/enrol'])) {
         $oauth->add_permission('modulemanagement/enrol', $client, true);
@@ -142,7 +147,7 @@ $render->render_admin_content($breadcrumb, $lang);
             
             <?php
                 foreach ($clientperms as $action) {
-                    echo "<tr><td class=\"field\">" . $action . "</td><td><input type=\"checkbox\" name=\"" . $action . "\"/></td></tr>"; 
+                    echo "<tr><td class=\"field\">" . $string[$action] . "</td><td><input type=\"checkbox\" name=\"" . $action . "\"/></td></tr>"; 
                 }
             ?>
         </table>

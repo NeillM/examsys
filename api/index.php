@@ -52,7 +52,7 @@ if ($configObject->get('cfg_api_enabled')) {
         $request = 'modulemanagement';
         $response = 'moduleManagementEnrolResponse';
         $operations = array('enrol', 'unenrol');
-        $fields = array('userid', 'attempt', 'moduleid', 'session');
+        $fields = array('userid', 'attempt', 'moduleid', 'session', 'studentid', 'moduleextid');
         $xsd = 'enrolrequest';
         process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
     });
@@ -61,8 +61,8 @@ if ($configObject->get('cfg_api_enabled')) {
     $app->post('/modulemanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {
         $request = 'modulemanagement';
         $response = 'moduleManagementResponse';
-        $operations = array('create', 'delete');
-        $fields = array('id', 'modulecode', 'name', 'school', 'faculty', 'sms');
+        $operations = array('create', 'update', 'delete');
+        $fields = array('id', 'modulecode', 'name', 'school', 'faculty', 'sms', 'externalid', 'schoolextid');
         $xsd = 'managementrequest';
         process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
     });
@@ -71,8 +71,8 @@ if ($configObject->get('cfg_api_enabled')) {
     $app->post('/coursemanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {
         $request = 'coursemanagement';
         $response = 'courseManagementResponse';
-        $operations = array('create', 'delete');
-        $fields = array('id', 'name', 'description', 'school', 'faculty');
+        $operations = array('create', 'update', 'delete');
+        $fields = array('id', 'name', 'description', 'school', 'faculty', 'externalid', 'schoolextid');
         $xsd = 'managementrequest';
         process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
     });
@@ -81,8 +81,8 @@ if ($configObject->get('cfg_api_enabled')) {
     $app->post('/schoolmanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {
         $request = 'schoolmanagement';
         $response = 'schoolManagementResponse';
-        $operations = array('create', 'delete');
-        $fields = array('id', 'name', 'faculty');
+        $operations = array('create', 'update', 'delete');
+        $fields = array('id', 'name', 'faculty', 'externalid', 'facultyextid', 'code');
         $xsd = 'managementrequest';
         process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
     });
@@ -91,8 +91,8 @@ if ($configObject->get('cfg_api_enabled')) {
     $app->post('/facultymanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {
         $request = 'facultymanagement';
         $response = 'facultyManagementResponse';
-        $operations = array('create', 'delete');
-        $fields = array('id', 'name');
+        $operations = array('create', 'update', 'delete');
+        $fields = array('id', 'name', 'externalid', 'code');
         $xsd = 'managementrequest';
         process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
     });
@@ -101,7 +101,7 @@ if ($configObject->get('cfg_api_enabled')) {
     $app->post('/usermanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {  
         $request = 'usermanagement';
         $response = 'userManagementResponse';
-        $operations = array('create', 'delete');
+        $operations = array('create', 'update', 'delete');
         $fields = array('id', 'username', 'title', 'forename', 'surname', 'initials', 'email', 'password',
             'course', 'gender', 'year', 'role', 'studentid', 'modules');
         $xsd = 'managementrequest';
@@ -111,7 +111,7 @@ if ($configObject->get('cfg_api_enabled')) {
     $app->post('/assessmentmanagement', function() use($api, $mysqli, $oauth, $render, $langpack) {  
         $request = 'assessmentmanagement';
         $response = 'assessmentManagementResponse';
-        $operations = array('create', 'schedule', 'delete');
+        $operations = array('create', 'schedule', 'delete', 'update');
         $fields = array('id', 'owner', 'type', 'title', 'startdatetime', 'enddatetime', 'modules', 'session', 'labs', 'month',
             'cohort_size', 'sittings', 'barriers', 'campus', 'notes', 'timezone', 'duration');
         $xsd = 'managementrequest';

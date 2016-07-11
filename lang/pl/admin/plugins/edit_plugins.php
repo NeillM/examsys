@@ -14,10 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['addfaculty'] = 'Přidat fakultu';
-$string['facultywarning'] = 'Tento název fakulty již existuje. Vyberte, prosím, jiný.';
-$string['code'] = 'Faculty Code';
-$string['name'] = 'Name';
-$string['externalid'] = 'External ID';
-$string['externalsys'] = 'External System';
-?>
+$string['rogoplugins'] = "Installed plugins";
+$string['editplugins'] = "Edit plugins";
+$string['enabled'] = "Enabled?";

@@ -29,6 +29,7 @@ $string['externalexaminer'] = 'External Examiner';
 $string['graduate'] = 'Graduate';
 $string['left'] = 'Left University';
 $string['suspended'] = 'Suspended';
+$string['locked'] = 'Locked';
 $string['Staff'] = 'Staff';
 $string['externalauth'] = '[Using external auth]';
 $string['gender'] = 'Gender';

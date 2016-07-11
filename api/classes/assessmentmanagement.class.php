@@ -57,6 +57,37 @@ class assessmentmanagement extends \api\abstractmanagement {
     );
     
     /**
+     * Check labs
+     * Currently we are working with the lab name as there is no lab management web service.
+     * @param array $labs list of labs we ant assignments to run in
+     * @return array validated list of labs assignment will run in, and any non fatal errors
+     */
+    private function check_labs($labs) {
+        $langpack = new \langpack();
+        $labsarray = array();
+        $labfactory = new \LabFactory($this->db);
+        $error = array();
+        if (!empty($labs)) {
+            foreach ($labs as $lab) {
+                // We allow empty lab elements so labs so the paper can have all labs removed.
+                if ($lab['value'] != '') {
+                    $labid = $labfactory->get_lab_id($lab['value']);
+                    if ($labid) {
+                        $labsarray[] = $labid;
+                    } else {
+                        $error[$lab['id']] = sprintf($langpack->get_string($this->langcomponent, 'paper_invalid_lab'), $lab['value']);
+                    }
+                }
+            }
+        }
+        if (count($labsarray) > 0) {
+            $labsstring = implode(',', $labsarray);
+        } else {
+            $labsstring = '';
+        }
+        return array($labsstring, $error);
+    }
+    /**
      * Handle thrown exceptions
      * @param string $exception - the thrown exception
      * @return array containg the relevant status code and status message
@@ -82,38 +113,20 @@ class assessmentmanagement extends \api\abstractmanagement {
                 return array('statuscode' => $this->statuscodes['PAPER_GENERAL_ERROR'], 'status' => $strings['paper_general_error'], 'id' => null);
         }
     }
-    
     /**
-     * Create/Update assessment
+     * Create assessment
      * @param array $parms create assessment parameters
      * @param integer $userid rogo user id linked to web service client
      * @return array assessment id and status
      */
     public function create($params, $userid) {
         $langpack = new \langpack();
-        $strings = $langpack->get_strings($this->langcomponent, array('paper_not_created', 'paper_scheduled_summative', 'paper_does_not_exist',
-            'paper_not_updated', 'paper_invalid_module', 'paper_invalid_lab', 'paper_module_error', 'paper_nothing_to_update'));
+        $strings = $langpack->get_strings($this->langcomponent, array('paper_not_created', 'paper_scheduled_summative', 'paper_invalid_module',
+             'paper_invalid_lab', 'paper_module_error'));
         $error = array();
         $configObject = \Config::get_instance();
         $paper = new \assessment($this->db, $configObject);
-        if (!empty($params['id'])) {
-            $paperid = \Paper_utils::paper_exists($params['id'], $this->db);
-            // Get current paper properties.
-            if ($paperid) {
-                $details = \Paper_utils::get_paper_properties($params['id'], $this->db);
-                $papertype = $details['type'];
-            } else {
-                // Paper does not exist so cannot update.
-                $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_PAPER'], 'status' => $strings['paper_does_not_exist'], 'id' => null);
-                return $this->get_response($data, 'create', $params['nodeid'], $error);
-            }
-            // Check if anything has been updated.
-            $checkparameter = array('title', 'owner', 'session', 'duration', 'timezone');
-            $change = $this->check_if_updated($checkparameter, $details, $params);
-        } else {
-            $paperid = false;
-            $papertype = $paper->get_type_value($params['type']);
-        }
+        $papertype = $paper->get_type_value($params['type']);
         // Check valid paper type.
         if ($papertype === false) {
              $data = $this->handle_exception('INVALID_PAPER_TYPE');
@@ -124,49 +137,124 @@ class assessmentmanagement extends \api\abstractmanagement {
             $data = array('statuscode' => $this->statuscodes['PAPER_SCHEDULE_SUMMATIVE'], 'status' => $strings['paper_scheduled_summative'], 'id' => null);
             return $this->get_response($data, 'create', $params['nodeid'], $error);
         }
-        if ($paperid) {
-            // Get title if not provided.
-            if (empty($params['title'])) {
-                $params['title'] = $details['title'];
-            }
-            // Get owner if not provided.
-            if (empty($params['owner'])) {
-                $params['owner'] = $details['owner'];
-            }
-            // Get session if not provided.
-            if (empty($params['session'])) {
-                $params['session'] = $details['session'];
-            }
-            // Get start datetime if not provided.
-            if (empty($params['startdatetime'])) {
-                $params['startdatetime'] = $details['startdatetime'];
-            } else {
-                // Mark something is to be updated.
-                $startdate = str_replace("T", " ", $params['startdatetime']);
-                if ($startdate != $details['startdatetime']) {
-                    $change = true;
+        // Use system timezone if not provided on creation.
+        if (empty($params['timezone'])) {
+            $params['timezone'] = $configObject->get('cfg_timezone');
+        }
+        // Check modules
+        $modulesarray = array();
+        if (!empty($params['modules'])) {
+            foreach ($params['modules'] as $module) {
+                $moduleid = \module_utils::get_moduleid_from_id($module['value'], $this->db);
+                if ($moduleid) {
+                    $modulesarray[] = $module['value'];
+                } else {
+                    $error[$module['id']] = sprintf($langpack->get_string($this->langcomponent, 'paper_invalid_module'), $module['value']);
                 }
-            }
-            // Get end datetime if not provided.
-            if (empty($params['enddatetime'])) {
-                $params['enddatetime'] = $details['enddatetime'];
-            } else {
-                // Mark something is to be updated.
-                $enddate = str_replace("T", " ", $params['enddatetime']);
-                if ($enddate != $details['enddatetime']) {
-                    $change = true;
-                }
-            }
-            // Get end timezone if not provided.
-            if (empty($params['timezone'])) {
-                $params['timezone'] = $details['timezone'];
-            }
-        } else {
-            // Use system timezone if not provided on creation.
-            if (empty($params['timezone'])) {
-                $params['timezone'] = $configObject->get('cfg_timezone');
             }
         }
+        
+        if (count($error) > 0) {
+            $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_MODULES'], 'status' => $strings['paper_module_error'], 'id' => null);
+        } else {
+            // Check labs.
+            if (!empty($params['labs'])) {
+                $checklabs = $this->check_labs($params['labs']);
+                $labs = $checklabs[0];
+                $error += $checklabs[1];
+            } else {
+                $labs = '';
+            }
+            
+            if (empty($params['duration'])) {
+                $params['duration'] = '';
+            }
+            // Create exam.
+            try {
+                $id = $paper->create($params['title'], $papertype, $params['owner'], $params['startdatetime'],
+                    $params['enddatetime'], $labs, $params['duration'], $params['session'], $modulesarray, $params['timezone']);
+                if ($id) {
+                    $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'error' => $error);
+                } else {
+                    $data = array('statuscode' => $this->statuscodes['PAPER_NOT_CREATED'], 'status' => $strings['paper_not_created'], 'id' => null);
+                }
+            } catch (\Exception $e) {
+                $data = $this->handle_exception($e->getMessage());
+            }
+        }
+        
+        return $this->get_response($data, 'create', $params['nodeid'], $error);
+    }
+    /**
+     * Update assessment
+     * @param array $parms update assessment parameters
+     * @param integer $userid rogo user id linked to web service client
+     * @return array assessment id and status
+     */
+    public function update($params, $userid) {
+        $langpack = new \langpack();
+        $strings = $langpack->get_strings($this->langcomponent, array('paper_scheduled_summative', 'paper_does_not_exist',
+            'paper_not_updated', 'paper_invalid_module', 'paper_invalid_lab', 'paper_module_error', 'paper_nothing_to_update'));
+        $error = array();
+        $configObject = \Config::get_instance();
+        $paper = new \assessment($this->db, $configObject);
+        $paperid = \Paper_utils::paper_exists($params['id'], $this->db);
+        // Get current paper properties.
+        if ($paperid) {
+            $details = \Paper_utils::get_paper_properties($params['id'], $this->db);
+            $papertype = $details['type'];
+        } else {
+            // Paper does not exist so cannot update.
+            $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_PAPER'], 'status' => $strings['paper_does_not_exist'], 'id' => null);
+            return $this->get_response($data, 'update', $params['nodeid'], $error);
+        }
+        // Check if anything has been updated.
+        $checkparameter = array('title', 'owner', 'session', 'duration', 'timezone');
+        $change = $this->check_if_updated($checkparameter, $details, $params);
+
+        // Error if trying to update a summative exam when they are set to be scheduled only.
+        if ($configObject->get('cfg_summative_mgmt') and $papertype == $paper::TYPE_SUMMATIVE) {
+            $data = array('statuscode' => $this->statuscodes['PAPER_SCHEDULE_SUMMATIVE'], 'status' => $strings['paper_scheduled_summative'], 'id' => null);
+            return $this->get_response($data, 'update', $params['nodeid'], $error);
+        }
+
+        // Get title if not provided.
+        if (empty($params['title'])) {
+            $params['title'] = $details['title'];
+        }
+        // Get owner if not provided.
+        if (empty($params['owner'])) {
+            $params['owner'] = $details['owner'];
+        }
+        // Get session if not provided.
+        if (empty($params['session'])) {
+            $params['session'] = $details['session'];
+        }
+        // Get start datetime if not provided.
+        if (empty($params['startdatetime'])) {
+            $params['startdatetime'] = $details['startdatetime'];
+        } else {
+            // Mark something is to be updated.
+            $startdate = str_replace("T", " ", $params['startdatetime']);
+            if ($startdate != $details['startdatetime']) {
+                $change = true;
+            }
+        }
+        // Get end datetime if not provided.
+        if (empty($params['enddatetime'])) {
+            $params['enddatetime'] = $details['enddatetime'];
+        } else {
+            // Mark something is to be updated.
+            $enddate = str_replace("T", " ", $params['enddatetime']);
+            if ($enddate != $details['enddatetime']) {
+                $change = true;
+            }
+        }
+        // Get end timezone if not provided.
+        if (empty($params['timezone'])) {
+            $params['timezone'] = $details['timezone'];
+        }
+
         // Check modules
         $modulesarray = array();
         if (!empty($params['modules'])) {
@@ -192,33 +280,13 @@ class assessmentmanagement extends \api\abstractmanagement {
         if (count($error) > 0) {
             $data = array('statuscode' => $this->statuscodes['PAPER_INVALID_MODULES'], 'status' => $strings['paper_module_error'], 'id' => null);
         } else {
-            if ($paperid and (empty($params['labs']))) {
+            if (empty($params['labs'])) {
                 $labs = $details['labs'];
             } else {
                 // Check labs.
-                // Currently we are working with the lab name as there is no lab management web service.
-                $labsarray = array();
-                $labfactory = new \LabFactory($this->db);
-                if (!empty($params['labs'])) {
-                    foreach ($params['labs'] as $lab) {
-                        // We allow empty lab elements so labs so the paper can have all labs removed.
-                        if ($lab['value'] != '') {
-                            $labid = $labfactory->get_lab_id($lab['value']);
-                            if ($labid) {
-                                $labsarray[] = $labid;
-                            } else {
-                                $error[$lab['id']] = sprintf($langpack->get_string($this->langcomponent, 'paper_invalid_lab'), $lab['value']);
-                            }
-                        } else {
-                            $labsarray[] = '';
-                        }
-                    }
-                }
-                if (count($labsarray) > 0) {
-                    $labs = implode(',', $labsarray);
-                } else {
-                    $labs = '';
-                }
+                $checklabs = $this->check_labs($params['labs']);
+                $labs = $checklabs[0];
+                $error += $checklabs[1];
             }
             // Mark something is to be updated.
             if ($paperid) {
@@ -228,46 +296,27 @@ class assessmentmanagement extends \api\abstractmanagement {
             }
             
             if (empty($params['duration'])) {
-                if ($paperid) {
-                    $params['duration'] = $details['duration'];   
-                } else {
-                    $params['duration'] = '';
-                }
+                $params['duration'] = $details['duration'];   
             }
             // Update exam.
-            if (!empty($params['id'])) {
-                if ($change) {
-                    try {
-                        $id = $paper->update($params['id'], $params['title'], $papertype, $params['owner'], $params['startdatetime'],
-                            $params['enddatetime'], $labs, $params['duration'], $params['session'], $modulesarray, $params['timezone'], $userid);
-                        if ($id) {
-                            $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'error' => $error);
-                        } else {
-                            $data = array('statuscode' => $this->statuscodes['PAPER_NOT_UPDATED'], 'status' => $strings['paper_not_updated'], 'id' => null);
-                        }
-                    } catch (\Exception $e) {
-                        $data = $this->handle_exception($e->getMessage());
-                    }
-                } else {
-                    $data = array('statuscode' => $this->statuscodes['PAPER_NOTHING_TO_UPDATE'], 'status' => $strings['paper_nothing_to_update'], 'id' => null);
-                }
-            // Create exam.
-            } else {
+            if ($change) {
                 try {
-                    $id = $paper->create($params['title'], $papertype, $params['owner'], $params['startdatetime'],
-                        $params['enddatetime'], $labs, $params['duration'], $params['session'], $modulesarray, $params['timezone']);
+                    $id = $paper->update($params['id'], $params['title'], $papertype, $params['owner'], $params['startdatetime'],
+                        $params['enddatetime'], $labs, $params['duration'], $params['session'], $modulesarray, $params['timezone'], $userid);
                     if ($id) {
-                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'error' => $error);
+                        $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'error' => $error);
                     } else {
-                        $data = array('statuscode' => $this->statuscodes['PAPER_NOT_CREATED'], 'status' => $strings['paper_not_created'], 'id' => null);
+                        $data = array('statuscode' => $this->statuscodes['PAPER_NOT_UPDATED'], 'status' => $strings['paper_not_updated'], 'id' => null);
                     }
                 } catch (\Exception $e) {
                     $data = $this->handle_exception($e->getMessage());
                 }
+            } else {
+                $data = array('statuscode' => $this->statuscodes['PAPER_NOTHING_TO_UPDATE'], 'status' => $strings['paper_nothing_to_update'], 'id' => null);
             }
         }
         
-        return $this->get_response($data, 'create', $params['nodeid'], $error);
+        return $this->get_response($data, 'update', $params['nodeid'], $error);
     }
     
     /**
@@ -304,16 +353,16 @@ class assessmentmanagement extends \api\abstractmanagement {
             $params['cohort_size'] = '<whole cohort>';
         }
         if (empty($params['sittings'])) {
-            $params['sittings'] = NULL;
+            $params['sittings'] = null;
         }
         if (empty($params['barriers'])) {
-            $params['barriers'] = NULL;
+            $params['barriers'] = null;
         }
         if (empty($params['campus'])) {
-            $params['campus'] = NULL;
+            $params['campus'] = null;
         }
         if (empty($params['notes'])) {
-            $params['notes'] = NULL;
+            $params['notes'] = null;
         }
         // Create.
         try {

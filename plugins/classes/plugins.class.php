@@ -176,7 +176,7 @@ abstract class plugins {
      */
     public function install($dbuser, $dbpasswd) {
         // Disable at start of process, enable at end if successful.
-        $this->config->set_setting('installed', 0, $this->plugin);
+        $this->config->set_setting('installed', 0, \Config::BOOLEAN, $this->plugin);
         // Check plugin dependencies.
         $check = $this->check_plugin_dependencies();
         if ($check !== true) {
@@ -237,7 +237,7 @@ abstract class plugins {
             // 2. Update version.
             $this->update_plugin_version($this->version);
             // 3. Flag plugin as installed.
-            $this->config->set_setting('installed', 1, $this->plugin);
+            $this->config->set_setting('installed', 1, \Config::BOOLEAN, $this->plugin);
         }
         return 'OK';
     }
@@ -266,7 +266,7 @@ abstract class plugins {
                 return 'DROP_SCHEMA_FAIL';
             }
             // Disable plugin.
-            $this->config->set_setting('installed', 0, $this->plugin);
+            $this->config->set_setting('installed', 0, \Config::BOOLEAN, $this->plugin);
             // Delete plugin.
             $this->delete_plugin_version();
             return 'OK';
@@ -293,7 +293,7 @@ abstract class plugins {
             } elseif ($current_plugin_version == $new_plugin_version) {
                 // Cannot install already installed.
                 // Not fatal so renable
-                $this->config->set_setting('installed', 1, $this->plugin);
+                $this->config->set_setting('installed', 1, \Config::BOOLEAN, $this->plugin);
                 return 'ALREADY_INSTALLED';
             }
         } else {
@@ -371,6 +371,13 @@ abstract class plugins {
      */
     public function get_file_requires() {
         return $this->requires;
+    }
+    /**
+     * Get installed version of plugin
+     * @return string value of installed version
+     */
+    public function get_installed_version() {
+        return $this->installedversion;
     }
     /**
      * Enable the plugin.

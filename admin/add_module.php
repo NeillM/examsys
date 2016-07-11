@@ -23,6 +23,7 @@
 */
 
 require_once '../include/sysadmin_auth.inc';
+require_once '../include/errors.inc';
 
 $SMS = SMSutils::GetSmsUtils();
 $cfg_sms_sources = array();
@@ -70,6 +71,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   if (isset($_POST['stdset']))    $stdset = true;
   if (isset($_POST['mapping']))   $mapping = true;
   if (isset($_POST['schoolid']))  $schoolid = $_POST['schoolid'];
+  $externalid = check_var('externalid', 'POST', false, false, true);
   if (isset($_POST['vle_api'])) {
     $vle_data = $_POST['vle_api'];
     if ($vle_data == '') {
@@ -105,8 +107,22 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 
   $ebel_grid_template = $_POST['ebel_grid_template'];
 
-  $modID = module_utils::add_modules($modulecode, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli, $sms_import, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start);
+  $modID = module_utils::add_modules($modulecode, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli, $sms_import, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start, $externalid);
 
+  // New sytle SMS enrolments.
+  $yearutils = new yearutils($mysqli);
+  $session = $yearutils->get_current_session();
+  $userObj = userObject::get_instance();
+  $smsplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
+  foreach($smsplugin_name as $name) {
+    $smspluginns = 'plugins\SMS\\' . $name. '\\' . $name;
+    if ($smsplugin->supports_module_import() !== false and $smsplugin->supports_enrol_import() !== false) {
+        $smsplugin = new $smspluginns($mysqli, $userObj->get_user_ID());
+        $smsplugin->update_module_enrolments($externalid, $session);
+    }
+  }
+  
+  
   header("location: list_modules.php");
   exit();
 } else {
@@ -195,21 +211,25 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 
 <?php
   $old_faculty = '';
+  $old_facultycode = '';
+  $old_facultyid = 0;
   echo "<tr><td class=\"field\">" . $string['school'] . "</td><td><select id=\"schoolid\" name=\"schoolid\" required>\n<option value=\"\"></option>\n";
-  $result = $mysqli->prepare("SELECT schools.id, school, faculty.name FROM schools, faculty WHERE schools.facultyID = faculty.id AND schools.deleted IS NULL ORDER BY faculty.name, school");
+  $result = $mysqli->prepare("SELECT schools.id, schools.code, school, faculty.code, faculty.name, faculty.id FROM schools, faculty WHERE schools.facultyID = faculty.id AND schools.deleted IS NULL ORDER BY faculty.code, faculty.name, school");
   $result->execute();
-  $result->bind_result($id, $school, $faculty);
+  $result->bind_result($id, $code, $school, $facultycode, $faculty, $facultyid);
   while ($result->fetch()) {
-    if ($old_faculty != $faculty) {
-      if ($old_faculty != '') echo "</optgroup>\n";
-      echo "<optgroup label=\"$faculty\">\n";
+    if ($facultyid != $old_facultyid) {
+      if ($old_facultycode . ' ' . $old_faculty != '') echo "</optgroup>\n";
+      echo "<optgroup label=\"$facultycode $faculty\">\n";
     }
     if (isset($_POST['schoolid']) and $_POST['schoolid'] == $id) {
-      echo "<option value=\"$id\" selected>$school</option>\n";
+      echo "<option value=\"$id\" selected>$code $school</option>\n";
     } else {
-      echo "<option value=\"$id\">$school</option>\n";
+      echo "<option value=\"$id\">$code $school</option>\n";
     }
+    $old_facultyid = $facultyid;
     $old_faculty = $faculty;
+    $old_facultycode = $facultycode;
   }
   $result->close();
   echo "</optgroup>\n</select></td></tr>\n";
@@ -252,7 +272,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     }
     $result->close();
     ?></select></td></tr>
-
+    <tr><td class="field"><?php echo $string['externalid'] ?></td><td><input type="text" size="30" maxlength="255" name="externalid" value=""></td></tr>
     <tr><td colspan="2" style="text-align:center; padding-top:12px"><input type="submit" class="ok" name="submit" value="<?php echo $string['add'] ?>"><input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" /></td></tr>
 		</table>
 	</form>

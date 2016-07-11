@@ -606,7 +606,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
    * Load default data needed for rogo to function
    */
   static function loadData() {
-    global $timezone_array;
+    global $string, $timezone_array;
     // Add 3 academic sessions to the the new user started.
     $calendaryear = date('Y');
     $previouscalendaryear = date('Y') - 1;
@@ -622,25 +622,31 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $insert->execute();
     $insert->close();
     // Add user psermissions.
-    $permissions = array('assessmentmanagement/create' => 'Create/Update paper',
-        'assessmentmanagement/delete' => 'Delete a paper',
-        'assessmentmanagement/schedule' => 'SChedule a summative assessment',
-        'gradebook' => 'Gradebook',
-        'modulemanagement/create' => 'Create/Update a module',
-        'modulemanagement/delete' => 'Delete a module',
-        'modulemanagement/enrol' => 'Enrol Users onto a module',
-        'modulemanagement/unenrol' => 'UnEnrol Users from a module',
-        'usermanagement/create' => 'Create/Update a user',
-        'usermanagement/delete' => 'Delete a user',
-        'coursemanagement/create' => 'Create/Update a course',
-        'coursemanagement/delete' => 'Delete a course',
-        'schoolmanagement/create' => 'Create/Update a school',
-        'schoolmanagement/delete' => 'Delete a school',
-        'facultymanagement/create' => 'Create/Update a faculty',
-        'facultymanagement/delete' => 'Delete a faculty');
-    foreach ($permissions as $permission => $description) {
-        $insert = self::$db->prepare("INSERT INTO permissions (action, description) VALUES (?, ?)");
-        $insert->bind_param('ss', $permission, $description);
+    $permissions = array('assessmentmanagement/create',
+        'assessmentmanagement/update',
+        'assessmentmanagement/delete',
+        'assessmentmanagement/schedule',
+        'gradebook',
+        'modulemanagement/create',
+        'modulemanagement/update',
+        'modulemanagement/delete',
+        'modulemanagement/enrol',
+        'modulemanagement/unenrol',
+        'usermanagement/create',
+        'usermanagement/update',
+        'usermanagement/delete',
+        'coursemanagement/create',
+        'coursemanagement/delete',
+        'coursemanagement/update',
+        'schoolmanagement/create',
+        'schoolmanagement/delete',
+        'schoolmanagement/update',
+        'facultymanagement/create',
+        'facultymanagement/delete',
+        'facultymanagement/update');
+    foreach ($permissions as $permission) {
+        $insert = self::$db->prepare("INSERT INTO permissions (action) VALUES (?)");
+        $insert->bind_param('s', $permission);
         $insert->execute();
         $insert->close();
     }
@@ -654,10 +660,10 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         '301-400', '401-500'));
     $configObject = Config::get_instance();
     $configObject->set_db_object(self::$db);
-    $configObject->set_setting('timezones', $encoded_timezones);
-    $configObject->set_setting('cohort_sizes', $encoded_cohorts);
-    $configObject->set_setting('max_duration', 779);
-    $configObject->set_setting('max_sittings', 6);
+    $configObject->set_setting('timezones', $encoded_timezones, 'json');
+    $configObject->set_setting('cohort_sizes', $encoded_cohorts, 'json');
+    $configObject->set_setting('max_duration', 779, 'integer');
+    $configObject->set_setting('max_sittings', 6, 'integer');
   }
   
   /**
