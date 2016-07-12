@@ -52,8 +52,10 @@
   
   $readonly = false;
   $readonlyhosts = $configObject->get('cfg_readonly_hosts');
-  if (in_array($_SERVER['SERVER_ADDR'], $readonlyhosts)){
+  if (!empty($readonlyhosts)) {
+    if (in_array($_SERVER['SERVER_ADDR'], $readonlyhosts)){
       $readonly = true;
+    }
   }
   
   // Check access to media directory.
