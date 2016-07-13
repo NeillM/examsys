@@ -50,13 +50,7 @@
     }
   }
   
-  $readonly = false;
-  $readonlyhosts = $configObject->get('cfg_readonly_hosts');
-  if (!empty($readonlyhosts)) {
-    if (in_array($_SERVER['SERVER_ADDR'], $readonlyhosts)){
-      $readonly = true;
-    }
-  }
+  $readonly = rogo_directory::is_read_only();
   
   // Check access to media directory.
   try {
