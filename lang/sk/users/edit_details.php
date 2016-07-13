@@ -16,7 +16,7 @@
 
 require '../lang/' . $language . '/users/details.php';
 
-$string['edituserdetails'] = 'Editova detaily pouívate¾a';
+$string['edituserdetails'] = 'EditovaÂ detaily pouÂÃ­vateÅ¾a';
 $string['photo'] = 'Fotografia';
-$string['usernameexists'] = '<strong>CHYBA:</strong> Pouívate¾ské meno u existuje.'
+$string['usernameexists'] = '<strong>CHYBA:</strong> PouÂÃ­vateÅ¾skÃ© meno uÂ existuje.'
 ?>
