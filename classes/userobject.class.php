@@ -831,13 +831,13 @@ class UserObject extends RogoStaticSingleton {
       $notice = UserNotices::get_instance();
       $notice->display_notice('Change DB user failed', $msg, '../artwork/exclamation_64.png', '#C00000', true, false);
       if ($this->db->error) {
-          try {
-              throw new Exception($string['showerror']);
-          } catch (Exception $e) {
-              echo $string['showerror'] . "<br >";
-              echo "<body>\n</html>";
-              exit();
-          }
+        try {
+          throw new Exception($string['showerror']);
+        } catch (Exception $e) {
+          echo $string['showerror'] . "<br >";
+          echo "<body>\n</html>";
+          exit();
+        }
       }
     }
   }

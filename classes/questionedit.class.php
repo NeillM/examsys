@@ -352,9 +352,9 @@ QUERY;
       $success = ($result->affected_rows > -1);
       if ($this->_mysqli->error) {
         try {
-            throw new Exception($string['showerror']);
+          throw new Exception($string['showerror']);
         } catch (Exception $e) {
-            echo $string['showerror'] . "<br >";
+          echo $string['showerror'] . "<br >";
         }
       }
       if ($success) {

@@ -67,44 +67,43 @@ Class DBUtils {
    * @return boolean
    */
   public static function check_sqlparams($bindtype, $bindvalue, $sql) {
-      if (is_array($bindvalue) && !empty($bindvalue) && is_array($bindtype) && !empty($bindtype) && (substr_count($sql, "?") === count($bindvalue)) && (count($bindvalue)=== count($bindtype))){
-          $counter = 0 ;
-          foreach ($bindtype as $type) {
-            if (!preg_match('/^(i|d|s|b)$/', $type)) {
-                return false;
-            }
-            $param = $bindvalue[$counter];
-            $counter++;
-            $error = null;
-            switch ($type) {
-                case "i":
-                    if(!ctype_digit(strval($param))) {
-                        $error = true;
-                    }
-                    break;
-                case "d":
-                    if(!is_float($param)) {
-                        $error = true;
-                    }
-                    break;
-                case "s":
-                    if(!is_string($param)) {
-                        $error = true;
-                    }
-                    break;
-                case "b":
-                    break;                                            
-                default:
-                    $error = true;
-            }
+    if (is_array($bindvalue) && !empty($bindvalue) && is_array($bindtype) && !empty($bindtype) && (substr_count($sql, "?") === count($bindvalue)) && (count($bindvalue) === count($bindtype))) {
+      while (!empty($bindtype)) {
+        $type = array_pop($bindtype);
+        $param = array_pop($bindvalue);
+        if (!preg_match('/^(i|d|s|b)$/', $type)) {
+          return false;
         }
-        if (!$error){
-            return true;
+        $error = null;
+        switch ($type) {
+          case "i":
+            if (!is_int($param)) {
+              $error = true;
+            }
+            break;
+          case "d":
+            if (!is_float($param)) {
+              $error = true;
+            }
+            break;
+          case "s":
+            if (!is_string($param)) {
+              $error = true;
+            }
+            break;
+          case "b":
+            break;
+          default:
+            $error = true;
         }
-        return false;
       }
+      if (!$error) {
+        return true;
+      }
+      return false;
+    }
   }
-   
+
   /**
    * Checks if the schema for a table supports full text search indexing.
    *

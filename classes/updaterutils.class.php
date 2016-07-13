@@ -304,9 +304,9 @@ Class UpdaterUtils {
       echo '<li class="error">ERROR: ' . $sql;
       if ($this->mysqli->error) {
         try {
-            throw new Exception($string['showerror']);
+          throw new Exception($string['showerror']);
         } catch (Exception $e) {
-            echo $string['showerror'] . "<br >";
+          echo $string['showerror'] . "<br >";
         }
       }
       echo "</li>\n";

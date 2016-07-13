@@ -83,29 +83,38 @@ class UoN_LTI extends BLTI {
    * @return
    */
   public function init_lti($usesession = true, $doredirect = false) {
-    if (!isset($_REQUEST["lti_message_type"]))
+    if (!isset($_REQUEST["lti_message_type"])) {
       $_REQUEST["lti_message_type"] = '';
-    if (!isset($_REQUEST["lti_version"]))
+    }
+    if (!isset($_REQUEST["lti_version"])) {
       $_REQUEST["lti_version"] = '';
-    if (!isset($_REQUEST["resource_link_id"]))
+    }
+    if (!isset($_REQUEST["resource_link_id"])) {
       $_REQUEST["resource_link_id"] = '';
-
+    }
+      
     // If this request is not an LTI Launch, either
     // give up or try to retrieve the context from session
     if (!is_lti_request()) {
       if ($usesession === false)
         return;
       if (strlen(session_id()) > 0) {
-        if (isset($_SESSION['_lti_row']))
+        if (isset($_SESSION['_lti_row'])) {
           $row = $_SESSION['_lti_row'];
-        if (isset($row))
+        }
+          
+        if (isset($row)) {
           $this->row = $row;
-        if (isset($_SESSION['_lti_context_id']))
+        } 
+        if (isset($_SESSION['_lti_context_id'])) {
           $context_id = $_SESSION['_lti_context_id'];
-        if (isset($context_id))
+        } 
+        if (isset($context_id)) {
           $this->context_id = $context_id;
-        if (isset($_SESSION['_lti_context']))
+        } 
+        if (isset($_SESSION['_lti_context'])) {
           $info = $_SESSION['_lti_context'];
+        }
         if (isset($info)) {
           $this->info = $info;
           $this->valid = true;

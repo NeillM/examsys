@@ -70,11 +70,10 @@ class BLTI {
     } else {      
         
       $key_column = $parm['key_column'] ? $parm['key_column'] : 'oauth_consumer_key';
-      $oauth_key = mysqli_real_escape_string($oauth_consumer_key);
       $table = $parm['table'];
       $sql = "SELECT * FROM  $table WHERE $key_column = ?";
       $result = $mysqli->prepare($sql);
-      $result->bind_param('i', $oauth_key);
+      $result->bind_param('i', $oauth_consumer_key);
       $result->execute();
       $result->store_result();
       $num_rows = $result->num_rows;
