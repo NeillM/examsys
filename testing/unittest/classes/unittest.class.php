@@ -44,7 +44,6 @@ abstract class UnitTest extends \PHPUnit_Framework_TestCase {
     parent::setUp();
     $this->config = RogoConfig::get_instance();
     $this->config->use_phpunit_site();
-    $this->config->set('cfg_readonly_host', false);
     $this->default_config = clone($this->config);
     vfsStream::setup(self::DATA_DIRECTORY, 0777);
     $this->config->set('cfg_rogo_data', vfsStream::url(self::DATA_DIRECTORY));

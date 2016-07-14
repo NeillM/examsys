@@ -275,6 +275,8 @@ class Config extends RogoStaticSingleton {
       }
     }
     $this->set('authentication', $authentication);
+    // Default host to be writable.
+    $this->set('cfg_readonly_host', false);
     $this->behatsetup = true;
   }
   
@@ -293,6 +295,8 @@ class Config extends RogoStaticSingleton {
     $this->set('cfg_db_database', $this->get('cfg_phpunit_db_database'));
     // Use the correct user data directory.
     $this->set('cfg_rogo_data', $this->get('cfg_phpunit_data'));
+    // Default host to be writable.
+    $this->set('cfg_readonly_host', false);
     $this->phpunitsetup = true;
   }
 

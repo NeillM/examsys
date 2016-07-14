@@ -69,7 +69,6 @@ abstract class unittestdatabase extends \PHPUnit_Extensions_Database_TestCase {
      */
     public function setUp() {
         $this->setup_db();
-        $this->config->set('cfg_readonly_host', false);
         parent::setUp();
     }
     
