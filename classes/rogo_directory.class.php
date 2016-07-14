@@ -96,18 +96,22 @@ abstract class rogo_directory {
 
   /**
    * Check if the directory has the correct permissions.
-   * @param boolean $readonly true if read only permission check, false otherwise
    * @return boolean true on correct, false otherwise.
    */
-  public function check_permissions($readonly = false) {
+  public function check_permissions() {
     $location = $this->location();
     $readable = is_readable($location);
-    if ($readable and $readonly) {
-      return true;
-    } elseif (!is_writable($location) or !$readable) {
-      return false;
+    $writable = is_writable($location);
+    if (self::is_read_only()) {
+        if ($readable and !$writable) {
+            return true;
+        }
+    } else {
+        if ($readable and $writable) {
+            return true;
+        }
     }
-    return true;
+    return false;
   }
   
   /**

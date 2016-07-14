@@ -70,6 +70,7 @@ trait frontend_hooks {
     }
     self::$default_config = clone($config);
     $config->use_behat_site();
+    $config->set('cfg_readonly_host', false);
     self::$rogo_config = clone($config);
 
     state::connect($config);

@@ -133,7 +133,6 @@ class rogo_directorytest extends UnitTest {
    * @group rogo_directory
    */
   public function test_clear() {
-    $this->config->set('cfg_readonly_host', false);
     $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
     // The contents of the directory.
     $structre = array(
@@ -159,7 +158,6 @@ class rogo_directorytest extends UnitTest {
    * @group rogo_directory
    */
   public function test_clear_empty() {
-    $this->config->set('cfg_readonly_host', false);
     $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
     $structre = array(
       'test' => array(),
@@ -261,7 +259,6 @@ class rogo_directorytest extends UnitTest {
    * @group rogo_directory
    */
   public function test_clear_no_permissions2() {
-    $this->config->set('cfg_readonly_host', false);
     $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
     // The contents of the directory.
     $structre = array(
@@ -374,6 +371,18 @@ class rogo_directorytest extends UnitTest {
   }
 
   /**
+   * Tests the check_permissions method returns true when the directory is usable (read only server).
+   *
+   * @group rogo_directory
+   */
+  public function test_check_permissions_read_only() {
+    $this->config->set('cfg_readonly_host', true);
+    $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data'));
+    vfsStreamWrapper::getRoot()->chmod(0500);
+    $this->assertTrue($this->rogodirectory->check_permissions());
+  }
+  
+  /**
    * Tests the check_permissions method returns false when the directory is not writable.
    *
    * @group rogo_directory
@@ -384,6 +393,17 @@ class rogo_directorytest extends UnitTest {
     $this->assertFalse($this->rogodirectory->check_permissions());
   }
 
+  /**
+   * Tests the check_permissions method returns false when the directory is not writable (read only server).
+   *
+   * @group rogo_directory
+   */
+  public function test_check_permissions_not_writable_read_only() {
+    $this->config->set('cfg_readonly_host', true);
+    $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data'));
+    $this->assertFalse($this->rogodirectory->check_permissions());
+  }
+  
   /**
    * Tests the check_permissions method returns false when the directory is not writable.
    *

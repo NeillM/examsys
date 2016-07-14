@@ -50,12 +50,10 @@
     }
   }
   
-  $readonly = rogo_directory::is_read_only();
-  
   // Check access to media directory.
   try {
     $mediadir = rogo_directory::get_directory('media');
-    if (!$mediadir->check_permissions($readonly)) {
+    if (!$mediadir->check_permissions()) {
       echo "ERROR::Invalid permissions on media directory: " . $mediadir->location() . "\n";
       $error = true;
     }
@@ -66,7 +64,7 @@
   // Check access to email_templates directory.
   try {
     $mediadir = rogo_directory::get_directory('email_templates');
-    if (!$mediadir->check_permissions($readonly)) {
+    if (!$mediadir->check_permissions()) {
       echo "ERROR::Invalid permissions on email_templates directory: " . $mediadir->location() . "\n";
       $error = true;
     }
@@ -77,7 +75,7 @@
   // Check access to qti_export directory.
   try {
     $mediadir = rogo_directory::get_directory('qti_export');
-    if (!$mediadir->check_permissions($readonly)) {
+    if (!$mediadir->check_permissions()) {
       echo "ERROR::Invalid permissions on qti_export directory: " . $mediadir->location() . "\n";
       $error = true;
     }
@@ -88,7 +86,7 @@
   // Check access to qti_import directory.
   try {
     $mediadir = rogo_directory::get_directory('qti_import');
-    if (!$mediadir->check_permissions($readonly)) {
+    if (!$mediadir->check_permissions()) {
       echo "ERROR::Invalid permissions on qti_import directory: " . $mediadir->location() . "\n";
       $error = true;
     }
@@ -99,7 +97,7 @@
   // Check access to user_photo directory.
   try {
     $mediadir = rogo_directory::get_directory('user_photo');
-    if (!$mediadir->check_permissions($readonly)) {
+    if (!$mediadir->check_permissions()) {
       echo "ERROR::Invalid permissions on user_photo directory: " . $mediadir->location() . "\n";
       $error = true;
     }
@@ -110,7 +108,7 @@
   // Check access to help_student directory.
   try {
     $mediadir = rogo_directory::get_directory('help_student');
-    if (!$mediadir->check_permissions($readonly)) {
+    if (!$mediadir->check_permissions()) {
       echo "ERROR::Invalid permissions on help_student directory: " . $mediadir->location() . "\n";
       $error = true;
     }
@@ -121,7 +119,7 @@
   // Check access to help_staff directory.
   try {
     $mediadir = rogo_directory::get_directory('help_staff');
-    if (!$mediadir->check_permissions($readonly)) {
+    if (!$mediadir->check_permissions()) {
       echo "ERROR::Invalid permissions on help_staff directory: " . $mediadir->location() . "\n";
       $error = true;
     }
