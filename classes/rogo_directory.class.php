@@ -348,7 +348,7 @@ abstract class rogo_directory {
   
   /**
    * Check if server is set to be read only
-   * @return boolean true if readonly server, false otehrwise
+   * @return boolean true if readonly server, false otherwise
    */
   public static function is_read_only() {
     $config = Config::get_instance();
