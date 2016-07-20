@@ -68,11 +68,11 @@ Class DBUtils {
    */
   public static function check_sqlparams($bindtype, $bindvalue, $sql) {
     if (is_array($bindvalue) && !empty($bindvalue) && is_array($bindtype) && !empty($bindtype) && (substr_count($sql, "?") === count($bindvalue)) && (count($bindvalue) === count($bindtype))) {
-      $error = null;
+      $error = false;
       while (!empty($bindtype)) {
         if ($error === true) {
           break;
-      	}
+        }
         $type = array_pop($bindtype);
         $param = array_pop($bindvalue);
         if (!preg_match('/^(i|d|s|b)$/', $type)) {
