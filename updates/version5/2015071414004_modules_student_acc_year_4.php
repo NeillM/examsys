@@ -1,6 +1,6 @@
 <?php
 
-// Modules student update needs runnign in msaller chunks on some db engines.
+// Modules student update needs runnign in smaller chunks on some db engines.
 if ($updater_utils->check_version("6.1.0")) {
     // Update where calendar_year = 2
     if (!$updater_utils->has_updated('rogo1481alter_modules_student3')) {
