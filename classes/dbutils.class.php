@@ -68,13 +68,16 @@ Class DBUtils {
    */
   public static function check_sqlparams($bindtype, $bindvalue, $sql) {
     if (is_array($bindvalue) && !empty($bindvalue) && is_array($bindtype) && !empty($bindtype) && (substr_count($sql, "?") === count($bindvalue)) && (count($bindvalue) === count($bindtype))) {
+      $error = null;
       while (!empty($bindtype)) {
+        if ($error === true) {
+          break;
+      	}
         $type = array_pop($bindtype);
         $param = array_pop($bindvalue);
         if (!preg_match('/^(i|d|s|b)$/', $type)) {
           return false;
         }
-        $error = null;
         switch ($type) {
           case "i":
             if (!is_int($param)) {
@@ -100,8 +103,8 @@ Class DBUtils {
       if (!$error) {
         return true;
       }
-      return false;
     }
+    return false;
   }
 
   /**
