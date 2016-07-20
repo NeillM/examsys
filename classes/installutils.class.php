@@ -695,7 +695,21 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     'rogo1481alter_relationships',
     'rogo1481alter_properties',
     'rogo1481alter_objectives',
-    'rogo1481alter_modules_student');
+    'rogo1481alter_modules_student',
+    'rogo1481alter_modules_student1',
+    'rogo1481alter_modules_student2',
+    'rogo1481alter_modules_student3',
+    'rogo1481alter_modules_student4',
+    'rogo1481alter_modules_student5',
+    'rogo1481alter_modules_student6',
+    'rogo1481alter_modules_student7',
+    'rogo1481alter_modules_student8',
+    'rogo1481alter_modules_student9',
+    'rogo1481alter_modules_student10',
+    'rogo1481alter_modules_student11',
+    'rogo1481alter_modules_student12',
+    'rogo1481alter_modules_student13',
+    'rogo1481alter_modules_student14');
     foreach ($updates as $update) {
         $insert = self::$db->prepare('INSERT INTO sys_updates VALUES (?, ?)');
         $insert->bind_param('ss', $update, $current_datetime);
