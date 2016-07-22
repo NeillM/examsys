@@ -24,4 +24,7 @@ $string['faculty'] = 'Fakulta';
 $string['prompt'] = 'Odbor';
 $string['enternameofschool'] = 'Zadajte, prosím, názov školy.';
 $string['duplicateerror'] = 'V rámci fakulty nie je možné použiť rovnaký názov dvakrát.';
+$string['externalid'] = 'External ID';
+$string['externalsys'] = 'External System';
+$string['code'] = 'School Code';
 ?>
