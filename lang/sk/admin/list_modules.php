@@ -29,5 +29,6 @@ $string['modulefolder'] = 'Priečinok modulu';
 $string['studentcohort'] = 'Skupina študentov';
 $string['currentmodule'] = 'Aktuálny modul';	
 $string['moduleimports'] = 'Importy modulu';	
-$string['importsummary'] = 'Prehľad k importu';	
+$string['importsummary'] = 'Prehľad k importu';
+$string['externalid'] = 'External ID';
 ?>
