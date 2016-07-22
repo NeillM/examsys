@@ -42,5 +42,9 @@ $string['questionstatuses'] = 'Stav úloh';
 $string['savefailattempts'] = 'Uložiť neúspešné pokusy';
 $string['testing'] = 'Testovanie systémov';
 $string['bug'] = 'Hlásenie chýb';
+$string['academicsessions'] = 'Academic Sessions';
+$string['authentication'] = 'OAuth Authentication';
+$string['plugins'] = 'Plugins';
+$string['imssettings'] = 'IMS Settings';
 
 ?>
