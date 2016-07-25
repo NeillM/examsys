@@ -22,4 +22,5 @@ $string['createschool'] = 'Nová škola';
 $string['editschool'] = 'Upraviť školu';
 $string['deleteschool'] = 'Zrušiť školu';
 $string['musthavefaculty'] = 'Pri založení školy je potrebné vytvořiť aspoň jednu fakultu.';
+$string['code'] = 'Code';
 ?>

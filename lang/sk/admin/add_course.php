@@ -26,4 +26,6 @@ $string['editcourse'] = 'Upraviť kurz';
 $string['deletecourse'] = 'Odobrať kurz';
 $string['codecourse'] = 'Zadajte, prosím, identifikátor kurzu.';
 $string['titlecourse'] = 'Zadajte, prosím, nadpis kurzu.';
+$string['externalid'] = 'External ID';
+$string['externalsys'] = 'External System';
 ?>

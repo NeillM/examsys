@@ -27,4 +27,6 @@ $string['deletecourse'] = 'Odstrániť kurz';
 $string['courseentercode'] = 'Zadajte, prosím, identifikátor kurzu.';
 $string['courseentertitle'] = 'Zadajte, prosím, nadpis kurzu.';
 $string['coursecodeinuse'] = 'Kurz s kódom %s už existuje. Zadajte, prosím, iný kód.';
+$string['externalid'] = 'External ID';
+$string['externalsys'] = 'External System';
 ?>
