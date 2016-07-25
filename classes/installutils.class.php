@@ -688,14 +688,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     'errorstate_signed_log1_deleted',
     'errorstate_signed_log2',
     'errorstate_signed_log3',
-    'errorstate_signed_log_late',
-    'rogo1481alter_users_metadata',
-    'rogo1481alter_sms_imports',
-    'rogo1481alter_sessions',
-    'rogo1481alter_relationships',
-    'rogo1481alter_properties',
-    'rogo1481alter_objectives',
-    'rogo1481alter_modules_student');
+    'errorstate_signed_log_late');
     foreach ($updates as $update) {
         $insert = self::$db->prepare('INSERT INTO sys_updates VALUES (?, ?)');
         $insert->bind_param('ss', $update, $current_datetime);
