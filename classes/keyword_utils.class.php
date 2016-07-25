@@ -82,4 +82,25 @@ Class keyword_utils {
     $keyword->close();
     return $keywordarray;
   }
+  
+  /**
+   * Function to get the keyword id based on the option id
+   * @param integer $o_id option id
+   * @param mysqli $db db connection
+   * @return integer|bool keyword id or false is non found
+   */
+  static public function get_keywordid_for_option($o_id, $db) {
+    $keyword = $db->prepare("SELECT keyword_id FROM keywords_option WHERE o_id = ?");
+    $keyword->bind_param('i', $o_id);
+    $keyword->execute();
+    $keyword->store_result();
+    $keyword->bind_result($keyword_id);
+    if ($keyword->num_rows == 0) {
+      $keyword_id = false;
+    } else {
+      $keyword->fetch();
+    }
+    $keyword->close();
+    return $keyword_id;
+  }
 }
