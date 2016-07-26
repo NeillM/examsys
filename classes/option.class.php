@@ -34,6 +34,27 @@ class Option {
   protected $marks_incorrect = 0;
   protected $marks_partial = 0;
 
+  /**
+   * Function to get the o_id based on the id_num
+   * @param integer $id_num option id number
+   * @param mysqli $db db connection
+   * @return integer|bool o_id or false is non found
+   */
+  public static function get_oid_from_idnum($id_num, $db) {
+    $sql = $db->prepare("SELECT o_id FROM options WHERE id_num = ?");
+    $sql->bind_param('i', $id_num);
+    $sql->execute();
+    $sql->store_result();
+    $sql->bind_result($o_id);
+    if ($sql->num_rows == 0) {
+      $o_id = false;
+    } else {
+      $sql->fetch();
+    }
+    $sql->close();
+    return $o_id;
+  }
+  
 }
 
 ?>

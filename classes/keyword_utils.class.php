@@ -106,12 +106,16 @@ Class keyword_utils {
   
   /**
    * Insert keyword/option reference row
-   * @param integer $o_id option id
+   * @param integer $id_num option id
    * @param integer $keyword_id keyword id
    * @param mysqli $db db connection
    * @return bool true on success, false otherwise
    */
-  static public function insert_keyword_option($o_id, $keyword_id, $db) {
+  static public function insert_keyword_option($id_num, $keyword_id, $db) {
+    $o_id = Option::get_oid_from_idnum($id_num, $db);
+    if ($o_id === false) {
+      return false;
+    }
     $sql = $db->prepare("INSERT INTO keywords_option (o_id, keyword_id) VALUES (?, ?)");
     $sql->bind_param('ii', $o_id, $keyword_id);
     $sql->execute();
@@ -124,12 +128,16 @@ Class keyword_utils {
   
   /**
    * Update keyword/option reference row
-   * @param integer $o_id option id
+   * @param integer $id_num option id
    * @param integer $keyword_id keyword id
    * @param mysqli $db db connection
    * @return bool true on success, false otherwise
    */
-  static public function update_keyword_option($o_id, $keyword_id, $db) {
+  static public function update_keyword_option($id_num, $keyword_id, $db) {
+    $o_id = Option::get_oid_from_idnum($id_num, $db);
+    if ($o_id === false) {
+      return false;
+    }
     $sql = $db->prepare("UPDATE keywords_option SET keyword_id = ? WHERE o_id = ?");
     $sql->bind_param('ii', $keyword_id, $o_id);
     $sql->execute();
