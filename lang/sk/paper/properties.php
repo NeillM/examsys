@@ -62,6 +62,7 @@ $string['displaycalculator'] = 'Zobraziť kalkulačku';
 $string['audio'] = 'Audio';
 $string['demosoundclip'] = 'demo zvuku';
 $string['marking'] = 'Známkovanie';
+$string['paperpublishedwarning'] = '<strong>Paper grades have been published.</strong>&nbsp;&nbsp;&nbsp;Marking adjustment can no longer occur.';
 $string['overallclassification'] = 'Celková klasifikácia';
 $string['overallclass1'] = '&lt;Automaticky&gt;';
 $string['overallclass2'] = 'Neuspel | Na hrane | Uspel';

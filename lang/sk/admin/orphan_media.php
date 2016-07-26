@@ -25,4 +25,7 @@ $string['cleanupsummary'] = 'Prehľad čistenia';
 $string['filedeleted'] = 'Odstránených súborov ';
 $string['spacereclaimed'] = 'Uvoľnený priestor';
 $string['deletingfiles'] = 'Odstraňovanie súborov!';
+$string['delete'] = 'Delete Files';
+$string['noorphanedfiles'] = 'No Orphaned Files Found';
+$string['toremove'] = 'To Remove:';
 ?>

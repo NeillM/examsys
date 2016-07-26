@@ -35,4 +35,5 @@ $string['textbox'] = 'Textové pole';
 $string['true_false'] = 'Pravda/Nepravda';
 $string['area'] = 'Plocha';
 $string['enhancedcalc'] = 'Výpočtová úloha';
+$string['flash'] = 'Flash Interface';
 ?>
