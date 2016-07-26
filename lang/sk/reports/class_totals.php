@@ -111,4 +111,6 @@ $string['marking'] = 'Hodnotenie...';
 $string['viewstudentnote'] = 'Zobraziť poznámku študenta...';
 $string['viewaccessibility'] = 'Zobraziť nastavenie prístupnosti...';
 $string['resitcandidate'] = 'Opakovanie (reparát)';
+$string['publishmarks'] = 'Publish Marks';
+$string['gradepublish'] = 'Marks Published';
 ?>

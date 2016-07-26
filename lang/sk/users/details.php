@@ -28,6 +28,7 @@ $string['externalexaminer'] = 'Oponent';
 $string['graduate'] = 'Absolvent';
 $string['left'] = 'Zanechal štúdium';
 $string['suspended'] = 'Prerušené štúdium';
+$string['locked'] = 'Locked';
 $string['Staff'] = 'Zamestnanec';
 $string['externalauth'] = '[Použiť externú autentizáciu]';
 $string['gender'] = 'Pohlavie';

@@ -17,4 +17,5 @@
 $string['confirmdelete'] = 'Potvrdiť odstránenie';
 $string['recyclebin'] = 'Kôš';
 $string['delete'] = 'Odstrániť';
+$string['cannotdelete'] = 'Unable to delete';
 ?>
