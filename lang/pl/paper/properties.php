@@ -92,6 +92,8 @@ $string['tooltip_random'] = 'Rog&#333; oszacuje jaką ocenę dostałby student o
 $string['tooltip_calculator'] = 'Kalkulator JavaScript dostępny jest dla studentów podczas egzaminu.';
 $string['tooltip_audio'] = 'Na stronie informacyjnej egzaminu umieszczony będzie próbny klip audio, umożliwiający studentom sprawdzenie poziomu dźwięku.';
 $string['tooltip_osceclassification'] = 'Warning: Once marking has started the overall classification is not changeable.';
+$string['externalid'] = 'External System ID';
+$string['externalsys'] = 'External System';
 
 // Security tab
 $string['securitytab'] = 'Bezpieczeństwo';

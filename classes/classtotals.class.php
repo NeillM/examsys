@@ -112,7 +112,7 @@ class ClassTotals {
     $this->marking_overrides  = array();
     $this->string             = $string;
     $this->percent_decimals   = $this->config->get('percent_decimals');
-    $this->gradebook_enabled  = $this->config->get('cfg_gradebook_enabled');
+    $this->gradebook_enabled  = $this->config->get_setting('core', 'cfg_gradebook_enabled');
     $this->question_statuses = QuestionStatus::get_all_statuses($db, array(), true);
   }
 

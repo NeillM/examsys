@@ -69,6 +69,11 @@ abstract class plugins {
      * @var string
      */
     protected $plugin_type;
+     /**
+     * Language pack component.
+     * @var string
+     */
+    protected $langcomponent;
     /**
      * Path to plugin.
      * @var string
@@ -378,6 +383,13 @@ abstract class plugins {
      */
     public function get_installed_version() {
         return $this->installedversion;
+    }
+    /**
+     * Get lang component of the plugin.
+     * @return string value of lang component
+     */
+    public function get_lang_component() {
+        return $this->langcomponent;
     }
     /**
      * Enable the plugin.

@@ -116,7 +116,7 @@ class apixml extends \api\apiabstract {
                     }
                 } else {
                     $error = true;
-                    $data = array('status' => $langpack->get_string($this->langcomponent, 'nopermission'), 'id' => null);
+                    $data = array('statuscode' => 000, 'status' => $langpack->get_string($this->langcomponent, 'nopermission'), 'id' => null);
                 }
                 if ($error) {
                     if ($node->hasAttribute('id')) { 

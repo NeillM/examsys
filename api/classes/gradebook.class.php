@@ -39,10 +39,18 @@ class gradebook extends \api\abstractpublish {
     public function get($filtername, $filterid) {
         $langpack = new \langpack();
         $gradebook = new \gradebook($this->db);
-        if ($filtername == 'paper') {
-            $grades = $gradebook->get_paper_gradebook($filterid);
-        } elseif ($filtername == 'module') {
-            $grades = $gradebook->get_module_gradebook($filterid);
+        switch ($filtername) {
+            case 'paper':
+            case 'extpaper':
+                $grades = $gradebook->get_paper_gradebook($filtername, $filterid);
+                break;
+            case 'module' :
+            case 'extmodule' :
+                $grades = $gradebook->get_module_gradebook($filtername, $filterid);
+                break;
+            default:
+                $grades = false;
+                break;
         }
         if ($grades) {
             return array('OK', $grades);

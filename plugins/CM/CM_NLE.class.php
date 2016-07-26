@@ -45,7 +45,7 @@ class CM_NLE implements iCMAPI {
     $nle_year = (string)$session . '/' . $endyear;
     // Map module code if necessary.
     $moduleID = \plugins\plugins_mapping::do_mapping($db, $moduleID);
-    $url = $configObject->get('cfg_nle_url') . "/webServices/RogoRestAPI.php?url=getObjectives/$moduleID/$nle_year";
+    $url = $configObject->get_setting('core', 'cfg_nle_url') . "/webServices/RogoRestAPI.php?url=getObjectives/$moduleID/$nle_year";
     $objectives = new restful($db);
     $options = array(CURLOPT_TIMEOUT => 10,
             CURLOPT_SSL_VERIFYPEER => false,

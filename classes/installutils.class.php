@@ -660,10 +660,19 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         '301-400', '401-500'));
     $configObject = Config::get_instance();
     $configObject->set_db_object(self::$db);
-    $configObject->set_setting('timezones', $encoded_timezones, 'json');
-    $configObject->set_setting('cohort_sizes', $encoded_cohorts, 'json');
-    $configObject->set_setting('max_duration', 779, 'integer');
-    $configObject->set_setting('max_sittings', 6, 'integer');
+    $configObject->set_setting('paper_timezones', $encoded_timezones, 'json');
+    $configObject->set_setting('summative_cohort_sizes', $encoded_cohorts, 'json');
+    $configObject->set_setting('paper_max_duration', 779, 'integer');
+    $configObject->set_setting('summative_max_sittings', 6, 'integer');
+    $configObject->set_setting('summative_hide_external', 0, 'boolean');
+    $configObject->set_setting('summative_warn_external', 0, 'boolean');
+    $configObject->set_setting('cfg_lti_allow_module_self_reg', 0, 'boolean');
+    $configObject->set_setting('cfg_lti_allow_staff_module_register', 0, 'boolean');
+    $configObject->set_setting('cfg_lti_allow_module_create', 0, 'boolean');
+    $configObject->set_setting('lti_integration', 'default', 'string');
+    $configObject->set_setting('lti_auth_timeout', 9072000, 'integer');
+    $configObject->set_setting('cfg_gradebook_enabled', 1, 'boolean');
+    $configObject->set_setting('cfg_api_enabled', 1, 'boolean');
   }
   
   /**
@@ -1842,14 +1851,6 @@ require \$root . '/include/path_functions.inc.php';
 // SMS Imports
   \$cfg_sms_api = '';
 
-// LTI these configure the default lti integration if you want more ability than this then you will need to override the lti_integration class using the lti_integration variable below to set the relative path & filename of the new integration class or left as blank or default to use the built in functionality.
-\$cfg_lti_allow_module_self_reg = false; // allows rogo to auto add student to module if selfreg is set for module if from lti launch
-\$cfg_lti_allow_staff_module_register = false; // allows rogo to register staff onto the module team if set to true and from lti launch and staff in vle
-\$cfg_lti_allow_module_create = false;  // allows rogo to create module if it doesnt exist
-
-\$lti_integration = 'default';
-\$lti_auth_timeout = 9072000; // length of lti authorisation in seconds
-
 \$authentication_fields_required_to_create_user = array('username', 'title', 'firstname', 'surname', 'email', 'role');
 
 //Authentication settings
@@ -1944,14 +1945,11 @@ switch (strtolower(\$_SERVER['HTTP_HOST'])) {
   \$cfg_oauth_refresh_token_lifetime = 1209600; // length of refresh token lifetime.
   \$cfg_oauth_always_issue_new_refresh_token = true; // enable or disable refresh tokens.
   
-  //gradebook setting
-  \$cfg_gradebook_enabled = true;
-  
   //IMS enterprise setting
   \$cfg_ims_enabled = false;
   
-  //API setting
-  \$cfg_api_enabled = true;
+  // Override db config settings with configs in this file?
+  \$file_config_override = true;
   ?>
 CONFIG;
 

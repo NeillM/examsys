@@ -86,6 +86,8 @@ class PaperProperties {
   private $questions;
   private $unmarked_enhancedcalc;
   private $unmarked_student_enhancedcalc;
+  private $externalid;
+  private $externalsys;
 
   private $_date_timezone = null;
 
@@ -267,7 +269,9 @@ class PaperProperties {
                   password,
                   retired,
                   crypt_name,
-                  recache_marks
+                  recache_marks,
+                  externalid,
+                  externalsys
               FROM
                   properties";
 
@@ -334,7 +338,9 @@ class PaperProperties {
                                   $this->password,
                                   $this->retired,
                                   $this->crypt_name,
-                                  $this->recache_marks
+                                  $this->recache_marks,
+                                  $this->externalid,
+                                  $this->externalsys
                                 );
     $paper_results->fetch();
     $paper_results->close();
@@ -423,6 +429,8 @@ class PaperProperties {
         $params['distinction_mark'] = array('i',  $this->distinction_mark);
         $params['exam_duration'] = array('i', $this->exam_duration);
         $params['calendar_year'] = array('i', $this->calendar_year);
+        $params['externalid'] = array('s', $this->externalid);
+        $params['externalsys'] = array('s', $this->externalsys);
       }
     }
 
@@ -1856,4 +1864,43 @@ class PaperProperties {
             }
     }
 
+    /**
+     * Get papers external id
+     * @return string
+     */
+    public function get_externalid() {
+        return $this->externalid;
+    }
+    
+    /**
+     * Set externalid id of paper
+     * @param string $externalid
+     */
+    public function set_externalid($externalid) {
+        $old_externalid = $this->externalid;
+        if ($old_externalid != $externalid) {
+          $this->externalid = $externalid;
+          $this->changes[] = array('old' => $old_externalid, 'new' => $externalid, 'part' => 'externalid');
+        }
+    }
+  
+    /**
+     * Get papers external system name
+     * @return string
+     */
+    public function get_externalsys() {
+        return $this->externalsys;
+    }
+    
+    /**
+     * Set externalid system name of paper
+     * @param string $externalsys
+     */
+    public function set_externalsys($externalsys) {
+        $old_externalsys = $this->externalsys;
+        if ($old_externalsys != $externalsys) {
+          $this->externalsys = $externalsys;
+          $this->changes[] = array('old' => $old_externalsys, 'new' => $externalsys, 'part' => 'externalsys');
+        }
+    }
 }

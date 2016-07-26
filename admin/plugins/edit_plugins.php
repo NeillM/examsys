@@ -47,10 +47,12 @@ if (isset($pluginslist[$plugin])) {
     $pluginns = $pluginslist[$plugin];
 }
 
+$p = new $pluginns($mysqli);
+$pluginlangcomponent = $p->get_lang_component();
+
 require '../../include/toprightmenu.inc';
 
 if (isset($_POST['submit'])) {
-    $p = new $pluginns($mysqli);
     // Enable.
     $enable = check_var('enabledchk', 'POST', false, false, true);
     if (is_null($enable)) {
@@ -117,6 +119,7 @@ $render->render_admin_content($breadcrumb, $lang);
     <form id="theform" name="add_session" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" autocomplete="off">
         <table cellpadding="0" cellspacing="2" border="0">
         <?php
+            $langpack = new langpack();
             if ($pluginenabled) { 
                 echo "<tr><td class=\"field\"><label for=\"enabledchk\">" . $string['enabled'] . "</label></td><td><input type=\"checkbox\" name=\"enabledchk\" id=\"enabledchk\" checked/></td></tr>";
             } else {
@@ -132,14 +135,14 @@ $render->render_admin_content($breadcrumb, $lang);
                         } else {
                             $checked = "";
                         }
-                        echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting . "</label></td><td><input type=\"checkbox\" name=\"" . $setting . "\" id=\"" . $setting . "\"" . $checked . "/></td></tr>";
+                        echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting . "</label>&nbsp;<img src=\"../../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $langpack->get_string($pluginlangcomponent, $setting) . "\" /></td><td><input type=\"checkbox\" name=\"" . $setting . "\" id=\"" . $setting . "\"" . $checked . "/></td></tr>";
                     } elseif ($type == Config::PASSWORD) {
                         // Password settings need to be decrypted.
                         $encryp = new encryp();
                         $value = $encryp->mdecrypt_password($value);
-                        echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting. "</label></td><td><input type=\"password\" size=\"20\" id=\"" . $setting . "\" name=\"" . $setting . "\" value=\"" . $value . "\" /></td></tr>";
+                        echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting. "</label>&nbsp;<img src=\"../../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $langpack->get_string($pluginlangcomponent, $setting) . "\" /></td><td><input type=\"password\" size=\"20\" id=\"" . $setting . "\" name=\"" . $setting . "\" value=\"" . $value . "\" /></td></tr>";
                     } else {
-                        echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting. "</label></td><td><input type=\"text\" size=\"20\" id=\"" . $setting . "\" name=\"" . $setting . "\" value=\"" . $value . "\" /></td></tr>";
+                        echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting. "</label>&nbsp;<img src=\"../../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $langpack->get_string($pluginlangcomponent, $setting). "\" /></td><td><input type=\"text\" size=\"20\" id=\"" . $setting . "\" name=\"" . $setting . "\" value=\"" . $value . "\" /></td></tr>";
                     }
                 }
             }

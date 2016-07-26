@@ -40,7 +40,7 @@ $api = new \api\api($app, $mysqli, $configObject);
 $api->set_header();
 
 // Only routes only available if enabled.
-if ($configObject->get('cfg_api_enabled')) {
+if ($configObject->get_setting('core', 'cfg_api_enabled')) {
 
     // Request oauth token.
     $app->post('/requesttoken', function() use($oauth) {
@@ -62,7 +62,7 @@ if ($configObject->get('cfg_api_enabled')) {
         $request = 'modulemanagement';
         $response = 'moduleManagementResponse';
         $operations = array('create', 'update', 'delete');
-        $fields = array('id', 'modulecode', 'name', 'school', 'faculty', 'sms', 'externalid', 'schoolextid');
+        $fields = array('id', 'modulecode', 'name', 'school', 'faculty', 'sms', 'externalid', 'schoolextid', 'externalsys');
         $xsd = 'managementrequest';
         process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
     });
@@ -72,7 +72,7 @@ if ($configObject->get('cfg_api_enabled')) {
         $request = 'coursemanagement';
         $response = 'courseManagementResponse';
         $operations = array('create', 'update', 'delete');
-        $fields = array('id', 'name', 'description', 'school', 'faculty', 'externalid', 'schoolextid');
+        $fields = array('id', 'name', 'description', 'school', 'faculty', 'externalid', 'schoolextid', 'externalsys');
         $xsd = 'managementrequest';
         process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
     });
@@ -82,7 +82,7 @@ if ($configObject->get('cfg_api_enabled')) {
         $request = 'schoolmanagement';
         $response = 'schoolManagementResponse';
         $operations = array('create', 'update', 'delete');
-        $fields = array('id', 'name', 'faculty', 'externalid', 'facultyextid', 'code');
+        $fields = array('id', 'name', 'faculty', 'externalid', 'facultyextid', 'code', 'externalsys');
         $xsd = 'managementrequest';
         process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
     });
@@ -92,7 +92,7 @@ if ($configObject->get('cfg_api_enabled')) {
         $request = 'facultymanagement';
         $response = 'facultyManagementResponse';
         $operations = array('create', 'update', 'delete');
-        $fields = array('id', 'name', 'externalid', 'code');
+        $fields = array('id', 'name', 'externalid', 'code', 'externalsys');
         $xsd = 'managementrequest';
         process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
     });
@@ -113,7 +113,7 @@ if ($configObject->get('cfg_api_enabled')) {
         $response = 'assessmentManagementResponse';
         $operations = array('create', 'schedule', 'delete', 'update');
         $fields = array('id', 'owner', 'type', 'title', 'startdatetime', 'enddatetime', 'modules', 'session', 'labs', 'month',
-            'cohort_size', 'sittings', 'barriers', 'campus', 'notes', 'timezone', 'duration');
+            'cohort_size', 'sittings', 'barriers', 'campus', 'notes', 'timezone', 'duration', 'externalid', 'externalsys', 'extmodules');
         $xsd = 'managementrequest';
         process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);    
     });
@@ -146,12 +146,17 @@ if ($configObject->get('cfg_api_enabled')) {
             
                 $response = array();
                 $gradebook = new \api\gradebook($mysqli);
-
+                // Map temnplate.
+                if (in_array($filtername, array('paper', 'extpaper'))) {
+                    $templatename = 'paper';
+                } else {
+                    $templatename = 'module';
+                }
                 // Process the request.
                 $request = $gradebook->get($filtername, $filterid);
                 $response = $request[1];
                 if ($request[0] == 'OK') {
-                    $template = 'api/' . $filtername . '_gradebook.xml';
+                    $template = 'api/' . $templatename . '_gradebook.xml';
                 } else {
                     $template = 'api/error.xml';
                 }

@@ -27,6 +27,11 @@
  */
 class Config extends RogoStaticSingleton {
   /**
+   * Areas of the Rogo system that can be confifured.
+   * @var array list of areas
+   */
+  public static $config_area = array('api', 'gradebook', 'lti', 'paper', 'summative', 'url');
+  /**
    * @var array
    */
   public $data;
@@ -277,6 +282,8 @@ class Config extends RogoStaticSingleton {
     $this->set('authentication', $authentication);
     // Default host to be writable.
     $this->set('cfg_readonly_host', false);
+    // Set file config override to false so we can test changes effectively.
+    $this->set('file_config_override', false);
     $this->behatsetup = true;
   }
   
@@ -297,6 +304,8 @@ class Config extends RogoStaticSingleton {
     $this->set('cfg_rogo_data', $this->get('cfg_phpunit_data'));
     // Default host to be writable.
     $this->set('cfg_readonly_host', false);
+    // Set file config override to false so we can test changes effectively.
+    $this->set('file_config_override', false);
     $this->phpunitsetup = true;
   }
 
@@ -403,6 +412,38 @@ class Config extends RogoStaticSingleton {
   }
 
   /**
+   * Override db config setting with config value in config.inc.php
+   * @param string $component The component to which this config setting belongs
+   * @param string $setting The name of the config setting
+   * @param string|array cached setting value(s)
+   * @return string|array overriden setting value(s)
+   */
+  public function file_config_override($component, $setting, $cachedsetting) {
+     if (!is_null($this->get('file_config_override'))) {
+         $override = $this->get('file_config_override');
+     } else {
+         $override = false;
+     }
+     if ($component == 'core' and $override) {
+       // A single setting.
+       if (is_string($setting)) {
+         $fileconfig = $this->get($setting);
+         if (!is_null($fileconfig)) {
+           $cachedsetting = $fileconfig;
+         }
+       // All componets settings.
+       } else {
+         foreach ($cachedsetting as $setting => $value) {
+           $fileconfig = $this->get($setting);
+           if (!is_null($fileconfig)) {
+             $cachedsetting[$setting] = $fileconfig;
+           }
+         }
+       }
+     }
+     return $cachedsetting;
+  }
+  /**
    * Get a config setting for a particular component
    * @param string $component The component to which this config setting belongs
    * @param string $setting The name of the config setting (Optional)
@@ -410,10 +451,12 @@ class Config extends RogoStaticSingleton {
   public function get_setting($component, $setting = null) {
     $cachedsetting = $this->get_setting_from_cache($component, $setting);
     if (!is_null($cachedsetting)) {
+      $cachedsetting = $this->file_config_override($component, $setting, $cachedsetting);
       return $cachedsetting;
     }
     $this->load_settings($component);
     $cachedsetting = $this->get_setting_from_cache($component, $setting);
+    $cachedsetting = $this->file_config_override($component, $setting, $cachedsetting);
     return $cachedsetting; 
   }
 

@@ -54,6 +54,11 @@ abstract class plugins_sms extends \plugins\plugins {
         }
     }
     /**
+     * Get all assessments for academic session
+     * @params integer $session academic session to sync assessments with
+     */
+    abstract public function get_assessments($session);
+    /**
      * Get all enrolments for academic session
      * @params integer $session academic session to sync enrolments with
      * @params integer $externalid external system module id
@@ -100,6 +105,11 @@ abstract class plugins_sms extends \plugins\plugins {
      * @return array|bool import url and translation strings, false  if enrolment import supported
      */
     abstract public function supports_enrol_import();
+    /**
+     * Check if assessment import is supported by the plugin
+     * @return array|bool import url and translation strings, false  if assessment import supported
+     */
+    abstract public function supports_assessment_import();
     /**
      * Get name of sms
      * @return string name of sms
