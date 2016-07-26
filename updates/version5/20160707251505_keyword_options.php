@@ -15,9 +15,9 @@ if ($updater_utils->check_version("6.2.0") and !$updater_utils->has_updated('rog
     $cfg_db_student_user = $cfg_db_database . '_stu';
     $cfg_db_staff_user = $cfg_db_database . '_staff';
     $cfg_db_external_user = $cfg_db_database . '_ext';
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".keywords_options TO '". $cfg_db_student_user . "'@'". $cfg_web_host . "'";
-    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".keywords_options TO '" . $cfg_db_external_user . "'@'". $cfg_web_host . "'";
-    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".keywords_options TO '". $cfg_db_staff_user . "'@'". $cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".keywords_option TO '". $cfg_db_student_user . "'@'". $cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $cfg_db_database . ".keywords_option TO '" . $cfg_db_external_user . "'@'". $cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".keywords_option TO '". $cfg_db_staff_user . "'@'". $cfg_web_host . "'";
     
     // Migrate existing references.
     $sql = "SELECT o_id, option_text FROM options, questions WHERE q_id = o_id AND q_type = 'keyword_based'";
