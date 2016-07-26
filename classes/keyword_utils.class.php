@@ -103,4 +103,40 @@ Class keyword_utils {
     $keyword->close();
     return $keyword_id;
   }
+  
+  /**
+   * Insert keyword/option reference row
+   * @param integer $o_id option id
+   * @param integer $keyword_id keyword id
+   * @param mysqli $db db connection
+   * @return bool true on success, false otherwise
+   */
+  static public function insert_keyword_option($o_id, $keyword_id, $db) {
+    $sql = $db->prepare("INSERT INTO keywords_option (o_id, keyword_id) VALUES (?, ?)");
+    $sql->bind_param('ii', $o_id, $keyword_id);
+    $sql->execute();
+    $sql->close();
+    if ($db->errno != 0) {
+        return false;
+    }
+    return true;
+  }
+  
+  /**
+   * Update keyword/option reference row
+   * @param integer $o_id option id
+   * @param integer $keyword_id keyword id
+   * @param mysqli $db db connection
+   * @return bool true on success, false otherwise
+   */
+  static public function update_keyword_option($o_id, $keyword_id, $db) {
+    $sql = $db->prepare("UPDATE keywords_option SET keyword_id = ? WHERE o_id = ?");
+    $sql->bind_param('ii', $keyword_id, $o_id);
+    $sql->execute();
+    $sql->close();
+    if ($db->errno != 0) {
+        return false;
+    }
+    return true;
+  }
 }

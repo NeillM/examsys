@@ -26,7 +26,7 @@
 Class QuestionEdit extends RogoObject {
 
   public $id = -1;
-  protected $type = null;
+  public $type = null;
   protected $theme = '';
   protected $scenario = '';
   protected $scenario_plain = '';
