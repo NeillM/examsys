@@ -189,7 +189,7 @@ Class OptionEdit extends RogoObject {
     $logger = new Logger($this->_mysqli);
 
     $valid = $this->validate();
-    
+
     if ($valid === true) {
       // If $id is -1 we're inserting a new record
       if ($this->id == -1) {
