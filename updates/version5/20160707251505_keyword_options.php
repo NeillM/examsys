@@ -20,11 +20,11 @@ if ($updater_utils->check_version("6.2.0") and !$updater_utils->has_updated('rog
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $cfg_db_database . ".keywords_option TO '". $cfg_db_staff_user . "'@'". $cfg_web_host . "'";
     
     // Migrate existing references.
-    $sql = "SELECT o_id, option_text FROM options, questions WHERE q_id = o_id AND q_type = 'keyword_based'";
+    $sql = $mysqli->prepare("SELECT o_id, option_text FROM options, questions WHERE q_id = o_id AND q_type = 'keyword_based'");
     $sql->execute();
     $sql->store_result();
     $sql->bind_result($o_id, $option_text);
-    while ($result->fetch()) {
+    while ($sql->fetch()) {
         $updatesql = "UPDATE options SET option_text = NULL WHERE o_id = $o_id";
         $updater_utils->execute_query($updatesql, true);
         // Some cases of empty option_text (keyword not selected) so do not need to migrate these.
