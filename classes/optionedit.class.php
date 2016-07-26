@@ -189,20 +189,16 @@ Class OptionEdit extends RogoObject {
     $logger = new Logger($this->_mysqli);
 
     $valid = $this->validate();
-    // Keyword based questions.
-    // Insert reference into keywords_option table not option_text
-    if ($this->question_type == 'keyword_based') {
-      if ($this->id == -1) {
-        keyword_utils::insert_keyword_option($this->_data[0], $this->_data[1], $this->_mysqli);
-      } else {
-        keyword_utils::update_keyword_option($this->_data[0], $this->_data[1], $this->_mysqli);
-      }
-      $this->_data[1] = null;
-    }
-
+    
     if ($valid === true) {
       // If $id is -1 we're inserting a new record
       if ($this->id == -1) {
+        // Keyword based questions.
+        // Insert reference into keywords_option table not option_text
+        if ($this->question_type == 'keyword_based') {
+            keyword_utils::insert_keyword_option($this->_data[0], $this->_data[1], $this->_mysqli);
+          $this->_data[1] = null;
+        }
         $params = array_merge(array('issiisssddd'), $this->_data);
         $query = <<< QUERY
 INSERT INTO options(o_id, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial)
@@ -210,6 +206,12 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 QUERY;
       } else {
         // Otherwise we're updating an existing one
+        // Keyword based questions.
+        // update reference into keywords_option table not option_text
+        if ($this->question_type == 'keyword_based') {
+          keyword_utils::update_keyword_option($this->_data[0], $this->_data[1], $this->_mysqli);
+          $this->_data[1] = null;
+        }
         $params = array_merge(array('issiisssdddi'), $this->_data, array(&$this->id));
         $query = <<< QUERY
 UPDATE options
