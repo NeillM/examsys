@@ -185,7 +185,7 @@ Class OptionEdit extends RogoObject {
    * @return boolean Success or failure of the save operation
    */
   public function save($option_number = 0) {
-    $success = false;
+    $success = true;
     $logger = new Logger($this->_mysqli);
 
     $valid = $this->validate();
@@ -196,7 +196,7 @@ Class OptionEdit extends RogoObject {
         // Keyword based questions.
         // Insert reference into keywords_option table not option_text
         if ($this->question_type == 'keyword_based') {
-          keyword_utils::insert_keyword_option($this->_data[0], $this->_data[1], $this->_mysqli);
+          $success = keyword_utils::insert_keyword_option($this->_data[0], $this->_data[1], $this->_mysqli);
           $this->_data[1] = null;
         }
         $params = array_merge(array('issiisssddd'), $this->_data);
@@ -209,7 +209,7 @@ QUERY;
         // Keyword based questions.
         // update reference into keywords_option table not option_text
         if ($this->question_type == 'keyword_based') {
-          keyword_utils::update_keyword_option($this->_data[0], $this->_data[1], $this->_mysqli);
+          $success = keyword_utils::update_keyword_option($this->_data[0], $this->_data[1], $this->_mysqli);
           $this->_data[1] = null;
         }
         $params = array_merge(array('issiisssdddi'), $this->_data, array(&$this->id));
@@ -219,22 +219,23 @@ SET o_id = ?, option_text = ?, o_media = ?, o_media_width = ?, o_media_height = 
 WHERE id_num = ?
 QUERY;
       }
-      $result = $this->_mysqli->prepare($query);
-      call_user_func_array (array($result,'bind_param'), $params);
-      $result->execute();
-      $success = ($result->affected_rows > -1);
-
       if ($success) {
-        if ($this->id == -1) {
-          $this->id = $this->_mysqli->insert_id;
-          $this->track_new($logger, $option_number);
-        } else {
-          // Log any changes
-          $this->save_changes($logger, $option_number);
-        }
-      }
-      $result->close();
+        $result = $this->_mysqli->prepare($query);
+        call_user_func_array (array($result,'bind_param'), $params);
+        $result->execute();
+        $success = ($result->affected_rows > -1);
 
+        if ($success) {
+          if ($this->id == -1) {
+            $this->id = $this->_mysqli->insert_id;
+            $this->track_new($logger, $option_number);
+          } else {
+            // Log any changes
+            $this->save_changes($logger, $option_number);
+          }
+        }
+        $result->close();
+      }
       $this->_modified_fields = array();
     } else {
       throw new ValidationException($valid);
