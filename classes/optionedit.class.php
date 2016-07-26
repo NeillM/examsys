@@ -196,7 +196,7 @@ Class OptionEdit extends RogoObject {
         // Keyword based questions.
         // Insert reference into keywords_option table not option_text
         if ($this->question_type == 'keyword_based') {
-            keyword_utils::insert_keyword_option($this->_data[0], $this->_data[1], $this->_mysqli);
+          keyword_utils::insert_keyword_option($this->_data[0], $this->_data[1], $this->_mysqli);
           $this->_data[1] = null;
         }
         $params = array_merge(array('issiisssddd'), $this->_data);
