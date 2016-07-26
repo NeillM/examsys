@@ -7,7 +7,7 @@ if ($updater_utils->check_version("6.2.0") and !$updater_utils->has_updated('rog
         `keyword_id` INT(11) NOT NULL,
         PRIMARY KEY (`o_id`, `keyword_id`),
         CONSTRAINT `keywords_options_fk1` FOREIGN KEY (`o_id`) REFERENCES `options` (`o_id`),
-        CONSTRAINT `keywords_options_fk2` FOREIGN KEY (`keyword_id`) REFERENCES `keywords_user (`id`)
+        CONSTRAINT `keywords_options_fk2` FOREIGN KEY (`keyword_id`) REFERENCES `keywords_user` (`id`)
     )";
     $updater_utils->execute_query($createsql, true);
     
