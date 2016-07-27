@@ -42,6 +42,7 @@ $string['externalstaff'] = 'Pracownik zewnętrzny';
 $string['nhslecturer'] = 'Wykładowca/konsultant medyczny'; //???
 $string['nhsadmin'] = 'Pracownik administracji medycznej'; //???
 $string['externalexaminer'] = 'Zewnętrzny egzaminator';
+$string['standardssetter'] = 'Standards Setter';
 $string['invigilator'] = 'Nadzorujący'; //???
 $string['students'] = 'Studenci';
 $string['newrogoaccount'] = 'Nowe konto w Rogō';
