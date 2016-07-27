@@ -32,7 +32,7 @@ class gradebook extends \api\abstractpublish {
        
     /**
      * @brief Get data.
-     * @param integer $filtername 
+     * @param string $filtername 
      * @param integer $filterid
      * @return array
      */
