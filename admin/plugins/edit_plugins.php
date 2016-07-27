@@ -95,18 +95,7 @@ $additionaljs = "<script type=\"text/javascript\" src=\"../../js/jquery.validate
     <script type=\"text/javascript\" src=\"../../js/jquery-ui-1.10.4.min.js\"></script>
     <script type=\"text/javascript\" src=\"../../js/system_tooltips.js\"></script></script>
     <script type=\"text/javascript\" src=\"js/plugins_validate.min.js\"></script>";
-$addtionalcss = "<style type=\"text/css\">
-          td {text-align:left}
-          .field {text-align:right; padding-right:10px}
-          .form-error {
-            width: 468px;
-            margin: 18px auto;
-            padding: 16px;
-            background-color: #FFD9D9;
-            color: #800000;
-            border: 2px solid #800000;
-          }
-        </style>";
+$addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/admin/config.css\"/>";
 $breadcrumb = array($string['home'] => "../../index.php", $string['administrativetools'] => "../index.php", $string['rogoplugins'] => "../plugins/list_plugins.php");
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('', '', $lang, $toprightmenu, 'admin/options_empty.html');
