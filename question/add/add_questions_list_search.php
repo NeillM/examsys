@@ -81,36 +81,45 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 <?php
 
   if (isset($_GET['display_pos'])) {
-    $display_pos = $_GET['display_pos'];
+    $display_pos = check_var('display_pos', 'GET', false, false, true);
   } else {
     $display_pos = 1;
   }
-
+  if (isset($_GET['searchterm'])) {
+    $searchterm = check_var('searchterm', 'GET', false, false, true);
+  } else {
+    $searchterm = '';
+  }
+  if (isset($_GET['searchtype'])) {
+    $searchtype = check_var('searchtype', 'GET', false, false, true);
+  } else {
+    $searchtype = '';
+  }
   ?>
   <table class="header">
   <tr>
   <th colspan="6">
   <form name="search" method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
-  &nbsp;<strong><?php echo $string['wordphrase']; ?></strong> <input type="text" size="30" name="searchterm" <?php if (isset($_GET['searchterm'])) echo 'value="' . $_GET['searchterm'] . '" '; ?>/> <strong><?php echo $string['in']; ?></strong>
+  &nbsp;<strong><?php echo $string['wordphrase']; ?></strong> <input type="text" size="30" name="searchterm" <?php echo 'value="' . $searchterm . '" '; ?>/> <strong><?php echo $string['in']; ?></strong>
   <select name="searchtype">
     <option value="%"><?php echo $string['anytype']; ?></option>
-    <option value="area" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'area') echo 'selected '; ?>><?php echo $string['area']; ?></option>
-    <option value="enhancedcalc" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'enhancedcalc') echo 'selected '; ?>><?php echo $string['calculation']; ?></option>
-    <option value="dichotomous" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'dichotomous') echo 'selected '; ?>><?php echo $string['dichotomous']; ?></option>
-    <option value="extmatch" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'extmatch') echo 'selected '; ?>><?php echo $string['extmatch']; ?></option>
-    <option value="blank" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'blank') echo 'selected '; ?>><?php echo $string['blank']; ?></option>
-    <option value="flash" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'flash') echo 'selected '; ?>><?php echo $string['flash']; ?></option>
-    <option value="hotspot" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'hotspot') echo 'selected '; ?>><?php echo $string['hotspot']; ?></option>
-    <option value="info" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'info') echo 'selected '; ?>><?php echo $string['info']; ?></option>
-    <option value="labelling" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'labelling') echo 'selected '; ?>><?php echo $string['labelling']; ?></option>
-    <option value="likert" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'likert') echo 'selected '; ?>><?php echo $string['likert']; ?></option>
-    <option value="matrix" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'matrix') echo 'selected '; ?>><?php echo $string['matrix']; ?></option>
-    <option value="mcq" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'mcq') echo 'selected '; ?>><?php echo $string['mcq']; ?></option>
-    <option value="mrq" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'mrq') echo 'selected '; ?>><?php echo $string['mrq']; ?></option>
-    <option value="rank" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'rank') echo 'selected '; ?>><?php echo $string['rank']; ?></option>
-    <option value="sct" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'sct') echo 'selected '; ?>><?php echo $string['sct']; ?></option>
-    <option value="textbox" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'textbox') echo 'selected '; ?>><?php echo $string['textbox']; ?></option>
-    <option value="true_false" <?php if (isset($_GET['searchtype']) and $_GET['searchtype'] == 'true_false') echo 'selected '; ?>><?php echo $string['true_false']; ?></option>
+    <option value="area" <?php if ($searchtype == 'area') echo 'selected '; ?>><?php echo $string['area']; ?></option>
+    <option value="enhancedcalc" <?php if ($searchtype == 'enhancedcalc') echo 'selected '; ?>><?php echo $string['calculation']; ?></option>
+    <option value="dichotomous" <?php if ($searchtype == 'dichotomous') echo 'selected '; ?>><?php echo $string['dichotomous']; ?></option>
+    <option value="extmatch" <?php if ($searchtype == 'extmatch') echo 'selected '; ?>><?php echo $string['extmatch']; ?></option>
+    <option value="blank" <?php if ($searchtype == 'blank') echo 'selected '; ?>><?php echo $string['blank']; ?></option>
+    <option value="flash" <?php if ($searchtype == 'flash') echo 'selected '; ?>><?php echo $string['flash']; ?></option>
+    <option value="hotspot" <?php if ($searchtype == 'hotspot') echo 'selected '; ?>><?php echo $string['hotspot']; ?></option>
+    <option value="info" <?php if ($searchtype == 'info') echo 'selected '; ?>><?php echo $string['info']; ?></option>
+    <option value="labelling" <?php if ($searchtype == 'labelling') echo 'selected '; ?>><?php echo $string['labelling']; ?></option>
+    <option value="likert" <?php if ($searchtype == 'likert') echo 'selected '; ?>><?php echo $string['likert']; ?></option>
+    <option value="matrix" <?php if ($searchtype == 'matrix') echo 'selected '; ?>><?php echo $string['matrix']; ?></option>
+    <option value="mcq" <?php if ($searchtype == 'mcq') echo 'selected '; ?>><?php echo $string['mcq']; ?></option>
+    <option value="mrq" <?php if ($searchtype== 'mrq') echo 'selected '; ?>><?php echo $string['mrq']; ?></option>
+    <option value="rank" <?php if ($searchtype == 'rank') echo 'selected '; ?>><?php echo $string['rank']; ?></option>
+    <option value="sct" <?php if ($searchtype == 'sct') echo 'selected '; ?>><?php echo $string['sct']; ?></option>
+    <option value="textbox" <?php if ($searchtype== 'textbox') echo 'selected '; ?>><?php echo $string['textbox']; ?></option>
+    <option value="true_false" <?php if ($searchtype == 'true_false') echo 'selected '; ?>><?php echo $string['true_false']; ?></option>
   </select>
   <?php
     search_utils::display_owners_dropdown($userObject, $mysqli, 'questions', $string, $state, 100);
@@ -121,23 +130,13 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   </tr>
 <?php
   if (isset($_GET['owner'])) {
-    $owner = $_GET['owner'];
+    $owner = check_var('owner', 'GET', false, false, true);
   } else {
     $owner = '';
   }
-  if (isset($_GET['searchterm'])) {
-    $searchterm = $_GET['searchterm'];
-  } else {
-    $searchterm = '';
-  }
-  if (isset($_GET['searchtype'])) {
-    $searchtype = $_GET['searchtype'];
-  } else {
-    $searchtype = '';
-  }
   if (isset($_GET['sortby'])) {
-    $sortby = $_GET['sortby'];
-    $ordering = $_GET['ordering'];
+    $sortby = check_var('sortby', 'GET', false, false, true);
+    $ordering = check_var('ordering', 'GET', false, false, true);
   } else {
     $sortby = 'leadin_plain';
     $ordering = 'asc';
@@ -173,10 +172,16 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
   if (isset($_GET['search']) or isset($_GET['sortby'])) {
     $old_id = 0;
-    $searchterm = '%' . $_GET['searchterm'] . '%';
+    $searchterm = '%' . $searchterm . '%';
 
     if ($sortby == 'q_type') $sortby = 'CAST(q_type AS CHAR)';
 
+    $qtype = check_var('searchtype', 'GET', true, false, true);
+    if ($qtype != '%') {
+      $andqtype = "AND q_type = ?";
+    } else {
+      $andqtype = "";
+    }
     if ($_GET['owner'] == '') {
       $teams = array_keys($userObject->get_staff_modules());
       $teamlist = "'" . implode(',', $teams) . "'";
@@ -186,12 +191,27 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
       . "LEFT JOIN options ON questions.q_id=options.o_id "
       . "WHERE questions.status = question_statuses.id AND questions.q_id = questions_modules.q_id "
       . "AND (idMod IN ($teamlist) OR questions.ownerID=?) AND (leadin_plain LIKE ? OR theme LIKE ? "
-      . "OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL "
+      . "OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) $andqtype AND deleted IS NULL "
       . "ORDER BY $sortby $ordering, questions.q_id");
-      $result->bind_param('issssss', $userObject->get_user_ID(), $searchterm, $searchterm, $searchterm, $searchterm, $searchterm, $_GET['searchtype']);
+      if ($qtype != '%') {
+        $result->bind_param('issssss', $userObject->get_user_ID(), $searchterm, $searchterm, $searchterm, $searchterm, $searchterm, $qtype);
+      } else {
+        $result->bind_param('isssss', $userObject->get_user_ID(), $searchterm, $searchterm, $searchterm, $searchterm, $searchterm);
+      }
     } else {
-      $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name FROM (questions, question_statuses) LEFT JOIN options ON questions.q_id=options.o_id WHERE questions.status = question_statuses.id  AND questions.ownerID = ? AND (leadin_plain LIKE ? OR theme LIKE ? OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) AND q_type LIKE ? AND deleted IS NULL ORDER BY $sortby $ordering, q_id");
-      $result->bind_param('issssss', $_GET['owner'], $searchterm, $searchterm, $searchterm, $searchterm, $searchterm, $_GET['searchtype']);
+      $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, "
+      . "DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name "
+      . "FROM (questions, question_statuses) "
+      . "LEFT JOIN options ON questions.q_id=options.o_id "
+      . "WHERE questions.status = question_statuses.id "
+      . "AND questions.ownerID = ? AND (leadin_plain LIKE ? OR theme LIKE ? "
+      . "OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) $andqtype AND deleted IS NULL "
+      . "ORDER BY $sortby $ordering, q_id");
+      if ($qtype != '%') {
+        $result->bind_param('issssss', $owner, $searchterm, $searchterm, $searchterm, $searchterm, $searchterm, $qtype);
+      } else {
+        $result->bind_param('isssss', $owner, $searchterm, $searchterm, $searchterm, $searchterm, $searchterm);
+      }
     }
     $result->execute();
     $result->bind_result($q_id, $q_type, $leadin, $display_date, $locked, $status, $status_name);
