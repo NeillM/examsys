@@ -17,4 +17,5 @@
 require '../lang/' . $language . '/delete/delete.inc';
 
 $string['msg'] = 'Ste si naozaj istý/á, že chcete túto školu odstrániť?';
+$string['modulesattached'] = 'All modules and courses must be removed from the school.';
 ?>

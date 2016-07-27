@@ -32,4 +32,5 @@ $string['itsupport'] = 'IT podpora';
 $string['plagarism'] = 'Anti plagiátorská nóta';
 $string['ipaddresses'] = 'IP adresy';
 $string['edit'] = 'Upraviť';
+$string['listcampuses'] = 'Campuses';
 ?>

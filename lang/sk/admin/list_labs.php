@@ -21,4 +21,5 @@ $string['vieweditdetails'] = 'Zobraziť/Upraviť detaily';
 $string['deletelab'] = 'Odstrániť učebňu';
 $string['lowbandwidth'] = 'Pomalé pripojenie';
 $string['computerlabs'] = 'Počítačová učebňa';
+$string['listcampuses'] = 'Campuses';
 ?>

@@ -26,4 +26,5 @@ $string['headerrow'] = 'Súbor obsahuje riadok so záhlavím';
 $string['import'] = 'Nahrať';
 $string['usernotfound'] = 'Používateľ nenájdený!';
 $string['saveerror'] = 'Chyba pri ukladaní používateľských údajov %s';
+$string['gradedmsg'] = 'Import failed. This OSCE station has already been graded.';
 ?>

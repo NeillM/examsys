@@ -34,4 +34,5 @@ $string['ipaddresses'] = 'IP adresy';
 $string['save'] = 'Uložiť';
 $string['badaddressesmsg'] = 'Následujúce IP adresy boli chybné a neboli do učebne zaradené: %s. Ostatné adresy boli uložené.';
 $string['backtolab'] = 'Späť na učebňu';
+$string['listcampuses'] = 'Campuses';
 ?>
