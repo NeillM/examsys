@@ -41,7 +41,12 @@ if (isset($_POST['submit'])) {
                 $new_value = 1;
             }
         }
+        // If new value null no change.
         if (is_null($new_value)) {
+            $new_value = $value;
+        }
+        // Check value is of expected type. No change if not expected type.
+        if (!Config::check_type($new_value, $type)) {
             $new_value = $value;
         }
         if ($value != $new_value) {

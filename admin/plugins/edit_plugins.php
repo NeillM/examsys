@@ -76,6 +76,10 @@ if (isset($_POST['submit'])) {
                     $new_value = 1;
                 }
             }
+            // Check value is of expected type. No change if not expected type.
+            if (!Config::check_type($new_value, $type)) {
+                $new_value = $value;
+            }
             if ($value != $new_value) {
                 if ($type == Config::PASSWORD) {
                     $new_value = $encryp->mcrypt_password($new_value);

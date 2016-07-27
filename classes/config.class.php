@@ -585,4 +585,39 @@ class Config extends RogoStaticSingleton {
     $fake = null;
     return $fake;
   }
+  
+  /**
+   * Check if value is of the expected type
+   * @param string $value value to check
+   * @param const $type constant config type
+   * @return bool true if value is of expected type, false otherwise
+   */
+  public static function check_type($value, $type) {
+    switch ($type) {
+        case self::PASSWORD:
+        case self::STRING:
+        case self::URL:
+        case self::JSON:
+          $check = is_string($value);
+          break;
+        case self::BOOLEAN:
+          if ($value == 1 or $value == 0) {
+            $check = true;
+          } else {
+            $check = false;
+          }
+          break;
+        case self::INTEGER:
+          if (is_int($value) or ctype_digit($value)) {
+              $check = true;
+          } else {
+              $check = false;
+          }
+          break;
+        default:
+          $check = false;
+          break;
+    }
+    return $check;
+  }
 }
