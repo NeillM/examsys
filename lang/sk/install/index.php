@@ -19,12 +19,14 @@ $string['rdbpassword'] = 'Heslo';
 $string['timedateformats'] = 'Čas/Dátum - formáty';
 
 $string['date'] = 'Dátum (%s)';
+$string['longdate'] = 'Long Date (%s)';
 $string['shortdatetime'] = 'Krátky Dátum/Čas (%s)';
 $string['longdatetime'] = 'Dlhý Dátum/Čas (%s)';
 $string['longdatephp'] = 'Neskrátený dátum (%s)';
 $string['shortdatephp'] = 'Skrátený dátum (%s)';
 $string['longtimephp'] = 'Neskrátený čas (%s)';
 $string['shorttimephp'] = 'Skrátený čas (%s)';
+$string['searchleadinlength'] = 'Search results lead-in length';
 $string['currenttimezone'] = 'Aktuálna časová zóna';
 $string['authentication'] = 'Overovanie';
 
@@ -91,12 +93,16 @@ $string['errors13'] = 'Chyba';
 $string['errors14'] = 'Boli generované následujúce varovania';
 $string['errors15'] = 'Varovania';
 $string['errors16'] = 'Rogo vyžaduje schopnosť vytvoriť jeho konfiguračný súbor %s/config/config.inc.php, jedným zo spôsobov, ako to zvládnuť je, že dočasne povolíte prístup osobe, ktorá toto ovláda, do %s/config a po spustení aktualizácie toto oprávnenie zrušíte.';
+$string['errors17'] = 'Rog&#333; requires MYSQL version %s or above you have %s';
+$string['errors18'] = 'The Rog&#333; data directory requires %s path to exist';
+$string['errors19'] = 'The Rog&#333; data directory requires %s must be writable';
 $string['installscript'] = 'Inštalačný skript Rogō ';
 $string['systeminstallation'] = 'Inštalácia systému';
 
 $string['flash'] = "Adobe Flash";
 $string['hostname'] = "Machine hostname";
 $string['webhost'] = 'WebServer host';
+$string['datadirectory'] = 'Rogo data directory';
 $string['html5'] = "HTML5";
 
 $string['labsecuritytype'] = "Zabezpečenie učebne";

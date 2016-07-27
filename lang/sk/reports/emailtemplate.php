@@ -19,4 +19,5 @@ $string['bcc'] = 'BCC';
 $string['subject'] = 'Predmet';
 $string['email_class'] = 'Zaslať E-mail';
 $string['cancel'] = 'Zrušiť'
+$string['filepermission'] = 'Could not create file as write permission denied';
 ?>

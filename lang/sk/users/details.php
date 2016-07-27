@@ -24,6 +24,7 @@ $string['edit'] = 'Editovať';
 $string['status'] = 'Stav'; 
 $string['student'] = 'Študent';
 $string['Students'] = 'Študenti';
+$string['standardssetter'] = 'Standards Setter';
 $string['externalexaminer'] = 'Oponent';
 $string['graduate'] = 'Absolvent';
 $string['left'] = 'Zanechal štúdium';

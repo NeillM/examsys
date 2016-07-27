@@ -37,4 +37,5 @@ $string['badaddressesmsg'] = 'Následujúce IP adresy boli chybné a neboli do u
 $string['backtolabs'] = 'Späť na zoznam učební';
 $string['noipaddresses'] = 'Učebňu nie je možné vytvoriť, nie sú uvedené žiadne IP adresy.';
 $string['nolabname'] = 'Bezmennú učebňu nie je možné vytvoriť.';
+$string['listcampuses'] = 'Campuses';
 ?>

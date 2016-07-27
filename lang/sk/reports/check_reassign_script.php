@@ -26,4 +26,5 @@ $string['Student ID'] = 'ID študenta';
 $string['msg4'] = 'Nenájdený žiadny používateľ s odpovedajúcimi údajmi.';
 $string['Reassign answers'] = 'Priradiť odpovede/známky';
 $string['to following user'] = 'následujúcemu používateľovi';
+$string['user_not_on_paper_modules'] = 'The student is not on any of the paper\'s modules.';
 ?>
