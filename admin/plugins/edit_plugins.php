@@ -95,7 +95,7 @@ $additionaljs = "<script type=\"text/javascript\" src=\"../../js/jquery.validate
     <script type=\"text/javascript\" src=\"../../js/jquery-ui-1.10.4.min.js\"></script>
     <script type=\"text/javascript\" src=\"../../js/system_tooltips.js\"></script></script>
     <script type=\"text/javascript\" src=\"js/plugins_validate.min.js\"></script>";
-$addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/admin/config.css\"/>";
+$addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/config.css\"/>";
 $breadcrumb = array($string['home'] => "../../index.php", $string['administrativetools'] => "../index.php", $string['rogoplugins'] => "../plugins/list_plugins.php");
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('', '', $lang, $toprightmenu, 'admin/options_empty.html');
