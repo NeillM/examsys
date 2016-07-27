@@ -42,6 +42,7 @@ $string['externalstaff'] = 'Externí zaměstnanec';
 $string['nhslecturer'] = 'NHS lektor/konzultant';
 $string['nhsadmin'] = 'NHS správce';
 $string['externalexaminer'] = 'Oponent';
+$string['standardssetter'] = 'Standards Setter';
 $string['invigilator'] = 'Dohled';
 $string['students'] = 'Student';
 $string['newrogoaccount'] = 'Nový účet Rogō';

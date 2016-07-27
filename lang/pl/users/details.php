@@ -24,6 +24,7 @@ $string['edit'] = 'Edytuj';
 $string['status'] = 'Status'; //cognate //Status, Stan
 $string['student'] = 'Student'; //cognate
 $string['Students'] = 'Studenci';
+$string['standardssetter'] = 'Standards Setter';
 $string['externalexaminer'] = 'Zewnętrzny egzaminator';
 $string['graduate'] = 'Absolwent';
 $string['left'] = 'Skreślony'; //???
