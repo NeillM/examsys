@@ -70,7 +70,7 @@ $render->render_admin_content($breadcrumb, $lang);
 <br />
 <div align="center">
     <p><?php echo $string['configblurb']; ?></p>
-    <form id="theform" name="add_session" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" autocomplete="off">
+    <form id="theform" name="add_config" method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" autocomplete="off">
         <table cellpadding="0" cellspacing="2" border="0">
         <?php
             $displayconfigs = array();
