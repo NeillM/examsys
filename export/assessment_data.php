@@ -264,6 +264,7 @@ if ($student_no > 0) {
   $log_array = array();
   $hits = 0;
   $rowID = 0;
+  $repcourse = check_var('repcourse', 'GET', true, false, true);
   // Capture the log data.
   if ($paper_type == '0') {
     $result = $mysqli->prepare("(SELECT DISTINCT 
@@ -327,10 +328,10 @@ if ($student_no > 0) {
                                         first_names, 
                                         started, 
                                         userID");
-    $result->bind_param('isssisss', $paperID, $_GET['repcourse'], $startdate, $enddate, $paperID, $_GET['repcourse'], $startdate, $enddate);
+    $result->bind_param('isssisss', $paperID, $repcourse, $startdate, $enddate, $paperID, $repcourse, $startdate, $enddate);
   } else {
     $result = $mysqli->prepare("SELECT DISTINCT username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, log$paper_type.q_id, user_answer, q_type, screen, settings FROM (log$paper_type, log_metadata, questions, users) WHERE log$paper_type.metadataID = log_metadata.id AND log$paper_type.q_id = questions.q_id AND log_metadata.userID IN ($student_list) AND paperID = ? AND users.id = log_metadata.userID $userroles $exclude AND grade LIKE ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ? ORDER BY surname, first_names, started, userID");
-    $result->bind_param('isss', $paperID, $_GET['repcourse'], $startdate, $enddate);
+    $result->bind_param('isss', $paperID, $repcourse, $startdate, $enddate);
   }
   $result->execute();
   $result->bind_result($username, $uID, $title, $surname, $first_names, $grade, $gender, $year, $started, $question_ID, $user_answer, $q_type, $screen, $settings);
