@@ -202,7 +202,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     . "DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name "
     . "FROM (questions, questions_modules, question_statuses) "
     . "WHERE questions.status = question_statuses.id AND questions.q_id = questions_modules.q_id "
-    . "$andowner AND questions.q_id in (select o_id from options where option_text like ?) $andqtype AND deleted IS NULL "
+    . "$andowner AND questions.q_id in (SELECT o_id FROM options WHERE option_text LIKE ?) $andqtype AND deleted IS NULL "
     . "ORDER BY $sortby $ordering, q_id");
     if ($qtype != '%') {
       $result->bind_param('isssssiss', $owner, $searchterm, $searchterm, $searchterm, $searchterm, $qtype, $owner, $searchterm, $qtype);
