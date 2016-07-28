@@ -138,7 +138,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     $sortby = check_var('sortby', 'GET', false, false, true);
     $ordering = check_var('ordering', 'GET', false, false, true);
   } else {
-    $sortby = 'leadin_plain';
+    $sortby = 'leadin';
     $ordering = 'asc';
   }
 
@@ -182,37 +182,34 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     } else {
       $andqtype = "";
     }
-    if ($_GET['owner'] == '') {
+    if ($owner == '') {
       $teams = array_keys($userObject->get_staff_modules());
       $teamlist = "'" . implode(',', $teams) . "'";
-      $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, "
-      . "DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name "
-      . "FROM (questions_modules, questions, question_statuses) "
-      . "LEFT JOIN options ON questions.q_id=options.o_id "
-      . "WHERE questions.status = question_statuses.id AND questions.q_id = questions_modules.q_id "
-      . "AND (idMod IN ($teamlist) OR questions.ownerID=?) AND (leadin_plain LIKE ? OR theme LIKE ? "
-      . "OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) $andqtype AND deleted IS NULL "
-      . "ORDER BY $sortby $ordering, questions.q_id");
-      if ($qtype != '%') {
-        $result->bind_param('issssss', $userObject->get_user_ID(), $searchterm, $searchterm, $searchterm, $searchterm, $searchterm, $qtype);
-      } else {
-        $result->bind_param('isssss', $userObject->get_user_ID(), $searchterm, $searchterm, $searchterm, $searchterm, $searchterm);
-      }
+      $owner = $userObject->get_user_ID();
+      $andowner = "AND (idMod IN ($teamlist) OR questions.ownerID=?)";
     } else {
-      $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, "
-      . "DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name "
-      . "FROM (questions, question_statuses) "
-      . "LEFT JOIN options ON questions.q_id=options.o_id "
-      . "WHERE questions.status = question_statuses.id "
-      . "AND questions.ownerID = ? AND (leadin_plain LIKE ? OR theme LIKE ? "
-      . "OR scenario_plain LIKE ? OR notes LIKE ? OR option_text LIKE ?) $andqtype AND deleted IS NULL "
-      . "ORDER BY $sortby $ordering, q_id");
-      if ($qtype != '%') {
-        $result->bind_param('issssss', $owner, $searchterm, $searchterm, $searchterm, $searchterm, $searchterm, $qtype);
-      } else {
-        $result->bind_param('isssss', $owner, $searchterm, $searchterm, $searchterm, $searchterm, $searchterm);
-      }
+      $andowner = "AND questions.ownerID = ?";
     }
+
+    $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, "
+    . "DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name "
+    . "FROM (questions, questions_modules, question_statuses) "
+    . "WHERE questions.status = question_statuses.id AND questions.q_id = questions_modules.q_id "
+    . "$andowner AND (leadin_plain LIKE ? OR theme LIKE ? "
+    . "OR scenario_plain LIKE ? OR notes LIKE ?) $andqtype AND deleted IS NULL "
+    . "UNION "
+    . "SELECT DISTINCT questions.q_id, q_type, leadin, "
+    . "DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name "
+    . "FROM (questions, questions_modules, question_statuses) "
+    . "WHERE questions.status = question_statuses.id AND questions.q_id = questions_modules.q_id "
+    . "$andowner AND questions.q_id in (select o_id from options where option_text like ?) $andqtype AND deleted IS NULL "
+    . "ORDER BY $sortby $ordering, q_id");
+    if ($qtype != '%') {
+      $result->bind_param('isssssiss', $owner, $searchterm, $searchterm, $searchterm, $searchterm, $qtype, $owner, $searchterm, $qtype);
+    } else {
+      $result->bind_param('issssis', $owner, $searchterm, $searchterm, $searchterm, $searchterm, $owner, $searchterm);
+    }
+    
     $result->execute();
     $result->bind_result($q_id, $q_type, $leadin, $display_date, $locked, $status, $status_name);
     while ($result->fetch()) {
