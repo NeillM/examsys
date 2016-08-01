@@ -15,15 +15,6 @@ if ($updater_utils->check_version("6.2.0")) {
         $grantsql[] = "GRANT SELECT, INSERT ON " . $dbname . ".help_log TO '" . $cfg_db_internal_user . "'@'". $cfg_web_host . "'";
         $grantsql[] = "GRANT SELECT, INSERT ON " . $dbname . ".help_searches TO '" . $cfg_db_internal_user . "'@'". $cfg_web_host . "'";
         $grantsql[] = "GRANT SELECT ON " . $dbname . ".keywords_question TO '" . $cfg_db_internal_user . "'@'". $cfg_web_host . "'";
-        $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log0 TO '" . $cfg_db_internal_user . "'@'". $cfg_web_host . "'";
-        $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log1 TO '" . $cfg_db_internal_user . "'@'". $cfg_web_host . "'";
-        $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log2 TO '" . $cfg_db_internal_user . "'@'". $cfg_web_host . "'";
-        $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log3 TO '" . $cfg_db_internal_user . "'@'". $cfg_web_host . "'";
-        $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log4 TO '" . $cfg_db_internal_user . "'@'". $cfg_web_host . "'";
-        $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log4_overall TO '" . $cfg_db_internal_user . "'@'". $cfg_web_host . "'";
-        $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log5 TO '" . $cfg_db_internal_user . "'@'". $cfg_web_host . "'";
-        $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log_late TO '" . $cfg_db_internal_user . "'@'". $cfg_web_host . "'";
-        $grantsql[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log_metadata TO '" . $cfg_db_internal_user . "'@'". $cfg_web_host . "'";
         $grantsql[] = "GRANT SELECT ON " . $dbname . ".modules TO '" . $cfg_db_internal_user . "'@'". $cfg_web_host . "'";
         $grantsql[] = "GRANT SELECT ON " . $dbname . ".modules_staff TO '" . $cfg_db_internal_user . "'@'". $cfg_web_host . "'";
         $grantsql[] = "GRANT SELECT ON " . $dbname . ".options TO '" . $cfg_db_internal_user . "'@'". $cfg_web_host . "'";
