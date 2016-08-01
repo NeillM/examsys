@@ -61,6 +61,8 @@ Class InstallUtils {
   public static $cfg_db_staff_passwd;
   public static $cfg_db_external_user;
   public static $cfg_db_external_passwd;
+  public static $cfg_db_internal_user;
+  public static $cfg_db_internal_passwd;
   public static $cfg_db_sysadmin_user;
   public static $cfg_db_sysadmin_passwd;
   public static $cfg_db_webservice_user;
@@ -795,6 +797,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::$cfg_db_staff_passwd = gen_password() . gen_password();
     self::generateUserName('cfg_db_external_user', self::$cfg_db_basename . '_ext');
     self::$cfg_db_external_passwd  = gen_password() . gen_password();
+    self::generateUserName('cfg_db_internal_user', self::$cfg_db_basename . '_int');
+    self::$cfg_db_internal_passwd  = gen_password() . gen_password();
     self::generateUserName('cfg_db_sysadmin_user', self::$cfg_db_basename . '_sys');
     self::$cfg_db_sysadmin_passwd = gen_password() . gen_password();
     self::generateUserName('cfg_db_webservice_user', self::$cfg_db_basename . '_web');
@@ -999,6 +1003,82 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       @flush();
       if (self::$db->errno != 0) {
         self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_external_user . $string['wnotpermission'] . ' ' . self::$db->error ));
+        self::$db->rollback();
+      }
+    }
+   self::$db->commit();
+
+    $priv_SQL = array();
+    //create 'database user internal user' and grant permissions
+    self::$db->query("CREATE USER  '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_internal_passwd . "'");
+    if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
+      self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_internal_user . $string['wnotcreated'] . ' ' . self::$db->error ));
+    }
+    //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".help_log TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".help_searches TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".keywords_question TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log0 TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log1 TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log2 TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log3 TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log4 TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log4_overall TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log5 TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log_late TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log_metadata TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".modules TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".modules_staff TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".options TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".papers TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".properties TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".questions TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".question_statuses TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".reference_material TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".reference_modules TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".reference_papers TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".review_comments TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".review_metadata TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".special_needs TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".std_set TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".std_set_questions TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".staff_help TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".student_help TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".sys_errors TO '" . self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".users TO '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".access_log TO '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".denied_log TO '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".properties_reviewers TO '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".client_identifiers TO '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".labs TO '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".properties_modules TO '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".log_extra_time TO '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".log_lab_end_time TO '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".schools TO '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".paper_metadata_security TO '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".modules_student TO '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".question_exclude TO '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".users_metadata TO '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".marking_override TO '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".sid TO '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".student_notes TO '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".paper_notes TO '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".exam_announcements TO '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".relationships TO '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".feedback_release TO '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".cache_paper_stats TO '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".paper_feedback TO '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".objectives TO '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".sessions TO '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".academic_year TO '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".config TO '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "FLUSH PRIVILEGES";
+    foreach ($priv_SQL as $sql) {
+      self::$db->query($sql);
+      @ob_flush();
+      @flush();
+      if (self::$db->errno != 0) {
+        self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_internal_user . $string['wnotpermission'] . ' ' . self::$db->error ));
         self::$db->rollback();
       }
     }
@@ -1803,6 +1883,9 @@ require \$root . '/include/path_functions.inc.php';
 //external examiner db user
   \$cfg_db_external_user = '{cfg_db_external}';
   \$cfg_db_external_passwd = '{cfg_db_external_passwd}';
+//internal reviewer db user
+  \$cfg_db_internal_user = '{cfg_db_internal}';
+  \$cfg_db_internal_passwd = '{cfg_db_internal_passwd}';
 //sysdamin db user
   \$cfg_db_sysadmin_user = '{cfg_db_sysadmin_user}';
   \$cfg_db_sysadmin_passwd = '{cfg_db_sysadmin_passwd}';
@@ -1974,6 +2057,8 @@ CONFIG;
     $config = str_replace('{cfg_db_staff_passwd}', self::$cfg_db_staff_passwd, $config);
     $config = str_replace('{cfg_db_external}', self::$cfg_db_external_user, $config);
     $config = str_replace('{cfg_db_external_passwd}', self::$cfg_db_external_passwd, $config);
+    $config = str_replace('{cfg_db_internal}', self::$cfg_db_internal_user, $config);
+    $config = str_replace('{cfg_db_internal_passwd}', self::$cfg_db_internal_passwd, $config);
     $config = str_replace('{cfg_db_sysadmin_user}', self::$cfg_db_sysadmin_user, $config);
     $config = str_replace('{cfg_db_sysadmin_passwd}', self::$cfg_db_sysadmin_passwd, $config);
     $config = str_replace('{cfg_db_sct_user}', self::$cfg_db_sct_user, $config);

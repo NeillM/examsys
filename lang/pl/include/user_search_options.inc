@@ -33,6 +33,7 @@ $string['staffsysadmin'] = 'Pracownik (SysAdmin)';
 $string['staffstudent'] = 'Pracownik i student'; 
 $string['inactivestaff'] = 'Pracownicy nieaktywni';
 $string['externalexaminers'] = 'Zewnętrzni egzaminatorzy';
+$string['internalreviewers'] = 'Internal Reviwers';
 $string['staffstandardssetter'] = 'Staff (Standards Setter)';
 $string['invigilators'] = 'Osoby nadzorujące';
 $string['back'] = 'Wstecz';
