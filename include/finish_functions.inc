@@ -336,8 +336,10 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         }
       } else {
         // Keyword.
+        // Get the keyword id.
+        $keyword_id = keyword_utils::get_keywordid_for_question($paper[$i]['q_id'], $mysqlidb);
         $keyword = $mysqlidb->prepare("SELECT q_id from keywords_question where keywordID = ?");
-        $keyword->bind_param('i', $paper[$i]['option_text'][0]);
+        $keyword->bind_param('i', $keyword_id);
         $keyword->execute();
         $keyword->store_result();
         $keyword->bind_result($checkID);

@@ -1426,11 +1426,13 @@ function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_
   }
 
   if ($selected_q_id == '') {
+    // Get the keyword id.
+    $keyword_id = keyword_utils::get_keywordid_for_question($random_q_data['q_id'], $db);
     // Generate a random question ID from keywords.
     $question_ids = array();
     $question_data = $db->prepare("SELECT DISTINCT k.q_id FROM keywords_question k, questions q WHERE k.q_id = q.q_id AND"
       . " k.keywordID = ? AND q.deleted is NULL");
-    $question_data->bind_param('i', $random_q_data['options'][0]['option_text']);
+    $question_data->bind_param('i', $keyword_id);
     $question_data->execute();
     $question_data->bind_result($q_id);
     while ($question_data->fetch()) {

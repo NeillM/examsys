@@ -330,6 +330,14 @@ QUERY;
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
+    $this->tableList['keywords_link'] = <<<QUERY
+        CREATE TABLE `keywords_link` (
+          `q_id` INT(4) NOT NULL,
+          `keyword_id` INT(11) NOT NULL,
+          PRIMARY KEY (`q_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
     $this->tableList['keywords_user'] = <<<QUERY
         CREATE TABLE `keywords_user` (
           `id` int(11) NOT NULL auto_increment,

@@ -60,7 +60,7 @@ $possible = array();
 // Check random blocks / keyword based questions for calculation questions
 $random = $mysqli->prepare("SELECT q_id, settings FROM questions WHERE q_type ='enhancedcalc' AND q_id in ("
     . "SELECT option_text FROM questions, options, papers WHERE q_id = o_id AND question = q_id AND q_type ='random' AND paper = ? "
-    . "UNION SELECT q_id FROM keywords_question, options, papers WHERE question = o_id AND keywordID = option_text AND paper = ?)");
+    . "UNION SELECT keywords_question.q_id FROM keywords_question, keywords_link, papers WHERE question = keywords_link.q_id AND keywordID = keyword_id AND paper = ?)");
 $random->bind_param('ii', $paperID, $paperID);
 $random->execute();
 $random->bind_result($random_id, $random_settings);

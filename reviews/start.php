@@ -171,12 +171,13 @@ function randomQOverwrite(&$questions, $random_q_data, $q_no, &$used_questions, 
  * @param db $mysqli
  */
 function keywordQOverwrite(&$questions, $random_q_data, $q_no, &$used_questions, $mysqli) {
-
+  // Get the keyword id.
+  $keyword_id = keyword_utils::get_keywordid_for_question($random_q_data['q_id'], $mysqli);
   // Generate a random question ID from keywords.
   $question_ids = array();
   $question_data = $mysqli->prepare("SELECT DISTINCT k.q_id FROM keywords_question k, questions q WHERE k.q_id = q.q_id AND"
     . " k.keywordID = ? AND q.deleted is NULL");
-  $question_data->bind_param('i', $random_q_data['options'][0]['option_text']);
+  $question_data->bind_param('i', $keyword_id);
   $question_data->execute();
   $question_data->bind_result($q_id);
   while ($question_data->fetch()) {
