@@ -138,7 +138,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     $sortby = check_var('sortby', 'GET', false, false, true);
     $ordering = check_var('ordering', 'GET', false, false, true);
   } else {
-    $sortby = 'leadin';
+    $sortby = 'leadin_plain';
     $ordering = 'asc';
   }
 
@@ -191,14 +191,14 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
       $andowner = "AND questions.ownerID = ?";
     }
 
-    $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin, "
+    $result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type, leadin_plain, leadin, "
     . "DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name "
     . "FROM (questions, questions_modules, question_statuses) "
     . "WHERE questions.status = question_statuses.id AND questions.q_id = questions_modules.q_id "
     . "$andowner AND (leadin_plain LIKE ? OR theme LIKE ? "
     . "OR scenario_plain LIKE ? OR notes LIKE ?) $andqtype AND deleted IS NULL "
     . "UNION "
-    . "SELECT DISTINCT questions.q_id, q_type, leadin, "
+    . "SELECT DISTINCT questions.q_id, q_type, leadin_plain, leadin, "
     . "DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name "
     . "FROM (questions, questions_modules, question_statuses) "
     . "WHERE questions.status = question_statuses.id AND questions.q_id = questions_modules.q_id "
@@ -211,7 +211,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     }
     
     $result->execute();
-    $result->bind_result($q_id, $q_type, $leadin, $display_date, $locked, $status, $status_name);
+    $result->bind_result($q_id, $q_type, $leadinplain, $leadin, $display_date, $locked, $status, $status_name);
     while ($result->fetch()) {
       $tmp_leadin = QuestionUtils::clean_leadin($leadin);
       if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['warningnoleadin'] . '</span>';
