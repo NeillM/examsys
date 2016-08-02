@@ -132,10 +132,12 @@ function keywordQOverwrite(&$questions, $question, $paper_type, $user_answers, $
   }
 
   if ($selected_q_id == '') {
+    // Get the keyword id.
+    $keyword_id = keyword_utils::get_keywordid_for_question($question['q_id'], $mysqli);
     // Generate a random question ID from keywords.
     $question_ids = array();
     $question_data = $mysqli->prepare("SELECT DISTINCT q_id FROM keywords_question WHERE keywordID = ?");
-    $question_data->bind_param('i', $question['options'][0]['option_text']);
+    $question_data->bind_param('i', $keyword_id);
     $question_data->execute();
     $question_data->bind_result($q_id);
     while ($question_data->fetch()) {

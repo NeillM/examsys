@@ -330,11 +330,11 @@ QUERY;
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['keywords_option'] = <<<QUERY
-        CREATE TABLE `keywords_option` (
-          `o_id` INT(4) NOT NULL,
+    $this->tableList['keywords_link'] = <<<QUERY
+        CREATE TABLE `keywords_link` (
+          `q_id` INT(4) NOT NULL,
           `keyword_id` INT(11) NOT NULL,
-          PRIMARY KEY (`o_id`, `keyword_id`)
+          PRIMARY KEY (`q_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 

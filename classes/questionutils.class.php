@@ -448,7 +448,7 @@ SQL;
    static function get_keyword_calc_question($q_id, $db) {
        $possible = array();
        $random = $db->prepare("SELECT q_id FROM questions WHERE q_type ='enhancedcalc' AND q_id in ("
-           . "SELECT q_id FROM keywords_question, keywords_option WHERE keywordID = keyword_id AND o_id = ?)");
+           . "SELECT keywords_question.q_id FROM keywords_question, keywords_link WHERE keywordID = keyword_id AND keywords_link.q_id = ?)");
        $random->bind_param('i', $q_id);
        $random->execute();
        $random->bind_result($random_id);
@@ -487,8 +487,8 @@ SQL;
      */
     static function is_in_keyword_block($q_id, $db) {
         $questions = array();
-        $query = $db->prepare("SELECT question FROM keywords_question, keywords_option, papers WHERE question = o_id AND "
-          . "keywordID = keyword_id AND q_id = ?");
+        $query = $db->prepare("SELECT question FROM keywords_question, keywords_link, papers WHERE question = keywords_link.q_id AND "
+          . "keywordID = keyword_id AND keywords_question.q_id = ?");
         $query->bind_param('i',$q_id);
         $query->execute();
         $query->bind_result($question);

@@ -84,14 +84,14 @@ Class keyword_utils {
   }
   
   /**
-   * Function to get the keyword id based on the option id
-   * @param integer $o_id option id
+   * Function to get the keyword id based on the question id
+   * @param integer $q_id question id
    * @param mysqli $db db connection
    * @return integer|bool keyword id or false is non found
    */
-  static public function get_keywordid_for_option($o_id, $db) {
-    $keyword = $db->prepare("SELECT keyword_id FROM keywords_option WHERE o_id = ?");
-    $keyword->bind_param('i', $o_id);
+  static public function get_keywordid_for_question($q_id, $db) {
+    $keyword = $db->prepare("SELECT keyword_id FROM keywords_link WHERE q_id = ?");
+    $keyword->bind_param('i', $q_id);
     $keyword->execute();
     $keyword->store_result();
     $keyword->bind_result($keyword_id);
@@ -105,19 +105,15 @@ Class keyword_utils {
   }
   
   /**
-   * Insert keyword/option reference row
-   * @param integer $id_num option id
+   * Insert keyword/question reference row
+   * @param integer $q_id question id
    * @param integer $keyword_id keyword id
    * @param mysqli $db db connection
    * @return bool true on success, false otherwise
    */
-  static public function insert_keyword_option($id_num, $keyword_id, $db) {
-    $o_id = Option::get_oid_from_idnum($id_num, $db);
-    if ($o_id === false) {
-      return false;
-    }
-    $sql = $db->prepare("INSERT INTO keywords_option (o_id, keyword_id) VALUES (?, ?)");
-    $sql->bind_param('ii', $o_id, $keyword_id);
+  static public function insert_keyword_link($q_id, $keyword_id, $db) {
+    $sql = $db->prepare("INSERT INTO keywords_link (q_id, keyword_id) VALUES (?, ?)");
+    $sql->bind_param('ii', $q_id, $keyword_id);
     $sql->execute();
     $sql->close();
     if ($db->errno != 0) {
@@ -127,19 +123,15 @@ Class keyword_utils {
   }
   
   /**
-   * Update keyword/option reference row
-   * @param integer $id_num option id
+   * Update keyword/question reference row
+   * @param integer $q_id question id
    * @param integer $keyword_id keyword id
    * @param mysqli $db db connection
    * @return bool true on success, false otherwise
    */
-  static public function update_keyword_option($id_num, $keyword_id, $db) {
-    $o_id = Option::get_oid_from_idnum($id_num, $db);
-    if ($o_id === false) {
-      return false;
-    }
-    $sql = $db->prepare("UPDATE keywords_option SET keyword_id = ? WHERE o_id = ?");
-    $sql->bind_param('ii', $keyword_id, $o_id);
+  static public function update_keyword_link($q_id, $keyword_id, $db) {
+    $sql = $db->prepare("UPDATE keywords_link SET keyword_id = ? WHERE q_id = ?");
+    $sql->bind_param('ii', $keyword_id, $q_id);
     $sql->execute();
     $sql->close();
     if ($db->errno != 0) {
