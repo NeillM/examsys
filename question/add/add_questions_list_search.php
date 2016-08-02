@@ -200,9 +200,9 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     . "UNION "
     . "SELECT DISTINCT questions.q_id, q_type, leadin_plain, leadin, "
     . "DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name "
-    . "FROM (questions, questions_modules, question_statuses) "
+    . "FROM (questions, questions_modules, question_statuses, options) "
     . "WHERE questions.status = question_statuses.id AND questions.q_id = questions_modules.q_id "
-    . "$andowner AND questions.q_id in (SELECT o_id FROM options WHERE option_text LIKE ?) $andqtype AND deleted IS NULL "
+    . "$andowner AND questions.q_id = options.o_id AND options.option_text LIKE ? $andqtype AND deleted IS NULL "
     . "ORDER BY $sortby $ordering, q_id");
     if ($qtype != '%') {
       $result->bind_param('isssssiss', $owner, $searchterm, $searchterm, $searchterm, $searchterm, $qtype, $owner, $searchterm, $qtype);
