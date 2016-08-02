@@ -53,14 +53,8 @@ require '../config/index.inc';  // Get the logo
     if (!$userObject->has_role(array('External Examiner'))) {
   ?>
   <script>
-    function startPaper(paperID, fullsc) {
-      var winwidth = screen.width-80;
-      var winheight = screen.height-80;
-      if (fullsc == 0) {
-        window.open("./start.php?id="+paperID+"&review=1","paper","width="+winwidth+",height="+winheight+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      } else {
-        window.open("./start.php?id="+paperID+"&review=1","paper","fullscreen=yes,left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      }
+    function startPaper(paperID) {
+        window.open("./start.php?id="+paperID+"&review=1","paper");
     }
   </script>
    <?php
@@ -183,8 +177,8 @@ if ($userObject->has_role(array('External Examiner'))) {
   $internalreview = new internalreview($mysqli);
   $review_papers = $internalreview->get_review_papers($userObject->get_user_ID());
   foreach($review_papers as $review_paper) {    
-    echo "<tr><td align=\"center\"><a href=\"#\" onclick=\"startPaper('" . $review_paper['crypt_name'] . "'," . $review_paper['fullscreen'] . "); return false;\">" . Paper_utils::displayIcon($review_paper['type'], $review_paper['paper_title'], '', '', '', '') . "</a></td>\n";
-    echo "<td><a href=\"#\" onclick=\"startPaper('" . $review_paper['crypt_name'] . "'," . $review_paper['fullscreen'] . "); return false;\">" . $review_paper['paper_title'] . "</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " " . $review_paper['internal_review_deadline'] . "</div>";
+    echo "<tr><td align=\"center\"><a href=\"#\" onclick=\"startPaper('" . $review_paper['crypt_name'] . "'); return false;\">" . Paper_utils::displayIcon($review_paper['type'], $review_paper['paper_title'], '', '', '', '') . "</a></td>\n";
+    echo "<td><a href=\"#\" onclick=\"startPaper('" . $review_paper['crypt_name'] . "'); return false;\">" . $review_paper['paper_title'] . "</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " " . $review_paper['internal_review_deadline'] . "</div>";
     if ($review_paper['reviewed'] == '') {
       echo "<span style=\"color:white; background-color:#FF4040\">&nbsp;" . $string['notreviewed'] . "&nbsp;</span>";
     } else {
