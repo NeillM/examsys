@@ -414,7 +414,7 @@ class Config extends RogoStaticSingleton {
   /**
    * Override db config setting with config value in config.inc.php
    * @param string $component The component to which this config setting belongs
-   * @param string $setting The name of the config setting
+   * @param string|null $setting The name of the config setting or null if getting whole component
    * @param string|array cached setting value(s)
    * @return string|array overriden setting value(s)
    */
@@ -426,7 +426,7 @@ class Config extends RogoStaticSingleton {
      }
      if ($component == 'core' and $override) {
        // A single setting.
-       if (is_string($setting)) {
+       if (!is_array($cachedsetting)) {
          $fileconfig = $this->get($setting);
          if (!is_null($fileconfig)) {
            $cachedsetting = $fileconfig;
