@@ -198,6 +198,11 @@ Class OptionEdit extends RogoObject {
           $keywordid = $this->_data[1];
           $this->_data[1] = null;
         }
+        // Insert reference into random_link table not option_text
+        if ($this->question_type == 'random') {
+          $randomid = $this->_data[1];
+          $this->_data[1] = null;
+        }
         $params = array_merge(array('issiisssddd'), $this->_data);
         $query = <<< QUERY
 INSERT INTO options(o_id, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial)
@@ -208,6 +213,11 @@ QUERY;
         // Update reference into keywords_link table not option_text
         if ($this->question_type == 'keyword_based') {
           $keywordid = $this->_data[1];
+          $this->_data[1] = null;
+        }
+        // Update reference into random_link table not option_text
+        if ($this->question_type == 'random') {
+          $randomid = $this->_data[1];
           $this->_data[1] = null;
         }
         $params = array_merge(array('issiisssdddi'), $this->_data, array(&$this->id));
@@ -229,11 +239,19 @@ QUERY;
           if ($this->question_type == 'keyword_based') {
             keyword_utils::insert_keyword_link($this->_data[0], $keywordid, $this->_mysqli);
           }
+          // Insert reference into  random_link table not option_text
+          if ($this->question_type == 'random') {
+            random_utils::insert_random_link($this->_data[0], $randomid, $this->_mysqli);
+          }
           $this->track_new($logger, $option_number);
         } else {
-           // Update reference into keywords_ley table not option_text
+          // Update reference into keywords_link table not option_text
           if ($this->question_type == 'keyword_based') { 
             keyword_utils::update_keyword_link($this->_data[0], $keywordid, $this->_mysqli);
+          }
+          // Update reference into radnom_link table not option_text
+          if ($this->question_type == 'random') { 
+            random_utils::update_random_link($this->_data[0], $randomid, $this->_mysqli);
           }
           // Log any changes
           $this->save_changes($logger, $option_number);

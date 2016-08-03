@@ -108,14 +108,15 @@ if ($marking{0} == '2') {
  * @param db $mysqli
  */
 function randomQOverwrite(&$questions, $random_q_data, $q_no, &$used_questions, $mysqli) {
-
+  // Get random qids.
+  $randomids = random_utils::get_random_qids_for_question($random_q_data['q_id'], $mysqli);
   // Generate a random question ID.
-  $random_q_no = count($random_q_data['options']);
+  $random_q_no = count($randomids);
   $try = 0;
   $unique = false;
   while ($unique == false and $try < 9999) {
     $selected_no = rand(0,$random_q_no-1);
-    $selected_q_id = $random_q_data['options'][$selected_no]['option_text'];
+    $selected_q_id = $randomids[$selected_no];
     if (!isset($used_questions[$selected_q_id])) $unique = true;
     $try++;
   }

@@ -1001,7 +1001,7 @@ function check_latex_random($q_ids, $mysqli) {
   $paper_warnings = array();
   for ($x=1; $x<=$row_no; $x++) {
     $status = $status_array[$temp_array[$x]['status']];
-    if ($temp_array[$x]['options'] == 0 and isset($temp_array[$x]['o_media']) and count($temp_array[$x]['o_media']) == 0 and ($temp_array[$x]['q_type'] != 'textbox' or $temp_array[$x]['correct'] != 'placeholder') and $temp_array[$x]['q_type'] != 'keyword_based') $temp_array[$x]['warnings'] .= $string['nooptionsdefined'];
+    if ($temp_array[$x]['options'] == 0 and isset($temp_array[$x]['o_media']) and count($temp_array[$x]['o_media']) == 0 and ($temp_array[$x]['q_type'] != 'textbox' or $temp_array[$x]['correct'] != 'placeholder') and $temp_array[$x]['q_type'] != 'keyword_based' and $temp_array[$x]['q_type'] != 'random') $temp_array[$x]['warnings'] .= $string['nooptionsdefined'];
     if ($status->get_display_warning()) $paper_warnings['status'][$status->get_name()][] = $question_number + 1;
     if ($old_screen != $temp_array[$x]['screen']) {
       if ($old_screen > 0) {

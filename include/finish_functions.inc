@@ -322,7 +322,9 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
       
       $possible_array = array();
       if ($paper[$i]['q_type'] == 'random') {
-        foreach ($paper[$i]['option_text'] as $checkID) {
+        // Get the random id.
+        $randomids = random_utils::get_random_qids_for_question($paper[$i]['q_id'], $mysqlidb);
+        foreach ($randomids as $checkID) {
           $used = false;
           for ($j = 1; $j <= $q_no; $j++) {
             if ($paper[$j]['q_id'] == $checkID) {
