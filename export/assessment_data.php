@@ -370,7 +370,6 @@ if ($student_no > 0) {
     foreach ($users as $idx => $value) {
       if ($value == $userid) {
         $log_array[$idx]['student_id'] = demo_replace_number($sid, $demo);
-        break;
       }
     }
   }
