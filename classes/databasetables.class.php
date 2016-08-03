@@ -386,7 +386,7 @@ QUERY;
           `duration` mediumint(9) DEFAULT NULL,
           `updated` datetime DEFAULT NULL,
           `dismiss` char(20) DEFAULT NULL,
-          `option_order` varchar(255) DEFAULT NULL,
+          `option_order` varchar(100) DEFAULT NULL,
           `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
           UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`),
@@ -407,7 +407,7 @@ QUERY;
           `duration` mediumint(9) DEFAULT NULL,
           `updated` datetime DEFAULT NULL,
           `dismiss` char(20) DEFAULT NULL,
-          `option_order` varchar(255) DEFAULT NULL,
+          `option_order` varchar(100) DEFAULT NULL,
           `metadataID` int(11) DEFAULT NULL
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
@@ -425,7 +425,7 @@ QUERY;
           `duration` mediumint(9) DEFAULT NULL,
           `updated` datetime DEFAULT NULL,
           `dismiss` char(20) DEFAULT NULL,
-          `option_order` varchar(255) DEFAULT NULL,
+          `option_order` varchar(100) DEFAULT NULL,
           `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
           UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`),
@@ -446,7 +446,7 @@ QUERY;
           `duration` mediumint(9) DEFAULT NULL,
           `updated` datetime DEFAULT NULL,
           `dismiss` char(20) DEFAULT NULL,
-          `option_order` varchar(255) DEFAULT NULL,
+          `option_order` varchar(100) DEFAULT NULL,
           `metadataID` int(11) DEFAULT NULL
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
@@ -464,7 +464,7 @@ QUERY;
           `duration` mediumint(9) DEFAULT NULL,
           `updated` datetime DEFAULT NULL,
           `dismiss` char(20) DEFAULT NULL,
-          `option_order` varchar(255) DEFAULT NULL,
+          `option_order` varchar(100) DEFAULT NULL,
           `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
           UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`),
@@ -485,7 +485,7 @@ QUERY;
           `duration` mediumint(9) DEFAULT NULL,
           `updated` datetime DEFAULT NULL,
           `dismiss` char(20) DEFAULT NULL,
-          `option_order` varchar(255) DEFAULT NULL,
+          `option_order` varchar(100) DEFAULT NULL,
           `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
           UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`),
@@ -593,7 +593,7 @@ QUERY;
           `duration` mediumint(9) default NULL,
           `updated` datetime default NULL,
           `dismiss` char(20) default NULL,
-          `option_order` varchar(255) default NULL,
+          `option_order` varchar(100) default NULL,
           `metadataID` int(11) unsigned DEFAULT NULL,
           PRIMARY KEY  (`id`),
           UNIQUE KEY `idx_metadataID_qid_screen` (`metadataID`,`q_id`,`screen`)
