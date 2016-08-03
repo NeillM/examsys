@@ -29,6 +29,14 @@ if ($updater_utils->check_version("6.2.0")) {
         $configObject->set_db_object($mysqli);
         $configObject->set_setting('summative_hide_external', 0, 'boolean');
         $configObject->set_setting('summative_warn_external', 0, 'boolean');
+        // Existing file configs added to db config.
+        $configObject->set_setting('cfg_lti_allow_module_self_reg', $configObject->get('cfg_lti_allow_module_self_reg'), 'boolean');
+        $configObject->set_setting('cfg_lti_allow_staff_module_register', $configObject->get('cfg_lti_allow_staff_module_register'), 'boolean');
+        $configObject->set_setting('cfg_lti_allow_module_create', $configObject->get('cfg_lti_allow_module_create'), 'boolean');
+        $configObject->set_setting('lti_integration', $configObject->get('lti_integration'), 'string');
+        $configObject->set_setting('lti_auth_timeout', $configObject->get('lti_auth_timeout'), 'integer');
+        $configObject->set_setting('cfg_gradebook_enabled', $configObject->get('cfg_gradebook_enabled'), 'boolean');
+        $configObject->set_setting('cfg_api_enabled', $configObject->get('cfg_api_enabled'), 'boolean');
         $updater_utils->record_update('rogo1829_newconfigs');
     }
     // Update config names.
