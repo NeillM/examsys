@@ -87,27 +87,27 @@ abstract class plugins_sms extends \plugins\plugins {
     abstract public function get_modules($externalid = null, $session = null);
     /**
      * Check if module import is supported by the plugin
-     * @return array|bool import url and translation strings, false  if module import supported
+     * @return array|bool import url and translation strings, false if module import not supported
      */
     abstract public function supports_module_import();
     /**
      * Check if faculty/school import is supported by the plugin
-     * @return array|bool import url and translation strings, false  if faculty import supported
+     * @return array|bool import url and translation strings, false if faculty import not supported
      */
     abstract public function supports_faculty_import();
     /**
      * Check if course import is supported by the plugin
-     * @return array|bool import url and translation strings, false  if course import supported
+     * @return array|bool import url and translation strings, false if course import not supported
      */
     abstract public function supports_course_import();
     /**
      * Check if enorlment import is supported by the plugin
-     * @return array|bool import url and translation strings, false  if enrolment import supported
+     * @return array|bool import url and translation strings, false if enrolment import not supported
      */
     abstract public function supports_enrol_import();
     /**
      * Check if assessment import is supported by the plugin
-     * @return array|bool import url and translation strings, false  if assessment import supported
+     * @return array|bool import url and translation strings, false if assessment import not supported
      */
     abstract public function supports_assessment_import();
     /**
