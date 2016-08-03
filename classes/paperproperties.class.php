@@ -429,8 +429,10 @@ class PaperProperties {
         $params['distinction_mark'] = array('i',  $this->distinction_mark);
         $params['exam_duration'] = array('i', $this->exam_duration);
         $params['calendar_year'] = array('i', $this->calendar_year);
-        $params['externalid'] = array('s', $this->externalid);
-        $params['externalsys'] = array('s', $this->externalsys);
+        if ($userObject->has_role('SysAdmin')) {
+          $params['externalid'] = array('s', $this->externalid);
+          $params['externalsys'] = array('s', $this->externalsys);
+        }
       }
     }
 
