@@ -368,7 +368,7 @@ class Config extends RogoStaticSingleton {
     $this->cache_setting($setting, $value, $component);
     $this->cache_setting_type($setting, $type, $component);
     if (!is_null($currentsetting)) {
-      $this->update_setting($setting, $value, $component);
+      $this->update_setting($setting, $value, $type, $component);
     } else {
       $this->insert_setting($setting, $value, $type, $component);
     }
@@ -378,9 +378,23 @@ class Config extends RogoStaticSingleton {
    * Update a config setting for a particular component
    * @param string $setting The name of the config setting
    * @param string|array $value
+   * @param string $type The type of the config setting
    * @param string $component (Optional) The component to which this setting belongs
    */
-  protected function update_setting($setting, $value, $component = 'core') {
+  protected function update_setting($setting, $value, $type = null, $component = 'core') {
+    // Passwords encrypted.
+    if ($type == self::PASSWORD) {
+        $encryp = new encryp();
+        $value = $encryp->mcrypt_password($value);
+    }
+    // Ensure boolean value.
+    if ($type == self::BOOLEAN) {
+        if (empty($value)) {
+            $value = 0;
+        } else {
+            $value = 1;
+        }
+    }
     // Update Settings.
     $result = $this->db->prepare("UPDATE `config` SET `value`= ? WHERE component = ? AND setting = ?");
     $result->bind_param("sss", $value, $component, $setting);
@@ -398,6 +412,19 @@ class Config extends RogoStaticSingleton {
    * @param string $component The component to which this config setting belongs
    */
   protected function insert_setting($setting, $value, $type = null, $component = 'core') {
+    // Passwords encrypted.
+    if ($type == self::PASSWORD) {
+        $encryp = new encryp();
+        $value = $encryp->mcrypt_password($value);
+    }
+    // Ensure boolean value.
+    if ($type == self::BOOLEAN) {
+        if (empty($value)) {
+            $value = 0;
+        } else {
+            $value = 1;
+        }
+    }
     // Insert Settings.
     $result = $this->db->prepare("INSERT INTO `config` (`component`, `setting`, `value`, `type`) VALUES (?, ?, ?, ?)");
     $result->bind_param("ssss", $component, $setting, $value, $type);
@@ -519,6 +546,11 @@ class Config extends RogoStaticSingleton {
     $result->bind_result($setting, $value, $type);
     $result->execute();
     while ($result->fetch()) {
+      if ($type == self::PASSWORD) {
+        // Password settings are encrypted.
+        $encryp = new encryp();
+        $value = $encryp->mdecrypt_password($value);
+      }
       $this->cache_setting($setting, $value, $component);
       $this->cache_setting_type($setting, $type, $component);
     }

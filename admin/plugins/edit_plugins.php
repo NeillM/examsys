@@ -65,25 +65,11 @@ if (isset($_POST['submit'])) {
         $type = $configObject->get_setting_type($plugin, $setting);
         if ($setting != "installed") {
             $new_value = check_var($setting, 'POST', false, false, true);
-            if ($type == Config::PASSWORD) {
-                // Password settings are encrypted.
-                $encryp = new encryp();
-                $value = $encryp->mdecrypt_password($value);
-            } elseif ($type == Config::BOOLEAN) {
-                if (empty($new_value)) {
-                    $new_value = 0;
-                } else {
-                    $new_value = 1;
-                }
-            }
             // Check value is of expected type. No change if not expected type.
             if (!Config::check_type($new_value, $type)) {
                 $new_value = $value;
             }
             if ($value != $new_value) {
-                if ($type == Config::PASSWORD) {
-                    $new_value = $encryp->mcrypt_password($new_value);
-                }
                 $configObject->set_setting($setting, $new_value, $type, $plugin);
             }
         }
@@ -130,9 +116,6 @@ $render->render_admin_content($breadcrumb, $lang);
                         }
                         echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting . "</label>&nbsp;<img src=\"../../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $langpack->get_string($pluginlangcomponent, $setting) . "\" /></td><td><input type=\"checkbox\" name=\"" . $setting . "\" id=\"" . $setting . "\"" . $checked . "/></td></tr>";
                     } elseif ($type == Config::PASSWORD) {
-                        // Password settings need to be decrypted.
-                        $encryp = new encryp();
-                        $value = $encryp->mdecrypt_password($value);
                         echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting. "</label>&nbsp;<img src=\"../../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $langpack->get_string($pluginlangcomponent, $setting) . "\" /></td><td><input type=\"password\" size=\"20\" id=\"" . $setting . "\" name=\"" . $setting . "\" value=\"" . $value . "\" /></td></tr>";
                     } else {
                         echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting. "</label>&nbsp;<img src=\"../../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $langpack->get_string($pluginlangcomponent, $setting). "\" /></td><td><input type=\"text\" size=\"20\" id=\"" . $setting . "\" name=\"" . $setting . "\" value=\"" . $value . "\" /></td></tr>";
