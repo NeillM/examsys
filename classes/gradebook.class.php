@@ -31,6 +31,30 @@ class gradebook {
     private $db;
     
     /**
+     * External paper - externalid used to referece paper
+     * @var string
+     */
+    const EXTPAPER = 'extpaper';
+    
+    /**
+     * External module - externalid used to referece module
+     * @var string
+     */
+    const EXTMODULE = 'extmodule';
+    
+    /**
+     * Internal paper - rogo id used to referece paper
+     * @var string
+     */
+    const PAPER = 'paper';
+    
+    /**
+     * Internal module - rogo id used to referece module
+     * @var string
+     */
+    const MODULE = 'module';
+    
+    /**
      * Constructor
      * @param object $db
      * @return void 
@@ -112,7 +136,7 @@ class gradebook {
      * @return array|bool gradebook for paper or false  
      */
     public function get_paper_gradebook($paperidtype, $paperid) {
-        if ($paperidtype == 'extpaper') {
+        if ($paperidtype == self::EXTPAPER) {
             $pid = \Paper_utils::get_id_from_externalid($paperid, $this->db);
         } else {
             $pid = $paperid;
@@ -126,7 +150,7 @@ class gradebook {
             $sql->bind_result($userid, $studentid, $username, $raw_grade, $adjusted_grade, $classification);
             $users = array();
             while ($sql->fetch()) {
-                if ($paperidtype == 'extpaper') {
+                if ($paperidtype == self::EXTPAPER) {
                     $uid = $studentid;
                 } else {
                     $uid = $userid;
@@ -149,7 +173,7 @@ class gradebook {
      * @return array|bool gradebook for module or false
      */
     public function get_module_gradebook($moduleidtype, $moduleid) {
-        if ($moduleidtype == 'extmodule') {
+        if ($moduleidtype == self::EXTMODULE) {
             $modid = \module_utils::get_id_from_externalid($moduleid, $this->db);
         } else {
             $modid = $moduleid;
@@ -178,7 +202,7 @@ class gradebook {
         while ($sql->fetch()) {
             $users = array('raw_grade' => $raw_grade, 'adjusted_grade' => $adjusted_grade, 'classification' => $classification,
                 'username' => $username);
-            if ($moduleidtype == 'extmodule') {
+            if ($moduleidtype == self::EXTMODULE) {
                 $papers[$extpaperid][$studentid] = $users;
             } else {
                 $papers[$paperid][$userid] = $users;    

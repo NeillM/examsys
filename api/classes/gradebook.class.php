@@ -40,12 +40,12 @@ class gradebook extends \api\abstractpublish {
         $langpack = new \langpack();
         $gradebook = new \gradebook($this->db);
         switch ($filtername) {
-            case 'paper':
-            case 'extpaper':
+            case \gradebook::PAPER:
+            case \gradebook::EXTPAPER:
                 $grades = $gradebook->get_paper_gradebook($filtername, $filterid);
                 break;
-            case 'module' :
-            case 'extmodule' :
+            case \gradebook::MODULE:
+            case \gradebook::EXTMODULE:
                 $grades = $gradebook->get_module_gradebook($filtername, $filterid);
                 break;
             default:
