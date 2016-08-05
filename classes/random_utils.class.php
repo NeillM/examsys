@@ -52,7 +52,7 @@ Class random_utils {
   /**
    * Insert random question reference row
    * @param integer $id parent question id
-   * @param integer $q_id child quetion id
+   * @param integer $q_id child question id
    * @param mysqli $db db connection
    * @return bool true on success, false otherwise
    */
@@ -68,15 +68,14 @@ Class random_utils {
   }
   
   /**
-   * Update random question reference row
+   * delete random question reference row
    * @param integer $id parent question id
-   * @param integer $q_id child quetion id
    * @param mysqli $db db connection
    * @return bool true on success, false otherwise
    */
-  static public function update_random_link($id, $q_id, $db) {
-    $sql = $db->prepare("UPDATE random_link SET q_id = ? WHERE id = ?");
-    $sql->bind_param('ii', $q_id, $id);
+  static public function delete_random_link($id, $db) {
+    $sql = $db->prepare("DELETE FROM random_link  WHERE id = ?");
+    $sql->bind_param('i', $id);
     $sql->execute();
     $sql->close();
     if ($db->errno != 0) {
