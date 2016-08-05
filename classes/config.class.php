@@ -68,6 +68,11 @@ class Config extends RogoStaticSingleton {
    */
   const JSON = 'json';
   /**
+   * Config setting timezones type identifier
+   * @var string
+   */
+  const TIMEZONES = 'timezones';
+  /**
    * Config setting string type identifier
    * @var string
    */
@@ -384,16 +389,20 @@ class Config extends RogoStaticSingleton {
   protected function update_setting($setting, $value, $type = null, $component = 'core') {
     // Passwords encrypted.
     if ($type == self::PASSWORD) {
-        $encryp = new encryp();
-        $value = $encryp->mcrypt_password($value);
+      $encryp = new encryp();
+      $value = $encryp->mcrypt_password($value);
     }
     // Ensure boolean value.
     if ($type == self::BOOLEAN) {
-        if (empty($value)) {
-            $value = 0;
-        } else {
-            $value = 1;
-        }
+      if (empty($value)) {
+        $value = 0;
+      } else {
+        $value = 1;
+      }
+    }
+    // Json encode.
+    if ($type == self::JSON or $type == self::TIMEZONES) {
+      $value = json_encode($value);
     }
     // Update Settings.
     $result = $this->db->prepare("UPDATE `config` SET `value`= ? WHERE component = ? AND setting = ?");
@@ -414,16 +423,20 @@ class Config extends RogoStaticSingleton {
   protected function insert_setting($setting, $value, $type = null, $component = 'core') {
     // Passwords encrypted.
     if ($type == self::PASSWORD) {
-        $encryp = new encryp();
-        $value = $encryp->mcrypt_password($value);
+      $encryp = new encryp();
+      $value = $encryp->mcrypt_password($value);
     }
     // Ensure boolean value.
     if ($type == self::BOOLEAN) {
-        if (empty($value)) {
-            $value = 0;
-        } else {
-            $value = 1;
-        }
+      if (empty($value)) {
+        $value = 0;
+      } else {
+        $value = 1;
+      }
+    }
+    // Json encode.
+    if ($type == self::JSON or $type == self::TIMEZONES) {
+      $value = json_encode($value);
     }
     // Insert Settings.
     $result = $this->db->prepare("INSERT INTO `config` (`component`, `setting`, `value`, `type`) VALUES (?, ?, ?, ?)");
@@ -551,6 +564,14 @@ class Config extends RogoStaticSingleton {
         $encryp = new encryp();
         $value = $encryp->mdecrypt_password($value);
       }
+      // Decode json.
+      if ($type == self::JSON) {
+        $value = json_decode($value);
+      }
+      // Set timzone to associative array.
+      if ($type == self::TIMEZONES) {
+        $value = json_decode($value, true);
+      }
       $this->cache_setting($setting, $value, $component);
       $this->cache_setting_type($setting, $type, $component);
     }
@@ -629,8 +650,11 @@ class Config extends RogoStaticSingleton {
         case self::PASSWORD:
         case self::STRING:
         case self::URL:
-        case self::JSON:
           $check = is_string($value);
+          break;
+        case self::JSON:
+        case self::TIMEZONES:
+          $check = is_array($value);
           break;
         case self::BOOLEAN:
           if ($value == 1 or $value == 0) {

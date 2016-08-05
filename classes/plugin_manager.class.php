@@ -90,7 +90,7 @@ class plugin_manager {
         $config = Config::get_instance();
         $enabled = $config->get_setting($type, 'enabled_plugin');
         if (!is_null($enabled)) {
-            $enabledarray = json_decode($enabled);
+            $enabledarray = $enabled;
             $newenabled = array();
             $changed = false;
             // Check existing enabled plugins and disable those not installed.
@@ -102,7 +102,7 @@ class plugin_manager {
                 }
             }
             if ($changed) {
-                $config->set_setting('enabled_plugin', json_encode($newenabled), Config::JSON, 'plugin_' . $type);
+                $config->set_setting('enabled_plugin', $newenabled, Config::JSON, 'plugin_' . $type);
             }
         } else {
             $newenabled = array();

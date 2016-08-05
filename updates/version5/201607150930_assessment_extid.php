@@ -46,7 +46,7 @@ if ($updater_utils->check_version("6.2.0")) {
     $updater_utils->execute_query($altersql, true);
     $updatesql = "UPDATE config set setting = 'paper_max_duration' WHERE setting = 'max_duration'";
     $updater_utils->execute_query($altersql, true);
-    $updatesql = "UPDATE config set setting = 'paper_timezones' WHERE setting = 'timezones'";
+    $updatesql = "UPDATE config set setting = 'paper_timezones', type = 'timezones' WHERE setting = 'timezones'";
     $updater_utils->execute_query($altersql, true);
     // New file config override setting.
     $new_lines = array("// Override db config settings with configs in this file?\n","\$file_config_override = true;\r\n");

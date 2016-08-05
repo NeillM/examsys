@@ -34,14 +34,14 @@ abstract class plugins_sms extends \plugins\plugins {
      */
     protected $plugin_type = 'SMS';
     /**
-     * Get names if sms external systems available to syn with
+     * Get names if sms external systems available to sync with
      * @param mysqli $db db connection
      * @return array|bool list of external systems or false if non available
      */
     static public function get_sms($db) {
         $sms = array();
         $config = \Config::get_instance();
-        $plugins = json_decode($config->get_setting('plugin_sms', 'enabled_plugin'));
+        $plugins = $config->get_setting('plugin_sms', 'enabled_plugin');
         foreach ($plugins as $p) {
             $mappingplugin_object = 'plugins\\SMS\\' . $p . '\\' . $p;
             $smsplugin = new $mappingplugin_object($db);

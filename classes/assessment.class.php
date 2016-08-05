@@ -184,8 +184,7 @@ class assessment {
             throw new Exception('INVALID_DATES');
         }
         // Verify timezone is supported, revert to server timezone if not.
-        $decode_timezones = json_decode($this->timezones, true);
-        if (!array_key_exists($timezone, $decode_timezones)) {
+        if (!array_key_exists($timezone, $this->timezones)) {
             $timezone = $this->server_timezone;
         }
 
@@ -333,8 +332,7 @@ class assessment {
         }
         
         // Verify timezone is supported, revert to server timezone if not.
-        $decode_timezones = json_decode($this->timezones, true);
-        if (!array_key_exists($timezone, $decode_timezones)) {
+        if (!array_key_exists($timezone, $this->timezones)) {
             $timezone = $this->server_timezone;
         }
         if ($timezone != $details['timezone']) {
@@ -452,8 +450,7 @@ class assessment {
             return false;
         }
         // Enforce cohort size interface restrictions.
-        $decode_cohort_sizes = json_decode($this->cohort_sizes);
-        if (!in_array($cohort_size, $decode_cohort_sizes)) {
+        if (!in_array($cohort_size, $this->cohort_sizes)) {
             $cohort_size = '<whole cohort>';
         }
         // Enforce sittings interface restrictions.

@@ -23,12 +23,24 @@
 
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.inc';
-
+require '../lang/' . $language. '/include/timezones.inc';
 require '../include/toprightmenu.inc';
 
 if (isset($_POST['submit'])) {
     foreach ($configObject->get_setting('core') as $setting => $value) {
         $new_value = check_var($setting, 'POST', false, false, true);
+        // Timezones are display in a multi selectbox so the post will be an array.
+        if ($setting == 'paper_timezones') {
+            $arrayvalue = array();
+            foreach ($new_value as $v) {
+                $parts = explode("|", $v);
+                $arrayvalue[$parts[0]] = $parts[1];
+            }
+            $new_value = $arrayvalue;
+        }
+        if ($setting == 'summative_cohort_sizes') {
+            $new_value = explode(',', $new_value);
+        }
         $type = $configObject->get_setting_type('core', $setting);
         // Check value is of expected type. No change if not expected type.
         if (!Config::check_type($new_value, $type)) {
@@ -92,7 +104,24 @@ $render->render_admin_content($breadcrumb, $lang);
                         echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting . "</label>&nbsp;<img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string[$setting] . "\" /></td><td><input type=\"checkbox\" name=\"" . $setting . "\" id=\"" . $setting . "\"" . $checked . $disabled . "/></td>";
                     } elseif ($type == Config::PASSWORD) {
                         echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting. "</label>&nbsp;<img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string[$setting] . "\" /></td><td><input type=\"password\" size=\"20\" id=\"" . $setting . "\" name=\"" . $setting . "\" value=\"" . htmlspecialchars($value) . "\""  . $disabled . "/></td>";
+                    } elseif ($type == Config::TIMEZONES) {
+                        echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting. "</label>&nbsp;<img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string[$setting] . "\" /></td><td><select id=\"" . $setting . "\" name=\"" . $setting . "[]\" multiple>";
+                        // Compare config setting against list of possible timezones.
+                        foreach ($timezone_array as $individual_zone => $display_zone) {
+                            foreach ($value as $i => $v) {
+                                if ($individual_zone == $i) {
+                                    $selected = "selected";
+                                    break;
+                                }
+                                $selected = "";
+                            }
+                            echo "<option value=\"" . htmlspecialchars($individual_zone) . "|" . htmlspecialchars($display_zone) . "\" $selected>" . htmlspecialchars($display_zone) . "</option>";
+                        }
+                        echo "</select></td>";
                     } else {
+                        if ($type == Config::JSON and $setting == 'summative_cohort_sizes') {
+                            $value = implode(',', $value);
+                        }
                         if ($type == Config::STRING or $type == Config::INTEGER) {
                             $size = 20;
                         } else {
