@@ -26,7 +26,21 @@
 Class random_utils {
 
   /**
-   * Function to get the radnom question ids based on the parent question id
+   * Generate a random question id from the random block
+   * @param integer $id id of the random block
+   * @param mysqli $db db connection
+   * @return integerrandom question id
+   */
+  static public function generate_random_qid_from_block($id, $db) {
+    // Get list of questions.
+    $randomids = self::get_random_qids_for_question($id, $db);
+    //  Get random question.
+    $random_q_no = count($randomids);
+    $selected_no = rand(0,$random_q_no-1);
+    return $randomids[$selected_no];
+  }
+  /**
+   * Function to get the random question ids based on the parent question id
    * @param integer $id question id
    * @param mysqli $db db connection
    * @return array|bool random question ids or false is non found
