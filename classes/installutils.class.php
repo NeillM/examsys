@@ -655,13 +655,13 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $insert->execute();
     $insert->close();
     // Save json encoded list of timezones.
-    $encoded_timezones = json_encode($timezone_array);
-    $encoded_cohorts = json_encode(array('<whole cohort>', '0-10', '11-20', '21-30', '31-40', '41-50', '51-75', '76-100', '101-150', '151-200', '201-300',
-        '301-400', '401-500'));
+    $timezones = $timezone_array;
+    $cohorts = array('<whole cohort>', '0-10', '11-20', '21-30', '31-40', '41-50', '51-75', '76-100', '101-150', '151-200', '201-300',
+        '301-400', '401-500');
     $configObject = Config::get_instance();
     $configObject->set_db_object(self::$db);
-    $configObject->set_setting('paper_timezones', $encoded_timezones, 'json');
-    $configObject->set_setting('summative_cohort_sizes', $encoded_cohorts, 'json');
+    $configObject->set_setting('paper_timezones', $timezones, 'timezones');
+    $configObject->set_setting('summative_cohort_sizes', $cohorts, 'json');
     $configObject->set_setting('paper_max_duration', 779, 'integer');
     $configObject->set_setting('summative_max_sittings', 6, 'integer');
     $configObject->set_setting('summative_hide_external', 0, 'boolean');
@@ -673,6 +673,10 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $configObject->set_setting('lti_auth_timeout', 9072000, 'integer');
     $configObject->set_setting('cfg_gradebook_enabled', 1, 'boolean');
     $configObject->set_setting('cfg_api_enabled', 1, 'boolean');
+    
+    self::createDefaultUsers();
+    self::createDefaultFacultiesSchoolsModules();
+    self::createQuestionStatuses();
   }
   
   /**
@@ -1226,13 +1230,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       }
     }
     self::$db->commit();
-
-    // Behat loads it's own defaults.
-    if (!self::$behat_install) {
-      self::createDefaultUsers();
-      self::createDefaultFacultiesSchoolsModules();
-      self::createQuestionStatuses();
-    }
 
     //FLUSH PRIVILEGES
     self::$db->query("FLUSH PRIVILEGES");
