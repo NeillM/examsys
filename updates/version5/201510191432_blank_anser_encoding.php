@@ -15,7 +15,7 @@ if ($updater_utils->check_version("6.1.0") and !$updater_utils->has_updated('bla
   $blank_answers->store_result();
   $blank_answers->bind_result($id, $answer);
   // Split transaction if large.
-  $limit = 150000;
+  $limit = 50000;
   $rows = $blank_answers->num_rows();
   if ($rows > $limit) {
       $split = true;
