@@ -92,6 +92,8 @@ $string['tooltip_random'] = 'Rogo vypočítá ohodnocení, jakého by student do
 $string['tooltip_calculator'] = 'Studentům je v rámci testu k dispozici JavaScriptová kalkulačka.';
 $string['tooltip_audio'] = 'Na úvodní stránce Zkoušky bude umístěn zkušební zvukový klip, aby si studenti mohli upravit hlasitost ještě před zahájením testování.';
 $string['tooltip_osceclassification'] = 'Upozornění: jakmile je hodnocení zahájeno, nelze klasifikaci měnit.';
+$string['externalid'] = 'External System ID';
+$string['externalsys'] = 'External System';
 
 // Security tab
 $string['securitytab'] = 'Bezpečnost';

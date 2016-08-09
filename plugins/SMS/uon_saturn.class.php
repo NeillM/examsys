@@ -174,17 +174,17 @@ Class UON_SATURN extends SmsUtils {
 
   public function getStudentSources() {
     $configObject = Config::get_instance();
-    return array('&lt;No lookup&gt;' => '', 'UK' => $configObject->get('cfg_sms_url') .
-    '/touchstonestudent.ashx?campus=uk', 'Malaysia' => $configObject->get('cfg_sms_url') .
-    '/touchstonestudent.ashx?campus=malaysia', 'China' => $configObject->get('cfg_sms_url') .
+    return array('&lt;No lookup&gt;' => '', 'UK' => $configObject->get_setting('core', 'cfg_sms_url') .
+    '/touchstonestudent.ashx?campus=uk', 'Malaysia' => $configObject->get_setting('core', 'cfg_sms_url') .
+    '/touchstonestudent.ashx?campus=malaysia', 'China' => $configObject->get_setting('core', 'cfg_sms_url') .
     '/touchstonestudent.ashx?campus=china');
   }
 
   public function getModuleSources() {
     $configObject = Config::get_instance();
-    return array('UK' => $configObject->get('cfg_sms_url') .
-    '/touchstone.ashx?campus=uk', 'Malaysia' => $configObject->get('cfg_sms_url') .
-    '/touchstone.ashx?campus=malaysia', 'China' => $configObject->get('cfg_sms_url') .
+    return array('UK' => $configObject->get_setting('core', 'cfg_sms_url') .
+    '/touchstone.ashx?campus=uk', 'Malaysia' => $configObject->get_setting('core', 'cfg_sms_url') .
+    '/touchstone.ashx?campus=malaysia', 'China' => $configObject->get_setting('core', 'cfg_sms_url') .
     '/touchstone.ashx?campus=china');
   }
 
@@ -432,9 +432,9 @@ Class UON_SATURN extends SmsUtils {
     }
     $import_type='';
     if ($enrolements > 0 or $deletions > 0) {
-      if ($sms_api == $configObject->get('cfg_sms_url') . '/touchstone.ashx?campus=malaysia') {
+      if ($sms_api == $configObject->get_setting('core', 'cfg_sms_url') . '/touchstone.ashx?campus=malaysia') {
         $import_type = 'SATURN Malaysia';
-      } elseif ($sms_api == $configObject->get('cfg_sms_url') . '/touchstone.ashx?campus=china') {
+      } elseif ($sms_api == $configObject->get_setting('core', 'cfg_sms_url') . '/touchstone.ashx?campus=china') {
         $import_type = 'SATURN China';
       } else {
         $import_type = 'SATURN UK';

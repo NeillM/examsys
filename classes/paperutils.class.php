@@ -780,10 +780,10 @@ Class PaperUtils {
    * @return array|bool array of paper details or false on error
    */
   static function get_paper_properties($id, $db) {
-    $result = $db->prepare("SELECT paper_title, paper_type, paper_ownerID, calendar_year, start_date, end_date, labs, exam_duration, timezone FROM properties WHERE property_id = ?");
+    $result = $db->prepare("SELECT paper_title, paper_type, paper_ownerID, calendar_year, start_date, end_date, labs, exam_duration, timezone, externalid, externalsys FROM properties WHERE property_id = ?");
     $result->bind_param('i', $id);
     $result->execute();
-    $result->bind_result($title, $type, $owner, $session, $startdatetime, $enddatetime, $labs, $duration, $timezone);
+    $result->bind_result($title, $type, $owner, $session, $startdatetime, $enddatetime, $labs, $duration, $timezone, $externalid, $externalsys);
     $result->fetch();
     if ($db->errno != 0) {
         $result->close();
@@ -798,8 +798,31 @@ Class PaperUtils {
                     'enddatetime' => $enddatetime,
                     'labs' => $labs,
                     'duration' => $duration,
-                    'timezone' => $timezone);
+                    'timezone' => $timezone,
+                    'externalid' => $externalid,
+                    'externalsys' => $externalsys);
     return $details;
   }
 
+  /**
+   * Get internal rogo properties id from external id
+   * @param string $externalid external system id
+   * @param mysqli $db db connection
+   * @return integer|bool rogo id or false on error
+   */
+  static public function get_id_from_externalid($externalid, $db) {
+    $result = $db->prepare("SELECT property_id FROM properties WHERE externalid = ? AND deleted IS NULL");
+    $result->bind_param('s', $externalid);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($id);
+    $result->fetch();
+    if ($result->num_rows == 0) {
+      $paperid = false;
+    } else {
+      $paperid = $id;
+    }
+    $result->close();
+    return $paperid;
+  }
 }

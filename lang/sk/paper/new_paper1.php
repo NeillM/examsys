@@ -22,4 +22,5 @@ $string['name'] = 'Názov';
 $string['next'] = 'Ďalší >';
 $string['msg1'] = 'Vyberte, prosím, typ dokumentu, ktorý si prajete vytvoriť.';
 $string['msg2'] = 'Zadajte, prosím, zmysluplný názov tohto dokumentu.';
+$string['msg3'] = 'Summative exams are scheduled by an external system are you sure you want to continue?';
 ?>

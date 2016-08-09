@@ -80,6 +80,11 @@ Class UserUtils {
       $salt = UserUtils::get_salt();
       $encrypt_password = $enc->encpw($salt, $username, $password);  // One way encrypt the password.
 
+      // Make sure empty string year is stored as null not 0.
+      if ($year == '') {
+        $year = null;
+      }
+
       // Add new record into users table.
       $result = $db->prepare("INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, 0, ?, NULL, NULL)");
       $result->bind_param('ssssssssssi', $encrypt_password, $course, $surname, $initials, $title, $username, $email, $role, $forname, $gender, $year);
@@ -189,6 +194,11 @@ Class UserUtils {
         if (!in_array(strtolower($gender), $genders)) {
             $gender = null;
         }
+    }
+
+    // Make sure empty string year is stored as null not 0.
+    if ($year == '') {
+        $year = null;
     }
 
     // Update record into users table.

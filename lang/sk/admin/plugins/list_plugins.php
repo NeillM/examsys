@@ -18,3 +18,4 @@ $string['rogoplugins'] = "Installed plugins";
 $string['editplugins'] = "Edit plugins";
 $string['plugins'] = "Plugins";
 $string['enabled'] = "Enabled?";
+$string['addpluginlink'] = "Install a new plugin";

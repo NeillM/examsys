@@ -27,6 +27,11 @@
  */
 class Config extends RogoStaticSingleton {
   /**
+   * Areas of the Rogo system that can be confifured.
+   * @var array list of areas
+   */
+  public static $config_area = array('api', 'gradebook', 'lti', 'paper', 'summative', 'url');
+  /**
    * @var array
    */
   public $data;
@@ -62,6 +67,11 @@ class Config extends RogoStaticSingleton {
    * @var string
    */
   const JSON = 'json';
+  /**
+   * Config setting timezones type identifier
+   * @var string
+   */
+  const TIMEZONES = 'timezones';
   /**
    * Config setting string type identifier
    * @var string
@@ -277,6 +287,8 @@ class Config extends RogoStaticSingleton {
     $this->set('authentication', $authentication);
     // Default host to be writable.
     $this->set('cfg_readonly_host', false);
+    // Set file config override to false so we can test changes effectively.
+    $this->set('file_config_override', false);
     $this->behatsetup = true;
   }
   
@@ -297,6 +309,8 @@ class Config extends RogoStaticSingleton {
     $this->set('cfg_rogo_data', $this->get('cfg_phpunit_data'));
     // Default host to be writable.
     $this->set('cfg_readonly_host', false);
+    // Set file config override to false so we can test changes effectively.
+    $this->set('file_config_override', false);
     $this->phpunitsetup = true;
   }
 
@@ -359,7 +373,7 @@ class Config extends RogoStaticSingleton {
     $this->cache_setting($setting, $value, $component);
     $this->cache_setting_type($setting, $type, $component);
     if (!is_null($currentsetting)) {
-      $this->update_setting($setting, $value, $component);
+      $this->update_setting($setting, $value, $type, $component);
     } else {
       $this->insert_setting($setting, $value, $type, $component);
     }
@@ -369,9 +383,27 @@ class Config extends RogoStaticSingleton {
    * Update a config setting for a particular component
    * @param string $setting The name of the config setting
    * @param string|array $value
+   * @param string $type The type of the config setting
    * @param string $component (Optional) The component to which this setting belongs
    */
-  protected function update_setting($setting, $value, $component = 'core') {
+  protected function update_setting($setting, $value, $type = null, $component = 'core') {
+    // Passwords encrypted.
+    if ($type == self::PASSWORD) {
+      $encryp = new encryp();
+      $value = $encryp->mcrypt_password($value);
+    }
+    // Ensure boolean value.
+    if ($type == self::BOOLEAN) {
+      if (empty($value)) {
+        $value = 0;
+      } else {
+        $value = 1;
+      }
+    }
+    // Json encode.
+    if ($type == self::JSON or $type == self::TIMEZONES) {
+      $value = json_encode($value);
+    }
     // Update Settings.
     $result = $this->db->prepare("UPDATE `config` SET `value`= ? WHERE component = ? AND setting = ?");
     $result->bind_param("sss", $value, $component, $setting);
@@ -389,6 +421,23 @@ class Config extends RogoStaticSingleton {
    * @param string $component The component to which this config setting belongs
    */
   protected function insert_setting($setting, $value, $type = null, $component = 'core') {
+    // Passwords encrypted.
+    if ($type == self::PASSWORD) {
+      $encryp = new encryp();
+      $value = $encryp->mcrypt_password($value);
+    }
+    // Ensure boolean value.
+    if ($type == self::BOOLEAN) {
+      if (empty($value)) {
+        $value = 0;
+      } else {
+        $value = 1;
+      }
+    }
+    // Json encode.
+    if ($type == self::JSON or $type == self::TIMEZONES) {
+      $value = json_encode($value);
+    }
     // Insert Settings.
     $result = $this->db->prepare("INSERT INTO `config` (`component`, `setting`, `value`, `type`) VALUES (?, ?, ?, ?)");
     $result->bind_param("ssss", $component, $setting, $value, $type);
@@ -403,6 +452,38 @@ class Config extends RogoStaticSingleton {
   }
 
   /**
+   * Override db config setting with config value in config.inc.php
+   * @param string $component The component to which this config setting belongs
+   * @param string|null $setting The name of the config setting or null if getting whole component
+   * @param string|array cached setting value(s)
+   * @return string|array overriden setting value(s)
+   */
+  public function file_config_override($component, $setting, $cachedsetting) {
+     if (!is_null($this->get('file_config_override'))) {
+         $override = $this->get('file_config_override');
+     } else {
+         $override = false;
+     }
+     if ($component == 'core' and $override) {
+       // A single setting.
+       if (!is_array($cachedsetting)) {
+         $fileconfig = $this->get($setting);
+         if (!is_null($fileconfig)) {
+           $cachedsetting = $fileconfig;
+         }
+       // All componets settings.
+       } else {
+         foreach ($cachedsetting as $setting => $value) {
+           $fileconfig = $this->get($setting);
+           if (!is_null($fileconfig)) {
+             $cachedsetting[$setting] = $fileconfig;
+           }
+         }
+       }
+     }
+     return $cachedsetting;
+  }
+  /**
    * Get a config setting for a particular component
    * @param string $component The component to which this config setting belongs
    * @param string $setting The name of the config setting (Optional)
@@ -410,10 +491,12 @@ class Config extends RogoStaticSingleton {
   public function get_setting($component, $setting = null) {
     $cachedsetting = $this->get_setting_from_cache($component, $setting);
     if (!is_null($cachedsetting)) {
+      $cachedsetting = $this->file_config_override($component, $setting, $cachedsetting);
       return $cachedsetting;
     }
     $this->load_settings($component);
     $cachedsetting = $this->get_setting_from_cache($component, $setting);
+    $cachedsetting = $this->file_config_override($component, $setting, $cachedsetting);
     return $cachedsetting; 
   }
 
@@ -476,6 +559,19 @@ class Config extends RogoStaticSingleton {
     $result->bind_result($setting, $value, $type);
     $result->execute();
     while ($result->fetch()) {
+      if ($type == self::PASSWORD) {
+        // Password settings are encrypted.
+        $encryp = new encryp();
+        $value = $encryp->mdecrypt_password($value);
+      }
+      // Decode json.
+      if ($type == self::JSON) {
+        $value = json_decode($value);
+      }
+      // Set timzone to associative array.
+      if ($type == self::TIMEZONES) {
+        $value = json_decode($value, true);
+      }
       $this->cache_setting($setting, $value, $component);
       $this->cache_setting_type($setting, $type, $component);
     }
@@ -541,5 +637,43 @@ class Config extends RogoStaticSingleton {
 
     $fake = null;
     return $fake;
+  }
+  
+  /**
+   * Check if value is of the expected type
+   * @param string $value value to check
+   * @param const $type constant config type
+   * @return bool true if value is of expected type, false otherwise
+   */
+  public static function check_type($value, $type) {
+    switch ($type) {
+        case self::PASSWORD:
+        case self::STRING:
+        case self::URL:
+          $check = is_string($value);
+          break;
+        case self::JSON:
+        case self::TIMEZONES:
+          $check = is_array($value);
+          break;
+        case self::BOOLEAN:
+          if ($value == 1 or $value == 0) {
+            $check = true;
+          } else {
+            $check = false;
+          }
+          break;
+        case self::INTEGER:
+          if (is_int($value) or ctype_digit($value)) {
+              $check = true;
+          } else {
+              $check = false;
+          }
+          break;
+        default:
+          $check = false;
+          break;
+    }
+    return $check;
   }
 }

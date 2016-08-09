@@ -47,10 +47,12 @@ if (isset($pluginslist[$plugin])) {
     $pluginns = $pluginslist[$plugin];
 }
 
+$p = new $pluginns($mysqli);
+$pluginlangcomponent = $p->get_lang_component();
+
 require '../../include/toprightmenu.inc';
 
 if (isset($_POST['submit'])) {
-    $p = new $pluginns($mysqli);
     // Enable.
     $enable = check_var('enabledchk', 'POST', false, false, true);
     if (is_null($enable)) {
@@ -63,21 +65,11 @@ if (isset($_POST['submit'])) {
         $type = $configObject->get_setting_type($plugin, $setting);
         if ($setting != "installed") {
             $new_value = check_var($setting, 'POST', false, false, true);
-            if ($type == Config::PASSWORD) {
-                // Password settings are encrypted.
-                $encryp = new encryp();
-                $value = $encryp->mdecrypt_password($value);
-            } elseif ($type == Config::BOOLEAN) {
-                if (empty($new_value)) {
-                    $new_value = 0;
-                } else {
-                    $new_value = 1;
-                }
+            // Check value is of expected type. No change if not expected type.
+            if (!Config::check_type($new_value, $type)) {
+                $new_value = $value;
             }
             if ($value != $new_value) {
-                if ($type == Config::PASSWORD) {
-                    $new_value = $encryp->mcrypt_password($new_value);
-                }
                 $configObject->set_setting($setting, $new_value, $type, $plugin);
             }
         }
@@ -93,18 +85,7 @@ $additionaljs = "<script type=\"text/javascript\" src=\"../../js/jquery.validate
     <script type=\"text/javascript\" src=\"../../js/jquery-ui-1.10.4.min.js\"></script>
     <script type=\"text/javascript\" src=\"../../js/system_tooltips.js\"></script></script>
     <script type=\"text/javascript\" src=\"js/plugins_validate.min.js\"></script>";
-$addtionalcss = "<style type=\"text/css\">
-          td {text-align:left}
-          .field {text-align:right; padding-right:10px}
-          .form-error {
-            width: 468px;
-            margin: 18px auto;
-            padding: 16px;
-            background-color: #FFD9D9;
-            color: #800000;
-            border: 2px solid #800000;
-          }
-        </style>";
+$addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/config.css\"/>";
 $breadcrumb = array($string['home'] => "../../index.php", $string['administrativetools'] => "../index.php", $string['rogoplugins'] => "../plugins/list_plugins.php");
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('', '', $lang, $toprightmenu, 'admin/options_empty.html');
@@ -117,6 +98,7 @@ $render->render_admin_content($breadcrumb, $lang);
     <form id="theform" name="add_session" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" autocomplete="off">
         <table cellpadding="0" cellspacing="2" border="0">
         <?php
+            $langpack = new langpack();
             if ($pluginenabled) { 
                 echo "<tr><td class=\"field\"><label for=\"enabledchk\">" . $string['enabled'] . "</label></td><td><input type=\"checkbox\" name=\"enabledchk\" id=\"enabledchk\" checked/></td></tr>";
             } else {
@@ -132,14 +114,11 @@ $render->render_admin_content($breadcrumb, $lang);
                         } else {
                             $checked = "";
                         }
-                        echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting . "</label></td><td><input type=\"checkbox\" name=\"" . $setting . "\" id=\"" . $setting . "\"" . $checked . "/></td></tr>";
+                        echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting . "</label>&nbsp;<img src=\"../../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $langpack->get_string($pluginlangcomponent, $setting) . "\" /></td><td><input type=\"checkbox\" name=\"" . $setting . "\" id=\"" . $setting . "\"" . $checked . "/></td></tr>";
                     } elseif ($type == Config::PASSWORD) {
-                        // Password settings need to be decrypted.
-                        $encryp = new encryp();
-                        $value = $encryp->mdecrypt_password($value);
-                        echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting. "</label></td><td><input type=\"password\" size=\"20\" id=\"" . $setting . "\" name=\"" . $setting . "\" value=\"" . $value . "\" /></td></tr>";
+                        echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting. "</label>&nbsp;<img src=\"../../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $langpack->get_string($pluginlangcomponent, $setting) . "\" /></td><td><input type=\"password\" size=\"20\" id=\"" . $setting . "\" name=\"" . $setting . "\" value=\"" . $value . "\" /></td></tr>";
                     } else {
-                        echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting. "</label></td><td><input type=\"text\" size=\"20\" id=\"" . $setting . "\" name=\"" . $setting . "\" value=\"" . $value . "\" /></td></tr>";
+                        echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting. "</label>&nbsp;<img src=\"../../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $langpack->get_string($pluginlangcomponent, $setting). "\" /></td><td><input type=\"text\" size=\"20\" id=\"" . $setting . "\" name=\"" . $setting . "\" value=\"" . $value . "\" /></td></tr>";
                     }
                 }
             }

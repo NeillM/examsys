@@ -46,5 +46,6 @@ $string['academicsessions'] = 'Academic Sessions';
 $string['authentication'] = 'OAuth Authentication';
 $string['plugins'] = 'Plugins';
 $string['imssettings'] = 'IMS Settings';
+$string['config'] = 'Configuration';
 
 ?>

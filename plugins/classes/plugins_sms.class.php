@@ -34,14 +34,14 @@ abstract class plugins_sms extends \plugins\plugins {
      */
     protected $plugin_type = 'SMS';
     /**
-     * Get names if sms external systems available to syn with
+     * Get names if sms external systems available to sync with
      * @param mysqli $db db connection
      * @return array|bool list of external systems or false if non available
      */
     static public function get_sms($db) {
         $sms = array();
         $config = \Config::get_instance();
-        $plugins = json_decode($config->get_setting('plugin_sms', 'enabled_plugin'));
+        $plugins = $config->get_setting('plugin_sms', 'enabled_plugin');
         foreach ($plugins as $p) {
             $mappingplugin_object = 'plugins\\SMS\\' . $p . '\\' . $p;
             $smsplugin = new $mappingplugin_object($db);
@@ -53,6 +53,11 @@ abstract class plugins_sms extends \plugins\plugins {
             return $sms;
         }
     }
+    /**
+     * Get all assessments for academic session
+     * @params integer $session academic session to sync assessments with
+     */
+    abstract public function get_assessments($session);
     /**
      * Get all enrolments for academic session
      * @params integer $session academic session to sync enrolments with
@@ -82,24 +87,29 @@ abstract class plugins_sms extends \plugins\plugins {
     abstract public function get_modules($externalid = null, $session = null);
     /**
      * Check if module import is supported by the plugin
-     * @return array|bool import url and translation strings, false  if module import supported
+     * @return array|bool import url and translation strings, false if module import not supported
      */
     abstract public function supports_module_import();
     /**
      * Check if faculty/school import is supported by the plugin
-     * @return array|bool import url and translation strings, false  if faculty import supported
+     * @return array|bool import url and translation strings, false if faculty import not supported
      */
     abstract public function supports_faculty_import();
     /**
      * Check if course import is supported by the plugin
-     * @return array|bool import url and translation strings, false  if course import supported
+     * @return array|bool import url and translation strings, false if course import not supported
      */
     abstract public function supports_course_import();
     /**
      * Check if enorlment import is supported by the plugin
-     * @return array|bool import url and translation strings, false  if enrolment import supported
+     * @return array|bool import url and translation strings, false if enrolment import not supported
      */
     abstract public function supports_enrol_import();
+    /**
+     * Check if assessment import is supported by the plugin
+     * @return array|bool import url and translation strings, false if assessment import not supported
+     */
+    abstract public function supports_assessment_import();
     /**
      * Get name of sms
      * @return string name of sms

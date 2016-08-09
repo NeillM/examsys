@@ -373,6 +373,16 @@ if (isset($_POST['Submit'])) {
       $properties->set_bidirectional($_POST['bidirectional']);
     }
 
+    // External system details;
+    $extid = check_var('externalid', 'POST', false, false, true);
+    $extsys = check_var('externalsys', 'POST', false, false, true);
+    if (!is_null($extid)) {
+      $properties->set_externalid($extid);
+    }
+    if (!is_null($extsys)) {
+      $properties->set_externalsys($extsys);
+    }
+    
     if ($properties->get_paper_type() == '6') {
       if (isset($_POST['display_photos'])) {
         $properties->set_display_correct_answer(1);
@@ -1320,7 +1330,28 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     }
     $folder_details->close();
     echo "</select>\n</td></tr>\n";
-
+    
+    // External system details.
+    if ($userObject->has_role('SysAdmin')) {
+        // Sys admins can edit.
+        echo "<tr><td>" . $string['externalsys'] . "</td><td><select name=\"externalsys\">";
+        $sms = \plugins\plugins_sms::get_sms($mysqli);
+        echo "<option value=\"\"></option>\n";
+        foreach ($sms as $s) {
+            if ($s == $properties->get_externalsys()) {
+              $selected = "selected";
+            } else {
+              $selected = "";
+            }
+            echo "<option value=\"$s\" $selected>$s</option>\n";
+        }
+        echo "</select></td></tr>";
+        echo "<tr><td>" . $string['externalid'] . "</td><td><input type=\"text\" size=\"30\" maxlength=\"255\" name=\"externalid\" value=\"" . $properties->get_externalid() . "\"></td></tr>";
+    } else {
+        // Non sys admins can only view.
+      echo "<tr><td>" . $string['externalid'] . "</td><td>" . $properties->get_externalid() . "</td></tr>";
+      echo "<tr><td>" . $string['externalsys']. "</td><td>" . $properties->get_externalsys() . "</td></tr>";
+    }
     echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
     if ($properties->get_paper_type() == '4') {
       echo '<input type="hidden" name="bgcolor" value="' . $properties->get_bgcolor() . '" />';
