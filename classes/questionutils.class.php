@@ -418,8 +418,7 @@ SQL;
     */
    static function get_random_calc_question($q_id, $db) {
        $possible = array();
-       $random = $db->prepare("SELECT q_id FROM questions WHERE q_type ='enhancedcalc' AND q_id in ("
-           . "SELECT random_link.q_id FROM questions, random_link WHERE questions.q_id = random_link.id AND q_type ='random' AND questions.q_id = ?)");
+       $random = $db->prepare("SELECT q.q_id FROM questions q, random_link r WHERE q.q_id = r.q_id AND q_type ='enhancedcalc' and r.id = ?");
        $random->bind_param('i', $q_id);
        $random->execute();
        $random->bind_result($random_id);
@@ -459,6 +458,7 @@ SQL;
      */
     static function is_in_random_block($q_id, $db) {
         $questions = array();
+        // We are checking the question is on a paper in order to display the list of papers to the end user.
         $query = $db->prepare("SELECT question FROM questions, random_link, papers WHERE question = questions.q_id AND "
           . "questions.q_id = random_link.id AND q_type ='random' AND random_link.q_id = ?");
         $query->bind_param('i', $q_id);
@@ -479,6 +479,7 @@ SQL;
      */
     static function is_in_keyword_block($q_id, $db) {
         $questions = array();
+        // We are checking the question is on a paper in order to display the list of papers to the end user.
         $query = $db->prepare("SELECT question FROM keywords_question, keywords_link, papers WHERE question = keywords_link.q_id AND "
           . "keywordID = keyword_id AND keywords_question.q_id = ?");
         $query->bind_param('i',$q_id);
