@@ -999,10 +999,10 @@ function check_latex_random($q_ids, $mysqli) {
   $question_number = 0;
   $marks_incorrect_error = false;
   $paper_warnings = array();
-  $nooptions = array('keyword_based', 'random', 'placeholder', 'textbox');
+  $nooptions = array('keyword_based', 'random', 'textbox');
   for ($x=1; $x<=$row_no; $x++) {
     $status = $status_array[$temp_array[$x]['status']];
-    if ($temp_array[$x]['options'] == 0 and isset($temp_array[$x]['o_media']) and count($temp_array[$x]['o_media']) == 0 and !in_array($temp_array[$x]['q_type'], $nooptions)) {
+    if ($temp_array[$x]['options'] == 0 and isset($temp_array[$x]['o_media']) and count($temp_array[$x]['o_media']) == 0 and (!in_array($temp_array[$x]['q_type'], $nooptions) or $temp_array[$x]['correct'] != 'placeholder')) {
       $temp_array[$x]['warnings'] .= $string['nooptionsdefined'];
     }
     if ($status->get_display_warning()) $paper_warnings['status'][$status->get_name()][] = $question_number + 1;
