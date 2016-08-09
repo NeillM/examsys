@@ -82,12 +82,12 @@ Class random_utils {
   }
   
   /**
-   * delete random question reference row
+   * Delete random question references for random block
    * @param integer $id parent question id
    * @param mysqli $db db connection
    * @return bool true on success, false otherwise
    */
-  static public function delete_random_link($id, $db) {
+  static public function delete_random_links($id, $db) {
     $sql = $db->prepare("DELETE FROM random_link  WHERE id = ?");
     $sql->bind_param('i', $id);
     $sql->execute();
