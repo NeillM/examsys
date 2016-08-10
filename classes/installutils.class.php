@@ -678,6 +678,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $configObject->set_setting('cfg_api_enabled', 1, 'boolean');
     $configObject->set_setting('paper_marks_postive', json_encode(range(1, 20)), 'csv');
     $configObject->set_setting('paper_marks_negative', json_encode(array(0, -0.25, -0.5, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10)), 'csv');
+    $configObject->set_setting('paper_marks_partial', json_encode(array_merge(range(0, 1, 0.1), range(2, 5))), 'csv');
     
     self::createDefaultUsers();
     self::createDefaultFacultiesSchoolsModules();

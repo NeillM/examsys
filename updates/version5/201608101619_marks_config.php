@@ -7,7 +7,8 @@ if ($updater_utils->check_version("6.2.0")) {
         $configObject->set_db_object($mysqli);
         $configObject->set_setting('paper_marks_postive', json_encode(range(1, 20)), 'csv');
         $configObject->set_setting('paper_marks_negative', json_encode(array(0, -0.25, -0.5, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10)), 'csv');
-
+        $configObject->set_setting('paper_marks_partial', json_encode(array_merge(range(0, 1, 0.1), range(2, 5))), 'csv');
+        
         // Update config type.
         $updatesql = "UPDATE config set type = 'csv' WHERE setting = 'summative_cohort_sizes'";
         $updater_utils->execute_query($altersql, true);
