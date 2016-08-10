@@ -120,6 +120,9 @@ $render->render_admin_content($breadcrumb, $lang);
                         }
                         echo "</select></td>";
                     } else {
+                        if ($type == Config::CSV) {
+                            $value = implode(',', $value);
+                        }
                         if ($type == Config::STRING or $type == Config::INTEGER) {
                             $size = 20;
                         } else {
