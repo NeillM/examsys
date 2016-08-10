@@ -570,8 +570,12 @@ class Config extends RogoStaticSingleton {
         $value = $encryp->mdecrypt_password($value);
       }
       // Decode json.
-      if ($type == self::JSON or $type == self::CSV) {
+      if ($type == self::JSON) {
         $value = json_decode($value);
+      }
+      // Implode array into csv.
+      if ($type == self::CSV) {
+        $value = implode(',', json_decode($value));
       }
       // Set timzone to associative array.
       if ($type == self::TIMEZONES) {
