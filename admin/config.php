@@ -39,7 +39,7 @@ if (isset($_POST['submit'])) {
             $new_value = $arrayvalue;
         }
         $type = $configObject->get_setting_type('core', $setting);
-        if ($type == Config::JSONARRAY) {
+        if ($type == Config::CSV) {
             $new_value = explode(',', $new_value);
         }
         // Check value is of expected type. No change if not expected type.
@@ -120,7 +120,7 @@ $render->render_admin_content($breadcrumb, $lang);
                         }
                         echo "</select></td>";
                     } else {
-                        if ($type == Config::JSONARRAY) {
+                        if ($type == Config::CSV) {
                             $value = implode(',', $value);
                         }
                         if ($type == Config::STRING or $type == Config::INTEGER) {
