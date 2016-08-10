@@ -57,7 +57,8 @@ if (isset($_POST['submit'])) {
 $render = new render($configObject);
 $toprightmenu = draw_toprightmenu();
 $lang['title'] = $string['config'];
-$additionaljs = "<script type=\"text/javascript\" src=\"../js/jquery-ui-1.10.4.min.js\"></script><script type=\"text/javascript\" src=\"../js/system_tooltips.js\"></script>";
+$additionaljs = "<script type=\"text/javascript\" src=\"../js/jquery-ui-1.10.4.min.js\"></script><script type=\"text/javascript\" src=\"../js/system_tooltips.js\"></script>
+    <script type=\"text/javascript\" src=\"../js/config.js\"></script>";
 $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/config.css\"/>";
 $breadcrumb = array($string['home'] => "../index.php", $string['administrativetools'] => "index.php");
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
