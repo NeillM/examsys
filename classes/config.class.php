@@ -68,6 +68,11 @@ class Config extends RogoStaticSingleton {
    */
   const JSON = 'json';
   /**
+   * Config setting json encoded array type identifier
+   * @var string
+   */
+  const JSONARRAY = 'jsonarray';
+  /**
    * Config setting timezones type identifier
    * @var string
    */
@@ -401,7 +406,7 @@ class Config extends RogoStaticSingleton {
       }
     }
     // Json encode.
-    if ($type == self::JSON or $type == self::TIMEZONES) {
+    if ($type == self::JSON or $type == self::JSONARRAY or $type == self::TIMEZONES) {
       $value = json_encode($value);
     }
     // Update Settings.
@@ -435,7 +440,7 @@ class Config extends RogoStaticSingleton {
       }
     }
     // Json encode.
-    if ($type == self::JSON or $type == self::TIMEZONES) {
+    if ($type == self::JSON or $type == self::JSONARRAY or $type == self::TIMEZONES) {
       $value = json_encode($value);
     }
     // Insert Settings.
@@ -565,7 +570,7 @@ class Config extends RogoStaticSingleton {
         $value = $encryp->mdecrypt_password($value);
       }
       // Decode json.
-      if ($type == self::JSON) {
+      if ($type == self::JSON or $type == self::JSONARRAY) {
         $value = json_decode($value);
       }
       // Set timzone to associative array.
@@ -653,6 +658,7 @@ class Config extends RogoStaticSingleton {
           $check = is_string($value);
           break;
         case self::JSON:
+        case self::JSONARRAY:
         case self::TIMEZONES:
           $check = is_array($value);
           break;

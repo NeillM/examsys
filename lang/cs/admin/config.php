@@ -40,4 +40,6 @@ $string['lti'] = 'LTI Integration';
 $string['paper'] = 'All Assessments';
 $string['summative'] = 'Summative Assessments';
 $string['url'] = 'External System URLs';
+$string['paper_marks_postive'] = 'Drop down options for postive marks available if correct option';
+$string['paper_marks_negative'] = 'Drop down options for negative marks available if correct option';
 
