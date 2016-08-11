@@ -130,7 +130,27 @@ if (isset($_POST['submit'])) {
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
+    // Check select all button
+    function selectall() {
+      var total = 0;
+      var count = 0;
+      $(".primarychk").each(function() {
+        if ($(this).is(':checked')) {
+          count++;
+          total++;
+        } else {
+          total++;
+        }
+      });
+      if (count === total) {
+        $("#selectallprimary").prop("checked", true);
+      }
+    }
     $(function() {
+      // Check select all button if all primary mark radio buttons selected on load.
+      $(document).ready(function(){
+        selectall();
+      });
       $("input:radio").click(function() {
         str = $(this).attr('id');
         
@@ -146,7 +166,7 @@ if (isset($_POST['submit'])) {
         
         $('input:radio[name=' + radioID + ']').removeAttr('checked');
       });
-      
+      // Select all primary marks radio buttons.
       $("#selectallprimary").change(function() {
         if ($("#selectallprimary").is(':checked')) {
           $(".primarychk").each(function() {
@@ -157,6 +177,14 @@ if (isset($_POST['submit'])) {
             $(this).prop("checked", false);
           });
         }
+      });
+      // Check select all button if all primary mark radio buttons selected.
+      $(".primarychk").click(function() {
+        selectall();
+      });
+      // Uncheck select all button if a secondary mark has been selected.
+      $(".secondarychk").click(function() {
+        $("#selectallprimary").prop("checked", false);
       });
     })
   </script>
