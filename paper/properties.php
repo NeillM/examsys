@@ -1610,6 +1610,19 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
 <table id="security" class="tabsection" style="display: none">
 <tr><td class="tabtitle"><img src="../artwork/security_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['securityheading']; ?></td></tr>
+<?php
+  if ($properties->get_summative_lock() and $userObject->has_role(array('SysAdmin'))) {
+?>
+<tr>
+  <td>
+    <div class="yellowwarn">
+      <img src="../artwork/paper_locked_padlock.png" width="32" height="32" alt="Locked" /><span style="vertical-align:top; padding-left:10px"><?php echo $string['donotchangewarning']; ?></span>
+    </div>
+  </td>
+</tr>
+<?php
+  }
+?>
 <tr>
 <td style="text-align:center; vertical-align:top">
 <?php

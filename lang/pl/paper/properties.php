@@ -111,6 +111,7 @@ $string['restricttolabs'] = 'Ogranicz do pracowni';
 $string['restricttometadata'] = 'Ogranicz do metadanych';
 $string['na'] = 'Brak';//data
 $string['tooltip_password'] = 'W wyniku tego dodane zostanie do arkusza uzupełniające hasło obok hasła stosowanego przez studenta do logowania się do Rogo. Hasło to można udostępnić studentom znajdującym sie w pracowni komputerowej.';
+$string['donotchangewarning'] = 'This paper is locked. It is recommended you only make changes if no students have attempted this paper';
 
 // Reviewers tab
 $string['reviewerstab'] = 'Recenzenci';
