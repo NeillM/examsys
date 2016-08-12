@@ -24,14 +24,14 @@
 * @package
 */
 
+
+require_once 'errors.inc';
+
 $stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState($configObject->get('cfg_root_path') . '/users/search.php');
 
-if (isset($_GET['calendar_year'])) {
-  $calendar_year = $_GET['calendar_year'];
-} else {
-  $calendar_year = '';
-}
+$calendar_year = check_var('calendar_year', 'GET', false, false, true);
+
 ?>
 <script type="text/javascript" src="../js/state.js"></script>
 <script>
@@ -164,7 +164,7 @@ if (isset($_GET['student_id'])) {
 } else {
   $search_student_id = '';
 }
-if (isset($username) and $search_surname == '' and $search_username == '' and $search_student_id == '' and !isset($_GET['module']) and !isset($_GET['calendar_year'])) {
+if (isset($username) and $search_surname == '' and $search_username == '' and $search_student_id == '' and !isset($_GET['module']) and is_null($calendar_year)) {
   $search_username = $username;
 }
 ?>
@@ -189,17 +189,8 @@ search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli);
 <div><?php echo $string['academicyear'] ?><br /><select name="calendar_year">
 <option value="%"><?php echo $string['anyyear'] ?></option>
 <?php
-  $result = $mysqli->prepare("SELECT DISTINCT calendar_year FROM modules_student ORDER BY calendar_year DESC");
-  $result->execute();
-  $result->bind_result($tmp_calendar_year);
-  while ($result->fetch()) {
-    if ($tmp_calendar_year == $calendar_year) {
-      echo "<option value=\"$tmp_calendar_year\" selected>$tmp_calendar_year</option>\n";
-    } else {
-      echo "<option value=\"$tmp_calendar_year\">$tmp_calendar_year</option>\n";
-    }
-  }
-  $result->close();
+  $yearutils = new yearutils($mysqli);
+  echo $yearutils->get_calendar_year_dropdown_options(2, $calendar_year, $string);
 ?>
 </select></div>
 <br />
