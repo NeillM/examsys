@@ -66,13 +66,10 @@ function randomQOverwrite(&$questions, $question, $paper_type, $user_answers, $c
   }
 
   if ($selected_q_id == '') {
-    // Generate a random question ID.
-    $random_q_no = count($question['options']);
     $try = 0;
     $unique = false;
     while ($unique == false and $try < 9999) {
-      $selected_no = rand(0,$random_q_no-1);
-      $selected_q_id = $question['options'][$selected_no]['option_text'];
+      $selected_q_id = random_utils::generate_random_qid_from_block($question['q_id'], $mysqli);
       if (!isset($used_questions[$selected_q_id])) $unique = true;
       $try++;
     }

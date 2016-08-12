@@ -123,15 +123,14 @@ Class keyword_utils {
   }
   
   /**
-   * Update keyword/question reference row
+   * Delete keyword/question reference row
    * @param integer $q_id question id
-   * @param integer $keyword_id keyword id
    * @param mysqli $db db connection
    * @return bool true on success, false otherwise
    */
-  static public function update_keyword_link($q_id, $keyword_id, $db) {
-    $sql = $db->prepare("UPDATE keywords_link SET keyword_id = ? WHERE q_id = ?");
-    $sql->bind_param('ii', $keyword_id, $q_id);
+  static public function delete_keyword_link($q_id, $db) {
+    $sql = $db->prepare("DELETE FROM keywords_link WHERE q_id = ?");
+    $sql->bind_param('i', $q_id);
     $sql->execute();
     $sql->close();
     if ($db->errno != 0) {
