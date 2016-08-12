@@ -1038,6 +1038,15 @@ $this->tableList['questions_modules'] = <<<QUERY
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
 
+$this->tableList['random_link'] = <<<QUERY
+        CREATE TABLE `random_link` (
+          `id` INT(4) NOT NULL,
+          `q_id` INT(4) NOT NULL,
+          PRIMARY KEY (`id`, `q_id`),
+          INDEX `random_link_fk2` (`q_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
     $this->tableList['recent_papers'] = <<<QUERY
         CREATE TABLE `recent_papers` (
           `userID` int(10) unsigned NOT NULL default '0',
