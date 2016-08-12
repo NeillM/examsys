@@ -7,9 +7,9 @@
  * @copyright Copyright (c) 2015 The University of Nottingham
  * @package update
  */
-if ($updater_utils->check_version("6.1.0") and !$updater_utils->has_updated('blank_answer_encoding')) {
+if ($updater_utils->check_version("6.1.0") and !$updater_utils->has_updated('blank_answer_encoding_log3')) {
   // Find all the answers for fill in the blank questions.
-  $select_sql = "SELECT id, user_answer FROM log0 l JOIN questions q ON q.q_id = l.q_id WHERE q.q_type = 'blank'";
+  $select_sql = "SELECT id, user_answer FROM log3 l JOIN questions q ON q.q_id = l.q_id WHERE q.q_type = 'blank'";
   $blank_answers = $mysqli->prepare($select_sql);
   $blank_answers->execute();
   $blank_answers->store_result();
@@ -33,7 +33,7 @@ if ($updater_utils->check_version("6.1.0") and !$updater_utils->has_updated('bla
     }
     $user_answer = explode('|', substr($answer, 1));
     $user_answer = json_encode($user_answer);
-    $update_sql = "UPDATE log0 SET user_answer = ? WHERE id = ?";
+    $update_sql = "UPDATE log3 SET user_answer = ? WHERE id = ?";
     $update = $mysqli->prepare($update_sql);
     $update->bind_param('si', $user_answer, $id);
     $update->execute();
@@ -45,5 +45,5 @@ if ($updater_utils->check_version("6.1.0") and !$updater_utils->has_updated('bla
     }
   }
   $blank_answers->close();
-  $updater_utils->record_update('blank_answer_encoding');
+  $updater_utils->record_update('blank_answer_encoding_log3');
 }
