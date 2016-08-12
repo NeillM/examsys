@@ -1464,7 +1464,7 @@ QUERY;
     $this->tableList['users_metadata'] = <<<QUERY
         CREATE TABLE `users_metadata` (
           `userID` int(10) unsigned default NULL,
-          `idMod` int(11) unsigned default NULL,
+          `idMod` int(11) default NULL,
           `type` varchar(255) default NULL,
           `value` varchar(255) default NULL,
           `calendar_year` INT(4),
