@@ -599,6 +599,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $alter[] = "ALTER TABLE std_set_questions ADD CONSTRAINT `std_set_questions_fk1` FOREIGN KEY (`std_setID`) REFERENCES `std_set` (`id`)";
     $alter[] = "ALTER TABLE random_link CONSTRAINT `random_link_fk1` FOREIGN KEY (`id`) REFERENCES `questions` (`q_id`)";
     $alter[] = "ALTER TABLE random_link CONSTRAINT `random_link_fk2` FOREIGN KEY (`q_id`) REFERENCES `questions` (`q_id`)";
+    $alter[] = "ALTER TABLE users_metadata CONSTRAINT `users_metadata_fk1` FOREIGN KEY (`idMod`) REFERENCES `modules` (`id`)";
 
     foreach ($alter as $a) {
         $res = self::$db->prepare($a);
