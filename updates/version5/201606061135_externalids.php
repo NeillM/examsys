@@ -37,6 +37,9 @@ if ($updater_utils->check_version("6.2.0")) {
         $altersql = "ALTER TABLE `modules` ADD UNIQUE INDEX `externalid` (`externalid`)";
         $updater_utils->execute_query($altersql, true);
         
+        // Drop perms desc column, we need to drop the description before adding the new permissions.
+        $altersql = "ALTER TABLE permissions DROP COLUMN description";
+        $updater_utils->execute_query($altersql, true);
         // New API perms.
         $insertsql = "INSERT INTO permissions (action) VALUES "
             . "('coursemanagement/update'), "
@@ -46,20 +49,17 @@ if ($updater_utils->check_version("6.2.0")) {
             . "('usermanagement/update'), "
             . "('assessmentmanagement/update')";
         $updater_utils->execute_query($insertsql, true);
-        // Drop perms desc column.
-        $altersql = "ALTER TABLE permissions DROP COLUMN description";
-        $updater_utils->execute_query($altersql, true);
         // New type column in config type.
         $altersql = "ALTER TABLE `config` ADD COLUMN `type` VARCHAR(10) NULL AFTER `value`";
         $updater_utils->execute_query($altersql, true);
         // Update config table with type.
         $altersql = "UPDATE `config` SET type = '" . Config::JSON . "' WHERE setting = 'timezones' AND component = 'core'";
         $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE `config` SET type = '" . Config::JSON . "'' WHERE setting = 'cohort_sizes' AND component = 'core'";
+        $altersql = "UPDATE `config` SET type = '" . Config::JSON . "' WHERE setting = 'cohort_sizes' AND component = 'core'";
         $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE `config` SET type = '" . Config::INTEGER . "'' WHERE setting = 'max_duration' AND component = 'core'";
+        $altersql = "UPDATE `config` SET type = '" . Config::INTEGER . "' WHERE setting = 'max_duration' AND component = 'core'";
         $updater_utils->execute_query($altersql, true);
-        $altersql = "UPDATE `config` SET type = '" . Config::INTEGER . "'' WHERE setting = 'max_sittings' AND component = 'core'";
+        $altersql = "UPDATE `config` SET type = '" . Config::INTEGER . "' WHERE setting = 'max_sittings' AND component = 'core'";
         $updater_utils->execute_query($altersql, true);
         $altersql = "UPDATE `config` SET type = null WHERE component = 'plugin_ims'";
         $updater_utils->execute_query($altersql, true);
