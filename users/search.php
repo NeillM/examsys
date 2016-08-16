@@ -152,13 +152,7 @@ if (isset($_GET['submit'])) {
           WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql
           AND user_deleted IS NULL LIMIT $limit";
       }
-    } elseif (isset($_GET['externals']) and $_GET['externals'] != '') {
-      $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
-        FROM users
-        LEFT JOIN sid ON users.id = sid.userID
-        WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql
-        AND user_deleted IS NULL LIMIT $limit";
-    } elseif (isset($_GET['internals']) and $_GET['internals'] != '') {
+    } elseif ((isset($_GET['externals']) and $_GET['externals'] != '') or (isset($_GET['internals']) and $_GET['internals'] != '')) {
       $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
         FROM users
         LEFT JOIN sid ON users.id = sid.userID
