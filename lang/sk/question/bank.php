@@ -38,6 +38,7 @@ $string['people'] = 'People';
 $string['noquestions'] = 'V banke neboli nájdené žiadne úlohy.';
 $string['noquestionsbloom']  = 'Nebola nájdená žiadna úloha na základe vyhľadávania "podľa Bloomovej taxonómie".';
 $string['noquestionsstatus'] = 'Nebola nájdená žiadna úloha na základe vyhľadávania "podľa stavu".';
+$string['noquestionskeyword'] = 'No questions found in bank by keyword.';
 $string['noquestionsperformance'] = 'Nebola nájdená žiadna úloha na základe vyhľadávania "podľa výkonu".';
 $string['noquestionsobjective'] = 'Nebola nájdená žiadna úloha na základe vyhľadávania "podľa cieľov".';
 $string['search'] = 'Hľadať';
