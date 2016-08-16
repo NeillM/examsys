@@ -487,7 +487,8 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
   $paper_types = array('Formative Self-Assessment', 'Progress Test', 'Summative Exam', 'Survey', 'OSCE Station', 'Offline Paper', 'Peer Review');
 
   if ($log_viewable) {
-    if (stripos($user_details['roles'], 'External Examiner') !== false or stripos($user_details['roles'], 'Internal Reviewer') !== false) {      // Get the papers the External is down to review.
+    // Get the papers the External/Internal is down to review.
+    if (stripos($user_details['roles'], 'External Examiner') !== false or stripos($user_details['roles'], 'Internal Reviewer') !== false) {
       $external_array = array();
 
       $sql = "SELECT DISTINCT
