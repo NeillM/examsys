@@ -111,6 +111,7 @@ $string['restricttolabs'] = 'Omezit na učebny';
 $string['restricttometadata'] = 'Omezit na metadata';
 $string['na'] = 'N/A';
 $string['tooltip_password'] = 'Tímto se  přidá další přístupové heslo k testu; k heslu, kterým se studenti hlásí do systému. Toto heslo lze studentům sdělit až  v počítačové učebně před zkouškou samotnou.';
+$string['donotchangewarning'] = 'This paper is locked. It is recommended you only make changes if no students have attempted this paper';
 
 // Záložka Recenzenta 
 $string['reviewerstab'] = 'Recenzenti';
