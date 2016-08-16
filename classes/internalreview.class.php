@@ -57,7 +57,7 @@
             paper_title,
             property_id,
             fullscreen,
-            DATE_FORMAT(internal_review_deadline,'{$this->config->get('cfg_long_date')}') AS internal_review_deadline,
+            DATE_FORMAT(internal_review_deadline, ?) AS internal_review_deadline,
             crypt_name,
             paper_type
             FROM (properties, properties_reviewers)
@@ -67,7 +67,8 @@
             AND reviewerID = ?
             AND type = 'internal'
             ORDER BY property_id");
-        $result->bind_param('i', $userID);
+        $longdate = $this->config->get('cfg_long_date');
+        $result->bind_param('si', $longdate, $userID);
         $result->execute();
         $result->bind_result($paper_title, $property_id, $fullscreen, $internal_review_deadline, $crypt_name, $paper_type);
         $result->store_result();
@@ -76,11 +77,12 @@
         }
         $result->close();
         $result2 = $this->db->prepare("SELECT paperID,
-            DATE_FORMAT(MAX(started),'{$this->config->get('cfg_long_date_time')}') AS started
+            DATE_FORMAT(MAX(started), ?) AS started
             FROM review_metadata
             WHERE reviewerID = ?
             GROUP BY paperID ORDER BY paperID");
-        $result2->bind_param('i', $userID);
+        $longdatetime = $this->config->get('cfg_long_date_time');
+        $result2->bind_param('si', $longdatetime, $userID);
         $result2->execute();
         $result2->bind_result($paperID, $reviewed);
         $result2->store_result();
