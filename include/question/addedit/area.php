@@ -46,6 +46,7 @@ if (count($question->options) > 0) {
   $mark_partial = 0.5;
 }
 
+$configObject = Config::get_instance();
 $marks_positive = $configObject->get_setting('core', 'paper_marks_postive');
 $marks_negative = $configObject->get_setting('core', 'paper_marks_negative');
 $marks_partial = $configObject->get_setting('core', 'paper_marks_partial');
@@ -82,7 +83,6 @@ if ($media['filename'] != '' and !$show_correction_intermediate):
   $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
   $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
 
-$configObject          = Config::get_instance();
 if ($configObject->get('cfg_interactive_qs') == 'html5') {
   //<!-- ======================== HTML5 part ================= -->
   echo '<canvas id="canvas1" width="' . $plugin_width . '" height="' . ($plugin_height+3) . '"></canvas>' . "\n";
