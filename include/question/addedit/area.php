@@ -46,9 +46,9 @@ if (count($question->options) > 0) {
   $mark_partial = 0.5;
 }
 
-$marks_positive = range(1, 20);
-$marks_negative = array(0, -0.25, -0.5, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10);
-$marks_partial = array_merge(range(0, 1, 0.1), range(2, 5));
+$marks_positive = $configObject->get_setting('core', 'paper_marks_postive');
+$marks_negative = $configObject->get_setting('core', 'paper_marks_negative');
+$marks_partial = $configObject->get_setting('core', 'paper_marks_partial');
 $mark_range = range(100, 50);
 $error_range = range(0, 50);
 ?>
