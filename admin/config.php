@@ -38,10 +38,10 @@ if (isset($_POST['submit'])) {
             }
             $new_value = $arrayvalue;
         }
-        if ($setting == 'summative_cohort_sizes') {
+        $type = $configObject->get_setting_type('core', $setting);
+        if ($type == Config::CSV) {
             $new_value = explode(',', $new_value);
         }
-        $type = $configObject->get_setting_type('core', $setting);
         // Check value is of expected type. No change if not expected type.
         if (!Config::check_type($new_value, $type)) {
             $new_value = $value;
@@ -120,7 +120,7 @@ $render->render_admin_content($breadcrumb, $lang);
                         }
                         echo "</select></td>";
                     } else {
-                        if ($type == Config::JSON and $setting == 'summative_cohort_sizes') {
+                        if ($type == Config::CSV) {
                             $value = implode(',', $value);
                         }
                         if ($type == Config::STRING or $type == Config::INTEGER) {

@@ -8,7 +8,7 @@ config:
     component: "core"
     setting: "summative_cohort_sizes"
     value: "[\"<whole cohort>\",\"0-10\",\"11-20\",\"21-30\",\"31-40\",\"41-50\",\"51-75\",\"76-100\",\"101-150\",\"151-200\",\"201-300\",\"301-400\",\"401-500\"]"
-    type: "json"
+    type: "csv"
   -
     component: "core"
     setting: "paper_timezones"
