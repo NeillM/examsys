@@ -42,6 +42,7 @@ $string['externalstaff'] = 'Externý zamestnanec';
 $string['nhslecturer'] = 'NHS lektor/konzultant';
 $string['nhsadmin'] = 'NHS správca';
 $string['externalexaminer'] = 'Oponent';
+$string['internalreviewer'] = 'Internal Reviewer';
 $string['standardssetter'] = 'Standards Setter';
 $string['invigilator'] = 'Dohľad';
 $string['students'] = 'Študent';

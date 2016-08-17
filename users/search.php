@@ -115,6 +115,7 @@ if (isset($_GET['submit'])) {
   if (isset($_GET['standardsstaff']) and $_GET['standardsstaff'] != '') $roles_sql .= " OR roles LIKE '%,Standards Setter%'";
   if (isset($_GET['inactive']) and $_GET['inactive'] != '') $roles_sql .= " OR roles LIKE '%inactive%'";
   if (isset($_GET['externals']) and $_GET['externals'] != '') $roles_sql .= " OR (roles = 'External Examiner' AND grade != 'left')";
+  if (isset($_GET['internals']) and $_GET['internals'] != '') $roles_sql .= " OR (roles = 'Internal Reviewer' AND grade != 'left')";
   if (isset($_GET['invigilators']) and $_GET['invigilators'] != '') $roles_sql .= " OR roles = 'Invigilator'";
   if (isset($_GET['graduates']) and $_GET['graduates'] != '') $roles_sql .= " OR roles = 'Graduate'";
   if (isset($_GET['leavers']) and $_GET['leavers'] != '') $roles_sql .= " OR roles = 'left'";
@@ -151,7 +152,7 @@ if (isset($_GET['submit'])) {
           WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql
           AND user_deleted IS NULL LIMIT $limit";
       }
-    } elseif (isset($_GET['externals']) and $_GET['externals'] != '') {
+    } elseif ((isset($_GET['externals']) and $_GET['externals'] != '') or (isset($_GET['internals']) and $_GET['internals'] != '')) {
       $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
         FROM users
         LEFT JOIN sid ON users.id = sid.userID

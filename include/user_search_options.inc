@@ -273,6 +273,11 @@ search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli);
   } else {
     echo "<div><input class=\"chk chkstaff\" type=\"checkbox\" id=\"chkbox8\" name=\"externals\" /><label for=\"chkbox8\">" . $string['externalexaminers'] . "</label></div>\n";
   }
+  if (isset($state['chkbox13']) and $state['chkbox13'] == 'true') {
+    echo "<div><input class=\"chk chkstaff\" type=\"checkbox\" id=\"chkbox13\" name=\"internals\" checked /><label for=\"chkbox13\">" . $string['internalreviewers'] . "</label></div>\n";
+  } else {
+    echo "<div><input class=\"chk chkstaff\" type=\"checkbox\" id=\"chkbox13\" name=\"internals\" /><label for=\"chkbox13\">" . $string['internalreviewers'] . "</label></div>\n";
+  }
   if (isset($state['chkbox9']) and $state['chkbox9'] == 'true') {
     echo "<div><input class=\"chk chkstaff\" type=\"checkbox\" id=\"chkbox9\" name=\"invigilators\" checked /><label for=\"chkbox9\">" . $string['invigilators'] . "</label></div>\n";
   } else {
