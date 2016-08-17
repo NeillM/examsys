@@ -103,7 +103,7 @@ $breadcrumb = array($string['home'] => "../index.php", $string['administrativeto
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('', '', $lang, $toprightmenu, 'admin/options_empty.html');
 $render->render_admin_content($breadcrumb, $lang);
-
+$plugins = array();
 foreach ($pluginslist as $plugin => $pluginns) {
     $p = new $pluginns($mysqli);
     $newversion = $p->get_file_version();
