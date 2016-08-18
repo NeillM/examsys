@@ -34,7 +34,7 @@ abstract class plugins_sms extends \plugins\plugins {
      */
     protected $plugin_type = 'SMS';
     /**
-     * Get names if sms external systems available to sync with
+     * Get names of sms external systems available to sync with
      * @param mysqli $db db connection
      * @return array|bool list of external systems or false if non available
      */
@@ -42,10 +42,12 @@ abstract class plugins_sms extends \plugins\plugins {
         $sms = array();
         $config = \Config::get_instance();
         $plugins = $config->get_setting('plugin_sms', 'enabled_plugin');
-        foreach ($plugins as $p) {
-            $mappingplugin_object = 'plugins\\SMS\\' . $p . '\\' . $p;
-            $smsplugin = new $mappingplugin_object($db);
-            $sms[] = $smsplugin->get_name();
+        if (!is_null($plugins)) {
+            foreach ($plugins as $p) {
+                $mappingplugin_object = 'plugins\\SMS\\' . $p . '\\' . $p;
+                $smsplugin = new $mappingplugin_object($db);
+                $sms[] = $smsplugin->get_name();
+            }
         }
         if (count($sms) == 0) {
             return false;
