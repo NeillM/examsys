@@ -26,6 +26,7 @@ $string['student'] = 'Student'; //cognate
 $string['Students'] = 'Studenci';
 $string['standardssetter'] = 'Standards Setter';
 $string['externalexaminer'] = 'Zewnętrzny egzaminator';
+$string['internalreviewer'] = 'Internal Reviewer';
 $string['graduate'] = 'Absolwent';
 $string['left'] = 'Skreślony'; //???
 $string['suspended'] = 'Zawieszony';

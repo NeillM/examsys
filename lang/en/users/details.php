@@ -26,6 +26,7 @@ $string['student'] = 'Student';
 $string['Students'] = 'Students';
 $string['standardssetter'] = 'Standards Setter';
 $string['externalexaminer'] = 'External Examiner';
+$string['internalreviewer'] = 'Internal Reviewer';
 $string['graduate'] = 'Graduate';
 $string['left'] = 'Left University';
 $string['suspended'] = 'Suspended';

@@ -26,6 +26,7 @@ $string['student'] = 'Student';
 $string['Students'] = 'Studenti';
 $string['standardssetter'] = 'Standards Setter';
 $string['externalexaminer'] = 'Oponenti';
+$string['internalreviewer'] = 'Internal Reviewer';
 $string['graduate'] = 'Absolvent';
 $string['left'] = 'Zanechal studia';
 $string['suspended'] = 'Přerušené studium';
