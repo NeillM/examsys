@@ -131,6 +131,16 @@ Class InstallUtils {
   /** Stores if the install is being done via cli. */
   public static $cli = false;
 
+  /**
+   * Called when the object is unserialised.
+   */
+  public function __wakeup() {
+    // The serialised database object will be invalid,
+    // this object should only be serialised during an error report,
+    // so adding the current database connect seems like a waste of time.
+    $this->db = null;
+  }
+
   static function displayForm() {
     global $string, $language, $timezone_array;
 
