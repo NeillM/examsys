@@ -11,7 +11,7 @@ if ($updater_utils->check_version("6.2.0")) {
         
         // Update config type.
         $updatesql = "UPDATE config set type = 'csv' WHERE setting = 'summative_cohort_sizes'";
-        $updater_utils->execute_query($altersql, true);
+        $updater_utils->execute_query($updatesql, true);
         $updater_utils->record_update('rogo1883_marks_config');
     }
 }
