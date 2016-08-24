@@ -29,6 +29,16 @@ Class UpdaterUtils {
   private $mysqli;
   private $db_name;
 
+  /**
+   * Called when the object is unserialised.
+   */
+  public function __wakeup() {
+    // The serialised database object will be invalid,
+    // this object should only be serialised during an error report,
+    // so adding the current database connect seems like a waste of time.
+    $this->mysqli = null;
+  }
+
   public function __construct($mysqli, $db_name) {
     $this->mysqli  = $mysqli;
     $this->db_name = $db_name;
