@@ -26,6 +26,7 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/demo_replace.inc';
+require_once '../include/errors.inc';
 
 function get_special_needs($db) {
   $needs_array = array();
@@ -47,13 +48,17 @@ if ($userObject->has_role('Demo')) {
 }
 $sortby = 'surname';
 $ordering = 'asc';
-$moduleID = '%';
-$calendar_year =  (isset($_GET['calendar_year']) and $_GET['calendar_year'] != '') ? $_GET['calendar_year'] : '%';
+$moduleID = check_var('module', $_GET, false, true, true);
+$calendar_year = check_var('calendar_year', $_GET, false, true, true);
 
-if ($calendar_year == '%') {
+if (is_null($calendar_year) or $calendar_year === '%') {
   $calendar_year_sql = '';
+  $calendar_year_param_types = '';
+  $calendar_year_params = array();
 } else {
-  $calendar_year_sql = " AND calendar_year = '$calendar_year'";
+  $calendar_year_sql = " AND calendar_year = ?";
+  $calendar_year_param_types = 'i';
+  $calendar_year_params = array($calendar_year);
 }
 
 $needs_array = get_special_needs($mysqli);
@@ -63,20 +68,34 @@ $limit = 10000;
 
 if (isset($_GET['submit'])) {
   $username_sql = '';
+  $username_param_types = '';
+  $username_params = array();
   $title_sql = '';
+  $title_param_types = '';
+  $title_params = array();
   $surname_sql = '';
+  $surname_param_types = '';
+  $surname_params = array();
   $initials_sql = '';
+  $initials_param_types = '';
+  $initials_params = array();
   $student_id_sql = '';
-  $title = '';
+  $student_id_param_types = '';
+  $student_id_params = array();
+  $param_types = '';
+  $params = array();
 
-  if (isset($_GET['module']) and $_GET['module'] != '') $moduleID = $_GET['module'];
-
-  if (isset($_GET['search_surname']) and $_GET['search_surname'] != '') {
-    $tmp_surname = str_replace("*", "%", trim($_GET['search_surname']));
+  $tmp_surname = check_var('search_surname', $_GET, false, true, true);
+  if (!is_null($tmp_surname)) {
+    $tmp_surname = str_replace("*", "%", trim($tmp_surname));
 
     $tmp_titles = explode(',', $string['title_types']);
     foreach ($tmp_titles as $tmp_title) {
-      if (substr_count(strtolower($tmp_surname), strtolower($tmp_title . ' ')) > 0) $title_sql = " AND title='$tmp_title'";
+      if (substr_count(strtolower($tmp_surname), strtolower($tmp_title . ' ')) > 0) {
+        $title_sql = " AND title=?";
+        $title_param_types = 's';
+        $title_params = array($tmp_title);
+      }
       $tmp_surname = preg_replace("/(" . $tmp_title . " )/i","",$tmp_surname);
     }
 
@@ -84,27 +103,35 @@ if (isset($_GET['submit'])) {
     if (count($sections) > 1) {    // Search for initials.
       if (strlen($sections[0]) < strlen($sections[1])) {
         $tmp_initials = $mysqli->real_escape_string(trim($sections[0]));
-        $initials_sql = " AND initials LIKE '" . $tmp_initials . "%'";
         $tmp_surname = trim($sections[1]);
       } else {
         $tmp_initials = $mysqli->real_escape_string(trim($sections[1]));
-        $initials_sql = " AND initials LIKE '" . $tmp_initials . "%'";
         $tmp_surname = trim($sections[0]);
       }
-    } else {
-      $initials_sql = '';
+      $initials_sql = " AND initials LIKE ?";
+      $initials_param_types = 's';
+      $initials_params = array($tmp_initials . '%');
     }
     $tmp_surname = $mysqli->real_escape_string(str_replace('*', '%', $tmp_surname));
-    $surname_sql = " AND surname LIKE '$tmp_surname'";
-  }
-  if ($_GET['search_username'] != '') {
-    $tmp_username = $mysqli->real_escape_string(str_replace('*', '%', trim($_GET['search_username'])));
-    $username_sql = " AND users.username LIKE '$tmp_username'";
+    $surname_sql = " AND surname LIKE ?";
+    $surname_param_types = 's';
+    $surname_params = array($tmp_surname);
   }
 
-  if ($_GET['student_id'] != '') {
+  $tmp_username = check_var('search_username', $_GET, false, true, true);
+  if (!is_null($tmp_username) and $tmp_username !== '') {
+    $tmp_username = $mysqli->real_escape_string(str_replace('*', '%', trim($tmp_username)));
+    $username_sql = " AND users.username LIKE ?";
+    $username_param_types = 's';
+    $username_params[] = $tmp_username;
+  }
+
+  $tmp_studentid = check_var('student_id', $_GET, false, true, true);
+  if (!is_null($tmp_studentid) and $tmp_studentid !== '') {
     $tmp_studentid = $mysqli->real_escape_string(trim($_GET['student_id']));
-    $student_id_sql = " AND student_id = '" . $tmp_studentid . "'";
+    $student_id_sql = " AND student_id = ?";
+    $student_id_param_types = 'i';
+    $student_id_params[] = $tmp_studentid;
   }
 
   $roles_sql = '';
@@ -127,13 +154,13 @@ if (isset($_GET['submit'])) {
 	$user_no = 0;
   if ($roles_sql != '') {
     if ((isset($_GET['staff']) and $_GET['staff'] != '') or (isset($_GET['inactive']) and $_GET['inactive'] != '') or (isset($_GET['sysadminstaff']) and $_GET['sysadminstaff'] != '') or (isset($_GET['adminstaff']) and $_GET['adminstaff'] != '') or (isset($_GET['invigilators']) and $_GET['invigilators'] != '') or (isset($_GET['standardsstaff']) and $_GET['standardsstaff'] != '')) {
-      if ($_GET['module'] != '') {
+      if (!is_null($moduleID)) {
         $query_string = "(SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
         FROM (users, modules_student, modules)
         LEFT JOIN sid ON users.id = sid.userID
         WHERE modules_student.idMod = modules.id
         AND users.id = modules_student.userID
-        AND modules_student.idMod = '" . $_GET['module'] . "'
+        AND modules_student.idMod = ?
         AND $roles_sql$surname_sql$title_sql$username_sql$initials_sql$calendar_year_sql
         AND user_deleted IS NULL)
         UNION
@@ -142,15 +169,23 @@ if (isset($_GET['submit'])) {
         LEFT JOIN sid ON users.id = sid.userID
         WHERE modules_staff.idMod = modules.id
         AND users.id = modules_staff.memberID
-        AND modules_staff.idMod = '" . $_GET['module'] . "'
+        AND modules_staff.idMod = ?
         AND $roles_sql$surname_sql$title_sql$username_sql$initials_sql
         AND user_deleted IS NULL LIMIT $limit)";
+        $sql_params = array($moduleID);
+        $param_types = 's' . $surname_param_types . $title_param_types . $username_param_types . $initials_param_types .
+            $calendar_year_param_types . 's' . $surname_param_types . $title_param_types . $username_param_types .
+            $initials_param_types;
+        $params = array_merge($sql_params, $surname_params, $title_params, $username_params, $initials_params,
+            $calendar_year_params, $sql_params, $surname_params, $title_params, $username_params, $initials_params);
       } else {
         $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
           FROM users
           LEFT JOIN sid ON users.id = sid.userID
           WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql
           AND user_deleted IS NULL LIMIT $limit";
+        $param_types = $surname_param_types . $title_param_types . $username_param_types . $initials_param_types;
+        $params = array_merge($surname_params, $title_params, $username_params, $initials_params);
       }
     } elseif ((isset($_GET['externals']) and $_GET['externals'] != '') or (isset($_GET['internals']) and $_GET['internals'] != '')) {
       $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
@@ -158,30 +193,46 @@ if (isset($_GET['submit'])) {
         LEFT JOIN sid ON users.id = sid.userID
         WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql
         AND user_deleted IS NULL LIMIT $limit";
+      $param_types = $surname_param_types . $title_param_types . $username_param_types . $initials_param_types;
+      $params = array_merge($surname_params, $title_params, $username_params, $initials_params);
     } else {
       // Student search
-      if ($moduleID == '%') {
+      if (is_null($moduleID)) {
         $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
           FROM users
           LEFT JOIN sid ON users.id = sid.userID
           WHERE $roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql
           AND user_deleted IS NULL LIMIT $limit";
+        $param_types = $surname_param_types . $title_param_types . $username_param_types . $student_id_param_types .
+            $initials_param_types;
+        $params = array_merge($surname_params, $title_params, $username_params, $student_id_params, $initials_params);
+
       } else {
         $roles_sql = 'AND ' . $roles_sql;
-        if ($moduleID == '%') {
-          $module_sql = '';
-        } else {
-          $module_sql = " AND idMod LIKE '{$moduleID}'";
-        }
+        $module_sql = " AND idMod LIKE ?";
+        $module_params = array($moduleID);
         $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
           FROM (users, modules_student)
           LEFT JOIN sid ON users.id = sid.userID
           WHERE users.id = modules_student.userID $module_sql$calendar_year_sql$roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql
           AND user_deleted IS NULL LIMIT $limit";
+        $param_types = 's' . $calendar_year_param_types . $surname_param_types . $title_param_types . $username_param_types;
+        $params = array_merge($module_params, $calendar_year_params, $surname_params, $title_params, $username_params,
+            $student_id_params, $initials_params);
       }
     }
 
+    // Create an array of references to the parameter values.
+    $ref_params = array();
+    foreach ($params as &$param) {
+      $ref_params[] = &$param;
+    }
+
     $user_data = $mysqli->prepare($query_string);
+    if (count($params) > 0) {
+      // Only call if the query has parameters.
+      call_user_func_array(array($user_data, "bind_param"), array_merge(array($param_types), $ref_params));
+    }
     $user_data->execute();
     $user_data->bind_result($tmp_id, $tmp_roles, $tmp_student_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title, $tmp_username, $tmp_grade, $tmp_yearofstudy, $tmp_email);
     $user_data->store_result();
