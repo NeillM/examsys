@@ -402,24 +402,6 @@ if (isset($_GET['paperID'])) {
 echo "</span></div>\n";
 echo "</div>\n";
 
-if (!is_null($search_surname)) {
-  $tmp_surname = $search_surname;
-} else {
-  $tmp_surname = '';
-}
-
-if (!is_null($search_surname)) {
-  $tmp_username = $search_username;
-} else {
-  $tmp_username = '';
-}
-
-if (!is_null($student_id)) {
-  $tmp_student_id = $student_id;
-} else {
-  $tmp_student_id = '';
-}
-
 if ($roles_sql == '') {
   echo "<div>" . $notice->info_strip($string['msg1'], 100) . "</div>";
   exit();
