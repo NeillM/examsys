@@ -246,6 +246,14 @@ if (isset($_GET['submit'])) {
     $user_no = number_format($user_data->num_rows);
   }
 }
+
+$module_id = check_var('moduleID', $_GET, false, true, true);
+$paper_id = check_var('paperID', $_GET, false, true, true);
+$team = check_var('team', $_GET, false, true, true);
+$email = check_var('email', $_GET, false, true, true);
+$temporary_surname = check_var('tmp_surname', $_GET, false, true, true);
+$temporary_courseid = check_var('tmp_courseID', $_GET, false, true, true);
+$temporary_yearid = check_var('tmp_yearID', $_GET, false, true, true);
 ?>
 <!DOCTYPE html>
 <html>
@@ -326,7 +334,13 @@ if (isset($_GET['submit'])) {
     }
 
     function profile(userID) {
-      document.location.href='details.php?search_surname=<?php echo $search_surname ?>&search_username=<?php echo $search_username ?>&student_id=<?php echo $student_id ?>&moduleID=<?php if (isset($_GET['team'])) echo $_GET['team']; if (!is_null($moduleID)) echo '&module=' . $moduleID ?>&calendar_year=<?php echo $calendar_year ?>&students=<?php if ($get_students) echo 'on'; ?>&submit=Search&userID=' + userID + '&email=<?php if (isset($_GET['email'])) echo $_GET['email']; ?>&tmp_surname=<?php if (isset($_GET['tmp_surname'])) echo $_GET['tmp_surname']; ?>&tmp_courseID=<?php if (isset($_GET['tmp_courseID'])) echo $_GET['tmp_courseID']; ?>&tmp_yearID=<?php if (isset($_GET['tmp_yearID'])) echo $_GET['tmp_yearID']; ?>';
+      document.location.href='details.php?search_surname=<?php echo $search_surname; ?>'
+              + '&search_username=<?php echo $search_username ?>&student_id=<?php echo $student_id; ?>'
+              + '&moduleID=<?php echo $team; if (!is_null($moduleID)) echo '&module=' . $moduleID; ?>'
+              + '&calendar_year=<?php echo $calendar_year ?>&students=<?php if ($get_students) echo 'on'; ?>'
+              + '&submit=Search&userID=' + userID + '&email=<?php echo $email; ?>'
+              + '&tmp_surname=<?php echo $temporary_surname; ?>&tmp_courseID=<?php echo $temporary_courseid; ?>'
+              + '&tmp_yearID=<?php echo $temporary_yearid; ?>';
     }
     
     $(function () {
@@ -349,7 +363,7 @@ if (isset($_GET['submit'])) {
 
 	echo draw_toprightmenu(92);
 	
-  if (isset($_GET['submit']) or isset($_GET['paperID']) or isset($_GET['moduleID'])) {
+  if (isset($_GET['submit']) or !is_null($paper_id) or !is_null($module_id)) {
     echo "<body>\n";
 
     include '../include/user_search_options.inc';
@@ -383,7 +397,7 @@ if (!is_null($moduleID)) {
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $moduleID . '">' . module_utils::get_moduleid_from_id($moduleID, $mysqli) . '</a>';
 }
 echo "</div><div class=\"page_title\">" . $string['usersearch'] . " ($user_no): <span style=\"font-weight: normal\">";
-if (isset($_GET['paperID'])) {
+if (!is_null($paper_id)) {
   echo implode(', ', array_values($paper_modules)) . ' (' . $paper_calendar_year . ')';
 } elseif (!is_null($search_surname)) {
   echo "'" . $search_surname . "'";
