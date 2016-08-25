@@ -217,7 +217,8 @@ if (isset($_GET['submit'])) {
         LEFT JOIN sid ON users.id = sid.userID
         WHERE users.id = modules_student.userID $module_sql$calendar_year_sql$roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql
         AND user_deleted IS NULL LIMIT $limit";
-      $param_types = 's' . $calendar_year_param_types . $surname_param_types . $title_param_types . $username_param_types;
+      $param_types = 's' . $calendar_year_param_types . $surname_param_types . $title_param_types . $username_param_types .
+          $student_id_param_types . $initials_param_types;
       $params = array_merge($module_params, $calendar_year_params, $surname_params, $title_params, $username_params,
           $student_id_params, $initials_params);
     }
