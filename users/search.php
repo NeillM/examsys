@@ -153,41 +153,43 @@ if (isset($_GET['submit'])) {
 
 	$user_no = 0;
   if ($roles_sql != '') {
-    if ((isset($_GET['staff']) and $_GET['staff'] != '') or (isset($_GET['inactive']) and $_GET['inactive'] != '') or (isset($_GET['sysadminstaff']) and $_GET['sysadminstaff'] != '') or (isset($_GET['adminstaff']) and $_GET['adminstaff'] != '') or (isset($_GET['invigilators']) and $_GET['invigilators'] != '') or (isset($_GET['standardsstaff']) and $_GET['standardsstaff'] != '')) {
-      if (!is_null($moduleID)) {
-        $query_string = "(SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
-        FROM (users, modules_student, modules)
-        LEFT JOIN sid ON users.id = sid.userID
-        WHERE modules_student.idMod = modules.id
-        AND users.id = modules_student.userID
-        AND modules_student.idMod = ?
-        AND $roles_sql$surname_sql$title_sql$username_sql$initials_sql$calendar_year_sql
-        AND user_deleted IS NULL)
-        UNION
-        (SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
-        FROM (users, modules_staff, modules)
-        LEFT JOIN sid ON users.id = sid.userID
-        WHERE modules_staff.idMod = modules.id
-        AND users.id = modules_staff.memberID
-        AND modules_staff.idMod = ?
-        AND $roles_sql$surname_sql$title_sql$username_sql$initials_sql
-        AND user_deleted IS NULL LIMIT $limit)";
-        $sql_params = array($moduleID);
-        $param_types = 's' . $surname_param_types . $title_param_types . $username_param_types . $initials_param_types .
-            $calendar_year_param_types . 's' . $surname_param_types . $title_param_types . $username_param_types .
-            $initials_param_types;
-        $params = array_merge($sql_params, $surname_params, $title_params, $username_params, $initials_params,
-            $calendar_year_params, $sql_params, $surname_params, $title_params, $username_params, $initials_params);
-      } else {
-        $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
-          FROM users
-          LEFT JOIN sid ON users.id = sid.userID
-          WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql
-          AND user_deleted IS NULL LIMIT $limit";
-        $param_types = $surname_param_types . $title_param_types . $username_param_types . $initials_param_types;
-        $params = array_merge($surname_params, $title_params, $username_params, $initials_params);
-      }
-    } elseif ((isset($_GET['externals']) and $_GET['externals'] != '') or (isset($_GET['internals']) and $_GET['internals'] != '')) {
+    $get_staff = (isset($_GET['staff']) and $_GET['staff'] != '');
+    $get_inactive = (isset($_GET['inactive']) and $_GET['inactive'] != '');
+    $get_sysadmin = (isset($_GET['sysadminstaff']) and $_GET['sysadminstaff'] != '');
+    $get_admin = (isset($_GET['adminstaff']) and $_GET['adminstaff'] != '');
+    $get_invigilators = (isset($_GET['invigilators']) and $_GET['invigilators'] != '');
+    $get_standardstaff = (isset($_GET['standardsstaff']) and $_GET['standardsstaff'] != '');
+    $seach_for_staff = ($get_staff or $get_inactive or $get_sysadmin or $get_admin or $get_invigilators or $get_standardstaff);
+
+    $get_external = (isset($_GET['externals']) and $_GET['externals'] != '');
+    $get_internal = (isset($_GET['internals']) and $_GET['internals'] != '');
+    $search_for_reviewers = ($get_external or $get_internal);
+
+    if ($seach_for_staff and !is_null($moduleID)) {
+      $query_string = "(SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
+      FROM (users, modules_student, modules)
+      LEFT JOIN sid ON users.id = sid.userID
+      WHERE modules_student.idMod = modules.id
+      AND users.id = modules_student.userID
+      AND modules_student.idMod = ?
+      AND $roles_sql$surname_sql$title_sql$username_sql$initials_sql$calendar_year_sql
+      AND user_deleted IS NULL)
+      UNION
+      (SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
+      FROM (users, modules_staff, modules)
+      LEFT JOIN sid ON users.id = sid.userID
+      WHERE modules_staff.idMod = modules.id
+      AND users.id = modules_staff.memberID
+      AND modules_staff.idMod = ?
+      AND $roles_sql$surname_sql$title_sql$username_sql$initials_sql
+      AND user_deleted IS NULL LIMIT $limit)";
+      $sql_params = array($moduleID);
+      $param_types = 's' . $surname_param_types . $title_param_types . $username_param_types . $initials_param_types .
+          $calendar_year_param_types . 's' . $surname_param_types . $title_param_types . $username_param_types .
+          $initials_param_types;
+      $params = array_merge($sql_params, $surname_params, $title_params, $username_params, $initials_params,
+          $calendar_year_params, $sql_params, $surname_params, $title_params, $username_params, $initials_params);
+    } elseif ($seach_for_staff or $search_for_reviewers) {
       $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
         FROM users
         LEFT JOIN sid ON users.id = sid.userID
@@ -195,31 +197,29 @@ if (isset($_GET['submit'])) {
         AND user_deleted IS NULL LIMIT $limit";
       $param_types = $surname_param_types . $title_param_types . $username_param_types . $initials_param_types;
       $params = array_merge($surname_params, $title_params, $username_params, $initials_params);
+    } elseif (is_null($moduleID)) {
+      // Students no module link.
+      $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
+        FROM users
+        LEFT JOIN sid ON users.id = sid.userID
+        WHERE $roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql
+        AND user_deleted IS NULL LIMIT $limit";
+      $param_types = $surname_param_types . $title_param_types . $username_param_types . $student_id_param_types .
+          $initials_param_types;
+      $params = array_merge($surname_params, $title_params, $username_params, $student_id_params, $initials_params);
     } else {
-      // Student search
-      if (is_null($moduleID)) {
-        $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
-          FROM users
-          LEFT JOIN sid ON users.id = sid.userID
-          WHERE $roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql
-          AND user_deleted IS NULL LIMIT $limit";
-        $param_types = $surname_param_types . $title_param_types . $username_param_types . $student_id_param_types .
-            $initials_param_types;
-        $params = array_merge($surname_params, $title_params, $username_params, $student_id_params, $initials_params);
-
-      } else {
-        $roles_sql = 'AND ' . $roles_sql;
-        $module_sql = " AND idMod LIKE ?";
-        $module_params = array($moduleID);
-        $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
-          FROM (users, modules_student)
-          LEFT JOIN sid ON users.id = sid.userID
-          WHERE users.id = modules_student.userID $module_sql$calendar_year_sql$roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql
-          AND user_deleted IS NULL LIMIT $limit";
-        $param_types = 's' . $calendar_year_param_types . $surname_param_types . $title_param_types . $username_param_types;
-        $params = array_merge($module_params, $calendar_year_params, $surname_params, $title_params, $username_params,
-            $student_id_params, $initials_params);
-      }
+      // Students on a particular module.
+      $roles_sql = ' AND ' . $roles_sql;
+      $module_sql = " AND idMod LIKE ? ";
+      $module_params = array($moduleID);
+      $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
+        FROM (users, modules_student)
+        LEFT JOIN sid ON users.id = sid.userID
+        WHERE users.id = modules_student.userID $module_sql$calendar_year_sql$roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql
+        AND user_deleted IS NULL LIMIT $limit";
+      $param_types = 's' . $calendar_year_param_types . $surname_param_types . $title_param_types . $username_param_types;
+      $params = array_merge($module_params, $calendar_year_params, $surname_params, $title_params, $username_params,
+          $student_id_params, $initials_params);
     }
 
     // Create an array of references to the parameter values.
