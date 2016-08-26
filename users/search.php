@@ -109,7 +109,7 @@ if (isset($_GET['submit'])) {
     $tmp_titles = explode(',', $string['title_types']);
     foreach ($tmp_titles as $tmp_title) {
       if (substr_count(strtolower($tmp_surname), strtolower($tmp_title . ' ')) > 0) {
-        $title_sql = " AND title=?";
+        $title_sql = " AND title = ?";
         $title_param_types = 's';
         $title_params = array($tmp_title);
       }
