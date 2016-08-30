@@ -88,6 +88,11 @@ abstract class plugins_sms extends \plugins\plugins {
      */
     abstract public function get_modules($externalid = null, $session = null);
     /**
+     * Write a gradebook to a file to be processed by campus solutions.
+     * @param integer $paper_id paper to publish gradebook for
+     */
+    abstract public function publish_gradebook($paper_id);
+    /**
      * Check if module import is supported by the plugin
      * @return array|bool import url and translation strings, false if module import not supported
      */
@@ -104,7 +109,7 @@ abstract class plugins_sms extends \plugins\plugins {
     abstract public function supports_course_import();
     /**
      * Check if enorlment import is supported by the plugin
-     * @return array|bool import url and translation strings, false if enrolment import not supported
+     * @return array|bool false if enrolment import not supported
      */
     abstract public function supports_enrol_import();
     /**
@@ -112,6 +117,11 @@ abstract class plugins_sms extends \plugins\plugins {
      * @return array|bool import url and translation strings, false if assessment import not supported
      */
     abstract public function supports_assessment_import();
+    /**
+     * Check if gradebook publishing is supported by the plugin
+     * @return array|bool if gradebook publishing is not supported
+     */
+    abstract public function supports_gradebook_publish();
     /**
      * Get name of sms
      * @return string name of sms
