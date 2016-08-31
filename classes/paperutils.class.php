@@ -835,7 +835,7 @@ Class PaperUtils {
    */
   static public function get_papers_by_session($session, $type, $db) {
     $paperids = array();
-    $result = $db->prepare("SELECT property_id FROM properties WHERE session = ? AND paper_type = ? AND deleted IS NULL");
+    $result = $db->prepare("SELECT property_id FROM properties WHERE calendar_year = ? AND paper_type = ? AND deleted IS NULL");
     $result->bind_param('is', $session, $type);
     $result->execute();
     $result->store_result();
