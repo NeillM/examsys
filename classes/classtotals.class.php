@@ -1787,10 +1787,7 @@ class ClassTotals {
       foreach($smsplugin_name as $name) {
         $smspluginns = 'plugins\SMS\\' . $name . '\\' . $name;
         $smsplugin = new $smspluginns($mysqli, $userObject->get_user_ID());
-        $gradebookpublish = $smsplugin->supports_gradebook_publish() ;
-        if ($gradebookpublish !== false) {
-          $smsplugin->publish_gradebook($this->paperID);
-        }
+        $smsplugin->publish_paper_gradebook($this->paperID);
       }
     }
   }
