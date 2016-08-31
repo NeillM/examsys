@@ -1786,7 +1786,8 @@ class ClassTotals {
       $smsplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
       foreach($smsplugin_name as $name) {
         $smspluginns = 'plugins\SMS\\' . $name . '\\' . $name;
-        $smsplugin = new $smspluginns($mysqli, $userObject->get_user_ID());
+        $userObject = UserObject::get_instance();
+        $smsplugin = new $smspluginns($this->db, $userObject->get_user_ID());
         $smsplugin->publish_paper_gradebook($this->paperID);
       }
     }
