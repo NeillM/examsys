@@ -146,6 +146,11 @@ function parse_group_data($questions, &$user_data) {
     $student_marks = 0;
     if (isset($student['data'])) {
       foreach ($student['data'] as $questionID => $question_data) {
+        if (empty($questions[$questionID]['scale_size'])) {
+          // Not a valid peer review question type,
+          // we should not bother trying to analyse it.
+          continue;
+        }
         $review_no      = 0;
         $review_total   = 0;
         $sub_student    = 0;
