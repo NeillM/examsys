@@ -47,7 +47,11 @@ function padDecimals($number, $rounding) {
 
 // Get questions on the paper
 $questions = array();
-$result = $mysqli->prepare("SELECT q_type, question, leadin, display_method, option_text FROM (papers, questions, options) WHERE papers.question = questions.q_id AND questions.q_id = options.o_id AND paper = ? ORDER BY display_pos, id_num");
+$sql = "SELECT q_type, question, leadin, display_method, option_text "
+    . "FROM (papers, questions, options) "
+    . "WHERE papers.question = questions.q_id AND questions.q_id = options.o_id AND paper = ? AND options.o_id = papers.question "
+    . "ORDER BY display_pos, id_num";
+$result = $mysqli->prepare($sql);
 $result->bind_param('i', $paperID);
 $result->execute();
 $result->bind_result($q_type, $questionID, $leadin, $display_method, $option_text);
