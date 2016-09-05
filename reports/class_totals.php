@@ -498,7 +498,7 @@ echo draw_toprightmenu(30);
         <tr class="nonattend" id="res<?php echo $i+1 ?>" onclick="popMenu(6, event); setVars('', '<?php echo $userID; ?>', '<?php echo $paper_type; ?>', '<?php echo $reassign ?>', '<?php echo $late_submissions ?>', '<?php echo $percent; ?>');"><td>&nbsp;</td>
         <?php
       } else {
-        // Setup the rown for a user who took the exam.
+        // Setup the row for a user who took the exam.
         if (isset($log_late[$user_results[$i]['metadataID']])) {
           $late_submissions = 'y';
         } else {
