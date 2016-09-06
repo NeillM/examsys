@@ -682,6 +682,7 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
 
   $yearutils = new yearutils($mysqli);
   $current_session = $yearutils->get_current_session();
+  $year_names = $yearutils->get_supported_years();
   while ($results->fetch()) {
     $user_modules[$row_no]['moduleid'] = $moduleid;
     $user_modules[$row_no]['fullname'] = $fullname;
@@ -705,7 +706,8 @@ if (isset($_POST['updateadmin']) and $userObject->has_role('SysAdmin')) {
 
   for ($i=0; $i<$row_no; $i++) {
     if ($user_modules[$i]['calendar_year'] != $old_year) {
-      echo "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $user_modules[$i]['calendar_year'];
+      $display_year = $year_names[$user_modules[$i]['calendar_year']];
+      echo "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $display_year;
       if (($user_modules[$i]['calendar_year'] == $most_recent_year or $user_modules[$i]['calendar_year'] == $current_session) and $userObject->has_role(array('Admin', 'SysAdmin'))) {
         echo "&nbsp;&nbsp;<a href=\"#\" onclick=\"editModules('" . $user_modules[$i]['calendar_year'] . "','" . $user_details['grade'] . "'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a>";
       }
