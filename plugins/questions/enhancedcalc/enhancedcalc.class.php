@@ -348,6 +348,10 @@ class EnhancedCalc extends Question implements questionInterface {
 					$this->useranswer['status']['error'] = true;
 					$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
 					$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
+					// If this happens the user's answer caused an error in the checker.
+					// This almost certainly means it is not a number, so we should give them
+					// the incorrect score.
+					$this->qmark = $this->settings['marks_incorrect'];
 				}
 
 				$this->useranswer['status']['overall'] = $returnstatus;
