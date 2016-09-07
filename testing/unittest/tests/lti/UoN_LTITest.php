@@ -35,6 +35,16 @@ class uonltitest extends unittestdatabase {
     public function getDataSet() {
         return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "lti" . DIRECTORY_SEPARATOR . "uonlti.yml");
     }
+
+    /**
+     * Get expected data set from yml
+     * @param string $name fixture file name
+     * @return dataset
+     */
+    public function get_expected_data_set($name) {
+        return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "lti" . DIRECTORY_SEPARATOR . $name . ".yml");
+    }
+
     /**
      * Test lti context lookup
      * @group lti
@@ -48,5 +58,88 @@ class uonltitest extends unittestdatabase {
         // Test context lookup for a staff memeber.
         $expected = array('TEST',"2016-02-11 17:29:11");
         $this->assertEquals($expected, $lti->lookup_lti_context('test:2'));
+    }
+
+    /**
+     * Test the get_user_by_external_id method.
+     * @group lti
+     */
+    public function test_get_user_by_external_id() {
+        $lti = new UoN_LTI();
+        $lti->init_lti0($this->db);
+        $expected = array(
+            '1000-1' => array(
+                'id' => 1000,
+                'title' => 'Miss',
+                'surname' => 'test',
+                'firstnames' => 'one',
+                'initials' => 'o',
+                'username' => 'unit',
+                'externalid' => '1',
+            ),
+        );
+        $this->assertEquals($expected, $lti->get_user_by_external_id('1', 'test'));
+    }
+
+    /**
+     * Test the get_links_by_username method
+     * @group lti
+     */
+    public function test_get_links_by_username() {
+        $lti = new UoN_LTI();
+        $lti->init_lti0($this->db);
+        $expected = array(
+            '1001-2' => array(
+                'id' => 1001,
+                'title' => 'Mx',
+                'surname' => 'staff',
+                'firstnames' => 'two',
+                'initials' => 't',
+                'username' => 'staff',
+                'externalid' => '2',
+            ),
+        );
+        $this->assertEquals($expected, $lti->get_links_by_username('staff', 1));
+    }
+
+    /**
+     * Test the get_lti_key method
+     * @group lti
+     */
+    public function test_get_lti_key() {
+        $lti = new UoN_LTI();
+        $lti->init_lti0($this->db);
+        $expected = array(
+            'id' => 1,
+            'oauth_consumer_key' => 'test',
+            'secret' => 'testsecret',
+            'name' => 'test lti',
+            'context_id' => '',
+        );
+        $this->assertEquals($expected, $lti->get_lti_key(1));
+    }
+
+    /**
+     * Test the delete_user_link method
+     * @group lti
+     */
+    public function test_delete_user_link() {
+        $lti = new UoN_LTI();
+        $lti->init_lti0($this->db);
+        $lti->delete_user_link(1000, 'test', '1');
+        $querytable = $this->getConnection()->createQueryTable('lti_user', 'SELECT * FROM lti_user');
+        $expectedtable = $this->get_expected_data_set('deleteuserlink')->getTable("lti_user");
+        $this->assertTablesEqual($expectedtable, $querytable);
+    }
+
+    /**
+     * Test the generate_user_key method
+     * @group lti
+     */
+    public function test_generate_user_key() {
+        $lti = new UoN_LTI();
+        $this->assertEquals('test:1', $lti->generate_user_key('test', '1'));
+        $this->assertEquals('test:1', $lti->generate_user_key('test', 1));
+        $this->assertEquals('myspecialkey:username', $lti->generate_user_key('myspecialkey', 'username'));
     }
 }

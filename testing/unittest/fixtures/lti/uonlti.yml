@@ -18,7 +18,7 @@ faculty:
 lti_keys:
   -
     id: 1
-    oauth_consumer_key: "testkey"
+    oauth_consumer_key: "test"
     secret: "testsecret"
     name: "test lti"
 lti_context:
@@ -43,6 +43,9 @@ users:
   -
     id: 1000
     password: "12345678"
+    title: "Miss"
+    first_names: "one"
+    initials: "o"
     surname: "test"
     username: "unit"
     roles: "Student"
@@ -50,6 +53,9 @@ users:
   -
     id: 1001
     password: "87654321"
+    title: "Mx"
+    first_names: "two"
+    initials: "t"
     surname: "staff"
     username: "staff"
     roles: "Staff"
