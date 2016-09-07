@@ -249,6 +249,110 @@ class UoN_LTI extends BLTI {
           return new lti_default_integration_extended();
       }
   }
+
+  /**
+   * Gets the user linked to an external id.
+   *
+   * @param string $externalid The id of a user in the external system
+   * @param string $consumer_key The consumer key used to connect to the system
+   * @return array
+   * @throws Exception
+   */
+  public function get_user_by_external_id($externalid, $consumer_key) {
+    if (!isset($this->db)) {
+      throw new Exception('lti_no_database');
+    }
+    $return = array();
+    $sql = "SELECT u.id, u.title, u.surname, u.first_names, u.initials, u.username "
+        . "FROM " . $this->parm['table_prefix'] . "lti_user lu "
+        . "JOIN users u ON lu.lti_user_equ = u.id "
+        . "WHERE lu.lti_user_key = ?";
+    $result = $this->db->prepare($sql);
+    $key = $this->generate_user_key($consumer_key, $externalid);
+    $result->bind_param('s', $key);
+    $result->execute();
+    $result->bind_result($id, $title, $surname, $firstnames, $initials, $username);
+    while ($result->fetch()) {
+      $return["$id-$externalid"] = array(
+        'id' => $id,
+        'title' => $title,
+        'surname' => $surname,
+        'firstnames' => $firstnames,
+        'initials' => $initials,
+        'username' => $username,
+        'externalid' => $externalid,
+      );
+    }
+    return $return;
+  }
+
+  /**
+   * Gets the eternal system ids attached to a Rogo user.
+   *
+   * @param string $username A Rogo user name
+   * @param int $linkid The id of an LTi ket record.
+   * @return array
+   * @throws Exception
+   */
+  public function get_links_by_username($username, $linkid) {
+    if (!isset($this->db)) {
+      throw new Exception('lti_no_database');
+    }
+    $return = array();
+    $sql = "SELECT u.id, u.title, u.surname, u.first_names, u.initials, u.username, lu.lti_user_key, k.oauth_consumer_key "
+        . "FROM " . $this->parm['table_prefix'] . "lti_user lu "
+        . "JOIN users u ON lu.lti_user_equ = u.id "
+        . "JOIN " . $this->parm['table_prefix'] . "lti_keys k ON lu.lti_user_key LIKE CONCAT(k.oauth_consumer_key, ':%') "
+        . "WHERE u.username = ? AND k.id = ?";
+    $result = $this->db->prepare($sql);
+    $result->bind_param('si', $username, $linkid);
+    $result->execute();
+    $result->bind_result($id, $title, $surname, $firstnames, $initials, $username, $rawexternalid, $consumer_key);
+    while ($result->fetch()) {
+      $externalid = substr($rawexternalid, strlen("$consumer_key:"));
+      $return["$id-$externalid"] = array(
+        'id' => $id,
+        'title' => $title,
+        'surname' => $surname,
+        'firstnames' => $firstnames,
+        'initials' => $initials,
+        'username' => $username,
+        'externalid' => $externalid,
+      );
+    }
+    return $return;
+  }
+  
+  /**
+   * Get the details of an LTi key by it's ID in an array containing the following keys:
+   * - id
+   * - oauth_consumer_key
+   * - secret
+   * - name
+   * - context_id
+   *
+   * If the passed key is invalid then the values of the keys will all be null.
+   *
+   * @param int $id
+   * @return array
+   * @throws Exception
+   */
+  public function get_lti_key($id) {
+    if (!isset($this->db)) {
+      throw new Exception('lti_no_database');
+    }
+    $return = array();
+    $sql = "SELECT id, oauth_consumer_key, secret, name, context_id "
+        . "FROM " . $this->parm['table_prefix'] . "lti_keys WHERE id = ? "
+        . "AND deleted IS NULL LIMIT 1";
+    $result = $this->db->prepare($sql);
+    $result->bind_param('i', $id);
+    $result->execute();
+    $result->bind_result($return['id'], $return['oauth_consumer_key'], $return['secret'], $return['name'], $return['context_id']);
+    $result->fetch();
+    $result->close();
+    return $return;
+  }
   
   function get_lti_keys($deleted = false) {
     $dataret = array();
@@ -357,7 +461,37 @@ class UoN_LTI extends BLTI {
       $stmt->close();
     }
   }
+  
+  /**
+   * Deletes the link between an user of an external system and Rogo.
+   *
+   * @param int $userid The id of a Rogo user.
+   * @param type $consumer_key The consumer key for an external system.
+   * @param type $externalid The id of the user in the external system.
+   * @throws Exception
+   */
+  public function delete_user_link($userid, $consumer_key, $externalid) {
+    if (!isset($this->db)) {
+      throw new Exception('lti_no_database');
+    }
+    $sql = "DELETE FROM " . $this->parm['table_prefix'] . "lti_user "
+        . "WHERE lti_user_equ = ? AND lti_user_key = ?";
+    $query = $this->db->prepare($sql);
+    $key = $this->generate_user_key($consumer_key, $externalid);
+    $query->bind_param('is', $userid, $key);
+    $query->execute();
+  }
 
+  /**
+   * Generate the user key for the lti_user table.
+   *
+   * @param string $consumer_key the consumer kety for the external system.
+   * @param string $externalid the identifier of a user from the external system.
+   * @return string
+   */
+  public function generate_user_key($consumer_key, $externalid) {
+    return "$consumer_key:$externalid";
+  }
 
   /**
    * Function to add new lti key

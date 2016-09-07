@@ -48,7 +48,19 @@ class render {
         ));
         $this->config = $configObject;
     }
-    
+
+    /**
+     * Render an abitary template file.
+     *
+     * @param array $data Data for the template
+     * @param array $lang Language strings
+     * @param string $template The template filename
+     */
+    public function render($data, $lang, $template) {
+        $data = array('data' => $data, 'lang' => $lang, 'path' => $this->config->get('cfg_root_path'));
+        echo $this->twig->render($template, $data);
+    }
+
     /**
      * Render xml reponse.
      * @param string $template - template location
