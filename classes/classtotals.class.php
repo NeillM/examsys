@@ -1763,8 +1763,8 @@ class ClassTotals {
    */
   public function create_gradebook() {
     if ($this->gradebook_enabled) {
-        $gradebook = new gradebook($this->db);
-        return $gradebook->create_gradebook($this->paperID);
+      $gradebook = new gradebook($this->db);
+      return $gradebook->create_gradebook($this->paperID);
     }
     return false;
   }
