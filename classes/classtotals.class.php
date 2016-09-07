@@ -1783,13 +1783,6 @@ class ClassTotals {
         $classification = $this->user_results[$student]['classification'];
         $gradebook->store_grade($userid, $this->paperID, $mark, $adjusted, $classification);
       }
-      $smsplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
-      foreach($smsplugin_name as $name) {
-        $smspluginns = 'plugins\SMS\\' . $name . '\\' . $name;
-        $userObject = UserObject::get_instance();
-        $smsplugin = new $smspluginns($this->db, $userObject->get_user_ID());
-        $smsplugin->publish_paper_gradebook($this->paperID);
-      }
     }
   }
   
