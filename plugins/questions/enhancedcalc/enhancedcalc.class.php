@@ -735,14 +735,14 @@ class EnhancedCalc extends Question implements questionInterface {
                     $marked = false;
                 }
                 if ($marked) {
-                    echo '<input type="text" style="text-align:right" name="q' . $extra['question'] . '" size="10" value="' . $this->useranswer['uansnumb'] . ' ' . $this->useranswer['uansunit'] . '" />';
+                    echo '<input type="text" style="text-align:right" name="q' . $extra['question'] . '" size="10" value="' . htmlspecialchars($this->useranswer['uansnumb']) . ' ' . $this->useranswer['uansunit'] . '" />';
                 }
             }
 
+            $display_units = '';
+
             if ($marked) {
-                if ($this->useranswer['ans']['units_used'] == '') {
-                    $display_units = '';
-                } else {
+                if ($this->useranswer['ans']['units_used'] != '') {
                     $display_units = ' ' . $this->useranswer['ans']['units_used'];
                 }
             }
