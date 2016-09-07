@@ -810,7 +810,7 @@ Class module {
   }
   
   /**
-   * Get the modules whose final grade for a stundent is affected by a paper
+   * Get the modules whose final grade for a student is affected by a paper
    * @param integer $paperid paper identifier
    * @param integer $userid student identifier
    * @param mylsqi $db db connection
