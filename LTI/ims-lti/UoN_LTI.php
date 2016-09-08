@@ -364,7 +364,7 @@ class UoN_LTI extends BLTI {
     if (!$deleted) {
       $extra = ' WHERE deleted IS NULL ';
     }
-    $stmt = $this->db->prepare("SELECT * FROM " . $this->parm['table_prefix'] . "lti_keys $extra");
+    $stmt = $this->db->prepare("SELECT id, oauth_consumer_key, secret, name, context_id, deleted, updated_on FROM " . $this->parm['table_prefix'] . "lti_keys $extra");
     if ($db->error) {
       try {
         throw new Exception($string['showerror']);
