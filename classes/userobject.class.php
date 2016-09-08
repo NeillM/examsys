@@ -25,7 +25,7 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-require_once '../include/errors.inc';
+require_once dirname(__DIR__) . '/include/errors.inc';
 
 class UserObject extends RogoStaticSingleton {
 

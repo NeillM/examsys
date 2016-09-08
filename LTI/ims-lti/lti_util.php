@@ -1,7 +1,7 @@
 <?php
 
 require_once 'OAuth.php';
-require_once '../../include/errors.inc';
+require_once dirname(dirname(__DIR__)) . '/include/errors.inc';
 // Returns true if this is a Basic LTI message
 // with minimum values to meet the protocol
 function is_lti_request() {

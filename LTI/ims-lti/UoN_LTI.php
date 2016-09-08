@@ -22,7 +22,7 @@
 * @package
 */
 
-require_once '../../include/errors.inc';
+require_once dirname(dirname(__DIR__)) . '/include/errors.inc';
 require_once 'lti_util.php';
 /**
  * Class to support LTI extends upon base LTI from IMS sample implimentation
@@ -200,8 +200,9 @@ class UoN_LTI extends BLTI {
     // Store the launch information in the session for later
     $newinfo = array();
     foreach ($_POST as $key => $value) {
-      if ($key == "basiclti_submit")
+      if ($key == "basiclti_submit") {
         continue;
+      }
       if (strpos($key, "oauth_") === false) {
         $newinfo[$key] = $value;
         continue;
@@ -218,10 +219,12 @@ class UoN_LTI extends BLTI {
       $_SESSION['_lti_context'] = $this->info;
       unset($_SESSION['_lti_row']);
       unset($_SESSION['_lti_context_id']);
-      if ($this->row)
+      if ($this->row) {
         $_SESSION['_lti_row'] = $this->row;
-      if ($this->context_id)
+      }
+      if ($this->context_id) {
         $_SESSION['_lti_context_id'] = $this->context_id;
+      }
     }
 
     if ($this->valid && $doredirect) {

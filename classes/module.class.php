@@ -24,7 +24,7 @@
  * @package
  */
 
-require_once '../include/errors.inc';
+require_once dirname(__DIR__) . '/include/errors.inc';
 
 Class module {
 
