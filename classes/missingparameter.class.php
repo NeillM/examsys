@@ -14,19 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace testing\behat\steps\backend;
-
 /**
- * This trait is a convnient way to get all the backend steps in one use statement.
+ * A required parameter was not set on a page.
  *
- * This trait should use all of the other traits in the backend namespace. No steps should be included in it.
- *
- * @copyright Copyright (c) 2015 The University of Nottingham
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
- * @package testing
- * @subpackage behat
+ * @version 1.0
+ * @copyright Copyright (c) 2016 The University of Nottingham
+ * @package core
  */
-trait include_backend {
-  use database,
-      param;
-}
+class MissingParameter extends Exception {}
