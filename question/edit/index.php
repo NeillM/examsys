@@ -692,7 +692,7 @@ try {
   } else {
     $message = $e->getMessage();
   }
-  display_error($title, $message, false, false);
+  display_error($title, $message, false);
 }
 ?>
 
