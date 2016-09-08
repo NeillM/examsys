@@ -187,3 +187,5 @@ config/behat.xml
 testing/behat/config/version.php
 testing/unittest/config/version.php
 config/phpunit.xml
+selenium-server-standalone-*.jar
+web.config
