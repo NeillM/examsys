@@ -879,20 +879,6 @@ Class UserUtils {
     return $found;
   }
 
-  /**
-   * Delete all the LTI records associated with a Rogo user ID.
-   *
-   * @param int $userID - ID of the Rogo user.
-   * @param object $db  - database connection.
-   *
-   */
-  static function clear_lti_user($userID, $db) {
-    $result = $db->prepare("DELETE FROM lti_user WHERE lti_user_equ = ?");
-    $result->bind_param('i', $userID);
-    $result->execute();
-    $result->close();
-  }
-
  /**
   * Check if the user has started a paper
   * @param integer $id - user id

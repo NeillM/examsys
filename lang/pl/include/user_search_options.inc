@@ -60,6 +60,5 @@ $string['miss'] = 'Pani';
 $string['mrs'] = '';
 $string['ms'] = '';
 $string['professor'] = 'Prof.';
-$string['deleteuser'] = 'Usuń użytkownika';  
-$string['clearltilinks'] = 'Clear LTI Links';
+$string['deleteuser'] = 'Usuń użytkownika';
 ?>

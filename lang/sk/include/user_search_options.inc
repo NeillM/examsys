@@ -61,5 +61,4 @@ $string['ms'] = 'Pani';
 $string['professor'] = 'Profesor';
 $string['deleteuser'] = 'Odstrániť používateľa';
 $string['performsummary'] = 'Prehľad výsledkov';
-$string['clearltilinks'] = 'Vyčistiť LTI linky';
 ?>
