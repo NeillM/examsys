@@ -17,5 +17,5 @@
 require '../../lang/' . $language . '/help/staff/index.php';
 
 $string['createlink'] = 'Vytvoriť linku';
-$string['msg'] = "Ukazovatele umožňují pridať do obsahu "stránku" navyše, ktorá vedie k už existujúcemu obsahu. Napríklad, môže byť užitočné pridať ukazovateľ s názvom "Odstránenie dokumentov", ktorý bude odkazovať na aktuálnu stránku "Dokumenty - ako odstrániť".";
+$string['msg'] = "Ukazovatele umožňují pridať do obsahu \"stránku\" navyše, ktorá vedie k už existujúcemu obsahu. Napríklad, môže byť užitočné pridať ukazovateľ s názvom \"Odstránenie dokumentov\", ktorý bude odkazovať na aktuálnu stránku \"Dokumenty - ako odstrániť\".";
 ?>
