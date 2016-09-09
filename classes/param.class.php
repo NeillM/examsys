@@ -24,10 +24,10 @@
  * @package core
  */
 class param {
-  /** A string consiting only of: a-z A-Z */
+  /** A string consiting only of letters. */
   const ALPHA = 1;
 
-  /** A string consiting only of: a-z A-Z 0-9 */
+  /** A string consiting only of letters and numbers. */
   const ALPHANUM = 2;
   
   /**
@@ -89,7 +89,7 @@ class param {
           'options' => array(
             'default' => null,
           ),
-          'flags' => FILTER_FLAG_STRIP_HIGH,
+          'flags' => FILTER_FLAG_NO_ENCODE_QUOTES,
         );
         break;
       case self::ALPHANUM:
@@ -98,7 +98,7 @@ class param {
           'options' => array(
             'default' => null,
           ),
-          'flags' => FILTER_FLAG_STRIP_HIGH,
+          'flags' => FILTER_FLAG_NO_ENCODE_QUOTES,
         );
         break;
       case self::BOOLEAN:
@@ -189,7 +189,7 @@ class param {
     // Do any additional cleaning that may be needed.
     switch ($type) {
       case self::ALPHA:
-        $cleaned = preg_replace('#[^a-zA-Z\s]#', '', $return);
+        $cleaned = preg_replace('#[^\p{L}\p{M}\p{Zs}]#u', '', $return);
         if ($cleaned === '' and $cleaned !== $return) {
           $return = null;
         } else {
@@ -197,7 +197,7 @@ class param {
         }
         break;
       case self::ALPHANUM:
-        $cleaned = preg_replace('#[^a-zA-Z0-9\s]#', '', $return);
+        $cleaned = preg_replace('#[^\p{L}\p{M}\p{Zs}0-9]#u', '', $return);
         if ($cleaned === '' and $cleaned !== $return) {
           $return = null;
         } else {

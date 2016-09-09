@@ -18,6 +18,8 @@ Feature: Cleaning variables
       | www.example.com | wwwexamplecom |
       | Test <script><!-- alert(\'Test\') --></script> text | Test  text |
       | Test > text | Test  text |
+      | Café | Café |
+      | æìřčžšíýúáÚůú | æìřčžšíýúáÚůú |
 
   Scenario Outline: Verifying alpha numeric input
     Given I clean "<input>" as "ALPHANUM"
@@ -33,6 +35,8 @@ Feature: Cleaning variables
       | www.example.com | wwwexamplecom |
       | Test <script><!-- alert(\'Test\') --></script> text | Test  text |
       | Test > text | Test  text |
+      | Café | Café |
+      | æìřčžšíýúáÚůú | æìřčžšíýúáÚůú |
 
   Scenario Outline: Verifying boolean input
     Given I clean "<input>" as "BOOLEAN"
@@ -93,6 +97,8 @@ Feature: Cleaning variables
       | 0xF | 0xF |
       | 128.243.48.6 | 128.243.48.6 |
       | Test > text | Test &gt; text |
+      | Café | Café |
+      | æìřčžšíýúáÚůú | æìřčžšíýúáÚůú |
 
   Scenario Outline: Verifying integer input
     Given I clean "<input>" as "INT"
@@ -138,6 +144,8 @@ Feature: Cleaning variables
       | 0xF | 0xF |
       | 128.243.48.6 | 128.243.48.6 |
       | 017 | 017 |
+      | Café | Café |
+      | æìřčžšíýúáÚůú | æìřčžšíýúáÚůú |
 
   Scenario Outline: Verifying text input
     Given I clean "<input>" as "TEXT"
@@ -153,6 +161,8 @@ Feature: Cleaning variables
       | 0xF | 0xF |
       | 128.243.48.6 | 128.243.48.6 |
       | 017 | 017 |
+      | Café | Café |
+      | æìřčžšíýúáÚůú | æìřčžšíýúáÚůú |
 
   Scenario Outline: Verifying url input
     Given I clean "<input>" as "URL"
