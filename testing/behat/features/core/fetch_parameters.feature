@@ -1,4 +1,4 @@
-@core @backend @wip
+@core @backend
 Feature: Get parameters passed to PHP
   In order to safely get parameters passed to the page
   As a developer
@@ -9,6 +9,8 @@ Feature: Get parameters passed to PHP
       | name | value | method |
       | id | 5 | GET |
       | function | test | POST |
+      | numbers | array:1,2,3,4; | POST |
+      | letters | array:test,value; | GET |
     When I look for the optional "<method>" parameter "<name>" as a "<type>"
     Then the clean result should be "<output>"
 
@@ -24,12 +26,18 @@ Feature: Get parameters passed to PHP
       | none | GET | RAW | null |
       | none | POST | RAW | null |
       | none | REQUEST | RAW | null |
+      | numbers | REQUEST | INT | array:1,2,3,4; |
+      | numbers | POST | ALPHA | array:null,null,null,null; |
+      | numbers | GET | ALPHA | null |
+      | letters | REQUEST | ALPHA | array:test,value; |
 
   Scenario Outline: Require parameters that are set
     Given the following parameters have been passed:
       | name | value | method |
       | id | 5 | GET |
       | function | test | POST |
+      | numbers | array:1,2,3,4; | POST |
+      | letters | array:test,value; | GET |
     When I look for the required "<method>" parameter "<name>" as a "<type>"
     Then the clean result should be "<output>"
 
@@ -39,11 +47,14 @@ Feature: Get parameters passed to PHP
       | id | REQUEST | INT | 5 |
       | function | REQUEST | ALPHA | test |
       | function | POST | ALPHA | test |
+      | numbers | REQUEST | INT | array:1,2,3,4; |
+      | letters | REQUEST | ALPHA | array:test,value; |
 
   Scenario Outline: Require a parameter that has not been passed with a valid value
     Given the following parameters have been passed:
       | name | value | method |
       | test | 5 | GET |
+      | numbers | array:1,2,3,4; | POST |
     When I look for the required "<method>" parameter "<name>" as a "<type>" there should be an exception
 
     Examples:
@@ -53,3 +64,4 @@ Feature: Get parameters passed to PHP
       | id | REQUEST | RAW |
       | test | POST | INT |
       | test | GET | IP_ADDRESS |
+      | numbers | REQUEST | ALPHA |

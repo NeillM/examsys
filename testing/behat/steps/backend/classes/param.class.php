@@ -84,6 +84,10 @@ trait param {
     foreach ($paramters->getHash() as $paramter) {
       $name = $paramter['name'];
       $value = $paramter['value'];
+      if (preg_match('/^array:\s?((?:[\w\d-]+(?:,\s?)?)+);$/', $value, $matches)) {
+        // Pass the matching group to the method. This is the value it expects.
+        $value = $this->cast_to_array($matches[1]);
+      }
       switch ($paramter['method']) {
         case 'GET':
           $_GET[$name] = $value;
