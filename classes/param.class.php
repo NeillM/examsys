@@ -225,6 +225,31 @@ class param {
   }
 
   /**
+   * Recurcively ensures that all the values in an array are of the specified type.
+   *
+   * @param array $value The value to clean
+   * @param int $type The type of value the value should be.
+   * @param bool $required When true throw an exception if the result is filtered to be an empty string or null.
+   * @return array The array containing only cleaned values or null if it does not match the type defined.
+   */
+  public static function clean_array(array $value, $type, $required = false) {
+    $return = array();
+    foreach ($value as $key => $part) {
+      if (!is_array($part)) {
+        $clean = self::clean($part, $type);
+        if ($required and (is_null($clean) or $clean === '')) {
+          // Nothing valid passed, throw an exception.
+          throw new MissingParameter();
+        }
+        $return[$key] = $clean;
+      } else {
+        $return[$key] = self::clean_array($part, $type);
+      }
+    }
+    return $return;
+  }
+
+  /**
    * Strips out unsafe html tags.
    *
    * @param string $html
@@ -250,7 +275,11 @@ class param {
    */
   public static function optional($name, $default, $type, $from = self::FETCH_REQUEST) {
     $value = self::fetch($name, $from);
-    $clean = self::clean($value, $type);
+    if (is_array($value)) {
+      $clean = self::clean_array($value, $type);
+    } else {
+      $clean = self::clean($value, $type);
+    }
     if (is_null($clean) or $clean === '') {
       $clean = $default;
     }
@@ -268,7 +297,11 @@ class param {
    */
   public static function required($name, $type, $from = self::FETCH_REQUEST) {
     $value = self::fetch($name, $from);
-    $clean = self::clean($value, $type);
+    if (is_array($value)) {
+      $clean = self::clean_array($value, $type, true);
+    } else {
+      $clean = self::clean($value, $type);
+    }
     if (is_null($clean) or $clean === '') {
       // Nothing valid passed, throw an exception.
       throw new MissingParameter();
