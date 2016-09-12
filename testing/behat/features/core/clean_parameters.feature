@@ -99,6 +99,11 @@ Feature: Cleaning variables
       | Test > text | Test &gt; text |
       | Café | Café |
       | æìřčžšíýúáÚůú | æìřčžšíýúáÚůú |
+      | <p>Test<img src=j&#X41vascript:alert('test2')></p> | <p>Test</p> |
+      | Test <br> test | Test <br /> test |
+      | <p>Test | <p>Test</p> |
+      | <div><p>Test</div></p> | <div><p>Test</p></div> |
+      | Test<iframe src='http://example.com'></iframe> | Test |
 
   Scenario Outline: Verifying integer input
     Given I clean "<input>" as "INT"
