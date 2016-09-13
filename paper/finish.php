@@ -45,13 +45,19 @@ require_once '../lang/' . $language . '/paper/label_answer.txt';
 $jstring = $string; //to pass it to JavaScript HTML5 modules
 //HTML5 part
 
-check_var('id', 'GET', true, false, false);
+$id = check_var('id', 'GET', true, false, true, param::ALPHANUM); // While it is an int, the numbers are too large for 32-bit PHP.
+$mode = param::optional('mode', '', param::ALPHA);
+$getmode = param::optional('mode', '', param::ALPHA, param::FETCH_GET);
+$q_id = param::optional('q_id', null, param::INT, param::FETCH_GET);
+$getuser = param::optional('userID', 0, param::INT, param::FETCH_GET);
+$metadataid = param::optional('metadataID', 0, param::INT, param::FETCH_GET);
+$do_not_record = param::optional('dont_record', false, param::BOOLEAN, param::FETCH_GET);
 
 $demo		= is_demo($userObject);
 $userID = $userObject->get_user_ID();
 
 //get the paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli, $string, true);
 
 /*
 * Set the default colour scheme for this paper and allow current users' special settings to override
@@ -142,18 +148,18 @@ if ($userObject->has_role(array('External Examiner'))) {
 }
 
 // Are we in a staff test and preview mode?
-$is_preview_mode = ($userObject->has_role(array('Staff', 'SysAdmin')) and isset( $_REQUEST['mode'] ) and $_REQUEST['mode'] == 'preview');
+$is_preview_mode = ($userObject->has_role(array('Staff', 'SysAdmin')) and $mode === 'preview');
 $is_summative_preview_mode = ($is_preview_mode and $propertyObj->get_paper_type() == '2');
 
 // Are we in a staff test and preview mode and on the first screen?
-$is_preview_mode_first_launch = ($is_preview_mode == true and isset($_GET['mode']) and $_GET['mode'] == 'preview');
+$is_preview_mode_first_launch = ($is_preview_mode == true and $getmode === 'preview');
 
 // Are we in a staff single question testmode?
-$is_question_preview_mode = (isset($_GET['q_id']));
+$is_question_preview_mode = (!is_null($q_id));
 
-$is_exam_review_mode = ($userObject->has_role(array('Staff', 'External Examiner')) and isset($_GET['userID']) and $_GET['userID'] != $userObject->get_user_ID());
+$is_exam_review_mode = ($userObject->has_role(array('Staff', 'External Examiner')) and $getuser != $userObject->get_user_ID());
 
-$is_formative_review = (isset($_GET['metadataID']) and $paper_type == '0');
+$is_formative_review = (!empty($metadataid) and $paper_type == '0');
 
 if ($is_exam_review_mode or $is_question_preview_mode or $is_summative_preview_mode) {
   // Turn on all feedback if staff and a student exam script is being reviewed.
@@ -165,9 +171,9 @@ if ($is_exam_review_mode or $is_question_preview_mode or $is_summative_preview_m
   $is_exam_review_mode        = true;
 }
 
-if (isset($_GET['userID'])) {
+if ($getuser) {
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff', 'External Examiner'))) {
-    $log_metadata = new LogMetadata($_GET['userID'], $paperID, $mysqli);
+    $log_metadata = new LogMetadata($getuser, $paperID, $mysqli);
   } else {   // Student is hacking the userid parameter.
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
@@ -175,9 +181,8 @@ if (isset($_GET['userID'])) {
 } else {
   $log_metadata = new LogMetadata($userObject->get_user_ID(), $paperID, $mysqli);
 }
-if (isset($_GET['metadataID'])) {
-  $log_metadata->get_record($_GET['metadataID']);
-  $metadataid = $_GET['metadataID'];
+if (!empty($metadataid)) {
+  $log_metadata->get_record($metadataid);
 } else {
   $log_metadata->get_record();
   $metadataid = $log_metadata->get_metadata_id();
@@ -283,20 +288,16 @@ require '../config/finish.inc';
 </head>
 <body>
 <?php
-  $preview_q_id = (isset($_GET['q_id'])) ? $_GET['q_id'] : null;
+  $preview_q_id = (!is_null($q_id)) ? $q_id : null;
 
-  if (isset($_POST['current_screen'])) {
-    $current_screen = $_POST['current_screen'];
-  } else {
-    $current_screen = 1;
-  }
-  if ($current_screen > 1 and (!isset($_GET['dont_record']) or $_GET['dont_record'] != true)) {
+  $current_screen = param::optional('current_screen', 1, param::INT, param::FETCH_POST);
+  if ($current_screen > 1 and !$do_not_record) {
     // Record answers from the previous screen.
     record_marks($paperID, $mysqli, $paper_type, $metadataid, $preview_q_id);
   }
 
-  if (isset($_GET['userID'])) {
-    $temp_userID = $_GET['userID'];
+  if (isset($getuser)) {
+    $temp_userID = $getuser;
     $result = $mysqli->prepare("SELECT title, initials, surname, student_id FROM users LEFT JOIN sid ON users.id = sid.userID WHERE id = ? LIMIT 1");
     $result->bind_param('i', $temp_userID);
     $result->execute();
@@ -314,7 +315,7 @@ require '../config/finish.inc';
   $old_q_id = 0;
   $old_screen = 0;
 
-  if (!isset($_GET['q_id'])) {
+  if (is_null($q_id)) {
     echo $top_table_html;
     echo '<tr><td><div class="paper">' . $paper_title . '</div>';
     if ($userObject->has_role('External Examiner')) {
