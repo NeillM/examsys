@@ -88,17 +88,15 @@ if($stmt) {
     $ratingColumns = explode(",", $rating);
     $notNullRatingColumns = array_filter($ratingColumns);
 
-    // MRQ have valid ratings with null column values so need a special case
-    if($q_type == "mrq") {    
+    // MRQ and RANK questions have valid ratings with null column values so need a special case
+    if($q_type == "mrq" or $q_type == "rank") {
 
-      // $mrq_correct logic adapted from include/display_functions.inc, line 419
-      $mrq_correct = 0;
       if ($score_method == 'Mark per Question') {
-        $mrq_correct = $option_no;
+        $mrq_correct = 1;
       } else {
         $mrq_correct = $mrq_correct_per_option;
       }
-
+      
       if($mrq_correct != count($notNullRatingColumns)) {
         $rating = $string['incomplete'] . "[COLUMNS-q_id" . $q_id . "]";
       }
