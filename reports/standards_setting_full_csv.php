@@ -104,11 +104,11 @@ if($stmt) {
       } else {
         $mrq_correct = $correct_per_option;
       }
-      
       if($mrq_correct != count($notNullRatingColumns)) {
         $rating = $string['incomplete'] . "[COLUMNS-q_id" . $q_id . "]";
       }
-
+    } elseif($q_type == "sct" or $q_type == "textbox") {
+        $rating = $string['noncompatible'] . "[COLUMNS-q_id" . $q_id . "]";
     } else {
 
       // Clearly mark incomplete ratings
