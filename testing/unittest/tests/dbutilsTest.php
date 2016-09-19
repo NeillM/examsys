@@ -61,6 +61,13 @@ class dbutilstest extends unittestdatabase {
      * @group dbutils
      */
     public function test_check_sqlparams() {
+      
+      $bindtype = array("i","i","s");
+      $bindvalue = array(4, 7, "hello");
+      $sql = "select something from somewhere where thisis = ? and thatis = ? and theyall = ? ";
+      $checker = DBUtils::check_sqlparams($bindtype, $bindvalue, $sql);
+      $this->assertTrue($checker);
+      
       $bindtype = array("i","i","s");
       $bindvalue = array("4", 7, "hello"); // "4" is not int
       $sql = "select something from somewhere where thisis = ? and thatis = ? and theyall = ? ";

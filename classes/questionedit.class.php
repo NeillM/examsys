@@ -297,8 +297,7 @@ Class QuestionEdit extends RogoObject {
    * @throws ValidationException
    */
   public function save($clear_checkout = true) {
-
-
+    global $string;
     $success = false;
     if ($this->_logger == null ) $this->_logger =  new Logger($this->_mysqli);
 

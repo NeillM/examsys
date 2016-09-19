@@ -70,7 +70,7 @@ class BLTI {
     } else {      
         
       $key_column = $parm['key_column'] ? $parm['key_column'] : 'oauth_consumer_key';
-      $table = $parm['table'];
+      $table = \param::clean($parm['table'], \param::ALPHA);
       $sql = "SELECT * FROM  $table WHERE $key_column = ?";
       $result = $mysqli->prepare($sql);
       $result->bind_param('i', $oauth_consumer_key);

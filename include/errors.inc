@@ -21,9 +21,9 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
-require_once dirname(__DIR__) . '/include/load_config.php';
-global $language;
-require_once $cfg_web_root . 'lang/' . $language . '/include/errors.inc';
+
+require $cfg_web_root . 'lang/' . $language . '/include/errors.inc';
+
 
 /**
  * Display an error to the screen.

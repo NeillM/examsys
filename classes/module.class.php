@@ -358,6 +358,7 @@ Class module {
    *                     'map_level ' => int 1
    */
   public function get_full_details_by_ID($modID, $db) {
+    global $string;
     // returns false if not self enrol else returns needed data;
     $result = $db->prepare("SELECT
                               modules.id,

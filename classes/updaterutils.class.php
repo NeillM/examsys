@@ -276,6 +276,7 @@ Class UpdaterUtils {
    * @param bool $update_display 	- If true then echo the SQL to the screen.
    */
   public function execute_query($sql, $update_display) {
+    global $string;
     $insertID = false;
     
     if ($update_display) {
