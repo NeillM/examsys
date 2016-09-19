@@ -22,7 +22,7 @@
 * @package
 */
 
-require_once dirname(dirname(__DIR__)) . '/include/errors.inc';
+
 require_once 'lti_util.php';
 /**
  * Class to support LTI extends upon base LTI from IMS sample implimentation
