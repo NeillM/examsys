@@ -28,7 +28,6 @@ class BLTI {
   private $db;
   private $parm;
   private $langcomponent = 'lti/error';
-  private $langpack;
   private $strings;
 
   function updateltikey($parm = false, $ltiid, $ltiname, $ltikey, $ltisec, $lticontext = '') {    
@@ -68,8 +67,8 @@ class BLTI {
 
     $this->db=$db;
     $this->parm=$parm;
-    $this->langpack = new \langpack();
-    $this->strings = $this->langpack->get_all_strings($this->langcomponent);
+    $langpack = new \langpack();
+    $this->strings = $langpack->get_all_strings($this->langcomponent);
     
     if (!is_basic_lti_request()) {
       if ($usesession === false) return;

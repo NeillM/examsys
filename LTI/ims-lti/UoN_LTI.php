@@ -35,7 +35,6 @@ class UoN_LTI extends BLTI {
   static $class_name = 'UoN_LTI';
     
   private $langcomponent = 'lti/error';
-  private $langpack;
   private $strings;
   /**
    * Create and return the Global instance of parent::$class_name for use in
@@ -64,8 +63,8 @@ class UoN_LTI extends BLTI {
 
 
   function __construct() {
-    $this->langpack = new \langpack();
-    $this->strings = $this->langpack->get_all_strings($this->langcomponent);
+    $langpack = new \langpack();
+    $this->strings = $langpack->get_all_strings($this->langcomponent);
   }
 
   function init_lti0($db) {
