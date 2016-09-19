@@ -35,10 +35,10 @@ class BLTI {
       $db = $parm['db'];
       if ($db->error) {
         try {
-          throw new Exception($strings['showerror']);
+          throw new Exception($this->strings['showerror']);
         }
         catch (Exception $e) {
-          echo $strings['showerror'] . "<br />";
+          echo $this->strings['showerror'] . "<br />";
         }
       }
       $stmt = $db->prepare("UPDATE lti_keys set oauth_consumer_key=?, secret=?, context_id=? , `name`=? WHERE id=?");
@@ -51,10 +51,10 @@ class BLTI {
       $db = $parm['db'];
       if ($db->error) {
         try {
-          throw new Exception($strings['showerror']);
+          throw new Exception($this->strings['showerror']);
         }
         catch (Exception $e) {
-          echo $strings['showerror'] . "<br />";
+          echo $this->strings['showerror'] . "<br />";
         }
       }
       $stmt = $db->prepare("INSERT INTO lti_keys (oauth_consumer_key, secret,context_id, `name`) VALUES (?, ?, ?, ?)");
@@ -68,8 +68,8 @@ class BLTI {
 
     $this->db=$db;
     $this->parm=$parm;
-    $langpack = new \langpack();
-    $this->strings = $langpack->get_all_strings($this->langcomponent);
+    $this->langpack = new \langpack();
+    $this->strings = $this->langpack->get_all_strings($this->langcomponent);
     
     if (!is_basic_lti_request()) {
       if ($usesession === false) return;
@@ -116,7 +116,7 @@ class BLTI {
         $db = $parm['db'];
         if ($db->error) {
           try {
-            throw new Exception($string['showerror']);
+            throw new Exception($this->strings['showerror']);
           } catch (Exception $e) {
             echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
             echo nl2br($e->getTraceAsString());
