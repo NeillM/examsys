@@ -27,8 +27,8 @@ class BLTI {
   public $context_id = false; // Override context_id
   private $db;
   private $parm;
-  private $langcomponent = 'lti/error';
-  private $strings;
+  protected $langcomponent = 'lti/error'; // Language component name
+  protected $strings; // Array for keeping language string
 
   function updateltikey($parm = false, $ltiid, $ltiname, $ltikey, $ltisec, $lticontext = '') {    
       $db = $parm['db'];
