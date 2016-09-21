@@ -31,7 +31,6 @@ require_once $cfg_web_root . 'lang/' . $language . '/include/common.inc';   // I
 
 $displayDebug = false; //XML call so debug info messes up the output
 error_reporting(E_ALL);
-ini_set('display_errors','On');
 
 if (!isset($_GET['url'])) {
   $action = '';

@@ -14,8 +14,6 @@ function myErrorHandler($errno, $errstr, $errfile, $errline)
     return false;
 }
 
-ini_set("display_errors", 1);
-
 if ( !isset ( $_REQUEST['b64'] ) ) {
    die("Missing b64 parameter");
 }

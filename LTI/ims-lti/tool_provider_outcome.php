@@ -18,8 +18,6 @@ if (version_compare(PHP_VERSION, '5.3.0') >= 0) {
  error_reporting(E_ALL & ~E_WARNING & ~E_NOTICE);
 }
 
-ini_set("display_errors", 1);
-
 $oauth_consumer_secret = $_REQUEST['secret'];
 if (strlen($oauth_consumer_secret) < 1 ) $oauth_consumer_secret = 'secret';
 
