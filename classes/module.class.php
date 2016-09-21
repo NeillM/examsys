@@ -28,10 +28,18 @@ require_once dirname(__DIR__) . '/include/errors.inc';
 
 Class module {
 
+  /** @var string Language component name. */
+  protected $langcomponent = 'classes/module';
+  /** @var array language strings */
+  protected $langstrings; 
+  
   /**
   * constructor
   */
-  public function __construct() {}
+  public function __construct() {
+    $langpack = new langpack();
+    $this->langstrings = $langpack->get_all_strings($this->langcomponent);
+  }
 
   /**
    * Gets a list of staff on a modules' team.
@@ -358,7 +366,6 @@ Class module {
    *                     'map_level ' => int 1
    */
   public function get_full_details_by_ID($modID, $db) {
-    global $string;
     // returns false if not self enrol else returns needed data;
     $result = $db->prepare("SELECT
                               modules.id,
@@ -391,9 +398,9 @@ Class module {
                             ");
     if ($db->error) {
       try {
-        throw new Exception($string['showerror']);
+        throw new Exception($this->langstrings['showerror']);
       } catch (Exception $e) {
-        echo $string['showerror'] . "<br >";
+        echo $$this->langstrings['showerror'] . "<br >";
       }
     }
     $result->bind_param('i', $modID);

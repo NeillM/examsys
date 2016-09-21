@@ -69,6 +69,11 @@ class UserObject extends RogoStaticSingleton {
 	private $dismiss;
 
   private $impersonateduser;
+  
+  /** @var string Language component name. */
+  protected $langcomponent = 'classes/userobject';
+  /** @var array language strings */
+  protected $langstrings; 
 
   /**
    * Called when the object is unserialised.
@@ -95,6 +100,9 @@ class UserObject extends RogoStaticSingleton {
     $this->db = & $db;
     $this->configObj = & $configObject;
     self::$inst = $this;
+        
+    $langpack = new langpack();
+    $this->langstrings = $langpack->get_all_strings($this->langcomponent);
   }
 
   public function error_handling($context = null) {
@@ -832,9 +840,9 @@ class UserObject extends RogoStaticSingleton {
       $notice->display_notice('Change DB user failed', $msg, '../artwork/exclamation_64.png', '#C00000', true, false);
       if ($this->db->error) {
         try {
-          throw new Exception($string['showerror']);
+          throw new Exception($this->langstrings['showerror']);
         } catch (Exception $e) {
-          echo $string['showerror'] . "<br >";
+          echo $this->langstrings['showerror'] . "<br >";
           echo "<body>\n</html>";
           exit();
         }

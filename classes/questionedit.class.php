@@ -123,6 +123,10 @@ Class QuestionEdit extends RogoObject {
   // A list of correction behaviours that will be called sequentially for the Correct operation
   protected $_correctors = array();
 
+  /** @var string Language component name. */
+  protected $langcomponent = 'classes/questionedit';
+  /** @var array language strings */
+  protected $langstrings; 
 
   /**
    * Create a new question object by either loading an existing question from the database or populating
@@ -147,6 +151,8 @@ Class QuestionEdit extends RogoObject {
     $this->_score_methods_db = array($this->_lang_strings['markperquestion'] => 'Mark per Question', $this->_lang_strings['markperoption'] => 'Mark per Option', $this->_lang_strings['allowpartial'] => 'Allow partial Marks', $this->_lang_strings['bonusmark'] => 'Bonus Mark');
     $this->_blooms_db = array('' => '', $this->_lang_strings['knowledge'] => 'Knowledge', $this->_lang_strings['comprehension'] => 'Comprehension', $this->_lang_strings['application'] => 'Application', $this->_lang_strings['analysis'] => 'Analysis', $this->_lang_strings['synthesis'] => 'Synthesis', $this->_lang_strings['evaluation'] => 'Evaluation');
 
+    $langpack = new langpack();
+    $this->langstrings = $langpack->get_all_strings($this->langcomponent);
     // Array of references to the fields.  Allows succinct use of call_user_func_array for saving
     foreach($this->_fields as $field) {
       $this->_data[] = &$this->$field;
@@ -297,7 +303,6 @@ Class QuestionEdit extends RogoObject {
    * @throws ValidationException
    */
   public function save($clear_checkout = true) {
-    global $string;
     $success = false;
     if ($this->_logger == null ) $this->_logger =  new Logger($this->_mysqli);
 
@@ -351,9 +356,9 @@ QUERY;
       $success = ($result->affected_rows > -1);
       if ($this->_mysqli->error) {
         try {
-          throw new Exception($string['showerror']);
+          throw new Exception($this->langstrings['showerror']);
         } catch (Exception $e) {
-          echo $string['showerror'] . "<br >";
+          echo $this->langstrings['showerror'] . "<br >";
         }
       }
       if ($success) {

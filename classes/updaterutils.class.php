@@ -31,6 +31,11 @@ Class UpdaterUtils {
   private $mysqli;
   private $db_name;
 
+  /** @var string Language component name. */
+  protected $langcomponent = 'classes/updaterutils';
+  /** @var array language strings */
+  protected $langstrings;   
+
   /**
    * Called when the object is unserialised.
    */
@@ -44,6 +49,8 @@ Class UpdaterUtils {
   public function __construct($mysqli, $db_name) {
     $this->mysqli  = $mysqli;
     $this->db_name = $db_name;
+    $langpack = new langpack();
+    $this->langstrings = $langpack->get_all_strings($this->langcomponent);
   }
   
   /**
@@ -294,10 +301,10 @@ Class UpdaterUtils {
       }
     } elseif ($this->mysqli->warning_count > 0) {
       if ($update_display) echo '</li>';
-      echo '<li class="warning">WARNING: ' . $string['showerror'];
+      echo '<li class="warning">WARNING: ' . $this->langstrings['showerror'];
       $e = $this->mysqli->get_warnings();
       do {
-        echo "<br />Warning: " . $string['showerror'] . "\n";
+        echo "<br />Warning: " . $this->langstrings['showerror'] . "\n";
       } while ($e->next());
       echo "</li>\n";
     } else {
@@ -305,9 +312,9 @@ Class UpdaterUtils {
       echo '<li class="error">ERROR: ' . $sql;
       if ($this->mysqli->error) {
         try {
-          throw new Exception($string['showerror']);
+          throw new Exception($this->langstrings['showerror']);
         } catch (Exception $e) {
-          echo $string['showerror'] . "<br >";
+          echo $this->langstrings['showerror'] . "<br >";
         }
       }
       echo "</li>\n";

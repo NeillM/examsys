@@ -110,13 +110,15 @@ Class UserUtils {
    * @throws Exception
    */
   static function insert_student_id($db, $studentid, $userid) {
-    global $string;
+    $langcomponent = 'classes/userutils';
+    $langpack = new langpack();
+    $langstrings = $langpack->get_all_strings($langcomponent);
     $result = $db->prepare("INSERT INTO sid VALUES(?, ?)");
     if ($db->error) {
       try {
-        throw new Exception($string['showerror']);
+        throw new Exception($langstrings['showerror']);
       } catch (Exception $e) {
-        echo $string['showerror'] . "<br >";
+        echo $langstrings['showerror'] . "<br >";
       }
     }
     $result->bind_param('si', $studentid, $userid);

@@ -33,9 +33,11 @@ class UoN_LTI extends BLTI {
 
   static $inst;
   static $class_name = 'UoN_LTI';
-    
-  protected $langcomponent = 'lti/error'; // Language component name
-  protected $strings; // Array for keeping language string
+  /** @var string Language component name. */  
+  protected $langcomponent = 'lti/error';
+  /** @var array language strings */
+  protected $strings;
+  
   /**
    * Create and return the Global instance of parent::$class_name for use in
    * the Local scope.
