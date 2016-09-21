@@ -900,7 +900,7 @@ function check_latex_random($q_ids, $mysqli) {
     require '../include/paper_options.inc';
   } catch (Exception $e) {
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
+    $notice->display_notice_and_exit($mysqli, $string['problemwithpaper'], $msg, $string['problemwithpaper'], '/artwork/page_not_found.png', '#C00000', true, true);
   }
   require '../include/toprightmenu.inc';
 
