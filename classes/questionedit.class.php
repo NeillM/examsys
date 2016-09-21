@@ -24,8 +24,6 @@
  * @package
  */
 
-require_once '../include/errors.inc';
-
 Class QuestionEdit extends RogoObject {
 
   public $id = -1;

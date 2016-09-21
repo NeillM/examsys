@@ -24,8 +24,6 @@
  * @package
  */
 
-require_once dirname(__DIR__) . '/include/errors.inc';
-
 Class module {
 
   /** @var string Language component name. */
@@ -400,7 +398,7 @@ Class module {
       try {
         throw new Exception($this->langstrings['showerror']);
       } catch (Exception $e) {
-        echo $$this->langstrings['showerror'] . "<br >";
+        echo $this->langstrings['showerror'] . "<br >";
       }
     }
     $result->bind_param('i', $modID);

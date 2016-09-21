@@ -23,7 +23,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-require_once '../include/errors.inc';
 
 Class UserUtils {
 
