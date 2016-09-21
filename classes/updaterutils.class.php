@@ -47,7 +47,7 @@ Class UpdaterUtils {
   public function __construct($mysqli, $db_name) {
     $this->mysqli  = $mysqli;
     $this->db_name = $db_name;
-    $langpack = new langpack();
+    $langpack = new \langpack();
     $this->langstrings = $langpack->get_all_strings($this->langcomponent);
   }
   

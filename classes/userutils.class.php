@@ -110,7 +110,7 @@ Class UserUtils {
    */
   static function insert_student_id($db, $studentid, $userid) {
     $langcomponent = 'classes/userutils';
-    $langpack = new langpack();
+    $langpack = new \langpack();
     $langstrings = $langpack->get_all_strings($langcomponent);
     $result = $db->prepare("INSERT INTO sid VALUES(?, ?)");
     if ($db->error) {

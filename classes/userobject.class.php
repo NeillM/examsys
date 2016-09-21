@@ -25,7 +25,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 class UserObject extends RogoStaticSingleton {
 
   protected static $inst = NULL;
@@ -100,7 +99,7 @@ class UserObject extends RogoStaticSingleton {
     $this->configObj = & $configObject;
     self::$inst = $this;
         
-    $langpack = new langpack();
+    $langpack = new \langpack();
     $this->langstrings = $langpack->get_all_strings($this->langcomponent);
   }
 

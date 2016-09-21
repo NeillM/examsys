@@ -23,7 +23,6 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-
 Class module {
 
   /** @var string Language component name. */
@@ -35,7 +34,7 @@ Class module {
   * constructor
   */
   public function __construct() {
-    $langpack = new langpack();
+    $langpack = new \langpack();
     $this->langstrings = $langpack->get_all_strings($this->langcomponent);
   }
 
