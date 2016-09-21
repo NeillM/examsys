@@ -24,7 +24,6 @@
 
 require $cfg_web_root . 'lang/' . $language . '/include/errors.inc';
 
-
 /**
  * Display an error to the screen.
  * @param string $error_title - brief title or summary of the error
