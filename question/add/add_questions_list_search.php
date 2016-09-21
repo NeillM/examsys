@@ -74,6 +74,12 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
         }
       }
     }
+    function checkForm() {
+      if ($('#searchtype').val() == '%' && $('#searchterm').val() == '' && $('#owner').val() == '') {
+        alert("<?php echo $string['msg1']; ?>");
+        return false;
+      }
+    }
   </script>
 </head>
 
@@ -99,9 +105,9 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <table class="header">
   <tr>
   <th colspan="6">
-  <form name="search" method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
-  &nbsp;<strong><?php echo $string['wordphrase']; ?></strong> <input type="text" size="30" name="searchterm" <?php echo 'value="' . $searchterm . '" '; ?>/> <strong><?php echo $string['in']; ?></strong>
-  <select name="searchtype">
+  <form name="search" method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off" onsubmit="return checkForm();">
+  &nbsp;<strong><?php echo $string['wordphrase']; ?></strong> <input type="text" size="30" name="searchterm" id="searchterm" <?php echo 'value="' . $searchterm . '" '; ?>/> <strong><?php echo $string['in']; ?></strong>
+  <select name="searchtype" id="searchtype">
     <option value="%"><?php echo $string['anytype']; ?></option>
     <option value="area" <?php if ($searchtype == 'area') echo 'selected '; ?>><?php echo $string['area']; ?></option>
     <option value="enhancedcalc" <?php if ($searchtype == 'enhancedcalc') echo 'selected '; ?>><?php echo $string['calculation']; ?></option>
