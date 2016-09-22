@@ -35,12 +35,7 @@ class BLTI {
   function updateltikey($parm = false, $ltiid, $ltiname, $ltikey, $ltisec, $lticontext = '') {    
       $db = $parm['db'];
       if ($db->error) {
-        try {
-          throw new Exception($this->strings['showerror']);
-        }
-        catch (Exception $e) {
-          echo $this->strings['showerror'] . "<br />";
-        }
+        echo $this->strings['showerror'] . "<br />";
       }
       $stmt = $db->prepare("UPDATE lti_keys set oauth_consumer_key=?, secret=?, context_id=? , `name`=? WHERE id=?");
       $stmt->bind_param('ssssi', $ltikey, $ltisec, $lticontext, $ltiname, $ltiid);
@@ -51,12 +46,7 @@ class BLTI {
   function addltikey($parm = false, $ltiname, $ltikey, $ltisec, $lticontext = '') {
       $db = $parm['db'];
       if ($db->error) {
-        try {
-          throw new Exception($this->strings['showerror']);
-        }
-        catch (Exception $e) {
-          echo $this->strings['showerror'] . "<br />";
-        }
+        echo $this->strings['showerror'] . "<br />";
       }
       $stmt = $db->prepare("INSERT INTO lti_keys (oauth_consumer_key, secret,context_id, `name`) VALUES (?, ?, ?, ?)");
       $stmt->bind_param('ssss', $ltikey, $ltisec, $lticontext, $ltiname);
@@ -116,12 +106,7 @@ class BLTI {
       if (isset($parm['db'])) {
         $db = $parm['db'];
         if ($db->error) {
-          try {
-            throw new Exception($this->strings['showerror']);
-          } catch (Exception $e) {
-            echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
-            echo nl2br($e->getTraceAsString());
-          }
+          echo $this->strings['showerror'];
         }
         $stmt = $db->prepare("SELECT secret,context_id,name FROM lti_keys WHERE oauth_consumer_key = ? AND `deleted` IS NULL");
         $stmt->bind_param('s', $oauth_consumer_key);

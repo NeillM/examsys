@@ -154,11 +154,7 @@ class UoN_LTI extends BLTI {
       return;
     } else {
       if ($this->db->error) {
-        try {
-          throw new Exception($this->strings['showerror']);
-        } catch (Exception $e) {
-          echo $this->strings['showerror'] . "<br />";
-        }
+        echo $this->strings['showerror'] . "<br />";
       }
 
       $stmt = $this->db->prepare("SELECT secret, context_id, name FROM " . $this->parm['table_prefix'] . "lti_keys WHERE oauth_consumer_key = ? AND `deleted` IS NULL");
@@ -360,11 +356,7 @@ class UoN_LTI extends BLTI {
     $dataret = array();
     $db = $this->db;
     if ($db->error) {
-      try {
-        throw new Exception($this->strings['showerror']);
-      } catch (Exception $e) {
-        echo $this->strings['showerror'] . "<br />";
-      }
+      echo $this->strings['showerror'] . "<br />";
     }
     $extra = '';
     if (!$deleted) {
@@ -372,11 +364,7 @@ class UoN_LTI extends BLTI {
     }
     $stmt = $this->db->prepare("SELECT id, oauth_consumer_key, secret, name, context_id, deleted, updated_on FROM " . $this->parm['table_prefix'] . "lti_keys $extra");
     if ($db->error) {
-      try {
-        throw new Exception($this->strings['showerror']);
-      } catch (Exception $e) {
-        echo $this->strings['showerror'] . "<br />";
-      }
+      echo $this->strings['showerror'] . "<br />";
     }
     $stmt->execute();
     $stmt->store_result();
@@ -417,11 +405,7 @@ class UoN_LTI extends BLTI {
   function update_lti_key($ltiid, $ltiname, $ltikey, $ltisec, $lticontext = '') {
     $db = $this->db;
     if ($db->error) {
-      try {
-        throw new Exception($this->strings['showerror']);
-      } catch (Exception $e) {
-        echo $this->strings['showerror'] . "<br />";
-      }
+      echo $this->strings['showerror'] . "<br />";
     }
     $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_keys SET oauth_consumer_key = ?, secret = ?, context_id = ?, `name` = ? WHERE id = ?");
     $stmt->bind_param('ssssi', $ltikey, $ltisec, $lticontext, $ltiname, $ltiid);
@@ -436,11 +420,7 @@ class UoN_LTI extends BLTI {
   function delete_lti_key($ltiid) {
     $db = $this->db;
     if ($db->error) {
-      try {
-        throw new Exception($this->strings['showerror']);
-      } catch (Exception $e) {
-        echo $this->strings['showerror'] . "<br />";
-      }
+      echo $this->strings['showerror'] . "<br />";
     }
     $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_keys SET deleted = NOW() WHERE id = ?");
     $stmt->bind_param('i', $ltiid);
@@ -491,11 +471,7 @@ class UoN_LTI extends BLTI {
   function add_lti_key($ltiname, $ltikey, $ltisec, $lticontext = '') {
     $db = $this->db;
     if ($db->error) {
-      try {
-        throw new Exception($this->strings['showerror']);
-      } catch (Exception $e) {
-        echo $this->strings['showerror'] . "<br />";
-      }
+      echo $this->strings['showerror'] . "<br />";
     }
     $stmt = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_keys (oauth_consumer_key, secret,context_id, `name`) VALUES (?, ?, ?, ?)");
     $stmt->bind_param('ssss', $ltikey, $ltisec, $lticontext, $ltiname);
@@ -514,11 +490,7 @@ class UoN_LTI extends BLTI {
     }
     $stmt = $this->db->prepare("SELECT lti_user_equ, updated_on FROM " . $this->parm['table_prefix'] . "lti_user WHERE lti_user_key = ?");
     if ($this->db->error) {
-      try {
-        throw new Exception($this->strings['showerror']);
-      } catch (Exception $e) {
-        echo $this->strings['showerror'] . "<br />";
-      }
+      echo $this->strings['showerror'] . "<br />";
     }
     $stmt->bind_param('s', $lti_user_key);
     $stmt->execute();
@@ -562,11 +534,7 @@ class UoN_LTI extends BLTI {
     }
     $result = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_user set updated_on = NOW() WHERE lti_user_key = ?");
     if ($this->db->error) {
-      try {
-        throw new Exception($this->strings['showerror']);
-      } catch (Exception $e) {
-        echo $this->strings['showerror'] . "<br />";
-      }
+      echo $this->strings['showerror'] . "<br />";
     }
     $result->bind_param('s', $lti_user_key);
     $result->execute();
@@ -651,11 +619,7 @@ class UoN_LTI extends BLTI {
     $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_context (lti_context_key, c_internal_id, updated_on) VALUES (?, ?, NOW()) ");
     $db = $this->db;
     if ($db->error) {
-      try {
-        throw new Exception($this->strings['showerror']);
-      } catch (Exception $e) {
-        echo $this->strings['showerror'] . "<br />";
-      }
+      echo $this->strings['showerror'] . "<br />";
     }
     $result->bind_param('ss', $lti_context_key, $c_internal_id);
     $result->execute();
@@ -679,11 +643,7 @@ class UoN_LTI extends BLTI {
     $stmt = $this->db->prepare($sql);
     $db = $this->db;
     if ($db->error) {
-      try {
-        throw new Exception($this->strings['showerror']);
-      } catch (Exception $e) {
-        echo $this->strings['showerror'] . "<br />";
-      }
+      echo $this->strings['showerror'] . "<br />";
     }
     $stmt->bind_param('s', $lti_context_key);
     $stmt->execute();
