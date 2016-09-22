@@ -176,13 +176,19 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   echo "<form name=\"theform\" method=\"post\" action=\"\" autocomplete=\"off\">\n";
   echo '<input type="hidden" name="screen" value="1" />';
 
-  if (isset($_GET['search']) or isset($_GET['sortby'])) {
+  if (isset($_GET['search'])) {
+    $search = true;
+    $qtype = check_var('searchtype', 'GET', true, false, true);
+  } else {
+    $search = false;
+  }
+
+  if ($search and ($searchterm != '' or $qtype != '%' or $owner != '')) {
+
     $old_id = 0;
     $searchterm = '%' . $searchterm . '%';
 
     if ($sortby == 'q_type') $sortby = 'CAST(q_type AS CHAR)';
-
-    $qtype = check_var('searchtype', 'GET', true, false, true);
     if ($qtype != '%') {
       $andqtype = "AND q_type = ?";
     } else {
