@@ -25,6 +25,7 @@
 
 require_once '../include/load_config.php';
 require_once '../include/auth.inc';
+require_once '../include/errors.inc';
 require_once '../include/std_set_shared_functions.inc';
 require_once dirname(__DIR__) . '/lang/' . $language . '/include/timezones.inc';
 require_once dirname(__DIR__) . '/lang/' . $language . '/install/index.php';
@@ -191,13 +192,8 @@ if (!isset($_POST['update'])) {
     $file = file_get_contents('../install/staff_help.sql');
     $mysqli->multi_query($file);
     if ($mysqli->error) {
-      try {
-        throw new Exception("MySQL error $mysqli->error <br /> Query:<br /> ", $mysqli->errno);
-      } catch (Exception $e) {
-        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-        echo nl2br($e->getTraceAsString());
-        exit();
-      }
+      echo $string['showerror'] . "<br />";
+      exit();
     }
     $ext = '';
     while ($mysqli->more_results()) {
@@ -217,13 +213,8 @@ if (!isset($_POST['update'])) {
     $file = file_get_contents('../install/student_help.sql');
     $mysqli->multi_query($file);
     if ($mysqli->error) {
-      try {
-        throw new Exception("MySQL error $mysqli->error <br /> Query:<br /> ", $mysqli->errno);
-      } catch (Exception $e) {
-        echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-        echo nl2br($e->getTraceAsString());
-        exit();
-      }
+      echo $string['showerror'] . "<br />";
+      exit();
     }
     $ext = '';
     while ($mysqli->more_results()) {

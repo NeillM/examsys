@@ -27,43 +27,30 @@ class BLTI {
   public $context_id = false; // Override context_id
   private $db;
   private $parm;
+  /** @var string Language component name. */
+  protected $langcomponent = 'lti/error';
+  /** @var array language strings */
+  protected $strings; 
 
-  function updateltikey($parm = false, $ltiid, $ltiname, $ltikey, $ltisec, $lticontext = '') {
-    if ($parm['dbtype'] == 'mysqli') {
+  function updateltikey($parm = false, $ltiid, $ltiname, $ltikey, $ltisec, $lticontext = '') {    
       $db = $parm['db'];
       if ($db->error) {
-        try {
-          throw new Exception("0MySQL error $mysqli->error <br /> Query:<br /> $query", $msqli->errno);
-        }
-        catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
-        }
+        echo $this->strings['showerror'] . "<br />";
       }
       $stmt = $db->prepare("UPDATE lti_keys set oauth_consumer_key=?, secret=?, context_id=? , `name`=? WHERE id=?");
       $stmt->bind_param('ssssi', $ltikey, $ltisec, $lticontext, $ltiname, $ltiid);
       $stmt->execute();
 
-    }
   }
 
   function addltikey($parm = false, $ltiname, $ltikey, $ltisec, $lticontext = '') {
-    if ($parm['dbtype'] == 'mysqli') {
       $db = $parm['db'];
       if ($db->error) {
-        try {
-          throw new Exception("0MySQL error $mysqli->error <br /> Query:<br /> $query", $db->errno);
-        }
-        catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
-        }
+        echo $this->strings['showerror'] . "<br />";
       }
       $stmt = $db->prepare("INSERT INTO lti_keys (oauth_consumer_key, secret,context_id, `name`) VALUES (?, ?, ?, ?)");
       $stmt->bind_param('ssss', $ltikey, $ltisec, $lticontext, $ltiname);
       $stmt->execute();
-
-    }
   }
 
   function __construct($db, $parm, $usesession = true, $doredirect = true) {
@@ -72,7 +59,9 @@ class BLTI {
 
     $this->db=$db;
     $this->parm=$parm;
-
+    $langpack = new \langpack();
+    $this->strings = $langpack->get_all_strings($this->langcomponent);
+    
     if (!is_basic_lti_request()) {
       if ($usesession === false) return;
       if (strlen(session_id()) > 0) {
@@ -115,59 +104,27 @@ class BLTI {
       return;
     } else {
       if (isset($parm['db'])) {
-        if ($parm['dbtype'] == 'mysql') {
-          $sql = 'SELECT * FROM ' . $parm['table'] . ' WHERE ' .
-            ($parm['key_column'] ? $parm['key_column'] : 'oauth_consumer_key') .
-            '=' .
-            "'" . mysql_real_escape_string($oauth_consumer_key) . "'";
-          $result = mysql_query($sql);
-          $num_rows = mysql_num_rows($result);
-          if ($num_rows != 1) {
-            $this->message = "Your consumer is not authorized oauth_consumer_key=" . $oauth_consumer_key;
-            return;
-          } else {
-            while ($row = mysql_fetch_assoc($result)) {
-              $secret = $row[$parms['secret_column'] ? $parms['secret_column'] : 'secret'];
-              $context_id = $row[$parms['context_column'] ? $parms['context_column'] : 'context_id'];
-              if ($context_id) $this->context_id = $context_id;
-              $this->row = $row;
-              break;
-            }
-            if (!is_string($secret)) {
-              $this->message = "Could not retrieve secret oauth_consumer_key=" . $oauth_consumer_key;
-              return;
-            }
+        $db = $parm['db'];
+        if ($db->error) {
+          echo $this->strings['showerror'];
+        }
+        $stmt = $db->prepare("SELECT secret,context_id,name FROM lti_keys WHERE oauth_consumer_key = ? AND `deleted` IS NULL");
+        $stmt->bind_param('s', $oauth_consumer_key);
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($rsecret, $rcontext_id, $rname);
+        while ($stmt->fetch()) {
+          $secret = $rsecret;
+          $name = $rname;
+          if (isset($rcontext_id)) {
+            $this->context_id = $rcontext_id;
+            break;
           }
         }
-        elseif ($parm['dbtype'] == 'mysqli')
-        {
-          $db = $parm['db'];
-          if ($db->error) {
-            try {
-              throw new Exception("0MySQL error $mysqli->error <br /> Query:<br /> $query", $msqli->errno);
-            } catch (Exception $e) {
-              echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br >";
-              echo nl2br($e->getTraceAsString());
-            }
-          }
-          $stmt = $db->prepare("SELECT secret,context_id,name FROM lti_keys WHERE oauth_consumer_key = ? AND `deleted` IS NULL");
-          $stmt->bind_param('s', $oauth_consumer_key);
-          $stmt->execute();
-          $stmt->store_result();
-          $stmt->bind_result($rsecret, $rcontext_id, $rname);
-          while ($stmt->fetch()) {
-            $secret = $rsecret;
-            $name = $rname;
-            if (isset($rcontext_id)) {
-              $this->context_id = $rcontext_id;
-              break;
-            }
-          }
-          $stmt->close();
-          if (!is_string($secret)) {
-            $this->message = 'Could not retrieve secret oauth_consumer_key=' . $oauth_consumer_key;
-            return;
-          }
+        $stmt->close();
+        if (!is_string($secret)) {
+          $this->message = 'Could not retrieve secret oauth_consumer_key=' . $oauth_consumer_key;
+          return;
         }
       }
     }

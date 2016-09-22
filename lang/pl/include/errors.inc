@@ -28,4 +28,5 @@ $string['fatalerrormsg0'] = 'Błąd krytyczny';
 $string['fatalerrormsg1'] = 'Brak wymaganej zmiennej GET.';
 $string['fatalerrormsg2'] = 'Brak wymaganej zmiennej POST.';
 $string['fatalerrormsg3'] = 'Brak wymaganej zmiennej REQUEST.';
-$string['fatalerrorarray'] = 'Brak wymaganej zmiennej tablicowej.'; 
+$string['fatalerrorarray'] = 'Brak wymaganej zmiennej tablicowej.';
+$string['showerror'] = 'System error';

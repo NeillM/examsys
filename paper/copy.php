@@ -300,13 +300,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
         $addQuestion = $mysqli->prepare("INSERT INTO questions (q_id, q_type, theme, scenario, leadin, correct_fback, incorrect_fback, display_method, notes, ownerID, q_media, q_media_width, q_media_height, creation_date, last_edited, bloom, scenario_plain, leadin_plain, checkout_time, checkout_authorID, deleted, locked, std, status, q_option_order, score_method, settings, guid) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?)");
 
         if ($mysqli->error) {
-          try {
-            throw new Exception("MySQL error $mysqli->error <br /> Query:<br /> ", $mysqli->errno);
-          }
-          catch (Exception $e) {
-            echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-            echo nl2br($e->getTraceAsString());
-          }
+            echo $string['showerror'] . "<br />";
         }
 
         $addQuestion->bind_param('ssssssssisssssssissss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $new_status, $q_option_order, $score_method, $settings, $guid);
@@ -460,7 +454,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
         $bw_oldoid = 0;
         $result->bind_param('iiisiii', $nw_paperid, $nw_qid, $nw_mapid, $nw_calyr, $nw_oldid, $nw_oldpapid, $nw_oldoid);
         if ($mysqli->error) {
-          $error[] = 'mysqli error ' . $mysql->error;
+          $error[] = $string['showerror'];
         }
         $i=0;
         foreach ($old_qids as $old_id) {
@@ -474,7 +468,7 @@ if ($_POST['copytype'] == 'paperonly') {        // Copy the paper only!
             $nw_oldoid		= $oldmapid;
             $result->execute();
             if ($mysqli->error) {
-              $error[] = 'mysqli error ' . $mysql->error;
+              $error[] = $string['showerror'];
             }
           }
           $i++;

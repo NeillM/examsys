@@ -2165,7 +2165,10 @@ SQL;
     // Clear previous performance stats
     $id_list = array();
     $result = $mysqli->prepare("SELECT id FROM performance_main WHERE paperID = ?");
-    echo $mysqli->error;
+    
+    if ($mysqli->error) {
+      echo $string['showerror'] . "<br >";
+    }
     $result->bind_param('i', $paperID);
     $result->execute();
     $result->bind_result($id);

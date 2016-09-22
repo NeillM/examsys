@@ -22,6 +22,7 @@
 * @package
 */
 
+
 require_once 'lti_util.php';
 /**
  * Class to support LTI extends upon base LTI from IMS sample implimentation
@@ -32,6 +33,11 @@ class UoN_LTI extends BLTI {
 
   static $inst;
   static $class_name = 'UoN_LTI';
+  /** @var string Language component name. */  
+  protected $langcomponent = 'lti/error';
+  /** @var array language strings */
+  protected $strings;
+  
   /**
    * Create and return the Global instance of parent::$class_name for use in
    * the Local scope.
@@ -59,11 +65,12 @@ class UoN_LTI extends BLTI {
 
 
   function __construct() {
+    $langpack = new \langpack();
+    $this->strings = $langpack->get_all_strings($this->langcomponent);
   }
 
-  function init_lti0($db, $parm = NULL) {
+  function init_lti0($db) {
     $this->db = $db;
-    if (is_array($parm) or is_string($parm)) $this->parm = $parm;
   }
 
   /**
@@ -82,21 +89,39 @@ class UoN_LTI extends BLTI {
    * @return
    */
   public function init_lti($usesession = true, $doredirect = false) {
-
-    if (!isset($_REQUEST["lti_message_type"])) $_REQUEST["lti_message_type"] = '';
-    if (!isset($_REQUEST["lti_version"])) $_REQUEST["lti_version"] = '';
-    if (!isset($_REQUEST["resource_link_id"])) $_REQUEST["resource_link_id"] = '';
-
+    if (!isset($_REQUEST["lti_message_type"])) {
+      $_REQUEST["lti_message_type"] = '';
+    }
+    if (!isset($_REQUEST["lti_version"])) {
+      $_REQUEST["lti_version"] = '';
+    }
+    if (!isset($_REQUEST["resource_link_id"])) {
+      $_REQUEST["resource_link_id"] = '';
+    }
+      
     // If this request is not an LTI Launch, either
     // give up or try to retrieve the context from session
     if (!is_lti_request()) {
-      if ($usesession === false) return;
+      if ($usesession === false) {
+        return;
+      }
       if (strlen(session_id()) > 0) {
-        if (isset($_SESSION['_lti_row'])) $row = $_SESSION['_lti_row'];
-        if (isset($row)) $this->row = $row;
-        if (isset($_SESSION['_lti_context_id'])) $context_id = $_SESSION['_lti_context_id'];
-        if (isset($context_id)) $this->context_id = $context_id;
-        if (isset($_SESSION['_lti_context'])) $info = $_SESSION['_lti_context'];
+        if (isset($_SESSION['_lti_row'])) {
+          $row = $_SESSION['_lti_row'];
+        }
+          
+        if (isset($row)) {
+          $this->row = $row;
+        } 
+        if (isset($_SESSION['_lti_context_id'])) {
+          $context_id = $_SESSION['_lti_context_id'];
+        } 
+        if (isset($context_id)) {
+          $this->context_id = $context_id;
+        } 
+        if (isset($_SESSION['_lti_context'])) {
+          $info = $_SESSION['_lti_context'];
+        }
         if (isset($info)) {
           $this->info = $info;
           $this->valid = true;
@@ -128,61 +153,28 @@ class UoN_LTI extends BLTI {
       unset($_SESSION['_lti_context']);
       return;
     } else {
-      if ($this->parm['dbtype'] == 'mysql') {
-        $sql = 'SELECT * FROM ' . $this->parm['table'] . ' WHERE ' .
-          ($this->parm['key_column'] ? $this->parm['key_column'] : 'oauth_consumer_key') .
-          '=' .
-          "'" . mysql_real_escape_string($oauth_consumer_key) . "'";
-        $result = mysql_query($sql);
-        $num_rows = mysql_num_rows($result);
-        if ($num_rows != 1) {
-          $this->message = "Your consumer is not authorized oauth_consumer_key = " . $oauth_consumer_key;
-          unset($_SESSION['_lti_context']);
-          return;
-        } else {
-          while ($row = mysql_fetch_assoc($result)) {
-            $secret = $row[$this->parms['secret_column'] ? $this->parms['secret_column'] : 'secret'];
-            $context_id = $row[$this->parms['context_column'] ? $this->parms['context_column'] : 'context_id'];
-            if ($context_id) $this->context_id = $context_id;
-            $this->row = $row;
-            break;
-          }
-          if (!is_string($secret)) {
-            $this->message = "Could not retrieve secret oauth_consumer_key=" . $oauth_consumer_key;
-            unset($_SESSION['_lti_context']);
-            return;
-          }
-        }
-      } elseif ($this->parm['dbtype'] == 'mysqli') {
-        if ($this->db->error) {
-          try {
-            throw new Exception("MySQL error $mysqli->error <br /> Query:<br /> $query", $msqli->errno);
-          } catch (Exception $e) {
-            echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-            echo nl2br($e->getTraceAsString());
-          }
-        }
+      if ($this->db->error) {
+        echo $this->strings['showerror'] . "<br />";
+      }
 
-        $stmt = $this->db->prepare("SELECT secret, context_id, name FROM " . $this->parm['table_prefix'] . "lti_keys WHERE oauth_consumer_key = ? AND `deleted` IS NULL");
-        $stmt->bind_param('s', $oauth_consumer_key);
-        $stmt->execute();
-        $stmt->store_result();
-        $stmt->bind_result($rsecret, $rcontext_id, $rname);
-        $stmt->fetch();
+      $stmt = $this->db->prepare("SELECT secret, context_id, name FROM " . $this->parm['table_prefix'] . "lti_keys WHERE oauth_consumer_key = ? AND `deleted` IS NULL");
+      $stmt->bind_param('s', $oauth_consumer_key);
+      $stmt->execute();
+      $stmt->store_result();
+      $stmt->bind_result($rsecret, $rcontext_id, $rname);
+      $stmt->fetch();
 
-        $secret = $rsecret;
-        $name = $rname;
-        if (isset($rcontext_id)) {
-          $this->context_id = $rcontext_id;
-        }
+      $secret = $rsecret;
+      $name = $rname;
+      if (isset($rcontext_id)) {
+        $this->context_id = $rcontext_id;
+      }
 
-        $stmt->close();
-        if (!is_string($secret)) {
-          $this->message = "Could not retrieve secret oauth_consumer_key = " . $oauth_consumer_key;
-          unset($_SESSION['_lti_context']);
-
-          return;
-        }
+      $stmt->close();
+      if (!is_string($secret)) {
+        $this->message = "Could not retrieve secret oauth_consumer_key = " . $oauth_consumer_key;
+        unset($_SESSION['_lti_context']);
+        return;
       }
     }
 
@@ -210,7 +202,9 @@ class UoN_LTI extends BLTI {
     // Store the launch information in the session for later
     $newinfo = array();
     foreach ($_POST as $key => $value) {
-      if ($key == "basiclti_submit") continue;
+      if ($key == "basiclti_submit") {
+        continue;
+      }
       if (strpos($key, "oauth_") === false) {
         $newinfo[$key] = $value;
         continue;
@@ -227,8 +221,12 @@ class UoN_LTI extends BLTI {
       $_SESSION['_lti_context'] = $this->info;
       unset($_SESSION['_lti_row']);
       unset($_SESSION['_lti_context_id']);
-      if ($this->row) $_SESSION['_lti_row'] = $this->row;
-      if ($this->context_id) $_SESSION['_lti_context_id'] = $this->context_id;
+      if ($this->row) {
+        $_SESSION['_lti_row'] = $this->row;
+      }
+      if ($this->context_id) {
+        $_SESSION['_lti_context_id'] = $this->context_id;
+      }
     }
 
     if ($this->valid && $doredirect) {
@@ -356,59 +354,43 @@ class UoN_LTI extends BLTI {
   
   function get_lti_keys($deleted = false) {
     $dataret = array();
-    if ($this->parm['dbtype'] == 'mysqli') {
-      $db = $this->db;
-      if ($db->error) {
-        try {
-          throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
-        } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
-        }
-      }
-      $extra = '';
-      if (!$deleted) {
-        $extra = ' WHERE deleted IS NULL ';
-      }
-      $stmt = $this->db->prepare("SELECT * FROM " . $this->parm['table_prefix'] . "lti_keys $extra");
-      if ($db->error) {
-        try {
-          throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
-        }
-        catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
-        }
-      }
-      $stmt->execute();
-      $stmt->store_result();
-      $stmt->bind_result($lti_keys_id, $lti_keys_key, $lti_keys_secret, $lti_keys_name, $lti_keys_context_id, $lti_keys_deleted, $lti_keys_updated_on);
-
-      $rows = $stmt->num_rows;
-      while ($stmt->fetch()) {
-        $dataret[$lti_keys_id] = array('lti_keys_id'=>$lti_keys_id, 'lti_keys_key'=>$lti_keys_key, 'lti_keys_secret'=>$lti_keys_secret, 'lti_keys_name'=>$lti_keys_name, 'lti_keys_context_id'=>$lti_keys_context_id, 'lti_keys_deleted'=>$lti_keys_deleted, 'lti_keys_updated_on'=>$lti_keys_updated_on);
-      }
-      $stmt->close();
-
-      return $dataret;
+    $db = $this->db;
+    if ($db->error) {
+      echo $this->strings['showerror'] . "<br />";
     }
+    $extra = '';
+    if (!$deleted) {
+      $extra = ' WHERE deleted IS NULL ';
+    }
+    $stmt = $this->db->prepare("SELECT id, oauth_consumer_key, secret, name, context_id, deleted, updated_on FROM " . $this->parm['table_prefix'] . "lti_keys $extra");
+    if ($db->error) {
+      echo $this->strings['showerror'] . "<br />";
+    }
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($lti_keys_id, $lti_keys_key, $lti_keys_secret, $lti_keys_name, $lti_keys_context_id, $lti_keys_deleted, $lti_keys_updated_on);
+
+    $rows = $stmt->num_rows;
+    while ($stmt->fetch()) {
+      $dataret[$lti_keys_id] = array('lti_keys_id' => $lti_keys_id, 'lti_keys_key' => $lti_keys_key, 'lti_keys_secret' => $lti_keys_secret, 'lti_keys_name' => $lti_keys_name, 'lti_keys_context_id' => $lti_keys_context_id, 'lti_keys_deleted' => $lti_keys_deleted, 'lti_keys_updated_on' => $lti_keys_updated_on);
+    }
+    $stmt->close();
+
+    return $dataret;
   }
 
   function lti_key_exists($keyID) {
     $rows = 0;
-    
-    if ($this->parm['dbtype'] == 'mysqli') {
-      $db = $this->db;
-      $stmt = $this->db->prepare("SELECT id FROM " . $this->parm['table_prefix'] . "lti_keys WHERE id = ? AND deleted IS NULL LIMIT 1");
-      $stmt->bind_param('i', $keyID);
-      $stmt->execute();
-      $stmt->store_result();
-      $stmt->bind_result($lti_keys_id);
-      $rows = $stmt->num_rows;
-      $stmt->fetch();
-      $stmt->close();
-    }
-    
+    $db = $this->db;
+    $stmt = $this->db->prepare("SELECT id FROM " . $this->parm['table_prefix'] . "lti_keys WHERE id = ? AND deleted IS NULL LIMIT 1");
+    $stmt->bind_param('i', $keyID);
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($lti_keys_id);
+    $rows = $stmt->num_rows;
+    $stmt->fetch();
+    $stmt->close();
+
     return $rows > 0;
   }
 
@@ -421,22 +403,14 @@ class UoN_LTI extends BLTI {
    * @param string optional lticontext override field of lti key
    */
   function update_lti_key($ltiid, $ltiname, $ltikey, $ltisec, $lticontext = '') {
-    if ($this->parm['dbtype'] == 'mysqli') {
-      $db = $this->db;
-      if ($db->error) {
-        try {
-          throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
-        }
-        catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
-        }
-      }
-      $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_keys SET oauth_consumer_key = ?, secret = ?, context_id = ?, `name` = ? WHERE id = ?");
-      $stmt->bind_param('ssssi', $ltikey, $ltisec, $lticontext, $ltiname, $ltiid);
-      $stmt->execute();
-      $stmt->close();
+    $db = $this->db;
+    if ($db->error) {
+      echo $this->strings['showerror'] . "<br />";
     }
+    $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_keys SET oauth_consumer_key = ?, secret = ?, context_id = ?, `name` = ? WHERE id = ?");
+    $stmt->bind_param('ssssi', $ltikey, $ltisec, $lticontext, $ltiname, $ltiid);
+    $stmt->execute();
+    $stmt->close();
   }
 
   /**
@@ -444,22 +418,14 @@ class UoN_LTI extends BLTI {
    * @param int $ltiid the unique id of lti key to delete
    */
   function delete_lti_key($ltiid) {
-    if ($this->parm['dbtype'] == 'mysqli') {
-      $db = $this->db;
-      if ($db->error) {
-        try {
-          throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
-        }
-        catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
-        }
-      }
-      $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_keys SET deleted = NOW() WHERE id = ?");
-      $stmt->bind_param('i', $ltiid);
-      $stmt->execute();
-      $stmt->close();
+    $db = $this->db;
+    if ($db->error) {
+      echo $this->strings['showerror'] . "<br />";
     }
+    $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_keys SET deleted = NOW() WHERE id = ?");
+    $stmt->bind_param('i', $ltiid);
+    $stmt->execute();
+    $stmt->close();
   }
   
   /**
@@ -503,22 +469,14 @@ class UoN_LTI extends BLTI {
    * @internal param \optional $string lticontext override field of lti key
    */
   function add_lti_key($ltiname, $ltikey, $ltisec, $lticontext = '') {
-    if ($this->parm['dbtype'] == 'mysqli') {
-      $db = $this->db;
-      if ($db->error) {
-        try {
-          throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
-        }
-        catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
-        }
-      }
-      $stmt = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_keys (oauth_consumer_key, secret,context_id, `name`) VALUES (?, ?, ?, ?)");
-      $stmt->bind_param('ssss', $ltikey, $ltisec, $lticontext, $ltiname);
-      $stmt->execute();
-      $stmt->close();
+    $db = $this->db;
+    if ($db->error) {
+      echo $this->strings['showerror'] . "<br />";
     }
+    $stmt = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_keys (oauth_consumer_key, secret,context_id, `name`) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param('ssss', $ltikey, $ltisec, $lticontext, $ltiname);
+    $stmt->execute();
+    $stmt->close();
   }
 
   /**
@@ -527,31 +485,23 @@ class UoN_LTI extends BLTI {
    * @return false if not found else array containing the associated id and last update time
    */
   function lookup_lti_user($lti_user_key = false) {
-    if ($lti_user_key === false) $lti_user_key = $this->getUserKey();
-    if ($this->parm['dbtype'] == 'mysqli') {
-      $stmt = $this->db->prepare("SELECT lti_user_equ, updated_on FROM " . $this->parm['table_prefix'] . "lti_user WHERE lti_user_key = ?");
-      if ($this->db->error) {
-        try {
-          $a = $this->db->error;
-          $b = $this->db->errno;
-          throw new Exception("MySQL error $a <br /> Query:<br /> $query", $b);
-        }
-        catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
-        }
-      }
-      $stmt->bind_param('s', $lti_user_key);
-      $stmt->execute();
-      $stmt->store_result();
-      $rows = $stmt->num_rows;
-      if ($rows < 1) {
-        return false;
-      }
-      $stmt->bind_result($rogo_id, $updated);
-      $stmt->fetch();
-      $stmt->close();
+    if ($lti_user_key === false) {
+      $lti_user_key = $this->getUserKey();
     }
+    $stmt = $this->db->prepare("SELECT lti_user_equ, updated_on FROM " . $this->parm['table_prefix'] . "lti_user WHERE lti_user_key = ?");
+    if ($this->db->error) {
+      echo $this->strings['showerror'] . "<br />";
+    }
+    $stmt->bind_param('s', $lti_user_key);
+    $stmt->execute();
+    $stmt->store_result();
+    $rows = $stmt->num_rows;
+    if ($rows < 1) {
+      return false;
+    }
+    $stmt->bind_result($rogo_id, $updated);
+    $stmt->fetch();
+    $stmt->close();
     return (array($rogo_id, $updated));
   }
 
@@ -562,14 +512,14 @@ class UoN_LTI extends BLTI {
    * @return int of insert id
    */
   function add_lti_user($lti_user_equ, $lti_user_key = false) {
-    if ($lti_user_key === false) $lti_user_key = $this->getUserKey();
-    if ($this->parm['dbtype'] == 'mysqli') {
-      $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_user (lti_user_key, lti_user_equ,updated_on) VALUES (?, ?, NOW()) ON DUPLICATE KEY UPDATE updated_on = NOW()");
-      $result->bind_param('ss', $lti_user_key, $lti_user_equ);
-      $result->execute();
-      $ret = $this->db->insert_id;
-      $result->close();
+    if ($lti_user_key === false) {
+      $lti_user_key = $this->getUserKey();
     }
+    $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_user (lti_user_key, lti_user_equ,updated_on) VALUES (?, ?, NOW()) ON DUPLICATE KEY UPDATE updated_on = NOW()");
+    $result->bind_param('ss', $lti_user_key, $lti_user_equ);
+    $result->execute();
+    $ret = $this->db->insert_id;
+    $result->close();
     return $ret;
   }
 
@@ -579,24 +529,16 @@ class UoN_LTI extends BLTI {
    * @return
    */
   function update_lti_user($lti_user_key = false) {
-    if ($lti_user_key === false) $lti_user_key = $this->getUserKey();
-    if ($this->parm['dbtype'] == 'mysqli') {
-      $result = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_user set updated_on = NOW() WHERE lti_user_key = ?");
-      if ($this->db->error) {
-        try {
-          $a = $this->db->error;
-          $b = $this->db->errno;
-          throw new Exception("MySQL error $a <br /> Query:<br /> $query", $b);
-        }
-        catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
-        }
-      }
-      $result->bind_param('s', $lti_user_key);
-      $result->execute();
-      $result->close();
+    if ($lti_user_key === false) {
+      $lti_user_key = $this->getUserKey();
     }
+    $result = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_user set updated_on = NOW() WHERE lti_user_key = ?");
+    if ($this->db->error) {
+      echo $this->strings['showerror'] . "<br />";
+    }
+    $result->bind_param('s', $lti_user_key);
+    $result->execute();
+    $result->close();
     return;
   }
 
@@ -606,21 +548,20 @@ class UoN_LTI extends BLTI {
    * @return false if missing else array of the internal_id, and the internal type plus when it was updated.
    */
   function lookup_lti_resource($lti_resource_key = false) {
-    if ($lti_resource_key === false) $lti_resource_key = $this->getResourceKey();
-    if ($this->parm['dbtype'] == 'mysqli') {
-      $stmt = $this->db->prepare("SELECT internal_id, internal_type, updated_on FROM " . $this->parm['table_prefix'] . "lti_resource WHERE lti_resource_key = ?");
-      $stmt->bind_param('s', $lti_resource_key);
-      $stmt->execute();
-      $stmt->store_result();
-      $rows = $stmt->num_rows;
-      if ($rows < 1) {
-        return false;
-      }
-      $stmt->bind_result($paperret, $otherret, $updated_on);
-      $stmt->fetch();
-      $stmt->close();
+    if ($lti_resource_key === false) {
+      $lti_resource_key = $this->getResourceKey();
     }
-    
+    $stmt = $this->db->prepare("SELECT internal_id, internal_type, updated_on FROM " . $this->parm['table_prefix'] . "lti_resource WHERE lti_resource_key = ?");
+    $stmt->bind_param('s', $lti_resource_key);
+    $stmt->execute();
+    $stmt->store_result();
+    $rows = $stmt->num_rows;
+    if ($rows < 1) {
+      return false;
+    }
+    $stmt->bind_result($paperret, $otherret, $updated_on);
+    $stmt->fetch();
+    $stmt->close();
     return (array($paperret, $otherret, $updated_on));
   }
 
@@ -632,14 +573,14 @@ class UoN_LTI extends BLTI {
    * @return record id
    */
   function add_lti_resource($internal_id, $internal_type, $lti_resource_key = false) {
-    if ($lti_resource_key === false) $lti_resource_key = $this->getResourceKey();
-    if ($this->parm['dbtype'] == 'mysqli') {
-      $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_resource (lti_resource_key, internal_id, internal_type, updated_on) VALUES (?, ?, ?, NOW()) ");
-      $result->bind_param('sss', $lti_resource_key, $internal_id, $internal_type);
-      $result->execute();
-      $ret = $this->db->insert_id;
-      $result->close();
+    if ($lti_resource_key === false) {
+      $lti_resource_key = $this->getResourceKey();
     }
+    $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_resource (lti_resource_key, internal_id, internal_type, updated_on) VALUES (?, ?, ?, NOW()) ");
+    $result->bind_param('sss', $lti_resource_key, $internal_id, $internal_type);
+    $result->execute();
+    $ret = $this->db->insert_id;
+    $result->close();
     return $ret;
   }
 
@@ -651,16 +592,16 @@ class UoN_LTI extends BLTI {
    * @return false if not found else number of rows
    */
   function update_lti_resource($internal_id, $internal_type, $lti_resource_key = false) {
-    if ($lti_resource_key === false) $lti_resource_key = $this->getResourceKey();
-    if ($this->parm['dbtype'] == 'mysqli') {
-      $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_resource SET internal_id = ?, internal_type = ? WHERE lti_resource_key = ?");
-      $stmt->bind_param('sss', $internal_id, $internal_type, $lti_resource_key);
-      $stmt->execute();
-      $rows = $stmt->affected_rows;
-      $stmt->close();
-      if ($rows > 0) {
-        return $rows;
-      }
+    if ($lti_resource_key === false) {
+      $lti_resource_key = $this->getResourceKey();
+    }
+    $stmt = $this->db->prepare("UPDATE " . $this->parm['table_prefix'] . "lti_resource SET internal_id = ?, internal_type = ? WHERE lti_resource_key = ?");
+    $stmt->bind_param('sss', $internal_id, $internal_type, $lti_resource_key);
+    $stmt->execute();
+    $rows = $stmt->affected_rows;
+    $stmt->close();
+    if ($rows > 0) {
+      return $rows;
     }
     return false;
   }
@@ -672,28 +613,21 @@ class UoN_LTI extends BLTI {
    * @return new row id
    */
   function add_lti_context($c_internal_id, $lti_context_key = false) {
-    if ($lti_context_key === false) $lti_context_key = $this->getCourseKey();
-    if ($this->parm['dbtype'] == 'mysqli') {
-      $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_context (lti_context_key, c_internal_id, updated_on) VALUES (?, ?, NOW()) ");
-      $db=$this->db;
-      if ($db->error) {
-        try {
-          throw new Exception("MySQL error $db->error <br /> Query:<br /> ", $db->errno);
-        } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
-          exit();
-        }
-      }
-      $result->bind_param('ss', $lti_context_key, $c_internal_id);
-      $result->execute();
-      $ret = $this->db->insert_id;
-      $result->close();
-      //   }
+    if ($lti_context_key === false) {
+      $lti_context_key = $this->getCourseKey();
     }
+    $result = $this->db->prepare("INSERT INTO " . $this->parm['table_prefix'] . "lti_context (lti_context_key, c_internal_id, updated_on) VALUES (?, ?, NOW()) ");
+    $db = $this->db;
+    if ($db->error) {
+      echo $this->strings['showerror'] . "<br />";
+      exit();
+    }
+    $result->bind_param('ss', $lti_context_key, $c_internal_id);
+    $result->execute();
+    $ret = $this->db->insert_id;
+    $result->close();
     return $ret;
   }
-
 
   /**
    * Function to lookup lti context
@@ -701,35 +635,30 @@ class UoN_LTI extends BLTI {
    * @return array|bool if false else array with module shortcode and last lti context updated time
    */
   function lookup_lti_context($lti_context_key = false) {
-    if ($lti_context_key === false) $lti_context_key = $this->getCourseKey();
-    if ($this->parm['dbtype'] == 'mysqli') {
-      $sql = "SELECT m.moduleid, c.updated_on FROM " . $this->parm['table_prefix'] . "lti_context c, " . $this->parm['table_prefix'] . "modules m
-            WHERE c.c_internal_id = m.id AND lti_context_key = ?";
-      $stmt = $this->db->prepare($sql);
-      $db=$this->db;
-      if ($db->error) {
-        try {
-          throw new Exception("MySQL error $db->error <br /> Query:<br /> ", $db->errno);
-        } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
-          exit();
-        }
-      }
-      $stmt->bind_param('s', $lti_context_key);
-      $stmt->execute();
-      $stmt->store_result();
-      $rows = $stmt->num_rows;
-      if ($rows < 1) {
-        return false;
-      }
-      $stmt->bind_result($moduleid, $updated_on);
-      $stmt->fetch();
-      $stmt->close();
+    if ($lti_context_key === false) {
+      $lti_context_key = $this->getCourseKey();
     }
+
+    $sql = "SELECT m.moduleid, c.updated_on FROM " . $this->parm['table_prefix'] . "lti_context c, " . $this->parm['table_prefix'] . "modules m
+            WHERE c.c_internal_id = m.id AND lti_context_key = ?";
+    $stmt = $this->db->prepare($sql);
+    $db = $this->db;
+    if ($db->error) {
+      echo $this->strings['showerror'] . "<br />";
+      exit();
+    }
+    $stmt->bind_param('s', $lti_context_key);
+    $stmt->execute();
+    $stmt->store_result();
+    $rows = $stmt->num_rows;
+    if ($rows < 1) {
+      return false;
+    }
+    $stmt->bind_result($moduleid, $updated_on);
+    $stmt->fetch();
+    $stmt->close();
     return (array($moduleid, $updated_on));
   }
-
 
   function get_consumer_secret() {
     if (isset($this->info['oauth_consumer_secret'])) {
