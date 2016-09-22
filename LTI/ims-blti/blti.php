@@ -1,5 +1,9 @@
 <?php
 
+use LTI\OAuthRequest,
+    LTI\OAuthServer,
+    LTI\OAuthSignatureMethod_HMAC_SHA1;
+
 require_once 'OAuth.php';
 require_once 'TrivialOAuthDataStore.php';
 

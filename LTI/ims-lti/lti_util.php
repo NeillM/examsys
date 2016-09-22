@@ -1,5 +1,13 @@
 <?php
 
+use LTI\OAuthConsumer,
+    LTI\OAuthDataStore,
+    LTI\OAuthRequest,
+    LTI\OAuthServer,
+    LTI\OAuthSignatureMethod_HMAC_SHA1,
+    LTI\OAuthToken,
+    LTI\OAuthUtil;
+
 require_once 'OAuth.php';
 
 // Returns true if this is a Basic LTI message

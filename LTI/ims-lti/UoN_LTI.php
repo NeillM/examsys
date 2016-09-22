@@ -23,6 +23,10 @@
 */
 
 
+use LTI\OAuthRequest,
+    LTI\OAuthServer,
+    LTI\OAuthSignatureMethod_HMAC_SHA1;
+
 require_once 'lti_util.php';
 /**
  * Class to support LTI extends upon base LTI from IMS sample implimentation

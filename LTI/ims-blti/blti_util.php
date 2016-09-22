@@ -1,5 +1,8 @@
 <?php
 
+use LTI\OAuthRequest,
+    LTI\OAuthServer,
+    LTI\OAuthSignatureMethod_HMAC_SHA1;
 
 // NOT USED as far as I can tell.
 
