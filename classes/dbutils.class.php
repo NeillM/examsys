@@ -180,22 +180,15 @@ Class DBUtils {
     foreach ($bind_values as $key => $value) {
       $bind_values_ref[$key] = &$bind_values[$key];
     }
-
-    $sql_str = $command . $selection . $filter;
-    if (DBUtils::check_sqlparams($bind_types_ar, $bind_values, $sql_str)) {
-      // Run generated query.
-      $result = $db->prepare($sql_str);
-      call_user_func_array(array($result, "bind_param"), array_merge(array($bind_types), $bind_values_ref));
-      $result->execute();
-      $result->close();
-    } else {
-      return false;
-    }
-
+    // Run generated query.
+    $result = $db->prepare($command . $selection);
+    call_user_func_array(array($result, "bind_param"), array_merge(array($bind_types), $bind_values_ref));
+    $result->execute();
+    $result->close();
     if ($db->errno != 0) {
-      return false;
+        return false;
     }
-    return true;
+    return $db->insert_id;
   }
 
   /**
