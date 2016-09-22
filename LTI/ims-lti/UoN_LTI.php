@@ -25,7 +25,8 @@
 
 use LTI\OAuthRequest,
     LTI\OAuthServer,
-    LTI\OAuthSignatureMethod_HMAC_SHA1;
+    LTI\OAuthSignatureMethod_HMAC_SHA1,
+    LTI\TrivialOAuthDataStore;
 
 require_once 'lti_util.php';
 /**

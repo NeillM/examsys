@@ -2,10 +2,10 @@
 
 use LTI\OAuthRequest,
     LTI\OAuthServer,
-    LTI\OAuthSignatureMethod_HMAC_SHA1;
+    LTI\OAuthSignatureMethod_HMAC_SHA1,
+    LTI\TrivialOAuthDataStore;
 
 require_once 'OAuth.php';
-require_once 'TrivialOAuthDataStore.php';
 
 // Returns true if this is a Basic LTI message
 // with minimum values to meet the protocol

@@ -4,10 +4,10 @@ use LTI\OAuthConsumer,
     LTI\OAuthRequest,
     LTI\OAuthServer,
     LTI\OAuthSignatureMethod_HMAC_SHA1,
-    LTI\OAuthUtil;
+    LTI\OAuthUtil,
+    LTI\TrivialOAuthDataStore;
 
 require_once("ims-blti/OAuth.php");
-require_once("ims-blti/TrivialOAuthDataStore.php");
 
 function getLastOAuthBodyBaseString() {
     global $LastOAuthBodyBaseString;
