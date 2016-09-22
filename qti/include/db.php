@@ -429,12 +429,8 @@ class Database {
     $query .= ")";
     $stmt = $mysqli->prepare($query);
     if ($mysqli->error) {
-      try {
-        throw new Exception($string['showerror']);
-      } catch (Exception $e) {
-        echo $string['showerror'] . "<br >";
-        exit();
-      }
+      echo $string['showerror'] . "<br >";
+      exit();
     }
     $params[0] = $stmt;
     call_user_func_array('mysqli_stmt_bind_param', $params);

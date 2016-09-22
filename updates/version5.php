@@ -193,12 +193,8 @@ if (!isset($_POST['update'])) {
     $file = file_get_contents('../install/staff_help.sql');
     $mysqli->multi_query($file);
     if ($mysqli->error) {
-      try {
-        throw new Exception($string['showerror']);
-      } catch (Exception $e) {
-        echo $string['showerror'] . "<br />";
-        exit();
-      }
+      echo $string['showerror'] . "<br />";
+      exit();
     }
     $ext = '';
     while ($mysqli->more_results()) {
@@ -218,12 +214,8 @@ if (!isset($_POST['update'])) {
     $file = file_get_contents('../install/student_help.sql');
     $mysqli->multi_query($file);
     if ($mysqli->error) {
-      try {
-        throw new Exception($string['showerror']);
-      } catch (Exception $e) {
-        echo $string['showerror'] . "<br />";
-        exit();
-      }
+      echo $string['showerror'] . "<br />";
+      exit();
     }
     $ext = '';
     while ($mysqli->more_results()) {

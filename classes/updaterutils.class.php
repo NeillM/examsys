@@ -308,11 +308,7 @@ Class UpdaterUtils {
       if ($update_display) echo '</li>';
       echo '<li class="error">ERROR: ' . $sql;
       if ($this->mysqli->error) {
-        try {
-          throw new Exception($this->langstrings['showerror']);
-        } catch (Exception $e) {
-          echo $this->langstrings['showerror'] . "<br >";
-        }
+        echo $this->langstrings['showerror'] . "<br >";
       }
       echo "</li>\n";
     }

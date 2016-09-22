@@ -352,11 +352,7 @@ QUERY;
       $result->execute();
       $success = ($result->affected_rows > -1);
       if ($this->_mysqli->error) {
-        try {
-          throw new Exception($this->langstrings['showerror']);
-        } catch (Exception $e) {
-          echo $this->langstrings['showerror'] . "<br >";
-        }
+        echo $this->langstrings['showerror'] . "<br >";
       }
       if ($success) {
         if ($this->id == -1) {

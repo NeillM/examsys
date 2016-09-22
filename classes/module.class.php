@@ -394,11 +394,7 @@ Class module {
                                mod_deleted IS NULL
                             ");
     if ($db->error) {
-      try {
-        throw new Exception($this->langstrings['showerror']);
-      } catch (Exception $e) {
-        echo $this->langstrings['showerror'] . "<br >";
-      }
+      echo $this->langstrings['showerror'] . "<br >";
     }
     $result->bind_param('i', $modID);
     $result->execute();

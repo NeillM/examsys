@@ -620,6 +620,7 @@ class UoN_LTI extends BLTI {
     $db = $this->db;
     if ($db->error) {
       echo $this->strings['showerror'] . "<br />";
+      exit();
     }
     $result->bind_param('ss', $lti_context_key, $c_internal_id);
     $result->execute();
@@ -644,6 +645,7 @@ class UoN_LTI extends BLTI {
     $db = $this->db;
     if ($db->error) {
       echo $this->strings['showerror'] . "<br />";
+      exit();
     }
     $stmt->bind_param('s', $lti_context_key);
     $stmt->execute();
