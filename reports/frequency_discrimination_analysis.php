@@ -2167,7 +2167,7 @@ SQL;
     $result = $mysqli->prepare("SELECT id FROM performance_main WHERE paperID = ?");
     
     if ($mysqli->error) {
-        echo $string['showerror'] . "<br >";
+      echo $string['showerror'] . "<br >";
     }
     $result->bind_param('i', $paperID);
     $result->execute();
