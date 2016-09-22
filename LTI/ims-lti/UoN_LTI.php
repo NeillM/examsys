@@ -34,7 +34,7 @@ class UoN_LTI extends BLTI {
   static $inst;
   static $class_name = 'UoN_LTI';
   /** @var string Language component name. */  
-  protected $langcomponent = 'lti/error';
+  protected $langcomponent = 'LTI/error';
   /** @var array language strings */
   protected $strings;
   
