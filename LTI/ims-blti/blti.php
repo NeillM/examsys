@@ -28,7 +28,7 @@ class BLTI {
   private $db;
   private $parm;
   /** @var string Language component name. */
-  protected $langcomponent = 'lti/error';
+  protected $langcomponent = 'LTI/error';
   /** @var array language strings */
   protected $strings; 
 
