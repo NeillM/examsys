@@ -157,7 +157,7 @@ Class DBUtils {
     $selection = '';
     $properties = array_keys($params);
     foreach ($properties as $prop) {
-        $selection .= $prop . ' = ?, ';
+      $selection .= $prop . ' = ?, ';
     }
     $selection = rtrim($selection, ', ');
     $values = array_values($params);
@@ -178,7 +178,7 @@ Class DBUtils {
     $bind_values[] = $id;
     $bind_values_ref = array();
     foreach ($bind_values as $key => $value)  {
-        $bind_values_ref[$key] = &$bind_values[$key]; 
+      $bind_values_ref[$key] = &$bind_values[$key]; 
     }
     // Run generated query.
     $result = $db->prepare($command . $selection . $filter);
@@ -186,7 +186,7 @@ Class DBUtils {
     $result->execute();
     $result->close();
     if ($db->errno != 0) {
-        return false;
+      return false;
     }
     return true;
   }
