@@ -205,7 +205,7 @@ Class DBUtils {
     $selection = '';
     $properties = array_keys($params);
     foreach ($properties as $prop) {
-        $selection .= $prop . ', ';
+      $selection .= $prop . ', ';
     }
     $selection = rtrim($selection, ', ');
     $selection .= ') VALUES (';
@@ -217,10 +217,10 @@ Class DBUtils {
       // Check valid bind_param type.
       if (preg_match('/^(i|d|s|b)$/', $val[0])) {
         $bind_types[] = $val[0];
-      } else {            
+      } else {
         return false;
       }
-      $bind_values[] = $val[1];        
+      $bind_values[] = $val[1];
       $selection .= '?, ';
     }
     $selection = rtrim($selection, ', ');
@@ -228,7 +228,7 @@ Class DBUtils {
     $bind_types = implode('', $bind_types);
     $bind_values_ref = array();
     foreach ($bind_values as $key => $value)  {
-        $bind_values_ref[$key] = &$bind_values[$key]; 
+      $bind_values_ref[$key] = &$bind_values[$key]; 
     }
     // Run generated query.
     $result = $db->prepare($command . $selection);
@@ -236,7 +236,7 @@ Class DBUtils {
     $result->execute();
     $result->close();
     if ($db->errno != 0) {
-        return false;
+      return false;
     }
     return $db->insert_id;
   }
