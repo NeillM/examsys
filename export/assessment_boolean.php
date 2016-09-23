@@ -163,7 +163,7 @@ if ($student_no > 0) {
     }
     $log_array[$rowID][$screen][$question_ID] = $user_answer;
     $log_array[$rowID]['userID'] = $uID;
-    $users[$uID] = $rowID;
+    $users[$uID][] = $rowID;
     $log_array[$rowID]['username'] = $username;
     $log_array[$rowID]['course'] = $grade;
     $log_array[$rowID]['year'] = $year;
@@ -188,7 +188,9 @@ if ($student_no > 0) {
     $result->execute();
     $result->bind_result($sid, $userid);
     while ($result->fetch()) {
-      $log_array[$users[$userid]]['student_id'] = demo_replace_number($sid, $demo);
+      foreach ($users[$userid] as $row) {
+        $log_array[$row]['student_id'] = demo_replace_number($sid, $demo);
+      }
     }
     for ($rowID = 1; $rowID < count($log_array); $rowID++) {
       if (!isset($log_array[$rowID]['student_id'])) {
