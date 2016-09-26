@@ -9,7 +9,7 @@ use LTI\OAuthConsumer,
     LTI\OAuthUtil,
     LTI\TrivialOAuthDataStore;
 
-require_once 'OAuth.php';
+$OAuth_last_computed_siguature = false;
 
 // Returns true if this is a Basic LTI message
 // with minimum values to meet the protocol
