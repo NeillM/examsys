@@ -165,39 +165,32 @@ Class DBUtils {
     $bind_types = array();
     $bind_values = array();
     foreach ($values as $idx => $val) {
-      $bind_types[] = $val[0];
+      // Check valid bind_param type.
+      if (preg_match('/^(i|d|s|b)$/', $val[0])) {
+        $bind_types[] = $val[0];
+      } else {
+        return false;
+      }
       $bind_values[] = $val[1];
     }
-
-    $bind_types_ar = $bind_types;
-    array_push($bind_types_ar, "i");
-    array_push($bind_values, $id);
-
     $bind_types = implode('', $bind_types);
     $bind_types .= 'i';
     $bind_values[] = $id;
     $bind_values_ref = array();
-    foreach ($bind_values as $key => $value) {
-      $bind_values_ref[$key] = &$bind_values[$key];
+    foreach ($bind_values as $key => $value)  {
+      $bind_values_ref[$key] = &$bind_values[$key]; 
     }
-
-    $sql_str = $command . $selection . $filter;
-    if (DBUtils::check_sqlparams($bind_types_ar, $bind_values, $sql_str)) {
-      // Run generated query.
-      $result = $db->prepare($sql_str);
-      call_user_func_array(array($result, "bind_param"), array_merge(array($bind_types), $bind_values_ref));
-      $result->execute();
-      $result->close();
-    } else {
-      return false;
-    }
-
+    // Run generated query.
+    $result = $db->prepare($command . $selection . $filter);
+    call_user_func_array(array($result, "bind_param"), array_merge(array($bind_types), $bind_values_ref));
+    $result->execute();
+    $result->close();
     if ($db->errno != 0) {
       return false;
     }
     return true;
   }
-
+  
   /**
    * Execute database insert command 
    * @param string $table The table being updated
@@ -221,35 +214,33 @@ Class DBUtils {
     $bind_types = array();
     $bind_values = array();
     foreach ($values as $idx => $val) {
-      $bind_types[] = $val[0];
+      // Check valid bind_param type.
+      if (preg_match('/^(i|d|s|b)$/', $val[0])) {
+        $bind_types[] = $val[0];
+      } else {
+        return false;
+      }
       $bind_values[] = $val[1];
       $selection .= '?, ';
     }
     $selection = rtrim($selection, ', ');
     $selection .= ')';
-    $bind_types_ar = $bind_types;
     $bind_types = implode('', $bind_types);
     $bind_values_ref = array();
-    foreach ($bind_values as $key => $value) {
-      $bind_values_ref[$key] = &$bind_values[$key];
+    foreach ($bind_values as $key => $value)  {
+      $bind_values_ref[$key] = &$bind_values[$key]; 
     }
-    $sql_str = $command . $selection;
-    if (DBUtils::check_sqlparams($bind_types_ar, $bind_values, $sql_str)) {
-      // Run generated query.
-      $result = $db->prepare($sql_str);
-      call_user_func_array(array($result, "bind_param"), array_merge(array($bind_types), $bind_values_ref));
-      $result->execute();
-      $result->close();
-    } else {
-      return false;
-    }
-
+    // Run generated query.
+    $result = $db->prepare($command . $selection);
+    call_user_func_array(array($result, "bind_param"), array_merge(array($bind_types), $bind_values_ref));
+    $result->execute();
+    $result->close();
     if ($db->errno != 0) {
       return false;
     }
     return $db->insert_id;
   }
-
+  
   /**
    * Run sql file
    * @param string $file file location
