@@ -2243,7 +2243,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
   if (count($schools) > 0) {
     $schools_list = implode(',', $schools);
     if ($userObject->has_role('SysAdmin')) {
-      $school_sql = '';
+      $school_sql = 'AND user_deleted IS NULL';
     } else {
       $school_sql = "AND schoolid IN ($schools_list) AND user_deleted IS NULL";
     }
