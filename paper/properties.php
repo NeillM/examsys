@@ -2263,8 +2263,17 @@ SQL;
   }
   // Add internal reviwers to list.
   $internal_reviwers = 'UNION SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE roles = "Internal Reviewer" AND user_deleted IS NULL';
-  
-  $query = "SELECT DISTINCT users.id, title, initials, surname, first_names FROM users, modules_staff, modules WHERE roles != 'Left' AND users.id = modules_staff.memberID AND modules.id = modules_staff.idMod $school_sql $admin_school_sql $current_internals_sql $internal_reviwers ORDER BY surname, initials";
+
+  // Dynamicaly choose tables and join based on role.
+  if ($userObject->has_role('SysAdmin')) {
+    $tables = "users, modules_staff";
+    $join = "users.id = modules_staff.memberID";
+  } else {
+    $tables = "users, modules_staff, modules";
+    $join = "users.id = modules_staff.memberID AND modules.id = modules_staff.idMod";
+  }
+
+  $query = "SELECT DISTINCT users.id, title, initials, surname, first_names FROM $tables WHERE roles != 'Left' AND $join $school_sql $admin_school_sql $current_internals_sql $internal_reviwers ORDER BY surname, initials";
   $internal_details = $mysqli->prepare($query);
   $internal_details->execute();
   $internal_details->bind_result($internal_id, $internal_title, $internal_initials, $internal_surname, $internal_first_names);
