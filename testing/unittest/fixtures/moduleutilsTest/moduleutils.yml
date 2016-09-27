@@ -18,3 +18,17 @@ modules_student:
   -
     userID: 2
     idMod: 2
+modules:
+  -
+    id: 1
+    moduleid: "ABC100"
+    fullname: "Test Module"
+    externalid: "123456789"
+    academic_year_start: "01/07"
+  -
+    id: 2
+    moduleid: "ABC200"
+    fullname: "Test Module 2"
+    externalid: "987654321"
+    academic_year_start: "01/07"
+

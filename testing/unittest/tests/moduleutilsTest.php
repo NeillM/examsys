@@ -39,9 +39,9 @@ class moduleutilstest extends unittestdatabase {
      * @group gradebook
      */
     public function test_get_modules_for_paper() {
-        $modules = array(1, 2);
+        $modules = array(array("moduleid" => "ABC100", "fullname" => "Test Module", "externalid" => "123456789"), array("moduleid" => "ABC200", "fullname" => "Test Module 2", "externalid" => "987654321"));
         $this->assertEquals($modules, module_utils::get_modules_for_paper(2, 1, $this->db));
-        $modules = array(1);
+        $modules = array(array("moduleid" => "ABC100", "fullname" => "Test Module", "externalid" => "123456789"));
         $this->assertEquals($modules, module_utils::get_modules_for_paper(1, 1, $this->db));
         $modules = array();
         $this->assertEquals($modules, module_utils::get_modules_for_paper(1, 2, $this->db));
