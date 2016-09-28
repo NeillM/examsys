@@ -2264,7 +2264,7 @@ SQL;
   // Add internal reviwers to list.
   $internal_reviwers = 'UNION SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE roles = "Internal Reviewer" AND user_deleted IS NULL';
 
-  // Dynamicaly choose tables and join based on role.
+  // Dynamically choose tables and join based on role.
   if ($userObject->has_role('SysAdmin')) {
     $tables = "users, modules_staff";
     $join = "users.id = modules_staff.memberID";
