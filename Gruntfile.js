@@ -56,14 +56,30 @@ module.exports = function(grunt) {
           rename: buildName
         }]
       }
+    },
+    cssmin: {
+      options: {
+        report: true
+      },
+      standard: {
+        files: [{
+          expand: true,
+          cwd: 'css/source',
+          src: '*.css',
+          dest: 'css',
+          ext: '.css',
+        }]
+      }
     }
   });
 
   // Load plugins.
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-eslint');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
 
   // Register tasks.
+  grunt.registerTask('css', ['cssmin:standard']);
   grunt.registerTask('admin', ['eslint:admin', 'uglify:admin']);
-  grunt.registerTask('default', ['admin']);
+  grunt.registerTask('default', ['admin', 'css']);
 }
