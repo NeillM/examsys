@@ -854,7 +854,7 @@ Class PaperUtils {
    * @param mysqli $db db connection
    * @return array list of ids of papers finialised in supplied year
    */
-  public function get_finalised_papers($year, $papertype, $db) {
+  static public function get_finalised_papers($year, $papertype, $db) {
     $papers = array();
     $result = $db->prepare("SELECT paperid
       FROM gradebook_paper, properties
