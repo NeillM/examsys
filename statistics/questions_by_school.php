@@ -140,6 +140,7 @@ foreach ($master_array as $school => $data) {
 
 	$old_faculty = $data['faculty'];
 }
+echo output_faculty_stats($faculty_stats, $types);
 ?>
 </table>
 
