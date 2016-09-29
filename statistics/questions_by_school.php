@@ -100,8 +100,8 @@ foreach ($master_array as $school => $data) {
 	if (count($moduleIDs) > 0) {
 		// Get the papers.
 		$date_range = '';
-				
-		$result = $mysqli->prepare("SELECT DISTINCT questions.q_id, q_type FROM questions, questions_modules WHERE questions.q_id = questions_modules.q_id AND idMod IN (" . implode(',', $moduleIDs) . ") AND deleted IS NULL GROUP BY questions.q_id");
+
+		$result = $mysqli->prepare("SELECT DISTINCT questions_modules.q_id, q_type FROM questions, questions_modules WHERE questions.q_id = questions_modules.q_id AND idMod IN (" . implode(',', $moduleIDs) . ") AND deleted IS NULL GROUP BY questions_modules.q_id");
 		$result->execute();
 		$result->bind_result($q_id, $q_type);
 		while ($result->fetch()) {
