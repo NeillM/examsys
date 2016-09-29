@@ -13,6 +13,9 @@ if ($updater_utils->check_version("6.2.0") and !$updater_utils->has_updated('rog
         ALTER `idMod` DROP DEFAULT";
     $updater_utils->execute_query($altersql, true);
 
+    $altersql = "ALTER TABLE `questions_modules` ADD INDEX `idx_q_id` (`q_id`)";
+    $updater_utils->execute_query($altersql, true);
+
     $altersql = "ALTER TABLE `questions_modules`
         CHANGE COLUMN `q_id` `q_id` INT(4) NOT NULL FIRST,
         CHANGE COLUMN `idMod` `idMod` INT(11) NOT NULL AFTER `q_id`";
