@@ -100,7 +100,7 @@ function format_space($space) {
   if ($Rows > 0) {
     echo "<tr><td style=\"color:#C00000\">log_late&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" />&nbsp;<a href=\"log_late_details.php\">" . $string['More details'] . "</a></td>";
     echo "<td style=\"text-align:right; color:#C00000\">" . number_format($Rows) . "</td>";
- } else {
+  } else {
     echo "<tr><td>log_late</td><td style=\"text-align:right\">" . number_format($Rows) . "</td>";
   }
   $sub_result = $mysqli->prepare("SELECT COUNT(id) FROM temp_users");   // Query to get an accurate figure for temp_users.
