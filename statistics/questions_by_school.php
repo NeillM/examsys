@@ -87,14 +87,14 @@ $result->close();
 $statssql = <<<SQL
 SELECT DISTINCT s.id, q.q_type, qm.q_id
 FROM schools s
-	JOIN faculty f ON s.facultyID = f.id
-	JOIN modules m ON m.schoolid = s.id
-    JOIN questions_modules qm ON qm.idMod = m.id
-    JOIN questions q ON q.q_id = qm.q_id
+  JOIN faculty f ON s.facultyID = f.id
+  JOIN modules m ON m.schoolid = s.id
+  JOIN questions_modules qm ON qm.idMod = m.id
+  JOIN questions q ON q.q_id = qm.q_id
 WHERE s.school != 'Training'
-	AND s.deleted IS NULL AND f.deleted IS NULL
-	AND m.active = 1 AND m.mod_deleted IS NULL
-    AND q.deleted IS NULL
+  AND s.deleted IS NULL AND f.deleted IS NULL
+  AND m.active = 1 AND m.mod_deleted IS NULL
+  AND q.deleted IS NULL
 SQL;
 $stats = $mysqli->prepare($statssql);
 $stats->execute();
