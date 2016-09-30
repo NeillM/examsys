@@ -85,7 +85,7 @@ $result->close();
 
 // Get a count of active questions by type for each school.
 $statssql = <<<SQL
-SELECT s.id, q.q_type, COUNT(DISTINCT qm.q_id)
+SELECT DISTINCT s.id, q.q_type, qm.q_id
 FROM schools s
 	JOIN faculty f ON s.facultyID = f.id
 	JOIN modules m ON m.schoolid = s.id
@@ -95,13 +95,12 @@ WHERE s.school != 'Training'
 	AND s.deleted IS NULL AND f.deleted IS NULL
 	AND m.active = 1 AND m.mod_deleted IS NULL
     AND q.deleted IS NULL
-GROUP BY s.id, q.q_type
 SQL;
 $stats = $mysqli->prepare($statssql);
 $stats->execute();
 $stats->bind_result($id, $question_type, $count);
 while ($stats->fetch()) {
-  $master_array[$id]['types'][$question_type] = $count;
+  $master_array[$id]['types'][$question_type]++;
 }
 $stats->close();
 
