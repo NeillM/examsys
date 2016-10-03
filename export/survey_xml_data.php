@@ -71,9 +71,8 @@ require '../include/staff_auth.inc';
   $user_no = 0;
   $sql = <<< SQL
 SELECT l.q_id, u.grade, DATE_FORMAT(lm.started,"%d/%m/%Y %T") AS started, lm.year, u.surname,
-u.initials, u.title, REPLACE(l.user_answer,'"',"'") AS user_answer, q.q_type, lm.userID
+u.initials, u.title, REPLACE(l.user_answer,'"',"'") AS user_answer, lm.userID
 FROM log3 l INNER JOIN log_metadata lm ON l.metadataID = lm.id
-INNER JOIN questions q ON l.q_id = q.q_id
 INNER JOIN users u ON lm.userID = u.id
 WHERE lm.paperID = ?
 AND lm.year LIKE ?
@@ -87,7 +86,7 @@ SQL;
   $result = $mysqli->prepare($sql);
   $result->bind_param('issss', $_GET['paperID'], $_GET['repyear'], $_GET['repcourse'], $_GET['startdate'], $_GET['enddate']);
   $result->execute();
-  $result->bind_result($question_ID, $grade, $started, $year, $surname, $initials, $title, $user_answer, $q_type, $user_ID);
+  $result->bind_result($question_ID, $grade, $started, $year, $surname, $initials, $title, $user_answer, $user_ID);
   while ($result->fetch()) {
     $log_array[$user_ID][$question_ID] = $user_answer;
     $log_array[$user_ID]['username'] = $user_ID;
