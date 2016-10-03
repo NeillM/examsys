@@ -24,15 +24,15 @@
 
 require '../include/staff_auth.inc';
 require './display_functions.inc';
-require '../include/errors.inc';
+require '../include/errors.php';
 require '../include/media.inc';
 
 //HTML5 part
-require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
-require_once '../lang/' . $language . '/question/edit/area.txt';
-require_once '../lang/' . $language . '/paper/hotspot_answer.txt';
-require_once '../lang/' . $language . '/paper/hotspot_question.txt';
-require_once '../lang/' . $language . '/paper/label_answer.txt';
+require_once '../lang/' . $language . '/question/edit/hotspot_correct.php';
+require_once '../lang/' . $language . '/question/edit/area.php';
+require_once '../lang/' . $language . '/paper/hotspot_answer.php';
+require_once '../lang/' . $language . '/paper/hotspot_question.php';
+require_once '../lang/' . $language . '/paper/label_answer.php';
 $jstring = $string; //to pass it to JavaScript HTML5 modules
 //HTML5 part
 

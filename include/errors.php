@@ -22,7 +22,7 @@
 * @package
 */
 
-require $cfg_web_root . 'lang/' . $language . '/include/errors.inc';
+require $cfg_web_root . 'lang/' . $language . '/include/errors.php';
 
 /**
  * Display an error to the screen.

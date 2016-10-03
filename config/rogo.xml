@@ -25,4 +25,7 @@
             <min_version>2.2</min_version>
         </apache>
     </webserver>
+    <translations>
+        <url>https://crowdin.com/download/project/rogo.zip</url>
+    </translations>
 </rogo>

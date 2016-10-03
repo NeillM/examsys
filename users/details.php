@@ -27,7 +27,7 @@
 */
 
 require_once '../include/staff_auth.inc';
-require_once '../include/errors.inc';
+require_once '../include/errors.php';
 require_once '../include/demo_replace.inc';
 
 $userID = check_var('userID', 'GET', true, false, true, param::INT);
@@ -374,7 +374,7 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
   }
   
   require '../tools/colour_picker/colour_picker.inc';
-  require '../include/user_search_options.inc';
+  require '../include/user_search_options.php';
   require '../include/toprightmenu.inc';
 	echo draw_toprightmenu();
 

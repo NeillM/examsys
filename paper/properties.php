@@ -25,10 +25,10 @@
 */
 
 require_once '../include/staff_auth.inc';
-require_once '../include/errors.inc';
+require_once '../include/errors.php';
 require_once '../include/add_edit.inc';  // to clear MS Office tags
 require_once '../include/load_config.php';
-require_once '../lang/' . $language . '/include/timezones.inc';
+require_once '../include/timezones.php';
 
 // Marking options
 define('MARK_NO_ADJUSTMENT', '0');

@@ -27,7 +27,7 @@
 set_time_limit(0);
 
 require '../include/staff_auth.inc';
-require_once '../include/errors.inc';
+require_once '../include/errors.php';
 require_once '../include/feedback.inc';
 
 $paperID    = check_var('paperID', 'GET', true, false, true);

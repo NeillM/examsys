@@ -23,7 +23,7 @@
 */
 
 require '../include/staff_auth.inc';
-require_once '../include/errors.inc';
+require_once '../include/errors.php';
 
 check_var('module', 'REQUEST', true, false, false);
 

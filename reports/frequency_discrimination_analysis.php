@@ -28,18 +28,18 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/media.inc';
-require_once '../include/errors.inc';
+require_once '../include/errors.php';
 require_once '../include/sort.inc';
-require_once '../include/errors.inc';
+require_once '../include/errors.php';
 
 require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';
 
 //HTML5 part
-require_once '../lang/' . $language . '/question/edit/hotspot_correct.txt';
-require_once '../lang/' . $language . '/question/edit/area.txt';
-require_once '../lang/' . $language . '/paper/hotspot_answer.txt';
-require_once '../lang/' . $language . '/paper/hotspot_question.txt';
-require_once '../lang/' . $language . '/paper/label_answer.txt';
+require_once '../lang/' . $language . '/question/edit/hotspot_correct.php';
+require_once '../lang/' . $language . '/question/edit/area.php';
+require_once '../lang/' . $language . '/paper/hotspot_answer.php';
+require_once '../lang/' . $language . '/paper/hotspot_question.php';
+require_once '../lang/' . $language . '/paper/label_answer.php';
 $jstring = $string; //to pass it to JavaScript HTML5 modules
 //HTML5 part
 

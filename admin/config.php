@@ -22,8 +22,8 @@
 */
 
 require '../include/sysadmin_auth.inc';
-require_once '../include/errors.inc';
-require '../lang/' . $language. '/include/timezones.inc';
+require_once '../include/errors.php';
+require '../include/timezones.php';
 require '../include/toprightmenu.inc';
 
 if (isset($_POST['submit'])) {

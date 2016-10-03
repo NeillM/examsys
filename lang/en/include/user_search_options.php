@@ -61,4 +61,5 @@ $string['mrs'] = 'Mrs';
 $string['ms'] = 'Ms';
 $string['professor'] = 'Professor';
 $string['deleteuser'] = 'Delete User';
+$string['clearltilinks'] = 'Clear LTI Links';
 ?>

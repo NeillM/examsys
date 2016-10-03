@@ -121,7 +121,7 @@ abstract class rogo_directory {
    * @return boolean true if all the contents were deleted, false otherwise.
    */
   public function clear() {
-    return $this->recursive_delete($this->location());
+    return self::recursive_delete($this->location());
   }
   
   /**
@@ -144,6 +144,28 @@ abstract class rogo_directory {
       $filename = basename($file);
       copy($default_location . $filename, $location . $filename);
     }
+  }
+
+  /**
+   * Move files from temporary location to permanent location.
+   * @param string $current_location location of downloaded files
+   * @return void
+   */
+  public function move_download_files($current_location) {
+    $directory = dir($current_location);
+    $entry = $directory->read();
+    // Loop through all the entries in the directory.
+    while ($entry !== false) {
+      if ($entry == '.' || $entry == '..') {
+        // We should not try to move the current and parent directory links.
+        $entry = $directory->read();
+        continue;
+      }
+      rename($current_location . $entry, $this->location() . $entry);
+      // Get the next entry.
+      $entry = $directory->read();
+    }
+    $directory->close();
   }
 
   /**
@@ -171,7 +193,7 @@ abstract class rogo_directory {
    * @param string $location The location to the directory.
    * @return boolean true if all the contents were deleted, false otherwise.
    */
-  protected function recursive_delete($location) {
+  public static function recursive_delete($location) {
     if (!is_writable($location) or self::is_read_only()) {
       // We cannot do any deletion.
       return false;
@@ -195,7 +217,7 @@ abstract class rogo_directory {
         $entry = $directory->read();
         continue;
       }
-      $deleted = $this->recursive_delete($location . $entry);
+      $deleted = self::recursive_delete($location . $entry);
       $success = $success && $deleted;
       if ($deleted && is_dir($location . $entry)) {
         // Delete the directory now as its contents have been removed.

@@ -25,7 +25,7 @@
 */
 
 require_once '../include/admin_auth.inc';
-require_once '../include/errors.inc';
+require_once '../include/errors.php';
 
 $userID = check_var('userID', 'REQUEST', true, false, true);
 $student_id = check_var('student_id', 'REQUEST', false, false, true);

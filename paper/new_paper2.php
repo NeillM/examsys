@@ -24,7 +24,7 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/sort.inc';
-require '../lang/' . $language. '/include/timezones.inc';
+require '../include/timezones.php';
 
 $assessment = new assessment($mysqli, $configObject);
 $papertype = $assessment->get_type_value($_POST['paper_type']);

@@ -24,7 +24,7 @@
 
 require_once '../include/sysadmin_auth.inc';
 require_once '../include/toprightmenu.inc';
-require_once '../include/errors.inc';
+require_once '../include/errors.php';
 
 $pluginslist = plugin_manager::listplugins();
 

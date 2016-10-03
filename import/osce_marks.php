@@ -23,7 +23,7 @@
 */
 
 require '../include/staff_auth.inc';
-require_once '../include/errors.inc';
+require_once '../include/errors.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 $moduleID = check_var('module', 'GET', true, false, true);
@@ -273,7 +273,7 @@ if (!$graded and isset($_POST['submit'])) {
 ?>
 <body>
 <?php
-  require '../include/paper_options.inc';
+  require '../include/paper_options.php';
 ?>
 
 <div id="content">

@@ -27,7 +27,7 @@ require_once '../../include/edit.inc';
 require_once '../../include/media.inc';
 require_once '../../include/metadata.inc';
 require_once '../../include/mapping.inc';
-require_once '../../include/errors.inc';
+require_once '../../include/errors.php';
 
 $stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState();
