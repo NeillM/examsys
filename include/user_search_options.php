@@ -25,7 +25,7 @@
 */
 
 
-require_once 'errors.inc';
+require_once 'errors.php';
 
 $stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState($configObject->get('cfg_root_path') . '/users/search.php');

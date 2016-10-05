@@ -25,7 +25,7 @@
 
 require_once '../include/load_config.php';
 require_once '../include/auth.inc';
-require_once '../include/errors.inc';
+require_once '../include/errors.php';
 require_once '../include/std_set_shared_functions.inc';
 require_once '../include/timezones.php';
 require_once dirname(__DIR__) . '/lang/' . $language . '/install/index.php';
