@@ -523,7 +523,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       $workingdir = getcwd();
       chdir(dirname(__DIR__));
       // Download language packs.
-      $file = @file_get_contents($url);
+      $file = @file_get_contents($url . DIRECTORY_SEPARATOR . $version . DIRECTORY_SEPARATOR . 'rogo.zip');
       if ($file === false or file_put_contents("translations.zip", $file) === false) {
         echo "Error downloading language packs, you will need to manually install them.";
       } else {
@@ -531,24 +531,10 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         $zip = new ZipArchive;
         $res = $zip->open('translations.zip');
         if ($res === TRUE) {
-          $zip->extractTo('translations');
+          $zip->extractTo('.');
           $zip->close();
-          $xlroot = getcwd() . DIRECTORY_SEPARATOR . 'translations' . DIRECTORY_SEPARATOR . $version . DIRECTORY_SEPARATOR;
-          // Fall back to master (latest) if not found.
-          if (!file_exists($xlroot)) {
-            $xlroot = getcwd() . DIRECTORY_SEPARATOR . 'translations' . DIRECTORY_SEPARATOR . 'master' . DIRECTORY_SEPARATOR;
-          }
-          // Move contents - overwrites old contents.
-          $lang_dir = rogo_directory::get_directory('translation_lang');
-          $lang_dir->move_download_files($xlroot . 'lang' . DIRECTORY_SEPARATOR);
-          $api_dir = rogo_directory::get_directory('translation_api');
-          $api_dir->move_download_files($xlroot . 'api' . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR);
-          $testing_dir = rogo_directory::get_directory('translation_testing');
-          $testing_dir->move_download_files($xlroot . 'testing' . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR);
           // Remove zip and temporary directories.
           unlink('translations.zip');
-          rogo_directory::recursive_delete(getcwd() . DIRECTORY_SEPARATOR . 'translations');
-          rmdir('translations');
         } else {
           echo('Cannot extract language packs, you will need to manually extract them.');
         }
