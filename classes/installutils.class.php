@@ -523,15 +523,16 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       $workingdir = getcwd();
       chdir(dirname(__DIR__));
       // Download language packs.
-      $file = @file_get_contents($url . DIRECTORY_SEPARATOR . $version . DIRECTORY_SEPARATOR . 'rogo.zip');
+      $fullurl = $url . '/' . $version . '/rogo.zip';
+      $file = @file_get_contents($fullurl);
       if ($file === false or file_put_contents("translations.zip", $file) === false) {
-        echo "Error downloading language packs, you will need to manually install them.";
+        echo "Error downloading language packs from $fullurl, you will need to manually install them.";
       } else {
         // Unzip archive.
         $zip = new ZipArchive;
         $res = $zip->open('translations.zip');
         if ($res === TRUE) {
-          $zip->extractTo('.');
+          $zip->extractTo(getcwd());
           $zip->close();
           // Remove zip and temporary directories.
           unlink('translations.zip');
