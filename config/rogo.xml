@@ -26,6 +26,6 @@
         </apache>
     </webserver>
     <translations>
-        <url>https://crowdin.com/download/project/rogo.zip</url>
+        <url>http://rogo-oss.nottingham.ac.uk/langpacks</url>
     </translations>
 </rogo>
