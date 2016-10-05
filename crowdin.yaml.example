@@ -13,10 +13,10 @@ files:
     translation: '/api/lang/%two_letters_code%/%original_file_name%'
   -
     source: '/classes/lang/en/*'
-    translation: '/api/lang/%two_letters_code%/%original_file_name%'
+    translation: '/classes/lang/%two_letters_code%/%original_file_name%'
   -
     source: '/testing/lang/en/*'
     translation: '/testing/lang/%two_letters_code%/%original_file_name%'
   -
     source: '/LTI/lang/en/*'
-    translation: '/testing/lang/%two_letters_code%/%original_file_name%'
+    translation: '/LTI/lang/%two_letters_code%/%original_file_name%'
