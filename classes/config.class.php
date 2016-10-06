@@ -643,6 +643,28 @@ class Config extends RogoStaticSingleton {
     return null;
   }
 
+  /**
+   * Override an xml setting value. This should only be used during testing to override settings.
+   *
+   * @param mixed $value the value to be used.
+   * @param string $parent name of xml node
+   * @param string $child xml child node name
+   * @param string $grandchild xml grandchild node name
+   */
+  public function override_xml($value, $parent, $child = '', $grandchild = '') {
+    $xmldata = json_decode($this->xmldata);
+    if (is_string($parent)) {
+      if ($child == '' and $grandchild == '') {
+        $xmldata->$parent = $value;
+      } elseif ($child != '' and $grandchild == '') {
+        $xmldata->$parent->$child = $value;
+      } else {
+        $xmldata->$parent->$child->$grandchild = $value;
+      }
+    }
+    $this->xmldata = json_encode($xmldata);
+  }
+
   function &getbyref($var) {
     if (is_string($var)) {
       if (isset($this->data[$var])) {
