@@ -615,6 +615,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $alter[] = "ALTER TABLE questions_module ADD CONSTRAINT `questions_modules_fk1` FOREIGN KEY (`q_id`) REFERENCES `questions` (`q_id`)";
     $alter[] = "ALTER TABLE questions_module ADD CONSTRAINT `questions_modules_fk2` FOREIGN KEY (`idMod`) REFERENCES `modules` (`id`)";
     $alter[] = "ALTER TABLE questions ADD CONSTRAINT `questions_fk1` FOREIGN KEY (`status`) REFERENCES `question_statuses` (`id`)";
+    $alter[] = "ALTER TABLE paper_feedback ADD CONSTRAINT `paper_feedback_fk1` FOREIGN KEY (`paperID`) REFERENCES `properties` (`property_id`)";
+    $alter[] = "ALTER TABLE paper_metadata_security ADD CONSTRAINT `paper_metadata_security_fk1` FOREIGN KEY (`paperID`) REFERENCES `properties` (`property_id`)";
 
     foreach ($alter as $a) {
         $res = self::$db->prepare($a);

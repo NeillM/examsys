@@ -804,17 +804,19 @@ QUERY;
           `paperID` mediumint(8) unsigned NOT NULL,
           `boundary` tinyint(3) unsigned NOT NULL,
           `msg` text,
-          PRIMARY KEY (`id`)
+          PRIMARY KEY (`id`),
+          KEY `idx_paperID` (`paperID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['paper_metadata_security'] = <<<QUERY
         CREATE TABLE `paper_metadata_security` (
           `id` int(11) NOT NULL auto_increment,
-          `paperID` mediumint(8) unsigned default NULL,
+          `paperID` mediumint(8) unsigned NOT NULL,
           `name` varchar(255) default NULL,
           `value` varchar(255) default NULL,
-          PRIMARY KEY (`id`)
+          PRIMARY KEY (`id`),
+          KEY `idx_paperID` (`paperID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
