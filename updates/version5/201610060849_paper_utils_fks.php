@@ -3,6 +3,11 @@
  * Add missing indexes and forign keys used by the PaperUtils class.
  */
 if ($updater_utils->check_version("6.2.0") and !$updater_utils->has_updated('rogo1984_paper_utils_fk')) {
+  // Add index to paperID in the paper_feedback table.
+  $index1 = "ALTER TABLE `paper_feedback` "
+      . "ADD INDEX `idx_paperID` (`paperID`)";
+  $updater_utils->execute_query($index1, true);
+
   // Add forign key on paperID to the paper_feedback table.
   $fk1 = "ALTER TABLE `paper_feedback` "
       . "ADD CONSTRAINT `paper_feedback_fk1` FOREIGN KEY (`paperID`) REFERENCES `properties` (`property_id`)";
