@@ -144,6 +144,7 @@ Class InstallUtils {
   static function displayForm() {
     global $string, $language, $timezone_array;
 
+    $configObject = Config::get_instance();
     ?>
     <script type="text/javascript" src="../js/system_tooltips.js"></script>
     <script>
@@ -271,8 +272,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         <div><label for="loadHelp"><?php echo $string['loadhelp']; ?></label> <input id="loadHelp" name="loadHelp" type="checkbox" checked="checked" /></div>
         
       <table class="h"><tr><td><nobr><?php echo $string['translationpack']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="loadtranslations"><?php echo $string['loadtranslations']; ?></label> <input id="loadtranslations" name="loadtranslations" type="checkbox"/></div>
-        
+        <div><label for="loadtranslations"><?php echo $string['loadtranslations']; ?></label> <input id="loadtranslations" name="loadtranslations" type="checkbox"/></div><br/><br/>
+        <div><?php echo sprintf($string['manualtranslations'], $configObject->getxml('translations', 'url')); ?></div>
+
       <table class="h"><tr><td><nobr><?php echo $string['interactivequestions']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><label><?php echo $string['flash']; ?></label> <input name="interactivequestions" value="flash" type="radio"/><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Adobe Flash is best for backwards browser compatibility but will be deprecated in future versions.  HTML5 is best for future proofing and works in IE9, Firefox 23, chrome 28.0 and Safari 5.1 and above" /></div>
         <div><label><?php echo $string['html5']; ?></label> <input name="interactivequestions" type="radio" value="html5" checked = "checked"/></div>
