@@ -731,11 +731,12 @@ QUERY;
     $this->tableList['modules_staff'] = <<<QUERY
         CREATE TABLE `modules_staff` (
           `groupID` int(4) NOT NULL auto_increment,
-          `idMod` int(11) unsigned DEFAULT NULL,
-          `memberID` int(10) unsigned DEFAULT NULL,
+          `idMod` int(11) NOT NULL,
+          `memberID` int(10) UNSIGNED NOT NULL,
           `added` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
           PRIMARY KEY (`groupID`),
-          KEY `name` (`idMod`)
+          KEY `name` (`idMod`),
+          KEY `idx_memberID` (`memberID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
@@ -1019,7 +1020,8 @@ QUERY;
           `guid` char(40),
           PRIMARY KEY (`q_id`),
           KEY `idx_owner_deleted` (`ownerID`,`deleted`),
-          KEY `idx_deleted` (`deleted`)
+          KEY `idx_deleted` (`deleted`),
+          KEY `idx_guid` (`guid`)
         ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
