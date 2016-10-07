@@ -72,6 +72,7 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
             }
             break;
           case 'enhancedcalc':
+            require_once dirname(__DIR__) . '/plugins/questions/enhancedcalc/enhancedcalc.class.php';
             $enhancedcalc = new EnhancedCalc($configObject);
             $enhancedcalc->set_useranswer($current_answer);
             if ($enhancedcalc->get_user_answer_raw() == '') {
