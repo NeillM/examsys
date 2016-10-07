@@ -73,25 +73,32 @@ papers:
   -
     p_id: 2
     paper: 4
+question_statuses:
+  -
+    id: 1
+    name: normal
+    retired: 0
+    is_default: 1
+    display_order: 1
 questions:
   -
     q_id: 1
-    status: -1
+    status: 1
     deleted: null
     ownerID: 2
   -
     q_id: 2
-    status: -1
+    status: 1
     deleted: null
     ownerID: 2
   -
     q_id: 3
-    status: -1
+    status: 1
     deleted: null
     ownerID: 1
   -
     q_id: 4
-    status: -1
+    status: 1
     ownerID: 1
     deleted: '2016-09-16 16:09:16'
 questions_modules:
