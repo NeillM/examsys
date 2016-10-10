@@ -141,10 +141,14 @@ class EnhancedCalc extends Question implements questionInterface {
 
 			if (isset($this->useranswer['uansunit'])) {
 				$this->useranswer['ans']['guessedunits'] = $this->useranswer['uansunit'];
+				// Are the units correct?
+				$this->useranswer['status']['units'] = $this->are_units_correct($this->useranswer['uansunit']);
+			} else {
+				// No units have been sent for some reason so they cannot be correct,
+				// it probably means that somehow the variables for the question have been set,
+				// but no answer recorded.
+				$this->useranswer['status']['units'] = false;
 			}
-
-			// Are the units correct?
-			$this->useranswer['status']['units'] = $this->are_units_correct($this->useranswer['uansunit']);
 
 			if ($this->useranswer['status']['units'] === false) {
 				// We can't match the units so this question must be wrong! However, we need to have a formula and a unit to calculate the feedback
