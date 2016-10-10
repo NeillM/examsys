@@ -362,7 +362,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
           $totalpos = null;
         }
         $calcanswers = param::required('qid', param::RAW, param::FETCH_POST);
-        if (is_array($calcanswers)) {
+        if (is_array($calcanswers[$log_id])) {
           $saved_response = EnhancedCalc::process_user_answer($calcanswers[$log_id], $_SESSION['qid'][$log_id]);
         }
         break;
