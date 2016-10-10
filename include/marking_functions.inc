@@ -362,7 +362,9 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
           $totalpos = null;
         }
         $calcanswers = param::required('qid', param::RAW, param::FETCH_POST);
-        $saved_response = EnhancedCalc::process_user_answer($calcanswers[$log_id], $_SESSION['qid'][$log_id]);
+        if (is_array($calcanswers)) {
+          $saved_response = EnhancedCalc::process_user_answer($calcanswers[$log_id], $_SESSION['qid'][$log_id]);
+        }
         break;
       case 'dichotomous':
         $qid = 'q' . $question_no . '_' . $question_part;
