@@ -1490,7 +1490,6 @@ QUERY;
     $this->tableList['permissions'] = <<<QUERY
         CREATE TABLE permissions (
             action varchar(80) NOT NULL,
-            description varchar(255) NOT NULL,
             PRIMARY KEY (action)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
