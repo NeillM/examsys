@@ -147,28 +147,6 @@ abstract class rogo_directory {
   }
 
   /**
-   * Move files from temporary location to permanent location.
-   * @param string $current_location location of downloaded files
-   * @return void
-   */
-  public function move_download_files($current_location) {
-    $directory = dir($current_location);
-    $entry = $directory->read();
-    // Loop through all the entries in the directory.
-    while ($entry !== false) {
-      if ($entry == '.' || $entry == '..') {
-        // We should not try to move the current and parent directory links.
-        $entry = $directory->read();
-        continue;
-      }
-      rename($current_location . $entry, $this->location() . $entry);
-      // Get the next entry.
-      $entry = $directory->read();
-    }
-    $directory->close();
-  }
-
-  /**
    * Create the directory if it does not exist.
    */
   public function create() {
@@ -193,7 +171,7 @@ abstract class rogo_directory {
    * @param string $location The location to the directory.
    * @return boolean true if all the contents were deleted, false otherwise.
    */
-  public static function recursive_delete($location) {
+  protected static function recursive_delete($location) {
     if (!is_writable($location) or self::is_read_only()) {
       // We cannot do any deletion.
       return false;
