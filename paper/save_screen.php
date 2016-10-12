@@ -26,8 +26,8 @@
 
 require_once '../include/staff_student_auth.inc';
 require_once '../include/marking_functions.inc';
-require_once '../include/errors.inc';
-require_once '../include/paper_security.inc';
+require_once '../include/errors.php';
+require_once '../include/paper_security.php';
 
 $answer_changed = param::optional('ans_changed', false, param::BOOLEAN);
 $random_page_id = param::optional('randomPageID', 'ERR_NO_PAGE_ID', param::ALPHANUM, param::FETCH_POST);

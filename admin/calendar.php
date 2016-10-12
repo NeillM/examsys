@@ -28,7 +28,7 @@ require '../include/staff_auth.inc';
 require '../include/sidebar_menu.inc';
 require '../include/sort.inc';
 require '../include/year_tabs.inc';
-require_once '../lang/' . $language . '/include/timezones.inc';
+require_once '../include/timezones.php';
 
 if (isset($_GET['calyear'])) {
   $current_year = $_GET['calyear'];

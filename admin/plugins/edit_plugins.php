@@ -22,7 +22,7 @@
 */
 
 require '../../include/sysadmin_auth.inc';
-require_once '../../include/errors.inc';
+require_once '../../include/errors.php';
 
 $plugin = check_var('pid', 'REQUEST', true, false, true);
 $installed = plugin_manager::plugin_installed($plugin);

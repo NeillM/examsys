@@ -25,4 +25,7 @@
             <min_version>2.2</min_version>
         </apache>
     </webserver>
+    <translations>
+        <url>http://rogo-oss.nottingham.ac.uk/langpacks</url>
+    </translations>
 </rogo>

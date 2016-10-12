@@ -23,7 +23,7 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/question_types.inc';
+require '../include/question_types.php';
 require '../include/display_functions.inc';
 require '../include/media.inc';
 

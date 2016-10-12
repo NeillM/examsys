@@ -68,7 +68,6 @@ $strings = $langpack->get_all_strings('testing/index');
 
   <h2><?php echo $strings['developmenttests'] ?></h2>
 	<ol>
-		<li><a href="lang_test.php"><?php echo $strings['languagetranslations'] ?></a></li>
 		<li><a href="database_grants.php"><?php echo $strings['databasegrants'] ?></a></li>
 		<li><a href="database_indexes.php"><?php echo $strings['databasindexes'] ?></a></li>
 		<li><a href="database_structure.php"><?php echo $strings['databasstructure'] ?></a></li>

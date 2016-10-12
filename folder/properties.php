@@ -23,7 +23,7 @@
 */
 
 require '../include/staff_auth.inc';
-require_once '../include/errors.inc';
+require_once '../include/errors.php';
 
 $folderID = check_var('folder', 'GET', true, false, true);
 

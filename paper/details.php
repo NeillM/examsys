@@ -28,8 +28,8 @@
 
 ob_start('ob_gzhandler');
 require '../include/staff_student_auth.inc';
-require '../include/question_types.inc';
-require '../include/errors.inc';
+require '../include/question_types.php';
+require '../include/errors.php';
 require '../include/calculate_marks.inc';
 require_once '../include/std_set_shared_functions.inc';
 
@@ -897,7 +897,7 @@ function check_latex_random($q_ids, $mysqli) {
     }
   }
   try {
-    require '../include/paper_options.inc';
+    require '../include/paper_options.php';
   } catch (Exception $e) {
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
     $notice->display_notice_and_exit($mysqli, $string['problemwithpaper'], $msg, $string['problemwithpaper'], '/artwork/page_not_found.png', '#C00000', true, true);

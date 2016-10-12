@@ -26,10 +26,10 @@
 * @package
 */
 require_once '../include/staff_student_auth.inc';
-require_once '../include/paper_security.inc';
+require_once '../include/paper_security.php';
 require_once '../include/display_functions.inc';
 require_once '../include/media.inc';
-require_once '../include/errors.inc';
+require_once '../include/errors.php';
 
 $userObject = UserObject::get_instance();
 

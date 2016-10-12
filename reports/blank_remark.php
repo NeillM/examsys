@@ -27,7 +27,7 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/errors.inc';
+require '../include/errors.php';
 
 $q_id     = check_var('q_id', 'GET', true, false, true);
 $paperID  = check_var('paperID', 'GET', true, false, true);

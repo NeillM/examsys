@@ -144,6 +144,7 @@ Class InstallUtils {
   static function displayForm() {
     global $string, $language, $timezone_array;
 
+    $configObject = Config::get_instance();
     ?>
     <script type="text/javascript" src="../js/system_tooltips.js"></script>
     <script>
@@ -270,6 +271,10 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       <table class="h"><tr><td><nobr><?php echo $string['helpdb']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><label for="loadHelp"><?php echo $string['loadhelp']; ?></label> <input id="loadHelp" name="loadHelp" type="checkbox" checked="checked" /></div>
         
+      <table class="h"><tr><td><nobr><?php echo $string['translationpack']; ?></nobr></td><td class="line"><hr /></td></tr></table>
+        <div><label for="loadtranslations"><?php echo $string['loadtranslations']; ?></label> <input id="loadtranslations" name="loadtranslations" type="checkbox"/></div><br/><br/>
+        <div><?php echo sprintf($string['manualtranslations'], $configObject->getxml('translations', 'url')); ?></div>
+
       <table class="h"><tr><td><nobr><?php echo $string['interactivequestions']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><label><?php echo $string['flash']; ?></label> <input name="interactivequestions" value="flash" type="radio"/><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Adobe Flash is best for backwards browser compatibility but will be deprecated in future versions.  HTML5 is best for future proofing and works in IE9, Firefox 23, chrome 28.0 and Safari 5.1 and above" /></div>
         <div><label><?php echo $string['html5']; ?></label> <input name="interactivequestions" type="radio" value="html5" checked = "checked"/></div>
@@ -493,6 +498,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       self::loadHelp();
     }
 
+    // Download language packs and install.
+    if (isset($_POST['loadtranslations'])) {
+      self::download_langpacks();
+    }
+
     //Write out the config file
     self::writeConfigFile();
     if (!is_array(self::$warnings)) {
@@ -501,6 +511,38 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       echo "<p style=\"margin-left:10px\"><input type=\"button\" class=\"ok\" name=\"home\" value=\"" . $string['staffhomepage'] . "\" onclick=\"window.location='../index.php'\" /></p>\n";
     } else {
       self::displayWarnings();
+    }
+  }
+
+  /**
+   * Download and install language packs.
+   */
+  static public function download_langpacks() {
+    $configObject = Config::get_instance();
+    $version = $configObject->getxml('version');
+    $url = $configObject->getxml('translations', 'url');
+    if (!is_null($url)) {
+      $workingdir = getcwd();
+      chdir(dirname(__DIR__));
+      // Download language packs.
+      $fullurl = $url . '/' . $version . '/rogo.zip';
+      $file = @file_get_contents($fullurl);
+      if ($file === false or file_put_contents("translations.zip", $file) === false) {
+        echo "Error downloading language packs from $fullurl, you will need to manually install them.";
+      } else {
+        // Unzip archive.
+        $zip = new ZipArchive;
+        $res = $zip->open('translations.zip');
+        if ($res === TRUE) {
+          $zip->extractTo(getcwd());
+          $zip->close();
+          // Remove zip and temporary directories.
+          unlink('translations.zip');
+        } else {
+          echo('Cannot extract language packs, you will need to manually extract them.');
+        }
+      }
+      chdir($workingdir);
     }
   }
 

@@ -25,7 +25,7 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/errors.inc';
+require '../include/errors.php';
 
 check_var('questionID', 'POST', true, false, false);
 check_var('pID', 'POST', true, false, false);

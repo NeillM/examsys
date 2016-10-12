@@ -14,12 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-require '../lang/en/include/common.inc';
+require '../lang/en/include/common.php';
 
 $string['testsuite'] = 'Test Suite';
 $string['testing'] = 'Testing';
 $string['developmenttests'] = 'Development Tests';
-$string['languagetranslations'] = 'Language translations';
 $string['databasegrants'] = 'Database grants';
 $string['databasindexes'] = 'Database indexes';
 $string['databasstructure'] = 'Database structure';

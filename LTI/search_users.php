@@ -23,7 +23,7 @@
  */
 
 require_once dirname(__DIR__) . '/include/sysadmin_auth.inc';
-require_once dirname(__DIR__) . '/include/errors.inc';
+require_once dirname(__DIR__) . '/include/errors.php';
 require_once __DIR__ . '/ims-lti/UoN_LTI.php';
 require_once dirname(__DIR__) . '/include/toprightmenu.inc';
 
