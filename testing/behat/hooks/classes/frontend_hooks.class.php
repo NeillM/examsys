@@ -185,6 +185,7 @@ trait frontend_hooks {
    * Sets some values that are usually installed by default.
    */
   protected static function special_config() {
+    global $string;
     $configObject = \Config::get_instance();
     $cfg_web_root = $configObject->get('cfg_web_root');
     $language = \LangUtils::getLang($cfg_web_root);
