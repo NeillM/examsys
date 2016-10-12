@@ -30,11 +30,7 @@ require_once dirname(dirname(__DIR__)) . '/include/autoload.inc.php';
 
 autoloader::init();
 
-if (!empty($_REQUEST['suite'])) {
-  $suite = $_REQUEST['suite'];
-} else {
-  $suite = '';
-}
+$suite = param::optional('suite', '', param::ALPHANUM);
 
 $config = Config::get_instance();
 // Find the test files.

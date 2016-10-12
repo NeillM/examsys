@@ -20,7 +20,8 @@ $setup->test
 ------------
 
 This must contain the name of the directory, this is to ensure that the suite has been
-configured correctly and is in the correct location.
+configured correctly and is in the correct location. The name must consist of letters
+and numbers only.
 
 $setup->required_js
 -------------------
