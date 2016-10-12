@@ -121,7 +121,7 @@ abstract class rogo_directory {
    * @return boolean true if all the contents were deleted, false otherwise.
    */
   public function clear() {
-    return self::recursive_delete($this->location());
+    return $this->recursive_delete($this->location());
   }
   
   /**
@@ -171,7 +171,7 @@ abstract class rogo_directory {
    * @param string $location The location to the directory.
    * @return boolean true if all the contents were deleted, false otherwise.
    */
-  protected static function recursive_delete($location) {
+  protected function recursive_delete($location) {
     if (!is_writable($location) or self::is_read_only()) {
       // We cannot do any deletion.
       return false;
@@ -195,7 +195,7 @@ abstract class rogo_directory {
         $entry = $directory->read();
         continue;
       }
-      $deleted = self::recursive_delete($location . $entry);
+      $deleted = $this->recursive_delete($location . $entry);
       $success = $success && $deleted;
       if ($deleted && is_dir($location . $entry)) {
         // Delete the directory now as its contents have been removed.
