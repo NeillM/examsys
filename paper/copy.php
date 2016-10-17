@@ -110,9 +110,10 @@ function copy_between_sessions (&$mappings_copy_objID, &$old_course, &$new_cours
                     }
                 }
               // Internal Rogo Objectives.
-              } else {
-                foreach ($new_course as $module => &$sessions) {
-                  foreach ($sessions as $identifier => &$session) {
+              } elseif (isset($new_course[$module][$identifier]['VLE']) and isset($old_course[$module][$identifier]['VLE'])) {
+                if ($new_course[$module][$identifier]['VLE'] === '' and $old_course[$module][$identifier]['VLE'] === '') {
+                  foreach ($new_course as $module => &$sessions) {
+                    foreach ($sessions as $identifier => &$session) {
                       if (isset($session['objectives'])){
                         foreach ($session['objectives'] as $new_obj) {
                           if (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)) {
@@ -129,6 +130,7 @@ function copy_between_sessions (&$mappings_copy_objID, &$old_course, &$new_cours
                           }
                         }
                       }
+                    }
                   }
                 }
               }
