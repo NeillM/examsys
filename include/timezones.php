@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once '../lang/' . $language . '/include/timezones.php';
+require_once $cfg_web_root . 'lang/' . $language . '/include/timezones.php';
 
 $timezone_array = array(
   'Pacific/Samoa' => $string['Pacific/Samoa'],
