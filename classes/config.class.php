@@ -387,7 +387,7 @@ class Config extends RogoStaticSingleton {
     $currentsetting = $this->get_setting($component, $setting);
     $this->cache_setting($setting, $value, $component);
     $this->cache_setting_type($setting, $type, $component);
-    if (!is_null($currentsetting)) {
+    if ($currentsetting !== null) {
       $this->update_setting($setting, $value, $type, $component);
     } else {
       $this->insert_setting($setting, $value, $type, $component);
@@ -505,7 +505,7 @@ class Config extends RogoStaticSingleton {
    */
   public function get_setting($component, $setting = null) {
     $cachedsetting = $this->get_setting_from_cache($component, $setting);
-    if (!is_null($cachedsetting)) {
+    if ($cachedsetting !== null) {
       $cachedsetting = $this->file_config_override($component, $setting, $cachedsetting);
       return $cachedsetting;
     }

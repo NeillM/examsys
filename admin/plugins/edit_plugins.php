@@ -65,6 +65,9 @@ if (isset($_POST['submit'])) {
         $type = $configObject->get_setting_type($plugin, $setting);
         if ($setting != "installed") {
             $new_value = check_var($setting, 'POST', false, false, true);
+            if (is_null($new_value)) {
+                $new_value = '';
+            }
             // Check value is of expected type. No change if not expected type.
             if (!Config::check_type($new_value, $type)) {
                 $new_value = $value;
