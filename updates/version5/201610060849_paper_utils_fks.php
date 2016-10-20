@@ -2,7 +2,7 @@
 /**
  * Add missing indexes and forign keys used by the PaperUtils class.
  */
-if ($updater_utils->check_version("6.2.0") and !$updater_utils->has_updated('rogo1984_paper_utils_fk')) {
+if ($updater_utils->check_version("6.3.0") and !$updater_utils->has_updated('rogo1984_paper_utils_fk')) {
   // Add index to paperID in the paper_feedback table.
   $index1 = "ALTER TABLE `paper_feedback` "
       . "ADD INDEX `idx_paperID` (`paperID`)";
