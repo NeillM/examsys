@@ -1,6 +1,6 @@
 <?php
 
-if ($updater_utils->check_version("6.2.0") and !$updater_utils->has_updated('rogo1983_modules_staff')) {
+if ($updater_utils->check_version("6.3.0") and !$updater_utils->has_updated('rogo1983_modules_staff')) {
 
     // idMod Make reference column same type as referred column.
     $altersql = "ALTER TABLE `modules_staff`
