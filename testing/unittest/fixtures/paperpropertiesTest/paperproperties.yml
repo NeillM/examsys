@@ -16,3 +16,4 @@ users:
     username: "sysadmin"
     roles: "Staff,SysAdmin"
     grade: "University Lecturer"
+track_changes:

@@ -7,7 +7,7 @@ properties:
 track_changes:
   -
     id: 1
-    type: "paper"
+    type: "Paper"
     typeID: 45
     editor: 1
     old: "password"
