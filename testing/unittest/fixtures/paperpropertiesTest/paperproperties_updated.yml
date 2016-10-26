@@ -1,0 +1,15 @@
+properties:
+  -
+    property_id: 45
+    calendar_year: 2015
+    paper_type: 1
+    password: "I37Dsh8QNmXBPEDmrdjBwq9V3JKR3zSSRc2J8IXKTGM="
+track_changes:
+  -
+    id: 1
+    type: "paper"
+    typeID: 45
+    editor: 1
+    old: "password"
+    new: "newpassword"
+    part: "password"

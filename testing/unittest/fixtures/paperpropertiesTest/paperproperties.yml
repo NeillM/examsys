@@ -1,0 +1,18 @@
+academic_year:
+  -
+    calendar_year: 2015
+    academic_year: "2015/16"
+properties:
+  -
+    property_id: 45
+    calendar_year: 2015
+    paper_type: 1
+    password: "ocQQIaMTq9Z55YzgYqGTC0v3dLLVd/8sY6O4bOSO69M="
+users:
+  -
+    id: 1
+    password: "87654321"
+    surname: "sysadmin"
+    username: "sysadmin"
+    roles: "Staff,SysAdmin"
+    grade: "University Lecturer"
