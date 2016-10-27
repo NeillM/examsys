@@ -1645,7 +1645,7 @@ class PaperProperties {
    */
   public function set_password($password) {
     $paperID = $this->get_property_id();
-    $old_password = $this->password;
+    $old_password = $this->get_decrypted_password();
 
     if ($password != '') {
         $this->password = $this->encrypt_password($paperID . $password);
