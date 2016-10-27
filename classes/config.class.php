@@ -322,7 +322,7 @@ class Config extends RogoStaticSingleton {
     $this->set('cfg_db_database', $this->get('cfg_phpunit_db_database'));
     // Use the correct user data directory.
     $this->set('cfg_rogo_data', $this->get('cfg_phpunit_data'));
-    // Fix the password salt for behat tests.
+    // Fix the password salt for unit tests.
     $authentication = $this->get('authentication');
     foreach($authentication as &$authmethod) {
       if ($authmethod[0] === 'internaldb') {
