@@ -322,6 +322,14 @@ class Config extends RogoStaticSingleton {
     $this->set('cfg_db_database', $this->get('cfg_phpunit_db_database'));
     // Use the correct user data directory.
     $this->set('cfg_rogo_data', $this->get('cfg_phpunit_data'));
+    // Fix the password salt for unit tests.
+    $authentication = $this->get('authentication');
+    foreach($authentication as &$authmethod) {
+      if ($authmethod[0] === 'internaldb') {
+        $authmethod[1]['encrypt_salt'] = 'F1rIPkEU8HV7HFnp';
+      }
+    }
+    $this->set('authentication', $authentication);
     // Default host to be writable.
     $this->set('cfg_readonly_host', false);
     // Set file config override to false so we can test changes effectively.
