@@ -69,15 +69,15 @@ while ($random->fetch()) {
 $random->close();
 
 // Check keyword based questions for calculation questions
-$random = $mysqli->prepare("SELECT q_id, settings FROM questions WHERE q_type ='enhancedcalc' AND q_id in ("
+$keyword = $mysqli->prepare("SELECT q_id, settings FROM questions WHERE q_type ='enhancedcalc' AND q_id in ("
     . "SELECT DISTINCT keywords_question.q_id FROM keywords_question, keywords_link, papers WHERE question = keywords_link.q_id AND keywordID = keyword_id AND paper = ?)");
-$random->bind_param('i', $paperID);
-$random->execute();
-$random->bind_result($random_id, $random_settings);
-while ($random->fetch()) {
-    $possible[$random_id] = $random_settings;
+$keyword->bind_param('i', $paperID);
+$keyword->execute();
+$keyword->bind_result($keyword_id, $keyword_settings);
+while ($keyword->fetch()) {
+    $possible[$keyword_id] = $keyword_settings;
 }
-$random->close();
+$keyword->close();
 
 // Find the questions used in the paper from the list of possible found from random blocks and keyword based questions.
 if (count($possible) > 0) {
