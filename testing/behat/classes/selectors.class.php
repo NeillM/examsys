@@ -20,7 +20,7 @@ use \Behat\Mink\Session;
 
 /**
  * Used to define things that behat can select in Rogo
- * 
+ *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2015 The University of Nottingham
  * @package testing
@@ -29,7 +29,7 @@ use \Behat\Mink\Session;
 class selectors {
   /**
    * An array of selector types that can be used by behat tests,
-   * unless built into behat directly they should also have an 
+   * unless built into behat directly they should also have an
    * entry in self::$rogoselectors.
    *
    * @var array
@@ -52,24 +52,81 @@ class selectors {
     'fieldset' => 'fieldset',
     'table' => 'table',
     // Rogo selectors.
+    'menu' => 'menu', //<div class="sidebar
+    'sub_menu' => 'sub_menu', //<div id="popup3" class="popup"
+    'menu_section' => 'menu_section', //<div class="submenuheading"
+    'nivagation' => 'nivagation', //<div class="breadcrumb"
+    'paper_title' => 'paper_title', // PAPER_title => <div class="PAGE_title" 
+    'content' => 'content', //<table id="sortable" class="header"
+    'admin_tool_link' => 'admin_tool_link',
+    'pop_page_title' => 'pop_page_title',
     'menu_item' => 'menu_item',
+    'page_title' => 'page_title',  
+    'content_section' => 'content_section',
+    'folder' => 'folder',
+    'mainmenu' => 'mainmenu', //<div id="toprightmenu" 
+    'searchmenu' => 'searchmenu',  
   );
 
   /**
    * An array containing XPATH selectors for elements of Rogo that behat can select.
    * The key is the name of the selector, the value the XPATH string describing it.
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected static $rogoselectors = array(
     'menu_item' => <<<XPATH
-//div[contains(concat(' ', normalize-space(@class), ' '), ' menuitem ')]/a
+//div[contains(concat(' ', normalize-space(@class), ' '), ' menuitem ')]/a[contains(normalize-space(.) , %locator%)]
 XPATH
-  );
+     ,'mainmenuicon' => <<<XPATH
+//img[contains(@id,'toprightmenu_icon')]
+XPATH
+     ,'admin_tool_link' => <<<XPATH
+//div[contains(concat(' ', normalize-space(@class), ' '), ' container ') and contains(normalize-space(.) , %locator%)]
+XPATH
+    ,'sub_menu' => <<<XPATH
+//div[contains(concat(' ', normalize-space(@class), ' '), ' popup ') and contains(normalize-space(.) , %locator%)]      
+XPATH
+    ,'menu_section' => <<<XPATH
+//div[contains(concat(' ', normalize-space(@class), ' '), ' submenuheading ') and contains(normalize-space(.) , %locator%)]      
+XPATH
+
+    ,'pagetitle ' => <<<XPATH
+//div[contains(concat(' ', normalize-space(@class), ' '), ' submenuheading ') and contains(normalize-space(.) , %locator%)]      
+XPATH
+
+    ,'nivagation' => <<<XPATH
+//div[contains(concat(' ', normalize-space(@class), ' '), ' breadcrumb ') and contains(normalize-space(.) , %locator%)]      
+XPATH
+    ,'content' => <<<XPATH
+//table[contains(concat(' ', normalize-space(@class), ' '), ' header ') and contains(normalize-space(.) , %locator%)]      
+XPATH
+    ,'paper_title' => <<<XPATH
+//div[contains(concat(' ', normalize-space(@class), ' '), ' page_title ') and contains(normalize-space(.) , %locator%)]      
+XPATH
+     ,'pop_page_title' => <<<XPATH
+//title[contains(concat(' ', normalize-space(.), ' '), %locator%)]
+XPATH
+     ,'menu' => <<<XPATH
+//div[contains(@class, 'sidebar')]
+XPATH
+      ,'mainmenu' => <<<XPATH
+//div[contains(concat(' ', normalize-space(@class), ' '), ' trm_div ') and contains(normalize-space(.) , %locator%)]      
+XPATH
+    ,'searchmenu' => <<<XPATH
+//div[contains(concat(' ', normalize-space(@class), ' '), ' popupitem ') and contains(normalize-space(.) , %locator%)]      
+XPATH
+    ,'content_section' => <<<XPATH
+//div[contains(concat(' ', normalize-space(@class), ' '), ' subsect_title ')]/nobr
+XPATH
+    ,'folder' => <<<XPATH
+//div[contains(concat(' ', normalize-space(@class), ' '), ' f_details ')]/a
+XPATH
+   );
 
   /**
    * Get the custom Rogo selector list.
-   * 
+   *
    * @return array
    */
   public static function get_selectors() {
