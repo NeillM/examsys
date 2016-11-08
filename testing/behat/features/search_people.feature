@@ -26,7 +26,7 @@ Feature: Searching People
          | Questions |
          | Papers |
          | People |
-      When I click "People" "searchmenu"
+      When I click "People" "search_menu"
       Then I should be on "/users/search.php"
       Then I fill in the following:
          | search_username | teacher1 |
@@ -43,7 +43,7 @@ Feature: Searching People
          | Questions |
          | Papers |
          | People |
-      When I click "People" "searchmenu"
+      When I click "People" "search_menu"
       Then I should be on "/users/search.php"
       Then I fill in the following:
          | search_username | teacher2 |
@@ -59,7 +59,7 @@ Feature: Searching People
          | Questions |
          | Papers |
          | People |
-      When I click "People" "searchmenu"
+      When I click "People" "search_menu"
       Then I should be on "/users/search.php"
       Then I fill in the following:
          | search_username | student1 |

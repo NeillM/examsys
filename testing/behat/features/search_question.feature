@@ -29,7 +29,7 @@ Feature: Searching Papers,People and their related Academic Sessions
       | Questions |
       | Papers    |
       | People    |
-    When I click "Question" "searchmenu"
+    When I click "Question" "search_menu"
     Then I should be on "/question/search.php"
     Then I fill in the following:
       | searchterm | textbox_question |

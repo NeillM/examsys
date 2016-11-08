@@ -20,15 +20,15 @@ Feature: Home page
          | Help and Support |
          | Sign Out |
          | About Rogo | 
-      Then I click "Help & Support" "mainmenu"
+      Then I click "Help & Support" "main_menu"
       Then I should see popup page with title "Rogō: Help"
       Then I close popup window
       Then I click main menu icon
-      Then I click "Administrative Tools" "mainmenu"
+      Then I click "Administrative Tools" "main_menu"
       Then I should see popup page with title "Rogō: Admin"
       Then I close popup window
       Then I click main menu icon
-      Then I click "Sign Out" "mainmenu"
+      Then I click "Sign Out" "main_menu"
       Then I should be on homepage
 
    @javascript

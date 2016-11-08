@@ -46,7 +46,7 @@ Feature: Searching Papers,People and their related Academic Sessions
          | Questions |
          | Papers |
          | People |
-      Then I click "Papers" "searchmenu"   
+      Then I click "Papers" "search_menu"   
       Then I should be on "/paper/search.php"
       Then I fill in the following:
          | searchterm | paper2 |
@@ -68,7 +68,7 @@ Feature: Searching Papers,People and their related Academic Sessions
          | Questions |
          | Papers |
          | People |
-      When I click "Papers" "searchmenu"   
+      When I click "Papers" "search_menu"   
       Then I should be on "/paper/search.php"
       Then I fill in the following:
          | searchterm | paper2 |

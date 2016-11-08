@@ -169,6 +169,14 @@ class users extends generator {
    * @throws data_error
    */
   public function create_user($parameters = null) {
+    // If an object is passed convert it into an array.
+    if (is_object($parameters)) {
+      $parameters = (array)$parameters;
+    }
+    // Check that the right type has been passed.
+    if (!is_array($parameters)) {
+      throw new data_error('Must pass an array or object');
+    }
     $usernumber = ++self::$userscreated;
     $defaults = array(
       'username' => self::$defaultusername . $usernumber,
@@ -229,7 +237,7 @@ class users extends generator {
     $query->bind_param('ssssssssssiisi', $data['password'], $data['grade'], $data['surname'], $data['initials'], $data['username'],
         $data['title'], $data['email'], $data['roles'], $data['first_names'], $data['gender'], $data['special_needs'],
         $data['yearsofstudy'], $data['user_deleted'], $data['password_expire']);
-    if (!$query->execute()) { 
+    if (!$query->execute()) {
       // The user was not successfully inserted.
       throw new data_error("User {$data['username']} not inserted into database");
     }

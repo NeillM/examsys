@@ -144,25 +144,25 @@ trait menu {
       $item = $menuitem['Item'];
       switch ($item) {
         case "Administrative Tools":
-          $element = $this->find("mainmenu", 'Administrative Tools');
+          $element = $this->find("main_menu", 'Administrative Tools');
           if (empty($element)) {
             throw new \Exception('$item in Top right menu could not be found');
           }
           break;
         case "Help and Support":
-          $element = $this->find("mainmenu", 'Help');
+          $element = $this->find("main_menu", 'Help');
           if (empty($element)) {
             throw new \Exception('$item in Top right menu could not be found');
           }
           break;
         case "Sign Out":
-          $element = $this->find("mainmenu", 'Sign Out');
+          $element = $this->find("main_menu", 'Sign Out');
           if (empty($element)) {
             throw new \Exception('$item in Top right menu could not be found');
           }
           break;
         case "About Rogo":
-          $element = $this->find("mainmenu", 'About Rog');
+          $element = $this->find("main_menu", 'About Rog');
           if (empty($element)) {
             throw new \Exception('$item in Top right menu could not be found');
           }
@@ -194,19 +194,19 @@ trait menu {
       $item = $menuitem['Item'];
       switch ($item) {
         case "Questions":
-          $element = $this->find("searchmenu", 'Questions');
+          $element = $this->find("search_menu", 'Questions');
           if (empty($element)) {
             throw new Exception('$item in Top right menu could not be found');
           }
           break;
         case "Papers":
-          $element = $this->find("searchmenu", 'Papers');
+          $element = $this->find("search_menu", 'Papers');
           if (empty($element)) {
             throw new Exception('$item in Top right menu could not be found');
           }
           break;
         case "People":
-          $element = $this->find("searchmenu", 'People');
+          $element = $this->find("search_menu", 'People');
           if (empty($element)) {
             throw new Exception('$item in Top right menu could not be found');
           }

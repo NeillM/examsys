@@ -55,7 +55,7 @@ class selectors {
     'menu' => 'menu', //<div class="sidebar
     'sub_menu' => 'sub_menu', //<div id="popup3" class="popup"
     'menu_section' => 'menu_section', //<div class="submenuheading"
-    'nivagation' => 'nivagation', //<div class="breadcrumb"
+    'navigation' => 'navigation', //<div class="breadcrumb"
     'paper_title' => 'paper_title', // PAPER_title => <div class="PAGE_title" 
     'content' => 'content', //<table id="sortable" class="header"
     'admin_tool_link' => 'admin_tool_link',
@@ -64,8 +64,8 @@ class selectors {
     'page_title' => 'page_title',  
     'content_section' => 'content_section',
     'folder' => 'folder',
-    'mainmenu' => 'mainmenu', //<div id="toprightmenu" 
-    'searchmenu' => 'searchmenu',  
+    'main_menu' => 'main_menu', //<div id="toprightmenu" 
+    'search_menu' => 'search_menu',
   );
 
   /**
@@ -95,11 +95,11 @@ XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' submenuheading ') and contains(normalize-space(.) , %locator%)]      
 XPATH
 
-    ,'nivagation' => <<<XPATH
+    ,'navigation' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' breadcrumb ') and contains(normalize-space(.) , %locator%)]      
 XPATH
     ,'content' => <<<XPATH
-//table[contains(concat(' ', normalize-space(@class), ' '), ' header ') and contains(normalize-space(.) , %locator%)]      
+//table[contains(concat(' ', normalize-space(@id), ' '), ' content ') and contains(normalize-space(.) , %locator%)]      
 XPATH
     ,'paper_title' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' page_title ') and contains(normalize-space(.) , %locator%)]      
@@ -110,10 +110,10 @@ XPATH
      ,'menu' => <<<XPATH
 //div[contains(@class, 'sidebar')]
 XPATH
-      ,'mainmenu' => <<<XPATH
+      ,'main_menu' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' trm_div ') and contains(normalize-space(.) , %locator%)]      
 XPATH
-    ,'searchmenu' => <<<XPATH
+    ,'search_menu' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' popupitem ') and contains(normalize-space(.) , %locator%)]      
 XPATH
     ,'content_section' => <<<XPATH

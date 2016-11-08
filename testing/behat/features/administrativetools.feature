@@ -2,7 +2,7 @@
 Feature: Administrative Tools
    In order to check page Administrative Tools,
    As a admin
-   I want see all functions listed in this page are avilible 
+   I want see all functions listed in this page are available 
 
    @javascript
    Scenario Outline: Admin tools links
