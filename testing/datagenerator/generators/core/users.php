@@ -168,7 +168,7 @@ class users extends generator {
    * @return array Contains the values that were inserted into the database for the user.
    * @throws data_error
    */
-  public function create_user($parameters = null) {
+  public function create_user($parameters) {
     // If an object is passed convert it into an array.
     if (is_object($parameters)) {
       $parameters = (array)$parameters;
