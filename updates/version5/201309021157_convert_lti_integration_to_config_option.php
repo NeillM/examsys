@@ -1,7 +1,7 @@
 <?php
 
 // Config stored in db from 6.2.0 onwards so do not run this update script on that version or version higher.
-$version = $configObject->get('rogo_version');
+$version = $configObject->getxml('version');
 if ($version::is_version_higher($version, '6.2.0') === false and $version !== '6.2.0') {
   // Your code here
   $cfg_web_root = $configObject->get('cfg_web_root');
