@@ -97,7 +97,7 @@
   $results->execute();
   $results->bind_result($modID, $facultycode, $faculty, $facultyid, $school, $schoolcode, $moduleid, $fullname);
   while ($results->fetch()) {
-    if ($facultyid != $old_facultyid or $old_school != $school) {
+    if ($old_facultyid != $facultyid or $old_school != $school) {
       if ($module_block == true) {
         echo "</div>\n";
         $module_block = false;
