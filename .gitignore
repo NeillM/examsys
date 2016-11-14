@@ -192,3 +192,4 @@ web.config
 node_modules/
 crowdin.yaml
 crowdin-cli.jar
+config/campuses.inc
