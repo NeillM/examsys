@@ -155,7 +155,7 @@ Class UON_SATURN extends SmsUtils {
       $lookup_username = trim($sms->Username);
 
       // Make sure we have a proper username - it can sometimes be blank in SATURN data
-      if ($sms->Email != '') {
+      if ($lookup_username == '' and $sms->Email != '') {
         // Try to extract from email address
         $un_parts = explode('@', $sms->Email);
         $lookup_username = $un_parts[0];
@@ -278,7 +278,7 @@ Class UON_SATURN extends SmsUtils {
         $lookup_username	= trim($sms->Username);
 
         // Make sure we have a proper username - it can sometimes be blank in SATURN data
-        if ($sms->Email != '') {
+        if ($lookup_username == '' and $sms->Email != '') {
           // Try to extract from email address
           $un_parts = explode('@', $sms->Email);
           $lookup_username = $un_parts[0];
