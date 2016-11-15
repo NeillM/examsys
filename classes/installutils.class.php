@@ -1692,7 +1692,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   }
 
   /**
-  * Check for installed software versions PHP, Apache
+  * Check for installed software versions PHP
   *
   */
   static function checkSoftware() {
@@ -1704,14 +1704,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       $server = preg_split("/[\/ ]/", $_SERVER['SERVER_SOFTWARE']);
     } else {
       $server = array('');
-    }
-    // Apache
-    if ($server[0] == 'Apache') {
-        $apache = $server[1];
-        $apache_min_ver = $configObject->getxml('webserver', 'apache', 'min_version');
-        if ($apache < $apache_min_ver) {
-            $errors['201'] = sprintf($string['errors9'], $apache_min_ver, $apache);
-        }
     }
     // php
     $php_min_ver = $configObject->getxml('php', 'min_version');

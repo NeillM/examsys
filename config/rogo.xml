@@ -20,11 +20,6 @@
             <min_version>50100</min_version>
         </mysql>
     </database>
-    <webserver>
-        <apache>
-            <min_version>2.2</min_version>
-        </apache>
-    </webserver>
     <translations>
         <url>http://rogo-oss.nottingham.ac.uk/langpacks</url>
     </translations>
