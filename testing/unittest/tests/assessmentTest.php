@@ -107,6 +107,26 @@ class assessmenttest extends unittestdatabase {
         $this->fail('Exception NON_UNIQUE_TITLE not thrown.');
     }
     /**
+     * Test unique paper title on paper creation - external system
+     * @group assessment
+     */
+    public function test_create_unique_paper_title_ext() {
+        $this->create_paper("Test schedule summative", 2);
+        $assessment = new assessment($this->db, $this->config);
+        $paperowner = 1;
+        $startdate = "2016-01-25 09:00:00";
+        $enddate = "2016-01-25 10:00:00";
+        $labs = "1";
+        $duration = 60;
+        $session = 2016;
+        $modules = array(1);
+        $timezone = "Europe/London";
+        $externalid = "A-000000001";
+        $papertitle = "Test schedule summative";
+        $papertype = 2;
+        $this->assertEquals(2, $assessment->create($papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $externalid));
+    }
+    /**
      * Test valid paper type on paper creation
      * @group assessment
      */
@@ -294,6 +314,29 @@ class assessmenttest extends unittestdatabase {
             $this->fail('Exception NON_UNIQUE_TITLE expected but ' . $e->getMessage() . ' thrown instead.');
         }
         $this->fail('Exception NON_UNIQUE_TITLE not thrown.');
+    }
+    /**
+     * Test unique paper title on paper update - external system
+     * @group assessment
+     */
+    public function test_update_unique_paper_title_ext() {
+        $papertitle = "Test update summative";
+        $papertype = 2;
+        $id = $this->create_paper($papertitle, $papertype);
+        $this->create_paper("Test schedule summative 2", $papertype);
+        $assessment = new assessment($this->db, $this->config);
+        $newtitle = "Test schedule summative 2";
+        $paperowner = 1;
+        $startdate = "2016-01-25 09:00:00";
+        $enddate = "2016-01-25 10:30:00";
+        $labs = "1";
+        $duration = 90;
+        $session = 2016;
+        $modules = array(1);
+        $timezone = "Europe/London";
+        $userid = 1;
+        $externalid = "A-000000001";
+        $this->assertTrue($assessment->update($id, $newtitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $userid, $externalid));
     }
     /**
      * Test valid paper owner on paper update
