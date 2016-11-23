@@ -66,10 +66,7 @@ require_once 'detail_parts/details_leadin.php';
 
 if ($media['filename'] != ''):
   $img_str = '';
-  if (strtolower($mode) == strtolower($string['edit'])) {
-    $flash_path = '../add/label_add.swf';
-  } else {
-    $flash_path = '../add/label_add.swf';
+  if (strtolower($mode) != strtolower($string['edit'])) {
     foreach ($label_images as $lab_img) {
       if (isset($lab_img['filename']) and $lab_img['filename'] != '') {
         $img_str .= implode(',', $lab_img) . ';';
