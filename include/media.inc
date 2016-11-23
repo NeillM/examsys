@@ -143,7 +143,7 @@ function uploadFile($fileID) {
   $unique_name = unique_filename($filename);
   $fullpath = $mediadirectory->fullpath($unique_name);
 
-  $permitted = array('.gif', '.jpg', '.jpeg', '.png', '.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx', '.pdf', '.avi', '.swf', '.flv', '.mpg', '.mpeg', '.mov', '.pdb', '.mp3', '.mid', '.wav', '.ram');
+  $permitted = array('.gif', '.jpg', '.jpeg', '.png', '.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx', '.pdf', '.avi', '.mpg', '.mpeg', '.mov', '.pdb', '.mp3', '.mid', '.wav', '.ram');
   foreach ($permitted as $extension) {
     if (preg_match("/$extension\$/i", $unique_name)) {
       $bad_file = false;
