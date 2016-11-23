@@ -461,11 +461,7 @@ if ($question != null and file_exists($cfg_web_root . 'js/validation/jquery.' . 
 <script type="text/javascript" src="../../js/toprightmenu.js"></script>
 <?php
 endif;
-if ($question != null and $question->requires_flash()):
-?>
-<script type="text/javascript" src="../../js/ie_fix.js"></script>
-<script type="text/javascript" src="../../js/flash_include.js"></script>
-<?php
+if ($question != null and $question->requires_html5()):
 $render = new render($configObject);
 $render->render_html5_js(json_encode($jstring));
 endif;
