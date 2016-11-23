@@ -834,7 +834,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
   </script>
 
   <div align="center">
-    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" id="flash<?php echo $question_no; ?>" width="<?php echo $display_option['q_media_width']; ?>" height="<?php echo $display_option['q_media_height']; ?>" align="middle">
+    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" id="flash<?php echo $question_no; ?>" width="<?php echo $display_option['q_media_width']; ?>" height="<?php echo $display_option['q_media_height']; ?>" align="middle">
     <param name="allowScriptAccess" value="sameDomain" />
     <param name="movie" value="<?php echo $mediadirectory->url($display_option['q_media']); ?>" />
     <param name="quality" value="high" />
