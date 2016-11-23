@@ -30,7 +30,7 @@ require_once '../include/paper_security.php';
 require_once '../include/display_functions.inc';
 require_once '../include/media.inc';
 require_once '../include/errors.php';
-
+$jstring = $string; //to pass it to JavaScript HTML5 modules
 $userObject = UserObject::get_instance();
 
 if ($userObject->has_role('External Examiner') or $userObject->has_role('Internal Reviewer')) {    // Special users have their own separate UI.
@@ -367,12 +367,8 @@ if ($css != '') {
   }
 
   if (Paper_utils::need_interactiveQ($screen_data, $current_screen, $mysqli)) {
-    echo "<script type=\"text/javascript\">\nvar lang_string = " . json_encode($jstring) . "\n</script>\n";
-    echo "<script type=\"text/javascript\" src=\"../js/html5.images.js\"></script>\n";
-    echo "<script type=\"text/javascript\" src=\"../js/qsharedf.js\"></script>\n";
-    echo "<script type=\"text/javascript\" src=\"../js/qlabelling.js\"></script>\n";
-    echo "<script type=\"text/javascript\" src=\"../js/qhotspot.js\"></script>\n";
-    echo "<script type=\"text/javascript\" src=\"../js/qarea.js\"></script>\n";
+    $render = new render($configObject);
+    $render->render_html5_js(json_encode($jstring));
   }
 
   echo $configObject->get('cfg_js_root');

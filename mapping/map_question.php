@@ -28,7 +28,7 @@ require '../include/mapping.inc';
 require '../include/errors.php';
 require '../include/display_functions.inc';
 require '../include/media.inc';
-
+$jstring = $string; //to pass it to JavaScript HTML5 modules
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
 
 if (file_exists($cfg_web_root . "lang/$language/paper/start.php")) {
@@ -91,12 +91,8 @@ function display_q($configObject, $target_id, $db) {
   echo "</table>\n";
 }
 
-echo "<script>var lang_string = " .  json_encode($jstring) . ";\n</script>\n";
-echo "<script type=\"text/javascript\" src=\"../js/html5.images.js\"></script>\n";
-echo "<script type=\"text/javascript\" src=\"../js/qsharedf.js\"></script>\n";
-echo "<script type=\"text/javascript\" src=\"../js/qlabelling.js\"></script>\n";
-echo "<script type=\"text/javascript\" src=\"../js/qhotspot.js\"></script>\n";
-echo "<script type=\"text/javascript\" src=\"../js/qarea.js\"></script>\n";
+$render = new render($configObject);
+$render->render_html5_js(json_encode($jstring));
 ?>
 <html>
 <head>

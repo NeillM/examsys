@@ -588,11 +588,8 @@ if ($textsize > 120) {
 	<img class="noimg" src="../artwork/fire_exit.png" />
 
   <?php
-    echo "<script type=\"text/javascript\" src=\"../js/html5.images.js\"></script>\n";
-    echo "<script type=\"text/javascript\" src=\"../js/qsharedf.js\"></script>\n";
-    echo "<script type=\"text/javascript\" src=\"../js/qlabelling.js\"></script>\n";
-    echo "<script type=\"text/javascript\" src=\"../js/qhotspot.js\"></script>\n";
-    echo "<script type=\"text/javascript\" src=\"../js/qarea.js\"></script>\n";
+    $render = new render($configObject);
+    $render->render_html5_js(json_encode($jstring));
   ?>
 	<img class="noimg" src="../js/images/combined.png" />
 </body>
