@@ -85,7 +85,6 @@ function close_window() {
     .paper {font-size:180%; color:white; font-weight:bold}
   </style>
 
-  <script src="../js/ie_fix.js" type="text/javascript"></script>
   <script>
     window.history.go(1);
   </script>

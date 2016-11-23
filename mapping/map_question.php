@@ -103,7 +103,6 @@ $render->render_html5_js(json_encode($jstring));
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.mappingform.js"></script>
   <script type="text/javascript" src="../js/flash_include.js"></script>
-  <script type="text/javascript" src="../js/ie_fix.js"></script>
   <script type="text/javascript" src="../js/jquery.flash_q.js"></script>
   <script>
     $(function () {
