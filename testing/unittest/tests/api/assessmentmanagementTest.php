@@ -521,23 +521,6 @@ class assessmentmanagementtest extends unittestdatabase {
         $this->assertTablesEqual($expectedtable, $querytable); 
     }
     /**
-     * Test assessment update exception - invalid title
-     * @group api
-     */
-    public function test_update_exception_title() {
-        // Test paper update - EXCEPTION title in use.
-        $params = $this->update_param_array();
-        $responsearray = $this->update_response_array();
-        $userid = 1;
-        $assessment = new \api\assessmentmanagement($this->db);
-        $responsearray['statuscode'] = 206;
-        $responsearray['status'] = 'Assessment title is already in use';
-        $responsearray['id'] = null;
-        $params['id'] = 2;
-        $params['title'] = "Test create formative 3";
-        $this->assertEquals($responsearray, $assessment->update($params, $userid));
-    }
-    /**
      * Test assessment update exception - invalid user
      * @group api
      */

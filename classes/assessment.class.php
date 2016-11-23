@@ -158,8 +158,9 @@ class assessment {
         }
         
         // Check title is unique.
+        // External system paper title may not be unique.
         $uniquetitle = Paper_utils::is_paper_title_unique($papertitle, $this->db);
-        if (!$uniquetitle) {
+        if (!$uniquetitle and is_null($externalid)) {
             throw new Exception('NON_UNIQUE_TITLE');
         }
 
@@ -288,8 +289,9 @@ class assessment {
         $details = Paper_utils::get_paper_properties($id, $this->db);
         if ($papertitle != $details['title']) {
             // Check title is unique.
+            // External system paper title may not be unique.
             $uniquetitle = Paper_utils::is_paper_title_unique($papertitle, $this->db);
-            if (!$uniquetitle) {
+            if (!$uniquetitle and is_null($externalid)) {
                 throw new Exception('NON_UNIQUE_TITLE');
             }
             $params['paper_title'] = array('s', $papertitle);
