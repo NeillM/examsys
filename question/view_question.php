@@ -98,18 +98,12 @@ $question['assigned_number'] = (isset($_GET['qNo'])) ? $_GET['qNo'] : 1;
   
   <?php
   if ($question['q_type'] == 'hotspot' or $question['q_type'] == 'labelling' or $question['q_type'] == 'area') {
-    if ($configObject->get('cfg_interactive_qs') == 'html5') {
-      echo "<script type=\"text/javascript\">\nvar lang_string = " . json_encode($jstring) . "\n</script>\n";
-      echo "<script type=\"text/javascript\" src=\"../js/html5.images.js\"></script>\n";
-      echo "<script type=\"text/javascript\" src=\"../js/qsharedf.js\"></script>\n";
-      echo "<script type=\"text/javascript\" src=\"../js/qlabelling.js\"></script>\n";
-      echo "<script type=\"text/javascript\" src=\"../js/qhotspot.js\"></script>\n";
-      echo "<script type=\"text/javascript\" src=\"../js/qarea.js\"></script>\n";
-    } else {
-      echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
-      echo "<script type=\"text/javascript\" src=\"../js/flash_include.js\"></script>\n";
-      echo "<script type=\"text/javascript\" src=\"../js/jquery.flash_q.js\"></script>\n";
-    }
+    echo "<script type=\"text/javascript\">\nvar lang_string = " . json_encode($jstring) . "\n</script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/html5.images.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qsharedf.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qlabelling.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qhotspot.js\"></script>\n";
+    echo "<script type=\"text/javascript\" src=\"../js/qarea.js\"></script>\n";
   }
   echo $configObject->get('cfg_js_root');
   ?>

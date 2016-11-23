@@ -110,11 +110,6 @@ $string['errors18'] = 'The Rog&#333; data directory requires %s path to exist';
 $string['errors19'] = 'The Rog&#333; data directory requires %s must be writable';
 $string['installscript'] = 'Rog&#333; Install script';
 $string['systeminstallation'] = 'System Installation';
-
-$string['interactivequestions'] = "Interactive Questions Rendering Settings";
-$string['flash'] = "Adobe Flash";
-$string['html5'] = "HTML5";
-
 $string['labsecuritytype'] = "Summative Exam Lab Security";
 $string['IP'] = "IP address";
 $string['hostname'] = "Machine hostname";

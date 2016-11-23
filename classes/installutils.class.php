@@ -271,10 +271,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         <div><label for="loadtranslations"><?php echo $string['loadtranslations']; ?></label> <input id="loadtranslations" name="loadtranslations" type="checkbox"/></div><br/><br/>
         <div><?php echo sprintf($string['manualtranslations'], $configObject->getxml('translations', 'url')); ?></div>
 
-      <table class="h"><tr><td><nobr><?php echo $string['interactivequestions']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label><?php echo $string['flash']; ?></label> <input name="interactivequestions" value="flash" type="radio"/><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Adobe Flash is best for backwards browser compatibility but will be deprecated in future versions.  HTML5 is best for future proofing and works in IE9, Firefox 23, chrome 28.0 and Safari 5.1 and above" /></div>
-        <div><label><?php echo $string['html5']; ?></label> <input name="interactivequestions" type="radio" value="html5" checked = "checked"/></div>
-        
       <table class="h"><tr><td><nobr><?php echo $string['labsecuritytype']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><label><?php echo $string['IP']; ?></label> <input name="labsecuritytype" value="ipaddress" type="radio" checked = "checked" /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Rogo can lock summative exams to either IP address or hostname. If your institution uses static IPs then chose IP address otherwise chose hostname. " /></div>
         <div><label><?php echo $string['hostname']; ?></label> <input name="labsecuritytype" type="radio" value="hostname" /></div>
@@ -1896,7 +1892,6 @@ require \$root . '/include/path_functions.inc.php';
 
 \$cfg_summative_mgmt = false;     // Set this to true for central summative exam administration.
 \$cfg_client_lookup = '{labsecuritytype}'; //ipadress or name
-\$cfg_interactive_qs = '{interactivequestions}'; //flash or html5
 
 
   \$cfg_web_host = '{cfg_web_host}';
