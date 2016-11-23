@@ -70,7 +70,7 @@ function display_media($filename, $width, $height, $border_color, $imageid=-1, $
 </object>
 OBJEMBED;
 
-  } elseif ($fn_parts['extension'] == 'mp3') {     // Embed MP3 using HTML5 audio tag (fall back on Flash plugin).
+  } elseif ($fn_parts['extension'] == 'mp3') {     // Embed MP3 using HTML5 audio tag.
 
     if (strpos($_SERVER['PHP_SELF'],'/edit/') !== false or strpos($_SERVER['PHP_SELF'],'/add/') !== false) {  // Display filename if add or edit script
       $html .= $filename . '&nbsp;';
@@ -78,10 +78,6 @@ OBJEMBED;
 
     $html .= <<< OBJEMBED
 <audio src="{$mediadirectory->url($filename)}" controls>
-<object type="application/x-shockwave-flash" data="{$configObject->get('cfg_root_path')}/paper/player_mp3_maxi.swf" width="200" height="20">
-<param name="wmode" value="transparent" />
-<param name="movie" value="{$configObject->get('cfg_root_path')}/paper/player_mp3_maxi.swf" />
-<param name="FlashVars" value="mp3={$mediadirectory->url($filename, false, false, true)}&amp;showstop=1&amp;showvolume=1&amp;bgcolor1=ffa50b&amp;bgcolor2=d07600" />
 </object>
 </audio>
 OBJEMBED;
