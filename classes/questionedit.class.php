@@ -66,7 +66,7 @@ Class QuestionEdit extends RogoObject {
   protected $_allow_negative_marks = null;
   protected $_requires_media = false;
   protected $_requires_correction_intermediate = false;
-  protected $_requires_flash = false;
+  protected $_requires_html5 = false;
   protected $_allow_mapping = true;
   protected $_allow_correction = true;
   protected $_allow_new_options = false;
@@ -575,11 +575,11 @@ QUERY;
   }
 
   /**
-   * Does this question type require the Flash JavaScript includes?
+   * Does this question type require the html5 JavaScript includes?
    * @return boolean
    */
-  public function requires_flash() {
-    return $this->_requires_flash;
+  public function requires_html5() {
+    return $this->_requires_html5;
   }
 
   /**

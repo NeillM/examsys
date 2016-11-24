@@ -131,18 +131,8 @@ function check_ebel_distinction_type($reviewID, $db) {
     echo "<script type=\"text/javascript\" src=\"../js/jquery-migrate-1.2.1.min.js\"></script>\n";
     echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>\n";
   }
-  if ($configObject->get('cfg_interactive_qs') == 'html5') {
-    echo "<script>var lang_string = " .  json_encode($jstring) . ";\n</script>\n";
-    echo "<script type=\"text/javascript\" src=\"../js/html5.images.js\"></script>\n";
-    echo "<script type=\"text/javascript\" src=\"../js/qsharedf.js\"></script>\n";
-    echo "<script type=\"text/javascript\" src=\"../js/qlabelling.js\"></script>\n";
-    echo "<script type=\"text/javascript\" src=\"../js/qhotspot.js\"></script>\n";
-    echo "<script type=\"text/javascript\" src=\"../js/qarea.js\"></script>\n";
-	} else {
-    echo "<script type=\"text/javascript\" src=\"../js/ie_fix.js\"></script>\n";
-    echo "<script type=\"text/javascript\" src=\"../js/flash_include.js\"></script>\n";
-    echo "<script type=\"text/javascript\" src=\"../js/jquery.flash_q.js\"></script>\n";
-  }
+  $render = new render($configObject);
+  $render->render_html5_js(json_encode($jstring));
 ?>
   <script>
   <?php

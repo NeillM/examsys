@@ -91,7 +91,6 @@ HTML;
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
   <script type="text/javascript" src="../js/jquery.textbox.js"></script> <!-- save marking in here -->
-  <script type="text/javascript" src="../js/ie_fix.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
     langStrings = {'saveerror': '<?php echo $string['saveerror'] ?>'};
