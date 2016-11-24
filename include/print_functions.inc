@@ -637,7 +637,6 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 		echo "', '" . $display_option['marks_correct'] . "~" . $display_option['marks_incorrect'] . "~" . $question['score_method'] . "','#FFC0C0','labelling','answer');\n";
 		echo "</script>\n";
 		//<!-- ==================================================== -->
-		echo "</script>\n";
 
         if (!isset($user_answers[$current_screen][$q_id]) OR $user_answers[$current_screen][$q_id] == '') {
           echo "<input type=\"hidden\" name=\"q" . $question_no . "\" id=\"q" . $question_no . "\" value=\"0$" . $marks . ";\" />\n";
