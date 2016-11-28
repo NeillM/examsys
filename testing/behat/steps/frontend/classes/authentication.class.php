@@ -49,7 +49,7 @@ trait authentication {
    * @param $username The username to be logged in.
    */
   public function i_log_out() {
-      $this->click_mainmenu_icon();
-      $this->i_click("signout", "id");
-    }
+    $this->toggle_main_menu();
+    $this->i_click("signout", "id");
+  }
 }

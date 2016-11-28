@@ -30,34 +30,34 @@ use \encryp,
  * @subpackage datagenerator
  */
 class academic_year extends generator {
-    /**
-     * Create academic_year
-     * 
-     * @param array parameters
-     *  string parameters[academic_year] This is academic_year value
-     *  string parameters[calendar_year] This is calendar_year
 
-     * @throws Exception If passed parameter is invailid
-     */
-    public function create_academic_year($parameters) {
+  /**
+   * Create academic_year
+   * 
+   * @param array parameters
+   *  string parameters[academic_year] This is academic_year value
+   *  string parameters[calendar_year] This is calendar_year
+   * @throws Exception If passed parameter is invailid
+   */
+  public function create_academic_year($parameters) {
 
-        $academicyearpattern = '/(20)[1-9]\d\/[1-9][0-9]/'; //2016/17
-        $calendaryearpattern = '/(20)[1-9]\d/'; //2016
+    $academicyearpattern = '/[1-9]\d{3,}\/\d{2,}/'; //2016/17
+    $calendaryearpattern = '/[1-9]\d{3,}/'; //2016
 
-        if (!(preg_match($academicyearpattern, $parameters['academic_year'])) or ! (preg_match($calendaryearpattern, $parameters['calendar_year']))) {
-            throw new data_error('year number format is worng, should be like | 2016 | 2016/17 |');
-        } else {
+    if (!(preg_match($academicyearpattern, $parameters['academic_year'])) or ! (preg_match($calendaryearpattern, $parameters['calendar_year']))) {
+      throw new data_error('year number format is worng, should be like | 2016 | 2016/17 |');
+    } else {
 
-            $academic_year = $parameters['academic_year'];
-            $calendar_year = (int) $parameters['calendar_year'];
-            $db = loader::get_database();
-            $sql = "INSERT INTO academic_year(calendar_year, academic_year) VALUES (?,?)";
-            $query = $db->prepare($sql);
-            $query->bind_param('is', $calendar_year, $academic_year);
+      $academic_year = $parameters['academic_year'];
+      $calendar_year = (int) $parameters['calendar_year'];
+      $db = loader::get_database();
+      $sql = "INSERT INTO academic_year(calendar_year, academic_year) VALUES (?,?)";
+      $query = $db->prepare($sql);
+      $query->bind_param('is', $calendar_year, $academic_year);
 
-            if (!$query->execute()) {
-                throw new data_error("academic_year {$calendar_year} not inserted into database");
-            }
-        }
+      if (!$query->execute()) {
+        throw new data_error("academic_year {$calendar_year} not inserted into database");
+      }
     }
+  }
 }

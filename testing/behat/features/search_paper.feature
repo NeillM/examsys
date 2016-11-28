@@ -46,7 +46,7 @@ Feature: Searching Papers,People and their related Academic Sessions
          | Questions |
          | Papers |
          | People |
-      Then I click "Papers" "search_menu"   
+      Then I click "Papers" "sub_search_menu_item"
       Then I should be on "/paper/search.php"
       Then I fill in the following:
          | searchterm | paper2 |
@@ -58,7 +58,7 @@ Feature: Searching Papers,People and their related Academic Sessions
       Then I check "progress"
       Then I check "formative"
       And I press "Search"  
-      Then I should see "paper2" in the "div.content" element
+      Then I should see "paper2" "link"
       Then I log out
       Given I login as "myteacher3"
       When I go to the homepage
@@ -68,7 +68,7 @@ Feature: Searching Papers,People and their related Academic Sessions
          | Questions |
          | Papers |
          | People |
-      When I click "Papers" "search_menu"   
+      When I click "Papers" "sub_search_menu_item"   
       Then I should be on "/paper/search.php"
       Then I fill in the following:
          | searchterm | paper2 |

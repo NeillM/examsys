@@ -38,7 +38,7 @@ abstract class Data_Loader {
   protected $load_help;
 
   public function __construct($load_help = false) {
-    $this->fixture_base = __DIR__ . '/../../../fixtures/base/';
+    $this->fixture_base = __DIR__ . '/../../../fixtures/';
     $this->help_base = __DIR__ . '/../../../../../install/';
     $this->load_help = $load_help;
   }

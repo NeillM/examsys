@@ -13,22 +13,22 @@ Feature: Home page
          | Create folder |
          | My Personal Keywords |
          | Search |
-      Then I click main menu icon
+      Then I toggle the main menu
       Then I should see main menu with following items:
          | Item | 
          | Administrative Tools |
          | Help and Support |
          | Sign Out |
          | About Rogo | 
-      Then I click "Help & Support" "main_menu"
+      Then I click "Help & Support" "main_menu_item"
       Then I should see popup page with title "Rogō: Help"
       Then I close popup window
-      Then I click main menu icon
-      Then I click "Administrative Tools" "main_menu"
+      Then I toggle the main menu
+      Then I click "Administrative Tools" "main_menu_item"
       Then I should see popup page with title "Rogō: Admin"
       Then I close popup window
-      Then I click main menu icon
-      Then I click "Sign Out" "main_menu"
+      Then I toggle the main menu
+      Then I click "Sign Out" "main_menu_item"
       Then I should be on homepage
 
    @javascript
@@ -45,7 +45,7 @@ Feature: Home page
       And I should see "My Modules" "content_section"
       And I should see "All Modules..." "link"
       When I follow "Search"
-      Then I should see popup submenu with following items:
+      Then I should see popup search menu with following items:
          | Item |
          | Questions |
          | Papers |

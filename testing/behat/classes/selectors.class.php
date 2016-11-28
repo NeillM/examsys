@@ -64,8 +64,11 @@ class selectors {
     'page_title' => 'page_title',  
     'content_section' => 'content_section',
     'folder' => 'folder',
-    'main_menu' => 'main_menu', //<div id="toprightmenu" 
-    'search_menu' => 'search_menu',
+    'search_menu' => 'search_menu',  
+    'main_menu' => 'main_menu',
+    'main_menu_icon' => 'main_menu_icon',
+    'main_menu_item' => 'main_menu_item', //<div id="toprightmenu" 
+    'sub_search_menu_item' => 'sub_search_menu_item',
   );
 
   /**
@@ -111,9 +114,18 @@ XPATH
 //div[contains(@class, 'sidebar')]
 XPATH
       ,'main_menu' => <<<XPATH
+//div[contains(@id, 'toprightmenu')]
+XPATH
+      ,'main_menu_item' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' trm_div ') and contains(normalize-space(.) , %locator%)]      
 XPATH
+      ,'main_menu_icon' => <<<XPATH
+//img[@id='toprightmenu_icon']
+XPATH
     ,'search_menu' => <<<XPATH
+//div[contains(@id, 'popup0') and contains(@style, 'display: block;')]
+XPATH
+    ,'sub_search_menu_item' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' popupitem ') and contains(normalize-space(.) , %locator%)]      
 XPATH
     ,'content_section' => <<<XPATH
@@ -125,12 +137,17 @@ XPATH
    );
 
   /**
-   * Get the custom Rogo selector list.
+   * Get the custom Rogo selector list or a selector.
    *
+   * @param string $selectorname
    * @return array
    */
-  public static function get_selectors() {
-    return self::$rogoselectors;
+  public static function get_selectors($selectorname = null) {
+    if (empty($selectorname)){
+      return self::$rogoselectors;
+    } else {
+      return self::$rogoselectors[$selectorname];
+    }
   }
 
   /**

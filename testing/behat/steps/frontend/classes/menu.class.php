@@ -17,7 +17,8 @@
 
 namespace testing\behat\steps\frontend;
 use Behat\Gherkin\Node\PyStringNode,
-    Behat\Gherkin\Node\TableNode;
+    Behat\Gherkin\Node\TableNode,
+   testing\behat\selectors;
 
 /**
  * Basic core step definitions.
@@ -102,23 +103,23 @@ trait menu {
    */
   public function i_not_see_main_menu() {
     $node = null;
-    if (!$node = $this->find("xpath", "//div[@id='toprightmenu']")) {
-      throw new Exception("Could not find top right menu");
+    if (!$node = $this->find("xpath", selectors::get_selectors('main_menu'))) {
+      throw new Exception("Could not find main menu");
     }
     if ($node->isVisible()) {
-      throw new Exception("Top right menu should be not visible.");
+      throw new Exception("Main menu should be not visible.");
     }
   }
 
   /**
-   * Click main menu icon.
+   * Toggle the main menu.
    *
-   * @Then /^(?:|I )click main menu icon$/
+   * @Then /^(?:|I )toggle the main menu$/
    */
-  public function click_mainmenu_icon() {
+  public function toggle_main_menu() {
     $node = null;
-    if (!$node = $this->find("xpath", "//img[contains(@id, 'toprightmenu_icon')]")) {
-      throw new Exception("Could not find top right menu");
+    if (!$node = $this->find("xpath", selectors::get_selectors("main_menu_icon"))) {
+      throw new Exception("Could not find main menu");
     }
     $node->click();
   }
@@ -137,38 +138,38 @@ trait menu {
     $toprightmenu = $this->find("xpath", "//div[contains(@id, 'toprightmenu') and contains(@style, 'display: block;')]");
 
     if (empty($toprightmenu)) {
-      throw new Exception('Top right menu is not found');
+      throw new Exception('Main menu is not found');
     }
 
     foreach ($menuitems->getHash() as $menuitem) {
       $item = $menuitem['Item'];
       switch ($item) {
         case "Administrative Tools":
-          $element = $this->find("main_menu", 'Administrative Tools');
+          $element = $this->find("main_menu_item", 'Administrative Tools');
           if (empty($element)) {
-            throw new \Exception('$item in Top right menu could not be found');
+            throw new \Exception('$item in main menu could not be found');
           }
           break;
         case "Help and Support":
-          $element = $this->find("main_menu", 'Help');
+          $element = $this->find("main_menu_item", 'Help');
           if (empty($element)) {
-            throw new \Exception('$item in Top right menu could not be found');
+            throw new \Exception('$item in main menu could not be found');
           }
           break;
         case "Sign Out":
-          $element = $this->find("main_menu", 'Sign Out');
+          $element = $this->find("main_menu_item", 'Sign Out');
           if (empty($element)) {
-            throw new \Exception('$item in Top right menu could not be found');
+            throw new \Exception('$item in main menu could not be found');
           }
           break;
         case "About Rogo":
-          $element = $this->find("main_menu", 'About Rog');
+          $element = $this->find("main_menu_item", 'About Rog');
           if (empty($element)) {
-            throw new \Exception('$item in Top right menu could not be found');
+            throw new \Exception('$item in main menu could not be found');
           }
           break;
         default:
-          throw new \Exception('Top right menu could not be found');
+          throw new \Exception('main menu could not be found');
       }
     }
   }
@@ -176,7 +177,7 @@ trait menu {
   /**
    * Checks for popup search menu items.
    *
-   * @Then /^I should see popup submenu with following items:$/
+   * @Then /^I should see popup search menu with following items:$/
    * @param TableNode $menuitems The menu's items
    * @throws Exception
    */
@@ -184,7 +185,7 @@ trait menu {
     if (empty($menuitems)) {
       throw new Exception("The search menu element or its items list are empty");
     }
-    $searchmenu = $this->find("xpath", "//div[contains(@id, 'popup0') and contains(@style, 'display: block;')]");
+    $searchmenu = $this->find("xpath", selectors::get_selectors("search_menu"));
 
     if (empty($searchmenu)) {
       throw new Exception('popup search menu is not found');
@@ -192,27 +193,9 @@ trait menu {
 
     foreach ($menuitems->getHash() as $menuitem) {
       $item = $menuitem['Item'];
-      switch ($item) {
-        case "Questions":
-          $element = $this->find("search_menu", 'Questions');
-          if (empty($element)) {
-            throw new Exception('$item in Top right menu could not be found');
-          }
-          break;
-        case "Papers":
-          $element = $this->find("search_menu", 'Papers');
-          if (empty($element)) {
-            throw new Exception('$item in Top right menu could not be found');
-          }
-          break;
-        case "People":
-          $element = $this->find("search_menu", 'People');
-          if (empty($element)) {
-            throw new Exception('$item in Top right menu could not be found');
-          }
-          break;
-        default:
-          throw new Exception('Popup search menu could not be found');
+      $element = $this->find("sub_search_menu_item", $item);
+      if (empty($element)) {
+            throw new Exception("$item in sub menu could not be found");
       }
     }
   }
