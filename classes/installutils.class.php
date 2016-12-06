@@ -500,6 +500,10 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         $mysqli->set_charset(self::$cfg_db_charset);
       }
       $configObject->set_db_object($mysqli);
+      require_once '../include/path_functions.inc.php';
+      $cfg_web_root = get_root_path() . '/';
+      $cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_ROOT']), '', $cfg_web_root), '/'), '/');
+      $configObject->set('cfg_root_path', $cfg_root_path);
       self::correct_staff_path();
       self::correct_student_path();
     }
