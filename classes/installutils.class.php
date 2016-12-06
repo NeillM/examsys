@@ -453,9 +453,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
     self::$db->set_charset(self::$cfg_db_charset);
 
-    // Set db object in config.
-    $configObject->set_db_object(self::$db);
-
     //create salt as this is needed to generate the passwords that are created in the next function rather than created during config file settings
     $salt = '';
     $characters = 'abcdefghijklmnopqrstuvwxzyABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -497,6 +494,12 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
     // Fix help file image paths.
     if (isset($_POST['loadHelp'])) {
+      // Set db object in config.
+      @$mysqli = new mysqli(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd, self::$cfg_db_name, self::$cfg_db_port);
+      if ($mysqli->connect_error == '') {
+        $mysqli->set_charset(self::$cfg_db_charset);
+      }
+      $configObject->set_db_object($mysqli);
       self::correct_staff_path();
       self::correct_student_path();
     }
@@ -513,7 +516,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   /**
    * Correct path of staff help file images as may not be in root web server directory.
    */
-  public function correct_staff_path() {
+  static public function correct_staff_path() {
     set_time_limit(0);
     $configObject = Config::get_instance();
     $webroot = $configObject->get('cfg_root_path');
@@ -545,7 +548,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   /**
    * Correct path of student help file images as may not be in root web server directory.
    */
-  public function correct_student_path() {
+  static public function correct_student_path() {
     set_time_limit(0);
     $configObject = Config::get_instance();
     $webroot = $configObject->get('cfg_root_path');
