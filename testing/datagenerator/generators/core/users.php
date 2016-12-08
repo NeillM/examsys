@@ -178,7 +178,6 @@ class users extends generator {
       throw new data_error('Must pass an array or object');
     }
     $usernumber = ++self::$userscreated;
-
     $defaults = array(
       'username' => self::$defaultusername . $usernumber,
       'surname' => $this->random_value('surnames'),
