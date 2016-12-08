@@ -196,6 +196,8 @@ trait basic {
   }
 
   /**
+   * Check javascript popup message
+   * 
    * @Then /^(?:|I )should see "([^"]*)" in popup$/
    *
    * @param string $message The message.
@@ -207,6 +209,8 @@ trait basic {
   }
 
   /**
+   * Confirm a javascript popup window, click OK/Yes button
+   * 
    * @Then /^(?:|I )confirm the popup$/
    */
   public function confirm_popup() {
@@ -214,6 +218,8 @@ trait basic {
   }
 
   /**
+   * Cancel a javascript popup window, click No/Cancel button
+   * 
    * @Then /^(?:|I )cancel the popup$/
    */
   public function cancel_popup() {
