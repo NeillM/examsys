@@ -76,6 +76,7 @@ class composer_utils {
    * @return void
    */
   protected static function fetch_dependancies($method) {
+    $devflag = '';
     if ($method == self::INSTALL_NODEV) {
       $devflag = '--no-dev';
     }
@@ -91,6 +92,7 @@ class composer_utils {
    * @return void
    */
   protected static function update_dependancies($method) {
+    $devflag = '';
     if ($method == self::UPDATE_NODEV) {
       $devflag = '--no-dev';
     }
