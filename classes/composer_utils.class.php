@@ -77,7 +77,7 @@ class composer_utils {
    */
   protected static function fetch_dependancies($method) {
     $devflag = '';
-    if ($method == self::INSTALL_NODEV) {
+    if ($method === self::INSTALL_NODEV) {
       $devflag = '--no-dev';
     }
     passthru("php composer.phar install $devflag", $statuscode);
@@ -93,7 +93,7 @@ class composer_utils {
    */
   protected static function update_dependancies($method) {
     $devflag = '';
-    if ($method == self::UPDATE_NODEV) {
+    if ($method === self::UPDATE_NODEV) {
       $devflag = '--no-dev';
     }
     passthru("php composer.phar update $devflag", $statuscode);
