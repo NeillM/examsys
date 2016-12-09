@@ -24,6 +24,12 @@ class composer_utils {
   /** Composer should get the laest versions of the depedencies and update the lock file. */
   const UPDATE = 2;
 
+  /** Composer should install dependancies respecting the lock file, skipping dev packages. */
+  const INSTALL_NODEV = 3;
+
+  /** Composer should get the laest versions of the depedencies and update the lock file, skipping dev packages. */
+  const UPDATE_NODEV = 4;
+  
   /**
    * Ensures that composer is installed, uptodate and has installed all the projects dependancies.
    *
@@ -35,10 +41,10 @@ class composer_utils {
     // Change to the root Rogo directory.
     chdir(__DIR__ . '/..');
     self::install_update();
-    if ($method === self::UPDATE) {
-      self::update_dependancies();
+    if ($method === self::UPDATE or $method === self::UPDATE_NODEV) {
+      self::update_dependancies($method);
     } else {
-      self::fetch_dependancies();
+      self::fetch_dependancies($method);
     }
     chdir($workingdir);
   }
@@ -66,11 +72,14 @@ class composer_utils {
 
   /**
    * Downloads and installs all the files required by the composer.lock file for the project.
-   *
+   * @param integer $method install method
    * @return void
    */
-  protected static function fetch_dependancies() {
-    passthru("php composer.phar install", $statuscode);
+  protected static function fetch_dependancies($method) {
+    if ($method == self::INSTALL_NODEV) {
+      $devflag = '--no-dev';
+    }
+    passthru("php composer.phar install $devflag", $statuscode);
     if ($statuscode != 0) {
       throw new Exception('Could not install components.');
     }
@@ -78,11 +87,14 @@ class composer_utils {
 
   /**
    * Downloads and installs all the files required by the composer.json file for the project.
-   *
+   * @param integer $method update method
    * @return void
    */
-  protected static function update_dependancies() {
-    passthru("php composer.phar update", $statuscode);
+  protected static function update_dependancies($method) {
+    if ($method == self::UPDATE_NODEV) {
+      $devflag = '--no-dev';
+    }
+    passthru("php composer.phar update $devflag", $statuscode);
     if ($statuscode != 0) {
       throw new Exception('Could not update components.');
     }

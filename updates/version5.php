@@ -870,6 +870,14 @@ QUERY;
 
   // End of updates -----------------------------------------------------------------
 
+  // Update composer and dependencies.
+  try {
+    $composer_method = composer_utils::UPDATE_NODEV;
+    composer_utils::setup($composer_method);
+  } catch (Exception $e) {
+      echo "<li class=\"error\">" . $e->getMessage() . "</li>";
+  }
+
   // Final housekeeping activities - put all updates above this line
   $updated = $updater_utils->update_version($version, $string, $cfg_web_root);
   if ($updated !== true) {
