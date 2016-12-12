@@ -31,6 +31,11 @@ class composer_utils {
   const UPDATE_NODEV = 4;
   
   /**
+   * Language pack component.
+   */
+  const langcomponent = 'classes/composerutils';
+  
+  /**
    * Ensures that composer is installed, uptodate and has installed all the projects dependancies.
    *
    * @return void
@@ -55,17 +60,18 @@ class composer_utils {
    * @return void
    */
   protected static function install_update() {
+    $langpack = new langpack();
     if (!file_exists(__DIR__ . '/../composer.phar')) {
       // Composer needs to be installed.
       passthru("curl http://getcomposer.org/installer | php", $statuscode);
       if ($statuscode != 0) {
-        throw new Exception('Cannot install composer, on Windows you will need to manually download it.');
+        throw new Exception($langpack->get_string(self::langcomponent, 'cannotinstall'));
       }
     } else {
       // Composer needs to be updated.
       passthru("php composer.phar self-update", $statuscode);
       if ($statuscode != 0) {
-        throw new Exception('Cannot update composer.');
+        throw new Exception($langpack->get_string(self::langcomponent, 'cannotupdate'));
       }
     }
   }
@@ -76,13 +82,14 @@ class composer_utils {
    * @return void
    */
   protected static function fetch_dependancies($method) {
+    $langpack = new langpack();
     $devflag = '';
     if ($method === self::INSTALL_NODEV) {
       $devflag = '--no-dev';
     }
     passthru("php composer.phar install $devflag", $statuscode);
     if ($statuscode != 0) {
-      throw new Exception('Could not install components.');
+      throw new Exception($langpack->get_string(self::langcomponent, 'couldnotinstallcomp'));
     }
   }
 
@@ -92,13 +99,14 @@ class composer_utils {
    * @return void
    */
   protected static function update_dependancies($method) {
+    $langpack = new langpack();
     $devflag = '';
     if ($method === self::UPDATE_NODEV) {
       $devflag = '--no-dev';
     }
     passthru("php composer.phar update $devflag", $statuscode);
     if ($statuscode != 0) {
-      throw new Exception('Could not update components.');
+      throw new Exception($langpack->get_string(self::langcomponent, 'couldnotupdatecomp'));
     }
   }
 }
