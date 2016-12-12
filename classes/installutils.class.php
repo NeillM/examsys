@@ -508,6 +508,17 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       self::correct_student_path();
     }
 
+    // Install composer and dependencies.
+    try {
+      $composer_method = composer_utils::INSTALL_NODEV;
+      composer_utils::setup($composer_method);
+    } catch (Exception $e) {
+      // Non fatal warning.
+      echo "<div class=\"warning\">\n";
+      echo "\t<div>" . $e->getMessage() . "</div>\n";
+      echo "</div>\n";
+    }
+
     if (!is_array(self::$warnings)) {
       echo "<p style=\"margin-left:10px\">" . $string['installed'] . "</p>\n";
       echo "<p style=\"margin-left:10px\">" . $string['deleteinstall'] . "</p>\n";
