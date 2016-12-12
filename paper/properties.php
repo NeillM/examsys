@@ -1921,9 +1921,16 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     if ($module_sql != '') {
       $module_array = $userObject->get_staff_accessable_modules();
       $old_school = '';
+      $old_schoolcode = '';
       foreach ($module_array as $module) {
-        if ($module['school'] != $old_school) {
-    			echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $module['school'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
+        if (is_null($module['schoolcode'])) {
+          if ($module['school'] != $old_school) {
+            echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $module['school'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
+          }
+        } else {
+          if ($module['schoolcode'] != $old_schoolcode) {
+            echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $module['schoolcode'] . ' '. $module['school'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
+          }
         }
         $match = false;
         foreach ($modules_array as $separate_module) {
@@ -1940,6 +1947,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         }
         $module_no++;
         $old_school = $module['school'];
+        $old_schoolcode = $module['schoolcode'];
       }
     }
     echo "<input type=\"hidden\" name=\"module_no\" id=\"module_no\" value=\"$module_no\" /></div>\n";
