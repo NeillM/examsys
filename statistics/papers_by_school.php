@@ -81,7 +81,7 @@ $current_year = check_var('calyear', 'GET', true, false, true);
 <?php
 $master_array = array();
 
-$result = $mysqli->prepare("SELECT schools.id, school.code, school, faculty,code, name FROM schools, faculty WHERE schools.facultyID = faculty.id AND school != 'Training' AND schools.deleted IS NULL AND faculty.deleted IS NULL ORDER BY name, school");
+$result = $mysqli->prepare("SELECT schools.id, schools.code, school, faculty.code, name FROM schools, faculty WHERE schools.facultyID = faculty.id AND school != 'Training' AND schools.deleted IS NULL AND faculty.deleted IS NULL ORDER BY name, school");
 $result->execute();
 $result->bind_result($id, $code, $school, $faculty_code, $faculty);
 while ($result->fetch()) {
