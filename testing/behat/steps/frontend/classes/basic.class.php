@@ -17,7 +17,8 @@
 namespace testing\behat\steps\frontend;
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode,
-    PHPUnit_Framework_Assert;
+    PHPUnit_Framework_Assert,
+    Exception;
 
 /**
  * Basic core step definitions.
