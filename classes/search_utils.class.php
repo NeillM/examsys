@@ -75,7 +75,7 @@ Class search_utils {
     $old_schoolcode= '';
     foreach ($staff_modules as $module) {
       if (is_null($module['schoolcode'])) {
-        if ($module['school'] != $old_school) {
+        if ($module['school'] != $old_school or !is_null($old_schoolcode)) {
           if ($old_school != '') echo "</optgroup>\n";
           echo "<optgroup label=\"" . $module['school'] . "\">\n";
         }
