@@ -1924,7 +1924,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       $old_schoolcode = '';
       foreach ($module_array as $module) {
         if (is_null($module['schoolcode'])) {
-          if ($module['school'] != $old_school) {
+          if ($module['school'] != $old_school or !is_null($old_schoolcode)) {
             echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $module['school'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
           }
         } else {

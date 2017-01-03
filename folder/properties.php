@@ -284,7 +284,7 @@ if ($unique_name) {
       
       foreach ($userObject->get_staff_accessable_modules() as $IdMod => $module) {
         if (is_null($module['schoolcode'])) {
-          if ($module['school'] != $old_school) {
+          if ($module['school'] != $old_school or !is_null($old_schoolcode)) {
             echo "<table border=\"0\" class=\"school\"><tr><td><nobr>" . $module['school'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
           }
         } else {

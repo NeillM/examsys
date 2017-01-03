@@ -482,7 +482,7 @@ if ($papertype == $assessment::TYPE_SUMMATIVE) {
   $old_schoolcode = '';
   foreach($module_array as $module) {
     if (is_null($module['schoolcode'])) {
-      if ($module['school'] != $current_school) {
+      if ($module['school'] != $current_school or !is_null($old_schoolcode)) {
         $current_school = $module['school'];
         echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $module['school'] . "&nbsp;</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
       }
