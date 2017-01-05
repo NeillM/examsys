@@ -24,7 +24,6 @@ $string['databasindexes'] = 'Database indexes';
 $string['databasstructure'] = 'Database structure';
 $string['helpconsistency'] = 'Help page consistency test';
 $string['helpgaps'] = 'Online Help gaps';
-$string['coding'] = 'Coding standards test';
 $string['posttests'] = 'Post-Installation Tests';
 $string['summativecheck'] = 'Summative Exam check';
 $string['calccheck'] = 'Check enhancedcalc setup';

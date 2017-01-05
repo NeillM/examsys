@@ -73,7 +73,6 @@ $strings = $langpack->get_all_strings('testing/index');
 		<li><a href="database_structure.php"><?php echo $strings['databasstructure'] ?></a></li>
         <li><a href="help_test.php"><?php echo $strings['helpconsistency'] ?></a></li>
 		<li><a href="online_help_gaps.php"><?php echo $strings['helpgaps'] ?></a></li>
-        <li><a href="syntax_test.php"><?php echo $strings['coding'] ?></a></li>
 	</ol>
   
   <h2><?php echo $strings['posttests'] ?></h2>
