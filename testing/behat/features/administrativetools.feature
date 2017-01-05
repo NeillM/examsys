@@ -46,4 +46,4 @@ Feature: Administrative Tools
       Then I should see "Clear Old Logs" "admin_tool_link"
       Then I should see "Clear Training" "admin_tool_link"
       Then I should see "phpinfo()" "admin_tool_link"
-      Then I log out
+
