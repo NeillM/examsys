@@ -543,108 +543,65 @@ $mysqli->close();
  * @return int - ID of the newly inserted property record.
  */
 function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, $userObj, $configObject) {
-
+  $pid = param::required('paperID', param::INT, param::FETCH_POST);
   $userID = $userObj->get_user_ID();
-  $moduleIDs = Paper_utils::get_modules($_POST['paperID'], $db);
+  $moduleIDs = Paper_utils::get_modules($pid, $db);
 
-  $result = $db->prepare("SELECT property_id,
-    paper_title,
-    start_date,
-    end_date,
-    timezone,
-    paper_type,
-    paper_prologue,
-    paper_postscript,
-    bgcolor,
-    fgcolor,
-    themecolor,
-    labelcolor,
-    fullscreen,
-    marking,
-    bidirectional,
-    pass_mark,
-    distinction_mark,
-    paper_ownerID,
-    folder,
-    labs,
-    rubric,
-    calculator,
-    exam_duration,
-    deleted,
-    created,
-    random_mark, 
-    total_mark,
-    display_correct_answer,
-    display_question_mark,
-    display_students_response,
-    display_feedback,
-    hide_if_unanswered,
-    calendar_year,
-    external_review_deadline,
-    internal_review_deadline,
-    sound_demo,
-    latex_needed,
-    password,
-    retired,
-    crypt_name,
-    recache_marks
-    FROM properties WHERE property_id = ? LIMIT 1");
-  $result->bind_param('i', $_POST['paperID']);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($property_id, $paper_title, $start_date, $end_date, $timezone, $paper_type, $paper_prologue, $paper_postscript, $bgcolor, $fgcolor, $themecolor, $labelcolor, $fullscreen, $marking, $bidirectional, $pass_mark, $distinction_mark, $paper_owner, $folder, $labs, $rubric, $calculator, $exam_duration, $deleted, $created, $random_mark, $total_mark, $display_correct_answer, $display_question_mark, $display_students_response, $display_feedback, $hide_if_unanswered, $calendar_year,  $external_review_deadline, $internal_review_deadline, $sound_demo, $latex_needed, $password, $retired, $crypt_name, $recache_marks);
-  $result->fetch();
-  $result->close();
+  $properties = Paper_utils::get_paper_properties($pid, $db);
 
-  $paper_type = $_POST['paper_type'];      // Override the paper type with what is posted.
+  $paper_type = param::required('paper_type', param::INT, param::FETCH_POST);      // Override the paper type with what is posted.
+  $duration_hours = param::optional('duration_hours', null, param::INT, param::FETCH_POST);
+  $duration_mins = param::optional('duration_mins', null, param::INT, param::FETCH_POST); 
   if ($paper_type == 2 and $configObject->get('cfg_summative_mgmt')) {
-		$duration = 0;
-		if (isset($_POST['duration_hours'])) {
-			$duration += ($_POST['duration_hours'] * 60);
-		}
-		if (isset($_POST['duration_mins'])) {
-			$duration += $_POST['duration_mins'];
-		}
-		$tmp_exam_duration = $duration;
+    $duration = 0;
+    if (!is_null($duration_hours)) {
+      $duration += ($duration_hours * 60);
+    }
+    if (!is_null($duration_mins)) {
+      $duration += $duration_mins;
+    }
+    $tmp_exam_duration = $duration;
   } else {
-    $tmp_exam_duration = $exam_duration;
+    $tmp_exam_duration = $properties['duration'];
   }
-
+  $labs = $properties['labs'];
   if ($paper_type == 2) {
     if ($configObject->get('cfg_summative_mgmt')) {
       $tmp_start_date = NULL;
       $tmp_end_date = NULL;
-			$labs = NULL;
+      $labs = NULL;
     } else {
       $tmp_start_date = '20200505090000';
       $tmp_end_date = '20200505100000';
     }
   } else {
-    $tmp_start_date = $start_date;
-    $tmp_end_date = $end_date;
+    $tmp_start_date = $properties['startdatetime'];
+    $tmp_end_date = $properties['enddatetime'];;
   }
-  $tmp_random_mark = $random_mark;
+  $tmp_random_mark = $properties['random_mark'];
   if ($tmp_random_mark == '') $tmp_random_mark = NULL;
-  $tmp_total_mark = $total_mark;
+  $tmp_total_mark = $properties['total_mark'];
   if ($tmp_total_mark == '') $tmp_total_mark = NULL;
 
-  $tmp_external_review_deadline = $external_review_deadline;
+  $tmp_external_review_deadline = $properties['external_review_deadline'];
   if ($tmp_external_review_deadline == '') $tmp_external_review_deadline = NULL;
 
-  $tmp_internal_review_deadline = $internal_review_deadline;
+  $tmp_internal_review_deadline = $properties['internal_review_deadline'];
   if ($tmp_internal_review_deadline == '') $tmp_internal_review_deadline = NULL;
 
-  if (isset($_POST['session'])) {
-    $new_calendar_year = $_POST['session'];
+  $new_paper = param::required('new_paper', param::ALPHANUM, param::FETCH_POST);
+  $session = param::optional('session', null, param::INT, param::FETCH_POST); 
+  if (!is_null($session)) {
+    $new_calendar_year = $session;
     if ($new_calendar_year == '') {
       $new_calendar_year = NULL;
     }
   } else {
-		$academic_year_title = Paper_utils::academic_year_from_title($_POST['new_paper']);
+		$academic_year_title = Paper_utils::academic_year_from_title($new_paper);
 		if ($academic_year_title !== false) {
 			$new_calendar_year = $academic_year_title;
 		} else {
-			$new_calendar_year = $calendar_year;
+			$new_calendar_year = $properties['calendar_year'];
 		}
   }
 
@@ -652,43 +609,43 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
   $unixtime = time();
   $created = date("Y-m-d H:i:s", $unixtime);
   $params = array(
-    'paper_title' => array('s', $_POST['new_paper']),
+    'paper_title' => array('s', $new_paper),
     'start_date' => array('s', $tmp_start_date),
     'end_date' => array('s', $tmp_end_date),
-    'timezone' => array('s', $timezone),
+    'timezone' => array('s', $properties['timezone']),
     'paper_type' => array('s', $paper_type),
-    'paper_prologue' => array('s', $paper_prologue),
-    'paper_postscript' => array('s', $paper_postscript),
-    'bgcolor' => array('s', $bgcolor),
-    'fgcolor' => array('s', $fgcolor),
-    'themecolor' => array('s', $themecolor),
-    'labelcolor' => array('s', $labelcolor),
-    'fullscreen' => array('s', $fullscreen),
-    'marking' => array('s', $marking),
-    'bidirectional' => array('s', $bidirectional),
-    'pass_mark' => array('i', $pass_mark),
-    'distinction_mark' => array('i', $distinction_mark),
+    'paper_prologue' => array('s', $properties['paper_prologue']),
+    'paper_postscript' => array('s', $properties['paper_postscript']),
+    'bgcolor' => array('s', $properties['bgcolor']),
+    'fgcolor' => array('s', $properties['fgcolor']),
+    'themecolor' => array('s', $properties['themecolor']),
+    'labelcolor' => array('s', $properties['labelcolor']),
+    'fullscreen' => array('s', $properties['fullscreen']),
+    'marking' => array('s', $properties['marking']),
+    'bidirectional' => array('s', $properties['bidirectional']),
+    'pass_mark' => array('i', $properties['pass_mark']),
+    'distinction_mark' => array('i', $properties['distinction_mark']),
     'paper_ownerID' => array('i', $userID),
-    'folder' => array('s', $folder),
+    'folder' => array('s', $properties['folder']),
     'labs' => array('s', $labs),
-    'rubric' => array('s', $rubric),
-    'calculator' => array('i', $calculator),
+    'rubric' => array('s', $properties['rubric']),
+    'calculator' => array('i', $properties['calculator']),
     'exam_duration' => array('i', $tmp_exam_duration),
     'deleted' => array('s', NULL),
     'created' => array('s', $created),
     'random_mark' => array('d', $tmp_random_mark),
     'total_mark' => array('i', $tmp_total_mark),
-    'display_correct_answer' => array('s', $display_correct_answer),
-    'display_question_mark' => array('s', $display_question_mark),
-    'display_students_response' => array('s', $display_students_response),
-    'display_feedback' => array('s', $display_feedback),
-    'hide_if_unanswered' => array('s', $hide_if_unanswered),
+    'display_correct_answer' => array('s', $properties['display_correct_answer']),
+    'display_question_mark' => array('s', $properties['display_question_mark']),
+    'display_students_response' => array('s', $properties['display_students_response']),
+    'display_feedback' => array('s', $properties['display_feedback']),
+    'hide_if_unanswered' => array('s', $properties['hide_if_unanswered']),
     'calendar_year' => array('i', $new_calendar_year),
     'external_review_deadline' => array('s', $tmp_external_review_deadline),
     'internal_review_deadline' => array('s', $tmp_internal_review_deadline),
-    'sound_demo' => array('s', $sound_demo),
-    'latex_needed' => array('i', $latex_needed),
-    'password' => array('s', $password),
+    'sound_demo' => array('s', $properties['sound_demo']),
+    'latex_needed' => array('i', $properties['latex_needed']),
+    'password' => array('s', $properties['password']),
     'retired' => array('s', NULL),
     'recache_marks' => array('i', 0)
   );
@@ -699,7 +656,7 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
 
   // Get the old reviewers and populate the new paper with.
   $result2 = $db->prepare("SELECT reviewerID, type FROM properties_reviewers WHERE paperID = ?");
-  $result2->bind_param('i', $_POST['paperID']);
+  $result2->bind_param('i', $pid);
   $result2->execute();
   $result2->store_result();
   $result2->bind_result($reviewerID, $type);
@@ -715,12 +672,13 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
   Paper_utils::update_modules($moduleIDs, $new_paper_id, $db, $userObj);
 
   if ($paper_type == $assessment::TYPE_SUMMATIVE and $configObject->get('cfg_summative_mgmt')) {
-    if (isset($_POST['barriers_needed'])) {
-      $barriers_needed = 1;
-    } else {
-      $barriers_needed = 0;
-    }
-    $assessment->schedule($new_paper_id, $_POST['period'], $barriers_needed, $_POST['cohort_size'], $_POST['notes'], $_POST['sittings'], $_POST['campus']);
+    $barriers_needed = param::optional('barriers_needed', 0, param::INT, param::FETCH_POST);
+    $period = param::optional('period', null, param::INT, param::FETCH_POST);
+    $cohort_size = param::optional('cohort_size', '<whole cohort>', param::ALPHANUM, param::FETCH_POST);
+    $notes = param::optional('notes', null, param::ALPHANUM, param::FETCH_POST);
+    $sittings = param::optional('sittings', 1, param::INT, param::FETCH_POST);
+    $campus= param::optional('campus', null, param::ALPHANUM, param::FETCH_POST);
+    $assessment->schedule($new_paper_id, $period, $barriers_needed, $cohort_size, $notes, $sittings, $campus);
   }
 
 
