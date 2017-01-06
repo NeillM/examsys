@@ -981,4 +981,46 @@ Class PaperUtils {
     $result->close();
     return $papers;
   }
+  
+  /**
+   * Get a list of papers available to the logged in user
+   *
+   * @param object $userObject logged in user object
+   * @param string $order query order string
+   * @param string $direction query order direction string
+   * @param integer $type paper type
+   * @param integer $teamid logged in users team
+   * @return array list of papers available to logged in user
+   */
+  static public function get_available_papers($userObject, $order, $direction, $type = null, $teamid = null) {
+    $configObject = \Config::get_instance();
+    $paper_details = array();
+    if (!is_null($type)) {
+      $user_teams = $userObject->get_staff_modules();
+      $module_id_list = implode(',', array_keys($user_teams));
+      $my_teams = '';
+      if (count($user_teams) > 0) {
+        $my_teams = " OR idMod IN ($module_id_list)";
+      }  
+      $sql = "SELECT properties.property_id, paper_title, paper_type, DATE_FORMAT(created,' {$configObject->get('cfg_long_date')}') AS created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND paper_type='" . $type . "' AND deleted IS NULL AND paper_ownerID=users.id AND (paper_ownerID=" . $userObject->get_user_ID() . " $my_teams)";
+    } else {
+      $sql = "SELECT properties.property_id, paper_title, paper_type, DATE_FORMAT(created,' {$configObject->get('cfg_long_date')}') AS created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND idMod = " . $teamid. " AND deleted IS NULL AND paper_ownerID=users.id";
+    }
+    if ($order == 'created') {
+      $order = 'CAST(created AS DATE)';
+    }
+    $sql .= " ORDER BY {$order} " . strtoupper($direction);
+    $result = $mysqli->prepare($sql);
+    $result->execute();
+    $result->bind_result($property_id, $paper_title, $paper_type, $created, $title, $initials, $surname, $moduleid);
+    while ($result->fetch()) {
+      if (!isset($paper_details[$property_id])) {
+        $paper_details[$property_id] = array('paper_title'=>$paper_title, 'paper_type'=>$paper_type, 'created'=>$created, 'title'=>$title, 'initials'=>$initials, 'surname'=>$surname);
+      }
+      $paper_details[$property_id]['moduleid'][] = $moduleid;
+    }
+    $result->close();
+    return $paper_details;
+  }
+  
 }
