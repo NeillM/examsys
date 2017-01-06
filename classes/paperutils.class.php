@@ -988,11 +988,12 @@ Class PaperUtils {
    * @param object $userObject logged in user object
    * @param string $order query order string
    * @param string $direction query order direction string
+   * @param mysqli $mysqli db connection
    * @param integer $type paper type
    * @param integer $teamid logged in users team
    * @return array list of papers available to logged in user
    */
-  static public function get_available_papers($userObject, $order, $direction, $type = null, $teamid = null) {
+  static public function get_available_papers($userObject, $order, $direction, $mysqli, $type = null, $teamid = null) {
     $configObject = \Config::get_instance();
     $paper_details = array();
     if (!is_null($type)) {
@@ -1004,7 +1005,7 @@ Class PaperUtils {
       }  
       $sql = "SELECT properties.property_id, paper_title, paper_type, DATE_FORMAT(created,' {$configObject->get('cfg_long_date')}') AS created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND paper_type='" . $type . "' AND deleted IS NULL AND paper_ownerID=users.id AND (paper_ownerID=" . $userObject->get_user_ID() . " $my_teams)";
     } else {
-      $sql = "SELECT properties.property_id, paper_title, paper_type, DATE_FORMAT(created,' {$configObject->get('cfg_long_date')}') AS created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND idMod = " . $teamid. " AND deleted IS NULL AND paper_ownerID=users.id";
+      $sql = "SELECT properties.property_id, paper_title, paper_type, DATE_FORMAT(created,' {$configObject->get('cfg_long_date')}') AS created, title, initials, surname, modules.moduleid FROM (properties, properties_modules, modules, users) WHERE properties.property_id=properties_modules.property_id AND properties_modules.idMod=modules.id AND idMod = " . $teamid . " AND deleted IS NULL AND paper_ownerID=users.id";
     }
     if ($order == 'created') {
       $order = 'CAST(created AS DATE)';

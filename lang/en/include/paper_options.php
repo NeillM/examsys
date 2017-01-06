@@ -147,4 +147,6 @@ $string['type'] = 'Type';
 $string['copyfrompaper'] = 'Copy from paper';
 $string['papersettingsonly'] = 'Paper settings only';
 $string['papersettingsandquestions'] = 'Paper settings and questions';
+$string['cancel'] = 'Cancel';
+$string['ok'] = 'Ok';
 ?>

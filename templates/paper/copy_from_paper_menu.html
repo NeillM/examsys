@@ -1,4 +1,4 @@
-<div class="popup" style="z-index: 20; font-size: 90%; background-color: white; top: 120px; width: 630px; height: 346px; display: block;" id="copy_from_submenu">
+<div class="popup" style="z-index: 20; font-size: 90%; background-color: white; top: 120px; width: 630px; height: 346px; display: block;" id="copy_from_submenu" onclick="showCopyFromMenu(true, event);">
     <form method="post" action="{{data.action}}" autocomplete="off">
         <input type="hidden" name="paper_type" value="{{data.papertype}}" />
         <input type="hidden" name="currentpid" value="{{data.paperid}}" />
@@ -17,7 +17,9 @@
                         <td colspan="4">
                             <select name="paperID" id="paperID">
                                 {% for id,item in data.papers %}
-                                <option value="{{id}}">{{item}}</option>
+                                {%if id != data.paperid %}
+                                <option value="{{id}}">{{item.paper_title}}</option>
+                                {% endif %}
                                 {% endfor %}
                             </select>
                         </td>
@@ -29,7 +31,7 @@
                         <td>&nbsp;</td>
                         <td>&nbsp;<input type="radio" name="copytype" value="paperonly">{{lang.paperonly}}</td>
                         <td>&nbsp;</td>
-                        <td>&nbsp;<input type="radio" name="copytype" value="paperquestions" checked="">{{lang.papersandquestions}}/td>
+                        <td>&nbsp;<input type="radio" name="copytype" value="paperquestions" checked="">{{lang.papersandquestions}}</td>
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
@@ -40,8 +42,9 @@
                         <td style="width:110px" align="center">&nbsp;</td>
                     </tr>
                     <tr>
-                        <td align="center" colspan="5"><input type="button" class="cancel" value="{{lang.cancel}}" name="cancel" id="cancel"><input type="button" class="ok" value="{{lang.ok}}" name="ok" id="ok">
-                            <input type="submit" class="ok" style="display:none" value="Copy From Paper" name="submit" id="submit_button">
+                        <td align="center" colspan="5">
+                            <input type="button" class="cancel" value="{{lang.cancel}}" name="cancel" id="cancel">
+                            <input type="submit" class="ok" value="{{lang.ok}}" name="submit" id="submit_button">
                         </td>
                     </tr>
                 </tbody>
