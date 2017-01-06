@@ -1,0 +1,51 @@
+<div class="popup" style="z-index: 20; font-size: 90%; background-color: white; top: 120px; width: 630px; height: 346px; display: block;" id="copy_from_submenu">
+    <form method="post" action="{{data.action}}" autocomplete="off">
+        <input type="hidden" name="paper_type" value="{{data.papertype}}" />
+        <input type="hidden" name="currentpid" value="{{data.paperid}}" />
+        <input type="hidden" name="copyfrompaper" value="1" />
+        <div id="table1div" style="width:100%">
+            <table cellpadding="1" cellspacing="0" border="0" style="font-size:100%; width:100%" id="table1">
+                <tbody>
+                    <tr>
+                        <td colspan="5" style="background-color:#F2B100; height:5px; padding:0"> </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:right">{{lang.papers}}</td>
+                        <td colspan="4">
+                            <select name="paperID" id="paperID">
+                                {% for id,item in data.papers %}
+                                <option value="{{id}}">{{item}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;<input type="radio" name="copytype" value="paperonly">{{lang.paperonly}}</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;<input type="radio" name="copytype" value="paperquestions" checked="">{{lang.papersandquestions}}/td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="width:130px" align="center">&nbsp;</td>
+                        <td style="width:170px" align="center"><img src="../artwork/copy_paper_only.png" width="120" height="130"></td>
+                        <td>&nbsp;&nbsp;&nbsp;</td>
+                        <td style="width:170px" align="center"><img src="../artwork/copy_paper_questions.png" width="120" height="130"></td>
+                        <td style="width:110px" align="center">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td align="center" colspan="5"><input type="button" class="cancel" value="{{lang.cancel}}" name="cancel" id="cancel"><input type="button" class="ok" value="{{lang.ok}}" name="ok" id="ok">
+                            <input type="submit" class="ok" style="display:none" value="Copy From Paper" name="submit" id="submit_button">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
