@@ -29,14 +29,14 @@ require_once '../include/errors.php';
 require_once '../include/media.inc';
 require_once '../include/mapping.inc';
 
-$paperid = check_var('paperID', 'POST', true, false, true);
+$paperid = param::required('paperID', param::INT, param::FETCH_POST);
 
 if (!Paper_utils::paper_exists($paperid, $mysqli)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
-
-if (!Paper_utils::is_paper_title_unique($_POST['new_paper'], $mysqli)) {			// If the paper title is unique.
+$new_paper_title = param::optional('new_paper', null, param::ALPHANUM, param::FETCH_POST);
+if (!Paper_utils::is_paper_title_unique($new_paper_title, $mysqli)) {			// If the paper title is unique.
   ?>
 <html>
 <head>
@@ -55,7 +55,7 @@ if (!Paper_utils::is_paper_title_unique($_POST['new_paper'], $mysqli)) {			// If
   </tr>
   <tr>
   <td style="background-color:#FFC0C0">
-  <p style="font-size:90%"><?php printf($string['nameused'], $_POST['new_paper']); ?></p>
+  <p style="font-size:90%"><?php printf($string['nameused'], $new_paper_title); ?></p>
 
   <div align="center"><input style="width:120px" type="button" value="<?php echo $string['back'] ?>" name="back" onclick="window.history.go(-1);"></div>
   </td>
@@ -505,7 +505,9 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
 </head>
 <?php
   if (count($error) == 0) {
-  	echo "<body onload=\"javascript:window.location='" . $configObject->get('cfg_root_path') . "/paper/details.php?paperID=$new_paper_id&module=" . $_POST['module'] . "&folder=" . $_POST['folder'] . "';\">";
+    $module = param::optional('module', '', param::INT, param::FETCH_POST);
+    $folder = param::optional('folder', '', param::INT, param::FETCH_POST);
+  	echo "<body onload=\"javascript:window.location='" . $configObject->get('cfg_root_path') . "/paper/details.php?paperID=$new_paper_id&module=" . $module . "&folder=" . $folder . "';\">";
   } else {
 ?>
   <body onclick="hideMenus()">
