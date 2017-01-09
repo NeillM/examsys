@@ -1,3 +1,11 @@
+<script>
+  $(function () {
+    $(".cancel").click(function(event) {
+      $('#copy_from_submenu').hide();
+      event.stopPropagation();
+    });
+  });
+</script>
 <div class="popup" style="z-index: 20; font-size: 90%; background-color: white; top: 120px; width: 630px; height: 346px; display: block;" id="copy_from_submenu" onclick="showCopyFromMenu(true, event);">
     <form method="post" action="{{data.action}}" autocomplete="off">
         <input type="hidden" name="paper_type" value="{{data.papertype}}" />

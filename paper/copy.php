@@ -146,9 +146,15 @@ $error = array();
 $copytype = param::optional('copytype', null, param::ALPHA, param::FETCH_POST);
 $update = param::optional('copyfrompaper', false, param::BOOLEAN, param::FETCH_POST);
 if ($copytype == 'paperonly') {        // Copy the paper only!
-  // Copy the properties (properties table)
-  $new_paper_id = copyProperties($mysqli, $calendar_year, $new_calendar_year, $moduleIDs, $userObject, $configObject, $update);
 
+  // Only copy properties if new paper created.
+  if ($update === false) {
+    // Copy the properties (properties table)
+    $new_paper_id = copyProperties($mysqli, $calendar_year, $new_calendar_year, $moduleIDs, $userObject, $configObject);
+  } else {
+    $new_paper_id = param::required('currentpid', param::INT, param::FETCH_POST);
+  }
+    
   // Copy the question pointers (papers table)
   $result = $mysqli->prepare("SELECT question, screen, display_pos FROM papers WHERE paper = ?");
   $result->bind_param('i', $paperid);
@@ -158,7 +164,6 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
   $qids = array();
   while ($result->fetch()) {
     $qids[] = $question;
-    
     Paper_utils::add_question($new_paper_id, $question, $screen, $display_pos, $mysqli);
   }
   $result->close();
@@ -192,8 +197,13 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
     }
   }
 } else {    // Copy the paper and the questions.
-  // Copy the properties (properties table)
-  $new_paper_id = copyProperties($mysqli, $calendar_year, $new_calendar_year, $moduleIDs, $userObject, $configObject, $update);
+  // Only copy properties if new paper created.
+  if ($update === false) {
+    // Copy the properties (properties table)
+    $new_paper_id = copyProperties($mysqli, $calendar_year, $new_calendar_year, $moduleIDs, $userObject, $configObject);
+  } else {
+    $new_paper_id = param::required('currentpid', param::INT, param::FETCH_POST);
+  }
   $mediadirectory = rogo_directory::get_directory('media');
 
   // Get question statuses
@@ -541,10 +551,9 @@ $mysqli->close();
  * @param string $moduleIDs			- Looks up and updates the modules the paper is on - used with learning objectives
  * @param object $userObj				- Currently logged in user object.
  * @param object $configObject	- Configuration settings object.
- * @param bool $update true if copying from a paper into an existing paper, false otherwise
  * @return int - ID of the newly inserted property record.
  */
-function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, $userObj, $configObject, $update = false) {
+function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, $userObj, $configObject) {
   $pid = param::required('paperID', param::INT, param::FETCH_POST);
   $userID = $userObj->get_user_ID();
   $moduleIDs = Paper_utils::get_modules($pid, $db);
@@ -554,7 +563,7 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
   $paper_type = param::required('paper_type', param::INT, param::FETCH_POST);      // Override the paper type with what is posted.
   $duration_hours = param::optional('duration_hours', null, param::INT, param::FETCH_POST);
   $duration_mins = param::optional('duration_mins', null, param::INT, param::FETCH_POST); 
-  if ($update === false and $paper_type == 2 and $configObject->get('cfg_summative_mgmt')) {
+  if ($paper_type == 2 and $configObject->get('cfg_summative_mgmt')) {
     $duration = 0;
     if (!is_null($duration_hours)) {
       $duration += ($duration_hours * 60);
@@ -567,7 +576,7 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
     $tmp_exam_duration = $properties['duration'];
   }
   $labs = $properties['labs'];
-  if ($update === false and $paper_type == 2) {
+  if ($paper_type == 2) {
     if ($configObject->get('cfg_summative_mgmt')) {
       $tmp_start_date = NULL;
       $tmp_end_date = NULL;
@@ -591,7 +600,7 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
   $tmp_internal_review_deadline = $properties['internal_review_deadline'];
   if ($tmp_internal_review_deadline == '') $tmp_internal_review_deadline = NULL;
 
-  $new_paper = param::required('new_paper', param::ALPHANUM, param::FETCH_POST);
+  $new_paper = param::optional('new_paper', null, param::ALPHANUM, param::FETCH_POST);
   $session = param::optional('session', null, param::INT, param::FETCH_POST); 
   if (!is_null($session)) {
     $new_calendar_year = $session;
@@ -651,15 +660,9 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
     'retired' => array('s', NULL),
     'recache_marks' => array('i', 0)
   );
-  if ($update === false) {
-    $new_paper_id = $assessment->db_insert_assessment($params);
-    $update_params = array('crypt_name' => array('s', $new_paper_id . $unixtime . $userID));
-    $assessment->db_update_assessment($new_paper_id, $update_params);
-  } else {
-    $new_paper_id = param::required('currentpid', param::INT, param::FETCH_POST);
-    $assessment->db_update_assessment($new_paper_id, $params);
-  }
-  
+  $new_paper_id = $assessment->db_insert_assessment($params);
+  $update_params = array('crypt_name' => array('s', $new_paper_id . $unixtime . $userID));
+  $assessment->db_update_assessment($new_paper_id, $update_params);
 
   // Get the old reviewers and populate the new paper with.
   $result2 = $db->prepare("SELECT reviewerID, type FROM properties_reviewers WHERE paperID = ?");
