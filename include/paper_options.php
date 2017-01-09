@@ -760,6 +760,6 @@ if ($properties->get_paper_type() == '2') {
   $order = 'property_id';
   $direction = 'desc';
   $teamid = param::optional('teamID', null, param::INT, param::FETCH_GET); 
-  $data['papers'] = PaperUtils::get_available_papers($userObject, $order, $direction, $mysqli, $properties->get_paper_type(), $module, $mysqli);
+  $data['papers'] = PaperUtils::get_available_papers($userObject, $order, $direction, $mysqli, $properties->get_paper_type(), $module);
   $render->render($data, $lang, 'paper/copy_from_paper_menu.html')
 ?>
