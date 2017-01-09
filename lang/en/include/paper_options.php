@@ -144,7 +144,7 @@ $string['people'] = 'People';
 $string['namewarning'] = 'This name is already being used by an existing paper!';
 $string['type'] = 'Type';
 
-$string['copyfrompaper'] = 'Copy from paper';
+$string['copyfrompaper'] = 'Copy questions from paper';
 $string['paperslinkquestions'] = 'Link to Orignal Papers Questions';
 $string['papercopyquestions'] = 'Duplicate Orignal Papers Questions';
 $string['cancel'] = 'Cancel';
