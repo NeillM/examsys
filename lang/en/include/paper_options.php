@@ -145,8 +145,8 @@ $string['namewarning'] = 'This name is already being used by an existing paper!'
 $string['type'] = 'Type';
 
 $string['copyfrompaper'] = 'Copy from paper';
-$string['papersettingsonly'] = 'Paper settings only';
-$string['papersettingsandquestions'] = 'Paper settings and questions';
+$string['paperslinkquestions'] = 'Link to Orignal Papers Questions';
+$string['papercopyquestions'] = 'Duplicate Orignal Papers Questions';
 $string['cancel'] = 'Cancel';
 $string['ok'] = 'Ok';
 ?>

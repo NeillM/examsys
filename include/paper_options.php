@@ -752,8 +752,8 @@ if ($properties->get_paper_type() == '2') {
   $lang['papers'] = $string['copyfrompaper'];
   $lang['cancel'] = $string['cancel'];
   $lang['ok'] = $string['ok'];
-  $lang['paperonly'] = $string['papersettingsonly'];
-  $lang['papersandquestions'] = $string['papersettingsandquestions'];
+  $lang['paperslinkquestions'] = $string['paperslinkquestions'];
+  $lang['papercopyquestions'] = $string['papercopyquestions'];
   $data['action'] = "../paper/copy.php";
   $data['papertype'] = $properties->get_paper_type();
   $data['paperid'] = param::required('paperID', param::INT, param::FETCH_GET);
