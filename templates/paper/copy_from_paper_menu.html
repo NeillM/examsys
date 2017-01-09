@@ -15,14 +15,14 @@
             <table cellpadding="1" cellspacing="0" border="0" style="font-size:100%; width:100%" id="table1">
                 <tbody>
                     <tr>
-                        <td colspan="5" style="background-color:#F2B100; height:5px; padding:0"> </td>
+                        <td colspan="2" style="background-color:#F2B100; height:5px; padding:0"> </td>
                     </tr>
                     <tr>
-                        <td colspan="5">&nbsp;</td>
+                        <td colspan="2">&nbsp;</td>
                     </tr>
                     <tr>
-                        <td colspan="2" style="text-align:right">{{lang.papers}}</td>
-                        <td colspan="3">
+                        <td colspan="1" style="text-align:right">{{lang.papers}}</td>
+                        <td colspan="1">
                             <select name="paperID" id="paperID">
                                 {% for id,item in data.papers %}
                                 {%if id != data.paperid %}
@@ -33,24 +33,18 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="5">&nbsp;</td>
+                        <td colspan="2">&nbsp;</td>
                     </tr>
                     <tr>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;<input type="radio" name="copytype" value="paperonly">{{lang.paperslinkquestions}}</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;<input type="radio" name="copytype" value="paperquestions" checked="">{{lang.papercopyquestions}}</td>
-                        <td>&nbsp;</td>
+                        <td align="center"><input type="radio" name="copytype" value="paperonly">{{lang.paperslinkquestions}}</td>
+                        <td align="center"><input type="radio" name="copytype" value="paperquestions" checked="">{{lang.papercopyquestions}}</td>
                     </tr>
                     <tr>
-                        <td style="width:130px" align="center">&nbsp;</td>
-                        <td style="width:170px" align="center"><img src="../artwork/copy_paper_only.png" width="120" height="130"></td>
-                        <td>&nbsp;&nbsp;&nbsp;</td>
-                        <td style="width:170px" align="center"><img src="../artwork/copy_paper_questions.png" width="120" height="130"></td>
-                        <td style="width:110px" align="center">&nbsp;</td>
+                        <td align="center"><img src="../artwork/copy_paper_only.png" width="120" height="130"></td>
+                        <td align="center"><img src="../artwork/copy_paper_questions.png" width="120" height="130"></td>
                     </tr>
                     <tr>
-                        <td align="center" colspan="5">
+                        <td align="center" colspan="2">
                             <input type="button" class="cancel" value="{{lang.cancel}}" name="cancel" id="cancel">
                             <input type="submit" class="ok" value="{{lang.ok}}" name="submit" id="submit_button">
                         </td>
