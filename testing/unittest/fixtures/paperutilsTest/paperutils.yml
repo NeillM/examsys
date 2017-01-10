@@ -8,12 +8,18 @@ academic_year:
 properties:
   -
     property_id: 1
+    paper_title: "Paper 1"
     calendar_year: 2015
     paper_type: 2
+    created: "2017-01-09 14:30:00"
+    paper_ownerID: 1
   -
     property_id: 2
+    paper_title: "Paper 2"
     calendar_year: 2016
     paper_type: 2
+    created: "2017-01-09 14:31:00"
+    paper_ownerID: 1
 properties_modules:
   -
     property_id: 1
@@ -31,3 +37,25 @@ gradebook_paper:
   -
     paperid: 2
     timestamp: '2016-09-16 16:09:16'
+users:
+  -
+    id: 1
+    password: "87654321"
+    username: "staff1"
+    roles: "Staff"
+    grade: "University Lecturer"
+    title: "Dr"
+    initials: "JL"
+    surname: "Baxter"
+modules:
+  -
+    id: 1
+    moduleid: "ABC100"
+    fullname: "Test Module"
+    externalid: "123456789"
+    academic_year_start: "01/07"
+modules_staff:
+  -
+    groupID: 666
+    idMod: 1
+    memberID: 1

@@ -80,4 +80,42 @@ class paperutilstest extends unittestdatabase {
         $papers = array();
         $this->assertEquals($papers, Paper_utils::get_finalised_papers('2016', 1, $this->db));
     }
+    
+    /**
+     * Test get available papers - paper type provided
+     * @group assessment
+     */
+    public function test_get_available_papers_type() {
+        // Load user id 1.
+        $this->userobject->load(1);
+        $order = "paper_title";
+        $direction = "asc";
+        $papers = array();
+        $created1 = ' ' . strftime($this->config->get('cfg_long_date'), strtotime("2017-01-09 14:30:00"));
+        $created2 = ' ' . strftime($this->config->get('cfg_long_date'), strtotime("2017-01-09 14:31:00"));
+        $papers[1] = array('paper_title'=>'Paper 1', 'paper_type'=>'2', 'created'=>$created1, 'title'=>'Dr', 'initials'=>'JL', 'surname'=>'Baxter');
+        $papers[1]['moduleid'][0] = "ABC100";
+        $papers[2] = array('paper_title'=>'Paper 2', 'paper_type'=>'2', 'created'=>$created2, 'title'=>'Dr', 'initials'=>'JL', 'surname'=>'Baxter');
+        $papers[2]['moduleid'][0] = "ABC100";
+        $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, $this->db, $type = '2', $teamid = null));
+    }
+
+    /**
+     * Test get available papers - team id provided
+     * @group assessment
+     */
+    public function test_get_available_papers_team() {
+        // Load user id 1.
+        $this->userobject->load(1);
+        $order = "paper_title";
+        $direction = "asc";
+        $papers = array();
+        $created1 = ' ' . strftime($this->config->get('cfg_long_date'), strtotime("2017-01-09 14:30:00"));
+        $created2 = ' ' . strftime($this->config->get('cfg_long_date'), strtotime("2017-01-09 14:31:00"));
+        $papers[1] = array('paper_title'=>'Paper 1', 'paper_type'=>'2', 'created'=>$created1, 'title'=>'Dr', 'initials'=>'JL', 'surname'=>'Baxter');
+        $papers[1]['moduleid'][0] = "ABC100";
+        $papers[2] = array('paper_title'=>'Paper 2', 'paper_type'=>'2', 'created'=>$created2, 'title'=>'Dr', 'initials'=>'JL', 'surname'=>'Baxter');
+        $papers[2]['moduleid'][0] = "ABC100";
+        $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, $this->db, $type = null, $teamid = 1));
+    }
 }
