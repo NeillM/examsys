@@ -47,6 +47,15 @@ users:
     title: "Dr"
     initials: "JL"
     surname: "Baxter"
+  -
+    id: 2
+    password: "12345678"
+    username: "staff3"
+    roles: "Staff"
+    grade: "University Lecturer"
+    title: "Mr"
+    initials: "T"
+    surname: "Tester"
 modules:
   -
     id: 1
@@ -54,8 +63,24 @@ modules:
     fullname: "Test Module"
     externalid: "123456789"
     academic_year_start: "01/07"
+  -
+    id: 2
+    moduleid: "ABC200"
+    fullname: "Test Module 2"
+    externalid: "987654321"
+    academic_year_start: "01/07"
+  -
+    id: 3
+    moduleid: "ABC300"
+    fullname: "Test Module 3"
+    externalid: "432198765"
+    academic_year_start: "01/07"
 modules_staff:
   -
     groupID: 666
     idMod: 1
     memberID: 1
+  -
+    groupID: 999
+    idMod: 3
+    memberID: 2
