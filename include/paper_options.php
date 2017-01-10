@@ -754,6 +754,7 @@ if ($properties->get_paper_type() == '2') {
   $lang['ok'] = $string['ok'];
   $lang['paperslinkquestions'] = $string['paperslinkquestions'];
   $lang['papercopyquestions'] = $string['papercopyquestions'];
+  $lang['copyquestionsblurb'] = $string['copyquestionsblurb'];
   $data['action'] = "../paper/copy.php";
   $data['papertype'] = $properties->get_paper_type();
   $data['paperid'] = param::required('paperID', param::INT, param::FETCH_GET);
