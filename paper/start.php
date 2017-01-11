@@ -1235,9 +1235,6 @@ if ($unanswered) {
   echo "</script>\n";
 }
 ?>
-<script>
-  Preview.Init();
-</script>
 </body>
 </html>
 
