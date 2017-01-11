@@ -115,6 +115,7 @@ $string['modified'] = 'Modified:';
 $string['editor'] = 'Editor';
 $string['plaintext'] = 'Plain Text';
 $string['wysiwyg'] = 'WYSIWYG';
+$string['mathjax'] = 'MathJax';
 $string['changes'] = 'Changes';
 $string['comments'] = 'Comments';
 $string['mapping'] = 'Mapping';

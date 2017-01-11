@@ -25,7 +25,7 @@
 $num_options = count($question->options);
 $columns = range(10, 120, 10);
 $rows = range(1, 15);
-$editors = array('plain' => $string['plaintext'], 'WYSIWYG' => $string['wysiwyg']);
+$editors = array('plain' => $string['plaintext'], 'mathjax' => $string['mathjax'], 'WYSIWYG' => $string['wysiwyg']);
 $editor = $question->get_editor();
 $terms = $question->get_terms();
 

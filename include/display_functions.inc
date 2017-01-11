@@ -993,7 +993,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         if (!in_array($question_no, $textboxes_seen)) {
           $textboxes_seen[] = $question_no;
           $settings = json_decode($question['settings'], true);
-          if (!isset($settings['editor']) or $settings['editor'] == 'plain') {
+          if (!isset($settings['editor']) or $settings['editor'] == 'plain' or $settings['editor'] == 'mathjax') {
             if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
               echo "<textarea class=\"unans\" name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $user_answers[$current_screen][$q_id] . "</textarea>\n";
               $unanswered = true;
@@ -1002,7 +1002,13 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
               if (isset($user_answers[$current_screen][$q_id])) {
                 $ans = $user_answers[$current_screen][$q_id];
               }
-              echo "<textarea name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $ans . "</textarea>\n";
+              if ($settings['editor'] == 'mathjax') {
+                echo "<textarea onkeyup=\"Preview.Update()\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $ans . "</textarea>\n";
+                echo "<p>" . $string['previewmathjax'] . "</p>";
+                echo "<div id=\"MathPreview\" style=\"border:1px solid; padding: 3px; width:50%; margin-top:5px\"></div><div id=\"MathBuffer\" style=\"border:1px solid; padding: 3px; width:50%; margin-top:5px; visibility:hidden; position:absolute; top:0; left: 0\"></div>";
+              } else {
+                echo "<textarea name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $ans . "</textarea>\n";
+              }
             }
           } else {
             include_once('wysiwyg_editor.inc');
