@@ -111,6 +111,10 @@ HTML;
         });
     });
   </script>
+  <?php
+    $render = new render($configObject);
+    $render->render(null, null, 'mathjax.html');
+  ?>
 </head>
 
 <body>
@@ -383,8 +387,8 @@ $half_marks = true;
             
       $out_of = $result->num_rows;
       echo '<p class="theme" style="padding-left:0">' . sprintf($string['mark_progress'], $answer_no, $out_of) . "</p>\n";
-      echo "<div id=\"ans_" . $answer_no . "\"><div class=\"student_ans\">" . nl2br(render_user_answer($user_answer, $string)) . "</div><div class=\"student_marks\">" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$textbox_q_id], $string) . "</div></div>\n";
- 
+      echo "<div onload=\"Preview" . $answer_no . ".Update()\" id=\"ans_" . $answer_no . "\"><div class=\"student_ans\">" . nl2br(render_user_answer($user_answer, $string)) . "</div><div class=\"student_marks\">" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$textbox_q_id], $string) . "</div></div>\n";
+      echo "<script>Preview" . $answer_no . ".Init();</script>";
       if (count($reminders) > 0) {
         $reminders_selected = explode('|', $reminders_selected);
         echo '<ul class="reminders">';
