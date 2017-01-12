@@ -34,3 +34,4 @@ if ($cfg_editor_name != 'tinymce') {
   echo "<script>Previewleadin.Init();</script>";
   echo "</tr>";
 }
+?>
