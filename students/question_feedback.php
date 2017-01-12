@@ -162,6 +162,7 @@ require '../config/finish.inc';
   }  
   $render = new render($configObject);
   $render->render_html5_js(json_encode($jstring));
+  $render->render(null, null, 'mathjax.html');
 ?>
 </head>
 <body>
