@@ -188,6 +188,10 @@ if (isset($_POST['submit'])) {
       });
     })
   </script>
+  <?php
+    $render = new render($configObject);
+    $render->render(null, null, 'mathjax.html');
+  ?>
 </head>
 
 <body>
