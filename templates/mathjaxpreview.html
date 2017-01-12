@@ -47,7 +47,7 @@ var Preview{{data.id}} = {
   CreatePreview: function () {
     Preview{{data.id}}.timeout = null;
     if (this.mjPending) return;
-    var text = document.getElementById("q{{data.id}}").value;
+    var text = document.getElementById("{{data.id}}").value;
     if (text === this.oldtext) return;
     if (this.mjRunning) {
       this.mjPending = true;

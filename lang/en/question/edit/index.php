@@ -284,4 +284,6 @@ $string['tooltip_formula'] = 'Click link for more details in the online help.';
 $string['reminders'] = 'Reminders';
 $string['reminder_no'] = 'Reminder #%d';
 
+$string['previewmathjax'] = 'Preview';
+
 
