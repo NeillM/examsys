@@ -91,18 +91,17 @@ function wysiwyg_editor($name, $replace, $content='', $type = '', $width=756, $h
 
   $html = '';
 
-  $content = htmlspecialchars($content);
-  $configObject = Config::get_instance();
-  $render = new render($configObject);
-  $html .= $render->render(array('id' => $replace), null, 'mathjaxpreview.html');
-
   if ($cfg_editor_name == 'tinymce') {
     if ($type == '') {
       $type = 'mceEditor';
     }
-    $html .= "<textarea onkeyup=\"Preview" . $replace . ".Update()\" class=\"$type\" id=\"$replace\" name=\"$replace\" style=\"width:" . $width . "px; height:" . $height . "px; margin: 0\" rows=\"5\" cols=\"20\">$content</textarea>\n";
+    $html .= "<textarea class=\"$type\" id=\"$replace\" name=\"$replace\" style=\"width:" . $width . "px; height:" . $height . "px; margin: 0\" rows=\"5\" cols=\"20\">$content</textarea>\n";
   } else {
     //If no editor is specified, output plain textarea.
+    $content = htmlspecialchars($content);
+    $configObject = Config::get_instance();
+    $render = new render($configObject);
+    $html .= $render->render(array('id' => $replace), null, 'mathjaxpreview.html');
     $height = $height - 6;
     $html .= "<textarea onkeyup=\"Preview" . $replace . ".Update()\" id=\"$replace\" name=\"$replace\" style=\"width:" . $width . "px; height:" . $height . "px\">$content</textarea>\n";
   }

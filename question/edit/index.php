@@ -493,8 +493,10 @@ endif;
 </script>
 <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
 <?php
-  $render = new render($configObject);
-  $render->render(null, null, 'mathjax.html');
+  if ($cfg_editor_name != 'tinymce') {
+    $render = new render($configObject);
+    $render->render(null, null, 'mathjax.html');
+  }
 ?>
 </head>
 <body>
