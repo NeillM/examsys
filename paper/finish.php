@@ -280,8 +280,10 @@ require '../config/finish.inc';
 	});
 </script>
 <?php
-  $render = new render($configObject);
-  $render->render(null, null, 'mathjax.html');
+  if($configObject->get_setting('core', 'paper_mathjax')) {
+    $render = new render($configObject);
+    $render->render(null, null, 'mathjax.html');
+  }
 ?>
 </head>
 <body>

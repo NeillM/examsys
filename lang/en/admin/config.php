@@ -43,4 +43,6 @@ $string['url'] = 'External System URLs';
 $string['paper_marks_postive'] = 'Drop down options for postive marks available option';
 $string['paper_marks_negative'] = 'Drop down options for negative marks available option';
 $string['paper_marks_partial'] = 'Drop down options for partial marks available option';
+$string['paper_mathjax'] = 'Enable/Disable mathjax rendering in papers';
+
 
