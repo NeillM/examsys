@@ -878,6 +878,14 @@ QUERY;
       echo "<li class=\"error\">" . $e->getMessage() . "</li>";
   }
 
+  // Update npm and dependencies.
+  try {
+    $npm_method = npm_utils::UPDATE;
+    npm_utils::setup($npm_method);
+  } catch (Exception $e) {
+      echo "<li class=\"error\">" . $e->getMessage() . "</li>";
+  }
+
   // Final housekeeping activities - put all updates above this line
   $updated = $updater_utils->update_version($version, $string, $cfg_web_root);
   if ($updated !== true) {

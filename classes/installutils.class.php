@@ -519,6 +519,17 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       echo "</div>\n";
     }
 
+    // Install npm and dependencies.
+    try {
+      $npm_method = npm_utils::INSTALL_NODEV;
+      npm_utils::setup($npm_method);
+    } catch (Exception $e) {
+      // Non fatal warning.
+      echo "<div class=\"warning\">\n";
+      echo "\t<div>" . $e->getMessage() . "</div>\n";
+      echo "</div>\n";
+    }
+
     if (!is_array(self::$warnings)) {
       echo "<p style=\"margin-left:10px\">" . $string['installed'] . "</p>\n";
       echo "<p style=\"margin-left:10px\">" . $string['deleteinstall'] . "</p>\n";
