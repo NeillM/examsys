@@ -14,8 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['cannotinstall'] = 'Cannot install npm, on Windows you will need to manually download it.';
-$string['cannotupdate'] = 'Cannot update npm.';
+$string['cannotupdate'] = 'NPM missing. Please install.';
 $string['couldnotinstallnpm'] = 'Could not install dependencies.';
 $string['couldnotupdatenpm'] = 'Could not update compodependenciesnents.';
 ?>

@@ -58,19 +58,10 @@ class npm_utils {
    */
   protected static function install_update() {
     $langpack = new langpack();
-    passthru("npm -v | sh", $statuscode);
+    // Update if installed.
+    passthru("npm install npm@latest -g", $statuscode);
     if ($statuscode != 0) {
-      // Npm needs to be installed.
-      passthru("curl https://npmjs.org/install.sh | sh", $statuscode);
-      if ($statuscode != 0) {
-        throw new Exception($langpack->get_string(self::langcomponent, 'cannotinstall'));
-      }
-    } else {
-      // Npm needs to be updated.
-      passthru("npm install npm@latest -g", $statuscode);
-      if ($statuscode != 0) {
-        throw new Exception($langpack->get_string(self::langcomponent, 'cannotupdate'));
-      }
+      throw new Exception($langpack->get_string(self::langcomponent, 'cannotupdate'));
     }
   }
 
