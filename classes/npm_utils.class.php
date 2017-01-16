@@ -59,7 +59,7 @@ class npm_utils {
   protected static function install_update() {
     $langpack = new langpack();
     // Update if installed.
-    passthru("npm install npm@latest -g", $statuscode);
+    exec("npm install npm@latest -g", $output, $statuscode);
     if ($statuscode != 0) {
       throw new Exception($langpack->get_string(self::langcomponent, 'cannotupdate'));
     }
