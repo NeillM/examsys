@@ -498,6 +498,7 @@ if ($papertype == $assessment::TYPE_SUMMATIVE) {
       echo "<div class=\"r1\" id=\"div$module_no\"><input type=\"checkbox\" onclick=\"toggle($module_no)\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" /><label for=\"mod$module_no\">" . $module['id'] . " - " . substr($module['fullname'],0,60) . "</label></div>\n";
     }
     $module_no++;
+    $old_schoolcode = $module['schoolcode'];
   }
 
   echo "</div>\n";
