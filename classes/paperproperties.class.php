@@ -216,7 +216,7 @@ class PaperProperties {
       $property_object->set_exam_duration($exam_duration);
       $property_object->set_calendar_year($calendar_year);
       $property_object->set_calendar_year($calendar_year);
-      $property_object->set_password($password);
+      $property_object->password = $password;
       $property_object->set_timezone($timezone);
       $property_object->set_display_start_date();
       $property_object->set_display_start_time();
