@@ -184,6 +184,10 @@ class assessment {
         if (!$validsession) {
              throw new Exception('INVALID_SESSION');
         }
+        // Check modules.
+        if (count($modules) == 0) {
+            throw new Exception('INVALID_NO_MODULES');
+        }
         
         // Set up start date and end date based on timezone.
         $datesarray = $this->setup_start_end_dates($papertype, $startdate, $enddate, $timezone);
