@@ -219,7 +219,7 @@ class assessmenttest extends unittestdatabase {
         }
         $this->fail('Exception INVALID_SESSION not thrown.');
     }
-     /**
+    /**
      * Test valid dates on paper creation
      * @group assessment
      */
@@ -244,6 +244,32 @@ class assessmenttest extends unittestdatabase {
             $this->fail('Exception INVALID_DATES expected but ' . $e->getMessage() . ' thrown instead.');
         }
         $this->fail('Exception INVALID_DATES not thrown.');
+    }
+    /**
+     * Test no modules on paper creation
+     * @group assessment
+     */
+    public function test_create_no_modules() {
+        $assessment = new assessment($this->db, $this->config);
+        $papertitle = "Test schedule formative";
+        $paperowner = 1;
+        $papertype = 0;
+        $enddate = "2016-01-25 10:00:00";
+        $startdate = "2016-01-25 09:00:00";
+        $labs = "1";
+        $duration = 60;
+        $session = 2016;
+        $modules = array();
+        $timezone = "Europe/London";
+        try {
+            $assessment->create($papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone);
+        } catch (Exception $e) {
+            if ($e->getMessage() == 'INVALID_NO_MODULES') {
+                return;
+            }
+            $this->fail('Exception INVALID_NO_MODULES expected but ' . $e->getMessage() . ' thrown instead.');
+        }
+        $this->fail('Exception INVALID_NO_MODULES not thrown.');
     }
     /**
      * Test assessemnt update
