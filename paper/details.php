@@ -629,6 +629,11 @@ function check_latex_random($q_ids, $mysqli) {
   <script type="text/javascript" src="../js/jquery.paperdetails.js"></script>
 <?php
   }
+
+  if($configObject->get_setting('core', 'paper_mathjax')) {
+    $render = new render($configObject);
+    $render->render(null, null, 'mathjax.html');
+  }
 ?>
 </head>
 
