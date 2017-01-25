@@ -26,7 +26,7 @@
 
 Class QuestionTEXTBOX extends QuestionEdit {
 
-  protected $columns = 90;
+  protected $columns = 80;
   protected $rows = 4;
   protected $editor = 'plain';
   protected $terms = '';
