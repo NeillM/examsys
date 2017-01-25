@@ -16,6 +16,7 @@
 
 require $cfg_web_root . '/lang/' . $language . '/include/user_search_options.php';
 require $cfg_web_root . '/lang/' . $language . '/include/titles.php';
+require $cfg_web_root . '/lang/' . $language . '/users/details.php';
 
 $string['createnewuser'] = 'Create New User';
 $string['getldapdetails'] = 'Get LDAP details';

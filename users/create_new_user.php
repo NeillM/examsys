@@ -31,49 +31,28 @@ $unique_username = true;
 $problem = false;
 
 if (isset($_POST['submit'])) {
+
+  $new_password = trim(check_var('new_password', 'POST', false, false, true));
+  $new_surname = UserUtils::my_ucwords(trim(check_var('new_surname', 'POST', false, false, true)));
+  $new_username = trim(check_var('new_username', 'POST', false, false, true));
+  $new_email = trim(check_var('new_email', 'POST', false, false, true));
+  $new_first_names = UserUtils::my_ucwords(trim(check_var('new_first_names', 'POST', false, false, true)));
+  $new_grade = check_var('new_grade', 'POST', false, false, true);
+	$new_year = check_var('new_year', 'POST', false, false, true);
+  $new_roles = check_var('new_roles', 'POST', false, false, true);
+
   // Check for unique username
-  if (UserUtils::username_exists($_POST['new_username'], $mysqli) !== false) {
+  if (UserUtils::username_exists($new_username, $mysqli) !== false) {
     $unique_username = false;
     $problem = true;
   }
-
-  switch($_POST['new_grade']) {
-    case 'University Lecturer':
-    case 'University Admin':
-    case 'Technical Staff':
-    case 'NHS Lecturer':
-    case 'NHS Admin':
-    case 'Standards Setter':
-      $tmp_roles = 'Staff';
-      break;
-    case 'Invigilator':
-      $tmp_roles = 'Invigilator';
-      break;
-    case 'Staff External Examiner':
-      $tmp_roles = 'External Examiner';
-      break;
-    case 'Staff Internal Reviewer':
-      $tmp_roles = 'Internal Reviewer';
-      break;
-    default:
-      $tmp_roles = 'Student';
-      break;
-  }
-
-  $new_password = trim($_POST['new_password']);
-  $new_surname = UserUtils::my_ucwords(trim($_POST['new_surname']));
-  $new_username = trim($_POST['new_username']);
-  $new_email = trim($_POST['new_email']);
-  $new_first_names = UserUtils::my_ucwords(trim($_POST['new_first_names']));
-  $new_grade = $_POST['new_grade'];
-	$new_year = (isset($_POST['new_year']) ? $_POST['new_year'] : 1);
 }
 
 if (isset($_POST['submit']) and $unique_username == true) {
-  if ($new_username == '' or strpos($new_username, '_') !== false or $new_surname == '' or $new_email == '' or $new_first_names == '' or $new_grade == '') {
+  if ($new_username == '' or strpos($new_username, '_') !== false or $new_surname == '' or $new_email == '' or $new_first_names == '' or $new_roles == '') {
     $problem = true;
   } else {
-    $new_userID = UserUtils::create_user($new_username, $new_password, $_POST['new_users_title'], $new_first_names, $new_surname, $new_email, $new_grade, $_POST['new_gender'], $new_year, $tmp_roles, $_POST['new_sid'], $mysqli);
+    $new_userID = UserUtils::create_user($new_username, $new_password, $_POST['new_users_title'], $new_first_names, $new_surname, $new_email, $new_grade, $_POST['new_gender'], $new_year, $new_roles, $_POST['new_sid'], $mysqli);
 
     // Send out email welcome.
     if (isset($_POST['new_welcome']) and $_POST['new_welcome'] != '') {
@@ -107,9 +86,9 @@ h2 {font-size:120%}
 {$string['password']}: {$_POST['new_password']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#808080\">{$string['casesensitive']}</span></p>
 MESSAGE;
 
-      if (strpos($tmp_roles,'Staff') !== false) {
+      if (strpos($new_roles,'Staff') !== false) {
         $message .= "<p>" . $string['email2'] . " <a href=\"https://{$_SERVER['HTTP_HOST']}/\">https://{$_SERVER['HTTP_HOST']}/staff/</a></p>";
-      } elseif (strpos($tmp_roles,'Student') !== false) {
+      } elseif (strpos($new_roles,'Student') !== false) {
         $message .= "<p>" . $string['email2'] . " <a href=\"https://{$_SERVER['HTTP_HOST']}/\">https://{$_SERVER['HTTP_HOST']}/students/</a></p>";
       } else {
         $message .= "<p>" . $string['email2'] . " <a href=\"https://{$_SERVER['HTTP_HOST']}/\">https://{$_SERVER['HTTP_HOST']}/</a></p>";
@@ -250,6 +229,7 @@ foreach ($titles as $tmp_title) {
 </select></td></tr>
 <tr><td class="field"><?php echo $string['firstnames'] ?></td><td><input<?php if (isset($_POST['submit']) and (!isset($new_first_names) or $new_first_names == '')) echo ' class="required"'; ?> type="text" id="new_first_names" name="new_first_names" size="40" maxlength="60" value="<?php if (isset($new_first_names)) echo $new_first_names; ?>" required /></td></tr>
 <tr><td class="field"><?php echo $string['lastname'] ?></td><td><input<?php if (isset($new_surname) and $new_surname == '') echo ' class="required"'; ?> type="text" id="new_surname" name="new_surname" size="40" maxlength="35" value="<?php if (isset($new_surname)) echo $new_surname; ?>" required /></td></tr>
+<tr><td class="field"><?php echo $string['studentid'] ?></td><td><input id="new_studentid" type="text" size="15" name="new_sid" /> <span style="color:#808080"><?php echo $string['onlyifstudent'] ?></span></td></tr>
 <tr><td class="field"><?php echo $string['email'] ?></td><td><input<?php if (isset($new_email) and $new_email == '') echo ' class="required"'; ?> type="email" id="new_email" name="new_email" size="40" maxlength="65" value="<?php if (isset($new_email)) echo $new_email; ?>" required /></td></tr>
 <tr><td class="field"><?php echo $string['username'] ?></td><td><input<?php if (isset($new_username) and ($new_username == '' or strpos($new_username, '_') !== false or !$unique_username)) echo ' class="required"'; ?> type="text" id="new_username" name="new_username" size="12" maxlength="15" value="<?php if (isset($new_username)) echo $new_username; ?>" autocomplete="off" required />
 &nbsp;&nbsp;&nbsp;<?php echo $string['password'] ?> <input type="text" id="new_password" name="new_password" value="<?php
@@ -259,6 +239,31 @@ foreach ($titles as $tmp_title) {
     echo gen_password();
   }
 ?>" size="12" autocomplete="off" required /></td></tr>
+<?php
+  echo "<tr><td class=\"field\">" . $string['course'] . "</td><td><select name=\"new_grade\" id=\"new_grade\" size=\"1\" style=\"width:350px\">";
+  echo "<option value=\"\"></option>";
+  
+  $old_school = '';
+  $result = $mysqli->prepare("SELECT DISTINCT c.name, c.description, s.school FROM courses c INNER JOIN schools s ON c.schoolid=s.id WHERE s.school NOT IN ('university','NHS','N/A') ORDER BY s.school, c.name");
+  $result->execute();
+  $result->bind_result($name, $description, $school);
+  while ($result->fetch()) {
+    if ($old_school != $school) {
+      echo "<optgroup label=\"$school\">\n";
+    }
+    
+    echo "<option value=\"$name\">$name: $description</option>\n";
+    
+    $old_school = $school;
+    
+    if ($old_school != $school) {
+      echo "</optgroup>";
+    }
+  }
+  $result->close();
+  
+  echo "</select></td></tr>\n";
+?>
 <tr><td class="field"><?php echo $string['yearofstudy'] ?></td><td>
 <select id="new_yos" name="new_year">
 <?php
@@ -272,43 +277,6 @@ foreach ($titles as $tmp_title) {
 ?>
 </select>
 </td></tr>
-<tr><td class="field"><?php echo $string['typecourse'] ?></td><td>
-<select name="new_grade" id="new_grade" size="1" style="width:350px"<?php if (isset($new_grade) and $new_grade == '') echo ' class="required"' ?> required>
-<option value=""></option>
-<optgroup label="<?php echo $string['universitystaff']; ?>">
-<option value="University Lecturer"><?php echo $string['academiclecturer'] ?></option>
-<option value="University Admin"><?php echo $string['administrator'] ?></option>
-<option value="Technical Staff"><?php echo $string['ittechnical'] ?></option>
-<option value="Standards Setter"><?php echo $string['standardssetter'] ?></option>
-<option value="Staff Internal Reviewer"><?php echo $string['internalreviewer'] ?></option>
-</optgroup>
-<optgroup label="<?php echo $string['externalstaff'] ?>">
-<?php
-if (strpos($_SERVER['HTTP_HOST'],'.uk') !== false) {
-  echo "<option value=\"NHS Lecturer\">" . $string['nhslecturer'] . "</option>\n";
-  echo "<option value=\"NHS Admin\">" . $string['nhsadmin'] . "</option>\n";
-}
-?>
-<option value="Staff External Examiner"><?php echo $string['externalexaminer'] ?></option>
-<option value="Invigilator"><?php echo $string['invigilator'] ?></option>
-<?php
-  $old_school = '';
-  $result = $mysqli->prepare("SELECT DISTINCT c.name, c.description, s.school FROM courses c INNER JOIN schools s ON c.schoolid=s.id WHERE s.school NOT IN ('university','NHS','N/A') ORDER BY s.school, c.name");
-  $result->execute();
-  $result->bind_result($name, $description, $school);
-  while ($result->fetch()) {
-    if ($old_school != $school) {
-      echo "</optgroup>\n<optgroup label=\"" . $string['students'] . " - $school\">\n";
-    }
-    echo "<option value=\"$name\">$name: $description</option>\n";
-    $old_school = $school;
-  }
-  $result->close();
-?>
-</optgroup>
-</select>
-</td></tr>
-
 <tr>
 <td class="field"><?php echo $string['gender'] ?></td><td>
 <select id="new_gender" name="new_gender" size="1">
@@ -319,8 +287,50 @@ if (strpos($_SERVER['HTTP_HOST'],'.uk') !== false) {
 </select>
 </td>
 </tr>
-<tr><td class="field"><?php echo $string['studentid'] ?></td><td><input id="new_studentid" type="text" size="15" name="new_sid" /></td></tr>
-<tr><td class="field"&nbsp;</td><td style="color:#808080"><?php echo $string['onlyifstudent'] ?></td></tr>
+<tr><td class="field"><?php echo $string['status'] ?></td><td>
+<?php
+  echo "<select name=\"new_roles\" id=\"new_roles\" class=\"required\" required>";
+  echo "<option value=\"\"></option>";
+
+  $old_optgroup = '';
+
+  $roles_array = array('#Staff', 'Staff');
+  if ($userObject->has_role('SysAdmin')) {
+    $roles_array[] = 'Staff,Admin';
+    $roles_array[] = 'Staff,SysAdmin';
+  } elseif ($userObject->has_role('Admin')) {
+    $roles_array[] = 'Staff,Admin';
+  }
+  $roles_array[] = 'Staff,Student';
+  $roles_array[] = 'External Examiner';
+  $roles_array[] = 'Internal Reviewer';
+  $roles_array[] = 'Staff,Standards Setter';
+  $roles_array[] = 'Invigilator';
+  $roles_array[] = '#Students';
+  $roles_array[] = 'Student';
+
+  foreach ($roles_array as $value) {
+    if (substr($value,0,1) == '#') {
+      echo "<optgroup label=\"" . $string[substr($value,1)] . "\">\n";  
+    } else {
+      $display_val = str_replace(' ', '', $value);
+      $display_val = str_replace(',', '', $display_val);
+      $display_val = $string[strtolower($display_val)];
+      echo "<option value=\"$value\">$display_val</option>";
+    }
+
+    if (substr($value,0,1) == '#') {
+      $old_optgroup = $value;
+      if($old_optgroup != $value) {
+        echo "</optgroup>\n";
+      }
+    }
+
+  }
+  echo "</optgroup>\n</select>\n";
+?>
+
+</td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td>&nbsp;</td><td><input type="checkbox" name="new_welcome" value="1" /><?php echo $string['sendwelcomeemail'] ?></td></tr>
 <tr><td colspan="2" style="text-align:center; padding-bottom:12px">
