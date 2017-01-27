@@ -18,7 +18,7 @@
 *
 * Creates a new user (staff or student).
 *
-* @author Simon Wilkinson
+* @author Simon Wilkinson / Richard Whitefoot (UEA)
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
@@ -168,7 +168,7 @@ MESSAGE;
 
 <?php
 if ($language != 'en') {
-  echo "<option value=\"\"></option>\n";
+  echo "<option label=\"\"></option>\n";
 }
 $titles = explode(',', $string['title_types']);
 foreach ($titles as $tmp_title) {
@@ -178,7 +178,7 @@ foreach ($titles as $tmp_title) {
 </select></td></tr>
 <tr><td class="field"><?php echo $string['firstnames'] ?></td><td><input<?php if (isset($_POST['submit']) and (!isset($new_first_names) or $new_first_names == '')) echo ' class="required"'; ?> type="text" id="new_first_names" name="new_first_names" size="40" maxlength="60" value="<?php if (isset($new_first_names)) echo $new_first_names; ?>" required /></td></tr>
 <tr><td class="field"><?php echo $string['lastname'] ?></td><td><input<?php if (isset($new_surname) and $new_surname == '') echo ' class="required"'; ?> type="text" id="new_surname" name="new_surname" size="40" maxlength="35" value="<?php if (isset($new_surname)) echo $new_surname; ?>" required /></td></tr>
-<tr><td class="field"><?php echo $string['studentid'] ?></td><td><input id="new_studentid" type="text" size="15" name="new_sid" /> <span style="color:#808080"><?php echo $string['onlyifstudent'] ?></span></td></tr>
+<tr><td class="field"><?php echo $string['studentid'] ?></td><td><input id="new_studentid" type="text" size="15" name="new_sid" /><span style="color:#808080"><?php echo $string['onlyifstudent']; ?></span></td></tr>
 <tr><td class="field"><?php echo $string['email'] ?></td><td><input<?php if (isset($new_email) and $new_email == '') echo ' class="required"'; ?> type="email" id="new_email" name="new_email" size="40" maxlength="65" value="<?php if (isset($new_email)) echo $new_email; ?>" required /></td></tr>
 <tr><td class="field"><?php echo $string['username'] ?></td><td><input<?php if (isset($new_username) and ($new_username == '' or strpos($new_username, '_') !== false or !$unique_username)) echo ' class="required"'; ?> type="text" id="new_username" name="new_username" size="12" maxlength="15" value="<?php if (isset($new_username)) echo $new_username; ?>" autocomplete="off" required />
 &nbsp;&nbsp;&nbsp;<?php echo $string['password'] ?> <input type="text" id="new_password" name="new_password" value="<?php
@@ -190,7 +190,7 @@ foreach ($titles as $tmp_title) {
 ?>" size="12" autocomplete="off" required /></td></tr>
 <?php
   echo "<tr><td class=\"field\">" . $string['course'] . "</td><td><select name=\"new_grade\" id=\"new_grade\" size=\"1\" style=\"width:350px\">";
-  echo "<option value=\"\"></option>";
+  echo "<option label=\"\" value=\"\"> </option>";
   
   $old_school = '';
   $result = $mysqli->prepare("SELECT DISTINCT c.name, c.description, s.school FROM courses c INNER JOIN schools s ON c.schoolid=s.id WHERE s.school NOT IN ('university','NHS','N/A') ORDER BY s.school, c.name");
@@ -229,7 +229,7 @@ foreach ($titles as $tmp_title) {
 <tr>
 <td class="field"><?php echo $string['gender'] ?></td><td>
 <select id="new_gender" name="new_gender" size="1">
-<option value=""></option>
+<option label=" "></option>
 <option value="Male"<?php if (isset($new_gender) and $new_gender == 'Male') echo ' selected' ?>><?php echo $string['male'] ?></option>
 <option value="Female"<?php if (isset($new_gender) and $new_gender == 'Female') echo ' selected' ?>><?php echo $string['female'] ?></option>
 <option value="Other"<?php if (isset($new_gender) and $new_gender == 'Other') echo ' selected' ?>><?php echo $string['other'] ?></option>
@@ -239,7 +239,7 @@ foreach ($titles as $tmp_title) {
 <tr><td class="field"><?php echo $string['status'] ?></td><td>
 <?php
   echo "<select name=\"new_roles\" id=\"new_roles\" class=\"required\" required>";
-  echo "<option value=\"\"></option>";
+  echo "<option label=\"\" value=\"\"> </option>";
 
   $old_optgroup = '';
 
