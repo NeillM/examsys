@@ -26,6 +26,43 @@
 
 require_once '../include/admin_auth.inc';
 require_once '../include/mb_string.inc.php';
+require '../include/toprightmenu.inc';
+
+$render = new render($configObject);
+$toprightmenu = draw_toprightmenu();
+$lang['title'] = $string['createnewuser'];
+$additionaljs = "<script type=\"text/javascript\" src=\"/js/jquery.validate.min.js\"></script>    
+    <script>
+    $(function () {
+      $('#theform').validate({
+        errorClass: 'errfield',
+        errorPlacement: function(error,element) {
+          return true;
+        }
+      });
+      $('form').removeAttr('novalidate');
+      
+      $('#ldaplookup').click(function() {
+        notice = window.open(\"ldaplookup.php\",\"ldap\",\"width=650,height=300,left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable\");
+        notice.moveTo(screen.width/2-325, screen.height/2-150);
+        if (window.focus) {
+          notice.focus();
+        }        
+      });
+    });
+  </script>";
+$addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/dialog.css\" />
+        <link rel=\"stylesheet\" type=\"text/css\" href=\"/css/list.css\" />
+        <style type=\"text/css\">
+          .dialog_table {background-color:#F1F5FB; border: 1px solid #95AEC8; margin-top:40px; margin-left:auto; margin-right:auto}
+          .field {text-align:right; padding-right:6px; width:120px}
+        </style>";
+
+$breadcrumb = array($string['home'] => "../../index.php");$action = $_SERVER['PHP_SELF'];
+$render->render_admin_header($lang, $additionaljs, $addtionalcss);
+$render->render_admin_options('', '', $lang, $toprightmenu);
+include '../include/user_search_options.php';
+$render->render_admin_content($breadcrumb, $lang);
 
 $unique_username = true;
 $problem = false;
@@ -40,6 +77,10 @@ if (isset($_POST['submit'])) {
   $new_grade = check_var('new_grade', 'POST', false, false, true);
 	$new_year = check_var('new_year', 'POST', false, false, true);
   $new_roles = check_var('new_roles', 'POST', false, false, true);
+  $new_sid = check_var('new_sid', 'POST', false, false, true);
+  $new_users_title = check_var('new_users_title', 'POST', false, false, true);
+  $new_gender = check_var('new_gender', 'POST', false, false, true);
+  $new_welcome = check_var('new_welcome', 'POST', false, false, true);
 
   // Check for unique username
   if (UserUtils::username_exists($new_username, $mysqli) !== false) {
@@ -52,10 +93,10 @@ if (isset($_POST['submit']) and $unique_username == true) {
   if ($new_username == '' or strpos($new_username, '_') !== false or $new_surname == '' or $new_email == '' or $new_first_names == '' or $new_roles == '') {
     $problem = true;
   } else {
-    $new_userID = UserUtils::create_user($new_username, $new_password, $_POST['new_users_title'], $new_first_names, $new_surname, $new_email, $new_grade, $_POST['new_gender'], $new_year, $new_roles, $_POST['new_sid'], $mysqli);
+    $new_userID = UserUtils::create_user($new_username, $new_password, $new_users_title, $new_first_names, $new_surname, $new_email, $new_grade, $new_gender, $new_year, $new_roles, $new_sid, $mysqli);
 
     // Send out email welcome.
-    if (isset($_POST['new_welcome']) and $_POST['new_welcome'] != '') {
+    if (isset($new_welcome) and $new_welcome != '') {
       $result = $mysqli->prepare("SELECT email FROM users WHERE username = ?");
       $result->bind_param('s', $userObject->get_username());
       $result->execute();
@@ -67,7 +108,7 @@ if (isset($_POST['submit']) and $unique_username == true) {
       $headers = "From: $tmp_email\n";
       $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n";
       $headers .= "bcc: $tmp_email\n";
-      $sname = ucwords($_POST['new_surname']);
+      $sname = ucwords($new_surname);
       $message = <<< MESSAGE
 <!DOCTYPE html>
 <html>
@@ -80,10 +121,10 @@ h2 {font-size:120%}
 </style>
 </head>
 <body>
-<p>{$string['dear']} {$_POST['new_users_title']} {$sname},</p>
+<p>{$string['dear']} {$new_users_title} {$sname},</p>
 <p>{$string['email1']}</p>
-<p>{$string['username']}: {$_POST['new_username']}<br />
-{$string['password']}: {$_POST['new_password']}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#808080\">{$string['casesensitive']}</span></p>
+<p>{$string['username']}: {$new_username}<br />
+{$string['password']}: {$new_password}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#808080\">{$string['casesensitive']}</span></p>
 MESSAGE;
 
       if (strpos($new_roles,'Staff') !== false) {
@@ -97,108 +138,16 @@ MESSAGE;
       $message .= "</body>\n</html>";
       mail ($new_email, $subject, $message, $headers) or print "<p>" . $string['couldnotsend'] . " <strong>" . $new_email . "</strong>.</p>";
     }
-    ?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-
-  <title>Rog&#333;: <?php echo $string['createnewuser'] . ' ' . $configObject->get('cfg_install_type') ?></title>
-
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
-  <link rel="stylesheet" type="text/css" href="../css/list.css" />
-  
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-</head>
-<body>
-<?php
-  require '../include/toprightmenu.inc';
-  include '../include/user_search_options.php';
-  
-	echo draw_toprightmenu();
 ?>
-<div id="content">
-<div class="head_title">
-  <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
-  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a></div>
-  <div class="page_title"><?php echo $string['createnewuser'] ?></div>
-</div>
-
-<p>&nbsp;<?php echo $string['newaccountcreated'] . ' ' . $_POST['new_users_title'] . ' ' . $_POST['new_surname'] ?>.</p>
+<p>&nbsp;<?php echo $string['newaccountcreated'] . ' ' . $new_users_title . ' ' . $new_surname ?>.</p>
 <div>&nbsp;<input type="button" name="gotouser" value="View Account" class="ok" onclick="window.location='details.php?userID=<?php echo $new_userID ?>'" /></div>
-
-</div>
-      <?php
+<?php
     }
   }
   if (!isset($_POST['submit']) or $problem) {
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-
-  <title>Rog&#333;: <?php echo "{$string['createnewuser']} {$configObject->get('cfg_install_type')}" ?></title>
-
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
-  <link rel="stylesheet" type="text/css" href="../css/list.css" />
-  <style>
-    .dialog_table {background-color:#F1F5FB; border: 1px solid #95AEC8; margin-top:40px; margin-left:auto; margin-right:auto}
-    .field {text-align:right; padding-right:6px; width:120px}
-  </style>
-
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    $(function () {
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
-        }
-      });
-      $('form').removeAttr('novalidate');
-      
-      $('#ldaplookup').click(function() {
-        notice = window.open("ldaplookup.php","ldap","width=650,height=300,left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-        notice.moveTo(screen.width/2-325, screen.height/2-150);
-        if (window.focus) {
-          notice.focus();
-        }        
-      });
-    });
-  </script>
-</head>
-
-<body>
-<?php
-  require '../include/user_search_options.php';
-  require '../include/toprightmenu.inc';
-
-	echo draw_toprightmenu();
-?>
-<div id="content">
-
-  <div class="head_title">
-    <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
-    <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a></div>
-    <div class="page_title"><?php echo $string['createnewuser'] ?></div>
-  </div>
 
 <form method="post" id="theform" name="newUser" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
-
 <table border="0" cellspacing="0" cellpadding="3" class="dialog_table">
 <tr><td class="dialog_header" style="border-bottom: 1px solid #95AEC8; line-height:170%" colspan="2"><img src="../artwork/user_female_32.png" width="32" height="32" alt="User Icon" style="float:left; padding-right:8px" /><?php echo $string['createnewuser'] ?></td></tr>
 <?php
@@ -233,8 +182,8 @@ foreach ($titles as $tmp_title) {
 <tr><td class="field"><?php echo $string['email'] ?></td><td><input<?php if (isset($new_email) and $new_email == '') echo ' class="required"'; ?> type="email" id="new_email" name="new_email" size="40" maxlength="65" value="<?php if (isset($new_email)) echo $new_email; ?>" required /></td></tr>
 <tr><td class="field"><?php echo $string['username'] ?></td><td><input<?php if (isset($new_username) and ($new_username == '' or strpos($new_username, '_') !== false or !$unique_username)) echo ' class="required"'; ?> type="text" id="new_username" name="new_username" size="12" maxlength="15" value="<?php if (isset($new_username)) echo $new_username; ?>" autocomplete="off" required />
 &nbsp;&nbsp;&nbsp;<?php echo $string['password'] ?> <input type="text" id="new_password" name="new_password" value="<?php
-  if (isset($_POST['password'])) {
-    echo $_POST['password'];
+  if (isset($new_password)) {
+    echo $new_password;
   } else {
     echo gen_password();
   }
@@ -281,9 +230,9 @@ foreach ($titles as $tmp_title) {
 <td class="field"><?php echo $string['gender'] ?></td><td>
 <select id="new_gender" name="new_gender" size="1">
 <option value=""></option>
-<option value="Male"<?php if (isset($_POST['gender']) and $_POST['gender'] == 'Male') echo ' selected' ?>><?php echo $string['male'] ?></option>
-<option value="Female"<?php if (isset($_POST['gender']) and $_POST['gender'] == 'Female') echo ' selected' ?>><?php echo $string['female'] ?></option>
-<option value="Other"<?php if (isset($_POST['gender']) and $_POST['gender'] == 'Other') echo ' selected' ?>><?php echo $string['other'] ?></option>
+<option value="Male"<?php if (isset($new_gender) and $new_gender == 'Male') echo ' selected' ?>><?php echo $string['male'] ?></option>
+<option value="Female"<?php if (isset($new_gender) and $new_gender == 'Female') echo ' selected' ?>><?php echo $string['female'] ?></option>
+<option value="Other"<?php if (isset($new_gender) and $new_gender == 'Other') echo ' selected' ?>><?php echo $string['other'] ?></option>
 </select>
 </td>
 </tr>
@@ -329,25 +278,20 @@ foreach ($titles as $tmp_title) {
   }
   echo "</optgroup>\n</select>\n";
 ?>
-
 </td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td>&nbsp;</td><td><input type="checkbox" name="new_welcome" value="1" /><?php echo $string['sendwelcomeemail'] ?></td></tr>
 <tr><td colspan="2" style="text-align:center; padding-bottom:12px">
 <input type="submit" name="submit" value="<?php echo $string['createaccount'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" onclick="history.back();" /></td></tr>
 </table>
-
 </form>
-
 <?php
   }
-  $mysqli->close();
+$mysqli->close();
 
-  if ($unique_username != true) {
-    echo '<script>alert("' . sprintf($string['usernameinuse'], $_POST['new_username']) . '")</script>';
-  }
+if ($unique_username != true) {
+  echo '<script>alert("' . sprintf($string['usernameinuse'], $new_username) . '")</script>';
+}
+
+$render->render_admin_footer();
 ?>
-</div>
-
-</body>
-</html>
