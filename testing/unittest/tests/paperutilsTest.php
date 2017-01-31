@@ -96,9 +96,9 @@ class paperutilstest extends unittestdatabase {
         $papers[1] = array('paper_title'=>'Paper 1', 'paper_type'=>'2', 'created'=>$created1, 'title'=>'Dr', 'initials'=>'JL', 'surname'=>'Baxter');
         $papers[1]['moduleid'][0] = "ABC100";
         $papers[2] = array('paper_title'=>'Paper 2', 'paper_type'=>'2', 'created'=>$created2, 'title'=>'Dr', 'initials'=>'JL', 'surname'=>'Baxter');
-        $papers[2]['moduleid'][0] = "ABC100";
-        $papers[2]['moduleid'][1] = "ABC200";
-        $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, $this->db, $type = '2', $teamid = null));
+        $papers[2]['moduleid'][0] = "ABC200";
+        $papers[2]['moduleid'][1] = "ABC100";
+        $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, $type = '2', $teamid = null));
     }
 
     /**
@@ -117,7 +117,7 @@ class paperutilstest extends unittestdatabase {
         $papers[1]['moduleid'][0] = "ABC100";
         $papers[2] = array('paper_title'=>'Paper 2', 'paper_type'=>'2', 'created'=>$created2, 'title'=>'Dr', 'initials'=>'JL', 'surname'=>'Baxter');
         $papers[2]['moduleid'][0] = "ABC100";
-        $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, $this->db, $type = null, $teamid = 1));
+        $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, $type = null, $teamid = 1));
     }
     
     /**
@@ -130,7 +130,7 @@ class paperutilstest extends unittestdatabase {
         $order = "paper_title";
         $direction = "asc";
         $papers = array();
-        $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, $this->db, $type = '2', $teamid = null));
+        $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, $type = '2', $teamid = null));
     }
 
     /**
@@ -143,6 +143,6 @@ class paperutilstest extends unittestdatabase {
         $order = "paper_title";
         $direction = "asc";
         $papers = array();
-        $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, $this->db, $type = null, $teamid = 3));
+        $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, $type = null, $teamid = 3));
     }
 }

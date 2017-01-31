@@ -873,13 +873,13 @@ Class PaperUtils {
    * @param object $userObject logged in user object
    * @param string $order query order string
    * @param string $direction query order direction string
-   * @param mysqli $mysqli db connection
    * @param integer $type paper type
    * @param integer $teamid logged in users team
    * @return array list of papers available to logged in user
    */
-  static public function get_available_papers($userObject, $order, $direction, $mysqli, $type = null, $teamid = null) {
+  static public function get_available_papers($userObject, $order, $direction, $type = null, $teamid = null) {
     $configObject = \Config::get_instance();
+    $mysqli = $configObject->db;
     $paper_details = array();
     if (!is_null($type)) {
       $user_teams = $userObject->get_staff_modules();

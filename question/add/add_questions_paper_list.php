@@ -95,7 +95,7 @@ if (!is_null($order)) {
   
   $type = param::optional('paper_type', null, param::INT, param::FETCH_GET); 
   $teamid = param::optional('teamID', null, param::INT, param::FETCH_GET); 
-  $paper_details = PaperUtils::get_available_papers($userObject, $order, $direction, $mysqli, $type, $teamid);
+  $paper_details = PaperUtils::get_available_papers($userObject, $order, $direction, $type, $teamid);
 
   foreach ($paper_details as $property_id=>$paper_detail) {
     echo '<tr><td class="f"><a href="add_questions_by_paper.php?question_paper=' . $property_id . '"><img src="../../artwork/' . $paper_icons[$paper_detail['paper_type']] . '" width="16" height="16" alt="' . $string['folder'] . '" align="middle" /></a></td><td class="s"><a href="add_questions_by_paper.php?question_paper=' . $property_id . '">' . $paper_detail['paper_title'] . '</a></td><td class="s">';
