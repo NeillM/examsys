@@ -603,7 +603,7 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
     if ($academic_year_title !== false) {
       $new_calendar_year = $academic_year_title;
     } else {
-      $new_calendar_year = $properties['calendar_year'];
+      $new_calendar_year = $properties['session'];
     }
   }
 
