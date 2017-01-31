@@ -145,16 +145,17 @@ $moduleID = NULL;
 $error = array();
 $copytype = param::optional('copytype', null, param::ALPHA, param::FETCH_POST);
 $update = param::optional('copyfrompaper', false, param::BOOLEAN, param::FETCH_POST);
+
+// Only copy properties if new paper created.
+if ($update === false) {
+  // Copy the properties (properties table)
+  $new_paper_id = copyProperties($mysqli, $calendar_year, $new_calendar_year, $moduleIDs, $userObject, $configObject);
+} else {
+  $new_paper_id = param::required('currentpid', param::INT, param::FETCH_POST);
+}
+
 if ($copytype == 'paperonly') {        // Copy the paper only!
 
-  // Only copy properties if new paper created.
-  if ($update === false) {
-    // Copy the properties (properties table)
-    $new_paper_id = copyProperties($mysqli, $calendar_year, $new_calendar_year, $moduleIDs, $userObject, $configObject);
-  } else {
-    $new_paper_id = param::required('currentpid', param::INT, param::FETCH_POST);
-  }
-    
   // Copy the question pointers (papers table)
   $result = $mysqli->prepare("SELECT question, screen, display_pos FROM papers WHERE paper = ?");
   $result->bind_param('i', $paperid);
@@ -197,13 +198,6 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
     }
   }
 } else {    // Copy the paper and the questions.
-  // Only copy properties if new paper created.
-  if ($update === false) {
-    // Copy the properties (properties table)
-    $new_paper_id = copyProperties($mysqli, $calendar_year, $new_calendar_year, $moduleIDs, $userObject, $configObject);
-  } else {
-    $new_paper_id = param::required('currentpid', param::INT, param::FETCH_POST);
-  }
   $mediadirectory = rogo_directory::get_directory('media');
 
   // Get question statuses
