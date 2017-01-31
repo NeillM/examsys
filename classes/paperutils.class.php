@@ -1010,4 +1010,207 @@ Class PaperUtils {
     return $paper_details;
   }
   
+  /**
+   * This function compares the old and the new courses session objectives to see which can be copied.
+   * 
+   * @param array $mappings_copy_objID - objectives to map
+   * @param array $old_course - old course objective information
+   * @param array $new_course - new course objective information
+   */
+  static public function copy_between_sessions (&$mappings_copy_objID, &$old_course, &$new_course) {
+    foreach ($old_course as $module => &$sessions) {
+      foreach ($sessions as $identifier => &$session) {
+        if (!empty($session['objectives'])) {
+          foreach ($session['objectives'] as &$obj) {
+            if (isset( $obj['id'])) {
+              $old_objID = $obj['id'];
+            } else {
+              $old_objID = NULL;
+            }
+            if (isset($obj['guid'])) {
+              $old_objGUID = $obj['guid'];
+            } else {
+              $old_objGUID = NULL;
+            }
+            // VLE Objectives.
+            if (!empty($new_course[$module][$identifier]['VLE']) and !empty($old_course[$module][$identifier]['VLE'])) {
+              if ($new_course[$module][$identifier]['VLE'] == $old_course[$module][$identifier]['VLE']) {
+                if (isset($new_course[$module][$identifier]['objectives'])){
+                  foreach ($new_course[$module][$identifier]['objectives'] as $new_obj) {
+                    if (((array_key_exists('id', $new_obj) and $new_obj['id'] == $old_objID)
+                      or (array_key_exists('guid', $new_obj) and $new_obj['guid'] == $old_objGUID))
+                      and (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)
+                      and $new_obj['content'] == $obj['content'])) {
+                        // Build a list of objectives that are still in both sessions
+                        $mappings_copy_objID[$old_objID] = $new_obj['id'];
+                        break;
+                       }
+                    }
+                  }
+                }
+            // Internal Rogo Objectives.
+            } elseif (isset($new_course[$module][$identifier]['VLE']) and isset($old_course[$module][$identifier]['VLE'])) {
+              if ($new_course[$module][$identifier]['VLE'] === '' and $old_course[$module][$identifier]['VLE'] === '') {
+                foreach ($new_course as $module => &$sessions) {
+                  foreach ($sessions as $identifier => &$session) {
+                    if (isset($session['objectives'])){
+                      foreach ($session['objectives'] as $new_obj) {
+                        if (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)) {
+                          // Brefore comparing the contents strip out all no alpha numeric characters and convert to lowecase.
+                          $new_content_check = strtolower($new_obj['content']);
+                          $new_content_check = preg_replace("/[^a-z0-9]/", '', $new_content_check);
+                          $old_content_check = strtolower($obj['content']);
+                          $old_content_check = preg_replace("/[^a-z0-9]/", '', $old_content_check);
+                          if ($new_content_check == $old_content_check) {
+                            // Build a list of objectives that are still in both sessions
+                            $mappings_copy_objID[$old_objID] = $new_obj['id'];
+                            break;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  /**
+   * Copies the paper properties record.
+   *
+   * @param string $calendar_year - Looks up and updates the academic session - used with learning objectives
+   * @param string $new_calendar_year  - Looks up and updates the academic session - used with learning objectives
+   * @param string $moduleIDs - Looks up and updates the modules the paper is on - used with learning objectives
+   * @param array $postparams - posted parameters to copy
+   * @return array - calendar year of copied paper, calendar year of new paper, modules new paper associated with and the id of the new paper.
+   */
+  static public function copyProperties($calendar_year, $new_calendar_year, $moduleIDs, $postparams) {
+    $configObject = \Config::get_instance();
+    $db = $configObject->db;
+    $userObj = \UserObject::get_instance();
+    $pid = $postparams['paperID'];
+    $userID = $userObj->get_user_ID();
+    $moduleIDs = Paper_utils::get_modules($postparams['paperID'], $db);
+
+    $properties = Paper_utils::get_paper_properties($postparams['paperID'], $db);
+    $calendar_year = $properties['session'];
+    if ($postparams['paper_type'] == 2 and $configObject->get('cfg_summative_mgmt')) {
+      $duration = 0;
+      $duration += ($postparams['duration_hours'] * 60) + $postparams['duration_mins'] ;
+      $tmp_exam_duration = $duration;
+    } else {
+      $tmp_exam_duration = $properties['duration'];
+    }
+    $labs = $properties['labs'];
+    if ($postparams['paper_type'] == 2) {
+      if ($configObject->get('cfg_summative_mgmt')) {
+        $tmp_start_date = NULL;
+        $tmp_end_date = NULL;
+        $labs = NULL;
+      } else {
+        $tmp_start_date = '20200505090000';
+        $tmp_end_date = '20200505100000';
+      }
+    } else {
+      $tmp_start_date = $properties['startdatetime'];
+      $tmp_end_date = $properties['enddatetime'];;
+    }
+    $tmp_random_mark = $properties['random_mark'];
+    if ($tmp_random_mark == '') $tmp_random_mark = NULL;
+    $tmp_total_mark = $properties['total_mark'];
+    if ($tmp_total_mark == '') $tmp_total_mark = NULL;
+
+    $tmp_external_review_deadline = $properties['external_review_deadline'];
+    if ($tmp_external_review_deadline == '') $tmp_external_review_deadline = NULL;
+
+    $tmp_internal_review_deadline = $properties['internal_review_deadline'];
+    if ($tmp_internal_review_deadline == '') $tmp_internal_review_deadline = NULL;
+
+    if (!is_null($postparams['session'])) {
+      $new_calendar_year = $postparams['session'];
+      if ($new_calendar_year == '') {
+        $new_calendar_year = NULL;
+      }
+    } else {
+      $academic_year_title = Paper_utils::academic_year_from_title($postparams['new_paper']);
+      if ($academic_year_title !== false) {
+        $new_calendar_year = $academic_year_title;
+      } else {
+        $new_calendar_year = $calendar_year;
+      }
+    }
+
+    $assessment = new assessment($db, $configObject);
+    $unixtime = time();
+    $created = date("Y-m-d H:i:s", $unixtime);
+    $params = array(
+      'paper_title' => array('s', $postparams['new_paper']),
+      'start_date' => array('s', $tmp_start_date),
+      'end_date' => array('s', $tmp_end_date),
+      'timezone' => array('s', $properties['timezone']),
+      'paper_type' => array('s', $postparams['paper_type']),
+      'paper_prologue' => array('s', $properties['paper_prologue']),
+      'paper_postscript' => array('s', $properties['paper_postscript']),
+      'bgcolor' => array('s', $properties['bgcolor']),
+      'fgcolor' => array('s', $properties['fgcolor']),
+      'themecolor' => array('s', $properties['themecolor']),
+      'labelcolor' => array('s', $properties['labelcolor']),
+      'fullscreen' => array('s', $properties['fullscreen']),
+      'marking' => array('s', $properties['marking']),
+      'bidirectional' => array('s', $properties['bidirectional']),
+      'pass_mark' => array('i', $properties['pass_mark']),
+      'distinction_mark' => array('i', $properties['distinction_mark']),
+      'paper_ownerID' => array('i', $userID),
+      'folder' => array('s', $properties['folder']),
+      'labs' => array('s', $labs),
+      'rubric' => array('s', $properties['rubric']),
+      'calculator' => array('i', $properties['calculator']),
+      'exam_duration' => array('i', $tmp_exam_duration),
+      'deleted' => array('s', NULL),
+      'created' => array('s', $created),
+      'random_mark' => array('d', $tmp_random_mark),
+      'total_mark' => array('i', $tmp_total_mark),
+      'display_correct_answer' => array('s', $properties['display_correct_answer']),
+      'display_question_mark' => array('s', $properties['display_question_mark']),
+      'display_students_response' => array('s', $properties['display_students_response']),
+      'display_feedback' => array('s', $properties['display_feedback']),
+      'hide_if_unanswered' => array('s', $properties['hide_if_unanswered']),
+      'calendar_year' => array('i', $new_calendar_year),
+      'external_review_deadline' => array('s', $tmp_external_review_deadline),
+      'internal_review_deadline' => array('s', $tmp_internal_review_deadline),
+      'sound_demo' => array('s', $properties['sound_demo']),
+      'latex_needed' => array('i', $properties['latex_needed']),
+      'password' => array('s', $properties['password']),
+      'retired' => array('s', NULL),
+      'recache_marks' => array('i', 0)
+    );
+    $new_paper_id = $assessment->db_insert_assessment($params);
+    $update_params = array('crypt_name' => array('s', $new_paper_id . $unixtime . $userID));
+    $assessment->db_update_assessment($new_paper_id, $update_params);
+
+    // Get the old reviewers and populate the new paper with.
+    $result2 = $db->prepare("SELECT reviewerID, type FROM properties_reviewers WHERE paperID = ?");
+    $result2->bind_param('i', $postparams['paperID']);
+    $result2->execute();
+    $result2->store_result();
+    $result2->bind_result($reviewerID, $type);
+    while ($result2->fetch()) {
+      $stmt = $db->prepare("INSERT INTO properties_reviewers VALUES (NULL, ?, ?, ?)");
+      $stmt->bind_param('iis', $new_paper_id, $reviewerID, $type);
+      $stmt->execute();
+      $stmt->close();
+    }
+    $result2->close();
+
+    // Set the modules on the new paper
+    Paper_utils::update_modules($moduleIDs, $new_paper_id, $db, $userObj);
+
+    if ($postparams['paper_type'] == $assessment::TYPE_SUMMATIVE and $configObject->get('cfg_summative_mgmt')) {
+      $assessment->schedule($new_paper_id, $postparams['period'], $postparams['barriers_needed'], $postparams['cohort_size'], $postparams['notes'] , $postparams['sittings'] , $postparams['campus']);
+    }
+    return array('calendar_year' => $calendar_year, 'new_calendar_year' => $new_calendar_year, 'moduleIDs' => $moduleIDs, 'new_paper_id' => $new_paper_id);
+  }
 }
