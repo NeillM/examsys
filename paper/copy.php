@@ -507,7 +507,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
   if (count($error) == 0) {
     $module = param::optional('module', '', param::INT, param::FETCH_POST);
     $folder = param::optional('folder', '', param::INT, param::FETCH_POST);
-  	echo "<body onload=\"javascript:window.location='" . $configObject->get('cfg_root_path') . "/paper/details.php?paperID=$new_paper_id&module=" . $module . "&folder=" . $folder . "';\">";
+    echo "<body onload=\"javascript:window.location='" . $configObject->get('cfg_root_path') . "/paper/details.php?paperID=$new_paper_id&module=" . $module . "&folder=" . $folder . "';\">";
   } else {
 ?>
   <body onclick="hideMenus()">
@@ -563,16 +563,11 @@ function copyProperties($db, &$calendar_year, &$new_calendar_year, &$moduleIDs, 
   $properties = Paper_utils::get_paper_properties($pid, $db);
 
   $paper_type = param::required('paper_type', param::INT, param::FETCH_POST);      // Override the paper type with what is posted.
-  $duration_hours = param::optional('duration_hours', null, param::INT, param::FETCH_POST);
-  $duration_mins = param::optional('duration_mins', null, param::INT, param::FETCH_POST); 
+  $duration_hours = param::optional('duration_hours', 0, param::INT, param::FETCH_POST);
+  $duration_mins = param::optional('duration_mins', 0, param::INT, param::FETCH_POST); 
   if ($paper_type == 2 and $configObject->get('cfg_summative_mgmt')) {
     $duration = 0;
-    if (!is_null($duration_hours)) {
-      $duration += ($duration_hours * 60);
-    }
-    if (!is_null($duration_mins)) {
-      $duration += $duration_mins;
-    }
+    $duration += ($duration_hours * 60) + $duration_mins;
     $tmp_exam_duration = $duration;
   } else {
     $tmp_exam_duration = $properties['duration'];
