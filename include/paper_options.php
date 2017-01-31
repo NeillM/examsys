@@ -546,7 +546,7 @@ if ($properties->get_paper_type() == '2') {
       foreach ($tmp_array as $reviewerID => $reviewer_name) {
         if ($internal_array[$reviewerID] == 1) $reviews_complete++;
       }
-      $paperID = param::required('paperID', param::INT, param::FETCH_GET);
+
       if ($reviews_complete < count($internal_array)) {
         if ($reviews_complete == 0) {
           $tmp_color = '#C00000';
