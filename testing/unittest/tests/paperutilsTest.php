@@ -145,4 +145,30 @@ class paperutilstest extends unittestdatabase {
         $papers = array();
         $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, $type = null, $teamid = 3));
     }
+
+    /**
+     * Test get copy paper properties
+     * @group assessment
+     */
+    public function test_copyProperties() {
+        // Load user id 1.
+        $this->userobject->load(1);
+        $postparams['paperID'] = 2;
+        $postparams['paper_type'] = 1;
+        $postparams['new_paper'] = 'paper copy test';
+        $postparams['session'] = 2017; 
+        $moduleIDs = null;
+        $calendar_year = $new_calendar_year = '';
+        $papercopy = PaperUtils::copyProperties($calendar_year, $new_calendar_year, $moduleIDs, $postparams);
+        $this->assertEquals(2016, $papercopy['calendar_year']);
+        $this->assertEquals(2017, $papercopy['new_calendar_year']);
+        $this->assertEquals(array(1 => 'ABC100', 2 => 'ABC200'), $papercopy['moduleIDs']);
+        $this->assertEquals(3, $papercopy['new_paper_id']);
+        $querypropertiestable = $this->getConnection()->createQueryTable('properties', 'SELECT property_id, paper_title, calendar_year, paper_type, paper_ownerID, exam_duration FROM properties');
+        $querypropertiesmodulestable = $this->getConnection()->createQueryTable('properties_modules', 'SELECT * FROM properties_modules');
+        $expectedpropertiestable = $this->get_expected_data_set('copyproperties')->getTable("properties");
+        $this->assertTablesEqual($expectedpropertiestable, $querypropertiestable);
+        $expectedpropertiesmodulestable = $this->get_expected_data_set('copyproperties')->getTable("properties_modules");
+        $this->assertTablesEqual($querypropertiesmodulestable, $querypropertiesmodulestable);
+    }
 }
