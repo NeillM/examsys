@@ -35,7 +35,7 @@ if (!Paper_utils::paper_exists($paperid, $mysqli)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
-$new_paper_title = param::optional('new_paper', null, param::ALPHANUM, param::FETCH_POST);
+$new_paper_title = param::optional('new_paper', null, param::TEXT, param::FETCH_POST);
 if (!Paper_utils::is_paper_title_unique($new_paper_title, $mysqli)) {			// If the paper title is unique.
   ?>
 <html>
