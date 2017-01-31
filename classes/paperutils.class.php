@@ -1098,8 +1098,7 @@ Class PaperUtils {
     $properties = Paper_utils::get_paper_properties($postparams['paperID'], $db);
     $calendar_year = $properties['session'];
     if ($postparams['paper_type'] == 2 and $configObject->get('cfg_summative_mgmt')) {
-      $duration = 0;
-      $duration += ($postparams['duration_hours'] * 60) + $postparams['duration_mins'] ;
+      $duration = ($postparams['duration_hours'] * 60) + $postparams['duration_mins'] ;
       $tmp_exam_duration = $duration;
     } else {
       $tmp_exam_duration = $properties['duration'];
@@ -1169,7 +1168,6 @@ Class PaperUtils {
       'rubric' => array('s', $properties['rubric']),
       'calculator' => array('i', $properties['calculator']),
       'exam_duration' => array('i', $tmp_exam_duration),
-      'deleted' => array('s', NULL),
       'created' => array('s', $created),
       'random_mark' => array('d', $tmp_random_mark),
       'total_mark' => array('i', $tmp_total_mark),
@@ -1183,9 +1181,7 @@ Class PaperUtils {
       'internal_review_deadline' => array('s', $tmp_internal_review_deadline),
       'sound_demo' => array('s', $properties['sound_demo']),
       'latex_needed' => array('i', $properties['latex_needed']),
-      'password' => array('s', $properties['password']),
-      'retired' => array('s', NULL),
-      'recache_marks' => array('i', 0)
+      'password' => array('s', $properties['password'])
     );
     $new_paper_id = $assessment->db_insert_assessment($params);
     $update_params = array('crypt_name' => array('s', $new_paper_id . $unixtime . $userID));

@@ -80,11 +80,11 @@ $update = param::optional('copyfrompaper', false, param::BOOLEAN, param::FETCH_P
 // Only copy properties if new paper created.
 if ($update === false) {
   // Copy the properties (properties table)
-  $postparams['paperID'] = param::required('paperID', param::INT, param::FETCH_POST);
+  $postparams['paperID'] = $paperid;
   $postparams['paper_type'] = param::required('paper_type', param::INT, param::FETCH_POST);      // Override the paper type with what is posted.
   $postparams['duration_hours'] = param::optional('duration_hours', 0, param::INT, param::FETCH_POST);
   $postparams['duration_mins'] = param::optional('duration_mins', 0, param::INT, param::FETCH_POST); 
-  $postparams['new_paper'] = param::optional('new_paper', null, param::ALPHANUM, param::FETCH_POST);
+  $postparams['new_paper'] = $new_paper_title;
   $postparams['session'] = param::optional('session', null, param::INT, param::FETCH_POST); 
   $postparams['barriers_needed'] = param::optional('barriers_needed', 0, param::INT, param::FETCH_POST);
   $postparams['period'] = param::optional('period', null, param::INT, param::FETCH_POST);
