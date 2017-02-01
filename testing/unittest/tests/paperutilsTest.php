@@ -171,4 +171,27 @@ class paperutilstest extends unittestdatabase {
         $expectedpropertiesmodulestable = $this->get_expected_data_set('copyproperties')->getTable("properties_modules");
         $this->assertTablesEqual($querypropertiesmodulestable, $querypropertiesmodulestable);
     }
+
+    /**
+     * Test get copy objectives between sessions
+     * @group assessment
+     */
+    public function test_copy_between_sessions() {
+        $this->userobject->load(1);
+        $postparams['paperID'] = 1;
+        $postparams['paper_type'] = 1;
+        $postparams['new_paper'] = 'paper copy test';
+        $postparams['session'] = 2017; 
+        $moduleIDs = null;
+        $calendar_year = $new_calendar_year = '';
+        $papercopy = PaperUtils::copyProperties($calendar_year, $new_calendar_year, $moduleIDs, $postparams);
+        // Need require until mapping made a class.
+        $cfg_web_root = get_root_path() . '/';
+        require_once $cfg_web_root . 'include/mapping.inc';
+        $old_course = getObjectives($papercopy['moduleIDs'], $papercopy['calendar_year'], 1, '', $this->db);
+        $new_course = getObjectives($papercopy['moduleIDs'], $papercopy['new_calendar_year'], 1, '', $this->db);
+        $mappings_copy_objID = Paper_utils::copy_between_sessions($old_course, $new_course);
+        $expected_mappings = array(123 => 126, 124 => 127, 125 => 128);
+        $this->assertEquals($expected_mappings, $mappings_copy_objID);
+    }
 }

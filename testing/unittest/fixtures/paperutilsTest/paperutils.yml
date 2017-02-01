@@ -67,18 +67,27 @@ modules:
     fullname: "Test Module"
     externalid: "123456789"
     academic_year_start: "01/07"
+    vle_api: ''
+    checklist: "mapping"
+    map_level: 7
   -
     id: 2
     moduleid: "ABC200"
     fullname: "Test Module 2"
     externalid: "987654321"
     academic_year_start: "01/07"
+    vle_api: ''
+    checklist: "mapping"
+    map_level: 7
   -
     id: 3
     moduleid: "ABC300"
     fullname: "Test Module 3"
     externalid: "432198765"
     academic_year_start: "01/07"
+    vle_api: ''
+    checklist: "mapping"
+    map_level: 7
 modules_staff:
   -
     groupID: 666
@@ -109,3 +118,63 @@ config:
     setting: "paper_max_duration"
     value: 779
     type: "integer"
+sessions:
+  -
+    sess_id: 1
+    identifier: 12345
+    idMod: 1
+    title: "test"
+    source_url: "https://www.example.com"
+    calendar_year: 2015
+    occurrence: "2017-01-09 11:00:00"
+  -
+    sess_id: 2
+    identifier: 67890
+    idMod: 1
+    title: "test"
+    source_url: "https://www.example.com"
+    calendar_year: 2017
+    occurrence: "2018-01-09 11:00:00"
+objectives:
+  -
+    obj_id: 123
+    objective: "a"
+    idMod: 1
+    identifier: 12345
+    calendar_year: 2015
+    sequence: 1
+  -
+    obj_id: 124
+    objective: "b"
+    idMod: 1
+    identifier: 12345
+    calendar_year: 2015
+    sequence: 2
+  -
+    obj_id: 125
+    objective: "c"
+    idMod: 1
+    identifier: 12345
+    calendar_year: 2015
+    sequence: 3
+  -
+    obj_id: 126
+    objective: "a"
+    idMod: 1
+    identifier: 67890
+    calendar_year: 2017
+    sequence: 1
+  -
+    obj_id: 127
+    objective: "b"
+    idMod: 1
+    identifier: 67890
+    calendar_year: 2017
+    sequence: 2
+  -
+    obj_id: 128
+    objective: "c"
+    idMod: 1
+    identifier: 67890
+    calendar_year: 2017
+    sequence: 3

@@ -1013,15 +1013,16 @@ Class PaperUtils {
   /**
    * This function compares the old and the new courses session objectives to see which can be copied.
    * 
-   * @param array $mappings_copy_objID - objectives to map
    * @param array $old_course - old course objective information
    * @param array $new_course - new course objective information
+   * @return array $mappings_copy_objID - objectives to map
    */
-  static public function copy_between_sessions (&$mappings_copy_objID, &$old_course, &$new_course) {
-    foreach ($old_course as $module => &$sessions) {
-      foreach ($sessions as $identifier => &$session) {
+  static public function copy_between_sessions ($old_course, $new_course) {
+    $mappings_copy_objID = array();
+    foreach ($old_course as $module => $sessions) {
+      foreach ($sessions as $identifier => $session) {
         if (!empty($session['objectives'])) {
-          foreach ($session['objectives'] as &$obj) {
+          foreach ($session['objectives'] as $obj) {
             if (isset( $obj['id'])) {
               $old_objID = $obj['id'];
             } else {
@@ -1049,10 +1050,10 @@ Class PaperUtils {
                   }
                 }
             // Internal Rogo Objectives.
-            } elseif (isset($new_course[$module][$identifier]['VLE']) and isset($old_course[$module][$identifier]['VLE'])) {
-              if ($new_course[$module][$identifier]['VLE'] === '' and $old_course[$module][$identifier]['VLE'] === '') {
-                foreach ($new_course as $module => &$sessions) {
-                  foreach ($sessions as $identifier => &$session) {
+            } else {
+              
+                foreach ($new_course as $module => $sessions) {
+                  foreach ($sessions as $identifier => $session) {
                     if (isset($session['objectives'])){
                       foreach ($session['objectives'] as $new_obj) {
                         if (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)) {
@@ -1071,12 +1072,13 @@ Class PaperUtils {
                     }
                   }
                 }
-              }
+              
             }
           }
         }
       }
     }
+    return $mappings_copy_objID;
   }
   /**
    * Copies the paper properties record.

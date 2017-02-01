@@ -83,9 +83,9 @@ if ($update === false) {
   $postparams['paperID'] = $paperid;
   $postparams['paper_type'] = param::required('paper_type', param::INT, param::FETCH_POST);      // Override the paper type with what is posted.
   $postparams['duration_hours'] = param::optional('duration_hours', 0, param::INT, param::FETCH_POST);
-  $postparams['duration_mins'] = param::optional('duration_mins', 0, param::INT, param::FETCH_POST); 
+  $postparams['duration_mins'] = param::optional('duration_mins', 0, param::INT, param::FETCH_POST);
   $postparams['new_paper'] = $new_paper_title;
-  $postparams['session'] = param::optional('session', null, param::INT, param::FETCH_POST); 
+  $postparams['session'] = param::optional('session', null, param::INT, param::FETCH_POST);
   $postparams['barriers_needed'] = param::optional('barriers_needed', 0, param::INT, param::FETCH_POST);
   $postparams['period'] = param::optional('period', null, param::INT, param::FETCH_POST);
   $postparams['cohort_size'] = param::optional('cohort_size', '<whole cohort>', param::ALPHANUM, param::FETCH_POST);
@@ -99,6 +99,11 @@ if ($update === false) {
   $new_paper_id = $copypaper['new_paper_id'];
 } else {
   $new_paper_id = param::required('currentpid', param::INT, param::FETCH_POST);
+  $properties = Paper_utils::get_paper_properties($new_paper_id, $mysqli);
+  $new_calendar_year = $properties['session'];
+  $properties = Paper_utils::get_paper_properties($paperid, $mysqli);
+  $calendar_year = $properties['session'];
+  $moduleIDs = Paper_utils::get_modules($new_paper_id, $mysqli);
 }
 
 if ($copytype == 'paperonly') {        // Copy the paper only!
@@ -127,11 +132,10 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
       $result->close();
     } else {
         // We are copying between sessions we need to check for changed sessions/objectives
-        $mappings_copy_objID = array();
         $old_course = getObjectives($moduleIDs, $calendar_year, $paperid, '', $mysqli);
         $new_course = getObjectives($moduleIDs, $new_calendar_year, $paperid, '', $mysqli);
         if (count($old_course) > 0 and count($new_course) > 0) {
-            Paper_utils::copy_between_sessions($mappings_copy_objID, $old_course, $new_course);
+            $mappings_copy_objID = Paper_utils::copy_between_sessions($old_course, $new_course);
             //Copy the objectives for each session where the objective still exists
             $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, ? as paper_id, question_id, ?, ?, vle_api, map_level"
               . " FROM relationships WHERE question_id IN ($qids) AND paper_id = ? AND obj_id = ?)");
@@ -391,11 +395,10 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
     }
   } else {
     // We are copying between sessions we need to check for changed sessions/objectives
-    $mappings_copy_objID = array();
     $old_course = getObjectives($moduleIDs, $calendar_year, $paperid, '', $mysqli);
     $new_course = getObjectives($moduleIDs, $new_calendar_year, $paperid, '', $mysqli);
     if (count($old_course) > 0 and count($new_course) > 0) {
-        Paper_utils::copy_between_sessions($mappings_copy_objID, $old_course, $new_course);
+        $mappings_copy_objID = Paper_utils::copy_between_sessions($old_course, $new_course);
 
         // Copy the objectives for each session where the objective still exists
         $result = $mysqli->prepare("INSERT INTO relationships (SELECT NULL, idMod, ?, ?, ?, ?, vle_api, map_level FROM"
