@@ -1033,46 +1033,61 @@ Class PaperUtils {
             } else {
               $old_objGUID = NULL;
             }
-            // VLE Objectives.
-            if (!empty($new_course[$module][$identifier]['VLE']) and !empty($old_course[$module][$identifier]['VLE'])) {
-              if ($new_course[$module][$identifier]['VLE'] == $old_course[$module][$identifier]['VLE']) {
-                if (isset($new_course[$module][$identifier]['objectives'])){
-                  foreach ($new_course[$module][$identifier]['objectives'] as $new_obj) {
-                    if (((array_key_exists('id', $new_obj) and $new_obj['id'] == $old_objID)
-                      or (array_key_exists('guid', $new_obj) and $new_obj['guid'] == $old_objGUID))
-                      and (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)
-                      and $new_obj['content'] == $obj['content'])) {
-                        // Build a list of objectives that are still in both sessions
-                        $mappings_copy_objID[$old_objID] = $new_obj['id'];
-                        break;
-                       }
-                    }
-                  }
-                }
-            // Internal Rogo Objectives.
-            } else {
-              
-                foreach ($new_course as $module => $sessions) {
-                  foreach ($sessions as $identifier => $session) {
-                    if (isset($session['objectives'])){
-                      foreach ($session['objectives'] as $new_obj) {
-                        if (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)) {
-                          // Brefore comparing the contents strip out all no alpha numeric characters and convert to lowecase.
-                          $new_content_check = strtolower($new_obj['content']);
-                          $new_content_check = preg_replace("/[^a-z0-9]/", '', $new_content_check);
-                          $old_content_check = strtolower($obj['content']);
-                          $old_content_check = preg_replace("/[^a-z0-9]/", '', $old_content_check);
-                          if ($new_content_check == $old_content_check) {
+            $skip = 0;
+            // Try VLE Objectives.
+            foreach ($new_course as $newmodule => $newsessions) {
+              foreach ($newsessions as $newidentifier => $newsession) {
+                if (!empty($newsession['VLE']) and !empty($session['VLE'])) {
+                  if ($newsession['VLE'] === $session['VLE']) {
+                    if (isset($newsession['objectives'])){
+                      foreach ($newsession['objectives'] as $new_obj) {
+                        if (((array_key_exists('id', $new_obj) and $new_obj['id'] == $old_objID)
+                          or (array_key_exists('guid', $new_obj) and $new_obj['guid'] == $old_objGUID))
+                          and (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)
+                          and $new_obj['content'] == $obj['content'])) {
                             // Build a list of objectives that are still in both sessions
                             $mappings_copy_objID[$old_objID] = $new_obj['id'];
                             break;
-                          }
+                        }
+                      }
+                    }
+                  } else {
+                    // VLEs do not match between sessions, cannot map.
+                    $skip = 2;
+                    break;
+                  }
+                } else {
+                 // VLEs not set, try internal mappings.
+                 $skip = 1;
+                 break;
+                }
+              }
+              if ($skip !== 0) {
+                break;
+              }
+            }
+            // Try Internal Rogo Objectives.
+            if ($skip === 1) {
+              foreach ($new_course as $newmodule => $newsessions) {
+                foreach ($newsessions as $newidentifier => $newsession) {
+                  if (isset($newsession['objectives'])){
+                    foreach ($newsession['objectives'] as $new_obj) {
+                      if (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)) {
+                        // Brefore comparing the contents strip out all no alpha numeric characters and convert to lowecase.
+                        $new_content_check = strtolower($new_obj['content']);
+                        $new_content_check = preg_replace("/[^a-z0-9]/", '', $new_content_check);
+                        $old_content_check = strtolower($obj['content']);
+                        $old_content_check = preg_replace("/[^a-z0-9]/", '', $old_content_check);
+                        if ($new_content_check == $old_content_check) {
+                          // Build a list of objectives that are still in both sessions
+                          $mappings_copy_objID[$old_objID] = $new_obj['id'];
+                          break;
                         }
                       }
                     }
                   }
                 }
-              
+              }
             }
           }
         }
