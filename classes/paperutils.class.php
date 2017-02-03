@@ -1057,23 +1057,11 @@ Class PaperUtils {
                     }
                   } else {
                     // VLEs do not match between sessions, cannot map.
-                    $skip = 2;
+                    $skip = 1;
                     break;
                   }
-                } else {
-                 // VLEs not set, try internal mappings.
-                 $skip = 1;
-                 break;
-                }
-              }
-              if ($skip !== 0) {
-                break;
-              }
-            }
-            // Try Internal Rogo Objectives.
-            if ($skip === 1) {
-              foreach ($new_course as $newmodule => $newsessions) {
-                foreach ($newsessions as $newidentifier => $newsession) {
+                } elseif (empty($newsession['VLE']) and empty($session['VLE'])) {
+                  // VLEs not set, try internal mappings.
                   if (isset($newsession['objectives'])){
                     foreach ($newsession['objectives'] as $new_obj) {
                       if (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)) {
@@ -1091,6 +1079,9 @@ Class PaperUtils {
                     }
                   }
                 }
+              }
+              if ($skip !== 0) {
+                break;
               }
             }
           }
