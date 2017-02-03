@@ -138,7 +138,7 @@ if (isset($_POST['submit'])) {
 			
 			for ($i = 0; $i < $no_answers; $i++) {
 				$blank_details = explode("[blank", $new_option_text);
-				 // Strip out answers from $blank_details
+				// Strip out answers from $blank_details
 				// n.b. First item in $blank_details not required
 				$blank_details[$i] = substr($blank_details[$i+1], (strpos($blank_details[$i+1], ']') + 1));
 				$blank_details[$i] = substr($blank_details[$i+1], 0, strpos($blank_details[$i+1], '[/blank]'));
