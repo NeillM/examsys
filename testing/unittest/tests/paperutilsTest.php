@@ -86,7 +86,7 @@ class paperutilstest extends unittestdatabase {
      * @group assessment
      */
     public function test_get_available_papers_type() {
-        // Load user id 1.
+        // Load user.
         $this->userobject->load(1);
         $order = "paper_title";
         $direction = "asc";
@@ -106,7 +106,7 @@ class paperutilstest extends unittestdatabase {
      * @group assessment
      */
     public function test_get_available_papers_team() {
-        // Load user id 1.
+        // Load user.
         $this->userobject->load(1);
         $order = "paper_title";
         $direction = "asc";
@@ -125,7 +125,7 @@ class paperutilstest extends unittestdatabase {
      * @group assessment
      */
     public function test_get_available_papers_type_none() {
-        // Load user id 1.
+        // Load user.
         $this->userobject->load(2);
         $order = "paper_title";
         $direction = "asc";
@@ -138,7 +138,7 @@ class paperutilstest extends unittestdatabase {
      * @group assessment
      */
     public function test_get_available_papers_team_none() {
-        // Load user id 1.
+        // Load user.
         $this->userobject->load(2);
         $order = "paper_title";
         $direction = "asc";
@@ -151,7 +151,7 @@ class paperutilstest extends unittestdatabase {
      * @group assessment
      */
     public function test_get_available_papers_null() {
-        // Load user id 1.
+        // Load user.
         $this->userobject->load(2);
         $order = "paper_title";
         $direction = "asc";
@@ -164,7 +164,7 @@ class paperutilstest extends unittestdatabase {
      * @group assessment
      */
     public function test_copyProperties() {
-        // Load user id 1.
+        // Load user.
         $this->userobject->load(1);
         $postparams['paperID'] = 2;
         $postparams['paper_type'] = 1;
