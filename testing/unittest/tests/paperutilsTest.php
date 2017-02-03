@@ -98,7 +98,7 @@ class paperutilstest extends unittestdatabase {
         $papers[2] = array('paper_title'=>'Paper 2', 'paper_type'=>'2', 'created'=>$created2, 'title'=>'Dr', 'initials'=>'JL', 'surname'=>'Baxter');
         $papers[2]['moduleid'][0] = "ABC200";
         $papers[2]['moduleid'][1] = "ABC100";
-        $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, $type = '2', $teamid = null));
+        $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, '2', null));
     }
 
     /**
@@ -117,7 +117,7 @@ class paperutilstest extends unittestdatabase {
         $papers[1]['moduleid'][0] = "ABC100";
         $papers[2] = array('paper_title'=>'Paper 2', 'paper_type'=>'2', 'created'=>$created2, 'title'=>'Dr', 'initials'=>'JL', 'surname'=>'Baxter');
         $papers[2]['moduleid'][0] = "ABC100";
-        $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, $type = null, $teamid = 1));
+        $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, null, 1));
     }
     
     /**
@@ -130,7 +130,7 @@ class paperutilstest extends unittestdatabase {
         $order = "paper_title";
         $direction = "asc";
         $papers = array();
-        $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, $type = '2', $teamid = null));
+        $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, '2', null));
     }
 
     /**
@@ -143,7 +143,20 @@ class paperutilstest extends unittestdatabase {
         $order = "paper_title";
         $direction = "asc";
         $papers = array();
-        $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, $type = null, $teamid = 3));
+        $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, null, 3));
+    }
+    
+    /**
+     * Test get available papers - team id and paper type not provided
+     * @group assessment
+     */
+    public function test_get_available_papers_null() {
+        // Load user id 1.
+        $this->userobject->load(2);
+        $order = "paper_title";
+        $direction = "asc";
+        $papers = array();
+        $this->assertEquals($papers, PaperUtils::get_available_papers($this->userobject, $order, $direction, null, null));
     }
 
     /**
