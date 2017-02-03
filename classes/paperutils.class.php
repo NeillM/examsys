@@ -979,6 +979,10 @@ Class PaperUtils {
    * @return array list of papers available to logged in user
    */
   static public function get_available_papers($userObject, $order, $direction, $type = null, $teamid = null) {
+    // Return empty list if type and team not provided.
+    if (is_null($type) and is_null($teamid)) {
+        return array();
+    }
     $configObject = \Config::get_instance();
     $mysqli = $configObject->db;
     $paper_details = array();
