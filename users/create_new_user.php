@@ -69,18 +69,18 @@ $problem = false;
 
 if (isset($_POST['submit'])) {
 
-  $new_password = trim(check_var('new_password', 'POST', false, false, true));
-  $new_surname = UserUtils::my_ucwords(trim(check_var('new_surname', 'POST', false, false, true)));
-  $new_username = trim(check_var('new_username', 'POST', false, false, true));
-  $new_email = trim(check_var('new_email', 'POST', false, false, true));
-  $new_first_names = UserUtils::my_ucwords(trim(check_var('new_first_names', 'POST', false, false, true)));
-  $new_grade = check_var('new_grade', 'POST', false, false, true);
-	$new_year = check_var('new_year', 'POST', false, false, true);
-  $new_roles = check_var('new_roles', 'POST', false, false, true);
-  $new_sid = check_var('new_sid', 'POST', false, false, true);
-  $new_users_title = check_var('new_users_title', 'POST', false, false, true);
-  $new_gender = check_var('new_gender', 'POST', false, false, true);
-  $new_welcome = check_var('new_welcome', 'POST', false, false, true);
+  $new_password = trim(check_var('new_password', 'POST', true, false, true, param::TEXT));
+  $new_surname = UserUtils::my_ucwords(trim(check_var('new_surname', 'POST', true, false, true, param::TEXT)));
+  $new_username = trim(check_var('new_username', 'POST', true, false, true, param::TEXT));
+  $new_email = trim(check_var('new_email', 'POST', true, false, true, param::TEXT));
+  $new_first_names = UserUtils::my_ucwords(trim(check_var('new_first_names', 'POST', true, false, true, param::TEXT)));
+  $new_grade = check_var('new_grade', 'POST', false, false, true, param::TEXT);
+	$new_year = check_var('new_year', 'POST', true, false, true, param::INT);
+  $new_roles = check_var('new_roles', 'POST', false, false, true, param::TEXT);
+  $new_sid = check_var('new_sid', 'POST', false, false, true, param::TEXT);
+  $new_users_title = check_var('new_users_title', 'POST', true, false, true, param::TEXT);
+  $new_gender = check_var('new_gender', 'POST', false, false, true, param::TEXT);
+  $new_welcome = check_var('new_welcome', 'POST', false, false, true, param::INT);
 
   // Check for unique username
   if (UserUtils::username_exists($new_username, $mysqli) !== false) {
