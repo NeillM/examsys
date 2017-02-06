@@ -135,14 +135,18 @@ if (isset($_POST['submit'])) {
 			$have_answer = false;
 			$saved_response = '';
       $user_parts = json_decode($log_answer);
-			
-			for ($i = 0; $i < $no_answers; $i++) {
+
+			// Required to shift array indexes.
+			$blank_details_redo = array();
+			$j = 0;
+			for ($i = 1; $i <= $no_answers; $i++) {
 				$blank_details = explode("[blank", $new_option_text);
 				// Strip out answers from $blank_details
 				// n.b. First item in $blank_details not required
-				$blank_details[$i] = substr($blank_details[$i+1], (strpos($blank_details[$i+1], ']') + 1));
-				$blank_details[$i] = substr($blank_details[$i+1], 0, strpos($blank_details[$i+1], '[/blank]'));
-				$answer_list = explode(',', $blank_details[$i]);
+				$blank_details_redo[$j] = substr($blank_details[$i], (strpos($blank_details[$i], ']') + 1));
+				$blank_details_redo[$j] = substr($blank_details[$i], 0, strpos($blank_details[$i], '[/blank]'));
+				$answer_list = explode(',', $blank_details_redo[$j]);
+				$j++;
 
 				$answer_list[0] = str_replace("[/blank]", '', $answer_list[0]);
 			
