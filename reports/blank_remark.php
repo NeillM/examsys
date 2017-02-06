@@ -145,19 +145,19 @@ if (isset($_POST['submit'])) {
         $blank_details_redo[$j] = substr($blank_details[$i], (strpos($blank_details[$i], ']') + 1));
         $blank_details_redo[$j] = substr($blank_details[$i], 0, strpos($blank_details[$i], '[/blank]'));
         $answer_list = explode(',', $blank_details_redo[$j]);
-        $j++;
         $answer_list[0] = str_replace("[/blank]", '', $answer_list[0]);
-        if ($user_parts[$i] != 'u' and $user_parts[$i] != '') {
+        if ($user_parts[$j] != 'u' and $user_parts[$j] != '') {
           $have_answer = true;
           $is_correct = false;
           foreach ($answer_list as $individual_answer) {
-            if (str_replace('&nbsp;', ' ', trim(strtolower($user_parts[$i]))) == str_replace('&nbsp;', ' ', trim(strtolower($individual_answer)))) {
+            if (str_replace('&nbsp;', ' ', trim(strtolower($user_parts[$j]))) == str_replace('&nbsp;', ' ', trim(strtolower($individual_answer)))) {
               $is_correct = true;
               break;
             }
           }
           $mark += ($is_correct) ? $individual_q_mark : $marks_incorrect;
         }
+        $j++;
       }
       // Recalculate if mark per question
       if ($score_method == 'Mark per Question') {
