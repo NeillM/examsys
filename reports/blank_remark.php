@@ -138,14 +138,13 @@ if (isset($_POST['submit'])) {
       // Required to shift array indexes.
       $blank_details_redo = array();
       $j = 0;
+      $blank_details = explode("[blank", $new_option_text);
       for ($i = 1; $i <= $no_answers; $i++) {
-        $blank_details = explode("[blank", $new_option_text);
         // Strip out answers from $blank_details
         // n.b. First item in $blank_details not required
         $blank_details_redo[$j] = substr($blank_details[$i], (strpos($blank_details[$i], ']') + 1));
         $blank_details_redo[$j] = substr($blank_details[$i], 0, strpos($blank_details[$i], '[/blank]'));
         $answer_list = explode(',', $blank_details_redo[$j]);
-        $answer_list[0] = str_replace("[/blank]", '', $answer_list[0]);
         if ($user_parts[$j] != 'u' and $user_parts[$j] != '') {
           $have_answer = true;
           $is_correct = false;
