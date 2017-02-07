@@ -1038,30 +1038,24 @@ Class PaperUtils {
               $old_objGUID = NULL;
             }
             $skip = 0;
-            // Try VLE Objectives.
             foreach ($new_course as $newmodule => $newsessions) {
               foreach ($newsessions as $newidentifier => $newsession) {
-                if (!empty($newsession['VLE']) and !empty($session['VLE'])) {
-                  if ($newsession['VLE'] === $session['VLE']) {
-                    if (isset($newsession['objectives'])){
-                      foreach ($newsession['objectives'] as $new_obj) {
-                        if (((array_key_exists('id', $new_obj) and $new_obj['id'] == $old_objID)
-                          or (array_key_exists('guid', $new_obj) and $new_obj['guid'] == $old_objGUID))
-                          and (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)
-                          and $new_obj['content'] == $obj['content'])) {
-                            // Build a list of objectives that are still in both sessions
-                            $mappings_copy_objID[$old_objID] = $new_obj['id'];
-                            break;
-                        }
+                if (!empty($newsession['VLE']) and !empty($session['VLE']) and $newsession['VLE'] === $session['VLE']) {
+                  // Matching External VLEs.
+                  if (isset($newsession['objectives'])){
+                    foreach ($newsession['objectives'] as $new_obj) {
+                      if (((array_key_exists('id', $new_obj) and $new_obj['id'] == $old_objID)
+                        or (array_key_exists('guid', $new_obj) and $new_obj['guid'] == $old_objGUID))
+                        and (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)
+                        and $new_obj['content'] == $obj['content'])) {
+                          // Build a list of objectives that are still in both sessions
+                          $mappings_copy_objID[$old_objID] = $new_obj['id'];
+                          break;
                       }
                     }
-                  } else {
-                    // VLEs do not match between sessions, cannot map.
-                    $skip = 1;
-                    break;
                   }
                 } elseif (empty($newsession['VLE']) and empty($session['VLE'])) {
-                  // VLEs not set, try internal mappings.
+                  // External VLEs not set, try internal mappings.
                   if (isset($newsession['objectives'])){
                     foreach ($newsession['objectives'] as $new_obj) {
                       if (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)) {
@@ -1078,6 +1072,10 @@ Class PaperUtils {
                       }
                     }
                   }
+                } else {
+                  // VLEs do not match between sessions, cannot map.
+                  $skip = 1;
+                  break;
                 }
               }
               if ($skip !== 0) {

@@ -78,7 +78,7 @@ modules:
     academic_year_start: "01/07"
     vle_api: 'UoNCM'
     checklist: "mapping"
-    map_level: 7
+    map_level: 0
   -
     id: 3
     moduleid: "ABC300"
