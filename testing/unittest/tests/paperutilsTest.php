@@ -207,4 +207,130 @@ class paperutilstest extends unittestdatabase {
         $expected_mappings = array(123 => 126, 124 => 127, 125 => 128);
         $this->assertEquals($expected_mappings, $mappings_copy_objID);
     }
+
+    /**
+     * Test get copy objectives between sessions - cmap objectives
+     * @group assessment
+     */
+    public function test_copy_between_sessions_cmap() {
+        $this->userobject->load(1);
+        $postparams['paperID'] = 2;
+        $postparams['paper_type'] = 1;
+        $postparams['new_paper'] = 'paper copy test';
+        $postparams['session'] = 2017; 
+        $moduleIDs = null;
+        $calendar_year = $new_calendar_year = '';
+        $papercopy = PaperUtils::copyProperties($calendar_year, $new_calendar_year, $moduleIDs, $postparams);
+        // Fake getObjectives return. Ideally we would mock the CMAP response but that involves more rework.
+        $old_course = array('A14ACE' => array(
+            'ab0a3310-c125-11e2-bcdc-005056ad00ea' => array (
+                'identifier' => '16605',
+                'guid' => 'ab0a3310-c125-11e2-bcdc-005056ad00ea',
+                'class_code' => '',
+                'title' => 'Generic skills',
+                'occurrance' => 'Non-timetabled',
+                'calendar_year' => 2016,
+                'VLE' => 'UoNCM',
+                'source_url' => '',
+                'mapped' => 0,
+                'objectives' => array(
+                    1 => array(
+                        'content' => 'Communicate clearly, sensitively and effectively with patients and their relatives or carers, and with other health care providers.',
+                        'id' => '16606',
+                        'guid' => 'ab0a33a6-c125-11e2-bcdc-005056ad00ea',
+                        'mapped' => 0
+                        )
+                    )
+                )
+            )
+        );
+        $new_course = array('A14ACE' => array(
+            'ab0a3310-c125-11e2-bcdc-005056ad00ea' => array (
+                'identifier' => '16607',
+                'guid' => 'ab0a3310-c125-11e2-bcdc-005056ad00ea',
+                'class_code' => '',
+                'title' => 'Generic skills',
+                'occurrance' => 'Non-timetabled',
+                'calendar_year' => 2017,
+                'VLE' => 'UoNCM',
+                'source_url' => '',
+                'mapped' => 0,
+                'objectives' => array(
+                    1 => array(
+                        'content' => 'Communicate clearly, sensitively and effectively with patients and their relatives or carers, and with other health care providers.',
+                        'id' => '16608',
+                        'guid' => 'ab0a33a6-c125-11e2-bcdc-005056ad00ea',
+                        'mapped' => 0
+                        )
+                    )
+                )
+            )
+        );
+        $mappings_copy_objID = Paper_utils::copy_between_sessions($old_course, $new_course);
+        $expected_mappings = array(16606 => '16608');
+        $this->assertEquals($expected_mappings, $mappings_copy_objID);
+    }
+
+    /**
+     * Test get copy objectives between sessions - cmap objectives, no mappings
+     * @group assessment
+     */
+    public function test_copy_between_sessions_cmap_nomappings() {
+        $this->userobject->load(1);
+        $postparams['paperID'] = 2;
+        $postparams['paper_type'] = 1;
+        $postparams['new_paper'] = 'paper copy test';
+        $postparams['session'] = 2017; 
+        $moduleIDs = null;
+        $calendar_year = $new_calendar_year = '';
+        $papercopy = PaperUtils::copyProperties($calendar_year, $new_calendar_year, $moduleIDs, $postparams);
+        // Fake getObjectives return. Ideally we would mock the CMAP response but that involves more rework.
+        $old_course = array('A14ACE' => array(
+            'ab0a3310-c125-11e2-bcdc-005056ad00ea' => array (
+                'identifier' => '16605',
+                'guid' => 'ab0a3310-c125-11e2-bcdc-005056ad00ea',
+                'class_code' => '',
+                'title' => 'Generic skills',
+                'occurrance' => 'Non-timetabled',
+                'calendar_year' => 2016,
+                'VLE' => 'UoNCM',
+                'source_url' => '',
+                'mapped' => 0,
+                'objectives' => array(
+                    1 => array(
+                        'content' => 'Communicate clearly, sensitively and effectively with patients and their relatives or carers, and with other health care providers.',
+                        'id' => '16606',
+                        'guid' => 'ab0a33a6-c125-11e2-bcdc-005056ad00ea',
+                        'mapped' => 0
+                        )
+                    )
+                )
+            )
+        );
+        $new_course = array('A14ACE' => array(
+            'ab0a3310-c125-11e2-bcdc-005056ad00ea' => array (
+                'identifier' => '16607',
+                'guid' => 'ab0a3310-c125-11e2-bcdc-005056ad00ea',
+                'class_code' => '',
+                'title' => 'Generic skills',
+                'occurrance' => 'Non-timetabled',
+                'calendar_year' => 2017,
+                'VLE' => 'UoNCM',
+                'source_url' => '',
+                'mapped' => 0,
+                'objectives' => array(
+                    1 => array(
+                        'content' => 'Content does not match',
+                        'id' => '16608',
+                        'guid' => 'ab0a33a6-c125-11e2-bcdc-005056ad00ea',
+                        'mapped' => 0
+                        )
+                    )
+                )
+            )
+        );
+        $mappings_copy_objID = Paper_utils::copy_between_sessions($old_course, $new_course);
+        $expected_mappings = array();
+        $this->assertEquals($expected_mappings, $mappings_copy_objID);
+    }
 }

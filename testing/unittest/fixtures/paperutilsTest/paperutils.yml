@@ -76,7 +76,7 @@ modules:
     fullname: "Test Module 2"
     externalid: "987654321"
     academic_year_start: "01/07"
-    vle_api: ''
+    vle_api: 'UoNCM'
     checklist: "mapping"
     map_level: 7
   -
