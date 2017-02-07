@@ -117,7 +117,7 @@ if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObjec
   check_paper_password($propertyObj->get_property_id(), $propertyObj->get_password(), $string, $mysqli);
 
   // Check time security.
-  check_datetime($propertyObj->get_start_date(), $propertyObj->get_end_date(), $string, $mysqli);
+  check_datetime($propertyObj->get_start_date(), $propertyObj->get_end_date(), $string, $mysqli, $is_first_launch);
 
   //Check room security.
   $low_bandwidth = check_labs(  $propertyObj->get_paper_type(),
@@ -178,6 +178,8 @@ if ($is_preview_mode_first_launch == true or ($is_first_launch and !$do_restart)
   $log_metadata->create_new_record($current_address, $userObject->get_grade(), $userObject->get_year(), $attempt, $lab_name);
 
 } elseif ($log_metadata->get_record() == false) { //load the data and check for no records
+  // Check the time again, just in case the user realised they can add a post screen check to get around the first launch check.
+  check_datetime($propertyObj->get_start_date(), $propertyObj->get_end_date(), $string, $mysqli, true);
   //we have no log_metadata record so make one
   $log_metadata->create_new_record($current_address, $userObject->get_grade(), $userObject->get_year(), $attempt, $lab_name);
 }
