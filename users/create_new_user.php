@@ -80,7 +80,7 @@ if (isset($_POST['submit'])) {
   $new_sid = check_var('new_sid', 'POST', false, false, true, param::TEXT);
   $new_users_title = check_var('new_users_title', 'POST', true, false, true, param::TEXT);
   $new_gender = check_var('new_gender', 'POST', false, false, true, param::TEXT);
-  $new_welcome = check_var('new_welcome', 'POST', false, false, true, param::INT);
+  $new_welcome = check_var('new_welcome', 'POST', false, false, true, param::BOOLEAN);
 
   // Check for unique username
   if (UserUtils::username_exists($new_username, $mysqli) !== false) {
