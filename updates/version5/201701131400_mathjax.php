@@ -1,6 +1,6 @@
 <?php
 
-if ($updater_utils->check_version("6.3.0")) {
+if ($updater_utils->check_version("6.4.0")) {
     if (!$updater_utils->has_updated('mathjax')) {
         // New configs.
         $configObject = Config::get_instance();
