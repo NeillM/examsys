@@ -58,7 +58,8 @@ $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/dialog.c
           .field {text-align:right; padding-right:6px; width:120px}
         </style>";
 
-$breadcrumb = array($string['home'] => "../../index.php");$action = $_SERVER['PHP_SELF'];
+$breadcrumb = array($string['home'] => "../index.php");
+$action = $_SERVER['PHP_SELF'];
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('', '', $lang, $toprightmenu);
 include '../include/user_search_options.php';
@@ -147,7 +148,7 @@ MESSAGE;
   if (!isset($_POST['submit']) or $problem) {
 ?>
 
-<form method="post" id="theform" name="newUser" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
+<form method="post" id="theform" name="newUser" action="<?php echo $action; ?>" autocomplete="off">
 <table border="0" cellspacing="0" cellpadding="3" class="dialog_table">
 <tr><td class="dialog_header" style="border-bottom: 1px solid #95AEC8; line-height:170%" colspan="2"><img src="../artwork/user_female_32.png" width="32" height="32" alt="User Icon" style="float:left; padding-right:8px" /><?php echo $string['createnewuser'] ?></td></tr>
 <?php
