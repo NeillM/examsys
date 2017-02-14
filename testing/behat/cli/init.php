@@ -46,11 +46,13 @@ if (isset($optionslist['h']) or isset($optionslist['help'])) {
   exit(0);
 }
 
-// Work out what type of composer dependancy installation method we should use.
+// Work out what type of composer and npm dependancy installation method we should use.
 if (isset($optionslist['update'])) {
   $composer_method = composer_utils::UPDATE;
+  $npm_method = npm_utils::UPDATE;
 } else {
   $composer_method = composer_utils::INSTALL;
+  $npm_method = npm_utils::INSTALL;
 }
 
 // Load the behat config file.
@@ -81,6 +83,8 @@ chdir(__DIR__);
 try {
   // Ensure composer and it's dependancies are installed and upto date.
   composer_utils::setup($composer_method);
+  // Ensure npm and it's dependancies are installed and upto date.
+  npm_utils::setup($npm_method);
   // The composer autoloader may not have been generated before this point so we should ensure it is.
   autoloader::init();
   // Create the behat.yml file.

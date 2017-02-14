@@ -101,6 +101,11 @@ $question['assigned_number'] = (isset($_GET['qNo'])) ? $_GET['qNo'] : 1;
     $render->render_html5_js(json_encode($jstring));
   }
   echo $configObject->get('cfg_js_root');
+
+  if($configObject->get_setting('core', 'paper_mathjax')) {
+    $render = new render($configObject);
+    $render->render(null, null, 'mathjax.html');
+  }
   ?>
 </head>
 <body>

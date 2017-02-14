@@ -519,6 +519,17 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       echo "</div>\n";
     }
 
+    // Install npm and dependencies.
+    try {
+      $npm_method = npm_utils::INSTALL_NODEV;
+      npm_utils::setup($npm_method);
+    } catch (Exception $e) {
+      // Non fatal warning.
+      echo "<div class=\"warning\">\n";
+      echo "\t<div>" . $e->getMessage() . "</div>\n";
+      echo "</div>\n";
+    }
+
     if (!is_array(self::$warnings)) {
       echo "<p style=\"margin-left:10px\">" . $string['installed'] . "</p>\n";
       echo "<p style=\"margin-left:10px\">" . $string['deleteinstall'] . "</p>\n";
@@ -822,7 +833,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $configObject->set_setting('paper_marks_postive', range(1, 20), 'csv');
     $configObject->set_setting('paper_marks_negative', array(0, -0.25, -0.5, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10), 'csv');
     $configObject->set_setting('paper_marks_partial', array_merge(range(0, 1, 0.1), range(2, 5)), 'csv');
-    
+    $configObject->set_setting('paper_mathjax', 1, 'boolean');
+    $configObject->set_setting('paper_editor_supports_mathjax',array("plain"), 'csv');
     self::createDefaultUsers();
     self::createDefaultFacultiesSchoolsModules();
     self::createQuestionStatuses();

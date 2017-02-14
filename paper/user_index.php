@@ -335,6 +335,12 @@ if ($exam_duration !== null) {
     $(document).tooltip({ items: ".help_tip[title]", position: { my: "top+10", at: "center+125" }  });
   });
   </script>
+  <?php
+    if($configObject->get_setting('core', 'paper_mathjax')) {
+      $render = new render($configObject);
+      $render->render(null, null, 'mathjax.html');
+    }
+  ?>
 </head>
 <body>
 <div style="text-align:right; padding-right:2px;"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
