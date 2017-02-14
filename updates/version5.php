@@ -880,7 +880,7 @@ QUERY;
 
   // Update npm and dependencies.
   try {
-    $npm_method = npm_utils::UPDATE;
+    $npm_method = npm_utils::INSTALL_NODEV;
     npm_utils::setup($npm_method);
   } catch (Exception $e) {
       echo "<li class=\"error\">" . $e->getMessage() . "</li>";
