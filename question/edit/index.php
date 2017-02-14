@@ -493,7 +493,7 @@ endif;
 </script>
 <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
 <?php
-  if ($cfg_editor_name != 'tinymce' and $configObject->get_setting('core', 'paper_mathjax')) {
+  if (in_array($cfg_editor_name, $configObject->get_setting('core', 'paper_editor_supports_mathjax')) and $configObject->get_setting('core', 'paper_mathjax')) {
     $render = new render($configObject);
     $render->render(null, null, 'mathjax.html');
   }
