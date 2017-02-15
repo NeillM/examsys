@@ -1000,7 +1000,7 @@ Class PaperUtils {
     if ($order == 'created') {
       $order = 'CAST(created AS DATE)';
     }
-    $sql .= " ORDER BY {$order} " . strtoupper($direction);
+    $sql .= " ORDER BY {$order} " . strtoupper($direction) . ", users.surname ASC, modules.moduleid ASC";
     $result = $mysqli->prepare($sql);
     $result->execute();
     $result->bind_result($property_id, $paper_title, $paper_type, $created, $title, $initials, $surname, $moduleid);
