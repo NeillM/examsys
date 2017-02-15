@@ -719,7 +719,7 @@ function check_latex_random($q_ids, $mysqli) {
     }
     if ($latex == 0) {
       if ($q_type == 'random') {
-        $rnd_q_ids[] = random_utils::get_random_qids_for_question($q_id, $mysqli);
+        $rnd_q_ids = random_utils::get_random_qids_for_question($q_id, $mysqli);
       } else {
         $latex = check_latex($leadin, $scenario, $option_text, $score_method, $correct_fback, $feedback_right);
       }
@@ -878,12 +878,7 @@ function check_latex_random($q_ids, $mysqli) {
 		
     // If we had random questions on paper need to check if they need LaTeX
     if ($latex == 0 and count($rnd_q_ids) > 0) {
-      foreach ($rnd_q_ids as $rqids) {
-        $latex = check_latex_random($rqids, $mysqli);
-        if ($latex) {
-          break;
-        }
-      }
+        $latex = check_latex_random($rnd_q_ids, $mysqli);
     }
 		
     if ((round($total_random_mark, 4) != round($properties->get_random_mark(), 4) or $total_marks != $properties->get_total_mark() or $latex != $properties->get_latex_needed()) and $properties->get_paper_type() != '3') {   // Calculate random and total marks
