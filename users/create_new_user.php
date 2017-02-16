@@ -31,8 +31,9 @@ require '../include/toprightmenu.inc';
 $render = new render($configObject);
 $toprightmenu = draw_toprightmenu();
 $lang['title'] = $string['createnewuser'];
-$additionaljs = "<script type=\"text/javascript\" src=\"/js/jquery.validate.min.js\"></script>    
-    <script>
+$additionaljs = "<script type=\"text/javascript\" src=\"/js/jquery.validate.min.js\"></script>";
+$additionaljs .= "<script type=\"text/javascript\" src=\"/js/jquery.user.js\"></script>";
+$additionaljs .= "<script>
     $(function () {
       $('#theform').validate({
         errorClass: 'errfield',
@@ -51,6 +52,7 @@ $additionaljs = "<script type=\"text/javascript\" src=\"/js/jquery.validate.min.
       });
     });
   </script>";
+
 $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/dialog.css\" />
         <link rel=\"stylesheet\" type=\"text/css\" href=\"/css/list.css\" />
         <style type=\"text/css\">
@@ -77,7 +79,7 @@ if (isset($_POST['submit'])) {
   $new_first_names = UserUtils::my_ucwords(trim(check_var('new_first_names', 'POST', true, false, true, param::TEXT)));
   $new_grade = check_var('new_grade', 'POST', false, false, true, param::TEXT);
   $new_year = check_var('new_year', 'POST', true, false, true, param::INT);
-  $new_roles = check_var('new_roles', 'POST', false, false, true, param::ALPHANUM);
+  $new_roles = check_var('new_roles', 'POST', false, false, true, param::TEXT);
   $new_sid = check_var('new_sid', 'POST', false, false, true, param::ALPHANUM);
   $new_users_title = check_var('new_users_title', 'POST', true, false, true, param::ALPHANUM);
   $new_gender = check_var('new_gender', 'POST', false, false, true, param::ALPHANUM);
@@ -165,7 +167,7 @@ MESSAGE;
   }
 ?>
 <tr><td class="field"><?php echo $string['title'] ?></td><td>
-<select id="new_users_title" name="new_users_title" size="1">
+<select id="new_users_title" name="new_users_title" size="1" required>
 
 <?php
 if ($language != 'en') {
@@ -189,33 +191,8 @@ foreach ($titles as $tmp_title) {
     echo gen_password();
   }
 ?>" size="12" autocomplete="off" required /></td></tr>
-<?php
-  echo "<tr><td class=\"field\">" . $string['course'] . "</td><td><select name=\"new_grade\" id=\"new_grade\" size=\"1\" style=\"width:350px\">";
-  echo "<option label=\"\" value=\"\"> </option>";
-  
-  $old_school = '';
-  $result = $mysqli->prepare("SELECT DISTINCT c.name, c.description, s.school FROM courses c INNER JOIN schools s ON c.schoolid=s.id WHERE s.school NOT IN ('university','NHS','N/A') ORDER BY s.school, c.name");
-  $result->execute();
-  $result->bind_result($name, $description, $school);
-  while ($result->fetch()) {
-    if ($old_school != $school) {
-      echo "<optgroup label=\"$school\">\n";
-    }
-    
-    echo "<option value=\"$name\">$name: $description</option>\n";
-    
-    $old_school = $school;
-    
-    if ($old_school != $school) {
-      echo "</optgroup>";
-    }
-  }
-  $result->close();
-  
-  echo "</select></td></tr>\n";
-?>
 <tr><td class="field"><?php echo $string['yearofstudy'] ?></td><td>
-<select id="new_yos" name="new_year">
+<select id="new_yos" name="new_year" required>
 <?php
   for ($tmp_year=1; $tmp_year<=6; $tmp_year++) {
     if ($tmp_year == 1) {
@@ -251,22 +228,23 @@ foreach ($titles as $tmp_title) {
   } elseif ($userObject->has_role('Admin')) {
     $roles_array[] = 'Staff,Admin';
   }
-  $roles_array[] = 'Staff,Student';
   $roles_array[] = 'External Examiner';
   $roles_array[] = 'Internal Reviewer';
   $roles_array[] = 'Staff,Standards Setter';
   $roles_array[] = 'Invigilator';
   $roles_array[] = '#Students';
   $roles_array[] = 'Student';
+  $roles_array[] = 'Staff,Student';
 
   foreach ($roles_array as $value) {
     if (substr($value,0,1) == '#') {
-      echo "<optgroup label=\"" . $string[substr($value,1)] . "\">\n";  
+      $parentRole = $string[substr($value,1)];
+      echo "<optgroup label=\"" . $parentRole . "\">\n";
     } else {
       $display_val = str_replace(' ', '', $value);
       $display_val = str_replace(',', '', $display_val);
       $display_val = $string[strtolower($display_val)];
-      echo "<option value=\"$value\">$display_val</option>";
+      echo "<option value=\"$value\" data-parent=\"$parentRole\">$display_val</option>";
     }
 
     if (substr($value,0,1) == '#') {
@@ -280,6 +258,49 @@ foreach ($titles as $tmp_title) {
   echo "</optgroup>\n</select>\n";
 ?>
 </td></tr>
+<tr><td class="field" id="typecourse"><?php echo $string['typecourse']; ?></td><td>
+<select name="new_grade" id="new_grade" size="1" style="width:350px" data-prev-parent="">
+<?php  
+  echo "<option label=\"\" value=\"\"> </option>";
+  
+  $old_school = '';
+  $result = $mysqli->prepare("SELECT DISTINCT c.name, c.description, s.school FROM courses c INNER JOIN schools s ON c.schoolid=s.id WHERE s.school NOT IN ('university','NHS','N/A') ORDER BY s.school, c.name");
+  $result->execute();
+  $result->bind_result($name, $description, $school);
+  while ($result->fetch()) {
+    if ($old_school != $school) {
+      echo "<optgroup data-role=\"Students\" label=\"$school\">\n";
+    }
+    
+    echo "<option value=\"$name\">$name: $description</option>\n";
+    
+    $old_school = $school;
+    
+    if ($old_school != $school) {
+      echo "</optgroup>";
+    }
+  }
+  $result->close();
+  
+  echo "\n";
+?>
+<optgroup data-role="Staff" label="<?php echo $string['universitystaff']; ?>">
+<option value="University Lecturer"><?php echo $string['academiclecturer'] ?></option>
+<option value="University Admin"><?php echo $string['administrator'] ?></option>
+<option value="Technical Staff"><?php echo $string['ittechnical'] ?></option>
+<option value="Standards Setter"><?php echo $string['standardssetter'] ?></option>
+<option value="Staff Internal Reviewer"><?php echo $string['internalreviewer'] ?></option>
+</optgroup>
+<optgroup label="<?php echo $string['externalstaff'] ?>">
+<?php
+if (strpos($_SERVER['HTTP_HOST'],'.uk') !== false) {
+  echo "<option value=\"NHS Lecturer\">" . $string['nhslecturer'] . "</option>\n";
+  echo "<option value=\"NHS Admin\">" . $string['nhsadmin'] . "</option>\n";
+}
+?>
+<option value="Staff External Examiner"><?php echo $string['externalexaminer'] ?></option>
+<option value="Invigilator"><?php echo $string['invigilator'] ?></option>
+</select></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td>&nbsp;</td><td><input type="checkbox" name="new_welcome" value="1" /><?php echo $string['sendwelcomeemail'] ?></td></tr>
 <tr><td colspan="2" style="text-align:center; padding-bottom:12px">
