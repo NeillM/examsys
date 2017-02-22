@@ -31,8 +31,8 @@ require '../include/toprightmenu.inc';
 $render = new render($configObject);
 $toprightmenu = draw_toprightmenu();
 $lang['title'] = $string['createnewuser'];
-$additionaljs = "<script type=\"text/javascript\" src=\"/js/jquery.validate.min.js\"></script>";
-$additionaljs .= "<script type=\"text/javascript\" src=\"/js/jquery.user.js\"></script>";
+$additionaljs = "<script type=\"text/javascript\" src=\"../js/jquery.validate.min.js\"></script>";
+$additionaljs .= "<script type=\"text/javascript\" src=\"../js/jquery.user.js\"></script>";
 $additionaljs .= "<script>
     $(function () {
       $('#theform').validate({
