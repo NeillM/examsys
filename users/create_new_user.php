@@ -33,25 +33,7 @@ $toprightmenu = draw_toprightmenu();
 $lang['title'] = $string['createnewuser'];
 $additionaljs = "<script type=\"text/javascript\" src=\"../js/jquery.validate.min.js\"></script>";
 $additionaljs .= "<script type=\"text/javascript\" src=\"../js/jquery.user.js\"></script>";
-$additionaljs .= "<script>
-    $(function () {
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
-        }
-      });
-      $('form').removeAttr('novalidate');
-      
-      $('#ldaplookup').click(function() {
-        notice = window.open(\"ldaplookup.php\",\"ldap\",\"width=650,height=300,left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable\");
-        notice.moveTo(screen.width/2-325, screen.height/2-150);
-        if (window.focus) {
-          notice.focus();
-        }        
-      });
-    });
-  </script>";
+$additionaljs .= "<script type=\"text/javascript\" src=\"../js/jquery.create_new_user.js\"></script>";
 
 $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/dialog.css\" />
         <link rel=\"stylesheet\" type=\"text/css\" href=\"/css/list.css\" />

@@ -4,75 +4,89 @@
  * @author Richard Whitefoot (UEA)
  * @version 1.0
  */
-$(document).ready(function() {
 
-  // TypeCourseFilter namespace
-  var TypeCourseFilter = (function() {
+/**
+* @namespace TypeCourseFilter
+*/
+var TypeCourseFilter = (function() {
+
+  /**
+  * Default properties
+  */
+  var settings = { 
+      parentField : "#new_roles", 
+      childField : "#new_grade", 
+      parentLabel : "#typecourse",
+      disableClass : "grey"
+  },
+
+  /**
+  * Disable the drop-down and grey out the associated field lable
+  * @private
+  */
+  _disable = function() {
+    $(settings.childField).attr("disabled", "disabled");
+    $(settings.parentLabel).addClass(settings.disableClass);
+  },
+
+  /**
+  * Enable the drop-down and remove the grey out class from the associated field lable
+  * @private
+  */
+  _enable = function() {
+    $(settings.childField).removeAttr("disabled");      
+    $(settings.parentLabel).removeClass(settings.disableClass);
+  },
+
+  /**
+  * Make changes to options within the Type/Course drop-down based on the Status drop-down
+  * @private
+  */
+  _setFilter = function() {
+
+    $(settings.parentField).change(function(){
+
+      var correspondingID = $(this).find(":selected").data("parent");
+
+      if(!correspondingID) {
+        correspondingID = "";
+      }
+
+      // Reset Type/Course and store previous value
+      if($(settings.childField).data("prev-parent") != correspondingID) {
     
-    /*
-    * _disable
-    */
-    var _disable = function() {
-      $("#new_grade").attr("disabled", "disabled");
-      $("#typecourse").addClass("grey");
-    };
+        $(settings.childField).val("");
 
-    /*
-    * _enable
-    */
-    var _enable = function() {
-      $("#new_grade").removeAttr("disabled");
-      $("#typecourse").removeClass("grey");
-    };
-
-    /*
-    * _setFilter
-    */
-    var _setFilter = function() {
-
-      $("#new_roles").change(function(){
-
-        var correspondingID = $(this).find(":selected").data("parent");
+        $(settings.childField + " optgroup").hide();
 
         if(!correspondingID) {
-          correspondingID = "";
+          _disable();
+        } else {
+          $(settings.childField + " optgroup[data-role='" + correspondingID + "']").show();
+          _enable();
         }
+      }
 
-        // Reset Type/Course and store previous value
-        if($("#new_grade").data("prev-parent") != correspondingID) {
+      $(settings.childField).data("prev-parent", correspondingID);
+
+    });
+  },
+
+  /**
+  # Initialise module
+  * @public
+  */
+  init = function(options) {
+    
+    // Extend and override default properties
+    settings = $.extend({}, settings, options);
+    
+    _disable();
+    _setFilter();
+  };
+
+  return {
+    init: init
+  }
       
-          $("#new_grade").val("");
-
-          $("#new_grade optgroup").hide();
-
-          if(!correspondingID) {
-            _disable();
-          } else {
-            $("#new_grade optgroup[data-role='" + correspondingID + "']").show();
-            _enable();
-          }
-        }
-
-        $("#new_grade").data("prev-parent", correspondingID);
-
-      });
-    };
-
-    /*
-    * init
-    */
-    var init = function() {
-      _disable();
-      _setFilter();
-    };
-
-    return {
-      init: init
-    }
-        
-  })();
-
-  // Call
-  TypeCourseFilter.init();
-
-});
+})();
