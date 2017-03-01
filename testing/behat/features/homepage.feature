@@ -17,9 +17,9 @@ Feature: Home page
       Then I should see main menu with following items:
          | Item | 
          | Administrative Tools |
-         | Help and Support |
+         | Help & Support |
          | Sign Out |
-         | About Rogo | 
+         | About Rogō | 
       Then I click "Help & Support" "main_menu_item"
       Then I should see popup page with title "Rogō: Help"
       Then I close popup window
@@ -29,7 +29,7 @@ Feature: Home page
       Then I close popup window
       Then I toggle the main menu
       Then I click "Sign Out" "main_menu_item"
-      Then I should be on homepage
+      Then I should be on the homepage
 
    @javascript
    Scenario: Admin user homepage
