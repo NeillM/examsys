@@ -66,7 +66,7 @@ trait basic {
   /**
    * Keep browser live, for debuging
    * 
-   * @Given /^I pause "(?P<seconds_number>\d+)"$/
+   * @Given /^I pause "(?P<seconds_number>\d+)" seconds$/
    * @param int $seconds 
    */
   public function i_wait_seconds($seconds) {

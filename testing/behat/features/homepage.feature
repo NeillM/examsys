@@ -79,4 +79,3 @@ Feature: Home page
       Then I should see "m1" "folder"
       Then I should see "m2" "folder"
       Then I should see "m3" "folder"
-      Then I log out
