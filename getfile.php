@@ -26,9 +26,9 @@ require_once './include/staff_student_auth.inc';
 require_once './include/errors.php';
 
 // Get the request variables.
-$type = check_var('type', 'REQUEST', false, true, true);
-$filename = check_var('filename', 'REQUEST', false, true, true);
-$forcedownload = check_var('forcedownload', 'REQUEST', false, true, true);
+$type = check_var('type', 'REQUEST', false, true, true, param::TEXT);
+$filename = check_var('filename', 'REQUEST', false, true, true, param::TEXT);
+$forcedownload = check_var('forcedownload', 'REQUEST', false, true, true, param::BOOLEAN);
 $forcedownload = !empty($forcedownload);
 
 try {
