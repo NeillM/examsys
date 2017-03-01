@@ -335,7 +335,10 @@ abstract class rogo_directory {
    */
   public function verify_file($filename) {
     $fullpath = $this->fullpath($filename);
-    if (empty($filename) || !file_exists($fullpath) || !is_readable($fullpath)) {
+    // Check real path of file is in the real path of the directory.
+    $realfullpath = realpath($fullpath);
+    $realdirpath = realpath($this->location());
+    if (empty($filename) || !file_exists($fullpath) || !is_readable($fullpath) || strpos($realfullpath, $realdirpath) === false) {
       // The file cannot be retrived for the user.
       throw new file_not_found($fullpath);
     }
