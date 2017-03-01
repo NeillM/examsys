@@ -342,7 +342,7 @@ abstract class rogo_directory {
     // Check real path of file is in the real path of the directory.
     $realfullpath = realpath($fullpath);
     $realdirpath = realpath($this->location());
-    if (strpos($realfullpath, $realdirpath) === false) {
+    if (strpos($realfullpath, $realdirpath) !== 0) {
       throw new file_not_found($fullpath);
     }
   }
