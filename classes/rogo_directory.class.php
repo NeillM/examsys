@@ -353,7 +353,7 @@ abstract class rogo_directory {
       $langpack = new langpack();
       $logger = new Logger($config->db);
       $logger->record_access_denied($userObject->get_user_ID(), $_SERVER['PHP_SELF'], $langpack->get_string($this->langcomponent, 'incorrectmediapath'));
-      throw new file_not_found($fullpath);
+      throw new invalid_file_path($fullpath);
     }
   }
   
