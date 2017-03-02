@@ -17,6 +17,7 @@
 namespace testing\unittest;
 use Config as RogoConfig;
 use UserObject as RogoUserObject;
+use org\bovigo\vfs\vfsStream;
     
 /**
  * Unit test database class
@@ -54,6 +55,9 @@ abstract class unittestdatabase extends \PHPUnit_Extensions_Database_TestCase {
      * @var mysqli $db database object.
      */
     public $db;
+
+    /** The name of the Rogo data directory in the virtual file system. */
+    const DATA_DIRECTORY = 'data';
     
     /**
      * Set-up config and db connections.
@@ -76,6 +80,8 @@ abstract class unittestdatabase extends \PHPUnit_Extensions_Database_TestCase {
     public function setUp() {
         $this->setup_db();
         parent::setUp();
+        vfsStream::setup(self::DATA_DIRECTORY, 0777);
+        $this->config->set('cfg_rogo_data', vfsStream::url(self::DATA_DIRECTORY));
     }
     
     /**
