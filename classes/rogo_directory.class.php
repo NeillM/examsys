@@ -37,6 +37,11 @@ abstract class rogo_directory {
    * @var rogo_directory[]
    */
   protected static $loaded = array();
+  
+  /**
+   * Language pack component.
+   */
+  private $langcomponent = 'classes/rogodirectory';
 
   /**
    * Is the user required to be authenticated to access files in the directory.
@@ -343,6 +348,11 @@ abstract class rogo_directory {
     $realfullpath = realpath($fullpath);
     $realdirpath = realpath($this->location());
     if (strpos($realfullpath, $realdirpath) !== 0) {
+      $config = Config::get_instance();
+      $userObject = UserObject::get_instance();
+      $langpack = new langpack();
+      $logger = new Logger($config->db);
+      $logger->record_access_denied($userObject->get_user_ID(), $_SERVER['PHP_SELF'], $langpack->get_string($this->langcomponent, 'incorrectmediapath'));
       throw new file_not_found($fullpath);
     }
   }
