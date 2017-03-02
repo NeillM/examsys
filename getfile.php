@@ -39,7 +39,7 @@ try {
 
 try {
   $directory->send_file($filename, $forcedownload);
-} catch (file_not_found $e) {
+} catch (Exception $e) {
   // The file does not exist or is not readable by the web server, exit.
   send_404();
 }
