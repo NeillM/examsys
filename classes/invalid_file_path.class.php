@@ -17,8 +17,8 @@
 /**
  * An exception to report that a file was not found.
  *
- * @author Neill Magill
- * @copyright Copyright (c) 2015 The University of Nottingham
+ * @author Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2017 The University of Nottingham
  * @package core
  */
 class invalid_file_path extends Exception {
