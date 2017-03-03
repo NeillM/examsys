@@ -299,13 +299,13 @@ class rogo_directorytest extends unittestdatabase {
   }
 
   /**
-   * Tests the verify_file method does not throw an exception if a file exists in the directory. Instead an invalid path file exception will be thrown
-   * due to this unit test being in a vfs and so not compatible with realpath
-   * 
+   * Tests the verify_file method does not throw an exception if a file exists in the directory.
+   *
    * @group rogo_directory
    */
   public function test_verify_file() {
     $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
+    $this->rogodirectory->expects($this->once())->method('valid_path')->willReturn(true);
     // The contents of the directory.
     $structre = array(
       'test' => array(
@@ -315,9 +315,30 @@ class rogo_directorytest extends unittestdatabase {
     vfsStream::setup(unittestdatabase::DATA_DIRECTORY, 0777, $structre);
     $this->assertTrue(vfsStreamWrapper::getRoot()->hasChild('test'));
     $this->assertTrue(vfsStreamWrapper::getRoot()->getChild('test')->hasChild('testfile.txt'));
+    $this->rogodirectory->verify_file('testfile.txt');
+  }
+
+  /**
+   * Tests the verify_file method throws an invalid path file exception
+   * 
+   * @group rogo_directory
+   */
+  public function test_verify_invalid_file() {
+    $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
+    $this->rogodirectory->expects($this->once())->method('valid_path')->willReturn(false);
+    // The contents of the directory.
+    $structre = array(
+      'test' => array(
+        'testfile.txt' => 'test content',
+      ),
+      'roottestfile.txt' => 'root test content',
+    );
+    vfsStream::setup(unittestdatabase::DATA_DIRECTORY, 0777, $structre);
+    $this->assertTrue(vfsStreamWrapper::getRoot()->hasChild('test'));
+    $this->assertTrue(vfsStreamWrapper::getRoot()->getChild('test')->hasChild('testfile.txt'));
     $this->userobject->load(1);
     try {
-      $this->rogodirectory->verify_file('testfile.txt');
+      $this->rogodirectory->verify_file('../roottestfile.txt');
     } catch (Exception $e) {
       if ($e->getMessage() == 'Invalid file path.') {
         // Test denied log entery exists.
@@ -339,6 +360,7 @@ class rogo_directorytest extends unittestdatabase {
    */
   public function test_verify_file_that_does_not_exist() {
     $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
+    $this->rogodirectory->expects($this->once())->method('valid_path')->willReturn(true);
     // The contents of the directory.
     $structre = array(
       'test' => array(),
@@ -358,6 +380,7 @@ class rogo_directorytest extends unittestdatabase {
    */
   public function test_verify_file_that_does_not_exist2() {
     $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
+    $this->rogodirectory->expects($this->once())->method('valid_path')->willReturn(true);
     // The contents of the directory.
     $structre = array(
       'test' => array(
@@ -379,6 +402,7 @@ class rogo_directorytest extends unittestdatabase {
    */
   public function test_verify_file_that_does_not_exist3() {
     $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
+    $this->rogodirectory->expects($this->once())->method('valid_path')->willReturn(true);
     // The contents of the directory.
     $structre = array(
       'test' => array(
