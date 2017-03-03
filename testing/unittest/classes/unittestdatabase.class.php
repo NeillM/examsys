@@ -72,6 +72,8 @@ abstract class unittestdatabase extends \PHPUnit_Extensions_Database_TestCase {
         // Create user object.
         $this->userobject = new RogoUserObject($this->config, $this->db);
         $this->config->use_phpunit_site();
+        vfsStream::setup(self::DATA_DIRECTORY, 0777);
+        $this->config->set('cfg_rogo_data', vfsStream::url(self::DATA_DIRECTORY));
     }
     
     /**
@@ -80,8 +82,6 @@ abstract class unittestdatabase extends \PHPUnit_Extensions_Database_TestCase {
     public function setUp() {
         $this->setup_db();
         parent::setUp();
-        vfsStream::setup(self::DATA_DIRECTORY, 0777);
-        $this->config->set('cfg_rogo_data', vfsStream::url(self::DATA_DIRECTORY));
     }
     
     /**
