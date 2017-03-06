@@ -345,6 +345,12 @@ abstract class rogo_directory {
       throw new file_not_found($fullpath);
     }
     if (!$this->valid_path($fullpath)) {
+      // Log error in denied access log.
+      $config = Config::get_instance();
+      $userObject = UserObject::get_instance();
+      $langpack = new langpack();
+      $logger = new Logger($config->db);
+      $logger->record_access_denied($userObject->get_user_ID(), $_SERVER['PHP_SELF'], $langpack->get_string($this->langcomponent, 'incorrectmediapath'));
       throw new invalid_file_path();
     }
   }
@@ -358,11 +364,6 @@ abstract class rogo_directory {
     $realfullpath = realpath($fullpath);
     $realdirpath = realpath($this->location());
     if (strpos($realfullpath, $realdirpath) !== 0) {
-      $config = Config::get_instance();
-      $userObject = UserObject::get_instance();
-      $langpack = new langpack();
-      $logger = new Logger($config->db);
-      $logger->record_access_denied($userObject->get_user_ID(), $_SERVER['PHP_SELF'], $langpack->get_string($this->langcomponent, 'incorrectmediapath'));
       return false;
     }
     return true;
