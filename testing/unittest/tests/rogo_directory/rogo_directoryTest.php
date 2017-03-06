@@ -35,7 +35,7 @@ class rogo_directorytest extends unittestdatabase {
 
   public function setUp() {
     parent::setUp();
-    $this->rogodirectory = $this->getMockForAbstractClass('rogo_directory');
+    $this->rogodirectory = $this->getMockForAbstractClass('rogo_directory', array(), '', true, true, true, array('valid_path'));
     // Ensure the root path is set to a known value.
     $this->config->set('cfg_root_path', $this->webroot);
   }
@@ -325,7 +325,6 @@ class rogo_directorytest extends unittestdatabase {
    */
   public function test_verify_invalid_file() {
     $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
-    $this->rogodirectory->expects($this->once())->method('valid_path')->willReturn(false);
     // The contents of the directory.
     $structre = array(
       'test' => array(
@@ -336,6 +335,7 @@ class rogo_directorytest extends unittestdatabase {
     vfsStream::setup(unittestdatabase::DATA_DIRECTORY, 0777, $structre);
     $this->assertTrue(vfsStreamWrapper::getRoot()->hasChild('test'));
     $this->assertTrue(vfsStreamWrapper::getRoot()->getChild('test')->hasChild('testfile.txt'));
+    $this->assertTrue(vfsStreamWrapper::getRoot()->hasChild('roottestfile.txt'));
     $this->userobject->load(1);
     try {
       $this->rogodirectory->verify_file('../roottestfile.txt');
@@ -360,7 +360,6 @@ class rogo_directorytest extends unittestdatabase {
    */
   public function test_verify_file_that_does_not_exist() {
     $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
-    $this->rogodirectory->expects($this->once())->method('valid_path')->willReturn(true);
     // The contents of the directory.
     $structre = array(
       'test' => array(),
@@ -380,7 +379,6 @@ class rogo_directorytest extends unittestdatabase {
    */
   public function test_verify_file_that_does_not_exist2() {
     $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
-    $this->rogodirectory->expects($this->once())->method('valid_path')->willReturn(true);
     // The contents of the directory.
     $structre = array(
       'test' => array(
@@ -402,7 +400,6 @@ class rogo_directorytest extends unittestdatabase {
    */
   public function test_verify_file_that_does_not_exist3() {
     $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
-    $this->rogodirectory->expects($this->once())->method('valid_path')->willReturn(true);
     // The contents of the directory.
     $structre = array(
       'test' => array(
