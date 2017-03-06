@@ -66,7 +66,7 @@ trait menu {
       throw new Exception("The menu name or items is empty");
     }
     foreach ($menuitems->getHash() as $menuitem) {
-      $title = $menuitem["item"];
+      $title = $menuitem["items"];
       //$element = $this->find('sub_menu', $title);
       $menuitem = $this->find("xpath", "//div[contains(concat(' ', normalize-space(@class), ' '), ' submenuheading ') and contains(normalize-space(.) , '" . $menu_section . "')]/following-sibling::div/div[contains(concat(' ', normalize-space(@class), ' '), ' menuitem ') and contains(normalize-space(.) , '" . $title  . "')]");
       if (empty($menuitem)) {
