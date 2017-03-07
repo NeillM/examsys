@@ -865,7 +865,7 @@ class UserObject extends RogoStaticSingleton {
   }
   
   /**
-  * Check if the user has completed a a paper
+  * Check if the user has completed a paper
   * @param integer $id - paper id
   * @return bool true if user has completed the paper
   */
