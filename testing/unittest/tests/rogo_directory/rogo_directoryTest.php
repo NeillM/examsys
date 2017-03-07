@@ -98,7 +98,7 @@ class rogo_directorytest extends unittestdatabase {
   public function test_create_not_writable() {
     // Set the location of the rogo directory to be a sub direcotry called test.
     $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
-    vfsStream::setup(unittestdatabase::DATA_DIRECTORY, 0000); // Set the data directory to not be wriatable.
+    vfsStream::setup(unittestdatabase::DATA_DIRECTORY, 0000); // Set the data directory to not be writable.
     $this->assertFalse(vfsStreamWrapper::getRoot()->hasChild('test'));
     $this->rogodirectory->create();
   }
