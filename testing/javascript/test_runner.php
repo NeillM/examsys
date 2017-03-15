@@ -30,7 +30,6 @@ require_once dirname(dirname(__DIR__)) . '/include/sysadmin_auth.inc';
 require_once dirname(dirname(__DIR__)) . '/include/autoload.inc.php';
 
 autoloader::init();
-$config = Config::get_instance();
 if (file_exists(dirname(dirname(__DIR__)) . '/node_modules/qunitjs/qunit/qunit.js')) {
     $suite = param::optional('suite', '', param::ALPHANUM);
     
@@ -45,7 +44,7 @@ if (file_exists(dirname(dirname(__DIR__)) . '/node_modules/qunitjs/qunit/qunit.j
     ));
     $data = array(
       'scripts' => $loader,
-      'webroot' => $config->get('cfg_root_path'),
+      'webroot' => $configObject->get('cfg_root_path'),
     );
     
     if ($success) {
@@ -57,6 +56,6 @@ if (file_exists(dirname(dirname(__DIR__)) . '/node_modules/qunitjs/qunit/qunit.j
     // Output the page.
     echo $renderer->render($template, $data);
 } else {
-    $msg = sprintf($string['furtherassistance'], $config->get('support_email'), $config->get('support_email'));
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
     $notice->display_notice_and_exit($mysqli, $string['accessdenied'], $msg, $string['accessdenied'], '/artwork/access_denied.png', '#C00000', true, true);
 }
