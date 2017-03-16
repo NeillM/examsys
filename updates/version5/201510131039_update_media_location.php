@@ -2,7 +2,7 @@
 /**
  * Updates any references in question leadins and scenarios to the new media directory.
  */
-if (!$updater_utils->has_updated('update_media_location')) {
+if (!$updater_utils->has_updated('update_media_location_2')) {
   // Regular expression to match the old media directory location.
   // it will match directories ./media/ or /media/ and grab the filename.
   $regexp = '#src=".?\/media\/(.*?)"#';
@@ -42,5 +42,5 @@ if (!$updater_utils->has_updated('update_media_location')) {
     }
   }
   
-  $updater_utils->record_update('update_media_location');
+  $updater_utils->record_update('update_media_location_2');
 }
