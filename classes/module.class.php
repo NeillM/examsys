@@ -342,8 +342,9 @@ Class module {
   }
 
   /**
-   * Get the full details of a module given its ID
-   * @param integer $modID - Database ID of the module
+   * Get the full details of a module given its internal id or external id
+   * @param string $idtype - internal or external id
+   * @param integer $id    - ID of the module
    * @param object $db     - Database link class
    * @return array e.g  'idMod' => int 291
    *                     'moduleid' => string '001' (length=3)
@@ -362,41 +363,51 @@ Class module {
    *                     'add_team_members' => int 1
    *                     'map_level ' => int 1
    */
-  public function get_full_details_by_ID($modID, $db) {
+  public function get_full_details($idtype, $id, $db) {
+    $types = array('internal', 'external');
+    if (!in_array($idtype, $types)) {
+      return false;
+    }
+    if ($idtype === 'internal') {
+      $idsql = 'modules.id = ?';
+    } else {
+      $idsql = 'modules.externalid = ?';
+    }
     // returns false if not self enrol else returns needed data;
-    $result = $db->prepare("SELECT
-                              modules.id,
-                              moduleid,
-                              fullname,
-                              school,
-                              active,
-                              vle_api,
-                              checklist,
-                              sms,
-                              selfenroll,
-                              schoolid,
-                              neg_marking,
-                              ebel_grid_template,
-                              timed_exams,
-                              exam_q_feedback,
-                              add_team_members,
-                              map_level,
-                              academic_year_start,
-                              modules.externalid
-                            FROM
-                              modules
-                            LEFT JOIN
-                              schools
-                            ON
-                               modules.schoolid = schools.id
-                            WHERE
-                               modules.id = ? AND
-                               mod_deleted IS NULL
-                            ");
+    $sql = "SELECT
+          modules.id,
+          moduleid,
+          fullname,
+          school,
+          active,
+          vle_api,
+          checklist,
+          sms,
+          selfenroll,
+          schoolid,
+          neg_marking,
+          ebel_grid_template,
+          timed_exams,
+          exam_q_feedback,
+          add_team_members,
+          map_level,
+          academic_year_start,
+          modules.externalid
+        FROM
+          modules
+        LEFT JOIN
+          schools
+        ON
+           modules.schoolid = schools.id
+        WHERE
+           $idsql AND
+           mod_deleted IS NULL
+        ";
+    $result = $db->prepare($sql);
     if ($db->error) {
       echo $this->langstrings['showerror'] . "<br >";
     }
-    $result->bind_param('i', $modID);
+    $result->bind_param('i', $id);
     $result->execute();
     $result->store_result();
     $result->bind_result($idMod, $moduleid, $fullname, $school, $active, $vle_api, $checklist, $sms, $selfenroll, $schoolid, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start, $externalid);
@@ -426,6 +437,14 @@ Class module {
                   'map_level' => $map_level,
                   'academic_year_start' => $academic_year_start,
                   'externalid' => $externalid);
+  }
+
+  /**
+   * Wrapper function for get_full_details
+   * @see module_utils::get_full_details
+   */
+  public function get_full_details_by_ID($modID, $db) {
+    return self::get_full_details('internal', $modID, $db);
   }
 
   /**
