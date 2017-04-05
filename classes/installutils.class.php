@@ -605,8 +605,10 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
   /**
    * Download and install language packs.
+   * @param boolean $echo enable or disable echo statements
+   * @return null|string
    */
-  static public function download_langpacks() {
+  static public function download_langpacks($echo = 1) {
     $configObject = Config::get_instance();
     $version = $configObject->getxml('version');
     $url = $configObject->getxml('translations', 'url');
@@ -617,7 +619,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       $fullurl = $url . '/' . $version . '/rogo.zip';
       $file = @file_get_contents($fullurl);
       if ($file === false or file_put_contents("translations.zip", $file) === false) {
-        echo "Error downloading language packs from $fullurl, you will need to manually install them.";
+        if ($echo) {
+          echo "Error downloading language packs from $fullurl, you will need to manually install them.";
+        } else {
+          return "Error downloading language packs from $fullurl, you will need to manually install them.";
+        }
       } else {
         // Unzip archive.
         $zip = new ZipArchive;
@@ -628,10 +634,17 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
           // Remove zip and temporary directories.
           unlink('translations.zip');
         } else {
-          echo('Cannot extract language packs, you will need to manually extract them.');
+          if ($echo) {
+            echo('Cannot extract language packs, you will need to manually extract them.');
+          } else {
+            return 'Cannot extract language packs, you will need to manually extract them.';
+          }
         }
       }
       chdir($workingdir);
+    }
+    if (!$echo) {
+        return '';
     }
   }
 

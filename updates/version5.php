@@ -24,6 +24,13 @@
  */
 
 require_once '../include/load_config.php';
+
+// Redirect to lang pack install screen if not en
+if ($language != 'en') {
+    header("location: langpack.php", true, 303);
+    exit();
+}
+
 require_once '../include/auth.inc';
 require_once '../include/errors.php';
 require_once '../include/std_set_shared_functions.inc';
