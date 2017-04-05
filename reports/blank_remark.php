@@ -145,7 +145,7 @@ if (isset($_POST['submit'])) {
         // Strip out answers from $blank_details
         // n.b. First item in $blank_details not required
         $blank_details_redo[$j] = substr($blank_details[$i], (strpos($blank_details[$i], ']') + 1));
-        $blank_details_redo[$j] = substr($blank_details[$i], 0, strpos($blank_details[$i], '[/blank]'));
+        $blank_details_redo[$j] = substr($blank_details_redo[$j], 0, (strpos($blank_details[$i], '[/blank]') - 1));
         $answer_list = explode(',', $blank_details_redo[$j]);
         if ($user_parts[$j] != 'u' and $user_parts[$j] != '') {
           $have_answer = true;
