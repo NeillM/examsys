@@ -58,6 +58,13 @@ $cfg_root_path = ltrim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $cfg_web_root)
 require_once dirname(__DIR__) . '/include/auth.inc';
 $includes = array('install/index.php');
 $language = LangUtils::getLang($cfg_web_root);
+
+// Redirect to lang pack install screen if not en
+if ($language != 'en') {
+    header("location: langpack.php", true, 303);
+    exit();
+}
+
 foreach ($includes as $file) {
   $lang_path = "{$cfg_web_root}lang/$language/" . $file;
   if (file_exists($lang_path)) {
