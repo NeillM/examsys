@@ -673,7 +673,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
         $saved_response = array();
         for ($i = 1; $i <= $no_answers; $i++) {
           $qid = 'q' . $question_no . '_' . $i;
-          $blank_answer = param::optional($qid, null, param::TEXT, param::FETCH_POST);
+          $blank_answer = param::optional($qid, null, param::RAW, param::FETCH_POST);
           // Encode commas.
           $blank_answer = str_replace(',', '&#44;', $blank_answer);
           if (!is_null($blank_answer)) {
