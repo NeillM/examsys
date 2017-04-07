@@ -628,7 +628,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   var forceSave = function() {
     stopAutoSave();
     ajaxSave(1);
-    alert('<?php echo $string['forcesave']; ?>');
+    info_dialog('<?php echo $string['forcesave']; ?>');
     submitType = 'forcedSubmit';
     $('#qForm').attr('action',"finish.php?id=<?php echo $id . $url_mod; ?>&dont_record=true");
     $('#qForm').submit();
