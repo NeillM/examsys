@@ -158,9 +158,9 @@ Feature: Cleaning variables
 
     Examples:
       | input | output |
-      | <p style='color: red'>Test text</p> | Test text |
-      | Test > text | Test > text |
-      | Test <script><!-- alert(\'Test\') --></script> text | Test  text |
+      | <p style='color: red'>Test text</p> | &#60;p style=&#39;color: red&#39;&#62;Test text&#60;/p&#62; |
+      | Test > text | Test &#62; text |
+      | Test <script><!-- alert(\'Test\') --></script> text | Test &#60;script&#62;&#60;!-- alert(\&#39;Test\&#39;) --&#62;&#60;/script&#62; text |
       | http://example.com | http://example.com |
       | 0 | 0 |
       | 0xF | 0xF |
