@@ -1,3 +1,11 @@
+// Dialog box
+function info_dialog(msg) {
+    $("#info_overlay").show();
+    $("#info_submit_dialog_msg").html(msg);
+    $("#info_submit_dialog").css('left', (($(window).width() / 2) - 250) + 'px');
+    $("#info_submit_dialog").css('top', (($(window).height() / 2) - 100) + 'px');
+}
+
 function UpdateClock( hours, minutes, seconds) {
   KillClock();
   
@@ -98,7 +106,7 @@ function rankCheck() {
     if(loopSel != '0' && loopSel != 'u' && loopSel == sel) count++;
   });
   if (count > 1) {
-    alert(lang['msgselectable3'] + ' ' + sel  + lang['msgselectable4']);
+    info_dialog(lang['msgselectable3'] + ' ' + sel  + lang['msgselectable4']);
     $(this).val('u');
   }
 }
