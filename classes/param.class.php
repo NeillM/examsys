@@ -161,7 +161,7 @@ class param {
         );
         break;
       case self::TEXT:
-        $filter = FILTER_SANITIZE_STRING;
+        $filter = FILTER_SANITIZE_SPECIAL_CHARS;
         $options = array(
           'options' => array(
             'default' => null,
