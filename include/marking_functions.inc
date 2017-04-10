@@ -619,14 +619,15 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
             }
           }
         } elseif ($score_method == 'Bonus Mark') {
-          if ($part_answer != 'u') {
-            if ($part_answer != 0) {
-              $mark += ($part_answer == $correct) ? $marks_correct : $marks_incorrect;
-            }
-            if ($part_answer <> $correct) $correct_rank = false;
-          } else {
-            $correct_rank = false;
+          // Part answer is not N/A
+          if ($part_answer != 0) {
+            // Mark if correct answer is not N/A
+            $mark += ($correct != 0) ? $marks_correct : $marks_incorrect;
+            // Do not assign bonus mark if part answer is not correct or absention.
+            if (($part_answer <> $correct) or $part_answer == 'u') $correct_rank = false;
           }
+          // Do not assign bonus mark if part answer is not correct or absention.
+          if (($part_answer == 0 and $correct != 0) or $part_answer == 'u') $correct_rank = false;
         }
         if ($score_method == 'Mark per Question') {
           $totalpos = $marks_correct;
