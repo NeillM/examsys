@@ -159,7 +159,9 @@ Feature: Cleaning variables
     Examples:
       | input | output |
       | <p style='color: red'>Test text</p> | Test text |
-      | Test > text | Test > text |
+      | Test > text | Test &gt; text |
+      | Test < text | Test &lt; text |
+      | Test &gt; text | Test &gt; text |
       | Test <script><!-- alert(\'Test\') --></script> text | Test  text |
       | http://example.com | http://example.com |
       | 0 | 0 |
