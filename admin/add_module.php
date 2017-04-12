@@ -255,6 +255,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   // SMS might be a plugin.
   $plugins = array();
   $userObj = userObject::get_instance();
+  $smsplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
   foreach($smsplugin_name as $name) {
     $smspluginns = 'plugins\SMS\\' . $name. '\\' . $name;
     $smsplugin = new $smspluginns($mysqli, $userObj->get_user_ID());
