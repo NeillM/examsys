@@ -259,9 +259,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   foreach($smsplugin_name as $name) {
     $smspluginns = 'plugins\SMS\\' . $name. '\\' . $name;
     $smsplugin = new $smspluginns($mysqli, $userObj->get_user_ID());
-    $plugins[] = $smsplugin->get_name();
-  }
-  foreach ($plugins as $value) {
+    $value = $smsplugin->get_name();
     echo "<option value=\"$value\">$value</option>\n";
   }
   echo '</select></td></tr>';
