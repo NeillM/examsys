@@ -1970,7 +1970,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
               }
             }
             // Decode commas.
-            $display_userchoice = htmlentities(str_replace('&#44;', ',', $user_choices[$blank_count]));
+            $display_userchoice = str_replace('&#44;', ',', $user_choices[$blank_count]);
             if ($correct_flag == true) {
               if (substr($tmp_exclude, $blank_count, 1) == '0') {
                 $paper[$question]['mark'] += $paper[$question]['marks_correct'];
