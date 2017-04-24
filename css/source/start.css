@@ -291,11 +291,6 @@ pre {
 .defaultSkin table.mceLayout {
   margin-top: 6px;
 }
-.calc {
-  cursor: pointer;
-  width: 24px;
-  height: 24px;
-}
 #fire_exit {
   width: 30px;
   height: 30px;

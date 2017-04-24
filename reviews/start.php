@@ -496,6 +496,11 @@ var lang = {
 ?>
 </head>
 <body onload="StartClock()" onunload="KillClock()">
+<?php
+if($propertyObj->get_calculator()) {
+  $render->render(null, null, 'calc98.html');
+}
+?>
 <div id="maincontent">
 <?php
 if ($current_screen < $no_screens) {
