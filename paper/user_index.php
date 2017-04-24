@@ -314,10 +314,7 @@ if ($exam_duration !== null) {
 <?php
   }
 ?>
-    exam = window.open(paperURL,"paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,menubar=no,titlebar=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes");
-    if (window.focus) {
-      exam.focus();
-    }
+    window.location = paperURL;
   }
 
   function reviewPaper(metadataID, type) {
