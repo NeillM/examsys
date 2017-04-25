@@ -23,4 +23,10 @@
     <translations>
         <url>http://rogo-oss.nottingham.ac.uk/langpacks</url>
     </translations>
+    <languages>
+        <lang>en</lang>
+        <lang>cs</lang>
+        <lang>pl</lang>
+        <lang>sk</lang>
+    </languages>
 </rogo>

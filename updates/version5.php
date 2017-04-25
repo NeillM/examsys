@@ -25,8 +25,8 @@
 
 require_once '../include/load_config.php';
 
-// Redirect to lang pack install screen if not en
-if ($language != 'en') {
+// If support lang pack not installed, redirect to install.
+if(!LangUtils::langPackInstalled($language)) {
     header("location: langpack.php", true, 303);
     exit();
 }

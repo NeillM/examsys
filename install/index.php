@@ -59,10 +59,9 @@ require_once dirname(__DIR__) . '/include/auth.inc';
 $includes = array('install/index.php');
 $language = LangUtils::getLang($cfg_web_root);
 
-// Redirect to lang pack install screen if not en
+// Install lang packs if not en
 if ($language != 'en') {
-    header("location: langpack.php", true, 303);
-    exit();
+    InstallUtils::download_langpacks(1);
 }
 
 foreach ($includes as $file) {

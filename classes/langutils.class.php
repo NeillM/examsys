@@ -38,20 +38,15 @@ Class LangUtils {
     }
     
     if (isset($langs) and is_array($langs)) {
-      $i = 0;
-      while ($i < count($langs) and $language == '') {
-        $parts = explode(';', $langs[$i]);
-        $test_lang = $parts[0];
-        if (file_exists($web_root . "/lang/" . substr($test_lang, 0, 5) . "/")) {
-          $language = substr($test_lang, 0, 5);
-        } elseif (file_exists($web_root . "/lang/" . substr($test_lang, 0, 2) . "/")) {
-          $language = substr($test_lang, 0, 2);
-        }
-        $i++;
-      }
+      $parts = explode(';', $langs[0]);
+      $test_lang = $parts[0];
+      $language = substr($test_lang, 0, 2);
     }
 
-    if ($language == '') $language = 'en'; // Default to English if no languages found
+    // Default to English if not supported language.
+    if (!LangUtils::supportedLang($language)) {
+        $language = 'en';
+    }
 
     return $language;
   }
@@ -72,6 +67,36 @@ Class LangUtils {
       require $lang_path;
     }
     return $string;
+  }
+  
+  /**
+   * Check if language is supported
+   * @param string $lang lang code
+   * @return boolean
+   */
+  static function supportedLang($lang) {
+    $configObject = Config::get_instance();
+    $supported_langs = $configObject->getxml('languages');
+    foreach ($supported_langs->lang as $supported) {
+      if ($lang === $supported) {
+          return true;
+      }
+    }
+    return false;
+  }
+
+  /**
+   * Check if language pack is installed
+   * @param string $lang lang code
+   * @return boolean
+   */
+  static function langPackInstalled($lang) {
+    $configObject = Config::get_instance();
+    $web_root = $configObject->get('cfg_web_root');
+    if (file_exists($web_root . "/lang/" . $lang . "/")) {
+      return true;
+    }
+    return false;
   }
 }
 ?>
