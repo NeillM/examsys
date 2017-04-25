@@ -493,12 +493,15 @@ var lang = {
     $render = new render($configObject);
     $render->render(null, null, 'mathjax.html');
   }
+  if($propertyObj->get_calculator()) {
+    $render->render(null, null, 'jcalc98_header.html');
+  }
 ?>
 </head>
 <body onload="StartClock()" onunload="KillClock()">
 <?php
 if($propertyObj->get_calculator()) {
-  $render->render(null, null, 'calc98.html');
+  $render->render(null, null, 'jcalc98.html');
 }
 ?>
 <div id="maincontent">

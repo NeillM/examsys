@@ -828,7 +828,7 @@ if($configObject->get_setting('core', 'paper_mathjax')) {
   $render->render(null, null, 'mathjax.html');
 }
 if($propertyObj->get_calculator()) {
-  $render->render(null, null, 'calc98_header.html');
+  $render->render(null, null, 'jcalc98_header.html');
 }
 ?>
 </head>
@@ -1043,7 +1043,7 @@ if($propertyObj->get_calculator()) {
     echo '<body onload="' . $method . ';" onunload="KillClock();">';
   }
   if($propertyObj->get_calculator()) {
-    $render->render(null, null, 'calc98.html');
+    $render->render(null, null, 'jcalc98.html');
   }
   echo "<div id=\"maincontent\">\n";
 
