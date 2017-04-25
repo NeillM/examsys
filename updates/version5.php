@@ -25,10 +25,9 @@
 
 require_once '../include/load_config.php';
 
-// If support lang pack not installed, redirect to install.
+// If supported lang pack not installed install them.
 if(!LangUtils::langPackInstalled($language)) {
-    header("location: langpack.php", true, 303);
-    exit();
+    InstallUtils::download_langpacks();
 }
 
 require_once '../include/auth.inc';

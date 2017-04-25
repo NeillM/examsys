@@ -61,7 +61,7 @@ $language = LangUtils::getLang($cfg_web_root);
 
 // Install lang packs if not en
 if ($language != 'en') {
-    InstallUtils::download_langpacks(1);
+    InstallUtils::download_langpacks();
 }
 
 foreach ($includes as $file) {
