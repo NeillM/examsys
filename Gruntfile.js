@@ -41,9 +41,6 @@ module.exports = function(grunt) {
       },
       admin: {
         src: ['admin/**/js/src/*.js']
-      },
-      updates: {
-        src: ['updates/js/src/*.js']
       }
     },
     uglify: {
@@ -56,15 +53,6 @@ module.exports = function(grunt) {
           cwd: 'admin/',
           src: '**/js/src/*.js',
           dest: 'admin/',
-          rename: buildName
-        }]
-      },
-      updates: {
-        files: [{
-          expand: true,
-          cwd: 'updates/',
-          src: 'js/src/*.js',
-          dest: 'updates/',
           rename: buildName
         }]
       }
@@ -93,6 +81,5 @@ module.exports = function(grunt) {
   // Register tasks.
   grunt.registerTask('css', ['cssmin:standard']);
   grunt.registerTask('admin', ['eslint:admin', 'uglify:admin']);
-  grunt.registerTask('updates', ['eslint:updates', 'uglify:updates']);
-  grunt.registerTask('default', ['admin', 'css', 'updates']);
+  grunt.registerTask('default', ['admin', 'css']);
 }
