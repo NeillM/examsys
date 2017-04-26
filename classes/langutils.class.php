@@ -75,11 +75,14 @@ Class LangUtils {
    * @return boolean
    */
   static function supportedLang($lang) {
-    $configObject = Config::get_instance();
-    $supported_langs = $configObject->getxml('languages');
-    foreach ($supported_langs->lang as $supported) {
-      if ($lang === $supported) {
+    $file = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'languages.xml';
+    if (file_exists($file)) {
+      $xmldata = simplexml_load_file($file, 'SimpleXMLElement', LIBXML_NOCDATA);
+      $languages = $xmldata->languages; 
+      foreach ($languages->lang as $supported) {
+        if ($lang === (string) $supported) {
           return true;
+        }
       }
     }
     return false;
