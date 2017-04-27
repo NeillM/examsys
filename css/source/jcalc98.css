@@ -10,52 +10,48 @@
   color: #000;
   background-color: #DCDDDE;
   width: 250px;
-  height: 344px;
+  height: 374px;
   position: absolute;
   left: 0;
   top: 0;
 }
 
-.calc #calculator {
-  margin-top: 18px;
-}
-
-.calc table, td {
+div.calc table, td {
   font-size: 100%;
   border-spacing: 0px;
   padding: 0px;
   border-collapse: collapse
 }
 
-.calc form {
+div.calc form {
   margin: 0
 }
 
-.calc h1 {
+div.calc h1 {
   font-size: 150%;
   color: black
 }
 
-.calc h2 {
+div.calc h2 {
   font-size: 140%;
   color: #f27000
 }
 
-.calc *.b {
+div.calc *.b {
   padding: 0px;
   margin: 1px;
   width: 40px
 }
 
-.calc a {
+div.calc a {
   text-decoration:none;
 }
 
-.calc a:hover {
+div.calc a:hover {
   text-decoration:none;
 }
 
-.calc a.del {
+div.calc a.del {
   border-radius: 4px;
   text-decoration: none;
   height: 30px;
@@ -71,7 +67,7 @@
   font-size: 110%
 }
 
-.calc a.ac {
+div.calc a.ac {
   text-decoration: none;
   height: 30px;
   line-height: 30px;
@@ -82,12 +78,12 @@
   font-size: 110%
 }
 
-.calc .ac:hover {
+div.calc .ac:hover {
   background: #AD0101;
   text-decoration:none;
 }
 
-.calc a.b1, .calc .label-button {
+div.calc a.b1, .label-button {
   text-decoration: none;
   height: 24px;
   line-height: 24px;
@@ -98,12 +94,12 @@
   font-size: 80%
 }
 
-.calc .b1:hover {
+div.calc .b1:hover {
   background: #454646;
   text-decoration: none;
 }
 
-.calc a.b2 {
+div.calc a.b2 {
   text-decoration: none;
   height: 30px;
   line-height: 30px;
@@ -114,27 +110,27 @@
   font-size: 110%
 }
 
-.calc .b2:hover {
+div.calc .b2:hover {
   background: #292929;
   text-decoration: none;
 }
 
-.calc a.b3 {
+div.calc a.b3 {
   background-color: #ECB01F;
   color: black !important;
 }
 
-.calc a.b3:hover {
+div.calc a.b3:hover {
   background-color: #ECB01F;
   color: black !important;
   text-decoration: none;
 }
 
-.calc .trigmode, .calc a.memBut {
+div.calc .trigmode, a.memBut {
   font-size: 90%
 }
 
-.calc #ans {
+div.calc #ans {
   border: 1px solid #C0C0C0;
   background-color: white;
   height: 22px;
@@ -144,11 +140,11 @@
   text-align: right;
 }
 
-.calc *.LCD {
+div.calc *.LCD {
   display: none
 }
 
-.calc *.memory {
+div.calc *.memory {
   text-decoration: none;
   border: 1px solid #ededed;
   line-height: 20px;
@@ -159,7 +155,7 @@
   width: 100%
 }
 
-.calc .path {
+div.calc .path {
   background-color: #F2F2F2;
   color: #666666;
   font-size: 80%;
@@ -167,43 +163,43 @@
   border-bottom: 1px solid #B6B6B6
 }
 
-.calc .subheading {
+div.calc .subheading {
   font-weight: bold;
   font-style: italic
 }
 
-.calc .tutorial {
+div.calc .tutorial {
   background-color: #FCF6CF;
   width: 95%;
   cursor: pointer
 }
 
-.calc tr.spaced .calc td {
+div.calc tr.spaced td {
   padding-top: 8px;
 }
 
-.calc label {
+div.calc label {
   font-size: 80%;
 }
 
-.calc .offscreen {
+div.calc .offscreen {
   position: absolute;
   left: -9999px;
 }
 
-.calc .label-button {
+div.calc .label-button {
   width: 40px;
   float: left;
   margin: 0 1px 0 1px;
   overflow: hidden;
 }
 
-.calc .label-button.selected {
+div.calc .label-button.selected {
   background-color: #ECB01F;
   color: black !important;
 }
 
-.calc .label-button.off {
+div.calc .label-button.off {
   background-color: #C00000;
   color: white !important;
   font-weight: bold;
