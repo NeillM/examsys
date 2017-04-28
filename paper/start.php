@@ -548,6 +548,10 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 					return true;
 				}
 		});
+		
+        $("#info_dialog_ok").click(function(event) {
+            $("#info_overlay").hide();
+        });
   });
 
   <?php // Normal user submit by clicking on next, previous, finish or jump screen ?>
@@ -624,7 +628,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   var forceSave = function() {
     stopAutoSave();
     ajaxSave(1);
-    alert('<?php echo $string['forcesave']; ?>');
+    info_dialog('<?php echo $string['forcesave']; ?>');
     submitType = 'forcedSubmit';
     $('#qForm').attr('action',"finish.php?id=<?php echo $id . $url_mod; ?>&dont_record=true");
     $('#qForm').submit();
@@ -822,6 +826,9 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 if($configObject->get_setting('core', 'paper_mathjax')) {
   $render = new render($configObject);
   $render->render(null, null, 'mathjax.html');
+}
+if($propertyObj->get_calculator()) {
+  $render->render(null, null, 'jcalc98_header.html');
 }
 ?>
 </head>
@@ -1035,7 +1042,9 @@ if($configObject->get_setting('core', 'paper_mathjax')) {
   } else {
     echo '<body onload="' . $method . ';" onunload="KillClock();">';
   }
-
+  if($propertyObj->get_calculator()) {
+    $render->render(null, null, 'jcalc98.html');
+  }
   echo "<div id=\"maincontent\">\n";
 
   if ($current_screen < $no_screens) {
@@ -1211,6 +1220,12 @@ if($configObject->get_setting('core', 'paper_mathjax')) {
   <div id="submit_dialog">
     <div id="submit_dialog_icon"><img src="../artwork/question_mark_64.png" width="64" height="64" alt="?" /></div><p id="submit_dialog_msg"></p>
     <div id="submit_dialog_buttons"><input type="button" name="dialog_ok" id="dialog_ok" class="ok" value="OK" /><input type="button" name="dialog_cancel" id="dialog_cancel" class="cancel" value="Cancel" />&nbsp;&nbsp;</div>
+  </div>
+</div>
+<div id="info_overlay">
+  <div id="info_submit_dialog">
+    <div id="info_submit_dialog_icon"><img src="../artwork/question_mark_64.png" width="64" height="64" alt="?" /></div><p id="info_submit_dialog_msg"></p>
+    <div id="info_submit_dialog_buttons"><input type="button" name="info_dialog_ok" id="info_dialog_ok" class="ok" value="OK" /></div>
   </div>
 </div>
 <?php

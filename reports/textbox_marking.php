@@ -315,7 +315,6 @@ $half_marks = true;
           $q_no++;
           echo "<a name=\"q$q_no\">$q_no.&nbsp;</a>";
         }
-        if ($properties->get_calculator() == 1) echo '<br /><a href="#" onclick="openCalculator(); return false;"><img src="../artwork/calc.png" width="24" height="24" alt="Calculator" /></a>';
         echo "</td><td>$scenario<br />\n<br />";
         $li_set = 1;
       }

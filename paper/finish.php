@@ -286,6 +286,9 @@ require '../config/finish.inc';
       window.close();
     });
     
+    if (window.opener == null) {
+      $('#close').css('display','none');
+    }
 	});
 </script>
 <?php
