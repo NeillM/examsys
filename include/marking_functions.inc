@@ -891,7 +891,7 @@ function finalise_mrq($old_score_method, $old_display_method, $correct_rank, $ol
     } else {
       $mark = $old_marks_incorrect;
     }
-  } elseif ($old_score_method == 'Mark per Option' and $mrq_options_selected > $totalpos) {
+  } elseif ($old_score_method == 'Mark per Option' and ($mrq_options_selected * $old_marks_correct) > $totalpos) {
     $mark = 0;
   }
   if ($old_display_method == 'other') {
