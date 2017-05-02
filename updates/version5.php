@@ -24,6 +24,12 @@
  */
 
 require_once '../include/load_config.php';
+
+// If supported lang pack not installed install them.
+if(!LangUtils::langPackInstalled($language)) {
+    InstallUtils::download_langpacks();
+}
+
 require_once '../include/auth.inc';
 require_once '../include/errors.php';
 require_once '../include/std_set_shared_functions.inc';

@@ -613,6 +613,13 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     if (!is_null($url)) {
       $workingdir = getcwd();
       chdir(dirname(__DIR__));
+      // Download supported languages xml.
+      $url = $configObject->getxml('translations', 'url');
+      $fullurl = $url . '/' . $version . '/languages.xml';
+      $file = @file_get_contents($fullurl);
+      if ($file === false or file_put_contents('languages.xml', $file) === false) {
+        echo "Error downloading latest languages.xml from $fullurl, you may need to manually install it.";
+      }
       // Download language packs.
       $fullurl = $url . '/' . $version . '/rogo.zip';
       $file = @file_get_contents($fullurl);
