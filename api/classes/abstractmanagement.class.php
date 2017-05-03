@@ -106,4 +106,28 @@ abstract class abstractmanagement {
         }
         return false;
     }
+    
+    /**
+     * Get the external system the request is for
+     * @param integer $userid internal user id
+     * @param string $externalsys system provided in request (used by sms plugins)
+     * @return string external system
+     */
+    public function get_external_system($userid, $externalsys) {
+        if ($userid === 0) {
+            // SMS plugin
+            return $externalsys;
+        } else {
+            // API so check external system mapping.
+            $external = new \external_systems();
+            $system = $external->get_mapped_externalsystem($userid);
+            if (is_null($system)) {
+                // Not mapped to specific external system so can manipulate any.
+                return $externalsys;
+            } else {
+                // Mapped so can only manipulate $system.
+                return $system;
+            }
+        }
+    }
 }

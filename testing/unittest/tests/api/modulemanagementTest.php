@@ -198,6 +198,7 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray['statuscode'] = 505;
         $responsearray['status'] = 'Module already exists';
         $responsearray['id'] = 1;
+        $responsearray['externalid'] = '12345678';
         $params['modulecode'] = 'TEST';
         $this->assertEquals($responsearray, $module->create($params, $userid));
     }
@@ -213,8 +214,9 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray['statuscode'] = 505;
         $responsearray['status'] = 'Module already exists';
         $responsearray['id'] = 1;
-        $responsearray['externalid'] = '';
-        $params['externalid'] = '';
+        $responsearray['externalid'] = '12345678';
+        $params['externalid'] = '12345678';
+        $params['sms'] = 'test rogo api';
         $this->assertEquals($responsearray, $module->create($params, $userid));
     }
     /**
@@ -290,7 +292,7 @@ class modulemanagementtest extends unittestdatabase {
             "name" => 'Test module 2',
             "school" => 'Test school',
             "faculty" => 'Test faculty',
-            "sms" => 'unittest');
+            "sms" => 'test rogo api');
         $module = new \api\modulemanagement($this->db);
         $userid = 1;
         $responsearray['statuscode'] = 512;
@@ -529,6 +531,7 @@ class modulemanagementtest extends unittestdatabase {
     public function test_delete_success() {
         // Test module deletion - SUCCESS.
         $responsearray = $this->delete_response_array();
+        $responsearray['externalid'] = '12345678';
         $params = $this->delete_param_array();
         $module = new \api\modulemanagement($this->db);
         $userid = 1;

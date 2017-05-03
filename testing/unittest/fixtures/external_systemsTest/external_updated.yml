@@ -1,0 +1,42 @@
+users:
+  -
+    id: 1
+    password: "87654321"
+    surname: "sysadmin"
+    username: "sysadmin"
+    roles: "Staff,SysAdmin"
+    grade: "University Lecturer"
+  -
+    id: 2
+    password: "12345678"
+    surname: "sysadmin2"
+    username: "sysadmin2"
+    roles: "Staff,SysAdmin"
+    grade: "University Lecturer"
+  -
+    id: 3
+    password: "qwerty"
+    surname: "sysadmin3"
+    username: "sysadmin3"
+    roles: "Staff,SysAdmin"
+    grade: "University Lecturer"
+external_systems:
+  -
+    id: 1
+    name: 'external api'
+    type: 'api'
+  -
+    id: 2
+    name: 'external api 2'
+    type: 'api'
+  -
+    id: 3
+    name: 'Campus Solutions'
+    type: 'plugin'
+external_systems_mapping:
+  -
+    user_id: 1
+    ext_id: 2
+  -
+    user_id: 2
+    ext_id: 2

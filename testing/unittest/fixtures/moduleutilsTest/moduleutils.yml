@@ -24,6 +24,7 @@ modules:
     moduleid: "ABC100"
     fullname: "Test Module"
     externalid: "123456789"
+    sms: 'external'
     academic_year_start: "01/07"
     schoolid: 1
   -
@@ -31,6 +32,7 @@ modules:
     moduleid: "ABC200"
     fullname: "Test Module 2"
     externalid: "987654321"
+    sms: 'external'
     academic_year_start: "01/07"
     schoolid: 1
 schools:

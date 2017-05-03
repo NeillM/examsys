@@ -60,9 +60,12 @@ class render {
      * @param array $data Data for the template
      * @param array $lang Language strings
      * @param string $template The template filename
+     * @param string $additionaljs additional javascript required
+     * @param string $additionalcss additional css required
      */
-    public function render($data, $lang, $template) {
-        $data = array('data' => $data, 'lang' => $lang, 'path' => $this->config->get('cfg_root_path'));
+    public function render($data, $lang, $template, $additionaljs = "", $additionalcss = "") {
+        $data = array('data' => $data, 'lang' => $lang, 'path' => $this->config->get('cfg_root_path'), 'charset' => $this->config->get('cfg_page_charset'),
+        'additionaljs' => $additionaljs, 'additionalcss' => $additionalcss);
         echo $this->twig->render($template, $data);
     }
 

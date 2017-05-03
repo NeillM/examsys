@@ -14,6 +14,7 @@ modules:
     schoolid: 1
     academic_year_start: "07/01"
     externalid: "abc123def"
+    sms: 'test rogo api'
 schools:
   -
     id: 1
@@ -47,6 +48,7 @@ properties:
     labs: "1"
     paper_type: "2"
     externalid: "xyz987uvw"
+    externalsys: 'test rogo api'
 properties_modules:
   -
     property_id: 1
@@ -70,3 +72,12 @@ sid:
   -
     student_id: 12345678
     userID: 1000
+external_systems:
+  -
+    id: 1
+    name: 'test rogo api'
+    type: 'api'
+external_systems_mapping:
+  -
+    ext_id: 1
+    user_id: 1

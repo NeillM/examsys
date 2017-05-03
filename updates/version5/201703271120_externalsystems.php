@@ -1,0 +1,29 @@
+<?php
+
+if ($updater_utils->check_version("6.4.0")) {
+    if (!$updater_utils->has_updated('externalsys')) {
+        // External systems.
+        $createsql = "CREATE TABLE external_systems (
+            id int(8) NOT NULL AUTO_INCREMENT,
+            name varchar(255) NOT NULL,
+            type varchar(30) NOT NULL,
+            PRIMARY KEY (`id`),
+            UNIQUE INDEX `name_idx` (`name`))";
+        $updater_utils->execute_query($createsql, true);
+        // Oauth client mappings to external systems.
+        $createsql = "CREATE TABLE external_systems_mapping (
+            user_id int(10) UNSIGNED NOT NULL,
+            ext_id int(8) NOT NULL,
+            PRIMARY KEY (user_id),
+            UNIQUE INDEX `user_id_idx` (`user_id`))";
+        $updater_utils->execute_query($createsql, true);
+        $altersql = "ALTER TABLE external_systems_mapping ADD CONSTRAINT external_systems_mapping_fk1 FOREIGN KEY (ext_id) REFERENCES external_systems(id)";
+        $updater_utils->execute_query($altersql, true);
+        $altersql = "ALTER TABLE external_systems_mapping ADD CONSTRAINT external_systems_mapping_fk2 FOREIGN KEY (user_id) REFERENCES users(id)";
+        $updater_utils->execute_query($altersql, true);
+        // Add external systems entry for ims enterprise.
+        $datasql = "INSERT IGNORE INTO external_systems (name, type) values ('ims_enterprise', 'plugin')";
+        $updater_utils->execute_query($datasql, true);
+        $updater_utils->record_update('externalsys');
+    }
+}
