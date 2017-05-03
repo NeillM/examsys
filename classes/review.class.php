@@ -84,10 +84,19 @@ class Review {
     $this->metadataID = $reviewID;
   }
 
+  /**
+   * Get and save the comments made for a page of the review screen.
+   *
+   * @param int $screen_no The screen number that should be saved.
+   */
   public function record_comments($screen_no) {
     $question_no = 0;
     $old_q_id = NULL;
     $submit_time = date("YmdHis", time());
+    
+    // Get page post variables.
+    $previous_duration = param::required('previous_duration', param::INT, param::FETCH_POST);
+    $pagestart = param::required('page_start', param::ALPHANUM, param::FETCH_POST);
 
     $stmt = $this->db->prepare("SELECT q_id, q_type FROM (papers, questions) WHERE paper = ? AND screen = ? AND papers.question = questions.q_id ORDER BY display_pos");
     $stmt->bind_param('ii', $this->paperID, $screen_no);
@@ -99,20 +108,23 @@ class Review {
         // Record external examiner comments.
         if ($q_type != 'info') {
           $question_no++;
+          // Get the post variables for the question.
+          $extcomments = param::optional("extcomments$question_no", null, param::TEXT, param::FETCH_POST);
+          $category = param::optional("exttype$question_no", null, param::INT, param::FETCH_POST);
 
           $result = $this->db->prepare("DELETE FROM review_comments WHERE metadataID = ? AND q_id = ?");
           $result->bind_param('ii', $this->metadataID, $q_id);
           $result->execute();  
           $result->close();
 
-          $tmp_duration = $this->time_to_seconds($submit_time) - $this->time_to_seconds($_POST['page_start']);
-          if ($tmp_duration < 0) $tmp_duration += 86400;
-          $tmp_duration += $_POST['previous_duration'];
-          if (isset($_POST["extcomments$question_no"])) {
-            $extcomments = $_POST["extcomments$question_no"];
-
+          $tmp_duration = $this->time_to_seconds($submit_time) - $this->time_to_seconds($pagestart);
+          if ($tmp_duration < 0) {
+            $tmp_duration += 86400;
+          }
+          $tmp_duration += $previous_duration;
+          if (!is_null($extcomments)) {
             $result = $this->db->prepare("INSERT INTO review_comments VALUES (NULL, ?, ?, ?, 'Not actioned', '', $tmp_duration, ?, ?)");
-            $result->bind_param('iisii', $q_id, $_POST["exttype$question_no"], $extcomments, $_POST['old_screen'], $this->metadataID);
+            $result->bind_param('iisii', $q_id, $category, $extcomments, $screen_no, $this->metadataID);
             $result->execute();
             $result->close();
           }
