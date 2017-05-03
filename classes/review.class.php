@@ -103,6 +103,21 @@ class Review {
     $stmt->execute();
     $stmt->bind_result($q_id, $q_type);
     $stmt->store_result();
+    
+    // Calculate the duration, while it is stored against each comment, it seems to be calculated on a per page basis.
+    $tmp_duration = $this->time_to_seconds($submit_time) - $this->time_to_seconds($pagestart);
+    if ($tmp_duration < 0) {
+      $tmp_duration += 86400;
+    }
+    $tmp_duration += $previous_duration;
+    
+    // Prepare the queries that will be used in the loop.
+    $delete = $this->db->prepare("DELETE FROM review_comments WHERE metadataID = ? AND q_id = ?");
+    $delete->bind_param('ii', $this->metadataID, $q_id);
+
+    $insert = $this->db->prepare("INSERT INTO review_comments VALUES (NULL, ?, ?, ?, 'Not actioned', '', $tmp_duration, ?, ?)");
+    $insert->bind_param('iisii', $q_id, $category, $extcomments, $screen_no, $this->metadataID);
+
     while ($stmt->fetch()) {
       if ($old_q_id != $q_id) {
         // Record external examiner comments.
@@ -112,26 +127,17 @@ class Review {
           $extcomments = param::optional("extcomments$question_no", null, param::TEXT, param::FETCH_POST);
           $category = param::optional("exttype$question_no", null, param::INT, param::FETCH_POST);
 
-          $result = $this->db->prepare("DELETE FROM review_comments WHERE metadataID = ? AND q_id = ?");
-          $result->bind_param('ii', $this->metadataID, $q_id);
-          $result->execute();  
-          $result->close();
+          $delete->execute();
 
-          $tmp_duration = $this->time_to_seconds($submit_time) - $this->time_to_seconds($pagestart);
-          if ($tmp_duration < 0) {
-            $tmp_duration += 86400;
-          }
-          $tmp_duration += $previous_duration;
           if (!is_null($extcomments)) {
-            $result = $this->db->prepare("INSERT INTO review_comments VALUES (NULL, ?, ?, ?, 'Not actioned', '', $tmp_duration, ?, ?)");
-            $result->bind_param('iisii', $q_id, $category, $extcomments, $screen_no, $this->metadataID);
-            $result->execute();
-            $result->close();
+            $insert->execute();
           }
         }
       }
       $old_q_id = $q_id;
-    }                    // End of while loop.
+    } // End of while loop.
+    $delete->close();
+    $insert->close();
     $stmt->close();
   }
 
