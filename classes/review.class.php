@@ -98,10 +98,24 @@ class Review {
     $previous_duration = param::required('previous_duration', param::INT, param::FETCH_POST);
     $pagestart = param::required('page_start', param::ALPHANUM, param::FETCH_POST);
 
-    $stmt = $this->db->prepare("SELECT q_id, q_type FROM (papers, questions) WHERE paper = ? AND screen = ? AND papers.question = questions.q_id ORDER BY display_pos");
-    $stmt->bind_param('ii', $this->paperID, $screen_no);
+    // Get the questions, along with details of any stored comments.
+    // This query needs to work in the following circumstances:
+    // * No users have submitted comments to any of the questions on the paper.
+    // * The user has submitted some comments for a question on the screen.
+    // * Another user has submitted comments for the paper.
+    $sql = <<<SQL
+SELECT q.q_id, q.q_type, rc.id AS r_id
+FROM questions q
+JOIN papers p ON p.question = q.q_id
+LEFT JOIN review_metadata rm ON rm.paperID = p.paper AND rm.reviewerID = ?
+LEFT JOIN review_comments rc ON rc.metadataid = rm.id AND rc.q_id = q.q_id
+WHERE p.paper = ? AND p.screen = ?
+ORDER BY p.display_pos
+SQL;
+    $stmt = $this->db->prepare($sql);
+    $stmt->bind_param('iii', $this->reviewerID, $this->paperID, $screen_no);
     $stmt->execute();
-    $stmt->bind_result($q_id, $q_type);
+    $stmt->bind_result($q_id, $q_type, $commentid);
     $stmt->store_result();
     
     // Calculate the duration, while it is stored against each comment, it seems to be calculated on a per page basis.
@@ -111,12 +125,20 @@ class Review {
     }
     $tmp_duration += $previous_duration;
     
-    // Prepare the queries that will be used in the loop.
-    $delete = $this->db->prepare("DELETE FROM review_comments WHERE metadataID = ? AND q_id = ?");
-    $delete->bind_param('ii', $this->metadataID, $q_id);
+    // Prepare the queries that will be used in the loop, we might need to insert or update so prepare both.
+    $insertsql = <<<SQL
+INSERT INTO review_comments
+VALUES (NULL, ?, ?, ?, 'Not actioned', '', ?, ?, ?)
+SQL;
+    $insert = $this->db->prepare($insertsql);
+    $insert->bind_param('iisiii', $q_id, $category, $extcomments, $tmp_duration, $screen_no, $this->metadataID);
 
-    $insert = $this->db->prepare("INSERT INTO review_comments VALUES (NULL, ?, ?, ?, 'Not actioned', '', $tmp_duration, ?, ?)");
-    $insert->bind_param('iisii', $q_id, $category, $extcomments, $screen_no, $this->metadataID);
+    $updatesql = <<<SQL
+UPDATE review_comments
+SET q_id = ?, category = ?, comment = ?, duration = ?, screen = ?, metadataID = ? WHERE id = ?
+SQL;
+    $update = $this->db->prepare($updatesql);
+    $update->bind_param('iisiiii', $q_id, $category, $extcomments, $tmp_duration, $screen_no, $this->metadataID, $commentid);
 
     while ($stmt->fetch()) {
       if ($old_q_id != $q_id) {
@@ -127,17 +149,17 @@ class Review {
           $extcomments = param::optional("extcomments$question_no", null, param::TEXT, param::FETCH_POST);
           $category = param::optional("exttype$question_no", null, param::INT, param::FETCH_POST);
 
-          $delete->execute();
-
-          if (!is_null($extcomments)) {
+          if (!is_null($extcomments) && !is_null($commentid)) {
+            $update->execute();
+          } elseif (!is_null($extcomments)) {
             $insert->execute();
           }
         }
       }
       $old_q_id = $q_id;
     } // End of while loop.
-    $delete->close();
     $insert->close();
+    $update->close();
     $stmt->close();
   }
 
