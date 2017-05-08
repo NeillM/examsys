@@ -99,8 +99,12 @@ if ($update === false) {
   $new_paper_id = $copypaper['new_paper_id'];
 } else {
   $new_paper_id = param::required('currentpid', param::INT, param::FETCH_POST);
-  $properties = Paper_utils::get_paper_properties($new_paper_id, $mysqli);
-  $new_calendar_year = $properties['session'];
+  $properties = PaperProperties::get_paper_properties_by_id($new_paper_id, $mysqli, $string);
+  if ($properties->get_summative_lock() == 1 or ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() == '2')) {
+    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $notice->display_notice_and_exit(null, $string['paperlockedwarning'], $msg, $string['paperlockedwarning'], '../artwork/page_not_found.png', '#C00000', true, true);
+  }
+  $new_calendar_year = $properties->get_calendar_year();
   $properties = Paper_utils::get_paper_properties($paperid, $mysqli);
   $calendar_year = $properties['session'];
   $moduleIDs = Paper_utils::get_modules($new_paper_id, $mysqli);
