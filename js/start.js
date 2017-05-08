@@ -217,3 +217,11 @@ function filterKeypress(event) {
     }
   }
 }
+// Wrapper for window.close, if not a popup we move back a page.
+function close_window () {
+  if (window.opener == null) {
+    parent.history.back();
+  } else {
+    window.close();
+  }
+}
