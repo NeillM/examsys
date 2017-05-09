@@ -18,7 +18,7 @@
  * This file is used to install Rogo.
  *
  * @author Joseph Baxter <joseph.baxter@nottingham.ac.uk>
- * @copyright Copyright (c) 2016 The University of Nottingham
+ * @copyright Copyright (c) 2017 The University of Nottingham
  */
  
 // Only run from the command line!
