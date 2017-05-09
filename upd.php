@@ -129,12 +129,17 @@ if (function_exists('opcache_reset')) {
 }
 
 try {
+  $updater_utils = new UpdaterUtils($mysqli, $configObject->get('cfg_db_database'));
   // Get the code version.
   $version = $configObject->getxml('version');
   // Get the installed version.
   $old_version = $configObject->get('rogo_version');
   if ($version == $old_version) {
     cli_utils::prompt('Nothing to update.');
+    exit(0);
+  }
+  if ($updater_utils->check_version("6.3.0")) {
+    cli_utils::prompt('Please upgrade via the user interface to version 6.3.X before using the command line updater.');
     exit(0);
   }
   // Get update file dir.
@@ -152,7 +157,6 @@ try {
     cli_utils::prompt($string['warning4']);
     exit(0);
   }
-  $updater_utils = new UpdaterUtils($mysqli, $configObject->get('cfg_db_database'));
   // Backup the config file before proceeding.
   $updater_utils->backup_file($cfg_web_root, $old_version);
   // Update.
