@@ -165,10 +165,12 @@ if (!isset($_POST['update'])) {
     $cfg_db_charset = $configObject->get('cfg_db_charset');
   }
 
-  $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $_POST['mysql_admin_user'], $_POST['mysql_admin_pass'], $configObject->get('cfg_db_database'), $cfg_db_charset, $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
+  $mysql_admin_user = param::required('mysql_admin_user', param::TEXT, param::FETCH_POST);
+  $mysql_admin_pass = param::required('mysql_admin_pass', param::TEXT, param::FETCH_POST);
+  $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $mysql_admin_user, $mysql_admin_pass, $configObject->get('cfg_db_database'), $cfg_db_charset, $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
 
   if ($mysqli->connect_error) {
-    echo "<div>Failed to contect to MySQL using " . $_POST['mysql_admin_user'] . '' . $_POST['mysql_admin_pass'] . '</div>';
+    echo "<div>Failed to contect to MySQL using " . $mysql_admin_user . '</div>';
     echo "</body>";
     echo "</html>";
     exit;
@@ -206,7 +208,8 @@ if (!isset($_POST['update'])) {
 
   $mysqli->autocommit(false);
   // 01/05/2013 - Update the online help files.
-  if (isset($_POST['update_staff_help'])) {
+  $update_staff_help = param::optional('update_staff_help', null, param::ALPHA, param::FETCH_POST);
+  if (!is_null($update_staff_help)) {
     $updater_utils->execute_query("TRUNCATE staff_help", true);
 
     $file = file_get_contents('../install/staff_help.sql');
@@ -229,7 +232,8 @@ if (!isset($_POST['update'])) {
     echo "<li>LOADED staff_help: " . $ext . "</li>\n";
   }
 
-  if (isset($_POST['update_student_help'])) {
+  $update_student_help = param::optional('update_student_help', null, param::ALPHA, param::FETCH_POST);
+  if (!is_null($update_student_help)) {
     $updater_utils->execute_query("TRUNCATE student_help", true);
 
     $file = file_get_contents('../install/student_help.sql');
@@ -441,11 +445,7 @@ if (!isset($_POST['update'])) {
   }
 
   // 03/06/2013 - nazrji - Add VLE APIs to config file.
-  if ($configObject->get('cfg_company') == 'University of Nottingham') {
-    $new_lines = array("\n// Objectives mapping\n", "\$vle_apis = array('UoNCM' => '', 'NLE' => '');\n");
-  } else {
-    $new_lines = array("\n// Objectives mapping\n", "\$vle_apis = array();\n");
-  }
+  $new_lines = array("\n// Objectives mapping\n", "\$vle_apis = array();\n");
   $target_line = '$cfg_password_expire';
   $updater_utils->add_line($string, '$vle_apis', $new_lines, 80, $cfg_web_root, $target_line, 1);
 
@@ -866,7 +866,8 @@ QUERY;
   $mysqli->commit();
 
   // Update language packs.
-  if (isset($_POST['update_translationpack'])) {
+  $update_translationpack = param::optional('update_translationpack', null, param::ALPHA, param::FETCH_POST);
+  if (!is_null($update_translationpack)) {
     InstallUtils::download_langpacks();
   }
 
@@ -905,6 +906,11 @@ QUERY;
   echo "<div>Ended at " . date("H:i:s") . "</div>";
   echo "\n<h2>" . $string['actionrequired'] . "</h2>\n<ol>";
   echo "\n<li>" . $string['readonly'] . "</li>\n";
-  echo "</ol>\n<div>" . $string['finished'] . "</div>\n<div style=\"text-align:center\"><input type=\"button\" class=\"ok\" value=\" " . $string['home'] . " \" onclick=\"window.location('" . $configObject->get('cfg_root_path') . "/')\" /></div><blockquote>\n";
+  echo "</ol>\n<div>" . $string['finished'] . "</div>\n<div style=\"text-align:center\"><input type=\"button\" class=\"ok\" value=\" " . $string['home'] . " \" onclick=\"go_home()\" /></div><blockquote>\n";
 }
 ?>
+<script>
+function go_home() {
+  window.location='../index.php';
+}
+</script>
