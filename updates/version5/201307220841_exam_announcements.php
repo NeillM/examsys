@@ -22,14 +22,11 @@ QUERY;
   $updater_utils->execute_query($sql, true);
 }
 
-// Config no longer required in 6.4.0 onwards so do not run this update script on that version or version higher.
-$version = $configObject->getxml('version');
-if (version::is_version_higher($version, '6.4.0') === false and $version !== '6.4.0') {
-  // 23/07/2013 (brzsw) - Add clarification setting config file.
-  $new_lines = array("  \$midexam_clarification = array('invigilators', 'students');\n");
-  $target_line = '$emergency_support_numbers';
-  $updater_utils->add_line($string, '$midexam_clarification', $new_lines, 60, $cfg_web_root, $target_line, 1);
-}
+// 23/07/2013 (brzsw) - Add clarification setting config file.
+$new_lines = array("  \$midexam_clarification = array('invigilators', 'students');\n");
+$target_line = '$emergency_support_numbers';
+$updater_utils->add_line($string, '$midexam_clarification', $new_lines, 60, $cfg_web_root, $target_line, 1);
+
 
 /*
  *****   NOW UPDATE THE INSTALLER SCRIPT   *****
