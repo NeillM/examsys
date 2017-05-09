@@ -100,7 +100,7 @@ if ($update === false) {
 } else {
   $new_paper_id = param::required('currentpid', param::INT, param::FETCH_POST);
   $properties = PaperProperties::get_paper_properties_by_id($new_paper_id, $mysqli, $string);
-  if ($properties->get_summative_lock() == 1 or ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() == '2')) {
+  if ($properties->get_summative_lock() == 1) {
     $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
     $notice->display_notice_and_exit(null, $string['paperlockedwarning'], $msg, $string['paperlockedwarning'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
