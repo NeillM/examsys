@@ -476,23 +476,18 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
     //Authentication
     if (!self::$cli) {
-      $lti = param::optional('useLti', false, param::BOOLEAN, param::FETCH_POST);
-      $internal = param::optional('useInternal', false, param::BOOLEAN, param::FETCH_POST);
-      $guest = param::optional('useGuest', false, param::BOOLEAN, param::FETCH_POST);
-      $impersonation = param::optional('useImpersonation', false, param::BOOLEAN, param::FETCH_POST);
-      $ldap = param::optional('useLdap', false, param::BOOLEAN, param::FETCH_POST);
+      self::$cfg_auth_lti = param::optional('useLti', false, param::BOOLEAN, param::FETCH_POST);
+      self::$cfg_auth_internal = param::optional('useInternal', false, param::BOOLEAN, param::FETCH_POST);
+      self::$cfg_auth_guest = param::optional('useGuest', false, param::BOOLEAN, param::FETCH_POST);
+      self::$cfg_auth_impersonation = param::optional('useImpersonation', false, param::BOOLEAN, param::FETCH_POST);
+      self::$cfg_auth_ldap = param::optional('useLdap', false, param::BOOLEAN, param::FETCH_POST);
     } else {
-      $lti = self::getSettings(param::BOOLEAN, false, 'authentication', 'lti');
-      $internal = self::getSettings(param::BOOLEAN, false, 'authentication', 'internaldb');
-      $guest = self::getSettings(param::BOOLEAN, false, 'authentication', 'summativeguestlogin');
-      $impersonation = self::getSettings(param::BOOLEAN, false, 'authentication', 'userimpersonation');
-      $ldap = self::getSettings(param::BOOLEAN, false, 'authentication', 'ldap');
+      self::$cfg_auth_lti = self::getSettings(param::BOOLEAN, false, 'authentication', 'lti');
+      self::$cfg_auth_internal = self::getSettings(param::BOOLEAN, false, 'authentication', 'internaldb');
+      self::$cfg_auth_guest = self::getSettings(param::BOOLEAN, false, 'authentication', 'summativeguestlogin');
+      self::$cfg_auth_impersonation = self::getSettings(param::BOOLEAN, false, 'authentication', 'userimpersonation');
+      self::$cfg_auth_ldap = self::getSettings(param::BOOLEAN, false, 'authentication', 'ldap');
     }
-    self::$cfg_auth_lti = $lti;
-    self::$cfg_auth_internal = $internal;
-    self::$cfg_auth_guest = $guest;
-    self::$cfg_auth_impersonation = $impersonation;
-    self::$cfg_auth_ldap = $ldap;
 
     //LDAP
     if (!self::$cli) {
