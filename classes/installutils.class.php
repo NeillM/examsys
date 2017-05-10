@@ -643,8 +643,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         echo "\t<div>" . $e->getMessage() . "</div>\n";
         echo "</div>\n";
       } else {
-        echo $e->getMessage();
-        echo PHP_EOL;
+        cli_utils::prompt($e->getMessage());
       }
     }
 
@@ -654,8 +653,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         echo "<p style=\"margin-left:10px\">" . $string['deleteinstall'] . "</p>\n";
         echo "<p style=\"margin-left:10px\"><input type=\"button\" class=\"ok\" name=\"config\" value=\"" . $string['config'] . "\" onclick=\"window.location='" . $configObject->get('cfg_root_path') . "/admin/config.php'\" /></p>\n";
       } else {
-        echo $string['installed'];
-        echo PHP_EOL;
+        cli_utils::prompt($string['installed']);
       }
     } else {
       self::displayWarnings();
