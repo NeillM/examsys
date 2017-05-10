@@ -2378,35 +2378,19 @@ CONFIG;
     $salt = $cfg_encrypt_salt;
 
     $config = str_replace('{cfg_encrypt_salt}', $salt, $config);
-    if (is_string(self::$cfg_ldap_server)) {
+    if (self::$cfg_auth_ldap) {
       $config = str_replace('{cfg_ldap_server}', self::$cfg_ldap_server, $config);
-    }
-    if (is_string(self::$cfg_ldap_search_dn)) {
       $config = str_replace('{cfg_ldap_search_dn}', self::$cfg_ldap_search_dn, $config);
-    }
-    if (is_string(self::$cfg_ldap_bind_rdn)) {
       $config = str_replace('{cfg_ldap_bind_rdn}', self::$cfg_ldap_bind_rdn, $config);
-    }
-    if (is_string(self::$cfg_ldap_bind_password)) {
       $config = str_replace('{cfg_ldap_bind_password}', self::$cfg_ldap_bind_password, $config);
-    }
-    if (is_string(self::$cfg_ldap_user_prefix)) {
       $config = str_replace('{cfg_ldap_user_prefix}', self::$cfg_ldap_user_prefix, $config);
     }
-    if (is_string(self::$cfg_lookup_ldap_server)) {
+    if (self::$cfg_uselookupLdap) {
       $config = str_replace('{cfg_lookup_ldap_server}', self::$cfg_lookup_ldap_server, $config);
-    }
-    if (is_string(self::$cfg_lookup_ldap_search_dn)) {
       $config = str_replace('{cfg_lookup_ldap_search_dn}', self::$cfg_lookup_ldap_search_dn, $config);
-    }
-    if (is_string(self::$cfg_lookup_ldap_bind_rdn)) {
       $config = str_replace('{cfg_lookup_ldap_bind_rdn}', self::$cfg_lookup_ldap_bind_rdn, $config);
-    }
-    if (is_string(self::$cfg_lookup_ldap_bind_password)) {
       $config = str_replace('{cfg_lookup_ldap_bind_password}', self::$cfg_lookup_ldap_bind_password, $config);
-    }
-    if (is_string(self::$cfg_lookup_ldap_user_prefix)) {
-       $config = str_replace('{cfg_lookup_ldap_user_prefix}', self::$cfg_lookup_ldap_user_prefix, $config);
+      $config = str_replace('{cfg_lookup_ldap_user_prefix}', self::$cfg_lookup_ldap_user_prefix, $config);
     }
 
     if (file_exists(self::$rogo_path . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.inc.php')) {
