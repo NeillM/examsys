@@ -488,31 +488,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       $impersonation = self::getSettings(param::BOOLEAN, false, 'authentication', 'userimpersonation');
       $ldap = self::getSettings(param::BOOLEAN, false, 'authentication', 'ldap');
     }
-    if ($lti) {
-      self::$cfg_auth_lti = true;
-    } else {
-      self::$cfg_auth_lti = false;
-    }
-    if ($internal) {
-      self::$cfg_auth_internal = true;
-    } else {
-      self::$cfg_auth_internal = false;
-    }
-    if ($guest) {
-      self::$cfg_auth_guest = true;
-    } else {
-      self::$cfg_auth_guest = false;
-    }
-    if ($impersonation) {
-      self::$cfg_auth_impersonation = true;
-    } else {
-      self::$cfg_auth_impersonation = false;
-    }
-    if ($ldap) {
-      self::$cfg_auth_ldap = true;
-    } else {
-      self::$cfg_auth_ldap = false;
-    }
+    self::$cfg_auth_lti = $lti;
+    self::$cfg_auth_internal = $internal;
+    self::$cfg_auth_guest = $guest;
+    self::$cfg_auth_impersonation = $impersonation;
+    self::$cfg_auth_ldap = $ldap;
 
     //LDAP
     if (!self::$cli) {
