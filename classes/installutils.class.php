@@ -507,7 +507,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
     //LDAP for lookup
     if (!self::$cli) {
-      $cfg_uselookupLdap = param::optional('uselookupLdap', null, param::BOOLEAN, param::FETCH_POST);
+      self::$cfg_uselookupLdap = param::optional('uselookupLdap', null, param::BOOLEAN, param::FETCH_POST);
       self::$cfg_lookup_ldap_server = param::optional('ldap_lookup_server', null, param::TEXT, param::FETCH_POST);
       self::$cfg_lookup_ldap_search_dn = param::optional('ldap_lookup_search_dn', null, param::TEXT, param::FETCH_POST);
       self::$cfg_lookup_ldap_bind_rdn = param::optional('ldap_lookup_bind_rdn', null, param::TEXT, param::FETCH_POST);
@@ -2365,17 +2365,17 @@ CONFIG;
 
     $config = str_replace('{cfg_authentication_arrays}', implode(",\n  ", $authentication_arrays), $config);
 
-    $lookup_arrays= array();
+    $lookup_arrays = array();
     if (self::$cfg_uselookupLdap) {
-      $lookup_arrays[]=  "array('ldap', array('ldap_server' => '{cfg_lookup_ldap_server}', 'ldap_search_dn' => '{cfg_lookup_ldap_search_dn}', 'ldap_bind_rdn' => '{cfg_lookup_ldap_bind_rdn}', 'ldap_bind_password' => '{cfg_lookup_ldap_bind_password}', 'ldap_user_prefix' => '{cfg_lookup_ldap_user_prefix}', 'ldap_attributes' => array('sAMAccountName' => 'username', 'sn' => 'surname', 'title' => 'title', 'givenName' => 'firstname', 'department' => 'school', 'mail' => 'email',  'cn' => 'username',  'employeeType' => 'role',  'initials' => 'initials'), 'lowercasecompare' => true, 'storeprepend' => 'ldap_'), 'LDAP')";
+      $lookup_arrays[] = "array('ldap', array('ldap_server' => '{cfg_lookup_ldap_server}', 'ldap_search_dn' => '{cfg_lookup_ldap_search_dn}', 'ldap_bind_rdn' => '{cfg_lookup_ldap_bind_rdn}', 'ldap_bind_password' => '{cfg_lookup_ldap_bind_password}', 'ldap_user_prefix' => '{cfg_lookup_ldap_user_prefix}', 'ldap_attributes' => array('sAMAccountName' => 'username', 'sn' => 'surname', 'title' => 'title', 'givenName' => 'firstname', 'department' => 'school', 'mail' => 'email',  'cn' => 'username',  'employeeType' => 'role',  'initials' => 'initials'), 'lowercasecompare' => true, 'storeprepend' => 'ldap_'), 'LDAP')";
     }
     if (self::$cfg_uselookupXML) {
-      $lookup_arrays[]= "array('XML', array('baseurl' => 'http://exports/', 'userlookup' => array( 'url' => '/student.ashx?campus=uk', 'mandatoryurlfields' => array('username'), 'urlfields' => array('username' => 'username'), 'xmlfields' => array('StudentID' => 'studentID', 'Title' => 'title', 'Forename' => 'firstname', 'Surname' => 'surname', 'Email' => 'email', 'Gender' => 'gender', 'YearofStudy' => 'yearofstudy', 'School' => 'school', 'Degree' => 'degree', 'CourseCode' => 'coursecode', 'CourseTitle' => 'coursetitle', 'AttendStatus' => 'attendstatus'), 'oneitemreturned' => true, 'override' => array('firstname' => true), 'storeprepend' => 'sms_userlookup_')), 'XML')";
+      $lookup_arrays[] = "array('XML', array('baseurl' => 'http://exports/', 'userlookup' => array( 'url' => '/student.ashx?campus=uk', 'mandatoryurlfields' => array('username'), 'urlfields' => array('username' => 'username'), 'xmlfields' => array('StudentID' => 'studentID', 'Title' => 'title', 'Forename' => 'firstname', 'Surname' => 'surname', 'Email' => 'email', 'Gender' => 'gender', 'YearofStudy' => 'yearofstudy', 'School' => 'school', 'Degree' => 'degree', 'CourseCode' => 'coursecode', 'CourseTitle' => 'coursetitle', 'AttendStatus' => 'attendstatus'), 'oneitemreturned' => true, 'override' => array('firstname' => true), 'storeprepend' => 'sms_userlookup_')), 'XML')";
     }
 
     $config = str_replace('{cfg_lookup_arrays}', implode(",\n  ", $lookup_arrays), $config);
 
-    $salt = $cfg_encrypt_salt; //=$salt;
+    $salt = $cfg_encrypt_salt;
 
     $config = str_replace('{cfg_encrypt_salt}', $salt, $config);
     if (is_string(self::$cfg_ldap_server)) {
