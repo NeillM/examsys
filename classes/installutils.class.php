@@ -1053,7 +1053,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
     if (empty(self::$sysadmin_email)) {
       if (!self::$cli) {
-        self::$sysadmin_email = param::required('SysAdmin_last', param::TEXT, param::FETCH_POST);
+        self::$sysadmin_email = param::required('SysAdmin_email', param::TEXT, param::FETCH_POST);
       } else {
         self::$sysadmin_email = self::getSettings(param::TEXT, true, 'sysadmin', 'email');
       }
