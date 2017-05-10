@@ -591,12 +591,21 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     // Update sys_updates table
     self::updateSysUpdates();
     
+    // Get Help and lang pack parameters.
+    if (!self::$cli) {
+      $load_help = param::optional('loadHelp', false, param::BOOLEAN, param::FETCH_POST);
+      $download_lang = param::optional('loadtranslations', false, param::BOOLEAN, param::FETCH_POST);
+    } else {
+      $load_help = self::getSettings(param::BOOLEAN, false, 'help');
+      $download_lang = self::getSettings(param::BOOLEAN, false, 'translations');
+    }
+
     //LOAD help if requested
-    if ((!self::$cli and param::optional('loadHelp', false, param::BOOLEAN, param::FETCH_POST)) or (self::$cli and self::getSettings(param::BOOLEAN, false, 'help'))) {
+    if ($load_help) {
       self::loadHelp();
     }
     // Download language packs and install.
-    if ((!self::$cli and param::optional('loadtranslations', false, param::BOOLEAN, param::FETCH_POST)) or (self::$cli and self::getSettings(param::BOOLEAN, false, 'translations'))) {
+    if ($download_lang) {
       self::download_langpacks();
     }
 
@@ -604,7 +613,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::writeConfigFile();
 
     // Fix help file image paths.
-    if ((!self::$cli and param::optional('loadHelp', false, param::BOOLEAN, param::FETCH_POST)) or (self::$cli and self::getSettings(param::BOOLEAN, false, 'help'))) {
+    if ($load_help) {
       // Set db object in config.
       @$mysqli = new mysqli(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd, self::$cfg_db_name, self::$cfg_db_port);
       if ($mysqli->connect_error == '') {
