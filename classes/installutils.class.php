@@ -521,7 +521,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       self::$cfg_lookup_ldap_bind_password = self::getSettings(param::TEXT, false, 'ldap', 'password');
       self::$cfg_lookup_ldap_user_prefix = self::getSettings(param::TEXT, false, 'ldap', 'prefix');
     }
-    // XML for lookip.
+    // XML for lookup.
     if (!self::$cli) {
       self::$cfg_uselookupXML = param::optional('uselookupXML', null, param::BOOLEAN, param::FETCH_POST);
     } else {
