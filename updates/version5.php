@@ -877,14 +877,6 @@ QUERY;
 
   // End of updates -----------------------------------------------------------------
 
-  // Update composer and dependencies.
-  try {
-    $composer_method = composer_utils::INSTALL_NODEV;
-    composer_utils::setup($composer_method);
-  } catch (Exception $e) {
-      echo "<li class=\"error\">" . $e->getMessage() . "</li>";
-  }
-
   // Update npm and dependencies.
   try {
     $npm_method = npm_utils::INSTALL_NODEV;
