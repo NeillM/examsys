@@ -399,11 +399,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       self::$db_admin_passwd = param::required('mysql_admin_pass', param::TEXT, param::FETCH_POST);
     } else {
       self::$cfg_company = self::getSettings(param::TEXT, true, 'company');
-      self::$cfg_db_host = $args['mysql_db_host'];
-      self::$cfg_db_port = $args['mysql_db_port'];
-      self::$cfg_db_name = $args['mysql_db_name'];
-      self::$db_admin_username = $args['mysql_admin_user'];
-      self::$db_admin_passwd = $args['mysql_admin_pass'];
+      self::$cfg_db_host = param::clean($args['mysql_db_host'], param::TEXT);
+      self::$cfg_db_port = param::clean($$args['mysql_db_port'], param::INT);
+      self::$cfg_db_name = param::clean($$args['mysql_db_name'], param::TEXT);
+      self::$db_admin_username = param::clean($$args['mysql_admin_user'], param::TEXT);
+      self::$db_admin_passwd = param::clean($$args['mysql_admin_pass'], param::TEXT);
     }
 
     self::$cfg_db_charset = 'utf8';
