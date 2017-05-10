@@ -51,6 +51,7 @@ Class InstallUtils {
   public static $cfg_db_password;
   public static $cfg_db_charset;
 
+  public static $cfg_root_path;
   public static $cfg_web_host;
   public static $cfg_rogo_data;
   public static $cfg_db_basename;
@@ -400,10 +401,10 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     } else {
       self::$cfg_company = self::getSettings(param::TEXT, true, 'company');
       self::$cfg_db_host = param::clean($args['mysql_db_host'], param::TEXT);
-      self::$cfg_db_port = param::clean($$args['mysql_db_port'], param::INT);
-      self::$cfg_db_name = param::clean($$args['mysql_db_name'], param::TEXT);
-      self::$db_admin_username = param::clean($$args['mysql_admin_user'], param::TEXT);
-      self::$db_admin_passwd = param::clean($$args['mysql_admin_pass'], param::TEXT);
+      self::$cfg_db_port = param::clean($args['mysql_db_port'], param::INT);
+      self::$cfg_db_name = param::clean($args['mysql_db_name'], param::TEXT);
+      self::$db_admin_username = param::clean($args['mysql_admin_user'], param::TEXT);
+      self::$db_admin_passwd = param::clean($args['mysql_admin_pass'], param::TEXT);
     }
 
     self::$cfg_db_charset = 'utf8';
@@ -612,6 +613,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     //Write out the config file
     self::writeConfigFile();
 
+    // We will need the root path.
+    $configObject->set('cfg_root_path', self::$cfg_root_path);
     // Fix help file image paths.
     if ($load_help) {
       // Set db object in config.
@@ -620,14 +623,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         $mysqli->set_charset(self::$cfg_db_charset);
       }
       $configObject->set_db_object($mysqli);
-      require_once dirname(__DIR__) . '/include/path_functions.inc.php';
-      $cfg_web_root = get_root_path() . '/';
-      if(self::$cli) {
-        $cfg_root_path = self::getSettings(param::TEXT, true, 'server', 'root');
-      } else {
-        $cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_ROOT']), '', $cfg_web_root), '/'), '/');
-      }
-      $configObject->set('cfg_root_path', $cfg_root_path);
       self::correct_staff_path();
       self::correct_student_path();
     }
@@ -1939,7 +1934,10 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
           $errors[$errorcode] = sprintf($string['errors11'], $extension);
         }
     }
- 
+    // Escape before composer update if errors.
+    if (count($errors) > 0) {
+      self::displayError($errors);
+    }
     // Install composer and dependencies.
     try {
       composer_utils::setup(composer_utils::INSTALL_NODEV);
@@ -2104,7 +2102,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
   static function writeConfigFile() {
     global $version, $cfg_encrypt_salt;
-
+    require_once dirname(__DIR__) . '/include/path_functions.inc.php';
     $config = <<<CONFIG
 <?php
 /**
@@ -2117,12 +2115,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 * @package
 */
 
-if (empty(\$root)) \$root = str_replace('/config', '/', str_replace('\\\\', '/', dirname(__FILE__)));
-require \$root . '/include/path_functions.inc.php';
-
 \$rogo_version = '{rogo_version}';
-\$cfg_web_root = get_root_path() . '/';
-\$cfg_root_path = rtrim('/' . trim(str_replace(normalise_path(\$_SERVER['DOCUMENT_ROOT']), '', \$cfg_web_root), '/'), '/');
+\$cfg_web_root = '{cfg_web_root}';
+\$cfg_root_path = '{cfg_root_path}';
 \$cfg_secure_connection = true;    // If true site must be accessed via HTTPS
 \$cfg_page_charset 	   = 'UTF-8';
 \$cfg_company = '{cfg_company}';
@@ -2284,6 +2279,18 @@ if(!isset(\$_SERVER['HTTP_HOST'])) {
 CONFIG;
 
     $config = str_replace('{rogo_version}', $version, $config);
+    $cfg_web_root = get_root_path();
+    // Ensure there is a trailing slash.
+    if (substr($cfg_web_root, -1) !== '/') {
+      $cfg_web_root .= '/';
+    }
+    $config = str_replace('{cfg_web_root}', $cfg_web_root, $config);
+    if (!self::$cli) {
+      self::$cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_ROOT']), '', $cfg_web_root), '/'), '/');
+    } else {
+      self::$cfg_root_path = self::getSettings(param::TEXT, true, 'server', 'root');
+    }
+    $config = str_replace('{cfg_root_path}', self::$cfg_root_path, $config);
     $config = str_replace('{SysAdmin_username}', 'USERNMAE_FOR_DEBUG', $config);
     $config = str_replace('{cfg_web_host}', self::$cfg_web_host, $config);
     $config = str_replace('{cfg_rogo_data}', self::$cfg_rogo_data, $config);

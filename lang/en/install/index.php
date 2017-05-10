@@ -82,7 +82,8 @@ $string['number'] = 'Number';
 $string['install'] = 'Install Rog&#333;';
 $string['installed'] = 'Rog&#333; is now successfully installed.';
 $string['deleteinstall'] = 'For security reasons please delete the install directory.';
-$string['staffhomepage'] = 'Go to staff homepage';
+$string['config'] = 'Configure settings';
+$string['invalidsetting'] = 'Setting %s either not provided or invalid!';
 
 $string['logwarning1'] = 'could not load staff_help.sql, could not install staff help';
 $string['logwarning2'] = 'cannot find staff_help.sql, could not install staff help';
@@ -113,4 +114,5 @@ $string['systeminstallation'] = 'System Installation';
 $string['labsecuritytype'] = "Summative Exam Lab Security";
 $string['IP'] = "IP address";
 $string['hostname'] = "Machine hostname";
+
 ?>
