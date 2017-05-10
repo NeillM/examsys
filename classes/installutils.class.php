@@ -476,11 +476,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
     //Authentication
     if (!self::$cli) {
-      $lti = !is_null(param::optional('useLti', null, param::ALPHA, param::FETCH_POST));
-      $internal = !is_null(param::optional('useInternal', null, param::ALPHA, param::FETCH_POST));
-      $guest = !is_null(param::optional('useGuest', null, param::ALPHA, param::FETCH_POST));
-      $impersonation = !is_null(param::optional('useImpersonation', null, param::ALPHA, param::FETCH_POST));
-      $ldap = !is_null(param::optional('useLdap', null, param::ALPHA, param::FETCH_POST));
+      $lti = param::optional('useLti', false, param::BOOLEAN, param::FETCH_POST);
+      $internal = param::optional('useInternal', false, param::BOOLEAN, param::FETCH_POST);
+      $guest = param::optional('useGuest', false, param::BOOLEAN, param::FETCH_POST);
+      $impersonation = param::optional('useImpersonation', false, param::BOOLEAN, param::FETCH_POST);
+      $ldap = param::optional('useLdap', false, param::BOOLEAN, param::FETCH_POST);
     } else {
       $lti = self::getSettings(param::BOOLEAN, false, 'authentication', 'lti');
       $internal = self::getSettings(param::BOOLEAN, false, 'authentication', 'internaldb');
@@ -617,11 +617,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::updateSysUpdates();
     
     //LOAD help if requested
-    if ((!self::$cli and !is_null(param::optional('loadHelp', null, param::ALPHA, param::FETCH_POST))) or (self::$cli and self::getSettings(param::BOOLEAN, false, 'help'))) {
+    if ((!self::$cli and param::optional('loadHelp', false, param::BOOLEAN, param::FETCH_POST)) or (self::$cli and self::getSettings(param::BOOLEAN, false, 'help'))) {
       self::loadHelp();
     }
     // Download language packs and install.
-    if ((!self::$cli and !is_null(param::optional('loadtranslations', null, param::ALPHA, param::FETCH_POST))) or (self::$cli and self::getSettings(param::BOOLEAN, false, 'translations'))) {
+    if ((!self::$cli and param::optional('loadtranslations', false, param::BOOLEAN, param::FETCH_POST)) or (self::$cli and self::getSettings(param::BOOLEAN, false, 'translations'))) {
       self::download_langpacks();
     }
 
@@ -629,7 +629,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::writeConfigFile();
 
     // Fix help file image paths.
-    if ((!self::$cli and !is_null(param::optional('loadHelp', null, param::ALPHA, param::FETCH_POST))) or (self::$cli and self::getSettings(param::BOOLEAN, false, 'help'))) {
+    if ((!self::$cli and param::optional('loadHelp', false, param::BOOLEAN, param::FETCH_POST)) or (self::$cli and self::getSettings(param::BOOLEAN, false, 'help'))) {
       // Set db object in config.
       @$mysqli = new mysqli(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd, self::$cfg_db_name, self::$cfg_db_port);
       if ($mysqli->connect_error == '') {
