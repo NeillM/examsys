@@ -5,8 +5,8 @@ if ($updater_utils->check_version("6.4.0")) {
         // New configs.
         $configObject = Config::get_instance();
         $configObject->set_db_object($mysqli);
-        $configObject->set_setting('logo_main', $configObject->get('cfg_root_path') . '/artwork/logo.png', 'url');
-        $configObject->set_setting('logo_email', $server . '/artwork/logo_alt.png', 'url');
+        $configObject->set_setting('misc_logo_main', $configObject->get('cfg_root_path') . '/artwork/logo.png', 'url');
+        $configObject->set_setting('misc_logo_email', $configObject->get('cfg_root_path') . '/artwork/alt_logo.png', 'url');
         $updater_utils->record_update('rogo-2160');
     }
 }

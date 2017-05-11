@@ -11,7 +11,7 @@
   } else {
     // Full-fat
     $top_table_html = '<table cellpadding="4" cellspacing="0" border="0" style="width:100%; background-color:#5590CF">';
-    $logo_path = $configObject->get_setting('core', 'logo_main');
+    $logo_path = $configObject->get_setting('core', 'misc_logo_main');
     $logo_html = '<td width="160" style="vertical_align:bottom"><img src="' . $logo_path . '" width="160" height="67" alt="Logo" /></td></tr>';
     $bottom_html = '<br /><table cellpadding="2" cellspacing="0" border="0" style="width:100%; background-color:#5590CF">';
   }

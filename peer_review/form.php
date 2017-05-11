@@ -366,7 +366,7 @@ if (isset($_POST['submit'] )) {
 
     echo "</select>\n";
   }
-  $logo_path = $configObject->get_setting('core', 'logo_main');
+  $logo_path = $configObject->get_setting('core', 'misc_logo_main');
   echo '</div></td><td width="160"><img src="' . $logo_path . '" width="160" height="67" alt="Logo" /></td></tr>';
   echo '</table>';
 
