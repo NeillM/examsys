@@ -1692,12 +1692,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   public static function createDirectories() {
     global $string;
     $errors = array();
-    //theme
-    $themedirectory = rogo_directory::get_directory('theme');
-    $themedirectory->create();
-    if (!$themedirectory->check_permissions()) {
-      $errors['102'] = sprintf($string['errors3'], $themedirectory->location());
-    }
     //media
     $mediadirectory = rogo_directory::get_directory('media');
     $mediadirectory->create();
@@ -1741,6 +1735,12 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $staffhelp->copy_from_default();
     if (!$staffhelp->check_permissions()) {
       $errors['108'] = sprintf($string['errors3'], $staffhelp->location());
+    }
+    //theme
+    $themedirectory = rogo_directory::get_directory('theme');
+    $themedirectory->create();
+    if (!$themedirectory->check_permissions()) {
+      $errors['109'] = sprintf($string['errors3'], $themedirectory->location());
     }
     if (count($errors) > 0) {
       self::displayError($errors);
