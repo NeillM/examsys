@@ -366,7 +366,8 @@ if (isset($_POST['submit'] )) {
 
     echo "</select>\n";
   }
-  $logo_path = $configObject->get_setting('core', 'misc_logo_main');
+  $themedirectory = rogo_directory::get_directory('theme');
+  $logo_path = $themedirectory->url($configObject->get_setting('core', 'misc_logo_main'));
   echo '</div></td><td width="160"><img src="' . $logo_path . '" width="160" height="67" alt="Logo" /></td></tr>';
   echo '</table>';
 

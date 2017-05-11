@@ -157,7 +157,8 @@ $result->close();
 echo "<form autocomplete=\"off\">\n";
 
 echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%; background-color:#5590CF">';
-$logo_path = $configObject->get_setting('core', 'misc_logo_main');
+$themedirectory = rogo_directory::get_directory('theme');
+$logo_path = $themedirectory->url($configObject->get_setting('core', 'misc_logo_main'));
 echo '<tr><td><div class="paper">' . $paper_title . '</div><div class="group"><strong>' . $string['student'] . '</strong> ' . $student_title . ' ' . demo_replace($student_surname, $demo) . ', ' . demo_replace($student_first_names, $demo) . '<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $string['group'] . '</strong> ' . $group . '</div></td><td width="160"><img src="' . $logo_path . '" width="160" height="67" alt="Logo" /></td></tr>';
 echo '</table>';
 
