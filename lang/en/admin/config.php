@@ -45,5 +45,5 @@ $string['paper_marks_negative'] = 'Drop down options for negative marks availabl
 $string['paper_marks_partial'] = 'Drop down options for partial marks available option';
 $string['paper_mathjax'] = 'Enable/Disable mathjax rendering in papers';
 $string['paper_editor_supports_mathjax'] = 'List of editors that support mathjax preview mode in question editing';
-
-
+$string['logo_main'] = 'Logo used in Rog&#333;.';
+$string['logo_email'] = 'Logo used in emails.';

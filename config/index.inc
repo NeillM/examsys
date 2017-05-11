@@ -1,3 +1,4 @@
 <?php
-  $logo_html = '<img src="../config/logo.png" width="167" height="70" alt="Logo" border="0" />';
+  $logo_path = $configObject->get_setting('core', 'logo_main');
+  $logo_html = '<img src="' . $logo_path . '" width="167" height="70" alt="Logo" border="0" />';
 ?>
