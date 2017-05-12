@@ -30,4 +30,8 @@ class theme extends rogo_directory {
     // Cache for 24 hours.
     return 86400;
   }
+
+  public function authentication_required() {
+    return false;
+  }
 }
