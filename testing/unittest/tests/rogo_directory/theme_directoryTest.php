@@ -18,7 +18,7 @@ use testing\unittest\DirectoryUnitTest;
 use org\bovigo\vfs\vfsStreamWrapper;
 
 /**
- * Test media directory class.
+ * Test theme directory class.
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
