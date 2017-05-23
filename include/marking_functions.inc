@@ -699,6 +699,9 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
           $answer_list = explode(',', $blank_details[$i]);
 
           $answer_list[0] = str_replace("[/blank]", '', $answer_list[0]);
+          // Ensure that the answers are filtered to the same level as the user's answers.
+          // This will ensure that they can match correctly.
+          $answer_list = param::clean_array($answer_list, param::TEXT);
           if ($display_method == 'textboxes') {
             if (!is_null($blank_answer) and $blank_answer != 'u' and $blank_answer != '') {
               $have_answer = true;
