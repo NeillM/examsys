@@ -20,6 +20,7 @@ Feature: Cleaning variables
       | Test > text | Test  text |
       | Café | Café |
       | æìřčžšíýúáÚůú | æìřčžšíýúáÚůú |
+      | n < 20 and x > 10 boo | n   boo |
 
   Scenario Outline: Verifying alpha numeric input
     Given I clean "<input>" as "ALPHANUM"
@@ -37,6 +38,8 @@ Feature: Cleaning variables
       | Test > text | Test  text |
       | Café | Café |
       | æìřčžšíýúáÚůú | æìřčžšíýúáÚůú |
+      | n < 20 and x > 10 | n  10 |
+      | n > 20 and x< 10 | n  20 and x |
 
   Scenario Outline: Verifying boolean input
     Given I clean "<input>" as "BOOLEAN"
@@ -106,6 +109,7 @@ Feature: Cleaning variables
       | <div><p>Test</div></p> | <div><p>Test</p></div> |
       | Test<iframe src='http://example.com'></iframe> | Test |
       | !£$%^&*()_-=+{}[]@#~;:?/.,\ | !£$%^&amp;*()_-=+{}[]@#~;:?/.,\ |
+      | n < 20 and x > 10 | n &lt; 20 and x &gt; 10 |
 
   Scenario Outline: Verifying integer input
     Given I clean "<input>" as "INT"
@@ -173,6 +177,7 @@ Feature: Cleaning variables
       | 017 | 017 |
       | Café | Café |
       | æìřčžšíýúáÚůú | æìřčžšíýúáÚůú |
+      | n < 20 and x > 10 | n < 20 and x > 10 |
 
   Scenario Outline: Verifying url input
     Given I clean "<input>" as "URL"
