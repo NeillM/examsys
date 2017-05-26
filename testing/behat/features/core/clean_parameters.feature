@@ -97,6 +97,7 @@ Feature: Cleaning variables
       | 0xF | 0xF |
       | 128.243.48.6 | 128.243.48.6 |
       | Test > text | Test &gt; text |
+      | Test < text | Test &lt; text |
       | Café | Café |
       | æìřčžšíýúáÚůú | æìřčžšíýúáÚůú |
       | <p>Test<img src=j&#X41vascript:alert('test2')></p> | <p>Test</p> |
@@ -104,6 +105,7 @@ Feature: Cleaning variables
       | <p>Test | <p>Test</p> |
       | <div><p>Test</div></p> | <div><p>Test</p></div> |
       | Test<iframe src='http://example.com'></iframe> | Test |
+      | !£$%^&*()_-=+{}[]@#~;:?/.,\ | !£$%^&amp;*()_-=+{}[]@#~;:?/.,\ |
 
   Scenario Outline: Verifying integer input
     Given I clean "<input>" as "INT"
@@ -145,6 +147,7 @@ Feature: Cleaning variables
       | Test > text | Test > text |
       | Test <script><!-- alert(\'Test\') --></script> text | Test <script><!-- alert(\'Test\') --></script> text |
       | http://example.com | http://example.com |
+      | !£$%^&*()_-=+{}[]@#~;:?/.,\ | !£$%^&*()_-=+{}[]@#~;:?/.,\ |
       | 0 | 0 |
       | 0xF | 0xF |
       | 128.243.48.6 | 128.243.48.6 |
@@ -161,7 +164,7 @@ Feature: Cleaning variables
       | <p style='color: red'>Test text</p> | Test text |
       | Test > text | Test > text |
       | Test < text | Test < text |
-      | Test &gt; text | Test &gt; text |
+      | !£$%^&*()_-=+{}[]@#~;:?/.,\ | !£$%^&*()_-=+{}[]@#~;:?/.,\ |
       | Test <script><!-- alert(\'Test\') --></script> text | Test  text |
       | http://example.com | http://example.com |
       | 0 | 0 |
