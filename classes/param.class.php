@@ -153,13 +153,6 @@ class param {
         );
         break;
       case self::RAW:
-        $filter = FILTER_UNSAFE_RAW;
-        $options = array(
-          'options' => array(
-            'default' => null,
-          ),
-        );
-        break;
       case self::TEXT:
         $filter = FILTER_UNSAFE_RAW;
         $options = array(
@@ -207,7 +200,7 @@ class param {
         $return = self::purify_html($return);
         break;
       case self::TEXT:
-        $return = self::strip_html($return);
+        $return = strip_tags($return);
         break;
       case self::LOCAL_URL:
         $rogo_url = Config::get_instance()->get('cfg_web_host');
@@ -262,22 +255,6 @@ class param {
     // First we setup the purifier.
     $config = HTMLPurifier_Config::createDefault();
     $purifier = new HTMLPurifier($config);
-    // Then we clean the text and return it.
-    return $purifier->purify($html);
-  }
-
-  /**
-   * Strips out all html/script tags.
-   *
-   * @param string $html
-   * @return string
-   */
-  protected static function strip_html($html) {
-    // We use the html purifier library for this (http://htmlpurifier.org/)
-    // First we setup the purifier.
-    $config = HTMLPurifier_Config::createDefault();
-    $purifier = new HTMLPurifier($config);
-    $config->set('HTML.Allowed', ''); // Allow Nothing
     // Then we clean the text and return it.
     return $purifier->purify($html);
   }
