@@ -220,7 +220,7 @@ class param {
   }
 
   /**
-   * Recurcively ensures that all the values in an array are of the specified type.
+   * Recursively ensures that all the values in an array are of the specified type.
    *
    * @param array $value The value to clean
    * @param int $type The type of value the value should be.
