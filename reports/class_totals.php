@@ -70,9 +70,9 @@ $user_no      = $report->get_user_no();
 
 // Check for unmarked calculation questions against the cohort subset selected by the user.
 $unmarked = $propertyObj->unmarked_enhancedcalc($studentsonly);
-
-if (($paper_type == '2' and $unmarked and !$propertyObj->is_active()) or ($paper_type == '1' and $unmarked)) {
-// Only mark calculation questions when the exam is not active.
+$nonsummative_papertypes = array ('0', '1');
+// If a summative exam (2) only mark if exam is not active. If Formative or Progressive (0,1) always mark.
+if (($paper_type == '2' and $unmarked and !$propertyObj->is_active()) or (in_array($paper_type,$nonsummative_papertypes) and $unmarked)) {
 ?>
 <!DOCTYPE html>
 <html>
