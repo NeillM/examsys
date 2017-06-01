@@ -956,6 +956,8 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             $blank_details[$blank_count] = substr($blank_details[$blank_count], (strpos($blank_details[$blank_count],']') + 1));
             $answer_options = explode('[/blank]',$blank_details[$blank_count]);
             $answer_list = explode(',',$answer_options[0]);
+            // Ensure that the correct answer is filtered in the same way as the user's answer.
+            $answer_list = param::clean_array($answer_list, param::TEXT);
             if (isset($blank_user_answers[$part_id - 1]) and $blank_user_answers[$part_id - 1] == 'u' and $screen_pre_submitted == 1) {
               echo "<select name=\"q" . $question_no . "_" . $part_id . "\" class=\"unans\">\n";
               $unanswered = true;
