@@ -190,6 +190,5 @@ config/phpunit.xml
 selenium-server-standalone-*.jar
 web.config
 node_modules/
-crowdin.yaml
-crowdin-cli.jar
+crowdin.yml
 config/campuses.inc
