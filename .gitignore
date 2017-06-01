@@ -191,5 +191,4 @@ selenium-server-standalone-*.jar
 web.config
 node_modules/
 crowdin.yml
-crowdin-cli.jar
 config/campuses.inc
