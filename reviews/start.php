@@ -489,8 +489,8 @@ var lang = {
   });
 </script>
 <?php
+  $render = new render($configObject);
   if($configObject->get_setting('core', 'paper_mathjax')) {
-    $render = new render($configObject);
     $render->render(null, null, 'mathjax.html');
   }
   if($propertyObj->get_calculator()) {
