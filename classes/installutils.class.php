@@ -637,7 +637,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
     // Install npm and dependencies.
     try {
-      $npm_method = npm_utils::INSTALL_NODEV;
+      if ($configObject->get('cfg_dev_system')) {
+        $npm_method = npm_utils::INSTALL;
+      } else {
+        $npm_method = npm_utils::INSTALL_NODEV;
+      }
       npm_utils::setup($npm_method);
     } catch (Exception $e) {
       // Non fatal warning.
@@ -1948,7 +1952,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
     // Install composer and dependencies.
     try {
-      composer_utils::setup(composer_utils::INSTALL_NODEV);
+      if ($configObject->get('cfg_dev_system')) {
+        composer_utils::setup(composer_utils::INSTALL);
+      } else {
+        composer_utils::setup(composer_utils::INSTALL_NODEV);
+      }
     } catch (Exception $e) {
       $errorcode += 1;
       $errors[$errorcode] = $e->getMessage();

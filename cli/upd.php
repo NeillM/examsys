@@ -221,7 +221,11 @@ try {
 
   // Update npm and dependencies.
   if ($update_npm) {
-    $npm_method = npm_utils::INSTALL_NODEV;
+    if ($configObject->get('cfg_dev_system')) {
+      $npm_method = npm_utils::INSTALL;
+    } else {
+      $npm_method = npm_utils::INSTALL_NODEV;
+    }
     npm_utils::setup($npm_method);
   }
 

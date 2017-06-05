@@ -879,7 +879,11 @@ QUERY;
 
   // Update npm and dependencies.
   try {
-    $npm_method = npm_utils::INSTALL_NODEV;
+    if ($configObject->get('cfg_dev_system')) {
+      $npm_method = npm_utils::INSTALL;
+    } else {
+      $npm_method = npm_utils::INSTALL_NODEV;
+    }
     npm_utils::setup($npm_method);
   } catch (Exception $e) {
       echo "<li class=\"error\">" . $e->getMessage() . "</li>";
