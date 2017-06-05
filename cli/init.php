@@ -113,10 +113,10 @@ try {
   InstallUtils::processForm($args);
   if ($dev_mode) {
     // Save dev mode setting in config file.
-    $updater_utils = new UpdaterUtils($mysqli, $databasename);
-    $new_lines = array("\$cfg_dev_system = true;\n");
+    $updater_utils = new UpdaterUtils($configObject->db, $databasename);
+    $new_lines = array("  \$cfg_dev_system = true;\n");
     $target_line = '$file_config_override';
-    $updater_utils->add_line($string, '$cfg_dev_system', $new_lines, 181, $cfg_web_root, $target_line);
+    $updater_utils->add_line($string, '$cfg_dev_system', $new_lines, 181, $cfg_web_root, $target_line, 1, true);
   }
 } catch (Exception $e) {
   cli_utils::prompt($e->getMessage());
