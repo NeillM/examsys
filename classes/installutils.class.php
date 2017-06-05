@@ -499,7 +499,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       self::$cfg_ldap_user_prefix = param::optional('ldap_user_prefix', null, param::TEXT, param::FETCH_POST);
     } else {
       self::$cfg_ldap_server = self::getSettings(param::TEXT, false, 'ldap', 'server');
-      self::$cfg_ldap_search_dn = self::getSettings(param::TEXT, false, 'ldap', 'serachdn');
+      self::$cfg_ldap_search_dn = self::getSettings(param::TEXT, false, 'ldap', 'searchdn');
       self::$cfg_ldap_bind_rdn = self::getSettings(param::TEXT, false, 'ldap', 'username');
       self::$cfg_ldap_bind_password = self::getSettings(param::TEXT, false, 'ldap', 'password');
       self::$cfg_ldap_user_prefix = self::getSettings(param::TEXT, false, 'ldap', 'prefix');
@@ -516,7 +516,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     } else {
       self::$cfg_uselookupLdap = self::getSettings(param::BOOLEAN, false, 'lookup', 'ldap');
       self::$cfg_lookup_ldap_server = self::getSettings(param::TEXT, false, 'ldap', 'server');
-      self::$cfg_lookup_ldap_search_dn = self::getSettings(param::TEXT, false, 'ldap', 'serachdn');
+      self::$cfg_lookup_ldap_search_dn = self::getSettings(param::TEXT, false, 'ldap', 'searchdn');
       self::$cfg_lookup_ldap_bind_rdn = self::getSettings(param::TEXT, false, 'ldap', 'username');
       self::$cfg_lookup_ldap_bind_password = self::getSettings(param::TEXT, false, 'ldap', 'password');
       self::$cfg_lookup_ldap_user_prefix = self::getSettings(param::TEXT, false, 'ldap', 'prefix');
