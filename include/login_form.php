@@ -21,7 +21,7 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
-
+require_once dirname(__DIR__) . '/include/path_functions.inc.php';
 $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
 $cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_ROOT']), '', $root), '/'), '/');
 ?>
