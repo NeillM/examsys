@@ -967,6 +967,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $configObject->set_setting('paper_marks_partial', array_merge(range(0, 1, 0.1), range(2, 5)), 'csv');
     $configObject->set_setting('paper_mathjax', 1, 'boolean');
     $configObject->set_setting('paper_editor_supports_mathjax',array("plain"), 'csv');
+    $configObject->set_setting('misc_logo_main', 'logo.png', 'string');
+    $configObject->set_setting('misc_logo_email', 'alt_logo.png', 'string');
     self::createDefaultUsers();
     self::createDefaultFacultiesSchoolsModules();
     self::createQuestionStatuses();
@@ -1850,6 +1852,12 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $staffhelp->copy_from_default();
     if (!$staffhelp->check_permissions()) {
       $errors['108'] = sprintf($string['errors3'], $staffhelp->location());
+    }
+    //theme
+    $themedirectory = rogo_directory::get_directory('theme');
+    $themedirectory->create();
+    if (!$themedirectory->check_permissions()) {
+      $errors['109'] = sprintf($string['errors3'], $themedirectory->location());
     }
     if (count($errors) > 0) {
       self::displayError($errors);

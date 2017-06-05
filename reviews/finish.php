@@ -94,7 +94,9 @@ function close_window() {
   <form method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>?id=<?php echo $_GET['id'] ?>" autocomplete="off">
 <?php
   echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%; background-color:#5590CF">';
-  echo '<tr><td><div class="paper">' . $propertyObj->get_paper_title() . '</div><div style="color:white; font-weight:bold">' . $string['reviewcomplete'] . '</div></td><td align="center" class="raised_tbl" width="50"><img src="../config/logo.png" width="160" height="67" alt="University Logo" /></td></tr>';
+  $themedirectory = rogo_directory::get_directory('theme');
+  $logo_path = $themedirectory->url($configObject->get_setting('core', 'misc_logo_main'));
+  echo '<tr><td><div class="paper">' . $propertyObj->get_paper_title() . '</div><div style="color:white; font-weight:bold">' . $string['reviewcomplete'] . '</div></td><td align="center" class="raised_tbl" width="50"><img src="' . $logo_path . '" width="160" height="67" alt="University Logo" /></td></tr>';
   echo '</table>';
 
   $configObject = Config::get_instance();
