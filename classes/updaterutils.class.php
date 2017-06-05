@@ -380,8 +380,9 @@ Class UpdaterUtils {
    * @param string $cfg_web_root 	- Path to the root of Rogo.
    * @param string $target_line 	- A string to find on a target line to act as a location for the new lines
    * @param int $offset 					- A plus or negative offset from $target_line to insert the new lines
+   * @param boolean $cli - true if we running this on the command line
    */
-  public function add_line($string, $search, $new_lines, $default_line, $cfg_web_root, $target_line = '', $offset = 1) {
+  public function add_line($string, $search, $new_lines, $default_line, $cfg_web_root, $target_line = '', $offset = 1, $cli = false) {
     $file_path = $cfg_web_root . 'config/config.inc.php';
     $cfg = file($file_path);
     $found = false;
@@ -400,14 +401,18 @@ Class UpdaterUtils {
       array_splice($cfg, $default_line, 0, $new_lines);
 
       if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
-        echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+        if (!$cli) {
+          echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+        }
       }
-      echo "<li>" . sprintf($string['addinglines'], $file_path) . "<br />\n";
-      foreach ($new_lines as $new_line) {
-        echo highlight_string($new_line, true) . "\n";
+      if (!$cli) {
+        echo "<li>" . sprintf($string['addinglines'], $file_path) . "<br />\n";
+        foreach ($new_lines as $new_line) {
+          echo highlight_string($new_line, true) . "\n";
+        }
+        echo "</li>\n";
+        ob_flush();
       }
-      echo "</li>\n";
-      ob_flush();
       flush();
     }
   }
