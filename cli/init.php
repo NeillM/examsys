@@ -93,6 +93,7 @@ try {
   InstallUtils::configFile();
   $configObject = Config::get_instance();
   if ($dev_mode) {
+    // Enable dev mode.
     $configObject->set('cfg_dev_system', true);
   }
   $version = $configObject->getxml('version');
@@ -110,6 +111,13 @@ try {
     'mysql_db_name' => $databasename
   );
   InstallUtils::processForm($args);
+  if ($dev_mode) {
+    // Save dev mode setting in config file.
+    $updater_utils = new UpdaterUtils($mysqli, $databasename);
+    $new_lines = array("\$cfg_dev_system = true;\n");
+    $target_line = '$file_config_override';
+    $updater_utils->add_line($string, '$cfg_dev_system', $new_lines, 181, $cfg_web_root, $target_line);
+  }
 } catch (Exception $e) {
   cli_utils::prompt($e->getMessage());
   cli_utils::prompt($error);
