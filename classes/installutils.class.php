@@ -1956,7 +1956,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
     // Install composer and dependencies.
     try {
-      composer_utils::setup(composer_utils::INSTALL_NODEV);
+      if (!InstallUtils::$behat_install and !InstallUtils::$phpunit_install) {
+        composer_utils::setup(composer_utils::INSTALL_NODEV);
+      }
     } catch (Exception $e) {
       $errorcode += 1;
       $errors[$errorcode] = $e->getMessage();
