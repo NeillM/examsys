@@ -221,10 +221,8 @@ try {
 
   // Update npm and dependencies.
   if ($update_npm) {
-    if (!InstallUtils::$behat_install and !InstallUtils::$phpunit_install) {
-      $npm_method = npm_utils::INSTALL_NODEV;
-      npm_utils::setup($npm_method);
-    }
+    $npm_method = npm_utils::INSTALL_NODEV;
+    npm_utils::setup($npm_method);
   }
 
   // Final housekeeping activities - put all updates above this line
