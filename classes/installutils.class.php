@@ -637,12 +637,10 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
     // Install npm and dependencies.
     try {
-      if ($configObject->get('cfg_dev_system')) {
-        $npm_method = npm_utils::INSTALL;
-      } else {
+      if (!InstallUtils::$behat_install and !InstallUtils::$phpunit_install) {
         $npm_method = npm_utils::INSTALL_NODEV;
+        npm_utils::setup($npm_method);
       }
-      npm_utils::setup($npm_method);
     } catch (Exception $e) {
       // Non fatal warning.
       if (!self::$cli) {
@@ -1952,9 +1950,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
     // Install composer and dependencies.
     try {
-      if ($configObject->get('cfg_dev_system')) {
-        composer_utils::setup(composer_utils::INSTALL);
-      } else {
+      if (!InstallUtils::$behat_install and !InstallUtils::$phpunit_install) {
         composer_utils::setup(composer_utils::INSTALL_NODEV);
       }
     } catch (Exception $e) {
