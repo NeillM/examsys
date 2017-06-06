@@ -49,7 +49,7 @@ require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARAT
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'timezones.php';
 
 // Lets look to see what arguments have been passed.
-$options = 'hu:p:s:t:n:d::';
+$options = 'hu:p:s:t:n:';
 $longoptions = array(
   'help',
 );
@@ -62,8 +62,7 @@ $help = 'Rogo initialisation script options'
         . PHP_EOL . PHP_EOL . "-p, --passwd, \tDatabase password"
         . PHP_EOL . PHP_EOL . "-s, --host, \tDatabase host"
         . PHP_EOL . PHP_EOL . "-t, --port, \tDatabase port"
-        . PHP_EOL . PHP_EOL . "-n, --name, \tDatabase name"
-        . PHP_EOL . PHP_EOL . "-d, --dev_mode, \tDeveloper mode (default: Off)";
+        . PHP_EOL . PHP_EOL . "-n, --name, \tDatabase name";
 
 if (isset($optionslist['h']) or isset($optionslist['help'])) {
   // Display some help information.
@@ -76,11 +75,7 @@ $databasepassword = $optionslist['p'];
 $databasehost = $optionslist['s'];
 $databaseport = $optionslist['t'];
 $databasename = $optionslist['n'];
-if (isset($optionslist['d'])) {
-  $dev_mode = true;
-} else {
-  $dev_mode = false;  
-}
+
 // Ensure any caches are cleared.
 if (function_exists('opcache_reset')) {
     opcache_reset();
@@ -92,10 +87,6 @@ try {
   InstallUtils::checkDirPermissionsPre();
   InstallUtils::configFile();
   $configObject = Config::get_instance();
-  if ($dev_mode) {
-    // Enable dev mode.
-    $configObject->set('cfg_dev_system', true);
-  }
   $version = $configObject->getxml('version');
   // Load an verifiy settings.xml
   InstallUtils::loadSettings();
@@ -111,13 +102,6 @@ try {
     'mysql_db_name' => $databasename
   );
   InstallUtils::processForm($args);
-  if ($dev_mode) {
-    // Save dev mode setting in config file.
-    $updater_utils = new UpdaterUtils($configObject->db, $databasename);
-    $new_lines = array("  \$cfg_dev_system = true;\n");
-    $target_line = '$file_config_override';
-    $updater_utils->add_line($string, '$cfg_dev_system', $new_lines, 181, $cfg_web_root, $target_line, 1, true);
-  }
 } catch (Exception $e) {
   cli_utils::prompt($e->getMessage());
   cli_utils::prompt($error);

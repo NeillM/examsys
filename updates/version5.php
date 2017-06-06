@@ -879,12 +879,10 @@ QUERY;
 
   // Update npm and dependencies.
   try {
-    if ($configObject->get('cfg_dev_system')) {
-      $npm_method = npm_utils::INSTALL;
-    } else {
+    if (!InstallUtils::$behat_install and !InstallUtils::$phpunit_install) {
       $npm_method = npm_utils::INSTALL_NODEV;
+      npm_utils::setup($npm_method);
     }
-    npm_utils::setup($npm_method);
   } catch (Exception $e) {
       echo "<li class=\"error\">" . $e->getMessage() . "</li>";
   }
