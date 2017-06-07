@@ -532,7 +532,7 @@ class assessmentmanagementtest extends unittestdatabase {
         // Assesment 2 - Check title / labs have not been changed in the db.
         // Assessment 3 - Check labs are null in the db.
         $querytable = $this->getConnection()->createQueryTable('properties', 'SELECT property_id, paper_title, start_date, end_date, exam_duration,
-            calendar_year, timezone, paper_ownerID, labs, paper_type, externalid FROM properties');
+            calendar_year, timezone, paper_ownerID, labs, paper_type, externalid, externalsys FROM properties');
         $expectedtable = $this->get_expected_data_set('updateassessment')->getTable("properties");  
         $this->assertTablesEqual($expectedtable, $querytable); 
     }

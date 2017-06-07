@@ -52,7 +52,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
         $request = 'modulemanagement';
         $response = 'moduleManagementEnrolResponse';
         $operations = array('enrol', 'unenrol');
-        $fields = array('userid', 'attempt', 'moduleid', 'session', 'studentid', 'moduleextid');
+        $fields = array('userid', 'attempt', 'moduleid', 'session', 'studentid', 'moduleextid', 'moduleextsys');
         $xsd = 'enrolrequest';
         process($request, $operations, $fields, $response, $oauth, $api, $langpack, $render, $xsd, $mysqli);
     });
@@ -152,8 +152,12 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
                 } else {
                     $templatename = 'module';
                 }
+                $external = new \external_systems();
+                // What external system is the client mapped to.
+                $user_id = $oauth->get_client_user($client_id);
+                $extsys = $external->get_mapped_externalsystem($user_id);
                 // Process the request.
-                $request = $gradebook->get($filtername, $filterid);
+                $request = $gradebook->get($filtername, $filterid, $extsys);
                 $response = $request[1];
                 if ($request[0] == 'OK') {
                     $template = 'api/' . $templatename . '_gradebook.xml';

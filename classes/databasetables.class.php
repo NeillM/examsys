@@ -1605,6 +1605,25 @@ $this->tableList['plugins'] = <<<QUERY
             PRIMARY KEY (`component`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
+
+$this->tableList['external_systems'] = <<<QUERY
+        CREATE TABLE external_systems (
+            `id` int(8) NOT NULL AUTO_INCREMENT,
+            `name` varchar(255) NOT NULL,
+            `type` varchar(30) NOT NULL,
+            PRIMARY KEY (`id`),
+            UNIQUE INDEX `name_idx` (`name`)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
+
+$this->tableList['external_systems_mapping'] = <<<QUERY
+        CREATE TABLE external_systems_mapping (
+            `user_id` int(10) UNSIGNED NOT NULL,
+            `ext_id` int(8) NOT NULL,
+            PRIMARY KEY (`user_id`),
+            UNIQUE INDEX `user_id_idx` (`user_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
+QUERY;
   }
   
   function next() {

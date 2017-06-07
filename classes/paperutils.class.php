@@ -905,12 +905,13 @@ Class PaperUtils {
   /**
    * Get internal rogo properties id from external id
    * @param string $externalid external system id
+   * @param string $externalsys external system source
    * @param mysqli $db db connection
    * @return integer|bool rogo id or false on error
    */
-  static public function get_id_from_externalid($externalid, $db) {
-    $result = $db->prepare("SELECT property_id FROM properties WHERE externalid = ? AND deleted IS NULL");
-    $result->bind_param('s', $externalid);
+  static public function get_id_from_externalid($externalid, $externalsys, $db) {
+    $result = $db->prepare("SELECT property_id FROM properties WHERE externalid = ? AND externalsys = ? AND deleted IS NULL");
+    $result->bind_param('ss', $externalid, $externalsys);
     $result->execute();
     $result->store_result();
     $result->bind_result($id);

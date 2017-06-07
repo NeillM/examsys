@@ -80,8 +80,14 @@ class modulemanagement extends \api\abstractmanagement {
             if (!empty($params['moduleid'])) {
                 $modid = $params['moduleid'];
             } elseif (!empty($params['moduleextid'])) {
+                $external = new \external_systems();
+                // What external system is the client mapped to.
+                if (empty($params['externalsys'])) {
+                    $params['externalsys'] = null;
+                }
+                $params['moduleextsys'] = $this->get_external_system($userid, $params['externalsys']);
                 // Try using external system id to enrol.
-                $modid = \module_utils::get_id_from_externalid($params['moduleextid'], $this->db);
+                $modid = \module_utils::get_id_from_externalid($params['moduleextid'], $params['moduleextsys'], $this->db);
                 if ($modid === false) {
                     $modid = '';
                 }
@@ -127,8 +133,14 @@ class modulemanagement extends \api\abstractmanagement {
             if (!empty($params['moduleid'])) {
                 $modid = $params['moduleid'];
             } elseif (!empty($params['moduleextid'])) {
+                $external = new \external_systems();
+                // What external system is the client mapped to.
+                if (empty($params['externalsys'])) {
+                    $params['externalsys'] = null;
+                }
+                $params['moduleextsys'] = $this->get_external_system($userid, $params['externalsys']);
                 // Try using external system id to enrol.
-                $modid = \module_utils::get_id_from_externalid($params['moduleextid'], $this->db);
+                $modid = \module_utils::get_id_from_externalid($params['moduleextid'], $params['moduleextsys'], $this->db);
                 if ($modid === false) {
                     $modid = '';
                 }
@@ -168,9 +180,17 @@ class modulemanagement extends \api\abstractmanagement {
         $strings = $langpack->get_strings($this->langcomponent, array('module_not_created', 'module_already_exists', 'faculty_not_supplied', 'school_not_supplied', 'external_school_invalid'));
         $faculty = true;
         $schoolid = false;
+        if (empty($params['sms'])) {
+            $params['sms'] = null;
+        }
+        if (isset($params['externalid'])) {
+            $external = new \external_systems();
+            // What external system is the client mapped to.
+            $params['sms'] = $this->get_external_system($userid, $params['sms']);
+        }
         if (!empty($params['schoolextid'])) {
             // Get school id if school external id provided.
-            $schoolid = \SchoolUtils::get_schoolid_from_externalid($params['schoolextid'], $this->db);
+            $schoolid = \SchoolUtils::get_schoolid_from_externalid($params['schoolextid'], $params['sms'], $this->db);
             if (!$schoolid) {
                 $data = array('statuscode' => $this->statuscodes['MODULE_SCHOOL_EXTID_INVALID'], 'status' => $strings['external_school_invalid'], 'id' => null, 'externalid' => null);
                 return $this->get_response($data, 'create', $params['nodeid']);
@@ -189,7 +209,7 @@ class modulemanagement extends \api\abstractmanagement {
         // Check if module externalid in use.
         $modextidinuse = false;
         if (isset($params['externalid'])) {
-            $idMod = \module_utils::get_id_from_externalid($params['externalid'], $this->db);
+            $idMod = \module_utils::get_id_from_externalid($params['externalid'], $params['sms'], $this->db);
             // module externalid in use already
             if ($idMod != false) {
                 $modextidinuse = true;
@@ -209,10 +229,6 @@ class modulemanagement extends \api\abstractmanagement {
             $data = array('statuscode' => $this->statuscodes['MODULE_ALREADY_EXISTS'], 'status' => $strings['module_already_exists'], 'id' => $idMod, 'externalid' => $details['externalid']);
         } else {
             if ($faculty) {
-                // Create Module.
-                if (empty($params['sms'])) {
-                    $params['sms'] = 'rogo webservice';
-                }
                 // Default null externalid.
                 if (!isset($params['externalid'])) {
                     $params['externalid'] = null;
@@ -246,8 +262,14 @@ class modulemanagement extends \api\abstractmanagement {
         if (!empty($params['id'])) {
             $moduleid = (bool) \module_utils::get_moduleid_from_id($params['id'], $this->db);
         } elseif (!empty($params['externalid'])) {
+            $external = new \external_systems();
+            // What external system is the client mapped to.
+            if (empty($params['sms'])) {
+                $params['sms'] = null;
+            }
+            $params['sms'] = $this->get_external_system($userid, $params['sms']);
             // Try using external system id to update course.
-            $params['id'] = \module_utils::get_id_from_externalid($params['externalid'], $this->db);;
+            $params['id'] = \module_utils::get_id_from_externalid($params['externalid'], $params['sms'], $this->db);;
             $moduleid = (bool) $params['id'];
         }
         
@@ -270,7 +292,7 @@ class modulemanagement extends \api\abstractmanagement {
         // Use external school/faculty id if provided
         if (isset($params['schoolextid']) and $params['schoolextid'] !== '') {
             // Get school id if school external id provided.
-            $schoolid = \SchoolUtils::get_schoolid_from_externalid($params['schoolextid'], $this->db);
+            $schoolid = \SchoolUtils::get_schoolid_from_externalid($params['schoolextid'], $params['sms'], $this->db);
             if (!$schoolid) {
                 $data = array('statuscode' => $this->statuscodes['MODULE_SCHOOL_EXTID_INVALID'], 'status' => $strings['external_school_invalid'], 'id' => null, 'externalid' => null);
                 return $this->get_response($data, 'update', $params['nodeid']);
@@ -363,9 +385,15 @@ class modulemanagement extends \api\abstractmanagement {
             'module_does_not_exist'));
         if (!empty($params['id'])) {
             $moduleid = \module_utils::get_moduleid_from_id($params['id'], $this->db);
-        } elseif (isset($params['externalid']) and $params['externalid'] !== '') {
+        } elseif (!empty($params['externalid'])) {
+            $external = new \external_systems();
+            // What external system is the client mapped to.
+            if (empty($params['sms'])) {
+                $params['sms'] = null;
+            }
+            $params['sms'] = $this->get_external_system($userid, $params['sms']);
             // Try using external system id to delete module.
-            $moduleid = \module_utils::get_id_from_externalid($params['externalid'], $this->db);
+            $moduleid = \module_utils::get_id_from_externalid($params['externalid'], $params['externalsys'], $this->db);
             $params['id'] = $moduleid;
         } else {
             $moduleid = false;

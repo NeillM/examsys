@@ -137,7 +137,7 @@ class coursemanagementtest extends unittestdatabase {
             "name" => 'CREATE',
             "description" => 'Create test',
             "schoolextid" => 'qwerty',
-            "facultyextid" => 'abcdefghi',
+            "schoolextsys" => 'external',
             "externalid" => 123457);
         $course = new \api\coursemanagement($this->db);
         $userid = 1;
@@ -263,7 +263,7 @@ class coursemanagementtest extends unittestdatabase {
         $params['faculty'] = 'Test faculty 2';
         $this->assertEquals($responsearray, $course->update($params, $userid));
         // Check courses table.
-        $querytable = $this->getConnection()->createQueryTable('courses', 'SELECT id, name, description, schoolid, externalid FROM courses WHERE id = 1');
+        $querytable = $this->getConnection()->createQueryTable('courses', 'SELECT id, name, description, schoolid, externalid, externalsys FROM courses WHERE id = 1');
         $expectedtable = $this->get_expected_data_set('updatecourse')->getTable("courses");  
         $this->assertTablesEqual($expectedtable, $querytable);
         // Check faculty table.
@@ -291,7 +291,7 @@ class coursemanagementtest extends unittestdatabase {
         $responsearray['externalid'] = null;
         $this->assertEquals($responsearray, $course->update($params, $userid));
         // Check courses table.
-        $querytable = $this->getConnection()->createQueryTable('courses', 'SELECT id, name, description, schoolid, externalid FROM courses WHERE id = 1');
+        $querytable = $this->getConnection()->createQueryTable('courses', 'SELECT id, name, description, schoolid, externalid, externalsys FROM courses WHERE id = 1');
         $expectedtable = $this->get_expected_data_set('updatecourse')->getTable("courses");  
         $this->assertTablesEqual($expectedtable, $querytable);
     }
