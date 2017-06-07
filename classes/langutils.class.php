@@ -38,16 +38,22 @@ Class LangUtils {
     }
     
     if (isset($langs) and is_array($langs)) {
-      $parts = explode(';', $langs[0]);
-      $test_lang = $parts[0];
-      $language = substr($test_lang, 0, 2);
+      $i = 0;
+      // Use first supported language found.
+      while ($i < count($langs) and $language == '') {
+        $parts = explode(';', $langs[$i]);
+        $test_lang = $parts[0];
+        $lang = substr($test_lang, 0, 2);
+        if (LangUtils::supportedLang($lang)) {
+          $language = $lang;
+        }
+        $i++;
+      }
     }
-
-    // Default to English if not supported language.
-    if (!LangUtils::supportedLang($language)) {
-        $language = 'en';
+    // Default to English language not supplied.
+    if ($language == '') {
+      $language = 'en';
     }
-
     return $language;
   }
 
