@@ -108,7 +108,8 @@ if (isset($_POST['submit'])) {
     $result->close();
     // External systems.
     $extsys = $external->get_all_api_externalsystems();
-    $currentextsys = $external->get_mapped_externalsystem_id($user_id);
+    $extsysinfo = $external->get_mapped_externalsystem_info($user_id);
+    $currentextsys = $extsysinfo['id'];
 }
 
 $render = new render($configObject);

@@ -38,38 +38,24 @@ class external_systems {
         $this->db = $configObject->db;
     }
     /**
-     * Get external system mapped to a user
+     * Get external system mapping info given user id
      * @param string $user_id user
-     * @return string|null external system
+     * @return array external system name and id 
      */
-    public function get_mapped_externalsystem($user_id) {
-        $result = $this->db->prepare("SELECT s.name FROM external_systems s, external_systems_mapping m WHERE s.id = m.ext_id AND m.user_id = ?");
+    public function get_mapped_externalsystem_info($user_id) {
+        $info = array();
+        $result = $this->db->prepare("SELECT s.name, m.ext_id FROM external_systems s, external_systems_mapping m WHERE s.id = m.ext_id AND m.user_id = ?");
         $result->bind_param('i', $user_id);
         $result->execute();
-        $result->bind_result($name);
+        $result->bind_result($name, $id);
         $result->fetch();
         $result->close();
         if ($this->db->errno != 0) {
-            return null;
+            return $info;
         }
-        return $name;
-    }
-    /**
-     * Get external system id mapped to a user
-     * @param string $user_id user
-     * @return string|null external system
-     */
-    public function get_mapped_externalsystem_id($user_id) {
-        $result = $this->db->prepare("SELECT ext_id FROM external_systems_mapping WHERE user_id = ?");
-        $result->bind_param('i', $user_id);
-        $result->execute();
-        $result->bind_result($id);
-        $result->fetch();
-        $result->close();
-        if ($this->db->errno != 0) {
-            return null;
-        }
-        return $id;
+        $info['name'] = $name;
+        $info['id'] = $id;
+        return $info;
     }
     /**
      * Get external systems
@@ -133,7 +119,8 @@ class external_systems {
      * @param integer $extsys external system id
      */
     public function update_external_system_mapping($userid, $extsys) {
-        if (!is_null($this->get_mapped_externalsystem_id($userid))) {
+        $extsysinfo = $this->get_mapped_externalsystem_info($userid);
+        if (count($extsysinfo) > 0) {
             $result = $this->db->prepare("UPDATE external_systems_mapping SET ext_id = ? WHERE user_id = ?");
             $result->bind_param('ii', $extsys, $userid);
             $result->execute();
@@ -147,7 +134,8 @@ class external_systems {
      * @param integer $userid internal user id
      */
     public function delete_external_system_mapping($userid) {
-        if (!is_null($this->get_mapped_externalsystem_id($userid))) {
+        $extsysinfo = $this->get_mapped_externalsystem_info($userid);
+        if (count($extsysinfo) > 0) {
             $result = $this->db->prepare("DELETE FROM external_systems_mapping WHERE user_id = ?");
             $result->bind_param('i', $userid);
             $result->execute();

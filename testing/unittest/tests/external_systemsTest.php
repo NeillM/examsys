@@ -41,20 +41,14 @@ class externalsystemstest extends unittestdatabase {
         return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "external_systemsTest" . DIRECTORY_SEPARATOR . $name . ".yml");
     }
     /**
-     * Test mapped external system for user.
+     * Test external system info for user.
      * @group extsys
      */
-    public function test_get_mapped_externalsystem() {
+    public function test_get_mapped_externalsystem_info() {
         $external = new external_systems();
-        $this->assertEquals('external api', $external->get_mapped_externalsystem(1));
-    }
-    /**
-     * Test mapped external system id for user.
-     * @group extsys
-     */
-    public function test_get_mapped_externalsystem_id() {
-        $external = new external_systems();
-        $this->assertEquals(2, $external->get_mapped_externalsystem_id(2));
+        $info = $external->get_mapped_externalsystem_info(2);
+        $this->assertEquals('external api 2', $info['name']);
+        $this->assertEquals(2, $info['id']);
     }
     /**
      * Test list all external systems.

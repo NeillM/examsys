@@ -155,7 +155,8 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
                 $external = new \external_systems();
                 // What external system is the client mapped to.
                 $user_id = $oauth->get_client_user($client_id);
-                $extsys = $external->get_mapped_externalsystem($user_id);
+                $extsysinfo = $external->get_mapped_externalsystem_info($user_id);
+                $extsys = $extsysinfo['name'];
                 // Process the request.
                 $request = $gradebook->get($filtername, $filterid, $extsys);
                 $response = $request[1];

@@ -120,13 +120,13 @@ abstract class abstractmanagement {
         } else {
             // API so check external system mapping.
             $external = new \external_systems();
-            $system = $external->get_mapped_externalsystem($userid);
-            if (is_null($system)) {
+            $system = $external->get_mapped_externalsystem_info($userid);
+            if ($system > 0) {
+                // Mapped so can only manipulate $system.
+                return $system['name'];
+            } else {
                 // Not mapped to specific external system so can manipulate any.
                 return $externalsys;
-            } else {
-                // Mapped so can only manipulate $system.
-                return $system;
             }
         }
     }
