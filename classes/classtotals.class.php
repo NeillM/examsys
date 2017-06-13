@@ -1127,7 +1127,7 @@ class ClassTotals {
                     calendar_year = ?";
 
       $result = $this->db->prepare($sql);
-      $result->bind_param('s', $this->calendar_year);
+      $result->bind_param('i', $this->calendar_year);
       $result->execute();
       $result->bind_result($userID, $tmp_username, $title, $surname, $first_names, $initials, $student_id, $grade, $moduleid, $gender);
       while ($result->fetch()) {
@@ -1164,7 +1164,7 @@ class ClassTotals {
       $mod_query = $this->db->prepare("SELECT modules_student.idMod, userID, moduleID FROM modules_student, modules WHERE modules_student.idMod = modules.id AND idMod IN ($tmp_moduleID_in)");
     } else {
       $mod_query = $this->db->prepare("SELECT modules_student.idMod, userID, moduleID FROM modules_student, modules WHERE modules_student.idMod = modules.id AND idMod IN ($tmp_moduleID_in) AND calendar_year = ?");
-      $mod_query->bind_param('s', $this->calendar_year);
+      $mod_query->bind_param('i', $this->calendar_year);
     }
     $mod_query->execute();
     $mod_query->bind_result($idMod, $userID, $tmp_moduleid);
@@ -1185,7 +1185,7 @@ class ClassTotals {
       $stmt = $this->db->prepare("SELECT userID, type, value FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.id IN ($this->moduleID_in)");
     } else {
       $stmt = $this->db->prepare("SELECT userID, type, value FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.id IN ($this->moduleID_in) AND calendar_year = ?");
-      $stmt->bind_param('s', $this->calendar_year);
+      $stmt->bind_param('i', $this->calendar_year);
     }
     $stmt->execute();
     $stmt->bind_result($student_userID, $type, $value);
@@ -1266,6 +1266,9 @@ class ClassTotals {
     $result->execute();
     $result->bind_result($metadataID, $userID, $username, $roles, $year, $title, $surname, $initials, $first_names, $email, $gender, $ipaddress, $lab_name, $student_id, $attempt, $display_started, $started, $student_grade);
     while ($result->fetch()) {
+      if ($this->repmodule != '' and !isset($this->user_modules[$userID]['idMod'])) {
+        continue;      // This user is not on the module set in repmodule so don't put them in the array.
+      }
       $tmp_name = trim(str_replace("'","",$surname) . ',' . $first_names);
       if ($lab_name == '') {
         $room = '<span style="color:#808080">&lt;unknown&gt;</span>';
@@ -1342,11 +1345,6 @@ class ClassTotals {
     $result->bind_result($log_id, $metadataID, $paper_type, $q_id, $screen, $duration, $user_answer, $q_type, $mark);
 
     while ($result->fetch()) {
-      $userID = $this->user_results[$metadataID]['userID'];
-      if ($this->repmodule != '' and !isset($this->user_modules[$userID]['idMod'])) {
-        continue;      // This user is not on the module set in repmodule so don't put them in the array.
-      }
-
       // We have passed the check this students should be displayed.
       $this->user_results[$metadataID]['visible'] =  true;
 
@@ -1367,7 +1365,7 @@ class ClassTotals {
         $tmp_user_mark_array = array();
         $user_duration = 0;
         $marking_complete = 1;
-      } else if (!$old_metadataID) {
+      } elseif (!$old_metadataID) {
         // This is the first record being iterated over so $old_metadataID is set to 0.
         if (isset($this->user_modules[$userID]['idMod'])) {
           $this->user_results[$metadataID]['module'] = $this->user_modules[$userID]['idMod'];
