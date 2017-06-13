@@ -1270,10 +1270,10 @@ class ClassTotals {
         continue;      // This user is not on the module set in repmodule so don't put them in the array.
       }
       if (isset($this->user_modules[$userID]['idMod'])) {
-          $module = $this->user_modules[$userID]['idMod'];
+        $module = $this->user_modules[$userID]['idMod'];
       } else {
-          // No module details set for this user.  Perhaps it is an unassigned guest user account.
-          $module = '';
+        // No module details set for this user.  Perhaps it is an unassigned guest user account.
+        $module = '';
       }
       $tmp_name = trim(str_replace("'","",$surname) . ',' . $first_names);
       if ($lab_name == '') {
