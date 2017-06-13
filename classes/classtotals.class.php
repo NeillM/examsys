@@ -1269,6 +1269,12 @@ class ClassTotals {
       if ($this->repmodule != '' and !isset($this->user_modules[$userID]['idMod'])) {
         continue;      // This user is not on the module set in repmodule so don't put them in the array.
       }
+      if (isset($this->user_modules[$userID]['idMod'])) {
+          $module = $this->user_modules[$userID]['idMod'];
+      } else {
+          // No module details set for this user.  Perhaps it is an unassigned guest user account.
+          $module = '';
+      }
       $tmp_name = trim(str_replace("'","",$surname) . ',' . $first_names);
       if ($lab_name == '') {
         $room = '<span style="color:#808080">&lt;unknown&gt;</span>';
@@ -1310,7 +1316,7 @@ class ClassTotals {
                                                 'questions'=>0,
                                                 'duration'=>0,
                                                 'marking_complete'=>true,
-                                                'module'=>'',
+                                                'module'=> $module,
                                                 'paper_type'=>$this->paper_type
                                                );
       $metadataids[] = $metadataID;
@@ -1352,29 +1358,13 @@ class ClassTotals {
         $user_duration += $old_duration;
       }
       if ($old_metadataID != $metadataID and $old_metadataID != 0) {
-        if (isset($this->user_modules[$userID]['idMod'])) {
-          $this->user_results[$metadataID]['module'] = $this->user_modules[$userID]['idMod'];
-        } else {
-          // No module details set for this user.  Perhaps it is an unassigned guest user account.
-          $this->user_results[$metadataID]['module'] = '';
-        }
-
         // Write the user results for the user that was iterated over previously using $old_metadataID
         $this->writeUserResults($old_metadataID, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete);
         $tmp_mark = 0;
         $tmp_user_mark_array = array();
         $user_duration = 0;
         $marking_complete = 1;
-      } elseif (!$old_metadataID) {
-        // This is the first record being iterated over so $old_metadataID is set to 0.
-        if (isset($this->user_modules[$userID]['idMod'])) {
-          $this->user_results[$metadataID]['module'] = $this->user_modules[$userID]['idMod'];
-        } else {
-          // No module details set for this user.  Perhaps it is an unassigned guest user account.
-          $this->user_results[$metadataID]['module'] = '';
-        }
       }
-
       $this->user_results[$metadataID]['questions']++;
       $this->user_results[$metadataID]['paper_type'] = $paper_type;
 
@@ -1401,7 +1391,7 @@ class ClassTotals {
     $result->close();
 
     if ($old_metadataID != 0) {
-      if ($this->repmodule == '' or (isset($this->user_modules[$userID]['idMod']) and $this->user_modules[$userID]['idMod'] == $this->repmodule)) {
+      if ($this->repmodule == '' or $this->user_results[$old_metadataID]['module'] == $this->repmodule) {
         $user_duration += $old_duration;
         $this->writeUserResults($old_metadataID, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete);
       }
