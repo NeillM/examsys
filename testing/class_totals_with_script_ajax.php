@@ -30,7 +30,6 @@
 */
 
 require '../include/sysadmin_auth.inc';
-include_once '../include/load_config.php';
 require_once 'classes/class_totals.php';
 
 set_time_limit(0);
