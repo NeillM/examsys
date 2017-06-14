@@ -25,6 +25,7 @@
 
 require_once '../include/load_config.php';
 
+$language = LangUtils::getLang($cfg_web_root);
 // If supported lang pack not installed install them.
 if(!LangUtils::langPackInstalled($language)) {
     InstallUtils::download_langpacks();
@@ -35,6 +36,7 @@ require_once '../include/errors.php';
 require_once '../include/std_set_shared_functions.inc';
 require_once '../include/timezones.php';
 require_once dirname(__DIR__) . '/lang/' . $language . '/install/index.php';
+require_once dirname(__DIR__) . '/lang/' . $language . '/updates/version5.php';
 
 // Get the code version.
 $version = $configObject->getxml('version');
