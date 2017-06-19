@@ -760,12 +760,12 @@ if ($properties->get_paper_type() == '2') {
   $lang['paperslinkquestions'] = $string['paperslinkquestions'];
   $lang['papercopyquestions'] = $string['papercopyquestions'];
   $lang['copyquestionsblurb'] = $string['copyquestionsblurb'];
-  $data['action'] = "../paper/copy.php";
-  $data['papertype'] = $properties->get_paper_type();
-  $data['paperid'] = param::required('paperID', param::INT, param::FETCH_GET);
+  $dataarray['action'] = "../paper/copy.php";
+  $dataarray['papertype'] = $properties->get_paper_type();
+  $dataarray['paperid'] = param::required('paperID', param::INT, param::FETCH_GET);
   $order = 'property_id';
   $direction = 'desc';
   $teamid = param::optional('teamID', null, param::INT, param::FETCH_GET); 
-  $data['papers'] = PaperUtils::get_available_papers($userObject, $order, $direction, $properties->get_paper_type(), $module);
-  $render->render($data, $lang, 'paper/copy_from_paper_menu.html')
+  $dataarray['papers'] = PaperUtils::get_available_papers($userObject, $order, $direction, $properties->get_paper_type(), $module);
+  $render->render($dataarray, $lang, 'paper/copy_from_paper_menu.html')
 ?>
