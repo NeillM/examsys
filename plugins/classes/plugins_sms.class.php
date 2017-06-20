@@ -57,34 +57,30 @@ abstract class plugins_sms extends \plugins\plugins {
     }
     /**
      * Install steps for sms plugin.
-     * @param mysqli $db db connection
-     * @param string $plugin name of plugin
      * @return bool true on success
      */
-    protected function type_install($db, $plugin) {
+    protected function type_install() {
         // Add external system to external systems table
-        $insertsql = $db->prepare("INSERT IGNORE INTO external_systems (name, type) values (?, 'plugin')");
-        $insertsql->bind_param('s', $plugin);
+        $insertsql = $this->db->prepare("INSERT IGNORE INTO external_systems (name, type) values (?, 'plugin')");
+        $insertsql->bind_param('s', $this->plugin);
         $insertsql->execute();
         $insertsql->close();
-        if ($db->errno != 0) {
+        if ($this->db->errno != 0) {
             return false;
         }
         return true;
     }
     /**
      * Uninstall steps for sms plugin.
-     * @param mysqli $db db connection
-     * @param string $plugin name of plugin
      * @return bool true on success
      */
-    protected function type_uninstall($db, $plugin) {
+    protected function type_uninstall() {
         // Remove external system from external systems table
-        $insertsql = $db->prepare("DELETE IGNORE FROM external_systems WHERE name = ? AND type = 'plugin'");
-        $insertsql->bind_param('s', $plugin);
+        $insertsql = $this->db->prepare("DELETE IGNORE FROM external_systems WHERE name = ? AND type = 'plugin'");
+        $insertsql->bind_param('s', $this->plugin);
         $insertsql->execute();
         $insertsql->close();
-        if ($db->errno != 0) {
+        if ($this->db->errno != 0) {
             return false;
         }
         return true;

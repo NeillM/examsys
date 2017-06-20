@@ -86,22 +86,20 @@ abstract class plugins {
     }
 
     /**
-     * Install steps for sms plugin.
-     * @param mysqli $db db connection
-     * @param string $plugin name of plugin
+     * Plugin type specific install steps
+     * These should be implemented by overriding these methods in the plugin types base class
      * @return bool true on success
      */
-    protected function type_install($db, $plugin) {
+    protected function type_install() {
         // By defult do nothing unless overridden.
         return true;
     }
     /**
-     * Uninstall steps for sms plugin.
-     * @param mysqli $db db connection
-     * @param string $plugin name of plugin
+     * Plugin type specific uninstall steps
+     * These should be implemented by overriding these methods in the plugin types base class
      * @return bool true on success
      */
-    protected function type_uninstall($db, $plugin) {
+    protected function type_uninstall() {
         // By defult do nothing unless overridden.
         return true;
     }
@@ -165,8 +163,7 @@ abstract class plugins {
                         }
                     }
                     // Run plugin type install steps.
-                    $type = '\\plugins\\plugins_' .  strtolower($this->plugin_type);
-                    if (!$type::type_install($this->db, $this->plugin)) {
+                    if (!$this->type_install()) {
                         throw new \Exception("$specific::install failed.");
                     }
                 } catch (\Exception $e) {
@@ -238,8 +235,7 @@ abstract class plugins {
                     }
                 }
                 // Run plugin type uninstall steps.
-                $type = '\\plugins\\plugins_' .  strtolower($this->plugin_type);
-                if (!$type::type_uninstall($this->db, $this->plugin)) {
+                if (!$this->type_uninstall()) {
                     throw new \Exception("$specific::uninstall failed.");
                 }
             } catch (\Exception $e) {
