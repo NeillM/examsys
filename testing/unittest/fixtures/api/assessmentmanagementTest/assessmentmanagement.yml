@@ -145,6 +145,12 @@ properties_modules:
   -
     property_id: 1
     idMod: 1
+oauth_clients:
+  -
+    client_id: 'test1'
+    client_secret: 'test'
+    redirect_uri: 'https://www.example.com'
+    user_id: 1
 external_systems:
   -
     id: 1
@@ -153,4 +159,4 @@ external_systems:
 external_systems_mapping:
   -
     ext_id: 1
-    user_id: 1
+    client_id: 'test1'

@@ -64,12 +64,11 @@ class coursemanagement extends \api\abstractmanagement {
             // Using internal rogo id to update course.
             $courseid = \CourseUtils::courseid_exists($params['id'], $this->db);  
         } elseif (!empty($params['externalid'])) {
-            $external = new \external_systems();
             // What external system is the client mapped to.
             if (empty($params['externalsys'])) {
                 $params['externalsys'] = null;
             }
-            $params['externalsys'] = $this->get_external_system($userid, $params['externalsys']);
+            $params['externalsys'] = $this->get_external_system($params['externalsys']);
             // Try using external system id to update course.
             $courseid = \CourseUtils::get_courseid_from_externalid($params['externalid'], $params['externalsys'], $this->db);
             $params['id'] = $courseid;
@@ -165,12 +164,11 @@ class coursemanagement extends \api\abstractmanagement {
             $params['externalid'] = null;
             $params['externalsys'] = null;
         } else {
-            $external = new \external_systems();
             // What external system is the client mapped to.
             if (empty($params['externalsys'])) {
                 $params['externalsys'] = null;
             }
-            $params['externalsys'] = $this->get_external_system($userid, $params['externalsys']);
+            $params['externalsys'] = $this->get_external_system($params['externalsys']);
         }
         if (!empty($params['schoolextid'])) {
             // Get school id if school external id provided.
@@ -228,12 +226,11 @@ class coursemanagement extends \api\abstractmanagement {
             // Try using rogo internal id to delete course.
             $courseid = \CourseUtils::courseid_exists($params['id'], $this->db);
         } elseif (!empty($params['externalid'])) {
-            $external = new \external_systems();
             // What external system is the client mapped to.
             if (empty($params['externalsys'])) {
                 $params['externalsys'] = null;
             }
-            $params['externalsys'] = $this->get_external_system($userid, $params['externalsys']);
+            $params['externalsys'] = $this->get_external_system($params['externalsys']);
             // Try using external system id to delete course.
             $courseid = \CourseUtils::get_courseid_from_externalid($params['externalid'], $params['externalsys'], $this->db);
             $params['id'] = $courseid;

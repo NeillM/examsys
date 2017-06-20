@@ -20,6 +20,22 @@ users:
     username: "sysadmin3"
     roles: "Staff,SysAdmin"
     grade: "University Lecturer"
+oauth_clients:
+  -
+    client_id: 'test1'
+    client_secret: 'test'
+    redirect_uri: 'https://www.example.com'
+    user_id: 1
+  -
+    client_id: 'test2'
+    client_secret: 'test'
+    redirect_uri: 'https://www.example.com'
+    user_id: 2
+  -
+    client_id: 'test3'
+    client_secret: 'test'
+    redirect_uri: 'https://www.example.com'
+    user_id: 3
 external_systems:
   -
     id: 1
@@ -43,11 +59,11 @@ external_systems:
     type: 'plugin'
 external_systems_mapping:
   -
-    user_id: 1
+    client_id: 'test1'
     ext_id: 1
   -
-    user_id: 2
+    client_id: 'test2'
     ext_id: 2
   -
-    user_id: 3
+    client_id: 'test3'
     ext_id: 2

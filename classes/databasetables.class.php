@@ -1618,10 +1618,10 @@ QUERY;
 
 $this->tableList['external_systems_mapping'] = <<<QUERY
         CREATE TABLE external_systems_mapping (
-            `user_id` int(10) UNSIGNED NOT NULL,
+            `client_id` varchar(80) NOT NULL,
             `ext_id` int(8) NOT NULL,
-            PRIMARY KEY (`user_id`),
-            UNIQUE INDEX `user_id_idx` (`user_id`)
+            PRIMARY KEY (`client_id`),
+            UNIQUE INDEX `client_id_idx` (`client_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET={$charset}
 QUERY;
   }

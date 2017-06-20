@@ -63,12 +63,11 @@ class schoolmanagement extends \api\abstractmanagement {
             $params['externalid'] = null;
             $params['externalsys'] = null;
         } else {
-            $external = new \external_systems();
             // What external system is the client mapped to.
             if (empty($params['externalsys'])) {
                 $params['externalsys'] = null;
             }
-            $params['externalsys'] = $this->get_external_system($userid, $params['externalsys']);
+            $params['externalsys'] = $this->get_external_system($params['externalsys']);
         }
         // Get faculty if provided.
         if (!empty($params['facultyextid'])) {
@@ -131,12 +130,11 @@ class schoolmanagement extends \api\abstractmanagement {
         if (!empty($params['id'])) {
             $schoolid = \SchoolUtils::schoolid_exists($params['id'], $this->db);
         } elseif (!empty($params['externalid'])) {
-            $external = new \external_systems();
             // What external system is the client mapped to.
             if (empty($params['externalsys'])) {
                 $params['externalsys'] = null;
             }
-            $params['externalsys'] = $this->get_external_system($userid, $params['externalsys']);
+            $params['externalsys'] = $this->get_external_system($params['externalsys']);
             // Try using external system id to update school.
             $schoolid = \SchoolUtils::get_schoolid_from_externalid($params['externalid'], $params['externalsys'], $this->db);
             $params['id'] = $schoolid;
@@ -224,12 +222,11 @@ class schoolmanagement extends \api\abstractmanagement {
         if (!empty($params['id'])) {
             $schoolid = \SchoolUtils::schoolid_exists($params['id'], $this->db);
         } elseif (!empty($params['externalid'])) {
-            $external = new \external_systems();
             // What external system is the client mapped to.
             if (empty($params['externalsys'])) {
                 $params['externalsys'] = null;
             }
-            $params['externalsys'] = $this->get_external_system($userid, $params['externalsys']);
+            $params['externalsys'] = $this->get_external_system($params['externalsys']);
             // Try using external system id to delete school.
             $params['id'] = \SchoolUtils::get_schoolid_from_externalid($params['externalid'], $params['externalsys'], $this->db);
             $schoolid = true;

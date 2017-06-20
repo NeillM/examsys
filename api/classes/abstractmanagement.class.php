@@ -55,13 +55,19 @@ abstract class abstractmanagement {
      * The database connection.
      */
     protected $db;
+    /**
+     * The oauth client id.
+     */
+    protected $client_id;
     
     /**
      * Constructor
      * @param mysqli $mysqli the database connection
+     * @param string $client_id the oauth client connecting
      */
-    public function __construct($mysqli) {
+    public function __construct($mysqli, $client_id = null) {
         $this->db = $mysqli;
+        $this->client_id = $client_id;
     }
     
     /**
@@ -109,18 +115,17 @@ abstract class abstractmanagement {
     
     /**
      * Get the external system the request is for
-     * @param integer $userid internal user id
      * @param string $externalsys system provided in request (used by sms plugins)
      * @return string external system
      */
-    public function get_external_system($userid, $externalsys) {
-        if ($userid === 0) {
+    public function get_external_system($externalsys) {
+        if (is_null($this->client_id)) {
             // SMS plugin
             return $externalsys;
         } else {
             // API so check external system mapping.
             $external = new \external_systems();
-            $system = $external->get_mapped_externalsystem_info($userid);
+            $system = $external->get_mapped_externalsystem_info($this->client_id);
             if ($system > 0) {
                 // Mapped so can only manipulate $system.
                 return $system['name'];

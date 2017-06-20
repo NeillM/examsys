@@ -39,22 +39,25 @@ class external_systems {
     }
     /**
      * Get external system mapping info given user id
-     * @param string $user_id user
+     * @param integer $client oauth client id
      * @return array external system name and id 
      */
-    public function get_mapped_externalsystem_info($user_id) {
+    public function get_mapped_externalsystem_info($client) {
         $info = array();
-        $result = $this->db->prepare("SELECT s.name, m.ext_id FROM external_systems s, external_systems_mapping m WHERE s.id = m.ext_id AND m.user_id = ?");
-        $result->bind_param('i', $user_id);
+        $result = $this->db->prepare("SELECT s.name, m.ext_id FROM external_systems s, external_systems_mapping m WHERE s.id = m.ext_id AND m.client_id = ?");
+        $result->bind_param('s', $client);
         $result->execute();
         $result->bind_result($name, $id);
+        $result->store_result();
         $result->fetch();
+        if ($result->num_rows == 1) {
+            $info['name'] = $name;
+            $info['id'] = $id;
+        }
         $result->close();
         if ($this->db->errno != 0) {
             return $info;
         }
-        $info['name'] = $name;
-        $info['id'] = $id;
         return $info;
     }
     /**
@@ -103,41 +106,41 @@ class external_systems {
         return $exts;
     }
     /**
-     * Insert external system mapping for user
-     * @param integer $userid internal user id
+     * Insert external system mapping for client
+     * @param integer $client oauth client id
      * @param integer $extsys external system id
      */
-    public function insert_external_system_mapping($userid, $extsys) {
-        $result = $this->db->prepare("INSERT INTO external_systems_mapping (user_id, ext_id) values (?, ?)");
-        $result->bind_param('ii', $userid, $extsys);
+    public function insert_external_system_mapping($client, $extsys) {
+        $result = $this->db->prepare("INSERT INTO external_systems_mapping (client_id, ext_id) values (?, ?)");
+        $result->bind_param('si', $client, $extsys);
         $result->execute();
         $result->close();
     }
     /**
-     * Update external system mapping for user
-     * @param integer $userid internal user id
+     * Update external system mapping for client
+     * @param integer $client oauth client id
      * @param integer $extsys external system id
      */
-    public function update_external_system_mapping($userid, $extsys) {
-        $extsysinfo = $this->get_mapped_externalsystem_info($userid);
+    public function update_external_system_mapping($client, $extsys) {
+        $extsysinfo = $this->get_mapped_externalsystem_info($client);
         if (count($extsysinfo) > 0) {
-            $result = $this->db->prepare("UPDATE external_systems_mapping SET ext_id = ? WHERE user_id = ?");
-            $result->bind_param('ii', $extsys, $userid);
+            $result = $this->db->prepare("UPDATE external_systems_mapping SET ext_id = ? WHERE client_id = ?");
+            $result->bind_param('is', $extsys, $client);
             $result->execute();
             $result->close();
         } else {
-            $this->insert_external_system_mapping($userid, $extsys);
+            $this->insert_external_system_mapping($client, $extsys);
         }
     }
     /**
-     * Delete external system mapping for user
-     * @param integer $userid internal user id
+     * Delete external system mapping for client
+     * @param integer $client oauth client id
      */
-    public function delete_external_system_mapping($userid) {
-        $extsysinfo = $this->get_mapped_externalsystem_info($userid);
+    public function delete_external_system_mapping($client) {
+        $extsysinfo = $this->get_mapped_externalsystem_info($client);
         if (count($extsysinfo) > 0) {
-            $result = $this->db->prepare("DELETE FROM external_systems_mapping WHERE user_id = ?");
-            $result->bind_param('i', $userid);
+            $result = $this->db->prepare("DELETE FROM external_systems_mapping WHERE client_id = ?");
+            $result->bind_param('s', $client);
             $result->execute();
             $result->close();
         }

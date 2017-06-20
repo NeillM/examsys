@@ -78,9 +78,9 @@ if (isset($_POST['submit'])) {
         $oauth->set_permission('gradebook', $client, false);
     }
     if (!is_null($extsys)) {
-        $external->update_external_system_mapping($userid, $extsys);
+        $external->update_external_system_mapping($client, $extsys);
     } else {
-        $external->delete_external_system_mapping($userid);
+        $external->delete_external_system_mapping($client);
     }
     header("location: list_oauthclient.php", true, 303);
     exit();
@@ -108,8 +108,12 @@ if (isset($_POST['submit'])) {
     $result->close();
     // External systems.
     $extsys = $external->get_all_api_externalsystems();
-    $extsysinfo = $external->get_mapped_externalsystem_info($user_id);
-    $currentextsys = $extsysinfo['id'];
+    $extsysinfo = $external->get_mapped_externalsystem_info($client);
+    if (count($extsysinfo) == 2) {
+        $currentextsys = $extsysinfo['id'];
+    } else {
+        $currentextsys = null;
+    }
 }
 
 $render = new render($configObject);

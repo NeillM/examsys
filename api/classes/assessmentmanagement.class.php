@@ -152,12 +152,11 @@ class assessmentmanagement extends \api\abstractmanagement {
             $params['externalid'] = null;
             $params['externalsys'] = null;
         } else {
-            $external = new \external_systems();
             // What external system is the client mapped to.
             if (empty($params['externalsys'])) {
                 $params['externalsys'] = null;
             }
-            $params['externalsys'] = $this->get_external_system($userid, $params['externalsys']);
+            $params['externalsys'] = $this->get_external_system($params['externalsys']);
         }
         // Check modules
         $modulesarray = array();
@@ -229,12 +228,11 @@ class assessmentmanagement extends \api\abstractmanagement {
             // Try internal rogo id.
             $paperid = \Paper_utils::paper_exists($params['id'], $this->db);
         } elseif (!empty($params['externalid'])) {
-            $external = new \external_systems();
             // What external system is the client mapped to.
             if (empty($params['externalsys'])) {
                 $params['externalsys'] = null;
             }
-            $params['externalsys'] = $this->get_external_system($userid, $params['externalsys']);
+            $params['externalsys'] = $this->get_external_system($params['externalsys']);
             // Try using external system id.
             $paperid = \Paper_utils::get_id_from_externalid($params['externalid'], $params['externalsys'], $this->db);
             $params['id'] = $paperid;
@@ -388,12 +386,11 @@ class assessmentmanagement extends \api\abstractmanagement {
             $params['externalid'] = null;
             $params['externalsys'] = null;
         } else {
-            $external = new \external_systems();
             // What external system is the client mapped to.
             if (empty($params['externalsys'])) {
                 $params['externalsys'] = null;
             }
-            $params['externalsys'] = $this->get_external_system($userid, $params['externalsys']);
+            $params['externalsys'] = $this->get_external_system($params['externalsys']);
         }
         // Check modules
         $modulesarray = array();
@@ -483,12 +480,11 @@ class assessmentmanagement extends \api\abstractmanagement {
         if (isset($params['id']) and $params['id'] !== '') {
             $paperexists = \Paper_utils::paper_exists($params['id'], $this->db);
         } elseif (!empty($params['externalid'])) {
-            $external = new \external_systems();
             // What external system is the client mapped to.
             if (empty($params['externalsys'])) {
                 $params['externalsys'] = null;
             }
-            $params['externalsys'] = $this->get_external_system($userid, $params['externalsys']);
+            $params['externalsys'] = $this->get_external_system($params['externalsys']);
             // Try using external system id.
             $paperid = \Paper_utils::get_id_from_externalid($params['externalid'], $params['externalsys'], $this->db);
             $params['id'] = $paperid;

@@ -80,12 +80,11 @@ class modulemanagement extends \api\abstractmanagement {
             if (!empty($params['moduleid'])) {
                 $modid = $params['moduleid'];
             } elseif (!empty($params['moduleextid'])) {
-                $external = new \external_systems();
                 // What external system is the client mapped to.
                 if (empty($params['externalsys'])) {
                     $params['externalsys'] = null;
                 }
-                $params['moduleextsys'] = $this->get_external_system($userid, $params['externalsys']);
+                $params['moduleextsys'] = $this->get_external_system($params['externalsys']);
                 // Try using external system id to enrol.
                 $modid = \module_utils::get_id_from_externalid($params['moduleextid'], $params['moduleextsys'], $this->db);
                 if ($modid === false) {
@@ -133,12 +132,11 @@ class modulemanagement extends \api\abstractmanagement {
             if (!empty($params['moduleid'])) {
                 $modid = $params['moduleid'];
             } elseif (!empty($params['moduleextid'])) {
-                $external = new \external_systems();
                 // What external system is the client mapped to.
                 if (empty($params['externalsys'])) {
                     $params['externalsys'] = null;
                 }
-                $params['moduleextsys'] = $this->get_external_system($userid, $params['externalsys']);
+                $params['moduleextsys'] = $this->get_external_system($params['externalsys']);
                 // Try using external system id to enrol.
                 $modid = \module_utils::get_id_from_externalid($params['moduleextid'], $params['moduleextsys'], $this->db);
                 if ($modid === false) {
@@ -184,9 +182,8 @@ class modulemanagement extends \api\abstractmanagement {
             $params['sms'] = null;
         }
         if (isset($params['externalid'])) {
-            $external = new \external_systems();
-            // What external system is the client mapped to.
-            $params['sms'] = $this->get_external_system($userid, $params['sms']);
+             // What external system is the client mapped to.
+            $params['sms'] = $this->get_external_system($params['sms']);
         }
         if (!empty($params['schoolextid'])) {
             // Get school id if school external id provided.
@@ -262,12 +259,11 @@ class modulemanagement extends \api\abstractmanagement {
         if (!empty($params['id'])) {
             $moduleid = (bool) \module_utils::get_moduleid_from_id($params['id'], $this->db);
         } elseif (!empty($params['externalid'])) {
-            $external = new \external_systems();
             // What external system is the client mapped to.
             if (empty($params['sms'])) {
                 $params['sms'] = null;
             }
-            $params['sms'] = $this->get_external_system($userid, $params['sms']);
+            $params['sms'] = $this->get_external_system($params['sms']);
             // Try using external system id to update course.
             $params['id'] = \module_utils::get_id_from_externalid($params['externalid'], $params['sms'], $this->db);;
             $moduleid = (bool) $params['id'];
@@ -386,12 +382,11 @@ class modulemanagement extends \api\abstractmanagement {
         if (!empty($params['id'])) {
             $moduleid = \module_utils::get_moduleid_from_id($params['id'], $this->db);
         } elseif (!empty($params['externalid'])) {
-            $external = new \external_systems();
             // What external system is the client mapped to.
             if (empty($params['sms'])) {
                 $params['sms'] = null;
             }
-            $params['sms'] = $this->get_external_system($userid, $params['sms']);
+            $params['sms'] = $this->get_external_system($params['sms']);
             // Try using external system id to delete module.
             $moduleid = \module_utils::get_id_from_externalid($params['externalid'], $params['externalsys'], $this->db);
             $params['id'] = $moduleid;

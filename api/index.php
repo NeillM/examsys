@@ -155,7 +155,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
                 $external = new \external_systems();
                 // What external system is the client mapped to.
                 $user_id = $oauth->get_client_user($client_id);
-                $extsysinfo = $external->get_mapped_externalsystem_info($user_id);
+                $extsysinfo = $external->get_mapped_externalsystem_info($client_id);
                 $extsys = $extsysinfo['name'];
                 // Process the request.
                 $request = $gradebook->get($filtername, $filterid, $extsys);
@@ -249,7 +249,7 @@ function process ($request, $operations, $fields, $response, $oauth, $api, $lang
         } else {
             $responsedata = array();
             $classname = '\\api\\' . $request;
-            $requestobject = new $classname($mysqli);
+            $requestobject = new $classname($mysqli, $client_id);
 
             // Process the request.
             $data = $api->process($request, $xsd);

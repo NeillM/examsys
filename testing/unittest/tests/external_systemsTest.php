@@ -46,7 +46,7 @@ class externalsystemstest extends unittestdatabase {
      */
     public function test_get_mapped_externalsystem_info() {
         $external = new external_systems();
-        $info = $external->get_mapped_externalsystem_info(2);
+        $info = $external->get_mapped_externalsystem_info('test2');
         $this->assertEquals('external api 2', $info['name']);
         $this->assertEquals(2, $info['id']);
     }
@@ -86,7 +86,7 @@ class externalsystemstest extends unittestdatabase {
      */
     public function test_insert_external_system_mapping() {
         $external = new external_systems();
-        $external->insert_external_system_mapping(3, 2);
+        $external->insert_external_system_mapping('test3', 2);
         $queryTable = $this->getConnection()->createQueryTable('external_systems_mapping', 'SELECT * FROM external_systems_mapping');
         $expectedTable = $this->get_expected_data_set('external_inserted')->getTable("external_systems_mapping");  
         $this->assertTablesEqual($expectedTable, $queryTable); 
@@ -97,7 +97,7 @@ class externalsystemstest extends unittestdatabase {
      */
     public function test_update_external_system_mapping() {
         $external = new external_systems();
-        $external->update_external_system_mapping(1, 2);
+        $external->update_external_system_mapping('test1', 2);
         $queryTable = $this->getConnection()->createQueryTable('external_systems_mapping', 'SELECT * FROM external_systems_mapping');
         $expectedTable = $this->get_expected_data_set('external_updated')->getTable("external_systems_mapping");  
         $this->assertTablesEqual($expectedTable, $queryTable); 
@@ -108,8 +108,8 @@ class externalsystemstest extends unittestdatabase {
      */
     public function test_delete_external_system_mapping() {
         $external = new external_systems();
-        $external->insert_external_system_mapping(3, 2);
-        $external->delete_external_system_mapping(3);
+        $external->insert_external_system_mapping('test3', 2);
+        $external->delete_external_system_mapping('test3');
         $queryTable = $this->getConnection()->createQueryTable('external_systems_mapping', 'SELECT * FROM external_systems_mapping');
         $expectedTable = $this->get_expected_data_set('external')->getTable("external_systems_mapping");  
         $this->assertTablesEqual($expectedTable, $queryTable); 

@@ -121,7 +121,7 @@ class coursemanagementtest extends unittestdatabase {
         // Test course creation - SUCCESS
         $responsearray = $this->create_response_array();
         $params = $this->create_param_array();
-        $course = new \api\coursemanagement($this->db);
+        $course = new \api\coursemanagement($this->db, 'test1');
         $userid = 1;
         $this->assertEquals($responsearray, $course->create($params, $userid));
     }
@@ -139,7 +139,7 @@ class coursemanagementtest extends unittestdatabase {
             "schoolextid" => 'qwerty',
             "schoolextsys" => 'external',
             "externalid" => 123457);
-        $course = new \api\coursemanagement($this->db);
+        $course = new \api\coursemanagement($this->db, 'test1');
         $userid = 1;
         $this->assertEquals($responsearray, $course->create($params, $userid));
     }
@@ -150,7 +150,7 @@ class coursemanagementtest extends unittestdatabase {
     public function test_create_nofaculty() {
         // Test course creation - SUCCESS (not supplying faculty)
         $responsearray = $this->create_response_array();
-        $course = new \api\coursemanagement($this->db);
+        $course = new \api\coursemanagement($this->db, 'test1');
         $userid = 1;
         $params = array(
             "nodeid" => 1,
@@ -167,7 +167,7 @@ class coursemanagementtest extends unittestdatabase {
         // Test course creation - ERROR course already exists
         $responsearray = $this->create_response_array();
         $params = $this->create_param_array();
-        $course = new \api\coursemanagement($this->db);
+        $course = new \api\coursemanagement($this->db, 'test1');
         $userid = 1;
         $responsearray['statuscode'] = 306;
         $responsearray['status'] = 'Course already exists';
@@ -183,7 +183,7 @@ class coursemanagementtest extends unittestdatabase {
     public function test_create_exception_faculty() {
         // Test course creation - ERROR invalid faculty
         $responsearray = $this->create_response_array();
-        $course = new \api\coursemanagement($this->db);
+        $course = new \api\coursemanagement($this->db, 'test1');
         $userid = 1;
         $responsearray['statuscode'] = 303;
         $responsearray['status'] = 'Faculty not supplied';
@@ -204,7 +204,7 @@ class coursemanagementtest extends unittestdatabase {
         // Test course update - SUCCESS description
         $responsearray = $this->update_response_array();
         $params = $this->update_param_array();
-        $course = new \api\coursemanagement($this->db);
+        $course = new \api\coursemanagement($this->db, 'test1');
         $userid = 1;
         // Test course update - SUCCESS name
         $params = array(
@@ -220,7 +220,7 @@ class coursemanagementtest extends unittestdatabase {
     public function test_update_success_external() {
         $responsearray = $this->update_response_array();
         $params = $this->update_param_array();
-        $course = new \api\coursemanagement($this->db);
+        $course = new \api\coursemanagement($this->db, 'test1');
         $userid = 1;
         // Test course update - SUCCESS name
         $params = array(
@@ -237,7 +237,7 @@ class coursemanagementtest extends unittestdatabase {
         // Test course uddate - ERROR course does not exist
         $responsearray = $this->update_response_array();
         $params = $this->update_param_array();
-        $course = new \api\coursemanagement($this->db);
+        $course = new \api\coursemanagement($this->db, 'test1');
         $userid = 1;
         $responsearray['statuscode'] = 301;
         $responsearray['status'] = 'Course does not exist';
@@ -254,7 +254,7 @@ class coursemanagementtest extends unittestdatabase {
         // Test course update - ERROR schhol not supplied.
         $responsearray = $this->update_response_array();
         $params = $this->update_param_array();
-        $course = new \api\coursemanagement($this->db);
+        $course = new \api\coursemanagement($this->db, 'test1');
         $userid = 1;
         $responsearray['statuscode'] = 307;
         $responsearray['status'] = 'School not supplied';
@@ -283,7 +283,7 @@ class coursemanagementtest extends unittestdatabase {
             "name" => 'TEST',
             "description" => 'Test course',
             "school" => 'Test school');
-        $course = new \api\coursemanagement($this->db);
+        $course = new \api\coursemanagement($this->db, 'test1');
         $userid = 1;
         $responsearray['statuscode'] = 308;
         $responsearray['status'] = 'Request updates nothing';
@@ -303,7 +303,7 @@ class coursemanagementtest extends unittestdatabase {
         // Test course deletion - SUCCESS.
         $responsearray = $this->delete_response_array();
         $params = $this->delete_param_array();
-        $course = new \api\coursemanagement($this->db);
+        $course = new \api\coursemanagement($this->db, 'test1');
         $userid = 1;
         $this->assertEquals($responsearray, $course->delete($params, $userid));
         // Check that the remaining courses are correct, when we delete a course we actually just add a timestamp to the table
@@ -321,7 +321,7 @@ class coursemanagementtest extends unittestdatabase {
         $params = array(
             "nodeid" => 1,
             "externalid" => 123456);
-        $course = new \api\coursemanagement($this->db);
+        $course = new \api\coursemanagement($this->db, 'test1');
         $userid = 1;
         $this->assertEquals($responsearray, $course->delete($params, $userid));
         // Check that the remaining courses are correct, when we delete a course we actually just add a timestamp to the table
@@ -338,7 +338,7 @@ class coursemanagementtest extends unittestdatabase {
         // Test deleting a non existance course.
         $responsearray = $this->delete_response_array();
         $params = $this->delete_param_array();
-        $course = new \api\coursemanagement($this->db);
+        $course = new \api\coursemanagement($this->db, 'test1');
         $userid = 1;
         $responsearray['statuscode'] = 301;
         $responsearray['status'] = 'Course does not exist';
@@ -359,7 +359,7 @@ class coursemanagementtest extends unittestdatabase {
         // Test deleting a course in use.
         $responsearray = $this->delete_response_array();
         $params = $this->delete_param_array();
-        $course = new \api\coursemanagement($this->db);
+        $course = new \api\coursemanagement($this->db, 'test1');
         $userid = 1;
         $responsearray['statuscode'] = 302;
         $responsearray['status'] = 'Course not deleted, as users enrolled';
