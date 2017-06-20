@@ -194,11 +194,11 @@ class external_systems {
                 return true;
             }
             // Check is api mapped to user.
-            $result = $this->db->prepare("SELECT NULL FROM external_systems_mapping WHERE ext_id = ?");
+            $result = $this->db->prepare("SELECT NULL FROM external_systems_mapping WHERE ext_id = ? LIMIT 1");
             $result->bind_param('i', $id);
             $result->execute();
             $result->store_result();
-            if ($result->num_rows > 0) {
+            if ($result->num_rows == 1) {
                 $exists = true;
             }
             $result->close();
