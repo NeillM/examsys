@@ -31,7 +31,7 @@ $id = param::required('id', param::INT, param::FETCH_GET);
 
 $external = new \external_systems();
 
-if (!$external->external_system_exits($id)) {
+if (!$external->external_system_exists($id)) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }

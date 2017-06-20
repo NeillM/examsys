@@ -168,7 +168,7 @@ class external_systems {
      * @param integer $id internal id of external system
      * @return boolean
      */
-    public function external_system_exits($id) {
+    public function external_system_exists($id) {
         $exists = false;
         $result = $this->db->prepare("SELECT NULL FROM external_systems WHERE id = ?");
         $result->bind_param('i', $id);
@@ -187,7 +187,7 @@ class external_systems {
      */
     public function external_system_inuse($id) {
         $exists = false;
-        if ($this->external_system_exits($id)) {
+        if ($this->external_system_exists($id)) {
             // If not api external system flag as in use
             $apis = $this->get_all_api_externalsystems();
             if (!array_key_exists($id, $apis)) {

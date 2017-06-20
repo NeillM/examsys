@@ -140,12 +140,12 @@ class externalsystemstest extends unittestdatabase {
      * Test checking external system exists
      * @group extsys
      */
-    public function test_external_system_exits() {
+    public function test_external_system_exists() {
         $external = new external_systems();
-        $this->assertTrue($external->external_system_exits(1));
-        $this->assertTrue($external->external_system_exits(2));
-        $this->assertTrue($external->external_system_exits(3));
-        $this->assertFalse($external->external_system_exits(4));
+        $this->assertTrue($external->external_system_exists(1));
+        $this->assertTrue($external->external_system_exists(2));
+        $this->assertTrue($external->external_system_exists(3));
+        $this->assertFalse($external->external_system_exists(4));
     }
     /**
      * Test checking external system in use
