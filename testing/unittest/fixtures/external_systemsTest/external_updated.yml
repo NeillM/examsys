@@ -33,6 +33,10 @@ external_systems:
     id: 3
     name: 'Campus Solutions'
     type: 'plugin'
+  -
+    id: 5
+    name: 'external api 3'
+    type: 'api'
 external_systems_mapping:
   -
     user_id: 1

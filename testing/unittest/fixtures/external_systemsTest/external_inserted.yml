@@ -34,7 +34,11 @@ external_systems:
     name: 'Campus Solutions'
     type: 'plugin'
   -
-    id: 4
+    id: 5
+    name: 'external api 3'
+    type: 'api'
+  -
+    id: 6
     name: 'test'
     type: 'plugin'
 external_systems_mapping:

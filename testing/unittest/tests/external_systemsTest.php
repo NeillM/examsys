@@ -56,7 +56,7 @@ class externalsystemstest extends unittestdatabase {
      */
     public function test_get_all_externalsystems() {
         $external = new external_systems();
-        $extsys = array(1 => 'external api', 2 => 'external api 2', 3 => 'Campus Solutions');
+        $extsys = array(1 => 'external api', 2 => 'external api 2', 3 => 'Campus Solutions', 5 => 'external api 3');
         $this->assertEquals($extsys, $external->get_all_externalsystems());
     }
     /**
@@ -67,7 +67,8 @@ class externalsystemstest extends unittestdatabase {
         $external = new external_systems();
         $extsys = array(1 => array('name' => 'external api', 'type' => 'api'),
             2 => array('name' => 'external api 2', 'type' => 'api'),
-            3 => array('name' => 'Campus Solutions', 'type' => 'plugin'));
+            3 => array('name' => 'Campus Solutions', 'type' => 'plugin'),
+            5 => array('name' => 'external api 3', 'type' => 'api'));
         $this->assertEquals($extsys, $external->get_all_externalsystems_details());
     }
     /**
@@ -76,7 +77,7 @@ class externalsystemstest extends unittestdatabase {
      */
     public function test_get_all_api_externalsystems() {
         $external = new external_systems();
-        $extsys = array(1 => 'external api', 2 => 'external api 2');
+        $extsys = array(1 => 'external api', 2 => 'external api 2', 5 => 'external api 3');
         $this->assertEquals($extsys, $external->get_all_api_externalsystems());
     }
     /**
@@ -131,7 +132,7 @@ class externalsystemstest extends unittestdatabase {
     public function test_delete_external_system() {
         $external = new external_systems();
         $external->insert_external_system('test', 'plugin');
-        $external->delete_external_system(4);
+        $external->delete_external_system(6);
         $queryTable = $this->getConnection()->createQueryTable('external_systems', 'SELECT * FROM external_systems');
         $expectedTable = $this->get_expected_data_set('external')->getTable("external_systems");  
         $this->assertTablesEqual($expectedTable, $queryTable); 
@@ -157,5 +158,13 @@ class externalsystemstest extends unittestdatabase {
         $this->assertTrue($external->external_system_inuse(2));
         $this->assertTrue($external->external_system_inuse(3));
         $this->assertFalse($external->external_system_inuse(4));
+    }
+    /**
+     * Test checking external system not in use
+     * @group extsys
+     */
+    public function test_external_system_not_inuse() {
+        $external = new external_systems();
+        $this->assertFalse($external->external_system_inuse(5));
     }
 }
