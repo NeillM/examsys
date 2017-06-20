@@ -56,6 +56,40 @@ abstract class plugins_sms extends \plugins\plugins {
         }
     }
     /**
+     * Install steps for sms plugin.
+     * @param mysqli $db db connection
+     * @param string $plugin name of plugin
+     * @return bool true on success
+     */
+    static public function type_install($db, $plugin) {
+        // Add external system to external systems table
+        $insertsql = $db->prepare("INSERT IGNORE INTO external_systems (name, type) values (?, 'plugin')");
+        $insertsql->bind_param('s', $plugin);
+        $insertsql->execute();
+        $insertsql->close();
+        if ($db->errno != 0) {
+            return false;
+        }
+        return true;
+    }
+    /**
+     * Uninstall steps for sms plugin.
+     * @param mysqli $db db connection
+     * @param string $plugin name of plugin
+     * @return bool true on success
+     */
+    static public function type_uninstall($db, $plugin) {
+        // Remove external system from external systems table
+        $insertsql = $db->prepare("DELETE IGNORE FROM external_systems WHERE name = ? AND type = 'plugin'");
+        $insertsql->bind_param('s', $plugin);
+        $insertsql->execute();
+        $insertsql->close();
+        if ($db->errno != 0) {
+            return false;
+        }
+        return true;
+    }
+    /**
      * Get all assessments for academic session
      * @params integer $session academic session to sync assessments with
      */

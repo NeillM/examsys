@@ -143,6 +143,11 @@ abstract class plugins {
                             throw new \Exception("DBUtils::run_sql install.sql failed.");
                         }
                     }
+                    // Run plugin type install steps.
+                    $type = '\\plugins\\plugins_' .  strtolower($this->plugin_type);
+                    if (!$type::type_install($this->db, $this->plugin)) {
+                        throw new \Exception("$specific::install failed.");
+                    }
                 } catch (\Exception $e) {
                     return 'SCHEMA_FAIL';
                 }
@@ -210,6 +215,11 @@ abstract class plugins {
                     if (!\DBUtils::run_sql($uninstallfile, $dbuser, $dbpasswd)) {
                         throw new \Exception("DBUtils::run_sql uninstall.sql failed.");
                     }
+                }
+                // Run plugin type uninstall steps.
+                $type = '\\plugins\\plugins_' .  strtolower($this->plugin_type);
+                if (!$type::type_uninstall($this->db, $this->plugin)) {
+                        throw new \Exception("$specific::uninstall failed.");
                 }
             } catch (\Exception $e) {
                 return 'DROP_SCHEMA_FAIL';
