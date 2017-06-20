@@ -145,8 +145,10 @@ abstract class plugins {
                     }
                     // Run plugin type install steps.
                     $type = '\\plugins\\plugins_' .  strtolower($this->plugin_type);
-                    if (!$type::type_install($this->db, $this->plugin)) {
-                        throw new \Exception("$specific::install failed.");
+                    if (method_exists($type, 'type_install')) {
+                        if (!$type::type_install($this->db, $this->plugin)) {
+                            throw new \Exception("$specific::install failed.");
+                        }
                     }
                 } catch (\Exception $e) {
                     return 'SCHEMA_FAIL';
@@ -218,8 +220,10 @@ abstract class plugins {
                 }
                 // Run plugin type uninstall steps.
                 $type = '\\plugins\\plugins_' .  strtolower($this->plugin_type);
-                if (!$type::type_uninstall($this->db, $this->plugin)) {
-                        throw new \Exception("$specific::uninstall failed.");
+                if (method_exists($type, 'type_uninstall')) {
+                    if (!$type::type_uninstall($this->db, $this->plugin)) {
+                            throw new \Exception("$specific::uninstall failed.");
+                    }
                 }
             } catch (\Exception $e) {
                 return 'DROP_SCHEMA_FAIL';
