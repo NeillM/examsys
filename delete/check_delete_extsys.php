@@ -16,7 +16,7 @@
 
 /**
 *
-* Confirm that it is OK to proceed deleting an OAuth key.
+* Confirm that it is OK to proceed deleting an external system.
 *
 * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 * @version 1.0
