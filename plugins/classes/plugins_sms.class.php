@@ -75,15 +75,34 @@ abstract class plugins_sms extends \plugins\plugins {
      * @return bool true on success
      */
     protected function type_uninstall() {
-        // Remove external system from external systems table
-        $insertsql = $this->db->prepare("DELETE IGNORE FROM external_systems WHERE name = ? AND type = 'plugin'");
-        $insertsql->bind_param('s', $this->plugin);
-        $insertsql->execute();
-        $insertsql->close();
-        if ($this->db->errno != 0) {
-            return false;
+        $success = true;
+        // Do not remove external systems if in use.
+        $checksql = $this->db->prepare("SELECT NULL FROM faculty WHERE externalsys = ?
+            UNION
+                SELECT NULL FROM courses WHERE externalsys = ?
+            UNION
+                SELECT NULL FROM schools WHERE externalsys = ?
+            UNION
+                SELECT NULL FROM modules WHERE sms = ?
+            UNION
+                SELECT NULL FROM properties WHERE externalsys = ? LIMIT 1");
+        $pluginname = '\\plugins\\SMS\\' . $this->plugin. '\\' . $this->plugin;
+        $name = $pluginname::SMS;
+        $checksql->bind_param('sssss', $name);
+        $checksql->execute();
+        $checksql->store_result();
+        if ($checksql->num_rows != 1) {
+            // Remove external system from external systems table
+            $insertsql = $this->db->prepare("DELETE IGNORE FROM external_systems WHERE name = ? AND type = 'plugin'");
+            $insertsql->bind_param('s', $name);
+            $insertsql->execute();
+            $insertsql->close();
+            if ($this->db->errno != 0) {
+                $success = false;
+            }
         }
-        return true;
+        $checksql->close();
+        return $success;
     }
     /**
      * Get all assessments for academic session
