@@ -109,17 +109,23 @@ class external_systems {
      * Insert external system mapping for client
      * @param integer $client oauth client id
      * @param integer $extsys external system id
+     * @return boolean true on success
      */
     public function insert_external_system_mapping($client, $extsys) {
         $result = $this->db->prepare("INSERT INTO external_systems_mapping (client_id, ext_id) values (?, ?)");
         $result->bind_param('si', $client, $extsys);
         $result->execute();
         $result->close();
+        if ($this->db->errno != 0 or $this->db->insert_id == 0) {
+            return false;
+        }
+        return true;
     }
     /**
      * Update external system mapping for client
      * @param integer $client oauth client id
      * @param integer $extsys external system id
+     * @return boolean true on success
      */
     public function update_external_system_mapping($client, $extsys) {
         $extsysinfo = $this->get_mapped_externalsystem_info($client);
@@ -128,9 +134,15 @@ class external_systems {
             $result->bind_param('is', $extsys, $client);
             $result->execute();
             $result->close();
+            if ($this->db->errno != 0 or $this->db->insert_id == 0) {
+                return false;
+            }
         } else {
-            $this->insert_external_system_mapping($client, $extsys);
+            if (!$this->insert_external_system_mapping($client, $extsys)) {
+                return false;
+            }
         }
+        return true;
     }
     /**
      * Delete external system mapping for client

@@ -77,7 +77,10 @@ if (isset($_POST['submit'])) {
         $oauth->add_permission('gradebook', $client, false);
     }
     if (!is_null($extsys)) {
-        $external->insert_external_system_mapping($client, $extsys);
+        if (!$external->insert_external_system_mapping($client, $extsys)) {
+            // External system no longer exists so abandon attempt to create client.
+            $oauth->delete_oauthclient($client);
+        }
     }
     header("location: list_oauthclient.php", true, 303);
     exit();
