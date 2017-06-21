@@ -971,6 +971,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $configObject->set_setting('paper_editor_supports_mathjax',array("plain"), 'csv');
     $configObject->set_setting('misc_logo_main', 'logo.png', 'string');
     $configObject->set_setting('misc_logo_email', 'alt_logo.png', 'string');
+    $configObject->set_setting('api_allow_superuser', 0, 'boolean');
     self::createDefaultUsers();
     self::createDefaultFacultiesSchoolsModules();
     self::createQuestionStatuses();

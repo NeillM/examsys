@@ -24,6 +24,8 @@ if ($updater_utils->check_version("6.4.0")) {
         // Add external systems entry for ims enterprise.
         $datasql = "INSERT IGNORE INTO external_systems (name, type) values ('ims_enterprise', 'plugin')";
         $updater_utils->execute_query($datasql, true);
+        // Add api super user.
+        $configObject->set_setting('api_allow_superuser', 0, 'boolean');
         $updater_utils->record_update('externalsys');
     }
 }

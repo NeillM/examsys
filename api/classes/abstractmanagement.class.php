@@ -59,6 +59,10 @@ abstract class abstractmanagement {
      * The oauth client id.
      */
     protected $client_id;
+    /**
+     * The config object.
+     */
+    protected $config;
     
     /**
      * Constructor
@@ -68,6 +72,7 @@ abstract class abstractmanagement {
     public function __construct($mysqli, $client_id = null) {
         $this->db = $mysqli;
         $this->client_id = $client_id;
+        $this->config = \Config::get_instance();
     }
     
     /**
@@ -126,12 +131,18 @@ abstract class abstractmanagement {
             // API so check external system mapping.
             $external = new \external_systems();
             $system = $external->get_mapped_externalsystem_info($this->client_id);
-            if ($system > 0) {
+            if (count($system) == 2) {
                 // Mapped so can only manipulate $system.
                 return $system['name'];
             } else {
-                // Not mapped to specific external system so can manipulate any.
-                return $externalsys;
+                // Super users can call the api for an external system.
+                if ($this->config->get_setting('core', 'api_allow_superuser')) {
+                    // Not mapped to specific external system so can manipulate any.
+                    return $externalsys;
+                } else {
+                    // A null external system will cause future checks to fail.
+                    return null;
+                }
             }
         }
     }
