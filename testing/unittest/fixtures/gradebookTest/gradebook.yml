@@ -68,6 +68,12 @@ users:
     username: "sysadmin"
     roles: "Staff,SysAdmin"
     grade: "University Lecturer"
+oauth_clients:
+  -
+    client_id: 'test1'
+    client_secret: 'test'
+    redirect_uri: 'https://www.example.com'
+    user_id: 1
 sid:
   -
     student_id: 12345678
@@ -80,4 +86,4 @@ external_systems:
 external_systems_mapping:
   -
     ext_id: 1
-    user_id: 1
+    client_id: 'test1'
