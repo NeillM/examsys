@@ -150,7 +150,7 @@ class assessment {
     public function create($papertitle, $papertype, $paperowner, $startdate, $enddate, $labs, $duration, $session, $modules, $timezone, $externalid = null, $externalsys = null) {
             
         // Check externalid is unique.
-        if (!is_null($externalid) and !is_null($externalsys)) {
+        if (!is_null($externalid)) {
             $uniqueexternalid = Paper_utils::get_id_from_externalid($externalid, $externalsys, $this->db);
             if ($uniqueexternalid !== false) {
                 throw new Exception('NON_UNIQUE_EXTID');
