@@ -22,6 +22,10 @@
 * @package
 */
 
+require_once 'mapping.inc';
+require_once 'media.inc';
+require_once '../LTI/ims-lti/UoN_LTI.php';
+
 $configObject = Config::get_instance();
 
 function can_display_feedback($paper_type, $moduleID, $userObject) {
