@@ -246,7 +246,6 @@ try {
   cli_utils::prompt($string['finished']);
   cli_utils::prompt($string['actionrequired']);
   cli_utils::prompt(filter_var($string['readonly'], $filter, $options));
-  cli_utils::prompt('You should now remove settings.xml from this system.');
 } catch (Exception $e) {
   cli_utils::prompt($e->getMessage());
 }
