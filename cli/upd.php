@@ -117,136 +117,137 @@ if (function_exists('opcache_reset')) {
     opcache_reset();
 }
 
-try {
-  $updater_utils = new UpdaterUtils($mysqli, $configObject->get('cfg_db_database'));
-  // Get the code version.
-  $version = $configObject->getxml('version');
-  // Get the installed version.
-  $old_version = $configObject->get('rogo_version');
-  if ($version == $old_version) {
-    cli_utils::prompt('Nothing to update.');
+
+$updater_utils = new UpdaterUtils($mysqli, $configObject->get('cfg_db_database'));
+// Get the code version.
+$version = $configObject->getxml('version');
+// Get the installed version.
+$old_version = $configObject->get('rogo_version');
+if ($version == $old_version) {
+  cli_utils::prompt('Nothing to update.');
+  exit(0);
+}
+if ($updater_utils->check_version("6.3.0")) {
+  cli_utils::prompt('Please upgrade via the user interface to version 6.3.X before using the command line updater.');
+  exit(0);
+}
+// Get update file dir.
+$migration_path = 'updates' . DIRECTORY_SEPARATOR . 'version5';
+// Check pre-requisites.
+InstallUtils::checkSoftware();
+if (!InstallUtils::configFileIsWriteable()) {
+  cli_utils::prompt($string['updatefromversion'] . ' ' . $old_version . ' to ' . $version);
+  cli_utils::prompt($string['warning1']);
+  cli_utils::prompt($string['warning2']);
+  exit(0);
+} elseif (!InstallUtils::configPathIsWriteable()) {
+  cli_utils::prompt($string['updatefromversion'] . ' ' . $old_version . ' to ' . $version);
+  cli_utils::prompt($string['warning3']);
+  cli_utils::prompt($string['warning4']);
+  exit(0);
+}
+// Backup the config file before proceeding.
+$updater_utils->backup_file($cfg_web_root, $old_version);
+// Update.
+ob_start();
+cli_utils::prompt($string['startingupdate']);
+cli_utils::prompt("Starting at " . date("H:i:s"));
+ob_flush();
+flush();
+$mysqli->autocommit(false);
+
+// Update the staff online help files.
+if ($update_staff_help) {
+  $updater_utils->execute_query("TRUNCATE staff_help", false);
+  $file = file_get_contents('install/staff_help.sql');
+  $mysqli->multi_query($file);
+  if ($mysqli->error) {
+    cli_utils::prompt($string['showerror']);
     exit(0);
   }
-  if ($updater_utils->check_version("6.3.0")) {
-    cli_utils::prompt('Please upgrade via the user interface to version 6.3.X before using the command line updater.');
+  $ext = '';
+  while ($mysqli->more_results()) {
+    $mysqli->next_result();
+    if ($mysqli->insert_id > 0) $ext = $ext . ' ' . $mysqli->insert_id;
+  }
+  // Ensure all help images are in the correct location.
+  $staffhelp = rogo_directory::get_directory('help_staff');
+  $staffhelp->create();
+  $staffhelp->copy_from_default();
+  // Fix path of help file images as may not be in root web dir.
+  InstallUtils::correct_staff_path();
+  cli_utils::prompt("LOADED staff_help: " . $ext);
+}
+// Update the student online help files.
+if ($update_student_help) {
+  $updater_utils->execute_query("TRUNCATE student_help", false);
+
+  $file = file_get_contents('install/student_help.sql');
+  $mysqli->multi_query($file);
+  if ($mysqli->error) {
+    cli_utils::prompt($string['showerror']);
     exit(0);
   }
-  // Get update file dir.
-  $migration_path = 'updates' . DIRECTORY_SEPARATOR . 'version5';
-  // Check pre-requisites.
-  InstallUtils::checkSoftware();
-  if (!InstallUtils::configFileIsWriteable()) {
-    cli_utils::prompt($string['updatefromversion'] . ' ' . $old_version . ' to ' . $version);
-    cli_utils::prompt($string['warning1']);
-    cli_utils::prompt($string['warning2']);
-    exit(0);
-  } elseif (!InstallUtils::configPathIsWriteable()) {
-    cli_utils::prompt($string['updatefromversion'] . ' ' . $old_version . ' to ' . $version);
-    cli_utils::prompt($string['warning3']);
-    cli_utils::prompt($string['warning4']);
-    exit(0);
+  $ext = '';
+  while ($mysqli->more_results()) {
+    $mysqli->next_result();
+    if ($mysqli->insert_id > 0) $ext = $ext . ' ' . $mysqli->insert_id;
   }
-  // Backup the config file before proceeding.
-  $updater_utils->backup_file($cfg_web_root, $old_version);
-  // Update.
-  ob_start();
-  cli_utils::prompt($string['startingupdate']);
-  cli_utils::prompt("Starting at " . date("H:i:s"));
-  ob_flush();
-  flush();
-  $mysqli->autocommit(false);
-  
-  // Update the staff online help files.
-  if ($update_staff_help) {
-    $updater_utils->execute_query("TRUNCATE staff_help", false);
+  // Ensure all help images are in the correct location.
+  $studenthelp = rogo_directory::get_directory('help_student');
+  $studenthelp->create();
+  $studenthelp->copy_from_default();
+  // Fix path of help file images as may not be in root web dir.
+  InstallUtils::correct_student_path();
+  cli_utils::prompt("LOADED student_help: " . $ext);
+}
+$mysqli->commit();
 
-    $file = file_get_contents('install/staff_help.sql');
-    $mysqli->multi_query($file);
-    if ($mysqli->error) {
-      cli_utils::prompt($string['showerror']);
-      exit(0);
-    }
-    $ext = '';
-    while ($mysqli->more_results()) {
-      $mysqli->next_result();
-      if ($mysqli->insert_id > 0) $ext = $ext . ' ' . $mysqli->insert_id;
-    }
-    // Ensure all help images are in the correct location.
-    $staffhelp = rogo_directory::get_directory('help_staff');
-    $staffhelp->create();
-    $staffhelp->copy_from_default();
-    // Fix path of help file images as may not be in root web dir.
-    InstallUtils::correct_staff_path();
-    cli_utils::prompt("LOADED staff_help: " . $ext);
+// Run individual update files
+$files = scandir($migration_path);
+foreach ($files as $file) {
+  if (StringUtils::ends_with($file, '.php')) {
+    cli_utils::prompt($migration_path . '/' . $file);
+    include $migration_path . '/' . $file;
+    $mysqli->commit();
   }
-  // Update the student online help files.
-  if ($update_student_help) {
-    $updater_utils->execute_query("TRUNCATE student_help", false);
+}
 
-    $file = file_get_contents('install/student_help.sql');
-    $mysqli->multi_query($file);
-    if ($mysqli->error) {
-      cli_utils::prompt($string['showerror']);
-      exit(0);
-    }
-    $ext = '';
-    while ($mysqli->more_results()) {
-      $mysqli->next_result();
-      if ($mysqli->insert_id > 0) $ext = $ext . ' ' . $mysqli->insert_id;
-    }
-    // Ensure all help images are in the correct location.
-    $studenthelp = rogo_directory::get_directory('help_student');
-    $studenthelp->create();
-    $studenthelp->copy_from_default();
-    // Fix path of help file images as may not be in root web dir.
-    InstallUtils::correct_student_path();
-    cli_utils::prompt("LOADED student_help: " . $ext);
-  }
-  $mysqli->commit();
-  
-  // Run individual update files
-  $files = scandir($migration_path);
-  foreach ($files as $file) {
-    if (StringUtils::ends_with($file, '.php')) {
-      cli_utils::prompt($migration_path . '/' . $file);
-      include $migration_path . '/' . $file;
-      $mysqli->commit();
-    }
-  }
+$mysqli->commit();
 
-  $mysqli->commit();
-  
-  // Update language packs.
-  if ($update_langpacks) {
-    InstallUtils::download_langpacks();
-  }
+// Update language packs.
+if ($update_langpacks) {
+  InstallUtils::download_langpacks();
+}
 
-  // Update npm and dependencies.
-  if ($update_npm) {
+// Update npm and dependencies.
+if ($update_npm) {
+  try {
     $npm_method = npm_utils::INSTALL_NODEV;
     npm_utils::setup($npm_method);
+  } catch (Exception $e) {
+    cli_utils::prompt($e->getMessage());
   }
-
-  // Final housekeeping activities - put all updates above this line
-  $updated = $updater_utils->update_version($version, $string, $cfg_web_root);
-  if ($updated !== true) {
-    cli_utils::prompt($string['couldnotwrite']);
-  }
-  $updater_utils->execute_query('FLUSH PRIVILEGES', false);
-  $updater_utils->execute_query('TRUNCATE sys_errors', false);
-  $mysqli->close();
-  cli_utils::prompt("Ended at " . date("H:i:s"));
-  $filter = FILTER_SANITIZE_STRING;
-  $options = array(
-    'options' => array(
-      'default' => null,
-     ),
-    'flags' => FILTER_FLAG_NO_ENCODE_QUOTES
-  );
-  cli_utils::prompt($string['finished']);
-  cli_utils::prompt($string['actionrequired']);
-  cli_utils::prompt(filter_var($string['readonly'], $filter, $options));
-} catch (Exception $e) {
-  cli_utils::prompt($e->getMessage());
 }
+
+// Final housekeeping activities - put all updates above this line
+$updated = $updater_utils->update_version($version, $string, $cfg_web_root);
+if ($updated !== true) {
+  cli_utils::prompt($string['couldnotwrite']);
+}
+$updater_utils->execute_query('FLUSH PRIVILEGES', false);
+$updater_utils->execute_query('TRUNCATE sys_errors', false);
+$mysqli->close();
+cli_utils::prompt("Ended at " . date("H:i:s"));
+$filter = FILTER_SANITIZE_STRING;
+$options = array(
+  'options' => array(
+    'default' => null,
+   ),
+  'flags' => FILTER_FLAG_NO_ENCODE_QUOTES
+);
+cli_utils::prompt($string['finished']);
+cli_utils::prompt($string['actionrequired']);
+cli_utils::prompt(filter_var($string['readonly'], $filter, $options));
+
 exit(0);
