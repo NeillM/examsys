@@ -16,4 +16,4 @@ var RubyDialog = {
 	}
 };
 
-tinyMCEPopup.onInit.add(ExampleDialog.init, RubyDialog);
+tinyMCEPopup.onInit.add(RubyDialog.init, RubyDialog);
