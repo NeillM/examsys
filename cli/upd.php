@@ -170,13 +170,17 @@ if ($update_staff_help) {
     $mysqli->next_result();
     if ($mysqli->insert_id > 0) $ext = $ext . ' ' . $mysqli->insert_id;
   }
-  // Ensure all help images are in the correct location.
-  $staffhelp = rogo_directory::get_directory('help_staff');
-  $staffhelp->create();
-  $staffhelp->copy_from_default();
-  // Fix path of help file images as may not be in root web dir.
-  InstallUtils::correct_staff_path();
-  cli_utils::prompt("LOADED staff_help: " . $ext);
+  try {
+      // Ensure all help images are in the correct location.
+      $staffhelp = rogo_directory::get_directory('help_staff');
+      $staffhelp->create();
+      $staffhelp->copy_from_default();
+      // Fix path of help file images as may not be in root web dir.
+      InstallUtils::correct_staff_path();
+      cli_utils::prompt("LOADED staff_help: " . $ext);
+  } catch (Exception $e) {
+    cli_utils::prompt($e->getMessage());
+  }
 }
 // Update the student online help files.
 if ($update_student_help) {
@@ -193,13 +197,17 @@ if ($update_student_help) {
     $mysqli->next_result();
     if ($mysqli->insert_id > 0) $ext = $ext . ' ' . $mysqli->insert_id;
   }
-  // Ensure all help images are in the correct location.
-  $studenthelp = rogo_directory::get_directory('help_student');
-  $studenthelp->create();
-  $studenthelp->copy_from_default();
-  // Fix path of help file images as may not be in root web dir.
-  InstallUtils::correct_student_path();
-  cli_utils::prompt("LOADED student_help: " . $ext);
+  try {
+      // Ensure all help images are in the correct location.
+      $studenthelp = rogo_directory::get_directory('help_student');
+      $studenthelp->create();
+      $studenthelp->copy_from_default();
+      // Fix path of help file images as may not be in root web dir.
+      InstallUtils::correct_student_path();
+      cli_utils::prompt("LOADED student_help: " . $ext);
+  } catch (Exception $e) {
+    cli_utils::prompt($e->getMessage());
+  }
 }
 $mysqli->commit();
 
