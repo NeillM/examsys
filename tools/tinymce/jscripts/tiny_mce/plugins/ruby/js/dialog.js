@@ -10,7 +10,7 @@ var RubyDialog = {
 
 	insert : function() {
 		// Insert the contents from the input into the document
-		var ruby = '<ruby>' + document.forms[0].ruby.value + '<rp>{</rp><rt>' + document.forms[0].rt.value + '</rt><rp>}</rp></ruby>';
+		var ruby = '<ruby><rb>' + document.forms[0].rb.value + '</rb><rp>{</rp><rt>' + document.forms[0].rt.value + '</rt><rp>}</rp></ruby>';
 		tinyMCEPopup.editor.execCommand('mceInsertContent', false, ruby);
 		tinyMCEPopup.close();
 	}
