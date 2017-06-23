@@ -5,7 +5,7 @@ var RubyDialog = {
 		var f = document.forms[0];
 
 		// Get the selected contents as text and place it in the input
-		f.ruby.value = tinyMCEPopup.editor.selection.getContent({format : 'text'});
+		f.rb.value = tinyMCEPopup.editor.selection.getContent({format : 'text'});
 	},
 
 	insert : function() {
