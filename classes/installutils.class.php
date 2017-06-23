@@ -2020,7 +2020,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
     if (!self::$cli) {
       echo "</div>\n";
-      self::displayFooter();
+      if ($fatal) {
+        self::displayFooter();
+      }
     }
     if ($fatal) {
         exit;
