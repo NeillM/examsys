@@ -1955,6 +1955,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       self::displayError($errors);
     }
     // Install composer and dependencies.
+    // Non fatal error so issue can be managed.
     try {
       if (!InstallUtils::$behat_install and !InstallUtils::$phpunit_install) {
         composer_utils::setup(composer_utils::INSTALL_NODEV);
@@ -1965,7 +1966,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
  
     if (count($errors) > 0) {
-      self::displayError($errors);
+      self::displayError($errors, false);
     }
   }
 
@@ -1984,10 +1985,12 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   }
 
   /**
-  * Display errors with a nice message
-  *
-  */
-  static function displayError($error = '') {
+   * Display errors with a nice message
+   * @param string $error error message
+   * @param boolean $fatal is error fatal
+   *
+   */
+  static function displayError($error = '', $fatal = true) {
     global $string;
 
     if (!self::$cli) {
@@ -2013,7 +2016,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       echo "</div>\n";
       self::displayFooter();
     }
-    exit;
+    if ($fatal) {
+        exit;
+    }
   }
 
   /**
