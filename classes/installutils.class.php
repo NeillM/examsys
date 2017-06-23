@@ -1955,7 +1955,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       self::displayError($errors);
     }
     // Install composer and dependencies.
-    // Non fatal error so issue can be managed.
     try {
       if (!InstallUtils::$behat_install and !InstallUtils::$phpunit_install) {
         composer_utils::setup(composer_utils::INSTALL_NODEV);
@@ -1966,7 +1965,14 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
  
     if (count($errors) > 0) {
-      self::displayError($errors, false);
+      $langpack = new langpack();
+      if ($e->getMessage() == $langpack->get_string('classes/composerutils', 'cannotinstall')) {
+          $fatal = true;
+      } else {
+          // Non fatal error if cannot be updated.
+          $fatal = false;
+      }
+      self::displayError($errors, $fatal);
     }
   }
 
