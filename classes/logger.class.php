@@ -156,7 +156,7 @@ Class Logger {
    * @param string $errorstring the error
    * @param string $errorfile the file
    * @param integer $errorline the line number
-   * @param array $variables variable to log
+   * @param array|string $variables variables to log
    */
   public function record_application_warning($userid, $type, $errorstring, $errorfile, $errorline, $variables = '') {
     if ($variables != '' and !is_string($variables)) {
