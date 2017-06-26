@@ -25,7 +25,7 @@
 * @package
 */
 
-include_once '../include/load_config.php';
+include_once dirname(__DIR__) . '/include/load_config.php';
 require_once 'classes/class_totals.php';
 
 $cfg_web_host = $configObject->get('cfg_web_host');

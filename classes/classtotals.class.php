@@ -29,9 +29,9 @@
 * @package
 */
 
-require_once '../include/calculate_marks.inc';
-require_once '../include/demo_replace.inc';
-require_once '../include/sort.inc';
+require_once dirname(__DIR__) . '/include/calculate_marks.inc';
+require_once dirname(__DIR__) . '/include/demo_replace.inc';
+require_once dirname(__DIR__) . '/include/sort.inc';
 
 class ClassTotals {
 

@@ -22,37 +22,13 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
-require_once '../lang/' . $language . '/paper/finish.php';
-require_once '../lang/' . $language . '/paper/start.php';
-require_once '../include/finish_functions.inc';
+
+require_once dirname(dirname(__DIR__)) . '/include/finish_functions.inc';
 
 /**
  * Class for class_totals functions used in summative exam check test.
  */
 class class_totals {
-
-  /**
-   * Function to parse marks from get_user_results
-   *
-   * @param string $data - user_results array
-   * @return array $marks
-   */
-  function parseRawMarks($data) {
-    // No result
-    if (count($data) == 0) {
-      return false;
-    }
-    $line = 0;
-    foreach ($data as $row) {
-      $marks[$line]['mark'] = $row['mark'];
-      $marks[$line]['percent'] = $row['percent'];
-      $marks[$line]['metadataID'] = $row['metadataID'];
-      $marks[$line]['userID'] = $row['userID'];
-
-      $line++;
-    }
-    return $marks;
-  }
 
   /**
    * Function to parse marks in display_feedback
@@ -127,9 +103,7 @@ class class_totals {
       $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($paper['crypt_name'], $mysqli, $string, true);
       $report = new ClassTotals(1, 100, 'asc', 0, 'student_id', $userObject, $propertyObj, $paper['start_date'], $paper['end_date'], '%', '', $mysqli, $string);
       $report->compile_report(false);
-      $user_results = $report->get_user_results();
-
-      $marks_set = $this->parseRawMarks($user_results);
+      $marks_set = $report->get_user_results();
 
       $current_no++;
 
@@ -147,6 +121,7 @@ class class_totals {
       foreach ($marks_set as $mark) {
         $overrides = $paper_utils->get_marking_overrides('2', $mark['userID'], $paper['paperID']);
         $log_metadata = new LogMetadata($mark['userID'], $paper['paperID'], $mysqli);
+        $log_metadata->get_record($mark['metadataID']);
         ob_start(); // Start output buffering
         display_feedback($propertyObj, $mark['userID'], '2', $userObject, $log_metadata, $mysqli, $status_array, $overrides, null);
         $output = ob_get_contents(); // Store buffer in variable
