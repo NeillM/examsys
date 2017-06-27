@@ -22,6 +22,12 @@
 * @package
 */
 
+require_once 'mapping.inc';
+require_once 'media.inc';
+require_once dirname(__DIR__) . '/LTI/ims-lti/UoN_LTI.php';
+require_once dirname(__DIR__) . '/lang/' . $language . '/paper/finish.php';
+require_once dirname(__DIR__). '/lang/' . $language . '/paper/start.php';
+
 $configObject = Config::get_instance();
 
 function can_display_feedback($paper_type, $moduleID, $userObject) {
