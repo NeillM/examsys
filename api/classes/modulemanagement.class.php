@@ -81,10 +81,10 @@ class modulemanagement extends \api\abstractmanagement {
                 $modid = $params['moduleid'];
             } elseif (!empty($params['moduleextid'])) {
                 // What external system is the client mapped to.
-                if (empty($params['externalsys'])) {
-                    $params['externalsys'] = null;
+                if (empty($params['moduleextsys'])) {
+                    $params['moduleextsys'] = null;
                 }
-                $params['moduleextsys'] = $this->get_external_system($params['externalsys']);
+                $params['moduleextsys'] = $this->get_external_system($params['moduleextsys']);
                 // Try using external system id to enrol.
                 $modid = \module_utils::get_id_from_externalid($params['moduleextid'], $params['moduleextsys'], $this->db);
                 if ($modid === false) {
@@ -133,10 +133,10 @@ class modulemanagement extends \api\abstractmanagement {
                 $modid = $params['moduleid'];
             } elseif (!empty($params['moduleextid'])) {
                 // What external system is the client mapped to.
-                if (empty($params['externalsys'])) {
-                    $params['externalsys'] = null;
+                if (empty($params['moduleextsys'])) {
+                    $params['moduleextsys'] = null;
                 }
-                $params['moduleextsys'] = $this->get_external_system($params['externalsys']);
+                $params['moduleextsys'] = $this->get_external_system($params['moduleextsys']);
                 // Try using external system id to enrol.
                 $modid = \module_utils::get_id_from_externalid($params['moduleextid'], $params['moduleextsys'], $this->db);
                 if ($modid === false) {
@@ -388,7 +388,7 @@ class modulemanagement extends \api\abstractmanagement {
             }
             $params['sms'] = $this->get_external_system($params['sms']);
             // Try using external system id to delete module.
-            $moduleid = \module_utils::get_id_from_externalid($params['externalid'], $params['externalsys'], $this->db);
+            $moduleid = \module_utils::get_id_from_externalid($params['externalid'], $params['sms'], $this->db);
             $params['id'] = $moduleid;
         } else {
             $moduleid = false;
