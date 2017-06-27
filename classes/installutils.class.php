@@ -1966,7 +1966,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
  
     if (count($errors) > 0) {
       $langpack = new langpack();
-      if ($e->getMessage() == $langpack->get_string('classes/composerutils', 'cannotinstall')) {
+      if ($errors[$errorcode] == $langpack->get_string('classes/composerutils', 'cannotinstall')) {
           $fatal = true;
       } else {
           // Non fatal error if cannot be updated.
@@ -1992,7 +1992,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
   /**
    * Display errors with a nice message
-   * @param string $error error message
+   * @param string|array $error error message(s)
    * @param boolean $fatal is error fatal
    *
    */
