@@ -25,7 +25,6 @@
  * @category unittest
  */
 ini_set('display_errors', 1);
-require_once dirname(dirname(dirname(__DIR__))) . '/include/path_functions.inc.php';
 require_once dirname(dirname(dirname(__DIR__))) . '/include/autoload.inc.php';
 autoloader::init();
 
@@ -69,10 +68,6 @@ try {
   cli_utils::prompt(help::error());
   exit(0);
 }
-
-// Setup some variables that are needed by scripts that are included further down.
-$cfg_web_root = get_root_path() . '/';
-$cfg_root_path = ltrim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $cfg_web_root), '/');
 
 // Ensure any caches are cleared.
 if (function_exists('opcache_reset')) {
