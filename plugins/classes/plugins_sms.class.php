@@ -88,7 +88,7 @@ abstract class plugins_sms extends \plugins\plugins {
                 SELECT NULL FROM properties WHERE externalsys = ? LIMIT 1");
         $pluginname = '\\plugins\\SMS\\' . $this->plugin. '\\' . $this->plugin;
         $name = $pluginname::SMS;
-        $checksql->bind_param('sssss', $name);
+        $checksql->bind_param('sssss', $name, $name, $name, $name, $name);
         $checksql->execute();
         $checksql->store_result();
         if ($checksql->num_rows != 1) {

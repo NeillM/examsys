@@ -164,7 +164,7 @@ abstract class plugins {
                     }
                     // Run plugin type install steps.
                     if (!$this->type_install()) {
-                        throw new \Exception("$specific::install failed.");
+                        throw new \Exception("type_install failed.");
                     }
                 } catch (\Exception $e) {
                     return 'SCHEMA_FAIL';
@@ -236,7 +236,7 @@ abstract class plugins {
                 }
                 // Run plugin type uninstall steps.
                 if (!$this->type_uninstall()) {
-                    throw new \Exception("$specific::uninstall failed.");
+                    throw new \Exception("type_uninstall failed.");
                 }
             } catch (\Exception $e) {
                 return 'DROP_SCHEMA_FAIL';
