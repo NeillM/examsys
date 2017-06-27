@@ -1965,7 +1965,14 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
  
     if (count($errors) > 0) {
-      self::displayError($errors);
+      $langpack = new langpack();
+      if ($errors[$errorcode] == $langpack->get_string('classes/composerutils', 'cannotinstall')) {
+          $fatal = true;
+      } else {
+          // Non fatal error if cannot be updated.
+          $fatal = false;
+      }
+      self::displayError($errors, $fatal);
     }
   }
 
@@ -1984,10 +1991,12 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   }
 
   /**
-  * Display errors with a nice message
-  *
-  */
-  static function displayError($error = '') {
+   * Display errors with a nice message
+   * @param string|array $error error message(s)
+   * @param boolean $fatal is error fatal
+   *
+   */
+  static function displayError($error = '', $fatal = true) {
     global $string;
 
     if (!self::$cli) {
@@ -2011,9 +2020,13 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
     if (!self::$cli) {
       echo "</div>\n";
-      self::displayFooter();
+      if ($fatal) {
+        self::displayFooter();
+      }
     }
-    exit;
+    if ($fatal) {
+        exit;
+    }
   }
 
   /**
