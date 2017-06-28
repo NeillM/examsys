@@ -65,10 +65,10 @@ class externalsystemstest extends unittestdatabase {
      */
     public function test_get_all_externalsystems_details() {
         $external = new external_systems();
-        $extsys = array(1 => array('name' => 'external api', 'type' => 'api'),
-            2 => array('name' => 'external api 2', 'type' => 'api'),
-            3 => array('name' => 'Campus Solutions', 'type' => 'plugin'),
-            5 => array('name' => 'external api 3', 'type' => 'api'));
+        $extsys = array(1 => array('name' => 'external api', 'type' => \external_systems::API),
+            2 => array('name' => 'external api 2', 'type' => \external_systems::API),
+            3 => array('name' => 'Campus Solutions', 'type' => \external_systems::PLUGIN),
+            5 => array('name' => 'external api 3', 'type' => \external_systems::API));
         $this->assertEquals($extsys, $external->get_all_externalsystems_details());
     }
     /**
@@ -120,7 +120,7 @@ class externalsystemstest extends unittestdatabase {
      */
     public function test_insert_external_system() {
         $external = new external_systems();
-        $external->insert_external_system('test', 'plugin');
+        $external->insert_external_system('test', \external_systems::PLUGIN);
         $queryTable = $this->getConnection()->createQueryTable('external_systems', 'SELECT * FROM external_systems');
         $expectedTable = $this->get_expected_data_set('external_inserted')->getTable("external_systems");  
         $this->assertTablesEqual($expectedTable, $queryTable); 
@@ -131,7 +131,7 @@ class externalsystemstest extends unittestdatabase {
      */
     public function test_delete_external_system() {
         $external = new external_systems();
-        $external->insert_external_system('test', 'plugin');
+        $external->insert_external_system('test', \external_systems::PLUGIN);
         $external->delete_external_system(6);
         $queryTable = $this->getConnection()->createQueryTable('external_systems', 'SELECT * FROM external_systems');
         $expectedTable = $this->get_expected_data_set('external')->getTable("external_systems");  

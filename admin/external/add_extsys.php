@@ -29,7 +29,7 @@ $external = new \external_systems();
 
 if (isset($_POST['submit'])) {
     $name = param::required('name', param::ALPHANUM, param::FETCH_POST);   
-    $external->insert_external_system($name, 'api');
+    $external->insert_external_system($name, \external_systems::API);
     header("location: list_extsys.php", true, 303);
     exit();
 }

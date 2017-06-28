@@ -30,6 +30,16 @@ class external_systems {
      */
     private $db;
     /**
+     * API external system type
+     * @var string
+     */
+    const API = 'api';
+    /**
+     * Pluin external system type
+     * @var string
+     */
+    const PLUGIN = 'plugin';
+    /**
      * Constructor
      * @return void 
      */
@@ -96,7 +106,9 @@ class external_systems {
      */
     public function get_all_api_externalsystems() {
         $exts = array();
-        $result = $this->db->prepare("SELECT id, name FROM external_systems WHERE type = 'api'");
+        $result = $this->db->prepare("SELECT id, name FROM external_systems WHERE type = ?");
+        $api = self::API;
+        $result->bind_param('s', $api);
         $result->execute();
         $result->bind_result($extid, $name);
         while ($result->fetch()) {
@@ -161,12 +173,17 @@ class external_systems {
      * Insert external system
      * @param string $name name of external system
      * @param string $type type of external system
+     * @return boolean true on success
      */
     public function insert_external_system($name, $type) {
         $result = $this->db->prepare("INSERT INTO external_systems (name, type) VALUES (?, ?)");
         $result->bind_param('ss', $name, $type);
         $result->execute();
         $result->close();
+        if ($this->db->errno != 0) {
+            return false;
+        }
+        return true;
     }
     /**
      * Delete external system

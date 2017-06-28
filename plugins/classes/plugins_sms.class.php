@@ -61,14 +61,8 @@ abstract class plugins_sms extends \plugins\plugins {
      */
     protected function type_install() {
         // Add external system to external systems table
-        $insertsql = $this->db->prepare("INSERT IGNORE INTO external_systems (name, type) values (?, 'plugin')");
-        $insertsql->bind_param('s', $this->plugin);
-        $insertsql->execute();
-        $insertsql->close();
-        if ($this->db->errno != 0) {
-            return false;
-        }
-        return true;
+        $external = new \external_systems();
+        return $external->insert_external_system($this->plugin, \external_systems::PLUGIN);
     }
     /**
      * Uninstall steps for sms plugin.
@@ -93,8 +87,9 @@ abstract class plugins_sms extends \plugins\plugins {
         $checksql->store_result();
         if ($checksql->num_rows != 1) {
             // Remove external system from external systems table
-            $insertsql = $this->db->prepare("DELETE IGNORE FROM external_systems WHERE name = ? AND type = 'plugin'");
-            $insertsql->bind_param('s', $name);
+            $insertsql = $this->db->prepare("DELETE IGNORE FROM external_systems WHERE name = ? AND type = ?");
+            $plugin = \external_systems::PLUGIN;
+            $insertsql->bind_param('ss', $name, $plugin);
             $insertsql->execute();
             $insertsql->close();
             if ($this->db->errno != 0) {
