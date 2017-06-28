@@ -126,6 +126,15 @@ class externalsystemstest extends unittestdatabase {
         $this->assertTablesEqual($expectedTable, $queryTable); 
     }
     /**
+     * Test inserting new external system invalid name
+     * @group extsys
+     */
+    public function test_insert_external_system_invlaid() {
+        $external = new external_systems();
+        $this->assertFalse($external->insert_external_system('', \external_systems::PLUGIN));
+        $this->assertFalse($external->insert_external_system('0', \external_systems::PLUGIN));
+    }
+    /**
      * Test deleting external system
      * @group extsys
      */

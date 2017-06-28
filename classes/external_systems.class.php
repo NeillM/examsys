@@ -177,6 +177,9 @@ class external_systems {
      */
     public function insert_external_system($name, $type) {
         $result = $this->db->prepare("INSERT INTO external_systems (name, type) VALUES (?, ?)");
+        if (empty($name)) {
+            return false;
+        }
         $result->bind_param('ss', $name, $type);
         $result->execute();
         $result->close();
