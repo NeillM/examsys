@@ -45,3 +45,4 @@ $string['facultymanagement/create'] = 'Create a faculty';
 $string['facultymanagement/delete'] = 'Delete a faculty';
 $string['facultymanagement/update'] = 'Update a faculty';
 $string['extsys'] = 'External System';
+
