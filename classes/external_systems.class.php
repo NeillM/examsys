@@ -128,7 +128,7 @@ class external_systems {
         $result->bind_param('si', $client, $extsys);
         $result->execute();
         $result->close();
-        if ($this->db->errno != 0 or $this->db->insert_id == 0) {
+        if ($this->db->errno != 0) {
             return false;
         }
         return true;
@@ -146,7 +146,7 @@ class external_systems {
             $result->bind_param('is', $extsys, $client);
             $result->execute();
             $result->close();
-            if ($this->db->errno != 0 or $this->db->insert_id == 0) {
+            if ($this->db->errno != 0) {
                 return false;
             }
         } else {
