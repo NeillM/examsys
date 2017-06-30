@@ -58,7 +58,7 @@ class moduleutilstest extends unittestdatabase {
                   'active' => null,
                   'vle_api' => null,
                   'checklist' => null,
-                  'sms' => null,
+                  'sms' => 'external',
                   'selfenroll' => null,
                   'schoolid' => 1,
                   'neg_marking' => null,
@@ -84,7 +84,7 @@ class moduleutilstest extends unittestdatabase {
                   'active' => null,
                   'vle_api' => null,
                   'checklist' => null,
-                  'sms' => null,
+                  'sms' => 'external',
                   'selfenroll' => null,
                   'schoolid' => 1,
                   'neg_marking' => null,
@@ -110,7 +110,7 @@ class moduleutilstest extends unittestdatabase {
                   'active' => null,
                   'vle_api' => null,
                   'checklist' => null,
-                  'sms' => null,
+                  'sms' => 'external',
                   'selfenroll' => null,
                   'schoolid' => 1,
                   'neg_marking' => null,
@@ -121,7 +121,7 @@ class moduleutilstest extends unittestdatabase {
                   'map_level' => 0,
                   'academic_year_start' => '01/07',
                   'externalid' => '987654321');
-        $details = module_utils::get_full_details('external', '987654321', $this->db);
+        $details = module_utils::get_full_details('external', '987654321', $this->db, 'external');
         $this->assertEquals($detailsarray, $details);
     }
     /**
