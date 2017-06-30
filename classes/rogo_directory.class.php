@@ -339,17 +339,18 @@ abstract class rogo_directory {
    * @throws file_not_found|invalid_file_path
    */
   public function verify_file($filename) {
+    $config = Config::get_instance();
+    $userObject = UserObject::get_instance();
+    $langpack = new langpack();
+    $logger = new Logger($config->db);
     $fullpath = $this->fullpath($filename);
     if (empty($filename) || !file_exists($fullpath) || !is_readable($fullpath)) {
       // The file cannot be retrived for the user.
+      $logger->record_access_denied($userObject->get_user_ID(), $_SERVER['PHP_SELF'], $langpack->get_string($this->langcomponent, 'mediapathnotfound'));
       throw new file_not_found($fullpath);
     }
     if (!$this->valid_path($fullpath)) {
       // Log error in denied access log.
-      $config = Config::get_instance();
-      $userObject = UserObject::get_instance();
-      $langpack = new langpack();
-      $logger = new Logger($config->db);
       $logger->record_access_denied($userObject->get_user_ID(), $_SERVER['PHP_SELF'], $langpack->get_string($this->langcomponent, 'incorrectmediapath'));
       throw new invalid_file_path();
     }
