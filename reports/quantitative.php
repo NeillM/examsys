@@ -424,14 +424,25 @@
 
   $exclude = '';
   if ($_GET['complete'] == 1) {
-    $result = $mysqli->prepare("SELECT userID, COUNT(id) AS answer_no FROM log3 WHERE q_paper = ? AND started >= ? AND started <= ? GROUP BY userID");
-    $result->bind_param('iss', $_GET['paperID'], $_GET['startdate'], $_GET['enddate']);
+    $result = $mysqli->prepare("SELECT 
+      lm.userID,
+      COUNT(l.id) AS answer_no
+    FROM
+      log3 l,
+      log_metadata lm
+    WHERE
+      l.metadataID = lm.id
+      AND lm.paperID = ?
+      AND lm.started >= ?
+      AND lm.started <= ?
+      AND l.user_answer NOT IN ('u', '')
+    GROUP BY lm.userID");
+    $result->bind_param('iss', $paperID, $startdate, $enddate);
     $result->execute();
-    $result->bind_result($tmp_userID, $answer_no);
+    $result->bind_result($tmp_userid, $answer_no);
     while ($result->fetch()) {
       if ($answer_no < $number_of_questions or $answer_no > $number_of_questions) {
-        // log_metadata aliased as lm in queries below for brevity
-        $exclude .= ' AND lm.userID!=' . $tmp_userID;
+        $exclude .= ' AND lm.userID != "' . $tmp_userid . '"';
       }
     }
     $result->close();
