@@ -83,6 +83,6 @@ if (isset($_POST['paper']) and $_POST['paper'] != '') {
     $class_totals->process_papers($mysqli, $username, $password, $rootpath, $userid, $start_dateSQL, $end_dateSQL, $server, $string, $userObject, $_POST['paper']);
 } else {
     $class_totals = new class_totals();
-    $class_totals->process_papers($mysqli, $username, $password, $rootpath, $userid, $start_dateSQL, $end_dateSQL, $server, $userObject, $string);
+    $class_totals->process_papers($mysqli, $username, $password, $rootpath, $userid, $start_dateSQL, $end_dateSQL, $server, $string, $userObject);
 }
 ?>
