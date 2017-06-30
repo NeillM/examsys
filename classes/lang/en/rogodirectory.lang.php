@@ -15,4 +15,5 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['incorrectmediapath'] = 'An attempt to access a file outside the allowed media directories was made.';
+$string['mediapathnotfound'] = 'An attempt to access an inaccessible file was made.';
 ?>
