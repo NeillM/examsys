@@ -28,7 +28,7 @@
  * @param  string  $course     Name of course
  * @param  string  $start_date Start date for report
  * @param  string  $end_date   End date for report
- * @param  boolean  $exclude   Exclude non complted user instances
+ * @param  boolean  $exclude   Exclude non completed user instances
  * @param  array   $log_array  Reference to array that will be populatesd with the data
  * @param  mysqli  $db         Database connection
  * @param integer $number_of_questions number of questions in paper
