@@ -28,9 +28,6 @@ if (PHP_SAPI != 'cli') {
 
 set_time_limit(0);
 
-require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'autoload.inc.php';
-autoloader::init();
-
 $error = PHP_EOL . 'For details about installing Rogo visit: ' . PHP_EOL . 'https://rogo-eassessment-docs.atlassian.net/wiki/pages/viewpage.action?pageId=491546';
 
 $language = 'en';
