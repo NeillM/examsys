@@ -69,6 +69,7 @@ $student_id = check_var('student_id', $_GET, false, true, true);
 $search_surname = check_var('search_surname', $_GET, false, true, true);
 $search_username = check_var('search_username', $_GET, false, true, true);
 
+
 if (is_null($calendar_year) or $calendar_year === '%') {
   $calendar_year_sql = '';
   $calendar_year_param_types = '';
@@ -130,9 +131,9 @@ if (isset($_GET['submit'])) {
       $initials_params = array($tmp_initials . '%');
     }
     $tmp_surname = $mysqli->real_escape_string(str_replace('*', '%', $tmp_surname));
-    $surname_sql = " AND surname LIKE ?";
-    $surname_param_types = 's';
-    $surname_params = array($tmp_surname);
+    $surname_sql = " AND ( surname LIKE  ? or  first_names LIKE ? ) ";
+    $surname_param_types = 'ss';
+    $surname_params = array($tmp_surname,$tmp_surname);
   }
 
   if (!is_null($search_username) and $search_username !== '') {
