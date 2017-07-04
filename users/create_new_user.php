@@ -75,7 +75,7 @@ if (isset($_POST['submit'])) {
 }
 
 if (isset($_POST['submit']) and $unique_username == true) {
-  if ($new_username == '' or strpos($new_username, '_') !== false or $new_surname == '' or $new_email == '' or $new_first_names == '' or $new_roles == '') {
+  if ($new_username == '' or strpos($new_username, '_') !== false or $new_surname == '' or $new_email == '' or $new_first_names == '' or $new_roles == '' or $new_grade == '') {
     $problem = true;
   } else {
     $new_userID = UserUtils::create_user($new_username, $new_password, $new_users_title, $new_first_names, $new_surname, $new_email, $new_grade, $new_gender, $new_year, $new_roles, $new_sid, $mysqli);
@@ -241,7 +241,7 @@ foreach ($titles as $tmp_title) {
 ?>
 </td></tr>
 <tr><td class="field" id="typecourse"><?php echo $string['typecourse']; ?></td><td>
-<select name="new_grade" id="new_grade" size="1" style="width:350px" data-prev-parent="">
+<select name="new_grade" id="new_grade" size="1" style="width:350px" data-prev-parent="" required>
 <?php  
   echo "<option label=\"\" value=\"\"> </option>";
   
