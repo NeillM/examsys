@@ -130,9 +130,9 @@ if (isset($_GET['submit'])) {
       $initials_params = array($tmp_initials . '%');
     }
     $tmp_surname = $mysqli->real_escape_string(str_replace('*', '%', $tmp_surname));
-    $surname_sql = " AND surname LIKE ?";
-    $surname_param_types = 's';
-    $surname_params = array($tmp_surname);
+    $surname_sql = " AND ( surname LIKE ? or first_names LIKE ? ) ";
+    $surname_param_types = 'ss';
+    $surname_params = array($tmp_surname, $tmp_surname);
   }
 
   if (!is_null($search_username) and $search_username !== '') {
