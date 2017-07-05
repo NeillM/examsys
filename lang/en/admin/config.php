@@ -48,3 +48,4 @@ $string['paper_mathjax'] = 'Enable/Disable mathjax rendering in papers';
 $string['paper_editor_supports_mathjax'] = 'List of editors that support mathjax preview mode in question editing';
 $string['misc_logo_main'] = 'Logo used in Rog&#333;.';
 $string['misc_logo_email'] = 'Logo used in emails.';
+$string['api_allow_superuser'] = 'Enable/Disable API super users. These users can call the API for any external system.';

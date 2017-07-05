@@ -252,14 +252,10 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   foreach ($cfg_sms_sources as $key=>$value) {
     echo "<option value=\"$value\">$key</option>\n";
   }
-  // SMS might be a plugin.
-  $plugins = array();
-  $userObj = userObject::get_instance();
-  $smsplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
-  foreach($smsplugin_name as $name) {
-    $smspluginns = 'plugins\SMS\\' . $name. '\\' . $name;
-    $smsplugin = new $smspluginns($mysqli, $userObj->get_user_ID());
-    $value = $smsplugin->get_name();
+  // SMS might be IMS enterprise, rogo web service or a plugin.
+  $externalsys = new \external_systems();
+  $extsys = $externalsys->get_all_externalsystems();
+  foreach ($extsys as $key=>$value) {
     echo "<option value=\"$value\">$value</option>\n";
   }
   echo '</select></td></tr>';

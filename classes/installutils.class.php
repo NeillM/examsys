@@ -882,6 +882,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $alter[] = "ALTER TABLE modules_staff ADD CONSTRAINT `modules_staff_fk1` FOREIGN KEY (`idMod`) REFERENCES `modules` (`id`)";
     $alter[] = "ALTER TABLE modules_staff ADD CONSTRAINT `modules_staff_fk2` FOREIGN KEY (`memberID`) REFERENCES `users` (`id`)";
     $alter[] = "ALTER TABLE review_comments ADD CONSTRAINT `metadata_fk0` FOREIGN KEY (`metadataID`) REFERENCES `review_metadata` (`id`)";
+    $alter[] = "ALTER TABLE external_systems_mapping ADD CONSTRAINT `external_systems_mapping_fk1` FOREIGN KEY (`ext_id`) REFERENCES `external_systems` (`id`)";
+    $alter[] = "ALTER TABLE external_systems_mapping ADD CONSTRAINT `external_systems_mapping_fk2` FOREIGN KEY (`client_id`) REFERENCES `oauth_clients` (`client_id`)";
 
     foreach ($alter as $a) {
         $res = self::$db->prepare($a);
@@ -969,6 +971,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $configObject->set_setting('paper_editor_supports_mathjax',array("plain"), 'csv');
     $configObject->set_setting('misc_logo_main', 'logo.png', 'string');
     $configObject->set_setting('misc_logo_email', 'alt_logo.png', 'string');
+    $configObject->set_setting('api_allow_superuser', 0, 'boolean');
     self::createDefaultUsers();
     self::createDefaultFacultiesSchoolsModules();
     self::createQuestionStatuses();
@@ -1965,7 +1968,14 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
  
     if (count($errors) > 0) {
-      self::displayError($errors);
+      $langpack = new langpack();
+      if ($errors[$errorcode] == $langpack->get_string('classes/composerutils', 'cannotinstall')) {
+          $fatal = true;
+      } else {
+          // Non fatal error if cannot be updated.
+          $fatal = false;
+      }
+      self::displayError($errors, $fatal);
     }
   }
 
@@ -1984,10 +1994,12 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   }
 
   /**
-  * Display errors with a nice message
-  *
-  */
-  static function displayError($error = '') {
+   * Display errors with a nice message
+   * @param string|array $error error message(s)
+   * @param boolean $fatal is error fatal
+   *
+   */
+  static function displayError($error = '', $fatal = true) {
     global $string;
 
     if (!self::$cli) {
@@ -2011,9 +2023,13 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
     if (!self::$cli) {
       echo "</div>\n";
-      self::displayFooter();
+      if ($fatal) {
+        self::displayFooter();
+      }
     }
-    exit;
+    if ($fatal) {
+        exit;
+    }
   }
 
   /**
