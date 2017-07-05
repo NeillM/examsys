@@ -156,6 +156,18 @@ ob_flush();
 flush();
 $mysqli->autocommit(false);
 
+// Run individual update files
+$files = scandir($migration_path);
+foreach ($files as $file) {
+  if (StringUtils::ends_with($file, '.php')) {
+    cli_utils::prompt($migration_path . '/' . $file);
+    include $migration_path . '/' . $file;
+    $mysqli->commit();
+  }
+}
+
+$mysqli->commit();
+
 // Update the staff online help files.
 if ($update_staff_help) {
   $updater_utils->execute_query("TRUNCATE staff_help", false);
@@ -209,18 +221,6 @@ if ($update_student_help) {
     cli_utils::prompt($e->getMessage());
   }
 }
-$mysqli->commit();
-
-// Run individual update files
-$files = scandir($migration_path);
-foreach ($files as $file) {
-  if (StringUtils::ends_with($file, '.php')) {
-    cli_utils::prompt($migration_path . '/' . $file);
-    include $migration_path . '/' . $file;
-    $mysqli->commit();
-  }
-}
-
 $mysqli->commit();
 
 // Update language packs.

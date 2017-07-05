@@ -674,6 +674,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     if (substr($webroot, -1) !== '/') {
       $webroot .= '/';
     }
+    // Strip out double forward slash.
+    $webroot = preg_replace('#/+#','/',$webroot);
     // The substitution will replace the old src tag with a new one that.
     $regexp = '#src="\/getfile\.php\?type\=help_staff&amp;filename\=(.*?)"#';
     $substitution = 'src="' . $webroot . 'getfile.php?type=help_staff&amp;filename=$1"';
@@ -706,6 +708,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     if (substr($webroot, -1) !== '/') {
       $webroot .= '/';
     }
+    // Strip out double forward slash.
+    $webroot = preg_replace('#/+#','/',$webroot);
     // The substitution will replace the old src tag with a new one that.
     $regexp = '#src="\/getfile\.php\?type\=help_student&amp;filename\=(.*?)"#';
     $substitution = 'src="' . $webroot . 'getfile.php?type=help_student&amp;filename=$1"';
