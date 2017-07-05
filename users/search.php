@@ -105,8 +105,6 @@ if (isset($_GET['submit'])) {
 
   if (!is_null($search_surname)) {
     $tmp_surname = str_replace("*", "%", trim($search_surname));
-
-
     $tmp_titles = explode(',', $string['title_types']);
     foreach ($tmp_titles as $tmp_title) {
       if (substr_count(strtolower($tmp_surname), strtolower($tmp_title . ' ')) > 0) {
