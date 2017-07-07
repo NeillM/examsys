@@ -140,6 +140,7 @@ if (isset($_GET['submit'])) {
             $surname_sql .= " OR ";
           }
           $i++;
+          $name = $mysqli->real_escape_string(str_replace('*', '%', $name));
           $surname_sql .= " surname LIKE ? OR first_names LIKE ?";
           $surname_param_types .= 'ss';
           array_push($surname_params, $name, $name);
