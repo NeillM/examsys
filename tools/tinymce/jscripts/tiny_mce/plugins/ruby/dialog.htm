@@ -10,13 +10,13 @@
 
 <form onsubmit="RubyDialog.insert();return false;" action="#">
 	<div class="formElments">
-		<p>
-			<title>{#ruby_dlg.rt}</title>
-			<input id="rt" name="rt" type="text" class="text" onkeyup="RubyDialog.preview();" />
-		</p>
+		<!--<p>-->
+			<!--<title>{#ruby_dlg.rt}</title>-->
+			<!--<input id="rt" name="rt" type="text" class="text" value="a|b|c" onkeyup="RubyDialog.preview();" />-->
+		<!--</p>-->
 		<p>
 			<title>{#ruby_dlg.rb}</title>
-			<input id="rb" name="rb" type="text" class="text" onkeyup="RubyDialog.preview();" />
+			<textarea id="rb" name="rb" type="text" class="text" value="a[1,2]b[2,3]cd" onkeyup="RubyDialog.preview();" col="20" rows="10" ></textarea>
 		</p>
 
 	</div>
