@@ -6,8 +6,8 @@ var RubyDialog = {
 
 		// Get the selected contents as text and place it in the input
 		var rubyValue = tinyMCEPopup.editor.selection.getNode();
-        f.rt.value = rubyValue.getElementsByTagName('rt')[0].innerHTML;
-        f.rb.value = rubyValue.textContent.split("{")[0];
+        //f.rt.value = rubyValue.getElementsByTagName('rt')[0].innerHTML;
+        //f.rb.value = rubyValue.textContent.split("{")[0];
 
         console.log(rubyValue);
 	},
