@@ -9,7 +9,6 @@ var RubyDialog = {
         //f.rt.value = rubyValue.getElementsByTagName('rt')[0].innerHTML;
         //f.rb.value = rubyValue.textContent.split("{")[0];
 
-        console.log(rubyValue);
 	},
 
 	edit : function(){
@@ -26,13 +25,13 @@ var RubyDialog = {
 		var ruby = '<ruby><rb>'+ rbValue.charAt(0) +'</rb>';
 		for(var l=1; l<rbValue.length; l++) {
 
-			if(rbValue.charAt(l) == "[") {
+			if(rbValue.charAt(l) == "(") {
 				l++;
             	ruby += '<rp>{</rp><rt>' + rbValue.charAt(l) ;
 			}else if(rbValue.charAt(l) == ",") {
                 l++;
                 ruby +=  rbValue.charAt(l) ;
-            }else if(rbValue.charAt(l) == "]") {
+            }else if(rbValue.charAt(l) == ")") {
 				l++;
                 ruby += '</rt><rp>}</rp></ruby><ruby><rb>' + rbValue.charAt(l) + '</rb>';
 			}else {
@@ -48,13 +47,13 @@ var RubyDialog = {
         var ruby = '<ruby><rb>'+ rbValue.charAt(0) +'</rb>';
         for(var l=1; l<rbValue.length; l++) {
 
-            if(rbValue.charAt(l) == "[") {
+            if(rbValue.charAt(l) == "(") {
                 l++;
                 ruby += '<rp>{</rp><rt>' + rbValue.charAt(l) ;
             }else if(rbValue.charAt(l) == ",") {
                 l++;
                 ruby +=  rbValue.charAt(l) ;
-            }else if(rbValue.charAt(l) == "]") {
+            }else if(rbValue.charAt(l) == ")") {
                 l++;
                 ruby += '</rt><rp>}</rp></ruby><ruby><rb>' + rbValue.charAt(l) + '</rb>';
             }else {
