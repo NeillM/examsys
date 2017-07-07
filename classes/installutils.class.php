@@ -1867,6 +1867,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     //theme
     $themedirectory = rogo_directory::get_directory('theme');
     $themedirectory->create();
+    $themedirectory->copy_from_default();
     if (!$themedirectory->check_permissions()) {
       $errors['109'] = sprintf($string['errors3'], $themedirectory->location());
     }
