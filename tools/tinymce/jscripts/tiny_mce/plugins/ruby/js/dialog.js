@@ -3,25 +3,17 @@ tinyMCEPopup.requireLangPack();
 var RubyDialog = {
 	init : function() {
 		var f = document.forms[0];
-
 		// Get the selected contents as text and place it in the input
         var rubyValue = tinyMCEPopup.editor.dom.getParent(tinyMCEPopup.editor.selection.getNode(),'span');
         var elements = rubyValue.getElementsByTagName('ruby');
         for (var i=0; i<elements.length; i++) {
             if(elements[i].textContent.indexOf('{')  > -1 ){
-                f.rb.value += elements[i].textContent.split("{")[0]+'('+ elements[i].getElementsByTagName('rt')[0].innerHTML +')';
+                var rt = elements[i].getElementsByTagName('rt')[0].innerHTML;
+                f.rb.value += elements[i].textContent.split("{")[0]+'('+ rt.split("") +')';
             }else{
                 f.rb.value += elements[i].textContent;
             }
         }
-	},
-
-	edit : function(){
-        //editing the value
-	    var rubyValue = tinyMCEPopup.editor.dom.getParent(tinyMCEPopup.editor.selection.getNode(),'span');
-        rubyValue.innerHTML = '';
-        rubyValue.innerHTML = this.constructTag();
-        tinyMCEPopup.close();
 	},
 
     preview : function() {
@@ -31,8 +23,8 @@ var RubyDialog = {
 
 	insert : function() {
 		// Insert the contents from the input into the document
-        var rubyValue1 = tinyMCEPopup.editor.dom.getParent(tinyMCEPopup.editor.selection.getNode(),'span');
-        if(rubyValue1 != null){
+        var rubyValue = tinyMCEPopup.editor.dom.getParent(tinyMCEPopup.editor.selection.getNode(),'span');
+        if(rubyValue != null){
             this.edit();
         }else{
             var ruby = "<span class='wrap'>"+ this.constructTag() +"</span>";
@@ -40,6 +32,14 @@ var RubyDialog = {
 		    tinyMCEPopup.close();
         }
 	},
+
+    edit : function(){
+        //editing the value
+        var rubyValue = tinyMCEPopup.editor.dom.getParent(tinyMCEPopup.editor.selection.getNode(),'span');
+        rubyValue.innerHTML = '';
+        rubyValue.innerHTML = this.constructTag();
+        tinyMCEPopup.close();
+    },
 
 	constructTag : function () {
         /**
