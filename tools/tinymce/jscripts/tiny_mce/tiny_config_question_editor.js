@@ -11,7 +11,7 @@ tinyMCE.init({
     editor_selector : "mceEditor",
     theme : "advanced",
     skin : "default",
-    plugins : "mee,table,visualchars,nonbreaking,xhtmlxtras,paste,insertimagequestioneditor,ruby",
+    plugins : "mee,table,visualchars,nonbreaking,xhtmlxtras,paste,insertimagequestioneditor,ruby,noneditable",
     // Theme options
     theme_advanced_buttons1 : "cut,copy,paste,|,undo,|,bold,italic,underline,|,sub,sup,|,mee,ruby,|,justifyleft,justifycenter,justifyright,|,numlist,bullist,|,insertimagequestioneditor,tablecontrols,|,code",
     theme_advanced_buttons2 : "",
@@ -27,12 +27,21 @@ tinyMCE.init({
 
     setup : function(ed) {
       ed.onInit.add(function(ed, evt) {
-
         var dom = ed.dom;
         tinymce.dom.Event.add(dom.getRoot(), 'blur', function(e) {
           // Do something when the editor window is blured.
           tinyMCE.triggerSave();
         });
+      });
+
+      ed.onKeyDown.add(function(ed, e) {
+        if (e.charCode == 13 || e.keyCode == 13 ) {
+          var nodeName = tinymce.activeEditor.selection.getNode().nodeName;
+          if(nodeName == 'RT' || nodeName == 'RP' || nodeName == 'RUBY'  ) {
+            tinyMCE.activeEditor.selection.select(tinymce.activeEditor.dom.getParent(tinyMCE.activeEditor.selection.getNode(),'span'), true);
+            tinyMCE.activeEditor.selection.collapse(false);
+          }
+        }
       });
 
       // If there is no text content, return nothing.
