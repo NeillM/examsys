@@ -11,7 +11,7 @@ tinyMCE.init({
     editor_selector : "mceEditor",
     theme : "advanced",
     skin : "default",
-    plugins : "mee,table,visualchars,nonbreaking,xhtmlxtras,paste,insertimagequestioneditor,ruby,noneditable",
+    plugins : "mee,table,visualchars,nonbreaking,xhtmlxtras,paste,insertimagequestioneditor,ruby",
     // Theme options
     theme_advanced_buttons1 : "cut,copy,paste,|,undo,|,bold,italic,underline,|,sub,sup,|,mee,ruby,|,justifyleft,justifycenter,justifyright,|,numlist,bullist,|,insertimagequestioneditor,tablecontrols,|,code",
     theme_advanced_buttons2 : "",

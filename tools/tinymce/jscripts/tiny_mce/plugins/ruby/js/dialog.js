@@ -50,7 +50,7 @@ var RubyDialog = {
         for(var l=0; l<rbValue.length; l++) {
             if(rbValue.charAt(l) == "(") {
                 l++;
-                ruby += '<rp >{</rp><rt>' + rbValue.charAt(l) ;
+                ruby += '<rp>{</rp><rt>' + rbValue.charAt(l) ;
             }else if(rbValue.charAt(l) == ",") {
                 l++;
                 ruby +=  rbValue.charAt(l) ;
