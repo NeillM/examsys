@@ -7,10 +7,10 @@ var RubyDialog = {
         var rubyValue = tinyMCEPopup.editor.dom.getParent(tinyMCEPopup.editor.selection.getNode(),'span');
         var elements = rubyValue.getElementsByTagName('ruby');
         for (var i=0; i<elements.length; i++) {
-            if(elements[i].textContent.indexOf('{')  > -1 ){
+            if(elements[i].textContent.indexOf('{')  > -1 ) {
                 var rt = elements[i].getElementsByTagName('rt')[0].innerHTML;
                 f.rb.value += elements[i].textContent.split("{")[0]+'('+ rt.split("") +')';
-            }else{
+            }else {
                 f.rb.value += elements[i].textContent;
             }
         }
@@ -24,16 +24,16 @@ var RubyDialog = {
 	insert : function() {
 		// Insert the contents from the input into the document
         var rubyValue = tinyMCEPopup.editor.dom.getParent(tinyMCEPopup.editor.selection.getNode(),'span');
-        if(rubyValue != null){
+        if(rubyValue != null) {
             this.edit();
-        }else{
+        }else {
             var ruby = "<span class='wrap'>"+ this.constructTag() +"</span>";
 		    tinyMCEPopup.editor.execCommand('mceInsertContent', false, ruby);
 		    tinyMCEPopup.close();
         }
 	},
 
-    edit : function(){
+    edit : function() {
         //editing the value
         var rubyValue = tinyMCEPopup.editor.dom.getParent(tinyMCEPopup.editor.selection.getNode(),'span');
         rubyValue.innerHTML = '';

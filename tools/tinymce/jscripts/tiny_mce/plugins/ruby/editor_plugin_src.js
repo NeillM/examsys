@@ -70,7 +70,7 @@
 		getInfo : function() {
 			return {
 				longname : 'Ruby annotation plugin',
-				author : 'Dr Joseph Baxter',
+				author : 'Dr Joseph Baxter, Naseem Sarwar',
 				authorurl : 'http://rogo-oss.nottingham.ac.uk/',
 				infourl : 'https://rogo-eassessment-docs.atlassian.net',
 				version : "1.0"
