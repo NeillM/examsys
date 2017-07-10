@@ -73,6 +73,7 @@ class class_totals {
    * @param type $paperid - the papers we want to check (optional, all if not supplied)
    */
   public function process_papers($mysqli, $username, $password, $rootpath, $userid, $start_dateSQL, $end_dateSQL, $server, $string, $userObject, $paperid = '') {
+    global $display_correct_answer, $display_students_response, $display_feedback, $display_question_mark;
     $papers = array();
 
     if ($paperid != '') {
@@ -99,9 +100,14 @@ class class_totals {
     
     $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     $paper_utils = Paper_utils::get_instance();
+    // Turn on all feedback if staff and a student exam script is being reviewed.
+    $display_correct_answer     = 1;
+    $display_question_mark      = 1;
+    $display_students_response  = 1;
+    $display_feedback           = 1;
     foreach ($papers as $paper) {
       $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($paper['crypt_name'], $mysqli, $string, true);
-      $report = new ClassTotals(1, 100, 'asc', 0, 'student_id', $userObject, $propertyObj, $paper['start_date'], $paper['end_date'], '%', '', $mysqli, $string);
+      $report = new ClassTotals(1, 100, 'asc', 0, 'name', $userObject, $propertyObj, $paper['start_date'], $paper['end_date'], '%', '', $mysqli, $string);
       $report->compile_report(false);
       $marks_set = $report->get_user_results();
 
@@ -115,13 +121,13 @@ class class_totals {
       $errors = '';
       if ($marks_set === false) {
         $marks_set = array();
-        $errors = "<ul><li>Couldn't access class_totals</li>\n";
+        $errors = "<ul><li>Couldn't access class totals</li>\n";
       }
       
       foreach ($marks_set as $mark) {
         $overrides = $paper_utils->get_marking_overrides('2', $mark['userID'], $paper['paperID']);
         $log_metadata = new LogMetadata($mark['userID'], $paper['paperID'], $mysqli);
-        $log_metadata->get_record($mark['metadataID']);
+        $log_metadata->get_record();
         ob_start(); // Start output buffering
         display_feedback($propertyObj, $mark['userID'], '2', $userObject, $log_metadata, $mysqli, $status_array, $overrides, null);
         $output = ob_get_contents(); // Store buffer in variable
@@ -133,7 +139,7 @@ class class_totals {
           if ($errors == '') {
             $errors = '<ul>';
           }
-          $errors .= "<li>Couldn't access finish</li>\n";
+          $errors .= "<li>Couldn't access feedback</li>\n";
         }
 
         if ($script_mark != $mark['mark']) {
