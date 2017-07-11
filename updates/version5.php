@@ -209,55 +209,6 @@ if (!isset($_POST['update'])) {
   flush();
 
   $mysqli->autocommit(false);
-  // 01/05/2013 - Update the online help files.
-  $update_staff_help = param::optional('update_staff_help', null, param::ALPHA, param::FETCH_POST);
-  if (!is_null($update_staff_help)) {
-    $updater_utils->execute_query("TRUNCATE staff_help", true);
-
-    $file = file_get_contents('../install/staff_help.sql');
-    $mysqli->multi_query($file);
-    if ($mysqli->error) {
-      echo $string['showerror'] . "<br />";
-      exit();
-    }
-    $ext = '';
-    while ($mysqli->more_results()) {
-      $mysqli->next_result();
-      if ($mysqli->insert_id > 0) $ext = $ext . ' ' . $mysqli->insert_id;
-    }
-    // Ensure all help images are in the correct location.
-    $staffhelp = rogo_directory::get_directory('help_staff');
-    $staffhelp->create();
-    $staffhelp->copy_from_default();
-    // Fix path of help file images as may not be in root web dir.
-    InstallUtils::correct_staff_path();
-    echo "<li>LOADED staff_help: " . $ext . "</li>\n";
-  }
-
-  $update_student_help = param::optional('update_student_help', null, param::ALPHA, param::FETCH_POST);
-  if (!is_null($update_student_help)) {
-    $updater_utils->execute_query("TRUNCATE student_help", true);
-
-    $file = file_get_contents('../install/student_help.sql');
-    $mysqli->multi_query($file);
-    if ($mysqli->error) {
-      echo $string['showerror'] . "<br />";
-      exit();
-    }
-    $ext = '';
-    while ($mysqli->more_results()) {
-      $mysqli->next_result();
-      if ($mysqli->insert_id > 0) $ext = $ext . ' ' . $mysqli->insert_id;
-    }
-    // Ensure all help images are in the correct location.
-    $studenthelp = rogo_directory::get_directory('help_student');
-    $studenthelp->create();
-    $studenthelp->copy_from_default();
-    // Fix path of help file images as may not be in root web dir.
-    InstallUtils::correct_student_path();
-    echo "<li>LOADED student_help: " . $ext . "</li>\n";
-  }
-  $mysqli->commit();
 
   // 01/05/2013
   if (!$updater_utils->does_column_exist('users', 'password_expire')) {
@@ -865,6 +816,56 @@ QUERY;
     }
   }
 
+  $mysqli->commit();
+  
+  // 01/05/2013 - Update the online help files.
+  $update_staff_help = param::optional('update_staff_help', false, param::BOOLEAN, param::FETCH_POST);
+  if (!is_null($update_staff_help)) {
+    $updater_utils->execute_query("TRUNCATE staff_help", true);
+
+    $file = file_get_contents('../install/staff_help.sql');
+    $mysqli->multi_query($file);
+    if ($mysqli->error) {
+      echo $string['showerror'] . "<br />";
+      exit();
+    }
+    $ext = '';
+    while ($mysqli->more_results()) {
+      $mysqli->next_result();
+      if ($mysqli->insert_id > 0) $ext = $ext . ' ' . $mysqli->insert_id;
+    }
+    // Ensure all help images are in the correct location.
+    $staffhelp = rogo_directory::get_directory('help_staff');
+    $staffhelp->create();
+    $staffhelp->copy_from_default();
+    // Fix path of help file images as may not be in root web dir.
+    InstallUtils::correct_staff_path();
+    echo "<li>LOADED staff_help: " . $ext . "</li>\n";
+  }
+
+  $update_student_help = param::optional('update_student_help', false, param::BOOLEAN, param::FETCH_POST);
+  if ($update_student_help) {
+    $updater_utils->execute_query("TRUNCATE student_help", true);
+
+    $file = file_get_contents('../install/student_help.sql');
+    $mysqli->multi_query($file);
+    if ($mysqli->error) {
+      echo $string['showerror'] . "<br />";
+      exit();
+    }
+    $ext = '';
+    while ($mysqli->more_results()) {
+      $mysqli->next_result();
+      if ($mysqli->insert_id > 0) $ext = $ext . ' ' . $mysqli->insert_id;
+    }
+    // Ensure all help images are in the correct location.
+    $studenthelp = rogo_directory::get_directory('help_student');
+    $studenthelp->create();
+    $studenthelp->copy_from_default();
+    // Fix path of help file images as may not be in root web dir.
+    InstallUtils::correct_student_path();
+    echo "<li>LOADED student_help: " . $ext . "</li>\n";
+  }
   $mysqli->commit();
 
   // Update language packs.

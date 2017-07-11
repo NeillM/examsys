@@ -119,7 +119,7 @@ function check_datetime($start_date, $end_date, $string, $db, $first_start = fal
   // Allow 1 minute before the start time of the assessment.
   if ((time()+60) < $start_date or $end_comparison > $end_date) {
     $msg = sprintf($string['error_time'], date('d/m/Y H:i',$start_date), date('d/m/Y H:i',$end_date));
-    $fullmsg = $msg . '<br /><br /><input type="button" name="close" value="' . $string['ok'] . '" onclick="window_close()" class="OK" />';
+    $fullmsg = $msg . '<br /><br /><input type="button" name="close" value="' . $string['ok'] . '" onclick="close_window()" class="OK" />';
     $notice->display_notice_and_exit($db, $string['accessdenied'], $fullmsg, $msg, '/artwork/summative_scheduling.png', '#C00000', true, true);
   }
 }
@@ -143,7 +143,7 @@ function check_finished($propertyObj, $userObj, $string, $db) {
   
   if ($completed != '') {
     $msg = sprintf($string['alreadycompleted'], date('d/m/Y H:i', $completed));
-    $fullmsg = $msg . '<br /><br /><input type="button" name="close" value="' . $string['ok'] . '" onclick="window_close()" class="OK" />';
+    $fullmsg = $msg . '<br /><br /><input type="button" name="close" value="' . $string['ok'] . '" onclick="close_window()" class="OK" />';
     $notice->display_notice_and_exit($db, $string['accessdenied'], $fullmsg, $msg, '/artwork/square_exclamation_48.png', '#C00000', true, true);
   }
   
