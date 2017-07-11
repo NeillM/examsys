@@ -1007,6 +1007,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
               if ($settings['editor'] == 'mathjax') {
                 $render = new render($configObject);
                 $render->render(array('id' => 'q' . $question_no), null, 'mathjaxpreview.html');
+                echo "<p>" . $string['mathjaxinstructions'] . "</p>";
                 echo "<textarea onkeyup=\"Previewq" . $question_no . ".Update()\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $ans . "</textarea>\n";
                 echo "<p>" . $string['previewmathjax'] . "</p>";
                 echo "<div id=\"MathPreviewq" . $question_no . "\" style=\"border:1px solid; padding: 3px; width:50%; margin-top:5px\"></div><div id=\"MathBufferq" . $question_no . "\" style=\"border:1px solid; padding: 3px; width:50%; margin-top:5px; visibility:hidden; position:absolute; top:0; left: 0\"></div>";
