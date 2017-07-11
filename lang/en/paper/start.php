@@ -76,4 +76,5 @@ $string['decimal_places'] = 'decimal places';
 $string['significant_figures'] = 'significant figures';
 $string['forcesave'] = 'Your time has expired and your answers have been saved';
 $string['previewmathjax'] = 'Answer Preview';
+$string['mathjaxinstructions'] = '<b>Tip:</b> Enter latex formula within <span class="tex2jax_ignore">$$</span> for inline mode, or <span class="tex2jax_ignore">$$$</span> for display mode.';
 ?>
