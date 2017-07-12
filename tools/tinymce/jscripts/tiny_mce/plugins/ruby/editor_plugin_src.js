@@ -46,7 +46,15 @@
 				cm.setActive('ruby', n.nodeName == 'IMG');
 			});
 
-            ed.onKeyDown.add(function(ed, e) { if (e.charCode == 13 || e.keyCode == 13 ) { var nodeName = tinymce.activeEditor.selection.getNode().nodeName;if(nodeName == 'RT' || nodeName == 'RP' || nodeName == 'RUBY'  ) {tinyMCE.activeEditor.selection.select(tinymce.activeEditor.dom.getParent(tinyMCE.activeEditor.selection.getNode(),'span'), true);tinyMCE.activeEditor.selection.collapse(false);}}});
+            ed.onKeyDown.add(function(ed, e) {
+            	if (e.charCode == 13 || e.keyCode == 13 ) {
+            		var nodeName = tinymce.activeEditor.selection.getNode().nodeName;
+            		if(nodeName == 'RT' || nodeName == 'RP' || nodeName == 'RUBY'  ) {
+            			tinyMCE.activeEditor.selection.select(tinymce.activeEditor.dom.getParent(tinyMCE.activeEditor.selection.getNode(),'span'), true);
+            			tinyMCE.activeEditor.selection.collapse(false);
+            		}
+            	}
+            });
 		},
 
 		/**

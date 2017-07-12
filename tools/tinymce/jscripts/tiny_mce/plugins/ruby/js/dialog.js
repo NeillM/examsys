@@ -2,8 +2,8 @@ tinyMCEPopup.requireLangPack();
 
 var RubyDialog = {
 	init : function() {
-		var f = document.forms[0];
-		// Get the selected contents as text and place it in the input
+	    var f = document.forms[0];
+	    // Get the selected contents as text and place it in the input
         var rubyValue = tinyMCEPopup.editor.dom.getParent(tinyMCEPopup.editor.selection.getNode(),'span');
         var elements = rubyValue.getElementsByTagName('ruby');
         for (var i=0; i<elements.length; i++) {
