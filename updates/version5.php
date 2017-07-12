@@ -869,8 +869,8 @@ QUERY;
   $mysqli->commit();
 
   // Update language packs.
-  $update_translationpack = param::optional('update_translationpack', null, param::ALPHA, param::FETCH_POST);
-  if (!is_null($update_translationpack)) {
+  $update_translationpack = param::optional('update_translationpack', false, param::BOOLEAN, param::FETCH_POST);
+  if ($update_translationpack) {
     InstallUtils::download_langpacks();
   }
 
