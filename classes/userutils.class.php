@@ -688,7 +688,7 @@ Class UserUtils {
       return 0;
     } else {
       $result = $db->prepare("INSERT INTO modules_student VALUES (NULL, ?, ?, ?, ?, ?)");
-      $result->bind_param('iisii', $tmp_userID, $idMod, $session, $attempt, $auto_update);
+      $result->bind_param('iiiii', $tmp_userID, $idMod, $session, $attempt, $auto_update);
       $result->execute();
       $result->close();
       if ($db->errno != 0) {
@@ -772,7 +772,7 @@ Class UserUtils {
     } else {
       $sql = "SELECT userID FROM modules_student WHERE userID = ? AND idMod IN ($idMod) AND calendar_year = ?";
       $result = $db->prepare($sql);
-      $result->bind_param('is', $tmp_userID, $session);
+      $result->bind_param('ii', $tmp_userID, $session);
     }
 
     $result->execute();

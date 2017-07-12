@@ -285,5 +285,6 @@ $string['reminders'] = 'Reminders';
 $string['reminder_no'] = 'Reminder #%d';
 
 $string['previewmathjax'] = 'Preview';
+$string['mathjaxinstructions'] = 'Enter latex formula within <span class="tex2jax_ignore">$$</span> for inline mode, or <span class="tex2jax_ignore">$$$</span> for display mode.';
 
 

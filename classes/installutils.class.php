@@ -674,6 +674,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     if (substr($webroot, -1) !== '/') {
       $webroot .= '/';
     }
+    // Strip out double forward slash.
+    $webroot = preg_replace('#/+#','/',$webroot);
     // The substitution will replace the old src tag with a new one that.
     $regexp = '#src="\/getfile\.php\?type\=help_staff&amp;filename\=(.*?)"#';
     $substitution = 'src="' . $webroot . 'getfile.php?type=help_staff&amp;filename=$1"';
@@ -706,6 +708,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     if (substr($webroot, -1) !== '/') {
       $webroot .= '/';
     }
+    // Strip out double forward slash.
+    $webroot = preg_replace('#/+#','/',$webroot);
     // The substitution will replace the old src tag with a new one that.
     $regexp = '#src="\/getfile\.php\?type\=help_student&amp;filename\=(.*?)"#';
     $substitution = 'src="' . $webroot . 'getfile.php?type=help_student&amp;filename=$1"';
@@ -972,6 +976,10 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $configObject->set_setting('misc_logo_main', 'logo.png', 'string');
     $configObject->set_setting('misc_logo_email', 'alt_logo.png', 'string');
     $configObject->set_setting('api_allow_superuser', 0, 'boolean');
+    // Add external systems.
+    $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
+    $insert->execute();
+    $insert->close();
     self::createDefaultUsers();
     self::createDefaultFacultiesSchoolsModules();
     self::createQuestionStatuses();
@@ -1859,6 +1867,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     //theme
     $themedirectory = rogo_directory::get_directory('theme');
     $themedirectory->create();
+    $themedirectory->copy_from_default();
     if (!$themedirectory->check_permissions()) {
       $errors['109'] = sprintf($string['errors3'], $themedirectory->location());
     }
