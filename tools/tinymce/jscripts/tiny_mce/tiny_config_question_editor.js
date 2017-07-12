@@ -33,17 +33,6 @@ tinyMCE.init({
           tinyMCE.triggerSave();
         });
       });
-
-      ed.onKeyDown.add(function(ed, e) {
-        if (e.charCode == 13 || e.keyCode == 13 ) {
-          var nodeName = tinymce.activeEditor.selection.getNode().nodeName;
-          if(nodeName == 'RT' || nodeName == 'RP' || nodeName == 'RUBY'  ) {
-            tinyMCE.activeEditor.selection.select(tinymce.activeEditor.dom.getParent(tinyMCE.activeEditor.selection.getNode(),'span'), true);
-            tinyMCE.activeEditor.selection.collapse(false);
-          }
-        }
-      });
-
       // If there is no text content, return nothing.
       // After http://alastairc.ac/2010/03/removing-emtpy-html-tags-from-tinymce/
       ed.onPostProcess.add(function(ed, o) {
