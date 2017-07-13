@@ -163,8 +163,8 @@ if (!$is_first_launch) {
     $current_screen = $post_screen;
   } elseif ($button_pressed == 'previous') {
     $current_screen = $post_screen - 2;
-  } elseif ($button_pressed == 'jump_screen') {
-    $current_screen = param::optional('jump_screen', 0, param::INT, param::FETCH_POST);
+  } elseif ($button_pressed == 'jumpscreen') {
+    $current_screen = param::optional('jumpscreen', 0, param::INT, param::FETCH_POST);
   } elseif ($is_fire_alarm) {
     $current_screen = $post_screen;
   }
@@ -531,7 +531,7 @@ if ($css != '') {
       })
 
       if (showWarning) {
-        var msg = '<?= $string['answerrequired'] ?><br/><br/><?= $string['answerrequired_confirm'] ?>';
+        var msg = '<?= $string['answerrequired'] ?><br/><br/><strong><?= $string['answerrequired_confirm'] ?></strong>';
         showEnhancedcalcWarning(msg);
         $("#enhancedcalc_warning_ok").click(function(event) {
           submitted = true;
@@ -549,7 +549,7 @@ if ($css != '') {
 
   $(document).ready(function () {
     $('#jumpscreen').change(function (event) {
-      $('#button_pressed').val('jump_screen');
+      $('#button_pressed').val('jumpscreen');
       $('#qForm').attr('action',"start.php?id=<?= $id ?>&dont_record=true");
       submitType = 'userSubmit';
       return checkSubmit(event);
@@ -670,19 +670,10 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     $("#enhancedcalc_warning_cancel").focus();
     $("#enhancedcalc_warning_msg").html(msg);
     $("#enhancedcalc_warning").css('left', (($(window).width() / 2) - 250) + 'px');
-    $("#enhancedcalc_warning").css('top', (($(window).height() / 2) - 100) + 'px');
+    $("#enhancedcalc_warning").css('top', (($(window).height() / 2) - 200) + 'px');
     $(".dialogs").hide();
     $("#enhancedcalc_warning").show();
     $("#overlay").show();
-  }
-
-    var formData = $('#qForm').serialize();
-    submitType = 'userSubmit';
-    stopAutoSave();
-    if (!!event) {
-      $('#button_pressed').attr('value',event.target.id);
-    }
-    confirmSubmit();
   }
 
   <?php  // Called when a user has run out of time by UpdateTimerWithRemainingTime in start.js ?>
@@ -1280,7 +1271,7 @@ if($propertyObj->get_calculator()) {
         echo '<input id="previous" type="submit" name="prev" value="&lt; ' . $string['screen'] . ' ' . ($current_screen - 2) . '" />';
       }
       if (in_array($original_paper_type, array('0', '1', '2'))) {
-        echo '<select name="jump_screen" id="jumpscreen">';
+        echo '<select name="jumpscreen" id="jumpscreen">';
         for ($i = 1; $i <= $no_screens; $i++) {
           $selected = $i == ($current_screen - 1) ? ' selected' : '';
           echo "<option value=\"$i\"$selected>$i</option>";
@@ -1304,7 +1295,7 @@ if($propertyObj->get_calculator()) {
 </form>
 </div>
 <div id="overlay">
-  <div id="submit_dialog">
+  <div id="submit_dialog" class="dialogs">
     <div id="submit_dialog_icon"><img src="../artwork/question_mark_64.png" width="64" height="64" alt="?" /></div><p id="submit_dialog_msg"></p>
     <div id="submit_dialog_buttons"><input type="button" name="dialog_ok" id="dialog_ok" class="ok" value="OK" /><input type="button" name="dialog_cancel" id="dialog_cancel" class="cancel" value="Cancel" />&nbsp;&nbsp;</div>
   </div>
