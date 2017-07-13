@@ -626,7 +626,10 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
       case 'enhancedcalc':
         // no options for enhanced calc now stored in settings
 
-        $extra = array('num_on_screen' => $question_no);
+        $extra = array(
+          'num_on_screen' => $question_no,
+          'paper_questions' => $question['paper_questions'],
+        );
 
         $question['object']->render_paper($extra);
         $question['object']->load_all_user_answers($user_answers);
@@ -1211,7 +1214,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
 		} elseif ($question['display_method'] == 'dropdown') {
       echo '</select></div>';
     }
-  } elseif ($question['q_type'] == 'dichotomous' or $question['q_type'] == 'mrq' or $question['q_type'] == 'rank') {
+  } elseif (in_array($question['q_type'], array('dichotomous', 'mrq', 'rank'))) {
     $answer = (isset($user_answers[$current_screen][$q_id])) ? $user_answers[$current_screen][$q_id] : '';
     if ($question['display_method'] == 'other') {
       $part_id++;
@@ -1371,7 +1374,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
   }
 
   // Write out the hidden field for the dismiss facility.
-  if ($question['q_type'] == 'mcq' or $question['q_type'] == 'mrq' or $question['q_type'] == 'rank') {
+  if (in_array($question['q_type'], array('mcq', 'mrq', 'rank'))) {
     if (isset($user_dismiss[$current_screen][$q_id]) and $user_dismiss[$current_screen][$q_id] != '') {
       echo "\n<div><input type=\"hidden\" name=\"dismiss$question_no\" id=\"dismiss$question_no\" value=\"" . $user_dismiss[$current_screen][$q_id] . "\" /></div>\n";
     } else {
@@ -1380,7 +1383,9 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
   }
 
   // Display possible marks for question (if not Survey)
-  if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'likert' and $question['q_type'] != 'info' and $question['q_type'] != 'enhancedcalc' and $question['q_type'] != 'matrix') echo '</blockquote>';
+  if (!in_array($question['q_type'], array('hotspot', 'likert', 'info', 'enhancedcalc', 'matrix'))) {
+    echo '</blockquote>';
+  }
   if ($paper_type < 3) {
     if ($marks == 0) {
       echo "</td></tr>\n<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
