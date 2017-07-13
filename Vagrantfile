@@ -18,6 +18,10 @@ Vagrant.configure("2") do |config|
     # install goodies
     apt-get install -y curl git zip
 
+    # install NodeJS and npm
+    curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
+    apt-get install -y nodejs
+
     # install MySQL (root / Passw0rd)
     debconf-set-selections <<< 'mysql-server mysql-server/root_password password Passw0rd'
     debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password Passw0rd'
