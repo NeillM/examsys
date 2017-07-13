@@ -1122,9 +1122,23 @@ class EnhancedCalc extends Question implements questionInterface {
 		}
 		
 		echo $leadin;
-		
-		if (in_array('ERROR', $varvalue, true)) {
+
+		// Find any previous failed/unanswered related question
+		$failed_answers = array();
+		foreach ($this->useranswer['vars'] as $key => $value) {
+			if ($value == 'ERROR' and isset($this->settings['vars'][$key]['min'])) {
+				foreach ($extra['paper_questions'] as $question_on_paper) {
+					if (isset($question_on_paper['q_id']) and substr($this->settings['vars'][$key]['min'], 3) == $question_on_paper['q_id'] and isset($question_on_paper['assigned_number'])) {
+						$failed_answers[] = $question_on_paper['assigned_number'];
+					}
+				}
+			}
+		}
+
+		if (in_array('ERROR', $this->useranswer['vars'])) {
 			echo "<p><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" disabled=\"disabled\" />" . $dispunits . $marking_precision_feedback . "</p>\n";
+			echo "<p><strong>" . sprintf($string['failedanswer'], implode(', ', $failed_answers)) . "</strong></p>";
+			echo "<input type=\"hidden\" name=\"missingCalcAnswer\" id=\"missingCalcAnswer\" value=\"1\">";
 		} else {
 			if (isset($this->useranswer['uans']) and $this->useranswer['uans'] == '') {
 				echo "<div><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" class=\"unans ecalc-answer\" />" . $dispunits . $marking_precision_feedback . "</div>\n";

@@ -77,4 +77,9 @@ $string['significant_figures'] = 'significant figures';
 $string['forcesave'] = 'Your time has expired and your answers have been saved';
 $string['previewmathjax'] = 'Answer Preview';
 $string['mathjaxinstructions'] = '<b>Tip:</b> Enter latex formula within <span class="tex2jax_ignore">$$</span> for inline mode, or <span class="tex2jax_ignore">$$$</span> for display mode.';
+$string['failedanswer'] = 'You failed to answer a question [no. %s] that provides a value that is needed for this question. This question will also be treated as if you failed to answer it.';
+$string['answerrequired'] = 'The answer to this question should be provided as it forms the basis of a subsequent question. If you cannot answer the question then you have the option to pass. Any subsequent dependent questions will be treated as if you failed to answer them.';
+$string['answerrequired_confirm'] = 'Do you still wish to pass this question or go back and answer it?';
+$string['go_back'] = 'Go back';
+$string['pass'] = 'Pass';
 ?>
