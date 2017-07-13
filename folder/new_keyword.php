@@ -35,29 +35,26 @@ $module = param::optional('module', '', param::INT, param::FETCH_REQUEST);
 if ($submit != '') {
   if ($new_keyword != '') {
     if ($module == '') {
-		  $type = 'personal';
-			$owner = $userObject->get_user_ID();
-		} else {
-		  $type = 'team';
-			$owner = $module;
-		}
-		
-		$result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE keyword = ? AND userID = ? AND keyword_type = ?");
-		$result->bind_param('sis', $new_keyword, $owner, $type);
-		$result->execute();  
+      $type = 'personal';
+      $owner = $userObject->get_user_ID();
+      } else {
+        $type = 'team';
+        $owner = $module;
+    }
+    $result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE keyword = ? AND userID = ? AND keyword_type = ?");
+    $result->bind_param('sis', $new_keyword, $owner, $type);
+    $result->execute();  
     $result->store_result();
     $result->bind_result($keyword);
-		if ($result->num_rows > 0) {
-		  $exists = true;
-		}
-		$result->close();
-		
-		if (!$exists) {
-			$result = $mysqli->prepare("INSERT INTO keywords_user VALUES (NULL, ?, ?, ?)");
-			$result->bind_param('iss', $owner, $new_keyword, $type);
-			$result->execute();  
-			$result->close();
-
+    if ($result->num_rows > 0) {
+      $exists = true;
+    }
+    $result->close();
+    if (!$exists) {
+      $result = $mysqli->prepare("INSERT INTO keywords_user VALUES (NULL, ?, ?, ?)");
+      $result->bind_param('iss', $owner, $new_keyword, $type);
+      $result->execute();  
+      $result->close();
 ?>
 <!DOCTYPE html>
 <html>
@@ -76,9 +73,9 @@ if ($submit != '') {
 </body>
 </html>
 <?php
-			exit();
-		}
-	}
+      exit();
+    }
+  }
 }
 ?>
 <!DOCTYPE html>
