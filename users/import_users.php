@@ -28,6 +28,9 @@ require '../include/errors.php';
 require '../include/import_users.inc';
 require_once '../include/demo_replace.inc';
 
+// instantiate Twig renderer
+$render = new render($configObject);
+
 set_time_limit(0);
 ob_start();
 ?>
