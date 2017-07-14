@@ -157,4 +157,24 @@ class render {
         $data = array ('path' => $this->config->get('cfg_root_path'), 'jsstring' => $jsstring);
         echo $this->twig->render('html5_js.html', $data);
     }
+
+    /**
+     * Render page breadcrumb from an associative array which keys must be the relative
+     * path for a page and the values are the title to display.
+     *
+     * @param array $links
+     * @return string
+     */
+    public function render_admin_navigation(array $links) {
+        $path = $this->config->get('cfg_root_path');
+        $current = count($links) > 0 ? array_pop($links) : '';
+        
+        $data = array (
+            'path' => $path,
+            'links' => $links,
+            'current' => $current,
+        );
+        
+        return $this->twig->render('admin/navigation.html', $data);
+    }
 }
