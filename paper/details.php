@@ -915,25 +915,27 @@ function check_latex_random($q_ids, $mysqli) {
   $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);
   $exam_announcements = $exam_announcementObj->get_announcements();
 
-  echo "<div class=\"head_title\">\n";
-  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
-  echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
-  if ($module) {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $module . '">' . module_utils::get_moduleid_from_id($module, $mysqli) . '</a>';
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/type.php?module=' . $module . '&type=' . $properties->get_paper_type() . '">' . Paper_utils::type_to_name($properties->get_paper_type(), $string) . '</a>';
-  } elseif ($folder) {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folder . '">' . folder_utils::get_folder_name($folder, $mysqli) . '</a>';
-  } else {
-    $paper_modules = Paper_utils::get_modules($paperID, $mysqli);  // Get the modules from paper properties
-    reset($paper_modules);
-    $moduleID = key($paper_modules);
-    if ($moduleID != '') {
-      $module_code = $paper_modules[$moduleID];
-      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $moduleID . '">' . $module_code . '</a>';
-      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/type.php?module=' . $moduleID . '&type=' . $properties->get_paper_type() . '">' . Paper_utils::type_to_name($properties->get_paper_type(), $string) . '</a>';
-    }
+  // initial link of breadcrumb
+  $links = array('/' => 'Home');
+  
+  // links of parent folders
+  $folderName = folder_utils::get_folder_name($folder, $mysqli);
+  foreach (folder_utils::get_parent_list($folderName, $userObject, $mysqli) as $parentId => $parentName) {
+    $href = '/folder/index.php?folder=' . $parentId;
+    $links[$href] = $parentName;
   }
-  echo '</div>';
+  
+  // link of current folder
+  $href = '/folder/index.php?folder=' . $folder;
+  $links[$href] = false === strpos($folderName, ';') ? $folderName : substr($folderName, strrpos($folderName, ';') + 1);
+  
+  // link of current paper
+  $href = '/paper/details.php?paperId=' . $paperID;
+  $links[$href] = $properties->get_paper_title();
+
+  // breadcrumb
+  echo (new render($configObject))->render_admin_navigation($links);
+
   $title_class = 'page_title';
   if ($properties->get_retired() != '') {
     $title_class .= ' retired';
