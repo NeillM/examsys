@@ -121,7 +121,7 @@ tinyMCE.init({
     skin : "default",
     plugins : "paste,ruby",
     // Theme options
-    theme_advanced_buttons1 : "cut,copy,paste,|,undo|,cleanup,removeformat,,ruby",
+    theme_advanced_buttons1 : "cut,copy,paste,|,undo|,cleanup,removeformat,|,ruby",
     theme_advanced_buttons2 : "",
     theme_advanced_buttons3 : "",
     theme_advanced_toolbar_location : "top",
