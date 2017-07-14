@@ -383,7 +383,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
     $qData->close();
   }
   /**
-   * copying Killer question to the new paper.
+   * Copying Killer question to the new paper.
    */
   $killerQuestionresult = $mysqli->prepare("SELECT q_id FROM killer_questions WHERE paperID = ?");
   $killerQuestionresult->bind_param('i', $paperid);

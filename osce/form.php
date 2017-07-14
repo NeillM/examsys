@@ -313,7 +313,7 @@ $photoname = UserUtils::student_photo_exist($username);
         echo "<td style=\"background-color:" . $cell_colors[$i] . "\" class=\"r\" id=\"c" . $question_no . "_" . ($i+1) . "\" onclick=\"ans($question_no," . ($i+1) . "," . $cols . ")\">$i</td>";
       } else if($i >= $cols) {
         echo "<td class=\"r\" style=\"background: #cfcfcf\">$i</td>";
-      }else {
+      } else {
         echo "<td class=\"r\" id=\"c" . $question_no . "_" . ($i+1) . "\" onclick=\"ans($question_no," . ($i+1) . "," . $cols . ")\">$i</td>";
       }
     }
