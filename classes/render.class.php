@@ -157,4 +157,17 @@ class render {
         $data = array ('path' => $this->config->get('cfg_root_path'), 'jsstring' => $jsstring);
         echo $this->twig->render('html5_js.html', $data);
     }
+
+    public function render_admin_navigation(array $links) {
+        $path = $this->config->get('cfg_root_path');
+        $current = count($links) > 0 ? array_pop($links) : '';
+        
+        $data = array (
+            'path' => $path,
+            'links' => $links,
+            'current' => $current,
+        );
+        
+        echo $this->twig->render('admin/navigation.html', $data);
+    }
 }

@@ -27,6 +27,7 @@ require '../include/admin_auth.inc';
 require '../include/errors.php';
 require '../include/import_users.inc';
 require_once '../include/demo_replace.inc';
+require '../include/toprightmenu.inc';
 
 // instantiate Twig renderer
 $render = new render($configObject);
@@ -59,6 +60,7 @@ ob_start();
         <style type="text/css">
             label.error {display:block; color:#f00}
         </style>
+        <script type="text/javascript" src="../js/toprightmenu.js"></script>
     </head>
 
     <?php
@@ -69,8 +71,18 @@ ob_start();
     }
 
     require '../include/user_search_options.php';
+    
+    echo draw_toprightmenu();
     ?>
-    <div id="content" class="content" style="padding-left:10px">
+    <div id="content" class="content">
+        <?php
+        $render->render_admin_navigation(array(
+            '/' => $string['home'],
+            '/admin/index.php' => $string['admintools'],
+            '/users/search.php' => $string['usermanagement'],
+            '/users/import_users.php' => $string['importusers'],
+        ));
+        ?>
         <?php
         $file_problem = false;
 
