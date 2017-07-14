@@ -18,7 +18,6 @@ var RubyDialog = {
 
   preview : function() {
     // Preview the contents from the input into the preview area
-    //console.log(this.constructTag());
     document.getElementById('rubyPreview').innerHTML = this.constructTag();
   },
 
