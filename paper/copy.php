@@ -382,6 +382,21 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
     $qData->free_result();
     $qData->close();
   }
+  /**
+   * copying Killer question to the new paper.
+   */
+  $killerQuestionresult = $mysqli->prepare("SELECT q_id FROM killer_questions WHERE paperID = ?");
+  $killerQuestionresult->bind_param('i', $paperid);
+  $killerQuestionresult->execute();
+  $killerQuestionresult->store_result();
+  $killerQuestionresult->bind_result($q_id);
+  while ($killerQuestionresult->fetch()) {
+    $addKillerQuestion = $mysqli->prepare("INSERT INTO killer_questions( paperID, q_id ) VALUES (?, ?)");
+    $addKillerQuestion->bind_param('ii', $new_paper_id, $q_id);
+    $addKillerQuestion->execute();
+    $addKillerQuestion->close();
+  }
+  $killerQuestionresult->close();
   $result->free_result();
   $result->close();
 
