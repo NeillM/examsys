@@ -76,7 +76,7 @@ ob_start();
     ?>
     <div id="content" class="content">
         <?php
-        $render->render_admin_navigation(array(
+        echo $render->render_admin_navigation(array(
             '/' => $string['home'],
             '/admin/index.php' => $string['admintools'],
             '/users/search.php' => $string['usermanagement'],
