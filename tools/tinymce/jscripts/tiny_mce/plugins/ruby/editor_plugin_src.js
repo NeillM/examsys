@@ -47,7 +47,7 @@
 			});
 
             ed.onKeyDown.add(function(ed, e) {
-            	if (e.charCode == 13 || e.keyCode == 13 ) {
+            	if (e.charCode == 13 || e.keyCode == 13 || e.keyCode == 32 || e.charCode == 32  ) {
             		var nodeName = tinymce.activeEditor.selection.getNode().nodeName;
             		if(nodeName == 'RT' || nodeName == 'RP' || nodeName == 'RUBY'  ) {
             			tinyMCE.activeEditor.selection.select(tinymce.activeEditor.dom.getParent(tinyMCE.activeEditor.selection.getNode(),'span'), true);
