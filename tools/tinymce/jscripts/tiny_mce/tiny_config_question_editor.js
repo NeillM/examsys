@@ -119,7 +119,7 @@ tinyMCE.init({
     editor_selector : "mceEditorBasic",
     theme : "advanced",
     skin : "default",
-    plugins : "paste,|,ruby",
+    plugins : "paste,ruby",
     // Theme options
     theme_advanced_buttons1 : "cut,copy,paste,|,undo|,cleanup,removeformat,,ruby",
     theme_advanced_buttons2 : "",
