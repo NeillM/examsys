@@ -4,15 +4,16 @@ tinyMCE.init({
     force_br_newlines : false,
     force_p_newlines : false,
     relative_urls : false,
-		remove_script_host : false,
-		convert_urls : false,
-		//language : window.navigator.language,
+    remove_script_host : false,
+    convert_urls : false,
+    schema : 'html5',
+    //language : window.navigator.language,
     editor_selector : "mceEditor",
     theme : "advanced",
     skin : "default",
-    plugins : "mee,table,visualchars,nonbreaking,xhtmlxtras,paste,insertimagequestioneditor,preview",
+    plugins : "mee,table,visualchars,nonbreaking,xhtmlxtras,paste,insertimagequestioneditor,ruby,preview",
     // Theme options
-    theme_advanced_buttons1 : "cut,copy,paste,|,undo,|,bold,italic,underline,|,sub,sup,|,mee,|,justifyleft,justifycenter,justifyright,|,numlist,bullist,|,insertimagequestioneditor,tablecontrols,|,code,preview",
+    theme_advanced_buttons1 : "cut,copy,paste,|,undo,|,bold,italic,underline,|,sub,sup,|,mee,ruby,|,justifyleft,justifycenter,justifyright,|,numlist,bullist,|,insertimagequestioneditor,tablecontrols,|,code,preview",
     theme_advanced_buttons2 : "",
     theme_advanced_buttons3 : "",
     theme_advanced_toolbar_location : "top",
@@ -26,14 +27,12 @@ tinyMCE.init({
 
     setup : function(ed) {
       ed.onInit.add(function(ed, evt) {
-
         var dom = ed.dom;
         tinymce.dom.Event.add(dom.getRoot(), 'blur', function(e) {
           // Do something when the editor window is blured.
           tinyMCE.triggerSave();
         });
       });
-
       // If there is no text content, return nothing.
       // After http://alastairc.ac/2010/03/removing-emtpy-html-tags-from-tinymce/
       ed.onPostProcess.add(function(ed, o) {
@@ -60,13 +59,14 @@ tinyMCE.init({
     relative_urls : false,
 		remove_script_host : false,
 		convert_urls : false,
+    schema : 'html5',
 		//language : window.navigator.language,
     editor_selector : "mceEditorSimple",
     theme : "advanced",
     skin : "default",
-    plugins : "mee,table,visualchars,nonbreaking,xhtmlxtras,paste,preview",
+    plugins : "mee,table,visualchars,nonbreaking,xhtmlxtras,paste,preview,ruby",
     // Theme options
-    theme_advanced_buttons1 : "cut,copy,paste,|,undo,|,bold,italic,underline,|,sub,sup,|,mee,|,code,preview",
+    theme_advanced_buttons1 : "cut,copy,paste,|,undo,|,bold,italic,underline,|,sub,sup,|,mee,|,code,preview,|,ruby",
     theme_advanced_buttons2 : "",
     theme_advanced_buttons3 : "",
     theme_advanced_toolbar_location : "top",
@@ -114,13 +114,14 @@ tinyMCE.init({
     relative_urls : false,
 		remove_script_host : false,
 		convert_urls : false,
+    schema : 'html5',
 		//language : window.navigator.language,
     editor_selector : "mceEditorBasic",
     theme : "advanced",
     skin : "default",
-    plugins : "paste",
+    plugins : "paste,ruby",
     // Theme options
-    theme_advanced_buttons1 : "cut,copy,paste,|,undo|,cleanup,removeformat",
+    theme_advanced_buttons1 : "cut,copy,paste,|,undo|,cleanup,removeformat,|,ruby",
     theme_advanced_buttons2 : "",
     theme_advanced_buttons3 : "",
     theme_advanced_toolbar_location : "top",
