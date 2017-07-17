@@ -22,7 +22,7 @@
 * @package
 */
 
-require '../../include/staff_auth.inc';
+require_once '../../include/staff_auth.inc';
 
 $html = <<< HTML
 <html>
