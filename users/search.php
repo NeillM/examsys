@@ -46,28 +46,30 @@ if ($userObject->has_role('Demo')) {
 } else {
   $demo = false;
 }
+
 $sortby = 'surname';
 $ordering = 'asc';
-$moduleID = check_var('module', $_REQUEST, false, true, true);
-$calendar_year = check_var('calendar_year', $_GET, false, true, true);
 
-$get_staff = !is_null(check_var('staff', $_GET, false, true, true));
-$get_inactive = !is_null(check_var('inactive', $_GET, false, true, true));
-$get_sysadmin = !is_null(check_var('sysadminstaff', $_GET, false, true, true));
-$get_admin = !is_null(check_var('adminstaff', $_GET, false, true, true));
-$get_invigilators = !is_null(check_var('invigilators', $_GET, false, true, true));
-$get_standardstaff = !is_null(check_var('standardsstaff', $_GET, false, true, true));
-$get_external = !is_null(check_var('externals', $_GET, false, true, true));
-$get_internal = !is_null(check_var('internals', $_GET, false, true, true));
-$get_students = !is_null(check_var('students', $_GET, false, true, true));
-$get_graduates = !is_null(check_var('graduates', $_GET, false, true, true));
-$get_leavers = !is_null(check_var('leavers', $_GET, false, true, true));
-$get_suspended = !is_null(check_var('suspended', $_GET, false, true, true));
-$get_locked = !is_null(check_var('locked', $_GET, false, true, true));
+$moduleID = param::optional('module', null, param::INT, param::FETCH_GET);
+$calendar_year = param::optional('calendar_year', '%', param::INT, param::FETCH_GET);
 
-$student_id = check_var('student_id', $_GET, false, true, true);
-$search_surname = check_var('search_surname', $_GET, false, true, true);
-$search_username = check_var('search_username', $_GET, false, true, true);
+$get_staff = param::optional('staff', true, param::BOOLEAN, param::FETCH_GET);
+$get_inactive = param::optional('inactive', true, param::BOOLEAN, param::FETCH_GET);
+$get_sysadmin = param::optional('sysadminstaff', true, param::BOOLEAN, param::FETCH_GET);
+$get_admin = param::optional('adminstaff', false, param::BOOLEAN, param::FETCH_GET);
+$get_invigilators = param::optional('invigilators', false, param::BOOLEAN, param::FETCH_GET);
+$get_standardstaff = param::optional('standardsstaff', false, param::BOOLEAN, param::FETCH_GET);
+$get_external = param::optional('externals', false, param::BOOLEAN, param::FETCH_GET);
+$get_internal = param::optional('internals', false, param::BOOLEAN, param::FETCH_GET);
+$get_students = param::optional('students', false, param::BOOLEAN, param::FETCH_GET);
+$get_graduates = param::optional('graduates', false, param::BOOLEAN, param::FETCH_GET);
+$get_leavers = param::optional('leavers', false, param::BOOLEAN, param::FETCH_GET);
+$get_suspended = param::optional('suspended', false, param::BOOLEAN, param::FETCH_GET);
+$get_locked = param::optional('locked', false, param::BOOLEAN, param::FETCH_GET);
+
+$student_id = param::optional('student_id', null, param::INT, param::FETCH_GET);
+$search_surname = param::optional('search_surname', null, param::ALPHA, param::FETCH_GET);
+$search_username = param::optional('search_username', null, param::ALPHA, param::FETCH_GET);
 
 if (is_null($calendar_year) or $calendar_year === '%') {
   $calendar_year_sql = '';
