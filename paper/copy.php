@@ -110,6 +110,8 @@ if ($update === false) {
   $moduleIDs = Paper_utils::get_modules($new_paper_id, $mysqli);
 }
 
+//Killer question object
+$KillerQuestionsObj = new Killer_Question($paperid,$mysqli);
 if ($copytype == 'paperonly') {        // Copy the paper only!
 
   // Copy the question pointers (papers table)
@@ -152,6 +154,8 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
 
     }
   }
+  //copying all the killer questions
+  $KillerQuestionsObj->copy_killer_questions($new_paper_id);
 } else {    // Copy the paper and the questions.
   $mediadirectory = rogo_directory::get_directory('media');
 
@@ -269,6 +273,12 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
         $addQuestion->bind_param('ssssssssisssssssissss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $new_status, $q_option_order, $score_method, $settings, $guid);
         $addQuestion->execute();
         $new_qids[] = $question_id = $mysqli->insert_id;
+        //making duplicate question a killer question
+        if($KillerQuestionsObj->is_killer_question($question)){
+          $copyKillerQuestion = new Killer_Question($new_paper_id,$mysqli);
+          $copyKillerQuestion->set_question($question_id);
+          $copyKillerQuestion->save();
+        }
         if ($q_type == 'enhancedcalc') $calculation_qid_map[$q_id] = $question_id;
         $addQuestion->close();
 
@@ -382,21 +392,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
     $qData->free_result();
     $qData->close();
   }
-  /**
-   * Copying Killer question to the new paper.
-   */
-  $killerQuestionresult = $mysqli->prepare("SELECT q_id FROM killer_questions WHERE paperID = ?");
-  $killerQuestionresult->bind_param('i', $paperid);
-  $killerQuestionresult->execute();
-  $killerQuestionresult->store_result();
-  $killerQuestionresult->bind_result($q_id);
-  while ($killerQuestionresult->fetch()) {
-    $addKillerQuestion = $mysqli->prepare("INSERT INTO killer_questions( paperID, q_id ) VALUES (?, ?)");
-    $addKillerQuestion->bind_param('ii', $new_paper_id, $q_id);
-    $addKillerQuestion->execute();
-    $addKillerQuestion->close();
-  }
-  $killerQuestionresult->close();
+
   $result->free_result();
   $result->close();
 
