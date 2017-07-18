@@ -31,29 +31,15 @@ ini_set("auto_detect_line_endings", true);
 
 // instantiate Twig renderer
 $render = new render($configObject);
-
+$lang['title'] = $string['impmodtitle'];
+$additionaljs = "";
+$addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/dialog.css\" />
+                <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/list.css\" />
+                <style type=\"text/css\">
+                    label.error {display:block; color:#f00}
+                </style>";
+$render->render_admin_header($lang, $additionaljs, $addtionalcss);
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-	<title><?php echo $string['impmodtitle'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-  
-	<link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
-  <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <link rel="stylesheet" type="text/css" href="../css/list.css" />
-  <style type="text/css">
-    p {margin:0; padding:0}
-    label.error {display:block; color:#f00}
-  </style>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-</head>
-
   <body>
 <?php
   require '../include/user_search_options.php';
