@@ -29,7 +29,7 @@ require '../include/import_users.inc';
 require_once '../include/demo_replace.inc';
 require '../include/toprightmenu.inc';
 
-// instantiate Twig renderer
+// Instantiate Twig renderer.
 $render = new render($configObject);
 
 set_time_limit(0);

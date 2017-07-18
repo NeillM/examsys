@@ -27,7 +27,7 @@
 require '../include/admin_auth.inc';
 require '../include/toprightmenu.inc';
 
-// instantiate Twig renderer
+// Instantiate Twig renderer.
 $render = new render($configObject);
 
 ini_set("auto_detect_line_endings", true);
