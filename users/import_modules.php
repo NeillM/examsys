@@ -25,8 +25,13 @@
 */
 
 require_once '../include/admin_auth.inc';
+require '../include/toprightmenu.inc';
 
 ini_set("auto_detect_line_endings", true);
+
+// instantiate Twig renderer
+$render = new render($configObject);
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -46,20 +51,24 @@ ini_set("auto_detect_line_endings", true);
     label.error {display:block; color:#f00}
   </style>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 
   <body>
 <?php
   require '../include/user_search_options.php';
+  echo draw_toprightmenu();
 ?>
-<div id="content">
-<br />
-<br />
-<br />
-
+<div id="content" class="content">
 <?php
+  echo $render->render_admin_navigation(array(
+      '/' => $string['home'],
+      '/admin/index.php' => $string['admintools'],
+      '/users/search.php' => $string['usermanagement'],
+      '/users/import_users.php' => $string['importmodules'],
+  ));
   $file_problem = false;
-
+  echo "<br /><br />";
   if (isset($_POST['submit'])) {
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
       if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_cohort_update.csv"))  {
@@ -67,7 +76,6 @@ ini_set("auto_detect_line_endings", true);
         exit;
       } else {
         ?>
-        <br /><br /><br />
         <table class="dialog_border" style="width:600px">
         <tr>
         <td class="dialog_header"><img src="../artwork/modules_icon.png" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<?php echo $string['importmodules'] ?></td>

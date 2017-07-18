@@ -25,6 +25,10 @@
 */
 
 require '../include/admin_auth.inc';
+require '../include/toprightmenu.inc';
+
+// instantiate Twig renderer
+$render = new render($configObject);
 
 ini_set("auto_detect_line_endings", true);
 
@@ -45,6 +49,7 @@ function returnTrueFalse($value) {
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo $string['bulkmoduleimport'] . ' ' . $configObject->get('cfg_install_type') ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
@@ -58,6 +63,7 @@ function returnTrueFalse($value) {
   </style>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
     $(function () {
       $('#import_form').validate();
@@ -72,8 +78,17 @@ function returnTrueFalse($value) {
   <body>
 <?php
   require '../include/admin_module_options.inc';  
+  echo draw_toprightmenu();
 ?>
-<div id="content">
+<div id="content" class="content">
+<?php
+  echo $render->render_admin_navigation(array(
+    '/' => $string['home'],
+    '/admin/index.php' => $string['admintools'],
+    '/admin/list_modules.php' => $string['modules'],
+    '/users/bulk_import_modules.php' => $string['bulkmoduleimport'],
+  ));
+?>
 <br />
 <br />
 <?php

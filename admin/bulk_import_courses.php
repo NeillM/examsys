@@ -25,6 +25,10 @@
 */
 
 require '../include/admin_auth.inc';
+require '../include/toprightmenu.inc';
+
+// instantiate Twig renderer
+$render = new render($configObject);
 
 ini_set("auto_detect_line_endings", true);
 ?>
@@ -37,6 +41,7 @@ ini_set("auto_detect_line_endings", true);
   <title><?php echo $string['bulkcourseimport'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
@@ -49,6 +54,7 @@ ini_set("auto_detect_line_endings", true);
   </style>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+  <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
     $(function () {
       $('#import_form').validate();
@@ -63,8 +69,17 @@ ini_set("auto_detect_line_endings", true);
   <body>
 <?php
   require '../include/course_options.inc';
+  echo draw_toprightmenu();
 ?>
-<div id="content">
+<div id="content" class="content">
+<?php
+  echo $render->render_admin_navigation(array(
+    '/' => $string['home'],
+    '/admin/index.php' => $string['admintools'],
+    '/admin/list_courses.php' => $string['courses'],
+    '/users/bulk_import_courses.php' => $string['bulkcourseimport'],
+  ));
+?>
 <br />
 <br />
 <?php
