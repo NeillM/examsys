@@ -930,7 +930,7 @@ function check_latex_random($q_ids, $mysqli) {
   $links[$href] = false === strpos($folderName, ';') ? $folderName : substr($folderName, strrpos($folderName, ';') + 1);
   
   // link of current paper
-  $href = '/paper/details.php?paperId=' . $paperID;
+  $href = '/paper/details.php?paperID=' . $paperID;
   $links[$href] = $properties->get_paper_title();
 
   // breadcrumb
