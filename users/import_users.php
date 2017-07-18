@@ -44,6 +44,7 @@ $additionaljs = "<script>
         </script>";
 $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/dialog.css\" />
                 <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/list.css\" />
+                <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/breadcrumb.css\" />
                 <style type=\"text/css\">
                     label.error {display:block; color:#f00}
                 </style>";

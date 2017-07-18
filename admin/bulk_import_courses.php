@@ -43,6 +43,7 @@ $additionaljs = "<script type=\"text/javascript\" src=\"../js/jquery.validate.mi
                     });
                 </script>";
 $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/dialog.css\" />
+                <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/breadcrumb.css\" />
                 <style type=\"text/css\">
                     p {margin:0; padding:0}
                     h1 {font-size:120%; font-weight:bold}
