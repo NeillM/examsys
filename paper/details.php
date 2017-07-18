@@ -917,18 +917,28 @@ function check_latex_random($q_ids, $mysqli) {
 
   // initial link of breadcrumb
   $links = array('/' => 'Home');
-  
-  // links of parent folders
-  $folderName = folder_utils::get_folder_name($folder, $mysqli);
-  foreach (folder_utils::get_parent_list($folderName, $userObject, $mysqli) as $parentId => $parentName) {
-    $href = '/folder/index.php?folder=' . $parentId;
-    $links[$href] = $parentName;
+
+    if ($folder) {
+    // links of parent folders
+    $folderName = folder_utils::get_folder_name($folder, $mysqli);
+    foreach (folder_utils::get_parent_list($folderName, $userObject, $mysqli) as $parentId => $parentName) {
+      $href = '/folder/index.php?folder=' . $parentId;
+      $links[$href] = $parentName;
+    }
+
+    // link of current folder
+    $href = '/folder/index.php?folder=' . $folder;
+    $links[$href] = false === strpos($folderName, ';') ? $folderName : substr($folderName, strrpos($folderName, ';') + 1);
+  } elseif ($module) {
+    // link to module
+    $href = '../module/index.php?module=' . $module ;
+    $links[$href] = module_utils::get_moduleid_from_id($module, $mysqli);
+ 
+    // link to module
+    $href = '../paper/type.php?module=' . $module . '&type=' . $properties->get_paper_type();
+    $links[$href] = Paper_utils::type_to_name($properties->get_paper_type(), $string);
   }
-  
-  // link of current folder
-  $href = '/folder/index.php?folder=' . $folder;
-  $links[$href] = false === strpos($folderName, ';') ? $folderName : substr($folderName, strrpos($folderName, ';') + 1);
-  
+
   // link of current paper
   $href = '/paper/details.php?paperID=' . $paperID;
   $links[$href] = $properties->get_paper_title();
