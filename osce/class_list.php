@@ -38,12 +38,13 @@ $paper_title 		= $properties->get_paper_title();
 $calendar_year 	= $properties->get_calendar_year();
 $modules				= $properties->get_modules();
 
-function quick_links() {
+function quick_links($string) {
 	$html = '';
 	
 	$html .= "<table style=\"width:100%; text-align:center\">\n<tr>\n";
+	$html .= "<td class=\"qlink\"><a href='#' class=\"qlink td\" data-val=\"All\">". $string['all']."</a> </td>";
 	for ($i=1; $i<=26; $i++) {
-		$html .= "<td class=\"qlink\"><a href=\"#" . chr($i+64) . "\" class=\"qlink\">" . chr($i+64) . "</a></td>";
+		$html .= "<td class=\"qlink\"><a href=\"#" . chr($i+64) . "\" class=\"qlink td\" data-val =".chr($i+64).">" . chr($i+64) . "</a></td>";
 	}
 	$html .= "</tr>\n</table>\n";
 	
@@ -83,15 +84,44 @@ function quick_links() {
     }
     
     $(function() {
-      $('.bl').click(function() {
+      $('.bl').on('click',function() {
         load($(this).attr('id'));
       });
       
-      $('.l').click(function() {
+      $('.l').on('click',function() {
         load($(this).attr('id'));
       });
-      
-      
+
+      $('.qlink.td').on('click',function () {
+        var id = "<?php echo $_GET['id']; ?>";
+        var letter = $(this).data('val');
+        if (letter == 'All') {
+          window.location.reload();
+        } else {
+          $.getJSON("/rogo_dev/osce/user_list.php?id=" + id + "&initial=" + letter, function (data) {
+            var user_list = $('#user_list');
+            user_list.empty().append('<tr><td colspan="3" class="letter"><a name="' + letter + '"></a>' + letter + '</td></tr>');
+            if (data.length == 0) {
+              user_list.append('<tr><td><?php echo $string['user_list']; ?><td></tr>');
+            } else {
+              $.each(data, function (key, value) {
+                if (value[5] == null) {
+                  user_list.append('<tr class="bl" id="user' + value[0] + '"><td class="indent">' + value[3] + '</td><td>' + value[1] + ',  <span class="n">' + value[2] + '</span></td><td>' + value[4] + '</td></tr>')
+                } else {
+                  user_list.append('<tr class="l" id="user' + value[0] + '"><td class="indent">' + value[3] + '</td><td>' + value[1] + ',  <span class="n">' + value[2] + '</span></td><td>' + value[4] + '</td></tr>')
+                }
+              });
+              // Binding the event after loading the ajax content
+              $('.bl').on('click', function () {
+                load($(this).attr('id'));
+              });
+              $('.l').on('click', function () {
+                load($(this).attr('id'));
+              });
+            }
+          });
+        }
+      });
     });
   </script>
   </head>
@@ -119,9 +149,8 @@ function quick_links() {
 		if ($result->num_rows == 0) {
 			echo $notice->info_strip($string['error3'], 100);
 		} else {
-		  echo quick_links();
-			
-			echo "<table cellpadding=\"6\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
+		  echo quick_links($string);
+			echo "<table id='user_list' cellpadding=\"6\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
 				
 			while ($result->fetch()) {
 				$current_letter = strtoupper($surname{0});
