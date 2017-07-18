@@ -136,7 +136,5 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 
         <?php
         $mysqli->close();
+        $render->render_admin_footer();
         ?>
-    </div>
-</body>
-</html>
