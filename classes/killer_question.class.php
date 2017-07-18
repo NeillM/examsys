@@ -120,6 +120,27 @@ class Killer_Question {
 		unset($this->questions[$q_id]);
 	}
 
+  /**
+   *
+   * @return mixed
+   */
+
+	public function get_questions(){
+
+    $this->questions = array();
+
+    $result = $this->db->prepare("SELECT q_id FROM killer_questions WHERE paperID = ?");
+    $result->bind_param('i', $this->paperID);
+    $result->execute();
+    $result->bind_result($q_id);
+    while ($result->fetch()) {
+      $this->questions[] = $q_id;
+    }
+    $result->close();
+
+	  return $this->questions;
+  }
+
 	/**
    * Copy Killer questions from one paper to another
    */
