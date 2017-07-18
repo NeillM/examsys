@@ -972,6 +972,18 @@ function check_latex_random($q_ids, $mysqli) {
     <th class="m vert_div">&nbsp;<?php echo $string['marks']; ?>&nbsp;</th>
     <th class="d vert_div">&nbsp;<?php echo $string['modified']; ?>&nbsp;</th>
     </tr>
+  <?php
+  if ($properties->get_paper_type() == '4' & $properties->get_marking() == 5) {			// OSCE stations
+  ?>
+    <tr>
+      <td colspan="6">
+        <div class="yellowwarn">
+          <strong>Warning</strong>
+          Please don't forget to set the overall classification for this test: <a href="#" onclick="return paperProperties(); return false;">Click here to set the overall classification </a>
+        </div>
+      </td>
+    </tr>
+  <?php } ?>
    <?php
     $gradebook = new gradebook($mysqli);
     $graded = $gradebook->paper_graded($paperID);
