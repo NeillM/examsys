@@ -444,7 +444,7 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
                 <?php endif; ?>
             </div>
 
-            <?php if ($roles_sql == '') : ?>
+            <?php if (!is_null($submit) and $roles_sql == '') : ?>
                 <div><?= $notice->info_strip($string['msg1'], 100) ?></div>
             <?php endif; ?>
 
