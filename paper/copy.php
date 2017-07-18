@@ -154,7 +154,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
 
     }
   }
-  //copying all the killer questions
+  // Copying all the killer questions
   $KillerQuestionsObj->copy_killer_questions($new_paper_id);
 } else {    // Copy the paper and the questions.
   $mediadirectory = rogo_directory::get_directory('media');

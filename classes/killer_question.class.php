@@ -121,7 +121,7 @@ class Killer_Question {
 	}
 
   /**
-   *
+   * return all the killer question by paper
    * @return mixed
    */
 

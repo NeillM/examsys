@@ -979,7 +979,7 @@ function check_latex_random($q_ids, $mysqli) {
       <td colspan="6">
         <div class="yellowwarn">
           <strong>Warning</strong>
-          Please don't forget to set the overall classification for this test: <a href="#" onclick="return paperProperties(); return false;">Click here to set the overall classification </a>
+          <?php echo $string['overall_classification_warning']?>
         </div>
       </td>
     </tr>

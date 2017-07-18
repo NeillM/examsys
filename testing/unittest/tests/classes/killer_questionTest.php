@@ -21,7 +21,7 @@ use testing\unittest\unittestdatabase;
  *
  * @author Naseem Sarwar <naseem.sarwar@nottingham.ac.uk>
  * @version 1.0
- * @copyright Copyright (c) 2016 onwards The University of Nottingham
+ * @copyright Copyright (c) 2017 onwards The University of Nottingham
  * @package tests
  */
 class Killer_Questiontest extends unittestdatabase {
@@ -38,7 +38,7 @@ class Killer_Questiontest extends unittestdatabase {
    * @group paper
    */
   public function test_is_a_killer_question() {
-    // Check count does not include deleted schools.
+    // Checks a question is killer or not.
     $killer_question = new Killer_Question(1,$this->db);
     $this->assertFalse( $killer_question->is_killer_question(1));
   }
