@@ -918,7 +918,7 @@ function check_latex_random($q_ids, $mysqli) {
   // initial link of breadcrumb
   $links = array('/' => 'Home');
 
-    if ($folder) {
+  if ($folder) {
     // links of parent folders
     $folderName = folder_utils::get_folder_name($folder, $mysqli);
     foreach (folder_utils::get_parent_list($folderName, $userObject, $mysqli) as $parentId => $parentName) {
