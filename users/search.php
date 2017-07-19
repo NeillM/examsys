@@ -27,23 +27,10 @@ require '../include/staff_auth.inc';
 require_once '../include/demo_replace.inc';
 require_once '../include/errors.php';
 
-function get_special_needs($db) {
-    $needs_array = array();
-    $result = $db->prepare("SELECT userID FROM special_needs");
-    $result->execute();
-    $result->bind_result($tmp_userID);
-    while ($result->fetch()) {
-        $needs_array[$tmp_userID] = '1';
-    }
-    $result->close();
-
-    return $needs_array;
-}
-
 $demo = $userObject->has_role('Demo');
 
-$sortby = 'surname';
-$ordering = 'asc';
+$sortby = param::optional('sortby', 'surname', param::ALPHA, param::FETCH_GET);
+$ordering = param::optional('ordering', 'asc', param::ALPHA, param::FETCH_GET);
 
 $moduleID = param::optional('module', null, param::INT, param::FETCH_GET);
 $calendar_year = param::optional('calendar_year', '%', param::INT, param::FETCH_GET);
@@ -221,11 +208,12 @@ if (!is_null($submit)) {
     if (count($roles) > 0) {
         // SQL parts
         $sql_counter = 'COUNT(DISTINCT users.id) AS counter';
-        $sql_fields = 'DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email';
+        $sql_fields = 'DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email, special_id';
         $sql_template = ' FROM users'
                 . ' LEFT JOIN modules_student ON users.id = modules_student.userID'
                 . ' LEFT JOIN modules_staff ON users.id = modules_staff.memberID'
                 . ' LEFT JOIN sid ON users.id = sid.userID'
+                . ' LEFT JOIN special_needs ON users.id = special_needs.userID'
                 . ' LEFT JOIN modules ON (modules_student.idMod = modules.id OR modules_staff.idMod = modules.id)'
                 . ' WHERE user_deleted IS NULL AND ' . implode(' AND ', $conditions);
         $sql_count = sprintf('SELECT %s%s', $sql_counter, $sql_template);
@@ -281,7 +269,7 @@ if (!is_null($submit)) {
         }
 
         // bind list query results to variables
-        $stmt->bind_result($tmp_id, $tmp_roles, $tmp_student_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title, $tmp_username, $tmp_grade, $tmp_yearofstudy, $tmp_email);
+        $stmt->bind_result($tmp_id, $tmp_roles, $tmp_student_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title, $tmp_username, $tmp_grade, $tmp_yearofstudy, $tmp_email, $tmp_special_id);
         $stmt->store_result();
     }
 }
@@ -294,7 +282,6 @@ $temporary_surname = param::optional('tmp_surname', null, param::ALPHA, param::F
 $temporary_courseid = param::optional('tmp_courseID', null, param::INT, param::FETCH_GET);
 $temporary_yearid = param::optional('tmp_yearID', null, param::INT, param::FETCH_GET);
 
-$needs_array = get_special_needs($mysqli);
 $render = new render($configObject);
 
 // links on breadcrumb
@@ -489,7 +476,7 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
                                         <?php endif; ?>
                                     </td>
                                     <td>
-                                        <?php if (array_key_exists($tmp_id, $needs_array)) : ?>
+                                        <?php if ($tmp_special_id) : ?>
                                             <img src="../artwork/accessibility_16.png" width="16" height="16" />
                                         <?php endif; ?>
                                     </td>
