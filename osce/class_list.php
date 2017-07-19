@@ -40,14 +40,14 @@ $modules				= $properties->get_modules();
 
 function quick_links($string) {
 	$html = '';
-	
+
 	$html .= "<table style=\"width:100%; text-align:center\">\n<tr>\n";
 	$html .= "<td class=\"qlink\"><a href='#' class=\"qlink td\" data-val=\"All\">". $string['all']."</a> </td>";
 	for ($i=1; $i<=26; $i++) {
 		$html .= "<td class=\"qlink\"><a href=\"#" . chr($i+64) . "\" class=\"qlink td\" data-val =".chr($i+64).">" . chr($i+64) . "</a></td>";
 	}
 	$html .= "</tr>\n</table>\n";
-	
+
 	return $html;
 }
 ?>
@@ -64,7 +64,7 @@ function quick_links($string) {
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
   <title><?php echo $string['classlist'] ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/osce_list.css" />
   <style type="text/css">
@@ -76,18 +76,18 @@ function quick_links($string) {
     }
   ?>
   </style>
-  
+
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
     function load(userID) {
       window.location.href = "form.php?id=<?php echo $_GET['id']; ?>&userID=" + userID.substr(4);
     }
-    
+
     $(function() {
       $('.bl').on('click',function() {
         load($(this).attr('id'));
       });
-      
+
       $('.l').on('click',function() {
         load($(this).attr('id'));
       });
@@ -98,7 +98,7 @@ function quick_links($string) {
         if (letter == 'All') {
           window.location.reload();
         } else {
-          $.getJSON("/osce/user_list.php?id=" + id + "&initial=" + letter, function (data) {
+          $.getJSON("user_list.php?id=" + id + "&initial=" + letter, function (data) {
             var user_list = $('#user_list');
             user_list.empty().append('<tr><td colspan="3" class="letter"><a name="' + letter + '"></a>' + letter + '</td></tr>');
             if (data.length == 0) {
@@ -129,9 +129,9 @@ function quick_links($string) {
   <body>
   <div class="title"><?php echo $paper_title; ?></div>
   <form autocomplete="off">
-  
+
   <?php
-  
+
   if (count($modules) == 0) {
 		echo $notice->info_strip($string['error1'], 100);
   } elseif (trim($calendar_year) == '') {
@@ -140,7 +140,7 @@ function quick_links($string) {
     // Get the students who are enrolled on the module/session.
     $student_no = 0;
     $old_letter = '';
-    
+
     $result = $mysqli->prepare("SELECT users.id, surname, first_names, title, student_id, started FROM (modules_student, users, sid) LEFT JOIN log4_overall ON users.id = log4_overall.userID AND q_paper = ? WHERE modules_student.userID = users.id AND users.id = sid.userID AND modules_student.idMod IN (" . implode(',', array_keys($modules)) . ") AND calendar_year = ? ORDER BY surname, initials");
     $result->bind_param('is', $paperID, $calendar_year);
     $result->execute();
@@ -151,7 +151,7 @@ function quick_links($string) {
 		} else {
 		  echo quick_links($string);
 			echo "<table id='user_list' cellpadding=\"6\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
-				
+
 			while ($result->fetch()) {
 				$current_letter = strtoupper($surname{0});
 				if ($old_letter != $current_letter) {
