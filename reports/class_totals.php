@@ -137,7 +137,7 @@ if (($paper_type == '2' and $unmarked and !$propertyObj->is_active()) or (in_arr
   echo "<span style=\"margin-left:10px; font-size:200%; color:black\"><strong>" . $string['classtotals'] . "</strong> - " . $string['markingcalcquestions'] . "</span></th><th class=\"h\" style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></th></tr>\n";
 
   echo '</table>';
-	
+
 	echo "<div class=\"marking\"><img src=\"../artwork/large_spin.gif\" widht=\"32\" height=\"32\" style=\"float:left; padding-right:10px\" />\n";
 	echo "<div id=\"msg\">" . $string['marking'] . "</div>\n";
 	echo "</div>\n";
@@ -182,9 +182,9 @@ ob_start();
 
     if (tmpMetadataID == '') {
       $('#item1').removeClass('popup_row');
-      $('#item1').addClass('popup_row_disabled'); 
+      $('#item1').addClass('popup_row_disabled');
       $('#item2').removeClass('popup_row');
-      $('#item2').addClass('popup_row_disabled'); 
+      $('#item2').addClass('popup_row_disabled');
     } else {
       $('#item1').addClass('popup_row');
       $('#item1').removeClass('popup_row_disabled');
@@ -197,7 +197,7 @@ ob_start();
       $('#item5').removeClass('popup_row_disabled');
 
       $('#item3').removeClass('popup_row');
-      $('#item3').addClass('popup_row_disabled');      
+      $('#item3').addClass('popup_row_disabled');
     } else {
       $('#item3').addClass('popup_row');
       $('#item3').removeClass('popup_row_disabled');
@@ -212,7 +212,7 @@ ob_start();
       $('#log_late_icon').show();
     } else {
       $('#item7').removeClass('popup_row');
-      $('#item7').addClass('popup_row_disabled'); 
+      $('#item7').addClass('popup_row_disabled');
       $('#log_late_icon').hide();
     }
   }
@@ -238,7 +238,7 @@ ob_start();
     templatewin = window.open("publishmarks.php","templatewin","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
     templatewin.moveTo(screen.width/2-390,screen.height/2-75);
   }
-  
+
   function viewProfile() {
     $('#menudiv').hide();
     if ($('#reassign').val() == 'n') {
@@ -287,19 +287,19 @@ ob_start();
       }
     }
   }
-  
-  var paperID = <?php echo $paperID ?>;  
+
+  var paperID = <?php echo $paperID ?>;
   var crypt_name = '<?php echo $propertyObj->get_crypt_name() ?>';
 
   $(function() {
     if ($("#maindata").find("tr").size() > 1) {
-      $("#maindata").tablesorter({ 
-        // sort on the first column and third column, order asc 
+      $("#maindata").tablesorter({
+        // sort on the first column and third column, order asc
         dateFormat: '<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>',
-        sortList: [[2,0],[3,0]] 
+        sortList: [[2,0],[3,0]]
       });
     }
-    
+
     $(document).click(function() {
       $('#menudiv').hide();
 		});
@@ -334,27 +334,27 @@ echo draw_toprightmenu(30);
     <div class="popup_icon"><img src="../artwork/summative_16.gif" width="16" height="16" alt="" /></div>
     <div class="popup_title"><?php echo $string['examscript'] ?></div>
   </div>
-  
+
   <div class="popup_row" onclick="viewFeedback();" id="item2">
     <div class="popup_icon"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" /></div>
     <div class="popup_title"><?php echo $string['feedback']; ?></div>
   </div>
-  
+
   <div class="popup_divider_row">
     <div class="popup_icon"></div>
     <div class="popup_title"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></div>
   </div>
-  
+
   <div class="popup_row" onclick="viewProfile();" id="item3">
     <div class="popup_icon"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" /></div>
     <div class="popup_title"><?php echo $string['studentprofile'] ?></div>
   </div>
-  
+
   <div class="popup_row" onclick="newStudentNote();" id="item4">
     <div class="popup_icon"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="" /></div>
     <div class="popup_title"><?php echo $string['newnote'] ?></div>
   </div>
-  
+
   <div class="popup_divider_row">
     <div class="popup_icon"></div>
     <div class="popup_title"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></div>
@@ -375,9 +375,9 @@ echo draw_toprightmenu(30);
 ?>
   <div class="<?php echo $class ?>" onclick="<?php echo $action ?>">
     <div class="popup_icon"></div>
-    <div class="popup_title" id="item6"><?php echo $string['resettimer']; ?></div>  
+    <div class="popup_title" id="item6"><?php echo $string['resettimer']; ?></div>
   </div>
-      
+
   <div class="popup_row" onclick="reassignLogLate();" id="item7">
     <div class="popup_icon"><img id="log_late_icon" style="display:none" src="../artwork/log_late_16.gif" width="16" height="16" alt="" /></div>
     <div class="popup_title"><?php echo $string['latesubmissions']; ?></div>
@@ -387,7 +387,7 @@ echo draw_toprightmenu(30);
   for ($i=-100; $i<=100; $i++) $distribution[$i] = 0;
 
   $notes = PaperNotes::get_all_notes_by_paper($paperID, $mysqli);
-  
+
   $toilet_breaks = ToiletBreaks::get_all_breaks_by_paper($paperID, $mysqli);
 
   if ($marking == '0') {
@@ -406,7 +406,7 @@ echo draw_toprightmenu(30);
 		$table_order[] = $string['ipaddress'];
   }
 	if ($paper_type == '2') $table_order[] = $string['room'];
-  
+
   $metadata_cols = array();
   if (isset($user_results[0])) {
     foreach ($user_results[0] as $key => $val) {
@@ -416,9 +416,9 @@ echo draw_toprightmenu(30);
       }
     }
   }
-  
+
   $cols = count($table_order);
-  
+
   echo "<div style=\"font-size:80%\">\n";
   echo "<div class=\"head_title\">\n";
   echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
@@ -444,7 +444,7 @@ echo draw_toprightmenu(30);
 
   echo "<div class=\"page_title\">$report_title</div>";
   echo "</div>\n";
-  
+
   // Warning display banners
   $report->check_late_submission_warnings();
   $report->check_unmarked_textbox_warnings();
@@ -462,7 +462,7 @@ echo draw_toprightmenu(30);
     echo "</tr>\n";
   }
   echo "</thead>\n";
-  
+
   if ($sortby == 'classification') {
     $sortby = 'mark';
   }
@@ -482,13 +482,13 @@ echo draw_toprightmenu(30);
       } else {
         $reassign = 'y';
       }
-      
+
       if (strpos($user_results[$i]['roles'], 'Staff') !== false) {
         $role_css = 'staff';
       } else {
         $role_css = '';
       }
-      
+
       if ($user_results[$i]['display_started'] == '') {
         // Setup the row for an absent user.
         $bg_color = '#FFC0C0';
@@ -546,7 +546,7 @@ echo draw_toprightmenu(30);
           $alt = $string['displaypaper'];
         }
         echo " style=\"cursor:hand\" onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['metadataID'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "');" . "\"";
-        echo "><td class=\"$class $role_css\"><img src=\"../artwork/$icon\" class=\"picon\" /></td>"; 
+        echo "><td class=\"$class $role_css\"><img src=\"../artwork/$icon\" title=\"$alt\" alt=\"$alt\" class=\"picon\" /></td>";
       }
 
       // Display the student names and any relevant note and icons.
@@ -575,11 +575,11 @@ echo draw_toprightmenu(30);
       }
       if (isset($toilet_breaks[$user_results[$i]['userID']])) {
         foreach ($toilet_breaks[$user_results[$i]['userID']] as $toilet_break) {
-          echo '<img src="../artwork/wc.png" alt="Toilet" class="icon16_active" onclick="viewToiletBreak(' . $toilet_break . ', event)" />';          
+          echo '<img src="../artwork/wc.png" alt="Toilet" class="icon16_active" onclick="viewToiletBreak(' . $toilet_break . ', event)" />';
         }
       }
       echo "</td>";
-      
+
       if ($user_results[$i]['student_id'] == '') {
         if (strpos($user_results[$i]['roles'], 'Staff') !== false) {
           echo "<td class=\"grey $class $role_css\">&nbsp;</td>";
@@ -597,7 +597,7 @@ echo draw_toprightmenu(30);
         $absent_no++;
       } else {
 				//$user_results[$i]['mark'] += 1;   // Use for testing the Class Totals/Exam Script checking script.
-				
+
         if ($user_results[$i]['classification'] == 'Fail') {
           echo "<td class=\"mk $class fail r $role_css\">";
           if ($user_results[$i]['marking_complete'] == '0') echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['markingnotcomplete'] . '" />&nbsp;';
@@ -649,7 +649,7 @@ echo draw_toprightmenu(30);
     }
   }
   echo "<tbody>\n</table>\n";
-  
+
   // Summary information after the cohort listing.
   // ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
   $scatter_file = fopen($configObject->get('cfg_tmpdir') . $userObject->get_user_ID(). '_scatter.dat', 'w');              // Scatter plot data
@@ -659,7 +659,7 @@ echo draw_toprightmenu(30);
   $distribution_file = fopen($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_distribution.dat', 'w');   // Distribution data
   fwrite($distribution_file, serialize($distribution) . "\n");
   fclose($distribution_file);
-	
+
   if ($user_no > 0) {
     //Check for any paper notes
     echo "<br /><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['papernotes'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
@@ -829,7 +829,7 @@ echo draw_toprightmenu(30);
 
     echo "</tr></table>\n<br />";
 
-    $emailtemplatedir = rogo_directory::get_directory('email_templates');    
+    $emailtemplatedir = rogo_directory::get_directory('email_templates');
     // Email Class -----------------------------------------------------------------------------------------
     if ($paper_type < 2 and isset($_POST['emailclass']) and $_POST['emailclass'] == 'yes') {
       // Save the latest template to disk.
@@ -945,9 +945,9 @@ echo draw_toprightmenu(30);
         echo '<input type="hidden" name="subject" value="" />';
         echo "</form>\n</div>\n";
       }
-      
+
     }
-    
+
     $unmarked_questions = false;
     $summative = false;
     $late_answers = false;
