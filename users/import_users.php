@@ -29,40 +29,27 @@ require '../include/import_users.inc';
 require_once '../include/demo_replace.inc';
 require '../include/toprightmenu.inc';
 
-// instantiate Twig renderer
+// Instantiate Twig renderer.
 $render = new render($configObject);
 
 set_time_limit(0);
 ob_start();
-?>
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-
-        <title><?php echo $string['importusers'] . " " . $configObject->get('cfg_install_type') ?></title>
-
-        <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-        <script>
+$lang['title'] = $string['importusers'];
+$additionaljs = "<script>
             $(function () {
                 $('#cancel').click(function () {
                     history.back();
                 });
             });
-        </script>
-
-        <link rel="stylesheet" type="text/css" href="../css/body.css" />
-        <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
-        <link rel="stylesheet" type="text/css" href="../css/header.css" />
-        <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-        <link rel="stylesheet" type="text/css" href="../css/list.css" />
-        <style type="text/css">
-            label.error {display:block; color:#f00}
-        </style>
-        <script type="text/javascript" src="../js/toprightmenu.js"></script>
-    </head>
-
+        </script>";
+$addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/dialog.css\" />
+                <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/list.css\" />
+                <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/breadcrumb.css\" />
+                <style type=\"text/css\">
+                    label.error {display:block; color:#f00}
+                </style>";
+$render->render_admin_header($lang, $additionaljs, $addtionalcss);
+?>
     <?php
     if (isset($_POST['submit'])) {
         echo "<body onload=\"updateMsg()\">\n";
@@ -150,7 +137,5 @@ ob_start();
 
         <?php
         $mysqli->close();
+        $render->render_admin_footer();
         ?>
-    </div>
-</body>
-</html>
