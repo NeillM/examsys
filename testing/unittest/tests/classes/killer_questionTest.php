@@ -48,7 +48,6 @@ class Killer_Questiontest extends unittestdatabase {
    * @group paper
    */
   public function test_set_question(){
-
     $killer_question = new Killer_Question(1,$this->db);
     $killer_question->set_question(1);
     $killer_question->save();
@@ -57,7 +56,7 @@ class Killer_Questiontest extends unittestdatabase {
   }
 
   /**
-   * Test counts killer question by paper
+   * Test counts killer questions by paper
    * @group paper
    */
   public function test_get_questions(){

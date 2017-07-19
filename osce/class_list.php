@@ -98,7 +98,7 @@ function quick_links($string) {
         if (letter == 'All') {
           window.location.reload();
         } else {
-          $.getJSON("/rogo_dev/osce/user_list.php?id=" + id + "&initial=" + letter, function (data) {
+          $.getJSON("/osce/user_list.php?id=" + id + "&initial=" + letter, function (data) {
             var user_list = $('#user_list');
             user_list.empty().append('<tr><td colspan="3" class="letter"><a name="' + letter + '"></a>' + letter + '</td></tr>');
             if (data.length == 0) {

@@ -34,14 +34,14 @@ $initial = check_var('initial', 'GET', true, false, true);
 
 $properties = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli, $string, true);
 
-$paperID 				= $properties->get_property_id();
-$paper_title 		= $properties->get_paper_title();
-$calendar_year 	= $properties->get_calendar_year();
-$modules				= $properties->get_modules();
+$paperID        = $properties->get_property_id();
+$paper_title    = $properties->get_paper_title();
+$calendar_year  = $properties->get_calendar_year();
+$modules        = $properties->get_modules();
 
 $student_no = 0;
 $old_letter = '';
-$user_list = array();
+$user_list  = array();
 $result = $mysqli->prepare("SELECT users.id, surname, first_names, title, student_id, started FROM (modules_student, users, sid) LEFT JOIN log4_overall ON users.id = log4_overall.userID AND q_paper = ? WHERE modules_student.userID = users.id AND users.id = sid.userID AND modules_student.idMod IN (" . implode(',', array_keys($modules)) . ") AND calendar_year = ? and initials = ? ORDER BY surname, initials");
 $result->bind_param('iss', $paperID, $calendar_year, $initial);
 $result->execute();

@@ -978,8 +978,8 @@ function check_latex_random($q_ids, $mysqli) {
     <tr>
       <td colspan="6">
         <div class="yellowwarn">
-          <strong>Warning</strong>
-          <?php echo $string['overall_classification_warning']?>
+          <strong><?php echo $string['warning'];?></strong>
+          <?php echo $string['overall_classification_warning']?><a href="#" onclick="return paperProperties(); return false;"><?php echo $string['clickhere']; ?></a>
         </div>
       </td>
     </tr>
