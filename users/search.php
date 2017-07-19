@@ -69,49 +69,57 @@ $search_username = param::optional('search_username', null, param::ALPHA, param:
 $submit = param::optional('submit', null, param::ALPHA, param::FETCH_GET);
 
 if (!is_null($submit)) {
-    // We should only display the first 10,000 rows to avoid browser issues.
-    $limit = 10000;
-
-    if ($calendar_year === '%') {
-        $calendar_year_sql = '';
-        $calendar_year_param_types = '';
-        $calendar_year_params = array();
-    } else {
-        $calendar_year_sql = " AND calendar_year = ?";
-        $calendar_year_param_types = 'i';
-        $calendar_year_params = array($calendar_year);
+    // max number of results per page
+    $limit_default = 100;
+    $limit = param::optional('limit', $limit_default, param::INT, param::FETCH_GET);
+    if ($limit < 1) {
+        $limit = $limit_default;
     }
 
-    $username_sql = '';
-    $username_param_types = '';
-    $username_params = array();
-    $title_sql = '';
-    $title_param_types = '';
-    $title_params = array();
-    $surname_sql = '';
-    $surname_param_types = '';
-    $surname_params = array();
-    $initials_sql = '';
-    $initials_param_types = '';
-    $initials_params = array();
-    $student_id_sql = '';
-    $student_id_param_types = '';
-    $student_id_params = array();
-    $param_types = '';
-    $params = array();
+    // current page of results
+    $page = param::optional('page', 1, param::INT, param::FETCH_GET);
+    if ($page < 1) {
+        $page = 1;
+    }
+    
+    // query offset
+    $offset = $page * $limit - $limit;
 
+    // accumulaters for query builder
+    $conditions = array();
+    $parameters = array();
+    $types = array();
+
+    // find by module
+    if ($moduleID) {
+        $conditions[] = '(modules_student.idMod = ? OR modules_staff.idMod = ?)';
+        array_push($parameters, $moduleID, $moduleID);
+        $types[] = 'ii';
+    }
+
+    // find by calendar year
+    if ($calendar_year !== '%') {
+        $conditions[] = 'calendar_year = ?';
+        $parameters[] = $calendar_year;
+        $types[] = 'i';
+    }
+
+    // find by name
     if (!is_null($search_surname)) {
         $tmp_surname = str_replace("*", "%", trim($search_surname));
+
+        // lookup titles
         $tmp_titles = explode(',', $string['title_types']);
         foreach ($tmp_titles as $tmp_title) {
             if (substr_count(strtolower($tmp_surname), strtolower($tmp_title . ' ')) > 0) {
-                $title_sql = " AND title = ?";
-                $title_param_types = 's';
-                $title_params = array($tmp_title);
+                $conditions[] = 'title = ?';
+                $parameters[] = $tmp_title;
+                $types[] = 's';
             }
             $tmp_surname = preg_replace("/(" . $tmp_title . " )/i", "", $tmp_surname);
         }
 
+        // find initials
         $sections = preg_split('[,.]', $tmp_surname);
         if (count($sections) > 1) {    // Search for initials.
             if (strlen($sections[0]) < strlen($sections[1])) {
@@ -121,163 +129,170 @@ if (!is_null($submit)) {
                 $tmp_initials = $mysqli->real_escape_string(trim($sections[1]));
                 $tmp_surname = trim($sections[0]);
             }
-            $initials_sql = " AND initials LIKE ?";
-            $initials_param_types = 's';
-            $initials_params = array($tmp_initials . '%');
+            $conditions[] = 'initials LIKE ?';
+            $parameters[] = $tmp_initials . '%';
+            $types[] = 's';
         }
-        $surname_sql = '';
+
+        // find remaining names
         $alphanumeric_string = str_replace("%", "", $tmp_surname);
         if (strlen($alphanumeric_string) >= 3) {
             $tmp_surname = explode(' ', $tmp_surname);
-            $i = 0;
-            $surname_sql = " AND ( ";
-            $surname_param_types = '';
+            $condition = array();
             foreach ($tmp_surname as $name) {
-                if ($i > 0) {
-                    $surname_sql .= " OR ";
-                }
-                $i++;
                 $name = $mysqli->real_escape_string(str_replace('*', '%', $name));
-                $surname_sql .= " surname LIKE ? OR first_names LIKE ?";
-                $surname_param_types .= 'ss';
-                array_push($surname_params, $name, $name);
+                if (false === array_key_exists($name, $condition)) {
+                    $condition[$name] = 'surname LIKE ? OR first_names LIKE ?';
+                    $types[] = 'ss';
+                    array_push($parameters, $name, $name);
+                }
             }
-            $surname_sql .= " ) ";
+            if (count($condition) > 0) {
+                $conditions[] = sprintf('(%s)', implode(' OR ', $condition));
+            }
         }
     }
 
-    if (!is_null($search_username) and $search_username !== '') {
+    // find by username
+    if (!is_null($search_username) and trim($search_username) !== '') {
         $tmp_username = $mysqli->real_escape_string(str_replace('*', '%', trim($search_username)));
-        $username_sql = " AND users.username LIKE ?";
-        $username_param_types = 's';
-        $username_params[] = $tmp_username;
+        $conditions[] = 'users.username LIKE ?';
+        $parameters[] = $tmp_username;
+        $types[] = 's';
     }
 
+    // find by student id
     if (!is_null($student_id) and $student_id !== '') {
         $tmp_studentid = $mysqli->real_escape_string(trim($student_id));
-        $student_id_sql = " AND student_id = ?";
-        $student_id_param_types = 'i';
-        $student_id_params[] = $tmp_studentid;
+        $conditions[] = 'student_id = ?';
+        $parameters[] = $tmp_studentid;
+        $types[] = 'i';
     }
 
-    $roles_sql = '';
-    if ($get_students or ( !is_null($student_id) and $student_id !== ''))
-        $roles_sql .= " OR roles LIKE '%Student'";
-    if ($get_staff)
-        $roles_sql .= " OR roles LIKE '%Staff%'";
-    if ($get_admin)
-        $roles_sql .= " OR roles LIKE '%,Admin%'";
-    if ($get_sysadmin)
-        $roles_sql .= " OR roles LIKE '%,SysAdmin%'";
-    if ($get_standardstaff)
-        $roles_sql .= " OR roles LIKE '%,Standards Setter%'";
-    if ($get_inactive)
-        $roles_sql .= " OR roles LIKE '%inactive%'";
-    if ($get_external)
-        $roles_sql .= " OR (roles = 'External Examiner' AND grade != 'left')";
-    if ($get_internal)
-        $roles_sql .= " OR (roles = 'Internal Reviewer' AND grade != 'left')";
-    if ($get_invigilators)
-        $roles_sql .= " OR roles = 'Invigilator'";
-    if ($get_graduates)
-        $roles_sql .= " OR roles = 'Graduate'";
-    if ($get_leavers)
-        $roles_sql .= " OR roles = 'left'";
-    if ($get_suspended)
-        $roles_sql .= " OR roles = 'suspended'";
-    if ($get_locked)
-        $roles_sql .= " OR roles = 'locked'";
-    if ($roles_sql != '')
-        $roles_sql = '(' . substr($roles_sql, 4) . ')';
-    if (!$get_leavers and $get_staff)
-        $roles_sql .= " AND grade != 'left'";
+    // filter by roles
+    $roles = array();
+    if ($get_students or (!is_null($student_id) and $student_id !== '')) {
+        $roles[] = "roles LIKE '%Student'";
+    }
+    if ($get_staff) {
+        $roles[] = "roles LIKE '%Staff%'";
+    }
+    if ($get_admin) {
+        $roles[] = "roles LIKE '%,Admin%'";
+    }
+    if ($get_sysadmin) {
+        $roles[] = "roles LIKE '%,SysAdmin%'";
+    }
+    if ($get_standardstaff) {
+        $roles[] = "roles LIKE '%,Standards Setter%'";
+    }
+    if ($get_inactive) {
+        $roles[] = "roles LIKE '%inactive%'";
+    }
+    if ($get_external) {
+        $roles[] = "(roles = 'External Examiner' AND grade != 'left')";
+    }
+    if ($get_internal) {
+        $roles[] = "(roles = 'Internal Reviewer' AND grade != 'left')";
+    }
+    if ($get_invigilators) {
+        $roles[] = "roles = 'Invigilator'";
+    }
+    if ($get_graduates) {
+        $roles[] = "roles = 'Graduate'";
+    }
+    if ($get_leavers) {
+        $roles[] = "roles = 'left'";
+    }
+    if ($get_suspended) {
+        $roles[] = "roles = 'suspended'";
+    }
+    if ($get_locked) {
+        $roles[] = "roles = 'locked'";
+    }
+    if (count($roles) > 0) {
+        $conditions[] = sprintf('(%s)', implode(' OR ', $roles));
+    }
+    if (!$get_leavers and $get_staff) {
+        $conditions[] = "grade <> 'left'";
+    }
 
-    $user_no = 0;
-    if ($roles_sql != '') {
-        $seach_for_staff = ($get_staff or $get_inactive or $get_sysadmin or $get_admin or $get_invigilators or $get_standardstaff);
-        $search_for_reviewers = ($get_external or $get_internal);
+    // execute query
+    if (count($roles) > 0) {
+        // SQL parts
+        $sql_counter = 'COUNT(DISTINCT users.id) AS counter';
+        $sql_fields = 'DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email';
+        $sql_template = ' FROM users'
+                . ' LEFT JOIN modules_student ON users.id = modules_student.userID'
+                . ' LEFT JOIN modules_staff ON users.id = modules_staff.memberID'
+                . ' LEFT JOIN sid ON users.id = sid.userID'
+                . ' LEFT JOIN modules ON (modules_student.idMod = modules.id OR modules_staff.idMod = modules.id)'
+                . ' WHERE user_deleted IS NULL AND ' . implode(' AND ', $conditions);
+        $sql_count = sprintf('SELECT %s%s', $sql_counter, $sql_template);
+        $sql_list = sprintf('SELECT %s%s LIMIT %d OFFSET %d', $sql_fields, $sql_template, $limit, $offset);
 
-        if ($seach_for_staff and ! is_null($moduleID)) {
-            $query_string = "(SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
-      FROM (users, modules_student, modules)
-      LEFT JOIN sid ON users.id = sid.userID
-      WHERE modules_student.idMod = modules.id
-      AND users.id = modules_student.userID
-      AND modules_student.idMod = ?
-      AND $roles_sql$surname_sql$title_sql$username_sql$initials_sql$calendar_year_sql
-      AND user_deleted IS NULL)
-      UNION
-      (SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
-      FROM (users, modules_staff, modules)
-      LEFT JOIN sid ON users.id = sid.userID
-      WHERE modules_staff.idMod = modules.id
-      AND users.id = modules_staff.memberID
-      AND modules_staff.idMod = ?
-      AND $roles_sql$surname_sql$title_sql$username_sql$initials_sql
-      AND user_deleted IS NULL LIMIT $limit)";
-            $sql_params = array($moduleID);
-            $param_types = 's' . $surname_param_types . $title_param_types . $username_param_types . $initials_param_types .
-                    $calendar_year_param_types . 's' . $surname_param_types . $title_param_types . $username_param_types .
-                    $initials_param_types;
-            $params = array_merge($sql_params, $surname_params, $title_params, $username_params, $initials_params, $calendar_year_params, $sql_params, $surname_params, $title_params, $username_params, $initials_params);
-        } elseif ($seach_for_staff or $search_for_reviewers) {
-            $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
-        FROM users
-        LEFT JOIN sid ON users.id = sid.userID
-        WHERE $roles_sql$surname_sql$title_sql$username_sql$initials_sql
-        AND user_deleted IS NULL LIMIT $limit";
-            $param_types = $surname_param_types . $title_param_types . $username_param_types . $initials_param_types;
-            $params = array_merge($surname_params, $title_params, $username_params, $initials_params);
-        } elseif (is_null($moduleID)) {
-            // Students no module link.
-            $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
-        FROM users
-        LEFT JOIN sid ON users.id = sid.userID
-        WHERE $roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql
-        AND user_deleted IS NULL LIMIT $limit";
-            $param_types = $surname_param_types . $title_param_types . $username_param_types . $student_id_param_types .
-                    $initials_param_types;
-            $params = array_merge($surname_params, $title_params, $username_params, $student_id_params, $initials_params);
-        } else {
-            // Students on a particular module.
-            $roles_sql = ' AND ' . $roles_sql;
-            $module_sql = " AND idMod LIKE ? ";
-            $module_params = array($moduleID);
-            $query_string = "SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email
-        FROM (users, modules_student)
-        LEFT JOIN sid ON users.id = sid.userID
-        WHERE users.id = modules_student.userID $module_sql$calendar_year_sql$roles_sql$surname_sql$title_sql$username_sql$student_id_sql$initials_sql
-        AND user_deleted IS NULL LIMIT $limit";
-            $param_types = 's' . $calendar_year_param_types . $surname_param_types . $title_param_types . $username_param_types .
-                    $student_id_param_types . $initials_param_types;
-            $params = array_merge($module_params, $calendar_year_params, $surname_params, $title_params, $username_params, $student_id_params, $initials_params);
+        // arguments to bind to queries
+        $arguments = array(implode('', $types));
+        foreach ($parameters as &$param) {
+            $arguments[] = &$param;
         }
 
-        // Create an array of references to the parameter values.
-        $ref_params = array();
-        foreach ($params as &$param) {
-            $ref_params[] = &$param;
+        // prepare counter query
+        if (false === $stmt = $mysqli->prepare($sql_count)) {
+            throw new \RuntimeException($mysqli->error);
         }
 
-        $user_data = $mysqli->prepare($query_string);
-        if (count($params) > 0) {
-            // Only call if the query has parameters.
-            call_user_func_array(array($user_data, "bind_param"), array_merge(array($param_types), $ref_params));
+        // bind parameters to counter query
+        if (count($parameters) > 0) {
+            if (false === call_user_func_array(array($stmt, 'bind_param'), $arguments)) {
+                throw new \RuntimeException($stmt->error);
+            }
         }
-        $user_data->execute();
-        $user_data->bind_result($tmp_id, $tmp_roles, $tmp_student_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title, $tmp_username, $tmp_grade, $tmp_yearofstudy, $tmp_email);
-        $user_data->store_result();
-        $user_no = number_format($user_data->num_rows);
+
+        // execute counter query
+        if (false === $stmt->execute()) {
+            throw new \RuntimeException($stmt->error);
+        }
+
+        // fetch total items count
+        $counter = 0;
+        $stmt->bind_result($counter);
+        $stmt->fetch();
+        $stmt->close();
+
+        // calculate total number pages
+        $pages = ceil($counter / $limit);
+
+        // prepare list query
+        if (false === $stmt = $mysqli->prepare($sql_list)) {
+            throw new \RuntimeException($mysqli->error);
+        }
+
+        // bind parameters to list query
+        if (count($parameters) > 0) {
+            if (false === call_user_func_array(array($stmt, 'bind_param'), $arguments)) {
+                throw new \RuntimeException($stmt->error);
+            }
+        }
+
+        // execute list query
+        if (false === $stmt->execute()) {
+            throw new \RuntimeException($stmt->error);
+        }
+
+        // bind list query results to variables
+        $stmt->bind_result($tmp_id, $tmp_roles, $tmp_student_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title, $tmp_username, $tmp_grade, $tmp_yearofstudy, $tmp_email);
+        $stmt->store_result();
     }
 }
 
-$module_id = check_var('moduleID', $_GET, false, true, true);
-$paper_id = check_var('paperID', $_GET, false, true, true);
-$team = check_var('team', $_GET, false, true, true);
-$email = check_var('email', $_GET, false, true, true);
-$temporary_surname = check_var('tmp_surname', $_GET, false, true, true);
-$temporary_courseid = check_var('tmp_courseID', $_GET, false, true, true);
-$temporary_yearid = check_var('tmp_yearID', $_GET, false, true, true);
+$module_id = param::optional('moduleID', null, param::INT, param::FETCH_GET);
+$paper_id = param::optional('paperID', null, param::INT, param::FETCH_GET);
+$team = param::optional('team', null, param::ALPHANUM, param::FETCH_GET);
+$email = param::optional('email', null, param::EMAIL, param::FETCH_GET);
+$temporary_surname = param::optional('tmp_surname', null, param::ALPHA, param::FETCH_GET);
+$temporary_courseid = param::optional('tmp_courseID', null, param::INT, param::FETCH_GET);
+$temporary_yearid = param::optional('tmp_yearID', null, param::INT, param::FETCH_GET);
 
 $needs_array = get_special_needs($mysqli);
 $render = new render($configObject);
@@ -412,7 +427,7 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
             $(function () {
                 if ($("#maindata").find("tr").size() > 1) {
                     $("#maindata").tablesorter({
-                        // sort on the third column, order asc 
+                        // sort on the third column, order asc
                         sortList: [[3, 0]]
                     });
                 }
@@ -437,14 +452,14 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
             <div class="page_title">
                 <?php echo $string['usersearch']; ?>
                 <?php if ($has_result) : ?>
-                    (<?= $user_no ?>):
+                (<?= number_format($counter) ?>):
                     <span style="font-weight: normal">
                         <?= $result_detail ?>
                     </span>
                 <?php endif; ?>
             </div>
 
-            <?php if (!is_null($submit) and $roles_sql == '') : ?>
+            <?php if (!is_null($submit) and empty($roles)) : ?>
                 <div><?= $notice->info_strip($string['msg1'], 100) ?></div>
             <?php endif; ?>
 
@@ -465,7 +480,7 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
                         <tbody>
                             <?php
                             $x = 0;
-                            while ($user_data->fetch()) :
+                            while ($stmt->fetch()) :
                                 ?>
                                 <tr class="l" id="<?= $x ?>" onclick="selUser('<?= $tmp_id ?>', <?= $x ?>, '2c', '<?= $tmp_roles ?>', event); return false;" ondblclick="profile('<?= $tmp_id ?>'); return false;">
                                     <td>
@@ -506,7 +521,7 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
                                 $x++;
                             endwhile;
 
-                            $user_data->close();
+                            $stmt->close();
                             $mysqli->close();
                             ?>
                         </tbody>
