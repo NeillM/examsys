@@ -34,6 +34,14 @@ class Killer_Questiontest extends unittestdatabase {
     return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "classes" . DIRECTORY_SEPARATOR . "killer_question.yml");
   }
   /**
+   * Get expected data set from yml
+   * @param string $name fixture file name
+   * @return dataset
+   */
+  public function get_expected_data_set($name) {
+    return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "classes" . DIRECTORY_SEPARATOR . $name . ".yml");
+  }
+  /**
    * Test checks a questions a killer
    * @group paper
    */
@@ -52,7 +60,6 @@ class Killer_Questiontest extends unittestdatabase {
     $killer_question->set_question(1);
     $killer_question->save();
     $this->assertEquals(1, count($killer_question->get_questions()));
-
   }
 
   /**
@@ -60,7 +67,6 @@ class Killer_Questiontest extends unittestdatabase {
    * @group paper
    */
   public function test_get_questions(){
-
     $killer_question = new Killer_Question(1,$this->db);
     $killer_question->set_question(1);
     $killer_question->save();
@@ -72,19 +78,19 @@ class Killer_Questiontest extends unittestdatabase {
    * @group paper
    */
   public function test_copy_killer_questions(){
-
     $killer_question = new Killer_Question(1,$this->db);
     $killer_question->copy_killer_questions(2 );
     $killer_question_new = new Killer_Question(2,$this->db);
     $this->assertEquals(1, count($killer_question_new->get_questions()));
-
+    $querytable = $this->getConnection()->createQueryTable('killer_questions', 'SELECT paperID FROM killer_questions');
+    $expectedtable = $this->get_expected_data_set('copy_killer_questions')->getTable("killer_questions");
+    $this->assertTablesEqual($expectedtable, $querytable);
   }
 
   /**
    * Test unsets the killer question
    */
   public function test_unset_question(){
-
     $killer_question = new Killer_Question(1,$this->db);
     $killer_question->unset_question(1);
     $killer_question->save();
@@ -92,6 +98,5 @@ class Killer_Questiontest extends unittestdatabase {
     $killer_question_new = new Killer_Question(2,$this->db);
     $killer_question_new->unset_question(1);
     $killer_question_new->save();
-
   }
 }
