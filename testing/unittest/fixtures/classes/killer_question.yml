@@ -15,3 +15,5 @@ questions:
     scenario: 'This is a test2'
     leadin: 'Is the world round?'
     status: 1
+
+killer_questions:

@@ -57,9 +57,7 @@ class Killer_Questiontest extends unittestdatabase {
    */
   public function test_set_question(){
     $killer_question = new Killer_Question(1,$this->db);
-    $killer_question->set_question(1);
-    $killer_question->save();
-    $this->assertEquals(1, count($killer_question->get_questions()));
+    $this->assertEquals(0, count($killer_question->get_questions()));
   }
 
   /**
@@ -79,10 +77,12 @@ class Killer_Questiontest extends unittestdatabase {
    */
   public function test_copy_killer_questions(){
     $killer_question = new Killer_Question(1,$this->db);
+    $killer_question->set_question(1);
+    $killer_question->save();
     $killer_question->copy_killer_questions(2 );
     $killer_question_new = new Killer_Question(2,$this->db);
     $this->assertEquals(1, count($killer_question_new->get_questions()));
-    $querytable = $this->getConnection()->createQueryTable('killer_questions', 'SELECT paperID FROM killer_questions');
+    $querytable = $this->getConnection()->createQueryTable('killer_questions', 'SELECT paperID, q_id FROM killer_questions');
     $expectedtable = $this->get_expected_data_set('copy_killer_questions')->getTable("killer_questions");
     $this->assertTablesEqual($expectedtable, $querytable);
   }
