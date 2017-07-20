@@ -124,8 +124,7 @@ class Killer_Question {
    * return all the killer question by paper
    * @return mixed
    */
-
-	public function get_questions(){
+  public function get_questions(){
 
     $this->questions = array();
 
