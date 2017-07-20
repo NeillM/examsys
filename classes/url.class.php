@@ -17,6 +17,11 @@
 
 /**
  * Utility class to handle URLs.
+ * 
+ * @author Pedro Ferreira <pedro.ferreira1@nottingham.ac.uk>
+ * @version 1.0
+ * @copyright Copyright (c) 2017 onwards The University of Nottingham
+ * @package classes
  */
 class Url {
 

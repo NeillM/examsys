@@ -15,20 +15,37 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-require __DIR__ . '/../../../../classes/url.class.php';
+use testing\unittest\UnitTest;
 
-class UrlTest extends \PHPUnit_Framework_TestCase {
+/**
+ * Testcase for class Url.
+ *
+ * @author Pedro Ferreira <pedro.ferreira1@nottingham.ac.uk>
+ * @version 1.0
+ * @copyright Copyright (c) 2017 onwards The University of Nottingham
+ * @package tests
+ * @group url
+ */
+class UrlTest extends UnitTest {
 
     /**
+     * Test for Url::fromGlobals.
+     *
      * @dataProvider fromGlobalsProvider
      * @param string $expected
      * @param array $server
+     * @return void
      */
     public function testFromGlobals($expected, $server) {
         $url = \Url::fromGlobals($server);
         $this->assertSame($expected, (string) $url);
     }
 
+    /**
+     * Provider for testFromGlobals.
+     *
+     * @return array
+     */
     public function fromGlobalsProvider() {
         return array(
             array(
@@ -59,16 +76,24 @@ class UrlTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
+     * Test for Url::getPart.
+     *
      * @dataProvider getPartProvider
      * @param mixed $expected
      * @param string $url
      * @param string $name
      * @param mixed $default
+     * @return void
      */
     public function testGetPart($expected, $url, $name, $default) {
         $this->assertSame($expected, (new Url($url))->getPart($name, $default));
     }
 
+    /**
+     * Provider for testGetPart.
+     *
+     * @return array
+     */
     public function getPartProvider() {
         return array(
             array('http', 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::SCHEME, null),
@@ -82,16 +107,21 @@ class UrlTest extends \PHPUnit_Framework_TestCase {
         );
     }
 
+    /**
+     * Test for Url::setQueryValues.
+     *
+     * @return void
+     */
     public function testSetQueryValues() {
         $url = new Url('http://localhost/?foo=bar');
         $this->assertSame('foo=bar', $url->getQuery());
-        
+
         $values = $url->getQueryAsArray();
         $this->assertArrayHasKey('foo', $values);
-        
+
         $values['foo'] = 'baz';
         $values['amp'] = '&';
-        
+
         $url->setQueryValues($values);
         $this->assertSame('foo=baz&amp=' . urlencode($values['amp']), $url->getQuery());
     }
