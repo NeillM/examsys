@@ -26,6 +26,7 @@
 require '../include/staff_auth.inc';
 require_once '../include/demo_replace.inc';
 require_once '../include/errors.php';
+require_once '../classes/url.class.php';
 
 $demo = $userObject->has_role('Demo');
 
@@ -68,7 +69,7 @@ if (!is_null($submit)) {
     if ($page < 1) {
         $page = 1;
     }
-    
+
     // query offset
     $offset = $page * $limit - $limit;
 
@@ -158,7 +159,7 @@ if (!is_null($submit)) {
 
     // filter by roles
     $roles = array();
-    if ($get_students or (!is_null($student_id) and $student_id !== '')) {
+    if ($get_students or ( !is_null($student_id) and $student_id !== '')) {
         $roles[] = "roles LIKE '%Student'";
     }
     if ($get_staff) {
@@ -217,7 +218,7 @@ if (!is_null($submit)) {
                 . ' LEFT JOIN modules ON (modules_student.idMod = modules.id OR modules_staff.idMod = modules.id)'
                 . ' WHERE user_deleted IS NULL AND ' . implode(' AND ', $conditions);
         $sql_count = sprintf('SELECT %s%s', $sql_counter, $sql_template);
-        $sql_list = sprintf('SELECT %s%s LIMIT %d OFFSET %d', $sql_fields, $sql_template, $limit, $offset);
+        $sql_list = sprintf('SELECT %s%s ORDER BY %s %s LIMIT %d OFFSET %d', $sql_fields, $sql_template, $sortby, $ordering, $limit, $offset);
 
         // arguments to bind to queries
         $arguments = array(implode('', $types));
@@ -247,6 +248,10 @@ if (!is_null($submit)) {
         $stmt->bind_result($counter);
         $stmt->fetch();
         $stmt->close();
+
+        // calculate first and last items in thispage
+        $first = $offset + 1;
+        $last = min(array($offset + $limit + 1, $counter));
 
         // calculate total number pages
         $pages = ceil($counter / $limit);
@@ -439,12 +444,32 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
             <div class="page_title">
                 <?php echo $string['usersearch']; ?>
                 <?php if ($has_result) : ?>
-                (<?= number_format($counter) ?>):
+                (<?= number_format($first) ?> to <?= number_format($last) ?> of <?= number_format($counter) ?>):
                     <span style="font-weight: normal">
                         <?= $result_detail ?>
                     </span>
                 <?php endif; ?>
             </div>
+
+            <?php if ($pages > 1) : ?>
+                <?php $url = Url::fromGlobals(); ?>
+                <p style="margin-left: 10px;">
+                    <?php for ($i = 1; $i <= $pages; $i++) : ?>
+                        <?php if ($i == $page) : ?>
+                            <strong>
+                        <?php else : ?>
+                            <a href="<?= $url->setQueryValue('page', $i); ?>">
+                        <?php endif; ?>
+                        <?= $i ?>
+                        <?php if ($i == $page) : ?>
+                            </strong>
+                        <?php else : ?>
+                            </a>
+                        <?php endif; ?>
+                        <?php if ($i < $pages) : ?>&nbsp;|&nbsp;<?php endif; ?>
+                    <?php endfor; ?>
+                </p>
+            <?php endif; ?>
 
             <?php if (!is_null($submit) and empty($roles)) : ?>
                 <div><?= $notice->info_strip($string['msg1'], 100) ?></div>
