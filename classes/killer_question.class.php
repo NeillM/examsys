@@ -53,7 +53,7 @@ class Killer_Question {
 	 */
   public function load() {
     $this->questions = array();
-		
+
     $result = $this->db->prepare("SELECT q_id FROM killer_questions WHERE paperID = ?");
     $result->bind_param('i', $this->paperID);
     $result->execute();
@@ -63,7 +63,7 @@ class Killer_Question {
     }
     $result->close();
   }
-	
+
 	/**
 	 * Saves questions back to the database.
 	 */
@@ -82,7 +82,7 @@ class Killer_Question {
 		}
 		$result->close();
 	}
-	
+
 	/**
 	 * Returns true/false if a particular question is a killer one or not.
 	 */
@@ -90,14 +90,14 @@ class Killer_Question {
 	  if (!is_array($this->questions)) {
 			$this->load();
 		}
-	
+
 	  if (isset($this->questions[$q_id])) {
 		  return true;
 		} else {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Sets a question as being killer.
 	 */
@@ -105,10 +105,10 @@ class Killer_Question {
 	  if (!is_array($this->questions)) {
 			$this->load();
 		}
-	
+
 		$this->questions[$q_id] = true;
 	}
-	
+
 	/**
 	 * Unsets a question as being killer.
 	 */
@@ -116,7 +116,7 @@ class Killer_Question {
 	  if (!is_array($this->questions)) {
 			$this->load();
 		}
-	
+
 		unset($this->questions[$q_id]);
 	}
 
@@ -138,13 +138,13 @@ class Killer_Question {
     }
     $result->close();
 
-	  return $this->questions;
+    return $this->questions;
   }
 
-	/**
+  /**
    * Copy Killer questions from one paper to another
    */
-	public function copy_killer_questions($newPaper){
+	public function copy_killer_questions($newPaper) {
     $killerQuestionresult = $this->db->prepare("SELECT q_id FROM killer_questions WHERE paperID = ?");
     $killerQuestionresult->bind_param('i', $this->paperID);
     $killerQuestionresult->execute();
