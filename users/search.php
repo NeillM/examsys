@@ -26,7 +26,6 @@
 require '../include/staff_auth.inc';
 require_once '../include/demo_replace.inc';
 require_once '../include/errors.php';
-require_once '../classes/url.class.php';
 
 $demo = $userObject->has_role('Demo');
 
@@ -437,18 +436,18 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
         ?>
 
         <div id="content" class="content">
-            <div class="head_title">
-                <?php echo $render->render_admin_navigation($links); ?>
-            </div>
+            <?php echo $render->render_admin_navigation($links); ?>
 
-            <div class="page_title">
-                <?php echo $string['usersearch']; ?>
-                <?php if ($has_result) : ?>
-                (<?= number_format($first) ?> to <?= number_format($last) ?> of <?= number_format($counter) ?>):
-                    <span style="font-weight: normal">
-                        <?= $result_detail ?>
-                    </span>
-                <?php endif; ?>
+            <div class="head_title">
+                <div class="page_title">
+                    <?php echo $string['usersearch']; ?>
+                    <?php if ($has_result) : ?>
+                    (<?= number_format($first) ?> to <?= number_format($last) ?> of <?= number_format($counter) ?>):
+                        <span style="font-weight: normal">
+                            <?= $result_detail ?>
+                        </span>
+                    <?php endif; ?>
+                </div>
             </div>
 
             <?php if ($pages > 1) : ?>
