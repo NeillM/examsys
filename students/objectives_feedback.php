@@ -23,7 +23,7 @@
 */
 
 require '../include/staff_student_auth.inc';
-
+require_once '../include/paper_security.php';
 require_once '../include/demo_replace.inc';
 require_once '../include/mapping.inc';
 require_once '../include/errors.php';
