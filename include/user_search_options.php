@@ -282,13 +282,13 @@ search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli);
 <br />
 
 <div style="text-align:center">
-    Show 
+    <?= ucfirst($string['show']) ?>
     <select name="limit">
         <option>100</option>
         <option selected>1000</option>
         <option>10000</option>
     </select>
-    results
+    <?= strtolower($string['results']) ?>
 </div>
 
 <br />
