@@ -22,7 +22,7 @@ use testing\unittest\unittestdatabase;
  * @author Naseem Sarwar <naseem.sarwar@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2017 onwards The University of Nottingham
- * @package tests
+ * @package paper
  */
 class Killer_Questiontest extends unittestdatabase {
 
