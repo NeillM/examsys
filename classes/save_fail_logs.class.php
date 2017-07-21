@@ -56,7 +56,11 @@ class save_fail_logs{
    */
   public function delete_save_fail_logs(){
     $result = $this->db->prepare("delete from save_fail_log");
-    $result->execute();
+    if($result->execute()){
+      return true;
+    }else{
+      return false;
+    }
   }
 
   /**
@@ -67,6 +71,10 @@ class save_fail_logs{
   public function delete_a_save_fail_log($log_id) {
     $result = $this->db->prepare("delete from save_fail_log where id = ?");
     $result->bind_param('i', $log_id);
-    $result->execute();
+    if($result->execute()){
+      return true;
+    }else{
+      return false;
+    }
   }
 }

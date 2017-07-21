@@ -113,15 +113,15 @@ if(isset($clear_all) == 'all') {
 } else {
   foreach ($log_list as $log) {
     echo "<tr class=\"l\"><td><a href=\"?log_id=" . $log['id'] . "\" onclick=\"return clear_a_log()\"><img title=\"".$string['icon_msg']."\" alt=\"".$string['icon_msg']."\" src='../artwork/access_denied_16.gif'></a></td>
-  <td>" . $log['title'] . " " . $log['initial'] . " " . $log['surname'] . "</td>
-  <td><a href=\"../paper/details.php?paperID=" . $log['paper_id'] . "\">$paper_title</a></td>
-  <td>" . $log['screen'] . "</td>
-  <td>" . $log['ipaddress'] . "</td>
-  <td>" . $log['failed'] . "</td>
-  <td>" . $log['status'] . "</td>
-  <td>" . $log['request'] . "</td>
-  <td>" . $log['response'] . "</td>
-  </tr>\n";
+    <td>" . $log['title'] . " " . $log['initial'] . " " . $log['surname'] . "</td>
+    <td><a href=\"../paper/details.php?paperID=" . $log['paper_id'] . "\">$paper_title</a></td>
+    <td>" . $log['screen'] . "</td>
+    <td>" . $log['ipaddress'] . "</td>
+    <td>" . $log['failed'] . "</td>
+    <td>" . $log['status'] . "</td>
+    <td>" . $log['request'] . "</td>
+    <td>" . $log['response'] . "</td>
+    </tr>\n";
   }
 }
 ?>
