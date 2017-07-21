@@ -446,7 +446,7 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
                 <div class="page_title">
                     <?php echo $string['usersearch']; ?>
                     <?php if ($has_result) : ?>
-                    (<?= number_format($first) ?> to <?= number_format($last) ?> of <?= number_format($counter) ?>):
+                    (<?= number_format($first) ?> <?php echo $string['to']; ?> <?= number_format($last) ?> <?php echo $string['of']; ?> <?= number_format($counter) ?>):
                         <span style="font-weight: normal">
                             <?= $result_detail ?>
                         </span>
