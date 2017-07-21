@@ -498,7 +498,15 @@ if ($css != '') {
     if ($('#button_pressed').val() == 'finish') {
       showDialog("<?php echo $string['javacheck2'] ?>");
     } else {
-      showDialog("<?php echo $string['javacheck1'] ?>");
+      var msg = "<?php echo $string['javacheck1'] ?>";
+      if ($('.ecalc-answer').length > 0) {
+        var ecalcQuestions = [];
+        $('.ecalc-answer').each(function(){
+          ecalcQuestions[ecalcQuestions.length] = this.id.substring(1);
+        });
+        msg = "<?php echo $string['javacheck3'] ?>".replace('[X]', ecalcQuestions.join());
+      }
+      showDialog(msg);
     }
 
     $("#dialog_ok").click(function(event) {
@@ -522,16 +530,15 @@ if ($css != '') {
         conductSave(event);
       });
     } else if ($('#isEnhancedCalc').val() == '1' && $('#missingCalcAnswer').val() != '1') {
-      var showWarning = false;
+      var ecalcQuestions = [];
       $('.ecalc-answer').each(function(){
         if ($(this).val() == '') {
-          showWarning = true;
-          return false;
+          ecalcQuestions[ecalcQuestions.length] = this.id.substring(1);
         }
-      })
+      });
 
-      if (showWarning) {
-        var msg = '<?= $string['answerrequired'] ?><br/><br/><strong><?= $string['answerrequired_confirm'] ?></strong>';
+      if (ecalcQuestions.length > 0) {
+        var msg = '<?= $string['answerrequired'] ?><br/><br/><strong><?= $string['answerrequired_confirm'] ?></strong>'.replace('[X]', ecalcQuestions.join());
         showEnhancedcalcWarning(msg);
         $("#enhancedcalc_warning_ok").click(function(event) {
           submitted = true;
