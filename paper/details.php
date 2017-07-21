@@ -929,7 +929,12 @@ function check_latex_random($q_ids, $mysqli) {
     // link of current folder
     $href = '/folder/index.php?folder=' . $folder;
     $links[$href] = false === strpos($folderName, ';') ? $folderName : substr($folderName, strrpos($folderName, ';') + 1);
-  } elseif ($module) {
+  } else {
+    if (is_null($module)) {
+        // Get the modules from paper properties
+        $modules = Paper_utils::get_modules($paperID, $mysqli);
+        $module = key($modules);
+    }
     // link to module
     $href = '../module/index.php?module=' . $module ;
     $links[$href] = module_utils::get_moduleid_from_id($module, $mysqli);
