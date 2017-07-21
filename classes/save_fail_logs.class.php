@@ -65,7 +65,6 @@ class save_fail_logs{
    */
 
   public function delete_a_save_fail_log($log_id) {
-    echo 'sdffsd';
     $result = $this->db->prepare("delete from save_fail_log where id = ?");
     $result->bind_param('i', $log_id);
     $result->execute();
