@@ -50,8 +50,8 @@ $get_suspended = param::optional('suspended', false, param::BOOLEAN, param::FETC
 $get_locked = param::optional('locked', false, param::BOOLEAN, param::FETCH_GET);
 
 $student_id = param::optional('student_id', null, param::INT, param::FETCH_GET);
-$search_surname = param::optional('search_surname', null, param::ALPHA, param::FETCH_GET);
-$search_username = param::optional('search_username', null, param::ALPHA, param::FETCH_GET);
+$search_surname = param::optional('search_surname', null, param::TEXT, param::FETCH_GET);
+$search_username = param::optional('search_username', null, param::TEXT, param::FETCH_GET);
 
 $submit = param::optional('submit', null, param::ALPHA, param::FETCH_GET);
 
@@ -221,7 +221,7 @@ if (!is_null($submit)) {
                 . ' WHERE user_deleted IS NULL AND ' . implode(' AND ', $conditions);
         $sql_count = sprintf('SELECT %s%s', $sql_counter, $sql_template);
         $sql_list = sprintf('SELECT %s%s ORDER BY %s %s LIMIT %d OFFSET %d', $sql_fields, $sql_template, $sortby, $ordering, $limit, $offset);
-
+        
         // arguments to bind to queries
         $arguments = array(implode('', $types));
         foreach ($parameters as &$param) {
