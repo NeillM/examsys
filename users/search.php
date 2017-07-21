@@ -253,7 +253,9 @@ if (!is_null($submit)) {
         // calculate first and last items in thispage
         $first = $offset + 1;
         $last = min(array($offset + $limit, $counter));
-
+        if ($last == 0) {
+            $first = 0;
+        }
         // calculate total number pages
         $pages = ceil($counter / $limit);
 
