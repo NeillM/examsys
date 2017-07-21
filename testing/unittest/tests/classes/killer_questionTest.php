@@ -22,7 +22,7 @@ use testing\unittest\unittestdatabase;
  * @author Naseem Sarwar <naseem.sarwar@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2017 onwards The University of Nottingham
- * @package paper
+ * @package tests
  */
 class Killer_Questiontest extends unittestdatabase {
 
@@ -89,6 +89,7 @@ class Killer_Questiontest extends unittestdatabase {
 
   /**
    * Test unsets the killer question
+   * @group paper
    */
   public function test_unset_question(){
     $killer_question = new Killer_Question(1,$this->db);
