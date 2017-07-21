@@ -498,7 +498,15 @@ if ($css != '') {
     if ($('#button_pressed').val() == 'finish') {
       showDialog("<?php echo $string['javacheck2'] ?>");
     } else {
-      showDialog("<?php echo $string['javacheck1'] ?>");
+      var msg = "<?php echo $string['javacheck1'] ?>";
+      if ($('.ecalc-answer').length > 0) {
+        var ecalcQuestions = [];
+        $('.ecalc-answer').each(function(){
+          ecalcQuestions[ecalcQuestions.length] = this.id.substring(1);
+        });
+        msg = "<?php echo $string['javacheck3'] ?>".replace('[X]', ecalcQuestions.join());
+      }
+      showDialog(msg);
     }
 
     $("#dialog_ok").click(function(event) {
