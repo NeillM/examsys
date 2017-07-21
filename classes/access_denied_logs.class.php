@@ -58,7 +58,11 @@ class access_denied_logs{
    */
   public function delete_access_denied_logs(){
     $result = $this->db->prepare("delete from denied_log ");
-    $result->execute();
+    if($result->execute()){
+      return true;
+    }else{
+      return false;
+    }
   }
 
   /**
@@ -69,7 +73,11 @@ class access_denied_logs{
   public function delete_a_access_denied_log($log_id) {
     $result = $this->db->prepare("delete from denied_log where id = ?");
     $result->bind_param('i', $log_id);
-    $result->execute();
+    if($result->execute()){
+      return true;
+    }else{
+      return false;
+    }
   }
 
 
