@@ -56,10 +56,11 @@ require '../include/sysadmin_auth.inc';
       }
     });
 
-    function clearAll(){
+    function clearAll() {
       return confirm("<?php echo $string['confirm_clear_all_logs'];?>");
     }
-    function clear_a_log(){
+
+    function clear_a_log() {
       return confirm("<?php echo $string['confirm_clear_a_log'];?>");
     }
   </script>
