@@ -931,9 +931,9 @@ function check_latex_random($q_ids, $mysqli) {
     $links[$href] = false === strpos($folderName, ';') ? $folderName : substr($folderName, strrpos($folderName, ';') + 1);
   } else {
     if (is_null($module)) {
-        // Get the modules from paper properties
-        $modules = Paper_utils::get_modules($paperID, $mysqli);
-        $module = key($modules);
+      // Get the modules from paper properties
+      $modules = Paper_utils::get_modules($paperID, $mysqli);
+      $module = key($modules);
     }
     // link to module
     $href = '../module/index.php?module=' . $module ;
