@@ -50,10 +50,16 @@ $get_suspended = param::optional('suspended', false, param::BOOLEAN, param::FETC
 $get_locked = param::optional('locked', false, param::BOOLEAN, param::FETCH_GET);
 
 $student_id = param::optional('student_id', null, param::INT, param::FETCH_GET);
-$search_surname = param::optional('search_surname', null, param::ALPHA, param::FETCH_GET);
-$search_username = param::optional('search_username', null, param::ALPHA, param::FETCH_GET);
+$search_surname = param::optional('search_surname', null, param::TEXT, param::FETCH_GET);
+$search_username = param::optional('search_username', null, param::TEXT, param::FETCH_GET);
 
 $submit = param::optional('submit', null, param::ALPHA, param::FETCH_GET);
+
+// Define page variables.
+$pages = 1;
+$first = 0;
+$last = 0;
+$counter = 0;
 
 if (!is_null($submit)) {
     // max number of results per page
@@ -122,21 +128,18 @@ if (!is_null($submit)) {
         }
 
         // find remaining names
-        $alphanumeric_string = str_replace("%", "", $tmp_surname);
-        if (strlen($alphanumeric_string) >= 3) {
-            $tmp_surname = explode(' ', $tmp_surname);
-            $condition = array();
-            foreach ($tmp_surname as $name) {
-                $name = $mysqli->real_escape_string(str_replace('*', '%', $name));
-                if (false === array_key_exists($name, $condition)) {
-                    $condition[$name] = 'surname LIKE ? OR first_names LIKE ?';
-                    $types[] = 'ss';
-                    array_push($parameters, $name, $name);
-                }
+        $tmp_surname = explode(' ', $tmp_surname);
+        $condition = array();
+        foreach ($tmp_surname as $name) {
+            $name = $mysqli->real_escape_string(str_replace('*', '%', $name));
+            if (false === array_key_exists($name, $condition)) {
+                $condition[$name] = 'surname LIKE ? OR first_names LIKE ?';
+                $types[] = 'ss';
+                array_push($parameters, $name, $name);
             }
-            if (count($condition) > 0) {
-                $conditions[] = sprintf('(%s)', implode(' OR ', $condition));
-            }
+        }
+        if (count($condition) > 0) {
+            $conditions[] = sprintf('(%s)', implode(' OR ', $condition));
         }
     }
 
@@ -218,7 +221,7 @@ if (!is_null($submit)) {
                 . ' WHERE user_deleted IS NULL AND ' . implode(' AND ', $conditions);
         $sql_count = sprintf('SELECT %s%s', $sql_counter, $sql_template);
         $sql_list = sprintf('SELECT %s%s ORDER BY %s %s LIMIT %d OFFSET %d', $sql_fields, $sql_template, $sortby, $ordering, $limit, $offset);
-
+        
         // arguments to bind to queries
         $arguments = array(implode('', $types));
         foreach ($parameters as &$param) {
@@ -243,7 +246,6 @@ if (!is_null($submit)) {
         }
 
         // fetch total items count
-        $counter = 0;
         $stmt->bind_result($counter);
         $stmt->fetch();
         $stmt->close();
@@ -251,7 +253,9 @@ if (!is_null($submit)) {
         // calculate first and last items in thispage
         $first = $offset + 1;
         $last = min(array($offset + $limit, $counter));
-
+        if ($last == 0) {
+            $first = 0;
+        }
         // calculate total number pages
         $pages = ceil($counter / $limit);
 
@@ -301,7 +305,7 @@ if ($moduleID) {
 // search has result
 if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_null($module_id)) {
     // current page label on breadcrumb
-    $links[] = 'Search Result';
+    $links[] = $string['usersearch'];
 
     // result detail
     if ($paper_id) {
@@ -433,6 +437,9 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
         <?php
         // left hand side menu
         include '../include/user_search_options.php';
+        // hidden topright menu
+        require '../include/toprightmenu.inc';
+        echo draw_toprightmenu(92);
         ?>
 
         <div id="content" class="content">
@@ -442,17 +449,16 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
                 <div class="page_title">
                     <?php echo $string['usersearch']; ?>
                     <?php if ($has_result) : ?>
-                    (<?= number_format($first) ?> to <?= number_format($last) ?> of <?= number_format($counter) ?>):
+                    (<?= number_format($first) ?> <?php echo $string['to']; ?> <?= number_format($last) ?> <?php echo $string['of']; ?> <?= number_format($counter) ?>):
                         <span style="font-weight: normal">
                             <?= $result_detail ?>
                         </span>
                     <?php endif; ?>
                 </div>
-            </div>
 
             <?php if ($pages > 1) : ?>
                 <?php $url = Url::fromGlobals(); ?>
-                <p style="margin-left: 10px;">
+                <div style="margin-left: 10px;">
                     <?php for ($i = 1; $i <= $pages; $i++) : ?>
                         <?php if ($i == $page) : ?>
                             <strong>
@@ -467,12 +473,9 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
                         <?php endif; ?>
                         <?php if ($i < $pages) : ?>&nbsp;|&nbsp;<?php endif; ?>
                     <?php endfor; ?>
-                </p>
+                </div>
             <?php endif; ?>
-
-            <?php if (!is_null($submit) and empty($roles)) : ?>
-                <div><?= $notice->info_strip($string['msg1'], 100) ?></div>
-            <?php endif; ?>
+            </div>
 
             <?php if ($has_result) : ?>
                 <form method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>?sortby=<?php echo $sortby; ?>&order=<?php echo $ordering; ?>" autocomplete="off">
@@ -488,62 +491,66 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
                                 <?php endforeach; ?>
                             </tr>
                         </thead>
+                        <?php
+                            if (!is_null($submit) and empty($roles)) {
+                                echo '</table>';
+                                echo $notice->info_strip($string['msg1'], 100);
+                            } else {
+                        ?>
                         <tbody>
                             <?php
                             $x = 0;
-                            while ($stmt->fetch()) :
-                                ?>
-                                <tr class="l" id="<?= $x ?>" onclick="selUser('<?= $tmp_id ?>', <?= $x ?>, '2c', '<?= $tmp_roles ?>', event); return false;" ondblclick="profile('<?= $tmp_id ?>'); return false;">
-                                    <td>
-                                        <?php if (false !== $photoname = UserUtils::student_photo_exist($tmp_username)) : ?>
-                                            <img src="../artwork/photo.png" width="16" height="16" alt="Photo" />
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <?php if ($tmp_special_id) : ?>
-                                            <img src="../artwork/accessibility_16.png" width="16" height="16" />
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <?php if (array_key_exists(mb_strtolower($tmp_title), $string)) : ?>
-                                            <?= $string[mb_strtolower($tmp_title)] ?>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td><?= $tmp_surname == '' ? demo_replace($tmp_surname, $demo, true, ' ') : demo_replace($tmp_surname, $demo, true, $tmp_surname{0}) ?></td>
-                                    <td><?= $tmp_first_names == '' ? demo_replace($tmp_first_names, $demo, true, ' ') : demo_replace($tmp_first_names, $demo, true, $tmp_first_names{0}) ?></td>
-                                    <td><?= demo_replace($tmp_username, $demo, false) ?></td>
-                                    <td class="fn">
-                                        <?php if (false !== strpos($tmp_roles, 'Student')) : ?>
-                                            <?= is_null($tmp_student_id) ? $string['unknown'] : demo_replace_number($tmp_student_id, $demo) ?>
-                                        <?php elseif (false !== strpos($tmp_roles, 'Staff')) : ?>
-                                            Staff
-                                        <?php else: ?>
-                                            <?= $string['na'] ?>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <?= $tmp_yearofstudy ?>
-                                    </td>
-                                    <td>
-                                        <?= $tmp_grade ?>
-                                    </td>
-                                </tr>
-                                <?php
-                                $x++;
-                            endwhile;
-
-                            $stmt->close();
-                            $mysqli->close();
+                            if (!is_null($submit) and count($roles) > 0) {
+                                while ($stmt->fetch()) :
+                                    ?>
+                                    <tr class="l" id="<?= $x ?>" onclick="selUser('<?= $tmp_id ?>', <?= $x ?>, '2c', '<?= $tmp_roles ?>', event); return false;" ondblclick="profile('<?= $tmp_id ?>'); return false;">
+                                        <td>
+                                            <?php if (false !== $photoname = UserUtils::student_photo_exist($tmp_username)) : ?>
+                                                <img src="../artwork/photo.png" width="16" height="16" alt="Photo" />
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <?php if ($tmp_special_id) : ?>
+                                                <img src="../artwork/accessibility_16.png" width="16" height="16" />
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <?php if (array_key_exists(mb_strtolower($tmp_title), $string)) : ?>
+                                                <?= $string[mb_strtolower($tmp_title)] ?>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td><?= $tmp_surname == '' ? demo_replace($tmp_surname, $demo, true, ' ') : demo_replace($tmp_surname, $demo, true, $tmp_surname{0}) ?></td>
+                                        <td><?= $tmp_first_names == '' ? demo_replace($tmp_first_names, $demo, true, ' ') : demo_replace($tmp_first_names, $demo, true, $tmp_first_names{0}) ?></td>
+                                        <td><?= demo_replace($tmp_username, $demo, false) ?></td>
+                                        <td class="fn">
+                                            <?php if (false !== strpos($tmp_roles, 'Student')) : ?>
+                                                <?= is_null($tmp_student_id) ? $string['unknown'] : demo_replace_number($tmp_student_id, $demo) ?>
+                                            <?php elseif (false !== strpos($tmp_roles, 'Staff')) : ?>
+                                                Staff
+                                            <?php else: ?>
+                                                <?= $string['na'] ?>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <?= $tmp_yearofstudy ?>
+                                        </td>
+                                        <td>
+                                            <?= $tmp_grade ?>
+                                        </td>
+                                    </tr>
+                                    <?php
+                                    $x++;
+                                endwhile;
+                                $stmt->close();
+                                $mysqli->close();
+                            }
                             ?>
                         </tbody>
                     </table>
+                    <?php
+                        }
+                    ?>
                 </form>
             <?php endif; ?>
-
-            <?php
-            // hidden topright menu
-            require '../include/toprightmenu.inc';
-            echo draw_toprightmenu(92);
-            ?>
     </body>
 </html>
