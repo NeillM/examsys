@@ -128,21 +128,18 @@ if (!is_null($submit)) {
         }
 
         // find remaining names
-        $alphanumeric_string = str_replace("%", "", $tmp_surname);
-        if (strlen($alphanumeric_string) >= 3) {
-            $tmp_surname = explode(' ', $tmp_surname);
-            $condition = array();
-            foreach ($tmp_surname as $name) {
-                $name = $mysqli->real_escape_string(str_replace('*', '%', $name));
-                if (false === array_key_exists($name, $condition)) {
-                    $condition[$name] = 'surname LIKE ? OR first_names LIKE ?';
-                    $types[] = 'ss';
-                    array_push($parameters, $name, $name);
-                }
+        $tmp_surname = explode(' ', $tmp_surname);
+        $condition = array();
+        foreach ($tmp_surname as $name) {
+            $name = $mysqli->real_escape_string(str_replace('*', '%', $name));
+            if (false === array_key_exists($name, $condition)) {
+                $condition[$name] = 'surname LIKE ? OR first_names LIKE ?';
+                $types[] = 'ss';
+                array_push($parameters, $name, $name);
             }
-            if (count($condition) > 0) {
-                $conditions[] = sprintf('(%s)', implode(' OR ', $condition));
-            }
+        }
+        if (count($condition) > 0) {
+            $conditions[] = sprintf('(%s)', implode(' OR ', $condition));
         }
     }
 
