@@ -632,9 +632,9 @@ function check_latex_random($q_ids, $mysqli) {
   <script type="text/javascript" src="../js/jquery.paperdetails.js"></script>
 <?php
   }
-
+  // Instantiate Twig renderer.
+  $render = new render($configObject);
   if($configObject->get_setting('core', 'paper_mathjax')) {
-    $render = new render($configObject);
     $render->render(null, null, 'mathjax.html');
   }
 ?>
@@ -944,13 +944,13 @@ function check_latex_random($q_ids, $mysqli) {
   $links[$href] = $properties->get_paper_title();
 
   // breadcrumb
-  echo (new render($configObject))->render_admin_navigation($links);
+  echo $render->render_admin_navigation($links);
 
   $title_class = 'page_title';
   if ($properties->get_retired() != '') {
     $title_class .= ' retired';
   }
-  echo '<div onclick="qOff()" class="' . $title_class . '">' . $properties->get_paper_title() . '</div>';
+  echo '<div class="head_title"><div onclick="qOff()" class="' . $title_class . '">' . $properties->get_paper_title() . '</div>';
   echo "</div>\n";
   
   echo "<table style=\"table-layout: fixed\" class=\"header\" id=\"sortable\">\n";
