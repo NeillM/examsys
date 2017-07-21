@@ -530,16 +530,15 @@ if ($css != '') {
         conductSave(event);
       });
     } else if ($('#isEnhancedCalc').val() == '1' && $('#missingCalcAnswer').val() != '1') {
-      var showWarning = false;
+      var ecalcQuestions = [];
       $('.ecalc-answer').each(function(){
         if ($(this).val() == '') {
-          showWarning = true;
-          return false;
+          ecalcQuestions[ecalcQuestions.length] = this.id.substring(1);
         }
-      })
+      });
 
-      if (showWarning) {
-        var msg = '<?= $string['answerrequired'] ?><br/><br/><strong><?= $string['answerrequired_confirm'] ?></strong>';
+      if (ecalcQuestions.length > 0) {
+        var msg = '<?= $string['answerrequired'] ?><br/><br/><strong><?= $string['answerrequired_confirm'] ?></strong>'.replace('[X]', ecalcQuestions.join());
         showEnhancedcalcWarning(msg);
         $("#enhancedcalc_warning_ok").click(function(event) {
           submitted = true;
