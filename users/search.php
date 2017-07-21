@@ -437,6 +437,9 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
         <?php
         // left hand side menu
         include '../include/user_search_options.php';
+        // hidden topright menu
+        require '../include/toprightmenu.inc';
+        echo draw_toprightmenu(92);
         ?>
 
         <div id="content" class="content">
@@ -549,11 +552,5 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
                     ?>
                 </form>
             <?php endif; ?>
-
-            <?php
-            // hidden topright menu
-            require '../include/toprightmenu.inc';
-            echo draw_toprightmenu(92);
-            ?>
     </body>
 </html>
