@@ -89,6 +89,7 @@ class Killer_Questiontest extends unittestdatabase {
 
   /**
    * Test unsets the killer question
+   * @group paper
    */
   public function test_unset_question(){
     $killer_question = new Killer_Question(1,$this->db);
