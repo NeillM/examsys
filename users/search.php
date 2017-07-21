@@ -305,7 +305,7 @@ if ($moduleID) {
 // search has result
 if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_null($module_id)) {
     // current page label on breadcrumb
-    $links[] = 'Search Result';
+    $links[] = $string['usersearch'];
 
     // result detail
     if ($paper_id) {
