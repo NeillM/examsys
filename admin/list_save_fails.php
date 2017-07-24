@@ -37,7 +37,7 @@ require '../include/sidebar_menu.inc';
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <style>
-    .clearall{float: right;margin-top: 10px;color: red;margin-right: 7%;font-size: 16px;text-decoration: none;}
+    .clearall{float: right;margin-top: 0.4em;color: red;margin-right: 7%;font-size: 0.7em;text-decoration: none;}
     a:hover.clearall, a:link.clearall, a:visited.clearall{color: red;text-decoration: none;}
   </style>
 

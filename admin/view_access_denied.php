@@ -37,7 +37,7 @@ require '../include/sysadmin_auth.inc';
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <style>
     .d {background-image: url('../artwork/access_denied_16.gif'); background-repeat:no-repeat; background-position: left center; padding-left:20px}
-    .clearall{float: right;margin-top: 10px;color: red;margin-right: 7%;font-size: 16px;text-decoration: none;}
+    .clearall{float: right;margin-top: 0.4px;color: red;margin-right: 7%;font-size: 0.7em;text-decoration: none;}
     a:hover.clearall, a:link.clearall, a:visited.clearall{color: red;text-decoration: none;}
   </style>
 
