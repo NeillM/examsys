@@ -121,8 +121,8 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
         $smsplugin->update_module_enrolments($externalid, $session);
     }
   }
-  
-  
+
+
   header("location: list_modules.php");
   exit();
 } else {
@@ -167,9 +167,11 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 
     $(function () {
       $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
+        rules: {
+          fullname: {
+            required: true,
+            maxlength: 80
+          }
         }
       });
       $('form').removeAttr('novalidate');
@@ -190,7 +192,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
       });
       $('#cancel').click(function() {
         history.back();
-      });    
+      });
     });
   </script>
   </head>
@@ -208,7 +210,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 		<div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" /><a href="list_modules.php"><?php echo $string['modules'] ?></a></div>
 		<div class="page_title"><?php echo $string['createmodule']; ?></div>
   </div>
-	
+
   <br />
 
   <form id="theform" name="module_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
