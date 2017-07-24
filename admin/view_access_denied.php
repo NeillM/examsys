@@ -111,7 +111,7 @@ if(isset($clear_all) == 'all') {
 
     echo "<tr class=\"l\">
       <td class=\"d\"><a href=\"?log_id=". $log['id'] ."\" onclick=\"return clear_a_log()\" >" . $tried_date->format($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_long_time_php')) . "</a></td>
-      <td><a href=\"../users/details.php?submit=Search&userID=". $log['userID'] ."\">". $log['title'] ." ". $log['initial'] ." ". $log['surname'] ."</a></td>
+      <td><a href=\"../users/details.php?submit=Search&userID=". $log['userID'] ."\">". $log['title'] ." ". $log['initials'] ." ". $log['surname'] ."</a></td>
       <td>". $log['page'] ."</td>
       <td>". $log['msg'] ."</td>
       </tr>\n";
