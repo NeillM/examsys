@@ -90,7 +90,7 @@ if (isset($_POST['submit'])) {
 
   <br/>
   <div align="center">
-    <form id="theform" name="add_LTIkeys" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
+      <form id="theform" name="add_LTIkeys" method="post" action="<?php echo url::fromGlobals(); ?>" autocomplete="off">
       <table>
         <tr>
           <td class="field"><?php echo $string['name']; ?></td>

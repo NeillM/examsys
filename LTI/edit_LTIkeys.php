@@ -116,7 +116,7 @@ if (isset($_POST['submit'])) {
 
   <br/>
   <div align="center">
-    <form id="theform" name="edit_LTIkeys" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?LTIkeysid=' . $_GET['LTIkeysid'] ?>" autocomplete="off">
+      <form id="theform" name="edit_LTIkeys" method="post" action="<?php echo url::fromGlobals() ?>" autocomplete="off">
       <table cellpadding="0" cellspacing="2" border="0">
         <tr>
           <td class="field"><?php echo $string['name']; ?></td>
