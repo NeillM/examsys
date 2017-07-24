@@ -37,8 +37,8 @@ require '../include/sysadmin_auth.inc';
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <style>
     .d {background-image: url('../artwork/access_denied_16.gif'); background-repeat:no-repeat; background-position: left center; padding-left:20px}
-    .clearall{float: right;margin-top: -0.4em;color: red;margin-right: 7%;font-size: 0.7em;text-decoration: none;padding: 0.3em;}
-    a:hover.clearall, a:link.clearall, a:visited.clearall{color: red;text-decoration: none;}
+    .clearall{float: right;margin-top: -0.4em;color: #000;margin-right: 8%;font-size: 50%;text-decoration: none;padding: 0.5em;}
+    a:hover.clearall, a:link.clearall, a:visited.clearall{text-decoration: none;}
   </style>
 
   <?php echo $configObject->get('cfg_js_root') ?>
