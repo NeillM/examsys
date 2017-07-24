@@ -28,15 +28,17 @@ class save_fail_logs{
   private $logs;
 
   /**
-   * @param object $db    - Link to mysqli
+   * Uses for save fail logs
    */
-  public function __construct($db) {
-    $this->db = $db;
+  public function __construct() {
+    $configObject = Config::get_instance();
+    $this->db = $configObject->db;
     $this->logs = array();
   }
 
   /**
-   * Get all the logs
+   * Get all the logs from save fail table
+   * returns associative array of logs
    */
   public function get_save_fail_logs() {
     $this->logs = array();
@@ -56,9 +58,9 @@ class save_fail_logs{
    */
   public function delete_save_fail_logs(){
     $result = $this->db->prepare("delete from save_fail_log");
-    if($result->execute()){
+    if ($result->execute()) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }
@@ -67,13 +69,12 @@ class save_fail_logs{
    * Delete a log from the table
    * @param $log_id
    */
-
   public function delete_a_save_fail_log($log_id) {
     $result = $this->db->prepare("delete from save_fail_log where id = ?");
     $result->bind_param('i', $log_id);
-    if($result->execute()){
+    if ($result->execute()) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }

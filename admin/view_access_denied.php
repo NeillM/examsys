@@ -91,10 +91,10 @@ echo draw_toprightmenu();
 </thead>
 <tbody>
 <?php
-$logs = new access_denied_logs( $mysqli);
+$logs = new access_denied_logs();
 $log_list = $logs->get_access_denied_logs();
-$clear_all = $_GET['clear'];
-$clear_a_log = $_GET['log_id'];
+$clear_all = param::optional('clear', null,param::TEXT, param::FETCH_GET);
+$clear_a_log = param::optional('log_id',null, param::INT, param::FETCH_GET);
 
 if(isset($clear_all) == 'all') {
   $logs->delete_access_denied_logs();

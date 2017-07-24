@@ -28,15 +28,17 @@ class access_denied_logs{
   private $logs;
 
   /**
-   * @param object $db    - Link to mysqli
+   * Uses for access denied logs
    */
-  public function __construct($db) {
-    $this->db = $db;
+  public function __construct() {
+    $configObject = Config::get_instance();
+    $this->db = $configObject->db;
     $this->logs = array();
   }
 
   /**
-   * Get all the logs
+   * Get all the logs from denied access table
+   * returns associative array of logs
    */
   public function get_access_denied_logs() {
     $this->logs = array();
@@ -56,11 +58,11 @@ class access_denied_logs{
   /**
    * Clear All the logs from table
    */
-  public function delete_access_denied_logs(){
+  public function delete_access_denied_logs() {
     $result = $this->db->prepare("delete from denied_log ");
-    if($result->execute()){
+    if ($result->execute()) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }
@@ -69,13 +71,12 @@ class access_denied_logs{
    * Delete a log from the table
    * @param $log_id
    */
-
   public function delete_a_access_denied_log($log_id) {
     $result = $this->db->prepare("delete from denied_log where id = ?");
     $result->bind_param('i', $log_id);
-    if($result->execute()){
+    if ($result->execute() ) {
       return true;
-    }else{
+    } else {
       return false;
     }
   }

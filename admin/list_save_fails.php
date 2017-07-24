@@ -99,8 +99,8 @@ echo draw_toprightmenu();
 
 $logs = new save_fail_logs( $mysqli );
 $log_list = $logs->get_save_fail_logs();
-$clear_all = $_GET['clear'];
-$clear_a_log = $_GET['log_id'];
+$clear_all = param::optional('clear', null,param::TEXT, param::FETCH_GET);
+$clear_a_log = param::optional('log_id',null, param::INT, param::FETCH_GET);
 
 if(isset($clear_all) == 'all') {
   $logs->delete_save_fail_logs();
