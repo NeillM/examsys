@@ -15,16 +15,16 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Utility class for date related functionality
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
-Class RecycleBin {  
+Class RecycleBin {
 	/**
 	 * Get a list of recycle bin contents for the current user
    * @param object $userObj current user object
@@ -33,7 +33,7 @@ Class RecycleBin {
 	 */
   static function get_recyclebin_contents($userObj, $db) {
     $recycle_bin = array();
-  
+
     // Query the Papers tables.
     $i = 0;
     $stmt = $db->prepare("SELECT property_id AS id, paper_type, paper_title, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM properties WHERE paper_ownerID = ? AND deleted IS NOT NULL");
@@ -101,9 +101,65 @@ Class RecycleBin {
         }
         $stmt->close();
     }
-    return $recycle_bin;	
+
+    // Query the modules table.
+    $stmt = $db->prepare("SELECT id, fullname as name, DATE_FORMAT(mod_deleted,'%Y%m%d%H%i') AS deleted FROM modules WHERE mod_deleted IS NOT NULL");
+    $stmt->execute();
+    $stmt->bind_result($id, $name, $deleted);
+    while ($stmt->fetch()) {
+      $recycle_bin[$i]['id'] = $id;
+      $recycle_bin[$i]['type'] = 'modules';
+      $recycle_bin[$i]['name'] = $name;
+      $recycle_bin[$i]['deleted'] = $deleted;
+      $recycle_bin[$i]['subtype'] = '';
+      $i++;
+    }
+    $stmt->close();
+
+    // Query the courses table.
+    $stmt = $db->prepare("SELECT id, name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM courses WHERE deleted IS NOT NULL");
+    $stmt->execute();
+    $stmt->bind_result($id, $name, $deleted);
+    while ($stmt->fetch()) {
+      $recycle_bin[$i]['id'] = $id;
+      $recycle_bin[$i]['type'] = 'courses';
+      $recycle_bin[$i]['name'] = $name;
+      $recycle_bin[$i]['deleted'] = $deleted;
+      $recycle_bin[$i]['subtype'] = '';
+      $i++;
+    }
+    $stmt->close();
+
+    // Query the schools table.
+    $stmt = $db->prepare("SELECT id, school as name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM schools WHERE deleted IS NOT NULL");
+    $stmt->execute();
+    $stmt->bind_result($id, $name, $deleted);
+    while ($stmt->fetch()) {
+      $recycle_bin[$i]['id'] = $id;
+      $recycle_bin[$i]['type'] = 'schools';
+      $recycle_bin[$i]['name'] = $name;
+      $recycle_bin[$i]['deleted'] = $deleted;
+      $recycle_bin[$i]['subtype'] = '';
+      $i++;
+    }
+    $stmt->close();
+
+    // Query the faculty table.
+    $stmt = $db->prepare("SELECT id, name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM faculty WHERE deleted IS NOT NULL");
+    $stmt->execute();
+    $stmt->bind_result($id, $name, $deleted);
+    while ($stmt->fetch()) {
+      $recycle_bin[$i]['id'] = $id;
+      $recycle_bin[$i]['type'] = 'faculty';
+      $recycle_bin[$i]['name'] = $name;
+      $recycle_bin[$i]['deleted'] = $deleted;
+      $recycle_bin[$i]['subtype'] = '';
+      $i++;
+    }
+    $stmt->close();
+    return $recycle_bin;
   }
-  
+
 }
 
 ?>
