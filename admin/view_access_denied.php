@@ -37,7 +37,7 @@ require '../include/sysadmin_auth.inc';
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <style>
     .d {background-image: url('../artwork/access_denied_16.gif'); background-repeat:no-repeat; background-position: left center; padding-left:20px}
-    .clearall{float: right;margin-top: 0.4px;color: red;margin-right: 7%;font-size: 0.7em;text-decoration: none;}
+    .clearall{float: right;margin-top: -0.4em;color: red;margin-right: 7%;font-size: 0.7em;text-decoration: none;padding: 0.3em;}
     a:hover.clearall, a:link.clearall, a:visited.clearall{color: red;text-decoration: none;}
   </style>
 
@@ -77,7 +77,7 @@ echo draw_toprightmenu();
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
-  <div class="page_title"><?php echo $string['deniedlogwarnings'] ?><a class="clearall" href="?clear=all" onclick="return clearAll()"><?php echo $string['clear_all_button_text']; ?></a> </div>
+  <div class="page_title"><?php echo $string['deniedlogwarnings'] ?><button class="clearall" href="?clear=all" onclick="return clearAll()"><?php echo $string['clear_all_button_text']; ?></button> </div>
 </div>
 
 <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
