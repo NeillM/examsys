@@ -97,7 +97,7 @@ echo draw_toprightmenu();
 <tbody>
 <?php
 
-$logs = new save_fail_logs( $mysqli );
+$logs = new save_fail_logs();
 $log_list = $logs->get_save_fail_logs();
 $clear_all = param::optional('clear', null,param::TEXT, param::FETCH_GET);
 $clear_a_log = param::optional('log_id',null, param::INT, param::FETCH_GET);
