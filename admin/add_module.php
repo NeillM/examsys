@@ -167,9 +167,11 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 
     $(function () {
       $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
+        rules: {
+          fullname: {
+            required: true,
+            maxlength: 80
+          }
         }
       });
       $('form').removeAttr('novalidate');
@@ -221,7 +223,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 ?>
     <table cellpadding="0" cellspacing="1" border="0" style="text-align:left; margin-left:auto; margin-right:auto">
     <tr><td class="field"><?php echo $string['moduleid'] ?></td><td><input type="text" size="10" maxlength="25" id="modulecode" name="modulecode" value="<?php echo $tmp_modulecode ?>" required autofocus /></td></tr>
-    <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" id="fullname" name="fullname" value="<?php if (isset($_POST['fullname'])) echo $_POST['fullname'] ?>" required maxlength="80" /></td></tr>
+    <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" id="fullname" name="fullname" value="<?php if (isset($_POST['fullname'])) echo $_POST['fullname'] ?>" required  /></td></tr>
 
 <?php
   $old_faculty = '';
