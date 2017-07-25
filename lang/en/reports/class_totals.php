@@ -114,7 +114,7 @@ $string['resitcandidate'] = 'Resit candidate';
 $string['publishmarks'] = 'Publish Marks';
 $string['gradepublish'] = 'Marks Published';
 $string['formative'] = 'Formative paper';
-$string['summrative'] = 'Summerative paper';
+$string['summative'] = 'Summative paper';
 $string['progress'] = 'Progress paper';
 
 ?>

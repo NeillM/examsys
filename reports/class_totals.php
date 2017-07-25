@@ -537,7 +537,7 @@ $user_results[$i]['attempt'] = 0;
       $alt = $string['progress'];
     } elseif ($user_results[$i]['paper_type'] == '2') {
       $icon = 'summative_16.gif';
-      $alt = $string['summerative'];
+      $alt = $string['summative'];
     } elseif ($user_results[$i]['paper_type'] == '3') {
       $icon = 'survey_16.gif';
       $alt = $string['displaysurvey'];
