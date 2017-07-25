@@ -533,7 +533,7 @@ if ($css != '') {
       var ecalcQuestions = [];
       $('.ecalc-answer').each(function(){
         if ($(this).val() == '') {
-          ecalcQuestions[ecalcQuestions.length] = this.id.substring(1);
+          ecalcQuestions[ecalcQuestions.length] = $(this).attr('data-screen');
         }
       });
 

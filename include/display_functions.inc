@@ -628,7 +628,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
 
         $extra = array(
           'num_on_screen' => $question_no,
-          'paper_questions' => $question['paper_questions'],
+          'current_question' => $question,
         );
 
         $question['object']->render_paper($extra);
