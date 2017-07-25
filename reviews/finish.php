@@ -54,17 +54,21 @@ $review = new Review($paperID, $userid, $review_type, $mysqli);
 
 if (isset($_POST['close'])) {
   $review->record_general_comments($_POST['paper_comments'], false);
-  echo close_window();
+  echo close_window($propertyObj->get_fullscreen());
   exit();
 } elseif (isset($_POST['finish'])) {
   $review->record_general_comments($_POST['paper_comments'], true);
-  echo close_window();
+  echo close_window($propertyObj->get_fullscreen());
   exit(); 
 }
 
-function close_window() {
-  $html = "<html>\n<head>\n<title>Rog&#333;</title>\n</head>\n<body onload=\"window.close(); window.opener.location.reload();\"></body>\n</html>";
-  
+function close_window($fullscreen) {
+  if ($fullscreen == 1) {
+    $html = "<html>\n<head>\n<title>Rog&#333;</title>\n</head>\n<body onload=\"window.close(); window.opener.location.reload();\"></body>\n</html>";
+  } else {
+    header("location: index.php", true, 303);
+    exit();
+  }
   return $html;
 }
 ?>
