@@ -49,10 +49,10 @@ $render->render_admin_options('', '', $lang, $toprightmenu);
 include '../include/user_search_options.php';
 $render->render_admin_content($breadcrumb, $lang);
 
-$unique_username = true;
-$problem = false;
+$submit = (bool) param::optional('submit', null, param::TEXT, param::FETCH_POST);
+$unique_username = false;
 
-if (isset($_POST['submit'])) {
+if ($submit) {
 
   $new_password = trim(check_var('new_password', 'POST', true, false, true, param::TEXT));
   $new_surname = UserUtils::my_ucwords(trim(check_var('new_surname', 'POST', true, false, true, param::TEXT)));
@@ -67,14 +67,11 @@ if (isset($_POST['submit'])) {
   $new_gender = check_var('new_gender', 'POST', false, false, true, param::ALPHANUM);
   $new_welcome = check_var('new_welcome', 'POST', false, false, true, param::BOOLEAN);
 
-  // Check for unique username
-  if (UserUtils::username_exists($new_username, $mysqli) !== false) {
-    $unique_username = false;
-    $problem = true;
-  }
+  // Check for valid and unique username
+  $unique_username = UserUtils::username_is_valid($new_username) and !UserUtils::username_exists($new_username, $mysqli);
 }
 
-if (isset($_POST['submit']) and $unique_username == true) {
+if ($submit and $unique_username) {
   if ($new_username == '' or strpos($new_username, '_') !== false or $new_surname == '' or $new_email == '' or $new_first_names == '' or $new_roles == '' or $new_grade == '') {
     $problem = true;
   } else {
@@ -129,7 +126,7 @@ MESSAGE;
 <?php
     }
   }
-  if (!isset($_POST['submit']) or $problem) {
+  if (!$submit or !$unique_username) {
 ?>
 
 <form method="post" id="theform" name="newUser" action="<?php echo $action; ?>" autocomplete="off">
@@ -161,7 +158,7 @@ foreach ($titles as $tmp_title) {
 }
 ?>
 </select></td></tr>
-<tr><td class="field"><?php echo $string['firstnames'] ?></td><td><input<?php if (isset($_POST['submit']) and (!isset($new_first_names) or $new_first_names == '')) echo ' class="required"'; ?> type="text" id="new_first_names" name="new_first_names" size="40" maxlength="60" value="<?php if (isset($new_first_names)) echo $new_first_names; ?>" required /></td></tr>
+<tr><td class="field"><?php echo $string['firstnames'] ?></td><td><input<?php if ($submit and (!isset($new_first_names) or $new_first_names == '')) echo ' class="required"'; ?> type="text" id="new_first_names" name="new_first_names" size="40" maxlength="60" value="<?php if (isset($new_first_names)) echo $new_first_names; ?>" required /></td></tr>
 <tr><td class="field"><?php echo $string['lastname'] ?></td><td><input<?php if (isset($new_surname) and $new_surname == '') echo ' class="required"'; ?> type="text" id="new_surname" name="new_surname" size="40" maxlength="35" value="<?php if (isset($new_surname)) echo $new_surname; ?>" required /></td></tr>
 <tr><td class="field"><?php echo $string['studentid'] ?></td><td><input id="new_studentid" type="text" size="15" name="new_sid" /><span style="color:#808080"><?php echo $string['onlyifstudent']; ?></span></td></tr>
 <tr><td class="field"><?php echo $string['email'] ?></td><td><input<?php if (isset($new_email) and $new_email == '') echo ' class="required"'; ?> type="email" id="new_email" name="new_email" size="40" maxlength="65" value="<?php if (isset($new_email)) echo $new_email; ?>" required /></td></tr>
@@ -293,7 +290,7 @@ if (strpos($_SERVER['HTTP_HOST'],'.uk') !== false) {
   }
 $mysqli->close();
 
-if ($unique_username != true) {
+if ($submit and !$unique_username) {
   echo '<script>alert("' . sprintf($string['usernameinuse'], $new_username) . '")</script>';
 }
 

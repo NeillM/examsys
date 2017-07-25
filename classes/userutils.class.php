@@ -255,6 +255,24 @@ Class UserUtils {
   }
 
   /**
+   * Check if username is valid.
+   *
+   * @param string $username username
+   *
+   * @return bool true when valid, otherwise false
+   *
+   */
+  static function username_is_valid($username) {
+    $is_guest_name = substr($username, 0, 4) == 'user' and is_numeric(substr($username, 4));
+
+    if (trim($username) == '' or $is_guest_name) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
    * Check if username exists and if so return ID.
    *
    * @param string $username username
