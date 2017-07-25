@@ -22,7 +22,7 @@
  * @package
  */
 
-class save_fail_logs{
+class save_fail_logs {
 
   private $db;
   private $logs;
@@ -49,7 +49,7 @@ class save_fail_logs{
     while ($result->fetch()) {
       $this->logs[] = array('id' => $id, 'surname' => $surname, 'title' => $title, 'initials' => $initials, 'userID' => $userID, 'paperID' => $paperID, 'screen' => $screen, 'ipaddress' => $ipaddress, 'page_tile' => $paper_title, 'failed' =>$failed, 'status' => $status, 'request' => $request, 'response' => $response );
     }
-
+    $result->close();
     return $this->logs;
   }
 
@@ -57,8 +57,10 @@ class save_fail_logs{
    * Clear All the logs from the table
    */
   public function delete_save_fail_logs(){
-    $result = $this->db->prepare("delete from save_fail_log");
-    if ($result->execute()) {
+    $result = $this->db->prepare("DELETE FROM save_fail_log");
+    $result->execute();
+    $result->close();
+    if ($this->db->errno == 0) {
       return true;
     } else {
       return false;
@@ -70,9 +72,11 @@ class save_fail_logs{
    * @param $log_id
    */
   public function delete_a_save_fail_log($log_id) {
-    $result = $this->db->prepare("delete from save_fail_log where id = ?");
+    $result = $this->db->prepare("DELETE FROM save_fail_log WHERE id = ?");
     $result->bind_param('i', $log_id);
-    if ($result->execute()) {
+    $result->execute();
+    $result->close();
+    if ($this->db->errno == 0) {
       return true;
     } else {
       return false;

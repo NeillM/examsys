@@ -77,7 +77,7 @@ echo draw_toprightmenu();
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
-  <div class="page_title"><?php echo $string['savefailattempts'] ?> <button class="clearall" href="?clear=all" onclick="return clearAll()"><?php echo $string['clear_all_button_text']; ?></button></div>
+  <div class="page_title"><?php echo $string['savefailattempts'] ?><a href="?clear=all" onclick="return clearAll()"><button class="clearall" ><?php echo $string['clear_all_button_text']; ?></button></a></div>
 </div>
 
 <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
@@ -99,10 +99,10 @@ echo draw_toprightmenu();
 
 $logs = new save_fail_logs();
 $log_list = $logs->get_save_fail_logs();
-$clear_all = param::optional('clear', null,param::TEXT, param::FETCH_GET);
-$clear_a_log = param::optional('log_id',null, param::INT, param::FETCH_GET);
+$clear_all = param::optional('clear', null, param::TEXT, param::FETCH_GET);
+$clear_a_log = param::optional('log_id', null, param::INT, param::FETCH_GET);
 
-if(isset($clear_all) == 'all') {
+if (isset($clear_all)) {
   $logs->delete_save_fail_logs();
   header( 'Location: list_save_fails.php' ) ;
 
