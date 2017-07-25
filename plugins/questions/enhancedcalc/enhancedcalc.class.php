@@ -1136,7 +1136,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			}
 		}
 
-        $screen = $extra['current_question']['screen'];
+		$screen = $extra['current_question']['screen'];
 		if (in_array('ERROR', $this->useranswer['vars'])) {
 			echo "<p><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" data-screen=\"$screen\" size=\"10\" value=\"\" disabled=\"disabled\" />" . $dispunits . $marking_precision_feedback . "</p>\n";
 			echo "<p><strong>" . sprintf($string['failedanswer'], implode(', ', $failed_answers)) . "</strong></p>";
