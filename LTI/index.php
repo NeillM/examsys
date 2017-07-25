@@ -133,8 +133,9 @@ if (!$lti->isInstructor()) {
       }
     }
     $_SESSION['lti']['paperlink'] = $returned[0];
-    header("location: ../paper/user_index.php?id=" . $returned[0]);
-    echo "Please click <a href='../paper/user_index.php?id=" . $returned[0] . ".>here</a> to continue";
+    $href = '../paper/user_index.php?id=' . $returned[0];
+    header("location: {$href}");
+    echo sprintf($string['redirectmessage'], $href);
     exit();
 
   }
@@ -158,8 +159,9 @@ if (!$lti->isInstructor()) {
     
     if (!$lti_i->allow_staff_edit_link()) {
       $_SESSION['lti']['paperlink'] = $returned[0];
-      header("location: ../paper/user_index.php?id=" . $returned[0]);
-      echo "Please click <a href='../paper/user_index.php?id=" . $returned[0] . ".>here</a> to continue";
+      $href = '../paper/user_index.php?id=' . $returned[0];
+      header("location: {$href}");
+      echo sprintf($string['redirectmessage'], $href);
       exit();
     } else {
       // allow editing of the stored link
@@ -326,7 +328,7 @@ END;
       unset($_SESSION['lti']);
       UserNotices::display_notice($string['NoPapers'], $string['NoPapersDesc'], '../artwork/access_denied.png', '#C00000');
 
-      echo '<p>Module(s): ' . $modules . '</p>';
+      echo sprintf('<p>%s: %s</p>', $string['modulescaption'], $modules);
     }
   }
 }
