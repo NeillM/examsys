@@ -1127,7 +1127,7 @@ class EnhancedCalc extends Question implements questionInterface {
 		$failed_answers = array();
 		foreach ($this->useranswer['vars'] as $key => $value) {
 			if ($value == 'ERROR' and isset($this->settings['vars'][$key]['min'])) {
-                $failed_answer_id = substr($this->settings['vars'][$key]['min'], 3);
+				$failed_answer_id = substr($this->settings['vars'][$key]['min'], 3);
 				foreach ($extra['current_question']['paper_questions'] as $question_on_paper) {
 					if (isset($question_on_paper['q_id']) and $failed_answer_id == $question_on_paper['q_id'] and isset($question_on_paper['assigned_number'])) {
 						$failed_answers[] = $question_on_paper['assigned_number'];
