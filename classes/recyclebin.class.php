@@ -31,7 +31,7 @@ Class RecycleBin {
    * @param resource $db database connection
 	 * @return array of recycle bin contents
 	 */
-	private  $recycle_bin;
+	private $recycle_bin;
   private $counter;
   private $userID;
 
