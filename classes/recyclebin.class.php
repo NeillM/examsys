@@ -31,133 +31,176 @@ Class RecycleBin {
    * @param resource $db database connection
 	 * @return array of recycle bin contents
 	 */
-  static function get_recyclebin_contents($userObj, $db) {
-    $recycle_bin = array();
+	private  $recycle_bin;
+  private $counter;
+  private $userID;
 
+  /**
+   * RecycleBin constructor.
+   */
+	public function __construct( $userObj ) {
+    $this->recycle_bin = array();
+    $configObject = Config::get_instance();
+    $this->db = $configObject->db;
+    $this->counter = 0;
+    $this->userID = $userObj->get_user_ID();
+	}
+
+  /**
+   * Gets the deleted content from the papers table.
+   */
+  public function get_papers_recyclebin_contents() {
     // Query the Papers tables.
-    $i = 0;
-    $stmt = $db->prepare("SELECT property_id AS id, paper_type, paper_title, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM properties WHERE paper_ownerID = ? AND deleted IS NOT NULL");
-    $stmt->bind_param('i', $userObj->get_user_ID());
+    $stmt = $this->db->prepare("SELECT property_id AS id, paper_type, paper_title, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM properties WHERE paper_ownerID = ? AND deleted IS NOT NULL");
+    $stmt->bind_param('i', $this->userID);
     $stmt->execute();
     $stmt->bind_result($id, $paper_type, $paper_title, $deleted);
     while ($stmt->fetch()) {
-      $recycle_bin[$i]['id'] = $id;
-      $recycle_bin[$i]['type'] = 'paper';
-      $recycle_bin[$i]['name'] = $paper_title;
-      $recycle_bin[$i]['deleted'] = $deleted;
-      $recycle_bin[$i]['subtype'] = $paper_type;
-      $i++;
+      $this->recycle_bin[$this->counter]['id'] = $id;
+      $this->recycle_bin[$this->counter]['type'] = 'paper';
+      $this->recycle_bin[$this->counter]['name'] = $paper_title;
+      $this->recycle_bin[$this->counter]['deleted'] = $deleted;
+      $this->recycle_bin[$this->counter]['subtype'] = $paper_type;
+      $this->counter++;
     }
     $stmt->close();
+	}
 
+  /**
+   * Gets the deleted content from the questions table.
+   */
+  public function get_questions_recyclebin_contents() {
     // Query the Questions tables.
-    $stmt = $db->prepare("SELECT q_id AS id, q_type, leadin_plain, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM questions WHERE ownerID = ? AND deleted IS NOT NULL");
-    $stmt->bind_param('i', $userObj->get_user_ID());
+    $stmt = $this->db->prepare("SELECT q_id AS id, q_type, leadin_plain, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM questions WHERE ownerID = ? AND deleted IS NOT NULL");
+    $stmt->bind_param('i', $this->userID);
     $stmt->execute();
     $stmt->bind_result($id, $q_type, $leadin_plain, $deleted);
     while ($stmt->fetch()) {
-      $recycle_bin[$i]['id'] = $id;
-      $recycle_bin[$i]['type'] = 'question';
+      $this->recycle_bin[$this->counter]['id'] = $id;
+      $this->recycle_bin[$this->counter]['type'] = 'question';
       if ($q_type == 'sct') {
         $parts = explode('~', $leadin_plain);
-        $recycle_bin[$i]['name'] = $parts[0];
+        $this->recycle_bin[$this->counter]['name'] = $parts[0];
       } else {
-        $recycle_bin[$i]['name'] = $leadin_plain;
+        $this->recycle_bin[$this->counter]['name'] = $leadin_plain;
       }
-      $recycle_bin[$i]['deleted'] = $deleted;
-      $recycle_bin[$i]['subtype'] = $q_type;
-      $i++;
+      $this->recycle_bin[$this->counter]['deleted'] = $deleted;
+      $this->recycle_bin[$this->counter]['subtype'] = $q_type;
+      $this->counter++;
     }
     $stmt->close();
+  }
 
+  /**
+   * Gets the deleted content from the folders table.
+   */
+  public function get_folders_recyclebin_contents() {
     // Query the Folder tables.
-    $stmt = $db->prepare("SELECT id, name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM folders WHERE ownerID = ? AND deleted IS NOT NULL");
-    $stmt->bind_param('i', $userObj->get_user_ID());
+    $stmt = $this->db->prepare("SELECT id, name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM folders WHERE ownerID = ? AND deleted IS NOT NULL");
+    $stmt->bind_param('i', $this->userID);
     $stmt->execute();
     $stmt->bind_result($id, $name, $deleted);
     while ($stmt->fetch()) {
-      $recycle_bin[$i]['id'] = $id;
-      $recycle_bin[$i]['type'] = 'folder';
-      $recycle_bin[$i]['name'] = str_replace(';','\\',$name);
-      $recycle_bin[$i]['deleted'] = $deleted;
-      $recycle_bin[$i]['subtype'] = '';
-      $i++;
+      $this->recycle_bin[$this->counter]['id'] = $id;
+      $this->recycle_bin[$this->counter]['type'] = 'folder';
+      $this->recycle_bin[$this->counter]['name'] = str_replace(';', '\\', $name);
+      $this->recycle_bin[$this->counter]['deleted'] = $deleted;
+      $this->recycle_bin[$this->counter]['subtype'] = '';
+      $this->counter++;
     }
     $stmt->close();
+  }
 
-    // Sys admins can restore deleted sessions.
-    if ($userObj->has_role(array('SysAdmin'))) {
-        // Query the academic session tables.
-        $stmt = $db->prepare("SELECT calendar_year, academic_year, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM academic_year WHERE deleted IS NOT NULL");
-        $stmt->execute();
-        $stmt->bind_result($calendar_year, $academic_year, $deleted);
-        while ($stmt->fetch()) {
-          $recycle_bin[$i]['id'] = $calendar_year;
-          $recycle_bin[$i]['type'] = 'academic_year';
-          $recycle_bin[$i]['name'] = $academic_year;
-          $recycle_bin[$i]['deleted'] = $deleted;
-          $recycle_bin[$i]['subtype'] = '';
-          $i++;
-        }
-        $stmt->close();
-    }
-
+  /**
+   * Gets the deleted content from the modules table.
+   */
+  public function get_modules_recyclebin_contents() {
     // Query the modules table.
-    $stmt = $db->prepare("SELECT id, fullname as name, DATE_FORMAT(mod_deleted,'%Y%m%d%H%i') AS deleted FROM modules WHERE mod_deleted IS NOT NULL");
+    $stmt = $this->db->prepare("SELECT id, fullname as name, DATE_FORMAT(mod_deleted,'%Y%m%d%H%i') AS deleted FROM modules WHERE mod_deleted IS NOT NULL");
     $stmt->execute();
     $stmt->bind_result($id, $name, $deleted);
     while ($stmt->fetch()) {
-      $recycle_bin[$i]['id'] = $id;
-      $recycle_bin[$i]['type'] = 'modules';
-      $recycle_bin[$i]['name'] = $name;
-      $recycle_bin[$i]['deleted'] = $deleted;
-      $recycle_bin[$i]['subtype'] = '';
-      $i++;
+      $this->recycle_bin[$this->counter]['id'] = $id;
+      $this->recycle_bin[$this->counter]['type'] = 'modules';
+      $this->recycle_bin[$this->counter]['name'] = $name;
+      $this->recycle_bin[$this->counter]['deleted'] = $deleted;
+      $this->recycle_bin[$this->counter]['subtype'] = '';
+      $this->counter++;
     }
     $stmt->close();
+  }
 
+  /**
+   * Gets the deleted content from the courses table.
+   */
+  public function get_courses_recyclebin_contents() {
     // Query the courses table.
-    $stmt = $db->prepare("SELECT id, name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM courses WHERE deleted IS NOT NULL");
+    $stmt = $this->db->prepare("SELECT id, name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM courses WHERE deleted IS NOT NULL");
     $stmt->execute();
     $stmt->bind_result($id, $name, $deleted);
     while ($stmt->fetch()) {
-      $recycle_bin[$i]['id'] = $id;
-      $recycle_bin[$i]['type'] = 'courses';
-      $recycle_bin[$i]['name'] = $name;
-      $recycle_bin[$i]['deleted'] = $deleted;
-      $recycle_bin[$i]['subtype'] = '';
-      $i++;
+      $this->recycle_bin[$this->counter]['id'] = $id;
+      $this->recycle_bin[$this->counter]['type'] = 'courses';
+      $this->recycle_bin[$this->counter]['name'] = $name;
+      $this->recycle_bin[$this->counter]['deleted'] = $deleted;
+      $this->recycle_bin[$this->counter]['subtype'] = '';
+      $this->counter++;
     }
     $stmt->close();
+  }
 
+  /**
+   * Gets the deleted content from the schools table.
+   */
+  public function get_schools_recyclebin_contents() {
     // Query the schools table.
-    $stmt = $db->prepare("SELECT id, school as name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM schools WHERE deleted IS NOT NULL");
+    $stmt = $this->db->prepare("SELECT id, school as name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM schools WHERE deleted IS NOT NULL");
     $stmt->execute();
     $stmt->bind_result($id, $name, $deleted);
     while ($stmt->fetch()) {
-      $recycle_bin[$i]['id'] = $id;
-      $recycle_bin[$i]['type'] = 'schools';
-      $recycle_bin[$i]['name'] = $name;
-      $recycle_bin[$i]['deleted'] = $deleted;
-      $recycle_bin[$i]['subtype'] = '';
-      $i++;
+      $this->recycle_bin[$this->counter]['id'] = $id;
+      $this->recycle_bin[$this->counter]['type'] = 'schools';
+      $this->recycle_bin[$this->counter]['name'] = $name;
+      $this->recycle_bin[$this->counter]['deleted'] = $deleted;
+      $this->recycle_bin[$this->counter]['subtype'] = '';
+      $this->counter++;
     }
     $stmt->close();
+	}
 
+  /**
+   * Gets the deleted content from the faculties table.
+   */
+  public function get_faculties_recyclebin_contents() {
     // Query the faculty table.
-    $stmt = $db->prepare("SELECT id, name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM faculty WHERE deleted IS NOT NULL");
+    $stmt = $this->db->prepare("SELECT id, name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM faculty WHERE deleted IS NOT NULL");
     $stmt->execute();
     $stmt->bind_result($id, $name, $deleted);
     while ($stmt->fetch()) {
-      $recycle_bin[$i]['id'] = $id;
-      $recycle_bin[$i]['type'] = 'faculty';
-      $recycle_bin[$i]['name'] = $name;
-      $recycle_bin[$i]['deleted'] = $deleted;
-      $recycle_bin[$i]['subtype'] = '';
-      $i++;
+      $this->recycle_bin[$this->counter]['id'] = $id;
+      $this->recycle_bin[$this->counter]['type'] = 'faculty';
+      $this->recycle_bin[$this->counter]['name'] = $name;
+      $this->recycle_bin[$this->counter]['deleted'] = $deleted;
+      $this->recycle_bin[$this->counter]['subtype'] = '';
+      $this->counter++;
     }
     $stmt->close();
-    return $recycle_bin;
+  }
+
+  /**
+   * Get the contents from papers, Questions, folders, modules, courses, schools and faculties
+   * @return array
+   */
+  public function get_recyclebin_contents(){
+    $this->get_papers_recyclebin_contents();
+    $this->get_questions_recyclebin_contents();
+    $this->get_folders_recyclebin_contents();
+    $this->get_modules_recyclebin_contents();
+    $this->get_courses_recyclebin_contents();
+    $this->get_schools_recyclebin_contents();
+    $this->get_faculties_recyclebin_contents();
+
+    return $this->recycle_bin;
   }
 
 }

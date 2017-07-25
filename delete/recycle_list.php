@@ -135,7 +135,8 @@ if (isset($_GET['folder'])) {
   require '../include/toprightmenu.inc';
 
 	echo draw_toprightmenu();
-$recycle_bin = RecycleBin::get_recyclebin_contents($userObject, $mysqli);
+$recycleObj = new RecycleBin($userObject);
+$recycle_bin = $recycleObj->get_recyclebin_contents();
 
 $mysqli->close();
 
@@ -184,7 +185,7 @@ for ($item=0; $item<$list_size; $item++) {
     echo "<tr class=\"l\" id=\"link_$item\" onselectstart=\"return false\" onclick=\"selQ($item,'a" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/add_sessions_16.png\" width=\"16\" height=\"16\" /></td><td>" . $split_name[0] . "</td><td>" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td><nobr>" . $string['academicsession'] . "</nobr></td></tr>\n";
   } elseif ($recycle_bin[$item]['type'] == 'modules') {
     echo "<tr class=\"l\" id=\"link_$item\" onselectstart=\"return false\" onclick=\"selQ($item,'m" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/module_icon_16.png\" width=\"16\" height=\"16\" /></td><td>" . $split_name[0] . "</td><td>" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td><nobr>" . $string['module'] . "</nobr></td></tr>\n";
-  }  elseif ($recycle_bin[$item]['type'] == 'courses') {
+  } elseif ($recycle_bin[$item]['type'] == 'courses') {
     echo "<tr class=\"l\" id=\"link_$item\" onselectstart=\"return false\" onclick=\"selQ($item,'c" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/degree_icon_16.png\" width=\"16\" height=\"16\" /></td><td>" . $split_name[0] . "</td><td>" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td><nobr>" . $string['course'] . "</nobr></td></tr>\n";
   } elseif ($recycle_bin[$item]['type'] == 'schools') {
     echo "<tr class=\"l\" id=\"link_$item\" onselectstart=\"return false\" onclick=\"selQ($item,'s" . $recycle_bin[$item]['id'] . "',event)\"><td class=\"icon\"><img src=\"../artwork/school_icon_16.png\" width=\"16\" height=\"16\" /></td><td>" . $split_name[0] . "</td><td>" . dateDisplay($recycle_bin[$item]['deleted']) . "</td><td><nobr>" . $string['school'] . "</nobr></td></tr>\n";
