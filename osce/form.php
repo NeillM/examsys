@@ -48,10 +48,10 @@ $number_of_qs = $propertyObj->get_question_no();
 
 $killer_questions = new Killer_question($paperID, $mysqli);
 $killer_questions->load();
-  
+
 
 if (isset($_POST) and count($_POST) > 0) {
-  
+
   if (!isset($_GET['dont_record'])) {
     save_osce_form($propertyObj, $userID, $_POST, $mysqli);
   }
@@ -284,18 +284,16 @@ $photoname = UserUtils::student_photo_exist($username);
   $result->execute();
   $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);
   while ($result->fetch()) {
-    if ($question_no == 1) {				// Header row
       $cols = substr_count($display_method, '|');
-    }
 
     if (trim($theme) != '') echo "<tr><td colspan=\"4\" class=\"t\">$theme</td></tr>\n";
-    
+
     if ($killer_questions->is_killer_question($q_id)) {
       $killer = 'killer';
     } else {
       $killer = 'non_killer';
     }
-    
+
     echo "<tr><td class=\"q {$killer}\">";
     if (trim($notes) != '') {
       echo "<span style=\"color:" . $propertyObj->get_labelcolor() . "\"><img src=\"../artwork/small_note_icon.png\" width=\"14\" height=\"14\" alt=\"note\" />&nbsp;$notes</span><br />\n";
