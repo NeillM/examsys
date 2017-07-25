@@ -1127,28 +1127,30 @@ class EnhancedCalc extends Question implements questionInterface {
 		$failed_answers = array();
 		foreach ($this->useranswer['vars'] as $key => $value) {
 			if ($value == 'ERROR' and isset($this->settings['vars'][$key]['min'])) {
-				foreach ($extra['paper_questions'] as $question_on_paper) {
-					if (isset($question_on_paper['q_id']) and substr($this->settings['vars'][$key]['min'], 3) == $question_on_paper['q_id'] and isset($question_on_paper['assigned_number'])) {
+                $failed_answer_id = substr($this->settings['vars'][$key]['min'], 3);
+				foreach ($extra['current_question']['paper_questions'] as $question_on_paper) {
+					if (isset($question_on_paper['q_id']) and $failed_answer_id == $question_on_paper['q_id'] and isset($question_on_paper['assigned_number'])) {
 						$failed_answers[] = $question_on_paper['assigned_number'];
 					}
 				}
 			}
 		}
 
+        $screen = $extra['current_question']['screen'];
 		if (in_array('ERROR', $this->useranswer['vars'])) {
-			echo "<p><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" disabled=\"disabled\" />" . $dispunits . $marking_precision_feedback . "</p>\n";
+			echo "<p><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" data-screen=\"$screen\" size=\"10\" value=\"\" disabled=\"disabled\" />" . $dispunits . $marking_precision_feedback . "</p>\n";
 			echo "<p><strong>" . sprintf($string['failedanswer'], implode(', ', $failed_answers)) . "</strong></p>";
 			echo "<input type=\"hidden\" name=\"missingCalcAnswer\" id=\"missingCalcAnswer\" value=\"1\">";
 		} else {
 			if (isset($this->useranswer['uans']) and $this->useranswer['uans'] == '') {
-				echo "<div><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" class=\"unans ecalc-answer\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
+				echo "<div><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" data-screen=\"$screen\" size=\"10\" class=\"unans ecalc-answer\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
 			} else {
 				if ((isset($this->useranswer['uans']) and $this->useranswer['uans'] != '')) { // Or $screen_pre_submitted == 0
 					$ans = $this->useranswer['uans'];
 
-					echo "<div><input type=\"text\" style=\"text-align:right\" id=\"q{$extra['num_on_screen']}\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"" . $ans . "\" class=\"ecalc-answer\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
+					echo "<div><input type=\"text\" style=\"text-align:right\" id=\"q{$extra['num_on_screen']}\" name=\"qid[" . $this->id . "][uans]\" data-screen=\"$screen\" size=\"10\" value=\"" . $ans . "\" class=\"ecalc-answer\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
 				} else {
-					echo "<div><input type=\"text\" style=\"text-align:right\" class=\"ecalc-answer\" id=\"q{$extra['num_on_screen']}\" name=\"qid[" . $this->id . "][uans]\" size=\"10\" value=\"\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
+					echo "<div><input type=\"text\" style=\"text-align:right\" class=\"ecalc-answer\" id=\"q{$extra['num_on_screen']}\" name=\"qid[" . $this->id . "][uans]\" data-screen=\"$screen\" size=\"10\" value=\"\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
 					$unanswered = true;
 				}
 			}
