@@ -42,11 +42,11 @@ $result->bind_result($ltis['id'], $ltis['oauth_consumer_key'], $ltis['secret'], 
 $result->fetch();
 $result->close();
 
-if (isset(param::optional('submit', null, param::ALPHA, param::FETCH_POST))) {
-  $ltiname = trim(param::optional('ltiname', null, param::ALPHA, param::FETCH_POST));
-  $ltikey = trim(param::optional('ltikey', null, param::ALPHA, param::FETCH_POST));
-  $ltisec = trim(param::optional('ltisec', null, param::ALPHA, param::FETCH_POST));
-  $lticontext = trim(param::optional('lticontext', null, param::ALPHA, param::FETCH_POST));
+if (isset(param::optional('submit', null, param::TEXT, param::FETCH_POST))) {
+  $ltiname = trim(param::optional('ltiname', null, param::TEXT, param::FETCH_POST));
+  $ltikey = trim(param::optional('ltikey', null, param::TEXT, param::FETCH_POST));
+  $ltisec = trim(param::optional('ltisec', null, param::TEXT, param::FETCH_POST));
+  $lticontext = trim(param::optional('lticontext', null, param::TEXT, param::FETCH_POST));
   
   $insert_id = $lti->update_lti_key($LTIkeysid, $ltiname, $ltikey, $ltisec, $lticontext);
   
