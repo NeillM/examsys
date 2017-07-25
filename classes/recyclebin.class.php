@@ -27,9 +27,6 @@
 Class RecycleBin {
 	/**
 	 * Get a list of recycle bin contents for the current user
-   * @param object $userObj current user object
-   * @param resource $db database connection
-	 * @return array of recycle bin contents
 	 */
 	private $recycle_bin;
   private $counter;
@@ -37,6 +34,7 @@ Class RecycleBin {
 
   /**
    * RecycleBin constructor.
+   * @param object $userObj current user object
    */
 	public function __construct( $userObj ) {
     $this->recycle_bin = array();
