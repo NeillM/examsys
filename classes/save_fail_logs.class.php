@@ -47,7 +47,19 @@ class save_fail_logs {
     $result->store_result();
     $result->bind_result($id, $surname, $title, $initials, $userID, $paperID, $screen, $ipaddress, $failed, $paper_title, $status, $request, $response);
     while ($result->fetch()) {
-      $this->logs[] = array('id' => $id, 'surname' => $surname, 'title' => $title, 'initials' => $initials, 'userID' => $userID, 'paperID' => $paperID, 'screen' => $screen, 'ipaddress' => $ipaddress, 'page_tile' => $paper_title, 'failed' =>$failed, 'status' => $status, 'request' => $request, 'response' => $response );
+      $this->logs[] = array('id' => $id,
+      'surname' => $surname,
+      'title' => $title,
+      'initials' => $initials,
+      'userID' => $userID,
+      'paperID' => $paperID,
+      'screen' => $screen,
+      'ipaddress' => $ipaddress,
+      'paper_title' => $paper_title,
+      'failed' => $failed,
+      'status' => $status,
+      'request' => $request,
+      'response' => $response);
     }
     $result->close();
     return $this->logs;
