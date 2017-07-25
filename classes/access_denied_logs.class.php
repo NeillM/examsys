@@ -22,7 +22,7 @@
  * @package
  */
 
-class access_denied_logs{
+class access_denied_logs {
 
   private $db;
   private $logs;
@@ -51,7 +51,7 @@ class access_denied_logs{
       $tried_date->setTimestamp($tried);
       $this->logs[] = array('id' =>$id, 'tried' => $tried, 'ipaddress' => $ipaddress, 'page' => $page, 'msg' =>$msg, 'userID' => $userID, 'title' => $title, 'initials' => $initials, 'surname' => $surname);
     }
-
+    $result->close();
     return $this->logs;
   }
 
@@ -59,8 +59,10 @@ class access_denied_logs{
    * Clear All the logs from table
    */
   public function delete_access_denied_logs() {
-    $result = $this->db->prepare("delete from denied_log ");
-    if ($result->execute()) {
+    $result = $this->db->prepare("DELETE FROM denied_log");
+    $result->execute();
+    $result->close();
+    if ($this->db->errno == 0) {
       return true;
     } else {
       return false;
@@ -72,9 +74,11 @@ class access_denied_logs{
    * @param $log_id
    */
   public function delete_a_access_denied_log($log_id) {
-    $result = $this->db->prepare("delete from denied_log where id = ?");
+    $result = $this->db->prepare("DELETE FROM denied_log WHERE id = ?");
     $result->bind_param('i', $log_id);
-    if ($result->execute() ) {
+    $result->execute();
+    $result->close();
+    if ($this->db->errno == 0) {
       return true;
     } else {
       return false;
