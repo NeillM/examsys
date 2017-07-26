@@ -263,7 +263,7 @@ Class UserUtils {
    *
    */
   static function username_is_valid($username) {
-    $is_guest_name = substr($username, 0, 4) == 'user' and is_numeric(substr($username, 4));
+    $is_guest_name = (substr(strtolower($username), 0, 4) == 'user' and is_numeric(substr($username, 4)));
 
     if (trim($username) == '' or $is_guest_name) {
       return false;
