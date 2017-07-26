@@ -138,8 +138,8 @@ if (!isset($_POST['update'])) {
               </td>
           </tr>
       </table>
-      <div><label for="update_staff_help"><?php echo $string['updatestaffhelp']; ?></label> <input type="checkbox" value="" name="update_staff_help" checked="checked" /></div>
-      <div><label for="update_student_help"><?php echo $string['updatestudenthelp']; ?></label> <input type="checkbox" value="" name="update_student_help" checked="checked" /></div>
+      <div><label for="update_staff_help"><?php echo $string['updatestaffhelp']; ?></label> <input type="checkbox" name="update_staff_help" checked="checked" /></div>
+      <div><label for="update_student_help"><?php echo $string['updatestudenthelp']; ?></label> <input type="checkbox" name="update_student_help" checked="checked" /></div>
       <table class="h">
           <tr>
               <td>
@@ -150,7 +150,7 @@ if (!isset($_POST['update'])) {
               </td>
           </tr>
       </table>
-      <div><label for="update_translationpack"><?php echo $string['updatetranslationpack']; ?></label> <input type="checkbox" value="" name="update_translationpack" /></div>
+      <div><label for="update_translationpack"><?php echo $string['updatetranslationpack']; ?></label> <input type="checkbox" name="update_translationpack" /></div>
       <div class="submit"><input type="submit" name="update" value="<?php echo $string['startupdate']; ?>" class="ok" /></div>
   </form>
     <?php
