@@ -718,6 +718,8 @@ class ClassTotals {
               }
             } else {
               $match = false;
+              // Encode commas.
+              $question['correct'][$a] = str_replace(',', '&#44;', $question['correct'][$a]);
               if (isset($question['correct'][$a])) {
                 foreach ($question['correct'][$a] as $correct_alternative) {
                   if (strtolower(trim($user_answers[$a])) == strtolower(trim($correct_alternative))) {
