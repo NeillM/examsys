@@ -113,8 +113,8 @@ if (isset($clear_all)) {
 } else {
   foreach ($log_list as $log) {
     echo "<tr class=\"l\"><td><a href=\"?log_id=" . $log['id'] . "\" onclick=\"return clear_a_log()\"><img title=\"".$string['icon_msg']."\" alt=\"".$string['icon_msg']."\" src='../artwork/access_denied_16.gif'></a></td>
-    <td>" . $log['title'] . " " . $log['initial'] . " " . $log['surname'] . "</td>
-    <td><a href=\"../paper/details.php?paperID=" . $log['paper_id'] . "\">$paper_title</a></td>
+    <td>" . $log['title'] . " " . $log['initials'] . " " . $log['surname'] . "</td>
+    <td><a href=\"../paper/details.php?paperID=" . $log['paperID'] . "\">" . $log['paper_title'] . "</a></td>
     <td>" . $log['screen'] . "</td>
     <td>" . $log['ipaddress'] . "</td>
     <td>" . $log['failed'] . "</td>
