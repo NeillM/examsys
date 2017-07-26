@@ -50,6 +50,7 @@ Class InstallUtils {
   public static $cfg_db_username;
   public static $cfg_db_password;
   public static $cfg_db_charset;
+  public static $cfg_db_engine;
 
   public static $cfg_root_path;
   public static $cfg_web_host;
@@ -110,7 +111,7 @@ Class InstallUtils {
 
   /** @var bool Stores if this is a behat installation. */
   public static $behat_install = false;
-  
+
   /** @var bool Stores if this is a phpunit installation. */
   public static $phpunit_install = false;
 
@@ -152,11 +153,11 @@ Class InstallUtils {
     <script>
       $(function () {
         $("#installForm").validate();
-      
+
         $('#useLdap').change(function() {
           $('#ldapOptions').toggle();
         });
-      
+
         $('#uselookupLdap').change(function() {
           $('#ldaplookupOptions').toggle();
         });
@@ -184,6 +185,10 @@ Class InstallUtils {
         <div><label for="mysql_db_host"><?php echo $string['databasehost']; ?></label> <input type="text" value="127.0.0.1" id="mysql_db_host" name="mysql_db_host" class="required" /></div>
         <div><label for="mysql_db_port"><?php echo $string['databaseport']; ?></label> <input type="text" value="3306" id="mysql_db_port" name="mysql_db_port" class="required" /></div>
         <div><label for="mysql_db_name"><?php echo $string['databasename']; ?></label> <input type="text" value="rogo" id="mysql_db_name" name="mysql_db_name" class="required" minlength="3" /></div>
+        <div><label for="mysql_db_engine"><?php echo $string['databaseengine']; ?></label> <select id="mysql_db_engine" name="mysql_db_engine" class="required">
+          <option value="InnoDB" selected>InnoDB</option>
+          <option value="MyISAM">MyISAM</option>
+        </select></div>
         <div><label for="mysql_baseusername"><?php echo $string['rdbbasename']; ?></label> <input type="text" value="rogo" id="mysql_baseusername" name="mysql_baseusername" class="required" minlength="3" maxlength="10" /></div>
 
       <table class="h"><tr><td><nobr><?php echo $string['timedateformats']; ?></nobr></td><td class="line"><hr /></td></tr></table>
@@ -269,7 +274,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
       <table class="h"><tr><td><nobr><?php echo $string['helpdb']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><label for="loadHelp"><?php echo $string['loadhelp']; ?></label> <input id="loadHelp" name="loadHelp" type="checkbox" checked="checked" /></div>
-        
+
       <table class="h"><tr><td><nobr><?php echo $string['translationpack']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><label for="loadtranslations"><?php echo $string['loadtranslations']; ?></label> <input id="loadtranslations" name="loadtranslations" type="checkbox"/></div><br/><br/>
         <div><?php echo sprintf($string['manualtranslations'], $configObject->getxml('translations', 'url')); ?></div>
@@ -277,7 +282,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       <table class="h"><tr><td><nobr><?php echo $string['labsecuritytype']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div><label><?php echo $string['IP']; ?></label> <input name="labsecuritytype" value="ipaddress" type="radio" checked = "checked" /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Rogo can lock summative exams to either IP address or hostname. If your institution uses static IPs then chose IP address otherwise chose hostname. " /></div>
         <div><label><?php echo $string['hostname']; ?></label> <input name="labsecuritytype" type="radio" value="hostname" /></div>
-      
+
       <table class="h"><tr><td><nobr><?php echo $string['supportemaila']; ?></nobr></td><td class="line"><hr /></td></tr></table>
         <div></div>
         <br />
@@ -313,16 +318,16 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       return false;
     }
 
-    return true;    
+    return true;
   }
-  
+
   /**
    * Load and verify settings file.
    */
   static function loadSettings() {
     self::$settings = json_encode(simplexml_load_file(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'settings.xml', 'SimpleXMLElement', LIBXML_NOCDATA));
   }
-  
+
   /**
    * Get settings.
    *
@@ -353,10 +358,10 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
     return self::check_setting(null, $type, $required, $setting);
   }
-  
+
   /**
    * Check and clean a setting
-   * 
+   *
    * @param string $value value of setting
    * @param integer $type type of setting
    * @param boolean $required is setting required
@@ -386,16 +391,17 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
     return $clean;
   }
-  
+
   static function processForm($args = array()) {
     global $string, $cfg_encrypt_salt;
     $configObject = Config::get_instance();
-    
+
     if (!self::$cli) {
       self::$cfg_company = param::required('company_name', param::TEXT, param::FETCH_POST);
       self::$cfg_db_host = param::required('mysql_db_host', param::TEXT, param::FETCH_POST);
       self::$cfg_db_port = param::required('mysql_db_port', param::INT, param::FETCH_POST);
       self::$cfg_db_name = param::required('mysql_db_name', param::TEXT, param::FETCH_POST);
+      self::$cfg_db_engine = param::required('mysql_db_engine', param::TEXT, param::FETCH_POST);
       self::$db_admin_username = param::required('mysql_admin_user', param::TEXT, param::FETCH_POST);
       self::$db_admin_passwd = param::required('mysql_admin_pass', param::TEXT, param::FETCH_POST);
     } else {
@@ -403,6 +409,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       self::$cfg_db_host = param::clean($args['mysql_db_host'], param::TEXT);
       self::$cfg_db_port = param::clean($args['mysql_db_port'], param::INT);
       self::$cfg_db_name = param::clean($args['mysql_db_name'], param::TEXT);
+      self::$cfg_db_engine = param::required('mysql_db_engine', param::TEXT);
       self::$db_admin_username = param::clean($args['mysql_admin_user'], param::TEXT);
       self::$db_admin_passwd = param::clean($args['mysql_admin_pass'], param::TEXT);
     }
@@ -422,7 +429,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         self::displayError(array('002' => sprintf($string['errors17'], $mysql_min_ver, $mysql_version)));
     }
     $check->close();
-    
+
     if (!self::$cli) {
       self::$cfg_web_host = param::required('web_host', param::TEXT, param::FETCH_POST);
       self::$cfg_rogo_data = param::required('rogo_data', param::TEXT, param::FETCH_POST);
@@ -586,20 +593,20 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       array('internaldb', array('table' => '', 'username_col' => '', 'passwd_col' => '', 'id_col' => '', 'sql_extra' => '', 'encrypt' => 'SHA-512', 'encrypt_salt' => $cfg_encrypt_salt), 'Internal Database')
     );
     $configObject->set('authentication', $authentication);
-    
+
     InstallUtils::checkDBUsers();
 
-    self::createDatabase(self::$cfg_db_name, self::$cfg_db_charset);
+    self::createDatabase(self::$cfg_db_name, self::$cfg_db_charset, self::$cfg_db_engine);
 
     // Create constraints.
     self::createConstraints();
-    
+
     // Load default data
     self::loadData();
-    
+
     // Update sys_updates table
     self::updateSysUpdates();
-    
+
     // Get Help and lang pack parameters.
     if (!self::$cli) {
       $load_help = param::optional('loadHelp', false, param::BOOLEAN, param::FETCH_POST);
@@ -894,9 +901,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         $res->execute();
         $res->close();
     }
-    
+
   }
-  
+
   /**
    * Load default data needed for rogo to function
    */
@@ -984,11 +991,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::createDefaultFacultiesSchoolsModules();
     self::createQuestionStatuses();
   }
-  
+
   /**
    * Update the sys updates table as we just did a clean install and do not want the update process
    * running these updates again.
-   * 
+   *
    * This list should not be added to as all new updates should be tied to a release.
    */
   static function updateSysUpdates() {
@@ -1075,12 +1082,12 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       }
     }
   }
-  
+
   /**
   * create the database and users if they do not exist
   *
   */
-  static function createDatabase($dbname, $dbcharset) {
+  static function createDatabase($dbname, $dbcharset, $dbengine = 'InnoDB') {
     global $string;
     $res = self::$db->prepare("SHOW DATABASES LIKE '$dbname'");
     $res->execute();
@@ -1109,7 +1116,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::$db->change_user(self::$db_admin_username, self::$db_admin_passwd,self::$cfg_db_name);
 
     //create tables
-    $tables = new databaseTables($dbcharset);
+    $tables = new databaseTables($dbcharset, $dbengine);
     self::$db->autocommit(false);
     while ($sql = $tables->next()) {
       $res = self::$db->query($sql);
@@ -1597,7 +1604,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".scheduling TO '". self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT INSERT ON " . $dbname . ".track_changes TO '". self::$cfg_db_webservice_user . "'@'". self::$cfg_web_host . "'";
 
-    
+
     $priv_SQL[] = "FLUSH PRIVILEGES";
     foreach ($priv_SQL as $sql) {
       self::$db->query($sql);
@@ -1914,7 +1921,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       self::displayError($errors);
     }
   }
-  
+
   static function checkDBUsers() {
     $errors = array();
 
@@ -1926,7 +1933,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
       }
     }
-    
+
     if (count($errors) > 0) {
       self::displayError($errors);
     }
@@ -1975,7 +1982,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       $errorcode += 1;
       $errors[$errorcode] = $e->getMessage();
     }
- 
+
     if (count($errors) > 0) {
       $langpack = new langpack();
       if ($errors[$errorcode] == $langpack->get_string('classes/composerutils', 'cannotinstall')) {
@@ -2290,7 +2297,7 @@ if(!isset(\$_SERVER['HTTP_HOST'])) {
   \$support_email = '{cfg_support_email}';
   \$emergency_support_numbers = {emergency_support_numbers};
   \$midexam_clarification = array('invigilators', 'students');
-  
+
 //Global DEBUG OUTPUT
   //require_once \$_SERVER['DOCUMENT_ROOT'] . 'include/debug.inc';   // Uncomment for debugging output (after uncommenting, comment out line below)
   \$dbclass = 'mysqli';
@@ -2312,10 +2319,10 @@ if(!isset(\$_SERVER['HTTP_HOST'])) {
   \$cfg_oauth_access_lifetime = 1209600; // length of access token lifetime.
   \$cfg_oauth_refresh_token_lifetime = 1209600; // length of refresh token lifetime.
   \$cfg_oauth_always_issue_new_refresh_token = true; // enable or disable refresh tokens.
-  
+
   //IMS enterprise setting
   \$cfg_ims_enabled = false;
-  
+
   // Override db config settings with configs in this file?
   \$file_config_override = true;
   ?>
