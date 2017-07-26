@@ -47,9 +47,9 @@ $prev_username = param::optional('prev_username', null, param::ALPHANUM, param::
 if ($submit and $username != $prev_username) {
   // Check new username is valid and is not already used. Overwriting usernames could screw up other accounts.
   if (!UserUtils::username_is_valid($username)) {
-    $errors = 'Username is invalid.';
+    $errors = $string['usernameinvalid'];
   } elseif (UserUtils::username_exists($username, $mysqli)) {
-    $errors = 'Username already exists.';
+    $errors = $string['usernameexists'];
   }
 }
 
@@ -176,10 +176,6 @@ if ($user_details['gender'] == 'Male') {
   </table>
   <br />
   
-  <?php if ($errors) : ?>
-  <p style="text-align: center; font-weight: bold; color: #c00;"><?= $errors; ?></p>
-  <?php endif; ?>
-
   <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>?userID=<?php echo $userID ?>" method="post" enctype="multipart/form-data" autocomplete="off">
   <table cellspacing="0" cellpadding="2" border="0" style="width:100%; border:12px solid #EEF4FF">
 <?php
@@ -195,8 +191,8 @@ if ($user_details['gender'] == 'Male') {
   }
   echo "</select> <input type=\"text\" value=\"" . $user_details['first_names'] . "\" name=\"first_names\" required /> <input type=\"text\" value=\"" . $user_details['surname'] . "\" name=\"surname\" required /></td></tr>\n";
   echo "<tr><td>" . $string['studentid'] . "</td><td><input type=\"text\" value=\"" . $user_details['student_id'] . "\" name=\"sid\" /></td></tr>\n";
-  if ($errors == 'Username exists') {
-    echo "<tr><td>" . $string['username'] . "</td><td><input type=\"text\" value=\"" . $_POST['username'] . "\" name=\"username\" class=\"form-error\" required />&nbsp;&nbsp;<span style=\"color:#C00000\">" . $string['usernameexists'] . "</span></td></tr>\n";
+  if ($errors) {
+    echo "<tr><td>" . $string['username'] . "</td><td><input type=\"text\" value=\"" . $username . "\" name=\"username\" class=\"form-error\" required />&nbsp;&nbsp;<span style=\"color:#C00000\">" . $errors . "</span></td></tr>\n";
   } else {
     echo "<tr><td>" . $string['username'] . "</td><td><input type=\"text\" value=\"" . $user_details['username'] . "\" name=\"username\" required /></td></tr>\n";
   }
