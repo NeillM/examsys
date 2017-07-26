@@ -36,7 +36,7 @@ Class RecycleBin {
    * RecycleBin constructor.
    * @param object $userObj current user object
    */
-	public function __construct( $userObj ) {
+  public function __construct( $userObj ) {
     $this->recycle_bin = array();
     $configObject = Config::get_instance();
     $this->db = $configObject->db;
@@ -62,7 +62,9 @@ Class RecycleBin {
       $this->counter++;
     }
     $stmt->close();
-	}
+
+    return $this->recycle_bin;
+  }
 
   /**
    * Gets the deleted content from the questions table.
@@ -87,6 +89,7 @@ Class RecycleBin {
       $this->counter++;
     }
     $stmt->close();
+    return $this->recycle_bin;
   }
 
   /**
@@ -107,6 +110,8 @@ Class RecycleBin {
       $this->counter++;
     }
     $stmt->close();
+
+    return $this->recycle_bin;
   }
 
   /**
@@ -126,6 +131,8 @@ Class RecycleBin {
       $this->counter++;
     }
     $stmt->close();
+
+    return $this->recycle_bin;
   }
 
   /**
@@ -145,6 +152,8 @@ Class RecycleBin {
       $this->counter++;
     }
     $stmt->close();
+
+    return $this->recycle_bin;
   }
 
   /**
@@ -164,7 +173,9 @@ Class RecycleBin {
       $this->counter++;
     }
     $stmt->close();
-	}
+
+    return $this->recycle_bin;
+  }
 
   /**
    * Gets the deleted content from the faculties table.
@@ -183,6 +194,8 @@ Class RecycleBin {
       $this->counter++;
     }
     $stmt->close();
+
+    return $this->recycle_bin;
   }
 
   /**
@@ -190,13 +203,16 @@ Class RecycleBin {
    * @return array
    */
   public function get_recyclebin_contents(){
-    $this->get_papers_recyclebin_contents();
-    $this->get_questions_recyclebin_contents();
-    $this->get_folders_recyclebin_contents();
-    $this->get_modules_recyclebin_contents();
-    $this->get_courses_recyclebin_contents();
-    $this->get_schools_recyclebin_contents();
-    $this->get_faculties_recyclebin_contents();
+    $this->recycle_bin = array_unique(
+      array_merge(
+        $this->get_papers_recyclebin_contents(),
+        $this->get_modules_recyclebin_contents(),
+        $this->get_courses_recyclebin_contents(),
+        $this->get_questions_recyclebin_contents(),
+        $this->get_schools_recyclebin_contents(),
+        $this->get_faculties_recyclebin_contents(),
+        $this->get_folders_recyclebin_contents()
+      ), SORT_REGULAR);
 
     return $this->recycle_bin;
   }
