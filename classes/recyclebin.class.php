@@ -39,6 +39,7 @@ Class RecycleBin {
     $this->recycle_bin = array();
     $configObject = Config::get_instance();
     $this->db = $configObject->db;
+    $this->counter = 0;
     $userObj = UserObject::get_instance();
     $this->userID = $userObj->get_user_ID();
 	}
