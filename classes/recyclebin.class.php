@@ -29,7 +29,6 @@ Class RecycleBin {
 	 * Get a list of recycle bin contents for the current user
 	 */
 	private $recycle_bin;
-  private $counter;
   private $userID;
 
   /**
@@ -39,7 +38,6 @@ Class RecycleBin {
     $this->recycle_bin = array();
     $configObject = Config::get_instance();
     $this->db = $configObject->db;
-    $this->counter = 0;
     $userObj = UserObject::get_instance();
     $this->userID = $userObj->get_user_ID();
 	}
@@ -49,18 +47,18 @@ Class RecycleBin {
    */
   public function get_papers_recyclebin_contents() {
     // Query the Papers tables.
-    $this->counter = 0;
+    $counter = 0;
     $stmt = $this->db->prepare("SELECT property_id AS id, paper_type, paper_title, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM properties WHERE paper_ownerID = ? AND deleted IS NOT NULL");
     $stmt->bind_param('i', $this->userID);
     $stmt->execute();
     $stmt->bind_result($id, $paper_type, $paper_title, $deleted);
     while ($stmt->fetch()) {
-      $this->recycle_bin[$this->counter]['id'] = $id;
-      $this->recycle_bin[$this->counter]['type'] = 'paper';
-      $this->recycle_bin[$this->counter]['name'] = $paper_title;
-      $this->recycle_bin[$this->counter]['deleted'] = $deleted;
-      $this->recycle_bin[$this->counter]['subtype'] = $paper_type;
-      $this->counter++;
+      $this->recycle_bin[$counter]['id'] = $id;
+      $this->recycle_bin[$counter]['type'] = 'paper';
+      $this->recycle_bin[$counter]['name'] = $paper_title;
+      $this->recycle_bin[$counter]['deleted'] = $deleted;
+      $this->recycle_bin[$counter]['subtype'] = $paper_type;
+      $counter++;
     }
     $stmt->close();
 
@@ -72,23 +70,23 @@ Class RecycleBin {
    */
   public function get_questions_recyclebin_contents() {
     // Query the Questions tables.
-    $this->counter = 0;
+    $counter = 0;
     $stmt = $this->db->prepare("SELECT q_id AS id, q_type, leadin_plain, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM questions WHERE ownerID = ? AND deleted IS NOT NULL");
     $stmt->bind_param('i', $this->userID);
     $stmt->execute();
     $stmt->bind_result($id, $q_type, $leadin_plain, $deleted);
     while ($stmt->fetch()) {
-      $this->recycle_bin[$this->counter]['id'] = $id;
-      $this->recycle_bin[$this->counter]['type'] = 'question';
+      $this->recycle_bin[$counter]['id'] = $id;
+      $this->recycle_bin[$counter]['type'] = 'question';
       if ($q_type == 'sct') {
         $parts = explode('~', $leadin_plain);
-        $this->recycle_bin[$this->counter]['name'] = $parts[0];
+        $this->recycle_bin[$counter]['name'] = $parts[0];
       } else {
-        $this->recycle_bin[$this->counter]['name'] = $leadin_plain;
+        $this->recycle_bin[$counter]['name'] = $leadin_plain;
       }
-      $this->recycle_bin[$this->counter]['deleted'] = $deleted;
-      $this->recycle_bin[$this->counter]['subtype'] = $q_type;
-      $this->counter++;
+      $this->recycle_bin[$counter]['deleted'] = $deleted;
+      $this->recycle_bin[$counter]['subtype'] = $q_type;
+      $counter++;
     }
     $stmt->close();
     return $this->recycle_bin;
@@ -99,18 +97,18 @@ Class RecycleBin {
    */
   public function get_folders_recyclebin_contents() {
     // Query the Folder tables.
-    $this->counter = 0;
+    $counter = 0;
     $stmt = $this->db->prepare("SELECT id, name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM folders WHERE ownerID = ? AND deleted IS NOT NULL");
     $stmt->bind_param('i', $this->userID);
     $stmt->execute();
     $stmt->bind_result($id, $name, $deleted);
     while ($stmt->fetch()) {
-      $this->recycle_bin[$this->counter]['id'] = $id;
-      $this->recycle_bin[$this->counter]['type'] = 'folder';
-      $this->recycle_bin[$this->counter]['name'] = str_replace(';', '\\', $name);
-      $this->recycle_bin[$this->counter]['deleted'] = $deleted;
-      $this->recycle_bin[$this->counter]['subtype'] = '';
-      $this->counter++;
+      $this->recycle_bin[$counter]['id'] = $id;
+      $this->recycle_bin[$counter]['type'] = 'folder';
+      $this->recycle_bin[$counter]['name'] = str_replace(';', '\\', $name);
+      $this->recycle_bin[$counter]['deleted'] = $deleted;
+      $this->recycle_bin[$counter]['subtype'] = '';
+      $counter++;
     }
     $stmt->close();
 
@@ -122,17 +120,17 @@ Class RecycleBin {
    */
   public function get_modules_recyclebin_contents() {
     // Query the modules table.
-    $this->counter = 0;
+    $counter = 0;
     $stmt = $this->db->prepare("SELECT id, fullname as name, DATE_FORMAT(mod_deleted,'%Y%m%d%H%i') AS deleted FROM modules WHERE mod_deleted IS NOT NULL");
     $stmt->execute();
     $stmt->bind_result($id, $name, $deleted);
     while ($stmt->fetch()) {
-      $this->recycle_bin[$this->counter]['id'] = $id;
-      $this->recycle_bin[$this->counter]['type'] = 'modules';
-      $this->recycle_bin[$this->counter]['name'] = $name;
-      $this->recycle_bin[$this->counter]['deleted'] = $deleted;
-      $this->recycle_bin[$this->counter]['subtype'] = '';
-      $this->counter++;
+      $this->recycle_bin[$counter]['id'] = $id;
+      $this->recycle_bin[$counter]['type'] = 'modules';
+      $this->recycle_bin[$counter]['name'] = $name;
+      $this->recycle_bin[$counter]['deleted'] = $deleted;
+      $this->recycle_bin[$counter]['subtype'] = '';
+      $counter++;
     }
     $stmt->close();
 
@@ -144,17 +142,17 @@ Class RecycleBin {
    */
   public function get_courses_recyclebin_contents() {
     // Query the courses table.
-    $this->counter = 0;
+    $counter = 0;
     $stmt = $this->db->prepare("SELECT id, name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM courses WHERE deleted IS NOT NULL");
     $stmt->execute();
     $stmt->bind_result($id, $name, $deleted);
     while ($stmt->fetch()) {
-      $this->recycle_bin[$this->counter]['id'] = $id;
-      $this->recycle_bin[$this->counter]['type'] = 'courses';
-      $this->recycle_bin[$this->counter]['name'] = $name;
-      $this->recycle_bin[$this->counter]['deleted'] = $deleted;
-      $this->recycle_bin[$this->counter]['subtype'] = '';
-      $this->counter++;
+      $this->recycle_bin[$counter]['id'] = $id;
+      $this->recycle_bin[$counter]['type'] = 'courses';
+      $this->recycle_bin[$counter]['name'] = $name;
+      $this->recycle_bin[$counter]['deleted'] = $deleted;
+      $this->recycle_bin[$counter]['subtype'] = '';
+      $counter++;
     }
     $stmt->close();
 
@@ -166,17 +164,17 @@ Class RecycleBin {
    */
   public function get_schools_recyclebin_contents() {
     // Query the schools table.
-    $this->counter = 0;
+    $counter = 0;
     $stmt = $this->db->prepare("SELECT id, school as name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM schools WHERE deleted IS NOT NULL");
     $stmt->execute();
     $stmt->bind_result($id, $name, $deleted);
     while ($stmt->fetch()) {
-      $this->recycle_bin[$this->counter]['id'] = $id;
-      $this->recycle_bin[$this->counter]['type'] = 'schools';
-      $this->recycle_bin[$this->counter]['name'] = $name;
-      $this->recycle_bin[$this->counter]['deleted'] = $deleted;
-      $this->recycle_bin[$this->counter]['subtype'] = '';
-      $this->counter++;
+      $this->recycle_bin[$counter]['id'] = $id;
+      $this->recycle_bin[$counter]['type'] = 'schools';
+      $this->recycle_bin[$counter]['name'] = $name;
+      $this->recycle_bin[$counter]['deleted'] = $deleted;
+      $this->recycle_bin[$counter]['subtype'] = '';
+      $counter++;
     }
     $stmt->close();
 
@@ -188,17 +186,17 @@ Class RecycleBin {
    */
   public function get_faculties_recyclebin_contents() {
     // Query the faculty table.
-    $this->counter = 0;
+    $counter = 0;
     $stmt = $this->db->prepare("SELECT id, name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM faculty WHERE deleted IS NOT NULL");
     $stmt->execute();
     $stmt->bind_result($id, $name, $deleted);
     while ($stmt->fetch()) {
-      $this->recycle_bin[$this->counter]['id'] = $id;
-      $this->recycle_bin[$this->counter]['type'] = 'faculty';
-      $this->recycle_bin[$this->counter]['name'] = $name;
-      $this->recycle_bin[$this->counter]['deleted'] = $deleted;
-      $this->recycle_bin[$this->counter]['subtype'] = '';
-      $this->counter++;
+      $this->recycle_bin[$counter]['id'] = $id;
+      $this->recycle_bin[$counter]['type'] = 'faculty';
+      $this->recycle_bin[$counter]['name'] = $name;
+      $this->recycle_bin[$counter]['deleted'] = $deleted;
+      $this->recycle_bin[$counter]['subtype'] = '';
+      $counter++;
     }
     $stmt->close();
 
