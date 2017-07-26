@@ -93,35 +93,22 @@ if ($submit and !$errors) {
   $grade = param::optional('grade', null, param::TEXT, param::FETCH_POST);
   $year = param::optional('year', null, param::INT, param::FETCH_POST);
   $email = param::optional('email', null, param::EMAIL, param::FETCH_POST);
+  $sid = param::optional('sid', null, param::TEXT, param::FETCH_POST);
 
-  $result = $mysqli->prepare("UPDATE users SET roles = ?, title = ?, initials = ?, surname = ?, grade = ?, yearofstudy = ?, username = ?, email = ?, first_names = ?, gender = ? WHERE id = ?");
-  $result->bind_param('sssssissssi', $tmp_roles, $title, $initials, $surname, $grade, $year, $username, $email, $first_names, $gender, $userID);
-  $result->execute();
-  $result->close();
-
-  // Remove from teams if 'left'.
-  if (strtolower($tmp_roles) == 'left') {
-    UserUtils::clear_staff_modules_by_userID($userID, $mysqli);
-  }
-
-  // Remove from admin access if role changed from Admin
-  if ($userObject->has_role('SysAdmin')) {
-    if ($tmp_roles != $_POST['prev_roles'] and $_POST['prev_roles'] == 'Staff,Admin') {
-      UserUtils::clear_admin_access($userID, $mysqli);
+  if (false === UserUtils::update_user($userID, $username, '', $title, $first_names, $surname, $email, $grade, $gender, $year, $tmp_roles, $sid, $mysqli, $initials)) {
+    $errors = $string['unabletosaveuserdetails'];
+  } else {
+    // Remove from teams if 'left'.
+    if (strtolower($tmp_roles) == 'left') {
+      UserUtils::clear_staff_modules_by_userID($userID, $mysqli);
     }
-  }
 
-  // Update 'sid' table;
-  $result = $mysqli->prepare("DELETE FROM sid WHERE userID = ?");
-  $result->bind_param('i', $userID);
-  $result->execute();
-  $result->close();
-
-  if (isset($_POST['sid']) and $_POST['sid'] != '' and $_POST['sid'] != $string['unknown']) {
-    $result = $mysqli->prepare("INSERT INTO sid VALUES (?, ?)");
-    $result->bind_param('si', $_POST['sid'], $userID);
-    $result->execute();
-    $result->close();
+    // Remove from admin access if role changed from Admin
+    if ($userObject->has_role('SysAdmin')) {
+      if ($tmp_roles != $_POST['prev_roles'] and $_POST['prev_roles'] == 'Staff,Admin') {
+        UserUtils::clear_admin_access($userID, $mysqli);
+      }
+    }
   }
 ?>
 <!DOCTYPE html>
