@@ -135,7 +135,7 @@ if (isset($_GET['folder'])) {
   require '../include/toprightmenu.inc';
 
 	echo draw_toprightmenu();
-$recycleObj = new RecycleBin($userObject);
+$recycleObj = new RecycleBin( );
 $recycle_bin = $recycleObj->get_recyclebin_contents();
 
 $mysqli->close();

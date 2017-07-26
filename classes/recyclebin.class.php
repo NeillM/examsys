@@ -34,13 +34,12 @@ Class RecycleBin {
 
   /**
    * RecycleBin constructor.
-   * @param object $userObj current user object
    */
-  public function __construct( $userObj ) {
+  public function __construct( ) {
     $this->recycle_bin = array();
     $configObject = Config::get_instance();
     $this->db = $configObject->db;
-    $this->counter = 0;
+    $userObj = UserObject::get_instance();
     $this->userID = $userObj->get_user_ID();
 	}
 
@@ -49,6 +48,7 @@ Class RecycleBin {
    */
   public function get_papers_recyclebin_contents() {
     // Query the Papers tables.
+    $this->counter = 0;
     $stmt = $this->db->prepare("SELECT property_id AS id, paper_type, paper_title, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM properties WHERE paper_ownerID = ? AND deleted IS NOT NULL");
     $stmt->bind_param('i', $this->userID);
     $stmt->execute();
@@ -71,6 +71,7 @@ Class RecycleBin {
    */
   public function get_questions_recyclebin_contents() {
     // Query the Questions tables.
+    $this->counter = 0;
     $stmt = $this->db->prepare("SELECT q_id AS id, q_type, leadin_plain, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM questions WHERE ownerID = ? AND deleted IS NOT NULL");
     $stmt->bind_param('i', $this->userID);
     $stmt->execute();
@@ -97,6 +98,7 @@ Class RecycleBin {
    */
   public function get_folders_recyclebin_contents() {
     // Query the Folder tables.
+    $this->counter = 0;
     $stmt = $this->db->prepare("SELECT id, name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM folders WHERE ownerID = ? AND deleted IS NOT NULL");
     $stmt->bind_param('i', $this->userID);
     $stmt->execute();
@@ -119,6 +121,7 @@ Class RecycleBin {
    */
   public function get_modules_recyclebin_contents() {
     // Query the modules table.
+    $this->counter = 0;
     $stmt = $this->db->prepare("SELECT id, fullname as name, DATE_FORMAT(mod_deleted,'%Y%m%d%H%i') AS deleted FROM modules WHERE mod_deleted IS NOT NULL");
     $stmt->execute();
     $stmt->bind_result($id, $name, $deleted);
@@ -140,6 +143,7 @@ Class RecycleBin {
    */
   public function get_courses_recyclebin_contents() {
     // Query the courses table.
+    $this->counter = 0;
     $stmt = $this->db->prepare("SELECT id, name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM courses WHERE deleted IS NOT NULL");
     $stmt->execute();
     $stmt->bind_result($id, $name, $deleted);
@@ -161,6 +165,7 @@ Class RecycleBin {
    */
   public function get_schools_recyclebin_contents() {
     // Query the schools table.
+    $this->counter = 0;
     $stmt = $this->db->prepare("SELECT id, school as name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM schools WHERE deleted IS NOT NULL");
     $stmt->execute();
     $stmt->bind_result($id, $name, $deleted);
@@ -182,6 +187,7 @@ Class RecycleBin {
    */
   public function get_faculties_recyclebin_contents() {
     // Query the faculty table.
+    $this->counter = 0;
     $stmt = $this->db->prepare("SELECT id, name, DATE_FORMAT(deleted,'%Y%m%d%H%i') AS deleted FROM faculty WHERE deleted IS NOT NULL");
     $stmt->execute();
     $stmt->bind_result($id, $name, $deleted);
