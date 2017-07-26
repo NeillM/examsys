@@ -36,10 +36,9 @@ class recyclebinTest extends unittestdatabase {
 
   /**
    * Test count deleted from questions, papers, folders, schools, courses, modules and faculties
-   * @group tests
+   * @group recyclebin
    */
   public function test_count_get_recyclebin_contents() {
-    // Check count does not include deleted schools.
     $this->userobject->load(1);
     $recyclebin = new recyclebin();
     $this->assertEquals(7, count($recyclebin->get_recyclebin_contents()));
@@ -47,7 +46,7 @@ class recyclebinTest extends unittestdatabase {
 
   /**
    * Test count deleted papers
-   * @group papers
+   * @group recyclebin
    */
   public function test_count_get_papers_recyclebin_contents() {
     $this->userobject->load(1);
@@ -57,7 +56,7 @@ class recyclebinTest extends unittestdatabase {
 
   /**
    * Test count deleted questions
-   * @group questions
+   * @group recyclebin
    */
   public function test_count_get_questions_recyclebin_contents() {
     $this->userobject->load(1);
@@ -67,7 +66,7 @@ class recyclebinTest extends unittestdatabase {
 
   /**
    * Test count deleted folders
-   * @group folders
+   * @group recyclebin
    */
   public function test_count_get_folders_recyclebin_contents() {
     $this->userobject->load(1);
@@ -77,7 +76,7 @@ class recyclebinTest extends unittestdatabase {
 
   /**
    * Test count deleted schools
-   * @group schools
+   * @group recyclebin
    */
   public function test_count_get_schools_recyclebin_contents() {
     $recyclebin = new recyclebin();
@@ -86,7 +85,7 @@ class recyclebinTest extends unittestdatabase {
 
   /**
    * Test count deleted
-   * @group courses
+   * @group recyclebin
    */
   public function test_count_get_courses_recyclebin_contents() {
     $recyclebin = new recyclebin();
@@ -95,7 +94,7 @@ class recyclebinTest extends unittestdatabase {
 
   /**
    * Test count deleted modules
-   * @group modules
+   * @group recyclebin
    */
   public function test_count_get_moduels_recyclebin_contents() {
     $recyclebin = new recyclebin();
@@ -104,7 +103,7 @@ class recyclebinTest extends unittestdatabase {
 
   /**
    * Test count deleted faculties in faculty table
-   * @group faculty
+   * @group recyclebin
    */
   public function test_count_get_faculties_recyclebin_contents() {
     $recyclebin = new recyclebin();
