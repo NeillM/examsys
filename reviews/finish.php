@@ -39,6 +39,7 @@ $propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize
 
 $paperID    = $propertyObj->get_property_id();
 $paper_type	= $propertyObj->get_paper_type();
+$start_date	= $propertyObj->get_start_date();
 
 if ($userObject->has_role('External Examiner')) {
   $review_type = 'External';
@@ -106,7 +107,7 @@ function close_window($fullscreen) {
   $configObject = Config::get_instance();
   $start_of_day_ts = strtotime('midnight');
 
-  if ($_POST['old_screen'] != '' and $start_of_day_ts <= $review_deadline) {
+  if (isset($_POST['old_screen']) and (($_POST['old_screen'] != '' and $start_of_day_ts <= $review_deadline and time() <= $start_date) or $start_date == '')) {
     $review->record_comments($_POST['old_screen']);
   } else {
     echo $string['deadline'] . ' = ' . date($configObject->get('cfg_long_date_php'), $review_deadline);
