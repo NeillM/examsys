@@ -338,7 +338,7 @@ if (!isset($_POST['update'])) {
 
   // 17/05/2013 (brzsw) - Add cache_paper_stats table
   if (!$updater_utils->does_table_exist('cache_paper_stats')) {
-    $sql = "CREATE TABLE cache_paper_stats (paperID mediumint(8) unsigned not null, cached int unsigned, max_mark decimal(10,5), max_percent decimal(10,5), min_mark decimal(10,5), min_percent decimal(10,5), q1 decimal(10,5), q2 decimal(10,5), q3 decimal(10,5), mean_mark decimal(10,5), mean_percent decimal(10,5), stdev_mark decimal(10,5), stdev_percent decimal(10,5), UNIQUE KEY `paperID` (`paperID`)) ENGINE={$cfg_db_engine}";
+    $sql = "CREATE TABLE cache_paper_stats (paperID mediumint(8) unsigned not null, cached int unsigned, max_mark decimal(10,5), max_percent decimal(10,5), min_mark decimal(10,5), min_percent decimal(10,5), q1 decimal(10,5), q2 decimal(10,5), q3 decimal(10,5), mean_mark decimal(10,5), mean_percent decimal(10,5), stdev_mark decimal(10,5), stdev_percent decimal(10,5), UNIQUE KEY `paperID` (`paperID`))";
     $updater_utils->execute_query($sql, true);
 
     $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.cache_paper_stats TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_web_host . '\'';
@@ -354,7 +354,7 @@ if (!isset($_POST['update'])) {
 
   // 20/05/2013 (brzsw) - Add cache_student_paper_marks table
   if (!$updater_utils->does_table_exist('cache_student_paper_marks')) {
-    $sql = "CREATE TABLE cache_student_paper_marks (paperID mediumint(8) unsigned not null, userID int(10) unsigned, mark decimal(10,5), percent decimal(10,5)) ENGINE={$cfg_db_engine}";
+    $sql = "CREATE TABLE cache_student_paper_marks (paperID mediumint(8) unsigned not null, userID int(10) unsigned, mark decimal(10,5), percent decimal(10,5))";
     $updater_utils->execute_query($sql, true);
 
     $sql = "ALTER TABLE cache_student_paper_marks ADD CONSTRAINT pk_paperID_userID PRIMARY KEY (paperID, userID)";
@@ -370,7 +370,7 @@ if (!isset($_POST['update'])) {
 
   // 20/05/2013 (brzsw) - Add cache_median_question_marks table
   if (!$updater_utils->does_table_exist('cache_median_question_marks')) {
-    $sql = "CREATE TABLE cache_median_question_marks (paperID mediumint(8) unsigned not null, questionID int(10) unsigned, median decimal(10,5), mean decimal(10,5) ) ENGINE={$cfg_db_engine}";
+    $sql = "CREATE TABLE cache_median_question_marks (paperID mediumint(8) unsigned not null, questionID int(10) unsigned, median decimal(10,5), mean decimal(10,5) )";
     $updater_utils->execute_query($sql, true);
 
     $sql = "ALTER TABLE cache_median_question_marks ADD CONSTRAINT pk_paperID_questionID PRIMARY KEY (paperID, questionID)";
@@ -440,7 +440,7 @@ if (!isset($_POST['update'])) {
 
   // 28/06/2013 (brzsw) - chaning the standards setting tables
   if (!$updater_utils->does_table_exist('std_set')) {
-    $sql = "CREATE TABLE std_set (id int unsigned not null primary key auto_increment, setterID int(10) unsigned not null, paperID mediumint(8) unsigned not null, std_set datetime, method enum('Modified Angoff','Angoff (Yes/No)','Ebel','Hofstee'), group_review text, pass_score decimal(10,6), distinction_score decimal(10,6)) ENGINE={$cfg_db_engine}";
+    $sql = "CREATE TABLE std_set (id int unsigned not null primary key auto_increment, setterID int(10) unsigned not null, paperID mediumint(8) unsigned not null, std_set datetime, method enum('Modified Angoff','Angoff (Yes/No)','Ebel','Hofstee'), group_review text, pass_score decimal(10,6), distinction_score decimal(10,6))";
     $updater_utils->execute_query($sql, true);
 
     $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.std_set TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_web_host . '\'';
@@ -452,7 +452,7 @@ if (!isset($_POST['update'])) {
     $sql = 'GRANT SELECT ON ' . $cfg_db_database . '.std_set TO \'' . $cfg_db_student_user . '\'@\'' . $cfg_web_host . '\'';
     $updater_utils->execute_query($sql, true);
 
-    $sql = "CREATE TABLE std_set_questions (id int unsigned not null primary key auto_increment, std_setID int unsigned not null, questionID int(11) unsigned not null, rating text) ENGINE={$cfg_db_engine}";
+    $sql = "CREATE TABLE std_set_questions (id int unsigned not null primary key auto_increment, std_setID int unsigned not null, questionID int(11) unsigned not null, rating text)";
     $updater_utils->execute_query($sql, true);
 
     $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.std_set_questions TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_web_host . '\'';
@@ -583,7 +583,7 @@ if (!isset($_POST['update'])) {
     }
 
     if (!$updater_utils->does_table_exist('hofstee')) {
-      $sql = "CREATE TABLE hofstee (std_setID int unsigned not null, whole_numbers tinyint, x1_pass tinyint, x2_pass tinyint, y1_pass tinyint, y2_pass tinyint, x1_distinction tinyint, x2_distinction tinyint, y1_distinction tinyint, y2_distinction tinyint, marking tinyint) ENGINE={$cfg_db_engine}";
+      $sql = "CREATE TABLE hofstee (std_setID int unsigned not null, whole_numbers tinyint, x1_pass tinyint, x2_pass tinyint, y1_pass tinyint, y2_pass tinyint, x1_distinction tinyint, x2_distinction tinyint, y1_distinction tinyint, y2_distinction tinyint, marking tinyint)";
       $updater_utils->execute_query($sql, true);
 
       $sql = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $cfg_db_database . '.hofstee TO \'' . $cfg_db_staff_user . '\'@\'' . $cfg_web_host . '\'';
@@ -731,7 +731,7 @@ CREATE TABLE `question_statuses` (
   `change_locked` tinyint(3) NOT NULL DEFAULT '1',
   `validate` tinyint(3) NOT NULL DEFAULT '1',
   `display_order` tinyint(3) unsigned NOT NULL DEFAULT '255',
-  PRIMARY KEY (`id`)) ENGINE={$cfg_db_engine} DEFAULT CHARSET={$cfg_db_charset};
+  PRIMARY KEY (`id`)) DEFAULT CHARSET={$cfg_db_charset};
 QUERY;
     $updater_utils->execute_query($sql, true);
 
@@ -785,7 +785,7 @@ CREATE TABLE `sys_updates` (
   `name` varchar(255),
   `updated` datetime NOT NULL,
   KEY `name` (`name`)
-) ENGINE={$cfg_db_engine} AUTO_INCREMENT=0;
+) AUTO_INCREMENT=0;
 QUERY;
     $updater_utils->execute_query($sql, true);
     
