@@ -26,7 +26,7 @@ class databaseTables {
 
   private $tableList = array();
 
-  function __construct($charset, $engine = 'InnoDB') {
+  function __construct($charset, $engine = 'InnoDB', $helpEngine = 'MyISAM') {
     $this->tableList['access_log'] = <<<QUERY
       CREATE TABLE `access_log` (
         `id` int(11) unsigned NOT NULL auto_increment,
@@ -266,7 +266,7 @@ QUERY;
           `accessed` datetime default NULL,
           `pageID` int(11) default NULL,
           PRIMARY KEY  (`id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+        ) ENGINE={$helpEngine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['help_searches'] = <<<QUERY
@@ -278,7 +278,7 @@ QUERY;
           `searchstring` text,
           `hits` int(11) default NULL,
           PRIMARY KEY  (`id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+        ) ENGINE={$helpEngine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['help_tutorial_log'] = <<<QUERY
@@ -289,7 +289,7 @@ QUERY;
           `accessed` datetime default NULL,
           `tutorial` varchar(255) default NULL,
           PRIMARY KEY (`id`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
+        ) ENGINE={$helpEngine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['hofstee'] = <<<QUERY
@@ -1275,7 +1275,7 @@ QUERY;
           KEY `language` (`language`),
           KEY `articleid` (`articleid`),
           FULLTEXT KEY `title` (`title`,`body_plain`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8
+        ) ENGINE={$helpEngine} AUTO_INCREMENT=0 DEFAULT CHARSET=utf8
 QUERY;
 
     $this->tableList['std_set'] = <<<QUERY
@@ -1329,7 +1329,7 @@ QUERY;
           KEY `language` (`language`),
           KEY `articleid` (`articleid`),
           FULLTEXT KEY `title` (`title`,`body_plain`)
-        ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8
+        ) ENGINE={$helpEngine} AUTO_INCREMENT=0 DEFAULT CHARSET=utf8
 QUERY;
 
     $this->tableList['student_notes'] = <<<QUERY

@@ -115,5 +115,6 @@ $string['labsecuritytype'] = "Summative Exam Lab Security";
 $string['IP'] = "IP address";
 $string['hostname'] = "Machine hostname";
 
-$string['databaseengine'] = "Database Engine";
+$string['databaseengine'] = "Main Database Engine";
+$string['databasehelpengine'] = "Help Database Engine";
 ?>

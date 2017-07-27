@@ -51,6 +51,7 @@ Class InstallUtils {
   public static $cfg_db_password;
   public static $cfg_db_charset;
   public static $cfg_db_engine;
+  public static $cfg_db_help_engine;
 
   public static $cfg_root_path;
   public static $cfg_web_host;
@@ -188,6 +189,10 @@ Class InstallUtils {
         <div><label for="mysql_db_engine"><?php echo $string['databaseengine']; ?></label> <select id="mysql_db_engine" name="mysql_db_engine" class="required">
           <option value="InnoDB" selected>InnoDB</option>
           <option value="MyISAM">MyISAM</option>
+        </select></div>
+        <div><label for="mysql_db_help_engine"><?php echo $string['databasehelpengine']; ?></label> <select id="mysql_db_help_engine" name="mysql_db_help_engine" class="required">
+          <option value="InnoDB">InnoDB</option>
+          <option value="MyISAM" selected>MyISAM</option>
         </select></div>
         <div><label for="mysql_baseusername"><?php echo $string['rdbbasename']; ?></label> <input type="text" value="rogo" id="mysql_baseusername" name="mysql_baseusername" class="required" minlength="3" maxlength="10" /></div>
 
@@ -402,6 +407,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       self::$cfg_db_port = param::required('mysql_db_port', param::INT, param::FETCH_POST);
       self::$cfg_db_name = param::required('mysql_db_name', param::TEXT, param::FETCH_POST);
       self::$cfg_db_engine = param::required('mysql_db_engine', param::ALPHA, param::FETCH_POST);
+      self::$cfg_db_help_engine = param::required('mysql_db_help_engine', param::ALPHA, param::FETCH_POST);
       self::$db_admin_username = param::required('mysql_admin_user', param::TEXT, param::FETCH_POST);
       self::$db_admin_passwd = param::required('mysql_admin_pass', param::TEXT, param::FETCH_POST);
     } else {
@@ -410,6 +416,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       self::$cfg_db_port = param::clean($args['mysql_db_port'], param::INT);
       self::$cfg_db_name = param::clean($args['mysql_db_name'], param::TEXT);
       self::$cfg_db_engine = self::getSettings(param::ALPHA, true, 'database', 'engine');
+      self::$cfg_db_help_engine = self::getSettings(param::ALPHA, true, 'database', 'help_engine');
       self::$db_admin_username = param::clean($args['mysql_admin_user'], param::TEXT);
       self::$db_admin_passwd = param::clean($args['mysql_admin_pass'], param::TEXT);
     }
@@ -596,7 +603,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
     InstallUtils::checkDBUsers();
 
-    self::createDatabase(self::$cfg_db_name, self::$cfg_db_charset, self::$cfg_db_engine);
+    self::createDatabase(self::$cfg_db_name, self::$cfg_db_charset, self::$cfg_db_engine, self::$cfg_db_help_engine);
 
     // Create constraints.
     self::createConstraints();
@@ -1087,7 +1094,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   * create the database and users if they do not exist
   *
   */
-  static function createDatabase($dbname, $dbcharset, $dbengine = 'InnoDB') {
+  static function createDatabase($dbname, $dbcharset, $dbengine = 'InnoDB', $dbhelpengine = 'MyISAM') {
     global $string;
     $res = self::$db->prepare("SHOW DATABASES LIKE '$dbname'");
     $res->execute();
@@ -1116,7 +1123,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::$db->change_user(self::$db_admin_username, self::$db_admin_passwd,self::$cfg_db_name);
 
     //create tables
-    $tables = new databaseTables($dbcharset, $dbengine);
+    $tables = new databaseTables($dbcharset, $dbengine, $dbhelpengine);
     self::$db->autocommit(false);
     while ($sql = $tables->next()) {
       $res = self::$db->query($sql);
