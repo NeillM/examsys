@@ -86,7 +86,7 @@ InstallUtils::checkDirPermissionsPre();
 InstallUtils::configFile();
 
 //output form
-if (isset($_POST['install'])) {
+if (param::optional('install', null, param::TEXT, param::FETCH_POST)) {
   InstallUtils::checkDirPermissionsPost();
   InstallUtils::processForm();
 } else {

@@ -9,6 +9,8 @@
     </server>
     <database>
         <prefix>rogo</prefix>
+        <engine>InnoDB</engine>
+        <help_engine>MyISAM</help_engine>
     </database>
     <timedate>
         <mysqlshortdate>%d/%m/%y</mysqlshortdate>
