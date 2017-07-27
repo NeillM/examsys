@@ -401,7 +401,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       self::$cfg_db_host = param::required('mysql_db_host', param::TEXT, param::FETCH_POST);
       self::$cfg_db_port = param::required('mysql_db_port', param::INT, param::FETCH_POST);
       self::$cfg_db_name = param::required('mysql_db_name', param::TEXT, param::FETCH_POST);
-      self::$cfg_db_engine = param::required('mysql_db_engine', param::TEXT, param::FETCH_POST);
+      self::$cfg_db_engine = param::required('mysql_db_engine', param::ALPHA, param::FETCH_POST);
       self::$db_admin_username = param::required('mysql_admin_user', param::TEXT, param::FETCH_POST);
       self::$db_admin_passwd = param::required('mysql_admin_pass', param::TEXT, param::FETCH_POST);
     } else {
@@ -409,7 +409,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       self::$cfg_db_host = param::clean($args['mysql_db_host'], param::TEXT);
       self::$cfg_db_port = param::clean($args['mysql_db_port'], param::INT);
       self::$cfg_db_name = param::clean($args['mysql_db_name'], param::TEXT);
-      self::$cfg_db_engine = param::required('mysql_db_engine', param::TEXT);
+      self::$cfg_db_engine = self::getSettings(param::ALPHA, true, 'database', 'engine');
       self::$db_admin_username = param::clean($args['mysql_admin_user'], param::TEXT);
       self::$db_admin_passwd = param::clean($args['mysql_admin_pass'], param::TEXT);
     }
