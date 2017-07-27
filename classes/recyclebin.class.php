@@ -25,10 +25,10 @@
 */
 
 Class RecycleBin {
-	/**
-	 * Get a list of recycle bin contents for the current user
-	 */
-	private $recycle_bin;
+  /**
+   * Get a list of recycle bin contents for the current user
+   */
+  private $recycle_bin;
   private $userID;
 
   /**
