@@ -188,12 +188,13 @@ Class InstallUtils {
         <div><label for="mysql_db_name"><?php echo $string['databasename']; ?></label> <input type="text" value="rogo" id="mysql_db_name" name="mysql_db_name" class="required" minlength="3" /></div>
         <div><label for="mysql_db_engine"><?php echo $string['databaseengine']; ?></label> <select id="mysql_db_engine" name="mysql_db_engine" class="required">
           <option value="InnoDB" selected>InnoDB</option>
-          <option value="MyISAM">MyISAM</option>
-        </select></div>
+          <option value="ndbcluster">ndbcluster</option>
+        </select><img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['databaseenginetooltip']; ?>" /></div>
         <div><label for="mysql_db_help_engine"><?php echo $string['databasehelpengine']; ?></label> <select id="mysql_db_help_engine" name="mysql_db_help_engine" class="required">
           <option value="InnoDB">InnoDB</option>
           <option value="MyISAM" selected>MyISAM</option>
-        </select></div>
+          <option value="ndbcluster">ndbcluster</option>
+        </select><img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['helpdatabaseenginetooltip']; ?>" /></div>
         <div><label for="mysql_baseusername"><?php echo $string['rdbbasename']; ?></label> <input type="text" value="rogo" id="mysql_baseusername" name="mysql_baseusername" class="required" minlength="3" maxlength="10" /></div>
 
       <table class="h"><tr><td><nobr><?php echo $string['timedateformats']; ?></nobr></td><td class="line"><hr /></td></tr></table>

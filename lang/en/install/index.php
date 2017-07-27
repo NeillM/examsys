@@ -117,4 +117,6 @@ $string['hostname'] = "Machine hostname";
 
 $string['databaseengine'] = "Main Database Engine";
 $string['databasehelpengine'] = "Help Database Engine";
+$string['databaseenginetooltip'] = "InnoDB reccommended";
+$string['helpdatabaseenginetooltip'] = "MyISAM recommended if MySQL version < 5.5";
 ?>
