@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Displays summative exams and OSCEs
 *
 * @author Simon Wilkinson
@@ -43,7 +43,7 @@ function display_papers($day_no, $subtract, $current_year, $current_month, $pape
       if ($paper['start_day'] == ($day_no - $subtract) and $paper['cal_year'] == $current_year and $paper['month'] == $current_month) {
         echo '<tr';
         if ($userObject->has_role('SysAdmin')) {
-          echo ' onclick="deleteEvent(' . $paper['eventID'] . ')"'; 
+          echo ' onclick="deleteEvent(' . $paper['eventID'] . ')"';
         }
         echo ' style="background-color:' . $paper['bgcolor'] . '; color:white"><td colspan="2">' . $paper['start_hour'];
         if ($paper['start_minute'] != 0) {
@@ -64,7 +64,7 @@ function display_papers($day_no, $subtract, $current_year, $current_month, $pape
           $problem = true;
         }
       }
-        
+
       if ($paper['start_day'] == ($day_no - $subtract) and $paper['cal_year'] == $current_year and $paper['month'] == $current_month) {
         $papers++;
         echo '<tr><td class="warn_icon">';
@@ -136,7 +136,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
   function showCallout(type, cellID, start_time, end_time, duration, labs, password, timezone, metadata) {
 		var p = $('#p' + cellID);
 		var position = p.position();
-		
+
 		var left_pos = position.left;
 		if (left_pos + 302 > $(window).width()) {
 			left_pos = $(window).width() - 302;
@@ -144,19 +144,19 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 		} else {
 			$('.notch').css('left', '20px');
 		}
-    
+
     var top_pos = position.top;
     if (top_pos - $(window).scrollTop() > ($(window).height() - 135)) {
       top_pos -= 135;
       $('.notch').hide();
     } else {
-      $('.notch').show();      
+      $('.notch').show();
     }
-    
+
 		$('#callout').css('left', left_pos);
 		$('#callout').css('top', top_pos + p.height() + 12);
 		$('#duration').html(duration + ' mins');
-		
+
 		if (start_time == end_time) {
 			$('#start_time2').html(start_time);
 			$('#end_time2').html(end_time);
@@ -172,7 +172,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 			$('#start_time_warning').hide();
 			$('#end_time_warning').hide();
 		}
-		
+
 		if (duration == '' && type != '4') {
 			$('#duration_warning').show();
 			$('#duration_ok').hide();
@@ -180,14 +180,14 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 			$('#duration_ok').show();
 			$('#duration_warning').hide();
 		}
-		
+
 		if (timezone != '<?php echo $default_timezone ?>') {
 			$('#timezone').html(timezone);
 			$('#timezone_row').show();
 		} else {
 			$('#timezone_row').hide();
 		}
-		
+
 		if (labs == '' && password == '' && type != '4') {
 			$('#lab_warning').show();
 			$('#lab_ok').hide();
@@ -198,7 +198,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 			if (labs == '') {
 				lab_html = '';
 			} else {
-				lab_parts = labs.split(","); 
+				lab_parts = labs.split(",");
 				lab_html = '';
 				$.each(lab_parts, function(key, value) {
 					if (lab_html == '') {
@@ -224,11 +224,11 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 		}
 		$('#callout').show();
   }
-  
+
   function showCallout2(cellID, message) {
 		var p = $('#p' + cellID);
 		var position = p.position();
-		
+
 		var left_pos = position.left;
 		if (left_pos + 302 > $(window).width()) {
 			left_pos = $(window).width() - 302;
@@ -236,28 +236,28 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 		} else {
 			$('.notch').css('left', '20px');
 		}
-    
+
     var top_pos = position.top;
     if (top_pos - $(window).scrollTop() > ($(window).height() - 80)) {
       top_pos -= 80;
       $('.notch').hide();
     } else {
-      $('.notch').show();      
+      $('.notch').show();
     }
     $('#callout2').css('left', left_pos);
 		$('#callout2').css('top', top_pos + p.height() + 12);
 		$('#message').html(message);
 		$('#callout2').show();
   }
-  
+
   function hideCallout() {
     $('#callout').hide();
   }
-	
+
   function hideCallout2() {
     $('#callout2').hide();
   }
-	
+
 <?php
     if ($userObject->has_role('SysAdmin')) {    // Do not include add/delete functions if not SysAdmin.
   ?>
@@ -278,15 +278,15 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
     }
 ?>
   $(function () {
-    
+
 	  $('#lab').change(function() {
 		  $('#theform').submit();
 		});
-		
+
 	  $('#school').change(function() {
 		  $('#theform').submit();
 		});
-	
+
   <?php
     if ($userObject->has_role('SysAdmin')) {
   ?>
@@ -296,9 +296,9 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
   <?php
     }
   ?>
-    
+
 	});
-  
+
 </script>
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -378,7 +378,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
     echo "<optgroup label=\"$campus\">";
     foreach ($lab as $id => $title) {
       $selected = '';
-      if (isset($_GET['lab']) and $id == $_GET['lab']) $selected = 'selected '; 
+      if (isset($_GET['lab']) and $id == $_GET['lab']) $selected = 'selected ';
       echo "<option value=\"$id\" $selected>$title</option>";
     }
     echo "</optgroup>";
@@ -390,7 +390,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
     echo "<optgroup label=\"$fac\">";
     foreach ($sch as $id => $title) {
       $selected = '';
-      if (isset($_GET['school']) and $id == $_GET['school']) $selected = 'selected '; 
+      if (isset($_GET['school']) and $id == $_GET['school']) $selected = 'selected ';
       echo "<option value=\"$id\" $selected>$title</option>";
     }
     echo "</optgroup>";
@@ -437,7 +437,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
     $lab_list[$lab_id]['name'] = $name;
   }
   $stmt->close();
-  
+
   //show only exams in a particular school
   $schools_sql = '';
   if (isset($_GET['school']) and $_GET['school'] != '') {
@@ -466,13 +466,13 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
     $stmt->close();
     if ($schools_sql != '') $schools_sql .= ')';
   }
-  
+
   if (isset($_GET['lab']) and $_GET['lab'] != -1) {
     $lab_sql = " AND (labs='" . $_GET['lab'] . "' OR labs LIKE '%," . $_GET['lab'] . ",%' OR labs LIKE '" . $_GET['lab'] . ",%' OR labs LIKE '%," . $_GET['lab'] . "')";
   } else {
     $lab_sql = '';
   }
-  
+
   $max_property_id = 0;
   $paper_details = array();
   $paper_ids = array();
@@ -518,7 +518,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
     // Set the property id to be the maximum value found so that we do not overwrite any of the details retrived in the loop above.
     $property_id = $max_property_id;
   }
-  
+
   // Get extra calendar events
   $paper_no = ($property_id + 1);
   $result = $mysqli->prepare("SELECT id, title, message, duration, bgcolor, DATE_FORMAT(thedate,'%H:%i') AS start_time, DATE_FORMAT(thedate,'%p') AS am_pm, DATE_FORMAT(thedate,'%l') AS start_hour, DATE_FORMAT(thedate,'%i') AS start_minute, DATE_FORMAT(thedate,'%e') AS start_day, DATE_FORMAT(thedate,'%c') AS month FROM extra_cal_dates WHERE thedate >= " . $current_year . "0101000000 AND thedate <= " . $current_year . "1231235959 AND deleted IS NULL");
@@ -539,8 +539,25 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
     $paper_details[$paper_no]['cal_year']     = $current_year;
     $paper_details[$paper_no]['duration']     = $duration;
     $paper_no++;
+
+    if($start_time + $duration/60 > 23){
+      $paper_details[$paper_no]['eventID']      = $eventID;
+      $paper_details[$paper_no]['type']         = 'extra_date';
+      $paper_details[$paper_no]['title']        = $title.' ( End Time )' ;
+      $paper_details[$paper_no]['message']      = $message;
+      $paper_details[$paper_no]['bgcolor']      = $bgcolor;
+      $paper_details[$paper_no]['start_time']   = $start_time;
+      $paper_details[$paper_no]['am_pm']        = 'AM';
+      $paper_details[$paper_no]['start_day']    = $start_day+1;
+      $paper_details[$paper_no]['start_hour']  	= $start_hour;
+      $paper_details[$paper_no]['start_minute'] = $start_minute;
+      $paper_details[$paper_no]['month']        = $month;
+      $paper_details[$paper_no]['cal_year']     = $current_year;
+      $paper_details[$paper_no]['duration']     = $duration;
+      $paper_no++;
+    }
   }
-    
+
   // Get metadata security
   if (count($paper_ids) > 0) {
     $result = $mysqli->prepare('SELECT paperID, name, value FROM paper_metadata_security WHERE paperID IN (' . implode(',', $paper_ids) . ')');
@@ -551,12 +568,12 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
     }
     $result->close();
   }
-    
+
   // Sort all papers correctly by start time
   $sortby = 'start_time';
   $ordering = 'asc';
   $paper_details = array_csort($paper_details, $sortby, $ordering);
-  
+
   $cellID = 0;
   for ($i=1; $i<=12; $i++) {
     $current_full_month = date("m", mktime(0, 0, 0, $current_month, 1, $current_year));
@@ -570,7 +587,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
     echo "<tr><td>";
     echo "<table style=\"width:100%; font-size:85%; margin-left:auto; margin-right:auto\">\n";
     echo "<tr><td class=\"dtext\">" . mb_substr($string['monday'],0,3,'UTF-8') . "</td><td class=\"dtext\">" . mb_substr($string['tuesday'],0,3,'UTF-8') . "</td><td class=\"dtext\">" . mb_substr($string['wednesday'],0,3,'UTF-8') . "</td><td class=\"dtext\">" . mb_substr($string['thursday'],0,3,'UTF-8') . "</td><td class=\"dtext\">" . mb_substr($string['friday'],0,3,'UTF-8') . "</td></tr>";
-   
+
     $day_no = 1;
     $cell_no = 1;
     $subtract = 0;
@@ -582,7 +599,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
       $start_day = 1;
       $day_no = 2;
     }
-  
+
     do {
 			$week_no = NULL;
 			$tmp_day_no = $day_no - $subtract;
@@ -627,7 +644,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
       }
       echo '</tr>';
       $day_no -= 5;  // reset day number.
-      
+
       echo '<tr style="height:80px">';
       for ($col=1; $col<=5; $col++) {
         if (($day_no - $subtract) < 1 or $day_no < $start_day) {    // Day on grid before start of month.
@@ -640,11 +657,11 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
             echo "<td class=\"day\" id=\"$dayid\">";
           }
           $papers = 0;
-          
+
 					display_papers($day_no, $subtract, $current_year, $current_month, $paper_details, $papers, $cellID, $string, $default_timezone, $userObject, $mysqli);
 
           if ($papers == 0) echo '&nbsp;';
-          
+
           if ($col == 5) {  // Check for Saturday exams.
             $saturday_exams = false;
             $day_number = '';
@@ -654,7 +671,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
                 $day_number = $individual_paper['start_day'];
               }
             }
-          
+
             if ($saturday_exams == true) {
               echo "<br /><table style=\"width:100%\">";
 							if ($day_number == date("j") and $current_month == date("n") and $current_year == date("Y")) {  // Current day
@@ -662,11 +679,11 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 							} else {
 								echo "<tr><td class=\"dhead\" style=\"border-left:0px\">$day_number &#8211; " . $string['saturday'] . "</td></tr>";
 							}
-							echo "</table>";              
+							echo "</table>";
               display_papers($day_no + 1, $subtract, $current_year, $current_month, $paper_details, $papers, $cellID, $string, $default_timezone, $userObject, $mysqli);
             }
           }
-          
+
           echo "</td>";
         } else {        // Day on grid after end of month.
           echo '<td class="daynomonth">&nbsp;</td>';
@@ -674,11 +691,11 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
         $day_no++;
       }
       echo "</tr>\n";
-      
+
       $day_no += 2;  // Skip the weekend.
     } while (($day_no-$subtract) <= $days_in_month);
     echo "</table>\n</td></tr>\n</table></div><br />\n";
-    
+
     $current_month++;
   }
   $mysqli->close();
