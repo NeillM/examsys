@@ -342,17 +342,6 @@ while ($stmt->fetch()) {
   $schools[$faculty_code . ' ' . $faculty][$id] = $school_code . ' ' . $school;
 }
 $stmt->close();
-
-// Get computer lab info
-$lab_details = array($string['default']=>array('-1'=>$string['alllabs']));
-$stmt = $mysqli->prepare("SELECT labs.id, building, room_no, campus.name FROM labs, campus
-    WHERE labs.campus = campus.id ORDER BY campus, building, room_no");
-$stmt->execute();
-$stmt->bind_result($id, $building, $room_no, $campus);
-while ($stmt->fetch()) {
-  $lab_details[$campus][$id] = $building . ' - ' . $room_no;
-}
-$stmt->close();
 ?>
 
 <form action="" method="get" id="theform" autocomplete="off">
