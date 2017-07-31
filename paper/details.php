@@ -990,7 +990,7 @@ function check_latex_random($q_ids, $mysqli) {
     <th class="d vert_div">&nbsp;<?php echo $string['modified']; ?>&nbsp;</th>
     </tr>
   <?php
-  if ($properties->get_paper_type() == '4' & $properties->get_marking() == 5) {			// OSCE stations
+  if ($properties->get_paper_type() == '4' & in_array($properties->get_marking(), array(1, 5))) {			// OSCE stations
   ?>
     <tr>
       <td colspan="6">
