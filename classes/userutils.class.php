@@ -50,7 +50,7 @@ Class UserUtils {
       return false;
     }
 
-    if (!self::username_exists($username, $db) and $username != '' and stristr('ps_', $username) === false) {
+    if (!self::username_exists($username, $db) and self::username_is_valid($username) and stristr('ps_', $username) === false) {
       // Force re-build of initials off forenames.
       if ($initials == '') {
           $initial = explode(' ', $forname);
@@ -143,7 +143,7 @@ Class UserUtils {
 
     $current = self::get_full_details_by_ID($id, $db);
 
-    if (empty($username) or  empty($surname) or empty($role) or empty($current['username'])) {
+    if (!self::username_is_valid($username) or empty($surname) or empty($role) or empty($current['username'])) {
       return false;
     }
 
