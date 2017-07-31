@@ -143,7 +143,7 @@ Class UserUtils {
 
     $current = self::get_full_details_by_ID($id, $db);
 
-    if (!self::username_is_valid($username) or  empty($surname) or empty($role) or empty($current['username'])) {
+    if (!self::username_is_valid($username) or empty($surname) or empty($role) or empty($current['username'])) {
       return false;
     }
 
