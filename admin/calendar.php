@@ -522,27 +522,23 @@ $stmt->close();
     $paper_details[$paper_no]['start_time']   = $start_time;
     $paper_details[$paper_no]['am_pm']        = $am_pm;
     $paper_details[$paper_no]['start_day']    = $start_day;
-    $paper_details[$paper_no]['start_hour']  	= $start_hour;
+    $paper_details[$paper_no]['start_hour']   = $start_hour;
     $paper_details[$paper_no]['start_minute'] = $start_minute;
     $paper_details[$paper_no]['month']        = $month;
     $paper_details[$paper_no]['cal_year']     = $current_year;
     $paper_details[$paper_no]['duration']     = $duration;
     $paper_no++;
 
-    if($start_time + $duration/60 > 23){
-      $paper_details[$paper_no]['eventID']      = $eventID;
-      $paper_details[$paper_no]['type']         = 'extra_date';
-      $paper_details[$paper_no]['title']        = $title.' ( End Time )' ;
-      $paper_details[$paper_no]['message']      = $message;
-      $paper_details[$paper_no]['bgcolor']      = $bgcolor;
-      $paper_details[$paper_no]['start_time']   = $start_time;
-      $paper_details[$paper_no]['am_pm']        = 'AM';
-      $paper_details[$paper_no]['start_day']    = $start_day+1;
-      $paper_details[$paper_no]['start_hour']  	= $start_hour;
-      $paper_details[$paper_no]['start_minute'] = $start_minute;
-      $paper_details[$paper_no]['month']        = $month;
-      $paper_details[$paper_no]['cal_year']     = $current_year;
-      $paper_details[$paper_no]['duration']     = $duration;
+    if ($start_time + $duration/60 > 23) {
+      $prev_paper_no = $paper_no - 1;
+      $paper_details[$paper_no]                  = $paper_details[$prev_paper_no];
+      $paper_details[$paper_no]['title']         = $title . ' ' . $string['eventcont'] ;
+      $paper_details[$paper_no]['start_hour']    = '';
+      $paper_details[$paper_no]['start_minute']  = '';
+      $paper_details[$paper_no]['am_pm']         = '';
+      $paper_details[$paper_no]['start_day']     = $start_day+1;
+      $paper_details[$prev_paper_no]['duration'] = 720 - ($start_hour * 60 + $start_minute);
+      $paper_details[$paper_no]['duration']      = $duration - $paper_details[$prev_paper_no]['duration'];
       $paper_no++;
     }
   }
