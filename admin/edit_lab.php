@@ -58,7 +58,7 @@ $result->bind_result($address, $low_bandwidth);
 while ($result->fetch()) {
     $addresses[$address] = $address;
 }
-$results->close();
+$result->close();
 
 $bad_addresses = array();
 $submit = param::optional('submit', null, param::TEXT, param::FETCH_POST);
