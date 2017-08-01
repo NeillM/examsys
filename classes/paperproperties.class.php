@@ -1807,12 +1807,12 @@ class PaperProperties {
                 if (!$excluded->is_question_excluded($question['q_id'])) {
                     switch ($question['type']) {
                         case 'random':
-                            foreach (QuestionUtils::get_random_question($question['q_id'], 'enhancedcalc', $this->db) as $possible) {
+                            foreach (QuestionUtils::get_random_question($question['q_id'], 'enhancedcalc') as $possible) {
                                 $enhancedcalc_ids[] = $possible;
                             }
                             break;
                         case 'keyword_based':
-                            foreach (QuestionUtils::get_keyword_question($question['q_id'], 'enhancedcalc', $this->db) as $possible) {
+                            foreach (QuestionUtils::get_keyword_question($question['q_id'], 'enhancedcalc') as $possible) {
                                 $enhancedcalc_ids[] = $possible;
                             }
                             break;
@@ -1908,12 +1908,12 @@ class PaperProperties {
                 if (!$excluded->is_question_excluded($question['q_id'])) {
                     switch ($question['type']) {
                         case 'random':
-                            foreach (QuestionUtils::get_random_question($question['q_id'], 'textbox', $this->db) as $possible) {
+                            foreach (QuestionUtils::get_random_question($question['q_id'], 'textbox') as $possible) {
                                 $textbox_ids[] = $possible;
                             }
                             break;
                         case 'keyword_based':
-                            foreach (QuestionUtils::get_keyword_question($question['q_id'], 'textbox', $this->db) as $possible) {
+                            foreach (QuestionUtils::get_keyword_question($question['q_id'], 'textbox') as $possible) {
                                 $textbox_ids[] = $possible;
                             }
                             break;
