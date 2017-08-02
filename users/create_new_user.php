@@ -45,7 +45,6 @@ $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/dialog.c
 $breadcrumb = array($string['home'] => "../index.php");
 $action = $_SERVER['PHP_SELF'];
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
-$render->render_admin_options('', '', $lang, $toprightmenu);
 include '../include/user_search_options.php';
 $render->render_admin_content($breadcrumb, $lang);
 
