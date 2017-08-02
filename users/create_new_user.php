@@ -29,7 +29,6 @@ require_once '../include/mb_string.inc.php';
 require '../include/toprightmenu.inc';
 
 $render = new render($configObject);
-$toprightmenu = draw_toprightmenu();
 $lang['title'] = $string['createnewuser'];
 $additionaljs = "<script type=\"text/javascript\" src=\"../js/jquery.validate.min.js\"></script>";
 $additionaljs .= "<script type=\"text/javascript\" src=\"../js/jquery.user.js\"></script>";
@@ -47,7 +46,8 @@ $action = $_SERVER['PHP_SELF'];
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 include '../include/user_search_options.php';
 $render->render_admin_content($breadcrumb, $lang);
-
+echo '<body>';
+echo draw_toprightmenu();
 $submit = (bool) param::optional('submit', null, param::TEXT, param::FETCH_POST);
 $unique_username = false;
 
