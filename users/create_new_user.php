@@ -67,7 +67,7 @@ if ($submit) {
   $new_welcome = check_var('new_welcome', 'POST', false, false, true, param::BOOLEAN);
 
   // Check for valid and unique username
-  $unique_username = UserUtils::username_is_valid($new_username) and !UserUtils::username_exists($new_username, $mysqli);
+  $unique_username = UserUtils::username_is_valid($new_username) && !UserUtils::username_exists($new_username, $mysqli);
 }
 
 if ($submit and $unique_username) {
