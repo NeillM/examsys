@@ -53,6 +53,7 @@ $configObject = Config::get_instance();
 
 require_once '../include/path_functions.inc.php';
 $cfg_web_root = get_root_path() . '/';
+$configObject->set('cfg_web_root', $cfg_web_root);
 $cfg_root_path = ltrim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $cfg_web_root), '/');
 
 require_once dirname(__DIR__) . '/include/auth.inc';
