@@ -36,16 +36,12 @@ echo "Starting<br><br>";
 
 $enhancedcalcType=$configObject->get('enhancedcalc_type');
 
-
-
-
-$root=$configObject->getbyref('root');
 if (!is_null($enhancedcalcType)) {
-  require_once $root . 'plugins/questions/enhancedcalc/' .$enhancedcalcType . '.php';
+  require_once $cfg_web_root . 'plugins/questions/enhancedcalc/' .$enhancedcalcType . '.php';
   $name = 'enhancedcalc_' . $enhancedcalcType;
   $enhancedcalcObj1 = new $name($configObject->getbyref('enhancedcalculation'));
 } else {
-  require_once $root . 'plugins/questions/enhancedcalc/' .'Rrserve.php';
+  require_once $cfg_web_root . 'plugins/questions/enhancedcalc/' .'Rrserve.php';
   $enhancedcalcObj1 = new EnhancedCalc_Rrserve($configObject->getbyref('enhancedcalculation'));
 }
 
