@@ -20,7 +20,6 @@ require_once '../include/errors.php';
 require_once 'include/inc.php';
 require_once 'qti/qti_load.php';
 require_once 'qti12/qti12_load.php';
-require_once 'qti20/qti20_load.php';
 require_once 'local/local_save.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
