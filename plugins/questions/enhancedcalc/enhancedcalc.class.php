@@ -871,7 +871,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
             // Substitue values.
             if ($this->is_compound_question_var($inputVal) or (!is_numeric($inputVal) and $inputVal != 'ERROR' and $inputVal !== '')) {
-                $inputVal = $this->substitute_vars($this->useranswer['vars'], $inputVal);
+                $inputVal = $this::substitute_vars($this->useranswer['vars'], $inputVal);
                 if (!is_numeric($inputVal)) {
                     $inputVal = 'ERROR';
                 }
@@ -932,7 +932,7 @@ class EnhancedCalc extends Question implements questionInterface {
 	 * @param string $formula sting in the format "($A+$B)/$C"
 	 * @return string
 	 */
-	public function substitute_vars($vars, $formula) {
+	static public function substitute_vars($vars, $formula) {
 		$varname = array_keys($vars);
 		$varvalue = array_values($vars);
 		$vars_subed = str_replace($varname, $varvalue, $formula);
