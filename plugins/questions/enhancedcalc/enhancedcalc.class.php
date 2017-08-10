@@ -871,7 +871,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
             // Substitue values.
             if ($this->is_compound_question_var($inputVal) or (!is_numeric($inputVal) and $inputVal != 'ERROR' and $inputVal !== '')) {
-                $inputVal = $this->substitute_and_eval_vars($this->useranswer['vars'], $inputVal);
+                $inputVal = $this->substitute_vars($this->useranswer['vars'], $inputVal);
                 if (!is_numeric($inputVal)) {
                     $inputVal = 'ERROR';
                 }
@@ -926,19 +926,18 @@ class EnhancedCalc extends Question implements questionInterface {
 	}
 
 	/**
-	 * replace $A,$B,$C .... in a string and evluate using php eval
-	 * N.B ONLY Used to calculate compound question varables only in in Rserve mode
+	 * Replace $A,$B,$C etc in a string
 	 *
 	 * @param  array $vars array('$VARNAME'=>VALUE)
 	 * @param string $formula sting in the format "($A+$B)/$C"
-	 * @return bool
+	 * @return string
 	 */
-	public function substitute_and_eval_vars($vars, $formula) {
+	public function substitute_vars($vars, $formula) {
 		$varname = array_keys($vars);
 		$varvalue = array_values($vars);
 		$vars_subed = str_replace($varname, $varvalue, $formula);
 
-		return @eval( "return (string)(" . $vars_subed . ");");
+		return $vars_subed;
 	}
 
 	/**
