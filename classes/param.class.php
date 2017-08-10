@@ -64,6 +64,15 @@ class param {
   /** A RFC-2396 URL. */
   const URL = 12;
   
+  /** Calculation question min variable **/
+  const CALCMIN = 13;
+  
+  /** Calculation question max variable **/
+  const CALCMAX = 14;
+  
+  /** Calculation question decimal variable **/
+  const CALCDECIMALPLACES = 15;
+  
   /** Find the named variable in the Get array. */
   const FETCH_GET = '_GET';
   
@@ -167,6 +176,27 @@ class param {
         $options = array(
           'options' => array(
             'default' => null,
+          ),
+        );
+        break;
+      case self::CALCMIN:
+      case self::CALCMAX:
+        $filter = FILTER_VALIDATE_REGEXP;
+         $options = array(
+          'options' => array(
+            'default' => null,
+            'regexp' => '#^var\$[A-Z][0-9]*|ans[0-9]*|[0-9]*[.]?[0-9]+$#',
+          ),
+        );
+        break;
+        break;
+      case self::CALCDECIMALPLACES:
+        $filter = FILTER_VALIDATE_INT;
+        $options = array(
+          'options' => array(
+            'default' => null,
+             'min_range' => 0,
+             'max_range' => 8
           ),
         );
         break;

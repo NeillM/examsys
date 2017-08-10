@@ -649,6 +649,18 @@ QUERY;
     }
     return $converted;
   }
+  
+  /*
+   * Get all post parameters of editable fields
+   * @param array $editable_fields list of editabkle fields
+   * @param integer $max_options max number of options available
+   * @return array parsed post data
+   */
+  public function get_option_post_params($editable_fields, $max_options) {
+    // TODO.
+    return $_POST;
+  }
+
 }
 
 ?>

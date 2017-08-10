@@ -58,6 +58,7 @@ function save_options($question, $userObject, $db) {
       // Editing existing option
       $option = $question->options[$_POST["optionid$option_no"]];
       $part_names = $option->get_editable_fields();
+      $postparams = $option->get_option_post_params($part_names, $option_no);
 
       // Build arrays for compound fields
       $compound_fields = $option->get_compound_fields();
@@ -65,7 +66,7 @@ function save_options($question, $userObject, $db) {
       $option->populate_compound(array_keys($compound_fields), $_POST, $existing_values, 'option_');
 
       // Save editable fields that aren't unified
-      $option->populate($part_names, $option_no, $_POST, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
+      $option->populate($part_names, $option_no, $postparams, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
 
       // Save fields that are the same across options
       $option->populate_unified($unified_part_names, $_POST, array_keys($compound_fields), 'option_');
@@ -78,14 +79,14 @@ function save_options($question, $userObject, $db) {
         $incorrect_fb = (isset($_POST["option_incorrect_fback$option_no"])) ? $_POST["option_incorrect_fback$option_no"] : '';
 
         $part_names = $option->get_editable_fields();
-
+        $postparams = $option->get_option_post_params($part_names, $option_no);;
         // Build arrays for compound fields
         $compound_fields = $option->get_compound_fields();
         if (!isset($existing_values)) $existing_values = array();
         $option->populate_compound(array_keys($compound_fields), $_POST, $existing_values, 'option_');
 
         // Save editable fields that aren't unified
-        $option->populate($part_names, $option_no, $_POST, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
+        $option->populate($part_names, $option_no, $postparams, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
 
         // Save fields that are the same across options
         $option->populate_unified($unified_part_names, $_POST, array_keys($compound_fields), 'option_', false);
