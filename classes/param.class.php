@@ -185,7 +185,7 @@ class param {
          $options = array(
           'options' => array(
             'default' => null,
-            'regexp' => '#^var\$[A-Z][0-9]*|ans[0-9]*|[0-9]*[.]?[0-9]+$#',
+            'regexp' => '#^\$[A-Z][0-9]*|var\$[A-Z][0-9]*|ans[0-9]*|[0-9]*[.]?[0-9]+$#',
           ),
         );
         break;
