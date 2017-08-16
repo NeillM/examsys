@@ -31,7 +31,7 @@ $(function() {
       option_max9: 'calcvariable',
       option_min10: 'calcvariable',
       option_max10: 'calcvariable',
-      option_increment1: 'required',
+      option_increment1: 'required number',
       option_formula1: {
         required: function () {
           var haveFormula = true;
@@ -44,6 +44,7 @@ $(function() {
         }
       },
       option_increment2: {
+        number: true,
         required: {
           depends: function (element) {
             return requiresIncrement(2);
@@ -51,6 +52,7 @@ $(function() {
         }
       },
       option_increment3: {
+        number: true,
         required: {
           depends: function (element) {
             return requiresIncrement(3);
@@ -58,6 +60,7 @@ $(function() {
         }
       },
       option_increment4: {
+        number: true,
         required: {
           depends: function (element) {
             return requiresIncrement(4);
@@ -65,6 +68,7 @@ $(function() {
         }
       },
       option_increment5: {
+        number: true,
         required: {
           depends: function (element) {
             return requiresIncrement(5);
@@ -72,6 +76,7 @@ $(function() {
         }
       },
       option_increment6: {
+        number: true,
         required: {
           depends: function (element) {
             return requiresIncrement(6);
@@ -79,6 +84,7 @@ $(function() {
         }
       },
       option_increment7: {
+        number: true,
         required: {
           depends: function (element) {
             return requiresIncrement(7);
@@ -86,6 +92,7 @@ $(function() {
         }
       },
       option_increment8: {
+        number: true,
         required: {
           depends: function (element) {
             return requiresIncrement(8);
@@ -93,6 +100,7 @@ $(function() {
         }
       },
       option_increment9: {
+        number: true,
         required: {
           depends: function (element) {
             return requiresIncrement(9);
@@ -100,6 +108,7 @@ $(function() {
         }
       },
       option_increment10: {
+        number: true,
         required: {
           depends: function (element) {
             return requiresIncrement(10);
@@ -110,16 +119,16 @@ $(function() {
     messages: {
       leadin: lang['enterleadin'],
       option_formula1: lang['enterformula'],
-      option_increment1: '<br />' + lang['enteroptionshort'],
-      option_increment2: '<br />' + lang['enteroptionshort'],
-      option_increment3: '<br />' + lang['enteroptionshort'],
-      option_increment4: '<br />' + lang['enteroptionshort'],
-      option_increment5: '<br />' + lang['enteroptionshort'],
-      option_increment6: '<br />' + lang['enteroptionshort'],
-      option_increment7: '<br />' + lang['enteroptionshort'],
-      option_increment8: '<br />' + lang['enteroptionshort'],
-      option_increment9: '<br />' + lang['enteroptionshort'],
-      option_increment10: '<br />' + lang['enteroptionshort']
+      option_increment1: '<br />' + lang['entervaliddecimal'],
+      option_increment2: '<br />' + lang['entervaliddecimal'],
+      option_increment3: '<br />' + lang['entervaliddecimal'],
+      option_increment4: '<br />' + lang['entervaliddecimal'],
+      option_increment5: '<br />' + lang['entervaliddecimal'],
+      option_increment6: '<br />' + lang['entervaliddecimal'],
+      option_increment7: '<br />' + lang['entervaliddecimal'],
+      option_increment8: '<br />' + lang['entervaliddecimal'],
+      option_increment9: '<br />' + lang['entervaliddecimal'],
+      option_increment10: '<br />' + lang['entervaliddecimal']
     },
     errorPlacement: function(error, element) {
       if (element.attr('name') == 'leadin') {
