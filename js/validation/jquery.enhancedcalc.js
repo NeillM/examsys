@@ -3,12 +3,34 @@ $(function() {
     tinyMCE.triggerSave();
   });
 
+  jQuery.validator.addMethod("calcvariable", function(value, element) {
+    return this.optional( element ) || /^\$[A-Z][0-9]*|var\$[A-Z][0-9]*|ans[0-9]*|[0-9]*[.]?[0-9]+$/.test( value );
+  }, lang['entervalidvariable']);
+
   $('#edit_form').validate({
     ignore: '',
     rules: {
       leadin: 'required',
-      option_min1: 'required',
-      option_max1: 'required',
+      option_min1: 'required calcvariable',
+      option_max1: 'required calcvariable',
+      option_min2: 'calcvariable',
+      option_max2: 'calcvariable',
+      option_min3: 'calcvariable',
+      option_max3: 'calcvariable',
+      option_min4: 'calcvariable',
+      option_max4: 'calcvariable',
+      option_min5: 'calcvariable',
+      option_max5: 'calcvariable',
+      option_min6: 'calcvariable',
+      option_max6: 'calcvariable',
+      option_min7: 'calcvariable',
+      option_max7: 'calcvariable',
+      option_min8: 'calcvariable',
+      option_max8: 'calcvariable',
+      option_min9: 'calcvariable',
+      option_max9: 'calcvariable',
+      option_min10: 'calcvariable',
+      option_max10: 'calcvariable',
       option_increment1: 'required',
       option_formula1: {
         required: function () {

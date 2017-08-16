@@ -234,6 +234,7 @@ $string['enterdescription'] = 'Please enter a description';
 $string['enteroptiontext'] = 'Please enter a value for this option';
 $string['enteroption'] = 'Please enter either option text or a media file for this option';
 $string['enteroptionshort'] = 'Required';
+$string['entervalidvariable'] = 'Invalid';
 $string['enteroption_kw'] = 'Please select a keyword for the question';
 $string['enterquestion'] = 'Please enter the question';
 $string['enterformula'] = 'Please enter a formula';
