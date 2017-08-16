@@ -189,7 +189,6 @@ class param {
           ),
         );
         break;
-        break;
       case self::CALCDECIMALPLACES:
         $filter = FILTER_VALIDATE_INT;
         $options = array(
