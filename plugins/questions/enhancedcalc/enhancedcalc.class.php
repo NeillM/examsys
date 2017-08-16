@@ -541,7 +541,8 @@ class EnhancedCalc extends Question implements questionInterface {
 		$data = $session;
 
 		foreach ($postdata as $key => $value) {
-			$data[$key] = $value;
+            // Clean the value.
+			$data[$key] = param::clean($value, param::TEXT);
 		}
 
 		$return = json_encode($data);
