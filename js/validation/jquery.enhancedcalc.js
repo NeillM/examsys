@@ -12,7 +12,7 @@ $(function() {
     rules: {
       leadin: 'required',
       option_min1: 'required calcvariable',
-      option_max1: 'required calcvariable',
+      option_max1: 'calcvariable',
       option_min2: 'calcvariable',
       option_max2: 'calcvariable',
       option_min3: 'calcvariable',
@@ -31,7 +31,6 @@ $(function() {
       option_max9: 'calcvariable',
       option_min10: 'calcvariable',
       option_max10: 'calcvariable',
-      option_increment1: 'required number',
       option_formula1: {
         required: function () {
           var haveFormula = true;
@@ -41,6 +40,14 @@ $(function() {
             }
           });
           return haveFormula;
+        }
+      },
+      option_increment1: {
+        number: true,
+        required: {
+          depends: function (element) {
+            return requiresIncrement(1);
+          }
         }
       },
       option_increment2: {
