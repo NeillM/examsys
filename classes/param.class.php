@@ -73,6 +73,9 @@ class param {
   /** Calculation question decimal variable **/
   const CALCDECIMALPLACES = 15;
   
+  /** Calculation question answer **/
+  const CALCANSWER = 16;
+  
   /** Find the named variable in the Get array. */
   const FETCH_GET = '_GET';
   
@@ -196,6 +199,15 @@ class param {
             'default' => null,
              'min_range' => 0,
              'max_range' => 8
+          ),
+        );
+        break;
+      case self::CALCANSWER:
+        $filter = FILTER_VALIDATE_REGEXP;
+         $options = array(
+          'options' => array(
+            'default' => '',
+            'regexp' => '#^[+-]?[0-9]*[.]?[0-9]+[ a-zA-Z]*$#',
           ),
         );
         break;
