@@ -52,4 +52,4 @@ $string['api_allow_superuser'] = 'Enable/Disable API super users. These users ca
 $string['apilogfile'] = 'Location of api log file. Leave blank to disable logging.';
 $string['calc'] = 'Calculation Questions';
 $string['cfg_calc_type'] = 'Calculation question integration type (default: phpEval).';
-$string['cfg_calc_settings'] = 'Calculation question integration server settings (phpEval: none).';
+$string['cfg_calc_settings'] = 'Calculation question integration server settings (phpEval: settings not used).';
