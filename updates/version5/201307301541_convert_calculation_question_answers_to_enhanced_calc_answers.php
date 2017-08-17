@@ -20,7 +20,7 @@ if (!$updater_utils->has_updated('convert_calc_ans_done')) {
 
   $root = $configObj->get('root');
 
-  $enhancedcalcType = $configObj->get('enhancedcalc_type');
+  $enhancedcalcType = $configObject->get_setting('core', 'cfg_calc_type');
   if (!is_null($enhancedcalcType)) {
     require_once $root . '/plugins/questions/enhancedcalc/' . $enhancedcalcType . '.php';
     $name = 'enhancedcalc_' . $enhancedcalcType;

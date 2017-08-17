@@ -30,7 +30,7 @@ class Config extends RogoStaticSingleton {
    * Areas of the Rogo system that can be confifured.
    * @var array list of areas
    */
-  public static $config_area = array('api', 'gradebook', 'lti', 'paper', 'summative', 'url', 'misc');
+  public static $config_area = array('api', 'gradebook', 'lti', 'paper', 'summative', 'url', 'misc', 'calc');
   /**
    * @var array
    */
@@ -97,6 +97,11 @@ class Config extends RogoStaticSingleton {
    * @var string
    */
   const URL = 'url';
+  /**
+   * Config setting associative array type identifier
+   * @var string
+   */
+  const ASSOC = 'assoc';
 
   function __toString() {
     return "ConfigObject!";
@@ -434,7 +439,7 @@ SCRIPT;
       }
     }
     // Json encode.
-    if ($type == self::JSON or $type == self::CSV or $type == self::TIMEZONES) {
+    if ($type == self::JSON or $type == self::CSV or $type == self::TIMEZONES or $type == self::ASSOC) {
       $value = json_encode($value);
     }
     // Update Settings.
@@ -468,7 +473,7 @@ SCRIPT;
       }
     }
     // Json encode.
-    if ($type == self::JSON or $type == self::CSV or $type == self::TIMEZONES) {
+    if ($type == self::JSON or $type == self::CSV or $type == self::TIMEZONES or $type == self::ASSOC) {
       $value = json_encode($value);
     }
     // Insert Settings.
@@ -602,7 +607,7 @@ SCRIPT;
         $value = json_decode($value);
       }
       // Set timzone to associative array.
-      if ($type == self::TIMEZONES) {
+      if ($type == self::TIMEZONES or $type == self::ASSOC) {
         $value = json_decode($value, true);
       }
       $this->cache_setting($setting, $value, $component);
@@ -710,6 +715,7 @@ SCRIPT;
         case self::JSON:
         case self::CSV:
         case self::TIMEZONES:
+        case self::ASSOC:
           $check = is_array($value);
           break;
         case self::BOOLEAN:

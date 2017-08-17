@@ -653,12 +653,13 @@ if (!isset($_POST['update'])) {
     $result->close();
   }
 
-  // 04/07/2013 (cczsa1) - enhanced question type config
-  $new_lines = array("\n// Enhanced Calculation question config\n", "\$enhancedcalculation = array('host' => 'localhost', 'port'=>6311,'timeout'=>5); //default enhancedcalc Rserve config options\n","//but use phpEval as default for enhanced calculation questions\n","\$enhancedcalc_type = 'phpEval'; //set the enhanced calculation to use php for maths \n","\$enhancedcalculation = array(); //no config options for phpEval enhancedcalc plugin");
-
-  $target_line = '$cfg_password_expire';
-  $updater_utils->add_line($string, '$enhancedcalculation', $new_lines, 80, $cfg_web_root, $target_line, 1);
-
+  // Config no longer required in 6.4.0 onwards so do not run this update script on that version or version higher.
+  if (version::is_version_higher($version, '6.5.0') === false and $version !== '6.5.0') {
+    // 04/07/2013 (cczsa1) - enhanced question type config
+    $new_lines = array("\n// Enhanced Calculation question config\n", "\$enhancedcalculation = array('host' => 'localhost', 'port'=>6311,'timeout'=>5); //default enhancedcalc Rserve config options\n","//but use phpEval as default for enhanced calculation questions\n","\$enhancedcalc_type = 'phpEval'; //set the enhanced calculation to use php for maths \n","\$enhancedcalculation = array(); //no config options for phpEval enhancedcalc plugin");
+    $target_line = '$cfg_password_expire';
+    $updater_utils->add_line($string, '$enhancedcalculation', $new_lines, 80, $cfg_web_root, $target_line, 1);
+  }
   // 04/07/2013 (cczsa1) - add new field to logs to indicate an error state
   if (!$updater_utils->does_column_exist('log0', 'errorstate')) {
     $updater_utils->execute_query("ALTER TABLE log0 ADD COLUMN errorstate tinyint unsigned NOT NULL DEFAULT '0' AFTER user_answer", true);

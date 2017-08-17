@@ -164,14 +164,15 @@ class EnhancedCalc extends Question implements questionInterface {
 				$this->useranswer['ans']['units_used'] = $this->useranswer['uansunit'];
 			}
 
-			$enhancedcalcType = $this->configObj->get('enhancedcalc_type');
-			if (!is_null($enhancedcalcType)) {
+			$enhancedcalcType = $this->configObj->get_setting('core', 'cfg_calc_type');
+            $enhancedcalcSettings = $this->configObj->get_setting('core', 'cfg_calc_settings');
+			if (!empty($enhancedcalcType)) {
 				require_once $enhancedcalcType . '.php';
 				$name = 'enhancedcalc_' . $enhancedcalcType;
-				$enhancedcalcObj = new $name($this->configObj->getbyref('enhancedcalculation'));
+				$enhancedcalcObj = new $name($enhancedcalcSettings);
 			} else {
-				require_once 'Rrserve.php';
-				$enhancedcalcObj = new EnhancedCalc_Rrserve($this->configObj->getbyref('enhancedcalculation'));
+				require_once 'phpEval.php';
+				$enhancedcalcObj = new EnhancedCalc_phpEval($enhancedcalcSettings);
 			}
 
 			if (is_array($this->useranswer['vars'])) {
@@ -1270,14 +1271,15 @@ class EnhancedCalc extends Question implements questionInterface {
 	public function get_answer_distance() {
 
 		if (!isset($this->useranswer['cans_dist'])) {
-			$enhancedcalcType = $this->configObj->get('enhancedcalc_type');
-			if (!is_null($enhancedcalcType)) {
+			$enhancedcalcType = $this->configObj->get_setting('core', 'cfg_calc_type');
+            $enhancedcalcSettings = $this->configObj->get_setting('core', 'cfg_calc_settings');
+			if (!empty($enhancedcalcType)) {
 				require_once $enhancedcalcType . '.php';
 				$name = 'enhancedcalc_' . $enhancedcalcType;
-				$enhancedcalcObj = new $name($this->configObj->getbyref($enhancedcalcType));
+				$enhancedcalcObj = new $name($this->configObj->getbyref($enhancedcalcSettings));
 			} else {
-				require_once 'Rrserve.php';
-				$enhancedcalcObj = new EnhancedCalc_Rrserve($this->configObj->getbyref('enhancedcalculation'));
+				require_once 'phpEval.php';
+				$enhancedcalcObj = new EnhancedCalc_phpEval($enhancedcalcSettings);
 			}
 
 			if ((isset($this->useranswer['status']['exact']) and $this->useranswer['status']['exact'] === false) or !isset($this->useranswer['status']['exact'])) {

@@ -28,19 +28,31 @@ require '../include/toprightmenu.inc';
 
 if (isset($_POST['submit'])) {
     foreach ($configObject->get_setting('core') as $setting => $value) {
-        $new_value = param::optional($setting, '', param::RAW, param::FETCH_POST);
-        // Timezones are display in a multi selectbox so the post will be an array.
-        if ($setting == 'paper_timezones') {
-            $arrayvalue = array();
-            foreach ($new_value as $v) {
-                $parts = explode("|", $v);
-                $arrayvalue[$parts[0]] = $parts[1];
-            }
-            $new_value = $arrayvalue;
-        }
         $type = $configObject->get_setting_type('core', $setting);
-        if ($type == Config::CSV) {
-            $new_value = explode(',', $new_value);
+        if ($type == Config::ASSOC) {
+            if ($setting == 'cfg_calc_settings') {
+                $num = 3;
+            }
+            $new_value = array();
+            for ($i = 0; $i < $num; $i++) {
+                $new_i = param::optional($setting . '_name_' . $i, '', param::TEXT, param::FETCH_POST);
+                $new_v = param::optional($setting . '_value_' . $i, '', param::TEXT, param::FETCH_POST);
+                $new_value[$new_i] = $new_v;
+            }
+        } else {
+            $new_value = param::optional($setting, '', param::RAW, param::FETCH_POST);
+            // Timezones are display in a multi selectbox so the post will be an array.
+            if ($setting == 'paper_timezones') {
+                $arrayvalue = array();
+                foreach ($new_value as $v) {
+                    $parts = explode("|", $v);
+                    $arrayvalue[$parts[0]] = $parts[1];
+                }
+                $new_value = $arrayvalue;
+            }
+            if ($type == Config::CSV) {
+                $new_value = explode(',', $new_value);
+            }
         }
         // Check value is of expected type. No change if not expected type.
         if (!Config::check_type($new_value, $type)) {
@@ -119,6 +131,23 @@ $render->render_admin_content($breadcrumb, $lang);
                             echo "<option value=\"" . htmlspecialchars($individual_zone) . "|" . htmlspecialchars($display_zone) . "\" $selected>" . htmlspecialchars($display_zone) . "</option>";
                         }
                         echo "</select></td>";
+                    } elseif ($type == Config::ASSOC) {
+                        $count = 0;
+                        echo "<tr><td class=\"field\"><label for=\"" . $setting . '_name_0' . "\">" . $setting . "</label>&nbsp;<img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string[$setting] . "\" /></td><td>";
+                          foreach ($value as $i => $v) {
+                              echo "<input class=\"" . $type . "\" type=\"hidden\" id=\"" . $setting . '_name_' . $count . "\" name=\"" . $setting . '_name_' . $count . "\" value=\"" . htmlspecialchars($i) . "\" />";
+                              echo htmlspecialchars($i) . "&nbsp;";
+                              echo "<input class=\"" . $type . "\" type=\"text\" id=\"" . $setting . '_value_' . $count . "\" name=\"" . $setting . '_value_' . $count . "\" value=\"" . htmlspecialchars($v) . "\""  . $disabled . "/>";
+                              echo "</br>";
+                              $count++;
+                          }
+                          for($i = $count; $i < 3; $i++) {
+                              echo "<input class=\"" . $type . "\" type=\"hidden\" id=\"" . $setting . '_name_' . $i . "\" name=\"" . $setting . '_name_' . $count . "\" value=\"" . htmlspecialchars($i) . "\" />";
+                              echo htmlspecialchars($i) . "&nbsp;";
+                              echo "<input class=\"" . $type . "\" type=\"text\" id=\"" . $setting . '_value_' . $i . "\" name=\"" . $setting . '_value_' . $i . "\" value=\"\""  . $disabled . "/>";
+                              echo "</br>";
+                          }
+                        echo "</td>";
                     } else {
                         if ($type == Config::CSV) {
                             $value = implode(',', $value);

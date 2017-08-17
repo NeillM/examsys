@@ -145,10 +145,10 @@ function format_space($space) {
 $authinfo = $authentication->version_info(true, false);
 
 // Get info about enhanced calculation plugin
-$enhancedc1 = $configObject->get('enhancedcalc_type');
-$enhancedc2 = $configObject->get('enhancedcalculation');
-if (is_null($enhancedc1)) {
-  $enhancedc1 = 'BLANK therefore Rrserve';
+$enhancedc1 = $configObject->get_setting('core', 'cfg_calc_type');
+$enhancedc2 = $configObject->get_setting('core', 'cfg_calc_settings');
+if (empty($enhancedc1)) {
+  $enhancedc1 = 'BLANK therefore phpEval';
 }
 $enhancedc3 = '';
 foreach ($enhancedc2 as $key => $value) {
