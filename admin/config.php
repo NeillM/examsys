@@ -130,6 +130,7 @@ $render->render_admin_content($breadcrumb, $lang);
                         }
                         echo "</select></td>";
                     } elseif ($type == Config::ASSOC) {
+                        $num = count($configObject->get_setting('core', $setting));
                         $count = 0;
                         echo "<tr><td class=\"field\"><label for=\"" . $setting . '_name_0' . "\">" . $setting . "</label>&nbsp;<img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string[$setting] . "\" /></td><td>";
                           foreach ($value as $i => $v) {
@@ -139,7 +140,7 @@ $render->render_admin_content($breadcrumb, $lang);
                               echo "</br>";
                               $count++;
                           }
-                          for($i = $count; $i < 3; $i++) {
+                          for($i = $count; $i < $num; $i++) {
                               echo "<input class=\"" . $type . "\" type=\"hidden\" id=\"" . $setting . '_name_' . $i . "\" name=\"" . $setting . '_name_' . $count . "\" value=\"" . htmlspecialchars($i) . "\" />";
                               echo htmlspecialchars($i) . "&nbsp;";
                               echo "<input class=\"" . $type . "\" type=\"text\" id=\"" . $setting . '_value_' . $i . "\" name=\"" . $setting . '_value_' . $i . "\" value=\"\""  . $disabled . "/>";
