@@ -30,9 +30,7 @@ if (isset($_POST['submit'])) {
     foreach ($configObject->get_setting('core') as $setting => $value) {
         $type = $configObject->get_setting_type('core', $setting);
         if ($type == Config::ASSOC) {
-            if ($setting == 'cfg_calc_settings') {
-                $num = 3;
-            }
+            $num = count($configObject->get_setting('core', $setting));
             $new_value = array();
             for ($i = 0; $i < $num; $i++) {
                 $new_i = param::optional($setting . '_name_' . $i, '', param::TEXT, param::FETCH_POST);
