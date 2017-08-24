@@ -300,7 +300,7 @@ class lti_uon_integration_extended extends lti_integration {
     // fourth is School it belongs to as text
     // fifth is if its self registration module
     // sixth is the module title.  if it starts MISSING: then there is need for manual intervention to complete this correctly
-
+    // seventh is optional. The SMS placeholder stored against a module instead of a URL by new SMS plugins.
     if (count($data) === 0) {
       return false;
     }
