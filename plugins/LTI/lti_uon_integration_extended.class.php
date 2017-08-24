@@ -260,6 +260,8 @@ class lti_uon_integration_extended extends lti_integration {
    * @return mixed module external id or null
    */
   public function module_id_translate($sourceid) {
+    // Regular expression to match XXXXXX_Y_ZZZZ occurences in course id where XXXXXX is the module id, Y is the offering,
+    // ZZZZ is the term. We only care about the module id.
     preg_match(self::CS_COURSE_ID, $sourceid, $info);
     if (count($info) > 0) {
       return $info['id'];
