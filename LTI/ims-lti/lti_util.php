@@ -137,6 +137,10 @@ class BLTI {
         $newinfo[$key] = $value;
         continue;
       }
+      if ($key == 'lis_course_section_sourcedid') {
+        $newinfo[$key] = $value;
+        continue;
+      }
     }
 
     $this->info = $newinfo;
@@ -300,6 +304,18 @@ class BLTI {
 
 	function getCourseID() {
 		return $this->course_id;
+	}
+
+    /**
+     * Get the external ID for VLE course.
+     * @return mixed clean value or null.
+     */
+    function getExternalID() {
+        $sourcedid = $this->info['lis_course_section_sourcedid'];
+        if (empty($sourcedid)) {
+          return null;
+        }
+        return $sourcedid;
 	}
 
 	function getCourseName() {
