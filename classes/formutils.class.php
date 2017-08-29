@@ -165,6 +165,10 @@ Class FormUtils {
   function is_email_in_cfg_institutional_domains($email) {
     $cfg = Config::get_instance();
     $domains  = $cfg->get('cfg_institutional_domains');
+    // Institutional domains not set so accept.
+    if (empty($domains)) {
+      return true;
+    }
     foreach($domains as $d) {
       if(stripos($email, $d)) {
         return true;
