@@ -167,7 +167,7 @@ Class FormUtils {
     $domains  = $cfg->get('cfg_institutional_domains');
     // Institutional domains not set so accept.
     if (empty($domains)) {
-      return true;
+      return false;
     }
     foreach($domains as $d) {
       if(stripos($email, $d)) {
