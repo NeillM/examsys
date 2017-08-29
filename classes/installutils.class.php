@@ -211,6 +211,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         <div><label for="cfg_long_time_php"><?php echo sprintf($string['longtimephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_long_time_php" name="cfg_long_time_php" class="required" value="H:i:s" /></div>
         <div><label for="cfg_short_time_php"><?php echo sprintf($string['shorttimephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_short_time_php" name="cfg_short_time_php" class="required" value="H:i" /></div>
         <div><label for="cfg_search_leadin_length"><?php echo $string['searchleadinlength']; ?></label> <input type="text" id="cfg_search_leadin_length" name="cfg_search_leadin_length" value="160" /></div>
+        <div><label for="cfg_dictionary_file"><?php echo $string['dictionaryfile']; ?></label> <input type="text" id="cfg_dictionary_file" name="cfg_dictionary_file" value="/usr/share/dict/words" /></div>
         <div><label for="cfg_timezone"><?php echo $string['currenttimezone']; ?></label> <select id="cfg_timezone" name="cfg_timezone">
         <?php
           $default_timezone = date_default_timezone_get();
@@ -992,6 +993,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $configObject->set_setting('misc_logo_email', 'alt_logo.png', 'string');
     $configObject->set_setting('api_allow_superuser', 0, 'boolean');
     $configObject->set_setting('apilogfile', '', 'string');
+    $configObject->set_setting('cfg_dictionary_file', '/usr/share/dict/words', 'string');
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();

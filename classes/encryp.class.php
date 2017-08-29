@@ -15,14 +15,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Oauth package
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2015 onwards The University of Nottingham
-*/
+ * Encryp package
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @author John O'Rourke <john@o-rourke.org>
+ * @copyright Copyright (c) 2015 onwards The University of Nottingham
+ */
 
 /**
  * Encryption helper class.
- * Interfaces with the vendor/bshaffer/oauth2-server-php
  */
 class encryp {
        
@@ -101,4 +101,46 @@ class encryp {
       return $pass;
     }
     
+    /**
+     * Create a password that is relatively secure, but easy to
+     * read and dictate regardless of fonts, eyesight etc.
+     * Falls back to gen_password if a dictionary file is unavailable
+     *
+     * @return array the password and the password to display - e.g. "monkeyhorseapple" and "monkey horse apple"
+     */
+    function gen_readable_password() {
+      $configObject = Config::get_instance();
+      $file = $configObject->get_setting('core', 'misc_dictionary_file');
+      // Revert to default password generation if no dictionary.
+      if (!file_exists($file)) {
+        $pass = gen_password();
+        return array('password' => $pass, 'display_password' => $pass);
+      }
+
+      $words = array();
+      $f = fopen($file, 'r');
+      while (!feof($f)) {
+        $word = fgets($f);
+        if (preg_match('/^[a-z]{4,6}$/', trim($word))) {
+          $words[] = $word;
+        }
+      }
+      fclose($f);
+
+      // Revert to default password generation if dictionary too small.
+      if (count($words) < 10000) {
+        $pass = gen_password();
+        return array('password' => $pass, 'display_password' => $pass);
+      }
+
+      $pass = '';
+      $disppass = '';
+      for ($i=0; $i<3; $i++) {
+        $word = rtrim($words[rand(0, count($words))]);
+        $pass .= $word;
+        $disppass .= $word . ' ';
+      }
+
+      return array('password' => $pass, 'display_password' => rtrim($disppass));
+    }
 }

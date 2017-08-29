@@ -57,4 +57,14 @@ function gen_password($len = 8) {
   $enc = new encryp();
   return $enc->gen_password($len);
 }
+
+/**
+ * Creates a readable and relatively secure password
+ *
+ * @return array password and display password
+ */
+function gen_readable_password() {
+  $enc = new encryp();
+  return $enc->gen_readable_password();
+}
 ?>

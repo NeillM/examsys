@@ -33,7 +33,9 @@ if (!UserUtils::userid_exists($userid, $mysqli)) {
 }
 
 $username     = UserUtils::get_username($userid, $mysqli);
-$new_password = gen_password();
+$generated_password = gen_readable_password();
+$new_password = $generated_password['password'];
+$display_password = $generated_password['display_password'];
 
 $success = UserUtils::update_password($username, $new_password, $userid, $mysqli);
 if (!$success) {
@@ -62,7 +64,7 @@ $mysqli->close();
 <table cellpadding="2" cellspacing="0" style="width:100%">
 <tr><td class="dialog_header header_line"><img src="../artwork/fingerprint_48.png" width="48" height="48" style="padding-right:8px" /></td><td class="dialog_header header_line" style="width:90%"><?php echo $string['passwordreset']; ?></td></tr>
 <tr><td colspan="2">&nbsp;</tr>
-<tr><td colspan="2" class="msg"><?php echo $string['msg']; ?> <span class="passwd"><?php echo $new_password; ?></span></tr>
+<tr><td colspan="2" class="msg"><?php echo $string['msg']; ?> <span class="passwd"><?php echo $display_password; ?></span></tr>
 <tr><td colspan="2">&nbsp;</tr>
 <tr><td colspan="2" style="text-align:center"><input type="button" name="ok" value="<?php echo $string['ok']; ?>" class="ok" onclick="window.close();" /></tr>
 </table>
