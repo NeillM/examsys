@@ -137,10 +137,6 @@ class BLTI {
         $newinfo[$key] = $value;
         continue;
       }
-      if ($key == 'lis_course_section_sourcedid') {
-        $newinfo[$key] = $value;
-        continue;
-      }
     }
 
     $this->info = $newinfo;
