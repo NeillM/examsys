@@ -118,7 +118,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     $smspluginns = 'plugins\SMS\\' . $name. '\\' . $name;
     $smsplugin = new $smspluginns($mysqli, $userObj->get_user_ID());
     if ($sms_api === $smsplugin->get_name()) {
-      if ($smsplugin->supports_module_import() !== false or $smsplugin->supports_enrol_import() !== false) {
+      if ($smsplugin->supports_module_import() !== false) {
         if (!is_null($externalid)) {
           $smsplugin->update_module_enrolments($externalid, $session);
         }
