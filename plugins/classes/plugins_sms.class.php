@@ -100,6 +100,41 @@ abstract class plugins_sms extends \plugins\plugins {
         return $success;
     }
     /**
+     * Enable this plugin.
+     */
+    public function enable_plugin() {
+        $enabled = $this->config->get_setting('plugin_SMS', 'enabled_plugin');
+        if (!is_null($enabled)) {
+            if (is_array($enabled)) {
+                if (!array_search($this->plugin, $enabled)) {
+                    $enabled[] = $this->plugin;
+                }
+            } else {
+                $enabled = array($enabled, $this->plugin);
+            }
+        } else {
+            $enabled = array($this->plugin);
+        }
+        $this->config->set_setting('enabled_plugin', $enabled, \Config::JSON, 'plugin_SMS');
+    }
+    /**
+     * Disable this plugin.
+     */
+    public function disable_plugin() {
+        $enabled = $this->config->get_setting('plugin_SMS', 'enabled_plugin');
+        if (!is_null($enabled)) {
+            $key = array_search($this->plugin, $enabled);
+            if ($key !== false) {
+                if (count($enabled) > 1) {
+                    unset($enabled[$key]);
+                } else {
+                    $enabled = array();
+                }
+                $this->config->set_setting('enabled_plugin', $enabled, \Config::JSON, 'plugin_SMS');
+            }
+        }
+    }
+    /**
      * Get all assessments for academic session
      * @params integer $session academic session to sync assessments with
      */
