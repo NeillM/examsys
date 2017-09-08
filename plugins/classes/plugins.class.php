@@ -366,4 +366,8 @@ abstract class plugins {
      * Enable the plugin.
      */
     abstract public function enable_plugin();
+    /**
+     * Disable the plugin.
+     */
+    abstract public function disable_plugin();
 }
