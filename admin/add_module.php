@@ -294,14 +294,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     }
     $result->close();
     ?></select></td></tr>
-    <?php
-      $sms = \plugins\plugins_sms::get_sms($mysqli);
-      if ($sms !== false) {
-    ?>
     <tr><td class="field"><?php echo $string['externalid'] ?></td><td><input type="text" size="30" maxlength="255" name="externalid" value=""></td></tr>
-    <?php
-      }
-    ?>
     <tr><td colspan="2" style="text-align:center; padding-top:12px"><input type="submit" class="ok" name="submit" value="<?php echo $string['add'] ?>"><input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" /></td></tr>
 		</table>
 	</form>
