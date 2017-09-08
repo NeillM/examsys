@@ -123,6 +123,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
           $smsplugin->update_module_enrolments($externalid, $session);
         }
       }
+      break;
     }
   }
 
