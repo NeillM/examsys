@@ -117,8 +117,12 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   foreach($smsplugin_name as $name) {
     $smspluginns = 'plugins\SMS\\' . $name. '\\' . $name;
     $smsplugin = new $smspluginns($mysqli, $userObj->get_user_ID());
-    if (!is_null($externalid) and $smsplugin->supports_module_import() !== false and $smsplugin->supports_enrol_import() !== false) {
-        $smsplugin->update_module_enrolments($externalid, $session);
+    if ($sms_api === $smsplugin->get_name()) {
+      if ($smsplugin->supports_module_import() !== false or $smsplugin->supports_enrol_import() !== false) {
+        if (!is_null($externalid)) {
+          $smsplugin->update_module_enrolments($externalid, $session);
+        }
+      }
     }
   }
 
