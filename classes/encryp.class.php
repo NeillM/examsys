@@ -135,7 +135,7 @@ class encryp {
 
       $pass = '';
       $disppass = '';
-      for ($i=0; $i<3; $i++) {
+      for ($i = 0; $i < 3; $i++) {
         $word = rtrim($words[rand(0, count($words))]);
         $pass .= $word;
         $disppass .= $word . ' ';
