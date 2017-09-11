@@ -162,20 +162,25 @@ Class FormUtils {
 		return $rval;
 	}
   
-  function is_email_in_cfg_institutional_domains($email) {
-    $cfg = Config::get_instance();
-    $domains  = $cfg->get('cfg_institutional_domains');
-    // Institutional domains not set so accept.
-    if (empty($domains)) {
+    /**
+     * Checks if email matches those defined in institutional domain list
+     * @param string $email
+     * @return boolean
+     */
+    function is_email_in_cfg_institutional_domains($email) {
+      $cfg = Config::get_instance();
+      $domains  = $cfg->get('cfg_institutional_domains');
+      // Institutional domains not set.
+      if (empty($domains)) {
+        return false;
+      }
+      foreach($domains as $d) {
+        if(stripos($email, $d)) {
+          return true;
+        }
+      }
       return false;
     }
-    foreach($domains as $d) {
-      if(stripos($email, $d)) {
-        return true;
-      }
-    }
-    return false;
-  }
 	
 	// Get a unique version of a given file name
 	/**
