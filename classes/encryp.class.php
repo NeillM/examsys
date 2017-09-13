@@ -143,7 +143,7 @@ class encryp {
     function gen_readable_password() {
       // Revert to default password generation if no dictionary.
       if (!$this->is_readable()) {
-        $pass = gen_password();
+        $pass = $this->gen_password();
         return array('password' => $pass, 'display_password' => $pass);
       }
 
