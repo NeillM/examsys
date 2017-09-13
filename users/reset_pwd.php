@@ -33,7 +33,8 @@ if (!UserUtils::userid_exists($userid, $mysqli)) {
 }
 
 $username     = UserUtils::get_username($userid, $mysqli);
-$generated_password = gen_readable_password();
+$enc = new encryp();
+$generated_password = $enc->gen_readable_password();
 $new_password = $generated_password['password'];
 $display_password = $generated_password['display_password'];
 
@@ -42,31 +43,24 @@ if (!$success) {
   display_error($string['resetfailed'], $string['failuremsg'], $configObject->get('cfg_root_path') . '/artwork/exclamation_red_bg.png', '#C00000', true, true, true);
 }
 $mysqli->close();
-?>
-<!DOCTYPE html>
-<html>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-
-  <title><?php echo $string['passwordreset'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
-
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
-  <style type="text/css">
-    body {font-size:80%}
-    .header_line {border-bottom:1px solid #CCD9EA}
-    .passwd {font-weight:bold; font-family:'Courier New'}
-    .msg {padding:10px; font-size:110%}
-  </style>
-</head>
-
-<body class="dialog_body">
-<table cellpadding="2" cellspacing="0" style="width:100%">
-<tr><td class="dialog_header header_line"><img src="../artwork/fingerprint_48.png" width="48" height="48" style="padding-right:8px" /></td><td class="dialog_header header_line" style="width:90%"><?php echo $string['passwordreset']; ?></td></tr>
-<tr><td colspan="2">&nbsp;</tr>
-<tr><td colspan="2" class="msg"><?php echo $string['msg']; ?> <span class="passwd"><?php echo $display_password; ?></span></tr>
-<tr><td colspan="2">&nbsp;</tr>
-<tr><td colspan="2" style="text-align:center"><input type="button" name="ok" value="<?php echo $string['ok']; ?>" class="ok" onclick="window.close();" /></tr>
-</table>
-</body>
-</html>
+$render = new render($configObject);
+$headerdata = array(
+  'css' => array(
+    '/css/screen.css',
+    '/css/password.css',
+  ),
+  'scripts' => array(),
+);
+$lang['title'] = $string['passwordreset'];
+$lang['pwdreset'] = $string['passwordreset'];
+if ($enc->is_readable()) {
+  $lang['pwdinfo'] = $string['passwordreadable'];
+} else {
+  $lang['pwdinfo'] = $string['passwordnonreadable'];
+}
+$lang['msg'] = $string['msg'];
+$lang['ok'] = $string['ok'];
+$data['dispwd'] = $display_password;
+$render->render($headerdata, $string, 'header.html');
+$render->render($data, $lang, 'users/password.html');
+$render->render_admin_footer();

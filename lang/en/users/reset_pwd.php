@@ -15,7 +15,8 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['passwordreset'] = 'Password Reset';
-$string['msg'] = 'Password reset to:';
+$string['msg'] = 'Password:';
 $string['resetfailed'] = 'Reset Failed';
 $string['failuremsg'] = 'There was a problem resetting the password.';
-?>
+$string['passwordreadable'] = 'Your password is made up of the following words. Spaces are not included.';
+$string['passwordnonreadable'] = 'Your password is made up of a random selection of characters.';

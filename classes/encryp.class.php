@@ -25,7 +25,39 @@
  * Encryption helper class.
  */
 class encryp {
-       
+
+    /**
+     * Array of dictionary words.
+     * @var array 
+     */
+    private $dictionary;
+    /**
+     * Constructor
+     */
+    public function __construct() {
+        $configObject = Config::get_instance();
+        $file = $configObject->get_setting('core', 'misc_dictionary_file');
+        // Revert to default password generation if no dictionary.
+        if (!file_exists($file)) {
+            $this->dictionary = array();
+        } else {
+            $words = array();
+            $f = fopen($file, 'r');
+            while (!feof($f)) {
+                $word = fgets($f);
+                if (preg_match('/^[a-z]{4,6}$/', trim($word))) {
+                    $words[] = $word;
+                }
+            }
+            fclose($f);
+            // Revert to default password generation if dictionary too small.
+            if (count($words) < 10000) {
+              $this->dictionary = array();
+            } else {
+              $this->dictionary = $words;
+            }
+        }
+    }
     /**
      * Encrypt a password that can be de-crypted.
      * 
@@ -109,26 +141,8 @@ class encryp {
      * @return array the password and the password to display - e.g. "monkeyhorseapple" and "monkey horse apple"
      */
     function gen_readable_password() {
-      $configObject = Config::get_instance();
-      $file = $configObject->get_setting('core', 'misc_dictionary_file');
       // Revert to default password generation if no dictionary.
-      if (!file_exists($file)) {
-        $pass = gen_password();
-        return array('password' => $pass, 'display_password' => $pass);
-      }
-
-      $words = array();
-      $f = fopen($file, 'r');
-      while (!feof($f)) {
-        $word = fgets($f);
-        if (preg_match('/^[a-z]{4,6}$/', trim($word))) {
-          $words[] = $word;
-        }
-      }
-      fclose($f);
-
-      // Revert to default password generation if dictionary too small.
-      if (count($words) < 10000) {
+      if (!$this->is_readable()) {
         $pass = gen_password();
         return array('password' => $pass, 'display_password' => $pass);
       }
@@ -136,11 +150,22 @@ class encryp {
       $pass = '';
       $disppass = '';
       for ($i = 0; $i < 3; $i++) {
-        $word = rtrim($words[rand(0, count($words))]);
+        $word = rtrim($this->dictionary[rand(0, count($this->dictionary))]);
         $pass .= $word;
         $disppass .= $word . ' ';
       }
 
       return array('password' => $pass, 'display_password' => rtrim($disppass));
+    }
+    
+    /**
+     * Check if readable passwords in use.
+     * @return bool
+     */
+    public function is_readable() {
+        if (count($this->dictionary) > 0) {
+            return true;
+        }
+        return false;
     }
 }

@@ -166,7 +166,8 @@ foreach ($titles as $tmp_title) {
   if (isset($new_password)) {
     echo $new_password;
   } else {
-    $generated_password = gen_readable_password();
+    $enc = new encryp();
+    $generated_password = $enc->gen_readable_password();
     echo $generated_password['password'];
   }
 ?>" size="12" autocomplete="off" required /></td></tr>
