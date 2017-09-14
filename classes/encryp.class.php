@@ -25,7 +25,11 @@
  * Encryption helper class.
  */
 class encryp {
-
+    /**
+     * Dictionary filename.
+     * @var string 
+     */
+    private $file;
     /**
      * Array of dictionary words.
      * @var array 
@@ -36,13 +40,18 @@ class encryp {
      */
     public function __construct() {
         $configObject = Config::get_instance();
-        $file = $configObject->get_setting('core', 'misc_dictionary_file');
+        $this->file = $configObject->get_setting('core', 'misc_dictionary_file');
+    }
+    /**
+     * Load dictionary into memory.
+     */
+    private function load() {
         // Revert to default password generation if no dictionary.
-        if (!file_exists($file)) {
+        if (!file_exists($this->file)) {
             $this->dictionary = array();
         } else {
             $words = array();
-            $f = fopen($file, 'r');
+            $f = fopen($this->file, 'r');
             while (!feof($f)) {
                 $word = fgets($f);
                 if (preg_match('/^[a-z]{4,6}$/', trim($word))) {
@@ -59,10 +68,10 @@ class encryp {
         }
     }
     /**
-     * Encrypt a password that can be de-crypted.
+     * Encrypt a password that can be decrypted.
      * 
-     * @param $string $password 
-     * @return $string encrypted passsword
+     * @param string $password 
+     * @return string encrypted password
      */
     public function mcrypt_password($password) {
         $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
@@ -72,8 +81,8 @@ class encryp {
     /**
     * Decrypt the password.
      * 
-     * @param string $enc_password encrypted passsword
-     * @return string decrypted passsword
+     * @param string $encpassword encrypted password
+     * @return string decrypted password
      */
     public function mdecrypt_password($encpassword) {
         $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
@@ -81,7 +90,7 @@ class encryp {
         return trim($dec);
     }
     /**
-     * This is function encpw encrpts a password using SHA-512 for storage in the DB.
+     * This is function encpw encrypts a password using SHA-512 for storage in the DB.
      * MD5 encryption is kept for backwards compatibility.
      *
      * @param string $salt the salt as set in the config.inc.php file
@@ -92,16 +101,12 @@ class encryp {
      *
      */
     public function encpw($salt, $u, $p, $type = 'SHA-512') {
-      $supportsha = false;
-      if (version_compare(PHP_VERSION, '5.3.2') >= 0) {
-        $supportsha = true;
-      }
-      if ($type == 'SHA-512' and $supportsha == true) {
+      if ($type == 'SHA-512') {
         $full_salt = '$6$' . $salt . '$'; // SHA-512
         $new_password = crypt($p, $full_salt);
         $new_password = '$6$' . substr($new_password, strlen($full_salt));
       } else {
-        $full_salt = '$1$' . substr(md5($u), 0, 8) . '$'; // Simple MD5, for barckwards compatibility
+        $full_salt = '$1$' . substr(md5($u), 0, 8) . '$'; // Simple MD5, for backwards compatibility
         $new_password = crypt($p, $full_salt);
       }
 
@@ -118,7 +123,8 @@ class encryp {
      * @param int $len Length of generated password (only used by non readable password
      * @return array the password and the password to display - e.g. "monkeyhorseapple" and "monkey horse apple"
      */
-    function gen_password($readable, $len = 8) {
+    public function gen_password($readable, $len = 8) {
+      $this->load();
       // Revert to default password generation if no dictionary.
       if ($readable === false or !$this->is_readable()) {
         $lower    = 'abcdefghijklmnoprrstuvwxyzabcdefghijklmnoprrstuvwxyz';
