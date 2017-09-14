@@ -68,7 +68,7 @@ Class UserUtils {
 
       // If there is no password generate a default one.
       if ($password == '') {
-        $password = $enc->gen_password();
+        $password = $enc->gen_password(true);
       }
 
       // Force valid value for gender or default to NULL
@@ -240,7 +240,8 @@ Class UserUtils {
     }
 
 		$salt = UserUtils::get_salt();
-    $encrypt_password = encpw($salt, $username, $password);
+    $enc = new encryp();
+    $encrypt_password = $enc->encpw($salt, $username, $password);
 
     $stmt = $db->prepare("UPDATE users SET password = ?, password_expire = NULL WHERE id = ?");
     $stmt->bind_param('si', $encrypt_password, $userID);

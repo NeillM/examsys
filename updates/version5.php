@@ -31,7 +31,6 @@ if(!LangUtils::langPackInstalled($language)) {
     InstallUtils::download_langpacks();
 }
 
-require_once '../include/auth.inc';
 require_once '../include/errors.php';
 require_once '../include/std_set_shared_functions.inc';
 require_once '../include/timezones.php';
@@ -41,6 +40,8 @@ require_once dirname(__DIR__) . '/lang/' . $language . '/updates/version5.php';
 // Get the code version.
 $version = $configObject->getxml('version');
 $migration_path = 'version5';
+// Set encryption class.
+$enc = new encryp();
 
 set_time_limit(0);
 

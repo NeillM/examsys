@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once __DIR__ . '/../include/auth.inc';
-
 /**
 *
 * @author Anthony Brown
@@ -1145,29 +1143,29 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       }
     }
    self::$db->commit();
-
+    $enc = new encryp();
     self::generateUserName('cfg_db_username', self::$cfg_db_basename . '_auth');
-    self::$cfg_db_password = gen_password() . gen_password();
+    self::$cfg_db_password = $enc->gen_password(false) . $enc->gen_password(false);
 
     self::generateUserName('cfg_db_student_user', self::$cfg_db_basename . '_stu');
-    self::$cfg_db_student_passwd = gen_password() . gen_password();
+    self::$cfg_db_student_passwd = $enc->gen_password(false) . $enc->gen_password(false);
     self::generateUserName('cfg_db_staff_user', self::$cfg_db_basename . '_staff');
-    self::$cfg_db_staff_passwd = gen_password() . gen_password();
+    self::$cfg_db_staff_passwd = $enc->gen_password(false) . $enc->gen_password(false);
     self::generateUserName('cfg_db_external_user', self::$cfg_db_basename . '_ext');
-    self::$cfg_db_external_passwd  = gen_password() . gen_password();
+    self::$cfg_db_external_passwd  = $enc->gen_password(false) . $enc->gen_password(false);
     self::generateUserName('cfg_db_internal_user', self::$cfg_db_basename . '_int');
-    self::$cfg_db_internal_passwd  = gen_password() . gen_password();
+    self::$cfg_db_internal_passwd  = $enc->gen_password(false) . $enc->gen_password(false);
     self::generateUserName('cfg_db_sysadmin_user', self::$cfg_db_basename . '_sys');
-    self::$cfg_db_sysadmin_passwd = gen_password() . gen_password();
+    self::$cfg_db_sysadmin_passwd = $enc->gen_password(false) . $enc->gen_password(false);
     self::generateUserName('cfg_db_webservice_user', self::$cfg_db_basename . '_web');
-    self::$cfg_db_webservice_passwd = gen_password() . gen_password();
+    self::$cfg_db_webservice_passwd = $enc->gen_password(false) . $enc->gen_password(false);
     self::generateUserName('cfg_db_sct_user', self::$cfg_db_basename . '_sct');
-    self::$cfg_db_sct_passwd = gen_password() . gen_password();
+    self::$cfg_db_sct_passwd = $enc->gen_password(false) . $enc->gen_password(false);
     self::generateUserName('cfg_db_inv_user', self::$cfg_db_basename . '_inv');
-    self::$cfg_db_inv_passwd = gen_password() . gen_password();
+    self::$cfg_db_inv_passwd = $enc->gen_password(false) . $enc->gen_password(false);
 
     self::generateUserName('cfg_cron_user', 'cron');
-    self::$cfg_cron_passwd = gen_password() . gen_password();
+    self::$cfg_cron_passwd = $enc->gen_password(false) . $enc->gen_password(false);
 
     $priv_SQL = array();
     //create 'database user authentication user' and grant permissions

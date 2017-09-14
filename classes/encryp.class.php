@@ -109,42 +109,33 @@ class encryp {
     }
 
     /**
-     * This is function gen_password makes a secure password
-     *
-     * @param int $len Length og generated password
-     * @return string password length $len including upper lower case and other chars
-     *
-     */
-    public function gen_password($len = 8) {
-      $lower    = 'abcdefghijklmnoprrstuvwxyzabcdefghijklmnoprrstuvwxyz';
-      $upper    = 'ABCDEFGHIJKLMN0PQRSTUVWXYZABCDEFGHIJKLMN0PQRSTUVWXYZ';
-      $num      = '0123456789012345678901234501234567890123456789012345';
-      $special  = '!$%^&*-=+_.@~!?!$%^&*-=+_.@~!?!$%^&*-=+_.@~!?!$%^&*-';
-
-      $pass = '';
-      $chars = array($lower, $lower, $lower, $special, $num, $num, $upper, $upper);
-      for ($i = 0; $i < $len; $i++) {
-        if ($i < 7) {
-          $pass .= substr($chars[$i], rand(0, 51), 1);
-        } else {
-          $pass .= substr($chars[rand(2, 6)], rand(0, 51), 1);
-        }
-      }
-      return $pass;
-    }
-    
-    /**
-     * Create a password that is relatively secure, but easy to
-     * read and dictate regardless of fonts, eyesight etc.
-     * Falls back to gen_password if a dictionary file is unavailable
-     *
+     * Create a password that either relatively secure, but easy to read and dictate regardless of fonts, eyesight etc
+     * or a random string if no need to be human readable.
+     * 
+     * Falls back to random password if a dictionary file is unavailable.
+     * 
+     * @param boo $readable flag to generate a readable password or a random string
+     * @param int $len Length of generated password (only used by non readable password
      * @return array the password and the password to display - e.g. "monkeyhorseapple" and "monkey horse apple"
      */
-    function gen_readable_password() {
+    function gen_password($readable, $len = 8) {
       // Revert to default password generation if no dictionary.
-      if (!$this->is_readable()) {
-        $pass = $this->gen_password();
-        return array('password' => $pass, 'display_password' => $pass);
+      if ($readable === false or !$this->is_readable()) {
+        $lower    = 'abcdefghijklmnoprrstuvwxyzabcdefghijklmnoprrstuvwxyz';
+        $upper    = 'ABCDEFGHIJKLMN0PQRSTUVWXYZABCDEFGHIJKLMN0PQRSTUVWXYZ';
+        $num      = '0123456789012345678901234501234567890123456789012345';
+        $special  = '!$%^&*-=+_.@~!?!$%^&*-=+_.@~!?!$%^&*-=+_.@~!?!$%^&*-';
+
+        $pass = '';
+        $chars = array($lower, $lower, $lower, $special, $num, $num, $upper, $upper);
+        for ($i = 0; $i < $len; $i++) {
+          if ($i < 7) {
+            $pass .= substr($chars[$i], rand(0, 51), 1);
+          } else {
+            $pass .= substr($chars[rand(2, 6)], rand(0, 51), 1);
+          }
+        }
+          return array('password' => $pass, 'display_password' => $pass);
       }
 
       $pass = '';

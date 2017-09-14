@@ -22,7 +22,6 @@
 * @package
 */
 
-require_once $cfg_web_root . 'include/auth.inc';
 require_once $cfg_web_root . 'include/errors.php';
 
 // Check for key parameters

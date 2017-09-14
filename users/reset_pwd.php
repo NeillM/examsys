@@ -34,7 +34,7 @@ if (!UserUtils::userid_exists($userid, $mysqli)) {
 
 $username     = UserUtils::get_username($userid, $mysqli);
 $enc = new encryp();
-$generated_password = $enc->gen_readable_password();
+$generated_password = $enc->gen_password(true);
 $new_password = $generated_password['password'];
 $display_password = $generated_password['display_password'];
 

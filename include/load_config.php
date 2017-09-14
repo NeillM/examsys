@@ -36,3 +36,4 @@ $cfg_web_root          = $configObject->get('cfg_web_root');
 $cfg_editor_javascript = $configObject->get('cfg_editor_javascript');
 $cfg_editor_name       = $configObject->get('cfg_editor_name');
 
+$notice = UserNotices::get_instance();
