@@ -4,7 +4,7 @@ $(function() {
   });
 
   jQuery.validator.addMethod("calcvariable", function(value, element) {
-    return this.optional( element ) || /^\$[A-Z][0-9]*|var\$[A-Z][0-9]*|ans[0-9]*|[0-9]*[.]?[0-9]+$/.test( value );
+    return this.optional( element ) || /^(\$[A-Z][0-9]*|var\$[A-Z][0-9]*|ans[0-9]*|[0-9]*[.]?[0-9]+)$/.test( value );
   }, lang['entervalidvariable']);
 
   $('#edit_form').validate({
