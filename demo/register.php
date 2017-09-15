@@ -280,7 +280,8 @@ MESSAGE;
                                                 echo $_POST['password'];
                                         } else {
                                                 $enc = new encryp();
-                                                echo $enc->gen_password(true);
+                                                $generated_password = $enc->gen_password(true);
+                                                echo $generated_password['password'];
                                         }
                                         ?>" size="12" required /></td>
                         </tr>

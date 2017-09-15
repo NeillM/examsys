@@ -68,7 +68,8 @@ Class UserUtils {
 
       // If there is no password generate a default one.
       if ($password == '') {
-        $password = $enc->gen_password(true);
+        $generated_password = $enc->gen_password(true);
+        $password = $generated_password['password'];
       }
 
       // Force valid value for gender or default to NULL

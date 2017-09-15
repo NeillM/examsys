@@ -46,6 +46,10 @@ class encryp {
      * Load dictionary into memory.
      */
     private function load() {
+        // Return if already in memory.
+        if (!empty($this->dictionary)) {
+            return $this->dictionary;
+        }
         // Revert to default password generation if no dictionary.
         if (!file_exists($this->file)) {
             $this->dictionary = array();
@@ -160,6 +164,7 @@ class encryp {
      * @return bool
      */
     public function is_readable() {
+        $this->load();
         if (count($this->dictionary) > 0) {
             return true;
         }

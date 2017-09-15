@@ -1145,27 +1145,37 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
    self::$db->commit();
     $enc = new encryp();
     self::generateUserName('cfg_db_username', self::$cfg_db_basename . '_auth');
-    self::$cfg_db_password = $enc->gen_password(false) . $enc->gen_password(false);
+    $generated_password = $enc->gen_password(false, 16);
+    self::$cfg_db_password = $generated_password['password'];
 
     self::generateUserName('cfg_db_student_user', self::$cfg_db_basename . '_stu');
-    self::$cfg_db_student_passwd = $enc->gen_password(false) . $enc->gen_password(false);
+    $generated_password = $enc->gen_password(false, 16);
+    self::$cfg_db_student_passwd = $generated_password['password'];
     self::generateUserName('cfg_db_staff_user', self::$cfg_db_basename . '_staff');
-    self::$cfg_db_staff_passwd = $enc->gen_password(false) . $enc->gen_password(false);
+    $generated_password = $enc->gen_password(false, 16);
+    self::$cfg_db_staff_passwd = $generated_password['password'];
     self::generateUserName('cfg_db_external_user', self::$cfg_db_basename . '_ext');
-    self::$cfg_db_external_passwd  = $enc->gen_password(false) . $enc->gen_password(false);
+    $generated_password = $enc->gen_password(false, 16);
+    self::$cfg_db_external_passwd  = $generated_password['password'];
     self::generateUserName('cfg_db_internal_user', self::$cfg_db_basename . '_int');
-    self::$cfg_db_internal_passwd  = $enc->gen_password(false) . $enc->gen_password(false);
+    $generated_password = $enc->gen_password(false, 16);
+    self::$cfg_db_internal_passwd  = $generated_password['password'];
     self::generateUserName('cfg_db_sysadmin_user', self::$cfg_db_basename . '_sys');
-    self::$cfg_db_sysadmin_passwd = $enc->gen_password(false) . $enc->gen_password(false);
+    $generated_password = $enc->gen_password(false, 16);
+    self::$cfg_db_sysadmin_passwd = $generated_password['password'];
     self::generateUserName('cfg_db_webservice_user', self::$cfg_db_basename . '_web');
-    self::$cfg_db_webservice_passwd = $enc->gen_password(false) . $enc->gen_password(false);
+    $generated_password = $enc->gen_password(false, 16);
+    self::$cfg_db_webservice_passwd = $generated_password['password'];
     self::generateUserName('cfg_db_sct_user', self::$cfg_db_basename . '_sct');
-    self::$cfg_db_sct_passwd = $enc->gen_password(false) . $enc->gen_password(false);
+    $generated_password = $enc->gen_password(false, 16);
+    self::$cfg_db_sct_passwd = $generated_password['password'];
     self::generateUserName('cfg_db_inv_user', self::$cfg_db_basename . '_inv');
-    self::$cfg_db_inv_passwd = $enc->gen_password(false) . $enc->gen_password(false);
+    $generated_password = $enc->gen_password(false, 16);
+    self::$cfg_db_inv_passwd = $generated_password['password'];
 
     self::generateUserName('cfg_cron_user', 'cron');
-    self::$cfg_cron_passwd = $enc->gen_password(false) . $enc->gen_password(false);
+    $generated_password = $enc->gen_password(false, 16);
+    self::$cfg_cron_passwd = $generated_password['password'];
 
     $priv_SQL = array();
     //create 'database user authentication user' and grant permissions
