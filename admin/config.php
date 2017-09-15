@@ -30,12 +30,10 @@ if (isset($_POST['submit'])) {
     foreach ($configObject->get_setting('core') as $setting => $value) {
         $type = $configObject->get_setting_type('core', $setting);
         if ($type == Config::ASSOC) {
-            $num = count($configObject->get_setting('core', $setting));
             $new_value = array();
-            for ($i = 0; $i < $num; $i++) {
-                $new_i = param::optional($setting . '_name_' . $i, '', param::TEXT, param::FETCH_POST);
-                $new_v = param::optional($setting . '_value_' . $i, '', param::TEXT, param::FETCH_POST);
-                $new_value[$new_i] = $new_v;
+            foreach ($value as $name => $oldval) {
+                $newval =  param::optional($setting . '_' . $name, '', param::TEXT, param::FETCH_POST);
+                $new_value[$name] = $newval;
             }
         } else {
             $new_value = param::optional($setting, '', param::RAW, param::FETCH_POST);
@@ -132,19 +130,12 @@ $render->render_admin_content($breadcrumb, $lang);
                     } elseif ($type == Config::ASSOC) {
                         $num = count($configObject->get_setting('core', $setting));
                         $count = 0;
-                        echo "<tr><td class=\"field\"><label for=\"" . $setting . '_name_0' . "\">" . $setting . "</label>&nbsp;<img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string[$setting] . "\" /></td><td>";
+                        echo "<tr><td class=\"field\"><label for=\"" . $setting . '_host' . "\">" . $setting . "</label>&nbsp;<img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string[$setting] . "\" /></td><td>";
                           foreach ($value as $i => $v) {
-                              echo "<input class=\"" . $type . "\" type=\"hidden\" id=\"" . $setting . '_name_' . $count . "\" name=\"" . $setting . '_name_' . $count . "\" value=\"" . htmlspecialchars($i) . "\" />";
                               echo htmlspecialchars($i) . "&nbsp;";
-                              echo "<input class=\"" . $type . "\" type=\"text\" id=\"" . $setting . '_value_' . $count . "\" name=\"" . $setting . '_value_' . $count . "\" value=\"" . htmlspecialchars($v) . "\""  . $disabled . "/>";
+                              echo "<input class=\"" . $type . "\" type=\"text\" id=\"" . $setting . '_' . $i . "\" name=\"" . $setting . '_' . $i . "\" value=\"" . htmlspecialchars($v) . "\""  . $disabled . "/>";
                               echo "</br>";
                               $count++;
-                          }
-                          for($i = $count; $i < $num; $i++) {
-                              echo "<input class=\"" . $type . "\" type=\"hidden\" id=\"" . $setting . '_name_' . $i . "\" name=\"" . $setting . '_name_' . $count . "\" value=\"" . htmlspecialchars($i) . "\" />";
-                              echo htmlspecialchars($i) . "&nbsp;";
-                              echo "<input class=\"" . $type . "\" type=\"text\" id=\"" . $setting . '_value_' . $i . "\" name=\"" . $setting . '_value_' . $i . "\" value=\"\""  . $disabled . "/>";
-                              echo "</br>";
                           }
                         echo "</td>";
                     } else {
