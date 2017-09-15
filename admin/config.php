@@ -29,7 +29,7 @@ require '../include/toprightmenu.inc';
 if (isset($_POST['submit'])) {
     foreach ($configObject->get_setting('core') as $setting => $value) {
         $type = $configObject->get_setting_type('core', $setting);
-        if ($type == Config::ASSOC) {
+        if ($type === Config::ASSOC) {
             $new_value = array();
             foreach ($value as $name => $oldval) {
                 $newval =  param::optional($setting . '_' . $name, '', param::TEXT, param::FETCH_POST);
@@ -46,7 +46,7 @@ if (isset($_POST['submit'])) {
                 }
                 $new_value = $arrayvalue;
             }
-            if ($type == Config::CSV) {
+            if ($type === Config::CSV) {
                 $new_value = explode(',', $new_value);
             }
         }
@@ -104,16 +104,16 @@ $render->render_admin_content($breadcrumb, $lang);
                     } else {
                         $disabled = "";
                     }
-                    if ($type == Config::BOOLEAN) {
+                    if ($type === Config::BOOLEAN) {
                         if ($value == true) {
                             $checked = "checked";
                         } else {
                             $checked = "";
                         }
                         echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting . "</label>&nbsp;<img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string[$setting] . "\" /></td><td><input type=\"checkbox\" name=\"" . $setting . "\" id=\"" . $setting . "\"" . $checked . $disabled . "/></td>";
-                    } elseif ($type == Config::PASSWORD) {
+                    } elseif ($type === Config::PASSWORD) {
                         echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting. "</label>&nbsp;<img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string[$setting] . "\" /></td><td><input type=\"password\" size=\"20\" id=\"" . $setting . "\" name=\"" . $setting . "\" value=\"" . htmlspecialchars($value) . "\""  . $disabled . "/></td>";
-                    } elseif ($type == Config::TIMEZONES) {
+                    } elseif ($type === Config::TIMEZONES) {
                         echo "<tr><td class=\"field\"><label for=\"" . $setting . "\">" . $setting. "</label>&nbsp;<img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string[$setting] . "\" /></td><td><select id=\"" . $setting . "\" name=\"" . $setting . "[]\" multiple>";
                         // Compare config setting against list of possible timezones.
                         foreach ($timezone_array as $individual_zone => $display_zone) {
@@ -127,7 +127,7 @@ $render->render_admin_content($breadcrumb, $lang);
                             echo "<option value=\"" . htmlspecialchars($individual_zone) . "|" . htmlspecialchars($display_zone) . "\" $selected>" . htmlspecialchars($display_zone) . "</option>";
                         }
                         echo "</select></td>";
-                    } elseif ($type == Config::ASSOC) {
+                    } elseif ($type === Config::ASSOC) {
                         $num = count($configObject->get_setting('core', $setting));
                         $count = 0;
                         echo "<tr><td class=\"field\"><label for=\"" . $setting . '_host' . "\">" . $setting . "</label>&nbsp;<img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string[$setting] . "\" /></td><td>";
@@ -139,10 +139,10 @@ $render->render_admin_content($breadcrumb, $lang);
                           }
                         echo "</td>";
                     } else {
-                        if ($type == Config::CSV) {
+                        if ($type === Config::CSV) {
                             $value = implode(',', $value);
                         }
-                        if ($type == Config::STRING or $type == Config::INTEGER) {
+                        if ($type == Config::STRING or $type === Config::INTEGER) {
                             $size = 20;
                         } else {
                             $size = 100;
