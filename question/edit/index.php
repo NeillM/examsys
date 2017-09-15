@@ -458,7 +458,7 @@ echo $cfg_editor_javascript;
 if ($question != null and file_exists($cfg_web_root . 'js/validation/jquery.' . $question->get_type() . '.js')):
 ?>
 <script type="text/javascript" src="../../js/jquery.validate.min.js"></script>
-<script type="text/javascript" src="../../js/validation/jquery.<?php echo $question->get_type() ?>.js"></script>
+<script type="text/javascript" src="../../js/validation/jquery.<?php echo $question->get_type() ?>.min.js"></script>
 <script type="text/javascript" src="../../js/toprightmenu.js"></script>
 <?php
 endif;
