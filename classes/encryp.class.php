@@ -47,7 +47,7 @@ class encryp {
      */
     private function load() {
         // Return if already in memory.
-        if (!empty($this->dictionary)) {
+        if (isset($this->dictionary)) {
             return $this->dictionary;
         }
         // Revert to default password generation if no dictionary.
