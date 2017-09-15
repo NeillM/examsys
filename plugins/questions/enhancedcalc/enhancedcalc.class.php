@@ -165,7 +165,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			}
 
 			$enhancedcalcType = $this->configObj->get_setting('core', 'cfg_calc_type');
-            $enhancedcalcSettings = $this->configObj->get_setting('core', 'cfg_calc_settings');
+			$enhancedcalcSettings = $this->configObj->get_setting('core', 'cfg_calc_settings');
 			if (!empty($enhancedcalcType)) {
 				require_once $enhancedcalcType . '.php';
 				$name = 'enhancedcalc_' . $enhancedcalcType;
@@ -542,7 +542,7 @@ class EnhancedCalc extends Question implements questionInterface {
 		$data = $session;
 
 		foreach ($postdata as $key => $value) {
-            // Clean the value.
+			// Clean the value.
 			$data[$key] = param::clean($value, param::CALCANSWER);
 		}
 
@@ -873,7 +873,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
             // Substitue values.
             if ($this->is_compound_question_var($inputVal) or (!is_numeric($inputVal) and $inputVal != 'ERROR' and $inputVal !== '')) {
-                $inputVal = $this::substitute_vars($this->useranswer['vars'], $inputVal);
+                $inputVal = self::substitute_vars($this->useranswer['vars'], $inputVal);
                 if (!is_numeric($inputVal)) {
                     $inputVal = 'ERROR';
                 }
@@ -1272,7 +1272,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
 		if (!isset($this->useranswer['cans_dist'])) {
 			$enhancedcalcType = $this->configObj->get_setting('core', 'cfg_calc_type');
-            $enhancedcalcSettings = $this->configObj->get_setting('core', 'cfg_calc_settings');
+			$enhancedcalcSettings = $this->configObj->get_setting('core', 'cfg_calc_settings');
 			if (!empty($enhancedcalcType)) {
 				require_once $enhancedcalcType . '.php';
 				$name = 'enhancedcalc_' . $enhancedcalcType;
