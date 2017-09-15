@@ -520,7 +520,16 @@ Class OptionENHANCEDCALC extends OptionEdit {
   public function get_post_units($max_options) {
     $options = array();
     for ($option_no = 1; $option_no <= $max_options; $option_no++) {
-      $options['option_units' . $option_no] = param::optional('option_units' . $option_no, null, param::ALPHA, param::FETCH_POST);
+      $options['option_units' . $option_no] = param::optional(
+        'option_units' . $option_no,
+        null,
+        param::REGEXP, 
+        param::FETCH_POST,
+          array(
+                'default' => '',
+                'regexp' => '#^[ a-zA-Z0-9/^]*$#',
+          )
+        );
     }
     return $options;
   }
