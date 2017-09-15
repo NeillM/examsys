@@ -27,9 +27,34 @@ class EnhancedCalc extends Question implements questionInterface {
 	protected $configObj;
 	protected $db;
 	public $alluseranswers;
+    /**
+     * Calculation object,
+     * @var object 
+     */
+    private $enhancedcalcObj;
+    /**
+     * Calculation type,
+     * @var string 
+     */
+    private $enhancedcalcType;
+    /**
+     * Calculation settings,
+     * @var array 
+     */
+    private $enhancedcalcSettings;
 
 	public function __construct($configObj) {
 		$this->configObj = $configObj;
+        $this->enhancedcalcType = $this->configObj->get_setting('core', 'cfg_calc_type');
+        $this->enhancedcalcSettings = $this->configObj->get_setting('core', 'cfg_calc_settings');
+        if (!empty($this->enhancedcalcType)) {
+            require_once $this->enhancedcalcType . '.php';
+            $name = 'enhancedcalc_' . $this->enhancedcalcType;
+            $this->enhancedcalcObj = new $name($this->enhancedcalcSettings);
+        } else {
+            require_once 'phpEval.php';
+            $this->enhancedcalcObj = new EnhancedCalc_phpEval($this->enhancedcalcSettings);
+        }
 	}
 
 	public function set_settings($data) {
@@ -164,17 +189,6 @@ class EnhancedCalc extends Question implements questionInterface {
 				$this->useranswer['ans']['units_used'] = $this->useranswer['uansunit'];
 			}
 
-			$enhancedcalcType = $this->configObj->get_setting('core', 'cfg_calc_type');
-			$enhancedcalcSettings = $this->configObj->get_setting('core', 'cfg_calc_settings');
-			if (!empty($enhancedcalcType)) {
-				require_once $enhancedcalcType . '.php';
-				$name = 'enhancedcalc_' . $enhancedcalcType;
-				$enhancedcalcObj = new $name($enhancedcalcSettings);
-			} else {
-				require_once 'phpEval.php';
-				$enhancedcalcObj = new EnhancedCalc_phpEval($enhancedcalcSettings);
-			}
-
 			if (is_array($this->useranswer['vars'])) {
 				foreach ($this->useranswer['vars'] as $key => $variablessplit) {
 					if ($variablessplit === 'ERROR') {
@@ -193,7 +207,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				 *  CALCULATE REQURED NUMERIC VALUES
 				 *
 				 */
-				$this->useranswer['cans'] = $enhancedcalcObj->calculate_correct_ans($this->useranswer['vars'], $this->useranswer['ans']['formula_used']);
+				$this->useranswer['cans'] = $this->enhancedcalcObj->calculate_correct_ans($this->useranswer['vars'], $this->useranswer['ans']['formula_used']);
 			} catch (Exception $e) {
 				//TODO: catch different errors "no connection", "unable to evaluate"
 				if (stripos($e->getMessage(), 'connect') !== false) {
@@ -201,7 +215,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				} else {
 					$returnstatus = Q_MARKING_UNCALC_ANSWER;
 					$this->useranswer['status']['error'] = true;
-					$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
+					$this->useranswer['ans']['error'] = $this->enhancedcalcObj->get_error();
 					$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
 				}
 
@@ -215,10 +229,10 @@ class EnhancedCalc extends Question implements questionInterface {
 					$this->settings['tolerance_full'] = $this->set_blank_to_zero($this->settings['tolerance_full']);
 					switch ($this->settings['fulltoltyp']) {
 						case "%":
-							$res = $enhancedcalcObj->calculate_tolerance_percent($this->useranswer['cans'], $this->settings['tolerance_full']);
+							$res = $this->enhancedcalcObj->calculate_tolerance_percent($this->useranswer['cans'], $this->settings['tolerance_full']);
 							break;
 						case "#":
-							$res = $enhancedcalcObj->calculate_tolerance_absolute($this->useranswer['cans'], $this->settings['tolerance_full']);
+							$res = $this->enhancedcalcObj->calculate_tolerance_absolute($this->useranswer['cans'], $this->settings['tolerance_full']);
 							break;
 					}
 					$this->useranswer['ans']['tolerance_full'] = $res['tolerance'];
@@ -232,7 +246,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				} else {
 					$returnstatus = Q_MARKING_UNCALC_FULL_TOLLERANCE;
 					$this->useranswer['status']['error'] = true;
-					$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
+					$this->useranswer['ans']['error'] = $this->enhancedcalcObj->get_error();
 					$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
 				}
 
@@ -246,10 +260,10 @@ class EnhancedCalc extends Question implements questionInterface {
 					$this->settings['tolerance_partial'] = $this->set_blank_to_zero($this->settings['tolerance_partial']);
 					switch ($this->settings['parttoltyp']) {
 						case "%":
-							$res = $enhancedcalcObj->calculate_tolerance_percent($this->useranswer['cans'], $this->settings['tolerance_partial']);
+							$res = $this->enhancedcalcObj->calculate_tolerance_percent($this->useranswer['cans'], $this->settings['tolerance_partial']);
 							break;
 						case "#":
-							$res = $enhancedcalcObj->calculate_tolerance_absolute($this->useranswer['cans'], $this->settings['tolerance_partial']);
+							$res = $this->enhancedcalcObj->calculate_tolerance_absolute($this->useranswer['cans'], $this->settings['tolerance_partial']);
 							break;
 					}
 					$this->useranswer['ans']['tolerance_partial'] = $res['tolerance'];
@@ -263,7 +277,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				} else {
 					$returnstatus = Q_MARKING_UNCALC_PARTIAL_TOLLERANCE;
 					$this->useranswer['status']['error'] = true;
-					$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
+					$this->useranswer['ans']['error'] = $this->enhancedcalcObj->get_error();
 					$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
 				}
 
@@ -293,15 +307,15 @@ class EnhancedCalc extends Question implements questionInterface {
 						$arg = $this->useranswer['uansnumb'];
 				}
 
-				$this->useranswer['cans'] = $enhancedcalcObj->$function($this->useranswer['cans'], $arg);
+				$this->useranswer['cans'] = $this->enhancedcalcObj->$function($this->useranswer['cans'], $arg);
 
-				$this->useranswer['ans']['tolerance_full'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_full'], $arg);
-				$this->useranswer['ans']['tolerance_fullans'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_fullans'], $arg);
-				$this->useranswer['ans']['tolerance_fullansneg'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_fullansneg'], $arg);
+				$this->useranswer['ans']['tolerance_full'] = $this->enhancedcalcObj->$function($this->useranswer['ans']['tolerance_full'], $arg);
+				$this->useranswer['ans']['tolerance_fullans'] = $this->enhancedcalcObj->$function($this->useranswer['ans']['tolerance_fullans'], $arg);
+				$this->useranswer['ans']['tolerance_fullansneg'] = $this->enhancedcalcObj->$function($this->useranswer['ans']['tolerance_fullansneg'], $arg);
 
-				$this->useranswer['ans']['tolerance_partial'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_partial'], $arg);
-				$this->useranswer['ans']['tolerance_partialans'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_partialans'], $arg);
-				$this->useranswer['ans']['tolerance_partialansneg'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_partialansneg'], $arg);
+				$this->useranswer['ans']['tolerance_partial'] = $this->enhancedcalcObj->$function($this->useranswer['ans']['tolerance_partial'], $arg);
+				$this->useranswer['ans']['tolerance_partialans'] = $this->enhancedcalcObj->$function($this->useranswer['ans']['tolerance_partialans'], $arg);
+				$this->useranswer['ans']['tolerance_partialansneg'] = $this->enhancedcalcObj->$function($this->useranswer['ans']['tolerance_partialansneg'], $arg);
 			} catch (Exception $e) {
 				//TODO: catch different errors "no connection", "unable to evaluate"
 				if (stripos($e->getMessage(), 'connect') !== false) {
@@ -309,7 +323,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				} else {
 						$returnstatus = Q_MARKING_UNCALC_FORMAT;
 						$this->useranswer['status']['error'] = true;
-						$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
+						$this->useranswer['ans']['error'] = $this->enhancedcalcObj->get_error();
 						$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
 				}
 
@@ -343,7 +357,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			}
 
 			try {
-				$this->useranswer['status']['exact'] = $enhancedcalcObj->is_useranswer_correct($this->useranswer['uansnumb'], $this->useranswer['cans'], ($this->settings['strictdisplay'] !== true));
+				$this->useranswer['status']['exact'] = $this->enhancedcalcObj->is_useranswer_correct($this->useranswer['uansnumb'], $this->useranswer['cans'], ($this->settings['strictdisplay'] !== true));
 			} catch (Exception $e) {
 				//TODO: catch different errors "no connection", "unable to evaluate"
 				if (stripos($e->getMessage(), 'connect') !== false) {
@@ -351,7 +365,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				} else {
 					$returnstatus = Q_MARKING_UNCALC_USER_ANSWER;
 					$this->useranswer['status']['error'] = true;
-					$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
+					$this->useranswer['ans']['error'] = $this->enhancedcalcObj->get_error();
 					$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
 					// If this happens the user's answer caused an error in the checker.
 					// This almost certainly means it is not a number, so we should give them
@@ -367,7 +381,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			try {
 				// Calculate distance from correct if needed
 				if ($this->useranswer['status']['exact'] === false) {
-					$this->useranswer['cans_dist'] = $enhancedcalcObj->distance_from_correct_answer($this->useranswer['uansnumb'], $this->useranswer['cans']);
+					$this->useranswer['cans_dist'] = $this->enhancedcalcObj->distance_from_correct_answer($this->useranswer['uansnumb'], $this->useranswer['cans']);
 				} else {
 					$this->useranswer['cans_dist'] = '0';
 				}
@@ -378,7 +392,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				} else {
 					$returnstatus = Q_MARKING_UNCALC_DIST_FROM_ANSWER;
 					$this->useranswer['status']['error'] = true;
-					$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
+					$this->useranswer['ans']['error'] = $this->enhancedcalcObj->get_error();
 					$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
 				}
 
@@ -389,7 +403,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
 			if ($this->useranswer['status']['exact'] === false) {
 				try {
-					$this->useranswer['status']['tolerance_full'] = $enhancedcalcObj->is_useranswer_within_tolerance(
+					$this->useranswer['status']['tolerance_full'] = $this->enhancedcalcObj->is_useranswer_within_tolerance(
 									$this->useranswer['uansnumb'], $this->useranswer['ans']['tolerance_fullansneg'], $this->useranswer['ans']['tolerance_fullans']
 					);
 				} catch (Exception $e) {
@@ -399,7 +413,7 @@ class EnhancedCalc extends Question implements questionInterface {
 					} else {
 							$returnstatus = Q_MARKING_UNCALC_WITHIN_FULL_TOLERANCE;
 							$this->useranswer['status']['error'] = true;
-							$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
+							$this->useranswer['ans']['error'] = $this->enhancedcalcObj->get_error();
 							$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
 					}
 					$this->useranswer['status']['overall'] = $returnstatus;
@@ -409,7 +423,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
 				if ($this->useranswer['status']['tolerance_full'] === false) {
 					try {
-						$this->useranswer['status']['tolerance_partial'] = $enhancedcalcObj->is_useranswer_within_tolerance(
+						$this->useranswer['status']['tolerance_partial'] = $this->enhancedcalcObj->is_useranswer_within_tolerance(
 										$this->useranswer['uansnumb'], $this->useranswer['ans']['tolerance_partialansneg'], $this->useranswer['ans']['tolerance_partialans']
 						);
 					} catch (Exception $e) {
@@ -419,7 +433,7 @@ class EnhancedCalc extends Question implements questionInterface {
 						} else {
 							$returnstatus = Q_MARKING_UNCALC_WITHIN_PARTIAL_TOLERANCE;
 							$this->useranswer['status']['error'] = true;
-							$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
+							$this->useranswer['ans']['error'] = $this->enhancedcalcObj->get_error();
 							$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
 						}
 						$this->useranswer['status']['overall'] = $returnstatus;
@@ -437,9 +451,9 @@ class EnhancedCalc extends Question implements questionInterface {
 				if ($this->is_strict_dp_enabled()) {
 
 					if ($this->is_strict_dp_strictzeros_enabled()) {
-						$this->useranswer['status']['strictdp'] = $enhancedcalcObj->is_useranswer_correct_decimal_places_strictzeros($this->useranswer['uansnumb'], $this->settings['dp']);
+						$this->useranswer['status']['strictdp'] = $this->enhancedcalcObj->is_useranswer_correct_decimal_places_strictzeros($this->useranswer['uansnumb'], $this->settings['dp']);
 					} else {
-						$this->useranswer['status']['strictdp'] = $enhancedcalcObj->is_useranswer_correct_decimal_places($this->useranswer['uansnumb'], $this->settings['dp']);
+						$this->useranswer['status']['strictdp'] = $this->enhancedcalcObj->is_useranswer_correct_decimal_places($this->useranswer['uansnumb'], $this->settings['dp']);
 					}
 					if ($this->useranswer['status']['strictdp'] === false) {
 						$this->qmark = $this->settings['marks_incorrect'];
@@ -455,7 +469,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				} else {
 					$returnstatus = Q_MARKING_UNCALC_STRICT_DP_CHECK;
 					$this->useranswer['status']['error'] = true;
-					$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
+					$this->useranswer['ans']['error'] = $this->enhancedcalcObj->get_error();
 					$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
 				}
 
@@ -467,7 +481,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			try {
 				// Sheck for strict sf
 				if ($this->is_strict_sf_enabled()) {
-					$this->useranswer['status']['strictsf'] = $enhancedcalcObj->is_useranswer_within_significant_figures($this->useranswer['uansnumb'], $this->settings['sf']);
+					$this->useranswer['status']['strictsf'] = $this->enhancedcalcObj->is_useranswer_within_significant_figures($this->useranswer['uansnumb'], $this->settings['sf']);
 					if ($this->useranswer['status']['strictsf'] === false) {
 						$this->qmark = $this->settings['marks_incorrect'];
 						$returnstatus = Q_MARKING_WRONG;
@@ -513,7 +527,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				} else {
 					$returnstatus = Q_MARKING_ERROR;
 					$this->useranswer['status']['error'] = true;
-					$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
+					$this->useranswer['ans']['error'] = $this->enhancedcalcObj->get_error();
 					$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage() . " - " . $e->getTraceAsString();
 				}
 				$this->useranswer['status']['overall'] = $returnstatus;
@@ -873,7 +887,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
             // Substitue values.
             if ($this->is_compound_question_var($inputVal) or (!is_numeric($inputVal) and $inputVal != 'ERROR' and $inputVal !== '')) {
-                $inputVal = self::substitute_vars($this->useranswer['vars'], $inputVal);
+                $inputVal = $this->enhancedcalcObj->calculate_correct_ans($this->useranswer['vars'], $inputVal);
                 if (!is_numeric($inputVal)) {
                     $inputVal = 'ERROR';
                 }
@@ -1271,19 +1285,8 @@ class EnhancedCalc extends Question implements questionInterface {
 	public function get_answer_distance() {
 
 		if (!isset($this->useranswer['cans_dist'])) {
-			$enhancedcalcType = $this->configObj->get_setting('core', 'cfg_calc_type');
-			$enhancedcalcSettings = $this->configObj->get_setting('core', 'cfg_calc_settings');
-			if (!empty($enhancedcalcType)) {
-				require_once $enhancedcalcType . '.php';
-				$name = 'enhancedcalc_' . $enhancedcalcType;
-				$enhancedcalcObj = new $name($this->configObj->getbyref($enhancedcalcSettings));
-			} else {
-				require_once 'phpEval.php';
-				$enhancedcalcObj = new EnhancedCalc_phpEval($enhancedcalcSettings);
-			}
-
 			if ((isset($this->useranswer['status']['exact']) and $this->useranswer['status']['exact'] === false) or !isset($this->useranswer['status']['exact'])) {
-				$this->useranswer['cans_dist'] = $enhancedcalcObj->distance_from_correct_answer($this->useranswer['uansnumb'], $this->useranswer['cans']);
+				$this->useranswer['cans_dist'] = $this->enhancedcalcObj->distance_from_correct_answer($this->useranswer['uansnumb'], $this->useranswer['cans']);
 			} else {
 				$this->useranswer['cans_dist'] = '0';
 			}
