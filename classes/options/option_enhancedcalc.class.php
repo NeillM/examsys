@@ -422,8 +422,22 @@ Class OptionENHANCEDCALC extends OptionEdit {
    */
   public function get_post_min($max_options) {
     $options = array();
+    // Variable defintion for calculation questions.
+    // Can be a link to another variable i.e. $A,
+    // a floating point or integer number i.e. 10.1,
+    // a link to another questions answer or variable i.e. ans10 or var$A99,
+    // a simple formula using [+,-,*,/] i.e. $A/$B
     for ($option_no = 1; $option_no <= $max_options; $option_no++) {
-      $options['option_min' . $option_no] = param::optional('option_min' . $option_no, null, param::CALCMIN, param::FETCH_POST);
+      $options['option_min' . $option_no] = param::optional(
+        'option_min' . $option_no,
+        null,
+        param::REGEXP,
+        param::FETCH_POST,
+        array(
+            'default' => null,
+            'regexp' => '#^((\$[A-Z][0-9]*|var\$[A-Z][0-9]*|ans[0-9]*|[0-9]*[.]?[0-9]+)([+-/*]?))+$#',
+        )
+      );
     }
     return $options;
   }
@@ -435,8 +449,22 @@ Class OptionENHANCEDCALC extends OptionEdit {
    */
   public function get_post_max($max_options) {
     $options = array();
+    // Variable defintion for calculation questions.
+    // Can be a link to another variable i.e. $A,
+    // a floating point or integer number i.e. 10.1,
+    // a link to another questions answer or variable i.e. ans10 or var$A99,
+    // a simple formula using [+,-,*,/] i.e. $A/$B
     for ($option_no = 1; $option_no <= $max_options; $option_no++) {
-      $options['option_max' . $option_no] = param::optional('option_max' . $option_no, null, param::CALCMAX, param::FETCH_POST);
+      $options['option_max' . $option_no] = param::optional(
+        'option_max' . $option_no,
+        null,
+        param::REGEXP,
+        param::FETCH_POST,
+        array(
+            'default' => null,
+            'regexp' => '#^((\$[A-Z][0-9]*|var\$[A-Z][0-9]*|ans[0-9]*|[0-9]*[.]?[0-9]+)([+-/*]?))+$#',
+         )
+      );
     }
     return $options;
   }
@@ -449,7 +477,11 @@ Class OptionENHANCEDCALC extends OptionEdit {
   public function get_post_decimals($max_options) {
     $options = array();
     for ($option_no = 1; $option_no <= $max_options; $option_no++) {
-      $options['option_decimals' . $option_no] = param::optional('option_decimals' . $option_no, null, param::CALCDECIMALPLACES, param::FETCH_POST);
+      $options['option_decimals' . $option_no] = param::optional(
+        'option_decimals' . $option_no, null,
+        param::INT, param::FETCH_POST,
+        array('default' => null, 'min_range' => 0, 'max_range' => 8)
+      );
     }
     return $options;
   }

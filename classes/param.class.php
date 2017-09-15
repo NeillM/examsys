@@ -64,17 +64,8 @@ class param {
   /** A RFC-2396 URL. */
   const URL = 12;
   
-  /** Calculation question min variable **/
-  const CALCMIN = 13;
-  
-  /** Calculation question max variable **/
-  const CALCMAX = 14;
-  
-  /** Calculation question decimal variable **/
-  const CALCDECIMALPLACES = 15;
-  
-  /** Calculation question answer **/
-  const CALCANSWER = 16;
+  /** A regular expression. */
+  const REGEXP = 13;
   
   /** Find the named variable in the Get array. */
   const FETCH_GET = '_GET';
@@ -90,77 +81,62 @@ class param {
    * 
    * @param mixed $value The value to clean
    * @param int $type The type of value the value should be.
+   * @param array $opt Cleaning options.
    * @return mixed The cleaned string or null if it does not match the type defined.
    */
-  public static function clean($value, $type) {
+  public static function clean($value, $type, $opt = array('default' => null)) {
     // Setup the parameters for the filter_var function.
     switch ($type) {
       case self::ALPHA:
         $filter = FILTER_SANITIZE_STRING;
         $options = array(
-          'options' => array(
-            'default' => null,
-          ),
+          'options' => $opt,
           'flags' => FILTER_FLAG_NO_ENCODE_QUOTES,
         );
         break;
       case self::ALPHANUM:
         $filter = FILTER_SANITIZE_STRING;
         $options = array(
-          'options' => array(
-            'default' => null,
-          ),
+          'options' => $opt,
           'flags' => FILTER_FLAG_NO_ENCODE_QUOTES,
         );
         break;
       case self::BOOLEAN:
         $filter = FILTER_VALIDATE_BOOLEAN;
         $options = array(
-          'options' => array(
-            'default' => null,
-          ),
+          'options' => $opt,
           'flags' => FILTER_NULL_ON_FAILURE,
         );
         break;
       case self::EMAIL:
         $filter = FILTER_VALIDATE_EMAIL;
         $options = array(
-          'options' => array(
-            'default' => null,
-          ),
+          'options' => $opt,
         );
         break;
       case self::FLOAT:
         $filter = FILTER_VALIDATE_FLOAT;
         $options = array(
-          'options' => array(
-            'default' => null,
-          ),
+          'options' => $opt,
         );
         break;
       case self::HTML:
         $filter = FILTER_UNSAFE_RAW;
         $options = array(
-          'options' => array(
-            'default' => null,
-          ),
+          'options' => $opt,
         );
         break;
       case self::INT:
         $filter = FILTER_VALIDATE_INT;
         $options = array(
-          'options' => array(
-            'default' => null,
-          ),
+          'options' => $opt,
           'flags' => FILTER_FLAG_ALLOW_OCTAL | FILTER_FLAG_ALLOW_HEX,
         );
         break;
       case self::IP_ADDRESS:
         $filter = FILTER_VALIDATE_IP;
         $options = array(
-          'options' => array(
-            'default' => null,
-          ),
+          'options' => $opt,
           'flags' => FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6,
         );
         break;
@@ -168,52 +144,20 @@ class param {
       case self::TEXT:
         $filter = FILTER_UNSAFE_RAW;
         $options = array(
-          'options' => array(
-            'default' => null,
-          ),
+          'options' => $opt,
         );
         break;
       case self::URL:
       case self::LOCAL_URL:
         $filter = FILTER_VALIDATE_URL;
         $options = array(
-          'options' => array(
-            'default' => null,
-          ),
+          'options' => $opt,
         );
         break;
-      // Variable defintion for calculation questions.
-      // Can be a link to another variable i.e. $A,
-      // a floating point or integer number i.e. 10.1,
-      // a link to another questions answer or variable i.e. ans10 or var$A99,
-      // a simple formula using [+,-,*,/] i.e. $A/$B
-      case self::CALCMIN:
-      case self::CALCMAX:
+      case self::REGEXP:
         $filter = FILTER_VALIDATE_REGEXP;
          $options = array(
-          'options' => array(
-            'default' => null,
-            'regexp' => '#^((\$[A-Z][0-9]*|var\$[A-Z][0-9]*|ans[0-9]*|[0-9]*[.]?[0-9]+)([+-/*]?))+$#',
-          ),
-        );
-        break;
-      case self::CALCDECIMALPLACES:
-        $filter = FILTER_VALIDATE_INT;
-        $options = array(
-          'options' => array(
-            'default' => null,
-             'min_range' => 0,
-             'max_range' => 8
-          ),
-        );
-        break;
-      case self::CALCANSWER:
-        $filter = FILTER_VALIDATE_REGEXP;
-         $options = array(
-          'options' => array(
-            'default' => '',
-            'regexp' => '#^[+-]?[0-9]*[.]?[0-9]+[ a-zA-Z]*$#',
-          ),
+          'options' => $opt,
         );
         break;
       default:
@@ -271,20 +215,21 @@ class param {
    * @param array $value The value to clean
    * @param int $type The type of value the value should be.
    * @param bool $required When true throw an exception if the result is filtered to be an empty string or null.
+   * @param array $opt Cleaning options.
    * @return array The array containing only cleaned values or null if it does not match the type defined.
    */
-  public static function clean_array(array $value, $type, $required = false) {
+  public static function clean_array(array $value, $type, $required = false, $opt = array('default' => null)) {
     $return = array();
     foreach ($value as $key => $part) {
       if (!is_array($part)) {
-        $clean = self::clean($part, $type);
+        $clean = self::clean($part, $type, $opt);
         if ($required and (is_null($clean) or $clean === '')) {
           // Nothing valid passed, throw an exception.
           throw new MissingParameter();
         }
         $return[$key] = $clean;
       } else {
-        $return[$key] = self::clean_array($part, $type);
+        $return[$key] = self::clean_array($part, $type, $opt);
       }
     }
     return $return;
@@ -308,18 +253,19 @@ class param {
   /**
    * Gets the named parameter, returns the default value if it is not present or invalid.
    * 
-   * @param string $name The name of the parameter to retrive.
+   * @param string $name The name of the parameter to retrieve.
    * @param mixed $default The default value for the parameter.
    * @param int $type The type of value the parameter should contain.
    * @param string $from Should be param::FETCH_REQUEST (default), param::FETCH_GET or param::FETCH_POST
+   * @param array $opt Cleaning options.
    * @return mixed
    */
-  public static function optional($name, $default, $type, $from = self::FETCH_REQUEST) {
+  public static function optional($name, $default, $type, $from = self::FETCH_REQUEST, $opt = array('default' => null)) {
     $value = self::fetch($name, $from);
     if (is_array($value)) {
-      $clean = self::clean_array($value, $type);
+      $clean = self::clean_array($value, $type, $opt);
     } else {
-      $clean = self::clean($value, $type);
+      $clean = self::clean($value, $type, $opt);
     }
     if (is_null($clean) or $clean === '') {
       $clean = $default;
@@ -330,13 +276,14 @@ class param {
   /**
    * Gets the named parameter, if it is invalid or does not exisit an error is generated.
    * 
-   * @param string $name The name of the parameter to retrive.
+   * @param string $name The name of the parameter to retrieve.
    * @param int $type The type of value the parameter should contain.
    * @param string $from Should be param::FETCH_REQUEST (default), param::FETCH_GET or param::FETCH_POST
+   * @param array $opt Cleaning options.
    * @return mixed
    * @throws MissingParameter
    */
-  public static function required($name, $type, $from = self::FETCH_REQUEST) {
+  public static function required($name, $type, $from = self::FETCH_REQUEST, $opt = array('default' => null)) {
     $value = self::fetch($name, $from);
     if (is_array($value)) {
       $clean = self::clean_array($value, $type, true);
@@ -353,7 +300,7 @@ class param {
   /**
    * Gets the named parameter.
    *
-   * @param string $name The name of the parameter to retrive.
+   * @param string $name The name of the parameter to retrieve.
    * @param string $from Should be param::FETCH_REQUEST (default), param::FETCH_GET or param::FETCH_POST
    * @return mixed
    */
