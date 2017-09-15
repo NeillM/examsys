@@ -79,7 +79,7 @@ function save_options($question, $userObject, $db) {
         $incorrect_fb = (isset($_POST["option_incorrect_fback$option_no"])) ? $_POST["option_incorrect_fback$option_no"] : '';
 
         $part_names = $option->get_editable_fields();
-        $postparams = $option->get_option_post_params($part_names, $option_no);;
+        $postparams = $option->get_option_post_params($part_names, $option_no);
         // Build arrays for compound fields
         $compound_fields = $option->get_compound_fields();
         if (!isset($existing_values)) $existing_values = array();
