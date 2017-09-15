@@ -182,6 +182,11 @@ class param {
           ),
         );
         break;
+      // Variable defintion for calculation questions.
+      // Can be a link to another variable i.e. $A,
+      // a floating point or integer number i.e. 10.1,
+      // a link to another questions answer or variable i.e. ans10 or var$A99,
+      // a simple formula using [+,-,*,/] i.e. $A/$B
       case self::CALCMIN:
       case self::CALCMAX:
         $filter = FILTER_VALIDATE_REGEXP;
