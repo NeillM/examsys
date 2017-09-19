@@ -367,171 +367,107 @@ Class OptionENHANCEDCALC extends OptionEdit {
       }
     }
   }
-  
-  /*
-   * Get all post parameters of editable fields
-   * @param array $editable_fields list of editabkle fields
-   * @param integer $max_options max number of options available
-   * @return array parsed post data
-   */
-  public function get_option_post_params($editable_fields, $max_options) {
-    $posts = array();
-    foreach ($editable_fields as $field) {
-      $posts = array_merge($posts, $this->get_ind_option_post_params($field, $max_options));
-    }
-    return $posts;
-  }
-  
-  /*
-   * Get indvidual post parameters of editble field
-   * @param string $field editable feild
-   * @param integer $max_options max number of options available
-   * @return array parsed post data
-   */
-  public function get_ind_option_post_params($field, $max_options) {
-    $options = array();
-    switch ($field) {
-      case 'min':
-        $options = $this->get_post_min($max_options);
-        break;
-      case 'max':
-        $options = $this->get_post_max($max_options);
-        break;
-      case 'decimals':
-        $options = $this->get_post_decimals($max_options);
-        break;
-      case 'increment':
-        $options = $this->get_post_increment($max_options);
-        break;
-      case 'formula':
-        $options = $this->get_post_formula($max_options);
-        break;
-      case 'units':
-        $options = $this->get_post_units($max_options);
-        break;
-      default:
-        break;
-    }
-    return $options;
-  }
-  
+
   /*
    * Get post parameters for option_min field
-   * @param integer $max_options max number of options available
+   * @param integer $option_no option number
    * @return array parsed post data
    */
-  public function get_post_min($max_options) {
-    $options = array();
+  public function get_post_min($option_no) {
     // Variable defintion for calculation questions.
     // Can be a link to another variable i.e. $A,
     // a floating point or integer number i.e. 10.1,
     // a link to another questions answer or variable i.e. ans10 or var$A99,
     // a simple formula using [+,-,*,/] i.e. $A/$B
-    for ($option_no = 1; $option_no <= $max_options; $option_no++) {
-      $options['option_min' . $option_no] = param::optional(
-        'option_min' . $option_no,
-        null,
-        param::REGEXP,
-        param::FETCH_POST,
-        array(
-            'default' => null,
-            'regexp' => '#^((\$[A-Z][0-9]*|var\$[A-Z][0-9]*|ans[0-9]*|[0-9]*[.]?[0-9]+)([+-/*]?))+$#',
-        )
-      );
-    }
-    return $options;
+    $option['option_min' . $option_no] = param::optional(
+      'option_min' . $option_no,
+      null,
+      param::REGEXP,
+      param::FETCH_POST,
+      array(
+          'default' => null,
+          'regexp' => '#^((\$[A-Z][0-9]*|var\$[A-Z][0-9]*|ans[0-9]*|[0-9]*[.]?[0-9]+)([+-/*]?))+$#',
+      )
+    );
+
+    return $option;
   }
   
   /*
    * Get post parameters for option_max field
-   * @param integer $max_options max number of options available
+   * @param integer $option_no option number
    * @return array parsed post data
    */
-  public function get_post_max($max_options) {
-    $options = array();
+  public function get_post_max($option_no) {
     // Variable defintion for calculation questions.
     // Can be a link to another variable i.e. $A,
     // a floating point or integer number i.e. 10.1,
     // a link to another questions answer or variable i.e. ans10 or var$A99,
     // a simple formula using [+,-,*,/] i.e. $A/$B
-    for ($option_no = 1; $option_no <= $max_options; $option_no++) {
-      $options['option_max' . $option_no] = param::optional(
-        'option_max' . $option_no,
-        null,
-        param::REGEXP,
-        param::FETCH_POST,
-        array(
-            'default' => null,
-            'regexp' => '#^((\$[A-Z][0-9]*|var\$[A-Z][0-9]*|ans[0-9]*|[0-9]*[.]?[0-9]+)([+-/*]?))+$#',
-         )
-      );
-    }
-    return $options;
+    $option['option_max' . $option_no] = param::optional(
+      'option_max' . $option_no,
+      null,
+      param::REGEXP,
+      param::FETCH_POST,
+      array(
+          'default' => null,
+          'regexp' => '#^((\$[A-Z][0-9]*|var\$[A-Z][0-9]*|ans[0-9]*|[0-9]*[.]?[0-9]+)([+-/*]?))+$#',
+       )
+    );
+    return $option;
   }
   
   /*
    * Get post parameters for option_decimals field
-   * @param integer $max_options max number of options available
+   * @param integer $option_no option number
    * @return array parsed post data
    */
-  public function get_post_decimals($max_options) {
-    $options = array();
-    for ($option_no = 1; $option_no <= $max_options; $option_no++) {
-      $options['option_decimals' . $option_no] = param::optional(
-        'option_decimals' . $option_no, null,
-        param::INT, param::FETCH_POST,
-        array('default' => null, 'min_range' => 0, 'max_range' => 8)
-      );
-    }
-    return $options;
+  public function get_post_decimals($option_no) {
+    $option['option_decimals' . $option_no] = param::optional(
+      'option_decimals' . $option_no, null,
+      param::INT, param::FETCH_POST,
+      array('default' => null, 'min_range' => 0, 'max_range' => 8)
+    );
+    return $option;
   }
   
   /*
    * Get post parameters for option_increment field
-   * @param integer $max_options max number of options available
+   * @param integer $option_no option number
    * @return array parsed post data
    */
-  public function get_post_increment($max_options) {
-    $options = array();
-    for ($option_no = 1; $option_no <= $max_options; $option_no++) {
-      $options['option_increment' . $option_no] = param::optional('option_increment' . $option_no, null, param::FLOAT, param::FETCH_POST);
-    }
-    return $options;
+  public function get_post_increment($option_no) {
+    $option['option_increment' . $option_no] = param::optional('option_increment' . $option_no, null, param::FLOAT, param::FETCH_POST);
+    return $option;
   }
   
   /*
    * Get post parameters for option_formula field
-   * @param integer $max_options max number of options available
+   * @param integer $option_no option number
    * @return array parsed post data
    */
-  public function get_post_formula($max_options) {
-    $options = array();
-    for ($option_no = 1; $option_no <= $max_options; $option_no++) {
-      $options['option_formula' . $option_no] = param::optional('option_formula' . $option_no, null, param::TEXT, param::FETCH_POST);
-    }
-    return $options;
+  public function get_post_formula($option_no) {
+    $option['option_formula' . $option_no] = param::optional('option_formula' . $option_no, null, param::TEXT, param::FETCH_POST);
+    return $option;
   }
   
   /*
    * Get post parameters for option_units field
-   * @param integer $max_options max number of options available
+   * @param integer $option_no option number
    * @return array parsed post data
    */
-  public function get_post_units($max_options) {
-    $options = array();
-    for ($option_no = 1; $option_no <= $max_options; $option_no++) {
-      $options['option_units' . $option_no] = param::optional(
-        'option_units' . $option_no,
-        null,
-        param::REGEXP, 
-        param::FETCH_POST,
-          array(
-                'default' => '',
-                'regexp' => '#^[ a-zA-Z0-9/^]*$#',
-          )
-        );
-    }
-    return $options;
+  public function get_post_units($option_no) {
+    $option['option_units' . $option_no] = param::optional(
+      'option_units' . $option_no,
+      null,
+      param::REGEXP, 
+      param::FETCH_POST,
+        array(
+              'default' => '',
+              'regexp' => '#^[ a-zA-Z0-9/^]*$#',
+        )
+      );
+    return $option;
   }
 }
 

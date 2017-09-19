@@ -42,6 +42,20 @@ $calling = (!isset($_REQUEST['calling'])) ? '' : $_REQUEST['calling'];
 $ListKeyword = (!isset($_REQUEST['keyword'])) ? '' : $_REQUEST['keyword'];
 $team = (!isset($_REQUEST['team'])) ? '' : $_REQUEST['team'];
 
+function get_post_params($part_names, $option, $option_no) {
+  $postparams = array();
+  foreach ($part_names as $field) {
+    if (method_exists($option,'get_post_' . $field)) {
+      $var = 'get_post_' . $field;
+      $postparams = array_merge($postparams, call_user_func(array($option, $var), $option_no));
+    }
+  }
+  if (count($postparams) === 0) {
+    $postparams = $option->get_post_default();
+  }
+  return $postparams;
+}
+
 function save_options($question, $userObject, $db) {
   $unified_part_names = $question->get_unified_fields();
 
@@ -58,8 +72,7 @@ function save_options($question, $userObject, $db) {
       // Editing existing option
       $option = $question->options[$_POST["optionid$option_no"]];
       $part_names = $option->get_editable_fields();
-      $postparams = $option->get_option_post_params($part_names, $option_no);
-
+      $postparams = get_post_params($part_names, $option, $option_no);
       // Build arrays for compound fields
       $compound_fields = $option->get_compound_fields();
       if (!isset($existing_values)) $existing_values = array();
@@ -79,7 +92,8 @@ function save_options($question, $userObject, $db) {
         $incorrect_fb = (isset($_POST["option_incorrect_fback$option_no"])) ? $_POST["option_incorrect_fback$option_no"] : '';
 
         $part_names = $option->get_editable_fields();
-        $postparams = $option->get_option_post_params($part_names, $option_no);
+        $postparams = get_post_params($part_names, $option, $option_no);
+
         // Build arrays for compound fields
         $compound_fields = $option->get_compound_fields();
         if (!isset($existing_values)) $existing_values = array();
