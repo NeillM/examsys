@@ -317,7 +317,6 @@ if ($critical_error == '') {
       if ($question->allow_option_edit()) {
         $critical_error = save_options($question, $userObject, $mysqli);
         if ($critical_error !== '') {
-          $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
           $notice->display_notice_and_exit($mysqli, $string['error'], $string[$critical_error], $string['error'], '/artwork/page_not_found.png', '#C00000', true, true);
         }
       }
@@ -360,7 +359,6 @@ if ($critical_error == '') {
 
       $critical_error = save_options($question, $userObject, $mysqli);
       if ($critical_error !== '') {
-        $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
         $notice->display_notice_and_exit($mysqli, $string['error'], $string[$critical_error], $string['error'], '/artwork/page_not_found.png', '#C00000', true, true);
       }
       $do_save = true;
