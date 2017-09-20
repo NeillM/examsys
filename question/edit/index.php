@@ -42,6 +42,13 @@ $calling = (!isset($_REQUEST['calling'])) ? '' : $_REQUEST['calling'];
 $ListKeyword = (!isset($_REQUEST['keyword'])) ? '' : $_REQUEST['keyword'];
 $team = (!isset($_REQUEST['team'])) ? '' : $_REQUEST['team'];
 
+/**
+ * Get post parameters for option and parse if function available for option type
+ * @param array $part_names the option part names
+ * @param object $option the option object
+ * @param integer $option_no the option number
+ * @return array
+ */
 function get_post_params($part_names, $option, $option_no) {
   $postparams = array();
   foreach ($part_names as $field) {
