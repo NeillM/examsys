@@ -456,7 +456,7 @@ Class OptionENHANCEDCALC extends OptionEdit {
    * @param integer $option_no option number
    * @return array parsed post data
    */
-  public function get_post_units($option_no) {
+  /*public function get_post_units($option_no) {
     $option['option_units' . $option_no] = param::optional(
       'option_units' . $option_no,
       null,
@@ -468,6 +468,6 @@ Class OptionENHANCEDCALC extends OptionEdit {
         )
       );
     return $option;
-  }
+  }*/
 }
 

@@ -59,6 +59,11 @@ function get_post_params($part_names, $option, $option_no) {
   }
   if (count($postparams) === 0) {
     $postparams = $option->get_post_default();
+  } else {
+    // Catch coding error if not all get_post functions defined.
+    if (count($postparams) !== count($part_names)) {
+      throw new Exception('CODING_ERROR');
+    }
   }
   return $postparams;
 }
@@ -79,7 +84,11 @@ function save_options($question, $userObject, $db) {
       // Editing existing option
       $option = $question->options[$_POST["optionid$option_no"]];
       $part_names = $option->get_editable_fields();
-      $postparams = get_post_params($part_names, $option, $option_no);
+      try {
+        $postparams = get_post_params($part_names, $option, $option_no);
+      } catch (\Exception $e) {
+        return $e->getMessage();
+      }
       // Build arrays for compound fields
       $compound_fields = $option->get_compound_fields();
       if (!isset($existing_values)) $existing_values = array();
@@ -99,7 +108,11 @@ function save_options($question, $userObject, $db) {
         $incorrect_fb = (isset($_POST["option_incorrect_fback$option_no"])) ? $_POST["option_incorrect_fback$option_no"] : '';
 
         $part_names = $option->get_editable_fields();
-        $postparams = get_post_params($part_names, $option, $option_no);
+        try {
+          $postparams = get_post_params($part_names, $option, $option_no);
+        } catch (\Exception $e) {
+          return $e->getMessage();
+        }
 
         // Build arrays for compound fields
         $compound_fields = $option->get_compound_fields();
@@ -133,6 +146,7 @@ function save_options($question, $userObject, $db) {
       }
     }
   }
+  return '';
 }
 
 $paper_count = 0;
@@ -301,7 +315,11 @@ if ($critical_error == '') {
       }
 
       if ($question->allow_option_edit()) {
-        save_options($question, $userObject, $mysqli);
+        $critical_error = save_options($question, $userObject, $mysqli);
+        if ($critical_error !== '') {
+          $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+          $notice->display_notice_and_exit($mysqli, $string['error'], $string[$critical_error], $string['error'], '/artwork/page_not_found.png', '#C00000', true, true);
+        }
       }
 
       $do_save = true;
@@ -340,8 +358,11 @@ if ($critical_error == '') {
       }
       $question->set_teams($question_teams);
 
-      save_options($question, $userObject, $mysqli);
-
+      $critical_error = save_options($question, $userObject, $mysqli);
+      if ($critical_error !== '') {
+        $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+        $notice->display_notice_and_exit($mysqli, $string['error'], $string[$critical_error], $string['error'], '/artwork/page_not_found.png', '#C00000', true, true);
+      }
       $do_save = true;
     }
   } elseif (isset($_POST['submit-cancel']) and $_POST['submit-cancel'] == $string['cancel']) {

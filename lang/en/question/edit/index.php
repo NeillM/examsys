@@ -31,6 +31,7 @@ require $configObject->get('cfg_web_root') . 'lang/' . $language . '/question/ed
 
 require $configObject->get('cfg_web_root') . 'lang/' . $language . '/errors/mapping.php';
 
+$string['CODING_ERROR'] = 'Coding Error';
 $string['edit'] = 'Edit';
 $string['add'] = 'Add';
 $string['type'] = 'Type';
