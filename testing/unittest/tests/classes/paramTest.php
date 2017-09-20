@@ -30,9 +30,8 @@ class paramtest extends UnitTest {
    * @group param
    */
   public function test_clean_int_with_range() {
-      $param = new \param();
-      $ok = $param->clean(1, \param::INT, array('default' => null, 'min_range' => 0, 'max_range' => 8));
-      $bad = $param->clean(9, \param::INT, array('default' => null, 'min_range' => 0, 'max_range' => 8));
+      $ok = \param::clean(1, \param::INT, array('default' => null, 'min_range' => 0, 'max_range' => 8));
+      $bad = \param::clean(9, \param::INT, array('default' => null, 'min_range' => 0, 'max_range' => 8));
       $this->assertEquals(1, $ok);
       $this->assertEquals(null, $bad);
   }
@@ -41,8 +40,7 @@ class paramtest extends UnitTest {
    * @group param
    */
   public function test_clean_int_not_options() {
-      $param = new \param();
-      $bad = $param->clean(9, \param::INT);
+      $bad = \param::clean(9, \param::INT);
       $this->assertEquals(9, $bad);
   }
   /**
@@ -50,10 +48,9 @@ class paramtest extends UnitTest {
    * @group param
    */
   public function test_clean_regexp() {
-      $param = new \param();
       $regexp = '#^[A-Z][0-9]$#';
-      $ok = $param->clean('A1', \param::REGEXP, array('default' => null, 'regexp' => $regexp));
-      $bad = $param->clean('A', \param::REGEXP, array('default' => null, 'regexp' => $regexp));
+      $ok = \param::clean('A1', \param::REGEXP, array('default' => null, 'regexp' => $regexp));
+      $bad = \param::clean('A', \param::REGEXP, array('default' => null, 'regexp' => $regexp));
       $this->assertEquals('A1', $ok);
       $this->assertEquals(null, $bad);
   }
