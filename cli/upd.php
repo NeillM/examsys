@@ -124,8 +124,8 @@ if ($version == $old_version) {
   cli_utils::prompt('Nothing to update.');
   exit(0);
 }
-if ($updater_utils->check_version("6.3.0")) {
-  cli_utils::prompt('Please upgrade via the user interface to version 6.3.X before using the command line updater.');
+if ($updater_utils->check_version("6.4.0")) {
+  cli_utils::prompt('Please upgrade via the user interface to version 6.4.X before using the command line updater.');
   exit(0);
 }
 // Get update file dir.
