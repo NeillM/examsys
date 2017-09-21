@@ -993,6 +993,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     $configObject->set_setting('api_allow_superuser', 0, Config::BOOLEAN);
     $configObject->set_setting('apilogfile', '', Config::STRING);
     $configObject->set_setting('rogo_version', $configObject->getxml('version'), Config::VERSION);
+    $configObject->set_setting('misc_company', self::$cfg_company, Config::STRING);
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();
@@ -2177,7 +2178,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 \$cfg_root_path = '{cfg_root_path}';
 \$cfg_secure_connection = true;    // If true site must be accessed via HTTPS
 \$cfg_page_charset 	   = 'UTF-8';
-\$cfg_company = '{cfg_company}';
 \$cfg_academic_year_start = '07/01';
 \$cfg_tmpdir = '{cfg_tmpdir}';
 
@@ -2353,7 +2353,6 @@ CONFIG;
     $config = str_replace('{cfg_db_host}', self::$cfg_db_host, $config);
     $config = str_replace('{cfg_db_port}', self::$cfg_db_port, $config);
     $config = str_replace('{cfg_db_charset}', self::$cfg_db_charset, $config);
-    $config = str_replace('{cfg_company}', self::$cfg_company, $config);
 
     $config = str_replace('{cfg_db_database}', self::$cfg_db_name, $config);
     $config = str_replace('{cfg_db_username}', self::$cfg_db_username, $config);

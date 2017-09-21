@@ -211,7 +211,7 @@ $yearutils = new yearutils($mysqli);
 <tr><td style="width:130px"><?php echo $string['version']; ?></td><td><?php echo $configObject->get_setting('core', 'rogo_version'); ?></td></tr>
 <tr><td><?php echo $string['webroot']; ?></td><td><?php echo $configObject->get('cfg_web_root'); ?></td></tr>
 <tr><td><?php echo $string['database']; ?></td><td><?php echo $configObject->get('cfg_db_database'); ?></td></tr>
-<tr><td><?php echo $string['company']; ?></td><td><?php echo $configObject->get('cfg_company'); ?></td></tr>
+<tr><td><?php echo $string['company']; ?></td><td><?php echo $configObject->get_setting('core', 'misc_company'); ?></td></tr>
 <tr><td><?php echo $string['lookups']; ?></td><td><?php echo $configObject->get('cfg_client_lookup'); ?></td></tr>
 <tr><td><?php echo $string['Session']; ?></td><td><?php echo $yearutils->get_academic_session($yearutils->get_current_session()); ?></td></tr>
 <tr><td><?php echo $string['ErrorLogSettings']; ?></td><td><?php echo $ErrorLogSettings ?></td></tr>

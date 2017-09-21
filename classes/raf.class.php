@@ -93,7 +93,7 @@ class RAF {
 	private function create_export_array($questions) {
 		$this->data['metadata']['rogo_version']	= $this->configObj->get_setting('core', 'rogo_version');
 		$this->data['metadata']['export_date']	= date($this->configObj->get('cfg_long_date_php') . ' ' . $this->configObj->get('cfg_long_time_php'));
-		$this->data['metadata']['company']			= $this->configObj->get('cfg_company');
+		$this->data['metadata']['company']			= $this->configObj->get_setting('core', 'misc_company');
 		$this->data['items'] = array();
 		
 		$item_no = 0;
@@ -409,7 +409,7 @@ class RAF {
 		
 		$date_format = $this->configObj->get('cfg_long_date_php') . ' ' . $this->configObj->get('cfg_short_time_php');
 		
-		if ($this->raf_company == $this->configObj->get('cfg_company')) {  // The import file company is the same as the current installation. Use the same IDs.
+		if ($this->raf_company == $this->configObj->get_setting('core', 'misc_company')) {  // The import file company is the same as the current installation. Use the same IDs.
 		  $old_q_id = $this->getQID_GUID($q['guid']);
 		
 		  if ($old_q_id !== false) {
@@ -444,7 +444,7 @@ class RAF {
    * @param int $q_id			 	- ID of the question the keywords are for.
 	 */
 	private function write_keywords($keywords, $q_id) {
-		if ($this->raf_company == $this->configObj->get('cfg_company')) {  // The import file company is the same as the current installation. Use the same IDs.
+		if ($this->raf_company == $this->configObj->get_setting('core', 'misc_company')) {  // The import file company is the same as the current installation. Use the same IDs.
 			$keywordIDs = $keywords;
 		} else {
 			$keywordIDs = array();

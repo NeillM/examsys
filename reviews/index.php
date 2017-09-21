@@ -124,7 +124,7 @@ if ($userObject->has_role(array('External Examiner'))) {
     echo "<tr><td align=\"center\"><a href=\"../paper/user_index.php?id=$crypt_name\">" . Paper_utils::displayIcon($paper_type, $paper_title, '', '', '', '') . "</a></td>\n";
     echo "  <td><a href=\"../paper/user_index.php?id=$crypt_name\">$paper_title</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " ";
     if ($start_of_day_ts > $external_review_deadline) {
-      printf($string['expired'], $configObject->get('cfg_company'));
+      printf($string['expired'], $configObject->get_setting('core', 'misc_company'));
     } else {
       if ($display_deadline == '00/00/0000') {
         echo $string['notset'];
@@ -202,7 +202,7 @@ if ($userObject->has_role(array('External Examiner'))) {
   </tr>
 </table>
 
-<div style="margin-left:10px; font-size:90%; color:#3F3F3F"><?php printf($string['copyrightmsg'], $configObject->get('cfg_company')); ?></div>
+<div style="margin-left:10px; font-size:90%; color:#3F3F3F"><?php printf($string['copyrightmsg'], $configObject->get_setting('core', 'misc_company')); ?></div>
 
 </body>
 </html>

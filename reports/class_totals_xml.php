@@ -106,7 +106,7 @@ $tmp_end = substr($_GET['enddate'], 6, 2) . '/' . substr($_GET['enddate'], 4, 2)
 echo '  <Description>Class totals for assessment taken between ' . $tmp_start . ' and ' . $tmp_end .'.</Description>';
 echo '  <LastAuthor>Rogo ' . $configObject->get_setting('core', 'rogo_version') . '</LastAuthor>';
 echo '  <Created>' . date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z</Created>';
-echo '  <Company>' . $configObject->get('cfg_company') . '</Company>';
+echo '  <Company>' . $configObject->get_setting('core', 'misc_company') . '</Company>';
 echo '  <Version>11.6408</Version>';
 echo ' </DocumentProperties>';
 echo ' <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">';
