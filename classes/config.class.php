@@ -97,6 +97,11 @@ class Config extends RogoStaticSingleton {
    * @var string
    */
   const URL = 'url';
+  /**
+   * Config setting version type identifier
+   * @var string
+   */
+  const VERSION = 'version';
 
   function __toString() {
     return "ConfigObject!";
@@ -726,6 +731,12 @@ SCRIPT;
               $check = false;
           }
           break;
+        case self ::VERSION:
+          if(preg_match("#^[0-9]+\.[0-9]\.+[0-9]+$#", $value)) {
+            $check = true;
+          } else {
+            $check = false;
+          }
         default:
           $check = false;
           break;

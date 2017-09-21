@@ -45,7 +45,7 @@ $migration_path = 'version5';
 set_time_limit(0);
 
 // Get the installed version.
-$old_version = $configObject->get('rogo_version');
+$old_version = $configObject->get_setting('core', 'rogo_version');
 ?>
 <!DOCTYPE html>
 <html>
@@ -53,7 +53,7 @@ $old_version = $configObject->get('rogo_version');
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
-    <title>Rog&#333; <?php echo $configObject->get('rogo_version') . ' to ' . $version; ?> update Script</title>
+    <title>Rog&#333; <?php echo $configObject->get_setting('core', 'rogo_version') . ' to ' . $version; ?> update Script</title>
 
     <link rel="stylesheet" type="text/css" href="../css/body.css"/>
 		<link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
@@ -97,13 +97,13 @@ if (!isset($_POST['update'])) {
   <?php
   if (!InstallUtils::configFileIsWriteable()) {
     ?>
-    <h2><?php echo $string['updatefromversion'] . ' ' . $configObject->get('rogo_version') . ' to ' . $version; ?></h2>
+    <h2><?php echo $string['updatefromversion'] . ' ' . $configObject->get_setting('core', 'rogo_version') . ' to ' . $version; ?></h2>
     <div><?php echo $string['warning1']; ?></div>
     <div><?php echo $string['warning2']; ?></div>
     <?php
   } elseif (!InstallUtils::configPathIsWriteable()) {
     ?>
-    <h2><?php echo $string['updatefromversion'] . ' ' . $configObject->get('rogo_version') . ' to ' . $version; ?></h2>
+    <h2><?php echo $string['updatefromversion'] . ' ' . $configObject->get_setting('core', 'rogo_version') . ' to ' . $version; ?></h2>
     <div><?php echo $string['warning3']; ?></div>
     <div><?php echo $string['warning4']; ?></div>
     <?php
@@ -889,10 +889,7 @@ QUERY;
   }
 
   // Final housekeeping activities - put all updates above this line
-  $updated = $updater_utils->update_version($version, $string, $cfg_web_root);
-  if ($updated !== true) {
-    echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
-  }
+  $configObject->set_setting('rogo_version', $version, Config::VERSION);
   $updater_utils->execute_query('FLUSH PRIVILEGES', true);
   $updater_utils->execute_query('TRUNCATE sys_errors', true);
   echo "</ol>\n";

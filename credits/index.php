@@ -50,7 +50,7 @@
 
 <div style="position:absolute; top:60px; left:20px; font-size:75%; padding-top:10px; padding-right:2px; padding-left:10px">
 <br />
-<p>Rog&#333; <?php echo $configObject->get('rogo_version') . ' ' . $string['msg']; ?></p>
+<p>Rog&#333; <?php echo $configObject->get_setting('core', 'rogo_version') . ' ' . $string['msg']; ?></p>
 <table cellpadding="0" cellspacing="0" border="0" style="width:660px">
 <tr><td style="width:240px">
 <strong><?php echo $string['designprogramming'] ?></strong><br />

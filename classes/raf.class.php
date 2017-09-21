@@ -91,7 +91,7 @@ class RAF {
 	 * @param array $questions - An array of questions to be exported.
 	 */
 	private function create_export_array($questions) {
-		$this->data['metadata']['rogo_version']	= $this->configObj->get('rogo_version');
+		$this->data['metadata']['rogo_version']	= $this->configObj->get_setting('core', 'rogo_version');
 		$this->data['metadata']['export_date']	= date($this->configObj->get('cfg_long_date_php') . ' ' . $this->configObj->get('cfg_long_time_php'));
 		$this->data['metadata']['company']			= $this->configObj->get('cfg_company');
 		$this->data['items'] = array();

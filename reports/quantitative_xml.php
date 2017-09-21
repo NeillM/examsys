@@ -287,7 +287,7 @@ echo '<?mso-application progid="Word.Document"?>
 echo $paper;
 $tmp_start = substr($startdate, 6, 2) . '/' . substr($startdate, 4, 2) . '/' . substr($startdate, 0, 4) . ' ' . substr($startdate, 8, 2) . ':' . substr($startdate, 10, 2);
 $tmp_end = substr($enddate, 6, 2) . '/' . substr($enddate, 4, 2) . '/' . substr($enddate, 0, 4) . ' ' . substr($enddate, 8, 2) . ':' . substr($enddate, 10, 2);
-echo '</o:Title><o:Author>Rogo ' . $configObject->get('rogo_version') . '</o:Author><o:Description>Quantitative report for survey taken between ' . $tmp_start . ' and ' . $tmp_end .'.</o:Description><o:LastAuthor>Rogo ' . $configObject->get('rogo_version') . '</o:LastAuthor><o:Revision>1</o:Revision><o:TotalTime>0</o:TotalTime><o:Created>';
+echo '</o:Title><o:Author>Rogo ' . $configObject->get_setting('core', 'rogo_version') . '</o:Author><o:Description>Quantitative report for survey taken between ' . $tmp_start . ' and ' . $tmp_end .'.</o:Description><o:LastAuthor>Rogo ' . $configObject->get_setting('core', 'rogo_version') . '</o:LastAuthor><o:Revision>1</o:Revision><o:TotalTime>0</o:TotalTime><o:Created>';
 echo date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z';
 echo '</o:Created><o:LastSaved>';
 echo date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z';

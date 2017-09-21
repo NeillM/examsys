@@ -184,7 +184,7 @@ HTML;
       }
       ?>
         
-        <div class="versionno">Rog&#333; <?php echo $this->configObj->get('rogo_version') ?></div>
+        <div class="versionno">Rog&#333; <?php echo $this->configObj->get_setting('core', 'rogo_version') ?></div>
 
     </div>
 </form>

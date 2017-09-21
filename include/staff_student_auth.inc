@@ -80,7 +80,7 @@ $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObj
 $configObject->set_db_object($mysqli);
 
 // Check to see if installed version matches the code version. If not the update script needs to be run by a sys admin.
-if ($configObject->get('rogo_version') != $configObject->getxml('version')) {
+if ($configObject->get_setting('core', 'rogo_version') != $configObject->getxml('version')) {
   $notice->display_notice_and_exit($mysqli, 'Update Required', 'System needs configuring before use. Please contact your local system administrator.', 'Update Required', '../artwork/software_64.png', $title_color = '#C00000', true, true);
 }
 

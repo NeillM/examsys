@@ -94,7 +94,7 @@ if (isset($_POST['submit'])) {
             </tr>
             <tr><td><input type="submit" class="ok" name="submit" value="<?php echo $string['save']; ?>"></td></tr>
             </table>
-        <div class="versionno">Rog&#333; <?php echo $configObject->get('rogo_version'); ?></div>
+        <div class="versionno">Rog&#333; <?php echo $configObject->get_setting('core', 'rogo_version'); ?></div>
     </div>
     <input type="hidden" id="client_id" name="client_id" value ="<?php echo $client_id; ?>">
     <input type="hidden" id="response_type" name="response_type" value ="code">

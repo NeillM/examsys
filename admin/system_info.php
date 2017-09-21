@@ -208,7 +208,7 @@ $yearutils = new yearutils($mysqli);
 <td style="vertical-align:top">
 <table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; width:550px">
 <tr><td colspan="2" class="sechead"><?php echo $string['application']; ?></td></tr>
-<tr><td style="width:130px"><?php echo $string['version']; ?></td><td><?php echo $configObject->get('rogo_version'); ?></td></tr>
+<tr><td style="width:130px"><?php echo $string['version']; ?></td><td><?php echo $configObject->get_setting('core', 'rogo_version'); ?></td></tr>
 <tr><td><?php echo $string['webroot']; ?></td><td><?php echo $configObject->get('cfg_web_root'); ?></td></tr>
 <tr><td><?php echo $string['database']; ?></td><td><?php echo $configObject->get('cfg_db_database'); ?></td></tr>
 <tr><td><?php echo $string['company']; ?></td><td><?php echo $configObject->get('cfg_company'); ?></td></tr>

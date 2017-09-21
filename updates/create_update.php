@@ -28,7 +28,7 @@ $migration_path = 'version5';
 
 set_time_limit(0);
 
-$old_version = $configObject->get('rogo_version');
+$old_version = $configObject->get_setting('core', 'rogo_version');
 ?>
 <!DOCTYPE html>
 <html>
@@ -36,7 +36,7 @@ $old_version = $configObject->get('rogo_version');
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
-    <title>Rog&#333; <?php echo $configObject->get('rogo_version') ?> update creation</title>
+    <title>Rog&#333; <?php echo $configObject->get_setting('core', 'rogo_version') ?> update creation</title>
 
     <link rel="stylesheet" type="text/css" href="../css/body.css"/>
 		<link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />

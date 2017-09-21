@@ -970,28 +970,29 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         '301-400', '401-500');
     $configObject = Config::get_instance();
     $configObject->set_db_object(self::$db);
-    $configObject->set_setting('paper_timezones', $timezones, 'timezones');
-    $configObject->set_setting('summative_cohort_sizes', $cohorts, 'csv');
-    $configObject->set_setting('paper_max_duration', 779, 'integer');
-    $configObject->set_setting('summative_max_sittings', 6, 'integer');
-    $configObject->set_setting('summative_hide_external', 0, 'boolean');
-    $configObject->set_setting('summative_warn_external', 0, 'boolean');
-    $configObject->set_setting('cfg_lti_allow_module_self_reg', 0, 'boolean');
-    $configObject->set_setting('cfg_lti_allow_staff_module_register', 0, 'boolean');
-    $configObject->set_setting('cfg_lti_allow_module_create', 0, 'boolean');
-    $configObject->set_setting('lti_integration', 'default', 'string');
-    $configObject->set_setting('lti_auth_timeout', 9072000, 'integer');
-    $configObject->set_setting('cfg_gradebook_enabled', 1, 'boolean');
-    $configObject->set_setting('cfg_api_enabled', 1, 'boolean');
-    $configObject->set_setting('paper_marks_postive', range(1, 20), 'csv');
-    $configObject->set_setting('paper_marks_negative', array(0, -0.25, -0.5, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10), 'csv');
-    $configObject->set_setting('paper_marks_partial', array_merge(range(0, 1, 0.1), range(2, 5)), 'csv');
-    $configObject->set_setting('paper_mathjax', 1, 'boolean');
-    $configObject->set_setting('paper_editor_supports_mathjax',array("plain"), 'csv');
-    $configObject->set_setting('misc_logo_main', 'logo.png', 'string');
-    $configObject->set_setting('misc_logo_email', 'alt_logo.png', 'string');
-    $configObject->set_setting('api_allow_superuser', 0, 'boolean');
-    $configObject->set_setting('apilogfile', '', 'string');
+    $configObject->set_setting('paper_timezones', $timezones, Config::TIMEZONES);
+    $configObject->set_setting('summative_cohort_sizes', $cohorts, Config::CSV);
+    $configObject->set_setting('paper_max_duration', 779, Config::INTEGER);
+    $configObject->set_setting('summative_max_sittings', 6, Config::INTEGER);
+    $configObject->set_setting('summative_hide_external', 0, Config::BOOLEAN);
+    $configObject->set_setting('summative_warn_external', 0, Config::BOOLEAN);
+    $configObject->set_setting('cfg_lti_allow_module_self_reg', 0, Config::BOOLEAN);
+    $configObject->set_setting('cfg_lti_allow_staff_module_register', 0, Config::BOOLEAN);
+    $configObject->set_setting('cfg_lti_allow_module_create', 0, Config::BOOLEAN);
+    $configObject->set_setting('lti_integration', 'default', Config::STRING);
+    $configObject->set_setting('lti_auth_timeout', 9072000, Config::INTEGER);
+    $configObject->set_setting('cfg_gradebook_enabled', 1, Config::BOOLEAN);
+    $configObject->set_setting('cfg_api_enabled', 1, Config::BOOLEAN);
+    $configObject->set_setting('paper_marks_postive', range(1, 20), Config::CSV);
+    $configObject->set_setting('paper_marks_negative', array(0, -0.25, -0.5, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10), Config::CSV);
+    $configObject->set_setting('paper_marks_partial', array_merge(range(0, 1, 0.1), range(2, 5)), Config::CSV);
+    $configObject->set_setting('paper_mathjax', 1, Config::BOOLEAN);
+    $configObject->set_setting('paper_editor_supports_mathjax',array("plain"), Config::CSV);
+    $configObject->set_setting('misc_logo_main', 'logo.png', Config::STRING);
+    $configObject->set_setting('misc_logo_email', 'alt_logo.png', Config::STRING);
+    $configObject->set_setting('api_allow_superuser', 0, Config::BOOLEAN);
+    $configObject->set_setting('apilogfile', '', Config::STRING);
+    $configObject->set_setting('rogo_version', $configObject->getxml('version'), Config::VERSION);
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();
@@ -2089,8 +2090,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   *
   */
   static function displayHeader() {
-    global $string, $version;
-
+    global $string;
+    $configObject = Config::get_instance();
+    $version = $configObject->getxml('version');
     ?>
     <!DOCTYPE html>
     <html>
@@ -2157,7 +2159,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   }
 
   static function writeConfigFile() {
-    global $version, $cfg_encrypt_salt;
+    global $cfg_encrypt_salt;
     require_once dirname(__DIR__) . '/include/path_functions.inc.php';
     $config = <<<CONFIG
 <?php
@@ -2171,7 +2173,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 * @package
 */
 
-\$rogo_version = '{rogo_version}';
 \$cfg_web_root = '{cfg_web_root}';
 \$cfg_root_path = '{cfg_root_path}';
 \$cfg_secure_connection = true;    // If true site must be accessed via HTTPS
@@ -2334,7 +2335,6 @@ if(!isset(\$_SERVER['HTTP_HOST'])) {
   ?>
 CONFIG;
 
-    $config = str_replace('{rogo_version}', $version, $config);
     $cfg_web_root = get_root_path();
     // Ensure there is a trailing slash.
     if (substr($cfg_web_root, -1) !== '/') {

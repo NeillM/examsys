@@ -588,7 +588,7 @@ if ($textsize > 120) {
   $mysqli->close();
   ?></td></tr></table>
 </form>
-<div class="powered"><i>powered by</i> Rog&#333; <?php echo $configObject->get('rogo_version'); ?></div>
+<div class="powered"><i>powered by</i> Rog&#333; <?php echo $configObject->get_setting('core', 'rogo_version'); ?></div>
 
 	<!-- Cache often used scripts and images -->
 	<script src="../js/start.js"></script>

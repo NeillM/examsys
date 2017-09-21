@@ -198,7 +198,7 @@ if ($userObject->has_role(array('External Examiner'))) {
 <table class="oss">
   <tr>
   <td><img src="../artwork/oss_logo.png" /></td>
-  <td style="padding-left:16px"><?php echo sprintf($string['rogodetails'], $configObject->get('rogo_version')) ?></a> <strong><a href="https://bitbucket.org/rogoOOS/rog/wiki/Home">bitbucket.org/rogoOOS/rog/wiki/Home</a></strong></td>
+  <td style="padding-left:16px"><?php echo sprintf($string['rogodetails'], $configObject->get_setting('core', 'rogo_version')) ?></a> <strong><a href="https://bitbucket.org/rogoOOS/rog/wiki/Home">bitbucket.org/rogoOOS/rog/wiki/Home</a></strong></td>
   </tr>
 </table>
 

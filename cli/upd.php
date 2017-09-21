@@ -119,7 +119,7 @@ $updater_utils = new UpdaterUtils($mysqli, $configObject->get('cfg_db_database')
 // Get the code version.
 $version = $configObject->getxml('version');
 // Get the installed version.
-$old_version = $configObject->get('rogo_version');
+$old_version = $configObject->get_setting('core', 'rogo_version');
 if ($version == $old_version) {
   cli_utils::prompt('Nothing to update.');
   exit(0);
@@ -236,10 +236,7 @@ if ($update_npm) {
 }
 
 // Final housekeeping activities - put all updates above this line
-$updated = $updater_utils->update_version($version, $string, $cfg_web_root);
-if ($updated !== true) {
-  cli_utils::prompt($string['couldnotwrite']);
-}
+$configObject->set_setting('rogo_version', $version, Config::VERSION);
 $updater_utils->execute_query('FLUSH PRIVILEGES', false);
 $updater_utils->execute_query('TRUNCATE sys_errors', false);
 $mysqli->close();
