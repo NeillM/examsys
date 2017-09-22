@@ -731,12 +731,13 @@ SCRIPT;
               $check = false;
           }
           break;
-        case self ::VERSION:
+        case self::VERSION:
           if(preg_match("#^[0-9]+\.[0-9]\.+[0-9]+$#", $value)) {
             $check = true;
           } else {
             $check = false;
           }
+          break;
         default:
           $check = false;
           break;

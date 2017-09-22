@@ -23,7 +23,7 @@
  * @package
  */
 
-require_once '../include/load_config.php';
+require_once '../include/sysadmin_auth.inc';
 
 $language = LangUtils::getLang($cfg_web_root);
 // If supported lang pack not installed install them.
@@ -31,10 +31,6 @@ if(!LangUtils::langPackInstalled($language)) {
     InstallUtils::download_langpacks();
 }
 
-require_once '../include/auth.inc';
-require_once '../include/errors.php';
-require_once '../include/std_set_shared_functions.inc';
-require_once '../include/timezones.php';
 require_once dirname(__DIR__) . '/lang/' . $language . '/install/index.php';
 require_once dirname(__DIR__) . '/lang/' . $language . '/updates/version5.php';
 
@@ -46,6 +42,8 @@ set_time_limit(0);
 
 // Get the installed version.
 $old_version = $configObject->get_setting('core', 'rogo_version');
+
+$updater_utils = new UpdaterUtils($mysqli, $configObject->get('cfg_db_database'));
 ?>
 <!DOCTYPE html>
 <html>
@@ -161,27 +159,6 @@ if (!isset($_POST['update'])) {
   <?php
 
 } else {
-  if ($configObject->get('cfg_db_charset') == null) {
-    $cfg_db_charset = 'latin1';
-  } else {
-    $cfg_db_charset = $configObject->get('cfg_db_charset');
-  }
-
-  $mysql_admin_user = param::required('mysql_admin_user', param::TEXT, param::FETCH_POST);
-  $mysql_admin_pass = param::required('mysql_admin_pass', param::TEXT, param::FETCH_POST);
-  $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $mysql_admin_user, $mysql_admin_pass, $configObject->get('cfg_db_database'), $cfg_db_charset, $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
-
-  if ($mysqli->connect_error) {
-    echo "<div>Failed to contect to MySQL using " . $mysql_admin_user . '</div>';
-    echo "</body>";
-    echo "</html>";
-    exit;
-  }
-
-  // Set db object in config.
-  $configObject->set_db_object($mysqli);
-
-  $updater_utils = new UpdaterUtils($mysqli, $configObject->get('cfg_db_database'));
 
   // Backup the config file before proceeding.
   $updater_utils->backup_file($cfg_web_root, $old_version);
