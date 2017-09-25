@@ -1,0 +1,6 @@
+function go_home() {
+  window.location='../index.php';
+}
+$(document).ready(function () {
+  $("#installForm").validate();
+});

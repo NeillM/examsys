@@ -146,11 +146,8 @@ if (!InstallUtils::configFileIsWriteable()) {
 // Backup the config file before proceeding.
 $updater_utils->backup_file($cfg_web_root, $old_version);
 // Update.
-ob_start();
 cli_utils::prompt($string['startingupdate']);
 cli_utils::prompt("Starting at " . date("H:i:s"));
-ob_flush();
-flush();
 $mysqli->autocommit(false);
 
 // Run individual update files
@@ -222,14 +219,30 @@ $mysqli->commit();
 
 // Update language packs.
 if ($update_langpacks) {
-  InstallUtils::download_langpacks();
+  try {
+    InstallUtils::download_langpacks();
+    cli_utils::prompt($string['langsuccess']);
+  } catch (Exception $e) {
+    switch ($e->getMessage()) {
+      case 'CANNOT_DOWNLOAD_XML':
+        cli_utils::prompt($string['cannotdownloadxml']);
+      case 'CANNOT_DOWNLOAD_ZIP':
+        cli_utils::prompt($string['cannotdownloadzip']);
+        break;
+      default:
+        cli_utils::prompt($string['cannotextract']);
+        break;
+    }
+  }
 }
 
 // Update npm and dependencies.
 if ($update_npm) {
   try {
     $npm_method = npm_utils::INSTALL_NODEV;
+    ob_start();
     npm_utils::setup($npm_method);
+    ob_end_clean();
   } catch (Exception $e) {
     cli_utils::prompt($e->getMessage());
   }

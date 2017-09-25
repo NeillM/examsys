@@ -26,9 +26,11 @@
 require_once '../include/sysadmin_auth.inc';
 
 $language = LangUtils::getLang($cfg_web_root);
-// If supported lang pack not installed install them.
-if(!LangUtils::langPackInstalled($language)) {
-    InstallUtils::download_langpacks();
+if (!isset($_POST['update'])) {
+  // If supported lang pack not installed install them.
+  if(!LangUtils::langPackInstalled($language)) {
+      InstallUtils::download_langpacks();
+  }
 }
 
 require_once dirname(__DIR__) . '/lang/' . $language . '/install/index.php';
@@ -44,121 +46,95 @@ set_time_limit(0);
 $old_version = $configObject->get_setting('core', 'rogo_version');
 
 $updater_utils = new UpdaterUtils($mysqli, $configObject->get('cfg_db_database'));
-?>
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
-    <title>Rog&#333; <?php echo $configObject->get_setting('core', 'rogo_version') . ' to ' . $version; ?> update Script</title>
+$render = new render($configObject);
+$headerdata = array(
+  'css' => array(
+    '/css/rogo_logo.css',
+    '/css/header.css',
+    '/css/updater.css',
+  ),
+  'scripts' => array(
+    '/js/jquery-1.11.1.min.js',
+    '/js/jquery.validate.min.js',
+    '/js/update.min.js',
+  ),
+);
 
-    <link rel="stylesheet" type="text/css" href="../css/body.css"/>
-		<link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
-    <link rel="stylesheet" type="text/css" href="../css/header.css"/>
-    <link rel="stylesheet" type="text/css" href="../css/updater.css"/>
-
-    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-    <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  </head>
-  <body>
-  <table class="header">
-    <tr>
-      <th style="padding-top:4px; padding-bottom:4px; padding-left:16px">
-          <img src="../artwork/r_logo.gif" alt="logo" class="logo_img" />
-
-          <div class="logo_lrg_txt">Rog&#333;</div>
-          <div class="logo_small_txt">Update Utility (<?php echo $old_version . ' to ' . $version; ?>)</div>
-      </th>
-      <th style="text-align:right; padding-right:10px"><img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" /></th>
-    </tr>
-  </table>
-<?php
+$lang['title'] = sprintf($string['updtitle'], $old_version, $version);
+$render->render($headerdata, $lang, 'header.html');
+$lang['logo_small_txt'] = sprintf($string['logo_small_txt'], $old_version, $version);
+$lang['icon'] = $string['icon'];
+$data = array();
+$data['updating'] = false;
+$data['configwarning'] = false;
+$data['dberror'] = false;
+$data['versionerror'] = false;
+$data['staffhelperror'] = false;
+$data['stuhelperror'] = false;
+$data['langerror'] = false;
 if ($updater_utils->check_version("6.4.0")) {
-  echo "<p style=\"margin-left:10px\">Rog&#333; $old_version is installed.<br /><br />Please updgrade to version 6.4.0 before proceeding with this upgrade.</p>";
+  $data['versionerror'] = true;
+  $lang['warning1'] = sprintf($string['warning1'], $old_version);
+  $lang['warning2'] = $string['warning2'];
+  $render->render($data, $lang, '/updates/update.html');
+  $render->render_admin_footer();
   exit;
 }
 if (!isset($_POST['update'])) {
+  $updating = true;
   InstallUtils::checkSoftware();
-  ?>
-<script>
-  $(document).ready(function () {
-    $("#installForm").validate();
-  });
-
-  $(document).ready(function () {
-    $('#useLdap').change(function () {
-      $('#ldapOptions').toggle();
-    });
-  });
-</script>
-  <?php
+  $lang['updatefromversion'] = $string['updatefromversion'];
   if (!InstallUtils::configFileIsWriteable()) {
-    ?>
-    <h2><?php echo $string['updatefromversion'] . ' ' . $configObject->get_setting('core', 'rogo_version') . ' to ' . $version; ?></h2>
-    <div><?php echo $string['warning1']; ?></div>
-    <div><?php echo $string['warning2']; ?></div>
-    <?php
+    $lang['warningmsg1'] = $string['warning1'];
+    $lang['warningmsg2'] = $string['warning2'];
+    $configwarning = true;
   } elseif (!InstallUtils::configPathIsWriteable()) {
-    ?>
-    <h2><?php echo $string['updatefromversion'] . ' ' . $configObject->get_setting('core', 'rogo_version') . ' to ' . $version; ?></h2>
-    <div><?php echo $string['warning3']; ?></div>
-    <div><?php echo $string['warning4']; ?></div>
-    <?php
+    $lang['warningmsg1'] = $string['warning3'];
+    $lang['warningmsg2'] = $string['warning4'];
+    $configwarning = true;
   } else {
-    ?>
-  <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'];?>" autocomplete="off">
-      <div><?php printf($string['msg1'], $version); ?></div>
-      <table class="h">
-          <tr>
-              <td>
-                  <nobr><?php echo $string['databaseadminuser']; ?></nobr>
-              </td>
-              <td class="line">
-                  <hr/>
-              </td>
-          </tr>
-      </table>
-      <div><?php echo $string['msg2']; ?></div>
-      <br/>
-
-      <div><label for="mysql_admin_user"><?php echo $string['dbusername']; ?></label> <input type="text" value="" name="mysql_admin_user" class="required" minlength="2"  autocomplete="off"/></div>
-      <div><label for="mysql_admin_pass"><?php echo $string['dbpassword']; ?></label> <input type="password" value="" name="mysql_admin_pass" autocomplete="off"/>
-      </div>
-
-      <table class="h">
-          <tr>
-              <td>
-                  <nobr><?php echo $string['onlinehelpsystems']; ?></nobr>
-              </td>
-              <td class="line">
-                  <hr />
-              </td>
-          </tr>
-      </table>
-      <div><label for="update_staff_help"><?php echo $string['updatestaffhelp']; ?></label> <input type="checkbox" name="update_staff_help" checked="checked" /></div>
-      <div><label for="update_student_help"><?php echo $string['updatestudenthelp']; ?></label> <input type="checkbox" name="update_student_help" checked="checked" /></div>
-      <table class="h">
-          <tr>
-              <td>
-                  <nobr><?php echo $string['translationpacks']; ?></nobr>
-              </td>
-              <td class="line">
-                  <hr />
-              </td>
-          </tr>
-      </table>
-      <div><label for="update_translationpack"><?php echo $string['updatetranslationpack']; ?></label> <input type="checkbox" name="update_translationpack" /></div>
-      <div class="submit"><input type="submit" name="update" value="<?php echo $string['startupdate']; ?>" class="ok" /></div>
-  </form>
-    <?php
+    $lang['menumsg'] = sprintf($string['msg1'], $version);
+    $lang['dbusermsg'] = $string['databaseadminuser'];
+    $lang['dbmsg'] = $string['msg2'];
+    $lang['dbuser'] = $string['dbusername'];
+    $lang['dbpass'] = $string['dbpassword'];
+    $lang['helpmsg'] = $string['onlinehelpsystems'];
+    $lang['updatestaff'] = $string['updatestaffhelp'];
+    $lang['updatestudent'] = $string['updatestudenthelp'];
+    $lang['transmsg'] = $string['translationpacks'];
+    $lang['updatetrans'] = $string['updatetranslationpack'];
+    $lang['startupdate'] = $string['startupdate'];
+    $data['action'] = url::fromGlobals();
   }
-  ?>
-   </body>
-   </html>
-  <?php
-
+  $data['configwarning'] = $configwarning;
+  $data['updating'] = true;
+  $render->render($data, $lang, '/updates/update.html');
+  $render->render_admin_footer();
 } else {
+
+  if ($configObject->get('cfg_db_charset') == null) {
+    $cfg_db_charset = 'latin1';
+  } else {
+    $cfg_db_charset = $configObject->get('cfg_db_charset');
+  }
+
+  $mysql_admin_user = param::required('mysql_admin_user', param::TEXT, param::FETCH_POST);
+  $mysql_admin_pass = param::required('mysql_admin_pass', param::TEXT, param::FETCH_POST);
+  $update_mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $mysql_admin_user, $mysql_admin_pass, $configObject->get('cfg_db_database'), $cfg_db_charset, $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
+
+  if ($update_mysqli->connect_error) {
+    $data['dberror'] = true;
+    $lang['dberror'] = sprintf($string['dberror'], $mysql_admin_user);
+    $render->render($data, $lang, '/updates/update.html');
+    $render->render_admin_footer();
+    exit;
+  }
+
+  // Set db object in config.
+  $configObject->set_db_object($update_mysqli);
+
+  $updater_utils = new UpdaterUtils($update_mysqli, $configObject->get('cfg_db_database'));
 
   // Backup the config file before proceeding.
   $updater_utils->backup_file($cfg_web_root, $old_version);
@@ -178,14 +154,10 @@ if (!isset($_POST['update'])) {
     $cfg_web_host = $cfg_db_host;
   }
 
-  ob_start();
-  
-  echo "\n<blockquote>\n<h1>" . $string['startingupdate'] . "</h1>";
-  echo "<div>Starting at " . date("H:i:s") . "</div>\n<ol>";
-  ob_flush();
-  flush();
+  $lang['startingupdate'] = $string['startingupdate'];
+  $lang['startingat'] = sprintf($string['startingat'], date("H:i:s"));
 
-  $mysqli->autocommit(false);
+  $update_mysqli->autocommit(false);
 
   /*
    *****   ALL UPDATES SHOULD NOW BE PLACED IN DATESTAMPED FILES IN THE version5 FOLDER   *****
@@ -197,27 +169,27 @@ if (!isset($_POST['update'])) {
   foreach ($files as $file) {
     if (StringUtils::ends_with($file, '.php')) {
       include $migration_path . '/' . $file;
-      $mysqli->commit();
+      $update_mysqli->commit();
     }
   }
 
-  $mysqli->commit();
+  $update_mysqli->commit();
   
   // 01/05/2013 - Update the online help files.
   $update_staff_help = param::optional('update_staff_help', false, param::BOOLEAN, param::FETCH_POST);
-  if (!is_null($update_staff_help)) {
-    $updater_utils->execute_query("TRUNCATE staff_help", true);
+  if ($update_staff_help) {
+    $updater_utils->execute_query("TRUNCATE staff_help", false);
 
     $file = file_get_contents('../install/staff_help.sql');
-    $mysqli->multi_query($file);
-    if ($mysqli->error) {
-      echo $string['showerror'] . "<br />";
-      exit();
+    $update_mysqli->multi_query($file);
+    if ($update_mysqli->error) {
+      $lang['staffhelperrormsg'] = $string['showerror'];
+      $data['staffhelperror'] = true;
     }
     $ext = '';
-    while ($mysqli->more_results()) {
-      $mysqli->next_result();
-      if ($mysqli->insert_id > 0) $ext = $ext . ' ' . $mysqli->insert_id;
+    while ($update_mysqli->more_results()) {
+      $update_mysqli->next_result();
+      if ($update_mysqli->insert_id > 0) $ext = $ext . ' ' . $update_mysqli->insert_id;
     }
     // Ensure all help images are in the correct location.
     $staffhelp = rogo_directory::get_directory('help_staff');
@@ -225,23 +197,23 @@ if (!isset($_POST['update'])) {
     $staffhelp->copy_from_default();
     // Fix path of help file images as may not be in root web dir.
     InstallUtils::correct_staff_path();
-    echo "<li>LOADED staff_help: " . $ext . "</li>\n";
+    $lang['staffloaded'] = sprintf($string['staffloaded'], $ext);
   }
 
   $update_student_help = param::optional('update_student_help', false, param::BOOLEAN, param::FETCH_POST);
   if ($update_student_help) {
-    $updater_utils->execute_query("TRUNCATE student_help", true);
+    $updater_utils->execute_query("TRUNCATE student_help", false);
 
     $file = file_get_contents('../install/student_help.sql');
-    $mysqli->multi_query($file);
-    if ($mysqli->error) {
-      echo $string['showerror'] . "<br />";
-      exit();
+    $update_mysqli->multi_query($file);
+    if ($update_mysqli->error) {
+      $lang['stuhelperrormsg'] = $string['showerror'];
+      $data['stuhelperror'] = true;
     }
     $ext = '';
-    while ($mysqli->more_results()) {
-      $mysqli->next_result();
-      if ($mysqli->insert_id > 0) $ext = $ext . ' ' . $mysqli->insert_id;
+    while ($update_mysqli->more_results()) {
+      $update_mysqli->next_result();
+      if ($update_mysqli->insert_id > 0) $ext = $ext . ' ' . $update_mysqli->insert_id;
     }
     // Ensure all help images are in the correct location.
     $studenthelp = rogo_directory::get_directory('help_student');
@@ -249,14 +221,29 @@ if (!isset($_POST['update'])) {
     $studenthelp->copy_from_default();
     // Fix path of help file images as may not be in root web dir.
     InstallUtils::correct_student_path();
-    echo "<li>LOADED student_help: " . $ext . "</li>\n";
+    $lang['stuloaded'] = sprintf($string['studentloaded'], $ext);
   }
-  $mysqli->commit();
+  $update_mysqli->commit();
 
   // Update language packs.
   $update_translationpack = param::optional('update_translationpack', false, param::BOOLEAN, param::FETCH_POST);
   if ($update_translationpack) {
-    InstallUtils::download_langpacks();
+    try {
+      InstallUtils::download_langpacks();
+      $lang['langsuccess'] = $string['langsuccess'];
+    } catch (Exception $e) {
+      $data['langerror'] = true;
+      switch ($e->getMessage()) {
+        case 'CANNOT_DOWNLOAD_XML':
+          $lang['langerror'] = $string['cannotdownloadxml'];
+        case 'CANNOT_DOWNLOAD_ZIP':
+          $lang['langerror'] = $string['cannotdownloadzip'];
+          break;
+        default:
+          $lang['langerror'] = $string['cannotextract'];
+          break;
+      }
+    }
   }
 
 	/*
@@ -268,26 +255,23 @@ if (!isset($_POST['update'])) {
   // Update npm and dependencies.
   try {
     $npm_method = npm_utils::INSTALL_NODEV;
+    ob_start();
     npm_utils::setup($npm_method);
+    ob_end_clean();
   } catch (Exception $e) {
-      echo "<li class=\"error\">" . $e->getMessage() . "</li>";
+    $lang['error'] = $e->getMessage();
   }
 
   // Final housekeeping activities - put all updates above this line
   $configObject->set_setting('rogo_version', $version, Config::VERSION);
-  $updater_utils->execute_query('FLUSH PRIVILEGES', true);
-  $updater_utils->execute_query('TRUNCATE sys_errors', true);
-  echo "</ol>\n";
-
-  $mysqli->close();
-  echo "<div>Ended at " . date("H:i:s") . "</div>";
-  echo "\n<h2>" . $string['actionrequired'] . "</h2>\n<ol>";
-  echo "\n<li>" . $string['readonly'] . "</li>\n";
-  echo "</ol>\n<div>" . $string['finished'] . "</div>\n<div style=\"text-align:center\"><input type=\"button\" class=\"ok\" value=\" " . $string['home'] . " \" onclick=\"go_home()\" /></div><blockquote>\n";
+  $updater_utils->execute_query('FLUSH PRIVILEGES', false);
+  $updater_utils->execute_query('TRUNCATE sys_errors', false);
+  $lang['actionrequired'] = $string['actionrequired'];
+  $lang['readonly'] = $string['readonly'];
+  $lang['finished'] = $string['finished'];
+  $lang['home'] = $string['home'];
+  $lang['ended'] = sprintf($string['ended'], date("H:i:s"));
+  $render->render($data, $lang, '/updates/update.html');
+  $render->render_admin_footer();
+  $update_mysqli->close();
 }
-?>
-<script>
-function go_home() {
-  window.location='../index.php';
-}
-</script>

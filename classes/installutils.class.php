@@ -630,7 +630,20 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
     // Download language packs and install.
     if ($download_lang) {
-      self::download_langpacks();
+      try {
+        self::download_langpacks();
+      } catch (Exception $e) {
+        switch ($e->getMessage()) {
+          case 'CANNOT_DOWNLOAD_XML':
+            echo $string['cannotdownloadxml'];
+          case 'CANNOT_DOWNLOAD_ZIP':
+            echo $string['cannotdownloadzip'];
+            break;
+          default:
+            echo $string['cannotextract'];
+            break;
+        }
+      }
     }
 
     //Write out the config file
@@ -653,7 +666,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     // Install npm and dependencies.
     try {
       $npm_method = npm_utils::INSTALL_NODEV;
+      ob_start();
       npm_utils::setup($npm_method);
+      ob_end_clean();
     } catch (Exception $e) {
       // Non fatal warning.
       if (!self::$cli) {
@@ -761,13 +776,13 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       $fullurl = $url . '/' . $version . '/languages.xml';
       $file = @file_get_contents($fullurl);
       if ($file === false or file_put_contents('languages.xml', $file) === false) {
-        echo "Error downloading latest languages.xml from $fullurl, you may need to manually install it.";
+        throw new Exception('CANNOT_DOWNLOAD_XML');
       }
       // Download language packs.
       $fullurl = $url . '/' . $version . '/rogo.zip';
       $file = @file_get_contents($fullurl);
       if ($file === false or file_put_contents("translations.zip", $file) === false) {
-        echo "Error downloading language packs from $fullurl, you will need to manually install them.";
+        throw new Exception('CANNOT_DOWNLOAD_ZIP');
       } else {
         // Unzip archive.
         $zip = new ZipArchive;
@@ -778,7 +793,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
           // Remove zip and temporary directories.
           unlink('translations.zip');
         } else {
-          echo('Cannot extract language packs, you will need to manually extract them.');
+          throw new Exception('CANNOT_EXTRACT');
         }
       }
       chdir($workingdir);
@@ -1998,7 +2013,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     // Install composer and dependencies.
     try {
       if (!InstallUtils::$behat_install and !InstallUtils::$phpunit_install) {
+        ob_start();
         composer_utils::setup(composer_utils::INSTALL_NODEV);
+        ob_end_clean();
       }
     } catch (Exception $e) {
       $errorcode += 1;

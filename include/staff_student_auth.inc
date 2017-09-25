@@ -79,11 +79,6 @@ if (is_null($configObject->get('cfg_db_port'))) {
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
 $configObject->set_db_object($mysqli);
 
-// Check to see if installed version matches the code version. If not the update script needs to be run by a sys admin.
-if ($configObject->get_setting('core', 'rogo_version') != $configObject->getxml('version')) {
-  $notice->display_notice_and_exit($mysqli, 'Update Required', 'System needs configuring before use. Please contact your local system administrator.', 'Update Required', '../artwork/software_64.png', $title_color = '#C00000', true, true);
-}
-
 $fp_link = "<p style=\"margin-left:60px\"><a href=\"{$configObject->get('cfg_root_path')}/users/forgotten_password.php\">" . $string['forgottenpassword'] . "</a></p>\n";
 
 // Check for secure protocol

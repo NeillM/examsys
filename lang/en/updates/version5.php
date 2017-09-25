@@ -16,7 +16,7 @@
 
 $string['systemupdate'] = 'System Update';
 $string['actionrequired'] = 'Action Required';
-$string['readonly'] = "Don't forget to make the <strong>/config/config.inc.php</strong> readonly! (chmod 444)";
+$string['readonly'] = "Don't forget to make the /config/config.inc.php readonly! (chmod 444)";
 $string['finished'] = 'Finished!';
 $string['couldnotwrite'] = 'Error: could not write config file!';
 $string['msg1'] = 'This script updates the database structures to match the new %s code. No harm will come if this script is run multiple times as it checks the current database structure before applying any changes.';
@@ -34,9 +34,18 @@ $string['warning1'] = 'This update requires that /config/config.inc.php is write
 $string['warning2'] = 'Please chown the file to the webserver and chomod it 644';
 $string['warning3'] = 'This update requires that the /config directory is writeable.';
 $string['warning4'] = 'Please chown the file to the webserver and chomod it 744';
-$string['updatefromversion'] = 'Update from version';
+$string['updatefromversion'] = 'Update from version %s to %s';
 $string['home'] = 'Home';
 $string['startingupdate'] = 'Starting Update';
 $string['addinglines'] = 'Adding lines to %s file:';
 $string['replacinglines'] = 'Replacing lines to %s file:';
-?>
+$string['icon'] = 'Upgrade Icon';
+$string['updtitle'] = '%s to %s update Script';
+$string['logo_small_txt'] = 'Update Utility (%s to %s)';
+$string['warning1'] = 'Rogō %s is installed.';
+$string['warning2'] = 'Please updgrade to version 6.4.0 before proceeding with this upgrade.';
+$string['startingat'] = 'Starting at %s';
+$string['staffloaded'] = 'LOADED staff_help: %s';
+$string['studentloaded'] = 'LOADED student_help: %s';
+$string['ended'] = 'Ended at %s';
+$string['dberror'] = 'Failed to contect to MySQL using %s';
