@@ -1,4 +1,3 @@
-<?php
 // This file is part of Rogo
 //
 // Rogo is free software: you can redistribute it and/or modify
@@ -13,10 +12,14 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
+// 
+// Requirement functions
+//
+// @author Dr Joseph Bater <joseph.baxter@nottingham.ac.uk>
+// @copyright Copyright (c) 2017 The University of Nottingham
+//
 
-$string['msg1'] = 'Enter a <b>short</b> tag that will be appended to the update file name';
-$string['tag'] = 'Tag';
-$string['create'] = 'Create';
-$string['success'] = 'Update file %s created';
-$string['createerror'] = 'Error creating update file';
-$string['runupdate'] = 'Run update';
+// Load uppgrade screen.
+function run_update() {
+  window.location='upgrade.php';
+}

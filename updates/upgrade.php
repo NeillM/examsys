@@ -15,12 +15,11 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Update script updates any V5 Rogō to latest V5 Rogō.
- *
+ * Updater script
+ * 
  * @author Simon Wilkinson
- * @version 1.0
- * @copyright Copyright (c) 2014 The University of Nottingham
- * @package
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2017 The University of Nottingham
  */
 
 require_once '../include/sysadmin_auth.inc';
@@ -34,11 +33,10 @@ if (!isset($_POST['update'])) {
 }
 
 require_once dirname(__DIR__) . '/lang/' . $language . '/install/index.php';
-require_once dirname(__DIR__) . '/lang/' . $language . '/updates/version5.php';
+require_once dirname(__DIR__) . '/lang/' . $language . '/updates/scripts.php';
 
 // Get the code version.
 $version = $configObject->getxml('version');
-$migration_path = 'version5';
 
 set_time_limit(0);
 
@@ -83,7 +81,6 @@ if ($updater_utils->check_version("6.4.0")) {
 }
 if (!isset($_POST['update'])) {
   $updating = true;
-  InstallUtils::checkSoftware();
   $lang['updatefromversion'] = $string['updatefromversion'];
   if (!InstallUtils::configFileIsWriteable()) {
     $lang['warningmsg1'] = $string['warning1'];
@@ -159,23 +156,18 @@ if (!isset($_POST['update'])) {
 
   $update_mysqli->autocommit(false);
 
-  /*
-   *****   ALL UPDATES SHOULD NOW BE PLACED IN DATESTAMPED FILES IN THE version5 FOLDER   *****
-   *
-   */
-
   // Run individual update files
-  $files = scandir($migration_path);
+  $files = scandir('scripts');
   foreach ($files as $file) {
     if (StringUtils::ends_with($file, '.php')) {
-      include $migration_path . '/' . $file;
+      include 'scripts/' . $file;
       $update_mysqli->commit();
     }
   }
 
   $update_mysqli->commit();
   
-  // 01/05/2013 - Update the online help files.
+  // Update the online help files.
   $update_staff_help = param::optional('update_staff_help', false, param::BOOLEAN, param::FETCH_POST);
   if ($update_staff_help) {
     $updater_utils->execute_query("TRUNCATE staff_help", false);
@@ -246,23 +238,7 @@ if (!isset($_POST['update'])) {
     }
   }
 
-	/*
-   *****   NOW UPDATE THE INSTALLER SCRIPT   *****
-   */
-
-  // End of updates -----------------------------------------------------------------
-
-  // Update npm and dependencies.
-  try {
-    $npm_method = npm_utils::INSTALL_NODEV;
-    ob_start();
-    npm_utils::setup($npm_method);
-    ob_end_clean();
-  } catch (Exception $e) {
-    $lang['error'] = $e->getMessage();
-  }
-
-  // Final housekeeping activities - put all updates above this line
+  // Final housekeeping activities.
   $configObject->set_setting('rogo_version', $version, Config::VERSION);
   $updater_utils->execute_query('FLUSH PRIVILEGES', false);
   $updater_utils->execute_query('TRUNCATE sys_errors', false);

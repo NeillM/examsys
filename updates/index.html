@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <title>Rog&#333;: Updater</title>
+    <link rel="stylesheet" type="text/css" href="../css/requirements.css" />
+    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../js/requirements.min.js"></script>
+    <script>
+      $(document).ready(function(){
+        $("#requirementslist").load("update.php");
+      });
+    </script>
+  </head>
+  <body>
+    <div class = "requirements">
+      <div id = "requirementstitle" class = "requirements-item">
+        <h3>Checking Rog&#333; requirements</h3>
+        <p>Where possible Rog&#333; will attempt to resolve any issues. Please wait this may take a few minutes.</p>
+      </div>
+      <div id = "requirementslist" class = "requirements-item">
+        <img id ="checking" src="../artwork/large_spin.gif" alt="Checking"/>
+      </div>
+    </div>
+    <footer>
+      <small>&copy; 2017 University of Nottingham. Licensed under 
+        <a href = "http://www.gnu.org/licenses/gpl.html" target = "_blank">
+          GPL v3.0 
+        </a>
+      </small>
+    </footer>
+  </body>
+</html>
