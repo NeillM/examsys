@@ -76,14 +76,14 @@ if (!$npm) {
   $info['npm'] = array($blurb ,true);
 }
 $html = <<<HTML
-  <div class="requirementsbody">
-    <div class="requirementsbody-item">Requirement</div>
-    <div class="requirementsbody-item">Found?</div>
+  <div class="requirements-header">
+    <div class="requirements-body-item">Requirement</div>
+    <div class="requirements-body-item">Found?</div>
   </div>
 HTML;
 echo $html;
 foreach ($info as $idx => $val) {
-  echo "<div class=\"requirementsbody\"><div class=\"requirementsbody-item\">$val[0]</div><div class=\"requirementsbody-item\">";
+  echo "<div class=\"requirements-body\"><div class=\"requirements-body-item\">$val[0]</div><div class=\"requirements-body-item\">";
   if ($val[1]) {
     echo "<img src=\"../artwork/tick.gif\" id=\"yes\" /></div>";
   } else {
@@ -91,7 +91,7 @@ foreach ($info as $idx => $val) {
   }
   echo "</div>";
 }
-echo "<div class=\"requirementsbody\">";
+echo "<div class=\"requirements-body\">";
 if ($phpversion and $phpallext and $composer) {
   echo "<button id=\"update\" class=\"updatebutton\" onclick=\"run_update()\">Update</button>";
 } else {

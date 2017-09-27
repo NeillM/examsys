@@ -1,5 +1,5 @@
 .updatebutton {
-  background-color: #4CAF50;
+  background-color: #4f81bd;
   border: none;
   border-radius: 5px;
   color: white;
@@ -17,9 +17,16 @@
 }
 .requirements-item {
   margin: auto;
-  width: 50%;
+  width: 90%;
 }
-.requirementsbody {
+.requirements-header {
   display: flex;
   justify-content: space-between;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+.requirements-body {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 32px;
 }
