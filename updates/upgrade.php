@@ -167,53 +167,35 @@ if (!isset($_POST['update'])) {
 
   $update_mysqli->commit();
   
-  // Update the online help files.
+  // Update the online staff help files.
   $update_staff_help = param::optional('update_staff_help', false, param::BOOLEAN, param::FETCH_POST);
   if ($update_staff_help) {
-    $updater_utils->execute_query("TRUNCATE staff_help", false);
-
-    $file = file_get_contents('../install/staff_help.sql');
-    $update_mysqli->multi_query($file);
-    if ($update_mysqli->error) {
-      $lang['staffhelperrormsg'] = $string['showerror'];
+    try {
+      OnlineHelp::load_staff_help();
+      $lang['staffloaded'] = sprintf($string['staffloaded'], $ext);
+    } catch (Exception $e) {
+      if ($e->getMessage() === 'CANNOT_FIND') {
+        $lang['staffhelperrormsg'] = $string['logwarning2'];
+      } else {
+        $lang['staffhelperrormsg'] = $string['logwarning1'];
+      }
       $data['staffhelperror'] = true;
     }
-    $ext = '';
-    while ($update_mysqli->more_results()) {
-      $update_mysqli->next_result();
-      if ($update_mysqli->insert_id > 0) $ext = $ext . ' ' . $update_mysqli->insert_id;
-    }
-    // Ensure all help images are in the correct location.
-    $staffhelp = rogo_directory::get_directory('help_staff');
-    $staffhelp->create();
-    $staffhelp->copy_from_default();
-    // Fix path of help file images as may not be in root web dir.
-    InstallUtils::correct_staff_path();
-    $lang['staffloaded'] = sprintf($string['staffloaded'], $ext);
   }
-
+  // Update the online student help files.
   $update_student_help = param::optional('update_student_help', false, param::BOOLEAN, param::FETCH_POST);
   if ($update_student_help) {
-    $updater_utils->execute_query("TRUNCATE student_help", false);
-
-    $file = file_get_contents('../install/student_help.sql');
-    $update_mysqli->multi_query($file);
-    if ($update_mysqli->error) {
-      $lang['stuhelperrormsg'] = $string['showerror'];
+    try {
+      OnlineHelp::load_student_help();
+      $lang['stuloaded'] = sprintf($string['studentloaded'], $ext);
+    } catch (Exception $e) {
+      if ($e->getMessage() === 'CANNOT_FIND') {
+        $lang['stuhelperrormsg'] = $string['logwarning4'];
+      } else {
+        $lang['stuhelperrormsg'] = $string['logwarning3'];
+      }
       $data['stuhelperror'] = true;
     }
-    $ext = '';
-    while ($update_mysqli->more_results()) {
-      $update_mysqli->next_result();
-      if ($update_mysqli->insert_id > 0) $ext = $ext . ' ' . $update_mysqli->insert_id;
-    }
-    // Ensure all help images are in the correct location.
-    $studenthelp = rogo_directory::get_directory('help_student');
-    $studenthelp->create();
-    $studenthelp->copy_from_default();
-    // Fix path of help file images as may not be in root web dir.
-    InstallUtils::correct_student_path();
-    $lang['stuloaded'] = sprintf($string['studentloaded'], $ext);
   }
   $update_mysqli->commit();
 

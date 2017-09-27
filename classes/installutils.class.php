@@ -651,17 +651,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 
     // We will need the root path.
     $configObject->set('cfg_root_path', self::$cfg_root_path);
-    // Fix help file image paths.
-    if ($load_help) {
-      // Set db object in config.
-      @$mysqli = new mysqli(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd, self::$cfg_db_name, self::$cfg_db_port);
-      if ($mysqli->connect_error == '') {
-        $mysqli->set_charset(self::$cfg_db_charset);
-      }
-      $configObject->set_db_object($mysqli);
-      self::correct_staff_path();
-      self::correct_student_path();
-    }
 
     // Install npm and dependencies.
     try {
@@ -691,74 +680,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     } else {
       self::displayWarnings();
     }
-  }
-
-  /**
-   * Correct path of staff help file images as may not be in root web server directory.
-   */
-  static public function correct_staff_path() {
-    set_time_limit(0);
-    $configObject = Config::get_instance();
-    $webroot = $configObject->get('cfg_root_path');
-    // Ensure there is a trailing slash.
-    if (substr($webroot, -1) !== '/') {
-      $webroot .= '/';
-    }
-    // Strip out double forward slash.
-    $webroot = preg_replace('#/+#','/',$webroot);
-    // The substitution will replace the old src tag with a new one that.
-    $regexp = '#src="\/getfile\.php\?type\=help_staff&amp;filename\=(.*?)"#';
-    $substitution = 'src="' . $webroot . 'getfile.php?type=help_staff&amp;filename=$1"';
-    // If we find any images in help files update them.
-    $result = $configObject->db->prepare("SELECT id, body FROM staff_help WHERE body LIKE '%<img%'");
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($id, $body);
-    while ($result->fetch()) {
-      $newbody = preg_replace($regexp, $substitution, $body);
-      if ($newbody != $body) {
-        // There was a change, so update the record.
-        $update = $configObject->db->prepare("UPDATE staff_help SET body = ? WHERE id = ?");
-        $update->bind_param('si', $newbody, $id);
-        $update->execute();
-        $update->close();
-      }
-    }
-    $result->close();
-  }
-
-  /**
-   * Correct path of student help file images as may not be in root web server directory.
-   */
-  static public function correct_student_path() {
-    set_time_limit(0);
-    $configObject = Config::get_instance();
-    $webroot = $configObject->get('cfg_root_path');
-    // Ensure there is a trailing slash.
-    if (substr($webroot, -1) !== '/') {
-      $webroot .= '/';
-    }
-    // Strip out double forward slash.
-    $webroot = preg_replace('#/+#','/',$webroot);
-    // The substitution will replace the old src tag with a new one that.
-    $regexp = '#src="\/getfile\.php\?type\=help_student&amp;filename\=(.*?)"#';
-    $substitution = 'src="' . $webroot . 'getfile.php?type=help_student&amp;filename=$1"';
-    // If we find any images in help files update them.
-    $result = $configObject->db->prepare("SELECT id, body FROM student_help WHERE body LIKE '%<img%'");
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($id, $body);
-    while ($result->fetch()) {
-      $newbody = preg_replace($regexp, $substitution, $body);
-      if ($newbody != $body) {
-        // There was a change, so update the record.
-        $update = $configObject->db->prepare("UPDATE student_help SET body = ? WHERE id = ?");
-        $update->bind_param('si', $newbody, $id);
-        $update->execute();
-        $update->close();
-      }
-    }
-    $result->close();
   }
 
   /**
@@ -806,89 +727,36 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   */
   static function loadHelp() {
     global $string;
-    $staff_help = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'staff_help.sql';
-    $student_help = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'student_help.sql';
-
-    //make sure we are using the right DB
-    self::$db->select_db(self::$cfg_db_name);
-
-    self::$db->autocommit(false);
-    if (file_exists($staff_help)) {
-      $query = file_get_contents($staff_help);
-      self::$db->query("TRUNCATE staff_help");
-
-
-      self::$db->multi_query($query);
-      if (self::$db->error) {
-        try {
-          throw new Exception("MySQL error " . self::$db->error . " <br /> Query:<br /> ", self::$db->errno);
-        } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
-        }
-        self::$db->rollback();
-      }
-
-      if (self::$db->errno != 0) {
-        self::logWarning(array('501' => $string['logwarning1'] . self::$db->error));
-        $ext = '';
-      }
-      while (self::$db->more_results()) {
-        self::$db->next_result();
-        if (self::$db->error) {
-          try {
-            throw new Exception("MySQL error " . self::$db->error . " <br /> Query:<br /> ", self::$db->errno);
-          } catch (Exception $e) {
-            echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-            echo nl2br($e->getTraceAsString());
-          }
-          self::$db->rollback();
-        }
-      }
-    } else {
-      self::logWarning(array('502' => $string['logwarning2']));
+    // Set db object in config.
+    @$mysqli = new mysqli(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd, self::$cfg_db_name, self::$cfg_db_port);
+    if ($mysqli->connect_error == '') {
+      $mysqli->set_charset(self::$cfg_db_charset);
     }
-    self::$db->commit();
-
-    if (file_exists($student_help)) {
-      $query = file_get_contents($student_help);
-      self::$db->query("TRUNCATE student_help");
-
-      self::$db->multi_query($query);
-      if (self::$db->error) {
-        try {
-          throw new Exception("MySQL error " . self::$db->error . " <br /> Query:<br /> ", self::$db->errno);
-        } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
-        }
-        self::$db->rollback();
+    $configObject->set_db_object($mysqli);
+    // Staff help files.
+    try {
+      OnlineHelp::load_staff_help;
+    } catch (Exception $ex) {
+      if ($ex->getMessage() === 'CANNOT_FIND') {
+        self::logWarning(array('502' => $string['logwarning2']));
+      } else {
+        self::logWarning(array('501' => $string['logwarning1']));
       }
-      if (self::$db->errno != 0) {
-        self::logWarning(array('503' => $string['logwarning3'] . self::$db->error));
-        $ext = '';
-        while (self::$db->more_results()) {
-          self::$db->next_result();
-          if (self::$db->error) {
-            try {
-              throw new Exception("MySQL error " . self::$db->error . " <br /> Query:<br /> ", self::$db->errno);
-            } catch (Exception $e) {
-              echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-              echo nl2br($e->getTraceAsString());
-            }
-            self::$db->rollback();
-          }
-        }
-      }
-    } else {
-      self::logWarning(array('504' => $string['logwarning4']));
     }
-    self::$db->commit();
-    self::$db->autocommit(true);
+    // Student help files.
+    try {
+      OnlineHelp::load_student_help();
+    } catch (Exception $ex) {
+      if ($ex->getMessage() === 'CANNOT_FIND') {
+        self::logWarning(array('503' => $string['logwarning3']));
+      } else {
+        self::logWarning(array('504' => $string['logwarning4']));
+      }
+    }
   }
 
   /**
-   * Create constrainsts to maintain database referential integrity
+   * Create constraints to maintain database referential integrity
    */
   static function createConstraints() {
     $alter = array();

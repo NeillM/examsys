@@ -618,4 +618,131 @@ Class OnlineHelp {
     
     return $search_results;
   }
+  
+  /**
+   * Load staff help into database
+   * @throws exception
+   */
+  public static function load_staff_help() {
+    $staff_help = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'staff_help.sql';
+    if (!file_exists($staff_help)) {
+      throw new Exception('CANNOT_FIND');
+    }
+    $configObject = Config::get_instance();
+    $updater_utils = new UpdaterUtils($configObject->db, $configObject->get('cfg_db_database'));
+    $updater_utils->execute_query("TRUNCATE staff_help", false);
+    $file = file_get_contents($staff_help);
+    $configObject->db->multi_query($file);
+    if ($configObject->db->error) {
+      throw new Exception('CANNOT_LOAD');
+    }
+    $ext = '';
+    while ($configObject->db->more_results()) {
+      $configObject->db->next_result();
+      if ($configObject->db->insert_id > 0) $ext = $ext . ' ' . $configObject->db->insert_id;
+    }
+    // Ensure all help images are in the correct location.
+    $staffhelp = rogo_directory::get_directory('help_staff');
+    $staffhelp->create();
+    $staffhelp->copy_from_default();
+    // Fix path of help file images as may not be in root web dir.
+    self::correct_staff_path();
+ 
+  }
+  /**
+   * Load student help into database
+   * @throws exception
+   */
+  public static function load_student_help() {
+    $student_help = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'student_help.sql';
+    if (!file_exists($student_help)) {
+      throw new Exception('CANNOT_FIND');
+    }
+    $configObject = Config::get_instance();
+    $updater_utils = new UpdaterUtils($configObject->db, $configObject->get('cfg_db_database'));
+    $updater_utils->execute_query("TRUNCATE student_help", false);
+    $file = file_get_contents($student_help);
+    $configObject->db->multi_query($file);
+    if ($configObject->db->error) {
+      throw new Exception('CANNOT_LOAD');
+    }
+    $ext = '';
+    while ($configObject->db->more_results()) {
+      $configObject->db->next_result();
+      if ($configObject->db->insert_id > 0) $ext = $ext . ' ' . $configObject->db->insert_id;
+    }
+    // Ensure all help images are in the correct location.
+    $studenthelp = rogo_directory::get_directory('help_student');
+    $studenthelp->create();
+    $studenthelp->copy_from_default();
+    // Fix path of help file images as may not be in root web dir.
+    self::correct_student_path();
+  }
+  /**
+   * Correct path of staff help file images as may not be in root web server directory.
+   */
+  static private function correct_staff_path() {
+    set_time_limit(0);
+    $configObject = Config::get_instance();
+    $webroot = $configObject->get('cfg_root_path');
+    // Ensure there is a trailing slash.
+    if (substr($webroot, -1) !== '/') {
+      $webroot .= '/';
+    }
+    // Strip out double forward slash.
+    $webroot = preg_replace('#/+#','/',$webroot);
+    // The substitution will replace the old src tag with a new one that.
+    $regexp = '#src="\/getfile\.php\?type\=help_staff&amp;filename\=(.*?)"#';
+    $substitution = 'src="' . $webroot . 'getfile.php?type=help_staff&amp;filename=$1"';
+    // If we find any images in help files update them.
+    $result = $configObject->db->prepare("SELECT id, body FROM staff_help WHERE body LIKE '%<img%'");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($id, $body);
+    while ($result->fetch()) {
+      $newbody = preg_replace($regexp, $substitution, $body);
+      if ($newbody != $body) {
+        // There was a change, so update the record.
+        $update = $configObject->db->prepare("UPDATE staff_help SET body = ? WHERE id = ?");
+        $update->bind_param('si', $newbody, $id);
+        $update->execute();
+        $update->close();
+      }
+    }
+    $result->close();
+  }
+
+  /**
+   * Correct path of student help file images as may not be in root web server directory.
+   */
+  static private function correct_student_path() {
+    set_time_limit(0);
+    $configObject = Config::get_instance();
+    $webroot = $configObject->get('cfg_root_path');
+    // Ensure there is a trailing slash.
+    if (substr($webroot, -1) !== '/') {
+      $webroot .= '/';
+    }
+    // Strip out double forward slash.
+    $webroot = preg_replace('#/+#','/',$webroot);
+    // The substitution will replace the old src tag with a new one that.
+    $regexp = '#src="\/getfile\.php\?type\=help_student&amp;filename\=(.*?)"#';
+    $substitution = 'src="' . $webroot . 'getfile.php?type=help_student&amp;filename=$1"';
+    // If we find any images in help files update them.
+    $result = $configObject->db->prepare("SELECT id, body FROM student_help WHERE body LIKE '%<img%'");
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($id, $body);
+    while ($result->fetch()) {
+      $newbody = preg_replace($regexp, $substitution, $body);
+      if ($newbody != $body) {
+        // There was a change, so update the record.
+        $update = $configObject->db->prepare("UPDATE student_help SET body = ? WHERE id = ?");
+        $update->bind_param('si', $newbody, $id);
+        $update->execute();
+        $update->close();
+      }
+    }
+    $result->close();
+  }
 }
