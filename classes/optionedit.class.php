@@ -652,7 +652,6 @@ QUERY;
   
   /*
    * Default method for return post params
-   * @param array $field the parameter
    * @return array unparsed post data
    */
   public function get_post_default() {
