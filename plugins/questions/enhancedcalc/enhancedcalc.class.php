@@ -548,8 +548,8 @@ class EnhancedCalc extends Question implements questionInterface {
 
 	/**
 	 * Process the POST data for the user's answer into JSON
-	 * @param  array  $postdata HTML POST data for theuser's answer
-	 * @param  [type] $session  [description]
+	 * @param  array  $postdata HTML POST data for the user's answer
+	 * @param  array $session user session data
 	 * @return string JSON encoded answer data
 	 */
 	static public function process_user_answer(&$postdata, &$session) {
@@ -674,8 +674,8 @@ class EnhancedCalc extends Question implements questionInterface {
 	}
 
 	/**
-	 * Render the querstion as required for displaying results and feedback to the user
-	 * @param  array  $extra [description]
+	 * Render the question as required for displaying results and feedback to the user
+	 * @param  array $extra additional paper settings
 	 */
 	public function render_feedback($extra = array()) {
 		global $string;
@@ -810,7 +810,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
 	/**
 	 * Load the answers for all users
-	 * @param  [type] $all_user_answers [description]
+	 * @param array $all_user_answers all users input
 	 */
 	function load_all_user_answers(&$all_user_answers) {
 		$this->alluseranswers = $all_user_answers;
@@ -819,8 +819,8 @@ class EnhancedCalc extends Question implements questionInterface {
 	/**
 	 * Substitute variable placeholders with the calculated value
 	 * @param  string $inputVal The variable definition
-	 * @param  [type] $user_answers [description]
-	 * @return [type] [description]
+	 * @param  array $user_answers a users input
+	 * @return string
 	 */
 	function variable_substitution($inputVal, $user_answers) {
 
@@ -977,7 +977,6 @@ class EnhancedCalc extends Question implements questionInterface {
 
 	/**
 	 * Render the question in the format required when taking the paper
-	 * @param  array  $extra [description]
 	 */
 	public function generate_variables() {
 
