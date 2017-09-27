@@ -32,8 +32,8 @@ if (!isset($_POST['update'])) {
   }
 }
 
-require_once dirname(__DIR__) . '/lang/' . $language . '/install/index.php';
-require_once dirname(__DIR__) . '/lang/' . $language . '/updates/scripts.php';
+require_once dirname(__DIR__) . '/lang/' . $language . '/install/install.php';
+require_once dirname(__DIR__) . '/lang/' . $language . '/updates/update.php';
 
 // Get the code version.
 $version = $configObject->getxml('version');

@@ -1,0 +1,14 @@
+body {font-size:90%}
+h1 {margin-left:16px; font-size:140%; color:#1F497D}
+.error {float:none; color:#C00000; padding-left: .5em; vertical-align:top}
+.warning {float:none; color:#C00000; padding-left: .5em; vertical-align:top}
+label {float:left; width:175px; padding-left:0em; text-align:right; padding-right:6px}
+p {clear:both}
+.submit {margin-left:42%; padding-top:2em}
+table {border:none;padding:0px}
+.h {margin-top:1.5em; margin-bottom:0.5em; width:97%; color:#1E3287}
+.h hr {border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:98%}
+td.line {width:98%}
+input[type=text], input[type=password] {width:200px}
+form {padding:1em}
+form div {padding-left:2em; clear:both;}

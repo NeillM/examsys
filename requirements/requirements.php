@@ -93,7 +93,11 @@ foreach ($info as $idx => $val) {
 }
 echo "<div class=\"requirements-body\">";
 if ($phpversion and $phpallext and $composer) {
-  echo "<button id=\"update\" class=\"updatebutton\" onclick=\"run_update()\">Update</button>";
+  if (InstallUtils::config_exists()){
+    echo "<button id=\"update\" class=\"updatebutton\" onclick=\"run_update()\">Update</button>";
+  } else {
+    echo "<button id=\"install\" class=\"updatebutton\" onclick=\"run_install()\">Install</button>";
+  }
 } else {
   echo "<p>Rog&#333; was unable to resolve all issues. Please refer to the <a href = \"https://rogo-eassessment-docs.atlassian.net\">documentation</a> on how to install any missing requirements</p>";
 }

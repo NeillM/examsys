@@ -147,161 +147,20 @@ Class InstallUtils {
 
   static function displayForm() {
     global $string, $language, $timezone_array;
-
     $configObject = Config::get_instance();
-    ?>
-    <script type="text/javascript" src="../js/system_tooltips.js"></script>
-    <script>
-      $(function () {
-        $("#installForm").validate();
-
-        $('#useLdap').change(function() {
-          $('#ldapOptions').toggle();
-        });
-
-        $('#uselookupLdap').change(function() {
-          $('#ldaplookupOptions').toggle();
-        });
-      });
-    </script>
-    <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" autocomplete="off">
-
-      <table class="h"><tr><td><nobr><?php echo $string['company']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="company_name"><?php echo $string['companyname']; ?></label> <input type="text" id="company_name" name="company_name" value="University of" class="required" minlength="2" /></div>
-
-      <table class="h"><tr><td><nobr><?php echo $string['server']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <br />
-        <div><label for="web_host"><?php echo $string['webhost']; ?></label> <input type="text" value="127.0.0.1" id="web_host" name="web_host" class="required" minlength="3" maxlength="10" /></div>
-        <div><label for="rogo_data"><?php echo $string['datadirectory']; ?></label> <input type="text" id="rogo_data" name="rogo_data" value="<?php echo dirname(__DIR__) . DIRECTORY_SEPARATOR ?>" /></div>
-        <div><label for="tmpdir"><?php echo $string['tempdirectory']; ?></label> <input type="text" id="tmpdir" name="tmpdir" value="/tmp/" /></div>
-
-      <table class="h"><tr><td><nobr><?php echo $string['databaseadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><?php echo $string['needusername']; ?></div>
-        <br />
-        <div><label for="mysql_admin_user"><?php echo $string['dbusername']; ?></label> <input type="text" value="" id="mysql_admin_user" name="mysql_admin_user" class="required" minlength="2" /></div>
-        <div><label for="mysql_admin_pass"><?php echo $string['dbpassword']; ?></label> <input type="password" value="" id="mysql_admin_pass" name="mysql_admin_pass"/></div>
-
-        <table class="h"><tr><td><nobr><?php echo $string['databasesetup']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <br />
-        <div><label for="mysql_db_host"><?php echo $string['databasehost']; ?></label> <input type="text" value="127.0.0.1" id="mysql_db_host" name="mysql_db_host" class="required" /></div>
-        <div><label for="mysql_db_port"><?php echo $string['databaseport']; ?></label> <input type="text" value="3306" id="mysql_db_port" name="mysql_db_port" class="required" /></div>
-        <div><label for="mysql_db_name"><?php echo $string['databasename']; ?></label> <input type="text" value="rogo" id="mysql_db_name" name="mysql_db_name" class="required" minlength="3" /></div>
-        <div><label for="mysql_db_engine"><?php echo $string['databaseengine']; ?></label> <select id="mysql_db_engine" name="mysql_db_engine" class="required">
-          <option value="InnoDB" selected>InnoDB</option>
-          <option value="ndbcluster">ndbcluster</option>
-        </select><img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['databaseenginetooltip']; ?>" /></div>
-        <div><label for="mysql_db_help_engine"><?php echo $string['databasehelpengine']; ?></label> <select id="mysql_db_help_engine" name="mysql_db_help_engine" class="required">
-          <option value="InnoDB">InnoDB</option>
-          <option value="MyISAM" selected>MyISAM</option>
-          <option value="ndbcluster">ndbcluster</option>
-        </select><img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['helpdatabaseenginetooltip']; ?>" /></div>
-        <div><label for="mysql_baseusername"><?php echo $string['rdbbasename']; ?></label> <input type="text" value="rogo" id="mysql_baseusername" name="mysql_baseusername" class="required" minlength="3" maxlength="10" /></div>
-
-      <table class="h"><tr><td><nobr><?php echo $string['timedateformats']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-<?php
-$mysql_date_url = 'http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_date-format';
-$php_date_url = 'http://www.php.net/manual/en/function.date.php';
-?>
-        <div><label for="cfg_short_date"><?php echo sprintf($string['date'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_short_date" name="cfg_short_date" class="required" minlength="2" value="%d/%m/%y" /></div>
-        <div><label for="cfg_long_date"><?php echo sprintf($string['longdate'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_long_date" name="cfg_long_date" class="required" minlength="2" value="%d/%m/%Y" /></div>
-        <div><label for="cfg_long_date_time"><?php echo sprintf($string['longdatetime'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_long_date_time" name="cfg_long_date_time" class="required" value="%d/%m/%Y %H:%i" /></div>
-        <div><label for="cfg_short_date_time"><?php echo sprintf($string['shortdatetime'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_short_date_time" name="cfg_short_date_time" class="required" value="%d/%m/%y %H:%i" /></div>
-        <div><label for="cfg_long_date_php"><?php echo sprintf($string['longdatephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_long_date_php" name="cfg_long_date_php" class="required" value="d/m/Y" /></div>
-        <div><label for="cfg_short_date_php"><?php echo sprintf($string['shortdatephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_short_date_php" name="cfg_short_date_php" class="required" value="d/m/y" /></div>
-        <div><label for="cfg_long_time_php"><?php echo sprintf($string['longtimephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_long_time_php" name="cfg_long_time_php" class="required" value="H:i:s" /></div>
-        <div><label for="cfg_short_time_php"><?php echo sprintf($string['shorttimephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_short_time_php" name="cfg_short_time_php" class="required" value="H:i" /></div>
-        <div><label for="cfg_search_leadin_length"><?php echo $string['searchleadinlength']; ?></label> <input type="text" id="cfg_search_leadin_length" name="cfg_search_leadin_length" value="160" /></div>
-        <div><label for="cfg_timezone"><?php echo $string['currenttimezone']; ?></label> <select id="cfg_timezone" name="cfg_timezone">
-        <?php
-          $default_timezone = date_default_timezone_get();
-          if ($default_timezone == 'UTC') $default_timezone = 'Europe/London';
-          foreach ($timezone_array as $individual_zone => $display_zone) {
-            if ($individual_zone == $default_timezone) {
-              echo "<option value=\"$individual_zone\" selected>$display_zone</option>";
-            } else {
-              echo "<option value=\"$individual_zone\">$display_zone</option>";
-            }
-          }
-        ?>
-        </select></div>
-
-        <table class="h"><tr><td><nobr><?php echo $string['authentication']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="useLti"><?php echo $string['allowlti']; ?></label><input id="useLti" name="useLti" type="checkbox" checked="checked" /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Allow authentication from successful LTI launch" /></div><br />
-        <div><label for="useInternal"><?php echo $string['allowintdb']; ?></label><input id="useInternal" name="useInternal" type="checkbox" checked="checked" /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Allow authentication from internal Rogo user database" /></div><br />
-        <div><label for="useGuest"><?php echo $string['allowguest']; ?></label><input id="useGuest" name="useGuest" type="checkbox" checked="checked" /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Allow guest temporary accouts for students who forget their normal log in details" /></div><br /><br />
-        <div><label for="useImpersonation"><?php echo $string['allowimpersonation']; ?></label><input id="useImpersonation" name="useImpersonation" type="checkbox" checked="checked" /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Allow SysAdmin users to impersonate other users" /></div><br clear="all" /><br />
-        <div><label for="useLdap"><?php echo $string['useldap']; ?></label><input id="useLdap" name="useLdap" type="checkbox" /></div>
-        <div id="ldapOptions" style="display:none">
-          <br/>
-          <div><label for="ldap_server"><?php echo $string['ldapserver']; ?></label> <input type="text" value="" id="ldap_server" name="ldap_server" /></div>
-          <div><label for="ldap_search_dn"><?php echo $string['searchdn']; ?></label> <input type="text" value="" id="ldap_search_dn" name="ldap_search_dn" /></div>
-          <div><label for="ldap_bind_rdn"><?php echo $string['bindusername']; ?></label> <input type="text" value="" id="ldap_bind_rdn" name="ldap_bind_rdn" /></div>
-          <div><label for="ldap_bind_password"><?php echo $string['bindpassword']; ?></label> <input type="password" value="" id="ldap_bind_password" name="ldap_bind_password" /></div>
-          <div><label for="ldap_user_prefix"><?php echo $string['userprefix']; ?></label> <input type="text" value="" id="ldap_user_prefix" name="ldap_user_prefix" /> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['userprefixtip'] ?>" /></div>
-        </div>
-
-
-        <table class="h"><tr><td><nobr><?php echo $string['lookup']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-
-
-        <div><label for="uselookupLdap"><?php echo $string['useldap']; ?></label><input id="uselookupLdap" name="uselookupLdap" type="checkbox" /></div>
-        <div id="ldaplookupOptions" style="display:none;">
-            <br/>
-            <div><label for="ldap_lookup_server"><?php echo $string['ldapserver']; ?></label> <input type="text" value="" id="ldap_lookup_server" name="ldap_lookup_server" /></div>
-            <div><label for="ldap_lookup_search_dn"><?php echo $string['searchdn']; ?></label> <input type="text" value="" id="ldap_lookup_search_dn" name="ldap_lookup_search_dn" /></div>
-            <div><label for="ldap_lookup_bind_rdn"><?php echo $string['bindusername']; ?></label> <input type="text" value="" id="ldap_lookup_bind_rdn" name="ldap_lookup_bind_rdn" /></div>
-            <div><label for="ldap_lookup_bind_password"><?php echo $string['bindpassword']; ?></label> <input type="password" value="" id="ldap_lookup_bind_password" name="ldap_lookup_bind_password" /></div>
-            <div><label for="ldap_lookup_user_prefix"><?php echo $string['userprefix']; ?></label> <input type="text" value="" id="ldap_lookup_user_prefix" name="ldap_lookup_user_prefix" /> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['userprefixtip'] ?>" /></div>
-        </div><br clear="all" />
-        <div><label for="uselookupXML"><?php echo $string['allowlookupXML']; ?></label><input id="uselookupXML" name="uselookupXML" type="checkbox" /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Allow guest temporary accouts for students who forget their normal log in details" /></div><br clear="all" /><br />
-
-
-        <table class="h"><tr><td><nobr><?php echo $string['sysadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><?php echo $string['initialsysadmin']; ?></div>
-        <br />
-        <div><label for="SysAdmin_title"><?php echo $string['title']; ?></label>
-          <select id="SysAdmin_title" name="SysAdmin_title" class="required">
-		<?php
-		  if ($language != 'en') {
-		    echo "<option value=\"\"></option>\n";
-		  }
-		  $titles = explode(',', $string['title_types']);
-		  foreach ($titles as $tmp_title) {
-		    echo "<option value=\"$tmp_title\" selected>$tmp_title</option>";
-		  }
-		  ?>
-          </select>
-        </div>
-        <div><label for="SysAdmin_first"><?php echo $string['firstname']; ?></label> <input type="text" value="" name="SysAdmin_first" id="SysAdmin_first" class="required" /> </div>
-        <div><label for="SysAdmin_last"><?php echo $string['surname']; ?></label> <input type="text" value="" id="SysAdmin_last" name="SysAdmin_last" class="required" minlength="3" /> </div>
-        <div><label for="SysAdmin_email"><?php echo $string['emailaddress']; ?></label> <input type="text" value="" id="SysAdmin_email" name="SysAdmin_email" class="required email" /></div>
-        <div><label for="SysAdmin_username"><?php echo $string['username']; ?></label> <input type="text" value="" id="SysAdmin_username" name="SysAdmin_username" class="required" minlength="3" /></div>
-        <div><label for="SysAdmin_password"><?php echo $string['password']; ?></label> <input type="password" value="" id="SysAdmin_password" name="SysAdmin_password" class="required" minlength="8" /></div>
-
-      <table class="h"><tr><td><nobr><?php echo $string['helpdb']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="loadHelp"><?php echo $string['loadhelp']; ?></label> <input id="loadHelp" name="loadHelp" type="checkbox" checked="checked" /></div>
-
-      <table class="h"><tr><td><nobr><?php echo $string['translationpack']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="loadtranslations"><?php echo $string['loadtranslations']; ?></label> <input id="loadtranslations" name="loadtranslations" type="checkbox"/></div><br/><br/>
-        <div><?php echo sprintf($string['manualtranslations'], $configObject->getxml('translations', 'url')); ?></div>
-
-      <table class="h"><tr><td><nobr><?php echo $string['labsecuritytype']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label><?php echo $string['IP']; ?></label> <input name="labsecuritytype" value="ipaddress" type="radio" checked = "checked" /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Rogo can lock summative exams to either IP address or hostname. If your institution uses static IPs then chose IP address otherwise chose hostname. " /></div>
-        <div><label><?php echo $string['hostname']; ?></label> <input name="labsecuritytype" type="radio" value="hostname" /></div>
-
-      <table class="h"><tr><td><nobr><?php echo $string['supportemaila']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div></div>
-        <br />
-        <div><label for="support_email"><?php echo $string['supportemail']; ?></label> <input type="text" value="" id="support_email" name="support_email" class="" class="email" /> </div>
-
-      <table class="h"><tr><td><nobr><?php echo $string['supportnumbers']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="emergency_support1"><?php echo $string['name']; ?></label> <input type="text" value="" id="emergency_support1" name="emergency_support1" class="" /> <?php echo $string['number']; ?> <input type="text" value="" name="emergency_support_number1" class="" /></div>
-        <div><label for="emergency_support2"><?php echo $string['name']; ?></label> <input type="text" value="" id="emergency_support2" name="emergency_support2" class="" /> <?php echo $string['number']; ?> <input type="text" value="" name="emergency_support_number2" class="" /></div>
-        <div><label for="emergency_support3"><?php echo $string['name']; ?></label> <input type="text" value="" id="emergency_support3" name="emergency_support3" class="" /> <?php echo $string['number']; ?> <input type="text" value="" name="emergency_support_number3" class="" /></div>
-
-      <div class="submit"> <input type="submit" name="install" value="<?php echo $string['install']; ?>" class="ok" /> </div>
-    </form>
-    <?php
+    $render = new render($configObject);
+    $data['action'] = Url::fromGlobals();
+    $data['dirsep'] = dirname(__DIR__) . DIRECTORY_SEPARATOR;
+    $default_timezone = date_default_timezone_get();
+    if ($default_timezone == 'UTC') $default_timezone = 'Europe/London';
+    $data['timezones'] = $timezone_array;
+    $data['defaulttz'] = $default_timezone;
+    if ($language != 'en') {
+      echo "<option value=\"\"></option>\n";
+    }
+    $data['titles'] = explode(',', $string['title_types']);
+    $string['translationsurl'] = $configObject->getxml('translations', 'url');
+    $render->render($data, $string, '/install/install_form.html');
   }
 
   /**
@@ -423,20 +282,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
 
     self::$cfg_db_charset = 'utf8';
-
-    // Check mysql version.
-    $check = mysqli_connect(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd);
-
-    if (mysqli_connect_error()) {
-      self::displayError(array('001' => mysqli_connect_error()));
-    }
-
-    $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
-    $mysql_version = mysqli_get_server_version($check);
-    if($mysql_version < $mysql_min_ver) {
-        self::displayError(array('002' => sprintf($string['errors17'], $mysql_min_ver, $mysql_version)));
-    }
-    $check->close();
 
     if (!self::$cli) {
       self::$cfg_web_host = param::required('web_host', param::TEXT, param::FETCH_POST);
@@ -649,26 +494,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     //Write out the config file
     self::writeConfigFile();
 
-    // We will need the root path.
-    $configObject->set('cfg_root_path', self::$cfg_root_path);
-
-    // Install npm and dependencies.
-    try {
-      $npm_method = npm_utils::INSTALL_NODEV;
-      ob_start();
-      npm_utils::setup($npm_method);
-      ob_end_clean();
-    } catch (Exception $e) {
-      // Non fatal warning.
-      if (!self::$cli) {
-        echo "<div class=\"warning\">\n";
-        echo "\t<div>" . $e->getMessage() . "</div>\n";
-        echo "</div>\n";
-      } else {
-        cli_utils::prompt($e->getMessage());
-      }
-    }
-
     if (!is_array(self::$warnings)) {
       if (!self::$cli) {
         echo "<p style=\"margin-left:10px\">" . $string['installed'] . "</p>\n";
@@ -732,10 +557,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     if ($mysqli->connect_error == '') {
       $mysqli->set_charset(self::$cfg_db_charset);
     }
+    $configObject = Config::get_instance();
     $configObject->set_db_object($mysqli);
     // Staff help files.
     try {
-      OnlineHelp::load_staff_help;
+      OnlineHelp::load_staff_help();
     } catch (Exception $ex) {
       if ($ex->getMessage() === 'CANNOT_FIND') {
         self::logWarning(array('502' => $string['logwarning2']));
@@ -1978,59 +1804,34 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   static function displayHeader() {
     global $string;
     $configObject = Config::get_instance();
-    $version = $configObject->getxml('version');
-    ?>
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-      <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-
-      <title>Rog&#333; Install script</title>
-
-      <link rel="stylesheet" type="text/css" href="../css/body.css" />
-      <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
-      <link rel="stylesheet" type="text/css" href="../css/header.css" />
-      <style type="text/css">
-        body {font-size:90%}
-        h1 {margin-left:16px; font-size:140%; color:#1F497D}
-        .error {float:none; color:#C00000; padding-left: .5em; vertical-align:top}
-        .warning {float:none; color:#C00000; padding-left: .5em; vertical-align:top}
-        label {float:left; width:175px; padding-left:0em; text-align:right; padding-right:6px}
-        p {clear:both}
-        .submit {margin-left:42%; padding-top:2em}
-        table {border:none;padding:0px}
-        .h {margin-top:1.5em; margin-bottom:0.5em; width:97%; color:#1E3287}
-        .h hr {border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:98%}
-        td.line {width:98%}
-        input[type=text], input[type=password] {width:200px}
-        form {padding:1em}
-        form div {padding-left:2em; clear:both;}
-      </style>
-
-      <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-      <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-      <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
-      <script>
-        $(function() {
-          $(document).tooltip();
-        });
-      </script>
-    </head>
-    <body>
-    <table cellpadding="0" cellspacing="0" border="0" class="header">
-    <tr>
-      <th style="padding-top:4px; padding-bottom:4px; padding-left:16px">
-      <img class="logo_img" src="../artwork/r_logo.gif" alt="logo" />
-      <div class="logo_lrg_txt">Rog&#333; <?php echo $version; ?></div>
-      <div class="logo_small_txt">System Installation</div>
-      </th>
-      <th style="text-align:right; padding-right:10px">
-      <img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" />
-      </th>
-      </tr>
-    </table>
-    <?php
+    $render = new render($configObject);
+    $headerdata = array(
+      'css' => array(
+        '/css/rogo_logo.css',
+        '/css/header.css',
+        '/css/install.css',
+      ),
+      'scripts' => array(
+        '/js/jquery-1.11.1.min.js',
+        '/js/jquery.validate.min.js',
+        '/js/jquery-ui-1.10.4.min.js',
+        '/js/install.min.js',
+        '/js/system_tooltips.js',
+      ),
+    );
+    $lang['title'] = $string['install'];
+    $lang['blurb'] = $string['systeminstallation'];
+    $data['version'] = $configObject->getxml('version');
+    require_once dirname(__DIR__) . '/include/path_functions.inc.php';
+    $cfg_web_root = get_root_path();
+    // Ensure there is a trailing slash.
+    if (substr($cfg_web_root, -1) !== '/') {
+      $cfg_web_root .= '/';
+    }
+    self::$cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_ROOT']), '', $cfg_web_root), '/'), '/');
+    $configObject->set('cfg_root_path', self::$cfg_root_path);
+    $render->render($headerdata, $lang, 'header.html');
+    $render->render($data, $lang, '/install/install_header.html');
   }
 
   /**
@@ -2038,10 +1839,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   *
   */
   static function displayfooter() {
-    ?>
-      </body>
-      </html>
-    <?php
+    $configObject = Config::get_instance();
+    $render = new render($configObject);
+    $render->render_admin_footer();
   }
 
   static function writeConfigFile() {
@@ -2226,9 +2026,7 @@ CONFIG;
       $cfg_web_root .= '/';
     }
     $config = str_replace('{cfg_web_root}', $cfg_web_root, $config);
-    if (!self::$cli) {
-      self::$cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_ROOT']), '', $cfg_web_root), '/'), '/');
-    } else {
+    if (self::$cli) {
       self::$cfg_root_path = self::getSettings(param::TEXT, true, 'server', 'root');
     }
     $config = str_replace('{cfg_root_path}', self::$cfg_root_path, $config);

@@ -19,7 +19,11 @@
 // @copyright Copyright (c) 2017 The University of Nottingham
 //
 
-// Load uppgrade screen.
+// Load upgrade screen.
 function run_update() {
-  window.location='upgrade.php';
+  window.location='../updates/upgrade.php';
+}
+// Load install screen.
+function run_install() {
+  window.location='install.php';
 }

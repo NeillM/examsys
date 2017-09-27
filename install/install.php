@@ -28,24 +28,6 @@
 require_once dirname(__DIR__) . '/include/autoload.inc.php';
 autoloader::init();
 
-// check for PHP.
-if ( false ) {
-  ?>
-  <!DOCTYPE html>
-  <html>
-  <head>
-    <title>Error: PHP is Missing</title>
-  </head>
-  <body>
-    <h2>Error: PHP is Missing</h2>
-    <p>Rogō requires that your web server is running PHP. Your server does not have PHP installed, or PHP is turned off.</p>
-  </body>
-  </html>
-  <?php
-  exit;
-}
-
-InstallUtils::displayHeader();
 // Have we got a config file? Exits if we do, as this is an install.
 if (!InstallUtils::config_exists()) {
   // The config class must be loaded for the new version checking code to work.
@@ -60,7 +42,7 @@ if (!InstallUtils::config_exists()) {
   $cfg_root_path = ltrim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $cfg_web_root), '/');
 
   require_once dirname(__DIR__) . '/include/auth.inc';
-  $includes = array('install/index.php');
+  $includes = array('install/install.php');
   $language = LangUtils::getLang($cfg_web_root);
 
   // Install lang packs if not installed.
@@ -68,20 +50,16 @@ if (!InstallUtils::config_exists()) {
       InstallUtils::download_langpacks();
   }
 
-  foreach ($includes as $file) {
-    $lang_path = "{$cfg_web_root}lang/$language/" . $file;
-    if (file_exists($lang_path)) {
-      require $lang_path;
-    }
-  }
+  require_once $cfg_web_root . "lang/" . $language . "/install/install.php";
   require_once dirname(__DIR__) . '/include/timezones.php';
   // Get the code version.
   $version = $configObject->getxml('version');
 
+  InstallUtils::displayHeader();
+
   set_time_limit(0);
 
   // Basic checks.
-  InstallUtils::checkSoftware();
   InstallUtils::checkDirPermissionsPre();
 
   //output form
@@ -92,17 +70,11 @@ if (!InstallUtils::config_exists()) {
     InstallUtils::displayForm();
   }
 } else {
-  $includes = array('install/index.php');
   $configObject = Config::get_instance();
   $cfg_web_root = $configObject->get('cfg_web_root');
   $language = LangUtils::getLang($cfg_web_root);
-
-  foreach ($includes as $file) {
-    $lang_path = "{$cfg_web_root}lang/$language/" . $file;
-    if (file_exists($lang_path)) {
-      require $lang_path;
-    }
-  }
+  require_once $cfg_web_root . "lang/" . $language . "/install/install.php";
+  InstallUtils::displayHeader();
   InstallUtils::configFile();
 }
 

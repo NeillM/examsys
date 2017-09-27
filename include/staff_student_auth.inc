@@ -18,39 +18,22 @@
  *
  * Authentication routine which permits staff and student access to a page.
  *
- * @author Simon Wilkinson, Anthony Brown
- * @version 1.0
- * @copyright Copyright (c) 2014 The University of Nottingham
+ * @author Simon Wilkinson
+ * @author Anthony Brown
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @version 2.0
+ * @copyright Copyright (c) 2017 The University of Nottingham
  * @package
  */
 
-/**
- *  This function is used to catch early errors and convert them to exeptions
- *  so we can catch them. I is later replaced by the more complex customErrorHandler
- *  in include/custom_error_handler.inc
- */
+require_once 'load_config.php';
 
-function handle_early_errors($errno, $errstr, $errfile, $errline) {
-  if (strpos($errstr, 'config.inc.php')) {
-    //turn a missing config file working into an exception so we can catch it
-    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
-
-    return true;
-  }
-
-  return false;
+if (!InstallUtils::config_exists()) {
+  header("location: install/index.html", true, 303);
+  exit();
 }
 
-//set_error_handler("handle_early_errors");
-
-$root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
-include_once $root . 'include/load_config.php';
-require_once $root . 'include/auth.inc';
-if (!file_exists($root . 'config/config.inc.php')) {
-  $mysqli = null;
-  $cfg_root_path = rtrim('/' . trim(str_replace(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']), '', $root), '/'), '/');
-  $notice->display_notice_and_exit(null, 'Install Required', 'Rog&#333; needs installing before use. The Installer is avalable <a href="' . $cfg_root_path . '/install/index.php">here</a>.', 'Install Required', '../artwork/software_64.png', $title_color = '#C00000', true, true);
-}
+require_once 'auth.inc';
 
 // Cookie sessions only.
 ini_set('session.use_only_cookies', 1);
