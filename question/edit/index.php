@@ -59,11 +59,9 @@ function get_post_params($part_names, $option, $option_no) {
   }
   if (count($postparams) === 0) {
     $postparams = $option->get_post_default();
-  } else {
+  } elseif (count($postparams) !== count($part_names)) {
     // Catch coding error if not all get_post functions defined.
-    if (count($postparams) !== count($part_names)) {
-      throw new Exception('CODING_ERROR');
-    }
+    throw new Exception('CODING_ERROR');
   }
   return $postparams;
 }
