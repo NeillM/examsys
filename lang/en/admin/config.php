@@ -55,3 +55,5 @@ $string['misc_dictionary_file'] = 'Dictionary File (if set, enables memorable pa
 $string['calc'] = 'Calculation Questions';
 $string['cfg_calc_type'] = 'Calculation question integration type (default: phpEval).';
 $string['cfg_calc_settings'] = 'Calculation question integration server settings (phpEval: settings not used).';
+$string['system'] = 'System settings';
+$string['system_maintenance_mode'] = 'Enable/Disable maintenance mode (restricts access to system to sys admin users only)';

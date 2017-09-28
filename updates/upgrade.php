@@ -165,10 +165,9 @@ if (!isset($_POST['update'])) {
     }
   }
 
-  $update_mysqli->commit();
-  
   // Update the online staff help files.
   $update_staff_help = param::optional('update_staff_help', false, param::BOOLEAN, param::FETCH_POST);
+  $lang['staffloaded'] = '';
   if ($update_staff_help) {
     try {
       OnlineHelp::load_staff_help();
@@ -184,6 +183,7 @@ if (!isset($_POST['update'])) {
   }
   // Update the online student help files.
   $update_student_help = param::optional('update_student_help', false, param::BOOLEAN, param::FETCH_POST);
+  $lang['stuloaded'] = '';
   if ($update_student_help) {
     try {
       OnlineHelp::load_student_help();
@@ -201,6 +201,7 @@ if (!isset($_POST['update'])) {
 
   // Update language packs.
   $update_translationpack = param::optional('update_translationpack', false, param::BOOLEAN, param::FETCH_POST);
+  $lang['langsuccess'] = '';
   if ($update_translationpack) {
     try {
       InstallUtils::download_langpacks();
@@ -221,6 +222,7 @@ if (!isset($_POST['update'])) {
   }
 
   // Final housekeeping activities.
+  $update_mysqli->autocommit(true);
   $configObject->set_setting('rogo_version', $version, Config::VERSION);
   $updater_utils->execute_query('FLUSH PRIVILEGES', false);
   $updater_utils->execute_query('TRUNCATE sys_errors', false);

@@ -30,7 +30,7 @@ class Config extends RogoStaticSingleton {
    * Areas of the Rogo system that can be confifured.
    * @var array list of areas
    */
-  public static $config_area = array('api', 'gradebook', 'lti', 'paper', 'summative', 'url', 'misc', 'calc');
+  public static $config_area = array('api', 'gradebook', 'lti', 'paper', 'summative', 'url', 'misc', 'calc', 'system');
   /**
    * @var array
    */

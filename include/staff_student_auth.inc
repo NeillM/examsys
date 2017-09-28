@@ -28,11 +28,6 @@
 
 require_once 'load_config.php';
 
-if (!InstallUtils::config_exists()) {
-  header("location: install/index.html", true, 303);
-  exit();
-}
-
 // Cookie sessions only.
 ini_set('session.use_only_cookies', 1);
 // Use secure cookie if on secure conenction.
@@ -60,6 +55,11 @@ if (is_null($configObject->get('cfg_db_port'))) {
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
 $configObject->set_db_object($mysqli);
 
+if (!InstallUtils::config_exists()) {
+  header("location: " . $configObject->get('cfg_root_path') . "/install/index.html", true, 303);
+  exit();
+}
+
 $fp_link = "<p style=\"margin-left:60px\"><a href=\"{$configObject->get('cfg_root_path')}/users/forgotten_password.php\">" . $string['forgottenpassword'] . "</a></p>\n";
 
 // Check for secure protocol
@@ -79,7 +79,12 @@ $authentication->get_auth_obj($getauthobj);
 
 $userObject = UserObject::get_instance();
 $userObject->db_user_change();
-
+if (!$userObject->has_role('SysAdmin')) {
+  if (version::is_version_higher($configObject->getxml('version'), $configObject->get_setting('core', 'rogo_version')) or $configObject->get_setting('core', 'system_maintenance_mode')) {
+      header("location: " . $configObject->get('cfg_root_path') . "/maintenance/index.php", true, 303);
+      exit();
+  }
+}
 $included_files = get_included_files();
 
 //set string encoding for the mbstring module for interfaces

@@ -72,17 +72,17 @@
                 <ol>
                     {% if data.staffhelperror == "true" %}
                         <li class="error">{{lang.staffhelperrormsg}}</li>
-                    {% else %}
+                    {% elseif lang.staffloaded != '' %}
                         <li>{{lang.staffloaded}}</li>
                     {% endif %}
                     {% if data.stuhelperror == "true" %}
                         <li class="error">{{lang.stuhelperrormsg}}</li>
-                    {% else %}
+                    {% elseif lang.stuloaded != '' %}
                         <li>{{lang.stuloaded}}</li>
                     {% endif %}
                     {% if data.langerror == "true" %}
                         <li class="error">{{lang.langerror}}</li>
-                    {% else %}
+                    {% elseif lang.langsuccess != ' '%}
                         <li>{{lang.langsuccess}}</li>
                     {% endif %}
                 </ol>
@@ -93,7 +93,7 @@
                 </ol>
                 <div>{{lang.finished}}</div>
                 <div class="finished">
-                    <input type="button" class="ok" value="{{lang.home}}" onclick="go_config()" />
+                    <input type="button" class="ok" value="{{lang.config}}" onclick="go_config()" />
                 </div>
                 </blockquote>
             {% endif %}

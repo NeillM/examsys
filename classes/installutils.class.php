@@ -705,6 +705,7 @@ Class InstallUtils {
     $configObject->set_setting('misc_dictionary_file', '', Config::STRING);
     $configObject->set_setting('cfg_calc_type', 'phpEval', Config::STRING);
     $configObject->set_setting('cfg_calc_settings', array('host' => '', 'port' => '', 'timeout' => ''), Config::ASSOC);
+    $configObject->set_setting('system_maintenance_mode', 0, Config::BOOLEAN);
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();
