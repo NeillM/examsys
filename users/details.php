@@ -274,7 +274,7 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
     }
 
     function forceResetPassword(username) {
-      editwin=window.open("reset_pwd.php?userID=<?php echo $userID ?>","editmodule","width=450,height=400,left="+(screen.width/2-200)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+      editwin=window.open("reset_pwd.php?userID=<?php echo $userID ?>","editmodule","width=600,height=400,left="+(screen.width/2-250)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
       if (window.focus) {
         editwin.focus();
       }

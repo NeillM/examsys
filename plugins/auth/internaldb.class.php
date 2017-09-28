@@ -188,7 +188,8 @@ class internaldb_auth extends outline_authentication {
           
       $this->savetodebug('Updating Password');
       extract($this->settings);
-      $encpw_details = encpw($this->settings['encrypt_salt'], $this->form['std']->username, $this->form['std']->password);
+      $enc = new encryp();
+      $encpw_details = $enc->encpw($this->settings['encrypt_salt'], $this->form['std']->username, $this->form['std']->password);
       $stmt = $this->db->prepare("UPDATE $table SET $passwd_col = ?, password_expire = ? WHERE $username_col = ?");
       $stmt->bind_param('sis', $encpw_details, $expire, $this->form['std']->username);
       $stmt->execute();

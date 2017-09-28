@@ -26,7 +26,6 @@
 */
 
 require_once '../include/load_config.php';
-require_once '../include/auth.inc';
 
 $language = LangUtils::getLang($cfg_web_root);
 LangUtils::loadlangfile(str_replace($cfg_web_root, '', str_replace('\\', '/', ($_SERVER['SCRIPT_FILENAME']))));

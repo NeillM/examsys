@@ -33,7 +33,6 @@ if (strcmp($configObject->get('cfg_install_type'), 'demo') != 0) { // If the ins
   exit();
 }
 
-require_once '../include/auth.inc';
 require_once '../include/mb_string.inc.php';
 
 require_once '../include/custom_error_handler.inc';
@@ -281,7 +280,9 @@ MESSAGE;
                                         if (isset($_POST['password'])) {
                                                 echo $_POST['password'];
                                         } else {
-                                                echo gen_password();
+                                                $enc = new encryp();
+                                                $generated_password = $enc->gen_password(true);
+                                                echo $generated_password['password'];
                                         }
                                         ?>" size="12" required /></td>
                         </tr>

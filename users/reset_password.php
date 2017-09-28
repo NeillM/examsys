@@ -23,7 +23,6 @@
 */
 
 require_once '../include/load_config.php';
-require_once '../include/auth.inc';
 
 $notice = UserNotices::get_instance();
 

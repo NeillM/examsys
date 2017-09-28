@@ -50,6 +50,7 @@ $string['misc_logo_main'] = 'Logo used in Rog&#333;.';
 $string['misc_logo_email'] = 'Logo used in emails.';
 $string['api_allow_superuser'] = 'Enable/Disable API super users. These users can call the API for any external system.';
 $string['apilogfile'] = 'Location of api log file. Leave blank to disable logging.';
+$string['misc_dictionary_file'] = 'Dictionary File (if set, enables memorable passwords)';
 $string['calc'] = 'Calculation Questions';
 $string['cfg_calc_type'] = 'Calculation question integration type (default: phpEval).';
 $string['cfg_calc_settings'] = 'Calculation question integration server settings (phpEval: settings not used).';

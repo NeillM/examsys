@@ -59,7 +59,6 @@ if (!InstallUtils::config_exists()) {
   $configObject->set('cfg_web_root', $cfg_web_root);
   $cfg_root_path = ltrim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $cfg_web_root), '/');
 
-  require_once dirname(__DIR__) . '/include/auth.inc';
   $includes = array('install/index.php');
   $language = LangUtils::getLang($cfg_web_root);
 

@@ -31,7 +31,6 @@ if(!LangUtils::langPackInstalled($language)) {
     InstallUtils::download_langpacks();
 }
 
-require_once '../include/auth.inc';
 require_once '../include/errors.php';
 require_once '../include/std_set_shared_functions.inc';
 require_once '../include/timezones.php';
@@ -41,6 +40,8 @@ require_once dirname(__DIR__) . '/lang/' . $language . '/updates/version5.php';
 // Get the code version.
 $version = $configObject->getxml('version');
 $migration_path = 'version5';
+// Set encryption class.
+$enc = new encryp();
 
 set_time_limit(0);
 
@@ -901,11 +902,11 @@ QUERY;
   echo "<div>Ended at " . date("H:i:s") . "</div>";
   echo "\n<h2>" . $string['actionrequired'] . "</h2>\n<ol>";
   echo "\n<li>" . $string['readonly'] . "</li>\n";
-  echo "</ol>\n<div>" . $string['finished'] . "</div>\n<div style=\"text-align:center\"><input type=\"button\" class=\"ok\" value=\" " . $string['home'] . " \" onclick=\"go_home()\" /></div><blockquote>\n";
+  echo "</ol>\n<div>" . $string['finished'] . "</div>\n<div style=\"text-align:center\"><input type=\"button\" class=\"ok\" value=\" " . $string['config'] . " \" onclick=\"go_to_config()\" /></div><blockquote>\n";
 }
 ?>
 <script>
-function go_home() {
-  window.location='../index.php';
+function go_to_config() {
+  window.location='../admin/config.php';
 }
 </script>
