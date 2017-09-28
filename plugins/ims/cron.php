@@ -32,7 +32,6 @@ if (PHP_SAPI != 'cli') {
 set_time_limit(0);
 
 require_once '../../include/load_config.php';
-require_once '../../include/auth.inc';
 require_once '../../include/custom_error_handler.inc';
 
 // Start class autoloading.

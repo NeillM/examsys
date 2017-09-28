@@ -25,7 +25,6 @@
 $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
 $root = "$root/../";
 require_once $root . 'include/load_config.php';
-require_once $cfg_web_root . 'include/auth.inc';
 require_once $cfg_web_root . 'include/custom_error_handler.inc';
 
 $displayDebug = false; //XML call so debug info messes up the output

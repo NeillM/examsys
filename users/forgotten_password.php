@@ -23,6 +23,8 @@
 */
 
 require_once '../include/load_config.php';
+$language = LangUtils::getLang($cfg_web_root);
+LangUtils::loadlangfile(str_replace($cfg_web_root, '', str_replace('\\', '/', ($_SERVER['SCRIPT_FILENAME']))));
 
 $notice = UserNotices::get_instance();
 

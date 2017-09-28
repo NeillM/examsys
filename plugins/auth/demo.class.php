@@ -266,7 +266,9 @@ HTML;
         if (isset($_POST['new_password']) and $_POST['new_password']!='') {
           $newpass = $_POST['new_password'];
         } else {
-          $newpass = gen_password();
+          $enc = new encryp();
+          $generated_password = $enc->gen_password(true);
+          $newpass = $generated_password['password'];
         }
         $msel = '';
         if (isset($_POST['new_gender']) and $_POST['new_gender'] == 'Male') $msel = ' selected';
