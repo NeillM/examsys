@@ -42,6 +42,30 @@ $calling = (!isset($_REQUEST['calling'])) ? '' : $_REQUEST['calling'];
 $ListKeyword = (!isset($_REQUEST['keyword'])) ? '' : $_REQUEST['keyword'];
 $team = (!isset($_REQUEST['team'])) ? '' : $_REQUEST['team'];
 
+/**
+ * Get post parameters for option and parse if function available for option type
+ * @param array $part_names the option part names
+ * @param object $option the option object
+ * @param integer $option_no the option number
+ * @return array
+ */
+function get_post_params($part_names, $option, $option_no) {
+  $postparams = array();
+  foreach ($part_names as $field) {
+    if (method_exists($option,'get_post_' . $field)) {
+      $var = 'get_post_' . $field;
+      $postparams = array_merge($postparams, call_user_func(array($option, $var), $option_no));
+    }
+  }
+  if (count($postparams) === 0) {
+    $postparams = $option->get_post_default();
+  } elseif (count($postparams) !== count($part_names)) {
+    // Catch coding error if not all get_post functions defined.
+    throw new Exception('CODING_ERROR');
+  }
+  return $postparams;
+}
+
 function save_options($question, $userObject, $db) {
   $unified_part_names = $question->get_unified_fields();
 
@@ -58,14 +82,18 @@ function save_options($question, $userObject, $db) {
       // Editing existing option
       $option = $question->options[$_POST["optionid$option_no"]];
       $part_names = $option->get_editable_fields();
-
+      try {
+        $postparams = get_post_params($part_names, $option, $option_no);
+      } catch (\Exception $e) {
+        return $e->getMessage();
+      }
       // Build arrays for compound fields
       $compound_fields = $option->get_compound_fields();
       if (!isset($existing_values)) $existing_values = array();
       $option->populate_compound(array_keys($compound_fields), $_POST, $existing_values, 'option_');
 
       // Save editable fields that aren't unified
-      $option->populate($part_names, $option_no, $_POST, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
+      $option->populate($part_names, $option_no, $postparams, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
 
       // Save fields that are the same across options
       $option->populate_unified($unified_part_names, $_POST, array_keys($compound_fields), 'option_');
@@ -78,6 +106,11 @@ function save_options($question, $userObject, $db) {
         $incorrect_fb = (isset($_POST["option_incorrect_fback$option_no"])) ? $_POST["option_incorrect_fback$option_no"] : '';
 
         $part_names = $option->get_editable_fields();
+        try {
+          $postparams = get_post_params($part_names, $option, $option_no);
+        } catch (\Exception $e) {
+          return $e->getMessage();
+        }
 
         // Build arrays for compound fields
         $compound_fields = $option->get_compound_fields();
@@ -85,7 +118,7 @@ function save_options($question, $userObject, $db) {
         $option->populate_compound(array_keys($compound_fields), $_POST, $existing_values, 'option_');
 
         // Save editable fields that aren't unified
-        $option->populate($part_names, $option_no, $_POST, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
+        $option->populate($part_names, $option_no, $postparams, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
 
         // Save fields that are the same across options
         $option->populate_unified($unified_part_names, $_POST, array_keys($compound_fields), 'option_', false);
@@ -111,6 +144,7 @@ function save_options($question, $userObject, $db) {
       }
     }
   }
+  return '';
 }
 
 $paper_count = 0;
@@ -279,7 +313,10 @@ if ($critical_error == '') {
       }
 
       if ($question->allow_option_edit()) {
-        save_options($question, $userObject, $mysqli);
+        $critical_error = save_options($question, $userObject, $mysqli);
+        if ($critical_error !== '') {
+          $notice->display_notice_and_exit($mysqli, $string['error'], $string[$critical_error], $string['error'], '/artwork/page_not_found.png', '#C00000', true, true);
+        }
       }
 
       $do_save = true;
@@ -318,8 +355,10 @@ if ($critical_error == '') {
       }
       $question->set_teams($question_teams);
 
-      save_options($question, $userObject, $mysqli);
-
+      $critical_error = save_options($question, $userObject, $mysqli);
+      if ($critical_error !== '') {
+        $notice->display_notice_and_exit($mysqli, $string['error'], $string[$critical_error], $string['error'], '/artwork/page_not_found.png', '#C00000', true, true);
+      }
       $do_save = true;
     }
   } elseif (isset($_POST['submit-cancel']) and $_POST['submit-cancel'] == $string['cancel']) {
@@ -457,7 +496,7 @@ echo $cfg_editor_javascript;
 if ($question != null and file_exists($cfg_web_root . 'js/validation/jquery.' . $question->get_type() . '.js')):
 ?>
 <script type="text/javascript" src="../../js/jquery.validate.min.js"></script>
-<script type="text/javascript" src="../../js/validation/jquery.<?php echo $question->get_type() ?>.js"></script>
+<script type="text/javascript" src="../../js/validation/jquery.<?php echo $question->get_type() ?>.min.js"></script>
 <script type="text/javascript" src="../../js/toprightmenu.js"></script>
 <?php
 endif;
@@ -470,7 +509,7 @@ endif;
 var qType = '<?php if (isset($question)) echo $question->get_type() ?>';
 var lang = {
 <?php
-$langstrings = array('allowpartial', 'validationerror', 'enterleadin', 'enterdescription', 'showmore', 'hidemore', 'enteroption', 'enterformula', 'enteroptionshort', 'enteroption_kw', 'mrqconvert', 'entervignette', 'enteroptiontext', 'selectarea', 'randomenterquestion', 'mappingwarning', 'markchangewarning');
+$langstrings = array('allowpartial', 'validationerror', 'enterleadin', 'enterdescription', 'showmore', 'hidemore', 'enteroption', 'enterformula', 'enteroptionshort', 'enteroption_kw', 'mrqconvert', 'entervignette', 'enteroptiontext', 'selectarea', 'randomenterquestion', 'mappingwarning', 'markchangewarning', 'entervalidvariable', 'entervaliddecimal');
 $first = true;
 foreach ($langstrings as $langstring) {
   if (!$first) {

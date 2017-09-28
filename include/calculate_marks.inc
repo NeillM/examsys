@@ -210,7 +210,6 @@ function qRandomMarks($question_type, $tmp_exclude, $marks_correct, $option_text
   if ($tmp_exclude == '') $tmp_exclude = '0000000000000000000000000000000000000000';
       
   switch ($question_type) {
-    case 'calculation':
     case 'flash':
     case 'textbox':
       $random_mark = 0;

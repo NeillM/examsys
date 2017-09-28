@@ -33,7 +33,6 @@ require_once '../include/errors.php';
 require_once 'include/inc.php';
 require_once 'local/local_load.php';
 require_once 'qti12/qti12_save.php';
-require_once 'qti20/qti20_save.php';
 
 $ids = check_var('paperID', 'GET', true, false, true);
 $dest = check_var('dest', 'GET', true, false, true);
@@ -46,8 +45,6 @@ foreach ($status_tmp as $sid => $status) {
 }
 
 $ob = new OB();
-
-if ($dest == 'qti21') $dest = 'qti20';
 
 if (isset($_GET['debug'])) {
   $show_debug = true;
@@ -80,8 +77,6 @@ $import->setStatuses($statuses);
 
 if ($dest == "qti12") {
   $export = new IE_QTI12_Save();
-} else if ($dest == "qti20") {
-  $export = new IE_QTI20_Save();
 } else {
   die("Invalid destination - $dest");
 }

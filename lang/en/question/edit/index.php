@@ -31,6 +31,7 @@ require $configObject->get('cfg_web_root') . 'lang/' . $language . '/question/ed
 
 require $configObject->get('cfg_web_root') . 'lang/' . $language . '/errors/mapping.php';
 
+$string['CODING_ERROR'] = 'Coding Error';
 $string['edit'] = 'Edit';
 $string['add'] = 'Add';
 $string['type'] = 'Type';
@@ -234,6 +235,8 @@ $string['enterdescription'] = 'Please enter a description';
 $string['enteroptiontext'] = 'Please enter a value for this option';
 $string['enteroption'] = 'Please enter either option text or a media file for this option';
 $string['enteroptionshort'] = 'Required';
+$string['entervalidvariable'] = 'Invalid';
+$string['entervaliddecimal'] = 'A decimal value must be supplied';
 $string['enteroption_kw'] = 'Please select a keyword for the question';
 $string['enterquestion'] = 'Please enter the question';
 $string['enterformula'] = 'Please enter a formula';
