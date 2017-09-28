@@ -1,0 +1,13 @@
+{% if data.displaywarnings == "false" %}
+<p style="margin-left:10px">{{lang.installed}}</p>
+<p style="margin-left:10px">
+    <input type="button" class="ok" name="config" value="{{lang.config}}" onclick="go_config()" />
+</p>
+{$ else %}
+<h1>{{lang.errors14}}</h1>
+<div class="warning">
+    {% for message in data.warnings %}
+    <div>{{lang.errors15}} {{message}}</div>
+    {$ endfor %}
+</div>
+{% endif %}

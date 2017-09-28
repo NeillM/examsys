@@ -80,7 +80,6 @@ $string['name'] = 'Name';
 $string['number'] = 'Number';
 $string['install'] = 'Install Rogō';
 $string['installed'] = 'Rogō is now successfully installed.';
-$string['deleteinstall'] = 'For security reasons please delete the install directory.';
 $string['config'] = 'Configure settings';
 $string['invalidsetting'] = 'Setting %s either not provided or invalid!';
 

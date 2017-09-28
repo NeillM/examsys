@@ -160,7 +160,7 @@ Class InstallUtils {
     }
     $data['titles'] = explode(',', $string['title_types']);
     $string['translationsurl'] = $configObject->getxml('translations', 'url');
-    $render->render($data, $string, '/install/install_form.html');
+    $render->render($data, $string, '/install/form.html');
   }
 
   /**
@@ -495,15 +495,16 @@ Class InstallUtils {
     self::writeConfigFile();
 
     if (!is_array(self::$warnings)) {
-      if (!self::$cli) {
-        echo "<p style=\"margin-left:10px\">" . $string['installed'] . "</p>\n";
-        echo "<p style=\"margin-left:10px\">" . $string['deleteinstall'] . "</p>\n";
-        echo "<p style=\"margin-left:10px\"><input type=\"button\" class=\"ok\" name=\"config\" value=\"" . $string['config'] . "\" onclick=\"window.location='" . $configObject->get('cfg_root_path') . "/admin/config.php'\" /></p>\n";
-      } else {
-        cli_utils::prompt($string['installed']);
-      }
+      $data['displaywarnings'] = true;
+      $data['warnings'] = self::$warnings;
     } else {
-      self::displayWarnings();
+      $data['displaywarnings'] = false;
+    }
+    if (!self::$cli) {
+      $render = new render($configObject);
+      $render->render($data, $string, '/install/processed.html');
+    } else {
+      cli_utils::prompt($string['installed']);
     }
   }
 
@@ -1780,24 +1781,6 @@ Class InstallUtils {
   }
 
   /**
-  * Display warnings with a nice message
-  *
-  */
-  static function displayWarnings() {
-    global $string;
-
-    if (is_array(self::$warnings)) {
-      echo "<h1>". $string['errors14']."</h1>";
-      echo "<div class=\"warning\">\n";
-      foreach(self::$warnings as $message) {
-        echo "\t<div>" . $string['errors15'] . " $message</div>\n";
-      }
-      echo "</div>\n";
-    }
-
-  }
-
-  /**
   * Display header
   *
   */
@@ -1831,7 +1814,7 @@ Class InstallUtils {
     self::$cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_ROOT']), '', $cfg_web_root), '/'), '/');
     $configObject->set('cfg_root_path', self::$cfg_root_path);
     $render->render($headerdata, $lang, 'header.html');
-    $render->render($data, $lang, '/install/install_header.html');
+    $render->render($data, $lang, '/install/header.html');
   }
 
   /**
