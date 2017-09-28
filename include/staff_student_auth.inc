@@ -33,8 +33,6 @@ if (!InstallUtils::config_exists()) {
   exit();
 }
 
-require_once 'auth.inc';
-
 // Cookie sessions only.
 ini_set('session.use_only_cookies', 1);
 // Use secure cookie if on secure conenction.

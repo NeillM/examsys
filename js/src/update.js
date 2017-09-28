@@ -20,8 +20,8 @@
 //
 
 // Load home screen
-function go_home() {
-  window.location='../index.php';
+function go_config() {
+  window.location='../admin/config.php';
 }
 // Initialise form validation
 $(document).ready(function () {
