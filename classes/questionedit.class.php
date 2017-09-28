@@ -109,7 +109,7 @@ Class QuestionEdit extends RogoObject {
   protected $_field_map = array('type' => 'q_type', 'option_order' => 'q_option_order', 'standards_setting' => 'std', 'owner_id' => 'ownerID', 'media' => 'q_media', 'media_width' => 'q_media_width', 'media_height' => 'q_media_height', 'checkout_author_id' => 'checkout_authorID', 'created' => 'creation_date');
   protected $_change_field_map;
   protected $_pretty_names;
-  public static $types = array('blank', 'calculation', 'dichotomous', 'extmatch', 'flash', 'hotspot', 'info', 'keyword_based', 'labelling', 'likert', 'matrix', 'mcq', 'mrq', 'random', 'rank', 'sct', 'textbox', 'true_false', 'area', 'enhancedcalc');
+  public static $types = array('blank', 'dichotomous', 'extmatch', 'flash', 'hotspot', 'info', 'keyword_based', 'labelling', 'likert', 'matrix', 'mcq', 'mrq', 'random', 'rank', 'sct', 'textbox', 'true_false', 'area', 'enhancedcalc');
 
   // Always store English values in the database so need to look up score method against English version
   protected $_score_methods_db;

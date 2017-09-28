@@ -362,36 +362,9 @@ if ($css != '') {
 }
 ?>
 
-<style type="text/css">
-    #enhancedcalc_warning{
-        position:absolute;
-        top:100px;
-        left:100px;
-        width:500px;
-        height:250px;
-        border:3px solid #1958B7;
-        background-color:#fff
-    }
-    #enhancedcalc_warning_icon{
-        float:left;
-        margin:10px 15px 10px 10px
-    }
-    #enhancedcalc_warning_msg{
-        margin:10px 10px 10px 90px;
-        text-align:left
-    }
-    #enhancedcalc_warning_buttons{
-        position:absolute;
-        bottom:0;
-        width:100%;
-        background-color:#EAEAEA;
-        text-align:right;
-        padding-top:5px;
-        padding-bottom:5px
-    }
-</style>
-
 <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="../js/validation/jquery.paper.enhancedcalc.min.js"></script>
 
 <?php if ($propertyObj->get_latex_needed() == 1) : ?>
 <script type="text/javascript" src="../js/jquery-migrate-1.2.1.min.js"></script>
@@ -425,7 +398,7 @@ if ($css != '') {
 
   var lang = {
   <?php
-  $langstrings = array('msgselectable1', 'msgselectable2', 'msgselectable3', 'msgselectable4');
+  $langstrings = array('msgselectable1', 'msgselectable2', 'msgselectable3', 'msgselectable4', 'entervalidcalcanswer');
   $first = true;
   foreach ($langstrings as $langstring) {
     if (!$first) {

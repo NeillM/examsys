@@ -649,6 +649,15 @@ QUERY;
     }
     return $converted;
   }
+  
+  /*
+   * Default method for return post params
+   * @return array unparsed post data
+   */
+  public function get_post_default() {
+    return $_POST;
+  }
+
 }
 
 ?>

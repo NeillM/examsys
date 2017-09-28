@@ -22,8 +22,6 @@
 * @package
 */
 
-$configObject          = Config::get_instance();
-
 function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questions, $paperID, $db) {
   $incomplete_screens = array_fill(1, $screen_no, 0);  // Set all screens to be initinally complete
 
@@ -193,51 +191,6 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
   return $incomplete_screens;
 }
 
-function calcPreParse($inputVal, $user_answers, $tmp_vars) {
-  global $A, $B, $C, $D, $E, $F, $G, $H, $I, $J;
-  if (substr($inputVal,0,3) == 'ans') {
-    //its a question refrance get previous user answer
-    $find_qid = intval(substr($inputVal,3));
-    $pre_user_answers = '';
-    foreach ($user_answers as $screen => $answers) {
-      foreach ($answers as $pre_qid => $ans) {
-        if ($pre_qid == $find_qid) {
-          list($pre_user_answers) = explode('|',$ans);
-          break 2;
-        }
-      }
-    }
-    if ($pre_user_answers == '') return 'ERROR';
-    $pre_user_answers = preg_replace('/[^0-9\.\-]/','',$pre_user_answers);
-    $inputVal = str_replace('ans' . $find_qid, $pre_user_answers, $inputVal);
-  } elseif (substr($inputVal,0,3) == 'var') {
-    //its a var refrance from a previous question
-    $find_var = substr($inputVal,3,1);
-    $find_qid = intval(substr($inputVal,4));
-    $pre_var_val = '';
-    foreach ($user_answers as $screen => $answers) {
-      foreach ($answers as $pre_qid => $ans) {
-        if ($pre_qid == $find_qid) {
-          $pre_user_answers_array = explode('|',$ans);
-          $variables = explode(',', $pre_user_answers_array[2]);
-          $pre_var_val = $variables[array_search($find_var,$tmp_vars)-1];
-          break 2;
-        }
-      }
-    }
-    if ($pre_var_val == '') return 'ERROR';
-    $inputVal = str_replace('var' . substr($inputVal,3,1) . $find_qid, $pre_var_val, $inputVal);
-  }
-  eval("\$inputVal = $inputVal;");
-  return $inputVal;
-}
-
-function checkVariables($number) {
-  global $A, $B, $C, $D, $E, $F, $G, $H, $I, $J;
-  eval("\$new_number = \"$number\";");
-  return $new_number;
-}
-
 /**
 * Replace error string from reference to blank user answer to previous question with presentation text in a way that is safe for strings containing equations
  * @param  string $haystack    The string within which the replacement will be made
@@ -261,7 +214,7 @@ function calc_replace_error_safe($haystack, $needle, $replacement) {
 }
 
 function display_question($configObject, &$question, $paper_type, $calculator, $current_screen, $old_q_type, &$question_no, $user_answers, &$unanswered) {
-  global $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $li_set, $bgcolor, $li_set, $used_questions, $user_dismiss, $user_order, $string, $language, $configObject, $unanswered_color;
+  global $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $li_set, $bgcolor, $li_set, $used_questions, $user_dismiss, $user_order, $string, $language, $unanswered_color;
 
   // Get the media directory object.
   $mediadirectory = rogo_directory::get_directory('media');

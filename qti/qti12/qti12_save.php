@@ -113,8 +113,8 @@ class IE_qti12_Save extends IE_Main {
 
     if ($question->type == "blank") {
       $this->SaveBlank($question);
-    } elseif ($question->type == "calculation" or $question->type == "enhancedcalc" ) {
-      $this->SaveCalculation($question);
+    } elseif ($question->type == "enhancedcalc" ) {
+      $this->SaveEnhancedCalc($question);
     } elseif ($question->type == "dichotomous") {
       $this->SaveDichotomous($question);
     } elseif ($question->type == "extmatch") {
@@ -210,47 +210,6 @@ $cfg_web_root=$configObject->get('cfg_web_root');
         include "qti12/tmpl/blank-textentry.php";
       }
     }
-    $this->output .= $ob->GetContent();
-    $ob->Restore();
-  }
-
-  /**
-   * Save 'calculation' question type to QTI XML
-   * @param ST_Question_Calculation $question Reference to the question object
-   * @author Adam Clarke, Rob Ingram
-   */
-  function SaveCalculation (&$question) {
-
-    if ($question->q_type == 'enhancedcalc') {
-      $this->SaveEnhancedCalc($question);
-      return;
-    }
-    $question->formula = trim($question->formula);
-
-    if (substr($question->formula, 0, 1) == "=") $question->formula = substr($question->formula, 1);
-
-    $question->origleadin = $question->leadin;
-    $q_text = $question->leadin;
-
-    // format the text for the question
-    // replace all variables in leadin with randomly generated values
-    foreach ($question->variables as $var => $vairable) {
-      $$var = MathsUtils::gen_random_no(checkVariables($vairable->min), checkVariables($vairable->max), $vairable->inc, $vairable->dec);
-      $q_text = str_ireplace("\$$var", $$var, $q_text);
-    }
-
-    eval("\$answer = " . $question->formula . ";");
-
-    //echo $q_text."<BR>";
-
-    $question->leadin = $q_text;
-
-    list($headertext, $title) = $this->MakeQuestionHeader($question);
-    $type = "Calculation";
-
-    $ob = new OB();
-    $ob->ClearAndSave();
-    include "qti12/tmpl/calculation.php";
     $this->output .= $ob->GetContent();
     $ob->Restore();
   }
