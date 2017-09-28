@@ -3,13 +3,39 @@ $(function() {
     tinyMCE.triggerSave();
   });
 
+  jQuery.validator.addMethod("calcvariable", function(value, element) {
+    // Variable defintion for calculation questions.
+    // Can be a link to another variable i.e. $A,
+    // a floating point or integer number i.e. 10.1,
+    // a link to another questions answer or variable i.e. ans10 or var$A99,
+    // a simple formula using [+,-,*,/] i.e. $A/$B
+    return this.optional( element ) || /^((\$[A-Z][0-9]*|var\$[A-Z][0-9]*|ans[0-9]*|[0-9]*[.]?[0-9]+)([+-/*]?))+$/.test( value );
+  }, lang['entervalidvariable']);
+
   $('#edit_form').validate({
     ignore: '',
     rules: {
       leadin: 'required',
-      option_min1: 'required',
-      option_max1: 'required',
-      option_increment1: 'required',
+      option_min1: 'required calcvariable',
+      option_max1: 'calcvariable',
+      option_min2: 'calcvariable',
+      option_max2: 'calcvariable',
+      option_min3: 'calcvariable',
+      option_max3: 'calcvariable',
+      option_min4: 'calcvariable',
+      option_max4: 'calcvariable',
+      option_min5: 'calcvariable',
+      option_max5: 'calcvariable',
+      option_min6: 'calcvariable',
+      option_max6: 'calcvariable',
+      option_min7: 'calcvariable',
+      option_max7: 'calcvariable',
+      option_min8: 'calcvariable',
+      option_max8: 'calcvariable',
+      option_min9: 'calcvariable',
+      option_max9: 'calcvariable',
+      option_min10: 'calcvariable',
+      option_max10: 'calcvariable',
       option_formula1: {
         required: function () {
           var haveFormula = true;
@@ -21,7 +47,16 @@ $(function() {
           return haveFormula;
         }
       },
+      option_increment1: {
+        number: true,
+        required: {
+          depends: function (element) {
+            return requiresIncrement(1);
+          }
+        }
+      },
       option_increment2: {
+        number: true,
         required: {
           depends: function (element) {
             return requiresIncrement(2);
@@ -29,6 +64,7 @@ $(function() {
         }
       },
       option_increment3: {
+        number: true,
         required: {
           depends: function (element) {
             return requiresIncrement(3);
@@ -36,6 +72,7 @@ $(function() {
         }
       },
       option_increment4: {
+        number: true,
         required: {
           depends: function (element) {
             return requiresIncrement(4);
@@ -43,6 +80,7 @@ $(function() {
         }
       },
       option_increment5: {
+        number: true,
         required: {
           depends: function (element) {
             return requiresIncrement(5);
@@ -50,6 +88,7 @@ $(function() {
         }
       },
       option_increment6: {
+        number: true,
         required: {
           depends: function (element) {
             return requiresIncrement(6);
@@ -57,6 +96,7 @@ $(function() {
         }
       },
       option_increment7: {
+        number: true,
         required: {
           depends: function (element) {
             return requiresIncrement(7);
@@ -64,6 +104,7 @@ $(function() {
         }
       },
       option_increment8: {
+        number: true,
         required: {
           depends: function (element) {
             return requiresIncrement(8);
@@ -71,6 +112,7 @@ $(function() {
         }
       },
       option_increment9: {
+        number: true,
         required: {
           depends: function (element) {
             return requiresIncrement(9);
@@ -78,6 +120,7 @@ $(function() {
         }
       },
       option_increment10: {
+        number: true,
         required: {
           depends: function (element) {
             return requiresIncrement(10);
@@ -88,16 +131,16 @@ $(function() {
     messages: {
       leadin: lang['enterleadin'],
       option_formula1: lang['enterformula'],
-      option_increment1: '<br />' + lang['enteroptionshort'],
-      option_increment2: '<br />' + lang['enteroptionshort'],
-      option_increment3: '<br />' + lang['enteroptionshort'],
-      option_increment4: '<br />' + lang['enteroptionshort'],
-      option_increment5: '<br />' + lang['enteroptionshort'],
-      option_increment6: '<br />' + lang['enteroptionshort'],
-      option_increment7: '<br />' + lang['enteroptionshort'],
-      option_increment8: '<br />' + lang['enteroptionshort'],
-      option_increment9: '<br />' + lang['enteroptionshort'],
-      option_increment10: '<br />' + lang['enteroptionshort']
+      option_increment1: '<br />' + lang['entervaliddecimal'],
+      option_increment2: '<br />' + lang['entervaliddecimal'],
+      option_increment3: '<br />' + lang['entervaliddecimal'],
+      option_increment4: '<br />' + lang['entervaliddecimal'],
+      option_increment5: '<br />' + lang['entervaliddecimal'],
+      option_increment6: '<br />' + lang['entervaliddecimal'],
+      option_increment7: '<br />' + lang['entervaliddecimal'],
+      option_increment8: '<br />' + lang['entervaliddecimal'],
+      option_increment9: '<br />' + lang['entervaliddecimal'],
+      option_increment10: '<br />' + lang['entervaliddecimal']
     },
     errorPlacement: function(error, element) {
       if (element.attr('name') == 'leadin') {

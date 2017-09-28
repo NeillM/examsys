@@ -26,12 +26,6 @@ require_once $cfg_web_root . 'include/std_set_shared_functions.inc';
 
 $stdID = 0;
 
-function checkVariables($number) {
-  global $A, $B, $C, $D, $E, $F, $G, $H, $I, $J;
-  eval("\$new_number = \"$number\";");
-  return $new_number;
-}
-
 function display_options($screen, $options, $q_id, $current_theme, $current_scenario, $current_leadin, $current_notes, $q_type, $std_method, $tmp_reviews, $tmp_exclude, $is_group) {
   global $marking, $question_no, $part_id, $labelcolor, $old_likert_label, $li_set, $bgcolor, $total_marks, $old_correct_fback, $stdID, $std_excluded, $string;
   static $allanswers;
@@ -459,7 +453,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
   }
 
   // Display possible marks for question (if not Survey)
-  if ($options[0]['q_type'] != 'hotspot' and $options[0]['q_type'] != 'likert' and $options[0]['q_type'] != 'mcq' and $options[0]['q_type'] != 'calculation' and $options[0]['q_type'] != 'dichotomous') echo '</blockquote>';
+  if ($options[0]['q_type'] != 'hotspot' and $options[0]['q_type'] != 'likert' and $options[0]['q_type'] != 'mcq' and $options[0]['q_type'] != 'dichotomous') echo '</blockquote>';
   if ($q_type < 3 and $options[0]['q_type'] != 'info') {
 
       echo "<div class=\"mk\">($marks ";

@@ -83,4 +83,5 @@ $string['answerrequired'] = 'The answer to this question(s) [X] should be provid
 $string['answerrequired_confirm'] = 'Do you still wish to pass this question or go back and answer it?';
 $string['go_back'] = 'Go back';
 $string['pass'] = 'Pass';
+$string['entervalidcalcanswer'] = 'Invalid: Answer should be numerical (with a unit if required), or left blank if you are skipping the question.';
 ?>

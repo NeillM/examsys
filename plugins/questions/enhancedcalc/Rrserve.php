@@ -104,10 +104,7 @@ class EnhancedCalc_Rrserve {
 			return false;
 		}
     
-    $varname = array_keys($vars);
-    $varvalue = array_values($vars);
-    $formula_vars_subed = str_replace($varname, $varvalue, $formula);
-    
+    $formula_vars_subed = EnhancedCalc::substitute_vars($vars, $formula);
     $correctanswer = $this->eval_string($formula_vars_subed);
    
     return $correctanswer;

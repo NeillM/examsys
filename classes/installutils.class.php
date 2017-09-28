@@ -704,6 +704,8 @@ Class InstallUtils {
     $configObject->set_setting('apilogfile', '', Config::STRING);
     $configObject->set_setting('rogo_version', $configObject->getxml('version'), Config::VERSION);
     $configObject->set_setting('misc_company', self::$cfg_company, Config::STRING);
+    $configObject->set_setting('cfg_calc_type', 'phpEval', Config::STRING);
+    $configObject->set_setting('cfg_calc_settings', array('host' => '', 'port' => '', 'timeout' => ''), Config::ASSOC);
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();
@@ -1920,12 +1922,6 @@ Class InstallUtils {
   {cfg_authentication_arrays}
 );
 \$cfg_password_expire = 30;    // Set in days
-
-\$enhancedcalculation = array('host' => 'localhost', 'port'=>6311,'timeout'=>5); //default enhancedcalc Rserve config options
-
-//but use phpEval as default for enhanced calculation questions
-\$enhancedcalc_type = 'phpEval'; //set the enhanced calculation to use php for maths
-\$enhancedcalculation = array(); //no config options for phpEval plugin
 
 //Lookup settings
 \$lookup = array(

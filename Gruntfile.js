@@ -43,7 +43,7 @@ module.exports = function(grunt) {
         src: ['admin/**/js/src/*.js']
       },
       corejs: {
-        src: ['js/src/*.js']
+        src: ['js/src/**/*.js']
       }
     },
     uglify: {
@@ -63,7 +63,7 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           cwd: 'js/',
-          src: 'src/*.js',
+          src: 'src/**/*.js',
           dest: 'js/',
           rename: buildName
         }]

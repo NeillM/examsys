@@ -80,10 +80,7 @@ class EnhancedCalc_phpEval {
 
   function calculate_correct_ans($vars, $formula) {
     
-    $varname = array_keys($vars);
-    $varvalue = array_values($vars);
-    $formula_vars_subed = str_replace($varname, $varvalue, $formula);
-    
+    $formula_vars_subed = EnhancedCalc::substitute_vars($vars, $formula);
     $correctanswer = eval( "return (" . $formula_vars_subed . ");");
    
     return (string)$correctanswer;

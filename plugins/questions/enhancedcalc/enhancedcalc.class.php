@@ -27,9 +27,34 @@ class EnhancedCalc extends Question implements questionInterface {
 	protected $configObj;
 	protected $db;
 	public $alluseranswers;
+	/**
+	 * Calculation object,
+	 * @var object 
+	 */
+	private $enhancedcalcObj;
+	/**
+	 * Calculation type,
+	 * @var string 
+	 */
+	private $enhancedcalcType;
+	/**
+	 * Calculation settings,
+	 * @var array 
+	 */
+	private $enhancedcalcSettings;
 
 	public function __construct($configObj) {
 		$this->configObj = $configObj;
+		$this->enhancedcalcType = $this->configObj->get_setting('core', 'cfg_calc_type');
+		$this->enhancedcalcSettings = $this->configObj->get_setting('core', 'cfg_calc_settings');
+		if (!empty($this->enhancedcalcType)) {
+			require_once $this->enhancedcalcType . '.php';
+			$name = 'enhancedcalc_' . $this->enhancedcalcType;
+			$this->enhancedcalcObj = new $name($this->enhancedcalcSettings);
+		} else {
+			require_once 'phpEval.php';
+			$this->enhancedcalcObj = new EnhancedCalc_phpEval($this->enhancedcalcSettings);
+		}
 	}
 
 	public function set_settings($data) {
@@ -43,7 +68,7 @@ class EnhancedCalc extends Question implements questionInterface {
 	/**
 	 * Split answer into number and units if applicable
 	 * @param  string $input User answer
-	 * @return array         Number and unit components of the string
+	 * @return array Number and unit components of the string
 	 */
 	function split_numb_from_unit($input) {
 		$input = trim($input);
@@ -75,7 +100,7 @@ class EnhancedCalc extends Question implements questionInterface {
 	/**
 	 * Build an array of formule indexed by their associated units
 	 * @param  array $ans Array of possible answers containing a formula and comma separated list of units
-	 * @return array      Array of formulae indexed by units string
+	 * @return array Array of formulae indexed by units string
 	 */
 	function build_formula_by_units($ans) {
 		$formula_by_units = array();
@@ -93,7 +118,7 @@ class EnhancedCalc extends Question implements questionInterface {
 	/**
 	 * Check if the user entered units match any that are defined in the possible answers
 	 * @param  string $unit Units as entered by the user
-	 * @return boolean      True if the units match any defined in the answers
+	 * @return boolean True if the units match any defined in the answers
 	 */
 	function are_units_correct($unit) {
 		$this->decode_settings();
@@ -164,16 +189,6 @@ class EnhancedCalc extends Question implements questionInterface {
 				$this->useranswer['ans']['units_used'] = $this->useranswer['uansunit'];
 			}
 
-			$enhancedcalcType = $this->configObj->get('enhancedcalc_type');
-			if (!is_null($enhancedcalcType)) {
-				require_once $enhancedcalcType . '.php';
-				$name = 'enhancedcalc_' . $enhancedcalcType;
-				$enhancedcalcObj = new $name($this->configObj->getbyref('enhancedcalculation'));
-			} else {
-				require_once 'Rrserve.php';
-				$enhancedcalcObj = new EnhancedCalc_Rrserve($this->configObj->getbyref('enhancedcalculation'));
-			}
-
 			if (is_array($this->useranswer['vars'])) {
 				foreach ($this->useranswer['vars'] as $key => $variablessplit) {
 					if ($variablessplit === 'ERROR') {
@@ -192,7 +207,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				 *  CALCULATE REQURED NUMERIC VALUES
 				 *
 				 */
-				$this->useranswer['cans'] = $enhancedcalcObj->calculate_correct_ans($this->useranswer['vars'], $this->useranswer['ans']['formula_used']);
+				$this->useranswer['cans'] = $this->enhancedcalcObj->calculate_correct_ans($this->useranswer['vars'], $this->useranswer['ans']['formula_used']);
 			} catch (Exception $e) {
 				//TODO: catch different errors "no connection", "unable to evaluate"
 				if (stripos($e->getMessage(), 'connect') !== false) {
@@ -200,7 +215,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				} else {
 					$returnstatus = Q_MARKING_UNCALC_ANSWER;
 					$this->useranswer['status']['error'] = true;
-					$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
+					$this->useranswer['ans']['error'] = $this->enhancedcalcObj->get_error();
 					$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
 				}
 
@@ -214,10 +229,10 @@ class EnhancedCalc extends Question implements questionInterface {
 					$this->settings['tolerance_full'] = $this->set_blank_to_zero($this->settings['tolerance_full']);
 					switch ($this->settings['fulltoltyp']) {
 						case "%":
-							$res = $enhancedcalcObj->calculate_tolerance_percent($this->useranswer['cans'], $this->settings['tolerance_full']);
+							$res = $this->enhancedcalcObj->calculate_tolerance_percent($this->useranswer['cans'], $this->settings['tolerance_full']);
 							break;
 						case "#":
-							$res = $enhancedcalcObj->calculate_tolerance_absolute($this->useranswer['cans'], $this->settings['tolerance_full']);
+							$res = $this->enhancedcalcObj->calculate_tolerance_absolute($this->useranswer['cans'], $this->settings['tolerance_full']);
 							break;
 					}
 					$this->useranswer['ans']['tolerance_full'] = $res['tolerance'];
@@ -231,7 +246,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				} else {
 					$returnstatus = Q_MARKING_UNCALC_FULL_TOLLERANCE;
 					$this->useranswer['status']['error'] = true;
-					$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
+					$this->useranswer['ans']['error'] = $this->enhancedcalcObj->get_error();
 					$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
 				}
 
@@ -245,10 +260,10 @@ class EnhancedCalc extends Question implements questionInterface {
 					$this->settings['tolerance_partial'] = $this->set_blank_to_zero($this->settings['tolerance_partial']);
 					switch ($this->settings['parttoltyp']) {
 						case "%":
-							$res = $enhancedcalcObj->calculate_tolerance_percent($this->useranswer['cans'], $this->settings['tolerance_partial']);
+							$res = $this->enhancedcalcObj->calculate_tolerance_percent($this->useranswer['cans'], $this->settings['tolerance_partial']);
 							break;
 						case "#":
-							$res = $enhancedcalcObj->calculate_tolerance_absolute($this->useranswer['cans'], $this->settings['tolerance_partial']);
+							$res = $this->enhancedcalcObj->calculate_tolerance_absolute($this->useranswer['cans'], $this->settings['tolerance_partial']);
 							break;
 					}
 					$this->useranswer['ans']['tolerance_partial'] = $res['tolerance'];
@@ -262,7 +277,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				} else {
 					$returnstatus = Q_MARKING_UNCALC_PARTIAL_TOLLERANCE;
 					$this->useranswer['status']['error'] = true;
-					$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
+					$this->useranswer['ans']['error'] = $this->enhancedcalcObj->get_error();
 					$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
 				}
 
@@ -292,15 +307,15 @@ class EnhancedCalc extends Question implements questionInterface {
 						$arg = $this->useranswer['uansnumb'];
 				}
 
-				$this->useranswer['cans'] = $enhancedcalcObj->$function($this->useranswer['cans'], $arg);
+				$this->useranswer['cans'] = $this->enhancedcalcObj->$function($this->useranswer['cans'], $arg);
 
-				$this->useranswer['ans']['tolerance_full'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_full'], $arg);
-				$this->useranswer['ans']['tolerance_fullans'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_fullans'], $arg);
-				$this->useranswer['ans']['tolerance_fullansneg'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_fullansneg'], $arg);
+				$this->useranswer['ans']['tolerance_full'] = $this->enhancedcalcObj->$function($this->useranswer['ans']['tolerance_full'], $arg);
+				$this->useranswer['ans']['tolerance_fullans'] = $this->enhancedcalcObj->$function($this->useranswer['ans']['tolerance_fullans'], $arg);
+				$this->useranswer['ans']['tolerance_fullansneg'] = $this->enhancedcalcObj->$function($this->useranswer['ans']['tolerance_fullansneg'], $arg);
 
-				$this->useranswer['ans']['tolerance_partial'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_partial'], $arg);
-				$this->useranswer['ans']['tolerance_partialans'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_partialans'], $arg);
-				$this->useranswer['ans']['tolerance_partialansneg'] = $enhancedcalcObj->$function($this->useranswer['ans']['tolerance_partialansneg'], $arg);
+				$this->useranswer['ans']['tolerance_partial'] = $this->enhancedcalcObj->$function($this->useranswer['ans']['tolerance_partial'], $arg);
+				$this->useranswer['ans']['tolerance_partialans'] = $this->enhancedcalcObj->$function($this->useranswer['ans']['tolerance_partialans'], $arg);
+				$this->useranswer['ans']['tolerance_partialansneg'] = $this->enhancedcalcObj->$function($this->useranswer['ans']['tolerance_partialansneg'], $arg);
 			} catch (Exception $e) {
 				//TODO: catch different errors "no connection", "unable to evaluate"
 				if (stripos($e->getMessage(), 'connect') !== false) {
@@ -308,7 +323,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				} else {
 						$returnstatus = Q_MARKING_UNCALC_FORMAT;
 						$this->useranswer['status']['error'] = true;
-						$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
+						$this->useranswer['ans']['error'] = $this->enhancedcalcObj->get_error();
 						$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
 				}
 
@@ -342,7 +357,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			}
 
 			try {
-				$this->useranswer['status']['exact'] = $enhancedcalcObj->is_useranswer_correct($this->useranswer['uansnumb'], $this->useranswer['cans'], ($this->settings['strictdisplay'] !== true));
+				$this->useranswer['status']['exact'] = $this->enhancedcalcObj->is_useranswer_correct($this->useranswer['uansnumb'], $this->useranswer['cans'], ($this->settings['strictdisplay'] !== true));
 			} catch (Exception $e) {
 				//TODO: catch different errors "no connection", "unable to evaluate"
 				if (stripos($e->getMessage(), 'connect') !== false) {
@@ -350,7 +365,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				} else {
 					$returnstatus = Q_MARKING_UNCALC_USER_ANSWER;
 					$this->useranswer['status']['error'] = true;
-					$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
+					$this->useranswer['ans']['error'] = $this->enhancedcalcObj->get_error();
 					$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
 					// If this happens the user's answer caused an error in the checker.
 					// This almost certainly means it is not a number, so we should give them
@@ -366,7 +381,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			try {
 				// Calculate distance from correct if needed
 				if ($this->useranswer['status']['exact'] === false) {
-					$this->useranswer['cans_dist'] = $enhancedcalcObj->distance_from_correct_answer($this->useranswer['uansnumb'], $this->useranswer['cans']);
+					$this->useranswer['cans_dist'] = $this->enhancedcalcObj->distance_from_correct_answer($this->useranswer['uansnumb'], $this->useranswer['cans']);
 				} else {
 					$this->useranswer['cans_dist'] = '0';
 				}
@@ -377,7 +392,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				} else {
 					$returnstatus = Q_MARKING_UNCALC_DIST_FROM_ANSWER;
 					$this->useranswer['status']['error'] = true;
-					$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
+					$this->useranswer['ans']['error'] = $this->enhancedcalcObj->get_error();
 					$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
 				}
 
@@ -388,7 +403,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
 			if ($this->useranswer['status']['exact'] === false) {
 				try {
-					$this->useranswer['status']['tolerance_full'] = $enhancedcalcObj->is_useranswer_within_tolerance(
+					$this->useranswer['status']['tolerance_full'] = $this->enhancedcalcObj->is_useranswer_within_tolerance(
 									$this->useranswer['uansnumb'], $this->useranswer['ans']['tolerance_fullansneg'], $this->useranswer['ans']['tolerance_fullans']
 					);
 				} catch (Exception $e) {
@@ -398,7 +413,7 @@ class EnhancedCalc extends Question implements questionInterface {
 					} else {
 							$returnstatus = Q_MARKING_UNCALC_WITHIN_FULL_TOLERANCE;
 							$this->useranswer['status']['error'] = true;
-							$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
+							$this->useranswer['ans']['error'] = $this->enhancedcalcObj->get_error();
 							$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
 					}
 					$this->useranswer['status']['overall'] = $returnstatus;
@@ -408,7 +423,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
 				if ($this->useranswer['status']['tolerance_full'] === false) {
 					try {
-						$this->useranswer['status']['tolerance_partial'] = $enhancedcalcObj->is_useranswer_within_tolerance(
+						$this->useranswer['status']['tolerance_partial'] = $this->enhancedcalcObj->is_useranswer_within_tolerance(
 										$this->useranswer['uansnumb'], $this->useranswer['ans']['tolerance_partialansneg'], $this->useranswer['ans']['tolerance_partialans']
 						);
 					} catch (Exception $e) {
@@ -418,7 +433,7 @@ class EnhancedCalc extends Question implements questionInterface {
 						} else {
 							$returnstatus = Q_MARKING_UNCALC_WITHIN_PARTIAL_TOLERANCE;
 							$this->useranswer['status']['error'] = true;
-							$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
+							$this->useranswer['ans']['error'] = $this->enhancedcalcObj->get_error();
 							$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
 						}
 						$this->useranswer['status']['overall'] = $returnstatus;
@@ -436,9 +451,9 @@ class EnhancedCalc extends Question implements questionInterface {
 				if ($this->is_strict_dp_enabled()) {
 
 					if ($this->is_strict_dp_strictzeros_enabled()) {
-						$this->useranswer['status']['strictdp'] = $enhancedcalcObj->is_useranswer_correct_decimal_places_strictzeros($this->useranswer['uansnumb'], $this->settings['dp']);
+						$this->useranswer['status']['strictdp'] = $this->enhancedcalcObj->is_useranswer_correct_decimal_places_strictzeros($this->useranswer['uansnumb'], $this->settings['dp']);
 					} else {
-						$this->useranswer['status']['strictdp'] = $enhancedcalcObj->is_useranswer_correct_decimal_places($this->useranswer['uansnumb'], $this->settings['dp']);
+						$this->useranswer['status']['strictdp'] = $this->enhancedcalcObj->is_useranswer_correct_decimal_places($this->useranswer['uansnumb'], $this->settings['dp']);
 					}
 					if ($this->useranswer['status']['strictdp'] === false) {
 						$this->qmark = $this->settings['marks_incorrect'];
@@ -454,7 +469,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				} else {
 					$returnstatus = Q_MARKING_UNCALC_STRICT_DP_CHECK;
 					$this->useranswer['status']['error'] = true;
-					$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
+					$this->useranswer['ans']['error'] = $this->enhancedcalcObj->get_error();
 					$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage();
 				}
 
@@ -466,7 +481,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			try {
 				// Sheck for strict sf
 				if ($this->is_strict_sf_enabled()) {
-					$this->useranswer['status']['strictsf'] = $enhancedcalcObj->is_useranswer_within_significant_figures($this->useranswer['uansnumb'], $this->settings['sf']);
+					$this->useranswer['status']['strictsf'] = $this->enhancedcalcObj->is_useranswer_within_significant_figures($this->useranswer['uansnumb'], $this->settings['sf']);
 					if ($this->useranswer['status']['strictsf'] === false) {
 						$this->qmark = $this->settings['marks_incorrect'];
 						$returnstatus = Q_MARKING_WRONG;
@@ -512,7 +527,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				} else {
 					$returnstatus = Q_MARKING_ERROR;
 					$this->useranswer['status']['error'] = true;
-					$this->useranswer['ans']['error'] = $enhancedcalcObj->get_error();
+					$this->useranswer['ans']['error'] = $this->enhancedcalcObj->get_error();
 					$this->useranswer['status']['e'] = $e->getCode() . " - " . $e->getMessage() . " - " . $e->getTraceAsString();
 				}
 				$this->useranswer['status']['overall'] = $returnstatus;
@@ -533,15 +548,23 @@ class EnhancedCalc extends Question implements questionInterface {
 
 	/**
 	 * Process the POST data for the user's answer into JSON
-	 * @param  array  $postdata HTML POST data for theuser's answer
-	 * @param  [type] $session  [description]
-	 * @return string           JSON encoded answer data
+	 * @param  array  $postdata HTML POST data for the user's answer
+	 * @param  array $session user session data
+	 * @return string JSON encoded answer data
 	 */
 	static public function process_user_answer(&$postdata, &$session) {
 		$data = $session;
 
 		foreach ($postdata as $key => $value) {
-			$data[$key] = $value;
+			// Clean the value.
+			$data[$key] = param::clean(
+			  $value,
+			  param::REGEXP,
+			  array(
+				'default' => '',
+				'regexp' => '#^[+-]?[0-9]*[.]?[0-9]+[ a-zA-Z0-9/^]*$#',
+			  )
+			);
 		}
 
 		$return = json_encode($data);
@@ -651,143 +674,143 @@ class EnhancedCalc extends Question implements questionInterface {
 	}
 
 	/**
-	 * Render the querstion as required for displaying results and feedback to the user
-	 * @param  array  $extra [description]
+	 * Render the question as required for displaying results and feedback to the user
+	 * @param  array $extra additional paper settings
 	 */
 	public function render_feedback($extra = array()) {
-            global $string;
+		global $string;
 
-            // Make sure data is arrays not encoded
-            if (!is_array($this->useranswer)) {
-                $this->useranswer = json_decode($this->useranswer, true);
-            }
-            if (!is_array($this->settings)) {
-                $this->settings = json_decode($this->settings, true);
-            }
+		// Make sure data is arrays not encoded
+		if (!is_array($this->useranswer)) {
+			$this->useranswer = json_decode($this->useranswer, true);
+		}
+		if (!is_array($this->settings)) {
+			$this->settings = json_decode($this->settings, true);
+		}
 
-            if (isset($this->useranswer['vars'])) {
-                $varname = array_keys($this->useranswer['vars']);
-                $varvalue = array_values($this->useranswer['vars']);
-            } else {
-                $varname = array('$A', '$B', '$C', '$D', '$E', '$F', '$G', '$H', '$I', '$J', '$K');
-                $varvalue = array_fill(0, 11, '<span class="var_error"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!">&nbsp;ERROR</span>');
-            }
+		if (isset($this->useranswer['vars'])) {
+			$varname = array_keys($this->useranswer['vars']);
+			$varvalue = array_values($this->useranswer['vars']);
+		} else {
+			$varname = array('$A', '$B', '$C', '$D', '$E', '$F', '$G', '$H', '$I', '$J', '$K');
+			$varvalue = array_fill(0, 11, '<span class="var_error"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!">&nbsp;ERROR</span>');
+		}
 
-            $leadin = str_ireplace($varname, $varvalue, $this->leadin);
+		$leadin = str_ireplace($varname, $varvalue, $this->leadin);
 
-            // Deal with the failed variables
+		// Deal with the failed variables
 
-            if ($this->scenario != '') {
-                echo "<p>" . $this->scenario . "</p>\n";
-            }
-            if ($this->q_media != '') {
-                echo "<p align=\"center\">" . display_media($this->q_media, $this->q_media_width, $this->q_media_height, '') . "</p>\n";
-            }
+		if ($this->scenario != '') {
+			echo "<p>" . $this->scenario . "</p>\n";
+		}
+		if ($this->q_media != '') {
+			echo "<p align=\"center\">" . display_media($this->q_media, $this->q_media_width, $this->q_media_height, '') . "</p>\n";
+		}
 
-            echo_content($leadin);
+		echo_content($leadin);
 
-            if (!isset($this->useranswer['uans']) or $this->useranswer['uans'] == '') {
-                if ($extra['hide_if_unanswered'] == 1) {
-                    $extra['tmp_display_correct_answer'] = 0;
-                    $extra['tmp_display_students_response'] = '0';
-                    $extra['tmp_display_feedback'] = '0';
-                    $extra['tmp_display_question_mark'] = '0';
-                }
-            }
+		if (!isset($this->useranswer['uans']) or $this->useranswer['uans'] == '') {
+			if ($extra['hide_if_unanswered'] == 1) {
+				$extra['tmp_display_correct_answer'] = 0;
+				$extra['tmp_display_students_response'] = '0';
+				$extra['tmp_display_feedback'] = '0';
+				$extra['tmp_display_question_mark'] = '0';
+			}
+		}
 
-            $saved_response = '';
-            $saved_response_clean = '';
-            if (isset($this->useranswer['uans'])) {
-                $saved_response = $this->useranswer['uans'];
-                $saved_response_clean = preg_replace('([^0-9\.\-])', '', $saved_response);
-            }
-            $part_id = 1;
+		$saved_response = '';
+		$saved_response_clean = '';
+		if (isset($this->useranswer['uans'])) {
+			$saved_response = $this->useranswer['uans'];
+			$saved_response_clean = preg_replace('([^0-9\.\-])', '', $saved_response);
+		}
+		$part_id = 1;
 
-            $tmp_fback = $this->correct_fback;
+		$tmp_fback = $this->correct_fback;
 
-            echo "<table cellpadding=\"0\" cellspacing=\"1\" border=\"0\"><tr>";
-            if ($extra['tmp_display_correct_answer'] == '1') {
-                echo '<td>';
-                if (isset($this->std[0])) {
-                    echo display_std($this->std[0]);
-                }
-                echo '</td>';
-            } else {
-                echo '<td></td>';
-            }
-            $marked = true;
-            if ($saved_response_clean == '') {
-                echo '<td>';
-                if ($extra['tmp_exclude'] == '1') {
-                    echo '<span class="exclude">';
-                }
-                echo display_response($extra['tmp_display_students_response'], 'blank') . "<input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q'" . $extra['question'] . "'\" size=\"10\" value=\"" . $string['unanswered'] . "\" />";
-            } else {
-                echo '<td>';
-                if ($extra['tmp_exclude'] == '1') {
-                    echo '<span class="exclude">';
-                }
+		echo "<table cellpadding=\"0\" cellspacing=\"1\" border=\"0\"><tr>";
+		if ($extra['tmp_display_correct_answer'] == '1') {
+			echo '<td>';
+			if (isset($this->std[0])) {
+				echo display_std($this->std[0]);
+			}
+			echo '</td>';
+		} else {
+			echo '<td></td>';
+		}
+		$marked = true;
+		if ($saved_response_clean == '') {
+			echo '<td>';
+			if ($extra['tmp_exclude'] == '1') {
+				echo '<span class="exclude">';
+			}
+			echo display_response($extra['tmp_display_students_response'], 'blank') . "<input type=\"text\" style=\"color:#808080; text-align:right\" name=\"q'" . $extra['question'] . "'\" size=\"10\" value=\"" . $string['unanswered'] . "\" />";
+		} else {
+			echo '<td>';
+			if ($extra['tmp_exclude'] == '1') {
+				echo '<span class="exclude">';
+			}
 
-                if (isset($this->useranswer['status']['overall']) and ($this->useranswer['status']['overall'] == Q_MARKING_EXACT or $this->useranswer['status']['overall'] == Q_MARKING_FULL_TOL)) {
-                    echo display_response($extra['tmp_display_students_response'], 'tick');
-                } elseif (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_PART_TOL) {
-                    echo display_response($extra['tmp_display_students_response'], 'half');
-                } elseif (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_WRONG) {
-                    echo display_response($extra['tmp_display_students_response'], 'cross');
-                } else {
-                    echo display_response($extra['tmp_display_students_response'], 'unmarked');
-                    $marked = false;
-                }
-                if ($marked) {
-                    echo '<input type="text" style="text-align:right" name="q' . $extra['question'] . '" size="10" value="' . htmlspecialchars($this->useranswer['uansnumb']) . ' ' . $this->useranswer['uansunit'] . '" />';
-                }
-            }
+			if (isset($this->useranswer['status']['overall']) and ($this->useranswer['status']['overall'] == Q_MARKING_EXACT or $this->useranswer['status']['overall'] == Q_MARKING_FULL_TOL)) {
+				echo display_response($extra['tmp_display_students_response'], 'tick');
+			} elseif (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_PART_TOL) {
+				echo display_response($extra['tmp_display_students_response'], 'half');
+			} elseif (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_WRONG) {
+				echo display_response($extra['tmp_display_students_response'], 'cross');
+			} else {
+				echo display_response($extra['tmp_display_students_response'], 'unmarked');
+				$marked = false;
+			}
+			if ($marked) {
+				echo '<input type="text" style="text-align:right" name="q' . $extra['question'] . '" size="10" value="' . htmlspecialchars($this->useranswer['uansnumb']) . ' ' . $this->useranswer['uansunit'] . '" />';
+			}
+		}
 
-            $display_units = '';
+		$display_units = '';
 
-            if ($marked) {
-                if ($this->useranswer['ans']['units_used'] != '') {
-                    $display_units = ' ' . $this->useranswer['ans']['units_used'];
-                }
-            }
-            if ($extra['tmp_display_correct_answer'] == '1') {
-                if (!isset($this->useranswer['status'])) {
-                    echo ' <strong><span class="err">' . $string['unmarked'] . '</span></strong>';
-                } elseif (!isset($this->useranswer['cans'])) {
-                    echo ' <strong><span class="err">' . $string['EnhancedCalcCorrectError'] . '</span></strong>';
-                } else {
-                    echo ' <strong>' . $this->useranswer['cans'] . $display_units . '</strong>';
-                }
-            } else {
-                echo ' ';
-            }
+		if ($marked) {
+			if ($this->useranswer['ans']['units_used'] != '') {
+			$display_units = ' ' . $this->useranswer['ans']['units_used'];
+			}
+		}
+		if ($extra['tmp_display_correct_answer'] == '1') {
+			if (!isset($this->useranswer['status'])) {
+				echo ' <strong><span class="err">' . $string['unmarked'] . '</span></strong>';
+			} elseif (!isset($this->useranswer['cans'])) {
+				echo ' <strong><span class="err">' . $string['EnhancedCalcCorrectError'] . '</span></strong>';
+			} else {
+				echo ' <strong>' . $this->useranswer['cans'] . $display_units . '</strong>';
+			}
+		} else {
+			echo ' ';
+		}
 
-            if (isset($this->useranswer['cans'])) {
-                if (isset($this->useranswer['status']['overall']) and ($this->useranswer['status']['overall'] == Q_MARKING_FULL_TOL)) {
-                    echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['tolerance_full'] . str_replace('#', '', $this->settings['fulltoltyp']);
-                    echo ' (' . $this->useranswer['ans']['tolerance_fullansneg'] . $display_units . ' - ' . $this->useranswer['ans']['tolerance_fullans'] . $display_units . ')';
-                }
-                if (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_PART_TOL) {
-                    echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['tolerance_partial'] . str_replace('#', '', $this->settings['parttoltyp']);
-                    echo ' (' . $this->useranswer['ans']['tolerance_partialansneg'] . $display_units . ' - ' . $this->useranswer['ans']['tolerance_partialans'] . $display_units . ')';
-                }
-            }
+		if (isset($this->useranswer['cans'])) {
+			if (isset($this->useranswer['status']['overall']) and ($this->useranswer['status']['overall'] == Q_MARKING_FULL_TOL)) {
+				echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['tolerance_full'] . str_replace('#', '', $this->settings['fulltoltyp']);
+				echo ' (' . $this->useranswer['ans']['tolerance_fullansneg'] . $display_units . ' - ' . $this->useranswer['ans']['tolerance_fullans'] . $display_units . ')';
+			}
+			if (isset($this->useranswer['status']['overall']) and $this->useranswer['status']['overall'] == Q_MARKING_PART_TOL) {
+				echo ' ' . $string['withatoleranceof'] . ' ' . $this->settings['tolerance_partial'] . str_replace('#', '', $this->settings['parttoltyp']);
+				echo ' (' . $this->useranswer['ans']['tolerance_partialansneg'] . $display_units . ' - ' . $this->useranswer['ans']['tolerance_partialans'] . $display_units . ')';
+			}
+		}
 
-            if ($extra['tmp_exclude'] == '1') {
-                echo '</span>';
-            }
-            echo "</td></tr>\n</table>\n";
-            if ($tmp_fback != '' and $extra['tmp_display_feedback'] == '1') {
-                foreach ($varname as $individual_varname) {
-                    $tmp_fback = str_replace($individual_varname, $this->useranswer['vars'][$individual_varname], $tmp_fback);
-                }
-                echo "<br /><div class=\"fback\">" . nl2br($tmp_fback) . "</div>\n";
-            }
+		if ($extra['tmp_exclude'] == '1') {
+			echo '</span>';
+		}
+		echo "</td></tr>\n</table>\n";
+		if ($tmp_fback != '' and $extra['tmp_display_feedback'] == '1') {
+			foreach ($varname as $individual_varname) {
+				$tmp_fback = str_replace($individual_varname, $this->useranswer['vars'][$individual_varname], $tmp_fback);
+			}
+			echo "<br /><div class=\"fback\">" . nl2br($tmp_fback) . "</div>\n";
+		}
 	}
 
 	/**
 	 * Load the answers for all users
-	 * @param  [type] $all_user_answers [description]
+	 * @param array $all_user_answers all users input
 	 */
 	function load_all_user_answers(&$all_user_answers) {
 		$this->alluseranswers = $all_user_answers;
@@ -795,89 +818,89 @@ class EnhancedCalc extends Question implements questionInterface {
 
 	/**
 	 * Substitute variable placeholders with the calculated value
-	 * @param  string $inputVal     The variable definition
-	 * @param  [type] $user_answers [description]
-	 * @return [type]               [description]
+	 * @param  string $inputVal The variable definition
+	 * @param  array $user_answers a users input
+	 * @return string
 	 */
 	function variable_substitution($inputVal, $user_answers) {
 
-            //Question reference
-            if ($this->is_linked_ans($inputVal)) {
-                $uansarray = array();
-                // 1. List answer and associated question
-                $find_qid = $this->parse_linked_ans($inputVal);
-                // 2. Error if user answers not set.
-                if (!is_array($user_answers)) {
-                    $user_answers = array();
-                    $inputVal = 'ERROR';
-                }
-                // 3. Loop though user answers.
-                foreach ($user_answers as $screen => $answers) {
-                    // Check user answer for question exists.
-                    if (isset($answers[$find_qid])) {
-                        try {
-                            // Decode if not already an array.
-                            if (!is_array($answers[$find_qid])) {
-                                $uansarray = json_decode($answers[$find_qid], true);
-                            } else {
-                                $uansarray = $answers[$find_qid];
-                            }
-                        } catch (exception $e) {
-                            return 'ERROR';
-                        }
-                        break;
-                    }
-                }
-                // 4. Error is user answer is empty.
-                if (!isset($uansarray['uans']) or $uansarray['uans'] == '') {
-                    return 'ERROR';
-                }
-                // 5. Return the number only.
-                $return = $this->split_numb_from_unit($uansarray['uans']);
-                $inputVal = $return[0];
-            }
+		//Question reference
+		if ($this->is_linked_ans($inputVal)) {
+			$uansarray = array();
+			// 1. List answer and associated question
+			$find_qid = $this->parse_linked_ans($inputVal);
+			// 2. Error if user answers not set.
+			if (!is_array($user_answers)) {
+				$user_answers = array();
+				$inputVal = 'ERROR';
+			}
+			// 3. Loop though user answers.
+			foreach ($user_answers as $screen => $answers) {
+				// Check user answer for question exists.
+				if (isset($answers[$find_qid])) {
+					try {
+						// Decode if not already an array.
+						if (!is_array($answers[$find_qid])) {
+							$uansarray = json_decode($answers[$find_qid], true);
+						} else {
+							$uansarray = $answers[$find_qid];
+						}
+					} catch (exception $e) {
+						return 'ERROR';
+					}
+					break;
+				}
+			}
+			// 4. Error is user answer is empty.
+			if (!isset($uansarray['uans']) or $uansarray['uans'] == '') {
+				return 'ERROR';
+			}
+			// 5. Return the number only.
+			$return = $this->split_numb_from_unit($uansarray['uans']);
+			$inputVal = $return[0];
+		}
 
-            // Variable reference
-            if ($this->is_linked_question_var($inputVal)) {
-                // 1. Get variable and associated question.
-                list($find_var, $find_qid) = $this->parse_linked_question_var($inputVal);
-                // 2. Error if user answers not set.
-                if (!is_array($user_answers)) {
-                    $user_answers = array();
-                    $inputVal = 'ERROR';
-                }
-                // 3. Loop though user answers.
-                foreach ($user_answers as $screen => $answers) {
-                    // Check user answer for question exists or error.
-                    if (isset($answers[$find_qid])) {
-                        // Decode if not already an array.
-                        if (!is_array($answers[$find_qid])) {
-                            $variables = json_decode($answers[$find_qid], true);
-                        } else {
-                            $variables = $answers[$find_qid];
-                        }
-                        // Set input value to variable or error.
-                        if (isset($variables['vars'][$find_var])) {
-                            $inputVal = $variables['vars'][$find_var];
-                            break;
-                        } else {
-                            $inputVal = 'ERROR';
-                        }
-                    } else {
-                        $inputVal = 'ERROR';
-                    }
-                }
-            }
+		// Variable reference
+		if ($this->is_linked_question_var($inputVal)) {
+			// 1. Get variable and associated question.
+			list($find_var, $find_qid) = $this->parse_linked_question_var($inputVal);
+			// 2. Error if user answers not set.
+			if (!is_array($user_answers)) {
+				$user_answers = array();
+				$inputVal = 'ERROR';
+			}
+			// 3. Loop though user answers.
+			foreach ($user_answers as $screen => $answers) {
+				// Check user answer for question exists or error.
+				if (isset($answers[$find_qid])) {
+					// Decode if not already an array.
+					if (!is_array($answers[$find_qid])) {
+						$variables = json_decode($answers[$find_qid], true);
+					} else {
+						$variables = $answers[$find_qid];
+					}
+					// Set input value to variable or error.
+					if (isset($variables['vars'][$find_var])) {
+						$inputVal = $variables['vars'][$find_var];
+						break;
+					} else {
+						$inputVal = 'ERROR';
+					}
+				} else {
+					$inputVal = 'ERROR';
+				}
+			}
+		}
 
-            // Substitue values.
-            if ($this->is_compound_question_var($inputVal) or (!is_numeric($inputVal) and $inputVal != 'ERROR' and $inputVal !== '')) {
-                $inputVal = $this->substitute_and_eval_vars($this->useranswer['vars'], $inputVal);
-                if (!is_numeric($inputVal)) {
-                    $inputVal = 'ERROR';
-                }
-            }
+		// Substitue values.
+		if ($this->is_compound_question_var($inputVal) or (!is_numeric($inputVal) and $inputVal != 'ERROR' and $inputVal !== '')) {
+			$inputVal = $this->enhancedcalcObj->calculate_correct_ans($this->useranswer['vars'], $inputVal);
+			if (!is_numeric($inputVal)) {
+				$inputVal = 'ERROR';
+			}
+		}
 
-            return $inputVal;
+		return $inputVal;
 	}
 
 	/**
@@ -926,19 +949,18 @@ class EnhancedCalc extends Question implements questionInterface {
 	}
 
 	/**
-	 * replace $A,$B,$C .... in a string and evluate using php eval
-	 * N.B ONLY Used to calculate compound question varables only in in Rserve mode
+	 * Replace $A,$B,$C etc in a string
 	 *
 	 * @param  array $vars array('$VARNAME'=>VALUE)
 	 * @param string $formula sting in the format "($A+$B)/$C"
-	 * @return bool
+	 * @return string
 	 */
-	public function substitute_and_eval_vars($vars, $formula) {
+	static public function substitute_vars($vars, $formula) {
 		$varname = array_keys($vars);
 		$varvalue = array_values($vars);
 		$vars_subed = str_replace($varname, $varvalue, $formula);
 
-		return @eval( "return (string)(" . $vars_subed . ");");
+		return $vars_subed;
 	}
 
 	/**
@@ -955,7 +977,6 @@ class EnhancedCalc extends Question implements questionInterface {
 
 	/**
 	 * Render the question in the format required when taking the paper
-	 * @param  array  $extra [description]
 	 */
 	public function generate_variables() {
 
@@ -1071,7 +1092,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			}
 		}
 
-		if (isset($extra['reviewers']) and $extra['reviewers']) {    // Display additional information for reviewers
+		if (isset($extra['reviewers']) and $extra['reviewers']) { // Display additional information for reviewers
 			echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"padding:10px; border: 2px solid #FCE699; background-color:#FFFFEE; width:700px\">\n";
 			echo "<tr><td colspan=\"4\">" . $string['notvisible'] . "</td></tr>";
 			echo "<tr><td colspan=\"4\" style=\"text-align:justify\">" . $string['reviewermsg'] . "</td></tr>";
@@ -1100,7 +1121,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				}
 				echo "</td></tr>\n";
 			}
-      echo "<tr><td colspan=\"4\"><input type=\"button\" class=\"reveal\" value=\"" . $string['togglevariables'] . "\" /></td></tr>\n";
+			echo "<tr><td colspan=\"4\"><input type=\"button\" class=\"reveal\" value=\"" . $string['togglevariables'] . "\" /></td></tr>\n";
 			echo "</table>\n<br />";
 
 			$real_answer = $this->get_real_answer();
@@ -1215,7 +1236,7 @@ class EnhancedCalc extends Question implements questionInterface {
 	 * @return string Answer including units if applicable
 	 */
 	public function get_real_answer() {
-    global $string;
+		global $string;
 		$this->decode_settings();
 		$units = $this->settings['answers'][0]['units'];
 
@@ -1226,9 +1247,9 @@ class EnhancedCalc extends Question implements questionInterface {
 			return $this->useranswer['cans'];
 		} else if (isset($this->useranswer['cans'])) {
 			return $this->useranswer['cans'] . ' ' . $units;
-    } else {
-      return 'error';
-    }
+		} else {
+			return 'error';
+		}
 	}
 
 	/**
@@ -1270,18 +1291,8 @@ class EnhancedCalc extends Question implements questionInterface {
 	public function get_answer_distance() {
 
 		if (!isset($this->useranswer['cans_dist'])) {
-			$enhancedcalcType = $this->configObj->get('enhancedcalc_type');
-			if (!is_null($enhancedcalcType)) {
-				require_once $enhancedcalcType . '.php';
-				$name = 'enhancedcalc_' . $enhancedcalcType;
-				$enhancedcalcObj = new $name($this->configObj->getbyref($enhancedcalcType));
-			} else {
-				require_once 'Rrserve.php';
-				$enhancedcalcObj = new EnhancedCalc_Rrserve($this->configObj->getbyref('enhancedcalculation'));
-			}
-
 			if ((isset($this->useranswer['status']['exact']) and $this->useranswer['status']['exact'] === false) or !isset($this->useranswer['status']['exact'])) {
-				$this->useranswer['cans_dist'] = $enhancedcalcObj->distance_from_correct_answer($this->useranswer['uansnumb'], $this->useranswer['cans']);
+				$this->useranswer['cans_dist'] = $this->enhancedcalcObj->distance_from_correct_answer($this->useranswer['uansnumb'], $this->useranswer['cans']);
 			} else {
 				$this->useranswer['cans_dist'] = '0';
 			}
