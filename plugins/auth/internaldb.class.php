@@ -146,7 +146,8 @@ class internaldb_auth extends outline_authentication {
     }
 
     $this->updatable = true;
-    $encrypt_password = encpw($this->settings['encrypt_salt'], $this->form['std']->username, $this->form['std']->password, $old_encrypt_type);
+    $enc = new encryp();
+    $encrypt_password = $enc->encpw($this->settings['encrypt_salt'], $this->form['std']->username, $this->form['std']->password, $old_encrypt_type);
 
     $this->savetodebug('encrypted password strings ' . $encrypt_password . ':::' . $pass);
 
