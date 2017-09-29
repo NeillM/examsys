@@ -15,8 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace testing\datagenerator;
-use \Config,
-    \encryp,
+use \encryp,
     \UserUtils;
 
 /**
@@ -201,9 +200,6 @@ class users extends generator {
     }
 
     // Ensure there is an encrypted password.
-    $db = loader::get_database();
-    $conf = Config::get_instance();
-    $conf->db = $db;
     $encrypt = new encryp();
     if (empty($parameters['username'])) {
       $username = $defaults['username'];

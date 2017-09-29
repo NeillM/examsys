@@ -17,7 +17,8 @@
 namespace testing\behat\hooks;
 
 use Config as RogoConfig,
-    Exception;
+    Exception,
+    testing\behat\helpers\database\state;
 
 /**
  * This class should define all the pre and post hooks for Rogo backend behat tests.
@@ -72,5 +73,7 @@ trait config {
       throw new Exception('Behat user data directory is not configured');
     }
     // We got this far everything is good.
+    // Set db in config.
+    $config->db = state::get_db();
   }
 }
