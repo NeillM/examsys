@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['npmsuccess'] = 'NPM instalation up to date.';
+$string['npmsuccess'] = 'NPM installation up to date.';
 $string['composersuccess'] = 'Composer installation up to date.';
 $string['phpversion'] = 'PHP version %s or above is required';
 $string['phpsuccess'] = 'PHP version meets requirements';
@@ -22,3 +22,4 @@ $string['dbversion'] = 'MYSQL version %s or above is required';
 $string['dbsuccess'] = 'MySQL version meets requirements';
 $string['phpextension'] = 'The PHP extension %s is required';
 $string['phpextensionsuccess'] = 'The PHP extension %s is enabled';
+$string['help'] = 'Not all requirements met. Please refer to the <a href = "https://rogo-eassessment-docs.atlassian.net">documentation</a> on how to install any missing requirements.';

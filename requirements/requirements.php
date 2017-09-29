@@ -99,6 +99,6 @@ if ($phpversion and $phpallext and $composer) {
     echo "<button id=\"install\" class=\"updatebutton\" onclick=\"run_install()\">Install</button>";
   }
 } else {
-  echo "<p>Rog&#333; was unable to resolve all issues. Please refer to the <a href = \"https://rogo-eassessment-docs.atlassian.net\">documentation</a> on how to install any missing requirements</p>";
+  echo "<p>" . $string['help'] . "</p>";
 }
 echo "</div>";
