@@ -62,14 +62,14 @@ foreach ($phpext as $idx => $val) {
     }
 }
 // Install composer and dependencies.
-$blurb = "Composer libraries are required";
+$blurb = "Composer and its library dependencies it supplies are required";
 if (!$composer) {
   $info['composer'] = array($blurb ,false);
 } else {
   $info['composer'] = array($blurb ,true);
 }
 // Install npm dependencies.
-$blurb = "NPM libraries are required";
+$blurb = "NPM is required";
 if (!$npm) {
   $info['npm'] = array($blurb ,false);
 } else {
