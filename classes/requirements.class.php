@@ -90,16 +90,20 @@ class requirements {
   public static function check_db() {
     $return = true;
     $configObject = Config::get_instance();
-    $check = mysqli_connect($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'));
-    if (mysqli_connect_error()) {
+    if (function_exists('mysqli_connect')) {
+      $check = mysqli_connect($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'));
+      if (mysqli_connect_error()) {
+        $return = false;
+      }
+      $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
+      $mysql_version = mysqli_get_server_version($check);
+      if($mysql_version < $mysql_min_ver) {
+        $return = false;
+      }
+      $check->close();
+    } else {
       $return = false;
     }
-    $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
-    $mysql_version = mysqli_get_server_version($check);
-    if($mysql_version < $mysql_min_ver) {
-      $return = false;
-    }
-    $check->close();
     return $return;
   }
 }
