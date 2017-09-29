@@ -14,6 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['npmmissing'] = 'NPM missing. Please install manually.';
-$string['couldnotinstallnpm'] = 'Could not install NPM dependencies.';
-$string['couldnotupdatenpm'] = 'Could not update NPM dependencies.';
+$string['npmsuccess'] = 'NPM instalation up to date.';
+$string['composersuccess'] = 'Composer installation up to date.';
+$string['phpversion'] = 'PHP version %s or above is required';
+$string['phpsuccess'] = 'PHP version meets requirements';
+$string['dbversion'] = 'MYSQL version %s or above is required';
+$string['dbsuccess'] = 'MySQL version meets requirements';
+$string['phpextension'] = 'The PHP extension %s is required';
+$string['phpextensionsuccess'] = 'The PHP extension %s is enabled';

@@ -24,6 +24,8 @@
  */
 require_once '../include/load_config.php';
 
+$language = LangUtils::getLang($cfg_web_root);
+LangUtils::loadlangfile(str_replace($cfg_web_root, '', str_replace('\\', '/', ($_SERVER['SCRIPT_FILENAME']))));
 $configObject = Config::get_instance();
 $php_min_ver = $configObject->getxml('php', 'min_version');
 $phpversion = requirements::check_php_version();
@@ -36,49 +38,47 @@ foreach ($phpext as $idx => $val) {
       $phpallext = false;
     }
 }
-$composer = requirements::check_composer();
-$npm = requirements::check_npm();
+
 // php version.
-$blurb = "PHP version " . $php_min_ver . " or above is required";
 if (!$phpversion) {
-  $info['phpversion'] = array($blurb ,false);
+  $info['phpversion'] = array(sprintf($string['phpversion'],$php_min_ver), false);
 } else {
-  $info['phpversion'] = array($blurb ,true);
+  $info['phpversion'] = array($string['phpsuccess'],true);
 }
 // db version.
-$blurb = "MYSQL version " . $mysql_min_ver . " or above is required";
 if (!$dbversion) {
-  $info['dbversion'] = array($blurb ,false);
+  $info['dbversion'] = array(sprintf($string['dbversion'], $mysql_min_ver), false);
 } else {
-  $info['dbversion'] = array($blurb ,true);
+  $info['dbversion'] = array($string['dbsuccess'], true);
 }
 // php extensions.
 foreach ($phpext as $idx => $val) {
-    $blurb = "The PHP extension " . $idx . " is required";
     if (!$val) {
+      $blurb = sprintf($string['phpextension'], $idx);
       $info[$idx] = array($blurb ,false);
     } else {
+      $blurb = sprintf($string['phpextensionsuccess'], $idx);
       $info[$idx] = array($blurb ,true);
     }
 }
 // Install composer and dependencies.
-$blurb = "Composer and its library dependencies it supplies are required";
-if (!$composer) {
-  $info['composer'] = array($blurb ,false);
+$composer = requirements::check_composer();
+if ($composer === true) {
+  $info['composer'] = array($string['composersuccess'], true);
 } else {
-  $info['composer'] = array($blurb ,true);
+  $info['composer'] = array($composer, false);
 }
 // Install npm dependencies.
-$blurb = "NPM is required";
-if (!$npm) {
-  $info['npm'] = array($blurb ,false);
+$npm = requirements::check_npm();
+if ($npm === true) {
+  $info['npm'] = array($string['npmsuccess'], true);
 } else {
-  $info['npm'] = array($blurb ,true);
+  $info['npm'] = array($npm, false);
 }
 $html = <<<HTML
   <div class="requirements-header">
     <div class="requirements-body-item">Requirement</div>
-    <div class="requirements-body-item">Found?</div>
+    <div class="requirements-body-item">Passed?</div>
   </div>
 HTML;
 echo $html;

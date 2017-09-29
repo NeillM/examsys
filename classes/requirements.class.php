@@ -57,7 +57,7 @@ class requirements {
   }
   /**
    * Install composer and update libraries to required versions.
-   * @return boolean
+   * @return mixed
    */
   public static function check_composer() {
     try {
@@ -65,13 +65,13 @@ class requirements {
       composer_utils::setup(composer_utils::INSTALL_NODEV);
       ob_end_clean();
     } catch (Exception $e) {
-      return false;
+      return $e->getMessage();
     }
     return true;
   }
   /**
    * Update NPM libraries to required versions.
-   * @return boolean
+   * @return mixed
    */
   public static function check_npm() {
     try {
@@ -79,7 +79,7 @@ class requirements {
       npm_utils::setup(npm_utils::INSTALL_NODEV);
       ob_end_clean();
     } catch (Exception $e) {
-      return false;
+      return $e->getMessage();
     }
     return true;
   }
