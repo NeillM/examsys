@@ -1099,6 +1099,8 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   */
   static function createDatabase($dbname, $dbcharset, $dbengine = 'InnoDB', $dbhelpengine = 'MyISAM') {
     global $string;
+    $configObject = Config::get_instance();
+    $configObject->db = self::$db;
     $res = self::$db->prepare("SHOW DATABASES LIKE '$dbname'");
     $res->execute();
     $res->store_result();
