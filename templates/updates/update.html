@@ -48,6 +48,7 @@
                     </table>
                     <div><label for="update_staff_help">{{lang.updatestaff}}</label> <input type="checkbox" name="update_staff_help" checked="checked" /></div>
                     <div><label for="update_student_help">{{lang.updatestudent}}</label> <input type="checkbox" name="update_student_help" checked="checked" /></div>
+                    {% if data.loadlangpacks == "true" %}
                     <table class="h">
                         <tr>
                             <td>
@@ -59,6 +60,7 @@
                         </tr>
                     </table>
                     <div><label for="update_translationpack">{{lang.updatetrans}}</label> <input type="checkbox" name="update_translationpack" /></div>
+                    {% endif %}
                     <div class="submit"><input type="submit" name="update" value="{{lang.startupdate}}" class="ok" /></div>
                 </form>
             {% endif %}

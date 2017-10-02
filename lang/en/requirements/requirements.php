@@ -23,3 +23,5 @@ $string['dbsuccess'] = 'MySQL version meets requirements';
 $string['phpextension'] = 'The PHP extension %s is required';
 $string['phpextensionsuccess'] = 'The PHP extension %s is enabled';
 $string['help'] = 'Not all requirements met. Please refer to the <a href = "https://rogo-eassessment-docs.atlassian.net">documentation</a> on how to install any missing requirements.';
+$string['langpacksmissing'] = 'Translation pack for language code "%s" missing.';
+$string['langpacksfound'] = 'Translation packs installed.';

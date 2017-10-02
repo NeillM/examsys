@@ -22,11 +22,29 @@
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2017 The University of Nottingham
  */
+
 require_once '../include/load_config.php';
 
+if (is_null($configObject->get('cfg_web_root'))) {
+  require_once '../include/path_functions.inc.php';
+  $cfg_web_root = get_root_path() . '/';
+  $configObject->set('cfg_web_root', $cfg_web_root);
+}
 $language = LangUtils::getLang($cfg_web_root);
+
+// Install lang packs if not installed.
+$langpackfound = 0;
+if(!LangUtils::langPackInstalled($language)) {
+  try {
+    InstallUtils::download_langpacks();
+    $langpackfound = 1;
+  } catch (Exception $e) {
+    $langpackfound = 2;
+  }
+}
+
 LangUtils::loadlangfile(str_replace($cfg_web_root, '', str_replace('\\', '/', ($_SERVER['SCRIPT_FILENAME']))));
-$configObject = Config::get_instance();
+
 $php_min_ver = $configObject->getxml('php', 'min_version');
 $phpversion = requirements::check_php_version();
 $phpext = requirements::check_php_extensions();
@@ -39,6 +57,12 @@ foreach ($phpext as $idx => $val) {
     }
 }
 
+// Lang packs.
+if ($langpackfound === 1) {
+  $info['langpacks'] = array($string['langpacksfound'], false);;
+} elseif ($langpackfound === 2) {
+  $info['langpacks'] = array(sprintf($string['langpacksmissing'], $language), false);
+}
 // php version.
 if (!$phpversion) {
   $info['phpversion'] = array(sprintf($string['phpversion'],$php_min_ver), false);
@@ -85,14 +109,16 @@ echo $html;
 foreach ($info as $idx => $val) {
   echo "<div class=\"requirements-body\"><div class=\"requirements-body-item\">$val[0]</div><div class=\"requirements-body-item\">";
   if ($val[1]) {
-    echo "<img src=\"../artwork/tick.gif\" id=\"yes\" /></div>";
+    echo "<img src=\"../artwork/tick.png\" id=\"yes\" /></div>";
+  }elseif ($idx === 'langpacks') {
+    echo "<img src=\"../artwork/exclamation.png\" id=\"warn\" /></div>";
   } else {
-    echo "<img src=\"../artwork/cross.gif\" id=\"no\" /></div>";
+    echo "<img src=\"../artwork/cross.png\" id=\"no\" /></div>";
   }
   echo "</div>";
 }
 echo "<div class=\"requirements-body\">";
-if ($phpversion and $phpallext and $composer) {
+if ($phpversion and $phpallext and $composer and $dbversion) {
   if (InstallUtils::config_exists()){
     echo "<button id=\"update\" class=\"updatebutton\" onclick=\"run_update()\">Update</button>";
   } else {

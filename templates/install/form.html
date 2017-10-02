@@ -288,6 +288,7 @@
         <label for="loadHelp">{{lang.loadhelp}}</label>
         <input id="loadHelp" name="loadHelp" type="checkbox" checked="checked" />
     </div>
+    {% if data.loadlangpacks == "true" %}
     <table class="h">
         <tr>
             <td><nobr>{{lang.translationpack}}</nobr></td>
@@ -303,6 +304,7 @@
     <div>
         {{lang.manualtranslations}} <a target="_blank" href = "{{lang.translationsurl}} ">here</a>
     </div>
+    {% endif %}
     <table class="h">
         <tr>
             <td><nobr>{{lang.labsecuritytype}}</nobr></td>

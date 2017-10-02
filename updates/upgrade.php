@@ -25,15 +25,9 @@
 require_once '../include/sysadmin_auth.inc';
 
 $language = LangUtils::getLang($cfg_web_root);
-if (!isset($_POST['update'])) {
-  // If supported lang pack not installed install them.
-  if(!LangUtils::langPackInstalled($language)) {
-      InstallUtils::download_langpacks();
-  }
-}
 
 require_once dirname(__DIR__) . '/lang/' . $language . '/install/install.php';
-require_once dirname(__DIR__) . '/lang/' . $language . '/updates/update.php';
+LangUtils::loadlangfile(str_replace($cfg_web_root, '', str_replace('\\', '/', ($_SERVER['SCRIPT_FILENAME']))));
 
 // Get the code version.
 $version = $configObject->getxml('version');
@@ -106,6 +100,10 @@ if (!isset($_POST['update'])) {
   }
   $data['configwarning'] = $configwarning;
   $data['updating'] = true;
+  $data['loadlangpacks'] = true;
+  if (LangUtils::langPackInstalled($language)) {
+    $data['loadlangpacks'] = false;
+  }
   $render->render($data, $lang, '/updates/update.html');
   $render->render_admin_footer();
 } else {

@@ -156,6 +156,10 @@ Class InstallUtils {
     if ($language != 'en') {
       echo "<option value=\"\"></option>\n";
     }
+    $data['loadlangpacks'] = true;
+    if (LangUtils::langPackInstalled($language)) {
+      $data['loadlangpacks'] = false;
+    }
     $data['titles'] = explode(',', $string['title_types']);
     $string['translationsurl'] = $configObject->getxml('translations', 'url');
     $render->render($data, $string, '/install/form.html');

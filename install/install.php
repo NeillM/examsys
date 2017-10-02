@@ -39,18 +39,9 @@ if (!InstallUtils::config_exists()) {
   require_once '../include/path_functions.inc.php';
   $cfg_web_root = get_root_path() . '/';
   $configObject->set('cfg_web_root', $cfg_web_root);
-  $cfg_root_path = ltrim(str_replace($_SERVER['DOCUMENT_ROOT'], '', $cfg_web_root), '/');
-
-  require_once dirname(__DIR__) . '/include/auth.inc';
-  $includes = array('install/install.php');
   $language = LangUtils::getLang($cfg_web_root);
 
-  // Install lang packs if not installed.
-  if(!LangUtils::langPackInstalled($language)) {
-      InstallUtils::download_langpacks();
-  }
-
-  require_once $cfg_web_root . "lang/" . $language . "/install/install.php";
+  LangUtils::loadlangfile(str_replace($cfg_web_root, '', str_replace('\\', '/', ($_SERVER['SCRIPT_FILENAME']))));
   require_once dirname(__DIR__) . '/include/timezones.php';
   // Get the code version.
   $version = $configObject->getxml('version');
@@ -73,7 +64,7 @@ if (!InstallUtils::config_exists()) {
   $configObject = Config::get_instance();
   $cfg_web_root = $configObject->get('cfg_web_root');
   $language = LangUtils::getLang($cfg_web_root);
-  require_once $cfg_web_root . "lang/" . $language . "/install/install.php";
+  LangUtils::loadlangfile(str_replace($cfg_web_root, '', str_replace('\\', '/', ($_SERVER['SCRIPT_FILENAME']))));
   InstallUtils::displayHeader();
   InstallUtils::configFile();
 }
