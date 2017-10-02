@@ -121,4 +121,3 @@ $string['cannotextract'] = 'Cannot extract language packs, you will need to manu
 $string['cannotdownloadxml'] = 'Error downloading language packs, you will need to manually install them.';
 $string['cannotdownloadzip'] = 'Error downloading latest languages.xml, you may need to manually install it.';
 $string['langsuccess'] = 'Language packs installed.';
-?>

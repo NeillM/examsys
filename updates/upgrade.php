@@ -100,10 +100,6 @@ if (!isset($_POST['update'])) {
   }
   $data['configwarning'] = $configwarning;
   $data['updating'] = true;
-  $data['loadlangpacks'] = true;
-  if (LangUtils::langPackInstalled($language)) {
-    $data['loadlangpacks'] = false;
-  }
   $render->render($data, $lang, '/updates/update.html');
   $render->render_admin_footer();
 } else {
@@ -227,7 +223,7 @@ if (!isset($_POST['update'])) {
   $lang['actionrequired'] = $string['actionrequired'];
   $lang['readonly'] = $string['readonly'];
   $lang['finished'] = $string['finished'];
-  $lang['home'] = $string['home'];
+  $lang['config'] = $string['config'];
   $lang['ended'] = sprintf($string['ended'], date("H:i:s"));
   $render->render($data, $lang, '/updates/update.html');
   $render->render_admin_footer();
