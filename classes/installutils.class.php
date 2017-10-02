@@ -153,9 +153,6 @@ Class InstallUtils {
     if ($default_timezone == 'UTC') $default_timezone = 'Europe/London';
     $data['timezones'] = $timezone_array;
     $data['defaulttz'] = $default_timezone;
-    if ($language != 'en') {
-      echo "<option value=\"\"></option>\n";
-    }
     $data['loadlangpacks'] = true;
     if (LangUtils::langPackInstalled($language)) {
       $data['loadlangpacks'] = false;
@@ -710,6 +707,7 @@ Class InstallUtils {
     $configObject->set_setting('cfg_calc_type', 'phpEval', Config::STRING);
     $configObject->set_setting('cfg_calc_settings', array('host' => '', 'port' => '', 'timeout' => ''), Config::ASSOC);
     $configObject->set_setting('system_maintenance_mode', 0, Config::BOOLEAN);
+    $configObject->set_setting('cfg_summative_mgmt', 0, Config::BOOLEAN);
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();
@@ -1865,7 +1863,6 @@ Class InstallUtils {
 \$cfg_academic_year_start = '07/01';
 \$cfg_tmpdir = '{cfg_tmpdir}';
 
-\$cfg_summative_mgmt = false;     // Set this to true for central summative exam administration.
 \$cfg_client_lookup = '{labsecuritytype}'; //ipadress or name
 
 

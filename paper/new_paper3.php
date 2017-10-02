@@ -60,7 +60,7 @@ if (isset($_POST['timezone'])) {
 } else {
     $timezone = $configObject->get('cfg_timezone');
 }
-if ($configObject->get('cfg_summative_mgmt') and $papertype == $assessment::TYPE_SUMMATIVE) {
+if ($configObject->get_setting('core', 'cfg_summative_mgmt') and $papertype == $assessment::TYPE_SUMMATIVE) {
     $duration = 0;
     if (isset($_POST['duration_hours'])) {
         $duration += ($_POST['duration_hours'] * 60);
@@ -96,7 +96,7 @@ if ($configObject->get('cfg_summative_mgmt') and $papertype == $assessment::TYPE
 try {
     $property_id = $assessment->create($paper_name, $papertype, $paper_owner , $start_date, $end_date, '', $duration, $session, $modules, $timezone);
 
-    if ($configObject->get('cfg_summative_mgmt') and $papertype == $assessment::TYPE_SUMMATIVE) {
+    if ($configObject->get_setting('core', 'cfg_summative_mgmt') and $papertype == $assessment::TYPE_SUMMATIVE) {
         if (isset($_POST['barriers_needed'])) {
             $barriers_needed = 1;
         } else {

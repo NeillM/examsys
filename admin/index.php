@@ -149,7 +149,7 @@ require '../include/sysadmin_auth.inc';
   $menudata['savefailattempts']     = array('list_save_fails.php', 'save_fail_48.png');
   $menudata['schools']              = array('list_schools.php', 'school_icon.png');
   $menudata['statistics']           = array('../statistics/index.php', 'statistics.png');
-  if ($configObject->get('cfg_summative_mgmt')) {  // Enable summative management scheduling if not activated.
+  if ($configObject->get_setting('core', 'cfg_summative_mgmt')) {  // Enable summative management scheduling if not activated.
         $menudata['summativescheduling'] = array('summative_scheduling.php', 'summative_scheduling.png');
   }
   $menudata['systemerrors']         = array('sys_error_list.php', 'system_errors.png');
@@ -161,7 +161,7 @@ require '../include/sysadmin_auth.inc';
   $menudata['externalsystems']        = array('external/list_extsys.php', 'sync.png');
   if ($configObject->get('cfg_setting_icons_order')) {
     foreach($configObject->get('cfg_setting_icons_order') as $iconkey) {
-        if (($iconkey == 'summativescheduling' && !$configObject->get('cfg_summative_mgmt')) || empty($menudata[$iconkey])) continue;
+        if (($iconkey == 'summativescheduling' && !$configObject->get_setting('core', 'cfg_summative_mgmt')) || empty($menudata[$iconkey])) continue;
         $parts = explode('.php', $menudata[$iconkey][0]);
         echo '<a class="blacklink" href="' . $menudata[$iconkey][0] . '" id="' . $parts[0] . '">';
         echo '<div class="container"><img src="../artwork/' . $menudata[$iconkey][1] . '" alt="" class="icon" /><br />' . $string[$iconkey] . '</div></a>';

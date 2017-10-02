@@ -394,7 +394,7 @@ class PaperProperties {
         $params['pass_mark'] = array('i', $this->pass_mark);
         $params['distinction_mark'] = array('i', $this->distinction_mark);
       }
-    } elseif ($configObject->get('cfg_summative_mgmt') and $this->paper_type == '2' and !$userObject->has_role(array('Admin', 'SysAdmin'))) {
+    } elseif ($configObject->get_setting('core', 'cfg_summative_mgmt') and $this->paper_type == '2' and !$userObject->has_role(array('Admin', 'SysAdmin'))) {
         // Non admin users cannot delete papers when summative management enabled so stop paper title change when non admin tries to delete a paper.
         if (is_null($this->get_deleted())) {
           $params['paper_title'] = array('s', $this->paper_title);
