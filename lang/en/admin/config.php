@@ -57,3 +57,4 @@ $string['cfg_calc_type'] = 'Calculation question integration type (default: phpE
 $string['cfg_calc_settings'] = 'Calculation question integration server settings (phpEval: settings not used).';
 $string['system'] = 'System settings';
 $string['system_maintenance_mode'] = 'Enable/Disable maintenance mode (restricts access to system to sys admin users only)';
+$string['cfg_summative_mgmt'] = 'Enable if summative assessment is managed centrally rather than on an adhoc basis.';
