@@ -262,7 +262,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   }
   echo '</select></td></tr>';
 ?>
-    <tr><td class="field"><?php echo $string['academicyearstart'] ?></td><td><input type="text"  name="academic_year_start" value="<?php echo $configObject->get('cfg_academic_year_start') ?>" style="width:50px" required /> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['tooltip_format'] ?>" /></td></tr>
+    <tr><td class="field"><?php echo $string['academicyearstart'] ?></td><td><input type="text"  name="academic_year_start" value="<?php echo $configObject->get_setting('core', 'system_academic_year_start'); ?>" style="width:50px" required /> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['tooltip_format'] ?>" /></td></tr>
     <tr><td class="field"><?php echo $string['objapi']; ?></td><td><select id="vle_api" name="vle_api"><option value=""><?php echo $string['nolookup']; ?></option>
 <?php
   foreach ($vle_apis as $vle_name => $vle_api_data) {

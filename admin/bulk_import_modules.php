@@ -83,7 +83,7 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 <br />
 <?php
   if (isset($_POST['submit'])) {
-    $default_academic_year_start = $configObject->get('cfg_academic_year_start');
+    $default_academic_year_start = $configObject->get_setting('core', 'system_academic_year_start');
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
       if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv"))  {
         echo uploadError($_FILES['csvfile']['error']);

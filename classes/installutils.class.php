@@ -709,6 +709,7 @@ Class InstallUtils {
     $configObject->set_setting('system_maintenance_mode', 0, Config::BOOLEAN);
     $configObject->set_setting('cfg_summative_mgmt', 0, Config::BOOLEAN);
     $configObject->set_setting('system_hostname_lookup', $cfg_labsecuritytype, Config::BOOLEAN);
+    $configObject->set_setting('system_academic_year_start', '07/01', Config::STRING);
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();
@@ -1861,7 +1862,6 @@ Class InstallUtils {
 \$cfg_root_path = '{cfg_root_path}';
 \$cfg_secure_connection = true;    // If true site must be accessed via HTTPS
 \$cfg_page_charset 	   = 'UTF-8';
-\$cfg_academic_year_start = '07/01';
 \$cfg_tmpdir = '{cfg_tmpdir}';
 
   \$cfg_web_host = '{cfg_web_host}';

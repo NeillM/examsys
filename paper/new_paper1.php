@@ -160,7 +160,7 @@ if (isset($_GET['module'])) {
   $yearutils = new yearutils($mysqli);
   $default_academic_year = $yearutils->get_current_session($module_details['academic_year_start']);
 } else {
-  $default_academic_year = $configObject->get('cfg_academic_year_start');
+  $default_academic_year = $configObject->get_setting('core', 'system_academic_year_start');
 }
 ?>
 <input type="hidden" name="default_academic_year" value="<?php echo $default_academic_year ?>" />
