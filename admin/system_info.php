@@ -202,6 +202,12 @@ if ($e6 == 'improved') {
 
 $yearutils = new yearutils($mysqli);
 
+
+if ($configObject->get_setting('core', 'system_hostname_lookup')) {
+  $hostname_lookup = $string['hostname'];
+} else {
+  $hostname_lookup = $string['ipaddress'];
+}
 ?>
 </td>
 <td style="width:50px">&nbsp;</td>
@@ -212,7 +218,7 @@ $yearutils = new yearutils($mysqli);
 <tr><td><?php echo $string['webroot']; ?></td><td><?php echo $configObject->get('cfg_web_root'); ?></td></tr>
 <tr><td><?php echo $string['database']; ?></td><td><?php echo $configObject->get('cfg_db_database'); ?></td></tr>
 <tr><td><?php echo $string['company']; ?></td><td><?php echo $configObject->get_setting('core', 'misc_company'); ?></td></tr>
-<tr><td><?php echo $string['lookups']; ?></td><td><?php echo $configObject->get('cfg_client_lookup'); ?></td></tr>
+<tr><td><?php echo $string['lookups']; ?></td><td><?php echo $hostname_lookup ?></td></tr>
 <tr><td><?php echo $string['Session']; ?></td><td><?php echo $yearutils->get_academic_session($yearutils->get_current_session()); ?></td></tr>
 <tr><td><?php echo $string['ErrorLogSettings']; ?></td><td><?php echo $ErrorLogSettings ?></td></tr>
 

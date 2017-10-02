@@ -411,7 +411,7 @@ Class InstallUtils {
     self::$emergency_support_numbers .= ')';
     //Other settings
     if (!self::$cli) {
-      self::$cfg_labsecuritytype = param::optional("labsecurity", 'ipaddress', param::TEXT, param::FETCH_POST);
+      self::$cfg_labsecuritytype = param::optional("labsecurity", false, param::TEXT, param::FETCH_POST);
     } else {
       self::$cfg_labsecuritytype = self::getSettings(param::TEXT, true, "labsecurity", 'type');
     }
@@ -708,6 +708,7 @@ Class InstallUtils {
     $configObject->set_setting('cfg_calc_settings', array('host' => '', 'port' => '', 'timeout' => ''), Config::ASSOC);
     $configObject->set_setting('system_maintenance_mode', 0, Config::BOOLEAN);
     $configObject->set_setting('cfg_summative_mgmt', 0, Config::BOOLEAN);
+    $configObject->set_setting('system_hostname_lookup', $cfg_labsecuritytype, Config::BOOLEAN);
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();
@@ -1863,9 +1864,6 @@ Class InstallUtils {
 \$cfg_academic_year_start = '07/01';
 \$cfg_tmpdir = '{cfg_tmpdir}';
 
-\$cfg_client_lookup = '{labsecuritytype}'; //ipadress or name
-
-
   \$cfg_web_host = '{cfg_web_host}';
   \$cfg_rogo_data = '{cfg_rogo_data}';
 
@@ -2064,7 +2062,6 @@ CONFIG;
     $config = str_replace('{cfg_timezone}', self::$cfg_timezone, $config);
     $config = str_replace('{cfg_tmpdir}', self::$cfg_tmpdir, $config);
     $config = str_replace('{cfg_tablesorter_date_time}', self::$cfg_tablesorter_date_time, $config);
-    $config = str_replace('{labsecuritytype}', self::$cfg_labsecuritytype, $config);
 
     $authentication_arrays = array();
     if (self::$cfg_auth_lti) {

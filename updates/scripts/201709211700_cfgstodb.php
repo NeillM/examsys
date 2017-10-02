@@ -8,6 +8,12 @@ if ($updater_utils->check_version("6.5.0")) {
     $updater_utils->execute_query($sql, false);
     $sql = "INSERT INTO config (component, setting, value, type) VALUES ('core', 'cfg_summative_mgmt', '" . $configObject->get('cfg_summative_mgmt') . "', '" . Config::BOOLEAN . "')";
     $updater_utils->execute_query($sql, false);
+    $hostname = true;
+    if ($configObject->get('cfg_client_lookup') === 'ipaddress') {
+      $hostname = false;
+    }
+    $configObject->set_setting('system_hostname_lookup', $hostname, Config::BOOLEAN);
+    
     $updater_utils->record_update('rogo2156');
   }
 }

@@ -58,3 +58,4 @@ $string['cfg_calc_settings'] = 'Calculation question integration server settings
 $string['system'] = 'System settings';
 $string['system_maintenance_mode'] = 'Enable/Disable maintenance mode (restricts access to system to sys admin users only)';
 $string['cfg_summative_mgmt'] = 'Enable if summative assessment is managed centrally rather than on an adhoc basis.';
+$string['system_hostname_lookup'] = 'If enabled hostname used to lookup clients. IP address is used if disabled.';

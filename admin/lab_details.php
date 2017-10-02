@@ -89,7 +89,7 @@ $results->close();
       echo "<br />\n<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; margin-left:10px; margin-right:10px\">\n<tr><td style=\"vertical-align:top; width:440px\"><div><strong>" . $string['ipaddresses'] . " (" . $results->num_rows . ")</strong></div>\n<div style=\"height:590px; overflow-y:scroll; border: 1px solid #EEEDE5\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">\n";
     }
 
-    if ($configObject->get('cfg_client_lookup') == 'name') {
+    if ($configObject->get_setting('core', 'system_hostname_lookup')) {
       echo "<tr><td><img src=\"../artwork/new_lab_16.png\" width=\"16\" height=\"16\" alt=\"PC icon\" />&nbsp;</td><td style=\"width:135px\">$address</td></tr>\n";
     } else {
       if ($address == $hostname) {

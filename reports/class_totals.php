@@ -400,7 +400,7 @@ if ($marking == '0') {
 
 // Output table heading
 $table_order = array('', 'Title', $string['surname'], $string['firstnames'], $string['studentid'], $string['course'], $string['mark'], $marking_label, $string['classification'], $string['rank'], $string['decile'], $string['starttime'], $string['duration']);
-if ($configObject->get('cfg_client_lookup') == 'name') {
+if ($configObject->get_setting('core', 'system_hostname_lookup')) {
   $table_order[] = $string['hostnames'];
 } else {
   $table_order[] = $string['ipaddress'];
