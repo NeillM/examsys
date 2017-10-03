@@ -97,6 +97,9 @@ $render->render_admin_content($breadcrumb, $lang);
             foreach ($displayconfigs as $area => $conf) {
                 echo '<tr><td class="fieldheader">' . $string[$area] . '</td></tr>';
                 foreach ($conf as $setting => $value) {
+                    if ($area === 'ims' and $value == true) {
+                      echo "<tr><td></td><td>" . $string['imssettings'] . " <a href = \"../plugins/ims/ims_settings.php\">here</a>.</td></tr>";
+                    }
                     $type = $configObject->get_setting_type('core', $setting);
                     if (!is_null($configObject->get('file_config_override'))) {
                         $override = $configObject->get('file_config_override');

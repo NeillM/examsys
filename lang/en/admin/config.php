@@ -69,3 +69,6 @@ $string['stdset_hofstee_distinction'] = 'Default Hofstee distinction settings';
 $string['stdset_hofstee_whole_numbers'] = 'Default setting of whole number setting in Hofstee configuration.';
 $string['summative_hour_warning'] = 'Hour in day (24hr clock) to warning users if they are setting an exam to start prior to.';
 $string['system_install_type'] = 'Installation type i.e. test (Leave blank for production environments).';
+$string['ims'] = 'IMS';
+$string['cfg_ims_enabled'] = 'Enable/Disable IMS integration.';
+$string['imssettings'] = 'More detailed settings are available for IMS ';

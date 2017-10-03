@@ -27,7 +27,7 @@ require_once '../../include/sysadmin_auth.inc';
 require_once '../../include/errors.php';
 
 // Exit if ims not enabled.
-if (!$configObject->get('cfg_ims_enabled')) {
+if (!$configObject->get_setting('core', 'cfg_ims_enabled')) {
   $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '../../artwork/page_not_found.png', '#C00000', true, true);
 }

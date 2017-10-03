@@ -727,6 +727,7 @@ Class InstallUtils {
     $configObject->set_setting('stdset_hofstee_whole_numbers', true, Config::BOOLEAN);
     $configObject->set_setting('summative_hour_warning', 10, Config::INTEGER);
     $configObject->set_setting('system_install_type', '', Config::STRING);
+    $configObject->set_setting('cfg_ims_enabled', false, Config::BOOLEAN);
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();
@@ -2002,9 +2003,6 @@ if(!isset(\$_SERVER['HTTP_HOST'])) {
   \$cfg_oauth_access_lifetime = 1209600; // length of access token lifetime.
   \$cfg_oauth_refresh_token_lifetime = 1209600; // length of refresh token lifetime.
   \$cfg_oauth_always_issue_new_refresh_token = true; // enable or disable refresh tokens.
-
-  //IMS enterprise setting
-  \$cfg_ims_enabled = false;
 
   // Override db config settings with configs in this file?
   \$file_config_override = true;
