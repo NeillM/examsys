@@ -141,16 +141,17 @@ if (isset($_POST['submit'])) {
   // Default values no POST and no editing existing review
   $checked = '';
   
-  $defaults = $configObject->get('hofstee_defaults');
+  $pass_defaults = $configObject->get_setting('core', 'stdset_hofstee_pass');
+  $distinction_defaults = $configObject->get_setting('core', 'stdset_hofstee_distinction');
   
-	$x1_pass = check_values($defaults['pass'][0], $stats);
-  $x2_pass = check_values($defaults['pass'][1], $stats);
-  $y1_pass = check_values($defaults['pass'][2], $stats);
-  $y2_pass = check_values($defaults['pass'][3], $stats);
-  $x1_distinction = check_values($defaults['distinction'][0], $stats);
-  $x2_distinction = check_values($defaults['distinction'][1], $stats);
-  $y1_distinction = check_values($defaults['distinction'][2], $stats);
-  $y2_distinction = check_values($defaults['distinction'][3], $stats);	
+  $x1_pass = check_values($pass_defaults['min_pass'], $stats);
+  $x2_pass = check_values($pass_defaults['max_pass'], $stats);
+  $y1_pass = check_values($pass_defaults['min_fail'], $stats);
+  $y2_pass = check_values($pass_defaults['max_fail'], $stats);
+  $x1_distinction = check_values($distinction_defaults['min_pass'], $stats);
+  $x2_distinction = check_values($distinction_defaults['max_pass'], $stats);
+  $y1_distinction = check_values($distinction_defaults['min_fail'], $stats);
+  $y2_distinction = check_values($distinction_defaults['max_fail'], $stats);
 }
 
 ?>
@@ -226,7 +227,7 @@ if (isset($_POST['submit'])) {
   if (isset($_POST['whole_numbers'])) {
     $checked = ' checked="checked"';
   } else {
-    if ($configObject->get('hofstee_whole_numbers') == true) {
+    if ($configObject->get_setting('core', 'stdset_hofstee_whole_numbers') == true) {
       $checked = ' checked="checked"';
     } else {
       $checked = '';

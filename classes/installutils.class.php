@@ -712,6 +712,19 @@ Class InstallUtils {
     $configObject->set_setting('system_academic_year_start', '07/01', Config::STRING);
     $configObject->set_setting('misc_search_leadin_length', self::$cfg_search_leadin_length, Config::INTEGER);
     $configObject->set_setting('rpt_percent_decimals', 2, Config::INTEGER);
+    $configObject->set_setting('stdset_hofstee_pass', array(
+        'min_pass'=> 0,
+        'max_pass' => 'median',
+        'min_fail' => 0,
+        'max_fail' => 100
+        ), Config::ASSOC);
+    $configObject->set_setting('stdset_hofstee_distinction', array(
+        'min_pass'=> 'median',
+        'max_pass' => 100,
+        'min_fail' => 0,
+        'max_fail' => 100
+        ), Config::ASSOC);
+    $configObject->set_setting('stdset_hofstee_whole_numbers', true, Config::BOOLEAN);
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();
@@ -1914,10 +1927,6 @@ Class InstallUtils {
 // cron user
   \$cfg_cron_user = '{cfg_cron_user}';
   \$cfg_cron_passwd = '{cfg_cron_passwd}';
-
-// Standard Setting
-  \$hofstee_defaults = array('pass'=>array(0, 'median', 0, 100), 'distinction'=>array('median', 100, 0, 100));
-  \$hofstee_whole_numbers = true;
 
 // SMS Imports
   \$cfg_sms_api = '';

@@ -63,3 +63,7 @@ $string['system_academic_year_start'] = 'Month / Day of academic year start';
 $string['misc_search_leadin_length'] = 'Length in characters of question leadin in question search list.';
 $string['rpt'] = 'Reports';
 $string['rpt_percent_decimals'] = 'Decimal places to display in reports.';
+$string['stdset'] = 'Standard setting';
+$string['stdset_hofstee_pass'] = 'Hofstee pass settings';
+$string['stdset_hofstee_distinction'] = 'Hofstee distinction setting';
+$string['stdset_hofstee_whole_numbers'] = 'Default setting of whole number setting in Hofstee configuration.';
