@@ -55,6 +55,24 @@ abstract class plugins_mapping extends \plugins\plugins {
         }
     }
     /**
+     * Enable this plugin
+     * Only one module mapping plugin should be enabled at anyone time
+     */
+    public function enable_plugin() {
+        $enabled = array($this->plugin);
+        $this->config->set_setting('enabled_plugin', $enabled, \Config::JSON, 'plugin_mapping');
+    }
+    /**
+     * Disable this plugin
+     * Only one module mapping plugin should be enabled at anyone time
+     */
+    public function disable_plugin() {
+        $enabled = $this->config->get_setting('plugin_mapping', 'enabled_plugin');
+        if ($this->plugin == $enabled[0]) {
+            $this->config->set_setting('enabled_plugin', array(), \Config::JSON, 'plugin_mapping');
+        }
+    }
+    /**
      * Get mapping.
      * @param string $source
      * @return string source if mapping not found, target of mapping otherwise

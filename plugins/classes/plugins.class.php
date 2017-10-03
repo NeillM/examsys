@@ -362,8 +362,4 @@ abstract class plugins {
     public function get_lang_component() {
         return $this->langcomponent;
     }
-    /**
-     * Enable the plugin.
-     */
-    abstract public function enable_plugin();
 }

@@ -34,28 +34,6 @@ abstract class plugins_sms extends \plugins\plugins {
      */
     protected $plugin_type = 'SMS';
     /**
-     * Get names of sms external systems available to sync with
-     * @param mysqli $db db connection
-     * @return array|bool list of external systems or false if non available
-     */
-    static public function get_sms($db) {
-        $sms = array();
-        $config = \Config::get_instance();
-        $plugins = $config->get_setting('plugin_sms', 'enabled_plugin');
-        if (!is_null($plugins)) {
-            foreach ($plugins as $p) {
-                $mappingplugin_object = 'plugins\\SMS\\' . $p . '\\' . $p;
-                $smsplugin = new $mappingplugin_object($db);
-                $sms[] = $smsplugin->get_name();
-            }
-        }
-        if (count($sms) == 0) {
-            return false;
-        } else {
-            return $sms;
-        }
-    }
-    /**
      * Install steps for sms plugin.
      * @return bool true on success
      */
@@ -98,6 +76,41 @@ abstract class plugins_sms extends \plugins\plugins {
         }
         $checksql->close();
         return $success;
+    }
+    /**
+     * Enable this plugin.
+     */
+    public function enable_plugin() {
+        $enabled = $this->config->get_setting('plugin_SMS', 'enabled_plugin');
+        if (!is_null($enabled)) {
+            if (is_array($enabled)) {
+                if (!array_search($this->plugin, $enabled)) {
+                    $enabled[] = $this->plugin;
+                }
+            } else {
+                $enabled = array($enabled, $this->plugin);
+            }
+        } else {
+            $enabled = array($this->plugin);
+        }
+        $this->config->set_setting('enabled_plugin', $enabled, \Config::JSON, 'plugin_SMS');
+    }
+    /**
+     * Disable this plugin.
+     */
+    public function disable_plugin() {
+        $enabled = $this->config->get_setting('plugin_SMS', 'enabled_plugin');
+        if (!is_null($enabled)) {
+            $key = array_search($this->plugin, $enabled);
+            if ($key !== false) {
+                if (count($enabled) > 1) {
+                    unset($enabled[$key]);
+                } else {
+                    $enabled = array();
+                }
+                $this->config->set_setting('enabled_plugin', $enabled, \Config::JSON, 'plugin_SMS');
+            }
+        }
     }
     /**
      * Get all assessments for academic session

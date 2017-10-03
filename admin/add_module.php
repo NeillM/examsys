@@ -110,15 +110,20 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   $modID = module_utils::add_modules($modulecode, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli, $sms_import, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start, $externalid);
 
   // New sytle SMS enrolments.
-  $yearutils = new yearutils($mysqli);
-  $session = $yearutils->get_current_session();
-  $userObj = userObject::get_instance();
-  $smsplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
-  foreach($smsplugin_name as $name) {
-    $smspluginns = 'plugins\SMS\\' . $name. '\\' . $name;
-    $smsplugin = new $smspluginns($mysqli, $userObj->get_user_ID());
-    if (!is_null($externalid) and $smsplugin->supports_module_import() !== false and $smsplugin->supports_enrol_import() !== false) {
-        $smsplugin->update_module_enrolments($externalid, $session);
+  if (!is_null($externalid)) {
+    $yearutils = new yearutils($mysqli);
+    $session = $yearutils->get_current_session();
+    $userObj = userObject::get_instance();
+    $smsplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
+    foreach($smsplugin_name as $name) {
+      $smspluginns = 'plugins\SMS\\' . $name. '\\' . $name;
+      $smsplugin = new $smspluginns($mysqli, $userObj->get_user_ID());
+      if ($sms_api === $smsplugin->get_name()) {
+        if ($smsplugin->supports_module_import() !== false) {
+          $smsplugin->update_module_enrolments($externalid, $session);
+        }
+        break;
+      }
     }
   }
 
@@ -294,14 +299,7 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
     }
     $result->close();
     ?></select></td></tr>
-    <?php
-      $sms = \plugins\plugins_sms::get_sms($mysqli);
-      if ($sms !== false) {
-    ?>
     <tr><td class="field"><?php echo $string['externalid'] ?></td><td><input type="text" size="30" maxlength="255" name="externalid" value=""></td></tr>
-    <?php
-      }
-    ?>
     <tr><td colspan="2" style="text-align:center; padding-top:12px"><input type="submit" class="ok" name="submit" value="<?php echo $string['add'] ?>"><input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" /></td></tr>
 		</table>
 	</form>
