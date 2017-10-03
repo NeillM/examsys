@@ -711,6 +711,7 @@ Class InstallUtils {
     $configObject->set_setting('system_hostname_lookup', $cfg_labsecuritytype, Config::BOOLEAN);
     $configObject->set_setting('system_academic_year_start', '07/01', Config::STRING);
     $configObject->set_setting('misc_search_leadin_length', self::$cfg_search_leadin_length, Config::INTEGER);
+    $configObject->set_setting('rpt_percent_decimals', 2, Config::INTEGER);
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();
@@ -1913,9 +1914,6 @@ Class InstallUtils {
 // cron user
   \$cfg_cron_user = '{cfg_cron_user}';
   \$cfg_cron_passwd = '{cfg_cron_passwd}';
-
-// Reports
-  \$percent_decimals = 2;
 
 // Standard Setting
   \$hofstee_defaults = array('pass'=>array(0, 'median', 0, 100), 'distinction'=>array('median', 100, 0, 100));

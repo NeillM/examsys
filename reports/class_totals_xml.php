@@ -72,7 +72,7 @@ if ($marking == '0') {
   $marking_key = 'adj_percent';
 }
 
-$percent_decimals = $configObject->get('percent_decimals');
+$percent_decimals = $configObject->get_setting('core', 'rpt_percent_decimals');
 
 //output table heading
 $table_order = array('Title'=>'title', 'Surname'=>'Surname', 'First Names'=>'First_Names', 'Student ID'=>'student_id', 'Course'=>'student_grade', 'Mark'=>'mark', $marking_label=>$marking_key, 'Clasification'=>'mark', 'Rank'=>'rank', 'Start Time'=>'started', 'Duration'=>'duration', 'IP Address'=>'ipaddress');

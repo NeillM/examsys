@@ -219,7 +219,7 @@ echo draw_toprightmenu(30);
     $sortby = 'mark';
   }
 
-  $percent_decimals = $configObject->get('percent_decimals');
+  $percent_decimals = $configObject->get_setting('core', 'rpt_percent_decimals');
   $absent_no = 0;
   $scatter_data = '';
 
