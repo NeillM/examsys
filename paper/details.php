@@ -700,7 +700,7 @@ function check_latex_random($q_ids, $mysqli) {
   $result->execute();
   $result->store_result();
   $result->bind_result($theme, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $scenario, $option_text, $o_media, $correct, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $marks_correct, $marks_incorrect, $display_last_edited, $display_pos, $status, $correct_fback, $feedback_right, $locked, $settings);
-
+  $leadinlength = $configObject->get_setting('core', 'misc_search_leadin_length');
   while ($result->fetch()) {
 
     if ($q_type == 'sct') {
@@ -775,7 +775,7 @@ function check_latex_random($q_ids, $mysqli) {
       $temp_array[$row_no]['screen']          = $screen;
       $temp_array[$row_no]['q_type']          = $q_type;
       $temp_array[$row_no]['fulltext']        = QuestionUtils::clean_leadin($leadin, 0);
-      $temp_array[$row_no]['leadin']          = QuestionUtils::clean_leadin($leadin, $configObject->get('cfg_search_leadin_length'));
+      $temp_array[$row_no]['leadin']          = QuestionUtils::clean_leadin($leadin, $leadinlength);
       $temp_array[$row_no]['scenario']        = $scenario;
       $temp_array[$row_no]['p_id']            = $p_id;
       $temp_array[$row_no]['q_id']            = $q_id;
@@ -1132,7 +1132,7 @@ function check_latex_random($q_ids, $mysqli) {
     }
 
     echo "<td class=\"l\" ";
-    if (strlen($temp_array[$x]['fulltext']) > $configObject->get('cfg_search_leadin_length')) {
+    if (strlen($temp_array[$x]['fulltext']) > $leadinlength) {
       echo ' onmouseover="showAdHocWindow(event,\''.htmlspecialchars($temp_array[$x]['fulltext']).'\');" ';
       echo ' onmouseleave="hideAdHocWindow();" ';
     }

@@ -304,6 +304,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
 
   <tbody>
   <?php
+  $leadinlength = $configObject->get_setting('core', 'misc_search_leadin_length');
   while ($search_results->fetch()) {
     echo '<tr class="q';
 
@@ -361,7 +362,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
     } else {
       echo '<td class="l"';
     }
-    if (strlen($leadin) > $configObject->get('cfg_search_leadin_length')) {
+    if (strlen($leadin) > $leadinlength) {
       echo ' onmouseover="showAdHocWindow(event,\''.htmlspecialchars(QuestionUtils::clean_leadin($leadin, 0)).'\');" ';
       echo ' onmouseleave="hideAdHocWindow();" ';
     }
@@ -371,7 +372,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
     }
     //sl change this from echo $leadin to below
 	
-    echo QuestionUtils::clean_leadin($leadin, $configObject->get('cfg_search_leadin_length')) . '</td>';
+    echo QuestionUtils::clean_leadin($leadin, $leadinlength) . '</td>';
     echo '<td class="nobr">' . $string[$q_type] . '</td>';
     if ($type == 'keyword' or $type == 'bloom') {
       echo '<td>' . $extra_field . '</td>';    

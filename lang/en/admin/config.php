@@ -60,3 +60,4 @@ $string['system_maintenance_mode'] = 'Enable/Disable maintenance mode (restricts
 $string['cfg_summative_mgmt'] = 'Enable if summative assessment is managed centrally rather than on an adhoc basis.';
 $string['system_hostname_lookup'] = 'If enabled hostname used to lookup clients. IP address is used if disabled.';
 $string['system_academic_year_start'] = 'Month / Day of academic year start';
+$string['misc_search_leadin_length'] = 'Length in characters of question leadin in question search list.';

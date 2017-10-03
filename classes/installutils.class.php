@@ -710,6 +710,7 @@ Class InstallUtils {
     $configObject->set_setting('cfg_summative_mgmt', 0, Config::BOOLEAN);
     $configObject->set_setting('system_hostname_lookup', $cfg_labsecuritytype, Config::BOOLEAN);
     $configObject->set_setting('system_academic_year_start', '07/01', Config::STRING);
+    $configObject->set_setting('misc_search_leadin_length', self::$cfg_search_leadin_length, Config::INTEGER);
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();
@@ -1907,7 +1908,6 @@ Class InstallUtils {
   \$cfg_short_date_php = '{cfg_short_date_php}';
   \$cfg_long_time_php = '{cfg_long_time_php}';
   \$cfg_short_time_php = '{cfg_short_time_php}';
-  \$cfg_search_leadin_length = '{cfg_search_leadin_length}';
   \$cfg_timezone = '{cfg_timezone}';
   date_default_timezone_set(\$cfg_timezone);
 // cron user
@@ -2058,7 +2058,6 @@ CONFIG;
     $config = str_replace('{cfg_short_date_php}', self::$cfg_short_date_php, $config);
     $config = str_replace('{cfg_long_time_php}', self::$cfg_long_time_php, $config);
     $config = str_replace('{cfg_short_time_php}', self::$cfg_short_time_php, $config);
-    $config = str_replace('{cfg_search_leadin_length}', self::$cfg_search_leadin_length, $config);
     $config = str_replace('{cfg_timezone}', self::$cfg_timezone, $config);
     $config = str_replace('{cfg_tmpdir}', self::$cfg_tmpdir, $config);
     $config = str_replace('{cfg_tablesorter_date_time}', self::$cfg_tablesorter_date_time, $config);
