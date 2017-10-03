@@ -116,7 +116,7 @@ require '../config/finish.inc';
   <meta http-equiv="imagetoolbar" content="no">
   <meta http-equiv="imagetoolbar" content="false">
 
-  <title><?php echo $string['examscript'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo $string['examscript'] . ' ' . $configObject->get_setting('core', 'system_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/start.css" />

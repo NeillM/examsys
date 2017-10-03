@@ -31,6 +31,7 @@ if ($updater_utils->check_version("6.5.0")) {
         ), Config::ASSOC);
     $configObject->set_setting('stdset_hofstee_whole_numbers', $configObject->get('hofstee_whole_numbers'), Config::BOOLEAN);
     $configObject->set_setting('summative_hour_warning', $configObject->get('cfg_hour_warning'), Config::INTEGER);
+    $configObject->set_setting('system_install_type', $configObject->get('cfg_install_type'), Config::STRING);
     $updater_utils->record_update('rogo2156');
   }
 }

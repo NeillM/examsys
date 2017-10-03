@@ -267,7 +267,7 @@ if (!$lti->isInstructor()) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset={$configObject->get('cfg_page_charset')}" />
 
-  <title>Rog&#333; {$configObject->get('cfg_install_type')}</title>
+  <title>Rog&#333; {$configObject->get_setting('core', 'system_install_type')}</title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">

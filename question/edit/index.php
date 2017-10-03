@@ -455,7 +455,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-<title><?php echo $mode . ' ' . $string['question'] . ' - ' . $q_type_full .  ' ' . $configObject->get('cfg_install_type') ?></title>
+<title><?php echo $mode . ' ' . $string['question'] . ' - ' . $q_type_full .  ' ' . $configObject->get_setting('core', 'system_install_type') ?></title>
 
 <link rel="stylesheet" href="../../css/body.css" type="text/css" />
 <link rel="stylesheet" href="../../css/header.css" type="text/css" />
