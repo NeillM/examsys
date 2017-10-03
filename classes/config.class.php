@@ -16,7 +16,7 @@
 
 /**
  *
- * config file
+ * Config file
  *
  * @author Simon Atack
  * @version 1.0
@@ -27,7 +27,7 @@
  */
 class Config extends RogoStaticSingleton {
   /**
-   * Areas of the Rogo system that can be confifured.
+   * Areas of the Rogo system that can be configured.
    * @var array list of areas
    */
   public static $config_area = array('api', 'gradebook', 'lti', 'paper', 'summative', 'url', 'misc', 'calc', 'system', 'rpt', 'stdset');
