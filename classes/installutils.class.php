@@ -713,13 +713,13 @@ Class InstallUtils {
     $configObject->set_setting('misc_search_leadin_length', self::$cfg_search_leadin_length, Config::INTEGER);
     $configObject->set_setting('rpt_percent_decimals', 2, Config::INTEGER);
     $configObject->set_setting('stdset_hofstee_pass', array(
-        'min_pass'=> 0,
+        'min_pass' => 0,
         'max_pass' => 'median',
         'min_fail' => 0,
         'max_fail' => 100
         ), Config::ASSOC);
     $configObject->set_setting('stdset_hofstee_distinction', array(
-        'min_pass'=> 'median',
+        'min_pass' => 'median',
         'max_pass' => 100,
         'min_fail' => 0,
         'max_fail' => 100
@@ -728,6 +728,22 @@ Class InstallUtils {
     $configObject->set_setting('summative_hour_warning', 10, Config::INTEGER);
     $configObject->set_setting('system_install_type', '', Config::STRING);
     $configObject->set_setting('cfg_ims_enabled', false, Config::BOOLEAN);
+    $contact_count = 0;
+    foreach (self::$emergency_support_numbers as $name => $number) {
+      $contact_count++;
+      $configObject->set_setting('emergency_support_contact' . $contact_count, array(
+          'name' => $name,
+          'number' => $number
+          ), Config::ASSOC);
+    }
+    $i = $contact_count;
+    while ($i < 3) {
+      $i++;
+      $configObject->set_setting('emergency_support_contact' . $i, array(
+          'name' => '',
+          'number' => ''
+          ), Config::ASSOC);
+    }
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();
@@ -1979,7 +1995,6 @@ if(!isset(\$_SERVER['HTTP_HOST'])) {
 
 //Assistance
   \$support_email = '{cfg_support_email}';
-  \$emergency_support_numbers = {emergency_support_numbers};
   \$midexam_clarification = array('invigilators', 'students');
 
 //Global DEBUG OUTPUT
@@ -2049,7 +2064,6 @@ CONFIG;
     $config = str_replace('{cfg_cron_passwd}', self::$cfg_cron_passwd, $config);
 
     $config = str_replace('{cfg_support_email}', self::$cfg_support_email, $config);
-    $config = str_replace('{emergency_support_numbers}', self::$emergency_support_numbers, $config);
 
     $config = str_replace('{cfg_short_date}', self::$cfg_short_date, $config);
     $config = str_replace('{cfg_long_date}', self::$cfg_long_date, $config);

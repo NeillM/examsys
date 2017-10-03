@@ -34,6 +34,22 @@ if ($updater_utils->check_version("6.5.0")) {
     $configObject->set_setting('system_install_type', $configObject->get('cfg_install_type'), Config::STRING);
     $sql = "INSERT INTO config (component, setting, value, type) VALUES ('core', 'cfg_ims_enabled', '" . $configObject->get('cfg_ims_enabled') . "', '" . Config::BOOLEAN . "')";
     $updater_utils->execute_query($sql, false);
+    $contact_count = 0;
+    foreach ($configObject->get('emergency_support_numbers') as $name => $number) {
+      $contact_count++;
+      $configObject->set_setting('emergency_support_contact' . $contact_count, array(
+          'name' => $name,
+          'number' => $number
+          ), Config::ASSOC);
+    }
+    $i = $contact_count;
+    while ($i < 3) {
+      $i++;
+      $configObject->set_setting('emergency_support_contact' . $i, array(
+          'name' => '',
+          'number' => ''
+          ), Config::ASSOC);
+    }
     $updater_utils->record_update('rogo2156');
   }
 }

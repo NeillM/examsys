@@ -72,3 +72,7 @@ $string['system_install_type'] = 'Installation type i.e. test (Leave blank for p
 $string['ims'] = 'IMS';
 $string['cfg_ims_enabled'] = 'Enable/Disable IMS integration.';
 $string['imssettings'] = 'More detailed settings are available for IMS ';
+$string['contact'] = 'Support Contacts';
+$string['emergency_support_contact1'] = 'Details for support contact 1';
+$string['emergency_support_contact2'] = 'Details for support contact 2';
+$string['emergency_support_contact3'] = 'Details for support contact 3';
