@@ -725,6 +725,7 @@ Class InstallUtils {
         'max_fail' => 100
         ), Config::ASSOC);
     $configObject->set_setting('stdset_hofstee_whole_numbers', true, Config::BOOLEAN);
+    $configObject->set_setting('summative_hour_warning', 10, Config::INTEGER);
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();
@@ -1970,9 +1971,6 @@ if(!isset(\$_SERVER['HTTP_HOST'])) {
 
 //A server specifc display name can be appended to rogo with the following
 \$cfg_install_type = '';
-
-//Warnings
-  \$cfg_hour_warning = 10;       // Warning for summative exams
 
 //Paper auto saving settings
   \$cfg_autosave_settimeout = 5; //Maximum time to wait for one request to succeed

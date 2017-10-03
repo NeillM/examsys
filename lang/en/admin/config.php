@@ -67,3 +67,4 @@ $string['stdset'] = 'Standard setting';
 $string['stdset_hofstee_pass'] = 'Hofstee pass settings';
 $string['stdset_hofstee_distinction'] = 'Hofstee distinction setting';
 $string['stdset_hofstee_whole_numbers'] = 'Default setting of whole number setting in Hofstee configuration.';
+$string['summative_hour_warning'] = 'Hour in day (24hr clock) to warning users if they are setting an exam to start prior to.';
