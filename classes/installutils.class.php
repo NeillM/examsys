@@ -745,6 +745,9 @@ Class InstallUtils {
           ), Config::ASSOC);
     }
     $configObject->set_setting('support_contact_email', self::$cfg_support_email, Config::STRING);
+    $configObject->set_setting('api_oauth_access_lifetime', 1209600, Config::INTEGER);
+    $configObject->set_setting('api_oauth_refresh_token_lifetime', 1209600, Config::INTEGER);
+    $configObject->set_setting('api_oauth_always_issue_new_refresh_token', true, Config::BOOLEAN);
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();
@@ -2013,11 +2016,6 @@ if(!isset(\$_SERVER['HTTP_HOST'])) {
 
   //used for debugging
   \$debug_lang_string = false;  // set to true to show lang string in stored system_error_log messages
-
-  //oauth settings
-  \$cfg_oauth_access_lifetime = 1209600; // length of access token lifetime.
-  \$cfg_oauth_refresh_token_lifetime = 1209600; // length of refresh token lifetime.
-  \$cfg_oauth_always_issue_new_refresh_token = true; // enable or disable refresh tokens.
 
   // Override db config settings with configs in this file?
   \$file_config_override = true;
