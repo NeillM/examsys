@@ -58,7 +58,8 @@ if ($updater_utils->check_version("6.5.0")) {
     $configObject->set_setting('paper_autosave_frequency', $configObject->get('cfg_autosave_frequency'), Config::INTEGER);
     $configObject->set_setting('paper_autosave_retrylimit', $configObject->get('cfg_autosave_retrylimit'), Config::INTEGER);
     $configObject->set_setting('paper_autosave_backoff_factor', $configObject->get('cfg_autosave_backoff_factor'), Config::DOUBLE);
-    $configObject->set_setting('summative_midexam_clarification', $configObject->get(midexam_clarification), Config::CSV);
+    $configObject->set_setting('summative_midexam_clarification', $configObject->get('midexam_clarification'), Config::CSV);
+    $configObject->set_setting('system_password_expire', $configObject->get('cfg_password_expire'), Config::INTEGER);
     $updater_utils->record_update('rogo2156');
   }
 }

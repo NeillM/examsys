@@ -753,6 +753,7 @@ Class InstallUtils {
     $configObject->set_setting('paper_autosave_retrylimit', 3, Config::INTEGER);
     $configObject->set_setting('paper_autosave_backoff_factor', 1.5, Config::DOUBLE);
     $configObject->set_setting('summative_midexam_clarification', array('invigilators', 'students'), Config::CSV);
+    $configObject->set_setting('system_password_expire', 30, Config::INTEGER);
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();
@@ -1965,7 +1966,6 @@ Class InstallUtils {
 \$authentication = array(
   {cfg_authentication_arrays}
 );
-\$cfg_password_expire = 30;    // Set in days
 
 //Lookup settings
 \$lookup = array(

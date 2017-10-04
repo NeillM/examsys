@@ -85,3 +85,4 @@ $string['paper_autosave_frequency'] = 'How often to auto save a paper (Seconds)'
 $string['paper_autosave_retrylimit'] = 'How many times to retry a failed paper auto save before informing the user';
 $string['paper_autosave_backoff_factor'] = 'Backoff factor used in paper auto saving calculation.';
 $string['summative_midexam_clarification'] = 'Roles that can view mid exam clarifcations during summative exams';
+$string['system_password_expire'] = 'Internal database login password lifetime (Days)';
