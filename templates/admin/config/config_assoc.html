@@ -6,7 +6,7 @@
     <td>
         {% for idx in data.item %}
             {{idx.i}}&nbsp;
-            <input class="{{data.type}}" type="text" id="{{data.setting}}_{{idx.i}}" name="{{data.setting}}_{{idx.i}}" value="{{idx.v}}" {{data.disabled}} />
+            <input class="{{data.type}}" type="text" id="{{data.setting}}_{{idx.i}}" name="{{data.setting}}_{{idx.i}}" value="{{idx.v|raw}}" {{data.disabled}} />
             </br>
        {% endfor %}
     </td>
