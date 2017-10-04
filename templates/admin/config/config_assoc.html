@@ -1,0 +1,16 @@
+<tr>
+    <td class="field">
+        <label for="{{data.setting}}_host">{{data.setting}}</label>&nbsp;
+        <img src="{{path}}/artwork/tooltip_icon.gif" class="help_tip" title="{{lang.setting}}" />
+    </td>
+    <td>
+        {% for idx in data.item %}
+            {{idx.i}}&nbsp;
+            <input class="{{data.type}}" type="text" id="{{data.setting}}_{{idx.i}}" name="{{data.setting}}_{{idx.i}}" value="{{idx.v}}" {{data.disabled}} />
+            </br>
+       {% endfor %}
+    </td>
+    {% if data.disabled != "" %}
+    <td>{{lang.fileoverride}}</td>
+    {% endif %}
+</tr>

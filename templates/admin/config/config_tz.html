@@ -1,0 +1,16 @@
+<tr>
+    <td class="field">
+        <label for="{{data.setting}}">{{data.setting}}</label>&nbsp;
+        <img src="{{path}}/artwork/tooltip_icon.gif" class="help_tip" title="{{lang.setting}}" />
+    </td>
+    <td>
+        <select id="{{data.setting}}" name="{{data.setting}}[]" multiple>
+            {% for tz in data.zone %}
+                 <option value="{{tz.iz}}|{{tz.dz}}" {{tz.selected}}>{{tz.dz}}</option>
+            {% endfor %}
+        </select>
+    </td>
+    {% if data.disabled != "" %}
+    <td>{{lang.fileoverride}}</td>
+    {% endif %}
+</tr>

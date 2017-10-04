@@ -1,0 +1,12 @@
+<tr>
+    <td class="field">
+        <label for="{{data.setting}}">{{data.setting}}</label>&nbsp;
+        <img src="{{path}}/artwork/tooltip_icon.gif" class="help_tip" title="{{lang.setting}}" />
+    </td>
+    <td>
+        <input type="checkbox" name="{{data.setting}}" id="{{data.setting}}" {{data.checked}} {{data.disabled}} />
+    </td>
+    {% if data.disabled != "" %}
+    <td>{{lang.fileoverride}}</td>
+    {% endif %}
+</tr>
