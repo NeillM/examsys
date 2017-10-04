@@ -54,6 +54,10 @@ if ($updater_utils->check_version("6.5.0")) {
     $configObject->set_setting('api_oauth_access_lifetime', $configObject->get('cfg_oauth_access_lifetime'), Config::INTEGER);
     $configObject->set_setting('api_oauth_refresh_token_lifetime', $configObject->get('cfg_oauth_refresh_token_lifetime'), Config::INTEGER);
     $configObject->set_setting('api_oauth_always_issue_new_refresh_token', $configObject->get('cfg_oauth_always_issue_new_refresh_token'), Config::BOOLEAN);
+    $configObject->set_setting('paper_autosave_settimeout', $configObject->get('cfg_autosave_settimeout'), Config::INTEGER);
+    $configObject->set_setting('paper_autosave_frequency', $configObject->get('cfg_autosave_frequency'), Config::INTEGER);
+    $configObject->set_setting('paper_autosave_retrylimit', $configObject->get('cfg_autosave_retrylimit'), Config::INTEGER);
+    $configObject->set_setting('paper_autosave_backoff_factor', $configObject->get('cfg_autosave_backoff_factor'), Config::DOUBLE);
     $updater_utils->record_update('rogo2156');
   }
 }

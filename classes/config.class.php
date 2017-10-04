@@ -107,6 +107,11 @@ class Config extends RogoStaticSingleton {
    * @var string
    */
   const ASSOC = 'assoc';
+  /**
+   * Config setting double type identifier
+   * @var string
+   */
+  const DOUBLE = 'double';
 
   function __toString() {
     return "ConfigObject!";
@@ -732,6 +737,13 @@ SCRIPT;
           break;
         case self::INTEGER:
           if (is_int($value) or ctype_digit($value)) {
+              $check = true;
+          } else {
+              $check = false;
+          }
+          break;
+        case self::DOUBLE:
+          if (is_double($value) or preg_match("#^\\d+\\.\\d+$#", $value)) {
               $check = true;
           } else {
               $check = false;

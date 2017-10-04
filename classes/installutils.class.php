@@ -748,6 +748,10 @@ Class InstallUtils {
     $configObject->set_setting('api_oauth_access_lifetime', 1209600, Config::INTEGER);
     $configObject->set_setting('api_oauth_refresh_token_lifetime', 1209600, Config::INTEGER);
     $configObject->set_setting('api_oauth_always_issue_new_refresh_token', true, Config::BOOLEAN);
+    $configObject->set_setting('paper_autosave_settimeout', 10, Config::INTEGER);
+    $configObject->set_setting('paper_autosave_frequency', 180, Config::INTEGER);
+    $configObject->set_setting('paper_autosave_retrylimit', 3, Config::INTEGER);
+    $configObject->set_setting('paper_autosave_backoff_factor', 1.5, Config::DOUBLE);
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();
@@ -1990,12 +1994,6 @@ SCRIPT;
 if(!isset(\$_SERVER['HTTP_HOST'])) {
   \$_SERVER['HTTP_HOST']='';
 }
-
-//Paper auto saving settings
-  \$cfg_autosave_settimeout = 5; //Maximum time to wait for one request to succeed
-  \$cfg_autosave_frequency = 30; //How often to auto save in seconds
-  \$cfg_autosave_retrylimit = 3; //How many times to retry a failed save befor informing the user
-  \$cfg_autosave_backoff_factor = 1.5; //each retry is lenghtend to \$cfg_autosave_settimeout + (\$cfg_autosave_backoff_factor * \$cfg_autosave_settimeout * retryCount);
 
 //Assistance
   \$midexam_clarification = array('invigilators', 'students');

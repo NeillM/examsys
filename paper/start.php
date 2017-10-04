@@ -697,7 +697,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 
   var startAutoSave = function () {
     clearTimeout(autoSaveRef);<?php // Cancel any outstanding timeouts to make sure only one auto save is ever registered. ?>
-    autoSaveRef = setTimeout("autoSave()",<?php echo (($configObject->get('cfg_autosave_frequency') + rand(-5,5)) * 1000); ?>);
+    autoSaveRef = setTimeout("autoSave()",<?php echo (($configObject->get_setting('core', 'paper_autosave_frequency') + rand(-5,5)) * 1000); ?>);
   }
 
   var stopAutoSave = function() {
@@ -723,11 +723,14 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
             // Set the time out of one requst to be the maximum total time plus 5s for network latency
             // PHP handles normal timeouts. This is just to make sure the user won't wait forever if somthing
             // weird happens.
-            echo ceil((($configObject->get('cfg_autosave_retrylimit') * $configObject->get('cfg_autosave_backoff_factor') * $configObject->get('cfg_autosave_settimeout')) + $configObject->get('cfg_autosave_settimeout') + 5)) * 1000;
+            $settimeout = $configObject->get_setting('core', 'paper_autosave_settimeout');
+            $retrylimit = $configObject->get_setting('core', 'paper_autosave_retrylimit');
+            $backofffactor = $configObject->get_setting('core', 'paper_autosave_backoff_factor');
+            echo ceil((($retrylimit * $backofffactor * $settimeout) + $settimeout + 5)) * 1000;
                    ?>,
           cache: false,
           tryCount : 0,
-          retryLimit : <?php echo $configObject->get('cfg_autosave_retrylimit'); // Try 3 times before erroring ?>,
+          retryLimit : <?php echo $retrylimit; // Try 3 times before erroring ?>,
           beforeSend: function() {
           },
           fail: function() {

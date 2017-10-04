@@ -42,11 +42,14 @@ var ajaxSave = function () {
                     // Set the time out of one requst to be the maximum total time plus 5s for network latency
                     // PHP handles nomal timeouts. This is just to make sure the user wont wait forever if somthing
                     // weird happens.
-                    echo ceil((($configObject->get('cfg_autosave_retrylimit') * $configObject->get('cfg_autosave_backoff_factor') * $configObject->get('cfg_autosave_settimeout')) + $configObject->get('cfg_autosave_settimeout') + 5)) * 1000;
+                    $settimeout = $configObject->get_setting('core', 'paper_autosave_settimeout');
+                    $retrylimit = $configObject->get_setting('core', 'paper_autosave_retrylimit');
+                    $backofffactor = $configObject->get_setting('core', 'paper_autosave_backoff_factor');
+                    echo ceil((($retrylimit * $backofffactor * $settimeout) + $settimeout + 5)) * 1000;
                    ?>,
           cache: false,
           tryCount : 0,
-          retryLimit : <?php echo $configObject->get('cfg_autosave_retrylimit'); // Try 3 times before erroring ?>,
+          retryLimit : <?php echo $retrylimit; // Try 3 times before erroring ?>,
           beforeSend: function() {
           },
           fail: function() {

@@ -149,7 +149,7 @@ $render->render_admin_content($breadcrumb, $lang);
                         if ($type === Config::CSV) {
                             $value = implode(',', $value);
                         }
-                        if ($type == Config::STRING or $type === Config::INTEGER) {
+                        if ($type == Config::STRING or $type === Config::INTEGER or $type === Config::DOUBLE) {
                             $size = 20;
                         } else {
                             $size = 100;

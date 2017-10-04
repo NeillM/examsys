@@ -80,3 +80,7 @@ $string['support_contact_email'] = 'Support email address';
 $string['api_oauth_access_lifetime'] = 'Length of access token lifetime (Seconds)';
 $string['api_oauth_refresh_token_lifetime'] = 'Length of refresh token lifetime (Seconds)';
 $string['api_oauth_always_issue_new_refresh_token'] = 'Enable/Disableisable refresh tokens';
+$string['paper_autosave_settimeout'] = 'Maximum time to wait for one paper auto save request to succeed (Seconds)';
+$string['paper_autosave_frequency'] = 'How often to auto save a paper (Seconds)';
+$string['paper_autosave_retrylimit'] = 'How many times to retry a failed paper auto save before informing the user';
+$string['paper_autosave_backoff_factor'] = 'Backoff factor used in paper auto saving calculation.';
