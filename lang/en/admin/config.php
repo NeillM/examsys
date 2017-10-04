@@ -76,3 +76,4 @@ $string['contact'] = 'Support Contacts';
 $string['emergency_support_contact1'] = 'Details for support contact 1';
 $string['emergency_support_contact2'] = 'Details for support contact 2';
 $string['emergency_support_contact3'] = 'Details for support contact 3';
+$string['support_contact_email'] = 'Support email address';

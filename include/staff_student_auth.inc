@@ -89,4 +89,5 @@ $included_files = get_included_files();
 
 //set string encoding for the mbstring module for interfaces
 mb_internal_encoding($configObject->get('cfg_page_charset'));
-?>
+
+$contactemail = $configObject->get_setting('core', 'support_contact_email');

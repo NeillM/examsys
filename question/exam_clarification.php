@@ -41,14 +41,14 @@ if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdm
 // Check if paper is Summative Exam.
 // Check if paper is not live.
 if (!$exam_clarifications) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 // Check that the questionID exists
 $q_id = check_var('q_id', 'REQUEST', true, false, true);
 if (!QuestionUtils::question_exists($q_id, $mysqli)) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 

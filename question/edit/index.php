@@ -443,7 +443,7 @@ if ($critical_error == '') {
   // Bad things have happened
   $q_type_display = '';
 
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['error'], $critical_error, $string['error'], '/artwork/page_not_found.png', '#C00000', true, true);
 }
 

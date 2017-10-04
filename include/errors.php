@@ -35,7 +35,7 @@ require $cfg_web_root . 'lang/' . $language . '/include/errors.php';
 function display_error($error_title, $error_description, $headers = true, $stop_execution = true, $display_support_email = true) {
   global $mysqli, $string, $notice, $configObject;
   
-  $support_email = $configObject->get('support_email');
+  $support_email = $configObject->get_setting('core', 'support_contact_email');
     
   $user = UserObject::get_instance();
   if ($user !== NULL and $user->get_user_ID() > 0) {

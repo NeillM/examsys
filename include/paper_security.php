@@ -170,7 +170,7 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $string, $db) {
   $yearutils = new yearutils($db);
   $attempt = 1;
   $usern = $userObj->get_username();
-
+  $contactemail = $configObject->get_setting('core', 'support_contact_email');
   if (stripos($usern, 'user') !== 0) {  // Do not check modules for guest accounts (e.g. user1...user100).
      if (count($moduleIDs) > 0) {
       $cal_year_sql = '';
@@ -192,14 +192,14 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $string, $db) {
             $html .= ', ' . $mod_details['moduleid'];
           }
         }
-        $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+        $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
         $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
       } else {
         $stmt->fetch();
       }
       $stmt->close();
     } else {
-      $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+      $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
       $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
     }
   }
@@ -208,19 +208,20 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $string, $db) {
 }
 
 function check_metadata($property_id, $userObj, $moduleIDs, $string, $db) {
-	if (!$userObj->is_temporary_account()) {			// Do not check metadata security if temporary account
-		$notice = UserNotices::get_instance();
-		$configObject = Config::get_instance();
-		$metadata = Paper_utils::get_metadata($property_id, $db);
+  $contactemail = $configObject->get_setting('core', 'support_contact_email');
+  if (!$userObj->is_temporary_account()) {			// Do not check metadata security if temporary account
+    $notice = UserNotices::get_instance();
+    $configObject = Config::get_instance();
+    $metadata = Paper_utils::get_metadata($property_id, $db);
 
-		foreach ($metadata as $security_type=>$security_value) {
-			if (!$userObj->has_metadata($moduleIDs, $security_type, $security_value)) {
-				$tmp_string = sprintf($string['error_metadata'], $security_type, $security_value);
-				$msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
-				$notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-			}
-		}
-	}
+    foreach ($metadata as $security_type=>$security_value) {
+      if (!$userObj->has_metadata($moduleIDs, $security_type, $security_value)) {
+        $tmp_string = sprintf($string['error_metadata'], $security_type, $security_value);
+        $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+        $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+      }
+    }
+  }
 }
 
 function render_password_form($string) {

@@ -189,7 +189,7 @@ $deleted            = $propertyObj->get_deleted();
 
 // If OSCE paper or if the paper has been deleted we should exit as this is an invalid page.
 if ($test_type == '4' OR $deleted != NULL) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '/artwork/exclamation_48.png', '#C00000', true, true);
 }
 

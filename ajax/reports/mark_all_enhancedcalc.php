@@ -164,9 +164,8 @@ if ($error) {
     $log_error->execute();
     $log_error->close();
 
-    $support_email = $configObject->get('support_email');
-    if ($support_email != '') {
-            $return_status .= '<br /><br /><br />' . $string['pleasecontact'] . ' <a href="mailto:' . $support_email . '">' . $support_email . '</a>';
+    if ($contactemail != '') {
+            $return_status .= '<br /><br /><br />' . $string['pleasecontact'] . ' <a href="mailto:' . $contactemail . '">' . $contactemail . '</a>';
     }
 }
 

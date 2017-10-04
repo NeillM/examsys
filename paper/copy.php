@@ -32,7 +32,7 @@ require_once '../include/mapping.inc';
 $paperid = param::required('paperID', param::INT, param::FETCH_POST);
 
 if (!Paper_utils::paper_exists($paperid, $mysqli)) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 $new_paper_title = param::optional('new_paper', null, param::TEXT, param::FETCH_POST);
@@ -101,7 +101,7 @@ if ($update === false) {
   $new_paper_id = param::required('currentpid', param::INT, param::FETCH_POST);
   $properties = PaperProperties::get_paper_properties_by_id($new_paper_id, $mysqli, $string);
   if ($properties->get_summative_lock() == 1) {
-    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit(null, $string['paperlockedwarning'], $msg, $string['paperlockedwarning'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
   $new_calendar_year = $properties->get_calendar_year();

@@ -249,6 +249,7 @@ class RAF {
 	 * IMPORT: Loads a ZIP file, parses and adds contents to the database.
 	 */
 	public function import($paperID = 0) {
+      $contactemail = $this->configObj->get_setting('core', 'support_contact_email');
 	  if ($paperID != 0) {
 			$this->properties = PaperProperties::get_paper_properties_by_id($paperID, $this->db, $this->string);
 		}
@@ -278,7 +279,7 @@ class RAF {
 				$this->data = file_get_contents($dest_dir . '/raf.json');
 			} else {
 				$zip->close();
-				$msg = sprintf($this->string['furtherassistance'], $this->configObj->get('support_email'), $this->configObj->get('support_email'));
+				$msg = sprintf($this->string['furtherassistance'], $contactemail, $contactemail);
 				$this->notice->display_notice_and_exit($this->db, $this->string['invalidraf'], $msg, $this->string['invalidraf'], '../artwork/exclamation_48.png', '#C00000', true, true);
 			}
 
@@ -291,7 +292,7 @@ class RAF {
 
 			$zip->close();
 		} else {
-      $msg = sprintf($this->string['furtherassistance'], $this->configObj->get('support_email'), $this->configObj->get('support_email'));
+      $msg = sprintf($this->string['furtherassistance'], $contactemail, $contactemail);
       $this->notice->display_notice_and_exit($this->db, $this->string['invalidzip'], $msg, $this->string['invalidzip'], '../artwork/exclamation_48.png', '#C00000', true, true);
 		}		
 	}

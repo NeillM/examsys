@@ -28,7 +28,7 @@ $plugin = check_var('pid', 'REQUEST', true, false, true);
 $installed = plugin_manager::plugin_installed($plugin);
 
 if ($installed === false) {
-    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $title = $string['pagenotfound'];
     $notice->display_notice_and_exit($mysqli, $title, $msg, $title, '../artwork/page_not_found.png', '#C00000', true, true);
 }

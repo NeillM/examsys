@@ -125,14 +125,15 @@ class PaperProperties {
   static function get_paper_properties_by_id($p_id, $db, $string, $exit_on_false = true) {
     $configObj = Config::get_instance();
     $notice = UserNotices::get_instance();
+    $contactemail = $configObj->get_setting('core', 'support_contact_email');
 
-  	$paper_property = new PaperProperties($db);
-  	$paper_property->set_property_id($p_id);
-  	if ($paper_property->load() !== false) {
-  		return $paper_property;
-  	} else {
+    $paper_property = new PaperProperties($db);
+    $paper_property->set_property_id($p_id);
+    if ($paper_property->load() !== false) {
+      return $paper_property;
+    } else {
       if ($exit_on_false) {
-        $msg = sprintf($string['furtherassistance'], $configObj->get('support_email'), $configObj->get('support_email'));
+        $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
         $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
       } else {
         return false;
@@ -151,19 +152,20 @@ class PaperProperties {
   static function get_paper_properties_by_crypt_name($crypt_name, $db, $string, $exit_on_false = true) {
     $configObj = Config::get_instance();
     $notice = UserNotices::get_instance();
+    $contactemail = $configObj->get_setting('core', 'support_contact_email');
 
-  	$paper_property = new PaperProperties($db);
-  	$paper_property->set_crypt_name($crypt_name);
-  	if ($paper_property->load() !== false) {
-  		return $paper_property;
-  	} else {
+    $paper_property = new PaperProperties($db);
+    $paper_property->set_crypt_name($crypt_name);
+    if ($paper_property->load() !== false) {
+      return $paper_property;
+    } else {
       if ($exit_on_false) {
-        $msg = sprintf($string['furtherassistance'], $configObj->get('support_email'), $configObj->get('support_email'));
+        $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
         $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
       } else {
         return false;
       }
-  	}
+    }
   }
 
 

@@ -30,7 +30,7 @@ $language = LangUtils::getLang($cfg_web_root);
 require_once 'classes/class_totals.php';
 
 $cfg_web_host = $configObject->get('cfg_web_host');
-$support_email = $configObject->get('support_email');
+$support_email = $configObject->get_setting('core', 'support_contact_email');
 $cfg_cron_user = $configObject->get('cfg_cron_user');
 $cfg_cron_passwd = $configObject->get('cfg_cron_passwd');
 

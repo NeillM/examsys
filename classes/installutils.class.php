@@ -744,6 +744,7 @@ Class InstallUtils {
           'number' => ''
           ), Config::ASSOC);
     }
+    $configObject->set_setting('support_contact_email', self::$cfg_support_email, Config::STRING);
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();
@@ -1994,7 +1995,6 @@ if(!isset(\$_SERVER['HTTP_HOST'])) {
   \$cfg_autosave_backoff_factor = 1.5; //each retry is lenghtend to \$cfg_autosave_settimeout + (\$cfg_autosave_backoff_factor * \$cfg_autosave_settimeout * retryCount);
 
 //Assistance
-  \$support_email = '{cfg_support_email}';
   \$midexam_clarification = array('invigilators', 'students');
 
 //Global DEBUG OUTPUT
@@ -2062,8 +2062,6 @@ CONFIG;
     $config = str_replace('{cfg_db_webservice_passwd}', self::$cfg_db_webservice_passwd, $config);
     $config = str_replace('{cfg_cron_user}', self::$cfg_cron_user, $config);
     $config = str_replace('{cfg_cron_passwd}', self::$cfg_cron_passwd, $config);
-
-    $config = str_replace('{cfg_support_email}', self::$cfg_support_email, $config);
 
     $config = str_replace('{cfg_short_date}', self::$cfg_short_date, $config);
     $config = str_replace('{cfg_long_date}', self::$cfg_long_date, $config);

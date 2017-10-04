@@ -848,7 +848,7 @@ class UserObject extends RogoStaticSingleton {
 		}
     if ($result == false) {
       $msg = 'This should never appear, please contact support';
-      $support_email = $configObject->get('support_email');
+      $support_email = $configObject->get_setting('core', 'support_contact_email');
 
       if ($support_email != '') {
         $msg .= " (<a href=\"$support_email\">$support_email</a>)";

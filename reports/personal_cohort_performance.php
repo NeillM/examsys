@@ -38,7 +38,7 @@ $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $s
 $log_type = $propertyObj->get_paper_type();
 
 if ($log_type != '2' and $log_type != '4' and $log_type != '5') {   // Exit if wrong type of paper
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
@@ -49,7 +49,7 @@ $medians       = $results_cache->get_median_question_marks_by_paper($paperID);
 $student_marks = $results_cache->get_student_question_marks_by_paper($userID, $log_type, $paperID);
 
 if (count($student_marks) == 0) {   // Exit if the student does not have any marks
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 

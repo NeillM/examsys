@@ -76,7 +76,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 if ($userObject->has_role('Student') and !($userObject->has_role(array('Staff', 'Admin', 'SysAdmin')))) {
   if ($properties->get_paper_type() == '2') {
     // Display 'Page not Found' for summative exams. For these go to the proper summative exam homepage.
-    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
   } else {
     header("location: user_index.php?id=" . $properties->get_crypt_name());
@@ -105,7 +105,7 @@ if ($userObject->has_role('SysAdmin') or $paper_ownerID == $userObject->get_user
 }
 
 if ($on_staff_module == false and !in_array('SYSTEM', array_values($paper_modules))) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
 }
 
@@ -902,7 +902,7 @@ function check_latex_random($q_ids, $mysqli) {
   try {
     require '../include/paper_options.php';
   } catch (Exception $e) {
-    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['problemwithpaper'], $msg, $string['problemwithpaper'], '/artwork/page_not_found.png', '#C00000', true, true);
   }
   require '../include/toprightmenu.inc';

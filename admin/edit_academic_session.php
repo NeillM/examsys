@@ -33,7 +33,7 @@ $result->bind_result($curr_academic_year, $curr_cal_status, $curr_stat_status);
 $result->fetch();
 if ($result->num_rows == 0) {
   $result->close();
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 $result->close();

@@ -50,6 +50,7 @@ if ($updater_utils->check_version("6.5.0")) {
           'number' => ''
           ), Config::ASSOC);
     }
+    $configObject->set_setting('support_contact_email', $configObject->get('support_email'), Config::STRING);;
     $updater_utils->record_update('rogo2156');
   }
 }

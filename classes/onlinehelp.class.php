@@ -331,6 +331,7 @@ Class OnlineHelp {
   public function display_page($id) {
     $page_details = $this->get_page_details($id);
     $original_title = $page_details['title'];
+    $contactemail = $this->configObject->get_setting('core', 'support_contact_email');
     
     if ($page_details['page_type'] == 'pointer') {    // If pointer look up source page.
       $page_details = $this->get_page_details($page_details['body']);
@@ -338,14 +339,14 @@ Class OnlineHelp {
     }    
 
     if ($page_details['body'] == '' and $page_details['title'] == '') {
-      $msg = sprintf($this->string['furtherassistance'], $this->configObject->get('support_email'), $this->configObject->get('support_email'));
+      $msg = sprintf($this->string['furtherassistance'], $contactemail, $contactemail);
       $this->notice->display_notice_and_exit($this->db, $this->string['pagenotfound'], $msg, $this->string['pagenotfound'], '/artwork/page_not_found.png', '#C00000');
     }
 
     $this->display_header($id, $page_details['title']);
 
     // Perform replacement on certain strings.
-    $page_details['body'] = str_replace('$support_email', '<a href="mailto:' . $this->configObject->get('support_email') . '">' . $this->configObject->get('support_email') . '</a>', $page_details['body']);
+    $page_details['body'] = str_replace('$support_email', '<a href="mailto:' . $contactemail . '">' . $contactemail . '</a>', $page_details['body']);
     $page_details['body'] = str_replace('$local_server', NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'], $page_details['body']);
 
     $offset = 0;

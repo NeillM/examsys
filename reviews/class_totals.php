@@ -36,7 +36,7 @@ $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli,
 
 $paperID = $propertyObj->get_property_id();
 if (!ReviewUtils::is_external_on_paper($userObject->get_user_ID(), $paperID, $mysqli)) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
 }
 

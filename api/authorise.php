@@ -25,7 +25,8 @@ require '../include/staff_auth.inc';
 require_once '../include/errors.php';
 
 function error($error, $string, $mysqli, $configObject, $notice) {
-    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $contactemail = $configObject->get_setting('core', 'support_contact_email');
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $error, '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
