@@ -320,8 +320,8 @@ if ($lab_object !== false) {
   if (isset($_GET['tab'])) {
     echo "$(\"a[rel='paper" . $_GET['tab'] . "']\").click();\n";
   }
-
-  if (in_array('invigilators', $configObject->get('midexam_clarification'))) {
+  $midexam_clarification = $configObject->get_setting('core', 'summative_midexam_clarification');
+  if (in_array('invigilators', $midexam_clarification)) {
     echo "var clarificationCall = setInterval(clarifyMethod, 10000);\n";
   }
 ?>
@@ -558,7 +558,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
             </table>
           </div>
         <?php
-        if (in_array('invigilators', $configObject->get('midexam_clarification'))) {
+        if (in_array('invigilators', $midexam_clarification)) {
           echo "<div id=\"clarifymsgtbl\" class=\" cohortlist\" style=\"float:left; width:50%\"><table cellpadding=\"2\" cellspacing=\"0\" style=\"width:100%; line-height:150%\">\n<tr><th>" . $string['midexamclarifications'] . "</th></tr>\n</table>\n";
           echo "<div id=\"msg$property_id\" class=\"clarifymsg\"><span class=\"blankclarification\">" . $string['examquestionclarifications'] . "</span></div>\n</div>\n";
           echo '<div id="store_' . $property_id . '" style="display: none;"></div>';

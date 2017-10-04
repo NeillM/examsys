@@ -752,6 +752,7 @@ Class InstallUtils {
     $configObject->set_setting('paper_autosave_frequency', 180, Config::INTEGER);
     $configObject->set_setting('paper_autosave_retrylimit', 3, Config::INTEGER);
     $configObject->set_setting('paper_autosave_backoff_factor', 1.5, Config::DOUBLE);
+    $configObject->set_setting('summative_midexam_clarification', array('invigilators', 'students'), Config::CSV);
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();
@@ -1994,9 +1995,6 @@ SCRIPT;
 if(!isset(\$_SERVER['HTTP_HOST'])) {
   \$_SERVER['HTTP_HOST']='';
 }
-
-//Assistance
-  \$midexam_clarification = array('invigilators', 'students');
 
 //Global DEBUG OUTPUT
   //require_once \$_SERVER['DOCUMENT_ROOT'] . 'include/debug.inc';   // Uncomment for debugging output (after uncommenting, comment out line below)

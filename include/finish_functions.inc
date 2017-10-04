@@ -539,12 +539,10 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
   <?php
   }
 
-  $midexam_clarification = $configObject->get('midexam_clarification');
+  $midexam_clarification = $configObject->get_setting('core', 'summative_midexam_clarification');
 
   if ($paper_type == '2') {
     if (in_array('students', $midexam_clarification) or $userObj->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
-      $midexam_clarification = $configObject->get('midexam_clarification');
-
       if (in_array('students', $midexam_clarification)) {
         $exam_announcementObj = new ExamAnnouncements($paperID, $mysqlidb, $string);
         echo $exam_announcementObj->display_student_announcements();

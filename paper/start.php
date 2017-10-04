@@ -1146,7 +1146,7 @@ if($propertyObj->get_calculator()) {
     echo '<tr><td>';
   }
 
-  $midexam_clarification = $configObject->get('midexam_clarification');
+  $midexam_clarification = $configObject->get_setting('core', 'summative_midexam_clarification');
 
   if ($propertyObj->get_paper_type() === '3') {
     $calculator = 0;

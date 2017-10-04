@@ -30,7 +30,7 @@ require_once $cfg_web_root . 'include/mapping.inc';
 
 $userObject = UserObject::get_instance();
 
-$clarif_types = $configObject->get('midexam_clarification');
+$clarif_types = $configObject->get_setting('core', 'summative_midexam_clarification');
 
 if (!isset($properties)) {
   $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
