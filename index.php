@@ -55,7 +55,7 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rog&#333;<?php echo ' ' . $configObject->get('cfg_install_type') ?></title>
+  <title>Rog&#333;<?php echo ' ' . $configObject->get_setting('core', 'system_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="./css/body.css" />
   <link rel="stylesheet" type="text/css" href="./css/rogo_logo.css" />
@@ -170,15 +170,15 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
   </div>
 </div>
 <?php
-  $as_pos = strpos($configObject->get('cfg_install_type'),' as ');
+  $as_pos = strpos($configObject->get_setting('core', 'system_install_type'),' as ');
   if ($as_pos !== false) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:40px\"><div class=\"greywarn\"><img src=\"./artwork/agent.png\" width=\"32\" height=\"32\" alt=\"Impersonate\" /></div></td><td><div class=\"greywarn\">" . $string['loggedinas'] . " " . substr($configObject->get('cfg_install_type'), ($as_pos+4)) . "</div></td></tr></table>\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:40px\"><div class=\"greywarn\"><img src=\"./artwork/agent.png\" width=\"32\" height=\"32\" alt=\"Impersonate\" /></div></td><td><div class=\"greywarn\">" . $string['loggedinas'] . " " . substr($configObject->get_setting('core', 'system_install_type'), ($as_pos+4)) . "</div></td></tr></table>\n";
   }
   
   $staff_team_array = $userObject->get_staff_team_modules();
   $module_no = count($staff_team_array);
   if ($module_no == 0) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:40px\"><div class=\"redwarn\"><img src=\"./artwork/exclamation_red_bg.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></div></td><td><div class=\"redwarn\"><strong>" . $string['warning'] . "</strong> " . $string['nomodules'] . " <a href=\"mailto:" . $configObject->get('support_email') . "\" style=\"color:#316AC5\">" . $configObject->get('support_email') . "</div></td></tr></table>\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:40px\"><div class=\"redwarn\"><img src=\"./artwork/exclamation_red_bg.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></div></td><td><div class=\"redwarn\"><strong>" . $string['warning'] . "</strong> " . $string['nomodules'] . " <a href=\"mailto:" . $contactemail . "\" style=\"color:#316AC5\">" . $contactemail . "</div></td></tr></table>\n";
   }
   
   

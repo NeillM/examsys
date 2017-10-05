@@ -116,7 +116,7 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title><?php echo $string['resetpassword'] . ' ' . $configObject->get('cfg_install_type') ?></title>
+  <title><?php echo $string['resetpassword'] . ' ' . $configObject->get_setting('core', 'system_install_type') ?></title>
 
   <link rel="stylesheet" href="../css/body.css" type="text/css" />
   <link rel="stylesheet" href="../css/screen.css" type="text/css" />

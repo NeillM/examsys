@@ -28,7 +28,7 @@ require_once '../include/errors.php';
 $courseID = check_var('courseID', 'REQUEST', true, false, true);
 
 if (!CourseUtils::courseid_exists($courseID, $mysqli)) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 

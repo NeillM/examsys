@@ -43,9 +43,12 @@ $addresses = explode(PHP_EOL, trim(param::optional('addresses', null, param::TEX
 
 if ($submit) { // Validate addresses
     $labFactory = new LabFactory($mysqli);
-    $test_re = $configObject->get('cfg_client_lookup') == 'name' ?
-            '/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/' :
-            '/^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/';
+    $hotsname_lookup = $configObject->get_setting('core', 'system_hostname_lookup');
+    if ($hostname_lookup) {
+      $test_re = '/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/';
+    } else {
+      $test_re = '/^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/';
+    }
     foreach ($addresses as $address) {
         $address = trim($address);
         if (0 === preg_match($test_re, $address)) {
@@ -64,7 +67,11 @@ if ($submit) { // Validate addresses
 
         foreach ($addresses as $address) { // Insert the new IP addresses.
             $address = trim($address);
-            $hostname = $configObject->get('cfg_client_lookup') == 'name' ? $address : gethostbyaddr($address);
+            if ($$hotsname_lookup) {
+              $hostname = $address;
+            } else {
+              $hostname = gethostbyaddr($address);
+            }
 
             $result = $mysqli->prepare("INSERT INTO client_identifiers (lab, address, hostname, low_bandwidth) VALUES (?, ?, ?, ?)");
             $result->bind_param('issi', $labID, $address, $hostname, $low_bandwidth);

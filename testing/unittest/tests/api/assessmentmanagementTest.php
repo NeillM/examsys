@@ -374,7 +374,7 @@ class assessmentmanagementtest extends unittestdatabase {
         $responsearray = $this->create_response_array();
         $userid = 1;
         $assessment = new \api\assessmentmanagement($this->db, 'test1');
-        $this->config->set('cfg_summative_mgmt', true);
+        $this->config->set_setting('cfg_summative_mgmt', true, \Config::BOOLEAN);
         $responsearray['statuscode'] = 214;
         $responsearray['status'] = 'This system is set-up to only allow the scheduling of summative exams';
         $responsearray['error'] = array();
@@ -384,7 +384,7 @@ class assessmentmanagementtest extends unittestdatabase {
         $params['title'] = "Test summative"; 
         $this->assertEquals($responsearray, $assessment->create($params, $userid));
         // Test create summative - success not centrally managed
-        $this->config->set('cfg_summative_mgmt', false);
+        $this->config->set_setting('cfg_summative_mgmt', false, \Config::BOOLEAN);
         $responsearray['statuscode'] = 100;
         $responsearray['status'] = 'OK';
         $responsearray['id'] = 5;
@@ -612,7 +612,7 @@ class assessmentmanagementtest extends unittestdatabase {
         // Test update summative - ERROR centrally managed
         $userid = 1;
         $assessment = new \api\assessmentmanagement($this->db, 'test1');
-        $this->config->set('cfg_summative_mgmt', true);
+        $this->config->set_setting('cfg_summative_mgmt', true, \Config::BOOLEAN);
         $summativeparams = array(
             "id" => 4,
             "type" => 'summative',
@@ -631,7 +631,7 @@ class assessmentmanagementtest extends unittestdatabase {
         $assessment->create($summativeparams, $userid);
         $this->assertEquals($summativeresponsearray, $assessment->update($summativeparams, $userid));
         // Test create summative - success not centrally managed
-        $this->config->set('cfg_summative_mgmt', false);
+        $this->config->set_setting('cfg_summative_mgmt', false, \Config::BOOLEAN);
         $summativeresponsearray['statuscode'] = 100;
         $summativeresponsearray['status'] = 'OK';
         $summativeresponsearray['nodeid'] = 10;
@@ -645,7 +645,7 @@ class assessmentmanagementtest extends unittestdatabase {
      */
     public function test_schedule_success() {
         // Test paper schedule- SUCCESS.
-        $this->config->set('cfg_summative_mgmt', true);
+        $this->config->set_setting('cfg_summative_mgmt', true, \Config::BOOLEAN);
         $responsearray = $this->schedule_response_array();
         $params = $this->schedule_param_array();
         $userid = 1;
@@ -658,7 +658,7 @@ class assessmentmanagementtest extends unittestdatabase {
      */
     public function test_schedule_success_req() {
         // Test paper schedule- SUCCESS.
-        $this->config->set('cfg_summative_mgmt', true);
+        $this->config->set_setting('cfg_summative_mgmt', true, \Config::BOOLEAN);
         $responsearray = $this->schedule_response_array();
         $params = array(
             "nodeid" => 1,
@@ -689,7 +689,7 @@ class assessmentmanagementtest extends unittestdatabase {
      */
     public function test_schedule_exception_modules() {
         // Test scheduling with invalid modules - non fatal error.
-        $this->config->set('cfg_summative_mgmt', true);
+        $this->config->set_setting('cfg_summative_mgmt', true, \Config::BOOLEAN);
         $responsearray = $this->schedule_response_array();
         $params = $this->schedule_param_array();
         $userid = 1;
@@ -710,7 +710,7 @@ class assessmentmanagementtest extends unittestdatabase {
      */
     public function test_schedule_exception_nomodules() {
         // Test scheduling with invalid modules - non fatal error.
-        $this->config->set('cfg_summative_mgmt', true);
+        $this->config->set_setting('cfg_summative_mgmt', true, \Config::BOOLEAN);
         $responsearray = $this->schedule_response_array();
         $params = $this->schedule_param_array();
         $userid = 1;

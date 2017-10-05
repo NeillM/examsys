@@ -1,0 +1,12 @@
+<div class="config">
+    <div class="configheading">
+        <label for="{{data.setting}}">{{data.setting}}</label>
+        <img src="{{path}}/artwork/tooltip_icon.gif" class="help_tip" title="{{lang.setting}}" />
+    </div>
+    <div class="configvalue">
+        <input type="checkbox" name="{{data.setting}}" id="{{data.setting}}" {{data.checked}} {{data.disabled}} />
+        {% if data.disabled != "" %}
+        <div class="configextra">{{lang.fileoverride}}</div>
+        {% endif %}
+    </div>
+</div>

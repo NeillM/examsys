@@ -177,13 +177,13 @@ class internaldb_auth extends outline_authentication {
 
   function update_password($postauthsuccessobj = '') {
     $configObj = Config::get_instance();
-    
+    $passwordexpire = $configObj->get('core', 'system_password_expire');
     $this->savetodebug('Called update_password');
     if ($this->updatable === true and (!isset($this->settings['donotupdatepassword']) or (isset($this->settings['donotupdatepassword']) and $this->settings['donotupdatepassword'] !== true))) {
-      if ($configObj->get('cfg_password_expire') == null) {
+      if ($passwordexpire == null) {
         $days = 30;   // If there is no setting in the config file, default to 30 days.
       } else {
-        $days = $configObj->get('cfg_password_expire');
+        $days = $passwordexpire;
       }
       $expire = time() + ($days * 24 * 60 * 60);
           

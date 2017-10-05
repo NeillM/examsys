@@ -121,7 +121,7 @@ if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type()
 if ($userObject->has_role(array('External Examiner'))) {
   // No further security checks.
   if (!ReviewUtils::is_external_on_paper($userObject->get_user_ID(), $paperID, $mysqli)) {
-    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
   }
 } elseif (($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObject)) or $userObject->has_role('SysCron')) {
@@ -179,7 +179,7 @@ if ($getuser) {
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff', 'External Examiner'))) {
     $log_metadata = new LogMetadata($getuser, $paperID, $mysqli);
   } else {   // Student is hacking the userid parameter.
-    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
 } else {
@@ -201,7 +201,7 @@ if (!$is_exam_review_mode and !$is_question_preview_mode and !$is_formative_revi
 // Access allowed if user role is staff,student (admins should ensure staff,student users are not students in modules they are staff on)
 if ($userObject->has_role('Student') and !$userObject->has_role('Staff')) {
   if (!$userObject->user_completed_paper($paperID)) {
-    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
   }
 }
@@ -216,7 +216,7 @@ require '../config/finish.inc';
 <meta http-equiv="imagetoolbar" content="no">
 <meta http-equiv="imagetoolbar" content="false">
 
-<title><?php echo $string['examscript'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+<title><?php echo $string['examscript'] . ' ' . $configObject->get_setting('core', 'system_install_type'); ?></title>
 
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/start.css" />

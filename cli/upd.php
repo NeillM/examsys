@@ -33,8 +33,8 @@ $error = PHP_EOL . 'For details about installing Rogo visit: ' . PHP_EOL . 'http
 $language = 'en';
 
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'load_config.php';
-require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $language . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'index.php';
-require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $language . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'version5.php';
+require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $language . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'install.php';
+require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $language . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'update.php';
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $language . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'errors.php';
 
 // Lets look to see what arguments have been passed.
@@ -119,17 +119,17 @@ $updater_utils = new UpdaterUtils($mysqli, $configObject->get('cfg_db_database')
 // Get the code version.
 $version = $configObject->getxml('version');
 // Get the installed version.
-$old_version = $configObject->get('rogo_version');
+$old_version = $configObject->get_setting('core', 'rogo_version');
 if ($version == $old_version) {
   cli_utils::prompt('Nothing to update.');
   exit(0);
 }
-if ($updater_utils->check_version("6.3.0")) {
-  cli_utils::prompt('Please upgrade via the user interface to version 6.3.X before using the command line updater.');
+if ($updater_utils->check_version("6.4.0")) {
+  cli_utils::prompt('Please upgrade via the user interface to version 6.4.X before using the command line updater.');
   exit(0);
 }
 // Get update file dir.
-$migration_path = 'updates' . DIRECTORY_SEPARATOR . 'version5';
+$migration_path = 'updates' . DIRECTORY_SEPARATOR . 'scripts';
 // Check pre-requisites.
 InstallUtils::checkSoftware();
 if (!InstallUtils::configFileIsWriteable()) {
@@ -146,11 +146,8 @@ if (!InstallUtils::configFileIsWriteable()) {
 // Backup the config file before proceeding.
 $updater_utils->backup_file($cfg_web_root, $old_version);
 // Update.
-ob_start();
 cli_utils::prompt($string['startingupdate']);
 cli_utils::prompt("Starting at " . date("H:i:s"));
-ob_flush();
-flush();
 $mysqli->autocommit(false);
 
 // Run individual update files
@@ -222,24 +219,37 @@ $mysqli->commit();
 
 // Update language packs.
 if ($update_langpacks) {
-  InstallUtils::download_langpacks();
+  try {
+    InstallUtils::download_langpacks();
+    cli_utils::prompt($string['langsuccess']);
+  } catch (Exception $e) {
+    switch ($e->getMessage()) {
+      case 'CANNOT_DOWNLOAD_XML':
+        cli_utils::prompt($string['cannotdownloadxml']);
+      case 'CANNOT_DOWNLOAD_ZIP':
+        cli_utils::prompt($string['cannotdownloadzip']);
+        break;
+      default:
+        cli_utils::prompt($string['cannotextract']);
+        break;
+    }
+  }
 }
 
 // Update npm and dependencies.
 if ($update_npm) {
   try {
     $npm_method = npm_utils::INSTALL_NODEV;
+    ob_start();
     npm_utils::setup($npm_method);
+    ob_end_clean();
   } catch (Exception $e) {
     cli_utils::prompt($e->getMessage());
   }
 }
 
 // Final housekeeping activities - put all updates above this line
-$updated = $updater_utils->update_version($version, $string, $cfg_web_root);
-if ($updated !== true) {
-  cli_utils::prompt($string['couldnotwrite']);
-}
+$configObject->set_setting('rogo_version', $version, Config::VERSION);
 $updater_utils->execute_query('FLUSH PRIVILEGES', false);
 $updater_utils->execute_query('TRUNCATE sys_errors', false);
 $mysqli->close();

@@ -26,11 +26,22 @@ require_once '../include/invigilator_auth.inc';
 require_once '../include/errors.php';
 require_once '../include/invigilator_common.inc';
 
-function emergencyNumbers($support_numbers, $string) {
+/**
+ * Render emergency numbers
+ * @param array $string translations
+ */
+function emergencyNumbers($string) {
+  $configObject = Config::get_instance();
+  $contact1 = $configObject->get_setting('core', 'emergency_support_contact1');
+  $contact2 = $configObject->get_setting('core', 'emergency_support_contact2');
+  $contact3 = $configObject->get_setting('core', 'emergency_support_contact3');
+  $contacts = array($contact1, $contact2, $contact3);
   echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; float:right; line-height:100%; margin-right:20px\">\n";
   echo "<tr><td colspan=\"2\" class=\"en\">Emergency Numbers</td></tr>\n";
-  foreach ($support_numbers as $number => $contact) {
-    echo "<tr><td><img src=\"../artwork/phone.png\" width=\"28\" height=\"28\" alt=\"call\" /></td><td><strong>$number</strong><br />$contact</td></tr>\n";
+  foreach ($contacts as $contact) {
+    if (!empty($contact['name']) and !empty($contact['number'])) {
+      echo "<tr><td><img src=\"../artwork/phone.png\" width=\"28\" height=\"28\" alt=\"call\" /></td><td><strong>" . $contact['number'] . "</strong><br />" . $contact['name'] . "</td></tr>\n";
+    }
   }
   echo "</table>\n";
 }
@@ -309,8 +320,8 @@ if ($lab_object !== false) {
   if (isset($_GET['tab'])) {
     echo "$(\"a[rel='paper" . $_GET['tab'] . "']\").click();\n";
   }
-
-  if (in_array('invigilators', $configObject->get('midexam_clarification'))) {
+  $midexam_clarification = $configObject->get_setting('core', 'summative_midexam_clarification');
+  if (in_array('invigilators', $midexam_clarification)) {
     echo "var clarificationCall = setInterval(clarifyMethod, 10000);\n";
   }
 ?>
@@ -326,7 +337,7 @@ if (!$lab_object) {
   $loggerObj->record_access_denied($userObject->get_user_ID(),$string['fatalerrormsg0'], $string['unknowncomputer']);
   echo "<div style=\"background-color:white\">\n";
   echo '<div style="float:right; padding-right:5px"><a href="../logout.php"><img src="../artwork/student_logout.png" width="24" height="24" /></a></div>';
-  emergencyNumbers($configObject->get('emergency_support_numbers'), $string, 68);
+  emergencyNumbers($string);
   echo "<p><img src=\"../artwork/exclamation_48.png\" width=\"48\" height=\"48\" alt=\"!\" style=\"float:left; padding-left:10px; padding-right:10px; padding-bottom:40px\" /><span style=\"font-weight:bold; color:#C00000; font-size:150%\">" . $string['unknowncomputer'] . "</span><br /><br />" . $string['unknowncomputermsg'] . "</p><br clear=\"all\" />";
 
   echo "</div>\n</body></html>";
@@ -512,7 +523,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
                 </td>
                 <td rowspan="5">
                   <?php
-                    emergencyNumbers($configObject->get('emergency_support_numbers'), $string);
+                    emergencyNumbers($string);
                   ?>
                 </td>
               </tr>
@@ -547,7 +558,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
             </table>
           </div>
         <?php
-        if (in_array('invigilators', $configObject->get('midexam_clarification'))) {
+        if (in_array('invigilators', $midexam_clarification)) {
           echo "<div id=\"clarifymsgtbl\" class=\" cohortlist\" style=\"float:left; width:50%\"><table cellpadding=\"2\" cellspacing=\"0\" style=\"width:100%; line-height:150%\">\n<tr><th>" . $string['midexamclarifications'] . "</th></tr>\n</table>\n";
           echo "<div id=\"msg$property_id\" class=\"clarifymsg\"><span class=\"blankclarification\">" . $string['examquestionclarifications'] . "</span></div>\n</div>\n";
           echo '<div id="store_' . $property_id . '" style="display: none;"></div>';
@@ -588,7 +599,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
 } else {
   echo "<div style=\"background-color:white\">\n";
   echo '<div style="float:right; padding-right:5px"><a href="../logout.php"><img src="../artwork/student_logout.png" width="24" height="24" /></a></div>';
-  emergencyNumbers($configObject->get('emergency_support_numbers'), $string, 68);
+  emergencyNumbers($string);
   echo "<p><img src=\"../artwork/exclamation_48.png\" width=\"48\" height=\"48\" alt=\"!\" style=\"float:left; padding-left:10px; padding-right:10px\" /><span style=\"font-weight:bold; color:#C00000; font-size:150%\">" . $string['nopapersfound'] . "</span><br /><br />" . $string['nopapersfoundmsg'] . "</p><br clear=\"all\" />";
 
   echo "</div>\n";

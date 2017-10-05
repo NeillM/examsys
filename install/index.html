@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="content-type" content="text/html;charset=utf-8" />
+    <title>Rog&#333;: System Installation</title>
+    <link rel="stylesheet" type="text/css" href="../css/body.css" />
+    <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
+    <link rel="stylesheet" type="text/css" href="../css/header.css" />
+    <link rel="stylesheet" type="text/css" href="../css/requirements.css" />
+    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../js/requirements.min.js"></script>
+    <script>
+      $(document).ready(function(){
+        $("#requirementslist").load("../requirements/requirements.php");
+      });
+    </script>
+  </head>
+  <body>
+    <table cellpadding="0" cellspacing="0" border="0" class="header">
+        <tr>
+            <th style="padding-top:4px; padding-bottom:4px; padding-left:16px">
+                <img class="logo_img" src="../artwork/r_logo.gif" alt="logo" />
+                <div class="logo_lrg_txt">Rog&#333;</div>
+                <div class="logo_small_txt">System Installation</div>
+            </th>
+            <th style="text-align:right; padding-right:10px">
+                <img src="../artwork/software_64.png" width="64" height="64" alt="Install Icon" />
+            </th>
+        </tr>
+    </table>
+    <div class = "requirements">
+      <div id = "requirementstitle" class = "requirements-item">
+        <h3>Checking Rog&#333; requirements</h3>
+      </div>
+      <div id = "requirementslist" class = "requirements-item">
+        <p>Please wait this may take a few minutes.</p>
+        <img id ="checking" src="../artwork/large_spin.gif" alt="Checking"/>
+      </div>
+      <div id = "requirementslist" class = "requirements-item">
+        <footer>
+          <small>&copy; 2017 University of Nottingham. Licensed under 
+            <a href = "http://www.gnu.org/licenses/gpl.html" target = "_blank">
+              GPL v3.0 
+            </a>
+          </small>
+        </footer>
+      </div>
+    </div>
+  </body>
+</html>

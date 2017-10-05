@@ -251,19 +251,19 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
         <p><?php echo $string['summativetestmsg'] ?></p>
       <?php
       $staff_module = '';
+      $hourwarning = $configObject->get_setting('core', 'summative_hour_warning');
       foreach ($papers as $moduleID => $paper_list) {
         if ($moduleID != $staff_module) {
           $staff_module = $moduleID;
           echo "<table style=\"clear:both; font-size:100%\"><tr><td class=\"subsect\"><nobr>$moduleID</nobr></td><td style=\"width:98%\"><hr class=\"head-line\" /></td></tr></table>\n";
         }
         foreach ($paper_list as $paper) {
-					$warnings = array();
-					
+          $warnings = array();
           $screen_plural = ($paper['screens'] > 1) ? 'screens' : 'screen';
           $start_hour = substr($paper['start_date'], 11, 2);
-					if (intval($start_hour) < $configObject->get('cfg_hour_warning')) {
-					  $warnings[] = sprintf($string['startwarning'], $configObject->get('cfg_hour_warning'));
-					}
+          if (intval($start_hour) < $hourwarning) {
+            $warnings[] = sprintf($string['startwarning'], $hourwarning);
+          }
 
           $labs = get_labs($mysqli, $paper['labs']);
           $lab_html = display_labs($labs, $computer_lab_short, $string, $warnings);

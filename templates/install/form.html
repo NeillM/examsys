@@ -1,0 +1,361 @@
+<form id="installForm" class="cmxform" method="post" action="{{data.action}}" autocomplete="off">
+    <table class="h">
+        <tr>
+            <td><nobr>{{lang.company}}</nobr></td>
+            <td class="line"><hr /></td>
+        </tr>
+    </table>
+    <div>
+        <label for="company_name">{{lang.companyname}}</label>
+        <input type="text" id="company_name" name="company_name" value="University of" class="required" minlength="2" />
+    </div>
+    <table class="h">
+        <tr>
+            <td><nobr>{{lang.server}}</nobr></td>
+            <td class="line"><hr /></td>
+        </tr>
+    </table>
+    <br />
+    <div>
+        <label for="web_host">{{lang.webhost}}</label>
+        <input type="text" value="127.0.0.1" id="web_host" name="web_host" class="required" minlength="3" maxlength="10" />
+    </div>
+    <div>
+        <label for="rogo_data">{{lang.datadirectory}}</label>
+        <input type="text" id="rogo_data" name="rogo_data" value="{{data.dirsep}}" />
+    </div>
+    <div>
+        <label for="tmpdir">{{lang.tempdirectory}}</label>
+        <input type="text" id="tmpdir" name="tmpdir" value="/tmp/" />
+    </div>
+    <table class="h">
+        <tr>
+            <td><nobr>{{lang.databaseadminuser}}</nobr></td>
+            <td class="line"><hr /></td>
+        </tr>
+    </table>
+    <div>
+        {{lang.needusername}}
+    </div>
+    <br />
+    <div>
+        <label for="mysql_admin_user">{{lang.dbusername}}</label>
+        <input type="text" value="" id="mysql_admin_user" name="mysql_admin_user" class="required" minlength="2" />
+    </div>
+    <div>
+        <label for="mysql_admin_pass">{{lang.dbpassword}}</label>
+        <input type="password" value="" id="mysql_admin_pass" name="mysql_admin_pass"/>
+    </div>
+    <table class="h">
+        <tr>
+            <td><nobr>{{lang.databasesetup}}</nobr></td>
+            <td class="line"><hr /></td>
+        </tr>
+    </table>
+    <br />
+    <div>
+        <label for="mysql_db_host">{{lang.databasehost}}</label>
+        <input type="text" value="127.0.0.1" id="mysql_db_host" name="mysql_db_host" class="required" />
+    </div>
+    <div>
+        <label for="mysql_db_port">{{lang.databaseport}}</label>
+        <input type="text" value="3306" id="mysql_db_port" name="mysql_db_port" class="required" />
+    </div>
+    <div>
+        <label for="mysql_db_name">{{lang.databasename}}</label>
+        <input type="text" value="rogo" id="mysql_db_name" name="mysql_db_name" class="required" minlength="3" />
+    </div>
+    <div>
+        <label for="mysql_db_engine">{{lang.databaseengine}}</label>
+        <select id="mysql_db_engine" name="mysql_db_engine" class="required">
+            <option value="InnoDB" selected>InnoDB</option>
+            <option value="ndbcluster">ndbcluster</option>
+        </select>
+        <img src="../artwork/tooltip_icon.gif" class="help_tip" title="{{lang.databaseenginetooltip}}" />
+    </div>
+    <div>
+        <label for="mysql_db_help_engine">{{lang.databasehelpengine}}</label>
+        <select id="mysql_db_help_engine" name="mysql_db_help_engine" class="required">
+            <option value="InnoDB">InnoDB</option>
+            <option value="MyISAM" selected>MyISAM</option>
+            <option value="ndbcluster">ndbcluster</option>
+        </select>
+        <img src="../artwork/tooltip_icon.gif" class="help_tip" title="{{lang.helpdatabaseenginetooltip}}" />
+    </div>
+    <div>
+        <label for="mysql_baseusername">{{lang.rdbbasename}}</label>
+        <input type="text" value="rogo" id="mysql_baseusername" name="mysql_baseusername" class="required" minlength="3" maxlength="10" />
+    </div>
+    <table class="h">
+        <tr>
+            <td><nobr>{{lang.timedateformats}}</nobr></td>
+            <td class="line"><hr /></td>
+        </tr>
+    </table>
+    <div>
+        <label for="cfg_short_date">{{lang.date}}</label>
+        <input type="text" id="cfg_short_date" name="cfg_short_date" class="required" minlength="2" value="%d/%m/%y" />
+    </div>
+    <div>
+        <label for="cfg_long_date">{{lang.longdate}}</label>
+        <input type="text" id="cfg_long_date" name="cfg_long_date" class="required" minlength="2" value="%d/%m/%Y" />
+    </div>
+    <div>
+        <label for="cfg_long_date_time">{{lang.longdatetime}}</label>
+        <input type="text" id="cfg_long_date_time" name="cfg_long_date_time" class="required" value="%d/%m/%Y %H:%i" />
+    </div>
+    <div>
+        <label for="cfg_short_date_time">{{lang.shortdatetime}}</label>
+        <input type="text" id="cfg_short_date_time" name="cfg_short_date_time" class="required" value="%d/%m/%y %H:%i" />
+    </div>
+    <div>
+        <label for="cfg_long_date_php">{{lang.longdatephp}}</label>
+        <input type="text" id="cfg_long_date_php" name="cfg_long_date_php" class="required" value="d/m/Y" />
+    </div>
+    <div>
+        <label for="cfg_short_date_php">{{lang.shortdatephp}}</label>
+        <input type="text" id="cfg_short_date_php" name="cfg_short_date_php" class="required" value="d/m/y" />
+    </div>
+    <div>
+        <label for="cfg_long_time_php">{{lang.longtimephp}}</label>
+        <input type="text" id="cfg_long_time_php" name="cfg_long_time_php" class="required" value="H:i:s" />
+    </div>
+    <div>
+        <label for="cfg_short_time_php">{{lang.shorttimephp}}</label>
+        <input type="text" id="cfg_short_time_php" name="cfg_short_time_php" class="required" value="H:i" />
+    </div>
+    <div>
+        <label for="cfg_search_leadin_length">{{lang.searchleadinlength}}</label>
+        <input type="text" id="cfg_search_leadin_length" name="cfg_search_leadin_length" value="160" />
+    </div>
+    <div>
+        <label for="cfg_timezone">{{lang.currenttimezone}}</label>
+        <select id="cfg_timezone" name="cfg_timezone">
+        {% for code,name in data.timezones %}
+            {% if code == data.defaulttz %}
+            <option value="{{code}}" selected>{{name}}</option>
+            {% else %}
+            <option value="{{code}}">{{name}}</option>
+            {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+    <table class="h">
+        <tr>
+            <td><nobr>{{lang.authentication}}</nobr></td>
+            <td class="line"><hr /></td>
+        </tr>
+    </table>
+    <div>
+        <label for="useLti">{{lang.allowlti}}</label>
+        <input id="useLti" name="useLti" type="checkbox" checked="checked" />
+        <img src="../artwork/tooltip_icon.gif" class="help_tip" title="Allow authentication from successful LTI launch" />
+    </div>
+    <br />
+    <div>
+        <label for="useInternal">{{lang.allowintdb}}</label>
+        <input id="useInternal" name="useInternal" type="checkbox" checked="checked" />
+        <img src="../artwork/tooltip_icon.gif" class="help_tip" title="Allow authentication from internal Rogo user database" />
+    </div>
+    <br />
+    <div>
+        <label for="useGuest">{{lang.allowguest}}</label>
+        <input id="useGuest" name="useGuest" type="checkbox" checked="checked" />
+        <img src="../artwork/tooltip_icon.gif" class="help_tip" title="Allow guest temporary accouts for students who forget their normal log in details" />
+    </div>
+    <br />
+    <br />
+    <div>
+        <label for="useImpersonation">{{lang.allowimpersonation}}</label>
+        <input id="useImpersonation" name="useImpersonation" type="checkbox" checked="checked" />
+        <img src="../artwork/tooltip_icon.gif" class="help_tip" title="Allow SysAdmin users to impersonate other users" />
+    </div><br clear="all" />
+    <br />
+    <div>
+        <label for="useLdap">{{lang.useldap}}</label>
+        <input id="useLdap" name="useLdap" type="checkbox" />
+    </div>
+    <div id="ldapOptions" style="display:none">
+    <br/>
+    <div>
+        <label for="ldap_server">{{lang.ldapserver}}</label>
+        <input type="text" value="" id="ldap_server" name="ldap_server" />
+    </div>
+    <div>
+        <label for="ldap_search_dn">{{lang.searchdn}}></label>
+        <input type="text" value="" id="ldap_search_dn" name="ldap_search_dn" />
+    </div>
+    <div><label for="ldap_bind_rdn">{{lang.bindusername}}</label>
+        <input type="text" value="" id="ldap_bind_rdn" name="ldap_bind_rdn" />
+    </div>
+    <div>
+        <label for="ldap_bind_password">{{lang.bindpassword}}</label>
+        <input type="password" value="" id="ldap_bind_password" name="ldap_bind_password" />
+    </div>
+    <div>
+        <label for="ldap_user_prefix">{{lang.userprefix}}</label>
+        <input type="text" value="" id="ldap_user_prefix" name="ldap_user_prefix" />
+        <img src="../artwork/tooltip_icon.gif" class="help_tip" title="{{lang.userprefixtip}}" />
+    </div>
+    </div>
+    <table class="h">
+        <tr>
+            <td><nobr>{{lang.lookup}}</nobr></td>
+            <td class="line"><hr /></td>
+        </tr>
+    </table>
+    <div>
+        <label for="uselookupLdap">{{lang.useldap}}</label>
+        <input id="uselookupLdap" name="uselookupLdap" type="checkbox" />
+    </div>
+    <div id="ldaplookupOptions" style="display:none;">
+        <br/>
+        <div>
+            <label for="ldap_lookup_server">{{lang.ldapserver}}</label>
+            <input type="text" value="" id="ldap_lookup_server" name="ldap_lookup_server" />
+        </div>
+        <div>
+            <label for="ldap_lookup_search_dn">{{lang.searchdn}}</label>
+            <input type="text" value="" id="ldap_lookup_search_dn" name="ldap_lookup_search_dn" />
+        </div>
+        <div>
+            <label for="ldap_lookup_bind_rdn">{{lang.bindusername}}</label>
+            <input type="text" value="" id="ldap_lookup_bind_rdn" name="ldap_lookup_bind_rdn" />
+        </div>
+        <div>
+            <label for="ldap_lookup_bind_password">{{lang.bindpassword}}</label>
+            <input type="password" value="" id="ldap_lookup_bind_password" name="ldap_lookup_bind_password" />
+        </div>
+        <div>
+            <label for="ldap_lookup_user_prefix">{{lang.userprefix}}</label>
+            <input type="text" value="" id="ldap_lookup_user_prefix" name="ldap_lookup_user_prefix" />
+            <img src="../artwork/tooltip_icon.gif" class="help_tip" title="{{lang.userprefixtip}}" />
+        </div>
+    </div>
+    <br clear="all" />
+    <div>
+        <label for="uselookupXML">{{lang.allowlookupXML}}</label>
+        <input id="uselookupXML" name="uselookupXML" type="checkbox" />
+        <img src="../artwork/tooltip_icon.gif" class="help_tip" title="Allow guest temporary accouts for students who forget their normal log in details" />
+    </div>
+    <br clear="all" />
+    <br />
+    <table class="h">
+        <tr>
+            <td><nobr>{{lang.sysadminuser}}</nobr></td>
+            <td class="line"><hr /></td>
+        </tr>
+    </table>
+    <div>
+        {{lang.initialsysadmin}}
+    </div>
+    <br />
+    <div>
+        <label for="SysAdmin_title">{{lang.title}}</label>
+        <select id="SysAdmin_title" name="SysAdmin_title" class="required">
+            {% for title in data.titles %}
+            <option value="{{title}}" selected>{{title}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div>
+        <label for="SysAdmin_first">{{lang.firstname}}</label>
+        <input type="text" value="" name="SysAdmin_first" id="SysAdmin_first" class="required" />
+    </div>
+    <div>
+        <label for="SysAdmin_last">{{lang.surname}}</label>
+        <input type="text" value="" id="SysAdmin_last" name="SysAdmin_last" class="required" minlength="3" />
+    </div>
+    <div>
+        <label for="SysAdmin_email">{{lang.emailaddress}}</label>
+        <input type="text" value="" id="SysAdmin_email" name="SysAdmin_email" class="required email" />
+    </div>
+    <div>
+        <label for="SysAdmin_username">{{lang.username}}</label>
+        <input type="text" value="" id="SysAdmin_username" name="SysAdmin_username" class="required" minlength="3" />
+    </div>
+    <div>
+        <label for="SysAdmin_password">{{lang.password}}</label>
+        <input type="password" value="" id="SysAdmin_password" name="SysAdmin_password" class="required" minlength="8" />
+    </div>
+    <table class="h">
+        <tr>
+            <td><nobr>{{lang.helpdb}}</nobr></td>
+            <td class="line"><hr /></td>
+        </tr>
+    </table>
+    <div>
+        <label for="loadHelp">{{lang.loadhelp}}</label>
+        <input id="loadHelp" name="loadHelp" type="checkbox" checked="checked" />
+    </div>
+    {% if data.loadlangpacks == "true" %}
+    <table class="h">
+        <tr>
+            <td><nobr>{{lang.translationpack}}</nobr></td>
+            <td class="line"><hr /></td>
+        </tr>
+    </table>
+    <div>
+        <label for="loadtranslations">{{lang.loadtranslations}}</label>
+        <input id="loadtranslations" name="loadtranslations" type="checkbox"/>
+    </div>
+    <br/>
+    <br/>
+    <div>
+        {{lang.manualtranslations}} <a target="_blank" href = "{{lang.translationsurl}} ">here</a>
+    </div>
+    {% endif %}
+    <table class="h">
+        <tr>
+            <td><nobr>{{lang.labsecuritytype}}</nobr></td>
+            <td class="line"><hr /></td>
+        </tr>
+    </table>
+    <div>
+        <label>{{lang.IP}}</label>
+        <input name="labsecuritytype" value="ipaddress" type="radio" checked = "checked" />
+        <img src="../artwork/tooltip_icon.gif" class="help_tip" title="Rogo can lock summative exams to either IP address or hostname. If your institution uses static IPs then chose IP address otherwise chose hostname. " />
+    </div>
+    <div>
+        <label>{{lang.hostname}}</label>
+        <input name="labsecuritytype" type="radio" value="hostname" />
+    </div>
+    <table class="h">
+        <tr>
+            <td><nobr>{{lang.supportemail}}</nobr></td>
+            <td class="line"><hr /></td>
+        </tr>
+    </table>
+    <br />
+    <div>
+        <label for="support_email">{{lang.supportemailaddress}}</label>
+        <input type="text" value="" id="support_email" name="support_email" class="" class="email" />
+    </div>
+    <table class="h">
+        <tr>
+            <td><nobr>{{lang.supportnumbers}}</nobr></td>
+            <td class="line"><hr /></td>
+        </tr>
+    </table>
+    <div>
+        <label for="emergency_support1">{{lang.name}}</label>
+        <input type="text" value="" id="emergency_support1" name="emergency_support1" class="" />
+        {{lang.number}}
+        <input type="text" value="" name="emergency_support_number1" class="" />
+    </div>
+    <div>
+        <label for="emergency_support2">{{lang.name}}</label>
+        <input type="text" value="" id="emergency_support2" name="emergency_support2" class="" />
+        {{lang.number}}
+        <input type="text" value="" name="emergency_support_number2" class="" />
+    </div>
+    <div>
+        <label for="emergency_support3">{{lang.name}}</label>
+        <input type="text" value="" id="emergency_support3" name="emergency_support3" class="" />
+        {{lang.number}}
+        <input type="text" value="" name="emergency_support_number3" class="" />
+    </div>
+    <div class="submit">
+        <input type="submit" name="install" value="{{lang.install}}" class="ok" />
+    </div>
+</form>

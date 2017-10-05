@@ -34,7 +34,7 @@ $paper_types = array('formative', 'progress', 'summative', 'survey', 'osce', 'of
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title><?php echo $string['createnewpaper'] . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo $string['createnewpaper'] . $configObject->get_setting('core', 'system_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/new_paper.css" />
@@ -160,7 +160,7 @@ if (isset($_GET['module'])) {
   $yearutils = new yearutils($mysqli);
   $default_academic_year = $yearutils->get_current_session($module_details['academic_year_start']);
 } else {
-  $default_academic_year = $configObject->get('cfg_academic_year_start');
+  $default_academic_year = $configObject->get_setting('core', 'system_academic_year_start');
 }
 ?>
 <input type="hidden" name="default_academic_year" value="<?php echo $default_academic_year ?>" />

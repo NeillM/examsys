@@ -71,6 +71,12 @@ Class LangUtils {
     $lang_path = "{$cfg_web_root}lang/$language/" . $file;
     if (file_exists($lang_path)) {
       require $lang_path;
+    } elseif ($language != 'en') {
+      // Revert to english if lang pack file not installed.
+      $lang_path = $cfg_web_root . 'lang/en/' . $file;
+      if (file_exists($lang_path)) {
+        require $lang_path;
+      }
     }
     return $string;
   }

@@ -425,7 +425,7 @@ if (isset($_POST['Submit'])) {
       $_POST['timezone'] = $properties->get_timezone();
     }
 
-    if (($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin','Admin'))) or !$configObject->get('cfg_summative_mgmt') or  $properties->get_paper_type() != '2') {
+    if (($configObject->get_setting('core', 'cfg_summative_mgmt') and $properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin','Admin'))) or !$configObject->get_setting('core', 'cfg_summative_mgmt') or  $properties->get_paper_type() != '2') {
   		$local_time = new DateTimeZone($configObject->get('cfg_timezone'));
   		$target_timezone = new DateTimeZone($_POST['timezone']);
 
@@ -947,7 +947,7 @@ if ($properties->get_end_date() != '') {
   $end_date = '';
 }
 
-if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() == '2' and !$userObject->has_role(array('SysAdmin', 'Admin'))) {
+if ($configObject->get_setting('core', 'cfg_summative_mgmt') and $properties->get_paper_type() == '2' and !$userObject->has_role(array('SysAdmin', 'Admin'))) {
   $sum_disabled = ' disabled';
 } elseif ($userObject->has_role('Admin') and $locked) {
   $sum_disabled = ' disabled';
@@ -962,7 +962,7 @@ if ($configObject->get('cfg_summative_mgmt') and $properties->get_paper_type() =
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title><?php echo $string['propertiestitle'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo $string['propertiestitle'] . ' ' . $configObject->get_setting('core', 'system_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css"/>
   <link rel="stylesheet" type="text/css" href="../css/header.css"/>
@@ -1951,7 +1951,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     echo "<input type=\"hidden\" name=\"module_no\" id=\"module_no\" value=\"$module_no\" /></div>\n";
     echo "</td>\n";
 
-    echo "<td>" . output_labs($properties->get_labs(), $configObject->get('cfg_summative_mgmt'), $properties->get_paper_type(), $userObject, $changed_labs, $mysqli) . "</td></tr>\n";
+    echo "<td>" . output_labs($properties->get_labs(), $configObject->get_setting('core', 'cfg_summative_mgmt'), $properties->get_paper_type(), $userObject, $changed_labs, $mysqli) . "</td></tr>\n";
 
   ?>
   <tr><td class="headbar" style="padding:2px" colspan="2">&nbsp;<?php echo $string['restricttometadata']; ?></td></tr>

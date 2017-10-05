@@ -80,16 +80,16 @@ $display_deadline = $external_review_deadline->format('l jS M Y');
   $external_details = UserUtils::get_user_details($externalID, $mysqli);
   
   $to = $external_details['email'];
-
+  $cfgcompany = $configObject->get_setting('core', 'misc_company');
   if ($mode == 0) {
     $message = $string['message0'];
-    $subject = sprintf($string['subject_msg0'], $configObject->get('cfg_company'));
+    $subject = sprintf($string['subject_msg0'], $cfgcompany);
   } elseif ($mode == 1) {
     $message = $string['message1'];    
-    $subject = sprintf($string['subject_msg1'], $configObject->get('cfg_company'));
+    $subject = sprintf($string['subject_msg1'], $cfgcompany);
   } else {
     $message = $string['message2'];
-    $subject = sprintf($string['subject_msg2'], $configObject->get('cfg_company'));
+    $subject = sprintf($string['subject_msg2'], $cfgcompany);
   }
   $message = str_replace('$users_name', $userObject->get_first_first_name(), $message);
   $message = str_replace('$support_email', $support_email, $message);
@@ -100,7 +100,7 @@ $display_deadline = $external_review_deadline->format('l jS M Y');
   $message = str_replace('$external_first_name', $external_details['first_name'], $message);
   $message = str_replace('$external_title', $external_details['title'], $message);
   $message = str_replace('$logo_path', $logo_path, $message);
-  $message = str_replace('$cfg_company', $configObject->get('cfg_company'), $message);
+  $message = str_replace('$cfg_company', $cfgcompany, $message);
     
   require '../include/toprightmenu.inc';
 	echo draw_toprightmenu();

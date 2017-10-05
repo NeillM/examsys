@@ -82,7 +82,7 @@
 
 <div class="popup" style="z-index:20; font-size:90%; background-color:white; top:120px; width:630px; height:346px" id="copy_submenu" onclick="showCopyMenu(true, event);">
 <?php
-if ($configObject->get('cfg_summative_mgmt')) {
+if ($configObject->get_setting('core', 'cfg_summative_mgmt')) {
   echo '<form method="post" action="../paper/copy.php" onsubmit="return checkCopyForm()" autocomplete="off">';
 } else {
   echo '<form method="post" action="../paper/copy.php" autocomplete="off">';
@@ -162,7 +162,7 @@ if ($configObject->get('cfg_summative_mgmt')) {
 </tr>
 <tr>
 <?php
-if ($properties->get_paper_type() == '2' and $configObject->get('cfg_summative_mgmt')) {
+if ($properties->get_paper_type() == '2' and $configObject->get_setting('core', 'cfg_summative_mgmt')) {
   echo '<td align="center" colspan="5"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" /><input type="button" class="ok" value="' . $string['next'] . '" name="next" onclick="nextTable();" id="next_button" /><input type="submit" class="ok" style="display:none" value="' . $string['copypaper'] . '" name="submit" id="submit_button" /></td>';
 } else {
   echo '<td align="center" colspan="5"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" /><input type="button" class="ok" style="display:none" value="' . $string['next'] . '" name="next" onclick="nextTable();" id="next_button" /><input type="submit" class="ok" value="' . $string['copypaper'] . '" name="submit" id="submit_button" onclick="checkName()" /></td>';

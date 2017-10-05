@@ -1,11 +1,40 @@
-td {text-align:left}
-.field {text-align:right; padding-right:10px}
-.fieldheader {text-align:left; padding-right:10px; font-weight: bold}
-.form-error {
-  width: 468px;
-  margin: 18px auto;
-  padding: 16px;
-  background-color: #FFD9D9;
-  color: #800000;
-  border: 2px solid #800000;
+.configlist {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+}
+.config {
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  background-color: #eef4ff;
+  border-radius: 5px;
+  border: none;
+  padding: 5px;
+}
+.configheading {
+  font-weight: bold;
+  font-size: 1.1em;
+  margin-left: 5px;
+}
+.configvalue {
+  font-size: 1em;
+  display: grid;
+  margin-right: 5px;
+}
+.configextra {
+  font-style: italic;
+  font-size: 1em;
+}
+.configarea {
+  margin: auto;
+  font-weight: bold;
+  font-size: 1.3em;
+}
+.configareaextra {
+  font-weight: normal;
+  font-size: 1em;
+}
+#display_ims {
+    display: none;
 }

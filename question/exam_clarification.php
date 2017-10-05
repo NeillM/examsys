@@ -30,7 +30,7 @@ $paperID = check_var('paperID', 'REQUEST', true, false, true);
 // Check the paperID exists
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
-$clarif_types = $configObject->get('midexam_clarification');
+$clarif_types = $configObject->get_setting('core', 'summative_midexam_clarification');
 if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->is_live() and $properties->get_bidirectional() == '1' and count($clarif_types) > 0) {
   $exam_clarifications = true;  
 } else {
@@ -41,14 +41,14 @@ if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdm
 // Check if paper is Summative Exam.
 // Check if paper is not live.
 if (!$exam_clarifications) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 // Check that the questionID exists
 $q_id = check_var('q_id', 'REQUEST', true, false, true);
 if (!QuestionUtils::question_exists($q_id, $mysqli)) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
@@ -67,7 +67,7 @@ if (isset($_POST['submit'])) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title><?php echo $string['midexamclarification'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo $string['midexamclarification'] . ' ' . $configObject->get_setting('core', 'system_install_type'); ?></title>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
@@ -100,7 +100,7 @@ exit();
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-  <title><?php echo $string['midexamclarification'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo $string['midexamclarification'] . ' ' . $configObject->get_setting('core', 'system_install_type'); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">

@@ -145,161 +145,21 @@ Class InstallUtils {
 
   static function displayForm() {
     global $string, $language, $timezone_array;
-
     $configObject = Config::get_instance();
-    ?>
-    <script type="text/javascript" src="../js/system_tooltips.js"></script>
-    <script>
-      $(function () {
-        $("#installForm").validate();
-
-        $('#useLdap').change(function() {
-          $('#ldapOptions').toggle();
-        });
-
-        $('#uselookupLdap').change(function() {
-          $('#ldaplookupOptions').toggle();
-        });
-      });
-    </script>
-    <form id="installForm" class="cmxform" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" autocomplete="off">
-
-      <table class="h"><tr><td><nobr><?php echo $string['company']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="company_name"><?php echo $string['companyname']; ?></label> <input type="text" id="company_name" name="company_name" value="University of" class="required" minlength="2" /></div>
-
-      <table class="h"><tr><td><nobr><?php echo $string['server']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <br />
-        <div><label for="web_host"><?php echo $string['webhost']; ?></label> <input type="text" value="127.0.0.1" id="web_host" name="web_host" class="required" minlength="3" maxlength="10" /></div>
-        <div><label for="rogo_data"><?php echo $string['datadirectory']; ?></label> <input type="text" id="rogo_data" name="rogo_data" value="<?php echo dirname(__DIR__) . DIRECTORY_SEPARATOR ?>" /></div>
-        <div><label for="tmpdir"><?php echo $string['tempdirectory']; ?></label> <input type="text" id="tmpdir" name="tmpdir" value="/tmp/" /></div>
-
-      <table class="h"><tr><td><nobr><?php echo $string['databaseadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><?php echo $string['needusername']; ?></div>
-        <br />
-        <div><label for="mysql_admin_user"><?php echo $string['dbusername']; ?></label> <input type="text" value="" id="mysql_admin_user" name="mysql_admin_user" class="required" minlength="2" /></div>
-        <div><label for="mysql_admin_pass"><?php echo $string['dbpassword']; ?></label> <input type="password" value="" id="mysql_admin_pass" name="mysql_admin_pass"/></div>
-
-        <table class="h"><tr><td><nobr><?php echo $string['databasesetup']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <br />
-        <div><label for="mysql_db_host"><?php echo $string['databasehost']; ?></label> <input type="text" value="127.0.0.1" id="mysql_db_host" name="mysql_db_host" class="required" /></div>
-        <div><label for="mysql_db_port"><?php echo $string['databaseport']; ?></label> <input type="text" value="3306" id="mysql_db_port" name="mysql_db_port" class="required" /></div>
-        <div><label for="mysql_db_name"><?php echo $string['databasename']; ?></label> <input type="text" value="rogo" id="mysql_db_name" name="mysql_db_name" class="required" minlength="3" /></div>
-        <div><label for="mysql_db_engine"><?php echo $string['databaseengine']; ?></label> <select id="mysql_db_engine" name="mysql_db_engine" class="required">
-          <option value="InnoDB" selected>InnoDB</option>
-          <option value="ndbcluster">ndbcluster</option>
-        </select><img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['databaseenginetooltip']; ?>" /></div>
-        <div><label for="mysql_db_help_engine"><?php echo $string['databasehelpengine']; ?></label> <select id="mysql_db_help_engine" name="mysql_db_help_engine" class="required">
-          <option value="InnoDB">InnoDB</option>
-          <option value="MyISAM" selected>MyISAM</option>
-          <option value="ndbcluster">ndbcluster</option>
-        </select><img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['helpdatabaseenginetooltip']; ?>" /></div>
-        <div><label for="mysql_baseusername"><?php echo $string['rdbbasename']; ?></label> <input type="text" value="rogo" id="mysql_baseusername" name="mysql_baseusername" class="required" minlength="3" maxlength="10" /></div>
-
-      <table class="h"><tr><td><nobr><?php echo $string['timedateformats']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-<?php
-$mysql_date_url = 'http://dev.mysql.com/doc/refman/5.1/en/date-and-time-functions.html#function_date-format';
-$php_date_url = 'http://www.php.net/manual/en/function.date.php';
-?>
-        <div><label for="cfg_short_date"><?php echo sprintf($string['date'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_short_date" name="cfg_short_date" class="required" minlength="2" value="%d/%m/%y" /></div>
-        <div><label for="cfg_long_date"><?php echo sprintf($string['longdate'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_long_date" name="cfg_long_date" class="required" minlength="2" value="%d/%m/%Y" /></div>
-        <div><label for="cfg_long_date_time"><?php echo sprintf($string['longdatetime'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_long_date_time" name="cfg_long_date_time" class="required" value="%d/%m/%Y %H:%i" /></div>
-        <div><label for="cfg_short_date_time"><?php echo sprintf($string['shortdatetime'], '<a href="' . $mysql_date_url . '" target="_blank">MySQL</a>'); ?></label> <input type="text" id="cfg_short_date_time" name="cfg_short_date_time" class="required" value="%d/%m/%y %H:%i" /></div>
-        <div><label for="cfg_long_date_php"><?php echo sprintf($string['longdatephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_long_date_php" name="cfg_long_date_php" class="required" value="d/m/Y" /></div>
-        <div><label for="cfg_short_date_php"><?php echo sprintf($string['shortdatephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_short_date_php" name="cfg_short_date_php" class="required" value="d/m/y" /></div>
-        <div><label for="cfg_long_time_php"><?php echo sprintf($string['longtimephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_long_time_php" name="cfg_long_time_php" class="required" value="H:i:s" /></div>
-        <div><label for="cfg_short_time_php"><?php echo sprintf($string['shorttimephp'], '<a href="' . $php_date_url . '" target="_blank">PHP</a>'); ?></label> <input type="text" id="cfg_short_time_php" name="cfg_short_time_php" class="required" value="H:i" /></div>
-        <div><label for="cfg_search_leadin_length"><?php echo $string['searchleadinlength']; ?></label> <input type="text" id="cfg_search_leadin_length" name="cfg_search_leadin_length" value="160" /></div>
-        <div><label for="cfg_timezone"><?php echo $string['currenttimezone']; ?></label> <select id="cfg_timezone" name="cfg_timezone">
-        <?php
-          $default_timezone = date_default_timezone_get();
-          if ($default_timezone == 'UTC') $default_timezone = 'Europe/London';
-          foreach ($timezone_array as $individual_zone => $display_zone) {
-            if ($individual_zone == $default_timezone) {
-              echo "<option value=\"$individual_zone\" selected>$display_zone</option>";
-            } else {
-              echo "<option value=\"$individual_zone\">$display_zone</option>";
-            }
-          }
-        ?>
-        </select></div>
-
-        <table class="h"><tr><td><nobr><?php echo $string['authentication']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="useLti"><?php echo $string['allowlti']; ?></label><input id="useLti" name="useLti" type="checkbox" checked="checked" /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Allow authentication from successful LTI launch" /></div><br />
-        <div><label for="useInternal"><?php echo $string['allowintdb']; ?></label><input id="useInternal" name="useInternal" type="checkbox" checked="checked" /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Allow authentication from internal Rogo user database" /></div><br />
-        <div><label for="useGuest"><?php echo $string['allowguest']; ?></label><input id="useGuest" name="useGuest" type="checkbox" checked="checked" /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Allow guest temporary accouts for students who forget their normal log in details" /></div><br /><br />
-        <div><label for="useImpersonation"><?php echo $string['allowimpersonation']; ?></label><input id="useImpersonation" name="useImpersonation" type="checkbox" checked="checked" /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Allow SysAdmin users to impersonate other users" /></div><br clear="all" /><br />
-        <div><label for="useLdap"><?php echo $string['useldap']; ?></label><input id="useLdap" name="useLdap" type="checkbox" /></div>
-        <div id="ldapOptions" style="display:none">
-          <br/>
-          <div><label for="ldap_server"><?php echo $string['ldapserver']; ?></label> <input type="text" value="" id="ldap_server" name="ldap_server" /></div>
-          <div><label for="ldap_search_dn"><?php echo $string['searchdn']; ?></label> <input type="text" value="" id="ldap_search_dn" name="ldap_search_dn" /></div>
-          <div><label for="ldap_bind_rdn"><?php echo $string['bindusername']; ?></label> <input type="text" value="" id="ldap_bind_rdn" name="ldap_bind_rdn" /></div>
-          <div><label for="ldap_bind_password"><?php echo $string['bindpassword']; ?></label> <input type="password" value="" id="ldap_bind_password" name="ldap_bind_password" /></div>
-          <div><label for="ldap_user_prefix"><?php echo $string['userprefix']; ?></label> <input type="text" value="" id="ldap_user_prefix" name="ldap_user_prefix" /> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['userprefixtip'] ?>" /></div>
-        </div>
-
-
-        <table class="h"><tr><td><nobr><?php echo $string['lookup']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-
-
-        <div><label for="uselookupLdap"><?php echo $string['useldap']; ?></label><input id="uselookupLdap" name="uselookupLdap" type="checkbox" /></div>
-        <div id="ldaplookupOptions" style="display:none;">
-            <br/>
-            <div><label for="ldap_lookup_server"><?php echo $string['ldapserver']; ?></label> <input type="text" value="" id="ldap_lookup_server" name="ldap_lookup_server" /></div>
-            <div><label for="ldap_lookup_search_dn"><?php echo $string['searchdn']; ?></label> <input type="text" value="" id="ldap_lookup_search_dn" name="ldap_lookup_search_dn" /></div>
-            <div><label for="ldap_lookup_bind_rdn"><?php echo $string['bindusername']; ?></label> <input type="text" value="" id="ldap_lookup_bind_rdn" name="ldap_lookup_bind_rdn" /></div>
-            <div><label for="ldap_lookup_bind_password"><?php echo $string['bindpassword']; ?></label> <input type="password" value="" id="ldap_lookup_bind_password" name="ldap_lookup_bind_password" /></div>
-            <div><label for="ldap_lookup_user_prefix"><?php echo $string['userprefix']; ?></label> <input type="text" value="" id="ldap_lookup_user_prefix" name="ldap_lookup_user_prefix" /> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['userprefixtip'] ?>" /></div>
-        </div><br clear="all" />
-        <div><label for="uselookupXML"><?php echo $string['allowlookupXML']; ?></label><input id="uselookupXML" name="uselookupXML" type="checkbox" /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Allow guest temporary accouts for students who forget their normal log in details" /></div><br clear="all" /><br />
-
-
-        <table class="h"><tr><td><nobr><?php echo $string['sysadminuser']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><?php echo $string['initialsysadmin']; ?></div>
-        <br />
-        <div><label for="SysAdmin_title"><?php echo $string['title']; ?></label>
-          <select id="SysAdmin_title" name="SysAdmin_title" class="required">
-		<?php
-		  if ($language != 'en') {
-		    echo "<option value=\"\"></option>\n";
-		  }
-		  $titles = explode(',', $string['title_types']);
-		  foreach ($titles as $tmp_title) {
-		    echo "<option value=\"$tmp_title\" selected>$tmp_title</option>";
-		  }
-		  ?>
-          </select>
-        </div>
-        <div><label for="SysAdmin_first"><?php echo $string['firstname']; ?></label> <input type="text" value="" name="SysAdmin_first" id="SysAdmin_first" class="required" /> </div>
-        <div><label for="SysAdmin_last"><?php echo $string['surname']; ?></label> <input type="text" value="" id="SysAdmin_last" name="SysAdmin_last" class="required" minlength="3" /> </div>
-        <div><label for="SysAdmin_email"><?php echo $string['emailaddress']; ?></label> <input type="text" value="" id="SysAdmin_email" name="SysAdmin_email" class="required email" /></div>
-        <div><label for="SysAdmin_username"><?php echo $string['username']; ?></label> <input type="text" value="" id="SysAdmin_username" name="SysAdmin_username" class="required" minlength="3" /></div>
-        <div><label for="SysAdmin_password"><?php echo $string['password']; ?></label> <input type="password" value="" id="SysAdmin_password" name="SysAdmin_password" class="required" minlength="8" /></div>
-
-      <table class="h"><tr><td><nobr><?php echo $string['helpdb']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="loadHelp"><?php echo $string['loadhelp']; ?></label> <input id="loadHelp" name="loadHelp" type="checkbox" checked="checked" /></div>
-
-      <table class="h"><tr><td><nobr><?php echo $string['translationpack']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="loadtranslations"><?php echo $string['loadtranslations']; ?></label> <input id="loadtranslations" name="loadtranslations" type="checkbox"/></div><br/><br/>
-        <div><?php echo sprintf($string['manualtranslations'], $configObject->getxml('translations', 'url')); ?></div>
-
-      <table class="h"><tr><td><nobr><?php echo $string['labsecuritytype']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label><?php echo $string['IP']; ?></label> <input name="labsecuritytype" value="ipaddress" type="radio" checked = "checked" /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="Rogo can lock summative exams to either IP address or hostname. If your institution uses static IPs then chose IP address otherwise chose hostname. " /></div>
-        <div><label><?php echo $string['hostname']; ?></label> <input name="labsecuritytype" type="radio" value="hostname" /></div>
-
-      <table class="h"><tr><td><nobr><?php echo $string['supportemaila']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div></div>
-        <br />
-        <div><label for="support_email"><?php echo $string['supportemail']; ?></label> <input type="text" value="" id="support_email" name="support_email" class="" class="email" /> </div>
-
-      <table class="h"><tr><td><nobr><?php echo $string['supportnumbers']; ?></nobr></td><td class="line"><hr /></td></tr></table>
-        <div><label for="emergency_support1"><?php echo $string['name']; ?></label> <input type="text" value="" id="emergency_support1" name="emergency_support1" class="" /> <?php echo $string['number']; ?> <input type="text" value="" name="emergency_support_number1" class="" /></div>
-        <div><label for="emergency_support2"><?php echo $string['name']; ?></label> <input type="text" value="" id="emergency_support2" name="emergency_support2" class="" /> <?php echo $string['number']; ?> <input type="text" value="" name="emergency_support_number2" class="" /></div>
-        <div><label for="emergency_support3"><?php echo $string['name']; ?></label> <input type="text" value="" id="emergency_support3" name="emergency_support3" class="" /> <?php echo $string['number']; ?> <input type="text" value="" name="emergency_support_number3" class="" /></div>
-
-      <div class="submit"> <input type="submit" name="install" value="<?php echo $string['install']; ?>" class="ok" /> </div>
-    </form>
-    <?php
+    $render = new render($configObject);
+    $data['action'] = Url::fromGlobals();
+    $data['dirsep'] = dirname(__DIR__) . DIRECTORY_SEPARATOR;
+    $default_timezone = date_default_timezone_get();
+    if ($default_timezone == 'UTC') $default_timezone = 'Europe/London';
+    $data['timezones'] = $timezone_array;
+    $data['defaulttz'] = $default_timezone;
+    $data['loadlangpacks'] = true;
+    if (LangUtils::langPackInstalled($language)) {
+      $data['loadlangpacks'] = false;
+    }
+    $data['titles'] = explode(',', $string['title_types']);
+    $string['translationsurl'] = $configObject->getxml('translations', 'url');
+    $render->render($data, $string, '/install/form.html');
   }
 
   /**
@@ -421,20 +281,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
 
     self::$cfg_db_charset = 'utf8';
-
-    // Check mysql version.
-    $check = mysqli_connect(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd);
-
-    if (mysqli_connect_error()) {
-      self::displayError(array('001' => mysqli_connect_error()));
-    }
-
-    $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
-    $mysql_version = mysqli_get_server_version($check);
-    if($mysql_version < $mysql_min_ver) {
-        self::displayError(array('002' => sprintf($string['errors17'], $mysql_min_ver, $mysql_version)));
-    }
-    $check->close();
 
     if (!self::$cli) {
       self::$cfg_web_host = param::required('web_host', param::TEXT, param::FETCH_POST);
@@ -565,7 +411,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     self::$emergency_support_numbers .= ')';
     //Other settings
     if (!self::$cli) {
-      self::$cfg_labsecuritytype = param::optional("labsecurity", 'ipaddress', param::TEXT, param::FETCH_POST);
+      self::$cfg_labsecuritytype = param::optional("labsecurity", false, param::TEXT, param::FETCH_POST);
     } else {
       self::$cfg_labsecuritytype = self::getSettings(param::TEXT, true, "labsecurity", 'type');
     }
@@ -628,120 +474,37 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     }
     // Download language packs and install.
     if ($download_lang) {
-      self::download_langpacks();
+      try {
+        self::download_langpacks();
+      } catch (Exception $e) {
+        switch ($e->getMessage()) {
+          case 'CANNOT_DOWNLOAD_XML':
+            echo $string['cannotdownloadxml'];
+          case 'CANNOT_DOWNLOAD_ZIP':
+            echo $string['cannotdownloadzip'];
+            break;
+          default:
+            echo $string['cannotextract'];
+            break;
+        }
+      }
     }
 
     //Write out the config file
     self::writeConfigFile();
 
-    // We will need the root path.
-    $configObject->set('cfg_root_path', self::$cfg_root_path);
-    // Fix help file image paths.
-    if ($load_help) {
-      // Set db object in config.
-      @$mysqli = new mysqli(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd, self::$cfg_db_name, self::$cfg_db_port);
-      if ($mysqli->connect_error == '') {
-        $mysqli->set_charset(self::$cfg_db_charset);
-      }
-      $configObject->set_db_object($mysqli);
-      self::correct_staff_path();
-      self::correct_student_path();
-    }
-
-    // Install npm and dependencies.
-    try {
-      $npm_method = npm_utils::INSTALL_NODEV;
-      npm_utils::setup($npm_method);
-    } catch (Exception $e) {
-      // Non fatal warning.
-      if (!self::$cli) {
-        echo "<div class=\"warning\">\n";
-        echo "\t<div>" . $e->getMessage() . "</div>\n";
-        echo "</div>\n";
-      } else {
-        cli_utils::prompt($e->getMessage());
-      }
-    }
-
     if (!is_array(self::$warnings)) {
-      if (!self::$cli) {
-        echo "<p style=\"margin-left:10px\">" . $string['installed'] . "</p>\n";
-        echo "<p style=\"margin-left:10px\">" . $string['deleteinstall'] . "</p>\n";
-        echo "<p style=\"margin-left:10px\"><input type=\"button\" class=\"ok\" name=\"config\" value=\"" . $string['config'] . "\" onclick=\"window.location='" . $configObject->get('cfg_root_path') . "/admin/config.php'\" /></p>\n";
-      } else {
-        cli_utils::prompt($string['installed']);
-      }
+      $data['displaywarnings'] = true;
+      $data['warnings'] = self::$warnings;
     } else {
-      self::displayWarnings();
+      $data['displaywarnings'] = false;
     }
-  }
-
-  /**
-   * Correct path of staff help file images as may not be in root web server directory.
-   */
-  static public function correct_staff_path() {
-    set_time_limit(0);
-    $configObject = Config::get_instance();
-    $webroot = $configObject->get('cfg_root_path');
-    // Ensure there is a trailing slash.
-    if (substr($webroot, -1) !== '/') {
-      $webroot .= '/';
+    if (!self::$cli) {
+      $render = new render($configObject);
+      $render->render($data, $string, '/install/processed.html');
+    } else {
+      cli_utils::prompt($string['installed']);
     }
-    // Strip out double forward slash.
-    $webroot = preg_replace('#/+#','/',$webroot);
-    // The substitution will replace the old src tag with a new one that.
-    $regexp = '#src="\/getfile\.php\?type\=help_staff&amp;filename\=(.*?)"#';
-    $substitution = 'src="' . $webroot . 'getfile.php?type=help_staff&amp;filename=$1"';
-    // If we find any images in help files update them.
-    $result = $configObject->db->prepare("SELECT id, body FROM staff_help WHERE body LIKE '%<img%'");
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($id, $body);
-    while ($result->fetch()) {
-      $newbody = preg_replace($regexp, $substitution, $body);
-      if ($newbody != $body) {
-        // There was a change, so update the record.
-        $update = $configObject->db->prepare("UPDATE staff_help SET body = ? WHERE id = ?");
-        $update->bind_param('si', $newbody, $id);
-        $update->execute();
-        $update->close();
-      }
-    }
-    $result->close();
-  }
-
-  /**
-   * Correct path of student help file images as may not be in root web server directory.
-   */
-  static public function correct_student_path() {
-    set_time_limit(0);
-    $configObject = Config::get_instance();
-    $webroot = $configObject->get('cfg_root_path');
-    // Ensure there is a trailing slash.
-    if (substr($webroot, -1) !== '/') {
-      $webroot .= '/';
-    }
-    // Strip out double forward slash.
-    $webroot = preg_replace('#/+#','/',$webroot);
-    // The substitution will replace the old src tag with a new one that.
-    $regexp = '#src="\/getfile\.php\?type\=help_student&amp;filename\=(.*?)"#';
-    $substitution = 'src="' . $webroot . 'getfile.php?type=help_student&amp;filename=$1"';
-    // If we find any images in help files update them.
-    $result = $configObject->db->prepare("SELECT id, body FROM student_help WHERE body LIKE '%<img%'");
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($id, $body);
-    while ($result->fetch()) {
-      $newbody = preg_replace($regexp, $substitution, $body);
-      if ($newbody != $body) {
-        // There was a change, so update the record.
-        $update = $configObject->db->prepare("UPDATE student_help SET body = ? WHERE id = ?");
-        $update->bind_param('si', $newbody, $id);
-        $update->execute();
-        $update->close();
-      }
-    }
-    $result->close();
   }
 
   /**
@@ -759,13 +522,13 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
       $fullurl = $url . '/' . $version . '/languages.xml';
       $file = @file_get_contents($fullurl);
       if ($file === false or file_put_contents('languages.xml', $file) === false) {
-        echo "Error downloading latest languages.xml from $fullurl, you may need to manually install it.";
+        throw new Exception('CANNOT_DOWNLOAD_XML');
       }
       // Download language packs.
       $fullurl = $url . '/' . $version . '/rogo.zip';
       $file = @file_get_contents($fullurl);
       if ($file === false or file_put_contents("translations.zip", $file) === false) {
-        echo "Error downloading language packs from $fullurl, you will need to manually install them.";
+        throw new Exception('CANNOT_DOWNLOAD_ZIP');
       } else {
         // Unzip archive.
         $zip = new ZipArchive;
@@ -776,7 +539,7 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
           // Remove zip and temporary directories.
           unlink('translations.zip');
         } else {
-          echo('Cannot extract language packs, you will need to manually extract them.');
+          throw new Exception('CANNOT_EXTRACT');
         }
       }
       chdir($workingdir);
@@ -789,89 +552,37 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   */
   static function loadHelp() {
     global $string;
-    $staff_help = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'staff_help.sql';
-    $student_help = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'student_help.sql';
-
-    //make sure we are using the right DB
-    self::$db->select_db(self::$cfg_db_name);
-
-    self::$db->autocommit(false);
-    if (file_exists($staff_help)) {
-      $query = file_get_contents($staff_help);
-      self::$db->query("TRUNCATE staff_help");
-
-
-      self::$db->multi_query($query);
-      if (self::$db->error) {
-        try {
-          throw new Exception("MySQL error " . self::$db->error . " <br /> Query:<br /> ", self::$db->errno);
-        } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
-        }
-        self::$db->rollback();
-      }
-
-      if (self::$db->errno != 0) {
-        self::logWarning(array('501' => $string['logwarning1'] . self::$db->error));
-        $ext = '';
-      }
-      while (self::$db->more_results()) {
-        self::$db->next_result();
-        if (self::$db->error) {
-          try {
-            throw new Exception("MySQL error " . self::$db->error . " <br /> Query:<br /> ", self::$db->errno);
-          } catch (Exception $e) {
-            echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-            echo nl2br($e->getTraceAsString());
-          }
-          self::$db->rollback();
-        }
-      }
-    } else {
-      self::logWarning(array('502' => $string['logwarning2']));
+    // Set db object in config.
+    @$mysqli = new mysqli(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd, self::$cfg_db_name, self::$cfg_db_port);
+    if ($mysqli->connect_error == '') {
+      $mysqli->set_charset(self::$cfg_db_charset);
     }
-    self::$db->commit();
-
-    if (file_exists($student_help)) {
-      $query = file_get_contents($student_help);
-      self::$db->query("TRUNCATE student_help");
-
-      self::$db->multi_query($query);
-      if (self::$db->error) {
-        try {
-          throw new Exception("MySQL error " . self::$db->error . " <br /> Query:<br /> ", self::$db->errno);
-        } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-          echo nl2br($e->getTraceAsString());
-        }
-        self::$db->rollback();
+    $configObject = Config::get_instance();
+    $configObject->set_db_object($mysqli);
+    // Staff help files.
+    try {
+      OnlineHelp::load_staff_help();
+    } catch (Exception $ex) {
+      if ($ex->getMessage() === 'CANNOT_FIND') {
+        self::logWarning(array('502' => $string['logwarning2']));
+      } else {
+        self::logWarning(array('501' => $string['logwarning1']));
       }
-      if (self::$db->errno != 0) {
-        self::logWarning(array('503' => $string['logwarning3'] . self::$db->error));
-        $ext = '';
-        while (self::$db->more_results()) {
-          self::$db->next_result();
-          if (self::$db->error) {
-            try {
-              throw new Exception("MySQL error " . self::$db->error . " <br /> Query:<br /> ", self::$db->errno);
-            } catch (Exception $e) {
-              echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-              echo nl2br($e->getTraceAsString());
-            }
-            self::$db->rollback();
-          }
-        }
-      }
-    } else {
-      self::logWarning(array('504' => $string['logwarning4']));
     }
-    self::$db->commit();
-    self::$db->autocommit(true);
+    // Student help files.
+    try {
+      OnlineHelp::load_student_help();
+    } catch (Exception $ex) {
+      if ($ex->getMessage() === 'CANNOT_FIND') {
+        self::logWarning(array('503' => $string['logwarning3']));
+      } else {
+        self::logWarning(array('504' => $string['logwarning4']));
+      }
+    }
   }
 
   /**
-   * Create constrainsts to maintain database referential integrity
+   * Create constraints to maintain database referential integrity
    */
   static function createConstraints() {
     $alter = array();
@@ -968,31 +679,81 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
         '301-400', '401-500');
     $configObject = Config::get_instance();
     $configObject->set_db_object(self::$db);
-    $configObject->set_setting('paper_timezones', $timezones, 'timezones');
-    $configObject->set_setting('summative_cohort_sizes', $cohorts, 'csv');
-    $configObject->set_setting('paper_max_duration', 779, 'integer');
-    $configObject->set_setting('summative_max_sittings', 6, 'integer');
-    $configObject->set_setting('summative_hide_external', 0, 'boolean');
-    $configObject->set_setting('summative_warn_external', 0, 'boolean');
-    $configObject->set_setting('cfg_lti_allow_module_self_reg', 0, 'boolean');
-    $configObject->set_setting('cfg_lti_allow_staff_module_register', 0, 'boolean');
-    $configObject->set_setting('cfg_lti_allow_module_create', 0, 'boolean');
-    $configObject->set_setting('lti_integration', 'default', 'string');
-    $configObject->set_setting('lti_auth_timeout', 9072000, 'integer');
-    $configObject->set_setting('cfg_gradebook_enabled', 1, 'boolean');
-    $configObject->set_setting('cfg_api_enabled', 1, 'boolean');
-    $configObject->set_setting('paper_marks_postive', range(1, 20), 'csv');
-    $configObject->set_setting('paper_marks_negative', array(0, -0.25, -0.5, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10), 'csv');
-    $configObject->set_setting('paper_marks_partial', array_merge(range(0, 1, 0.1), range(2, 5)), 'csv');
-    $configObject->set_setting('paper_mathjax', 1, 'boolean');
-    $configObject->set_setting('paper_editor_supports_mathjax',array("plain"), 'csv');
-    $configObject->set_setting('misc_logo_main', 'logo.png', 'string');
-    $configObject->set_setting('misc_logo_email', 'alt_logo.png', 'string');
-    $configObject->set_setting('api_allow_superuser', 0, 'boolean');
-    $configObject->set_setting('apilogfile', '', 'string');
-    $configObject->set_setting('misc_dictionary_file', '', 'string');
+    $configObject->set_setting('paper_timezones', $timezones, Config::TIMEZONES);
+    $configObject->set_setting('summative_cohort_sizes', $cohorts, Config::CSV);
+    $configObject->set_setting('paper_max_duration', 779, Config::INTEGER);
+    $configObject->set_setting('summative_max_sittings', 6, Config::INTEGER);
+    $configObject->set_setting('summative_hide_external', 0, Config::BOOLEAN);
+    $configObject->set_setting('summative_warn_external', 0, Config::BOOLEAN);
+    $configObject->set_setting('cfg_lti_allow_module_self_reg', 0, Config::BOOLEAN);
+    $configObject->set_setting('cfg_lti_allow_staff_module_register', 0, Config::BOOLEAN);
+    $configObject->set_setting('cfg_lti_allow_module_create', 0, Config::BOOLEAN);
+    $configObject->set_setting('lti_integration', 'default', Config::STRING);
+    $configObject->set_setting('lti_auth_timeout', 9072000, Config::INTEGER);
+    $configObject->set_setting('cfg_gradebook_enabled', 1, Config::BOOLEAN);
+    $configObject->set_setting('cfg_api_enabled', 1, Config::BOOLEAN);
+    $configObject->set_setting('paper_marks_postive', range(1, 20), Config::CSV);
+    $configObject->set_setting('paper_marks_negative', array(0, -0.25, -0.5, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10), Config::CSV);
+    $configObject->set_setting('paper_marks_partial', array_merge(range(0, 1, 0.1), range(2, 5)), Config::CSV);
+    $configObject->set_setting('paper_mathjax', 1, Config::BOOLEAN);
+    $configObject->set_setting('paper_editor_supports_mathjax',array("plain"), Config::CSV);
+    $configObject->set_setting('misc_logo_main', 'logo.png', Config::STRING);
+    $configObject->set_setting('misc_logo_email', 'alt_logo.png', Config::STRING);
+    $configObject->set_setting('api_allow_superuser', 0, Config::BOOLEAN);
+    $configObject->set_setting('apilogfile', '', Config::STRING);
+    $configObject->set_setting('rogo_version', $configObject->getxml('version'), Config::VERSION);
+    $configObject->set_setting('misc_company', self::$cfg_company, Config::STRING);
+    $configObject->set_setting('misc_dictionary_file', '', Config::STRING);
     $configObject->set_setting('cfg_calc_type', 'phpEval', Config::STRING);
     $configObject->set_setting('cfg_calc_settings', array('host' => '', 'port' => '', 'timeout' => ''), Config::ASSOC);
+    $configObject->set_setting('system_maintenance_mode', 0, Config::BOOLEAN);
+    $configObject->set_setting('cfg_summative_mgmt', 0, Config::BOOLEAN);
+    $configObject->set_setting('system_hostname_lookup', $cfg_labsecuritytype, Config::BOOLEAN);
+    $configObject->set_setting('system_academic_year_start', '07/01', Config::STRING);
+    $configObject->set_setting('misc_search_leadin_length', self::$cfg_search_leadin_length, Config::INTEGER);
+    $configObject->set_setting('rpt_percent_decimals', 2, Config::INTEGER);
+    $configObject->set_setting('stdset_hofstee_pass', array(
+        'min_pass' => 0,
+        'max_pass' => 'median',
+        'min_fail' => 0,
+        'max_fail' => 100
+        ), Config::ASSOC);
+    $configObject->set_setting('stdset_hofstee_distinction', array(
+        'min_pass' => 'median',
+        'max_pass' => 100,
+        'min_fail' => 0,
+        'max_fail' => 100
+        ), Config::ASSOC);
+    $configObject->set_setting('stdset_hofstee_whole_numbers', true, Config::BOOLEAN);
+    $configObject->set_setting('summative_hour_warning', 10, Config::INTEGER);
+    $configObject->set_setting('system_install_type', '', Config::STRING);
+    $configObject->set_setting('cfg_ims_enabled', false, Config::BOOLEAN);
+    $contact_count = 0;
+    foreach (self::$emergency_support_numbers as $name => $number) {
+      $contact_count++;
+      $configObject->set_setting('emergency_support_contact' . $contact_count, array(
+          'name' => $name,
+          'number' => $number
+          ), Config::ASSOC);
+    }
+    $i = $contact_count;
+    while ($i < 3) {
+      $i++;
+      $configObject->set_setting('emergency_support_contact' . $i, array(
+          'name' => '',
+          'number' => ''
+          ), Config::ASSOC);
+    }
+    $configObject->set_setting('support_contact_email', array(self::$cfg_support_email), Config::EMAIL);
+    $configObject->set_setting('api_oauth_access_lifetime', 1209600, Config::INTEGER);
+    $configObject->set_setting('api_oauth_refresh_token_lifetime', 1209600, Config::INTEGER);
+    $configObject->set_setting('api_oauth_always_issue_new_refresh_token', true, Config::BOOLEAN);
+    $configObject->set_setting('paper_autosave_settimeout', 10, Config::INTEGER);
+    $configObject->set_setting('paper_autosave_frequency', 180, Config::INTEGER);
+    $configObject->set_setting('paper_autosave_retrylimit', 3, Config::INTEGER);
+    $configObject->set_setting('paper_autosave_backoff_factor', 1.5, Config::DOUBLE);
+    $configObject->set_setting('summative_midexam_clarification', array('invigilators', 'students'), Config::CSV);
+    $configObject->set_setting('system_password_expire', 30, Config::INTEGER);
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();
@@ -2009,7 +1770,9 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
     // Install composer and dependencies.
     try {
       if (!InstallUtils::$behat_install and !InstallUtils::$phpunit_install) {
+        ob_start();
         composer_utils::setup(composer_utils::INSTALL_NODEV);
+        ob_end_clean();
       }
     } catch (Exception $e) {
       $errorcode += 1;
@@ -2080,82 +1843,40 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   }
 
   /**
-  * Display warnings with a nice message
-  *
-  */
-  static function displayWarnings() {
-    global $string;
-
-    if (is_array(self::$warnings)) {
-      echo "<h1>". $string['errors14']."</h1>";
-      echo "<div class=\"warning\">\n";
-      foreach(self::$warnings as $message) {
-        echo "\t<div>" . $string['errors15'] . " $message</div>\n";
-      }
-      echo "</div>\n";
-    }
-
-  }
-
-  /**
   * Display header
   *
   */
   static function displayHeader() {
-    global $string, $version;
-
-    ?>
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-      <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-
-      <title>Rog&#333; Install script</title>
-
-      <link rel="stylesheet" type="text/css" href="../css/body.css" />
-      <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
-      <link rel="stylesheet" type="text/css" href="../css/header.css" />
-      <style type="text/css">
-        body {font-size:90%}
-        h1 {margin-left:16px; font-size:140%; color:#1F497D}
-        .error {float:none; color:#C00000; padding-left: .5em; vertical-align:top}
-        .warning {float:none; color:#C00000; padding-left: .5em; vertical-align:top}
-        label {float:left; width:175px; padding-left:0em; text-align:right; padding-right:6px}
-        p {clear:both}
-        .submit {margin-left:42%; padding-top:2em}
-        table {border:none;padding:0px}
-        .h {margin-top:1.5em; margin-bottom:0.5em; width:97%; color:#1E3287}
-        .h hr {border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:98%}
-        td.line {width:98%}
-        input[type=text], input[type=password] {width:200px}
-        form {padding:1em}
-        form div {padding-left:2em; clear:both;}
-      </style>
-
-      <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-      <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-      <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
-      <script>
-        $(function() {
-          $(document).tooltip();
-        });
-      </script>
-    </head>
-    <body>
-    <table cellpadding="0" cellspacing="0" border="0" class="header">
-    <tr>
-      <th style="padding-top:4px; padding-bottom:4px; padding-left:16px">
-      <img class="logo_img" src="../artwork/r_logo.gif" alt="logo" />
-      <div class="logo_lrg_txt">Rog&#333; <?php echo $version; ?></div>
-      <div class="logo_small_txt">System Installation</div>
-      </th>
-      <th style="text-align:right; padding-right:10px">
-      <img src="../artwork/software_64.png" width="64" height="64" alt="Upgrade Icon" />
-      </th>
-      </tr>
-    </table>
-    <?php
+    global $string;
+    $configObject = Config::get_instance();
+    $render = new render($configObject);
+    $headerdata = array(
+      'css' => array(
+        '/css/rogo_logo.css',
+        '/css/header.css',
+        '/css/install.css',
+      ),
+      'scripts' => array(
+        '/js/jquery-1.11.1.min.js',
+        '/js/jquery.validate.min.js',
+        '/js/jquery-ui-1.10.4.min.js',
+        '/js/install.min.js',
+        '/js/system_tooltips.js',
+      ),
+    );
+    $lang['title'] = $string['install'];
+    $lang['blurb'] = $string['systeminstallation'];
+    $data['version'] = $configObject->getxml('version');
+    require_once dirname(__DIR__) . '/include/path_functions.inc.php';
+    $cfg_web_root = get_root_path();
+    // Ensure there is a trailing slash.
+    if (substr($cfg_web_root, -1) !== '/') {
+      $cfg_web_root .= '/';
+    }
+    self::$cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_ROOT']), '', $cfg_web_root), '/'), '/');
+    $configObject->set('cfg_root_path', self::$cfg_root_path);
+    $render->render($headerdata, $lang, 'header.html');
+    $render->render($data, $lang, '/install/header.html');
   }
 
   /**
@@ -2163,14 +1884,13 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   *
   */
   static function displayfooter() {
-    ?>
-      </body>
-      </html>
-    <?php
+    $configObject = Config::get_instance();
+    $render = new render($configObject);
+    $render->render_admin_footer();
   }
 
   static function writeConfigFile() {
-    global $version, $cfg_encrypt_salt;
+    global $cfg_encrypt_salt;
     require_once dirname(__DIR__) . '/include/path_functions.inc.php';
     $config = <<<CONFIG
 <?php
@@ -2184,18 +1904,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 * @package
 */
 
-\$rogo_version = '{rogo_version}';
 \$cfg_web_root = '{cfg_web_root}';
 \$cfg_root_path = '{cfg_root_path}';
 \$cfg_secure_connection = true;    // If true site must be accessed via HTTPS
 \$cfg_page_charset 	   = 'UTF-8';
-\$cfg_company = '{cfg_company}';
-\$cfg_academic_year_start = '07/01';
 \$cfg_tmpdir = '{cfg_tmpdir}';
-
-\$cfg_summative_mgmt = false;     // Set this to true for central summative exam administration.
-\$cfg_client_lookup = '{labsecuritytype}'; //ipadress or name
-
 
   \$cfg_web_host = '{cfg_web_host}';
   \$cfg_rogo_data = '{cfg_rogo_data}';
@@ -2240,19 +1953,11 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
   \$cfg_short_date_php = '{cfg_short_date_php}';
   \$cfg_long_time_php = '{cfg_long_time_php}';
   \$cfg_short_time_php = '{cfg_short_time_php}';
-  \$cfg_search_leadin_length = '{cfg_search_leadin_length}';
   \$cfg_timezone = '{cfg_timezone}';
   date_default_timezone_set(\$cfg_timezone);
 // cron user
   \$cfg_cron_user = '{cfg_cron_user}';
   \$cfg_cron_passwd = '{cfg_cron_passwd}';
-
-// Reports
-  \$percent_decimals = 2;
-
-// Standard Setting
-  \$hofstee_defaults = array('pass'=>array(0, 'median', 0, 100), 'distinction'=>array('median', 100, 0, 100));
-  \$hofstee_whole_numbers = true;
 
 // SMS Imports
   \$cfg_sms_api = '';
@@ -2263,7 +1968,6 @@ $php_date_url = 'http://www.php.net/manual/en/function.date.php';
 \$authentication = array(
   {cfg_authentication_arrays}
 );
-\$cfg_password_expire = 30;    // Set in days
 
 //Lookup settings
 \$lookup = array(
@@ -2294,23 +1998,6 @@ if(!isset(\$_SERVER['HTTP_HOST'])) {
   \$_SERVER['HTTP_HOST']='';
 }
 
-//A server specifc display name can be appended to rogo with the following
-\$cfg_install_type = '';
-
-//Warnings
-  \$cfg_hour_warning = 10;       // Warning for summative exams
-
-//Paper auto saving settings
-  \$cfg_autosave_settimeout = 5; //Maximum time to wait for one request to succeed
-  \$cfg_autosave_frequency = 30; //How often to auto save in seconds
-  \$cfg_autosave_retrylimit = 3; //How many times to retry a failed save befor informing the user
-  \$cfg_autosave_backoff_factor = 1.5; //each retry is lenghtend to \$cfg_autosave_settimeout + (\$cfg_autosave_backoff_factor * \$cfg_autosave_settimeout * retryCount);
-
-//Assistance
-  \$support_email = '{cfg_support_email}';
-  \$emergency_support_numbers = {emergency_support_numbers};
-  \$midexam_clarification = array('invigilators', 'students');
-
 //Global DEBUG OUTPUT
   //require_once \$_SERVER['DOCUMENT_ROOT'] . 'include/debug.inc';   // Uncomment for debugging output (after uncommenting, comment out line below)
   \$dbclass = 'mysqli';
@@ -2328,29 +2015,18 @@ if(!isset(\$_SERVER['HTTP_HOST'])) {
   //used for debugging
   \$debug_lang_string = false;  // set to true to show lang string in stored system_error_log messages
 
-  //oauth settings
-  \$cfg_oauth_access_lifetime = 1209600; // length of access token lifetime.
-  \$cfg_oauth_refresh_token_lifetime = 1209600; // length of refresh token lifetime.
-  \$cfg_oauth_always_issue_new_refresh_token = true; // enable or disable refresh tokens.
-
-  //IMS enterprise setting
-  \$cfg_ims_enabled = false;
-
   // Override db config settings with configs in this file?
   \$file_config_override = true;
   ?>
 CONFIG;
 
-    $config = str_replace('{rogo_version}', $version, $config);
     $cfg_web_root = get_root_path();
     // Ensure there is a trailing slash.
     if (substr($cfg_web_root, -1) !== '/') {
       $cfg_web_root .= '/';
     }
     $config = str_replace('{cfg_web_root}', $cfg_web_root, $config);
-    if (!self::$cli) {
-      self::$cfg_root_path = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_ROOT']), '', $cfg_web_root), '/'), '/');
-    } else {
+    if (self::$cli) {
       self::$cfg_root_path = self::getSettings(param::TEXT, true, 'server', 'root');
     }
     $config = str_replace('{cfg_root_path}', self::$cfg_root_path, $config);
@@ -2360,7 +2036,6 @@ CONFIG;
     $config = str_replace('{cfg_db_host}', self::$cfg_db_host, $config);
     $config = str_replace('{cfg_db_port}', self::$cfg_db_port, $config);
     $config = str_replace('{cfg_db_charset}', self::$cfg_db_charset, $config);
-    $config = str_replace('{cfg_company}', self::$cfg_company, $config);
 
     $config = str_replace('{cfg_db_database}', self::$cfg_db_name, $config);
     $config = str_replace('{cfg_db_username}', self::$cfg_db_username, $config);
@@ -2384,9 +2059,6 @@ CONFIG;
     $config = str_replace('{cfg_cron_user}', self::$cfg_cron_user, $config);
     $config = str_replace('{cfg_cron_passwd}', self::$cfg_cron_passwd, $config);
 
-    $config = str_replace('{cfg_support_email}', self::$cfg_support_email, $config);
-    $config = str_replace('{emergency_support_numbers}', self::$emergency_support_numbers, $config);
-
     $config = str_replace('{cfg_short_date}', self::$cfg_short_date, $config);
     $config = str_replace('{cfg_long_date}', self::$cfg_long_date, $config);
     $config = str_replace('{cfg_long_date_time}', self::$cfg_long_date_time, $config);
@@ -2395,11 +2067,9 @@ CONFIG;
     $config = str_replace('{cfg_short_date_php}', self::$cfg_short_date_php, $config);
     $config = str_replace('{cfg_long_time_php}', self::$cfg_long_time_php, $config);
     $config = str_replace('{cfg_short_time_php}', self::$cfg_short_time_php, $config);
-    $config = str_replace('{cfg_search_leadin_length}', self::$cfg_search_leadin_length, $config);
     $config = str_replace('{cfg_timezone}', self::$cfg_timezone, $config);
     $config = str_replace('{cfg_tmpdir}', self::$cfg_tmpdir, $config);
     $config = str_replace('{cfg_tablesorter_date_time}', self::$cfg_tablesorter_date_time, $config);
-    $config = str_replace('{labsecuritytype}', self::$cfg_labsecuritytype, $config);
 
     $authentication_arrays = array();
     if (self::$cfg_auth_lti) {

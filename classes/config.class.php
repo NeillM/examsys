@@ -16,7 +16,7 @@
 
 /**
  *
- * config file
+ * Config file
  *
  * @author Simon Atack
  * @version 1.0
@@ -27,10 +27,10 @@
  */
 class Config extends RogoStaticSingleton {
   /**
-   * Areas of the Rogo system that can be confifured.
+   * Areas of the Rogo system that can be configured.
    * @var array list of areas
    */
-  public static $config_area = array('api', 'gradebook', 'lti', 'paper', 'summative', 'url', 'misc', 'calc');
+  public static $config_area = array('api', 'gradebook', 'lti', 'paper', 'summative', 'url', 'misc', 'calc', 'system', 'rpt', 'stdset', 'ims', 'contact');
   /**
    * @var array
    */
@@ -98,10 +98,25 @@ class Config extends RogoStaticSingleton {
    */
   const URL = 'url';
   /**
+   * Config setting version type identifier
+   * @var string
+   */
+  const VERSION = 'version';
+  /**
    * Config setting associative array type identifier
    * @var string
    */
   const ASSOC = 'assoc';
+  /**
+   * Config setting double type identifier
+   * @var string
+   */
+  const DOUBLE = 'double';
+  /**
+   * Config setting email type identifier
+   * @var string
+   */
+  const EMAIL = 'email';
 
   function __toString() {
     return "ConfigObject!";
@@ -439,7 +454,7 @@ SCRIPT;
       }
     }
     // Json encode.
-    if ($type == self::JSON or $type == self::CSV or $type == self::TIMEZONES or $type == self::ASSOC) {
+    if ($type == self::JSON or $type == self::CSV or $type == self::TIMEZONES or $type == self::ASSOC or $type == self::EMAIL) {
       $value = json_encode($value);
     }
     // Update Settings.
@@ -473,7 +488,7 @@ SCRIPT;
       }
     }
     // Json encode.
-    if ($type == self::JSON or $type == self::CSV or $type == self::TIMEZONES or $type == self::ASSOC) {
+    if ($type == self::JSON or $type == self::CSV or $type == self::TIMEZONES or $type == self::ASSOC or $type == self::EMAIL) {
       $value = json_encode($value);
     }
     // Insert Settings.
@@ -603,7 +618,7 @@ SCRIPT;
         $value = $encryp->mdecrypt_password($value);
       }
       // Decode json.
-      if ($type == self::JSON or $type == self::CSV) {
+      if ($type == self::JSON or $type == self::CSV or $type == self::EMAIL) {
         $value = json_decode($value);
       }
       // Set timzone to associative array.
@@ -706,11 +721,16 @@ SCRIPT;
    * @return bool true if value is of expected type, false otherwise
    */
   public static function check_type($value, $type) {
+    $check = false;
     switch ($type) {
         case self::PASSWORD:
         case self::STRING:
-        case self::URL:
           $check = is_string($value);
+          break;
+        case self::URL:
+          if (filter_var($value, FILTER_VALIDATE_URL)) {
+            $check = true;
+          }
           break;
         case self::JSON:
         case self::CSV:
@@ -721,15 +741,32 @@ SCRIPT;
         case self::BOOLEAN:
           if ($value == 1 or $value == 0) {
             $check = true;
-          } else {
-            $check = false;
           }
           break;
         case self::INTEGER:
-          if (is_int($value) or ctype_digit($value)) {
-              $check = true;
-          } else {
-              $check = false;
+          if (filter_var($value, FILTER_VALIDATE_INT)) {
+            $check = true;
+          }
+          break;
+        case self::DOUBLE:
+          if (filter_var($value, FILTER_VALIDATE_FLOAT)) {
+            $check = true;
+          }
+          break;
+        case self::VERSION:
+          if(preg_match("#^[0-9]+\.[0-9]\.+[0-9]+$#", $value)) {
+            $check = true;
+          }
+          break;
+        case self::EMAIL:
+          if (is_array($value)) {
+            foreach ($value as $v) {
+              if (filter_var($v, FILTER_VALIDATE_EMAIL)) {
+                $check = true;
+              } else {
+                $check = false;
+              }
+            }
           }
           break;
         default:

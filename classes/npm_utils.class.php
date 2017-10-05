@@ -42,7 +42,7 @@ class npm_utils {
     $workingdir = getcwd();
     // Change to the root Rogo directory.
     chdir(__DIR__ . '/..');
-    self::install_update();
+    self::check_for_npm();
     if ($method === self::UPDATE) {
       self::update_dependancies();
     } else {
@@ -52,16 +52,15 @@ class npm_utils {
   }
 
   /**
-   * Ensures npm is installed and upto date.
+   * Ensures npm is installed.
    *
    * @return void
    */
-  protected static function install_update() {
+  protected static function check_for_npm() {
     $langpack = new langpack();
-    // Update if installed.
-    exec("npm install npm@latest -g", $output, $statuscode);
+    exec("npm help", $output, $statuscode);
     if ($statuscode != 0) {
-      throw new Exception($langpack->get_string(self::langcomponent, 'cannotupdate'));
+      throw new Exception($langpack->get_string(self::langcomponent, 'npmmissing'));
     }
   }
 

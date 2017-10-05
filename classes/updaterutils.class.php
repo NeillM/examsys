@@ -320,32 +320,6 @@ Class UpdaterUtils {
   }
 
   /**
-   * Changes the version number in /config/config.inc.php.
-   *
-   * @param string $version - The new version number to set.
-   * @param string $string 	- Language translations.
-   * @param string $cfg_web_root - Path to the root of Rogo.
-   *
-   * @return bool - True = the config file is written correctly, False = file could not be written.
-   */
-	 public function update_version($version, $string, $cfg_web_root) {
-    $cfg_new = array();
-    $cfg = file($cfg_web_root . 'config/config.inc.php');
-    foreach ($cfg as $line) {
-      if (strpos($line, 'rogo_version') !== false) {
-        $cfg_new[] = "\$rogo_version = '$version';\n";
-      } else {
-        $cfg_new[] = $line;
-      }
-    }
-    if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg_new) === false) {
-      return $string['couldnotwrite'];
-    } else {
-      return true;
-    }
-  }
-
-  /**
    * Check if update should be run againt installed version.
    * 
    * @param string $version 
@@ -353,7 +327,7 @@ Class UpdaterUtils {
    */
   public function check_version($version) {
     $configObject = Config::get_instance();
-    $cfg_version = $configObject->get('rogo_version');
+    $cfg_version = $configObject->get_setting('core', 'rogo_version');
     $code_version = $configObject->getxml('version');
     $dev_system = $configObject->get('cfg_dev_system');
 
