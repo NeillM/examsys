@@ -1,10 +1,5 @@
-<tr>
-    <td class="fieldheader">{{lang.area}}</td>
-</tr>
+<div class="configarea">{{lang.area}}
 {% if data.area == "ims" %}
-<tr>
-   <td></td>
-   <td>{{lang.imssettings}} <a href = "{{path}}/plugins/ims/ims_settings.php">here</a>.</td>
-</tr>
+    <div class="configareaextra">{{lang.imssettings}} <a href = "{{path}}/plugins/ims/ims_settings.php">here</a>.</div>
 {% endif %}
-</tr>
+</div>

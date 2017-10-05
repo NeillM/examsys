@@ -1,12 +1,13 @@
-<tr>
-    <td class="field">
+<div class="config">
+    <div class="configheading">
         <label for="{{data.setting}}">{{data.setting}}</label>&nbsp;
         <img src="{{path}}/artwork/tooltip_icon.gif" class="help_tip" title="{{lang.setting}}" />
-    </td>
-    <td>
+    </div>
+    <div class="configvalue">
         <input type="text" size="{{data.size}}" id="{{data.setting}}" name="{{data.setting}}" value="{{data.value|raw}}" {{data.disabled}} />
-    </td>
-    {% if data.disabled != "" %}
-    <td>{{lang.fileoverride}}</td>
-    {% endif %}
-</tr>
+        
+        {% if data.disabled != "" %}
+        <div class="configextra">{{lang.fileoverride}}</div>
+        {% endif %}
+    </div>
+</div>

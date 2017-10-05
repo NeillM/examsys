@@ -92,6 +92,7 @@ foreach ($displayconfigs as $area => $conf) {
     $string['area'] = $string[$area];
     $render->render($data, $string, 'admin/config/config_area.html');
     foreach ($conf as $setting => $value) {
+        $data = array();
         $data['setting'] = $setting;
         $data['value'] = $value;
         $string['setting'] = $string[$setting];
