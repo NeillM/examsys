@@ -46,7 +46,7 @@ if (isset($_POST['submit'])) {
                 }
                 $new_value = $arrayvalue;
             }
-            if ($type === Config::CSV) {
+            if ($type === Config::CSV or $type === Config::EMAIL) {
                 $new_value = explode(',', $new_value);
             }
         }
@@ -145,7 +145,7 @@ foreach ($displayconfigs as $area => $conf) {
             }
             $render->render($data, $string, 'admin/config/config_assoc.html');
         } else {
-            if ($type === Config::CSV) {
+            if ($type === Config::CSV or $type === Config::EMAIL) {
                 $value = implode(',', $value);
             }
             if ($type == Config::STRING or $type === Config::INTEGER or $type === Config::DOUBLE) {

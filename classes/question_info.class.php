@@ -48,7 +48,7 @@ Class question_info {
     $question_data->fetch();
     $question_data->close();
 
-    $contactemail = $configObject->get_setting('core', 'support_contact_email');
+    $contactemail = support::get_email();
     if (!isset($creation_date)) {
       $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
       $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', false, true);

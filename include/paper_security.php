@@ -170,7 +170,7 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $string, $db) {
   $yearutils = new yearutils($db);
   $attempt = 1;
   $usern = $userObj->get_username();
-  $contactemail = $configObject->get_setting('core', 'support_contact_email');
+  $contactemail = support::get_email();
   if (stripos($usern, 'user') !== 0) {  // Do not check modules for guest accounts (e.g. user1...user100).
      if (count($moduleIDs) > 0) {
       $cal_year_sql = '';
@@ -208,7 +208,7 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $string, $db) {
 }
 
 function check_metadata($property_id, $userObj, $moduleIDs, $string, $db) {
-  $contactemail = $configObject->get_setting('core', 'support_contact_email');
+  $contactemail = support::get_email();
   if (!$userObj->is_temporary_account()) {			// Do not check metadata security if temporary account
     $notice = UserNotices::get_instance();
     $configObject = Config::get_instance();

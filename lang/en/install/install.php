@@ -76,6 +76,7 @@ $string['loadtranslations'] = 'Download All Translation Packs';
 $string['manualtranslations'] = 'Alternatively you can download individual translation packs';
 $string['supportemail'] = 'Support Email';
 $string['supportnumbers'] = 'Emergency Support Numbers';
+$string['supportemailaddress'] = 'Email Address (Comma seperate list)';
 $string['name'] = 'Name';
 $string['number'] = 'Number';
 $string['install'] = 'Install Rogō';

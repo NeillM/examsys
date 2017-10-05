@@ -50,7 +50,7 @@ if ($updater_utils->check_version("6.5.0")) {
           'number' => ''
           ), Config::ASSOC);
     }
-    $configObject->set_setting('support_contact_email', $configObject->get('support_email'), Config::EMAIL);
+    $configObject->set_setting('support_contact_email', array($configObject->get('support_email')), Config::EMAIL);
     $configObject->set_setting('api_oauth_access_lifetime', $configObject->get('cfg_oauth_access_lifetime'), Config::INTEGER);
     $configObject->set_setting('api_oauth_refresh_token_lifetime', $configObject->get('cfg_oauth_refresh_token_lifetime'), Config::INTEGER);
     $configObject->set_setting('api_oauth_always_issue_new_refresh_token', $configObject->get('cfg_oauth_always_issue_new_refresh_token'), Config::BOOLEAN);

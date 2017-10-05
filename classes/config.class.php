@@ -454,7 +454,7 @@ SCRIPT;
       }
     }
     // Json encode.
-    if ($type == self::JSON or $type == self::CSV or $type == self::TIMEZONES or $type == self::ASSOC) {
+    if ($type == self::JSON or $type == self::CSV or $type == self::TIMEZONES or $type == self::ASSOC or $type == self::EMAIL) {
       $value = json_encode($value);
     }
     // Update Settings.
@@ -488,7 +488,7 @@ SCRIPT;
       }
     }
     // Json encode.
-    if ($type == self::JSON or $type == self::CSV or $type == self::TIMEZONES or $type == self::ASSOC) {
+    if ($type == self::JSON or $type == self::CSV or $type == self::TIMEZONES or $type == self::ASSOC or $type == self::EMAIL) {
       $value = json_encode($value);
     }
     // Insert Settings.
@@ -618,7 +618,7 @@ SCRIPT;
         $value = $encryp->mdecrypt_password($value);
       }
       // Decode json.
-      if ($type == self::JSON or $type == self::CSV) {
+      if ($type == self::JSON or $type == self::CSV or $type == self::EMAIL) {
         $value = json_decode($value);
       }
       // Set timzone to associative array.
@@ -759,8 +759,14 @@ SCRIPT;
           }
           break;
         case self::EMAIL:
-          if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            $check = true;
+          if (is_array($value)) {
+            foreach ($value as $v) {
+              if (filter_var($v, FILTER_VALIDATE_EMAIL)) {
+                $check = true;
+              } else {
+                $check = false;
+              }
+            }
           }
           break;
         default:
