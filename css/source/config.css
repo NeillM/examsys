@@ -35,3 +35,6 @@
   font-weight: normal;
   font-size: 1em;
 }
+#display_ims {
+    display: none;
+}
