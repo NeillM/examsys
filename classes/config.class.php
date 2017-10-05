@@ -112,6 +112,11 @@ class Config extends RogoStaticSingleton {
    * @var string
    */
   const DOUBLE = 'double';
+  /**
+   * Config setting email type identifier
+   * @var string
+   */
+  const EMAIL = 'email';
 
   function __toString() {
     return "ConfigObject!";
@@ -716,11 +721,16 @@ SCRIPT;
    * @return bool true if value is of expected type, false otherwise
    */
   public static function check_type($value, $type) {
+    $check = false;
     switch ($type) {
         case self::PASSWORD:
         case self::STRING:
-        case self::URL:
           $check = is_string($value);
+          break;
+        case self::URL:
+          if (filter_var($value, FILTER_VALIDATE_URL)) {
+            $check = true;
+          }
           break;
         case self::JSON:
         case self::CSV:
@@ -731,29 +741,26 @@ SCRIPT;
         case self::BOOLEAN:
           if ($value == 1 or $value == 0) {
             $check = true;
-          } else {
-            $check = false;
           }
           break;
         case self::INTEGER:
-          if (is_int($value) or ctype_digit($value)) {
-              $check = true;
-          } else {
-              $check = false;
+          if (filter_var($value, FILTER_VALIDATE_INT)) {
+            $check = true;
           }
           break;
         case self::DOUBLE:
-          if (is_double($value) or preg_match("#^\\d+\\.\\d+$#", $value)) {
-              $check = true;
-          } else {
-              $check = false;
+          if (filter_var($value, FILTER_VALIDATE_FLOAT)) {
+            $check = true;
           }
           break;
         case self::VERSION:
           if(preg_match("#^[0-9]+\.[0-9]\.+[0-9]+$#", $value)) {
             $check = true;
-          } else {
-            $check = false;
+          }
+          break;
+        case self::EMAIL:
+          if (filter_var($value, FILTER_VALIDATE_EMAIL)) {
+            $check = true;
           }
           break;
         default:

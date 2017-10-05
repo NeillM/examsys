@@ -744,7 +744,7 @@ Class InstallUtils {
           'number' => ''
           ), Config::ASSOC);
     }
-    $configObject->set_setting('support_contact_email', self::$cfg_support_email, Config::STRING);
+    $configObject->set_setting('support_contact_email', self::$cfg_support_email, Config::EMAIL);
     $configObject->set_setting('api_oauth_access_lifetime', 1209600, Config::INTEGER);
     $configObject->set_setting('api_oauth_refresh_token_lifetime', 1209600, Config::INTEGER);
     $configObject->set_setting('api_oauth_always_issue_new_refresh_token', true, Config::BOOLEAN);
