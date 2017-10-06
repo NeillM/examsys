@@ -708,7 +708,7 @@ Class InstallUtils {
     $configObject->set_setting('cfg_calc_settings', array('host' => '', 'port' => '', 'timeout' => ''), Config::ASSOC);
     $configObject->set_setting('system_maintenance_mode', 0, Config::BOOLEAN);
     $configObject->set_setting('cfg_summative_mgmt', 0, Config::BOOLEAN);
-    $configObject->set_setting('system_hostname_lookup', $cfg_labsecuritytype, Config::BOOLEAN);
+    $configObject->set_setting('system_hostname_lookup', self::$cfg_labsecuritytype, Config::BOOLEAN);
     $configObject->set_setting('system_academic_year_start', '07/01', Config::STRING);
     $configObject->set_setting('misc_search_leadin_length', self::$cfg_search_leadin_length, Config::INTEGER);
     $configObject->set_setting('rpt_percent_decimals', 2, Config::INTEGER);
