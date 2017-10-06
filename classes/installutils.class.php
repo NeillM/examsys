@@ -479,12 +479,12 @@ Class InstallUtils {
       } catch (Exception $e) {
         switch ($e->getMessage()) {
           case 'CANNOT_DOWNLOAD_XML':
-            echo $string['cannotdownloadxml'];
+            self::logWarning(array('600' => $string['cannotdownloadxml']));
           case 'CANNOT_DOWNLOAD_ZIP':
-            echo $string['cannotdownloadzip'];
+            self::logWarning(array('601' => $string['cannotdownloadzip']));
             break;
           default:
-            echo $string['cannotextract'];
+            self::logWarning(array('602' => $string['cannotextract']));
             break;
         }
       }
@@ -1800,13 +1800,9 @@ Class InstallUtils {
    */
   static function displayError($error = '', $fatal = true) {
     global $string;
-
-    if (!self::$cli) {
-      echo "<div class=\"error\">\n";
-    }
     if (is_array($error)) {
-      foreach($error as $errCode => $message) {
-        if (self::$cli) {
+      if (self::$cli) {
+        foreach($error as $errCode => $message) {
           $filter = FILTER_SANITIZE_STRING;
           $options = array(
             'options' => array(
@@ -1815,13 +1811,15 @@ Class InstallUtils {
             'flags' => FILTER_FLAG_NO_ENCODE_QUOTES
           );
           cli_utils::prompt($string['errors13'] . "$errCode: " . filter_var($message, $filter, $options));
-        } else {
-          echo "\t<div><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" /> <strong>" . $string['errors13'] . " $errCode:</strong> $message</div>\n";
         }
+      } else {
+        $configObject = Config::get_instance();
+        $render = new render($configObject);
+        $data['error'] = $error;
+        $render->render($data, $string, '/install/error.html');
       }
     }
     if (!self::$cli) {
-      echo "</div>\n";
       if ($fatal) {
         self::displayFooter();
       }
