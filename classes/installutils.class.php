@@ -898,13 +898,6 @@ Class InstallUtils {
       @flush();
       if (self::$db->errno != 0) {
         self::displayError(array('012' => $string['displayerror3'] . self::$db->error . "<br /> $sql"));
-        try {
-          $err=self::$db->error;
-          $mess=self::$db->errno;
-          throw new Exception("MySQL error $err", $mess);
-        } catch (Exception $e) {
-          echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-        }
         self::$db->rollback();
       }
     }
@@ -1395,7 +1388,6 @@ Class InstallUtils {
       @ob_flush();
       @flush();
       if (self::$db->errno != 0) {
-        echo self::$db->error . "<br />";
         self::displayError(array('013'=> $string['wdatabaseuser'] . self::$cfg_db_sysadmin_user . $string['wnotpermission'] . ' ' . self::$db->error ));
         self::$db->rollback();
       }
