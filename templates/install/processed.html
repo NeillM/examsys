@@ -3,7 +3,7 @@
 <p style="margin-left:10px">
     <input type="button" class="ok" name="config" value="{{lang.config}}" onclick="go_config()" />
 </p>
-{$ else %}
+{% else %}
 <h1>{{lang.errors14}}</h1>
 <div class="warning">
     {% for message in data.warnings %}
