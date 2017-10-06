@@ -39,7 +39,7 @@ class requirements {
   }
   /**
    * Check required php extensions are enabled.
-   * @return boolean
+   * @return array
    */
   public static function check_php_extensions() {
     $ext = array();
@@ -105,5 +105,41 @@ class requirements {
       $return = false;
     }
     return $return;
+  }
+  
+  /**
+  * Check for required components - used by cli installers
+  * @throws Exception
+  */
+  public static function check() {
+    $configObject = Config::get_instance();
+    // db.
+    if (!self::check_db()) {
+      $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
+      throw new Exception('MySQL version does not meet minimum requirement - ' . $mysql_min_ver);
+    }
+    // php.
+    if (!self::check_php_version()) {
+      $php_min_ver = $configObject->getxml('php', 'min_version');
+      throw new Exception('PHP version does not meet minimum requirement - ' . $php_min_ver);
+    }
+    $phpext = self::check_php_extensions();
+    foreach ($phpext as $idx => $val) {
+      if (!$val) {
+        throw new Exception('PHP extension ' . strtoupper($idx) . ' missing.');
+      }
+    }
+    // Install composer and dependencies.
+    if (!InstallUtils::$behat_install and !InstallUtils::$phpunit_install) {
+      if (self::check_composer() !== true) {
+        throw new Exception('Composer not installed / failed to install libraries.');
+      }
+    }
+    // Install NPM dependencies.
+    if (!InstallUtils::$behat_install and !InstallUtils::$phpunit_install) {
+      if (self::check_npm() !== true) {
+        throw new Exception('NPM not installed / failed to install libraries');
+      }
+    }
   }
 }

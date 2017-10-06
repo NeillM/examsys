@@ -87,7 +87,12 @@ try {
   // Load an verifiy settings.xml
   InstallUtils::loadSettings();
   // Check pre-requisites.
-  InstallUtils::checkSoftware();
+  try {
+    requirements::check();
+  } catch (Exception $e) {
+    cli_utils::prompt($e->getMessage());
+    exit(0);
+  }
   // Install.
   InstallUtils::checkDirPermissionsPost();
   $args = array(

@@ -1728,63 +1728,6 @@ Class InstallUtils {
   }
 
   /**
-  * Check for installed software versions PHP
-  *
-  */
-  static function checkSoftware() {
-    global $string;
-    $configObject = Config::get_instance();
-    $errors = array();
-
-    if (!empty($_SERVER['SERVER_SOFTWARE'])) {
-      $server = preg_split("/[\/ ]/", $_SERVER['SERVER_SOFTWARE']);
-    } else {
-      $server = array('');
-    }
-    // php
-    $php_min_ver = $configObject->getxml('php', 'min_version');
-    $phpversion = phpversion();
-    if ($phpversion < $php_min_ver) {
-      $errors['202'] = sprintf($string['errors10'], $php_min_ver, $phpversion);
-    }
-    $phpModules = get_loaded_extensions();
-    $extensions = $configObject->getxml('php', 'extensions');
-    $errorcode = 202;
-    foreach ($extensions->extension as $extension) {
-        $errorcode += 1;
-        if (!in_array($extension, $phpModules) ) {
-          $errors[$errorcode] = sprintf($string['errors11'], $extension);
-        }
-    }
-    // Escape before composer update if errors.
-    if (count($errors) > 0) {
-      self::displayError($errors);
-    }
-    // Install composer and dependencies.
-    try {
-      if (!InstallUtils::$behat_install and !InstallUtils::$phpunit_install) {
-        ob_start();
-        composer_utils::setup(composer_utils::INSTALL_NODEV);
-        ob_end_clean();
-      }
-    } catch (Exception $e) {
-      $errorcode += 1;
-      $errors[$errorcode] = $e->getMessage();
-    }
-
-    if (count($errors) > 0) {
-      $langpack = new langpack();
-      if ($errors[$errorcode] == $langpack->get_string('classes/composerutils', 'cannotinstall')) {
-          $fatal = true;
-      } else {
-          // Non fatal error if cannot be updated.
-          $fatal = false;
-      }
-      self::displayError($errors, $fatal);
-    }
-  }
-
-  /**
    * Display errors with a nice message
    * @param string|array $error error message(s)
    * @param boolean $fatal is error fatal

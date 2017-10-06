@@ -34,11 +34,11 @@ $language = 'en';
 
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'load_config.php';
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $language . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'install.php';
-require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $language . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'update.php';
+require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $language . DIRECTORY_SEPARATOR . 'updates' . DIRECTORY_SEPARATOR . 'upgrade.php';
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $language . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'errors.php';
 
 // Lets look to see what arguments have been passed.
-$options = 'hu:p:o::q::l::n::';
+$options = 'hu:p:o::q::l::';
 $longoptions = array(
   'help',
 );
@@ -51,8 +51,7 @@ $help = 'Rogo initialisation script options'
         . PHP_EOL . PHP_EOL . "-p, --passwd, \t\tDatabase password"
         . PHP_EOL . PHP_EOL . "-o, --staff_help, \tLoad staff help (0/1, default 0)"
         . PHP_EOL . PHP_EOL . "-q, --student_help, \tLoad student help (0/1, default 0)"
-        . PHP_EOL . PHP_EOL . "-l, --langpacks, \tLoad language packs (0/1, default 0)"
-        . PHP_EOL . PHP_EOL . "-n, --npm, \t\tUpdate NPM library (0/1, default 1)";
+        . PHP_EOL . PHP_EOL . "-l, --langpacks, \tLoad language packs (0/1, default 0)";
 
 if (isset($optionslist['h']) or isset($optionslist['help'])) {
   // Display some help information.
@@ -104,11 +103,6 @@ if (isset($optionslist['l'])) {
 } else {
   $update_langpacks = 0;
 }
-if (isset($optionslist['n'])) {
-  $update_npm = $optionslist['n'];
-} else {
-  $update_npm = 1;
-}
 // Ensure any caches are cleared.
 if (function_exists('opcache_reset')) {
     opcache_reset();
@@ -131,7 +125,12 @@ if ($updater_utils->check_version("6.4.0")) {
 // Get update file dir.
 $migration_path = 'updates' . DIRECTORY_SEPARATOR . 'scripts';
 // Check pre-requisites.
-InstallUtils::checkSoftware();
+try {
+  requirements::check();
+} catch (Exception $e) {
+  cli_utils::prompt($e->getMessage());
+  exit(0);
+}
 if (!InstallUtils::configFileIsWriteable()) {
   cli_utils::prompt($string['updatefromversion'] . ' ' . $old_version . ' to ' . $version);
   cli_utils::prompt($string['warning1']);
@@ -233,18 +232,6 @@ if ($update_langpacks) {
         cli_utils::prompt($string['cannotextract']);
         break;
     }
-  }
-}
-
-// Update npm and dependencies.
-if ($update_npm) {
-  try {
-    $npm_method = npm_utils::INSTALL_NODEV;
-    ob_start();
-    npm_utils::setup($npm_method);
-    ob_end_clean();
-  } catch (Exception $e) {
-    cli_utils::prompt($e->getMessage());
   }
 }
 

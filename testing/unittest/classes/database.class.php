@@ -42,7 +42,11 @@ class database {
     InstallUtils::$cli = true;
     InstallUtils::$phpunit_install = true;
     // Check that the php environment is setup correctly.
-    InstallUtils::checkSoftware();
+    try {
+      requirements::check();
+    } catch (Exception $e) {
+      throw new Exception($e->getMessage());
+    }
     // Setup the InstallUtils class for installation.
     InstallUtils::$cfg_db_basename = $config->get('cfg_db_database');
     InstallUtils::$cfg_db_name = $config->get('cfg_db_database');
