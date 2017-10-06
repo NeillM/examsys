@@ -177,8 +177,8 @@ if ($update_staff_help) {
 // Update the student online help files.
 if ($update_student_help) {
   try {
-      $ext = OnlineHelp::load_student_help();
-      cli_utils::prompt($string['studentloaded']);
+    $ext = OnlineHelp::load_student_help();
+    cli_utils::prompt($string['studentloaded']);
   } catch (Exception $e) {
     if ($e->getMessage() === 'CANNOT_FIND') {
       cli_utils::prompt($string['logwarning4']);
