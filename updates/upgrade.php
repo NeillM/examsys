@@ -165,7 +165,7 @@ if (!isset($_POST['update'])) {
   if ($update_staff_help) {
     try {
       OnlineHelp::load_staff_help();
-      $lang['staffloaded'] = sprintf($string['staffloaded'], $ext);
+      $lang['staffloaded'] = $string['staffloaded'];
     } catch (Exception $e) {
       if ($e->getMessage() === 'CANNOT_FIND') {
         $lang['staffhelperrormsg'] = $string['logwarning2'];
@@ -181,7 +181,7 @@ if (!isset($_POST['update'])) {
   if ($update_student_help) {
     try {
       OnlineHelp::load_student_help();
-      $lang['stuloaded'] = sprintf($string['studentloaded'], $ext);
+      $lang['stuloaded'] = $string['studentloaded'];
     } catch (Exception $e) {
       if ($e->getMessage() === 'CANNOT_FIND') {
         $lang['stuhelperrormsg'] = $string['logwarning4'];

@@ -163,55 +163,28 @@ $mysqli->commit();
 
 // Update the staff online help files.
 if ($update_staff_help) {
-  $updater_utils->execute_query("TRUNCATE staff_help", false);
-  $file = file_get_contents('install/staff_help.sql');
-  $mysqli->multi_query($file);
-  if ($mysqli->error) {
-    cli_utils::prompt($string['showerror']);
-    exit(0);
-  }
-  $ext = '';
-  while ($mysqli->more_results()) {
-    $mysqli->next_result();
-    if ($mysqli->insert_id > 0) $ext = $ext . ' ' . $mysqli->insert_id;
-  }
   try {
-      // Ensure all help images are in the correct location.
-      $staffhelp = rogo_directory::get_directory('help_staff');
-      $staffhelp->create();
-      $staffhelp->copy_from_default();
-      // Fix path of help file images as may not be in root web dir.
-      InstallUtils::correct_staff_path();
-      cli_utils::prompt("LOADED staff_help: " . $ext);
+    OnlineHelp::load_staff_help();
+    cli_utils::prompt($string['staffloaded']);
   } catch (Exception $e) {
-    cli_utils::prompt($e->getMessage());
+    if ($e->getMessage() === 'CANNOT_FIND') {
+      cli_utils::prompt($string['logwarning2']);
+    } else {
+      cli_utils::prompt($string['logwarning1']);
+    }
   }
 }
 // Update the student online help files.
 if ($update_student_help) {
-  $updater_utils->execute_query("TRUNCATE student_help", false);
-
-  $file = file_get_contents('install/student_help.sql');
-  $mysqli->multi_query($file);
-  if ($mysqli->error) {
-    cli_utils::prompt($string['showerror']);
-    exit(0);
-  }
-  $ext = '';
-  while ($mysqli->more_results()) {
-    $mysqli->next_result();
-    if ($mysqli->insert_id > 0) $ext = $ext . ' ' . $mysqli->insert_id;
-  }
   try {
-      // Ensure all help images are in the correct location.
-      $studenthelp = rogo_directory::get_directory('help_student');
-      $studenthelp->create();
-      $studenthelp->copy_from_default();
-      // Fix path of help file images as may not be in root web dir.
-      InstallUtils::correct_student_path();
-      cli_utils::prompt("LOADED student_help: " . $ext);
+      $ext = OnlineHelp::load_student_help();
+      cli_utils::prompt($string['studentloaded']);
   } catch (Exception $e) {
-    cli_utils::prompt($e->getMessage());
+    if ($e->getMessage() === 'CANNOT_FIND') {
+      cli_utils::prompt($string['logwarning4']);
+    } else {
+      cli_utils::prompt($string['logwarning3']);
+    }
   }
 }
 $mysqli->commit();
