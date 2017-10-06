@@ -392,23 +392,21 @@ Class InstallUtils {
     } else {
       self::$cfg_support_email = self::getSettings(param::TEXT, true, 'supportemail');
     }
-    self::$emergency_support_numbers = 'array(';
+    self::$emergency_support_numbers = array();
     for ($i = 1; $i<=3; $i++) {
       if (!self::$cli) {
         $supportname = param::optional("emergency_support$i", null, param::TEXT, param::FETCH_POST);
         if (!is_null($supportname)) {
-          self::$emergency_support_numbers .= "'" . $supportname . "'=>'" . param::optional("emergency_support_number$i", null, param::TEXT, param::FETCH_POST) . "', ";
+          self::$emergency_support_numbers[$supportname] = param::optional("emergency_support_number$i", null, param::TEXT, param::FETCH_POST);
         }
       } else {
         $name = self::getSettings(param::TEXT, false, "contact$i", 'name');
         $number = self::getSettings(param::TEXT, false, "contact$i", 'telephone');
         if (is_string($name) and is_string($number)) {
-          self::$emergency_support_numbers .= "'" . $name . "'=>'" . $number . "', ";
+          self::$emergency_support_numbers[$name] = $number;
         }
       }
     }
-    self::$emergency_support_numbers = rtrim(self::$emergency_support_numbers, ', ');
-    self::$emergency_support_numbers .= ')';
     //Other settings
     if (!self::$cli) {
       self::$cfg_labsecuritytype = param::optional("labsecurity", false, param::TEXT, param::FETCH_POST);
