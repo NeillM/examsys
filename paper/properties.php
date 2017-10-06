@@ -974,9 +974,13 @@ if ($configObject->get_setting('core', 'cfg_summative_mgmt') and $properties->ge
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
   <script type="text/javascript" src="../js/system_tooltips.js"></script>
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config_properties.js"></script>
+<?php
+  if($configObject->get_setting('core', 'misc_editor_name') === 'tinymce') {
+      $render = new render($configObject);
+      $tinmymcedata['file'] = 'tiny_config_properties';
+      $render->render($tinmymcedata, null, 'tinymce.html');
+  }
+?>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
 <?php

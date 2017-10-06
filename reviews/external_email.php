@@ -58,12 +58,16 @@ $display_deadline = $external_review_deadline->format('l jS M Y');
     .email {width:300px; color:#316ac5}
   </style>
   
-  <?php echo $configObject->get('cfg_js_root') ?>
+<?php
+  if($configObject->get_setting('core', 'misc_editor_name') === 'tinymce') {
+      $render = new render($configObject);
+      $tinmymcedata['file'] = 'tiny_config_externals_email';
+      $render->render($tinmymcedata, null, 'tinymce.html');
+  }
+?>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config_externals_email.js"></script>
   <script>
     $(function () {
       

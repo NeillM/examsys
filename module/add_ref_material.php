@@ -64,11 +64,15 @@ if (isset($_POST['submit'])) {
     input[type=checkbox] {margin-left:20px}
     .r1 {text-indent:-23px; padding-left:23px; background-color:white}
     .r2 {text-indent:-23px; padding-left:23px; background-color:#FFBD69}
-		.school {margin-top:10px; width:100%; background-color:white; color:#1E3287}
+    .school {margin-top:10px; width:100%; background-color:white; color:#1E3287}
   </style>
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config.js"></script>
+<?php
+  if($configObject->get_setting('core', 'misc_editor_name') === 'tinymce') {
+      $render = new render($configObject);
+      $tinmymcedata['file'] = 'tiny_config';
+      $render->render($tinmymcedata, null, 'tinymce.html');
+  }
+?>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>

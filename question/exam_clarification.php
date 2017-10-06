@@ -108,11 +108,15 @@ exit();
     h1 {text-align:left; font-size:150%; margin-left:4px; font-weight:normal}
   </style>
   
-  <?php echo $configObject->get('cfg_js_root') ?>
+<?php
+  if($configObject->get_setting('core', 'misc_editor_name') === 'tinymce') {
+      $render = new render($configObject);
+      $tinmymcedata['file'] = 'tiny_config_announcements';
+      $render->render($tinmymcedata, null, 'tinymce.html');
+  }
+?>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
-  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config_announcements.js"></script>
   <script>
     $(function () {
       var new_height = $(window).height() - 105;

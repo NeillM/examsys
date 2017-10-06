@@ -55,13 +55,13 @@ if (isset($_GET['default'])) {
     .swatch {display:inline-block; width:40px; height:40px; border: 6px solid #F1F5FB}
     .dialog_header {font-size:200%; border-bottom: 1px solid #CCD9EA; background-image: url('../artwork/calendar_icon.png'); background-repeat:no-repeat; background-position: 10px 3px; padding-left:66px; line-height:56px; height:56px}
   </style>
-
-  <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config.js"></script>
 <?php
-
+if($configObject->get_setting('core', 'misc_editor_name') === 'tinymce') {
+    $render = new render($configObject);
+    $tinmymcedata['file'] = 'tiny_config';
+    $render->render($tinmymcedata, null, 'tinymce.html');
+}
 if (isset($_POST['submit'])) {
   $title = trim($_POST['title']);
   $message = trim($_POST['message']);

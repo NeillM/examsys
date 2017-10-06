@@ -754,6 +754,7 @@ Class InstallUtils {
     $configObject->set_setting('paper_autosave_backoff_factor', 1.5, Config::DOUBLE);
     $configObject->set_setting('summative_midexam_clarification', array('invigilators', 'students'), Config::CSV);
     $configObject->set_setting('system_password_expire', 30, Config::INTEGER);
+    $configObject->set_setting('misc_editor_name', 'tinymce', Config::STRING);
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();
@@ -1984,14 +1985,6 @@ Class InstallUtils {
     var cfgRootPath = '\$cfg_root_path';
   }
 </script>
-SCRIPT;
-
-//Editor
-  \$cfg_editor_name = 'tinymce';
-  \$cfg_editor_javascript = <<< SCRIPT
-\$cfg_js_root
-<script type="text/javascript" src="\$cfg_root_path/tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript" src="\$cfg_root_path/tools/tinymce/jscripts/tiny_mce/tiny_config.js"></script>
 SCRIPT;
 
 if(!isset(\$_SERVER['HTTP_HOST'])) {

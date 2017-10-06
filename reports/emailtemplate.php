@@ -62,9 +62,13 @@ if (file_exists($templatefile)) {
     body {font-size:90%; background-color:#F0F0F0; margin:4px}
   </style>
 
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config_email.js"></script>
+<?php
+  if($configObject->get_setting('core', 'misc_editor_name') === 'tinymce') {
+      $render = new render($configObject);
+      $tinmymcedata['file'] = 'tiny_config_email';
+      $render->render($tinmymcedata, null, 'tinymce.html');
+  }
+?>
   <script>
     function submitValues() {
       opener.document.theform.emailtemplate.value = tinyMCE.get('template').getContent();
