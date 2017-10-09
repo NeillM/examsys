@@ -1669,8 +1669,7 @@ class PaperProperties {
    * @return $string encrypted passsword
    */
   public function encrypt_password($password) {
-    $encryp = new encryp();
-    return $encryp->mcrypt_password($password);
+    return \encryp::mcrypt_password($password);
   }
   /**
    * Decrypt the password.
@@ -1679,8 +1678,7 @@ class PaperProperties {
    * @return string decrypted passsword
    */
   public function decrypt_password($encpassword) {
-    $encryp = new encryp();
-    return $encryp->mdecrypt_password($encpassword);
+    return \encryp::mdecrypt_password($encpassword);
   }
 
   /**
