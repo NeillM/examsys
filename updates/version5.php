@@ -40,8 +40,6 @@ require_once dirname(__DIR__) . '/lang/' . $language . '/updates/version5.php';
 // Get the code version.
 $version = $configObject->getxml('version');
 $migration_path = 'version5';
-// Set encryption class.
-$enc = new encryp();
 
 set_time_limit(0);
 
@@ -181,6 +179,9 @@ if (!isset($_POST['update'])) {
 
   // Set db object in config.
   $configObject->set_db_object($mysqli);
+
+  // Set encryption class.
+  $enc = new encryp();
 
   $updater_utils = new UpdaterUtils($mysqli, $configObject->get('cfg_db_database'));
 
