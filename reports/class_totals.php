@@ -80,7 +80,7 @@ if (($paper_type == '2' and $unmarked and !$propertyObj->is_active()) or (in_arr
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-    <title><?php echo $string['classtotals'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+    <title><?php echo $string['classtotals'] . ' ' . $configObject->get_setting('core', 'system_install_type'); ?></title>
 
     <link rel="stylesheet" type="text/css" href="../css/body.css" />
     <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -156,7 +156,7 @@ ob_start();
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title><?php echo $string['classtotals'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo $string['classtotals'] . ' ' . $configObject->get_setting('core', 'system_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -400,7 +400,7 @@ if ($marking == '0') {
 
 // Output table heading
 $table_order = array('', 'Title', $string['surname'], $string['firstnames'], $string['studentid'], $string['course'], $string['mark'], $marking_label, $string['classification'], $string['rank'], $string['decile'], $string['starttime'], $string['duration']);
-if ($configObject->get('cfg_client_lookup') == 'name') {
+if ($configObject->get_setting('core', 'system_hostname_lookup')) {
   $table_order[] = $string['hostnames'];
 } else {
   $table_order[] = $string['ipaddress'];
@@ -467,7 +467,7 @@ if ($sortby == 'classification') {
   $sortby = 'mark';
 }
 
-$percent_decimals = $configObject->get('percent_decimals');
+$percent_decimals = $configObject->get_setting('core', 'rpt_percent_decimals');
 $absent_no = 0;
 $scatter_data = '';
 

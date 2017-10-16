@@ -1,0 +1,8 @@
+<div class="error">
+    {% for errCode, message in data.error %}
+    <div>
+        <img src="{{path}}/artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" />
+        <strong>{{lang.errors13}} {{errCode}}:</strong> {{message}}
+    </div>
+    {% endfor %}
+</div>

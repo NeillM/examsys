@@ -27,8 +27,8 @@ require_once '../../include/sysadmin_auth.inc';
 require_once '../../include/errors.php';
 
 // Exit if ims not enabled.
-if (!$configObject->get('cfg_ims_enabled')) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+if (!$configObject->get_setting('core', 'cfg_ims_enabled')) {
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '../../artwork/page_not_found.png', '#C00000', true, true);
 }
 
@@ -53,7 +53,7 @@ $render = new \html_renderer();
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-    <title>Rog&#333;: <?php echo "IMS Settings " . $configObject->get('cfg_install_type') ?>
+    <title>Rog&#333;: <?php echo "IMS Settings " . $configObject->get_setting('core', 'system_install_type') ?>
     </title>
     <link rel="stylesheet" type="text/css" href="../../css/body.css" />
     <link rel="stylesheet" type="text/css" href="../../css/header.css" />

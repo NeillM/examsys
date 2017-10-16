@@ -60,7 +60,7 @@ if (isset($_GET['module'])) {
     }
     $module_code = $module_details['moduleid'];
     if (!$module_code) {
-      $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+      $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
       $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
     }
   } else {
@@ -78,7 +78,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rog&#333;: <?php echo $string['questionbank'] . ' ' . $configObject->get('cfg_install_type') ?></title>
+  <title>Rog&#333;: <?php echo $string['questionbank'] . ' ' . $configObject->get_setting('core', 'system_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -304,6 +304,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
 
   <tbody>
   <?php
+  $leadinlength = $configObject->get_setting('core', 'misc_search_leadin_length');
   while ($search_results->fetch()) {
     echo '<tr class="q';
 
@@ -361,7 +362,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
     } else {
       echo '<td class="l"';
     }
-    if (strlen($leadin) > $configObject->get('cfg_search_leadin_length')) {
+    if (strlen($leadin) > $leadinlength) {
       echo ' onmouseover="showAdHocWindow(event,\''.htmlspecialchars(QuestionUtils::clean_leadin($leadin, 0)).'\');" ';
       echo ' onmouseleave="hideAdHocWindow();" ';
     }
@@ -371,7 +372,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
     }
     //sl change this from echo $leadin to below
 	
-    echo QuestionUtils::clean_leadin($leadin, $configObject->get('cfg_search_leadin_length')) . '</td>';
+    echo QuestionUtils::clean_leadin($leadin, $leadinlength) . '</td>';
     echo '<td class="nobr">' . $string[$q_type] . '</td>';
     if ($type == 'keyword' or $type == 'bloom') {
       echo '<td>' . $extra_field . '</td>';    

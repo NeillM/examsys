@@ -34,7 +34,7 @@ $jstring = $string; //to pass it to JavaScript HTML5 modules
 $userObject = UserObject::get_instance();
 
 if ($userObject->has_role('External Examiner') or $userObject->has_role('Internal Reviewer')) {    // Special users have their own separate UI.
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['accessdenied'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/access_denied.png', '#C00000', true, true);
 }
 
@@ -55,7 +55,7 @@ $deleted = $propertyObj->get_deleted();
 
 // If the paper has been deleted we should exit as this is an invalid page.
 if ($deleted != NULL) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '/artwork/exclamation_48.png', '#C00000', true, true);
 }
 
@@ -697,7 +697,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 
   var startAutoSave = function () {
     clearTimeout(autoSaveRef);<?php // Cancel any outstanding timeouts to make sure only one auto save is ever registered. ?>
-    autoSaveRef = setTimeout("autoSave()",<?php echo (($configObject->get('cfg_autosave_frequency') + rand(-5,5)) * 1000); ?>);
+    autoSaveRef = setTimeout("autoSave()",<?php echo (($configObject->get_setting('core', 'paper_autosave_frequency') + rand(-5,5)) * 1000); ?>);
   }
 
   var stopAutoSave = function() {
@@ -723,11 +723,14 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
             // Set the time out of one requst to be the maximum total time plus 5s for network latency
             // PHP handles normal timeouts. This is just to make sure the user won't wait forever if somthing
             // weird happens.
-            echo ceil((($configObject->get('cfg_autosave_retrylimit') * $configObject->get('cfg_autosave_backoff_factor') * $configObject->get('cfg_autosave_settimeout')) + $configObject->get('cfg_autosave_settimeout') + 5)) * 1000;
+            $settimeout = $configObject->get_setting('core', 'paper_autosave_settimeout');
+            $retrylimit = $configObject->get_setting('core', 'paper_autosave_retrylimit');
+            $backofffactor = $configObject->get_setting('core', 'paper_autosave_backoff_factor');
+            echo ceil((($retrylimit * $backofffactor * $settimeout) + $settimeout + 5)) * 1000;
                    ?>,
           cache: false,
           tryCount : 0,
-          retryLimit : <?php echo $configObject->get('cfg_autosave_retrylimit'); // Try 3 times before erroring ?>,
+          retryLimit : <?php echo $retrylimit; // Try 3 times before erroring ?>,
           beforeSend: function() {
           },
           fail: function() {
@@ -1143,7 +1146,7 @@ if($propertyObj->get_calculator()) {
     echo '<tr><td>';
   }
 
-  $midexam_clarification = $configObject->get('midexam_clarification');
+  $midexam_clarification = $configObject->get_setting('core', 'summative_midexam_clarification');
 
   if ($propertyObj->get_paper_type() === '3') {
     $calculator = 0;

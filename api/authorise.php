@@ -25,7 +25,8 @@ require '../include/staff_auth.inc';
 require_once '../include/errors.php';
 
 function error($error, $string, $mysqli, $configObject, $notice) {
-    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $error, '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
@@ -94,7 +95,7 @@ if (isset($_POST['submit'])) {
             </tr>
             <tr><td><input type="submit" class="ok" name="submit" value="<?php echo $string['save']; ?>"></td></tr>
             </table>
-        <div class="versionno">Rog&#333; <?php echo $configObject->get('rogo_version'); ?></div>
+        <div class="versionno">Rog&#333; <?php echo $configObject->get_setting('core', 'rogo_version'); ?></div>
     </div>
     <input type="hidden" id="client_id" name="client_id" value ="<?php echo $client_id; ?>">
     <input type="hidden" id="response_type" name="response_type" value ="code">

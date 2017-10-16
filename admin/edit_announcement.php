@@ -28,7 +28,7 @@ require '../include/errors.php';
 $announcementid = check_var('announcementid', 'REQUEST', true, false, true);
 
 if (!announcement_utils::announcement_exist($announcementid, $mysqli)) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
@@ -69,14 +69,11 @@ $result->close();
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/announcement.css" />
 <?php
-// Override this variable with a specific configuration file for announcements.
-$cfg_editor_javascript = <<< SCRIPT
-{$configObject->get('cfg_js_root')}
-<script type="text/javascript" src="{$configObject->get('cfg_root_path')}/tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript" src="{$configObject->get('cfg_root_path')}/tools/tinymce/jscripts/tiny_mce/tiny_config_announcements.js"></script>
-SCRIPT;
-
-  echo $cfg_editor_javascript;
+if($configObject->get_setting('core', 'misc_editor_name') === 'tinymce') {
+    $render = new render($configObject);
+    $tinmymcedata['file'] = 'tiny_config_announcements';
+    $render->render($tinmymcedata, null, 'tinymce.html');
+}
 ?>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>

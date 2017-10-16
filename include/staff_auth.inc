@@ -29,7 +29,7 @@ $userObject = UserObject::get_instance();
 
 if (!$userObject->has_role(array('Staff', 'External Examiner', 'SysCron', 'Invigilator', 'Internal Reviewer'))) {
   // Current user is not Staff, External Examiner or the system cron so display warning and exit.
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '/artwork/exclamation_48.png', '#C00000', true, true);
 }
 
@@ -159,7 +159,7 @@ if ($userObject->has_role('SysAdmin')) {
       }
     }
     if ($staff_module_match == false) {
-      $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+      $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
       $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
     }
   }
@@ -182,7 +182,7 @@ if ($userObject->has_role('SysAdmin')) {
       }
 
       if ($on_staff_module == false and !in_array('SYSTEM', array_values($paper_modules))) {
-        $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+        $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
         $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
       }
     }
@@ -211,7 +211,7 @@ if ($userObject->has_role('SysAdmin')) {
 
         // Allow acsess to the TRAIN module for training!
         if ($access == false and !in_array('SYSTEM', array_values($question_modules))) {
-          $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+          $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
           $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
         }
       }
@@ -221,7 +221,7 @@ if ($userObject->has_role('SysAdmin')) {
   // Can the user access reference material?
   if (isset($_REQUEST['refID'])) {
     if (!refmaterials_utils::check_access($userObject, $_REQUEST['refID'], $mysqli)) {
-      $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+      $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
       $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
     }
   }

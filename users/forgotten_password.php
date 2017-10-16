@@ -95,7 +95,7 @@ h2 {font-size:120%}
 <body>
 EMAIL;
 
-        $email_body .= sprintf($string['emailhtml'], $title, $surname, $_SERVER['HTTP_HOST'], $token, $configObject->get('support_email'));
+        $email_body .= sprintf($string['emailhtml'], $title, $surname, $_SERVER['HTTP_HOST'], $token, $configObject->get_setting('core', 'support_contact_email'));
 
         $email_body .= <<< EMAIL
 </body>
@@ -104,7 +104,7 @@ EMAIL;
 
         $mail_to = $email;
         $subject = "Rogo {$string['passwordreset']}";
-        $headers = "From: " . $configObject->get('support_email') . "\n";
+        $headers = "From: " . $configObject->get_setting('core', 'support_contact_email') . "\n";
         $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=utf-8\n";
         if(!@mail ($mail_to, $subject, $email_body, $headers)) {
           $errors[] = sprintf($string['couldntsendemail'], $email);
@@ -123,7 +123,7 @@ EMAIL;
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title><?php echo $string['forgottenpassword'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo $string['forgottenpassword'] . ' ' . $configObject->get_setting('core', 'system_install_type'); ?></title>
 
   <link rel="stylesheet" href="../css/body.css" type="text/css" />
   <link rel="stylesheet" href="../css/screen.css" type="text/css" />

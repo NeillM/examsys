@@ -42,7 +42,7 @@ $academic_year = $yearutils->get_academic_session($session);
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Rog&#333; <?php echo $configObject->get('cfg_install_type'); ?></title>
+    <title>Rog&#333; <?php echo $configObject->get_setting('core', 'system_install_type'); ?></title>
 
     <link rel="stylesheet" type="text/css" href="../css/body.css" />
     <link rel="stylesheet" type="text/css" href="../css/header.css" />

@@ -39,7 +39,7 @@ $folder = '';
 
 $module_details = module_utils::get_full_details_by_ID($_GET['module'], $mysqli);
 if (!$module_details) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 ?>
@@ -49,7 +49,7 @@ if (!$module_details) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rog&#333;: <?php echo $string['importmetadata'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;: <?php echo $string['importmetadata'] . ' ' . $configObject->get_setting('core', 'system_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
@@ -207,7 +207,8 @@ if (!$module_details) {
   $yearutils = new yearutils($mysqli);
   $current_year = $yearutils->get_current_session();
   $previous_year = $current_year -1;
-  $next_year = $current_year + 1;  echo "<option value=\"$previous_year\">$previous_year</option>\n";
+  $next_year = $current_year + 1;
+  echo "<option value=\"$previous_year\">$previous_year</option>\n";
   echo "<option value=\"$current_year\" selected>$current_year</option>\n";
   echo "<option value=\"$next_year\">$next_year</option>\n";
 

@@ -93,7 +93,7 @@ function check_ebel_distinction_type($reviewID, $db) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rog&#333;: Standards Setting<?php echo ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;: Standards Setting<?php echo ' ' . $configObject->get_setting('core', 'system_install_type'); ?></title>
   <?php
   // Get any questions to exclude.
   $exclusions = new Exclusion($paperID, $mysqli);

@@ -146,8 +146,7 @@ class internaldb_auth extends outline_authentication {
     }
 
     $this->updatable = true;
-    $enc = new encryp();
-    $encrypt_password = $enc->encpw($this->settings['encrypt_salt'], $this->form['std']->username, $this->form['std']->password, $old_encrypt_type);
+    $encrypt_password = \encryp::encpw($this->settings['encrypt_salt'], $this->form['std']->username, $this->form['std']->password, $old_encrypt_type);
 
     $this->savetodebug('encrypted password strings ' . $encrypt_password . ':::' . $pass);
 
@@ -177,20 +176,19 @@ class internaldb_auth extends outline_authentication {
 
   function update_password($postauthsuccessobj = '') {
     $configObj = Config::get_instance();
-    
+    $passwordexpire = $configObj->get('core', 'system_password_expire');
     $this->savetodebug('Called update_password');
     if ($this->updatable === true and (!isset($this->settings['donotupdatepassword']) or (isset($this->settings['donotupdatepassword']) and $this->settings['donotupdatepassword'] !== true))) {
-      if ($configObj->get('cfg_password_expire') == null) {
+      if ($passwordexpire == null) {
         $days = 30;   // If there is no setting in the config file, default to 30 days.
       } else {
-        $days = $configObj->get('cfg_password_expire');
+        $days = $passwordexpire;
       }
       $expire = time() + ($days * 24 * 60 * 60);
           
       $this->savetodebug('Updating Password');
       extract($this->settings);
-      $enc = new encryp();
-      $encpw_details = $enc->encpw($this->settings['encrypt_salt'], $this->form['std']->username, $this->form['std']->password);
+      $encpw_details = \encryp::encpw($this->settings['encrypt_salt'], $this->form['std']->username, $this->form['std']->password);
       $stmt = $this->db->prepare("UPDATE $table SET $passwd_col = ?, password_expire = ? WHERE $username_col = ?");
       $stmt->bind_param('sis', $encpw_details, $expire, $this->form['std']->username);
       $stmt->execute();

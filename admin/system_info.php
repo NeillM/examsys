@@ -202,17 +202,23 @@ if ($e6 == 'improved') {
 
 $yearutils = new yearutils($mysqli);
 
+
+if ($configObject->get_setting('core', 'system_hostname_lookup')) {
+  $hostname_lookup = $string['hostname'];
+} else {
+  $hostname_lookup = $string['ipaddress'];
+}
 ?>
 </td>
 <td style="width:50px">&nbsp;</td>
 <td style="vertical-align:top">
 <table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; width:550px">
 <tr><td colspan="2" class="sechead"><?php echo $string['application']; ?></td></tr>
-<tr><td style="width:130px"><?php echo $string['version']; ?></td><td><?php echo $configObject->get('rogo_version'); ?></td></tr>
+<tr><td style="width:130px"><?php echo $string['version']; ?></td><td><?php echo $configObject->get_setting('core', 'rogo_version'); ?></td></tr>
 <tr><td><?php echo $string['webroot']; ?></td><td><?php echo $configObject->get('cfg_web_root'); ?></td></tr>
 <tr><td><?php echo $string['database']; ?></td><td><?php echo $configObject->get('cfg_db_database'); ?></td></tr>
-<tr><td><?php echo $string['company']; ?></td><td><?php echo $configObject->get('cfg_company'); ?></td></tr>
-<tr><td><?php echo $string['lookups']; ?></td><td><?php echo $configObject->get('cfg_client_lookup'); ?></td></tr>
+<tr><td><?php echo $string['company']; ?></td><td><?php echo $configObject->get_setting('core', 'misc_company'); ?></td></tr>
+<tr><td><?php echo $string['lookups']; ?></td><td><?php echo $hostname_lookup ?></td></tr>
 <tr><td><?php echo $string['Session']; ?></td><td><?php echo $yearutils->get_academic_session($yearutils->get_current_session()); ?></td></tr>
 <tr><td><?php echo $string['ErrorLogSettings']; ?></td><td><?php echo $ErrorLogSettings ?></td></tr>
 

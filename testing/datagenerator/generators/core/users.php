@@ -200,7 +200,6 @@ class users extends generator {
     }
 
     // Ensure there is an encrypted password.
-    $encrypt = new encryp();
     if (empty($parameters['username'])) {
       $username = $defaults['username'];
     } else {
@@ -211,7 +210,7 @@ class users extends generator {
     } else {
       $plainpassword = $parameters['password_clear'];
     }
-    $defaults['password'] = $encrypt->encpw(UserUtils::get_salt(), $username, $plainpassword);
+    $defaults['password'] = \encryp::encpw(UserUtils::get_salt(), $username, $plainpassword);
 
     $values = $this->set_defaults_and_clean($defaults, $parameters);
     $values['roles'] = $this->validate_roles($values['roles']);

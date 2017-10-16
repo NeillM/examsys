@@ -55,16 +55,20 @@ if (file_exists($templatefile)) {
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title>Rog&#333;: Email Template<?php echo " " . $configObject->get('cfg_install_type') ?></title>
+  <title>Rog&#333;: Email Template<?php echo " " . $configObject->get_setting('core', 'system_install_type') ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
     body {font-size:90%; background-color:#F0F0F0; margin:4px}
   </style>
 
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config_email.js"></script>
+<?php
+  if($configObject->get_setting('core', 'misc_editor_name') === 'tinymce') {
+      $render = new render($configObject);
+      $tinmymcedata['file'] = 'tiny_config_email';
+      $render->render($tinmymcedata, null, 'tinymce.html');
+  }
+?>
   <script>
     function submitValues() {
       opener.document.theform.emailtemplate.value = tinyMCE.get('template').getContent();

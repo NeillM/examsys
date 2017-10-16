@@ -44,16 +44,18 @@ $retry = param::optional('retry', 0, param::INT);
 $mode = param::optional('mode', '', param::ALPHA);
 $submit_type = param::optional('submitType', '', param::ALPHA, param::FETCH_GET);
 $old_screen = param::optional('old_screen', 0, param::INT, param::FETCH_POST);
-
+$settimeout = $configObject->get_setting('core', 'paper_autosave_settimeout');
+$retrylimit = $configObject->get_setting('core', 'paper_autosave_retrylimit');
+$backofffactor = $configObject->get_setting('core', 'paper_autosave_backoff_factor');
 // Calculate how long this request should be processed based on the config vars and the retry number.
-if (!is_null($retry) and $retry > 0 and $retry <= $configObject->get('cfg_autosave_retrylimit')) {
-  $extra_time = 1 + ceil($configObject->get('cfg_autosave_backoff_factor') * intval($retry) *  $configObject->get('cfg_autosave_settimeout'));
+if (!is_null($retry) and $retry > 0 and $retry <= $retrylimit) {
+  $extra_time = 1 + ceil($backofffactor * intval($retry) *  $settimeout);
 } else {
   $extra_time = 1;
 }
 
 // Kill this request if it is taking to long the JavaScript will retry if it can.
-set_time_limit($configObject->get('cfg_autosave_settimeout') + $extra_time);
+set_time_limit($settimeout + $extra_time);
 
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli, $string, true);
 

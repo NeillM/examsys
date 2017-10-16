@@ -100,7 +100,7 @@ class assessment {
      */
     function __construct($db, $configObject) {
         $this->db = $db;
-        $this->summative_mgmt = $configObject->get('cfg_summative_mgmt');
+        $this->summative_mgmt = $configObject->get_setting('core', 'cfg_summative_mgmt');
         $this->server_timezone = $configObject->get('cfg_timezone');
         $this->type = array('formative' => self::TYPE_FORMATIVE,
             'progress' => self::TYPE_PROGRESS,

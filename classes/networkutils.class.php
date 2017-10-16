@@ -36,7 +36,7 @@ Class NetworkUtils {
     }
     // If don't have cached version look it up
     if (!isset($_SESSION['current_ip'])) {
-      if ($configObject->get('cfg_client_lookup') == 'name') {
+      if ($configObject->get_setting('core', 'system_hostname_lookup')) {
         if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
           $tmp_parts = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
           $tmp_client_ipaddress = gethostbyaddr(trim($tmp_parts[0]));

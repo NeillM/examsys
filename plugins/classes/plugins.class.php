@@ -259,7 +259,7 @@ abstract class plugins {
             // Cannot install plugin with incorrect version format.
             return 'INCORRECT_VERSION';
         }
-        $current_rogo_version = $this->config->get('rogo_version');
+        $current_rogo_version = $this->config->get_setting('core', 'rogo_version');
         $current_plugin_version = $this->get_plugin_version();
         $plugin_requires_rogo = $this->requires;
         if (!\version::is_version_higher($plugin_requires_rogo, $current_rogo_version)) {

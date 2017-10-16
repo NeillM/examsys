@@ -139,7 +139,7 @@ class assessmentmanagement extends \api\abstractmanagement {
              return $this->get_response($data, 'create', $params['nodeid'], $error);
         }
         // Error if trying to create a summative exam when they are set to be scheduled only.
-        if ($configObject->get('cfg_summative_mgmt') and $papertype == $paper::TYPE_SUMMATIVE) {
+        if ($configObject->get_setting('core', 'cfg_summative_mgmt') and $papertype == $paper::TYPE_SUMMATIVE) {
             $data = array('statuscode' => $this->statuscodes['PAPER_SCHEDULE_SUMMATIVE'], 'status' => $strings['paper_scheduled_summative'], 'id' => null);
             return $this->get_response($data, 'create', $params['nodeid'], $error);
         }
@@ -251,7 +251,7 @@ class assessmentmanagement extends \api\abstractmanagement {
         $change = $this->check_if_updated($checkparameter, $details, $params);
 
         // Error if trying to update a summative exam when they are set to be scheduled only.
-        if ($configObject->get('cfg_summative_mgmt') and $papertype == $paper::TYPE_SUMMATIVE) {
+        if ($configObject->get_setting('core', 'cfg_summative_mgmt') and $papertype == $paper::TYPE_SUMMATIVE) {
             $data = array('statuscode' => $this->statuscodes['PAPER_SCHEDULE_SUMMATIVE'], 'status' => $strings['paper_scheduled_summative'], 'id' => null);
             return $this->get_response($data, 'update', $params['nodeid'], $error);
         }

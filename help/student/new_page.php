@@ -49,14 +49,18 @@ if (isset($_POST['save_changes'])) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-  <title>Rog&#333;: <?php echo $string['help'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title>Rog&#333;: <?php echo $string['help'] . ' ' . $configObject->get_setting('core', 'system_install_type'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/help.css" />
   
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-  <script type="text/javascript" src="../../tools/tinymce/jscripts/tiny_mce/tiny_config_help_staff.js"></script>
+<?php
+  if($configObject->get_setting('core', 'misc_editor_name') === 'tinymce') {
+      $render = new render($configObject);
+      $tinmymcedata['file'] = 'tiny_config_help_staff';
+      $render->render($tinmymcedata, null, 'tinymce.html');
+  }
+?>
   <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../../js/help.js"></script>
   <script>

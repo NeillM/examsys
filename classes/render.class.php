@@ -101,7 +101,7 @@ class render {
      */
     public function render_admin_header($lang, $additionaljs, $additionalcss) {
         $data = array('lang' => $lang, 'additionaljs' => $additionaljs, 'additionalcss' => $additionalcss,
-        'installtype' => $this->config->get('cfg_install_type'), 'charset' => $this->config->get('cfg_page_charset'),
+        'installtype' => $this->config->get_setting('core', 'system_install_type'), 'charset' => $this->config->get('cfg_page_charset'),
         'path' => $this->config->get('cfg_root_path'));
         echo $this->twig->render('admin/header.html', $data);
     }

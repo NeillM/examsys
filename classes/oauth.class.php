@@ -72,9 +72,9 @@ class oauth {
         $this->storage = new \OAuth2\Storage\Pdo(array('dsn' => $dsn, 'username' => $username, 'password' => $password));
         // Config options for server.
         $config = array(
-            'access_lifetime' => $configObject->get('cfg_oauth_access_lifetime'),
-            'refresh_token_lifetime' => $configObject->get('cfg_oauth_refresh_token_lifetime'),
-            'always_issue_new_refresh_token' => $configObject->get('cfg_oauth_always_issue_new_refresh_token')
+            'access_lifetime' => $configObject->get_setting('core', 'api_oauth_access_lifetime'),
+            'refresh_token_lifetime' => $configObject->get('core', 'api_oauth_refresh_token_lifetime'),
+            'always_issue_new_refresh_token' => $configObject->get('core', 'api_oauth_always_issue_new_refresh_token')
         );
         // Pass a storage object or array of storage objects to the OAuth2 server class
         $this->server = new \OAuth2\Server($this->storage, $config);

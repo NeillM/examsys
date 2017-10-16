@@ -1,0 +1,102 @@
+<div>
+    <table class="header">
+      <tr>
+        <th style="padding-top:4px; padding-bottom:4px; padding-left:16px">
+            <img src="{{path}}/artwork/r_logo.gif" alt="logo" class="logo_img" />
+            <div class="logo_lrg_txt">Rog&#333;</div>
+            <div class="logo_small_txt">{{lang.logo_small_txt}}</div>
+        </th>
+        <th style="text-align:right; padding-right:10px"><img src="{{path}}/artwork/software_64.png" width="64" height="64" alt="{{lang.icon}}" /></th>
+        </tr>
+    </table>
+    {% if data.versionerror == "true" %}
+        <p class="version_warning">{{lang.warning1}}</br></br>{{lang.warning2}}</p>
+    {% else %}
+        {% if data.updating == "true" %}
+            {% if data.configwarning == "true" %}
+                <h2>{{lang.updatefromversion}}</h2>
+                <div>{{lang.warningmsg1}}</div>
+                <div>{{lang.warningmsg2}}/div>
+            {% else %}
+                <form id="installForm" class="cmxform" method="post" action="{{data.action}}" autocomplete="off">
+                    <div>{{lang.menumsg}}</div>
+                    <table class="h">
+                        <tr>
+                            <td>
+                                <nobr>{{lang.dbusermsg}}</nobr>
+                            </td>
+                            <td class="line">
+                                <hr/>
+                            </td>
+                        </tr>
+                    </table>
+                    <div>{{lang.dbmsg}}</div>
+                    <br/>
+
+                    <div><label for="mysql_admin_user">{{lang.dbuser}}</label> <input type="text" value="" name="mysql_admin_user" class="required" minlength="2"  autocomplete="off"/></div>
+                    <div><label for="mysql_admin_pass">{{lang.dbpass}}</label> <input type="password" value="" name="mysql_admin_pass" autocomplete="off"/>
+                    </div>
+                    <table class="h">
+                        <tr>
+                            <td>
+                                <nobr>{{lang.helpmsg}}</nobr>
+                            </td>
+                            <td class="line">
+                                <hr />
+                            </td>
+                        </tr>
+                    </table>
+                    <div><label for="update_staff_help">{{lang.updatestaff}}</label> <input type="checkbox" name="update_staff_help" checked="checked" /></div>
+                    <div><label for="update_student_help">{{lang.updatestudent}}</label> <input type="checkbox" name="update_student_help" checked="checked" /></div>
+
+                    <table class="h">
+                        <tr>
+                            <td>
+                                <nobr>{{lang.transmsg}}</nobr>
+                            </td>
+                            <td class="line">
+                                <hr />
+                            </td>
+                        </tr>
+                    </table>
+                    <div><label for="update_translationpack">{{lang.updatetrans}}</label> <input type="checkbox" name="update_translationpack" /></div>
+                    <div class="submit"><input type="submit" name="update" value="{{lang.startupdate}}" class="ok" /></div>
+                </form>
+            {% endif %}
+        {% else %}
+            {% if data.dberror == "true" %}
+                <div>{{lang.dberror}}</div>
+            {% else %}
+                <blockquote>
+                <h1>{{lang.startingupdate}}</h1>
+                <div>{{lang.startingat}}</div>
+                <ol>
+                    {% if data.staffhelperror == "true" %}
+                        <li class="error">{{lang.staffhelperrormsg}}</li>
+                    {% elseif lang.staffloaded != '' %}
+                        <li>{{lang.staffloaded}}</li>
+                    {% endif %}
+                    {% if data.stuhelperror == "true" %}
+                        <li class="error">{{lang.stuhelperrormsg}}</li>
+                    {% elseif lang.stuloaded != '' %}
+                        <li>{{lang.stuloaded}}</li>
+                    {% endif %}
+                    {% if data.langerror == "true" %}
+                        <li class="error">{{lang.langerror}}</li>
+                    {% elseif lang.langsuccess != ''%}
+                        <li>{{lang.langsuccess}}</li>
+                    {% endif %}
+                </ol>
+                <div>{{lang.ended}}</div>
+                <h2>{{lang.actionrequired}}</h2>
+                <ol>
+                    <li>{{lang.readonly}}</li>
+                </ol>
+                <div>{{lang.finished}}</div>
+                <div class="finished">
+                    <input type="button" class="ok" value="{{lang.config}}" onclick="go_config()" />
+                </div>
+                </blockquote>
+            {% endif %}
+        {% endif %}
+    {% endif %}

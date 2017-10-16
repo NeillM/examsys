@@ -507,11 +507,12 @@ class Authentication {
             $msg = $string['Authentication_issue2nodebug'];
             $reason = $string['Authentication_issue2nodebug'];
         }
+        $contactemail = $this->configObj->get_setting('core', 'support_contact_email');
         $notice->display_notice_and_exit(
           $this->db,
           $string['Authentication_issue1'],
-          sprintf($msg, $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()),
-          sprintf($reason, $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()),
+          sprintf($msg, $contactemail, $contactemail, $contactemail, $this->debug_to_string()),
+          sprintf($reason, $contactemail, $contactemail, $contactemail, $this->debug_to_string()),
           '/artwork/fingerprint_48.png', '#C00000',
           true,
           true);
@@ -634,11 +635,12 @@ class Authentication {
             $msg = $string['Authentication_notloggedin2nodebug'];
             $reason = $string['Authentication_notloggedin2nodebug'];
         }
+        $contactemail = $this->configObj->get_setting('core', 'support_contact_email');
         $notice->display_notice_and_exit(
           $this->db,
           $string['Authentication_notloggedin1'],
-          sprintf($msg, $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()),
-          sprintf($reason, $this->configObj->get('support_email'), $this->configObj->get('support_email'), $this->debug_to_string()),
+          sprintf($msg, $contactemail, $contactemail, $this->debug_to_string()),
+          sprintf($reason, $contactemail, $contactemail, $this->debug_to_string()),
           '/artwork/fingerprint_48.png',
           '#C00000',
           true,
