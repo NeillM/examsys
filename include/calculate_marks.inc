@@ -114,6 +114,7 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
         $scores = explode('|', $display_method);
         // Ignore n/a index.
         $scores = array_slice($scores, 0, count($scores) - 1);
+        sort($scores);
         $max_score = $scores[count($scores) - 1];
         // Check if max index value is an integer.
         if (filter_var($max_score, FILTER_VALIDATE_INT)) {
