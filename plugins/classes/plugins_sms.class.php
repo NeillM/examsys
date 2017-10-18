@@ -101,15 +101,15 @@ abstract class plugins_sms extends \plugins\plugins {
     public function disable_plugin() {
         $enabled = $this->config->get_setting('plugin_SMS', 'enabled_plugin');
         if (!is_null($enabled)) {
+            $newenabled = array();
             $key = array_search($this->plugin, $enabled);
-            if ($key !== false) {
-                if (count($enabled) > 1) {
-                    unset($enabled[$key]);
-                } else {
-                    $enabled = array();
-                }
-                $this->config->set_setting('enabled_plugin', $enabled, \Config::JSON, 'plugin_SMS');
+            foreach ($enabled as $sms) {
+              if ($key !== false and $this->plugin === $sms) {
+                  continue;
+              }
+              $newenabled[] = $sms;
             }
+            $this->config->set_setting('enabled_plugin', $newenabled, \Config::JSON, 'plugin_SMS');
         }
     }
     /**
