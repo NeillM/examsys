@@ -104,10 +104,10 @@ abstract class plugins_sms extends \plugins\plugins {
             $newenabled = array();
             $key = array_search($this->plugin, $enabled);
             foreach ($enabled as $sms) {
-              if ($key !== false and $this->plugin === $sms) {
-                  continue;
-              }
-              $newenabled[] = $sms;
+                if ($key !== false and $this->plugin === $sms) {
+                    continue;
+                }
+                $newenabled[] = $sms;
             }
             $this->config->set_setting('enabled_plugin', $newenabled, \Config::JSON, 'plugin_SMS');
         }
