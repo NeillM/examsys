@@ -1,7 +1,7 @@
 <div class="config">
     <div class="configheading">
         <label for="{{data.setting}}_host">{{data.setting}}</label>
-        <img src="{{path}}/artwork/tooltip_icon.gif" class="help_tip" title="{{lang.setting}}" />
+        <img src="{{path}}/artwork/tooltip_icon.gif" class="help_tip" title="{{attribute(lang, data.setting)}}" />
     </div>
     <div class="configvalue">
         {% for idx in data.item %}

@@ -85,13 +85,11 @@ foreach (Config::$config_area as $area) {
 }
 foreach ($displayconfigs as $area => $conf) {
     $data['area'] = $area;
-    $string['area'] = $string[$area];
     $render->render($data, $string, 'admin/config/config_area.html');
     foreach ($conf as $setting => $value) {
         $data = array();
         $data['setting'] = $setting;
         $data['value'] = $value;
-        $string['setting'] = $string[$setting];
         $type = $configObject->get_setting_type('core', $setting);
         $data['type'] = $type;
         if (!is_null($configObject->get('file_config_override'))) {
