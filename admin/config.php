@@ -116,13 +116,11 @@ foreach ($displayconfigs as $area => $conf) {
         } elseif ($type === Config::TIMEZONES) {
             // Compare config setting against list of possible timezones.
             $i = 0;
+            
             foreach ($timezone_array as $individual_zone => $display_zone) {
-                foreach ($value as $i => $v) {
-                    if ($individual_zone == $i) {
-                        $selected = "selected";
-                        break;
-                    }
-                    $selected = "";
+                $selected = "";
+                if (isset($value[$individual_zone])) {
+                    $selected = "selected";
                 }
                 $data['zone'][$i]['iz'] =  htmlspecialchars($individual_zone);
                 $data['zone'][$i]['dz'] =  htmlspecialchars($display_zone);
