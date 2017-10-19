@@ -78,10 +78,6 @@ $displayconfigs = array();
 $configs = $configObject->get_setting('core');
 foreach (Config::$config_area as $area) {
     foreach ($configs as $setting => $value) {
-        if ($setting === 'rogo_version') {
-          // Skip rogo version as uneditable.
-          continue;
-        }
         if (strpos($setting, $area) !== false) {
             $displayconfigs[$area][$setting] = $value;
         }
