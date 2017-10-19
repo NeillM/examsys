@@ -31,6 +31,7 @@ $paperID    = check_var('paperID', 'POST', true, false, true);
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 if ($properties->get_paper_type() != '1') {   // Only allow timer reset of Progress Test papers.
+  $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
@@ -38,12 +39,14 @@ if ($properties->get_paper_type() != '1') {   // Only allow timer reset of Progr
 $log_metadata = new LogMetadata($userID, $paperID, $mysqli);
 
 if ($log_metadata->get_record($metadataID) === false) {
+  $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 $user_details = UserUtils::get_user_details($userID, $mysqli);
 if ($user_details === false) {
+  $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }

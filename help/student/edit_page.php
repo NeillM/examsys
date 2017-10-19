@@ -33,6 +33,7 @@ header('Content-Type: text/html; charset=utf-8');
 $page_details = $help_system->get_page_details($pageid);
 
 if ($page_details === false) {
+  $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../../artwork/page_not_found.png', '#C00000', true, true);
 }

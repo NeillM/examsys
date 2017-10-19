@@ -121,6 +121,7 @@ if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type()
 if ($userObject->has_role(array('External Examiner'))) {
   // No further security checks.
   if (!ReviewUtils::is_external_on_paper($userObject->get_user_ID(), $paperID, $mysqli)) {
+    $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
   }
@@ -179,6 +180,7 @@ if ($getuser) {
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff', 'External Examiner'))) {
     $log_metadata = new LogMetadata($getuser, $paperID, $mysqli);
   } else {   // Student is hacking the userid parameter.
+    $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
@@ -201,6 +203,7 @@ if (!$is_exam_review_mode and !$is_question_preview_mode and !$is_formative_revi
 // Access allowed if user role is staff,student (admins should ensure staff,student users are not students in modules they are staff on)
 if ($userObject->has_role('Student') and !$userObject->has_role('Staff')) {
   if (!$userObject->user_completed_paper($paperID)) {
+    $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
   }

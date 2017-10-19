@@ -32,4 +32,13 @@ class support {
     $configObj = Config::get_instance();
     return implode(";", $configObj->get_setting('core', 'support_contact_email'));
   }
+  /**
+   * Get primary support email address
+   * @return string
+   */
+  public static function get_primary_email() {
+    $configObj = Config::get_instance();
+    $emaillist = $configObj->get_setting('core', 'support_contact_email');
+    return $emaillist[0];
+  }
 }

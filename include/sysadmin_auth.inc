@@ -27,6 +27,7 @@
 require_once 'staff_student_auth.inc';
   
 if (!$userObject->has_role('SysAdmin')) {
+  $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/exclamation_48.png', '#C00000', true, true);
 } 

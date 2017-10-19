@@ -39,5 +39,12 @@ class supporttest extends unittestdatabase {
     public function test_get_email() {
         $this->assertEquals("test@example.com;joseph.baxter@example.com", \support::get_email());
     }
+    /**
+     * Test get primary email address
+     * @group support
+     */
+    public function test_get_primary_email() {
+        $this->assertEquals("test@example.com", \support::get_primary_email());
+    }
 
 }

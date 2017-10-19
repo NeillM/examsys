@@ -30,12 +30,14 @@ $moduleID = check_var('module', 'GET', true, false, true);
 $module_details = module_utils::get_full_details_by_ID($moduleID, $mysqli);
 
 if (!$module_details) {
-   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+  $contactemail = support::get_email();
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 if (!$userObject->has_role(array('SysAdmin', 'Admin'))) {
   if ($module_details['add_team_members'] == 0) {
+    $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);  
   }

@@ -125,7 +125,7 @@ class PaperProperties {
   static function get_paper_properties_by_id($p_id, $db, $string, $exit_on_false = true) {
     $configObj = Config::get_instance();
     $notice = UserNotices::get_instance();
-    $contactemail = $configObj->get_setting('core', 'support_contact_email');
+    $contactemail = support::get_email();
 
     $paper_property = new PaperProperties($db);
     $paper_property->set_property_id($p_id);
@@ -152,7 +152,7 @@ class PaperProperties {
   static function get_paper_properties_by_crypt_name($crypt_name, $db, $string, $exit_on_false = true) {
     $configObj = Config::get_instance();
     $notice = UserNotices::get_instance();
-    $contactemail = $configObj->get_setting('core', 'support_contact_email');
+    $contactemail = support::get_email();
 
     $paper_property = new PaperProperties($db);
     $paper_property->set_crypt_name($crypt_name);

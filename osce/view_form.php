@@ -29,7 +29,7 @@ require '../include/demo_replace.inc';
 require './osce.inc';
 
 if ($userObject->has_role('Demo')) $demo = true;
-
+$contactemail = support::get_email();
 $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
 
 if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {

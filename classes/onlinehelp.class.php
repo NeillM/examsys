@@ -331,7 +331,7 @@ Class OnlineHelp {
   public function display_page($id) {
     $page_details = $this->get_page_details($id);
     $original_title = $page_details['title'];
-    $contactemail = $this->configObject->get_setting('core', 'support_contact_email');
+    $contactemail = support::get_email();
     
     if ($page_details['page_type'] == 'pointer') {    // If pointer look up source page.
       $page_details = $this->get_page_details($page_details['body']);

@@ -50,6 +50,7 @@ if (isset($_GET['userID'])) {
     }
   } else {  // Student is trying to hack into another students userID on the URL.
     header("HTTP/1.0 404 Not Found");
+    $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
@@ -67,6 +68,7 @@ $staffmodule = $userObject->has_role('Staff') and check_staff_modules($moduleID,
 // Access allowed if user role is staff,student (admins should ensure staff,student users are not students in modules they are staff on)
 if ($userObject->has_role('Student') and !$staffmodule) {
   if (!$propertyObj->is_objective_fb_released()) {
+    $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
@@ -116,6 +118,7 @@ $result->store_result();
 $result->fetch();
 if ($result->num_rows == 0) {
   header("HTTP/1.0 404 Not Found");
+  $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }

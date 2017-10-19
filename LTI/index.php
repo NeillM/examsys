@@ -111,6 +111,7 @@ if (!$lti->isInstructor()) {
     if ($returned2 === false) {
         $data = $lti_i->module_code_translate($mysqli, $lti->getCourseName(), $lti->get_context_title());
         if ($data === false) {
+            $contactemail = support::get_email();
             UserNotices::display_notice($string['moduletranslateerror'], sprintf($string['moduletranslatemessage'], $contactemail, $contactemail), '/artwork/access_denied.png');
             echo sprintf($string['moduletranslatecode'], $lti->getCourseName());
             exit();
@@ -181,6 +182,7 @@ if (!$lti->isInstructor()) {
       //no context
       $data = $lti_i->module_code_translate($mysqli, $lti->getCourseName(), $lti->get_context_title());
       if ($data === false) {
+            $contactemail = support::get_email();
             UserNotices::display_notice($string['moduletranslateerror'], sprintf($string['moduletranslatemessage'], $contactemail, $contactemail), '/artwork/access_denied.png');
             echo sprintf($string['moduletranslatecode'], $lti->getCourseName());
             exit();
@@ -214,6 +216,7 @@ if (!$lti->isInstructor()) {
           }
           $sms_api = $lti_i->sms_api($moduleinfo);
           if ($sms_api === false) {
+            $contactemail = support::get_email();
             UserNotices::display_notice($string['modulecreateerror'], sprintf($string['modulecreatemessage'], $contactemail, $contactemail), '/artwork/access_denied.png');
             echo sprintf($string['moduletranslatecode'], $moduleinfo[1]);
             exit(); 

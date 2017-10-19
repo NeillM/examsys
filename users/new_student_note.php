@@ -32,11 +32,13 @@ $paperID = check_var('paperID', 'REQUEST', false, false, true);
 
 // Does the paper exist?
 if (!is_null($paperID) and !Paper_utils::paper_exists($paperID, $mysqli)) {
+  $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 // Does the student exist?
 if (!UserUtils::userid_exists($userID, $mysqli)) {
+  $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }

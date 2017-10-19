@@ -32,6 +32,7 @@ require_once '../include/mapping.inc';
 $paperid = param::required('paperID', param::INT, param::FETCH_POST);
 
 if (!Paper_utils::paper_exists($paperid, $mysqli)) {
+  $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
@@ -101,6 +102,7 @@ if ($update === false) {
   $new_paper_id = param::required('currentpid', param::INT, param::FETCH_POST);
   $properties = PaperProperties::get_paper_properties_by_id($new_paper_id, $mysqli, $string);
   if ($properties->get_summative_lock() == 1) {
+    $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit(null, $string['paperlockedwarning'], $msg, $string['paperlockedwarning'], '../artwork/page_not_found.png', '#C00000', true, true);
   }

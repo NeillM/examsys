@@ -507,7 +507,7 @@ class Authentication {
             $msg = $string['Authentication_issue2nodebug'];
             $reason = $string['Authentication_issue2nodebug'];
         }
-        $contactemail = $this->configObj->get_setting('core', 'support_contact_email');
+        $contactemail = support::get_email();
         $notice->display_notice_and_exit(
           $this->db,
           $string['Authentication_issue1'],
@@ -635,7 +635,7 @@ class Authentication {
             $msg = $string['Authentication_notloggedin2nodebug'];
             $reason = $string['Authentication_notloggedin2nodebug'];
         }
-        $contactemail = $this->configObj->get_setting('core', 'support_contact_email');
+        $contactemail = support::get_email();
         $notice->display_notice_and_exit(
           $this->db,
           $string['Authentication_notloggedin1'],

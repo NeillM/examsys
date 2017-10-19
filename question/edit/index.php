@@ -442,7 +442,7 @@ if ($critical_error == '') {
 } else {
   // Bad things have happened
   $q_type_display = '';
-
+  $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['error'], $critical_error, $string['error'], '/artwork/page_not_found.png', '#C00000', true, true);
 }

@@ -29,6 +29,7 @@ require '../../include/question_types.php';
 $question_paper = check_var('question_paper', 'GET', true, false, true);
 
 if (!Paper_utils::paper_exists($question_paper, $mysqli)) {
+  $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../../artwork/page_not_found.png', '#C00000', true, true);
 }

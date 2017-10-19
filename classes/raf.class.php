@@ -249,7 +249,7 @@ class RAF {
 	 * IMPORT: Loads a ZIP file, parses and adds contents to the database.
 	 */
 	public function import($paperID = 0) {
-      $contactemail = $this->configObj->get_setting('core', 'support_contact_email');
+      $contactemail = support::get_email();
 	  if ($paperID != 0) {
 			$this->properties = PaperProperties::get_paper_properties_by_id($paperID, $this->db, $this->string);
 		}

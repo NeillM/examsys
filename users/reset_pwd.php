@@ -28,6 +28,7 @@ require_once '../include/errors.php';
 $userid = check_var('userID', 'GET', true, false, true);
 
 if (!UserUtils::userid_exists($userid, $mysqli)) {
+  $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }

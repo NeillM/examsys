@@ -42,6 +42,7 @@ $results->bind_result($name, $campus, $building, $room_no, $timetabling, $it_sup
 
 if ($results->num_rows == 0) { // Lab not found
     $results->close();
+    $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }

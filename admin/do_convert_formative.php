@@ -30,6 +30,7 @@ require_once '../include/errors.php';
 $paperid = check_var('paperID', 'POST', true, false, true);
 
 if (!Paper_utils::paper_exists($paperid, $mysqli)) {
+  $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }

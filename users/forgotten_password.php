@@ -94,8 +94,8 @@ h2 {font-size:120%}
 </head>
 <body>
 EMAIL;
-
-        $email_body .= sprintf($string['emailhtml'], $title, $surname, $_SERVER['HTTP_HOST'], $token, $configObject->get_setting('core', 'support_contact_email'));
+        $contactemail = support::get_primary_email();
+        $email_body .= sprintf($string['emailhtml'], $title, $surname, $_SERVER['HTTP_HOST'], $token, $contactemail);
 
         $email_body .= <<< EMAIL
 </body>
@@ -104,7 +104,7 @@ EMAIL;
 
         $mail_to = $email;
         $subject = "Rogo {$string['passwordreset']}";
-        $headers = "From: " . $configObject->get_setting('core', 'support_contact_email') . "\n";
+        $headers = "From: " . $contactemail . "\n";
         $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=utf-8\n";
         if(!@mail ($mail_to, $subject, $email_body, $headers)) {
           $errors[] = sprintf($string['couldntsendemail'], $email);

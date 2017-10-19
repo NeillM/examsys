@@ -30,8 +30,9 @@ $modID = check_var('module', 'GET', true, false, true);
 $module = module_utils::get_moduleid_from_id($modID, $mysqli);
 
 if (!$module) {
-   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+  $contactemail = support::get_email();
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 ?>
 <!DOCTYPE html>

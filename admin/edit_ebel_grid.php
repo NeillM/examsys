@@ -73,6 +73,7 @@ if (isset($_POST['submit'])) {
   $result->fetch();
   if ($result->num_rows == 0) {
     $result->close();
+    $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
