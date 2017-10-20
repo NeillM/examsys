@@ -26,7 +26,7 @@
  * @package
  */
 
-require_once 'load_config.php';
+require_once __DIR__ . '/load_config.php';
 
 // Cookie sessions only.
 ini_set('session.use_only_cookies', 1);
