@@ -17,7 +17,7 @@
 /**
  *
  * Check that system requirements are met before updating.
- * As we may not have twig or language packs we cannot use templates and translations in this file.
+ * As we may not have twig we cannot use templates in this file.
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2017 The University of Nottingham
@@ -59,7 +59,7 @@ foreach ($phpext as $idx => $val) {
 
 // Lang packs.
 if ($langpackfound === 1) {
-  $info['langpacks'] = array($string['langpacksfound'], false);;
+  $info['langpacks'] = array($string['langpacksfound'], false);
 } elseif ($langpackfound === 2) {
   $info['langpacks'] = array(sprintf($string['langpacksmissing'], $language), false);
 }
