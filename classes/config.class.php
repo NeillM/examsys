@@ -500,7 +500,7 @@ SCRIPT;
   }
 
   function append($var, $value) {
-    $this->data[$var]=$this->data[$var] . $value;
+    $this->data[$var]= $this->get_setting('core', $var) . $value;
   }
 
   /**
