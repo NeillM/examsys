@@ -292,8 +292,8 @@ class RAF {
 
 			$zip->close();
 		} else {
-      $msg = sprintf($this->string['furtherassistance'], $contactemail, $contactemail);
-      $this->notice->display_notice_and_exit($this->db, $this->string['invalidzip'], $msg, $this->string['invalidzip'], '../artwork/exclamation_48.png', '#C00000', true, true);
+		$msg = sprintf($this->string['furtherassistance'], $contactemail, $contactemail);
+		$this->notice->display_notice_and_exit($this->db, $this->string['invalidzip'], $msg, $this->string['invalidzip'], '../artwork/exclamation_48.png', '#C00000', true, true);
 		}		
 	}
 	

@@ -679,6 +679,7 @@ Class OnlineHelp {
     // Fix path of help file images as may not be in root web dir.
     self::correct_student_path();
   }
+
   /**
    * Correct path of staff help file images as may not be in root web server directory.
    */

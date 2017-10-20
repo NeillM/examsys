@@ -37,6 +37,7 @@ class requirements {
     }
     return true;
   }
+
   /**
    * Check required php extensions are enabled.
    * @return array
@@ -55,6 +56,7 @@ class requirements {
     }
     return $ext;
   }
+
   /**
    * Install composer and update libraries to required versions.
    * @return mixed
@@ -69,6 +71,7 @@ class requirements {
     }
     return true;
   }
+
   /**
    * Update NPM libraries to required versions.
    * @return mixed
@@ -83,6 +86,7 @@ class requirements {
     }
     return true;
   }
+
   /**
    * Check db version meets minimum requirements.
    * @return boolean
@@ -106,7 +110,7 @@ class requirements {
     }
     return $return;
   }
-  
+
   /**
   * Check for required components - used by cli installers
   * @throws Exception

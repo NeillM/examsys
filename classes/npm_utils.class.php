@@ -58,7 +58,7 @@ class npm_utils {
    */
   protected static function check_for_npm() {
     $langpack = new langpack();
-    exec("npm help", $output, $statuscode);
+    exec("npm -v", $output, $statuscode);
     if ($statuscode != 0) {
       throw new Exception($langpack->get_string(self::langcomponent, 'npmmissing'));
     }
