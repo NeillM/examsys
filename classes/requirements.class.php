@@ -61,7 +61,7 @@ class requirements {
    * Install composer and update libraries to required versions.
    * @return mixed
    */
-  public static function check_composer() {
+  public static function composer() {
     try {
       ob_start();
       composer_utils::setup(composer_utils::INSTALL_NODEV);
@@ -76,7 +76,7 @@ class requirements {
    * Update NPM libraries to required versions.
    * @return mixed
    */
-  public static function check_npm() {
+  public static function npm() {
     try {
       ob_start();
       npm_utils::setup(npm_utils::INSTALL_NODEV);
@@ -135,13 +135,13 @@ class requirements {
     }
     // Install composer and dependencies.
     if (!InstallUtils::$behat_install and !InstallUtils::$phpunit_install) {
-      if (self::check_composer() !== true) {
+      if (self::composer() !== true) {
         throw new Exception('Composer not installed / failed to install libraries.');
       }
     }
     // Install NPM dependencies.
     if (!InstallUtils::$behat_install and !InstallUtils::$phpunit_install) {
-      if (self::check_npm() !== true) {
+      if (self::npm() !== true) {
         throw new Exception('NPM not installed / failed to install libraries');
       }
     }

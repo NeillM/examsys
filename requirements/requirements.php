@@ -86,14 +86,14 @@ foreach ($phpext as $idx => $val) {
     }
 }
 // Install composer and dependencies.
-$composer = requirements::check_composer();
+$composer = requirements::composer();
 if ($composer === true) {
   $info['composer'] = array($string['composersuccess'], true);
 } else {
   $info['composer'] = array($composer, false);
 }
 // Install npm dependencies.
-$npm = requirements::check_npm();
+$npm = requirements::npm();
 if ($npm === true) {
   $info['npm'] = array($string['npmsuccess'], true);
 } else {
