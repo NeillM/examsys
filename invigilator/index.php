@@ -37,7 +37,7 @@ function emergencyNumbers($string) {
   $contact3 = $configObject->get_setting('core', 'emergency_support_contact3');
   $contacts = array($contact1, $contact2, $contact3);
   echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; float:right; line-height:100%; margin-right:20px\">\n";
-  echo "<tr><td colspan=\"2\" class=\"en\">Emergency Numbers</td></tr>\n";
+  echo "<tr><td colspan=\"2\" class=\"en\">" . $string['emergencynumbers'] . "</td></tr>\n";
   foreach ($contacts as $contact) {
     if (!empty($contact['name']) and !empty($contact['number'])) {
       echo "<tr><td><img src=\"../artwork/phone.png\" width=\"28\" height=\"28\" alt=\"call\" /></td><td><strong>" . $contact['number'] . "</strong><br />" . $contact['name'] . "</td></tr>\n";
