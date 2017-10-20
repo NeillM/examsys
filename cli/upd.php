@@ -125,7 +125,7 @@ if ($version == $old_version) {
   exit(0);
 }
 if ($updater_utils->check_version("6.4.0")) {
-  cli_utils::prompt('Please upgrade via the user interface to version 6.4.X before using the command line updater.');
+  cli_utils::prompt('This version of Rogo requires at least version 6.4.0 is installed prior to upgrade.');
   exit(0);
 }
 // Get update file dir.
