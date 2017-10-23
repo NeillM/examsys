@@ -41,7 +41,7 @@ class database {
     InstallUtils::$behat_install = true;
     // Check that the php environment is setup correctly.
     try {
-      requirements::check();
+      \requirements::check();
     } catch (Exception $e) {
       throw new Exception($e->getMessage());
     }
