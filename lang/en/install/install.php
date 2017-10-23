@@ -85,6 +85,7 @@ $string['supportemailaddress'] = 'Email Address (Comma seperate list)';
 $string['name'] = 'Name';
 $string['number'] = 'Number';
 $string['install'] = 'Install Rogō';
+$string['altintallicon'] = 'Install Icon';
 $string['installed'] = 'Rogō is now successfully installed.';
 $string['config'] = 'Configure settings';
 $string['invalidsetting'] = 'Setting %s either not provided or invalid!';

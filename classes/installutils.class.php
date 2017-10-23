@@ -1798,6 +1798,7 @@ Class InstallUtils {
     );
     $lang['title'] = $string['install'];
     $lang['blurb'] = $string['systeminstallation'];
+    $lang['altintallicon'] = $string['altintallicon'];
     $data['version'] = $configObject->getxml('version');
     require_once dirname(__DIR__) . '/include/path_functions.inc.php';
     $cfg_web_root = get_root_path();
