@@ -16,3 +16,4 @@
 
 $string['title'] = 'Undergoing Maintenance';
 $string['msg'] = 'This site is currently undergoing routine maintenance. Please try again later.';
+$string['alticon'] = 'Under maintenance';
