@@ -45,13 +45,18 @@ $string['currenttimezone'] = 'Current Timezone';
 $string['authentication'] = 'Authentication';
 
 $string['allowlti'] = 'Allow via LTI';
+$string['allowltitip'] = 'Allow authentication from successful LTI launch';
 $string['allowintdb'] = 'Internal database';
+$string['allowintdbtip'] = 'Allow authentication from internal Rogo user database';
 $string['allowguest'] = 'Guest log in (for summative exams)';
+$string['allowguesttip'] = 'Allow guest temporary accouts for students who forget their normal log in details';
 $string['allowimpersonation'] = 'User impersonation (SysAdmin only)';
+$string['allowimpersonationtip'] = 'Allow SysAdmin users to impersonate other users';
 $string['useldap'] = 'Use LDAP';
 
 $string['lookup'] = 'Lookup Data Sources';
 $string['allowlookupXML'] = 'use XML (Will need customising in config file)';
+$string['allowlookupXMLtip'] = 'Allow a custom XML lookup source.';
 $string['rdbbasename'] = 'Basepart of username';
 
 $string['ldapserver'] = 'LDAP server';
@@ -110,6 +115,7 @@ $string['errors19'] = 'The Rogō data directory requires %s must be writable';
 $string['installscript'] = 'Rogō Install script';
 $string['systeminstallation'] = 'System Installation';
 $string['labsecuritytype'] = "Summative Exam Lab Security";
+$string['labsecuritytypetip'] = 'Rogo can lock summative exams to either IP address or hostname. If your institution uses static IPs then chose IP address otherwise chose hostname.';
 $string['IP'] = "IP address";
 $string['hostname'] = "Machine hostname";
 
