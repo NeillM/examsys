@@ -28,6 +28,14 @@
 
 require_once __DIR__ . '/load_config.php';
 
+if (!InstallUtils::config_exists()) {
+  require_once __DIR__  . '/path_functions.inc.php';
+  $cfg_web_root = get_root_path() . '/';
+  $root = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_ROOT']), '', $cfg_web_root), '/'), '/');
+  header("location: " . $root . "/install/index.html", true, 303);
+  exit();
+}
+
 // Cookie sessions only.
 ini_set('session.use_only_cookies', 1);
 // Use secure cookie if on secure conenction.
@@ -54,11 +62,6 @@ if (is_null($configObject->get('cfg_db_port'))) {
 }
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
 $configObject->set_db_object($mysqli);
-
-if (!InstallUtils::config_exists()) {
-  header("location: " . $configObject->get('cfg_root_path') . "/install/index.html", true, 303);
-  exit();
-}
 
 $fp_link = "<p style=\"margin-left:60px\"><a href=\"{$configObject->get('cfg_root_path')}/users/forgotten_password.php\">" . $string['forgottenpassword'] . "</a></p>\n";
 
