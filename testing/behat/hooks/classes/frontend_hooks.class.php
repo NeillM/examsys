@@ -62,6 +62,11 @@ trait frontend_hooks {
     self::check_config();
     // Setup the config for behat and store a cloned instance of it.
     $config = RogoConfig::get_instance();
+    // Check version behat built for matches code version.
+    if (environment::upgrade_needed()) {
+      $message = 'The version of the Rogo that the Behat database was built for does not match the version of the Rogo code (' . $config->getxml('version') . ')';
+      throw new Exception($message);
+    }
     self::$default_config = clone($config);
     $config->use_behat_site();
     self::$rogo_config = clone($config);
