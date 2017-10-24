@@ -41,11 +41,13 @@ class page {
     if (!is_null($userObject)) {
       // Demo mode.
       if ($userObject->is_demo()) {
-        $pagetitle .= " (DEMO mode)";
+        $langpack = new langpack();
+        $pagetitle .= " (" . $langpack->get_string('classes/page', 'demomode') . ")";
       }
       // Impersonated user.
       if ($userObject->is_impersonated()) {
-        $pagetitle .= " as " . $userObject->get_title() . " " . $userObject->get_surname();
+        $langpack = new langpack();
+        $pagetitle .= " " . $langpack->get_string('classes/page', 'as') . " " . $userObject->get_title() . " " . $userObject->get_surname();
       }
     }
     return $pagetitle;

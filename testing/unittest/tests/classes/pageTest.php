@@ -51,7 +51,9 @@ class pageTest extends unittestdatabase {
   public function test_title_demo() {
     $this->userobject->load(1);
     $this->userobject->set_demo();
-    $this->assertEquals('title unittest (DEMO mode)', \page::title('title'));
+    $langpack = new \langpack();
+    $demomode = $langpack->get_string('classes/page', 'demomode');
+    $this->assertEquals('title unittest (' . $demomode . ')', \page::title('title'));
   }
 
   /**
@@ -61,6 +63,8 @@ class pageTest extends unittestdatabase {
   public function test_title_impersonate() {
     $this->userobject->load(1);
     $this->userobject->impersonate(2);
-    $this->assertEquals('title unittest as Mr Tester', \page::title('title'));
+    $langpack = new \langpack();
+    $as = $langpack->get_string('classes/page', 'as');
+    $this->assertEquals('title unittest ' .  $as . ' Mr Tester', \page::title('title'));
   }
 }
