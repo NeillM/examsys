@@ -37,13 +37,16 @@ class page {
     if (!is_null($type)) {
       $pagetitle .= " " . $type;
     }
-    // Demo mode.
-    if ($userObject->is_demo()) {
-      $pagetitle .= " (DEMO mode)";
-    }
-    // Impersonated user.
-    if ($userObject->is_impersonated()) {
-      $pagetitle .= " as " . $userObject->get_title() . " " . $userObject->get_surname();
+    // Checks for logged in users.
+    if (!is_null($userObject)) {
+      // Demo mode.
+      if ($userObject->is_demo()) {
+        $pagetitle .= " (DEMO mode)";
+      }
+      // Impersonated user.
+      if ($userObject->is_impersonated()) {
+        $pagetitle .= " as " . $userObject->get_title() . " " . $userObject->get_surname();
+      }
     }
     return $pagetitle;
   }
