@@ -19,6 +19,11 @@ config:
     setting: "paper_max_duration"
     value: 779
     type: "integer"
+  -
+    component: "core"
+    setting: "support_contact_email"
+    value: "[\"test@example.com\",\"joseph.baxter@example.com\"]"
+    type: "email"
 academic_year:
   -
     calendar_year: 2015

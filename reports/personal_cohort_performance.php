@@ -38,7 +38,8 @@ $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $s
 $log_type = $propertyObj->get_paper_type();
 
 if ($log_type != '2' and $log_type != '4' and $log_type != '5') {   // Exit if wrong type of paper
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $contactemail = support::get_email();
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
@@ -49,7 +50,8 @@ $medians       = $results_cache->get_median_question_marks_by_paper($paperID);
 $student_marks = $results_cache->get_student_question_marks_by_paper($userID, $log_type, $paperID);
 
 if (count($student_marks) == 0) {   // Exit if the student does not have any marks
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $contactemail = support::get_email();
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
@@ -99,8 +101,7 @@ $question_marks[$old_q_id] = qMarks($old_q_type, $tmp_exclude, $old_marks, $old_
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-
-<title><?php $string['personalcohortperformance'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+<title><?php echo page::title($string['personalcohortperformance']); ?></title>
 
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/header.css" />

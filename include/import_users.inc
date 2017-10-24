@@ -224,9 +224,8 @@ function add_users_from_file($fileName) {
       //update existing student records
 
       if ($password != '') {					// We are updating the password from the CSV.
-				$salt = UserUtils::get_salt();
-        $enc = new encryp();
-        $encpw_password = $enc->encpw($salt, $username, $password);
+        $salt = UserUtils::get_salt();
+        $encpw_password = \encryp::encpw($salt, $username, $password);
 
         $result = $mysqli->prepare("UPDATE users SET yearofstudy = ?, title = ?, first_names = ?, surname = ?, grade = ?, password = ?, roles = ? WHERE username = ?");
         $result->bind_param('ssssssss', $year, $title, $forname, $surname, $course, $encpw_password, $role, $username);

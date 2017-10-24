@@ -79,3 +79,9 @@ cfg_line {
   color: #007700;
   font-family: 'Courier New';
 }
+.version_warning {
+  margin-left:10px;
+}
+.finished {
+  text-align:center
+}

@@ -47,4 +47,4 @@ $string['authentication'] = 'OAuth Authentication';
 $string['plugins'] = 'Plugins';
 $string['config'] = 'Configuration';
 $string['externalsystems'] = 'External Systems';
-?>
+$string['admin'] = 'Admin';

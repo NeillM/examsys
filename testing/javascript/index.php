@@ -48,6 +48,7 @@ if (file_exists(dirname(dirname(__DIR__)) . '/node_modules/qunitjs/qunit/qunit.j
     // Output the page.
     echo $renderer->render('index.html', $data);
 } else {
-    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['accessdenied'], $msg, $string['accessdenied'], '/artwork/access_denied.png', '#C00000', true, true);
 }

@@ -39,8 +39,7 @@ $paper = $propertyObj->get_paper_title();
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-
-  <title>Rog&#333;: <?php echo $string['textboxmarking'] . ' ' . $configObject->get('cfg_install_type') ?></title>
+  <title><?php echo page::title('Rog&#333;: ' . $string['textboxmarking']); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />

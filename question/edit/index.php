@@ -442,8 +442,8 @@ if ($critical_error == '') {
 } else {
   // Bad things have happened
   $q_type_display = '';
-
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $contactemail = support::get_email();
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['error'], $critical_error, $string['error'], '/artwork/page_not_found.png', '#C00000', true, true);
 }
 
@@ -454,8 +454,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-
-<title><?php echo $mode . ' ' . $string['question'] . ' - ' . $q_type_full .  ' ' . $configObject->get('cfg_install_type') ?></title>
+<title><?php echo page::title($mode . ' ' . $string['question'] . ' - ' . $q_type_full); ?></title>
 
 <link rel="stylesheet" href="../../css/body.css" type="text/css" />
 <link rel="stylesheet" href="../../css/header.css" type="text/css" />
@@ -465,29 +464,17 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <link rel="stylesheet" href="../../css/warnings.css" type="text/css" />
 
 <?php
-// Override this variable with a specific configuration file for the question editor.
-$cfg_editor_javascript = <<< SCRIPT
-{$configObject->get('cfg_js_root')}
-<script type="text/javascript" src="{$configObject->get('cfg_root_path')}/tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript" src="{$configObject->get('cfg_root_path')}/tools/tinymce/jscripts/tiny_mce/tiny_config_question_editor.js"></script>
-SCRIPT;
-
-echo $cfg_editor_javascript;
+  if($configObject->get_setting('core', 'misc_editor_name') === 'tinymce') {
+      $render = new render($configObject);
+      $tinmymcedata['file'] = 'tiny_config_question_editor';
+      $render->render($tinmymcedata, null, 'tinymce.html');
+  }
 ?>
 <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="../../js/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="../../js/jquery-ui-1.10.4.min.js"></script>
 <script type="text/javascript" src="../../js/system_tooltips.js"></script>
-<?php
-// Override this variable with a specific configuration file for the question editor.
-$cfg_editor_javascript = <<< SCRIPT
-{$configObject->get('cfg_js_root')}
-<script type="text/javascript" src="{$configObject->get('cfg_root_path')}/tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-<script type="text/javascript" src="{$configObject->get('cfg_root_path')}/tools/tinymce/jscripts/tiny_mce/tiny_config_question_editor.js"></script>
-SCRIPT;
-
-echo $cfg_editor_javascript;
-?><script type="text/javascript" src="../../js/state.js"></script>
+<script type="text/javascript" src="../../js/state.js"></script>
 <script type="text/javascript" src="../../js/staff_help.js"></script>
 <script type="text/javascript" src="../../js/jquery.addedit.js"></script>
 <script type="text/javascript" src="../../js/jquery.mappingform.js"></script>
@@ -532,7 +519,7 @@ endif;
 </script>
 <script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
 <?php
-  if (in_array($cfg_editor_name, $configObject->get_setting('core', 'paper_editor_supports_mathjax')) and $configObject->get_setting('core', 'paper_mathjax')) {
+  if (in_array($configObject->get_setting('core', 'misc_editor_name'), $configObject->get_setting('core', 'paper_editor_supports_mathjax')) and $configObject->get_setting('core', 'paper_mathjax')) {
     $render = new render($configObject);
     $render->render(null, null, 'mathjax.html');
   }

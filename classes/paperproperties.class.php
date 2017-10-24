@@ -125,14 +125,15 @@ class PaperProperties {
   static function get_paper_properties_by_id($p_id, $db, $string, $exit_on_false = true) {
     $configObj = Config::get_instance();
     $notice = UserNotices::get_instance();
+    $contactemail = support::get_email();
 
-  	$paper_property = new PaperProperties($db);
-  	$paper_property->set_property_id($p_id);
-  	if ($paper_property->load() !== false) {
-  		return $paper_property;
-  	} else {
+    $paper_property = new PaperProperties($db);
+    $paper_property->set_property_id($p_id);
+    if ($paper_property->load() !== false) {
+      return $paper_property;
+    } else {
       if ($exit_on_false) {
-        $msg = sprintf($string['furtherassistance'], $configObj->get('support_email'), $configObj->get('support_email'));
+        $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
         $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
       } else {
         return false;
@@ -151,19 +152,20 @@ class PaperProperties {
   static function get_paper_properties_by_crypt_name($crypt_name, $db, $string, $exit_on_false = true) {
     $configObj = Config::get_instance();
     $notice = UserNotices::get_instance();
+    $contactemail = support::get_email();
 
-  	$paper_property = new PaperProperties($db);
-  	$paper_property->set_crypt_name($crypt_name);
-  	if ($paper_property->load() !== false) {
-  		return $paper_property;
-  	} else {
+    $paper_property = new PaperProperties($db);
+    $paper_property->set_crypt_name($crypt_name);
+    if ($paper_property->load() !== false) {
+      return $paper_property;
+    } else {
       if ($exit_on_false) {
-        $msg = sprintf($string['furtherassistance'], $configObj->get('support_email'), $configObj->get('support_email'));
+        $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
         $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
       } else {
         return false;
       }
-  	}
+    }
   }
 
 
@@ -394,7 +396,7 @@ class PaperProperties {
         $params['pass_mark'] = array('i', $this->pass_mark);
         $params['distinction_mark'] = array('i', $this->distinction_mark);
       }
-    } elseif ($configObject->get('cfg_summative_mgmt') and $this->paper_type == '2' and !$userObject->has_role(array('Admin', 'SysAdmin'))) {
+    } elseif ($configObject->get_setting('core', 'cfg_summative_mgmt') and $this->paper_type == '2' and !$userObject->has_role(array('Admin', 'SysAdmin'))) {
         // Non admin users cannot delete papers when summative management enabled so stop paper title change when non admin tries to delete a paper.
         if (is_null($this->get_deleted())) {
           $params['paper_title'] = array('s', $this->paper_title);
@@ -1667,8 +1669,7 @@ class PaperProperties {
    * @return $string encrypted passsword
    */
   public function encrypt_password($password) {
-    $encryp = new encryp();
-    return $encryp->mcrypt_password($password);
+    return \encryp::mcrypt_password($password);
   }
   /**
    * Decrypt the password.
@@ -1677,8 +1678,7 @@ class PaperProperties {
    * @return string decrypted passsword
    */
   public function decrypt_password($encpassword) {
-    $encryp = new encryp();
-    return $encryp->mdecrypt_password($encpassword);
+    return \encryp::mdecrypt_password($encpassword);
   }
 
   /**

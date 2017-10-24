@@ -28,7 +28,8 @@ require '../include/errors.php';
 $refID = check_var('refID', 'GET', true, false, true);
 
 if (!refmaterials_utils::refmaterials_exist($refID, $mysqli)) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $contactemail = support::get_email();
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
@@ -83,15 +84,19 @@ $result->close();
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style type="text/css">
-		input, textarea {line-height:140%}
+    input, textarea {line-height:140%}
     input[type=checkbox] {margin-left:20px}
-		.r1 {text-indent:-23px; padding-left:23px; background-color:white}
-		.r2 {text-indent:-23px; padding-left:23px; background-color:#FFBD69}
-		.school {margin-top:10px; width:100%; background-color:white; color:#1E3287}
+    .r1 {text-indent:-23px; padding-left:23px; background-color:white}
+    .r2 {text-indent:-23px; padding-left:23px; background-color:#FFBD69}
+    .school {margin-top:10px; width:100%; background-color:white; color:#1E3287}
   </style>
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_mce.js"></script>
-  <script type="text/javascript" src="../tools/tinymce/jscripts/tiny_mce/tiny_config.js"></script>
+<?php
+  if($configObject->get_setting('core', 'misc_editor_name') === 'tinymce') {
+      $render = new render($configObject);
+      $tinmymcedata['file'] = 'tiny_config';
+      $render->render($tinmymcedata, null, 'tinymce.html');
+  }
+?>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery-migrate-1.2.1.min.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>

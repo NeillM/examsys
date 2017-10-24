@@ -58,7 +58,8 @@ $propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize
 
 // Check if paper can be released date wise
 if (!$propertyObj->is_question_fb_released()) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $contactemail = support::get_email();
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
@@ -115,8 +116,7 @@ require '../config/finish.inc';
   <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <meta http-equiv="imagetoolbar" content="no">
   <meta http-equiv="imagetoolbar" content="false">
-
-  <title><?php echo $string['examscript'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo page::title('Rog&#333;: ' . $string['examscript']); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/start.css" />
@@ -180,7 +180,8 @@ require '../config/finish.inc';
       }
     } else {  // Student is trying to hack into another students userID on the URL.
       header("HTTP/1.0 404 Not Found");
-      $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+      $contactemail = support::get_email();
+      $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
       $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
     }
   } else {

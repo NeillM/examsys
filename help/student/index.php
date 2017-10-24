@@ -37,8 +37,7 @@ $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'stu
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-    
-    <title>Rog&#333;: <?php echo $string['help'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+    <title><?php echo page::title('Rog&#333;: ' . $string['help']); ?></title>
     
     <link rel="stylesheet" type="text/css" href="../../css/body.css" />
     <link rel="stylesheet" type="text/css" href="../../css/help.css" />

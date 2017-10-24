@@ -32,16 +32,15 @@ $current_year = check_var('calyear', 'GET', true, false, true);
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-
-	<title>Rog&#333;: <?php echo $string['papersbyschool']  . ' ' . $configObject->get('cfg_install_type'); ?></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+    <title><?php echo page::title('Rog&#333;: ' . $string['papersbyschool']); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/statistics.css" />
-	<link rel="stylesheet" type="text/css" href="../css/tabs.css" />
-  
+  <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
+
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>

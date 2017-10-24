@@ -26,7 +26,8 @@ require '../../include/staff_auth.inc';
 
 if (isset($_GET['teamID'])) {
   if (!module_utils::get_moduleid_from_id($_GET['teamID'], $mysqli)) {
-    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../../artwork/page_not_found.png', '#C00000', true, true);
   }
 }

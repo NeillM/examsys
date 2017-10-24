@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['cannotupdate'] = 'NPM missing or you do not have permissions to run. Please install / run manually.';
-$string['couldnotinstallnpm'] = 'Could not install dependencies.';
-$string['couldnotupdatenpm'] = 'Could not update compodependenciesnents.';
-?>
+$string['npmmissing'] = 'NPM missing. Please install manually.';
+$string['couldnotinstallnpm'] = 'Could not install NPM dependencies.';
+$string['couldnotupdatenpm'] = 'Could not update NPM dependencies.';

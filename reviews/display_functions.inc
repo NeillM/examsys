@@ -1055,7 +1055,7 @@ function display_question ($configObject, &$question, $paper_type, $calculator, 
     echo "<tr><td colspan=\"5\"><textarea cols=\"80\" rows=\"4\" name=\"extcomments$question_no\" id=\"extcomments$question_no\" class=\"commentsbox\">" . $review->get_comment($q_id) . "</textarea></td></tr>";
 
     if ($start_of_day_ts > $external_review_deadline and ($review->get_action($q_id) != 'Not actioned' and $review->get_action($q_id) !== null)) {
-      echo "<tr><td colspan=\"5\"><strong>" . $configObject->get('cfg_company');
+      echo "<tr><td colspan=\"5\"><strong>" . $configObject->get_setting('core', 'misc_company');
       if ($review->get_action($q_id) == 'Read - actioned') {
         echo '&nbsp;&nbsp;<span style="color:#008000">';
       } else {

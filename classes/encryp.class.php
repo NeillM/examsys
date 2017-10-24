@@ -77,7 +77,7 @@ class encryp {
      * @param string $password 
      * @return string encrypted password
      */
-    public function mcrypt_password($password) {
+    public static function mcrypt_password($password) {
         $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
         $enc = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, UserUtils::get_salt(), $password, MCRYPT_MODE_ECB, $iv);
         return trim(base64_encode($enc));
@@ -88,7 +88,7 @@ class encryp {
      * @param string $encpassword encrypted password
      * @return string decrypted password
      */
-    public function mdecrypt_password($encpassword) {
+    public static function mdecrypt_password($encpassword) {
         $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
         $dec = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, UserUtils::get_salt(), base64_decode($encpassword), MCRYPT_MODE_ECB, $iv);
         return trim($dec);
@@ -104,7 +104,7 @@ class encryp {
      * @return string encrypted password
      *
      */
-    public function encpw($salt, $u, $p, $type = 'SHA-512') {
+    public static function encpw($salt, $u, $p, $type = 'SHA-512') {
       if ($type == 'SHA-512') {
         $full_salt = '$6$' . $salt . '$'; // SHA-512
         $new_password = crypt($p, $full_salt);

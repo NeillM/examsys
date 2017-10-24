@@ -39,7 +39,7 @@ require_once '../../include/autoload.inc.php';
 autoloader::init();
 
 $configObject = \Config::get_instance();
-if ($configObject->get('cfg_ims_enabled')) { 
+if ($configObject->get_setting('core', 'cfg_ims_enabled')) { 
     
     $mysqli = \DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_sysadmin_user'),
         $configObject->get('cfg_db_sysadmin_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'),

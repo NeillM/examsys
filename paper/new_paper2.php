@@ -34,8 +34,7 @@ $papertype = $assessment->get_type_value($_POST['paper_type']);
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-
-  <title><?php echo $string['createnewpaper'] . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo page::title('Rog&#333;: ' . $string['createnewpaper']); ?></title>
 <?php
   // Check that the new paper name is not already used by any other paper (i.e. unique).
   $unique = Paper_utils::is_paper_title_unique($_POST['paper_name'], $mysqli);
@@ -285,7 +284,7 @@ if ($papertype == $assessment::TYPE_SUMMATIVE) {
 <td>
 <?php
   echo "<table width=\"100%\" border=\"0\">\n";
-  if (!$configObject->get('cfg_summative_mgmt') or $papertype != $assessment::TYPE_SUMMATIVE) {
+  if (!$configObject->get_setting('core', 'cfg_summative_mgmt') or $papertype != $assessment::TYPE_SUMMATIVE) {
     echo "<tr><td colspan=\"6\" class=\"titlebar\">" . $string['availability'] . "</td></tr>\n";
   } else {
     echo "<tr><td colspan=\"6\" class=\"titlebar\">" . $string['summativeexamdetails'] . "</td></tr>\n";
@@ -302,7 +301,7 @@ if ($papertype == $assessment::TYPE_SUMMATIVE) {
     echo "<input type=\"hidden\" name=\"session\" value=\"\" />\n";
   }
 
-  if (!$configObject->get('cfg_summative_mgmt') or $papertype != $assessment::TYPE_SUMMATIVE) {
+  if (!$configObject->get_setting('core', 'cfg_summative_mgmt') or $papertype != $assessment::TYPE_SUMMATIVE) {
     echo "</tr><tr><td align=\"right\" valign=\"top\">" . $string['from'] . "&nbsp;</td><td>";
     $date_array = getdate();
 
@@ -467,9 +466,9 @@ if ($papertype == $assessment::TYPE_SUMMATIVE) {
   echo "</table>\n";
 
   echo "<div class=\"titlebar\" style=\"margin-top:5px; border-top:1px solid #295AAD; border-left:1px solid #295AAD; border-right:1px solid #295AAD\">" . $string['modules'] . "</div>";
-  if ($configObject->get('cfg_summative_mgmt') and $papertype == $assessment::TYPE_SUMMATIVE) {
+  if ($configObject->get_setting('core', 'cfg_summative_mgmt') and $papertype == $assessment::TYPE_SUMMATIVE) {
     echo "<div style=\"display:block; background-color:white; height:230px; overflow-y:scroll; border:1px solid #295AAD; font-size:90%\">";
-  } else if ($papertype == $assessment::TYPE_OSCE or (!$configObject->get('cfg_summative_mgmt') and $papertype == $assessment::TYPE_SUMMATIVE)) {
+  } else if ($papertype == $assessment::TYPE_OSCE or (!$configObject->get_setting('core', 'cfg_summative_mgmt') and $papertype == $assessment::TYPE_SUMMATIVE)) {
     echo "<div style=\"display:block; background-color:white; height:310px; overflow-y:scroll; border:1px solid #295AAD; font-size:90%\">";
   } else {
     echo "<div style=\"display:block; background-color:white; height:340px; overflow-y:scroll; border:1px solid #295AAD; font-size:90%\">";

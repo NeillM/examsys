@@ -68,9 +68,9 @@ class yearutils {
 
         $this->mysqli = $mysqli;
         // Start of academic year (mm/dd)
-        $year_start = $configObject->get('cfg_academic_year_start');
+        $year_start = $configObject->get_setting('core', 'system_academic_year_start');
         if ($this->check_year_start_format($year_start)) {
-            $this->academic_year_start = $configObject->get('cfg_academic_year_start');
+            $this->academic_year_start = $year_start;
         } else {
             $this->academic_year_start = '07/01';
         }

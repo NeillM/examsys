@@ -32,7 +32,8 @@ $campusobj = new campus($mysqli);
 $details = $campusobj->get_campus_details($campus);
 $found = true;
 if ($details === false) {
-    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $title = $string['pagenotfound'];
     $notice->display_notice_and_exit($mysqli, $title, $msg, $title, '../artwork/page_not_found.png', '#C00000', true, true);
 }

@@ -231,7 +231,6 @@ class UserObject extends RogoStaticSingleton {
 
   public function set_demo() {
     $this->demomode = true;
-    $this->configObj->append('cfg_install_type', " (DEMO mode)");
     $this->roles['Demo'] = 1;
   }
 
@@ -746,7 +745,6 @@ class UserObject extends RogoStaticSingleton {
       $this->studentModules = array();
       $this->load($userid);
       $this->impersonate    = true;
-      $this->configObj->append('cfg_install_type', " as $this->title $this->surname");
     } else {
       $notice = UserNotices::get_instance();
       $notice->access_denied($this->db, $string, $string['impersonatepriv'], true, true);
@@ -848,7 +846,7 @@ class UserObject extends RogoStaticSingleton {
 		}
     if ($result == false) {
       $msg = 'This should never appear, please contact support';
-      $support_email = $configObject->get('support_email');
+      $support_email = support::get_email();
 
       if ($support_email != '') {
         $msg .= " (<a href=\"$support_email\">$support_email</a>)";

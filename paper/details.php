@@ -76,7 +76,8 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 if ($userObject->has_role('Student') and !($userObject->has_role(array('Staff', 'Admin', 'SysAdmin')))) {
   if ($properties->get_paper_type() == '2') {
     // Display 'Page not Found' for summative exams. For these go to the proper summative exam homepage.
-    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
   } else {
     header("location: user_index.php?id=" . $properties->get_crypt_name());
@@ -105,7 +106,8 @@ if ($userObject->has_role('SysAdmin') or $paper_ownerID == $userObject->get_user
 }
 
 if ($on_staff_module == false and !in_array('SYSTEM', array_values($paper_modules))) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $contactemail = support::get_email();
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
 }
 
@@ -422,8 +424,7 @@ function check_latex_random($q_ids, $mysqli) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-
-  <title>Rog&#333;<?php echo ' ' . $configObject->get('rogo_version') . ' ' . $configObject->get('cfg_install_type') ?></title>
+  <title><?php echo page::title('Rog&#333;:'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -700,7 +701,7 @@ function check_latex_random($q_ids, $mysqli) {
   $result->execute();
   $result->store_result();
   $result->bind_result($theme, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $scenario, $option_text, $o_media, $correct, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $marks_correct, $marks_incorrect, $display_last_edited, $display_pos, $status, $correct_fback, $feedback_right, $locked, $settings);
-
+  $leadinlength = $configObject->get_setting('core', 'misc_search_leadin_length');
   while ($result->fetch()) {
 
     if ($q_type == 'sct') {
@@ -775,7 +776,7 @@ function check_latex_random($q_ids, $mysqli) {
       $temp_array[$row_no]['screen']          = $screen;
       $temp_array[$row_no]['q_type']          = $q_type;
       $temp_array[$row_no]['fulltext']        = QuestionUtils::clean_leadin($leadin, 0);
-      $temp_array[$row_no]['leadin']          = QuestionUtils::clean_leadin($leadin, $configObject->get('cfg_search_leadin_length'));
+      $temp_array[$row_no]['leadin']          = QuestionUtils::clean_leadin($leadin, $leadinlength);
       $temp_array[$row_no]['scenario']        = $scenario;
       $temp_array[$row_no]['p_id']            = $p_id;
       $temp_array[$row_no]['q_id']            = $q_id;
@@ -902,7 +903,8 @@ function check_latex_random($q_ids, $mysqli) {
   try {
     require '../include/paper_options.php';
   } catch (Exception $e) {
-    $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['problemwithpaper'], $msg, $string['problemwithpaper'], '/artwork/page_not_found.png', '#C00000', true, true);
   }
   require '../include/toprightmenu.inc';
@@ -1010,14 +1012,15 @@ function check_latex_random($q_ids, $mysqli) {
       if ($properties->get_summative_lock()) {
         echo "<tr><td colspan=\"2\"><div class=\"yellowwarn\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"32\" height=\"32\" alt=\"Locked\" /></div></td><td colspan=\"4\" style=\"vertical-align:middle\"><div class=\"yellowwarn\">" . $string['paperlockedwarning'] . " <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">". $string['paperlockedclick'] ."</a></div></td></tr>\n";
       } elseif ($properties->get_paper_type() == '2' and $properties->get_start_date() !== null) {
+        $hourwarning = $configObject->get_setting('core', 'summative_hour_warning');
         $tmp_hour = date("G", $properties->get_start_date());
         if (date("Y", $properties->get_start_date()) > (date("Y") + 1)) {
           echo "<tr><td colspan=\"2\" style=\"width:40px; line-height:0\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td colspan=\"4\" class=\"redwarn\">";
           printf($string['farfuturewarning'], $properties->get_display_start_date());
           echo "</td></tr>\n";
-        } elseif ($tmp_hour < $configObject->get('cfg_hour_warning')) {
+        } elseif ($tmp_hour < $hourwarning) {
           echo "<tr><td colspan=\"2\" style=\"width:40px; line-height:0\" class=\"redwarn\"><img src=\"../artwork/late_warning_icon.png\" width=\"32\" height=\"32\" alt=\"Warning\" /></td><td colspan=\"4\" class=\"redwarn\">";
-          printf($string['earlywarning'], $configObject->get('cfg_hour_warning'));
+          printf($string['earlywarning'], $hourwarning);
           echo "</td></tr>\n";
         }
       }
@@ -1132,7 +1135,7 @@ function check_latex_random($q_ids, $mysqli) {
     }
 
     echo "<td class=\"l\" ";
-    if (strlen($temp_array[$x]['fulltext']) > $configObject->get('cfg_search_leadin_length')) {
+    if (strlen($temp_array[$x]['fulltext']) > $leadinlength) {
       echo ' onmouseover="showAdHocWindow(event,\''.htmlspecialchars($temp_array[$x]['fulltext']).'\');" ';
       echo ' onmouseleave="hideAdHocWindow();" ';
     }

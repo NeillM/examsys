@@ -36,7 +36,8 @@ $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli,
 
 $paperID = $propertyObj->get_property_id();
 if (!ReviewUtils::is_external_on_paper($userObject->get_user_ID(), $paperID, $mysqli)) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $contactemail = support::get_email();
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
 }
 
@@ -76,8 +77,7 @@ ob_start();
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-
-  <title><?php echo $string['classtotals'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo page::title($string['classtotals']); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
@@ -170,7 +170,7 @@ echo draw_toprightmenu(30);
 
   //output table heading
 	$table_order = array('', $string['studentid'], $string['course'], $string['mark'], $marking_label, $string['classification'], $string['rank'], $string['decile'], $string['starttime'], $string['duration']);
-	if ($configObject->get('cfg_client_lookup') == 'name') {
+	if ($configObject->get_setting('core', 'system_hostname_lookup')) {
 		$table_order[] = $string['hostnames'];
 	} else {
 		$table_order[] = $string['ipaddress'];
@@ -219,7 +219,7 @@ echo draw_toprightmenu(30);
     $sortby = 'mark';
   }
 
-  $percent_decimals = $configObject->get('percent_decimals');
+  $percent_decimals = $configObject->get_setting('core', 'rpt_percent_decimals');
   $absent_no = 0;
   $scatter_data = '';
 

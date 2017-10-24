@@ -56,7 +56,7 @@ class updaterutilstest extends unittestdatabase {
    */
   public function test_check_version_upgrade_non_dev() {
     $this->config->set('cfg_dev_system', false);
-    $this->config->set('rogo_version', '6.1.0');
+    $this->config->set_setting('rogo_version', '6.1.0', Config::VERSION);
     $this->config->override_xml('6.2.0', 'version');
     // Version numbers are higher than the version set in the configuration file.
     $this->assertTrue($this->updateutil->check_version('6.1.1'));
@@ -78,7 +78,7 @@ class updaterutilstest extends unittestdatabase {
    */
   public function test_check_version_no_upgrade_non_dev() {
     $this->config->set('cfg_dev_system', false);
-    $this->config->set('rogo_version', '6.2.0');
+    $this->config->set_setting('rogo_version', '6.2.0', Config::VERSION);
     $this->config->override_xml('6.2.0', 'version');
     // Version number equal to the code version.
     $this->assertFalse($this->updateutil->check_version('6.2.0'));
@@ -98,7 +98,7 @@ class updaterutilstest extends unittestdatabase {
    */
   public function test_check_version_downgrade_non_dev() {
     $this->config->set('cfg_dev_system', false);
-    $this->config->set('rogo_version', '6.3.0');
+    $this->config->set_setting('rogo_version', '6.3.0', Config::VERSION);
     $this->config->override_xml('6.2.0', 'version');
     // Version numbers are higher than the version set in the configuration file.
     $this->assertFalse($this->updateutil->check_version('6.3.1'));
@@ -120,7 +120,7 @@ class updaterutilstest extends unittestdatabase {
    */
   public function test_check_version_upgrade_dev() {
     $this->config->set('cfg_dev_system', true);
-    $this->config->set('rogo_version', '6.1.0');
+    $this->config->set_setting('rogo_version', '6.1.0', Config::VERSION);
     $this->config->override_xml('6.2.0', 'version');
     // Version numbers are higher than the version set in the configuration file.
     $this->assertTrue($this->updateutil->check_version('6.1.1'));
@@ -142,7 +142,7 @@ class updaterutilstest extends unittestdatabase {
    */
   public function test_check_version_no_upgrade_dev() {
     $this->config->set('cfg_dev_system', true);
-    $this->config->set('rogo_version', '6.2.0');
+    $this->config->set_setting('rogo_version', '6.2.0', Config::VERSION);
     $this->config->override_xml('6.2.0', 'version');
     // Version number equal to the code version.
     $this->assertTrue($this->updateutil->check_version('6.2.0'));
@@ -162,7 +162,7 @@ class updaterutilstest extends unittestdatabase {
    */
   public function test_check_version_downgrade_dev() {
     $this->config->set('cfg_dev_system', false);
-    $this->config->set('rogo_version', '6.3.0');
+    $this->config->set_setting('rogo_version', '6.3.0', Config::VERSION);
     $this->config->override_xml('6.2.0', 'version');
     // Version numbers are higher than the version set in the configuration file.
     $this->assertFalse($this->updateutil->check_version('6.3.1'));

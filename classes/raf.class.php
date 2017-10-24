@@ -91,9 +91,9 @@ class RAF {
 	 * @param array $questions - An array of questions to be exported.
 	 */
 	private function create_export_array($questions) {
-		$this->data['metadata']['rogo_version']	= $this->configObj->get('rogo_version');
+		$this->data['metadata']['rogo_version']	= $this->configObj->get_setting('core', 'rogo_version');
 		$this->data['metadata']['export_date']	= date($this->configObj->get('cfg_long_date_php') . ' ' . $this->configObj->get('cfg_long_time_php'));
-		$this->data['metadata']['company']			= $this->configObj->get('cfg_company');
+		$this->data['metadata']['company']			= $this->configObj->get_setting('core', 'misc_company');
 		$this->data['items'] = array();
 		
 		$item_no = 0;
@@ -249,6 +249,7 @@ class RAF {
 	 * IMPORT: Loads a ZIP file, parses and adds contents to the database.
 	 */
 	public function import($paperID = 0) {
+      $contactemail = support::get_email();
 	  if ($paperID != 0) {
 			$this->properties = PaperProperties::get_paper_properties_by_id($paperID, $this->db, $this->string);
 		}
@@ -278,7 +279,7 @@ class RAF {
 				$this->data = file_get_contents($dest_dir . '/raf.json');
 			} else {
 				$zip->close();
-				$msg = sprintf($this->string['furtherassistance'], $this->configObj->get('support_email'), $this->configObj->get('support_email'));
+				$msg = sprintf($this->string['furtherassistance'], $contactemail, $contactemail);
 				$this->notice->display_notice_and_exit($this->db, $this->string['invalidraf'], $msg, $this->string['invalidraf'], '../artwork/exclamation_48.png', '#C00000', true, true);
 			}
 
@@ -291,8 +292,8 @@ class RAF {
 
 			$zip->close();
 		} else {
-      $msg = sprintf($this->string['furtherassistance'], $this->configObj->get('support_email'), $this->configObj->get('support_email'));
-      $this->notice->display_notice_and_exit($this->db, $this->string['invalidzip'], $msg, $this->string['invalidzip'], '../artwork/exclamation_48.png', '#C00000', true, true);
+		$msg = sprintf($this->string['furtherassistance'], $contactemail, $contactemail);
+		$this->notice->display_notice_and_exit($this->db, $this->string['invalidzip'], $msg, $this->string['invalidzip'], '../artwork/exclamation_48.png', '#C00000', true, true);
 		}		
 	}
 	
@@ -409,7 +410,7 @@ class RAF {
 		
 		$date_format = $this->configObj->get('cfg_long_date_php') . ' ' . $this->configObj->get('cfg_short_time_php');
 		
-		if ($this->raf_company == $this->configObj->get('cfg_company')) {  // The import file company is the same as the current installation. Use the same IDs.
+		if ($this->raf_company == $this->configObj->get_setting('core', 'misc_company')) {  // The import file company is the same as the current installation. Use the same IDs.
 		  $old_q_id = $this->getQID_GUID($q['guid']);
 		
 		  if ($old_q_id !== false) {
@@ -444,7 +445,7 @@ class RAF {
    * @param int $q_id			 	- ID of the question the keywords are for.
 	 */
 	private function write_keywords($keywords, $q_id) {
-		if ($this->raf_company == $this->configObj->get('cfg_company')) {  // The import file company is the same as the current installation. Use the same IDs.
+		if ($this->raf_company == $this->configObj->get_setting('core', 'misc_company')) {  // The import file company is the same as the current installation. Use the same IDs.
 			$keywordIDs = $keywords;
 		} else {
 			$keywordIDs = array();

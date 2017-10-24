@@ -79,7 +79,7 @@ Class UserUtils {
       }
 
       $salt = UserUtils::get_salt();
-      $encrypt_password = $enc->encpw($salt, $username, $password);  // One way encrypt the password.
+      $encrypt_password = \encryp::encpw($salt, $username, $password);  // One way encrypt the password.
 
       // Make sure empty string year is stored as null not 0.
       if ($year == '') {
@@ -182,9 +182,8 @@ Class UserUtils {
         $encrypt_password = $current['password'];
     } else {
         // If updating the password - encrypt.
-        $enc = new encryp();
         $salt = UserUtils::get_salt();
-        $encrypt_password = $enc->encpw($salt, $username, $password);  // One way encrypt the password.
+        $encrypt_password = \encryp::encpw($salt, $username, $password);  // One way encrypt the password.
     }
 
     // If updating the gender. Force valid value for gender or default to NULL
@@ -240,9 +239,8 @@ Class UserUtils {
       return false;
     }
 
-		$salt = UserUtils::get_salt();
-    $enc = new encryp();
-    $encrypt_password = $enc->encpw($salt, $username, $password);
+    $salt = UserUtils::get_salt();
+    $encrypt_password = \encryp::encpw($salt, $username, $password);
 
     $stmt = $db->prepare("UPDATE users SET password = ?, password_expire = NULL WHERE id = ?");
     $stmt->bind_param('si', $encrypt_password, $userID);

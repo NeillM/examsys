@@ -20,4 +20,4 @@ $string['subject'] = 'Subject';
 $string['email_class'] = 'Email Class';
 $string['cancel'] = 'Cancel';
 $string['filepermission'] = 'Could not create file as write permission denied';
-?>
+$string['emailtemplate'] = 'Email Template';

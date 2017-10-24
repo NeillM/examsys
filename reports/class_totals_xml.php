@@ -72,7 +72,7 @@ if ($marking == '0') {
   $marking_key = 'adj_percent';
 }
 
-$percent_decimals = $configObject->get('percent_decimals');
+$percent_decimals = $configObject->get_setting('core', 'rpt_percent_decimals');
 
 //output table heading
 $table_order = array('Title'=>'title', 'Surname'=>'Surname', 'First Names'=>'First_Names', 'Student ID'=>'student_id', 'Course'=>'student_grade', 'Mark'=>'mark', $marking_label=>$marking_key, 'Clasification'=>'mark', 'Rank'=>'rank', 'Start Time'=>'started', 'Duration'=>'duration', 'IP Address'=>'ipaddress');
@@ -100,13 +100,13 @@ echo ' xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"';
 echo ' xmlns:html="http://www.w3.org/TR/REC-html40">';
 echo ' <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">';
 echo '  <Title>' . $paper . '</Title>';
-echo '  <Author>Rogo ' . $configObject->get('rogo_version') . '</Author>';
+echo '  <Author>Rogo ' . $configObject->get_setting('core', 'rogo_version') . '</Author>';
 $tmp_start = substr($_GET['startdate'], 6, 2) . '/' . substr($_GET['startdate'], 4, 2) . '/' . substr($_GET['startdate'], 0, 4) . ' ' . substr($_GET['startdate'], 8, 2) . ':' . substr($_GET['startdate'], 10, 2);
 $tmp_end = substr($_GET['enddate'], 6, 2) . '/' . substr($_GET['enddate'], 4, 2) . '/' . substr($_GET['enddate'], 0, 4) . ' ' . substr($_GET['enddate'], 8, 2) . ':' . substr($_GET['enddate'], 10, 2);
 echo '  <Description>Class totals for assessment taken between ' . $tmp_start . ' and ' . $tmp_end .'.</Description>';
-echo '  <LastAuthor>Rogo ' . $configObject->get('rogo_version') . '</LastAuthor>';
+echo '  <LastAuthor>Rogo ' . $configObject->get_setting('core', 'rogo_version') . '</LastAuthor>';
 echo '  <Created>' . date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z</Created>';
-echo '  <Company>' . $configObject->get('cfg_company') . '</Company>';
+echo '  <Company>' . $configObject->get_setting('core', 'misc_company') . '</Company>';
 echo '  <Version>11.6408</Version>';
 echo ' </DocumentProperties>';
 echo ' <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">';

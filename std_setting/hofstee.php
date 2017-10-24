@@ -141,40 +141,40 @@ if (isset($_POST['submit'])) {
   // Default values no POST and no editing existing review
   $checked = '';
   
-  $defaults = $configObject->get('hofstee_defaults');
+  $pass_defaults = $configObject->get_setting('core', 'stdset_hofstee_pass');
+  $distinction_defaults = $configObject->get_setting('core', 'stdset_hofstee_distinction');
   
-	$x1_pass = check_values($defaults['pass'][0], $stats);
-  $x2_pass = check_values($defaults['pass'][1], $stats);
-  $y1_pass = check_values($defaults['pass'][2], $stats);
-  $y2_pass = check_values($defaults['pass'][3], $stats);
-  $x1_distinction = check_values($defaults['distinction'][0], $stats);
-  $x2_distinction = check_values($defaults['distinction'][1], $stats);
-  $y1_distinction = check_values($defaults['distinction'][2], $stats);
-  $y2_distinction = check_values($defaults['distinction'][3], $stats);	
+  $x1_pass = check_values($pass_defaults['min_pass'], $stats);
+  $x2_pass = check_values($pass_defaults['max_pass'], $stats);
+  $y1_pass = check_values($pass_defaults['min_fail'], $stats);
+  $y2_pass = check_values($pass_defaults['max_fail'], $stats);
+  $x1_distinction = check_values($distinction_defaults['min_pass'], $stats);
+  $x2_distinction = check_values($distinction_defaults['max_pass'], $stats);
+  $y1_distinction = check_values($distinction_defaults['min_fail'], $stats);
+  $y2_distinction = check_values($distinction_defaults['max_fail'], $stats);
 }
 
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+    <title><?php echo page::title('Rog&#333;: ' . $string['hofstee']); ?></title>
 
-	<title>Rog&#333;: <?php echo $string['hofstee'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+    <link rel="stylesheet" type="text/css" href="../css/body.css" />
+    <link rel="stylesheet" type="text/css" href="../css/header.css" />
+    <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
+    <style type="text/css">
+        h1 {margin-left:10px; font-size:140%}
+        input[type="text"] {border: 1px solid #C0C0C0}
+        .pass {color:#538135}
+        .fail {color:#C00000}
+    </style>
 
-	<link rel="stylesheet" type="text/css" href="../css/body.css" />
-	<link rel="stylesheet" type="text/css" href="../css/header.css" />
-	<link rel="stylesheet" type="text/css" href="../css/warnings.css" />
-	<style type="text/css">
-		h1 {margin-left:10px; font-size:140%}
-		input[type="text"] {border: 1px solid #C0C0C0}
-		.pass {color:#538135}
-		.fail {color:#C00000}
-	</style>
-
-	<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-	<script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../js/staff_help.js"></script>
+    <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 <body>
 <?php
@@ -226,7 +226,7 @@ if (isset($_POST['submit'])) {
   if (isset($_POST['whole_numbers'])) {
     $checked = ' checked="checked"';
   } else {
-    if ($configObject->get('hofstee_whole_numbers') == true) {
+    if ($configObject->get_setting('core', 'stdset_hofstee_whole_numbers') == true) {
       $checked = ' checked="checked"';
     } else {
       $checked = '';

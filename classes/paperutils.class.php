@@ -1114,7 +1114,7 @@ Class PaperUtils {
 
     $properties = Paper_utils::get_paper_properties($postparams['paperID'], $db);
     $calendar_year = $properties['session'];
-    if ($postparams['paper_type'] == 2 and $configObject->get('cfg_summative_mgmt')) {
+    if ($postparams['paper_type'] == 2 and $configObject->get_setting('core', 'cfg_summative_mgmt')) {
       $duration = ($postparams['duration_hours'] * 60) + $postparams['duration_mins'] ;
       $tmp_exam_duration = $duration;
     } else {
@@ -1122,7 +1122,7 @@ Class PaperUtils {
     }
     $labs = $properties['labs'];
     if ($postparams['paper_type'] == 2) {
-      if ($configObject->get('cfg_summative_mgmt')) {
+      if ($configObject->get_setting('core', 'cfg_summative_mgmt')) {
         $tmp_start_date = NULL;
         $tmp_end_date = NULL;
         $labs = NULL;
@@ -1221,7 +1221,7 @@ Class PaperUtils {
     // Set the modules on the new paper
     Paper_utils::update_modules($moduleIDs, $new_paper_id, $db, $userObj);
 
-    if ($postparams['paper_type'] == $assessment::TYPE_SUMMATIVE and $configObject->get('cfg_summative_mgmt')) {
+    if ($postparams['paper_type'] == $assessment::TYPE_SUMMATIVE and $configObject->get_setting('core', 'cfg_summative_mgmt')) {
       $assessment->schedule($new_paper_id, $postparams['period'], $postparams['barriers_needed'], $postparams['cohort_size'], $postparams['notes'] , $postparams['sittings'] , $postparams['campus']);
     }
     return array('calendar_year' => $calendar_year, 'new_calendar_year' => $new_calendar_year, 'moduleIDs' => $moduleIDs, 'new_paper_id' => $new_paper_id);

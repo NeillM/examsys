@@ -18,37 +18,22 @@
  *
  * Authentication routine which permits staff and student access to a page.
  *
- * @author Simon Wilkinson, Anthony Brown
- * @version 1.0
- * @copyright Copyright (c) 2014 The University of Nottingham
+ * @author Simon Wilkinson
+ * @author Anthony Brown
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @version 2.0
+ * @copyright Copyright (c) 2017 The University of Nottingham
  * @package
  */
 
-/**
- *  This function is used to catch early errors and convert them to exeptions
- *  so we can catch them. I is later replaced by the more complex customErrorHandler
- *  in include/custom_error_handler.inc
- */
+require_once __DIR__ . '/load_config.php';
 
-function handle_early_errors($errno, $errstr, $errfile, $errline) {
-  if (strpos($errstr, 'config.inc.php')) {
-    //turn a missing config file working into an exception so we can catch it
-    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
-
-    return true;
-  }
-
-  return false;
-}
-
-//set_error_handler("handle_early_errors");
-
-$root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
-include_once $root . 'include/load_config.php';
-if (!file_exists($root . 'config/config.inc.php')) {
-  $mysqli = null;
-  $cfg_root_path = rtrim('/' . trim(str_replace(str_replace('\\', '/', $_SERVER['DOCUMENT_ROOT']), '', $root), '/'), '/');
-  $notice->display_notice_and_exit(null, 'Install Required', 'Rog&#333; needs installing before use. The Installer is avalable <a href="' . $cfg_root_path . '/install/index.php">here</a>.', 'Install Required', '../artwork/software_64.png', $title_color = '#C00000', true, true);
+if (!InstallUtils::config_exists()) {
+  require_once __DIR__  . '/path_functions.inc.php';
+  $cfg_web_root = get_root_path() . '/';
+  $root = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_ROOT']), '', $cfg_web_root), '/'), '/');
+  header("location: " . $root . "/install/index.html", true, 303);
+  exit();
 }
 
 // Cookie sessions only.
@@ -78,11 +63,6 @@ if (is_null($configObject->get('cfg_db_port'))) {
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
 $configObject->set_db_object($mysqli);
 
-// Check to see if installed version matches the code version. If not the update script needs to be run by a sys admin.
-if ($configObject->get('rogo_version') != $configObject->getxml('version')) {
-  $notice->display_notice_and_exit($mysqli, 'Update Required', 'System needs configuring before use. Please contact your local system administrator.', 'Update Required', '../artwork/software_64.png', $title_color = '#C00000', true, true);
-}
-
 $fp_link = "<p style=\"margin-left:60px\"><a href=\"{$configObject->get('cfg_root_path')}/users/forgotten_password.php\">" . $string['forgottenpassword'] . "</a></p>\n";
 
 // Check for secure protocol
@@ -102,9 +82,13 @@ $authentication->get_auth_obj($getauthobj);
 
 $userObject = UserObject::get_instance();
 $userObject->db_user_change();
-
+if (!$userObject->has_role('SysAdmin')) {
+  if (version::is_version_higher($configObject->getxml('version'), $configObject->get_setting('core', 'rogo_version')) or $configObject->get_setting('core', 'system_maintenance_mode')) {
+      header("location: " . $configObject->get('cfg_root_path') . "/maintenance/index.php", true, 303);
+      exit();
+  }
+}
 $included_files = get_included_files();
 
 //set string encoding for the mbstring module for interfaces
 mb_internal_encoding($configObject->get('cfg_page_charset'));
-?>

@@ -19,4 +19,4 @@ require '../lang/' . $language . '/include/ebel_grid_options.php';
 $string['ebeltemplates'] = 'Ebel Grid Templates';
 $string['gridnames'] = 'Grid Names';
 $string['deletegrid'] = 'Delete Grid';
-?>
+$string['ebelgrids'] = 'Ebel Grids';

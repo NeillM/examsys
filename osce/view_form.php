@@ -29,8 +29,8 @@ require '../include/demo_replace.inc';
 require './osce.inc';
 
 if ($userObject->has_role('Demo')) $demo = true;
-
-$msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+$contactemail = support::get_email();
+$msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
 
 if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
   $userID = $_GET['userID'];

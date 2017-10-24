@@ -48,9 +48,8 @@ function get_list($list, $db) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-	
-  <title>Rog&#333;: SMS Update Summary<?php echo " " . $configObject->get('cfg_install_type') ?></title>
-	
+  <title><?php echo page::title('Rog&#333;: ' . $string['smsupdatesummary']); ?></title>
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />

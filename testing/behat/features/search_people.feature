@@ -63,6 +63,7 @@ Feature: Searching People
       Then I should be on "/users/search.php"
       Then I fill in the following:
          | search_username | student1 |
+      When I click "icon3" "id"
       Then I should see "Students" in the "div#menu3" element
       Then I check "students"
       And I press "Search"

@@ -163,10 +163,9 @@ if ($error) {
     $log_error->bind_param('issssssssis', $userid, $username, $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data);
     $log_error->execute();
     $log_error->close();
-
-    $support_email = $configObject->get('support_email');
-    if ($support_email != '') {
-            $return_status .= '<br /><br /><br />' . $string['pleasecontact'] . ' <a href="mailto:' . $support_email . '">' . $support_email . '</a>';
+    $contactemail = support::get_email();
+    if ($contactemail != '') {
+            $return_status .= '<br /><br /><br />' . $string['pleasecontact'] . ' <a href="mailto:' . $contactemail . '">' . $contactemail . '</a>';
     }
 }
 

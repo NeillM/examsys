@@ -38,8 +38,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-
-  <title>Rog&#333;: <?php echo $string['questionsearch'] . ' ' . $configObject->get('cfg_install_type') ?></title>
+  <title><?php echo page::title('Rog&#333;: ' . $string['questionsearch']); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
@@ -411,6 +410,7 @@ if (isset($_GET['submit'])) {
   <tbody>
 <?php
   $display_no = 0;
+  $leadinlength = $configObject->get_setting('core', 'misc_search_leadin_length');
   while ($result->fetch()) {
     $status_class = ' status' . $status_array[$status]->id;
 
@@ -421,7 +421,7 @@ if (isset($_GET['submit'])) {
       echo " id=\"l$display_no\" onclick=\"selL($q_id,'$q_type',$display_no,event)\">";
     }
     $fullText = QuestionUtils::clean_leadin($leadin, 0);
-    $tmp_leadin = QuestionUtils::clean_leadin($leadin, $configObject->get('cfg_search_leadin_length'));
+    $tmp_leadin = QuestionUtils::clean_leadin($leadin, $leadinlength);
     if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:red">' . $string['noquestionleadin'] . '</span>';
     
     if ($q_type == 'sct') {
@@ -433,7 +433,7 @@ if (isset($_GET['submit'])) {
     } else {
       echo '<td class="u" ';
     }
-    if (strlen($fullText) > $configObject->get('cfg_search_leadin_length')) {
+    if (strlen($fullText) > $leadinlength) {
       echo ' onmouseover="showAdHocWindow(event,\''.htmlspecialchars($fullText).'\');" ';
       echo ' onmouseleave="hideAdHocWindow();" ';
     }

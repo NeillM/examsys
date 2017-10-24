@@ -81,13 +81,12 @@ function display_lab_stats($lab_count, $string, $db) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title>Rog&#333;: <?php echo $string['summativeexamstats'] . ' ' . $configObject->get('cfg_install_type') ?></title>
-  
+  <title><?php echo page::title('Rog&#333;: ' . $string['summativeexamstats']); ?></title>
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/statistics.css" />
-	<link rel="stylesheet" type="text/css" href="../css/tabs.css" />
+  <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
   
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>

@@ -39,7 +39,8 @@ while ($result->fetch()) {
 $result->close();
 
 if (count($keyword_names) < substr_count($keywordIDs, ',')) {
-  $msg = sprintf($string['furtherassistance'], $configObject->get('support_email'), $configObject->get('support_email'));
+  $contactemail = support::get_email();
+  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
@@ -50,8 +51,7 @@ $mysqli->close();
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title><?php echo $string['confirmdelete'] . ' ' . $configObject->get('cfg_install_type'); ?></title>
+  <title><?php echo page::title('Rog&#333;: ' . $string['confirmdelete']); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />

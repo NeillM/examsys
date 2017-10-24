@@ -41,7 +41,7 @@ if (!file_exists(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_S
 $language = 'en';
 
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'path_functions.inc.php';
-require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $language . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'index.php';
+require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $language . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'install.php';
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'timezones.php';
 
 // Lets look to see what arguments have been passed.
@@ -87,7 +87,12 @@ try {
   // Load an verifiy settings.xml
   InstallUtils::loadSettings();
   // Check pre-requisites.
-  InstallUtils::checkSoftware();
+  try {
+    requirements::check();
+  } catch (Exception $e) {
+    cli_utils::prompt($e->getMessage());
+    exit(0);
+  }
   // Install.
   InstallUtils::checkDirPermissionsPost();
   $args = array(

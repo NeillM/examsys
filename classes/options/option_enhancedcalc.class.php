@@ -464,7 +464,7 @@ Class OptionENHANCEDCALC extends OptionEdit {
       param::FETCH_POST,
         array(
               'default' => '',
-              'regexp' => '#^[ a-zA-Z0-9/^]*$#',
+              'regexp' => '#^[ a-zA-Z0-9/^%]*$#',
         )
       );
     return $option;
