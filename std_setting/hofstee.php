@@ -158,24 +158,23 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+    <title><?php echo page::title('Rog&#333;: ' . $string['hofstee']); ?></title>
 
-	<title>Rog&#333;: <?php echo $string['hofstee'] . ' ' . $configObject->get_setting('core', 'system_install_type'); ?></title>
+    <link rel="stylesheet" type="text/css" href="../css/body.css" />
+    <link rel="stylesheet" type="text/css" href="../css/header.css" />
+    <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
+    <style type="text/css">
+        h1 {margin-left:10px; font-size:140%}
+        input[type="text"] {border: 1px solid #C0C0C0}
+        .pass {color:#538135}
+        .fail {color:#C00000}
+    </style>
 
-	<link rel="stylesheet" type="text/css" href="../css/body.css" />
-	<link rel="stylesheet" type="text/css" href="../css/header.css" />
-	<link rel="stylesheet" type="text/css" href="../css/warnings.css" />
-	<style type="text/css">
-		h1 {margin-left:10px; font-size:140%}
-		input[type="text"] {border: 1px solid #C0C0C0}
-		.pass {color:#538135}
-		.fail {color:#C00000}
-	</style>
-
-	<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-	<script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../js/staff_help.js"></script>
+    <script type="text/javascript" src="../js/toprightmenu.js"></script>
 </head>
 <body>
 <?php

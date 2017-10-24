@@ -53,8 +53,7 @@ if (isset($_POST['submit'])) {
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  
-  <title><?php echo $string['newreferencematerial'] . ' ' . $configObject->get_setting('core', 'system_install_type'); ?></title>
+  <title><?php echo page::title('Rog&#333;: ' . $string['newreferencematerial']); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />

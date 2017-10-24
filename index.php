@@ -54,8 +54,7 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-
-  <title>Rog&#333;<?php echo ' ' . $configObject->get_setting('core', 'system_install_type') ?></title>
+  <title><?php echo page::title('Rog&#333;:'); ?></title>
 
   <link rel="stylesheet" type="text/css" href="./css/body.css" />
   <link rel="stylesheet" type="text/css" href="./css/rogo_logo.css" />
@@ -170,9 +169,8 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
   </div>
 </div>
 <?php
-  $as_pos = strpos($configObject->get_setting('core', 'system_install_type'),' as ');
-  if ($as_pos !== false) {
-    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:40px\"><div class=\"greywarn\"><img src=\"./artwork/agent.png\" width=\"32\" height=\"32\" alt=\"Impersonate\" /></div></td><td><div class=\"greywarn\">" . $string['loggedinas'] . " " . substr($configObject->get_setting('core', 'system_install_type'), ($as_pos+4)) . "</div></td></tr></table>\n";
+  if ($userObject->is_impersonated() === true) {
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%\"><tr><td style=\"width:40px\"><div class=\"greywarn\"><img src=\"./artwork/agent.png\" width=\"32\" height=\"32\" alt=\"Impersonate\" /></div></td><td><div class=\"greywarn\">" . $string['loggedinas'] . " " . $userObject->get_title() . " " . $userObject->get_surname() . "</div></td></tr></table>\n";
   }
   
   $staff_team_array = $userObject->get_staff_team_modules();

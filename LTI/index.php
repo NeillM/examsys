@@ -268,9 +268,9 @@ if (!$lti->isInstructor()) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset={$configObject->get('cfg_page_charset')}" />
-
-  <title>Rog&#333; {$configObject->get_setting('core', 'system_install_type')}</title>
-
+END;
+  echo "<title>" . page::title('Rog&#333;:') . "</title>";
+  echo <<<END
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <style type="text/css">
   body {padding-left:20px; background-color:transparent !important; line-height:140%}

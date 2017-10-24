@@ -64,8 +64,7 @@ $month_end[8] = ($current_year + 1) . '0901000000';
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title>Rog&#333;: <?php echo $string['summativeexamstats'] . ' ' . $configObject->get_setting('core', 'system_install_type') ?></title>
+  <title><?php echo page::title('Rog&#333;: ' . $string['summativeexamstats']); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />

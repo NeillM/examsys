@@ -14,10 +14,4 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['cc'] = 'CC';
-$string['bcc'] = 'BCC';
-$string['subject'] = 'Subject';
-$string['email_class'] = 'Email Class';
-$string['cancel'] = 'Cancel';
-$string['filepermission'] = 'Could not create file as write permission denied';
-$string['emailtemplate'] = 'Email Template';
+$string['onlinetutorial'] = 'Online Tutorial';

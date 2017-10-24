@@ -64,6 +64,7 @@ class render {
      * @param string $additionalcss additional css required
      */
     public function render($data, $lang, $template, $additionaljs = "", $additionalcss = "") {
+        $lang['title'] = page::title($lang['title']);
         $data = array('data' => $data, 'lang' => $lang, 'path' => $this->config->get('cfg_root_path'), 'charset' => $this->config->get('cfg_page_charset'),
         'additionaljs' => $additionaljs, 'additionalcss' => $additionalcss);
         echo $this->twig->render($template, $data);
@@ -100,9 +101,9 @@ class render {
      * @return void
      */
     public function render_admin_header($lang, $additionaljs, $additionalcss) {
+        $lang['title'] = page::title($lang['title']);
         $data = array('lang' => $lang, 'additionaljs' => $additionaljs, 'additionalcss' => $additionalcss,
-        'installtype' => $this->config->get_setting('core', 'system_install_type'), 'charset' => $this->config->get('cfg_page_charset'),
-        'path' => $this->config->get('cfg_root_path'));
+        'charset' => $this->config->get('cfg_page_charset'), 'path' => $this->config->get('cfg_root_path'));
         echo $this->twig->render('admin/header.html', $data);
     }
     

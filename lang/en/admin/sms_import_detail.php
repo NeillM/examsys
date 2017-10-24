@@ -25,4 +25,5 @@ $string['enrolementdetails'] = 'Enrolment Details';
 $string['deletions'] = 'Deletions';
 $string['deletiondetails'] = 'Deletion Details';
 $string['importtype'] = 'Import Type';
+$string['smsupdatesummary'] = 'SMS Update Summary';
 ?>

@@ -29,21 +29,20 @@ require_once '../include/mapping.inc';
 $errors = array();
 
 if (empty($_POST['source_y']) or empty($_POST['dest_y']) or empty($_POST['moduleID'])) {
-	$errors[] = "Undefined source or destination year";
+  $errors[] = "Undefined source or destination year";
 } elseif ($_POST['source_y'] == $_POST['dest_y']) {
-	$errors[] = "Source and destination years cannot be the same";
+  $errors[] = "Source and destination years cannot be the same";
 } else {
-	// Get the sessions for the source year
+  // Get the sessions for the source year
 
   $module_code = module_utils::get_moduleid_from_id($_POST['moduleID'], $mysqli);
   $modules_array = array($_POST['moduleID'] => $module_code);
-	$objectives = getObjectives($modules_array, $_POST['source_y'], '', '', $mysqli);
-	
-	try {
-		copyObjectives($objectives, $_POST['moduleID'], $module_code, $_POST['dest_y'], $mysqli);
-	} catch(Exception $ex) {
-		$errors[] = "An error occured when copying the objectives. Please try again.";
-	}
+  $objectives = getObjectives($modules_array, $_POST['source_y'], '', '', $mysqli);
+  try {
+    copyObjectives($objectives, $_POST['moduleID'], $module_code, $_POST['dest_y'], $mysqli);
+  } catch(Exception $ex) {
+    $errors[] = "An error occured when copying the objectives. Please try again.";
+  }
 }
 
 ?>
@@ -52,15 +51,14 @@ if (empty($_POST['source_y']) or empty($_POST['dest_y']) or empty($_POST['module
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title>Rog&#333;: Copy Objectives<?php echo ' ' . $configObject->get_setting('core', 'system_install_type'); ?></title>
+  <title><?php echo page::title('Rog&#333;: ' . $string['copy']); ?></title>
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 </head>
 <?php
 if (count($errors) == 0) {
-	echo "<body onload=\"window.location='" . $configObject->get('cfg_root_path') . "/mapping/sessions_list.php?module=" . $_POST['moduleID'] . "';\"></body></html>";
+  echo "<body onload=\"window.location='" . $configObject->get('cfg_root_path') . "/mapping/sessions_list.php?module=" . $_POST['moduleID'] . "';\"></body></html>";
 } else {
 ?>
   <body onclick="hideMenus()">
@@ -71,20 +69,20 @@ if (count($errors) == 0) {
 
     <table border="0" cellpadding="4" cellspacing="1" style="background-color:#FF0000">
     <tr>
-    <td valign="middle" style="background-color: white"><img src="../artwork/access_denied.png" width="48" height="48" alt="Warning" />&nbsp;&nbsp;<span style="font-size:150%; font-weight:bold; color:#C00000">Error</span></td>
+    <td valign="middle" style="background-color: white"><img src="../artwork/access_denied.png" width="48" height="48" alt="Warning" />&nbsp;&nbsp;<span style="font-size:150%; font-weight:bold; color:#C00000"><?php echo $string['error']; ?></span></td>
     </tr>
     <tr>
     <td style="background-color:#FFC0C0">
-    	<p>Sorry, there was a problem copying your objectives please review the following error(s) and try again:</p>
-    	<ul>
+    <p><?php echo $string['problem']; ?></p>
+    <ul>
 <?php
-	foreach($errors as $error) {
+    foreach($errors as $error) {
 ?>
-    		<li style="font-size:90%"><?php echo $error; ?></li>
+        <li style="font-size:90%"><?php echo $error; ?></li>
 <?php
-	}
+    }
 ?>
-			</ul>
+    </ul>
     <div align="center"><input style="width:120px" type="button" value="&lt; Back" name="back" onclick="window.history.go(-1);"></div>
     </td>
     </tr>
@@ -97,4 +95,3 @@ if (count($errors) == 0) {
     </html>
 <?php
 }
-?>

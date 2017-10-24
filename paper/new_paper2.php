@@ -34,8 +34,7 @@ $papertype = $assessment->get_type_value($_POST['paper_type']);
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-
-  <title><?php echo $string['createnewpaper'] . $configObject->get_setting('core', 'system_install_type'); ?></title>
+  <title><?php echo page::title('Rog&#333;: ' . $string['createnewpaper']); ?></title>
 <?php
   // Check that the new paper name is not already used by any other paper (i.e. unique).
   $unique = Paper_utils::is_paper_title_unique($_POST['paper_name'], $mysqli);
