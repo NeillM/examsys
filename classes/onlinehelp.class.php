@@ -637,10 +637,8 @@ Class OnlineHelp {
     if ($configObject->db->error) {
       throw new Exception('CANNOT_LOAD');
     }
-    $ext = '';
     while ($configObject->db->more_results()) {
       $configObject->db->next_result();
-      if ($configObject->db->insert_id > 0) $ext = $ext . ' ' . $configObject->db->insert_id;
     }
     // Ensure all help images are in the correct location.
     $staffhelp = rogo_directory::get_directory('help_staff');
@@ -667,10 +665,8 @@ Class OnlineHelp {
     if ($configObject->db->error) {
       throw new Exception('CANNOT_LOAD');
     }
-    $ext = '';
     while ($configObject->db->more_results()) {
       $configObject->db->next_result();
-      if ($configObject->db->insert_id > 0) $ext = $ext . ' ' . $configObject->db->insert_id;
     }
     // Ensure all help images are in the correct location.
     $studenthelp = rogo_directory::get_directory('help_student');
