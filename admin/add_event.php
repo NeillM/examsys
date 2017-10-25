@@ -50,18 +50,14 @@ if (isset($_GET['default'])) {
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
-  <style type="text/css">
-    body {background-color:#F1F5FB; font-size:80%}
-    .swatch {display:inline-block; width:40px; height:40px; border: 6px solid #F1F5FB}
-    .dialog_header {font-size:200%; border-bottom: 1px solid #CCD9EA; background-image: url('../artwork/calendar_icon.png'); background-repeat:no-repeat; background-position: 10px 3px; padding-left:66px; line-height:56px; height:56px}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/event.css" />
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <?php
-if($configObject->get_setting('core', 'misc_editor_name') === 'tinymce') {
-    $render = new render($configObject);
-    $tinmymcedata['file'] = 'tiny_config';
-    $render->render($tinmymcedata, null, 'tinymce.html');
-}
+$texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+$texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+$texteditorplugin = new $texteditorpluginns($mysqli);
+$texteditorplugin->get_javascript('config');
+
 if (isset($_POST['submit'])) {
   $title = trim($_POST['title']);
   $message = trim($_POST['message']);
@@ -118,7 +114,7 @@ if (isset($_POST['submit'])) {
     </tr>
     <tr>
       <td><?php echo $string['message'] ?></td>
-      <td><textarea class="mceEditor" id="message" name="message" rows="6" style="width:100%; height:200px"></textarea></td>
+      <td><?php $texteditorplugin->get_textarea('message', 'message', '', plugins\plugins_texteditor::type_standard); ?></td>
     </tr>
     <tr>
       <td><?php echo $string['date'] ?></td>

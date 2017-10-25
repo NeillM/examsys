@@ -974,11 +974,10 @@ if ($configObject->get_setting('core', 'cfg_summative_mgmt') and $properties->ge
   <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
   <script type="text/javascript" src="../js/system_tooltips.js"></script>
 <?php
-  if($configObject->get_setting('core', 'misc_editor_name') === 'tinymce') {
-      $render = new render($configObject);
-      $tinmymcedata['file'] = 'tiny_config_properties';
-      $render->render($tinmymcedata, null, 'tinymce.html');
-  }
+  $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+  $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+  $texteditorplugin = new $texteditorpluginns($mysqli);
+  $texteditorplugin->get_javascript('config_properties');
 ?>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>

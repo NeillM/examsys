@@ -53,11 +53,10 @@ if (isset($_POST['save_changes'])) {
   <link rel="stylesheet" type="text/css" href="../../css/help.css" />
   
 <?php
-  if($configObject->get_setting('core', 'misc_editor_name') === 'tinymce') {
-      $render = new render($configObject);
-      $tinmymcedata['file'] = 'tiny_config_help_staff';
-      $render->render($tinmymcedata, null, 'tinymce.html');
-  }
+  $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+  $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+  $texteditorplugin = new $texteditorpluginns($mysqli);
+  $texteditorplugin->get_javascript('config_help_staff');
 ?>
   <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../../js/help.js"></script>
@@ -88,8 +87,7 @@ if (isset($_POST['save_changes'])) {
   </tr>
   </table>
   <br />
-
-  <textarea class="mceEditor" id="edit1" name="edit1" style="width:100%; height:500px"></textarea>
+  <?php echo $texteditorplugin->get_textarea('edit1', 'edit1', '', plugins\plugins_texteditor::type_standard); ?>
 
   <div style="text-align:center; padding-top:8px"><input class="ok" type="submit" name="save_changes" value="<?php echo $string['save'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="history.back();" /></div>
 </form>

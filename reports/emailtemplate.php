@@ -57,16 +57,13 @@ if (file_exists($templatefile)) {
   <title><?php echo page::title('Rog&#333;: ' . $string['emailtemplate']); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <style type="text/css">
-    body {font-size:90%; background-color:#F0F0F0; margin:4px}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/emailtemplate.css" />
 
 <?php
-  if($configObject->get_setting('core', 'misc_editor_name') === 'tinymce') {
-      $render = new render($configObject);
-      $tinmymcedata['file'] = 'tiny_config_email';
-      $render->render($tinmymcedata, null, 'tinymce.html');
-  }
+  $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+  $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+  $texteditorplugin = new $texteditorpluginns($mysqli);
+  $texteditorplugin->get_javascript('config_email');
 ?>
   <script>
     function submitValues() {
@@ -97,7 +94,7 @@ if (file_exists($templatefile)) {
 <td><?php echo $string['subject'] ?></td><td><input type="text" size="70" name="subject" value="<?php echo $subject ?>" /></td>
 </tr>
 <tr>
-<td colspan="3"><textarea class="mceEditor" id="template" name="template" style="width:772px; height:368px"><?php echo  htmlspecialchars($message, ENT_NOQUOTES) ?></textarea></p>
+<td colspan="3"><?php $texteditorplugin->get_textarea('template', 'template', htmlspecialchars($message, ENT_NOQUOTES), plugins\plugins_texteditor::type_standard); ?></td>
 </tr>
 <tr>
 <td colspan="3" style="text-align: center">

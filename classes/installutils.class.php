@@ -701,7 +701,6 @@ Class InstallUtils {
     $configObject->set_setting('paper_marks_negative', array(0, -0.25, -0.5, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10), Config::CSV);
     $configObject->set_setting('paper_marks_partial', array_merge(range(0, 1, 0.1), range(2, 5)), Config::CSV);
     $configObject->set_setting('paper_mathjax', 1, Config::BOOLEAN);
-    $configObject->set_setting('paper_editor_supports_mathjax',array("plain"), Config::CSV);
     $configObject->set_setting('misc_logo_main', 'logo.png', Config::STRING);
     $configObject->set_setting('misc_logo_email', 'alt_logo.png', Config::STRING);
     $configObject->set_setting('api_allow_superuser', 0, Config::BOOLEAN);
@@ -759,10 +758,13 @@ Class InstallUtils {
     $configObject->set_setting('paper_autosave_backoff_factor', 1.5, Config::DOUBLE);
     $configObject->set_setting('summative_midexam_clarification', array('invigilators', 'students'), Config::CSV);
     $configObject->set_setting('system_password_expire', 30, Config::INTEGER);
-    $configObject->set_setting('misc_editor_name', 'tinymce', Config::STRING);
+    // Enable default text editor.
+    $defaulttexteditorns = 'plugins\texteditor\plugin_tinymce3_texteditor\plugin_tinymce3_texteditor';
+    $defaulttexteditor = new $defaulttexteditorns(self::$db);
+    $defaulttexteditor->enable_plugin();
     $configObject->set_setting('lti_ssl_verifypeer', 1, Config::BOOLEAN);
     $configObject->set_setting('lti_ssl_verifyhost', 1, Config::BOOLEAN);
-    // Add external systems.
+   // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();
     $insert->close();

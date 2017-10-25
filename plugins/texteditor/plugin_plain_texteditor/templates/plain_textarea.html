@@ -1,0 +1,6 @@
+{% if data.mathjax == true %}
+<p>{{lang.mathjaxinstructions|raw}}</p>
+<textarea onkeyup="Preview{{data.id}}.Update()" class="plaintextarea" id="{{data.id}}" name="{{data.name}}">{{data.content}}</textarea>
+{% else %}
+<textarea class="plaintextarea" id="{{data.id}}" name="{{data.name}}">{{data.content}}</textarea>
+{% endif %}

@@ -70,11 +70,11 @@ $result->close();
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/announcement.css" />
 <?php
-if($configObject->get_setting('core', 'misc_editor_name') === 'tinymce') {
-    $render = new render($configObject);
-    $tinmymcedata['file'] = 'tiny_config_announcements';
-    $render->render($tinmymcedata, null, 'tinymce.html');
-}
+$texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+$texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+$texteditorplugin = new $texteditorpluginns($mysqli);
+$texteditorplugin->get_javascript('config_announcements');
+
 ?>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
@@ -156,10 +156,10 @@ if (substr($startdate, 0, 4) < date('Y')) {
 <td class="field"><?php echo $string['Available to'] ?></td><td><?php echo date_utils::timedate_select('t', $enddate, false, $start_year, date('Y')+2, $string) ?></td>
 </tr>
 <tr>
-<td class="field"><?php echo $string['Staff Message'] ?></td><td><textarea class="mceEditor" id="staff_msg" name="staff_msg" style="width:750px; height:180px; margin: 0" rows="5" cols="20"><?php echo $staff_msg ?></textarea></td>
+<td class="field"><?php echo $string['Staff Message'] ?></td><td><?php $texteditorplugin->get_textarea('staff_msg', 'staff_msg', '', plugins\plugins_texteditor::type_standard); ?></td>
 </tr>
 <tr>
-<td class="field"><?php echo $string['Student Message'] ?></td><td><textarea class="mceEditor" id="student_msg" name="student_msg" style="width:750px; height:180px; margin: 0" rows="5" cols="20"><?php echo $student_msg ?></textarea></td>
+<td class="field"><?php echo $string['Student Message'] ?></td><td><?php $texteditorplugin->get_textarea('student_msg', 'student_msg', '', plugins\plugins_texteditor::type_standard); ?></td>
 </tr>
 <tr>
 <td colspan="2" style="text-align:center; padding-top:10px"><input type="submit" name="save" value="<?php echo $string['save'] ?>" class="ok" /><input type="button" name="cancel" id="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" /></td>

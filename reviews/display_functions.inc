@@ -644,7 +644,14 @@ function display_question ($configObject, &$question, $paper_type, $calculator, 
               echo "<blockquote><textarea name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $question['correct_fback'] . "</textarea>";
             }
           } else {
-            include_once('../include/wysiwyg_editor.inc');
+            $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+            $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+            $texteditorplugin = new $texteditorpluginns($mysqli);
+            if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
+              $texteditorplugin->get_javascript('config_unanswered');
+            } else {
+              $texteditorplugin->get_javascript('config_answered');
+            }
             echo "<textarea class=\"mceEditor\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" style=\"width:" . (40 + ($settings['columns'] * 8)) . "px; height:" . ($settings['rows'] * 28) . "px\">" . $question['correct_fback'] . "</textarea>\n";
           }
 

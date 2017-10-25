@@ -73,7 +73,17 @@ if ($updater_utils->check_version("6.5.0")) {
     $configObject->set_setting('paper_autosave_backoff_factor', $configObject->get('cfg_autosave_backoff_factor'), Config::DOUBLE);
     $configObject->set_setting('summative_midexam_clarification', $configObject->get('midexam_clarification'), Config::CSV);
     $configObject->set_setting('system_password_expire', $configObject->get('cfg_password_expire'), Config::INTEGER);
-    $configObject->set_setting('misc_editor_name', $configObject->get('cfg_editor_name'), Config::STRING);
+    if ($configObject->get('cfg_editor_name') === 'tinymce') {
+      $defaulttexteditorns = 'plugins\texteditor\plugin_tinymce3_texteditor\plugin_tinymce3_texteditor';
+      $defaulttexteditor = new $defaulttexteditorns($mysqli);
+      $defaulttexteditor->enable_plugin();
+    } else {
+      $defaulttexteditorns = 'plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor';
+      $defaulttexteditor = new $defaulttexteditorns($mysqli);
+      $defaulttexteditor->enable_plugin();
+    }
+    $sql = "DELETE FROM config WHERE component = 'core' AND setting = 'paper_editor_supports_mathjax'";
+    $updater_utils->execute_query($sql, false);
     $updater_utils->record_update('rogo2156');
   }
 }

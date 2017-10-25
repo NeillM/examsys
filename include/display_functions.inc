@@ -974,7 +974,16 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
               }
             }
           } else {
-            include_once('wysiwyg_editor.inc');
+
+            $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+            $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+            $texteditorplugin = new $texteditorpluginns($mysqli);
+            if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
+              $texteditorplugin->get_javascript('config_unanswered');
+            } else {
+              $texteditorplugin->get_javascript('config_answered');
+            }
+
             $ans = '';
             if (isset($user_answers[$current_screen][$q_id])) {
               $ans = $user_answers[$current_screen][$q_id];

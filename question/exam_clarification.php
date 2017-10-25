@@ -103,17 +103,13 @@ exit();
   <title><?php echo page::title($string['midexamclarification']); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <style type="text/css">
-    body {background-color:#F1F5FB; font-size:80%; text-align:center; margin:2px}
-    h1 {text-align:left; font-size:150%; margin-left:4px; font-weight:normal}
-  </style>
-  
+  <link rel="stylesheet" type="text/css" href="../css/examclarification.css" />
+
 <?php
-  if($configObject->get_setting('core', 'misc_editor_name') === 'tinymce') {
-      $render = new render($configObject);
-      $tinmymcedata['file'] = 'tiny_config_announcements';
-      $render->render($tinmymcedata, null, 'tinymce.html');
-  }
+  $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+  $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+  $texteditorplugin = new $texteditorpluginns($mysqli);
+  $texteditorplugin->get_javascript('config_announcements');
 ?>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
@@ -139,7 +135,7 @@ exit();
 <body>
 <form name="myform" id="myform" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
 <h1 class="dkblue_header"><?php echo sprintf($string['questionscreen'], $questionNo, $screenNo); ?></h1>
-<textarea class="mceEditor" id="msg" name="msg" cols="80" rows="4" style="width:100%; height:340px"><?php echo htmlspecialchars($msg, ENT_NOQUOTES); ?></textarea><br />
+<?php $texteditorplugin->get_textarea('msg', 'msg', htmlspecialchars($msg, ENT_NOQUOTES), plugins\plugins_texteditor::type_standard); ?><br />
 <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" class="cancel" /></div>
 <input type="hidden" name="paperID" value="<?php echo $paperID ?>" />
 <input type="hidden" name="q_id" value="<?php echo $q_id ?>" />

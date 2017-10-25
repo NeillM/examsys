@@ -57,20 +57,12 @@ if (isset($_POST['submit'])) {
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <style type="text/css">
-    table {font-size:100%}
-    input, textarea {line-height:140%}
-    input[type=checkbox] {margin-left:20px}
-    .r1 {text-indent:-23px; padding-left:23px; background-color:white}
-    .r2 {text-indent:-23px; padding-left:23px; background-color:#FFBD69}
-    .school {margin-top:10px; width:100%; background-color:white; color:#1E3287}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/refmaterial.css" />
 <?php
-  if($configObject->get_setting('core', 'misc_editor_name') === 'tinymce') {
-      $render = new render($configObject);
-      $tinmymcedata['file'] = 'tiny_config';
-      $render->render($tinmymcedata, null, 'tinymce.html');
-  }
+  $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+  $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+  $texteditorplugin = new $texteditorpluginns($mysqli);
+  $texteditorplugin->get_javascript('config');
 ?>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
@@ -124,7 +116,7 @@ for ($size=200; $size<850; $size+=50) {
   }
 }
 ?></select></td><td><?php echo $string['modules']; ?></td></tr>
-<tr><td><textarea name="ref_content" id="ref_content" rows="40" cols="100" style="height:600px" class="mceEditor"></textarea></td><td style="vertical-align:top">
+<tr><td><?php $texteditorplugin->get_textarea('ref_content', 'ref_content', '', plugins\plugins_texteditor::type_standard); ?></td><td style="vertical-align:top">
 <?php
   echo "<div style=\"margin-top:1px; display:block; width:400px; height:604px; overflow-y:scroll; border:1px solid #909090; font-size:90%\">";
   $modules_array = array();
