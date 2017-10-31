@@ -64,14 +64,13 @@ if (isset($_POST['submit'])) {
 
 $render = new render($configObject);
 $toprightmenu = draw_toprightmenu();
-$lang['title'] = $string['config'];
 $additionaljs = "<script type=\"text/javascript\" src=\"../js/jquery-ui-1.10.4.min.js\"></script><script type=\"text/javascript\" src=\"../js/system_tooltips.js\"></script>
     <script type=\"text/javascript\" src=\"../js/config.min.js\"></script>";
 $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/config.css\"/>";
 $breadcrumb = array($string['home'] => "../index.php", $string['administrativetools'] => "index.php");
-$render->render_admin_header($lang, $additionaljs, $addtionalcss);
-$render->render_admin_options('', '', $lang, $toprightmenu, 'admin/options_empty.html');
-$render->render_admin_content($breadcrumb, $lang);
+$render->render_admin_header($string, $additionaljs, $addtionalcss);
+$render->render_admin_options('', '', $string, $toprightmenu, 'admin/options_empty.html');
+$render->render_admin_content($breadcrumb, $string);
 $data['action'] = Url::fromGlobals();
 $render->render($data, $string, 'admin/config/config_header.html');
 $displayconfigs = array();

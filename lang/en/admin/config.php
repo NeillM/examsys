@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['config'] = 'Configuration Settings';
+$string['title'] = 'Configuration Settings';
 $string['summative_cohort_sizes'] = 'Cohort ranges available when scheduling a summative exam.';
 $string['paper_max_duration'] = 'Max time (in minutes) any exam can be set to last for.';
 $string['summative_max_sittings'] = 'Max number of sittings a summative exam can be scheduled to require.';
