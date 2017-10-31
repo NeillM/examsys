@@ -98,3 +98,19 @@ extarea, input[type=text], select, textarea, input[type=password] {
 .greySkin table.mceLayout tr.mceLast td {
   border-bottom: 0 !important;  
 }
+#osce_marking_guidance {
+  width: 100%;
+  height: 230px;
+}
+#paper_prologue {
+  width: 100%;
+  height: 537px;
+}
+#paper_postscript {
+  width: 100%;
+  height: 537px;
+}
+#rubric_text {
+  width: 100%;
+  height: 537px;
+}

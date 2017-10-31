@@ -1,1 +1,1 @@
-INSERT IGNORE INTO config (component, setting, value, type) values ('plugin_texteditor', 'supports_mathjax', 1, 'boolean');
+INSERT IGNORE INTO config (component, setting, value, type) values ('plugin_plain_texteditor', 'supports_mathjax', 1, 'boolean');

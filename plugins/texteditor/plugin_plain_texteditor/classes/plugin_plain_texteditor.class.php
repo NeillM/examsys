@@ -47,10 +47,10 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
   /**
     * Set the available land pack strings for the plugin
     */
-   private function set_lang_strings() {
-     $langpack = new \langpack();
-     $this->strings = $langpack->get_all_strings($this->langcomponent);
-   }
+  private function set_lang_strings() {
+    $langpack = new \langpack();
+    $this->strings = $langpack->get_all_strings($this->langcomponent);
+  }
 
   /**
    * Constructor

@@ -239,7 +239,7 @@ abstract class plugins {
         return 'OK';
     }
     /**
-     * Unistall a plugin
+     * Uninstall a plugin
      * Removes database schema of plugin and sets appropiate flags in config
      * Does not remove the code
      * @param string $dbuser user to run db command

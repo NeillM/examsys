@@ -59,7 +59,6 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
    * @raturn string
    */
   public function get_textarea($name, $id, $content, $type) {
-    
     switch ($type) {
       case \plugins\plugins_texteditor::type_simple:
         $type = 'editorSimple';
