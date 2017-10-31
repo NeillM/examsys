@@ -33,9 +33,11 @@ class page {
     $configObject  = Config::get_instance();
     $userObject = UserObject::get_instance();
     // Install type.
-    $type = $configObject->get_setting('core', 'system_install_type');
-    if (!is_null($type)) {
-      $pagetitle .= " " . $type;
+    if (!is_null($configObject->db)) {
+      $type = $configObject->get_setting('core', 'system_install_type');
+      if (!is_null($type)) {
+        $pagetitle .= " " . $type;
+      }
     }
     // Checks for logged in users.
     if (!is_null($userObject)) {
