@@ -23,10 +23,17 @@
 */
 
 require '../include/staff_auth.inc';
+require_once '../include/errors.php';
 
-$paper_id = $_GET['paperID'];
-$rep_year = (empty($_GET['repyear'])) ? '%' : $_GET['repyear'];
-$rep_course = (empty($_GET['repcourse'])) ? '%' : $_GET['repcourse'];
+$paper_id = check_var('paperID', 'GET', true, false, true, param::INT);
+$startdate = check_var('startdate', 'GET', true, false, true, param::TEXT);
+$enddate = check_var('enddate', 'GET', true, false, true, param::TEXT);
+$repyear = check_var('repyear', 'GET', false, false, true, param::INT);
+$repcourse = check_var('repcourse', 'GET', false, false, true, param::TEXT);
+$and_year = "AND lm.year = ?";
+$and_grade = "AND u.grade = ?";
+$rep_year = (empty($repyear)) ? '' : $and_year;
+$rep_course = (empty($repcourse)) ? '' : $and_grade;
 
 // Capture the paper makeup.
 $paper_buffer = array();
@@ -65,7 +72,6 @@ $paper_buffer[$question_no]['option_no'] = $option_no;
 $paper_buffer[$question_no]['score_method'] = $old_score_method;
 $question_no++;
 
-
 header('Pragma: public');
 header('Content-type: application/octet-stream');
 header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper_title) . ".csv");
@@ -79,12 +85,15 @@ $stmt->bind_result($number_of_questions);
 $stmt->fetch();
 $stmt->close();
 
-
 $exclude = '';
 if ($_GET['complete'] == 1) {
-  $stmt = $mysqli->prepare("SELECT userID, COUNT(id) AS answer_no FROM log3 WHERE q_paper=? AND started>=? AND started<=? GROUP BY userID");
-  $stmt->bind_param('iss', $paper_id, $_GET['startdate'], $_GET['enddate']);
+  $stmt = $mysqli->prepare("SELECT lm.userID, COUNT(l.id) AS answer_no FROM log3 l 
+  INNER JOIN log_metadata lm ON l.metadataID = lm.id 
+  WHERE lm.paperID=? AND lm.started>=? AND lm.started<=? GROUP BY lm.userID");
+
+  $stmt->bind_param('iii', $paper_id, $startdate, $enddate);
   $stmt->execute();
+
   $stmt->bind_result($uID, $answer_no); //TODO replaced $userID with $uID
   while($stmt->fetch()) {
     if ($answer_no < $number_of_questions or $answer_no > $number_of_questions) {
@@ -105,15 +114,40 @@ FROM log3 l INNER JOIN log_metadata lm ON l.metadataID = lm.id
 INNER JOIN users u ON lm.userID = u.id
 LEFT JOIN sid ON u.id = sid.userID
 WHERE lm.paperID = ?
-AND lm.year LIKE ?
+$rep_year
 AND (u.roles = 'Student' OR u.roles = 'graduate')$exclude
-AND u.grade LIKE ?
+$rep_course
 AND lm.started >= ? AND lm.started <= ?
 SQL;
+
+$bind_types = array();
+$queryParams[] = $paper_id;
+$bind_types[] = "i";
+
+if(!empty($rep_year)) {
+    $queryParams[] = $repyear;
+    $bind_types[] = "i";
+}
+if(!empty($rep_course)) {
+    $queryParams[] = $repcourse;
+    $bind_types[] = "s";
+}
+
+$queryParams[] = $startdate;
+$bind_types[] = "i";
+$queryParams[] = $enddate;
+$bind_types[] = "i";
+$bind_types_str = implode('', $bind_types);
 $stmt = $mysqli->prepare($sql);
-$stmt->bind_param('issss', $paper_id, $rep_year, $rep_course, $_GET['startdate'], $_GET['enddate']);
+$bind_arr = array_merge(array($bind_types_str), $queryParams);
+$bind_values_ref = array();
+foreach ($bind_arr as $key => $value)  {
+    $bind_values_ref[$key] = &$bind_arr[$key];
+}
+call_user_func_array(array($stmt, "bind_param"), $bind_values_ref);
 $stmt->execute();
 $stmt->bind_result($student_id, $username, $title, $surname, $initials, $grade, $gender, $year, $started, $q_id, $user_answer, $screen);
+
 while($stmt->fetch()) {
   $log_array[$username][$screen][$q_id] = $user_answer;
   $log_array[$username]['student_id'] = $student_id;
