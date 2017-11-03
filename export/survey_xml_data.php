@@ -26,15 +26,20 @@ require '../include/staff_auth.inc';
 require_once '../include/errors.php';
 
 $paper_id = check_var('paperID', 'GET', true, false, true, param::INT);
-$startdate = check_var('startdate', 'GET', true, false, true, param::TEXT);
-$enddate = check_var('enddate', 'GET', true, false, true, param::TEXT);
-$repyear = check_var('repyear', 'GET', false, false, true, param::INT);
+$date_reg = "#^([12]\d{3}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01][0-9]|2[0-3])[0-5]\d[0-5]\d)$#";
+$startdate = check_var('startdate', 'GET', true, false, true, param::REGEXP, $date_reg);
+$enddate = check_var('enddate', 'GET', true, false, true, param::REGEXP, $date_reg);
+if ($_GET['repyear'] !== '%') { //web form defines "ANY YEAR" as %
+  $repyear = check_var('repyear', 'GET', false, false, true, param::INT);
+}
+if ($_GET['repcourse'] !== '%') {
+  $repcourse = check_var('repcourse', 'GET', false, false, true, param::TEXT);
+}
 $complete = check_var('complete', 'GET', false, false, true, param::INT);
-$repcourse = check_var('repcourse', 'GET', false, false, true, param::TEXT);
 $and_year = "AND lm.year = ?";
 $and_grade = "AND u.grade = ?";
-$rep_year = (empty($repyear)) ? '' : $and_year;
-$rep_course = (empty($repcourse)) ? '' : $and_grade;
+$repyear_sql = (empty($repyear)) ? '' : $and_year;
+$repcourse_sql = (empty($repcourse)) ? '' : $and_grade;
 
 // Capture the paper makeup.
 $paper_buffer = array();
@@ -67,10 +72,10 @@ if ($complete == 1) {
     $result->fetch();
     $result->close();
     $result = $mysqli->prepare("SELECT lm.userID, COUNT(l.id) AS answer_no 
-    FROM log$paper_type l 
-    INNER JOIN log_metadata lm 
-    ON l.metadataID = lm.id 
-    WHERE lm.paperID=? AND lm.started>=? AND lm.started<=? GROUP BY lm.userID");
+        FROM log$paper_type l 
+        INNER JOIN log_metadata lm 
+        ON l.metadataID = lm.id 
+        WHERE lm.paperID=? AND lm.started>=? AND lm.started<=? GROUP BY lm.userID");
     $result->bind_param('iii', $paper_id, $startdate, $enddate);
     $result->execute();
     $result->bind_result($tmp_username, $answer_no);
@@ -90,7 +95,7 @@ SELECT l.q_id, u.grade, DATE_FORMAT(lm.started,"%d/%m/%Y %T") AS started, lm.yea
 u.initials, u.title, REPLACE(l.user_answer,'"',"'") AS user_answer, lm.userID
 FROM log3 l INNER JOIN log_metadata lm ON l.metadataID = lm.id
 INNER JOIN users u ON lm.userID = u.id
-WHERE lm.paperID = ? $rep_year $rep_course AND (u.roles='Student' OR u.roles='graduate')$exclude
+WHERE lm.paperID = ? $repyear_sql $repcourse_sql AND (u.roles='Student' OR u.roles='graduate')$exclude
 AND lm.started>= ? AND lm.started<= ? ORDER BY u.surname, u.initials
 SQL;
 
@@ -98,11 +103,11 @@ $bind_types = array();
 $queryParams[] = $paper_id;
 $bind_types[] = "i";
 
-if (!empty($rep_year)) {
+if (!empty($repyear_sql)) {
     $queryParams[] = $repyear;
     $bind_types[] = "i";
 }
-if (!empty($rep_course)) {
+if (!empty($repcourse_sql)) {
     $queryParams[] = $repcourse;
     $bind_types[] = "s";
 }
