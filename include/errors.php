@@ -102,7 +102,6 @@ function uploadError($errCode) {
  * @param bool    $headers      If true then output HTML header code
  * @param bool    $return_var   If true return the value of the tested variable back
  * @param int     $type         The type of value that is expected.
- * @param string  $regex        regex needed when using param::REGEX, default null
  *
  * @return void|mixed If $return_var is true we will return the value if it is present,
  *                    if the variable is not set and $mandatory is false null will be returned.
@@ -110,14 +109,9 @@ function uploadError($errCode) {
  *                    In all cases if $mandatory is true and the variable is not set then an error
  *                    page will be displayed and the script will stop processing.
  */
-function check_var($var_name, $method, $mandatory, $headers, $return_var, $type = param::RAW, $regex = null) {
+function check_var($var_name, $method, $mandatory, $headers, $return_var, $type = param::RAW) {
   global $string;
-
-  // check if $type = param::REGEXP
-  $is_regex = false;
-  if (($type === param::REGEXP) && !empty(trim($regex))) {
-    $is_regex = true;
-  }
+  
   if (is_array($method)) {
     if (!isset($method[$var_name]) or $method[$var_name] === '' ) {
       if ($mandatory) {
@@ -127,13 +121,8 @@ function check_var($var_name, $method, $mandatory, $headers, $return_var, $type 
       }
     }
     if ($return_var) {
-      if ($is_regex) {
-        return param::clean($method[$var_name], $type, array("regexp"=>$regex));
-      } else {
-        // Ensure that the value is sanitised.
-        return param::clean($method[$var_name], $type);
-      }
-
+      // Ensure that the value is sanitised.
+      return param::clean($method[$var_name], $type);
     } else {
       return;
     }
@@ -152,11 +141,7 @@ function check_var($var_name, $method, $mandatory, $headers, $return_var, $type 
 
   if ($mandatory) {
     try {
-      if ($is_regex) {
-        return param::required($var_name, $type, $from, array("regexp"=>$regex));
-      } else {
-        $output = param::required($var_name, $type, $from);
-      }
+      $output = param::required($var_name, $type, $from);
     } catch (MissingParameter $e) {
       // Only catch exceptions for missing parameters.
       switch ($method) {
@@ -171,12 +156,8 @@ function check_var($var_name, $method, $mandatory, $headers, $return_var, $type 
       }
     }
   } else {
-    if ($is_regex) {
-      $output = param::optional($var_name, null, $type, $from, array("regexp"=>$regex));
-    } else {
-      // The parameter is not required, we may need to return null.
-      $output = param::optional($var_name, null, $type, $from);
-    }
+    // The parameter is not required, we may need to return null.
+    $output = param::optional($var_name, null, $type, $from);
   }
   // Check if we should return the value.
   if ($return_var) {

@@ -26,19 +26,20 @@ require '../include/staff_auth.inc';
 require_once '../include/errors.php';
 
 $paper_id = check_var('paperID', 'GET', true, false, true, param::INT);
-$date_reg = "#^([12]\d{3}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])([01][0-9]|2[0-3])[0-5]\d[0-5]\d)$#";
-$startdate = check_var('startdate', 'GET', true, false, true, param::REGEXP, $date_reg);
-$enddate = check_var('enddate', 'GET', true, false, true, param::REGEXP, $date_reg);
-if ($_GET['repyear'] !== '%') { //web form defines "ANY YEAR" as %
+$startdate = check_var('startdate', 'GET', true, false, true, param::SQLDATETIME);
+$enddate = check_var('enddate', 'GET', true, false, true, param::SQLDATETIME);
+
+$get_repyear = param::optional('repyear',null, param::INT, param::FETCH_GET);
+$get_repcoutrse = param::optional('repcourse',null, param::TEXT, param::FETCH_GET);
+
+if ( $get_repyear && $get_repyear !== '%') { //web form defines "ANY YEAR" as %
   $repyear = check_var('repyear', 'GET', false, false, true, param::INT);
-}
-if ($_GET['repcourse'] !== '%') {
-  $repcourse = check_var('repcourse', 'GET', false, false, true, param::TEXT);
 }
 $and_year = "AND lm.year = ?";
 $and_grade = "AND u.grade = ?";
-$repyear_sql = (empty($repyear)) ? '' : $and_year;
-$repcourse_sql = (empty($repcourse)) ? '' : $and_grade;
+
+$repyear_sql = ($repyear) ? $and_year : '';
+$repcourse_sql = (($get_repcoutrse == '%') || empty($get_repcoutrse)) ? '' : $and_grade;
 
 // Capture the paper makeup.
 $paper_buffer = array();
@@ -118,10 +119,8 @@ u.gender, lm.year, lm.started, l.q_id, l.user_answer, l.screen
 FROM log3 l INNER JOIN log_metadata lm ON l.metadataID = lm.id
 INNER JOIN users u ON lm.userID = u.id
 LEFT JOIN sid ON u.id = sid.userID
-WHERE lm.paperID = ?
-$repyear_sql
-AND (u.roles = 'Student' OR u.roles = 'graduate')$exclude
-$repcourse_sql
+WHERE lm.paperID = ? $repyear_sql
+AND (u.roles = 'Student' OR u.roles = 'graduate')$exclude $repcourse_sql
 AND lm.started >= ? AND lm.started <= ?
 SQL;
 
