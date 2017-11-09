@@ -28,18 +28,30 @@ require_once '../include/errors.php';
 $paper_id = check_var('paperID', 'GET', true, false, true, param::INT);
 $startdate = check_var('startdate', 'GET', true, false, true, param::SQLDATETIME);
 $enddate = check_var('enddate', 'GET', true, false, true, param::SQLDATETIME);
-
 $get_repyear = param::optional('repyear',null, param::INT, param::FETCH_GET);
-$get_repcoutrse = param::optional('repcourse',null, param::TEXT, param::FETCH_GET);
-
-if ( $get_repyear && $get_repyear !== '%') { //web form defines "ANY YEAR" as %
-  $repyear = check_var('repyear', 'GET', false, false, true, param::INT);
+$get_repcourse = param::optional('repcourse',null, param::TEXT, param::FETCH_GET);
+$complete = param::optional('completerpt',null, param::INT, param::FETCH_GET);
+$bind_types = array();
+$queryParams[] = $paper_id;
+$bind_types[] = "i";
+if (!empty($get_repyear)) {
+  $repyear_sql= "AND lm.year = ?";
+  $queryParams[] = $repyear;
+  $bind_types[] = "s";
+} else {
+  $repyear_sql = "";
 }
-$and_year = "AND lm.year = ?";
-$and_grade = "AND u.grade = ?";
-
-$repyear_sql = ($repyear) ? $and_year : '';
-$repcourse_sql = (($get_repcoutrse == '%') || empty($get_repcoutrse)) ? '' : $and_grade;
+if (($get_repcourse !== "%") && !empty($get_repcourse)) {
+  $repcourse_sql = "AND u.grade = ?";
+  $queryParams[] = $get_repcourse;
+  $bind_types[] = "s";
+} else {
+  $repcourse_sql = "";
+}
+$queryParams[] = $startdate;
+$bind_types[] = "i";
+$queryParams[] = $enddate;
+$bind_types[] = "i";
 
 // Capture the paper makeup.
 $paper_buffer = array();
@@ -92,22 +104,20 @@ $stmt->fetch();
 $stmt->close();
 
 $exclude = '';
-if ($_GET['complete'] == 1) {
-    $stmt = $mysqli->prepare("SELECT lm.userID, COUNT(l.id) AS answer_no FROM log3 l 
-      INNER JOIN log_metadata lm ON l.metadataID = lm.id 
-      WHERE lm.paperID=? AND lm.started>=? AND lm.started<=? GROUP BY lm.userID");
-
-    $stmt->bind_param('iii', $paper_id, $startdate, $enddate);
-    $stmt->execute();
-
-    $stmt->bind_result($uID, $answer_no); //TODO replaced $userID with $uID
-    while($stmt->fetch()) {
-        if ($answer_no < $number_of_questions or $answer_no > $number_of_questions) {
-            // log_metadata aliased as lm in queries below for brevity
-            $exclude .= " AND lm.userID != $uID";
-        }
+if ($complete == 1) {
+  $stmt = $mysqli->prepare("SELECT lm.userID, COUNT(l.id) AS answer_no FROM log3 l 
+    INNER JOIN log_metadata lm ON l.metadataID = lm.id 
+    WHERE lm.paperID=? AND lm.started>=? AND lm.started<=? GROUP BY lm.userID");
+  $stmt->bind_param('iii', $paper_id, $startdate, $enddate);
+  $stmt->execute();
+  $stmt->bind_result($uID, $answer_no); //TODO replaced $userID with $uID
+  while($stmt->fetch()) {
+    if ($answer_no < $number_of_questions or $answer_no > $number_of_questions) {
+      // log_metadata aliased as lm in queries below for brevity
+      $exclude .= " AND lm.userID != $uID";
     }
-    $stmt->close();
+  }
+  $stmt->close();
 }
 
 $log_array = array();
@@ -124,23 +134,6 @@ AND (u.roles = 'Student' OR u.roles = 'graduate')$exclude $repcourse_sql
 AND lm.started >= ? AND lm.started <= ?
 SQL;
 
-$bind_types = array();
-$queryParams[] = $paper_id;
-$bind_types[] = "i";
-
-if(!empty($repyear_sql)) {
-    $queryParams[] = $repyear;
-    $bind_types[] = "i";
-}
-if(!empty($repcourse_sql)) {
-    $queryParams[] = $repcourse;
-    $bind_types[] = "s";
-}
-
-$queryParams[] = $startdate;
-$bind_types[] = "i";
-$queryParams[] = $enddate;
-$bind_types[] = "i";
 $bind_types_str = implode('', $bind_types);
 $stmt = $mysqli->prepare($sql);
 $bind_arr = array_merge(array($bind_types_str), $queryParams);
