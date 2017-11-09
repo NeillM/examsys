@@ -29,7 +29,7 @@ $paper_id = check_var('paperID', 'GET', true, false, true, param::INT);
 $startdate = check_var('startdate', 'GET', true, false, true, param::SQLDATETIME);
 $enddate = check_var('enddate', 'GET', true, false, true, param::SQLDATETIME);
 $get_repyear = param::optional('repyear',null, param::INT, param::FETCH_GET);
-$get_repcourse = param::optional('repcourse',null, param::TEXT, param::FETCH_GET);
+$get_repcourse = param::optional('repcourse','%', param::TEXT, param::FETCH_GET);
 $complete = param::optional('completerpt',null, param::INT, param::FETCH_GET);
 $bind_types = array();
 $queryParams[] = $paper_id;
@@ -41,7 +41,7 @@ if (!empty($get_repyear)) {
 } else {
   $repyear_sql = "";
 }
-if (($get_repcourse !== "%") && !empty($get_repcourse)) {
+if ($get_repcourse !== "%") {
   $repcourse_sql = "AND u.grade = ?";
   $queryParams[] = $get_repcourse;
   $bind_types[] = "s";
