@@ -92,23 +92,23 @@ class requirements {
    * @return boolean
    */
   public static function check_db() {
-    $return = true;
     $configObject = Config::get_instance();
-    if (function_exists('mysqli_connect')) {
-      $check = mysqli_connect($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'));
-      if (mysqli_connect_error()) {
-        $return = false;
+    $phpModules = get_loaded_extensions();
+    if (in_array('mysqli', $phpModules)) {
+      @$check = new mysqli($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'));
+      if ($check->connect_error != '') {
+        return false;
       }
       $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
-      $mysql_version = mysqli_get_server_version($check);
+      $mysql_version = $check->server_version;
       if($mysql_version < $mysql_min_ver) {
-        $return = false;
+        return false;
       }
       $check->close();
     } else {
-      $return = false;
+      return false;
     }
-    return $return;
+    return true;
   }
 
   /**
