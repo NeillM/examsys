@@ -212,7 +212,7 @@ if (isset($_POST['submit'])) {
     $end_start_tag = strpos($blank_details[$i],']');
     $start_end_tag = strpos($blank_details[$i],'[/blank]');
     $blank_options = substr($blank_details[$i],($end_start_tag+1),($start_end_tag-1));
-    if ($i == $_GET['blank']) {
+    if ($i == $_GET['blank'] && $blank_options !== '') {
       $blanks = explode(',', $blank_options);
     }
   }
