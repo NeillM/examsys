@@ -75,20 +75,17 @@ while ($result->fetch()) {
 $result->close();
 
 if (isset($_POST['submit'])) {
-  $option_list = '';
+  $option_list_array = array();
 
   // Iterate around all words marked for correction
   for ($i=0; $i<$_POST['word_count']; $i++) {
     if (isset($_POST['word' . $i])) {
       // Encode commas.
       $word = str_replace(',', '&#44;', $_POST['word' . $i]);
-      if ($option_list == '') {
-        $option_list = $word;
-      } else {
-        $option_list .= ',' . $word;
-      }
+      $option_list_array[] = $word;
     }
   }
+  $option_list = implode(',', $option_list_array);
 
   $blank_details = explode('[blank', $option_text);
   for ($i=1; $i<count($blank_details); $i++) {
