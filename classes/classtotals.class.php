@@ -602,7 +602,7 @@ class ClassTotals {
       // This will ensure that they can match correctly.
       $answer_list = param::clean_array($answer_list, param::TEXT);
       foreach ($answer_list as $individual_answer) {
-        $correct[$i-1][] = html_entity_decode(trim(str_replace('&nbsp;', ' ', $individual_answer)));
+        $correct[$i-1][] = html_entity_decode(StringUtils::clean_and_trim($individual_answer));
       }
     }
 
@@ -707,7 +707,7 @@ class ClassTotals {
         for ($a = 0; $a < $count_user_answer; $a++) {
           if ($tmp_exclude{$a} == '0') {
             // Ensure that the students answer is encoded in the same way as the correct answers.
-            $student_answer = html_entity_decode(trim(str_replace('&nbsp;', ' ', $user_answers[$a])));
+            $student_answer = html_entity_decode(StringUtils::clean_and_trim($user_answers[$a]));
             if ($question['display_method'] == 'dropdown') {
               // In a drop down list the correct answer is always the first one entered; all the others are incorrect alternatives.
               $correct_answer = $question['correct'][$a][0];
