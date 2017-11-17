@@ -68,7 +68,7 @@ while ($result->fetch()) {
   // Decode user answers into an array of lowercase strings.
   $tmp_answer = json_decode($user_answer);
   foreach ($tmp_answer as &$answer) {
-    $answer = str_replace(',', '&#44;', trim(strtolower($answer)));
+    $answer = strtolower(StringUtils::clean_and_trim($answer));
   }
   $log_answers[$type][$id] = $tmp_answer;
 }
@@ -155,7 +155,7 @@ if (isset($_POST['submit'])) {
           $have_answer = true;
           $is_correct = false;
           foreach ($answer_list as $individual_answer) {
-            if (str_replace('&nbsp;', ' ', $user_parts[$j]) == str_replace('&nbsp;', ' ', trim(strtolower($individual_answer)))) {
+            if ($user_parts[$j] == strtolower(StringUtils::clean_and_trim($individual_answer))) {
               $is_correct = true;
               break;
             }
