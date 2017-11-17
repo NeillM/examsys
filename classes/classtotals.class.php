@@ -704,7 +704,7 @@ class ClassTotals {
       } elseif ($question['q_type'] == 'blank') {
         $user_answers = json_decode($tmp_user_answer);
         $count_user_answer = count($user_answers);
-        for ($a=0; $a<$count_user_answer; $a++) {
+        for ($a = 0; $a < $count_user_answer; $a++) {
           if ($tmp_exclude{$a} == '0') {
             if ($question['display_method'] == 'dropdown') {
               $correct_answer = html_entity_decode(trim(str_replace('&nbsp;', ' ', $question['correct'][$a][0])));
