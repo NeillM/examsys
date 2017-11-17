@@ -707,8 +707,8 @@ class ClassTotals {
         for ($a=0; $a<$count_user_answer; $a++) {
           if ($tmp_exclude{$a} == '0') {
             if ($question['display_method'] == 'dropdown') {
-              $student_answer = html_entity_decode(trim(str_replace('&nbsp;', ' ', $question['correct'][$a][0])));
-              $correct_answer = html_entity_decode(trim(str_replace('&nbsp;', ' ', $user_answers[$a])));
+              $correct_answer = html_entity_decode(trim(str_replace('&nbsp;', ' ', $question['correct'][$a][0])));
+              $student_answer = html_entity_decode(trim(str_replace('&nbsp;', ' ', $user_answers[$a])));
 
               if ($student_answer == $correct_answer) {
                 $tmp_mark += $question['marks_correct'];
