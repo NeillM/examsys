@@ -252,7 +252,7 @@ class param {
   protected static function strip_tags($text) {
     $postfix = '';
     if (substr($text, -1) === '<') {
-      // strinp_tags will remove a less than if it is the final character. We wish to leave it in.
+      // strip_tags will remove a less than if it is the final character. We wish to leave it in.
       $postfix = '<';
     }
     $return = strip_tags($text);
