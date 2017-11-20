@@ -47,6 +47,17 @@ class external_systems {
         $configObject = Config::get_instance();
         $this->db = $configObject->db;
     }
+
+    /**
+     * Called when the object is unserialised.
+     */
+    public function __wakeup() {
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
+        $this->db = null;
+    }
+
     /**
      * Get external system mapping info given user id
      * @param integer $client oauth client id
