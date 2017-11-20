@@ -30,7 +30,6 @@ $language = LangUtils::getLang($cfg_web_root);
 require_once 'classes/class_totals.php';
 
 $cfg_web_host = $configObject->get('cfg_web_host');
-$support_email = support::get_email();
 $cfg_cron_user = $configObject->get('cfg_cron_user');
 $cfg_cron_passwd = $configObject->get('cfg_cron_passwd');
 
@@ -38,6 +37,9 @@ $cfg_cron_passwd = $configObject->get('cfg_cron_passwd');
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_sysadmin_user'),
   $configObject->get('cfg_db_sysadmin_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'),
   $configObject->get('notice'), $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
+
+$configObject->set_db_object($mysqli);
+$support_email = support::get_email();
 
 // Exit if not on command line.
 if (php_sapi_name() != 'cli') {
