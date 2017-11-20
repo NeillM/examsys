@@ -91,7 +91,7 @@ class PaperProperties {
   private $externalsys;
   private $unmarked_textbox;
   private $unmarked_student_textbox;
-
+  private $enhancedcalc_questions;
   private $_date_timezone = null;
 
   /**
@@ -1794,7 +1794,7 @@ class PaperProperties {
             $this->load_questions();
         }
 
-        $enhancedcalc_ids = array();
+        $this->enhancedcalc_questions = array();
 
         $paperID = $this->get_property_id();
         $paperType = $this->get_paper_type();
@@ -1809,16 +1809,16 @@ class PaperProperties {
                     switch ($question['type']) {
                         case 'random':
                             foreach (QuestionUtils::get_random_question($question['q_id'], 'enhancedcalc') as $possible) {
-                                $enhancedcalc_ids[] = $possible;
+                                $this->enhancedcalc_questions[] = $possible;
                             }
                             break;
                         case 'keyword_based':
                             foreach (QuestionUtils::get_keyword_question($question['q_id'], 'enhancedcalc') as $possible) {
-                                $enhancedcalc_ids[] = $possible;
+                                $this->enhancedcalc_questions[] = $possible;
                             }
                             break;
                         case 'enhancedcalc':
-                            $enhancedcalc_ids[] = $question['q_id'];
+                            $this->enhancedcalc_questions[] = $question['q_id'];
                             break;
                         default:
                             break;
@@ -1828,7 +1828,7 @@ class PaperProperties {
         }
 
         // Find unmarked questions.
-        if (count($enhancedcalc_ids) > 0) {
+        if (count($this->enhancedcalc_questions) > 0) {
 
             // Some error states are fatal we should skip over these to avoid an infitie loop trying to mark them,
             // Affected questions will be flagged to the staff member marking.
@@ -1840,7 +1840,7 @@ class PaperProperties {
                 $rolesql = '';
             }
             $result = $this->db->prepare("SELECT log$paperType.id FROM log$paperType, log_metadata, users WHERE log$paperType.metadataID = log_metadata.id "
-              . "AND users.id = log_metadata.userID AND q_id IN (" . implode(',', $enhancedcalc_ids) . ") AND paperID = ? AND mark IS NULL and errorstate not in ("
+              . "AND users.id = log_metadata.userID AND q_id IN (" . implode(',', $this->enhancedcalc_questions) . ") AND paperID = ? AND mark IS NULL and errorstate not in ("
               . implode(',', $skiperrorstates) . ") $rolesql LIMIT 1");
             $result->bind_param('i', $paperID);
             $result->execute();
@@ -1855,6 +1855,16 @@ class PaperProperties {
             }
             $result->close();
         }
+    }
+
+    /**
+     * List of all calculation questions on paper
+     * @param int $studentsonly only check students in cohort
+     * @return array
+     */
+    public function get_enhancedcalc_questions($studentsonly = 0) {
+        $this->load_unmarked_enhancedcalc($studentsonly);
+        return $this->enhancedcalc_questions;
     }
 
     /**
