@@ -1863,7 +1863,14 @@ class PaperProperties {
      * @return array
      */
     public function get_enhancedcalc_questions($studentsonly = 0) {
-        $this->load_unmarked_enhancedcalc($studentsonly);
+        if ($studentsonly) {
+            $check = $this->unmarked_student_enhancedcalc;
+        } else {
+            $check = $this->unmarked_enhancedcalc;
+        }
+        if ($check === null) {
+            $this->load_unmarked_enhancedcalc($studentsonly);
+        }
         return $this->enhancedcalc_questions;
     }
 
