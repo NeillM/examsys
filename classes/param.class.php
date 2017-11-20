@@ -235,7 +235,7 @@ class param {
         }
         $return[$key] = $clean;
       } else {
-        $return[$key] = self::clean_array($part, $type, $opt);
+        $return[$key] = self::clean_array($part, $type, false, $opt);
       }
     }
     return $return;
