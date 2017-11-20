@@ -37,6 +37,16 @@ class save_fail_logs {
   }
 
   /**
+   * Called when the object is unserialised.
+   */
+  public function __wakeup() {
+    // The serialised database object will be invalid,
+    // this object should only be serialised during an error report,
+    // so adding the current database connect seems like a waste of time.
+    $this->db = null;
+  }
+
+  /**
    * Get all the logs from save fail table
    * returns associative array of logs
    */
