@@ -109,8 +109,8 @@ class class_totals {
     foreach ($papers as $paper) {
       $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($paper['crypt_name'], $mysqli, $string, true);
       // Mark calculation questions.
-      if ($propertyObj->unmarked_enhancedcalc(true)) {
-        $qids = $propertyObj->get_enhancedcalc_questions(true);
+      if ($propertyObj->unmarked_enhancedcalc(1)) {
+        $qids = $propertyObj->get_enhancedcalc_questions(1);
         foreach ($qids as $qid) {
           enhancedcalc_remark('2', $paper['paperID'], $qid, QuestionUtils::get_settings($qid), $mysqli, 'all');
         }
