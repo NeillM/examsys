@@ -271,7 +271,7 @@ foreach ($titles as $tmp_title) {
 <option value="Standards Setter"><?php echo $string['standardssetter'] ?></option>
 <option value="Staff Internal Reviewer"><?php echo $string['internalreviewer'] ?></option>
 </optgroup>
-<optgroup label="<?php echo $string['externalstaff'] ?>">
+<optgroup data-role="Staff" label="<?php echo $string['externalstaff'] ?>">
 <?php
 if (strpos($_SERVER['HTTP_HOST'],'.uk') !== false) {
   echo "<option value=\"NHS Lecturer\">" . $string['nhslecturer'] . "</option>\n";
