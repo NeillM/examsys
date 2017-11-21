@@ -1794,7 +1794,7 @@ class PaperProperties {
             $this->load_questions();
         }
 
-        $this->enhancedcalc_questions = array();
+        $enhancedcalc_ids = array();
 
         $paperID = $this->get_property_id();
         $paperType = $this->get_paper_type();
@@ -1809,16 +1809,16 @@ class PaperProperties {
                     switch ($question['type']) {
                         case 'random':
                             foreach (QuestionUtils::get_random_question($question['q_id'], 'enhancedcalc') as $possible) {
-                                $this->enhancedcalc_questions[] = $possible;
+                                $enhancedcalc_ids[] = $possible;
                             }
                             break;
                         case 'keyword_based':
                             foreach (QuestionUtils::get_keyword_question($question['q_id'], 'enhancedcalc') as $possible) {
-                                $this->enhancedcalc_questions[] = $possible;
+                                $enhancedcalc_ids[] = $possible;
                             }
                             break;
                         case 'enhancedcalc':
-                            $this->enhancedcalc_questions[] = $question['q_id'];
+                            $enhancedcalc_ids[] = $question['q_id'];
                             break;
                         default:
                             break;
@@ -1828,7 +1828,9 @@ class PaperProperties {
         }
 
         // Find unmarked questions.
-        if (count($this->enhancedcalc_questions) > 0) {
+        if (count($enhancedcalc_ids) > 0) {
+
+            $this->enhancedcalc_questions = array();
 
             // Some error states are fatal we should skip over these to avoid an infitie loop trying to mark them,
             // Affected questions will be flagged to the staff member marking.
@@ -1839,14 +1841,17 @@ class PaperProperties {
             } else {
                 $rolesql = '';
             }
-            $result = $this->db->prepare("SELECT log$paperType.id FROM log$paperType, log_metadata, users WHERE log$paperType.metadataID = log_metadata.id "
-              . "AND users.id = log_metadata.userID AND q_id IN (" . implode(',', $this->enhancedcalc_questions) . ") AND paperID = ? AND mark IS NULL and errorstate not in ("
-              . implode(',', $skiperrorstates) . ") $rolesql LIMIT 1");
+            $result = $this->db->prepare("SELECT distinct log$paperType.q_id FROM log$paperType, log_metadata, users WHERE log$paperType.metadataID = log_metadata.id "
+              . "AND users.id = log_metadata.userID AND q_id IN (" . implode(',', $enhancedcalc_ids) . ") AND paperID = ? AND mark IS NULL and errorstate not in ("
+              . implode(',', $skiperrorstates) . ") $rolesql ORDER BY 1");
             $result->bind_param('i', $paperID);
             $result->execute();
             $result->store_result();
-            $result->bind_result($id);
+            $result->bind_result($qid);
             if ($result->num_rows > 0) {
+                while ($result->fetch()) {
+                    $this->enhancedcalc_questions[] = $qid;
+                }
                 if ($studentsonly) {
                     $this->unmarked_student_enhancedcalc = true;
                 } else {
@@ -1864,9 +1869,19 @@ class PaperProperties {
      */
     public function get_enhancedcalc_questions($studentsonly = 0) {
         if ($studentsonly) {
+            // Do we have student only questions?
             $check = $this->unmarked_student_enhancedcalc;
+            // Force reload if we have non studnent questions.
+            if ($this->unmarked_enhancedcalc === true) {
+              $check = null;
+            }
         } else {
+            // Do we have non student questions?
             $check = $this->unmarked_enhancedcalc;
+            // Force reload if we have studnent questions.
+            if ($this->unmarked_student_enhancedcalc === true) {
+              $check = null;
+            }
         }
         if ($check === null) {
             $this->load_unmarked_enhancedcalc($studentsonly);
