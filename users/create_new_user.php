@@ -280,6 +280,7 @@ if (strpos($_SERVER['HTTP_HOST'],'.uk') !== false) {
 ?>
 <option value="Staff External Examiner"><?php echo $string['externalexaminer'] ?></option>
 <option value="Invigilator"><?php echo $string['invigilator'] ?></option>
+</optgroup>
 </select></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td>&nbsp;</td><td><input type="checkbox" name="new_welcome" value="1" /><?php echo $string['sendwelcomeemail'] ?></td></tr>
