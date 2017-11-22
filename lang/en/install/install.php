@@ -111,6 +111,7 @@ $string['errors13'] = 'Error';
 $string['errors14'] = 'The following warnings were generated';
 $string['errors15'] = 'Warning';
 $string['errors16'] = 'Rogō requires ability to write its config file %s/config/config.inc.php. One way to fix this is you can temporarily allow write access to %s/config and change permissions once update has run.';
+$string['errors17'] = 'Rogō requires MySQL version %s or above.';
 $string['errors18'] = 'The Rogō data directory requires %s path to exist';
 $string['errors19'] = 'The Rogō data directory requires %s must be writable';
 $string['installscript'] = 'Rogō Install script';

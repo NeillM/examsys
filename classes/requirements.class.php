@@ -89,16 +89,19 @@ class requirements {
 
   /**
    * Check db version meets minimum requirements.
+   * @param string $host db host
+   * @param string $user db user
+   * @param string $pass db password
    * @return boolean
    */
-  public static function check_db() {
-    $configObject = Config::get_instance();
+  public static function check_db($host, $user, $pass) {
     $phpModules = get_loaded_extensions();
     if (in_array('mysqli', $phpModules)) {
-      @$check = new mysqli($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'));
+      @$check = new mysqli($host, $user, $pass);
       if ($check->connect_error != '') {
         return false;
       }
+      $configObject = Config::get_instance();
       $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
       $mysql_version = $check->server_version;
       if($mysql_version < $mysql_min_ver) {
