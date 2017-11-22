@@ -188,7 +188,7 @@
   $result->execute();
   $result->bind_result($student_grade, $description);
   while ($result->fetch()) {
-    if (strlen($student_grade) == 4) echo "<option value=\"$student_grade\">$student_grade: $description</option>\n";
+    echo "<option value=\"$student_grade\">$student_grade: $description</option>\n";
   }
   $result->close();
   echo "</select></td></tr>\n";
