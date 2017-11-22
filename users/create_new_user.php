@@ -271,7 +271,7 @@ foreach ($titles as $tmp_title) {
 <option value="Standards Setter"><?php echo $string['standardssetter'] ?></option>
 <option value="Staff Internal Reviewer"><?php echo $string['internalreviewer'] ?></option>
 </optgroup>
-<optgroup label="<?php echo $string['externalstaff'] ?>">
+<optgroup data-role="Staff" label="<?php echo $string['externalstaff'] ?>">
 <?php
 if (strpos($_SERVER['HTTP_HOST'],'.uk') !== false) {
   echo "<option value=\"NHS Lecturer\">" . $string['nhslecturer'] . "</option>\n";
@@ -280,6 +280,7 @@ if (strpos($_SERVER['HTTP_HOST'],'.uk') !== false) {
 ?>
 <option value="Staff External Examiner"><?php echo $string['externalexaminer'] ?></option>
 <option value="Invigilator"><?php echo $string['invigilator'] ?></option>
+</optgroup>
 </select></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td>&nbsp;</td><td><input type="checkbox" name="new_welcome" value="1" /><?php echo $string['sendwelcomeemail'] ?></td></tr>
