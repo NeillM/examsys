@@ -454,7 +454,13 @@ Class InstallUtils {
     // Load default data
     self::loadData();
 
-    // Update sys_updates table
+    // Load default plugins.
+    $configObject->set('cfg_db_host', self::$cfg_db_host);
+    $configObject->set('cfg_db_database', self::$cfg_db_name);
+    $configObject->set('dbclass', 'mysqli');
+    self::loadPlugins();
+
+    // Update sys_updates table.
     self::updateSysUpdates();
 
     // Get Help and lang pack parameters.
