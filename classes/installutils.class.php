@@ -232,7 +232,7 @@ Class InstallUtils {
    * @param string $setting xml path of setting
    * @return cleaned settings
    */
-  private static function check_setting($value, $type, $required, $setting) {
+  private function check_setting($value, $type, $required, $setting) {
     global $string;
     if (is_array($value)) {
       $clean = param::clean_array($value, $type, $required);
@@ -281,12 +281,6 @@ Class InstallUtils {
     }
 
     self::$cfg_db_charset = 'utf8';
-
-    // Check mysql version.
-    if (!requirements::check_db(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd)) {
-      $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
-      self::displayError(array('002' => sprintf($string['errors17'], $mysql_min_ver)), true);
-    }
 
     if (!self::$cli) {
       self::$cfg_web_host = param::required('web_host', param::TEXT, param::FETCH_POST);
@@ -758,6 +752,21 @@ Class InstallUtils {
     $configObject->set_setting('paper_autosave_backoff_factor', 1.5, Config::DOUBLE);
     $configObject->set_setting('summative_midexam_clarification', array('invigilators', 'students'), Config::CSV);
     $configObject->set_setting('system_password_expire', 30, Config::INTEGER);
+    $configObject->set_setting('lti_ssl_verifypeer', 1, Config::BOOLEAN);
+    $configObject->set_setting('lti_ssl_verifyhost', 1, Config::BOOLEAN);
+    // Add external systems.
+    $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
+    $insert->execute();
+    $insert->close();
+    self::createDefaultUsers();
+    self::createDefaultFacultiesSchoolsModules();
+    self::createQuestionStatuses();
+  }
+
+  /**
+   * Load default plugins needed for rogo to function
+   */
+  static function loadPlugins() {
     // Enable default text editor.
     $defaulttexteditorns = 'plugins\texteditor\plugin_tinymce3_texteditor\plugin_tinymce3_texteditor';
     $defaulttexteditor = new $defaulttexteditorns(self::$db);
@@ -767,15 +776,6 @@ Class InstallUtils {
     $plaintexteditorns = 'plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor';
     $plaintexteditor = new $plaintexteditorns(self::$db);
     $plaintexteditor->install(self::$db_admin_username, self::$db_admin_passwd);
-    $configObject->set_setting('lti_ssl_verifypeer', 1, Config::BOOLEAN);
-    $configObject->set_setting('lti_ssl_verifyhost', 1, Config::BOOLEAN);
-   // Add external systems.
-    $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
-    $insert->execute();
-    $insert->close();
-    self::createDefaultUsers();
-    self::createDefaultFacultiesSchoolsModules();
-    self::createQuestionStatuses();
   }
 
   /**
@@ -1455,7 +1455,7 @@ Class InstallUtils {
                                 false,
                                 false,
                                 true,
-                                0,
+                                null,
                                 null,
                                 self::$db,
                                 0,
@@ -1476,7 +1476,7 @@ Class InstallUtils {
                                 true,
                                 true,
                                 true,
-                                0,
+                                null,
                                 null,
                                 self::$db,
                                 0,
