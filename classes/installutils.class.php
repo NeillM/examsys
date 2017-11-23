@@ -761,7 +761,12 @@ Class InstallUtils {
     // Enable default text editor.
     $defaulttexteditorns = 'plugins\texteditor\plugin_tinymce3_texteditor\plugin_tinymce3_texteditor';
     $defaulttexteditor = new $defaulttexteditorns(self::$db);
+    $defaulttexteditor->install(self::$db_admin_username, self::$db_admin_passwd);
     $defaulttexteditor->enable_plugin();
+    // Install plain text editor.
+    $plaintexteditorns = 'plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor';
+    $plaintexteditor = new $plaintexteditorns(self::$db);
+    $plaintexteditor->install(self::$db_admin_username, self::$db_admin_passwd);
     $configObject->set_setting('lti_ssl_verifypeer', 1, Config::BOOLEAN);
     $configObject->set_setting('lti_ssl_verifyhost', 1, Config::BOOLEAN);
    // Add external systems.
