@@ -1175,9 +1175,10 @@ if($propertyObj->get_calculator()) {
       continue;
     }
 
+    // Flag original for telling if this is a linked question, since this flag is abandoned, set to 0
+    $is_enhancedcalc = 0;
     // refer to all questions on displayed question
     $question['paper_questions'] = &$questions_array;
-    
     if ($screen_pre_submitted == 1 and $q_displayed == 0) {
       echo "<tr style=\"display:none\" id=\"unansweredkey\">"
         . "<td colspan=\"2\"><span class=\"unans\">&nbsp;&nbsp;&nbsp;&nbsp;</span> "
