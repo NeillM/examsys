@@ -6,6 +6,10 @@ if ($updater_utils->check_version("6.5.0")) {
     $configObject->set_setting('system_maintenance_mode', 0, Config::BOOLEAN);
     $sql = "INSERT INTO config (component, setting, value, type) VALUES ('core', 'rogo_version', '" . $configObject->get('rogo_version') . "', '" . Config::VERSION . "')";
     $updater_utils->execute_query($sql, false);
+    // Need to remove old cfg line.
+    $replace = "\$rogo_version = '" . $configObject->get('rogo_version') . "';";
+    $updater_utils->replace_line($string, $replace, '', $cfg_web_root);
+    //
     $sql = "INSERT INTO config (component, setting, value, type) VALUES ('core', 'cfg_summative_mgmt', '" . $configObject->get('cfg_summative_mgmt') . "', '" . Config::BOOLEAN . "')";
     $updater_utils->execute_query($sql, false);
     $hostname = true;

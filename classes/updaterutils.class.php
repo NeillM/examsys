@@ -374,13 +374,8 @@ Class UpdaterUtils {
       array_splice($cfg, $default_line, 0, $new_lines);
 
       if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
-        echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+        InstallUtils::logWarning(array(300 => $string['couldnotwrite']));
       }
-      echo "<li>" . sprintf($string['addinglines'], $file_path) . "<br />\n";
-      foreach ($new_lines as $new_line) {
-        echo highlight_string($new_line, true) . "\n";
-      }
-      echo "</li>\n";
       ob_flush();
       flush();
     }
@@ -411,14 +406,8 @@ Class UpdaterUtils {
       $cfg[$founndloc]=$new_line;
 
       if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
-        echo "<li class=\"error\">" . $string['couldnotwrite'] . "</li>";
+        InstallUtils::logWarning(array(300 => $string['couldnotwrite']));
       }
-      echo "<li>" . sprintf($string['replacinglines'], $file_path) . "<br />\n";
-
-
-      echo highlight_string("$replace\r\n with\r\n$new_line", true) . "\n";
-
-      echo "</li>\n";
       ob_flush();
       flush();
     }
@@ -437,34 +426,3 @@ Class UpdaterUtils {
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

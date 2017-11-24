@@ -48,8 +48,6 @@ LangUtils::loadlangfile(str_replace($cfg_web_root, '', str_replace('\\', '/', ($
 $php_min_ver = $configObject->getxml('php', 'min_version');
 $phpversion = requirements::check_php_version();
 $phpext = requirements::check_php_extensions();
-$mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
-$dbversion = requirements::check_db();
 $phpallext = true;
 foreach ($phpext as $idx => $val) {
     if (!$val) {
@@ -70,10 +68,17 @@ if (!$phpversion) {
   $info['phpversion'] = array($string['phpsuccess'],true);
 }
 // db version.
-if (!$dbversion) {
-  $info['dbversion'] = array(sprintf($string['dbversion'], $mysql_min_ver), false);
+if (InstallUtils::config_exists()){
+  $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
+  $dbversion = requirements::check_db($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'));
+  if (!$dbversion) {
+    $info['dbversion'] = array(sprintf($string['dbversion'], $mysql_min_ver), false);
+  } else {
+    $info['dbversion'] = array($string['dbsuccess'], true);
+  }
 } else {
-  $info['dbversion'] = array($string['dbsuccess'], true);
+  // On install skip check here as done in insall process.
+  $dbversion = true;
 }
 // php extensions.
 foreach ($phpext as $idx => $val) {
