@@ -68,13 +68,13 @@ if (isset($_POST['save_changes'])) {
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/help.css" />
+  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
 <?php
   $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
   $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
   $texteditorplugin = new $texteditorpluginns($mysqli);
   $texteditorplugin->get_javascript('config_help_student');
 ?>
-  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../../js/help.js"></script>
   <script>
     $(function () {

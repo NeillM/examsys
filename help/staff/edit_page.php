@@ -68,6 +68,7 @@ if (isset($_POST['save_changes'])) {
 
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/help.css" />
+  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
 
 <?php
   $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
@@ -76,7 +77,6 @@ if (isset($_POST['save_changes'])) {
   $texteditorplugin->get_javascript('config_help_staff');
 
 ?>
-  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../../js/help.js"></script>
   <script>
     $(function () {

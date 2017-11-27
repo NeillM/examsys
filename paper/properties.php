@@ -969,7 +969,6 @@ if ($configObject->get_setting('core', 'cfg_summative_mgmt') and $properties->ge
   <link rel="stylesheet" type="text/css" href="../css/warnings.css"/>
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery-migrate-1.2.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
   <script type="text/javascript" src="../js/system_tooltips.js"></script>

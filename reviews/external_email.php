@@ -54,6 +54,7 @@ $display_deadline = $external_review_deadline->format('l jS M Y');
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/externalemail.css" />
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 
 <?php
   $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
@@ -62,7 +63,6 @@ $display_deadline = $external_review_deadline->format('l jS M Y');
   $texteditorplugin->get_javascript('config_externals_email');
 ?>
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script>
     $(function () {

@@ -469,14 +469,13 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <link rel="stylesheet" href="../../css/add_edit.css" type="text/css" />
 <link rel="stylesheet" href="../../css/mapping_form.css" type="text/css" />
 <link rel="stylesheet" href="../../css/warnings.css" type="text/css" />
-
+<script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
 <?php
   $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
   $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
   $texteditorplugin = new $texteditorpluginns($mysqli);
   $texteditorplugin->get_javascript('config_question_editor');
 ?>
-<script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="../../js/jquery-ui-1.10.4.min.js"></script>
 <script type="text/javascript" src="../../js/system_tooltips.js"></script>
 <script type="text/javascript" src="../../js/state.js"></script>

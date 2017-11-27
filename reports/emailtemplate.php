@@ -58,6 +58,7 @@ if (file_exists($templatefile)) {
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/emailtemplate.css" />
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 
 <?php
   $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');

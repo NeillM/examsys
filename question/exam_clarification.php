@@ -104,6 +104,7 @@ exit();
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/examclarification.css" />
+  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 
 <?php
   $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
@@ -111,7 +112,6 @@ exit();
   $texteditorplugin = new $texteditorpluginns($mysqli);
   $texteditorplugin->get_javascript('config_announcements');
 ?>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
     $(function () {
       var new_height = $(window).height() - 105;
