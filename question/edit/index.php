@@ -477,7 +477,6 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
   $texteditorplugin->get_javascript('config_question_editor');
 ?>
 <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
-<script type="text/javascript" src="../../js/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="../../js/jquery-ui-1.10.4.min.js"></script>
 <script type="text/javascript" src="../../js/system_tooltips.js"></script>
 <script type="text/javascript" src="../../js/state.js"></script>
@@ -523,7 +522,6 @@ $(function () {
 endif;
 ?>
 </script>
-<script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
 <?php
   if ($configObject->get_setting($texteditorplugin_name[0], 'supports_mathjax') and $configObject->get_setting('core', 'paper_mathjax')) {
     $render = new render($configObject);

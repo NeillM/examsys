@@ -261,8 +261,13 @@ require '../config/finish.inc';
   echo "<script type=\"text/javascript\" src=\"../js/student_help.js\"></script>\n";
   if ($show_feedback) {     // Do not JavaScript files if feedback is not displayed.
     if ($latex_needed == 1) {
-      echo "<script type=\"text/javascript\" src=\"../js/jquery-migrate-1.2.1.min.js\"></script>\n";
-      echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>\n";
+      // tinymce3 plugin uses addtioanl mee plugin. Newer plugins should use core mathjax to display maths.
+      $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+      if ($texteditorplugin_name[0] === 'plugin_tinymce3_texteditor') {
+        $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+        $texteditorplugin = new $texteditorpluginns($mysqli);
+        $texteditorplugin->get_mee_javascript();
+      }
     }
     $render = new render($configObject);
     $render->render_html5_js(json_encode($jstring));

@@ -70,7 +70,7 @@ function insertMME() {
 
     var datatxt = JSON.stringify(data);
 
-    var src = "../../tools/tinymce/jscripts/tiny_mce/plugins/mee/frame.html?" + datatxt;
+    var src = "../../plugins/texteditor/plugin_tinymce3_texteditor/tinymce/jscripts/tiny_mce/plugins/mee/frame.html?" + datatxt;
 
     var style = 'display:block';
     if(data.inline) {

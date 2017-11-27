@@ -456,13 +456,20 @@ function check_latex_random($q_ids, $mysqli) {
 
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-	<script type="text/javascript" src="../js/jquery-migrate-1.2.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
-  <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
   <script type="text/javascript" src="../js/jquery.rquerystring.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../js/page_scroll.js"></script>
   <script type="text/javascript" src="../js/adhocwindow.js"></script>
+<?php
+  // tinymce3 plugin uses addtioanl mee plugin. Newer plugins should use core mathjax to display maths.
+  $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+  if ($texteditorplugin_name[0] === 'plugin_tinymce3_texteditor') {
+    $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+    $texteditorplugin = new $texteditorpluginns($mysqli);
+    $texteditorplugin->get_mee_javascript();
+  }
+?>
 <script defer="defer">
   var paperID = '<?php echo $paperID ?>';
 
