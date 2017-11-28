@@ -652,7 +652,10 @@ function display_question ($configObject, &$question, $paper_type, $calculator, 
             } else {
               $texteditorplugin->get_javascript('config_answered');
             }
-            echo "<textarea class=\"mceEditor\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" style=\"width:" . (40 + ($settings['columns'] * 8)) . "px; height:" . ($settings['rows'] * 28) . "px\">" . $question['correct_fback'] . "</textarea>\n";
+            $textbox_width  = ( 40 + ( $settings['columns'] * 8 ) );
+            $textbox_height = ( $settings['rows'] * 28 );
+            $texteditorplugin->get_textarea('q' . $question_no, 'q' . $question_no, $question['correct_fback'], plugins\plugins_texteditor::type_standard,
+              'width: ' . $textbox_width . 'px; height: ' . $textbox_height . 'px;');
           }
 
           echo "</blockquote>\n";

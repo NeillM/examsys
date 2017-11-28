@@ -65,9 +65,10 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
    * @param string $id editor id
    * @param string $content editor content
    * @param string $type type of editor i.e. standard, simple, etc
+   * @param string $styleoverwrite overwrite base styling
    * @raturn string
    */
-  public function get_textarea($name, $id, $content, $type) {
+  public function get_textarea($name, $id, $content, $type, $styleoverwrite = '') {
     switch ($type) {
       case \plugins\plugins_texteditor::type_simple:
         $type = 'editorSimple';
@@ -84,7 +85,8 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
         'type' => $type,
         'id' => $id,
         'name' => $id,
-        'content' => $content);
+        'content' => $content,
+        'style' => $styleoverwrite);
     $render->render($tinmymcedata, null, 'tinymce3_textarea.html');
   }
 }

@@ -997,9 +997,8 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
               $background_colour = 'background-color:red;';
             }
-            ?>
-            <textarea class="mceEditor" id="q<?php echo $question_no ?>" name="q<?php echo $question_no ?>" style="<?php echo $background_colour; ?>width:<?php echo $textbox_width ?>px; height:<?php echo $textbox_height ?>px"><?php echo $ans ?></textarea><?php echo "\n"; ?>
-            <?php
+            $texteditorplugin->get_textarea('q' . $question_no, 'q' . $question_no, $ans, plugins\plugins_texteditor::type_standard,
+              $background_colour . ' width: ' . $textbox_width . 'px; height: ' . $textbox_height . 'px;');
           }
           $marks += $display_option['marks_correct'];
         }
