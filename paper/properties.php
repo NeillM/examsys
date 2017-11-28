@@ -1972,7 +1972,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
 <table id="rubric" class="tabsection" style="display: none">
   <tr><td class="tabtitle"><img src="../artwork/rubric_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['rubricheading']; ?></td></tr>
-  <tr><td><?php $texteditorplugin->get_textarea('rubric_text', 'rubric_text', htmlspecialchars($properties->get_rubric(), ENT_NOQUOTES), plugins\plugins_texteditor::type_standard); ?></td></tr>
+  <tr><td class="sectionmain"><?php $texteditorplugin->get_textarea('rubric_text', 'rubric_text', htmlspecialchars($properties->get_rubric(), ENT_NOQUOTES), plugins\plugins_texteditor::type_standard); ?></td></tr>
 </table>
 
 <table id="feedback" class="tabsection" style="display: none">
