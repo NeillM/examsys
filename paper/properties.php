@@ -1478,7 +1478,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
       echo "<tr><td colspan=\"4\">" . $string['markingguidance'] . "</td></tr>\n";
       echo "<tr><td colspan=\"4\" style=\"padding: 0\">";
-      $texteditorplugin->get_textarea('osce_marking_guidance', 'osce_marking_guidance', htmlspecialchars($properties->get_paper_postscript(), ENT_NOQUOTES), plugins\plugins_texteditor::type_standard);
+      $texteditorplugin->get_textarea('osce_marking_guidance', 'osce_marking_guidance', htmlspecialchars($properties->get_paper_postscript(), ENT_NOQUOTES), plugins\plugins_texteditor::type_standard, "width:100%; height:230px;");
       echo "</td></tr>";
     } elseif ($properties->get_paper_type() == '6') {  // Peer Review
       $review = $properties->get_display_question_mark();
@@ -1609,12 +1609,12 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
 <table id="prologue" class="tabsection" style="display: none">
 <tr><td class="tabtitle"><img src="../artwork/prologue_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['prologueheading']; ?></td></tr>
-<tr><td><?php $texteditorplugin->get_textarea('paper_prologue', 'paper_prologue', htmlspecialchars($properties->get_paper_prologue(), ENT_NOQUOTES), plugins\plugins_texteditor::type_standard); ?></td></tr>
+<tr><td><?php $texteditorplugin->get_textarea('paper_prologue', 'paper_prologue', htmlspecialchars($properties->get_paper_prologue(), ENT_NOQUOTES), plugins\plugins_texteditor::type_standard, "width:100%; height:537px"); ?></td></tr>
 </table>
 
 <table id="postscript" class="tabsection" style="display: none">
 <tr><td class="tabtitle"><img src="../artwork/postscript_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['postscriptheading']; ?></td></tr>
-<tr><td><?php $texteditorplugin->get_textarea('paper_postscript', 'paper_postscript', htmlspecialchars($properties->get_paper_postscript(), ENT_NOQUOTES), plugins\plugins_texteditor::type_standard); ?></td></tr>
+<tr><td><?php $texteditorplugin->get_textarea('paper_postscript', 'paper_postscript', htmlspecialchars($properties->get_paper_postscript(), ENT_NOQUOTES), plugins\plugins_texteditor::type_standard, "width:100%; height:537px"); ?></td></tr>
 </table>
 
 <table id="security" class="tabsection" style="display: none">
@@ -1972,7 +1972,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
 
 <table id="rubric" class="tabsection" style="display: none">
   <tr><td class="tabtitle"><img src="../artwork/rubric_heading_icon.png" alt="Icon" align="middle" /><?php echo $string['rubricheading']; ?></td></tr>
-  <tr><td class="sectionmain"><?php $texteditorplugin->get_textarea('rubric_text', 'rubric_text', htmlspecialchars($properties->get_rubric(), ENT_NOQUOTES), plugins\plugins_texteditor::type_standard); ?></td></tr>
+  <tr><td><?php $texteditorplugin->get_textarea('rubric_text', 'rubric_text', htmlspecialchars($properties->get_rubric(), ENT_NOQUOTES), plugins\plugins_texteditor::type_standard, "width:100%; height:537px"); ?></td></tr>
 </table>
 
 <table id="feedback" class="tabsection" style="display: none">
