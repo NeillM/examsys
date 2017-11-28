@@ -83,7 +83,7 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
     $tinmymcedata = array(
         'type' => $type,
         'id' => $id,
-        'name' => $name,
+        'name' => $id,
         'content' => $content);
     $render->render($tinmymcedata, null, 'tinymce3_textarea.html');
   }

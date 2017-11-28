@@ -87,7 +87,7 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
     // Render textarea.
     $render = new \render($this->config, $this->get_path() . DIRECTORY_SEPARATOR . 'templates');
     $data['id'] = $id;
-    $data['name'] = $name;
+    $data['name'] = $id;
     $data['content'] = $content;
     $render->render($data, $this->strings, 'plain_textarea.html');
   }
