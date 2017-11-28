@@ -68,9 +68,9 @@ abstract class plugins_texteditor extends \plugins\plugins {
      * @param string $id
      * @param string $content
      * @param string $type
-     * @return string
+     * @param string $styleoverwrite overwrite base styling
      */
-    abstract public function get_textarea($name, $id, $content, $type);
+    abstract public function get_textarea($name, $id, $content, $type, $styleoverwrite = '');
     /**
      * Enable this plugin
      * Only one module text editor plugin should be enabled at anyone time

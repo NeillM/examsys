@@ -75,8 +75,9 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
    * @param string $id editor id
    * @param string $content editor content
    * @param string $type type of editor i.e. i.e. standard, simple, etc
+   * @param string $styleoverwrite overwrite base styling
    */
-  public function get_textarea($name, $id, $content, $type) {
+  public function get_textarea($name, $id, $content, $type, $styleoverwrite = '') {
     // Reneder mathjax utils.
     $data['mathjax'] = false;
     if ($type == \plugins\plugins_texteditor::type_mathjax and $this->config->get_setting($this->plugin, 'supports_mathjax')) {
@@ -89,6 +90,7 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
     $data['id'] = $id;
     $data['name'] = $id;
     $data['content'] = $content;
+    $data['style'] = $styleoverwrite;
     $render->render($data, $this->strings, 'plain_textarea.html');
   }
 }
