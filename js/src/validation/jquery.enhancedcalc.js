@@ -1,6 +1,6 @@
 $(function() {
   $('#edit_form').submit(function () { 
-    tinyMCE.triggerSave();
+    triggerSave();
   });
 
   jQuery.validator.addMethod("calcvariable", function(value, element) {

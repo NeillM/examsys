@@ -591,9 +591,10 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   <?php // Normal user submit by clicking on next, previous, finish or jump screen ?>
   var checkSubmit = function (event) {
     stopAutoSave();
-    if (typeof(tinyMCE) != "undefined") {
-      tinyMCE.triggerSave();
-    }
+    <?php
+    // Get text editor plugin trigger save js code.
+    $texteditorplugin->get_trigger_save();
+    ?>
 
     var formData = $('#qForm').serialize();
     submitType = 'userSubmit';
@@ -619,9 +620,10 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   }
 
   function conductSave(event) {
-    if (typeof(tinyMCE) != "undefined") {
-      tinyMCE.triggerSave();
-    }
+    <?php
+    // Get text editor plugin trigger save js code.
+    $texteditorplugin->get_trigger_save();
+    ?>
 
     var formData = $('#qForm').serialize();
     submitType = 'userSubmit';
@@ -680,10 +682,10 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     <?php // This could take longer than the autosave timeout stop auto save to stop duplicate events. ?>
     stopAutoSave();
 
-    <?php // Save any data from wysiwyg  ?>
-    if (typeof(tinyMCE) != "undefined") {
-      tinyMCE.triggerSave();
-    }
+    <?php
+      // Get text editor plugin trigger save js code.
+      $texteditorplugin->get_trigger_save();
+    ?>
     var formData = $('#qForm').serialize();
 
     <?php // Only auto save if the data has changed, OR 20 minutes has elapsed - stop sessions expiring. ?>
@@ -718,9 +720,10 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     date = new Date();
     randomPageID = date.getTime();
     $('#randomPageID').val(randomPageID);
-    if (typeof(tinyMCE) != "undefined"){
-      tinyMCE.triggerSave();
-    }
+    <?php
+     // Get text editor plugin trigger save js code.
+     $texteditorplugin->get_trigger_save();
+     ?>
     $.ajax({
           url: 'save_screen.php?id=<?php echo $id . $url_mod; ?>&ans_changed=' + ans_changed + '&submitType=' + submitType + '&rnd=' + randomPageID + '<?php echo html_entity_decode($url_mod) ?>',
           type: 'post',

@@ -93,4 +93,11 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
     $data['style'] = $styleoverwrite;
     $render->render($data, $this->strings, 'plain_textarea.html');
   }
+
+  /**
+   * Prints trigger save js.
+   */
+  public function get_trigger_save() {
+    echo '';
+  }
 }

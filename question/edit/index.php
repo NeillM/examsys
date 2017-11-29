@@ -486,6 +486,14 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <?php
 if ($question != null and file_exists($cfg_web_root . 'js/validation/jquery.' . $question->get_type() . '.min.js')):
 ?>
+<script>
+  function triggerSave() {
+    <?php
+    // Get text editor plugin trigger save js code.
+    $texteditorplugin->get_trigger_save();
+    ?>
+  }
+</script>
 <script type="text/javascript" src="../../js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="../../js/validation/jquery.<?php echo $question->get_type() ?>.min.js"></script>
 <script type="text/javascript" src="../../js/toprightmenu.js"></script>

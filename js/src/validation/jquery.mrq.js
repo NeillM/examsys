@@ -2,7 +2,7 @@ $(function () {
   var button = null;
   ($('.submit').focus(function () { button = $(this).attr('id'); }))
   $('#edit_form').submit(function (e) {
-    tinyMCE.triggerSave();
+    triggerSave();
     var checked = 0;
     if (button == 'addbank' || button == 'addpaper' || button == 'submit-save') {
       $('.mrq-correct').each(function () {

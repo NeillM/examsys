@@ -72,6 +72,10 @@ abstract class plugins_texteditor extends \plugins\plugins {
      */
     abstract public function get_textarea($name, $id, $content, $type, $styleoverwrite = '');
     /**
+     * Prints trigger save js.
+    */
+    abstract public function get_trigger_save();
+    /**
      * Enable this plugin
      * Only one module text editor plugin should be enabled at anyone time
      */

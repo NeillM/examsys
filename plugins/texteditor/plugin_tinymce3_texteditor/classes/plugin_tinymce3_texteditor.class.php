@@ -89,4 +89,13 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
         'style' => $styleoverwrite);
     $render->render($tinmymcedata, null, 'tinymce3_textarea.html');
   }
+
+  /**
+   * Prints trigger save js.
+   */
+  public function get_trigger_save() {
+    $render = new \render($this->config, $this->get_path() . DIRECTORY_SEPARATOR . 'templates');
+    $tinmymcedata = array();
+    $render->render($tinmymcedata, null, 'tinymce3_trigger_save.js');
+  }
 }
