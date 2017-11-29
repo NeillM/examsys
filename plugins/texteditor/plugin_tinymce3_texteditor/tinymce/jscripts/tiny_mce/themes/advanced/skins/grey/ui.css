@@ -211,3 +211,11 @@
 .greySkin span.mce_pagebreak {background-position:0 -40px}
 .greySkin span.mce_restoredraft {background-position:-20px -40px}
 .greySkin span.mce_spellchecker {background-position:-540px -20px}
+
+.greySkin table.mceLayout {
+  border-left: 0 !important;
+  border-right: 0 !important;
+}
+.greySkin table.mceLayout tr.mceLast td {
+  border-bottom: 0 !important;  
+}
