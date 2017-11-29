@@ -621,6 +621,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     var formData = $('#qForm').serialize();
     submitType = 'userSubmit';
     stopAutoSave();
+    $('#saveError').fadeOut('slow');
     $('#savemsg').html("<img src=\"../artwork/busy.gif\" class=\"busyicon\" />");
     <?php // Log which method the users submitted the page via ?>
       if ($('#button_pressed').val() == 'finish') {
@@ -705,6 +706,8 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   }
 
   var ajaxSave = function (ans_changed) {
+    <?php // Hide any errors ?>
+    $('#saveError').fadeOut('fast');
     <?php // Random page ID to stop IE caching results. ?>
     date = new Date();
     randomPageID = date.getTime();
