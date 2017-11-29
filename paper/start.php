@@ -621,8 +621,6 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     var formData = $('#qForm').serialize();
     submitType = 'userSubmit';
     stopAutoSave();
-
-    $('#saveError').fadeOut('slow');
     $('#savemsg').html("<img src=\"../artwork/busy.gif\" class=\"busyicon\" />");
     <?php // Log which method the users submitted the page via ?>
       if ($('#button_pressed').val() == 'finish') {
@@ -682,15 +680,15 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     var formData = $('#qForm').serialize();
 
     <?php // Only auto save if the data has changed, OR 20 minutes has elapsed - stop sessions expiring. ?>
-		var now_milliseconds = (new Date).getTime();
-		var save_diff = now_milliseconds - last_save_point;
+    var now_milliseconds = (new Date).getTime();
+    var save_diff = now_milliseconds - last_save_point;
     if (last_saved_user_answers !== formData) {
-      $('#savemsg').html("<?php echo $string['auto_saving']; ?>")
+      $('#savemsg').html("<img src=\"../artwork/busy.gif\" class=\"busyicon\" />");
       ajaxSave(1);
-			last_save_point = (new Date).getTime();
+      last_save_point = (new Date).getTime();
     } else if (save_diff > (1000 * 1200)) {
       ajaxSave(0);
-			last_save_point = (new Date).getTime();
+      last_save_point = (new Date).getTime();
     } else {
       <?php // Re-register the autosave timer ?>
       startAutoSave();
@@ -707,8 +705,6 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
   }
 
   var ajaxSave = function (ans_changed) {
-    <?php // Hide any errors ?>
-    $('#saveError').fadeOut('fast');
     <?php // Random page ID to stop IE caching results. ?>
     date = new Date();
     randomPageID = date.getTime();
@@ -816,9 +812,8 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     } else if(submitType == 'forcedSubmit') {
       $('#qForm').submit();
     } else {
-      $('#savemsg').html("<?php echo $string['auto_ok'] ?>");
       <?php // Clear auto save message ?>
-      setTimeout("$('#savemsg').html(\"\")", 5000);
+      $('#savemsg').html("");
     }
   }
 
@@ -833,9 +828,11 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     } else {
       $('#save_failed').val(current_val + '\n' + unix_now + '-' + textStatus + '-' + url + '-' + ret_data);
     }
-
-    $('#saveError').fadeIn('fast');
     $('#savemsg').html("");
+    // usersubmit always warns, auto save only on application error.
+    if (submitType !== 'autoSave' || textStatus === 'record_marks') {
+      $('#saveError').fadeIn('fast');
+    }
     $('body').css('cursor','default');
     submitted = false;
 
