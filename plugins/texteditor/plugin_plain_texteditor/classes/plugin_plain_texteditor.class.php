@@ -98,6 +98,6 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
    * Prints trigger save js.
    */
   public function get_trigger_save() {
-    echo '';
+    // Nothing to do.
   }
 }

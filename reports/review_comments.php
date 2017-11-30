@@ -554,13 +554,13 @@ $result->close();
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../js/page_scroll.js"></script>
-	<?php
+<?php
+  $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+  $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+  $texteditorplugin = new $texteditorpluginns($mysqli);
   if ($propertyObj->get_latex_needed() == 1) {
-    // tinymce3 plugin uses addtioanl mee plugin. Newer plugins should use core mathjax to display maths.
-    $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+    // tinymce3 plugin uses additional mee plugin. Newer plugins should use core mathjax to display maths.
     if ($texteditorplugin_name[0] === 'plugin_tinymce3_texteditor') {
-      $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-      $texteditorplugin = new $texteditorpluginns($mysqli);
       $texteditorplugin->get_mee_javascript();
     }
   }
