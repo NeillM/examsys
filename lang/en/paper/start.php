@@ -64,12 +64,9 @@ $string['msgselectable1'] = 'Too many options selected!\n\nOnly';
 $string['msgselectable2'] = 'items can be selected in this question.';
 $string['msgselectable3'] = 'You have already selected';
 $string['msgselectable4'] = '.\n\nPlease select a different ranking.';
-//ajax saving and auto saving messages
-$string['saving'] = 'Saving';
-$string['auto_saving'] = 'Auto saving ...';
-$string['auto_ok'] = 'Auto Save Successful';
+// Ajax failed save message
 $string['savefailed'] = 'Save Failed!';
-$string['tryagain'] = 'Please try again, by moving to the next or previous screens.';
+$string['tryagain'] = 'If the problem persists please inform an invigilator / administrator.';
 $string['questionclarification'] = 'Question Clarification';
 $string['question'] = 'Question';
 $string['answer_to'] = 'answer to';
