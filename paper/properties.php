@@ -1216,7 +1216,7 @@ if ($configObject->get_setting('core', 'cfg_summative_mgmt') and $properties->ge
 <?php
   require '../tools/colour_picker/colour_picker.inc';
 ?>
-<table border="0" cellpadding="0" cellspacing="5" style="width:100%; height:645px; font-size:90%">
+<table border="0" cellpadding="0" cellspacing="5" style="width:100%; font-size:90%">
 <tr><td valign="top" style="background-color:white; border:1px solid #828790; width:120px">
 
 <table cellspacing="0" cellpadding="0" border="0" style="font-size:90%; width:140px">
