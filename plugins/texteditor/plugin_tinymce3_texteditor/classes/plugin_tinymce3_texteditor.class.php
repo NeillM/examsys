@@ -43,7 +43,7 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
    * Get text editor javascript
    * @param array $configfile config file
    */
-  public function get_javascript($configfile) {
+  public function get_javascript($configfile = 'tiny_config') {
     $render = new \render($this->config, $this->get_path() . DIRECTORY_SEPARATOR . 'templates');
     $tinmymcedata['file'] = 'tiny_' . $configfile;
     $render->render($tinmymcedata, null, 'tinymce3.html');

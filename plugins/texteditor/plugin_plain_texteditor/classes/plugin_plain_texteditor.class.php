@@ -64,7 +64,7 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
    * Get text editor javascript
    * @param array $configfile config file
    */
-  public function get_javascript($configfile) {
+  public function get_javascript($configfile = '') {
     // Nothing to do.
   }
 
