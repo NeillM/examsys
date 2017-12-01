@@ -58,6 +58,11 @@ Class OptionEdit extends RogoObject {
   // Refrence to array of localised language strings
   protected $_lang_strings = null;
 
+  /**
+   * Text editor
+   * @var object
+   */
+  private $texteditor;
 
   /**
    * Create a new option object by either loading an existing option from the database or populating
@@ -94,6 +99,10 @@ Class OptionEdit extends RogoObject {
     } elseif ($data !== null) {
       throw new DataTypeException($this->_lang_strings['optioninvalid']);
     }
+
+    $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+    $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+    $this->texteditor = new $texteditorpluginns($mysqli);
   }
 
   /**
@@ -313,7 +322,9 @@ QUERY;
    * @return string
    */
   public function get_text() {
-    $this->text = $this->replace_mee_div($this->text);
+    if ($this->texteditor->get_name() === 'plugin_tinymce3_texteditor') {
+      $this->text = $this->texteditor->replace_mee_div($this->text);
+    }
     return $this->text;
   }
 
@@ -322,9 +333,9 @@ QUERY;
    * @param string $value
    */
   public function set_text($value) {
-
-    $value = $this->replace_tex($value);
-
+    if ($this->texteditor->get_name() === 'plugin_tinymce3_texteditor') {
+      $value = $this->texteditor->replace_tex($value);
+    }
     if ($value != $this->text and !in_array('text', array_keys($this->_question->get_unified_fields()))) {
       $this->set_modified_field('text', $this->text, sprintf($this->_lang_strings['optiontext'], $this->_number));
     }
@@ -357,7 +368,9 @@ QUERY;
    * @return string
    */
   public function get_correct_fback() {
-    $this->correct_fback = $this->replace_mee_div($this->correct_fback);
+    if ($this->texteditor->get_name() === 'plugin_tinymce3_texteditor') {
+      $this->correct_fback = $this->texteditor->replace_mee_div($this->correct_fback);
+    }
     return $this->correct_fback;
   }
 
@@ -366,7 +379,9 @@ QUERY;
    * @param string $value
    */
   public function set_correct_fback($value) {
-    $value = $this->replace_tex($value);
+    if ($this->texteditor->get_name() === 'plugin_tinymce3_texteditor') {
+      $value = $this->texteditor->replace_tex($value);
+    }
     if($value != $this->correct_fback) {
       $this->set_modified_field('correct_fback', $this->correct_fback, sprintf($this->_lang_strings['optionfbcorrect'], $this->_number));
       $this->correct_fback = $value;
@@ -378,7 +393,9 @@ QUERY;
    * @return string
    */
   public function get_incorrect_fback() {
-    $this->incorrect_fback = $this->replace_mee_div($this->incorrect_fback);
+    if ($this->texteditor->get_name() === 'plugin_tinymce3_texteditor') {
+      $this->incorrect_fback = $this->texteditor->replace_mee_div($this->incorrect_fback);
+    }
     return $this->incorrect_fback;
   }
 
@@ -387,7 +404,9 @@ QUERY;
    * @param string $value
    */
   public function set_incorrect_fback($value) {
-    $value = $this->replace_tex($value);
+    if ($this->texteditor->get_name() === 'plugin_tinymce3_texteditor') {
+      $value = $this->texteditor->replace_tex($value);
+    }
     if($value != $this->incorrect_fback) {
       $this->set_modified_field('incorrect_fback', $this->incorrect_fback, sprintf($this->_lang_strings['optionfbincorrect'], $this->_number));
       $this->incorrect_fback = $value;

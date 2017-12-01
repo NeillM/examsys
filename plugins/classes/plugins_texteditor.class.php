@@ -99,4 +99,12 @@ abstract class plugins_texteditor extends \plugins\plugins {
             $defaulttexteditor->enable_plugin();
         }
     }
+
+    /**
+     * Get plugin name
+     * @return string
+     */
+    public function get_name() {
+      return $this->plugin;
+    }
 }
