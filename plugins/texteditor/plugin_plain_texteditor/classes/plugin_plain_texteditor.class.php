@@ -54,10 +54,9 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
 
   /**
    * Constructor
-   * @param mysqli $mysqli db connection
    */
-  public function __construct($mysqli) {
-    parent::__construct($mysqli);
+  public function __construct() {
+    parent::__construct();
     $this->set_lang_strings();
   }
 

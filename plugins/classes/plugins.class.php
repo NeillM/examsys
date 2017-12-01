@@ -128,9 +128,9 @@ abstract class plugins {
     /**
      * Constructor
      */
-    public function __construct($mysqli) {
-        $this->db = $mysqli;
+    public function __construct() {
         $this->config = \Config::get_instance();
+        $this->db = $this->config->db;
         // Get path to plugin.
         $this->path = $this->get_path();
         // Load version info.
