@@ -61,7 +61,7 @@ abstract class plugins_texteditor extends \plugins\plugins {
      * Get text editor javascript.
      * @param array $data
      */
-    abstract public function get_javascript($data);
+    abstract public function get_javascript($data = '');
     /**
      * Get text editor textarea.
      * @param string $name
