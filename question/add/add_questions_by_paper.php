@@ -51,7 +51,6 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     .divider {font-size:80%; font-weight:bold; padding-left:6px}
     .s {padding-left:6px}
     .q_no {text-align:right; width:35px}
-    .mee { display: inline; }
 
 <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>

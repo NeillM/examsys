@@ -44,7 +44,6 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <style type="text/css">
     body {font-size: 90%}
     p, td {font-size: 90%}
-    .mee {display: inline}
 
 <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>

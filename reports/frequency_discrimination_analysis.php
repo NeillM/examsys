@@ -1722,7 +1722,6 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
     td p:first-child {margin-top: 0}
     .matrix {border:1px solid #808080; border-collapse: collapse}
     .matrix td {border:1px solid #808080}
-    .mee {display: inline}
     .subsect_table {margin-left: 6px; margin-bottom: 10px}
   </style>
 
