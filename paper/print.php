@@ -198,11 +198,11 @@ if (isset($_POST['sessionid'])) require '../include/marking_functions.inc';
 // Get how many screens make up the question paper.
 $screen_data = array();
 $row_no = 0;
-$stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calendar_year, latex_needed, password FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id AND q_type != 'info' ORDER BY screen");
+$stmt = $mysqli->prepare("SELECT property_id, labs, paper_title, paper_type, paper_prologue, marking, screen, UNIX_TIMESTAMP(start_date), UNIX_TIMESTAMP(end_date), bgcolor, fgcolor, themecolor, labelcolor, bidirectional, calendar_year, password FROM (properties, papers, questions) WHERE properties.property_id=papers.paper AND crypt_name=? AND papers.question=questions.q_id AND q_type != 'info' ORDER BY screen");
 $stmt->bind_param('s', $_GET['id']);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calendar_year, $latex_needed, $password);
+$stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calendar_year, $password);
 if ($stmt->num_rows == 0) {  // No record found, the paper can't exist
   $stmt->close();
   $contactemail = support::get_email();
@@ -257,13 +257,10 @@ $current_screen = 1;
   </style>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <?php
-  // tinymce3 plugin uses addtioanl mee plugin. Newer plugins should use core mathjax to display maths.
   $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
-  if ($texteditorplugin_name[0] === 'plugin_tinymce3_texteditor') {
-    $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-    $texteditorplugin = new $texteditorpluginns($mysqli);
-    $texteditorplugin->get_mee_javascript();
-  }
+  $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+  $texteditorplugin = new $texteditorpluginns($mysqli);
+  $texteditorplugin->get_javascript();
 ?>
   <script type="text/javascript" src="../js/start.js"></script>
 	

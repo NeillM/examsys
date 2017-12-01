@@ -70,7 +70,6 @@ class PaperProperties {
   private $external_review_deadline;
   private $internal_review_deadline;
   private $sound_demo;
-  private $latex_needed;
   private $password;
   private $retired;
   private $crypt_name;
@@ -280,7 +279,6 @@ class PaperProperties {
                   DATE_FORMAT(external_review_deadline, '%Y-%m-%d'),
                   DATE_FORMAT(internal_review_deadline, '%Y-%m-%d'),
                   sound_demo,
-                  latex_needed,
                   password,
                   retired,
                   crypt_name,
@@ -349,7 +347,6 @@ class PaperProperties {
                                   $this->external_review_deadline,
                                   $this->internal_review_deadline,
                                   $this->sound_demo,
-                                  $this->latex_needed,
                                   $this->password,
                                   $this->retired,
                                   $this->crypt_name,
@@ -1601,20 +1598,6 @@ class PaperProperties {
     if ($old_sound_demo != $sound_demo) {
       $this->changes[] = array('old'=>$old_sound_demo, 'new'=>$sound_demo, 'part'=>'demosoundclip');
     }
-  }
-
-  /**
-   * @return int $latex_needed
-   */
-  public function get_latex_needed() {
-    return $this->latex_needed;
-  }
-
-  /**
-   * @param int $latex_needed
-   */
-  public function set_latex_needed($latex_needed) {
-    $this->latex_needed = $latex_needed;
   }
 
   /**

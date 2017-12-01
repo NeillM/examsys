@@ -50,15 +50,6 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
   }
 
   /**
-   * Get maths equation editor display javascript
-   */
-  public function get_mee_javascript() {
-    $render = new \render($this->config, $this->get_path() . DIRECTORY_SEPARATOR . 'templates');
-    $tinmymcedata = array();
-    $render->render($tinmymcedata, null, 'mee.html');
-  }
-
-  /**
    * Get text editor textarea.
    * @param string $name editor name
    * @param string $id editor id

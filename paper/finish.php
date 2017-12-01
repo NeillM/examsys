@@ -82,7 +82,6 @@ $end_date                   = $propertyObj->get_end_date();
 $marking                    = $propertyObj->get_marking();
 $paper_postscript           = $propertyObj->get_paper_postscript();
 $pass_mark                  = $propertyObj->get_pass_mark();
-$latex_needed               = $propertyObj->get_latex_needed();
 $password                   = $propertyObj->get_password();
 $moduleID                   = $propertyObj->get_modules();
 
@@ -129,8 +128,6 @@ if ($userObject->has_role(array('External Examiner'))) {
   // No further security checks.
 } else {
   $modIDs = array_keys($moduleID);
-
-  if ($paper_type == 2) $latex_needed = 0;  // Students get no feedback for summative exams so don't load the Latex library
 
   // Check for additional password on the paper
   check_paper_password($propertyObj->get_property_id(), $password, $string, $mysqli);
@@ -262,16 +259,10 @@ require '../config/finish.inc';
   }
 
   echo "<script type=\"text/javascript\" src=\"../js/student_help.js\"></script>\n";
-  if ($show_feedback) {     // Do not JavaScript files if feedback is not displayed.
-    if ($latex_needed == 1) {
-      // tinymce3 plugin uses additional mee plugin. Newer plugins should use core mathjax to display maths.
-      if ($texteditorplugin_name[0] === 'plugin_tinymce3_texteditor') {
-        $texteditorplugin->get_mee_javascript();
-      }
-    }
-    $render = new render($configObject);
-    $render->render_html5_js(json_encode($jstring));
-  }
+
+  $render = new render($configObject);
+  $render->render_html5_js(json_encode($jstring));
+
   echo $configObject->get('cfg_js_root');
 ?>
 <script>

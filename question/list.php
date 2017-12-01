@@ -95,13 +95,10 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
 <?php
-  // tinymce3 plugin uses addtioanl mee plugin. Newer plugins should use core mathjax to display maths.
   $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
-  if ($texteditorplugin_name[0] === 'plugin_tinymce3_texteditor') {
-    $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-    $texteditorplugin = new $texteditorpluginns($mysqli);
-    $texteditorplugin->get_mee_javascript();
-  }
+  $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+  $texteditorplugin = new $texteditorpluginns($mysqli);
+  $texteditorplugin->get_javascript();
 ?>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../js/sidebar.js"></script>
