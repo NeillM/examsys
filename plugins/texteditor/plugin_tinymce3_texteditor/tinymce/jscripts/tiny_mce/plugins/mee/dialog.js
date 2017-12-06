@@ -70,7 +70,8 @@ function insertMME() {
 
     var datatxt = JSON.stringify(data);
 
-    var src = "../../plugins/texteditor/plugin_tinymce3_texteditor/tinymce/jscripts/tiny_mce/plugins/mee/frame.html?" + datatxt;
+    var url = document.URL.substring(0, document.URL.lastIndexOf("/"));
+    var src = url+ "/frame.html?" + datatxt;
 
     var style = 'display:block';
     if(data.inline) {

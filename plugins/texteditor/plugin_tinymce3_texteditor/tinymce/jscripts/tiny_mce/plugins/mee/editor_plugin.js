@@ -136,7 +136,7 @@ function encodeQuotes(str) {
 
                     var datatxt = JSON.stringify(data);
 
-                    var html = "<iframe class='mee_iframe' src='../../plugins/texteditor/plugin_tinymce3_texteditor/tinymce/jscripts/tiny_mce/plugins/mee/frame.html?" + datatxt + "' frameborder='0'></iframe>";
+                    var html = "<iframe class='mee_iframe' src='" + url + "/frame.html?" + datatxt + "' frameborder='0'></iframe>";
                     var newelem = $(html);
 
                     $(newelem).insertBefore(elem);
