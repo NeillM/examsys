@@ -646,7 +646,7 @@ function display_question ($configObject, &$question, $paper_type, $calculator, 
           } else {
             $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
             $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-            $texteditorplugin = new $texteditorpluginns($mysqli);
+            $texteditorplugin = new $texteditorpluginns($configObject->db);
             if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
               $texteditorplugin->get_javascript('config_unanswered');
             } else {
