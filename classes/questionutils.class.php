@@ -110,8 +110,13 @@ Class QuestionUtils {
    * @return string
    */
   static function clean_leadin($leadin, $limit=160) {
-    if (strpos($leadin, 'class="mee"') === false AND strpos($leadin, 'class=mee') === false) {
-      $leadin = strip_tags($leadin);                                     // No equation, strip all tags
+    $configObject = Config::get_instance();
+    $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+    $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+    $texteditorplugin = new $texteditorpluginns($configObject->db);
+    // Check if editor has clean rule i.e. for equations.
+    if ($texteditorplugin->clean_leadin($leadin)) {
+      $leadin = strip_tags($leadin);
       if (mb_strlen($leadin) > $limit and $limit != 0) {
         $leadin = mb_substr($leadin, 0, $limit) . '...';
       }

@@ -80,6 +80,12 @@ abstract class plugins_texteditor extends \plugins\plugins {
     */
     abstract public function get_trigger_save();
     /**
+     * Leadin clean function check
+     * @param $leadin
+     * @return boolean
+     */
+    abstract public function clean_leadin($leadin);
+    /**
      * Enable this plugin
      * Only one module text editor plugin should be enabled at anyone time
      */

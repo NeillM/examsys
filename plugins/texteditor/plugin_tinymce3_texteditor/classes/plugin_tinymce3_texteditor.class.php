@@ -150,4 +150,17 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
     }
     return $text;
   }
+
+  /**
+   * Leadin clean function check
+   * @param $leadin
+   * @return boolean
+   */
+  public function clean_leadin($leadin) {
+    if (strpos($leadin, 'class="mee"') === false AND strpos($leadin, 'class=mee') === false) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

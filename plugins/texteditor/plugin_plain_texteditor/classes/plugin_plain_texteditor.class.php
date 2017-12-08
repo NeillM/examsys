@@ -106,4 +106,13 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
   public function get_trigger_save() {
     // Nothing to do.
   }
+
+  /**
+   * Leadin clean function check
+   * @param $leadin
+   * @return boolean
+   */
+  public function clean_leadin($leadin) {
+    return true;
+  }
 }
