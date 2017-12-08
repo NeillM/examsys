@@ -58,7 +58,8 @@ if (isset($_POST['save_changes'])) {
   $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
   $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
   $texteditorplugin = new $texteditorpluginns($mysqli);
-  $texteditorplugin->get_javascript('config_help_staff');
+  $texteditorplugin->get_header();
+  $texteditorplugin->get_javascript_config('config_help_staff');
 ?>
   <script type="text/javascript" src="../../js/help.js"></script>
   <script>

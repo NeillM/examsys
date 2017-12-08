@@ -40,13 +40,24 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
   }
 
   /**
+   * Get text editor base
+   * @param array $configfile config file
+   */
+  public function get_header() {
+    $render = new \render($this->config, $this->get_path() . DIRECTORY_SEPARATOR . 'templates');
+    $render->render(array(), null, 'tinymce3.html');
+  }
+
+  /**
    * Get text editor javascript
    * @param array $configfile config file
    */
-  public function get_javascript($configfile = '') {
+  public function get_javascript_config($configfile = '') {
     $render = new \render($this->config, $this->get_path() . DIRECTORY_SEPARATOR . 'templates');
     $tinmymcedata['file'] = 'tiny_' . $configfile;
-    $render->render($tinmymcedata, null, 'tinymce3.html');
+    if ($tinmymcedata['file'] != 'tiny_') {
+      $render->render($tinmymcedata, null, 'tinymce3_config.html');
+    }
   }
 
   /**

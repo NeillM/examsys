@@ -353,7 +353,7 @@ if ($css != '') {
   $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
   $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
   $texteditorplugin = new $texteditorpluginns($mysqli);
-  $texteditorplugin->get_javascript();
+  $texteditorplugin->get_header();
 
   if (Paper_utils::need_interactiveQ($screen_data, $current_screen, $mysqli)) {
     $render = new render($configObject);
@@ -657,7 +657,7 @@ echo '" onsubmit="return confirmSubmit()" autocomplete="off">';   // Warning mes
     if ($q_displayed == 0 and $current_screen == 1 and $paper_prologue != '') echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
     if ($q_displayed == 0 and $question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
     
-    display_question($configObject, $question, $propertyObj->get_paper_type(), $propertyObj->get_calculator(), $current_screen, $previous_q_type, $question_no, $question_offset, $start_of_day_ts);
+    display_question($configObject, $question, $propertyObj->get_paper_type(), $propertyObj->get_calculator(), $current_screen, $previous_q_type, $question_no, $question_offset, $start_of_day_ts, $texteditorplugin);
     $previous_q_type = $question['q_type'];
     $q_displayed++;
   }

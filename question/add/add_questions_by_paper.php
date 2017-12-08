@@ -60,7 +60,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
   $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
   $texteditorplugin = new $texteditorpluginns($mysqli);
-  $texteditorplugin->get_javascript();
+  $texteditorplugin->get_header();
 ?>
   <script>
     function Qpreview(qID) {

@@ -42,7 +42,7 @@ function display_std($std_value, $inline=1) {
   return $html;
 }
 
-function display_question ($configObject, &$question, $paper_type, $calculator, $current_screen, $old_q_type, &$question_no, &$question_offset, $start_of_day_ts) {
+function display_question ($configObject, &$question, $paper_type, $calculator, $current_screen, $old_q_type, &$question_no, &$question_offset, $start_of_day_ts, $texteditorplugin) {
   global $external_review_deadline, $review, $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $A_min, $B_min, $C_min, $D_min, $E_min, $F_min, $G_min, $H_min, $I_min, $J_min, $A_max, $B_max, $C_max, $D_max, $E_max, $F_max, $G_max, $H_max, $I_max, $J_max, $li_set, $bgcolor, $li_set, $used_questions, $user_dismiss, $string, $language, $configObject;
   
   $q_id = $question['q_id'];
@@ -644,13 +644,10 @@ function display_question ($configObject, &$question, $paper_type, $calculator, 
               echo "<blockquote><textarea name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $question['correct_fback'] . "</textarea>";
             }
           } else {
-            $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
-            $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-            $texteditorplugin = new $texteditorpluginns($configObject->db);
             if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
-              $texteditorplugin->get_javascript('config_unanswered');
+              $texteditorplugin->get_javascript_config('config_unanswered');
             } else {
-              $texteditorplugin->get_javascript('config_answered');
+              $texteditorplugin->get_javascript_config('config_answered');
             }
             $textbox_width  = ( 40 + ( $settings['columns'] * 8 ) );
             $textbox_height = ( $settings['rows'] * 28 );

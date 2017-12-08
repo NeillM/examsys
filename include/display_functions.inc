@@ -213,7 +213,7 @@ function calc_replace_error_safe($haystack, $needle, $replacement) {
   return str_replace($needle, '<span style="color:red; font-weight:bold">' . $replacement . '</span>', $haystack);
 }
 
-function display_question($configObject, &$question, $paper_type, $calculator, $current_screen, $old_q_type, &$question_no, $user_answers, &$unanswered) {
+function display_question($configObject, &$question, $paper_type, $calculator, $current_screen, $old_q_type, &$question_no, $user_answers, &$unanswered, $texteditorplugin) {
   global $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $li_set, $bgcolor, $li_set, $used_questions, $user_dismiss, $user_order, $string, $language, $unanswered_color;
 
   // Get the media directory object.
@@ -974,14 +974,10 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
               }
             }
           } else {
-
-            $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
-            $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-            $texteditorplugin = new $texteditorpluginns($configObject->db);
             if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
-              $texteditorplugin->get_javascript('config_unanswered');
+              $texteditorplugin->get_javascript_config('config_unanswered');
             } else {
-              $texteditorplugin->get_javascript('config_answered');
+              $texteditorplugin->get_javascript_config('config_answered');
             }
 
             $ans = '';

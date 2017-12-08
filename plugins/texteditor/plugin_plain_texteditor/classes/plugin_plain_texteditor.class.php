@@ -61,10 +61,17 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
   }
 
   /**
+   * Get text editor base
+   */
+  public function get_header() {
+    // Nothing to do.
+  }
+
+  /**
    * Get text editor javascript
    * @param array $configfile config file
    */
-  public function get_javascript($configfile = '') {
+  public function get_javascript_config($configfile = '') {
     // Nothing to do.
   }
 

@@ -58,10 +58,14 @@ abstract class plugins_texteditor extends \plugins\plugins {
      */
     protected $plugin_type = 'texteditor';
     /**
+     * Get text editor header
+     */
+    abstract public function get_header();
+    /**
      * Get text editor javascript.
      * @param array $data
      */
-    abstract public function get_javascript($data = '');
+    abstract public function get_javascript_config($data = '');
     /**
      * Get text editor textarea.
      * @param string $name

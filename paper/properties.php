@@ -976,15 +976,11 @@ if ($configObject->get_setting('core', 'cfg_summative_mgmt') and $properties->ge
   $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
   $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
   $texteditorplugin = new $texteditorpluginns($mysqli);
-  $texteditorplugin->get_javascript('config_properties');
+  $texteditorplugin->get_header();
+  $texteditorplugin->get_javascript_config('config_properties');
 ?>
   <script type="text/javascript" src="../js/staff_help.js"></script>
 <?php
-  $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
-  $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-  $texteditorplugin = new $texteditorpluginns($mysqli);
-  $texteditorplugin->get_javascript();
-
   if ($properties->get_paper_type() == '2' or $properties->get_paper_type() == '5') {
 ?>
   <script type="text/javascript" src="../js/jquery.datecopy.js"></script>
