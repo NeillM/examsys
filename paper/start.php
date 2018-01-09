@@ -383,360 +383,7 @@ if ($css != '') {
 ?>
 
 <script>
-  window.history.go(1);
-
-  var lang = {
-  <?php
-  $langstrings = array('msgselectable1', 'msgselectable2', 'msgselectable3', 'msgselectable4', 'entervalidcalcanswer');
-  $first = true;
-  foreach ($langstrings as $langstring) {
-    if (!$first) {
-      echo ',';
-    }
-    echo "'{$langstring}':'{$string[$langstring]}'";
-    $first = false;
-  }
-  ?>
-  };
-
-  var submitted = false;
-  <?php if ($is_question_preview_mode === true) : ?>
-  var confirmSubmit = function(event) {
-    conductSave(event);
-  }
-  <?php elseif ($propertyObj->get_bidirectional() == 0) : // Linear navigation ?>
-  var confirmSubmit = function(event) {
-    if ($('#button_pressed').val() == 'finish') {
-      showDialog("<?php echo $string['javacheck2'] ?>");
-    } else {
-      var msg = "<?php echo $string['javacheck1'] ?>";
-      if ($('.ecalc-answer').length > 0) {
-        var ecalcQuestions = [];
-        $('.ecalc-answer').each(function(){
-          ecalcQuestions[ecalcQuestions.length] = this.id.substring(1);
-        });
-        msg = "<?php echo $string['javacheck3'] ?>".replace('[X]', ecalcQuestions.join());
-      }
-      showDialog(msg);
-    }
-
-    $("#dialog_ok").click(function(event) {
-      $('body').css('cursor','wait');
-      submitted = true;
-      $("#overlay").hide();
-      conductSave(event);
-    });
-  }
-  <?php else : // Bi-directional navigation ?>
-  var confirmSubmit = function(event) {
-    if (submitted == true) {
-      return false;
-    }
-    if ($('#button_pressed').val() == 'finish') {
-      showDialog("<?php echo $string['javacheck2'] ?>");
-      $("#dialog_ok").click(function(event) {
-        $('body').css('cursor','wait');
-        submitted = true;
-        $("#overlay").hide();
-        conductSave(event);
-      });
-    } else if ($('#isEnhancedCalc').val() == '1' && $('#missingCalcAnswer').val() != '1') {
-      var ecalcQuestions = [];
-      $('.ecalc-answer').each(function(){
-        if ($(this).val() == '') {
-          ecalcQuestions[ecalcQuestions.length] = $(this).attr('data-screen');
-        }
-      });
-
-      if (ecalcQuestions.length > 0) {
-        var msg = '<?= $string['answerrequired'] ?><br/><br/><strong><?= $string['answerrequired_confirm'] ?></strong>'.replace('[X]', ecalcQuestions.join());
-        showEnhancedcalcWarning(msg);
-        $("#enhancedcalc_warning_ok").click(function(event) {
-          submitted = true;
-          $('body').css('cursor','wait');
-          $("#overlay").hide();
-          conductSave(event);
-        });
-      } else {
-        conductSave(event);
-      }
-    } else {
-      conductSave(event);
-    }
-  }
-
-  <?php endif;
-
-if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline papers.
-	// Bind save function to the screen for fault tolerant form saving ?>
-
-  var submitType = '';
-  var autoSaveRef = '';
-  var last_save_point = (new Date).getTime();
-  var last_saved_user_answers = null;    <?php // Holds the data of the last successful auto save ?>
-
-  <?php // Normal user submit by clicking on next, previous, finish or jump screen ?>
-  var checkSubmit = function (event) {
-    stopAutoSave();
-    if (typeof(tinyMCE) != "undefined") {
-      tinyMCE.triggerSave();
-    }
-
-    var formData = $('#qForm').serialize();
-    submitType = 'userSubmit';
-    if (!!event) {
-      $('#button_pressed').attr('value',event.target.id);
-    }
-
-    $("#dialog_cancel, #enhancedcalc_warning_cancel").click(function(event) {
-      if ($('#button_pressed').val() == 'jumpscreen') {
-        $('#jumpscreen option').each(function () {
-          if (this.defaultSelected) {
-            this.selected = true;
-            return false;
-          }
-        });
-      }
-      $('#savemsg').html("");
-      $('body').css('cursor','default');
-      $("#overlay").hide();
-    });
-
-    confirmSubmit();
-  }
-
-  function conductSave(event) {
-    if (typeof(tinyMCE) != "undefined") {
-      tinyMCE.triggerSave();
-    }
-
-    var formData = $('#qForm').serialize();
-    submitType = 'userSubmit';
-    stopAutoSave();
-    $('#saveError').fadeOut('slow');
-    $('#savemsg').html("<img src=\"../artwork/busy.gif\" class=\"busyicon\" />");
-    <?php // Log which method the users submitted the page via ?>
-      if ($('#button_pressed').val() == 'finish') {
-        $('#qForm').attr('action',"finish.php?id=<?php echo $id . $url_mod; ?>&dont_record=true");
-      } else {
-        $('#qForm').attr('action',"start.php?id=<?php echo $id . $url_mod; ?>&dont_record=true");
-      }
-
-    //if (last_saved_user_answers !== formData<?php if (!isset($user_answers[$current_screen])) echo ' || true' ?>) {
-      ajaxSave(1);
-    //} else {
-    //  ajaxSave(0);
-    //}
-  }
-
-  function showDialog(msg) {
-    $("#dialog_cancel").focus();
-    $("#submit_dialog_msg").html(msg);
-    $("#submit_dialog").css('left', (($(window).width() / 2) - 250) + 'px');
-    $("#submit_dialog").css('top', (($(window).height() / 2) - 100) + 'px');
-    $(".dialogs").hide();
-    $("#submit_dialog").show();
-    $("#overlay").show();
-  }
-
-  function showEnhancedcalcWarning(msg) {
-    $("#enhancedcalc_warning_cancel").focus();
-    $("#enhancedcalc_warning_msg").html(msg);
-    $("#enhancedcalc_warning").css('left', (($(window).width() / 2) - 250) + 'px');
-    $("#enhancedcalc_warning").css('top', (($(window).height() / 2) - 200) + 'px');
-    $(".dialogs").hide();
-    $("#enhancedcalc_warning").show();
-    $("#overlay").show();
-  }
-
-  <?php  // Called when a user has run out of time by UpdateTimerWithRemainingTime in start.js ?>
-  var forceSave = function() {
-    stopAutoSave();
-    ajaxSave(1);
-    info_dialog('<?php echo $string['forcesave']; ?>');
-    submitType = 'forcedSubmit';
-    $('#qForm').attr('action',"finish.php?id=<?php echo $id . $url_mod; ?>&dont_record=true");
-    $('#qForm').submit();
-  }
-
-  <?php  // Called on auto save time out ?>
-  var autoSave = function() {
-    submitType = 'autoSave';
-
-    <?php // This could take longer than the autosave timeout stop auto save to stop duplicate events. ?>
-    stopAutoSave();
-
-    <?php // Save any data from wysiwyg  ?>
-    if (typeof(tinyMCE) != "undefined") {
-      tinyMCE.triggerSave();
-    }
-    var formData = $('#qForm').serialize();
-
-    <?php // Only auto save if the data has changed, OR 20 minutes has elapsed - stop sessions expiring. ?>
-    var now_milliseconds = (new Date).getTime();
-    var save_diff = now_milliseconds - last_save_point;
-    if (last_saved_user_answers !== formData) {
-      $('#savemsg').html("<img src=\"../artwork/busy.gif\" class=\"busyicon\" />");
-      ajaxSave(1);
-      last_save_point = (new Date).getTime();
-    } else if (save_diff > (1000 * 1200)) {
-      ajaxSave(0);
-      last_save_point = (new Date).getTime();
-    } else {
-      <?php // Re-register the autosave timer ?>
-      startAutoSave();
-    }
-  }
-
-  var startAutoSave = function () {
-    clearTimeout(autoSaveRef);<?php // Cancel any outstanding timeouts to make sure only one auto save is ever registered. ?>
-    autoSaveRef = setTimeout("autoSave()",<?php echo (($configObject->get_setting('core', 'paper_autosave_frequency') + rand(-5,5)) * 1000); ?>);
-  }
-
-  var stopAutoSave = function() {
-    clearTimeout(autoSaveRef);
-  }
-
-  var ajaxSave = function (ans_changed) {
-    <?php // Hide any errors ?>
-    $('#saveError').fadeOut('fast');
-    <?php // Random page ID to stop IE caching results. ?>
-    date = new Date();
-    randomPageID = date.getTime();
-    $('#randomPageID').val(randomPageID);
-    if (typeof(tinyMCE) != "undefined"){
-      tinyMCE.triggerSave();
-    }
-    $.ajax({
-          url: 'save_screen.php?id=<?php echo $id . $url_mod; ?>&ans_changed=' + ans_changed + '&submitType=' + submitType + '&rnd=' + randomPageID + '<?php echo html_entity_decode($url_mod) ?>',
-          type: 'post',
-          data: $('#qForm').serialize(),
-          dataType: 'html',
-          timeout: <?php
-            // Set the time out of one requst to be the maximum total time plus 5s for network latency
-            // PHP handles normal timeouts. This is just to make sure the user won't wait forever if somthing
-            // weird happens.
-            $settimeout = $configObject->get_setting('core', 'paper_autosave_settimeout');
-            $retrylimit = $configObject->get_setting('core', 'paper_autosave_retrylimit');
-            $backofffactor = $configObject->get_setting('core', 'paper_autosave_backoff_factor');
-            echo ceil((($retrylimit * $backofffactor * $settimeout) + $settimeout + 5)) * 1000;
-                   ?>,
-          cache: false,
-          tryCount : 0,
-          retryLimit : <?php echo $retrylimit; // Try 3 times before erroring ?>,
-          beforeSend: function() {
-          },
-          fail: function() {
-            if (this.retry()) {
-              return;
-            } else  {
-              saveFail('fail', this.url, '');
-              return;
-            }
-          },
-          error: function(xhr, textStatus, errorThrown) {
-            if (textStatus == 'error') {
-              if (this.retry()) {
-                return;
-              } else {
-                // Status is the response code and errorThrown is the HTTP response text.
-                if (errorThrown != '') {
-                    saveFail(textStatus + ': ' + xhr.status, this.url, errorThrown);
-                    return;
-                }
-              }
-            }
-            // Just use the xhr status.
-            saveFail(textStatus + ': ' + xhr.status, this.url, '');
-            return;
-          },
-          success: function (ret_data, textStatus, jqXHR) {
-            if (ret_data == randomPageID) {
-              $('#save_failed').val('');
-              <?php // Cache the form data to look for changes on next auto save ?>
-              last_saved_user_answers = this.data;
-              saveSuccess();
-              return;
-            }
-            if (this.retry()) {
-              return;
-            } else {
-              // marking_funcions.inc record_marks failed after retry.
-              // red_data can be ERROR, a random generated number or a html page.
-              if (ret_data == 'ERROR' || (!isNaN(parseFloat(ret_data)) && isFinite(ret_data))) {
-                // record the returned random number or ERROR.
-                saveFail('record_marks', this.url, ret_data);
-              } else {
-                  // Strip out the title of the html as thats is all we are interested in.
-                  htmlstart = ret_data.indexOf("<title>") + 7;
-                  htmlend = ret_data.indexOf("</title>");
-                  htmltitle = ret_data.substring(htmlstart, htmlend);
-                  if (htmltitle == '') {
-                      htmltitle = 'html response';
-                  }
-                  saveFail('record_marks', this.url, htmltitle);
-              }
-              return;
-            }
-          },
-          retry: function (){
-            <?php // Retry if we can ?>
-            this.tryCount++;
-            if (this.tryCount <= this.retryLimit) {
-              <?php // Indicate the retry on the url ?>
-              if (this.tryCount == 1) {
-                this.url = this.url + "&retry=" + this.tryCount;
-              } else {
-                this.url = this.url.replace("&retry=" + (this.tryCount - 1), "&retry=" + this.tryCount);
-              }
-              $.ajax(this);
-              return true;
-            }
-            return false
-          }
-      });
-    return;
-  }
-
-  var saveSuccess = function () {
-    <?php // Re-register the autosave timer ?>
-    startAutoSave();
-    if (submitType == 'userSubmit') {
-      $('#qForm').submit();
-      return true;
-    } else if(submitType == 'forcedSubmit') {
-      $('#qForm').submit();
-    } else {
-      <?php // Clear auto save message ?>
-      $('#savemsg').html("");
-    }
-  }
-
-  var saveFail = function (textStatus, url, ret_data) {
-    <?php // Re-register the autosave timer ?>
-    startAutoSave();
-
-    current_val =  $('#save_failed').val();
-    unix_now = Math.round($.now() / 1000);
-    if (current_val == '') {
-      $('#save_failed').val(unix_now  + '-' + textStatus + '-' + url + '-' + ret_data);
-    } else {
-      $('#save_failed').val(current_val + '\n' + unix_now + '-' + textStatus + '-' + url + '-' + ret_data);
-    }
-    $('#savemsg').html("");
-    // usersubmit always warns, auto save only on application error.
-    if (submitType !== 'autoSave' || textStatus === 'record_marks') {
-      $('#saveError').fadeIn('fast');
-    }
-    $('body').css('cursor','default');
-    submitted = false;
-
-    return false;
-  }
-
-<?php
-}
-?>
+  var lang = <?php echo json_encode($jstring); ?>;
 </script>
 <script type="text/javascript" src="../js/start.min.js"></script>
 <?php
@@ -1094,8 +741,14 @@ if($propertyObj->get_calculator()) {
   echo "<input type=\"hidden\" id=\"randomPageID\" name=\"randomPageID\" value=\"\" />\n";
   echo "<input type=\"hidden\" id=\"isEnhancedCalc\" name=\"isEnhancedCalc\" value=\"{$is_enhancedcalc}\" />\n";
   echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"{$refpane}\" />\n";
-  echo "<input type=\"hidden\" id=\"refmaterialscount\" name=\"refmaterialscount\" value=\"" . count($reference_materials) . "\" />\n";
-  echo "<input type=\"hidden\" id=\"pid\" name=\"pid\" value=\"" . $id . "\" />\n";
+
+  if ($is_question_preview_mode === true) {
+    $submitype = "preview";
+  } elseif ($propertyObj->get_bidirectional() == 0) {
+    $submitype = "linear";
+  } else {
+    $submitype = "bidirectional";
+  }
   if ($is_question_preview_mode) {
     echo "<input type=\"hidden\" id=\"mode\" name=\"mode\" value=\"preview\" />\n";
   } else {
@@ -1180,6 +833,23 @@ if($propertyObj->get_calculator()) {
     <div id="info_submit_dialog_icon"><img src="../artwork/question_mark_64.png" width="64" height="64" alt="?" /></div><p id="info_submit_dialog_msg"></p>
     <div id="info_submit_dialog_buttons"><input type="button" name="info_dialog_ok" id="info_dialog_ok" class="ok" value="OK" /></div>
   </div>
+</div>
+<div id="paper" 
+     data-pid="<?php echo $id; ?>"
+     data-urlmod="<?php echo html_entity_decode($url_mod); ?>"
+     data-submittype="<?php echo $submitype; ?>"
+     data-refcount="<?php echo count($reference_materials); ?>"
+     data-savefreq="<?php echo (($configObject->get_setting('core', 'paper_autosave_frequency') + rand(-5,5)) * 1000); ?>"
+     data-savetimeout="<?php
+       // Set the time out of one requst to be the maximum total time plus 5s for network latency
+       // PHP handles normal timeouts. This is just to make sure the user won't wait forever if somthing
+       // weird happens.
+       $settimeout = $configObject->get_setting('core', 'paper_autosave_settimeout');
+       $retrylimit = $configObject->get_setting('core', 'paper_autosave_retrylimit');
+       $backofffactor = $configObject->get_setting('core', 'paper_autosave_backoff_factor');
+       echo ceil((($retrylimit * $backofffactor * $settimeout) + $settimeout + 5)) * 1000; ?>"
+     data-saveretry="<?php echo $retrylimit; ?>"
+     >
 </div>
 <?php
 

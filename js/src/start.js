@@ -134,6 +134,8 @@ function multimatchingCheck(questionid, options_total, selectable) {
 }
 
 $(document).ready(function(){
+  var el = document.getElementById('paper');
+
   $('#previous').click(function() {
     $('#button_pressed').val('previous');
   });
@@ -152,7 +154,7 @@ $(document).ready(function(){
 
   $('#jumpscreen').change(function (event) {
     $('#button_pressed').val('jumpscreen');
-    $('#qForm').attr('action',"start.php?id=" + $('#pid').val() + "&dont_record=true");
+    $('#qForm').attr('action',"start.php?id=" + el.dataset.pid + "&dont_record=true");
     submitType = 'userSubmit';
     return checkSubmit(event);
   });
@@ -182,15 +184,19 @@ $(document).ready(function(){
   $('.rankselect').change(rankCheck);
   $(".calc-answer").keydown(filterKeypress);
 
+  autoSaveRef = '';
+  last_save_point = (new Date).getTime();
+  last_saved_user_answers = null; // Holds the data of the last successful auto save
+  submitted = false;
+
   // Setup autosave
   startAutoSave();
 
   $('#fire_exit').click(function() {
-      submitType = 'userSubmit';
-      $('#button_pressed').val('fire_exit');
-      $('#qForm').attr('action',"fire_evacuation.php?id=" + $('#pid').val() + "&dont_record=true");
-      ajaxSave(1);
-    });
+    $('#button_pressed').val('fire_exit');
+    $('#qForm').attr('action',"fire_evacuation.php?id=" + el.dataset.pid + "&dont_record=true");
+    ajaxSave(1, 'userSubmit');
+  });
 });
 
 function onoff(objID) {
@@ -268,9 +274,10 @@ function close_window () {
   }
 }
 
-var changeRef = function(refID) {
+function changeRef (refID) {
   $('#refpane').val(refID);
-  refcount = $('#refmaterialscount').val();
+  var el = document.getElementById('paper');
+  refcount = el.dataset.refcount;
   winH = $(window).height();
   resizeReference();
   var flag = 0;
@@ -289,11 +296,12 @@ var changeRef = function(refID) {
       }
     }
   }
-};
+}
 
-var resizeReference = function() {
+function resizeReference () {
   winH = $(window).height();
-  refcount = $('#refmaterialscount').val();
+  var el = document.getElementById('paper');
+  refcount = el.dataset.refcount;
   if (refcount > 0) {
     $subtract = (31 * refcount) + 11;
     for (i=0; i< refcount; i++) {
@@ -302,4 +310,321 @@ var resizeReference = function() {
     var mainWidth = $('body').outerWidth() - $('#framecontent0').outerWidth(true);
     $('#maincontent').width(mainWidth);
   }
-};
+}
+
+function confirmSubmit (event) {
+    var el = document.getElementById('paper');
+    if (el.dataset.submittype === 'preview') {
+      confirmSubmitPreview(event);
+    } else if (el.dataset.submittype === 'linear') {
+      confirmSubmitLinear(event);
+    } else {
+      confirmSubmitBiDirectional(event);
+    }
+}
+
+function confirmSubmitPreview (event) {
+  conductSave(event);
+}
+
+function confirmSubmitLinear (event) {
+  if ($('#button_pressed').val() === 'finish') {
+    showDialog(lang['javacheck2']);
+  } else {
+    var msg = lang['javacheck1'];
+    if ($('.ecalc-answer').length > 0) {
+      var ecalcQuestions = [];
+      $('.ecalc-answer').each(function(){
+        ecalcQuestions[ecalcQuestions.length] = this.id.substring(1);
+      });
+      msg = lang['javacheck3'].replace('[X]', ecalcQuestions.join());
+    }
+    showDialog(msg);
+  }
+
+  $("#dialog_ok").click(function(event) {
+    $('body').css('cursor','wait');
+    submitted = true;
+    $("#overlay").hide();
+    conductSave(event);
+  });
+}
+
+function confirmSubmitBiDirectional (event) {
+  if (submitted === true) {
+    return false;
+  }
+  if ($('#button_pressed').val() === 'finish') {
+    showDialog(lang['javacheck2']);
+    $("#dialog_ok").click(function(event) {
+      $('body').css('cursor','wait');
+      submitted = true;
+      $("#overlay").hide();
+      conductSave(event);
+    });
+  } else if ($('#isEnhancedCalc').val() === '1' && $('#missingCalcAnswer').val() != '1') {
+    var ecalcQuestions = [];
+    $('.ecalc-answer').each(function(){
+      if ($(this).val() === '') {
+        ecalcQuestions[ecalcQuestions.length] = $(this).attr('data-screen');
+      }
+    });
+
+    if (ecalcQuestions.length > 0) {
+      var msg = lang['answerrequired'] + '<br/><br/><strong>' + lang['answerrequired_confirm'] + '</strong>'.replace('[X]', ecalcQuestions.join());
+      showEnhancedcalcWarning(msg);
+      $("#enhancedcalc_warning_ok").click(function(event) {
+        submitted = true;
+        $('body').css('cursor','wait');
+        $("#overlay").hide();
+        conductSave(event);
+      });
+    } else {
+      conductSave(event);
+    }
+  } else {
+    conductSave(event);
+  }
+}
+
+// Normal user submit by clicking on next, previous, finish or jump screen
+function checkSubmit (event) {
+  stopAutoSave();
+  if (typeof(tinyMCE) !== "undefined") {
+    tinyMCE.triggerSave();
+  }
+
+  submitType = 'userSubmit';
+  if (event === null) {
+    $('#button_pressed').attr('value',event.target.id);
+  }
+
+  $("#dialog_cancel, #enhancedcalc_warning_cancel").click(function(event) {
+    if ($('#button_pressed').val() === 'jumpscreen') {
+      $('#jumpscreen option').each(function () {
+        if (this.defaultSelected) {
+          this.selected = true;
+          return false;
+        }
+      });
+    }
+    $('#savemsg').html("");
+    $('body').css('cursor','default');
+    $("#overlay").hide();
+  });
+  confirmSubmit(event);
+}
+
+function conductSave(event) {
+  var el = document.getElementById('paper');
+  if (typeof(tinyMCE) !== "undefined") {
+    tinyMCE.triggerSave();
+  }
+  stopAutoSave();
+  $('#saveError').fadeOut('slow');
+  $('#savemsg').html("<img src=\"../artwork/busy.gif\" class=\"busyicon\" />");
+  // Log which method the users submitted the page via
+  if ($('#button_pressed').val() === 'finish') {
+    $('#qForm').attr('action',"finish.php?id=" + el.dataset.pid + el.dataset.urlmod + "&dont_record=true");
+  } else {
+    $('#qForm').attr('action',"start.php?id=" + el.dataset.pid + el.dataset.urlmod + "&dont_record=true");
+  }
+  ajaxSave(1, 'userSubmit');
+}
+
+function showDialog(msg) {
+  $("#dialog_cancel").focus();
+  $("#submit_dialog_msg").html(msg);
+  $("#submit_dialog").css('left', (($(window).width() / 2) - 250) + 'px');
+  $("#submit_dialog").css('top', (($(window).height() / 2) - 100) + 'px');
+  $(".dialogs").hide();
+  $("#submit_dialog").show();
+  $("#overlay").show();
+}
+
+function showEnhancedcalcWarning(msg) {
+  $("#enhancedcalc_warning_cancel").focus();
+  $("#enhancedcalc_warning_msg").html(msg);
+  $("#enhancedcalc_warning").css('left', (($(window).width() / 2) - 250) + 'px');
+  $("#enhancedcalc_warning").css('top', (($(window).height() / 2) - 200) + 'px');
+  $(".dialogs").hide();
+  $("#enhancedcalc_warning").show();
+  $("#overlay").show();
+}
+
+// Called when a user has run out of time by UpdateTimerWithRemainingTime in start.js
+function forceSave () {
+  var el = document.getElementById('paper');
+  stopAutoSave();
+  ajaxSave(1, 'forcedSubmit');
+  info_dialog(lang['forcesave']);
+  $('#qForm').attr('action',"finish.php?id=" + el.dataset.pid + el.dataset.urlmod + "&dont_record=true");
+  $('#qForm').submit();
+}
+
+// Called on auto save time out
+function autoSave () {
+
+  // This could take longer than the autosave timeout stop auto save to stop duplicate events.
+  stopAutoSave();
+
+   // Save any data from wysiwyg
+  if (typeof(tinyMCE) != "undefined") {
+    tinyMCE.triggerSave();
+  }
+  var formData = $('#qForm').serialize();
+
+  // Only auto save if the data has changed, OR 20 minutes has elapsed - stop sessions expiring. ?>
+  var now_milliseconds = (new Date).getTime();
+  var save_diff = now_milliseconds - last_save_point;
+  if (last_saved_user_answers !== formData) {
+    $('#savemsg').html("<img src=\"../artwork/busy.gif\" class=\"busyicon\" />");
+    ajaxSave(1, 'autoSave');
+    last_save_point = (new Date).getTime();
+  } else if (save_diff > (1000 * 1200)) {
+    ajaxSave(0, 'autoSave');
+    last_save_point = (new Date).getTime();
+  } else {
+    // Re-register the autosave timer
+    startAutoSave();
+  }
+}
+
+function startAutoSave () {
+  var el = document.getElementById('paper');
+  clearTimeout(autoSaveRef);// Cancel any outstanding timeouts to make sure only one auto save is ever registered.
+  autoSaveRef = setTimeout("autoSave()", el.dataset.savefreq);
+}
+
+function stopAutoSave () {
+  clearTimeout(autoSaveRef);
+}
+
+function ajaxSave (ans_changed, submitType) {
+  var el = document.getElementById('paper');
+  // Hide any errors
+  $('#saveError').fadeOut('fast');
+  // Random page ID to stop IE caching results.
+  date = new Date();
+  randomPageID = date.getTime();
+  $('#randomPageID').val(randomPageID);
+  if (typeof(tinyMCE) !== "undefined"){
+    tinyMCE.triggerSave();
+  }
+  $.ajax({
+    url: 'save_screen.php?id=' + el.dataset.pid + el.dataset.urlmod + '&ans_changed=' + ans_changed + '&submitType=' + submitType + '&rnd=' + randomPageID + el.dataset.urlmod,
+    type: 'post',
+    data: $('#qForm').serialize(),
+    dataType: 'html',
+    timeout: el.dataset.savetimeout,
+    cache: false,
+    tryCount : 0,
+    retryLimit : el.dataset.saveretry,
+    beforeSend: function() {},
+    fail: function() {
+      if (this.retry()) {
+        return;
+      } else  {
+        saveFail('fail', this.url, '');
+        return;
+      }
+    },
+    error: function(xhr, textStatus, errorThrown) {
+      if (textStatus === 'error') {
+        if (this.retry()) {
+          return;
+        } else {
+          // Status is the response code and errorThrown is the HTTP response text.
+          if (errorThrown !== '') {
+              saveFail(textStatus + ': ' + xhr.status, this.url, errorThrown);
+              return;
+          }
+        }
+      }
+      // Just use the xhr status.
+      saveFail(textStatus + ': ' + xhr.status, this.url, '');
+      return;
+    },
+    success: function (ret_data, textStatus, jqXHR) {
+      if (ret_data == randomPageID) {
+        $('#save_failed').val('');
+        //Cache the form data to look for changes on next auto save
+        last_saved_user_answers = this.data;
+        saveSuccess();
+        return;
+      }
+      if (this.retry()) {
+        return;
+      } else {
+        // marking_funcions.inc record_marks failed after retry.
+        // red_data can be ERROR, a random generated number or a html page.
+        if (ret_data === 'ERROR' || (!isNaN(parseFloat(ret_data)) && isFinite(ret_data))) {
+          // record the returned random number or ERROR.
+          saveFail('record_marks', this.url, ret_data);
+        } else {
+            // Strip out the title of the html as thats is all we are interested in.
+            htmlstart = ret_data.indexOf("<title>") + 7;
+            htmlend = ret_data.indexOf("</title>");
+            htmltitle = ret_data.substring(htmlstart, htmlend);
+            if (htmltitle === '') {
+                htmltitle = 'html response';
+            }
+            saveFail('record_marks', this.url, htmltitle);
+        }
+        return;
+      }
+    },
+    retry: function (){
+      // Retry if we can
+      this.tryCount++;
+      if (this.tryCount <= this.retryLimit) {
+        // Indicate the retry on the url
+        if (this.tryCount === 1) {
+          this.url = this.url + "&retry=" + this.tryCount;
+        } else {
+          this.url = this.url.replace("&retry=" + (this.tryCount - 1), "&retry=" + this.tryCount);
+        }
+        $.ajax(this);
+        return true;
+      }
+      return false;
+    }
+  });
+  return;
+}
+
+function saveSuccess () {
+  // Re-register the autosave timer ?>
+  startAutoSave();
+  if (submitType === 'userSubmit') {
+    $('#qForm').submit();
+    return true;
+  } else if(submitType === 'forcedSubmit') {
+    $('#qForm').submit();
+  } else {
+    // Clear auto save message ?>
+    $('#savemsg').html("");
+  }
+}
+
+function saveFail (textStatus, url, ret_data) {
+  // Re-register the autosave timer
+  startAutoSave();
+
+  current_val =  $('#save_failed').val();
+  unix_now = Math.round($.now() / 1000);
+  if (current_val === '') {
+    $('#save_failed').val(unix_now  + '-' + textStatus + '-' + url + '-' + ret_data);
+  } else {
+    $('#save_failed').val(current_val + '\n' + unix_now + '-' + textStatus + '-' + url + '-' + ret_data);
+  }
+  $('#savemsg').html("");
+  // usersubmit always warns, auto save only on application error.
+  if (submitType !== 'autoSave' || textStatus === 'record_marks') {
+    $('#saveError').fadeIn('fast');
+  }
+  $('body').css('cursor','default');
+  submitted = false;
+
+  return false;
+}
