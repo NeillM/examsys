@@ -47,7 +47,7 @@ $post_screen = param::optional('current_screen', null, param::INT, param::FETCH_
 $get_qid = param::optional('q_id', null, param::INT, param::FETCH_GET);
 $q_number = param::optional('qNo', null, param::INT, param::FETCH_GET);
 $do_not_record = param::optional('dont_record', false, param::BOOLEAN, param::FETCH_GET);
-$refpane = param::optional('refpane', null, param::INT, param::FETCH_POST);
+$refpane = param::optional('refpane', 0, param::INT, param::FETCH_POST);
 
 // Get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli, $string, true);
@@ -384,19 +384,6 @@ if ($css != '') {
 
 <script>
   window.history.go(1);
-<?php
-  if (count($reference_materials) > 0) {
-    echo "\$(function () {\n";
-    if (!is_null($refpane)) {
-      echo "  changeRef(" . $refpane . ");\n";
-    } else {
-      echo "  changeRef();\n";
-      echo "  resizeReference();\n";
-    }
-    echo "$(window).resize(resizeReference);";
-    echo "});\n";
-  }
-?>
 
   var lang = {
   <?php
@@ -411,57 +398,6 @@ if ($css != '') {
   }
   ?>
   };
-
-
-  <?php
-  if (count($reference_materials) > 0) {
-      echo "var changeRef = function(refID) {\n";
-      echo "\$('#refpane').val(refID);\n";
-      echo "winH = \$(window).height();\n";
-      echo "resizeReference();\n";
-      echo "var flag = 0;\n";
-
-      echo "    for (i=0; i<" . count($reference_materials) . "; i++) {\n";
-      echo "      if (i == refID) {\n";
-      echo "        $('#framecontent' + i).show();\n";
-      echo "        $('#refhead' + i).css('top', (31 * i) + 'px');\n";
-      echo "        flag = 1;\n";
-      echo "      } else {\n";
-      echo "        $('#framecontent' + i).hide();\n";
-      echo "        if (flag == 0) {\n";
-      echo "          $('#refhead' + i).css('top', (31 * i) + 'px');\n";
-      echo "        } else {\n";
-      echo "          $('#refhead' + i).css('top', '');\n";
-      echo "          $('#refhead' + i).css('bottom', ((" . count($reference_materials) . " - (i + 1)) * 31) + 'px');\n";
-      echo "        }\n";
-      echo "      }\n";
-      echo "    }\n";
-      echo "  }\n\n";
-      // Expand the first Reference material item.
-      echo "  $(document).ready(function() {\n";
-      echo "    changeRef(0);\n";
-      echo "  });";
-    } else {
-      echo "var changeRef = function(refID) {};\n";
-    }
-  ?>
-
-
-  var resizeReference = function() {
-    winH = $(window).height();
-<?php
-  if (count($reference_materials) > 0) {
-    $subtract = (31 * count($reference_materials)) + 11;
-    echo "    for (i=0; i<" . count($reference_materials) . "; i++) {\n";
-    echo "      $('#framecontent' + i).css('height', (winH - $subtract) + 'px');\n";
-    echo "    }\n";
-?>
-    var mainWidth = $('body').outerWidth() - $('#framecontent0').outerWidth(true);
-    $('#maincontent').width(mainWidth);
-<?php
-  }
-?>
-  }
 
   var submitted = false;
   <?php if ($is_question_preview_mode === true) : ?>
@@ -858,7 +794,7 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
 }
 ?>
 </script>
-<script type="text/javascript" src="../js/start.js"></script>
+<script type="text/javascript" src="../js/start.min.js"></script>
 <?php
 $render = new render($configObject);
 if($configObject->get_setting('core', 'paper_mathjax')) {
@@ -1213,6 +1149,8 @@ if($propertyObj->get_calculator()) {
   echo "<input type=\"hidden\" id=\"button_pressed\" name=\"button_pressed\" value=\"next\" />\n";
   echo "<input type=\"hidden\" id=\"randomPageID\" name=\"randomPageID\" value=\"\" />\n";
   echo "<input type=\"hidden\" id=\"isEnhancedCalc\" name=\"isEnhancedCalc\" value=\"{$is_enhancedcalc}\" />\n";
+  echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"{$refpane}\" />\n";
+  echo "<input type=\"hidden\" id=\"refmaterialscount\" name=\"refmaterialscount\" value=\"" . count($reference_materials) . "\" />\n";
   if ($is_question_preview_mode) {
     echo "<input type=\"hidden\" id=\"mode\" name=\"mode\" value=\"preview\" />\n";
   } else {
@@ -1232,7 +1170,6 @@ if($propertyObj->get_calculator()) {
     if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline papers.
 			echo '<input id="finish" type="submit" name="next" value="' . $string['finish'] . '" />';
     }
-		echo '<input type="hidden" name="refpane" id="refpane" value="' . (count($reference_materials) - 1) . '" />';
   } else {
     echo $bottom_html;
     ?>
@@ -1268,7 +1205,6 @@ if($propertyObj->get_calculator()) {
       echo '<input id="next" type="submit" name="next" value="' . $string['screen'] . ' ' . $current_screen . ' &gt;" />';
     }
     echo '</td></tr></table>';
-    echo '<input type="hidden" name="refpane" id="refpane" value="' . (count($reference_materials) - 1) . '" />';
   }
 ?>
 </td></tr></table>
@@ -1311,14 +1247,11 @@ if (count($reference_materials) > 0) {
     $top += 31;
     $ref_no++;
   }
-}
-$mysqli->close();
-
-if (!is_null($refpane)) {
   echo "<script>\n";
   echo "  changeRef(" . $refpane . ");\n";
   echo "</script>\n";
 }
+$mysqli->close();
 
 if ($unanswered) {
   echo "<script>\n";

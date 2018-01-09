@@ -225,3 +225,39 @@ function close_window () {
     window.close();
   }
 }
+
+var changeRef = function(refID) {
+  $('#refpane').val(refID);
+  refcount = $('#refmaterialscount').val();
+  winH = $(window).height();
+  resizeReference();
+  var flag = 0;
+  for (i=0; i< refcount; i++) {
+    if (i === refID) {
+      $('#framecontent' + i).show();
+      $('#refhead' + i).css('top', (31 * i) + 'px');
+      flag = 1;
+    } else {
+      $('#framecontent' + i).hide();
+      if (flag === 0) {
+        $('#refhead' + i).css('top', (31 * i) + 'px');
+      } else {
+        $('#refhead' + i).css('top', '');
+        $('#refhead' + i).css('bottom', ((refcount - (i + 1)) * 31) + 'px');
+      }
+    }
+  }
+};
+
+var resizeReference = function() {
+  winH = $(window).height();
+  refcount = $('#refmaterialscount').val();
+  if (refcount > 0) {
+    $subtract = (31 * refcount) + 11;
+    for (i=0; i< refcount; i++) {
+      $('#framecontent' + i).css('height', (winH - $subtract) + 'px');
+    }
+    var mainWidth = $('body').outerWidth() - $('#framecontent0').outerWidth(true);
+    $('#maincontent').width(mainWidth);
+  }
+}
