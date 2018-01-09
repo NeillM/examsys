@@ -465,59 +465,15 @@ if ($css != '') {
     }
   }
 
-  $(document).ready(function () {
-    $('#jumpscreen').change(function (event) {
-      $('#button_pressed').val('jumpscreen');
-      $('#qForm').attr('action',"start.php?id=<?= $id ?>&dont_record=true");
-      submitType = 'userSubmit';
-      return checkSubmit(event);
-    });
-  });
   <?php endif;
 
 if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline papers.
 	// Bind save function to the screen for fault tolerant form saving ?>
-  var usingAjax = false;
+
   var submitType = '';
   var autoSaveRef = '';
   var last_save_point = (new Date).getTime();
   var last_saved_user_answers = null;    <?php // Holds the data of the last successful auto save ?>
-
-  $(document).ready(function () {
-		<?php  // We have javascript replace the form submit buttons to enable ajax saving ?>
-		usingAjax = true;
-    last_saved_user_answers = $('#qForm').serialize();
-		$('#next').replaceWith('<?php echo "<input id=\"next\" type=\"button\" value=\"" . $string['screen'] . " " . ($current_screen + 1) . " &gt;\" />";?>');
-    $('#next').click(checkSubmit);
-
-		$('#previous').replaceWith('<?php echo "<input id=\"previous\" type=\"button\" value=\"&lt; " . $string['screen'] . " " . ($current_screen - 1) . "\" />";?>');
-		$('#previous').click(checkSubmit);
-
-		$('#finish').replaceWith('<?php echo "<input id=\"finish\" type=\"button\" value=\"" . $string['finish'] . "\" />";?>');
-		$('#finish').click(checkSubmit);
-
-		<?php // Attach UI events ?>
-		$('.rankselect').change(rankCheck);
-		$(".calc-answer").keydown(filterKeypress);
-
-		 <?php // Setup autosave ?>
-		startAutoSave();
-
-		<?php // Stop forms being submitted with ENTER  ?>
-		$('input[type=text]').keydown(function (event) {
-				event = event || window.event;
-				if (event.keyCode == 13) {
-					event.preventDefault();
-					return false;
-				} else {
-					return true;
-				}
-		});
-
-        $("#info_dialog_ok").click(function(event) {
-            $("#info_overlay").hide();
-  });
-  });
 
   <?php // Normal user submit by clicking on next, previous, finish or jump screen ?>
   var checkSubmit = function (event) {
@@ -778,18 +734,6 @@ if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline 
     return false;
   }
 
-  $(document).ready(function () {
-    $('#fire_exit').click(function() {
-      submitType = 'userSubmit';
-      $('#button_pressed').val('fire_exit');
-      if (usingAjax) {
-        $('#qForm').attr('action',"fire_evacuation.php?id=<?php echo $id ?>&dont_record=true");
-      } else {
-        $('#qForm').attr('action',"fire_evacuation.php?id=<?php echo $id ?>");
-      }
-      ajaxSave(1);
-    });
-  });
 <?php
 }
 ?>
@@ -1151,6 +1095,7 @@ if($propertyObj->get_calculator()) {
   echo "<input type=\"hidden\" id=\"isEnhancedCalc\" name=\"isEnhancedCalc\" value=\"{$is_enhancedcalc}\" />\n";
   echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"{$refpane}\" />\n";
   echo "<input type=\"hidden\" id=\"refmaterialscount\" name=\"refmaterialscount\" value=\"" . count($reference_materials) . "\" />\n";
+  echo "<input type=\"hidden\" id=\"pid\" name=\"pid\" value=\"" . $id . "\" />\n";
   if ($is_question_preview_mode) {
     echo "<input type=\"hidden\" id=\"mode\" name=\"mode\" value=\"preview\" />\n";
   } else {
@@ -1168,7 +1113,7 @@ if($propertyObj->get_calculator()) {
 
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and $is_question_preview_mode) {
     if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline papers.
-			echo '<input id="finish" type="submit" name="next" value="' . $string['finish'] . '" />';
+      echo "<input id=\"finish\" type=\"button\" value=\"" . $string['finish'] . "\" />";
     }
   } else {
     echo $bottom_html;
@@ -1188,7 +1133,7 @@ if($propertyObj->get_calculator()) {
     echo '<span id="savemsg"></span>';
     if ($propertyObj->get_bidirectional() == 1 and $no_screens > 1) {
       if ($current_screen > 2) {
-        echo '<input id="previous" type="submit" name="prev" value="&lt; ' . $string['screen'] . ' ' . ($current_screen - 2) . '" />';
+        echo "<input id=\"previous\" type=\"button\" value=\"&lt; " . $string['screen'] . " " . ($current_screen - 2) . "\" />";
       }
       if (in_array($original_paper_type, array('0', '1', '2'))) {
         echo '<select name="jumpscreen" id="jumpscreen">';
@@ -1200,9 +1145,9 @@ if($propertyObj->get_calculator()) {
       }
     }
     if ($current_screen > $no_screens) {
-			echo '<input id="finish" type="submit" name="next" value="' . $string['finish'] . '" />';
-		} else {
-      echo '<input id="next" type="submit" name="next" value="' . $string['screen'] . ' ' . $current_screen . ' &gt;" />';
+      echo "<input id=\"finish\" type=\"button\" value=\"" . $string['finish'] . "\" />";
+    } else {
+      echo "<input id=\"next\" type=\"button\" value=\"" . $string['screen'] . " " . ($current_screen) . " &gt;\" />";
     }
     echo '</td></tr></table>';
   }

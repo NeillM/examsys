@@ -149,6 +149,48 @@ $(document).ready(function(){
   $('.inact').click(function() {
     onoff($(this).attr('id'));
   });
+
+  $('#jumpscreen').change(function (event) {
+    $('#button_pressed').val('jumpscreen');
+    $('#qForm').attr('action',"start.php?id=" + $('#pid').val() + "&dont_record=true");
+    submitType = 'userSubmit';
+    return checkSubmit(event);
+  });
+
+  //Stop forms being submitted with ENTER
+  $('input[type=text]').keydown(function (event) {
+    event = event || window.event;
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      return false;
+    } else {
+      return true;
+    }
+  });
+
+  $("#info_dialog_ok").click(function(event) {
+    $("#info_overlay").hide();
+  });
+
+  last_saved_user_answers = $('#qForm').serialize();
+  $('#next').click(checkSubmit);
+
+  $('#previous').click(checkSubmit);
+  $('#finish').click(checkSubmit);
+
+  // Attach UI events
+  $('.rankselect').change(rankCheck);
+  $(".calc-answer").keydown(filterKeypress);
+
+  // Setup autosave
+  startAutoSave();
+
+  $('#fire_exit').click(function() {
+      submitType = 'userSubmit';
+      $('#button_pressed').val('fire_exit');
+      $('#qForm').attr('action',"fire_evacuation.php?id=" + $('#pid').val() + "&dont_record=true");
+      ajaxSave(1);
+    });
 });
 
 function onoff(objID) {
@@ -260,4 +302,4 @@ var resizeReference = function() {
     var mainWidth = $('body').outerWidth() - $('#framecontent0').outerWidth(true);
     $('#maincontent').width(mainWidth);
   }
-}
+};
