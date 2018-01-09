@@ -54,8 +54,9 @@ $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli,
 
 $deleted = $propertyObj->get_deleted();
 
-// If the paper has been deleted we should exit as this is an invalid page.
-if ($deleted != NULL) {
+// If the paper has been deleted we should exit as this is an invalid page
+// and Deny access to offline papers.
+if ($deleted != NULL or $propertyObj->get_paper_type() == '5') {
   $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '/artwork/exclamation_48.png', '#C00000', true, true);
