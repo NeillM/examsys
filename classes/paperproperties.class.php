@@ -2049,4 +2049,88 @@ class PaperProperties {
           $this->changes[] = array('old' => $old_externalsys, 'new' => $externalsys, 'part' => 'externalsys');
         }
     }
+
+    /**
+     * Returns an array of screen information - used for the numbers at the top
+     * of the screen.
+     * @param bool $is_question_preview_mode  - Are we previewing a single question
+     * @return array - Returns an array of screens then question ID and question type.
+     *
+     */
+    public function get_screens($is_question_preview_mode) {
+        $paperID = $this->get_property_id();
+        // Get how many screens make up the question paper.
+        $screen_data = array();
+        if ($is_question_preview_mode) {
+          $get_qid = param::optional('q_id', 0, param::INT, param::FETCH_GET);
+          $stmt = $this->db->prepare("SELECT 1, q_type, q_id
+                                    FROM
+                                      questions
+                                    WHERE
+                                      questions.q_id = ?
+                                    ");
+          $stmt->bind_param('i', $get_qid);
+        } else {
+          $stmt = $this->db->prepare("SELECT
+                                      screen, q_type, question
+                                    FROM
+                                      (papers, questions)
+                                    WHERE
+                                      papers.paper = ? AND
+                                      papers.question = questions.q_id
+                                    ORDER BY
+                                      screen, display_pos");
+          $stmt->bind_param('i', $paperID);
+        }
+        $stmt->execute();
+        $stmt->store_result();
+        $stmt->bind_result($screen, $q_type, $q_id);
+
+        while ($stmt->fetch()) {
+          if ($q_type != 'info') {    // Do not count information blocks.
+            $screen_data[$screen][] = array($q_type, $q_id);
+          }
+        }
+        $stmt->free_result();
+        $stmt->close();
+
+        return $screen_data;
+    }
+
+    /*
+     * Load any Reference Material into an array.
+     * @return array       - Array of all reference material relevant to the current paper.
+     */
+    public function load_reference_materials() {
+        $paperID = $this->get_property_id();
+        $reference_materials = array();
+        $ref_no = 0;
+        $stmt = $this->db->prepare("SELECT title, content, width FROM (reference_material, reference_papers) WHERE reference_material.id = reference_papers.refID AND paperID = ?");
+        $stmt->bind_param('i', $paperID);
+        $stmt->execute();
+        $stmt->bind_result($reference_title, $reference_material, $reference_width);
+        while ($stmt->fetch()) {
+            $reference_materials[$ref_no]['title'] = $reference_title;
+            $reference_materials[$ref_no]['material'] = $reference_material;
+            $reference_materials[$ref_no]['width'] = $reference_width;
+            $ref_no++;
+        }
+        $stmt->close();
+        return $reference_materials;
+    }
+
+    /*
+     * Looks through and returns the largest width for a set of reference materials.
+     * @param array $reference_materials - Array of reference materials to check.
+     * @return int he maximum width of any reference material for the current paper.
+     */
+    public function get_max_reference_width($reference_materials) {
+      $max_ref_width = 0;
+      foreach ($reference_materials as $reference_material) {
+          if ($reference_material['width'] > $max_ref_width) {
+              $max_ref_width = $reference_material['width'];
+          }
+      }
+        return $max_ref_width;
+    }
 }
