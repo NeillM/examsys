@@ -155,7 +155,6 @@ $(document).ready(function(){
   $('#jumpscreen').change(function (event) {
     $('#button_pressed').val('jumpscreen');
     $('#qForm').attr('action',"start.php?id=" + el.dataset.pid + "&dont_record=true");
-    submitType = 'userSubmit';
     return checkSubmit(event);
   });
 
@@ -394,7 +393,6 @@ function checkSubmit (event) {
     tinyMCE.triggerSave();
   }
 
-  submitType = 'userSubmit';
   if (event === null) {
     $('#button_pressed').attr('value',event.target.id);
   }
@@ -525,7 +523,7 @@ function ajaxSave (ans_changed, submitType) {
       if (this.retry()) {
         return;
       } else  {
-        saveFail('fail', this.url, '');
+        saveFail('fail', this.url, '', submitType);
         return;
       }
     },
@@ -536,13 +534,13 @@ function ajaxSave (ans_changed, submitType) {
         } else {
           // Status is the response code and errorThrown is the HTTP response text.
           if (errorThrown !== '') {
-              saveFail(textStatus + ': ' + xhr.status, this.url, errorThrown);
+              saveFail(textStatus + ': ' + xhr.status, this.url, errorThrown, submitType);
               return;
           }
         }
       }
       // Just use the xhr status.
-      saveFail(textStatus + ': ' + xhr.status, this.url, '');
+      saveFail(textStatus + ': ' + xhr.status, this.url, '', submitType);
       return;
     },
     success: function (ret_data, textStatus, jqXHR) {
@@ -550,7 +548,7 @@ function ajaxSave (ans_changed, submitType) {
         $('#save_failed').val('');
         //Cache the form data to look for changes on next auto save
         last_saved_user_answers = this.data;
-        saveSuccess();
+        saveSuccess(submitType);
         return;
       }
       if (this.retry()) {
@@ -560,7 +558,7 @@ function ajaxSave (ans_changed, submitType) {
         // red_data can be ERROR, a random generated number or a html page.
         if (ret_data === 'ERROR' || (!isNaN(parseFloat(ret_data)) && isFinite(ret_data))) {
           // record the returned random number or ERROR.
-          saveFail('record_marks', this.url, ret_data);
+          saveFail('record_marks', this.url, ret_data, submitType);
         } else {
             // Strip out the title of the html as thats is all we are interested in.
             htmlstart = ret_data.indexOf("<title>") + 7;
@@ -569,7 +567,7 @@ function ajaxSave (ans_changed, submitType) {
             if (htmltitle === '') {
                 htmltitle = 'html response';
             }
-            saveFail('record_marks', this.url, htmltitle);
+            saveFail('record_marks', this.url, htmltitle, submitType);
         }
         return;
       }
@@ -593,7 +591,7 @@ function ajaxSave (ans_changed, submitType) {
   return;
 }
 
-function saveSuccess () {
+function saveSuccess (submitType) {
   // Re-register the autosave timer ?>
   startAutoSave();
   if (submitType === 'userSubmit') {
@@ -607,7 +605,7 @@ function saveSuccess () {
   }
 }
 
-function saveFail (textStatus, url, ret_data) {
+function saveFail (textStatus, url, ret_data, submitType) {
   // Re-register the autosave timer
   startAutoSave();
 
