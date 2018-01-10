@@ -134,6 +134,8 @@ function multimatchingCheck(questionid, options_total, selectable) {
 }
 
 $(document).ready(function(){
+  generatePaperCss();
+
   var el = document.getElementById('paper');
 
   $('#previous').click(function() {
@@ -300,6 +302,7 @@ function changeRef (refID) {
 function resizeReference () {
   winH = $(window).height();
   var el = document.getElementById('paper');
+  var elcss = document.getElementById('css');
   refcount = el.dataset.refcount;
   if (refcount > 0) {
     $subtract = (31 * refcount) + 11;
@@ -308,6 +311,10 @@ function resizeReference () {
     }
     var mainWidth = $('body').outerWidth() - $('#framecontent0').outerWidth(true);
     $('#maincontent').width(mainWidth);
+    $('#maincontent').css('position', 'fixed');
+    $('#maincontent').css('right', elcss.dataset.max_ref_width + 1);
+    $('.framecontent').width(elcss.dataset.max_ref_width - 12);
+    $('.refhead').width(elcss.dataset.max_ref_width - 12);
   }
 }
 
@@ -625,4 +632,38 @@ function saveFail (textStatus, url, ret_data, submitType) {
   submitted = false;
 
   return false;
+}
+
+function generatePaperCss() {
+  var el = document.getElementById('css');
+  if (el.dataset.special_needs && el.dataset.bgcolor !== '#FFFFFF' && el.dataset.bgcolor !== 'white') {
+    $('select,input').css('background-color', el.dataset.bgcolor);
+    $('select,input').css('color', el.dataset.fgcolor);
+    $('select,input').css('font-family', el.dataset.font + ",sans-serif");
+  }
+  if ((el.dataset.bgcolor !== '#FFFFFF' && el.dataset.bgcolor !== 'white') || (el.dataset.fgcolor !== '#000000' && el.dataset.fgcolor !== 'black') || el.dataset.textsize !== 90) {
+    $('body').css('background-color', el.dataset.bgcolor);
+    $('body').css('color', el.dataset.fgcolor);
+    $('body').css('font-size', el.dataset.textsize + "%");
+  }
+  if (el.dataset.font !== 'Arial') {
+    $('body').css('font-family', el.dataset.font + "',sans-serif");
+    $('pre').css('font-family', el.dataset.font + "',sans-serif");
+  }
+  if (el.dataset.themecolor !== '#316AC5') {
+    $('.theme').css('color', el.dataset.themecolor);
+  }
+  if (el.dataset.marks_color  !== '#808080') {
+    $('.mk').css('color', el.dataset.marks_color);
+  }
+  if (el.dataset.fgcolor !== '#000000' && el.dataset.fgcolor !== 'black') {
+    $('.act').css('color', el.dataset.fgcolor);
+  }
+  if (el.dataset.unanswered_color !== '#FFC0C0') {
+    $('.unans').css('background-color', el.dataset.unanswered_color);
+    $('.scr_un').css('background-color', el.dataset.unanswered_color);
+  }
+  if (el.dataset.dismiss_color !== '#A5A5A5') {
+    $('.inact').css('color', el.dataset.dismiss_color );
+  }
 }

@@ -322,47 +322,6 @@ if ($propertyObj->get_paper_type() == '3') {
 } else {
   echo "<title>" . $string['assessment'] . "</title>\n";
 }
-
-$css = '';
-if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF' and $bgcolor != 'white') {
-  $css .= "select,input{background-color:$bgcolor;color:$fgcolor;font-family:$font,sans-serif}\n";
-}
-if (($bgcolor != '#FFFFFF' and $bgcolor != 'white') or ($fgcolor != '#000000' and $fgcolor != 'black') or $textsize != 90) {
-  $css .= "body {background-color:$bgcolor;color:$fgcolor;font-size:$textsize%}\n";
-}
-if ($font != 'Arial') {
-  if (strpos($font,' ') === false) {
-    $css .= "body {font-family:$font,sans-serif}\n";
-    $css .= "pre {font-family:$font,sans-serif}\n";
-  } else {
-    $css .= "body {font-family:'$font',sans-serif}\n";
-    $css .= "pre {font-family:'$font',sans-serif}\n";
-  }
-}
-if ($themecolor != '#316AC5') {
-  $css .= ".theme {color:$themecolor}\n";
-}
-if ($marks_color != '#808080') {
-  $css .= ".mk {color:$marks_color}\n";
-}
-if ($fgcolor != '#000000' and $fgcolor != 'black') {
-  $css .= ".act {color:$fgcolor}\n";
-}
-if ($unanswered_color != '#FFC0C0') {
-  $css .= ".unans {background-color:$unanswered_color}\n";
-  $css .= ".scr_un {background-color:$unanswered_color}\n";
-}
-if ($dismiss_color != '#A5A5A5') {
-  $css .= ".inact {color:$dismiss_color}";
-}
-if (count($reference_materials) > 0) {
-  $css .= "#maincontent {position:fixed; right:" . ($max_ref_width + 1) . "px}\n";
-  $css .= ".framecontent {width:" . ($max_ref_width - 12) . "px}\n";
-  $css .= ".refhead {width:" . ($max_ref_width - 12) . "px;}\n";
-}
-if ($css != '') {
-  echo "<style type=\"text/css\">\n$css\n</style>\n";
-}
 ?>
 
 <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
@@ -850,6 +809,19 @@ if($propertyObj->get_calculator()) {
        $backofffactor = $configObject->get_setting('core', 'paper_autosave_backoff_factor');
        echo ceil((($retrylimit * $backofffactor * $settimeout) + $settimeout + 5)) * 1000; ?>"
      data-saveretry="<?php echo $retrylimit; ?>"
+     >
+</div>
+<div id="css" 
+     data-bgcolor="<?php echo $bgcolor; ?>"
+     data-fgcolor="<?php echo $fgcolor; ?>"
+     data-font="<?php echo $font; ?>"
+     data-textsize="<?php echo $textsize; ?>"
+     data-unanswered_color="<?php echo $unanswered_color; ?>"
+     data-themecolor="<?php echo $themecolor; ?>"
+     data-marks_color="<?php echo $marks_color; ?>"
+     data-dismiss_color="<?php echo $dismiss_color; ?>"
+     data-max_ref_width="<?php echo $max_ref_width; ?>"
+     data-special_needs="<?php echo $userObject->is_special_needs(); ?>"
      >
 </div>
 <?php
