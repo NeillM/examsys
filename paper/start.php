@@ -674,6 +674,5 @@ if ($unanswered) {
   echo "  $('#unansweredkey').show();\n";
   echo "</script>\n";
 }
-?>
-</body>
-</html>
+
+$render->render(array(), array(), 'footer.html');
