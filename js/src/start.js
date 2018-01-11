@@ -84,7 +84,7 @@ function MRQ(questionid, part_id, options_total, selectable) {
     }
   }
   if (checked_total > selectable) {
-		alert(lang['msgselectable1'] + ' ' + selectable + ' ' + lang['msgselectable2']);
+		alert(lang_string['msgselectable1'] + ' ' + selectable + ' ' + lang_string['msgselectable2']);
 		$("#q" + questionid + "_" + part_id).prop("checked", false);
   }
 }
@@ -106,7 +106,7 @@ function rankCheck() {
     if(loopSel != '0' && loopSel != 'u' && loopSel == sel) count++;
   });
   if (count > 1) {
-    info_dialog(lang['msgselectable3'] + ' ' + sel  + lang['msgselectable4']);
+    info_dialog(lang_string['msgselectable3'] + ' ' + sel  + lang_string['msgselectable4']);
     $(this).val('u');
   }
 }
@@ -120,7 +120,7 @@ function multimatchingCheck(questionid, options_total, selectable) {
   }
   tmp_count = 0;
   if (checked_total > selectable) {
-    alert(lang['msgselectable1'] + ' ' + selectable + ' ' + lang['msgselectable2']);
+    alert(lang_string['msgselectable1'] + ' ' + selectable + ' ' + lang_string['msgselectable2']);
 	
     for (i=0; i<options_total; i++) {
       if (document.getElementById(questionid).options[i].selected == 1) {
@@ -137,6 +137,26 @@ $(document).ready(function(){
   generatePaperCss();
 
   var el = document.getElementById('paper');
+  var el2 = document.getElementById('user');
+
+  if (el.dataset.timed) {
+    StartTimer(el2.dataset.remaining_time, true);
+  } else {
+    StartClock();
+  }
+
+  if (el2.dataset.student) {
+    $('body').on('contextmenu', function(){
+      return false;
+    });
+    $('body').on('close', function(){
+      KillClock();
+    });
+  } else {
+    $('body').on('unload', function(){
+      KillClock();
+    });
+  }
 
   $('#previous').click(function() {
     $('#button_pressed').val('previous');
@@ -334,15 +354,15 @@ function confirmSubmitPreview (event) {
 
 function confirmSubmitLinear (event) {
   if ($('#button_pressed').val() === 'finish') {
-    showDialog(lang['javacheck2']);
+    showDialog(lang_string['javacheck2']);
   } else {
-    var msg = lang['javacheck1'];
+    var msg = lang_string['javacheck1'];
     if ($('.ecalc-answer').length > 0) {
       var ecalcQuestions = [];
       $('.ecalc-answer').each(function(){
         ecalcQuestions[ecalcQuestions.length] = this.id.substring(1);
       });
-      msg = lang['javacheck3'].replace('[X]', ecalcQuestions.join());
+      msg = lang_string['javacheck3'].replace('[X]', ecalcQuestions.join());
     }
     showDialog(msg);
   }
@@ -360,7 +380,7 @@ function confirmSubmitBiDirectional (event) {
     return false;
   }
   if ($('#button_pressed').val() === 'finish') {
-    showDialog(lang['javacheck2']);
+    showDialog(lang_string['javacheck2']);
     $("#dialog_ok").click(function(event) {
       $('body').css('cursor','wait');
       submitted = true;
@@ -376,7 +396,7 @@ function confirmSubmitBiDirectional (event) {
     });
 
     if (ecalcQuestions.length > 0) {
-      var msg = lang['answerrequired'] + '<br/><br/><strong>' + lang['answerrequired_confirm'] + '</strong>'.replace('[X]', ecalcQuestions.join());
+      var msg = lang_string['answerrequired'] + '<br/><br/><strong>' + lang_string['answerrequired_confirm'] + '</strong>'.replace('[X]', ecalcQuestions.join());
       showEnhancedcalcWarning(msg);
       $("#enhancedcalc_warning_ok").click(function(event) {
         submitted = true;
@@ -461,7 +481,7 @@ function forceSave () {
   var el = document.getElementById('paper');
   stopAutoSave();
   ajaxSave(1, 'forcedSubmit');
-  info_dialog(lang['forcesave']);
+  info_dialog(lang_string['forcesave']);
   $('#qForm').attr('action',"finish.php?id=" + el.dataset.pid + el.dataset.urlmod + "&dont_record=true");
   $('#qForm').submit();
 }

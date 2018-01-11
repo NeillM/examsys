@@ -256,55 +256,57 @@ $reference_materials = $propertyObj->load_reference_materials();
 $max_ref_width = $propertyObj->get_max_reference_width($reference_materials);
 
 require '../config/start.inc';
-echo "<!DOCTYPE html>\n<html>\n<head>\n";
 
 $url_mod = ($is_question_preview_mode) ? '&q_id=' . $get_qid . '&qNo=' . $q_number : '';
-?>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-<meta http-equiv="pragma" content="no-cache" />
-<link rel="stylesheet" type="text/css" href="../css/body.css" />
-<link rel="stylesheet" type="text/css" href="../css/start.css" />
-<?php
+
+$render = new render($configObject);
+$headerdata = array(
+  'css' => array(
+    '/css/start.css',
+  ),
+  'scripts' => array(
+    '/js/jquery-1.11.1.min.js',
+    '/js/jquery.validate.min.js',
+    '/js/validation/jquery.paper.enhancedcalc.min.js',
+    '/js/start.min.js',
+  ),
+  'metadata' => array(
+    'pragma' => 'no-cache',
+  ),
+);
 if ($propertyObj->get_paper_type() == '3') {
-  echo "<title>" . $string['survey'] . "</title>\n";
+  $lang['title'] = $string['survey'];
 } else {
-  echo "<title>" . $string['assessment'] . "</title>\n";
+ $lang['title'] = $string['assessment'];
 }
-?>
-
-<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-<script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-<script type="text/javascript" src="../js/validation/jquery.paper.enhancedcalc.min.js"></script>
-
-<?php if ($propertyObj->get_latex_needed() == 1) : ?>
-<script type="text/javascript" src="../js/jquery-migrate-1.2.1.min.js"></script>
-<script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
-<?php endif; ?>
-
-<?php
-  if (Paper_utils::need_interactiveQ($screen_data, $current_screen, $mysqli)) {
-    $render = new render($configObject);
-    $render->render_html5_js(json_encode($jstring));
-  }
-
-  echo $configObject->get('cfg_js_root');
+if (Paper_utils::need_interactiveQ($screen_data, $current_screen, $mysqli)) {
+  $headerdata['scripts'][] = '/js/html5.images.min.js';
+  $headerdata['scripts'][] = '/js/qsharedf.js';
+  $headerdata['scripts'][] = '/js/qlabelling.js';
+  $headerdata['scripts'][] = '/js/qhotspot.js';
+  $headerdata['scripts'][] = '/js/qarea.js';
+}
+if ($propertyObj->get_latex_needed() == 1) {
+  $headerdata['scripts'][] = '/js/jquery-migrate-1.2.1.min.js';
+  $headerdata['scripts'][] = '/tools/mee/mee/js/mee_src.js';
+}
+if($configObject->get_setting('core', 'paper_mathjax')) {
+  $headerdata['scripts'][] = '/js/mathjax-config.min.js';
+  $headerdata['scripts'][] = '/node_modules/mathjax/MathJax.js?config=TeX-MML-AM_HTMLorMML';
+}
+if($propertyObj->get_calculator()) {
+  $headerdata['scripts'][] = '/js/jquery-ui-1.10.4.min.js';
+  $headerdata['scripts'][] = '/js/jcalc98.min.js';
+  $headerdata['scripts'][] = '/js/jcalc98uon.min.js';
+  $headerdata['css'][] = '/css/jcalc98.css';
+}
+$render->render($headerdata, $lang, 'header.html');
 ?>
 
 <script>
-  var lang = <?php echo json_encode($jstring); ?>;
+  var lang_string = <?php echo json_encode($jstring); ?>;
 </script>
-<script type="text/javascript" src="../js/start.min.js"></script>
-<?php
-$render = new render($configObject);
-if($configObject->get_setting('core', 'paper_mathjax')) {
-  $render->render(null, null, 'mathjax.html');
-}
-if($propertyObj->get_calculator()) {
-  $render->render(null, null, 'jcalc98_header.html');
-}
-?>
-</head>
+
 <?php
 
   /*
@@ -354,12 +356,11 @@ if($propertyObj->get_calculator()) {
   $incomplete_screens = get_unanswered_screens($no_screens, $screen_data, $user_answers, $questions_array, $paperID, $mysqli);
 
   // BP If the duration is set then show timer
-
-  $method = 'StartClock()';
   $timer_label = '';
-
+  $timed = false;
   $special_needs_percentage = $userObject->get_special_needs_percentage();
   if ($allow_timing and $propertyObj->get_exam_duration() != null) {
+    $timed = true;
     // Summative type. Time is only active in live.
     if (($propertyObj->get_paper_type() == '2' or $original_paper_type == 2) and $is_preview_mode === false) {
 
@@ -372,7 +373,6 @@ if($propertyObj->get_calculator()) {
       if ($summative_exam_session_started !== false) {
         $summative_timer  = new SummativeTimer($log_extra_time);
         $remaining_time   = $summative_timer->calculate_remaining_time_secs();
-        $method           = 'StartTimer(' . $remaining_time . ', true)';
         $timer_label      = $string['timeremaining'] . ':';
       }
 
@@ -386,16 +386,10 @@ if($propertyObj->get_calculator()) {
       }
 
       $remaining_time = $timer->calculate_remaining_time();
-      $method         = 'StartTimer(' . $remaining_time . ', true)';
       $timer_label    = $string['timeremaining'] . ':';
     }
   }
 
-  if ($userObject->has_role('Student')) {
-    echo '<body oncontextmenu="return false;"onload="' . $method . ';" onclose="KillClock();">';
-  } else {
-    echo '<body onload="' . $method . ';" onunload="KillClock();">';
-  }
   if($propertyObj->get_calculator()) {
     $render->render(null, null, 'jcalc98.html');
   }
@@ -622,7 +616,7 @@ if($propertyObj->get_calculator()) {
     <div id="info_submit_dialog_buttons"><input type="button" name="info_dialog_ok" id="info_dialog_ok" class="ok" value="OK" /></div>
   </div>
 </div>
-<div id="paper" 
+<div id="paper"
      data-pid="<?php echo $id; ?>"
      data-urlmod="<?php echo html_entity_decode($url_mod); ?>"
      data-submittype="<?php echo $submitype; ?>"
@@ -637,9 +631,10 @@ if($propertyObj->get_calculator()) {
        $backofffactor = $configObject->get_setting('core', 'paper_autosave_backoff_factor');
        echo ceil((($retrylimit * $backofffactor * $settimeout) + $settimeout + 5)) * 1000; ?>"
      data-saveretry="<?php echo $retrylimit; ?>"
+     data-timed="<?php echo $timed; ?>"
      >
 </div>
-<div id="css" 
+<div id="css"
      data-bgcolor="<?php echo $bgcolor; ?>"
      data-fgcolor="<?php echo $fgcolor; ?>"
      data-font="<?php echo $font; ?>"
@@ -650,6 +645,11 @@ if($propertyObj->get_calculator()) {
      data-dismiss_color="<?php echo $dismiss_color; ?>"
      data-max_ref_width="<?php echo $max_ref_width; ?>"
      data-special_needs="<?php echo $userObject->is_special_needs(); ?>"
+     >
+</div>
+<div id="user"
+     data-student="<?php echo $userObject->has_role('Student'); ?>"
+     data-remaining_time="<?php echo $remaining_time; ?>"
      >
 </div>
 <?php
