@@ -2125,12 +2125,142 @@ class PaperProperties {
      * @return int he maximum width of any reference material for the current paper.
      */
     public function get_max_reference_width($reference_materials) {
-      $max_ref_width = 0;
-      foreach ($reference_materials as $reference_material) {
-          if ($reference_material['width'] > $max_ref_width) {
-              $max_ref_width = $reference_material['width'];
-          }
-      }
+        $max_ref_width = 0;
+        foreach ($reference_materials as $reference_material) {
+            if ($reference_material['width'] > $max_ref_width) {
+                $max_ref_width = $reference_material['width'];
+            }
+       }
         return $max_ref_width;
+    }
+
+    /**
+     * 
+     * @param boolean $is_question_preview_mode is the paper being previewed
+     * @param integer $get_qid question id
+     * @return array
+     */
+    public function build_paper($is_question_preview_mode, $get_qid) {
+        $paperID = $this->get_property_id();
+        if ($is_question_preview_mode) {
+          $question_data = $this->db->prepare("SELECT
+                                                1,
+                                                q_type,
+                                                q_id,
+                                                score_method,
+                                                display_method,
+                                                settings,
+                                                marks_correct,
+                                                marks_incorrect,
+                                                marks_partial,
+                                                theme,
+                                                scenario,
+                                                leadin,
+                                                correct,
+                                                REPLACE(option_text,'\t','') AS option_text,
+                                                q_media,
+                                                q_media_width,
+                                                q_media_height,
+                                                o_media,
+                                                o_media_width,
+                                                o_media_height,
+                                                notes,
+                                                display_pos,
+                                                q_option_order
+                                            FROM
+                                                papers, questions LEFT JOIN options ON questions.q_id = options.o_id
+                                            WHERE
+                                              paper = ? AND
+                                              q_id = ? AND
+                                              papers.question = questions.q_id
+                                            ORDER BY
+                                            display_pos,
+                                            id_num");
+          $question_data->bind_param('ii', $paperID, $get_qid);
+        } else {
+          $question_data = $this->db->prepare("SELECT
+                                                  screen,
+                                                  q_type,
+                                                  q_id,
+                                                  score_method,
+                                                  display_method,
+                                                  settings,
+                                                  marks_correct,
+                                                  marks_incorrect,
+                                                  marks_partial,
+                                                  theme,
+                                                  scenario,
+                                                  leadin,
+                                                  correct,
+                                                  REPLACE(option_text,'\t','') AS option_text,
+                                                  q_media,
+                                                  q_media_width,
+                                                  q_media_height,
+                                                  o_media,
+                                                  o_media_width,
+                                                  o_media_height,
+                                                  notes,
+                                                  display_pos,
+                                                  q_option_order
+                                              FROM
+                                                  papers, questions LEFT JOIN options ON questions.q_id = options.o_id
+                                              WHERE
+                                                paper = ? AND
+                                                papers.question = questions.q_id
+                                              ORDER BY
+                                              display_pos,
+                                              id_num");
+          $tmp_pid = $paperID;
+          $question_data->bind_param('i', $tmp_pid);
+        }
+        $question_data->execute();
+        $question_data->store_result();
+        $question_data->bind_result($screen, $q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $display_pos, $q_option_order);
+
+        $q_no = 0;
+        $assigned_number = 0;
+        $no_on_screen = 0;
+        $old_screen = 0;
+        // Build the questions_array
+        $tmp_questions_array = array();
+        while ($question_data->fetch()) {
+          if ($q_no == 0 or $tmp_questions_array[$q_no]['q_id'] != $q_id or $tmp_questions_array[$q_no]['display_pos'] != $display_pos) {
+            $q_no++;
+            if ($screen != $old_screen) {
+              $no_on_screen = 0;
+            }
+            if ($q_type != 'info') {
+              $assigned_number++;
+              $no_on_screen++;
+            }
+            if (!is_null($q_number)) {
+              $tmp_questions_array[$q_no]['assigned_number'] = $q_number;   // Preview mode, use the number that is passed in.
+            } else {
+              $tmp_questions_array[$q_no]['assigned_number'] = $assigned_number;
+            }
+            $tmp_questions_array[$q_no]['no_on_screen'] = $no_on_screen;
+            $tmp_questions_array[$q_no]['screen'] = $screen;
+            $tmp_questions_array[$q_no]['theme'] = trim($theme);
+            $tmp_questions_array[$q_no]['scenario'] = trim($scenario);
+            $tmp_questions_array[$q_no]['leadin'] = trim($leadin);
+            $tmp_questions_array[$q_no]['notes'] = trim($notes);
+            $tmp_questions_array[$q_no]['q_type'] = $q_type;
+            $tmp_questions_array[$q_no]['q_id'] = $q_id;
+            $tmp_questions_array[$q_no]['display_pos'] = $display_pos;
+            $tmp_questions_array[$q_no]['score_method'] = $score_method;
+            $tmp_questions_array[$q_no]['display_method'] = $display_method;
+            $tmp_questions_array[$q_no]['settings'] = $settings;
+            $tmp_questions_array[$q_no]['q_media'] = $q_media;
+            $tmp_questions_array[$q_no]['q_media_width'] = $q_media_width;
+            $tmp_questions_array[$q_no]['q_media_height'] = $q_media_height;
+            $tmp_questions_array[$q_no]['q_option_order'] = $q_option_order;
+            $tmp_questions_array[$q_no]['dismiss'] = '';
+            $used_questions[$q_id] = 1;
+          }
+          $tmp_questions_array[$q_no]['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
+          $old_screen = $screen;
+        }
+        $question_data->close();
+        return $tmp_questions_array;
     }
 }

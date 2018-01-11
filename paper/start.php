@@ -234,64 +234,15 @@ if (!$is_question_preview_mode) {
 *       records could exist in 2 logs the original paper type log and log_late
 *
 */
-$user_answers = array();
-$previous_duration = 0;
-$screen_pre_submitted = 0;
-
-// Get users previous answers from the log.
-if ($propertyObj->get_paper_type() == '_late') {
-  // If we are after the deadline check for answers in original_paper_type_log - these will be over written below by new answers in log_late below
-  $log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$original_paper_type WHERE metadataID = ?");
-  $log_data->bind_param('i', $metadataID);
-  $log_data->execute();
-  $log_data->store_result();
-  $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
-  $user_answers = array();
-  $used_questions[$log_q_id] = $log_q_id;
-  while ($log_data->fetch()) {
-    $user_answers[$log_screen][$log_q_id] = $log_user_answer;
-    $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
-    $user_order[$log_screen][$log_q_id] = $option_order;
-    // Bump up the current screen if restarting
-    if ($do_restart and $log_screen > $current_screen) {
-      $current_screen = $log_screen;
-    }
-    if ($log_screen == $current_screen) {
-      $previous_duration = $log_duration;
-      $screen_pre_submitted = 1;
-    }
-  }
-  $log_data->close();
-}
-// Get user answers from whichever log is pointed to by log$paper_type
-if ($propertyObj->get_paper_type() == '5') {
-  // There is no user answer in Log5 (offline papers) so put NULL instead.
-	$log_data = $mysqli->prepare("SELECT id, q_id, NULL AS user_answer, NULL AS duration, NULL AS screen, NULL AS dismiss, NULL AS option_order FROM log" . $propertyObj->get_paper_type() . " WHERE metadataID = ? ORDER BY id");
-} else {
-	$log_data = $mysqli->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log" . $propertyObj->get_paper_type() . " WHERE metadataID = ? ORDER BY id");
-}
-$log_data->bind_param('i', $metadataID);
-$log_data->execute();
-$log_data->store_result();
-$log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
-if ($log_data->num_rows > 0) {
-  while ($log_data->fetch()) {
-    $user_answers[$log_screen][$log_q_id] = $log_user_answer;
-    $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
-    $user_order[$log_screen][$log_q_id] = $option_order;
-    $used_questions[$log_q_id] = $log_q_id;
-
-    // Bump up the current screen if restarting
-    if ($do_restart and $log_screen > $current_screen) {
-      $current_screen = $log_screen;
-    }
-    if ($log_screen == $current_screen) {
-      $previous_duration = $log_duration;
-      $screen_pre_submitted = 1;
-    }
-  }
-}
-$log_data->close();
+$log = new log();
+$l = $log->get_previous_answers($original_paper_type, $propertyObj->get_paper_type(), $metadataID, $do_restart, $current_screen);
+$user_answers = $l['user_answers'];
+$user_dismiss = $l['user_dismiss'];
+$user_order = $l['user_order'];
+$used_questions[$l['used_question']] = $l['used_question'];
+$previous_duration = $l['previous_duration'];
+$screen_pre_submitted = $l['screen_pre_submitted'];
+$current_screen = $l['current_screen'];
 
 if ($propertyObj->get_bidirectional() == 0 and $do_restart) {   // Linear
   $current_screen = $log_metadata->get_highest_screen() + 1;
@@ -371,126 +322,7 @@ if($propertyObj->get_calculator()) {
   $marks = 0;
   $old_theme = '';
   $previous_q_type = '';
-  if ($is_question_preview_mode) {
-    $question_data = $mysqli->prepare("SELECT
-                                          1,
-                                          q_type,
-                                          q_id,
-                                          score_method,
-                                          display_method,
-                                          settings,
-                                          marks_correct,
-                                          marks_incorrect,
-                                          marks_partial,
-                                          theme,
-                                          scenario,
-                                          leadin,
-                                          correct,
-                                          REPLACE(option_text,'\t','') AS option_text,
-                                          q_media,
-                                          q_media_width,
-                                          q_media_height,
-                                          o_media,
-                                          o_media_width,
-                                          o_media_height,
-                                          notes,
-                                          display_pos,
-                                          q_option_order
-                                      FROM
-                                          papers, questions LEFT JOIN options ON questions.q_id = options.o_id
-                                      WHERE
-                                        paper = ? AND
-                                        q_id = ? AND
-                                        papers.question = questions.q_id
-                                      ORDER BY
-                                      display_pos,
-                                      id_num");
-    $question_data->bind_param('ii', $paperID, $get_qid);
-  } else {
-    $question_data = $mysqli->prepare("SELECT
-                                            screen,
-                                            q_type,
-                                            q_id,
-                                            score_method,
-                                            display_method,
-                                            settings,
-                                            marks_correct,
-                                            marks_incorrect,
-                                            marks_partial,
-                                            theme,
-                                            scenario,
-                                            leadin,
-                                            correct,
-                                            REPLACE(option_text,'\t','') AS option_text,
-                                            q_media,
-                                            q_media_width,
-                                            q_media_height,
-                                            o_media,
-                                            o_media_width,
-                                            o_media_height,
-                                            notes,
-                                            display_pos,
-                                            q_option_order
-                                        FROM
-                                            papers, questions LEFT JOIN options ON questions.q_id = options.o_id
-                                        WHERE
-                                          paper = ? AND
-                                          papers.question = questions.q_id
-                                        ORDER BY
-                                        display_pos,
-                                        id_num");
-    $tmp_pid = $paperID;
-    $question_data->bind_param('i', $tmp_pid);
-  }
-  $question_data->execute();
-  $question_data->store_result();
-  $question_data->bind_result($screen, $q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes, $display_pos, $q_option_order);
-  $num_rows = $question_data->num_rows;
-
-  $q_no = 0;
-  $assigned_number = 0;
-  $no_on_screen = 0;
-  $old_screen = 0;
-  // Build the questions_array
-  $tmp_questions_array = array();
-  while ($question_data->fetch()) {
-    if ($q_no == 0 or $tmp_questions_array[$q_no]['q_id'] != $q_id or $tmp_questions_array[$q_no]['display_pos'] != $display_pos) {
-      $q_no++;
-      if ($screen != $old_screen) {
-        $no_on_screen = 0;
-      }
-      if ($q_type != 'info') {
-        $assigned_number++;
-        $no_on_screen++;
-      }
-      if (!is_null($q_number)) {
-        $tmp_questions_array[$q_no]['assigned_number'] = $q_number;   // Preview mode, use the number that is passed in.
-      } else {
-        $tmp_questions_array[$q_no]['assigned_number'] = $assigned_number;
-      }
-      $tmp_questions_array[$q_no]['no_on_screen'] = $no_on_screen;
-      $tmp_questions_array[$q_no]['screen'] = $screen;
-      $tmp_questions_array[$q_no]['theme'] = trim($theme);
-      $tmp_questions_array[$q_no]['scenario'] = trim($scenario);
-      $tmp_questions_array[$q_no]['leadin'] = trim($leadin);
-      $tmp_questions_array[$q_no]['notes'] = trim($notes);
-      $tmp_questions_array[$q_no]['q_type'] = $q_type;
-      $tmp_questions_array[$q_no]['q_id'] = $q_id;
-      $tmp_questions_array[$q_no]['display_pos'] = $display_pos;
-      $tmp_questions_array[$q_no]['score_method'] = $score_method;
-      $tmp_questions_array[$q_no]['display_method'] = $display_method;
-      $tmp_questions_array[$q_no]['settings'] = $settings;
-      $tmp_questions_array[$q_no]['q_media'] = $q_media;
-      $tmp_questions_array[$q_no]['q_media_width'] = $q_media_width;
-      $tmp_questions_array[$q_no]['q_media_height'] = $q_media_height;
-      $tmp_questions_array[$q_no]['q_option_order'] = $q_option_order;
-      $tmp_questions_array[$q_no]['dismiss'] = '';
-      $used_questions[$q_id] = 1;
-    }
-    $tmp_questions_array[$q_no]['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
-    $old_screen = $screen;
-  }
-  $question_data->close();
+  $tmp_questions_array = $propertyObj->build_paper($is_question_preview_mode, $get_qid);
 
   // Look for random questions and overwrite as needed
   $questions_array = array();
@@ -725,9 +557,7 @@ if($propertyObj->get_calculator()) {
   echo '<div id="saveError"><img src="' . $configObject->get('cfg_root_path') . '/artwork/no_save.png" width="60" height="60" alt="Warning" /> <div><span style="color:#C42828; font-weight:bold">' .  $string['savefailed'] . '</span><br />' . $string['tryagain'] . '</div></div>';
 
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and $is_question_preview_mode) {
-    if ($propertyObj->get_paper_type() != '5') { // Do not allow saving for offline papers.
-      echo "<input id=\"finish\" type=\"button\" value=\"" . $string['finish'] . "\" />";
-    }
+    echo "<input id=\"finish\" type=\"button\" value=\"" . $string['finish'] . "\" />";
   } else {
     echo $bottom_html;
     ?>
