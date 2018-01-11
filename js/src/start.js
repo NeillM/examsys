@@ -279,7 +279,6 @@ function changeRef (refID) {
   $('#refpane').val(refID);
   var el = document.getElementById('paper');
   refcount = el.dataset.refcount;
-  winH = $(window).height();
   resizeReference();
   var flag = 0;
   for (i=0; i< refcount; i++) {
@@ -665,5 +664,12 @@ function generatePaperCss() {
   }
   if (el.dataset.dismiss_color !== '#A5A5A5') {
     $('.inact').css('color', el.dataset.dismiss_color );
+  }
+  var el2 = document.getElementById('paper');
+  if (el2.dataset.refcount > 0) {
+    var mainWidth = $('body').outerWidth() - $('#framecontent0').outerWidth(true);
+    $('#maincontent').width(mainWidth);
+    $('#maincontent').css('position', 'fixed');
+    $('#maincontent').css('right', el.dataset.max_ref_width + 1);
   }
 }
