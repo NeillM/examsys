@@ -1,0 +1,34 @@
+<div id="maincontent">
+    <form method="post" id="qForm" name="questions" action="{{data.action}}" autocomplete="off">
+{% for number,id in data.hidden %}
+        <input type="hidden" name="q{{number}}_randomID" value="{{id}}" />
+{% endfor %}
+        <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
+{% if data.preview == "true" %}
+            <tr>
+                <td>
+{% else %}
+            <tr>
+                <td valign="top">
+                    <table cellpadding="4" cellspacing="0" border="0" style="width:100%; background-color:#5590CF">
+                        <tr>
+                            <td>
+                                <div class="paper">{{data.papertitle}}</div>
+{% for s in data.screen %}
+                                <div class="{{s.screentype}}" title="{{s.noquestions}} {{s.noquestionsclass}}">
+                                    {{s.pageno}}
+                                </div>
+{% endfor %}
+                                <div style="clear:both"></div>
+{% for s in data.screen %}
+                                <div class="{{s.screentype2}}"></div>
+{% endfor %}
+                            </td>
+                            <td width="160">
+                                <img src="{{data.logopath}}" width="160" height="67" alt="Logo" />
+                            </td>
+                        </tr>
+                    </table>
+{% endif %}
+                    <table cellpadding="0" cellspacing="4" border="0" width="100%" style="table-layout:fixed">
+                        <col width="40"><col>

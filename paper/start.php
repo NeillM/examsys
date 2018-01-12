@@ -326,17 +326,17 @@ $render->render($headerdata, $lang, 'header.html');
 
   // Look for random questions and overwrite as needed
   $questions_array = array();
-  $hidden_html = '';
+  $hidden = array();
   foreach ($tmp_questions_array as $question) {
     if ($question['q_type'] == 'random') {
-      $question = Paper_utils::randomQOverwrite($question, $user_answers, $screen_data, $used_questions, $string);
+      $question =  $propertyObj->randomQOverwrite($question, $user_answers, $screen_data, $used_questions, $string);
       if ($current_screen == $question['screen']) {
-        $hidden_html .= "\n<input type=\"hidden\" name=\"q" . $question['no_on_screen'] . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
+        $hidden[$question['no_on_screen']] = $question['q_id'];
       }
     } elseif ($question['q_type'] == 'keyword_based') {
-      $question = Paper_utils::keywordQOverwrite($question, $user_answers, $screen_data, $used_questions, $string);
+      $question = $propertyObj->keywordQOverwrite($question, $user_answers, $screen_data, $used_questions, $string);
       if ($current_screen == $question['screen'] and $question['q_id'] != -1) {
-        $hidden_html .= "\n<input type=\"hidden\" name=\"q" . $question['no_on_screen'] . "_randomID\" value=\"" . $question['q_id'] ."\" />\n";
+        $hidden[$question['no_on_screen']] = $question['q_id'];
       }
     }
     if ($question['q_type'] == 'enhancedcalc') {
@@ -393,31 +393,27 @@ $render->render($headerdata, $lang, 'header.html');
   if($propertyObj->get_calculator()) {
     $render->render(null, null, 'jcalc98.html');
   }
-  echo "<div id=\"maincontent\">\n";
 
   if ($current_screen < $no_screens) {
-    echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $id . $url_mod . "\" autocomplete=\"off\">";
+    $contentdata['action'] = Url::fromGlobals();
   } else {
-    echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"finish.php?id=" . $id . $url_mod . "\" autocomplete=\"off\">";
+    $contentdata['action'] = "/finish.php?id=" . $id . $url_mod;
   }
-  echo $hidden_html;
-  ?>
-    <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
-<?php
+  $contentdata['hidden'] = $hidden;
+  $contentdata['previewmode'] = $is_question_preview_mode;
+
   if (!$is_question_preview_mode) {
-    echo "<tr><td valign=\"top\">\n";
-    echo $top_table_html;
-    echo '<tr><td><div class="paper">' . $propertyObj->get_paper_title() . '</div>';
+    $contentdata['papertitle'] = $propertyObj->get_paper_title();
     $question_offset = 0;
     if ($no_screens > 1) {
       for ($i=1; $i<=$no_screens; $i++) {
         if ($i == $current_screen) {
-          echo '<div class="scr_cur"';
+          $contentdata['screen'][$i]['screentype'] = 'scr_cur';
         } else {
           if ($incomplete_screens[$i] == 1) {
-            echo '<div class="scr_un"';
+          $contentdata['screen'][$i]['screentype'] = 'scr_un';
           } else {
-            echo '<div class="scr_ans"';
+          $contentdata['screen'][$i]['screentype'] = 'scr_ans';
           }
         }
         $no_questions = 0;
@@ -426,12 +422,12 @@ $render->render($headerdata, $lang, 'header.html');
             $no_questions++;
           }
         }
-        if ($no_questions == 1) {
-          echo ' title="' . $no_questions . ' question">';
+        $contentdata['screen'][$i]['noquestions'] = $no_questions;
+        if ($no_questions === 1) {
+          $contentdata['screen'][$i]['noquestionsclass'] = 'question';
         } else {
-          echo ' title="' . $no_questions . ' questions">';
+          $contentdata['screen'][$i]['noquestionsclass'] = 'questions';
         }
-
         if ($i < $current_screen and isset($screen_data[$i])) {
           foreach ($screen_data[$i] as $screen_question) {
             if ($screen_question[0] != 'info' ) {
@@ -439,24 +435,17 @@ $render->render($headerdata, $lang, 'header.html');
             }
           }
         }
-        echo "$i</div>\n";
+        $contentdata['screen'][$i]['pageno'] = $i;
       }
-      echo "<div style=\"clear:both\"></div>\n";
-
-
       for ($i=1; $i<=$no_screens; $i++) {
         if ($i == $current_screen) {
-          echo '<div class="scr_arrow"></div>';
+          $contentdata['screen'][$i]['screentype2'] = 'scr_arrow';
         } else {
-          echo '<div class="scr_spacer"></div>';
+          $contentdata['screen'][$i]['screentype2'] = 'scr_spacer';
         }
       }
-
     }
-    echo '</td>';
-    echo $logo_html;
-  } else {
-    echo '<tr><td>';
+    $contentdata['logopath'] = $logo_path;
   }
 
   $midexam_clarification = $configObject->get_setting('core', 'summative_midexam_clarification');
@@ -472,9 +461,7 @@ $render->render($headerdata, $lang, 'header.html');
     echo $exam_announcementObj->display_student_announcements();
   }
 
-  // Start displaying questions
-  echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
-  echo "<col width=\"40\"><col>\n";
+  $render->render($contentdata, $string, 'paper/content.html');
 
   // Display each question
   foreach ($questions_array as &$question) {
