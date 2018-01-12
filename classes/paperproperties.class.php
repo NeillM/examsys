@@ -2263,4 +2263,234 @@ class PaperProperties {
         $question_data->close();
         return $tmp_questions_array;
     }
+
+    /**
+     * Looks up the source question in a random question block.
+     * @param array $random_q_data 	- Holds question information about the parent random question.
+     * @param array $user_answers 	- Holds a list of user answers by question ID.
+     * @param array $screen_data 		- Holds a list of question types and IDs used on all screens in the paper.
+     * @param array $used_questions - Array of question IDs already used on the paper.
+     * @param array $string   			- Contains language translations.
+     *
+     */
+    public function randomQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_questions, $string) {
+      $selected_q_id = '';
+      $current_screen = $random_q_data['screen'];
+      $q_no = $random_q_data['no_on_screen'];
+
+      if (isset($user_answers[$current_screen])) {
+        // Match user's answers with random question ID.
+        $question_on_screen = array_keys($user_answers[$current_screen]);
+        $selected_q_id = current($question_on_screen);
+        for ($i=1; $i<$q_no; $i++) {
+          $selected_q_id = next($question_on_screen);
+        }
+      }
+
+      if ($selected_q_id == '') {
+        $try = 0;
+        $unique = false;
+        while ($unique == false and $try < 9999) {
+          $selected_q_id = random_utils::generate_random_qid_from_block($random_q_data['q_id'], $this->db);
+          if (!isset($used_questions[$selected_q_id])) $unique = true;
+          $try++;
+        }
+        $used_questions[$selected_q_id] = 1;
+      } else {
+        $unique = true;
+      }
+
+      $question['assigned_number'] = $random_q_data['assigned_number'];
+      $question['no_on_screen'] = $question['display_pos'] = $q_no;
+      $question['screen'] = $random_q_data['screen'];
+
+      $error = false;
+
+      if ($unique) {
+        // Look up selected question and overwrite data.
+        $question_data = $this->db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect,"
+          . " marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width,"
+          . " q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions LEFT JOIN options"
+          . " ON questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num");
+        $question_data->bind_param('i', $selected_q_id);
+        $question_data->execute();
+        $question_data->store_result();
+        $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect,
+          $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media,
+          $o_media_width, $o_media_height, $notes, $q_option_order);
+        if ($question_data->num_rows() > 0) {
+            while ($question_data->fetch()) {
+              if (!isset($question['q_id']) or $question['q_id'] != $q_id) {
+                $question['theme'] = $theme;
+                $question['scenario'] = $scenario;
+                $question['leadin'] = $leadin;
+                $question['notes'] = $notes;
+                $question['q_type'] = $q_type;
+                $question['q_id'] = $q_id;
+                $question['score_method'] = $score_method;
+                $question['display_method'] = $display_method;
+                $question['settings'] = $settings;
+                $question['q_media'] = $q_media;
+                $question['q_media_width'] = $q_media_width;
+                $question['q_media_height'] = $q_media_height;
+                $question['q_option_order'] = $q_option_order;
+                $question['dismiss'] = '';
+              }
+              $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media,
+                  'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct,
+                  'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
+            }
+            // Overwrite the screen data.
+            $screen_no = count($screen_data);
+            for ($i=1; $i<=$screen_no; $i++) {
+              if (isset($screen_data[$i])) {
+                $q_no = count($screen_data[$i]);
+              } else {
+                $q_no = 0;
+              }
+              for ($a=0; $a<$q_no; $a++) {
+                if ($screen_data[$i][$a][1] == $random_q_data['q_id']) {
+                  $screen_data[$i][$a][0] = $q_type;
+                  $screen_data[$i][$a][1] = $q_id;
+                }
+              }
+            }
+        } else {
+            $error = true;
+        }
+
+      } else {
+        $error = true;
+      }
+
+      if ($error) {
+        $question['leadin'] = '<span style="color: #f00;">' . $string['error_random'] . '</span>';
+        $question['q_type'] = 'random';
+        $question['q_id'] = -1;
+        $question['theme'] = $question['scenario'] = $question['notes'] = $question['score_method'] = $question['q_media'] = '';
+        $question['q_media_width'] = $question['q_media_height'] = $question['q_option_order'] = $question['dismiss'] = '';
+        $question['options'] = array();
+      }
+
+      return $question;
+    }
+
+    /**
+     * Looks up the source question in a keyword question block.
+     * @param array $random_q_data 	- Holds question information about the parent random question.
+     * @param array $user_answers 	- Holds a list of user answers by question ID.
+     * @param array $screen_data 		- Holds a list of question types and IDs used on all screens in the paper.
+     * @param array $used_questions - Array of question IDs already used on the paper.
+     * @param array $string   			- Contains language translations.
+     *
+     */
+    public function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_questions, $string) {
+      $selected_q_id = '';
+      $unique = true;
+      $current_screen = $random_q_data['screen'];
+      $q_no = $random_q_data['no_on_screen'];
+
+      if (isset($user_answers[$current_screen])) {
+        // Match user's answers with random question ID.
+        $question_on_screen = array_keys($user_answers[$current_screen]);
+        $selected_q_id = current($question_on_screen);
+        for ($i=1; $i<$q_no; $i++) {
+          $selected_q_id = next($question_on_screen);
+        }
+      }
+
+      if ($selected_q_id == '') {
+        // Get the keyword id.
+        $keyword_id = keyword_utils::get_keywordid_for_question($random_q_data['q_id'], $this->db);
+        // Generate a random question ID from keywords.
+        $question_ids = array();
+        $question_data = $this->db->prepare("SELECT DISTINCT k.q_id FROM keywords_question k, questions q WHERE k.q_id = q.q_id AND"
+          . " k.keywordID = ? AND q.deleted is NULL");
+        $question_data->bind_param('i', $keyword_id);
+        $question_data->execute();
+        $question_data->bind_result($q_id);
+        while ($question_data->fetch()) {
+          $question_ids[] = $q_id;
+        }
+        $question_data->close();
+        shuffle($question_ids);
+
+        $try = 0;
+        $unique = false;
+        while ($unique == false and $try < count($question_ids)) {
+          $selected_q_id = $question_ids[$try];
+          if (!isset($used_questions[$selected_q_id])) $unique = true;
+          $try++;
+        }
+        $used_questions[$selected_q_id] = 1;
+      }
+
+      if ($unique) {
+        // Look up selected question and overwrite the question data.
+        $question_data = $this->db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect,"
+          . " marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width,"
+          . " q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions LEFT JOIN options ON"
+          . " questions.q_id = options.o_id  WHERE q_id = ? ORDER BY id_num");
+        $question_data->bind_param('i', $selected_q_id);
+        $question_data->execute();
+        $question_data->store_result();
+        $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect,
+          $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media,
+          $o_media_width, $o_media_height, $notes, $q_option_order);
+        while ($question_data->fetch()) {
+          if (!isset($question['q_id']) or $question['q_id'] != $q_id) {
+            $question['assigned_number'] = $random_q_data['assigned_number'];
+            $question['no_on_screen'] = $q_no;
+            $question['screen'] = $random_q_data['screen'];
+            $question['theme'] = $theme;
+            $question['scenario'] = $scenario;
+            $question['leadin'] = $leadin;
+            $question['notes'] = $notes;
+            $question['q_type'] = $q_type;
+            $question['q_id'] = $q_id;
+            $question['display_pos'] = $q_no;
+            $question['score_method'] = $score_method;
+            $question['display_method'] = $display_method;
+            $question['settings'] = $settings;
+            $question['q_media'] = $q_media;
+            $question['q_media_width'] = $q_media_width;
+            $question['q_media_height'] = $q_media_height;
+            $question['q_option_order'] = $q_option_order;
+            $question['dismiss'] = '';
+          }
+          $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media,
+              'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct,
+              'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
+        }
+        $question_data->close();
+
+        // Overwrite the screen data.
+        $screen_no = count($screen_data);
+        for ($i=1; $i<=$screen_no; $i++) {
+          if (isset($screen_data[$i])) {
+            $q_no = count($screen_data[$i]);
+          } else {
+            $q_no = 0;
+          }
+          for ($a=0; $a<$q_no; $a++) {
+            if ($screen_data[$i][$a][1] == $random_q_data['q_id']) {
+              $screen_data[$i][$a][0] = $q_type;
+              $screen_data[$i][$a][1] = $q_id;
+            }
+          }
+        }
+      } else {
+        $question['leadin'] = '<span style="color:#C00000">' . $string['error_keywords'] . '</span>';
+        $question['q_type'] = 'keyword_based';
+        $question['q_id'] = -1;
+        $question['theme'] = $question['scenario'] = $question['notes'] = $question['score_method'] = $question['q_media'] = '';
+        $question['q_media_width'] = $question['q_media_height'] = $question['q_option_order'] = $question['dismiss'] = '';
+        $question['options'] = array();
+        $question['screen'] = $random_q_data['screen'];
+        $question['assigned_number'] = $random_q_data['assigned_number'];
+        $question['no_on_screen'] = $question['display_pos'] = $q_no;
+      }
+
+      return $question;
+    }
 }
