@@ -1,0 +1,7 @@
+{% for ref in data.ref %}
+<div class="refhead" id="refhead{{ref.refno}}" onclick="changeRef({{ref.refno}})" style="top:{{ref.top}}px">{{ref.reftitle}}</div>
+<div class="framecontent" id="framecontent{{ref.refno}}" style="top:{{ref.top}}px">{{ref.reftitle}}</div>
+{% endfor %}
+<script>
+  changeRef({{data.refpane}});
+</script>

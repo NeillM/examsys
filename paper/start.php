@@ -580,79 +580,56 @@ $render->render($headerdata, $lang, 'header.html');
 
 </form>
 </div>
-<div id="overlay">
-  <div id="submit_dialog" class="dialogs">
-    <div id="submit_dialog_icon"><img src="../artwork/question_mark_64.png" width="64" height="64" alt="?" /></div><p id="submit_dialog_msg"></p>
-    <div id="submit_dialog_buttons"><input type="button" name="dialog_ok" id="dialog_ok" class="ok" value="OK" /><input type="button" name="dialog_cancel" id="dialog_cancel" class="cancel" value="Cancel" />&nbsp;&nbsp;</div>
-  </div>
-  <div id="enhancedcalc_warning" class="dialogs">
-    <div id="enhancedcalc_warning_icon">
-        <img src="../artwork/question_mark_64.png" width="64" height="64" alt="?" />
-    </div>
-    <p id="enhancedcalc_warning_msg"></p>
-    <div id="enhancedcalc_warning_buttons">
-        <input type="button" name="dialog_cancel" id="enhancedcalc_warning_cancel" value="Go back" />
-        <input type="button" name="dialog_ok" id="enhancedcalc_warning_ok" value="Pass" />
-        &nbsp;&nbsp;
-    </div>
-  </div>
-</div>
-<div id="info_overlay">
-  <div id="info_submit_dialog">
-    <div id="info_submit_dialog_icon"><img src="../artwork/question_mark_64.png" width="64" height="64" alt="?" /></div><p id="info_submit_dialog_msg"></p>
-    <div id="info_submit_dialog_buttons"><input type="button" name="info_dialog_ok" id="info_dialog_ok" class="ok" value="OK" /></div>
-  </div>
-</div>
-<div id="paper"
-     data-pid="<?php echo $id; ?>"
-     data-urlmod="<?php echo html_entity_decode($url_mod); ?>"
-     data-submittype="<?php echo $submitype; ?>"
-     data-refcount="<?php echo count($reference_materials); ?>"
-     data-savefreq="<?php echo (($configObject->get_setting('core', 'paper_autosave_frequency') + rand(-5,5)) * 1000); ?>"
-     data-savetimeout="<?php
-       // Set the time out of one requst to be the maximum total time plus 5s for network latency
-       // PHP handles normal timeouts. This is just to make sure the user won't wait forever if somthing
-       // weird happens.
-       $settimeout = $configObject->get_setting('core', 'paper_autosave_settimeout');
-       $retrylimit = $configObject->get_setting('core', 'paper_autosave_retrylimit');
-       $backofffactor = $configObject->get_setting('core', 'paper_autosave_backoff_factor');
-       echo ceil((($retrylimit * $backofffactor * $settimeout) + $settimeout + 5)) * 1000; ?>"
-     data-saveretry="<?php echo $retrylimit; ?>"
-     data-timed="<?php echo $timed; ?>"
-     >
-</div>
-<div id="css"
-     data-bgcolor="<?php echo $bgcolor; ?>"
-     data-fgcolor="<?php echo $fgcolor; ?>"
-     data-font="<?php echo $font; ?>"
-     data-textsize="<?php echo $textsize; ?>"
-     data-unanswered_color="<?php echo $unanswered_color; ?>"
-     data-themecolor="<?php echo $themecolor; ?>"
-     data-marks_color="<?php echo $marks_color; ?>"
-     data-dismiss_color="<?php echo $dismiss_color; ?>"
-     data-max_ref_width="<?php echo $max_ref_width; ?>"
-     data-special_needs="<?php echo $userObject->is_special_needs(); ?>"
-     >
-</div>
-<div id="user"
-     data-student="<?php echo $userObject->has_role('Student'); ?>"
-     data-remaining_time="<?php echo $remaining_time; ?>"
-     >
-</div>
 <?php
+$render->render(array(), array(), 'paper/overlays.html');
+// Paper dataset.
+$dataset['name'] = 'paper';
+$dataset['attributes']['pid'] = $id;
+$dataset['attributes']['urlmod'] = html_entity_decode($url_mod);
+$dataset['attributes']['submittype'] = $submitype;
+$dataset['attributes']['refcount'] = count($reference_materials);
+$dataset['attributes']['savefreq='] = (($configObject->get_setting('core', 'paper_autosave_frequency') + rand(-5,5)) * 1000);
+// Set the time out of one requst to be the maximum total time plus 5s for network latency
+// PHP handles normal timeouts. This is just to make sure the user won't wait forever if somthing
+// weird happens.
+$settimeout = $configObject->get_setting('core', 'paper_autosave_settimeout');
+$retrylimit = $configObject->get_setting('core', 'paper_autosave_retrylimit');
+$backofffactor = $configObject->get_setting('core', 'paper_autosave_backoff_factor');
+$dataset['attributes']['savetimeout'] = ceil((($retrylimit * $backofffactor * $settimeout) + $settimeout + 5)) * 1000;
+$dataset['attributes']['saveretry'] = $retrylimit;
+$dataset['attributes']['timed'] = $timed;
+$render->render($dataset, array(), 'paper/dataset.html');
+// CSS dataset.
+$datasetcss['name'] = 'css';
+$datasetcss['attributes']['bgcolor'] = $bgcolor;
+$datasetcss['attributes']['fgcolor'] = $fgcolor;
+$datasetcss['attributes']['font'] = $font;
+$datasetcss['attributes']['textsize'] = $textsize;
+$datasetcss['attributes']['unanswered_color'] = $unanswered_color;
+$datasetcss['attributes']['themecolor'] = $themecolor;
+$datasetcss['attributes']['marks_color'] = $marks_color;
+$datasetcss['attributes']['dismiss_color'] = $dismiss_color;
+$datasetcss['attributes']['max_ref_width'] = $max_ref_width;
+$datasetcss['attributes']['special_needs'] = $userObject->is_special_needs();
+$render->render($datasetcss, array(), 'paper/dataset.html');
+// User dataset.
+$datasetuser['name'] = 'user';
+$datasetuser['attributes']['student'] = $userObject->has_role('Student');
+$datasetuser['attributes']['remaining_time'] = $remaining_time;
+$render->render($datasetuser, array(), 'paper/dataset.html');
 
 if (count($reference_materials) > 0) {
   $top = 0;
   $ref_no = 0;
   foreach ($reference_materials as $reference_material) {
-    echo "<div class=\"refhead\" id=\"refhead" . $ref_no . "\" onclick=\"changeRef(" . $ref_no . ")\" style=\"top:{$top}px\">" . $reference_material['title'] . "</div>\n";
-    echo "<div class=\"framecontent\" id=\"framecontent" . $ref_no . "\" style=\"top:" . (31 + $top) . "px\">\n" . $reference_material['material'] . "</div>\n";
+    $refdata['ref'][$ref_no]['refno'] = $ref_no;
+    $refdata['ref'][$ref_no]['top'] = 31 + $top;
+    $refdata['ref'][$ref_no]['reftitle'] = $reference_material['title'] ;
     $top += 31;
     $ref_no++;
   }
-  echo "<script>\n";
-  echo "  changeRef(" . $refpane . ");\n";
-  echo "</script>\n";
+  $refdata['refpane'] = $refpane;
+  $render->render($refdata, $string, 'paper/refmaterial.html');
 }
 $mysqli->close();
 
