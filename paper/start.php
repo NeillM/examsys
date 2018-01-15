@@ -500,18 +500,14 @@ $render->render($headerdata, $lang, 'header.html');
     $q_displayed++;
   }
 
-  // End of questions display
-  echo "</table></td></tr>\n<tr><td>\n<br />\n";
-
   $current_screen++;
-  echo "<input type=\"hidden\" name=\"current_screen\" value=\"$current_screen\" />\n";
-  echo "<input type=\"hidden\" name=\"page_start\" value=\"" . date("YmdHis", time()) . "\" />\n";
-  echo "<input type=\"hidden\" name=\"old_screen\" value=\"" . ($current_screen - 1) . "\" />\n";
-  echo "<input type=\"hidden\" name=\"previous_duration\" value=\"$previous_duration\" />\n";
-  echo "<input type=\"hidden\" id=\"button_pressed\" name=\"button_pressed\" value=\"next\" />\n";
-  echo "<input type=\"hidden\" id=\"randomPageID\" name=\"randomPageID\" value=\"\" />\n";
-  echo "<input type=\"hidden\" id=\"isEnhancedCalc\" name=\"isEnhancedCalc\" value=\"{$is_enhancedcalc}\" />\n";
-  echo "<input type=\"hidden\" name=\"refpane\" id=\"refpane\" value=\"{$refpane}\" />\n";
+
+  $footer_data['current_screen'] = $current_screen;
+  $footer_data['page_start'] = date("YmdHis", time());
+  $footer_data['old_screen'] = $current_screen - 1;
+  $footer_data['previous_duration'] = $previous_duration;
+  $footer_data['is_enhancedcalc'] = $is_enhancedcalc;
+  $footer_data['refpane'] = $refpane;
 
   if ($is_question_preview_mode === true) {
     $submitype = "preview";
@@ -521,66 +517,67 @@ $render->render($headerdata, $lang, 'header.html');
     $submitype = "bidirectional";
   }
   if ($is_question_preview_mode) {
-    echo "<input type=\"hidden\" id=\"mode\" name=\"mode\" value=\"preview\" />\n";
+    $footer_data['previewmode'] = 1;
   } else {
     if ($is_preview_mode) {
-      echo "<input type=\"hidden\" id=\"mode\" name=\"mode\" value=\"preview\" />\n";
+      $footer_data['previewmode'] = 2;
+    } else {
+      $footer_data['previewmode'] = 0;
     }
+    $footer_data['msg'] = '';
     if ($current_screen > $no_screens) {
-      echo "<div class=\"callout\">\n<div id=\"calloutTxt\">" . $string['finishnote'] . "</div><b class=\"notch\"></b></div>\n";
+      $footer_data['msg'] = $string['finishnote'];
     } elseif ($propertyObj->get_bidirectional() == 0) {
-      echo "<div class=\"callout\">\n<div id=\"calloutTxt\">" . sprintf($string['pleasecomplete'], $current_screen) . "</div><b class=\"notch\"></b></div>\n";
+      $footer_data['msg'] = sprintf($string['pleasecomplete'], $current_screen);
     }
   }
 
-  echo '<div id="saveError"><img src="' . $configObject->get('cfg_root_path') . '/artwork/no_save.png" width="60" height="60" alt="Warning" /> <div><span style="color:#C42828; font-weight:bold">' .  $string['savefailed'] . '</span><br />' . $string['tryagain'] . '</div></div>';
+  
 
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and $is_question_preview_mode) {
-    echo "<input id=\"finish\" type=\"button\" value=\"" . $string['finish'] . "\" />";
+    $footer_data['adminview'] = true;
   } else {
-    echo $bottom_html;
-    ?>
-    <span style="color:white">
-    <?php
+    $footer_data['adminview'] = false;
+    if ($original_paper_type == '2') {
+      $footer_data['fire'] = true;
+    } else { 
+      $footer_data['fire'] = false;
+    }
+
     if ($propertyObj->get_exam_duration() != null) {
       echo $timer_label;
     }
 
-    ?>
-    <span id="theTime" type="text" class="thetime"></span>
-    </span>
-    <?php
-    echo '</td><td align="right">';
-
-    echo '<span id="savemsg"></span>';
+    $footer_data['bidirectional'] = false;
     if ($propertyObj->get_bidirectional() == 1 and $no_screens > 1) {
+      $footer_data['bidirectional'] = true;
       if ($current_screen > 2) {
-        echo "<input id=\"previous\" type=\"button\" value=\"&lt; " . $string['screen'] . " " . ($current_screen - 2) . "\" />";
+        $footer_data['previous'] = true;
+        $footer_data['previousscreen'] = $current_screen - 2;
+      } else {
+        $footer_data['previous'] = false;
       }
       if (in_array($original_paper_type, array('0', '1', '2'))) {
-        echo '<select name="jumpscreen" id="jumpscreen">';
+        $footer_data['jumpscreen'] = true;
+        $options = array();
         for ($i = 1; $i <= $no_screens; $i++) {
           $selected = $i == ($current_screen - 1) ? ' selected' : '';
-          echo "<option value=\"$i\"$selected>$i</option>";
+          $options[$i] = $selected;
         }
-        echo '</select>';
+        $footer_data['jumpscreenoptions'] = $options;
+      } else {
+        $footer_data['jumpscreen'] = false;
       }
     }
     if ($current_screen > $no_screens) {
-      echo "<input id=\"finish\" type=\"button\" value=\"" . $string['finish'] . "\" />";
+      $footer_data['endscreen'] = true;
     } else {
-      echo "<input id=\"next\" type=\"button\" value=\"" . $string['screen'] . " " . ($current_screen) . " &gt;\" />";
+      $footer_data['endscreen'] = false;
     }
-    echo '</td></tr></table>';
+
   }
-?>
-</td></tr></table>
 
-<textarea id="save_failed" name="save_failed" style="display:none"></textarea>
-
-</form>
-</div>
-<?php
+$render->render($footer_data, $string, 'paper/content_footer.html');
 $render->render(array(), array(), 'paper/overlays.html');
 // Paper dataset.
 $dataset['name'] = 'paper';
