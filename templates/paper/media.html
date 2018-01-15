@@ -1,0 +1,31 @@
+<div id="media{{mediaid}}" class="media">
+{% if data.mediatype == 2 %}
+    <img src="{{data.mediafile}}" width="{{data.mediawidth}}" height="{{data.mediaheight}} alt="Image"
+    {% if data.mediaborder %} 
+     style="border: 1px solid {{data.mediabordercolour}}"
+    {% endif %}
+     />
+{% elseif data.mediatype == 3 %}
+    <img src="audio_icon_32.gif" width="32" height="32" alt="Audio File" />
+    <a href="{{data.mediafile}}">Audio Clip</a>
+{% elseif data.mediatype == 4 %}
+    <iframe src="{{data.mediafile}}" width="{{data.mediawidth}}" height="{{data.mediaheight}} align="center">Your browser does not support iframes!</iframe>
+{% elseif data.mediatype == 5 %}
+    <object type="application/x-shockwave-flash" data="{{path}}/paper/player_flv_maxi.swf" width="{{data.mediawidth}}" height="{{data.mediaheight}}>
+        <param name="movie" value="{{path}}/paper/player_flv_maxi.swf" />
+        <param name="FlashVars" value="flv={{data.mediaurl}}&amp;buffermessage=&amp;showplayer=always&amp;showvolume=1&amp;showstop=1&amp;showtime=1&amp;margin=1" />
+    </object>
+{% elseif data.mediatype == 6 %}
+    {{data.mediafile}}&nbsp;
+    <audio src="{{data.mediaurl}}" controls>
+    </audio>
+{% elseif data.mediatype == 7 %}
+    <embed src="{{data.mediafile}}" width="{{data.mediawidth}}" height="{{data.mediaheight}} border="1" autoplay="true" loop="false" alt="Data File" wmode="opaque"></embed>
+{% else %}
+    <embed src="{{data.mediafile}}" width="{{data.mediawidth}}" height="{{data.mediaheight}} border="1" alt="Data File" wmode="opaque"></embed>
+{% endif %}
+{% if data.mediadelete %}
+    <a href="#" class="media-delete" rel="{{mediaid}}"><img class="align-bottom" src="{{path}}}/artwork/red_cross.png" width="16" height="16" alt="Delete" /></a></div>
+    <label class="hide"><input type="checkbox" id="delete_media{{mediaid}}" name="delete_media{$imageid}" /> Delete image {{mediaid}}}</label>
+    <input type="hidden" id="existing_media{{mediaid}}" name="existing_media{{mediaid}}" value="{{data.mediafile}}" />
+{% endif %}

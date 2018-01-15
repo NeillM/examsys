@@ -477,25 +477,8 @@ $render->render($headerdata, $lang, 'header.html');
     $is_enhancedcalc = 0;
     // refer to all questions on displayed question
     $question['paper_questions'] = &$questions_array;
-    if ($screen_pre_submitted == 1 and $q_displayed == 0) {
-      echo "<tr style=\"display:none\" id=\"unansweredkey\">"
-        . "<td colspan=\"2\"><span class=\"unans\">&nbsp;&nbsp;&nbsp;&nbsp;</span> "
-        . $string['unansweredquestion']
-        . "</td></tr>\n";
-    }
 
-    // Attempt to display paper prolog
-    if ($q_displayed == 0 and $current_screen == 1 and $propertyObj->get_paper_prologue() != '') {
-      echo '<tr><td colspan="2" style="padding:20px; text-align:justify">'
-        . $propertyObj->get_paper_prologue()
-        . '</td></tr>';
-    }
-
-    if ($q_displayed == 0 and $question['theme'] == '') {
-      echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
-    }
-
-    display_question($configObject, $question, $propertyObj->get_paper_type(), $calculator, $current_screen, $previous_q_type, $question_no, $user_answers, $unanswered);
+    \paperrender::display_question($screen_pre_submitted, $q_displayed, $string, $question, $paperID, $calculator, $current_screen, $previous_q_type, $question_no, $user_answers, $unanswered);
 
     $q_displayed++;
   }
@@ -531,8 +514,6 @@ $render->render($headerdata, $lang, 'header.html');
       $footer_data['msg'] = sprintf($string['pleasecomplete'], $current_screen);
     }
   }
-
-  
 
   if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff')) and $is_question_preview_mode) {
     $footer_data['adminview'] = true;
