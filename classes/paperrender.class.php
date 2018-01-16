@@ -138,6 +138,7 @@ class paperrender {
     $questiondata['displaymedia'] = false;
     $questiondata['displaynotes'] = false;
     $questiondata['displayscenario'] = false;
+    $questiondata['displayleadin'] = false;
     if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
       $questiondata['displayassigned'] = true;
       if ($question['scenario'] != '' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'matrix' and $question['q_type'] != 'likert' and $question['q_type'] != 'enhancedcalc') {
@@ -174,8 +175,14 @@ class paperrender {
           }
         }
         $li_set = 1;
-        if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and in_array($question['q_type'], array('extmatch', 'matrix', 'enhancedcalc')))) echo '<p class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
-        if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'enhancedcalc') echo $question['leadin'];
+        if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and in_array($question['q_type'], array('extmatch', 'matrix', 'enhancedcalc')))) {
+          $questiondata['displaynotes'] = true;
+          $questiondata['notes'] = $question['notes'];
+        }
+        if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'enhancedcalc') {
+          $questiondata['displayleadin'] = true;
+          $questiondata['leadin'] = $question['leadin'];
+        }
       }
     }
     $render->render($questiondata, $string, 'paper/question.html');

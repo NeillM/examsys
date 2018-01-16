@@ -41,20 +41,20 @@
             <br />
             <img class="sciCalculator" src="{{path}}/artwork/calc.png" alt="{{lang.calculator}}" />
         {% endif %}
-        {% if data.displaynotes %}
-            <p class="note">
-                <img src="{{path}}/artwork/notes_icon.gif" width="16" height="16" alt="{{lang.note}}" />
-                &nbsp;<strong>{{lang.note}}:</strong>&nbsp;{{data.notes}}
-            </p>
-        {% endif %}
-        {% if data.displayscenario %}
-            {{data.scenario}}<br /><br />
-        {% endif %}
-        {%if data.displaymedia %}
-            <p align="center">
-                {% include 'media.html' %}
-            </p>
-        {% endif %}
         </td>
         <td>
+        {% if data.displaynotes %}
+        <p class="note">
+            <img src="{{path}}/artwork/notes_icon.gif" width="16" height="16" alt="{{lang.note}}" />
+            &nbsp;<strong>{{lang.note}}:</strong>&nbsp;{{data.notes}}
+        </p>
+        {% endif %}
+        {% if data.displayscenario %}
+        {{data.scenario}}<br /><br />
+        {% endif %}
+        {% if data.displaymedia %}
+        <p align="center">
+            {% include 'media.html' %}
+        </p>
+        {% endif %}
 {% endif %}

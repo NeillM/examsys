@@ -525,9 +525,7 @@ $render->render($headerdata, $lang, 'header.html');
       $footer_data['fire'] = false;
     }
 
-    if ($propertyObj->get_exam_duration() != null) {
-      echo $timer_label;
-    }
+    $footer_data['timerlabel'] = $timer_label;
 
     $footer_data['bidirectional'] = false;
     if ($propertyObj->get_bidirectional() == 1 and $no_screens > 1) {
