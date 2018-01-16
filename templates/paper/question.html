@@ -50,11 +50,17 @@
         </p>
         {% endif %}
         {% if data.displayscenario %}
-        {{data.scenario}}<br /><br />
+        {{data.scenario|raw}}<br /><br />
         {% endif %}
         {% if data.displaymedia %}
         <p align="center">
             {% include 'media.html' %}
         </p>
         {% endif %}
+        {{data.leadin|raw}}
+{% endif %}
+{% if data.displayinfo %}
+    <tr>
+        <td colspan="2" style="padding-left:10px; padding-right:10px">
+            {{data.leadin|raw}}
 {% endif %}

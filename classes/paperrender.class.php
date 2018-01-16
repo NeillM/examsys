@@ -185,19 +185,24 @@ class paperrender {
         }
       }
     }
-    $render->render($questiondata, $string, 'paper/question.html');
 
+    $questiondata['displayinfo'] = false;
     if ($question['q_type'] == 'info') {
       // Special processing of Information Blocks.
-      if ($li_set == 0) echo '<tr><td colspan="2" style="padding-left:10px; padding-right:10px">';
-      if ($question['q_media'] != '') {
-        echo '<p align="center">' . display_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '') . "</p>\n";
+      if ($li_set == 0) {
+        $questiondata['displayinfo'] = true;
       }
-      echo $question['leadin'];
+      if ($question['q_media'] != '') {
+        $questiondata['displaymedia'] = true;
+        $questiondata = array_merge($questiondata, self::get_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], ''));
+      }
+      $questiondata['displayleadin'] = true;
+      $questiondata['leadin'] = $question['leadin'];
       $li_set = 1;
       $question_no--;
     }
 
+    $render->render($questiondata, $string, 'paper/question.html');
     $part_id = 0;
     $marks = 0;
     if ($question['q_type'] != 'likert') $old_likert_label = '';
