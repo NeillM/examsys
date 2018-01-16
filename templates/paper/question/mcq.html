@@ -1,0 +1,8 @@
+<blockquote {% if data.unaswered %} class="unans" {% endif %}>
+{% if data.mcq_display_method == 1 %}
+    <table cellpadding="2" cellspacing="0" border="0">
+{% elseif data.mcq_display_method == 2 %}
+    <div class="option">
+        <select {%if data.unaswered %} class="unans" {% endif %} name="q{{data.question_no}}" size="1">
+            <option value=""></option>
+{% endif %}

@@ -1,0 +1,43 @@
+{% if data.likertscenario %}
+    {% if data.displaylikertscenario %}
+    <tr>
+        <td colspan="{data.likertscenariocolspan}}">
+            {{data.scenario|raw}}
+        </td>
+    </tr>
+    {% endif %}
+{% else %}
+</table>
+<table cellpadding="4" cellspacing="0" border="0">
+    <col width="40"><col>
+    {% if data.displaylikertnotes %}
+    <tr>
+        <td></td>
+        <td colspan="{data.likertnotescolspan}}" class="note">
+            <img src="{{path}}/artwork/notes_icon.gif" width="16" height="16" alt="Note" />
+            &nbsp;<strong>{{lang.note}}:</strong>&nbsp;{{data.notes}}
+        </td>
+    </tr>
+    {% endif %}
+    {% if data.displaylikertscenario %}
+    <tr>
+        <td colspan="{data.likertscenariocolspan}}">
+            {{data.scenario|raw}}
+        </td>
+    </tr>
+    {% endif %}
+    <tr>
+        <td></td>
+        <td></td>
+    {% if data.likertna %}
+        <td style="vertical-align:bottom; text-align:center; color:{{data.labelcolour}}; font-size:80%">
+            {{lang.na}}
+        </td>
+    {% endif %}
+    {% for i in data.likertdisplay %}
+        <td style="vertical-align:bottom; text-align:center; color:{{data.labelcolour}}; font-size:80%">
+            {{i}}
+        </td>
+    {% endfor %}
+    </tr>
+{% endif %}

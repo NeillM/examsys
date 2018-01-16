@@ -54,7 +54,7 @@
         {% endif %}
         {% if data.displaymedia %}
         <p align="center">
-            {% include 'media.html' %}
+            {% include 'paper/media.html' %}
         </p>
         {% endif %}
         {{data.leadin|raw}}
@@ -63,4 +63,7 @@
     <tr>
         <td colspan="2" style="padding-left:10px; padding-right:10px">
             {{data.leadin|raw}}
+{% endif %}
+{% if data[data.questiontype] %}
+    {% include 'paper/question/'~data.questiontype~'.html' %}
 {% endif %}

@@ -139,37 +139,39 @@ class paperrender {
     $questiondata['displaynotes'] = false;
     $questiondata['displayscenario'] = false;
     $questiondata['displayleadin'] = false;
+    $questiondata['assigned_number'] = $question['assigned_number'];
+    $questiondata['scenario'] = $question['scenario'];
+    $questiondata['notes'] = $question['notes'];
+    $questiondata['labelcolour'] = $labelcolor;
+    $questiondata['leadin'] = $question['leadin'];
+    $mediadata = self::get_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
+    $questiondata = array_merge($questiondata, $mediadata);
     if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
       $questiondata['displayassigned'] = true;
       if ($question['scenario'] != '' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'matrix' and $question['q_type'] != 'likert' and $question['q_type'] != 'enhancedcalc') {
-        $questiondata['assigned_number'] = $question['assigned_number'];
+        
         if ($calculator == 1)  {
           $questiondata['displaycalc'] = true;
         }
         if ($question['notes'] != '') {
           $questiondata['displaynotes'] = true;
-          $questiondata['notes'] = $question['notes'];
         }
         if ($question['scenario'] != '') {
           $questiondata['displayscenario'] = true;
-          $questiondata['scenario'] = $question['scenario'];
         }
         $li_set = 1;
       }
       if ($question['q_media'] != '' and $question['q_type'] != 'hotspot' and $question['q_type'] != 'labelling' and $question['q_type'] != 'flash' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'area' and $question['q_type'] != 'enhancedcalc') {
         if ($li_set == 0) {
-          $questiondata['assigned_number'] = $question['assigned_number'];
           if ($calculator == 1)  {
             $questiondata['displaycalc'] = true;
           }
         }
         $questiondata['displaymedia'] = true;
-        $questiondata = array_merge($questiondata, self::get_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], ''));
         $li_set = 1;
       }
       if ($question['q_type'] != 'likert') {
         if ($li_set == 0) {
-          $questiondata['assigned_number'] = $question['assigned_number'];
           if ($calculator == 1)  {
             $questiondata['displaycalc'] = true;
           }
@@ -177,11 +179,9 @@ class paperrender {
         $li_set = 1;
         if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and in_array($question['q_type'], array('extmatch', 'matrix', 'enhancedcalc')))) {
           $questiondata['displaynotes'] = true;
-          $questiondata['notes'] = $question['notes'];
         }
         if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'enhancedcalc') {
           $questiondata['displayleadin'] = true;
-          $questiondata['leadin'] = $question['leadin'];
         }
       }
     }
@@ -194,20 +194,19 @@ class paperrender {
       }
       if ($question['q_media'] != '') {
         $questiondata['displaymedia'] = true;
-        $questiondata = array_merge($questiondata, self::get_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], ''));
       }
       $questiondata['displayleadin'] = true;
-      $questiondata['leadin'] = $question['leadin'];
       $li_set = 1;
       $question_no--;
     }
 
-    $render->render($questiondata, $string, 'paper/question.html');
     $part_id = 0;
     $marks = 0;
     if ($question['q_type'] != 'likert') $old_likert_label = '';
 
     // Pre-question processing
+    $questiondata['questiontype'] = $question['q_type'];
+    $questiondata[$question['q_type']] = false;
     switch ($question['q_type']) {
       case 'enhancedcalc':
         if (isset($user_answers[$current_screen][$q_id])) {
@@ -218,35 +217,40 @@ class paperrender {
         $question['object']->load_all_user_answers($user_answers);
         break;
       case 'dichotomous':
-        echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
+        $questiondata['dichotomous'] = true;
+        $questiondata['dichotomous_type'] = 'YN';
+        $questiondata['dichotomous_display_method'] = 0;
         if (substr($question['display_method'],0,2) == 'TF') {
-          echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">" . $string['true'] . "</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor;font-size:90%\">" . $string['false'] . "</td>";
-        } else {
-          echo "<tr><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">" . $string['yes'] . "</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor;font-size:90%\">" . $string['no'] . "</td>";
+          $questiondata['dichotomous_type'] = 'TF';
         }
-        if (strpos($question['display_method'],'Abstain') !== false) echo "<td width=\"40\" align=\"center\" style=\"color:$labelcolor; font-size:90%\">" . $string['abstain'] . "</td><td>&nbsp;</td>";
-        echo "</tr>\n";
+        if (strpos($question['display_method'],'Abstain') !== false) {
+          $questiondata['dichotomous_display_method'] = 1;
+        }
         break;
       case 'mcq':
+        $questiondata['mcq'] = true;
+        $questiondata['mcq_display_method'] = 0;
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0' and $screen_pre_submitted == 1) {
-          echo '<blockquote class="unans">';
+          $questiondata['unanswered'] = true;
           $unanswered = true;
         } else {
-          echo '<blockquote>';
+          $questiondata['unanswered'] = false;
         }
         if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
-          echo '<table cellpadding="2" cellspacing="0" border="0">';
+          $questiondata['mcq_display_method'] = 1;
         } elseif ($question['display_method'] == 'dropdown') {
+          $questiondata['mcq_display_method'] = 2;
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0') {
-            echo '<div class="option"><select class="unans" name="q' . $question_no . '" size="1">';
+            $questiondata['question_no'] = $question_no;
+            $questiondata['unanswered'] = true;
             $unanswered = true;
           } else {
-            echo '<div class="option"><select name="q' . $question_no . '" size="1">';
+            $questiondata['unanswered'] = false;
           }
-          echo '<option value=""></option>';
         }
         break;
       case 'mrq':
+        $questiondata['mrq'] = true;
         $mrq_correct = 0;
         if ($question['score_method'] == 'Mark per Question') {
           $mrq_correct = $option_no;
@@ -262,49 +266,60 @@ class paperrender {
           $len_answer = 0;
         }
         if (isset($answer_parts) and $answer_parts[0] == str_repeat('n', $len_answer) and $screen_pre_submitted == 1) {
-          echo '<blockquote class="unans"><table cellpadding="2" cellspacing="0" border="0">';
+          $questiondata['unanswered'] = true;
           $unanswered = true;
         } else {
-          echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
+          $questiondata['unanswered'] = false;
         }
         break;
       case 'rank':
-        echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
+        $questiondata['rank'] = true;
         break;
       case 'likert':
+        $questiondata['likert'] = true;
+        $questiondata['likertstart'] = false;
+        $questiondata['likertna'] = false;
+        $questiondata['likertscenario'] = false;
+        $questiondata['displaylikertnotes'] = false;
+        $questiondata['displaylikertscenario'] = false;
         $na = false;
         $likert_display = explode('|',$question['display_method']);
         $likert_col_no = substr_count($question['display_method'],'|');
         if (strtolower($old_likert_label) != strtolower($question['display_method']) or $question['theme'] != '') {
-          if ($likert_col_no != $old_likert_cols) echo '</table><table cellpadding="4" cellspacing="0" border="0"><col width="40"><col>';
+          if ($likert_col_no != $old_likert_cols) {
+            $questiondata['likertstart'] = true;
+          }
           if ($likert_display[$likert_col_no] == 'true') {
             $likert_col_no++;
             $na = true;
           }
           if ($question['notes'] != '') {
-            echo "<tr><td></td><td colspan=\"" . ($likert_col_no + 1) . "\" class=\"note\"><img src=\"../artwork/notes_icon.gif\" width=\"16\" height=\"16\" alt=\"Note\" />&nbsp;<strong>" . $string['note'] . ":</strong>&nbsp;" . $question['notes'] . "</td></tr>\n";
+            $questiondata['displaylikertnotes'] = true;
+            $questiondata['likertnotescolspan'] = $likert_col_no + 1;
           }
           if ($question['scenario'] != '') {
-            echo "<tr><td colspan=\"" . ($likert_col_no + 2) . "\">" . $question['scenario'] . "</td></tr>\n";
+            $questiondata['displaylikertscenario'] = true;
+            $questiondata['likertscenariocolspan'] = $likert_col_no + 2;
           }
-          echo '<tr><td></td><td></td>';
           if ($na == true) {
-            echo "<td style=\"vertical-align:bottom; text-align:center; color:$labelcolor; font-size:80%\">" . $string['na'] . "</td>";
+            $questiondata['likertna'] = true;
           }
-          echo "<td style=\"vertical-align:bottom; text-align:center; color:$labelcolor; font-size:80%\">$likert_display[0]</td>";
+          $questiondata['likertdisplay'][0] = $likert_display[0];
           $temp_end = substr_count($question['display_method'],'|') - 1;
           for ($i=1; $i<=$temp_end; $i++) {
-            echo "<td valign=\"bottom\" style=\"text-align:center; color:$labelcolor; font-size:80%\">$likert_display[$i]</td>\n";
+            $questiondata['likertdisplay'][$i] = $likert_display[$i];
           }
-          echo "</tr>\n";
         } else {
-          if ($question['scenario'] != '') echo "<tr><td colspan=\"" . ($likert_col_no + 2) . "\">" . $question['scenario'] . "</td></tr>\n";
+          $questiondata['likertscenario'] = true;
+          $questiondata['displaylikertscenario'] = true;
+          $questiondata['likertscenariocolspan'] = $likert_col_no + 2;
         }
         $old_likert_label = $question['display_method'];
         $old_likert_cols = $likert_col_no;
         break;
       case 'extmatch':
       case 'matrix':
+        $questiondata[$question['q_type']] = true;
         $matching_scenarios = explode('|', $question['scenario']);
         $matching_media = explode('|', $question['q_media']);
         $matching_media_width = explode('|', $question['q_media_width']);
@@ -318,46 +333,51 @@ class paperrender {
         $matching_answers = explode('|', $question['options'][0]['correct']);
         break;
       case 'sct':
+        $questiondata['sct'] = true;
+        $questiondata['displaysctcalc'] = false;
+        $questiondata['displaysctmedia'] = false;
+        $questiondata['displaysctscenario'] = false;
+        $questiondata['displaysctnotes'] = false;
+        $questiondata['sctheaderset'] = false;
         if ($question['scenario'] != '') {
-          echo "<tr><td class=\"question_no\">" . $question['assigned_number'] . ".&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040\">" . $string['clinicalvignette'] . "</td></tr>\n";
-          echo '<tr><td style="vertical-align:top; text-align:right">';
-          if ($calculator == 1) echo '<br /><img class="sciCalculator" src="../artwork/calc.png" alt="' . $string['calculator'] . '" />';
-          echo "</td><td>";
-          if ($question['notes'] != '') echo '<p class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
-          echo $question['scenario'] . "<br />\n<br />";
+          $questiondata['displaysctscenario'] = true;
+          if ($calculator == 1) {
+            $questiondata['displaysctcalc'] = true;
+          }
+          if ($question['notes'] != '') {
+            $questiondata['displaysctnotes'] = true;
+          }
           $li_set = 1;
+          $questiondata['sctheaderset'] = true;
         }
         if ($question['q_media'] != '') {
           if ($li_set == 0) {
-            echo '<tr><td class="q_no">' . $question['assigned_number'] . '.&nbsp;';
-            if ($calculator == 1) echo '<br /><img class="sciCalculator" src="../artwork/calc.png" alt="' . $string['calculator'] . '" />';
-            echo '</td><td>';
+            if ($calculator == 1) {
+              $questiondata['displaysctcalc'] = true;
+            }
           }
-          echo '<p align="center">' . display_media($question['q_media'],$question['q_media_width'],$question['q_media_height'], '') . "</p>\n";
+          $questiondata['displaysctmedia'] = true;
           $li_set = 1;
         }
 
         $sct_parts = explode('~',$question['leadin']);
-        echo '<table cellpadding="2" cellspacing="0" border="0" style="width:100%">';
         $sct_titles = array(1=>$string['hypothesis'], 2=>$string['investigation'], 3=>$string['prescription'], 4=>$string['intervention'], 5=>$string['treatment']);
-        echo "<tr><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $sct_titles[$question['display_method']] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold\">" . $string['newinformation'] . "</td></tr>\n";
-        echo "<tr><td style=\"width:49%; vertical-align:top\">" . $sct_parts[0] . "</td><td style=\"width:2%\">&nbsp;</td><td style=\"width:49%; vertical-align:top\">" . $sct_parts[1] . "</td></tr>\n";
-        echo "</table>\n";
-
-        echo '<p><strong>';
-        echo $string['thenthis'] . " " . mb_strtolower($sct_titles[$question['display_method']], 'UTF-8') . " " . $string['is'] . ":";
-        echo '</strong></p>';
+        $questiondata['scttitle'] = $sct_titles[$question['display_method']];
+        $questiondata['sctpart0'] = $sct_parts[0];
+        $questiondata['sctpart1'] = $sct_parts[1];
+        $questiondata['scttitlelower'] = $string['thenthis'] . " " . mb_strtolower($sct_titles[$question['display_method']], 'UTF-8') . " " . $string['is'] . ":";
 
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0' and $screen_pre_submitted == 1) {
-          echo '<blockquote class="unans"><table cellpadding="2" cellspacing="0" border="0">';
+          $questiondata['unanswered'] = true;
           $unanswered = true;
         } else {
-          echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
+          $questiondata['unanswered'] = false;
         }
         $marks = 1;
         break;
     }
 
+    $render->render($questiondata, $string, 'paper/question.html');
     // Processing for each stem.
     foreach ($question['options'] as $display_option) {
       $part_id++;
@@ -1259,46 +1279,46 @@ class paperrender {
 
     $fn_parts = pathinfo($filename);
 
-    if ($imageid > -1) {
-      $mediadata['mediaid'] = $imageid;
-      $mediadata['mediafile'] = $filename;
-      $mediadata['mediawidth'] = $width;
-      $mediadata['mediaheight'] = $height;
-      // Is the file an image or something else (e.g. RasMol)?
-      if (!array_key_exists('extension', $fn_parts)) {
-        $mediadata['mediatype'] = 1;
-      } elseif (array_key_exists('extension', $fn_parts) and in_array(strtolower($fn_parts['extension']), array('gif', 'jpg', 'jpeg', 'png'))) {
-        $mediadata['mediatype'] = 2;
-        if ($border_color == '') {
-          $mediadata['mediaborder'] = false;
-        } else {
-          $mediadata['mediaborder'] = true;
-          $mediadata['mediabordercolour'] = $border_color;
-        }
-      } elseif (in_array($fn_parts['extension'], array('wav', 'wma', 'mid'))) {
-        $mediadata['mediatype'] = 3;
-      } elseif (in_array($fn_parts['extension'], array('doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'pdf'))) {
-        $mediadata['mediatype'] = 4;
-      } elseif ($fn_parts['extension'] == 'flv') {
-        $mediadata['mediatype'] = 5;
-        if ($width == 0 or $height == 0) {
-          $width = 320;
-          $height = 260;
-        }
-        $mediadata['mediaurl'] = $mediadirectory->url($filename, false, false, true);
-      } elseif ($fn_parts['extension'] == 'mp3') {     // Embed MP3 using HTML5 audio tag.
-        $mediadata['mediatype'] = 6;
-        if (strpos(Url::fromGlobals(),'/edit/') !== false or strpos(Url::fromGlobals(),'/add/') !== false) {  // Display filename if add or edit script
-          $mediadata['mediaurl'] = $mediadirectory->url($filename);
-        }
-      } elseif ($fn_parts['extension'] == 'avi' or $fn_parts['extension'] == 'wmv') {
-        $mediadata['mediatype'] = 7;
-      }
-      if (!$locked) {
-        $mediadata['mediadelete'] = true;
+    $mediadata['mediaid'] = $imageid;
+    $mediadata['mediafile'] = $filename;
+    $mediadata['mediawidth'] = $width;
+    $mediadata['mediaheight'] = $height;
+    $mediadata['mediaurl'] = $mediadirectory->url($filename);
+    // Is the file an image or something else (e.g. RasMol)?
+    if (!array_key_exists('extension', $fn_parts)) {
+      $mediadata['mediatype'] = 1;
+    } elseif (array_key_exists('extension', $fn_parts) and in_array(strtolower($fn_parts['extension']), array('gif', 'jpg', 'jpeg', 'png'))) {
+      $mediadata['mediatype'] = 2;
+      if ($border_color == '') {
+        $mediadata['mediaborder'] = false;
       } else {
-        $mediadata['mediadelete'] = false;
+        $mediadata['mediaborder'] = true;
+        $mediadata['mediabordercolour'] = $border_color;
       }
+    } elseif (in_array($fn_parts['extension'], array('wav', 'wma', 'mid'))) {
+      $mediadata['mediatype'] = 3;
+    } elseif (in_array($fn_parts['extension'], array('doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'pdf'))) {
+      $mediadata['mediatype'] = 4;
+    } elseif ($fn_parts['extension'] == 'flv') {
+      $mediadata['mediatype'] = 5;
+      if ($width == 0 or $height == 0) {
+        $width = 320;
+        $height = 260;
+      }
+      $mediadata['mediaurl'] = $mediadirectory->url($filename, false, false, true);
+    } elseif ($fn_parts['extension'] == 'mp3') {     // Embed MP3 using HTML5 audio tag.
+      $mediadata['mediatype'] = 6;
+      $mediadata['mediaedit'] = false;
+      if (strpos(Url::fromGlobals(),'/edit/') !== false or strpos(Url::fromGlobals(),'/add/') !== false) {  // Display filename if add or edit script
+        $mediadata['mediaedit'] = true;
+      }
+    } elseif ($fn_parts['extension'] == 'avi' or $fn_parts['extension'] == 'wmv') {
+      $mediadata['mediatype'] = 7;
+    }
+    if ($imageid > -1 and !$locked) {
+      $mediadata['mediadelete'] = true;
+    } else {
+      $mediadata['mediadelete'] = false;
     }
     return $mediadata;
   }
