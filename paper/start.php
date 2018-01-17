@@ -255,7 +255,10 @@ if ($propertyObj->get_bidirectional() == 0 and $do_restart) {   // Linear
 $reference_materials = $propertyObj->load_reference_materials();
 $max_ref_width = $propertyObj->get_max_reference_width($reference_materials);
 
-require '../config/start.inc';
+if (isset($low_bandwidth) and $low_bandwidth == 1) {
+  // Lowbandwidth
+  ob_start('ob_gzhandler');   // enable compression
+}
 
 $url_mod = ($is_question_preview_mode) ? '&q_id=' . $get_qid . '&qNo=' . $q_number : '';
 
@@ -445,8 +448,11 @@ $render->render($headerdata, $lang, 'header.html');
         }
       }
     }
-    $contentdata['logopath'] = $logo_path;
   }
+
+  $themedirectory = rogo_directory::get_directory('theme');
+  $logo_path = $themedirectory->url($configObject->get_setting('core', 'misc_logo_main'));
+  $contentdata['logopath'] = $logo_path;
 
   $midexam_clarification = $configObject->get_setting('core', 'summative_midexam_clarification');
 
