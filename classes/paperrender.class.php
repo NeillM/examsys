@@ -144,6 +144,7 @@ class paperrender {
     $questiondata['notes'] = $question['notes'];
     $questiondata['labelcolour'] = $labelcolor;
     $questiondata['leadin'] = $question['leadin'];
+    $questiondata['langauge'] = $language;
     $mediadata = self::get_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
     $questiondata = array_merge($questiondata, $mediadata);
     if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
@@ -207,6 +208,7 @@ class paperrender {
     // Pre-question processing
     $questiondata['questiontype'] = $question['q_type'];
     $questiondata[$question['q_type']] = false;
+    $questiondata['question_no'] = $question_no;
     switch ($question['q_type']) {
       case 'enhancedcalc':
         if (isset($user_answers[$current_screen][$q_id])) {
@@ -241,7 +243,6 @@ class paperrender {
         } elseif ($question['display_method'] == 'dropdown') {
           $questiondata['mcq_display_method'] = 2;
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0') {
-            $questiondata['question_no'] = $question_no;
             $questiondata['unanswered'] = true;
             $unanswered = true;
           } else {
@@ -377,13 +378,15 @@ class paperrender {
         break;
     }
 
-    $render->render($questiondata, $string, 'paper/question.html');
+    
+    $questiondata['displayoptionmedia'] = false;
     // Processing for each stem.
     foreach ($question['options'] as $display_option) {
       $part_id++;
+      $questiondata['option'][$part_id]['optionmedia'] = self::get_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '');
       switch ($question['q_type']) {
         case 'area':
-
+          $questiondata['area'] = true;
           $default_ans  = '100,0,0,0,0,0';
 
           if (isset($user_answers[$current_screen][$q_id])) {
@@ -400,29 +403,21 @@ class paperrender {
             $tmp_user_answer = '';
             $full_user_ans = $default_ans;
           }
-          ?>
-          <br />
-          <?php
+
           if (isset($user_answers[$current_screen][$q_id]) and $tmp_user_answer == $default_ans and  $screen_pre_submitted == 1) {
-            echo "<div align=\"left\" class=\"unans\" style=\"padding:2px\">";
+            $questiondata['unanswered'] = true;
             $unanswered = true;
             $tmp_bgcolor = '#FFC0C0';
           } else {
-            echo "<div align=\"left\">";
+            $questiondata['unanswered'] = false;
             $tmp_bgcolor = $bgcolor;
           }
 
-          //<!-- ======================== HTML5 part include disp ================= -->
-          echo "<canvas id='canvas" . $question_no . "' width='" . ($question['q_media_width'] + 2) . "' height='" . ($question['q_media_height'] + 27) . "'></canvas>\n";
-          echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-          echo "<script>\n";
-          echo "setUpQuestion(" . $question_no . ", 'q" . $question_no . "','" . $language . "', '" . $question['q_media'] . "', '" . $display_option['correct'] . "', '" . $tmp_user_answer . "',1,'#FFC0C0','area','answer');\n";
-          echo "</script>\n";
-          //<!-- ==================================================== -->
-  ?>
-          </div>
-          <input type="hidden" name="q<?php echo $question_no; ?>" id="q<?php echo $question_no; ?>" value="<?php echo $full_user_ans; ?>"/>
-          <?php
+          $questiondata['option'][$part_id]['mediawidth'] += 2;
+          $questiondata['option'][$part_id]['mediaheight'] += 27;
+          $questiondata['option'][$part_id]['areadisplay'] = $display_option['correct'];
+          $questiondata['option'][$part_id]['areauseranswer'] = $tmp_user_answer;
+          $questiondata['option'][$part_id]['areafulluseranswer'] = $full_user_ans;
           $marks += $display_option['marks_correct'];
           break;
         case 'dichotomous':
@@ -438,38 +433,24 @@ class paperrender {
           }
 
           $class_mod = '';
+          $questiondata['option'][$part_id]['unanswered'] = false;
           if ($tmp_user_answer == 'u' and $screen_pre_submitted == 1) {
             $class_mod = ' class="unans"';
             $unanswered = true;
+            $questiondata['option'][$part_id]['unanswered'] = true;
           }
-
-          echo '<tr id="q' . $question_no . '_opt' . $part_id . '"' . $class_mod . '><td align="center">';
+          $questiondata['option'][$part_id]['dichotomouspartid'] = $part_id;
 
           $tmp_part_id = $question['option_order'][$part_id-1] + 1;
           $optionID = 'q' . $question_no . '_' . $tmp_part_id;
-          if ($tmp_user_answer == 't') {
-            echo '<input type="radio" name="' . $optionID . '" value="t" checked="checked" /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $tmp_part_id . '" value="f" /></td>';
-          } elseif ($tmp_user_answer == 'f') {
-            echo '<input type="radio" name="' . $optionID . '" value="t" /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $tmp_part_id . '" value="f" checked="checked" /></td>';
-          } elseif ($tmp_user_answer == 'a') {
-            echo '<input type="radio" name="' . $optionID . '" value="t" /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $tmp_part_id . '" value="f" /></td>';
-          } else {
-            echo '<input type="radio" name="' . $optionID . '" value="t" /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $tmp_part_id . '" value="f" /></td>';
-          }
-          if ($abstain == true) {
-            if ($tmp_user_answer == 'a') {
-              echo "<td align=\"center\"><input type=\"radio\" name=\"$optionID\" value=\"a\" checked=\"checked\" /></td>";
-            } else {
-              echo "<td align=\"center\"><input type=\"radio\" name=\"$optionID\" value=\"a\" /></td>";
-            }
-          }
-          echo '<td>';
-          if ($display_option['option_text'] != '') echo $display_option['option_text'];
+          $questiondata['option'][$part_id]['dichotomousoptionid'] = $optionID;
+          $questiondata['option'][$part_id]['dichotomoustmppartid'] = $tmp_part_id;
+          $questiondata['option'][$part_id]['dichotomoususeranswer'] = $tmp_user_answer;
+          $questiondata['option'][$part_id]['dichotomousabstain'] = $abstain;
+          $questiondata['option'][$part_id]['dichotomousoptiontext'] = $display_option['option_text'];
           if ($display_option['o_media'] != '') {
-            if ($display_option['option_text'] != '') echo '<br />';
-            echo display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '');
+            $questiondata['option'][$part_id]['displayoptionmedia'] = true;
           }
-          echo "</td></tr>\n";
           $marks += $display_option['marks_correct'];
           break;
         case 'enhancedcalc':
@@ -1035,6 +1016,7 @@ class paperrender {
       }                  // End switch
     }                    // End foreach loop
 
+    $render->render($questiondata, $string, 'paper/question.html');
     if ($question['q_type'] == 'mcq') {
       if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
         if ($question['display_method'] == 'vertical_other' and $paper_type == '3') {

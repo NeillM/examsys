@@ -1,0 +1,12 @@
+<br />
+<div align="left" {% if data.unaswered %} class="unans" style="padding:2px"{% endif %}>
+    <!-- ======================== HTML5 part include disp ================= -->
+    <canvas id='canvas{{data.question_no}}' width='{{data.mediawidth}}' height='{{data.mediaheight}}'></canvas>
+    <br />
+    <div style='width:100%;text-align: left;' id='canvasbox'></div>
+    <script>
+        setUpQuestion("{{data.question_no}}", 'q{{data.question_no}}','{{data.language}}', '{{data.mediafile}}', '{{data.areadisplay}}', '{{data.areauseranswer}}',1,'#FFC0C0','area','answer');
+    </script>
+    <!-- ==================================================== -->
+</div>
+<input type="hidden" name="q{{data.question_no}}" id="q{{data.question_no}}" value="{{data.areafulluseranswer}}"/>
