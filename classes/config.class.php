@@ -442,8 +442,7 @@ SCRIPT;
   protected function update_setting($setting, $value, $type = null, $component = 'core') {
     // Passwords encrypted.
     if ($type == self::PASSWORD) {
-      $encryp = new encryp();
-      $value = $encryp->mcrypt_password($value);
+      $value = \encryp::openssl_encrypt_decrypt("encrypt", $value);
     }
     // Ensure boolean value.
     if ($type == self::BOOLEAN) {
@@ -476,7 +475,7 @@ SCRIPT;
   protected function insert_setting($setting, $value, $type = null, $component = 'core') {
     // Passwords encrypted.
     if ($type == self::PASSWORD) {
-      $value = \encryp::mcrypt_password($value);
+      $value = \encryp::openssl_encrypt_decrypt("encrypt", $value);
     }
     // Ensure boolean value.
     if ($type == self::BOOLEAN) {
@@ -613,7 +612,7 @@ SCRIPT;
     while ($result->fetch()) {
       if ($type == self::PASSWORD) {
         // Password settings are encrypted.
-        $value = \encryp::mdecrypt_password($value);
+        $value = \encrypt::openssl_encrypt_decrypt("decrypt", $value);
       }
       // Decode json.
       if ($type == self::JSON or $type == self::CSV or $type == self::EMAIL) {

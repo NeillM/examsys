@@ -28,8 +28,7 @@ Vagrant.configure("2") do |config|
     apt-get install -y mysql-server
 
     # install PHP 5 with required extensions
-    apt-get install -y php5 php5-gd php5-curl php5-xmlrpc php5-mysql php5-mcrypt
-    php5enmod mcrypt
+    apt-get install -y php5 php5-gd php5-curl php5-xmlrpc php5-mysql
 
     # install Apache with PHP
     apt-get install -y apache2 libapache2-mod-php

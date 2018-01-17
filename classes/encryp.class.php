@@ -71,28 +71,34 @@ class encryp {
             }
         }
     }
-    /**
-     * Encrypt a password that can be decrypted.
-     * 
-     * @param string $password 
-     * @return string encrypted password
-     */
-    public static function mcrypt_password($password) {
-        $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
-        $enc = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, UserUtils::get_salt(), $password, MCRYPT_MODE_ECB, $iv);
-        return trim(base64_encode($enc));
+
+  /**
+   * Encrypt & Decrypt a password that can be decrypted.
+   * @param string $action encrypt or decrypt
+   * @param string $password content to encrypt or decrypt
+   * @param string $encryption_method
+   * @return string $output
+   */
+  public static function openssl_encrypt_decrypt($action, $password, $encryption_method = "AES-256-CBC") {
+    $output = false;
+    $key = base64_encode(UserUtils::get_salt());
+    if ($action == 'encrypt') {
+      // Generate a random string for $iv
+      $str = bin2hex(openssl_random_pseudo_bytes(10));
+      $iv = substr($str, 0, 16);
+      $output = openssl_encrypt($password, $encryption_method, $key, 0, $iv);
+      $output = base64_encode($output);
+      $output = $iv . $output;
+    } else {
+      if ($action == 'decrypt') {
+        $iv = substr($password, 0, 16);
+        $password = substr($password, 16);
+        $output = openssl_decrypt(base64_decode($password), $encryption_method, $key, 0, $iv);
+      }
     }
-    /**
-    * Decrypt the password.
-     * 
-     * @param string $encpassword encrypted password
-     * @return string decrypted password
-     */
-    public static function mdecrypt_password($encpassword) {
-        $iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB), MCRYPT_RAND);
-        $dec = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, UserUtils::get_salt(), base64_decode($encpassword), MCRYPT_MODE_ECB, $iv);
-        return trim($dec);
-    }
+    return $output;
+  }
+
     /**
      * This is function encpw encrypts a password using SHA-512 for storage in the DB.
      * MD5 encryption is kept for backwards compatibility.
