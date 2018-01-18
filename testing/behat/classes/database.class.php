@@ -55,6 +55,12 @@ class database {
       throw new \Exception('Could not connect to database. Aborting.');
     }
 
+    // Check database version is supported.
+    if (!\requirements::check_db($config->get('cfg_db_host'), $config->get('cfg_behat_db_user'), $config->get('cfg_behat_db_password'))) {
+       $mysql_min_ver = $config->getxml('database', 'mysql', 'min_version');
+       throw new \Exception('MySQL version does not meet minimum requirement - ' . $mysql_min_ver);
+    }
+
     // Preset the database usernames to the details of the live site.
     InstallUtils::$cfg_db_username = $config->get('base_database') . '_auth';
     InstallUtils::$cfg_db_student_user = $config->get('base_database') . '_stu';
