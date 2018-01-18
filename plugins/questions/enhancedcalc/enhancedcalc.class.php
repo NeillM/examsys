@@ -1041,6 +1041,9 @@ class EnhancedCalc extends Question implements questionInterface {
   public function render_paper($extra = array()) {
     global $string;
 
+    $configObject = Config::get_instance();
+    $render = new render($configObject);
+
     // Display question on paper
     $screen_pre_submitted = null;
     if (isset($extra['screen_pre_submitted'])) {
@@ -1184,6 +1187,10 @@ class EnhancedCalc extends Question implements questionInterface {
     }
 
     $marks = $this->settings['marks_correct'];
+    $render->render($questiondata, $string, 'plugins' . DIRECTORY_SEPARATOR
+      . 'questions' . DIRECTORY_SEPARATOR
+      . 'enhancedcalc' . DIRECTORY_SEPARATOR
+      . 'templates' . DIRECTORY_SEPARATOR . 'question.html');
   }
 
   /**
