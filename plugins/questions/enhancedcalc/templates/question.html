@@ -1,1 +1,61 @@
-&nbsp;&nbsp;<select name='qid[{{data.id}}][uansunit]'>
+{% if data.displayscenario %}
+<p>{{data.scenario|raw}}</p>
+{% endif %}
+{% if data.calcdisplaymedia %}
+<p align="center">
+    {% include 'paper/media.html' %}
+</p>
+{% endif %}
+{{data.leadin|raw}}
+{% if data.error %}
+<p>
+    <input type="text" style="text-align:right" name="qid[{{data.id}}][uans]" data-screen="{{data.screen}}" size="10" value="" disabled="disabled" />
+    &nbsp;&nbsp;
+    {% if data.showunits %}
+        {% if data.numunitoptions > 1 %}
+    <select name='qid[{{data.id}}][uansunit]'>
+            {% for key,selected in data.options %}
+        <option value='{{key}}' {% if selected %} selected {% endif %}>{{key}}</option>
+            {% endfor %}
+    </select>
+        {% else %}
+    {{data.option}}<input type="hidden" name="qid[{{data.id}}][uansunit]" value="{[data.option}}" />
+        {% endif %}
+    {% endif %}
+    {% if data.feedbackprecision == 'dp' %}
+    <span class="calc_fb">({{lang.answer_to}} {{data.feedbackprecisionvalue}} {{lang.decimal_places}})</span>
+    {% elseif data.feedbackprecision == 'sf' %}
+    <span class="calc_fb">({{lang.answer_to}} {{data.feedbackprecisionvalue}} {{lang.significant_figures}}</span>
+    {% endif %}
+</p>
+<p>
+    <strong>{{data.failedanswer}}</strong>
+</p>
+<input type="hidden" name="missingCalcAnswer" id="missingCalcAnswer" value="1">
+{% else %}
+<div>
+    {% if data.useranswered == 0%}
+    <input type="text" style="text-align:right" name="qid[{{data.id}}][uans]" data-screen="{{data.screen}}" size="10" class="unans ecalc-answer" />
+    {% elseif data.useranswered == 1 %}
+    <input type="text" style="text-align:right" id="q{{data.numonscreen}}" name="qid[{{data.id}}][uans]" data-screen="{{data.screen}}" size="10" value="{{data.answer}}" class="ecalc-answer" />
+    {% elseif data.useranswered == 2 %}
+    <input type="text" style="text-align:right" id="q{{data.numonscreen}}" name="qid[{{data.id}}][uans]" data-screen="{{data.screen}}" size="10" value="" class="ecalc-answer"/>
+    {% endif %}
+    {% if data.showunits %}
+        {% if data.numunitoptions > 1 %}
+    <select name='qid[{{data.id}}][uansunit]'>
+            {% for key,selected in data.options %}
+        <option value='{{key}}' {% if selected %} selected {% endif %}>{{key}}</option>
+            {% endfor %}
+    </select>
+        {% else %}
+    {{data.option}}<input type="hidden" name="qid[{{data.id}}][uansunit]" value="{[data.option}}" />
+        {% endif %}
+    {% endif %}
+    {% if data.feedbackprecision == 'dp' %}
+    <span class="calc_fb">({{lang.answer_to}} {{data.feedbackprecisionvalue}} {{lang.decimal_places}})</span>
+    {% elseif data.feedbackprecision == 'sf' %}
+    <span class="calc_fb">({{lang.answer_to}} {{data.feedbackprecisionvalue}} {{lang.significant_figures}}</span>
+    {% endif %}
+</div>
+{% endif %}

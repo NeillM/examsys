@@ -57,13 +57,15 @@
             {% include 'paper/media.html' %}
         </p>
         {% endif %}
+        {% if data.displayleadin %}
         {{data.leadin|raw}}
+        {% endif %}
 {% endif %}
 {% if data.displayinfo %}
     <tr>
         <td colspan="2" style="padding-left:10px; padding-right:10px">
             {{data.leadin|raw}}
 {% endif %}
-{% if data[data.questiontype] %}
+{% if data[data.questiontype] and data.questiontype != 'enhancedcalc' %}
     {% include 'paper/question/'~data.questiontype~'.html' %}
 {% endif %}

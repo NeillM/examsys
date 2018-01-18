@@ -1042,7 +1042,9 @@ class EnhancedCalc extends Question implements questionInterface {
     global $string;
 
     $configObject = Config::get_instance();
-    $render = new render($configObject);
+    $render = new render($configObject, dirname(__DIR__) . DIRECTORY_SEPARATOR
+      . 'enhancedcalc' . DIRECTORY_SEPARATOR
+      . 'templates');
 
     // Display question on paper
     $screen_pre_submitted = null;
@@ -1081,21 +1083,21 @@ class EnhancedCalc extends Question implements questionInterface {
     }
 
     $dispunits = '';
+    $questiondata['showuntis'] = $this->settings['show_units'];
+    $questiondata['numunitoptions'] = count($this->settings['answersexp']);
+    $questiondata['id'] = $this->id;
     if ($this->settings['show_units'] === true) {
-      if (count($this->settings['answersexp']) > 1) {
+      if ($questiondata['numunitoptions'] > 1) {
         // Make drop down of units
-        $dispunits = "&nbsp;&nbsp;<select name='qid[" . $this->id . "][uansunit]'>";
         foreach ($this->settings['answersexp'] as $key => $value) {
+          $questiondata['options'][$key] = false;
           if ($key == $this->useranswer['uansunit']) {
-            $dispunits = $dispunits . "<option value='$key' selected>$key</option>";
-          } else {
-            $dispunits = $dispunits . "<option value='$key'>$key</option>";
+            $questiondata['options'][$key] = true;
           }
         }
-        $dispunits = $dispunits . '</select>';
       } else {
         $dispunits = array_keys($this->settings['answersexp']);
-        $dispunits = "&nbsp;&nbsp;" . $dispunits[0] . "<input type=\"hidden\" name=\"qid[" . $this->id . "][uansunit]\" value=\"" . $dispunits[0] . "\" />";
+        $questiondata['option'] = $dispunits[0];
       }
     }
 
@@ -1135,22 +1137,28 @@ class EnhancedCalc extends Question implements questionInterface {
       $this->add_to_useranswer('uans', $real_answer);  // Get the real answer and override
     }
 
+    $questiondata['displayscenario'] = false;
     if ($this->scenario != '') {
-      echo "<p>" . $this->scenario . "</p>\n";
+      $questiondata['displayscenario'] = true;
+      $questiondata['scenario'] = $this->scenario;
     }
+    $questiondata['displaymedia'] = false;
     if ($this->q_media != '') {
-      echo "<p align=\"center\">" . display_media($this->q_media, $this->q_media_width, $this->q_media_height, '') . "</p>\n";
+      $questiondata['displaymedia'] = true;
     }
 
     $marking_precision_feedback = '';
+    $questiondata['feedbackprecision'] = 'dp';
     if ($this->is_strict_dp_enabled()) {
-      $marking_precision_feedback = " <span class=\"calc_fb\">(" . $string['answer_to'] . " " . $this->settings['dp'] . " " . $string['decimal_places'] . ")</span>";
+      $marking_precision_feedback = 'dp';
+      $questiondata['feedbackprecisionvalue'] = $this->settings['dp'];
     } else if ($this->is_strict_sf_enabled()) {
-      $marking_precision_feedback = " <span class=\"calc_fb\">(" . $string['answer_to'] . " " . $this->settings['sf'] . " " . $string['significant_figures'] . ")</span>";
+      $marking_precision_feedback = 'sf';
+      $questiondata['feedbackprecisionvalue'] = $this->settings['sf'];
     }
+    $questiondata['feedbackprecision'] = $marking_precision_feedback;
 
-    echo $leadin;
-
+    $questiondata['leadin'] = $leadin;
     // Find any previous failed/unanswered related question
     $failed_answers = array();
     foreach ($this->useranswer['vars'] as $key => $value) {
@@ -1167,30 +1175,29 @@ class EnhancedCalc extends Question implements questionInterface {
     // We could have duplicates if answer/variable in a parent question is used in multiple variables in a child question.
     $failed_answers = array_unique($failed_answers);
     $screen = $extra['current_question']['screen'];
+    $questiondata['screen'] = $screen;
     if (in_array('ERROR', $this->useranswer['vars'], true)) {
-      echo "<p><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" data-screen=\"$screen\" size=\"10\" value=\"\" disabled=\"disabled\" />" . $dispunits . $marking_precision_feedback . "</p>\n";
-      echo "<p><strong>" . sprintf($string['failedanswer'], implode(', ', $failed_answers)) . "</strong></p>";
-      echo "<input type=\"hidden\" name=\"missingCalcAnswer\" id=\"missingCalcAnswer\" value=\"1\">";
+      $questiondata['error'] = true;
+      $questiondata['failedanswer'] =  sprintf($string['failedanswer'], implode(', ', $failed_answers));
     } else {
+      $questiondata['error'] = false;
       if (isset($this->useranswer['uans']) and $this->useranswer['uans'] == '') {
-        echo "<div><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" data-screen=\"$screen\" size=\"10\" class=\"unans ecalc-answer\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
+        $questiondata['useranswered'] = 0;
       } else {
+        $questiondata['numonscreen'] = $extra['num_on_screen'];
         if ((isset($this->useranswer['uans']) and $this->useranswer['uans'] != '')) { // Or $screen_pre_submitted == 0
           $ans = $this->useranswer['uans'];
-
-          echo "<div><input type=\"text\" style=\"text-align:right\" id=\"q{$extra['num_on_screen']}\" name=\"qid[" . $this->id . "][uans]\" data-screen=\"$screen\" size=\"10\" value=\"" . $ans . "\" class=\"ecalc-answer\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
+          $questiondata['useranswered'] = 1;
+          $questiondata['answer'] = $ans;
         } else {
-          echo "<div><input type=\"text\" style=\"text-align:right\" class=\"ecalc-answer\" id=\"q{$extra['num_on_screen']}\" name=\"qid[" . $this->id . "][uans]\" data-screen=\"$screen\" size=\"10\" value=\"\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
           $unanswered = true;
+          $questiondata['useranswered'] = 2;
         }
       }
     }
 
     $marks = $this->settings['marks_correct'];
-    $render->render($questiondata, $string, 'plugins' . DIRECTORY_SEPARATOR
-      . 'questions' . DIRECTORY_SEPARATOR
-      . 'enhancedcalc' . DIRECTORY_SEPARATOR
-      . 'templates' . DIRECTORY_SEPARATOR . 'question.html');
+    $render->render($questiondata, $string, 'question.html');
   }
 
   /**

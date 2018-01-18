@@ -211,6 +211,7 @@ class paperrender {
     $questiondata['question_no'] = $question_no;
     switch ($question['q_type']) {
       case 'enhancedcalc':
+        $questiondata['enhancedcalc'] = true;
         if (isset($user_answers[$current_screen][$q_id])) {
           $d = array();
           $d['useranswer'] = $user_answers[$current_screen][$q_id];
