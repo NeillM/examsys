@@ -120,11 +120,6 @@ class requirements {
   */
   public static function check() {
     $configObject = Config::get_instance();
-    // db.
-    if (!self::check_db()) {
-      $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
-      throw new Exception('MySQL version does not meet minimum requirement - ' . $mysql_min_ver);
-    }
     // php.
     if (!self::check_php_version()) {
       $php_min_ver = $configObject->getxml('php', 'min_version');
