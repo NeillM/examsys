@@ -2138,9 +2138,10 @@ class PaperProperties {
      * 
      * @param boolean $is_question_preview_mode is the paper being previewed
      * @param integer $get_qid question id
+     * @param integer $q_number question number on preview screen
      * @return array
      */
-    public function build_paper($is_question_preview_mode, $get_qid) {
+    public function build_paper($is_question_preview_mode, $get_qid, $q_number) {
         $paperID = $this->get_property_id();
         if ($is_question_preview_mode) {
           $question_data = $this->db->prepare("SELECT

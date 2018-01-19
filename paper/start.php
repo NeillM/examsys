@@ -325,7 +325,7 @@ $render->render($headerdata, $lang, 'header.html');
   $marks = 0;
   $old_theme = '';
   $previous_q_type = '';
-  $tmp_questions_array = $propertyObj->build_paper($is_question_preview_mode, $get_qid);
+  $tmp_questions_array = $propertyObj->build_paper($is_question_preview_mode, $get_qid, $q_number);
 
   // Look for random questions and overwrite as needed
   $questions_array = array();
@@ -362,6 +362,7 @@ $render->render($headerdata, $lang, 'header.html');
   $timer_label = '';
   $timed = false;
   $special_needs_percentage = $userObject->get_special_needs_percentage();
+  $remaining_time = null;
   if ($allow_timing and $propertyObj->get_exam_duration() != null) {
     $timed = true;
     // Summative type. Time is only active in live.
@@ -597,7 +598,9 @@ $render->render($datasetcss, array(), 'paper/dataset.html');
 // User dataset.
 $datasetuser['name'] = 'user';
 $datasetuser['attributes']['student'] = $userObject->has_role('Student');
-$datasetuser['attributes']['remaining_time'] = $remaining_time;
+if (!is_null($remaining_time)) {
+  $datasetuser['attributes']['remaining_time'] = $remaining_time;
+}
 $render->render($datasetuser, array(), 'paper/dataset.html');
 
 if (count($reference_materials) > 0) {
