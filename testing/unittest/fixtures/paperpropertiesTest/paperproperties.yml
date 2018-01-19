@@ -132,17 +132,17 @@ log2:
 question_statuses:
   -
     id: 1
-    name: "statuse1"
+    name: "status1"
     exclude_marking: 0
     retired: 0
   -
     id: 2
-    name: "statuse2"
+    name: "status2"
     exclude_marking: 0
     retired: 0
   -
     id: 3
-    name: "statuse3"
+    name: "status3"
     exclude_marking: 0
     retired: 0
 questions:
