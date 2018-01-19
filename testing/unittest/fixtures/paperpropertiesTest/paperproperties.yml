@@ -129,6 +129,22 @@ log2:
     errorstate: 0
     metadataID: 2
     mark: null
+question_statuses:
+  -
+    id: 1
+    name: "status1"
+    exclude_marking: 0
+    retired: 0
+  -
+    id: 2
+    name: "status2"
+    exclude_marking: 0
+    retired: 0
+  -
+    id: 3
+    name: "status3"
+    exclude_marking: 0
+    retired: 0
 questions:
   -
     q_id: 1
