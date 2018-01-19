@@ -205,6 +205,8 @@ class paperrender {
     $marks = 0;
     if ($question['q_type'] != 'likert') $old_likert_label = '';
 
+    $render->render($questiondata, $string, 'paper/question_header.html');
+
     // Pre-question processing
     $questiondata['questiontype'] = $question['q_type'];
     $questiondata[$question['q_type']] = false;
@@ -414,11 +416,11 @@ class paperrender {
             $tmp_bgcolor = $bgcolor;
           }
 
-          $questiondata['option'][$part_id]['mediawidth'] += 2;
-          $questiondata['option'][$part_id]['mediaheight'] += 27;
-          $questiondata['option'][$part_id]['areadisplay'] = $display_option['correct'];
-          $questiondata['option'][$part_id]['areauseranswer'] = $tmp_user_answer;
-          $questiondata['option'][$part_id]['areafulluseranswer'] = $full_user_ans;
+          $questiondata['mediawidth'] += 2;
+          $questiondata['mediaheight'] += 27;
+          $questiondata['areadisplay'] = $display_option['correct'];
+          $questiondata['areauseranswer'] = $tmp_user_answer;
+          $questiondata['areafulluseranswer'] = $full_user_ans;
           $marks += $display_option['marks_correct'];
           break;
         case 'dichotomous':
@@ -470,12 +472,11 @@ class paperrender {
           break;
         case 'likert':
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and $screen_pre_submitted == 1) {
-            echo '<tr class="unans">';
             $unanswered = true;
+            $questiondata['unanswered'] = true;
           } else {
-            echo '<tr>';
+            $questiondata['unanswered'] = false;
           }
-          echo '<td class="q_no">' . $question['assigned_number'] . '.&nbsp;</td><td>' . $question['leadin'] . '</td>';
           $scale_size = substr_count($question['display_method'],'|');
           if ($likert_display[$scale_size] == 'true') {
             echo "<td style=\"text-align:center; width:40px; vertical-align:top\"><input type=\"radio\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"n/a\"";
@@ -1015,9 +1016,11 @@ class paperrender {
         $marks += $display_option['marks_correct'];
         break;
       }                  // End switch
+      if ($question['q_type'] != 'enhancedcalc') {
+        $render->render($questiondata, $string, 'paper/question.html');
+      }
     }                    // End foreach loop
 
-    $render->render($questiondata, $string, 'paper/question.html');
     if ($question['q_type'] == 'mcq') {
       if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
         if ($question['display_method'] == 'vertical_other' and $paper_type == '3') {

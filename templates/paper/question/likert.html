@@ -41,3 +41,5 @@
     {% endfor %}
     </tr>
 {% endif %}
+    <tr {% if data.unaswered %} class="unans" {% endif %}>
+        <td class="q_no">{{data.assigned_number}}.&nbsp;</td><td>{{data.leadin}}</td>
