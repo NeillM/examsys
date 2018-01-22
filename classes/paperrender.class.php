@@ -133,6 +133,7 @@ class paperrender {
       $questiondata['displaytheme'] = false;
     }
 
+    $questiondata['papertype'] = $paper_type;
     $questiondata['displaycalc'] = false;
     $questiondata['displayassigned'] = false;
     $questiondata['displaymedia'] = false;
@@ -530,32 +531,29 @@ class paperrender {
         case 'mrq':
           $tmp_part_id = $question['option_order'][$part_id-1] + 1;
           $optionID = 'q' . $question_no . '_' . $tmp_part_id;
-          if ($paper_type == 3) {
-            if (isset($user_answers[$current_screen][$q_id]) and substr($user_answers[$current_screen][$q_id],$question['option_order'][$part_id-1],1) == 'y') {
-              echo "<tr><td><input type=\"checkbox\" name=\"$optionID\" id=\"$optionID\" value=\"y\" checked=\"checked\" /></td><td>";
-            } else {
-              echo "<tr><td><input type=\"checkbox\" name=\"$optionID\" id=\"$optionID\" value=\"y\" /></td><td>";
-            }
-          } else {
-            if (isset($user_answers[$current_screen][$q_id]) and substr($user_answers[$current_screen][$q_id],$question['option_order'][$part_id-1],1) == 'y') {
-              echo "<tr><td><input type=\"checkbox\" onclick=\"MRQ($question_no,$tmp_part_id,$option_no,$mrq_correct);\" name=\"$optionID\" id=\"$optionID\" value=\"y\" checked=\"checked\" /></td><td>";
-            } else {
-              echo "<tr><td><input type=\"checkbox\" onclick=\"MRQ($question_no,$tmp_part_id,$option_no,$mrq_correct);\" name=\"$optionID\" id=\"$optionID\" value=\"y\" /></td><td>";
-            }
+          $questiondata['option'][$part_id]['tmp_part_id'] = $tmp_part_id;
+          $questiondata['option'][$part_id]['option_no'] = $option_no;
+          $questiondata['option'][$part_id]['mrq_correct'] = $mrq_correct;
+          $questiondata['option'][$part_id]['optiontextdisplay'] = false;
+          $questiondata['option'][$part_id]['optiontext'] = $display_option['option_text'];
+          if ($display_option['option_text'] != '') {
+            $questiondata['option'][$part_id]['optiontextdisplay'] = true;
           }
-
+          if ($display_option['o_media'] != '') {
+            $questiondata['option'][$part_id]['displayoptionmedia'] = true;
+          }
+          if (isset($user_answers[$current_screen][$q_id]) and substr($user_answers[$current_screen][$q_id],$question['option_order'][$part_id-1],1) == 'y') {
+            $questiondata['option'][$part_id]['selected'] = true;
+          } else {
+            $questiondata['option'][$part_id]['selected'] = false;
+          }
           if (isset($user_dismiss[$current_screen][$q_id]) and substr($user_dismiss[$current_screen][$q_id],$part_id-1,1) == '1') {
             $class_type = 'inact';
+            $questiondata['option'][$part_id]['inact'] = true;
           } else {
+            $questiondata['option'][$part_id]['inact'] = false;
             $class_type = 'act';
           }
-
-          if ($display_option['option_text'] != '') echo "<span class=\"$class_type\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . '</span>';
-          if ($display_option['o_media'] != '') {
-            if ($display_option['option_text'] != '') echo '<br />';
-            echo display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '');
-          }
-          echo "</td></tr>\n";
           if ($question['score_method'] == 'Mark per Option') {
             if ($display_option['correct'] == 'y') $marks += $display_option['marks_correct'];  // Mark for correct options only
           } elseif ($question['score_method'] == 'Mark per Question') {
