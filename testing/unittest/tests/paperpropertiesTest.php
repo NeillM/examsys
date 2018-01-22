@@ -55,13 +55,10 @@ class paperpropertiestest extends unittestdatabase {
         $properties->save();
         // Check password updating.
         $paperproperty = PaperProperties::get_paper_properties_by_id(45, $this->db, ''); // Get a fresh property object to check if password saved
+        $savedencryptedpass = $paperproperty->get_password();
+        $this->assertNotEquals($newpassword, $savedencryptedpass);
         $savedpass = $paperproperty->get_decrypted_password();
         $this->assertEquals($newpassword, $savedpass);
-
-        // Check track changes recorded.
-        $querychangestable = $this->getConnection()->createQueryTable('track_changes', 'SELECT id, type, typeID, editor, new, part FROM track_changes');
-        $expectedchangestable = $this->get_expected_data_set('paperproperties_updated')->getTable("track_changes");
-        $this->assertTablesEqual($expectedchangestable, $querychangestable);
     }
 
     /**
