@@ -235,7 +235,7 @@ class paperrender {
         break;
       case 'mcq':
         $questiondata['mcq'] = true;
-        $questiondata['mcq_display_method'] = 0;
+        $questiondata['mcqdisplaymethod'] = '';
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0' and $screen_pre_submitted == 1) {
           $questiondata['unanswered'] = true;
           $unanswered = true;
@@ -243,9 +243,9 @@ class paperrender {
           $questiondata['unanswered'] = false;
         }
         if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
-          $questiondata['mcq_display_method'] = 1;
+          $questiondata['mcqdisplaymethod'] = 'vertical';
         } elseif ($question['display_method'] == 'dropdown') {
-          $questiondata['mcq_display_method'] = 2;
+          $questiondata['mcqdisplaymethod'] = 'dropdown';
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0') {
             $questiondata['unanswered'] = true;
             $unanswered = true;
@@ -499,39 +499,31 @@ class paperrender {
           break;
         case 'mcq':
           $tmp_part_id = $question['option_order'][$part_id-1] + 1;
+          $questiondata['mcqpartid'] = $tmp_part_id;
+          if (isset($user_answers[$current_screen][$q_id]) and $tmp_part_id == $user_answers[$current_screen][$q_id]) {
+            $questiondata['option'][$part_id]['selected'] = true;
+          } else {
+            $questiondata['option'][$part_id]['selected'] = false;
+          }
+          $questiondata['option'][$part_id]['optiontextdisplay'] = false;
+          if ($display_option['option_text'] != '') {
+            $questiondata['option'][$part_id]['optiontextdisplay'] = true;
+          }
+          $questiondata['option'][$part_id]['optiontext'] = $display_option['option_text'];
+          if ($display_option['o_media'] != '') {
+            $questiondata['option'][$part_id]['displayoptionmedia'] = true;
+          }
           if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
-            if (isset($user_answers[$current_screen][$q_id]) and $tmp_part_id == $user_answers[$current_screen][$q_id]) {
-              echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$tmp_part_id\" checked=\"checked\" /></td><td>";
-            } else {
-              echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$tmp_part_id\" /></td><td>";
-            }
+            $questiondata['mcqdisplaymethod'] = 'vertical';
             if (isset($user_dismiss[$current_screen][$q_id]) and substr($user_dismiss[$current_screen][$q_id],$tmp_part_id-1,1) == '1') {
               $class_type = 'inact';
+              $questiondata['option'][$part_id]['inact'] = true;
             } else {
+              $questiondata['option'][$part_id]['inact'] = false;
               $class_type = 'act';
             }
-            if ($display_option['option_text'] != '') echo "<span class=\"$class_type\" id=\"$question_no" . "_" . "$tmp_part_id\">" . $display_option['option_text'] . '</span>';
-            if ($display_option['o_media'] != '') {
-              if ($display_option['option_text'] != '') echo '<br />';
-              echo display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'], '');
-            }
-            echo "</td></tr>\n";
           } elseif ($question['display_method'] == 'horizontal') {
-            echo "<div style=\"float:left; margin-right:15px; margin-bottom:15px\">";
-            if (isset($user_answers[$current_screen][$q_id]) and $tmp_part_id == $user_answers[$current_screen][$q_id]) {
-              echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"" . $tmp_part_id . "\" checked=\"checked\" />";
-            } else {
-              echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"" . $tmp_part_id . "\" />";
-            }
-            if ($display_option['option_text'] != '') echo '&nbsp;' . $display_option['option_text'];
-            if ($display_option['o_media'] != '') echo '&nbsp;' . display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '');
-            echo "</div>";
-          } else {
-            if (isset($user_answers[$current_screen][$q_id]) and $tmp_part_id == $user_answers[$current_screen][$q_id]) {
-              echo "<option value=\"" . $tmp_part_id . "\" selected>" . $display_option['option_text'] . "</option>\n";
-            } else {
-              echo "<option value=\"" . $tmp_part_id . "\">" . $display_option['option_text'] . "</option>\n";
-            }
+            $questiondata['mcqdisplaymethod'] = 'horizontal';
           }
           if ($tmp_part_id == $display_option['correct']) $marks = $display_option['marks_correct'];
           break;
@@ -1020,11 +1012,10 @@ class paperrender {
         $marks += $display_option['marks_correct'];
         break;
       }                  // End switch
-      if ($question['q_type'] != 'enhancedcalc') {
-        $render->render($questiondata, $string, 'paper/question.html');
-      }
     }                    // End foreach loop
-
+    if ($question['q_type'] != 'enhancedcalc') {
+      $render->render($questiondata, $string, 'paper/question.html');
+    }
     if ($question['q_type'] == 'mcq') {
       if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
         if ($question['display_method'] == 'vertical_other' and $paper_type == '3') {

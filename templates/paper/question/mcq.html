@@ -1,8 +1,38 @@
 <blockquote {% if data.unaswered %} class="unans" {% endif %}>
-{% if data.mcq_display_method == 1 %}
+{% if data.mcqdisplaymethod == 'vertical' %}
     <table cellpadding="2" cellspacing="0" border="0">
-{% elseif data.mcq_display_method == 2 %}
-    <div class="option">
-        <select {%if data.unaswered %} class="unans" {% endif %} name="q{{data.question_no}}" size="1">
-            <option value=""></option>
+    {% for i,p in data.option %}
+        <tr>
+            <td>
+                <input type="radio" name="q{{data.question_no}}" value="{{i}}" {% if p.selected %} checked="checked" {% endif %}/>
+            </td>
+            <td>
+            {% if p.optiontextdisplay %}
+            <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.question_no}}_{{i}}"> {{p.optiontext|raw}}</span></br>
+            {% endif %}
+            {% if p.displayoptionmedia %}
+                {% include 'paper/media.html' with {'data': p.optionmedia} %}
+            {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+{% elseif data.mcqdisplaymethod == 'horizontal' %}
+    {% for i,p in data.option %}
+        <div style="float:left; margin-right:15px; margin-bottom:15px">
+            <input type="radio" name="q{{data.question_no}}" value="{{i}}" {% if p.selected %} checked="checked" {% endif %} />
+        {% if p.optiontextdisplay %}
+                &nbsp;{{p.optiontext|raw}}
+        {% endif %}
+        {% if p.displayoptionmedia %}
+            {% include 'paper/media.html' with {'data': p.optionmedia} %}
+        {% endif %}
+        </div>
+    {% endfor %}
+{% else %}
+<div class="option">
+    <select {%if data.unaswered %} class="unans" {% endif %} name="q{{data.question_no}}" size="1">
+        <option value=""></option>
+    {% for i,p in data.option %}
+        <option value="{{i}}" {% if p.selected %} selected {% endif %}>{{p.optiontext|raw}}</option>
+    {% endfor %}
 {% endif %}
