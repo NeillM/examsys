@@ -27,6 +27,78 @@ require 'load_config.php';
 include_once $cfg_web_root . 'tools/getid3/getid3.php';
 
 /**
+ * Function takes a filename with the width and height and returns appropriate HTML to display the media type.
+ *
+ * @param mixed $filename
+ * @param mixed $width
+ * @param mixed $height
+ * @param mixed $imageid
+ *
+ */
+function display_media($filename, $width, $height, $border_color, $imageid=-1, $locked=false) {
+
+  $configObject = Config::get_instance();
+
+  $mediadirectory = rogo_directory::get_directory('media');
+  $html = '';
+
+  $fn_parts = pathinfo($filename);
+
+  if ($imageid > -1) $html .= "<div id=\"media$imageid\" class=\"media\">";
+  // Is the file an image or something else (e.g. RasMol)?
+  if (!array_key_exists('extension', $fn_parts)) {
+    $html .= "<embed src=\"" . $mediadirectory->url($filename) . "\" width=\"$width\" height=\"$height\" border=\"1\" alt=\"Data File\" wmode=\"opaque\"></embed>";
+  } elseif (array_key_exists('extension', $fn_parts) and in_array(strtolower($fn_parts['extension']), array('gif', 'jpg', 'jpeg', 'png'))) {
+    if ($border_color == '') {
+      $html .= "<img src=\"" . $mediadirectory->url($filename) . "\" width=\"$width\" height=\"$height\" alt=\"Image\" />";
+    } else {
+      $html .= "<img src=\"" . $mediadirectory->url($filename) . "\" width=\"$width\" height=\"$height\" alt=\"Image\" style=\"border: 1px solid $border_color\" />";
+    }
+  } elseif (in_array($fn_parts['extension'], array('wav', 'wma', 'mid'))) {
+    $html .= "<img src=\"audio_icon_32.gif\" width=\"32\" height=\"32\" alt=\"Audio File\" /><a href=\"" . $mediadirectory->url($filename) . "\">Audio Clip</a>";
+  } elseif (in_array($fn_parts['extension'], array('doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'pdf'))) {
+    $html .= "<iframe src=\"" . $mediadirectory->url($filename) . "\" width=\"$width\" height=\"$height\" align=\"center\">Your browser does not support iframes!</iframe>";
+  } elseif ($fn_parts['extension'] == 'flv') {
+    if ($width == 0 or $height == 0) {
+      $width = 320;
+      $height = 260;
+    }
+    $html .= <<< OBJEMBED
+<object type="application/x-shockwave-flash" data="{$configObject->get('cfg_root_path')}/paper/player_flv_maxi.swf" width="{$width}" height="{$height}">
+<param name="movie" value="{$configObject->get('cfg_root_path')}/paper/player_flv_maxi.swf" />
+<param name="FlashVars" value="flv={$mediadirectory->url($filename, false, false, true)}&amp;buffermessage=&amp;showplayer=always&amp;showvolume=1&amp;showstop=1&amp;showtime=1&amp;margin=1" />
+</object>
+OBJEMBED;
+
+  } elseif ($fn_parts['extension'] == 'mp3') {     // Embed MP3 using HTML5 audio tag.
+
+    if (strpos($_SERVER['PHP_SELF'],'/edit/') !== false or strpos($_SERVER['PHP_SELF'],'/add/') !== false) {  // Display filename if add or edit script
+      $html .= $filename . '&nbsp;';
+    }
+
+    $html .= <<< OBJEMBED
+<audio src="{$mediadirectory->url($filename)}" controls>
+</object>
+</audio>
+OBJEMBED;
+  } elseif ($fn_parts['extension'] == 'avi' or $fn_parts['extension'] == 'wmv') {
+    $html .= "<embed src=\"" . $mediadirectory->url($filename) . "\" width=\"$width\" height=\"$height\" border=\"1\" autoplay=\"true\" loop=\"false\" alt=\"Data File\" wmode=\"opaque\"></embed>";
+  } else {
+    $html .= "<embed src=\"" . $mediadirectory->url($filename) . "\" width=\"$width\" height=\"$height\" border=\"1\" alt=\"Data File\" wmode=\"opaque\"></embed>";
+  }
+  if ($imageid > -1 and !$locked) {
+    $html .= <<< DELETE
+<a href="#" class="media-delete" rel="{$imageid}"><img class="align-bottom" src="{$configObject->get('cfg_root_path')}/artwork/red_cross.png" width="16" height="16" alt="Delete" /></a></div>
+<label class="hide"><input type="checkbox" id="delete_media{$imageid}" name="delete_media{$imageid}" /> Delete image {$imageid}</label>
+<input type="hidden" id="existing_media{$imageid}" name="existing_media{$imageid}" value="$filename" />
+
+DELETE;
+  }
+
+  return $html;
+}
+
+/**
  * This is function returns a unique filename so that files are not overwritten on the server.
  * The filename is initially seeded with the current UNIX time in seconds plus the original
  * file extension.
