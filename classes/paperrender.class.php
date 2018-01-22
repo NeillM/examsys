@@ -148,9 +148,8 @@ class paperrender {
     $mediadata = self::get_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
     $questiondata = array_merge($questiondata, $mediadata);
     if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
-      $questiondata['displayassigned'] = true;
       if ($question['scenario'] != '' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'matrix' and $question['q_type'] != 'likert' and $question['q_type'] != 'enhancedcalc') {
-        
+        $questiondata['displayassigned'] = true;
         if ($calculator == 1)  {
           $questiondata['displaycalc'] = true;
         }
@@ -164,6 +163,7 @@ class paperrender {
       }
       if ($question['q_media'] != '' and $question['q_type'] != 'hotspot' and $question['q_type'] != 'labelling' and $question['q_type'] != 'flash' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'area' and $question['q_type'] != 'enhancedcalc') {
         if ($li_set == 0) {
+          $questiondata['displayassigned'] = true;
           if ($calculator == 1)  {
             $questiondata['displaycalc'] = true;
           }
@@ -173,6 +173,7 @@ class paperrender {
       }
       if ($question['q_type'] != 'likert') {
         if ($li_set == 0) {
+          $questiondata['displayassigned'] = true;
           if ($calculator == 1)  {
             $questiondata['displaycalc'] = true;
           }
@@ -478,20 +479,23 @@ class paperrender {
             $questiondata['unanswered'] = false;
           }
           $scale_size = substr_count($question['display_method'],'|');
+          $questiondata['likertscaledisplay'] = false;
+          $questiondata['likertoptionid'] = $question_no . "_" . $part_id;
           if ($likert_display[$scale_size] == 'true') {
-            echo "<td style=\"text-align:center; width:40px; vertical-align:top\"><input type=\"radio\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"n/a\"";
-            if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'n/a') echo ' checked="checked"';
-            echo "/></td>";
+            $questiondata['likertscaledisplay'] = true;
+            $questiondata['likertscalena'] = false;
+            if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'n/a') {
+              $questiondata['likertscalena'] = true;
+            }
           }
           for ($i=1; $i<=$scale_size; $i++) {
             $optionID = 'q' . $question_no . '_' . $part_id;
             if (isset($user_answers[$current_screen][$q_id]) and $i == $user_answers[$current_screen][$q_id]) {
-              echo "<td class=\"likert_button\"><input type=\"radio\" name=\"$optionID\" value=\"$i\" checked=\"checked\" /></td>";
+              $questiondata['likertscale'][$i] = true;
             } else {
-              echo "<td class=\"likert_button\"><input type=\"radio\" name=\"$optionID\" value=\"$i\" /></td>";
+              $questiondata['likertscale'][$i] = false;
             }
           }
-          echo "</tr>\n";
           break;
         case 'mcq':
           $tmp_part_id = $question['option_order'][$part_id-1] + 1;
