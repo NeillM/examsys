@@ -51,11 +51,11 @@
     </tr>
     <tr>
         <td style="width:49%; vertical-align:top">
-            {{data.sctpart0}}
+            {{data.sctpart0|raw}}
         </td>
         <td style="width:2%">&nbsp;</td>
         <td style="width:49%; vertical-align:top">
-            {{data.sctpart1}}
+            {{data.sctpart1|raw}}
         </td>
     </tr>
 </table>
@@ -66,3 +66,15 @@
 </p>
 <blockquote {% if data.unaswered %} class="unans" {% endif %}>
     <table cellpadding="2" cellspacing="0" border="0">
+{% for i,p in data.option %}
+        <tr>
+            <td>
+                <input type="radio" name="q{{data.question_no}}" value="{{data.tmp_part_id}}" {% if p.selected %} checked="checked" {% endif %} />
+            </td>
+            <td>
+    {% if p.optiontextdisplay %}
+                <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{p.option_no}}">{{p.optiontext}}</span>
+            </td>
+        </tr>
+    {% endif %}
+{% endfor %}

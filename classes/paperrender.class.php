@@ -621,17 +621,19 @@ class paperrender {
         case 'sct':
           $tmp_part_id = $question['option_order'][$part_id-1] + 1;
           if (isset($user_answers[$current_screen][$q_id]) and $tmp_part_id == $user_answers[$current_screen][$q_id]) {
-            echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$tmp_part_id\" checked=\"checked\" /></td><td>";
+            $questiondata['option'][$part_id]['selected'] = true;
           } else {
-            echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"$tmp_part_id\" /></td><td>";
+            $questiondata['option'][$part_id]['selected'] = false;
           }
           if (isset($user_dismiss[$current_screen][$q_id]) and substr($user_dismiss[$current_screen][$q_id],$tmp_part_id-1,1) == '1') {
-            $class_type = 'inact';
+            $questiondata['option'][$part_id]['inact'] = true;
           } else {
-            $class_type = 'act';
+            $questiondata['option'][$part_id]['inact'] = false;
           }
-          if ($display_option['option_text'] != '') echo "<span class=\"$class_type\" id=\"$question_no" . "_" . "$tmp_part_id\">" . $display_option['option_text'] . '</span>';
-          echo "</td></tr>\n";
+          $questiondata['option'][$part_id]['optiontextdisplay'] = false;
+          if ($display_option['option_text'] != '') {
+            $questiondata['option'][$part_id]['optiontextdisplay'] = true;
+          }
           break;
         case 'true_false':
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and $screen_pre_submitted == 1) {
