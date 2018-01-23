@@ -636,58 +636,46 @@ class paperrender {
           }
           break;
         case 'true_false':
+          $questiondata['true_false'] = true;
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and $screen_pre_submitted == 1) {
-            echo '<blockquote style="line-height:175%" class="unans">';
+            $questiondata['unanswered'] = true;
             $unanswered = true;
           } else {
-            echo '<blockquote style="line-height:175%">';
+            $questiondata['unanswered'] = false;
           }
 
-          $true_checked = '';
-          $false_checked = '';
-          $abstain_checked = '';
-
+          $questiondata['trueselected'] = false;
+          $questiondata['falseselected'] = false;
+          $questiondata['abstainselected'] = false;
+          $questiondata['tfdisplaymethod'] = '';
           if ($question['display_method'] == 'dropdown') {
-            echo "<select name=\"q" . $question_no . "\">\n";
-            echo "<option value=\"\"></option>\n";
+            $questiondata['tfdisplaymethod'] = 'dropdown';
             if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 't') {
-              echo "<option value=\"t\" selected>" . $string['true'] . "</option>\n";
-            } else {
-              echo "<option value=\"t\">" . $string['true'] . "</option>\n";
+              $questiondata['trueselected'] = true;
             }
             if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'f') {
-              echo "<option value=\"f\" selected>" . $string['false'] . "</option>\n";
-            } else {
-              echo "<option value=\"f\">" . $string['false'] . "</option>\n";
+              $questiondata['falseselected'] = true;
             }
-            echo "</select>\n";
           } else {
-            if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 't') $true_checked = ' checked="checked"';
-            if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'f') $false_checked = ' checked="checked"';
-
-            echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"t\"$true_checked />&nbsp;" . $string['true'];
-            if ($question['display_method'] == 'horizontal') {
-              echo '&nbsp;&nbsp;&nbsp;';
-            } elseif ($question['display_method'] == 'vertical') {
-              echo '<br />';
+            if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 't') {
+              $questiondata['trueselected'] = true;
             }
-            echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"f\"$false_checked />&nbsp;" . $string['false'];
+            if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'f') {
+              $questiondata['falseselected'] = false;
+            }
 
+            if ($question['display_method'] == 'horizontal') {
+              $questiondata['tfdisplaymethod'] = 'horizontal';
+            } elseif ($question['display_method'] == 'vertical') {
+              $questiondata['tfdisplaymethod'] = 'vertical';
+            }
+            $questiondata['neg_marking'] = $neg_marking;
             if ($neg_marking) {
               if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'a') {
-                $abstain_checked = ' checked="checked"';
+                $questiondata['abstainselected'] = true;
               }
-              if ($question['display_method'] == 'horizontal') {
-                echo '&nbsp;&nbsp;&nbsp;';
-              } elseif ($question['display_method'] == 'vertical') {
-                echo '<br />';
-              }
-              echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"a\"$abstain_checked />&nbsp;<span style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</span>";         
             }
           }
-
-          echo '</blockquote>';
-
           $marks = $display_option['marks_correct'];
 
           break;

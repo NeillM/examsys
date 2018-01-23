@@ -1,0 +1,23 @@
+<blockquote style="line-height:175%" {% if data.unanswered %} class="unans" {% endif %}>
+{% if data.tfdisplaymethod == 'dropdown' %}
+    <select name="q{{data.question_no}}">
+        <option value=""></option>
+        <option value="t" {% if data.trueselected %} selected {% endif %}>{{lang.true}}</option>
+        <option value="f" {% if data.falseselected %} selected {% endif %}>{{lang.false}}</option>
+    </select>
+{% else %}
+    <input type="radio" name="q{{data.question_no}}" value="t" {% if data.trueselected %} checked="checked" {% endif %} />&nbsp;{{lang.true}}
+    {% if data.tfdisplaymethod == 'horizontal' %}
+    &nbsp;&nbsp;&nbsp;
+    {% elseif data.tfdisplaymethod == 'vetical' %}
+    <br />
+    {% endif %}
+    <input type="radio" name="q{{data.question_no}}" value="f" {% if data.falseselected %} checked="checked" {% endif %} />&nbsp;{{lang.false}}
+    {% if data.tfdisplaymethod == 'horizontal' %}
+    &nbsp;&nbsp;&nbsp;
+    {% elseif data.tfdisplaymethod == 'vetical' %}
+    <br />
+    {% endif %}
+    <input type="radio" name="q{{data.question_no}}" value="a" {% if data.abstainelected %} checked="checked" {% endif %} />&nbsp;<span style="color:{{data.labelcolour}}">&lt;{{lang.abstain}}&gt;</span>
+{% endif %}
+</blockquote>
