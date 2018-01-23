@@ -383,12 +383,15 @@ class paperrender {
         break;
     }
 
-    
     $questiondata['displayoptionmedia'] = false;
     // Processing for each stem.
     foreach ($question['options'] as $display_option) {
       $part_id++;
       $questiondata['option'][$part_id]['optionmedia'] = self::get_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '');
+      $questiondata['option'][$part_id]['optiontext'] = $display_option['option_text'];
+      $tmp_part_id = $question['option_order'][$part_id-1] + 1;
+      $questiondata['option'][$part_id]['option_no'] = 'q' . $question_no . '_' . $tmp_part_id;
+      $questiondata['option'][$part_id]['tmp_part_id'] = $tmp_part_id;
       switch ($question['q_type']) {
         case 'area':
           $questiondata['area'] = true;
@@ -445,14 +448,8 @@ class paperrender {
             $questiondata['option'][$part_id]['unanswered'] = true;
           }
           $questiondata['option'][$part_id]['dichotomouspartid'] = $part_id;
-
-          $tmp_part_id = $question['option_order'][$part_id-1] + 1;
-          $optionID = 'q' . $question_no . '_' . $tmp_part_id;
-          $questiondata['option'][$part_id]['dichotomousoptionid'] = $optionID;
-          $questiondata['option'][$part_id]['dichotomoustmppartid'] = $tmp_part_id;
           $questiondata['option'][$part_id]['dichotomoususeranswer'] = $tmp_user_answer;
           $questiondata['option'][$part_id]['dichotomousabstain'] = $abstain;
-          $questiondata['option'][$part_id]['dichotomousoptiontext'] = $display_option['option_text'];
           if ($display_option['o_media'] != '') {
             $questiondata['option'][$part_id]['displayoptionmedia'] = true;
           }
@@ -499,7 +496,6 @@ class paperrender {
           }
           break;
         case 'mcq':
-          $tmp_part_id = $question['option_order'][$part_id-1] + 1;
           $questiondata['mcqpartid'] = $tmp_part_id;
           if (isset($user_answers[$current_screen][$q_id]) and $tmp_part_id == $user_answers[$current_screen][$q_id]) {
             $questiondata['option'][$part_id]['selected'] = true;
@@ -510,7 +506,6 @@ class paperrender {
           if ($display_option['option_text'] != '') {
             $questiondata['option'][$part_id]['optiontextdisplay'] = true;
           }
-          $questiondata['option'][$part_id]['optiontext'] = $display_option['option_text'];
           if ($display_option['o_media'] != '') {
             $questiondata['option'][$part_id]['displayoptionmedia'] = true;
           }
@@ -529,13 +524,8 @@ class paperrender {
           if ($tmp_part_id == $display_option['correct']) $marks = $display_option['marks_correct'];
           break;
         case 'mrq':
-          $tmp_part_id = $question['option_order'][$part_id-1] + 1;
-          $optionID = 'q' . $question_no . '_' . $tmp_part_id;
-          $questiondata['option'][$part_id]['tmp_part_id'] = $tmp_part_id;
-          $questiondata['option'][$part_id]['option_no'] = $option_no;
           $questiondata['option'][$part_id]['mrq_correct'] = $mrq_correct;
           $questiondata['option'][$part_id]['optiontextdisplay'] = false;
-          $questiondata['option'][$part_id]['optiontext'] = $display_option['option_text'];
           if ($display_option['option_text'] != '') {
             $questiondata['option'][$part_id]['optiontextdisplay'] = true;
           }
@@ -567,7 +557,6 @@ class paperrender {
           $matching_options[] = $display_option['option_text'];
             break;
         case 'rank':
-          $tmp_part_id = $question['option_order'][$part_id-1] + 1;
           if (isset($user_answers[$current_screen][$q_id])) {
             $rank_answers = explode(',', $user_answers[$current_screen][$q_id]);
           } else {
@@ -596,48 +585,33 @@ class paperrender {
           } else {
             $answers_needed = $total_rank_no;
           }
-
-          echo '<tr';
+          $questiondata['option'][$part_id]['unans'] = false;
           if (isset($rank_answers[$tmp_part_id - 1]) and $rank_answers[$tmp_part_id - 1] == 'u' and $screen_pre_submitted == 1 and $tmp_user_answers < $answers_needed) {
-            echo ' class="unans"';
+            $questiondata['option'][$part_id]['unans'] = true;
             $unanswered = true;
           }
-          echo "><td class=\"option\"><select name=\"q" . $question_no . "_" . $tmp_part_id . "\" id=\"q" . $question_no . "_" . $tmp_part_id . "\" class=\"rankselect q" . $question_no . "\">\n";
-
-          echo "<option value=\"u\"></option>\n";
+          $questiondata['option'][$part_id]['na'] = false;
           if ($require_na) {
+            $questiondata['option'][$part_id]['na'] = true;
             if (isset($rank_answers[$tmp_part_id - 1]) and $rank_answers[$tmp_part_id - 1] == '0') {
-              echo "<option value=\"0\" selected>" . $string['na'] . "</option>\n";
+              $questiondata['option'][$part_id]['selected'] = true;
             } else {
-              echo "<option value=\"0\">" . $string['na'] . "</option>\n";
+              $questiondata['option'][$part_id]['selected'] = false;
             }
           }
+          $questiondata['option'][$part_id]['totalrank'] = $total_rank_no;
           for ($i=1; $i<=$total_rank_no; $i++) {
             if (isset($rank_answers[$tmp_part_id - 1]) and $i == $rank_answers[$tmp_part_id - 1]) {
-              echo "<option value=\"" . $i . "\" selected>" . $i;
+              $questiondata['option'][$part_id]['selected'] = true;
             } else {
-              echo "<option value=\"" . $i . "\">" . $i;
+              $questiondata['option'][$part_id]['selected'] = false;
             }
-            if ($language == 'en') {
-              if ($i == 1) {
-                echo 'st';
-              } elseif ($i == 2) {
-                echo 'nd';
-              } elseif ($i == 3) {
-                echo 'rd';
-              } else {
-                echo 'th';
-              }
-            }
-            echo '</option>';
           }
-          echo '</select></td>';
           if (isset($user_dismiss[$current_screen][$q_id]) and substr($user_dismiss[$current_screen][$q_id],$tmp_part_id-1,1) == '1') {
-            $class_type = 'inact';
+            $questiondata['option'][$part_id]['inact'] = true;
           } else {
-            $class_type = 'act';
+            $questiondata['option'][$part_id]['inact'] = false;
           }
-          echo "<td><span class=\"$class_type\" id=\"$question_no" . "_" . "$tmp_part_id\">" . $display_option['option_text'] . "</span></td>\n</tr>\n";
           if ($display_option['correct'] != 0) {
             $marks += $display_option['marks_correct'];
           } elseif ($question['score_method'] == 'Mark per Option') {

@@ -25,19 +25,19 @@
 {% for i,p in data.option %}
         <tr id="q{{p.question_no}}_opt{{p.dichotomouspartid}}" {% if p.unaswered %} class="unans"{% endif %}>
             <td align="center">
-                <input type="radio" name="{{p.dichotomousoptionid}}" value="t" {% if p.dichotomoususeranswer == 't' %} checked="checked" {% endif %}/>
+                <input type="radio" name="{{p.option_no}}" value="t" {% if p.dichotomoususeranswer == 't' %} checked="checked" {% endif %}/>
             </td>
             <td align="center">
-                <input type="radio" name="q{{p.question_no}}_{{p.dichotomoustmppartid}}" value="f" {% if p.dichotomoususeranswer == 'f' %} checked="checked" {% endif %}/>
+                <input type="radio" name="q{{p.question_no}}_{{p.tmp_part_id}}" value="f" {% if p.dichotomoususeranswer == 'f' %} checked="checked" {% endif %}/>
             </td>
     {% if p.dichotomousabstain %}
             <td align="center">
-                <input type="radio" name="{{p.dichotomousoptionid}}" value="a" {% if p.dichotomoususeranswer == 'a' %} checked="checked" {% endif %}/>
+                <input type="radio" name="{{p.option_no}}" value="a" {% if p.dichotomoususeranswer == 'a' %} checked="checked" {% endif %}/>
             </td>
     {% endif %}
             <td>
-    {% if p.dichotomousoptiontext != '' %}
-                {{p.dichotomousoptiontext}}<br />
+    {% if p.optiontext != '' %}
+                {{p.optiontext}}<br />
     {% endif %}
     {% if p.displayoptionmedia %}
                 {% include 'paper/media.html' with {'data': p.optionmedia} %}
