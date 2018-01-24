@@ -1,5 +1,5 @@
 <blockquote style="line-height:175%" {% if data.unanswered %} class="unans" {% endif %}>
-{% if data.tfdisplaymethod == 'dropdown' %}
+{% if data.displaymethod == 'dropdown' %}
     <select name="q{{data.question_no}}">
         <option value=""></option>
         <option value="t" {% if data.trueselected %} selected {% endif %}>{{lang.true}}</option>
@@ -7,15 +7,15 @@
     </select>
 {% else %}
     <input type="radio" name="q{{data.question_no}}" value="t" {% if data.trueselected %} checked="checked" {% endif %} />&nbsp;{{lang.true}}
-    {% if data.tfdisplaymethod == 'horizontal' %}
+    {% if data.displaymethod == 'horizontal' %}
     &nbsp;&nbsp;&nbsp;
-    {% elseif data.tfdisplaymethod == 'vetical' %}
+    {% elseif data.displaymethod == 'vetical' %}
     <br />
     {% endif %}
     <input type="radio" name="q{{data.question_no}}" value="f" {% if data.falseselected %} checked="checked" {% endif %} />&nbsp;{{lang.false}}
-    {% if data.tfdisplaymethod == 'horizontal' %}
+    {% if data.displaymethod == 'horizontal' %}
     &nbsp;&nbsp;&nbsp;
-    {% elseif data.tfdisplaymethod == 'vetical' %}
+    {% elseif data.displaymethod == 'vetical' %}
     <br />
     {% endif %}
     <input type="radio" name="q{{data.question_no}}" value="a" {% if data.abstainelected %} checked="checked" {% endif %} />&nbsp;<span style="color:{{data.labelcolour}}">&lt;{{lang.abstain}}&gt;</span>

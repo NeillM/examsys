@@ -1,0 +1,20 @@
+{% if data.displaymethod == 'textboxes' %}
+<p class="stem">
+{% for i,p in data.option %}
+   {{p.blurb}} <input type="text" name="q{{data.question_no}}_{{i}}" {% if p.unaswered %} class="unans" {% else %} value="{{p.encoded_ans}}" {% endif %} size="{{p.size}}" />
+{% endfor %}
+{{data.fibend}}
+</p>
+{% else %}
+<p>
+{% for i,p in data.option %}
+    {{p.blurb}} <select name="q{{data.question_no}}_{{i}}" {% if p.unaswered %} class="unans" {% endif %}>
+                    <option value="u"></option>
+       {% for a in p.answer_list %}
+                    <option value="{{a.answer}}" {% if a.selected %} selected {% endif %}>{{a.answer}}</option>
+       {% endfor %}
+               </select>
+{% endfor %}
+    {{data.fibend}}
+</p>
+{% endif %}

@@ -1,5 +1,5 @@
 <blockquote {% if data.unaswered %} class="unans" {% endif %}>
-{% if data.mcqdisplaymethod == 'vertical' %}
+{% if data.displaymethod == 'vertical' %}
     <table cellpadding="2" cellspacing="0" border="0">
     {% for i,p in data.option %}
         <tr>
@@ -16,7 +16,7 @@
             </td>
         </tr>
     {% endfor %}
-{% elseif data.mcqdisplaymethod == 'horizontal' %}
+{% elseif data.displaymethod == 'horizontal' %}
     {% for i,p in data.option %}
         <div style="float:left; margin-right:15px; margin-bottom:15px">
             <input type="radio" name="q{{data.question_no}}" value="{{i}}" {% if p.selected %} checked="checked" {% endif %} />

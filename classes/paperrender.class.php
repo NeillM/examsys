@@ -133,6 +133,7 @@ class paperrender {
       $questiondata['displaytheme'] = false;
     }
 
+    $questiondata['displaymethod'] = '';
     $questiondata['papertype'] = $paper_type;
     $questiondata['displaycalc'] = false;
     $questiondata['displayassigned'] = false;
@@ -236,7 +237,6 @@ class paperrender {
         break;
       case 'mcq':
         $questiondata['mcq'] = true;
-        $questiondata['mcqdisplaymethod'] = '';
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0' and $screen_pre_submitted == 1) {
           $questiondata['unanswered'] = true;
           $unanswered = true;
@@ -244,9 +244,9 @@ class paperrender {
           $questiondata['unanswered'] = false;
         }
         if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
-          $questiondata['mcqdisplaymethod'] = 'vertical';
+          $questiondata['displaymethod'] = 'vertical';
         } elseif ($question['display_method'] == 'dropdown') {
-          $questiondata['mcqdisplaymethod'] = 'dropdown';
+          $questiondata['displaymethod'] = 'dropdown';
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0') {
             $questiondata['unanswered'] = true;
             $unanswered = true;
@@ -510,7 +510,7 @@ class paperrender {
             $questiondata['option'][$part_id]['displayoptionmedia'] = true;
           }
           if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
-            $questiondata['mcqdisplaymethod'] = 'vertical';
+            $questiondata['displaymethod'] = 'vertical';
             if (isset($user_dismiss[$current_screen][$q_id]) and substr($user_dismiss[$current_screen][$q_id],$tmp_part_id-1,1) == '1') {
               $class_type = 'inact';
               $questiondata['option'][$part_id]['inact'] = true;
@@ -519,7 +519,7 @@ class paperrender {
               $class_type = 'act';
             }
           } elseif ($question['display_method'] == 'horizontal') {
-            $questiondata['mcqdisplaymethod'] = 'horizontal';
+            $questiondata['displaymethod'] = 'horizontal';
           }
           if ($tmp_part_id == $display_option['correct']) $marks = $display_option['marks_correct'];
           break;
@@ -647,9 +647,8 @@ class paperrender {
           $questiondata['trueselected'] = false;
           $questiondata['falseselected'] = false;
           $questiondata['abstainselected'] = false;
-          $questiondata['tfdisplaymethod'] = '';
           if ($question['display_method'] == 'dropdown') {
-            $questiondata['tfdisplaymethod'] = 'dropdown';
+            $questiondata['displaymethod'] = 'dropdown';
             if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 't') {
               $questiondata['trueselected'] = true;
             }
@@ -665,9 +664,9 @@ class paperrender {
             }
 
             if ($question['display_method'] == 'horizontal') {
-              $questiondata['tfdisplaymethod'] = 'horizontal';
+              $questiondata['displaymethod'] = 'horizontal';
             } elseif ($question['display_method'] == 'vertical') {
-              $questiondata['tfdisplaymethod'] = 'vertical';
+              $questiondata['displaymethod'] = 'vertical';
             }
             $questiondata['neg_marking'] = $neg_marking;
             if ($neg_marking) {
@@ -680,10 +679,12 @@ class paperrender {
 
           break;
         case 'blank':
+          $questiondata['blank'] = true;
           $ans = '';
           $blank_mark = array();
           $display_option['option_text'] = str_replace('&nbsp;',' ',$display_option['option_text']);
           $blank_details = explode('[blank',$display_option['option_text']);
+          var_dump($blank_details);
           if (isset($user_answers[$current_screen][$q_id])) {
             $user_answers[$current_screen][$q_id] = str_replace('&nbsp;',' ',$user_answers[$current_screen][$q_id]);
           }
@@ -695,85 +696,70 @@ class paperrender {
           }
 
           if ($question['display_method'] == 'textboxes') {
-            $screen_output = array();
-            $array_size = count($blank_details);
-            $blank_count = 1;
-            while ($blank_count < $array_size) {
-              $blank_details[$blank_count] = '[blank]' . $blank_details[$blank_count];
-              $results = array();
-              $not_used = preg_match("|size=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$results);
+            $questiondata['displaymethod'] = 'textboxes';
+          }
 
-              if (isset($results[1]) and $results[1] != '') {
-                $blank_size[$blank_count] = $results[1];
+          $array_size = count($blank_details);
+          $blank_count = 1;
+          while ($blank_count < $array_size) {
+            if ($question['display_method'] == 'textboxes') {
+              $sizeresults = array();
+              $not_used = preg_match("|size=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$sizeresults);
+              if (isset($sizeresults[1]) and $sizeresults[1] != '') {
+                $blank_size[$blank_count] = $sizeresults[1];
               } else {
                 $blank_size[$blank_count] = 15;
               }
-              $results=array();
-              $not_used = preg_match("|mark=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$results);
-              if (isset($results[1]) and $results[1] != '') {
-                $blank_mark[$blank_count] = $results[1];
-              } else {
-                $blank_mark[$blank_count] = $display_option['marks_correct'];
-              }
-
+            }
+            $results=array();
+            $not_used = preg_match("|mark=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$results);
+            if (isset($results[1]) and $results[1] != '') {
+              $blank_mark[$blank_count] = $results[1];
+            } else {
+              $blank_mark[$blank_count] = $display_option['marks_correct'];
+            }
+            if ($question['display_method'] == 'textboxes') {
+              $questiondata['option'][$blank_count]['size'] = $blank_size[$blank_count];
+            } else {
+              $dd_blank_details[$blank_count] = substr($blank_details[$blank_count], (strpos($blank_details[$blank_count],']') + 1));
+              $answer_options = explode('[/blank]',$dd_blank_details[$blank_count]);
+              $answer_list = explode(',',$answer_options[0]);
+              // Ensure that the correct answer is filtered in the same way as the user's answer.
+              $answer_list = param::clean_array($answer_list, param::TEXT);
+            }
+            $questiondata['option'][$blank_count]['blurb'] = '';
+            if ($question['display_method'] == 'textboxes') {
               if ( (isset($blank_user_answers[$blank_count - 1]) and $blank_user_answers[$blank_count - 1] == 'u') and (isset($screen_pre_submitted) and $screen_pre_submitted == 1) ) {
-                $screen_output[$blank_count] = preg_replace("|\[blank.*\].*\[/blank\]|","<input type=\"text\" name=\"q" . $question_no . "_" . $blank_count . "\" class=\"unans\" size=\"$blank_size[$blank_count]\" />",$blank_details[$blank_count]);
                 $unanswered = true;
+                $questiondata['option'][$blank_count]['unans'] = true;
               } else {
+                $questiondata['option'][$blank_count]['unans'] = false;
                 if (isset($blank_user_answers[$blank_count - 1])) {
                   $ans = $blank_user_answers[$blank_count - 1];
                 }
                 $encoded_ans = htmlentities($ans, ENT_COMPAT | ENT_HTML5, Config::get_instance()->get('cfg_page_charset'), false);
-                $screen_output[$blank_count] = preg_replace("|\[blank.*\].*\[/blank\]|","<input type=\"text\" name=\"q" . $question_no . "_" . $blank_count . "\" value=\"" . $encoded_ans . "\" size=\"$blank_size[$blank_count]\" />",$blank_details[$blank_count]);
+                $questiondata['option'][$blank_count]['encoded_ans'] = $encoded_ans;
               }
-              $blank_count++;
-            }
-            $screen_output_all = '';
-            if (count($screen_output) > 0) {     // Check there are actually some blanks
-              foreach ($screen_output as $value) {
-                $screen_output_all .= $value;
-              }
-            }
-            echo "<p class=\"stem\">" . $blank_details[0] . $screen_output_all . "</p>\n";
-          } else {
-            // Dropdown lists.
-            $no_blanks = count($blank_details);
-            echo '<p>' . $blank_details[0];
-            $blank_count = 1;
-            while ($blank_count < $no_blanks) {
-              $not_used = preg_match("|mark=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$results);
-              if (isset($results[1]) and $results[1] != '') {
-                $blank_mark[$blank_count] = $results[1];
-              } else {
-                $blank_mark[$blank_count] = $display_option['marks_correct'];
-              }
-              $blank_details[$blank_count] = substr($blank_details[$blank_count], (strpos($blank_details[$blank_count],']') + 1));
-              $answer_options = explode('[/blank]',$blank_details[$blank_count]);
-              $answer_list = explode(',',$answer_options[0]);
-              // Ensure that the correct answer is filtered in the same way as the user's answer.
-              $answer_list = param::clean_array($answer_list, param::TEXT);
+            } else {
               if (isset($blank_user_answers[$part_id - 1]) and $blank_user_answers[$part_id - 1] == 'u' and $screen_pre_submitted == 1) {
-                echo "<select name=\"q" . $question_no . "_" . $part_id . "\" class=\"unans\">\n";
+                $questiondata['option'][$blank_count]['unans'] = true;
                 $unanswered = true;
               } else {
-                echo "<select name=\"q" . $question_no . "_" . $part_id . "\">\n";
+                $questiondata['option'][$blank_count]['unans'] = false;
               }
-              echo "<option value=\"u\"></option>\n";
               shuffle($answer_list);            // Shuffle the answers up.
-              for ($i=1; $i<=count($answer_list); $i++) {
-                if (isset($answer_list[$i-1]) and isset($blank_user_answers[$blank_count - 1]) and html_entity_decode(trim($answer_list[$i-1])) == html_entity_decode(trim($blank_user_answers[$blank_count - 1]))) {
-                  echo "<option value=\"" . htmlentities(trim($answer_list[$i-1]), ENT_COMPAT, "UTF-8") . "\" selected>" . trim($answer_list[$i-1]) . "</option>\n";
+              for ($i=0; $i<count($answer_list); $i++) {
+                if (isset($answer_list[$i]) and isset($blank_user_answers[$blank_count - 1]) and html_entity_decode(trim($answer_list[$i])) == html_entity_decode(trim($blank_user_answers[$blank_count - 1]))) {
+                  $questiondata['option'][$blank_count]['answer_list'][] = array('answer' => htmlentities(trim($answer_list[$i]), ENT_COMPAT, "UTF-8"), 'selected' => true);
                 } else {
-                  echo "<option value=\"" . htmlentities(trim($answer_list[$i-1]), ENT_COMPAT, "UTF-8") . "\">" . trim($answer_list[$i-1]) . "</option>\n";
+                  $questiondata['option'][$blank_count]['answer_list'][] = array('answer' => htmlentities(trim($answer_list[$i]), ENT_COMPAT, "UTF-8"), 'selected' =>  false);
                 }
               }
-              echo '</select>';
-              echo $answer_options[1]; // Bit after the closing [/blank] tag.
-              $blank_count++;
               $part_id++;
             }
-            echo '</p>';
+            $blank_count++;
           }
+          $questiondata['fibend'] = strip_tags($blank_details[$blank_count-1]);
           if ($question['score_method'] == 'Mark per Option') {
             if (count($blank_mark) > 0) {
               foreach ($blank_mark as $individual_mark) $marks += $individual_mark;
