@@ -911,45 +911,13 @@ class paperrender {
           }
           break;
         case 'flash':
-  ?>
-    <script>
-      var isInternetExplorer = navigator.appName.indexOf("Microsoft") != -1;
-      function flash<?php echo $question_no; ?>_DoFSCommand(command, args) {
-        var flash<?php echo $question_no; ?>Obj = isInternetExplorer ? document.all.flash<?php echo $question_no; ?> : document.flash<?php echo $question_no; ?>;
-        document.questions.q<?php echo $question_no; ?>.value = args;
-      }
-      if (navigator.appName && navigator.appName.indexOf("Microsoft") != -1 && navigator.userAgent.indexOf("Windows") != -1 && navigator.userAgent.indexOf("Windows 3.1") == -1) {
-        document.write('<script language=\"VBScript\"\>\n');
-        document.write('On Error Resume Next\n');
-        document.write('Sub flash<?php echo $question_no; ?>_FSCommand(ByVal command, ByVal args)\n');
-        document.write('	Call flash<?php echo $question_no; ?>_DoFSCommand(command, args)\n');
-        document.write('End Sub\n');
-        document.write('</script\>\n');
-      }
-    </script>
-    <div align="center">
-    <script>
-      write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" id="flash<?php echo $question_no; ?>" width="<?php echo $question['q_media_width']; ?>" height="<?php echo $question['q_media_height']; ?>" align="middle">');
-      write_string('<param name="wmode" value="opaque" />');
-      write_string('<param name="allowScriptAccess" value="sameDomain" />');
-      write_string('<param name="movie" value="<?php echo $mediadirectory->url($question['q_media']); ?>" />');
-      write_string('<param name="quality" value="high" />');
-      write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
-      <?php
-        if ($question['scenario'] != '') {
-          echo 'write_string(\'<param name="FlashVars" value="' . $question['scenario'] . '">\')';
-        }
-        echo 'write_string(\'<embed style="z-index:0;" src="' . $mediadirectory->url($question['q_media']) . '"';
-        if ($question['scenario'] != '') {
-          echo ' FlashVars="' . $question['scenario'] . '"';
-        }
-        echo ' wmode="opaque" quality="high" bgcolor="' . $bgcolor . '" width="' . $question['q_media_width'] . '" height="' . $question['q_media_height'] . '" swLiveConnect=true id="flash' . $question_no . '" name="flash' . $question_no . '" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />\');';
-      ?>
-      write_string('</object>');
-    </script>
-    </div>
-    <?php
-        echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"0,0\" />\n";
+          // Question type is deprecated. Rogo only supports pre-existing flash questions.
+          $questiondata['flash'] = true;
+          if ($question['scenario'] != '') {
+            $questiondata['displayscenario'] = true;
+          } else {
+            $questiondata['displayscenario'] = false;
+          }
         $marks += $display_option['marks_correct'];
         break;
       }                  // End switch
