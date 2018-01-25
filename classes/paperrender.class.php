@@ -850,6 +850,7 @@ class paperrender {
           }
           break;
         case 'labelling':
+          $questiondata['labelling'] = true;
           $tmp_labels = 0;
           $max_col1 = 0;
           $max_col2 = 0;
@@ -890,25 +891,23 @@ class paperrender {
           }
           $tmp_correct = trim($question['options'][0]['correct']);
           $tmp_correct = str_replace("'", "&#039;", $tmp_correct);
-    ?>
-              <div align="left">
-              <?php
-                  //<!-- ======================== HTML5 part include disp ================= -->
-                  echo "<canvas class=\"labelling\" id=\"canvas" . $question_no . "\" width=\"" . ($question['q_media_width'] + 220) . "\" height=\"" . $tmp_height . "\"></canvas>\n";
-                  echo "<br /><div id=\"canvasbox\"></div>\n";
-                  echo "<script>\n";
-                  echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '";
-                  if (isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);
-                  echo "', '" . $display_option['marks_correct'] . "~" . $display_option['marks_incorrect'] . "~" . $question['score_method'] . "','#FFC0C0','labelling','answer');\n";
-                  echo "</script>\n";
-                  //<!-- ==================================================== -->
-              ?>
-            </div>
-          <?php
+
+          $questiondata['mediawidth'] += 220;
+          $questiondata['mediaheight'] = $tmp_height;
+          $questiondata['tmpcorrect'] = $tmp_correct;
+          $questiondata['marks'] = $marks;
+
+          if (isset($user_answers[$current_screen][$q_id])) {
+            $questiondata['useranswer'] = trim($user_answers[$current_screen][$q_id]);
+            $questiondata['marks_correct'] = $display_option['marks_correct'];
+            $questiondata['marks_incorrect'] = $display_option['marks_incorrect'];
+            $questiondata['score_method'] = $question['score_method'];
+          }
+
           if (!isset($user_answers[$current_screen][$q_id]) or $user_answers[$current_screen][$q_id] == '') {
-            echo "<input type=\"hidden\" name=\"q" . $question_no . "\" id=\"q" . $question_no . "\" value=\"0$" . $marks . ";\" />\n";
+            $questiondata['unanswered'] = true;
           } else {
-            echo "<input type=\"hidden\" name=\"q" . $question_no . "\" id=\"q" . $question_no . "\" value=\"" . $user_answers[$current_screen][$q_id] . "\" />\n";
+            $questiondata['unanswered'] = false;
           }
           break;
         case 'flash':
