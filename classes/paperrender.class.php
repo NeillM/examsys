@@ -770,31 +770,28 @@ class paperrender {
           }
           break;
         case 'textbox':
-          if (stripos($question['leadin'], '<p>') === false and stripos($question['leadin'], '<div>') == false) {
-            echo '<br />';
-          }
+          $questiondata['textbox'] = true;
+          $questiondata['unanswered'] = false;
           if (!in_array($question_no, $textboxes_seen)) {
             $textboxes_seen[] = $question_no;
             $settings = json_decode($question['settings'], true);
+            $questiondata['editorcolumns'] = $settings['columns'];
+            $questiondata['editorrows'] = $settings['rows'];
             if (!isset($settings['editor']) or $settings['editor'] == 'plain' or $settings['editor'] == 'mathjax') {
+              $questiondata['editor'] = 'plain';
               if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
-                echo "<textarea class=\"unans\" name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $user_answers[$current_screen][$q_id] . "</textarea>\n";
+                $questiondata['unanswered'] = true;
+                $questiondata['useranswer'] = $user_answers[$current_screen][$q_id];
                 $unanswered = true;
               } else {
                 $ans = '';
                 if (isset($user_answers[$current_screen][$q_id])) {
                   $ans = $user_answers[$current_screen][$q_id];
                 }
+                $questiondata['useranswer'] = $ans;
                 if ($settings['editor'] == 'mathjax') {
-                  $render = new render($configObject);
-                  $render->render(array('id' => 'q' . $question_no), null, 'mathjaxpreview.html');
-                  echo "<p>" . $string['mathjaxinstructions'] . "</p>";
-                  echo "<textarea onkeyup=\"Previewq" . $question_no . ".Update()\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $ans . "</textarea>\n";
-                  echo "<p>" . $string['previewmathjax'] . "</p>";
-                  echo "<div id=\"MathPreviewq" . $question_no . "\" style=\"border:1px solid; padding: 3px; width:50%; margin-top:5px\"></div><div id=\"MathBufferq" . $question_no . "\" style=\"border:1px solid; padding: 3px; width:50%; margin-top:5px; visibility:hidden; position:absolute; top:0; left: 0\"></div>";
-                  echo "<script>Previewq" . $question_no . ".Init();</script>";
-                } else {
-                  echo "<textarea name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $ans . "</textarea>\n";
+                  $questiondata['editormathjax'] = true;
+                  $questiondata['id'] = 'q' . $question_no;
                 }
               }
             } else {

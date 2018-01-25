@@ -1,0 +1,19 @@
+{% if data.editor == 'plain' %}
+    {% if data.unaswered %}
+<textarea class="unans" name="q{{data.question_no}}" cols="{{data.editorcolumns}}" rows="{{data.editorrows}}">{{data.useranswer}}</textarea>
+    {% else %}
+        {% if data.editormathjax %}
+            {% include 'mathjaxpreview.html' %}
+<p>{{lang.mathjaxinstructions|raw}}</p>
+<textarea onkeyup="Previewq{{data.question_no}}.Update()" id="q{{data.question_no}}" name="q{{data.question_no}}" cols="{{data.editorcolumns}}" rows=""{{data.editorrows}}">{{data.useranswer}}</textarea>
+<p>{{lang.previewmathjax}}</p>
+<div id="MathPreviewq{{data.question_no}}" style="border:1px solid; padding: 3px; width:50%; margin-top:5px"></div>
+<div id="MathBufferq{{data.question_no}}" style="border:1px solid; padding: 3px; width:50%; margin-top:5px; visibility:hidden; position:absolute; top:0; left: 0"></div>
+<script>Previewq{{data.question_no}}.Init();</script>
+        {% else %}
+<textarea name="q{{data.question_no}}" cols="{{data.editorcolumns}}" rows="{{data.editorrows}}">{{data.useranswer}}</textarea>
+        {% endif %}
+    {% endif %}
+{% else %}
+
+{% endif %}
