@@ -134,6 +134,7 @@ class paperrender {
     }
 
     $questiondata['displaymethod'] = '';
+    $questiondata['negativemarking'] = false;
     $questiondata['papertype'] = $paper_type;
     $questiondata['displaycalc'] = false;
     $questiondata['displayassigned'] = false;
@@ -387,6 +388,7 @@ class paperrender {
     // Processing for each stem.
     foreach ($question['options'] as $display_option) {
       $part_id++;
+      $questiondata['part_id'] = $part_id;
       $questiondata['option'][$part_id]['optionmedia'] = self::get_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '');
       $questiondata['option'][$part_id]['optiontext'] = $display_option['option_text'];
       $tmp_part_id = $question['option_order'][$part_id-1] + 1;
@@ -922,27 +924,28 @@ class paperrender {
         break;
       }                  // End switch
     }                    // End foreach loop
-    if ($question['q_type'] != 'enhancedcalc') {
-      $render->render($questiondata, $string, 'paper/question.html');
-    }
+
     if ($question['q_type'] == 'mcq') {
       if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
+        $questiondata['displaymcqother'] = false;
         if ($question['display_method'] == 'vertical_other' and $paper_type == '3') {
+          $questiondata['displaymcqother'] = true;
           if (isset($user_answers[$current_screen][$q_id]) and substr($user_answers[$current_screen][$q_id],0,5) == 'other') {
-            echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" checked=\"checked\" /></td><td>" . $string['other'] . " <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" value=\"" . substr($user_answers[$current_screen][$q_id],6) . "\" /></td></tr>\n";
+            $questiondata['mcqotherselected'] = true;
+            $questiondata['mcqother'] = substr($user_answers[$current_screen][$q_id],6);
           } else {
-            echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"other\" /></td><td>" . $string['other'] . " <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "[" . $part_id . "].checked=true\" name=\"q" . $question_no . "_other\" /></td></tr>\n";
+            $questiondata['mcqotherselected'] = false;
           }
         }
-              if ($display_option['marks_incorrect'] < 0) {
-                  // Include an abstain option if negative marking is used.
-                if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'a') {
-                      echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"a\" checked=\"checked\" /></td><td style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</td></tr>\n";
-                  } else {
-                      echo "<tr><td><input type=\"radio\" name=\"q" . $question_no . "\" value=\"a\" /></td><td style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</td></tr>\n";
-                  }
-              }
-        echo '</table>';
+        if ($display_option['marks_incorrect'] < 0) {
+          $questiondata['negativemarking'] = true;
+            // Include an abstain option if negative marking is used.
+          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'a') {
+              $questiondata['mcqabstainselected'] = true;
+            } else {
+              $questiondata['mcqabstainselected'] = false;
+            }
+        }
       } elseif ($question['display_method'] == 'horizontal') {
             if ($display_option['marks_incorrect'] < 0) {
                   if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'a') {
@@ -1148,6 +1151,11 @@ class paperrender {
     }
     if ($question['q_type'] != 'info') echo "<input type=\"hidden\" name=\"order$question_no\" value=\"" . implode(',', $question['option_order']) . "\" />\n";
     $used_questions[$q_id] = $q_id;
+
+    // Plugin question use there own templating.
+    if ($question['q_type'] != 'enhancedcalc') {
+      $render->render($questiondata, $string, 'paper/question.html');
+    }
   }
 
   /**

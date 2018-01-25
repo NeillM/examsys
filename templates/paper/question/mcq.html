@@ -16,6 +16,26 @@
             </td>
         </tr>
     {% endfor %}
+    {% if data.displaymcqother %}
+        <tr>
+            <td>
+                <input type="radio" name="q{{data.question_no}}" value="other" {% if data.mcqotherselected %} checked="checked" {% endif %}/>
+            </td>
+
+            <td>{{lang.other}} 
+                <input type="text" onkeypress="document.questions.q{{data.question_no}}[{{data.part_id}}].checked=true" name="q{{data.question_no}}_other" {% if data.mcqotherselected %} value="{{data.mcqother}}" {% endif %} />
+            </td>
+        </tr>
+    {% endif %}
+    {% if data.negativemarking %}
+        <tr>
+            <td>
+                <input type="radio" name="q{{data.question_no}}" value="a" {% if data.mcqabstainselected %} checked="checked" {% endif %}/>
+            </td>
+            <td style="color:{{data.labelcolour}}">&lt;{{lang.abstain}}&gt;</td>
+        </tr>
+    {% endif %}
+    </table>
 {% elseif data.displaymethod == 'horizontal' %}
     {% for i,p in data.option %}
         <div style="float:left; margin-right:15px; margin-bottom:15px">
