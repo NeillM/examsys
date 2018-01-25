@@ -817,6 +817,7 @@ class paperrender {
           }
           break;
         case 'hotspot':
+          $questiondata['hotspot'] = true;
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and  $screen_pre_submitted == 1) {
             $unanswered = true;
           }
@@ -827,25 +828,20 @@ class paperrender {
           $tmp_correct = str_replace("'", "\'", trim($question['options'][0]['correct']));
           $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
           $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
-          ?>
-          <div align="left">
-                  <?php
-                      //<!-- ======================== HTML5 part include disp ================= -->
-                      echo "<canvas id='canvas" . $question_no . "' width='" . ($question['q_media_width'] + 300) . "' height='" . ($tmp_height-29) . "'></canvas>\n";
-                      echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-                      echo "<script>\n";
-                      echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '";
-                      if (isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);
-                      echo "', '" . $screen_pre_submitted . "','#FFC0C0','hotspot','answer');\n";
-                      echo "</script>\n";
-                      //<!-- ==================================================== -->
-                  ?>
-          </div>
-          <?php
+
+          $questiondata['tmpcorrect'] = $tmp_correct;
+          $questiondata['mediawidth'] += 300;
+          $questiondata['mediaheight'] = $tmp_height-29;
+
+          if (isset($user_answers[$current_screen][$q_id])) {
+            $questiondata['useranswer'] = trim($user_answers[$current_screen][$q_id]);
+            $questiondata['screensubmitted'] = $screen_pre_submitted;
+          }
+
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] != '') {
-            echo "<input type=\"hidden\" name=\"q" . $question_no . "\" id=\"q" . $question_no . "\" value=\"" . $user_answers[$current_screen][$q_id] . "\" />\n";
+            $questiondata['unanswered'] = false;
           } else {
-            echo "<input type=\"hidden\" name=\"q" . $question_no . "\" id=\"q" . $question_no . "\" value=\"u\" />\n";
+            $questiondata['unanswered'] = true;
           }
           if ($question['score_method'] == 'Mark per Question') {
             $marks = $display_option['marks_correct'];
