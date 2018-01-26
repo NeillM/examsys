@@ -1033,20 +1033,20 @@ class paperrender {
         if (count($matching_options) < 10) $list_size = count($matching_options);
         if ($answer_no == 1) {
           if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == 'u' and $screen_pre_submitted == 1) {
-            $questiondata['extmatchstem'][$part_id-1]['answered'] = false;
+            $questiondata['extmatchstem'][$part_id-1]['unanswered'] = true;
             $unanswered = true;
           } else {
-            $questiondata['extmatchstem'][$part_id-1]['answered'] = true;
+            $questiondata['extmatchstem'][$part_id-1]['unanswered'] = false;
           }
         } else {
           $questiondata['extmatchstem'][$part_id-1]['listsize'] = $list_size;
           $questiondata['extmatchstem'][$part_id-1]['sub_answers'] = count($sub_answers);
           $questiondata['extmatchstem'][$part_id-1]['matching_options'] = count($matching_options);
           if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == '' and $screen_pre_submitted == 1) {
-            $questiondata['extmatchstem'][$part_id-1]['answered'] = false;
+            $questiondata['extmatchstem'][$part_id-1]['unanswered'] = true;
             $unanswered = true;
           } else {
-            $questiondata['extmatchstem'][$part_id-1]['answered'] = true;
+            $questiondata['extmatchstem'][$part_id-1]['unanswered'] = false;
           }
         }
 
@@ -1077,44 +1077,40 @@ class paperrender {
         $marks = $display_option['marks_correct'];
       }
     } elseif ($question['q_type'] == 'matrix') {
+      $questiondata['matrix'] = true;
       $part_id = 1;
-      echo '<table cellpadding="2" cellspacing="0" border="1" class="matrix">';
-      echo "<tr>\n<td colspan=\"2\">&nbsp;</td>";
       foreach ($matching_options as $single_option) {
-        echo '<td>' . $single_option . '</td>';
+        $questiondata['matrixoptions'][]['option'] = $single_option;
       }
-      echo "</tr>\n";
       foreach ($matching_scenarios as $single_scenario) {
         if (trim($single_scenario) != '') {
           if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == '' and $screen_pre_submitted == 1) {
-            echo "<tr class=\"unans\">\n";
+            $questiondata['matrixscenarios'][$part_id-1]['unanswered'] = true;
             $unanswered = true;
           } else {
-            echo "<tr>\n";
+            $questiondata['matrixoptions'][$part_id-1]['unanswered'] = false;
           }
-          echo '<td align="right">' . chr(64 + $part_id) . '.</td><td>' . $single_scenario . '</td>';
+          $questiondata['matrixscenarios'][$part_id-1]['id'] = chr(64 + $part_id);
+          $questiondata['matrixscenarios'][$part_id-1]['value'] = $single_scenario;
           $answer_no = 1;
           foreach ($matching_options as $single_option) {
             $tmp_part_id = $question['option_order'][$answer_no-1] + 1;
+            $questiondata['matrixoptions'][$part_id-1]['tmp_part_id'] = $tmp_part_id;
             if (isset($matching_users_answers[$part_id-1]) and $matching_users_answers[$part_id-1] == $tmp_part_id) {
-              echo '<td><div align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="' . $tmp_part_id . '" checked="checked" /></div></td>';
+              $questiondata['matrixoptions'][$part_id-1]['selected'] = true;
             } else {
-              echo '<td><div align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="' . $tmp_part_id . '" /></div></td>';
+              $questiondata['matrixoptions'][$part_id-1]['selected'] = false;
             }
             $answer_no++;
           }
-          echo "</tr>\n";
           $part_id++;
         }
       }
-      echo '</table>';
       if ($question['score_method'] == 'Mark per Question') {
         $marks = $display_option['marks_correct'];
       } else {
         $marks = $part_id - 1;
       }
-    } elseif ($question['q_type'] == 'sct') {
-      echo '</table>';
     }
 
     // Write out the hidden field for the dismiss facility.
