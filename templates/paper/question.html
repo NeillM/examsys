@@ -19,3 +19,31 @@
 {% if data[data.questiontype] %}
     {% include 'paper/question/'~data.questiontype~'.html' %}
 {% endif %}
+{% if data.papertype != 3 %}
+    {% if data.finalmarks == 0 %}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">&nbsp;</td>
+    </tr>
+    {% else %}
+        <div id="q{{data.question_no}}_mk" class="mk">({{data.finalmarks}} {% if data.finalmarks == 1 %} {{lang.mark}} {% else %} {{lang.marks}} {% endif %}
+        {% if data.score_method == 'bonus' %}
+    {{data.bonus}}
+        {% endif %}
+        {% if data.negativemarking %}
+    , {{lang.negmarking}}
+        {% endif %}
+    )
+        </div>
+        <br />
+        </td>
+    </tr>
+    {% endif %}
+{% else %}
+        </td>
+    </tr>
+{% endif %}
+{% if data.displayinfo == false %}
+    <input type="hidden" name="order{{data.question_no}}" value="{{data.option_order}}" />
+{% endif %}

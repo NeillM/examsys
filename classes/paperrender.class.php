@@ -1116,37 +1116,25 @@ class paperrender {
     // Write out the hidden field for the dismiss facility.
     if (in_array($question['q_type'], array('mcq', 'mrq', 'rank'))) {
       if (isset($user_dismiss[$current_screen][$q_id]) and $user_dismiss[$current_screen][$q_id] != '') {
-        echo "\n<div><input type=\"hidden\" name=\"dismiss$question_no\" id=\"dismiss$question_no\" value=\"" . $user_dismiss[$current_screen][$q_id] . "\" /></div>\n";
+        $questiondata['dismiss'] = $user_dismiss[$current_screen][$q_id];
       } else {
-        echo "\n<div><input type=\"hidden\" name=\"dismiss$question_no\" id=\"dismiss$question_no\" value=\"" . str_repeat('0', count($question['options'])) . "\" /></div>\n";
+        $questiondata['dismiss'] = str_repeat('0', count($question['options'])) ;
       }
     }
 
     // Display possible marks for question (if not Survey)
-    if (!in_array($question['q_type'], array('hotspot', 'likert', 'info', 'enhancedcalc', 'matrix'))) {
-      echo '</blockquote>';
-    }
+    $questiondata['finalmarks'] = $marks;
     if ($paper_type < 3) {
-      if ($marks == 0) {
-        echo "</td></tr>\n<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
-      } else {
-        echo "<div id=\"q{$question_no}_mk\" class=\"mk\">($marks ";
-        if ($marks == 1) {
-          echo $string['mark'];
-        } else {
-          echo $string['marks'];
-        }
+      if ($marks != 0) {
         if ($question['score_method'] == 'Bonus Mark') {
+          $questiondata['score_method'] = 'bonus';
           $plural = ($display_option['marks_correct'] == 1) ?  $string['mark'] : $string['marks'];
-          echo ' ' . sprintf($string['bonusmark'], $display_option['marks_correct'], $plural);  // Used on ranking questions
+          $questiondata['bonus'] = sprintf($string['bonusmark'], $display_option['marks_correct'], $plural);  // Used on ranking questions
         }
-        if ($neg_marking) echo ', ' . $string['negmarking'];
-        echo ")</div>\n<br /></td></tr>\n";
       }
-    } else {
-      echo "</td></tr>\n";
     }
-    if ($question['q_type'] != 'info') echo "<input type=\"hidden\" name=\"order$question_no\" value=\"" . implode(',', $question['option_order']) . "\" />\n";
+
+    $questiondata['option_order'] = implode(',', $question['option_order']);
     $used_questions[$q_id] = $q_id;
 
     // Plugin question use there own templating.
