@@ -133,6 +133,7 @@ class paperrender {
       $questiondata['displaytheme'] = false;
     }
 
+    $questiondata['option_no'] = $option_no;
     $questiondata['displaymethod'] = '';
     $questiondata['negativemarking'] = false;
     $questiondata['papertype'] = $paper_type;
@@ -927,63 +928,68 @@ class paperrender {
 
     if ($question['q_type'] == 'mcq') {
       if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
-        $questiondata['displaymcqother'] = false;
+        $questiondata['displayother'] = false;
         if ($question['display_method'] == 'vertical_other' and $paper_type == '3') {
-          $questiondata['displaymcqother'] = true;
+          $questiondata['displayother'] = true;
           if (isset($user_answers[$current_screen][$q_id]) and substr($user_answers[$current_screen][$q_id],0,5) == 'other') {
-            $questiondata['mcqotherselected'] = true;
-            $questiondata['mcqother'] = substr($user_answers[$current_screen][$q_id],6);
+            $questiondata['otherselected'] = true;
+            $questiondata['other'] = substr($user_answers[$current_screen][$q_id],6);
           } else {
-            $questiondata['mcqotherselected'] = false;
+            $questiondata['otherselected'] = false;
           }
         }
         if ($display_option['marks_incorrect'] < 0) {
           $questiondata['negativemarking'] = true;
             // Include an abstain option if negative marking is used.
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'a') {
-              $questiondata['mcqabstainselected'] = true;
+              $questiondata['abstainselected'] = true;
             } else {
-              $questiondata['mcqabstainselected'] = false;
+              $questiondata['abstainselected'] = false;
             }
         }
       } elseif ($question['display_method'] == 'horizontal') {
-            if ($display_option['marks_incorrect'] < 0) {
-                  if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'a') {
-                      echo '&nbsp;&nbsp;<input type="radio" name="q' . $question_no . '" value="a" checked="checked" /><span style="color:' . $labelcolor . '">&lt;' . $string['abstain'] . '&gt;</span>';
-                  } else {
-                      echo '&nbsp;&nbsp;<input type="radio" name="q' . $question_no . '" value="a" /><span style="color:' . $labelcolor . '">&lt;' . $string['abstain'] . '&gt;</span>';
-                  }
-              }
-          } elseif ($question['display_method'] == 'dropdown') {
-        echo '</select></div>';
+        if ($display_option['marks_incorrect'] < 0) {
+          $questiondata['negativemarking'] = true;
+          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'a') {
+            $questiondata['abstainselected'] = true;
+          } else {
+            $questiondata['abstainselected'] = false;
+          }
+        }
       }
     } elseif (in_array($question['q_type'], array('dichotomous', 'mrq', 'rank'))) {
       $answer = (isset($user_answers[$current_screen][$q_id])) ? $user_answers[$current_screen][$q_id] : '';
+      $questiondata['displayother'] = false;
       if ($question['display_method'] == 'other') {
+        $questiondata['displayother'] = true;
         $part_id++;
+        $questiondata['part_id'] = $part_id;
         if ($answer != '' and substr($answer,($part_id - 1),1) == 'y') {
-          echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" checked=\"checked\" /></td>";
+          $questiondata['otherselected'] = true;
         } else {
-          echo "<tr><td><input type=\"checkbox\" name=\"q" . $question_no . "_" . $part_id . "\" value=\"y\" /></td>";
+          $questiondata['otherselected'] = false;
         }
-        echo "<td>" . $string['other'] . " <input type=\"text\" onkeypress=\"document.questions.q" . $question_no . "_" . $part_id . ".checked=true\" name=\"q" . $question_no . "_other\" value=\"" . substr($answer, $part_id) . "\" /></td></tr>\n";
+        $questiondata['other'] = substr($answer, $part_id);
       } elseif ($question['q_type'] == 'mrq' and $display_option['marks_incorrect'] < 0) {
-            // Include an abstain option if negative marking is used.
+        $questiondata['negativemarking'] = true;
+        // Include an abstain option if negative marking is used.
         if ($answer != '' and $answer == 'a') {
-                  echo "<tr><td><input type=\"checkbox\" onclick=\"MRQabstain($question_no,$option_no);\" name=\"q" . $question_no . "_abstain\" id=\"q" . $question_no . "_abstain\" value=\"y\" checked=\"checked\" /></td><td><span style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</span></td></tr>";
-              } else {
-                  echo "<tr><td><input type=\"checkbox\" onclick=\"MRQabstain($question_no,$option_no);\" name=\"q" . $question_no . "_abstain\" id=\"q" . $question_no . "_abstain\" value=\"y\" /></td><td><span style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</span></td></tr>";
-              }
-          }
-      echo '</table>';
+          $questiondata['abstainselected'] = true;
+        } else {
+          $questiondata['abstainselected'] = false;
+        }
+      }
       if ($question['score_method'] == 'Mark per Question') {
         $marks = $display_option['marks_correct'];
       }
     } elseif ($question['q_type'] == 'extmatch') {
+      $questiondata['extmatch'] = true;
       $matching_answers = explode('|', $question['options'][0]['correct']);
-
+      $questiondata['displayextmatchmedia'] = false;
       if ($matching_media[0] != '') {
-        echo '<p align="center">' . display_media($matching_media[0],$matching_media_width[0],$matching_media_height[0], '') . '</p>';
+        $questiondata['displayextmatchmedia'] = true;
+        $mediadata = self::get_media($matching_media[0], $matching_media_width[0], $matching_media_height[0], '');
+        $questiondata = array_merge($questiondata, $mediadata);
       }
 
       array_unshift($matching_scenarios, '');
@@ -996,20 +1002,12 @@ class paperrender {
         }
       }
 
-
-
       $col1_no = ceil(count($matching_options) / 2);
-      echo "<table class=\"extmatch_opt_table\">\n<tr><td><ol>\n";
+      $questiondata['extmatchsplit'] = $col1_no-1;
       for ($i=0; $i<count($matching_options); $i++) {
-
-        echo "<li>" . $matching_options[$i] . "</li>";
-        if ($i == ($col1_no-1)) {
-          echo "</ol></td><td style=\"vertical-align:top\"><ol start=\"" . ($i+2) . "\">";
-        }
+        $questiondata['extmatchoptions'][$i] = $matching_options[$i];
       }
-      echo "</ol></td></tr>\n</table>\n";
-
-      echo '<ol class="extmatch">';
+      $questiondata['extmathmatching_options'] = count($matching_options);
       for ($part_id=1; $part_id<=$scenario_no; $part_id++) {
         if(isset($matching_answers[$part_id-1])) {
           $answer_no = substr_count($matching_answers[$part_id-1],'$') + 1;
@@ -1017,10 +1015,14 @@ class paperrender {
         } else {
           $answer_no = 0;
         }
-        echo '<li>';
-        if (isset($matching_scenarios[$part_id]) and $matching_scenarios[$part_id] != '') echo '<div>' . $matching_scenarios[$part_id] . '</div>';
+        $questiondata['extmatchstem'][$part_id-1]['answer_no'] = $answer_no;
+        if (isset($matching_scenarios[$part_id]) and $matching_scenarios[$part_id] != '') {
+          $questiondata['extmatchstem'][$part_id-1]['scenario'] = $matching_scenarios[$part_id];
+        }
+        $questiondata['extmatchstem'][$part_id-1]['display'] = false;
         if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') {
-          echo "<div>" . display_media($matching_media[$part_id], $matching_media_width[$part_id], $matching_media_height[$part_id], '') . "</div>\n<br />";
+          $questiondata['extmatchstem'][$part_id-1]['display'] = true;
+          $questiondata['extmatchstem'][$part_id-1]['media'] = self::get_media($matching_media[$part_id], $matching_media_width[$part_id], $matching_media_height[$part_id], '');
         }
         if(isset($matching_answers[$part_id-1])) {
           $sub_answers = explode('$', $matching_answers[$part_id - 1]);
@@ -1031,19 +1033,20 @@ class paperrender {
         if (count($matching_options) < 10) $list_size = count($matching_options);
         if ($answer_no == 1) {
           if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == 'u' and $screen_pre_submitted == 1) {
-            echo "<select class=\"unans\" name=\"q" . $question_no . "_" . $part_id . "\" size=\"1\">\n";
+            $questiondata['extmatchstem'][$part_id-1]['answered'] = false;
             $unanswered = true;
           } else {
-            echo "<select name=\"q" . $question_no . "_" . $part_id . "\" size=\"1\">\n";
+            $questiondata['extmatchstem'][$part_id-1]['answered'] = true;
           }
-          echo "<option value=\"u\"></option>\n";
         } else {
-          echo "<br />\n";
+          $questiondata['extmatchstem'][$part_id-1]['listsize'] = $list_size;
+          $questiondata['extmatchstem'][$part_id-1]['sub_answers'] = count($sub_answers);
+          $questiondata['extmatchstem'][$part_id-1]['matching_options'] = count($matching_options);
           if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == '' and $screen_pre_submitted == 1) {
-            echo "<div class=\"option\"><select class=\"unans\" onchange=\"multimatchingCheck('q" . $question_no . "_" . $part_id . "'," . count($matching_options) . "," . count($sub_answers) . ");\" name=\"q" . $question_no . "_" . $part_id . "[]\" id=\"q" . $question_no . "_" . $part_id . "\" multiple=\"multiple\" size=\"$list_size\">\n";
+            $questiondata['extmatchstem'][$part_id-1]['answered'] = false;
             $unanswered = true;
           } else {
-            echo "<div class=\"option\"><select onchange=\"multimatchingCheck('q" . $question_no . "_" . $part_id . "'," . count($matching_options) . "," . count($sub_answers) . ");\" name=\"q" . $question_no . "_" . $part_id . "[]\" id=\"q" . $question_no . "_" . $part_id . "\" multiple=\"multiple\" size=\"$list_size\">\n";
+            $questiondata['extmatchstem'][$part_id-1]['answered'] = true;
           }
         }
 
@@ -1061,17 +1064,15 @@ class paperrender {
             }
           }
           if ($tmp_answer_match == true) {
-            echo "<option value=\"" . ($question['option_order'][$option_no]+1) . "\" selected>" . chr($option_no+65) . ". " . $matching_options[$option_no] . "</option>\n";
+            $questiondata['extmatchstem'][$part_id-1]['matching_option'][$option_no]['selected'] = true;
           } else {
-            echo "<option value=\"" . ($question['option_order'][$option_no]+1) . "\">" . chr($option_no+65) . ". " . $matching_options[$option_no] . "</option>\n";
+            $questiondata['extmatchstem'][$part_id-1]['matching_option'][$option_no]['selected'] = false;
           }
+          $questiondata['extmatchstem'][$part_id-1]['matching_option'][$option_no]['value'] = $question['option_order'][$option_no]+1;
+          $questiondata['extmatchstem'][$part_id-1]['matching_option'][$option_no]['option'] = chr($option_no+65) . '. ' . $matching_options[$option_no];
           $tmp_option_no++;
         }
-        echo '</select>';
-        if ($answer_no > 1) echo '<div class="mk">' . $string['holddownctrlkey'] . '</div>';
-        echo '</div></li>';
       }
-      echo '</ol><input type="hidden" name="multimatching' . $question_no . '_options" value="' . count($matching_options) . '" />';
       if ($question['score_method'] == 'Mark per Question') {
         $marks = $display_option['marks_correct'];
       }

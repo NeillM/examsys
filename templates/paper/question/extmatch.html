@@ -1,0 +1,49 @@
+{% if data.displayextmatchmedia %}
+<p align="center">
+    {% include 'paper/media.html' %}
+</p>
+{% endif %}
+<table class="extmatch_opt_table">
+    <tr>
+        <td>
+            <ol>
+{% for o in data.extmatchoptions %}
+                <li>{{o}}</li>
+    {% if loop.index0 == data.extmatchsplit %}
+            </ol>
+        </td>
+        <td style="vertical-align:top">
+            <ol start="{{loop.index0 + 2}}">
+    {% endif %}
+{% endfor %}
+            </ol>
+        </td>
+    </tr>
+</table>
+<ol class="extmatch">
+{% for m in data.extmatchstem %}
+<li>
+    <div>{{m.scenario|raw}}</div>
+    {% if m.display %}
+    <div>{% include 'paper/media.html' with {'data': m.media} %}</div><br />
+    {% endif %}
+    {% if m.answer_no == 1 %}
+    <select {% if m.answered == false %} class="unans" {% endif %} name="q{{data.question_no}}_{{loop.index1}}" size="1">
+        <option value="u"></option>
+    {% else %}
+    <br />
+    <div class="option">
+        <select {% if m.answered == false %} class="unans" {% endif %} onchange="multimatchingCheck('q{{data.question_no}}_{{loop.index1}}',"{{m.matching_options}}","{{m.sub_answers}}");" name="q{{data.question_no}}_{{loop.index1}}"[]" id="q{{data.question_no}}_{{loop.index1}}" multiple="multiple" size="{{m.list_size}}">
+    {% endif %}
+    {% for o in m.matching_option %}
+            <option value="{{o.value}}" {% if o.selected %} selected {% endif %}>{{o.option}}</option>
+    {% endfor %}
+        </select>
+    {% if m.answer_no > 1 %}
+        <div class="mk">{{lang.holddownctrlkey}}</div>
+    {% endif %}
+    </div>
+</li>
+{% endfor %}
+</ol>
+<input type="hidden" name="multimatching{{data.question_no}}_options" value="{{data.extmathmatching_options}}" />

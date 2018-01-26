@@ -16,21 +16,21 @@
             </td>
         </tr>
     {% endfor %}
-    {% if data.displaymcqother %}
+    {% if data.displayother %}
         <tr>
             <td>
-                <input type="radio" name="q{{data.question_no}}" value="other" {% if data.mcqotherselected %} checked="checked" {% endif %}/>
+                <input type="radio" name="q{{data.question_no}}" value="other" {% if data.otherselected %} checked="checked" {% endif %}/>
             </td>
 
             <td>{{lang.other}} 
-                <input type="text" onkeypress="document.questions.q{{data.question_no}}[{{data.part_id}}].checked=true" name="q{{data.question_no}}_other" {% if data.mcqotherselected %} value="{{data.mcqother}}" {% endif %} />
+                <input type="text" onkeypress="document.questions.q{{data.question_no}}[{{data.part_id}}].checked=true" name="q{{data.question_no}}_other" {% if data.otherselected %} value="{{data.other}}" {% endif %} />
             </td>
         </tr>
     {% endif %}
     {% if data.negativemarking %}
         <tr>
             <td>
-                <input type="radio" name="q{{data.question_no}}" value="a" {% if data.mcqabstainselected %} checked="checked" {% endif %}/>
+                <input type="radio" name="q{{data.question_no}}" value="a" {% if data.abstainselected %} checked="checked" {% endif %}/>
             </td>
             <td style="color:{{data.labelcolour}}">&lt;{{lang.abstain}}&gt;</td>
         </tr>
@@ -38,16 +38,19 @@
     </table>
 {% elseif data.displaymethod == 'horizontal' %}
     {% for i,p in data.option %}
-        <div style="float:left; margin-right:15px; margin-bottom:15px">
-            <input type="radio" name="q{{data.question_no}}" value="{{i}}" {% if p.selected %} checked="checked" {% endif %} />
-        {% if p.optiontextdisplay %}
-                &nbsp;{{p.optiontext|raw}}
-        {% endif %}
-        {% if p.displayoptionmedia %}
-            {% include 'paper/media.html' with {'data': p.optionmedia} %}
-        {% endif %}
-        </div>
+    <div style="float:left; margin-right:15px; margin-bottom:15px">
+        <input type="radio" name="q{{data.question_no}}" value="{{i}}" {% if p.selected %} checked="checked" {% endif %} />
+    {% if p.optiontextdisplay %}
+            &nbsp;{{p.optiontext|raw}}
+    {% endif %}
+    {% if p.displayoptionmedia %}
+        {% include 'paper/media.html' with {'data': p.optionmedia} %}
+    {% endif %}
+    </div>
     {% endfor %}
+    {% if data.negativemarking %}
+    <input type="radio" name="q{{data.question_no}}" value="a" {% if data.abstainselected %} checked="checked" {% endif %} /><span style="color:{{data.labelcolour}}">&lt;{{lang.abstain}}&gt;</span>
+    {% endif %}
 {% else %}
 <div class="option">
     <select {%if data.unaswered %} class="unans" {% endif %} name="q{{data.question_no}}" size="1">
@@ -55,4 +58,6 @@
     {% for i,p in data.option %}
         <option value="{{i}}" {% if p.selected %} selected {% endif %}>{{p.optiontext|raw}}</option>
     {% endfor %}
+    </select>
+</div>
 {% endif %}

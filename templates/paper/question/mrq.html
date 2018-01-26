@@ -33,3 +33,25 @@
     </tr>
     {% endfor %}
 {% endif %}
+{% if data.displayother %}
+    <tr>
+        <td>
+            <input type="checkbox" name="q{{data.question_no}}_{{data.part_id}}" value="y" {% if data.otherselected %} checked="checked" {% endif %}/>
+        </td>
+        <td>{{lang.other}} 
+            <input type="text" onkeypress="document.questions.q{{data.question_no}}_{{data.part_id}}.checked=true" name="q{{data.question_no}}_other" value="{{data.other}}" />
+        </td>
+    </tr>
+{% endif %}
+{% if data.negativemarking %}
+    <tr>
+        <td>
+            <input type="checkbox" onclick="MRQabstain({{data.question_no}},{{data.option_no}});" name="q{{data.question_no}}_abstain" id="q{{data.question_no}}_abstain" value="y" {% if data.abstainselected %} checked="checked" {% endif %} />
+        </td>
+        <td>
+            <span style="color:{{data.labelcolour}}">&lt;{{lang.abstain}}&gt;</span>
+        </td>
+    </tr>
+{% endif %}
+</table>
+
