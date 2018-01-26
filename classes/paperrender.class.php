@@ -1154,9 +1154,6 @@ class paperrender {
    */
   public static function get_media($filename, $width, $height, $border_color, $imageid=-1, $locked=false) {
 
-    $configObject = Config::get_instance();
-    $render = new render($configObject);
-
     $mediadirectory = rogo_directory::get_directory('media');
     $mediadata = array();
 
