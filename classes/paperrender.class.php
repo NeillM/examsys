@@ -26,7 +26,7 @@
 class paperrender {
 
   public static function display_question($screen_pre_submitted, $q_displayed, $string, &$question, $pid, $calculator, $current_screen, $old_q_type, &$question_no, $user_answers, &$unanswered) {
-    global $labelcolor, $old_likert_label, $old_likert_cols, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $li_set, $bgcolor, $li_set, $used_questions, $user_dismiss, $user_order, $string, $language, $unanswered_color;
+    global $labelcolor, $old_likert_label, $old_likert_cols, $li_set, $bgcolor, $li_set, $used_questions, $user_dismiss, $user_order, $string, $language;
  
     $configObject = Config::get_instance();
     $db = $configObject->db;
