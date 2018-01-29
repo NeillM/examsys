@@ -1,5 +1,5 @@
 {% if data.editor == 'plain' %}
-    {% if data.unaswered %}
+    {% if data.unanswered %}
 <textarea class="unans" name="q{{data.question_no}}" cols="{{data.editorcolumns}}" rows="{{data.editorrows}}">{{data.useranswer}}</textarea>
     {% else %}
         {% if data.editormathjax %}

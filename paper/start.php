@@ -352,8 +352,6 @@ $render->render($headerdata, $lang, 'header.html');
   }
   unset($tmp_questions_array);
 
-  $unanswered = false;
-
   $incomplete_screens = get_unanswered_screens($no_screens, $screen_data, $user_answers, $questions_array, $paperID, $mysqli);
 
   // BP If the duration is set then show timer
@@ -482,8 +480,8 @@ $render->render($headerdata, $lang, 'header.html');
     $is_enhancedcalc = 0;
     // refer to all questions on displayed question
     $question['paper_questions'] = &$questions_array;
-
-    \paperrender::display_question($screen_pre_submitted, $q_displayed, $string, $question, $paperID, $calculator, $current_screen, $previous_q_type, $question_no, $user_answers, $unanswered);
+    $paperrender = new \paperrender();
+    $paperrender->display_question($screen_pre_submitted, $q_displayed, $string, $question, $paperID, $calculator, $current_screen, $previous_q_type, $question_no, $user_answers);
 
     $q_displayed++;
   }
@@ -615,11 +613,5 @@ if (count($reference_materials) > 0) {
   $render->render($refdata, $string, 'paper/refmaterial.html');
 }
 $mysqli->close();
-
-if ($unanswered) {
-  echo "<script>\n";
-  echo "  $('#unansweredkey').show();\n";
-  echo "</script>\n";
-}
 
 $render->render(array(), array(), 'footer.html');

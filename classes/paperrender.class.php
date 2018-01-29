@@ -25,7 +25,39 @@
  */
 class paperrender {
 
-  public static function display_question($screen_pre_submitted, $q_displayed, $string, &$question, $pid, $calculator, $current_screen, $old_q_type, &$question_no, $user_answers, &$unanswered) {
+  /**
+   * Question answered state
+   * @var boolean
+   */
+  private $unanswered;
+
+  /**
+   * Called when the object is unserialised.
+   */
+  public function __wakeup() {
+    // The serialised database object will be invalid,
+    // this object should only be serialised during an error report,
+    // so adding the current database connect seems like a waste of time.
+    $this->db = null;
+  }
+
+  /**
+     * Constructor
+     */
+  function __construct() {
+    $configObject = Config::get_instance();
+    $db = $configObject->db;
+  }
+
+  public function set($attribute, $value) {
+    $this->$attribute = $value;
+  }
+
+  public function get($attribute) {
+    return $this->$attribute;
+  }
+
+  public function display_question($screen_pre_submitted, $q_displayed, $string, &$question, $pid, $calculator, $current_screen, $old_q_type, &$question_no, $user_answers) {
     global $labelcolor, $old_likert_label, $old_likert_cols, $li_set, $bgcolor, $li_set, $used_questions, $user_dismiss, $user_order, $string, $language;
  
     $configObject = Config::get_instance();
@@ -37,9 +69,9 @@ class paperrender {
     $render = new render($configObject);
 
     if ($screen_pre_submitted == 1 and $q_displayed == 0) {
-      $questiondata['unanswered'] = true;
+      $this->set('unanswered', true);
     } else {
-      $questiondata['unanswered'] = false;
+      $this->set('unanswered', false);
     }
 
     // Attempt to display paper prolog
@@ -210,6 +242,7 @@ class paperrender {
     $marks = 0;
     if ($question['q_type'] != 'likert') $old_likert_label = '';
 
+    $questiondata['unanswered'] = $this->get('unanswered');
     $render->render($questiondata, $string, 'paper/question_header.html');
 
     // Pre-question processing
@@ -240,20 +273,14 @@ class paperrender {
       case 'mcq':
         $questiondata['mcq'] = true;
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0' and $screen_pre_submitted == 1) {
-          $questiondata['unanswered'] = true;
-          $unanswered = true;
-        } else {
-          $questiondata['unanswered'] = false;
+          $this->set('unanswered', true);
         }
         if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
           $questiondata['displaymethod'] = 'vertical';
         } elseif ($question['display_method'] == 'dropdown') {
           $questiondata['displaymethod'] = 'dropdown';
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0') {
-            $questiondata['unanswered'] = true;
-            $unanswered = true;
-          } else {
-            $questiondata['unanswered'] = false;
+            $this->set('unanswered', true);
           }
         }
         break;
@@ -274,10 +301,9 @@ class paperrender {
           $len_answer = 0;
         }
         if (isset($answer_parts) and $answer_parts[0] == str_repeat('n', $len_answer) and $screen_pre_submitted == 1) {
-          $questiondata['unanswered'] = true;
-          $unanswered = true;
+          $this->set('unanswered', true);
         } else {
-          $questiondata['unanswered'] = false;
+          $this->set('unanswered', false);
         }
         break;
       case 'rank':
@@ -376,10 +402,9 @@ class paperrender {
         $questiondata['scttitlelower'] = $string['thenthis'] . " " . mb_strtolower($sct_titles[$question['display_method']], 'UTF-8') . " " . $string['is'] . ":";
 
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0' and $screen_pre_submitted == 1) {
-          $questiondata['unanswered'] = true;
-          $unanswered = true;
+          $this->set('unanswered', true);
         } else {
-          $questiondata['unanswered'] = false;
+          $this->set('unanswered', false);
         }
         $marks = 1;
         break;
@@ -416,11 +441,9 @@ class paperrender {
           }
 
           if (isset($user_answers[$current_screen][$q_id]) and $tmp_user_answer == $default_ans and  $screen_pre_submitted == 1) {
-            $questiondata['unanswered'] = true;
-            $unanswered = true;
+            $this->set('unanswered', true);
             $tmp_bgcolor = '#FFC0C0';
           } else {
-            $questiondata['unanswered'] = false;
             $tmp_bgcolor = $bgcolor;
           }
 
@@ -443,11 +466,9 @@ class paperrender {
             $abstain = false;
           }
 
-          $class_mod = '';
           $questiondata['option'][$part_id]['unanswered'] = false;
           if ($tmp_user_answer == 'u' and $screen_pre_submitted == 1) {
-            $class_mod = ' class="unans"';
-            $unanswered = true;
+            $this->set('unanswered', true);
             $questiondata['option'][$part_id]['unanswered'] = true;
           }
           $questiondata['option'][$part_id]['dichotomouspartid'] = $part_id;
@@ -474,10 +495,9 @@ class paperrender {
           break;
         case 'likert':
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and $screen_pre_submitted == 1) {
-            $unanswered = true;
-            $questiondata['unanswered'] = true;
+            $this->set('unanswered', true);
           } else {
-            $questiondata['unanswered'] = false;
+            $this->set('unanswered', false);
           }
           $scale_size = substr_count($question['display_method'],'|');
           $questiondata['likertscaledisplay'] = false;
@@ -515,11 +535,9 @@ class paperrender {
           if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
             $questiondata['displaymethod'] = 'vertical';
             if (isset($user_dismiss[$current_screen][$q_id]) and substr($user_dismiss[$current_screen][$q_id],$tmp_part_id-1,1) == '1') {
-              $class_type = 'inact';
               $questiondata['option'][$part_id]['inact'] = true;
             } else {
               $questiondata['option'][$part_id]['inact'] = false;
-              $class_type = 'act';
             }
           } elseif ($question['display_method'] == 'horizontal') {
             $questiondata['displaymethod'] = 'horizontal';
@@ -541,11 +559,9 @@ class paperrender {
             $questiondata['option'][$part_id]['selected'] = false;
           }
           if (isset($user_dismiss[$current_screen][$q_id]) and substr($user_dismiss[$current_screen][$q_id],$part_id-1,1) == '1') {
-            $class_type = 'inact';
             $questiondata['option'][$part_id]['inact'] = true;
           } else {
             $questiondata['option'][$part_id]['inact'] = false;
-            $class_type = 'act';
           }
           if ($question['score_method'] == 'Mark per Option') {
             if ($display_option['correct'] == 'y') $marks += $display_option['marks_correct'];  // Mark for correct options only
@@ -591,7 +607,7 @@ class paperrender {
           $questiondata['option'][$part_id]['unans'] = false;
           if (isset($rank_answers[$tmp_part_id - 1]) and $rank_answers[$tmp_part_id - 1] == 'u' and $screen_pre_submitted == 1 and $tmp_user_answers < $answers_needed) {
             $questiondata['option'][$part_id]['unans'] = true;
-            $unanswered = true;
+            $this->set('unanswered', true);
           }
           $questiondata['option'][$part_id]['na'] = false;
           if ($require_na) {
@@ -641,10 +657,9 @@ class paperrender {
         case 'true_false':
           $questiondata['true_false'] = true;
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and $screen_pre_submitted == 1) {
-            $questiondata['unanswered'] = true;
-            $unanswered = true;
+            $this->set('unanswered', true);
           } else {
-            $questiondata['unanswered'] = false;
+            $this->set('unanswered', false);
           }
 
           $questiondata['trueselected'] = false;
@@ -711,7 +726,6 @@ class paperrender {
             if (substr($blank_details[$blank_count], 0, 1) === ']') {
               $questiondata['option'][$count]['itemtype'] = 'blank';
               $questiondata['option'][$count]['itemcount'] = $itemcount;
-              $itemcount++;
               if ($question['display_method'] == 'textboxes') {
                 $sizeresults = array();
                 $not_used = preg_match("|size=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$sizeresults);
@@ -721,13 +735,13 @@ class paperrender {
                   $blank_size[$blank_count] = 15;
                 }
                 $questiondata['option'][$count]['size'] = $blank_size[$blank_count];
-                if ( (isset($blank_user_answers[$blank_count - 1]) and $blank_user_answers[$blank_count - 1] == 'u') and (isset($screen_pre_submitted) and $screen_pre_submitted == 1) ) {
-                  $unanswered = true;
+                if ((isset($blank_user_answers[$itemcount - 1]) and $blank_user_answers[$itemcount - 1] == 'u') and (isset($screen_pre_submitted) and $screen_pre_submitted == 1)) {
+                  $this->set('unanswered', true);
                   $questiondata['option'][$count]['unans'] = true;
                 } else {
                   $questiondata['option'][$count]['unans'] = false;
-                  if (isset($blank_user_answers[$blank_count - 1])) {
-                    $ans = $blank_user_answers[$blank_count - 1];
+                  if (isset($blank_user_answers[$itemcount - 1])) {
+                    $ans = $blank_user_answers[$itemcount - 1];
                   }
                   $encoded_ans = htmlentities($ans, ENT_COMPAT | ENT_HTML5, Config::get_instance()->get('cfg_page_charset'), false);
                   $questiondata['option'][$count]['encoded_ans'] = $encoded_ans;
@@ -738,19 +752,18 @@ class paperrender {
                 $answer_list = param::clean_array($answer_list, param::TEXT);
                 shuffle($answer_list);            // Shuffle the answers up.
                 for ($i=0; $i<count($answer_list); $i++) {
-                  if (isset($answer_list[$i]) and isset($blank_user_answers[$blank_count - 1]) and html_entity_decode(trim($answer_list[$i])) == html_entity_decode(trim($blank_user_answers[$blank_count - 1]))) {
+                  if (isset($answer_list[$i]) and isset($blank_user_answers[$itemcount - 1]) and html_entity_decode(trim($answer_list[$i])) == html_entity_decode(trim($blank_user_answers[$itemcount - 1]))) {
                     $questiondata['option'][$count]['itemvalue'][] = array('answer' => htmlentities(trim($answer_list[$i]), ENT_COMPAT, "UTF-8"), 'selected' => true);
                   } else {
-                    $questiondata['option'][$count]['itemvalue'][] = array('answer' => htmlentities(trim($answer_list[$i]), ENT_COMPAT, "UTF-8"), 'selected' =>  false);
+                    $questiondata['option'][$count]['itemvalue'][] = array('answer' => htmlentities(trim($answer_list[$i]), ENT_COMPAT, "UTF-8"), 'selected' => false);
                   }
                 }
-                if (isset($blank_user_answers[$part_id - 1]) and $blank_user_answers[$part_id - 1] == 'u' and $screen_pre_submitted == 1) {
+                if (isset($blank_user_answers[$itemcount- 1]) and $blank_user_answers[$itemcount- 1] == 'u' and $screen_pre_submitted == 1) {
                   $questiondata['option'][$count]['unans'] = true;
-                  $unanswered = true;
+                  $this->set('unanswered', true);
                 } else {
                   $questiondata['option'][$count]['unans'] = false;
                 }
-                $part_id++;
               }
               $results=array();
               $not_used = preg_match("|mark=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$results);
@@ -759,6 +772,7 @@ class paperrender {
               } else {
                 $blank_mark[$blank_count] = $display_option['marks_correct'];
               }
+              $itemcount++;
             } else {
               $questiondata['option'][$count]['itemtype'] = 'blurb';
               $questiondata['option'][$count]['itemvalue'] = $blank_details[$blank_count];
@@ -774,7 +788,6 @@ class paperrender {
           break;
         case 'textbox':
           $questiondata['textbox'] = true;
-          $questiondata['unanswered'] = false;
           if (!in_array($question_no, $textboxes_seen)) {
             $textboxes_seen[] = $question_no;
             $settings = json_decode($question['settings'], true);
@@ -783,9 +796,8 @@ class paperrender {
             if (!isset($settings['editor']) or $settings['editor'] == 'plain' or $settings['editor'] == 'mathjax') {
               $questiondata['editor'] = 'plain';
               if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
-                $questiondata['unanswered'] = true;
                 $questiondata['useranswer'] = $user_answers[$current_screen][$q_id];
-                $unanswered = true;
+                $this->set('unanswered', true);
               } else {
                 $ans = '';
                 if (isset($user_answers[$current_screen][$q_id])) {
@@ -822,7 +834,7 @@ class paperrender {
         case 'hotspot':
           $questiondata['hotspot'] = true;
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and  $screen_pre_submitted == 1) {
-            $unanswered = true;
+            $this->set('unanswered', true);
           }
           $hotspot_no = substr_count($question['options'][0]['correct'],'|') + 1;
           $tmp_height = $question['q_media_height'] + 30;
@@ -842,9 +854,9 @@ class paperrender {
           }
 
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] != '') {
-            $questiondata['unanswered'] = false;
+            $this->set('unanswered', false);
           } else {
-            $questiondata['unanswered'] = true;
+            $this->set('unanswered', true);
           }
           if ($question['score_method'] == 'Mark per Question') {
             $marks = $display_option['marks_correct'];
@@ -890,7 +902,7 @@ class paperrender {
           }
 
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0$' . $marks . ';' and  $screen_pre_submitted == 1) {
-            $unanswered = true;
+            $this->set('unanswered', true);
           }
           $tmp_correct = trim($question['options'][0]['correct']);
           $tmp_correct = str_replace("'", "&#039;", $tmp_correct);
@@ -908,9 +920,9 @@ class paperrender {
           }
 
           if (!isset($user_answers[$current_screen][$q_id]) or $user_answers[$current_screen][$q_id] == '') {
-            $questiondata['unanswered'] = true;
+            $this->set('unanswered', true);
           } else {
-            $questiondata['unanswered'] = false;
+            $this->set('unanswered', false);
           }
           break;
         case 'flash':
@@ -1034,7 +1046,7 @@ class paperrender {
         if ($answer_no == 1) {
           if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == 'u' and $screen_pre_submitted == 1) {
             $questiondata['extmatchstem'][$part_id-1]['unanswered'] = true;
-            $unanswered = true;
+            $this->set('unanswered', true);
           } else {
             $questiondata['extmatchstem'][$part_id-1]['unanswered'] = false;
           }
@@ -1044,7 +1056,7 @@ class paperrender {
           $questiondata['extmatchstem'][$part_id-1]['matching_options'] = count($matching_options);
           if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == '' and $screen_pre_submitted == 1) {
             $questiondata['extmatchstem'][$part_id-1]['unanswered'] = true;
-            $unanswered = true;
+            $this->set('unanswered', true);
           } else {
             $questiondata['extmatchstem'][$part_id-1]['unanswered'] = false;
           }
@@ -1086,7 +1098,7 @@ class paperrender {
         if (trim($single_scenario) != '') {
           if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == '' and $screen_pre_submitted == 1) {
             $questiondata['matrixscenarios'][$part_id-1]['unanswered'] = true;
-            $unanswered = true;
+            $this->set('unanswered', true);
           } else {
             $questiondata['matrixoptions'][$part_id-1]['unanswered'] = false;
           }
@@ -1139,6 +1151,7 @@ class paperrender {
 
     // Plugin question use there own templating.
     if ($question['q_type'] != 'enhancedcalc') {
+      $questiondata['unanswered'] = $this->get('unanswered');
       $render->render($questiondata, $string, 'paper/question.html');
     }
   }

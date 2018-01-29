@@ -41,7 +41,7 @@
     {% endfor %}
     </tr>
 {% endif %}
-    <tr {% if data.unaswered %} class="unans" {% endif %}>
+    <tr {% if data.unanswered %} class="unans" {% endif %}>
         <td class="q_no">{{data.assigned_number}}.&nbsp;</td><td>{{data.leadin|raw}}</td>
 {% if data.likertscaledisplay %}
         <td style="text-align:center; width:40px; vertical-align:top">

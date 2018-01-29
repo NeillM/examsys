@@ -4,7 +4,7 @@
     {% if p.itemtype == 'blurb' %}
     {{p.itemvalue|raw}}
     {% else %}
-    <input type="text" name="q{{data.question_no}}_{{p.itemcount}}" {% if p.unaswered %} class="unans" {% else %} value="{{p.encoded_ans}}" {% endif %} size="{{p.size}}" />
+    <input type="text" name="q{{data.question_no}}_{{p.itemcount}}" {% if p.unans %} class="unans" {% else %} value="{{p.encoded_ans}}" {% endif %} size="{{p.size}}" />
     {% endif %}
 {% endfor %}
 </p>
@@ -14,7 +14,7 @@
     {% if p.itemtype == 'blurb' %}
     {{p.itemvalue|raw}}
     {% else %}
-    <select name="q{{data.question_no}}_{{p.itemcount}}" {% if p.unaswered %} class="unans" {% endif %}>
+    <select name="q{{data.question_no}}_{{p.itemcount}}" {% if p.unans %} class="unans" {% endif %}>
                     <option value="u"></option>
        {% for a in p.itemvalue %}
                     <option value="{{a.answer}}" {% if a.selected %} selected {% endif %}>{{a.answer}}</option>

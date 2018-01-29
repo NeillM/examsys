@@ -64,12 +64,12 @@
         {{data.scttitlelower}}
     </strong>
 </p>
-<blockquote {% if data.unaswered %} class="unans" {% endif %}>
+<blockquote {% if data.unanswered %} class="unans" {% endif %}>
     <table cellpadding="2" cellspacing="0" border="0">
 {% for i,p in data.option %}
         <tr>
             <td>
-                <input type="radio" name="q{{data.question_no}}" value="{{data.tmp_part_id}}" {% if p.selected %} checked="checked" {% endif %} />
+                <input type="radio" name="q{{data.question_no}}" value="{{p.tmp_part_id}}" {% if p.selected %} checked="checked" {% endif %} />
             </td>
             <td>
     {% if p.optiontextdisplay %}
