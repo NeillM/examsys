@@ -315,14 +315,8 @@ $render->render($headerdata, $lang, 'header.html');
   * Build the paper structure
   *
   */
-  $old_leadin = '';
-  $old_q_type = '';
-  $old_q_id = 0;
   $question_no = 0;
   $q_displayed = 0;
-  $marks = 0;
-  $old_theme = '';
-  $previous_q_type = '';
   $tmp_questions_array = $propertyObj->build_paper($is_question_preview_mode, $get_qid, $q_number);
 
   // Look for random questions and overwrite as needed
@@ -468,8 +462,6 @@ $render->render($headerdata, $lang, 'header.html');
 
   // Display each question
   foreach ($questions_array as &$question) {
-    // Previous question type
-    $previous_q_type = $question['q_type'];
 
     // Question not on this screen, don't display
     if ($question['screen'] != $current_screen) {
@@ -482,8 +474,8 @@ $render->render($headerdata, $lang, 'header.html');
     $question['paper_questions'] = &$questions_array;
     $paperrender = new \paperrender();
     $paperrender->set('labelcolour', $labelcolor);
-    $paperrender->set('calculator', $calculator);
-    $paperrender->display_question($screen_pre_submitted, $q_displayed, $string, $question, $paperID, $current_screen, $previous_q_type, $question_no, $user_answers);
+    $paperrender->set('displaycalc', $calculator);
+    $paperrender->display_question($screen_pre_submitted, $q_displayed, $string, $question, $paperID, $current_screen, $question_no, $user_answers);
 
     $q_displayed++;
   }

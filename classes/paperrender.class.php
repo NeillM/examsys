@@ -53,7 +53,55 @@ class paperrender {
    * Calculator state in paper
    * @var boolean
    */
-  private $calculator;
+  private $displaycalc;
+
+  /**
+   * Prologue state in paper
+   * @var boolean
+   */
+  private $displayprologue;
+
+  /**
+   * Theme state in paper
+   * @var boolean
+   */
+  private $displaytheme;
+
+  /**
+   * Media state in paper
+   * @var boolean
+   */
+  private $displaymedia;
+
+  /**
+   * Scenario state in paper
+   * @var boolean
+   */
+  private $displayscenario;
+
+  /**
+   * Notes state in paper
+   * @var boolean
+   */
+  private $displaynotes;
+
+  /**
+   * Leadin state in paper
+   * @var boolean
+   */
+  private $displayleadin;
+
+  /**
+   * Question header state in paper
+   * @var boolean
+   */
+  private $displaydefault;
+
+  /**
+   * Negative marking state in paper
+   * @var boolean
+   */
+  private $negativemarking;
 
   /**
    * Default unanswered state
@@ -68,7 +116,47 @@ class paperrender {
   /**
    * Default calculator state
    */
-  const default_calculator = true;
+  const default_displaycalc = true;
+
+  /**
+   * Default prologue state
+   */
+  const default_displayprologue = false;
+
+  /**
+   * Default theme state
+   */
+  const default_displaytheme = false;
+
+  /**
+   * Default media state
+   */
+  const default_displaymedia = false;
+
+  /**
+   * Default media state
+   */
+  const default_displayscenario = false;
+
+  /**
+   * Default notes state
+   */
+  const default_displaynotes = false;
+
+  /**
+   * Default leadin state
+   */
+  const default_displayleadin = false;
+
+  /**
+   * Default display default question header state
+   */
+  const default_displaydefault = false;
+
+  /**
+   * Default negative marking state
+   */
+  const defatul_negativemarking = false;
 
   /**
    * Called when the object is unserialised.
@@ -109,13 +197,12 @@ class paperrender {
     }
   }
 
-  public function display_question($screen_pre_submitted, $q_displayed, $string, &$question, $pid, $current_screen, $old_q_type, &$question_no, $user_answers) {
+  public function display_question($screen_pre_submitted, $q_displayed, $string, &$question, $pid, $current_screen, &$question_no, $user_answers) {
     global $used_questions, $user_dismiss, $user_order, $language;
  
     $propertyObj = PaperProperties::get_paper_properties_by_id($pid, $this->db, $string, true);
     $paper_type = $propertyObj->get_paper_type();
     $render = new render($this->config);
-    $calculator = $this->get('calculator');
 
     if ($screen_pre_submitted == 1 and $q_displayed == 0) {
       $this->set('unanswered', true);
@@ -126,15 +213,7 @@ class paperrender {
     // Attempt to display paper prolog
     if ($q_displayed == 0 and $current_screen == 1 and $propertyObj->get_paper_prologue() != '') {
       $questiondata['prologue'] = $propertyObj->get_paper_prologue();
-      $questiondata['displayprologue'] = true;
-    } else {
-      $questiondata['displayprologue'] = false;
-    }
-
-    if ($q_displayed == 0 and $question['theme'] == '') {
-      $questiondata['notheme'] = true;
-    } else {
-      $questiondata['notheme'] = false;
+      $this->set('displayprologue', true);
     }
 
     // Get the media directory object.
@@ -198,32 +277,14 @@ class paperrender {
     $question_no++;
     $textboxes_seen = array();
 
-    $li_set = 0;
-    $questiondata['likerprev'] = false;
-    $questiondata['likercur'] = false;
-    if ($old_q_type == 'likert' and $question['q_type'] != 'likert') {
-      $questiondata['likerprev'] = true;
-    } elseif ($old_q_type != 'likert' and $question['q_type'] == 'likert') {
-      $questiondata['likercur'] = true;
-    }
-
     if ($question['theme'] != '') {
       $questiondata['theme'] = $question['theme'];
-      $questiondata['displaytheme'] = true;
-    } else {
-      $questiondata['displaytheme'] = false;
+      $this->set('displaytheme', true);
     }
 
     $questiondata['option_no'] = $option_no;
     $questiondata['displaymethod'] = '';
-    $questiondata['negativemarking'] = false;
     $questiondata['papertype'] = $paper_type;
-    $questiondata['displaycalc'] = false;
-    $questiondata['displayassigned'] = false;
-    $questiondata['displaymedia'] = false;
-    $questiondata['displaynotes'] = false;
-    $questiondata['displayscenario'] = false;
-    $questiondata['displayleadin'] = false;
     $questiondata['assigned_number'] = $question['assigned_number'];
     $questiondata['scenario'] = $question['scenario'];
     $questiondata['notes'] = $question['notes'];
@@ -233,41 +294,25 @@ class paperrender {
     $questiondata = array_merge($questiondata, $mediadata);
     if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
       if ($question['scenario'] != '' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'matrix' and $question['q_type'] != 'likert' and $question['q_type'] != 'enhancedcalc') {
-        $questiondata['displayassigned'] = true;
-        if ($calculator == 1)  {
-          $questiondata['displaycalc'] = true;
-        }
+        $this->set('displaydefault', true);
         if ($question['notes'] != '') {
-          $questiondata['displaynotes'] = true;
+          $this->set('displaynotes', true);
         }
         if ($question['scenario'] != '') {
-          $questiondata['displayscenario'] = true;
+          $this->set('displayscenario', true);
         }
-        $li_set = 1;
       }
       if ($question['q_media'] != '' and $question['q_type'] != 'hotspot' and $question['q_type'] != 'labelling' and $question['q_type'] != 'flash' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'area' and $question['q_type'] != 'enhancedcalc') {
-        if ($li_set == 0) {
-          $questiondata['displayassigned'] = true;
-          if ($calculator == 1)  {
-            $questiondata['displaycalc'] = true;
-          }
-        }
-        $questiondata['displaymedia'] = true;
-        $li_set = 1;
+        $this->set('displaydefault', true);
+        $this->set('displaymedia', true);
       }
       if ($question['q_type'] != 'likert') {
-        if ($li_set == 0) {
-          $questiondata['displayassigned'] = true;
-          if ($calculator == 1)  {
-            $questiondata['displaycalc'] = true;
-          }
-        }
-        $li_set = 1;
+        $this->set('displaydefault', true);
         if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and in_array($question['q_type'], array('extmatch', 'matrix', 'enhancedcalc')))) {
-          $questiondata['displaynotes'] = true;
+          $this->set('displaynotes', true);
         }
         if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'enhancedcalc') {
-          $questiondata['displayleadin'] = true;
+          $this->set('displayleadin', true);
         }
       }
     }
@@ -275,14 +320,11 @@ class paperrender {
     $questiondata['displayinfo'] = false;
     if ($question['q_type'] == 'info') {
       // Special processing of Information Blocks.
-      if ($li_set == 0) {
-        $questiondata['displayinfo'] = true;
-      }
+      $questiondata['displayinfo'] = true;
       if ($question['q_media'] != '') {
-        $questiondata['displaymedia'] = true;
+        $this->set('displaymedia', true);
       }
-      $questiondata['displayleadin'] = true;
-      $li_set = 1;
+      $this->set('displayleadin', true);
       $question_no--;
     }
 
@@ -291,6 +333,14 @@ class paperrender {
 
     $questiondata['unanswered'] = $this->get('unanswered');
     $questiondata['labelcolour'] = $this->get('labelcolour');
+    $questiondata['displayprologue'] = $this->get('displayprologue');
+    $questiondata['displaytheme'] = $this->get('displaytheme');
+    $questiondata['displaycalc'] = $this->get('displaycalc');
+    $questiondata['displaymedia'] = $this->get('displaymedia');
+    $questiondata['displayscenario'] = $this->get('displayscenario');
+    $questiondata['displaynotes'] = $this->get('displaynotes');
+    $questiondata['displayleadin'] = $this->get('displayleadin');
+    $questiondata['displaydefault'] = $this->get('displaydefault');
     $render->render($questiondata, $string, 'paper/question_header.html');
 
     // Pre-question processing
@@ -360,9 +410,6 @@ class paperrender {
       case 'likert':
         $questiondata['likert'] = true;
         $questiondata['likertna'] = false;
-        $questiondata['likertscenario'] = false;
-        $questiondata['displaylikertnotes'] = false;
-        $questiondata['displaylikertscenario'] = false;
         $na = false;
         $likert_display = explode('|',$question['display_method']);
         $likert_col_no = substr_count($question['display_method'],'|');
@@ -371,11 +418,11 @@ class paperrender {
           $na = true;
         }
         if ($question['notes'] != '') {
-          $questiondata['displaylikertnotes'] = true;
+          $this->set('displaynotes', true);
           $questiondata['likertnotescolspan'] = $likert_col_no + 1;
         }
         if ($question['scenario'] != '') {
-          $questiondata['displaylikertscenario'] = true;
+          $this->set('displayscenario', true);
           $questiondata['likertscenariocolspan'] = $likert_col_no + 2;
         }
         if ($na == true) {
@@ -404,30 +451,13 @@ class paperrender {
         break;
       case 'sct':
         $questiondata['sct'] = true;
-        $questiondata['displaysctcalc'] = false;
-        $questiondata['displaysctmedia'] = false;
-        $questiondata['displaysctscenario'] = false;
-        $questiondata['displaysctnotes'] = false;
-        $questiondata['sctheaderset'] = false;
-        if ($question['scenario'] != '') {
-          $questiondata['displaysctscenario'] = true;
-          if ($calculator == 1) {
-            $questiondata['displaysctcalc'] = true;
-          }
-          if ($question['notes'] != '') {
-            $questiondata['displaysctnotes'] = true;
-          }
-          $li_set = 1;
-          $questiondata['sctheaderset'] = true;
+        // SCT stalls vignette in scenario so must dispaly. 
+        $this->set('displayscenario', true);
+        if ($question['notes'] != '') {
+          $this->set('displaynotes', true);
         }
         if ($question['q_media'] != '') {
-          if ($li_set == 0) {
-            if ($calculator == 1) {
-              $questiondata['displaysctcalc'] = true;
-            }
-          }
-          $questiondata['displaysctmedia'] = true;
-          $li_set = 1;
+          $this->set('displaymedia', true);
         }
 
         $sct_parts = explode('~',$question['leadin']);
@@ -962,9 +992,7 @@ class paperrender {
           // Question type is deprecated. Rogo only supports pre-existing flash questions.
           $questiondata['flash'] = true;
           if ($question['scenario'] != '') {
-            $questiondata['displayscenario'] = true;
-          } else {
-            $questiondata['displayscenario'] = false;
+          $this->set('displayscenario', true);
           }
         $marks += $display_option['marks_correct'];
         break;
@@ -984,7 +1012,7 @@ class paperrender {
           }
         }
         if ($display_option['marks_incorrect'] < 0) {
-          $questiondata['negativemarking'] = true;
+          $this->set('negativemarking', true);
             // Include an abstain option if negative marking is used.
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'a') {
               $questiondata['abstainselected'] = true;
@@ -994,7 +1022,7 @@ class paperrender {
         }
       } elseif ($question['display_method'] == 'horizontal') {
         if ($display_option['marks_incorrect'] < 0) {
-          $questiondata['negativemarking'] = true;
+          $this->set('negativemarking', true);
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'a') {
             $questiondata['abstainselected'] = true;
           } else {
@@ -1016,7 +1044,7 @@ class paperrender {
         }
         $questiondata['other'] = substr($answer, $part_id);
       } elseif ($question['q_type'] == 'mrq' and $display_option['marks_incorrect'] < 0) {
-        $questiondata['negativemarking'] = true;
+        $this->set('negativemarking', true);
         // Include an abstain option if negative marking is used.
         if ($answer != '' and $answer == 'a') {
           $questiondata['abstainselected'] = true;
@@ -1185,6 +1213,10 @@ class paperrender {
     // Plugin question use there own templating.
     if ($question['q_type'] != 'enhancedcalc') {
       $questiondata['unanswered'] = $this->get('unanswered');
+      $questiondata['displaymedia'] = $this->get('displaymedia');
+      $questiondata['displayscenario'] = $this->get('displayscenario');
+      $questiondata['displaynotes'] = $this->get('displaynotes');
+      $questiondata['negativemarking'] = $this->get('negativemarking');
       $render->render($questiondata, $string, 'paper/question.html');
     }
   }

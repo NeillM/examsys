@@ -13,20 +13,6 @@
         </td>
     </tr>
 {% endif %}
-{% if data.notheme %}
-    <tr>
-        <td colspan="2">&nbsp;</td>
-    </tr>
-{% endif %}
-{% if data.likertprev %}
-</table>
-<br />
-<table cellpadding="0" cellspacing="4" border="0" width="100%" style="table-layout:fixed">
-    <col width="40"><col>
-{% elseif data.likertcur %}
-</table>
-<table cellpadding="0" cellspacing="4" border="0">
-{% endif %}
 {% if data.displaytheme %}
     <tr>
         <td colspan="2" class="theme">
@@ -34,9 +20,9 @@
         </td>
     </tr>
 {% endif %}
-{% if data.displayassigned %}
+{% if data.displaydefault %}
     <tr>
-        <td class="q_no">{{data.assigned_number}}&nbsp;
+        <td class="q_no">{{data.assigned_number}}.&nbsp;
         {% if data.displaycalc %}
             <br />
             <img class="sciCalculator" src="{{path}}/artwork/calc.png" alt="{{lang.calculator}}" />

@@ -1,21 +1,21 @@
-{% if data.displaysctscenario %}
+{% if data.displayscenario %}
 <tr>
     <td class="question_no">
         {{data.assigned_number}}.&nbsp;
     </td>
-    <td style="width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040">
+    <td style="background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040">
         {{lang.clinicalvignette}}
     </td>
 </tr>
 <tr>
     <td style="vertical-align:top; text-align:right">
-    {% if data.displaysctcalc %}
+    {% if data.displaycalc %}
         <br />
         <img class="sciCalculator" src="{{path}}/artwork/calc.png" alt="{{lang.calculator}}" />
     {% endif %}
     </td>
     <td>
-        {% if data.displaysctnotes %}
+        {% if data.displaynotes %}
         <p class="note">
          <img src="{{path}}/artwork/notes_icon.gif" width="16" height="16" alt="{{lang.note}}" />&nbsp;<strong>{{lang.note}}:</strong>&nbsp;{{data.notes}}
         </p>
@@ -23,38 +23,27 @@
     {{data.scenario|raw}}<br />
     <br />
 {% endif %}
-{% if data.displaysctmedia %}
-    {% if data.sctheaderset  == false %}
-<tr>
-    <td class="question_no">
-        {{data.assigned_number}}.&nbsp;
-        {% if data.displaysctcalc %}
-        <br />
-        <img class="sciCalculator" src="{{path}}/artwork/calc.png" alt="{{lang.calculator}}" />
-        {% endif %}
-    </td>
-    <td>
-    {% endif %}
-        <p align="center">
-            {% include 'paper/media.html' %}
-        </p>
+{% if data.displaymedia %}
+    <p align="center">
+        {% include 'paper/media.html' %}
+    </p>
 {% endif %}
 <table cellpadding="2" cellspacing="0" border="0" style="width:100%">
     <tr>
-        <td style="width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold">
+        <td style="background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold">
             {{data.scttitle}}
         </td>
         <td style="width:2%">&nbsp;</td>
-        <td style="width:49%; background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold">
+        <td style="background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold">
             {{lang.newinformation}}
         </td>
     </tr>
     <tr>
-        <td style="width:49%; vertical-align:top">
+        <td style="vertical-align:top">
             {{data.sctpart0|raw}}
         </td>
         <td style="width:2%">&nbsp;</td>
-        <td style="width:49%; vertical-align:top">
+        <td style="vertical-align:top">
             {{data.sctpart1|raw}}
         </td>
     </tr>
