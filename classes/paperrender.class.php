@@ -26,10 +26,22 @@
 class paperrender {
 
   /**
+   * DB connection
+   * @var mysqli 
+   */
+  private $db;
+
+  /**
    * Question answered state
    * @var boolean
    */
   private $unanswered;
+
+  /**
+   * Colour of 'labels' in paper
+   * @var string
+   */
+  private $labelcolour;
 
   /**
    * Called when the object is unserialised.
@@ -42,27 +54,35 @@ class paperrender {
   }
 
   /**
-     * Constructor
-     */
+   * Constructor
+   */
   function __construct() {
     $configObject = Config::get_instance();
-    $db = $configObject->db;
+    $this->db = $configObject->db;
   }
 
+  /**
+   * Set an attribute
+   * @param string $attribute
+   * @param mixed $value
+   */
   public function set($attribute, $value) {
     $this->$attribute = $value;
   }
-
+  /**
+   * Get an attribute
+   * @param string $attribute
+   * @return mixed
+   */
   public function get($attribute) {
     return $this->$attribute;
   }
 
   public function display_question($screen_pre_submitted, $q_displayed, $string, &$question, $pid, $calculator, $current_screen, $old_q_type, &$question_no, $user_answers) {
-    global $labelcolor, $old_likert_label, $old_likert_cols, $li_set, $bgcolor, $li_set, $used_questions, $user_dismiss, $user_order, $string, $language;
+    global $li_set, $bgcolor, $li_set, $used_questions, $user_dismiss, $user_order, $language;
  
     $configObject = Config::get_instance();
-    $db = $configObject->db;
-    $propertyObj = PaperProperties::get_paper_properties_by_id($pid, $db, $string, true);
+    $propertyObj = PaperProperties::get_paper_properties_by_id($pid, $this->db, $string, true);
     $paper_type = $propertyObj->get_paper_type();
     
     
@@ -178,7 +198,6 @@ class paperrender {
     $questiondata['assigned_number'] = $question['assigned_number'];
     $questiondata['scenario'] = $question['scenario'];
     $questiondata['notes'] = $question['notes'];
-    $questiondata['labelcolour'] = $labelcolor;
     $questiondata['leadin'] = $question['leadin'];
     $questiondata['langauge'] = $language;
     $mediadata = self::get_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
@@ -240,9 +259,9 @@ class paperrender {
 
     $part_id = 0;
     $marks = 0;
-    if ($question['q_type'] != 'likert') $old_likert_label = '';
 
     $questiondata['unanswered'] = $this->get('unanswered');
+    $questiondata['labelcolour'] = $this->get('labelcolour');
     $render->render($questiondata, $string, 'paper/question_header.html');
 
     // Pre-question processing
@@ -311,7 +330,6 @@ class paperrender {
         break;
       case 'likert':
         $questiondata['likert'] = true;
-        $questiondata['likertstart'] = false;
         $questiondata['likertna'] = false;
         $questiondata['likertscenario'] = false;
         $questiondata['displaylikertnotes'] = false;
@@ -319,37 +337,26 @@ class paperrender {
         $na = false;
         $likert_display = explode('|',$question['display_method']);
         $likert_col_no = substr_count($question['display_method'],'|');
-        if (strtolower($old_likert_label) != strtolower($question['display_method']) or $question['theme'] != '') {
-          if ($likert_col_no != $old_likert_cols) {
-            $questiondata['likertstart'] = true;
-          }
-          if ($likert_display[$likert_col_no] == 'true') {
-            $likert_col_no++;
-            $na = true;
-          }
-          if ($question['notes'] != '') {
-            $questiondata['displaylikertnotes'] = true;
-            $questiondata['likertnotescolspan'] = $likert_col_no + 1;
-          }
-          if ($question['scenario'] != '') {
-            $questiondata['displaylikertscenario'] = true;
-            $questiondata['likertscenariocolspan'] = $likert_col_no + 2;
-          }
-          if ($na == true) {
-            $questiondata['likertna'] = true;
-          }
-          $questiondata['likertdisplay'][0] = $likert_display[0];
-          $temp_end = substr_count($question['display_method'],'|') - 1;
-          for ($i=1; $i<=$temp_end; $i++) {
-            $questiondata['likertdisplay'][$i] = $likert_display[$i];
-          }
-        } else {
-          $questiondata['likertscenario'] = true;
+        if ($likert_display[$likert_col_no] == 'true') {
+          $likert_col_no++;
+          $na = true;
+        }
+        if ($question['notes'] != '') {
+          $questiondata['displaylikertnotes'] = true;
+          $questiondata['likertnotescolspan'] = $likert_col_no + 1;
+        }
+        if ($question['scenario'] != '') {
           $questiondata['displaylikertscenario'] = true;
           $questiondata['likertscenariocolspan'] = $likert_col_no + 2;
         }
-        $old_likert_label = $question['display_method'];
-        $old_likert_cols = $likert_col_no;
+        if ($na == true) {
+          $questiondata['likertna'] = true;
+        }
+        $questiondata['likertdisplay'][0] = $likert_display[0];
+        $temp_end = substr_count($question['display_method'],'|') - 1;
+        for ($i=1; $i<=$temp_end; $i++) {
+          $questiondata['likertdisplay'][$i] = $likert_display[$i];
+        }
         break;
       case 'extmatch':
       case 'matrix':

@@ -1,16 +1,7 @@
-{% if data.likertscenario %}
-    {% if data.displaylikertscenario %}
-    <tr>
-        <td colspan="{data.likertscenariocolspan}}">
-            {{data.scenario|raw}}
-        </td>
-    </tr>
-    {% endif %}
-{% else %}
 </table>
 <table cellpadding="4" cellspacing="0" border="0">
     <col width="40"><col>
-    {% if data.displaylikertnotes %}
+{% if data.displaylikertnotes %}
     <tr>
         <td></td>
         <td colspan="{data.likertnotescolspan}}" class="note">
@@ -18,29 +9,28 @@
             &nbsp;<strong>{{lang.note}}:</strong>&nbsp;{{data.notes}}
         </td>
     </tr>
-    {% endif %}
-    {% if data.displaylikertscenario %}
+{% endif %}
+{% if data.displaylikertscenario %}
     <tr>
         <td colspan="{data.likertscenariocolspan}}">
             {{data.scenario|raw}}
         </td>
     </tr>
-    {% endif %}
+{% endif %}
     <tr>
         <td></td>
         <td></td>
-    {% if data.likertna %}
+{% if data.likertna %}
         <td style="vertical-align:bottom; text-align:center; color:{{data.labelcolour}}; font-size:80%">
             {{lang.na}}
         </td>
-    {% endif %}
-    {% for i in data.likertdisplay %}
+{% endif %}
+{% for i in data.likertdisplay %}
         <td style="vertical-align:bottom; text-align:center; color:{{data.labelcolour}}; font-size:80%">
             {{i|raw}}
         </td>
-    {% endfor %}
+{% endfor %}
     </tr>
-{% endif %}
     <tr {% if data.unanswered %} class="unans" {% endif %}>
         <td class="q_no">{{data.assigned_number}}.&nbsp;</td><td>{{data.leadin|raw}}</td>
 {% if data.likertscaledisplay %}
