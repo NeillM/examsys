@@ -104,8 +104,6 @@ $attempt = 1;                 //default attempt to 1 overwritten if the student 
 $low_bandwidth = 0;           //default to off overwritten by (check_labs) if lab has low_bandwidth set
 $lab_name = NULL;             //default overwritten by (check_labs)
 $lab_id = NULL;
-$current_address = NULL;   //default overwritten by (check_labs)
-
 $current_address = NetworkUtils::get_client_address();
 
 //get the module Ids for this paper
