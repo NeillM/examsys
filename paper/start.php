@@ -482,7 +482,8 @@ $render->render($headerdata, $lang, 'header.html');
     $question['paper_questions'] = &$questions_array;
     $paperrender = new \paperrender();
     $paperrender->set('labelcolour', $labelcolor);
-    $paperrender->display_question($screen_pre_submitted, $q_displayed, $string, $question, $paperID, $calculator, $current_screen, $previous_q_type, $question_no, $user_answers);
+    $paperrender->set('calculator', $calculator);
+    $paperrender->display_question($screen_pre_submitted, $q_displayed, $string, $question, $paperID, $current_screen, $previous_q_type, $question_no, $user_answers);
 
     $q_displayed++;
   }

@@ -32,6 +32,12 @@ class paperrender {
   private $db;
 
   /**
+   * Config object
+   * @var object
+   */
+  private $config;
+
+  /**
    * Question answered state
    * @var boolean
    */
@@ -42,6 +48,27 @@ class paperrender {
    * @var string
    */
   private $labelcolour;
+
+  /**
+   * Calculator state in paper
+   * @var boolean
+   */
+  private $calculator;
+
+  /**
+   * Default unanswered state
+   */
+  const default_unanswered = true;
+
+  /**
+   * Default label colour
+   */
+  const default_labelcolour = '#C00000';
+
+  /**
+   * Default calculator state
+   */
+  const default_calculator = true;
 
   /**
    * Called when the object is unserialised.
@@ -57,8 +84,8 @@ class paperrender {
    * Constructor
    */
   function __construct() {
-    $configObject = Config::get_instance();
-    $this->db = $configObject->db;
+    $this->config = Config::get_instance();
+    $this->db = $this->config->db;
   }
 
   /**
@@ -75,18 +102,20 @@ class paperrender {
    * @return mixed
    */
   public function get($attribute) {
-    return $this->$attribute;
+    if (empty($attribute)) {
+      return constant('default_' . $attribute);
+    } else {
+      return $this->$attribute;
+    }
   }
 
-  public function display_question($screen_pre_submitted, $q_displayed, $string, &$question, $pid, $calculator, $current_screen, $old_q_type, &$question_no, $user_answers) {
+  public function display_question($screen_pre_submitted, $q_displayed, $string, &$question, $pid, $current_screen, $old_q_type, &$question_no, $user_answers) {
     global $used_questions, $user_dismiss, $user_order, $language;
  
-    $configObject = Config::get_instance();
     $propertyObj = PaperProperties::get_paper_properties_by_id($pid, $this->db, $string, true);
     $paper_type = $propertyObj->get_paper_type();
-    
-    
-    $render = new render($configObject);
+    $render = new render($this->config);
+    $calculator = $this->get('calculator');
 
     if ($screen_pre_submitted == 1 and $q_displayed == 0) {
       $this->set('unanswered', true);
