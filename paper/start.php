@@ -472,7 +472,8 @@ $render->render($headerdata, $lang, 'header.html');
     $is_enhancedcalc = 0;
     // refer to all questions on displayed question
     $question['paper_questions'] = &$questions_array;
-    $questionrender = new \questionrender();
+    $qrender = $question['q_type'] . 'render';
+    $questionrender = new $qrender();
     $questionrender->set('labelcolour', $labelcolor);
     $questionrender->set('displaycalc', $calculator);
     $questionrender->display_question($screen_pre_submitted, $q_displayed, $string, $question, $paperID, $current_screen, $question_no, $user_answers);

@@ -23,7 +23,7 @@
 /**
  * Question rendering helper class.
  */
-class questionrender {
+abstract class questionrender {
 
   /**
    * DB connection
@@ -109,6 +109,15 @@ class questionrender {
    */
   private $displaymethod;
 
+
+  private $scenario;
+
+  private $notes;
+
+  private $q_media;
+
+  private $questiontype;
+
   /**
    * Default unanswered state
    */
@@ -187,6 +196,12 @@ class questionrender {
     $this->db = $this->config->db;
   }
 
+  abstract public function set_question_head();
+
+  abstract public function set_question($screen_pre_submitted, $useranswered);
+
+  abstract public function set_option();
+
   /**
    * Set an attribute
    * @param string $attribute
@@ -202,7 +217,11 @@ class questionrender {
    */
   public function get($attribute) {
     if (empty($attribute)) {
-      return constant('default_' . $attribute);
+      if (empty(constant('default_' . $attribute))) {
+        return null;
+      } else {
+        return constant('default_' . $attribute);
+      }
     } else {
       return $this->$attribute;
     }
@@ -296,37 +315,42 @@ class questionrender {
     $questiondata['option_no'] = $option_no;
     $questiondata['papertype'] = $paper_type;
     $questiondata['assigned_number'] = $question['assigned_number'];
-    $questiondata['scenario'] = $question['scenario'];
-    $questiondata['notes'] = $question['notes'];
+    $this->set('scenario', $question['scenario']);
+    $this->set('notes', $question['notes']);
+    $this->set('q_media', $question['q_media']);
     $questiondata['leadin'] = $question['leadin'];
     $questiondata['langauge'] = $language;
     $mediadata = self::get_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
     $questiondata = array_merge($questiondata, $mediadata);
-    if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
-      if ($question['scenario'] != '' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'matrix' and $question['q_type'] != 'likert' and $question['q_type'] != 'enhancedcalc') {
-        $this->set('displaydefault', true);
-        if ($question['notes'] != '') {
-          $this->set('displaynotes', true);
+    
+    if ($question['q_type'] == 'mcq') {
+      $this->set_question_head();
+    } else {
+      if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
+        if ($question['scenario'] != '' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'matrix' and $question['q_type'] != 'likert' and $question['q_type'] != 'enhancedcalc') {
+          $this->set('displaydefault', true);
+          if ($question['notes'] != '') {
+            $this->set('displaynotes', true);
+          }
+          if ($question['scenario'] != '') {
+            $this->set('displayscenario', true);
+          }
         }
-        if ($question['scenario'] != '') {
-          $this->set('displayscenario', true);
+        if ($question['q_media'] != '' and $question['q_type'] != 'hotspot' and $question['q_type'] != 'labelling' and $question['q_type'] != 'flash' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'area' and $question['q_type'] != 'enhancedcalc') {
+          $this->set('displaydefault', true);
+          $this->set('displaymedia', true);
         }
-      }
-      if ($question['q_media'] != '' and $question['q_type'] != 'hotspot' and $question['q_type'] != 'labelling' and $question['q_type'] != 'flash' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'area' and $question['q_type'] != 'enhancedcalc') {
-        $this->set('displaydefault', true);
-        $this->set('displaymedia', true);
-      }
-      if ($question['q_type'] != 'likert') {
-        $this->set('displaydefault', true);
-        if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and in_array($question['q_type'], array('extmatch', 'matrix', 'enhancedcalc')))) {
-          $this->set('displaynotes', true);
-        }
-        if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'enhancedcalc') {
-          $this->set('displayleadin', true);
+        if ($question['q_type'] != 'likert') {
+          $this->set('displaydefault', true);
+          if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and in_array($question['q_type'], array('extmatch', 'matrix', 'enhancedcalc')))) {
+            $this->set('displaynotes', true);
+          }
+          if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'enhancedcalc') {
+            $this->set('displayleadin', true);
+          }
         }
       }
     }
-
     $questiondata['displayinfo'] = false;
     if ($question['q_type'] == 'info') {
       // Special processing of Information Blocks.
@@ -351,12 +375,15 @@ class questionrender {
     $questiondata['displaynotes'] = $this->get('displaynotes');
     $questiondata['displayleadin'] = $this->get('displayleadin');
     $questiondata['displaydefault'] = $this->get('displaydefault');
+    $questiondata['scenario'] = $this->get('scenario');
+    $questiondata['notes'] = $this->get('notes');
     $render->render($questiondata, $string, 'paper/question_header.html');
 
     // Pre-question processing
-    $questiondata['questiontype'] = $question['q_type'];
+    
     $questiondata[$question['q_type']] = false;
     $questiondata['question_no'] = $question_no;
+    $this->set('displaymethod', $question['display_method']);
     switch ($question['q_type']) {
       case 'enhancedcalc':
         $questiondata['enhancedcalc'] = true;
@@ -369,21 +396,14 @@ class questionrender {
         break;
       case 'dichotomous':
         $questiondata['dichotomous'] = true;
-        $this->set('displaymethod', $question['display_method']);
         break;
       case 'mcq':
-        $questiondata['mcq'] = true;
-        if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0' and $screen_pre_submitted == 1) {
-          $this->set('unanswered', true);
+        if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0') {
+          $useranswered = false;
+        } else {
+          $useranswered = true;
         }
-        if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
-          $this->set('displaymethod', 'vertical');
-        } elseif ($question['display_method'] == 'dropdown') {
-          $this->set('displaymethod', 'dropdown');
-          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0') {
-            $this->set('unanswered', true);
-          }
-        }
+        $this->set_question($screen_pre_submitted, $useranswered);
         break;
       case 'mrq':
         $questiondata['mrq'] = true;
@@ -585,29 +605,7 @@ class questionrender {
           }
           break;
         case 'mcq':
-          $questiondata['mcqpartid'] = $tmp_part_id;
-          if (isset($user_answers[$current_screen][$q_id]) and $tmp_part_id == $user_answers[$current_screen][$q_id]) {
-            $questiondata['option'][$part_id]['selected'] = true;
-          } else {
-            $questiondata['option'][$part_id]['selected'] = false;
-          }
-          $questiondata['option'][$part_id]['optiontextdisplay'] = false;
-          if ($display_option['option_text'] != '') {
-            $questiondata['option'][$part_id]['optiontextdisplay'] = true;
-          }
-          if ($display_option['o_media'] != '') {
-            $questiondata['option'][$part_id]['displayoptionmedia'] = true;
-          }
-          if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
-            if (isset($user_dismiss[$current_screen][$q_id]) and substr($user_dismiss[$current_screen][$q_id],$tmp_part_id-1,1) == '1') {
-              $questiondata['option'][$part_id]['inact'] = true;
-            } else {
-              $questiondata['option'][$part_id]['inact'] = false;
-            }
-          } elseif ($question['display_method'] == 'horizontal') {
-            $this->set('displaymethod', 'horizontal');
-          }
-          if ($tmp_part_id == $display_option['correct']) $marks = $display_option['marks_correct'];
+          $this->set_option();
           break;
         case 'mrq':
           $questiondata['option'][$part_id]['mrq_correct'] = $mrq_correct;
@@ -1218,6 +1216,7 @@ class questionrender {
       $questiondata['displaynotes'] = $this->get('displaynotes');
       $questiondata['negativemarking'] = $this->get('negativemarking');
       $questiondata['displaymethod'] = $this->get('displaymethod');
+      $questiondata['questiontype'] = $this->get('questiontype');
       $render->render($questiondata, $string, 'paper/question.html');
     }
   }
