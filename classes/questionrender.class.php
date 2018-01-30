@@ -15,15 +15,15 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Paper Render package
+* Question Render package
 * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 * @copyright Copyright (c) 2018 onwards The University of Nottingham
 */
 
 /**
- * Paper rendering helper class.
+ * Question rendering helper class.
  */
-class paperrender {
+class questionrender {
 
   /**
    * DB connection
