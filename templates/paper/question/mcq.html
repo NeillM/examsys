@@ -1,5 +1,5 @@
 <blockquote {% if data.unanswered %} class="unans" {% endif %}>
-{% if data.displaymethod == 'vertical' %}
+{% if data.displaymethod == 'vertical' or data.displaymethod == 'other' %}
     <table cellpadding="2" cellspacing="0" border="0">
     {% for i,p in data.option %}
         <tr>
@@ -16,7 +16,7 @@
             </td>
         </tr>
     {% endfor %}
-    {% if data.displayother %}
+    {% if data.displaymethod == 'other' %}
         <tr>
             <td>
                 <input type="radio" name="q{{data.question_no}}" value="other" {% if data.otherselected %} checked="checked" {% endif %}/>

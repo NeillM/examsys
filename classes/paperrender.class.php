@@ -50,7 +50,7 @@ class paperrender {
   private $labelcolour;
 
   /**
-   * Calculator state in paper
+   * Calculator state of question
    * @var boolean
    */
   private $displaycalc;
@@ -62,46 +62,52 @@ class paperrender {
   private $displayprologue;
 
   /**
-   * Theme state in paper
+   * Theme state of question
    * @var boolean
    */
   private $displaytheme;
 
   /**
-   * Media state in paper
+   * Media state of question
    * @var boolean
    */
   private $displaymedia;
 
   /**
-   * Scenario state in paper
+   * Scenario state of question
    * @var boolean
    */
   private $displayscenario;
 
   /**
-   * Notes state in paper
+   * Notes state of question
    * @var boolean
    */
   private $displaynotes;
 
   /**
-   * Leadin state in paper
+   * Leadin state of question
    * @var boolean
    */
   private $displayleadin;
 
   /**
-   * Question header state in paper
+   * Question header state
    * @var boolean
    */
   private $displaydefault;
 
   /**
-   * Negative marking state in paper
+   * Negative marking state of question
    * @var boolean
    */
   private $negativemarking;
+
+  /**
+   * Display method used by question
+   * @var boolean
+   */
+  private $displaymethod;
 
   /**
    * Default unanswered state
@@ -157,6 +163,11 @@ class paperrender {
    * Default negative marking state
    */
   const defatul_negativemarking = false;
+
+  /**
+   * Default question display method
+   */
+  const default_displaymethod = '';
 
   /**
    * Called when the object is unserialised.
@@ -283,7 +294,6 @@ class paperrender {
     }
 
     $questiondata['option_no'] = $option_no;
-    $questiondata['displaymethod'] = '';
     $questiondata['papertype'] = $paper_type;
     $questiondata['assigned_number'] = $question['assigned_number'];
     $questiondata['scenario'] = $question['scenario'];
@@ -359,14 +369,7 @@ class paperrender {
         break;
       case 'dichotomous':
         $questiondata['dichotomous'] = true;
-        $questiondata['dichotomous_type'] = 'YN';
-        $questiondata['dichotomous_display_method'] = 0;
-        if (substr($question['display_method'],0,2) == 'TF') {
-          $questiondata['dichotomous_type'] = 'TF';
-        }
-        if (strpos($question['display_method'],'Abstain') !== false) {
-          $questiondata['dichotomous_display_method'] = 1;
-        }
+        $this->set('displaymethod', $question['display_method']);
         break;
       case 'mcq':
         $questiondata['mcq'] = true;
@@ -374,9 +377,9 @@ class paperrender {
           $this->set('unanswered', true);
         }
         if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
-          $questiondata['displaymethod'] = 'vertical';
+          $this->set('displaymethod', 'vertical');
         } elseif ($question['display_method'] == 'dropdown') {
-          $questiondata['displaymethod'] = 'dropdown';
+          $this->set('displaymethod', 'dropdown');
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0') {
             $this->set('unanswered', true);
           }
@@ -523,7 +526,7 @@ class paperrender {
           } else {
             $tmp_user_answer = '';
           }
-          if (($question['display_method'] == 'TF_NegativeAbstain') or ($question['display_method'] == 'TF_NegativeAbstainHalf') or ($question['display_method'] == 'TF_PostiveAbstain') or ($question['display_method'] == "YN_NegativeAbstain")) {
+          if (($question['display_method'] == 'TF_NegativeAbstain') or ($question['display_method'] == "YN_NegativeAbstain")) {
             $abstain = true;
           } else {
             $abstain = false;
@@ -596,14 +599,13 @@ class paperrender {
             $questiondata['option'][$part_id]['displayoptionmedia'] = true;
           }
           if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
-            $questiondata['displaymethod'] = 'vertical';
             if (isset($user_dismiss[$current_screen][$q_id]) and substr($user_dismiss[$current_screen][$q_id],$tmp_part_id-1,1) == '1') {
               $questiondata['option'][$part_id]['inact'] = true;
             } else {
               $questiondata['option'][$part_id]['inact'] = false;
             }
           } elseif ($question['display_method'] == 'horizontal') {
-            $questiondata['displaymethod'] = 'horizontal';
+            $this->set('displaymethod', 'horizontal');
           }
           if ($tmp_part_id == $display_option['correct']) $marks = $display_option['marks_correct'];
           break;
@@ -729,7 +731,7 @@ class paperrender {
           $questiondata['falseselected'] = false;
           $questiondata['abstainselected'] = false;
           if ($question['display_method'] == 'dropdown') {
-            $questiondata['displaymethod'] = 'dropdown';
+            $this->set('displaymethod', 'dropdown');
             if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 't') {
               $questiondata['trueselected'] = true;
             }
@@ -745,11 +747,11 @@ class paperrender {
             }
 
             if ($question['display_method'] == 'horizontal') {
-              $questiondata['displaymethod'] = 'horizontal';
+              $this->set('displaymethod', 'horizontal');
             } elseif ($question['display_method'] == 'vertical') {
-              $questiondata['displaymethod'] = 'vertical';
+              $this->set('displaymethod', 'vertical');
             }
-            $questiondata['neg_marking'] = $neg_marking;
+            $this->set('negativemarking', $neg_marking);
             if ($neg_marking) {
               if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'a') {
                 $questiondata['abstainselected'] = true;
@@ -776,7 +778,7 @@ class paperrender {
           }
 
           if ($question['display_method'] == 'textboxes') {
-            $questiondata['displaymethod'] = 'textboxes';
+            $this->set('displaymethod', 'textboxes');
           }
           $count = 0;
           $itemcount = 1;
@@ -1001,9 +1003,8 @@ class paperrender {
 
     if ($question['q_type'] == 'mcq') {
       if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
-        $questiondata['displayother'] = false;
         if ($question['display_method'] == 'vertical_other' and $paper_type == '3') {
-          $questiondata['displayother'] = true;
+          $this->set('displaymethod', 'other');
           if (isset($user_answers[$current_screen][$q_id]) and substr($user_answers[$current_screen][$q_id],0,5) == 'other') {
             $questiondata['otherselected'] = true;
             $questiondata['other'] = substr($user_answers[$current_screen][$q_id],6);
@@ -1032,9 +1033,8 @@ class paperrender {
       }
     } elseif (in_array($question['q_type'], array('dichotomous', 'mrq', 'rank'))) {
       $answer = (isset($user_answers[$current_screen][$q_id])) ? $user_answers[$current_screen][$q_id] : '';
-      $questiondata['displayother'] = false;
       if ($question['display_method'] == 'other') {
-        $questiondata['displayother'] = true;
+        $this->set('displaymethod', 'other');
         $part_id++;
         $questiondata['part_id'] = $part_id;
         if ($answer != '' and substr($answer,($part_id - 1),1) == 'y') {
@@ -1217,6 +1217,7 @@ class paperrender {
       $questiondata['displayscenario'] = $this->get('displayscenario');
       $questiondata['displaynotes'] = $this->get('displaynotes');
       $questiondata['negativemarking'] = $this->get('negativemarking');
+      $questiondata['displaymethod'] = $this->get('displaymethod');
       $render->render($questiondata, $string, 'paper/question.html');
     }
   }

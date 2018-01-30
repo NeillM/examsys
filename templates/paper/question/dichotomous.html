@@ -2,20 +2,20 @@
     <table cellpadding="2" cellspacing="0" border="0">
         <tr>
             <td align="center" width="40" style="color:{{data.labelcolour}}; font-size:90%">
-{% if data.dichotomous_type == 'TF' %}
+{% if data.displaymethod == 'TF_Positive' or if data.displaymethod == 'TF_NegativeAbstain' %}
                 {{lang.true}}
 {% else %}
                 {{lang.yes}}
 {% endif %}
             </td>
             <td width="40" align="center" style="color:{{data.labelcolour}};font-size:90%">
-{% if data.dichotomous_type == 'TF' %}
+{% if data.displaymethod == 'TF_Positive' or if data.displaymethod == 'TF_NegativeAbstain' %}
                 {{lang.false}}
 {% else %}
                 {{lang.no}}
 {% endif %}
             </td>
-{% if data.dichotomous_display_method == 1 %}
+{% if data.displaymethod == 'YN_NegativeAbstain' or if data.displaymethod == 'TF_NegativeAbstain' %}
             <td width="40" align="center" style="color:{{data.labelcolour}}; font-size:90%">
                 {{lang.abstain}}
             </td>

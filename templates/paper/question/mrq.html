@@ -33,7 +33,7 @@
     </tr>
     {% endfor %}
 {% endif %}
-{% if data.displayother %}
+{% if data.displaymethod == 'other' %}
     <tr>
         <td>
             <input type="checkbox" name="q{{data.question_no}}_{{data.part_id}}" value="y" {% if data.otherselected %} checked="checked" {% endif %}/>
