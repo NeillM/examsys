@@ -1,4 +1,4 @@
-{% if data.unanswered %}
+{% if data.get('unanswered') %}
     <tr id="unansweredkey">
         <td colspan="2">
             <span class="unans">&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -6,33 +6,33 @@
         </td>
     </tr>
 {% endif %}
-{% if data.displayprologue %}
+{% if data.get('displayprologue') %}
     <tr>
         <td colspan="2" style="padding:20px; text-align:justify">
-            {{data.prologue}}
+            {{data.get('prologue')}}
         </td>
     </tr>
 {% endif %}
-{% if data.displaytheme %}
+{% if data.get('displaytheme') %}
     <tr>
         <td colspan="2" class="theme">
-            {{data.theme}}
+            {{data.get('theme')}}
         </td>
     </tr>
 {% endif %}
-{% if data.displaydefault %}
+{% if data.get('displaydefault') %}
     <tr>
-        <td class="q_no">{{data.assigned_number}}.&nbsp;
-        {% if data.displaycalc %}
+        <td class="q_no">{{data.get('assignednumber')}}.&nbsp;
+        {% if data.get('displaycalc') %}
             <br />
             <img class="sciCalculator" src="{{path}}/artwork/calc.png" alt="{{lang.calculator}}" />
         {% endif %}
         </td>
         <td>
-        {% if data.displaynotes %}
+        {% if data.get('displaynotes') %}
         <p class="note">
             <img src="{{path}}/artwork/notes_icon.gif" width="16" height="16" alt="{{lang.note}}" />
-            &nbsp;<strong>{{lang.note}}:</strong>&nbsp;{{data.notes}}
+            &nbsp;<strong>{{lang.note}}:</strong>&nbsp;{{data.get('notes')}}
         </p>
         {% endif %}
 {% endif %}

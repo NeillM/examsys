@@ -1,25 +1,25 @@
-<blockquote style="line-height:175%" {% if data.unanswered %} class="unans" {% endif %}>
+<blockquote style="line-height:175%" {% if data.get('unanswered') %} class="unans" {% endif %}>
 {% if data.displaymethod == 'dropdown' %}
-    <select name="q{{data.question_no}}">
+    <select name="q{{data.get('questionno')}}">
         <option value=""></option>
         <option value="t" {% if data.trueselected %} selected {% endif %}>{{lang.true}}</option>
         <option value="f" {% if data.falseselected %} selected {% endif %}>{{lang.false}}</option>
     </select>
 {% else %}
-    <input type="radio" name="q{{data.question_no}}" value="t" {% if data.trueselected %} checked="checked" {% endif %} />&nbsp;{{lang.true}}
+    <input type="radio" name="q{{data.get('questionno')}}" value="t" {% if data.trueselected %} checked="checked" {% endif %} />&nbsp;{{lang.true}}
     {% if data.displaymethod == 'horizontal' %}
     &nbsp;&nbsp;&nbsp;
     {% elseif data.displaymethod == 'vertical' %}
     <br />
     {% endif %}
-    <input type="radio" name="q{{data.question_no}}" value="f" {% if data.falseselected %} checked="checked" {% endif %} />&nbsp;{{lang.false}}
+    <input type="radio" name="q{{data.get('questionno')}}" value="f" {% if data.falseselected %} checked="checked" {% endif %} />&nbsp;{{lang.false}}
     {% if data.displaymethod == 'horizontal' %}
     &nbsp;&nbsp;&nbsp;
     {% elseif data.displaymethod == 'vertical' %}
     <br />
     {% endif %}
-    {% if data.negativemarking %}
-    <input type="radio" name="q{{data.question_no}}" value="a" {% if data.abstainelected %} checked="checked" {% endif %} />&nbsp;<span style="color:{{data.labelcolour}}">&lt;{{lang.abstain}}&gt;</span>
+    {% if data.get('negativemarking') %}
+    <input type="radio" name="q{{data.get('questionno')}}" value="a" {% if data.abstainelected %} checked="checked" {% endif %} />&nbsp;<span style="color:{{data.get('labelcolour')}}">&lt;{{lang.abstain}}&gt;</span>
     {% endif %}
 {% endif %}
 </blockquote>

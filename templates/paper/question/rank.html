@@ -3,14 +3,14 @@
 {% for i,p in data.option %}
         <tr {% if p.unans %} class="unans" {% endif %}>
             <td class="option">
-                <select name="{{p.option_no}}" class="rankselect q"{{data.question_no}}">
+                <select name="{{p.optionno}}" class="rankselect q"{{data.get('questionno')}}">
                     <option value="u"></option>
     {% if p.na %}
                     <option value="0" {% if p.selected %} selected {% endif %}>{{lang.na}}</option>
     {% endif %}
     {% for c in 1..p.totalrank %}
                     <option value="{{c}}" {% if p.selected %} selected {% endif %}>
-        {% if data.langauge == 'en' %}
+        {% if data.get('language') == 'en' %}
             {% if c == 1 %}
                 {{c}}st
             {% elseif c == 2 %}
@@ -28,12 +28,12 @@
                 </select>
             </td>
             <td>
-                <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{p.option_no}}">{{p.optiontext}}</span>
+                <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{p.optionno}}">{{p.optiontext}}</span>
             </td>
         </tr>
 {% endfor %}
     </table>
     <div>
-        <input type="hidden" name="dismiss{{data.question_no}}" id="dismiss{{data.question_no}}" value="{{data.dismiss}}" />
+        <input type="hidden" name="dismiss{{data.get('questionno')}}" id="dismiss{{data.get('questionno')}}" value="{{data.get('dismiss')}}" />
     </div>
 </blockquote>

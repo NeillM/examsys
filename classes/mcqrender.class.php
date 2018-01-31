@@ -26,6 +26,34 @@
 class mcqrender extends questionrender {
 
   /**
+   * Question 'other' option selected state
+   * @var boolean
+   */
+  protected $otherselected;
+
+  /**
+   * Question 'abstain' option selected state
+   * @var boolean
+   */
+  protected $abstainselected;
+
+  /**
+   * Question options dismissed
+   * @var string
+   */
+  protected $dismiss;
+
+  /**
+   * Default other selected state
+   */
+  const default_otherselected = false;
+
+  /**
+   * Default abstain selected state
+   */
+  const default_abstainselected = false;
+
+  /**
    * Constructor
    */
   function __construct() {
@@ -34,7 +62,7 @@ class mcqrender extends questionrender {
   }
 
   /**
-   * Disable/Enable display of question header sections
+   * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
     if ($this->get('scenario') != '') {
@@ -53,41 +81,68 @@ class mcqrender extends questionrender {
   /**
    * Question level settings for template rendering
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   * @param boolean $useranswered is the user answer a non answer
+   * @param mixed $useranswerid id or name of user answer
+   * @param integer $user_dismissid id of option user dismissed
    */
-  public function set_question($screen_pre_submitted, $useranswered) {
-    if ($useranswered and $screen_pre_submitted) {
+  public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid) {
+    if (is_null($useranswerid) and $screen_pre_submitted) {
       $this->set('unanswered', true);
     }
     // Set to vertical to simpify template logic.
     if ($this->get('displaymethod') === 'vertical_other') {
       $this->set('displaymethod', 'vertical');
+      if($this->get('papertype') === 3) {
+        $this->set('displaymethod', 'other');
+        if (substr($useranswerid,0,5) === 'other') {
+          $this->set('otherselected', true);
+          $this->set('other', substr($useranswerid,6));
+        }
+      }
     }
+    if ($user_dismissid != '') {
+       $this->set('dismiss', $user_dismissid);
+     } else {
+       $this->set('dismiss', str_repeat('0', $this->get('optionno')));
+     }
   }
 
   /**
    * Option level settings for template rendering
+   * @param integer $part_id part loop id
+   * @param integer $useranswerid id of option user selected
+   * @param integer $user_dismissid id of option user dismissed
+   * @param integer $marks reference to marks available for question
+   * @param float $marks_incorrect marks for incorrect answer
    */
-  public function set_option() {
-    if (isset($user_answers[$current_screen][$q_id]) and $tmp_part_id == $user_answers[$current_screen][$q_id]) {
-      $questiondata['option'][$part_id]['selected'] = true;
-    } else {
-      $questiondata['option'][$part_id]['selected'] = false;
-    }
-    $questiondata['option'][$part_id]['optiontextdisplay'] = false;
-    if ($display_option['option_text'] != '') {
-      $questiondata['option'][$part_id]['optiontextdisplay'] = true;
-    }
-    if ($display_option['o_media'] != '') {
-      $questiondata['option'][$part_id]['displayoptionmedia'] = true;
-    }
-    if ($this->get('displaymethod') === 'vertical') {
-      if (isset($user_dismiss[$current_screen][$q_id]) and substr($user_dismiss[$current_screen][$q_id],$tmp_part_id-1,1) == '1') {
-        $questiondata['option'][$part_id]['inact'] = true;
-      } else {
-        $questiondata['option'][$part_id]['inact'] = false;
+  public function set_option($part_id, $useranswerid, $user_dismissid, &$marks, $marks_incorrect) {
+    if ($marks_incorrect < 0) {
+      $this->set('negativemarking', true);
+      if ($useranswerid === 'a') {
+        $this->set('abstainselected', true);
       }
     }
-    if ($tmp_part_id == $display_option['correct']) $marks = $display_option['marks_correct'];
+    $option = $this->get_opt($part_id);
+    if ($option['tmppartid'] === $useranswerid) {
+      $option['selected'] = true;
+    } else {
+      $option['selected'] = false;
+    }
+    $option['optiontextdisplay'] = false;
+    if ($option['optiontext'] != '') {
+      $option['optiontextdisplay'] = true;
+    }
+    $option['displayoptionmedia'] = false;
+    if ($option['omedia'] != '') {
+      $option['displayoptionmedia'] = true;
+    }
+    if ($this->get('displaymethod') === 'vertical') {
+      if (substr($user_dismissid, $option['tmppartid']-1, 1) == '1') {
+        $option['inact'] = true;
+      } else {
+        $option['inact'] = false;
+      }
+    }
+    $this->set_opt($part_id, $option);
+    if ($option['tmppartid'] == $option['correct']) $marks = $option['markscorrect'];
   }
 }

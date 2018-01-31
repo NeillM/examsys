@@ -1,7 +1,7 @@
-{% if data.displayscenario %}
+{% if data.get('displayscenario') %}
 <tr>
     <td class="question_no">
-        {{data.assigned_number}}.&nbsp;
+        {{data.get('assignednumber')}}.&nbsp;
     </td>
     <td style="background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040">
         {{lang.clinicalvignette}}
@@ -9,21 +9,21 @@
 </tr>
 <tr>
     <td style="vertical-align:top; text-align:right">
-    {% if data.displaycalc %}
+    {% if data.get('displaycalc') %}
         <br />
         <img class="sciCalculator" src="{{path}}/artwork/calc.png" alt="{{lang.calculator}}" />
     {% endif %}
     </td>
     <td>
-        {% if data.displaynotes %}
+        {% if data.get('displaynotes') %}
         <p class="note">
-         <img src="{{path}}/artwork/notes_icon.gif" width="16" height="16" alt="{{lang.note}}" />&nbsp;<strong>{{lang.note}}:</strong>&nbsp;{{data.notes}}
+         <img src="{{path}}/artwork/notes_icon.gif" width="16" height="16" alt="{{lang.note}}" />&nbsp;<strong>{{lang.note}}:</strong>&nbsp;{{data.get('notes')}}
         </p>
         {% endif %}
-    {{data.scenario|raw}}<br />
+    {{data.get('scenario')|raw}}<br />
     <br />
 {% endif %}
-{% if data.displaymedia %}
+{% if data.get('displaymedia') %}
     <p align="center">
         {% include 'paper/media.html' %}
     </p>
@@ -53,16 +53,16 @@
         {{data.scttitlelower}}
     </strong>
 </p>
-<blockquote {% if data.unanswered %} class="unans" {% endif %}>
+<blockquote {% if data.get('unanswered') %} class="unans" {% endif %}>
     <table cellpadding="2" cellspacing="0" border="0">
 {% for i,p in data.option %}
         <tr>
             <td>
-                <input type="radio" name="q{{data.question_no}}" value="{{p.tmp_part_id}}" {% if p.selected %} checked="checked" {% endif %} />
+                <input type="radio" name="q{{data.get('questionno')}}" value="{{p.tmppartid}}" {% if p.selected %} checked="checked" {% endif %} />
             </td>
             <td>
     {% if p.optiontextdisplay %}
-                <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{p.option_no}}">{{p.optiontext}}</span>
+                <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{p.optionno}}">{{p.optiontext}}</span>
             </td>
         </tr>
     {% endif %}

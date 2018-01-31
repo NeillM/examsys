@@ -1,14 +1,14 @@
 <blockquote>
     <table cellpadding="2" cellspacing="0" border="0">
         <tr>
-            <td align="center" width="40" style="color:{{data.labelcolour}}; font-size:90%">
+            <td align="center" width="40" style="color:{{data.get('labelcolour')}}; font-size:90%">
 {% if data.displaymethod == 'TF_Positive' or if data.displaymethod == 'TF_NegativeAbstain' %}
                 {{lang.true}}
 {% else %}
                 {{lang.yes}}
 {% endif %}
             </td>
-            <td width="40" align="center" style="color:{{data.labelcolour}};font-size:90%">
+            <td width="40" align="center" style="color:{{data.get('labelcolour')}};font-size:90%">
 {% if data.displaymethod == 'TF_Positive' or if data.displaymethod == 'TF_NegativeAbstain' %}
                 {{lang.false}}
 {% else %}
@@ -16,7 +16,7 @@
 {% endif %}
             </td>
 {% if data.displaymethod == 'YN_NegativeAbstain' or if data.displaymethod == 'TF_NegativeAbstain' %}
-            <td width="40" align="center" style="color:{{data.labelcolour}}; font-size:90%">
+            <td width="40" align="center" style="color:{{data.get('labelcolour')}}; font-size:90%">
                 {{lang.abstain}}
             </td>
             <td>&nbsp;</td>
@@ -25,14 +25,14 @@
 {% for i,p in data.option %}
         <tr id="q{{p.question_no}}_opt{{p.dichotomouspartid}}" {% if p.unanswered %} class="unans"{% endif %}>
             <td align="center">
-                <input type="radio" name="{{p.option_no}}" value="t" {% if p.dichotomoususeranswer == 't' %} checked="checked" {% endif %}/>
+                <input type="radio" name="{{p.optionno}}" value="t" {% if p.dichotomoususeranswer == 't' %} checked="checked" {% endif %}/>
             </td>
             <td align="center">
-                <input type="radio" name="q{{p.question_no}}_{{p.tmp_part_id}}" value="f" {% if p.dichotomoususeranswer == 'f' %} checked="checked" {% endif %}/>
+                <input type="radio" name="q{{p.question_no}}_{{p.tmppartid}}" value="f" {% if p.dichotomoususeranswer == 'f' %} checked="checked" {% endif %}/>
             </td>
     {% if p.dichotomousabstain %}
             <td align="center">
-                <input type="radio" name="{{p.option_no}}" value="a" {% if p.dichotomoususeranswer == 'a' %} checked="checked" {% endif %}/>
+                <input type="radio" name="{{p.optionno}}" value="a" {% if p.dichotomoususeranswer == 'a' %} checked="checked" {% endif %}/>
             </td>
     {% endif %}
             <td>

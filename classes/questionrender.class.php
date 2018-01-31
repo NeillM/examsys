@@ -98,6 +98,12 @@ abstract class questionrender {
   private $displaydefault;
 
   /**
+   * Info block flag
+   * @var boolean
+   */
+  private $displayinfo;
+
+  /**
    * Negative marking state of question
    * @var boolean
    */
@@ -105,18 +111,183 @@ abstract class questionrender {
 
   /**
    * Display method used by question
-   * @var boolean
+   * @var string
    */
   private $displaymethod;
 
+  /**
+   * Display state of option media
+   * @var boolean
+   */
+  private $displayoptionmedia;
 
+  /**
+   * Question scenario
+   * @var string
+   */
   private $scenario;
 
+  /**
+   * Question notes
+   * @var string
+   */
   private $notes;
 
+  /**
+   * Question media
+   * @var string
+   */
   private $q_media;
 
+  /**
+   * Question type
+   * @var string
+   */
   private $questiontype;
+
+  /**
+   * Question options
+   * @var array
+   */
+  private $options;
+
+  /**
+   * Paper prologue
+   * @var string
+   */
+  private $prologue;
+
+  /**
+   * Question theme
+   * @var string
+   */
+  private $theme;
+
+  /**
+   * Question number of options
+   * @var string
+   */
+  private $optionno;
+
+  /**
+   * Paper type
+   * @var string
+   */
+  private $papertype;
+
+  /**
+   * Question leadin
+   * @var string
+   */
+  private  $leadin;
+
+  /**
+   * Question langague
+   * @var string
+   */
+  private $language;
+
+  /**
+   * Question assigned display number
+   * @var boolean
+   */
+  private $assignednumber;
+
+  /**
+   * Question media id
+   * @var integer
+   */
+  private $mediaid;
+
+  /**
+   * Question media filename
+   * @var string
+   */
+  private $mediafile;
+
+  /**
+   * Question media width
+   * @var integer
+   */
+  private $mediawidth;
+  /**
+   * Question media height
+   * @var integer
+   */
+
+  private $mediaheight;
+
+  /**
+   * Question media url
+   * @var string
+   */
+  private $mediaurl;
+
+  /**
+   * Question media url
+   * @var string
+   */
+  private $mediatype;
+
+  /**
+   * Question media border state
+   * @var boolean
+   */
+  private $mediaborder;
+
+  /**
+   * Question media border colour
+   * @var string
+   */
+  private $mediabordercolour;
+
+  /**
+   * Question media edit state
+   * @var boolean
+   */
+  private $mediaedit;
+
+  /**
+   * Question media delete state
+   * @var boolean
+   */
+  private $mediadelete;
+
+  /**
+   * Question display number
+   * @var integer
+   */
+  private $questionno;
+
+  /**
+   * Question part id
+   * @var integer
+   */
+  private $partid;
+
+  /**
+   * Marks for question
+   * @var float
+   */
+  private $finalmarks;
+
+  /**
+   * Question score method
+   * @var string
+   */
+  private $scoremethod;
+  
+  /**
+   * Question bonus type
+   * @var string
+   */
+  private $bonus;
+
+  /**
+   * Order of question options
+   * @var string 
+   */
+  private $optionorder;
 
   /**
    * Default unanswered state
@@ -179,6 +350,16 @@ abstract class questionrender {
   const default_displaymethod = '';
 
   /**
+   * Default info block flag
+   */
+  const default_displayinfo = false;
+
+  /**
+   * Default option media display state
+   */
+  const default_displayoptionmedia = false;
+
+  /**
    * Called when the object is unserialised.
    */
   public function __wakeup() {
@@ -196,11 +377,28 @@ abstract class questionrender {
     $this->db = $this->config->db;
   }
 
+  /**
+   * Abstract function to set quetion header
+   */
   abstract public function set_question_head();
 
-  abstract public function set_question($screen_pre_submitted, $useranswered);
+  /**
+   * Abstract function to set question
+   * @param boolean $screen_pre_submitted has the user submitted and answer previously
+   * @param integer $useranswerid id of user answer
+   * @param integer $user_dismissid id of option user dismissed
+   */
+  abstract public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
 
-  abstract public function set_option();
+  /**
+   * Abstract function to set question options
+   * @param integer $part_id part loop id
+   * @param integer $useranswerid id of option user selected
+   * @param integer $user_dismissid id of option user dismissed
+   * @param integer $marks reference to marks available for question
+   * @param float $marks_incorrect marks for incorrect answer
+   */
+  abstract public function set_option($part_id, $useranswerid, $user_dismissid, &$marks, $marks_incorrect);
 
   /**
    * Set an attribute
@@ -227,6 +425,39 @@ abstract class questionrender {
     }
   }
 
+  /**
+   * Get options
+   * @param integer $id option id
+   * @return array
+   */
+  public function get_opt($id) {
+    return $this->options[$id];
+  }
+
+  /**
+   * Set options
+   * @param integer $id option id
+   * @param array $opt options
+   */
+  public function set_opt($id, $opt) {
+    $this->options[$id] = $opt;
+  }
+
+  /**
+   * Render question
+   * @global array $used_questions user log data for questions
+   * @global type $user_dismiss user dismiss data for questions
+   * @global type $user_order the order the user gets the question options
+   * @global type $language system langauge
+   * @param type $screen_pre_submitted has the user been on this screen before
+   * @param type $q_displayed loop id of question
+   * @param type $string language strings
+   * @param type $question question data
+   * @param type $pid paper id
+   * @param type $current_screen current screen id
+   * @param type $question_no current question number
+   * @param type $user_answers users answers
+   */
   public function display_question($screen_pre_submitted, $q_displayed, $string, &$question, $pid, $current_screen, &$question_no, $user_answers) {
     global $used_questions, $user_dismiss, $user_order, $language;
  
@@ -242,7 +473,7 @@ abstract class questionrender {
 
     // Attempt to display paper prolog
     if ($q_displayed == 0 and $current_screen == 1 and $propertyObj->get_paper_prologue() != '') {
-      $questiondata['prologue'] = $propertyObj->get_paper_prologue();
+      $this->set('prologue', $propertyObj->get_paper_prologue());
       $this->set('displayprologue', true);
     }
 
@@ -308,22 +539,22 @@ abstract class questionrender {
     $textboxes_seen = array();
 
     if ($question['theme'] != '') {
-      $questiondata['theme'] = $question['theme'];
+      $this->set('theme', $question['theme']);
       $this->set('displaytheme', true);
     }
 
-    $questiondata['option_no'] = $option_no;
-    $questiondata['papertype'] = $paper_type;
-    $questiondata['assigned_number'] = $question['assigned_number'];
+    $this->set('optionno', $option_no);
+    $this->set('papertype', $paper_type);
+    $this->set('assignednumber',  $question['assigned_number']);
     $this->set('scenario', $question['scenario']);
     $this->set('notes', $question['notes']);
     $this->set('q_media', $question['q_media']);
-    $questiondata['leadin'] = $question['leadin'];
-    $questiondata['langauge'] = $language;
-    $mediadata = self::get_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
-    $questiondata = array_merge($questiondata, $mediadata);
-    
+    $this->set('leadin', $question['leadin']);
+    $this->set('language', $language);
+    $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
+
     if ($question['q_type'] == 'mcq') {
+      
       $this->set_question_head();
     } else {
       if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
@@ -351,10 +582,10 @@ abstract class questionrender {
         }
       }
     }
-    $questiondata['displayinfo'] = false;
+
     if ($question['q_type'] == 'info') {
       // Special processing of Information Blocks.
-      $questiondata['displayinfo'] = true;
+      $this->set('displayinfo', true);
       if ($question['q_media'] != '') {
         $this->set('displaymedia', true);
       }
@@ -365,28 +596,27 @@ abstract class questionrender {
     $part_id = 0;
     $marks = 0;
 
-    $questiondata['unanswered'] = $this->get('unanswered');
-    $questiondata['labelcolour'] = $this->get('labelcolour');
-    $questiondata['displayprologue'] = $this->get('displayprologue');
-    $questiondata['displaytheme'] = $this->get('displaytheme');
-    $questiondata['displaycalc'] = $this->get('displaycalc');
-    $questiondata['displaymedia'] = $this->get('displaymedia');
-    $questiondata['displayscenario'] = $this->get('displayscenario');
-    $questiondata['displaynotes'] = $this->get('displaynotes');
-    $questiondata['displayleadin'] = $this->get('displayleadin');
-    $questiondata['displaydefault'] = $this->get('displaydefault');
-    $questiondata['scenario'] = $this->get('scenario');
-    $questiondata['notes'] = $this->get('notes');
-    $render->render($questiondata, $string, 'paper/question_header.html');
+    $render->render($this, $string, 'paper/question_header.html');
+
+    // What is the users current answer.
+    if (isset($user_answers[$current_screen][$q_id])) {
+      $useranswerid = $user_answers[$current_screen][$q_id];
+    } else {
+      $useranswerid = null;
+    }
+
+    // What is the users current dismissed.
+    if (isset($user_dismiss[$current_screen][$q_id])) {
+      $user_dismissid = $user_dismiss[$current_screen][$q_id];
+    } else {
+      $user_dismissid = null;
+    }
 
     // Pre-question processing
-    
-    $questiondata[$question['q_type']] = false;
-    $questiondata['question_no'] = $question_no;
+    $this->set('questionno', $question_no);
     $this->set('displaymethod', $question['display_method']);
     switch ($question['q_type']) {
       case 'enhancedcalc':
-        $questiondata['enhancedcalc'] = true;
         if (isset($user_answers[$current_screen][$q_id])) {
           $d = array();
           $d['useranswer'] = $user_answers[$current_screen][$q_id];
@@ -395,18 +625,11 @@ abstract class questionrender {
         $question['object']->load_all_user_answers($user_answers);
         break;
       case 'dichotomous':
-        $questiondata['dichotomous'] = true;
         break;
       case 'mcq':
-        if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0') {
-          $useranswered = false;
-        } else {
-          $useranswered = true;
-        }
-        $this->set_question($screen_pre_submitted, $useranswered);
+        $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
         break;
       case 'mrq':
-        $questiondata['mrq'] = true;
         $mrq_correct = 0;
         if ($question['score_method'] == 'Mark per Question') {
           $mrq_correct = $option_no;
@@ -428,10 +651,8 @@ abstract class questionrender {
         }
         break;
       case 'rank':
-        $questiondata['rank'] = true;
         break;
       case 'likert':
-        $questiondata['likert'] = true;
         $questiondata['likertna'] = false;
         $na = false;
         $likert_display = explode('|',$question['display_method']);
@@ -459,7 +680,6 @@ abstract class questionrender {
         break;
       case 'extmatch':
       case 'matrix':
-        $questiondata[$question['q_type']] = true;
         $matching_scenarios = explode('|', $question['scenario']);
         $matching_media = explode('|', $question['q_media']);
         $matching_media_width = explode('|', $question['q_media_width']);
@@ -473,7 +693,6 @@ abstract class questionrender {
         $matching_answers = explode('|', $question['options'][0]['correct']);
         break;
       case 'sct':
-        $questiondata['sct'] = true;
         // SCT stalls vignette in scenario so must dispaly. 
         $this->set('displayscenario', true);
         if ($question['notes'] != '') {
@@ -499,19 +718,24 @@ abstract class questionrender {
         break;
     }
 
-    $questiondata['displayoptionmedia'] = false;
     // Processing for each stem.
+    $this->set('options', array());
     foreach ($question['options'] as $display_option) {
       $part_id++;
-      $questiondata['part_id'] = $part_id;
-      $questiondata['option'][$part_id]['optionmedia'] = self::get_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '');
-      $questiondata['option'][$part_id]['optiontext'] = $display_option['option_text'];
+      $this->set('partid', $part_id);
       $tmp_part_id = $question['option_order'][$part_id-1] + 1;
-      $questiondata['option'][$part_id]['option_no'] = 'q' . $question_no . '_' . $tmp_part_id;
-      $questiondata['option'][$part_id]['tmp_part_id'] = $tmp_part_id;
+      $this->set_opt($part_id, array(
+          'optiontext' => $display_option['option_text'],
+          'omedia' => $display_option['o_media'],
+          'markscorrect' => $display_option['marks_correct'],
+          'correct' => $display_option['correct'],
+          'optionno' => 'q' . $question_no . '_' . $tmp_part_id,
+          'tmppartid' => $tmp_part_id
+      ));
+      $this->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '', -1, false, $part_id);
+
       switch ($question['q_type']) {
         case 'area':
-          $questiondata['area'] = true;
           $default_ans  = '100,0,0,0,0,0';
 
           if (isset($user_answers[$current_screen][$q_id])) {
@@ -605,7 +829,7 @@ abstract class questionrender {
           }
           break;
         case 'mcq':
-          $this->set_option();
+          $this->set_option($part_id, $useranswerid, $user_dismissid, $marks, $display_option['marks_incorrect']);
           break;
         case 'mrq':
           $questiondata['option'][$part_id]['mrq_correct'] = $mrq_correct;
@@ -718,7 +942,6 @@ abstract class questionrender {
           }
           break;
         case 'true_false':
-          $questiondata['true_false'] = true;
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and $screen_pre_submitted == 1) {
             $this->set('unanswered', true);
           } else {
@@ -760,7 +983,6 @@ abstract class questionrender {
 
           break;
         case 'blank':
-          $questiondata['blank'] = true;
           $ans = '';
           $blank_mark = array();
           $display_option['option_text'] = str_replace('&nbsp;',' ',$display_option['option_text']);
@@ -850,7 +1072,6 @@ abstract class questionrender {
           }
           break;
         case 'textbox':
-          $questiondata['textbox'] = true;
           if (!in_array($question_no, $textboxes_seen)) {
             $textboxes_seen[] = $question_no;
             $settings = json_decode($question['settings'], true);
@@ -895,7 +1116,6 @@ abstract class questionrender {
           }
           break;
         case 'hotspot':
-          $questiondata['hotspot'] = true;
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and  $screen_pre_submitted == 1) {
             $this->set('unanswered', true);
           }
@@ -928,7 +1148,6 @@ abstract class questionrender {
           }
           break;
         case 'labelling':
-          $questiondata['labelling'] = true;
           $tmp_labels = 0;
           $max_col1 = 0;
           $max_col2 = 0;
@@ -977,7 +1196,7 @@ abstract class questionrender {
 
           if (isset($user_answers[$current_screen][$q_id])) {
             $questiondata['useranswer'] = trim($user_answers[$current_screen][$q_id]);
-            $questiondata['marks_correct'] = $display_option['marks_correct'];
+            $questiondata['markscorrect'] = $display_option['marks_correct'];
             $questiondata['marks_incorrect'] = $display_option['marks_incorrect'];
             $questiondata['score_method'] = $question['score_method'];
           }
@@ -990,7 +1209,6 @@ abstract class questionrender {
           break;
         case 'flash':
           // Question type is deprecated. Rogo only supports pre-existing flash questions.
-          $questiondata['flash'] = true;
           if ($question['scenario'] != '') {
           $this->set('displayscenario', true);
           }
@@ -999,37 +1217,7 @@ abstract class questionrender {
       }                  // End switch
     }                    // End foreach loop
 
-    if ($question['q_type'] == 'mcq') {
-      if ($question['display_method'] == 'vertical' or $question['display_method'] == 'vertical_other') {
-        if ($question['display_method'] == 'vertical_other' and $paper_type == '3') {
-          $this->set('displaymethod', 'other');
-          if (isset($user_answers[$current_screen][$q_id]) and substr($user_answers[$current_screen][$q_id],0,5) == 'other') {
-            $questiondata['otherselected'] = true;
-            $questiondata['other'] = substr($user_answers[$current_screen][$q_id],6);
-          } else {
-            $questiondata['otherselected'] = false;
-          }
-        }
-        if ($display_option['marks_incorrect'] < 0) {
-          $this->set('negativemarking', true);
-            // Include an abstain option if negative marking is used.
-          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'a') {
-              $questiondata['abstainselected'] = true;
-            } else {
-              $questiondata['abstainselected'] = false;
-            }
-        }
-      } elseif ($question['display_method'] == 'horizontal') {
-        if ($display_option['marks_incorrect'] < 0) {
-          $this->set('negativemarking', true);
-          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'a') {
-            $questiondata['abstainselected'] = true;
-          } else {
-            $questiondata['abstainselected'] = false;
-          }
-        }
-      }
-    } elseif (in_array($question['q_type'], array('dichotomous', 'mrq', 'rank'))) {
+    if (in_array($question['q_type'], array('dichotomous', 'mrq', 'rank'))) {
       $answer = (isset($user_answers[$current_screen][$q_id])) ? $user_answers[$current_screen][$q_id] : '';
       if ($question['display_method'] == 'other') {
         $this->set('displaymethod', 'other');
@@ -1059,7 +1247,7 @@ abstract class questionrender {
       $questiondata['displayextmatchmedia'] = false;
       if ($matching_media[0] != '') {
         $questiondata['displayextmatchmedia'] = true;
-        $mediadata = self::get_media($matching_media[0], $matching_media_width[0], $matching_media_height[0], '');
+        //$mediadata = $this->set_media($matching_media[0], $matching_media_width[0], $matching_media_height[0], '');
         $questiondata = array_merge($questiondata, $mediadata);
       }
 
@@ -1093,7 +1281,7 @@ abstract class questionrender {
         $questiondata['extmatchstem'][$part_id-1]['display'] = false;
         if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') {
           $questiondata['extmatchstem'][$part_id-1]['display'] = true;
-          $questiondata['extmatchstem'][$part_id-1]['media'] = self::get_media($matching_media[$part_id], $matching_media_width[$part_id], $matching_media_height[$part_id], '');
+          //$questiondata['extmatchstem'][$part_id-1]['media'] = $this->set_media($matching_media[$part_id], $matching_media_width[$part_id], $matching_media_height[$part_id], '');
         }
         if(isset($matching_answers[$part_id-1])) {
           $sub_answers = explode('$', $matching_answers[$part_id - 1]);
@@ -1185,7 +1373,7 @@ abstract class questionrender {
     }
 
     // Write out the hidden field for the dismiss facility.
-    if (in_array($question['q_type'], array('mcq', 'mrq', 'rank'))) {
+    if (in_array($question['q_type'], array('mrq', 'rank'))) {
       if (isset($user_dismiss[$current_screen][$q_id]) and $user_dismiss[$current_screen][$q_id] != '') {
         $questiondata['dismiss'] = $user_dismiss[$current_screen][$q_id];
       } else {
@@ -1194,90 +1382,104 @@ abstract class questionrender {
     }
 
     // Display possible marks for question (if not Survey)
-    $questiondata['finalmarks'] = $marks;
+    $this->set('finalmarks', $marks);
     if ($paper_type < 3) {
       if ($marks != 0) {
         if ($question['score_method'] == 'Bonus Mark') {
-          $questiondata['score_method'] = 'bonus';
+          $this->set('scoremethod', 'bonus');
           $plural = ($display_option['marks_correct'] == 1) ?  $string['mark'] : $string['marks'];
-          $questiondata['bonus'] = sprintf($string['bonusmark'], $display_option['marks_correct'], $plural);  // Used on ranking questions
+          $this->set('bonus', sprintf($string['bonusmark'], $display_option['marks_correct'], $plural));  // Used on ranking questions
         }
       }
     }
 
-    $questiondata['option_order'] = implode(',', $question['option_order']);
+    $this->set('optionorder', implode(',', $question['option_order']));
     $used_questions[$q_id] = $q_id;
 
     // Plugin question use there own templating.
     if ($question['q_type'] != 'enhancedcalc') {
-      $questiondata['unanswered'] = $this->get('unanswered');
-      $questiondata['displaymedia'] = $this->get('displaymedia');
-      $questiondata['displayscenario'] = $this->get('displayscenario');
-      $questiondata['displaynotes'] = $this->get('displaynotes');
-      $questiondata['negativemarking'] = $this->get('negativemarking');
-      $questiondata['displaymethod'] = $this->get('displaymethod');
-      $questiondata['questiontype'] = $this->get('questiontype');
-      $render->render($questiondata, $string, 'paper/question.html');
+      $render->render($this, $string, 'paper/question.html');
     }
   }
 
   /**
-   * Function takes a filename with the width and height and returns appropriate HTML to display the media type.
+   * Set question media
    *
-   * @param mixed $filename
-   * @param mixed $width
-   * @param mixed $height
-   * @param mixed $imageid
-   *
+   * @param string $filename media file name
+   * @param integer $width media width
+   * @param integer $height media height
+   * @param string $border_color media border colour
+   * @param integer $imageid media id
+   * @param boolean $locked is media locked
+   * @param string $part_id option part id
    */
-  public static function get_media($filename, $width, $height, $border_color, $imageid=-1, $locked=false) {
+  private function set_media($filename, $width, $height, $border_color, $imageid=-1, $locked=false, $part_id=null) {
 
     $mediadirectory = rogo_directory::get_directory('media');
-    $mediadata = array();
-
     $fn_parts = pathinfo($filename);
+    $mediaedit = false;
+    $mediadelete = false;
+    $mediatype = null;
+    $mediaborder = true;
+    $url = $mediadirectory->url($filename);
 
-    $mediadata['mediaid'] = $imageid;
-    $mediadata['mediafile'] = $filename;
-    $mediadata['mediawidth'] = $width;
-    $mediadata['mediaheight'] = $height;
-    $mediadata['mediaurl'] = $mediadirectory->url($filename);
     // Is the file an image or something else (e.g. RasMol)?
     if (!array_key_exists('extension', $fn_parts)) {
-      $mediadata['mediatype'] = 1;
+      $mediatype = 1;
     } elseif (array_key_exists('extension', $fn_parts) and in_array(strtolower($fn_parts['extension']), array('gif', 'jpg', 'jpeg', 'png'))) {
-      $mediadata['mediatype'] = 2;
+      $mediatype = 2;
       if ($border_color == '') {
-        $mediadata['mediaborder'] = false;
-      } else {
-        $mediadata['mediaborder'] = true;
-        $mediadata['mediabordercolour'] = $border_color;
+        $mediaborder = false;
       }
     } elseif (in_array($fn_parts['extension'], array('wav', 'wma', 'mid'))) {
-      $mediadata['mediatype'] = 3;
+      $mediatype = 3;
     } elseif (in_array($fn_parts['extension'], array('doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'pdf'))) {
-      $mediadata['mediatype'] = 4;
+      $mediatype = 4;
     } elseif ($fn_parts['extension'] == 'flv') {
-      $mediadata['mediatype'] = 5;
+      $mediatype = 5;
       if ($width == 0 or $height == 0) {
         $width = 320;
         $height = 260;
       }
-      $mediadata['mediaurl'] = $mediadirectory->url($filename, false, false, true);
+      $url = $mediadirectory->url($filename, false, false, true);
     } elseif ($fn_parts['extension'] == 'mp3') {     // Embed MP3 using HTML5 audio tag.
-      $mediadata['mediatype'] = 6;
-      $mediadata['mediaedit'] = false;
+      $mediatype = 6;
       if (strpos(Url::fromGlobals(),'/edit/') !== false or strpos(Url::fromGlobals(),'/add/') !== false) {  // Display filename if add or edit script
-        $mediadata['mediaedit'] = true;
+        $mediaedit = true;
       }
     } elseif ($fn_parts['extension'] == 'avi' or $fn_parts['extension'] == 'wmv') {
-      $mediadata['mediatype'] = 7;
+      $mediatype = 7;
     }
     if ($imageid > -1 and !$locked) {
-      $mediadata['mediadelete'] = true;
-    } else {
-      $mediadata['mediadelete'] = false;
+      $mediadelete = true;
     }
-    return $mediadata;
+    // Set option media ot question media.
+    if (!is_null($part_id)) {
+      $option = $this->get_opt($part_id);
+      $option['optionmedia'] = array(
+          'mediaid' => $imageid,
+          'mediafile', $filename,
+          'mediawidth', $width,
+          'mediaheight', $height,
+          'mediaurl' => $url,
+          'mediadelete' => $mediadelete,
+          'mediaedit' => $mediaedit,
+          'mediatype' => $mediatype,
+          'mediaborder' => $mediaborder,
+          'mediabordercolour' => $border_color
+      );
+      $this->set_opt($part_id, $option);
+    } else {
+      $this->set('mediaid', $imageid);
+      $this->set('mediafile', $filename);
+      $this->set('mediawidth', $width);
+      $this->set('mediaheight', $height);
+      $this->set('mediaurl', $url);
+      $this->set('mediadelete', $mediadelete);
+      $this->set('mediaedit', $mediaedit);
+      $this->set('mediatype', $mediatype);
+      $this->set('mediaborder', $mediaborder);
+      $this->set('mediabordercolour', $border_color);
+    }
   }
 }
