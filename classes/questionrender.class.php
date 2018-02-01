@@ -403,8 +403,9 @@ abstract class questionrender {
    * @param integer $useranswerid id of option user selected
    * @param integer $user_dismissid id of option user dismissed
    * @param integer $marks reference to marks available for question
+   * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  abstract public function set_option($part_id, $useranswerid, $user_dismissid, &$marks);
+  abstract public function set_option($part_id, $useranswerid, $user_dismissid, &$marks, $screen_pre_submitted);
 
   /**
    * Option level settings for template rendering
@@ -567,7 +568,7 @@ abstract class questionrender {
     $this->set('language', $language);
     $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
 
-    if (in_array($question['q_type'], array('mcq', 'mrq'))) {
+    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous'))) {
       $this->set_question_head();
     } else {
       if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
@@ -770,29 +771,7 @@ abstract class questionrender {
           $marks += $display_option['marks_correct'];
           break;
         case 'dichotomous':
-          if (isset($user_answers[$current_screen][$q_id])) {
-            $tmp_user_answer = substr($user_answers[$current_screen][$q_id], $question['option_order'][$part_id-1], 1);
-          } else {
-            $tmp_user_answer = '';
-          }
-          if (($question['display_method'] == 'TF_NegativeAbstain') or ($question['display_method'] == "YN_NegativeAbstain")) {
-            $abstain = true;
-          } else {
-            $abstain = false;
-          }
-
-          $questiondata['option'][$part_id]['unanswered'] = false;
-          if ($tmp_user_answer == 'u' and $screen_pre_submitted == 1) {
-            $this->set('unanswered', true);
-            $questiondata['option'][$part_id]['unanswered'] = true;
-          }
-          $questiondata['option'][$part_id]['dichotomouspartid'] = $part_id;
-          $questiondata['option'][$part_id]['dichotomoususeranswer'] = $tmp_user_answer;
-          $questiondata['option'][$part_id]['dichotomousabstain'] = $abstain;
-          if ($display_option['o_media'] != '') {
-            $questiondata['option'][$part_id]['displayoptionmedia'] = true;
-          }
-          $marks += $display_option['marks_correct'];
+          $this->set_option($part_id, $useranswerid, $user_dismissid, $marks, $screen_pre_submitted);
           break;
         case 'enhancedcalc':
           // no options for enhanced calc now stored in settings
@@ -834,10 +813,10 @@ abstract class questionrender {
           }
           break;
         case 'mcq':
-          $this->set_option($part_id, $useranswerid, $user_dismissid, $marks);
+          $this->set_option($part_id, $useranswerid, $user_dismissid, $marks, $screen_pre_submitted);
           break;
         case 'mrq':
-          $this->set_option($part_id, $useranswerid, $user_dismissid, $marks);
+          $this->set_option($part_id, $useranswerid, $user_dismissid, $marks, $screen_pre_submitted);
           break;
         case 'extmatch':
         case 'matrix':
@@ -1198,7 +1177,7 @@ abstract class questionrender {
       }                  // End switch
     }                    // End foreach loop
 
-    if (in_array($question['q_type'], array('mcq', 'mrq'))) {
+    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous'))) {
       $this->set_additional_option($part_id, $useranswerid, $user_dismissid);
     }
     if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'rank'))) {
@@ -1206,7 +1185,7 @@ abstract class questionrender {
         $marks = $display_option['marks_correct'];
       }
     }
-    if (in_array($question['q_type'], array('dichotomous', 'rank'))) {
+    if (in_array($question['q_type'], array('rank'))) {
       $answer = (isset($user_answers[$current_screen][$q_id])) ? $user_answers[$current_screen][$q_id] : '';
       if ($question['display_method'] == 'other') {
         $this->set('displaymethod', 'other');

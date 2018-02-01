@@ -159,7 +159,7 @@ class mrqrender extends questionrender {
   }
 
   /**
-   * Option level settings for template rendering
+   * Additional option level settings for template rendering
    * @param integer $part_id part loop id
    * @param integer $useranswerid id of option user selected
    * @param integer $user_dismissid id of option user dismissed

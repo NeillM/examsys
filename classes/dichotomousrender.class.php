@@ -16,49 +16,21 @@
 
 /**
  *
- * Class for MCQ rendering
+ * Class for dichotomous rendering
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
 
-class mcqrender extends questionrender {
-
-  /**
-   * Question 'other' option selected state
-   * @var boolean
-   */
-  protected $otherselected;
-
-  /**
-   * Question 'abstain' option selected state
-   * @var boolean
-   */
-  protected $abstainselected;
-
-  /**
-   * Question options dismissed
-   * @var string
-   */
-  protected $dismiss;
-
-  /**
-   * Default other selected state
-   */
-  const default_otherselected = false;
-
-  /**
-   * Default abstain selected state
-   */
-  const default_abstainselected = false;
+class dichotomousrender extends questionrender {
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->set('questiontype', 'mcq');
+    $this->set('questiontype', 'dichotomous');
   }
 
   /**
@@ -85,13 +57,7 @@ class mcqrender extends questionrender {
    * @param integer $user_dismissid id of option user dismissed
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
-    if (is_null($useranswerid) and $screen_pre_submitted) {
-      $this->set('unanswered', true);
-    }
-    // Set to vertical to simpify template logic.
-    if ($this->get('displaymethod') === 'vertical_other') {
-      $this->set('displaymethod', 'vertical');
-    }
+    // Nothing to do.
   }
 
   /**
@@ -100,31 +66,26 @@ class mcqrender extends questionrender {
    * @param integer $useranswerid id of option user selected
    * @param integer $user_dismissid id of option user dismissed
    * @param integer $marks reference to marks available for question
+   * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function set_option($part_id, $useranswerid, $user_dismissid, &$marks) {
+  public function set_option($part_id, $useranswerid, $user_dismissid, &$marks, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    if ($option['tmppartid'] === $useranswerid) {
-      $option['selected'] = true;
-    } else {
-      $option['selected'] = false;
-    }
-    $option['optiontextdisplay'] = false;
-    if ($option['optiontext'] != '') {
-      $option['optiontextdisplay'] = true;
+    $option['useranswer'] = substr($useranswerid, $option['tmppartid']-1, 1);
+    if ($option['useranswer'] == 'u' and $screen_pre_submitted == 1) {
+      $this->set('unanswered', true);
+      $option['unanswered'] = true;
     }
     $option['displayoptionmedia'] = false;
     if ($option['omedia'] != '') {
       $option['displayoptionmedia'] = true;
     }
-    if ($this->get('displaymethod') === 'vertical') {
-      if (substr($user_dismissid, $option['tmppartid']-1, 1) == '1') {
-        $option['inact'] = true;
-      } else {
-        $option['inact'] = false;
-      }
+    $option['abstain'] = false;
+    if ($this->get('displaymethod') === 'TF_NegativeAbstain' or $this->get('displaymethod') === 'YN_NegativeAbstain') {
+        $option['abstain'] = true;
     }
+    $marks += $option['markscorrect'];
     $this->set_opt($part_id, $option);
-    if ($option['tmppartid'] == $option['correct']) $marks = $option['markscorrect'];
+    
   }
 
   /**
@@ -137,23 +98,6 @@ class mcqrender extends questionrender {
     $option = $this->get_opt($part_id);
     if ($option['marksincorrect'] < 0) {
       $this->set('negativemarking', true);
-      if ($useranswerid === 'a') {
-        $this->set('abstainselected', true);
-      }
-    }
-    if ($this->get('displaymethod') === 'vertical') {
-      if($this->get('papertype') === 3) {
-        $this->set('displaymethod', 'other');
-        if (substr($useranswerid,0,5) === 'other') {
-          $this->set('otherselected', true);
-          $this->set('other', substr($useranswerid,6));
-        }
-      }
-    }
-    if ($user_dismissid != '') {
-       $this->set('dismiss', $user_dismissid);
-    } else {
-       $this->set('dismiss', str_repeat('0', $this->get('optionnumber')));
     }
   }
 }
