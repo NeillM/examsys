@@ -1,7 +1,7 @@
 <blockquote {% if data.get('unanswered') %} class="unans" {% endif %}>
     <table cellpadding="2" cellspacing="0" border="0">
 {% if data.get('papertype') == 3 %}
-    {% for i,p in data.option %}
+    {% for i,p in data.get('options') %}
     <tr>
         <td>
             <input type="checkbox" name="q{{data.get('questionno')}}_{{i}}" id="q{{data.get('questionno')}}_{{i}}" value="y" {% if p.selected %} checked="checked" {% endif %}/>
@@ -17,10 +17,10 @@
     </tr>
     {% endfor %}
 {% else %}
-    {% for i,p in data.option %}
+    {% for i,p in data.get('options') %}
     <tr>
         <td>
-            <input type="checkbox" onclick="MRQ({{data.get('questionno')}},{p.tmppartid},{p.optionno},{p.mrq_correct};" name="q{{data.get('questionno')}}_{{i}}" id="q{{data.get('questionno')}}_{{i}}" value="y" {% if p.selected %} checked="checked" {% endif %} />
+            <input type="checkbox" onclick="MRQ({{data.get('questionno')}},{{p.tmppartid}},{{data.get('optionnumber')}},{{data.get('allowedresponses')}});" name="q{{data.get('questionno')}}_{{i}}" id="q{{data.get('questionno')}}_{{i}}" value="y" {% if p.selected %} checked="checked" {% endif %} />
         </td>
         <td>
             {% if p.optiontextdisplay %}
@@ -33,7 +33,7 @@
     </tr>
     {% endfor %}
 {% endif %}
-{% if data.displaymethod == 'other' %}
+{% if data.get('displaymethod') == 'other' %}
     <tr>
         <td>
             <input type="checkbox" name="q{{data.get('questionno')}}_{{data.get('partid')}}" value="y" {% if data.get('otherselected') %} checked="checked" {% endif %}/>
@@ -46,7 +46,7 @@
 {% if data.get('negativemarking') %}
     <tr>
         <td>
-            <input type="checkbox" onclick="MRQabstain({{data.get('questionno')}},{{data.get('optionno')}});" name="q{{data.get('questionno')}}_abstain" id="q{{data.get('questionno')}}_abstain" value="y" {% if data.get('abstainselected') %} checked="checked" {% endif %} />
+            <input type="checkbox" onclick="MRQabstain({{data.get('questionno')}},{{data.get('optionnumber')}});" name="q{{data.get('questionno')}}_abstain" id="q{{data.get('questionno')}}_abstain" value="y" {% if data.get('abstainselected') %} checked="checked" {% endif %} />
         </td>
         <td>
             <span style="color:{{data.get('labelcolour')}}">&lt;{{lang.abstain}}&gt;</span>

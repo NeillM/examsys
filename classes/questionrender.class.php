@@ -165,6 +165,12 @@ abstract class questionrender {
 
   /**
    * Question number of options
+   * @var integer
+   */
+  private $optionnumber;
+
+  /**
+   * Option id
    * @var string
    */
   private $optionno;
@@ -387,8 +393,9 @@ abstract class questionrender {
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    * @param integer $useranswerid id of user answer
    * @param integer $user_dismissid id of option user dismissed
+   * @param integer $allowed_responses number of answers that can be provided to a question
    */
-  abstract public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
+  abstract public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1);
 
   /**
    * Abstract function to set question options
@@ -396,9 +403,16 @@ abstract class questionrender {
    * @param integer $useranswerid id of option user selected
    * @param integer $user_dismissid id of option user dismissed
    * @param integer $marks reference to marks available for question
-   * @param float $marks_incorrect marks for incorrect answer
    */
-  abstract public function set_option($part_id, $useranswerid, $user_dismissid, &$marks, $marks_incorrect);
+  abstract public function set_option($part_id, $useranswerid, $user_dismissid, &$marks);
+
+  /**
+   * Option level settings for template rendering
+   * @param integer $part_id part loop id
+   * @param integer $useranswerid id of option user selected
+   * @param integer $user_dismissid id of option user dismissed
+   */
+  abstract public function set_additional_option($part_id, $useranswerid, $user_dismissid);
 
   /**
    * Set an attribute
@@ -482,7 +496,7 @@ abstract class questionrender {
 
     $q_id = $question['q_id'];
     $option_no = count($question['options']);
-
+    $this->set('optionnumber', $option_no);
     // Determine if negative marking is used.
     $neg_marking = false;
     if (isset($question['object']) and method_exists($question['object'], 'is_negative_marked')) {
@@ -553,8 +567,7 @@ abstract class questionrender {
     $this->set('language', $language);
     $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
 
-    if ($question['q_type'] == 'mcq') {
-      
+    if (in_array($question['q_type'], array('mcq', 'mrq'))) {
       $this->set_question_head();
     } else {
       if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
@@ -615,6 +628,7 @@ abstract class questionrender {
     // Pre-question processing
     $this->set('questionno', $question_no);
     $this->set('displaymethod', $question['display_method']);
+    $this->set('scoremethod', $question['score_method']);
     switch ($question['q_type']) {
       case 'enhancedcalc':
         if (isset($user_answers[$current_screen][$q_id])) {
@@ -638,17 +652,7 @@ abstract class questionrender {
             if ($question['options'][$i]['correct'] == 'y') $mrq_correct++;
           }
         }
-        if (isset($user_answers[$current_screen][$q_id])) {
-          $answer_parts = explode(':', $user_answers[$current_screen][$q_id]);
-          $len_answer = strlen($answer_parts[0]);
-        } else {
-          $len_answer = 0;
-        }
-        if (isset($answer_parts) and $answer_parts[0] == str_repeat('n', $len_answer) and $screen_pre_submitted == 1) {
-          $this->set('unanswered', true);
-        } else {
-          $this->set('unanswered', false);
-        }
+        $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $mrq_correct);
         break;
       case 'rank':
         break;
@@ -728,6 +732,7 @@ abstract class questionrender {
           'optiontext' => $display_option['option_text'],
           'omedia' => $display_option['o_media'],
           'markscorrect' => $display_option['marks_correct'],
+          'marksincorrect' => $display_option['marks_incorrect'],
           'correct' => $display_option['correct'],
           'optionno' => 'q' . $question_no . '_' . $tmp_part_id,
           'tmppartid' => $tmp_part_id
@@ -829,34 +834,10 @@ abstract class questionrender {
           }
           break;
         case 'mcq':
-          $this->set_option($part_id, $useranswerid, $user_dismissid, $marks, $display_option['marks_incorrect']);
+          $this->set_option($part_id, $useranswerid, $user_dismissid, $marks);
           break;
         case 'mrq':
-          $questiondata['option'][$part_id]['mrq_correct'] = $mrq_correct;
-          $questiondata['option'][$part_id]['optiontextdisplay'] = false;
-          if ($display_option['option_text'] != '') {
-            $questiondata['option'][$part_id]['optiontextdisplay'] = true;
-          }
-          if ($display_option['o_media'] != '') {
-            $questiondata['option'][$part_id]['displayoptionmedia'] = true;
-          }
-          if (isset($user_answers[$current_screen][$q_id]) and substr($user_answers[$current_screen][$q_id],$question['option_order'][$part_id-1],1) == 'y') {
-            $questiondata['option'][$part_id]['selected'] = true;
-          } else {
-            $questiondata['option'][$part_id]['selected'] = false;
-          }
-          if (isset($user_dismiss[$current_screen][$q_id]) and substr($user_dismiss[$current_screen][$q_id],$part_id-1,1) == '1') {
-            $questiondata['option'][$part_id]['inact'] = true;
-          } else {
-            $questiondata['option'][$part_id]['inact'] = false;
-          }
-          if ($question['score_method'] == 'Mark per Option') {
-            if ($display_option['correct'] == 'y') $marks += $display_option['marks_correct'];  // Mark for correct options only
-          } elseif ($question['score_method'] == 'Mark per Question') {
-            if ($part_id == 1) $marks += $display_option['marks_correct'];
-          } else {
-            $marks += $display_option['marks_correct'];  // Mark for each and every item
-          }
+          $this->set_option($part_id, $useranswerid, $user_dismissid, $marks);
           break;
         case 'extmatch':
         case 'matrix':
@@ -1217,7 +1198,15 @@ abstract class questionrender {
       }                  // End switch
     }                    // End foreach loop
 
-    if (in_array($question['q_type'], array('dichotomous', 'mrq', 'rank'))) {
+    if (in_array($question['q_type'], array('mcq', 'mrq'))) {
+      $this->set_additional_option($part_id, $useranswerid, $user_dismissid);
+    }
+    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'rank'))) {
+      if ($question['score_method'] == 'Mark per Question') {
+        $marks = $display_option['marks_correct'];
+      }
+    }
+    if (in_array($question['q_type'], array('dichotomous', 'rank'))) {
       $answer = (isset($user_answers[$current_screen][$q_id])) ? $user_answers[$current_screen][$q_id] : '';
       if ($question['display_method'] == 'other') {
         $this->set('displaymethod', 'other');
@@ -1229,17 +1218,6 @@ abstract class questionrender {
           $questiondata['otherselected'] = false;
         }
         $questiondata['other'] = substr($answer, $part_id);
-      } elseif ($question['q_type'] == 'mrq' and $display_option['marks_incorrect'] < 0) {
-        $this->set('negativemarking', true);
-        // Include an abstain option if negative marking is used.
-        if ($answer != '' and $answer == 'a') {
-          $questiondata['abstainselected'] = true;
-        } else {
-          $questiondata['abstainselected'] = false;
-        }
-      }
-      if ($question['score_method'] == 'Mark per Question') {
-        $marks = $display_option['marks_correct'];
       }
     } elseif ($question['q_type'] == 'extmatch') {
       $questiondata['extmatch'] = true;
@@ -1373,7 +1351,7 @@ abstract class questionrender {
     }
 
     // Write out the hidden field for the dismiss facility.
-    if (in_array($question['q_type'], array('mrq', 'rank'))) {
+    if (in_array($question['q_type'], array('rank'))) {
       if (isset($user_dismiss[$current_screen][$q_id]) and $user_dismiss[$current_screen][$q_id] != '') {
         $questiondata['dismiss'] = $user_dismiss[$current_screen][$q_id];
       } else {
