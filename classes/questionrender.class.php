@@ -557,7 +557,7 @@ abstract class questionrender {
     $this->set('language', $language);
     $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
 
-    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'info'))) {
+    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'info', 'sct'))) {
       $this->set_question_head();
     } else {
       if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
@@ -677,27 +677,7 @@ abstract class questionrender {
         $matching_answers = explode('|', $question['options'][0]['correct']);
         break;
       case 'sct':
-        // SCT stalls vignette in scenario so must dispaly. 
-        $this->set('displayscenario', true);
-        if ($question['notes'] != '') {
-          $this->set('displaynotes', true);
-        }
-        if ($question['q_media'] != '') {
-          $this->set('displaymedia', true);
-        }
-
-        $sct_parts = explode('~',$question['leadin']);
-        $sct_titles = array(1=>$string['hypothesis'], 2=>$string['investigation'], 3=>$string['prescription'], 4=>$string['intervention'], 5=>$string['treatment']);
-        $questiondata['scttitle'] = $sct_titles[$question['display_method']];
-        $questiondata['sctpart0'] = $sct_parts[0];
-        $questiondata['sctpart1'] = $sct_parts[1];
-        $questiondata['scttitlelower'] = $string['thenthis'] . " " . mb_strtolower($sct_titles[$question['display_method']], 'UTF-8') . " " . $string['is'] . ":";
-
-        if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0' and $screen_pre_submitted == 1) {
-          $this->set('unanswered', true);
-        } else {
-          $this->set('unanswered', false);
-        }
+        $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
         $marks = 1;
         break;
     }
@@ -864,21 +844,7 @@ abstract class questionrender {
           }
           break;
         case 'sct':
-          $tmp_part_id = $question['option_order'][$part_id-1] + 1;
-          if (isset($user_answers[$current_screen][$q_id]) and $tmp_part_id == $user_answers[$current_screen][$q_id]) {
-            $questiondata['option'][$part_id]['selected'] = true;
-          } else {
-            $questiondata['option'][$part_id]['selected'] = false;
-          }
-          if (isset($user_dismiss[$current_screen][$q_id]) and substr($user_dismiss[$current_screen][$q_id],$tmp_part_id-1,1) == '1') {
-            $questiondata['option'][$part_id]['inact'] = true;
-          } else {
-            $questiondata['option'][$part_id]['inact'] = false;
-          }
-          $questiondata['option'][$part_id]['optiontextdisplay'] = false;
-          if ($display_option['option_text'] != '') {
-            $questiondata['option'][$part_id]['optiontextdisplay'] = true;
-          }
+          $this->set_option($part_id, $useranswerid, $user_dismissid, $marks, $screen_pre_submitted);
           break;
         case 'true_false':
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and $screen_pre_submitted == 1) {

@@ -74,7 +74,7 @@ class mrqrender extends questionrender {
     if ($this->get('scenario') != '') {
       $this->set('displayscenario', true);
     }
-    if ($this->get('q_media') != '') {
+    if ($this->get('qmedia') != '') {
       $this->set('displaymedia', true);
     }
     $this->set('displaydefault', true);

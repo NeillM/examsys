@@ -31,7 +31,7 @@
 <table cellpadding="2" cellspacing="0" border="0" style="width:100%">
     <tr>
         <td style="background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold">
-            {{data.scttitle}}
+            {{data.get('scttitle')}}
         </td>
         <td style="width:2%">&nbsp;</td>
         <td style="background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold">
@@ -40,22 +40,22 @@
     </tr>
     <tr>
         <td style="vertical-align:top">
-            {{data.sctpart0|raw}}
+            {{data.get('scthyp')|raw}}
         </td>
         <td style="width:2%">&nbsp;</td>
         <td style="vertical-align:top">
-            {{data.sctpart1|raw}}
+            {{data.get('sctinfo')|raw}}
         </td>
     </tr>
 </table>
 <p>
     <strong>
-        {{data.scttitlelower}}
+        {{data.get('scttitlelower')}}
     </strong>
 </p>
 <blockquote {% if data.get('unanswered') %} class="unans" {% endif %}>
     <table cellpadding="2" cellspacing="0" border="0">
-{% for i,p in data.option %}
+{% for i,p in data.get('options') %}
         <tr>
             <td>
                 <input type="radio" name="q{{data.get('questionno')}}" value="{{p.tmppartid}}" {% if p.selected %} checked="checked" {% endif %} />
