@@ -452,7 +452,7 @@ abstract class questionrender {
    * @global array $used_questions user log data for questions
    * @global type $user_dismiss user dismiss data for questions
    * @global type $user_order the order the user gets the question options
-   * @global type $language system langauge
+   * @global type $language system language
    * @param type $screen_pre_submitted has the user been on this screen before
    * @param type $q_displayed loop id of question
    * @param type $string language strings
@@ -637,30 +637,7 @@ abstract class questionrender {
       case 'rank':
         break;
       case 'likert':
-        $questiondata['likertna'] = false;
-        $na = false;
-        $likert_display = explode('|',$question['display_method']);
-        $likert_col_no = substr_count($question['display_method'],'|');
-        if ($likert_display[$likert_col_no] == 'true') {
-          $likert_col_no++;
-          $na = true;
-        }
-        if ($question['notes'] != '') {
-          $this->set('displaynotes', true);
-          $questiondata['likertnotescolspan'] = $likert_col_no + 1;
-        }
-        if ($question['scenario'] != '') {
-          $this->set('displayscenario', true);
-          $questiondata['likertscenariocolspan'] = $likert_col_no + 2;
-        }
-        if ($na == true) {
-          $questiondata['likertna'] = true;
-        }
-        $questiondata['likertdisplay'][0] = $likert_display[0];
-        $temp_end = substr_count($question['display_method'],'|') - 1;
-        for ($i=1; $i<=$temp_end; $i++) {
-          $questiondata['likertdisplay'][$i] = $likert_display[$i];
-        }
+        $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
         break;
       case 'extmatch':
       case 'matrix':
@@ -747,30 +724,6 @@ abstract class questionrender {
 
           break;
         case 'likert':
-          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and $screen_pre_submitted == 1) {
-            $this->set('unanswered', true);
-          } else {
-            $this->set('unanswered', false);
-          }
-          $scale_size = substr_count($question['display_method'],'|');
-          $questiondata['likertscaledisplay'] = false;
-          $questiondata['likertoptionid'] = $this->get('questionno') . "_" . $part_id;
-          if ($likert_display[$scale_size] == 'true') {
-            $questiondata['likertscaledisplay'] = true;
-            $questiondata['likertscalena'] = false;
-            if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'n/a') {
-              $questiondata['likertscalena'] = true;
-            }
-          }
-          for ($i=1; $i<=$scale_size; $i++) {
-            $optionID = 'q' . $this->get('questionno') . '_' . $part_id;
-            if (isset($user_answers[$current_screen][$q_id]) and $i == $user_answers[$current_screen][$q_id]) {
-              $questiondata['likertscale'][$i] = true;
-            } else {
-              $questiondata['likertscale'][$i] = false;
-            }
-          }
-          break;
         case 'mcq':
         case 'mrq':
           $this->set_option($part_id, $useranswerid, $user_dismissid, $marks, $screen_pre_submitted);
