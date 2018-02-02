@@ -180,6 +180,7 @@ class mrqrender extends questionrender {
         $this->set('abstainselected', true);
       }
     }
+    // Write out the hidden field for the dismiss facility.
     if ($user_dismissid != '') {
        $this->set('dismiss', $user_dismissid);
     } else {

@@ -16,26 +16,14 @@
 
 /**
  *
- * Class for MCQ rendering
+ * Class for Rank rendering
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
 
-class mcqrender extends questionrender {
-
-  /**
-   * Question 'other' option selected state
-   * @var boolean
-   */
-  protected $otherselected;
-
-  /**
-   * Question 'abstain' option selected state
-   * @var boolean
-   */
-  protected $abstainselected;
+class rankrender extends questionrender {
 
   /**
    * Question options dismissed
@@ -44,21 +32,11 @@ class mcqrender extends questionrender {
   protected $dismiss;
 
   /**
-   * Default other selected state
-   */
-  const default_otherselected = false;
-
-  /**
-   * Default abstain selected state
-   */
-  const default_abstainselected = false;
-
-  /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->set('questiontype', 'mcq');
+    $this->set('questiontype', 'rank');
   }
 
   /**
@@ -85,13 +63,7 @@ class mcqrender extends questionrender {
    * @param integer $user_dismissid id of option user dismissed
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
-    if (is_null($useranswerid) and $screen_pre_submitted) {
-      $this->set('unanswered', true);
-    }
-    // Set to vertical to simpify template logic.
-    if ($this->get('displaymethod') === 'vertical_other') {
-      $this->set('displaymethod', 'vertical');
-    }
+    // Nothing to do
   }
 
   /**
@@ -103,28 +75,67 @@ class mcqrender extends questionrender {
    */
   public function set_option($part_id, $useranswerid, $user_dismissid, &$marks, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    if ($option['tmppartid'] === $useranswerid) {
-      $option['selected'] = true;
+    if (!is_null($useranswerid)) {
+      $rank_answers = explode(',', $useranswerid);
     } else {
-      $option['selected'] = false;
+      $rank_answers = '';
     }
-    $option['optiontextdisplay'] = false;
-    if ($option['optiontext'] != '') {
-      $option['optiontextdisplay'] = true;
+    $total_rank_no = 0;
+    $require_na = false;
+    for ($i=0; $i<$this->get('optionnumber'); $i++) {
+      if ($option['correct'] != 0 or $this->get('papertype') == '3') {
+        $total_rank_no++;
+      }
+      if ($option['correct'] == 0) $require_na = true;
     }
-    $option['displayoptionmedia'] = false;
-    if ($option['omedia'] != '') {
-      $option['displayoptionmedia'] = true;
-    }
-    if ($this->get('displaymethod') === 'vertical') {
-      if (substr($user_dismissid, $option['tmppartid']-1, 1) == '1') {
-        $option['inact'] = true;
-      } else {
-        $option['inact'] = false;
+    $tmp_user_answers = 0;
+
+    if ($rank_answers != '') {
+      for ($i=0; $i<count($rank_answers); $i++) {
+        if ($rank_answers[$i] != 'u' and $rank_answers[$i] != 0 and $rank_answers[$i] != 'u') {
+          $tmp_user_answers++;
+        }
       }
     }
+
+    if ($this->get('scoremethod') == 'Mark per Option') {
+      $answers_needed = $this->get('optionnumber');
+    } else {
+      $answers_needed = $total_rank_no;
+    }
+    $option['unans'] = false;
+    if (isset($rank_answers[$option['tmppartid'] - 1]) and $rank_answers[$option['tmppartid'] - 1] == 'u' and $screen_pre_submitted == 1 and $tmp_user_answers < $answers_needed) {
+      $option['unans'] = true;
+      $this->set('unanswered', true);
+    }
+    $option['na'] = false;
+    if ($require_na) {
+      $option['na'] = true;
+      if (isset($rank_answers[$option['tmppartid'] - 1]) and $rank_answers[$option['tmppartid'] - 1] == '0') {
+        $option['selected'] = true;
+      } else {
+        $option['selected'] = false;
+      }
+    }
+    $option['totalrank'] = $total_rank_no;
+    for ($i=1; $i<=$total_rank_no; $i++) {
+      if (isset($rank_answers[$option['tmppartid'] - 1]) and $i == $rank_answers[$option['tmppartid'] - 1]) {
+        $option['selected'] = true;
+      } else {
+        $option['selected'] = false;
+      }
+    }
+    if (substr($user_dismissid, $option['tmppartid']-1, 1) == '1') {
+      $option['inact'] = true;
+    } else {
+      $option['inact'] = false;
+    }
+    if ($option['correct'] != 0) {
+      $marks += $option['markscorrect'];
+    } elseif ($this->get('scoremethod') == 'Mark per Option') {
+      $marks += $option['markscorrect'];
+    }
     $this->set_opt($part_id, $option);
-    if ($option['tmppartid'] == $option['correct']) $marks = $option['markscorrect'];
   }
 
   /**
@@ -137,18 +148,6 @@ class mcqrender extends questionrender {
     $option = $this->get_opt($part_id);
     if ($option['marksincorrect'] < 0) {
       $this->set('negativemarking', true);
-      if ($useranswerid === 'a') {
-        $this->set('abstainselected', true);
-      }
-    }
-    if ($this->get('displaymethod') === 'vertical') {
-      if($this->get('papertype') === 3) {
-        $this->set('displaymethod', 'other');
-        if (substr($useranswerid,0,5) === 'other') {
-          $this->set('otherselected', true);
-          $this->set('other', substr($useranswerid,6));
-        }
-      }
     }
     // Write out the hidden field for the dismiss facility.
     if ($user_dismissid != '') {

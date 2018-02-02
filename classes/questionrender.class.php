@@ -557,7 +557,7 @@ abstract class questionrender {
     $this->set('language', $language);
     $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
 
-    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'info', 'sct'))) {
+    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'info', 'sct', 'rank'))) {
       $this->set_question_head();
     } else {
       if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
@@ -772,8 +772,6 @@ abstract class questionrender {
           }
           break;
         case 'mcq':
-          $this->set_option($part_id, $useranswerid, $user_dismissid, $marks, $screen_pre_submitted);
-          break;
         case 'mrq':
           $this->set_option($part_id, $useranswerid, $user_dismissid, $marks, $screen_pre_submitted);
           break;
@@ -782,66 +780,7 @@ abstract class questionrender {
           $matching_options[] = $display_option['option_text'];
             break;
         case 'rank':
-          if (isset($user_answers[$current_screen][$q_id])) {
-            $rank_answers = explode(',', $user_answers[$current_screen][$q_id]);
-          } else {
-            $rank_answers = '';
-          }
-          $total_rank_no = 0;
-          $require_na = false;
-          for ($i=0; $i<$option_no; $i++) {
-            if ($question['options'][$i]['correct'] != 0 or $paper_type == '3') {
-              $total_rank_no++;
-            }
-            if ($question['options'][$i]['correct'] == 0) $require_na = true;
-          }
-          $tmp_user_answers = 0;
-
-          if ($rank_answers != '') {
-            for ($i=0; $i<count($rank_answers); $i++) {
-              if ($rank_answers[$i] != 'u' and $rank_answers[$i] != 0 and $rank_answers[$i] != 'u') {
-                $tmp_user_answers++;
-              }
-            }
-          }
-
-          if ($question['score_method'] == 'Mark per Option') {
-            $answers_needed = $option_no;
-          } else {
-            $answers_needed = $total_rank_no;
-          }
-          $questiondata['option'][$part_id]['unans'] = false;
-          if (isset($rank_answers[$tmp_part_id - 1]) and $rank_answers[$tmp_part_id - 1] == 'u' and $screen_pre_submitted == 1 and $tmp_user_answers < $answers_needed) {
-            $questiondata['option'][$part_id]['unans'] = true;
-            $this->set('unanswered', true);
-          }
-          $questiondata['option'][$part_id]['na'] = false;
-          if ($require_na) {
-            $questiondata['option'][$part_id]['na'] = true;
-            if (isset($rank_answers[$tmp_part_id - 1]) and $rank_answers[$tmp_part_id - 1] == '0') {
-              $questiondata['option'][$part_id]['selected'] = true;
-            } else {
-              $questiondata['option'][$part_id]['selected'] = false;
-            }
-          }
-          $questiondata['option'][$part_id]['totalrank'] = $total_rank_no;
-          for ($i=1; $i<=$total_rank_no; $i++) {
-            if (isset($rank_answers[$tmp_part_id - 1]) and $i == $rank_answers[$tmp_part_id - 1]) {
-              $questiondata['option'][$part_id]['selected'] = true;
-            } else {
-              $questiondata['option'][$part_id]['selected'] = false;
-            }
-          }
-          if (isset($user_dismiss[$current_screen][$q_id]) and substr($user_dismiss[$current_screen][$q_id],$tmp_part_id-1,1) == '1') {
-            $questiondata['option'][$part_id]['inact'] = true;
-          } else {
-            $questiondata['option'][$part_id]['inact'] = false;
-          }
-          if ($display_option['correct'] != 0) {
-            $marks += $display_option['marks_correct'];
-          } elseif ($question['score_method'] == 'Mark per Option') {
-            $marks += $display_option['marks_correct'];
-          }
+          $this->set_option($part_id, $useranswerid, $user_dismissid, $marks, $screen_pre_submitted);
           break;
         case 'sct':
           $this->set_option($part_id, $useranswerid, $user_dismissid, $marks, $screen_pre_submitted);
@@ -1122,7 +1061,7 @@ abstract class questionrender {
       }                  // End switch
     }                    // End foreach loop
 
-    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous'))) {
+    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'rank'))) {
       $this->set_additional_option($part_id, $useranswerid, $user_dismissid);
     }
     if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'rank'))) {
@@ -1130,20 +1069,7 @@ abstract class questionrender {
         $marks = $display_option['marks_correct'];
       }
     }
-    if (in_array($question['q_type'], array('rank'))) {
-      $answer = (isset($user_answers[$current_screen][$q_id])) ? $user_answers[$current_screen][$q_id] : '';
-      if ($question['display_method'] == 'other') {
-        $this->set('displaymethod', 'other');
-        $part_id++;
-        $questiondata['part_id'] = $part_id;
-        if ($answer != '' and substr($answer,($part_id - 1),1) == 'y') {
-          $questiondata['otherselected'] = true;
-        } else {
-          $questiondata['otherselected'] = false;
-        }
-        $questiondata['other'] = substr($answer, $part_id);
-      }
-    } elseif ($question['q_type'] == 'extmatch') {
+    if ($question['q_type'] == 'extmatch') {
       $questiondata['extmatch'] = true;
       $matching_answers = explode('|', $question['options'][0]['correct']);
       $questiondata['displayextmatchmedia'] = false;
@@ -1271,15 +1197,6 @@ abstract class questionrender {
         $marks = $display_option['marks_correct'];
       } else {
         $marks = $part_id - 1;
-      }
-    }
-
-    // Write out the hidden field for the dismiss facility.
-    if (in_array($question['q_type'], array('rank'))) {
-      if (isset($user_dismiss[$current_screen][$q_id]) and $user_dismiss[$current_screen][$q_id] != '') {
-        $questiondata['dismiss'] = $user_dismiss[$current_screen][$q_id];
-      } else {
-        $questiondata['dismiss'] = str_repeat('0', count($question['options'])) ;
       }
     }
 

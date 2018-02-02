@@ -1,6 +1,6 @@
 <blockquote>
     <table cellpadding="2" cellspacing="0" border="0">
-{% for i,p in data.option %}
+{% for i,p in data.get('options') %}
         <tr {% if p.unans %} class="unans" {% endif %}>
             <td class="option">
                 <select name="{{p.optionno}}" class="rankselect q"{{data.get('questionno')}}">
