@@ -1,0 +1,10 @@
+<tr>
+    <td colspan="2" style="padding-left:10px; padding-right:10px">
+{% if data.get('displaymedia') %}
+        <p align="center">
+{% include 'paper/media.html' %}
+        </p>
+{% endif %}
+{% if data.get('displayleadin') %}
+        {{data.get('leadin')|raw}}
+{% endif %}

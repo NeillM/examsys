@@ -98,12 +98,6 @@ abstract class questionrender {
   private $displaydefault;
 
   /**
-   * Info block flag
-   * @var boolean
-   */
-  private $displayinfo;
-
-  /**
    * Negative marking state of question
    * @var boolean
    */
@@ -356,11 +350,6 @@ abstract class questionrender {
   const default_displaymethod = '';
 
   /**
-   * Default info block flag
-   */
-  const default_displayinfo = false;
-
-  /**
    * Default option media display state
    */
   const default_displayoptionmedia = false;
@@ -563,12 +552,12 @@ abstract class questionrender {
     $this->set('assignednumber',  $question['assigned_number']);
     $this->set('scenario', $question['scenario']);
     $this->set('notes', $question['notes']);
-    $this->set('q_media', $question['q_media']);
+    $this->set('qmedia', $question['q_media']);
     $this->set('leadin', $question['leadin']);
     $this->set('language', $language);
     $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
 
-    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous'))) {
+    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'info'))) {
       $this->set_question_head();
     } else {
       if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
@@ -595,16 +584,6 @@ abstract class questionrender {
           }
         }
       }
-    }
-
-    if ($question['q_type'] == 'info') {
-      // Special processing of Information Blocks.
-      $this->set('displayinfo', true);
-      if ($question['q_media'] != '') {
-        $this->set('displaymedia', true);
-      }
-      $this->set('displayleadin', true);
-      $question_no--;
     }
 
     $part_id = 0;
@@ -639,8 +618,8 @@ abstract class questionrender {
         }
         $question['object']->load_all_user_answers($user_answers);
         break;
+      case 'info':
       case 'dichotomous':
-        break;
       case 'mcq':
         $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
         break;
@@ -735,7 +714,7 @@ abstract class questionrender {
           'markscorrect' => $display_option['marks_correct'],
           'marksincorrect' => $display_option['marks_incorrect'],
           'correct' => $display_option['correct'],
-          'optionno' => 'q' . $question_no . '_' . $tmp_part_id,
+          'optionno' => 'q' . $this->get('questionno') . '_' . $tmp_part_id,
           'tmppartid' => $tmp_part_id
       ));
       $this->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '', -1, false, $part_id);
@@ -777,7 +756,7 @@ abstract class questionrender {
           // no options for enhanced calc now stored in settings
 
           $extra = array(
-            'num_on_screen' => $question_no,
+            'num_on_screen' => $this->get('questionno'),
             'current_question' => $question,
           );
 
@@ -795,7 +774,7 @@ abstract class questionrender {
           }
           $scale_size = substr_count($question['display_method'],'|');
           $questiondata['likertscaledisplay'] = false;
-          $questiondata['likertoptionid'] = $question_no . "_" . $part_id;
+          $questiondata['likertoptionid'] = $this->get('questionno') . "_" . $part_id;
           if ($likert_display[$scale_size] == 'true') {
             $questiondata['likertscaledisplay'] = true;
             $questiondata['likertscalena'] = false;
@@ -804,7 +783,7 @@ abstract class questionrender {
             }
           }
           for ($i=1; $i<=$scale_size; $i++) {
-            $optionID = 'q' . $question_no . '_' . $part_id;
+            $optionID = 'q' . $this->get('questionno') . '_' . $part_id;
             if (isset($user_answers[$current_screen][$q_id]) and $i == $user_answers[$current_screen][$q_id]) {
               $questiondata['likertscale'][$i] = true;
             } else {
@@ -1032,8 +1011,8 @@ abstract class questionrender {
           }
           break;
         case 'textbox':
-          if (!in_array($question_no, $textboxes_seen)) {
-            $textboxes_seen[] = $question_no;
+          if (!in_array($this->get('questionno'), $textboxes_seen)) {
+            $textboxes_seen[] = $this->get('questionno');
             $settings = json_decode($question['settings'], true);
             $questiondata['editorcolumns'] = $settings['columns'];
             $questiondata['editorrows'] = $settings['rows'];
@@ -1050,7 +1029,7 @@ abstract class questionrender {
                 $questiondata['useranswer'] = $ans;
                 if ($settings['editor'] == 'mathjax') {
                   $questiondata['editormathjax'] = true;
-                  $questiondata['id'] = 'q' . $question_no;
+                  $questiondata['id'] = 'q' . $this->get('questionno');
                 }
               }
             } else {
@@ -1069,7 +1048,7 @@ abstract class questionrender {
                 $background_colour = 'background-color:red;';
               }
               ?>
-              <textarea class="mceEditor" id="q<?php echo $question_no ?>" name="q<?php echo $question_no ?>" style="<?php echo $background_colour; ?>width:<?php echo $textbox_width ?>px; height:<?php echo $textbox_height ?>px"><?php echo $ans ?></textarea><?php echo "\n"; ?>
+              <textarea class="mceEditor" id="q<?php echo $this->get('questionno') ?>" name="q<?php echo $this->get('questionno') ?>" style="<?php echo $background_colour; ?>width:<?php echo $textbox_width ?>px; height:<?php echo $textbox_height ?>px"><?php echo $ans ?></textarea><?php echo "\n"; ?>
               <?php
             }
             $marks += $display_option['marks_correct'];

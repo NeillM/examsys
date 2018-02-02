@@ -11,11 +11,6 @@
         {{data.get('leadin')|raw}}
         {% endif %}
 {% endif %}
-{% if data.displayinfo %}
-    <tr>
-        <td colspan="2" style="padding-left:10px; padding-right:10px">
-            {{data.get('leadin')|raw}}
-{% endif %}
 {% include 'paper/question/'~data.get('questiontype')~'.html' %}
 {% if data.get('papertype') != 3 %}
     {% if data.get('finalmarks') == 0 %}
@@ -42,6 +37,6 @@
         </td>
     </tr>
 {% endif %}
-{% if data.displayinfo == false %}
+{% if data.get('questiontype') != 'info' %}
     <input type="hidden" name="order{{data.get('questionno')}}" value="{{data.get('optionorder')}}" />
 {% endif %}

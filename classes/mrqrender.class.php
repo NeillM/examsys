@@ -110,9 +110,9 @@ class mrqrender extends questionrender {
    * @param integer $part_id part loop id
    * @param integer $useranswerid id of option user selected
    * @param integer $user_dismissid id of option user dismissed
-   * @param integer $marks reference to marks available for question
+   * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function set_option($part_id, $useranswerid, $user_dismissid, &$marks) {
+  public function set_option($part_id, $useranswerid, $user_dismissid, &$marks, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
     if (substr($useranswerid, $option['tmppartid']-1, 1) === 'y') {
       $option['selected'] = true;
