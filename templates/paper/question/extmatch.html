@@ -1,4 +1,4 @@
-{% if data.displayextmatchmedia %}
+{% if data.get('extmatchdisplaymedia') %}
 <p align="center">
     {% include 'paper/media.html' %}
 </p>
@@ -7,9 +7,9 @@
     <tr>
         <td>
             <ol>
-{% for o in data.extmatchoptions %}
+{% for o in data.get('matchoptions') %}
                 <li>{{o}}</li>
-    {% if loop.index0 == data.extmatchsplit %}
+    {% if loop.index0 == data.get('split') %}
             </ol>
         </td>
         <td style="vertical-align:top">
@@ -21,11 +21,11 @@
     </tr>
 </table>
 <ol class="extmatch">
-{% for m in data.extmatchstem %}
+{% for m in data.get('matchstem') %}
 <li>
     <div>{{m.scenario|raw}}</div>
     {% if m.display %}
-    <div>{% include 'paper/media.html' with {'data': m.media} %}</div><br />
+    <div>{% include 'paper/optmedia.html' with {'data': m.media} %}</div><br />
     {% endif %}
     {% if m.answer_no == 1 %}
     <select {% if m.unanswered %} class="unans" {% endif %} name="q{{data.get('questionno')}}_{{loop.index}}" size="1">
@@ -46,4 +46,4 @@
 </li>
 {% endfor %}
 </ol>
-<input type="hidden" name="multimatching{{data.get('questionno')}}_options" value="{{data.extmathmatching_options}}" />
+<input type="hidden" name="multimatching{{data.get('questionno')}}_options" value="{{data.get('matchoptionsno')}}" />

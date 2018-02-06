@@ -73,7 +73,7 @@ class rankrender extends questionrender {
    * @param integer $user_dismissid id of option user dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function set_option($part_id, $useranswerid, $user_dismissid, &$marks, $screen_pre_submitted) {
+  public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
     if (!is_null($useranswerid)) {
       $rank_answers = explode(',', $useranswerid);
@@ -130,11 +130,13 @@ class rankrender extends questionrender {
     } else {
       $option['inact'] = false;
     }
+    $marks = $this->get('marks');
     if ($option['correct'] != 0) {
       $marks += $option['markscorrect'];
     } elseif ($this->get('scoremethod') == 'Mark per Option') {
       $marks += $option['markscorrect'];
     }
+    $this->set('marks', $marks);
     $this->set_opt($part_id, $option);
   }
 

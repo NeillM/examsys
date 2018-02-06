@@ -130,7 +130,7 @@ class likertrender extends questionrender {
    * @param integer $user_dismissid id of option user dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function set_option($part_id, $useranswerid, $user_dismissid, &$marks, $screen_pre_submitted) {
+  public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     if ($useranswerid == 'u' and $screen_pre_submitted == 1) {
       $this->set('unanswered', true);
     } else {

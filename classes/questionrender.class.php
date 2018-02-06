@@ -131,7 +131,19 @@ abstract class questionrender {
    * Question media
    * @var string
    */
-  private $q_media;
+  private $qmedia;
+
+  /**
+   * Question media height
+   * @var string
+   */
+  private $qmediaheight;
+
+  /**
+   * Question media width
+   * @var string
+   */
+  private $qmediawidth;
 
   /**
    * Question type
@@ -179,7 +191,7 @@ abstract class questionrender {
    * Question leadin
    * @var string
    */
-  private  $leadin;
+  private $leadin;
 
   /**
    * Question langague
@@ -283,6 +295,12 @@ abstract class questionrender {
    */
   private $bonus;
 
+  /**
+   * Question b available marks
+   * @var float
+   */
+  private $marks;
+  
   /**
    * Order of question options
    * @var string 
@@ -391,10 +409,9 @@ abstract class questionrender {
    * @param integer $part_id part loop id
    * @param integer $useranswerid id of option user selected
    * @param integer $user_dismissid id of option user dismissed
-   * @param integer $marks reference to marks available for question
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  abstract public function set_option($part_id, $useranswerid, $user_dismissid, &$marks, $screen_pre_submitted);
+  abstract public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
 
   /**
    * Option level settings for template rendering
@@ -553,11 +570,13 @@ abstract class questionrender {
     $this->set('scenario', $question['scenario']);
     $this->set('notes', $question['notes']);
     $this->set('qmedia', $question['q_media']);
+    $this->set('qmediawidth', $question['q_media_width']);
+    $this->set('qmediaheight', $question['q_media_height']);
     $this->set('leadin', $question['leadin']);
     $this->set('language', $language);
     $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
 
-    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'info', 'sct', 'rank'))) {
+    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'info', 'sct', 'rank', 'extmatch'))) {
       $this->set_question_head();
     } else {
       if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
@@ -621,6 +640,9 @@ abstract class questionrender {
       case 'info':
       case 'dichotomous':
       case 'mcq':
+      case 'rank':
+      case 'likert':
+      case 'extmatch':
         $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
         break;
       case 'mrq':
@@ -634,12 +656,6 @@ abstract class questionrender {
         }
         $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $mrq_correct);
         break;
-      case 'rank':
-        break;
-      case 'likert':
-        $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
-        break;
-      case 'extmatch':
       case 'matrix':
         $matching_scenarios = explode('|', $question['scenario']);
         $matching_media = explode('|', $question['q_media']);
@@ -661,6 +677,7 @@ abstract class questionrender {
 
     // Processing for each stem.
     $this->set('options', array());
+    $this->set('marks', $marks);
     foreach ($question['options'] as $display_option) {
       $part_id++;
       $this->set('partid', $part_id);
@@ -707,7 +724,7 @@ abstract class questionrender {
           $marks += $display_option['marks_correct'];
           break;
         case 'dichotomous':
-          $this->set_option($part_id, $useranswerid, $user_dismissid, $marks, $screen_pre_submitted);
+          $this->set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
           break;
         case 'enhancedcalc':
           // no options for enhanced calc now stored in settings
@@ -726,17 +743,11 @@ abstract class questionrender {
         case 'likert':
         case 'mcq':
         case 'mrq':
-          $this->set_option($part_id, $useranswerid, $user_dismissid, $marks, $screen_pre_submitted);
-          break;
         case 'extmatch':
         case 'matrix':
-          $matching_options[] = $display_option['option_text'];
-            break;
         case 'rank':
-          $this->set_option($part_id, $useranswerid, $user_dismissid, $marks, $screen_pre_submitted);
-          break;
         case 'sct':
-          $this->set_option($part_id, $useranswerid, $user_dismissid, $marks, $screen_pre_submitted);
+          $this->set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
           break;
         case 'true_false':
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and $screen_pre_submitted == 1) {
@@ -1014,109 +1025,18 @@ abstract class questionrender {
       }                  // End switch
     }                    // End foreach loop
 
-    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'rank'))) {
+    $this->set('optionorder', implode(',', $question['option_order']));
+ 
+    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'rank', 'extmatch'))) {
       $this->set_additional_option($part_id, $useranswerid, $user_dismissid);
     }
-    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'rank'))) {
+    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'rank', 'extmatch'))) {
+      $marks = $this->get('marks');
       if ($question['score_method'] == 'Mark per Question') {
         $marks = $display_option['marks_correct'];
       }
     }
-    if ($question['q_type'] == 'extmatch') {
-      $questiondata['extmatch'] = true;
-      $matching_answers = explode('|', $question['options'][0]['correct']);
-      $questiondata['displayextmatchmedia'] = false;
-      if ($matching_media[0] != '') {
-        $questiondata['displayextmatchmedia'] = true;
-        //$mediadata = $this->set_media($matching_media[0], $matching_media_width[0], $matching_media_height[0], '');
-        $questiondata = array_merge($questiondata, $mediadata);
-      }
-
-      array_unshift($matching_scenarios, '');
-      $max_scenarios = max(count($matching_scenarios), count($matching_media));
-      $scenario_no = 0;
-      for ($part_id = 1; $part_id < $max_scenarios; $part_id++) {
-        if ((isset($matching_scenarios[$part_id]) and trim(strip_tags($matching_scenarios[$part_id],'<img>')) != '')
-          or (isset($matching_media[$part_id]) and $matching_media[$part_id] != '')) {
-          $scenario_no++;
-        }
-      }
-
-      $col1_no = ceil(count($matching_options) / 2);
-      $questiondata['extmatchsplit'] = $col1_no-1;
-      for ($i=0; $i<count($matching_options); $i++) {
-        $questiondata['extmatchoptions'][$i] = $matching_options[$i];
-      }
-      $questiondata['extmathmatching_options'] = count($matching_options);
-      for ($part_id=1; $part_id<=$scenario_no; $part_id++) {
-        if(isset($matching_answers[$part_id-1])) {
-          $answer_no = substr_count($matching_answers[$part_id-1],'$') + 1;
-          $marks += (substr_count($matching_answers[$part_id-1],'$') + 1) * $display_option['marks_correct'];
-        } else {
-          $answer_no = 0;
-        }
-        $questiondata['extmatchstem'][$part_id-1]['answer_no'] = $answer_no;
-        if (isset($matching_scenarios[$part_id]) and $matching_scenarios[$part_id] != '') {
-          $questiondata['extmatchstem'][$part_id-1]['scenario'] = $matching_scenarios[$part_id];
-        }
-        $questiondata['extmatchstem'][$part_id-1]['display'] = false;
-        if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') {
-          $questiondata['extmatchstem'][$part_id-1]['display'] = true;
-          //$questiondata['extmatchstem'][$part_id-1]['media'] = $this->set_media($matching_media[$part_id], $matching_media_width[$part_id], $matching_media_height[$part_id], '');
-        }
-        if(isset($matching_answers[$part_id-1])) {
-          $sub_answers = explode('$', $matching_answers[$part_id - 1]);
-        } else {
-          $sub_answers = array();
-        }
-        $list_size = 10;
-        if (count($matching_options) < 10) $list_size = count($matching_options);
-        if ($answer_no == 1) {
-          if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == 'u' and $screen_pre_submitted == 1) {
-            $questiondata['extmatchstem'][$part_id-1]['unanswered'] = true;
-            $this->set('unanswered', true);
-          } else {
-            $questiondata['extmatchstem'][$part_id-1]['unanswered'] = false;
-          }
-        } else {
-          $questiondata['extmatchstem'][$part_id-1]['listsize'] = $list_size;
-          $questiondata['extmatchstem'][$part_id-1]['sub_answers'] = count($sub_answers);
-          $questiondata['extmatchstem'][$part_id-1]['matching_options'] = count($matching_options);
-          if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == '' and $screen_pre_submitted == 1) {
-            $questiondata['extmatchstem'][$part_id-1]['unanswered'] = true;
-            $this->set('unanswered', true);
-          } else {
-            $questiondata['extmatchstem'][$part_id-1]['unanswered'] = false;
-          }
-        }
-
-        $multi_answers = array();
-        if (isset($matching_users_answers[$part_id - 1])) {
-          $multi_answers = explode('$', $matching_users_answers[$part_id - 1]);
-        }
-
-        $tmp_option_no = 0;
-        for ($option_no=0; $option_no<count($matching_options); $option_no++) {
-          $tmp_answer_match = false;
-          foreach ($multi_answers as $separate_tmp_answer) {
-            if ($separate_tmp_answer == ($question['option_order'][$tmp_option_no]+1)) {
-              $tmp_answer_match = true;
-            }
-          }
-          if ($tmp_answer_match == true) {
-            $questiondata['extmatchstem'][$part_id-1]['matching_option'][$option_no]['selected'] = true;
-          } else {
-            $questiondata['extmatchstem'][$part_id-1]['matching_option'][$option_no]['selected'] = false;
-          }
-          $questiondata['extmatchstem'][$part_id-1]['matching_option'][$option_no]['value'] = $question['option_order'][$option_no]+1;
-          $questiondata['extmatchstem'][$part_id-1]['matching_option'][$option_no]['option'] = chr($option_no+65) . '. ' . $matching_options[$option_no];
-          $tmp_option_no++;
-        }
-      }
-      if ($question['score_method'] == 'Mark per Question') {
-        $marks = $display_option['marks_correct'];
-      }
-    } elseif ($question['q_type'] == 'matrix') {
+    if ($question['q_type'] == 'matrix') {
       $questiondata['matrix'] = true;
       $part_id = 1;
       foreach ($matching_options as $single_option) {
@@ -1165,7 +1085,6 @@ abstract class questionrender {
       }
     }
 
-    $this->set('optionorder', implode(',', $question['option_order']));
     $used_questions[$q_id] = $q_id;
 
     // Plugin question use there own templating.
@@ -1185,7 +1104,7 @@ abstract class questionrender {
    * @param boolean $locked is media locked
    * @param string $part_id option part id
    */
-  private function set_media($filename, $width, $height, $border_color, $imageid=-1, $locked=false, $part_id=null) {
+  protected function set_media($filename, $width, $height, $border_color, $imageid=-1, $locked=false, $part_id=null) {
 
     $mediadirectory = rogo_directory::get_directory('media');
     $fn_parts = pathinfo($filename);
@@ -1230,9 +1149,9 @@ abstract class questionrender {
       $option = $this->get_opt($part_id);
       $option['optionmedia'] = array(
           'mediaid' => $imageid,
-          'mediafile', $filename,
-          'mediawidth', $width,
-          'mediaheight', $height,
+          'mediafile' => $filename,
+          'mediawidth'=> $width,
+          'mediaheight'=> $height,
           'mediaurl' => $url,
           'mediadelete' => $mediadelete,
           'mediaedit' => $mediaedit,

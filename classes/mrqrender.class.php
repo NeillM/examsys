@@ -112,7 +112,7 @@ class mrqrender extends questionrender {
    * @param integer $user_dismissid id of option user dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function set_option($part_id, $useranswerid, $user_dismissid, &$marks, $screen_pre_submitted) {
+  public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
     if (substr($useranswerid, $option['tmppartid']-1, 1) === 'y') {
       $option['selected'] = true;
@@ -132,8 +132,11 @@ class mrqrender extends questionrender {
     if ($option['omedia'] != '') {
       $option['displayoptionmedia'] = true;
     }
+    $marks = $this->get('marks');
     if ($this->get('scoremethod') === 'Mark per Option') {
-      if ($option['correct'] === 'y') $marks += $option['markscorrect'];  // Mark for correct options only
+      if ($option['correct'] === 'y') {
+        $marks += $option['markscorrect'];  // Mark for correct options only
+      }
     } elseif ($this->get('scoremethod') === 'Mark per Question') {
       if ($part_id == 1) {
         $marks += $option['markscorrect'];
@@ -141,6 +144,7 @@ class mrqrender extends questionrender {
     } else {
       $marks += $option['markscorrect'];  // Mark for each and every item
     }
+    $this->set('marks', $marks);
     if ($this->get('displaymethod') === 'other') {
       $pid = $this->get('partid') + 1;
       $this->set('partid', $part_id) ;
