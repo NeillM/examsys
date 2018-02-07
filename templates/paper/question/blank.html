@@ -1,6 +1,6 @@
 {% if data.displaymethod == 'textboxes' %}
 <p class="stem">
-{% for i,p in data.option %}
+{% for i,p in data.get('blankoptions') %}
     {% if p.itemtype == 'blurb' %}
     {{p.itemvalue|raw}}
     {% else %}
@@ -10,7 +10,7 @@
 </p>
 {% else %}
 <p>
-{% for i,p in data.option %}
+{% for i,p in data.get('blankoptions') %}
     {% if p.itemtype == 'blurb' %}
     {{p.itemvalue|raw}}
     {% else %}
