@@ -513,6 +513,7 @@ abstract class questionrender {
         if ($tmp_option['marks_incorrect'] < 0) $neg_marking = true;
       }
     }
+    $this->set('negativemarking', $neg_marking);
 
     // Process the order
     $question['option_order'] = array();
@@ -576,7 +577,7 @@ abstract class questionrender {
     $this->set('language', $language);
     $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
 
-    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'info', 'sct', 'rank', 'extmatch', 'matrix', 'area'))) {
+    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'info', 'sct', 'rank', 'extmatch', 'matrix', 'area', 'true_false'))) {
       $this->set_question_head();
     } else {
       if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
@@ -645,6 +646,7 @@ abstract class questionrender {
       case 'extmatch':
       case 'matrix':
       case 'area':
+      case 'true_false':
         $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
         break;
       case 'mrq':
@@ -708,48 +710,8 @@ abstract class questionrender {
         case 'matrix':
         case 'rank':
         case 'sct':
-          $this->set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
-          break;
         case 'true_false':
-          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and $screen_pre_submitted == 1) {
-            $this->set('unanswered', true);
-          } else {
-            $this->set('unanswered', false);
-          }
-
-          $questiondata['trueselected'] = false;
-          $questiondata['falseselected'] = false;
-          $questiondata['abstainselected'] = false;
-          if ($question['display_method'] == 'dropdown') {
-            $this->set('displaymethod', 'dropdown');
-            if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 't') {
-              $questiondata['trueselected'] = true;
-            }
-            if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'f') {
-              $questiondata['falseselected'] = true;
-            }
-          } else {
-            if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 't') {
-              $questiondata['trueselected'] = true;
-            }
-            if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'f') {
-              $questiondata['falseselected'] = false;
-            }
-
-            if ($question['display_method'] == 'horizontal') {
-              $this->set('displaymethod', 'horizontal');
-            } elseif ($question['display_method'] == 'vertical') {
-              $this->set('displaymethod', 'vertical');
-            }
-            $this->set('negativemarking', $neg_marking);
-            if ($neg_marking) {
-              if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'a') {
-                $questiondata['abstainselected'] = true;
-              }
-            }
-          }
-          $marks = $display_option['marks_correct'];
-
+          $this->set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
           break;
         case 'blank':
           $ans = '';
@@ -1004,6 +966,8 @@ abstract class questionrender {
       if ($question['score_method'] == 'Mark per Question') {
         $marks = $display_option['marks_correct'];
       }
+    } else {
+      $marks = $this->get('marks');
     }
     
 
