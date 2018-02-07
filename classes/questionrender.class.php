@@ -576,7 +576,7 @@ abstract class questionrender {
     $this->set('language', $language);
     $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
 
-    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'info', 'sct', 'rank', 'extmatch'))) {
+    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'info', 'sct', 'rank', 'extmatch', 'matrix'))) {
       $this->set_question_head();
     } else {
       if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
@@ -643,6 +643,7 @@ abstract class questionrender {
       case 'rank':
       case 'likert':
       case 'extmatch':
+      case 'matrix':
         $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
         break;
       case 'mrq':
@@ -655,19 +656,6 @@ abstract class questionrender {
           }
         }
         $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $mrq_correct);
-        break;
-      case 'matrix':
-        $matching_scenarios = explode('|', $question['scenario']);
-        $matching_media = explode('|', $question['q_media']);
-        $matching_media_width = explode('|', $question['q_media_width']);
-        $matching_media_height = explode('|', $question['q_media_height']);
-        $matching_options = array();
-        if (isset($user_answers[$current_screen][$q_id])) {
-          $matching_users_answers = explode('|', $user_answers[$current_screen][$q_id]);
-        } else {
-          $matching_users_answers = array();
-        }
-        $matching_answers = explode('|', $question['options'][0]['correct']);
         break;
       case 'sct':
         $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
@@ -1027,7 +1015,7 @@ abstract class questionrender {
 
     $this->set('optionorder', implode(',', $question['option_order']));
  
-    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'rank', 'extmatch'))) {
+    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'rank', 'extmatch',))) {
       $this->set_additional_option($part_id, $useranswerid, $user_dismissid);
     }
     if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'rank', 'extmatch'))) {
@@ -1037,35 +1025,8 @@ abstract class questionrender {
       }
     }
     if ($question['q_type'] == 'matrix') {
-      $questiondata['matrix'] = true;
       $part_id = 1;
-      foreach ($matching_options as $single_option) {
-        $questiondata['matrixoptions'][]['option'] = $single_option;
-      }
-      foreach ($matching_scenarios as $single_scenario) {
-        if (trim($single_scenario) != '') {
-          if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == '' and $screen_pre_submitted == 1) {
-            $questiondata['matrixscenarios'][$part_id-1]['unanswered'] = true;
-            $this->set('unanswered', true);
-          } else {
-            $questiondata['matrixoptions'][$part_id-1]['unanswered'] = false;
-          }
-          $questiondata['matrixscenarios'][$part_id-1]['id'] = chr(64 + $part_id);
-          $questiondata['matrixscenarios'][$part_id-1]['value'] = $single_scenario;
-          $answer_no = 1;
-          foreach ($matching_options as $single_option) {
-            $tmp_part_id = $question['option_order'][$answer_no-1] + 1;
-            $questiondata['matrixoptions'][$part_id-1]['tmp_part_id'] = $tmp_part_id;
-            if (isset($matching_users_answers[$part_id-1]) and $matching_users_answers[$part_id-1] == $tmp_part_id) {
-              $questiondata['matrixoptions'][$part_id-1]['selected'] = true;
-            } else {
-              $questiondata['matrixoptions'][$part_id-1]['selected'] = false;
-            }
-            $answer_no++;
-          }
-          $part_id++;
-        }
-      }
+      $this->set_additional_option($part_id, $useranswerid, $user_dismissid);
       if ($question['score_method'] == 'Mark per Question') {
         $marks = $display_option['marks_correct'];
       } else {

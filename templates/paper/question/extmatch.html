@@ -27,19 +27,19 @@
     {% if m.display %}
     <div>{% include 'paper/optmedia.html' with {'data': m.media} %}</div><br />
     {% endif %}
-    {% if m.answer_no == 1 %}
+    {% if m.answerno == 1 %}
     <select {% if m.unanswered %} class="unans" {% endif %} name="q{{data.get('questionno')}}_{{loop.index}}" size="1">
         <option value="u"></option>
     {% else %}
     <br />
     <div class="option">
-        <select {% if m.unanswered %} class="unans" {% endif %} onchange="multimatchingCheck('q{{data.get('questionno')}}_{{loop.index}}',"{{m.matching_options}}","{{m.sub_answers}}");" name="q{{data.get('questionno')}}_{{loop.index}}"[]" id="q{{data.get('questionno')}}_{{loop.index}}" multiple="multiple" size="{{m.list_size}}">
+        <select {% if m.unanswered %} class="unans" {% endif %} onchange="multimatchingCheck('q{{data.get('questionno')}}_{{loop.index}}','{{m.matchingoptions}}','{{m.subanswers}}');" name="q{{data.get('questionno')}}_{{loop.index}}[]" id="q{{data.get('questionno')}}_{{loop.index}}" multiple="multiple" size="{{m.listsize}}">
     {% endif %}
-    {% for o in m.matching_option %}
+    {% for o in m.matchingoption %}
             <option value="{{o.value}}" {% if o.selected %} selected {% endif %}>{{o.option}}</option>
     {% endfor %}
         </select>
-    {% if m.answer_no > 1 %}
+    {% if m.answerno > 1 %}
         <div class="mk">{{lang.holddownctrlkey}}</div>
     {% endif %}
     </div>

@@ -16,7 +16,7 @@
 
 /**
  *
- * Class for MRQ rendering
+ * Class for extact match rendering
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
@@ -156,7 +156,7 @@ class extmatchrender extends questionrender {
     $matching_scenarios = $this->get('scenarios');
     $matching_options = $this->get('matchoptions');
     $matching_users_answers = $this->get('usersanswers');
-    $option_order = $this->get('optionorder');
+    $option_order = explode(',', $this->get('optionorder'));
     if ($matching_media[0] != '') {
       $this->set('extmatchdisplaymedia', true);
       $this->set_media($matching_media[0], $matching_media_width[0], $matching_media_height[0], '');
@@ -184,7 +184,7 @@ class extmatchrender extends questionrender {
       } else {
         $answer_no = 0;
       }
-      $matchstem[$id-1]['answer_no'] = $answer_no;
+      $matchstem[$id-1]['answerno'] = $answer_no;
       if (isset($matching_scenarios[$id]) and $matching_scenarios[$id] != '') {
         $matchstem[$id-1]['scenario'] = $matching_scenarios[$id];
       }
@@ -213,8 +213,8 @@ class extmatchrender extends questionrender {
         }
       } else {
         $matchstem[$id-1]['listsize'] = $list_size;
-        $matchstem[$id-1]['sub_answers'] = count($sub_answers);
-        $matchstem[$id-1]['matching_options'] = count($matching_options);
+        $matchstem[$id-1]['subanswers'] = count($sub_answers);
+        $matchstem[$id-1]['matchingoptions'] = count($matching_options);
         if (isset($matching_users_answers[$id - 1]) and $matching_users_answers[$id - 1] == '' and $screen_pre_submitted == 1) {
           $matchstem[$id-1]['unanswered'] = true;
           $this->set('unanswered', true);
@@ -237,12 +237,12 @@ class extmatchrender extends questionrender {
           }
         }
         if ($tmp_answer_match == true) {
-          $matchstem[$id-1]['matching_option'][$option_no]['selected'] = true;
+          $matchstem[$id-1]['matchingoption'][$option_no]['selected'] = true;
         } else {
-          $matchstem[$id-1]['matching_option'][$option_no]['selected'] = false;
+          $matchstem[$id-1]['matchingoption'][$option_no]['selected'] = false;
         }
-        $matchstem[$id-1]['matching_option'][$option_no]['value'] = $option_order[$option_no]+1;
-        $matchstem[$id-1]['matching_option'][$option_no]['option'] = chr($option_no+65) . '. ' . $matching_options[$option_no];
+        $matchstem[$id-1]['matchingoption'][$option_no]['value'] = $option_order[$option_no]+1;
+        $matchstem[$id-1]['matchingoption'][$option_no]['option'] = chr($option_no+65) . '. ' . $matching_options[$option_no];
         $tmp_option_no++;
       }
     }

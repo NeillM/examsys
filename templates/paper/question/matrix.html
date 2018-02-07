@@ -1,18 +1,18 @@
 <table cellpadding="2" cellspacing="0" border="1" class="matrix">
     <tr>
         <td colspan="2">&nbsp;</td>
-{% for m in data.matrixoptions %}
+{% for m in data.get('matchoptions') %}
         <td>{{m.option}}</td>
 {% endfor %}
     </tr>
-{% for s in data.matrixscenarios %}
+{% for i,s in data.get('matchscenarios') %}
     <tr {% if s.unanswered %} class="unans" {% endif %}>
-        <td align="right">{{s.id}}</td>
+        <td align="right">{{s.id}}.</td>
         <td>{{s.value}}</td>
-    {% for m in data.matrixoptions %}
+    {% for m in data.get('matchoptions') %}
         <td>
             <div align="center">
-                <input type="radio" name="q{{data.get('questionno')}}_{{loop.index}}" value="{{m.tmppartid}}" {% if m.selected %} checked="checked" {% endif %}/>
+                <input type="radio" name="q{{data.get('questionno')}}_{{i+1}}" value="{{m.value}}" {% if m.selected %} checked="checked" {% endif %}/>
             </div>
         </td>
     {% endfor %}
