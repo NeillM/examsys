@@ -576,7 +576,7 @@ abstract class questionrender {
     $this->set('language', $language);
     $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
 
-    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'info', 'sct', 'rank', 'extmatch', 'matrix'))) {
+    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'info', 'sct', 'rank', 'extmatch', 'matrix', 'area'))) {
       $this->set_question_head();
     } else {
       if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
@@ -644,6 +644,7 @@ abstract class questionrender {
       case 'likert':
       case 'extmatch':
       case 'matrix':
+      case 'area':
         $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
         break;
       case 'mrq':
@@ -683,34 +684,6 @@ abstract class questionrender {
 
       switch ($question['q_type']) {
         case 'area':
-          $default_ans  = '100,0,0,0,0,0';
-
-          if (isset($user_answers[$current_screen][$q_id])) {
-            $tmp_user_answer = $user_answers[$current_screen][$q_id];
-          } else {
-            $tmp_user_answer = $default_ans;
-          }
-
-          $answer_parts = explode(';', $tmp_user_answer);
-          if (isset($answer_parts[1])) {
-            $tmp_user_answer = substr($answer_parts[1], 0, -2);
-            $full_user_ans = $user_answers[$current_screen][$q_id];
-          } else {
-            $tmp_user_answer = '';
-            $full_user_ans = $default_ans;
-          }
-
-          if (isset($user_answers[$current_screen][$q_id]) and $tmp_user_answer == $default_ans and  $screen_pre_submitted == 1) {
-            $this->set('unanswered', true);
-          }
-
-          $questiondata['mediawidth'] += 2;
-          $questiondata['mediaheight'] += 27;
-          $questiondata['areadisplay'] = $display_option['correct'];
-          $questiondata['areauseranswer'] = $tmp_user_answer;
-          $questiondata['areafulluseranswer'] = $full_user_ans;
-          $marks += $display_option['marks_correct'];
-          break;
         case 'dichotomous':
           $this->set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
           break;
@@ -1014,16 +987,7 @@ abstract class questionrender {
     }                    // End foreach loop
 
     $this->set('optionorder', implode(',', $question['option_order']));
- 
-    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'rank', 'extmatch',))) {
-      $this->set_additional_option($part_id, $useranswerid, $user_dismissid);
-    }
-    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'rank', 'extmatch'))) {
-      $marks = $this->get('marks');
-      if ($question['score_method'] == 'Mark per Question') {
-        $marks = $display_option['marks_correct'];
-      }
-    }
+
     if ($question['q_type'] == 'matrix') {
       $part_id = 1;
       $this->set_additional_option($part_id, $useranswerid, $user_dismissid);
@@ -1032,7 +996,16 @@ abstract class questionrender {
       } else {
         $marks = $part_id - 1;
       }
+    } else {
+      $this->set_additional_option($part_id, $useranswerid, $user_dismissid);
     }
+    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'rank', 'extmatch'))) {
+      $marks = $this->get('marks');
+      if ($question['score_method'] == 'Mark per Question') {
+        $marks = $display_option['marks_correct'];
+      }
+    }
+    
 
     // Display possible marks for question (if not Survey)
     $this->set('finalmarks', $marks);

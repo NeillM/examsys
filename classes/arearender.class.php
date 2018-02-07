@@ -1,0 +1,129 @@
+<?php
+// This file is part of Rogō
+//
+// Rogō is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogō is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ *
+ * Class for area rendering
+ *
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @version 1.0
+ * @copyright Copyright (c) 2018 The University of Nottingham
+ */
+
+class arearender extends questionrender {
+
+  /**
+   * Area user response
+   * @var string
+   */
+  protected $areauseranswer;
+
+  /**
+   * Area full user response
+   * @var string
+   */
+  protected $areafulluseranswer;
+
+  /**
+   * Area display value
+   * @var string
+   */
+  protected $areadisplay;
+
+  /**
+   * Constructor
+   */
+  function __construct() {
+    parent::__construct();
+    $this->set('questiontype', 'area');
+  }
+
+  /**
+   * Disable/Enable display of question header sections for template rendering
+   */
+  public function set_question_head() {
+    $this->set('displaydefault', true);
+    if ($this->get('notes') != '') {
+      $this->set('displaynotes', true);
+    }
+    if ($this->get('scenario') != '') {
+      $this->set('displayscenario', true);
+    }
+    $this->set('displayleadin', true);
+  }
+
+  /**
+   * Question level settings for template rendering
+   * @param boolean $screen_pre_submitted has the user submitted and answer previously
+   * @param mixed $useranswerid id or name of user answer
+   * @param integer $user_dismissid id of option user dismissed
+   */
+  public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
+    // Noting to do.
+  }
+
+  /**
+   * Option level settings for template rendering
+   * @param integer $part_id part loop id
+   * @param integer $useranswerid id of option user selected
+   * @param integer $user_dismissid id of option user dismissed
+   * @param boolean $screen_pre_submitted has the user submitted and answer previously
+   */
+  public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
+    $option = $this->get_opt($part_id);
+    $default_ans  = '100,0,0,0,0,0';
+    if (!is_null($useranswerid)) {
+      $tmp_user_answer = $useranswerid;
+    } else {
+      $tmp_user_answer = $default_ans;
+    }
+
+    $answer_parts = explode(';', $tmp_user_answer);
+    if (isset($answer_parts[1])) {
+      $tmp_user_answer = substr($answer_parts[1], 0, -2);
+      $full_user_ans = $useranswerid;
+    } else {
+      $tmp_user_answer = '';
+      $full_user_ans = $default_ans;
+    }
+
+    if ($tmp_user_answer == $default_ans and $screen_pre_submitted == 1) {
+      $this->set('unanswered', true);
+    }
+
+    $qmediawidth = $this->get('mediawidth') + 2;
+    $this->set('mediawidth', $qmediawidth);
+    $qmediaheight = $this->get('mediaheight') + 27;
+    $this->set('mediaheight', $qmediaheight);
+    $this->set('areadisplay', $option['correct']);
+    $this->set('areauseranswer',  $tmp_user_answer);
+    $this->set('areafulluseranswer', $full_user_ans);
+    $this->set_opt($part_id, $option);
+    $marks = $this->get('marks');
+    $marks += $option['markscorrect'];
+    $this->set('marks', $marks);
+  }
+
+  /**
+   * Additional option level settings for template rendering
+   * @param integer $part_id part loop id
+   * @param integer $useranswerid id of option user selected
+   * @param integer $user_dismissid id of option user dismissed
+   */
+  public function set_additional_option($part_id, $useranswerid, $user_dismissid) {
+    // Nothing to do.
+  }
+}
