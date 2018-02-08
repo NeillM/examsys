@@ -7,13 +7,13 @@
     'flash{{data.get('questionno')}}',
     '{{data.get('language')}}',
     '{{data.get('mediafile')}}',
-    '{{data.tmpcorrect}}', 
-    '{{data.useranswer}}',
-    '{{data.markscorrect}}~{{data.marks_incorrect}}~{{data.get('scoremethod')}}',
+    '{{data.get('tmpcorrect')}}', 
+    '{{data.get('useranswer')}}',
+    '{{data.get('markscorrect')}}~{{data.get('marksincorrect')}}~{{data.get('scoremethod')}}',
     '#FFC0C0',
     'labelling',
     'answer');
     </script>
     <!-- ==================================================== -->
 </div>
-<input type="hidden" name="q{{data.get('questionno')}}" id="q{{data.get('questionno')}}" {% if data.get('unanswered') %} value="0{{data.marks}}" {% else %} value="{{data.useranswer}}" {% endif %}/>
+<input type="hidden" name="q{{data.get('questionno')}}" id="q{{data.get('questionno')}}" {% if data.get('unanswered') %} value="0{{data.marks}}" {% else %} value="{{data.get('useranswer')}}" {% endif %}/>

@@ -527,7 +527,7 @@ abstract class questionrender {
     $this->set('settings', $question['settings']);
     $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
 
-    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'info', 'sct', 'rank', 'extmatch', 'matrix', 'area', 'true_false', 'blank', 'hotspot'))) {
+    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'info', 'sct', 'rank', 'extmatch', 'matrix', 'area', 'true_false', 'blank', 'hotspot', 'labelling'))) {
       $this->set_question_head();
     } else {
       if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
@@ -640,66 +640,6 @@ abstract class questionrender {
 
           $marks += $question['object']->calculate_question_mark();
 
-          break;
-        case 'labelling':
-          $tmp_labels = 0;
-          $max_col1 = 0;
-          $max_col2 = 0;
-          $tmp_first_split = explode(';', $question['options'][0]['correct']);
-          $tmp_second_split = explode('|', $tmp_first_split[11]);
-          $label_width = $tmp_first_split[5];
-          $label_height = $tmp_first_split[6];
-          $hyphen = false;
-          foreach ($tmp_second_split as $ind_label) {
-            $label_parts = explode('$', $ind_label);
-            if (isset($label_parts[4]) and trim($label_parts[4]) != '') {
-              if (mb_strstr($label_parts[4], '-') !== false) $hyphen = true;
-              $tmp_labels++;
-              if ($label_parts[2] > 219) $marks += $display_option['marks_correct'];
-              if ($label_parts[0] < 10) {
-                $max_col1 = $label_parts[0];
-              } else {
-                $max_col2 = $label_parts[0];
-              }
-            }
-          }
-          $max_col2-=10;
-          $max_label = max($max_col1, $max_col2);
-
-          if ($question['score_method'] == 'Mark per Question') {
-            $marks = $display_option['marks_correct'];
-          }
-          if (($label_width < 80 and $hyphen) or ($label_width < 104 and !$hyphen)) {    // Two columns
-            $computed_height = round(($label_height + 6) * ceil($tmp_labels / 2)) + 10;
-            $tmp_height = max($question['q_media_height'], $computed_height);
-          } else {                    // Single column
-            $computed_height = round(($label_height + 6) * $tmp_labels) + 10;
-            $tmp_height = max($question['q_media_height'], $computed_height);
-          }
-
-          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '0$' . $marks . ';' and  $screen_pre_submitted == 1) {
-            $this->set('unanswered', true);
-          }
-          $tmp_correct = trim($question['options'][0]['correct']);
-          $tmp_correct = str_replace("'", "&#039;", $tmp_correct);
-
-          $questiondata['mediawidth'] += 220;
-          $questiondata['mediaheight'] = $tmp_height;
-          $questiondata['tmpcorrect'] = $tmp_correct;
-          $questiondata['marks'] = $marks;
-
-          if (isset($user_answers[$current_screen][$q_id])) {
-            $questiondata['useranswer'] = trim($user_answers[$current_screen][$q_id]);
-            $questiondata['markscorrect'] = $display_option['marks_correct'];
-            $questiondata['marks_incorrect'] = $display_option['marks_incorrect'];
-            $questiondata['score_method'] = $question['score_method'];
-          }
-
-          if (!isset($user_answers[$current_screen][$q_id]) or $user_answers[$current_screen][$q_id] == '') {
-            $this->set('unanswered', true);
-          } else {
-            $this->set('unanswered', false);
-          }
           break;
         case 'flash':
           // Question type is deprecated. Rogo only supports pre-existing flash questions.
