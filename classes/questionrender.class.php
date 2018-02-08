@@ -527,7 +527,7 @@ abstract class questionrender {
     $this->set('settings', $question['settings']);
     $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
 
-    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'info', 'sct', 'rank', 'extmatch', 'matrix', 'area', 'true_false', 'blank'))) {
+    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'info', 'sct', 'rank', 'extmatch', 'matrix', 'area', 'true_false', 'blank', 'hotspot'))) {
       $this->set_question_head();
     } else {
       if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
@@ -640,38 +640,6 @@ abstract class questionrender {
 
           $marks += $question['object']->calculate_question_mark();
 
-          break;
-        case 'hotspot':
-          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and  $screen_pre_submitted == 1) {
-            $this->set('unanswered', true);
-          }
-          $hotspot_no = substr_count($question['options'][0]['correct'],'|') + 1;
-          $tmp_height = $question['q_media_height'] + 30;
-          if ($tmp_height < (($hotspot_no * 36) + 25)) $tmp_height = (($hotspot_no * 36) + 25);
-
-          $tmp_correct = str_replace("'", "\'", trim($question['options'][0]['correct']));
-          $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
-          $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
-
-          $questiondata['tmpcorrect'] = $tmp_correct;
-          $questiondata['mediawidth'] += 300;
-          $questiondata['mediaheight'] = $tmp_height-29;
-
-          if (isset($user_answers[$current_screen][$q_id])) {
-            $questiondata['useranswer'] = trim($user_answers[$current_screen][$q_id]);
-            $questiondata['screensubmitted'] = $screen_pre_submitted;
-          }
-
-          if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] != '') {
-            $this->set('unanswered', false);
-          } else {
-            $this->set('unanswered', true);
-          }
-          if ($question['score_method'] == 'Mark per Question') {
-            $marks = $display_option['marks_correct'];
-          } else {
-            $marks = (substr_count($question['options'][0]['correct'],'|') + 1) * $display_option['marks_correct'];
-          }
           break;
         case 'labelling':
           $tmp_labels = 0;

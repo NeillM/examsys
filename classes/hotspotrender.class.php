@@ -1,0 +1,132 @@
+<?php
+// This file is part of Rogō
+//
+// Rogō is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogō is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ *
+ * Class for hotspot rendering
+ *
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @version 1.0
+ * @copyright Copyright (c) 2018 The University of Nottingham
+ */
+
+class hotspotrender extends questionrender {
+
+  /**
+   * User answers
+   * @var string
+   */
+  protected $useranswer;
+
+  /**
+   * Screen submitted state
+   * @var boolean
+   */
+  protected $screensubmitted;
+
+  /**
+   * Temp correct answer
+   * @var string
+   */
+  protected $tmpcorrect;
+
+  /**
+   * Constructor
+   */
+  function __construct() {
+    parent::__construct();
+    $this->set('questiontype', 'hotspot');
+    $this->set('screensubmitted', false);
+    $this->set('useranswer', '');
+  }
+
+  /**
+   * Disable/Enable display of question header sections for template rendering
+   */
+  public function set_question_head() {
+    $this->set('displaydefault', true);
+    if ($this->get('notes') != '') {
+      $this->set('displaynotes', true);
+    }
+    if ($this->get('scenario') != '') {
+      $this->set('displayscenario', true);
+    }
+  }
+
+  /**
+   * Question level settings for template rendering
+   * @param boolean $screen_pre_submitted has the user submitted and answer previously
+   * @param mixed $useranswerid id or name of user answer
+   * @param integer $user_dismissid id of option user dismissed
+   */
+  public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
+    // Noting to do.
+  }
+
+  /**
+   * Option level settings for template rendering
+   * @param integer $part_id part loop id
+   * @param integer $useranswerid id of option user selected
+   * @param integer $user_dismissid id of option user dismissed
+   * @param boolean $screen_pre_submitted has the user submitted and answer previously
+   */
+  public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
+    $option = $this->get_opt($part_id);
+    if ($useranswerid == 'u' and  $screen_pre_submitted == 1) {
+      $this->set('unanswered', true);
+    }
+    $hotspot_no = substr_count($option['correct'],'|') + 1;
+    $tmp_height = $this->get('mediaheight') + 30;
+    if ($tmp_height < (($hotspot_no * 36) + 25)) {
+      $tmp_height = (($hotspot_no * 36) + 25);
+    }
+    $tmp_correct = str_replace("'", "\'", trim($option['correct']));
+    $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
+    $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
+
+    $this->set('tmpcorrect', $tmp_correct);
+    $qmediawidth = $this->get('mediawidth') + 300;
+    $this->set('mediawidth', $qmediawidth);
+    $this->set('mediaheight', $tmp_height - 29);
+
+    if (!is_null($useranswerid)) {
+      $this->set('useranswer', trim($useranswerid));
+      $this->set('screensubmitted', $screen_pre_submitted);
+    }
+    if ($useranswerid != '') {
+      $this->set('unanswered', false);
+    } else {
+      $this->set('unanswered', true);
+    }
+    $marks = $this->get('marks');
+    if ($this->get('scoremethod') == 'Mark per Question') {
+      $marks = $option['markscorrect'];
+    } else {
+      $marks = (substr_count($option['correct'],'|') + 1) * $option['markscorrect'];
+    }
+    $this->set('marks', $marks);
+  }
+
+  /**
+   * Additional option level settings for template rendering
+   * @param integer $part_id part loop id
+   * @param integer $useranswerid id of option user selected
+   * @param integer $user_dismissid id of option user dismissed
+   */
+  public function set_additional_option($part_id, $useranswerid, $user_dismissid) {
+    // Nothing to do.
+  }
+}
