@@ -16,38 +16,31 @@
 
 /**
  *
- * Class for dichotomous rendering
- *
+ * Class for enhancedcalc rendering
+ * 
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
 
-class dichotomousrender extends questionrender {
+class enhancedcalcrender extends questionrender {
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->set('questiontype', 'dichotomous');
+    $this->set('questiontype', 'enhancedcalc');
   }
 
   /**
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
-    if ($this->get('scenario') != '') {
-      $this->set('displayscenario', true);
-    }
-    if ($this->get('qmedia') != '') {
-      $this->set('displaymedia', true);
-    }
     $this->set('displaydefault', true);
-    if ($this->get('notes') != ''){
+    if ($this->get('notes') != '') {
       $this->set('displaynotes', true);
     }
-    $this->set('displayleadin', true);
   }
 
   /**
@@ -57,7 +50,14 @@ class dichotomousrender extends questionrender {
    * @param integer $user_dismissid id of option user dismissed
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
-    // Nothing to do.
+    $question = $this->get('question');
+    if (!is_null($useranswerid)) {
+      $d = array();
+      $d['useranswer'] = $useranswerid;
+      $question['object']->load($d);
+    }
+    $useranswers = $this->get('useranswers');
+    $question['object']->load_all_user_answers($useranswers);
   }
 
   /**
@@ -68,25 +68,18 @@ class dichotomousrender extends questionrender {
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
-    $option = $this->get_opt($part_id);
-    $option['useranswer'] = substr($useranswerid, $option['tmppartid']-1, 1);
-    if ($option['useranswer'] == 'u' and $screen_pre_submitted == 1) {
-      $this->set('unanswered', true);
-      $option['unanswered'] = true;
-    }
-    $option['displayoptionmedia'] = false;
-    if ($option['omedia'] != '') {
-      $option['displayoptionmedia'] = true;
-    }
-    $option['abstain'] = false;
-    if ($this->get('displaymethod') === 'TF_NegativeAbstain' or $this->get('displaymethod') === 'YN_NegativeAbstain') {
-        $option['abstain'] = true;
-    }
     $marks = $this->get('marks');
-    $marks += $option['markscorrect'];
+    $question = $this->get('question');
+    // no options for enhanced calc now stored in settings
+    $extra = array(
+      'num_on_screen' => $this->get('questionno'),
+      'current_question' => $question,
+    );
+    $question['object']->render_paper($extra);
+    $useranswers = $this->get('useranswers');
+    $question['object']->load_all_user_answers($useranswers);
+    $marks += $question['object']->calculate_question_mark();
     $this->set('marks', $marks);
-    $this->set_opt($part_id, $option);
-    
   }
 
   /**
@@ -96,9 +89,6 @@ class dichotomousrender extends questionrender {
    * @param integer $user_dismissid id of option user dismissed
    */
   public function set_additional_option($part_id, $useranswerid, $user_dismissid) {
-    $option = $this->get_opt($part_id);
-    if ($option['marksincorrect'] < 0) {
-      $this->set('negativemarking', true);
-    }
+    // Nothing to do.
   }
 }

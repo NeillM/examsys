@@ -314,6 +314,24 @@ abstract class questionrender {
   private $optionorder;
 
   /**
+   * Question object name
+   * @var string 
+   */
+  private $object;
+
+  /**
+   * The current question
+   * @var array 
+   */
+  private $question;
+
+  /**
+   * User answers
+   * @var array 
+   */
+  private $useranswers;
+
+  /**
    * Called when the object is unserialised.
    */
   public function __wakeup() {
@@ -525,16 +543,15 @@ abstract class questionrender {
     $this->set('leadin', $question['leadin']);
     $this->set('language', $language);
     $this->set('settings', $question['settings']);
+    if (isset($question['object'])) {
+      $this->set('object', $question['object']);
+    }
+    $this->set('question', $question);
+    $this->set('useranswers', $user_answers);
     $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
 
-    if ($question['q_type'] === 'enhancedcalc') {
-      $this->set('displaydefault', true);
-      if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '')) {
-        $this->set('displaynotes', true);
-      }
-    } else {
-      $this->set_question_head();
-    }
+    // Set question header.
+    $this->set_question_head();
 
     $part_id = 0;
     $marks = 0;
@@ -560,14 +577,6 @@ abstract class questionrender {
     $this->set('displaymethod', $question['display_method']);
     $this->set('scoremethod', $question['score_method']);
     switch ($question['q_type']) {
-      case 'enhancedcalc':
-        if (isset($user_answers[$current_screen][$q_id])) {
-          $d = array();
-          $d['useranswer'] = $user_answers[$current_screen][$q_id];
-          $question['object']->load($d);
-        }
-        $question['object']->load_all_user_answers($user_answers);
-        break;
       case 'mrq':
         $mrq_correct = 0;
         if ($question['score_method'] == 'Mark per Question') {
@@ -606,26 +615,9 @@ abstract class questionrender {
       ));
       $this->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '', -1, false, $part_id);
 
-      switch ($question['q_type']) {
-        case 'enhancedcalc':
-          // no options for enhanced calc now stored in settings
-
-          $extra = array(
-            'num_on_screen' => $this->get('questionno'),
-            'current_question' => $question,
-          );
-
-          $question['object']->render_paper($extra);
-          $question['object']->load_all_user_answers($user_answers);
-
-          $marks += $question['object']->calculate_question_mark();
-
-          break;
-        default:
-          $this->set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
-          break;
-      }                  // End switch
-    }                    // End foreach loop
+      // Set question options.
+      $this->set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
+    }
 
     $this->set('optionorder', implode(',', $question['option_order']));
 
