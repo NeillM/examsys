@@ -35,7 +35,7 @@ abstract class questionrender {
    * Config object
    * @var object
    */
-  private $config;
+  protected $config;
 
   /**
    * Question answered state
@@ -49,6 +49,12 @@ abstract class questionrender {
    */
   private $labelcolour;
 
+  /**
+   * Question settings
+   * @var json
+   */
+  private $settings;
+  
   /**
    * Calculator state of question
    * @var boolean
@@ -308,71 +314,6 @@ abstract class questionrender {
   private $optionorder;
 
   /**
-   * Default unanswered state
-   */
-  const default_unanswered = true;
-
-  /**
-   * Default label colour
-   */
-  const default_labelcolour = '#C00000';
-
-  /**
-   * Default calculator state
-   */
-  const default_displaycalc = true;
-
-  /**
-   * Default prologue state
-   */
-  const default_displayprologue = false;
-
-  /**
-   * Default theme state
-   */
-  const default_displaytheme = false;
-
-  /**
-   * Default media state
-   */
-  const default_displaymedia = false;
-
-  /**
-   * Default media state
-   */
-  const default_displayscenario = false;
-
-  /**
-   * Default notes state
-   */
-  const default_displaynotes = false;
-
-  /**
-   * Default leadin state
-   */
-  const default_displayleadin = false;
-
-  /**
-   * Default display default question header state
-   */
-  const default_displaydefault = false;
-
-  /**
-   * Default negative marking state
-   */
-  const defatul_negativemarking = false;
-
-  /**
-   * Default question display method
-   */
-  const default_displaymethod = '';
-
-  /**
-   * Default option media display state
-   */
-  const default_displayoptionmedia = false;
-
-  /**
    * Called when the object is unserialised.
    */
   public function __wakeup() {
@@ -388,6 +329,19 @@ abstract class questionrender {
   function __construct() {
     $this->config = Config::get_instance();
     $this->db = $this->config->db;
+    $this->set('unanswered', true);
+    $this->set('labelcolour', '#C00000');
+    $this->set('displaycalc', true);
+    $this->set('displayprologue', false);
+    $this->set('displaytheme', false);
+    $this->set('displaymedia', false);
+    $this->set('displayscenario', false);
+    $this->set('displaynotes', false);
+    $this->set('displayleadin', false);
+    $this->set('displaydefault', false);
+    $this->set('negativemarking', false);
+    $this->set('displaymethod', '');
+    $this->set('displayoptionmedia', false);
   }
 
   /**
@@ -435,12 +389,8 @@ abstract class questionrender {
    * @return mixed
    */
   public function get($attribute) {
-    if (empty($attribute)) {
-      if (empty(constant('default_' . $attribute))) {
-        return null;
-      } else {
-        return constant('default_' . $attribute);
-      }
+    if (!isset($attribute)) {
+      return null;
     } else {
       return $this->$attribute;
     }
@@ -558,7 +508,6 @@ abstract class questionrender {
     }
 
     $question_no++;
-    $textboxes_seen = array();
 
     if ($question['theme'] != '') {
       $this->set('theme', $question['theme']);
@@ -575,6 +524,7 @@ abstract class questionrender {
     $this->set('qmediaheight', $question['q_media_height']);
     $this->set('leadin', $question['leadin']);
     $this->set('language', $language);
+    $this->set('settings', $question['settings']);
     $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
 
     if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'info', 'sct', 'rank', 'extmatch', 'matrix', 'area', 'true_false', 'blank'))) {
@@ -638,17 +588,6 @@ abstract class questionrender {
         }
         $question['object']->load_all_user_answers($user_answers);
         break;
-      case 'info':
-      case 'dichotomous':
-      case 'mcq':
-      case 'rank':
-      case 'likert':
-      case 'extmatch':
-      case 'matrix':
-      case 'area':
-      case 'true_false':
-        $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
-        break;
       case 'mrq':
         $mrq_correct = 0;
         if ($question['score_method'] == 'Mark per Question') {
@@ -663,6 +602,9 @@ abstract class questionrender {
       case 'sct':
         $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
         $marks = 1;
+        break;
+      default:
+        $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
         break;
     }
 
@@ -685,10 +627,6 @@ abstract class questionrender {
       $this->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '', -1, false, $part_id);
 
       switch ($question['q_type']) {
-        case 'area':
-        case 'dichotomous':
-          $this->set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
-          break;
         case 'enhancedcalc':
           // no options for enhanced calc now stored in settings
 
@@ -702,61 +640,6 @@ abstract class questionrender {
 
           $marks += $question['object']->calculate_question_mark();
 
-          break;
-        case 'likert':
-        case 'mcq':
-        case 'mrq':
-        case 'extmatch':
-        case 'matrix':
-        case 'rank':
-        case 'sct':
-        case 'true_false':
-        case 'blank':
-          $this->set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
-          break;
-        case 'textbox':
-          if (!in_array($this->get('questionno'), $textboxes_seen)) {
-            $textboxes_seen[] = $this->get('questionno');
-            $settings = json_decode($question['settings'], true);
-            $questiondata['editorcolumns'] = $settings['columns'];
-            $questiondata['editorrows'] = $settings['rows'];
-            if (!isset($settings['editor']) or $settings['editor'] == 'plain' or $settings['editor'] == 'mathjax') {
-              $questiondata['editor'] = 'plain';
-              if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
-                $questiondata['useranswer'] = $user_answers[$current_screen][$q_id];
-                $this->set('unanswered', true);
-              } else {
-                $ans = '';
-                if (isset($user_answers[$current_screen][$q_id])) {
-                  $ans = $user_answers[$current_screen][$q_id];
-                }
-                $questiondata['useranswer'] = $ans;
-                if ($settings['editor'] == 'mathjax') {
-                  $questiondata['editormathjax'] = true;
-                  $questiondata['id'] = 'q' . $this->get('questionno');
-                }
-              }
-            } else {
-              include_once('wysiwyg_editor.inc');
-              $ans = '';
-              if (isset($user_answers[$current_screen][$q_id])) {
-                $ans = $user_answers[$current_screen][$q_id];
-              }
-
-              $textbox_width  = ( 40 + ( $settings['columns'] * 8 ) );
-              $textbox_height = ( $settings['rows'] * 28 );
-
-              $background_colour = '';
-
-              if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
-                $background_colour = 'background-color:red;';
-              }
-              ?>
-              <textarea class="mceEditor" id="q<?php echo $this->get('questionno') ?>" name="q<?php echo $this->get('questionno') ?>" style="<?php echo $background_colour; ?>width:<?php echo $textbox_width ?>px; height:<?php echo $textbox_height ?>px"><?php echo $ans ?></textarea><?php echo "\n"; ?>
-              <?php
-            }
-            $marks += $display_option['marks_correct'];
-          }
           break;
         case 'hotspot':
           if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and  $screen_pre_submitted == 1) {
@@ -857,6 +740,9 @@ abstract class questionrender {
           }
         $marks += $display_option['marks_correct'];
         break;
+        default:
+          $this->set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
+          break;
       }                  // End switch
     }                    // End foreach loop
 

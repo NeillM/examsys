@@ -86,16 +86,12 @@ class extmatchrender extends questionrender {
   protected $matchstem;
 
   /**
-   * Default extmatch media state
-   */
-  const default_extmatchdisplaymedia = false;
-
-  /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
     $this->set('questiontype', 'extmatch');
+    $this->set('extmatchdisplaymedia', false);
   }
 
   /**

@@ -44,21 +44,13 @@ class mcqrender extends questionrender {
   protected $dismiss;
 
   /**
-   * Default other selected state
-   */
-  const default_otherselected = false;
-
-  /**
-   * Default abstain selected state
-   */
-  const default_abstainselected = false;
-
-  /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
     $this->set('questiontype', 'mcq');
+    $this->set('otherselected', false);
+    $this->set('abstainselected', false);
   }
 
   /**

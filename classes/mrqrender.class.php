@@ -50,21 +50,13 @@ class mrqrender extends questionrender {
   protected $allowedresponses;
 
   /**
-   * Default other selected state
-   */
-  const default_otherselected = false;
-
-  /**
-   * Default abstain selected state
-   */
-  const default_abstainselected = false;
-
-  /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
     $this->set('questiontype', 'mrq');
+    $this->set('otherselected', false);
+    $this->set('abstainselected', false);
   }
 
   /**

@@ -68,16 +68,12 @@ class likertrender extends questionrender {
   protected $na;
 
   /**
-   * Default na state
-   */
-  const default_displayna = false;
-
-  /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
     $this->set('questiontype', 'likert');
+    $this->set('displayna', false);
   }
 
   /**

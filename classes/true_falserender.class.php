@@ -44,26 +44,14 @@ class true_falserender extends questionrender {
   protected $abstainselected;
 
   /**
-   * Default abstain selected state
-   */
-  const default_abstainselected = false;
-
-  /**
-   * Default abstain selected state
-   */
-  const default_falseselected = false;
-
-  /**
-   * Default abstain selected state
-   */
-  const default_trueselected = false;
-
-  /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
     $this->set('questiontype', 'true_false');
+    $this->set('abstainselected', false);
+    $this->set('falseselected', false);
+    $this->set('trueselected', false);
   }
 
   /**
