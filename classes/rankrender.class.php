@@ -82,11 +82,12 @@ class rankrender extends questionrender {
     }
     $total_rank_no = 0;
     $require_na = false;
+    $question = $this->get('question');
     for ($i=0; $i<$this->get('optionnumber'); $i++) {
-      if ($option['correct'] != 0 or $this->get('papertype') == '3') {
+      if ($question['options'][$i]['correct'] != 0 or $this->get('papertype') == '3') {
         $total_rank_no++;
       }
-      if ($option['correct'] == 0) $require_na = true;
+      if ($question['options'][$i]['correct'] == 0) $require_na = true;
     }
     $tmp_user_answers = 0;
 
