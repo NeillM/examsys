@@ -527,33 +527,13 @@ abstract class questionrender {
     $this->set('settings', $question['settings']);
     $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
 
-    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'info', 'sct', 'rank', 'extmatch', 'matrix', 'area', 'true_false', 'blank', 'hotspot', 'labelling'))) {
-      $this->set_question_head();
-    } else {
-      if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
-        if ($question['scenario'] != '' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'matrix' and $question['q_type'] != 'likert' and $question['q_type'] != 'enhancedcalc') {
-          $this->set('displaydefault', true);
-          if ($question['notes'] != '') {
-            $this->set('displaynotes', true);
-          }
-          if ($question['scenario'] != '') {
-            $this->set('displayscenario', true);
-          }
-        }
-        if ($question['q_media'] != '' and $question['q_type'] != 'hotspot' and $question['q_type'] != 'labelling' and $question['q_type'] != 'flash' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'area' and $question['q_type'] != 'enhancedcalc') {
-          $this->set('displaydefault', true);
-          $this->set('displaymedia', true);
-        }
-        if ($question['q_type'] != 'likert') {
-          $this->set('displaydefault', true);
-          if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and in_array($question['q_type'], array('extmatch', 'matrix', 'enhancedcalc')))) {
-            $this->set('displaynotes', true);
-          }
-          if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'enhancedcalc') {
-            $this->set('displayleadin', true);
-          }
-        }
+    if ($question['q_type'] === 'enhancedcalc') {
+      $this->set('displaydefault', true);
+      if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '')) {
+        $this->set('displaynotes', true);
       }
+    } else {
+      $this->set_question_head();
     }
 
     $part_id = 0;
@@ -641,13 +621,6 @@ abstract class questionrender {
           $marks += $question['object']->calculate_question_mark();
 
           break;
-        case 'flash':
-          // Question type is deprecated. Rogo only supports pre-existing flash questions.
-          if ($question['scenario'] != '') {
-          $this->set('displayscenario', true);
-          }
-        $marks += $display_option['marks_correct'];
-        break;
         default:
           $this->set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
           break;
