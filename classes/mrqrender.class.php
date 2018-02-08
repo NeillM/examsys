@@ -84,7 +84,7 @@ class mrqrender extends questionrender {
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
     if (!is_null($useranswerid)) {
-      $answer_parts = explode(':', $user_answers[$current_screen][$q_id]);
+      $answer_parts = explode(':', $useranswerid);
       $len_answer = strlen($answer_parts[0]);
     } else {
       $len_answer = 0;
@@ -159,8 +159,9 @@ class mrqrender extends questionrender {
    * @param integer $part_id part loop id
    * @param integer $useranswerid id of option user selected
    * @param integer $user_dismissid id of option user dismissed
+   * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function set_additional_option($part_id, $useranswerid, $user_dismissid) {
+  public function set_additional_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
     if ($this->get('displaymethod') === 'other') {
       $part_id = $this->get('partid') + 1;

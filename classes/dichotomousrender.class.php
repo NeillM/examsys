@@ -94,8 +94,9 @@ class dichotomousrender extends questionrender {
    * @param integer $part_id part loop id
    * @param integer $useranswerid id of option user selected
    * @param integer $user_dismissid id of option user dismissed
+   * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function set_additional_option($part_id, $useranswerid, $user_dismissid) {
+  public function set_additional_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
     if ($option['marksincorrect'] < 0) {
       $this->set('negativemarking', true);

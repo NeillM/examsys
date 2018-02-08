@@ -390,8 +390,9 @@ abstract class questionrender {
    * @param integer $part_id part loop id
    * @param integer $useranswerid id of option user selected
    * @param integer $user_dismissid id of option user dismissed
+   * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  abstract public function set_additional_option($part_id, $useranswerid, $user_dismissid);
+  abstract public function set_additional_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
 
   /**
    * Set an attribute
@@ -623,14 +624,14 @@ abstract class questionrender {
 
     if ($question['q_type'] == 'matrix') {
       $part_id = 1;
-      $this->set_additional_option($part_id, $useranswerid, $user_dismissid);
+      $this->set_additional_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
       if ($question['score_method'] == 'Mark per Question') {
         $marks = $display_option['marks_correct'];
       } else {
         $marks = $part_id - 1;
       }
     } else {
-      $this->set_additional_option($part_id, $useranswerid, $user_dismissid);
+      $this->set_additional_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
     }
     if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'rank', 'extmatch'))) {
       $marks = $this->get('marks');
