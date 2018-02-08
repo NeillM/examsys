@@ -11,7 +11,7 @@
         {{data.get('leadin')|raw}}
         {% endif %}
 {% endif %}
-{% include 'paper/question/'~data.get('questiontype')~'.html' %}
+{% include data.get('questiontype')~'.html' %}
 {% if data.get('papertype') != 3 %}
     {% if data.get('finalmarks') == 0 %}
         </td>

@@ -453,7 +453,9 @@ abstract class questionrender {
  
     $propertyObj = PaperProperties::get_paper_properties_by_id($pid, $this->db, $string, true);
     $paper_type = $propertyObj->get_paper_type();
-    $render = new render($this->config);
+    $render = new render($this->config, array(
+        dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . $question['q_type'] . DIRECTORY_SEPARATOR . 'templates',
+        dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates'));
 
     if ($screen_pre_submitted == 1 and $q_displayed == 0) {
       $this->set('unanswered', true);

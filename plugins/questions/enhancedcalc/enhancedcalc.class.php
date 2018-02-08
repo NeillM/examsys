@@ -1197,7 +1197,7 @@ class EnhancedCalc extends Question implements questionInterface {
     }
 
     $marks = $this->settings['marks_correct'];
-    $render->render($questiondata, $string, 'question.html');
+    $render->render($questiondata, $string, 'enhancedcalc.html');
   }
 
   /**
