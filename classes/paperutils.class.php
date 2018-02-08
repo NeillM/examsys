@@ -1253,5 +1253,4 @@ Class PaperUtils {
       $result->close();
       return $overrides;
   }
-
 }
