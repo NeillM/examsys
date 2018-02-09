@@ -139,15 +139,9 @@ class render extends \questionrender {
     $this->set('mediaheight', $tmp_height);
     $this->set('tmpcorrect', $tmp_correct);
     $this->set('marks', $marks);
-
-    if (!is_null($useranswerid)) {
-      $this->set('useranswer', trim($useranswerid));
-      $this->set('markscorrect', $option['markscorrect']);
-      $this->set('marksincorrect', $option['marksincorrect']);
-      $this->set('unanswered', false);
-    } else {
-      $this->set('unanswered', true);
-    }
+    $this->set('useranswer', trim($useranswerid));
+    $this->set('markscorrect', $option['markscorrect']);
+    $this->set('marksincorrect', $option['marksincorrect']);
   }
 
   /**

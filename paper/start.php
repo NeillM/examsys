@@ -461,6 +461,7 @@ $render->render($headerdata, $lang, 'header.html');
   $render->render($contentdata, $string, 'paper/content.html');
 
   // Display each question
+  $unanswered = false;
   foreach ($questions_array as &$question) {
 
     // Question not on this screen, don't display
@@ -474,10 +475,16 @@ $render->render($headerdata, $lang, 'header.html');
     $question['paper_questions'] = &$questions_array;
     $questionpluginns = 'plugins\questions\\' . $question['q_type'] . '\\render';
     $questionrender = new $questionpluginns();
+    $questionrender->set('unansweredkey', false);
+    if ($screen_pre_submitted == 1 and $q_displayed == 0) {
+      $questionrender->set('unansweredkey', true);
+    }
     $questionrender->set('labelcolour', $labelcolor);
     $questionrender->set('displaycalc', $calculator);
     $questionrender->display_question($screen_pre_submitted, $q_displayed, $string, $question, $paperID, $current_screen, $question_no, $user_answers);
-
+    if ($questionrender->get('unanswered')) {
+      $unanswered = true;
+    }
     $q_displayed++;
   }
 
@@ -609,4 +616,8 @@ if (count($reference_materials) > 0) {
 }
 $mysqli->close();
 
-$render->render(array(), array(), 'footer.html');
+$footerdata = array();
+if ($unanswered) {
+  $footerdata['scripts'][] = '/js/paperfooter.min.js';
+}
+$render->render($footerdata, array(), 'footer.html', $addtionaljs);

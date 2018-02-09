@@ -108,9 +108,7 @@ class render extends \questionrender {
       $this->set('useranswer', trim($useranswerid));
       $this->set('screensubmitted', $screen_pre_submitted);
     }
-    if ($useranswerid != '') {
-      $this->set('unanswered', false);
-    } else {
+    if ($useranswerid == '' or $useranswerid == 'u') {
       $this->set('unanswered', true);
     }
     $marks = $this->get('marks');

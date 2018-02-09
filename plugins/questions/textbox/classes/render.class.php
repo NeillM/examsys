@@ -127,10 +127,10 @@ class render extends \questionrender {
             $ans = $useranswerid;
           }
           $this->set('useranswer', $ans);
-          if ($settings['editor'] == 'mathjax') {
-            // Bad way of inserting mathjax editor to be resolved in ROGO-2263.
-            $this->set('editormathjax',  true);
-          }
+        }
+        if ($settings['editor'] == 'mathjax') {
+          // Bad way of inserting mathjax editor to be resolved in ROGO-2263.
+          $this->set('editormathjax',  true);
         }
       } else {
         // Bad way of inserting text editor to be resolved in ROGO-2263.
@@ -152,6 +152,7 @@ class render extends \questionrender {
         $background_colour = '';
 
         if ($useranswerid == '' and $screen_pre_submitted == 1) {
+          $this->set('unanswered', true);
           $background_colour = 'background-color:red;';
         }
         // Bad way of inserting text editor to be resolved in ROGO-2263.

@@ -79,7 +79,7 @@ class render extends \questionrender {
    * @param integer $user_dismissid id of option user dismissed
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
-    if (is_null($useranswerid) and $screen_pre_submitted) {
+    if ($useranswerid == '0' and $screen_pre_submitted) {
       $this->set('unanswered', true);
     }
     // Set to vertical to simpify template logic.

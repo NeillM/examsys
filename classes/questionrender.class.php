@@ -44,6 +44,12 @@ abstract class questionrender {
   private $unanswered;
 
   /**
+   * Question unanswered key state
+   * @var boolean
+   */
+  private $unansweredkey;
+
+  /**
    * Colour of 'labels' in paper
    * @var string
    */
@@ -347,7 +353,7 @@ abstract class questionrender {
   function __construct() {
     $this->config = Config::get_instance();
     $this->db = $this->config->db;
-    $this->set('unanswered', true);
+    $this->set('unanswered', false);
     $this->set('labelcolour', '#C00000');
     $this->set('displaycalc', true);
     $this->set('displayprologue', false);
@@ -456,12 +462,6 @@ abstract class questionrender {
     $render = new render($this->config, array(
         dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . $question['q_type'] . DIRECTORY_SEPARATOR . 'templates',
         dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates'));
-
-    if ($screen_pre_submitted == 1 and $q_displayed == 0) {
-      $this->set('unanswered', true);
-    } else {
-      $this->set('unanswered', false);
-    }
 
     // Attempt to display paper prolog
     if ($q_displayed == 0 and $current_screen == 1 and $propertyObj->get_paper_prologue() != '') {
