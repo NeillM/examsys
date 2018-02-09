@@ -442,30 +442,29 @@ abstract class questionrender {
   /**
    * Render question
    * @global array $used_questions user log data for questions
-   * @global type $user_dismiss user dismiss data for questions
-   * @global type $user_order the order the user gets the question options
-   * @global type $language system language
-   * @param type $screen_pre_submitted has the user been on this screen before
-   * @param type $q_displayed loop id of question
-   * @param type $string language strings
-   * @param type $question question data
-   * @param type $pid paper id
-   * @param type $current_screen current screen id
-   * @param type $question_no current question number
-   * @param type $user_answers users answers
+   * @global array $user_dismiss user dismiss data for questions
+   * @global array $user_order the order the user gets the question options
+   * @global string $language system language
+   * @param boolean $screen_pre_submitted has the user been on this screen before
+   * @param integer $q_displayed loop id of question
+   * @param string $string language strings
+   * @param array $question question data
+   * @param integer $pid paper id
+   * @param integer $current_screen current screen id
+   * @param integer $question_no current question number
+   * @param array $user_answers users answers
    */
   public function display_question($screen_pre_submitted, $q_displayed, $string, &$question, $pid, $current_screen, &$question_no, $user_answers) {
     global $used_questions, $user_dismiss, $user_order, $language;
- 
-    $propertyObj = PaperProperties::get_paper_properties_by_id($pid, $this->db, $string, true);
-    $paper_type = $propertyObj->get_paper_type();
+
+    $paper_properties = PaperUtils::get_paper_properties($pid, $this->db);
     $render = new render($this->config, array(
         dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . $question['q_type'] . DIRECTORY_SEPARATOR . 'templates',
         dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates'));
 
     // Attempt to display paper prolog
-    if ($q_displayed == 0 and $current_screen == 1 and $propertyObj->get_paper_prologue() != '') {
-      $this->set('prologue', $propertyObj->get_paper_prologue());
+    if ($q_displayed == 0 and $current_screen == 1 and $paper_properties['paper_prologue'] != '') {
+      $this->set('prologue', $paper_properties['paper_prologue']);
       $this->set('displayprologue', true);
     }
 
@@ -536,7 +535,7 @@ abstract class questionrender {
     }
 
     $this->set('optionno', $option_no);
-    $this->set('papertype', $paper_type);
+    $this->set('papertype', $paper_properties['type']);
     $this->set('assignednumber',  $question['assigned_number']);
     $this->set('scenario', $question['scenario']);
     $this->set('notes', $question['notes']);
@@ -647,7 +646,7 @@ abstract class questionrender {
 
     // Display possible marks for question (if not Survey)
     $this->set('finalmarks', $marks);
-    if ($paper_type < 3) {
+    if ($paper_properties['type'] < 3) {
       if ($marks != 0) {
         if ($question['score_method'] == 'Bonus Mark') {
           $this->set('scoremethod', 'bonus');
