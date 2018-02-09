@@ -113,7 +113,6 @@ class render extends \questionrender {
     $this->set('areadisplay', $option['correct']);
     $this->set('areauseranswer',  $tmp_user_answer);
     $this->set('areafulluseranswer', $full_user_ans);
-    $this->set_opt($part_id, $option);
     $marks = $this->get('marks');
     $marks += $option['markscorrect'];
     $this->set('marks', $marks);
