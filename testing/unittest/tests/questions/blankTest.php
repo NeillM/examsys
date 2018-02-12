@@ -109,7 +109,7 @@ class blanktest extends unittest{
     sort($options[2]['itemvalue']);
     $this->assertEquals($blankoptions[2], $options[2]);
     $this->assertEquals($blankoptions[3], $options[3]);
-    asort($options[4]['itemvalue']);
+    sort($options[4]['itemvalue']);
     $this->assertEquals($blankoptions[4], $options[4]);
     $this->assertEquals($blankoptions[5], $options[5]);
     $this->assertEquals(2, $render->get('marks'));
