@@ -102,6 +102,8 @@ class render extends \questionrender {
     $option = $this->get_opt($part_id);
     if ($option['marksincorrect'] < 0) {
       $this->set('negativemarking', true);
+    } else {
+      $this->set('negativemarking', false);
     }
   }
 }
