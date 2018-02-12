@@ -117,7 +117,7 @@ class render extends \questionrender {
             if (isset($blank_user_answers[$itemcount - 1])) {
               $ans = $blank_user_answers[$itemcount - 1];
             }
-            $encoded_ans = htmlentities($ans, ENT_COMPAT | ENT_HTML5, Config::get_instance()->get('cfg_page_charset'), false);
+            $encoded_ans = htmlentities($ans, ENT_COMPAT | ENT_HTML5, \Config::get_instance()->get('cfg_page_charset'), false);
             $blankoption[$count]['encoded_ans'] = $encoded_ans;
           }
         } else {
