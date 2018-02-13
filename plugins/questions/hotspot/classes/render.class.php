@@ -89,6 +89,8 @@ class render extends \questionrender {
     $option = $this->get_opt($part_id);
     if ($useranswerid == 'u' and  $screen_pre_submitted == 1) {
       $this->set('unanswered', true);
+    } else {
+      $this->set('unanswered', false);
     }
     $hotspot_no = substr_count($option['correct'],'|') + 1;
     $tmp_height = $this->get('mediaheight') + 30;
@@ -110,6 +112,8 @@ class render extends \questionrender {
     }
     if ($useranswerid == '' or $useranswerid == 'u') {
       $this->set('unanswered', true);
+    } else {
+      $this->set('unanswered', false);
     }
     $marks = $this->get('marks');
     if ($this->get('scoremethod') == 'Mark per Question') {
