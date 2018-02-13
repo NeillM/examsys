@@ -620,4 +620,4 @@ $footerdata = array();
 if ($unanswered) {
   $footerdata['scripts'][] = '/js/paperfooter.min.js';
 }
-$render->render($footerdata, array(), 'footer.html', $addtionaljs);
+$render->render($footerdata, array(), 'footer.html');
