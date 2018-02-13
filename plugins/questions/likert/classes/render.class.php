@@ -112,6 +112,8 @@ class render extends \questionrender {
     }
     if ($na == true) {
       $this->set('displayna', true);
+    } else {
+      $this->set('displayna', false);
     }
     $disp[0] = $likert_display[0];
     $temp_end = substr_count($this->get('displaymethod'),'|') - 1;
@@ -142,6 +144,8 @@ class render extends \questionrender {
       if ($useranswerid == 'n/a') {
         $this->set('na', true);
       }
+    } else {
+      $this->set('na', false);
     }
     $scale = array();
     for ($i=1; $i<=$scale_size; $i++) {
