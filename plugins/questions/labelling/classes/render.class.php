@@ -122,14 +122,16 @@ class render extends \questionrender {
     }
     if (($label_width < 80 and $hyphen) or ($label_width < 104 and !$hyphen)) {    // Two columns
       $computed_height = round(($label_height + 6) * ceil($tmp_labels / 2)) + 10;
-      $tmp_height = max($this->get('qmediaheight'), $computed_height);
+      $tmp_height = max($this->get('mediaheight'), $computed_height);
     } else {                    // Single column
       $computed_height = round(($label_height + 6) * $tmp_labels) + 10;
-      $tmp_height = max($this->get('qmediaheight'), $computed_height);
+      $tmp_height = max($this->get('mediaheight'), $computed_height);
     }
 
     if ($useranswerid == '0$' . $marks . ';' and  $screen_pre_submitted == 1) {
       $this->set('unanswered', true);
+    } else {
+      $this->set('unanswered', false);
     }
     $tmp_correct = trim($option['correct']);
     $tmp_correct = str_replace("'", "&#039;", $tmp_correct);
