@@ -27,7 +27,7 @@ use testing\unittest\unittest;
 class areatest extends unittest{
 
   /**
-    * Test area question header setter
+    * Test question header setter
     * @group question
     */
   public function test_set_question_head() {
@@ -46,7 +46,7 @@ class areatest extends unittest{
   }
  
   /**
-    * Test area question option setter
+    * Test question option setter
     * @group question
     */
   public function test_set_option() {

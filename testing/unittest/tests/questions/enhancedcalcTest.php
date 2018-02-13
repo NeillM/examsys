@@ -37,7 +37,7 @@ class enhancedcalctest extends unittestdatabase{
    }
 
   /**
-    * Test area question header setter
+    * Test question header setter
     * @group question
     */
   public function test_set_question_head() {
@@ -52,7 +52,7 @@ class enhancedcalctest extends unittestdatabase{
   }
 
   /**
-    * Test area question question setter
+    * Test question question setter
     * @group question
     */
   public function test_set_question() {
@@ -68,7 +68,7 @@ class enhancedcalctest extends unittestdatabase{
   }
 
   /**
-    * Test area question option setter
+    * Test question option setter
     * @group question
     */
   public function test_set_option() {

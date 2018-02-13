@@ -27,7 +27,7 @@ use testing\unittest\unittest;
 class blanktest extends unittest{
 
   /**
-    * Test area question header setter
+    * Test question header setter
     * @group question
     */
   public function test_set_question_head() {
@@ -49,7 +49,7 @@ class blanktest extends unittest{
   }
  
   /**
-    * Test area question option setter - textbox responses
+    * Test question option setter - textbox responses
     * @group question
     */
   public function test_set_option_textbox() {
@@ -77,7 +77,7 @@ class blanktest extends unittest{
   }
 
   /**
-    * Test area question option setter - dropdown responses
+    * Test question option setter - dropdown responses
     * @group question
     */
   public function test_set_option_dropdown() {
