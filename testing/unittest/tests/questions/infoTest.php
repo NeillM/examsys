@@ -42,6 +42,5 @@ class infotest extends unittest{
     $this->assertTrue($render->get('displaymedia'));
     $this->assertEquals(1, $render->get('questionno'));
   }
- 
 
 }
