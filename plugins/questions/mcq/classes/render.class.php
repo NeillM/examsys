@@ -81,6 +81,8 @@ class render extends \questionrender {
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
     if ($useranswerid == '0' and $screen_pre_submitted) {
       $this->set('unanswered', true);
+    } else {
+      $this->set('unanswered', false);
     }
     // Set to vertical to simpify template logic.
     if ($this->get('displaymethod') === 'vertical_other') {
@@ -118,9 +120,7 @@ class render extends \questionrender {
       }
     }
     $this->set_opt($part_id, $option);
-    if ($option['tmppartid'] == $option['correct']) {
-      $this->set('marks', $option['markscorrect']);
-    }
+    $this->set('marks', $option['markscorrect']);
   }
 
   /**
@@ -136,10 +136,14 @@ class render extends \questionrender {
       $this->set('negativemarking', true);
       if ($useranswerid === 'a') {
         $this->set('abstainselected', true);
+      } else {
+        $this->set('abstainselected', false);
       }
+    } else {
+      $this->set('negativemarking', false);
     }
     if ($this->get('displaymethod') === 'vertical') {
-      if($this->get('papertype') === 3) {
+      if($this->get('papertype') == 3) {
         $this->set('displaymethod', 'other');
         if (substr($useranswerid,0,5) === 'other') {
           $this->set('otherselected', true);
