@@ -131,9 +131,9 @@ class render extends \questionrender {
           $tmp_part_id = $option_order[$i] + 1;
           $matchoption[$i]['value'] = $tmp_part_id;
           if (isset($matching_users_answers[$part_id-1]) and $matching_users_answers[$part_id-1] == $tmp_part_id) {
-            $matchoption[$i]['selected'][$part_id-1] = true;
+            $matchoption[$i]['selected'][$part_id] = true;
           } else {
-            $matchoption[$i]['selected'][$part_id-1] = false;
+            $matchoption[$i]['selected'][$part_id] = false;
           }
         }
         $part_id++;

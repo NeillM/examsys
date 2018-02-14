@@ -17,7 +17,7 @@
 use testing\unittest\unittest;
 
 /**
- * Test fill in the matrix question class
+ * Test matrix question class
  * 
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
