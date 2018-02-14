@@ -42,8 +42,7 @@
             <input type="text" onkeypress="document.questions.q{{data.get('questionno')}}_{{data.get('partid')}}.checked=true" name="q{{data.get('questionno')}}_other" value="{{data.get('other')}}" />
         </td>
     </tr>
-{% endif %}
-{% if data.get('negativemarking') %}
+{% elseif data.get('negativemarking') %}
     <tr>
         <td>
             <input type="checkbox" onclick="MRQabstain({{data.get('questionno')}},{{data.get('optionnumber')}});" name="q{{data.get('questionno')}}_abstain" id="q{{data.get('questionno')}}_abstain" value="y" {% if data.get('abstainselected') %} checked="checked" {% endif %} />

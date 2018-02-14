@@ -139,20 +139,6 @@ class render extends \questionrender {
       $marks += $option['markscorrect'];  // Mark for each and every item
     }
     $this->set('marks', $marks);
-    if ($this->get('displaymethod') === 'other') {
-      $pid = $this->get('partid') + 1;
-      $this->set('partid', $part_id) ;
-      if (!is_null($useranswerid) and substr($useranswerid,($pid - 1),1) == 'y') {
-        $this->set('otherselected', true);
-      }
-      $this->set('other', substr($useranswerid, $pid));
-    }
-    if ($option['marksincorrect'] < 0) {
-      $this->set('negativemarking', true);
-      if ($useranswerid === 'a') {
-        $this->set('abstainselected', true);
-      }
-    }
     $this->set_opt($part_id, $option);
   }
 
