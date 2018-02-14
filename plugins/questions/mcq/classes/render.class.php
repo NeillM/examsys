@@ -99,7 +99,7 @@ class render extends \questionrender {
    */
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    if ($option['tmppartid'] === $useranswerid) {
+    if ($option['tmppartid'] == $useranswerid) {
       $option['selected'] = true;
     } else {
       $option['selected'] = false;

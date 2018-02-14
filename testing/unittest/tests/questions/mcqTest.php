@@ -72,7 +72,7 @@ class mcqtest extends unittest{
   public function test_set_option() {
     $pluginns = 'plugins\questions\mcq\render';
     $render = new $pluginns();
-    $option['tmppartid'] = '4';
+    $option['tmppartid'] = 4;
     $option['optiontext'] = '';
     $option['omedia'] = '';
     $option['correct'] = '1';
@@ -87,7 +87,7 @@ class mcqtest extends unittest{
     $this->assertFalse($option['inact']);
     $this->assertTrue($option['selected']);
     $this->assertEquals(2, $render->get('marks'));
-    $option['tmppartid'] = '1';
+    $option['tmppartid'] = 1;
     $render->set_opt(1, $option);
     $render->set_option(1, '2', '1000', 1);
     $option = $render->get_opt(1);
