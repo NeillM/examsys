@@ -31,63 +31,63 @@ class render extends \questionrender {
    * List of textboxes viewed
    * @var array
    */
-  protected $textboxesseen;
+  public $textboxesseen;
 
   /**
    * Number of columns in editor
    * @var integer
    */
-  protected $editorcolumns;
+  public $editorcolumns;
 
   /**
    * Number of rows in editor
    * @var integer
    */
-  protected $editorrows;
+  public $editorrows;
 
   /**
    * Editor type
    * @var string
    */
-  protected $editor;
+  public $editor;
 
   /**
    * User answer
    * @var string
    */
-  protected $useranswer;
+  public $useranswer;
 
   /**
    * Mathjax state
    * @var boolean
    */
-  protected $editormathjax;
+  public $editormathjax;
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->set('questiontype', 'textbox');
-    $this->set('textboxesseen', array());
-    $this->set('editormathjax', false);
-    $this->set('editor ', 'plain');
+    $this->questiontype = 'textbox';
+    $this->textboxesseen = array();
+    $this->editormathjax = false;
+    $this->editor  = 'plain';
   }
 
   /**
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
-    $this->set('displaydefault', true);
+    $this->displaydefault = true;
     if ($this->get('notes') != '') {
-      $this->set('displaynotes', true);
+      $this->displaynotes = true;
     }
     if ($this->get('scenario') != '') {
-      $this->set('displayscenario', true);
+      $this->displayscenario = true;
     }
-    $this->set('displayleadin', true);
+    $this->displayleadin = true;
     if ($this->get('qmedia') != '') {
-      $this->set('displaymedia', true);
+      $this->displaymedia = true;
     }
   }
 
@@ -114,23 +114,23 @@ class render extends \questionrender {
     if (!in_array($this->get('questionno'), $textboxes_seen)) {
       $textboxes_seen[] = $this->get('questionno');
       $settings = json_decode($this->get('settings'), true);
-      $this->set('editorcolumns', $settings['columns']);
-      $this->set('editorrows', $settings['rows']);
+      $this->editorcolumns = $settings['columns'];
+      $this->editorrows = $settings['rows'];
       if (!isset($settings['editor']) or $settings['editor'] == 'plain' or $settings['editor'] == 'mathjax') {
-        $this->set('editor', 'plain');
+        $this->editor = 'plain';
         if ($useranswerid == '' and $screen_pre_submitted == 1) {
-          $this->set('useranswer', $useranswerid);
-          $this->set('unanswered', true);
+          $this->useranswer = $useranswerid;
+          $this->unanswered = true;
         } else {
           $ans = '';
           if (!is_null($useranswerid)) {
             $ans = $useranswerid;
           }
-          $this->set('useranswer', $ans);
+          $this->useranswer = $ans;
         }
         if ($settings['editor'] == 'mathjax') {
           // Bad way of inserting mathjax editor to be resolved in ROGO-2263.
-          $this->set('editormathjax',  true);
+          $this->editormathjax =  true;
         }
       } else {
         // Bad way of inserting text editor to be resolved in ROGO-2263.
@@ -152,16 +152,16 @@ class render extends \questionrender {
         $background_colour = '';
 
         if ($useranswerid == '' and $screen_pre_submitted == 1) {
-          $this->set('unanswered', true);
+          $this->unanswered = true;
           $background_colour = 'background-color:red;';
         }
         // Bad way of inserting text editor to be resolved in ROGO-2263.
         echo "<textarea class=\"mceEditor\" id=\"q" . $this->get('questionno') . "\" name=\"q" . $this->get('questionno') . "\"style=\"" . $background_colour . "; width:" . $textbox_width . "px; height:" . $textbox_height . "px\">" . $ans . "</textarea>";
       }
-      $this->set('textboxesseen', $textboxes_seen);
+      $this->textboxesseen = $textboxes_seen;
       $marks = $this->get('marks');
       $marks += $option['markscorrect'];
-      $this->set('marks', $marks);
+      $this->marks = $marks;
     }
   }
 

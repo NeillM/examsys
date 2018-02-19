@@ -33,21 +33,21 @@ class render extends \questionrender {
    */
   function __construct() {
     parent::__construct();
-    $this->set('questiontype', 'flash');
+    $this->questiontype = 'flash';
   }
 
   /**
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
-    $this->set('displaydefault', true);
+    $this->displaydefault = true;
     if ($this->get('notes') != '') {
-      $this->set('displaynotes', true);
+      $this->displaynotes = true;
     }
     if ($this->get('scenario') != '') {
-      $this->set('displayscenario', true);
+      $this->displayscenario = true;
     }
-    $this->set('displayleadin', true);
+    $this->displayleadin = true;
   }
 
   /**
@@ -71,7 +71,7 @@ class render extends \questionrender {
     $option = $this->get_opt($part_id);
     $marks = $this->get('marks');
     $marks += $option['markscorrect'];
-    $this->set('marks', $marks);
+    $this->marks = $marks;
   }
 
   /**

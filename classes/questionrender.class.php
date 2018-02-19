@@ -41,301 +41,301 @@ abstract class questionrender {
    * Question answered state
    * @var boolean
    */
-  private $unanswered;
+  public $unanswered;
 
   /**
    * Question unanswered key state
    * @var boolean
    */
-  private $unansweredkey;
+  public $unansweredkey;
 
   /**
    * Colour of 'labels' in paper
    * @var string
    */
-  private $labelcolour;
+  public $labelcolour;
 
   /**
    * Question settings
    * @var json
    */
-  private $settings;
+  public $settings;
   
   /**
    * Calculator state of question
    * @var boolean
    */
-  private $displaycalc;
+  public $displaycalc;
 
   /**
    * Prologue state in paper
    * @var boolean
    */
-  private $displayprologue;
+  public $displayprologue;
 
   /**
    * Theme state of question
    * @var boolean
    */
-  private $displaytheme;
+  public $displaytheme;
 
   /**
    * Media state of question
    * @var boolean
    */
-  private $displaymedia;
+  public $displaymedia;
 
   /**
    * Scenario state of question
    * @var boolean
    */
-  private $displayscenario;
+  public $displayscenario;
 
   /**
    * Notes state of question
    * @var boolean
    */
-  private $displaynotes;
+  public $displaynotes;
 
   /**
    * Leadin state of question
    * @var boolean
    */
-  private $displayleadin;
+  public $displayleadin;
 
   /**
    * Question header state
    * @var boolean
    */
-  private $displaydefault;
+  public $displaydefault;
 
   /**
    * Negative marking state of question
    * @var boolean
    */
-  private $negativemarking;
+  public $negativemarking;
 
   /**
    * Display method used by question
    * @var string
    */
-  private $displaymethod;
+  public $displaymethod;
 
   /**
    * Display state of option media
    * @var boolean
    */
-  private $displayoptionmedia;
+  public $displayoptionmedia;
 
   /**
    * Question scenario
    * @var string
    */
-  private $scenario;
+  public $scenario;
 
   /**
    * Question notes
    * @var string
    */
-  private $notes;
+  public $notes;
 
   /**
    * Question media
    * @var string
    */
-  private $qmedia;
+  public $qmedia;
 
   /**
    * Question media height
    * @var string
    */
-  private $qmediaheight;
+  public $qmediaheight;
 
   /**
    * Question media width
    * @var string
    */
-  private $qmediawidth;
+  public $qmediawidth;
 
   /**
    * Question type
    * @var string
    */
-  private $questiontype;
+  public $questiontype;
 
   /**
    * Question options
    * @var array
    */
-  private $options;
+  public $options;
 
   /**
    * Paper prologue
    * @var string
    */
-  private $prologue;
+  public $prologue;
 
   /**
    * Question theme
    * @var string
    */
-  private $theme;
+  public $theme;
 
   /**
    * Question number of options
    * @var integer
    */
-  private $optionnumber;
+  public $optionnumber;
 
   /**
    * Option id
    * @var string
    */
-  private $optionno;
+  public $optionno;
 
   /**
    * Paper type
    * @var string
    */
-  private $papertype;
+  public $papertype;
 
   /**
    * Question leadin
    * @var string
    */
-  private $leadin;
+  public $leadin;
 
   /**
    * Question langague
    * @var string
    */
-  private $language;
+  public $language;
 
   /**
    * Question assigned display number
    * @var boolean
    */
-  private $assignednumber;
+  public $assignednumber;
 
   /**
    * Question media id
    * @var integer
    */
-  private $mediaid;
+  public $mediaid;
 
   /**
    * Question media filename
    * @var string
    */
-  private $mediafile;
+  public $mediafile;
 
   /**
    * Question media width
    * @var integer
    */
-  private $mediawidth;
+  public $mediawidth;
   /**
    * Question media height
    * @var integer
    */
 
-  private $mediaheight;
+  public $mediaheight;
 
   /**
    * Question media url
    * @var string
    */
-  private $mediaurl;
+  public $mediaurl;
 
   /**
    * Question media url
    * @var string
    */
-  private $mediatype;
+  public $mediatype;
 
   /**
    * Question media border state
    * @var boolean
    */
-  private $mediaborder;
+  public $mediaborder;
 
   /**
    * Question media border colour
    * @var string
    */
-  private $mediabordercolour;
+  public $mediabordercolour;
 
   /**
    * Question media edit state
    * @var boolean
    */
-  private $mediaedit;
+  public $mediaedit;
 
   /**
    * Question media delete state
    * @var boolean
    */
-  private $mediadelete;
+  public $mediadelete;
 
   /**
    * Question display number
    * @var integer
    */
-  private $questionno;
+  public $questionno;
 
   /**
    * Question part id
    * @var integer
    */
-  private $partid;
+  public $partid;
 
   /**
    * Marks for question
    * @var float
    */
-  private $finalmarks;
+  public $finalmarks;
 
   /**
    * Question score method
    * @var string
    */
-  private $scoremethod;
+  public $scoremethod;
   
   /**
    * Question bonus type
    * @var string
    */
-  private $bonus;
+  public $bonus;
 
   /**
    * Question b available marks
    * @var float
    */
-  private $marks;
+  public $marks;
   
   /**
    * Order of question options
    * @var string 
    */
-  private $optionorder;
+  public $optionorder;
 
   /**
    * Question object name
    * @var string 
    */
-  private $object;
+  public $object;
 
   /**
    * The current question
    * @var array 
    */
-  private $question;
+  public $question;
 
   /**
    * User answers
    * @var array 
    */
-  private $useranswers;
+  public $useranswers;
 
   /**
    * Called when the object is unserialised.
@@ -353,19 +353,19 @@ abstract class questionrender {
   function __construct() {
     $this->config = Config::get_instance();
     $this->db = $this->config->db;
-    $this->set('unanswered', false);
-    $this->set('labelcolour', '#C00000');
-    $this->set('displaycalc', true);
-    $this->set('displayprologue', false);
-    $this->set('displaytheme', false);
-    $this->set('displaymedia', false);
-    $this->set('displayscenario', false);
-    $this->set('displaynotes', false);
-    $this->set('displayleadin', false);
-    $this->set('displaydefault', false);
-    $this->set('negativemarking', false);
-    $this->set('displaymethod', '');
-    $this->set('displayoptionmedia', false);
+    $this->unanswered = false;
+    $this->labelcolour = '#C00000';
+    $this->displaycalc = true;
+    $this->displayprologue = false;
+    $this->displaytheme = false;
+    $this->displaymedia = false;
+    $this->displayscenario = false;
+    $this->displaynotes = false;
+    $this->displayleadin = false;
+    $this->displaydefault = false;
+    $this->negativemarking = false;
+    $this->displaymethod = '';
+    $this->displayoptionmedia = false;
   }
 
   /**
@@ -400,14 +400,6 @@ abstract class questionrender {
    */
   abstract public function set_additional_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
 
-  /**
-   * Set an attribute
-   * @param string $attribute
-   * @param mixed $value
-   */
-  public function set($attribute, $value) {
-    $this->$attribute = $value;
-  }
   /**
    * Get an attribute
    * @param string $attribute
@@ -464,8 +456,8 @@ abstract class questionrender {
 
     // Attempt to display paper prolog
     if ($q_displayed == 0 and $current_screen == 1 and $paper_properties['paper_prologue'] != '') {
-      $this->set('prologue', $paper_properties['paper_prologue']);
-      $this->set('displayprologue', true);
+      $this->prologue = $paper_properties['paper_prologue'];
+      $this->displayprologue = true;
     }
 
     // Get the media directory object.
@@ -473,7 +465,7 @@ abstract class questionrender {
 
     $q_id = $question['q_id'];
     $option_no = count($question['options']);
-    $this->set('optionnumber', $option_no);
+    $this->optionnumber = $option_no;
     // Determine if negative marking is used.
     $neg_marking = false;
     if (isset($question['object']) and method_exists($question['object'], 'is_negative_marked')) {
@@ -483,7 +475,7 @@ abstract class questionrender {
         if ($tmp_option['marks_incorrect'] < 0) $neg_marking = true;
       }
     }
-    $this->set('negativemarking', $neg_marking);
+    $this->negativemarking = $neg_marking;
 
     // Process the order
     $question['option_order'] = array();
@@ -530,26 +522,26 @@ abstract class questionrender {
     $question_no++;
 
     if ($question['theme'] != '') {
-      $this->set('theme', $question['theme']);
-      $this->set('displaytheme', true);
+      $this->theme = $question['theme'];
+      $this->displaytheme = true;
     }
 
-    $this->set('optionno', $option_no);
-    $this->set('papertype', $paper_properties['type']);
-    $this->set('assignednumber',  $question['assigned_number']);
-    $this->set('scenario', $question['scenario']);
-    $this->set('notes', $question['notes']);
-    $this->set('qmedia', $question['q_media']);
-    $this->set('qmediawidth', $question['q_media_width']);
-    $this->set('qmediaheight', $question['q_media_height']);
-    $this->set('leadin', $question['leadin']);
-    $this->set('language', $language);
-    $this->set('settings', $question['settings']);
+    $this->optionno = $option_no;
+    $this->papertype = $paper_properties['type'];
+    $this->assignednumber =  $question['assigned_number'];
+    $this->scenario = $question['scenario'];
+    $this->notes = $question['notes'];
+    $this->qmedia = $question['q_media'];
+    $this->qmediawidth = $question['q_media_width'];
+    $this->qmediaheight = $question['q_media_height'];
+    $this->leadin = $question['leadin'];
+    $this->language = $language;
+    $this->settings = $question['settings'];
     if (isset($question['object'])) {
-      $this->set('object', $question['object']);
+      $this->object = $question['object'];
     }
-    $this->set('question', $question);
-    $this->set('useranswers', $user_answers);
+    $this->question = $question;
+    $this->useranswers = $user_answers;
     $this->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '');
 
     // Set question header.
@@ -575,9 +567,9 @@ abstract class questionrender {
     }
 
     // Pre-question processing
-    $this->set('questionno', $question_no);
-    $this->set('displaymethod', $question['display_method']);
-    $this->set('scoremethod', $question['score_method']);
+    $this->questionno = $question_no;
+    $this->displaymethod = $question['display_method'];
+    $this->scoremethod = $question['score_method'];
     switch ($question['q_type']) {
       case 'mrq':
         $mrq_correct = 0;
@@ -600,11 +592,11 @@ abstract class questionrender {
     }
 
     // Processing for each stem.
-    $this->set('options', array());
-    $this->set('marks', $marks);
+    $this->options = array();
+    $this->marks = $marks;
     foreach ($question['options'] as $display_option) {
       $part_id++;
-      $this->set('partid', $part_id);
+      $this->partid = $part_id;
       $tmp_part_id = $question['option_order'][$part_id-1] + 1;
       $this->set_opt($part_id, array(
           'optiontext' => $display_option['option_text'],
@@ -621,7 +613,7 @@ abstract class questionrender {
       $this->set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
     }
 
-    $this->set('optionorder', implode(',', $question['option_order']));
+    $this->optionorder = implode(',', $question['option_order']);
 
     if ($question['q_type'] == 'matrix') {
       $part_id = 1;
@@ -645,13 +637,13 @@ abstract class questionrender {
     
 
     // Display possible marks for question (if not Survey)
-    $this->set('finalmarks', $marks);
+    $this->finalmarks = $marks;
     if ($paper_properties['type'] < 3) {
       if ($marks != 0) {
         if ($question['score_method'] == 'Bonus Mark') {
-          $this->set('scoremethod', 'bonus');
+          $this->scoremethod = 'bonus';
           $plural = ($display_option['marks_correct'] == 1) ?  $string['mark'] : $string['marks'];
-          $this->set('bonus', sprintf($string['bonusmark'], $display_option['marks_correct'], $plural));  // Used on ranking questions
+          $this->bonus = sprintf($string['bonusmark'], $display_option['marks_correct'], $plural);  // Used on ranking questions
         }
       }
     }
@@ -732,16 +724,16 @@ abstract class questionrender {
       );
       $this->set_opt($part_id, $option);
     } else {
-      $this->set('mediaid', $imageid);
-      $this->set('mediafile', $filename);
-      $this->set('mediawidth', $width);
-      $this->set('mediaheight', $height);
-      $this->set('mediaurl', $url);
-      $this->set('mediadelete', $mediadelete);
-      $this->set('mediaedit', $mediaedit);
-      $this->set('mediatype', $mediatype);
-      $this->set('mediaborder', $mediaborder);
-      $this->set('mediabordercolour', $border_color);
+      $this->mediaid = $imageid;
+      $this->mediafile = $filename;
+      $this->mediawidth = $width;
+      $this->mediaheight = $height;
+      $this->mediaurl = $url;
+      $this->mediadelete = $mediadelete;
+      $this->mediaedit = $mediaedit;
+      $this->mediatype = $mediatype;
+      $this->mediaborder = $mediaborder;
+      $this->mediabordercolour = $border_color;
     }
   }
 

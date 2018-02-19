@@ -31,45 +31,45 @@ class render extends \questionrender {
    * True selection state
    * @var boolean
    */
-  protected $trueselected;
+  public $trueselected;
 
   /**
    * False selection state
    * @var boolean
    */
-  protected $falseselected;
+  public $falseselected;
 
   /**
    * Abstain selection state
    * @var boolean
    */
-  protected $abstainselected;
+  public $abstainselected;
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->set('questiontype', 'true_false');
-    $this->set('abstainselected', false);
-    $this->set('falseselected', false);
-    $this->set('trueselected', false);
+    $this->questiontype = 'true_false';
+    $this->abstainselected = false;
+    $this->falseselected = false;
+    $this->trueselected = false;
   }
 
   /**
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
-    $this->set('displaydefault', true);
+    $this->displaydefault = true;
     if ($this->get('notes') != '') {
-      $this->set('displaynotes', true);
+      $this->displaynotes = true;
     }
     if ($this->get('scenario') != '') {
-      $this->set('displayscenario', true);
+      $this->displayscenario = true;
     }
-    $this->set('displayleadin', true);
+    $this->displayleadin = true;
     if ($this->get('qmedia') != '') {
-      $this->set('displaymedia', true);
+      $this->displaymedia = true;
     }
   }
 
@@ -93,31 +93,31 @@ class render extends \questionrender {
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
     if ($useranswerid == 'u' and $screen_pre_submitted == 1) {
-      $this->set('unanswered', true);
+      $this->unanswered = true;
     } else {
-      $this->set('unanswered', false);
+      $this->unanswered = false;
     }
     if ($this->get('displaymethod') == 'dropdown') {
       if ($useranswerid == 't') {
-        $this->set('trueselected', true);
+        $this->trueselected = true;
       }
       if ($useranswerid == 'f') {
-        $this->set('falseselected', true);
+        $this->falseselected = true;
       }
     } else {
       if ($useranswerid == 't') {
-        $this->set('trueselected', true);
+        $this->trueselected = true;
       }
       if ($useranswerid == 'f') {
-        $this->set('falseselected', false);
+        $this->falseselected = false;
       }
       if ($this->get('negativemarking')) {
         if ($useranswerid == 'a') {
-          $this->set('abstainselected', true);
+          $this->abstainselected = true;
         }
       }
     }
-    $this->set('marks', $option['markscorrect']);
+    $this->marks = $option['markscorrect'];
   }
 
   /**

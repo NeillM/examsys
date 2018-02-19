@@ -31,14 +31,14 @@ class render extends \questionrender {
    * Question options dismissed
    * @var string
    */
-  protected $dismiss;
+  public $dismiss;
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->set('questiontype', 'rank');
+    $this->questiontype = 'rank';
   }
 
   /**
@@ -46,16 +46,16 @@ class render extends \questionrender {
    */
   public function set_question_head() {
     if ($this->get('scenario') != '') {
-      $this->set('displayscenario', true);
+      $this->displayscenario = true;
     }
     if ($this->get('qmedia') != '') {
-      $this->set('displaymedia', true);
+      $this->displaymedia = true;
     }
-    $this->set('displaydefault', true);
+    $this->displaydefault = true;
     if ($this->get('notes') != ''){
-      $this->set('displaynotes', true);
+      $this->displaynotes = true;
     }
-    $this->set('displayleadin', true);
+    $this->displayleadin = true;
   }
 
   /**
@@ -109,7 +109,9 @@ class render extends \questionrender {
     $option['unans'] = false;
     if (isset($rank_answers[$option['tmppartid'] - 1]) and $rank_answers[$option['tmppartid'] - 1] == 'u' and $screen_pre_submitted == 1 and $tmp_user_answers < $answers_needed) {
       $option['unans'] = true;
-      $this->set('unanswered', true);
+      $this->unanswered = true;
+    } else {
+      $this->unanswered = false;
     }
     $option['na'] = false;
     if ($require_na) {
@@ -139,7 +141,7 @@ class render extends \questionrender {
     } elseif ($this->get('scoremethod') == 'Mark per Option') {
       $marks += $option['markscorrect'];
     }
-    $this->set('marks', $marks);
+    $this->marks = $marks;
     $this->set_opt($part_id, $option);
   }
 
@@ -153,13 +155,13 @@ class render extends \questionrender {
   public function set_additional_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
     if ($option['marksincorrect'] < 0) {
-      $this->set('negativemarking', true);
+      $this->negativemarking = true;
     }
     // Write out the hidden field for the dismiss facility.
     if ($user_dismissid != '') {
-       $this->set('dismiss', $user_dismissid);
+       $this->dismiss = $user_dismissid;
     } else {
-       $this->set('dismiss', str_repeat('0', $this->get('optionnumber')));
+       $this->dismiss = str_repeat('0', $this->get('optionnumber'));
     }
   }
 }

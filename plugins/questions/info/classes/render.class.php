@@ -32,7 +32,7 @@ class render extends \questionrender {
    */
   function __construct() {
     parent::__construct();
-    $this->set('questiontype', 'info');
+    $this->questiontype = 'info';
   }
 
   /**
@@ -51,10 +51,10 @@ class render extends \questionrender {
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
     // Special processing of Information Blocks.
     if ($this->get('qmedia') != '') {
-      $this->set('displaymedia', true);
+      $this->displaymedia = true;
     }
-    $this->set('displayleadin', true);
-    $this->set('questionno', $this->get('questionno') - 1);
+    $this->displayleadin = true;
+    $this->questionno = $this->get('questionno') - 1;
   }
 
   /**

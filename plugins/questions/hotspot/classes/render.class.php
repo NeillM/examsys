@@ -31,40 +31,40 @@ class render extends \questionrender {
    * User answers
    * @var string
    */
-  protected $useranswer;
+  public $useranswer;
 
   /**
    * Screen submitted state
    * @var boolean
    */
-  protected $screensubmitted;
+  public $screensubmitted;
 
   /**
    * Temp correct answer
    * @var string
    */
-  protected $tmpcorrect;
+  public $tmpcorrect;
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->set('questiontype', 'hotspot');
-    $this->set('screensubmitted', false);
-    $this->set('useranswer', '');
+    $this->questiontype = 'hotspot';
+    $this->screensubmitted = false;
+    $this->useranswer = '';
   }
 
   /**
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
-    $this->set('displaydefault', true);
+    $this->displaydefault = true;
     if ($this->get('notes') != '') {
-      $this->set('displaynotes', true);
+      $this->displaynotes = true;
     }
     if ($this->get('scenario') != '') {
-      $this->set('displayscenario', true);
+      $this->displayscenario = true;
     }
   }
 
@@ -88,9 +88,9 @@ class render extends \questionrender {
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
     if ($useranswerid == 'u' and  $screen_pre_submitted == 1) {
-      $this->set('unanswered', true);
+      $this->unanswered = true;
     } else {
-      $this->set('unanswered', false);
+      $this->unanswered = false;
     }
     $hotspot_no = substr_count($option['correct'],'|') + 1;
     $tmp_height = $this->get('mediaheight') + 30;
@@ -101,19 +101,19 @@ class render extends \questionrender {
     $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
     $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
 
-    $this->set('tmpcorrect', $tmp_correct);
+    $this->tmpcorrect = $tmp_correct;
     $qmediawidth = $this->get('mediawidth') + 300;
-    $this->set('mediawidth', $qmediawidth);
-    $this->set('mediaheight', $tmp_height - 29);
+    $this->mediawidth = $qmediawidth;
+    $this->mediaheight = $tmp_height - 29;
 
     if (!is_null($useranswerid)) {
-      $this->set('useranswer', trim($useranswerid));
-      $this->set('screensubmitted', $screen_pre_submitted);
+      $this->useranswer = trim($useranswerid);
+      $this->screensubmitted = $screen_pre_submitted;
     }
     if ($useranswerid == '' or $useranswerid == 'u') {
-      $this->set('unanswered', true);
+      $this->unanswered = true;
     } else {
-      $this->set('unanswered', false);
+      $this->unanswered = false;
     }
     $marks = $this->get('marks');
     if ($this->get('scoremethod') == 'Mark per Question') {
@@ -121,7 +121,7 @@ class render extends \questionrender {
     } else {
       $marks = (substr_count($option['correct'],'|') + 1) * $option['markscorrect'];
     }
-    $this->set('marks', $marks);
+    $this->marks = $marks;
   }
 
   /**

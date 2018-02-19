@@ -31,80 +31,80 @@ class render extends \questionrender {
    * Media state of extmatch question
    * @var boolean
    */
-  protected $extmatchdisplaymedia;
+  public $extmatchdisplaymedia;
 
   /**
    * Matching scenarios
    * @var array
    */
-  protected $scenarios;
+  public $scenarios;
 
   /**
    * Matching media
    * @var array
    */
-  protected $media;
+  public $media;
 
   /**
    * Matching media width
    * @var array
    */
-  protected $mediawidth;
+  public $mediawidth;
 
   /**
    * Matching media height
    * @var array
    */
-  protected $mediaheight;
+  public $mediaheight;
 
   /**
    * Matching user answers
    * @var array
    */
-  protected $usersanswers;
+  public $usersanswers;
 
   /**
    * Matching options
    * @var array 
    */
-  protected $matchoptions;
+  public $matchoptions;
 
   /**
    * Number of matching options
    * @var integer 
    */
-  protected $matchoptionsno;
+  public $matchoptionsno;
 
   /**
    * Display split position
    * @var integer 
    */
-  protected $split;
+  public $split;
 
   /**
    * Match stems
    * @var integer 
    */
-  protected $matchstem;
+  public $matchstem;
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->set('questiontype', 'extmatch');
-    $this->set('extmatchdisplaymedia', false);
+    $this->questiontype = 'extmatch';
+    $this->extmatchdisplaymedia = false;
   }
 
   /**
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
-    $this->set('displaydefault', true);
+    $this->displaydefault = true;
     if ($this->get('notes') != ''){
-      $this->set('displaynotes', true);
+      $this->displaynotes = true;
     }
-    $this->set('displayleadin', true);
+    $this->displayleadin = true;
   }
 
   /**
@@ -114,14 +114,14 @@ class render extends \questionrender {
    * @param integer $user_dismissid id of option user dismissed
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
-    $this->set('scenarios', explode('|', $this->get('scenario')));
-    $this->set('media', explode('|', $this->get('qmedia')));
-    $this->set('mediawidth', explode('|', $this->get('qmediawidth')));
-    $this->set('mediaheight', explode('|', $this->get('qmediaheight')));
+    $this->scenarios = explode('|', $this->get('scenario'));
+    $this->media = explode('|', $this->get('qmedia'));
+    $this->mediawidth = explode('|', $this->get('qmediawidth'));
+    $this->mediaheight = explode('|', $this->get('qmediaheight'));
     if (!is_null($useranswerid)) {
-      $this->set('usersanswers', explode('|', $useranswerid));
+      $this->usersanswers = explode('|', $useranswerid);
     } else {
-      $this->set('usersanswers', array());
+      $this->usersanswers = array();
     }
   }
 
@@ -136,7 +136,7 @@ class render extends \questionrender {
     $option = $this->get_opt($part_id);
     $matching_options = $this->get('matchoptions');
     $matching_options[] = $option['optiontext'];
-    $this->set('matchoptions', $matching_options);
+    $this->matchoptions = $matching_options;
   }
 
   /**
@@ -157,7 +157,7 @@ class render extends \questionrender {
     $matching_users_answers = $this->get('usersanswers');
     $option_order = explode(',', $this->get('optionorder'));
     if ($matching_media[0] != '') {
-      $this->set('extmatchdisplaymedia', true);
+      $this->extmatchdisplaymedia =  true;
       $this->set_media($matching_media[0], $matching_media_width[0], $matching_media_height[0], '');
     }
 
@@ -172,8 +172,8 @@ class render extends \questionrender {
     }
 
     $col1_no = ceil(count($matching_options) / 2);
-    $this->set('split', $col1_no-1);
-    $this->set('matchoptionsno', count($matching_options));
+    $this->split = $col1_no-1;
+    $this->matchoptionsno = count($matching_options);
     $matchstem = array();
     $marks = $this->get('marks');
     for ($id=1; $id<=$scenario_no; $id++) {
@@ -206,7 +206,7 @@ class render extends \questionrender {
       if ($answer_no == 1) {
         if (isset($matching_users_answers[$id - 1]) and $matching_users_answers[$id - 1] == 'u' and $screen_pre_submitted == 1) {
           $matchstem[$id-1]['unanswered'] = true;
-          $this->set('unanswered', true);
+          $this->unanswered = true;
         } else {
           $matchstem[$id-1]['unanswered'] = false;
         }
@@ -216,7 +216,7 @@ class render extends \questionrender {
         $matchstem[$id-1]['matchingoptions'] = count($matching_options);
         if (isset($matching_users_answers[$id - 1]) and $matching_users_answers[$id - 1] == '' and $screen_pre_submitted == 1) {
           $matchstem[$id-1]['unanswered'] = true;
-          $this->set('unanswered', true);
+          $this->unanswered = true;
         } else {
           $matchstem[$id-1]['unanswered'] = false;
         }
@@ -245,7 +245,7 @@ class render extends \questionrender {
         $tmp_option_no++;
       }
     }
-    $this->set('marks', $marks);
-    $this->set('matchstem', $matchstem);
+    $this->marks = $marks;
+    $this->matchstem = $matchstem;
   }
 }

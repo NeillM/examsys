@@ -32,16 +32,16 @@ class render extends \questionrender {
    */
   function __construct() {
     parent::__construct();
-    $this->set('questiontype', 'enhancedcalc');
+    $this->questiontype = 'enhancedcalc';
   }
 
   /**
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
-    $this->set('displaydefault', true);
+    $this->displaydefault = true;
     if ($this->get('notes') != '') {
-      $this->set('displaynotes', true);
+      $this->displaynotes = true;
     }
   }
 
@@ -81,7 +81,7 @@ class render extends \questionrender {
     $useranswers = $this->get('useranswers');
     $question['object']->load_all_user_answers($useranswers);
     $marks += $question['object']->calculate_question_mark();
-    $this->set('marks', $marks);
+    $this->marks =  $marks;
   }
 
   /**

@@ -32,7 +32,7 @@ class render extends \questionrender {
    */
   function __construct() {
     parent::__construct();
-    $this->set('questiontype', 'dichotomous');
+    $this->questiontype = 'dichotomous';
   }
 
   /**
@@ -40,16 +40,16 @@ class render extends \questionrender {
    */
   public function set_question_head() {
     if ($this->get('scenario') != '') {
-      $this->set('displayscenario', true);
+      $this->displayscenario = true;
     }
     if ($this->get('qmedia') != '') {
-      $this->set('displaymedia', true);
+      $this->displaymedia = true;
     }
-    $this->set('displaydefault', true);
+    $this->displaydefault = true;
     if ($this->get('notes') != ''){
-      $this->set('displaynotes', true);
+      $this->displaynotes = true;
     }
-    $this->set('displayleadin', true);
+    $this->displayleadin = true;
   }
 
   /**
@@ -73,7 +73,7 @@ class render extends \questionrender {
     $option = $this->get_opt($part_id);
     $option['useranswer'] = substr($useranswerid, $option['tmppartid']-1, 1);
     if ($option['useranswer'] == 'u' and $screen_pre_submitted == 1) {
-      $this->set('unanswered', true);
+      $this->unanswered = true;
       $option['unanswered'] = true;
     }
     $option['displayoptionmedia'] = false;
@@ -86,7 +86,7 @@ class render extends \questionrender {
     }
     $marks = $this->get('marks');
     $marks += $option['markscorrect'];
-    $this->set('marks', $marks);
+    $this->marks = $marks;
     $this->set_opt($part_id, $option);
     
   }
@@ -101,9 +101,9 @@ class render extends \questionrender {
   public function set_additional_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
     if ($option['marksincorrect'] < 0) {
-      $this->set('negativemarking', true);
+      $this->negativemarking = true;
     } else {
-      $this->set('negativemarking', false);
+      $this->negativemarking = false;
     }
   }
 }

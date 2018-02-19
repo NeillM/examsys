@@ -31,40 +31,40 @@ class render extends \questionrender {
    * Area user response
    * @var string
    */
-  protected $areauseranswer;
+  public $areauseranswer;
 
   /**
    * Area full user response
    * @var string
    */
-  protected $areafulluseranswer;
+  public $areafulluseranswer;
 
   /**
    * Area display value
    * @var string
    */
-  protected $areadisplay;
+  public $areadisplay;
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->set('questiontype', 'area');
+    $this->questiontype =  'area';
   }
 
   /**
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
-    $this->set('displaydefault', true);
+    $this->displaydefault = true;
     if ($this->get('notes') != '') {
-      $this->set('displaynotes', true);
+      $this->displaynotes = true;
     }
     if ($this->get('scenario') != '') {
-      $this->set('displayscenario', true);
+      $this->displayscenario = true;
     }
-    $this->set('displayleadin', true);
+    $this->displayleadin = true;
   }
 
   /**
@@ -103,19 +103,19 @@ class render extends \questionrender {
     }
 
     if ($tmp_user_answer == $default_ans and $screen_pre_submitted == 1) {
-      $this->set('unanswered', true);
+      $this->unanswered = true;
     }
 
     $qmediawidth = $this->get('mediawidth') + 2;
-    $this->set('mediawidth', $qmediawidth);
+    $this->mediawidth = $qmediawidth;
     $qmediaheight = $this->get('mediaheight') + 27;
-    $this->set('mediaheight', $qmediaheight);
-    $this->set('areadisplay', $option['correct']);
-    $this->set('areauseranswer',  $tmp_user_answer);
-    $this->set('areafulluseranswer', $full_user_ans);
+    $this->mediaheight = $qmediaheight;
+    $this->areadisplay = $option['correct'];
+    $this->areauseranswer =  $tmp_user_answer;
+    $this->areafulluseranswer = $full_user_ans;
     $marks = $this->get('marks');
     $marks += $option['markscorrect'];
-    $this->set('marks', $marks);
+    $this->marks = $marks;
   }
 
   /**

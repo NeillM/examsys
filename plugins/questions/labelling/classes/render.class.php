@@ -31,46 +31,46 @@ class render extends \questionrender {
    * User response
    * @var string
    */
-  protected $useranswer;
+  public $useranswer;
 
   /**
    * Temp correct answer
    * @var string
    */
-  protected $tmpcorrect;
+  public $tmpcorrect;
 
   /**
    * Marks correct
    * @var float
    */
-  protected $markscorrect;
+  public $markscorrect;
 
   /**
    * marks incorrect
    * @var flost
    */
-  protected $marksincorrect;
+  public $marksincorrect;
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->set('questiontype', 'labelling');
+    $this->questiontype = 'labelling';
   }
 
   /**
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
-    $this->set('displaydefault', true);
+    $this->displaydefault = true;
     if ($this->get('notes') != '') {
-      $this->set('displaynotes', true);
+      $this->displaynotes = true;
     }
     if ($this->get('scenario') != '') {
-      $this->set('displayscenario', true);
+      $this->displayscenario = true;
     }
-    $this->set('displayleadin', true);
+    $this->displayleadin = true;
   }
 
   /**
@@ -129,21 +129,21 @@ class render extends \questionrender {
     }
 
     if ($useranswerid == '0$' . $marks . ';' and  $screen_pre_submitted == 1) {
-      $this->set('unanswered', true);
+      $this->unanswered = true;
     } else {
-      $this->set('unanswered', false);
+      $this->unanswered = false;
     }
     $tmp_correct = trim($option['correct']);
     $tmp_correct = str_replace("'", "&#039;", $tmp_correct);
 
     $qmediawidth = $this->get('mediawidth') + 220;
-    $this->set('mediawidth', $qmediawidth);
-    $this->set('mediaheight', $tmp_height);
-    $this->set('tmpcorrect', $tmp_correct);
-    $this->set('marks', $marks);
-    $this->set('useranswer', trim($useranswerid));
-    $this->set('markscorrect', $option['markscorrect']);
-    $this->set('marksincorrect', $option['marksincorrect']);
+    $this->mediawidth = $qmediawidth;
+    $this->mediaheight = $tmp_height;
+    $this->tmpcorrect = $tmp_correct;
+    $this->marks = $marks;
+    $this->useranswer = trim($useranswerid);
+    $this->markscorrect = $option['markscorrect'];
+    $this->marksincorrect = $option['marksincorrect'];
   }
 
   /**

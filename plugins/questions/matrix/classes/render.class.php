@@ -31,44 +31,44 @@ class render extends \questionrender {
    * Matching scenarios
    * @var array
    */
-  protected $scenarios;
+  public $scenarios;
 
   /**
    * Matching user answers
    * @var array
    */
-  protected $usersanswers;
+  public $usersanswers;
 
   /**
    * Matching options
    * @var array 
    */
-  protected $matchoptions;
+  public $matchoptions;
 
   /**
    * Matching scenarios
    * @var integer 
    */
-  protected $matchscenarios;
+  public $matchscenarios;
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->set('questiontype', 'matrix');
+    $this->questiontype = 'matrix';
   }
 
   /**
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
-    $this->set('displaydefault', true);
-    $this->set('displaymedia', true);
+    $this->displaydefault = true;
+    $this->displaymedia = true;
     if ($this->get('notes') != ''){
-      $this->set('displaynotes', true);
+      $this->displaynotes = true;
     }
-    $this->set('displayleadin', true);
+    $this->displayleadin = true;
   }
 
   /**
@@ -78,11 +78,11 @@ class render extends \questionrender {
    * @param integer $user_dismissid id of option user dismissed
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
-    $this->set('scenarios', explode('|', $this->get('scenario')));
+    $this->scenarios = explode('|', $this->get('scenario'));
     if (!is_null($useranswerid)) {
-      $this->set('usersanswers', explode('|', $useranswerid));
+      $this->usersanswers = explode('|', $useranswerid);
     } else {
-      $this->set('usersanswers', array());
+      $this->usersanswers = array();
     }
   }
 
@@ -97,7 +97,7 @@ class render extends \questionrender {
     $option = $this->get_opt($part_id);
     $matching_options = $this->get('matchoptions');
     $matching_options[] = $option['optiontext'];
-    $this->set('matchoptions', $matching_options);
+    $this->matchoptions = $matching_options;
   }
 
   /**
@@ -121,7 +121,7 @@ class render extends \questionrender {
       if (trim($single_scenario) != '') {
         if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == '' and $screen_pre_submitted == 1) {
           $matchscenario[$part_id-1]['unanswered'] = true;
-          $this->set('unanswered', true);
+          $this->unanswered = true;
         } else {
           $matchscenario[$part_id-1]['unanswered'] = false;
         }
@@ -139,7 +139,7 @@ class render extends \questionrender {
         $part_id++;
       }
     }
-    $this->set('matchoptions', $matchoption);
-    $this->set('matchscenarios', $matchscenario);
+    $this->matchoptions = $matchoption;
+    $this->matchscenarios = $matchscenario;
   }
 }

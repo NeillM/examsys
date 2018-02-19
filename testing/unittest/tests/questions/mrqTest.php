@@ -31,17 +31,16 @@ class mrqtest extends unittest{
     * @group question
     */
   public function test_set_question_head() {
-    $pluginns = 'plugins\questions\mrq\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('mrq');
     $render->set_question_head();
     $this->assertTrue($render->get('displaydefault'));
     $this->assertFalse($render->get('displaynotes'));
     $this->assertFalse($render->get('displayscenario'));
     $this->assertTrue($render->get('displayleadin'));
     $this->assertFalse($render->get('displaymedia'));
-    $render->set('notes', 'test');
-    $render->set('scenario', 'test');
-    $render->set('qmedia', 'test');
+    $render->notes = 'test';
+    $render->scenario = 'test';
+    $render->qmedia = 'test';
     $render->set_question_head();
     $this->assertTrue($render->get('displaynotes'));
     $this->assertTrue($render->get('displayscenario'));
@@ -53,8 +52,7 @@ class mrqtest extends unittest{
     * @group question
     */
   public function test_set_question() {
-    $pluginns = 'plugins\questions\mrq\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('mrq');
     $useranswerid = 'nnnnn';
     $render->set_question(1, $useranswerid, '', 2);
     $this->assertTrue($render->get('unanswered'));
@@ -72,16 +70,15 @@ class mrqtest extends unittest{
     * @group question
     */
   public function test_set_option() {
-    $pluginns = 'plugins\questions\mrq\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('mrq');
     $option['tmppartid'] = 1;
     $option['optiontext'] = '';
     $option['omedia'] = '';
     $option['correct'] = 'n';
     $option['markscorrect'] = 1;
     $render->set_opt(1, $option);
-    $render->set('marks', 0);
-    $render->set('scoremethod', 'Mark per Option');
+    $render->marks = 0;
+    $render->scoremethod = 'Mark per Option';
     $useranswerid = 'nnny';
     $render->set_option(1, $useranswerid, '1000', 1);
     $option = $render->get_opt(1);
@@ -99,17 +96,16 @@ class mrqtest extends unittest{
     * @group question
     */
   public function test_set_additional_option() {
-    $pluginns = 'plugins\questions\mrq\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('mrq');
     // Test other.
     $useranswerid = 'nnnyn';
-    $render->set('optionnumber', 5);
+    $render->optionnumber = 5;
     $option['marksincorrect'] = 0;
     $option['tmppartid'] = 4;
     $option['correct'] = 'y';
     $render->set_opt(4, $option);
-    $render->set('displaymethod', 'other');
-    $render->set('partid', 4);
+    $render->displaymethod = 'other';
+    $render->partid = 4;
     $useranswerid = 'nnnnytest';
     $render->set_additional_option(4, $useranswerid, '00000', 1);
     $this->assertEquals(5, $render->get('partid'));

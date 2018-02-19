@@ -31,32 +31,32 @@ class render extends \questionrender {
    * SCT title
    * @var string
    */
-  protected $scttitle;
+  public $scttitle;
 
   /**
    * SCT hypothesis
    * @var string
    */
-  protected $scthyp;
+  public $scthyp;
 
   /**
    * SCT New information
    * @var string
    */
-  protected $sctinfo;
+  public $sctinfo;
 
   /**
    * SCT title
    * @var string
    */
-  protected $scttitlelower;
+  public $scttitlelower;
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->set('questiontype', 'sct');
+    $this->questiontype = 'sct';
   }
 
   /**
@@ -75,24 +75,24 @@ class render extends \questionrender {
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
     global $string;
     // SCT stalls vignette in scenario so must display. 
-    $this->set('displayscenario', true);
+    $this->displayscenario = true;
     if ($this->get('notes') != '') {
-      $this->set('displaynotes', true);
+      $this->displaynotes = true;
     }
     if ($this->get('qmedia') != '') {
-      $this->set('displaymedia', true);
+      $this->displaymedia = true;
     }
     $sct_parts = explode('~',$this->get('leadin'));
     $sct_titles = array(1=>$string['hypothesis'], 2=>$string['investigation'], 3=>$string['prescription'], 4=>$string['intervention'], 5=>$string['treatment']);
-    $this->set('scttitle', $sct_titles[$this->get('displaymethod')]);
-    $this->set('scthyp', $sct_parts[0]);
-    $this->set('sctinfo', $sct_parts[1]);
-    $this->set('scttitlelower', $string['thenthis'] . " " . mb_strtolower($sct_titles[$this->get('displaymethod')], 'UTF-8') . " " . $string['is'] . ":");
+    $this->scttitle = $sct_titles[$this->get('displaymethod')];
+    $this->scthyp = $sct_parts[0];
+    $this->sctinfo = $sct_parts[1];
+    $this->scttitlelower = $string['thenthis'] . " " . mb_strtolower($sct_titles[$this->get('displaymethod')], 'UTF-8') . " " . $string['is'] . ":";
 
     if ($useranswerid == '0' and $screen_pre_submitted == 1) {
-      $this->set('unanswered', true);
+      $this->unanswered = true;
     } else {
-      $this->set('unanswered', false);
+      $this->unanswered = false;
     }
   }
 
@@ -132,7 +132,7 @@ class render extends \questionrender {
   public function set_additional_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
     if ($option['marksincorrect'] < 0) {
-      $this->set('negativemarking', true);
+      $this->negativemarking = true;
     }
   }
 }

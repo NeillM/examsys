@@ -31,34 +31,34 @@ class render extends \questionrender {
    * Question 'other' option selected state
    * @var boolean
    */
-  protected $otherselected;
+  public $otherselected;
 
   /**
    * Question 'abstain' option selected state
    * @var boolean
    */
-  protected $abstainselected;
+  public $abstainselected;
 
   /**
    * Question options dismissed
    * @var string
    */
-  protected $dismiss;
+  public $dismiss;
 
   /**
    * Number of allowed responses to the question
    * @var integer 
    */
-  protected $allowedresponses;
+  public $allowedresponses;
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->set('questiontype', 'mrq');
-    $this->set('otherselected', false);
-    $this->set('abstainselected', false);
+    $this->questiontype = 'mrq';
+    $this->otherselected = false;
+    $this->abstainselected = false;
   }
 
   /**
@@ -66,16 +66,16 @@ class render extends \questionrender {
    */
   public function set_question_head() {
     if ($this->get('scenario') != '') {
-      $this->set('displayscenario', true);
+      $this->displayscenario = true;
     }
     if ($this->get('qmedia') != '') {
-      $this->set('displaymedia', true);
+      $this->displaymedia = true;
     }
-    $this->set('displaydefault', true);
+    $this->displaydefault = true;
     if ($this->get('notes') != ''){
-      $this->set('displaynotes', true);
+      $this->displaynotes = true;
     }
-    $this->set('displayleadin', true);
+    $this->displayleadin = true;
   }
 
   /**
@@ -92,11 +92,11 @@ class render extends \questionrender {
       $len_answer = 0;
     }
     if (isset($answer_parts) and $answer_parts[0] == str_repeat('n', $len_answer) and $screen_pre_submitted == 1) {
-      $this->set('unanswered', true);
+      $this->unanswered = true;
     } else {
-      $this->set('unanswered', false);
+      $this->unanswered = false;
     }
-    $this->set('allowedresponses', $allowed_responses);
+    $this->allowedresponses = $allowed_responses;
   }
 
   /**
@@ -138,7 +138,7 @@ class render extends \questionrender {
     } else {
       $marks += $option['markscorrect'];  // Mark for each and every item
     }
-    $this->set('marks', $marks);
+    $this->marks = $marks;
     $this->set_opt($part_id, $option);
   }
 
@@ -153,23 +153,23 @@ class render extends \questionrender {
     $option = $this->get_opt($part_id);
     if ($this->get('displaymethod') === 'other') {
       $part_id = $this->get('partid') + 1;
-      $this->set('partid', $part_id) ;
+      $this->partid = $part_id ;
       if (!is_null($useranswerid) and substr($useranswerid,($part_id - 1),1) == 'y') {
-        $this->set('otherselected', true);
+        $this->otherselected = true;
       }
-      $this->set('other', substr($useranswerid, $part_id));
+      $this->other = substr($useranswerid, $part_id);
     }
     if ($option['marksincorrect'] < 0) {
-      $this->set('negativemarking', true);
+      $this->negativemarking = true;
       if ($useranswerid === 'a') {
-        $this->set('abstainselected', true);
+        $this->abstainselected = true;
       }
     }
     // Write out the hidden field for the dismiss facility.
     if ($user_dismissid != '') {
-       $this->set('dismiss', $user_dismissid);
+       $this->dismiss = $user_dismissid;
     } else {
-       $this->set('dismiss', str_repeat('0', $this->get('optionnumber')));
+       $this->dismiss = str_repeat('0', $this->get('optionnumber'));
     }
   }
 }

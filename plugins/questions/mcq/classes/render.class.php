@@ -31,28 +31,28 @@ class render extends \questionrender {
    * Question 'other' option selected state
    * @var boolean
    */
-  protected $otherselected;
+  public $otherselected;
 
   /**
    * Question 'abstain' option selected state
    * @var boolean
    */
-  protected $abstainselected;
+  public $abstainselected;
 
   /**
    * Question options dismissed
    * @var string
    */
-  protected $dismiss;
+  public $dismiss;
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->set('questiontype', 'mcq');
-    $this->set('otherselected', false);
-    $this->set('abstainselected', false);
+    $this->questiontype = 'mcq';
+    $this->otherselected = false;
+    $this->abstainselected = false;
   }
 
   /**
@@ -60,16 +60,16 @@ class render extends \questionrender {
    */
   public function set_question_head() {
     if ($this->get('scenario') != '') {
-      $this->set('displayscenario', true);
+      $this->displayscenario = true;
     }
     if ($this->get('qmedia') != '') {
-      $this->set('displaymedia', true);
+      $this->displaymedia = true;
     }
-    $this->set('displaydefault', true);
+    $this->displaydefault = true;
     if ($this->get('notes') != ''){
-      $this->set('displaynotes', true);
+      $this->displaynotes = true;
     }
-    $this->set('displayleadin', true);
+    $this->displayleadin = true;
   }
 
   /**
@@ -80,13 +80,13 @@ class render extends \questionrender {
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
     if ($useranswerid == '0' and $screen_pre_submitted) {
-      $this->set('unanswered', true);
+      $this->unanswered = true;
     } else {
-      $this->set('unanswered', false);
+      $this->unanswered = false;
     }
     // Set to vertical to simpify template logic.
     if ($this->get('displaymethod') === 'vertical_other') {
-      $this->set('displaymethod', 'vertical');
+      $this->displaymethod = 'vertical';
     }
   }
 
@@ -120,7 +120,7 @@ class render extends \questionrender {
       }
     }
     $this->set_opt($part_id, $option);
-    $this->set('marks', $option['markscorrect']);
+    $this->marks = $option['markscorrect'];
   }
 
   /**
@@ -133,29 +133,29 @@ class render extends \questionrender {
   public function set_additional_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
     if ($option['marksincorrect'] < 0) {
-      $this->set('negativemarking', true);
+      $this->negativemarking = true;
       if ($useranswerid === 'a') {
-        $this->set('abstainselected', true);
+        $this->abstainselected = true;
       } else {
-        $this->set('abstainselected', false);
+        $this->abstainselected = false;
       }
     } else {
-      $this->set('negativemarking', false);
+      $this->negativemarking = false;
     }
     if ($this->get('displaymethod') === 'vertical') {
       if($this->get('papertype') == 3) {
-        $this->set('displaymethod', 'other');
+        $this->displaymethod = 'other';
         if (substr($useranswerid,0,5) === 'other') {
-          $this->set('otherselected', true);
-          $this->set('other', substr($useranswerid,6));
+          $this->otherselected = true;
+          $this->other = substr($useranswerid,6);
         }
       }
     }
     // Write out the hidden field for the dismiss facility.
     if ($user_dismissid != '') {
-       $this->set('dismiss', $user_dismissid);
+       $this->dismiss = $user_dismissid;
     } else {
-       $this->set('dismiss', str_repeat('0', $this->get('optionnumber')));
+       $this->dismiss = str_repeat('0', $this->get('optionnumber'));
     }
   }
 }

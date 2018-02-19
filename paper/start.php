@@ -474,12 +474,12 @@ $render->render($headerdata, $lang, 'header.html');
     // refer to all questions on displayed question
     $question['paper_questions'] = &$questions_array;
     $questionrender = questionrender::get_render($question['q_type']);
-    $questionrender->set('unansweredkey', false);
+    $questionrender->unansweredkey = false;
     if ($screen_pre_submitted == 1 and $q_displayed == 0) {
-      $questionrender->set('unansweredkey', true);
+      $questionrender->unansweredkey = true;
     }
-    $questionrender->set('labelcolour', $labelcolor);
-    $questionrender->set('displaycalc', $calculator);
+    $questionrender->labelcolour = $labelcolor;
+    $questionrender->displaycalc = $calculator;
     $questionrender->display_question($screen_pre_submitted, $q_displayed, $string, $question, $paperID, $current_screen, $question_no, $user_answers);
     if ($questionrender->get('unanswered')) {
       $unanswered = true;

@@ -31,30 +31,30 @@ class render extends \questionrender {
    * Blank options
    * @var array
    */
-  protected $blankoptions;
+  public $blankoptions;
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->set('questiontype', 'blank');
+    $this->questiontype = 'blank';
   }
 
   /**
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
-    $this->set('displaydefault', true);
+    $this->displaydefault = true;
     if ($this->get('notes') != '') {
-      $this->set('displaynotes', true);
+      $this->displaynotes = true;
     }
     if ($this->get('scenario') != '') {
-      $this->set('displayscenario', true);
+      $this->displayscenario = true;
     }
-    $this->set('displayleadin', true);
+    $this->displayleadin = true;
     if ($this->get('qmedia') != '') {
-      $this->set('displaymedia', true);
+      $this->displaymedia = true;
     }
   }
 
@@ -110,7 +110,7 @@ class render extends \questionrender {
           }
           $blankoption[$count]['size'] = $blank_size[$blank_count];
           if ((isset($blank_user_answers[$itemcount - 1]) and $blank_user_answers[$itemcount - 1] == 'u') and (isset($screen_pre_submitted) and $screen_pre_submitted == 1)) {
-            $this->set('unanswered', true);
+            $this->unanswered = true;
             $blankoption[$count]['unans'] = true;
           } else {
             $blankoption[$count]['unans'] = false;
@@ -134,7 +134,7 @@ class render extends \questionrender {
           }
           if (isset($blank_user_answers[$itemcount- 1]) and $blank_user_answers[$itemcount- 1] == 'u' and $screen_pre_submitted == 1) {
             $blankoption[$count]['unans'] = true;
-            $this->set('unanswered', true);
+            $this->unanswered = true;
           } else {
             $blankoption[$count]['unans'] = false;
           }
@@ -152,7 +152,7 @@ class render extends \questionrender {
         $blankoption[$count]['itemvalue'] = $blank_details[$blank_count];
       }
     }
-    $this->set('blankoptions', $blankoption);
+    $this->blankoptions = $blankoption;
     if ($this->get('scoremethod') == 'Mark per Option') {
       if (count($blank_mark) > 0) {
         $marks = $this->get('marks');
@@ -163,7 +163,7 @@ class render extends \questionrender {
     } else {
       $marks = $option['markscorrect'];
     }
-    $this->set('marks', $marks);
+    $this->marks = $marks;
   }
 
   /**

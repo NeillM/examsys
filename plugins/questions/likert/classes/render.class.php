@@ -31,51 +31,51 @@ class render extends \questionrender {
    * Na option state
    * @var integer 
    */
-  protected $displayna;
+  public $displayna;
 
   /**
    * Note column span length
    * @var integer 
    */
-  protected $likertnotescolspan;
+  public $likertnotescolspan;
 
   /**
    * Scenario column span length
    * @var integer 
    */
-  protected $likertscenariocolspan;
+  public $likertscenariocolspan;
 
   /**
    * List of scale labels.
    * @var array
    */
-  protected $scale;
+  public $scale;
 
   /**
    * List of scale options.
    * @var array
    */
-  protected $scaleopt;
+  public $scaleopt;
 
   /**
    * Id of scale
    * @var integer
    */
-  protected $id;
+  public $id;
 
   /**
    * Na state
    * @var boolean
    */
-  protected $na;
+  public $na;
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->set('questiontype', 'likert');
-    $this->set('displayna', false);
+    $this->questiontype = 'likert';
+    $this->displayna = false;
   }
 
   /**
@@ -83,9 +83,9 @@ class render extends \questionrender {
    */
   public function set_question_head() {
     if ($this->get('qmedia') != '') {
-      $this->set('displaymedia', true);
+      $this->displaymedia = true;
     }
-    $this->set('displaydefault', true);
+    $this->displaydefault = true;
   }
 
   /**
@@ -103,24 +103,24 @@ class render extends \questionrender {
       $na = true;
     }
     if ($this->get('notes') != '') {
-      $this->set('displaynotes', true);
-      $this->set('likertnotescolspan', $likert_col_no + 1);
+      $this->displaynotes = true;
+      $this->likertnotescolspan = $likert_col_no + 1;
     }
     if ($this->get('scenario') != '') {
-      $this->set('displayscenario', true);
-      $this->set('likertscenariocolspan', $likert_col_no + 2);
+      $this->displayscenario = true;
+      $this->likertscenariocolspan = $likert_col_no + 2;
     }
     if ($na == true) {
-      $this->set('displayna', true);
+      $this->displayna = true;
     } else {
-      $this->set('displayna', false);
+      $this->displayna = false;
     }
     $disp[0] = $likert_display[0];
     $temp_end = substr_count($this->get('displaymethod'),'|') - 1;
     for ($i=1; $i<=$temp_end; $i++) {
       $disp[$i] = $likert_display[$i];
     }
-    $this->set('scale', $disp);
+    $this->scale = $disp;
   }
 
   /**
@@ -132,20 +132,20 @@ class render extends \questionrender {
    */
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     if ($useranswerid == 'u' and $screen_pre_submitted == 1) {
-      $this->set('unanswered', true);
+      $this->unanswered = true;
     } else {
-      $this->set('unanswered', false);
+      $this->unanswered = false;
     }
     $scale_size = substr_count($this->get('displaymethod'),'|');
-    $this->set('id', $this->get('questionno') . "_" . $part_id);
+    $this->id = $this->get('questionno') . "_" . $part_id;
     $likert_display = explode('|',$this->get('displaymethod'));
     if ($likert_display[$scale_size] == 'true') {
-      $this->set('na', false);
+      $this->na = false;
       if ($useranswerid == 'n/a') {
-        $this->set('na', true);
+        $this->na = true;
       }
     } else {
-      $this->set('na', false);
+      $this->na = false;
     }
     $scale = array();
     for ($i=1; $i<=$scale_size; $i++) {
@@ -155,7 +155,7 @@ class render extends \questionrender {
         $scale[$i] = false;
       }
     }
-    $this->set('scaleopt', $scale);
+    $this->scaleopt = $scale;
   }
 
   /**
