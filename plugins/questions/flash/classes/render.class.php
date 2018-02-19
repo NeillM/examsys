@@ -19,8 +19,8 @@ namespace plugins\questions\flash;
 /**
  *
  * Class for flash rendering
- * Question type is deprecated. Rogo only supports pre-existing flash questions.
  * 
+ * @deprecated Question type is deprecated. Rogo only supports pre-existing flash questions.
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2018 The University of Nottingham
