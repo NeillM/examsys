@@ -31,13 +31,12 @@ class extmatchtest extends unittest{
     * @group question
     */
   public function test_set_question_head() {
-    $pluginns = 'plugins\questions\extmatch\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('extmatch');
     $render->set_question_head();
     $this->assertTrue($render->get('displaydefault'));
     $this->assertFalse($render->get('displaynotes'));
     $this->assertTrue($render->get('displayleadin'));
-    $render->set('notes', 'test');
+    $render->notes = 'test';
     $render->set_question_head();
     $this->assertTrue($render->get('displaynotes'));
   }
@@ -47,12 +46,11 @@ class extmatchtest extends unittest{
     * @group question
     */
   public function test_set_question() {
-    $pluginns = 'plugins\questions\extmatch\render';
-    $render = new $pluginns();
-    $render->set('scenario', "<div>It is now known as;</div>|<div>It's football team is called</div>|<div>It's most famous landmark is the</div>|||||||");
-    $render->set('qmedia', "1516973089.jpg|1516973089.png|1516975621.jpg||||||||");
-    $render->set('qmediawidth', "1480|480|951||||||||");
-    $render->set('qmediaheight', "776|105|121||||||||");
+    $render = questionrender::get_render('extmatch');
+    $render->scenario =  "<div>It is now known as;</div>|<div>It's football team is called</div>|<div>It's most famous landmark is the</div>|||||||";
+    $render->qmedia = "1516973089.jpg|1516973089.png|1516975621.jpg||||||||";
+    $render->qmediawidth = "1480|480|951||||||||";
+    $render->qmediaheight = "776|105|121||||||||";
     $scenarios = array("<div>It is now known as;</div>",
         "<div>It's football team is called</div>",
         "<div>It's most famous landmark is the</div>", "", "", "", "", "", "", "");
@@ -78,9 +76,8 @@ class extmatchtest extends unittest{
     * @group question
     */
   public function test_set_option() {
-    $pluginns = 'plugins\questions\extmatch\render';
-    $render = new $pluginns();
-    $render->set('matchoptions', array('Paris'));
+    $render = questionrender::get_render('extmatch');
+    $render->matchoptions = array('Paris');
     $render->set_opt(1, array('optiontext' => 'Paris'));
     $render->set_opt(2, array('optiontext' => 'Eifel Tower'));
     $render->set_opt(3, array('optiontext' => 'Paris Saint-Germain F.C.'));
@@ -96,26 +93,25 @@ class extmatchtest extends unittest{
     * @group question
     */
   public function test_set_additional_option() {
-    $pluginns = 'plugins\questions\extmatch\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('extmatch');
     $render->set_opt(1, array('optiontext' => 'Paris', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
     $render->set_opt(2, array('optiontext' => 'Eifel Tower', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
     $render->set_opt(3, array('optiontext' => 'Paris Saint-Germain F.C.', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
     $render->set_opt(4, array('optiontext' => 'Derby', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
     $render->set_opt(5, array('optiontext' => 'Intu Centre', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
     $render->set_opt(6, array('optiontext' => 'Derby County F.C.', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
-    $render->set('matchoptions', array('Paris', 'Eifel Tower', 'Paris Saint-Germain F.C.', 'Derby', 'Intu Centre', 'Derby County F.C.'));
-    $render->set('optionorder', "0,1,2,3,4,5");
-    $render->set('scenarios', array("<div>It is now known as;</div>",
+    $render->matchoptions = array('Paris', 'Eifel Tower', 'Paris Saint-Germain F.C.', 'Derby', 'Intu Centre', 'Derby County F.C.');
+    $render->optionorder = "0,1,2,3,4,5";
+    $render->scenarios = array("<div>It is now known as;</div>",
         "<div>It's football team is called</div>",
-        "<div>It's most famous landmark is the</div>", "", "", "", "", "", "", ""));
-    $render->set('media', array("1516973089.jpg",
+        "<div>It's most famous landmark is the</div>", "", "", "", "", "", "", "");
+    $render->media = array("1516973089.jpg",
         "1516973089.png",
-        "1516975621.jpg", "", "", "", "", "", "", "", ""));
-    $render->set('mediawidth', array(1480, 480, 951, "", "", "", "", "", "", "", ""));
-    $render->set('mediaheight', array(776, 105, 121, "", "", "", "", "", "", "", ""));
-    $render->set('usersanswers', array('1', '3', '2'));
-    $marks = $render->set('marks', 0);
+        "1516975621.jpg", "", "", "", "", "", "", "", "");
+    $render->mediawidth = array(1480, 480, 951, "", "", "", "", "", "", "", "");
+    $render->mediaheight =  array(776, 105, 121, "", "", "", "", "", "", "", "");
+    $render->usersanswers =  array('1', '3', '2');
+    $render->marks = 0;
     $cfg_root_path = $this->config->get('cfg_root_path');
     $matchstem = array(
       array('answerno' => 2,

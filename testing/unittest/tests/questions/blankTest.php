@@ -31,17 +31,16 @@ class blanktest extends unittest{
     * @group question
     */
   public function test_set_question_head() {
-    $pluginns = 'plugins\questions\blank\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('blank');
     $render->set_question_head();
     $this->assertTrue($render->get('displaydefault'));
     $this->assertFalse($render->get('displaynotes'));
     $this->assertFalse($render->get('displayscenario'));
     $this->assertTrue($render->get('displayleadin'));
     $this->assertFalse($render->get('displaymedia'));
-    $render->set('notes', 'test');
-    $render->set('scenario', 'test');
-    $render->set('qmedia', 'test');
+    $render->notes = 'test';
+    $render->scenario = 'test';
+    $render->qmedia = 'test';
     $render->set_question_head();
     $this->assertTrue($render->get('displaynotes'));
     $this->assertTrue($render->get('displayscenario'));
@@ -53,14 +52,13 @@ class blanktest extends unittest{
     * @group question
     */
   public function test_set_option_textbox() {
-    $pluginns = 'plugins\questions\blank\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('blank');
     $option['optiontext'] = '<div>London is the capital of [blank]England,Scotland,Wales,Northern Ireland[/blank] and is in the [blank]United Kingdom,United States of America[/blank]</div>';
     $option['markscorrect'] = 1;
     $render->set_opt(0, $option);
-    $render->set('displaymethod', 'textboxes');
-    $render->set('scoremethod', 'Mark per Option');
-    $render->set('marks', 0);
+    $render->displaymethod = 'textboxes';
+    $render->scoremethod = 'Mark per Option';
+    $render->marks = 0;
     $useranswerid = '["Wales","u"]';
     $render->set_option(0, $useranswerid, '', 1);
     $this->assertTrue($render->get('unanswered'));
@@ -71,7 +69,7 @@ class blanktest extends unittest{
     $blankoptions[5] = array('itemtype' => 'blurb', 'itemvalue' => '</div>');
     $this->assertEquals($blankoptions, $render->get('blankoptions'));
     $this->assertEquals(2, $render->get('marks'));
-    $render->set('scoremethod', 'Mark per Question');
+    $render->scoremethod = 'Mark per Question';
     $render->set_option(0, $useranswerid, '', 1);
     $this->assertEquals(1, $render->get('marks'));
   }
@@ -81,14 +79,13 @@ class blanktest extends unittest{
     * @group question
     */
   public function test_set_option_dropdown() {
-    $pluginns = 'plugins\questions\blank\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('blank');
     $option['optiontext'] = '<div>London is the capital of [blank]England,Scotland,Wales,Northern Ireland[/blank] and is in the [blank]United Kingdom,United States of America[/blank]</div>';
     $option['markscorrect'] = 1;
     $render->set_opt(0, $option);
-    $render->set('displaymethod', 'dropdown');
-    $render->set('scoremethod', 'Mark per Option');
-    $render->set('marks', 0);
+    $render->displaymethod = 'dropdown';
+    $render->scoremethod = 'Mark per Option';
+    $render->marks = 0;
     $useranswerid = '["Wales","u"]';
     $render->set_option(0, $useranswerid, '', 1);
     $this->assertTrue($render->get('unanswered'));
@@ -113,7 +110,7 @@ class blanktest extends unittest{
     $this->assertEquals($blankoptions[4], $options[4]);
     $this->assertEquals($blankoptions[5], $options[5]);
     $this->assertEquals(2, $render->get('marks'));
-    $render->set('scoremethod', 'Mark per Question');
+    $render->scoremethod = 'Mark per Question';
     $render->set_option(0, $useranswerid, '', 1);
     $this->assertEquals(1, $render->get('marks'));
   }

@@ -31,15 +31,14 @@ class areatest extends unittest{
     * @group question
     */
   public function test_set_question_head() {
-    $pluginns = 'plugins\questions\area\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('area');
     $render->set_question_head();
     $this->assertTrue($render->get('displaydefault'));
     $this->assertFalse($render->get('displaynotes'));
     $this->assertFalse($render->get('displayscenario'));
     $this->assertTrue($render->get('displayleadin'));
-    $render->set('notes', 'test');
-    $render->set('scenario', 'test');
+    $render->notes = 'test';
+    $render->scenario = 'test';
     $render->set_question_head();
     $this->assertTrue($render->get('displaynotes'));
     $this->assertTrue($render->get('displayscenario'));
@@ -50,14 +49,13 @@ class areatest extends unittest{
     * @group question
     */
   public function test_set_option() {
-    $pluginns = 'plugins\questions\area\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('area');
     $option['correct'] = 1;
     $option['markscorrect'] = 1;
     $render->set_opt(0, $option);
-    $render->set('marks', 1);
-    $render->set('mediawidth', 10);
-    $render->set('mediaheight', 10);
+    $render->marks = 1;
+    $render->mediawidth =  10;
+    $render->mediaheight = 10;
     $useranswerid = '100,0,0,0,0,7397;d5,69,df,64,d5,69, ';
     $render->set_option(0, $useranswerid, '', 0);
     $this->assertFalse($render->get('unanswered'));

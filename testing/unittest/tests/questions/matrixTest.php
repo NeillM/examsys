@@ -31,14 +31,13 @@ class matrixtest extends unittest{
     * @group question
     */
   public function test_set_question_head() {
-    $pluginns = 'plugins\questions\matrix\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('matrix');
     $render->set_question_head();
     $this->assertTrue($render->get('displaydefault'));
     $this->assertFalse($render->get('displaynotes'));
     $this->assertTrue($render->get('displayleadin'));
     $this->assertTrue($render->get('displaymedia'));
-    $render->set('notes', 'test');
+    $render->notes = 'test';
     $render->set_question_head();
     $this->assertTrue($render->get('displaynotes'));
   }
@@ -48,9 +47,8 @@ class matrixtest extends unittest{
     * @group question
     */
   public function test_set_question() {
-    $pluginns = 'plugins\questions\matrix\render';
-    $render = new $pluginns();
-    $render->set('scenario', "Word|Excel|PowerPoint|Access5|Publisher|Data File||||");
+    $render = questionrender::get_render('matrix');
+    $render->scenario = "Word|Excel|PowerPoint|Access5|Publisher|Data File||||";
     $useranswerid = '3|4|2|5|1|6';
     $scenarios = array('Word', 'Excel', 'PowerPoint', 'Access5', 'Publisher', 'Data File', '', '', '', '');
     $render->set_question(1, $useranswerid, '');
@@ -66,9 +64,8 @@ class matrixtest extends unittest{
     * @group question
     */
   public function test_set_option() {
-    $pluginns = 'plugins\questions\matrix\render';
-    $render = new $pluginns();
-    $render->set('matchoptions', array('.PUB'));
+    $render = questionrender::get_render('matrix');
+    $render->matchoptions = array('.PUB');
     $render->set_opt(1, array('optiontext' => '.PUB'));
     $render->set_opt(2, array('optiontext' => '.PPT'));
     $render->set_opt(3, array('optiontext' => '.DOC'));
@@ -84,12 +81,11 @@ class matrixtest extends unittest{
     * @group question
     */
   public function test_set_additional_option() {
-    $pluginns = 'plugins\questions\matrix\render';
-    $render = new $pluginns();
-    $render->set('matchoptions', array('.PUB', '.PPT', '.DOC', '.XLS', '.MDB','.DAT'));
-    $render->set('usersanswers', array('3', '4', '2', '5', '1', '6'));
-    $render->set('optionorder', '5,2,4,1,0,3');
-    $render->set('scenarios', array('Word', 'Excel', 'PowerPoint', 'Access5', 'Publisher', 'Data File', '', '', '', ''));
+    $render = questionrender::get_render('matrix');
+    $render->matchoptions = array('.PUB', '.PPT', '.DOC', '.XLS', '.MDB','.DAT');
+    $render->usersanswers = array('3', '4', '2', '5', '1', '6');
+    $render->optionorder = '5,2,4,1,0,3';
+    $render->scenarios = array('Word', 'Excel', 'PowerPoint', 'Access5', 'Publisher', 'Data File', '', '', '', '');
     $useranswerid = '3|4|2|5|1|6';
     $render->set_additional_option(1, $useranswerid, '', 1);
     $matchscenarios = array(

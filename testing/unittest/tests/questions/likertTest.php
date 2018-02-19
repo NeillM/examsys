@@ -31,12 +31,11 @@ class likerttest extends unittest{
     * @group question
     */
   public function test_set_question_head() {
-    $pluginns = 'plugins\questions\likert\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('likert');
     $render->set_question_head();
     $this->assertTrue($render->get('displaydefault'));
     $this->assertFalse($render->get('displaymedia'));
-    $render->set('qmedia', 'test');
+    $render->qmedia = 'test';
     $render->set_question_head();
     $this->assertTrue($render->get('displaymedia'));
   }
@@ -46,17 +45,16 @@ class likerttest extends unittest{
     * @group question
     */
   public function test_set_question() {
-    $pluginns = 'plugins\questions\likert\render';
-    $render = new $pluginns();
-    $render->set('displaymethod', '0|1|2|3|4|true');
+    $render = questionrender::get_render('likert');
+    $render->displaymethod =  '0|1|2|3|4|true';
     $render->set_question(0, '', '');
     $this->assertFalse($render->get('displaynotes'));
     $this->assertFalse($render->get('displayscenario'));
     $this->assertTrue($render->get('displayna'));
     $this->assertEquals(array(0, 1, 2, 3, 4), $render->get('scale'));
-    $render->set('displaymethod', '0|1|2|3|4|false');
-    $render->set('notes', 'note');
-    $render->set('scenario', 'scenario');
+    $render->displaymethod = '0|1|2|3|4|false';
+    $render->notes = 'note';
+    $render->scenario = 'scenario';
     $render->set_question(0, '', '');
     $this->assertFalse($render->get('displayna'));
     $this->assertEquals(array(0, 1, 2, 3, 4), $render->get('scale'));
@@ -72,10 +70,9 @@ class likerttest extends unittest{
     * @group question
     */
   public function test_set_option() {
-    $pluginns = 'plugins\questions\likert\render';
-    $render = new $pluginns();
-    $render->set('displaymethod', '0|1|2|3|4|true');
-    $render->set('questionno', '1');
+    $render = questionrender::get_render('likert');
+    $render->displaymethod =  '0|1|2|3|4|true';
+    $render->questionno =  '1';
     $render->set_option(0, '4', '', 1);
     $this->assertFalse($render->get('unanswered'));
     $this->assertFalse($render->get('na'));
@@ -84,7 +81,7 @@ class likerttest extends unittest{
     $render->set_option(0, 'n/a', '', 1);
     $this->assertTrue($render->get('na'));
     $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => false, 5 => false), $render->get('scaleopt'));
-    $render->set('displaymethod', '0|1|2|3|4|false');
+    $render->displaymethod = '0|1|2|3|4|false';
     $render->set_option(0, 'u', '', 1);
     $this->assertFalse($render->get('na'));
     $this->assertTrue($render->get('unanswered'));

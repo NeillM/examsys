@@ -31,15 +31,14 @@ class flashtest extends unittest{
     * @group question
     */
   public function test_set_question_head() {
-    $pluginns = 'plugins\questions\flash\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('flash');
     $render->set_question_head();
     $this->assertTrue($render->get('displaydefault'));
     $this->assertFalse($render->get('displaynotes'));
     $this->assertFalse($render->get('displayscenario'));
     $this->assertTrue($render->get('displayleadin'));
-    $render->set('notes', 'test');
-    $render->set('scenario', 'test');
+    $render->notes = 'test';
+    $render->scenario = 'test';
     $render->set_question_head();
     $this->assertTrue($render->get('displaynotes'));
     $this->assertTrue($render->get('displayscenario'));
@@ -50,11 +49,10 @@ class flashtest extends unittest{
     * @group question
     */
   public function test_set_option() {
-    $pluginns = 'plugins\questions\flash\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('flash');
     $option['markscorrect'] = 1;
     $render->set_opt(0, $option);
-    $render->set('marks', 1);
+    $render->marks = 1;
     $render->set_option(0, '', '', 0);
     $this->assertEquals(2, $render->get('marks'));
   }

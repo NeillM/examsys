@@ -31,17 +31,16 @@ class mcqtest extends unittest{
     * @group question
     */
   public function test_set_question_head() {
-    $pluginns = 'plugins\questions\mcq\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('mcq');
     $render->set_question_head();
     $this->assertTrue($render->get('displaydefault'));
     $this->assertFalse($render->get('displaynotes'));
     $this->assertFalse($render->get('displayscenario'));
     $this->assertTrue($render->get('displayleadin'));
     $this->assertFalse($render->get('displaymedia'));
-    $render->set('notes', 'test');
-    $render->set('scenario', 'test');
-    $render->set('qmedia', 'test');
+    $render->notes = 'test';
+    $render->scenario = 'test';
+    $render->qmedia = 'test';
     $render->set_question_head();
     $this->assertTrue($render->get('displaynotes'));
     $this->assertTrue($render->get('displayscenario'));
@@ -53,13 +52,12 @@ class mcqtest extends unittest{
     * @group question
     */
   public function test_set_question() {
-    $pluginns = 'plugins\questions\mcq\render';
-    $render = new $pluginns();
-    $render->set('displaymethod', 'vertical_other');
+    $render = questionrender::get_render('mcq');
+    $render->displaymethod = 'vertical_other';
     $render->set_question(1, '0', '');
     $this->assertEquals('vertical', $render->get('displaymethod'));
     $this->assertTrue($render->get('unanswered'));
-    $render->set('displaymethod', 'dropdown');
+    $render->displaymethod = 'dropdown';
     $render->set_question(1, '4', '');
     $this->assertEquals('dropdown', $render->get('displaymethod'));
     $this->assertFalse($render->get('unanswered'));
@@ -70,16 +68,15 @@ class mcqtest extends unittest{
     * @group question
     */
   public function test_set_option() {
-    $pluginns = 'plugins\questions\mcq\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('mcq');
     $option['tmppartid'] = 4;
     $option['optiontext'] = '';
     $option['omedia'] = '';
     $option['correct'] = '1';
     $option['markscorrect'] = 2;
     $render->set_opt(1, $option);
-    $render->set('marks', 0);
-    $render->set('displaymethod', 'vertical');
+    $render->marks = 0;
+    $render->displaymethod = 'vertical';
     $render->set_option(1, '4', '0000', 1);
     $option = $render->get_opt(1);
     $this->assertFalse($option['optiontextdisplay']);
@@ -100,10 +97,10 @@ class mcqtest extends unittest{
     * @group question
     */
   public function test_set_additional_option() {
-    $pluginns = 'plugins\questions\mcq\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('mcq');
+    // Test dismiss.
     $useranswerid = 'u';
-    $render->set('optionnumber', 4);
+    $render->optionnumber = 4;
     $option['marksincorrect'] = -1;
     $render->set_opt(1, $option);
     $render->set_additional_option(1, $useranswerid, '0100', 1);
@@ -116,6 +113,7 @@ class mcqtest extends unittest{
     $this->assertFalse($render->get('negativemarking'));
     $this->assertFalse($render->get('abstainselected'));
     $this->assertEquals('0000', $render->get('dismiss'));
+    // Test abstain.
     $useranswerid = 'a';
     $option['marksincorrect'] = -1;
     $render->set_opt(1, $option);
@@ -123,8 +121,9 @@ class mcqtest extends unittest{
     $this->assertTrue($render->get('negativemarking'));
     $this->assertTrue($render->get('abstainselected'));
     $this->assertEquals('0000', $render->get('dismiss'));
-    $render->set('displaymethod', 'vertical');
-    $render->set('papertype', '3');
+    // Test other.
+    $render->displaymethod =  'vertical';
+    $render->papertype = '3';
     $useranswerid = 'other:test';
     $render->set_additional_option(1, $useranswerid, '', 1);
     $this->assertEquals('other', $render->get('displaymethod'));

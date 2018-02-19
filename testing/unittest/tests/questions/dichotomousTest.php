@@ -31,17 +31,16 @@ class dichotomoustest extends unittest{
     * @group question
     */
   public function test_set_question_head() {
-    $pluginns = 'plugins\questions\dichotomous\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('dichotomous');
     $render->set_question_head();
     $this->assertTrue($render->get('displaydefault'));
     $this->assertFalse($render->get('displaynotes'));
     $this->assertFalse($render->get('displayscenario'));
     $this->assertTrue($render->get('displayleadin'));
     $this->assertFalse($render->get('displaymedia'));
-    $render->set('notes', 'test');
-    $render->set('scenario', 'test');
-    $render->set('qmedia', 'test');
+    $render->notes = 'test';
+    $render->scenario = 'test';
+    $render->qmedia = 'test';
     $render->set_question_head();
     $this->assertTrue($render->get('displaynotes'));
     $this->assertTrue($render->get('displayscenario'));
@@ -53,14 +52,13 @@ class dichotomoustest extends unittest{
     * @group question
     */
   public function test_set_option() {
-    $pluginns = 'plugins\questions\dichotomous\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('dichotomous');
     $option['markscorrect'] = 1;
     $option['tmppartid'] = 1;
     $option['omedia'] = '';
     $render->set_opt(0, $option);
-    $render->set('displaymethod', 'TF_Positive');
-    $render->set('marks', 0);
+    $render->displaymethod = 'TF_Positive';
+    $render->marks = 0;
     $useranswerid = 'uuu';
     $render->set_option(0, $useranswerid, '', 1);
     $option = $render->get_opt(0);
@@ -70,7 +68,7 @@ class dichotomoustest extends unittest{
     $this->assertEquals(1, $render->get('marks'));
     $option['omedia'] = 'test';
     $render->set_opt(0, $option);
-    $render->set('displaymethod', 'TF_NegativeAbstain');
+    $render->displaymethod = 'TF_NegativeAbstain';
     $render->set_option(0, $useranswerid, '', 1);
     $option = $render->get_opt(0);
     $this->assertTrue($option['abstain']);
@@ -82,8 +80,7 @@ class dichotomoustest extends unittest{
     * @group question
     */
   public function test_set_additional_option() {
-    $pluginns = 'plugins\questions\dichotomous\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('dichotomous');
     $useranswerid = 'uuu';
     $option['marksincorrect'] = -1;
     $render->set_opt(0, $option);

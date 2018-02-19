@@ -31,13 +31,12 @@ class infotest extends unittest{
     * @group question
     */
   public function test_set_question() {
-    $pluginns = 'plugins\questions\info\render';
-    $render = new $pluginns();
+    $render = questionrender::get_render('info');
     $render->set_question(1, '', '');
     $this->assertFalse($render->get('displaymedia'));
     $this->assertTrue($render->get('displayleadin'));
-    $render->set('qmedia', 'test');
-    $render->set('questionno', 2);
+    $render->qmedia = 'test';
+    $render->questionno =  2;
     $render->set_question(1, '', '');
     $this->assertTrue($render->get('displaymedia'));
     $this->assertEquals(1, $render->get('questionno'));
