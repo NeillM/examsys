@@ -473,8 +473,7 @@ $render->render($headerdata, $lang, 'header.html');
     $is_enhancedcalc = 0;
     // refer to all questions on displayed question
     $question['paper_questions'] = &$questions_array;
-    $questionpluginns = 'plugins\questions\\' . $question['q_type'] . '\\render';
-    $questionrender = new $questionpluginns();
+    $questionrender = questionrender::get_render($question['q_type']);
     $questionrender->set('unansweredkey', false);
     if ($screen_pre_submitted == 1 and $q_displayed == 0) {
       $questionrender->set('unansweredkey', true);

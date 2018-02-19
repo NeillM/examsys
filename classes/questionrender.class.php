@@ -744,4 +744,15 @@ abstract class questionrender {
       $this->set('mediabordercolour', $border_color);
     }
   }
+
+  /**
+   * Get rendering object for question type
+   * @param string $qtype question type
+   * @return object
+   */
+  public static function get_render($qtype) {
+    $questionpluginns = 'plugins\\questions\\' . $qtype . '\\render';
+    return new $questionpluginns();
+  }
+
 }
