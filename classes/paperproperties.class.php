@@ -2113,6 +2113,7 @@ class PaperProperties {
             $reference_materials[$ref_no]['title'] = $reference_title;
             $reference_materials[$ref_no]['material'] = $reference_material;
             $reference_materials[$ref_no]['width'] = $reference_width;
+            $reference_materials[$ref_no]['num'] = $ref_no;
             $ref_no++;
         }
         $stmt->close();

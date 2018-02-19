@@ -601,16 +601,10 @@ if (!is_null($remaining_time)) {
 $render->render($datasetuser, array(), 'paper/dataset.html');
 
 if (count($reference_materials) > 0) {
-  $top = 0;
-  $ref_no = 0;
-  foreach ($reference_materials as $reference_material) {
-    $refdata['ref'][$ref_no]['refno'] = $ref_no;
-    $refdata['ref'][$ref_no]['top'] = 31 + $top;
-    $refdata['ref'][$ref_no]['reftitle'] = $reference_material['title'] ;
-    $top += 31;
-    $ref_no++;
-  }
-  $refdata['refpane'] = $refpane;
+  $refdata = array(
+    'ref' => $reference_materials,
+    'refpane' => $refpane
+  );
   $render->render($refdata, $string, 'paper/refmaterial.html');
 }
 $mysqli->close();
