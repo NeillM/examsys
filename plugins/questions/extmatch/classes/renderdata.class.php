@@ -25,7 +25,7 @@ namespace plugins\questions\extmatch;
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
 
-class render extends \questionrender {
+class renderdata extends \questiondata {
 
   /**
    * Media state of extmatch question

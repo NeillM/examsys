@@ -14,18 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace plugins\questions\mrq;
+namespace plugins\questions\mcq;
 
 /**
  *
- * Class for MRQ rendering
+ * Class for MCQ rendering
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
 
-class render extends \questionrender {
+class renderdata extends \questiondata {
 
   /**
    * Question 'other' option selected state
@@ -46,17 +46,11 @@ class render extends \questionrender {
   public $dismiss;
 
   /**
-   * Number of allowed responses to the question
-   * @var integer 
-   */
-  public $allowedresponses;
-
-  /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->questiontype = 'mrq';
+    $this->questiontype = 'mcq';
     $this->otherselected = false;
     $this->abstainselected = false;
   }
@@ -85,18 +79,15 @@ class render extends \questionrender {
    * @param integer $user_dismissid id of option user dismissed
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
-    if (!is_null($useranswerid)) {
-      $answer_parts = explode(':', $useranswerid);
-      $len_answer = strlen($answer_parts[0]);
-    } else {
-      $len_answer = 0;
-    }
-    if (isset($answer_parts) and $answer_parts[0] == str_repeat('n', $len_answer) and $screen_pre_submitted == 1) {
+    if ($useranswerid == '0' and $screen_pre_submitted) {
       $this->unanswered = true;
     } else {
       $this->unanswered = false;
     }
-    $this->allowedresponses = $allowed_responses;
+    // Set to vertical to simpify template logic.
+    if ($this->get('displaymethod') === 'vertical_other') {
+      $this->displaymethod = 'vertical';
+    }
   }
 
   /**
@@ -108,15 +99,10 @@ class render extends \questionrender {
    */
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    if (substr($useranswerid, $option['tmppartid']-1, 1) === 'y') {
+    if ($option['tmppartid'] == $useranswerid) {
       $option['selected'] = true;
     } else {
       $option['selected'] = false;
-    }
-    if (substr($user_dismissid,$part_id-1,1) === '1') {
-      $option['inact'] = true;
-    } else {
-      $option['inact'] = false;
     }
     $option['optiontextdisplay'] = false;
     if ($option['optiontext'] != '') {
@@ -126,20 +112,15 @@ class render extends \questionrender {
     if ($option['omedia'] != '') {
       $option['displayoptionmedia'] = true;
     }
-    $marks = $this->get('marks');
-    if ($this->get('scoremethod') === 'Mark per Option') {
-      if ($option['correct'] === 'y') {
-        $marks += $option['markscorrect'];  // Mark for correct options only
+    if ($this->get('displaymethod') === 'vertical') {
+      if (substr($user_dismissid, $option['tmppartid']-1, 1) == '1') {
+        $option['inact'] = true;
+      } else {
+        $option['inact'] = false;
       }
-    } elseif ($this->get('scoremethod') === 'Mark per Question') {
-      if ($part_id == 1) {
-        $marks += $option['markscorrect'];
-      }
-    } else {
-      $marks += $option['markscorrect'];  // Mark for each and every item
     }
-    $this->marks = $marks;
     $this->set_opt($part_id, $option);
+    $this->marks = $option['markscorrect'];
   }
 
   /**
@@ -151,18 +132,23 @@ class render extends \questionrender {
    */
   public function set_additional_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    if ($this->get('displaymethod') === 'other') {
-      $part_id = $this->get('partid') + 1;
-      $this->partid = $part_id ;
-      if (!is_null($useranswerid) and substr($useranswerid,($part_id - 1),1) == 'y') {
-        $this->otherselected = true;
-      }
-      $this->other = substr($useranswerid, $part_id);
-    }
     if ($option['marksincorrect'] < 0) {
       $this->negativemarking = true;
       if ($useranswerid === 'a') {
         $this->abstainselected = true;
+      } else {
+        $this->abstainselected = false;
+      }
+    } else {
+      $this->negativemarking = false;
+    }
+    if ($this->get('displaymethod') === 'vertical') {
+      if($this->get('papertype') == 3) {
+        $this->displaymethod = 'other';
+        if (substr($useranswerid,0,5) === 'other') {
+          $this->otherselected = true;
+          $this->other = substr($useranswerid,6);
+        }
       }
     }
     // Write out the hidden field for the dismiss facility.

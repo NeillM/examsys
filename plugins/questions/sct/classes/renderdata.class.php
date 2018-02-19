@@ -14,61 +14,56 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace plugins\questions\matrix;
+namespace plugins\questions\sct;
 
 /**
  *
- * Class for matrix rendering
+ * Class for SCT rendering
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
 
-class render extends \questionrender {
+class renderdata extends \questiondata {
 
   /**
-   * Matching scenarios
-   * @var array
+   * SCT title
+   * @var string
    */
-  public $scenarios;
+  public $scttitle;
 
   /**
-   * Matching user answers
-   * @var array
+   * SCT hypothesis
+   * @var string
    */
-  public $usersanswers;
+  public $scthyp;
 
   /**
-   * Matching options
-   * @var array 
+   * SCT New information
+   * @var string
    */
-  public $matchoptions;
+  public $sctinfo;
 
   /**
-   * Matching scenarios
-   * @var integer 
+   * SCT title
+   * @var string
    */
-  public $matchscenarios;
+  public $scttitlelower;
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->questiontype = 'matrix';
+    $this->questiontype = 'sct';
   }
 
   /**
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
-    $this->displaydefault = true;
-    $this->displaymedia = true;
-    if ($this->get('notes') != ''){
-      $this->displaynotes = true;
-    }
-    $this->displayleadin = true;
+    // Nothing to do.
   }
 
   /**
@@ -78,11 +73,26 @@ class render extends \questionrender {
    * @param integer $user_dismissid id of option user dismissed
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
-    $this->scenarios = explode('|', $this->get('scenario'));
-    if (!is_null($useranswerid)) {
-      $this->usersanswers = explode('|', $useranswerid);
+    global $string;
+    // SCT stalls vignette in scenario so must display. 
+    $this->displayscenario = true;
+    if ($this->get('notes') != '') {
+      $this->displaynotes = true;
+    }
+    if ($this->get('qmedia') != '') {
+      $this->displaymedia = true;
+    }
+    $sct_parts = explode('~',$this->get('leadin'));
+    $sct_titles = array(1=>$string['hypothesis'], 2=>$string['investigation'], 3=>$string['prescription'], 4=>$string['intervention'], 5=>$string['treatment']);
+    $this->scttitle = $sct_titles[$this->get('displaymethod')];
+    $this->scthyp = $sct_parts[0];
+    $this->sctinfo = $sct_parts[1];
+    $this->scttitlelower = $string['thenthis'] . " " . mb_strtolower($sct_titles[$this->get('displaymethod')], 'UTF-8') . " " . $string['is'] . ":";
+
+    if ($useranswerid == '0' and $screen_pre_submitted == 1) {
+      $this->unanswered = true;
     } else {
-      $this->usersanswers = array();
+      $this->unanswered = false;
     }
   }
 
@@ -95,9 +105,21 @@ class render extends \questionrender {
    */
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    $matching_options = $this->get('matchoptions');
-    $matching_options[] = $option['optiontext'];
-    $this->matchoptions = $matching_options;
+    if ($option['tmppartid'] == $useranswerid) {
+      $option['selected'] = true;
+    } else {
+      $option['selected'] = false;
+    }
+    if (substr($user_dismissid, $option['tmppartid']-1, 1) == '1') {
+      $option['inact'] = true;
+    } else {
+      $option['inact'] = false;
+    }
+    $option['optiontextdisplay'] = false;
+    if ($option['optiontext'] != '') {
+      $option['optiontextdisplay'] = true;
+    }
+    $this->set_opt($part_id, $option);
   }
 
   /**
@@ -108,38 +130,9 @@ class render extends \questionrender {
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
   public function set_additional_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
-    $matchoption = array();
-    $matchscenario = array();
-    $matching_options = $this->get('matchoptions');
-    foreach ($matching_options as $single_option) {
-      $matchoption[]['option'] = $single_option;
+    $option = $this->get_opt($part_id);
+    if ($option['marksincorrect'] < 0) {
+      $this->negativemarking = true;
     }
-    $matching_users_answers = $this->get('usersanswers');
-    $option_order = explode(',', $this->get('optionorder'));
-    $matching_scenarios = $this->get('scenarios');
-    foreach ($matching_scenarios as $single_scenario) {
-      if (trim($single_scenario) != '') {
-        if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == '' and $screen_pre_submitted == 1) {
-          $matchscenario[$part_id-1]['unanswered'] = true;
-          $this->unanswered = true;
-        } else {
-          $matchscenario[$part_id-1]['unanswered'] = false;
-        }
-        $matchscenario[$part_id-1]['id'] = chr(64 + $part_id);
-        $matchscenario[$part_id-1]['value'] = $single_scenario;
-        for ($i = 0; $i < count($matchoption); $i++) {
-          $tmp_part_id = $option_order[$i] + 1;
-          $matchoption[$i]['value'] = $tmp_part_id;
-          if (isset($matching_users_answers[$part_id-1]) and $matching_users_answers[$part_id-1] == $tmp_part_id) {
-            $matchoption[$i]['selected'][$part_id] = true;
-          } else {
-            $matchoption[$i]['selected'][$part_id] = false;
-          }
-        }
-        $part_id++;
-      }
-    }
-    $this->matchoptions = $matchoption;
-    $this->matchscenarios = $matchscenario;
   }
 }

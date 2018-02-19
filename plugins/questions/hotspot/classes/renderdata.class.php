@@ -14,42 +14,58 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace plugins\questions\dichotomous;
+namespace plugins\questions\hotspot;
 
 /**
  *
- * Class for dichotomous rendering
+ * Class for hotspot rendering
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
 
-class render extends \questionrender {
+class renderdata extends \questiondata {
+
+  /**
+   * User answers
+   * @var string
+   */
+  public $useranswer;
+
+  /**
+   * Screen submitted state
+   * @var boolean
+   */
+  public $screensubmitted;
+
+  /**
+   * Temp correct answer
+   * @var string
+   */
+  public $tmpcorrect;
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->questiontype = 'dichotomous';
+    $this->questiontype = 'hotspot';
+    $this->screensubmitted = false;
+    $this->useranswer = '';
   }
 
   /**
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
+    $this->displaydefault = true;
+    if ($this->get('notes') != '') {
+      $this->displaynotes = true;
+    }
     if ($this->get('scenario') != '') {
       $this->displayscenario = true;
     }
-    if ($this->get('qmedia') != '') {
-      $this->displaymedia = true;
-    }
-    $this->displaydefault = true;
-    if ($this->get('notes') != ''){
-      $this->displaynotes = true;
-    }
-    $this->displayleadin = true;
   }
 
   /**
@@ -59,7 +75,7 @@ class render extends \questionrender {
    * @param integer $user_dismissid id of option user dismissed
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
-    // Nothing to do.
+    // Noting to do.
   }
 
   /**
@@ -71,24 +87,41 @@ class render extends \questionrender {
    */
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    $option['useranswer'] = substr($useranswerid, $option['tmppartid']-1, 1);
-    if ($option['useranswer'] == 'u' and $screen_pre_submitted == 1) {
+    if ($useranswerid == 'u' and  $screen_pre_submitted == 1) {
       $this->unanswered = true;
-      $option['unanswered'] = true;
+    } else {
+      $this->unanswered = false;
     }
-    $option['displayoptionmedia'] = false;
-    if ($option['omedia'] != '') {
-      $option['displayoptionmedia'] = true;
+    $hotspot_no = substr_count($option['correct'],'|') + 1;
+    $tmp_height = $this->get('mediaheight') + 30;
+    if ($tmp_height < (($hotspot_no * 36) + 25)) {
+      $tmp_height = (($hotspot_no * 36) + 25);
     }
-    $option['abstain'] = false;
-    if ($this->get('displaymethod') === 'TF_NegativeAbstain' or $this->get('displaymethod') === 'YN_NegativeAbstain') {
-        $option['abstain'] = true;
+    $tmp_correct = str_replace("'", "\'", trim($option['correct']));
+    $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
+    $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
+
+    $this->tmpcorrect = $tmp_correct;
+    $qmediawidth = $this->get('mediawidth') + 300;
+    $this->mediawidth = $qmediawidth;
+    $this->mediaheight = $tmp_height - 29;
+
+    if (!is_null($useranswerid)) {
+      $this->useranswer = trim($useranswerid);
+      $this->screensubmitted = $screen_pre_submitted;
+    }
+    if ($useranswerid == '' or $useranswerid == 'u') {
+      $this->unanswered = true;
+    } else {
+      $this->unanswered = false;
     }
     $marks = $this->get('marks');
-    $marks += $option['markscorrect'];
+    if ($this->get('scoremethod') == 'Mark per Question') {
+      $marks = $option['markscorrect'];
+    } else {
+      $marks = (substr_count($option['correct'],'|') + 1) * $option['markscorrect'];
+    }
     $this->marks = $marks;
-    $this->set_opt($part_id, $option);
-    
   }
 
   /**
@@ -99,11 +132,6 @@ class render extends \questionrender {
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
   public function set_additional_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
-    $option = $this->get_opt($part_id);
-    if ($option['marksincorrect'] < 0) {
-      $this->negativemarking = true;
-    } else {
-      $this->negativemarking = false;
-    }
+    // Nothing to do.
   }
 }

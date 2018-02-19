@@ -14,32 +14,40 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace plugins\questions\info;
+namespace plugins\questions\flash;
 
 /**
  *
- * Class for info rendering
- *
+ * Class for flash rendering
+ * 
+ * @deprecated Question type is deprecated. Rogo only supports pre-existing flash questions.
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
 
-class render extends \questionrender {
+class renderdata extends \questiondata {
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->questiontype = 'info';
+    $this->questiontype = 'flash';
   }
 
   /**
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
-    // Nothing to do.
+    $this->displaydefault = true;
+    if ($this->get('notes') != '') {
+      $this->displaynotes = true;
+    }
+    if ($this->get('scenario') != '') {
+      $this->displayscenario = true;
+    }
+    $this->displayleadin = true;
   }
 
   /**
@@ -49,12 +57,7 @@ class render extends \questionrender {
    * @param integer $user_dismissid id of option user dismissed
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
-    // Special processing of Information Blocks.
-    if ($this->get('qmedia') != '') {
-      $this->displaymedia = true;
-    }
-    $this->displayleadin = true;
-    $this->questionno = $this->get('questionno') - 1;
+    // Noting to do.
   }
 
   /**
@@ -65,7 +68,10 @@ class render extends \questionrender {
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
-    // Nothing to do.
+    $option = $this->get_opt($part_id);
+    $marks = $this->get('marks');
+    $marks += $option['markscorrect'];
+    $this->marks = $marks;
   }
 
   /**

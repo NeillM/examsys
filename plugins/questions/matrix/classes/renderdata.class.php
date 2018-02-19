@@ -14,25 +14,49 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace plugins\questions\enhancedcalc;
+namespace plugins\questions\matrix;
 
 /**
  *
- * Class for enhancedcalc rendering
- * 
+ * Class for matrix rendering
+ *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
 
-class render extends \questionrender {
+class renderdata extends \questiondata {
+
+  /**
+   * Matching scenarios
+   * @var array
+   */
+  public $scenarios;
+
+  /**
+   * Matching user answers
+   * @var array
+   */
+  public $usersanswers;
+
+  /**
+   * Matching options
+   * @var array 
+   */
+  public $matchoptions;
+
+  /**
+   * Matching scenarios
+   * @var integer 
+   */
+  public $matchscenarios;
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->questiontype = 'enhancedcalc';
+    $this->questiontype = 'matrix';
   }
 
   /**
@@ -40,9 +64,11 @@ class render extends \questionrender {
    */
   public function set_question_head() {
     $this->displaydefault = true;
-    if ($this->get('notes') != '') {
+    $this->displaymedia = true;
+    if ($this->get('notes') != ''){
       $this->displaynotes = true;
     }
+    $this->displayleadin = true;
   }
 
   /**
@@ -52,14 +78,12 @@ class render extends \questionrender {
    * @param integer $user_dismissid id of option user dismissed
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
-    $question = $this->get('question');
+    $this->scenarios = explode('|', $this->get('scenario'));
     if (!is_null($useranswerid)) {
-      $d = array();
-      $d['useranswer'] = $useranswerid;
-      $question['object']->load($d);
+      $this->usersanswers = explode('|', $useranswerid);
+    } else {
+      $this->usersanswers = array();
     }
-    $useranswers = $this->get('useranswers');
-    $question['object']->load_all_user_answers($useranswers);
   }
 
   /**
@@ -70,18 +94,10 @@ class render extends \questionrender {
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
-    $marks = $this->get('marks');
-    $question = $this->get('question');
-    // no options for enhanced calc now stored in settings
-    $extra = array(
-      'num_on_screen' => $this->get('questionno'),
-      'current_question' => $question,
-    );
-    $question['object']->render_paper($extra);
-    $useranswers = $this->get('useranswers');
-    $question['object']->load_all_user_answers($useranswers);
-    $marks += $question['object']->calculate_question_mark();
-    $this->marks =  $marks;
+    $option = $this->get_opt($part_id);
+    $matching_options = $this->get('matchoptions');
+    $matching_options[] = $option['optiontext'];
+    $this->matchoptions = $matching_options;
   }
 
   /**
@@ -92,6 +108,38 @@ class render extends \questionrender {
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
   public function set_additional_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
-    // Nothing to do.
+    $matchoption = array();
+    $matchscenario = array();
+    $matching_options = $this->get('matchoptions');
+    foreach ($matching_options as $single_option) {
+      $matchoption[]['option'] = $single_option;
+    }
+    $matching_users_answers = $this->get('usersanswers');
+    $option_order = explode(',', $this->get('optionorder'));
+    $matching_scenarios = $this->get('scenarios');
+    foreach ($matching_scenarios as $single_scenario) {
+      if (trim($single_scenario) != '') {
+        if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == '' and $screen_pre_submitted == 1) {
+          $matchscenario[$part_id-1]['unanswered'] = true;
+          $this->unanswered = true;
+        } else {
+          $matchscenario[$part_id-1]['unanswered'] = false;
+        }
+        $matchscenario[$part_id-1]['id'] = chr(64 + $part_id);
+        $matchscenario[$part_id-1]['value'] = $single_scenario;
+        for ($i = 0; $i < count($matchoption); $i++) {
+          $tmp_part_id = $option_order[$i] + 1;
+          $matchoption[$i]['value'] = $tmp_part_id;
+          if (isset($matching_users_answers[$part_id-1]) and $matching_users_answers[$part_id-1] == $tmp_part_id) {
+            $matchoption[$i]['selected'][$part_id] = true;
+          } else {
+            $matchoption[$i]['selected'][$part_id] = false;
+          }
+        }
+        $part_id++;
+      }
+    }
+    $this->matchoptions = $matchoption;
+    $this->matchscenarios = $matchscenario;
   }
 }

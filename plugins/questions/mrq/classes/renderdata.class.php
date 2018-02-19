@@ -14,18 +14,30 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace plugins\questions\rank;
+namespace plugins\questions\mrq;
 
 /**
  *
- * Class for Rank rendering
+ * Class for MRQ rendering
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
 
-class render extends \questionrender {
+class renderdata extends \questiondata {
+
+  /**
+   * Question 'other' option selected state
+   * @var boolean
+   */
+  public $otherselected;
+
+  /**
+   * Question 'abstain' option selected state
+   * @var boolean
+   */
+  public $abstainselected;
 
   /**
    * Question options dismissed
@@ -34,11 +46,19 @@ class render extends \questionrender {
   public $dismiss;
 
   /**
+   * Number of allowed responses to the question
+   * @var integer 
+   */
+  public $allowedresponses;
+
+  /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->questiontype = 'rank';
+    $this->questiontype = 'mrq';
+    $this->otherselected = false;
+    $this->abstainselected = false;
   }
 
   /**
@@ -65,7 +85,18 @@ class render extends \questionrender {
    * @param integer $user_dismissid id of option user dismissed
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
-    // Nothing to do
+    if (!is_null($useranswerid)) {
+      $answer_parts = explode(':', $useranswerid);
+      $len_answer = strlen($answer_parts[0]);
+    } else {
+      $len_answer = 0;
+    }
+    if (isset($answer_parts) and $answer_parts[0] == str_repeat('n', $len_answer) and $screen_pre_submitted == 1) {
+      $this->unanswered = true;
+    } else {
+      $this->unanswered = false;
+    }
+    $this->allowedresponses = $allowed_responses;
   }
 
   /**
@@ -77,69 +108,35 @@ class render extends \questionrender {
    */
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    if (!is_null($useranswerid)) {
-      $rank_answers = explode(',', $useranswerid);
+    if (substr($useranswerid, $option['tmppartid']-1, 1) === 'y') {
+      $option['selected'] = true;
     } else {
-      $rank_answers = '';
+      $option['selected'] = false;
     }
-    $total_rank_no = 0;
-    $require_na = false;
-    $question = $this->get('question');
-    for ($i=0; $i<$this->get('optionnumber'); $i++) {
-      if ($question['options'][$i]['correct'] != 0 or $this->get('papertype') == '3') {
-        $total_rank_no++;
-      }
-      if ($question['options'][$i]['correct'] == 0) $require_na = true;
-    }
-    $tmp_user_answers = 0;
-
-    if ($rank_answers != '') {
-      for ($i=0; $i<count($rank_answers); $i++) {
-        if ($rank_answers[$i] != 'u' and $rank_answers[$i] != 0 and $rank_answers[$i] != 'u') {
-          $tmp_user_answers++;
-        }
-      }
-    }
-
-    if ($this->get('scoremethod') == 'Mark per Option') {
-      $answers_needed = $this->get('optionnumber');
-    } else {
-      $answers_needed = $total_rank_no;
-    }
-    $option['unans'] = false;
-    if (isset($rank_answers[$option['tmppartid'] - 1]) and $rank_answers[$option['tmppartid'] - 1] == 'u' and $screen_pre_submitted == 1 and $tmp_user_answers < $answers_needed) {
-      $option['unans'] = true;
-      $this->unanswered = true;
-    } else {
-      $this->unanswered = false;
-    }
-    $option['na'] = false;
-    if ($require_na) {
-      $option['na'] = true;
-      if (isset($rank_answers[$option['tmppartid'] - 1]) and $rank_answers[$option['tmppartid'] - 1] == '0') {
-        $option['selected'] = true;
-      } else {
-        $option['selected'] = false;
-      }
-    }
-    $option['totalrank'] = $total_rank_no;
-    for ($i=1; $i<=$total_rank_no; $i++) {
-      if (isset($rank_answers[$option['tmppartid'] - 1]) and $i == $rank_answers[$option['tmppartid'] - 1]) {
-        $option['selected'] = true;
-      } else {
-        $option['selected'] = false;
-      }
-    }
-    if (substr($user_dismissid, $option['tmppartid']-1, 1) == '1') {
+    if (substr($user_dismissid,$part_id-1,1) === '1') {
       $option['inact'] = true;
     } else {
       $option['inact'] = false;
     }
+    $option['optiontextdisplay'] = false;
+    if ($option['optiontext'] != '') {
+      $option['optiontextdisplay'] = true;
+    }
+    $option['displayoptionmedia'] = false;
+    if ($option['omedia'] != '') {
+      $option['displayoptionmedia'] = true;
+    }
     $marks = $this->get('marks');
-    if ($option['correct'] != 0) {
-      $marks += $option['markscorrect'];
-    } elseif ($this->get('scoremethod') == 'Mark per Option') {
-      $marks += $option['markscorrect'];
+    if ($this->get('scoremethod') === 'Mark per Option') {
+      if ($option['correct'] === 'y') {
+        $marks += $option['markscorrect'];  // Mark for correct options only
+      }
+    } elseif ($this->get('scoremethod') === 'Mark per Question') {
+      if ($part_id == 1) {
+        $marks += $option['markscorrect'];
+      }
+    } else {
+      $marks += $option['markscorrect'];  // Mark for each and every item
     }
     $this->marks = $marks;
     $this->set_opt($part_id, $option);
@@ -154,8 +151,19 @@ class render extends \questionrender {
    */
   public function set_additional_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
+    if ($this->get('displaymethod') === 'other') {
+      $part_id = $this->get('partid') + 1;
+      $this->partid = $part_id ;
+      if (!is_null($useranswerid) and substr($useranswerid,($part_id - 1),1) == 'y') {
+        $this->otherselected = true;
+      }
+      $this->other = substr($useranswerid, $part_id);
+    }
     if ($option['marksincorrect'] < 0) {
       $this->negativemarking = true;
+      if ($useranswerid === 'a') {
+        $this->abstainselected = true;
+      }
     }
     // Write out the hidden field for the dismiss facility.
     if ($user_dismissid != '') {

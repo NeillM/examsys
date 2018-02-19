@@ -14,58 +14,32 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace plugins\questions\hotspot;
+namespace plugins\questions\info;
 
 /**
  *
- * Class for hotspot rendering
+ * Class for info rendering
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
 
-class render extends \questionrender {
-
-  /**
-   * User answers
-   * @var string
-   */
-  public $useranswer;
-
-  /**
-   * Screen submitted state
-   * @var boolean
-   */
-  public $screensubmitted;
-
-  /**
-   * Temp correct answer
-   * @var string
-   */
-  public $tmpcorrect;
+class renderdata extends \questiondata {
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->questiontype = 'hotspot';
-    $this->screensubmitted = false;
-    $this->useranswer = '';
+    $this->questiontype = 'info';
   }
 
   /**
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
-    $this->displaydefault = true;
-    if ($this->get('notes') != '') {
-      $this->displaynotes = true;
-    }
-    if ($this->get('scenario') != '') {
-      $this->displayscenario = true;
-    }
+    // Nothing to do.
   }
 
   /**
@@ -75,7 +49,12 @@ class render extends \questionrender {
    * @param integer $user_dismissid id of option user dismissed
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
-    // Noting to do.
+    // Special processing of Information Blocks.
+    if ($this->get('qmedia') != '') {
+      $this->displaymedia = true;
+    }
+    $this->displayleadin = true;
+    $this->questionno = $this->get('questionno') - 1;
   }
 
   /**
@@ -86,42 +65,7 @@ class render extends \questionrender {
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
-    $option = $this->get_opt($part_id);
-    if ($useranswerid == 'u' and  $screen_pre_submitted == 1) {
-      $this->unanswered = true;
-    } else {
-      $this->unanswered = false;
-    }
-    $hotspot_no = substr_count($option['correct'],'|') + 1;
-    $tmp_height = $this->get('mediaheight') + 30;
-    if ($tmp_height < (($hotspot_no * 36) + 25)) {
-      $tmp_height = (($hotspot_no * 36) + 25);
-    }
-    $tmp_correct = str_replace("'", "\'", trim($option['correct']));
-    $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
-    $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
-
-    $this->tmpcorrect = $tmp_correct;
-    $qmediawidth = $this->get('mediawidth') + 300;
-    $this->mediawidth = $qmediawidth;
-    $this->mediaheight = $tmp_height - 29;
-
-    if (!is_null($useranswerid)) {
-      $this->useranswer = trim($useranswerid);
-      $this->screensubmitted = $screen_pre_submitted;
-    }
-    if ($useranswerid == '' or $useranswerid == 'u') {
-      $this->unanswered = true;
-    } else {
-      $this->unanswered = false;
-    }
-    $marks = $this->get('marks');
-    if ($this->get('scoremethod') == 'Mark per Question') {
-      $marks = $option['markscorrect'];
-    } else {
-      $marks = (substr_count($option['correct'],'|') + 1) * $option['markscorrect'];
-    }
-    $this->marks = $marks;
+    // Nothing to do.
   }
 
   /**

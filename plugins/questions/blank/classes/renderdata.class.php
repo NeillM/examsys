@@ -25,7 +25,7 @@ namespace plugins\questions\blank;
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
 
-class render extends \questionrender {
+class renderdata extends \questiondata {
 
   /**
    * Blank options

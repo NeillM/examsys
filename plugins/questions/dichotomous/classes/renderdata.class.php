@@ -14,56 +14,42 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace plugins\questions\sct;
+namespace plugins\questions\dichotomous;
 
 /**
  *
- * Class for SCT rendering
+ * Class for dichotomous rendering
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
 
-class render extends \questionrender {
-
-  /**
-   * SCT title
-   * @var string
-   */
-  public $scttitle;
-
-  /**
-   * SCT hypothesis
-   * @var string
-   */
-  public $scthyp;
-
-  /**
-   * SCT New information
-   * @var string
-   */
-  public $sctinfo;
-
-  /**
-   * SCT title
-   * @var string
-   */
-  public $scttitlelower;
+class renderdata extends \questiondata {
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->questiontype = 'sct';
+    $this->questiontype = 'dichotomous';
   }
 
   /**
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
-    // Nothing to do.
+    if ($this->get('scenario') != '') {
+      $this->displayscenario = true;
+    }
+    if ($this->get('qmedia') != '') {
+      $this->displaymedia = true;
+    }
+    $this->displaydefault = true;
+    if ($this->get('notes') != ''){
+      $this->displaynotes = true;
+    }
+    $this->displayleadin = true;
   }
 
   /**
@@ -73,27 +59,7 @@ class render extends \questionrender {
    * @param integer $user_dismissid id of option user dismissed
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
-    global $string;
-    // SCT stalls vignette in scenario so must display. 
-    $this->displayscenario = true;
-    if ($this->get('notes') != '') {
-      $this->displaynotes = true;
-    }
-    if ($this->get('qmedia') != '') {
-      $this->displaymedia = true;
-    }
-    $sct_parts = explode('~',$this->get('leadin'));
-    $sct_titles = array(1=>$string['hypothesis'], 2=>$string['investigation'], 3=>$string['prescription'], 4=>$string['intervention'], 5=>$string['treatment']);
-    $this->scttitle = $sct_titles[$this->get('displaymethod')];
-    $this->scthyp = $sct_parts[0];
-    $this->sctinfo = $sct_parts[1];
-    $this->scttitlelower = $string['thenthis'] . " " . mb_strtolower($sct_titles[$this->get('displaymethod')], 'UTF-8') . " " . $string['is'] . ":";
-
-    if ($useranswerid == '0' and $screen_pre_submitted == 1) {
-      $this->unanswered = true;
-    } else {
-      $this->unanswered = false;
-    }
+    // Nothing to do.
   }
 
   /**
@@ -105,21 +71,24 @@ class render extends \questionrender {
    */
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    if ($option['tmppartid'] == $useranswerid) {
-      $option['selected'] = true;
-    } else {
-      $option['selected'] = false;
+    $option['useranswer'] = substr($useranswerid, $option['tmppartid']-1, 1);
+    if ($option['useranswer'] == 'u' and $screen_pre_submitted == 1) {
+      $this->unanswered = true;
+      $option['unanswered'] = true;
     }
-    if (substr($user_dismissid, $option['tmppartid']-1, 1) == '1') {
-      $option['inact'] = true;
-    } else {
-      $option['inact'] = false;
+    $option['displayoptionmedia'] = false;
+    if ($option['omedia'] != '') {
+      $option['displayoptionmedia'] = true;
     }
-    $option['optiontextdisplay'] = false;
-    if ($option['optiontext'] != '') {
-      $option['optiontextdisplay'] = true;
+    $option['abstain'] = false;
+    if ($this->get('displaymethod') === 'TF_NegativeAbstain' or $this->get('displaymethod') === 'YN_NegativeAbstain') {
+        $option['abstain'] = true;
     }
+    $marks = $this->get('marks');
+    $marks += $option['markscorrect'];
+    $this->marks = $marks;
     $this->set_opt($part_id, $option);
+    
   }
 
   /**
@@ -133,6 +102,8 @@ class render extends \questionrender {
     $option = $this->get_opt($part_id);
     if ($option['marksincorrect'] < 0) {
       $this->negativemarking = true;
+    } else {
+      $this->negativemarking = false;
     }
   }
 }

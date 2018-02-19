@@ -14,60 +14,55 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace plugins\questions\mcq;
+namespace plugins\questions\area;
 
 /**
  *
- * Class for MCQ rendering
+ * Class for area rendering
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
 
-class render extends \questionrender {
+class renderdata extends \questiondata {
 
   /**
-   * Question 'other' option selected state
-   * @var boolean
-   */
-  public $otherselected;
-
-  /**
-   * Question 'abstain' option selected state
-   * @var boolean
-   */
-  public $abstainselected;
-
-  /**
-   * Question options dismissed
+   * Area user response
    * @var string
    */
-  public $dismiss;
+  public $areauseranswer;
+
+  /**
+   * Area full user response
+   * @var string
+   */
+  public $areafulluseranswer;
+
+  /**
+   * Area display value
+   * @var string
+   */
+  public $areadisplay;
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->questiontype = 'mcq';
-    $this->otherselected = false;
-    $this->abstainselected = false;
+    $this->questiontype =  'area';
   }
 
   /**
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
+    $this->displaydefault = true;
+    if ($this->get('notes') != '') {
+      $this->displaynotes = true;
+    }
     if ($this->get('scenario') != '') {
       $this->displayscenario = true;
-    }
-    if ($this->get('qmedia') != '') {
-      $this->displaymedia = true;
-    }
-    $this->displaydefault = true;
-    if ($this->get('notes') != ''){
-      $this->displaynotes = true;
     }
     $this->displayleadin = true;
   }
@@ -79,15 +74,7 @@ class render extends \questionrender {
    * @param integer $user_dismissid id of option user dismissed
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
-    if ($useranswerid == '0' and $screen_pre_submitted) {
-      $this->unanswered = true;
-    } else {
-      $this->unanswered = false;
-    }
-    // Set to vertical to simpify template logic.
-    if ($this->get('displaymethod') === 'vertical_other') {
-      $this->displaymethod = 'vertical';
-    }
+    // Noting to do.
   }
 
   /**
@@ -99,28 +86,36 @@ class render extends \questionrender {
    */
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    if ($option['tmppartid'] == $useranswerid) {
-      $option['selected'] = true;
+    $default_ans  = '100,0,0,0,0,0';
+    if (!is_null($useranswerid)) {
+      $tmp_user_answer = $useranswerid;
     } else {
-      $option['selected'] = false;
+      $tmp_user_answer = $default_ans;
     }
-    $option['optiontextdisplay'] = false;
-    if ($option['optiontext'] != '') {
-      $option['optiontextdisplay'] = true;
+
+    $answer_parts = explode(';', $tmp_user_answer);
+    if (isset($answer_parts[1])) {
+      $tmp_user_answer = substr($answer_parts[1], 0, -2);
+      $full_user_ans = $useranswerid;
+    } else {
+      $tmp_user_answer = '';
+      $full_user_ans = $default_ans;
     }
-    $option['displayoptionmedia'] = false;
-    if ($option['omedia'] != '') {
-      $option['displayoptionmedia'] = true;
+
+    if ($tmp_user_answer == $default_ans and $screen_pre_submitted == 1) {
+      $this->unanswered = true;
     }
-    if ($this->get('displaymethod') === 'vertical') {
-      if (substr($user_dismissid, $option['tmppartid']-1, 1) == '1') {
-        $option['inact'] = true;
-      } else {
-        $option['inact'] = false;
-      }
-    }
-    $this->set_opt($part_id, $option);
-    $this->marks = $option['markscorrect'];
+
+    $qmediawidth = $this->get('mediawidth') + 2;
+    $this->mediawidth = $qmediawidth;
+    $qmediaheight = $this->get('mediaheight') + 27;
+    $this->mediaheight = $qmediaheight;
+    $this->areadisplay = $option['correct'];
+    $this->areauseranswer =  $tmp_user_answer;
+    $this->areafulluseranswer = $full_user_ans;
+    $marks = $this->get('marks');
+    $marks += $option['markscorrect'];
+    $this->marks = $marks;
   }
 
   /**
@@ -131,31 +126,6 @@ class render extends \questionrender {
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
   public function set_additional_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
-    $option = $this->get_opt($part_id);
-    if ($option['marksincorrect'] < 0) {
-      $this->negativemarking = true;
-      if ($useranswerid === 'a') {
-        $this->abstainselected = true;
-      } else {
-        $this->abstainselected = false;
-      }
-    } else {
-      $this->negativemarking = false;
-    }
-    if ($this->get('displaymethod') === 'vertical') {
-      if($this->get('papertype') == 3) {
-        $this->displaymethod = 'other';
-        if (substr($useranswerid,0,5) === 'other') {
-          $this->otherselected = true;
-          $this->other = substr($useranswerid,6);
-        }
-      }
-    }
-    // Write out the hidden field for the dismiss facility.
-    if ($user_dismissid != '') {
-       $this->dismiss = $user_dismissid;
-    } else {
-       $this->dismiss = str_repeat('0', $this->get('optionnumber'));
-    }
+    // Nothing to do.
   }
 }

@@ -14,49 +14,46 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace plugins\questions\labelling;
+namespace plugins\questions\true_false;
 
 /**
  *
- * Class for labelling rendering
+ * Class for TF rendering
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
 
-class render extends \questionrender {
+class renderdata extends \questiondata {
 
   /**
-   * User response
-   * @var string
+   * True selection state
+   * @var boolean
    */
-  public $useranswer;
+  public $trueselected;
 
   /**
-   * Temp correct answer
-   * @var string
+   * False selection state
+   * @var boolean
    */
-  public $tmpcorrect;
+  public $falseselected;
 
   /**
-   * Marks correct
-   * @var float
+   * Abstain selection state
+   * @var boolean
    */
-  public $markscorrect;
-
-  /**
-   * marks incorrect
-   * @var flost
-   */
-  public $marksincorrect;
+  public $abstainselected;
 
   /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
-    $this->questiontype = 'labelling';
+    $this->questiontype = 'true_false';
+    $this->abstainselected = false;
+    $this->falseselected = false;
+    $this->trueselected = false;
   }
 
   /**
@@ -71,6 +68,9 @@ class render extends \questionrender {
       $this->displayscenario = true;
     }
     $this->displayleadin = true;
+    if ($this->get('qmedia') != '') {
+      $this->displaymedia = true;
+    }
   }
 
   /**
@@ -92,58 +92,32 @@ class render extends \questionrender {
    */
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    $marks = $this->get('marks');
-    $tmp_labels = 0;
-    $max_col1 = 0;
-    $max_col2 = 0;
-    $tmp_first_split = explode(';', $option['correct']);
-    $tmp_second_split = explode('|', $tmp_first_split[11]);
-    $label_width = $tmp_first_split[5];
-    $label_height = $tmp_first_split[6];
-    $hyphen = false;
-    foreach ($tmp_second_split as $ind_label) {
-      $label_parts = explode('$', $ind_label);
-      if (isset($label_parts[4]) and trim($label_parts[4]) != '') {
-        if (mb_strstr($label_parts[4], '-') !== false) $hyphen = true;
-        $tmp_labels++;
-        if ($label_parts[2] > 219) $marks += $option['markscorrect'];
-        if ($label_parts[0] < 10) {
-          $max_col1 = $label_parts[0];
-        } else {
-          $max_col2 = $label_parts[0];
-        }
-      }
-    }
-    $max_col2-=10;
-    $max_label = max($max_col1, $max_col2);
-
-    if ($this->get('scoremethod') == 'Mark per Question') {
-      $marks = $option['markscorrect'];
-    }
-    if (($label_width < 80 and $hyphen) or ($label_width < 104 and !$hyphen)) {    // Two columns
-      $computed_height = round(($label_height + 6) * ceil($tmp_labels / 2)) + 10;
-      $tmp_height = max($this->get('mediaheight'), $computed_height);
-    } else {                    // Single column
-      $computed_height = round(($label_height + 6) * $tmp_labels) + 10;
-      $tmp_height = max($this->get('mediaheight'), $computed_height);
-    }
-
-    if ($useranswerid == '0$' . $marks . ';' and  $screen_pre_submitted == 1) {
+    if ($useranswerid == 'u' and $screen_pre_submitted == 1) {
       $this->unanswered = true;
     } else {
       $this->unanswered = false;
     }
-    $tmp_correct = trim($option['correct']);
-    $tmp_correct = str_replace("'", "&#039;", $tmp_correct);
-
-    $qmediawidth = $this->get('mediawidth') + 220;
-    $this->mediawidth = $qmediawidth;
-    $this->mediaheight = $tmp_height;
-    $this->tmpcorrect = $tmp_correct;
-    $this->marks = $marks;
-    $this->useranswer = trim($useranswerid);
-    $this->markscorrect = $option['markscorrect'];
-    $this->marksincorrect = $option['marksincorrect'];
+    if ($this->get('displaymethod') == 'dropdown') {
+      if ($useranswerid == 't') {
+        $this->trueselected = true;
+      }
+      if ($useranswerid == 'f') {
+        $this->falseselected = true;
+      }
+    } else {
+      if ($useranswerid == 't') {
+        $this->trueselected = true;
+      }
+      if ($useranswerid == 'f') {
+        $this->falseselected = false;
+      }
+      if ($this->get('negativemarking')) {
+        if ($useranswerid == 'a') {
+          $this->abstainselected = true;
+        }
+      }
+    }
+    $this->marks = $option['markscorrect'];
   }
 
   /**
