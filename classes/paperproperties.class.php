@@ -2054,15 +2054,15 @@ class PaperProperties {
      * Returns an array of screen information - used for the numbers at the top
      * of the screen.
      * @param bool $is_question_preview_mode  - Are we previewing a single question
+     * @param integer $get_qid the id of the question we are previewing
      * @return array - Returns an array of screens then question ID and question type.
      *
      */
-    public function get_screens($is_question_preview_mode) {
+    public function get_screens($is_question_preview_mode, $get_qid = null) {
         $paperID = $this->get_property_id();
         // Get how many screens make up the question paper.
         $screen_data = array();
         if ($is_question_preview_mode) {
-          $get_qid = param::optional('q_id', 0, param::INT, param::FETCH_GET);
           $stmt = $this->db->prepare("SELECT 1, q_type, q_id
                                     FROM
                                       questions
