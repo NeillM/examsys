@@ -3,26 +3,27 @@
 {% for i,p in data.get('options') %}
         <tr {% if p.unans %} class="unans" {% endif %}>
             <td class="option">
-                <select name="{{p.optionno}}" class="rankselect q"{{data.get('questionno')}}">
+                <select name="{{p.optionno}}" id ="{{p.optionno}}" class="rankselect q"{{data.get('questionno')}}">
                     <option value="u"></option>
-    {% if p.na %}
-                    <option value="0" {% if p.selected %} selected {% endif %}>{{lang.na}}</option>
-    {% endif %}
-    {% for c in 1..p.totalrank %}
-                    <option value="{{c}}" {% if p.selected %} selected {% endif %}>
-        {% if data.get('language') == 'en' %}
-            {% if c == 1 %}
-                {{c}}st
-            {% elseif c == 2 %}
-                {{c}}nd
-            {% elseif c == 3 %}
-                {{c}}rd
-            {% else %}
-                {{c}}th
-            {% endif %}
-        {% else %}
-                {{c}}
-        {% endif %}
+    {% for idx,value in p.selected %}
+                    <option value="{{idx}}" {% if value %} selected {% endif %}>
+                            {% if idx == 0 %}
+                                {{lang.na}} 
+                            {% else %}
+                                {% if data.get('language') == 'en' %}
+                                    {% if idx == 1 %}
+                                        {{idx}}st
+                                    {% elseif idx == 2 %}
+                                        {{idx}}nd
+                                    {% elseif idx == 3 %}
+                                        {{idx}}rd
+                                    {% else %}
+                                        {{idx}}th
+                                    {% endif %}
+                                {% else %}
+                                        {{idx}}
+                                {% endif %}
+                            {% endif %}
                     </option>
     {% endfor %}
                 </select>

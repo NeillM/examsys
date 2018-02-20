@@ -113,21 +113,19 @@ class renderdata extends \questiondata {
     } else {
       $this->unanswered = false;
     }
-    $option['na'] = false;
     if ($require_na) {
-      $option['na'] = true;
       if (isset($rank_answers[$option['tmppartid'] - 1]) and $rank_answers[$option['tmppartid'] - 1] == '0') {
-        $option['selected'] = true;
+        $option['selected'][0] = true;
       } else {
-        $option['selected'] = false;
+        $option['selected'][0] = false;
       }
     }
     $option['totalrank'] = $total_rank_no;
     for ($i=1; $i<=$total_rank_no; $i++) {
       if (isset($rank_answers[$option['tmppartid'] - 1]) and $i == $rank_answers[$option['tmppartid'] - 1]) {
-        $option['selected'] = true;
+        $option['selected'][$i]= true;
       } else {
-        $option['selected'] = false;
+        $option['selected'][$i] = false;
       }
     }
     if (substr($user_dismissid, $option['tmppartid']-1, 1) == '1') {
@@ -156,6 +154,8 @@ class renderdata extends \questiondata {
     $option = $this->get_opt($part_id);
     if ($option['marksincorrect'] < 0) {
       $this->negativemarking = true;
+    } else {
+      $this->negativemarking = false;
     }
     // Write out the hidden field for the dismiss facility.
     if ($user_dismissid != '') {
