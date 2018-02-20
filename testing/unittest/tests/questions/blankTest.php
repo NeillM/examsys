@@ -31,20 +31,20 @@ class blanktest extends unittest{
     * @group question
     */
   public function test_set_question_head() {
-    $render = questionrender::get_render('blank');
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaydefault'));
-    $this->assertFalse($render->get('displaynotes'));
-    $this->assertFalse($render->get('displayscenario'));
-    $this->assertTrue($render->get('displayleadin'));
-    $this->assertFalse($render->get('displaymedia'));
-    $render->notes = 'test';
-    $render->scenario = 'test';
-    $render->qmedia = 'test';
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaynotes'));
-    $this->assertTrue($render->get('displayscenario'));
-    $this->assertTrue($render->get('displaymedia'));
+    $data = questiondata::get_datastore('blank');
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaydefault'));
+    $this->assertFalse($data->get('displaynotes'));
+    $this->assertFalse($data->get('displayscenario'));
+    $this->assertTrue($data->get('displayleadin'));
+    $this->assertFalse($data->get('displaymedia'));
+    $data->notes = 'test';
+    $data->scenario = 'test';
+    $data->qmedia = 'test';
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaynotes'));
+    $this->assertTrue($data->get('displayscenario'));
+    $this->assertTrue($data->get('displaymedia'));
   }
  
   /**
@@ -52,26 +52,26 @@ class blanktest extends unittest{
     * @group question
     */
   public function test_set_option_textbox() {
-    $render = questionrender::get_render('blank');
+    $data = questiondata::get_datastore('blank');
     $option['optiontext'] = '<div>London is the capital of [blank]England,Scotland,Wales,Northern Ireland[/blank] and is in the [blank]United Kingdom,United States of America[/blank]</div>';
     $option['markscorrect'] = 1;
-    $render->set_opt(0, $option);
-    $render->displaymethod = 'textboxes';
-    $render->scoremethod = 'Mark per Option';
-    $render->marks = 0;
+    $data->set_opt(0, $option);
+    $data->displaymethod = 'textboxes';
+    $data->scoremethod = 'Mark per Option';
+    $data->marks = 0;
     $useranswerid = '["Wales","u"]';
-    $render->set_option(0, $useranswerid, '', 1);
-    $this->assertTrue($render->get('unanswered'));
+    $data->set_option(0, $useranswerid, '', 1);
+    $this->assertTrue($data->get('unanswered'));
     $blankoptions[1] = array('itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of ');
     $blankoptions[2] = array('itemtype' => 'blank', 'itemcount' => 1, 'size' => 15, 'unans' => false, 'encoded_ans' => 'Wales');
     $blankoptions[3] = array('itemtype' => 'blurb', 'itemvalue' => ' and is in the ');
     $blankoptions[4] = array('itemtype' => 'blank', 'itemcount' => 2, 'size' => 15, 'unans' => true);
     $blankoptions[5] = array('itemtype' => 'blurb', 'itemvalue' => '</div>');
-    $this->assertEquals($blankoptions, $render->get('blankoptions'));
-    $this->assertEquals(2, $render->get('marks'));
-    $render->scoremethod = 'Mark per Question';
-    $render->set_option(0, $useranswerid, '', 1);
-    $this->assertEquals(1, $render->get('marks'));
+    $this->assertEquals($blankoptions, $data->get('blankoptions'));
+    $this->assertEquals(2, $data->get('marks'));
+    $data->scoremethod = 'Mark per Question';
+    $data->set_option(0, $useranswerid, '', 1);
+    $this->assertEquals(1, $data->get('marks'));
   }
 
   /**
@@ -79,16 +79,16 @@ class blanktest extends unittest{
     * @group question
     */
   public function test_set_option_dropdown() {
-    $render = questionrender::get_render('blank');
+    $data = questiondata::get_datastore('blank');
     $option['optiontext'] = '<div>London is the capital of [blank]England,Scotland,Wales,Northern Ireland[/blank] and is in the [blank]United Kingdom,United States of America[/blank]</div>';
     $option['markscorrect'] = 1;
-    $render->set_opt(0, $option);
-    $render->displaymethod = 'dropdown';
-    $render->scoremethod = 'Mark per Option';
-    $render->marks = 0;
+    $data->set_opt(0, $option);
+    $data->displaymethod = 'dropdown';
+    $data->scoremethod = 'Mark per Option';
+    $data->marks = 0;
     $useranswerid = '["Wales","u"]';
-    $render->set_option(0, $useranswerid, '', 1);
-    $this->assertTrue($render->get('unanswered'));
+    $data->set_option(0, $useranswerid, '', 1);
+    $this->assertTrue($data->get('unanswered'));
     $blankoptions[1] = array('itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of ');
     $blankoptions[2] = array('itemtype' => 'blank', 'itemcount' => 1, 'unans' => false, 'itemvalue' => array (
         0 => array('answer' => 'England', 'selected' => false),
@@ -101,7 +101,7 @@ class blanktest extends unittest{
          1 => array('answer' => 'United States of America', 'selected' => false)));
     $blankoptions[5] = array('itemtype' => 'blurb', 'itemvalue' => '</div>');
     // Need to split test as itemvalue randomly shuffled so need to sort before test.
-    $options = $render->get('blankoptions');
+    $options = $data->get('blankoptions');
     $this->assertEquals($blankoptions[1], $options[1]);
     sort($options[2]['itemvalue']);
     $this->assertEquals($blankoptions[2], $options[2]);
@@ -109,10 +109,10 @@ class blanktest extends unittest{
     sort($options[4]['itemvalue']);
     $this->assertEquals($blankoptions[4], $options[4]);
     $this->assertEquals($blankoptions[5], $options[5]);
-    $this->assertEquals(2, $render->get('marks'));
-    $render->scoremethod = 'Mark per Question';
-    $render->set_option(0, $useranswerid, '', 1);
-    $this->assertEquals(1, $render->get('marks'));
+    $this->assertEquals(2, $data->get('marks'));
+    $data->scoremethod = 'Mark per Question';
+    $data->set_option(0, $useranswerid, '', 1);
+    $this->assertEquals(1, $data->get('marks'));
   }
 
 }

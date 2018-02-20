@@ -41,13 +41,13 @@ class enhancedcalctest extends unittestdatabase{
     * @group question
     */
   public function test_set_question_head() {
-    $render = questionrender::get_render('enhancedcalc');
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaydefault'));
-    $this->assertFalse($render->get('displaynotes'));
-    $render->notes = 'test';
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaynotes'));
+    $data = questiondata::get_datastore('enhancedcalc');
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaydefault'));
+    $this->assertFalse($data->get('displaynotes'));
+    $data->notes = 'test';
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaynotes'));
   }
 
   /**
@@ -55,14 +55,14 @@ class enhancedcalctest extends unittestdatabase{
     * @group question
     */
   public function test_set_question() {
-    $render = questionrender::get_render('enhancedcalc');
+    $data = questiondata::get_datastore('enhancedcalc');
     $cfg_web_root = $this->config->get('cfg_web_root');
     require_once $cfg_web_root . 'plugins/questions/enhancedcalc/enhancedcalc.class.php';
     $question['object'] = new \EnhancedCalc($this->config);
-    $render->question = $question;
+    $data->question = $question;
     $useranswerid = '{"vars":{"$A":2,"$B":8},"uans":""}';
-    $render->set_question(1, $useranswerid, '');
-    $this->assertEquals($render->get('useranswers'), $question['object']->alluseranswers);
+    $data->set_question(1, $useranswerid, '');
+    $this->assertEquals($data->get('useranswers'), $question['object']->alluseranswers);
   }
 
   /**
@@ -71,19 +71,19 @@ class enhancedcalctest extends unittestdatabase{
     */
   public function test_set_option() {
     ob_start(); // Start output buffering
-    $render = questionrender::get_render('enhancedcalc');
-    $render->marks = 0;
-    $render->questionno = 1;
+    $data = questiondata::get_datastore('enhancedcalc');
+    $data->marks = 0;
+    $data->questionno = 1;
     $cfg_web_root = $this->config->get('cfg_web_root');
     require_once $cfg_web_root . 'plugins/questions/enhancedcalc/enhancedcalc.class.php';
     $propertyObj = \PaperProperties::get_paper_properties_by_id(1, $this->db, array(), true);
     $questions =  $propertyObj->build_paper(true, 1, 1);
     $questions[1]['object'] = new \EnhancedCalc($this->config);
     $questions[1]['object']->load($questions[1]);
-    $render->question = $questions[1];
+    $data->question = $questions[1];
     $useranswerid = '{"vars":{"$A":2,"$B":8},"uans":""}';
-    $render->set_option(1, $useranswerid, '', 1);
-    $this->assertEquals(3, $render->get('marks'));
+    $data->set_option(1, $useranswerid, '', 1);
+    $this->assertEquals(3, $data->get('marks'));
     $output = ob_get_contents(); // Store buffer in variable
     ob_end_clean(); // End buffering and clean up
   }

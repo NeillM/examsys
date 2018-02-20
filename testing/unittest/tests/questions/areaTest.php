@@ -31,17 +31,17 @@ class areatest extends unittest{
     * @group question
     */
   public function test_set_question_head() {
-    $render = questionrender::get_render('area');
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaydefault'));
-    $this->assertFalse($render->get('displaynotes'));
-    $this->assertFalse($render->get('displayscenario'));
-    $this->assertTrue($render->get('displayleadin'));
-    $render->notes = 'test';
-    $render->scenario = 'test';
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaynotes'));
-    $this->assertTrue($render->get('displayscenario'));
+    $data = questiondata::get_datastore('area');
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaydefault'));
+    $this->assertFalse($data->get('displaynotes'));
+    $this->assertFalse($data->get('displayscenario'));
+    $this->assertTrue($data->get('displayleadin'));
+    $data->notes = 'test';
+    $data->scenario = 'test';
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaynotes'));
+    $this->assertTrue($data->get('displayscenario'));
   }
  
   /**
@@ -49,22 +49,22 @@ class areatest extends unittest{
     * @group question
     */
   public function test_set_option() {
-    $render = questionrender::get_render('area');
+    $data = questiondata::get_datastore('area');
     $option['correct'] = 1;
     $option['markscorrect'] = 1;
-    $render->set_opt(0, $option);
-    $render->marks = 1;
-    $render->mediawidth =  10;
-    $render->mediaheight = 10;
+    $data->set_opt(0, $option);
+    $data->marks = 1;
+    $data->mediawidth =  10;
+    $data->mediaheight = 10;
     $useranswerid = '100,0,0,0,0,7397;d5,69,df,64,d5,69, ';
-    $render->set_option(0, $useranswerid, '', 0);
-    $this->assertFalse($render->get('unanswered'));
-    $this->assertEquals(12, $render->get('mediawidth'));
-    $this->assertEquals(37, $render->get('mediaheight'));
-    $this->assertEquals(1, $render->get('areadisplay'));
-    $this->assertEquals('d5,69,df,64,d5,69', $render->get('areauseranswer'));
-    $this->assertEquals($useranswerid, $render->get('areafulluseranswer'));
-    $this->assertEquals(2, $render->get('marks'));
+    $data->set_option(0, $useranswerid, '', 0);
+    $this->assertFalse($data->get('unanswered'));
+    $this->assertEquals(12, $data->get('mediawidth'));
+    $this->assertEquals(37, $data->get('mediaheight'));
+    $this->assertEquals(1, $data->get('areadisplay'));
+    $this->assertEquals('d5,69,df,64,d5,69', $data->get('areauseranswer'));
+    $this->assertEquals($useranswerid, $data->get('areafulluseranswer'));
+    $this->assertEquals(2, $data->get('marks'));
   }
 
 }

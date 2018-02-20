@@ -31,13 +31,13 @@ class likerttest extends unittest{
     * @group question
     */
   public function test_set_question_head() {
-    $render = questionrender::get_render('likert');
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaydefault'));
-    $this->assertFalse($render->get('displaymedia'));
-    $render->qmedia = 'test';
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaymedia'));
+    $data = questiondata::get_datastore('likert');
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaydefault'));
+    $this->assertFalse($data->get('displaymedia'));
+    $data->qmedia = 'test';
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaymedia'));
   }
 
     /**
@@ -45,23 +45,23 @@ class likerttest extends unittest{
     * @group question
     */
   public function test_set_question() {
-    $render = questionrender::get_render('likert');
-    $render->displaymethod =  '0|1|2|3|4|true';
-    $render->set_question(0, '', '');
-    $this->assertFalse($render->get('displaynotes'));
-    $this->assertFalse($render->get('displayscenario'));
-    $this->assertTrue($render->get('displayna'));
-    $this->assertEquals(array(0, 1, 2, 3, 4), $render->get('scale'));
-    $render->displaymethod = '0|1|2|3|4|false';
-    $render->notes = 'note';
-    $render->scenario = 'scenario';
-    $render->set_question(0, '', '');
-    $this->assertFalse($render->get('displayna'));
-    $this->assertEquals(array(0, 1, 2, 3, 4), $render->get('scale'));
-    $this->assertTrue($render->get('displaynotes'));
-    $this->assertTrue($render->get('displayscenario'));
-    $this->assertEquals(6, $render->get('likertnotescolspan'));
-    $this->assertEquals(7, $render->get('likertscenariocolspan'));
+    $data = questiondata::get_datastore('likert');
+    $data->displaymethod =  '0|1|2|3|4|true';
+    $data->set_question(0, '', '');
+    $this->assertFalse($data->get('displaynotes'));
+    $this->assertFalse($data->get('displayscenario'));
+    $this->assertTrue($data->get('displayna'));
+    $this->assertEquals(array(0, 1, 2, 3, 4), $data->get('scale'));
+    $data->displaymethod = '0|1|2|3|4|false';
+    $data->notes = 'note';
+    $data->scenario = 'scenario';
+    $data->set_question(0, '', '');
+    $this->assertFalse($data->get('displayna'));
+    $this->assertEquals(array(0, 1, 2, 3, 4), $data->get('scale'));
+    $this->assertTrue($data->get('displaynotes'));
+    $this->assertTrue($data->get('displayscenario'));
+    $this->assertEquals(6, $data->get('likertnotescolspan'));
+    $this->assertEquals(7, $data->get('likertscenariocolspan'));
     
     }
 
@@ -70,22 +70,22 @@ class likerttest extends unittest{
     * @group question
     */
   public function test_set_option() {
-    $render = questionrender::get_render('likert');
-    $render->displaymethod =  '0|1|2|3|4|true';
-    $render->questionno =  '1';
-    $render->set_option(0, '4', '', 1);
-    $this->assertFalse($render->get('unanswered'));
-    $this->assertFalse($render->get('na'));
-    $this->assertEquals('1_0', $render->get('id'));
-    $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => true, 5 => false), $render->get('scaleopt'));
-    $render->set_option(0, 'n/a', '', 1);
-    $this->assertTrue($render->get('na'));
-    $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => false, 5 => false), $render->get('scaleopt'));
-    $render->displaymethod = '0|1|2|3|4|false';
-    $render->set_option(0, 'u', '', 1);
-    $this->assertFalse($render->get('na'));
-    $this->assertTrue($render->get('unanswered'));
-    $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => false, 5 => false), $render->get('scaleopt'));
+    $data = questiondata::get_datastore('likert');
+    $data->displaymethod =  '0|1|2|3|4|true';
+    $data->questionno =  '1';
+    $data->set_option(0, '4', '', 1);
+    $this->assertFalse($data->get('unanswered'));
+    $this->assertFalse($data->get('na'));
+    $this->assertEquals('1_0', $data->get('id'));
+    $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => true, 5 => false), $data->get('scaleopt'));
+    $data->set_option(0, 'n/a', '', 1);
+    $this->assertTrue($data->get('na'));
+    $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => false, 5 => false), $data->get('scaleopt'));
+    $data->displaymethod = '0|1|2|3|4|false';
+    $data->set_option(0, 'u', '', 1);
+    $this->assertFalse($data->get('na'));
+    $this->assertTrue($data->get('unanswered'));
+    $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => false, 5 => false), $data->get('scaleopt'));
   }
 
 }

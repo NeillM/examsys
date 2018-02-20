@@ -31,20 +31,20 @@ class mrqtest extends unittest{
     * @group question
     */
   public function test_set_question_head() {
-    $render = questionrender::get_render('mrq');
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaydefault'));
-    $this->assertFalse($render->get('displaynotes'));
-    $this->assertFalse($render->get('displayscenario'));
-    $this->assertTrue($render->get('displayleadin'));
-    $this->assertFalse($render->get('displaymedia'));
-    $render->notes = 'test';
-    $render->scenario = 'test';
-    $render->qmedia = 'test';
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaynotes'));
-    $this->assertTrue($render->get('displayscenario'));
-    $this->assertTrue($render->get('displaymedia'));
+    $data = questiondata::get_datastore('mrq');
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaydefault'));
+    $this->assertFalse($data->get('displaynotes'));
+    $this->assertFalse($data->get('displayscenario'));
+    $this->assertTrue($data->get('displayleadin'));
+    $this->assertFalse($data->get('displaymedia'));
+    $data->notes = 'test';
+    $data->scenario = 'test';
+    $data->qmedia = 'test';
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaynotes'));
+    $this->assertTrue($data->get('displayscenario'));
+    $this->assertTrue($data->get('displaymedia'));
   }
 
   /**
@@ -52,17 +52,17 @@ class mrqtest extends unittest{
     * @group question
     */
   public function test_set_question() {
-    $render = questionrender::get_render('mrq');
+    $data = questiondata::get_datastore('mrq');
     $useranswerid = 'nnnnn';
-    $render->set_question(1, $useranswerid, '', 2);
-    $this->assertTrue($render->get('unanswered'));
-    $this->assertEquals(2, $render->get('allowedresponses'));
+    $data->set_question(1, $useranswerid, '', 2);
+    $this->assertTrue($data->get('unanswered'));
+    $this->assertEquals(2, $data->get('allowedresponses'));
     $useranswerid = 'nnnyn';
-    $render->set_question(1, $useranswerid, '', 2);
-    $this->assertFalse($render->get('unanswered'));
+    $data->set_question(1, $useranswerid, '', 2);
+    $this->assertFalse($data->get('unanswered'));
     $useranswerid = 'nynyn';
-    $render->set_question(1, $useranswerid, '', 2);
-    $this->assertFalse($render->get('unanswered'));
+    $data->set_question(1, $useranswerid, '', 2);
+    $this->assertFalse($data->get('unanswered'));
   }
 
   /**
@@ -70,25 +70,25 @@ class mrqtest extends unittest{
     * @group question
     */
   public function test_set_option() {
-    $render = questionrender::get_render('mrq');
+    $data = questiondata::get_datastore('mrq');
     $option['tmppartid'] = 1;
     $option['optiontext'] = '';
     $option['omedia'] = '';
     $option['correct'] = 'n';
     $option['markscorrect'] = 1;
-    $render->set_opt(1, $option);
-    $render->marks = 0;
-    $render->scoremethod = 'Mark per Option';
+    $data->set_opt(1, $option);
+    $data->marks = 0;
+    $data->scoremethod = 'Mark per Option';
     $useranswerid = 'nnny';
-    $render->set_option(1, $useranswerid, '1000', 1);
-    $option = $render->get_opt(1);
+    $data->set_option(1, $useranswerid, '1000', 1);
+    $option = $data->get_opt(1);
     $this->assertFalse($option['selected']);
     $this->assertTrue($option['inact']);
     $this->assertFalse($option['optiontextdisplay']);
     $this->assertFalse($option['displayoptionmedia']);
-    $this->assertFalse($render->get('negativemarking'));
-    $this->assertFalse($render->get('abstainselected'));
-    $this->assertEquals(0, $render->get('marks'));
+    $this->assertFalse($data->get('negativemarking'));
+    $this->assertFalse($data->get('abstainselected'));
+    $this->assertEquals(0, $data->get('marks'));
   }
 
   /**
@@ -96,34 +96,34 @@ class mrqtest extends unittest{
     * @group question
     */
   public function test_set_additional_option() {
-    $render = questionrender::get_render('mrq');
+    $data = questiondata::get_datastore('mrq');
     // Test other.
     $useranswerid = 'nnnyn';
-    $render->optionnumber = 5;
+    $data->optionnumber = 5;
     $option['marksincorrect'] = 0;
     $option['tmppartid'] = 4;
     $option['correct'] = 'y';
-    $render->set_opt(4, $option);
-    $render->displaymethod = 'other';
-    $render->partid = 4;
+    $data->set_opt(4, $option);
+    $data->displaymethod = 'other';
+    $data->partid = 4;
     $useranswerid = 'nnnnytest';
-    $render->set_additional_option(4, $useranswerid, '00000', 1);
-    $this->assertEquals(5, $render->get('partid'));
-    $this->assertTrue($render->get('otherselected'));
-    $this->assertEquals('test', $render->get('other'));
+    $data->set_additional_option(4, $useranswerid, '00000', 1);
+    $this->assertEquals(5, $data->get('partid'));
+    $this->assertTrue($data->get('otherselected'));
+    $this->assertEquals('test', $data->get('other'));
     // Test dismiss.
     $option['marksincorrect'] = -1;
-    $render->set_opt(1, $option);
-    $render->set_additional_option(1, $useranswerid, '01000', 1);
-    $this->assertEquals('01000', $render->get('dismiss'));
-    $render->set_additional_option(1, $useranswerid, '', 1);
-    $this->assertEquals('00000', $render->get('dismiss'));
+    $data->set_opt(1, $option);
+    $data->set_additional_option(1, $useranswerid, '01000', 1);
+    $this->assertEquals('01000', $data->get('dismiss'));
+    $data->set_additional_option(1, $useranswerid, '', 1);
+    $this->assertEquals('00000', $data->get('dismiss'));
     // Test abstain.
     $useranswerid = 'a';
     $option['markscorrect'] = -1;
-    $render->set_additional_option(1, $useranswerid, '1000', 1);
-    $option = $render->get_opt(1);
-    $this->assertTrue($render->get('negativemarking'));
-    $this->assertTrue($render->get('abstainselected'));
+    $data->set_additional_option(1, $useranswerid, '1000', 1);
+    $option = $data->get_opt(1);
+    $this->assertTrue($data->get('negativemarking'));
+    $this->assertTrue($data->get('abstainselected'));
   }
 }

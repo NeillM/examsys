@@ -31,17 +31,17 @@ class flashtest extends unittest{
     * @group question
     */
   public function test_set_question_head() {
-    $render = questionrender::get_render('flash');
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaydefault'));
-    $this->assertFalse($render->get('displaynotes'));
-    $this->assertFalse($render->get('displayscenario'));
-    $this->assertTrue($render->get('displayleadin'));
-    $render->notes = 'test';
-    $render->scenario = 'test';
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaynotes'));
-    $this->assertTrue($render->get('displayscenario'));
+    $data = questiondata::get_datastore('flash');
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaydefault'));
+    $this->assertFalse($data->get('displaynotes'));
+    $this->assertFalse($data->get('displayscenario'));
+    $this->assertTrue($data->get('displayleadin'));
+    $data->notes = 'test';
+    $data->scenario = 'test';
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaynotes'));
+    $this->assertTrue($data->get('displayscenario'));
   }
 
   /**
@@ -49,12 +49,12 @@ class flashtest extends unittest{
     * @group question
     */
   public function test_set_option() {
-    $render = questionrender::get_render('flash');
+    $data = questiondata::get_datastore('flash');
     $option['markscorrect'] = 1;
-    $render->set_opt(0, $option);
-    $render->marks = 1;
-    $render->set_option(0, '', '', 0);
-    $this->assertEquals(2, $render->get('marks'));
+    $data->set_opt(0, $option);
+    $data->marks = 1;
+    $data->set_option(0, '', '', 0);
+    $this->assertEquals(2, $data->get('marks'));
   }
 
 }

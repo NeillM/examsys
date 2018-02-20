@@ -725,4 +725,13 @@ abstract class questiondata {
     }
   }
 
+  /**
+   * Get data store class
+   * @param string $qtype question type
+   * @return class
+   */
+  public static function get_datastore($qtype) {
+    $questionpluginns = 'plugins\\questions\\' . $qtype . '\\renderdata';
+    return new $questionpluginns();
+  }
 }

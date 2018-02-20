@@ -31,14 +31,14 @@ class extmatchtest extends unittest{
     * @group question
     */
   public function test_set_question_head() {
-    $render = questionrender::get_render('extmatch');
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaydefault'));
-    $this->assertFalse($render->get('displaynotes'));
-    $this->assertTrue($render->get('displayleadin'));
-    $render->notes = 'test';
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaynotes'));
+    $data = questiondata::get_datastore('extmatch');
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaydefault'));
+    $this->assertFalse($data->get('displaynotes'));
+    $this->assertTrue($data->get('displayleadin'));
+    $data->notes = 'test';
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaynotes'));
   }
 
   /**
@@ -46,11 +46,11 @@ class extmatchtest extends unittest{
     * @group question
     */
   public function test_set_question() {
-    $render = questionrender::get_render('extmatch');
-    $render->scenario =  "<div>It is now known as;</div>|<div>It's football team is called</div>|<div>It's most famous landmark is the</div>|||||||";
-    $render->qmedia = "1516973089.jpg|1516973089.png|1516975621.jpg||||||||";
-    $render->qmediawidth = "1480|480|951||||||||";
-    $render->qmediaheight = "776|105|121||||||||";
+    $data = questiondata::get_datastore('extmatch');
+    $data->scenario =  "<div>It is now known as;</div>|<div>It's football team is called</div>|<div>It's most famous landmark is the</div>|||||||";
+    $data->qmedia = "1516973089.jpg|1516973089.png|1516975621.jpg||||||||";
+    $data->qmediawidth = "1480|480|951||||||||";
+    $data->qmediaheight = "776|105|121||||||||";
     $scenarios = array("<div>It is now known as;</div>",
         "<div>It's football team is called</div>",
         "<div>It's most famous landmark is the</div>", "", "", "", "", "", "", "");
@@ -60,15 +60,15 @@ class extmatchtest extends unittest{
     $width = array(1480, 480, 951, "", "", "", "", "", "", "", "");
     $height= array(776, 105, 121, "", "", "", "", "", "", "", "");
     $useranswerid = '1|3|2';
-    $render->set_question(1, $useranswerid, '');
-    $this->assertEquals($scenarios, $render->get('scenarios'));
-    $this->assertEquals($media, $render->get('media'));
-    $this->assertEquals($width, $render->get('mediawidth'));
-    $this->assertEquals($height, $render->get('mediaheight'));
-    $this->assertEquals(array('1', '3', '2'), $render->get('usersanswers'));
+    $data->set_question(1, $useranswerid, '');
+    $this->assertEquals($scenarios, $data->get('scenarios'));
+    $this->assertEquals($media, $data->get('media'));
+    $this->assertEquals($width, $data->get('mediawidth'));
+    $this->assertEquals($height, $data->get('mediaheight'));
+    $this->assertEquals(array('1', '3', '2'), $data->get('usersanswers'));
     $useranswerid = null;
-    $render->set_question(0, $useranswerid, '');
-    $this->assertEquals(array(), $render->get('usersanswers'));
+    $data->set_question(0, $useranswerid, '');
+    $this->assertEquals(array(), $data->get('usersanswers'));
   }
 
   /**
@@ -76,16 +76,16 @@ class extmatchtest extends unittest{
     * @group question
     */
   public function test_set_option() {
-    $render = questionrender::get_render('extmatch');
-    $render->matchoptions = array('Paris');
-    $render->set_opt(1, array('optiontext' => 'Paris'));
-    $render->set_opt(2, array('optiontext' => 'Eifel Tower'));
-    $render->set_opt(3, array('optiontext' => 'Paris Saint-Germain F.C.'));
-    $render->set_opt(4, array('optiontext' => 'Derby'));
-    $render->set_opt(5, array('optiontext' => 'Intu Centre'));
-    $render->set_opt(6, array('optiontext' => 'Derby County F.C.'));
-    $render->set_option(2, '1|3|2', '', 1);
-    $this->assertEquals(array('Paris', 'Eifel Tower'), $render->get('matchoptions'));
+    $data = questiondata::get_datastore('extmatch');
+    $data->matchoptions = array('Paris');
+    $data->set_opt(1, array('optiontext' => 'Paris'));
+    $data->set_opt(2, array('optiontext' => 'Eifel Tower'));
+    $data->set_opt(3, array('optiontext' => 'Paris Saint-Germain F.C.'));
+    $data->set_opt(4, array('optiontext' => 'Derby'));
+    $data->set_opt(5, array('optiontext' => 'Intu Centre'));
+    $data->set_opt(6, array('optiontext' => 'Derby County F.C.'));
+    $data->set_option(2, '1|3|2', '', 1);
+    $this->assertEquals(array('Paris', 'Eifel Tower'), $data->get('matchoptions'));
   }
 
   /**
@@ -93,25 +93,25 @@ class extmatchtest extends unittest{
     * @group question
     */
   public function test_set_additional_option() {
-    $render = questionrender::get_render('extmatch');
-    $render->set_opt(1, array('optiontext' => 'Paris', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
-    $render->set_opt(2, array('optiontext' => 'Eifel Tower', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
-    $render->set_opt(3, array('optiontext' => 'Paris Saint-Germain F.C.', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
-    $render->set_opt(4, array('optiontext' => 'Derby', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
-    $render->set_opt(5, array('optiontext' => 'Intu Centre', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
-    $render->set_opt(6, array('optiontext' => 'Derby County F.C.', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
-    $render->matchoptions = array('Paris', 'Eifel Tower', 'Paris Saint-Germain F.C.', 'Derby', 'Intu Centre', 'Derby County F.C.');
-    $render->optionorder = "0,1,2,3,4,5";
-    $render->scenarios = array("<div>It is now known as;</div>",
+    $data = questiondata::get_datastore('extmatch');
+    $data->set_opt(1, array('optiontext' => 'Paris', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
+    $data->set_opt(2, array('optiontext' => 'Eifel Tower', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
+    $data->set_opt(3, array('optiontext' => 'Paris Saint-Germain F.C.', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
+    $data->set_opt(4, array('optiontext' => 'Derby', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
+    $data->set_opt(5, array('optiontext' => 'Intu Centre', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
+    $data->set_opt(6, array('optiontext' => 'Derby County F.C.', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
+    $data->matchoptions = array('Paris', 'Eifel Tower', 'Paris Saint-Germain F.C.', 'Derby', 'Intu Centre', 'Derby County F.C.');
+    $data->optionorder = "0,1,2,3,4,5";
+    $data->scenarios = array("<div>It is now known as;</div>",
         "<div>It's football team is called</div>",
         "<div>It's most famous landmark is the</div>", "", "", "", "", "", "", "");
-    $render->media = array("1516973089.jpg",
+    $data->media = array("1516973089.jpg",
         "1516973089.png",
         "1516975621.jpg", "", "", "", "", "", "", "", "");
-    $render->mediawidth = array(1480, 480, 951, "", "", "", "", "", "", "", "");
-    $render->mediaheight =  array(776, 105, 121, "", "", "", "", "", "", "", "");
-    $render->usersanswers =  array('1', '3', '2');
-    $render->marks = 0;
+    $data->mediawidth = array(1480, 480, 951, "", "", "", "", "", "", "", "");
+    $data->mediaheight =  array(776, 105, 121, "", "", "", "", "", "", "", "");
+    $data->usersanswers =  array('1', '3', '2');
+    $data->marks = 0;
     $cfg_root_path = $this->config->get('cfg_root_path');
     $matchstem = array(
       array('answerno' => 2,
@@ -249,12 +249,12 @@ class extmatchtest extends unittest{
         )
       )
     );
-    $render->set_additional_option(6, '1|3|2', '', 1);
-    $this->assertTrue($render->get('extmatchdisplaymedia'));
-    $this->assertEquals(2, $render->get('split'));
-    $this->assertEquals(6, $render->get('matchoptionsno'));
-    $this->assertEquals(4, $render->get('marks'));
-    $this->assertFalse($render->get('unanswered'));
-    $this->assertEquals($matchstem, $render->get('matchstem'));
+    $data->set_additional_option(6, '1|3|2', '', 1);
+    $this->assertTrue($data->get('extmatchdisplaymedia'));
+    $this->assertEquals(2, $data->get('split'));
+    $this->assertEquals(6, $data->get('matchoptionsno'));
+    $this->assertEquals(4, $data->get('marks'));
+    $this->assertFalse($data->get('unanswered'));
+    $this->assertEquals($matchstem, $data->get('matchstem'));
   }
 }

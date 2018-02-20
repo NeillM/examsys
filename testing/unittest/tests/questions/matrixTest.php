@@ -31,15 +31,15 @@ class matrixtest extends unittest{
     * @group question
     */
   public function test_set_question_head() {
-    $render = questionrender::get_render('matrix');
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaydefault'));
-    $this->assertFalse($render->get('displaynotes'));
-    $this->assertTrue($render->get('displayleadin'));
-    $this->assertTrue($render->get('displaymedia'));
-    $render->notes = 'test';
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaynotes'));
+    $data = questiondata::get_datastore('matrix');
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaydefault'));
+    $this->assertFalse($data->get('displaynotes'));
+    $this->assertTrue($data->get('displayleadin'));
+    $this->assertTrue($data->get('displaymedia'));
+    $data->notes = 'test';
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaynotes'));
   }
 
   /**
@@ -47,16 +47,16 @@ class matrixtest extends unittest{
     * @group question
     */
   public function test_set_question() {
-    $render = questionrender::get_render('matrix');
-    $render->scenario = "Word|Excel|PowerPoint|Access5|Publisher|Data File||||";
+    $data = questiondata::get_datastore('matrix');
+    $data->scenario = "Word|Excel|PowerPoint|Access5|Publisher|Data File||||";
     $useranswerid = '3|4|2|5|1|6';
     $scenarios = array('Word', 'Excel', 'PowerPoint', 'Access5', 'Publisher', 'Data File', '', '', '', '');
-    $render->set_question(1, $useranswerid, '');
-    $this->assertEquals($scenarios, $render->get('scenarios'));
-    $this->assertEquals(array('3', '4', '2', '5', '1', '6'), $render->get('usersanswers'));
+    $data->set_question(1, $useranswerid, '');
+    $this->assertEquals($scenarios, $data->get('scenarios'));
+    $this->assertEquals(array('3', '4', '2', '5', '1', '6'), $data->get('usersanswers'));
     $useranswerid = null;
-    $render->set_question(0, $useranswerid, '');
-    $this->assertEquals(array(), $render->get('usersanswers'));
+    $data->set_question(0, $useranswerid, '');
+    $this->assertEquals(array(), $data->get('usersanswers'));
   }
 
   /**
@@ -64,16 +64,16 @@ class matrixtest extends unittest{
     * @group question
     */
   public function test_set_option() {
-    $render = questionrender::get_render('matrix');
-    $render->matchoptions = array('.PUB');
-    $render->set_opt(1, array('optiontext' => '.PUB'));
-    $render->set_opt(2, array('optiontext' => '.PPT'));
-    $render->set_opt(3, array('optiontext' => '.DOC'));
-    $render->set_opt(4, array('optiontext' => '.XLS'));
-    $render->set_opt(5, array('optiontext' => '.MDB'));
-    $render->set_opt(6, array('optiontext' => '.DAT'));
-    $render->set_option(2, '3|4|2|5|1|6', '', 1);
-    $this->assertEquals(array('.PUB', '.PPT'), $render->get('matchoptions'));
+    $data = questiondata::get_datastore('matrix');
+    $data->matchoptions = array('.PUB');
+    $data->set_opt(1, array('optiontext' => '.PUB'));
+    $data->set_opt(2, array('optiontext' => '.PPT'));
+    $data->set_opt(3, array('optiontext' => '.DOC'));
+    $data->set_opt(4, array('optiontext' => '.XLS'));
+    $data->set_opt(5, array('optiontext' => '.MDB'));
+    $data->set_opt(6, array('optiontext' => '.DAT'));
+    $data->set_option(2, '3|4|2|5|1|6', '', 1);
+    $this->assertEquals(array('.PUB', '.PPT'), $data->get('matchoptions'));
   }
 
   /**
@@ -81,13 +81,13 @@ class matrixtest extends unittest{
     * @group question
     */
   public function test_set_additional_option() {
-    $render = questionrender::get_render('matrix');
-    $render->matchoptions = array('.PUB', '.PPT', '.DOC', '.XLS', '.MDB','.DAT');
-    $render->usersanswers = array('3', '4', '2', '5', '1', '6');
-    $render->optionorder = '5,2,4,1,0,3';
-    $render->scenarios = array('Word', 'Excel', 'PowerPoint', 'Access5', 'Publisher', 'Data File', '', '', '', '');
+    $data = questiondata::get_datastore('matrix');
+    $data->matchoptions = array('.PUB', '.PPT', '.DOC', '.XLS', '.MDB','.DAT');
+    $data->usersanswers = array('3', '4', '2', '5', '1', '6');
+    $data->optionorder = '5,2,4,1,0,3';
+    $data->scenarios = array('Word', 'Excel', 'PowerPoint', 'Access5', 'Publisher', 'Data File', '', '', '', '');
     $useranswerid = '3|4|2|5|1|6';
-    $render->set_additional_option(1, $useranswerid, '', 1);
+    $data->set_additional_option(1, $useranswerid, '', 1);
     $matchscenarios = array(
       array('unanswered' => false, 'id' => 'A', 'value' => 'Word'),
       array('unanswered' => false, 'id' => 'B', 'value' => 'Excel'),
@@ -134,7 +134,7 @@ class matrixtest extends unittest{
           5 => false,
           6 => false))
     );
-    $this->assertEquals($matchoptions, $render->get('matchoptions'));
-    $this->assertEquals($matchscenarios, $render->get('matchscenarios'));
+    $this->assertEquals($matchoptions, $data->get('matchoptions'));
+    $this->assertEquals($matchscenarios, $data->get('matchscenarios'));
   }
 }

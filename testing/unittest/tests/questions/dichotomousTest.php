@@ -31,20 +31,20 @@ class dichotomoustest extends unittest{
     * @group question
     */
   public function test_set_question_head() {
-    $render = questionrender::get_render('dichotomous');
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaydefault'));
-    $this->assertFalse($render->get('displaynotes'));
-    $this->assertFalse($render->get('displayscenario'));
-    $this->assertTrue($render->get('displayleadin'));
-    $this->assertFalse($render->get('displaymedia'));
-    $render->notes = 'test';
-    $render->scenario = 'test';
-    $render->qmedia = 'test';
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaynotes'));
-    $this->assertTrue($render->get('displayscenario'));
-    $this->assertTrue($render->get('displaymedia'));
+    $data = questiondata::get_datastore('dichotomous');
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaydefault'));
+    $this->assertFalse($data->get('displaynotes'));
+    $this->assertFalse($data->get('displayscenario'));
+    $this->assertTrue($data->get('displayleadin'));
+    $this->assertFalse($data->get('displaymedia'));
+    $data->notes = 'test';
+    $data->scenario = 'test';
+    $data->qmedia = 'test';
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaynotes'));
+    $this->assertTrue($data->get('displayscenario'));
+    $this->assertTrue($data->get('displaymedia'));
   }
  
   /**
@@ -52,25 +52,25 @@ class dichotomoustest extends unittest{
     * @group question
     */
   public function test_set_option() {
-    $render = questionrender::get_render('dichotomous');
+    $data = questiondata::get_datastore('dichotomous');
     $option['markscorrect'] = 1;
     $option['tmppartid'] = 1;
     $option['omedia'] = '';
-    $render->set_opt(0, $option);
-    $render->displaymethod = 'TF_Positive';
-    $render->marks = 0;
+    $data->set_opt(0, $option);
+    $data->displaymethod = 'TF_Positive';
+    $data->marks = 0;
     $useranswerid = 'uuu';
-    $render->set_option(0, $useranswerid, '', 1);
-    $option = $render->get_opt(0);
-    $this->assertTrue($render->get('unanswered'));
+    $data->set_option(0, $useranswerid, '', 1);
+    $option = $data->get_opt(0);
+    $this->assertTrue($data->get('unanswered'));
     $this->assertFalse($option['displayoptionmedia']);
     $this->assertFalse($option['abstain']);
-    $this->assertEquals(1, $render->get('marks'));
+    $this->assertEquals(1, $data->get('marks'));
     $option['omedia'] = 'test';
-    $render->set_opt(0, $option);
-    $render->displaymethod = 'TF_NegativeAbstain';
-    $render->set_option(0, $useranswerid, '', 1);
-    $option = $render->get_opt(0);
+    $data->set_opt(0, $option);
+    $data->displaymethod = 'TF_NegativeAbstain';
+    $data->set_option(0, $useranswerid, '', 1);
+    $option = $data->get_opt(0);
     $this->assertTrue($option['abstain']);
     $this->assertTrue($option['displayoptionmedia']);
   }
@@ -80,16 +80,16 @@ class dichotomoustest extends unittest{
     * @group question
     */
   public function test_set_additional_option() {
-    $render = questionrender::get_render('dichotomous');
+    $data = questiondata::get_datastore('dichotomous');
     $useranswerid = 'uuu';
     $option['marksincorrect'] = -1;
-    $render->set_opt(0, $option);
-    $render->set_additional_option(0, $useranswerid, '', 1);
-    $this->assertTrue($render->get('negativemarking'));
+    $data->set_opt(0, $option);
+    $data->set_additional_option(0, $useranswerid, '', 1);
+    $this->assertTrue($data->get('negativemarking'));
     $option['marksincorrect'] = 0;
-    $render->set_opt(0, $option);
-    $render->set_additional_option(0, $useranswerid, '', 1);
-    $this->assertFalse($render->get('negativemarking'));
+    $data->set_opt(0, $option);
+    $data->set_additional_option(0, $useranswerid, '', 1);
+    $this->assertFalse($data->get('negativemarking'));
   }
   
 }

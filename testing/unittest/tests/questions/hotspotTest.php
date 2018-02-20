@@ -31,16 +31,16 @@ class hotspottest extends unittest{
     * @group question
     */
   public function test_set_question_head() {
-    $render = questionrender::get_render('hotspot');
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaydefault'));
-    $this->assertFalse($render->get('displaynotes'));
-    $this->assertFalse($render->get('displayscenario'));
-    $render->notes = 'test';
-    $render->scenario = 'test';
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaynotes'));
-    $this->assertTrue($render->get('displayscenario'));
+    $data = questiondata::get_datastore('hotspot');
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaydefault'));
+    $this->assertFalse($data->get('displaynotes'));
+    $this->assertFalse($data->get('displayscenario'));
+    $data->notes = 'test';
+    $data->scenario = 'test';
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaynotes'));
+    $this->assertTrue($data->get('displayscenario'));
   }
  
   /**
@@ -48,28 +48,28 @@ class hotspottest extends unittest{
     * @group question
     */
   public function test_set_option() {
-    $render = questionrender::get_render('hotspot');
+    $data = questiondata::get_datastore('hotspot');
     $useranswerid = 'u';
-    $render->set_option(0, $useranswerid, '', 1);
-    $this->assertTrue($render->get('unanswered'));
+    $data->set_option(0, $useranswerid, '', 1);
+    $this->assertTrue($data->get('unanswered'));
     $useranswerid = '1,325,995|1,825,965';
-    $render->mediaheight = 1600;
-    $render->mediawidth = 1600;
+    $data->mediaheight = 1600;
+    $data->mediawidth = 1600;
     $option['correct'] = 'Chocolate calculator~16711680~polygon~16a,399,152,3c7,1a9,3ed,106,407,f9,3a6~0~|Dictionary~16776960~ellipse~392,382,2d1,418~0~';
     $option['markscorrect'] = 1;
-    $render->set_opt(0, $option);
-    $render->scoremethod = 'Mark per Question';
-    $render->set_option(0, $useranswerid, '', 1);
-    $this->assertFalse($render->get('unanswered'));
-    $this->assertEquals($option['correct'], $render->get('tmpcorrect'));
-    $this->assertEquals(1900, $render->get('mediawidth'));
-    $this->assertEquals(1601, $render->get('mediaheight'));
-    $this->assertEquals($useranswerid, $render->get('useranswer'));
-    $this->assertEquals(1, $render->get('screensubmitted'));
-    $this->assertEquals(1, $render->get('marks'));
-    $render->scoremethod =  'Mark per Option';
-    $render->set_option(0, $useranswerid, '', 1);
-    $this->assertEquals(2, $render->get('marks'));
+    $data->set_opt(0, $option);
+    $data->scoremethod = 'Mark per Question';
+    $data->set_option(0, $useranswerid, '', 1);
+    $this->assertFalse($data->get('unanswered'));
+    $this->assertEquals($option['correct'], $data->get('tmpcorrect'));
+    $this->assertEquals(1900, $data->get('mediawidth'));
+    $this->assertEquals(1601, $data->get('mediaheight'));
+    $this->assertEquals($useranswerid, $data->get('useranswer'));
+    $this->assertEquals(1, $data->get('screensubmitted'));
+    $this->assertEquals(1, $data->get('marks'));
+    $data->scoremethod =  'Mark per Option';
+    $data->set_option(0, $useranswerid, '', 1);
+    $this->assertEquals(2, $data->get('marks'));
   }
 
 }

@@ -43,8 +43,7 @@ class questionrender {
    */
   function __construct($qtype) {
     $this->config = Config::get_instance();
-    $questionpluginns = 'plugins\\questions\\' . $qtype . '\\renderdata';
-    $this->questiondata = new $questionpluginns();
+    $this->questiondata = questiondata::get_datastore($qtype);
   }
 
   /**

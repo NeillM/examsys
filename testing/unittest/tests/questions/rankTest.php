@@ -31,20 +31,20 @@ class ranktest extends unittest{
     * @group question
     */
   public function test_set_question_head() {
-    $render = questionrender::get_render('rank');
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaydefault'));
-    $this->assertFalse($render->get('displaynotes'));
-    $this->assertFalse($render->get('displayscenario'));
-    $this->assertTrue($render->get('displayleadin'));
-    $this->assertFalse($render->get('displaymedia'));
-    $render->notes = 'test';
-    $render->scenario = 'test';
-    $render->qmedia = 'test';
-    $render->set_question_head();
-    $this->assertTrue($render->get('displaynotes'));
-    $this->assertTrue($render->get('displayscenario'));
-    $this->assertTrue($render->get('displaymedia'));
+    $data = questiondata::get_datastore('rank');
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaydefault'));
+    $this->assertFalse($data->get('displaynotes'));
+    $this->assertFalse($data->get('displayscenario'));
+    $this->assertTrue($data->get('displayleadin'));
+    $this->assertFalse($data->get('displaymedia'));
+    $data->notes = 'test';
+    $data->scenario = 'test';
+    $data->qmedia = 'test';
+    $data->set_question_head();
+    $this->assertTrue($data->get('displaynotes'));
+    $this->assertTrue($data->get('displayscenario'));
+    $this->assertTrue($data->get('displaymedia'));
   }
 
   /**
@@ -52,34 +52,34 @@ class ranktest extends unittest{
     * @group question
     */
   public function test_set_option() {
-    $render = questionrender::get_render('rank');
-    $render->papertype = '0'; 
-    $render->scoremethod = 'Mark per Option';
-    $render->optionnumber = 3;
-    $render->marks = 0;
+    $data = questiondata::get_datastore('rank');
+    $data->papertype = '0'; 
+    $data->scoremethod = 'Mark per Option';
+    $data->optionnumber = 3;
+    $data->marks = 0;
     $question['options'][0]['correct'] = 1;
     $question['options'][1]['correct'] = 2;
     $question['options'][2]['correct'] = 0;
-    $render->question = $question;
+    $data->question = $question;
     $option['tmppartid'] = 1;
     $option['correct'] = 1;
     $option['markscorrect'] = 1;
-    $render->set_opt(1, $option);
+    $data->set_opt(1, $option);
     $useranswerid = 'u,u,u';
-    $render->set_option(1, $useranswerid, '100', 1);
-    $option = $render->get_opt(1);
-    $this->assertTrue($render->get('unanswered'));
+    $data->set_option(1, $useranswerid, '100', 1);
+    $option = $data->get_opt(1);
+    $this->assertTrue($data->get('unanswered'));
     $this->assertTrue($option['unans']);
     $this->assertTrue($option['na']);
     $this->assertFalse($option['selected']);
     $this->assertTrue($option['inact']);
-    $this->assertEquals(1, $render->get('marks'));
+    $this->assertEquals(1, $data->get('marks'));
     $option['tmppartid'] = 1;
-    $render->set_opt(1, $option);
+    $data->set_opt(1, $option);
     $useranswerid = '1,u,u';
-    $render->set_option(1, $useranswerid, '000', 1);
-    $this->assertFalse($render->get('unanswered'));
-    $option = $render->get_opt(1);
+    $data->set_option(1, $useranswerid, '000', 1);
+    $this->assertFalse($data->get('unanswered'));
+    $option = $data->get_opt(1);
     $this->assertFalse($option['unans']);
     $this->assertTrue($option['selected']);
     $this->assertFalse($option['inact']);
@@ -90,6 +90,6 @@ class ranktest extends unittest{
     * @group question
     */
   public function test_set_additional_option() {
-    $render = questionrender::get_render('rank');
+    $data = questiondata::get_datastore('rank');
   }
 }
