@@ -100,20 +100,26 @@ class renderdata extends \questiondata {
     if ($this->get('displaymethod') == 'dropdown') {
       if ($useranswerid == 't') {
         $this->trueselected = true;
+        $this->falseselected = false;
       }
       if ($useranswerid == 'f') {
         $this->falseselected = true;
+        $this->trueselected = false;
       }
     } else {
       if ($useranswerid == 't') {
         $this->trueselected = true;
+        $this->falseselected = false;
       }
       if ($useranswerid == 'f') {
-        $this->falseselected = false;
+        $this->falseselected = true;
+        $this->trueselected = false;
       }
       if ($this->get('negativemarking')) {
         if ($useranswerid == 'a') {
           $this->abstainselected = true;
+        } else {
+          $this->abstainselected = false;
         }
       }
     }
