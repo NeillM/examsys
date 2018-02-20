@@ -52,11 +52,24 @@ class renderdata extends \questiondata {
   public $scttitlelower;
 
   /**
+   * Language pack component.
+   */
+  public $langcomponent = 'plugins/questions/sct/sct';
+
+  /**
+   * Land pack strings.
+   * @var string
+   */
+  private $strings;
+
+  /**
    * Constructor
    */
   function __construct() {
     parent::__construct();
     $this->questiontype = 'sct';
+    $langpack = new \langpack();
+    $this->strings = $langpack->get_all_strings($this->langcomponent);
   }
 
   /**
@@ -73,8 +86,7 @@ class renderdata extends \questiondata {
    * @param integer $user_dismissid id of option user dismissed
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
-    global $string;
-    // SCT stalls vignette in scenario so must display. 
+    // SCT stores vignette in scenario so must display. 
     $this->displayscenario = true;
     if ($this->get('notes') != '') {
       $this->displaynotes = true;
@@ -83,11 +95,11 @@ class renderdata extends \questiondata {
       $this->displaymedia = true;
     }
     $sct_parts = explode('~',$this->get('leadin'));
-    $sct_titles = array(1=>$string['hypothesis'], 2=>$string['investigation'], 3=>$string['prescription'], 4=>$string['intervention'], 5=>$string['treatment']);
+    $sct_titles = array(1=>$this->strings['hypothesis'], 2=>$this->strings['investigation'], 3=>$this->strings['prescription'], 4=>$this->strings['intervention'], 5=>$this->strings['treatment']);
     $this->scttitle = $sct_titles[$this->get('displaymethod')];
     $this->scthyp = $sct_parts[0];
     $this->sctinfo = $sct_parts[1];
-    $this->scttitlelower = $string['thenthis'] . " " . mb_strtolower($sct_titles[$this->get('displaymethod')], 'UTF-8') . " " . $string['is'] . ":";
+    $this->scttitlelower = $this->strings['thenthis'] . " " . mb_strtolower($sct_titles[$this->get('displaymethod')], 'UTF-8') . " " . $this->strings['is'] . ":";
 
     if ($useranswerid == '0' and $screen_pre_submitted == 1) {
       $this->unanswered = true;
@@ -133,6 +145,14 @@ class renderdata extends \questiondata {
     $option = $this->get_opt($part_id);
     if ($option['marksincorrect'] < 0) {
       $this->negativemarking = true;
+    } else {
+      $this->negativemarking = false;
+    }
+    // Write out the hidden field for the dismiss facility.
+    if ($user_dismissid != '') {
+       $this->dismiss = $user_dismissid;
+    } else {
+       $this->dismiss = str_repeat('0', $this->get('optionnumber'));
     }
   }
 }

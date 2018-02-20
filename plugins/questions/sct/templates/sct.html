@@ -58,14 +58,17 @@
 {% for i,p in data.get('options') %}
         <tr>
             <td>
-                <input type="radio" name="q{{data.get('questionno')}}" value="{{p.tmppartid}}" {% if p.selected %} checked="checked" {% endif %} />
+                <input type="radio" id="{{p.optionno}}" name="q{{data.get('questionno')}}" value="{{p.tmppartid}}" {% if p.selected %} checked="checked" {% endif %} />
             </td>
             <td>
     {% if p.optiontextdisplay %}
-                <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{p.optionno}}">{{p.optiontext}}</span>
+                <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.get('questionno')}}_{{i}}">{{p.optiontext}}</span>
             </td>
         </tr>
     {% endif %}
 {% endfor %}
     </table>
+    <div>
+        <input type="hidden" name="dismiss{{data.get('questionno')}}" id="dismiss{{data.get('questionno')}}" value="{{data.get('dismiss')}}" />
+    </div>
 </blockquote>
