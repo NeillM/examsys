@@ -67,6 +67,11 @@ class textboxtest extends unittest{
     $this->assertTrue($data->editormathjax);
     $this->assertEquals(array(1, 2), $data->textboxesseen);
     $this->assertEquals(2, $data->marks);
+    $data->questionno = 3;
+    $data->set_option(0, 'test', '', 1);
+    $this->assertEquals('test', $data->useranswer);
+    $this->assertFalse($data->unanswered);
+    
   }
 
   /**
@@ -85,11 +90,14 @@ class textboxtest extends unittest{
     $data->set_option(0, '', '', 1);
     $this->assertEquals(40, $data->editorcolumns);
     $this->assertEquals(10, $data->editorrows);
-    $this->assertEquals('plain', $data->editor);
+    $this->assertEquals('', $data->editor);
     $this->assertTrue($data->unanswered);
     $this->assertFalse($data->editormathjax);
     $this->assertEquals(array(1, 2), $data->textboxesseen);
     $this->assertEquals(2, $data->marks);
+    $data->questionno = 3;
+    $data->set_option(0, 'test', '', 1);
+    $this->assertFalse($data->unanswered);
     $output = ob_get_contents(); // Store buffer in variable
     ob_end_clean(); // End buffering and clean up
   }

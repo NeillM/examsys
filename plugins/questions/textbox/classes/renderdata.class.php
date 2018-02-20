@@ -71,7 +71,7 @@ class renderdata extends \questiondata {
     $this->questiontype = 'textbox';
     $this->textboxesseen = array();
     $this->editormathjax = false;
-    $this->editor  = 'plain';
+    $this->editor  = '';
   }
 
   /**
@@ -122,11 +122,8 @@ class renderdata extends \questiondata {
           $this->useranswer = $useranswerid;
           $this->unanswered = true;
         } else {
-          $ans = '';
-          if (!is_null($useranswerid)) {
-            $ans = $useranswerid;
-          }
-          $this->useranswer = $ans;
+          $this->useranswer = $useranswerid;
+          $this->unanswered = false;
         }
         if ($settings['editor'] == 'mathjax') {
           // Bad way of inserting mathjax editor to be resolved in ROGO-2263.
@@ -141,10 +138,6 @@ class renderdata extends \questiondata {
         } else {
           echo "<script type=\"text/javascript\" src=\"" . $this->config->get('cfg_root_path') . "/tools/tinymce/jscripts/tiny_mce/tiny_config_answered.js\"></script>";
         }
-        $ans = '';
-        if (!is_null($useranswerid)) {
-          $ans = $useranswerid;
-        }
 
         $textbox_width  = ( 40 + ( $settings['columns'] * 8 ) );
         $textbox_height = ( $settings['rows'] * 28 );
@@ -154,9 +147,11 @@ class renderdata extends \questiondata {
         if ($useranswerid == '' and $screen_pre_submitted == 1) {
           $this->unanswered = true;
           $background_colour = 'background-color:red;';
+        } else {
+          $this->unanswered = false;
         }
         // Bad way of inserting text editor to be resolved in ROGO-2263.
-        echo "<textarea class=\"mceEditor\" id=\"q" . $this->get('questionno') . "\" name=\"q" . $this->get('questionno') . "\"style=\"" . $background_colour . "; width:" . $textbox_width . "px; height:" . $textbox_height . "px\">" . $ans . "</textarea>";
+        echo "<textarea class=\"mceEditor\" id=\"q" . $this->get('questionno') . "\" name=\"q" . $this->get('questionno') . "\"style=\"" . $background_colour . "; width:" . $textbox_width . "px; height:" . $textbox_height . "px\">" . $useranswerid . "</textarea>";
       }
       $this->textboxesseen = $textboxes_seen;
       $marks = $this->get('marks');
