@@ -189,12 +189,6 @@ abstract class questiondata {
   public $optionnumber;
 
   /**
-   * Option id
-   * @var string
-   */
-  public $optionno;
-
-  /**
    * Paper type
    * @var string
    */
@@ -521,7 +515,6 @@ abstract class questiondata {
       $this->displaytheme = true;
     }
 
-    $this->optionno = $option_no;
     $this->papertype = $paper_properties['type'];
     $this->assignednumber =  $question['assigned_number'];
     $this->scenario = $question['scenario'];
@@ -655,7 +648,7 @@ abstract class questiondata {
    * @param boolean $locked is media locked
    * @param string $part_id option part id
    */
-  protected function set_media($filename, $width, $height, $border_color, $imageid=-1, $locked=false, $part_id=null) {
+  public function set_media($filename, $width, $height, $border_color, $imageid=-1, $locked=false, $part_id=null) {
 
     $mediadirectory = rogo_directory::get_directory('media');
     $fn_parts = pathinfo($filename);

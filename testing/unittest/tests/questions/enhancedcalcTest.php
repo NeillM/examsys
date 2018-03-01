@@ -29,12 +29,12 @@ class enhancedcalctest extends unittestdatabase{
     * Get init data set from yml
     * @return dataset
     */
-   public function getDataSet() {
+  public function getDataSet() {
     return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory()
       . DIRECTORY_SEPARATOR. "questions"
       . DIRECTORY_SEPARATOR . "enchancedcalcTest"
       . DIRECTORY_SEPARATOR . "enhancedcalc.yml");
-   }
+  }
 
   /**
     * Test question header setter
