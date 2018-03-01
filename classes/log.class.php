@@ -66,7 +66,7 @@ class log {
     $user_order = array();
     if ($paper_type == '_late') {
       // If we are after the deadline check for answers in original_paper_type_log - these will be over written below by new answers in log_late below.
-      $log_data = $this->db->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log_$original_paper_type WHERE metadataID = ?");
+      $log_data = $this->db->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$original_paper_type WHERE metadataID = ?");
       $log_data->bind_param('i', $metadataID);
       $log_data->execute();
       $log_data->store_result();
