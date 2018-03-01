@@ -112,4 +112,133 @@ class paperpropertiestest extends unittestdatabase {
         $expected = array(1, 2);
         $this->assertEquals($expected, $properties->get_enhancedcalc_questions(1));
     }
+
+    /**
+     * Test building a paper
+     * @group paper
+     */
+    public function test_build_paper() {
+      $properties = PaperProperties::get_paper_properties_by_id(1, $this->db, '');
+      $expected = array(1 => array(
+        'assigned_number' => 1,
+        'no_on_screen' => 1,
+        'screen' => 1,
+        'theme' => 'test theme',
+        'scenario' => 'test scenario',
+        'leadin' => 'test leadin',
+        'notes' => 'test notes',
+        'q_type' => 'enhancedcalc',
+        'q_id' => 2,
+        'display_pos' => 1,
+        'score_method' => 'Allow partial Marks',
+        'display_method' => null,
+        'settings' => '{"strictdisplay":true,"strictzeros":false,"dp":"0","tolerance_full":"0","fulltoltyp":"#","tolerance_partial":"0","parttoltyp":"#","marks_partial":0,"marks_incorrect":0,"marks_correct":1,"marks_unit":0,"show_units":true,"answers":[{"formula":"$A*$B","units":"cm"}],"vars":{"$A":{"min":"2","max":"10","inc":"1","dec":"0"},"$B":{"min":"5","max":"10","inc":"1","dec":"0"}}}',
+        'q_media' => null,
+        'q_media_width' => 0,
+        'q_media_height' => 0,
+        'q_option_order' => 'display order',
+        'dismiss' => '',
+        'options' => array(0 => array(
+            'correct' => null,
+            'option_text' => null,
+            'o_media' => null,
+            'o_media_width' => null,
+            'o_media_height' => null,
+            'marks_correct' => null,
+            'marks_incorrect' => null,
+            'marks_partial' => null
+          )),
+        ),
+        2 => array(
+        'assigned_number' => 2,
+        'no_on_screen' => 2,
+        'screen' => 1,
+        'theme' => 'test theme 2',
+        'scenario' => 'test scenario 2',
+        'leadin' => 'test leadin 2',
+        'notes' => 'test notes 2',
+        'q_type' => 'mcq',
+        'q_id' => 6,
+        'display_pos' => 2,
+        'score_method' => 'Mark per Option',
+        'display_method' => 'vertical',
+        'settings' => '[]',
+        'q_media' => '1517406311.png',
+        'q_media_width' => '480',
+        'q_media_height' => '105',
+        'q_option_order' => 'random',
+        'dismiss' => '',
+        'options' => array(0 => array(
+            'correct' => 1,
+            'option_text' => 'true',
+            'o_media' => '1517409282.jpg',
+            'o_media_width' => 951,
+            'o_media_height' => 121,
+            'marks_correct' => 2,
+            'marks_incorrect' => -2,
+            'marks_partial' => 0
+          ),
+          1 => array(
+            'correct' => 1,
+            'option_text' => 'false',
+            'o_media' => '',
+            'o_media_width' => 0,
+            'o_media_height' => 0,
+            'marks_correct' => 2,
+            'marks_incorrect' => -2,
+            'marks_partial' => 0
+          ),
+          2 => array(
+            'correct' => 1,
+            'option_text' => 'maybe',
+            'o_media' => '',
+            'o_media_width' => 0,
+            'o_media_height' => 0,
+            'marks_correct' => 2,
+            'marks_incorrect' => -2,
+            'marks_partial' => 0
+          ),
+        )
+      ));
+      $this->assertEquals($expected, $properties->build_paper(false, null, null));
+    }
+
+    /**
+     * Test building a paper = question preview
+     * @group paper
+     */
+    public function test_build_paper_question_preview() {
+      $properties = PaperProperties::get_paper_properties_by_id(1, $this->db, '');
+      $expected = array(1 => array(
+        'assigned_number' => 1,
+        'no_on_screen' => 1,
+        'screen' => 1,
+        'theme' => 'test theme',
+        'scenario' => 'test scenario',
+        'leadin' => 'test leadin',
+        'notes' => 'test notes',
+        'q_type' => 'enhancedcalc',
+        'q_id' => 2,
+        'display_pos' => 1,
+        'score_method' => 'Allow partial Marks',
+        'display_method' => null,
+        'settings' => '{"strictdisplay":true,"strictzeros":false,"dp":"0","tolerance_full":"0","fulltoltyp":"#","tolerance_partial":"0","parttoltyp":"#","marks_partial":0,"marks_incorrect":0,"marks_correct":1,"marks_unit":0,"show_units":true,"answers":[{"formula":"$A*$B","units":"cm"}],"vars":{"$A":{"min":"2","max":"10","inc":"1","dec":"0"},"$B":{"min":"5","max":"10","inc":"1","dec":"0"}}}',
+        'q_media' => null,
+        'q_media_width' => 0,
+        'q_media_height' => 0,
+        'q_option_order' => 'display order',
+        'dismiss' => '',
+        'options' => array(0 => array(
+            'correct' => null,
+            'option_text' => null,
+            'o_media' => null,
+            'o_media_width' => null,
+            'o_media_height' => null,
+            'marks_correct' => null,
+            'marks_incorrect' => null,
+            'marks_partial' => null
+          )),
+        ));
+      $this->assertEquals($expected, $properties->build_paper(true, 2, 1));
+    }
 }
