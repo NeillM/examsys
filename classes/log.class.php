@@ -23,13 +23,49 @@
 /**
  * Log helper class.
  */
-class log {
+abstract class log {
 
   /**
    *  DB connection
    * @var mysqli
    */
-  private $db;
+  protected $db;
+
+  /**
+   * Unique identifier of paper/user entry in log
+   * @var integer 
+   */
+  protected $metadataid;
+
+  /**
+   * Does this paper type allow multiple attempts
+   * @var boolean 
+   */
+  protected $dorestart;
+
+  /**
+   * What screen is the user on
+   * @var integer 
+   */
+  protected $currentscreen;
+
+  /**
+   * Paper type
+   * @var string
+   */
+  protected $papertype;
+
+  /**
+   * Screen duration
+   * @var integer
+   */
+  protected $previousduration;
+
+  /**
+   * Screen previously submitted
+   * @var boolean
+   */
+  protected $screenpresubmitted;
 
   /**
    * Called when the object is unserialised.
@@ -52,68 +88,68 @@ class log {
   /**
    * Get previous answers for a paper/user in log - used to load exam script
    * @param string $original_paper_type paper type identifier
-   * @param string $paper_type paper type identifier
    * @param integer $metadataID unique identifier of paper/user entry in log
    * @param boolean $do_restart does this paper type allow multiple attempts
    * @param integer $current_screen what screen is the user on
    * @return array
    */
-  public function get_previous_answers($original_paper_type, $paper_type, $metadataID, $do_restart, $current_screen) {
-    $previous_duration = 0;
-    $screen_pre_submitted = 0;
-    $user_answers = array();
-    $user_dismiss = array();
-    $user_order = array();
-    if ($paper_type == '_late') {
+  public function get_previous_answers($original_paper_type, $metadataID, $do_restart, $current_screen) {
+    $this->previousduration = 0;
+    $this->screenpresubmitted = 0;
+    $this->dorestart = $do_restart;
+    $this->currentscreen = $current_screen;
+    $this->metadataid = $metadataID;
+    if ($this->papertype == '_late') {
       // If we are after the deadline check for answers in original_paper_type_log - these will be over written below by new answers in log_late below.
-      $log_data = $this->db->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$original_paper_type WHERE metadataID = ?");
-      $log_data->bind_param('i', $metadataID);
-      $log_data->execute();
-      $log_data->store_result();
-      $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
-      $used_question = $log_q_id;
-      while ($log_data->fetch()) {
-        $user_answers[$log_screen][$log_q_id] = $log_user_answer;
-        $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
-        $user_order[$log_screen][$log_q_id] = $option_order;
-        // Bump up the current screen if restarting
-        if ($do_restart and $log_screen > $current_screen) {
-          $current_screen = $log_screen;
-        }
-        if ($log_screen == $current_screen) {
-          $previous_duration = $log_duration;
-          $screen_pre_submitted = 1;
-        }
-      }
-      $log_data->close();
+      $loglate = $this->get_log();
+      $this->papertype = $original_paper_type;
+      return array_merge($loglate, $this->get_log());
+    } else {
+      // Get user answers from whichever log is pointed to by log$paper_type
+     return $this->get_log();
     }
-    // Get user answers from whichever log is pointed to by log$paper_type
-    $log_data = $this->db->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log$paper_type WHERE metadataID = ? ORDER BY id");
-    $log_data->bind_param('i', $metadataID);
-    $log_data->execute();
-    $log_data->store_result();
-    $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
-    $used_question = $log_q_id;
-    while ($log_data->fetch()) {
-      $user_answers[$log_screen][$log_q_id] = $log_user_answer;
-      $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
-      $user_order[$log_screen][$log_q_id] = $option_order;
-      // Bump up the current screen if restarting
-      if ($do_restart and $log_screen > $current_screen) {
-        $current_screen = $log_screen;
-      }
-      if ($log_screen == $current_screen) {
-        $previous_duration = $log_duration;
-        $screen_pre_submitted = 1;
-      }
+  }
+
+  /**
+   * Get paper logs
+   */
+  abstract public function get_log();
+
+  /**
+   * Get paper log class
+   * @param string $papertype paper type
+   * @return class
+   */
+  public static function get_paperlog($papertype) {
+    switch ($papertype) {
+      case '0':
+        $papertype = 'formative';
+        break;
+      case '1':
+        $papertype = 'progressive';
+        break;
+      case '2':
+        $papertype = 'summative';
+        break;
+      case '3':
+        $papertype = 'survey';
+        break;
+      case '4':
+        $papertype = 'osce';
+        break;
+      case '5':
+        $papertype = 'offline';
+        break;
+      case '6':
+        $papertype = 'peer_review';
+        break;
+      case '_late':
+        $papertype = 'late';
+        break;
+      default:
+        break;
     }
-    $log_data->close();
-    return array('used_question' => $used_question,
-        'user_answers' => $user_answers,
-        'user_dismiss' => $user_dismiss,
-        'user_order' => $user_order,
-        'previous_duration' => $previous_duration,
-        'screen_pre_submitted' => $screen_pre_submitted,
-        'current_screen' => $current_screen);
+    $paperpluginns = 'plugins\\papers\\' . $papertype . '\\log';
+    return new $paperpluginns();
   }
 }

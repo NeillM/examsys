@@ -51,12 +51,12 @@ $refpane = param::optional('refpane', 0, param::INT, param::FETCH_POST);
 
 // Get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli, $string, true);
-
+$papertype = $propertyObj->get_paper_type();
 $deleted = $propertyObj->get_deleted();
 
 // If the paper has been deleted we should exit as this is an invalid page
 // and Deny access to offline papers.
-if ($deleted != NULL or $propertyObj->get_paper_type() == '5') {
+if ($deleted != NULL or $papertype == '5') {
   $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '/artwork/exclamation_48.png', '#C00000', true, true);
@@ -88,7 +88,7 @@ $screen_data = $propertyObj->get_screens($is_question_preview_mode, $get_qid);
 $no_screens = $propertyObj->get_max_screen();
 
 //store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
-$original_paper_type = $propertyObj->get_paper_type();
+$original_paper_type = $papertype;
 
 // Is this a type of paper that allows only one attempt?
 $do_restart = ($is_first_launch and ($original_paper_type == 1 or $original_paper_type == 2 or $original_paper_type == 3));
@@ -121,7 +121,7 @@ if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObjec
   check_datetime($propertyObj->get_start_date(), $propertyObj->get_end_date(), $string, $mysqli, $is_first_launch);
 
   //Check room security.
-  $low_bandwidth = check_labs(  $propertyObj->get_paper_type(),
+  $low_bandwidth = check_labs(  $papertype,
                                 $propertyObj->get_labs(),
                                 $current_address,
                                 $propertyObj->get_password(),
@@ -187,12 +187,12 @@ if ($is_preview_mode_first_launch == true or ($is_first_launch and !$do_restart)
 $metadataID = $log_metadata->get_metadata_id();
 
 // Foramtive or Progressive papers that have a duration set should use the timer.
-if ($propertyObj->get_paper_type() == '0' || $propertyObj->get_paper_type() == '1') {
+if ($papertype == '0' || $papertype == '1') {
     if ($propertyObj->get_exam_duration() != null) {
         $allow_timing = true;
     }
 // Summative exams only allow timing if ALL the modules of the paper allow it.
-} else if ($propertyObj->get_paper_type() == '2'){
+} else if ($papertype == '2'){
     $allow_timing = module_utils::modules_allow_timing($modIDs, $mysqli);
 }
 
@@ -202,14 +202,14 @@ if ($propertyObj->get_paper_type() == '0' || $propertyObj->get_paper_type() == '
 * If a summative exam session has been started  then record late answers in log_late
 */
 $paper_scheduled = ($propertyObj->get_start_date() !== null);
-if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2' and !$is_question_preview_mode) {
+if ($propertyObj->get_exam_duration() != null and $papertype == '2' and !$is_question_preview_mode) {
   // Has this lab had an end time set?
   $log_lab_end_time = new LogLabEndTime($lab_id, $propertyObj, $mysqli);
   $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
 }
 
 // Check for submissions after the end date and set them to save in log_late if we are not in preview_mode or a summative exam session as not been started
-if ($is_preview_mode === false and time() > $propertyObj->get_end_date() and ($propertyObj->get_paper_type() == '1' or ($propertyObj->get_paper_type() == '2' and $paper_scheduled and $summative_exam_session_started === false))) {
+if ($is_preview_mode === false and time() > $propertyObj->get_end_date() and ($papertype == '1' or ($papertype == '2' and $paper_scheduled and $summative_exam_session_started === false))) {
   $propertyObj->set_paper_type('_late');
 }
 
@@ -221,7 +221,7 @@ if ($is_preview_mode === false and time() > $propertyObj->get_end_date() and ($p
 */
 if (!$is_question_preview_mode) {
   if (!$is_first_launch and !$do_not_record) {
-    record_marks($paperID, $mysqli, $propertyObj->get_paper_type(), $metadataID);
+    record_marks($paperID, $mysqli, $papertype, $metadataID);
   }
 }
 
@@ -232,12 +232,12 @@ if (!$is_question_preview_mode) {
 *       records could exist in 2 logs the original paper type log and log_late
 *
 */
-$log = new log();
-$l = $log->get_previous_answers($original_paper_type, $propertyObj->get_paper_type(), $metadataID, $do_restart, $current_screen);
+$log = log::get_paperlog($papertype);
+$l = $log->get_previous_answers($original_paper_type, $metadataID, $do_restart, $current_screen);
 $user_answers = $l['user_answers'];
 $user_dismiss = $l['user_dismiss'];
 $user_order = $l['user_order'];
-$used_questions = $l['used_question'];
+$used_questions = $l['used_questions'];
 $previous_duration = $l['previous_duration'];
 $screen_pre_submitted = $l['screen_pre_submitted'];
 $current_screen = $l['current_screen'];
@@ -275,7 +275,7 @@ $headerdata = array(
     'pragma' => 'no-cache',
   ),
 );
-if ($propertyObj->get_paper_type() == '3') {
+if ($papertype == '3') {
   $lang['title'] = $string['survey'];
 } else {
  $lang['title'] = $string['assessment'];
@@ -356,7 +356,7 @@ $render->render($headerdata, $lang, 'header.html');
   if ($allow_timing and $propertyObj->get_exam_duration() != null) {
     $timed = true;
     // Summative type. Time is only active in live.
-    if (($propertyObj->get_paper_type() == '2' or $original_paper_type == 2) and $is_preview_mode === false) {
+    if (($papertype == '2' or $original_paper_type == 2) and $is_preview_mode === false) {
 
       // Has the student been allotted extra time by an invigilator?
       $student_object['user_ID'] = $userObject->get_user_ID();
@@ -447,7 +447,7 @@ $render->render($headerdata, $lang, 'header.html');
 
   $midexam_clarification = $configObject->get_setting('core', 'summative_midexam_clarification');
 
-  if ($propertyObj->get_paper_type() === '3') {
+  if ($papertype === '3') {
     $calculator = 0;
   } else {
     $calculator = $propertyObj->get_calculator();

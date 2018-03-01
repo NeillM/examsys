@@ -38,20 +38,19 @@ class alogtest extends unittestdatabase {
    * @group log
    */
   public function test_get_previous_answers() {
-    $log = new \log();
-    $original_paper_type = 0;
-    $paper_type = 0;
+    $log = \log::get_paperlog('0');
+    $original_paper_type = '0';
     $metadataID = 2;
     $do_restart = true;
     $current_screen = 1;
-    $previous = array('used_question' => 2,
+    $previous = array('used_questions' => array(2 => 2),
         'user_answers' => array(2 => array(2 => '1')),
         'user_dismiss' => array(2 => array(2 => '0000')),
         'user_order' => array(2 => array(2 => '0,1,2,3')),
         'previous_duration' => 5,
         'screen_pre_submitted' => 1,
         'current_screen' => 2);
-    $this->assertEquals($previous, $log->get_previous_answers($original_paper_type, $paper_type, $metadataID, $do_restart, $current_screen));
+    $this->assertEquals($previous, $log->get_previous_answers($original_paper_type, $metadataID, $do_restart, $current_screen));
   }
 
   /**
@@ -59,19 +58,18 @@ class alogtest extends unittestdatabase {
    * @group log
    */
   public function test_get_previous_answers_late() {
-    $log = new \log();
-    $original_paper_type = 2;
-    $paper_type = '_late';
+    $log = \log::get_paperlog('_late');
+    $original_paper_type = '2';
     $metadataID = 1;
     $do_restart = false;
     $current_screen = 1;
-    $previous = array('used_question' => 2,
+    $previous = array('used_questions' => array(2 => 2),
         'user_answers' => array(1 => array(2 => '1', 2 => '2')),
         'user_dismiss' => array(1 => array(2 => '0000', 2 => '1000')),
         'user_order' => array(1 => array(2 => '0,1,2,3')),
         'previous_duration' => 10,
         'screen_pre_submitted' => 1,
         'current_screen' => 1);
-    $this->assertEquals($previous, $log->get_previous_answers($original_paper_type, $paper_type, $metadataID, $do_restart, $current_screen));
+    $this->assertEquals($previous, $log->get_previous_answers($original_paper_type, $metadataID, $do_restart, $current_screen));
   }
 }
