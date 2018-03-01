@@ -2144,74 +2144,57 @@ class PaperProperties {
      */
     public function build_paper($is_question_preview_mode, $get_qid, $q_number) {
         $paperID = $this->get_property_id();
+        $questioninfo = "q_type,
+                          q_id,
+                          score_method,
+                          display_method,
+                          settings,
+                          marks_correct,
+                          marks_incorrect,
+                          marks_partial,
+                          theme,
+                          scenario,
+                          leadin,
+                          correct,
+                          REPLACE(option_text,'\t','') AS option_text,
+                          q_media,
+                          q_media_width,
+                          q_media_height,
+                          o_media,
+                          o_media_width,
+                          o_media_height,
+                          notes,
+                          display_pos,
+                          q_option_order";
+        $from = 'papers, questions LEFT JOIN options ON questions.q_id = options.o_id';
+        $orderby = 'display_pos, id_num';
         if ($is_question_preview_mode) {
+          $screen = '1';
+          $where = 'paper = ? AND
+                    q_id = ? AND
+                    papers.question = questions.q_id';
           $question_data = $this->db->prepare("SELECT
-                                                1,
-                                                q_type,
-                                                q_id,
-                                                score_method,
-                                                display_method,
-                                                settings,
-                                                marks_correct,
-                                                marks_incorrect,
-                                                marks_partial,
-                                                theme,
-                                                scenario,
-                                                leadin,
-                                                correct,
-                                                REPLACE(option_text,'\t','') AS option_text,
-                                                q_media,
-                                                q_media_width,
-                                                q_media_height,
-                                                o_media,
-                                                o_media_width,
-                                                o_media_height,
-                                                notes,
-                                                display_pos,
-                                                q_option_order
+                                              1,
+                                              $questioninfo
                                             FROM
-                                                papers, questions LEFT JOIN options ON questions.q_id = options.o_id
+                                              $from
                                             WHERE
-                                              paper = ? AND
-                                              q_id = ? AND
-                                              papers.question = questions.q_id
+                                              $where
                                             ORDER BY
-                                            display_pos,
-                                            id_num");
+                                              $orderby");
           $question_data->bind_param('ii', $paperID, $get_qid);
         } else {
+          $where = 'paper = ? AND
+                    papers.question = questions.q_id';
           $question_data = $this->db->prepare("SELECT
-                                                  screen,
-                                                  q_type,
-                                                  q_id,
-                                                  score_method,
-                                                  display_method,
-                                                  settings,
-                                                  marks_correct,
-                                                  marks_incorrect,
-                                                  marks_partial,
-                                                  theme,
-                                                  scenario,
-                                                  leadin,
-                                                  correct,
-                                                  REPLACE(option_text,'\t','') AS option_text,
-                                                  q_media,
-                                                  q_media_width,
-                                                  q_media_height,
-                                                  o_media,
-                                                  o_media_width,
-                                                  o_media_height,
-                                                  notes,
-                                                  display_pos,
-                                                  q_option_order
+                                                screen,
+                                                $questioninfo
                                               FROM
-                                                  papers, questions LEFT JOIN options ON questions.q_id = options.o_id
+                                                $from
                                               WHERE
-                                                paper = ? AND
-                                                papers.question = questions.q_id
+                                                $where
                                               ORDER BY
-                                              display_pos,
-                                              id_num");
+                                                $orderby");
           $tmp_pid = $paperID;
           $question_data->bind_param('i', $tmp_pid);
         }
