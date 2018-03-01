@@ -1,3 +1,7 @@
+academic_year:
+  -
+    calendar_year: 2016
+    academic_year: "2016/17"
 modules_student:
   -
     id: 1
