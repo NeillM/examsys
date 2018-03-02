@@ -178,6 +178,7 @@ abstract class plugins {
                         // Get update files available.
                         $updatefiles = glob($pluginpath . 'update*');
                         $fileversion = array();
+                        // SQL files.
                         foreach ($updatefiles as $file) {
                             $v = ltrim(rtrim(basename($file), '.sql'), 'update');
                             // Check version format is correct.
@@ -198,6 +199,30 @@ abstract class plugins {
                                     if (!\DBUtils::run_sql($updatefile, $dbuser, $dbpasswd)) {
                                         throw new \Exception("DBUtils::run_sql update" . $version . ".sql failed.");
                                     }
+                                }
+                            }
+                        }
+                        // PHP files.
+                        foreach ($updatefiles as $file) {
+                            $v = ltrim(rtrim(basename($file), '.php'), 'update');
+                            // Check version format is correct.
+                            if (\version::check_version_format($v)) {
+                              $fileversion[] = $v;
+                            }
+                        }
+                        if (count($fileversion) > 0) {
+                            // Run each update file in numeric ascending order.
+                            $fileversion = \version::sort_version($fileversion);
+                            foreach ($fileversion as $version) {
+                                if (!\version::is_version_higher($version, $currentversion) or \version::is_version_higher($version, $this->version)) {
+                                    // Skip updates from previously installed versions and from future versions.
+                                    continue;
+                                }
+                                $updatefile = $pluginpath . 'update' . $version . '.php';
+                                if (file_exists($updatefile)) {
+                                  include $updatefile;
+                                } else {
+                                  throw new \Exception("update file " . $version . ".php failed.");
                                 }
                             }
                         }
