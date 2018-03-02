@@ -612,7 +612,7 @@ SCRIPT;
     while ($result->fetch()) {
       if ($type == self::PASSWORD) {
         // Password settings are encrypted.
-        $value = \encrypt::openssl_encrypt_decrypt("decrypt", $value);
+        $value = \encryp::openssl_encrypt_decrypt("decrypt", $value);
       }
       // Decode json.
       if ($type == self::JSON or $type == self::CSV or $type == self::EMAIL) {
