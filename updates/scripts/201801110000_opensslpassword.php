@@ -1,6 +1,4 @@
 <?php
-
-
 /**
  * Decrypt the password used here for replacing itself and mcrypt with openssl
  *
@@ -13,9 +11,9 @@ function rogo2272_mdecrypt_password($encpassword) {
   return trim($dec);
 }
 
-
 if ($updater_utils->check_version("6.5.0")) {
   if (!$updater_utils->has_updated('rogo2272')) {
+    // Update paper passwords.
     $result = $mysqli->prepare("SELECT property_id, password from properties WHERE password is not null and password != ''");
     $result->execute();
     $result->store_result();
@@ -29,11 +27,30 @@ if ($updater_utils->check_version("6.5.0")) {
     foreach ($passwords as $p_id => $pass) {
       $update->bind_param('si', $pass, $p_id);
       $update->execute();
-
     }
-    $updater_utils->record_update('rogo2272');
 
     $result->close();
     $update->close();
+
+    // Update plugin passwords
+    $result2 = $mysqli->prepare("SELECT component, value from config WHERE setting = 'password' and type = 'password' and value != ''");
+    $result2->execute();
+    $result2->store_result();
+    $result2->bind_result($component, $value);
+    while ($result2->fetch()) {
+      $oldpass = rogo2272_mdecrypt_password($value);
+      $passwords[$component] = \encryp::openssl_encrypt_decrypt("encrypt", $oldpass) ;
+    }
+
+    $update2 = $mysqli->prepare("UPDATE config SET value = ? WHERE component = ? and setting = 'password' and type = 'password'");
+    foreach ($passwords as $component => $value) {
+      $update2->bind_param('ss', $value, $component);
+      $update2->execute();
+    }
+
+    $result2->close();
+    $update2->close();
+
+    $updater_utils->record_update('rogo2272');
   }
 }
