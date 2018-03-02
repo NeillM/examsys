@@ -562,7 +562,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			  param::REGEXP,
 			  array(
 				'default' => '',
-				'regexp' => '#^[+-]?[0-9]*[.]?[0-9]+[ a-zA-Z0-9/^%]*$#',
+				'regexp' => '#^[+-]?[0-9]*[.]?[0-9]*[ a-zA-Z0-9/^%]*$#',
 			  )
 			);
 		}
