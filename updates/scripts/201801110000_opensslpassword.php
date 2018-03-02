@@ -22,7 +22,7 @@ if ($updater_utils->check_version("6.5.0")) {
     $result->bind_result($property_id, $password);
     while ($result->fetch()) {
       $oldpass = rogo2272_mdecrypt_password($password);
-      $passwords[property_id] = \encryp::openssl_encrypt_encrypt("encrypt", $oldpass) ;
+      $passwords[property_id] = \encryp::openssl_encrypt_decrypt("encrypt", $oldpass) ;
     }
 
     $update = $mysqli->prepare("UPDATE properties SET password = ? WHERE property_id = ?");
