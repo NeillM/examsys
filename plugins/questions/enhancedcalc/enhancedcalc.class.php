@@ -67,7 +67,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
 	/**
 	 * Split answer into number and units if applicable
-	 * @param	string $input User answer
+	 * @param string $input User answer
 	 * @return array Number and unit components of the string
 	 */
 	function split_numb_from_unit($input) {
@@ -93,12 +93,12 @@ class EnhancedCalc extends Question implements questionInterface {
 
 			return array($numb, $units);
 		} else {
-			return array($input, '');	// No number matched
+			return array($input, ''); // No number matched
 		}
 	}
 
 	/**
-	 * Build an array of formule indexed by their associated units
+	 * Build an array of formula indexed by their associated units
 	 * @param array $ans Array of possible answers containing a formula and comma separated list of units
 	 * @return array Array of formulae indexed by units string
 	 */
