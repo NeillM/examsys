@@ -33,18 +33,18 @@ if ($updater_utils->check_version("6.5.0")) {
     $update->close();
 
     // Update plugin passwords
-    $result2 = $mysqli->prepare("SELECT component, value from config WHERE type = 'password' and value != ''");
+    $result2 = $mysqli->prepare("SELECT component, setting, value from config WHERE type = 'password' and value != ''");
     $result2->execute();
     $result2->store_result();
-    $result2->bind_result($component, $value);
+    $result2->bind_result($component, $setting, $value);
     while ($result2->fetch()) {
       $oldpass = rogo2272_mdecrypt_password($value);
-      $passwords[$component] = \encryp::openssl_encrypt_decrypt("encrypt", $oldpass) ;
+      $passwords[$component] = array($setting, \encryp::openssl_encrypt_decrypt("encrypt", $oldpass));
     }
 
-    $update2 = $mysqli->prepare("UPDATE config SET value = ? WHERE component = ? and type = 'password'");
-    foreach ($passwords as $component => $value) {
-      $update2->bind_param('ss', $value, $component);
+    $update2 = $mysqli->prepare("UPDATE config SET value = ? WHERE setting = ? and component = ? and type = 'password'");
+    foreach ($passwords as $component => $setting) {
+      $update2->bind_param('sss', $setting[1], $setting[0], $component);
       $update2->execute();
     }
 
