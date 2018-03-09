@@ -2023,7 +2023,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
               echo "<option value=\"u\" selected=\"selected\">{$string['unanswered']}</option>\n";
             }
             foreach ($answer_list as $answer_option) {
-              if (isset($user_choices[$blank_count]) and html_entity_decode(StringUtils::clean_and_trim($answer_option)) == html_entity_decode(trim($user_choices[$blank_count]))) {
+              if (isset($user_choices[$blank_count]) and html_entity_decode(StringUtils::clean_and_trim($answer_option)) == html_entity_decode(StringUtils::clean_and_trim($user_choices[$blank_count]))) {
                 echo "<option value=\"\" selected>$answer_option</option>\n";
               } else {
                 echo "<option value=\"\">$answer_option</option>\n";
@@ -2031,18 +2031,18 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
             }
             echo "</select>\n";
 
-            if (isset($user_choices[$blank_count]) and str_replace('&nbsp;',' ',html_entity_decode(trim($answer_list[0]))) == str_replace('&nbsp;',' ',html_entity_decode(trim($user_choices[$blank_count])))) {
+            if (isset($user_choices[$blank_count]) and html_entity_decode(StringUtils::clean_and_trim($answer_list[0])) == html_entity_decode(StringUtils::clean_and_trim($user_choices[$blank_count]))) {
               if (substr($tmp_exclude,$blank_count,1) == '0') {
                 $paper[$question]['mark'] += $paper[$question]['marks_correct'];
                 $have_answer = true;
                 echo display_response($tmp_display_students_response, 'tick');
               }
             } else {
-              if (isset($user_choices[$blank_count]) and html_entity_decode(trim($user_choices[$blank_count])) != 'u') {
+              if (isset($user_choices[$blank_count]) and html_entity_decode(StringUtils::clean_and_trim($user_choices[$blank_count])) != 'u') {
                 if (substr($tmp_exclude,$blank_count,1) == '0') $paper[$question]['mark'] += $paper[$question]['marks_incorrect'];
                 $have_answer = true;
               }
-              if ($tmp_display_students_response == '1' and substr($tmp_exclude,$blank_count,1) == '0' and isset($user_choices[$blank_count]) and html_entity_decode(trim($user_choices[$blank_count])) != 'u') {
+              if ($tmp_display_students_response == '1' and substr($tmp_exclude,$blank_count,1) == '0' and isset($user_choices[$blank_count]) and html_entity_decode(StringUtils::clean_and_trim($user_choices[$blank_count])) != 'u') {
                 echo display_response($tmp_display_students_response, 'cross');
               } else {
                 echo display_response($tmp_display_students_response, 'blank');
