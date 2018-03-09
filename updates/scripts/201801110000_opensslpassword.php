@@ -33,7 +33,7 @@ if ($updater_utils->check_version("6.5.0")) {
     $update->close();
 
     // Update plugin passwords
-    $result2 = $mysqli->prepare("SELECT component, value from config WHERE setting = 'password' and type = 'password' and value != ''");
+    $result2 = $mysqli->prepare("SELECT component, value from config WHERE type = 'password' and value != ''");
     $result2->execute();
     $result2->store_result();
     $result2->bind_result($component, $value);
@@ -42,7 +42,7 @@ if ($updater_utils->check_version("6.5.0")) {
       $passwords[$component] = \encryp::openssl_encrypt_decrypt("encrypt", $oldpass) ;
     }
 
-    $update2 = $mysqli->prepare("UPDATE config SET value = ? WHERE component = ? and setting = 'password' and type = 'password'");
+    $update2 = $mysqli->prepare("UPDATE config SET value = ? WHERE component = ? and type = 'password'");
     foreach ($passwords as $component => $value) {
       $update2->bind_param('ss', $value, $component);
       $update2->execute();
