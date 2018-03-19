@@ -44,7 +44,9 @@ if ($updater_utils->check_version("6.5.0")) {
 
     $update2 = $mysqli->prepare("UPDATE config SET value = ? WHERE setting = ? and component = ? and type = 'password'");
     foreach ($passwords as $component => $setting) {
-      $update2->bind_param('sss', $setting[1], $setting[0], $component);
+      $value = $setting[1];
+      $name = $setting[0];
+      $update2->bind_param('sss', $value, $name, $component);
       $update2->execute();
     }
 
