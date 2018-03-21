@@ -468,6 +468,7 @@ Class InstallUtils {
       $load_help = param::optional('loadHelp', false, param::BOOLEAN, param::FETCH_POST);
       $download_lang = param::optional('loadtranslations', false, param::BOOLEAN, param::FETCH_POST);
     } else {
+      $configObject->set('cfg_root_path', self::getSettings(param::TEXT, true, 'server', 'root'));
       $load_help = self::getSettings(param::BOOLEAN, false, 'help');
       $download_lang = self::getSettings(param::BOOLEAN, false, 'translations');
     }
