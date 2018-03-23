@@ -2352,7 +2352,7 @@ class PaperProperties {
       }
 
       if ($error) {
-        $question['leadin'] = '<span style="color: #f00;">' . $string['error_random'] . '</span>';
+        $question['leadin'] = '<span class = "randomerror">' . $string['error_random'] . '</span>';
         $question['q_type'] = 'random';
         $question['q_id'] = -1;
         $question['theme'] = $question['scenario'] = $question['notes'] = $question['score_method'] = $question['q_media'] = '';
@@ -2473,7 +2473,7 @@ class PaperProperties {
           }
         }
       } else {
-        $question['leadin'] = '<span style="color:#C00000">' . $string['error_keywords'] . '</span>';
+        $question['leadin'] = '<span class = "keyworderror">' . $string['error_keywords'] . '</span>';
         $question['q_type'] = 'keyword_based';
         $question['q_id'] = -1;
         $question['theme'] = $question['scenario'] = $question['notes'] = $question['score_method'] = $question['q_media'] = '';
