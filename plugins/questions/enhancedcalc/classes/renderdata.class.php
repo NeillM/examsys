@@ -91,7 +91,7 @@ class renderdata extends \questiondata {
    * @param integer $user_dismissid id of option user dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function set_additional_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
+  public function process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     // Nothing to do.
   }
 }

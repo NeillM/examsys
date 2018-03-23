@@ -92,7 +92,7 @@ class extmatchtest extends unittest{
     * Test question additional option setter
     * @group question
     */
-  public function test_set_additional_option() {
+  public function test_process_options() {
     $data = questiondata::get_datastore('extmatch');
     $data->set_opt(1, array('optiontext' => 'Paris', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
     $data->set_opt(2, array('optiontext' => 'Eifel Tower', 'correct' => '1$4|3|2|||||||', 'markscorrect' => 1));
@@ -249,7 +249,7 @@ class extmatchtest extends unittest{
         )
       )
     );
-    $data->set_additional_option(6, '1|3|2', '', 1);
+    $data->process_options(6, '1|3|2', '', 1);
     $this->assertTrue($data->get('extmatchdisplaymedia'));
     $this->assertEquals(2, $data->get('split'));
     $this->assertEquals(6, $data->get('matchoptionsno'));

@@ -80,14 +80,14 @@ class matrixtest extends unittest{
     * Test question additional option setter
     * @group question
     */
-  public function test_set_additional_option() {
+  public function test_process_options() {
     $data = questiondata::get_datastore('matrix');
     $data->matchoptions = array('.PUB', '.PPT', '.DOC', '.XLS', '.MDB','.DAT');
     $data->usersanswers = array('3', '4', '2', '5', '1', '6');
     $data->optionorder = '5,2,4,1,0,3';
     $data->scenarios = array('Word', 'Excel', 'PowerPoint', 'Access5', 'Publisher', 'Data File', '', '', '', '');
     $useranswerid = '3|4|2|5|1|6';
-    $data->set_additional_option(1, $useranswerid, '', 1);
+    $data->process_options(1, $useranswerid, '', 1);
     $matchscenarios = array(
       array('unanswered' => false, 'id' => 'A', 'value' => 'Word'),
       array('unanswered' => false, 'id' => 'B', 'value' => 'Excel'),

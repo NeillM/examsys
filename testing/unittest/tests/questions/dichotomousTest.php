@@ -79,16 +79,16 @@ class dichotomoustest extends unittest{
     * Test question additional option setter
     * @group question
     */
-  public function test_set_additional_option() {
+  public function test_process_options() {
     $data = questiondata::get_datastore('dichotomous');
     $useranswerid = 'uuu';
     $option['marksincorrect'] = -1;
     $data->set_opt(0, $option);
-    $data->set_additional_option(0, $useranswerid, '', 1);
+    $data->process_options(0, $useranswerid, '', 1);
     $this->assertTrue($data->get('negativemarking'));
     $option['marksincorrect'] = 0;
     $data->set_opt(0, $option);
-    $data->set_additional_option(0, $useranswerid, '', 1);
+    $data->process_options(0, $useranswerid, '', 1);
     $this->assertFalse($data->get('negativemarking'));
   }
   

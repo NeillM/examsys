@@ -96,20 +96,20 @@ class mcqtest extends unittest{
     * Test question additional option setter
     * @group question
     */
-  public function test_set_additional_option() {
+  public function test_process_options() {
     $data = questiondata::get_datastore('mcq');
     // Test dismiss.
     $useranswerid = 'u';
     $data->optionnumber = 4;
     $option['marksincorrect'] = -1;
     $data->set_opt(1, $option);
-    $data->set_additional_option(1, $useranswerid, '0100', 1);
+    $data->process_options(1, $useranswerid, '0100', 1);
     $this->assertTrue($data->get('negativemarking'));
     $this->assertFalse($data->get('abstainselected'));
     $this->assertEquals('0100', $data->get('dismiss'));
     $option['marksincorrect'] = 0;
     $data->set_opt(1, $option);
-    $data->set_additional_option(1, $useranswerid, '', 1);
+    $data->process_options(1, $useranswerid, '', 1);
     $this->assertFalse($data->get('negativemarking'));
     $this->assertFalse($data->get('abstainselected'));
     $this->assertEquals('0000', $data->get('dismiss'));
@@ -117,7 +117,7 @@ class mcqtest extends unittest{
     $useranswerid = 'a';
     $option['marksincorrect'] = -1;
     $data->set_opt(1, $option);
-    $data->set_additional_option(1, $useranswerid, '', 1);
+    $data->process_options(1, $useranswerid, '', 1);
     $this->assertTrue($data->get('negativemarking'));
     $this->assertTrue($data->get('abstainselected'));
     $this->assertEquals('0000', $data->get('dismiss'));
@@ -125,7 +125,7 @@ class mcqtest extends unittest{
     $data->displaymethod =  'vertical';
     $data->papertype = '3';
     $useranswerid = 'other:test';
-    $data->set_additional_option(1, $useranswerid, '', 1);
+    $data->process_options(1, $useranswerid, '', 1);
     $this->assertEquals('other', $data->get('displaymethod'));
     $this->assertTrue($data->get('otherselected'));
     $this->assertEquals('test', $data->get('other'));

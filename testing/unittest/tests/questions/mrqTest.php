@@ -95,7 +95,7 @@ class mrqtest extends unittest{
     * Test question additional option setter
     * @group question
     */
-  public function test_set_additional_option() {
+  public function test_process_options() {
     $data = questiondata::get_datastore('mrq');
     // Test other.
     $useranswerid = 'nnnyn';
@@ -107,21 +107,21 @@ class mrqtest extends unittest{
     $data->displaymethod = 'other';
     $data->partid = 4;
     $useranswerid = 'nnnnytest';
-    $data->set_additional_option(4, $useranswerid, '00000', 1);
+    $data->process_options(4, $useranswerid, '00000', 1);
     $this->assertEquals(5, $data->get('partid'));
     $this->assertTrue($data->get('otherselected'));
     $this->assertEquals('test', $data->get('other'));
     // Test dismiss.
     $option['marksincorrect'] = -1;
     $data->set_opt(1, $option);
-    $data->set_additional_option(1, $useranswerid, '01000', 1);
+    $data->process_options(1, $useranswerid, '01000', 1);
     $this->assertEquals('01000', $data->get('dismiss'));
-    $data->set_additional_option(1, $useranswerid, '', 1);
+    $data->process_options(1, $useranswerid, '', 1);
     $this->assertEquals('00000', $data->get('dismiss'));
     // Test abstain.
     $useranswerid = 'a';
     $option['markscorrect'] = -1;
-    $data->set_additional_option(1, $useranswerid, '1000', 1);
+    $data->process_options(1, $useranswerid, '1000', 1);
     $option = $data->get_opt(1);
     $this->assertTrue($data->get('negativemarking'));
     $this->assertTrue($data->get('abstainselected'));

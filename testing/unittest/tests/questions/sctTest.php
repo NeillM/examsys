@@ -88,19 +88,19 @@ class scttest extends unittest{
     * Test question additional option setter
     * @group question
     */
-  public function test_set_additional_option() {
+  public function test_process_options() {
     $data = questiondata::get_datastore('sct');
     // Test dismiss and negative marking.
     $useranswerid = 5;
     $data->optionnumber = 5;
     $option['marksincorrect'] = -1;
     $data->set_opt(1, $option);
-    $data->set_additional_option(1, $useranswerid, '01000', 1);
+    $data->process_options(1, $useranswerid, '01000', 1);
     $this->assertEquals('01000', $data->get('dismiss'));
     $this->assertTrue($data->get('negativemarking'));
     $option['marksincorrect'] = 0;
     $data->set_opt(1, $option);
-    $data->set_additional_option(1, $useranswerid, '', 1);
+    $data->process_options(1, $useranswerid, '', 1);
     $this->assertEquals('00000', $data->get('dismiss'));
     $this->assertFalse($data->get('negativemarking'));
   }

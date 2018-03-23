@@ -92,19 +92,19 @@ class ranktest extends unittest{
     * Test question additional option setter
     * @group question
     */
-  public function test_set_additional_option() {
+  public function test_process_options() {
     $data = questiondata::get_datastore('rank');
     // Test dismiss and negative marking.
     $useranswerid = '1,u,u';
     $data->optionnumber = 3;
     $option['marksincorrect'] = -1;
     $data->set_opt(1, $option);
-    $data->set_additional_option(1, $useranswerid, '010', 1);
+    $data->process_options(1, $useranswerid, '010', 1);
     $this->assertEquals('010', $data->get('dismiss'));
     $this->assertTrue($data->get('negativemarking'));
     $option['marksincorrect'] = 0;
     $data->set_opt(1, $option);
-    $data->set_additional_option(1, $useranswerid, '', 1);
+    $data->process_options(1, $useranswerid, '', 1);
     $this->assertEquals('000', $data->get('dismiss'));
     $this->assertFalse($data->get('negativemarking'));
   }
