@@ -110,7 +110,7 @@ class renderdata extends \questiondata {
   /**
    * Question level settings for template rendering
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   * @param mixed $useranswerid id or name of user answer
+   * @param mixed $useranswerid user answer
    * @param integer $user_dismissid id of option user dismissed
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {

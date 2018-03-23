@@ -365,15 +365,17 @@ abstract class questiondata {
 
   /**
    * Abstract function to set question header
+   * @return void
    */
   abstract public function set_question_head();
 
   /**
    * Abstract function to set question
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   * @param integer $useranswerid id of user answer
+   * @param integer $useranswerid user answer
    * @param integer $user_dismissid id of option user dismissed
    * @param integer $allowed_responses number of answers that can be provided to a question
+   * @return void
    */
   abstract public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1);
 
@@ -383,6 +385,7 @@ abstract class questiondata {
    * @param integer $useranswerid id of option user selected
    * @param integer $user_dismissid id of option user dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
+   * @return void
    */
   abstract public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
 
@@ -392,6 +395,7 @@ abstract class questiondata {
    * @param integer $useranswerid id of option user selected
    * @param integer $user_dismissid id of option user dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
+   * @return void
    */
   abstract public function set_additional_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
 
