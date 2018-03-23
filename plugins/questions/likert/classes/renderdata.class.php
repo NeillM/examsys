@@ -85,7 +85,7 @@ class renderdata extends \questiondata {
     if ($this->qmedia != '') {
       $this->displaymedia = true;
     }
-    $this->displaydefault = true;
+    $this->displaydefault = false;
   }
 
   /**
@@ -103,11 +103,11 @@ class renderdata extends \questiondata {
       $na = true;
     }
     if ($this->notes != '') {
-      $this->displaynotes = true;
+      $this->displaylikertnotes = true;
       $this->likertnotescolspan = $likert_col_no + 1;
     }
     if ($this->scenario != '') {
-      $this->displayscenario = true;
+      $this->displaylikertscenario = true;
       $this->likertscenariocolspan = $likert_col_no + 2;
     }
     if ($na == true) {
