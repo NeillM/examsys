@@ -48,7 +48,7 @@ class renderdata extends \questiondata {
    * @param mixed $useranswerid user answer
    * @param integer $user_dismissid id of option user dismissed
    */
-  public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
+  public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid) {
     // Special processing of Information Blocks.
     if ($this->qmedia != '') {
       $this->displaymedia = true;

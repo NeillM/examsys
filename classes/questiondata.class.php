@@ -374,10 +374,9 @@ abstract class questiondata {
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    * @param integer $useranswerid user answer
    * @param integer $user_dismissid id of option user dismissed
-   * @param integer $allowed_responses number of answers that can be provided to a question
    * @return void
    */
-  abstract public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1);
+  abstract public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
 
   /**
    * Abstract function to set question options
@@ -419,6 +418,14 @@ abstract class questiondata {
    */
   public function set_opt($id, $opt) {
     $this->options[$id] = $opt;
+  }
+
+  /**
+   * Return the base mark for the question type
+   * @return int
+   */
+  public function get_base_marks() {
+    return 0;
   }
 
   /**
@@ -531,7 +538,6 @@ abstract class questiondata {
     $this->set_question_head();
 
     $part_id = 0;
-    $marks = 0;
 
     // What is the users current answer.
     if (isset($user_answers[$current_screen][$q_id])) {
@@ -551,26 +557,8 @@ abstract class questiondata {
     $this->questionno = $question_no;
     $this->displaymethod = $question['display_method'];
     $this->scoremethod = $question['score_method'];
-    switch ($question['q_type']) {
-      case 'mrq':
-        $mrq_correct = 0;
-        if ($question['score_method'] == 'Mark per Question') {
-          $mrq_correct = $option_no;
-        } else {
-          for ($i=0; $i<$option_no; $i++) {
-            if ($question['options'][$i]['correct'] == 'y') $mrq_correct++;
-          }
-        }
-        $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $mrq_correct);
-        break;
-      case 'sct':
-        $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
-        $marks = 1;
-        break;
-      default:
-        $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
-        break;
-    }
+    $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
+    $marks = $this->get_base_marks();
 
     // Processing for each stem.
     $this->options = array();

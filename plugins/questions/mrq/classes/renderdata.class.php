@@ -62,6 +62,25 @@ class renderdata extends \questiondata {
   }
 
   /**
+   * Return the allowed number of responses
+   * @return int
+   */
+  private function get_allowed_responses() {
+    $mrq_correct = 0;
+    if ($this->scoremethod == 'Mark per Question') {
+      $mrq_correct = $this->optionnumber;
+    } else {
+      $question = $this->question;
+      for ($i = 0; $i < $this->optionnumber; $i++) {
+        if ($question['options'][$i]['correct'] == 'y') {
+          $mrq_correct++;
+        }
+      }
+    }
+    return $mrq_correct;
+  }
+
+  /**
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
@@ -84,7 +103,8 @@ class renderdata extends \questiondata {
    * @param mixed $useranswerid user answer
    * @param integer $user_dismissid id of option user dismissed
    */
-  public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
+  public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid) {
+    $allowed_responses = $this->get_allowed_responses();
     if (!is_null($useranswerid)) {
       $answer_parts = explode(':', $useranswerid);
       $len_answer = strlen($answer_parts[0]);

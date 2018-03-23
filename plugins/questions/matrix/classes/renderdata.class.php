@@ -77,7 +77,7 @@ class renderdata extends \questiondata {
    * @param mixed $useranswerid user answer
    * @param integer $user_dismissid id of option user dismissed
    */
-  public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
+  public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid) {
     $this->scenarios = explode('|', $this->scenario);
     if (!is_null($useranswerid)) {
       $this->usersanswers = explode('|', $useranswerid);

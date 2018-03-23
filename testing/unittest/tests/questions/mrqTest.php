@@ -54,14 +54,16 @@ class mrqtest extends unittest{
   public function test_set_question() {
     $data = questiondata::get_datastore('mrq');
     $useranswerid = 'nnnnn';
-    $data->set_question(1, $useranswerid, '', 2);
+    $data->scoremethod = 'Mark per Question';
+    $data->optionnumber = 2;
+    $data->set_question(1, $useranswerid, '');
     $this->assertTrue($data->unanswered);
     $this->assertEquals(2, $data->allowedresponses);
     $useranswerid = 'nnnyn';
-    $data->set_question(1, $useranswerid, '', 2);
+    $data->set_question(1, $useranswerid, '');
     $this->assertFalse($data->unanswered);
     $useranswerid = 'nynyn';
-    $data->set_question(1, $useranswerid, '', 2);
+    $data->set_question(1, $useranswerid, '');
     $this->assertFalse($data->unanswered);
   }
 

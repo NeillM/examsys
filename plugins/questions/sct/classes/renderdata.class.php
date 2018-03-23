@@ -73,6 +73,14 @@ class renderdata extends \questiondata {
   }
 
   /**
+   * Return the base mark for the question type
+   * @return int
+   */
+  public function get_base_marks() {
+    return 1;
+  }
+
+  /**
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
@@ -85,7 +93,7 @@ class renderdata extends \questiondata {
    * @param mixed $useranswerid user answer
    * @param integer $user_dismissid id of option user dismissed
    */
-  public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
+  public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid) {
     // SCT stores vignette in scenario so must display. 
     $this->displayscenario = true;
     if ($this->notes != '') {
