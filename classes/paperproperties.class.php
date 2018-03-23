@@ -2264,10 +2264,7 @@ class PaperProperties {
       if (isset($user_answers[$current_screen])) {
         // Match user's answers with random question ID.
         $question_on_screen = array_keys($user_answers[$current_screen]);
-        $selected_q_id = current($question_on_screen);
-        for ($i = 1; $i < $q_no; $i++) {
-          $selected_q_id = next($question_on_screen);
-        }
+        $selected_q_id = $question_on_screen[$q_no - 1];
       }
 
       if ($selected_q_id == '') {
@@ -2384,10 +2381,7 @@ class PaperProperties {
       if (isset($user_answers[$current_screen])) {
         // Match user's answers with random question ID.
         $question_on_screen = array_keys($user_answers[$current_screen]);
-        $selected_q_id = current($question_on_screen);
-        for ($i = 1; $i < $q_no; $i++) {
-          $selected_q_id = next($question_on_screen);
-        }
+        $selected_q_id = $question_on_screen[$q_no - 1];
       }
 
       if ($selected_q_id == '') {
