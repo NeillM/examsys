@@ -2160,7 +2160,6 @@ class PaperProperties {
         $from = 'papers, questions LEFT JOIN options ON questions.q_id = options.o_id';
         $orderby = 'display_pos, id_num';
         if ($is_question_preview_mode) {
-          $screen = '1';
           $where = 'paper = ? AND
                     q_id = ? AND
                     papers.question = questions.q_id';
@@ -2233,7 +2232,15 @@ class PaperProperties {
             $tmp_questions_array[$q_no]['dismiss'] = '';
             $used_questions[$q_id] = 1;
           }
-          $tmp_questions_array[$q_no]['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
+          $tmp_questions_array[$q_no]['options'][] = array(
+              'correct' => $correct,
+              'option_text' => $option_text,
+              'o_media' => $o_media,
+              'o_media_width' => $o_media_width,
+              'o_media_height' => $o_media_height,
+              'marks_correct' => $marks_correct,
+              'marks_incorrect' => $marks_incorrect,
+              'marks_partial' => $marks_partial);
           $old_screen = $screen;
         }
         $question_data->close();
@@ -2247,7 +2254,7 @@ class PaperProperties {
      * @param array $screen_data 		- Holds a list of question types and IDs used on all screens in the paper.
      * @param array $used_questions - Array of question IDs already used on the paper.
      * @param array $string   			- Contains language translations.
-     *
+     * @return array
      */
     public function randomQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_questions, $string) {
       $selected_q_id = '';
@@ -2258,7 +2265,7 @@ class PaperProperties {
         // Match user's answers with random question ID.
         $question_on_screen = array_keys($user_answers[$current_screen]);
         $selected_q_id = current($question_on_screen);
-        for ($i=1; $i<$q_no; $i++) {
+        for ($i = 1; $i < $q_no; $i++) {
           $selected_q_id = next($question_on_screen);
         }
       }
@@ -2268,7 +2275,9 @@ class PaperProperties {
         $unique = false;
         while ($unique == false and $try < 9999) {
           $selected_q_id = random_utils::generate_random_qid_from_block($random_q_data['q_id'], $this->db);
-          if (!isset($used_questions[$selected_q_id])) $unique = true;
+          if (!isset($used_questions[$selected_q_id])) {
+            $unique = true;
+          }
           $try++;
         }
         $used_questions[$selected_q_id] = 1;
@@ -2312,19 +2321,25 @@ class PaperProperties {
                 $question['q_option_order'] = $q_option_order;
                 $question['dismiss'] = '';
               }
-              $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media,
-                  'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct,
-                  'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
+              $question['options'][] = array(
+                  'correct' => $correct,
+                  'option_text' => $option_text,
+                  'o_media' => $o_media,
+                  'o_media_width' => $o_media_width,
+                  'o_media_height' => $o_media_height,
+                  'marks_correct' => $marks_correct,
+                  'marks_incorrect' => $marks_incorrect,
+                  'marks_partial' => $marks_partial);
             }
             // Overwrite the screen data.
             $screen_no = count($screen_data);
-            for ($i=1; $i<=$screen_no; $i++) {
+            for ($i = 1; $i <= $screen_no; $i++) {
               if (isset($screen_data[$i])) {
                 $q_no = count($screen_data[$i]);
               } else {
                 $q_no = 0;
               }
-              for ($a=0; $a<$q_no; $a++) {
+              for ($a = 0; $a < $q_no; $a++) {
                 if ($screen_data[$i][$a][1] == $random_q_data['q_id']) {
                   $screen_data[$i][$a][0] = $q_type;
                   $screen_data[$i][$a][1] = $q_id;
@@ -2358,7 +2373,7 @@ class PaperProperties {
      * @param array $screen_data 		- Holds a list of question types and IDs used on all screens in the paper.
      * @param array $used_questions - Array of question IDs already used on the paper.
      * @param array $string   			- Contains language translations.
-     *
+     * @return array
      */
     public function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_questions, $string) {
       $selected_q_id = '';
@@ -2370,7 +2385,7 @@ class PaperProperties {
         // Match user's answers with random question ID.
         $question_on_screen = array_keys($user_answers[$current_screen]);
         $selected_q_id = current($question_on_screen);
-        for ($i=1; $i<$q_no; $i++) {
+        for ($i = 1; $i < $q_no; $i++) {
           $selected_q_id = next($question_on_screen);
         }
       }
@@ -2395,7 +2410,9 @@ class PaperProperties {
         $unique = false;
         while ($unique == false and $try < count($question_ids)) {
           $selected_q_id = $question_ids[$try];
-          if (!isset($used_questions[$selected_q_id])) $unique = true;
+          if (!isset($used_questions[$selected_q_id])) {
+            $unique = true;
+          }
           $try++;
         }
         $used_questions[$selected_q_id] = 1;
@@ -2434,21 +2451,27 @@ class PaperProperties {
             $question['q_option_order'] = $q_option_order;
             $question['dismiss'] = '';
           }
-          $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media,
-              'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct,
-              'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
+          $question['options'][] = array(
+              'correct' => $correct,
+              'option_text' => $option_text,
+              'o_media' => $o_media,
+              'o_media_width' => $o_media_width,
+              'o_media_height' => $o_media_height,
+              'marks_correct' => $marks_correct,
+              'marks_incorrect' => $marks_incorrect,
+              'marks_partial' => $marks_partial);
         }
         $question_data->close();
 
         // Overwrite the screen data.
         $screen_no = count($screen_data);
-        for ($i=1; $i<=$screen_no; $i++) {
+        for ($i = 1; $i <= $screen_no; $i++) {
           if (isset($screen_data[$i])) {
             $q_no = count($screen_data[$i]);
           } else {
             $q_no = 0;
           }
-          for ($a=0; $a<$q_no; $a++) {
+          for ($a = 0; $a < $q_no; $a++) {
             if ($screen_data[$i][$a][1] == $random_q_data['q_id']) {
               $screen_data[$i][$a][0] = $q_type;
               $screen_data[$i][$a][1] = $q_id;
