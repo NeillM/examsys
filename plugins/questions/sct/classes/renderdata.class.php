@@ -88,18 +88,18 @@ class renderdata extends \questiondata {
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
     // SCT stores vignette in scenario so must display. 
     $this->displayscenario = true;
-    if ($this->get('notes') != '') {
+    if ($this->notes != '') {
       $this->displaynotes = true;
     }
-    if ($this->get('qmedia') != '') {
+    if ($this->qmedia != '') {
       $this->displaymedia = true;
     }
-    $sct_parts = explode('~',$this->get('leadin'));
+    $sct_parts = explode('~',$this->leadin);
     $sct_titles = array(1=>$this->strings['hypothesis'], 2=>$this->strings['investigation'], 3=>$this->strings['prescription'], 4=>$this->strings['intervention'], 5=>$this->strings['treatment']);
-    $this->scttitle = $sct_titles[$this->get('displaymethod')];
+    $this->scttitle = $sct_titles[$this->displaymethod];
     $this->scthyp = $sct_parts[0];
     $this->sctinfo = $sct_parts[1];
-    $this->scttitlelower = $this->strings['thenthis'] . " " . mb_strtolower($sct_titles[$this->get('displaymethod')], 'UTF-8') . " " . $this->strings['is'] . ":";
+    $this->scttitlelower = $this->strings['thenthis'] . " " . mb_strtolower($sct_titles[$this->displaymethod], 'UTF-8') . " " . $this->strings['is'] . ":";
 
     if ($useranswerid == '0' and $screen_pre_submitted == 1) {
       $this->unanswered = true;
@@ -152,7 +152,7 @@ class renderdata extends \questiondata {
     if ($user_dismissid != '') {
        $this->dismiss = $user_dismissid;
     } else {
-       $this->dismiss = str_repeat('0', $this->get('optionnumber'));
+       $this->dismiss = str_repeat('0', $this->optionnumber);
     }
   }
 }

@@ -252,9 +252,9 @@ class questiondatatest extends unittestdatabase{
     */
   public function test_get() {
     $data = questiondata::get_datastore('area');
-    $this->assertNull($data->get('notes'));
+    $this->assertNull($data->notes);
     $data->notes = 'notes';
-    $this->assertEquals('notes', $data->get('notes'));
+    $this->assertEquals('notes', $data->notes);
   }
 
   /**

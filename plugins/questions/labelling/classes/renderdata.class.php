@@ -64,10 +64,10 @@ class renderdata extends \questiondata {
    */
   public function set_question_head() {
     $this->displaydefault = true;
-    if ($this->get('notes') != '') {
+    if ($this->notes != '') {
       $this->displaynotes = true;
     }
-    if ($this->get('scenario') != '') {
+    if ($this->scenario != '') {
       $this->displayscenario = true;
     }
     $this->displayleadin = true;
@@ -92,7 +92,7 @@ class renderdata extends \questiondata {
    */
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    $marks = $this->get('marks');
+    $marks = $this->marks;
     $tmp_labels = 0;
     $max_col1 = 0;
     $max_col2 = 0;
@@ -117,15 +117,15 @@ class renderdata extends \questiondata {
     $max_col2-=10;
     $max_label = max($max_col1, $max_col2);
 
-    if ($this->get('scoremethod') == 'Mark per Question') {
+    if ($this->scoremethod == 'Mark per Question') {
       $marks = $option['markscorrect'];
     }
     if (($label_width < 80 and $hyphen) or ($label_width < 104 and !$hyphen)) {    // Two columns
       $computed_height = round(($label_height + 6) * ceil($tmp_labels / 2)) + 10;
-      $tmp_height = max($this->get('mediaheight'), $computed_height);
+      $tmp_height = max($this->mediaheight, $computed_height);
     } else {                    // Single column
       $computed_height = round(($label_height + 6) * $tmp_labels) + 10;
-      $tmp_height = max($this->get('mediaheight'), $computed_height);
+      $tmp_height = max($this->mediaheight, $computed_height);
     }
 
     if ($useranswerid == '0$' . $marks . ';' and  $screen_pre_submitted == 1) {
@@ -136,7 +136,7 @@ class renderdata extends \questiondata {
     $tmp_correct = trim($option['correct']);
     $tmp_correct = str_replace("'", "&#039;", $tmp_correct);
 
-    $qmediawidth = $this->get('mediawidth') + 220;
+    $qmediawidth = $this->mediawidth + 220;
     $this->mediawidth = $qmediawidth;
     $this->mediaheight = $tmp_height;
     $this->tmpcorrect = $tmp_correct;

@@ -33,13 +33,13 @@ class infotest extends unittest{
   public function test_set_question() {
     $data = questiondata::get_datastore('info');
     $data->set_question(1, '', '');
-    $this->assertFalse($data->get('displaymedia'));
-    $this->assertTrue($data->get('displayleadin'));
+    $this->assertFalse($data->displaymedia);
+    $this->assertTrue($data->displayleadin);
     $data->qmedia = 'test';
     $data->questionno =  2;
     $data->set_question(1, '', '');
-    $this->assertTrue($data->get('displaymedia'));
-    $this->assertEquals(1, $data->get('questionno'));
+    $this->assertTrue($data->displaymedia);
+    $this->assertEquals(1, $data->questionno);
   }
 
 }

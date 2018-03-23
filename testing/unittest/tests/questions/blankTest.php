@@ -33,18 +33,18 @@ class blanktest extends unittest{
   public function test_set_question_head() {
     $data = questiondata::get_datastore('blank');
     $data->set_question_head();
-    $this->assertTrue($data->get('displaydefault'));
-    $this->assertFalse($data->get('displaynotes'));
-    $this->assertFalse($data->get('displayscenario'));
-    $this->assertTrue($data->get('displayleadin'));
-    $this->assertFalse($data->get('displaymedia'));
+    $this->assertTrue($data->displaydefault);
+    $this->assertFalse($data->displaynotes);
+    $this->assertFalse($data->displayscenario);
+    $this->assertTrue($data->displayleadin);
+    $this->assertFalse($data->displaymedia);
     $data->notes = 'test';
     $data->scenario = 'test';
     $data->qmedia = 'test';
     $data->set_question_head();
-    $this->assertTrue($data->get('displaynotes'));
-    $this->assertTrue($data->get('displayscenario'));
-    $this->assertTrue($data->get('displaymedia'));
+    $this->assertTrue($data->displaynotes);
+    $this->assertTrue($data->displayscenario);
+    $this->assertTrue($data->displaymedia);
   }
  
   /**
@@ -61,17 +61,17 @@ class blanktest extends unittest{
     $data->marks = 0;
     $useranswerid = '["Wales","u"]';
     $data->set_option(0, $useranswerid, '', 1);
-    $this->assertTrue($data->get('unanswered'));
+    $this->assertTrue($data->unanswered);
     $blankoptions[1] = array('itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of ');
     $blankoptions[2] = array('itemtype' => 'blank', 'itemcount' => 1, 'size' => 15, 'unans' => false, 'encoded_ans' => 'Wales');
     $blankoptions[3] = array('itemtype' => 'blurb', 'itemvalue' => ' and is in the ');
     $blankoptions[4] = array('itemtype' => 'blank', 'itemcount' => 2, 'size' => 15, 'unans' => true);
     $blankoptions[5] = array('itemtype' => 'blurb', 'itemvalue' => '</div>');
-    $this->assertEquals($blankoptions, $data->get('blankoptions'));
-    $this->assertEquals(2, $data->get('marks'));
+    $this->assertEquals($blankoptions, $data->blankoptions);
+    $this->assertEquals(2, $data->marks);
     $data->scoremethod = 'Mark per Question';
     $data->set_option(0, $useranswerid, '', 1);
-    $this->assertEquals(1, $data->get('marks'));
+    $this->assertEquals(1, $data->marks);
   }
 
   /**
@@ -88,7 +88,7 @@ class blanktest extends unittest{
     $data->marks = 0;
     $useranswerid = '["Wales","u"]';
     $data->set_option(0, $useranswerid, '', 1);
-    $this->assertTrue($data->get('unanswered'));
+    $this->assertTrue($data->unanswered);
     $blankoptions[1] = array('itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of ');
     $blankoptions[2] = array('itemtype' => 'blank', 'itemcount' => 1, 'unans' => false, 'itemvalue' => array (
         0 => array('answer' => 'England', 'selected' => false),
@@ -101,7 +101,7 @@ class blanktest extends unittest{
          1 => array('answer' => 'United States of America', 'selected' => false)));
     $blankoptions[5] = array('itemtype' => 'blurb', 'itemvalue' => '</div>');
     // Need to split test as itemvalue randomly shuffled so need to sort before test.
-    $options = $data->get('blankoptions');
+    $options = $data->blankoptions;
     $this->assertEquals($blankoptions[1], $options[1]);
     sort($options[2]['itemvalue']);
     $this->assertEquals($blankoptions[2], $options[2]);
@@ -109,10 +109,10 @@ class blanktest extends unittest{
     sort($options[4]['itemvalue']);
     $this->assertEquals($blankoptions[4], $options[4]);
     $this->assertEquals($blankoptions[5], $options[5]);
-    $this->assertEquals(2, $data->get('marks'));
+    $this->assertEquals(2, $data->marks);
     $data->scoremethod = 'Mark per Question';
     $data->set_option(0, $useranswerid, '', 1);
-    $this->assertEquals(1, $data->get('marks'));
+    $this->assertEquals(1, $data->marks);
   }
 
 }

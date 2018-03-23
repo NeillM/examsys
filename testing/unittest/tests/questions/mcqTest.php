@@ -33,18 +33,18 @@ class mcqtest extends unittest{
   public function test_set_question_head() {
     $data = questiondata::get_datastore('mcq');
     $data->set_question_head();
-    $this->assertTrue($data->get('displaydefault'));
-    $this->assertFalse($data->get('displaynotes'));
-    $this->assertFalse($data->get('displayscenario'));
-    $this->assertTrue($data->get('displayleadin'));
-    $this->assertFalse($data->get('displaymedia'));
+    $this->assertTrue($data->displaydefault);
+    $this->assertFalse($data->displaynotes);
+    $this->assertFalse($data->displayscenario);
+    $this->assertTrue($data->displayleadin);
+    $this->assertFalse($data->displaymedia);
     $data->notes = 'test';
     $data->scenario = 'test';
     $data->qmedia = 'test';
     $data->set_question_head();
-    $this->assertTrue($data->get('displaynotes'));
-    $this->assertTrue($data->get('displayscenario'));
-    $this->assertTrue($data->get('displaymedia'));
+    $this->assertTrue($data->displaynotes);
+    $this->assertTrue($data->displayscenario);
+    $this->assertTrue($data->displaymedia);
   }
 
   /**
@@ -55,12 +55,12 @@ class mcqtest extends unittest{
     $data = questiondata::get_datastore('mcq');
     $data->displaymethod = 'vertical_other';
     $data->set_question(1, '0', '');
-    $this->assertEquals('vertical', $data->get('displaymethod'));
-    $this->assertTrue($data->get('unanswered'));
+    $this->assertEquals('vertical', $data->displaymethod);
+    $this->assertTrue($data->unanswered);
     $data->displaymethod = 'dropdown';
     $data->set_question(1, '4', '');
-    $this->assertEquals('dropdown', $data->get('displaymethod'));
-    $this->assertFalse($data->get('unanswered'));
+    $this->assertEquals('dropdown', $data->displaymethod);
+    $this->assertFalse($data->unanswered);
   }
 
   /**
@@ -83,7 +83,7 @@ class mcqtest extends unittest{
     $this->assertFalse($option['displayoptionmedia']);
     $this->assertFalse($option['inact']);
     $this->assertTrue($option['selected']);
-    $this->assertEquals(2, $data->get('marks'));
+    $this->assertEquals(2, $data->marks);
     $option['tmppartid'] = 1;
     $data->set_opt(1, $option);
     $data->set_option(1, '2', '1000', 1);
@@ -104,30 +104,30 @@ class mcqtest extends unittest{
     $option['marksincorrect'] = -1;
     $data->set_opt(1, $option);
     $data->process_options(1, $useranswerid, '0100', 1);
-    $this->assertTrue($data->get('negativemarking'));
-    $this->assertFalse($data->get('abstainselected'));
-    $this->assertEquals('0100', $data->get('dismiss'));
+    $this->assertTrue($data->negativemarking);
+    $this->assertFalse($data->abstainselected);
+    $this->assertEquals('0100', $data->dismiss);
     $option['marksincorrect'] = 0;
     $data->set_opt(1, $option);
     $data->process_options(1, $useranswerid, '', 1);
-    $this->assertFalse($data->get('negativemarking'));
-    $this->assertFalse($data->get('abstainselected'));
-    $this->assertEquals('0000', $data->get('dismiss'));
+    $this->assertFalse($data->negativemarking);
+    $this->assertFalse($data->abstainselected);
+    $this->assertEquals('0000', $data->dismiss);
     // Test abstain.
     $useranswerid = 'a';
     $option['marksincorrect'] = -1;
     $data->set_opt(1, $option);
     $data->process_options(1, $useranswerid, '', 1);
-    $this->assertTrue($data->get('negativemarking'));
-    $this->assertTrue($data->get('abstainselected'));
-    $this->assertEquals('0000', $data->get('dismiss'));
+    $this->assertTrue($data->negativemarking);
+    $this->assertTrue($data->abstainselected);
+    $this->assertEquals('0000', $data->dismiss);
     // Test other.
     $data->displaymethod =  'vertical';
     $data->papertype = '3';
     $useranswerid = 'other:test';
     $data->process_options(1, $useranswerid, '', 1);
-    $this->assertEquals('other', $data->get('displaymethod'));
-    $this->assertTrue($data->get('otherselected'));
-    $this->assertEquals('test', $data->get('other'));
+    $this->assertEquals('other', $data->displaymethod);
+    $this->assertTrue($data->otherselected);
+    $this->assertEquals('test', $data->other);
   }
 }

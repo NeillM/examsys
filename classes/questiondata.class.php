@@ -400,19 +400,6 @@ abstract class questiondata {
   abstract public function process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
 
   /**
-   * Get an attribute
-   * @param string $attribute
-   * @return mixed
-   */
-  public function get($attribute) {
-    if (!isset($attribute)) {
-      return null;
-    } else {
-      return $this->$attribute;
-    }
-  }
-
-  /**
    * Get options
    * @param integer $id option id
    * @return array
@@ -594,7 +581,7 @@ abstract class questiondata {
           'markscorrect' => $display_option['marks_correct'],
           'marksincorrect' => $display_option['marks_incorrect'],
           'correct' => $display_option['correct'],
-          'optionno' => 'q' . $this->get('questionno') . '_' . $tmp_part_id,
+          'optionno' => 'q' . $this->questionno . '_' . $tmp_part_id,
           'tmppartid' => $tmp_part_id
       ));
       $this->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '', -1, false, $part_id);
@@ -617,12 +604,12 @@ abstract class questiondata {
       $this->process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
     }
     if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'rank', 'extmatch'))) {
-      $marks = $this->get('marks');
+      $marks = $this->marks;
       if ($question['score_method'] == 'Mark per Question') {
         $marks = $display_option['marks_correct'];
       }
     } else {
-      $marks = $this->get('marks');
+      $marks = $this->marks;
     }
     
 

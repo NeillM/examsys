@@ -82,7 +82,7 @@ class renderdata extends \questiondata {
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
-    if ($this->get('qmedia') != '') {
+    if ($this->qmedia != '') {
       $this->displaymedia = true;
     }
     $this->displaydefault = true;
@@ -96,17 +96,17 @@ class renderdata extends \questiondata {
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
     $na = false;
-    $likert_display = explode('|',$this->get('displaymethod'));
-    $likert_col_no = substr_count($this->get('displaymethod'),'|');
+    $likert_display = explode('|',$this->displaymethod);
+    $likert_col_no = substr_count($this->displaymethod,'|');
     if ($likert_display[$likert_col_no] == 'true') {
       $likert_col_no++;
       $na = true;
     }
-    if ($this->get('notes') != '') {
+    if ($this->notes != '') {
       $this->displaynotes = true;
       $this->likertnotescolspan = $likert_col_no + 1;
     }
-    if ($this->get('scenario') != '') {
+    if ($this->scenario != '') {
       $this->displayscenario = true;
       $this->likertscenariocolspan = $likert_col_no + 2;
     }
@@ -116,7 +116,7 @@ class renderdata extends \questiondata {
       $this->displayna = false;
     }
     $disp[0] = $likert_display[0];
-    $temp_end = substr_count($this->get('displaymethod'),'|') - 1;
+    $temp_end = substr_count($this->displaymethod,'|') - 1;
     for ($i=1; $i<=$temp_end; $i++) {
       $disp[$i] = $likert_display[$i];
     }
@@ -136,9 +136,9 @@ class renderdata extends \questiondata {
     } else {
       $this->unanswered = false;
     }
-    $scale_size = substr_count($this->get('displaymethod'),'|');
-    $this->id = $this->get('questionno') . "_" . $part_id;
-    $likert_display = explode('|',$this->get('displaymethod'));
+    $scale_size = substr_count($this->displaymethod,'|');
+    $this->id = $this->questionno . "_" . $part_id;
+    $likert_display = explode('|',$this->displaymethod);
     if ($likert_display[$scale_size] == 'true') {
       $this->na = false;
       if ($useranswerid == 'n/a') {

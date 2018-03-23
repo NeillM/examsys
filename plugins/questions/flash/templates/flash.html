@@ -1,17 +1,17 @@
 <div align="center">
-    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/get/shockwave/cabs/flash/swflash.cab" id="flash{{data.get('questionno')}}" width="{{data.get('mediawidth')}}" height="{{data.get('mediaheight')}}" align="middle">
+    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/get/shockwave/cabs/flash/swflash.cab" id="flash{{data.questionno}}" width="{{data.mediawidth}}" height="{{data.mediaheight}}" align="middle">
     <param name="wmode" value="opaque" />
     <param name="allowScriptAccess" value="sameDomain" />
-    <param name="movie" value="{{data.get('mediaurl')}}" />
+    <param name="movie" value="{{data.mediaurl}}" />
     <param name="quality" value="high" />
     <param name="bgcolor" value="{{data.bgcolor}}" />
-{% if data.get('displayscenario') %}
-    <param name="FlashVars" value="{{data.get('scenario')}}">
+{% if data.displayscenario %}
+    <param name="FlashVars" value="{{data.scenario}}">
 {% endif %}
-    <embed style="z-index:0;" src="{{data.get('mediaurl')}}";{% if data.get('displayscenario') %} FlashVars="{{data.get('scenario')}}";{% endif %} wmode="opaque"
-            quality="high" bgcolor="{{data.bgcolor}}" width="{{data.get('mediawidth')}}" height="{{data.get('mediaheight')}}" swLiveConnect=true id="flash{{data.get('questionno')}}"
-            name="flash{{data.get('questionno')}}" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash"
+    <embed style="z-index:0;" src="{{data.mediaurl}}";{% if data.displayscenario %} FlashVars="{{data.scenario}}";{% endif %} wmode="opaque"
+            quality="high" bgcolor="{{data.bgcolor}}" width="{{data.mediawidth}}" height="{{data.mediaheight}}" swLiveConnect=true id="flash{{data.questionno}}"
+            name="flash{{data.questionno}}" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash"
             pluginspage="https://get.adobe.com/flashplayer/" />
     </object>
 </div>
-<input type="hidden" name="q{{data.get('questionno')}}" value="0,0" />
+<input type="hidden" name="q{{data.questionno}}" value="0,0" />

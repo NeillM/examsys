@@ -1,30 +1,30 @@
-{% if data.get('displaydefault') %}
-        {% if data.get('displayscenario') %}
-        {{data.get('scenario')|raw}}<br /><br />
+{% if data.displaydefault %}
+        {% if data.displayscenario %}
+        {{data.scenario|raw}}<br /><br />
         {% endif %}
-        {% if data.get('displaymedia') %}
+        {% if data.displaymedia %}
         <p align="center">
             {% include 'paper/media.html' %}
         </p>
         {% endif %}
-        {% if data.get('displayleadin') %}
-        {{data.get('leadin')|raw}}
+        {% if data.displayleadin %}
+        {{data.leadin|raw}}
         {% endif %}
 {% endif %}
-{% include data.get('questiontype')~'.html' %}
-{% if data.get('papertype') != 3 %}
-    {% if data.get('finalmarks') == 0 %}
+{% include data.questiontype~'.html' %}
+{% if data.papertype != 3 %}
+    {% if data.finalmarks == 0 %}
         </td>
     </tr>
     <tr>
         <td colspan="2">&nbsp;</td>
     </tr>
     {% else %}
-        <div id="q{{data.get('questionno')}}_mk" class="mk">({{data.get('finalmarks')}} {% if data.get('finalmarks') == 1 %} {{lang.mark}} {% else %} {{lang.marks}} {% endif %}
-        {% if data.get('scoremethod') == 'bonus' %}
-    {{data.get('bonus')}}
+        <div id="q{{data.questionno}}_mk" class="mk">({{data.finalmarks}} {% if data.finalmarks == 1 %} {{lang.mark}} {% else %} {{lang.marks}} {% endif %}
+        {% if data.scoremethod == 'bonus' %}
+    {{data.bonus}}
         {% endif %}
-        {% if data.get('negativemarking') %}
+        {% if data.negativemarking %}
     , {{lang.negmarking}}
         {% endif %}
     )
@@ -37,6 +37,6 @@
         </td>
     </tr>
 {% endif %}
-{% if data.get('questiontype') != 'info' %}
-    <input type="hidden" name="order{{data.get('questionno')}}" value="{{data.get('optionorder')}}" />
+{% if data.questiontype != 'info' %}
+    <input type="hidden" name="order{{data.questionno}}" value="{{data.optionorder}}" />
 {% endif %}

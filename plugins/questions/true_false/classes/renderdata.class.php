@@ -61,14 +61,14 @@ class renderdata extends \questiondata {
    */
   public function set_question_head() {
     $this->displaydefault = true;
-    if ($this->get('notes') != '') {
+    if ($this->notes != '') {
       $this->displaynotes = true;
     }
-    if ($this->get('scenario') != '') {
+    if ($this->scenario != '') {
       $this->displayscenario = true;
     }
     $this->displayleadin = true;
-    if ($this->get('qmedia') != '') {
+    if ($this->qmedia != '') {
       $this->displaymedia = true;
     }
   }
@@ -97,7 +97,7 @@ class renderdata extends \questiondata {
     } else {
       $this->unanswered = false;
     }
-    if ($this->get('displaymethod') == 'dropdown') {
+    if ($this->displaymethod == 'dropdown') {
       if ($useranswerid == 't') {
         $this->trueselected = true;
         $this->falseselected = false;
@@ -115,7 +115,7 @@ class renderdata extends \questiondata {
         $this->falseselected = true;
         $this->trueselected = false;
       }
-      if ($this->get('negativemarking')) {
+      if ($this->negativemarking) {
         if ($useranswerid == 'a') {
           $this->abstainselected = true;
         } else {

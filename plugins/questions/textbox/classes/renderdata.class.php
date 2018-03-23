@@ -79,14 +79,14 @@ class renderdata extends \questiondata {
    */
   public function set_question_head() {
     $this->displaydefault = true;
-    if ($this->get('notes') != '') {
+    if ($this->notes != '') {
       $this->displaynotes = true;
     }
-    if ($this->get('scenario') != '') {
+    if ($this->scenario != '') {
       $this->displayscenario = true;
     }
     $this->displayleadin = true;
-    if ($this->get('qmedia') != '') {
+    if ($this->qmedia != '') {
       $this->displaymedia = true;
     }
   }
@@ -110,10 +110,10 @@ class renderdata extends \questiondata {
    */
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    $textboxes_seen = $this->get('textboxesseen');
-    if (!in_array($this->get('questionno'), $textboxes_seen)) {
-      $textboxes_seen[] = $this->get('questionno');
-      $settings = json_decode($this->get('settings'), true);
+    $textboxes_seen = $this->textboxesseen;
+    if (!in_array($this->questionno, $textboxes_seen)) {
+      $textboxes_seen[] = $this->questionno;
+      $settings = json_decode($this->settings, true);
       $this->editorcolumns = $settings['columns'];
       $this->editorrows = $settings['rows'];
       if (!isset($settings['editor']) or $settings['editor'] == 'plain' or $settings['editor'] == 'mathjax') {
@@ -151,10 +151,10 @@ class renderdata extends \questiondata {
           $this->unanswered = false;
         }
         // Bad way of inserting text editor to be resolved in ROGO-2263.
-        echo "<textarea class=\"mceEditor\" id=\"q" . $this->get('questionno') . "\" name=\"q" . $this->get('questionno') . "\"style=\"" . $background_colour . "; width:" . $textbox_width . "px; height:" . $textbox_height . "px\">" . $useranswerid . "</textarea>";
+        echo "<textarea class=\"mceEditor\" id=\"q" . $this->questionno . "\" name=\"q" . $this->questionno . "\"style=\"" . $background_colour . "; width:" . $textbox_width . "px; height:" . $textbox_height . "px\">" . $useranswerid . "</textarea>";
       }
       $this->textboxesseen = $textboxes_seen;
-      $marks = $this->get('marks');
+      $marks = $this->marks;
       $marks += $option['markscorrect'];
       $this->marks = $marks;
     }

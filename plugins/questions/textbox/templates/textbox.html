@@ -1,14 +1,14 @@
-{% if data.get('editor') == 'plain' %}
-        {% if data.get('editormathjax') %}
+{% if data.editor == 'plain' %}
+        {% if data.editormathjax %}
 {% include 'mathjaxpreview.html' %}
 <p>{{lang.mathjaxinstructions|raw}}</p>
         {% endif %}
-<textarea {% if data.get('editormathjax') %} onkeyup="Previewq{{data.get('questionno')}}.Update()" {% endif %} {% if data.get('unanswered') %} class="unans" {% endif %} id="q{{data.get('questionno')}}" name="q{{data.get('questionno')}}" cols="{{data.get('editorcolumns')}}" rows="{{data.get('editorrows')}}">{{data.get('useranswer')}}</textarea>
-    {% if data.get('editormathjax') %}
+<textarea {% if data.editormathjax %} onkeyup="Previewq{{data.questionno}}.Update()" {% endif %} {% if data.unanswered %} class="unans" {% endif %} id="q{{data.questionno}}" name="q{{data.questionno}}" cols="{{data.editorcolumns}}" rows="{{data.editorrows}}">{{data.useranswer}}</textarea>
+    {% if data.editormathjax %}
 <p>{{lang.previewmathjax}}</p>
-<div id="MathPreviewq{{data.get('questionno')}}" style="border:1px solid; padding: 3px; width:50%; margin-top:5px"></div>
-<div id="MathBufferq{{data.get('questionno')}}" style="border:1px solid; padding: 3px; width:50%; margin-top:5px; visibility:hidden; position:absolute; top:0; left: 0"></div>
-<script>Previewq{{data.get('questionno')}}.Init();</script>
+<div id="MathPreviewq{{data.questionno}}" style="border:1px solid; padding: 3px; width:50%; margin-top:5px"></div>
+<div id="MathBufferq{{data.questionno}}" style="border:1px solid; padding: 3px; width:50%; margin-top:5px; visibility:hidden; position:absolute; top:0; left: 0"></div>
+<script>Previewq{{data.questionno}}.Init();</script>
     {% endif %}
 {% else %}
 

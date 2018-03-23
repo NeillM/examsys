@@ -1,14 +1,14 @@
-<blockquote {% if data.get('unanswered') %} class="unans" {% endif %}>
+<blockquote {% if data.unanswered %} class="unans" {% endif %}>
     <table cellpadding="2" cellspacing="0" border="0">
-{% if data.get('papertype') == 3 %}
-    {% for i,p in data.get('options') %}
+{% if data.papertype == 3 %}
+    {% for i,p in data.options %}
     <tr>
         <td>
-            <input type="checkbox" name="q{{data.get('questionno')}}_{{i}}" id="q{{data.get('questionno')}}_{{i}}" value="y" {% if p.selected %} checked="checked" {% endif %}/>
+            <input type="checkbox" name="q{{data.questionno}}_{{i}}" id="q{{data.questionno}}_{{i}}" value="y" {% if p.selected %} checked="checked" {% endif %}/>
         </td>
         <td>
         {% if p.optiontextdisplay %}
-        <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.get('questionno')}}_{{i}}"> {{p.optiontext|raw}}</span></br>
+        <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.questionno}}_{{i}}"> {{p.optiontext|raw}}</span></br>
         {% endif %}
         {% if p.displayoptionmedia %}
             {% include 'paper/media.html' with {'data': p.optionmedia} %}
@@ -17,14 +17,14 @@
     </tr>
     {% endfor %}
 {% else %}
-    {% for i,p in data.get('options') %}
+    {% for i,p in data.options %}
     <tr>
         <td>
-            <input type="checkbox" onclick="MRQ({{data.get('questionno')}},{{p.tmppartid}},{{data.get('optionnumber')}},{{data.get('allowedresponses')}});" name="q{{data.get('questionno')}}_{{i}}" id="q{{data.get('questionno')}}_{{i}}" value="y" {% if p.selected %} checked="checked" {% endif %} />
+            <input type="checkbox" onclick="MRQ({{data.questionno}},{{p.tmppartid}},{{data.optionnumber}},{{data.allowedresponses}});" name="q{{data.questionno}}_{{i}}" id="q{{data.questionno}}_{{i}}" value="y" {% if p.selected %} checked="checked" {% endif %} />
         </td>
         <td>
             {% if p.optiontextdisplay %}
-            <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.get('questionno')}}_{{i}}"> {{p.optiontext|raw}}</span></br>
+            <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.questionno}}_{{i}}"> {{p.optiontext|raw}}</span></br>
             {% endif %}
             {% if p.displayoptionmedia %}
                 {% include 'paper/media.html' with {'data': p.optionmedia} %}
@@ -33,27 +33,27 @@
     </tr>
     {% endfor %}
 {% endif %}
-{% if data.get('displaymethod') == 'other' %}
+{% if data.displaymethod == 'other' %}
     <tr>
         <td>
-            <input type="checkbox" name="q{{data.get('questionno')}}_{{data.get('partid')}}" value="y" {% if data.get('otherselected') %} checked="checked" {% endif %}/>
+            <input type="checkbox" name="q{{data.questionno}}_{{data.partid}}" value="y" {% if data.otherselected %} checked="checked" {% endif %}/>
         </td>
         <td>{{lang.other}} 
-            <input type="text" onkeypress="document.questions.q{{data.get('questionno')}}_{{data.get('partid')}}.checked=true" name="q{{data.get('questionno')}}_other" value="{{data.get('other')}}" />
+            <input type="text" onkeypress="document.questions.q{{data.questionno}}_{{data.partid}}.checked=true" name="q{{data.questionno}}_other" value="{{data.other}}" />
         </td>
     </tr>
-{% elseif data.get('negativemarking') %}
+{% elseif data.negativemarking %}
     <tr>
         <td>
-            <input type="checkbox" onclick="MRQabstain({{data.get('questionno')}},{{data.get('optionnumber')}});" name="q{{data.get('questionno')}}_abstain" id="q{{data.get('questionno')}}_abstain" value="y" {% if data.get('abstainselected') %} checked="checked" {% endif %} />
+            <input type="checkbox" onclick="MRQabstain({{data.questionno}},{{data.optionnumber}});" name="q{{data.questionno}}_abstain" id="q{{data.questionno}}_abstain" value="y" {% if data.abstainselected %} checked="checked" {% endif %} />
         </td>
         <td>
-            <span style="color:{{data.get('labelcolour')}}">&lt;{{lang.abstain}}&gt;</span>
+            <span style="color:{{data.labelcolour}}">&lt;{{lang.abstain}}&gt;</span>
         </td>
     </tr>
 {% endif %}
 </table>
 <div>
-    <input type="hidden" name="dismiss{{data.get('questionno')}}" id="dismiss{{data.get('questionno')}}" value="{{data.get('dismiss')}}" />
+    <input type="hidden" name="dismiss{{data.questionno}}" id="dismiss{{data.questionno}}" value="{{data.dismiss}}" />
 </div>
 </blockquote>

@@ -43,11 +43,11 @@ class enhancedcalctest extends unittestdatabase{
   public function test_set_question_head() {
     $data = questiondata::get_datastore('enhancedcalc');
     $data->set_question_head();
-    $this->assertTrue($data->get('displaydefault'));
-    $this->assertFalse($data->get('displaynotes'));
+    $this->assertTrue($data->displaydefault);
+    $this->assertFalse($data->displaynotes);
     $data->notes = 'test';
     $data->set_question_head();
-    $this->assertTrue($data->get('displaynotes'));
+    $this->assertTrue($data->displaynotes);
   }
 
   /**
@@ -62,7 +62,7 @@ class enhancedcalctest extends unittestdatabase{
     $data->question = $question;
     $useranswerid = '{"vars":{"$A":2,"$B":8},"uans":""}';
     $data->set_question(1, $useranswerid, '');
-    $this->assertEquals($data->get('useranswers'), $question['object']->alluseranswers);
+    $this->assertEquals($data->useranswers, $question['object']->alluseranswers);
   }
 
   /**
@@ -83,7 +83,7 @@ class enhancedcalctest extends unittestdatabase{
     $data->question = $questions[1];
     $useranswerid = '{"vars":{"$A":2,"$B":8},"uans":""}';
     $data->set_option(1, $useranswerid, '', 1);
-    $this->assertEquals(3, $data->get('marks'));
+    $this->assertEquals(3, $data->marks);
     $output = ob_get_contents(); // Store buffer in variable
     ob_end_clean(); // End buffering and clean up
   }

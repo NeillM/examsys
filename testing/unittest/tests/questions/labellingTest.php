@@ -33,15 +33,15 @@ class labellingtest extends unittest{
   public function test_set_question_head() {
     $data = questiondata::get_datastore('labelling');
     $data->set_question_head();
-    $this->assertTrue($data->get('displaydefault'));
-    $this->assertFalse($data->get('displaynotes'));
-    $this->assertFalse($data->get('displayscenario'));
-    $this->assertTrue($data->get('displayleadin'));
+    $this->assertTrue($data->displaydefault);
+    $this->assertFalse($data->displaynotes);
+    $this->assertFalse($data->displayscenario);
+    $this->assertTrue($data->displayleadin);
     $data->notes = 'test';
     $data->scenario = 'test';
     $data->set_question_head();
-    $this->assertTrue($data->get('displaynotes'));
-    $this->assertTrue($data->get('displayscenario'));
+    $this->assertTrue($data->displaynotes);
+    $this->assertTrue($data->displayscenario);
   }
 
   /**
@@ -60,21 +60,21 @@ class labellingtest extends unittest{
     $data->mediawidth = 580;
     $useranswerid = '4$4;370$148$beetle3.png$t$371$275$earwig3.png$t$537$78$spider$t$539$447$plants$t$';
     $data->set_option(0, $useranswerid, '', 0);
-    $this->assertEquals(1, $data->get('marks'));
-    $this->assertFalse($data->get('unanswered'));
-    $this->assertEquals(480, $data->get('mediaheight'));
-    $this->assertEquals(800, $data->get('mediawidth'));
-    $this->assertEquals(1, $data->get('markscorrect'));
-    $this->assertEquals(-1, $data->get('marksincorrect'));
-    $this->assertEquals($useranswerid, $data->get('useranswer'));
-    $this->assertEquals($option['correct'], $data->get('tmpcorrect'));
+    $this->assertEquals(1, $data->marks);
+    $this->assertFalse($data->unanswered);
+    $this->assertEquals(480, $data->mediaheight);
+    $this->assertEquals(800, $data->mediawidth);
+    $this->assertEquals(1, $data->markscorrect);
+    $this->assertEquals(-1, $data->marksincorrect);
+    $this->assertEquals($useranswerid, $data->useranswer);
+    $this->assertEquals($option['correct'], $data->tmpcorrect);
     $useranswerid = '0$4;';
     $data->marks =  0;
     $data->scoremethod =  'Mark per Option';
     $data->set_option(0, $useranswerid, '', 1);
-    $this->assertEquals($useranswerid, $data->get('useranswer'));
-    $this->assertTrue($data->get('unanswered'));
-    $this->assertEquals(4, $data->get('marks'));
+    $this->assertEquals($useranswerid, $data->useranswer);
+    $this->assertTrue($data->unanswered);
+    $this->assertEquals(4, $data->marks);
     
   }
 

@@ -33,18 +33,18 @@ class true_falsetest extends unittest{
   public function test_set_question_head() {
     $data = questiondata::get_datastore('true_false');
     $data->set_question_head();
-    $this->assertTrue($data->get('displaydefault'));
-    $this->assertTrue($data->get('displayleadin'));
-    $this->assertFalse($data->get('displaynotes'));
-    $this->assertFalse($data->get('displayscenario'));
-    $this->assertFalse($data->get('displaymedia'));
+    $this->assertTrue($data->displaydefault);
+    $this->assertTrue($data->displayleadin);
+    $this->assertFalse($data->displaynotes);
+    $this->assertFalse($data->displayscenario);
+    $this->assertFalse($data->displaymedia);
     $data->notes = 'test';
     $data->scenario = 'test';
     $data->qmedia = 'test';
     $data->set_question_head();
-    $this->assertTrue($data->get('displaynotes'));
-    $this->assertTrue($data->get('displayscenario'));
-    $this->assertTrue($data->get('displaymedia'));
+    $this->assertTrue($data->displaynotes);
+    $this->assertTrue($data->displayscenario);
+    $this->assertTrue($data->displaymedia);
   }
 
   /**

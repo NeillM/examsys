@@ -477,7 +477,7 @@ $render->render($headerdata, $lang, 'header.html');
     $questionrender->questiondata->labelcolour = $labelcolor;
     $questionrender->questiondata->displaycalc = $calculator;
     $questionrender->display_question($screen_pre_submitted, $q_displayed, $string, $question, $paperID, $current_screen, $question_no, $user_answers);
-    if ($questionrender->questiondata->get('unanswered')) {
+    if ($questionrender->questiondata->unanswered) {
       $unanswered = true;
     }
     $q_displayed++;

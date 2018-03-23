@@ -1,4 +1,4 @@
-{% if data.get('extmatchdisplaymedia') %}
+{% if data.extmatchdisplaymedia %}
 <p align="center">
     {% include 'paper/media.html' %}
 </p>
@@ -7,9 +7,9 @@
     <tr>
         <td>
             <ol>
-{% for o in data.get('matchoptions') %}
+{% for o in data.matchoptions %}
                 <li>{{o}}</li>
-    {% if loop.index0 == data.get('split') %}
+    {% if loop.index0 == data.split %}
             </ol>
         </td>
         <td style="vertical-align:top">
@@ -21,19 +21,19 @@
     </tr>
 </table>
 <ol class="extmatch">
-{% for m in data.get('matchstem') %}
+{% for m in data.matchstem %}
 <li>
     <div>{{m.scenario|raw}}</div>
     {% if m.display %}
     <div>{% include 'paper/optmedia.html' with {'data': m.media} %}</div><br />
     {% endif %}
     {% if m.answerno == 1 %}
-    <select {% if m.unanswered %} class="unans" {% endif %} name="q{{data.get('questionno')}}_{{loop.index}}" size="1">
+    <select {% if m.unanswered %} class="unans" {% endif %} name="q{{data.questionno}}_{{loop.index}}" size="1">
         <option value="u"></option>
     {% else %}
     <br />
     <div class="option">
-        <select {% if m.unanswered %} class="unans" {% endif %} onchange="multimatchingCheck('q{{data.get('questionno')}}_{{loop.index}}','{{m.matchingoptions}}','{{m.subanswers}}');" name="q{{data.get('questionno')}}_{{loop.index}}[]" id="q{{data.get('questionno')}}_{{loop.index}}" multiple="multiple" size="{{m.listsize}}">
+        <select {% if m.unanswered %} class="unans" {% endif %} onchange="multimatchingCheck('q{{data.questionno}}_{{loop.index}}','{{m.matchingoptions}}','{{m.subanswers}}');" name="q{{data.questionno}}_{{loop.index}}[]" id="q{{data.questionno}}_{{loop.index}}" multiple="multiple" size="{{m.listsize}}">
     {% endif %}
     {% for o in m.matchingoption %}
             <option value="{{o.value}}" {% if o.selected %} selected {% endif %}>{{o.option}}</option>
@@ -46,4 +46,4 @@
 </li>
 {% endfor %}
 </ol>
-<input type="hidden" name="multimatching{{data.get('questionno')}}_options" value="{{data.get('matchoptionsno')}}" />
+<input type="hidden" name="multimatching{{data.questionno}}_options" value="{{data.matchoptionsno}}" />

@@ -60,10 +60,10 @@ class renderdata extends \questiondata {
    */
   public function set_question_head() {
     $this->displaydefault = true;
-    if ($this->get('notes') != '') {
+    if ($this->notes != '') {
       $this->displaynotes = true;
     }
-    if ($this->get('scenario') != '') {
+    if ($this->scenario != '') {
       $this->displayscenario = true;
     }
   }
@@ -93,7 +93,7 @@ class renderdata extends \questiondata {
       $this->unanswered = false;
     }
     $hotspot_no = substr_count($option['correct'],'|') + 1;
-    $tmp_height = $this->get('mediaheight') + 30;
+    $tmp_height = $this->mediaheight + 30;
     if ($tmp_height < (($hotspot_no * 36) + 25)) {
       $tmp_height = (($hotspot_no * 36) + 25);
     }
@@ -102,7 +102,7 @@ class renderdata extends \questiondata {
     $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
 
     $this->tmpcorrect = $tmp_correct;
-    $qmediawidth = $this->get('mediawidth') + 300;
+    $qmediawidth = $this->mediawidth + 300;
     $this->mediawidth = $qmediawidth;
     $this->mediaheight = $tmp_height - 29;
 
@@ -115,8 +115,8 @@ class renderdata extends \questiondata {
     } else {
       $this->unanswered = false;
     }
-    $marks = $this->get('marks');
-    if ($this->get('scoremethod') == 'Mark per Question') {
+    $marks = $this->marks;
+    if ($this->scoremethod == 'Mark per Question') {
       $marks = $option['markscorrect'];
     } else {
       $marks = (substr_count($option['correct'],'|') + 1) * $option['markscorrect'];

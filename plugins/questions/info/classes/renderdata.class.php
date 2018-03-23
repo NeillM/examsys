@@ -50,11 +50,11 @@ class renderdata extends \questiondata {
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
     // Special processing of Information Blocks.
-    if ($this->get('qmedia') != '') {
+    if ($this->qmedia != '') {
       $this->displaymedia = true;
     }
     $this->displayleadin = true;
-    $this->questionno = $this->get('questionno') - 1;
+    $this->questionno = $this->questionno - 1;
   }
 
   /**

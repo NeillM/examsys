@@ -58,10 +58,10 @@ class renderdata extends \questiondata {
    */
   public function set_question_head() {
     $this->displaydefault = true;
-    if ($this->get('notes') != '') {
+    if ($this->notes != '') {
       $this->displaynotes = true;
     }
-    if ($this->get('scenario') != '') {
+    if ($this->scenario != '') {
       $this->displayscenario = true;
     }
     $this->displayleadin = true;
@@ -106,14 +106,14 @@ class renderdata extends \questiondata {
       $this->unanswered = true;
     }
 
-    $qmediawidth = $this->get('mediawidth') + 2;
+    $qmediawidth = $this->mediawidth + 2;
     $this->mediawidth = $qmediawidth;
-    $qmediaheight = $this->get('mediaheight') + 27;
+    $qmediaheight = $this->mediaheight + 27;
     $this->mediaheight = $qmediaheight;
     $this->areadisplay = $option['correct'];
     $this->areauseranswer =  $tmp_user_answer;
     $this->areafulluseranswer = $full_user_ans;
-    $marks = $this->get('marks');
+    $marks = $this->marks;
     $marks += $option['markscorrect'];
     $this->marks = $marks;
   }

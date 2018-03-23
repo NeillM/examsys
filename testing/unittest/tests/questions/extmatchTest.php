@@ -33,12 +33,12 @@ class extmatchtest extends unittest{
   public function test_set_question_head() {
     $data = questiondata::get_datastore('extmatch');
     $data->set_question_head();
-    $this->assertTrue($data->get('displaydefault'));
-    $this->assertFalse($data->get('displaynotes'));
-    $this->assertTrue($data->get('displayleadin'));
+    $this->assertTrue($data->displaydefault);
+    $this->assertFalse($data->displaynotes);
+    $this->assertTrue($data->displayleadin);
     $data->notes = 'test';
     $data->set_question_head();
-    $this->assertTrue($data->get('displaynotes'));
+    $this->assertTrue($data->displaynotes);
   }
 
   /**
@@ -61,14 +61,14 @@ class extmatchtest extends unittest{
     $height= array(776, 105, 121, "", "", "", "", "", "", "", "");
     $useranswerid = '1|3|2';
     $data->set_question(1, $useranswerid, '');
-    $this->assertEquals($scenarios, $data->get('scenarios'));
-    $this->assertEquals($media, $data->get('media'));
-    $this->assertEquals($width, $data->get('mediawidth'));
-    $this->assertEquals($height, $data->get('mediaheight'));
-    $this->assertEquals(array('1', '3', '2'), $data->get('usersanswers'));
+    $this->assertEquals($scenarios, $data->scenarios);
+    $this->assertEquals($media, $data->media);
+    $this->assertEquals($width, $data->mediawidth);
+    $this->assertEquals($height, $data->mediaheight);
+    $this->assertEquals(array('1', '3', '2'), $data->usersanswers);
     $useranswerid = null;
     $data->set_question(0, $useranswerid, '');
-    $this->assertEquals(array(), $data->get('usersanswers'));
+    $this->assertEquals(array(), $data->usersanswers);
   }
 
   /**
@@ -85,7 +85,7 @@ class extmatchtest extends unittest{
     $data->set_opt(5, array('optiontext' => 'Intu Centre'));
     $data->set_opt(6, array('optiontext' => 'Derby County F.C.'));
     $data->set_option(2, '1|3|2', '', 1);
-    $this->assertEquals(array('Paris', 'Eifel Tower'), $data->get('matchoptions'));
+    $this->assertEquals(array('Paris', 'Eifel Tower'), $data->matchoptions);
   }
 
   /**
@@ -250,11 +250,11 @@ class extmatchtest extends unittest{
       )
     );
     $data->process_options(6, '1|3|2', '', 1);
-    $this->assertTrue($data->get('extmatchdisplaymedia'));
-    $this->assertEquals(2, $data->get('split'));
-    $this->assertEquals(6, $data->get('matchoptionsno'));
-    $this->assertEquals(4, $data->get('marks'));
-    $this->assertFalse($data->get('unanswered'));
-    $this->assertEquals($matchstem, $data->get('matchstem'));
+    $this->assertTrue($data->extmatchdisplaymedia);
+    $this->assertEquals(2, $data->split);
+    $this->assertEquals(6, $data->matchoptionsno);
+    $this->assertEquals(4, $data->marks);
+    $this->assertFalse($data->unanswered);
+    $this->assertEquals($matchstem, $data->matchstem);
   }
 }

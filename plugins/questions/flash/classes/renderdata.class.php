@@ -41,10 +41,10 @@ class renderdata extends \questiondata {
    */
   public function set_question_head() {
     $this->displaydefault = true;
-    if ($this->get('notes') != '') {
+    if ($this->notes != '') {
       $this->displaynotes = true;
     }
-    if ($this->get('scenario') != '') {
+    if ($this->scenario != '') {
       $this->displayscenario = true;
     }
     $this->displayleadin = true;
@@ -69,7 +69,7 @@ class renderdata extends \questiondata {
    */
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    $marks = $this->get('marks');
+    $marks = $this->marks;
     $marks += $option['markscorrect'];
     $this->marks = $marks;
   }

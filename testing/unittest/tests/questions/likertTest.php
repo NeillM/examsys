@@ -33,11 +33,11 @@ class likerttest extends unittest{
   public function test_set_question_head() {
     $data = questiondata::get_datastore('likert');
     $data->set_question_head();
-    $this->assertTrue($data->get('displaydefault'));
-    $this->assertFalse($data->get('displaymedia'));
+    $this->assertTrue($data->displaydefault);
+    $this->assertFalse($data->displaymedia);
     $data->qmedia = 'test';
     $data->set_question_head();
-    $this->assertTrue($data->get('displaymedia'));
+    $this->assertTrue($data->displaymedia);
   }
 
     /**
@@ -48,20 +48,20 @@ class likerttest extends unittest{
     $data = questiondata::get_datastore('likert');
     $data->displaymethod =  '0|1|2|3|4|true';
     $data->set_question(0, '', '');
-    $this->assertFalse($data->get('displaynotes'));
-    $this->assertFalse($data->get('displayscenario'));
-    $this->assertTrue($data->get('displayna'));
-    $this->assertEquals(array(0, 1, 2, 3, 4), $data->get('scale'));
+    $this->assertFalse($data->displaynotes);
+    $this->assertFalse($data->displayscenario);
+    $this->assertTrue($data->displayna);
+    $this->assertEquals(array(0, 1, 2, 3, 4), $data->scale);
     $data->displaymethod = '0|1|2|3|4|false';
     $data->notes = 'note';
     $data->scenario = 'scenario';
     $data->set_question(0, '', '');
-    $this->assertFalse($data->get('displayna'));
-    $this->assertEquals(array(0, 1, 2, 3, 4), $data->get('scale'));
-    $this->assertTrue($data->get('displaynotes'));
-    $this->assertTrue($data->get('displayscenario'));
-    $this->assertEquals(6, $data->get('likertnotescolspan'));
-    $this->assertEquals(7, $data->get('likertscenariocolspan'));
+    $this->assertFalse($data->displayna);
+    $this->assertEquals(array(0, 1, 2, 3, 4), $data->scale);
+    $this->assertTrue($data->displaynotes);
+    $this->assertTrue($data->displayscenario);
+    $this->assertEquals(6, $data->likertnotescolspan);
+    $this->assertEquals(7, $data->likertscenariocolspan);
     
     }
 
@@ -74,18 +74,18 @@ class likerttest extends unittest{
     $data->displaymethod =  '0|1|2|3|4|true';
     $data->questionno =  '1';
     $data->set_option(0, '4', '', 1);
-    $this->assertFalse($data->get('unanswered'));
-    $this->assertFalse($data->get('na'));
-    $this->assertEquals('1_0', $data->get('id'));
-    $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => true, 5 => false), $data->get('scaleopt'));
+    $this->assertFalse($data->unanswered);
+    $this->assertFalse($data->na);
+    $this->assertEquals('1_0', $data->id);
+    $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => true, 5 => false), $data->scaleopt);
     $data->set_option(0, 'n/a', '', 1);
-    $this->assertTrue($data->get('na'));
-    $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => false, 5 => false), $data->get('scaleopt'));
+    $this->assertTrue($data->na);
+    $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => false, 5 => false), $data->scaleopt);
     $data->displaymethod = '0|1|2|3|4|false';
     $data->set_option(0, 'u', '', 1);
-    $this->assertFalse($data->get('na'));
-    $this->assertTrue($data->get('unanswered'));
-    $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => false, 5 => false), $data->get('scaleopt'));
+    $this->assertFalse($data->na);
+    $this->assertTrue($data->unanswered);
+    $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => false, 5 => false), $data->scaleopt);
   }
 
 }

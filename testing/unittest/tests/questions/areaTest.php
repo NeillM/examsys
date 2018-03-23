@@ -33,15 +33,15 @@ class areatest extends unittest{
   public function test_set_question_head() {
     $data = questiondata::get_datastore('area');
     $data->set_question_head();
-    $this->assertTrue($data->get('displaydefault'));
-    $this->assertFalse($data->get('displaynotes'));
-    $this->assertFalse($data->get('displayscenario'));
-    $this->assertTrue($data->get('displayleadin'));
+    $this->assertTrue($data->displaydefault);
+    $this->assertFalse($data->displaynotes);
+    $this->assertFalse($data->displayscenario);
+    $this->assertTrue($data->displayleadin);
     $data->notes = 'test';
     $data->scenario = 'test';
     $data->set_question_head();
-    $this->assertTrue($data->get('displaynotes'));
-    $this->assertTrue($data->get('displayscenario'));
+    $this->assertTrue($data->displaynotes);
+    $this->assertTrue($data->displayscenario);
   }
  
   /**
@@ -58,13 +58,13 @@ class areatest extends unittest{
     $data->mediaheight = 10;
     $useranswerid = '100,0,0,0,0,7397;d5,69,df,64,d5,69, ';
     $data->set_option(0, $useranswerid, '', 0);
-    $this->assertFalse($data->get('unanswered'));
-    $this->assertEquals(12, $data->get('mediawidth'));
-    $this->assertEquals(37, $data->get('mediaheight'));
-    $this->assertEquals(1, $data->get('areadisplay'));
-    $this->assertEquals('d5,69,df,64,d5,69', $data->get('areauseranswer'));
-    $this->assertEquals($useranswerid, $data->get('areafulluseranswer'));
-    $this->assertEquals(2, $data->get('marks'));
+    $this->assertFalse($data->unanswered);
+    $this->assertEquals(12, $data->mediawidth);
+    $this->assertEquals(37, $data->mediaheight);
+    $this->assertEquals(1, $data->areadisplay);
+    $this->assertEquals('d5,69,df,64,d5,69', $data->areauseranswer);
+    $this->assertEquals($useranswerid, $data->areafulluseranswer);
+    $this->assertEquals(2, $data->marks);
   }
 
 }

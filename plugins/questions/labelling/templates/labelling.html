@@ -1,19 +1,19 @@
 <div align="left">
     <!-- ======================== HTML5 part include disp ================= -->
-    <canvas class="labelling" id="canvas{{data.get('questionno')}}" width="{{data.get('mediawidth')}}" height="{{data.get('mediaheight')}}"></canvas>
+    <canvas class="labelling" id="canvas{{data.questionno}}" width="{{data.mediawidth}}" height="{{data.mediaheight}}"></canvas>
     <br /><div id="canvasbox"></div>
     <script>
-    setUpQuestion("{{data.get('questionno')}}",
-    'flash{{data.get('questionno')}}',
-    '{{data.get('language')}}',
-    '{{data.get('mediafile')}}',
-    '{{data.get('tmpcorrect')}}', 
-    '{{data.get('useranswer')}}',
-    '{{data.get('markscorrect')}}~{{data.get('marksincorrect')}}~{{data.get('scoremethod')}}',
+    setUpQuestion("{{data.questionno}}",
+    'flash{{data.questionno}}',
+    '{{data.language}}',
+    '{{data.mediafile}}',
+    '{{data.tmpcorrect}}', 
+    '{{data.useranswer}}',
+    '{{data.markscorrect}}~{{data.marksincorrect}}~{{data.scoremethod}}',
     '#FFC0C0',
     'labelling',
     'answer');
     </script>
     <!-- ==================================================== -->
 </div>
-<input type="hidden" name="q{{data.get('questionno')}}" id="q{{data.get('questionno')}}" {% if data.get('unanswered') %} value="0{{data.marks}}" {% else %} value="{{data.get('useranswer')}}" {% endif %}/>
+<input type="hidden" name="q{{data.questionno}}" id="q{{data.questionno}}" {% if data.unanswered %} value="0{{data.marks}}" {% else %} value="{{data.useranswer}}" {% endif %}/>

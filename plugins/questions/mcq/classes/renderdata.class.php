@@ -59,14 +59,14 @@ class renderdata extends \questiondata {
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
-    if ($this->get('scenario') != '') {
+    if ($this->scenario != '') {
       $this->displayscenario = true;
     }
-    if ($this->get('qmedia') != '') {
+    if ($this->qmedia != '') {
       $this->displaymedia = true;
     }
     $this->displaydefault = true;
-    if ($this->get('notes') != ''){
+    if ($this->notes != ''){
       $this->displaynotes = true;
     }
     $this->displayleadin = true;
@@ -85,7 +85,7 @@ class renderdata extends \questiondata {
       $this->unanswered = false;
     }
     // Set to vertical to simpify template logic.
-    if ($this->get('displaymethod') === 'vertical_other') {
+    if ($this->displaymethod === 'vertical_other') {
       $this->displaymethod = 'vertical';
     }
   }
@@ -112,7 +112,7 @@ class renderdata extends \questiondata {
     if ($option['omedia'] != '') {
       $option['displayoptionmedia'] = true;
     }
-    if ($this->get('displaymethod') === 'vertical') {
+    if ($this->displaymethod === 'vertical') {
       if (substr($user_dismissid, $option['tmppartid']-1, 1) == '1') {
         $option['inact'] = true;
       } else {
@@ -142,8 +142,8 @@ class renderdata extends \questiondata {
     } else {
       $this->negativemarking = false;
     }
-    if ($this->get('displaymethod') === 'vertical') {
-      if($this->get('papertype') == 3) {
+    if ($this->displaymethod === 'vertical') {
+      if($this->papertype == 3) {
         $this->displaymethod = 'other';
         if (substr($useranswerid,0,5) === 'other') {
           $this->otherselected = true;
@@ -155,7 +155,7 @@ class renderdata extends \questiondata {
     if ($user_dismissid != '') {
        $this->dismiss = $user_dismissid;
     } else {
-       $this->dismiss = str_repeat('0', $this->get('optionnumber'));
+       $this->dismiss = str_repeat('0', $this->optionnumber);
     }
   }
 }

@@ -33,18 +33,18 @@ class ranktest extends unittest{
   public function test_set_question_head() {
     $data = questiondata::get_datastore('rank');
     $data->set_question_head();
-    $this->assertTrue($data->get('displaydefault'));
-    $this->assertFalse($data->get('displaynotes'));
-    $this->assertFalse($data->get('displayscenario'));
-    $this->assertTrue($data->get('displayleadin'));
-    $this->assertFalse($data->get('displaymedia'));
+    $this->assertTrue($data->displaydefault);
+    $this->assertFalse($data->displaynotes);
+    $this->assertFalse($data->displayscenario);
+    $this->assertTrue($data->displayleadin);
+    $this->assertFalse($data->displaymedia);
     $data->notes = 'test';
     $data->scenario = 'test';
     $data->qmedia = 'test';
     $data->set_question_head();
-    $this->assertTrue($data->get('displaynotes'));
-    $this->assertTrue($data->get('displayscenario'));
-    $this->assertTrue($data->get('displaymedia'));
+    $this->assertTrue($data->displaynotes);
+    $this->assertTrue($data->displayscenario);
+    $this->assertTrue($data->displaymedia);
   }
 
   /**
@@ -68,18 +68,18 @@ class ranktest extends unittest{
     $useranswerid = 'u,u,u';
     $data->set_option(1, $useranswerid, '100', 1);
     $option = $data->get_opt(1);
-    $this->assertTrue($data->get('unanswered'));
+    $this->assertTrue($data->unanswered);
     $this->assertTrue($option['unans']);
     $this->assertFalse($option['selected'][0]);
     $this->assertFalse($option['selected'][1]);
     $this->assertFalse($option['selected'][2]);
     $this->assertTrue($option['inact']);
-    $this->assertEquals(1, $data->get('marks'));
+    $this->assertEquals(1, $data->marks);
     $option['tmppartid'] = 1;
     $data->set_opt(1, $option);
     $useranswerid = '1,u,u';
     $data->set_option(1, $useranswerid, '000', 1);
-    $this->assertFalse($data->get('unanswered'));
+    $this->assertFalse($data->unanswered);
     $option = $data->get_opt(1);
     $this->assertFalse($option['unans']);
     $this->assertFalse($option['selected'][0]);
@@ -100,12 +100,12 @@ class ranktest extends unittest{
     $option['marksincorrect'] = -1;
     $data->set_opt(1, $option);
     $data->process_options(1, $useranswerid, '010', 1);
-    $this->assertEquals('010', $data->get('dismiss'));
-    $this->assertTrue($data->get('negativemarking'));
+    $this->assertEquals('010', $data->dismiss);
+    $this->assertTrue($data->negativemarking);
     $option['marksincorrect'] = 0;
     $data->set_opt(1, $option);
     $data->process_options(1, $useranswerid, '', 1);
-    $this->assertEquals('000', $data->get('dismiss'));
-    $this->assertFalse($data->get('negativemarking'));
+    $this->assertEquals('000', $data->dismiss);
+    $this->assertFalse($data->negativemarking);
   }
 }

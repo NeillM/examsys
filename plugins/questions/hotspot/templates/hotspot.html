@@ -1,16 +1,16 @@
 <div align="left">
     <!-- ======================== HTML5 part include disp ================= -->
-    <canvas id='canvas{{data.get('questionno')}}' width='{{data.get('mediawidth')}}' height='{{data.get('mediaheight')}}'></canvas>
+    <canvas id='canvas{{data.questionno}}' width='{{data.mediawidth}}' height='{{data.mediaheight}}'></canvas>
     <br /><div style='width:100%;text-align: left;' id='canvasbox'></div>
     <script>
-        setUpQuestion("{{data.get('questionno')}}",
-        'flash{{data.get('questionno')}}',
-        '{{data.get('language')}}',
-        '{{data.get('mediafile')}}',
-        '{{data.get('tmpcorrect')}}',
-        '{{data.get('useranswer')}}',
-        '{{data.get('screensubmitted')}}','#FFC0C0','hotspot','answer');
+        setUpQuestion("{{data.questionno}}",
+        'flash{{data.questionno}}',
+        '{{data.language}}',
+        '{{data.mediafile}}',
+        '{{data.tmpcorrect}}',
+        '{{data.useranswer}}',
+        '{{data.screensubmitted}}','#FFC0C0','hotspot','answer');
     </script>
     <!-- ==================================================== -->
 </div>
-<input type="hidden" name="q{{data.get('questionno')}}" id="q{{data.get('questionno')}}" {% if data.get('unanswered') %} value="u" {% else %} value="{{data.get('useranswer')}}" {% endif %}/>
+<input type="hidden" name="q{{data.questionno}}" id="q{{data.questionno}}" {% if data.unanswered %} value="u" {% else %} value="{{data.useranswer}}" {% endif %}/>

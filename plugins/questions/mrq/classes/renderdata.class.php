@@ -65,14 +65,14 @@ class renderdata extends \questiondata {
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
-    if ($this->get('scenario') != '') {
+    if ($this->scenario != '') {
       $this->displayscenario = true;
     }
-    if ($this->get('qmedia') != '') {
+    if ($this->qmedia != '') {
       $this->displaymedia = true;
     }
     $this->displaydefault = true;
-    if ($this->get('notes') != ''){
+    if ($this->notes != ''){
       $this->displaynotes = true;
     }
     $this->displayleadin = true;
@@ -126,12 +126,12 @@ class renderdata extends \questiondata {
     if ($option['omedia'] != '') {
       $option['displayoptionmedia'] = true;
     }
-    $marks = $this->get('marks');
-    if ($this->get('scoremethod') === 'Mark per Option') {
+    $marks = $this->marks;
+    if ($this->scoremethod === 'Mark per Option') {
       if ($option['correct'] === 'y') {
         $marks += $option['markscorrect'];  // Mark for correct options only
       }
-    } elseif ($this->get('scoremethod') === 'Mark per Question') {
+    } elseif ($this->scoremethod === 'Mark per Question') {
       if ($part_id == 1) {
         $marks += $option['markscorrect'];
       }
@@ -151,8 +151,8 @@ class renderdata extends \questiondata {
    */
   public function process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    if ($this->get('displaymethod') === 'other') {
-      $part_id = $this->get('partid') + 1;
+    if ($this->displaymethod === 'other') {
+      $part_id = $this->partid + 1;
       $this->partid = $part_id ;
       if (!is_null($useranswerid) and substr($useranswerid,($part_id - 1),1) == 'y') {
         $this->otherselected = true;
@@ -169,7 +169,7 @@ class renderdata extends \questiondata {
     if ($user_dismissid != '') {
        $this->dismiss = $user_dismissid;
     } else {
-       $this->dismiss = str_repeat('0', $this->get('optionnumber'));
+       $this->dismiss = str_repeat('0', $this->optionnumber);
     }
   }
 }

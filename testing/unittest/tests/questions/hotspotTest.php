@@ -33,14 +33,14 @@ class hotspottest extends unittest{
   public function test_set_question_head() {
     $data = questiondata::get_datastore('hotspot');
     $data->set_question_head();
-    $this->assertTrue($data->get('displaydefault'));
-    $this->assertFalse($data->get('displaynotes'));
-    $this->assertFalse($data->get('displayscenario'));
+    $this->assertTrue($data->displaydefault);
+    $this->assertFalse($data->displaynotes);
+    $this->assertFalse($data->displayscenario);
     $data->notes = 'test';
     $data->scenario = 'test';
     $data->set_question_head();
-    $this->assertTrue($data->get('displaynotes'));
-    $this->assertTrue($data->get('displayscenario'));
+    $this->assertTrue($data->displaynotes);
+    $this->assertTrue($data->displayscenario);
   }
  
   /**
@@ -51,7 +51,7 @@ class hotspottest extends unittest{
     $data = questiondata::get_datastore('hotspot');
     $useranswerid = 'u';
     $data->set_option(0, $useranswerid, '', 1);
-    $this->assertTrue($data->get('unanswered'));
+    $this->assertTrue($data->unanswered);
     $useranswerid = '1,325,995|1,825,965';
     $data->mediaheight = 1600;
     $data->mediawidth = 1600;
@@ -60,16 +60,16 @@ class hotspottest extends unittest{
     $data->set_opt(0, $option);
     $data->scoremethod = 'Mark per Question';
     $data->set_option(0, $useranswerid, '', 1);
-    $this->assertFalse($data->get('unanswered'));
-    $this->assertEquals($option['correct'], $data->get('tmpcorrect'));
-    $this->assertEquals(1900, $data->get('mediawidth'));
-    $this->assertEquals(1601, $data->get('mediaheight'));
-    $this->assertEquals($useranswerid, $data->get('useranswer'));
-    $this->assertEquals(1, $data->get('screensubmitted'));
-    $this->assertEquals(1, $data->get('marks'));
+    $this->assertFalse($data->unanswered);
+    $this->assertEquals($option['correct'], $data->tmpcorrect);
+    $this->assertEquals(1900, $data->mediawidth);
+    $this->assertEquals(1601, $data->mediaheight);
+    $this->assertEquals($useranswerid, $data->useranswer);
+    $this->assertEquals(1, $data->screensubmitted);
+    $this->assertEquals(1, $data->marks);
     $data->scoremethod =  'Mark per Option';
     $data->set_option(0, $useranswerid, '', 1);
-    $this->assertEquals(2, $data->get('marks'));
+    $this->assertEquals(2, $data->marks);
   }
 
 }

@@ -1,16 +1,16 @@
 <blockquote>
     <table cellpadding="2" cellspacing="0" border="0">
-{% for i,p in data.get('options') %}
+{% for i,p in data.options %}
         <tr {% if p.unans %} class="unans" {% endif %}>
             <td class="option">
-                <select name="{{p.optionno}}" id ="{{p.optionno}}" class="rankselect q"{{data.get('questionno')}}">
+                <select name="{{p.optionno}}" id ="{{p.optionno}}" class="rankselect q"{{data.questionno}}">
                     <option value="u"></option>
     {% for idx,value in p.selected %}
                     <option value="{{idx}}" {% if value %} selected {% endif %}>
                             {% if idx == 0 %}
                                 {{lang.na}} 
                             {% else %}
-                                {% if data.get('language') == 'en' %}
+                                {% if data.language == 'en' %}
                                     {% if idx == 1 %}
                                         {{idx}}st
                                     {% elseif idx == 2 %}
@@ -35,6 +35,6 @@
 {% endfor %}
     </table>
     <div>
-        <input type="hidden" name="dismiss{{data.get('questionno')}}" id="dismiss{{data.get('questionno')}}" value="{{data.get('dismiss')}}" />
+        <input type="hidden" name="dismiss{{data.questionno}}" id="dismiss{{data.questionno}}" value="{{data.dismiss}}" />
     </div>
 </blockquote>

@@ -65,7 +65,7 @@ class renderdata extends \questiondata {
   public function set_question_head() {
     $this->displaydefault = true;
     $this->displaymedia = true;
-    if ($this->get('notes') != ''){
+    if ($this->notes != ''){
       $this->displaynotes = true;
     }
     $this->displayleadin = true;
@@ -78,7 +78,7 @@ class renderdata extends \questiondata {
    * @param integer $user_dismissid id of option user dismissed
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
-    $this->scenarios = explode('|', $this->get('scenario'));
+    $this->scenarios = explode('|', $this->scenario);
     if (!is_null($useranswerid)) {
       $this->usersanswers = explode('|', $useranswerid);
     } else {
@@ -95,7 +95,7 @@ class renderdata extends \questiondata {
    */
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    $matching_options = $this->get('matchoptions');
+    $matching_options = $this->matchoptions;
     $matching_options[] = $option['optiontext'];
     $this->matchoptions = $matching_options;
   }
@@ -110,13 +110,13 @@ class renderdata extends \questiondata {
   public function process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $matchoption = array();
     $matchscenario = array();
-    $matching_options = $this->get('matchoptions');
+    $matching_options = $this->matchoptions;
     foreach ($matching_options as $single_option) {
       $matchoption[]['option'] = $single_option;
     }
-    $matching_users_answers = $this->get('usersanswers');
-    $option_order = explode(',', $this->get('optionorder'));
-    $matching_scenarios = $this->get('scenarios');
+    $matching_users_answers = $this->usersanswers;
+    $option_order = explode(',', $this->optionorder);
+    $matching_scenarios = $this->scenarios;
     foreach ($matching_scenarios as $single_scenario) {
       if (trim($single_scenario) != '') {
         if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == '' and $screen_pre_submitted == 1) {

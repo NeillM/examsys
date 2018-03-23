@@ -1,7 +1,7 @@
-{% if data.get('displayscenario') %}
+{% if data.displayscenario %}
 <tr>
     <td class="question_no">
-        {{data.get('assignednumber')}}.&nbsp;
+        {{data.assignednumber}}.&nbsp;
     </td>
     <td style="background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040">
         {{lang.clinicalvignette}}
@@ -9,21 +9,21 @@
 </tr>
 <tr>
     <td style="vertical-align:top; text-align:right">
-    {% if data.get('displaycalc') %}
+    {% if data.displaycalc %}
         <br />
         <img class="sciCalculator" src="{{path}}/artwork/calc.png" alt="{{lang.calculator}}" />
     {% endif %}
     </td>
     <td>
-        {% if data.get('displaynotes') %}
+        {% if data.displaynotes %}
         <p class="note">
-         <img src="{{path}}/artwork/notes_icon.gif" width="16" height="16" alt="{{lang.note}}" />&nbsp;<strong>{{lang.note}}:</strong>&nbsp;{{data.get('notes')}}
+         <img src="{{path}}/artwork/notes_icon.gif" width="16" height="16" alt="{{lang.note}}" />&nbsp;<strong>{{lang.note}}:</strong>&nbsp;{{data.notes}}
         </p>
         {% endif %}
-    {{data.get('scenario')|raw}}<br />
+    {{data.scenario|raw}}<br />
     <br />
 {% endif %}
-{% if data.get('displaymedia') %}
+{% if data.displaymedia %}
     <p align="center">
         {% include 'paper/media.html' %}
     </p>
@@ -31,7 +31,7 @@
 <table cellpadding="2" cellspacing="0" border="0" style="width:100%">
     <tr>
         <td style="background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold">
-            {{data.get('scttitle')}}
+            {{data.scttitle}}
         </td>
         <td style="width:2%">&nbsp;</td>
         <td style="background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold">
@@ -40,35 +40,35 @@
     </tr>
     <tr>
         <td style="vertical-align:top">
-            {{data.get('scthyp')|raw}}
+            {{data.scthyp|raw}}
         </td>
         <td style="width:2%">&nbsp;</td>
         <td style="vertical-align:top">
-            {{data.get('sctinfo')|raw}}
+            {{data.sctinfo|raw}}
         </td>
     </tr>
 </table>
 <p>
     <strong>
-        {{data.get('scttitlelower')}}
+        {{data.scttitlelower}}
     </strong>
 </p>
-<blockquote {% if data.get('unanswered') %} class="unans" {% endif %}>
+<blockquote {% if data.unanswered %} class="unans" {% endif %}>
     <table cellpadding="2" cellspacing="0" border="0">
-{% for i,p in data.get('options') %}
+{% for i,p in data.options %}
         <tr>
             <td>
-                <input type="radio" id="{{p.optionno}}" name="q{{data.get('questionno')}}" value="{{p.tmppartid}}" {% if p.selected %} checked="checked" {% endif %} />
+                <input type="radio" id="{{p.optionno}}" name="q{{data.questionno}}" value="{{p.tmppartid}}" {% if p.selected %} checked="checked" {% endif %} />
             </td>
             <td>
     {% if p.optiontextdisplay %}
-                <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.get('questionno')}}_{{i}}">{{p.optiontext}}</span>
+                <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.questionno}}_{{i}}">{{p.optiontext}}</span>
             </td>
         </tr>
     {% endif %}
 {% endfor %}
     </table>
     <div>
-        <input type="hidden" name="dismiss{{data.get('questionno')}}" id="dismiss{{data.get('questionno')}}" value="{{data.get('dismiss')}}" />
+        <input type="hidden" name="dismiss{{data.questionno}}" id="dismiss{{data.questionno}}" value="{{data.dismiss}}" />
     </div>
 </blockquote>

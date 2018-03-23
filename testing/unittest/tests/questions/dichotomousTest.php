@@ -33,18 +33,18 @@ class dichotomoustest extends unittest{
   public function test_set_question_head() {
     $data = questiondata::get_datastore('dichotomous');
     $data->set_question_head();
-    $this->assertTrue($data->get('displaydefault'));
-    $this->assertFalse($data->get('displaynotes'));
-    $this->assertFalse($data->get('displayscenario'));
-    $this->assertTrue($data->get('displayleadin'));
-    $this->assertFalse($data->get('displaymedia'));
+    $this->assertTrue($data->displaydefault);
+    $this->assertFalse($data->displaynotes);
+    $this->assertFalse($data->displayscenario);
+    $this->assertTrue($data->displayleadin);
+    $this->assertFalse($data->displaymedia);
     $data->notes = 'test';
     $data->scenario = 'test';
     $data->qmedia = 'test';
     $data->set_question_head();
-    $this->assertTrue($data->get('displaynotes'));
-    $this->assertTrue($data->get('displayscenario'));
-    $this->assertTrue($data->get('displaymedia'));
+    $this->assertTrue($data->displaynotes);
+    $this->assertTrue($data->displayscenario);
+    $this->assertTrue($data->displaymedia);
   }
  
   /**
@@ -62,10 +62,10 @@ class dichotomoustest extends unittest{
     $useranswerid = 'uuu';
     $data->set_option(0, $useranswerid, '', 1);
     $option = $data->get_opt(0);
-    $this->assertTrue($data->get('unanswered'));
+    $this->assertTrue($data->unanswered);
     $this->assertFalse($option['displayoptionmedia']);
     $this->assertFalse($option['abstain']);
-    $this->assertEquals(1, $data->get('marks'));
+    $this->assertEquals(1, $data->marks);
     $option['omedia'] = 'test';
     $data->set_opt(0, $option);
     $data->displaymethod = 'TF_NegativeAbstain';
@@ -85,11 +85,11 @@ class dichotomoustest extends unittest{
     $option['marksincorrect'] = -1;
     $data->set_opt(0, $option);
     $data->process_options(0, $useranswerid, '', 1);
-    $this->assertTrue($data->get('negativemarking'));
+    $this->assertTrue($data->negativemarking);
     $option['marksincorrect'] = 0;
     $data->set_opt(0, $option);
     $data->process_options(0, $useranswerid, '', 1);
-    $this->assertFalse($data->get('negativemarking'));
+    $this->assertFalse($data->negativemarking);
   }
   
 }

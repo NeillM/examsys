@@ -33,15 +33,15 @@ class flashtest extends unittest{
   public function test_set_question_head() {
     $data = questiondata::get_datastore('flash');
     $data->set_question_head();
-    $this->assertTrue($data->get('displaydefault'));
-    $this->assertFalse($data->get('displaynotes'));
-    $this->assertFalse($data->get('displayscenario'));
-    $this->assertTrue($data->get('displayleadin'));
+    $this->assertTrue($data->displaydefault);
+    $this->assertFalse($data->displaynotes);
+    $this->assertFalse($data->displayscenario);
+    $this->assertTrue($data->displayleadin);
     $data->notes = 'test';
     $data->scenario = 'test';
     $data->set_question_head();
-    $this->assertTrue($data->get('displaynotes'));
-    $this->assertTrue($data->get('displayscenario'));
+    $this->assertTrue($data->displaynotes);
+    $this->assertTrue($data->displayscenario);
   }
 
   /**
@@ -54,7 +54,7 @@ class flashtest extends unittest{
     $data->set_opt(0, $option);
     $data->marks = 1;
     $data->set_option(0, '', '', 0);
-    $this->assertEquals(2, $data->get('marks'));
+    $this->assertEquals(2, $data->marks);
   }
 
 }

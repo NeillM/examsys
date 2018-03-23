@@ -45,14 +45,14 @@ class renderdata extends \questiondata {
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
-    if ($this->get('scenario') != '') {
+    if ($this->scenario != '') {
       $this->displayscenario = true;
     }
-    if ($this->get('qmedia') != '') {
+    if ($this->qmedia != '') {
       $this->displaymedia = true;
     }
     $this->displaydefault = true;
-    if ($this->get('notes') != ''){
+    if ($this->notes != ''){
       $this->displaynotes = true;
     }
     $this->displayleadin = true;
@@ -84,9 +84,9 @@ class renderdata extends \questiondata {
     }
     $total_rank_no = 0;
     $require_na = false;
-    $question = $this->get('question');
-    for ($i=0; $i<$this->get('optionnumber'); $i++) {
-      if ($question['options'][$i]['correct'] != 0 or $this->get('papertype') == '3') {
+    $question = $this->question;
+    for ($i=0; $i<$this->optionnumber; $i++) {
+      if ($question['options'][$i]['correct'] != 0 or $this->papertype == '3') {
         $total_rank_no++;
       }
       if ($question['options'][$i]['correct'] == 0) $require_na = true;
@@ -101,8 +101,8 @@ class renderdata extends \questiondata {
       }
     }
 
-    if ($this->get('scoremethod') == 'Mark per Option') {
-      $answers_needed = $this->get('optionnumber');
+    if ($this->scoremethod == 'Mark per Option') {
+      $answers_needed = $this->optionnumber;
     } else {
       $answers_needed = $total_rank_no;
     }
@@ -133,10 +133,10 @@ class renderdata extends \questiondata {
     } else {
       $option['inact'] = false;
     }
-    $marks = $this->get('marks');
+    $marks = $this->marks;
     if ($option['correct'] != 0) {
       $marks += $option['markscorrect'];
-    } elseif ($this->get('scoremethod') == 'Mark per Option') {
+    } elseif ($this->scoremethod == 'Mark per Option') {
       $marks += $option['markscorrect'];
     }
     $this->marks = $marks;
@@ -161,7 +161,7 @@ class renderdata extends \questiondata {
     if ($user_dismissid != '') {
        $this->dismiss = $user_dismissid;
     } else {
-       $this->dismiss = str_repeat('0', $this->get('optionnumber'));
+       $this->dismiss = str_repeat('0', $this->optionnumber);
     }
   }
 }

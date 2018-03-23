@@ -1,46 +1,46 @@
 </table>
 <table cellpadding="4" cellspacing="0" border="0">
     <col width="40"><col>
-{% if data.get('displaynotes') %}
+{% if data.displaynotes %}
     <tr>
         <td></td>
         <td colspan="{data.likertnotescolspan}}" class="note">
             <img src="{{path}}/artwork/notes_icon.gif" width="16" height="16" alt="Note" />
-            &nbsp;<strong>{{lang.note}}:</strong>&nbsp;{{data.get('notes')}}
+            &nbsp;<strong>{{lang.note}}:</strong>&nbsp;{{data.notes}}
         </td>
     </tr>
 {% endif %}
-{% if data.get('displayscenario') %}
+{% if data.displayscenario %}
     <tr>
         <td colspan="{data.likertscenariocolspan}}">
-            {{data.get('scenario')|raw}}
+            {{data.scenario|raw}}
         </td>
     </tr>
 {% endif %}
     <tr>
         <td></td>
         <td></td>
-{% if data.get('displayna') %}
-        <td style="vertical-align:bottom; text-align:center; color:{{data.get('labelcolour')}}; font-size:80%">
+{% if data.displayna %}
+        <td style="vertical-align:bottom; text-align:center; color:{{data.labelcolour}}; font-size:80%">
             {{lang.na}}
         </td>
 {% endif %}
-{% for i in data.get('scale') %}
-        <td style="vertical-align:bottom; text-align:center; color:{{data.get('labelcolour')}}; font-size:80%">
+{% for i in data.scale %}
+        <td style="vertical-align:bottom; text-align:center; color:{{data.labelcolour}}; font-size:80%">
             {{i|raw}}
         </td>
 {% endfor %}
     </tr>
-    <tr {% if data.get('unanswered') %} class="unans" {% endif %}>
-        <td class="q_no">{{data.get('assignednumber')}}.&nbsp;</td><td>{{data.get('leadin')|raw}}</td>
-{% if data.get('displayna') %}
+    <tr {% if data.unanswered %} class="unans" {% endif %}>
+        <td class="q_no">{{data.assignednumber}}.&nbsp;</td><td>{{data.leadin|raw}}</td>
+{% if data.displayna %}
         <td style="text-align:center; width:40px; vertical-align:top">
-            <input type="radio" name="q{{data.get('id')}}" value="n/a" {% if data.get('na') %}  checked="checked" {% endif %}/>
+            <input type="radio" name="q{{data.id}}" value="n/a" {% if data.na %}  checked="checked" {% endif %}/>
         </td>
 {% endif %}
-{% for i,selected in data.get('scaleopt') %}
+{% for i,selected in data.scaleopt %}
         <td class="likert_button">
-            <input type="radio" name="q{{data.get('id')}}" value="{{i}}" {% if selected %} checked=\"checked\" {% endif %}/>
+            <input type="radio" name="q{{data.id}}" value="{{i}}" {% if selected %} checked=\"checked\" {% endif %}/>
         </td>
 {% endfor %}
     </tr>

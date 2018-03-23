@@ -46,14 +46,14 @@ class renderdata extends \questiondata {
    */
   public function set_question_head() {
     $this->displaydefault = true;
-    if ($this->get('notes') != '') {
+    if ($this->notes != '') {
       $this->displaynotes = true;
     }
-    if ($this->get('scenario') != '') {
+    if ($this->scenario != '') {
       $this->displayscenario = true;
     }
     $this->displayleadin = true;
-    if ($this->get('qmedia') != '') {
+    if ($this->qmedia != '') {
       $this->displaymedia = true;
     }
   }
@@ -100,7 +100,7 @@ class renderdata extends \questiondata {
       if (substr($blank_details[$blank_count], 0, 1) === ']') {
         $blankoption[$count]['itemtype'] = 'blank';
         $blankoption[$count]['itemcount'] = $itemcount;
-        if ($this->get('displaymethod') === 'textboxes') {
+        if ($this->displaymethod === 'textboxes') {
           $sizeresults = array();
           $not_used = preg_match("|size=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$sizeresults);
           if (isset($sizeresults[1]) and $sizeresults[1] != '') {
@@ -153,9 +153,9 @@ class renderdata extends \questiondata {
       }
     }
     $this->blankoptions = $blankoption;
-    if ($this->get('scoremethod') == 'Mark per Option') {
+    if ($this->scoremethod == 'Mark per Option') {
       if (count($blank_mark) > 0) {
-        $marks = $this->get('marks');
+        $marks = $this->marks;
         foreach ($blank_mark as $individual_mark) {
           $marks += $individual_mark;
         }

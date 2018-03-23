@@ -39,14 +39,14 @@ class renderdata extends \questiondata {
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
-    if ($this->get('scenario') != '') {
+    if ($this->scenario != '') {
       $this->displayscenario = true;
     }
-    if ($this->get('qmedia') != '') {
+    if ($this->qmedia != '') {
       $this->displaymedia = true;
     }
     $this->displaydefault = true;
-    if ($this->get('notes') != ''){
+    if ($this->notes != ''){
       $this->displaynotes = true;
     }
     $this->displayleadin = true;
@@ -81,10 +81,10 @@ class renderdata extends \questiondata {
       $option['displayoptionmedia'] = true;
     }
     $option['abstain'] = false;
-    if ($this->get('displaymethod') === 'TF_NegativeAbstain' or $this->get('displaymethod') === 'YN_NegativeAbstain') {
+    if ($this->displaymethod === 'TF_NegativeAbstain' or $this->displaymethod === 'YN_NegativeAbstain') {
         $option['abstain'] = true;
     }
-    $marks = $this->get('marks');
+    $marks = $this->marks;
     $marks += $option['markscorrect'];
     $this->marks = $marks;
     $this->set_opt($part_id, $option);

@@ -33,13 +33,13 @@ class matrixtest extends unittest{
   public function test_set_question_head() {
     $data = questiondata::get_datastore('matrix');
     $data->set_question_head();
-    $this->assertTrue($data->get('displaydefault'));
-    $this->assertFalse($data->get('displaynotes'));
-    $this->assertTrue($data->get('displayleadin'));
-    $this->assertTrue($data->get('displaymedia'));
+    $this->assertTrue($data->displaydefault);
+    $this->assertFalse($data->displaynotes);
+    $this->assertTrue($data->displayleadin);
+    $this->assertTrue($data->displaymedia);
     $data->notes = 'test';
     $data->set_question_head();
-    $this->assertTrue($data->get('displaynotes'));
+    $this->assertTrue($data->displaynotes);
   }
 
   /**
@@ -52,11 +52,11 @@ class matrixtest extends unittest{
     $useranswerid = '3|4|2|5|1|6';
     $scenarios = array('Word', 'Excel', 'PowerPoint', 'Access5', 'Publisher', 'Data File', '', '', '', '');
     $data->set_question(1, $useranswerid, '');
-    $this->assertEquals($scenarios, $data->get('scenarios'));
-    $this->assertEquals(array('3', '4', '2', '5', '1', '6'), $data->get('usersanswers'));
+    $this->assertEquals($scenarios, $data->scenarios);
+    $this->assertEquals(array('3', '4', '2', '5', '1', '6'), $data->usersanswers);
     $useranswerid = null;
     $data->set_question(0, $useranswerid, '');
-    $this->assertEquals(array(), $data->get('usersanswers'));
+    $this->assertEquals(array(), $data->usersanswers);
   }
 
   /**
@@ -73,7 +73,7 @@ class matrixtest extends unittest{
     $data->set_opt(5, array('optiontext' => '.MDB'));
     $data->set_opt(6, array('optiontext' => '.DAT'));
     $data->set_option(2, '3|4|2|5|1|6', '', 1);
-    $this->assertEquals(array('.PUB', '.PPT'), $data->get('matchoptions'));
+    $this->assertEquals(array('.PUB', '.PPT'), $data->matchoptions);
   }
 
   /**
@@ -134,7 +134,7 @@ class matrixtest extends unittest{
           5 => false,
           6 => false))
     );
-    $this->assertEquals($matchoptions, $data->get('matchoptions'));
-    $this->assertEquals($matchscenarios, $data->get('matchscenarios'));
+    $this->assertEquals($matchoptions, $data->matchoptions);
+    $this->assertEquals($matchscenarios, $data->matchscenarios);
   }
 }

@@ -40,7 +40,7 @@ class renderdata extends \questiondata {
    */
   public function set_question_head() {
     $this->displaydefault = true;
-    if ($this->get('notes') != '') {
+    if ($this->notes != '') {
       $this->displaynotes = true;
     }
   }
@@ -52,13 +52,13 @@ class renderdata extends \questiondata {
    * @param integer $user_dismissid id of option user dismissed
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
-    $question = $this->get('question');
+    $question = $this->question;
     if (!is_null($useranswerid)) {
       $d = array();
       $d['useranswer'] = $useranswerid;
       $question['object']->load($d);
     }
-    $useranswers = $this->get('useranswers');
+    $useranswers = $this->useranswers;
     $question['object']->load_all_user_answers($useranswers);
   }
 
@@ -70,15 +70,15 @@ class renderdata extends \questiondata {
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
-    $marks = $this->get('marks');
-    $question = $this->get('question');
+    $marks = $this->marks;
+    $question = $this->question;
     // no options for enhanced calc now stored in settings
     $extra = array(
-      'num_on_screen' => $this->get('questionno'),
+      'num_on_screen' => $this->questionno,
       'current_question' => $question,
     );
     $question['object']->render_paper($extra);
-    $useranswers = $this->get('useranswers');
+    $useranswers = $this->useranswers;
     $question['object']->load_all_user_answers($useranswers);
     $marks += $question['object']->calculate_question_mark();
     $this->marks =  $marks;

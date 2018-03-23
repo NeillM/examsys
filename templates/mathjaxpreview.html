@@ -1,5 +1,5 @@
 <script>
-var Previewq{{data.get('questionno')}} = {
+var Previewq{{data.questionno}} = {
   delay: 150,        // delay after keystroke before updating
   preview: null,     // filled in by Init below
   buffer: null,      // filled in by Init below
@@ -11,8 +11,8 @@ var Previewq{{data.get('questionno')}} = {
   //  Get the preview and buffer DIV's
   //
   Init: function () {
-    this.preview = document.getElementById("MathPreviewq{{data.get('questionno')}}");
-    this.buffer = document.getElementById("MathBufferq{{data.get('questionno')}}");
+    this.preview = document.getElementById("MathPreviewq{{data.questionno}}");
+    this.buffer = document.getElementById("MathBufferq{{data.questionno}}");
   },
   //
   //  Switch the buffer and preview, and display the right one.
@@ -45,9 +45,9 @@ var Previewq{{data.get('questionno')}} = {
   //    typesetting.  After it is done, call PreviewDone.
   //  
   CreatePreview: function () {
-    Previewq{{data.get('questionno')}}.timeout = null;
+    Previewq{{data.questionno}}.timeout = null;
     if (this.mjPending) return;
-    var text = document.getElementById("q{{data.get('questionno')}}").value;
+    var text = document.getElementById("q{{data.questionno}}").value;
     if (text === this.oldtext) return;
     if (this.mjRunning) {
       this.mjPending = true;
@@ -73,6 +73,6 @@ var Previewq{{data.get('questionno')}} = {
 //
 //  Cache a callback to the CreatePreview action
 //
-Previewq{{data.get('questionno')}}.callback = MathJax.Callback(["CreatePreview",Previewq{{data.get('questionno')}}]);
-Previewq{{data.get('questionno')}}.callback.autoReset = true;  // make sure it can run more than once
+Previewq{{data.questionno}}.callback = MathJax.Callback(["CreatePreview",Previewq{{data.questionno}}]);
+Previewq{{data.questionno}}.callback.autoReset = true;  // make sure it can run more than once
 </script>

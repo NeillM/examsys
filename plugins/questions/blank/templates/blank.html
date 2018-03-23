@@ -1,20 +1,20 @@
 {% if data.displaymethod == 'textboxes' %}
 <p class="stem">
-{% for i,p in data.get('blankoptions') %}
+{% for i,p in data.blankoptions %}
     {% if p.itemtype == 'blurb' %}
     {{p.itemvalue|raw}}
     {% else %}
-    <input type="text" name="q{{data.get('questionno')}}_{{p.itemcount}}" {% if p.unans %} class="unans" {% else %} value="{{p.encoded_ans}}" {% endif %} size="{{p.size}}" />
+    <input type="text" name="q{{data.questionno}}_{{p.itemcount}}" {% if p.unans %} class="unans" {% else %} value="{{p.encoded_ans}}" {% endif %} size="{{p.size}}" />
     {% endif %}
 {% endfor %}
 </p>
 {% else %}
 <p>
-{% for i,p in data.get('blankoptions') %}
+{% for i,p in data.blankoptions %}
     {% if p.itemtype == 'blurb' %}
     {{p.itemvalue|raw}}
     {% else %}
-    <select name="q{{data.get('questionno')}}_{{p.itemcount}}" {% if p.unans %} class="unans" {% endif %}>
+    <select name="q{{data.questionno}}_{{p.itemcount}}" {% if p.unans %} class="unans" {% endif %}>
                     <option value="u"></option>
        {% for a in p.itemvalue %}
                     <option value="{{a.answer}}" {% if a.selected %} selected {% endif %}>{{a.answer}}</option>

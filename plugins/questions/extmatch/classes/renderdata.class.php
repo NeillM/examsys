@@ -101,7 +101,7 @@ class renderdata extends \questiondata {
    */
   public function set_question_head() {
     $this->displaydefault = true;
-    if ($this->get('notes') != ''){
+    if ($this->notes != ''){
       $this->displaynotes = true;
     }
     $this->displayleadin = true;
@@ -114,10 +114,10 @@ class renderdata extends \questiondata {
    * @param integer $user_dismissid id of option user dismissed
    */
   public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid, $allowed_responses = 1) {
-    $this->scenarios = explode('|', $this->get('scenario'));
-    $this->media = explode('|', $this->get('qmedia'));
-    $this->mediawidth = explode('|', $this->get('qmediawidth'));
-    $this->mediaheight = explode('|', $this->get('qmediaheight'));
+    $this->scenarios = explode('|', $this->scenario);
+    $this->media = explode('|', $this->qmedia);
+    $this->mediawidth = explode('|', $this->qmediawidth);
+    $this->mediaheight = explode('|', $this->qmediaheight);
     if (!is_null($useranswerid)) {
       $this->usersanswers = explode('|', $useranswerid);
     } else {
@@ -134,7 +134,7 @@ class renderdata extends \questiondata {
    */
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    $matching_options = $this->get('matchoptions');
+    $matching_options = $this->matchoptions;
     $matching_options[] = $option['optiontext'];
     $this->matchoptions = $matching_options;
   }
@@ -149,13 +149,13 @@ class renderdata extends \questiondata {
   public function process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
     $matching_answers = explode('|', $option['correct']);
-    $matching_media = $this->get('media');
-    $matching_media_width = $this->get('mediawidth');
-    $matching_media_height = $this->get('mediaheight');
-    $matching_scenarios = $this->get('scenarios');
-    $matching_options = $this->get('matchoptions');
-    $matching_users_answers = $this->get('usersanswers');
-    $option_order = explode(',', $this->get('optionorder'));
+    $matching_media = $this->media;
+    $matching_media_width = $this->mediawidth;
+    $matching_media_height = $this->mediaheight;
+    $matching_scenarios = $this->scenarios;
+    $matching_options = $this->matchoptions;
+    $matching_users_answers = $this->usersanswers;
+    $option_order = explode(',', $this->optionorder);
     if ($matching_media[0] != '') {
       $this->extmatchdisplaymedia =  true;
       $this->set_media($matching_media[0], $matching_media_width[0], $matching_media_height[0], '');
@@ -175,7 +175,7 @@ class renderdata extends \questiondata {
     $this->split = $col1_no-1;
     $this->matchoptionsno = count($matching_options);
     $matchstem = array();
-    $marks = $this->get('marks');
+    $marks = $this->marks;
     for ($id=1; $id<=$scenario_no; $id++) {
       if(isset($matching_answers[$id-1])) {
         $answer_no = substr_count($matching_answers[$id-1],'$') + 1;

@@ -37,21 +37,21 @@ class scttest extends unittest{
     $data->leadin = "hyp~info";
     $data->displaymethod = 1;
     $data->set_question(1, 0, '');
-    $this->assertTrue($data->get('displayscenario'));
-    $this->assertFalse($data->get('displaynotes'));
-    $this->assertFalse($data->get('displaymedia'));
+    $this->assertTrue($data->displayscenario);
+    $this->assertFalse($data->displaynotes);
+    $this->assertFalse($data->displaymedia);
     $this->assertEquals('hyp', $data->scthyp);
     $this->assertEquals('info', $data->sctinfo);
     $this->assertEquals($strings['hypothesis'], $data->scttitle);
     $lowertitle = $strings['thenthis'] . " " . mb_strtolower($strings['hypothesis'], 'UTF-8') . " " . $strings['is'] . ":";
     $this->assertEquals($lowertitle, $data->scttitlelower);
-    $this->assertTrue($data->get('unanswered'));
+    $this->assertTrue($data->unanswered);
     $data->notes = 'test';
     $data->qmedia = 'test';
     $data->set_question(1, 1, '');
-    $this->assertFalse($data->get('unanswered'));
-    $this->assertTrue($data->get('displaynotes'));
-    $this->assertTrue($data->get('displaymedia'));
+    $this->assertFalse($data->unanswered);
+    $this->assertTrue($data->displaynotes);
+    $this->assertTrue($data->displaymedia);
   }
 
   /**
@@ -96,12 +96,12 @@ class scttest extends unittest{
     $option['marksincorrect'] = -1;
     $data->set_opt(1, $option);
     $data->process_options(1, $useranswerid, '01000', 1);
-    $this->assertEquals('01000', $data->get('dismiss'));
-    $this->assertTrue($data->get('negativemarking'));
+    $this->assertEquals('01000', $data->dismiss);
+    $this->assertTrue($data->negativemarking);
     $option['marksincorrect'] = 0;
     $data->set_opt(1, $option);
     $data->process_options(1, $useranswerid, '', 1);
-    $this->assertEquals('00000', $data->get('dismiss'));
-    $this->assertFalse($data->get('negativemarking'));
+    $this->assertEquals('00000', $data->dismiss);
+    $this->assertFalse($data->negativemarking);
   }
 }
