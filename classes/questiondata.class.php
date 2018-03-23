@@ -405,7 +405,11 @@ abstract class questiondata {
    * @return array
    */
   public function get_opt($id) {
-    return $this->options[$id];
+    if (empty($this->options[$id])) {
+      return array();
+    } else {
+      return $this->options[$id];
+    }
   }
 
   /**
