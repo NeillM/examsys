@@ -87,11 +87,8 @@ $get_qid = param::optional('q_id', 0, param::INT, param::FETCH_GET);
 $screen_data = $propertyObj->get_screens($is_question_preview_mode, $get_qid);
 $no_screens = $propertyObj->get_max_screen();
 
-//store the original paper type - needed to retrieve answers from the correct log and functionality related decisions
-$original_paper_type = $papertype;
-
 // Is this a type of paper that allows only one attempt?
-$do_restart = ($is_first_launch and ($original_paper_type == 1 or $original_paper_type == 2 or $original_paper_type == 3));
+$do_restart = ($is_first_launch and ($papertype == 1 or $papertype == 2 or $papertype == 3));
 
 /*
 * Set the default colour scheme for this paper and allow current users' special settings to override
@@ -208,11 +205,6 @@ if ($propertyObj->get_exam_duration() != null and $papertype == '2' and !$is_que
   $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
 }
 
-// Check for submissions after the end date and set them to save in log_late if we are not in preview_mode or a summative exam session as not been started
-if ($is_preview_mode === false and time() > $propertyObj->get_end_date() and ($papertype == '1' or ($papertype == '2' and $paper_scheduled and $summative_exam_session_started === false))) {
-  $propertyObj->set_paper_type('_late');
-}
-
 /*
 * Save any posted answers
 *
@@ -233,7 +225,12 @@ if (!$is_question_preview_mode) {
 *
 */
 $log = log::get_paperlog($papertype);
-$l = $log->get_previous_answers($original_paper_type, $metadataID, $do_restart, $current_screen);
+$check_log_late = false;
+// Check for submissions after the end date and set them to save in log_late if we are not in preview_mode or a summative exam session as not been started
+if ($is_preview_mode === false and time() > $propertyObj->get_end_date() and ($log->papertype == 'progressive' or ($log->papertype == 'summative' and $paper_scheduled and $summative_exam_session_started === false))) {
+  $check_log_late = true;
+}
+$l = $log->get_previous_answers($papertype, $metadataID, $do_restart, $current_screen, $check_log_late);
 $user_answers = $l['user_answers'];
 $user_dismiss = $l['user_dismiss'];
 $user_order = $l['user_order'];
@@ -356,7 +353,7 @@ $render->render($headerdata, $lang, 'header.html');
   if ($allow_timing and $propertyObj->get_exam_duration() != null) {
     $timed = true;
     // Summative type. Time is only active in live.
-    if (($papertype == '2' or $original_paper_type == 2) and $is_preview_mode === false) {
+    if (($papertype == '2') and $is_preview_mode === false) {
 
       // Has the student been allotted extra time by an invigilator?
       $student_object['user_ID'] = $userObject->get_user_ID();
@@ -523,7 +520,7 @@ $render->render($headerdata, $lang, 'header.html');
     $footer_data['adminview'] = true;
   } else {
     $footer_data['adminview'] = false;
-    if ($original_paper_type == '2') {
+    if ($papertype == '2') {
       $footer_data['fire'] = true;
     } else { 
       $footer_data['fire'] = false;
@@ -540,7 +537,7 @@ $render->render($headerdata, $lang, 'header.html');
       } else {
         $footer_data['previous'] = false;
       }
-      if (in_array($original_paper_type, array('0', '1', '2'))) {
+      if (in_array($papertype, array('0', '1', '2'))) {
         $footer_data['jumpscreen'] = true;
         $options = array();
         for ($i = 1; $i <= $no_screens; $i++) {

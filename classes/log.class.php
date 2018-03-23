@@ -68,6 +68,12 @@ abstract class log {
   protected $screenpresubmitted;
 
   /**
+   * Flag to indicate if paper type uses log late table
+   * @var boolean
+   */
+  protected $late;
+
+  /**
    * Called when the object is unserialised.
    */
   public function __wakeup() {
@@ -83,30 +89,84 @@ abstract class log {
   public function __construct() {
     $configObj = Config::get_instance();
     $this->db = $configObj->db;
+    $this->late = false;
   }
 
   /**
    * Get previous answers for a paper/user in log - used to load exam script
-   * @param string $original_paper_type paper type identifier
+   * @param string $papertype paper type identifier
    * @param integer $metadataID unique identifier of paper/user entry in log
    * @param boolean $do_restart does this paper type allow multiple attempts
    * @param integer $current_screen what screen is the user on
+   * @param boolean so we need to check the log late table
    * @return array
    */
-  public function get_previous_answers($original_paper_type, $metadataID, $do_restart, $current_screen) {
+  public function get_previous_answers($papertype, $metadataID, $do_restart, $current_screen, $check_log_late = false) {
     $this->previousduration = 0;
     $this->screenpresubmitted = 0;
     $this->dorestart = $do_restart;
     $this->currentscreen = $current_screen;
     $this->metadataid = $metadataID;
-    if ($this->papertype == '_late') {
+    if ($check_log_late and $this->late) {
       // If we are after the deadline check for answers in original_paper_type_log - these will be over written below by new answers in log_late below.
-      $loglate = $this->get_log();
-      $this->papertype = $original_paper_type;
-      return array_merge($loglate, $this->get_log());
+      return array_merge($this->get_log(), $this->get_log_late());
     } else {
       // Get user answers from whichever log is pointed to by log$paper_type
      return $this->get_log();
+    }
+  }
+
+  /**
+   * Get entries from the log late table
+   * @return array
+   */
+  public function get_log_late() {
+    $user_answers = array();
+    $user_dismiss = array();
+    $user_order = array();
+    $used_questions = array();
+    $log_data = $this->db->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log_late WHERE metadataID = ? ORDER BY id");
+    $log_data->bind_param('i', $this->metadataid);
+    $log_data->execute();
+    $log_data->store_result();
+    $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
+    while ($log_data->fetch()) {
+      $user_answers[$log_screen][$log_q_id] = $log_user_answer;
+      $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
+      $user_order[$log_screen][$log_q_id] = $option_order;
+      $used_questions[$log_q_id] = $log_q_id;
+      // Bump up the current screen if restarting
+      if ($this->dorestart and $log_screen > $this->currentscreen) {
+        $this->currentscreen = $log_screen;
+      }
+      if ($log_screen == $this->currentscreen) {
+        $this->previousduration = $log_duration;
+        $this->screenpresubmitted = 1;
+      }
+    }
+    $log_data->close();
+    return array('used_questions' => $used_questions,
+      'user_answers' => $user_answers,
+      'user_dismiss' => $user_dismiss,
+      'user_order' => $user_order,
+      'previous_duration' => $this->previousduration,
+      'screen_pre_submitted' => $this->screenpresubmitted,
+      'current_screen' => $this->currentscreen);
+  }
+
+  /**
+   * Update screen variables to keep track of user journey
+   * @param integer $log_screen screen identifier
+   * @param integer $log_duration time in seconds spent on screen
+   */
+  public function process_screen_variables($log_screen, $log_duration) {
+    // Bump up the current screen if restarting
+    if ($this->dorestart and $log_screen > $this->currentscreen) {
+      $this->currentscreen = $log_screen;
+    }
+    if ($log_screen == $this->currentscreen) {
+      $this->previousduration = $log_duration;
+      $this->screenpresubmitted = 1;
     }
   }
 
@@ -143,11 +203,8 @@ abstract class log {
       case '6':
         $papertype = 'peer_review';
         break;
-      case '_late':
-        $papertype = 'late';
-        break;
       default:
-        break;
+        throw new \Exception("Unsupported paper type.");
     }
     $paperpluginns = 'plugins\\papers\\' . $papertype . '\\log';
     return new $paperpluginns();

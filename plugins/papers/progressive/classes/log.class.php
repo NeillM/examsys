@@ -28,21 +28,12 @@ namespace plugins\papers\progressive;
 class log extends \log {
 
   /**
-   * Called when the object is unserialised.
-   */
-  public function __wakeup() {
-    // The serialised database object will be invalid,
-    // this object should only be serialised during an error report,
-    // so adding the current database connect seems like a waste of time.
-    $this->db = null;
-  }
-
-  /**
    * Constructor
    */
   public function __construct() {
     parent::__construct();
     $this->papertype = '1';
+    $this->late = true;
   }
 
   /**
@@ -64,14 +55,7 @@ class log extends \log {
       $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
       $user_order[$log_screen][$log_q_id] = $option_order;
       $used_questions[$log_q_id] = $log_q_id;
-      // Bump up the current screen if restarting
-      if ($this->dorestart and $log_screen > $this->currentscreen) {
-        $this->currentscreen = $log_screen;
-      }
-      if ($log_screen == $this->currentscreen) {
-        $this->previousduration = $log_duration;
-        $this->screenpresubmitted = 1;
-      }
+      $this->process_screen_variables($log_screen, $log_duration);
     }
     $log_data->close();
     return array('used_questions' => $used_questions,

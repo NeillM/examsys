@@ -24,7 +24,7 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class alogtest extends unittestdatabase {
+class logtest extends unittestdatabase {
   /**
    * Get init data set from yml
    * @return dataset
@@ -38,8 +38,8 @@ class alogtest extends unittestdatabase {
    * @group log
    */
   public function test_get_previous_answers() {
-    $log = \log::get_paperlog('0');
-    $original_paper_type = '0';
+    $papertype = '0';
+    $log = \log::get_paperlog($papertype);
     $metadataID = 2;
     $do_restart = true;
     $current_screen = 1;
@@ -50,7 +50,7 @@ class alogtest extends unittestdatabase {
         'previous_duration' => 5,
         'screen_pre_submitted' => 1,
         'current_screen' => 2);
-    $this->assertEquals($previous, $log->get_previous_answers($original_paper_type, $metadataID, $do_restart, $current_screen));
+    $this->assertEquals($previous, $log->get_previous_answers($papertype, $metadataID, $do_restart, $current_screen));
   }
 
   /**
@@ -58,8 +58,8 @@ class alogtest extends unittestdatabase {
    * @group log
    */
   public function test_get_previous_answers_late() {
-    $log = \log::get_paperlog('_late');
-    $original_paper_type = '2';
+    $papertype = '2';
+    $log = \log::get_paperlog($papertype);
     $metadataID = 1;
     $do_restart = false;
     $current_screen = 1;
@@ -70,6 +70,6 @@ class alogtest extends unittestdatabase {
         'previous_duration' => 10,
         'screen_pre_submitted' => 1,
         'current_screen' => 1);
-    $this->assertEquals($previous, $log->get_previous_answers($original_paper_type, $metadataID, $do_restart, $current_screen));
+    $this->assertEquals($previous, $log->get_previous_answers($papertype, $metadataID, $do_restart, $current_screen, true));
   }
 }
