@@ -2099,12 +2099,13 @@ class PaperProperties {
 
     /*
      * Load any Reference Material into an array.
-     * @return array       - Array of all reference material relevant to the current paper.
+     * @return array - Array of all reference material relevant to the current paper and the maximum reference width.
      */
     public function load_reference_materials() {
         $paperID = $this->get_property_id();
         $reference_materials = array();
         $ref_no = 0;
+        $max_ref_width = 0;
         $stmt = $this->db->prepare("SELECT title, content, width FROM (reference_material, reference_papers) WHERE reference_material.id = reference_papers.refID AND paperID = ?");
         $stmt->bind_param('i', $paperID);
         $stmt->execute();
@@ -2113,26 +2114,16 @@ class PaperProperties {
             $reference_materials[$ref_no]['title'] = $reference_title;
             $reference_materials[$ref_no]['material'] = $reference_material;
             $reference_materials[$ref_no]['width'] = $reference_width;
+            if ($ref_no == 0) {
+              $max_ref_width = $reference_width;
+            } elseif ($reference_width > $reference_materials[$ref_no - 1]['width']) {
+              $max_ref_width = $reference_width;
+            }
             $reference_materials[$ref_no]['num'] = $ref_no;
             $ref_no++;
         }
         $stmt->close();
-        return $reference_materials;
-    }
-
-    /*
-     * Looks through and returns the largest width for a set of reference materials.
-     * @param array $reference_materials - Array of reference materials to check.
-     * @return int he maximum width of any reference material for the current paper.
-     */
-    public function get_max_reference_width($reference_materials) {
-        $max_ref_width = 0;
-        foreach ($reference_materials as $reference_material) {
-            if ($reference_material['width'] > $max_ref_width) {
-                $max_ref_width = $reference_material['width'];
-            }
-       }
-        return $max_ref_width;
+        return array($reference_materials, $max_ref_width);
     }
 
     /**
