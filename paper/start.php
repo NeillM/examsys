@@ -319,7 +319,7 @@ $render->render($headerdata, $lang, 'header.html');
   $hidden = array();
   foreach ($tmp_questions_array as $question) {
     if ($question['q_type'] == 'random') {
-      $question =  $propertyObj->randomQOverwrite($question, $user_answers, $screen_data, $used_questions, $string);
+      $question = $propertyObj->randomQOverwrite($question, $user_answers, $screen_data, $used_questions, $string);
       if ($current_screen == $question['screen']) {
         $hidden[$question['no_on_screen']] = $question['q_id'];
       }
@@ -453,7 +453,7 @@ $render->render($headerdata, $lang, 'header.html');
     echo $exam_announcementObj->display_student_announcements();
   }
 
-  $render->render($contentdata, $string, 'paper/content.html');
+  $render->render($contentdata, $string, 'paper/header.html');
 
   // Display each question
   $unanswered = false;
@@ -555,7 +555,7 @@ $render->render($headerdata, $lang, 'header.html');
 
   }
 
-$render->render($footer_data, $string, 'paper/content_footer.html');
+$render->render($footer_data, $string, 'paper/footer.html');
 $render->render(array(), array(), 'paper/overlays.html');
 // Paper dataset.
 $dataset['name'] = 'paper';
