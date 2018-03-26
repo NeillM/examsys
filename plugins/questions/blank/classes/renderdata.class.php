@@ -79,36 +79,44 @@ class renderdata extends \questiondata {
     $option = $this->get_opt($part_id);
     $ans = '';
     $blank_mark = array();
+    // Get possible answers.
     $option['optiontext'] = str_replace('&nbsp;',' ',$option['optiontext']);
-    $blank_details = preg_split("/\[blank|\[\/blank\]/", $option['optiontext']);
+    // Create an array of all blurbs.
+    $blurbs = preg_split("/\[blank\](.*?)\[\/blank\]/", $option['optiontext']);
+    // Create an array of all blanks.
+    preg_match_all("/\[blank\](.*?)\[\/blank\]/", $option['optiontext'], $blanks);
+    $blanks = $blanks[1];
+    // Decode user answer.
     if (!is_null($useranswerid)) {
       $useranswerid = str_replace('&nbsp;', ' ', $useranswerid);
       $blank_user_answers = json_decode($useranswerid);
     } else {
       $blank_user_answers = array();
     }
-
+    // Create options, assign preivous user answers etc.
     $count = 0;
     $itemcount = 1;
+    $j = 0;
     $blankoption = array();
-    for ($blank_count = 0; $blank_count < count($blank_details); $blank_count++) {
-      if ($blank_details[$blank_count] === '') {
-        continue;
-      } else {
+    foreach ($blurbs as $blurb) {
+      $count++;
+      $blankoption[$count]['itemtype'] = 'blurb';
+      $blankoption[$count]['itemvalue'] = $blurb;
+      if (!empty($blanks[$j])) {
         $count++;
-      }
-      if (substr($blank_details[$blank_count], 0, 1) === ']') {
         $blankoption[$count]['itemtype'] = 'blank';
         $blankoption[$count]['itemcount'] = $itemcount;
         if ($this->displaymethod === 'textboxes') {
+          // Resize textboxes to fit text.
           $sizeresults = array();
-          $not_used = preg_match("|size=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$sizeresults);
+          $not_used = preg_match("|size=\"([0-9]{1,3})\"|", $blanks[$j], $sizeresults);
           if (isset($sizeresults[1]) and $sizeresults[1] != '') {
-            $blank_size[$blank_count] = $sizeresults[1];
+            $blank_size[$count] = $sizeresults[1];
           } else {
-            $blank_size[$blank_count] = 15;
+            $blank_size[$count] = 15;
           }
-          $blankoption[$count]['size'] = $blank_size[$blank_count];
+          $blankoption[$count]['size'] = $blank_size[$count];
+          // Set question as unanswered if not attempted.
           if ((isset($blank_user_answers[$itemcount - 1]) and $blank_user_answers[$itemcount - 1] == 'u') and (isset($screen_pre_submitted) and $screen_pre_submitted == 1)) {
             $this->unanswered = true;
             $blankoption[$count]['unans'] = true;
@@ -117,14 +125,19 @@ class renderdata extends \questiondata {
             if (isset($blank_user_answers[$itemcount - 1])) {
               $ans = $blank_user_answers[$itemcount - 1];
             }
+            // Encoded user answer for display.
             $encoded_ans = htmlentities($ans, ENT_COMPAT | ENT_HTML5, \Config::get_instance()->get('cfg_page_charset'), false);
             $blankoption[$count]['encoded_ans'] = $encoded_ans;
           }
+        // Drop Down display.
         } else {
-          $answer_list = explode(',', ltrim($blank_details[$blank_count], ']'));
+          // Get list of possible answers.
+          $answer_list = explode(',', $blanks[$j]);
           // Ensure that the correct answer is filtered in the same way as the user's answer.
           $answer_list = \param::clean_array($answer_list, \param::TEXT);
-          shuffle($answer_list);            // Shuffle the answers up.
+          // Shuffle the answers up.
+          shuffle($answer_list);
+          // If question previsouly answered auto select option.
           for ($i=0; $i<count($answer_list); $i++) {
             if (isset($answer_list[$i]) and isset($blank_user_answers[$itemcount - 1]) and html_entity_decode(trim($answer_list[$i])) == html_entity_decode(trim($blank_user_answers[$itemcount - 1]))) {
               $blankoption[$count]['itemvalue'][] = array('answer' => htmlentities(trim($answer_list[$i]), ENT_COMPAT, "UTF-8"), 'selected' => true);
@@ -132,38 +145,38 @@ class renderdata extends \questiondata {
               $blankoption[$count]['itemvalue'][] = array('answer' => htmlentities(trim($answer_list[$i]), ENT_COMPAT, "UTF-8"), 'selected' => false);
             }
           }
-          if (isset($blank_user_answers[$itemcount- 1]) and $blank_user_answers[$itemcount- 1] == 'u' and $screen_pre_submitted == 1) {
+          // Set question as unanswered if not attempted.
+          if (isset($blank_user_answers[$itemcount - 1]) and $blank_user_answers[$itemcount - 1] == 'u' and $screen_pre_submitted == 1) {
             $blankoption[$count]['unans'] = true;
             $this->unanswered = true;
           } else {
             $blankoption[$count]['unans'] = false;
           }
         }
+        // Mark per blank option.
         $results=array();
-        $not_used = preg_match("|mark=\"([0-9]{1,3})\"|",$blank_details[$blank_count],$results);
+        $not_used = preg_match("|mark=\"([0-9]{1,3})\"|", $blanks[$j], $results);
         if (isset($results[1]) and $results[1] != '') {
-          $blank_mark[$blank_count] = $results[1];
+          $blank_mark[$j] = $results[1];
         } else {
-          $blank_mark[$blank_count] = $option['markscorrect'];
+          $blank_mark[$j] = $option['markscorrect'];
         }
         $itemcount++;
-      } else {
-        $blankoption[$count]['itemtype'] = 'blurb';
-        $blankoption[$count]['itemvalue'] = $blank_details[$blank_count];
       }
+      $j++;
     }
     $this->blankoptions = $blankoption;
+
+    // Calculate total marks.
     if ($this->scoremethod == 'Mark per Option') {
       if (count($blank_mark) > 0) {
-        $marks = $this->marks;
         foreach ($blank_mark as $individual_mark) {
-          $marks += $individual_mark;
+          $this->marks += $individual_mark;
         }
       }
     } else {
-      $marks = $option['markscorrect'];
+      $this->marks = $option['markscorrect'];
     }
-    $this->marks = $marks;
   }
 
   /**
