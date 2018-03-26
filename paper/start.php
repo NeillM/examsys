@@ -149,7 +149,6 @@ $log_metadata = null;
 $current_screen = 1;
 $is_fire_alarm = param::optional('fire_alarm', false, param::BOOLEAN, param::FETCH_POST);
 $summative_exam_session_started = false; //lab timing stated by invigilators
-$allow_timing = false;
 
 /*
 * Extract the posted variables.
@@ -182,15 +181,8 @@ if ($is_preview_mode_first_launch == true or ($is_first_launch and !$do_restart)
 }
 $metadataID = $log_metadata->get_metadata_id();
 
-// Foramtive or Progressive papers that have a duration set should use the timer.
-if ($papertype == '0' || $papertype == '1') {
-    if ($propertyObj->get_exam_duration() != null) {
-        $allow_timing = true;
-    }
-// Summative exams only allow timing if ALL the modules of the paper allow it.
-} else if ($papertype == '2'){
-    $allow_timing = module_utils::modules_allow_timing($modIDs, $mysqli);
-}
+//  Check if paper shoudl display a timer.
+$allow_timing = $propertyObj->display_timer();
 
 /*
 * BP Determine the student's end_date timestamp for a summative exam that has been 'Started'.

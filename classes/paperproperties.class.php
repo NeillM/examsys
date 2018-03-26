@@ -2486,4 +2486,21 @@ class PaperProperties {
 
       return $question;
     }
+
+    /**
+     * Check if paper should display a timer
+     * @return boolean
+     */
+    public function display_timer() {
+      // Foramtive or Progressive papers that have a duration set should use the timer.
+      if ($this->paper_type == '0' || $this->paper_type == '1') {
+        if ($this->get_exam_duration() != null) {
+           return true;
+        }
+      // Summative exams only allow timing if ALL the modules of the paper allow it.
+      } else if ($this->paper_type == '2'){
+        return module_utils::modules_allow_timing(array_keys(Paper_utils::get_modules($this->property_id, $this->db)), $this->db);
+      }
+      return false;
+    }
 }

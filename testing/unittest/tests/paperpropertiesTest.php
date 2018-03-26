@@ -241,4 +241,24 @@ class paperpropertiestest extends unittestdatabase {
         ));
       $this->assertEquals($expected, $properties->build_paper(true, 2, 1));
     }
+
+    /**
+     * Test display timer
+     * @group paper
+     */
+    public function test_display_timer() {
+      // Summative - no timed modules
+      $properties = PaperProperties::get_paper_properties_by_id(1, $this->db, '');
+      $this->assertFalse($properties->display_timer());
+      // Summative - timed modules
+      $properties = PaperProperties::get_paper_properties_by_id(45, $this->db, '');
+      $this->assertTrue($properties->display_timer());
+      // Progressive - timed
+      $properties = PaperProperties::get_paper_properties_by_id(2, $this->db, '');
+      $this->assertTrue($properties->display_timer());
+      // Formative - not timed
+      $properties = PaperProperties::get_paper_properties_by_id(3, $this->db, '');
+      $this->assertFalse($properties->display_timer());
+    }
+
 }
