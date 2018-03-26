@@ -605,7 +605,6 @@ abstract class questiondata {
     }
     
 
-    // Display possible marks for question (if not Survey)
     $this->finalmarks = $marks;
     if ($paper_properties['type'] < 3) {
       if ($marks != 0) {
