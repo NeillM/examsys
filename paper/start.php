@@ -83,7 +83,6 @@ $is_preview_mode_first_launch = ($is_preview_mode == true and $getmode === 'prev
 $is_question_preview_mode = !is_null($get_qid);
 
 if (!$is_first_launch) require '../include/marking_functions.inc';
-$get_qid = param::optional('q_id', 0, param::INT, param::FETCH_GET);
 $screen_data = $propertyObj->get_screens($is_question_preview_mode, $get_qid);
 $no_screens = $propertyObj->get_max_screen();
 
