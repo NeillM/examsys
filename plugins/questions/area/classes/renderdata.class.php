@@ -106,10 +106,6 @@ class renderdata extends \questiondata {
       $this->unanswered = true;
     }
 
-    $qmediawidth = $this->mediawidth + 2;
-    $this->mediawidth = $qmediawidth;
-    $qmediaheight = $this->mediaheight + 27;
-    $this->mediaheight = $qmediaheight;
     $this->areadisplay = $option['correct'];
     $this->areauseranswer =  $tmp_user_answer;
     $this->areafulluseranswer = $full_user_ans;

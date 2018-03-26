@@ -1,7 +1,7 @@
 <br />
 <div align="left" {% if data.unanswered %} class="unans" style="padding:2px"{% endif %}>
     <!-- ======================== HTML5 part include disp ================= -->
-    <canvas id='canvas{{data.questionno}}' width='{{data.mediawidth}}' height='{{data.mediaheight}}'></canvas>
+    <canvas id='canvas{{data.questionno}}' width='{{data.mediawidth + 2}}' height='{{data.mediaheight + 27}}'></canvas>
     <br />
     <div style='width:100%;text-align: left;' id='canvasbox'></div>
     <script>
