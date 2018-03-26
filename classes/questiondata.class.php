@@ -47,6 +47,34 @@ trait mpqgetmarks {
  * Get/Set data to be used in rendering object.
  */
 abstract class questiondata {
+  /**
+   * Media type - file
+   */
+  const FILE = 1;
+  /**
+   * Media type - image
+   */
+  const IMAGE = 2;
+  /**
+   * Media type - movie
+   */
+  const MOVIE = 3;
+  /**
+   * Media type - document
+   */
+  const DOC = 4;
+  /**
+   * Media type - flash
+   */
+  const FLASH = 5;
+  /**
+   * Media type - mp3
+   */
+  const MP3 = 6;
+  /**
+   * Media type - windows movie types
+   */
+  const WINMOVIE = 7;
 
   /**
    * DB connection
@@ -649,32 +677,34 @@ abstract class questiondata {
     $mediaborder = true;
     $url = $mediadirectory->url($filename);
 
+    
+      
     // Is the file an image or something else (e.g. RasMol)?
     if (!array_key_exists('extension', $fn_parts)) {
-      $mediatype = 1;
+      $mediatype = self::FILE;
     } elseif (array_key_exists('extension', $fn_parts) and in_array(strtolower($fn_parts['extension']), array('gif', 'jpg', 'jpeg', 'png'))) {
-      $mediatype = 2;
+      $mediatype = self::IMAGE;
       if ($border_color == '') {
         $mediaborder = false;
       }
     } elseif (in_array($fn_parts['extension'], array('wav', 'wma', 'mid'))) {
-      $mediatype = 3;
+      $mediatype = self::MOVIE;
     } elseif (in_array($fn_parts['extension'], array('doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'pdf'))) {
-      $mediatype = 4;
+      $mediatype = self::DOC;
     } elseif ($fn_parts['extension'] == 'flv') {
-      $mediatype = 5;
+      $mediatype = self::FLASH;
       if ($width == 0 or $height == 0) {
         $width = 320;
         $height = 260;
       }
       $url = $mediadirectory->url($filename, false, false, true);
     } elseif ($fn_parts['extension'] == 'mp3') {     // Embed MP3 using HTML5 audio tag.
-      $mediatype = 6;
+      $mediatype = self::MP3;
       if (strpos(Url::fromGlobals(),'/edit/') !== false or strpos(Url::fromGlobals(),'/add/') !== false) {  // Display filename if add or edit script
         $mediaedit = true;
       }
     } elseif ($fn_parts['extension'] == 'avi' or $fn_parts['extension'] == 'wmv') {
-      $mediatype = 7;
+      $mediatype = self::WINMOVIE;
     }
     if ($imageid > -1 and !$locked) {
       $mediadelete = true;
