@@ -50,7 +50,7 @@ class textboxtest extends unittest{
     * Test question option setter - mathjax
     * @group question
     */
-  public function test_set_option_mathjax() {
+  public function test_set_option_answer_mathjax() {
     $data = questiondata::get_datastore('textbox');
     $data->settings = json_encode(array('columns' => 40, 'rows' => 10, 'editor' => 'mathjax'));
     $data->questionno = 2;
@@ -58,7 +58,7 @@ class textboxtest extends unittest{
     $option['markscorrect'] = 1;
     $data->set_opt(0, $option);
     $data->marks = 1;
-    $data->set_option(0, '', '', 1);
+    $data->set_option_answer(0, '', '', 1);
     $this->assertEquals(40, $data->editorcolumns);
     $this->assertEquals(10, $data->editorrows);
     $this->assertEquals('plain', $data->editor);
@@ -68,7 +68,7 @@ class textboxtest extends unittest{
     $this->assertEquals(array(1, 2), $data->textboxesseen);
     $this->assertEquals(2, $data->marks);
     $data->questionno = 3;
-    $data->set_option(0, 'test', '', 1);
+    $data->set_option_answer(0, 'test', '', 1);
     $this->assertEquals('test', $data->useranswer);
     $this->assertFalse($data->unanswered);
     
@@ -78,7 +78,7 @@ class textboxtest extends unittest{
     * Test question option setter - tinymce
     * @group question
     */
-  public function test_set_option_tinymce() {
+  public function test_set_option_answer_tinymce() {
     ob_start(); // Start output buffering
     $data = questiondata::get_datastore('textbox');
     $data->settings = json_encode(array('columns' => 40, 'rows' => 10, 'editor' => 'tinymce'));
@@ -87,7 +87,7 @@ class textboxtest extends unittest{
     $option['markscorrect'] = 1;
     $data->set_opt(0, $option);
     $data->marks = 1;
-    $data->set_option(0, '', '', 1);
+    $data->set_option_answer(0, '', '', 1);
     $this->assertEquals(40, $data->editorcolumns);
     $this->assertEquals(10, $data->editorrows);
     $this->assertEquals('', $data->editor);
@@ -96,7 +96,7 @@ class textboxtest extends unittest{
     $this->assertEquals(array(1, 2), $data->textboxesseen);
     $this->assertEquals(2, $data->marks);
     $data->questionno = 3;
-    $data->set_option(0, 'test', '', 1);
+    $data->set_option_answer(0, 'test', '', 1);
     $this->assertFalse($data->unanswered);
     $output = ob_get_contents(); // Store buffer in variable
     ob_end_clean(); // End buffering and clean up

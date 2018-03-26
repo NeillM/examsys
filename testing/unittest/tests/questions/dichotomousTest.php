@@ -51,7 +51,7 @@ class dichotomoustest extends unittest{
     * Test question option setter
     * @group question
     */
-  public function test_set_option() {
+  public function test_set_option_answer() {
     $data = questiondata::get_datastore('dichotomous');
     $option['markscorrect'] = 1;
     $option['tmppartid'] = 1;
@@ -60,7 +60,7 @@ class dichotomoustest extends unittest{
     $data->displaymethod = 'TF_Positive';
     $data->marks = 0;
     $useranswerid = 'uuu';
-    $data->set_option(0, $useranswerid, '', 1);
+    $data->set_option_answer(0, $useranswerid, '', 1);
     $option = $data->get_opt(0);
     $this->assertTrue($data->unanswered);
     $this->assertFalse($option['displayoptionmedia']);
@@ -69,7 +69,7 @@ class dichotomoustest extends unittest{
     $option['omedia'] = 'test';
     $data->set_opt(0, $option);
     $data->displaymethod = 'TF_NegativeAbstain';
-    $data->set_option(0, $useranswerid, '', 1);
+    $data->set_option_answer(0, $useranswerid, '', 1);
     $option = $data->get_opt(0);
     $this->assertTrue($option['abstain']);
     $this->assertTrue($option['displayoptionmedia']);

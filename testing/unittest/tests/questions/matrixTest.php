@@ -63,7 +63,7 @@ class matrixtest extends unittest{
     * Test question option setter
     * @group question
     */
-  public function test_set_option() {
+  public function test_set_option_answer() {
     $data = questiondata::get_datastore('matrix');
     $data->matchoptions = array('.PUB');
     $data->set_opt(1, array('optiontext' => '.PUB'));
@@ -72,7 +72,7 @@ class matrixtest extends unittest{
     $data->set_opt(4, array('optiontext' => '.XLS'));
     $data->set_opt(5, array('optiontext' => '.MDB'));
     $data->set_opt(6, array('optiontext' => '.DAT'));
-    $data->set_option(2, '3|4|2|5|1|6', '', 1);
+    $data->set_option_answer(2, '3|4|2|5|1|6', '', 1);
     $this->assertEquals(array('.PUB', '.PPT'), $data->matchoptions);
   }
 

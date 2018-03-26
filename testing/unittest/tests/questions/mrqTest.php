@@ -71,7 +71,7 @@ class mrqtest extends unittest{
     * Test question option setter
     * @group question
     */
-  public function test_set_option() {
+  public function test_set_option_answer() {
     $data = questiondata::get_datastore('mrq');
     $option['tmppartid'] = 1;
     $option['optiontext'] = '';
@@ -82,7 +82,7 @@ class mrqtest extends unittest{
     $data->marks = 0;
     $data->scoremethod = 'Mark per Option';
     $useranswerid = 'nnny';
-    $data->set_option(1, $useranswerid, '1000', 1);
+    $data->set_option_answer(1, $useranswerid, '1000', 1);
     $option = $data->get_opt(1);
     $this->assertFalse($option['selected']);
     $this->assertTrue($option['inact']);

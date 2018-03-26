@@ -51,7 +51,7 @@ class ranktest extends unittest{
     * Test question option setter
     * @group question
     */
-  public function test_set_option() {
+  public function test_set_option_answer() {
     $data = questiondata::get_datastore('rank');
     $data->papertype = '0'; 
     $data->scoremethod = 'Mark per Option';
@@ -66,7 +66,7 @@ class ranktest extends unittest{
     $option['markscorrect'] = 1;
     $data->set_opt(1, $option);
     $useranswerid = 'u,u,u';
-    $data->set_option(1, $useranswerid, '100', 1);
+    $data->set_option_answer(1, $useranswerid, '100', 1);
     $option = $data->get_opt(1);
     $this->assertTrue($data->unanswered);
     $this->assertTrue($option['unans']);
@@ -78,7 +78,7 @@ class ranktest extends unittest{
     $option['tmppartid'] = 1;
     $data->set_opt(1, $option);
     $useranswerid = '1,u,u';
-    $data->set_option(1, $useranswerid, '000', 1);
+    $data->set_option_answer(1, $useranswerid, '000', 1);
     $this->assertFalse($data->unanswered);
     $option = $data->get_opt(1);
     $this->assertFalse($option['unans']);

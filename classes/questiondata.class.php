@@ -436,7 +436,7 @@ abstract class questiondata {
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    * @return void
    */
-  abstract public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
+  abstract public function set_option_answer($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
 
   /**
    * Option level settings for template rendering
@@ -645,7 +645,7 @@ abstract class questiondata {
       $this->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '', -1, false, $part_id);
 
       // Set question options.
-      $this->set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
+      $this->set_option_answer($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
     }
 
     $this->optionorder = implode(',', $question['option_order']);

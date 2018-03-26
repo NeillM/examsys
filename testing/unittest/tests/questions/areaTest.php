@@ -48,7 +48,7 @@ class areatest extends unittest{
     * Test question option setter
     * @group question
     */
-  public function test_set_option() {
+  public function test_set_option_answer() {
     $data = questiondata::get_datastore('area');
     $option['correct'] = 1;
     $option['markscorrect'] = 1;
@@ -57,7 +57,7 @@ class areatest extends unittest{
     $data->mediawidth =  10;
     $data->mediaheight = 10;
     $useranswerid = '100,0,0,0,0,7397;d5,69,df,64,d5,69, ';
-    $data->set_option(0, $useranswerid, '', 0);
+    $data->set_option_answer(0, $useranswerid, '', 0);
     $this->assertFalse($data->unanswered);
     $this->assertEquals(12, $data->mediawidth);
     $this->assertEquals(37, $data->mediaheight);

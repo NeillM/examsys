@@ -69,20 +69,20 @@ class likerttest extends unittest{
     * Test question option setter
     * @group question
     */
-  public function test_set_option() {
+  public function test_set_option_answer() {
     $data = questiondata::get_datastore('likert');
     $data->displaymethod =  '0|1|2|3|4|true';
     $data->questionno =  '1';
-    $data->set_option(0, '4', '', 1);
+    $data->set_option_answer(0, '4', '', 1);
     $this->assertFalse($data->unanswered);
     $this->assertFalse($data->na);
     $this->assertEquals('1_0', $data->id);
     $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => true, 5 => false), $data->scaleopt);
-    $data->set_option(0, 'n/a', '', 1);
+    $data->set_option_answer(0, 'n/a', '', 1);
     $this->assertTrue($data->na);
     $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => false, 5 => false), $data->scaleopt);
     $data->displaymethod = '0|1|2|3|4|false';
-    $data->set_option(0, 'u', '', 1);
+    $data->set_option_answer(0, 'u', '', 1);
     $this->assertFalse($data->na);
     $this->assertTrue($data->unanswered);
     $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => false, 5 => false), $data->scaleopt);

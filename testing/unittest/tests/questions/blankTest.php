@@ -51,7 +51,7 @@ class blanktest extends unittest{
     * Test question option setter - textbox responses
     * @group question
     */
-  public function test_set_option_textbox() {
+  public function test_set_option_answer_textbox() {
     $data = questiondata::get_datastore('blank');
     $option['optiontext'] = '<div>London is the capital of [blank]England,Scotland,Wales,Northern Ireland[/blank] and is in the [blank]United Kingdom,United States of America[/blank]</div>';
     $option['markscorrect'] = 1;
@@ -60,7 +60,7 @@ class blanktest extends unittest{
     $data->scoremethod = 'Mark per Option';
     $data->marks = 0;
     $useranswerid = '["Wales","u"]';
-    $data->set_option(0, $useranswerid, '', 1);
+    $data->set_option_answer(0, $useranswerid, '', 1);
     $this->assertTrue($data->unanswered);
     $blankoptions[1] = array('itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of ');
     $blankoptions[2] = array('itemtype' => 'blank', 'itemcount' => 1, 'size' => 15, 'unans' => false, 'encoded_ans' => 'Wales');
@@ -70,7 +70,7 @@ class blanktest extends unittest{
     $this->assertEquals($blankoptions, $data->blankoptions);
     $this->assertEquals(2, $data->marks);
     $data->scoremethod = 'Mark per Question';
-    $data->set_option(0, $useranswerid, '', 1);
+    $data->set_option_answer(0, $useranswerid, '', 1);
     $this->assertEquals(1, $data->marks);
   }
 
@@ -78,7 +78,7 @@ class blanktest extends unittest{
     * Test question option setter - dropdown responses
     * @group question
     */
-  public function test_set_option_dropdown() {
+  public function test_set_option_answer_dropdown() {
     $data = questiondata::get_datastore('blank');
     $option['optiontext'] = '<div>London is the capital of [blank]England,Scotland,Wales,Northern Ireland[/blank] and is in the [blank]United Kingdom,United States of America[/blank]</div>';
     $option['markscorrect'] = 1;
@@ -87,7 +87,7 @@ class blanktest extends unittest{
     $data->scoremethod = 'Mark per Option';
     $data->marks = 0;
     $useranswerid = '["Wales","u"]';
-    $data->set_option(0, $useranswerid, '', 1);
+    $data->set_option_answer(0, $useranswerid, '', 1);
     $this->assertTrue($data->unanswered);
     $blankoptions[1] = array('itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of ');
     $blankoptions[2] = array('itemtype' => 'blank', 'itemcount' => 1, 'unans' => false, 'itemvalue' => array (
@@ -111,7 +111,7 @@ class blanktest extends unittest{
     $this->assertEquals($blankoptions[5], $options[5]);
     $this->assertEquals(2, $data->marks);
     $data->scoremethod = 'Mark per Question';
-    $data->set_option(0, $useranswerid, '', 1);
+    $data->set_option_answer(0, $useranswerid, '', 1);
     $this->assertEquals(1, $data->marks);
   }
 

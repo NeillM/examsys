@@ -58,7 +58,7 @@ class scttest extends unittest{
     * Test question option setter
     * @group question
     */
-  public function test_set_option() {
+  public function test_set_option_answer() {
     $data = questiondata::get_datastore('sct');
     $option['optiontext'] = '';
     $option['tmppartid'] = 1;
@@ -66,7 +66,7 @@ class scttest extends unittest{
     $option['markscorrect'] = 1;
     $data->set_opt(1, $option);
     $useranswerid = 3;
-    $data->set_option(1, $useranswerid, '10000', 1);
+    $data->set_option_answer(1, $useranswerid, '10000', 1);
     $option = $data->get_opt(1);
     $this->assertFalse($option['selected']);
     $this->assertTrue($option['inact']);
@@ -77,7 +77,7 @@ class scttest extends unittest{
     $option['markscorrect'] = 1;
     $data->set_opt(2, $option);
     $useranswerid = 3;
-    $data->set_option(2, $useranswerid, '10000', 1);
+    $data->set_option_answer(2, $useranswerid, '10000', 1);
     $option = $data->get_opt(2);
     $this->assertTrue($option['selected']);
     $this->assertFalse($option['inact']);

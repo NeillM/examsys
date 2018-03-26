@@ -69,7 +69,7 @@ class enhancedcalctest extends unittestdatabase{
     * Test question option setter
     * @group question
     */
-  public function test_set_option() {
+  public function test_set_option_answer() {
     ob_start(); // Start output buffering
     $data = questiondata::get_datastore('enhancedcalc');
     $data->marks = 0;
@@ -82,7 +82,7 @@ class enhancedcalctest extends unittestdatabase{
     $questions[1]['object']->load($questions[1]);
     $data->question = $questions[1];
     $useranswerid = '{"vars":{"$A":2,"$B":8},"uans":""}';
-    $data->set_option(1, $useranswerid, '', 1);
+    $data->set_option_answer(1, $useranswerid, '', 1);
     $this->assertEquals(3, $data->marks);
     $output = ob_get_contents(); // Store buffer in variable
     ob_end_clean(); // End buffering and clean up

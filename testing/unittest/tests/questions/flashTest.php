@@ -48,12 +48,12 @@ class flashtest extends unittest{
     * Test question option setter
     * @group question
     */
-  public function test_set_option() {
+  public function test_set_option_answer() {
     $data = questiondata::get_datastore('flash');
     $option['markscorrect'] = 1;
     $data->set_opt(0, $option);
     $data->marks = 1;
-    $data->set_option(0, '', '', 0);
+    $data->set_option_answer(0, '', '', 0);
     $this->assertEquals(2, $data->marks);
   }
 

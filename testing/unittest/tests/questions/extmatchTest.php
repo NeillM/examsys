@@ -75,7 +75,7 @@ class extmatchtest extends unittest{
     * Test question option setter
     * @group question
     */
-  public function test_set_option() {
+  public function test_set_option_answer() {
     $data = questiondata::get_datastore('extmatch');
     $data->matchoptions = array('Paris');
     $data->set_opt(1, array('optiontext' => 'Paris'));
@@ -84,7 +84,7 @@ class extmatchtest extends unittest{
     $data->set_opt(4, array('optiontext' => 'Derby'));
     $data->set_opt(5, array('optiontext' => 'Intu Centre'));
     $data->set_opt(6, array('optiontext' => 'Derby County F.C.'));
-    $data->set_option(2, '1|3|2', '', 1);
+    $data->set_option_answer(2, '1|3|2', '', 1);
     $this->assertEquals(array('Paris', 'Eifel Tower'), $data->matchoptions);
   }
 
