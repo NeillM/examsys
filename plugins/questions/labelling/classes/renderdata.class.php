@@ -86,7 +86,7 @@ class renderdata extends \questiondata {
   /**
    * Option level settings for template rendering
    * @param integer $part_id part loop id
-   * @param integer $useranswerid id of option user selected
+   * @param mixed $useranswerid user answer
    * @param integer $user_dismissid id of option user dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
@@ -147,7 +147,7 @@ class renderdata extends \questiondata {
   /**
    * Additional option level settings for template rendering
    * @param integer $part_id part loop id
-   * @param integer $useranswerid id of option user selected
+   * @param mixed $useranswerid user answer
    * @param integer $user_dismissid id of option user dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
