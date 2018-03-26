@@ -108,6 +108,8 @@ class renderdata extends \questiondata {
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
   public function process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
+    $part_id = 1;
+    $option = $this->get_opt($part_id);
     $matchoption = array();
     $matchscenario = array();
     $matching_options = $this->matchoptions;
@@ -141,5 +143,10 @@ class renderdata extends \questiondata {
     }
     $this->matchoptions = $matchoption;
     $this->matchscenarios = $matchscenario;
+    if ($this->scoremethod == 'Mark per Question') {
+      $marks = $option['markscorrect'];
+    } else {
+      $marks = $part_id - 1;
+    }
   }
 }

@@ -584,17 +584,8 @@ abstract class questiondata {
 
     $this->optionorder = implode(',', $question['option_order']);
 
-    if ($question['q_type'] == 'matrix') {
-      $part_id = 1;
-      $this->process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
-      if ($question['score_method'] == 'Mark per Question') {
-        $marks = $display_option['marks_correct'];
-      } else {
-        $marks = $part_id - 1;
-      }
-    } else {
-      $this->process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
-    }
+    $this->process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
+
     if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'rank', 'extmatch'))) {
       $marks = $this->marks;
       if ($question['score_method'] == 'Mark per Question') {
