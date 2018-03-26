@@ -49,7 +49,7 @@
             {% endfor %}
     </select>
         {% else %}
-    {{data.option}}<input type="hidden" name="qid[{{data.id}}][uansunit]" value="{[data.option}}" />
+    {{data.option}}<input type="hidden" name="qid[{{data.id}}][uansunit]" value="{{data.option}}" />
         {% endif %}
     {% endif %}
     {% if data.feedbackprecision == 'dp' %}

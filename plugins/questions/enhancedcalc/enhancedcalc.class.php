@@ -1083,7 +1083,7 @@ class EnhancedCalc extends Question implements questionInterface {
 		}
 
 		$dispunits = '';
-		$questiondata['showuntis'] = $this->settings['show_units'];
+		$questiondata['showunits'] = $this->settings['show_units'];
 		$questiondata['numunitoptions'] = count($this->settings['answersexp']);
 		$questiondata['id'] = $this->id;
 		if ($this->settings['show_units'] === true) {
