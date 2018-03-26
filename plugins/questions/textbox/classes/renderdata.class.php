@@ -26,7 +26,7 @@ namespace plugins\questions\textbox;
  */
 
 class renderdata extends \questiondata {
-
+  use \defaultgetmarks;
   /**
    * List of textboxes viewed
    * @var array

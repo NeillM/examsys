@@ -26,7 +26,7 @@ namespace plugins\questions\dichotomous;
  */
 
 class renderdata extends \questiondata {
-
+  use \mpqgetmarks;
   /**
    * Constructor
    */

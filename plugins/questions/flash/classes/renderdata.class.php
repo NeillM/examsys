@@ -27,7 +27,7 @@ namespace plugins\questions\flash;
  */
 
 class renderdata extends \questiondata {
-
+  use \defaultgetmarks;
   /**
    * Constructor
    */

@@ -26,7 +26,7 @@ namespace plugins\questions\extmatch;
  */
 
 class renderdata extends \questiondata {
-
+  use \mpqgetmarks;
   /**
    * Media state of extmatch question
    * @var boolean

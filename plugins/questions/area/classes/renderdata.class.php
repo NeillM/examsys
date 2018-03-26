@@ -26,7 +26,7 @@ namespace plugins\questions\area;
  */
 
 class renderdata extends \questiondata {
-
+  use \defaultgetmarks;
   /**
    * Area user response
    * @var string

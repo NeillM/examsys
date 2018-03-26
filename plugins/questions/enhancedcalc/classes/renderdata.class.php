@@ -26,7 +26,7 @@ namespace plugins\questions\enhancedcalc;
  */
 
 class renderdata extends \questiondata {
-
+  use \defaultgetmarks;
   /**
    * Constructor
    */

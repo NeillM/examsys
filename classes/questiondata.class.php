@@ -21,6 +21,28 @@
 */
 
 /**
+ * Get total marks for question
+ */
+trait defaultgetmarks {
+  public function get_marks ($markscorrect) {
+    return $this->marks;
+  }
+}
+
+/**
+ * Get total marks for question
+ * Apply marks per question if applicable
+ */
+trait mpqgetmarks {
+  public function get_marks ($markscorrect) {
+    $marks = $this->marks;
+    if ($this->scoremethod == 'Mark per Question') {
+      $marks = $markscorrect;
+    }
+    return $marks;
+  }
+}
+/**
  * Question data helper class.
  * Get/Set data to be used in rendering object.
  */
@@ -399,6 +421,13 @@ abstract class questiondata {
   abstract public function process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
 
   /**
+   * Get total marks for question
+   * @param float $markscorrect marks for correct answer
+   * @reutrn float
+   */
+  abstract public function get_marks ($markscorrect);
+
+  /**
    * Get options
    * @param integer $id option id
    * @return array
@@ -558,11 +587,10 @@ abstract class questiondata {
     $this->displaymethod = $question['display_method'];
     $this->scoremethod = $question['score_method'];
     $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
-    $marks = $this->get_base_marks();
 
     // Processing for each stem.
     $this->options = array();
-    $this->marks = $marks;
+    $this->marks = $this->get_base_marks();
     foreach ($question['options'] as $display_option) {
       $part_id++;
       $this->partid = $part_id;
@@ -586,19 +614,9 @@ abstract class questiondata {
 
     $this->process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
 
-    if (in_array($question['q_type'], array('mcq', 'mrq', 'dichotomous', 'rank', 'extmatch'))) {
-      $marks = $this->marks;
-      if ($question['score_method'] == 'Mark per Question') {
-        $marks = $display_option['marks_correct'];
-      }
-    } else {
-      $marks = $this->marks;
-    }
-    
-
-    $this->finalmarks = $marks;
+    $this->finalmarks = $this->get_marks($display_option['marks_correct']);;
     if ($paper_properties['type'] < 3) {
-      if ($marks != 0) {
+      if ($this->finalmarks != 0) {
         if ($question['score_method'] == 'Bonus Mark') {
           $this->scoremethod = 'bonus';
           $plural = ($display_option['marks_correct'] == 1) ?  $string['mark'] : $string['marks'];

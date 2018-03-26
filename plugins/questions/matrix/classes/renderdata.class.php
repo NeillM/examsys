@@ -26,7 +26,7 @@ namespace plugins\questions\matrix;
  */
 
 class renderdata extends \questiondata {
-
+  use \defaultgetmarks;
   /**
    * Matching scenarios
    * @var array

@@ -26,7 +26,7 @@ namespace plugins\questions\labelling;
  */
 
 class renderdata extends \questiondata {
-
+  use \defaultgetmarks;
   /**
    * User response
    * @var string

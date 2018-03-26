@@ -26,7 +26,7 @@ namespace plugins\questions\rank;
  */
 
 class renderdata extends \questiondata {
-
+  use \mpqgetmarks;
   /**
    * Question options dismissed
    * @var string

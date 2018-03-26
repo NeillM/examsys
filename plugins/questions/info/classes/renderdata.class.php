@@ -26,7 +26,7 @@ namespace plugins\questions\info;
  */
 
 class renderdata extends \questiondata {
-
+  use \defaultgetmarks;
   /**
    * Constructor
    */

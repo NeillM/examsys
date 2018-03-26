@@ -26,7 +26,7 @@ namespace plugins\questions\likert;
  */
 
 class renderdata extends \questiondata {
-
+  use \defaultgetmarks;
   /**
    * Na option state
    * @var integer 

@@ -26,7 +26,7 @@ namespace plugins\questions\blank;
  */
 
 class renderdata extends \questiondata {
-
+  use \defaultgetmarks;
   /**
    * Blank options
    * @var array

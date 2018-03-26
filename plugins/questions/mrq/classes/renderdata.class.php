@@ -26,7 +26,7 @@ namespace plugins\questions\mrq;
  */
 
 class renderdata extends \questiondata {
-
+  use \mpqgetmarks;
   /**
    * Question 'other' option selected state
    * @var boolean

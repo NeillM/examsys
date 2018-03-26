@@ -26,7 +26,7 @@ namespace plugins\questions\true_false;
  */
 
 class renderdata extends \questiondata {
-
+  use \defaultgetmarks;
   /**
    * True selection state
    * @var boolean

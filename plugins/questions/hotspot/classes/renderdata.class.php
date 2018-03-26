@@ -26,7 +26,7 @@ namespace plugins\questions\hotspot;
  */
 
 class renderdata extends \questiondata {
-
+  use \defaultgetmarks;
   /**
    * User answers
    * @var string

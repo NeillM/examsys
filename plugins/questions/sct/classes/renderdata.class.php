@@ -26,7 +26,7 @@ namespace plugins\questions\sct;
  */
 
 class renderdata extends \questiondata {
-
+  use \defaultgetmarks;
   /**
    * SCT title
    * @var string
