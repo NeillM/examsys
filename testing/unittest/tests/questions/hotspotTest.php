@@ -57,12 +57,10 @@ class hotspottest extends unittest{
     $this->assertTrue($data->unanswered);
     $useranswerid = '1,325,995|1,825,965';
     $data->mediaheight = 1600;
-    $data->mediawidth = 1600;
     $data->scoremethod = 'Mark per Question';
     $data->set_option_answer(0, $useranswerid, '', 1);
     $this->assertFalse($data->unanswered);
     $this->assertEquals($option['correct'], $data->tmpcorrect);
-    $this->assertEquals(1900, $data->mediawidth);
     $this->assertEquals(1601, $data->mediaheight);
     $this->assertEquals($useranswerid, $data->useranswer);
     $this->assertEquals(1, $data->screensubmitted);
