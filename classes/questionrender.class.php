@@ -70,9 +70,7 @@ class questionrender {
     $this->questiondata->setup_question_data($screen_pre_submitted, $q_displayed, $string, $question, $pid, $current_screen, $question_no, $user_answers);
     $render->render($this->questiondata, $string, 'paper/question_header.html');
     // Plugin question use there own templating for question body.
-    if ($question['q_type'] != 'enhancedcalc') {
-      $render->render($this->questiondata, $string, 'paper/question.html');
-    }
+    $this->questiondata->render_question($render, $string);
   }
 
 }

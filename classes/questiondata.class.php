@@ -472,6 +472,7 @@ abstract class questiondata {
    * Set options
    * @param integer $id option id
    * @param array $opt options
+   * @return void
    */
   public function set_opt($id, $opt) {
     $this->options[$id] = $opt;
@@ -483,6 +484,15 @@ abstract class questiondata {
    */
   public function get_base_marks() {
     return 0;
+  }
+
+  /* Render the question to screen
+   * @param object $render twig rendering object
+   * @param array $string language strings
+   * @return void
+   */
+  public function render_question($render, $string) {
+    $render->render($this, $string, 'paper/question.html');
   }
 
   /**

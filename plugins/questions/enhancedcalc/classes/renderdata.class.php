@@ -72,12 +72,6 @@ class renderdata extends \questiondata {
   public function set_option($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $marks = $this->marks;
     $question = $this->question;
-    // no options for enhanced calc now stored in settings
-    $extra = array(
-      'num_on_screen' => $this->questionno,
-      'current_question' => $question,
-    );
-    $question['object']->render_paper($extra);
     $useranswers = $this->useranswers;
     $question['object']->load_all_user_answers($useranswers);
     $marks += $question['object']->calculate_question_mark();
@@ -93,5 +87,22 @@ class renderdata extends \questiondata {
    */
   public function process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     // Nothing to do.
+  }
+
+  /**
+   * Render the question to screen
+   * Enhanced calculation question override the generic method
+   * @param object $render twig rendering object
+   * @param array $string language strings
+   * @return void
+   */
+  public function render_question($render, $string) {
+    $question = $this->question;
+    // no options for enhanced calc now stored in settings
+    $extra = array(
+      'num_on_screen' => $this->questionno,
+      'current_question' => $question,
+    );
+    $question['object']->render_paper($extra);
   }
 }
