@@ -136,8 +136,6 @@ class renderdata extends \questiondata {
     $tmp_correct = trim($option['correct']);
     $tmp_correct = str_replace("'", "&#039;", $tmp_correct);
 
-    $qmediawidth = $this->mediawidth + 220;
-    $this->mediawidth = $qmediawidth;
     $this->mediaheight = $tmp_height;
     $this->tmpcorrect = $tmp_correct;
     $this->marks = $marks;

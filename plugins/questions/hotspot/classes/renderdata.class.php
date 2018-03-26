@@ -102,8 +102,6 @@ class renderdata extends \questiondata {
     $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
 
     $this->tmpcorrect = $tmp_correct;
-    $qmediawidth = $this->mediawidth + 300;
-    $this->mediawidth = $qmediawidth;
     $this->mediaheight = $tmp_height - 29;
 
     if (!is_null($useranswerid)) {
