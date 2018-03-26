@@ -33,7 +33,7 @@ class likerttest extends unittest{
   public function test_set_question_head() {
     $data = questiondata::get_datastore('likert');
     $data->set_question_head();
-    $this->assertTrue($data->displaydefault);
+    $this->assertFalse($data->displaydefault);
     $this->assertFalse($data->displaymedia);
     $data->qmedia = 'test';
     $data->set_question_head();
@@ -48,8 +48,8 @@ class likerttest extends unittest{
     $data = questiondata::get_datastore('likert');
     $data->displaymethod =  '0|1|2|3|4|true';
     $data->set_question(0, '', '');
-    $this->assertFalse($data->displaynotes);
-    $this->assertFalse($data->displayscenario);
+    $this->assertFalse($data->displaylikertnotes);
+    $this->assertFalse($data->displaylikertscenario);
     $this->assertTrue($data->displayna);
     $this->assertEquals(array(0, 1, 2, 3, 4), $data->scale);
     $data->displaymethod = '0|1|2|3|4|false';
@@ -58,8 +58,8 @@ class likerttest extends unittest{
     $data->set_question(0, '', '');
     $this->assertFalse($data->displayna);
     $this->assertEquals(array(0, 1, 2, 3, 4), $data->scale);
-    $this->assertTrue($data->displaynotes);
-    $this->assertTrue($data->displayscenario);
+    $this->assertTrue($data->displaylikertnotes);
+    $this->assertTrue($data->displaylikertscenario);
     $this->assertEquals(6, $data->likertnotescolspan);
     $this->assertEquals(7, $data->likertscenariocolspan);
     

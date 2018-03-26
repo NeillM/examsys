@@ -105,10 +105,15 @@ class renderdata extends \questiondata {
     if ($this->notes != '') {
       $this->displaylikertnotes = true;
       $this->likertnotescolspan = $likert_col_no + 1;
+    } else {
+      $this->displaylikertnotes = true;
+      $this->displaylikertnotes = false;
     }
     if ($this->scenario != '') {
       $this->displaylikertscenario = true;
       $this->likertscenariocolspan = $likert_col_no + 2;
+    } else {
+      $this->displaylikertscenario = false;
     }
     if ($na == true) {
       $this->displayna = true;

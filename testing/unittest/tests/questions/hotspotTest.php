@@ -49,15 +49,15 @@ class hotspottest extends unittest{
     */
   public function test_set_option() {
     $data = questiondata::get_datastore('hotspot');
+    $option['correct'] = 'Chocolate calculator~16711680~polygon~16a,399,152,3c7,1a9,3ed,106,407,f9,3a6~0~|Dictionary~16776960~ellipse~392,382,2d1,418~0~';
+    $option['markscorrect'] = 1;
+    $data->set_opt(0, $option);
     $useranswerid = 'u';
     $data->set_option(0, $useranswerid, '', 1);
     $this->assertTrue($data->unanswered);
     $useranswerid = '1,325,995|1,825,965';
     $data->mediaheight = 1600;
     $data->mediawidth = 1600;
-    $option['correct'] = 'Chocolate calculator~16711680~polygon~16a,399,152,3c7,1a9,3ed,106,407,f9,3a6~0~|Dictionary~16776960~ellipse~392,382,2d1,418~0~';
-    $option['markscorrect'] = 1;
-    $data->set_opt(0, $option);
     $data->scoremethod = 'Mark per Question';
     $data->set_option(0, $useranswerid, '', 1);
     $this->assertFalse($data->unanswered);
