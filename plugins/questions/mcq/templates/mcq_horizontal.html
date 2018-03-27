@@ -1,0 +1,19 @@
+<blockquote {% if data.unanswered %} class="unans" {% endif %}>
+{% for i,p in data.options %}
+    <div style="float:left; margin-right:15px; margin-bottom:15px">
+        <input type="radio" name="q{{data.questionno}}" value="{{i}}" {% if p.selected %} checked="checked" {% endif %} />
+    {% if p.optiontextdisplay %}
+            &nbsp;{{p.optiontext|raw}}
+    {% endif %}
+    {% if p.displayoptionmedia %}
+        {% include 'paper/optmedia.html' with {'data': p.optionmedia} %}
+    {% endif %}
+    </div>
+{% endfor %}
+{% if data.negativemarking %}
+    <input type="radio" name="q{{data.questionno}}" value="a" {% if data.abstainselected %} checked="checked" {% endif %} /><span style="color:{{data.labelcolour}}">&lt;{{lang.abstain}}&gt;</span>
+{% endif %}
+<div>
+    <input type="hidden" name="dismiss{{data.questionno}}" id="dismiss{{data.questionno}}" value="{{data.dismiss}}" />
+</div>
+</blockquote>

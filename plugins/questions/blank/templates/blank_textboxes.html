@@ -1,0 +1,9 @@
+<p class="stem">
+{% for i,p in data.blankoptions %}
+    {% if p.itemtype == 'blurb' %}
+    {{p.itemvalue|raw}}
+    {% else %}
+    <input type="text" name="q{{data.questionno}}_{{p.itemcount}}" {% if p.unans %} class="unans" {% else %} value="{{p.encoded_ans}}" {% endif %} size="{{p.size}}" />
+    {% endif %}
+{% endfor %}
+</p>

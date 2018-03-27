@@ -1,0 +1,9 @@
+<blockquote style="line-height:175%" {% if data.unanswered %} class="unans" {% endif %}>
+    <input type="radio" name="q{{data.questionno}}" value="t" {% if data.trueselected %} checked="checked" {% endif %} />&nbsp;{{lang.true}}
+    <br />
+    <input type="radio" name="q{{data.questionno}}" value="f" {% if data.falseselected%} checked="checked" {% endif %} />&nbsp;{{lang.false}}
+    <br />
+    {% if data.negativemarking %}
+    <input type="radio" name="q{{data.questionno}}" value="a" {% if data.abstainselected %} checked="checked" {% endif %} />&nbsp;<span style="color:{{data.labelcolour}}">&lt;{{lang.abstain}}&gt;</span>
+    {% endif %}
+</blockquote>

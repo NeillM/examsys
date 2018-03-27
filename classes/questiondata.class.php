@@ -492,6 +492,18 @@ abstract class questiondata {
    * @return void
    */
   public function render_question($render, $string) {
+    // Check if the display method has its own template. Otherwise use default template.
+    if (file_exists(dirname(__DIR__)
+      . DIRECTORY_SEPARATOR . 'plugins'
+      . DIRECTORY_SEPARATOR . 'questions'
+      . DIRECTORY_SEPARATOR
+      . $this->questiontype
+      . DIRECTORY_SEPARATOR
+      . 'templates' . '/' . $this->questiontype . '_' . $this->displaymethod . '.html')){
+      $this->questiontemplate = $this->questiontype . '_' . $this->displaymethod . '.html';
+    } else {
+      $this->questiontemplate = $this->questiontype . '.html';
+    }
     $render->render($this, $string, 'paper/question.html');
   }
 

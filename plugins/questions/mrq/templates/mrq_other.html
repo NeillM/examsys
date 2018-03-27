@@ -33,16 +33,14 @@
     </tr>
     {% endfor %}
 {% endif %}
-{% if data.negativemarking %}
     <tr>
         <td>
-            <input type="checkbox" onclick="MRQabstain({{data.questionno}},{{data.optionnumber}});" name="q{{data.questionno}}_abstain" id="q{{data.questionno}}_abstain" value="y" {% if data.abstainselected %} checked="checked" {% endif %} />
+            <input type="checkbox" name="q{{data.questionno}}_{{data.partid}}" value="y" {% if data.otherselected %} checked="checked" {% endif %}/>
         </td>
-        <td>
-            <span style="color:{{data.labelcolour}}">&lt;{{lang.abstain}}&gt;</span>
+        <td>{{lang.other}} 
+            <input type="text" onkeypress="document.questions.q{{data.questionno}}_{{data.partid}}.checked=true" name="q{{data.questionno}}_other" value="{{data.other}}" />
         </td>
     </tr>
-{% endif %}
 </table>
 <div>
     <input type="hidden" name="dismiss{{data.questionno}}" id="dismiss{{data.questionno}}" value="{{data.dismiss}}" />
