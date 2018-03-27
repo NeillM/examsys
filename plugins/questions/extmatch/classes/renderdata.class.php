@@ -135,8 +135,7 @@ class renderdata extends \questiondata {
   public function set_option_answer($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
     $matching_options = $this->matchoptions;
-    $matching_options[] = $option['optiontext'];
-    $this->matchoptions = $matching_options;
+    $this->matchoptions[] = $option['optiontext'];
   }
 
   /**
