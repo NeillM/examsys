@@ -65,7 +65,7 @@ class renderdata extends \questiondata {
   public function set_question_head() {
     $this->displaydefault = true;
     $this->displaymedia = true;
-    if ($this->notes != ''){
+    if ($this->notes != '') {
       $this->displaynotes = true;
     }
     $this->displayleadin = true;
@@ -95,9 +95,7 @@ class renderdata extends \questiondata {
    */
   public function set_option_answer($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    $matching_options = $this->matchoptions;
-    $matching_options[] = $option['optiontext'];
-    $this->matchoptions = $matching_options;
+    $this->matchoptions[]['option'] = $option['optiontext'];
   }
 
   /**
@@ -110,16 +108,10 @@ class renderdata extends \questiondata {
   public function process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $part_id = 1;
     $option = $this->get_opt($part_id);
-    $matchoption = array();
     $matchscenario = array();
-    $matching_options = $this->matchoptions;
-    foreach ($matching_options as $single_option) {
-      $matchoption[]['option'] = $single_option;
-    }
     $matching_users_answers = $this->usersanswers;
     $option_order = explode(',', $this->optionorder);
-    $matching_scenarios = $this->scenarios;
-    foreach ($matching_scenarios as $single_scenario) {
+    foreach ($this->scenarios as $single_scenario) {
       if (trim($single_scenario) != '') {
         if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == '' and $screen_pre_submitted == 1) {
           $matchscenario[$part_id-1]['unanswered'] = true;
@@ -129,19 +121,18 @@ class renderdata extends \questiondata {
         }
         $matchscenario[$part_id-1]['id'] = chr(64 + $part_id);
         $matchscenario[$part_id-1]['value'] = $single_scenario;
-        for ($i = 0; $i < count($matchoption); $i++) {
+        for ($i = 0; $i < count($this->matchoptions); $i++) {
           $tmp_part_id = $option_order[$i] + 1;
-          $matchoption[$i]['value'] = $tmp_part_id;
+          $this->matchoptions[$i]['value'] = $tmp_part_id;
           if (isset($matching_users_answers[$part_id-1]) and $matching_users_answers[$part_id-1] == $tmp_part_id) {
-            $matchoption[$i]['selected'][$part_id] = true;
+            $this->matchoptions[$i]['selected'][$part_id] = true;
           } else {
-            $matchoption[$i]['selected'][$part_id] = false;
+            $this->matchoptions[$i]['selected'][$part_id] = false;
           }
         }
         $part_id++;
       }
     }
-    $this->matchoptions = $matchoption;
     $this->matchscenarios = $matchscenario;
     if ($this->scoremethod == 'Mark per Question') {
       $marks = $option['markscorrect'];

@@ -65,7 +65,7 @@ class matrixtest extends unittest{
     */
   public function test_set_option_answer() {
     $data = questiondata::get_datastore('matrix');
-    $data->matchoptions = array('.PUB');
+    $data->matchoptions = array(0 => array('option' => '.PUB'));
     $data->set_opt(1, array('optiontext' => '.PUB'));
     $data->set_opt(2, array('optiontext' => '.PPT'));
     $data->set_opt(3, array('optiontext' => '.DOC'));
@@ -73,7 +73,7 @@ class matrixtest extends unittest{
     $data->set_opt(5, array('optiontext' => '.MDB'));
     $data->set_opt(6, array('optiontext' => '.DAT'));
     $data->set_option_answer(2, '3|4|2|5|1|6', '', 1);
-    $this->assertEquals(array('.PUB', '.PPT'), $data->matchoptions);
+    $this->assertEquals(array(0 => array('option' => '.PUB'), 1 => array('option' => '.PPT')), $data->matchoptions);
   }
 
   /**
@@ -82,7 +82,12 @@ class matrixtest extends unittest{
     */
   public function test_process_options() {
     $data = questiondata::get_datastore('matrix');
-    $data->matchoptions = array('.PUB', '.PPT', '.DOC', '.XLS', '.MDB','.DAT');
+    $data->matchoptions = array(0 => array('option' => '.PUB'),
+        1 => array('option' => '.PPT'),
+        2 => array('option' => '.DOC'),
+        3 => array('option' => '.XLS'),
+        4 => array('option' => '.MDB'),
+        5 => array('option' => '.DAT'));
     $data->usersanswers = array('3', '4', '2', '5', '1', '6');
     $data->optionorder = '5,2,4,1,0,3';
     $data->scenarios = array('Word', 'Excel', 'PowerPoint', 'Access5', 'Publisher', 'Data File', '', '', '', '');
