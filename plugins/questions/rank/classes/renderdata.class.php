@@ -80,7 +80,7 @@ class renderdata extends \questiondata {
     if (!is_null($useranswerid)) {
       $rank_answers = explode(',', $useranswerid);
     } else {
-      $rank_answers = '';
+      $rank_answers = array();
     }
     $total_rank_no = 0;
     $require_na = false;
@@ -89,15 +89,15 @@ class renderdata extends \questiondata {
       if ($question['options'][$i]['correct'] != 0 or $this->papertype == '3') {
         $total_rank_no++;
       }
-      if ($question['options'][$i]['correct'] == 0) $require_na = true;
+      if ($question['options'][$i]['correct'] == 0) {
+        $require_na = true;
+      }
     }
     $tmp_user_answers = 0;
 
-    if ($rank_answers != '') {
-      for ($i=0; $i<count($rank_answers); $i++) {
-        if ($rank_answers[$i] != 'u' and $rank_answers[$i] != 0 and $rank_answers[$i] != 'u') {
-          $tmp_user_answers++;
-        }
+    for ($i=0; $i<count($rank_answers); $i++) {
+      if ($rank_answers[$i] != 'u' and $rank_answers[$i] != 0) {
+        $tmp_user_answers++;
       }
     }
 
