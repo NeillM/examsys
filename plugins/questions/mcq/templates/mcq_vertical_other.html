@@ -10,7 +10,7 @@
             <span {% if p.inact %} class="inact" {% else %} class="act" {% endif %} id="{{data.questionno}}_{{i}}"> {{p.optiontext|raw}}</span></br>
             {% endif %}
             {% if p.displayoptionmedia %}
-                {% include 'paper/optmedia.html' with {'data': p.optionmedia} %}
+                {% include 'paper/media.html' with {'data': p.optionmedia} %}
             {% endif %}
             </td>
         </tr>

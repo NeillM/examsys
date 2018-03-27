@@ -6,7 +6,7 @@
             &nbsp;{{p.optiontext|raw}}
     {% endif %}
     {% if p.displayoptionmedia %}
-        {% include 'paper/optmedia.html' with {'data': p.optionmedia} %}
+        {% include 'paper/media.html' with {'data': p.optionmedia} %}
     {% endif %}
     </div>
 {% endfor %}

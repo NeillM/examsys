@@ -25,7 +25,7 @@
 <li>
     <div>{{m.scenario|raw}}</div>
     {% if m.display %}
-    <div>{% include 'paper/optmedia.html' with {'data': m.media} %}</div><br />
+    <div>{% include 'paper/media.html' with {'data': m.media} %}</div><br />
     {% endif %}
     {% if m.answerno == 1 %}
     <select {% if m.unanswered %} class="unans" {% endif %} name="q{{data.questionno}}_{{loop.index}}" size="1">
