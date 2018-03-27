@@ -2,20 +2,20 @@
     <table cellpadding="2" cellspacing="0" border="0">
         <tr>
             <td align="center" width="40" style="color:{{data.labelcolour}}; font-size:90%">
-{% if data.displaymethod== 'TF_Positive' or data.displaymethod == 'TF_NegativeAbstain' %}
+{% if data.displayTF %}
                 {{lang.true}}
 {% else %}
                 {{lang.yes}}
 {% endif %}
             </td>
             <td width="40" align="center" style="color:{{data.labelcolour}};font-size:90%">
-{% if data.displaymethod== 'TF_Positive' or data.displaymethod == 'TF_NegativeAbstain' %}
+{% if data.displayTF %}
                 {{lang.false}}
 {% else %}
                 {{lang.no}}
 {% endif %}
             </td>
-{% if data.displaymethod== 'YN_NegativeAbstain' or data.displaymethod == 'TF_NegativeAbstain' %}
+{% if data.displayAbstain %}
             <td width="40" align="center" style="color:{{data.labelcolour}}; font-size:90%">
                 {{lang.abstain}}
             </td>

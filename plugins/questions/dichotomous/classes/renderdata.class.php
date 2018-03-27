@@ -28,6 +28,17 @@ namespace plugins\questions\dichotomous;
 class renderdata extends \questiondata {
   use \mpqgetmarks;
   /**
+   * Display true/false options if enabled. Y/N by default.
+   * @var boolean 
+   */
+  var $displayTF;
+  /**
+   * Display Abstain options if enabled.
+   * @var boolean 
+   */
+  var $displayAbstain;
+
+  /**
    * Constructor
    */
   function __construct() {
@@ -83,6 +94,14 @@ class renderdata extends \questiondata {
     $option['abstain'] = false;
     if ($this->displaymethod === 'TF_NegativeAbstain' or $this->displaymethod === 'YN_NegativeAbstain') {
         $option['abstain'] = true;
+        $this->displayAbstain = true;
+    } else {
+      $this->displayAbstain = false;
+    }
+    if ($this->displaymethod === 'TF_Positive' or $this->displaymethod === 'TF_NegativeAbstain') {
+      $this->displayTF = true;
+    } else {
+      $this->displayTF = false;
     }
     $marks = $this->marks;
     $marks += $option['markscorrect'];
