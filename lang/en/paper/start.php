@@ -89,3 +89,4 @@ $string['audiofile'] = 'Audio File';
 $string['datafile'] = 'Data File';
 $string['delete'] = 'Delete';
 $string['deleteimage'] = 'Delete image';
+$string['audioclip'] = 'Audio Clip';
