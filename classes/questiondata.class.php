@@ -56,9 +56,9 @@ abstract class questiondata {
    */
   const IMAGE = 2;
   /**
-   * Media type - movie
+   * Media type - audio
    */
-  const MOVIE = 3;
+  const AUDIO = 3;
   /**
    * Media type - document
    */
@@ -72,9 +72,9 @@ abstract class questiondata {
    */
   const MP3 = 6;
   /**
-   * Media type - windows movie types
+   * Media type - movie
    */
-  const WINMOVIE = 7;
+  const MOVIE = 7;
 
   /**
    * DB connection
@@ -710,7 +710,7 @@ abstract class questiondata {
         $mediaborder = false;
       }
     } elseif (in_array($fn_parts['extension'], array('wav', 'wma', 'mid'))) {
-      $mediatype = self::MOVIE;
+      $mediatype = self::AUDIO;
     } elseif (in_array($fn_parts['extension'], array('doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'pdf'))) {
       $mediatype = self::DOC;
     } elseif ($fn_parts['extension'] == 'flv') {
@@ -726,7 +726,7 @@ abstract class questiondata {
         $mediaedit = true;
       }
     } elseif ($fn_parts['extension'] == 'avi' or $fn_parts['extension'] == 'wmv') {
-      $mediatype = self::WINMOVIE;
+      $mediatype = self::MOVIE;
     }
     if ($imageid > -1 and !$locked) {
       $mediadelete = true;
