@@ -1,3 +1,4 @@
+{# Display default question fields #}
 {% if data.displaydefault %}
         {% if data.displayscenario %}
         {{data.scenario|raw}}<br /><br />
@@ -12,6 +13,7 @@
         {% endif %}
 {% endif %}
 {% include data.questiontemplate %}
+{# If not a survey paper #}
 {% if data.papertype != 3 %}
     {% if data.finalmarks == 0 %}
         </td>

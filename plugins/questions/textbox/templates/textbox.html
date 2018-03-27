@@ -1,8 +1,10 @@
+{# Display plain text editor#}
 {% if data.editor == 'plain' %}
-        {% if data.editormathjax %}
+    {# Add mathjax if enabled #}
+    {% if data.editormathjax %}
 {% include 'mathjaxpreview.html' %}
 <p>{{lang.mathjaxinstructions|raw}}</p>
-        {% endif %}
+    {% endif %}
 <textarea {% if data.editormathjax %} onkeyup="Previewq{{data.questionno}}.Update()" {% endif %} {% if data.unanswered %} class="unans" {% endif %} id="q{{data.questionno}}" name="q{{data.questionno}}" cols="{{data.editorcolumns}}" rows="{{data.editorrows}}">{{data.useranswer}}</textarea>
     {% if data.editormathjax %}
 <p>{{lang.previewmathjax}}</p>
@@ -11,5 +13,5 @@
 <script>Previewq{{data.questionno}}.Init();</script>
     {% endif %}
 {% else %}
-
+{# TODO add tinymce support #}
 {% endif %}

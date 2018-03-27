@@ -1,3 +1,4 @@
+{# Template for drop down display #}
 <blockquote {% if data.unanswered %} class="unans" {% endif %}>
     <div class="option">
         <select {%if data.unanswered %} class="unans" {% endif %} name="q{{data.questionno}}" size="1">

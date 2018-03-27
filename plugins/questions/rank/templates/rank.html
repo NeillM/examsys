@@ -5,6 +5,7 @@
             <td class="option">
                 <select name="{{p.optionno}}" id ="{{p.optionno}}" class="rankselect q"{{data.questionno}}">
                     <option value="u"></option>
+    {# Display each rank option with computed ordinal #}
     {% for idx,selected in p.selected %}
                     <option value="{{idx}}" {% if selected.value %} selected {% endif %}>
                             {% if selected.ordinal == 0 %}
