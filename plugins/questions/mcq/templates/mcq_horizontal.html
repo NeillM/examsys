@@ -11,7 +11,7 @@
     </div>
 {% endfor %}
 {% if data.negativemarking %}
-    <input type="radio" name="q{{data.questionno}}" value="a" {% if data.abstainselected %} checked="checked" {% endif %} /><span style="color:{{data.labelcolour}}">&lt;{{lang.abstain}}&gt;</span>
+    <input type="radio" name="q{{data.questionno}}" value="a" {% if data.abstainselected %} checked="checked" {% endif %} /><span style="color:{{data.labelcolour}}">{{lang.abstain}}</span>
 {% endif %}
 <div>
     <input type="hidden" name="dismiss{{data.questionno}}" id="dismiss{{data.questionno}}" value="{{data.dismiss}}" />

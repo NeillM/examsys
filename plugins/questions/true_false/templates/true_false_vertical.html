@@ -4,6 +4,6 @@
     <input type="radio" name="q{{data.questionno}}" value="f" {% if data.falseselected%} checked="checked" {% endif %} />&nbsp;{{lang.false}}
     <br />
     {% if data.negativemarking %}
-    <input type="radio" name="q{{data.questionno}}" value="a" {% if data.abstainselected %} checked="checked" {% endif %} />&nbsp;<span style="color:{{data.labelcolour}}">&lt;{{lang.abstain}}&gt;</span>
+    <input type="radio" name="q{{data.questionno}}" value="a" {% if data.abstainselected %} checked="checked" {% endif %} />&nbsp;<span style="color:{{data.labelcolour}}">{{lang.abstain}}</span>
     {% endif %}
 </blockquote>

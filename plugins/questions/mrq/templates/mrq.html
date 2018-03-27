@@ -39,7 +39,7 @@
             <input type="checkbox" onclick="MRQabstain({{data.questionno}},{{data.optionnumber}});" name="q{{data.questionno}}_abstain" id="q{{data.questionno}}_abstain" value="y" {% if data.abstainselected %} checked="checked" {% endif %} />
         </td>
         <td>
-            <span style="color:{{data.labelcolour}}">&lt;{{lang.abstain}}&gt;</span>
+            <span style="color:{{data.labelcolour}}">{{lang.abstain}}</span>
         </td>
     </tr>
 {% endif %}
