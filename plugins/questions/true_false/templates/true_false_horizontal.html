@@ -1,3 +1,4 @@
+{# Template for horizontal radio button display #}
 <blockquote style="line-height:175%" {% if data.unanswered %} class="unans" {% endif %}>
     <input type="radio" name="q{{data.questionno}}" value="t" {% if data.trueselected %} checked="checked" {% endif %} />&nbsp;{{lang.true}}
     &nbsp;&nbsp;&nbsp;
