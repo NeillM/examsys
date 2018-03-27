@@ -32,11 +32,6 @@
     </tr>
     <tr {% if data.unanswered %} class="unans" {% endif %}>
         <td class="q_no">{{data.assignednumber}}.&nbsp;</td><td>{{data.leadin|raw}}</td>
-{% if data.displayna %}
-        <td style="text-align:center; width:40px; vertical-align:top">
-            <input type="radio" name="q{{data.id}}" value="n/a" {% if data.na %}  checked="checked" {% endif %}/>
-        </td>
-{% endif %}
 {% for i,selected in data.scaleopt %}
         <td class="likert_button">
             <input type="radio" name="q{{data.id}}" value="{{i}}" {% if selected %} checked=\"checked\" {% endif %}/>
