@@ -99,7 +99,6 @@ class renderdata extends \questiondata {
     $this->scale_size = substr_count($this->displaymethod,'|');
     if ($likert_display[$this->scale_size] == 'true') {
       $this->displayna = true;
-      $this->scale_size++;
     }
     if ($this->notes != '') {
       $this->displaylikertnotes = true;
@@ -137,14 +136,16 @@ class renderdata extends \questiondata {
     }
     $this->id = $this->questionno . "_" . $part_id;
     $scale = array();
-    // If n/a enabled set if selected.
-    if ($this->displayna and $useranswerid == 'n/a') {
-      $scale['n/a'] = true;
-    } else {
-      $scale['n/a'] = false;
+    if ($this->displayna) {
+      // If n/a enabled set if selected.
+      if ($useranswerid == 'n/a') {
+        $scale['n/a'] = true;
+      } else {
+        $scale['n/a'] = false;
+      }
     }
     // Loop through scale and set if selected.
-    for ($i = 1; $i < $this->scale_size; $i++) {
+    for ($i = 1; $i <= $this->scale_size; $i++) {
       if ($i == $useranswerid) {
         $scale[$i] = true;
       } else {

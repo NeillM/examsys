@@ -40,11 +40,11 @@ class likerttest extends unittest{
     $this->assertTrue($data->displaymedia);
   }
 
-    /**
+  /**
     * Test question setter
     * @group question
     */
-  public function test_set_question() {
+  public function test_set_question_na() {
     $data = questiondata::get_datastore('likert');
     $data->displaymethod =  '0|1|2|3|4|true';
     $data->set_question(0, '', '');
@@ -52,6 +52,14 @@ class likerttest extends unittest{
     $this->assertFalse($data->displaylikertscenario);
     $this->assertTrue($data->displayna);
     $this->assertEquals(array(0, 1, 2, 3, 4), $data->scale);
+  }
+
+   /**
+    * Test question setter
+    * @group question
+    */
+  public function test_set_question_nona() {
+    $data = questiondata::get_datastore('likert');
     $data->displaymethod = '0|1|2|3|4|false';
     $data->notes = 'note';
     $data->scenario = 'scenario';
@@ -62,28 +70,49 @@ class likerttest extends unittest{
     $this->assertTrue($data->displaylikertscenario);
     $this->assertEquals(6, $data->likertnotescolspan);
     $this->assertEquals(7, $data->likertscenariocolspan);
-    
-    }
+  }
 
   /**
-    * Test question option setter
+    * Test question option setter - na not selected
     * @group question
     */
   public function test_set_option_answer() {
     $data = questiondata::get_datastore('likert');
     $data->displaymethod =  '0|1|2|3|4|true';
+    $data->scale_size = substr_count($data->displaymethod,'|');
     $data->questionno =  '1';
+    $data->displayna = true;
     $data->set_option_answer(0, '4', '', 1);
     $this->assertFalse($data->unanswered);
-    $this->assertFalse($data->na);
     $this->assertEquals('1_0', $data->id);
-    $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => true, 5 => false), $data->scaleopt);
+    $this->assertEquals(array('n/a' => false, 1 => false, 2 => false, 3 => false, 4 => true, 5 => false), $data->scaleopt);
+  }
+
+  /**
+    * Test question option setter - na selected
+    * @group question
+    */
+  public function test_set_option_answer_naselected() {
+    $data = questiondata::get_datastore('likert');
+    $data->displaymethod =  '0|1|2|3|4|true';
+    $data->scale_size = substr_count($data->displaymethod,'|');
+    $data->questionno =  '1';
+    $data->displayna = true;
     $data->set_option_answer(0, 'n/a', '', 1);
-    $this->assertTrue($data->na);
-    $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => false, 5 => false), $data->scaleopt);
+    $this->assertEquals(array('n/a' => true, 1 => false, 2 => false, 3 => false, 4 => false, 5 => false), $data->scaleopt);
+  }
+
+  /**
+    * Test question option setter - unanswered
+    * @group question
+    */
+  public function test_set_option_answer_unanswered() {
+    $data = questiondata::get_datastore('likert');
+    $data->questionno =  '1';
+    $data->displayna = false;
     $data->displaymethod = '0|1|2|3|4|false';
+    $data->scale_size = substr_count($data->displaymethod,'|');
     $data->set_option_answer(0, 'u', '', 1);
-    $this->assertFalse($data->na);
     $this->assertTrue($data->unanswered);
     $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => false, 5 => false), $data->scaleopt);
   }
