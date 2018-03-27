@@ -55,11 +55,9 @@ class mcqtest extends unittest{
     $data = questiondata::get_datastore('mcq');
     $data->displaymethod = 'vertical_other';
     $data->set_question(1, '0', '');
-    $this->assertEquals('vertical', $data->displaymethod);
     $this->assertTrue($data->unanswered);
     $data->displaymethod = 'dropdown';
     $data->set_question(1, '4', '');
-    $this->assertEquals('dropdown', $data->displaymethod);
     $this->assertFalse($data->unanswered);
   }
 
@@ -122,11 +120,10 @@ class mcqtest extends unittest{
     $this->assertTrue($data->abstainselected);
     $this->assertEquals('0000', $data->dismiss);
     // Test other.
-    $data->displaymethod =  'vertical';
+    $data->displaymethod =  'vertical_other';
     $data->papertype = '3';
     $useranswerid = 'other:test';
     $data->process_options(1, $useranswerid, '', 1);
-    $this->assertEquals('other', $data->displaymethod);
     $this->assertTrue($data->otherselected);
     $this->assertEquals('test', $data->other);
   }

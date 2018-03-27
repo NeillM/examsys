@@ -15,15 +15,16 @@
             </td>
         </tr>
 {% endfor %}
+{% if data.papertype == 3 %}
         <tr>
             <td>
                 <input type="radio" name="q{{data.questionno}}" value="other" {% if data.otherselected %} checked="checked" {% endif %}/>
             </td>
-
             <td>{{lang.other}} 
                 <input type="text" onkeypress="document.questions.q{{data.questionno}}[{{data.partid}}].checked=true" name="q{{data.questionno}}_other" {% if data.otherselected %} value="{{data.other}}" {% endif %} />
             </td>
         </tr>
+{% endif %}
 {% if data.negativemarking %}
         <tr>
             <td>

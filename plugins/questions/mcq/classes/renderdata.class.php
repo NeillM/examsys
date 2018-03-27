@@ -84,10 +84,6 @@ class renderdata extends \questiondata {
     } else {
       $this->unanswered = false;
     }
-    // Set to vertical to simpify template logic.
-    if ($this->displaymethod === 'vertical_other') {
-      $this->displaymethod = 'vertical';
-    }
   }
 
   /**
@@ -112,7 +108,7 @@ class renderdata extends \questiondata {
     if ($option['omedia'] != '') {
       $option['displayoptionmedia'] = true;
     }
-    if ($this->displaymethod === 'vertical') {
+    if ($this->displaymethod === 'vertical' or $this->displaymethod === 'vertical_other') {
       if (substr($user_dismissid, $option['tmppartid']-1, 1) == '1') {
         $option['inact'] = true;
       } else {
@@ -142,9 +138,9 @@ class renderdata extends \questiondata {
     } else {
       $this->negativemarking = false;
     }
-    if ($this->displaymethod === 'vertical') {
-      if($this->papertype == 3) {
-        $this->displaymethod = 'other';
+    // other textbox not currently supported by non survey papers.
+    if ($this->displaymethod === 'vertical_other') {
+      if ($this->papertype == 3) {
         if (substr($useranswerid,0,5) === 'other') {
           $this->otherselected = true;
           $this->other = substr($useranswerid,6);
