@@ -1042,9 +1042,7 @@ class EnhancedCalc extends Question implements questionInterface {
 		global $string;
 
 		$configObject = Config::get_instance();
-		$render = new render($configObject, dirname(__DIR__) . DIRECTORY_SEPARATOR
-			. 'enhancedcalc' . DIRECTORY_SEPARATOR
-			. 'templates');
+		$render = new render($configObject, __DIR__ . DIRECTORY_SEPARATOR . 'templates');
 
 		// Display question on paper
 		$screen_pre_submitted = null;
