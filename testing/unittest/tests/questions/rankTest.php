@@ -48,7 +48,7 @@ class ranktest extends unittest{
   }
 
   /**
-    * Test question option setter
+    * Test question option setter - not answered
     * @group question
     */
   public function test_set_option_answer() {
@@ -75,6 +75,25 @@ class ranktest extends unittest{
     $this->assertFalse($option['selected'][2]);
     $this->assertTrue($option['inact']);
     $this->assertEquals(1, $data->marks);
+  }
+
+  /**
+    * Test question option setter - partially answered
+    * @group question
+    */
+  public function test_set_option_answer_partial() {
+    $data = questiondata::get_datastore('rank');
+    $data->papertype = '0'; 
+    $data->scoremethod = 'Mark per Option';
+    $data->optionnumber = 3;
+    $data->marks = 0;
+    $question['options'][0]['correct'] = 1;
+    $question['options'][1]['correct'] = 2;
+    $question['options'][2]['correct'] = 0;
+    $data->question = $question;
+    $option['tmppartid'] = 1;
+    $option['correct'] = 1;
+    $option['markscorrect'] = 1;
     $option['tmppartid'] = 1;
     $data->set_opt(1, $option);
     $useranswerid = '1,u,u';

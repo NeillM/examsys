@@ -39,6 +39,7 @@ class renderdata extends \questiondata {
   function __construct() {
     parent::__construct();
     $this->questiontype = 'rank';
+    $this->unanswered = false;
   }
 
   /**
@@ -110,9 +111,8 @@ class renderdata extends \questiondata {
     if (isset($rank_answers[$option['tmppartid'] - 1]) and $rank_answers[$option['tmppartid'] - 1] == 'u' and $screen_pre_submitted == 1 and $tmp_user_answers < $answers_needed) {
       $option['unans'] = true;
       $this->unanswered = true;
-    } else {
-      $this->unanswered = false;
     }
+
     if ($require_na) {
       if (isset($rank_answers[$option['tmppartid'] - 1]) and $rank_answers[$option['tmppartid'] - 1] == '0') {
         $option['selected'][0] = true;
