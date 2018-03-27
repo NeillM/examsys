@@ -97,24 +97,16 @@ class renderdata extends \questiondata {
     } else {
       $this->unanswered = false;
     }
-    if ($this->displaymethod == 'dropdown') {
-      if ($useranswerid == 't') {
-        $this->trueselected = true;
-        $this->falseselected = false;
-      }
-      if ($useranswerid == 'f') {
-        $this->falseselected = true;
-        $this->trueselected = false;
-      }
-    } else {
-      if ($useranswerid == 't') {
-        $this->trueselected = true;
-        $this->falseselected = false;
-      }
-      if ($useranswerid == 'f') {
-        $this->falseselected = true;
-        $this->trueselected = false;
-      }
+
+    if ($useranswerid == 't') {
+      $this->trueselected = true;
+      $this->falseselected = false;
+    } elseif ($useranswerid == 'f') {
+      $this->falseselected = true;
+      $this->trueselected = false;
+    }
+
+    if ($this->displaymethod != 'dropdown') {
       if ($this->negativemarking) {
         if ($useranswerid == 'a') {
           $this->abstainselected = true;
