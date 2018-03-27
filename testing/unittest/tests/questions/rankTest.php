@@ -70,9 +70,9 @@ class ranktest extends unittest{
     $option = $data->get_opt(1);
     $this->assertTrue($data->unanswered);
     $this->assertTrue($option['unans']);
-    $this->assertFalse($option['selected'][0]);
-    $this->assertFalse($option['selected'][1]);
-    $this->assertFalse($option['selected'][2]);
+    $this->assertFalse($option['selected'][0]['value']);
+    $this->assertFalse($option['selected'][1]['value']);
+    $this->assertFalse($option['selected'][2]['value']);
     $this->assertTrue($option['inact']);
     $this->assertEquals(1, $data->marks);
   }
@@ -101,9 +101,9 @@ class ranktest extends unittest{
     $this->assertFalse($data->unanswered);
     $option = $data->get_opt(1);
     $this->assertFalse($option['unans']);
-    $this->assertFalse($option['selected'][0]);
-    $this->assertTrue($option['selected'][1]);
-    $this->assertFalse($option['selected'][2]);
+    $this->assertFalse($option['selected'][0]['value']);
+    $this->assertTrue($option['selected'][1]['value']);
+    $this->assertFalse($option['selected'][2]['value']);
     $this->assertFalse($option['inact']);
   }
 

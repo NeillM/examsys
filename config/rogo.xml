@@ -13,6 +13,7 @@
             <extension>xmlrpc</extension>
             <extension>fileinfo</extension>
             <extension>zlib</extension>
+            <extension>intl</extension>
         </extensions>
     </php>
     <database>

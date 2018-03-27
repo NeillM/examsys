@@ -115,17 +115,19 @@ class renderdata extends \questiondata {
 
     if ($require_na) {
       if (isset($rank_answers[$option['tmppartid'] - 1]) and $rank_answers[$option['tmppartid'] - 1] == '0') {
-        $option['selected'][0] = true;
+        $option['selected'][0] = $option['selected'][$i] = array('ordinal' => $i, 'value' => false);
       } else {
-        $option['selected'][0] = false;
+        $option['selected'][0] = $option['selected'][$i] = array('ordinal' => $i, 'value' => false);
       }
     }
     $option['totalrank'] = $total_rank_no;
-    for ($i=1; $i<=$total_rank_no; $i++) {
+    $nf = new \NumberFormatter($this->language, \NumberFormatter::ORDINAL);
+    for ($i = 1; $i <= $total_rank_no; $i++) {
+      $ordinal = $nf->format($i);
       if (isset($rank_answers[$option['tmppartid'] - 1]) and $i == $rank_answers[$option['tmppartid'] - 1]) {
-        $option['selected'][$i]= true;
+        $option['selected'][$i]= array('ordinal' => $ordinal, 'value' => true);
       } else {
-        $option['selected'][$i] = false;
+        $option['selected'][$i]= array('ordinal' => $ordinal, 'value' => false);
       }
     }
     if (substr($user_dismissid, $option['tmppartid']-1, 1) == '1') {

@@ -5,24 +5,12 @@
             <td class="option">
                 <select name="{{p.optionno}}" id ="{{p.optionno}}" class="rankselect q"{{data.questionno}}">
                     <option value="u"></option>
-    {% for idx,value in p.selected %}
-                    <option value="{{idx}}" {% if value %} selected {% endif %}>
-                            {% if idx == 0 %}
+    {% for idx,selected in p.selected %}
+                    <option value="{{idx}}" {% if selected.value %} selected {% endif %}>
+                            {% if selected.ordinal == 0 %}
                                 {{lang.na}} 
                             {% else %}
-                                {% if data.language == 'en' %}
-                                    {% if idx == 1 %}
-                                        {{idx}}st
-                                    {% elseif idx == 2 %}
-                                        {{idx}}nd
-                                    {% elseif idx == 3 %}
-                                        {{idx}}rd
-                                    {% else %}
-                                        {{idx}}th
-                                    {% endif %}
-                                {% else %}
-                                        {{idx}}
-                                {% endif %}
+                                {{selected.ordinal}}
                             {% endif %}
                     </option>
     {% endfor %}
