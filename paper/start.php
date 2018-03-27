@@ -547,6 +547,8 @@ $render->render($headerdata, $lang, 'header.html');
 
   }
 
+$footer_data['copyright'] = sprintf ($string['papercopyright'], date("Y"), $configObject->get_setting('core', 'misc_company'));
+  
 $render->render($footer_data, $string, 'paper/footer.html');
 $render->render(array(), array(), 'paper/overlays.html');
 // Paper dataset.

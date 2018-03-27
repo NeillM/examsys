@@ -81,4 +81,5 @@ $string['answerrequired_confirm'] = 'Do you still wish to pass this question or 
 $string['go_back'] = 'Go back';
 $string['pass'] = 'Pass';
 $string['entervalidcalcanswer'] = 'Invalid: Answer should be numerical (with a unit if required), or left blank if you are skipping the question.';
+$string['papercopyright'] = '© %s, %s';
 ?>
