@@ -43,7 +43,7 @@ class scttest extends unittest{
     $this->assertEquals('hyp', $data->scthyp);
     $this->assertEquals('info', $data->sctinfo);
     $this->assertEquals($strings['hypothesis'], $data->scttitle);
-    $lowertitle = $strings['thenthis'] . " " . mb_strtolower($strings['hypothesis'], 'UTF-8') . " " . $strings['is'] . ":";
+    $lowertitle = sprintf($strings['scttitle'], mb_strtolower($strings['hypothesis'], 'UTF-8'));
     $this->assertEquals($lowertitle, $data->scttitlelower);
     $this->assertTrue($data->unanswered);
     $data->notes = 'test';
