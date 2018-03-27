@@ -92,6 +92,7 @@ class renderdata extends \questiondata {
     } else {
       $this->unanswered = false;
     }
+    // Adjust the height of the hotspot canvas based on the number of options available.
     $hotspot_no = substr_count($option['correct'],'|') + 1;
     $tmp_height = $this->mediaheight + 30;
     if ($tmp_height < (($hotspot_no * 36) + 25)) {
