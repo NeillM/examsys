@@ -82,4 +82,10 @@ $string['go_back'] = 'Go back';
 $string['pass'] = 'Pass';
 $string['entervalidcalcanswer'] = 'Invalid: Answer should be numerical (with a unit if required), or left blank if you are skipping the question.';
 $string['papercopyright'] = '© %s, %s';
-?>
+// Media.
+$string['iframes'] = 'Your browser does not support iframes!';
+$string['image'] = 'Image';
+$string['audiofile'] = 'Audio File';
+$string['datafile'] = 'Data File';
+$string['delete'] = 'Delete';
+$string['deleteimage'] = 'Delete image';
