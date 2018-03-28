@@ -89,7 +89,7 @@ lang.significant_figures - significant figues
     {# answered #}
     {% elseif data.useranswered == 1 %}
     <input type="text" style="text-align:right" id="q{{data.numonscreen}}" name="qid[{{data.id}}][uans]" data-screen="{{data.screen}}" size="10" value="{{data.answer}}" class="ecalc-answer" />
-    # unanswered #}
+    {# unanswered #}
     {% elseif data.useranswered == 2 %}
     <input type="text" style="text-align:right" id="q{{data.numonscreen}}" name="qid[{{data.id}}][uans]" data-screen="{{data.screen}}" size="10" value="" class="ecalc-answer"/>
     {% endif %}
