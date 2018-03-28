@@ -103,7 +103,7 @@ lang.screen
     {# Display additional controls for bidirectional papers #}
     {% if data.bidirectional %}
         {% if data.previous %}
-                        <input id="previous" type="button" value="&lt; {{lang.screen}} {{data.previousscreen}} " />
+                        <input id="previous" type="button" value="{{data.previousbutton}}" />
         {% endif %}
         {% if data.jumpscreen %}
                         <select name="jumpscreen" id="jumpscreen">
@@ -116,7 +116,7 @@ lang.screen
     {% if data.endscreen %}
                         <input id="finish" type="button" value="{{lang.finish}}" />
     {% else %}
-                        <input id="next" type="button" value="{{lang.screen}} {{data.current_screen}} &gt;" />
+                        <input id="next" type="button" value="{{data.nextbutton}}" />
     {% endif %}
                     </td>
                 </tr>

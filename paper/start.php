@@ -477,6 +477,7 @@ $render->render($headerdata, $lang, 'header.html');
   $current_screen++;
 
   $footer_data['current_screen'] = $current_screen;
+  $footer_data['nextbutton'] = sprintf($string['nextscreen'], $footer_data['current_screen']);
   $footer_data['page_start'] = date("YmdHis", time());
   $footer_data['old_screen'] = $current_screen - 1;
   $footer_data['previous_duration'] = $previous_duration;
@@ -524,6 +525,7 @@ $render->render($headerdata, $lang, 'header.html');
       if ($current_screen > 2) {
         $footer_data['previous'] = true;
         $footer_data['previousscreen'] = $current_screen - 2;
+        $footer_data['previousbutton'] = sprintf($string['previousscreen'], $footer_data['previousscreen']);
       } else {
         $footer_data['previous'] = false;
       }
@@ -548,7 +550,7 @@ $render->render($headerdata, $lang, 'header.html');
   }
 
 $footer_data['copyright'] = sprintf ($string['papercopyright'], date("Y"), $configObject->get_setting('core', 'misc_company'));
-  
+
 $render->render($footer_data, $string, 'paper/footer.html');
 $render->render(array(), $string, 'paper/overlays.html');
 // Paper dataset.

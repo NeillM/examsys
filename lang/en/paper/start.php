@@ -95,3 +95,5 @@ $string['cancel'] = 'Cancel';
 $string['ok'] = 'OK';
 $string['goback'] = 'Go back';
 $string['pass'] = 'Pass';
+$string['previousscreen'] = '< Screen %s'; 
+$string['nextscreen'] = 'Screen %s >'; 
