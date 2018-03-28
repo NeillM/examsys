@@ -115,9 +115,9 @@ class renderdata extends \questiondata {
 
     if ($require_na) {
       if (isset($rank_answers[$option['tmppartid'] - 1]) and $rank_answers[$option['tmppartid'] - 1] == '0') {
-        $option['selected'][0] = $option['selected'][$i] = array('ordinal' => $i, 'value' => false);
+        $option['selected'][0] = $option['selected'][0] = array('ordinal' => 0, 'value' => false);
       } else {
-        $option['selected'][0] = $option['selected'][$i] = array('ordinal' => $i, 'value' => false);
+        $option['selected'][0] = $option['selected'][0] = array('ordinal' => 0, 'value' => false);
       }
     }
     $option['totalrank'] = $total_rank_no;
