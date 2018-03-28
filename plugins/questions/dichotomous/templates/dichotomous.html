@@ -67,7 +67,7 @@ data.partid - the question part id
             </td>
     {% if p.abstain %}
             <td align="center">
-                <input type="radio" name="{{p.optionno}}" value="a" {% if p.ususeranswer == 'a' %} checked="checked" {% endif %}/>
+                <input type="radio" name="{{p.optionno}}" value="a" {% if p.useranswer == 'a' %} checked="checked" {% endif %}/>
             </td>
     {% endif %}
             <td>
