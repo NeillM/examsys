@@ -1,3 +1,52 @@
+{#This file is part of Rogō
+
+ Rogō is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Rogō is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the calculation question type.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2018 onwards The University of Nottingham
+
+Required variables:
+
+data.displayscenario - flag to indicate if a scenario can be displayed
+data.scenario - the questions scenario
+data.displaymedia - flag to indicate if question media can be displayed
+data.leadin - the questions leadin
+data.error - flag to indicate if an error has occurred in calculating answer
+data.id - question id
+data.screen - screen the question is displayed on
+data.showunits - flag to indicate if the display units drop down should be displayed
+data.numunitoptions - the number of display units available
+data.options - the options available
+options.key - option value
+options.selected - flag to indicate if option was previously selected
+data.option - single option available
+data.feedbackprecision - the type precision of selected dp/sf
+data.feedbackprecisionvalue - the value of the precision
+data.useranswered - flag to indicate if the question has been previously answered
+data.failedanswer - warning displayed if this is a child of a linked question and the parent has not been answered
+data.answer - the users previous answer
+data.numonscreen - the question number
+
+Required localised text -
+lang.answer_to - answer to
+lang.decimal_places - decimal places
+lang.significant_figures - significant figues
+#}
 {% if data.displayscenario %}
 <p>{{data.scenario|raw}}</p>
 {% endif %}

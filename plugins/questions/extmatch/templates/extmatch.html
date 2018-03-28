@@ -1,3 +1,46 @@
+{#This file is part of Rogō
+
+ Rogō is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Rogō is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the exact match question type.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2018 onwards The University of Nottingham
+
+Required variables:
+
+data.extmatchdisplaymedia - flag to indicate if question media is available
+data.matchoptions - the options
+data.split - where to split the options table
+data.matchstem - the stems
+matchstem.scenario - the stem scenario
+matchstem.display  - flag to indicate if stem media is available
+matchstem.media  - the stem media
+matchstem.answerno - stem number of answers
+matchstem.matchingoptions - the stem options
+matchstem.subanswers - multi answers
+matchstem.listsize - size of multi option list
+matchstem.value - value of stem option
+matchstem.selected - flag to indicate if option was selected previously
+data.questionno - the question number
+data.matchoptionsno - number of options
+
+Required localised text -
+lang.holddownctrlkey - user instructions on how to multi select options.
+#}
 {% if data.extmatchdisplaymedia %}
 <p align="center">
     {% include 'paper/media.html' %}

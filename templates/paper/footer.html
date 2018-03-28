@@ -1,4 +1,50 @@
-{# Display the paper footer information #}
+{#This file is part of Rogō
+
+ Rogō is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Rogō is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the paper footer display.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2018 onwards The University of Nottingham
+
+Required variables - 
+data.current_screen - the current screen
+data.page_start - timestamp when screen was first viewed
+data.old_screen - the last screen
+data.previous_duration - duration screen was viewed previously
+data.is_enhancedcalc - is there a calculation question on screen
+data.refpane - is there a reference panel
+data.previewmode - are we in question preview mode
+data.msg - a call out mesage
+data.adminview - does the user have admin rights
+data.fire - fire action flag
+data.copyright - copyright notice
+data.previousscreen - previous screen number
+data.bidirectional - is this paper in bidirectional mode
+data.previous - is there a previous screen
+data.jumpscreen - can we jump to another screen
+data.jumpscreenoptions - list of possible screen to jump to
+data.endscreen - is this the last screen
+
+Required localised language strings -
+lang.savefailed
+lang.tryagain
+lang.finish
+lang.screen
+#}
             </table>
         </td>
     </tr>
