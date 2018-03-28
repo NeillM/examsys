@@ -49,7 +49,7 @@ lang.other - other
 {% for i,p in data.options %}
         <tr>
             <td>
-                <input type="radio" name="q{{data.questionno}}" value="{{i}}" {% if p.selected %} checked="checked" {% endif %}/>
+                <input type="radio" name="q{{data.questionno}}" value="{{p.tmppartid}}" {% if p.selected %} checked="checked" {% endif %}/>
             </td>
             <td>
             {% if p.optiontextdisplay %}

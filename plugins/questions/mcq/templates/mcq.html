@@ -34,7 +34,7 @@ data.dismiss - record of which options have been dismissed by the user
         <select {%if data.unanswered %} class="unans" {% endif %} name="q{{data.questionno}}" size="1">
             <option value=""></option>
 {% for i,p in data.options %}
-            <option value="{{i}}" {% if p.selected %} selected {% endif %}>{{p.optiontext|raw}}</option>
+            <option value="{{p.tmppartid}}" {% if p.selected %} selected {% endif %}>{{p.optiontext|raw}}</option>
 {% endfor %}
         </select>
     </div>
