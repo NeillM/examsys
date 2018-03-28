@@ -61,7 +61,7 @@ class scttest extends unittest{
   public function test_set_option_answer() {
     $data = questiondata::get_datastore('sct');
     $option['optiontext'] = '';
-    $option['tmppartid'] = 1;
+    $option['position'] = 1;
     $option['correct'] = 1;
     $option['markscorrect'] = 1;
     $data->set_opt(1, $option);
@@ -72,7 +72,7 @@ class scttest extends unittest{
     $this->assertTrue($option['inact']);
     $this->assertFalse($option['optiontextdisplay']);
     $option['optiontext'] = 'meh';
-    $option['tmppartid'] = 3;
+    $option['position'] = 3;
     $option['correct'] = 1;
     $option['markscorrect'] = 1;
     $data->set_opt(2, $option);

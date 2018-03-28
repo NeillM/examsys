@@ -145,7 +145,7 @@ class questiondatatest extends unittestdatabase{
         'markscorrect' => 2,
         'marksincorrect' => -1,
         'optionno' => 'q1_1',
-        'tmppartid' => 1,
+        'position' => 1,
         'optionmedia' => array(
             'mediaid' => -1,
             'mediafile' => '',
@@ -170,7 +170,7 @@ class questiondatatest extends unittestdatabase{
         'markscorrect' => 2,
         'marksincorrect' => -1,
         'optionno' => 'q1_2',
-        'tmppartid' => 2,
+        'position' => 2,
         'optionmedia' => array(
             'mediaid' => -1,
             'mediafile' => '1517409282.jpg',
@@ -195,7 +195,7 @@ class questiondatatest extends unittestdatabase{
         'markscorrect' => 2,
         'marksincorrect' => -1,
         'optionno' => 'q1_3',
-        'tmppartid' => 3,
+        'position' => 3,
         'optionmedia' => array(
             'mediaid' => -1,
             'mediafile' => '1517411342.png',
@@ -220,7 +220,7 @@ class questiondatatest extends unittestdatabase{
         'markscorrect' => 2,
         'marksincorrect' => -1,
         'optionno' => 'q1_4',
-        'tmppartid' => 4,
+        'position' => 4,
         'optionmedia' => array(
             'mediaid' => -1,
             'mediafile' => '',

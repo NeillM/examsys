@@ -652,7 +652,7 @@ abstract class questiondata {
           'marksincorrect' => $display_option['marks_incorrect'],
           'correct' => $display_option['correct'],
           'optionno' => 'q' . $this->questionno . '_' . $tmp_part_id,
-          'tmppartid' => $tmp_part_id
+          'position' => $tmp_part_id
       ));
       $this->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '', -1, false, $part_id);
 

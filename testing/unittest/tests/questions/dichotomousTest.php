@@ -54,7 +54,7 @@ class dichotomoustest extends unittest{
   public function test_set_option_answer() {
     $data = questiondata::get_datastore('dichotomous');
     $option['markscorrect'] = 1;
-    $option['tmppartid'] = 1;
+    $option['position'] = 1;
     $option['omedia'] = '';
     $data->set_opt(0, $option);
     $data->displaymethod = 'TF_Positive';

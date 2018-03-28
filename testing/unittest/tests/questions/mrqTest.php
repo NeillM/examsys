@@ -73,7 +73,7 @@ class mrqtest extends unittest{
     */
   public function test_set_option_answer() {
     $data = questiondata::get_datastore('mrq');
-    $option['tmppartid'] = 1;
+    $option['position'] = 1;
     $option['optiontext'] = '';
     $option['omedia'] = '';
     $option['correct'] = 'n';
@@ -103,7 +103,7 @@ class mrqtest extends unittest{
     $useranswerid = 'nnnyn';
     $data->optionnumber = 5;
     $option['marksincorrect'] = 0;
-    $option['tmppartid'] = 4;
+    $option['position'] = 4;
     $option['correct'] = 'y';
     $data->set_opt(4, $option);
     $data->displaymethod = 'other';

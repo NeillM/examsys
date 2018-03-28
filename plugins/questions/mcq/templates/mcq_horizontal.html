@@ -30,6 +30,7 @@ options.optiontextdisplay - flag to indicate if there is option text to display
 options.displayoptionmedia - flag to indicate if there is option media to display
 options.optionmedia - the option media
 options.optiontext - the option text
+options.position - option position
 data.negativemarking - flag to indicate if negative marking is enabled
 data.abstainselected - flag to indicate if abstain option has previously been selected
 data.labelcolour - colour of label, controlled by user accessibility settings.
@@ -41,7 +42,7 @@ lang.abstain - abstain
 <blockquote {% if data.unanswered %} class="unans" {% endif %}>
 {% for i,p in data.options %}
     <div style="float:left; margin-right:15px; margin-bottom:15px">
-        <input type="radio" name="q{{data.questionno}}" value="{{p.tmppartid}}" {% if p.selected %} checked="checked" {% endif %} />
+        <input type="radio" name="q{{data.questionno}}" value="{{p.position}}" {% if p.selected %} checked="checked" {% endif %} />
     {% if p.optiontextdisplay %}
             &nbsp;{{p.optiontext|raw}}
     {% endif %}

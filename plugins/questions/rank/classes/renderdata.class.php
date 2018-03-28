@@ -108,13 +108,13 @@ class renderdata extends \questiondata {
       $answers_needed = $total_rank_no;
     }
     $option['unans'] = false;
-    if (isset($rank_answers[$option['tmppartid'] - 1]) and $rank_answers[$option['tmppartid'] - 1] == 'u' and $screen_pre_submitted == 1 and $tmp_user_answers < $answers_needed) {
+    if (isset($rank_answers[$option['position'] - 1]) and $rank_answers[$option['position'] - 1] == 'u' and $screen_pre_submitted == 1 and $tmp_user_answers < $answers_needed) {
       $option['unans'] = true;
       $this->unanswered = true;
     }
 
     if ($require_na) {
-      if (isset($rank_answers[$option['tmppartid'] - 1]) and $rank_answers[$option['tmppartid'] - 1] == '0') {
+      if (isset($rank_answers[$option['position'] - 1]) and $rank_answers[$option['position'] - 1] == '0') {
         $option['selected'][0] = $option['selected'][0] = array('ordinal' => 0, 'value' => true);
       } else {
         $option['selected'][0] = $option['selected'][0] = array('ordinal' => 0, 'value' => false);
@@ -124,13 +124,13 @@ class renderdata extends \questiondata {
     $nf = new \NumberFormatter($this->language, \NumberFormatter::ORDINAL);
     for ($i = 1; $i <= $total_rank_no; $i++) {
       $ordinal = $nf->format($i);
-      if (isset($rank_answers[$option['tmppartid'] - 1]) and $i == $rank_answers[$option['tmppartid'] - 1]) {
+      if (isset($rank_answers[$option['position'] - 1]) and $i == $rank_answers[$option['position'] - 1]) {
         $option['selected'][$i]= array('ordinal' => $ordinal, 'value' => true);
       } else {
         $option['selected'][$i]= array('ordinal' => $ordinal, 'value' => false);
       }
     }
-    if (substr($user_dismissid, $option['tmppartid']-1, 1) == '1') {
+    if (substr($user_dismissid, $option['position']-1, 1) == '1') {
       $option['inact'] = true;
     } else {
       $option['inact'] = false;

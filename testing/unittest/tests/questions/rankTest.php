@@ -61,7 +61,7 @@ class ranktest extends unittest{
     $question['options'][1]['correct'] = 2;
     $question['options'][2]['correct'] = 0;
     $data->question = $question;
-    $option['tmppartid'] = 1;
+    $option['position'] = 1;
     $option['correct'] = 1;
     $option['markscorrect'] = 1;
     $data->set_opt(1, $option);
@@ -91,10 +91,10 @@ class ranktest extends unittest{
     $question['options'][1]['correct'] = 2;
     $question['options'][2]['correct'] = 0;
     $data->question = $question;
-    $option['tmppartid'] = 1;
+    $option['position'] = 1;
     $option['correct'] = 1;
     $option['markscorrect'] = 1;
-    $option['tmppartid'] = 1;
+    $option['position'] = 1;
     $data->set_opt(1, $option);
     $useranswerid = '1,u,u';
     $data->set_option_answer(1, $useranswerid, '000', 1);

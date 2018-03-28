@@ -128,7 +128,7 @@ class renderdata extends \questiondata {
    */
   public function set_option_answer($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    if (substr($useranswerid, $option['tmppartid']-1, 1) === 'y') {
+    if (substr($useranswerid, $option['position']-1, 1) === 'y') {
       $option['selected'] = true;
     } else {
       $option['selected'] = false;

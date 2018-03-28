@@ -67,7 +67,7 @@ class mcqtest extends unittest{
     */
   public function test_set_option_answer() {
     $data = questiondata::get_datastore('mcq');
-    $option['tmppartid'] = 4;
+    $option['position'] = 4;
     $option['optiontext'] = '';
     $option['omedia'] = '';
     $option['correct'] = '1';
@@ -82,7 +82,7 @@ class mcqtest extends unittest{
     $this->assertFalse($option['inact']);
     $this->assertTrue($option['selected']);
     $this->assertEquals(2, $data->marks);
-    $option['tmppartid'] = 1;
+    $option['position'] = 1;
     $data->set_opt(1, $option);
     $data->set_option_answer(1, '2', '1000', 1);
     $option = $data->get_opt(1);
