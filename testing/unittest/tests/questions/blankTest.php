@@ -75,6 +75,66 @@ class blanktest extends unittest{
   }
 
   /**
+    * Test question option setter - with size element
+    * @group question
+    */
+  public function test_set_option_answer_textbox_size() {
+    $data = questiondata::get_datastore('blank');
+    $option['optiontext'] = '<div>London is the capital of [blank|size="100"|]England,Scotland,Wales,Northern Ireland[/blank] and is in the [blank]United Kingdom,United States of America[/blank]</div>';
+    $option['markscorrect'] = 1;
+    $data->set_opt(0, $option);
+    $data->displaymethod = 'textboxes';
+    $data->scoremethod = 'Mark per Option';
+    $data->marks = 0;
+    $useranswerid = '["Wales","u"]';
+    $data->set_option_answer(0, $useranswerid, '', 1);
+    $blankoptions[1] = array('itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of ');
+    $blankoptions[2] = array('itemtype' => 'blank', 'itemcount' => 1, 'size' => 100, 'unans' => false, 'encoded_ans' => 'Wales');
+    $blankoptions[3] = array('itemtype' => 'blurb', 'itemvalue' => ' and is in the ');
+    $blankoptions[4] = array('itemtype' => 'blank', 'itemcount' => 2, 'size' => 100, 'unans' => true);
+    $blankoptions[5] = array('itemtype' => 'blurb', 'itemvalue' => '</div>');
+  }
+
+  /**
+    * Test question option setter - with mark element
+    * @group question
+    */
+  public function test_set_option_answer_textbox_marks() {
+    $data = questiondata::get_datastore('blank');
+    $option['optiontext'] = '<div>London is the capital of [blank|mark="3"|]England,Scotland,Wales,Northern Ireland[/blank] and is in the [blank]United Kingdom,United States of America[/blank]</div>';
+    $option['markscorrect'] = 1;
+    $data->set_opt(0, $option);
+    $data->displaymethod = 'textboxes';
+    $data->scoremethod = 'Mark per Option';
+    $data->marks = 0;
+    $useranswerid = '["Wales","u"]';
+    $data->set_option_answer(0, $useranswerid, '', 1);
+    $this->assertEquals(4, $data->marks);
+  }
+
+  /**
+    * Test question option setter - with mark and size elements
+    * @group question
+    */
+  public function test_set_option_answer_textbox_marks_size() {
+    $data = questiondata::get_datastore('blank');
+    $option['optiontext'] = '<div>London is the capital of [blank|size="100"|mark="3"|]England,Scotland,Wales,Northern Ireland[/blank] and is in the [blank]United Kingdom,United States of America[/blank]</div>';
+    $option['markscorrect'] = 1;
+    $data->set_opt(0, $option);
+    $data->displaymethod = 'textboxes';
+    $data->scoremethod = 'Mark per Option';
+    $data->marks = 0;
+    $useranswerid = '["Wales","u"]';
+    $data->set_option_answer(0, $useranswerid, '', 1);
+    $this->assertEquals(4, $data->marks);
+    $blankoptions[1] = array('itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of ');
+    $blankoptions[2] = array('itemtype' => 'blank', 'itemcount' => 1, 'size' => 100, 'unans' => false, 'encoded_ans' => 'Wales');
+    $blankoptions[3] = array('itemtype' => 'blurb', 'itemvalue' => ' and is in the ');
+    $blankoptions[4] = array('itemtype' => 'blank', 'itemcount' => 2, 'size' => 100, 'unans' => true);
+    $blankoptions[5] = array('itemtype' => 'blurb', 'itemvalue' => '</div>');
+  }
+
+  /**
     * Test question option setter - dropdown responses
     * @group question
     */

@@ -84,8 +84,10 @@ class renderdata extends \questiondata {
     // Create an array of all blurbs.
     $blurbs = preg_split("/\[blank\](.*?)\[\/blank\]/", $option['optiontext']);
     // Create an array of all blanks.
-    preg_match_all("/\[blank\](.*?)\[\/blank\]/", $option['optiontext'], $blanks);
-    $blanks = $blanks[1];
+    preg_match_all("/\[blank(\|)*(size=\"([0-9]{1,3})\"\|)*(mark=\"([0-9]{1,3})\"\|)*\](.*?)\[\/blank\]/", $option['optiontext'], $blankmatch);
+    $blanks = $blankmatch[6];
+    $sizes = $blankmatch[3];
+    $marks = $blankmatch[5];
     // Decode user answer.
     if (!is_null($useranswerid)) {
       $useranswerid = str_replace('&nbsp;', ' ', $useranswerid);
@@ -108,10 +110,8 @@ class renderdata extends \questiondata {
         $blankoption[$count]['itemcount'] = $itemcount;
         if ($this->displaymethod === 'textboxes') {
           // Resize textboxes to fit text.
-          $sizeresults = array();
-          $not_used = preg_match("|size=\"([0-9]{1,3})\"|", $blanks[$j], $sizeresults);
-          if (isset($sizeresults[1]) and $sizeresults[1] != '') {
-            $blank_size[$count] = $sizeresults[1];
+          if (!empty($sizes[$j])) {
+            $blank_size[$count] = $sizes[$j];
           } else {
             $blank_size[$count] = 15;
           }
@@ -154,10 +154,8 @@ class renderdata extends \questiondata {
           }
         }
         // Mark per blank option.
-        $results=array();
-        $not_used = preg_match("|mark=\"([0-9]{1,3})\"|", $blanks[$j], $results);
-        if (isset($results[1]) and $results[1] != '') {
-          $blank_mark[$j] = $results[1];
+        if (!empty($marks[$j])) {
+          $blank_mark[$j] = $marks[$j];
         } else {
           $blank_mark[$j] = $option['markscorrect'];
         }
