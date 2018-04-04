@@ -35,6 +35,8 @@ if (!$configObject->get_setting('core', 'cfg_api_enabled')) {
     error($string['pagenotfound'], $string, $mysqli, $configObject, $notice);
 }
 
+$state = null;
+
 if (isset($_POST['submit'])) {
     $authorised = check_var('authorised', 'POST', true, false, true);
     $client_id = check_var('client_id', 'POST', true, false, true);
@@ -54,10 +56,9 @@ if (isset($_POST['submit'])) {
     }
 } else {
     $client_id = check_var('client_id', 'GET', true, false, true);
-	if (!isset($_GET['state'])) {
+    $state = param::optional('state',null, param::ALPHANUM,param::FETCH_GET);
+	if (is_null($state)) {
         error('State not supplied.', $string, $mysqli, $configObject, $notice);
-    } else {
-    	$state = $_GET['state'];
     }
 }
 ?>
