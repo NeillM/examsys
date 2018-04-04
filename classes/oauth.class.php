@@ -73,8 +73,8 @@ class oauth {
         // Config options for server.
         $config = array(
             'access_lifetime' => $configObject->get_setting('core', 'api_oauth_access_lifetime'),
-            'refresh_token_lifetime' => $configObject->get('core', 'api_oauth_refresh_token_lifetime'),
-            'always_issue_new_refresh_token' => $configObject->get('core', 'api_oauth_always_issue_new_refresh_token')
+            'refresh_token_lifetime' => $configObject->get_setting('core', 'api_oauth_refresh_token_lifetime'),
+            'always_issue_new_refresh_token' => $configObject->get_setting('core', 'api_oauth_always_issue_new_refresh_token')
         );
         // Pass a storage object or array of storage objects to the OAuth2 server class
         $this->server = new \OAuth2\Server($this->storage, $config);
