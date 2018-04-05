@@ -15,6 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
+use PHPUnit\DbUnit\DataSet\YamlDataSet;
 use org\bovigo\vfs\vfsStreamWrapper;
 use org\bovigo\vfs\vfsStream;
 
@@ -50,7 +51,7 @@ class rogo_directorytest extends unittestdatabase {
    * @return dataset
    */
   public function getDataSet() {
-    return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "rogo_directory" . DIRECTORY_SEPARATOR . "rogodirectory.yml");
+    return new YamlDataSet($this->get_base_fixture_directory() . "rogo_directory" . DIRECTORY_SEPARATOR . "rogodirectory.yml");
   }
 
   /**
@@ -59,7 +60,7 @@ class rogo_directorytest extends unittestdatabase {
    * @return dataset
    */
   public function get_expected_data_set($name) {
-    return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "rogo_directory" . DIRECTORY_SEPARATOR . $name . ".yml");
+    return new YamlDataSet($this->get_base_fixture_directory() . "rogo_directory" . DIRECTORY_SEPARATOR . $name . ".yml");
   }
     
   /**

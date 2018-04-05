@@ -24,6 +24,11 @@ config:
     setting: "support_contact_email"
     value: "[\"test@example.com\",\"joseph.baxter@example.com\"]"
     type: "email"
+  -
+    component: "core"
+    setting: "cfg_summative_mgmt"
+    value: 0
+    type: "boolean"
 academic_year:
   -
     calendar_year: 2015
