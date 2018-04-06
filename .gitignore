@@ -193,3 +193,6 @@ web.config
 node_modules/
 crowdin.yml
 config/campuses.inc
+
+.vagrant/*
+.npm/*
