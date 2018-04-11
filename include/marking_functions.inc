@@ -484,7 +484,11 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
             }
             $execmatch_answers = param::optional($qid, null, param::ALPHANUM, param::FETCH_POST);
             if (!is_null($execmatch_answers)) {
-              $answer_count = count($execmatch_answers);
+              if (is_array($execmatch_answers)) {
+                $answer_count = count($execmatch_answers);
+              } else {
+                $answer_count = 1;
+              }
               if ($score_method == 'Mark per Question' and (is_array($execmatch_answers) or $execmatch_answers != 'u')) {
                 $all_items_abstain = false;
               }
