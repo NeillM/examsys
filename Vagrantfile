@@ -99,7 +99,6 @@ Vagrant.configure("2") do |config|
     # create data dir
     cd /
     mkdir rogodata
-    chown www-data:www-data rogodata
 
     # remove config file
     if [ -e /var/www/config/config.inc.php ]; then
@@ -116,6 +115,10 @@ Vagrant.configure("2") do |config|
         cd /var/www
         composer install
     fi
+
+    # set data dir perms
+    cd /
+    chown -R www-data:www-data rogodata
 
     # done!
     echo "[ROGO] https://localhost:44433/"
