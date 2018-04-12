@@ -96,18 +96,26 @@ Vagrant.configure("2") do |config|
         echo "cd /var/www" >> /home/vagrant/.profile
     fi
 
-    # run composer install
-    cd /var/www
-    composer install
-
     # create data dir
     cd /
     mkdir rogodata
     chown www-data:www-data rogodata
 
     # remove config file
-    cd /var/www/config
-    rm config.inc.php
+    if [ -e /var/www/config/config.inc.php ]; then
+        cd /var/www/config
+        rm config.inc.php
+    fi
+
+    if [ -e /var/www/config/settings.xml ]; then
+        # install rogo via setting file
+        cd /var/www
+        php cli/init.php -uroot -pPassw0rd -s127.0.0.1 -t3306 -nrogo
+    else
+        # manual install - just get composer files
+        cd /var/www
+        composer install
+    fi
 
     # done!
     echo "[ROGO] https://localhost:44433/"
