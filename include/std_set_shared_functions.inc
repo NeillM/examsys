@@ -909,7 +909,7 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
       $html = "<select name=\"std$qID\" class=\"$dropdown_class\">\n<option value=\"\"></option>\n";
       for ($i=0; $i<=100; $i+=5) {
         $sel = ($valid and $value !== '' and $value == $i) ? ' selected="selected"' : '';
-        +$html .= "<option value=\"$i\"$sel>$i%</option>\n";
+        $html .= "<option value=\"$i\"$sel>$i%</option>\n";
       }
       $html .=  "</select>\n";
       $html .= $review_string;
