@@ -363,9 +363,11 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
           if ($question['options'][$i]['correct'] == 0) $require_na = true;
         }
         $tmp_user_answers = 0;
-        for ($i=1; $i<count($rank_answers); $i++) {
-          if ($rank_answers[$i] != 'u' and $rank_answers[$i] != 0 and $rank_answers[$i] != 'u') {
-            $tmp_user_answers++;
+        if (is_array($rank_answers)) {
+          for ($i = 1; $i < count($rank_answers); $i++) {
+            if ($rank_answers[$i] != 'u' and $rank_answers[$i] != 0 and $rank_answers[$i] != 'u') {
+              $tmp_user_answers++;
+            }
           }
         }
 
