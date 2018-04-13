@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
     apt-get install -y mysql-server-5.6
 
     # install PHP 7.2 with required extensions
-    apt-get install -y php7.2 php7.2-gd php7.2-curl php7.2-xml php7.2-xmlrpc php7.2-mysql php7.2-intl php7.2-ldap php7.2-mbstring
+    apt-get install -y php7.2 php7.2-gd php7.2-curl php7.2-xml php7.2-xmlrpc php7.2-mysql php7.2-intl php7.2-ldap php7.2-mbstring php7.2-zip
 
     # install Apache with PHP
     apt-get install -y apache2 libapache2-mod-php7.2
@@ -79,6 +79,17 @@ Vagrant.configure("2") do |config|
     a2dissite 000-default
     a2ensite rogo
     rm -rf /var/www/html
+
+    # rogo php settings
+    echo "
+max_execution_time = 120
+memory_limit = 512M
+post_max_size = 20M
+upload_max_filesize = 20M
+default_charset = "utf-8"
+mbstring.internal_encoding = UTF-8
+max_input_vars = 3000
+" > /etc/php/7.2/apache2/conf.d/20-user.ini
 
     # restart Apache
     service apache2 restart
