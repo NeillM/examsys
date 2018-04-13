@@ -22,11 +22,7 @@ Vagrant.configure("2") do |config|
     apt-get update
 
     # install goodies
-    apt-get install -y curl git zip
-
-    # install NodeJS and npm
-    curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
-    apt-get install -y nodejs
+    apt-get install -y npm r-cran-rserve memcached
 
     # install MySQL (root / Passw0rd)
     debconf-set-selections <<< 'mysql-server mysql-server/root_password password Passw0rd'
@@ -34,7 +30,7 @@ Vagrant.configure("2") do |config|
     apt-get install -y mysql-server-5.6
 
     # install PHP 7.2 with required extensions
-    apt-get install -y php7.2 php7.2-gd php7.2-curl php7.2-xml php7.2-xmlrpc php7.2-mysql php7.2-intl php7.2-ldap php7.2-mbstring php7.2-zip
+    apt-get install -y php7.2 php7.2-gd php7.2-curl php7.2-xml php7.2-xmlrpc php7.2-mysql php7.2-intl php7.2-ldap php7.2-mbstring php7.2-zip php7.2-memcache
 
     # install Apache with PHP
     apt-get install -y apache2 libapache2-mod-php7.2
@@ -89,18 +85,12 @@ upload_max_filesize = 20M
 default_charset = "utf-8"
 mbstring.internal_encoding = UTF-8
 max_input_vars = 3000
+session.save_handler = memcache
+session.save_path = "tcp://localhost:11211"
 " > /etc/php/7.2/apache2/conf.d/20-user.ini
 
     # restart Apache
     service apache2 restart
-
-    # install Composer
-    if [ -e /usr/local/bin/composer ]; then
-        /usr/local/bin/composer self-update
-    else
-        curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-        cp /usr/local/bin/composer /var/www/composer.phar
-    fi
 
     # reset home directory of vagrant user
     if ! grep -q "cd /var/www" /home/vagrant/.profile; then
@@ -124,12 +114,16 @@ max_input_vars = 3000
     else
         # manual install - just get composer files
         cd /var/www
-        composer install
+        wget https://getcomposer.org/composer.phar
+        php composer.phar install
     fi
 
     # set data dir perms
     cd /
     chown -R www-data:www-data rogodata
+
+    # start up Rrserve
+    R CMD Rserve --no-save
 
     # done!
     echo "[ROGO] https://localhost:44433/"
