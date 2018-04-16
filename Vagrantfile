@@ -22,7 +22,7 @@ Vagrant.configure("2") do |config|
     apt-get update
 
     # install goodies
-    apt-get install -y npm r-cran-rserve memcached
+    apt-get install -y npm r-cran-rserve memcached wbritish
 
     # install MySQL (root / Passw0rd)
     debconf-set-selections <<< 'mysql-server mysql-server/root_password password Passw0rd'
