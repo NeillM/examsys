@@ -10,7 +10,7 @@ if ($updater_utils->check_version("6.5.0")) {
     $replace = "\$rogo_version = '" . $configObject->get('rogo_version') . "';";
     $updater_utils->replace_line($string, $replace, '', $cfg_web_root);
     //
-    $sql = "INSERT INTO config (component, setting, value, type) VALUES ('core', 'cfg_summative_mgmt', '" . $configObject->get('cfg_summative_mgmt') . "', '" . Config::BOOLEAN . "')";
+    $sql = "INSERT INTO config (component, setting, value, type) VALUES ('core', 'cfg_summative_mgmt', " . $configObject->get('cfg_summative_mgmt') . ", '" . Config::BOOLEAN . "')";
     $updater_utils->execute_query($sql, false);
     $hostname = true;
     if ($configObject->get('cfg_client_lookup') === 'ipaddress') {
@@ -36,10 +36,10 @@ if ($updater_utils->check_version("6.5.0")) {
     $configObject->set_setting('stdset_hofstee_whole_numbers', $configObject->get('hofstee_whole_numbers'), Config::BOOLEAN);
     $configObject->set_setting('summative_hour_warning', $configObject->get('cfg_hour_warning'), Config::INTEGER);
     $configObject->set_setting('system_install_type', $configObject->get('cfg_install_type'), Config::STRING);
-    $sql = "INSERT INTO config (component, setting, value, type) VALUES ('core', 'cfg_ims_enabled', '" . $configObject->get('cfg_ims_enabled') . "', '" . Config::BOOLEAN . "')";
+    $sql = "INSERT INTO config (component, setting, value, type) VALUES ('core', 'cfg_ims_enabled', " . $configObject->get('cfg_ims_enabled') . ", '" . Config::BOOLEAN . "')";
     $updater_utils->execute_query($sql, false);
     $contact_count = 0;
-    foreach ($configObject->get('emergency_support_numbers') as $name => $number) {
+    foreach ($configObject->get('emergency_support_numbers') as $number => $name) {
       $contact_count++;
       $configObject->set_setting('emergency_support_contact' . $contact_count, array(
           'name' => $name,
