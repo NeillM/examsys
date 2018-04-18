@@ -18,6 +18,7 @@
         <optional_extenstions>
             <extension>pdo_mysql</extension>
             <extension>sockets</extension>
+            <extension>ldap</extension>
         </optional_extenstions>
     </php>
     <database>
