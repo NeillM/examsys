@@ -17,5 +17,6 @@ pipelines:
           - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
           - composer install --no-dev
           - npm install --production
-          - tar --exclude='.git' --exclude='Gruntfile.js' --exclude='Vagrantfile' --exclude='bitbucket-pipelines.yml' --exclude='composer.phar' --exclude='crowdin.yml.example' --exclude='behat.example.xml' --exclude='phpunit.example.xml' -czvf build.tar.gz ./
-          - curl -X POST "https://${BB_AUTH_STRING}@api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads" --form files=@"build.tar.gz"
+          - cd ..
+          - tar --exclude='.git' --exclude='Gruntfile.js' --exclude='Vagrantfile' --exclude='bitbucket-pipelines.yml' --exclude='composer.phar' --exclude='crowdin.yml.example' --exclude='behat.example.xml' --exclude='phpunit.example.xml' -czvf build.tar.gz build
+          - curl -X POST "https://${BB_AUTH_STRING}@api.bitbucket.org/2.0/repositories/${BITBUCKET_REPO_OWNER}/${BITBUCKET_REPO_SLUG}/downloads" --form files=@"../build.tar.gz"
