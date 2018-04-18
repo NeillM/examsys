@@ -15,6 +15,10 @@
             <extension>zlib</extension>
             <extension>intl</extension>
         </extensions>
+        <optional_extenstions>
+            <extension>pdo_mysql</extension>
+            <extension>sockets</extension>
+        </optional_extenstions>
     </php>
     <database>
         <mysql>

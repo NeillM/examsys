@@ -57,9 +57,9 @@ foreach ($phpext as $idx => $val) {
 
 // Lang packs.
 if ($langpackfound === 1) {
-  $info['langpacks'] = array($string['langpacksfound'], false);
+  $info['langpacks'] = array($string['langpacksfound'], true);
 } elseif ($langpackfound === 2) {
-  $info['langpacks'] = array(sprintf($string['langpacksmissing'], $language), false);
+  $info['langpacks'] = array(sprintf($string['langpacksmissing'], $language), 'warn');
 }
 // php version.
 if (!$phpversion) {
@@ -82,12 +82,15 @@ if (InstallUtils::config_exists()){
 }
 // php extensions.
 foreach ($phpext as $idx => $val) {
-    if (!$val) {
+    if ($val === false) {
       $blurb = sprintf($string['phpextension'], $idx);
-      $info[$idx] = array($blurb ,false);
-    } else {
+      $info[$idx] = array($blurb, false);
+    } elseif ($val === true) {
       $blurb = sprintf($string['phpextensionsuccess'], $idx);
-      $info[$idx] = array($blurb ,true);
+      $info[$idx] = array($blurb, true);
+    } else {
+      $blurb = sprintf($string['phpextensionwarn'], $idx);
+      $info[$idx] = array($blurb, 'warn');
     }
 }
 
@@ -100,12 +103,12 @@ HTML;
 echo $html;
 foreach ($info as $idx => $val) {
   echo "<div class=\"requirements-body\"><div class=\"requirements-body-item\">$val[0]</div><div class=\"requirements-body-item\">";
-  if ($val[1]) {
+  if ($val[1] === true) {
     echo "<img src=\"../artwork/tick.png\" id=\"yes\" /></div>";
-  }elseif ($idx === 'langpacks') {
-    echo "<img src=\"../artwork/exclamation.png\" id=\"warn\" /></div>";
-  } else {
+  } elseif ($val[1] === false) {
     echo "<img src=\"../artwork/cross.png\" id=\"no\" /></div>";
+  } else {
+    echo "<img src=\"../artwork/exclamation.png\" id=\"warn\" /></div>";
   }
   echo "</div>";
 }
