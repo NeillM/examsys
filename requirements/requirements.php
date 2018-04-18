@@ -90,20 +90,7 @@ foreach ($phpext as $idx => $val) {
       $info[$idx] = array($blurb ,true);
     }
 }
-// Install composer and dependencies.
-$composer = requirements::composer();
-if ($composer === true) {
-  $info['composer'] = array($string['composersuccess'], true);
-} else {
-  $info['composer'] = array($composer, false);
-}
-// Install npm dependencies.
-$npm = requirements::npm();
-if ($npm === true) {
-  $info['npm'] = array($string['npmsuccess'], true);
-} else {
-  $info['npm'] = array($npm, false);
-}
+
 $html = <<<HTML
   <div class="requirements-header">
     <div class="requirements-body-item">Requirement</div>
@@ -123,7 +110,7 @@ foreach ($info as $idx => $val) {
   echo "</div>";
 }
 echo "<div class=\"requirements-body\">";
-if ($phpversion and $phpallext and $composer and $dbversion) {
+if ($phpversion and $phpallext and $dbversion) {
   if (InstallUtils::config_exists()){
     echo "<button id=\"update\" class=\"updatebutton\" onclick=\"run_update()\">Update</button>";
   } else {
