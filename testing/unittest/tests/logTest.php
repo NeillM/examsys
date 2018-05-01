@@ -50,7 +50,7 @@ class logtest extends unittestdatabase {
         'previous_duration' => 5,
         'screen_pre_submitted' => 1,
         'current_screen' => 2);
-    $this->assertEquals($previous, $log->get_previous_answers($papertype, $metadataID, $do_restart, $current_screen));
+    $this->assertEquals($previous, $log->get_previous_answers($metadataID, $do_restart, $current_screen));
   }
 
   /**
@@ -70,6 +70,6 @@ class logtest extends unittestdatabase {
         'previous_duration' => 10,
         'screen_pre_submitted' => 1,
         'current_screen' => 1);
-    $this->assertEquals($previous, $log->get_previous_answers($papertype, $metadataID, $do_restart, $current_screen, true));
+    $this->assertEquals($previous, $log->get_previous_answers($metadataID, $do_restart, $current_screen, true));
   }
 }

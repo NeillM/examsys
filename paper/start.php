@@ -221,7 +221,7 @@ $check_log_late = false;
 if ($is_preview_mode === false and time() > $propertyObj->get_end_date() and ($log->papertype == 'progressive' or ($log->papertype == 'summative' and $paper_scheduled and $summative_exam_session_started === false))) {
   $check_log_late = true;
 }
-$l = $log->get_previous_answers($papertype, $metadataID, $do_restart, $current_screen, $check_log_late);
+$l = $log->get_previous_answers($metadataID, $do_restart, $current_screen, $check_log_late);
 $user_answers = $l['user_answers'];
 $user_dismiss = $l['user_dismiss'];
 $user_order = $l['user_order'];

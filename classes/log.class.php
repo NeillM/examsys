@@ -94,14 +94,13 @@ abstract class log {
 
   /**
    * Get previous answers for a paper/user in log - used to load exam script
-   * @param string $papertype paper type identifier
    * @param integer $metadataID unique identifier of paper/user entry in log
    * @param boolean $do_restart does this paper type allow multiple attempts
    * @param integer $current_screen what screen is the user on
    * @param boolean so we need to check the log late table
    * @return array
    */
-  public function get_previous_answers($papertype, $metadataID, $do_restart, $current_screen, $check_log_late = false) {
+  public function get_previous_answers($metadataID, $do_restart, $current_screen, $check_log_late = false) {
     $this->previousduration = 0;
     $this->screenpresubmitted = 0;
     $this->dorestart = $do_restart;
