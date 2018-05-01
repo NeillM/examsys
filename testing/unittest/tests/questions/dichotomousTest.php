@@ -59,8 +59,8 @@ class dichotomoustest extends unittest{
     $data->set_opt(0, $option);
     $data->displaymethod = 'TF_Positive';
     $data->marks = 0;
-    $useranswerid = 'uuu';
-    $data->set_option_answer(0, $useranswerid, '', 1);
+    $useranswer = 'uuu';
+    $data->set_option_answer(0, $useranswer, '', 1);
     $option = $data->get_opt(0);
     $this->assertTrue($data->unanswered);
     $this->assertFalse($option['displayoptionmedia']);
@@ -69,7 +69,7 @@ class dichotomoustest extends unittest{
     $option['omedia'] = 'test';
     $data->set_opt(0, $option);
     $data->displaymethod = 'TF_NegativeAbstain';
-    $data->set_option_answer(0, $useranswerid, '', 1);
+    $data->set_option_answer(0, $useranswer, '', 1);
     $option = $data->get_opt(0);
     $this->assertTrue($option['abstain']);
     $this->assertTrue($option['displayoptionmedia']);
@@ -81,14 +81,14 @@ class dichotomoustest extends unittest{
     */
   public function test_process_options() {
     $data = questiondata::get_datastore('dichotomous');
-    $useranswerid = 'uuu';
+    $useranswer = 'uuu';
     $option['marksincorrect'] = -1;
     $data->set_opt(0, $option);
-    $data->process_options(0, $useranswerid, '', 1);
+    $data->process_options(0, $useranswer, '', 1);
     $this->assertTrue($data->negativemarking);
     $option['marksincorrect'] = 0;
     $data->set_opt(0, $option);
-    $data->process_options(0, $useranswerid, '', 1);
+    $data->process_options(0, $useranswer, '', 1);
     $this->assertFalse($data->negativemarking);
   }
   

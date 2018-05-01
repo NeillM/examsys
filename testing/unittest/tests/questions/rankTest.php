@@ -65,8 +65,8 @@ class ranktest extends unittest{
     $option['correct'] = 1;
     $option['markscorrect'] = 1;
     $data->set_opt(1, $option);
-    $useranswerid = 'u,u,u';
-    $data->set_option_answer(1, $useranswerid, '100', 1);
+    $useranswer = 'u,u,u';
+    $data->set_option_answer(1, $useranswer, '100', 1);
     $option = $data->get_opt(1);
     $this->assertTrue($data->unanswered);
     $this->assertTrue($option['unans']);
@@ -96,8 +96,8 @@ class ranktest extends unittest{
     $option['markscorrect'] = 1;
     $option['position'] = 1;
     $data->set_opt(1, $option);
-    $useranswerid = '1,u,u';
-    $data->set_option_answer(1, $useranswerid, '000', 1);
+    $useranswer = '1,u,u';
+    $data->set_option_answer(1, $useranswer, '000', 1);
     $this->assertFalse($data->unanswered);
     $option = $data->get_opt(1);
     $this->assertFalse($option['unans']);
@@ -114,16 +114,16 @@ class ranktest extends unittest{
   public function test_process_options() {
     $data = questiondata::get_datastore('rank');
     // Test dismiss and negative marking.
-    $useranswerid = '1,u,u';
+    $useranswer = '1,u,u';
     $data->optionnumber = 3;
     $option['marksincorrect'] = -1;
     $data->set_opt(1, $option);
-    $data->process_options(1, $useranswerid, '010', 1);
+    $data->process_options(1, $useranswer, '010', 1);
     $this->assertEquals('010', $data->dismiss);
     $this->assertTrue($data->negativemarking);
     $option['marksincorrect'] = 0;
     $data->set_opt(1, $option);
-    $data->process_options(1, $useranswerid, '', 1);
+    $data->process_options(1, $useranswer, '', 1);
     $this->assertEquals('000', $data->dismiss);
     $this->assertFalse($data->negativemarking);
   }

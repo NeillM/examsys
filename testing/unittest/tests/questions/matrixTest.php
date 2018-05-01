@@ -49,13 +49,13 @@ class matrixtest extends unittest{
   public function test_set_question() {
     $data = questiondata::get_datastore('matrix');
     $data->scenario = "Word|Excel|PowerPoint|Access5|Publisher|Data File||||";
-    $useranswerid = '3|4|2|5|1|6';
+    $useranswer = '3|4|2|5|1|6';
     $scenarios = array('Word', 'Excel', 'PowerPoint', 'Access5', 'Publisher', 'Data File', '', '', '', '');
-    $data->set_question(1, $useranswerid, '');
+    $data->set_question(1, $useranswer, '');
     $this->assertEquals($scenarios, $data->scenarios);
     $this->assertEquals(array('3', '4', '2', '5', '1', '6'), $data->usersanswers);
-    $useranswerid = null;
-    $data->set_question(0, $useranswerid, '');
+    $useranswer = null;
+    $data->set_question(0, $useranswer, '');
     $this->assertEquals(array(), $data->usersanswers);
   }
 
@@ -91,8 +91,8 @@ class matrixtest extends unittest{
     $data->usersanswers = array('3', '4', '2', '5', '1', '6');
     $data->optionorder = '5,2,4,1,0,3';
     $data->scenarios = array('Word', 'Excel', 'PowerPoint', 'Access5', 'Publisher', 'Data File', '', '', '', '');
-    $useranswerid = '3|4|2|5|1|6';
-    $data->process_options(1, $useranswerid, '', 1);
+    $useranswer = '3|4|2|5|1|6';
+    $data->process_options(1, $useranswer, '', 1);
     $matchscenarios = array(
       array('unanswered' => false, 'id' => 'A', 'value' => 'Word'),
       array('unanswered' => false, 'id' => 'B', 'value' => 'Excel'),

@@ -60,8 +60,8 @@ class enhancedcalctest extends unittestdatabase{
     require_once $cfg_web_root . 'plugins/questions/enhancedcalc/enhancedcalc.class.php';
     $question['object'] = new \EnhancedCalc($this->config);
     $data->question = $question;
-    $useranswerid = '{"vars":{"$A":2,"$B":8},"uans":""}';
-    $data->set_question(1, $useranswerid, '');
+    $useranswer = '{"vars":{"$A":2,"$B":8},"uans":""}';
+    $data->set_question(1, $useranswer, '');
     $this->assertEquals($data->useranswers, $question['object']->alluseranswers);
   }
 
@@ -81,8 +81,8 @@ class enhancedcalctest extends unittestdatabase{
     $questions[1]['object'] = new \EnhancedCalc($this->config);
     $questions[1]['object']->load($questions[1]);
     $data->question = $questions[1];
-    $useranswerid = '{"vars":{"$A":2,"$B":8},"uans":""}';
-    $data->set_option_answer(1, $useranswerid, '', 1);
+    $useranswer = '{"vars":{"$A":2,"$B":8},"uans":""}';
+    $data->set_option_answer(1, $useranswer, '', 1);
     $this->assertEquals(3, $data->marks);
     $output = ob_get_contents(); // Store buffer in variable
     ob_end_clean(); // End buffering and clean up

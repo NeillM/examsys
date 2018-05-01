@@ -75,11 +75,11 @@ class renderdata extends \questiondata {
   /**
    * Question level settings for template rendering
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   * @param mixed $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param mixed $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    */
-  public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid) {
-    if ($useranswerid == '0' and $screen_pre_submitted) {
+  public function set_question($screen_pre_submitted, $useranswer, $userdismissed) {
+    if ($useranswer == '0' and $screen_pre_submitted) {
       $this->unanswered = true;
     } else {
       $this->unanswered = false;
@@ -89,13 +89,13 @@ class renderdata extends \questiondata {
   /**
    * Option level settings for template rendering
    * @param integer $part_id part loop id
-   * @param mixed $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param mixed $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function set_option_answer($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
+  public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    if ($option['position'] == $useranswerid) {
+    if ($option['position'] == $useranswer) {
       $option['selected'] = true;
     } else {
       $option['selected'] = false;
@@ -109,7 +109,7 @@ class renderdata extends \questiondata {
       $option['displayoptionmedia'] = true;
     }
     if ($this->displaymethod === 'vertical' or $this->displaymethod === 'vertical_other') {
-      if (substr($user_dismissid, $option['position']-1, 1) == '1') {
+      if (substr($userdismissed, $option['position']-1, 1) == '1') {
         $option['inact'] = true;
       } else {
         $option['inact'] = false;
@@ -122,15 +122,15 @@ class renderdata extends \questiondata {
   /**
    * Additional option level settings for template rendering
    * @param integer $part_id part loop id
-   * @param mixed $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param mixed $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
+  public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
     if ($option['marksincorrect'] < 0) {
       $this->negativemarking = true;
-      if ($useranswerid === 'a') {
+      if ($useranswer === 'a') {
         $this->abstainselected = true;
       } else {
         $this->abstainselected = false;
@@ -141,15 +141,15 @@ class renderdata extends \questiondata {
     // other textbox not currently supported by non survey papers.
     if ($this->displaymethod === 'vertical_other') {
       if ($this->papertype == 3) {
-        if (substr($useranswerid,0,5) === 'other') {
+        if (substr($useranswer,0,5) === 'other') {
           $this->otherselected = true;
-          $this->other = substr($useranswerid,6);
+          $this->other = substr($useranswer,6);
         }
       }
     }
     // Write out the hidden field for the dismiss facility.
-    if ($user_dismissid != '') {
-       $this->dismiss = $user_dismissid;
+    if ($userdismissed != '') {
+       $this->dismiss = $userdismissed;
     } else {
        $this->dismiss = str_repeat('0', $this->optionnumber);
     }

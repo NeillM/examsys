@@ -94,21 +94,21 @@ class renderdata extends \questiondata {
   /**
    * Question level settings for template rendering
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   * @param mixed $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param mixed $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    */
-  public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid) {
+  public function set_question($screen_pre_submitted, $useranswer, $userdismissed) {
     // Noting to do.
   }
 
   /**
    * Option level settings for template rendering
    * @param integer $part_id part loop id
-   * @param mixed $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param mixed $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function set_option_answer($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
+  public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
     $textboxes_seen = $this->textboxesseen;
     if (!in_array($this->questionno, $textboxes_seen)) {
@@ -118,11 +118,11 @@ class renderdata extends \questiondata {
       $this->editorrows = $settings['rows'];
       if (!isset($settings['editor']) or $settings['editor'] == 'plain' or $settings['editor'] == 'mathjax') {
         $this->editor = 'plain';
-        if ($useranswerid == '' and $screen_pre_submitted == 1) {
-          $this->useranswer = $useranswerid;
+        if ($useranswer == '' and $screen_pre_submitted == 1) {
+          $this->useranswer = $useranswer;
           $this->unanswered = true;
         } else {
-          $this->useranswer = $useranswerid;
+          $this->useranswer = $useranswer;
           $this->unanswered = false;
         }
         if ($settings['editor'] == 'mathjax') {
@@ -133,7 +133,7 @@ class renderdata extends \questiondata {
         // Bad way of inserting text editor to be resolved in ROGO-2263.
         echo $this->config->get('cfg_js_root');
         echo "<script type=\"text/javascript\" src=\"" . $this->config->get('cfg_root_path') . "/tools/tinymce/jscripts/tiny_mce/tiny_mce.js\"></script>";
-        if ($useranswerid == '' and $screen_pre_submitted == 1) {
+        if ($useranswer == '' and $screen_pre_submitted == 1) {
           echo "<script type=\"text/javascript\" src=\"" . $this->config->get('cfg_root_path') . "/tools/tinymce/jscripts/tiny_mce/tiny_config_unanswered.js\"></script>";
         } else {
           echo "<script type=\"text/javascript\" src=\"" . $this->config->get('cfg_root_path') . "/tools/tinymce/jscripts/tiny_mce/tiny_config_answered.js\"></script>";
@@ -144,14 +144,14 @@ class renderdata extends \questiondata {
 
         $background_colour = '';
 
-        if ($useranswerid == '' and $screen_pre_submitted == 1) {
+        if ($useranswer == '' and $screen_pre_submitted == 1) {
           $this->unanswered = true;
           $background_colour = 'background-color:red;';
         } else {
           $this->unanswered = false;
         }
         // Bad way of inserting text editor to be resolved in ROGO-2263.
-        echo "<textarea class=\"mceEditor\" id=\"q" . $this->questionno . "\" name=\"q" . $this->questionno . "\"style=\"" . $background_colour . "; width:" . $textbox_width . "px; height:" . $textbox_height . "px\">" . $useranswerid . "</textarea>";
+        echo "<textarea class=\"mceEditor\" id=\"q" . $this->questionno . "\" name=\"q" . $this->questionno . "\"style=\"" . $background_colour . "; width:" . $textbox_width . "px; height:" . $textbox_height . "px\">" . $useranswer . "</textarea>";
       }
       $this->textboxesseen = $textboxes_seen;
       $marks = $this->marks;
@@ -163,11 +163,11 @@ class renderdata extends \questiondata {
   /**
    * Additional option level settings for template rendering
    * @param integer $part_id part loop id
-   * @param mixed $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param mixed $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
+  public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
     // Nothing to do.
   }
 }

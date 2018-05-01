@@ -97,33 +97,33 @@ class mcqtest extends unittest{
   public function test_process_options() {
     $data = questiondata::get_datastore('mcq');
     // Test dismiss.
-    $useranswerid = 'u';
+    $useranswer = 'u';
     $data->optionnumber = 4;
     $option['marksincorrect'] = -1;
     $data->set_opt(1, $option);
-    $data->process_options(1, $useranswerid, '0100', 1);
+    $data->process_options(1, $useranswer, '0100', 1);
     $this->assertTrue($data->negativemarking);
     $this->assertFalse($data->abstainselected);
     $this->assertEquals('0100', $data->dismiss);
     $option['marksincorrect'] = 0;
     $data->set_opt(1, $option);
-    $data->process_options(1, $useranswerid, '', 1);
+    $data->process_options(1, $useranswer, '', 1);
     $this->assertFalse($data->negativemarking);
     $this->assertFalse($data->abstainselected);
     $this->assertEquals('0000', $data->dismiss);
     // Test abstain.
-    $useranswerid = 'a';
+    $useranswer = 'a';
     $option['marksincorrect'] = -1;
     $data->set_opt(1, $option);
-    $data->process_options(1, $useranswerid, '', 1);
+    $data->process_options(1, $useranswer, '', 1);
     $this->assertTrue($data->negativemarking);
     $this->assertTrue($data->abstainselected);
     $this->assertEquals('0000', $data->dismiss);
     // Test other.
     $data->displaymethod =  'vertical_other';
     $data->papertype = '3';
-    $useranswerid = 'other:test';
-    $data->process_options(1, $useranswerid, '', 1);
+    $useranswer = 'other:test';
+    $data->process_options(1, $useranswer, '', 1);
     $this->assertTrue($data->otherselected);
     $this->assertEquals('test', $data->other);
   }

@@ -57,20 +57,20 @@ class labellingtest extends unittest{
     $data->marks =  0;
     $data->scoremethod = 'Mark per Question';
     $data->mediaheight = 480;
-    $useranswerid = '4$4;370$148$beetle3.png$t$371$275$earwig3.png$t$537$78$spider$t$539$447$plants$t$';
-    $data->set_option_answer(0, $useranswerid, '', 0);
+    $useranswer = '4$4;370$148$beetle3.png$t$371$275$earwig3.png$t$537$78$spider$t$539$447$plants$t$';
+    $data->set_option_answer(0, $useranswer, '', 0);
     $this->assertEquals(1, $data->marks);
     $this->assertFalse($data->unanswered);
     $this->assertEquals(480, $data->mediaheight);
     $this->assertEquals(1, $data->markscorrect);
     $this->assertEquals(-1, $data->marksincorrect);
-    $this->assertEquals($useranswerid, $data->useranswer);
+    $this->assertEquals($useranswer, $data->useranswer);
     $this->assertEquals($option['correct'], $data->tmpcorrect);
-    $useranswerid = '0$4;';
+    $useranswer = '0$4;';
     $data->marks =  0;
     $data->scoremethod =  'Mark per Option';
-    $data->set_option_answer(0, $useranswerid, '', 1);
-    $this->assertEquals($useranswerid, $data->useranswer);
+    $data->set_option_answer(0, $useranswer, '', 1);
+    $this->assertEquals($useranswer, $data->useranswer);
     $this->assertTrue($data->unanswered);
     $this->assertEquals(4, $data->marks);
     

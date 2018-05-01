@@ -59,8 +59,8 @@ class blanktest extends unittest{
     $data->displaymethod = 'textboxes';
     $data->scoremethod = 'Mark per Option';
     $data->marks = 0;
-    $useranswerid = '["Wales","u"]';
-    $data->set_option_answer(0, $useranswerid, '', 1);
+    $useranswer = '["Wales","u"]';
+    $data->set_option_answer(0, $useranswer, '', 1);
     $this->assertTrue($data->unanswered);
     $blankoptions[1] = array('itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of ');
     $blankoptions[2] = array('itemtype' => 'blank', 'itemcount' => 1, 'size' => 15, 'unans' => false, 'encoded_ans' => 'Wales');
@@ -70,7 +70,7 @@ class blanktest extends unittest{
     $this->assertEquals($blankoptions, $data->blankoptions);
     $this->assertEquals(2, $data->marks);
     $data->scoremethod = 'Mark per Question';
-    $data->set_option_answer(0, $useranswerid, '', 1);
+    $data->set_option_answer(0, $useranswer, '', 1);
     $this->assertEquals(1, $data->marks);
   }
 
@@ -86,8 +86,8 @@ class blanktest extends unittest{
     $data->displaymethod = 'textboxes';
     $data->scoremethod = 'Mark per Option';
     $data->marks = 0;
-    $useranswerid = '["Wales","u"]';
-    $data->set_option_answer(0, $useranswerid, '', 1);
+    $useranswer = '["Wales","u"]';
+    $data->set_option_answer(0, $useranswer, '', 1);
     $blankoptions[1] = array('itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of ');
     $blankoptions[2] = array('itemtype' => 'blank', 'itemcount' => 1, 'size' => 100, 'unans' => false, 'encoded_ans' => 'Wales');
     $blankoptions[3] = array('itemtype' => 'blurb', 'itemvalue' => ' and is in the ');
@@ -108,8 +108,8 @@ class blanktest extends unittest{
     $data->displaymethod = 'textboxes';
     $data->scoremethod = 'Mark per Option';
     $data->marks = 0;
-    $useranswerid = '["Wales","u"]';
-    $data->set_option_answer(0, $useranswerid, '', 1);
+    $useranswer = '["Wales","u"]';
+    $data->set_option_answer(0, $useranswer, '', 1);
     $this->assertEquals(4, $data->marks);
   }
 
@@ -125,8 +125,8 @@ class blanktest extends unittest{
     $data->displaymethod = 'textboxes';
     $data->scoremethod = 'Mark per Option';
     $data->marks = 0;
-    $useranswerid = '["Wales","u"]';
-    $data->set_option_answer(0, $useranswerid, '', 1);
+    $useranswer = '["Wales","u"]';
+    $data->set_option_answer(0, $useranswer, '', 1);
     $this->assertEquals(4, $data->marks);
     $blankoptions[1] = array('itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of ');
     $blankoptions[2] = array('itemtype' => 'blank', 'itemcount' => 1, 'size' => 100, 'unans' => false, 'encoded_ans' => 'Wales');
@@ -148,8 +148,8 @@ class blanktest extends unittest{
     $data->displaymethod = 'dropdown';
     $data->scoremethod = 'Mark per Option';
     $data->marks = 0;
-    $useranswerid = '["Wales","u"]';
-    $data->set_option_answer(0, $useranswerid, '', 1);
+    $useranswer = '["Wales","u"]';
+    $data->set_option_answer(0, $useranswer, '', 1);
     $this->assertTrue($data->unanswered);
     $blankoptions[1] = array('itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of ');
     $blankoptions[2] = array('itemtype' => 'blank', 'itemcount' => 1, 'unans' => false, 'itemvalue' => array (
@@ -173,7 +173,7 @@ class blanktest extends unittest{
     $this->assertEquals($blankoptions[5], $options[5]);
     $this->assertEquals(2, $data->marks);
     $data->scoremethod = 'Mark per Question';
-    $data->set_option_answer(0, $useranswerid, '', 1);
+    $data->set_option_answer(0, $useranswer, '', 1);
     $this->assertEquals(1, $data->marks);
   }
 

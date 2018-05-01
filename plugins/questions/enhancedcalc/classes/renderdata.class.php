@@ -48,14 +48,14 @@ class renderdata extends \questiondata {
   /**
    * Question level settings for template rendering
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   * @param mixed $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param mixed $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    */
-  public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid) {
+  public function set_question($screen_pre_submitted, $useranswer, $userdismissed) {
     $question = $this->question;
-    if (!is_null($useranswerid)) {
+    if (!is_null($useranswer)) {
       $d = array();
-      $d['useranswer'] = $useranswerid;
+      $d['useranswer'] = $useranswer;
       $question['object']->load($d);
     }
     $useranswers = $this->useranswers;
@@ -65,11 +65,11 @@ class renderdata extends \questiondata {
   /**
    * Option level settings for template rendering
    * @param integer $part_id part loop id
-   * @param mixed $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param mixed $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function set_option_answer($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
+  public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
     $marks = $this->marks;
     $question = $this->question;
     $useranswers = $this->useranswers;
@@ -81,11 +81,11 @@ class renderdata extends \questiondata {
   /**
    * Additional option level settings for template rendering
    * @param integer $part_id part loop id
-   * @param mixed $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param mixed $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
+  public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
     // Nothing to do.
   }
 

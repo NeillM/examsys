@@ -100,13 +100,13 @@ class renderdata extends \questiondata {
   /**
    * Question level settings for template rendering
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   * @param mixed $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param mixed $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    */
-  public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid) {
+  public function set_question($screen_pre_submitted, $useranswer, $userdismissed) {
     $allowed_responses = $this->get_allowed_responses();
-    if (!is_null($useranswerid)) {
-      $answer_parts = explode(':', $useranswerid);
+    if (!is_null($useranswer)) {
+      $answer_parts = explode(':', $useranswer);
       $len_answer = strlen($answer_parts[0]);
     } else {
       $len_answer = 0;
@@ -122,18 +122,18 @@ class renderdata extends \questiondata {
   /**
    * Option level settings for template rendering
    * @param integer $part_id part loop id
-   * @param mixed $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param mixed $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function set_option_answer($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
+  public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    if (substr($useranswerid, $option['position']-1, 1) === 'y') {
+    if (substr($useranswer, $option['position']-1, 1) === 'y') {
       $option['selected'] = true;
     } else {
       $option['selected'] = false;
     }
-    if (substr($user_dismissid,$part_id-1,1) === '1') {
+    if (substr($userdismissed,$part_id-1,1) === '1') {
       $option['inact'] = true;
     } else {
       $option['inact'] = false;
@@ -165,29 +165,29 @@ class renderdata extends \questiondata {
   /**
    * Additional option level settings for template rendering
    * @param integer $part_id part loop id
-   * @param mixed $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param mixed $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
+  public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
     if ($this->displaymethod === 'other') {
       $part_id = $this->partid + 1;
       $this->partid = $part_id ;
-      if (!is_null($useranswerid) and substr($useranswerid,($part_id - 1),1) == 'y') {
+      if (!is_null($useranswer) and substr($useranswer,($part_id - 1),1) == 'y') {
         $this->otherselected = true;
       }
-      $this->other = substr($useranswerid, $part_id);
+      $this->other = substr($useranswer, $part_id);
     }
     if ($option['marksincorrect'] < 0) {
       $this->negativemarking = true;
-      if ($useranswerid === 'a') {
+      if ($useranswer === 'a') {
         $this->abstainselected = true;
       }
     }
     // Write out the hidden field for the dismiss facility.
-    if ($user_dismissid != '') {
-       $this->dismiss = $user_dismissid;
+    if ($userdismissed != '') {
+       $this->dismiss = $userdismissed;
     } else {
        $this->dismiss = str_repeat('0', $this->optionnumber);
     }

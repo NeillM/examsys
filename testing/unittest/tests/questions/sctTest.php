@@ -65,8 +65,8 @@ class scttest extends unittest{
     $option['correct'] = 1;
     $option['markscorrect'] = 1;
     $data->set_opt(1, $option);
-    $useranswerid = 3;
-    $data->set_option_answer(1, $useranswerid, '10000', 1);
+    $useranswer = 3;
+    $data->set_option_answer(1, $useranswer, '10000', 1);
     $option = $data->get_opt(1);
     $this->assertFalse($option['selected']);
     $this->assertTrue($option['inact']);
@@ -76,8 +76,8 @@ class scttest extends unittest{
     $option['correct'] = 1;
     $option['markscorrect'] = 1;
     $data->set_opt(2, $option);
-    $useranswerid = 3;
-    $data->set_option_answer(2, $useranswerid, '10000', 1);
+    $useranswer = 3;
+    $data->set_option_answer(2, $useranswer, '10000', 1);
     $option = $data->get_opt(2);
     $this->assertTrue($option['selected']);
     $this->assertFalse($option['inact']);
@@ -91,16 +91,16 @@ class scttest extends unittest{
   public function test_process_options() {
     $data = questiondata::get_datastore('sct');
     // Test dismiss and negative marking.
-    $useranswerid = 5;
+    $useranswer = 5;
     $data->optionnumber = 5;
     $option['marksincorrect'] = -1;
     $data->set_opt(1, $option);
-    $data->process_options(1, $useranswerid, '01000', 1);
+    $data->process_options(1, $useranswer, '01000', 1);
     $this->assertEquals('01000', $data->dismiss);
     $this->assertTrue($data->negativemarking);
     $option['marksincorrect'] = 0;
     $data->set_opt(1, $option);
-    $data->process_options(1, $useranswerid, '', 1);
+    $data->process_options(1, $useranswer, '', 1);
     $this->assertEquals('00000', $data->dismiss);
     $this->assertFalse($data->negativemarking);
   }

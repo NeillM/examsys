@@ -76,39 +76,39 @@ class renderdata extends \questiondata {
   /**
    * Question level settings for template rendering
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   * @param mixed $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param mixed $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    */
-  public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid) {
+  public function set_question($screen_pre_submitted, $useranswer, $userdismissed) {
     // Noting to do.
   }
 
   /**
    * Option level settings for template rendering
    * @param integer $part_id part loop id
-   * @param mixed $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param mixed $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function set_option_answer($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
+  public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
-    if ($useranswerid == 'u' and $screen_pre_submitted == 1) {
+    if ($useranswer == 'u' and $screen_pre_submitted == 1) {
       $this->unanswered = true;
     } else {
       $this->unanswered = false;
     }
 
-    if ($useranswerid == 't') {
+    if ($useranswer == 't') {
       $this->trueselected = true;
       $this->falseselected = false;
-    } elseif ($useranswerid == 'f') {
+    } elseif ($useranswer == 'f') {
       $this->falseselected = true;
       $this->trueselected = false;
     }
 
     if ($this->displaymethod != 'dropdown') {
       if ($this->negativemarking) {
-        if ($useranswerid == 'a') {
+        if ($useranswer == 'a') {
           $this->abstainselected = true;
         } else {
           $this->abstainselected = false;
@@ -121,11 +121,11 @@ class renderdata extends \questiondata {
   /**
    * Additional option level settings for template rendering
    * @param integer $part_id part loop id
-   * @param mixed $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param mixed $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
+  public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
     // Nothing to do.
   }
 }

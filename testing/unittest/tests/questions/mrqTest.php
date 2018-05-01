@@ -53,17 +53,17 @@ class mrqtest extends unittest{
     */
   public function test_set_question() {
     $data = questiondata::get_datastore('mrq');
-    $useranswerid = 'nnnnn';
+    $useranswer = 'nnnnn';
     $data->scoremethod = 'Mark per Question';
     $data->optionnumber = 2;
-    $data->set_question(1, $useranswerid, '');
+    $data->set_question(1, $useranswer, '');
     $this->assertTrue($data->unanswered);
     $this->assertEquals(2, $data->allowedresponses);
-    $useranswerid = 'nnnyn';
-    $data->set_question(1, $useranswerid, '');
+    $useranswer = 'nnnyn';
+    $data->set_question(1, $useranswer, '');
     $this->assertFalse($data->unanswered);
-    $useranswerid = 'nynyn';
-    $data->set_question(1, $useranswerid, '');
+    $useranswer = 'nynyn';
+    $data->set_question(1, $useranswer, '');
     $this->assertFalse($data->unanswered);
   }
 
@@ -81,8 +81,8 @@ class mrqtest extends unittest{
     $data->set_opt(1, $option);
     $data->marks = 0;
     $data->scoremethod = 'Mark per Option';
-    $useranswerid = 'nnny';
-    $data->set_option_answer(1, $useranswerid, '1000', 1);
+    $useranswer = 'nnny';
+    $data->set_option_answer(1, $useranswer, '1000', 1);
     $option = $data->get_opt(1);
     $this->assertFalse($option['selected']);
     $this->assertTrue($option['inact']);
@@ -100,7 +100,7 @@ class mrqtest extends unittest{
   public function test_process_options() {
     $data = questiondata::get_datastore('mrq');
     // Test other.
-    $useranswerid = 'nnnyn';
+    $useranswer = 'nnnyn';
     $data->optionnumber = 5;
     $option['marksincorrect'] = 0;
     $option['position'] = 4;
@@ -108,22 +108,22 @@ class mrqtest extends unittest{
     $data->set_opt(4, $option);
     $data->displaymethod = 'other';
     $data->partid = 4;
-    $useranswerid = 'nnnnytest';
-    $data->process_options(4, $useranswerid, '00000', 1);
+    $useranswer = 'nnnnytest';
+    $data->process_options(4, $useranswer, '00000', 1);
     $this->assertEquals(5, $data->partid);
     $this->assertTrue($data->otherselected);
     $this->assertEquals('test', $data->other);
     // Test dismiss.
     $option['marksincorrect'] = -1;
     $data->set_opt(1, $option);
-    $data->process_options(1, $useranswerid, '01000', 1);
+    $data->process_options(1, $useranswer, '01000', 1);
     $this->assertEquals('01000', $data->dismiss);
-    $data->process_options(1, $useranswerid, '', 1);
+    $data->process_options(1, $useranswer, '', 1);
     $this->assertEquals('00000', $data->dismiss);
     // Test abstain.
-    $useranswerid = 'a';
+    $useranswer = 'a';
     $option['markscorrect'] = -1;
-    $data->process_options(1, $useranswerid, '1000', 1);
+    $data->process_options(1, $useranswer, '1000', 1);
     $option = $data->get_opt(1);
     $this->assertTrue($data->negativemarking);
     $this->assertTrue($data->abstainselected);

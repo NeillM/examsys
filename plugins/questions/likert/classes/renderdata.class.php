@@ -91,10 +91,10 @@ class renderdata extends \questiondata {
   /**
    * Question level settings for template rendering
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   * @param mixed $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param mixed $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    */
-  public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid) {
+  public function set_question($screen_pre_submitted, $useranswer, $userdismissed) {
     $likert_display = explode('|',$this->displaymethod);
     $this->scale_size = substr_count($this->displaymethod,'|');
     if ($likert_display[$this->scale_size] == 'true') {
@@ -124,12 +124,12 @@ class renderdata extends \questiondata {
   /**
    * Option level settings for template rendering
    * @param integer $part_id part loop id
-   * @param mixed $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param mixed $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function set_option_answer($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
-    if ($useranswerid == 'u' and $screen_pre_submitted == 1) {
+  public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
+    if ($useranswer == 'u' and $screen_pre_submitted == 1) {
       $this->unanswered = true;
     } else {
       $this->unanswered = false;
@@ -138,7 +138,7 @@ class renderdata extends \questiondata {
     $scale = array();
     if ($this->displayna) {
       // If n/a enabled set if selected.
-      if ($useranswerid == 'n/a') {
+      if ($useranswer == 'n/a') {
         $scale['n/a'] = true;
       } else {
         $scale['n/a'] = false;
@@ -146,7 +146,7 @@ class renderdata extends \questiondata {
     }
     // Loop through scale and set if selected.
     for ($i = 1; $i <= $this->scale_size; $i++) {
-      if ($i == $useranswerid) {
+      if ($i == $useranswer) {
         $scale[$i] = true;
       } else {
         $scale[$i] = false;
@@ -158,11 +158,11 @@ class renderdata extends \questiondata {
   /**
    * Additional option level settings for template rendering
    * @param integer $part_id part loop id
-   * @param mixed $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param mixed $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
+  public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
    // Nothing to do.
   }
 }

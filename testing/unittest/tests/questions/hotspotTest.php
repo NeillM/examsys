@@ -52,21 +52,21 @@ class hotspottest extends unittest{
     $option['correct'] = 'Chocolate calculator~16711680~polygon~16a,399,152,3c7,1a9,3ed,106,407,f9,3a6~0~|Dictionary~16776960~ellipse~392,382,2d1,418~0~';
     $option['markscorrect'] = 1;
     $data->set_opt(0, $option);
-    $useranswerid = 'u';
-    $data->set_option_answer(0, $useranswerid, '', 1);
+    $useranswer = 'u';
+    $data->set_option_answer(0, $useranswer, '', 1);
     $this->assertTrue($data->unanswered);
-    $useranswerid = '1,325,995|1,825,965';
+    $useranswer = '1,325,995|1,825,965';
     $data->mediaheight = 1600;
     $data->scoremethod = 'Mark per Question';
-    $data->set_option_answer(0, $useranswerid, '', 1);
+    $data->set_option_answer(0, $useranswer, '', 1);
     $this->assertFalse($data->unanswered);
     $this->assertEquals($option['correct'], $data->tmpcorrect);
     $this->assertEquals(1601, $data->mediaheight);
-    $this->assertEquals($useranswerid, $data->useranswer);
+    $this->assertEquals($useranswer, $data->useranswer);
     $this->assertEquals(1, $data->screensubmitted);
     $this->assertEquals(1, $data->marks);
     $data->scoremethod =  'Mark per Option';
-    $data->set_option_answer(0, $useranswerid, '', 1);
+    $data->set_option_answer(0, $useranswer, '', 1);
     $this->assertEquals(2, $data->marks);
   }
 

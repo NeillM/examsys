@@ -110,16 +110,16 @@ class renderdata extends \questiondata {
   /**
    * Question level settings for template rendering
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   * @param mixed $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param mixed $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    */
-  public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid) {
+  public function set_question($screen_pre_submitted, $useranswer, $userdismissed) {
     $this->scenarios = explode('|', $this->scenario);
     $this->media = explode('|', $this->qmedia);
     $this->mediawidth = explode('|', $this->qmediawidth);
     $this->mediaheight = explode('|', $this->qmediaheight);
-    if (!is_null($useranswerid)) {
-      $this->usersanswers = explode('|', $useranswerid);
+    if (!is_null($useranswer)) {
+      $this->usersanswers = explode('|', $useranswer);
     } else {
       $this->usersanswers = array();
     }
@@ -128,11 +128,11 @@ class renderdata extends \questiondata {
   /**
    * Option level settings for template rendering
    * @param integer $part_id part loop id
-   * @param mixed $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param mixed $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function set_option_answer($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
+  public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
     $matching_options = $this->matchoptions;
     $this->matchoptions[] = $option['optiontext'];
@@ -141,11 +141,11 @@ class renderdata extends \questiondata {
   /**
    * Additional option level settings for template rendering
    * @param integer $part_id part loop id
-   * @param mixed $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param mixed $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted) {
+  public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
     $option = $this->get_opt($part_id);
     $matching_answers = explode('|', $option['correct']);
     $matching_media = $this->media;

@@ -59,15 +59,15 @@ class extmatchtest extends unittest{
         "1516975621.jpg", "", "", "", "", "", "", "", "");
     $width = array(1480, 480, 951, "", "", "", "", "", "", "", "");
     $height= array(776, 105, 121, "", "", "", "", "", "", "", "");
-    $useranswerid = '1|3|2';
-    $data->set_question(1, $useranswerid, '');
+    $useranswer = '1|3|2';
+    $data->set_question(1, $useranswer, '');
     $this->assertEquals($scenarios, $data->scenarios);
     $this->assertEquals($media, $data->media);
     $this->assertEquals($width, $data->mediawidth);
     $this->assertEquals($height, $data->mediaheight);
     $this->assertEquals(array('1', '3', '2'), $data->usersanswers);
-    $useranswerid = null;
-    $data->set_question(0, $useranswerid, '');
+    $useranswer = null;
+    $data->set_question(0, $useranswer, '');
     $this->assertEquals(array(), $data->usersanswers);
   }
 

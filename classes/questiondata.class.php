@@ -400,31 +400,31 @@ abstract class questiondata {
   /**
    * Abstract function to set question
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   * @param integer $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param integer $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @return void
    */
-  abstract public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
+  abstract public function set_question($screen_pre_submitted, $useranswer, $userdismissed);
 
   /**
    * Abstract function to set question options
    * @param integer $part_id part loop id
-   * @param integer $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param integer $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    * @return void
    */
-  abstract public function set_option_answer($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
+  abstract public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted);
 
   /**
    * Option level settings for template rendering
    * @param integer $part_id part loop id
-   * @param integer $useranswerid user answer
-   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
+   * @param integer $useranswer user answer
+   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    * @return void
    */
-  abstract public function process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
+  abstract public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted);
 
   /**
    * Get total marks for question
@@ -598,23 +598,23 @@ abstract class questiondata {
 
     // What is the users current answer.
     if (isset($user_answers[$current_screen][$q_id])) {
-      $useranswerid = $user_answers[$current_screen][$q_id];
+      $useranswer = $user_answers[$current_screen][$q_id];
     } else {
-      $useranswerid = null;
+      $useranswer = null;
     }
 
     // What is the users current dismissed.
     if (isset($user_dismiss[$current_screen][$q_id])) {
-      $user_dismissid = $user_dismiss[$current_screen][$q_id];
+      $userdismissed = $user_dismiss[$current_screen][$q_id];
     } else {
-      $user_dismissid = null;
+      $userdismissed = null;
     }
 
     // Pre-question processing
     $this->questionno = $question_no;
     $this->displaymethod = $question['display_method'];
     $this->scoremethod = $question['score_method'];
-    $this->set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
+    $this->set_question($screen_pre_submitted, $useranswer, $userdismissed);
 
     // Processing for each stem.
     $this->options = array();
@@ -635,12 +635,12 @@ abstract class questiondata {
       $this->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '', -1, false, $part_id);
 
       // Set question options.
-      $this->set_option_answer($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
+      $this->set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted);
     }
 
     $this->optionorder = implode(',', $question['option_order']);
 
-    $this->process_options($part_id, $useranswerid, $user_dismissid, $screen_pre_submitted);
+    $this->process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted);
 
     $this->finalmarks = $this->get_marks($display_option['marks_correct']);;
     if ($paper_properties['type'] < 3) {

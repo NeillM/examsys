@@ -54,12 +54,12 @@ class areatest extends unittest{
     $option['markscorrect'] = 1;
     $data->set_opt(0, $option);
     $data->marks = 1;
-    $useranswerid = '100,0,0,0,0,7397;d5,69,df,64,d5,69, ';
-    $data->set_option_answer(0, $useranswerid, '', 0);
+    $useranswer = '100,0,0,0,0,7397;d5,69,df,64,d5,69, ';
+    $data->set_option_answer(0, $useranswer, '', 0);
     $this->assertFalse($data->unanswered);
     $this->assertEquals(1, $data->areadisplay);
     $this->assertEquals('d5,69,df,64,d5,69', $data->areauseranswer);
-    $this->assertEquals($useranswerid, $data->areafulluseranswer);
+    $this->assertEquals($useranswer, $data->areafulluseranswer);
     $this->assertEquals(2, $data->marks);
   }
 
