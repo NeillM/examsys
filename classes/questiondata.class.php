@@ -698,9 +698,6 @@ abstract class questiondata {
     $mediatype = null;
     $mediaborder = true;
     $url = $mediadirectory->url($filename);
-
-    
-      
     // Is the file an image or something else (e.g. RasMol)?
     if (!array_key_exists('extension', $fn_parts)) {
       $mediatype = self::FILE;
