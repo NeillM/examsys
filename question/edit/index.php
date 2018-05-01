@@ -171,7 +171,7 @@ if (!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
         $modules = Paper_utils::get_modules($paper_id, $mysqli);
       } else {
         // Adding via a module.
-        $modules = array($module);
+        $modules = array($module => module_utils::get_instance()->get_moduleid_from_id($module, $mysqli));
       }
       $question->set_teams($modules);
     } catch (ClassNotFoundException $ex) {
