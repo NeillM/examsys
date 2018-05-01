@@ -409,7 +409,7 @@ abstract class questiondata {
   /**
    * Abstract function to set question options
    * @param integer $part_id part loop id
-   * @param integer $useranswerid id of option user selected
+   * @param integer $useranswerid user answer
    * @param integer $user_dismissid id of option user dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    * @return void
@@ -419,7 +419,7 @@ abstract class questiondata {
   /**
    * Option level settings for template rendering
    * @param integer $part_id part loop id
-   * @param integer $useranswerid id of option user selected
+   * @param integer $useranswerid user answer
    * @param integer $user_dismissid id of option user dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    * @return void
