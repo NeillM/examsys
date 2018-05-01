@@ -181,7 +181,7 @@ if ($is_preview_mode_first_launch == true or ($is_first_launch and !$do_restart)
 }
 $metadataID = $log_metadata->get_metadata_id();
 
-//  Check if paper shoudl display a timer.
+//  Check if paper should display a timer.
 $allow_timing = $propertyObj->display_timer();
 
 /*
