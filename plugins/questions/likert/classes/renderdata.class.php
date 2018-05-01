@@ -114,7 +114,7 @@ class renderdata extends \questiondata {
       $this->displaylikertscenario = false;
     }
     $disp[0] = $likert_display[0];
-    $temp_end = substr_count($this->displaymethod,'|') - 1;
+    $temp_end = $this->scale_size - 1;
     for ($i=1; $i<=$temp_end; $i++) {
       $disp[$i] = $likert_display[$i];
     }
