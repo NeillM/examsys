@@ -21,28 +21,6 @@
 */
 
 /**
- * Get total marks for question
- */
-trait defaultgetmarks {
-  public function get_marks ($markscorrect) {
-    return $this->marks;
-  }
-}
-
-/**
- * Get total marks for question
- * Apply marks per question if applicable
- */
-trait mpqgetmarks {
-  public function get_marks ($markscorrect) {
-    $marks = $this->marks;
-    if ($this->scoremethod == 'Mark per Question') {
-      $marks = $markscorrect;
-    }
-    return $marks;
-  }
-}
-/**
  * Question data helper class.
  * Get/Set data to be used in rendering object.
  */
