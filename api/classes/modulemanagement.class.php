@@ -231,7 +231,7 @@ class modulemanagement extends \api\abstractmanagement {
                     $params['externalid'] = null;
                 }
                 $id = \module_utils::add_modules($params['modulecode'], $params['name'], 1, $schoolid, '', $params['sms'],
-                    '', false, false, false, false, '', '', $this->db, false, '', '', '', 0, '07/01', $params['externalid']);
+                    '', false, false, false, false, 0, '', $this->db, false, '', '', '', 0, '07/01', $params['externalid']);
                 if ($id) {
                     $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'externalid' => $params['externalid']);
                 } else {

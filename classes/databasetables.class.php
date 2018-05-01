@@ -711,7 +711,7 @@ QUERY;
           `sms` varchar(255) default NULL,
           `selfenroll` tinyint(4) default NULL,
           `schoolid` int(11) default NULL,
-          `neg_marking` tinyint(1) default NULL,
+          `neg_marking` tinyint(1) default 0,
           `ebel_grid_template` int(11) default NULL,
           `mod_deleted` datetime default NULL,
           `timed_exams` tinyint(4) default NULL,
