@@ -82,7 +82,7 @@ class renderdata extends \questiondata {
     // Get possible answers.
     $option['optiontext'] = str_replace('&nbsp;',' ',$option['optiontext']);
     // Create an array of all blurbs.
-    $blurbs = preg_split("/\[blank\](.*?)\[\/blank\]/", $option['optiontext']);
+    $blurbs = preg_split("/\[blank(\|)*(size=\"([0-9]{1,3})\"\|)*(mark=\"([0-9]{1,3})\"\|)*\](.*?)\[\/blank\]/", $option['optiontext']);
     // Create an array of all blanks.
     preg_match_all("/\[blank(\|)*(size=\"([0-9]{1,3})\"\|)*(mark=\"([0-9]{1,3})\"\|)*\](.*?)\[\/blank\]/", $option['optiontext'], $blankmatch);
     $blanks = $blankmatch[6];

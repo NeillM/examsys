@@ -91,8 +91,9 @@ class blanktest extends unittest{
     $blankoptions[1] = array('itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of ');
     $blankoptions[2] = array('itemtype' => 'blank', 'itemcount' => 1, 'size' => 100, 'unans' => false, 'encoded_ans' => 'Wales');
     $blankoptions[3] = array('itemtype' => 'blurb', 'itemvalue' => ' and is in the ');
-    $blankoptions[4] = array('itemtype' => 'blank', 'itemcount' => 2, 'size' => 100, 'unans' => true);
+    $blankoptions[4] = array('itemtype' => 'blank', 'itemcount' => 2, 'size' => 15, 'unans' => true);
     $blankoptions[5] = array('itemtype' => 'blurb', 'itemvalue' => '</div>');
+    $this->assertEquals($blankoptions, $data->blankoptions);
   }
 
   /**
@@ -130,8 +131,9 @@ class blanktest extends unittest{
     $blankoptions[1] = array('itemtype' => 'blurb', 'itemvalue' => '<div>London is the capital of ');
     $blankoptions[2] = array('itemtype' => 'blank', 'itemcount' => 1, 'size' => 100, 'unans' => false, 'encoded_ans' => 'Wales');
     $blankoptions[3] = array('itemtype' => 'blurb', 'itemvalue' => ' and is in the ');
-    $blankoptions[4] = array('itemtype' => 'blank', 'itemcount' => 2, 'size' => 100, 'unans' => true);
+    $blankoptions[4] = array('itemtype' => 'blank', 'itemcount' => 2, 'size' => 15, 'unans' => true);
     $blankoptions[5] = array('itemtype' => 'blurb', 'itemvalue' => '</div>');
+    $this->assertEquals($blankoptions, $data->blankoptions);
   }
 
   /**
