@@ -401,7 +401,7 @@ abstract class questiondata {
    * Abstract function to set question
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    * @param integer $useranswerid user answer
-   * @param integer $user_dismissid id of option user dismissed
+   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
    * @return void
    */
   abstract public function set_question($screen_pre_submitted, $useranswerid, $user_dismissid);
@@ -410,7 +410,7 @@ abstract class questiondata {
    * Abstract function to set question options
    * @param integer $part_id part loop id
    * @param integer $useranswerid user answer
-   * @param integer $user_dismissid id of option user dismissed
+   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    * @return void
    */
@@ -420,7 +420,7 @@ abstract class questiondata {
    * Option level settings for template rendering
    * @param integer $part_id part loop id
    * @param integer $useranswerid user answer
-   * @param integer $user_dismissid id of option user dismissed
+   * @param string $user_dismissid list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    * @return void
    */
