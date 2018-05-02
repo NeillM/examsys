@@ -7,11 +7,11 @@
 //
 // Rogō is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+// along with Rogō. If not, see <http://www.gnu.org/licenses/>.
 
 /**
  *
@@ -67,7 +67,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
 	/**
 	 * Split answer into number and units if applicable
-	 * @param  string $input User answer
+	 * @param string $input User answer
 	 * @return array Number and unit components of the string
 	 */
 	function split_numb_from_unit($input) {
@@ -82,7 +82,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			if (isset($matches[0])) {
 				return array($matches[0], $this->useranswer['uansunit']);
 			} else {
-				return array($input, $this->useranswer['uansunit']);  // No number matched
+				return array($input, $this->useranswer['uansunit']); // No number matched
 			}
 		}
 
@@ -93,13 +93,13 @@ class EnhancedCalc extends Question implements questionInterface {
 
 			return array($numb, $units);
 		} else {
-			return array($input, '');  // No number matched
+			return array($input, ''); // No number matched
 		}
 	}
 
 	/**
-	 * Build an array of formule indexed by their associated units
-	 * @param  array $ans Array of possible answers containing a formula and comma separated list of units
+	 * Build an array of formula indexed by their associated units
+	 * @param array $ans Array of possible answers containing a formula and comma separated list of units
 	 * @return array Array of formulae indexed by units string
 	 */
 	function build_formula_by_units($ans) {
@@ -117,7 +117,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
 	/**
 	 * Check if the user entered units match any that are defined in the possible answers
-	 * @param  string $unit Units as entered by the user
+	 * @param string $unit Units as entered by the user
 	 * @return boolean True if the units match any defined in the answers
 	 */
 	function are_units_correct($unit) {
@@ -204,14 +204,14 @@ class EnhancedCalc extends Question implements questionInterface {
 
 				/*
 				 *
-				 *  CALCULATE REQURED NUMERIC VALUES
+				 * CALCULATE REQURED NUMERIC VALUES
 				 *
 				 */
 				$this->useranswer['cans'] = $this->enhancedcalcObj->calculate_correct_ans($this->useranswer['vars'], $this->useranswer['ans']['formula_used']);
 			} catch (Exception $e) {
 				//TODO: catch different errors "no connection", "unable to evaluate"
 				if (stripos($e->getMessage(), 'connect') !== false) {
-					$returnstatus = Q_MARKING_UNMARKED;   // Set to unmarked as there is no connection to R serve.
+					$returnstatus = Q_MARKING_UNMARKED; // Set to unmarked as there is no connection to R serve.
 				} else {
 					$returnstatus = Q_MARKING_UNCALC_ANSWER;
 					$this->useranswer['status']['error'] = true;
@@ -242,7 +242,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			} catch (Exception $e) {
 				//TODO: catch different errors "no connection", "unable to evaluate"
 				if (stripos($e->getMessage(), 'connect') !== false) {
-					$returnstatus = Q_MARKING_UNMARKED;   // Set to unmarked as there is no connection to R serve.
+					$returnstatus = Q_MARKING_UNMARKED; // Set to unmarked as there is no connection to R serve.
 				} else {
 					$returnstatus = Q_MARKING_UNCALC_FULL_TOLLERANCE;
 					$this->useranswer['status']['error'] = true;
@@ -273,7 +273,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			} catch (Exception $e) {
 				//TODO: catch different errors "no connection", "unable to evaluate"
 				if (stripos($e->getMessage(), 'connect') !== false) {
-					$returnstatus = Q_MARKING_UNMARKED;   // Set to unmarked as there is no connection to R serve.
+					$returnstatus = Q_MARKING_UNMARKED; // Set to unmarked as there is no connection to R serve.
 				} else {
 					$returnstatus = Q_MARKING_UNCALC_PARTIAL_TOLLERANCE;
 					$this->useranswer['status']['error'] = true;
@@ -319,7 +319,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			} catch (Exception $e) {
 				//TODO: catch different errors "no connection", "unable to evaluate"
 				if (stripos($e->getMessage(), 'connect') !== false) {
-						$returnstatus = Q_MARKING_UNMARKED;   // Set to unmarked as there is no connection to R serve.
+						$returnstatus = Q_MARKING_UNMARKED; // Set to unmarked as there is no connection to R serve.
 				} else {
 						$returnstatus = Q_MARKING_UNCALC_FORMAT;
 						$this->useranswer['status']['error'] = true;
@@ -361,7 +361,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			} catch (Exception $e) {
 				//TODO: catch different errors "no connection", "unable to evaluate"
 				if (stripos($e->getMessage(), 'connect') !== false) {
-					$returnstatus = Q_MARKING_UNMARKED;   // Set to unmarked as there is no connection to R serve.
+					$returnstatus = Q_MARKING_UNMARKED; // Set to unmarked as there is no connection to R serve.
 				} else {
 					$returnstatus = Q_MARKING_UNCALC_USER_ANSWER;
 					$this->useranswer['status']['error'] = true;
@@ -388,7 +388,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			} catch (Exception $e) {
 				//TODO: catch different errors "no connection", "unable to evaluate"
 				if (stripos($e->getMessage(), 'connect') !== false) {
-					$returnstatus = Q_MARKING_UNMARKED;   // Set to unmarked as there is no connection to R serve.
+					$returnstatus = Q_MARKING_UNMARKED; // Set to unmarked as there is no connection to R serve.
 				} else {
 					$returnstatus = Q_MARKING_UNCALC_DIST_FROM_ANSWER;
 					$this->useranswer['status']['error'] = true;
@@ -409,7 +409,7 @@ class EnhancedCalc extends Question implements questionInterface {
 				} catch (Exception $e) {
 					//TODO: catch different errors "no connection", "unable to evaluate"
 					if (stripos($e->getMessage(), 'connect') !== false) {
-							$returnstatus = Q_MARKING_UNMARKED;   // Set to unmarked as there is no connection to R serve.
+							$returnstatus = Q_MARKING_UNMARKED; // Set to unmarked as there is no connection to R serve.
 					} else {
 							$returnstatus = Q_MARKING_UNCALC_WITHIN_FULL_TOLERANCE;
 							$this->useranswer['status']['error'] = true;
@@ -429,7 +429,7 @@ class EnhancedCalc extends Question implements questionInterface {
 					} catch (Exception $e) {
 						//TODO: catch different errors "no connection", "unable to evaluate"
 						if (stripos($e->getMessage(), 'connect') !== false) {
-							$returnstatus = Q_MARKING_UNMARKED;   // Set to unmarked as there is no connection to R serve.
+							$returnstatus = Q_MARKING_UNMARKED; // Set to unmarked as there is no connection to R serve.
 						} else {
 							$returnstatus = Q_MARKING_UNCALC_WITHIN_PARTIAL_TOLERANCE;
 							$this->useranswer['status']['error'] = true;
@@ -465,7 +465,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			} catch (Exception $e) {
 				//TODO: catch different errors "no connection", "unable to evaluate"
 				if (stripos($e->getMessage(), 'connect') !== false) {
-					$returnstatus = Q_MARKING_UNMARKED;   // Set to unmarked as there is no connection to R serve.
+					$returnstatus = Q_MARKING_UNMARKED; // Set to unmarked as there is no connection to R serve.
 				} else {
 					$returnstatus = Q_MARKING_UNCALC_STRICT_DP_CHECK;
 					$this->useranswer['status']['error'] = true;
@@ -523,7 +523,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			} catch (Exception $e) {
 				//TODO: catch different errors "no connection", "unable to evaluate"
 				if (stripos($e->getMessage(), 'connect') !== false) {
-					$returnstatus = Q_MARKING_UNMARKED;   // Set to unmarked as there is no connection to R serve.
+					$returnstatus = Q_MARKING_UNMARKED; // Set to unmarked as there is no connection to R serve.
 				} else {
 					$returnstatus = Q_MARKING_ERROR;
 					$this->useranswer['status']['error'] = true;
@@ -548,8 +548,8 @@ class EnhancedCalc extends Question implements questionInterface {
 
 	/**
 	 * Process the POST data for the user's answer into JSON
-	 * @param  array  $postdata HTML POST data for the user's answer
-	 * @param  array $session user session data
+	 * @param array $postdata HTML POST data for the user's answer
+	 * @param array $session user session data
 	 * @return string JSON encoded answer data
 	 */
 	static public function process_user_answer(&$postdata, &$session) {
@@ -596,15 +596,15 @@ class EnhancedCalc extends Question implements questionInterface {
 
 	/**
 	 * Calculate the Random Mark for this question
-	 * @return integer  Expected marks if answeing the question by guessing
+	 * @return integer Expected marks if answering the question by guessing
 	 */
 	public function calculate_random_mark() {
-		return 0;				// The chances of getting a calculation question correct by luck is extremely small - return zero.
+		return 0; // The chances of getting a calculation question correct by luck is extremely small - return zero.
 	}
 
 	/**
 	 * Is this question excluded
-	 * @return boolean true if question has been exluded due to poor performance
+	 * @return boolean true if question has been excluded due to poor performance
 	 */
 	function is_excluded() {
 		return (isset($this->excluded{0}) and $this->excluded{0} == 1);
@@ -687,7 +687,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
 	/**
 	 * Render the question as required for displaying results and feedback to the user
-	 * @param  array $extra additional paper settings
+	 * @param array $extra additional paper settings
 	 */
 	public function render_feedback($extra = array()) {
 		global $string;
@@ -830,8 +830,8 @@ class EnhancedCalc extends Question implements questionInterface {
 
 	/**
 	 * Substitute variable placeholders with the calculated value
-	 * @param  string $inputVal The variable definition
-	 * @param  array $user_answers a users input
+	 * @param string $inputVal The variable definition
+	 * @param array $user_answers a users input
 	 * @return string
 	 */
 	function variable_substitution($inputVal, $user_answers) {
@@ -917,7 +917,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
 	/**
 	 * test to see if a var is linked to a previous answer
-	 * @param  string var min or max
+	 * @param string var min or max
 	 * @return bool
 	 */
 	public function is_linked_ans($varval) {
@@ -938,7 +938,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
 	/**
 	 * test to see if a var is linked to a previous question
-	 * @param  string  var min or max
+	 * @param string var min or max
 	 * @return bool
 	 */
 	public function is_linked_question_var($varval) {
@@ -950,7 +950,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
 	/**
 	 * test to see if a var is built from previous vars
-	 * @param  string  var min or max
+	 * @param string var min or max
 	 * @return bool
 	 */
 	public function is_compound_question_var($varval) {
@@ -963,7 +963,7 @@ class EnhancedCalc extends Question implements questionInterface {
 	/**
 	 * Replace $A,$B,$C etc in a string
 	 *
-	 * @param  array $vars array('$VARNAME'=>VALUE)
+	 * @param array $vars array('$VARNAME'=>VALUE)
 	 * @param string $formula sting in the format "($A+$B)/$C"
 	 * @return string
 	 */
@@ -1053,6 +1053,9 @@ class EnhancedCalc extends Question implements questionInterface {
 	public function render_paper($extra = array()) {
 		global $string;
 
+		$configObject = Config::get_instance();
+		$render = new render($configObject, __DIR__ . DIRECTORY_SEPARATOR . 'templates');
+
 		// Display question on paper
 		$screen_pre_submitted = null;
 		if (isset($extra['screen_pre_submitted'])) {
@@ -1090,21 +1093,21 @@ class EnhancedCalc extends Question implements questionInterface {
 		}
 
 		$dispunits = '';
+		$questiondata['showunits'] = $this->settings['show_units'];
+		$questiondata['numunitoptions'] = count($this->settings['answersexp']);
+		$questiondata['id'] = $this->id;
 		if ($this->settings['show_units'] === true) {
-			if (count($this->settings['answersexp']) > 1) {
+			if ($questiondata['numunitoptions'] > 1) {
 				// Make drop down of units
-				$dispunits = "&nbsp;&nbsp;<select name='qid[" . $this->id . "][uansunit]'>";
 				foreach ($this->settings['answersexp'] as $key => $value) {
+					$questiondata['options'][$key] = false;
 					if (isset($this->useranswer['uansunit']) and $key == $this->useranswer['uansunit']) {
-						$dispunits = $dispunits . "<option value='$key' selected>$key</option>";
-					} else {
-						$dispunits = $dispunits . "<option value='$key'>$key</option>";
+						$questiondata['options'][$key] = true;
 					}
 				}
-				$dispunits = $dispunits . '</select>';
 			} else {
 				$dispunits = array_keys($this->settings['answersexp']);
-				$dispunits = "&nbsp;&nbsp;" . $dispunits[0] . "<input type=\"hidden\" name=\"qid[" . $this->id . "][uansunit]\" value=\"" . $dispunits[0] . "\" />";
+				$questiondata['option'] = $dispunits[0];
 			}
 		}
 
@@ -1141,25 +1144,31 @@ class EnhancedCalc extends Question implements questionInterface {
 			echo "</table>\n<br />";
 
 			$real_answer = $this->get_real_answer();
-			$this->add_to_useranswer('uans', $real_answer);  // Get the real answer and override
+			$this->add_to_useranswer('uans', $real_answer); // Get the real answer and override
 		}
 
+		$questiondata['displayscenario'] = false;
 		if ($this->scenario != '') {
-			echo "<p>" . $this->scenario . "</p>\n";
+			$questiondata['displayscenario'] = true;
+			$questiondata['scenario'] = $this->scenario;
 		}
+		$questiondata['displaymedia'] = false;
 		if ($this->q_media != '') {
-			echo "<p align=\"center\">" . display_media($this->q_media, $this->q_media_width, $this->q_media_height, '') . "</p>\n";
+			$questiondata['displaymedia'] = true;
 		}
 
 		$marking_precision_feedback = '';
+		$questiondata['feedbackprecision'] = 'dp';
 		if ($this->is_strict_dp_enabled()) {
-			$marking_precision_feedback = " <span class=\"calc_fb\">(" . $string['answer_to'] . " " . $this->settings['dp'] . " " . $string['decimal_places'] . ")</span>";
+			$marking_precision_feedback = 'dp';
+			$questiondata['feedbackprecisionvalue'] = $this->settings['dp'];
 		} else if ($this->is_strict_sf_enabled()) {
-			$marking_precision_feedback = " <span class=\"calc_fb\">(" . $string['answer_to'] . " " . $this->settings['sf'] . " " . $string['significant_figures'] . ")</span>";
+			$marking_precision_feedback = 'sf';
+			$questiondata['feedbackprecisionvalue'] = $this->settings['sf'];
 		}
+		$questiondata['feedbackprecision'] = $marking_precision_feedback;
 
-		echo $leadin;
-
+		$questiondata['leadin'] = $leadin;
 		// Find any previous failed/unanswered related question
 		$failed_answers = array();
 		foreach ($this->useranswer['vars'] as $key => $value) {
@@ -1176,30 +1185,33 @@ class EnhancedCalc extends Question implements questionInterface {
 		// We could have duplicates if answer/variable in a parent question is used in multiple variables in a child question.
 		$failed_answers = array_unique($failed_answers);
 		$screen = $extra['current_question']['screen'];
+		$questiondata['screen'] = $screen;
 		if (in_array('ERROR', $this->useranswer['vars'], true)) {
-			echo "<p><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" data-screen=\"$screen\" size=\"10\" value=\"\" disabled=\"disabled\" />" . $dispunits . $marking_precision_feedback . "</p>\n";
-			echo "<p><strong>" . sprintf($string['failedanswer'], implode(', ', $failed_answers)) . "</strong></p>";
-			echo "<input type=\"hidden\" name=\"missingCalcAnswer\" id=\"missingCalcAnswer\" value=\"1\">";
+			$questiondata['error'] = true;
+			$questiondata['failedanswer'] = sprintf($string['failedanswer'], implode(', ', $failed_answers));
 		} else {
+			$questiondata['error'] = false;
 			if (isset($this->useranswer['uans']) and $this->useranswer['uans'] == '') {
-				echo "<div><input type=\"text\" style=\"text-align:right\" name=\"qid[" . $this->id . "][uans]\" data-screen=\"$screen\" size=\"10\" class=\"unans ecalc-answer\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
+				$questiondata['useranswered'] = 0;
 			} else {
+				$questiondata['numonscreen'] = $extra['num_on_screen'];
 				if ((isset($this->useranswer['uans']) and $this->useranswer['uans'] != '')) { // Or $screen_pre_submitted == 0
 					$ans = $this->useranswer['uans'];
-
-					echo "<div><input type=\"text\" style=\"text-align:right\" id=\"q{$extra['num_on_screen']}\" name=\"qid[" . $this->id . "][uans]\" data-screen=\"$screen\" size=\"10\" value=\"" . $ans . "\" class=\"ecalc-answer\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
+					$questiondata['useranswered'] = 1;
+					$questiondata['answer'] = $ans;
 				} else {
-					echo "<div><input type=\"text\" style=\"text-align:right\" class=\"ecalc-answer\" id=\"q{$extra['num_on_screen']}\" name=\"qid[" . $this->id . "][uans]\" data-screen=\"$screen\" size=\"10\" value=\"\" />" . $dispunits . $marking_precision_feedback . "</div>\n";
 					$unanswered = true;
+					$questiondata['useranswered'] = 2;
 				}
 			}
 		}
 
 		$marks = $this->settings['marks_correct'];
+		$render->render($questiondata, $string, 'enhancedcalc.html');
 	}
 
 	/**
-	 * Get the veriables as defined in the question
+	 * Get the variables as defined in the question
 	 * @return array Array of defined variables indexed by the label (e.g. $A)
 	 */
 	public function get_question_vars() {
@@ -1209,7 +1221,7 @@ class EnhancedCalc extends Question implements questionInterface {
 	}
 
 	/**
-	 * Set the veriables as defined in the question
+	 * Set the variables as defined in the question
 	 */
 	public function set_question_vars($vars) {
 		$this->decode_settings();
@@ -1240,7 +1252,7 @@ class EnhancedCalc extends Question implements questionInterface {
 	}
 
 	/**
-	 * Get whether the question is set to disply uints to the user
+	 * Get whether the question is set to display units to the user
 	 * @return boolean Whether to show units for the question
 	 */
 	public function get_show_units() {
@@ -1256,7 +1268,7 @@ class EnhancedCalc extends Question implements questionInterface {
 		$this->decode_settings();
 		$units = $this->settings['answers'][0]['units'];
 
-		$this->add_to_useranswer('uans', "1 $units");   // Set a bogus answer before marking.
+		$this->add_to_useranswer('uans', "1 $units"); // Set a bogus answer before marking.
 		$this->calculate_user_mark();
 
 		if ($this->settings['show_units'] == true and isset($this->useranswer['cans'])) {

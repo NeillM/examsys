@@ -1,0 +1,30 @@
+log_late:
+  -
+    id: 1
+    q_id: 2
+    user_answer: '2'
+    duration: 10
+    screen: 1
+    dismiss: '1000'
+    option_order: '0,1,2,3'
+    metadataID: 1
+log2:
+  -
+    id: 2
+    q_id: 2
+    user_answer: '1'
+    duration: 5
+    screen: 1
+    dismiss: '0000'
+    option_order: '0,1,2,3'
+    metadataID: 1
+log0:
+  -
+    id: 3
+    q_id: 2
+    user_answer: '1'
+    duration: 5
+    screen: 2
+    dismiss: '0000'
+    option_order: '0,1,2,3'
+    metadataID: 2
