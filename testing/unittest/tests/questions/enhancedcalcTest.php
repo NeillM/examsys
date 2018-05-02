@@ -15,6 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
+use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
 /**
  * Test fill in the enhancedcalc question class
@@ -30,7 +31,7 @@ class enhancedcalctest extends unittestdatabase{
     * @return dataset
     */
   public function getDataSet() {
-    return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory()
+    return new YamlDataSet($this->get_base_fixture_directory()
       . DIRECTORY_SEPARATOR. "questions"
       . DIRECTORY_SEPARATOR . "enchancedcalcTest"
       . DIRECTORY_SEPARATOR . "enhancedcalc.yml");
