@@ -1704,7 +1704,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       $split_hour = $start_date->format('H');
       $split_minute = $start_date->format('i');
     } else {
-      $split_year = $split_month = $split_day = $split_hour = $split_minute = '';
+      $split_year = $split_month = $split_day = $split_hour = $split_minute = 0;
     }
 
     // Available from Day
@@ -1811,7 +1811,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       $split_hour = $end_date->format('H');
       $split_minute = $end_date->format('i');
     } else {
-      $split_year = $split_month = $split_day = $split_hour = $split_minute = '';
+      $split_year = $split_month = $split_day = $split_hour = $split_minute = 0;
     }
 
     echo "<td align=\"right\">" . $string['to'] . "&nbsp;</td><td>";
