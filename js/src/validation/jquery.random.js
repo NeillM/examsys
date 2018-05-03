@@ -13,8 +13,8 @@ $(function() {
       questioncheck: 'havequestions'
     },
     messages: {
-      leadin: lang['enterdescription'],
-      questioncheck: lang['randomenterquestion']
+      leadin: lang_string['enterdescription'],
+      questioncheck: lang_string['randomenterquestion']
     },
     errorPlacement: function(error, element) {
       if (element.attr('name') == 'questioncheck') {
@@ -24,7 +24,7 @@ $(function() {
       }
     },
     invalidHandler: function() {
-      alert(lang['validationerror']);
+      alert(lang_string['validationerror']);
     }
   });
 });
