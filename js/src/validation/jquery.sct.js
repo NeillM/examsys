@@ -8,7 +8,7 @@ $(function() {
       scenario: 'required'
     },
     messages: {
-      scenario: lang['entervignette']
+      scenario: lang_string['entervignette']
     },
     errorPlacement: function(error, element) {
       if (element.attr('name') == 'scenario') {
@@ -23,7 +23,7 @@ $(function() {
       }
     },
     invalidHandler: function() {
-      alert(lang['validationerror']);
+      alert(lang_string['validationerror']);
     }
   });
 });

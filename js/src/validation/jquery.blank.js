@@ -9,8 +9,8 @@ $(function() {
       option_text: 'required'
     },
     messages: {
-      leadin: lang['enterleadin'],
-      option_text: lang['enterquestion']
+      leadin: lang_string['enterleadin'],
+      option_text: lang_string['enterquestion']
     },
     errorPlacement: function(error, element) {
       if (element.attr('name') == 'leadin') {
@@ -31,7 +31,7 @@ $(function() {
       }
     },
     invalidHandler: function() {
-      alert(lang['validationerror']);
+      alert(lang_string['validationerror']);
     }
   });
 })

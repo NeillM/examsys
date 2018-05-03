@@ -10,8 +10,8 @@ $(function () {
       option_text1: 'required'
     },
     messages: {
-      leadin: '<br />'+lang['enterleadin'],
-      option_text1: '<br />'+lang['enteroption_kw']
+      leadin: '<br />'+lang_string['enterleadin'],
+      option_text1: '<br />'+lang_string['enteroption_kw']
     }
   });
 });
