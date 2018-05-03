@@ -196,3 +196,9 @@ config/campuses.inc
 
 .vagrant/*
 .npm/*
+/results
+chromedriver
+geckodriver
+geckodriver.tar.gz
+selenium-chrome.zip
+selenium-server.jar
