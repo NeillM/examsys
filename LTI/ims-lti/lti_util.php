@@ -1,12 +1,9 @@
 <?php
 
 use LTI\OAuthConsumer,
-    LTI\OAuthDataStore,
     LTI\OAuthRequest,
     LTI\OAuthServer,
     LTI\OAuthSignatureMethod_HMAC_SHA1,
-    LTI\OAuthToken,
-    LTI\OAuthUtil,
     LTI\TrivialOAuthDataStore;
 
 $OAuth_last_computed_siguature = false;
@@ -434,7 +431,8 @@ function sendXmlOverPost($url, $xml, $header) {
 
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // ask for results to be returned
   curl_setopt($ch,CURLOPT_TIMEOUT, 10);
-
+  curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, false);
   // Send to remote and return data to caller.
   $result = curl_exec($ch);
   curl_close($ch);
