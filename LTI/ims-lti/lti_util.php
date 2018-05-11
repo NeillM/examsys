@@ -420,6 +420,7 @@ function sendOAuthBodyPOST($method, $endpoint, $oauth_consumer_key, $oauth_consu
 
 function sendXmlOverPost($url, $xml, $header) {
   if ( ! function_exists('curl_init') ) return false;
+  $configObject = Config::get_instance();
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
 
@@ -431,8 +432,8 @@ function sendXmlOverPost($url, $xml, $header) {
 
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // ask for results to be returned
   curl_setopt($ch,CURLOPT_TIMEOUT, 10);
-  curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, false);
-  curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, false);
+  curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, $configObject->get_setting('core', 'lti_ssl_verifypeer'));
+  curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, $configObject->get_setting('core', 'lti_ssl_verifyhost'));
   // Send to remote and return data to caller.
   $result = curl_exec($ch);
   curl_close($ch);
