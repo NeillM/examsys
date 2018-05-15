@@ -52,6 +52,36 @@ class renderdata extends \questiondata {
   public $editor;
 
   /**
+   * Editor config file
+   * @var string
+   */
+  public $file;
+
+  /**
+   * Editor type
+   * @var string
+   */
+  public $type;
+
+  /**
+   * Editor style
+   * @var string
+   */
+  public $style;
+
+  /**
+   * Editor config file template
+   * @var string
+   */
+  public $editorconfig;
+
+  /**
+   * Editor textarea file template
+   * @var string
+   */
+  public $editortextarea;
+
+  /**
    * User answer
    * @var string
    */
@@ -117,6 +147,7 @@ class renderdata extends \questiondata {
       $this->editorcolumns = $settings['columns'];
       $this->editorrows = $settings['rows'];
       if (!isset($settings['editor']) or $settings['editor'] == 'plain' or $settings['editor'] == 'mathjax') {
+        // a wysiwyg editor might be enabled but this has been overriden at the question level.
         $this->editor = 'plain';
         if ($useranswer == '' and $screen_pre_submitted == 1) {
           $this->useranswer = $useranswer;
@@ -126,18 +157,21 @@ class renderdata extends \questiondata {
           $this->unanswered = false;
         }
         if ($settings['editor'] == 'mathjax') {
-          // Bad way of inserting mathjax editor to be resolved in ROGO-2263.
           $this->editormathjax =  true;
         }
       } else {
-        // Bad way of inserting text editor to be resolved in ROGO-2263.
-        echo $this->config->get('cfg_js_root');
-        echo "<script type=\"text/javascript\" src=\"" . $this->config->get('cfg_root_path') . "/tools/tinymce/jscripts/tiny_mce/tiny_mce.js\"></script>";
+        $texteditorplugin_name = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+        $te = explode('_',$texteditorplugin_name[0]);
+        $this->editor = $te[1];
+        $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+        $texteditorplugin = new $texteditorpluginns($this->config->db);
         if ($useranswer == '' and $screen_pre_submitted == 1) {
-          echo "<script type=\"text/javascript\" src=\"" . $this->config->get('cfg_root_path') . "/tools/tinymce/jscripts/tiny_mce/tiny_config_unanswered.js\"></script>";
+          $this->file = $this->editor . '_config_unanswered';
         } else {
-          echo "<script type=\"text/javascript\" src=\"" . $this->config->get('cfg_root_path') . "/tools/tinymce/jscripts/tiny_mce/tiny_config_answered.js\"></script>";
+          $this->file = $this->editor . '_config_answered';
         }
+
+        $this->editorconfig = $this->editor . '_config.html';
 
         $textbox_width  = ( 40 + ( $settings['columns'] * 8 ) );
         $textbox_height = ( $settings['rows'] * 28 );
@@ -146,12 +180,15 @@ class renderdata extends \questiondata {
 
         if ($useranswer == '' and $screen_pre_submitted == 1) {
           $this->unanswered = true;
-          $background_colour = 'background-color:red;';
+          $background_colour = 'background-color:red; ';
         } else {
           $this->unanswered = false;
         }
-        // Bad way of inserting text editor to be resolved in ROGO-2263.
-        echo "<textarea class=\"mceEditor\" id=\"q" . $this->questionno . "\" name=\"q" . $this->questionno . "\"style=\"" . $background_colour . "; width:" . $textbox_width . "px; height:" . $textbox_height . "px\">" . $useranswer . "</textarea>";
+        $this->useranswer = $useranswer;
+
+        $this->editortextarea = $this->editor . '_textarea.html';
+        $this->type = $texteditorplugin->get_type(\plugins\plugins_texteditor::type_standard);
+        $this->style = $background_colour . "width:" . $textbox_width . "px; height:" . $textbox_height . "px";
       }
       $this->textboxesseen = $textboxes_seen;
       $marks = $this->marks;

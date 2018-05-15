@@ -85,11 +85,12 @@ function clearMSOtags($sHTML) {
  * @return html of editor
  */
 function wysiwyg_editor($name, $replace, $content='', $type = '') {
+  $configObject = Config::get_instance();
   $html = '';
   $content = htmlspecialchars($content);
   $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
   $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-  $texteditorplugin = new $texteditorpluginns($mysqli);
+  $texteditorplugin = new $texteditorpluginns($configObject->db);
   $html .=  $texteditorplugin->get_textarea($name, $replace, $content, $type);
   return $html;
 }

@@ -119,7 +119,7 @@ exit();
       $('#msg').height(new_height);
       
       $('form').submit(function() {
-        tinyMCE.triggerSave();
+        triggerSave();
         if ($('#msg').val() == '') {
           $('.defaultSkin table.mceLayout').css('border-color', '#C00000');
           $('.defaultSkin table.mceLayout').css('box-shadow', '0 0 6px rgba(200, 0, 0, 0.85)');

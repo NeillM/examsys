@@ -246,8 +246,12 @@ if (isset($low_bandwidth) and $low_bandwidth == 1) {
 }
 
 $url_mod = ($is_question_preview_mode) ? '&q_id=' . $get_qid . '&qNo=' . $q_number : '';
-
-$render = new render($configObject);
+$texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+$texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+$texteditorplugin = new $texteditorpluginns($mysqli);
+$render = new render($configObject, array(
+  $texteditorplugin->get_header_path(),
+  dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates'));
 $headerdata = array(
   'css' => array(
     '/css/start.css',
@@ -274,10 +278,6 @@ if (Paper_utils::need_interactiveQ($screen_data, $current_screen, $mysqli)) {
   $headerdata['scripts'][] = '/js/qhotspot.js';
   $headerdata['scripts'][] = '/js/qarea.js';
 }
-if ($propertyObj->get_latex_needed() == 1) {
-  $headerdata['scripts'][] = '/js/jquery-migrate-1.2.1.min.js';
-  $headerdata['scripts'][] = '/tools/mee/mee/js/mee_src.js';
-}
 if($configObject->get_setting('core', 'paper_mathjax')) {
   $headerdata['scripts'][] = '/js/mathjax-config.min.js';
   $headerdata['scripts'][] = '/node_modules/mathjax/MathJax.js?config=TeX-MML-AM_HTMLorMML';
@@ -288,6 +288,7 @@ if($propertyObj->get_calculator()) {
   $headerdata['scripts'][] = '/js/jcalc98uon.min.js';
   $headerdata['css'][] = '/css/jcalc98.css';
 }
+$headerdata['texteditor'] = $texteditorplugin->get_header_file();
 $render->render($headerdata, $lang, 'header.html');
 ?>
 

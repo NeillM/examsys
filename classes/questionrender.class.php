@@ -63,7 +63,11 @@ class questionrender {
    */
   public function display_question($screen_pre_submitted, $q_displayed, $string, &$question, $pid, $current_screen, &$question_no, $user_answers) {
 
+    $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+    $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+    $texteditorplugin = new $texteditorpluginns($this->config->db);
     $render = new render($this->config, array(
+        $texteditorplugin->get_header_path(),
         dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . $question['q_type'] . DIRECTORY_SEPARATOR . 'templates',
         dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates'));
 

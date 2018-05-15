@@ -1,14 +1,14 @@
-{% if data.mathjax == true %}
+{% if data.editormathjax == true %}
 <p>{{lang.mathjaxinstructions|raw}}</p>
     {% if data.style == '' %}
-    <textarea onkeyup="Preview{{data.id}}.Update()" class="plaintextarea" id="{{data.id}}" name="{{data.name}}">{{data.content}}</textarea>
+    <textarea onkeyup="Preview{{data.id}}.Update()" class="plaintextarea" id="{{data.questionno}}" name="{{data.questionno}}">{{data.useranswer}}</textarea>
     {% else %}
-    <textarea onkeyup="Preview{{data.id}}.Update()" class="plaintextarea" id="{{data.id}}" name="{{data.name}}" style="{{data.style}}">{{data.content}}</textarea>
+    <textarea onkeyup="Preview{{data.id}}.Update()" class="plaintextarea" id="{{data.questionno}}" name="{{data.questionno}}" style="{{data.style}}">{{data.useranswer}}</textarea>
     {% endif %}
 {% else %}
     {% if data.style == '' %}
-    <textarea class="plaintextarea" id="{{data.id}}" name="{{data.name}}">{{data.content}}</textarea>
+    <textarea class="plaintextarea" id="{{data.questionno}}" name="{{data.questionno}}">{{data.useranswer}}</textarea>
     {% else %}
-    <textarea class="plaintextarea" id="{{data.id}}" name="{{data.name}}" style="{{data.style}}">{{data.content}}</textarea>
+    <textarea class="plaintextarea" id="{{data.questionno}}" name="{{data.questionno}}" style="{{data.style}}">{{data.useranswer}}</textarea>
     {% endif %}
 {% endif %}

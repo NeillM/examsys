@@ -64,7 +64,24 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
    * Get text editor base
    */
   public function get_header() {
-    // Nothing to do.
+    $render = new \render($this->config, $this->get_header_path());
+    $render->render(array(), null, $this->get_header_file());
+  }
+
+  /**
+   * Get text editor base path
+   * @return string
+   */
+  public function get_header_path() {
+    return $this->get_path() . DIRECTORY_SEPARATOR . 'templates';
+  }
+
+  /**
+   * Get text editor base file
+   * @return string
+   */
+  public function get_header_file() {
+    return 'plain.html';
   }
 
   /**
@@ -85,26 +102,30 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
    */
   public function get_textarea($name, $id, $content, $type, $styleoverwrite = '') {
     // Reneder mathjax utils.
-    $data['mathjax'] = false;
-    if ($type == \plugins\plugins_texteditor::type_mathjax and $this->config->get_setting($this->plugin, 'supports_mathjax')) {
+    $data['editormathjax'] = false;
+    if ($this->get_type($type) === 'mathjax') {
       $render = new \render($this->config);
       $render->render(array('id' => $id), null, 'mathjaxpreview.html');
-      $data['mathjax'] = true;
+      $data['editormathjax'] = true;
     }
     // Render textarea.
     $render = new \render($this->config, $this->get_path() . DIRECTORY_SEPARATOR . 'templates');
-    $data['id'] = $id;
-    $data['name'] = $id;
-    $data['content'] = $content;
+    $data['questionno'] = $id;
+    $data['useranswer'] = $content;
     $data['style'] = $styleoverwrite;
     $render->render($data, $this->strings, 'plain_textarea.html');
   }
 
   /**
-   * Prints trigger save js.
+   * Return editor specific type class
+   * @param string $type generic type
+   * @return string
    */
-  public function get_trigger_save() {
-    // Nothing to do.
+  public function get_type($type) {
+    if ($type == \plugins\plugins_texteditor::type_mathjax and $this->config->get_setting($this->plugin, 'supports_mathjax')) {
+      return 'mathjax';
+    }
+    return 'plain';
   }
 
   /**

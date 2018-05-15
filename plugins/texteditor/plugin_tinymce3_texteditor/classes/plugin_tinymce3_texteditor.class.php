@@ -41,11 +41,26 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
 
   /**
    * Get text editor base
-   * @param array $configfile config file
    */
   public function get_header() {
-    $render = new \render($this->config, $this->get_path() . DIRECTORY_SEPARATOR . 'templates');
-    $render->render(array(), null, 'tinymce3.html');
+    $render = new \render($this->config, $this->get_header_path());
+    $render->render(array(), null, $this->get_header_file());
+  }
+
+  /**
+   * Get text editor base path
+   * @return string
+   */
+  public function get_header_path() {
+    return $this->get_path() . DIRECTORY_SEPARATOR . 'templates';
+  }
+
+  /**
+   * Get text editor base file
+   * @return string
+   */
+  public function get_header_file() {
+    return 'tinymce3.html';
   }
 
   /**
@@ -54,8 +69,8 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
    */
   public function get_javascript_config($configfile = '') {
     $render = new \render($this->config, $this->get_path() . DIRECTORY_SEPARATOR . 'templates');
-    $tinmymcedata['file'] = 'tiny_' . $configfile;
-    if ($tinmymcedata['file'] != 'tiny_') {
+    $tinmymcedata['file'] = 'tinymce3_' . $configfile;
+    if ($tinmymcedata['file'] != 'tinymce3_') {
       $render->render($tinmymcedata, null, 'tinymce3_config.html');
     }
   }
@@ -70,6 +85,22 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
    * @raturn string
    */
   public function get_textarea($name, $id, $content, $type, $styleoverwrite = '') {
+    $type = $this->get_type($type);
+    $render = new \render($this->config, $this->get_path() . DIRECTORY_SEPARATOR . 'templates');
+    $tinmymcedata = array(
+        'type' => $type,
+        'questionno' => $id,
+        'useranswer' => $content,
+        'style' => $styleoverwrite);
+    $render->render($tinmymcedata, null, 'tinymce3_textarea.html');
+  }
+
+  /**
+   * Return editor specific type class
+   * @param string $type generic type
+   * @return string
+   */
+  public function get_type($type) {
     switch ($type) {
       case \plugins\plugins_texteditor::type_simple:
         $type = 'editorSimple';
@@ -81,23 +112,7 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
         $type = 'editorStandard';
         break;
     }
-    $render = new \render($this->config, $this->get_path() . DIRECTORY_SEPARATOR . 'templates');
-    $tinmymcedata = array(
-        'type' => $type,
-        'id' => $id,
-        'name' => $id,
-        'content' => $content,
-        'style' => $styleoverwrite);
-    $render->render($tinmymcedata, null, 'tinymce3_textarea.html');
-  }
-
-  /**
-   * Prints trigger save js.
-   */
-  public function get_trigger_save() {
-    $render = new \render($this->config, $this->get_path() . DIRECTORY_SEPARATOR . 'templates');
-    $tinmymcedata = array();
-    $render->render($tinmymcedata, null, 'tinymce3_trigger_save.js');
+    return $type;
   }
 
   /**

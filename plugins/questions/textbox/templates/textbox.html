@@ -48,5 +48,6 @@ lang.previewmathjax - preview
 <script>Previewq{{data.questionno}}.Init();</script>
     {% endif %}
 {% else %}
-{# TODO add tinymce support #}
+{% include data.editorconfig %}
+{% include data.editortextarea %}
 {% endif %}

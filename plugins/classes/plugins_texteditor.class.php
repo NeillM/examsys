@@ -57,15 +57,28 @@ abstract class plugins_texteditor extends \plugins\plugins {
      * @var string
      */
     protected $plugin_type = 'texteditor';
+
     /**
      * Get text editor header
      */
     abstract public function get_header();
+
+    /**
+     * Get text editor header file
+     */
+    abstract public function get_header_file();
+
+    /**
+     * Get text editor header path
+     */
+    abstract public function get_header_path();
+
     /**
      * Get text editor javascript.
      * @param array $data
      */
     abstract public function get_javascript_config($data = '');
+
     /**
      * Get text editor textarea.
      * @param string $name
@@ -75,16 +88,14 @@ abstract class plugins_texteditor extends \plugins\plugins {
      * @param string $styleoverwrite overwrite base styling
      */
     abstract public function get_textarea($name, $id, $content, $type, $styleoverwrite = '');
-    /**
-     * Prints trigger save js.
-    */
-    abstract public function get_trigger_save();
+
     /**
      * Leadin clean function check
      * @param $leadin
      * @return boolean
      */
     abstract public function clean_leadin($leadin);
+
     /**
      * Enable this plugin
      * Only one module text editor plugin should be enabled at anyone time
@@ -93,6 +104,7 @@ abstract class plugins_texteditor extends \plugins\plugins {
         $enabled = array($this->plugin);
         $this->config->set_setting('enabled_plugin', $enabled, \Config::JSON, 'plugin_texteditor');
     }
+
     /**
      * Disable this plugin
      * Only one module text editor plugin should be enabled at anyone time
