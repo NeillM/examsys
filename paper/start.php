@@ -249,6 +249,9 @@ $url_mod = ($is_question_preview_mode) ? '&q_id=' . $get_qid . '&qNo=' . $q_numb
 $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
 $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
 $texteditorplugin = new $texteditorpluginns($mysqli);
+$langpack = new \langpack();
+$strings = $langpack->get_all_strings($texteditorplugin->langcomponent);
+$string = array_merge($string, $strings);
 $render = new render($configObject, array(
   $texteditorplugin->get_header_path(),
   dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates'));

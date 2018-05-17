@@ -42,7 +42,7 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
    * Language pack component.
    * @var string
    */
-  protected $langcomponent = 'plugins/texteditor/plugin_plain_texteditor/plugin_plain_texteditor';
+  public $langcomponent = 'plugins/texteditor/plugin_plain_texteditor/plugin_plain_texteditor';
 
   /**
     * Set the available land pack strings for the plugin
@@ -89,7 +89,11 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
    * @param array $configfile config file
    */
   public function get_javascript_config($configfile = '') {
-    // Nothing to do.
+    $render = new \render($this->config, $this->get_path() . DIRECTORY_SEPARATOR . 'templates');
+    $plaindata['file'] = 'plain_' . $configfile;
+    if ($plaindata['file'] != 'plain_') {
+      $render->render($plaindata, null, 'plain_config.html');
+    }
   }
 
   /**
@@ -104,8 +108,6 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
     // Reneder mathjax utils.
     $data['editormathjax'] = false;
     if ($this->get_type($type) === 'mathjax') {
-      $render = new \render($this->config);
-      $render->render(array('id' => $id), null, 'mathjaxpreview.html');
       $data['editormathjax'] = true;
     }
     // Render textarea.

@@ -14,5 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['mathjaxinstructions'] = 'Enter latex formula within <span class="tex2jax_ignore">$$</span> for inline mode, or <span class="tex2jax_ignore">$$$</span> for display mode.';
+$string['mathjaxinstructions'] = '<b>Tip:</b> Enter latex formula within <span class="tex2jax_ignore">$$</span> for inline mode, or <span class="tex2jax_ignore">$$$</span> for display mode.';
 $string['supports_mathjax'] = 'Enable mathjax preview mode.';
+$string['previewmathjax'] = 'Preview';

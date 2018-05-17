@@ -1,14 +1,15 @@
 {% if data.editormathjax == true %}
+{% include 'mathjaxpreview.html' %}
 <p>{{lang.mathjaxinstructions|raw}}</p>
     {% if data.style == '' %}
-    <textarea onkeyup="Preview{{data.id}}.Update()" class="plaintextarea" id="{{data.questionno}}" name="{{data.questionno}}">{{data.useranswer}}</textarea>
-    {% else %}
-    <textarea onkeyup="Preview{{data.id}}.Update()" class="plaintextarea" id="{{data.questionno}}" name="{{data.questionno}}" style="{{data.style}}">{{data.useranswer}}</textarea>
+    <textarea onkeyup="Preview{{data.questionno}}.Update()" {% if data.unanswered %} class="unans" {% else %} class="plaintextarea" {% endif %} id="q{{data.questionno}}" name="q{{data.questionno}}" {% if data.editorcolumns %} cols="{{data.editorcolumns}}" {% endif %} {% if data.editorcolumns %} cols="{{data.editorrows}}" {% endif %}>{{data.useranswer}}</textarea>
+{% else %}
+    <textarea onkeyup="Preview{{data.questionno}}.Update()" {% if data.unanswered %} class="unans" {% else %} class="plaintextarea" {% endif %} id="q{{data.questionno}}" name="q{{data.questionno}}" style="{{data.style}}" {% if data.editorcolumns %} cols="{{data.editorcolumns}}" {% endif %} {% if data.editorcolumns %} cols="{{data.editorrows}}" {% endif %}>{{data.useranswer}}</textarea>
     {% endif %}
 {% else %}
     {% if data.style == '' %}
-    <textarea class="plaintextarea" id="{{data.questionno}}" name="{{data.questionno}}">{{data.useranswer}}</textarea>
+    <textarea {% if data.unanswered %} class="unans" {% else %} class="plaintextarea" {% endif %} id="q{{data.questionno}}" name="q{{data.questionno}}" {% if data.editorcolumns %} cols="{{data.editorcolumns}}" {% endif %} {% if data.editorcolumns %} cols="{{data.editorrows}}" {% endif %}>{{data.useranswer}}</textarea>
     {% else %}
-    <textarea class="plaintextarea" id="{{data.questionno}}" name="{{data.questionno}}" style="{{data.style}}">{{data.useranswer}}</textarea>
+    <textarea {% if data.unanswered %} class="unans" {% else %} class="plaintextarea" {% endif %} id="q{{data.questionno}}" name="q{{data.questionno}}" style="{{data.style}}" {% if data.editorcolumns %} cols="{{data.editorcolumns}}" {% endif %} {% if data.editorcolumns %} cols="{{data.editorrows}}" {% endif %}>{{data.useranswer}}</textarea>
     {% endif %}
 {% endif %}

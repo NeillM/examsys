@@ -139,6 +139,7 @@ class renderdata extends \questiondata {
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
   public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
+    global $string;
     $option = $this->get_opt($part_id);
     $textboxes_seen = $this->textboxesseen;
     if (!in_array($this->questionno, $textboxes_seen)) {
@@ -146,50 +147,47 @@ class renderdata extends \questiondata {
       $settings = json_decode($this->settings, true);
       $this->editorcolumns = $settings['columns'];
       $this->editorrows = $settings['rows'];
-      if (!isset($settings['editor']) or $settings['editor'] == 'plain' or $settings['editor'] == 'mathjax') {
-        // a wysiwyg editor might be enabled but this has been overriden at the question level.
-        $this->editor = 'plain';
-        if ($useranswer == '' and $screen_pre_submitted == 1) {
-          $this->useranswer = $useranswer;
-          $this->unanswered = true;
-        } else {
-          $this->useranswer = $useranswer;
-          $this->unanswered = false;
-        }
+      $texteditorplugin_name = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+      $te = explode('_',$texteditorplugin_name[0]);
+      $this->editor = $te[1];
+      // We can override the enabled texteditor with plain/mathjax at the question level.
+      if (isset($settings['editor'])) {
         if ($settings['editor'] == 'mathjax') {
-          $this->editormathjax =  true;
+          $this->editormathjax = true;
+          $texteditorplugin_name = array('plugin_plain_texteditor');
+          $this->editor = 'plain';
+        } elseif ($settings['editor'] == 'plain') {
+          $this->editormathjax = false;
+          $texteditorplugin_name = array('plugin_plain_texteditor');
+          $this->editor = 'plain';
         }
-      } else {
-        $texteditorplugin_name = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
-        $te = explode('_',$texteditorplugin_name[0]);
-        $this->editor = $te[1];
-        $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-        $texteditorplugin = new $texteditorpluginns($this->config->db);
-        if ($useranswer == '' and $screen_pre_submitted == 1) {
-          $this->file = $this->editor . '_config_unanswered';
-        } else {
-          $this->file = $this->editor . '_config_answered';
-        }
-
-        $this->editorconfig = $this->editor . '_config.html';
-
-        $textbox_width  = ( 40 + ( $settings['columns'] * 8 ) );
-        $textbox_height = ( $settings['rows'] * 28 );
-
-        $background_colour = '';
-
-        if ($useranswer == '' and $screen_pre_submitted == 1) {
-          $this->unanswered = true;
-          $background_colour = 'background-color:red; ';
-        } else {
-          $this->unanswered = false;
-        }
-        $this->useranswer = $useranswer;
-
-        $this->editortextarea = $this->editor . '_textarea.html';
-        $this->type = $texteditorplugin->get_type(\plugins\plugins_texteditor::type_standard);
-        $this->style = $background_colour . "width:" . $textbox_width . "px; height:" . $textbox_height . "px";
       }
+      $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+      $texteditorplugin = new $texteditorpluginns($this->config->db);
+      if ($useranswer == '' and $screen_pre_submitted == 1) {
+        $this->file = $this->editor . '_config_unanswered';
+      } else {
+        $this->file = $this->editor . '_config_answered';
+      }
+
+      $this->editorconfig = $this->editor . '_config.html';
+
+      $textbox_width  = ( 40 + ( $settings['columns'] * 8 ) );
+      $textbox_height = ( $settings['rows'] * 28 );
+
+      $background_colour = '';
+
+      if ($useranswer == '' and $screen_pre_submitted == 1) {
+        $this->unanswered = true;
+        $background_colour = 'background-color:red; ';
+      } else {
+        $this->unanswered = false;
+      }
+      $this->useranswer = $useranswer;
+
+      $this->editortextarea = $this->editor . '_textarea.html';
+      $this->type = $texteditorplugin->get_type(\plugins\plugins_texteditor::type_standard);
+      $this->style = $background_colour . "width:" . $textbox_width . "px; height:" . $textbox_height . "px";
       $this->textboxesseen = $textboxes_seen;
       $marks = $this->marks;
       $marks += $option['markscorrect'];

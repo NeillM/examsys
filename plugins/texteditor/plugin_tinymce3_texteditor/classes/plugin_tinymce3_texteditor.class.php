@@ -33,6 +33,12 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
   protected $plugin = 'plugin_tinymce3_texteditor';
 
   /**
+   * Language pack component.
+   * @var string
+   */
+  public $langcomponent = 'plugins/texteditor/plugin_tinymce3_texteditor/plugin_tinymce3_texteditor';
+
+  /**
    * Constructor
    */
   public function __construct() {
