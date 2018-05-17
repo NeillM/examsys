@@ -95,10 +95,11 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
     $render = new \render($this->config, $this->get_path() . DIRECTORY_SEPARATOR . 'templates');
     $tinmymcedata = array(
         'type' => $type,
-        'questionno' => $id,
-        'useranswer' => $content,
+        'id' => $id,
+        'name' => $id,
+        'content' => $content,
         'style' => $styleoverwrite);
-    $render->render($tinmymcedata, null, 'tinymce3_textarea.html');
+    $render->render($tinmymcedata, null, 'tinymce3_admin_textarea.html');
   }
 
   /**

@@ -1,0 +1,5 @@
+{% if data.style == '' %}
+<textarea class="{{data.type}}" id="{{data.id}}" name="{{data.name}}">{{data.content|raw}}</textarea>
+{% else %}
+<textarea class="{{data.type}}" id="{{data.id}}" name="{{data.name}}" style="{{data.style}}">{{data.content|raw}}</textarea>
+{% endif %}
