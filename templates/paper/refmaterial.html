@@ -26,7 +26,7 @@ data.refpane - ref pane id
 #}
 {% for ref in data.ref %}
 <div class="refhead" id="refhead{{ref.num}}" onclick="changeRef({{ref.num}})" style="top: calc(31px + 31px * {{ref.num}})">{{ref.title}}</div>
-<div class="framecontent" id="framecontent{{ref.num}}" style="top: calc(31px + 31px * {{ref.num}})">{{ref.title}}</div>
+<div class="framecontent" id="framecontent{{ref.num}}" style="top: calc(31px + 31px * {{ref.num}})">{{ref.material|raw}}</div>
 {% endfor %}
 <script>
   changeRef({{data.refpane}});

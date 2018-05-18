@@ -48,7 +48,7 @@ lang.note - note
 {% if data.displayprologue %}
     <tr>
         <td colspan="2" style="padding:20px; text-align:justify">
-            {{data.prologue}}
+            {{data.prologue|raw}}
         </td>
     </tr>
 {% endif %}
