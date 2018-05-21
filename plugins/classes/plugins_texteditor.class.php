@@ -59,19 +59,9 @@ abstract class plugins_texteditor extends \plugins\plugins {
     protected $plugin_type = 'texteditor';
 
     /**
-     * Get text editor header
-     */
-    abstract public function get_header();
-
-    /**
      * Get text editor header file
      */
     abstract public function get_header_file();
-
-    /**
-     * Get text editor header path
-     */
-    abstract public function get_header_path();
 
     /**
      * Get text editor javascript.
@@ -95,6 +85,13 @@ abstract class plugins_texteditor extends \plugins\plugins {
      * @return boolean
      */
     abstract public function clean_leadin($leadin);
+
+    /**
+     * Return editor specific type class
+     * @param string $type generic type
+     * @return string
+     */
+    abstract public function get_type($type);
 
     /**
      * Enable this plugin
@@ -128,5 +125,21 @@ abstract class plugins_texteditor extends \plugins\plugins {
      */
     public function get_name() {
       return $this->plugin;
+    }
+
+    /**
+     * Get text editor base
+     */
+    public function get_header() {
+      $render = new \render($this->config, $this->get_header_path());
+      $render->render(array(), null, $this->get_header_file());
+    }
+
+    /**
+     * Get text editor base path
+     * @return string
+     */
+    public function get_header_path() {
+      return $this->get_path() . DIRECTORY_SEPARATOR . 'templates';
     }
 }

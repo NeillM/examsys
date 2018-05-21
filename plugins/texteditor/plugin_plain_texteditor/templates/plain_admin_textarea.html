@@ -1,0 +1,15 @@
+{% if data.editormathjax == true %}
+{% include 'mathjaxpreview.html' %}
+<p>{{lang.mathjaxinstructions|raw}}</p>
+    {% if data.style == '' %}
+    <textarea onkeyup="Preview{{data.id}}.Update()" class="plaintextarea" id="q{{data.id}}" name="{{data.id}}">{{data.content}}</textarea>
+{% else %}
+    <textarea onkeyup="Preview{{data.id}}.Update()" class="plaintextarea" id="q{{data.id}}" name="{{data.id}}" style="{{data.style}}">{{data.content}}</textarea>
+    {% endif %}
+{% else %}
+    {% if data.style == '' %}
+    <textarea class="plaintextarea" id="{{data.id}}" name="{{data.id}}">{{data.content}}</textarea>
+    {% else %}
+    <textarea class="plaintextarea" id="{{data.id}}" name="{{data.id}}" style="{{data.style}}">{{data.content}}</textarea>
+    {% endif %}
+{% endif %}

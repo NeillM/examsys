@@ -46,22 +46,6 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
   }
 
   /**
-   * Get text editor base
-   */
-  public function get_header() {
-    $render = new \render($this->config, $this->get_header_path());
-    $render->render(array(), null, $this->get_header_file());
-  }
-
-  /**
-   * Get text editor base path
-   * @return string
-   */
-  public function get_header_path() {
-    return $this->get_path() . DIRECTORY_SEPARATOR . 'templates';
-  }
-
-  /**
    * Get text editor base file
    * @return string
    */

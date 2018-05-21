@@ -61,22 +61,6 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
   }
 
   /**
-   * Get text editor base
-   */
-  public function get_header() {
-    $render = new \render($this->config, $this->get_header_path());
-    $render->render(array(), null, $this->get_header_file());
-  }
-
-  /**
-   * Get text editor base path
-   * @return string
-   */
-  public function get_header_path() {
-    return $this->get_path() . DIRECTORY_SEPARATOR . 'templates';
-  }
-
-  /**
    * Get text editor base file
    * @return string
    */
@@ -112,10 +96,11 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
     }
     // Render textarea.
     $render = new \render($this->config, $this->get_path() . DIRECTORY_SEPARATOR . 'templates');
+    $data['id'] = $id;
     $data['questionno'] = $id;
-    $data['useranswer'] = $content;
+    $data['content'] = $content;
     $data['style'] = $styleoverwrite;
-    $render->render($data, $this->strings, 'plain_textarea.html');
+    $render->render($data, $this->strings, 'plain_admin_textarea.html');
   }
 
   /**
