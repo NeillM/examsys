@@ -22,7 +22,7 @@
 * @package
 */
 
-  require  '../../../../../../include/staff_auth.inc';
+  require  '../../../../../../../../include/staff_auth.inc';
 
 ?>
 <!DOCTYPE html>
@@ -33,8 +33,8 @@
 
   <title>Add New Image</title>
 
-  <link rel="stylesheet" type="text/css" href="../../../../../../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../../../../../../css/dialog.css" />
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../../../../../../../../css/dialog.css" />
   <style type="text/css">
     body {font-size:90%}
     .field {text-align:right}
@@ -106,11 +106,11 @@ function showForm($error) {
 </script>
 <form name="uploadImage" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['REQUEST_URI'] . '?' . $_SERVER['QUERY_STRING']; ?>">
 <table border="0" cellpadding="4" cellspacing="0" width="100%" style="font-size:100%">
-<tr><td class="dialog_header" style="width:56px; border-bottom: 1px solid #CCD9EA"><img src="../../../../../../artwork/folder_image.png" width="48" height="48" alt="Image" /></td><td class="dialog_header" style="border-bottom: 1px solid #CCD9EA">Add New Image</td></tr>
+<tr><td class="dialog_header" style="width:56px; border-bottom: 1px solid #CCD9EA"><img src="../../../../../../../../artwork/folder_image.png" width="48" height="48" alt="Image" /></td><td class="dialog_header" style="border-bottom: 1px solid #CCD9EA">Add New Image</td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td></td><td class="note">Browse for the image file you wish to add (GIF, PNG or JPEG).</td></tr>
 <tr><td class="field">File</td><td>
-  <div id="waitmsg" style="display:none; box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50); position:absolute; left:70px; top:25px; width:320px; height:190px; background-color: white; border:1px solid #868686; color: black; font-size: 20pt; text-align:center"><br /><strong>Please Wait<br /></strong><br /><div style="font-size:10pt">This could take a few minutes<br />depending on network speed.</div><div align="center"><img src="../../../../../../artwork/green_progress_bar.gif" width="150" height="13" alt="Progress Bar" /></div></div>
+  <div id="waitmsg" style="display:none; box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50); position:absolute; left:70px; top:25px; width:320px; height:190px; background-color: white; border:1px solid #868686; color: black; font-size: 20pt; text-align:center"><br /><strong>Please Wait<br /></strong><br /><div style="font-size:10pt">This could take a few minutes<br />depending on network speed.</div><div align="center"><img src="../../../../../../../../artwork/green_progress_bar.gif" width="150" height="13" alt="Progress Bar" /></div></div>
     <input type="file" name="FileName" accept="image/gif,image/jpeg,image/pjpeg,image/png" size="50" /><br />
 </td></tr>
 <tr><td class="field">alt</td><td><input type="text" name="alt" value="" size="40" /></td></tr>
