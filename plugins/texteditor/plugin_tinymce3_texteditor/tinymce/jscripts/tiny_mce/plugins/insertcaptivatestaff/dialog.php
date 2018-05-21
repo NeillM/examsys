@@ -98,12 +98,12 @@ function showForm($error) {
 </script>
 <form name="uploadImage" method="post" enctype="multipart/form-data" action="<?php echo $_SERVER['REQUEST_URI'] . '?' . $_SERVER['QUERY_STRING']; ?>">
 <table border="0" cellpadding="4" cellspacing="0" width="100%" style="font-size:100%">
-<tr><td style="background-color:white; width:56px"><img src="../../../../../../../../artwork/folder_captivate.png" width="48" height="48" border="0" alt="Image" /></td><td style="color:#5582D2; width:90%; background-color:white; text-align:left; font-size:140%; font-weight:bold">Add Captivate Tutorial</td></tr>
+<tr><td style="background-color:white; width:56px"><img src="img/folder_captivate.png" width="48" height="48" border="0" alt="Image" /></td><td style="color:#5582D2; width:90%; background-color:white; text-align:left; font-size:140%; font-weight:bold">Add Captivate Tutorial</td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td></td><td class="note">Browse for the flash file you wish to add (SWF).</td></tr>
 <tr><td class="field">Title</td><td><input name="title" type="text" value="" size="40" style="width:95%" /></td></tr>
 <tr><td class="field">File</td><td>
-  <div id="waitmsg" style="display:none; box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50); position:absolute; left:70px; top:25px; width:320px; height:190px; background-color: white; border:1px solid #868686; color: black; font-size: 20pt; text-align:center"><br /><strong>Please Wait<br /></strong><br /><div style="font-size:10pt">This could take a few minutes<br />depending on network speed.</div><div align="center"><img src="../../../../../../../../artwork/green_progress_bar.gif" width="150" height="13" alt="Progress Bar" /></div></div>
+  <div id="waitmsg" style="display:none; box-shadow:3px 3px 3px rgba(100, 100, 100, 0.50); position:absolute; left:70px; top:25px; width:320px; height:190px; background-color: white; border:1px solid #868686; color: black; font-size: 20pt; text-align:center"><br /><strong>Please Wait<br /></strong><br /><div style="font-size:10pt">This could take a few minutes<br />depending on network speed.</div><div align="center"><img src="img/green_progress_bar.gif" width="150" height="13" alt="Progress Bar" /></div></div>
     <input type="file" name="FileName" size="50" /><br />
 </td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
