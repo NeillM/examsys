@@ -33,7 +33,7 @@ require  '../../../../../../../../include/staff_auth.inc';
 
   <title>Add Captivate Tutorial</title>
 
-  <link rel="stylesheet" type="text/css" href="../../../../../../../../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="css/body.css" />
   <link rel="stylesheet" type="text/css" href="css/dialog.css" />
   <style type="text/css">
     body {font-size:90%}
