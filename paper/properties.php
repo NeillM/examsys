@@ -36,8 +36,8 @@ define('MARK_STD_SET', '2');
 
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
 
-$exam_duration_hours = param::optional('exam_duration_hours', null, param::INT, param::FETCH_POST);
-$exam_duration_mins = param::optional('exam_duration_mins', null, param::INT, param::FETCH_POST);
+$exam_duration_hours = param::optional('exam_duration_hours', 0, param::INT, param::FETCH_POST);
+$exam_duration_mins = param::optional('exam_duration_mins', 0, param::INT, param::FETCH_POST);
 $ext_tyear = param::optional('ext_tyear', null, param::INT, param::FETCH_POST);
 $int_tyear = param::optional('int_tyear', null, param::INT, param::FETCH_POST);
 
@@ -489,23 +489,15 @@ if (isset($_POST['Submit'])) {
         $calendar_year = ($_POST['calendar_year'] == '') ? NULL : $_POST['calendar_year'];
         $properties->set_calendar_year($calendar_year);
       }
-      if (!is_null($exam_duration_hours) or !is_null($exam_duration_mins)) {
-        $exam_duration = 0;
-        if (!is_null($exam_duration_hours)) {
-          $exam_duration += $exam_duration_hours * 60;
-        }
-        if (!is_null($exam_duration_mins)) {
-          $exam_duration += $exam_duration_mins;
-        }
-        if (!$locked) {
-          $properties->set_exam_duration($exam_duration);
-        }
-      } else {
-        $exam_duration = NULL;
-        if (!$locked) {
-          $properties->set_exam_duration($exam_duration);
-		}
-	  }
+
+      // Set exam duration (in minutes).
+      $exam_duration = $exam_duration_hours * 60;
+      $exam_duration += $exam_duration_mins;
+
+      if (!$locked) {
+        $properties->set_exam_duration($exam_duration);
+      }
+
       $lab_string = '';
       for ($i=0; $i<$_POST['lab_no']; $i++) {
         if (isset($_POST["lab$i"])) {
