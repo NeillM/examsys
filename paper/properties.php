@@ -490,22 +490,22 @@ if (isset($_POST['Submit'])) {
         $properties->set_calendar_year($calendar_year);
       }
       if (!is_null($exam_duration_hours) or !is_null($exam_duration_mins)) {
-			  $exam_duration = 0;
-				if (!is_null($exam_duration_hours)) {
-					$exam_duration += $exam_duration_hours * 60;
-				}
-				if (!is_null($exam_duration_mins)) {
-					$exam_duration += $exam_duration_mins;
-				}
+        $exam_duration = 0;
+        if (!is_null($exam_duration_hours)) {
+          $exam_duration += $exam_duration_hours * 60;
+        }
+        if (!is_null($exam_duration_mins)) {
+          $exam_duration += $exam_duration_mins;
+        }
         if (!$locked) {
-					$properties->set_exam_duration($exam_duration);
-				}
-			} else {
-				$exam_duration = NULL;
+          $properties->set_exam_duration($exam_duration);
+        }
+      } else {
+        $exam_duration = NULL;
         if (!$locked) {
-					$properties->set_exam_duration($exam_duration);
-				}
-			}
+          $properties->set_exam_duration($exam_duration);
+		}
+	  }
       $lab_string = '';
       for ($i=0; $i<$_POST['lab_no']; $i++) {
         if (isset($_POST["lab$i"])) {
