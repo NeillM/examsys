@@ -482,7 +482,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
             } else {
                 $correct_answers = array();
             }
-            // Can only compare user answer and correct answer is correct answer exists.
+            // Can only compare user answer and correct answer if correct answer exists.
             if ($correct_answers !== false) {
               $execmatch_answers = param::optional($qid, null, param::ALPHANUM, param::FETCH_POST);
               if (!is_null($execmatch_answers)) {
