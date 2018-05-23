@@ -498,12 +498,10 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
 
             for ($i = 0; $i < $answer_count; $i++) {
               if ($i == 0) {
-                if ($correct_answers !== false) {
-                  if (count($correct_answers) == 1) {
-                    $saved_response .= $execmatch_answers;
-                  } else {
-                    $saved_response .= $execmatch_answers[$i];
-                  }
+                if (count($correct_answers) == 1) {
+                  $saved_response .= $execmatch_answers;
+                } else {
+                  $saved_response .= $execmatch_answers[$i];
                 }
               } else {
                 $saved_response .= '$' . $execmatch_answers[$i];
