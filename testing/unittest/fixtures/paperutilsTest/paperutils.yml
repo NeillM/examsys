@@ -121,6 +121,11 @@ config:
     setting: "paper_max_duration"
     value: 779
     type: "integer"
+  -
+    component: "core"
+    setting: "cfg_summative_mgmt"
+    value: 0
+    type: "boolean"
 sessions:
   -
     sess_id: 1

@@ -7,31 +7,33 @@
 # to start your local Rogo environment.
 #
 Vagrant.configure("2") do |config|
-  config.vm.box = "bento/ubuntu-14.04"
+  config.vm.box = "bento/ubuntu-16.04"
   config.vm.network "forwarded_port", guest: 80, host: 8080
   config.vm.network "forwarded_port", guest: 443, host: 44433
   config.vm.synced_folder ".", "/var/www", owner: "www-data", group: "www-data"
   config.vm.provision "shell", inline: <<-SHELL
+    # add php 7.2 repo
+    add-apt-repository ppa:ondrej/php
+
+    # add mysql 5.6 repo
+    add-apt-repository ppa:ondrej/mysql-5.6
+
     # update packages
     apt-get update
 
     # install goodies
-    apt-get install -y curl git zip
-
-    # install NodeJS and npm
-    curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
-    apt-get install -y nodejs
+    apt-get install -y npm r-cran-rserve memcached wbritish xvfb
 
     # install MySQL (root / Passw0rd)
     debconf-set-selections <<< 'mysql-server mysql-server/root_password password Passw0rd'
     debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password Passw0rd'
-    apt-get install -y mysql-server
+    apt-get install -y mysql-server-5.6
 
-    # install PHP 5 with required extensions
-    apt-get install -y php5 php5-gd php5-curl php5-xmlrpc php5-mysql
+    # install PHP 7.2 with required extensions
+    apt-get install -y php7.2 php7.2-gd php7.2-curl php7.2-xml php7.2-xmlrpc php7.2-mysql php7.2-intl php7.2-ldap php7.2-mbstring php7.2-zip php7.2-memcache
 
     # install Apache with PHP
-    apt-get install -y apache2 libapache2-mod-php
+    apt-get install -y apache2 libapache2-mod-php7.2
 
     # create virtual hosts
     echo "<VirtualHost *:80>
@@ -74,25 +76,54 @@ Vagrant.configure("2") do |config|
     a2ensite rogo
     rm -rf /var/www/html
 
+    # rogo php settings
+    echo "
+max_execution_time = 120
+memory_limit = 512M
+post_max_size = 20M
+upload_max_filesize = 20M
+default_charset = "utf-8"
+mbstring.internal_encoding = UTF-8
+max_input_vars = 3000
+session.save_handler = memcache
+session.save_path = "tcp://localhost:11211"
+" > /etc/php/7.2/apache2/conf.d/20-user.ini
+
     # restart Apache
     service apache2 restart
-
-    # install Composer
-    if [ -e /usr/local/bin/composer ]; then
-        /usr/local/bin/composer self-update
-    else
-        curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-        cp /usr/local/bin/composer /var/www/composer.phar
-    fi
 
     # reset home directory of vagrant user
     if ! grep -q "cd /var/www" /home/vagrant/.profile; then
         echo "cd /var/www" >> /home/vagrant/.profile
     fi
 
-    # run composer install
-    cd /var/www
-    composer install
+    # create data dir
+    cd /
+    mkdir rogodata
+
+    # remove config file
+    if [ -e /var/www/config/config.inc.php ]; then
+        cd /var/www/config
+        rm config.inc.php
+    fi
+
+    if [ -e /var/www/config/settings.xml ]; then
+        # install rogo via setting file
+        cd /var/www
+        php cli/init.php -uroot -pPassw0rd -s127.0.0.1 -t3306 -nrogo
+    else
+        # manual install - just get composer files
+        cd /var/www
+        wget https://getcomposer.org/composer.phar
+        php composer.phar install
+    fi
+
+    # set data dir perms
+    cd /
+    chown -R www-data:www-data rogodata
+
+    # start up Rrserve
+    R CMD Rserve --no-save
 
     # done!
     echo "[ROGO] https://localhost:44433/"

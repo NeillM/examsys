@@ -994,11 +994,11 @@ function parseHtml($s_str) {
     $s_temp = substr($s_str, $i_indicatorL, ($i_indicatorR - $i_indicatorL));
     $a_tag = explode(' ', $s_temp);
     // Here we get the tag's name
-    list(, $s_tagName, , ) = each($a_tag);
+    list(, $s_tagName, , ) = $a_tag[0];
     $s_tagName = strtoupper($s_tagName);
     // Well, I am not interesting in <br>, </font> or anything else like that...
     // So, this is false for tags without options.
-    $b_boolOptions = is_array(($s_tagOption = each($a_tag))) && $s_tagOption[1];
+    $b_boolOptions = is_array(($s_tagOption = $a_tag[1])) && $s_tagOption[1];
     if ($b_boolOptions) {
       // Without this, we will mess up the array
       $i_arrayCounter=0;
@@ -1006,13 +1006,15 @@ function parseHtml($s_str) {
         $i_arrayCounter = (int) count($a_html[$s_tagName]);
       }
       // get the tag options, like src="htt://". Here, s_tagTokOption is 'src' and s_tagTokValue is '"http://"'
+      $tagcount = 2;
       do {
         $s_tagTokOption = strtolower(strtok($s_tagOption[1], "="));
         $s_tagTokValue = trim(strtok("="));
         if (substr($s_tagTokValue, 0, 1) == "\"" && substr($s_tagTokValue, strlen($s_tagTokValue) - 1, 1) == "\"") $s_tagTokValue = substr($s_tagTokValue, 1, strlen($s_tagTokValue) - 2);
         if (substr($s_tagTokValue, 0, 1) == "'" && substr($s_tagTokValue, strlen($s_tagTokValue) - 1, 1) == "'") $s_tagTokValue = substr($s_tagTokValue, 1, strlen($s_tagTokValue) - 2);
         $a_html[$s_tagName][$i_arrayCounter][$s_tagTokOption] = $s_tagTokValue;
-        $b_boolOptions = is_array(($s_tagOption = each($a_tag))) && $s_tagOption[1];
+        $b_boolOptions = is_array(($s_tagOption = $a_tag[$tagcount])) && $s_tagOption[1];
+        $tagcount++;
       } while ($b_boolOptions);
     }
   }

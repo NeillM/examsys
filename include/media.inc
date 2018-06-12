@@ -24,8 +24,6 @@
 
 require 'load_config.php';
 
-include_once $cfg_web_root . 'tools/getid3/getid3.php';
-
 /**
  * Function takes a filename with the width and height and returns appropriate HTML to display the media type.
  *

@@ -15,6 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
+use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
 /**
  * Test userutils class
@@ -30,7 +31,7 @@ class userutilstest extends unittestdatabase {
      * @return dataset
      */
     public function getDataSet() {
-        return new PHPUnit_Extensions_Database_DataSet_YamlDataSet($this->get_base_fixture_directory() . "userutilsTest" . DIRECTORY_SEPARATOR . "userutils.yml");
+        return new YamlDataSet($this->get_base_fixture_directory() . "userutilsTest" . DIRECTORY_SEPARATOR . "userutils.yml");
     } 
     /**
      * Test gettign enrolment id

@@ -54,6 +54,15 @@ class requirements {
         $ext[$extension] = true;
       }
     }
+    // Check optional extenstions.
+    $optional_extenstions = $configObject->getxml('php', 'optional_extenstions');
+    foreach ($optional_extenstions->extension as $opt) {
+      if (!in_array($opt, $phpModules)) {
+        $ext[$opt] = 'warn';
+      } else {
+        $ext[$opt] = true;
+      }
+    }
     return $ext;
   }
 

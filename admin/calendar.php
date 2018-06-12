@@ -528,7 +528,7 @@ $stmt->close();
     $paper_details[$paper_no]['duration']     = $duration;
     $paper_no++;
 
-    if ($start_time + $duration/60 > 23) {
+    if (intval($start_time) + $duration/60 > 23) {
       $prev_paper_no = $paper_no - 1;
       $paper_details[$paper_no]                  = $paper_details[$prev_paper_no];
       $paper_details[$paper_no]['title']         = $title . ' ' . $string['eventcont'] ;

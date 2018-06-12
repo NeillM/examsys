@@ -36,6 +36,11 @@ define('MARK_STD_SET', '2');
 
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
 
+$exam_duration_hours = param::optional('exam_duration_hours', 0, param::INT, param::FETCH_POST);
+$exam_duration_mins = param::optional('exam_duration_mins', 0, param::INT, param::FETCH_POST);
+$ext_tyear = param::optional('ext_tyear', null, param::INT, param::FETCH_POST);
+$int_tyear = param::optional('int_tyear', null, param::INT, param::FETCH_POST);
+
 /**
  * Define callbacks to be used when retrieving tracked changes
  * @param  array  $changed_reviewers    Array of reviewers referenced in changes
@@ -484,23 +489,15 @@ if (isset($_POST['Submit'])) {
         $calendar_year = ($_POST['calendar_year'] == '') ? NULL : $_POST['calendar_year'];
         $properties->set_calendar_year($calendar_year);
       }
-      if (isset($_POST['exam_duration_hours']) or isset($_POST['exam_duration_mins'])) {
-			  $exam_duration = 0;
-				if (isset($_POST['exam_duration_hours'])) {
-					$exam_duration += ($_POST['exam_duration_hours'] * 60);
-				}
-				if (isset($_POST['exam_duration_mins'])) {
-					$exam_duration += $_POST['exam_duration_mins'];
-				}
-        if (!$locked) {
-					$properties->set_exam_duration($exam_duration);
-				}
-			} else {
-				$exam_duration = NULL;
-        if (!$locked) {
-					$properties->set_exam_duration($exam_duration);
-				}
-			}
+
+      // Set exam duration (in minutes).
+      $exam_duration = $exam_duration_hours * 60;
+      $exam_duration += $exam_duration_mins;
+
+      if (!$locked) {
+        $properties->set_exam_duration($exam_duration);
+      }
+
       $lab_string = '';
       for ($i=0; $i<$_POST['lab_no']; $i++) {
         if (isset($_POST["lab$i"])) {
@@ -513,29 +510,32 @@ if (isset($_POST['Submit'])) {
       }
       $properties->set_labs($lab_string);
     }
-
-    $leap = is_leap($_POST['ext_tyear']);
-    if ($leap == true and $_POST['ext_tmonth'] == '02' and ($_POST['ext_tday'] == '30' or $_POST['ext_tday'] == '31')) $_POST['ext_tday'] = '29';
-    if ($leap == false and $_POST['ext_tmonth'] == '02' and ($_POST['ext_tday'] == '29' or $_POST['ext_tday'] == '30' or $_POST['ext_tday'] == '31')) $_POST['ext_tday'] = '28';
+    if (!empty($ext_tyear)) {
+      $leap = is_leap($ext_tyear);
+      if ($leap == true and $_POST['ext_tmonth'] == '02' and ($_POST['ext_tday'] == '30' or $_POST['ext_tday'] == '31')) $_POST['ext_tday'] = '29';
+      if ($leap == false and $_POST['ext_tmonth'] == '02' and ($_POST['ext_tday'] == '29' or $_POST['ext_tday'] == '30' or $_POST['ext_tday'] == '31')) $_POST['ext_tday'] = '28';
+    }
     if (($_POST['ext_tmonth'] == '04' or $_POST['ext_tmonth'] == '06' or $_POST['ext_tmonth'] == '09' or $_POST['ext_tmonth'] == '11') and $_POST['ext_tday'] == '31') $_POST['ext_tday'] = '30';
 
-    if ($_POST['ext_tyear'] == '' or $_POST['ext_tmonth'] == '' or $_POST['ext_tday'] == '') {
+    if (empty($ext_tyear) or $_POST['ext_tmonth'] == '' or $_POST['ext_tday'] == '') {
       $properties->set_external_review_deadline(NULL);
     } else {
-      $tmp_date = new DateTime($_POST['ext_tyear'] . '-' . $_POST['ext_tmonth'] . '-' . $_POST['ext_tday']);
+      $tmp_date = new DateTime($ext_tyear . '-' . $_POST['ext_tmonth'] . '-' . $_POST['ext_tday']);
       $properties->set_external_review_deadline($tmp_date->format('Y-m-d'));
       unset($tmp_date);
     }
 
-    $leap = is_leap($_POST['int_tyear']);
-    if ($leap == true and $_POST['int_tmonth'] == '02' and ($_POST['int_tday'] == '30' or $_POST['int_tday'] == '31')) $_POST['int_tday'] = '29';
-    if ($leap == false and $_POST['int_tmonth'] == '02' and ($_POST['int_tday'] == '29' or $_POST['int_tday'] == '30' or $_POST['int_tday'] == '31')) $_POST['int_tday'] = '28';
+    if (!empty($int_tyear)) {
+      $leap = is_leap($int_tyear);
+      if ($leap == true and $_POST['int_tmonth'] == '02' and ($_POST['int_tday'] == '30' or $_POST['int_tday'] == '31')) $_POST['int_tday'] = '29';
+      if ($leap == false and $_POST['int_tmonth'] == '02' and ($_POST['int_tday'] == '29' or $_POST['int_tday'] == '30' or $_POST['int_tday'] == '31')) $_POST['int_tday'] = '28';
+    }
     if (($_POST['int_tmonth'] == '04' or $_POST['int_tmonth'] == '06' or $_POST['int_tmonth'] == '09' or $_POST['int_tmonth'] == '11') and $_POST['int_tday'] == '31') $_POST['int_tday'] = '30';
 
-    if ($_POST['int_tyear'] == '' or $_POST['int_tmonth'] == '' or  $_POST['int_tday'] == '') {
+    if (empty($int_tyear) or $_POST['int_tmonth'] == '' or  $_POST['int_tday'] == '') {
       $properties->set_internal_review_deadline(NULL);
     } else {
-      $tmp_date = new DateTime($_POST['int_tyear'] . '-' . $_POST['int_tmonth'] . '-' . $_POST['int_tday']);
+      $tmp_date = new DateTime($int_tyear . '-' . $_POST['int_tmonth'] . '-' . $_POST['int_tday']);
       $properties->set_internal_review_deadline($tmp_date->format('Y-m-d'));
     }
 
@@ -1696,7 +1696,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       $split_hour = $start_date->format('H');
       $split_minute = $start_date->format('i');
     } else {
-      $split_year = $split_month = $split_day = $split_hour = $split_minute = '';
+      $split_year = $split_month = $split_day = $split_hour = $split_minute = 0;
     }
 
     // Available from Day
@@ -1803,7 +1803,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
       $split_hour = $end_date->format('H');
       $split_minute = $end_date->format('i');
     } else {
-      $split_year = $split_month = $split_day = $split_hour = $split_minute = '';
+      $split_year = $split_month = $split_day = $split_hour = $split_minute = 0;
     }
 
     echo "<td align=\"right\">" . $string['to'] . "&nbsp;</td><td>";
