@@ -526,8 +526,8 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                 }
               }
               $totalpos += count($correct_answers) * $marks_correct;
-              $option_no++;
             }
+            $option_no++;
           }
         }
 
