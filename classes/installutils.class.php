@@ -468,7 +468,7 @@ Class InstallUtils {
       $load_help = param::optional('loadHelp', false, param::BOOLEAN, param::FETCH_POST);
       $download_lang = param::optional('loadtranslations', false, param::BOOLEAN, param::FETCH_POST);
     } else {
-      $configObject->set('cfg_root_path', self::getSettings(param::TEXT, true, 'server', 'root'));
+      $configObject->set('cfg_root_path', self::getSettings(param::TEXT, false, 'server', 'root'));
       $load_help = self::getSettings(param::BOOLEAN, false, 'help');
       $download_lang = self::getSettings(param::BOOLEAN, false, 'translations');
     }
@@ -1961,7 +1961,7 @@ CONFIG;
     }
     $config = str_replace('{cfg_web_root}', $cfg_web_root, $config);
     if (self::$cli) {
-      self::$cfg_root_path = self::getSettings(param::TEXT, true, 'server', 'root');
+      self::$cfg_root_path = self::getSettings(param::TEXT, false, 'server', 'root');
     }
     $config = str_replace('{cfg_root_path}', self::$cfg_root_path, $config);
     $config = str_replace('{SysAdmin_username}', 'USERNMAE_FOR_DEBUG', $config);
