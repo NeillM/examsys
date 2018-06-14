@@ -38,9 +38,4 @@ session_write_close();
 setcookie(session_name(), '', 0, '/');
 header('Location: ./');
 session_regenerate_id(true);
-?>
-<html>
-<body>
-<h1>Now Logged Out</h1><p><a href="./">Click Here to go back.</a></p>
-</body>
-</html>
+exit;
