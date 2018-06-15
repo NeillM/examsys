@@ -59,8 +59,8 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
    */
   public function get_javascript_config($configfile = '') {
     $render = new \render($this->config, $this->get_path() . DIRECTORY_SEPARATOR . 'templates');
-    $tinmymcedata['file'] = 'tinymce_' . $configfile;
-    if ($tinmymcedata['file'] != 'tinymce_') {
+    $tinmymcedata['file'] = 'tinymce3_' . $configfile;
+    if ($tinmymcedata['file'] != 'tinymce3_') {
       $render->render($tinmymcedata, null, 'tinymce3_config.html');
     }
   }
