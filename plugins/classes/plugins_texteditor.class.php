@@ -114,7 +114,7 @@ abstract class plugins_texteditor extends \plugins\plugins {
         // Default to plain texteditor if non set.
         if (count(\plugin_manager::get_plugin_type_enabled('plugin_texteditor')) === 0) {
             $defaulttexteditorns = 'plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor';
-            $defaulttexteditor = new $defaulttexteditorns($mysqli);
+            $defaulttexteditor = new $defaulttexteditorns($this->config->db);
             $defaulttexteditor->enable_plugin();
         }
     }

@@ -147,13 +147,6 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
         $text = str_replace($m, $new, $text);
       }
     }
-    preg_match_all("#<span class=\"mee\">(.*?)\</span>#si",$text,$tex_matches);
-    if (count($tex_matches[0]) > 0) {
-      foreach($tex_matches[0] as $m) {
-        $new = str_replace(array('<span class="mee">','</span>'),array('[texi]','[/texi]'),$m);
-        $text = str_replace($m, $new, $text);
-      }
-    }
     return $text;
   }
 
