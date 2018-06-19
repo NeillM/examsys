@@ -232,7 +232,7 @@ Class InstallUtils {
    * @param string $setting xml path of setting
    * @return cleaned settings
    */
-  private function check_setting($value, $type, $required, $setting) {
+  private static function check_setting($value, $type, $required, $setting) {
     global $string;
     if (is_array($value)) {
       $clean = param::clean_array($value, $type, $required);
