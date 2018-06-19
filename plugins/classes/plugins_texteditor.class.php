@@ -50,7 +50,7 @@ abstract class plugins_texteditor extends \plugins\plugins {
      * Type of the editor.
      * @var string
      */
-    const type_mathjax= 'mathjax';
+    const type_mathjax = 'mathjax';
     
     /**
      * Type of the plugin.
