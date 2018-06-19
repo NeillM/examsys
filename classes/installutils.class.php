@@ -458,7 +458,7 @@ Class InstallUtils {
     $configObject->set('cfg_db_host', self::$cfg_db_host);
     $configObject->set('cfg_db_database', self::$cfg_db_name);
     $configObject->set('dbclass', 'mysqli');
-    self::loadPlugins();
+    plugins\plugins::install_core_plugins(self::$db_admin_username, self::$db_admin_passwd);
 
     // Update sys_updates table.
     self::updateSysUpdates();
@@ -767,21 +767,6 @@ Class InstallUtils {
     self::createDefaultUsers();
     self::createDefaultFacultiesSchoolsModules();
     self::createQuestionStatuses();
-  }
-
-  /**
-   * Load default plugins needed for rogo to function
-   */
-  static function loadPlugins() {
-    // Enable default text editor.
-    $defaulttexteditorns = 'plugins\texteditor\plugin_tinymce3_texteditor\plugin_tinymce3_texteditor';
-    $defaulttexteditor = new $defaulttexteditorns(self::$db);
-    $defaulttexteditor->install(self::$db_admin_username, self::$db_admin_passwd);
-    $defaulttexteditor->enable_plugin();
-    // Install plain text editor.
-    $plaintexteditorns = 'plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor';
-    $plaintexteditor = new $plaintexteditorns(self::$db);
-    $plaintexteditor->install(self::$db_admin_username, self::$db_admin_passwd);
   }
 
   /**
