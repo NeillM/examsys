@@ -764,10 +764,7 @@ QUERY;
    * @return string
    */
   public function get_theme() {
-    if ($this->texteditor->get_name() === 'plugin_tinymce3_texteditor') {
-      $this->theme = $this->texteditor->replace_mee_div($this->theme);
-    }
-    return $this->theme;
+    return $this->texteditor->get_text_for_display($this->theme);
   }
 
   /**
@@ -775,9 +772,7 @@ QUERY;
    * @param string $value
    */
   public function set_theme($value) {
-    if ($this->texteditor->get_name() === 'plugin_tinymce3_texteditor') {
-      $value = $this->texteditor->replace_tex($value);
-    }
+    $value = $this->texteditor->prepare_text_for_save($value);
     if ($value != $this->theme) {
       $this->set_modified_field('theme', $this->theme);
       $this->theme = $value;
@@ -847,10 +842,7 @@ QUERY;
    * @return string
    */
   public function get_notes() {
-    if ($this->texteditor->get_name() === 'plugin_tinymce3_texteditor') {
-      $this->notes = $this->texteditor->replace_mee_div($this->notes);
-    }
-    return $this->notes;
+    return $this->texteditor->get_text_for_display($this->notes);
   }
 
   /**
@@ -858,9 +850,7 @@ QUERY;
    * @param string $value
    */
   public function set_notes($value) {
-    if ($this->texteditor->get_name() === 'plugin_tinymce3_texteditor') {
-      $value = $this->texteditor->replace_tex($value);
-    }
+    $value = $this->texteditor->prepare_text_for_save($value);
     if ($value != $this->notes) {
       $this->set_modified_field('notes', $this->notes);
       $this->notes = $value;
@@ -872,10 +862,7 @@ QUERY;
    * @return string
    */
   public function get_correct_fback() {
-    if ($this->texteditor->get_name() === 'plugin_tinymce3_texteditor') {
-      $this->correct_fback = $this->texteditor->replace_mee_div($this->correct_fback);
-    }
-    return $this->correct_fback;
+    return $this->texteditor->get_text_for_display($this->correct_fback);
   }
 
   /**
@@ -883,9 +870,7 @@ QUERY;
    * @param string $value
    */
   public function set_correct_fback($value) {
-    if ($this->texteditor->get_name() === 'plugin_tinymce3_texteditor') {
-      $value = $this->texteditor->replace_tex($value);
-    }
+    $value = $this->texteditor->prepare_text_for_save($value);
     if ($value != $this->correct_fback) {
       $this->set_modified_field('correct_fback', $this->correct_fback);
       $this->correct_fback = $value;
@@ -897,10 +882,7 @@ QUERY;
    * @return string
    */
   public function get_incorrect_fback() {
-    if ($this->texteditor->get_name() === 'plugin_tinymce3_texteditor') {
-      $this->incorrect_fback = $this->texteditor->replace_mee_div($this->incorrect_fback);
-    }
-    return $this->incorrect_fback;
+    return $this->texteditor->get_text_for_display($this->incorrect_fback);
   }
 
   /**
@@ -908,9 +890,7 @@ QUERY;
    * @param string $value
    */
   public function set_incorrect_fback($value) {
-    if ($this->texteditor->get_name() === 'plugin_tinymce3_texteditor') {
-      $value = $this->texteditor->replace_tex($value);
-    }
+    $value = $this->texteditor->prepare_text_for_save($value);
     if ($value != $this->incorrect_fback) {
       $this->set_modified_field('incorrect_fback', $this->incorrect_fback);
       $this->incorrect_fback = $value;

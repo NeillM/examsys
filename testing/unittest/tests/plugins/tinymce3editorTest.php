@@ -128,19 +128,19 @@ class tinymce3editortest extends unittestdatabase {
    * Test repalce [tex]/[texi] tags
    * @group texteditor
    */
-  public function replace_tex() {
+  public function test_prepare_text_for_save() {
     $tinymce = new \plugins\texteditor\plugin_tinymce3_texteditor\plugin_tinymce3_texteditor();
-    $this->assertEquals("<div class=\"mee\">\sigma</div>", $tinymce->replace_tex("[tex]\sigma[/tex]"));
-    $this->assertEquals("<div class=\"mee\">\sigma</div>", $tinymce->replace_tex("[texi]\sigma[/texi]"));
+    $this->assertEquals("<div class=\"mee\">\sigma</div>", $tinymce->prepare_text_for_save("[tex]\sigma[/tex]"));
+    $this->assertEquals("<span class=\"mee\">\sigma</span>", $tinymce->prepare_text_for_save("[texi]\sigma[/texi]"));
   }
 
   /**
    * Test repalce <div class="mee"> tags
    * @group texteditor
    */
-  public function replace_mee_div() {
+  public function test_get_text_for_display() {
     $tinymce = new \plugins\texteditor\plugin_tinymce3_texteditor\plugin_tinymce3_texteditor();
-    $this->assertEquals("[tex]\alpha[/tex", $tinymce->replace_tex("<div class=\"mee\">\alpha</div>"));
+    $this->assertEquals("[tex]\alpha[/tex]", $tinymce->get_text_for_display("<div class=\"mee\">\alpha</div>"));
   }
 
   /**

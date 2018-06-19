@@ -148,8 +148,27 @@ class plaineditortest extends unittestdatabase {
    * @group texteditor
    */
   public function clean_leadin() {
-    $tinymce = new \plugins\texteditor\plugin_tinymce3_texteditor\plugin_tinymce3_texteditor();
+    $tinymce = new \plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor();
     $this->assertTrue($tinymce->cleanleadin("test - <div class=\"mee\">\alpha</div>"));
     $this->assertTrue($tinymce->cleanleadin("test - \alpha"));
+  }
+
+  /**
+   * Test repalce text for save
+   * @group texteditor
+   */
+  public function test_prepare_text_for_save() {
+    $tinymce = new \plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor();
+    $this->assertEquals("[tex]\sigma[/tex]", $tinymce->prepare_text_for_save("[tex]\sigma[/tex]"));
+    $this->assertEquals("[texi]\sigma[/texi]", $tinymce->prepare_text_for_save("[texi]\sigma[/texi]"));
+  }
+
+  /**
+   * Test text for display
+   * @group texteditor
+   */
+  public function test_get_text_for_display() {
+    $tinymce = new \plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor();
+    $this->assertEquals("<div class=\"mee\">\alpha</div>", $tinymce->get_text_for_display("<div class=\"mee\">\alpha</div>"));
   }
 }

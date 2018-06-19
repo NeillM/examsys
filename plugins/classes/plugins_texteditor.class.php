@@ -94,6 +94,20 @@ abstract class plugins_texteditor extends \plugins\plugins {
     abstract public function get_type($type);
 
     /**
+     * Convert text stored in database to editor text
+     * @param string $text text from database
+     * @return string
+     */
+    abstract public function get_text_for_display($text);
+
+    /**
+     * Convert text in editor to store in database
+     * @param string $text editor text
+     * @return string
+     */
+    abstract public function prepare_text_for_save($text);
+
+    /**
      * Enable this plugin
      * Only one module text editor plugin should be enabled at anyone time
      */

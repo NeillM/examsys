@@ -320,10 +320,7 @@ QUERY;
    * @return string
    */
   public function get_text() {
-    if ($this->texteditor->get_name() === 'plugin_tinymce3_texteditor') {
-      $this->text = $this->texteditor->replace_mee_div($this->text);
-    }
-    return $this->text;
+    return $this->texteditor->get_text_for_display($this->text);
   }
 
   /**
@@ -331,9 +328,7 @@ QUERY;
    * @param string $value
    */
   public function set_text($value) {
-    if ($this->texteditor->get_name() === 'plugin_tinymce3_texteditor') {
-      $value = $this->texteditor->replace_tex($value);
-    }
+    $value = $this->texteditor->prepare_text_for_save($value);
     if ($value != $this->text and !in_array('text', array_keys($this->_question->get_unified_fields()))) {
       $this->set_modified_field('text', $this->text, sprintf($this->_lang_strings['optiontext'], $this->_number));
     }
@@ -366,10 +361,7 @@ QUERY;
    * @return string
    */
   public function get_correct_fback() {
-    if ($this->texteditor->get_name() === 'plugin_tinymce3_texteditor') {
-      $this->correct_fback = $this->texteditor->replace_mee_div($this->correct_fback);
-    }
-    return $this->correct_fback;
+    return $this->texteditor->get_text_for_display($this->correct_fback);
   }
 
   /**
@@ -377,9 +369,7 @@ QUERY;
    * @param string $value
    */
   public function set_correct_fback($value) {
-    if ($this->texteditor->get_name() === 'plugin_tinymce3_texteditor') {
-      $value = $this->texteditor->replace_tex($value);
-    }
+    $value = $this->texteditor->prepare_text_for_save($value);
     if($value != $this->correct_fback) {
       $this->set_modified_field('correct_fback', $this->correct_fback, sprintf($this->_lang_strings['optionfbcorrect'], $this->_number));
       $this->correct_fback = $value;
@@ -391,10 +381,7 @@ QUERY;
    * @return string
    */
   public function get_incorrect_fback() {
-    if ($this->texteditor->get_name() === 'plugin_tinymce3_texteditor') {
-      $this->incorrect_fback = $this->texteditor->replace_mee_div($this->incorrect_fback);
-    }
-    return $this->incorrect_fback;
+    return $this->texteditor->get_text_for_display($this->incorrect_fback);
   }
 
   /**
@@ -402,9 +389,7 @@ QUERY;
    * @param string $value
    */
   public function set_incorrect_fback($value) {
-    if ($this->texteditor->get_name() === 'plugin_tinymce3_texteditor') {
-      $value = $this->texteditor->replace_tex($value);
-    }
+    $value = $this->texteditor->prepare_text_for_save($value);
     if($value != $this->incorrect_fback) {
       $this->set_modified_field('incorrect_fback', $this->incorrect_fback, sprintf($this->_lang_strings['optionfbincorrect'], $this->_number));
       $this->incorrect_fback = $value;

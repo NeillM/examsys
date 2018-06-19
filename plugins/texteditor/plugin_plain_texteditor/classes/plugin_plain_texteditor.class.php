@@ -123,4 +123,22 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
   public function clean_leadin($leadin) {
     return true;
   }
+
+  /**
+   * Plain text editor applies no conversion to stored text
+   * @param string $text from database
+   * @return string
+   */
+  public function get_text_for_display($text) {
+    return $text;
+  }
+
+  /**
+   * Plain text editor applies no conversion to db text
+   * @param string $text from database
+   * @return string
+   */
+  public function prepare_text_for_save($text) {
+    return $text;
+  }
 }
