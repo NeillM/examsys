@@ -136,9 +136,7 @@ $paper_prologue = $propertyObj->get_paper_prologue();
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <?php
-    $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
-    $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-    $texteditorplugin = new $texteditorpluginns();
+    $texteditorplugin = \plugins\plugins_texteditor::get_editor();
     $texteditorplugin->get_header();
     $render = new render($configObject);
     $render->render_html5_js(json_encode($jstring));

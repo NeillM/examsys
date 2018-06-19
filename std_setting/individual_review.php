@@ -126,9 +126,7 @@ function check_ebel_distinction_type($reviewID, $db) {
     });
   </script>
 <?php
-  $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
-  $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-  $texteditorplugin = new $texteditorpluginns();
+  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->get_header();
   $render = new render($configObject);
   $render->render_html5_js(json_encode($jstring));

@@ -48,9 +48,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../../js/jquery_tablesorter/jquery.tablesorter.js"></script>
 <?php
-  $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
-  $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-  $texteditorplugin = new $texteditorpluginns();
+  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->get_header();
 ?>
   <script>

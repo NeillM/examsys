@@ -86,12 +86,9 @@ function clearMSOtags($sHTML) {
  */
 function wysiwyg_editor($name, $replace, $content='', $type = '') {
   global $string;
-  $configObject = Config::get_instance();
   $html = '';
   $content = htmlspecialchars($content);
-  $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
-  $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-  $texteditorplugin = new $texteditorpluginns();
+  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $langpack = new \langpack();
   $strings = $langpack->get_all_strings($texteditorplugin->langcomponent);
   $string = array_merge($string, $strings);

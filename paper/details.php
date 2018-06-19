@@ -389,9 +389,7 @@ function random_qMarks($random_questions) {
   <script type="text/javascript" src="../js/page_scroll.js"></script>
   <script type="text/javascript" src="../js/adhocwindow.js"></script>
 <?php
-  $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
-  $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-  $texteditorplugin = new $texteditorpluginns();
+  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->get_header();
 ?>
 <script defer="defer">

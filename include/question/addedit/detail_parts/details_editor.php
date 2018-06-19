@@ -27,7 +27,6 @@ $field_editor = (isset($field_editor)) ? $field_editor : 'scenario';
 $label_editor = (isset($label_editor)) ? $label_editor : '<label for="' . $field_editor . '">' . $string['scenario'] . '</label><br /><span class="note">' . $string['scenariomsg'] . '</span>';
 $value_editor = (isset($value_editor)) ? $value_editor : $question->get_scenario();
 $index_editor = (isset($index_editor)) ? $index_editor++ : 1;
-$cfg_editor_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
 ?>
             <tr>
               <th><?php echo $mandatory ?><?php echo $label_editor ?></th>

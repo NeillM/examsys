@@ -178,9 +178,7 @@ Class QuestionEdit extends RogoObject {
       throw new DataTypeException($this->_lang_strings['questioninvalid']);
     }
 
-    $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
-    $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-    $this->texteditor = new $texteditorpluginns();
+    $this->texteditor = \plugins\plugins_texteditor::get_editor();
   }
 
   /**

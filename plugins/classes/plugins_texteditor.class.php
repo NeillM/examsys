@@ -142,4 +142,14 @@ abstract class plugins_texteditor extends \plugins\plugins {
     public function get_header_path() {
       return $this->get_path() . DIRECTORY_SEPARATOR . 'templates';
     }
+
+    /**
+     * Get the enabled text editor
+     * @return object
+     */
+    public static function get_editor() {
+      $texteditorplugin_name = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+      $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+      return new $texteditorpluginns();
+    }
 }
