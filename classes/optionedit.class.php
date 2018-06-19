@@ -102,7 +102,7 @@ Class OptionEdit extends RogoObject {
 
     $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
     $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-    $this->texteditor = new $texteditorpluginns($mysqli);
+    $this->texteditor = new $texteditorpluginns();
   }
 
   /**

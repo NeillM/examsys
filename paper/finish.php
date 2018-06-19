@@ -227,7 +227,7 @@ require '../config/finish.inc';
 <?php
   $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
   $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-  $texteditorplugin = new $texteditorpluginns($mysqli);
+  $texteditorplugin = new $texteditorpluginns();
   $texteditorplugin->get_header();
   $css = '';
   if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF' and $bgcolor != 'white') {

@@ -72,7 +72,7 @@ if (isset($_POST['save_changes'])) {
 <?php
   $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
   $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-  $texteditorplugin = new $texteditorpluginns($mysqli);
+  $texteditorplugin = new $texteditorpluginns();
   $texteditorplugin->get_header();
   $texteditorplugin->get_javascript_config('config_help_student');
 ?>

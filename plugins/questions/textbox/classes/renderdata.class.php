@@ -163,7 +163,7 @@ class renderdata extends \questiondata {
         }
       }
       $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-      $texteditorplugin = new $texteditorpluginns($this->config->db);
+      $texteditorplugin = new $texteditorpluginns();
       if ($useranswer == '' and $screen_pre_submitted == 1) {
         $this->file = $this->editor . '_config_unanswered';
       } else {

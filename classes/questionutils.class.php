@@ -113,7 +113,7 @@ Class QuestionUtils {
     $configObject = Config::get_instance();
     $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
     $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-    $texteditorplugin = new $texteditorpluginns($configObject->db);
+    $texteditorplugin = new $texteditorpluginns();
     // Check if editor has clean rule i.e. for equations.
     if ($texteditorplugin->clean_leadin($leadin)) {
       $leadin = strip_tags($leadin);

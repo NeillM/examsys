@@ -59,7 +59,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 <?php
   $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
   $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-  $texteditorplugin = new $texteditorpluginns($mysqli);
+  $texteditorplugin = new $texteditorpluginns();
   $texteditorplugin->get_header();
 ?>
   <script>

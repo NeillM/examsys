@@ -65,7 +65,7 @@ class questionrender {
 
     $texteditorplugin_name = plugin_manager::get_plugin_type_enabled('plugin_texteditor');
     $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-    $texteditorplugin = new $texteditorpluginns($this->config->db);
+    $texteditorplugin = new $texteditorpluginns();
     // We always require the plain text renderpath.
     if ($texteditorplugin_name[0] === 'plugin_plain_texteditor') {
       $renderpath[] = $texteditorplugin->get_header_path();
