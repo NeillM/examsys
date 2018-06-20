@@ -173,7 +173,13 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
               } else {
                 $academic_year_start = $default_academic_year_start;
               }
-              
+
+              if (isset($fields[16])) {
+                $externalid = trim($fields[16]);
+              } else {
+                $externalid = null;
+              }
+
               if (module_utils::module_exists($moduleid, $mysqli)) {
                 $updateData = array();
                  
@@ -194,11 +200,12 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
                 $updateData['exam_q_feedback'] = $exam_q_feedback;
                 $updateData['add_team_members'] = $add_team_members;
                 $updateData['academic_year_start'] = $academic_year_start;
+                $updateData['externalid'] = $externalid;
     
                 module_utils::update_module_by_code($moduleid, $updateData, $mysqli);
                 echo "<li class=\"existing\">$moduleid - " . $string['alreadyexists'] . "</li>\n";
               } else {
-                $success = module_utils::add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnrol, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli, 0, $timed_exams, $exam_q_feedback, 1, $academic_year_start);
+                $success = module_utils::add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnrol, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli, 0, $timed_exams, $exam_q_feedback, $add_team_members, 1, $academic_year_start, $externalid);
                 if ($success) {
                   echo "<li class=\"added\">$moduleid - " . $string['added'] . "</li>\n";
                   $modulesAdded++;
@@ -236,7 +243,7 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 <td align="left" style="padding:10px" class="dialog_body" colspan="2">
 
 <p style="text-align:justify"><?php echo $string['msg1']; ?></p>
-<blockquote>Module ID, Name, School, SMS API, Objectives API, Peer Review, External Examiners, Standards Setting, Mapping, Active, Allow Self-enrol, Negative Marking</blockquote>
+<blockquote>Module ID, Name, School, SMS API, Objectives API, Peer Review, External Examiners, Standards Setting, Mapping, Active, Allow Self-enrol, Negative Marking, Timed Exams, Question-Based Feedback, Add Team Members, Academic Year Start, External ID</blockquote>
 <div style="text-align:center"><img src="../artwork/bulk_module_import_headings.png" width="891" height="59" alt="screenshot" style="border:1px solid black" /></div>
 <br />
 <div><?php echo $string['msg2']; ?></div>
