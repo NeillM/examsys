@@ -68,7 +68,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
         $requesttype = 'modulemanagement';
         $responsetype = 'moduleManagementResponse';
         $operations = array('create', 'update', 'delete');
-        $fields = array('id', 'modulecode', 'name', 'school', 'faculty', 'sms', 'externalid', 'schoolextid', 'externalsys');
+        $fields = array('id', 'modulecode', 'name', 'school', 'faculty', 'sms', 'externalid', 'schoolextid', 'externalsys', 'newexternalid');
         $xsd = 'managementrequest';
         process($requesttype, $operations, $fields, $responsetype, $oauth, $api, $langpack, $render, $xsd, $mysqli, $response, $request);
     });
