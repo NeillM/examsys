@@ -75,14 +75,6 @@ abstract class plugins {
      */
     private $path;
     /**
-     * Define core plugins.
-     * Associate array (plugin namespace, enabled by default flag)
-     */
-    const core_plugins = array(
-      array('namespace' => 'plugins\texteditor\plugin_tinymce3_texteditor\plugin_tinymce3_texteditor', 'enabled' => true),
-      array('namespace' => 'plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor', 'enabled' => false));
-
-    /**
      * Called when the object is unserialised.
      */
     public function __wakeup() {
@@ -393,22 +385,5 @@ abstract class plugins {
      */
     public function get_lang_component() {
         return $this->langcomponent;
-    }
-
-    /**
-     * Install all core plugins
-     * @param string $db_admin_username db user
-     * @param string $db_admin_passwd password fro db user
-     */
-    public static function install_core_plugins($db_admin_username, $db_admin_passwd) {
-        foreach (self::core_plugins as $core) {
-            $pluginns = $core['namespace'];
-            $enabled = $core['enabled'];
-            $plugin = new $pluginns();
-            $plugin->install($db_admin_username, $db_admin_passwd);
-            if ($enabled) {
-                $plugin->enable_plugin();
-            }
-        }
     }
 }

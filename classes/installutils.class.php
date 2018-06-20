@@ -458,7 +458,7 @@ Class InstallUtils {
     $configObject->set('cfg_db_host', self::$cfg_db_host);
     $configObject->set('cfg_db_database', self::$cfg_db_name);
     $configObject->set('dbclass', 'mysqli');
-    plugins\plugins::install_core_plugins(self::$db_admin_username, self::$db_admin_passwd);
+    plugin_manager::install_core_plugins(self::$db_admin_username, self::$db_admin_passwd);
 
     // Update sys_updates table.
     self::updateSysUpdates();
