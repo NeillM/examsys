@@ -281,6 +281,30 @@ class modulemanagementtest extends unittestdatabase {
         $this->assertEquals($responsearray, $module->update($params, $userid));
     }
     /**
+     * Test successful module update with a new external id
+     * @group api
+     */
+    public function test_update_new_external_id() {
+      // Test module update name.
+      $responsearray = $this->update_response_array();
+      $params = $this->update_param_array();
+      $module = new \api\modulemanagement($this->db, 'test1');
+      $userid = 1;
+      $this->assertEquals($responsearray, $module->update($params, $userid));
+      // Test module update module code.
+      $params = array(
+        "nodeid" => 1,
+        "externalid" => '12345678',
+        "newexternalid" => '87654321');
+      $responsearray["id"]= 1;
+      $responsearray["externalid"] = "87654321";
+      $this->assertEquals($responsearray, $module->update($params, $userid));
+      // Check update occured.
+      $querytable = $this->getConnection()->createQueryTable('modules', 'SELECT id, moduleid, fullname, active, schoolid, academic_year_start, externalid, sms FROM modules where externalid = "87654321"');
+      $expectedtable = $this->get_expected_data_set('updatemodule2')->getTable("modules");
+      $this->assertTablesEqual($expectedtable, $querytable);
+  }
+    /**
      * Test module update exception nothing to update
      * @group api
      */
