@@ -40,12 +40,6 @@ class csv_handler
   protected $read_file_handle;
 
   /**
-   * Writing pointer to the file from fopen()
-   * @var resource
-   */
-  protected $write_file_handle;
-
-  /**
    * The header that is required by the file.
    * @var array
    */
@@ -108,45 +102,6 @@ class csv_handler
   }
 
   /**
-   * Create the csv file with the required header row.
-   *
-   * @return void
-   * @throws csv_load_exception
-   */
-  protected function create()
-  {
-    if (!is_writable(dirname($this->file))) {
-      throw new csv_load_exception('Directory for ' . $this->file . ' is not writable');
-    }
-    if (file_exists($this->file) && !is_writable($this->file)) {
-      throw new csv_load_exception($this->file . ' is not writable');
-    }
-    $this->write_file_handle = fopen($this->file, 'w');
-    if (!empty($this->required_header)) {
-      fputcsv($this->write_file_handle, $this->required_header);
-    }
-  }
-
-  /**
-   * Writes an array as a line in the csv file.
-   *
-   * @param array $line
-   * @return void
-   * @throws csv_load_exception
-   */
-  public function write_line(array $line)
-  {
-    if (!isset($this->write_file_handle)) {
-      if (empty($this->required_header)) {
-        // If no required header is set, use the array keys for this line.
-        $this->required_header(array_keys($line));
-      }
-      $this->create();
-    }
-    fputcsv($this->write_file_handle, $line);
-  }
-
-  /**
    * Gets a line of data from the csv file as an associative
    * array where the values are keyed by the headers.
    *
@@ -180,7 +135,7 @@ class csv_handler
   }
 
   /**
-   * Check that the csv file has athe required header.
+   * Check that the csv file has a the required headers.
    *
    * @return boolean true if the header validates
    */
