@@ -104,11 +104,8 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
           $modulesAdded = 0;
           try {
             $csv = new \csv\csv_handler($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
-          } catch (\csv\csv_load_exception $e) {
-            echo "<li class=\"fail\">" . $string['csvfileloadfail'] . "</li>\n";
-          }
-          $import = new \import\import_modules($csv);
-          if ($import->execute()) {
+            $import = new \import\import_modules($csv);
+            $import->execute();
             foreach ($import->get_exists() as $exists) {
               echo "<li class=\"existing\">$exists - " . $string['alreadyexists'] . "</li>\n";
             }
@@ -118,8 +115,8 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
             foreach ($import->get_failed() as $failed) {
               echo "<li class=\"fail\">$failed - " . $string['failed'] . "</li>\n";
             }
-          } else {
-            echo "<li class=\"fail\">" . $string['csvfileinvalid'] . "</li>\n";
+          } catch (\csv\csv_load_exception $e) {
+            echo "<li class=\"fail\">" . $e->getMessage() . "</li>\n";
           }
         }
       }
