@@ -25,8 +25,7 @@ namespace csv;
 /**
  * CSV handler helper class.
  */
-class csv_handler
-{
+class csv_handler {
   /**
    * The path to the csv file.
    * @var string
@@ -57,8 +56,7 @@ class csv_handler
    * @param string $file The path to the file to be used
    * @throws csv_load_exception
    */
-  public function __construct($file)
-  {
+  public function __construct($file) {
     $filename = basename($file);
     $directory = dirname($file);
     $fullpath = realpath($directory);
@@ -73,8 +71,7 @@ class csv_handler
    *
    * @param array $headers
    */
-  public function required_header(array $headers)
-  {
+  public function required_header(array $headers) {
     $this->required_header = $headers;
   }
 
@@ -83,8 +80,7 @@ class csv_handler
    *
    * @throws csv_load_exception
    */
-  protected function load()
-  {
+  protected function load() {
     // Check the file exists and is readable.
     if (!file_exists($this->file)) {
       throw new csv_load_exception($this->file . ' does not exist');
@@ -108,8 +104,7 @@ class csv_handler
    * @return array
    * @throws csv_load_exception
    */
-  public function get_line()
-  {
+  public function get_line() {
     if (!isset($this->read_file_handle)) {
       // The file has not been opened for reading.
       $this->load();
@@ -130,7 +125,7 @@ class csv_handler
    * Delete csv file
    * @param $file file to delete
    */
-  public function delete($file){
+  public function delete($file) {
     unlink( $file);
   }
 
@@ -139,8 +134,7 @@ class csv_handler
    *
    * @return boolean true if the header validates
    */
-  protected function verify_header()
-  {
+  protected function verify_header() {
     if (empty($this->header)) {
       // No header is set.
       $valid = false;
