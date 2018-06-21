@@ -20,7 +20,7 @@
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  */
 
-namespace csv;
+namespace import;
 
 /**
  * A CSV file failed to load.
@@ -29,5 +29,5 @@ namespace csv;
  * @copyright (c) 2018, University of Nottingham
  */
 class csv_load_exception extends error {
-    // Intentionally empty. 
+  // Intentionally empty.
 }

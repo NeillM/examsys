@@ -20,7 +20,7 @@
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  */
 
-namespace csv;
+namespace import;
 
 /**
  * CSV handler helper class.
@@ -57,19 +57,12 @@ class csv_handler {
   protected $header;
 
   /**
-   * The config object
-   * @var object
-   */
-  private $config;
-
-  /**
    * Initialise the handler.
    *
    * @param string $file The path to the file to be used
    * @throws csv_load_exception
    */
   public function __construct($file) {
-    $this->config = Config::get_instance();
     $filename = basename($file);
     $directory = dirname($file);
     $fullpath = realpath($directory);

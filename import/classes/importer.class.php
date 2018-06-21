@@ -15,19 +15,43 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * CSV parameter exception package
+ * CSV convertor package
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  */
-
-namespace csv;
+namespace import;
 
 /**
- * A parameter passed to the script is incorrect.
+ * Abstract converter class the base of all converter classes.
  *
  * @author Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright (c) 2018, University of Nottingham
  */
-class parameter_exception extends error {
-    // Intentionally empty.
+abstract class importer {
+  /**
+   * The handler for the csv file that contains the conversion information.
+   * @var csv_handler
+   */
+  protected $data;
+
+  /**
+   * The config object
+   * @var object
+   */
+  protected $config;
+
+  /**
+   * The constructor.
+   *
+   * @param csv_handler $file
+   */
+  public function __construct(csv_handler $file) {
+    $this->config = \Config::get_instance();
+    $this->data = $file;
+  }
+
+  /**
+   * Do the transform.
+   */
+  abstract public function execute();
 }

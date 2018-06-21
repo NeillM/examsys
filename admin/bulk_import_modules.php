@@ -101,124 +101,21 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
         <ul>
 
         <?php
-        // Get a list of schools held by Rogo.
-        $unknown_schoolID = 0;
-        $school_list = array();
-        $result = $mysqli->prepare("SELECT DISTINCT id, school FROM schools");
-        $result->execute();
-        $result->bind_result($school_id, $school_name);
-        while ($result->fetch()) {
-          $school_list[$school_name] = $school_id;
-          if ($school_name == 'unknown') {
-            $unknown_schoolID = $school_id;
+          $modulesAdded = 0;
+          $csv = new \import\csv_handler($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
+          $import = new \import\import_modules($csv);
+          $import->execute();
+          foreach ($import->get_exists() as $exists) {
+            echo "<li class=\"existing\">$exists - " . $string['alreadyexists'] . "</li>\n";
           }
-        }
-        $result->close();
-
-        $modulesAdded = 0;
-        $csv = new \csv\csv_handler($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
-        $import = new \csv\import_modules($csv);
-        $import->execute();
-        $students = array();
-        foreach ($lines as $separate_line) {
-          if (trim($separate_line) != '') {
-            $fields = explode(',', $separate_line);
-            
-            if (trim($fields[0]) != 'Module ID' and trim($fields[0]) != 'ID') {  // Ignore header line
-              $moduleid = trim($fields[0]);
-              $fullname = trim($fields[1]);
-              if (isset($school_list[trim($fields[2])])) {
-                $schoolID = $school_list[trim($fields[2])];
-              } else {
-                if ($unknown_schoolID == 0) {
-                  $result = $mysqli->prepare("SELECT id FROM faculty WHERE name = 'Administrative and Support Units' LIMIT 1");
-                  $result->execute();
-                  $result->bind_result($facultyID);
-                  $result->fetch();
-                  $result->close();
-
-                  $unknown_schoolID = SchoolUtils::add_school($facultyID, '', $mysqli);
-                }
-                $schoolID = $unknown_schoolID;
-              }              
-              $sms_api          = trim($fields[3]);
-              $vle_api          = trim($fields[4]);
-              
-              $peer             = returnTrueFalse($fields[5]);
-              $external         = returnTrueFalse($fields[6]);
-              $stdset           = returnTrueFalse($fields[7]);
-              $mapping          = returnTrueFalse($fields[8]);
-              $active           = returnTrueFalse($fields[9]);
-              $selfEnrol        = returnTrueFalse($fields[10]);
-              $neg_marking      = returnTrueFalse($fields[11]);
-              if (isset($fields[12])) {
-                $timed_exams = returnTrueFalse($fields[12]);
-              } else {
-                $timed_exams = 0;
-              }
-              if (isset($fields[13])) {
-                $exam_q_feedback = returnTrueFalse($fields[13]);
-              } else {
-                $exam_q_feedback = 0;
-              }
-              if (isset($fields[14])) {
-                $add_team_members = returnTrueFalse($fields[14]);
-              } else {
-                $add_team_members = 0;
-              }
-              
-              $ebel_grid_template = '';
-              
-              if (isset($fields[15]) and preg_match ('([0-1][0-9]/[0-3][0-9])', $fields[15]) ) {
-                $academic_year_start = trim($fields[15]);
-              } else {
-                $academic_year_start = $default_academic_year_start;
-              }
-
-              if (isset($fields[16])) {
-                $externalid = trim($fields[16]);
-              } else {
-                $externalid = null;
-              }
-
-              if (module_utils::module_exists($moduleid, $mysqli)) {
-                $updateData = array();
-                 
-                $checklist = '';
-                if ($peer == true) $checklist .= ',peer';
-                if ($external == true) $checklist .= ',external';
-                if ($stdset == true) $checklist .= ',stdset';
-                if ($mapping == true) $checklist .= ',mapping';
-                $updateData['checklist'] = substr($checklist, 1);
-                $updateData['fullname'] = $fullname;
-                $updateData['vle_api'] = $vle_api;
-                $updateData['sms'] = $sms_api;
-                $updateData['schoolid'] = $schoolID;
-                $updateData['active'] = $active;
-                $updateData['selfenroll'] = $selfEnrol;
-                $updateData['neg_marking'] = $neg_marking;
-                $updateData['timed_exams'] = $timed_exams;
-                $updateData['exam_q_feedback'] = $exam_q_feedback;
-                $updateData['add_team_members'] = $add_team_members;
-                $updateData['academic_year_start'] = $academic_year_start;
-                $updateData['externalid'] = $externalid;
-    
-                module_utils::update_module_by_code($moduleid, $updateData, $mysqli);
-                echo "<li class=\"existing\">$moduleid - " . $string['alreadyexists'] . "</li>\n";
-              } else {
-                $success = module_utils::add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnrol, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli, 0, $timed_exams, $exam_q_feedback, $add_team_members, 1, $academic_year_start, $externalid);
-                if ($success) {
-                  echo "<li class=\"added\">$moduleid - " . $string['added'] . "</li>\n";
-                  $modulesAdded++;
-                } else {
-                  echo "<li class=\"fail\">$moduleid - " . $string['failed'] . "</li>\n";
-                }
-              }
-            }
+          foreach ($import->get_added() as $added) {
+            echo "<li class=\"added\">$added - " . $string['added'] . "</li>\n";
+          }
+          foreach ($import->get_failed() as $failed) {
+            echo "<li class=\"fail\">$failed - " . $string['failed'] . "</li>\n";
           }
         }
       }
-    }
     unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
 
     echo "</ul>";

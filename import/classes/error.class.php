@@ -15,33 +15,19 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * CSV convertor package
+ * CSV file exception package
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  */
-namespace csv;
+
+namespace import;
 
 /**
- * Abstract converter class the base of all converter classes.
+ * Exceptions of this type are errors.
  *
  * @author Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright (c) 2018, University of Nottingham
  */
-abstract class importer {
-    /** @var csv_handler The handler for the csv file that contains the conversion information. */
-    protected $data;
-
-    /**
-     * The constructor.
-     *
-     * @param csv_handler $file
-     */
-    public function __construct(csv_handler $file) {
-        $this->data = $file;
-    }
-    
-    /**
-     * Do the transform.
-     */
-    abstract public function execute();
+class error extends \Exception {
+  // Intentionally blank
 }

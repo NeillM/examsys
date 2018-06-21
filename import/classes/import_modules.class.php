@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace csv;
+namespace import;
 
 /**
  * Import modules from csv format to rogo db format
@@ -23,6 +23,24 @@ namespace csv;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  */
 class import_modules extends importer {
+
+  /**
+   * The list of modules where school was not found.
+   * @var array
+   */
+  private $moduleexists;
+
+  /**
+   * The list of modules added.
+   * @var array
+   */
+  private $moduleadded;
+
+  /**
+   * The list of modules that failed to add.
+   * @var array
+   */
+  private $modulefailed;
 
   /**
    * Do the module import described in the csv file.
@@ -54,14 +72,14 @@ class import_modules extends importer {
     try {
       // Get a list of schools held by Rogo.
       $school_list = \schoolutils::get_schools();
-      $modulesAdded = 0;
       while ($line = $this->data->get_line()) {
         $line['moduleid'] = trim($line['moduleid']);
         $line['fullname'] = trim($line['fullname']);
-        if (isset($school_list[trim($line['schoolid'])])) {
+        if (isset($school_list[trim($line['school'])])) {
           $line['school'] = $school_list[trim($line['school'])];
         } else {
           // School not found.
+          $this->modulefailed[] = $line['moduleid'];
           continue;
         }
         $line['smsapi'] = trim($line['smsapi'] );
@@ -105,7 +123,7 @@ class import_modules extends importer {
           $line['externalid'] = null;
         }
 
-        if (module_utils::module_exists($line['moduleid'], $this->config->db)) {
+        if (\module_utils::module_exists($line['moduleid'], $this->config->db)) {
           $updateData = array();
 
           $checklist = '';
@@ -127,10 +145,10 @@ class import_modules extends importer {
           $updateData['academic_year_start'] = $line['yearstart'];
           $updateData['externalid'] = $line['externalid'];
 
-          module_utils::update_module_by_code($line['moduleid'], $updateData, $this->config->db);
-          //echo "<li class=\"existing\">$moduleid - " . $string['alreadyexists'] . "</li>\n";
+          \module_utils::update_module_by_code($line['moduleid'], $updateData, $this->config->db);
+          $this->moduleexists[] = $line['moduleid'];
         } else {
-          $success = module_utils::add_modules(
+          $success = \module_utils::add_modules(
             $line['moduleid'],
             $line['fullname'],
             $line['active'],
@@ -154,15 +172,39 @@ class import_modules extends importer {
             $line['externalid']
           );
           if ($success) {
-            //echo "<li class=\"added\">$moduleid - " . $string['added'] . "</li>\n";
-            $modulesAdded++;
+            $this->moduleadded[] = $line['moduleid'];
           } else {
-            //echo "<li class=\"fail\">$moduleid - " . $string['failed'] . "</li>\n";
+            $this->modulefailed[] = $line['moduleid'];
           }
         }
       }
     } catch (csv_load_exception $e) {
       // The csv file is invalid.
+      $this->modulefailed[] = 'Boom!';
     }
+  }
+
+  /**
+   * Get failed modules
+   * @return array
+   */
+  public function get_failed() {
+    return $this->modulefailed;
+  }
+
+  /**
+   * Get added modules
+   * @return array
+   */
+  public function get_added() {
+    return $this->moduleadded;
+  }
+
+  /**
+   * Get modules that already exist
+   * @return array
+   */
+  public function get_exists() {
+    return $this->moduleexists;
   }
 }
