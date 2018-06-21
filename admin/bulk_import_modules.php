@@ -116,8 +116,9 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
         $result->close();
 
         $modulesAdded = 0;
-        $lines = file( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
-
+        $csv = new \csv\csv_handler($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
+        $import = new \csv\import_modules($csv);
+        $import->execute();
         $students = array();
         foreach ($lines as $separate_line) {
           if (trim($separate_line) != '') {
