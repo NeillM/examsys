@@ -20,6 +20,7 @@
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  */
 namespace import;
+use csv\csv_handler;
 
 /**
  * Abstract converter class the base of all converter classes.

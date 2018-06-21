@@ -102,21 +102,28 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 
         <?php
           $modulesAdded = 0;
-          $csv = new \import\csv_handler($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
+          try {
+            $csv = new \csv\csv_handler($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
+          } catch (\csv\csv_load_exception $e) {
+            echo "<li class=\"fail\">" . $string['csvfileloadfail'] . "</li>\n";
+          }
           $import = new \import\import_modules($csv);
-          $import->execute();
-          foreach ($import->get_exists() as $exists) {
-            echo "<li class=\"existing\">$exists - " . $string['alreadyexists'] . "</li>\n";
-          }
-          foreach ($import->get_added() as $added) {
-            echo "<li class=\"added\">$added - " . $string['added'] . "</li>\n";
-          }
-          foreach ($import->get_failed() as $failed) {
-            echo "<li class=\"fail\">$failed - " . $string['failed'] . "</li>\n";
+          if ($import->execute()) {
+            foreach ($import->get_exists() as $exists) {
+              echo "<li class=\"existing\">$exists - " . $string['alreadyexists'] . "</li>\n";
+            }
+            foreach ($import->get_added() as $added) {
+              echo "<li class=\"added\">$added - " . $string['added'] . "</li>\n";
+            }
+            foreach ($import->get_failed() as $failed) {
+              echo "<li class=\"fail\">$failed - " . $string['failed'] . "</li>\n";
+            }
+          } else {
+            echo "<li class=\"fail\">" . $string['csvfileinvalid'] . "</li>\n";
           }
         }
       }
-    unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
+    $csv->delete( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
 
     echo "</ul>";
     echo "<div style=\"text-align:center\"><input type=\"button\" name=\"ok\" value=\"" . $string['ok'] . "\" onclick=\"window.location='list_modules.php'\" class=\"ok\" /></div>\n";

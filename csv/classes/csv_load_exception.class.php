@@ -15,19 +15,19 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * CSV parameter exception package
+ * CSV file exception package
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  */
 
-namespace import;
+namespace csv;
 
 /**
- * A parameter passed to the script is incorrect.
+ * A CSV file failed to load.
  *
  * @author Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright (c) 2018, University of Nottingham
  */
-class parameter_exception extends error {
+class csv_load_exception extends \Exception {
   // Intentionally empty.
 }

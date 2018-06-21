@@ -15,6 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace import;
+use csv\csv_load_exception;
 
 /**
  * Import modules from csv format to rogo db format
@@ -44,28 +45,19 @@ class import_modules extends importer {
 
   /**
    * Do the module import described in the csv file.
+   * @return @bool false on error
    */
   public function execute() {
-    // Set the required header.
+    $this->modulefailed = array();
+    $this->moduleadded = array();
+    $this->moduleexists = array();
+
+    // Set the required headers.
     $this->data->required_header(
       array(
         'moduleid',
         'fullname',
         'school',
-        'smsapi',
-        'objectiveapi',
-        'peerreview',
-        'externalexaminers',
-        'stdset',
-        'mapping',
-        'active',
-        'selfenrol',
-        'negmarking',
-        'timedexams',
-        'questionbasedfb',
-        'addteammember',
-        'yearstart',
-        'externalid',
       )
     );
     $default_academic_year_start = $this->config->get_setting('core', 'system_academic_year_start');
@@ -180,8 +172,9 @@ class import_modules extends importer {
       }
     } catch (csv_load_exception $e) {
       // The csv file is invalid.
-      $this->modulefailed[] = 'Boom!';
+      return false;
     }
+    return true;
   }
 
   /**

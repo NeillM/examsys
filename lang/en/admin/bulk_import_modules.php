@@ -27,4 +27,6 @@ $string['import'] = 'Import';
 $string['alreadyexists'] = 'already exists';
 $string['added'] = 'added';
 $string['failed'] = 'failed';
+$string['csvfileinvalid'] = 'CSV file invalid';
+$string['csvfileloadfail'] = 'CSV failed to load';
 ?>
