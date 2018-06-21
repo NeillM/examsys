@@ -84,54 +84,51 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 <?php
   if (isset($_POST['submit'])) {
     $default_academic_year_start = $configObject->get_setting('core', 'system_academic_year_start');
-    if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
-      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv"))  {
-        echo uploadError($_FILES['csvfile']['error']);
+    $tmpfile = $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv";
+    try {
+      \csv\csv_handler::move_upload_to_temp($_FILES['csvfile'], $tmpfile);
+    } catch (\csv\csv_load_exception $e) {
+        echo $e->getMessage();
         exit;
-      } else {
-        ?>
-        <br /><br /><br />
-        <div align="center">
-        <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; font-size:120%; width:600px">
+    }
+?>
+<br /><br /><br />
+<div align="center">
+    <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; font-size:120%; width:600px">
         <tr>
-        <td valign="middle" align="left" style="width:56px; background-color:white"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" /><span style="font-size:140%; font-weight:bold" class="dialog_header"><?php echo $string['bulkmoduleimport']; ?></span></td>
+            <td valign="middle" align="left" style="width:56px; background-color:white"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" /><span style="font-size:140%; font-weight:bold" class="dialog_header"><?php echo $string['bulkmoduleimport']; ?></span></td>
         </tr>
         <tr>
-        <td align="left" class="dialog_body">
-        <ul>
+            <td align="left" class="dialog_body">
+                <ul>
+<?php
+  $modulesAdded = 0;
+  try {
+    $csv = new \csv\csv_handler($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
+    $import = new \import\import_modules($csv);
+    $import->execute();
+    foreach ($import->get_exists() as $exists) {
+      echo "<li class=\"existing\">$exists - " . $string['alreadyexists'] . "</li>\n";
+    }
+    foreach ($import->get_added() as $added) {
+      echo "<li class=\"added\">$added - " . $string['added'] . "</li>\n";
+    }
+    foreach ($import->get_failed() as $failed) {
+      echo "<li class=\"fail\">$failed - " . $string['failed'] . "</li>\n";
+    }
+  } catch (\csv\csv_load_exception $e) {
+    echo "<li class=\"fail\">" . $e->getMessage() . "</li>\n";
+  }
 
-        <?php
-          $modulesAdded = 0;
-          try {
-            $csv = new \csv\csv_handler($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
-            $import = new \import\import_modules($csv);
-            $import->execute();
-            foreach ($import->get_exists() as $exists) {
-              echo "<li class=\"existing\">$exists - " . $string['alreadyexists'] . "</li>\n";
-            }
-            foreach ($import->get_added() as $added) {
-              echo "<li class=\"added\">$added - " . $string['added'] . "</li>\n";
-            }
-            foreach ($import->get_failed() as $failed) {
-              echo "<li class=\"fail\">$failed - " . $string['failed'] . "</li>\n";
-            }
-          } catch (\csv\csv_load_exception $e) {
-            echo "<li class=\"fail\">" . $e->getMessage() . "</li>\n";
-          }
-        }
-      }
-    $csv->delete( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
-
-    echo "</ul>";
-    echo "<div style=\"text-align:center\"><input type=\"button\" name=\"ok\" value=\"" . $string['ok'] . "\" onclick=\"window.location='list_modules.php'\" class=\"ok\" /></div>\n";
-
-    $mysqli->close();
-    ?>
-    </div>
-    </td>
-    </tr>
+  $csv->delete( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
+  echo "</ul>";
+  echo "<div style=\"text-align:center\"><input type=\"button\" name=\"ok\" value=\"" . $string['ok'] . "\" onclick=\"window.location='list_modules.php'\" class=\"ok\" /></div>\n";
+?>
+             </div>
+            </td>
+        </tr>
     </table>
-    </div>
+</div>
     </td></tr>
     </table>
     <?php

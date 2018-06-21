@@ -52,7 +52,6 @@ class csv_handler {
 
   /**
    * Initialise the handler.
-   *
    * @param string $file The path to the file to be used
    * @throws csv_load_exception
    */
@@ -64,6 +63,46 @@ class csv_handler {
       throw new csv_load_exception($file . ' has an invalid path');
     }
     $this->file = $fullpath . DIRECTORY_SEPARATOR . $filename;
+  }
+
+  /**
+   * Move upload file to tmp dir
+   * @param $from upload file
+   * @param $to temp file location
+   * @throws csv_load_exception
+   * @return string
+   */
+  public static function move_upload_to_temp($from, $to) {
+    if ($from['name'] == 'none' and $from['name'] == '') {
+      throw new csv_load_exception('No filename supplied.');
+    }
+    if (pathinfo($from['name'], PATHINFO_EXTENSION) != 'csv') {
+      throw new csv_load_exception('File has an invalid file extension. Only .csv is supported.');
+    }
+    if (!move_uploaded_file($from['tmp_name'], $to)) {
+      switch ($from['error']) {
+        case 2:
+          $err = 'The uploaded file was bigger then  upload_max_filesize in php.ini.';
+          break;
+        case 3:
+          $err = 'The uploaded file was bigger then MAX_FILE_SIZE in html-form.';
+          break;
+        case 4:
+          $err = 'File partialy uploaded.';
+          break;
+        case 5:
+          $err = 'No file was uploaded.';
+          break;
+        case 6:
+          $err = 'No temp directory.';
+          break;
+        default:
+          $err = 'Unknown problem.';
+          break;
+      }
+      throw new csv_load_exception($err);
+    }
+    return $to;
   }
 
   /**
