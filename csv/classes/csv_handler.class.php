@@ -51,6 +51,11 @@ class csv_handler {
   protected $header;
 
   /**
+   * Language pack component.
+   */
+  const langcomponent = 'csv/csv_handler';
+
+  /**
    * Initialise the handler.
    * @param string $file The path to the file to be used
    * @throws csv_load_exception
@@ -59,8 +64,10 @@ class csv_handler {
     $filename = basename($file);
     $directory = dirname($file);
     $fullpath = realpath($directory);
+    $langpack = new \langpack();
+    $error = $langpack->get_string(self::langcomponent, "invalidpath");
     if ($fullpath === false) {
-      throw new csv_load_exception($file . ' has an invalid path');
+      throw new csv_load_exception($file . $error);
     }
     $this->file = $fullpath . DIRECTORY_SEPARATOR . $filename;
   }
@@ -73,31 +80,31 @@ class csv_handler {
    * @return string
    */
   public static function move_upload_to_temp($from, $to) {
+    $langpack = new \langpack();
+    $string = $langpack->get_strings(self::langcomponent, array('nofilename', 'csvonly', 'maxfilesize', 'partialupload', 'nofileuploaded', 'notempdir', 'unknownissue'));
     if ($from['name'] == 'none' and $from['name'] == '') {
-      throw new csv_load_exception('No filename supplied.');
+      throw new csv_load_exception($string['nofilename']);
     }
     if (pathinfo($from['name'], PATHINFO_EXTENSION) != 'csv') {
-      throw new csv_load_exception('File has an invalid file extension. Only .csv is supported.');
+      throw new csv_load_exception($string['csvonly']);
     }
     if (!move_uploaded_file($from['tmp_name'], $to)) {
       switch ($from['error']) {
         case 2:
-          $err = 'The uploaded file was bigger then  upload_max_filesize in php.ini.';
-          break;
         case 3:
-          $err = 'The uploaded file was bigger then MAX_FILE_SIZE in html-form.';
+          $err = string['maxfilesize'];
           break;
         case 4:
-          $err = 'File partialy uploaded.';
+          $err = $string['partialupload'];
           break;
         case 5:
-          $err = 'No file was uploaded.';
+          $err = $string['nofileuploaded'];
           break;
         case 6:
-          $err = 'No temp directory.';
+          $err = $string['notempdir'];
           break;
         default:
-          $err = 'Unknown problem.';
+          $err = $string['unknownissue'];
           break;
       }
       throw new csv_load_exception($err);
@@ -120,19 +127,21 @@ class csv_handler {
    * @throws csv_load_exception
    */
   protected function load() {
+    $langpack = new \langpack();
+    $string = $langpack->get_strings(self::langcomponent, array('doesnotexist', 'cannotberead', 'invalidheaders'));
     // Check the file exists and is readable.
     if (!file_exists($this->file)) {
-      throw new csv_load_exception($this->file . ' does not exist');
+      throw new csv_load_exception($this->file . $string['doesnotexist']);
     }
     if (!is_readable($this->file)) {
-      throw new csv_load_exception($this->file . ' cannot be read');
+      throw new csv_load_exception($this->file . $string['cannotberead']);
     }
     // Open the file.
     $this->read_file_handle = fopen($this->file, 'r');
     // The first line should be the header of the file.
     $this->header = fgetcsv($this->read_file_handle);
     if (!$this->verify_header()) {
-      throw new csv_load_exception($this->file . ' has invalid headers');
+      throw new csv_load_exception($this->file . $string['invalidheaders']);
     }
   }
 
