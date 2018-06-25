@@ -58,18 +58,14 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
   require '../include/admin_module_options.inc';  
   echo draw_toprightmenu();
 ?>
-<div id="content" class="content">
 <?php
-  echo $render->render_admin_navigation(array(
-    '/' => $string['home'],
-    '/admin/index.php' => $string['admintools'],
-    '/admin/list_modules.php' => $string['modules'],
-    '/users/bulk_import_modules.php' => $string['bulkmoduleimport'],
-  ));
-?>
-<br />
-<br />
-<?php
+  $breadcrumb = array(
+    $string['home'] => '/',
+    $string['admintools'] => '/admin/index.php',
+    $string['modules'] => '/admin/list_modules.php',
+    $string['bulkmoduleimport'] => '/users/bulk_import_modules.php',
+  );
+  $render->render_admin_content($breadcrumb, $lang);
   if (isset($_POST['submit'])) {
     $default_academic_year_start = $configObject->get_setting('core', 'system_academic_year_start');
     $tmpfile = $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv";
@@ -79,47 +75,20 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
         echo $e->getMessage();
         exit;
     }
-?>
-<br /><br /><br />
-<div align="center">
-    <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; font-size:120%; width:600px">
-        <tr>
-            <td valign="middle" align="left" style="width:56px; background-color:white"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" /><span style="font-size:140%; font-weight:bold" class="dialog_header"><?php echo $string['bulkmoduleimport']; ?></span></td>
-        </tr>
-        <tr>
-            <td align="left" class="dialog_body">
-                <ul>
-<?php
-  $modulesAdded = 0;
-  try {
-    $csv = new \csv\csv_handler($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
-    $import = new \import\import_modules($csv);
-    $import->execute();
-    foreach ($import->get_exists() as $exists) {
-      echo "<li class=\"existing\">$exists - " . $string['alreadyexists'] . "</li>\n";
-    }
-    foreach ($import->get_added() as $added) {
-      echo "<li class=\"added\">$added - " . $string['added'] . "</li>\n";
-    }
-    foreach ($import->get_failed() as $failed) {
-      echo "<li class=\"fail\">$failed - " . $string['failed'] . "</li>\n";
-    }
-  } catch (\csv\csv_load_exception $e) {
-    echo "<li class=\"fail\">" . $e->getMessage() . "</li>\n";
-  }
 
-  $csv->delete( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
-  echo "</ul>";
-  echo "<div style=\"text-align:center\"><input type=\"button\" name=\"ok\" value=\"" . $string['ok'] . "\" onclick=\"window.location='list_modules.php'\" class=\"ok\" /></div>\n";
-?>
-             </div>
-            </td>
-        </tr>
-    </table>
-</div>
-    </td></tr>
-    </table>
-    <?php
+    $data['onclick'] = "window.location='list_modules.php'";
+    try {
+      $csv = new \csv\csv_handler($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
+      $import = new \import\import_modules($csv);
+      $import->execute();
+      $data['exists'] = $import->get_exists();
+      $data['added'] = $import->get_added();
+      $data['failed'] = $import->get_failed();
+    } catch (\csv\csv_load_exception $e) {
+      $data['failed'] = array($e->getMessage());
+    }
+    $csv->delete( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
+    $render->render($data, $string, 'admin/upload_complete.html');
   } else {
     $data['formaction'] = $_SERVER['PHP_SELF'];
     $data['required'] = \import\import_modules::REQUIRED;
