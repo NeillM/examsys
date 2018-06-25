@@ -141,7 +141,7 @@ class import_modules extends importer {
       }
 
 
-      if (isset($line['yearstart']) and preg_match ('([0-1][0-9]/[0-3][0-9])', $fields[15]) ) {
+      if (isset($line['yearstart']) and preg_match ('([0-1][0-9]/[0-3][0-9])', $line['yearstart']) ) {
         $line['yearstart']= trim($line['yearstart']);
       } else {
         $line['yearstart']= $default_academic_year_start;
