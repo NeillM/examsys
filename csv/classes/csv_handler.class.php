@@ -82,7 +82,7 @@ class csv_handler {
   public static function move_upload_to_temp($from, $to) {
     $langpack = new \langpack();
     $string = $langpack->get_strings(self::langcomponent, array('nofilename', 'csvonly', 'maxfilesize', 'partialupload', 'nofileuploaded', 'notempdir', 'unknownissue'));
-    if ($from['name'] == 'none' and $from['name'] == '') {
+    if ($from['name'] == 'none' or $from['name'] == '') {
       throw new csv_load_exception($string['nofilename']);
     }
     if (pathinfo($from['name'], PATHINFO_EXTENSION) != 'csv') {
