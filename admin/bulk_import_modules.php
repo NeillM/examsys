@@ -29,18 +29,6 @@ require '../include/toprightmenu.inc';
 
 // Instantiate Twig renderer.
 $render = new render($configObject);
-
-ini_set("auto_detect_line_endings", true);
-
-function returnTrueFalse($value) {
-  $value = strtolower(trim($value));
-
-  if ($value == 'yes' or $value == 'y' or $value == 'true') {
-    return true;
-  } else {
-    return false;
-  }
-}
 $lang['title'] = $string['bulkmoduleimport'];
 $additionaljs = "<script type=\"text/javascript\" src=\"../js/jquery.validate.min.js\"></script>
                 <script>
@@ -133,32 +121,9 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
     </table>
     <?php
   } else {
-?>
-<table border="0" cellpadding="4" cellspacing="0" style="width:900px; border:1px solid #95AEC8; margin-left:auto; margin-right:auto">
-<tr>
-<td class="dialog_header" style="width:56px"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header midblue_header" style="width:844px"><?php echo $string['bulkmoduleimport'] ?></span></td>
-</tr>
-<tr>
-<td align="left" style="padding:10px" class="dialog_body" colspan="2">
-
-<p style="text-align:justify"><?php echo $string['msg1']; ?></p>
-<blockquote>Module ID, Name, School, SMS API, Objectives API, Peer Review, External Examiners, Standards Setting, Mapping, Active, Allow Self-enrol, Negative Marking, Timed Exams, Question-Based Feedback, Add Team Members, Academic Year Start, External ID</blockquote>
-<div style="text-align:center"><img src="../artwork/bulk_module_import_headings.png" width="891" height="59" alt="screenshot" style="border:1px solid black" /></div>
-<br />
-<div><?php echo $string['msg2']; ?></div>
-<br />
-<div align="center">
-<form id="import_form" name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" autocomplete="off">
-<p><strong><?php echo $string['csvfile']; ?></strong> <input type="file" size="50" name="csvfile" class="required" /></p>
-<br />
-<p><input type="submit" class="ok" value="<?php echo $string['import'] ?>" name="submit" /><input class="cancel" id="cancel" type="button" value="<?php echo $string['cancel'] ?>" name="cancel" /></p>
-</form>
-</div>
-</td>
-</tr>
-</table>
-
-<?php
+    $data['formaction'] = $_SERVER['PHP_SELF'];
+    $data['required'] = \import\import_modules::REQUIRED;
+    $data['optional'] = \import\import_modules::OPTIONAL;
+    $render->render($data, $string, 'admin/upload.html');
   }
   $render->render_admin_footer();
-?>

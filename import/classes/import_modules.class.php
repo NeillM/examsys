@@ -44,6 +44,51 @@ class import_modules extends importer {
   private $modulefailed;
 
   /**
+   * Required fields
+   * @var array
+   */
+  const REQUIRED = array(
+    'moduleid',
+    'fullname',
+    'school',
+  );
+
+  /**
+   * Optional feilds
+   * @var array
+   */
+  const OPTIONAL = array(
+    'smsapi',
+    'objectiveapi',
+    'peerreview',
+    'externalexaminers',
+    'stdset',
+    'mapping',
+    'active',
+    'selfenrol',
+    'negmarking',
+    'timedexams',
+    'questionbasedfb',
+    'addteammember',
+    'yearstart',
+    'externalid',
+  );
+
+  /**
+   * Filter true/false responses
+   * @param $value true/false response
+   * @return bool
+   */
+  private function returnTrueFalse($value) {
+    $value = strtolower(trim($value));
+    if ($value == 'yes' or $value == 'y' or $value == 'true') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
    * Do the module import described in the csv file.
    * @throws csv_load_exception
    */
@@ -53,13 +98,7 @@ class import_modules extends importer {
     $this->moduleexists = array();
 
     // Set the required headers.
-    $this->data->required_header(
-      array(
-        'moduleid',
-        'fullname',
-        'school',
-      )
-    );
+    $this->data->required_header(self::REQUIRED);
     $default_academic_year_start = $this->config->get_setting('core', 'system_academic_year_start');
     // Get a list of schools held by Rogo.
     $school_list = \schoolutils::get_schools();
@@ -75,28 +114,28 @@ class import_modules extends importer {
       }
       $line['smsapi'] = trim($line['smsapi'] );
       $line['objectiveapi'] = trim($line['objectiveapi']);
-      $line['peerreview'] = returnTrueFalse($line['peerreview']);
-      $line['externalexaminers'] = returnTrueFalse($line['externalexaminers']);
-      $line['stdset'] = returnTrueFalse($line['stdset']);
-      $line['mapping'] = returnTrueFalse($line['mapping']);
-      $line['active'] = returnTrueFalse($line['active']);
-      $line['selfenrol'] = returnTrueFalse($line['selfenrol']);
-      $line['negmarking'] = returnTrueFalse($line['negmarking']);
+      $line['peerreview'] = $this->returnTrueFalse($line['peerreview']);
+      $line['externalexaminers'] = $this->returnTrueFalse($line['externalexaminers']);
+      $line['stdset'] = $this->returnTrueFalse($line['stdset']);
+      $line['mapping'] = $this->returnTrueFalse($line['mapping']);
+      $line['active'] = $this->returnTrueFalse($line['active']);
+      $line['selfenrol'] = $this->returnTrueFalse($line['selfenrol']);
+      $line['negmarking'] = $this->returnTrueFalse($line['negmarking']);
 
       if (isset($line['timedexams'])) {
-        $line['timedexams'] = returnTrueFalse($line['timedexams']);
+        $line['timedexams'] = $this->returnTrueFalse($line['timedexams']);
       } else {
         $line['timedexams'] = 0;
       }
 
       if (isset($line['questionbasedfb'])) {
-        $line['questionbasedfb'] = returnTrueFalse($line['questionbasedfb']);
+        $line['questionbasedfb'] = $this->returnTrueFalse($line['questionbasedfb']);
       } else {
         $line['questionbasedfb'] = 0;
       }
 
       if (isset($line['addteammember'])) {
-        $line['addteammember'] = returnTrueFalse($line['addteammember']);
+        $line['addteammember'] = $this->returnTrueFalse($line['addteammember']);
       } else {
         $line['addteammember'] = 0;
       }
