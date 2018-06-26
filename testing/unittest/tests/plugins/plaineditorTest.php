@@ -148,9 +148,9 @@ class plaineditortest extends unittestdatabase {
    * @group texteditor
    */
   public function clean_leadin() {
-    $tinymce = new \plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor();
-    $this->assertTrue($tinymce->cleanleadin("test - <div class=\"mee\">\alpha</div>"));
-    $this->assertTrue($tinymce->cleanleadin("test - \alpha"));
+    $plain = new \plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor();
+    $this->assertTrue($plain->cleanleadin("test - <div class=\"mee\">\alpha</div>"));
+    $this->assertTrue($plain->cleanleadin("test - \alpha"));
   }
 
   /**
@@ -158,9 +158,9 @@ class plaineditortest extends unittestdatabase {
    * @group texteditor
    */
   public function test_prepare_text_for_save() {
-    $tinymce = new \plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor();
-    $this->assertEquals("[tex]\sigma[/tex]", $tinymce->prepare_text_for_save("[tex]\sigma[/tex]"));
-    $this->assertEquals("[texi]\sigma[/texi]", $tinymce->prepare_text_for_save("[texi]\sigma[/texi]"));
+    $plain = new \plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor();
+    $this->assertEquals("[tex]\sigma[/tex]", $plain->prepare_text_for_save("[tex]\sigma[/tex]"));
+    $this->assertEquals("[texi]\sigma[/texi]", $plain->prepare_text_for_save("[texi]\sigma[/texi]"));
   }
 
   /**
@@ -168,7 +168,7 @@ class plaineditortest extends unittestdatabase {
    * @group texteditor
    */
   public function test_get_text_for_display() {
-    $tinymce = new \plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor();
-    $this->assertEquals("<div class=\"mee\">\alpha</div>", $tinymce->get_text_for_display("<div class=\"mee\">\alpha</div>"));
+    $plain = new \plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor();
+    $this->assertEquals("<div class=\"mee\">\alpha</div>", $plain->get_text_for_display("<div class=\"mee\">\alpha</div>"));
   }
 }
