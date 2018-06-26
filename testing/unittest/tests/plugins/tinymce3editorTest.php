@@ -109,23 +109,23 @@ class tinymce3editortest extends unittestdatabase {
   }
 
   /**
-   * Test repalce [tex]/[texi] tags
+   * Test replace <div class="mee"></div> tags with [tex][/tex]
    * @group texteditor
    */
   public function test_prepare_text_for_save() {
     $tinymce = new \plugins\texteditor\plugin_tinymce3_texteditor\plugin_tinymce3_texteditor();
-    $this->assertEquals("<div class=\"mee\">\sigma</div>", $tinymce->prepare_text_for_save("[tex]\sigma[/tex]"));
-    $this->assertEquals("<span class=\"mee\">\sigma</span>", $tinymce->prepare_text_for_save("[texi]\sigma[/texi]"));
+    $this->assertEquals("[tex]\sigma[/tex]", $tinymce->prepare_text_for_save("<div class=\"mee\">\sigma</div>"));
+    $this->assertEquals("[texi]\sigma[/texi]", $tinymce->prepare_text_for_save("<span class=\"mee\">\sigma</span>"));
   }
 
   /**
-   * Test repalce <div class="mee"> tags
+   * Test replace [tex][/tex] tags with <div class="mee"></div>
    * @group texteditor
    */
   public function test_get_text_for_display() {
     $tinymce = new \plugins\texteditor\plugin_tinymce3_texteditor\plugin_tinymce3_texteditor();
-    $this->assertEquals("[tex]\alpha[/tex]", $tinymce->get_text_for_display("<div class=\"mee\">\alpha</div>"));
-    $this->assertEquals("[texi]\alpha[/texi]", $tinymce->get_text_for_display("<span class=\"mee\">\alpha</span>"));
+    $this->assertEquals("<div class=\"mee\">\alpha</div>", $tinymce->get_text_for_display("[tex]\alpha[/tex]"));
+    $this->assertEquals("<span class=\"mee\">\alpha</span>", $tinymce->get_text_for_display("[texi]\alpha[/texi]"));
   }
 
   /**
