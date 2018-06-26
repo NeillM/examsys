@@ -147,22 +147,20 @@ class renderdata extends \questiondata {
       $settings = json_decode($this->settings, true);
       $this->editorcolumns = $settings['columns'];
       $this->editorrows = $settings['rows'];
-      $texteditorplugin_name = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
-      $te = explode('_',$texteditorplugin_name[0]);
+      $texteditorplugin = \plugins\plugins_texteditor::get_editor();
+      $te = explode('_', $texteditorplugin->get_name());
       $this->editor = $te[1];
       // We can override the enabled texteditor with plain/mathjax at the question level.
       if (isset($settings['editor'])) {
         if ($settings['editor'] == 'mathjax') {
           $this->editormathjax = true;
-          $texteditorplugin_name = array('plugin_plain_texteditor');
           $this->editor = 'plain';
         } elseif ($settings['editor'] == 'plain') {
           $this->editormathjax = false;
-          $texteditorplugin_name = array('plugin_plain_texteditor');
           $this->editor = 'plain';
         }
       }
-      $texteditorplugin = \plugins\plugins_texteditor::get_editor();
+
       if ($useranswer == '' and $screen_pre_submitted == 1) {
         $this->file = $this->editor . '_config_unanswered';
       } else {
