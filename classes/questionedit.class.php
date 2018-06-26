@@ -784,7 +784,7 @@ QUERY;
    * @return string
    */
   public function get_scenario() {
-    return $this->scenario;
+    return $this->texteditor->get_text_for_display($this->scenario);
   }
 
   /**
@@ -796,7 +796,7 @@ QUERY;
     $tmp_scenario = trim($this->scenario);
     if ($scenario != $tmp_scenario) {
       $this->set_modified_field('scenario_plain', $this->get_scenario_plain());
-      $this->scenario = $scenario;
+      $this->scenario = $this->texteditor->prepare_text_for_save($scenario);
     }
   }
 
@@ -814,7 +814,7 @@ QUERY;
    * @return string
    */
   public function get_leadin() {
-    return $this->leadin;
+    return $this->texteditor->get_text_for_display($this->leadin);
   }
 
   /**
@@ -824,7 +824,7 @@ QUERY;
   public function set_leadin($value) {
     if ($value != $this->leadin) {
       $this->set_modified_field('leadin_plain', $this->get_leadin_plain());
-      $this->leadin = $value;
+      $this->leadin = $this->texteditor->prepare_text_for_save($value);
     }
   }
 

@@ -107,39 +107,12 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
   }
 
   /**
-   * Replace [tex][/tex] tags with <div class="mee"></div> in none wysiwyg editors 
+   * Replace <div class="mee"></div> tags with [tex][/tex]
    * before it is saved to the database
    *
    * @param string $text the text to be processed
    */
   public function prepare_text_for_save($text) {
-    //swap [tex] before saving to db <div class="mee">
-    preg_match_all("#\[tex\](.*?)\[/tex\]#si",$text,$tex_matches);
-    if (count($tex_matches[0]) > 0) {
-      foreach($tex_matches[0] as $m) {
-        $new = str_replace(array('[tex]','[/tex]'),array('<div class="mee">','</div>'),$m);
-        $text = str_replace($m, $new, $text);
-      }
-    } 
-    
-    //swap [texi] before saving to db <div class="mee">
-    preg_match_all("#\[texi\](.*?)\[/texi\]#si",$text,$tex_matches);
-    if (count($tex_matches[0]) > 0) {
-      foreach($tex_matches[0] as $m) {
-        $new = str_replace(array('[texi]','[/texi]'),array('<span class="mee">','</span>'),$m);
-        $text = str_replace($m, $new, $text);
-      }
-    } 
-    return $text;
-  }
-
-  /**
-   * Replace <div class="mee"></div> tags with [tex][/tex] in none wysiwyg editors 
-   * before it is displayed in the editor
-   *
-   * @param string $text the text to be processed
-   */
-  public function get_text_for_display($text) {
     preg_match_all("#<div class=\"mee\">(.*?)\</div>#si",$text,$tex_matches);
     if (count($tex_matches[0]) > 0) {
       foreach($tex_matches[0] as $m) {
@@ -154,6 +127,30 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
         $text = str_replace($m, $new, $text);
       }
     }
+    return $text;
+  }
+
+  /**
+   * Replace [tex][/tex] tags with <div class="mee"></div>
+   * before it is displayed in the editor
+   *
+   * @param string $text the text to be processed
+   */
+  public function get_text_for_display($text) {
+    preg_match_all("#\[tex\](.*?)\[/tex\]#si",$text,$tex_matches);
+    if (count($tex_matches[0]) > 0) {
+      foreach($tex_matches[0] as $m) {
+        $new = str_replace(array('[tex]','[/tex]'),array('<div class="mee">','</div>'),$m);
+        $text = str_replace($m, $new, $text);
+      }
+    }
+    preg_match_all("#\[texi\](.*?)\[/texi\]#si",$text,$tex_matches);
+    if (count($tex_matches[0]) > 0) {
+      foreach($tex_matches[0] as $m) {
+        $new = str_replace(array('[texi]','[/texi]'),array('<span class="mee">','</span>'),$m);
+        $text = str_replace($m, $new, $text);
+      }
+    } 
     return $text;
   }
 
