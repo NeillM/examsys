@@ -73,12 +73,12 @@ class import_modulesTest extends unittestdatabase {
     $import->execute();
     // Test modules table is correct.
     $queryTable = $this->getConnection()->createQueryTable('modules', 'SELECT * FROM modules');
-    $expectedTable = $this->get_expected_data_set('modules_updated')->getTable("modules");
+    $expectedTable = $this->get_expected_data_set('modules_updated_addteammember')->getTable("modules");
     $this->assertTablesEqual($expectedTable, $queryTable);
   }
 
   /**
-   * Test module import update checklist
+   * Test module import update 'checklist'
    * @group import
    */
   public function test_execute_update_checklist() {
@@ -87,6 +87,110 @@ class import_modulesTest extends unittestdatabase {
     // Test modules table is correct.
     $queryTable = $this->getConnection()->createQueryTable('modules', 'SELECT * FROM modules');
     $expectedTable = $this->get_expected_data_set('modules_updated_checklist')->getTable("modules");
+    $this->assertTablesEqual($expectedTable, $queryTable);
+  }
+
+  /**
+   * Test module import update 'active'
+   * @group import
+   */
+  public function test_execute_update_active() {
+    $import = new \import\import_modules($this->get_test_csv('modules_update_active'));
+    $import->execute();
+    // Test modules table is correct.
+    $queryTable = $this->getConnection()->createQueryTable('modules', 'SELECT * FROM modules');
+    $expectedTable = $this->get_expected_data_set('modules_updated_active')->getTable("modules");
+    $this->assertTablesEqual($expectedTable, $queryTable);
+  }
+
+  /**
+   * Test module import update 'external id'
+   * @group import
+   */
+  public function test_execute_update_externalid() {
+    $import = new \import\import_modules($this->get_test_csv('modules_update_externalid'));
+    $import->execute();
+    // Test modules table is correct.
+    $queryTable = $this->getConnection()->createQueryTable('modules', 'SELECT * FROM modules');
+    $expectedTable = $this->get_expected_data_set('modules_updated_externalid')->getTable("modules");
+    $this->assertTablesEqual($expectedTable, $queryTable);
+  }
+
+  /**
+   * Test module import update 'negative marking'
+   * @group import
+   */
+  public function test_execute_update_negmarking() {
+    $import = new \import\import_modules($this->get_test_csv('modules_update_negmarking'));
+    $import->execute();
+    // Test modules table is correct.
+    $queryTable = $this->getConnection()->createQueryTable('modules', 'SELECT * FROM modules');
+    $expectedTable = $this->get_expected_data_set('modules_updated_negmarking')->getTable("modules");
+    $this->assertTablesEqual($expectedTable, $queryTable);
+  }
+
+  /**
+   * Test module import update 'objective api'
+   * @group import
+   */
+  public function test_execute_update_objectiveapi() {
+    $import = new \import\import_modules($this->get_test_csv('modules_update_objectiveapi'));
+    $import->execute();
+    // Test modules table is correct.
+    $queryTable = $this->getConnection()->createQueryTable('modules', 'SELECT * FROM modules');
+    $expectedTable = $this->get_expected_data_set('modules_updated_objectiveapi')->getTable("modules");
+    $this->assertTablesEqual($expectedTable, $queryTable);
+  }
+
+  /**
+   * Test module import update 'question based feedback'
+   * @group import
+   */
+  public function test_execute_update_questionbasedfb() {
+    $import = new \import\import_modules($this->get_test_csv('modules_update_questionbasedfb'));
+    $import->execute();
+    // Test modules table is correct.
+    $queryTable = $this->getConnection()->createQueryTable('modules', 'SELECT * FROM modules');
+    $expectedTable = $this->get_expected_data_set('modules_updated_questionbasedfb')->getTable("modules");
+    $this->assertTablesEqual($expectedTable, $queryTable);
+  }
+
+  /**
+   * Test module import update 'self enrol'
+   * @group import
+   */
+  public function test_execute_update_selfenrol() {
+    $import = new \import\import_modules($this->get_test_csv('modules_update_selfenrol'));
+    $import->execute();
+    // Test modules table is correct.
+    $queryTable = $this->getConnection()->createQueryTable('modules', 'SELECT * FROM modules');
+    $expectedTable = $this->get_expected_data_set('modules_updated_selfenrol')->getTable("modules");
+    $this->assertTablesEqual($expectedTable, $queryTable);
+  }
+
+  /**
+   * Test module import update 'timed exams'
+   * @group import
+   */
+  public function test_execute_update_timedexams() {
+    $import = new \import\import_modules($this->get_test_csv('modules_update_timedexams'));
+    $import->execute();
+    // Test modules table is correct.
+    $queryTable = $this->getConnection()->createQueryTable('modules', 'SELECT * FROM modules');
+    $expectedTable = $this->get_expected_data_set('modules_updated_timedexams')->getTable("modules");
+    $this->assertTablesEqual($expectedTable, $queryTable);
+  }
+
+  /**
+   * Test module import update 'year start'
+   * @group import
+   */
+  public function test_execute_update_yearstart() {
+    $import = new \import\import_modules($this->get_test_csv('modules_update_yearstart'));
+    $import->execute();
+    // Test modules table is correct.
+    $queryTable = $this->getConnection()->createQueryTable('modules', 'SELECT * FROM modules');
+    $expectedTable = $this->get_expected_data_set('modules_updated_yearstart')->getTable("modules");
     $this->assertTablesEqual($expectedTable, $queryTable);
   }
 
