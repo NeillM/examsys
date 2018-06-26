@@ -162,8 +162,7 @@ class renderdata extends \questiondata {
           $this->editor = 'plain';
         }
       }
-      $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-      $texteditorplugin = new $texteditorpluginns();
+      $texteditorplugin = \plugins\plugins_texteditor::get_editor();
       if ($useranswer == '' and $screen_pre_submitted == 1) {
         $this->file = $this->editor . '_config_unanswered';
       } else {
