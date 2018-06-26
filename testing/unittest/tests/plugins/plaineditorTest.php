@@ -89,39 +89,6 @@ class plaineditortest extends unittestdatabase {
   }
 
   /**
-   * Test disable plain - will default to tinymce3 if enabled
-   * @group texteditor
-   */
-  public function test_disable_plain() {
-    $plain = new \plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor();
-    $plain->install($this->config->get('cfg_phpunit_db_user'), $this->config->get('cfg_phpunit_db_password'));
-    $tinymce = new \plugins\texteditor\plugin_tinymce3_texteditor\plugin_tinymce3_texteditor();
-    $tinymce->install($this->config->get('cfg_phpunit_db_user'), $this->config->get('cfg_phpunit_db_password'));
-    $plain->disable_plugin();
-    // Check tables are correct.
-    $queryTable = $this->getConnection()->createQueryTable('plugins', 'SELECT component, type, version FROM plugins');
-    $expectedTable = $this->get_expected_data_set('plain_disabled')->getTable("plugins");
-    $this->assertTablesEqual($expectedTable, $queryTable);
-  }
-
-  /**
-   * Test disable plain - will default to plain if no other texteditor enabled
-   * @group texteditor
-   */
-  public function test_disable_plain_default() {
-    $plain = new \plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor();
-    $plain->install($this->config->get('cfg_phpunit_db_user'), $this->config->get('cfg_phpunit_db_password'));
-    $tinymce = new \plugins\texteditor\plugin_tinymce3_texteditor\plugin_tinymce3_texteditor();
-    $tinymce->install($this->config->get('cfg_phpunit_db_user'), $this->config->get('cfg_phpunit_db_password'));
-    $tinymce->disable_plugin();
-    $plain->disable_plugin();
-    // Check tables are correct.
-    $queryTable = $this->getConnection()->createQueryTable('plugins', 'SELECT component, type, version FROM plugins');
-    $expectedTable = $this->get_expected_data_set('plain_disabled_default')->getTable("plugins");
-    $this->assertTablesEqual($expectedTable, $queryTable);
-  }
-
-  /**
    * Test get header file
    * @group texteditor
    */

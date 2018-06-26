@@ -118,19 +118,10 @@ abstract class plugins_texteditor extends \plugins\plugins {
 
     /**
      * Disable this plugin
-     * Only one module text editor plugin should be enabled at anyone time
+     *
      */
     public function disable_plugin() {
-        $enabled = $this->config->get_setting('plugin_texteditor', 'enabled_plugin');
-        if ($this->plugin == $enabled[0]) {
-            $this->config->set_setting('enabled_plugin', array(), \Config::JSON, 'plugin_texteditor');
-        }
-        // Default to plain texteditor if non set.
-        if (count(\plugin_manager::get_plugin_type_enabled('plugin_texteditor')) === 0) {
-            $defaulttexteditorns = 'plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor';
-            $defaulttexteditor = new $defaulttexteditorns($this->config->db);
-            $defaulttexteditor->enable_plugin();
-        }
+      // Nothing to do as only one module text editor plugin is enable at a time enable_plugin handles everything.
     }
 
     /**

@@ -89,22 +89,6 @@ class tinymce3editortest extends unittestdatabase {
   }
 
   /**
-   * Test disable tinymce3 will default to plain
-   * @group texteditor
-   */
-  public function test_disable_tinymce3() {
-    $plain = new \plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor();
-    $plain->install($this->config->get('cfg_phpunit_db_user'), $this->config->get('cfg_phpunit_db_password'));
-    $tinymce = new \plugins\texteditor\plugin_tinymce3_texteditor\plugin_tinymce3_texteditor();
-    $tinymce->install($this->config->get('cfg_phpunit_db_user'), $this->config->get('cfg_phpunit_db_password'));
-    $tinymce->disable_plugin();
-    // Check tables are correct.
-    $queryTable = $this->getConnection()->createQueryTable('plugins', 'SELECT component, type, version FROM plugins');
-    $expectedTable = $this->get_expected_data_set('tinymce3_disabled')->getTable("plugins");
-    $this->assertTablesEqual($expectedTable, $queryTable);
-  }
-
-  /**
    * Test get header file
    * @group texteditor
    */
