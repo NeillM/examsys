@@ -141,6 +141,7 @@ class tinymce3editortest extends unittestdatabase {
   public function test_get_text_for_display() {
     $tinymce = new \plugins\texteditor\plugin_tinymce3_texteditor\plugin_tinymce3_texteditor();
     $this->assertEquals("[tex]\alpha[/tex]", $tinymce->get_text_for_display("<div class=\"mee\">\alpha</div>"));
+    $this->assertEquals("[texi]\alpha[/texi]", $tinymce->get_text_for_display("<span class=\"mee\">\alpha</span>"));
   }
 
   /**
