@@ -975,7 +975,7 @@ if ($configObject->get_setting('core', 'cfg_summative_mgmt') and $properties->ge
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->get_header();
-  $texteditorplugin->get_javascript_config('config_properties');
+  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::properties);
 ?>
   <script type="text/javascript" src="../js/staff_help.js"></script>
 <?php

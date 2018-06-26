@@ -58,7 +58,7 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->get_header();
-  $texteditorplugin->get_javascript_config('config_announcements');
+  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::announcements);
 ?>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>

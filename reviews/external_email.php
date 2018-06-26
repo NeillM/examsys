@@ -59,7 +59,7 @@ $display_deadline = $external_review_deadline->format('l jS M Y');
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->get_header();
-  $texteditorplugin->get_javascript_config('config_externals_email');
+  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::external);
 ?>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>

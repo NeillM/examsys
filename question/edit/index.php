@@ -473,7 +473,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->get_header();
-  $texteditorplugin->get_javascript_config('config_question_editor');
+  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::question);
 ?>
 <script type="text/javascript" src="../../js/jquery-ui-1.10.4.min.js"></script>
 <script type="text/javascript" src="../../js/system_tooltips.js"></script>

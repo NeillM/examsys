@@ -954,9 +954,9 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             }
           } else {
             if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
-              $texteditorplugin->get_javascript_config('config_unanswered');
+              $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::unanswered);
             } else {
-              $texteditorplugin->get_javascript_config('config_answered');
+              $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::answered);
             }
 
             $ans = '';

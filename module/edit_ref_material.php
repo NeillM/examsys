@@ -88,7 +88,7 @@ $result->close();
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->get_header();
-  $texteditorplugin->get_javascript_config('config');
+  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::config);
 ?>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>

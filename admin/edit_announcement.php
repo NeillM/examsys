@@ -73,7 +73,7 @@ $result->close();
 <?php
 $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 $texteditorplugin->get_header();
-$texteditorplugin->get_javascript_config('config_announcements');
+$texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::announcements);
 
 ?>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>

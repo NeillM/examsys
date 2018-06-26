@@ -63,7 +63,7 @@ if (file_exists($templatefile)) {
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->get_header();
-  $texteditorplugin->get_javascript_config('config_email');
+  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::email);
 ?>
   <script>
     function submitValues() {
