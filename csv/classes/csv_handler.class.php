@@ -174,7 +174,7 @@ class csv_handler {
    * @param $file file to delete
    */
   public function delete($file) {
-    unlink( $file);
+    unlink($file);
   }
 
   /**

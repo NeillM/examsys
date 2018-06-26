@@ -14,7 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-use testing\unittest\unittest;
+use testing\unittest\unittestdatabase;
+use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
 /**
  * Test csv class
@@ -24,10 +25,27 @@ use testing\unittest\unittest;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class csv_handlerTest extends unittest {
+class csv_handlerTest extends unittestdatabase {
+  /**
+   * Get init data set from yml
+   * @return dataset
+   */
+  public function getDataSet() {
+    return new YamlDataSet($this->get_base_fixture_directory() . "csv" . DIRECTORY_SEPARATOR . "csv.yml");
+  }
+
+  /**
+   * Get test file
+   * @param $name name of file
+   * @return csv_handler
+   */
+  public function get_test_csv($name) {
+    return $this->get_base_fixture_directory() . "csv" . DIRECTORY_SEPARATOR . "files" . DIRECTORY_SEPARATOR . $name . ".csv";
+  }
+
   /**
    * Test invalid file type upload
-   * @group import
+   * @group csv
    */
   public function test_move_upload_to_temp_invalid() {
     $this->expectExceptionMessage('File has an invalid file extension. Only .csv is supported.');
@@ -39,7 +57,7 @@ class csv_handlerTest extends unittest {
 
   /**
    * Test invalid file type upload
-   * @group import
+   * @group csv
    */
   public function test_move_upload_to_temp_noname() {
     $this->expectExceptionMessage('No filename supplied.');
@@ -47,5 +65,15 @@ class csv_handlerTest extends unittest {
     $file['tmp_name'] = '';
     $file['error'] = 0;
     \csv\csv_handler::move_upload_to_temp($file, $this->config->get('cfg_tmpdir'));
+  }
+
+  /**
+   * Test get line
+   * @group csv
+   */
+  public function test_get_line() {
+    $csv = new \csv\csv_handler($this->get_test_csv('test'));
+    $line = array('a' => '1', 'b' => '2', 'c' => '3');
+    $this->assertEquals($line, $csv->get_line());
   }
 }
