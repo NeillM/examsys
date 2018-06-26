@@ -64,17 +64,9 @@ class questionrender {
   public function display_question($screen_pre_submitted, $q_displayed, $string, &$question, $pid, $current_screen, &$question_no, $user_answers) {
 
     $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-    // We always require the plain text renderpath.
-    if ($texteditorplugin_name[0] === 'plugin_plain_texteditor') {
-      $renderpath[] = $texteditorplugin->get_header_path();
-    } else {
-      $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'texteditor' . DIRECTORY_SEPARATOR . 'plugin_plain_texteditor' . DIRECTORY_SEPARATOR . 'templates';
-      $renderpath[] = $texteditorplugin->get_header_path();
-      // Get the plain langpack.
-      $langpack = new \langpack();
-      $strings = $langpack->get_all_strings('plugins/texteditor/plugin_plain_texteditor/plugin_plain_texteditor');
-      $string = array_merge($string, $strings);
-    }
+    $renderpath = $texteditorplugin->get_render_paths();
+    $strings = $texteditorplugin->get_strings();
+    $string = array_merge($string, $strings);
     $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . $question['q_type'] . DIRECTORY_SEPARATOR . 'templates';
     $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates';
     $render = new render($this->config, $renderpath);

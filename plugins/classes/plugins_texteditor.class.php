@@ -217,4 +217,26 @@ abstract class plugins_texteditor extends \plugins\plugins {
       $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
       return new $texteditorpluginns();
     }
+
+    /**
+     * Get path to render templates
+     * @return array
+     */
+    public function get_render_paths() {
+      // Always get plain text editor.
+      $renderpath = array(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'texteditor'
+        . DIRECTORY_SEPARATOR . 'plugin_plain_texteditor'
+        . DIRECTORY_SEPARATOR . 'templates');
+      return $renderpath;
+    }
+
+    /**
+     * Get texteditor langpack
+     * @return array
+     */
+    public function get_strings() {
+      $langpack = new \langpack();
+      // Always get plain text editor.
+      return $langpack->get_all_strings('plugins/texteditor/plugin_plain_texteditor/plugin_plain_texteditor');
+    }
 }

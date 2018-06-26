@@ -169,4 +169,14 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
       return false;
     }
   }
+
+  /**
+   * Get path to render templates
+   * @return array
+   */
+  public function get_render_paths() {
+    $renderpath = parent::get_render_paths();
+    $renderpath[] = $this->get_header_path();
+    return $renderpath;
+  }
 }
