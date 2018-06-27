@@ -25,7 +25,7 @@ data.current_screen - the current screen
 data.page_start - timestamp when screen was first viewed
 data.old_screen - the last screen
 data.previous_duration - duration screen was viewed previously
-data.is_enhancedcalc - is there a calculation question on screen
+data.is_linked - is there a linked calculation question on screen
 data.refpane - is there a reference panel
 data.previewmode - are we in question preview mode
 data.msg - a call out mesage
@@ -57,7 +57,6 @@ lang.screen
             <input type="hidden" name="previous_duration" value="{{data.previous_duration}}" />
             <input type="hidden" id="button_pressed" name="button_pressed" value="next" />
             <input type="hidden" id="randomPageID" name="randomPageID" value="" />
-            <input type="hidden" id="isEnhancedCalc" name="isEnhancedCalc" value="{{data.is_enhancedcalc}}" />
             <input type="hidden" name="refpane" id="refpane" value="{{data.refpane}}" />
 {% if data.previewmode %}
             <input type="hidden" id="mode" name="mode" value="preview" />

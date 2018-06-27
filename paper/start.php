@@ -447,6 +447,27 @@ $render->render($headerdata, $lang, 'header.html');
 
   $render->render($contentdata, $string, 'paper/header.html');
 
+  $linked = array();
+  foreach ($questions_array as &$question) {
+    if ($question['q_type'] === 'enhancedcalc') {
+      $settings = json_decode($question['settings'], true);
+      foreach ($settings['vars'] as $var_name => $var_data) {
+        if ($question['object']->is_linked_ans($var_data['min'])) {
+          $linked[] = $question['object']->parse_linked_ans($var_data['min']);
+        }
+        if ($question['object']->is_linked_ans($var_data['max'])) {
+          $linked[] = $question['object']->parse_linked_ans($var_data['max']);
+        }
+        if ($question['object']->is_linked_question_var($var_data['min'])) {
+          $linked[] = $question['object']->parse_linked_question_var($var_data['min']);
+        }
+        if ($question['object']->is_linked_question_var($var_data['max'])) {
+          $linked[] = $question['object']->parse_linked_question_var($question['q_id']);
+        }
+      }
+    }
+  }
+  $linked = array_unique($linked);
   // Display each question
   $unanswered = false;
   foreach ($questions_array as &$question) {
@@ -456,8 +477,12 @@ $render->render($headerdata, $lang, 'header.html');
       continue;
     }
 
-    // Flag original for telling if this is a linked question, since this flag is abandoned, set to 0
-    $is_enhancedcalc = 0;
+    // Check if calculation question is a parent of a future question.
+    if ($question['q_type'] === 'enhancedcalc') {
+      if (in_array($question['q_id'], $linked)) {
+        $question['object']->set_link_parent();
+      }
+    }
     // refer to all questions on displayed question
     $question['paper_questions'] = &$questions_array;
     $questionrender = new questionrender($question['q_type']);
@@ -481,7 +506,6 @@ $render->render($headerdata, $lang, 'header.html');
   $footer_data['page_start'] = date("YmdHis", time());
   $footer_data['old_screen'] = $current_screen - 1;
   $footer_data['previous_duration'] = $previous_duration;
-  $footer_data['is_enhancedcalc'] = $is_enhancedcalc;
   $footer_data['refpane'] = $refpane;
 
   if ($is_question_preview_mode === true) {

@@ -360,9 +360,13 @@ function confirmSubmitLinear (event) {
     if ($('.ecalc-answer').length > 0) {
       var ecalcQuestions = [];
       $('.ecalc-answer').each(function(){
-        ecalcQuestions[ecalcQuestions.length] = this.id.substring(1);
+        if ($(this).attr('data-linkparent') === '1') {
+          ecalcQuestions[ecalcQuestions.length] = $(this).attr('data-assignednum');
+        }
       });
-      msg = lang_string['javacheck3'].replace('[X]', ecalcQuestions.join());
+      if (ecalcQuestions.length > 0) {
+        msg = lang_string['javacheck3'].replace('[X]', ecalcQuestions.join());
+      }
     }
     showDialog(msg);
   }
@@ -387,16 +391,17 @@ function confirmSubmitBiDirectional (event) {
       $("#overlay").hide();
       conductSave(event);
     });
-  } else if ($('#isEnhancedCalc').val() === '1' && $('#missingCalcAnswer').val() != '1') {
+  } else {
     var ecalcQuestions = [];
     $('.ecalc-answer').each(function(){
-      if ($(this).val() === '') {
-        ecalcQuestions[ecalcQuestions.length] = $(this).attr('data-screen');
+      if ($(this).val() === '' && $(this).attr('data-linkparent') === '1') {
+        ecalcQuestions[ecalcQuestions.length] = $(this).attr('data-assignednum');
       }
     });
 
     if (ecalcQuestions.length > 0) {
-      var msg = lang_string['answerrequired'] + '<br/><br/><strong>' + lang_string['answerrequired_confirm'] + '</strong>'.replace('[X]', ecalcQuestions.join());
+      var msg = lang_string['answerrequired'] + '<br/><br/><strong>' + lang_string['answerrequired_confirm'] + '</strong>';
+      msg = msg.replace('[X]', ecalcQuestions.join());
       showEnhancedcalcWarning(msg);
       $("#enhancedcalc_warning_ok").click(function(event) {
         submitted = true;
@@ -407,8 +412,6 @@ function confirmSubmitBiDirectional (event) {
     } else {
       conductSave(event);
     }
-  } else {
-    conductSave(event);
   }
 }
 
