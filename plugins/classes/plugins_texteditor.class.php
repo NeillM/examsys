@@ -223,10 +223,13 @@ abstract class plugins_texteditor extends \plugins\plugins {
      * @return array
      */
     public function get_render_paths() {
+      $renderpath = array($this->get_header_path());
       // Always get plain text editor.
-      $renderpath = array(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'texteditor'
-        . DIRECTORY_SEPARATOR . 'plugin_plain_texteditor'
-        . DIRECTORY_SEPARATOR . 'templates');
+      if ($this->get_name() !== 'plugin_plain_texteditor') {
+        $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'texteditor'
+          . DIRECTORY_SEPARATOR . 'plugin_plain_texteditor'
+          . DIRECTORY_SEPARATOR . 'templates';
+      }
       return $renderpath;
     }
 
@@ -236,7 +239,11 @@ abstract class plugins_texteditor extends \plugins\plugins {
      */
     public function get_strings() {
       $langpack = new \langpack();
+      $strings = $langpack->get_all_strings($this->langcomponent);
       // Always get plain text editor.
-      return $langpack->get_all_strings('plugins/texteditor/plugin_plain_texteditor/plugin_plain_texteditor');
+      if ($this->get_name() !== 'plugin_plain_texteditor') {
+        $strings = array_merge($strings, $langpack->get_all_strings('plugins/texteditor/plugin_plain_texteditor/plugin_plain_texteditor'));
+      }
+      return $strings;
     }
 }
