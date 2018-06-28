@@ -7,16 +7,16 @@
     <tr>
         <td align="left" style="padding:10px" class="dialog_body" colspan="2">
 
-            <p style="text-align:justify">{{lang.msg1}}</p>
+            <p style="text-align:justify">{{lang.intro}}</p>
             <br />
-            <div>{{lang.msg2}}
+            <div>{{lang.mandatoryfields}}
                 <ol>
                 {% for item in data.required %}
                     <li>{{item}} - {{lang[item]}}</li>
                 {% endfor %}
                 </ol>
             </div>
-            <div>{{lang.msg3}}
+            <div>{{lang.optionalfields}}
                 <ol>
                     {% for item in data.optional %}
                     <li>{{item}} - {{lang[item]}}</li>
