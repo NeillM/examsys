@@ -32,8 +32,7 @@ class renderdata extends \questiondata
   /**
    * Constructor
    */
-  function __construct()
-  {
+  function __construct() {
     parent::__construct();
     $this->questiontype = 'enhancedcalc';
   }
@@ -41,8 +40,7 @@ class renderdata extends \questiondata
   /**
    * Disable/Enable display of question header sections for template rendering
    */
-  public function set_question_head()
-  {
+  public function set_question_head() {
     $this->displaydefault = true;
     if ($this->notes != '') {
       $this->displaynotes = true;
@@ -55,8 +53,7 @@ class renderdata extends \questiondata
    * @param mixed $useranswer user answer
    * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    */
-  public function set_question($screen_pre_submitted, $useranswer, $userdismissed)
-  {
+  public function set_question($screen_pre_submitted, $useranswer, $userdismissed) {
     $question = $this->question;
     if (!is_null($useranswer)) {
       $d = array();
@@ -74,8 +71,7 @@ class renderdata extends \questiondata
    * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
-  {
+  public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
     $marks = $this->marks;
     $question = $this->question;
     $useranswers = $this->useranswers;
@@ -91,8 +87,7 @@ class renderdata extends \questiondata
    * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
-  {
+  public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
     // Nothing to do.
   }
 
@@ -103,8 +98,7 @@ class renderdata extends \questiondata
    * @param array $string language strings
    * @return void
    */
-  public function render_question($render, $string)
-  {
+  public function render_question($render, $string) {
     $question = $this->question;
     // no options for enhanced calc now stored in settings
     $extra = array(
