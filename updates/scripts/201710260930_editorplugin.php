@@ -15,6 +15,8 @@ if ($updater_utils->check_version("6.5.0")) {
     } else {
       $plaintexteditor->enable_plugin();
     }
+    // Add mee setting.
+    $configObject->set_setting('paper_mee', 1, Config::BOOLEAN);
     // Delete deprcated settings.
     $sql = "DELETE FROM config WHERE component = 'core' AND setting = 'misc_editor_name'";
     $updater_utils->execute_query($sql, false);

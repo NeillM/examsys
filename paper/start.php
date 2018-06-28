@@ -289,6 +289,7 @@ if($propertyObj->get_calculator()) {
   $headerdata['scripts'][] = '/js/jcalc98uon.min.js';
   $headerdata['css'][] = '/css/jcalc98.css';
 }
+$headerdata['mee'] = $configObject->get_setting('core', 'paper_mee');
 $headerdata['texteditor'] = $texteditorplugin->get_header_file();
 $render->render($headerdata, $lang, 'header.html');
 ?>

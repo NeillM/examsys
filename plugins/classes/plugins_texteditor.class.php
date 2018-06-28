@@ -168,6 +168,12 @@ abstract class plugins_texteditor extends \plugins\plugins {
     abstract public function prepare_text_for_save($text);
 
     /**
+     * Get data to render in header.
+     * @return array
+     */
+    abstract function get_header_data();
+
+    /**
      * Enable this plugin
      * Only one module text editor plugin should be enabled at anyone time
      */
@@ -197,7 +203,7 @@ abstract class plugins_texteditor extends \plugins\plugins {
      */
     public function get_header() {
       $render = new \render($this->config, $this->get_header_path());
-      $render->render(array(), null, $this->get_header_file());
+      $render->render($this->get_header_data(), null, $this->get_header_file());
     }
 
     /**

@@ -141,4 +141,13 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
   public function prepare_text_for_save($text) {
     return $text;
   }
+
+  /**
+   * Get header data.
+   * @return array
+   */
+  public function get_header_data() {
+    // Intentionally empty.
+    return array();
+  }
 }

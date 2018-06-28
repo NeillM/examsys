@@ -87,3 +87,4 @@ $string['summative_midexam_clarification'] = 'Roles that can view mid exam clari
 $string['system_password_expire'] = 'Internal database login password lifetime (Days)';
 $string['lti_ssl_verifypeer'] = 'Perform ssl peer verification';
 $string['lti_ssl_verifyhost'] = 'Perform ssl host verification';
+$string['paper_mee'] = 'Enable/Disable deprecated mee maths rendering.';
