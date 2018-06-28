@@ -55,7 +55,7 @@ if (isset($_GET['default'])) {
 <?php
 $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 $texteditorplugin->get_header();
-$texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::config);
+$texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::announcements);
 
 if (isset($_POST['submit'])) {
   $title = trim($_POST['title']);
