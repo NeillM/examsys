@@ -74,8 +74,8 @@ class csv_handler {
 
   /**
    * Move upload file to tmp dir
-   * @param $from upload file
-   * @param $to temp file location
+   * @param string $from upload file
+   * @param string $to temp file location
    * @throws csv_load_exception
    * @return string
    */
@@ -171,7 +171,7 @@ class csv_handler {
 
   /**
    * Delete csv file
-   * @param $file file to delete
+   * @param string $file file to delete
    */
   public function delete($file) {
     unlink($file);
