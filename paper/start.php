@@ -447,27 +447,9 @@ $render->render($headerdata, $lang, 'header.html');
 
   $render->render($contentdata, $string, 'paper/header.html');
 
-  $linked = array();
-  foreach ($questions_array as &$question) {
-    if ($question['q_type'] === 'enhancedcalc') {
-      $settings = json_decode($question['settings'], true);
-      foreach ($settings['vars'] as $var_name => $var_data) {
-        if ($question['object']->is_linked_ans($var_data['min'])) {
-          $linked[] = $question['object']->parse_linked_ans($var_data['min']);
-        }
-        if ($question['object']->is_linked_ans($var_data['max'])) {
-          $linked[] = $question['object']->parse_linked_ans($var_data['max']);
-        }
-        if ($question['object']->is_linked_question_var($var_data['min'])) {
-          $linked[] = $question['object']->parse_linked_question_var($var_data['min']);
-        }
-        if ($question['object']->is_linked_question_var($var_data['max'])) {
-          $linked[] = $question['object']->parse_linked_question_var($question['q_id']);
-        }
-      }
-    }
-  }
-  $linked = array_unique($linked);
+  // Get linked question parents.
+  $linked = PaperUtils::get_linked_question_parents($questions_array);
+  
   // Display each question
   $unanswered = false;
   foreach ($questions_array as &$question) {
