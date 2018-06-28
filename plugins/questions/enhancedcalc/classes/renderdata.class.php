@@ -25,8 +25,7 @@ namespace plugins\questions\enhancedcalc;
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
 
-class renderdata extends \questiondata
-{
+class renderdata extends \questiondata {
   use \defaultgetmarks;
 
   /**
