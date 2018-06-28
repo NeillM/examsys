@@ -414,21 +414,4 @@ Class SchoolUtils {
     }
     return true;
   }
-
-  /**
-   * Get list of schools in database
-   * @return array list of schools in rogo
-   */
-  static function get_schools() {
-    $configObject = Config::get_instance();
-    $school_list = array();
-    $result = $configObject->db->prepare("SELECT DISTINCT id, school FROM schools");
-    $result->execute();
-    $result->bind_result($school_id, $school_name);
-    while ($result->fetch()) {
-      $school_list[$school_name] = $school_id;
-    }
-    $result->close();
-    return $school_list;
-  }
 }

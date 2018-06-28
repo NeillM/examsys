@@ -47,3 +47,4 @@ $string['questionbasedfb'] = 'Enable/Disable question based feedback for student
 $string['addteammember'] = 'Allow/Disallow module staff members to add additional members.';
 $string['yearstart'] = 'Set academic year start for the module.';
 $string['externalid'] = 'External system identifier for the module.';
+$string['schoolcode'] = 'School Code. (used if school names not unique)';

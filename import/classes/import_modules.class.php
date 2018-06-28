@@ -58,6 +58,7 @@ class import_modules extends importer {
    * @var array
    */
   const OPTIONAL = array(
+    'schoolcode',
     'smsapi',
     'objectiveapi',
     'peerreview',
@@ -100,17 +101,21 @@ class import_modules extends importer {
     // Set the required headers.
     $this->data->required_header(self::REQUIRED);
     $default_academic_year_start = $this->config->get_setting('core', 'system_academic_year_start');
-    // Get a list of schools held by Rogo.
-    $school_list = \schoolutils::get_schools();
     while ($line = $this->data->get_line()) {
       $line['moduleid'] = trim($line['moduleid']);
       $line['fullname'] = trim($line['fullname']);
-      if (isset($school_list[trim($line['school'])])) {
-        $line['school'] = $school_list[trim($line['school'])];
+      // Check if school exists.
+      if (!isset($line['schoolcode'])) {
+        $schools = \schoolutils::school_name_exists(trim($line['school']), $this->config->db);
       } else {
-        // School not found.
+        $schools = \schoolutils::get_schoolid_by_code(trim($line['schoolcode']), $this->config->db);
+      }
+      if ($schools === false or count($schools) > 1) {
+        // School not found or multiple schools found.
         $this->modulefailed[] = $line['moduleid'];
         continue;
+      } else {
+        $line['school'] = $schools;
       }
       if (\module_utils::module_exists($line['moduleid'], $this->config->db)) {
         $updateData = array();
