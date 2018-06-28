@@ -110,8 +110,8 @@ class import_modules extends importer {
       } else {
         $schools = \schoolutils::get_schoolid_by_code(trim($line['schoolcode']), $this->config->db);
       }
-      if ($schools === false or count($schools) > 1) {
-        // School not found or multiple schools found.
+      if ($schools === false) {
+        // School not found.
         $this->modulefailed[] = $line['moduleid'];
         continue;
       } else {
