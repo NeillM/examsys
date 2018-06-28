@@ -26,11 +26,12 @@ require '../include/staff_auth.inc';
 require_once '../include/errors.php';
 
 check_var('module', 'REQUEST', true, false, false);
-
+$texteditorplugin = \plugins\plugins_texteditor::get_editor();
 if (isset($_POST['submit'])) {
+  $content = $texteditorplugin->prepare_text_for_save($_POST['ref_content']);
   // Write the reference material
   $result = $mysqli->prepare("INSERT INTO reference_material VALUES (NULL, ?, ?, ?, NOW(), NULL)");
-  $result->bind_param('sss', $_POST['title'], $_POST['ref_content'], $_POST['width']);
+  $result->bind_param('sss', $_POST['title'], $content, $_POST['width']);
   $result->execute();
   
   $refID = $mysqli->insert_id;
@@ -60,7 +61,6 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/refmaterial.css" />
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <?php
-  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->get_header();
   $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::config);
 ?>

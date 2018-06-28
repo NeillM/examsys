@@ -26,7 +26,7 @@ require '../include/staff_auth.inc';
 require '../include/errors.php';
 
 $refID = check_var('refID', 'GET', true, false, true);
-
+$texteditorplugin = \plugins\plugins_texteditor::get_editor();
 if (!refmaterials_utils::refmaterials_exist($refID, $mysqli)) {
   $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
@@ -34,9 +34,10 @@ if (!refmaterials_utils::refmaterials_exist($refID, $mysqli)) {
 }
 
 if (isset($_POST['submit'])) {
+  $content = $texteditorplugin->prepare_text_for_save($_POST['ref_content']);
   // Write the reference material
   $result = $mysqli->prepare("UPDATE reference_material SET title = ?, content = ?, width = ? WHERE id = ?");
-  $result->bind_param('sssi', $_POST['title'], $_POST['ref_content'], $_POST['width'], $_GET['refID']);
+  $result->bind_param('sssi', $_POST['title'], $content, $_POST['width'], $_GET['refID']);
   $result->execute();
   
   // Add it to the modules
@@ -86,7 +87,6 @@ $result->close();
   <link rel="stylesheet" type="text/css" href="../css/refmaterial.css" />
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <?php
-  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->get_header();
   $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::config);
 ?>
@@ -140,7 +140,7 @@ for ($size=200; $size<850; $size+=50) {
   }
 }
 ?></select></td><td><?php echo $string['modules']; ?></td></tr>
-<tr><td><?php $texteditorplugin->get_textarea('ref_content', 'ref_content', $content, plugins\plugins_texteditor::type_standard); ?></td><td style="vertical-align:top">
+<tr><td><?php $texteditorplugin->get_textarea('ref_content', 'ref_content', $texteditorplugin->get_text_for_display($content), plugins\plugins_texteditor::type_standard); ?></td><td style="vertical-align:top">
 <?php
   echo "<div style=\"margin-top:1px; display:block; width:420px; height:604px; overflow-y:scroll; border:1px solid #909090; font-size:90%\">";
 
