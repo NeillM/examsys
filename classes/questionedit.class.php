@@ -764,7 +764,7 @@ QUERY;
    * @return string
    */
   public function get_theme() {
-    return $this->texteditor->get_text_for_display($this->theme);
+    return $this->theme;
   }
 
   /**
@@ -772,7 +772,6 @@ QUERY;
    * @param string $value
    */
   public function set_theme($value) {
-    $value = $this->texteditor->prepare_text_for_save($value);
     if ($value != $this->theme) {
       $this->set_modified_field('theme', $this->theme);
       $this->theme = $value;
@@ -842,7 +841,7 @@ QUERY;
    * @return string
    */
   public function get_notes() {
-    return $this->texteditor->get_text_for_display($this->notes);
+    return $this->notes;
   }
 
   /**
@@ -850,7 +849,6 @@ QUERY;
    * @param string $value
    */
   public function set_notes($value) {
-    $value = $this->texteditor->prepare_text_for_save($value);
     if ($value != $this->notes) {
       $this->set_modified_field('notes', $this->notes);
       $this->notes = $value;
@@ -862,7 +860,7 @@ QUERY;
    * @return string
    */
   public function get_correct_fback() {
-    return $this->texteditor->get_text_for_display($this->correct_fback);
+    return $this->correct_fback;
   }
 
   /**
@@ -870,7 +868,6 @@ QUERY;
    * @param string $value
    */
   public function set_correct_fback($value) {
-    $value = $this->texteditor->prepare_text_for_save($value);
     if ($value != $this->correct_fback) {
       $this->set_modified_field('correct_fback', $this->correct_fback);
       $this->correct_fback = $value;
@@ -882,7 +879,7 @@ QUERY;
    * @return string
    */
   public function get_incorrect_fback() {
-    return $this->texteditor->get_text_for_display($this->incorrect_fback);
+    return $this->incorrect_fback;
   }
 
   /**
@@ -890,7 +887,6 @@ QUERY;
    * @param string $value
    */
   public function set_incorrect_fback($value) {
-    $value = $this->texteditor->prepare_text_for_save($value);
     if ($value != $this->incorrect_fback) {
       $this->set_modified_field('incorrect_fback', $this->incorrect_fback);
       $this->incorrect_fback = $value;
