@@ -1259,7 +1259,7 @@ Class PaperUtils {
    * @param $questions questions array from paper
    * @return array
    */
-  public function get_linked_question_parents($questions) {
+  public static function get_linked_question_parents($questions) {
     $linked = array();
     foreach ($questions as &$question) {
       if ($question['q_type'] === 'enhancedcalc') {
