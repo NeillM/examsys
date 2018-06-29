@@ -1,6 +1,9 @@
 <?php
-if ($updater_utils->check_version("6.5.0")) {
+if ($updater_utils->check_version("7.0.0")) {
   if (!$updater_utils->has_updated('rogo2263')) {
+    // Latex column no longer required.
+    $sql = "ALTER TABLE properties DROP COLUMN latex_needed";
+    $updater_utils->execute_query($sql, false);
     // Install tinymce plugin.
     $defaulttexteditorns = 'plugins\texteditor\plugin_tinymce3_texteditor\plugin_tinymce3_texteditor';
     $defaulttexteditor = new $defaulttexteditorns($mysqli);
