@@ -323,7 +323,11 @@ class modulemanagement extends \api\abstractmanagement {
                 }
             }
         }
-        
+        // Update external id if new one provided.
+        if (!empty($params['newexternalid'])) {
+            $details['externalid'] = $params['newexternalid'];
+            $change = true;
+        }
         if ($modcodeinuse) {
             $data = array('statuscode' => $this->statuscodes['MODULE_ALREADY_EXISTS'], 'status' => $strings['module_already_exists'], 'id' => $modid, 'externalid' => null);
         } else {
@@ -340,10 +344,6 @@ class modulemanagement extends \api\abstractmanagement {
                 // Get student management system if not provided.
                 if ((empty($params['sms']))) {
                     $params['sms'] = $details['sms'];
-                }
-                // Get externalid if not provided.
-                if ((!isset($params['externalid']) or $params['externalid'] === '')) {
-                    $params['externalid'] = $details['externalid'];
                 }
                 // Update Module.
                 if ($change) {
