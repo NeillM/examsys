@@ -144,7 +144,13 @@ abstract class plugins_texteditor extends \plugins\plugins {
      * @param $leadin
      * @return boolean
      */
-    abstract public function clean_leadin($leadin);
+    public function clean_leadin($leadin) {
+        if (strpos($leadin, 'class="mee"') === false AND strpos($leadin, 'class=mee') === false) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     /**
      * Return editor specific type class
