@@ -166,13 +166,4 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
       return false;
     }
   }
-
-  /**
-   * Get header data.
-   * @return array
-   */
-  public function get_header_data() {
-    $data['mee'] = $this->config->get_setting('core', 'paper_mee');
-    return $data;
-  }
 }

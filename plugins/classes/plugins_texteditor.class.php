@@ -171,7 +171,11 @@ abstract class plugins_texteditor extends \plugins\plugins {
      * Get data to render in header.
      * @return array
      */
-    abstract function get_header_data();
+    public function get_header_data() {
+        // Enable/Disable deprecated mee maths.
+        $data['mee'] = $this->config->get_setting('core', 'paper_mee');
+        return $data;
+    }
 
     /**
      * Enable this plugin
