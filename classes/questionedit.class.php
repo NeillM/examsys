@@ -793,7 +793,7 @@ QUERY;
   public function set_scenario($value) {
     $scenario = (trim(strip_tags($value, '<img>')) == '') ? '' : $value;
     $tmp_scenario = trim($this->scenario);
-    if ($scenario != $tmp_scenario) {
+    if ($scenario != $this->texteditor->prepare_text_for_save($tmp_scenario)) {
       $this->set_modified_field('scenario_plain', $this->get_scenario_plain());
       $this->scenario = $this->texteditor->prepare_text_for_save($scenario);
     }
@@ -821,7 +821,7 @@ QUERY;
    * @param string $value
    */
   public function set_leadin($value) {
-    if ($value != $this->leadin) {
+    if ($value != $this->texteditor->prepare_text_for_save($value)) {
       $this->set_modified_field('leadin_plain', $this->get_leadin_plain());
       $this->leadin = $this->texteditor->prepare_text_for_save($value);
     }
