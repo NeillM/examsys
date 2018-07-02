@@ -132,25 +132,30 @@ if (isset($_POST['submit'])) {
     $headerdata['scripts'][] = '/node_modules/mathjax/MathJax.js?config=TeX-MML-AM_HTMLorMML';
   }
   $render->render($headerdata, $lang, 'header.html');
-?>
 
-  <div id="content">
-<?php
+
+  $breadcrumb[$string['home']] = '../index.php';
+  if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
+    $link = "../folder/index.php?folder=" . $_GET['folder'];
+    $name = folder_utils::get_folder_name($_GET['folder'], $mysqli);
+    $breadcrumb[$name] = $link;
+  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
+    $link = "../module/index.php?module=" . $_GET['module'];
+    $name = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
+    $breadcrumb[$name] = $link;
+  }
+  $link = "../paper/details.php?paperID=" . $paperID;
+  $name = $propertyObj->get_paper_title();
+  $breadcrumb[$name] = $link;
   require '../include/toprightmenu.inc';
 
-	echo draw_toprightmenu();
+  $toprightmenu = draw_toprightmenu();
+  $render->render_admin_options('', '', $lang, $toprightmenu, 'admin/no_sidebar.html');
+  $render->render_admin_content($breadcrumb, $lang);
 
   echo "<form action=\"" . $_SERVER['PHP_SELF'] . "?paperID=" . $paperID . "&module=" . $_GET['module'] . "&folder=" . $_GET['folder'] . "&repcourse=" . $_GET['repcourse'] . "\" method=\"post\" autocomplete=\"off\">\n";
-  echo '<div class="head_title">';
-  echo '<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>';
-  echo '<div class="breadcrumb" style="height:20px"><a href="../index.php">' . $string['home'] . '</a>';
-  if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
-  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
-  }
-  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $propertyObj->get_paper_title() . '</a></div></div>';
-  echo '<table class="header"><tr><th><div class="page_title">' . $string['finalisemarks'] . ': <span style="font-weight:normal"> ' . $string['question'] . ' ' . $_GET['qNo'] . '</span></div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['first'].'</div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['second'].'</div></td><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['override'].'</div></th></tr>';
+
+  echo '<table class="header"><tr><th><div class="page_title"><span style="font-weight:normal"> ' . $string['question'] . ' ' . $_GET['qNo'] . '</span></div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['first'].'</div></th><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['second'].'</div></td><th style="text-align:center; vertical-align:bottom"><div style="width:70px; font-size:110%">'.$string['override'].'</div></th></tr>';
   echo '<tr><td colspan="4"><img src="../artwork/tooltip_icon.gif" />' . $string['comments'] . '</td></tr>';
   $student_no = 0;
 
