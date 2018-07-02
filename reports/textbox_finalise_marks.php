@@ -34,12 +34,12 @@ $paper_type = $propertyObj->get_paper_type();
 function load_marks($paperID, $q_id, $phase, $db) {
   $marks = array();
   
-  $result = $db->prepare("SELECT answer_id, mark FROM textbox_marking WHERE paperID = ? AND q_id = ? AND phase = ?");
+  $result = $db->prepare("SELECT answer_id, mark, comments FROM textbox_marking WHERE paperID = ? AND q_id = ? AND phase = ?");
   $result->bind_param('iii', $paperID, $q_id, $phase);
   $result->execute();
-  $result->bind_result($answer_id, $mark);
+  $result->bind_result($answer_id, $mark, $comment);
   while ($result->fetch()) {
-    $marks[$answer_id] = $mark;
+    $marks[$answer_id] = array('mark' => $mark, 'comment' => $comment);
   }
   $result->close();
 
@@ -107,11 +107,10 @@ if (isset($_POST['submit'])) {
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
   }
-  
-  $primary_marks = load_marks($paperID, $q_id, 1, $mysqli);
-  
+
+  $primary_marks = $marks = load_marks($paperID, $q_id, 1, $mysqli);
   $secondary_marks = load_marks($paperID, $q_id, 2, $mysqli);
-  
+
   $marks_correct = load_question_mark($q_id, $mysqli);
 
 ?>
@@ -263,11 +262,11 @@ SQL;
   $result->bind_result($logtype, $log_id, $tmp_userID, $user_answer, $user_mark);
   while ($result->fetch()) {
       $student_no++;
-      if (isset($primary_marks[$log_id]) and $primary_marks[$log_id] === $user_mark) {
+      if (isset($primary_marks[$log_id]['mark']) and $primary_marks[$log_id]['mark'] === $user_mark) {
         $primary_checked = ' checked';
         $secondary_checked = '';
         $override = false;
-      } elseif (isset($secondary_marks[$log_id]) and $secondary_marks[$log_id] === $user_mark) {
+      } elseif (isset($secondary_marks[$log_id]['mark']) and $secondary_marks[$log_id]['mark'] === $user_mark) {
         $primary_checked = '';
         $secondary_checked = ' checked';
         $override = false;
@@ -279,16 +278,24 @@ SQL;
       if (trim($user_answer) != '') {
       echo "<tr class=\"l\"><td class=\"ans\">" . nl2br($user_answer) . "<br />&nbsp;</td>";
 
-      if (isset($secondary_marks[$log_id]) and isset($primary_marks[$log_id]) and abs($primary_marks[$log_id] - $secondary_marks[$log_id]) > 1) {
-        echo "<td class=\"primary noans\">" . $primary_marks[$log_id] . "<input class=\"primarychk\" type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" $primary_checked /></td><td class=\"secondary noans\">" . $secondary_marks[$log_id] . "<input type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" $secondary_checked /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td class=\"override noans\">" . displayMarks($student_no, $marks_correct, $override, $user_mark);
+      if (isset($secondary_marks[$log_id]['mark']) and isset($primary_marks[$log_id]['mark']) and abs($primary_marks[$log_id]['mark'] - $secondary_marks[$log_id]['mark']) > 1) {
+        echo "<td class=\"primary noans\">" . $primary_marks[$log_id]['mark'] . "<input class=\"primarychk\" type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $primary_marks[$log_id]['mark'] . "\" $primary_checked /></td><td class=\"secondary noans\">" . $secondary_marks[$log_id]['mark'] . "<input type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $secondary_marks[$log_id]['mark'] . "\" $secondary_checked /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td class=\"override noans\">" . displayMarks($student_no, $marks_correct, $override, $user_mark);
       } else {
-        if (isset($primary_marks[$log_id])) {
-          echo "<td class=\"primary\">" . $primary_marks[$log_id] . "<input class=\"primarychk\" type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" $primary_checked /></td>";
+        if (isset($primary_marks[$log_id]['mark'])) {
+          echo "<td class=\"primary\">" . $primary_marks[$log_id]['mark'] . "<input class=\"primarychk\" type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $primary_marks[$log_id]['mark'] . "\" $primary_checked />";
+          if (isset($secondary_marks[$log_id]['mark'])) {
+            echo "<img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $primary_marks[$log_id]['comment'] . "\" />";
+          }
+          echo "</td>";
         } else {
           echo "<td class=\"unmarked\">" . $string['unmarked'] . "</td>";
         }
-        if (isset($secondary_marks[$log_id])) {
-          echo "<td class=\"secondary\">" . $secondary_marks[$log_id] . "<input class=\"secondarychk\" type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" $secondary_checked /></td>";
+        if (isset($secondary_marks[$log_id]['mark'])) {
+          echo "<td class=\"secondary\">" . $secondary_marks[$log_id]['mark'] . "<input class=\"secondarychk\" type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $secondary_marks[$log_id]['mark'] . "\" $secondary_checked />";
+          if (isset($primary_marks[$log_id]['mark'])) {
+            echo "<img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $secondary_marks[$log_id]['comment'] . "\" />";
+          }
+          echo "</td>";
         } else {
           echo "<td class=\"secondary missing\">&nbsp;</td>";
         }
@@ -297,13 +304,13 @@ SQL;
     } else {
       // User answer is blank.
       echo "<tr class=\"l\"><td class=\"ans\" style=\"color: #C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" />&nbsp;" . $string['noanswer'] . "<br />&nbsp;</td>";
-      if (isset($primary_marks[$log_id])) {
-        echo "<td class=\"primary noans\">" . $primary_marks[$log_id] . "<input class=\"primarychk\" type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $primary_marks[$log_id] . "\" $primary_checked/></td>";
+      if (isset($primary_marks[$log_id]['mark'])) {
+        echo "<td class=\"primary noans\">" . $primary_marks[$log_id]['mark'] . "<input class=\"primarychk\" type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $primary_marks[$log_id]['mark'] . "\" $primary_checked/></td>";
       } else {
         echo "<td class=\"unmarked\">" . $string['unmarked'] . "</td>";
       }
-      if (isset($secondary_marks[$log_id])) {
-        echo "<td class=\"secondary noans\"\">" . $secondary_marks[$log_id] . "<input class=\"secondarychk\" type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $secondary_marks[$log_id] . "\" $secondary_checked/>
+      if (isset($secondary_marks[$log_id]['mark'])) {
+        echo "<td class=\"secondary noans\"\">" . $secondary_marks[$log_id]['mark'] . "<input class=\"secondarychk\" type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $secondary_marks[$log_id]['mark'] . "\" $secondary_checked/>
             <input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td>";
       } else {
         echo "<td class=\"secondary noans missing\">&nbsp;</td>";
