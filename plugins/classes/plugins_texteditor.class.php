@@ -162,6 +162,7 @@ abstract class plugins_texteditor extends \plugins\plugins {
     /**
      * Parse text before saving to the database
      * @param string $text the text to be processed
+     * @return string
      */
     public function prepare_text_for_save($text) {
         // Replace deprecated mee maths
@@ -185,6 +186,7 @@ abstract class plugins_texteditor extends \plugins\plugins {
     /**
      * Parse text before displaying in the editor
      * @param string $text the text to be processed
+     * @return string
      */
     public function get_text_for_display($text) {
         // Support deprecated mee maths
