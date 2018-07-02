@@ -113,31 +113,27 @@ if (isset($_POST['submit'])) {
 
   $marks_correct = load_question_mark($q_id, $mysqli);
 
+  $render = new render($configObject);
+  $lang['title'] =  $string['finalisemarks'];
+  $headerdata = array(
+    'css' => array(
+      '/css/header.css',
+      '/css/textbox_finalise_marks.css',
+    ),
+    'scripts' => array(
+      '/js/jquery-1.11.1.min.js',
+      '/js/staff_help.js',
+      '/js/toprightmenu.js',
+      '/js/textbox_finalise.min.js',
+    ),
+  );
+  if($configObject->get_setting('core', 'paper_mathjax')) {
+    $headerdata['scripts'][] = '/js/mathjax-config.min.js';
+    $headerdata['scripts'][] = '/node_modules/mathjax/MathJax.js?config=TeX-MML-AM_HTMLorMML';
+  }
+  $render->render($headerdata, $lang, 'header.html');
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo page::title('Rog&#333;: ' . $string['finalisemarks']); ?></title>
 
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/textbox_finalise_marks.css" />
-
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript" src="../js/textbox_finalise.min.js"></script>
-  <?php
-    if($configObject->get_setting('core', 'paper_mathjax')) {
-      $render = new render($configObject);
-      $render->render(null, null, 'mathjax.html');
-    }
-  ?>
-</head>
-
-<body>
   <div id="content">
 <?php
   require '../include/toprightmenu.inc';
@@ -277,9 +273,8 @@ SQL;
 </div>
 </form>
 </div>
-</body>
-</html>
 
 <?php
+  $render->render(array(), array(), 'footer.html');
 }
 ?>
