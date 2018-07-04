@@ -157,7 +157,7 @@ QUERY;
     $this->tableList['ebel'] = <<<QUERY
           CREATE TABLE `ebel` (
             `std_setID` int(10) unsigned NOT NULL,
-            `category` char(3) default NULL,
+            `category` char(3) NOT NULL,
             `percentage` float default NULL,
             PRIMARY KEY (`std_setID`,`category`)
           ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
@@ -324,8 +324,8 @@ QUERY;
 
     $this->tableList['keywords_question'] = <<<QUERY
         CREATE TABLE `keywords_question` (
-          `q_id` int(11) default NULL,
-          `keywordID` int(11) default NULL,
+          `q_id` int(11) NOT NULL,
+          `keywordID` int(11) NOT NULL,
           PRIMARY KEY (`q_id`, `keywordID`)
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
@@ -1214,8 +1214,8 @@ QUERY;
 
     $this->tableList['sid'] = <<<QUERY
         CREATE TABLE `sid` (
-          `student_id` char(15) default NULL,
-          `userID` int(10) unsigned NOT NULL default 0,
+          `student_id` char(15) NOT NULL,
+          `userID` int(10) unsigned NOT NULL,
           PRIMARY KEY  (`userID`,`student_id`)
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
@@ -1269,7 +1269,7 @@ QUERY;
           `deleted` datetime default NULL,
           `language` char(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'en',
           `articleid` smallint(6) unsigned NOT NULL,
-          `lastupdated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+          `lastupdated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
           PRIMARY KEY  (`id`),
           KEY `language` (`language`),
           KEY `articleid` (`articleid`),
@@ -1323,7 +1323,7 @@ QUERY;
           `deleted` datetime default NULL,
           `language` char(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'en',
           `articleid` smallint(6) unsigned NOT NULL,
-          `lastupdated` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+          `lastupdated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
           PRIMARY KEY (`id`),
           KEY `language` (`language`),
           KEY `articleid` (`articleid`),
