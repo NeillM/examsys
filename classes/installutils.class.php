@@ -280,7 +280,7 @@ Class InstallUtils {
       self::$db_admin_passwd = param::clean($args['mysql_admin_pass'], param::TEXT);
     }
 
-    self::$cfg_db_charset = 'utf8';
+    self::$cfg_db_charset = 'utf8mb4';
 
     if (!self::$cli) {
       self::$cfg_web_host = param::required('web_host', param::TEXT, param::FETCH_POST);
@@ -880,6 +880,9 @@ Class InstallUtils {
     $res->close();
 
     switch ($dbcharset) {
+      case 'utf8mb4':
+        $collation = 'utf8mb4_unicode_ci';
+        break;
       case 'utf8':
         $collation = 'utf8_general_ci';
         break;
