@@ -117,9 +117,9 @@ QUERY;
         
     $this->tableList['config'] = <<<QUERY
         CREATE TABLE `config` (
-          `component` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'core',
-          `setting` varchar(100) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
-          `value` text COLLATE utf8_unicode_ci,
+          `component` varchar(100) NOT NULL DEFAULT 'core',
+          `setting` varchar(100) NOT NULL DEFAULT '',
+          `value` text,
           `type` VARCHAR(10) NULL,
           PRIMARY KEY (`component`,`setting`)
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
@@ -1267,14 +1267,14 @@ QUERY;
           `checkout_authorID` int(10) unsigned default NULL,
           `roles` enum('SysAdmin','Admin','Staff') default NULL,
           `deleted` datetime default NULL,
-          `language` char(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'en',
+          `language` char(5) NOT NULL DEFAULT 'en',
           `articleid` smallint(6) unsigned NOT NULL,
           `lastupdated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
           PRIMARY KEY  (`id`),
           KEY `language` (`language`),
           KEY `articleid` (`articleid`),
           FULLTEXT KEY `title` (`title`,`body_plain`)
-        ) ENGINE={$helpEngine} AUTO_INCREMENT=0 DEFAULT CHARSET=utf8
+        ) ENGINE={$helpEngine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['std_set'] = <<<QUERY
@@ -1321,14 +1321,14 @@ QUERY;
           `checkout_time` datetime default NULL,
           `checkout_authorID` int(10) unsigned default NULL,
           `deleted` datetime default NULL,
-          `language` char(5) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'en',
+          `language` char(5) NOT NULL DEFAULT 'en',
           `articleid` smallint(6) unsigned NOT NULL,
           `lastupdated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
           PRIMARY KEY (`id`),
           KEY `language` (`language`),
           KEY `articleid` (`articleid`),
           FULLTEXT KEY `title` (`title`,`body_plain`)
-        ) ENGINE={$helpEngine} AUTO_INCREMENT=0 DEFAULT CHARSET=utf8
+        ) ENGINE={$helpEngine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
     $this->tableList['student_notes'] = <<<QUERY
