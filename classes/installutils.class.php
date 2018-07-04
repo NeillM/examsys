@@ -455,7 +455,7 @@ Class InstallUtils {
 
     InstallUtils::checkDBUsers();
 
-    self::createDatabase(self::$cfg_db_name, self::$cfg_db_engine, self::$cfg_db_help_engine);
+    self::createDatabase(self::$cfg_db_name, self::$cfg_db_charset, self::$cfg_db_collation, self::$cfg_db_engine, self::$cfg_db_help_engine);
 
     // Create constraints.
     self::createConstraints();
@@ -874,7 +874,7 @@ Class InstallUtils {
   * create the database and users if they do not exist
   *
   */
-  static function createDatabase($dbname, $dbengine = 'InnoDB', $dbhelpengine = 'MyISAM') {
+  static function createDatabase($dbname, $dbcharset, $dbcollation, $dbengine = 'InnoDB', $dbhelpengine = 'MyISAM') {
     global $string;
     $configObject = Config::get_instance();
     $configObject->db = self::$db;
@@ -888,10 +888,7 @@ Class InstallUtils {
     }
     $res->close();
 
-    $dbcharset = self::$cfg_db_charset;
-    $collation = self::$cfg_db_collation;
-
-    self::$db->query("CREATE DATABASE $dbname CHARACTER SET = $dbcharset COLLATE = $collation"); //have to use query here oldvers of php throw an error
+    self::$db->query("CREATE DATABASE $dbname CHARACTER SET = $dbcharset COLLATE = $dbcollation"); //have to use query here oldvers of php throw an error
     if (self::$db->errno != 0) {
       self::displayError(array('011' => $string['displayerror2']));
     }
