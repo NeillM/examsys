@@ -349,7 +349,7 @@ if (isset($_GET['submit'])) {
 
   if ($keywordsSQL == '') {
     $sql = "SELECT DISTINCT title, initials, surname, q_type,"
-      . " questions.q_id, theme, leadin,"
+      . " questions.q_id, theme, leadin, leadin_plain,"
       . " DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited,"
       . " ownerID, locked, status, name FROM (questions, question_statuses, users)"
       . " LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id"
@@ -359,7 +359,7 @@ if (isset($_GET['submit'])) {
       . " AND deleted IS NULL ORDER BY leadin_plain";
   } else {
     $sql = "SELECT DISTINCT title, initials, surname, q_type,"
-      . " questions.q_id, theme, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited,"
+      . " questions.q_id, theme, leadin, leadin_plain, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited,"
       . " ownerID, locked, status, name FROM (questions, question_statuses, users, keywords_question)"
       . " LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id"
       . " LEFT OUTER JOIN options ON options.o_id = questions.q_id"
@@ -378,7 +378,7 @@ if (isset($_GET['submit'])) {
   }
   $result->execute();
   $result->store_result();
-  $result->bind_result($title, $initials, $surname, $q_type, $q_id, $theme, $leadin, $last_edited, $ownerID, $locked, $status, $status_name);
+  $result->bind_result($title, $initials, $surname, $q_type, $q_id, $theme, $leadin, $leadin_plain, $last_edited, $ownerID, $locked, $status, $status_name);
 
   $hits = $result->num_rows;
 
