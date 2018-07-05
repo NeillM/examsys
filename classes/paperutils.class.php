@@ -531,11 +531,14 @@ Class PaperUtils {
     }
 
     $paper_no = 0;
-    $paper_query = $db->prepare("SELECT property_id, paper_type, crypt_name, paper_title, bidirectional, fullscreen, MAX(screen) AS max_screen, labs, calendar_year, password, completed FROM (papers, properties) LEFT JOIN log_metadata ON properties.property_id = log_metadata.paperID AND userID = ? WHERE papers.paper = properties.property_id AND (labs != '' OR password != '') AND ({$type_sql}) AND deleted IS NULL AND start_date < DATE_ADD(NOW(),interval 15 minute) AND end_date > NOW() $exclude_sql GROUP BY paper");
+    $paper_query = $db->prepare("SELECT property_id, paper_type, crypt_name, paper_title, bidirectional, MAX(screen) AS max_screen, labs, calendar_year, password, completed
+      FROM (papers, properties) LEFT JOIN log_metadata ON properties.property_id = log_metadata.paperID AND userID = ?
+      WHERE papers.paper = properties.property_id AND (labs != '' OR password != '') AND ({$type_sql}) AND deleted IS NULL AND start_date < DATE_ADD(NOW(),interval 15 minute)
+      AND end_date > NOW() $exclude_sql GROUP BY calendar_year, paper_type, paper_title, property_id, completed, crypt_name, paper_type, labs, bidirectional, password");
     $paper_query->bind_param('i', $userObj->get_user_ID());
     $paper_query->execute();
     $paper_query->store_result();
-    $paper_query->bind_result($property_id, $paper_type, $crypt_name, $paper_title, $bidirectional, $fullscreen, $max_screen, $labs, $calendar_year, $password, $completed);
+    $paper_query->bind_result($property_id, $paper_type, $crypt_name, $paper_title, $bidirectional, $max_screen, $labs, $calendar_year, $password, $completed);
     while ($paper_query->fetch()) {
       if ($labs != '') {
         $machineOK = false;
