@@ -1934,7 +1934,6 @@ if(!isset(\$_SERVER['HTTP_HOST'])) {
 }
 
 //Global DEBUG OUTPUT
-  //require_once \$_SERVER['DOCUMENT_ROOT'] . 'include/debug.inc';   // Uncomment for debugging output (after uncommenting, comment out line below)
   \$dbclass = 'mysqli';
 
   \$display_auth_debug = false; // set this to display debug on failed authentication

@@ -14,6 +14,8 @@ if ($updater_utils->check_version("7.0.0")) {
     }
     $target_line = '$cfg_db_charset';
     $updater_utils->add_line($string, $search, $new_lines, $default_line, $cfg_web_root, $target_line);
+    $replace = 'debug.inc';
+    $updater_utils->replace_line($string, $replace, '', $cfg_web_root);
     $updater_utils->record_update('rogo_1813');
   }
 }
