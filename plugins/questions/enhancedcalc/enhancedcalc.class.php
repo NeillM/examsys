@@ -42,8 +42,11 @@ class EnhancedCalc extends Question implements questionInterface {
 	 * @var array 
 	 */
 	private $enhancedcalcSettings;
-
-	private $link_parent = 0;
+	/**
+	 * Flag to state if question is a parent of a linekd question.
+	 * @var boolean
+	 */
+	private $link_parent = false;
 
 	public function __construct($configObj) {
 		$this->configObj = $configObj;
@@ -1362,7 +1365,7 @@ class EnhancedCalc extends Question implements questionInterface {
 	 * Set question as being a parent to a linked question.
 	 */
 	public function set_link_parent() {
-		$this->link_parent = 1;
+		$this->link_parent = true;
 	}
 
 	/*

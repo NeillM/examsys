@@ -360,7 +360,7 @@ function confirmSubmitLinear (event) {
     if ($('.ecalc-answer').length > 0) {
       var ecalcQuestions = [];
       $('.ecalc-answer').each(function(){
-        if ($(this).attr('data-linkparent') === '1') {
+        if ($(this).attr('data-linkparent') == true) {
           ecalcQuestions[ecalcQuestions.length] = $(this).attr('data-assignednum');
         }
       });
@@ -394,7 +394,7 @@ function confirmSubmitBiDirectional (event) {
   } else {
     var ecalcQuestions = [];
     $('.ecalc-answer').each(function(){
-      if ($(this).val() === '' && $(this).attr('data-linkparent') === '1') {
+      if ($(this).val() === '' && $(this).attr('data-linkparent') == true) {
         ecalcQuestions[ecalcQuestions.length] = $(this).attr('data-assignednum');
       }
     });
