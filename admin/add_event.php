@@ -55,7 +55,7 @@ if (isset($_GET['default'])) {
 <?php
 $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 $texteditorplugin->get_header();
-$texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::announcements);
+$texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::ANNOUNCEMENTS);
 
 if (isset($_POST['submit'])) {
   $title = trim($_POST['title']);
@@ -113,7 +113,7 @@ if (isset($_POST['submit'])) {
     </tr>
     <tr>
       <td><?php echo $string['message'] ?></td>
-      <td><?php $texteditorplugin->get_textarea('message', 'message', '', plugins\plugins_texteditor::type_standard); ?></td>
+      <td><?php $texteditorplugin->get_textarea('message', 'message', '', plugins\plugins_texteditor::TYPE_STANDARD); ?></td>
     </tr>
     <tr>
       <td><?php echo $string['date'] ?></td>

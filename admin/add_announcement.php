@@ -58,7 +58,7 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->get_header();
-  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::announcements);
+  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::ANNOUNCEMENTS);
 ?>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
@@ -135,11 +135,11 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
   </tr>
   <tr>
     <td class="field"><?php echo $string['Staff Message']; ?></td>
-    <td><?php $texteditorplugin->get_textarea('staff_msg', 'staff_msg', '', plugins\plugins_texteditor::type_standard); ?></td>
+    <td><?php $texteditorplugin->get_textarea('staff_msg', 'staff_msg', '', plugins\plugins_texteditor::TYPE_STANDARD); ?></td>
   </tr>
   <tr>
     <td class="field"><?php echo $string['Student Message']; ?></td>
-    <td><?php $texteditorplugin->get_textarea('student_msg', 'student_msg', '', plugins\plugins_texteditor::type_standard); ?></td>
+    <td><?php $texteditorplugin->get_textarea('student_msg', 'student_msg', '', plugins\plugins_texteditor::TYPE_STANDARD); ?></td>
   </tr>
   <tr>
     <td colspan="2" style="text-align:center; padding-top:10px"><input type="submit" name="ok" value="<?php echo $string['ok'] ?>" class="ok" /><input type="button" name="cancel" id="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" /></td>

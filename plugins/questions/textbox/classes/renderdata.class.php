@@ -183,7 +183,7 @@ class renderdata extends \questiondata {
       $this->useranswer = $useranswer;
 
       $this->editortextarea = $this->editor . '_textarea.html';
-      $this->type = $texteditorplugin->get_type(\plugins\plugins_texteditor::type_standard);
+      $this->type = $texteditorplugin->get_type(\plugins\plugins_texteditor::TYPE_STANDARD);
       $this->style = $background_colour . "width:" . $textbox_width . "px; height:" . $textbox_height . "px";
       $this->textboxesseen = $textboxes_seen;
       $marks = $this->marks;

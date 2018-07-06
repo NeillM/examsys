@@ -109,7 +109,7 @@ exit();
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->get_header();
-  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::announcements);
+  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::ANNOUNCEMENTS);
 ?>
   <script>
     $(function () {
@@ -133,7 +133,7 @@ exit();
 <body>
 <form name="myform" id="myform" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
 <h1 class="dkblue_header"><?php echo sprintf($string['questionscreen'], $questionNo, $screenNo); ?></h1>
-<?php $texteditorplugin->get_textarea('msg', 'msg', htmlspecialchars($msg, ENT_NOQUOTES), plugins\plugins_texteditor::type_standard); ?><br />
+<?php $texteditorplugin->get_textarea('msg', 'msg', htmlspecialchars($msg, ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD); ?><br />
 <div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" class="cancel" /></div>
 <input type="hidden" name="paperID" value="<?php echo $paperID ?>" />
 <input type="hidden" name="q_id" value="<?php echo $q_id ?>" />

@@ -88,7 +88,7 @@ $result->close();
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <?php
   $texteditorplugin->get_header();
-  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::config);
+  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::CONFIG);
 ?>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
@@ -140,7 +140,7 @@ for ($size=200; $size<850; $size+=50) {
   }
 }
 ?></select></td><td><?php echo $string['modules']; ?></td></tr>
-<tr><td><?php $texteditorplugin->get_textarea('ref_content', 'ref_content', $texteditorplugin->get_text_for_display($content), plugins\plugins_texteditor::type_standard); ?></td><td style="vertical-align:top">
+<tr><td><?php $texteditorplugin->get_textarea('ref_content', 'ref_content', $texteditorplugin->get_text_for_display($content), plugins\plugins_texteditor::TYPE_STANDARD); ?></td><td style="vertical-align:top">
 <?php
   echo "<div style=\"margin-top:1px; display:block; width:420px; height:604px; overflow-y:scroll; border:1px solid #909090; font-size:90%\">";
 

@@ -109,7 +109,7 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
    * @return string
    */
   public function get_type($type) {
-    if ($type == \plugins\plugins_texteditor::type_mathjax and $this->config->get_setting($this->plugin, 'supports_mathjax')) {
+    if ($type == \plugins\plugins_texteditor::TYPE_MATHJAX and $this->config->get_setting($this->plugin, 'supports_mathjax')) {
       return 'mathjax';
     }
     return 'plain';

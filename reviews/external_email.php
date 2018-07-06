@@ -59,7 +59,7 @@ $display_deadline = $external_review_deadline->format('l jS M Y');
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->get_header();
-  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::external);
+  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::EXTERNAL);
 ?>
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
@@ -162,7 +162,7 @@ if (isset($_POST['submit'])) {
     <td><?php echo $string['subject'] ?></td><td><input type="text" size="70" name="subject" value="<?php echo $subject ?>" /></td>
     </tr>
     <tr>
-    <td colspan="3"><?php $texteditorplugin->get_textarea('message', 'message', htmlspecialchars($message, ENT_NOQUOTES), plugins\plugins_texteditor::type_standard); ?></td>
+    <td colspan="3"><?php $texteditorplugin->get_textarea('message', 'message', htmlspecialchars($message, ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD); ?></td>
     </tr>
 
     <tr>

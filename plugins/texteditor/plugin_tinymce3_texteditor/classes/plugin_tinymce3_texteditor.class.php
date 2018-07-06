@@ -93,10 +93,10 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
    */
   public function get_type($type) {
     switch ($type) {
-      case \plugins\plugins_texteditor::type_simple:
+      case \plugins\plugins_texteditor::TYPE_SIMPLE:
         $type = 'editorSimple';
         break;
-      case \plugins\plugins_texteditor::type_basic:
+      case \plugins\plugins_texteditor::TYPE_BASIC:
         $type = 'editorBasic';
         break;
       default:

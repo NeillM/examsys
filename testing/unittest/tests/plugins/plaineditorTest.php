@@ -103,11 +103,11 @@ class plaineditortest extends unittestdatabase {
    */
   public function test_get_type() {
     $plain = new \plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor();
-    $this->assertEquals('plain', $plain->get_type(\plugins\plugins_texteditor::type_standard));
+    $this->assertEquals('plain', $plain->get_type(\plugins\plugins_texteditor::TYPE_STANDARD));
     $this->config->set_setting('supports_mathjax', 1, \Config::BOOLEAN, $plain->get_name());
-    $this->assertEquals('mathjax', $plain->get_type(\plugins\plugins_texteditor::type_mathjax));
+    $this->assertEquals('mathjax', $plain->get_type(\plugins\plugins_texteditor::TYPE_MATHJAX));
     $this->config->set_setting('supports_mathjax', 0, \Config::BOOLEAN, $plain->get_name());
-    $this->assertEquals('plain', $plain->get_type(\plugins\plugins_texteditor::type_mathjax));
+    $this->assertEquals('plain', $plain->get_type(\plugins\plugins_texteditor::TYPE_MATHJAX));
   }
 
   /**

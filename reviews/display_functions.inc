@@ -645,13 +645,13 @@ function display_question ($configObject, &$question, $paper_type, $calculator, 
             }
           } else {
             if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
-              $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::unanswered);
+              $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::UNANSWERED);
             } else {
-              $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::answered);
+              $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::ANSWERED);
             }
             $textbox_width  = ( 40 + ( $settings['columns'] * 8 ) );
             $textbox_height = ( $settings['rows'] * 28 );
-            $texteditorplugin->get_textarea('q' . $question_no, 'q' . $question_no, $question['correct_fback'], plugins\plugins_texteditor::type_standard,
+            $texteditorplugin->get_textarea('q' . $question_no, 'q' . $question_no, $question['correct_fback'], plugins\plugins_texteditor::TYPE_STANDARD,
               'width: ' . $textbox_width . 'px; height: ' . $textbox_height . 'px;');
           }
 

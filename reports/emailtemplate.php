@@ -63,7 +63,7 @@ if (file_exists($templatefile)) {
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->get_header();
-  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::email);
+  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::EMAIL);
 ?>
   <script>
     function submitValues() {
@@ -94,7 +94,7 @@ if (file_exists($templatefile)) {
 <td><?php echo $string['subject'] ?></td><td><input type="text" size="70" name="subject" value="<?php echo $subject ?>" /></td>
 </tr>
 <tr>
-<td colspan="3"><?php $texteditorplugin->get_textarea('template', 'template', htmlspecialchars($message, ENT_NOQUOTES), plugins\plugins_texteditor::type_standard); ?></td>
+<td colspan="3"><?php $texteditorplugin->get_textarea('template', 'template', htmlspecialchars($message, ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD); ?></td>
 </tr>
 <tr>
 <td colspan="3" style="text-align: center">

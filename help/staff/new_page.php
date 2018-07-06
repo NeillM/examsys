@@ -56,7 +56,7 @@ if (isset($_POST['save_changes'])) {
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->get_header();
-  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::help_staff);
+  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::HELP_STAFF);
 ?>
   <script type="text/javascript" src="../../js/help.js"></script>
   <script>
@@ -86,7 +86,7 @@ if (isset($_POST['save_changes'])) {
   </tr>
   </table>
   <br />
-  <?php echo $texteditorplugin->get_textarea('edit1', 'edit1', '', plugins\plugins_texteditor::type_standard); ?>
+  <?php echo $texteditorplugin->get_textarea('edit1', 'edit1', '', plugins\plugins_texteditor::TYPE_STANDARD); ?>
 
   <div style="text-align:center; padding-top:8px"><input class="ok" type="submit" name="save_changes" value="<?php echo $string['save'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="history.back();" /></div>
 </form>

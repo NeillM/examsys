@@ -32,7 +32,7 @@ $index_editor = (isset($index_editor)) ? $index_editor++ : 1;
               <th><?php echo $mandatory ?><?php echo $label_editor ?></th>
               <td>
 <?php
-  echo wysywig_or_non_editable($dis_class, 'edit_common' . $index_editor, $field_editor, $value_editor, plugins\plugins_texteditor::type_mathjax);
+  echo wysywig_or_non_editable($dis_class, 'edit_common' . $index_editor, $field_editor, $value_editor, plugins\plugins_texteditor::TYPE_MATHJAX);
 ?>
               </td>
             </tr>

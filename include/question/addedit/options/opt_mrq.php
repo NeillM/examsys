@@ -38,7 +38,7 @@ $locked = ($dis_class != '');
             <tr<?php echo $spaced ?>>
               <th<?php echo $spaced ?>><?php echo $mandatory ?><label for="option_text<?php echo $index ?>"><?php printf($string['optiontext'], $index) ?></label></th>
               <td<?php echo $spaced ?>>
-                <?php echo wysywig_or_non_editable($dis_class, 'option_text' . $index, 'option_text' . $index, $option->get_text(), plugins\plugins_texteditor::type_simple);?>
+                <?php echo wysywig_or_non_editable($dis_class, 'option_text' . $index, 'option_text' . $index, $option->get_text(), plugins\plugins_texteditor::TYPE_SIMPLE);?>
                 <input name="optionid<?php echo $index ?>" value="<?php echo $option->id ?>" type="hidden" />
               </td>
               <td class="small align-centre"><input id="option_correct<?php echo $index ?>" name="option_correct<?php echo $index ?>" value="<?php echo $question->get_answer_positive() ?>" type="checkbox" class="mrq-correct"<?php echo $correct ?> /></td>

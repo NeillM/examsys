@@ -72,7 +72,7 @@ if (isset($_POST['save_changes'])) {
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->get_header();
-  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::help_student);
+  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::HELP_STUDENT);
 ?>
   <script type="text/javascript" src="../../js/help.js"></script>
   <script>
@@ -105,7 +105,7 @@ if (isset($_POST['save_changes'])) {
   }
 
   echo "<p style=\"margin-left:20px\"><input type=\"text\" style=\"color:#295AAD; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold\" size=\"50\" name=\"page_title\" value=\"" . $page_details['title'] . "\" required /></p>\n";
-  echo $texteditorplugin->get_textarea('edit1', 'edit1', htmlspecialchars($page_details['body'], ENT_NOQUOTES), plugins\plugins_texteditor::type_standard);
+  echo $texteditorplugin->get_textarea('edit1', 'edit1', htmlspecialchars($page_details['body'], ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD);
 
   // Check for lockout.
   $current_time = date('YmdHis');

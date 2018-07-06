@@ -73,7 +73,7 @@ if (isset($_POST['save_changes'])) {
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->get_header();
-  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::help_staff);
+  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::HELP_STAFF);
 
 ?>
   <script type="text/javascript" src="../../js/help.js"></script>
@@ -117,7 +117,7 @@ if (isset($_POST['save_changes'])) {
   }
 
   echo "</select>\n</td></tr></table>\n<br />\n";
-  echo $texteditorplugin->get_textarea('edit1', 'edit1', htmlspecialchars($page_details['body'], ENT_NOQUOTES), plugins\plugins_texteditor::type_standard);
+  echo $texteditorplugin->get_textarea('edit1', 'edit1', htmlspecialchars($page_details['body'], ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD);
 
   // Check for lockout.
   $current_time = date('YmdHis');

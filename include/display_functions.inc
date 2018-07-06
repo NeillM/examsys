@@ -954,9 +954,9 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             }
           } else {
             if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
-              $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::unanswered);
+              $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::UNANSWERED);
             } else {
-              $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::answered);
+              $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::ANSWERED);
             }
 
             $ans = '';
@@ -972,7 +972,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == '' and $screen_pre_submitted == 1) {
               $background_colour = 'background-color:red;';
             }
-            $texteditorplugin->get_textarea('q' . $question_no, 'q' . $question_no, $ans, plugins\plugins_texteditor::type_standard,
+            $texteditorplugin->get_textarea('q' . $question_no, 'q' . $question_no, $ans, plugins\plugins_texteditor::TYPE_STANDARD,
               $background_colour . ' width: ' . $textbox_width . 'px; height: ' . $textbox_height . 'px;');
           }
           $marks += $display_option['marks_correct'];
