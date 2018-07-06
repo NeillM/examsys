@@ -52,9 +52,9 @@ lang.previewmathjax - preview
 <tr>
 <th>{{lang.previewmathjax}}</th>
 <td>
-    <div id="MathPreview{{data.name}}" style="border:1px solid; padding: 3px; width:50%; margin-top:5px"></div>
-    <div id="MathBuffer{{data.name}}" style="border:1px solid; padding: 3px; width:50%; margin-top:5px; visibility:hidden; position:absolute; top:0; left: 0"></div>
+    <div id="MathPreview{{data.id}}" style="border:1px solid; padding: 3px; width:50%; margin-top:5px"></div>
+    <div id="MathBuffer{{data.id}}" style="border:1px solid; padding: 3px; width:50%; margin-top:5px; visibility:hidden; position:absolute; top:0; left: 0"></div>
 </td>
-<script>Previewleadin.Init();</script>
+<script>Preview{{data.id}}.Init();</script>
 </tr>
 {% endif %}
