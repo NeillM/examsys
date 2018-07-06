@@ -521,7 +521,7 @@ endif;
 ?>
 </script>
 <?php
-  if ($configObject->get_setting($texteditorplugin_name[0], 'supports_mathjax') and $configObject->get_setting('core', 'paper_mathjax')) {
+  if ($configObject->get_setting($texteditorplugin->get_name(), 'supports_mathjax') and $configObject->get_setting('core', 'paper_mathjax')) {
     $render = new render($configObject);
     $render->render(null, null, 'mathjax.html');
   }
