@@ -58,7 +58,7 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
    * @param array $configfile config file
    */
   public function get_javascript_config($configfile = '') {
-    $render = new \render($this->config, $this->get_path() . DIRECTORY_SEPARATOR . 'templates');
+    $render = new \render($this->config, $this->get_render_paths());
     $tinmymcedata['file'] = 'tinymce3_' . $configfile;
     if ($tinmymcedata['file'] != 'tinymce3_') {
       $render->render($tinmymcedata, null, 'tinymce3_config.html');
@@ -76,7 +76,7 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor {
    */
   public function get_textarea($name, $id, $content, $type, $styleoverwrite = '') {
     $type = $this->get_type($type);
-    $render = new \render($this->config, $this->get_path() . DIRECTORY_SEPARATOR . 'templates');
+    $render = new \render($this->config, $this->get_render_paths());
     $tinmymcedata = array(
         'type' => $type,
         'id' => $id,

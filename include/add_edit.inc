@@ -89,9 +89,6 @@ function wysiwyg_editor($name, $replace, $content='', $type = '') {
   $html = '';
   $content = htmlspecialchars($content);
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-  $langpack = new \langpack();
-  $strings = $langpack->get_all_strings($texteditorplugin->langcomponent);
-  $string = array_merge($string, $strings);
   $html .=  $texteditorplugin->get_textarea($name, $replace, $content, $type);
   return $html;
 }

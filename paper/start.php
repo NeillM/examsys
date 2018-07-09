@@ -247,12 +247,9 @@ if (isset($low_bandwidth) and $low_bandwidth == 1) {
 
 $url_mod = ($is_question_preview_mode) ? '&q_id=' . $get_qid . '&qNo=' . $q_number : '';
 $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-$langpack = new \langpack();
-$strings = $langpack->get_all_strings($texteditorplugin->langcomponent);
-$string = array_merge($string, $strings);
-$render = new render($configObject, array(
-  $texteditorplugin->get_header_path(),
-  dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates'));
+$renderpath = $texteditorplugin->get_render_paths();
+$renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates';
+$render = new render($configObject, $renderpath);
 $headerdata = array(
   'css' => array(
     '/css/start.css',

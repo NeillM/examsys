@@ -33,31 +33,16 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
   protected $plugin = 'plugin_plain_texteditor';
 
   /**
-   * Lang pack strings.
-   * @var string
-   */
-  private $strings;
-
-  /**
    * Language pack component.
    * @var string
    */
   public $langcomponent = 'plugins/texteditor/plugin_plain_texteditor/plugin_plain_texteditor';
 
   /**
-    * Set the available land pack strings for the plugin
-    */
-  private function set_lang_strings() {
-    $langpack = new \langpack();
-    $this->strings = $langpack->get_all_strings($this->langcomponent);
-  }
-
-  /**
    * Constructor
    */
   public function __construct() {
     parent::__construct();
-    $this->set_lang_strings();
   }
 
   /**
@@ -73,7 +58,7 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
    * @param array $configfile config file
    */
   public function get_javascript_config($configfile = '') {
-    $render = new \render($this->config, $this->get_path() . DIRECTORY_SEPARATOR . 'templates');
+    $render = new \render($this->config, $this->get_render_paths());
     $plaindata['file'] = 'plain_' . $configfile;
     if ($plaindata['file'] != 'plain_') {
       $render->render($plaindata, null, 'plain_config.html');
@@ -95,12 +80,12 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
       $data['editormathjax'] = true;
     }
     // Render textarea.
-    $render = new \render($this->config, $this->get_path() . DIRECTORY_SEPARATOR . 'templates');
+    $render = new \render($this->config, $this->get_render_paths());
     $data['id'] = $id;
     $data['questionno'] = $id;
     $data['content'] = $content;
     $data['style'] = $styleoverwrite;
-    $render->render($data, $this->strings, 'plain_admin_textarea.html');
+    $render->render($data, $this->get_strings(), 'plain_admin_textarea.html');
   }
 
   /**
@@ -149,5 +134,14 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
   public function get_header_data() {
     // Intentionally empty.
     return array();
+  }
+
+  /**
+   * Get text editor base path
+   * @return string
+   */
+  public function get_header_path() {
+    // Intentionally blank as plain path loaded by core.
+    return '';
   }
 }

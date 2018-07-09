@@ -246,7 +246,7 @@ abstract class plugins_texteditor extends \plugins\plugins {
      * Render text editor header
      */
     public function display_header() {
-      $render = new \render($this->config, $this->get_header_path());
+      $render = new \render($this->config, $this->get_render_paths());
       $render->render($this->get_header_data(), null, $this->get_header_file());
     }
 
@@ -275,11 +275,7 @@ abstract class plugins_texteditor extends \plugins\plugins {
     public function get_render_paths() {
       $renderpath = array($this->get_header_path());
       // Always get plain text editor.
-      if ($this->get_name() !== 'plugin_plain_texteditor') {
-        $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'texteditor'
-          . DIRECTORY_SEPARATOR . 'plugin_plain_texteditor'
-          . DIRECTORY_SEPARATOR . 'templates';
-      }
+      $renderpath[] = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'templates'. DIRECTORY_SEPARATOR . 'texteditor';
       return $renderpath;
     }
 
@@ -291,9 +287,7 @@ abstract class plugins_texteditor extends \plugins\plugins {
       $langpack = new \langpack();
       $strings = $langpack->get_all_strings($this->langcomponent);
       // Always get plain text editor.
-      if ($this->get_name() !== 'plugin_plain_texteditor') {
-        $strings = array_merge($strings, $langpack->get_all_strings('plugins/texteditor/plugin_plain_texteditor/plugin_plain_texteditor'));
-      }
+      $strings = array_merge($strings, $langpack->get_all_strings('plugins/texteditor/texteditor'));
       return $strings;
     }
 }
