@@ -287,7 +287,7 @@ abstract class plugins_texteditor extends \plugins\plugins {
       $langpack = new \langpack();
       $strings = $langpack->get_all_strings($this->langcomponent);
       // Always get plain text editor.
-      $strings = array_merge($strings, $langpack->get_all_strings('plugins/texteditor/texteditor'));
+      $strings = array_merge($strings, $langpack->get_all_strings('/texteditor'));
       return $strings;
     }
 }
