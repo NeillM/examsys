@@ -56,7 +56,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-  $texteditorplugin->get_header();
+  $texteditorplugin->display_header();
 ?>
   <script type="text/javascript" src="../js/adhocwindow.js"></script>
   <script>

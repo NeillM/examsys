@@ -556,7 +556,7 @@ $result->close();
   <script type="text/javascript" src="../js/page_scroll.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-  $texteditorplugin->get_header();
+  $texteditorplugin->display_header();
   $render = new render($configObject);
   $render->render_html5_js(json_encode($jstring));
   ?>

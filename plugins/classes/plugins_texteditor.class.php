@@ -243,9 +243,9 @@ abstract class plugins_texteditor extends \plugins\plugins {
     }
 
     /**
-     * Get text editor base
+     * Render text editor header
      */
-    public function get_header() {
+    public function display_header() {
       $render = new \render($this->config, $this->get_header_path());
       $render->render($this->get_header_data(), null, $this->get_header_file());
     }

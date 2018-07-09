@@ -226,7 +226,7 @@ require '../config/finish.inc';
 
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-  $texteditorplugin->get_header();
+  $texteditorplugin->display_header();
   $css = '';
   if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF' and $bgcolor != 'white') {
     $css .= "select,input{background-color:$bgcolor;color:$fgcolor;font-family:$font,sans-serif}\n";

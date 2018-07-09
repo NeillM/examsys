@@ -49,7 +49,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <script type="text/javascript" src="../../js/jquery_tablesorter/jquery.tablesorter.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-  $texteditorplugin->get_header();
+  $texteditorplugin->display_header();
 ?>
   <script>
     function populateTicks() {

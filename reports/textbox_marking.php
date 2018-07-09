@@ -118,7 +118,7 @@ HTML;
       $render->render(null, null, 'mathjax.html');
     }
     $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-    $texteditorplugin->get_header();
+    $texteditorplugin->display_header();
   ?>
 </head>
 

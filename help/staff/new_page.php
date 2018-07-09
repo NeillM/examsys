@@ -55,7 +55,7 @@ if (isset($_POST['save_changes'])) {
   
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-  $texteditorplugin->get_header();
+  $texteditorplugin->display_header();
   $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::HELP_STAFF);
 ?>
   <script type="text/javascript" src="../../js/help.js"></script>

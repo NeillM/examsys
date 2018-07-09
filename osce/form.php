@@ -238,7 +238,7 @@ if (isset($_POST) and count($_POST) > 0) {
   <?php
     require './ajaxsave.js.php';
     $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-    $texteditorplugin->get_header();
+    $texteditorplugin->display_header();
     if($configObject->get_setting('core', 'paper_mathjax')) {
       $render = new render($configObject);
       $render->render(null, null, 'mathjax.html');

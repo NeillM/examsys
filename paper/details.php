@@ -390,7 +390,7 @@ function random_qMarks($random_questions) {
   <script type="text/javascript" src="../js/adhocwindow.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-  $texteditorplugin->get_header();
+  $texteditorplugin->display_header();
 ?>
 <script defer="defer">
   var paperID = '<?php echo $paperID ?>';

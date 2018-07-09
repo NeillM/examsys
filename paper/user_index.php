@@ -303,7 +303,7 @@ if ($exam_duration !== null) {
   <script type="text/javascript" src="../js/student_help.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-  $texteditorplugin->get_header();
+  $texteditorplugin->display_header();
 ?>
   <script>
   function startPaper() {

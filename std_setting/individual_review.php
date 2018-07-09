@@ -127,7 +127,7 @@ function check_ebel_distinction_type($reviewID, $db) {
   </script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-  $texteditorplugin->get_header();
+  $texteditorplugin->display_header();
   $render = new render($configObject);
   $render->render_html5_js(json_encode($jstring));
 ?>

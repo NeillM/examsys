@@ -137,7 +137,7 @@ $paper_prologue = $propertyObj->get_paper_prologue();
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <?php
     $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-    $texteditorplugin->get_header();
+    $texteditorplugin->display_header();
     $render = new render($configObject);
     $render->render_html5_js(json_encode($jstring));
   ?>

@@ -61,7 +61,7 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/refmaterial.css" />
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <?php
-  $texteditorplugin->get_header();
+  $texteditorplugin->display_header();
   $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::CONFIG);
 ?>
   <script type="text/javascript" src="../js/jquery.validate.min.js"></script>

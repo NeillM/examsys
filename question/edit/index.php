@@ -472,7 +472,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-  $texteditorplugin->get_header();
+  $texteditorplugin->display_header();
   $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::QUESTION);
 ?>
 <script type="text/javascript" src="../../js/jquery-ui-1.10.4.min.js"></script>

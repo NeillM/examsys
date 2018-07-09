@@ -258,7 +258,7 @@ $current_screen = 1;
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-  $texteditorplugin->get_header();
+  $texteditorplugin->display_header();
 ?>
   <script type="text/javascript" src="../js/start.js"></script>
 	

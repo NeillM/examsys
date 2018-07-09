@@ -72,7 +72,7 @@ $result->close();
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <?php
 $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-$texteditorplugin->get_header();
+$texteditorplugin->display_header();
 $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::ANNOUNCEMENTS);
 
 ?>
