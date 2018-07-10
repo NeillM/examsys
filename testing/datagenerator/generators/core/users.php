@@ -131,7 +131,7 @@ class users extends generator {
   /** @var string[] An array of titles that can be used for users. */
   protected static $titles = array('Dr', 'Miss', 'Mr', 'Mrs', 'Mx', 'Prof');
   /** @var string[] All the valid roles for a user. */
-  protected static $roles = array('Student', 'Staff', 'SysAdmin', 'Admin', 'graduate', 'left', 'External Examiner', 'Invigilator', 'Inactive Staff', 'Internal Reviewer');
+  protected static $roles = array('Student', 'Staff', 'SysAdmin', 'Admin', 'graduate', 'left', 'External Examiner', 'Invigilator', 'Inactive Staff', 'Internal Reviewer', 'Standards Setter');
   /** @var string[] Possible genders. */
   protected static $gender = array('Female', 'Male', 'Other');
   /** @var string[] possible years of study. */
@@ -144,6 +144,7 @@ class users extends generator {
     'Staff External Examiner',
     'Staff Internal Reviewer',
     'Invigilator',
+    'Standards Setter',
     'none',
     '',
   );
