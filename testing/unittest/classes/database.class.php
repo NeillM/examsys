@@ -72,6 +72,7 @@ class database {
     InstallUtils::$cfg_db_webservice_user = $config->get('base_database') . '_web';
     InstallUtils::$cfg_db_sct_user = $config->get('base_database') . '_sct';
     InstallUtils::$cfg_db_inv_user = $config->get('base_database') . '_inv';
+    InstallUtils::$cfg_db_internal_user = $config->get('base_database') . '_int';
     InstallUtils::$cfg_cron_user = 'cron';
 
     // Details of the admin user.
