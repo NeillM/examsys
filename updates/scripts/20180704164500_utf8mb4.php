@@ -56,6 +56,11 @@ if ($updater_utils->check_version("7.0.0")) {
     $updater_utils->execute_query($sqlstudent, false);
     $sqlstudent2 = "ALTER TABLE student_help MODIFY COLUMN `lastupdated` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP";
     $updater_utils->execute_query($sqlstudent2, false);
+    // Sid table changes.
+    $sqlsid = "ALTER TABLE sid MODIFY COLUMN `student_id` char(15) NOT NULL";
+    $updater_utils->execute_query($sqlsid, false);
+    $sqlsid2 = "ALTER TABLE sid MODIFY COLUMN `userID` int(10) unsigned NOT NULL";
+    $updater_utils->execute_query($sqlsid2, false);
     $updater_utils->record_update('rogo_1813');
   }
 }
