@@ -27,6 +27,7 @@ namespace plugins\questions\enhancedcalc;
 
 class renderdata extends \questiondata {
   use \defaultgetmarks;
+
   /**
    * Constructor
    */
@@ -75,7 +76,7 @@ class renderdata extends \questiondata {
     $useranswers = $this->useranswers;
     $question['object']->load_all_user_answers($useranswers);
     $marks += $question['object']->calculate_question_mark();
-    $this->marks =  $marks;
+    $this->marks = $marks;
   }
 
   /**
@@ -102,6 +103,7 @@ class renderdata extends \questiondata {
     $extra = array(
       'num_on_screen' => $this->questionno,
       'current_question' => $question,
+      'assignednumber' => $this->assignednumber
     );
     $question['object']->render_paper($extra);
   }

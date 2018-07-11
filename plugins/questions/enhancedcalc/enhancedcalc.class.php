@@ -42,6 +42,11 @@ class EnhancedCalc extends Question implements questionInterface {
 	 * @var array 
 	 */
 	private $enhancedcalcSettings;
+	/**
+	 * Flag to state if question is a parent of a linekd question.
+	 * @var boolean
+	 */
+	private $link_parent = false;
 
 	public function __construct($configObj) {
 		$this->configObj = $configObj;
@@ -1061,7 +1066,9 @@ class EnhancedCalc extends Question implements questionInterface {
 		if (isset($extra['screen_pre_submitted'])) {
 			$screen_pre_submitted = $extra['screen_pre_submitted'];
 		}
-
+		if (isset($extra['assignednumber'])) {
+			$questiondata['assignednumber'] = $extra['assignednumber'];
+		}
 		// Make sure data is arrays not encoded
 		if (!is_array($this->useranswer)) {
 			$this->useranswer = json_decode($this->useranswer, true);
@@ -1191,10 +1198,10 @@ class EnhancedCalc extends Question implements questionInterface {
 			$questiondata['failedanswer'] = sprintf($string['failedanswer'], implode(', ', $failed_answers));
 		} else {
 			$questiondata['error'] = false;
+			$questiondata['numonscreen'] = $extra['num_on_screen'];
 			if (isset($this->useranswer['uans']) and $this->useranswer['uans'] == '') {
 				$questiondata['useranswered'] = 0;
 			} else {
-				$questiondata['numonscreen'] = $extra['num_on_screen'];
 				if ((isset($this->useranswer['uans']) and $this->useranswer['uans'] != '')) { // Or $screen_pre_submitted == 0
 					$ans = $this->useranswer['uans'];
 					$questiondata['useranswered'] = 1;
@@ -1206,6 +1213,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			}
 		}
 
+		$questiondata['linkparent'] = $this->get_link_parent();
 		$marks = $this->settings['marks_correct'];
 		$render->render($questiondata, $string, 'enhancedcalc.html');
 	}
@@ -1353,5 +1361,19 @@ class EnhancedCalc extends Question implements questionInterface {
 		return null;
 	}
 
+	/*
+	 * Set question as being a parent to a linked question.
+	 */
+	public function set_link_parent() {
+		$this->link_parent = true;
+	}
+
+	/*
+	 * is the question a linked question parent
+	 * @return boolean
+	 */
+	public function get_link_parent() {
+		return $this->link_parent;
+	}
 }
 ?>
