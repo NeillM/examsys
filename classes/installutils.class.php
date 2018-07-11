@@ -48,6 +48,7 @@ Class InstallUtils {
   public static $cfg_db_username;
   public static $cfg_db_password;
   public static $cfg_db_charset;
+  public static $cfg_db_collation;
   public static $cfg_db_engine;
   public static $cfg_db_help_engine;
 
@@ -280,8 +281,6 @@ Class InstallUtils {
       self::$db_admin_passwd = param::clean($args['mysql_admin_pass'], param::TEXT);
     }
 
-    self::$cfg_db_charset = 'utf8';
-
     if (!self::$cli) {
       self::$cfg_web_host = param::required('web_host', param::TEXT, param::FETCH_POST);
       self::$cfg_rogo_data = param::required('rogo_data', param::TEXT, param::FETCH_POST);
@@ -429,6 +428,10 @@ Class InstallUtils {
     if (mysqli_connect_error()) {
       self::displayError(array('001' => mysqli_connect_error()));
     }
+
+    // Enforce utf8mb4
+    self::$cfg_db_charset = 'utf8mb4';
+    self::$cfg_db_collation = 'utf8mb4_unicode_ci';
     self::$db->set_charset(self::$cfg_db_charset);
 
     //create salt as this is needed to generate the passwords that are created in the next function rather than created during config file settings
@@ -446,7 +449,7 @@ Class InstallUtils {
 
     InstallUtils::checkDBUsers();
 
-    self::createDatabase(self::$cfg_db_name, self::$cfg_db_charset, self::$cfg_db_engine, self::$cfg_db_help_engine);
+    self::createDatabase(self::$cfg_db_name, self::$cfg_db_charset, self::$cfg_db_collation, self::$cfg_db_engine, self::$cfg_db_help_engine);
 
     // Create constraints.
     self::createConstraints();
@@ -865,7 +868,7 @@ Class InstallUtils {
   * create the database and users if they do not exist
   *
   */
-  static function createDatabase($dbname, $dbcharset, $dbengine = 'InnoDB', $dbhelpengine = 'MyISAM') {
+  static function createDatabase($dbname, $dbcharset, $dbcollation, $dbengine = 'InnoDB', $dbhelpengine = 'MyISAM') {
     global $string;
     $configObject = Config::get_instance();
     $configObject->db = self::$db;
@@ -879,15 +882,7 @@ Class InstallUtils {
     }
     $res->close();
 
-    switch ($dbcharset) {
-      case 'utf8':
-        $collation = 'utf8_general_ci';
-        break;
-      default:
-        $collation = 'latin1_swedish_ci';
-    }
-
-    self::$db->query("CREATE DATABASE $dbname CHARACTER SET = $dbcharset COLLATE = $collation"); //have to use query here oldvers of php throw an error
+    self::$db->query("CREATE DATABASE $dbname CHARACTER SET = $dbcharset COLLATE = $dbcollation"); //have to use query here oldvers of php throw an error
     if (self::$db->errno != 0) {
       self::displayError(array('011' => $string['displayerror2']));
     }
@@ -1848,7 +1843,7 @@ Class InstallUtils {
 \$cfg_web_root = '{cfg_web_root}';
 \$cfg_root_path = '{cfg_root_path}';
 \$cfg_secure_connection = true;    // If true site must be accessed via HTTPS
-\$cfg_page_charset 	   = 'UTF-8';
+\$cfg_page_charset = 'UTF-8';
 \$cfg_tmpdir = '{cfg_tmpdir}';
 
   \$cfg_web_host = '{cfg_web_host}';
@@ -1858,8 +1853,9 @@ Class InstallUtils {
   \$cfg_db_username = '{cfg_db_username}';
   \$cfg_db_passwd   = '{cfg_db_passwd}';
   \$cfg_db_database = '{cfg_db_database}';
-  \$cfg_db_host 	  = '{cfg_db_host}';
-  \$cfg_db_charset 	= '{cfg_db_charset}';
+  \$cfg_db_host = '{cfg_db_host}';
+  \$cfg_db_charset = '{cfg_db_charset}';
+  \$cfg_db_collation = '{cfg_db_collation}';
 //student db user
   \$cfg_db_student_user = '{cfg_db_student_user}';
   \$cfg_db_student_passwd = '{cfg_db_student_passwd}';
@@ -1932,7 +1928,6 @@ if(!isset(\$_SERVER['HTTP_HOST'])) {
 }
 
 //Global DEBUG OUTPUT
-  //require_once \$_SERVER['DOCUMENT_ROOT'] . 'include/debug.inc';   // Uncomment for debugging output (after uncommenting, comment out line below)
   \$dbclass = 'mysqli';
 
   \$display_auth_debug = false; // set this to display debug on failed authentication
@@ -1969,6 +1964,7 @@ CONFIG;
     $config = str_replace('{cfg_db_host}', self::$cfg_db_host, $config);
     $config = str_replace('{cfg_db_port}', self::$cfg_db_port, $config);
     $config = str_replace('{cfg_db_charset}', self::$cfg_db_charset, $config);
+    $config = str_replace('{cfg_db_collation}', self::$cfg_db_collation, $config);
 
     $config = str_replace('{cfg_db_database}', self::$cfg_db_name, $config);
     $config = str_replace('{cfg_db_username}', self::$cfg_db_username, $config);

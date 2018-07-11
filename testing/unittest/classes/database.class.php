@@ -88,7 +88,7 @@ class database {
     // Start installing the base Rogo database.
     InstallUtils::checkDBUsers();
     InstallUtils::createDirectories();
-    InstallUtils::createDatabase($config->get('cfg_db_database'), $config->get('cfg_db_charset'));
+    InstallUtils::createDatabase($config->get('cfg_db_database'), $config->get('cfg_db_charset'), $config->get('cfg_db_collation'));
     // Create constraints.
     InstallUtils::createConstraints();
   }

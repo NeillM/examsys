@@ -24,7 +24,7 @@
     </php>
     <database>
         <mysql>
-            <min_version>50100</min_version>
+            <min_version>50700</min_version>
         </mysql>
     </database>
     <translations>

@@ -15,19 +15,16 @@ Vagrant.configure("2") do |config|
     # add php 7.2 repo
     add-apt-repository ppa:ondrej/php
 
-    # add mysql 5.6 repo
-    add-apt-repository ppa:ondrej/mysql-5.6
-
     # update packages
     apt-get update
 
     # install goodies
-    apt-get install -y npm r-cran-rserve memcached wbritish xvfb
+    apt-get install -y npm r-cran-rserve memcached wbritish
 
     # install MySQL (root / Passw0rd)
     debconf-set-selections <<< 'mysql-server mysql-server/root_password password Passw0rd'
     debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password Passw0rd'
-    apt-get install -y mysql-server-5.6
+    apt-get install -y mysql-server
 
     # install PHP 7.2 with required extensions
     apt-get install -y php7.2 php7.2-gd php7.2-curl php7.2-xml php7.2-xmlrpc php7.2-mysql php7.2-intl php7.2-ldap php7.2-mbstring php7.2-zip php7.2-memcache
