@@ -231,6 +231,22 @@ class coursemanagementtest extends unittestdatabase {
         $this->assertEquals($responsearray, $course->update($params, $userid));
     }
     /**
+     * Test updating course school with external school id
+     * @group api
+     */
+    public function test_update_school() {
+      $responsearray = $this->update_response_array();
+      $params = $this->update_param_array();
+      $course = new \api\coursemanagement($this->db, 'test1');
+      $userid = 1;
+      // Test course update - SUCCESS name
+      $params = array(
+        "nodeid" => 1,
+        "externalid" => 123456,
+        "schoolextid" => 'berty');
+      $this->assertEquals($responsearray, $course->update($params, $userid));
+    }
+    /**
      * Test course update exception invalid course
      * @group api
      */
