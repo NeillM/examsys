@@ -1370,7 +1370,7 @@ class EnhancedCalc extends Question implements questionInterface {
 
 	/*
 	 * is the question a linked question parent
-	 * @return integer
+	 * @return boolean
 	 */
 	public function get_link_parent() {
 		return $this->link_parent;
