@@ -447,9 +447,6 @@ $render->render($headerdata, $lang, 'header.html');
 
   $render->render($contentdata, $string, 'paper/header.html');
 
-  // Get linked question parents.
-  $linked = PaperUtils::get_linked_question_parents($questions_array);
-  
   // Display each question
   $unanswered = false;
   foreach ($questions_array as &$question) {
@@ -459,12 +456,8 @@ $render->render($headerdata, $lang, 'header.html');
       continue;
     }
 
-    // Check if calculation question is a parent of a future question.
-    if ($question['q_type'] === 'enhancedcalc') {
-      if (in_array($question['q_id'], $linked)) {
-        $question['object']->set_link_parent();
-      }
-    }
+    // Flag original for telling if this is a linked question, since this flag is abandoned, set to 0
+    $is_enhancedcalc = 0;
     // refer to all questions on displayed question
     $question['paper_questions'] = &$questions_array;
     $questionrender = new questionrender($question['q_type']);
@@ -488,6 +481,7 @@ $render->render($headerdata, $lang, 'header.html');
   $footer_data['page_start'] = date("YmdHis", time());
   $footer_data['old_screen'] = $current_screen - 1;
   $footer_data['previous_duration'] = $previous_duration;
+  $footer_data['is_enhancedcalc'] = $is_enhancedcalc;
   $footer_data['refpane'] = $refpane;
 
   if ($is_question_preview_mode === true) {
