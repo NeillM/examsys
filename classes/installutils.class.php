@@ -281,12 +281,6 @@ Class InstallUtils {
       self::$db_admin_passwd = param::clean($args['mysql_admin_pass'], param::TEXT);
     }
 
-    // Check mysql version.
-    if (!requirements::check_db(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd)) {
-      $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
-      self::displayError(array('002' => sprintf($string['errors17'], $mysql_min_ver)), true);
-    }
-
     if (!self::$cli) {
       self::$cfg_web_host = param::required('web_host', param::TEXT, param::FETCH_POST);
       self::$cfg_rogo_data = param::required('rogo_data', param::TEXT, param::FETCH_POST);
