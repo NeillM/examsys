@@ -400,4 +400,26 @@ class paperutilstest extends unittestdatabase {
         $expected_mappings = array();
         $this->assertEquals($expected_mappings, $mappings_copy_objID);
     }
+
+    /**
+     * Test creating list of parent link calc question in a paper
+     * @group assessment
+     */
+    public function test_get_linked_question_parents() {
+      $expected = array(2);
+      // Build paper.
+      $properties = PaperProperties::get_paper_properties_by_id(1, $this->db, '');
+      $tmp_questions_array = $properties->build_paper(false, null, null);
+      // Mock paper start fudge.
+      foreach ($tmp_questions_array as $question) {
+        if ($question['q_type'] == 'enhancedcalc') {
+          require_once 'plugins/questions/enhancedcalc/enhancedcalc.class.php';
+          $question['object'] = new EnhancedCalc($this->config);
+          $question['object']->load($question);
+        }
+        $questions_array[] = $question;
+      }
+      unset($tmp_questions_array);
+      $this->assertEquals($expected, PaperUtils::get_linked_question_parents($questions_array));
+    }
 }
