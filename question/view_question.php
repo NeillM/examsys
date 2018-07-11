@@ -91,9 +91,11 @@ $question['assigned_number'] = (isset($_GET['qNo'])) ? $_GET['qNo'] : 1;
   <link rel="stylesheet" type="text/css" href="../css/start.css" />
 
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery-migrate-1.2.1.min.js"></script>
   <script type="text/javascript" src="../js/start.js"></script>
-  <script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
+<?php
+  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
+  $texteditorplugin->display_header();
+?>
   
   <?php
   $render = new render($configObject);

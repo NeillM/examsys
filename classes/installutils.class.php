@@ -282,12 +282,6 @@ Class InstallUtils {
 
     self::$cfg_db_charset = 'utf8';
 
-    // Check mysql version.
-    if (!requirements::check_db(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd)) {
-      $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
-      self::displayError(array('002' => sprintf($string['errors17'], $mysql_min_ver)), true);
-    }
-
     if (!self::$cli) {
       self::$cfg_web_host = param::required('web_host', param::TEXT, param::FETCH_POST);
       self::$cfg_rogo_data = param::required('rogo_data', param::TEXT, param::FETCH_POST);
@@ -460,7 +454,13 @@ Class InstallUtils {
     // Load default data
     self::loadData();
 
-    // Update sys_updates table
+    // Load default plugins.
+    $configObject->set('cfg_db_host', self::$cfg_db_host);
+    $configObject->set('cfg_db_database', self::$cfg_db_name);
+    $configObject->set('dbclass', 'mysqli');
+    plugin_manager::install_core_plugins(self::$db_admin_username, self::$db_admin_passwd);
+
+    // Update sys_updates table.
     self::updateSysUpdates();
 
     // Get Help and lang pack parameters.
@@ -701,7 +701,7 @@ Class InstallUtils {
     $configObject->set_setting('paper_marks_negative', array(0, -0.25, -0.5, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10), Config::CSV);
     $configObject->set_setting('paper_marks_partial', array_merge(range(0, 1, 0.1), range(2, 5)), Config::CSV);
     $configObject->set_setting('paper_mathjax', 1, Config::BOOLEAN);
-    $configObject->set_setting('paper_editor_supports_mathjax',array("plain"), Config::CSV);
+    $configObject->set_setting('paper_mee', 0, Config::BOOLEAN);
     $configObject->set_setting('misc_logo_main', 'logo.png', Config::STRING);
     $configObject->set_setting('misc_logo_email', 'alt_logo.png', Config::STRING);
     $configObject->set_setting('api_allow_superuser', 0, Config::BOOLEAN);
@@ -759,7 +759,6 @@ Class InstallUtils {
     $configObject->set_setting('paper_autosave_backoff_factor', 1.5, Config::DOUBLE);
     $configObject->set_setting('summative_midexam_clarification', array('invigilators', 'students'), Config::CSV);
     $configObject->set_setting('system_password_expire', 30, Config::INTEGER);
-    $configObject->set_setting('misc_editor_name', 'tinymce', Config::STRING);
     $configObject->set_setting('lti_ssl_verifypeer', 1, Config::BOOLEAN);
     $configObject->set_setting('lti_ssl_verifyhost', 1, Config::BOOLEAN);
     // Add external systems.
@@ -1448,7 +1447,7 @@ Class InstallUtils {
                                 false,
                                 false,
                                 true,
-                                0,
+                                null,
                                 null,
                                 self::$db,
                                 0,
@@ -1469,7 +1468,7 @@ Class InstallUtils {
                                 true,
                                 true,
                                 true,
-                                0,
+                                null,
                                 null,
                                 self::$db,
                                 0,

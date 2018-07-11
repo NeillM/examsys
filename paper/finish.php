@@ -82,7 +82,6 @@ $end_date                   = $propertyObj->get_end_date();
 $marking                    = $propertyObj->get_marking();
 $paper_postscript           = $propertyObj->get_paper_postscript();
 $pass_mark                  = $propertyObj->get_pass_mark();
-$latex_needed               = $propertyObj->get_latex_needed();
 $password                   = $propertyObj->get_password();
 $moduleID                   = $propertyObj->get_modules();
 
@@ -129,8 +128,6 @@ if ($userObject->has_role(array('External Examiner'))) {
   // No further security checks.
 } else {
   $modIDs = array_keys($moduleID);
-
-  if ($paper_type == 2) $latex_needed = 0;  // Students get no feedback for summative exams so don't load the Latex library
 
   // Check for additional password on the paper
   check_paper_password($propertyObj->get_property_id(), $password, $string, $mysqli);
@@ -228,6 +225,8 @@ require '../config/finish.inc';
 <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 
 <?php
+  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
+  $texteditorplugin->display_header();
   $css = '';
   if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF' and $bgcolor != 'white') {
     $css .= "select,input{background-color:$bgcolor;color:$fgcolor;font-family:$font,sans-serif}\n";
@@ -259,14 +258,10 @@ require '../config/finish.inc';
   }
 
   echo "<script type=\"text/javascript\" src=\"../js/student_help.js\"></script>\n";
-  if ($show_feedback) {     // Do not JavaScript files if feedback is not displayed.
-    if ($latex_needed == 1) {
-      echo "<script type=\"text/javascript\" src=\"../js/jquery-migrate-1.2.1.min.js\"></script>\n";
-      echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>\n";
-    }
-    $render = new render($configObject);
-    $render->render_html5_js(json_encode($jstring));
-  }
+
+  $render = new render($configObject);
+  $render->render_html5_js(json_encode($jstring));
+
   echo $configObject->get('cfg_js_root');
 ?>
 <script>

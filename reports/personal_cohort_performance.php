@@ -112,8 +112,10 @@ li {padding-bottom:10px}
 </style>
 
 <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-<script type="text/javascript" src="../js/jquery-migrate-1.2.1.min.js"></script>
-<script type="text/javascript" src="../tools/mee/mee/js/mee_src.js"></script>
+<?php
+  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
+  $texteditorplugin->display_header();
+?>
 
 </head>
 <body>

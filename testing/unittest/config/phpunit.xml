@@ -8,6 +8,12 @@
     <testsuite name="base">
       <directory suffix="Test.php">../tests</directory>
     </testsuite>
+
+    <testsuite name="plugins">
+      <directory suffix="Test.php">../../../plugins/SMS/plugin_cs_sms/unittest/tests</directory>
+      <directory suffix="Test.php">../../../plugins/mapping/plugin_csmodule_mapping/unittest/tests</directory>
+      <directory suffix="Test.php">../../../plugins/mapping/plugin_module_mapping/unittest/tests</directory>
+    </testsuite>
   </testsuites>
   <php>
     <const name="PHPUNIT_ROGO_TESTSUITE" value="true"/>

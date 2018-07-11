@@ -63,9 +63,13 @@ class questionrender {
    */
   public function display_question($screen_pre_submitted, $q_displayed, $string, &$question, $pid, $current_screen, &$question_no, $user_answers) {
 
-    $render = new render($this->config, array(
-        dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . $question['q_type'] . DIRECTORY_SEPARATOR . 'templates',
-        dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates'));
+    $texteditorplugin = \plugins\plugins_texteditor::get_editor();
+    $renderpath = $texteditorplugin->get_render_paths();
+    $strings = $texteditorplugin->get_strings();
+    $string = array_merge($string, $strings);
+    $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . $question['q_type'] . DIRECTORY_SEPARATOR . 'templates';
+    $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates';
+    $render = new render($this->config, $renderpath);
 
     $this->questiondata->setup_question_data($screen_pre_submitted, $q_displayed, $string, $question, $pid, $current_screen, $question_no, $user_answers);
     $render->render($this->questiondata, $string, 'paper/question_header.html');

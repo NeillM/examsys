@@ -813,7 +813,6 @@ Class PaperUtils {
       external_review_deadline,
       internal_review_deadline,
       sound_demo,
-      latex_needed,
       password
     FROM properties WHERE property_id = ?");
     $result->bind_param('i', $id);
@@ -853,7 +852,6 @@ Class PaperUtils {
       $external_review_deadline,
       $internal_review_deadline,
       $sound_demo,
-      $latex_needed,
       $password);
     $result->fetch();
     if ($db->errno != 0) {
@@ -896,7 +894,6 @@ Class PaperUtils {
                     'external_review_deadline' => $external_review_deadline,
                     'internal_review_deadline' => $internal_review_deadline,
                     'sound_demo' => $sound_demo,
-                    'latex_needed' => $latex_needed,
                     'password' => $password
                     );
     return $details;
@@ -1197,7 +1194,6 @@ Class PaperUtils {
       'external_review_deadline' => array('s', $tmp_external_review_deadline),
       'internal_review_deadline' => array('s', $tmp_internal_review_deadline),
       'sound_demo' => array('s', $properties['sound_demo']),
-      'latex_needed' => array('i', $properties['latex_needed']),
       'password' => array('s', $properties['password'])
     );
     $new_paper_id = $assessment->db_insert_assessment($params);

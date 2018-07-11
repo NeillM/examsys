@@ -36,7 +36,6 @@ properties:
     external_review_deadline: null
     internal_review_deadline: null
     sound_demo: "0"
-    latex_needed: 0
     password: null
     retired: null
     crypt_name: "115163541061"

@@ -919,7 +919,6 @@ QUERY;
           `external_review_deadline` date default NULL,
           `internal_review_deadline` date default NULL,
           `sound_demo` enum('0','1') default '0',
-          `latex_needed` tinyint(4) default '0',
           `password` char(255) default NULL,
           `retired` datetime default NULL,
           `crypt_name` varchar(32) default NULL,

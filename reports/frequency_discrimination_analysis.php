@@ -1722,7 +1722,6 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
     td p:first-child {margin-top: 0}
     .matrix {border:1px solid #808080; border-collapse: collapse}
     .matrix td {border:1px solid #808080}
-    .mee {display: inline}
     .subsect_table {margin-left: 6px; margin-bottom: 10px}
   </style>
 
@@ -1730,10 +1729,8 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
   <script type="text/javascript" src="../js/staff_help.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
 <?php
-  if ($propertyObj->get_latex_needed() == 1) {
-    echo "<script type=\"text/javascript\" src=\"../js/jquery-migrate-1.2.1.min.js\"></script>\n";
-    echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>\n";
-  }
+  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
+  $texteditorplugin->display_header();
 
   $render = new render($configObject);
   $render->render_html5_js(json_encode($jstring));

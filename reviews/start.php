@@ -350,11 +350,9 @@ if ($css != '') {
 <script type="text/javascript" src="start.js"></script>
 <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <?php
-  if ($propertyObj->get_latex_needed() == 1) {
-    echo "<script type=\"text/javascript\" src=\"../js/jquery-migrate-1.2.1.min.js\"></script>\n";
-    echo "<script type=\"text/javascript\" src=\"../tools/mee/mee/js/mee_src.js\"></script>\n";
-  }
-  
+  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
+  $texteditorplugin->display_header();
+
   if (Paper_utils::need_interactiveQ($screen_data, $current_screen, $mysqli)) {
     $render = new render($configObject);
     $render->render_html5_js(json_encode($jstring));
@@ -657,7 +655,7 @@ echo '" onsubmit="return confirmSubmit()" autocomplete="off">';   // Warning mes
     if ($q_displayed == 0 and $current_screen == 1 and $paper_prologue != '') echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
     if ($q_displayed == 0 and $question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
     
-    display_question($configObject, $question, $propertyObj->get_paper_type(), $propertyObj->get_calculator(), $current_screen, $previous_q_type, $question_no, $question_offset, $start_of_day_ts);
+    display_question($configObject, $question, $propertyObj->get_paper_type(), $propertyObj->get_calculator(), $current_screen, $previous_q_type, $question_no, $question_offset, $start_of_day_ts, $texteditorplugin);
     $previous_q_type = $question['q_type'];
     $q_displayed++;
   }

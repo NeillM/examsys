@@ -22,31 +22,9 @@ copyright 2018 onwards The University of Nottingham
 
 Required variables:
 
-data.editormathjax - flag to indicate if mathjax editor in use
-data.questionno - question number
-data.unanswered - flag to indicate if question has previously been answered
-data.editorcolumns -number of columns in editor
-data.editorrows - number of row in editor
-data.useranswer - users answer
-
-Required localised text -
-lang.mathjaxinstructions - instructions
-lang.previewmathjax - preview
-
+data.editorconfig - text editor configuration i.e. js
+data.editortextarea - the text editor
 #}
-{% if data.editor == 'plain' %}
-    {# Add mathjax if enabled #}
-    {% if data.editormathjax %}
-{% include 'mathjaxpreview.html' %}
-<p>{{lang.mathjaxinstructions|raw}}</p>
-    {% endif %}
-<textarea {% if data.editormathjax %} onkeyup="Previewq{{data.questionno}}.Update()" {% endif %} {% if data.unanswered %} class="unans" {% endif %} id="q{{data.questionno}}" name="q{{data.questionno}}" cols="{{data.editorcolumns}}" rows="{{data.editorrows}}">{{data.useranswer}}</textarea>
-    {% if data.editormathjax %}
-<p>{{lang.previewmathjax}}</p>
-<div id="MathPreviewq{{data.questionno}}" style="border:1px solid; padding: 3px; width:50%; margin-top:5px"></div>
-<div id="MathBufferq{{data.questionno}}" style="border:1px solid; padding: 3px; width:50%; margin-top:5px; visibility:hidden; position:absolute; top:0; left: 0"></div>
-<script>Previewq{{data.questionno}}.Init();</script>
-    {% endif %}
-{% else %}
-{# TODO add tinymce support #}
-{% endif %}
+
+{% include data.editorconfig %}
+{% include data.editortextarea %}

@@ -126,6 +126,12 @@ Class QuestionEdit extends RogoObject {
   protected $langstrings; 
 
   /**
+   * Text editor
+   * @var object
+   */
+  private $texteditor;
+
+  /**
    * Create a new question object by either loading an existing question from the database or populating
    * properties from an associative array
    * @param mixed $data
@@ -171,6 +177,8 @@ Class QuestionEdit extends RogoObject {
     } elseif ($data !== null) {
       throw new DataTypeException($this->_lang_strings['questioninvalid']);
     }
+
+    $this->texteditor = \plugins\plugins_texteditor::get_editor();
   }
 
   /**
@@ -756,7 +764,6 @@ QUERY;
    * @return string
    */
   public function get_theme() {
-    $this->theme = $this->replace_mee_div($this->theme);
     return $this->theme;
   }
 
@@ -765,7 +772,6 @@ QUERY;
    * @param string $value
    */
   public function set_theme($value) {
-    $value = $this->replace_tex($value);
     if ($value != $this->theme) {
       $this->set_modified_field('theme', $this->theme);
       $this->theme = $value;
@@ -777,7 +783,7 @@ QUERY;
    * @return string
    */
   public function get_scenario() {
-    return $this->scenario;
+    return $this->texteditor->get_text_for_display($this->scenario);
   }
 
   /**
@@ -785,9 +791,8 @@ QUERY;
    * @param string $value
    */
   public function set_scenario($value) {
-    $scenario = (trim(strip_tags($value, '<img>')) == '') ? '' : $value;
-    $tmp_scenario = trim($this->scenario);
-    if ($scenario != $tmp_scenario) {
+    $scenario = trim($this->texteditor->prepare_text_for_save($value));
+    if ($this->scenario != $scenario) {
       $this->set_modified_field('scenario_plain', $this->get_scenario_plain());
       $this->scenario = $scenario;
     }
@@ -807,7 +812,7 @@ QUERY;
    * @return string
    */
   public function get_leadin() {
-    return $this->leadin;
+    return $this->texteditor->get_text_for_display($this->leadin);
   }
 
   /**
@@ -815,7 +820,8 @@ QUERY;
    * @param string $value
    */
   public function set_leadin($value) {
-    if ($value != $this->leadin) {
+    $value = $this->texteditor->prepare_text_for_save($value);
+    if ($this->leadin != $value) {
       $this->set_modified_field('leadin_plain', $this->get_leadin_plain());
       $this->leadin = $value;
     }
@@ -835,7 +841,6 @@ QUERY;
    * @return string
    */
   public function get_notes() {
-    $this->notes = $this->replace_mee_div($this->notes);
     return $this->notes;
   }
 
@@ -844,7 +849,6 @@ QUERY;
    * @param string $value
    */
   public function set_notes($value) {
-    $value = $this->replace_tex($value);
     if ($value != $this->notes) {
       $this->set_modified_field('notes', $this->notes);
       $this->notes = $value;
@@ -856,7 +860,6 @@ QUERY;
    * @return string
    */
   public function get_correct_fback() {
-    $this->correct_fback = $this->replace_mee_div($this->correct_fback);
     return $this->correct_fback;
   }
 
@@ -865,7 +868,6 @@ QUERY;
    * @param string $value
    */
   public function set_correct_fback($value) {
-    $value = $this->replace_tex($value);
     if ($value != $this->correct_fback) {
       $this->set_modified_field('correct_fback', $this->correct_fback);
       $this->correct_fback = $value;
@@ -877,7 +879,6 @@ QUERY;
    * @return string
    */
   public function get_incorrect_fback() {
-    $this->incorrect_fback = $this->replace_mee_div($this->incorrect_fback);
     return $this->incorrect_fback;
   }
 
@@ -886,7 +887,6 @@ QUERY;
    * @param string $value
    */
   public function set_incorrect_fback($value) {
-    $value = $this->replace_tex($value);
     if ($value != $this->incorrect_fback) {
       $this->set_modified_field('incorrect_fback', $this->incorrect_fback);
       $this->incorrect_fback = $value;

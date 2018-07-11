@@ -14,7 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-use testing\unittest\unittest;
+use testing\unittest\unittestdatabase;
+use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
 /**
  * Test textbox question class
@@ -24,7 +25,18 @@ use testing\unittest\unittest;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class textboxtest extends unittest{
+class textboxtest extends unittestdatabase{
+
+  /**
+   * Get init data set from yml
+   * @return dataset
+   */
+  public function getDataSet() {
+    return new YamlDataSet($this->get_base_fixture_directory()
+      . DIRECTORY_SEPARATOR. "questions"
+      . DIRECTORY_SEPARATOR . "textboxTest"
+      . DIRECTORY_SEPARATOR . "textbox.yml");
+  }
 
   /**
     * Test question header setter
@@ -81,7 +93,7 @@ class textboxtest extends unittest{
   public function test_set_option_answer_tinymce() {
     ob_start(); // Start output buffering
     $data = questiondata::get_datastore('textbox');
-    $data->settings = json_encode(array('columns' => 40, 'rows' => 10, 'editor' => 'tinymce'));
+    $data->settings = json_encode(array('columns' => 40, 'rows' => 10, 'editor' => 'WYSIWYG'));
     $data->questionno = 2;
     $data->textboxesseen = array(1);
     $option['markscorrect'] = 1;
@@ -90,7 +102,7 @@ class textboxtest extends unittest{
     $data->set_option_answer(0, '', '', 1);
     $this->assertEquals(40, $data->editorcolumns);
     $this->assertEquals(10, $data->editorrows);
-    $this->assertEquals('', $data->editor);
+    $this->assertEquals('tinymce3', $data->editor);
     $this->assertTrue($data->unanswered);
     $this->assertFalse($data->editormathjax);
     $this->assertEquals(array(1, 2), $data->textboxesseen);

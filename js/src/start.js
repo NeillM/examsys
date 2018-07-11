@@ -415,10 +415,7 @@ function confirmSubmitBiDirectional (event) {
 // Normal user submit by clicking on next, previous, finish or jump screen
 function checkSubmit (event) {
   stopAutoSave();
-  if (typeof(tinyMCE) !== "undefined") {
-    tinyMCE.triggerSave();
-  }
-
+  triggerSave();
   if (event === null) {
     $('#button_pressed').attr('value',event.target.id);
   }
@@ -441,9 +438,7 @@ function checkSubmit (event) {
 
 function conductSave(event) {
   var el = document.getElementById('paper');
-  if (typeof(tinyMCE) !== "undefined") {
-    tinyMCE.triggerSave();
-  }
+  triggerSave();
   stopAutoSave();
   $('#saveError').fadeOut('slow');
   $('#savemsg').html("<img src=\"../artwork/busy.gif\" class=\"busyicon\" />");
@@ -492,10 +487,8 @@ function autoSave () {
   // This could take longer than the autosave timeout stop auto save to stop duplicate events.
   stopAutoSave();
 
-   // Save any data from wysiwyg
-  if (typeof(tinyMCE) != "undefined") {
-    tinyMCE.triggerSave();
-  }
+  // Save any data from wysiwyg
+  triggerSave();
   var formData = $('#qForm').serialize();
 
   // Only auto save if the data has changed, OR 20 minutes has elapsed - stop sessions expiring. ?>
@@ -532,9 +525,7 @@ function ajaxSave (ans_changed, submitType) {
   date = new Date();
   randomPageID = date.getTime();
   $('#randomPageID').val(randomPageID);
-  if (typeof(tinyMCE) !== "undefined"){
-    tinyMCE.triggerSave();
-  }
+  triggerSave();
   $.ajax({
     url: 'save_screen.php?id=' + el.dataset.pid + el.dataset.urlmod + '&ans_changed=' + ans_changed + '&submitType=' + submitType + '&rnd=' + randomPageID + el.dataset.urlmod,
     type: 'post',

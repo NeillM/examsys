@@ -52,6 +52,36 @@ class renderdata extends \questiondata {
   public $editor;
 
   /**
+   * Editor config file
+   * @var string
+   */
+  public $file;
+
+  /**
+   * Editor type
+   * @var string
+   */
+  public $type;
+
+  /**
+   * Editor style
+   * @var string
+   */
+  public $style;
+
+  /**
+   * Editor config file template
+   * @var string
+   */
+  public $editorconfig;
+
+  /**
+   * Editor textarea file template
+   * @var string
+   */
+  public $editortextarea;
+
+  /**
    * User answer
    * @var string
    */
@@ -109,6 +139,7 @@ class renderdata extends \questiondata {
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
   public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
+    global $string;
     $option = $this->get_opt($part_id);
     $textboxes_seen = $this->textboxesseen;
     if (!in_array($this->questionno, $textboxes_seen)) {
@@ -116,43 +147,44 @@ class renderdata extends \questiondata {
       $settings = json_decode($this->settings, true);
       $this->editorcolumns = $settings['columns'];
       $this->editorrows = $settings['rows'];
-      if (!isset($settings['editor']) or $settings['editor'] == 'plain' or $settings['editor'] == 'mathjax') {
-        $this->editor = 'plain';
-        if ($useranswer == '' and $screen_pre_submitted == 1) {
-          $this->useranswer = $useranswer;
-          $this->unanswered = true;
-        } else {
-          $this->useranswer = $useranswer;
-          $this->unanswered = false;
-        }
+      $texteditorplugin = \plugins\plugins_texteditor::get_editor();
+      $te = explode('_', $texteditorplugin->get_name());
+      $this->editor = $te[1];
+      // We can override the enabled texteditor with plain/mathjax at the question level.
+      if (isset($settings['editor'])) {
         if ($settings['editor'] == 'mathjax') {
-          // Bad way of inserting mathjax editor to be resolved in ROGO-2263.
-          $this->editormathjax =  true;
+          $this->editormathjax = true;
+          $this->editor = 'plain';
+        } elseif ($settings['editor'] == 'plain') {
+          $this->editormathjax = false;
+          $this->editor = 'plain';
         }
-      } else {
-        // Bad way of inserting text editor to be resolved in ROGO-2263.
-        echo $this->config->get('cfg_js_root');
-        echo "<script type=\"text/javascript\" src=\"" . $this->config->get('cfg_root_path') . "/tools/tinymce/jscripts/tiny_mce/tiny_mce.js\"></script>";
-        if ($useranswer == '' and $screen_pre_submitted == 1) {
-          echo "<script type=\"text/javascript\" src=\"" . $this->config->get('cfg_root_path') . "/tools/tinymce/jscripts/tiny_mce/tiny_config_unanswered.js\"></script>";
-        } else {
-          echo "<script type=\"text/javascript\" src=\"" . $this->config->get('cfg_root_path') . "/tools/tinymce/jscripts/tiny_mce/tiny_config_answered.js\"></script>";
-        }
-
-        $textbox_width  = ( 40 + ( $settings['columns'] * 8 ) );
-        $textbox_height = ( $settings['rows'] * 28 );
-
-        $background_colour = '';
-
-        if ($useranswer == '' and $screen_pre_submitted == 1) {
-          $this->unanswered = true;
-          $background_colour = 'background-color:red;';
-        } else {
-          $this->unanswered = false;
-        }
-        // Bad way of inserting text editor to be resolved in ROGO-2263.
-        echo "<textarea class=\"mceEditor\" id=\"q" . $this->questionno . "\" name=\"q" . $this->questionno . "\"style=\"" . $background_colour . "; width:" . $textbox_width . "px; height:" . $textbox_height . "px\">" . $useranswer . "</textarea>";
       }
+
+      if ($useranswer == '' and $screen_pre_submitted == 1) {
+        $this->file = $this->editor . '_config_unanswered';
+      } else {
+        $this->file = $this->editor . '_config_answered';
+      }
+
+      $this->editorconfig = $this->editor . '_config.html';
+
+      $textbox_width  = ( 40 + ( $settings['columns'] * 8 ) );
+      $textbox_height = ( $settings['rows'] * 28 );
+
+      $background_colour = '';
+
+      if ($useranswer == '' and $screen_pre_submitted == 1) {
+        $this->unanswered = true;
+        $background_colour = 'background-color:red; ';
+      } else {
+        $this->unanswered = false;
+      }
+      $this->useranswer = $useranswer;
+
+      $this->editortextarea = $this->editor . '_textarea.html';
+      $this->type = $texteditorplugin->get_type(\plugins\plugins_texteditor::TYPE_STANDARD);
+      $this->style = $background_colour . "width:" . $textbox_width . "px; height:" . $textbox_height . "px";
       $this->textboxesseen = $textboxes_seen;
       $marks = $this->marks;
       $marks += $option['markscorrect'];

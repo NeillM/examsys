@@ -469,16 +469,12 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <link rel="stylesheet" href="../../css/add_edit.css" type="text/css" />
 <link rel="stylesheet" href="../../css/mapping_form.css" type="text/css" />
 <link rel="stylesheet" href="../../css/warnings.css" type="text/css" />
-
-<?php
-  if($configObject->get_setting('core', 'misc_editor_name') === 'tinymce') {
-      $render = new render($configObject);
-      $tinmymcedata['file'] = 'tiny_config_question_editor';
-      $render->render($tinmymcedata, null, 'tinymce.html');
-  }
-?>
 <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
-<script type="text/javascript" src="../../js/jquery-migrate-1.2.1.min.js"></script>
+<?php
+  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
+  $texteditorplugin->display_header();
+  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::QUESTION);
+?>
 <script type="text/javascript" src="../../js/jquery-ui-1.10.4.min.js"></script>
 <script type="text/javascript" src="../../js/system_tooltips.js"></script>
 <script type="text/javascript" src="../../js/state.js"></script>
@@ -524,9 +520,8 @@ $(function () {
 endif;
 ?>
 </script>
-<script type="text/javascript" src="../../tools/mee/mee/js/mee_src.js"></script>
 <?php
-  if (in_array($configObject->get_setting('core', 'misc_editor_name'), $configObject->get_setting('core', 'paper_editor_supports_mathjax')) and $configObject->get_setting('core', 'paper_mathjax')) {
+  if ($configObject->get_setting($texteditorplugin->get_name(), 'supports_mathjax') and $configObject->get_setting('core', 'paper_mathjax')) {
     $render = new render($configObject);
     $render->render(null, null, 'mathjax.html');
   }
