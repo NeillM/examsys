@@ -86,5 +86,5 @@ $string['paper_autosave_backoff_factor'] = 'Backoff factor used in paper auto sa
 $string['summative_midexam_clarification'] = 'Roles that can view mid exam clarifcations during summative exams';
 $string['system_password_expire'] = 'Internal database login password lifetime (Days)';
 $string['lti_ssl_verifypeer'] = 'Perform ssl peer verification';
-$string['lti_ssl_verifyhost'] = 'Perform ssl host verification';
+$string['lti_ssl_verifyhost'] = 'Perform ssl host verification. 0 disables, 1 is deprecated and should not be used, 2 enables.';
 $string['paper_mee'] = 'Enable/Disable deprecated mee maths rendering.';
