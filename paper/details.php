@@ -680,7 +680,7 @@ function random_qMarks($random_questions) {
           $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
         }
       }
-      if ($do_marking) $total_marks += $temp_array[$row_no2]['marks'];
+      if ($do_marking and $temp_array[$row_no2]['marks'] !== 'ERR') $total_marks += $temp_array[$row_no2]['marks'];
       $temp_array[$row_no2]['display_method'] = $old_display_method;
       $temp_array[$row_no2]['score_method'] = $old_score_method;
       if ($row_no2 > 0 and $properties->get_paper_type() < 3) {
@@ -789,7 +789,7 @@ function random_qMarks($random_questions) {
         $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
       }
     }
-    if ($do_marking) $total_marks += $temp_array[$row_no2]['marks'];
+    if ($do_marking and $temp_array[$row_no2]['marks'] !== 'ERR') $total_marks += $temp_array[$row_no2]['marks'];
     $temp_array[$row_no2]['display_pos'] = $old_display_pos;
     $temp_array[$row_no2]['score_method'] = $old_score_method;
     if ($properties->get_paper_type() < 3) {
@@ -1100,9 +1100,7 @@ function random_qMarks($random_questions) {
     } else {
       if (!$status_array[$temp_array[$x]['status']]->get_exclude_marking() and $temp_array[$x]['marks'] === 'ERR') {
         // Only ever get in here for random questions
-        if (count($temp_array[$x]['marks']) > 0) {
-          echo '<td style="text-align:right; vertical-align:top"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" title="' . $string['variablenomarks'] . '" alt="' . $string['variablenomarks'] . '" /></td>';
-        }
+        echo '<td style="text-align:right; vertical-align:top"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" title="' . $string['variablenomarks'] . '" alt="' . $string['variablenomarks'] . '" /></td>';
         $marks_incorrect_error = true;
       } elseif ($status_array[$temp_array[$x]['status']]->get_exclude_marking()) {
         echo '<td style="text-align:right; vertical-align:top">' . $string['na'] . '</td>';
@@ -1110,7 +1108,7 @@ function random_qMarks($random_questions) {
         echo '<td class="m">' . $temp_array[$x]['marks'] . '</td>';
       }
     }
-    if (!$status_array[$temp_array[$x]['status']]->get_exclude_marking()) {
+    if (!$status_array[$temp_array[$x]['status']]->get_exclude_marking() and $temp_array[$x]['marks'] !== 'ERR') {
     	$screen_marks += $temp_array[$x]['marks'];
     }
     echo '<td class="d">' . $temp_array[$x]['display_last_edited'] . '</td>';
@@ -1134,7 +1132,7 @@ function random_qMarks($random_questions) {
     if ($row_no > 0 and $properties->get_paper_type() != '3' and $properties->get_paper_type() != '4') {
       echo "<tr><td colspan=\"4\"></td><td id=\"marks_total\" style=\"border-top:1px solid black; padding-right:4px\" align=\"right\">";
       if ($marks_incorrect_error == true) {
-        echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['variablenomarks'] . '" />';
+        echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" title="' . $string['variablenomarks'] . '" alt="' . $string['variablenomarks'] . '" />';
       } else {
         echo $total_marks;
       }
