@@ -64,7 +64,9 @@ class renderdata extends \questiondata {
    */
   public function set_question_head() {
     $this->displaydefault = true;
-    $this->displaymedia = true;
+    if ($this->qmedia != '') {
+      $this->displaymedia = true;
+    }
     if ($this->notes != '') {
       $this->displaynotes = true;
     }
@@ -135,9 +137,9 @@ class renderdata extends \questiondata {
     }
     $this->matchscenarios = $matchscenario;
     if ($this->scoremethod == 'Mark per Question') {
-      $marks = $option['markscorrect'];
+      $this->marks = $option['markscorrect'];
     } else {
-      $marks = $part_id - 1;
+      $this->marks = ($part_id - 1) * $option['markscorrect'];
     }
   }
 }
