@@ -265,7 +265,7 @@ Class module {
                         'timed_exams' => 'timedexams',
                         'exam_q_feedback' => 'questionbasedfeedback',
                         'add_team_members' => 'addteammembers',
-                        'map_level' => 'map_level',
+                        'map_level' => 'maplevel',
                         'academic_year_start' => 'academicyearstart',
                         'externalid' => 'externalid'
                         );
