@@ -224,7 +224,7 @@ if (!is_null($submit)) {
           LEFT JOIN modules ON modules_student.idMod = modules.id
           WHERE user_deleted IS NULL" . $studentconditions . " AND " . implode(' AND ', $conditions);
         // Staff template.
-        // Need to get only staff,studnet roles to avoud duplication.
+        // Need to get only staff,student roles to aviud duplication.
         $conditions = str_replace('Student', 'Staff,Student', $conditions);
         $sql_staff_template = " FROM users
           LEFT JOIN modules_staff ON users.id = modules_staff.memberID 
