@@ -48,6 +48,10 @@ class yearutils {
      * Constant for academic years visible in both the calendar and statisics.
      */
     const BOTH = "BOTH";
+    /**
+     * Constant for academic years visible in user searches
+     */
+    const USERS = "USERS";
 
     /**
      * Called when the object is unserialised.
@@ -91,7 +95,18 @@ class yearutils {
         } else if ($state == self::CAL) {
             $filter = "WHERE cal_status = 1 AND deleted is NULL ORDER BY calendar_year ASC";
         } else if ($state == self::BOTH) {
-            $filter = "WHERE cal_status = 1 AND stat_status = 1 AND deleted is NULL ORDER BY calendar_year ASC";
+          $filter = "WHERE cal_status = 1 AND stat_status = 1 AND deleted is NULL ORDER BY calendar_year ASC";
+        } else if ($state == self::USERS) {
+            $paperyears = $this->mysqli->prepare("SELECT DISTINCT calendar_year FROM properties");
+            $paperyears->execute();
+            $paperyears->bind_result($year);
+            $years = array();
+            while ($paperyears->fetch()) {
+              $years[] = $year;
+            }
+            $paperyears->close();
+            $years = implode(",", $years);
+            $filter = "WHERE deleted is NULL AND calendar_year in ($years) ORDER BY calendar_year ASC";
         } else {
             $filter = "WHERE deleted is NULL ORDER BY calendar_year ASC";
         }
@@ -113,15 +128,16 @@ class yearutils {
      * @param char $paper_type type of paper
      * @param string $calendar_year - current calendar year
      * @param array $string - language sting array
+     * @param string $yeartype - supported year search type.
      * @return string - options list
      */
-    public function get_calendar_year_dropdown_options($paper_type, $calendar_year, $string) {
+    public function get_calendar_year_dropdown_options($paper_type, $calendar_year, $string, $yeartype = self::ALL) {
         $list = "";
         if ($paper_type != '2' and $paper_type != '4') {
             $list = "<option value=\"\">" . $string['na'] .  "</option>\n";
         }
 
-        $years = $this->get_supported_years();
+        $years = $this->get_supported_years($yeartype);
 
         foreach ($years as $calendar => $academic) {
             $list .= "<option value=\"" . $calendar . "\"";
