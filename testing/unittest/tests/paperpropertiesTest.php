@@ -60,6 +60,10 @@ class paperpropertiestest extends unittestdatabase {
         $this->assertNotEquals($newpassword, $savedencryptedpass);
         $savedpass = $paperproperty->get_decrypted_password();
         $this->assertEquals($newpassword, $savedpass);
+        $actual = $this->getConnection()->createQueryTable('track_changes', 'SELECT id, type, typeID, editor, new, old, part FROM track_changes');
+        $expected = $this->get_expected_data_set('paperproperties_updated')->getTable("track_changes");
+        // Check track changes masks password.
+        $this->assertTablesEqual($expected, $actual);
     }
 
     /**
