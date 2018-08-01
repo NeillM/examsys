@@ -166,48 +166,48 @@ if (!is_null($submit)) {
     // filter by roles
     $roles = array();
     if ($get_students or ( !is_null($student_id) and $student_id !== '')) {
-        $roles[] = "roles LIKE '%Student'";
+        $roles[] = "roles = 'Student'";
     }
     if ($get_staff) {
-        $roles[] = "roles LIKE '%Staff%'";
+        $roles[] = "roles = 'Staff'";
     }
     if ($get_admin) {
-        $roles[] = "roles LIKE '%,Admin%'";
+        $roles[] = "roles = 'Staff,Admin'";
     }
     if ($get_sysadmin) {
-        $roles[] = "roles LIKE '%,SysAdmin%'";
+        $roles[] = "roles = 'Staff,SysAdmin'";
     }
     if ($get_standardstaff) {
-        $roles[] = "roles LIKE '%,Standards Setter%'";
+        $roles[] = "roles = 'Staff,Standards Setter'";
     }
     if ($get_inactive) {
-        $roles[] = "roles LIKE '%inactive%'";
+        $roles[] = "roles = 'Inactive Staff'";
     }
     if ($get_external) {
-        $roles[] = "(roles = 'External Examiner' AND grade != 'left')";
+        $roles[] = "(roles = 'External Examiner')";
     }
     if ($get_internal) {
-        $roles[] = "(roles = 'Internal Reviewer' AND grade != 'left')";
+        $roles[] = "(roles = 'Internal Reviewer')";
     }
     if ($get_invigilators) {
         $roles[] = "roles = 'Invigilator'";
     }
     if ($get_graduates) {
-        $roles[] = "roles = 'Graduate'";
+        $roles[] = "roles = 'graduate'";
     }
     if ($get_leavers) {
         $roles[] = "roles = 'left'";
     }
     if ($get_suspended) {
-        $roles[] = "roles = 'suspended'";
+        $roles[] = "roles = 'Suspended'";
     }
     if ($get_locked) {
-        $roles[] = "roles = 'locked'";
+        $roles[] = "roles = 'Locked'";
     }
     if (count($roles) > 0) {
         $conditions[] = sprintf('(%s)', implode(' OR ', $roles));
     }
-    if (!$get_leavers and $get_staff) {
+    if (!$get_leavers) {
         $conditions[] = "grade <> 'left'";
     }
 
@@ -224,6 +224,8 @@ if (!is_null($submit)) {
           LEFT JOIN modules ON modules_student.idMod = modules.id
           WHERE user_deleted IS NULL" . $studentconditions . " AND " . implode(' AND ', $conditions);
         // Staff template.
+        // Need to get only staff,student roles to aviud duplication.
+        $conditions = str_replace('Student', 'Staff,Student', $conditions);
         $sql_staff_template = " FROM users
           LEFT JOIN modules_staff ON users.id = modules_staff.memberID 
           LEFT JOIN sid ON users.id = sid.userID
