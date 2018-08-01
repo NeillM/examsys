@@ -85,7 +85,7 @@ class yearutils {
      * Get years supported by the system.
      *
      * @param string $state - filter which years to retrieve - ALL, CAL (active calendar years), STAT (active statistical years),
-     *        BOTH (active calendar and statistical years)
+     *        BOTH (active calendar and statistical years), USERS (years with active users)
      * @return array - associative array of calendar and academic years
      */
     public function get_supported_years($state = self::ALL) {
@@ -97,7 +97,7 @@ class yearutils {
         } else if ($state == self::BOTH) {
           $filter = "WHERE cal_status = 1 AND stat_status = 1 AND deleted is NULL ORDER BY calendar_year ASC";
         } else if ($state == self::USERS) {
-            $paperyears = $this->mysqli->prepare("SELECT DISTINCT calendar_year FROM properties");
+            $paperyears = $this->mysqli->prepare("SELECT DISTINCT calendar_year FROM modules_student");
             $paperyears->execute();
             $paperyears->bind_result($year);
             $years = array();
