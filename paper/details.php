@@ -680,7 +680,9 @@ function random_qMarks($random_questions) {
           $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
         }
       }
-      if ($do_marking and $temp_array[$row_no2]['marks'] !== 'ERR') $total_marks += $temp_array[$row_no2]['marks'];
+      if ($do_marking and $temp_array[$row_no2]['marks'] !== 'ERR') {
+        $total_marks += $temp_array[$row_no2]['marks'];
+      }
       $temp_array[$row_no2]['display_method'] = $old_display_method;
       $temp_array[$row_no2]['score_method'] = $old_score_method;
       if ($row_no2 > 0 and $properties->get_paper_type() < 3) {
@@ -789,7 +791,9 @@ function random_qMarks($random_questions) {
         $total_random_mark += qRandomMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method, $old_q_media_width, $old_q_media_height);
       }
     }
-    if ($do_marking and $temp_array[$row_no2]['marks'] !== 'ERR') $total_marks += $temp_array[$row_no2]['marks'];
+    if ($do_marking and $temp_array[$row_no2]['marks'] !== 'ERR') {
+      $total_marks += $temp_array[$row_no2]['marks'];
+    }
     $temp_array[$row_no2]['display_pos'] = $old_display_pos;
     $temp_array[$row_no2]['score_method'] = $old_score_method;
     if ($properties->get_paper_type() < 3) {
