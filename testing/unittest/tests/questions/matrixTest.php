@@ -36,7 +36,7 @@ class matrixtest extends unittest{
     $this->assertTrue($data->displaydefault);
     $this->assertFalse($data->displaynotes);
     $this->assertTrue($data->displayleadin);
-    $this->assertTrue($data->displaymedia);
+    $this->assertFalse($data->displaymedia);
     $data->notes = 'test';
     $data->set_question_head();
     $this->assertTrue($data->displaynotes);
@@ -92,6 +92,13 @@ class matrixtest extends unittest{
     $data->optionorder = '5,2,4,1,0,3';
     $data->scenarios = array('Word', 'Excel', 'PowerPoint', 'Access5', 'Publisher', 'Data File', '', '', '', '');
     $useranswer = '3|4|2|5|1|6';
+    $option['markscorrect'] = 1;
+    $data->set_opt(1, $option);
+    $data->set_opt(2, $option);
+    $data->set_opt(3, $option);
+    $data->set_opt(4, $option);
+    $data->set_opt(5, $option);
+    $data->set_opt(6, $option);
     $data->process_options(1, $useranswer, '', 1);
     $matchscenarios = array(
       array('unanswered' => false, 'id' => 'A', 'value' => 'Word'),
