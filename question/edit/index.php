@@ -102,8 +102,6 @@ function save_options($question, $userObject, $db) {
       $option = OptionEdit::option_factory($db, $userObject->get_user_ID(), $question, $option_no, $string, array('marks' => 1));
 
       if ($option->minimum_fields_exist($_POST, $_FILES, $option_no)) {
-        $correct_fb = (isset($_POST["option_correct_fback$option_no"])) ? $_POST["option_correct_fback$option_no"] : '';
-        $incorrect_fb = (isset($_POST["option_incorrect_fback$option_no"])) ? $_POST["option_incorrect_fback$option_no"] : '';
 
         $part_names = $option->get_editable_fields();
         try {
