@@ -78,9 +78,9 @@ function save_options($question, $userObject, $db) {
   for ($option_no = 1; $option_no <= $question->max_options; $option_no++) {
     $option = null;
 
-    if (isset($_POST["optionid$option_no"]) and $_POST["optionid$option_no"] != -1) {
+    if (isset($question->options[$option_no])) {
       // Editing existing option
-      $option = $question->options[$_POST["optionid$option_no"]];
+      $option = $question->options[$option_no];
       $part_names = $option->get_editable_fields();
       try {
         $postparams = get_post_params($part_names, $option, $option_no);
