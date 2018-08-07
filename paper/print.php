@@ -260,7 +260,6 @@ $current_screen = 1;
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
 ?>
-  <script type="text/javascript" src="../js/start.js"></script>
 	
   <?php 
   
