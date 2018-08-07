@@ -604,7 +604,7 @@ if ($textsize > 120) {
 <div class="powered"><i>powered by</i> Rog&#333; <?php echo $configObject->get_setting('core', 'rogo_version'); ?></div>
 
 	<!-- Cache often used scripts and images -->
-	<script src="../js/start.js"></script>
+	<script src="../js/start.min.js"></script>
 	<img class="noimg" src="../artwork/calc.png" />
 	<img class="noimg" src="../artwork/no_save.png" />
 	<img class="noimg" src="../artwork/fire_exit.png" />
