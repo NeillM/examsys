@@ -8,7 +8,7 @@ $(function() {
       leadin: 'required'
     },
     messages: {
-      leadin: lang_string['enterleadin'],
+      leadin: lang['enterleadin'],
       //niko leadin: 'Please enter a leadin for the question'
     },
     errorPlacement: function(error, element) {
@@ -22,7 +22,7 @@ $(function() {
     },
     invalidHandler: function() {
       //niko alert('There were problems with your submission. Please review the form and re-try');
-      alert(lang_string['validationerror']);
+      alert(lang['validationerror']);
     }
   });
 })

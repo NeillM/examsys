@@ -8,7 +8,7 @@ $(function() {
       points1: 'required'
     },
     messages: {
-      points1: lang_string['selectarea']
+      points1: lang['selectarea']
     },
     errorPlacement: function(error, element) {
       if (element.attr('name') == 'points1') {
@@ -18,7 +18,7 @@ $(function() {
       }
     },
     invalidHandler: function() {
-      alert(lang_string['validationerror']);
+      alert(lang['validationerror']);
     }
   });
 });

@@ -11,10 +11,10 @@ $(function() {
       option_text3: 'required'
     },
     messages: {
-      leadin: lang_string['enterleadin'],
-      option_text1: '<br />' + lang_string['enteroptionshort'],
-      option_text2: '<br />' + lang_string['enteroptionshort'],
-      option_text3: '<br />' + lang_string['enteroptionshort']
+      leadin: lang['enterleadin'],
+      option_text1: '<br />' + lang['enteroptionshort'],
+      option_text2: '<br />' + lang['enteroptionshort'],
+      option_text3: '<br />' + lang['enteroptionshort']
     },
     errorPlacement: function(error, element) {
       if (element.attr('name') == 'leadin') {
@@ -26,7 +26,7 @@ $(function() {
       }
     },
     invalidHandler: function() {
-      alert(lang_string['validationerror']);
+      alert(lang['validationerror']);
     }
   });
 });

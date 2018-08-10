@@ -22,9 +22,9 @@ $(function() {
       }
     },
     messages: {
-      leadin: lang_string['enterleadin'],
-      option_text1: '<br />'+lang_string['enteroption'],
-      option_text2: '<br />'+lang_string['enteroption']
+      leadin: lang['enterleadin'],
+      option_text1: '<br />'+lang['enteroption'],
+      option_text2: '<br />'+lang['enteroption']
     },
     errorPlacement: function(error, element) {
       if (element.attr('name') == 'leadin') {
@@ -40,7 +40,7 @@ $(function() {
       }
     },
     invalidHandler: function() {
-      alert(lang_string['validationerror']);
+      alert(lang['validationerror']);
     }
   });
 })

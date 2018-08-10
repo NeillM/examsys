@@ -10,7 +10,7 @@ $(function() {
     // a link to another questions answer or variable i.e. ans10 or var$A99,
     // a simple formula using [+,-,*,/] i.e. $A/$B
     return this.optional( element ) || /^((\$[A-Z][0-9]*|var\$[A-Z][0-9]*|ans[0-9]*|[0-9]*[.]?[0-9]+)([+-/*]?))+$/.test( value );
-  }, lang_string['entervalidvariable']);
+  }, lang['entervalidvariable']);
 
   $('#edit_form').validate({
     ignore: '',
@@ -129,18 +129,18 @@ $(function() {
       }
     },
     messages: {
-      leadin: lang_string['enterleadin'],
-      option_formula1: lang_string['enterformula'],
-      option_increment1: '<br />' + lang_string['entervaliddecimal'],
-      option_increment2: '<br />' + lang_string['entervaliddecimal'],
-      option_increment3: '<br />' + lang_string['entervaliddecimal'],
-      option_increment4: '<br />' + lang_string['entervaliddecimal'],
-      option_increment5: '<br />' + lang_string['entervaliddecimal'],
-      option_increment6: '<br />' + lang_string['entervaliddecimal'],
-      option_increment7: '<br />' + lang_string['entervaliddecimal'],
-      option_increment8: '<br />' + lang_string['entervaliddecimal'],
-      option_increment9: '<br />' + lang_string['entervaliddecimal'],
-      option_increment10: '<br />' + lang_string['entervaliddecimal']
+      leadin: lang['enterleadin'],
+      option_formula1: lang['enterformula'],
+      option_increment1: '<br />' + lang['entervaliddecimal'],
+      option_increment2: '<br />' + lang['entervaliddecimal'],
+      option_increment3: '<br />' + lang['entervaliddecimal'],
+      option_increment4: '<br />' + lang['entervaliddecimal'],
+      option_increment5: '<br />' + lang['entervaliddecimal'],
+      option_increment6: '<br />' + lang['entervaliddecimal'],
+      option_increment7: '<br />' + lang['entervaliddecimal'],
+      option_increment8: '<br />' + lang['entervaliddecimal'],
+      option_increment9: '<br />' + lang['entervaliddecimal'],
+      option_increment10: '<br />' + lang['entervaliddecimal']
     },
     errorPlacement: function(error, element) {
       if (element.attr('name') == 'leadin') {
@@ -154,7 +154,7 @@ $(function() {
       }
     },
     invalidHandler: function() {
-      alert(lang_string['validationerror']);
+      alert(lang['validationerror']);
     }
   });
 });
