@@ -548,6 +548,11 @@ function ajaxSave (ans_changed, submitType) {
       }
     },
     error: function(xhr, textStatus, errorThrown) {
+      if (xhr.status === 403) {
+        info_dialog(xhr.responseText)
+        stop();
+        return;
+      }
       if (textStatus === 'error') {
         if (this.retry()) {
           return;
@@ -644,6 +649,14 @@ function saveFail (textStatus, url, ret_data, submitType) {
   $('body').css('cursor','default');
   submitted = false;
 
+  return false;
+}
+
+function stop () {
+  stopAutoSave();
+  $('#savemsg').html("");
+  $('body').css('cursor','default');
+  submitted = false;
   return false;
 }
 

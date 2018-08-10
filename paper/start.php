@@ -117,13 +117,13 @@ if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObjec
   check_datetime($propertyObj->get_start_date(), $propertyObj->get_end_date(), $string, $mysqli, $is_first_launch);
 
   //Check room security.
-  $low_bandwidth = check_labs(  $papertype,
-                                $propertyObj->get_labs(),
-                                $current_address,
-                                $propertyObj->get_password(),
-                                $string,
-                                $mysqli
-                              );
+  $low_bandwidth = check_labs($papertype,
+    $propertyObj->get_labs(),
+    $current_address,
+    $propertyObj->get_password(),
+    $string,
+    $mysqli
+  );
 
   // Check modules if the user is a student and the paper is not formative.
   $attempt = check_modules($userObject, $modIDs, $propertyObj->get_calendar_year(), $string, $mysqli);
@@ -133,6 +133,12 @@ if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObjec
 
   // Check if the student has clicked 'Finish'.
   check_finished($propertyObj, $userObject, $string, $mysqli);
+
+  if ($papertype == '2') {
+    // Check current IP address with that of attempt in log.
+    // Warn user they are logged into mulitple devices in this exam and log them out.
+    check_ipmismatch($paperID, $current_address, $string, $userObject, $mysqli);
+  }
 }
 
 // Get lab info used in log metadata.
