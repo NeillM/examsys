@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * CSV file exception package
+ * CSV wrtie file exception package
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  */
@@ -23,11 +23,11 @@
 namespace csv;
 
 /**
- * A CSV file failed to load.
+ * A CSV file failed to wrtie.
  *
  * @author Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright (c) 2018, University of Nottingham
  */
-class csv_load_exception extends \file_load_exception {
+class csv_write_exception extends \file_write_exception {
   // Intentionally empty.
 }

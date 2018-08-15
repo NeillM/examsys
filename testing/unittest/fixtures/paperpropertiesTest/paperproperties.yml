@@ -76,16 +76,23 @@ users:
     username: "student"
     roles: "Student"
     grade: "TEST"
+    initials: "a"
+    title: "Mx"
+    gender: "other"
+    first_names: "test"
 track_changes:
 log_metadata:
   -
     id: 1
     userID: 999
     paperID: 45
+    started: "2015-01-01 09:00:00"
+    year: 1
   -
     id: 2
     userID: 1
     paperID: 45
+    started: "2015-02-01 10:00:00"
 log2:
   -
     id: 1
@@ -93,30 +100,40 @@ log2:
     errorstate: 0
     metadataID: 1
     mark: null
+    screen: 1
+    user_answer: 1
   -
     id: 2
     q_id: 2
     errorstate: 0
     metadataID: 1
     mark: null
+    screen: 2
+    user_answer: 2
   -
     id: 3
     q_id: 3
     errorstate: 0
     metadataID: 1
     mark: 1
+    screen: 3
+    user_answer: 5
   -
     id: 4
     q_id: 4
     errorstate: 0
     metadataID: 1
     mark: 1
+    screen: 4
+    user_answer: 7
   -
     id: 5
     q_id: 5
     errorstate: 0
     metadataID: 1
     mark: null
+    screen: 5
+    user_answer: 10
   -
     id: 6
     q_id: 1
@@ -297,3 +314,13 @@ properties_modules:
   -
     property_id: 45
     idMod: 1
+modules_student:
+  -
+    id: 1
+    userID: 999
+    idMod: 1
+    calendar_year: 2015
+sid:
+  -
+    student_id: "1234567890"
+    userID: 999

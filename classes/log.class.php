@@ -170,6 +170,131 @@ abstract class log {
   }
 
   /**
+   * Get list of users that have taken the exam order by total mark ascending.
+   * @param integer $paperid paper id
+   * @param string $startdate start datetime for filter
+   * @param string $enddate end datetime for filter
+   * @param string $userlist user filter
+   * @param boolean $studentonly flag to set student only filter
+   * @return array
+   */
+  public function get_log_users($paperid, $startdate, $enddate, $userlist, $studentonly = false) {
+    $user_list = array();
+    if ($studentonly) {
+      $rolefilter = self::get_student_only();
+    } else {
+      $rolefilter = '';
+    }
+    $userfilter = self::get_user_filter($userlist);
+    $sql = "SELECT
+            log_metadata.userID,
+            SUM(mark) AS total_mark 
+          FROM
+            log$this->papertype,
+            log_metadata,
+            users
+          WHERE
+            log$this->papertype.metadataID = log_metadata.id AND
+            paperID = ? AND
+            DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND
+            started <= ? $userfilter AND
+            log_metadata.userID = users.id $rolefilter
+          GROUP BY
+            log_metadata.userID,
+            paperID,
+            started
+          ORDER BY
+            total_mark, log_metadata.userID";
+    $result = $this->db->prepare($sql);
+    $result->bind_param('iss', $paperid, $startdate, $enddate);
+    $result->execute();
+    $result->bind_result($tmp_userID, $total_mark);
+    $i = 0;
+    while ($result->fetch()) {
+      $user_list[$i]['userid'] = $tmp_userID;
+      $user_list[$i]['totalmark'] = $total_mark;
+      $i++;
+    }
+    $result->free_result();
+    $result->close();
+    return $user_list;
+  }
+
+  /**
+   * Get list of users that have taken the exam order by total mark ascending.
+   * Formative results inclused progressive results, as progressive papers can be converted into a formative
+   * @param integer $paperid paper id
+   * @param string $startdate start datetime for filter
+   * @param string $enddate end datetime for filter
+   * @param string $userlist list of users to filter
+   * @param string $course course filter
+   * @param boolean $studentonly flag to set student only filter
+   * @return array
+   */
+  public function get_assessment_data($paperid, $startdate, $enddate, $userlist, $course = '%', $studentonly = false) {
+    $data = array();
+    if ($studentonly) {
+      $rolefilter = self::get_student_only();
+    } else {
+      $rolefilter = '';
+    }
+    $sql = "SELECT DISTINCT
+        username,
+        log_metadata.userID,
+        title,
+        surname,
+        first_names,
+        grade,
+        gender,
+        year,
+        started,
+        log$this->papertype.q_id,
+        user_answer,
+        screen
+      FROM 
+        log$this->papertype,
+        log_metadata,
+        questions,
+        users
+      WHERE
+        log$this->papertype.metadataID = log_metadata.id AND
+        log$this->papertype.q_id = questions.q_id AND
+        log_metadata.userID IN ($userlist) AND
+        paperID = ? AND
+        users.id = log_metadata.userID $rolefilter AND
+        grade LIKE ? AND
+        DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND 
+        started <= ?
+      ORDER BY 
+        surname,
+        first_names,
+        started,
+        userID";
+    $result = $this->db->prepare($sql);
+    $result->bind_param('isss', $paperid, $course, $startdate, $enddate);
+    $result->execute();
+    $result->bind_result($username, $uID, $title, $surname, $first_names, $grade, $gender, $year, $started, $question_ID, $user_answer, $screen);
+    $i = 0;
+    while ($result->fetch()) {
+      $data[$i]['username'] = $username;
+      $data[$i]['uID'] = $uID;
+      $data[$i]['title'] = $title;
+      $data[$i]['surname'] = $surname;
+      $data[$i]['first_names'] = $first_names;
+      $data[$i]['grade'] = $grade;
+      $data[$i]['gender'] = $gender;
+      $data[$i]['year'] = $year;
+      $data[$i]['started'] = $started;
+      $data[$i]['question_ID'] = $question_ID;
+      $data[$i]['user_answer'] = $user_answer;
+      $data[$i]['screen'] = $screen;
+      $i++;
+    }
+    $result->close();
+    return $data;
+  }
+
+  /**
    * Get paper logs
    */
   abstract public function get_log();
@@ -207,5 +332,32 @@ abstract class log {
     }
     $paperpluginns = 'plugins\\papers\\' . $papertype . '\\log';
     return new $paperpluginns();
+  }
+
+  /**
+   * Retrieve student only sql filter.
+   * @return string
+   */
+  public static function get_student_only() {
+      return " AND (users.roles LIKE '%Student%' OR users.roles = 'graduate')";
+  }
+
+  /**
+   * Retrieve user sql filter.
+   * @param array $userlist list of users
+   * @return string
+   */
+  public static function get_user_filter($userlist) {
+    if (!is_array($userlist)) {
+      $userfilter = '';
+    } elseif (count($userlist) === 1) {
+      $userfilter = 'AND userID = ' . $userlist[0];
+    } elseif (count($userlist) > 0) {
+      $userfilter = 'AND userID IN (' . implode(',', $userlist) . ')';
+    } else {
+      // No users found? So ensure query returns 0 rows.
+      $userfilter = 'AND userID = 0';
+    }
+    return $userfilter;
   }
 }

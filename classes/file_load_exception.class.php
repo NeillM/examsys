@@ -15,12 +15,10 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * CSV file exception package
+ * File exception package
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  */
-
-namespace csv;
 
 /**
  * A CSV file failed to load.
@@ -28,6 +26,6 @@ namespace csv;
  * @author Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright (c) 2018, University of Nottingham
  */
-class csv_load_exception extends \file_load_exception {
+class file_load_exception extends \Exception {
   // Intentionally empty.
 }

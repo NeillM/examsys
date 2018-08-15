@@ -99,9 +99,9 @@ class import_modules extends importer {
     $this->moduleexists = array();
 
     // Set the required headers.
-    $this->data->required_header(self::REQUIRED);
+    $this->handler->required_header(self::REQUIRED);
     $default_academic_year_start = $this->config->get_setting('core', 'system_academic_year_start');
-    while ($line = $this->data->get_line()) {
+    while ($line = $this->handler->get_line()) {
       $line['moduleid'] = trim($line['moduleid']);
       $line['fullname'] = trim($line['fullname']);
       // Check if school exists.

@@ -15,25 +15,24 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * CSV convertor package
+ * CSV import package
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  */
 namespace import;
-use csv\csv_handler;
 
 /**
- * Abstract converter class the base of all converter classes.
+ * Abstract import class the base of all export classes.
  *
  * @author Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright (c) 2018, University of Nottingham
  */
 abstract class importer {
   /**
-   * The handler for the csv file that contains the conversion information.
-   * @var csv_handler
+   * The handler for the file
+   * @var object
    */
-  protected $data;
+  protected $handler;
 
   /**
    * The config object
@@ -42,17 +41,16 @@ abstract class importer {
   protected $config;
 
   /**
-   * The constructor.
-   *
-   * @param csv_handler $file
+   * The constructor
+   * @param \file_handler $handler
    */
-  public function __construct(csv_handler $file) {
+  public function __construct($handler) {
     $this->config = \Config::get_instance();
-    $this->data = $file;
+    $this->handler = $handler;
   }
 
   /**
-   * Do the transform.
+   * Perform the import
    */
   abstract public function execute();
 }

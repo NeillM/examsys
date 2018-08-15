@@ -48,7 +48,7 @@ class import_modulesTest extends unittestdatabase {
    * @return csv_handler
    */
   public function get_test_csv($name) {
-    return new \csv\csv_handler($this->get_base_fixture_directory() . "import" . DIRECTORY_SEPARATOR . "files" . DIRECTORY_SEPARATOR . $name . ".csv");
+    return new \csv\csv_handler($name . ".csv", $this->get_base_fixture_directory() . "import" . DIRECTORY_SEPARATOR . "files" . DIRECTORY_SEPARATOR );
   }
 
   /**

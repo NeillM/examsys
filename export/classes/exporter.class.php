@@ -15,19 +15,43 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * CSV file exception package
+ * CSV export package
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  */
-
-namespace csv;
+namespace export;
 
 /**
- * A CSV file failed to load.
+ * Abstract export class the base of all export classes.
  *
  * @author Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright (c) 2018, University of Nottingham
  */
-class csv_load_exception extends \file_load_exception {
-  // Intentionally empty.
+abstract class exporter {
+  /**
+   * The handler for the file
+   * @var object
+   */
+  protected $handler;
+
+  /**
+   * The config object
+   * @var object
+   */
+  protected $config;
+
+  /**
+   * The constructor
+   * @param \file_handler $handler
+   */
+  public function __construct($handler) {
+    $this->config = \Config::get_instance();
+    $this->handler = $handler;
+  }
+
+  /**
+   * Perform the export
+   * @param array $data export data
+   */
+  abstract public function execute($data);
 }

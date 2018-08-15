@@ -266,4 +266,98 @@ class paperpropertiestest extends unittestdatabase {
       $this->assertFalse($properties->display_timer());
     }
 
+    /**
+     * Test get student list for paper
+     * @group paper
+     */
+    public function test_get_user_list() {
+      $expected = array(999);
+      $startdate = "2015-01-01 00:00:00";
+      $enddate = "2015-02-01 11:00:00";
+      $percentile = 100;
+      $studentonly = true;
+      $modules = '';
+      $properties = PaperProperties::get_paper_properties_by_id(45, $this->db, '');
+      // Students only.
+      $this->assertEquals($expected, $properties->get_user_list($startdate, $enddate, $percentile, $studentonly, $modules));
+      $expected = array(1, 999);
+      $studentonly = false;
+      // All.
+      $this->assertEquals($expected, $properties->get_user_list($startdate, $enddate, $percentile, $studentonly, $modules));
+      // Top 40%.
+      $expected = array(1);
+      $percentile = 40;
+      $this->assertEquals($expected, $properties->get_user_list($startdate, $enddate, $percentile, $studentonly, $modules));
+      $percentile = 100;
+      // Out of range.
+      $expected = array();
+      $startdate = "2017-01-01 00:00:00";
+      $enddate = "2017-02-01 11:00:00";
+      $this->assertEquals($expected, $properties->get_user_list($startdate, $enddate, $percentile, $studentonly, $modules));
+      // Not in module.
+      $startdate = "2015-01-01 00:00:00";
+      $enddate = "2015-02-01 11:00:00";
+      $modules = '2';
+      $this->assertEquals($expected, $properties->get_user_list($startdate, $enddate, $percentile, $studentonly, $modules));
+      // In module.
+      $expected = array(999);
+      $modules = '1';
+      $this->assertEquals($expected, $properties->get_user_list($startdate, $enddate, $percentile, $studentonly, $modules));
+    }
+
+    /**
+     * Test get assessment data for paper
+     * @group paper
+     */
+    public function test_paper_assessment_data() {
+      $expected[0][1][1] = 1;
+      $expected[0][2][2] = 2;
+      $expected[0][3][3] = 5;
+      $expected[0][4][4] = 7;
+      $expected[0][5][5] = 10;
+      $expected[0]['userID'] = 999;
+      $expected[0]['username'] = 'student';
+      $expected[0]['course'] = 'TEST';
+      $expected[0]['year'] = 1;
+      $expected[0]['started'] = "2015-01-01 09:00:00";
+      $expected[0]['title'] = 'Mx';
+      $expected[0]['surname'] ='student';
+      $expected[0]['first_names'] = "test";
+      $expected[0]['name'] = "student,test";
+      $expected[0]['gender'] = "Other";
+      $expected[0]['student_id'] = '1234567890';
+      $properties = PaperProperties::get_paper_properties_by_id(45, $this->db, '');
+      $course = "TEST";
+      $startdate = "2015-01-01 00:00:00";
+      $enddate = "2015-02-01 11:00:00";
+      $percentile = 100;
+      $studentonly = true;
+      $modules = '';
+      $demo = false;
+      $student_list = implode(',', $properties->get_user_list($startdate, $enddate, $percentile, $studentonly, $modules));
+      $this->assertEquals($expected, $properties->get_paper_assessment_data($course, $startdate, $enddate, $student_list, $studentonly, $demo));
+    }
+
+    /**
+     * Test get paper details
+     * @group paper
+     */
+    public function test_get_paper_questions() {
+      $properties = PaperProperties::get_paper_properties_by_id(1, $this->db, '');
+      $expected[0]['ID'] = 2;
+      $expected[0]['type'] = 'enhancedcalc';
+      $expected[0]['screen'] = 1;
+      $expected[0]['correct'] = ',';
+      $expected[0]['correct_text'] = "\t";
+      $expected[0]['score_method'] = 'Allow partial Marks';
+      $expected[0]['settings'] = '{"strictdisplay":true,"strictzeros":false,"dp":"0","tolerance_full":"0","fulltoltyp":"#","tolerance_partial":"0","parttoltyp":"#","marks_partial":0,"marks_incorrect":0,"marks_correct":1,"marks_unit":0,"show_units":true,"answers":[{"formula":"$A*$B","units":"cm"}],"vars":{"$A":{"min":"2","max":"10","inc":"1","dec":"0"},"$B":{"min":"5","max":"10","inc":"1","dec":"0"}}}';
+      $expected[1]['ID'] = 6;
+      $expected[1]['type'] = 'mcq';
+      $expected[1]['screen'] = 1;
+      $expected[1]['correct'] = ',1';
+      $expected[1]['correct_text'] = "\ttrue\tfalse\tmaybe";
+      $expected[1]['score_method'] = "Mark per Option";
+      $expected[1]['settings'] = '[]';
+      $this->assertEquals($expected, $properties->get_paper_questions());
+    }
 }

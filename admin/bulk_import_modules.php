@@ -69,11 +69,11 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
   $data['onclick'] = "window.location='list_modules.php'";
   if (isset($_POST['submit'])) {
     $default_academic_year_start = $configObject->get_setting('core', 'system_academic_year_start');
-    $tmpfile = $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv";
+    $tmpfile = $userObject->get_user_ID() . "_module_create.csv";
     try {
-      \csv\csv_handler::move_upload_to_temp($_FILES['csvfile'], $tmpfile);
+      \csv\csv_handler::move_upload_to_temp($_FILES['csvfile'], $configObject->get('cfg_tmpdir') . $tmpfile);
       try {
-        $csv = new \csv\csv_handler($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
+        $csv = new \csv\csv_handler($tmpfile);
         $import = new \import\import_modules($csv);
         $import->execute();
         $data['exists'] = $import->get_exists();
@@ -82,7 +82,7 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
       } catch (\csv\csv_load_exception $e) {
         $data['failed'] = array($e->getMessage());
       }
-      $csv->delete( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_module_create.csv");
+      $csv->delete_temp_file();
     } catch (\csv\csv_load_exception $e) {
       $data['failed'] = array($e->getMessage());
     }

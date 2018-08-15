@@ -35,12 +35,11 @@ class csv_handlerTest extends unittestdatabase {
   }
 
   /**
-   * Get test file
-   * @param $name name of file
+   * Get test dir
    * @return csv_handler
    */
-  public function get_test_csv($name) {
-    return $this->get_base_fixture_directory() . "csv" . DIRECTORY_SEPARATOR . "files" . DIRECTORY_SEPARATOR . $name . ".csv";
+  public function get_test_dir() {
+    return $this->get_base_fixture_directory() . "csv" . DIRECTORY_SEPARATOR . "files" . DIRECTORY_SEPARATOR;
   }
 
   /**
@@ -72,8 +71,9 @@ class csv_handlerTest extends unittestdatabase {
    * @group csv
    */
   public function test_get_line() {
-    $csv = new \csv\csv_handler($this->get_test_csv('test'));
+    $csv = new \csv\csv_handler("test.csv", $this->get_test_dir());
     $line = array('a' => '1', 'b' => '2', 'c' => '3');
     $this->assertEquals($line, $csv->get_line());
   }
+
 }

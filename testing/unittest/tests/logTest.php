@@ -73,4 +73,205 @@ class logtest extends unittestdatabase {
         'current_screen' => 1);
     $this->assertEquals($previous, $log->get_previous_answers($metadataID, $do_restart, $current_screen, true));
   }
+
+  /**
+   * Test retrieving users in log for survey (where it is not supported)
+   * @group log
+   */
+  public function test_get_log_users_survey() {
+    $papertype = '3';
+    $log = \log::get_paperlog($papertype);
+    $this->assertEquals(array(), $log->get_log_users(1, '', '', array(), false));
+  }
+
+  /**
+   * Test retrieving users in log for summative
+   * @group log
+   */
+  public function test_get_log_users_summative() {
+    $papertype = '2';
+    $log = \log::get_paperlog($papertype);
+    $expected[0]['userid'] = 2;
+    $expected[0]['totalmark'] = 1.0;
+    $expected[1]['userid'] = 1;
+    $expected[1]['totalmark'] = 3.0;
+    // All users.
+    $this->assertEquals($expected, $log->get_log_users(2, '2018-01-01 00:00:00', '2018-01-05 01:00:00', array(1, 2), false));
+    // Students only.
+    $expected = array();
+    $expected[0]['userid'] = 1;
+    $expected[0]['totalmark'] = 3.0;
+    $this->assertEquals($expected, $log->get_log_users(2, '2018-01-01 00:00:00', '2018-01-05 01:00:00', array(1, 2), true));
+    // All users in timeframe
+    $this->assertEquals($expected, $log->get_log_users(2, '2018-01-01 00:00:00', '2018-01-01 01:00:00', array(1, 2), false));
+  }
+
+  /**
+   * Test retrieving users in log for formative
+   * @group log
+   */
+  public function test_get_log_users_formative() {
+    $papertype = '0';
+    $log = \log::get_paperlog($papertype);
+    $expected[0]['userid'] = 2;
+    $expected[0]['totalmark'] = 0.0;
+    $expected[1]['userid'] = 1;
+    $expected[1]['totalmark'] = 1.0;
+    $expected[2]['userid'] = 2;
+    $expected[2]['totalmark'] = 2.0;
+    $expected[3]['userid'] = 1;
+    $expected[3]['totalmark'] = 4.0;
+    // Progressive paper migrated to formative paper.
+    // All users.
+    $this->assertEquals($expected, $log->get_log_users(3, '2016-01-01 00:00:00', '2018-01-05 01:00:00', array(1, 2), false));
+    // Students only.
+    $expected = array();
+    $expected[0]['userid'] = 1;
+    $expected[0]['totalmark'] = 1.0;
+    $expected[1]['userid'] = 1;
+    $expected[1]['totalmark'] = 4.0;
+    $this->assertEquals($expected, $log->get_log_users(3, '2016-01-01 00:00:00', '2018-01-05 01:00:00', array(1, 2), true));
+    // All users in timeframe
+    $this->assertEquals($expected, $log->get_log_users(3, '2017-01-01 00:00:00', '2018-01-05 01:00:00', array(1, 2), false));
+  }
+
+  /**
+   * Test retrieving assessment data in log for survey (where it is not supported)
+   * @group log
+   */
+  public function test_get_assessment_data_survey() {
+    $papertype = '3';
+    $log = \log::get_paperlog($papertype);
+    $this->assertEquals(array(), $log->get_assessment_data(1, '', '', ''));
+  }
+
+  /**
+   * Test retrieving assessment data in log for summative
+   * @group log
+   */
+  public function test_get_assessment_data_summative() {
+    $papertype = '2';
+    $log = \log::get_paperlog($papertype);
+    // Student only.
+    $expected[0]['username'] = 'student1';
+    $expected[0]['uID'] = 1;
+    $expected[0]['title'] = 'Mr';
+    $expected[0]['surname'] = 'Baxter';
+    $expected[0]['first_names'] = "Joseph";
+    $expected[0]['grade'] = 'TEST';
+    $expected[0]['gender'] = "Male";
+    $expected[0]['year'] = 2;
+    $expected[0]['started'] = "2018-01-01 00:00:00";
+    $expected[0]['question_ID'] = 2;
+    $expected[0]['user_answer'] = '1';
+    $expected[0]['screen'] = 1;
+    $expected[1]['username'] = 'student1';
+    $expected[1]['uID'] = 1;
+    $expected[1]['title'] = 'Mr';
+    $expected[1]['surname'] = 'Baxter';
+    $expected[1]['first_names'] = "Joseph";
+    $expected[1]['grade'] = 'TEST';
+    $expected[1]['gender'] = "Male";
+    $expected[1]['year'] = 2;
+    $expected[1]['started'] = "2018-01-01 00:00:00";
+    $expected[1]['question_ID'] = 3;
+    $expected[1]['user_answer'] = '1';
+    $expected[1]['screen'] = 2;
+    $this->assertEquals($expected, $log->get_assessment_data(2, '2018-01-01 00:00:00', '2018-01-05 01:00:00', "1, 2", '%', true));
+    // All users in timeframe.
+    $this->assertEquals($expected, $log->get_assessment_data(2, '2018-01-01 00:00:00', '2018-01-01 01:00:00', "1, 2"));
+    // All users in course.
+    $this->assertEquals($expected, $log->get_assessment_data(2, '2018-01-01 00:00:00', '2018-01-05 01:00:00', "1, 2", 'TEST', false));
+    // All users.
+    $expected[2]['username'] = 'staff';
+    $expected[2]['uID'] = 2;
+    $expected[2]['title'] = 'Dr';
+    $expected[2]['surname'] = 'Baxter';
+    $expected[2]['first_names'] = "Josephine";
+    $expected[2]['grade'] = 'University Staff';
+    $expected[2]['gender'] = "Female";
+    $expected[2]['year'] = 1;
+    $expected[2]['started'] = "2018-01-04 00:00:00";
+    $expected[2]['question_ID'] = 2;
+    $expected[2]['user_answer'] = '1';
+    $expected[2]['screen'] = 1;
+    $expected[3]['username'] = 'staff';
+    $expected[3]['uID'] = 2;
+    $expected[3]['title'] = 'Dr';
+    $expected[3]['surname'] = 'Baxter';
+    $expected[3]['first_names'] = "Josephine";
+    $expected[3]['grade'] = 'University Staff';
+    $expected[3]['gender'] = "Female";
+    $expected[3]['year'] = 1;
+    $expected[3]['started'] = "2018-01-04 00:00:00";
+    $expected[3]['question_ID'] = 3;
+    $expected[3]['user_answer'] = '0';
+    $expected[3]['screen'] = 2;
+    $this->assertEquals($expected, $log->get_assessment_data(2, '2018-01-01 00:00:00', '2018-01-05 01:00:00', "1, 2"));
+  }
+
+  /**
+   * Test retrieving assessment data in log for formative
+   * @group log
+   */
+  public function test_get_assessment_data_formative() {
+    $papertype = '0';
+    $log = \log::get_paperlog($papertype);
+    // Student only.
+    $expected[0]['username'] = 'student1';
+    $expected[0]['uID'] = 1;
+    $expected[0]['title'] = 'Mr';
+    $expected[0]['surname'] = 'Baxter';
+    $expected[0]['first_names'] = "Joseph";
+    $expected[0]['grade'] = 'TEST';
+    $expected[0]['gender'] = "Male";
+    $expected[0]['year'] = 2;
+    $expected[0]['started'] = "2017-01-01 00:00:00";
+    $expected[0]['question_ID'] = 2;
+    $expected[0]['user_answer'] = '1';
+    $expected[0]['screen'] = 1;
+    $expected[1]['username'] = 'student1';
+    $expected[1]['uID'] = 1;
+    $expected[1]['title'] = 'Mr';
+    $expected[1]['surname'] = 'Baxter';
+    $expected[1]['first_names'] = "Joseph";
+    $expected[1]['grade'] = 'TEST';
+    $expected[1]['gender'] = "Male";
+    $expected[1]['year'] = 2;
+    $expected[1]['started'] = "2018-01-01 00:00:00";
+    $expected[1]['question_ID'] = 2;
+    $expected[1]['user_answer'] = '1';
+    $expected[1]['screen'] = 1;
+    $this->assertEquals($expected, $log->get_assessment_data(3, '2016-01-01 00:00:00', '2018-01-05 01:00:00', "1, 2", '%', true));
+    // All users in timeframe.
+    $this->assertEquals($expected, $log->get_assessment_data(3, '2017-01-01 00:00:00', '2018-01-05 01:00:00', "1, 2"));
+    // All users in course.
+    $this->assertEquals($expected, $log->get_assessment_data(3, '2016-01-01 00:00:00', '2018-01-05 01:00:00', "1, 2", 'TEST', false));
+    // All users.
+    $expected[2]['username'] = 'staff';
+    $expected[2]['uID'] = 2;
+    $expected[2]['title'] = 'Dr';
+    $expected[2]['surname'] = 'Baxter';
+    $expected[2]['first_names'] = "Josephine";
+    $expected[2]['grade'] = 'University Staff';
+    $expected[2]['gender'] = "Female";
+    $expected[2]['year'] = 1;
+    $expected[2]['started'] = "2016-01-01 00:00:00";
+    $expected[2]['question_ID'] = 2;
+    $expected[2]['user_answer'] = '4';
+    $expected[2]['screen'] = 1;
+    $expected[3]['username'] = 'staff';
+    $expected[3]['uID'] = 2;
+    $expected[3]['title'] = 'Dr';
+    $expected[3]['surname'] = 'Baxter';
+    $expected[3]['first_names'] = "Josephine";
+    $expected[3]['grade'] = 'University Staff';
+    $expected[3]['gender'] = "Female";
+    $expected[3]['year'] = 1;
+    $expected[3]['started'] = "2016-01-01 00:00:00";
+    $expected[3]['question_ID'] = 2;
+    $expected[3]['user_answer'] = '3';
+    $expected[3]['screen'] = 1;
+    $this->assertEquals($expected, $log->get_assessment_data(3, '2016-01-01 00:00:00', '2018-01-05 01:00:00', "1, 2"));
+  }
 }

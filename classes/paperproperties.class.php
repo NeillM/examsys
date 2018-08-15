@@ -2486,4 +2486,144 @@ class PaperProperties {
       }
       return false;
     }
+
+  /**
+   * Get list of users that have taken the paper.
+   * @param string $startdate start of datetime range
+   * @param string $enddate end of datetime range
+   * @param float $percentile range of percentile
+   * @param boolean $studentonly do we only want student users
+   * @param string $modules the modules we are interested in
+   * @return array
+   */
+  public function get_user_list($startdate, $enddate, $percentile, $studentonly = true, $modules = '') {
+    $student_list = array();
+    $userlist = null;
+    if ($modules !== '') {
+      $moduleusers = array();
+      $calendar_year = $this->get_calendar_year();
+      $modules = explode(',', $modules);
+      foreach ($modules as $module) {
+        $members = module_utils::get_student_members($calendar_year, $module, $this->db);
+        foreach ($members as $member) {
+          $moduleusers[] = $member['userID'];
+        }
+      }
+      $moduleusers = array_unique($moduleusers);
+      $userlist = $moduleusers;
+    }
+    $log = log::get_paperlog($this->get_paper_type());
+    $users = $log->get_log_users($this->property_id, $startdate, $enddate, $userlist, $studentonly);
+    $user_no = round((count($users)/100) * $percentile);
+    for ($student_no = 0; $student_no < $user_no; $student_no++) {
+      $student_list[] = $users[$student_no]['userid'];
+    }
+    return $student_list;
+  }
+
+  /**
+   * Get assessment data for paper
+   * @param string $course course to filter by
+   * @param string $startdate start of datetime range
+   * @param string $enddate end of datetime range
+   * @param string $user_list comma seperated list of users to filter by
+   * @param boolean $studentonly do we only want student users
+   * @param boolean $demo obfusticate data if in demo mode
+   * @return array
+   */
+  public function get_paper_assessment_data($course, $startdate, $enddate, $user_list, $studentonly, $demo) {
+    $log_array = array();
+    $rowID = 0;
+    // Capture the log data.
+    $log = log::get_paperlog($this->get_paper_type());
+    $assessment = $log->get_assessment_data($this->property_id, $startdate, $enddate, $user_list, $course, $studentonly);
+    $old_username = '';
+    $old_started = '';
+    $users = array();
+    foreach ($assessment as $log) {
+      if ($old_username != $log['username'] or $old_started != $log['started']) {
+        $rowID++;
+      }
+      $log_array[$rowID][$log['screen']][$log['question_ID']] = $log['user_answer'];
+      $log_array[$rowID]['userID'] = $log['uID'];
+      $users[$log['uID']][] = $rowID;
+      $log_array[$rowID]['username'] = $log['username'];
+      $log_array[$rowID]['course'] = $log['grade'];
+      $log_array[$rowID]['year'] = $log['year'];
+      $log_array[$rowID]['started'] = $log['started'];
+      $log_array[$rowID]['title'] = $log['title'];
+      $log_array[$rowID]['surname'] = \demo::demo_replace($log['surname'], $demo);
+      $log_array[$rowID]['first_names'] = \demo::demo_replace($log['first_names'], $demo);
+      $log_array[$rowID]['name'] = str_replace("'", "", $log['surname']) . ',' . $log['first_names'];
+      $log_array[$rowID]['gender'] = $log['gender'];
+
+      $old_username = $log['username'];
+      $old_started = $log['started'];
+    }
+
+    // Get student ids.
+    if (count($users) > 0) {
+      $users_list = implode(',', array_keys($users));
+      $result = $this->db->prepare("SELECT student_id, userID FROM sid WHERE userID IN ($users_list)");
+      $result->execute();
+      $result->bind_result($sid, $userid);
+      while ($result->fetch()) {
+        foreach ($users[$userid] as $row) {
+          $log_array[$row]['student_id'] = \demo::demo_replace_number($sid, $demo);
+        }
+      }
+      for ($rowID = 1; $rowID < count($log_array); $rowID++) {
+        if (!isset($log_array[$rowID]['student_id'])) {
+          $log_array[$rowID]['student_id'] = null;
+        }
+      }
+      $result->close();
+    }
+    $sortby = 'name';
+    $ordering = 'asc';
+    return \sort::array_csort($log_array, $sortby, $ordering);
+  }
+
+  /**
+   * Get the paper details
+   * @return array
+   */
+  public function get_paper_questions() {
+    $paper_buffer = array();
+    $configObject = \Config::get_instance();
+    $db = $configObject->db;
+    $question_no = -1;
+    $old_q_id = -1;
+    $result = $db->prepare("SELECT q_id, q_type, screen, correct, option_text, score_method, settings FROM papers, questions LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.question = questions.q_id AND papers.paper = ? AND q_type != 'info' ORDER BY screen, display_pos, id_num");
+    $result->bind_param('i', $this->property_id);
+    $result->execute();
+    $result->bind_result($q_id, $q_type, $screen, $correct, $option_text, $score_method, $settings);
+    while ($result->fetch()) {
+      if ($old_q_id != $q_id) {
+        $question_no++;
+        $paper_buffer[$question_no]['ID'] = $q_id;
+        $paper_buffer[$question_no]['type'] = $q_type;
+        $paper_buffer[$question_no]['screen'] = $screen;
+        $old_correct = $paper_buffer[$question_no]['correct'] = QuestionUtils::fix_correct($q_type, $correct, '', $option_text);
+        $paper_buffer[$question_no]['correct_text'] = "\t" . $option_text;
+        $paper_buffer[$question_no]['score_method'] = $score_method;
+        $paper_buffer[$question_no]['settings'] = $settings;
+      } else {
+        // A seperate option for the same question as the last loop.
+        $old_correct = $paper_buffer[$question_no]['correct'] = QuestionUtils::fix_correct($q_type, $correct, $old_correct, $option_text);
+        $paper_buffer[$question_no]['correct_text'] .= "\t" . $option_text;
+      }
+      $old_q_id = $q_id;
+    }
+    $result->close();
+    // Get random ids.
+    $i = 0;
+    foreach ($paper_buffer as $question) {
+      if ($question['type'] == 'random') {
+        $paper_buffer[$i]['rand_ids'] = random_utils::get_random_qids_for_question($question['ID'], $db);
+      }
+      $i++;
+    }
+    return $paper_buffer;
+  }
 }

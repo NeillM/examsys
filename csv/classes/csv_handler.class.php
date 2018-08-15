@@ -25,18 +25,7 @@ namespace csv;
 /**
  * CSV handler helper class.
  */
-class csv_handler {
-  /**
-   * The path to the csv file.
-   * @var string
-   */
-  protected $file;
-
-  /**
-   * Reading pointer to the file from fopen()
-   * @var resource
-   */
-  protected $read_file_handle;
+class csv_handler extends \file_handler {
 
   /**
    * The header that is required by the file.
@@ -51,28 +40,6 @@ class csv_handler {
   protected $header;
 
   /**
-   * Language pack component.
-   */
-  const langcomponent = 'csv/csv_handler';
-
-  /**
-   * Initialise the handler.
-   * @param string $file The path to the file to be used
-   * @throws csv_load_exception
-   */
-  public function __construct($file) {
-    $filename = basename($file);
-    $directory = dirname($file);
-    $fullpath = realpath($directory);
-    $langpack = new \langpack();
-    $error = $langpack->get_string(self::langcomponent, "invalidpath");
-    if ($fullpath === false) {
-      throw new csv_load_exception($file . $error);
-    }
-    $this->file = $fullpath . DIRECTORY_SEPARATOR . $filename;
-  }
-
-  /**
    * Move upload file to tmp dir
    * @param string $from upload file
    * @param string $to temp file location
@@ -81,7 +48,7 @@ class csv_handler {
    */
   public static function move_upload_to_temp($from, $to) {
     $langpack = new \langpack();
-    $string = $langpack->get_strings(self::langcomponent, array('nofilename', 'csvonly', 'maxfilesize', 'partialupload', 'nofileuploaded', 'notempdir', 'unknownissue'));
+    $string = $langpack->get_strings(parent::langcomponent, array('nofilename', 'csvonly', 'maxfilesize', 'partialupload', 'nofileuploaded', 'notempdir', 'unknownissue'));
     if ($from['name'] == '') {
       throw new csv_load_exception($string['nofilename']);
     }
@@ -92,7 +59,7 @@ class csv_handler {
       switch ($from['error']) {
         case 2:
         case 3:
-          $err = string['maxfilesize'];
+          $err = $string['maxfilesize'];
           break;
         case 4:
           $err = $string['partialupload'];
@@ -126,22 +93,20 @@ class csv_handler {
    *
    * @throws csv_load_exception
    */
-  protected function load() {
-    $langpack = new \langpack();
-    $string = $langpack->get_strings(self::langcomponent, array('doesnotexist', 'cannotberead', 'invalidheaders'));
+  public function load() {
     // Check the file exists and is readable.
     if (!file_exists($this->file)) {
-      throw new csv_load_exception($this->file . $string['doesnotexist']);
+      throw new csv_load_exception($this->file . $this->string['doesnotexist']);
     }
     if (!is_readable($this->file)) {
-      throw new csv_load_exception($this->file . $string['cannotberead']);
+      throw new csv_load_exception($this->file . $this->string['cannotberead']);
     }
     // Open the file.
     $this->read_file_handle = fopen($this->file, 'r');
     // The first line should be the header of the file.
     $this->header = fgetcsv($this->read_file_handle);
     if (!$this->verify_header()) {
-      throw new csv_load_exception($this->file . $string['invalidheaders']);
+      throw new csv_load_exception($this->file . $this->string['invalidheaders']);
     }
   }
 
@@ -167,14 +132,6 @@ class csv_handler {
       }
     }
     return $return;
-  }
-
-  /**
-   * Delete csv file
-   * @param string $file file to delete
-   */
-  public function delete($file) {
-    unlink($file);
   }
 
   /**
@@ -205,5 +162,53 @@ class csv_handler {
       }
     }
     return $valid;
+  }
+
+  /**
+   * Create the temp csv file with the required header row.
+   * @throws csv_write_exception
+   */
+  public function create() {
+    // We create a temp file so we can check it has been created successfully before allowing the user to download it.
+    if ($this->write_file_handle !== false) {
+      if (!empty($this->required_header)) {
+        if (fputcsv($this->write_file_handle, $this->required_header) === false) {
+          $this->delete_temp_file();
+          throw new csv_write_exception($this->file . ' ' . $this->string['cannotwriteheaders']);
+        }
+      } else {
+        $this->delete_temp_file();
+        throw new csv_write_exception($this->file . ' ' . $this->string['noheaders']);
+      }
+    } else {
+      throw new csv_write_exception($this->file . ' ' . $this->string['cannotwritefile']);
+    }
+  }
+
+  /**
+   * Writes an array as a line in the temp csv file.
+   * @param array $line
+   * @throws csv_write_exception
+   */
+  public function write_line(array $line) {
+    if (!isset($this->write_file_handle)) {
+      if (empty($this->required_header)) {
+        // If no required header is set, use the array keys for this line.
+        $this->required_header(array_keys($line));
+      }
+      $this->create_temp_file();
+    }
+    if (fputcsv($this->write_file_handle, $line) === false) {
+      $this->delete_temp_file();
+      throw new csv_write_exception($this->file . ' ' . $this->string['cannotwriteline']);
+    }
+  }
+
+  /**
+   * Set csv file headers
+   */
+  public function set_headers() {
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="' . basename($this->filename) . '"');
   }
 }
