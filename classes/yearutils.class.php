@@ -105,8 +105,12 @@ class yearutils {
               $years[] = $year;
             }
             $paperyears->close();
-            $years = ltrim(implode(",", $years), ',');
-            $filter = "WHERE deleted is NULL AND calendar_year in ($years) ORDER BY calendar_year ASC";
+            if (count($years) > 0) {
+              $years = ltrim(implode(",", $years), ',');
+              $filter = "WHERE deleted is NULL AND calendar_year in ($years) ORDER BY calendar_year ASC";
+            } else {
+              return array();
+            }
         } else {
             $filter = "WHERE deleted is NULL ORDER BY calendar_year ASC";
         }
