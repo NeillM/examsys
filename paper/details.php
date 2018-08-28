@@ -838,7 +838,7 @@ function random_qMarks($random_questions) {
   $exam_announcements = $exam_announcementObj->get_announcements();
 
   // initial link of breadcrumb
-  $links = array('/' => 'Home');
+  $links = array('/' => $string['home']);
 
   if ($folder) {
     // links of parent folders

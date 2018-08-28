@@ -355,7 +355,7 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
         $result_detail = '';
     }
 
-    $table_order = array('#1', '#2', $string['title'], 'Surname', 'First Names', $string['username'], $string['studentid'], $string['year'], $string['course']);
+    $table_order = array('#1', '#2', $string['title'], $string['surname'], $string['firstname'], $string['username'], $string['studentid'], $string['year'], $string['course']);
     $photodirectory = rogo_directory::get_directory('user_photo');
 }
 ?>

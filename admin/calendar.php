@@ -117,6 +117,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script>
+    var mins = '<?php echo $string['mins'] ?>';
     var lab_names = new Array();
     <?php
     // Get computer lab information.
@@ -154,7 +155,7 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 
       $('#callout').css('left', left_pos);
       $('#callout').css('top', top_pos + p.height() + 12);
-      $('#duration').html(duration + ' mins');
+      $('#duration').html(duration + ' ' + mins);
 
       if (start_time == end_time) {
         $('#start_time2').html(start_time);
