@@ -272,8 +272,12 @@ if ($exam_duration !== null) {
     // Check current IP address with that of attempt in log.
     // Warn user that they need to log out if they are logged into mulitple devices in this exam.
     if ($current_address !== $log_metadata->get_ipaddress()) {
-      $ipmismatch = true;
-      $log_metadata->set_ipaddress($current_address);
+      if (!is_null($log_metadata->get_ipaddress())) {
+         $ipmismatch = true;
+      }
+      if ($exam_started) {
+        $log_metadata->set_ipaddress($current_address);
+      }
     }
     $extra_time_mins    = $extra_time_secs / 60;
   } else {
