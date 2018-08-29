@@ -74,7 +74,7 @@ Class module {
     $members = array();
 
     $result = $db->prepare("SELECT DISTINCT surname, initials, title, users.id, username, student_id 
-        FROM (modules_student, users, sid) WHERE modules_student.userID = users.id AND users.id = sid.userID AND calendar_year = ? AND idMod = ? ORDER BY surname, initials");
+        FROM (modules_student, users) LEFT JOIN sid ON users.id = sid.userID WHERE modules_student.userID = users.id AND calendar_year = ? AND idMod = ? ORDER BY surname, initials");
     $result->bind_param('ii', $calendar_year, $idMod);
     $result->execute();
     $result->store_result();
