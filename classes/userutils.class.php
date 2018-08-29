@@ -209,10 +209,14 @@ Class UserUtils {
         return false;
     }
     if (isset($sid) and $sid != '') {
+      if (is_null($current['studentid'])) {
+        $result = $db->prepare("INSERT INTO sid (student_id, userID) VALUES (?, ?)");
+      } else {
         $result = $db->prepare("UPDATE sid SET student_id = ? WHERE userID = ?");
-        $result->bind_param('si', $sid, $id);
-        $result->execute();
-        $result->close();
+      }
+      $result->bind_param('si', $sid, $id);
+      $result->execute();
+      $result->close();
     }
     if ($db->errno != 0) {
         return false;
