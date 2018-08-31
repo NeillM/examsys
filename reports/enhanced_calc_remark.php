@@ -242,7 +242,7 @@ foreach ($log_answers2 as $innerans) {
     </tbody>
   </table>
 </div>
-<div style="text-align:center"
+<div style="text-align:center">
   <button id="save_all" type="button" class="save-all"><?php echo $string['save'] ?></button>
   <button id="" onclick="window.close();"><?php echo $string['done'] ?></button>
 </div>
