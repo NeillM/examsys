@@ -7,14 +7,11 @@
 # to start your local Rogo environment.
 #
 Vagrant.configure("2") do |config|
-  config.vm.box = "bento/ubuntu-16.04"
+  config.vm.box = "bento/ubuntu-18.04"
   config.vm.network "forwarded_port", guest: 80, host: 8080
   config.vm.network "forwarded_port", guest: 443, host: 44433
   config.vm.synced_folder ".", "/var/www", owner: "www-data", group: "www-data"
   config.vm.provision "shell", inline: <<-SHELL
-    # add php 7.2 repo
-    add-apt-repository ppa:ondrej/php
-
     # update packages
     apt-get update
 
@@ -27,10 +24,10 @@ Vagrant.configure("2") do |config|
     apt-get install -y mysql-server
 
     # install PHP 7.2 with required extensions
-    apt-get install -y php7.2 php7.2-gd php7.2-curl php7.2-xml php7.2-xmlrpc php7.2-mysql php7.2-intl php7.2-ldap php7.2-mbstring php7.2-zip php7.2-memcache
+    apt-get install -y php-gd php-curl php-xml php-xmlrpc php-mysql php-intl php-ldap php-mbstring php-zip php-memcached
 
     # install Apache with PHP
-    apt-get install -y apache2 libapache2-mod-php7.2
+    apt-get install -y apache2 libapache2-mod-php
 
     # create virtual hosts
     echo "<VirtualHost *:80>
@@ -82,8 +79,8 @@ upload_max_filesize = 20M
 default_charset = "utf-8"
 mbstring.internal_encoding = UTF-8
 max_input_vars = 3000
-session.save_handler = memcache
-session.save_path = "tcp://localhost:11211"
+session.save_handler = memcached
+session.save_path = "localhost:11211"
 " > /etc/php/7.2/apache2/conf.d/20-user.ini
 
     # restart Apache
