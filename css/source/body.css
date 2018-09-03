@@ -282,3 +282,7 @@ audio {
   height:220px;
   margin:0;
 }
+.mediadiv {
+  margin: auto;
+  text-align: center;
+}

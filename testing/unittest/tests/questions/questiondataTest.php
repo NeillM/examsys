@@ -81,7 +81,10 @@ class questiondatatest extends unittestdatabase{
               'o_media_height' => '121',
               'marks_correct' => 2,
               'marks_incorrect' => -1,
-              'marks_partial' => 0
+              'marks_partial' => 0,
+              'mediaext' => 'jpg',
+              'mediadelay' => false,
+              'mediaextra' => array(),
             ),
             2 => array(
               'correct' => '1',
@@ -91,7 +94,10 @@ class questiondatatest extends unittestdatabase{
               'o_media_height' => '149',
               'marks_correct' => 2,
               'marks_incorrect' => -1,
-              'marks_partial' => 0
+              'marks_partial' => 0,
+              'mediaext' => 'png',
+              'mediadelay' => false,
+              'mediaextra' => array(),
             ),
             3 => array(
               'correct' => '1',
@@ -158,6 +164,9 @@ class questiondatatest extends unittestdatabase{
             'mediatype' => 1,
             'mediaborder' => true,
             'mediabordercolour' => '',
+            'mediaext' => '',
+            'mediadelay' => false,
+            'mediaextra' => array(),
         ),
         'selected' => true,
         'optiontextdisplay' => true,
@@ -183,6 +192,9 @@ class questiondatatest extends unittestdatabase{
             'mediatype' => 2,
             'mediaborder' => false,
             'mediabordercolour' => '',
+            'mediaext' => 'jpg',
+            'mediadelay' => false,
+            'mediaextra' => array(),
         ),
         'selected' => false,
         'optiontextdisplay' => true,
@@ -208,6 +220,9 @@ class questiondatatest extends unittestdatabase{
             'mediatype' => 2,
             'mediaborder' => false,
             'mediabordercolour' => '',
+            'mediaext' => 'png',
+            'mediadelay' => false,
+            'mediaextra' => array(),
         ),
         'selected' => false,
         'optiontextdisplay' => true,
@@ -233,6 +248,9 @@ class questiondatatest extends unittestdatabase{
             'mediatype' => 1,
             'mediaborder' => true,
             'mediabordercolour' => '',
+            'mediaext' => '',
+            'mediadelay' => false,
+            'mediaextra' => array(),
         ),
         'selected' => false,
         'optiontextdisplay' => true,
@@ -286,7 +304,7 @@ class questiondatatest extends unittestdatabase{
     $locked = true;
     $mediadirectory = rogo_directory::get_directory('media');
     $url = $mediadirectory->url($filename);
-    $data->set_media($filename, $width, $height, $border_color, $imageid, $locked);
+    $data->set_media($filename, $width, $height, $border_color, false, $imageid, $locked);
     $this->assertEquals($imageid ,$data->mediaid);
     $this->assertEquals($filename, $data->mediafile);
     $this->assertEquals($width, $data->mediawidth);
@@ -299,7 +317,7 @@ class questiondatatest extends unittestdatabase{
     $this->assertEquals($border_color, $data->mediabordercolour);
     // Test option media.
     $part_id = 2;
-    $data->set_media($filename, $width, $height, $border_color, $imageid, $locked, $part_id);
+    $data->set_media($filename, $width, $height, $border_color, false, $imageid, $locked, $part_id);
     $option['optionmedia'] = array(
           'mediaid' => $imageid,
           'mediafile' => $filename,
@@ -310,7 +328,10 @@ class questiondatatest extends unittestdatabase{
           'mediaedit' => false,
           'mediatype' => 2,
           'mediaborder' => true,
-          'mediabordercolour' => $border_color
+          'mediabordercolour' => $border_color,
+          'mediaext' => 'png',
+          'mediadelay' => false,
+          'mediaextra' => array(),
         );
     $this->assertEquals($option, $data->get_opt($part_id));
   }

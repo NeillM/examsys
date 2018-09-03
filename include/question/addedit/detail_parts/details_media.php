@@ -35,10 +35,19 @@ if ($dis_class != '') {
   $locked = false;
 }
 if ($current_media['filename'] != '') {
+  $configObj = Config::get_instance();
+  $questiondatatype = "plugins\questions\\" . $question->get_type() . '\\renderdata';
+  $questiondata = new $questiondatatype();
+  $render = new render($configObj);
+  $questiondata->set_media($current_media['filename'], $current_media['width'], $current_media['height'], '', false, $media_index_display, $locked);
 ?>
             <tr>
               <th><?php echo $string['current'] . ' ' . $media_label ?></th>
-              <td><?php echo display_media($current_media['filename'], $current_media['width'], $current_media['height'], '', $media_index_display, $locked); ?></td>
+              <td>
+                <?php
+                $render->render($questiondata, $string, 'paper/media.html');
+                ?>
+              </td>
             </tr>
 <?php      
 }

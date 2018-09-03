@@ -88,3 +88,6 @@ $string['system_password_expire'] = 'Internal database login password lifetime (
 $string['lti_ssl_verifypeer'] = 'Perform ssl peer verification';
 $string['lti_ssl_verifyhost'] = 'Perform ssl host verification. 0 disables, 1 is deprecated and should not be used, 2 enables.';
 $string['paper_mee'] = 'Enable/Disable deprecated mee maths rendering.';
+$string['system_mediatypes'] = 'Media types that can be uploaded to the system.';
+$string['paper_threejs'] = 'Enable/Disable deprecated threejs rendering.';
+$string['system_maxmediasize'] = 'Maximum size of media file that can be uploaded (in bytes).';

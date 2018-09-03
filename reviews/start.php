@@ -25,7 +25,6 @@
 require '../include/staff_auth.inc';
 require './display_functions.inc';
 require '../include/errors.php';
-require '../include/media.inc';
 
 //HTML5 part
 require_once '../lang/' . $language . '/question/edit/hotspot_correct.php';
@@ -357,6 +356,9 @@ if ($css != '') {
     $render = new render($configObject);
     $render->render_html5_js(json_encode($jstring));
   }
+
+    // Check if any 3d file types are enabled and render js.
+    threed_handler::render_js($string);
 
   echo $configObject->get('cfg_js_root');
 ?>

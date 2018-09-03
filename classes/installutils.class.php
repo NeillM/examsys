@@ -770,6 +770,27 @@ Class InstallUtils {
     $configObject->set_setting('system_password_expire', 30, Config::INTEGER);
     $configObject->set_setting('lti_ssl_verifypeer', 1, Config::BOOLEAN);
     $configObject->set_setting('lti_ssl_verifyhost', 2, Config::INTEGER);
+    $filetypes = array();
+    foreach (media_handler::SUPPORTED as $name => $type) {
+      // Threejs disabled by default.
+      if ($type === questiondata::THREED or $type === questiondata::ARCHIVE) {
+        $filetypes[$name] = 0;
+      } else {
+        $filetypes[$name] = 1;
+      }
+    }
+    $configObject->set_setting('system_mediatypes', $filetypes, Config::ASSOC);
+    $configObject->set_setting('paper_threejs', 0, Config::BOOLEAN);
+    $maxsize = ini_get('upload_max_filesize');
+    $unit = preg_replace('/[^bkmgtpezy]/i', '', $maxsize);
+    $maxsize = preg_replace('/[^0-9\.]/', '', $maxsize);
+    if ($unit) {
+      // Find the position of the unit in the ordered string which is the power of magnitude to multiply a kilobyte by.
+      $maxsize = round($maxsize * pow(1024, stripos('bkmgtpezy', $unit[0])));
+    } else {
+      $maxsize = round($maxsize);
+    }
+    $configObject->set_setting('system_maxmediasize', $maxsize, Config::INTEGER);
     // Add external systems.
     $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
     $insert->execute();

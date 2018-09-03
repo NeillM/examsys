@@ -16,8 +16,8 @@
 
 /**
 *
-* Handles paper display and the recording of marks to the 'logX' tables. Uses functions within 'display_functions.inc' to process specific
-* types of questions. Start.php continues calling itself while there are further screens to be displayed and then calls 'finish.php'
+* Handles paper display and the recording of marks to the 'logX' tables.
+* Start.php continues calling itself while there are further screens to be displayed and then calls 'finish.php'
 * to end.
 *
 * @author Simon Wilkinson, Anthony Brown
@@ -28,7 +28,6 @@
 require_once '../include/staff_student_auth.inc';
 require_once '../include/paper_security.php';
 require_once '../include/display_functions.inc';
-require_once '../include/media.inc';
 require_once '../include/errors.php';
 $jstring = $string; //to pass it to JavaScript HTML5 modules
 $userObject = UserObject::get_instance();
@@ -291,6 +290,12 @@ if($propertyObj->get_calculator()) {
   $headerdata['scripts'][] = '/js/jcalc98.min.js';
   $headerdata['scripts'][] = '/js/jcalc98uon.min.js';
   $headerdata['css'][] = '/css/jcalc98.css';
+}
+
+// Check if 3d file types are enabled and load js.
+if($configObject->get_setting('core', 'paper_threejs')) {
+  $headerdata['scripts'] = array_merge($headerdata['scripts'], threed_handler::get_js());
+  $headerdata['css'] = array_merge($headerdata['css'], threed_handler::get_css());
 }
 $headerdata['mee'] = $configObject->get_setting('core', 'paper_mee');
 $headerdata['texteditor'] = $texteditorplugin->get_header_file();

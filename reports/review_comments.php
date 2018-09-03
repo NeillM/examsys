@@ -25,7 +25,6 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/media.inc';
 require_once '../include/errors.php';
 
 //HTML5 part
@@ -149,6 +148,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
   $cfg_root_path = $configObject->get('cfg_root_path');
   $mediadirectory = rogo_directory::get_directory('media');
+  $questiondatatype = "plugins\questions\\" . $q_type . '\\renderdata';
+  $questiondata = new $questiondatatype();
+  $render = new render($configObject);
 
   if ($theme != '') echo "<tr><td colspan=\"2\"><h1 style=\"color:$themecolor\">$theme</h1></td></tr>\n";
   echo "<tr>\n";
@@ -161,13 +163,19 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$scenario<br />\n";
         echo $leadin;
         if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'area') {
-          echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height, '') . "</p>\n";
+          echo "<div class=\"mediadiv\">";
+          $questiondata->set_media($q_media, $q_media_width, $q_media_height, '');
+          $render->render($questiondata, $string, 'paper/media.html');
+          echo "</div>\n";
         }
         if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'blank') echo "<p>\n<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"margin-left:30px\">\n";
       } else {
         echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n";
         if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'area') {
-          echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height, '') . "</p>\n";
+          echo "<div class=\"mediadiv\">";
+          $questiondata->set_media($q_media, $q_media_width, $q_media_height, '');
+          $render->render($questiondata, $string, 'paper/media.html');
+          echo "</div>\n";
         }
         if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'blank') echo "<p>\n<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"margin-left:30px\">\n";
       }
@@ -435,12 +443,18 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
     echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n<ol type=\"A\">";
     if ($matching_media[0] != '') {
-      echo "<div align=\"center\">" . display_media($matching_media[0], $tmp_media_width_array[0], $tmp_media_height_array[0], '') . "</div>\n";
+      echo "<div class=\"mediadiv\">";
+      $questiondata->set_media($matching_media[0], $tmp_media_width_array[0], $tmp_media_height_array[0], '');
+      $render->render($questiondata, $string, 'paper/media.html');
+      echo "</div>\n";
     }
     for ($i=1; $i<=$scenario_no; $i++) {
       echo "<li>\n";
       if (isset($matching_media[$i]) and $matching_media[$i] != '') {
-        echo "<div>" . display_media($matching_media[$i], $tmp_media_width_array[$i], $tmp_media_height_array[$i], '') . "</div>\n";
+        echo "<div>";
+        $questiondata->set_media($matching_media[$i], $tmp_media_width_array[$i], $tmp_media_height_array[$i], '');
+        $render->render($questiondata, $string, 'paper/media.html');
+        echo "</div>\n";
       }
       if ($matching_scenarios[$i]) echo $matching_scenarios[$i] . '<br />';
       $option_no = 1;

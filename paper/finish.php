@@ -30,7 +30,6 @@ require_once '../include/marking_functions.inc';
 require_once '../include/calculate_marks.inc';
 require_once '../include/errors.php';
 require_once '../include/mapping.inc';
-require_once '../include/media.inc';
 require_once '../include/finish_functions.inc';
 require_once '../include/paper_security.php';
 require_once '../include/demo_replace.inc';
@@ -293,6 +292,9 @@ require '../config/finish.inc';
     $render = new render($configObject);
     $render->render(null, null, 'mathjax.html');
   }
+
+  // Check if any 3d file types are enabled and render js.
+  threed_handler::render_js($string);
 ?>
 </head>
 <body>

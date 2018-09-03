@@ -27,7 +27,6 @@
 */
 
 require '../include/staff_auth.inc';
-require_once '../include/media.inc';
 require_once '../include/errors.php';
 require_once '../include/sort.inc';
 require_once '../include/errors.php';
@@ -518,7 +517,10 @@ function count_labels($correct) {
 function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $o_media, $bottom_log, $top_log, $freq_log, $correct_buf, $candidate_no, $score_method, $display_method, $themecolor, $std) {
   global $ex_no, $d_no, $d_total, $user_total, $language, $string;
 
-	$configObject = Config::get_instance();
+  $configObject = Config::get_instance();
+  $questiondatatype = "plugins\questions\\" . $q_type . '\\renderdata';
+  $questiondata = new $questiondatatype();
+  $render = new render($configObject);
   $mediadirectory = rogo_directory::get_directory('media');
 
   if ($theme != '') echo "<tr><td colspan=\"2\"><h1 style=\"color:$themecolor\">$theme</h1></td></tr>\n";
@@ -545,7 +547,10 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
       if (trim(str_replace('&nbsp;', '', $scenario)) != '') echo "$scenario<br /><br />\n";
       if ($q_type != 'hotspot' and $q_type != 'timedate' and $q_type != 'enhancedcalc' and $q_type != 'flash' and $q_type != 'area') echo "$leadin</div>\n";
       if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'flash' and $q_type != 'area') {
-        echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height, '') . "</p>\n";
+        echo "<div class=\"mediadiv\">";
+        $questiondata->set_media($q_media, $q_media_width, $q_media_height, '', true);
+        $render->render($questiondata, $string, 'paper/media.html');
+        echo "</div>\n";
       }
       if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'enhancedcalc' and $q_type != 'blank' and $q_type != 'flash' and $q_type != 'area') echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
     }
@@ -568,7 +573,10 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         } else {
           echo excludeButton($ex_no, $q_id, '0', 1, 1);
         }
-        echo "</div><p>" . display_media($q_media, $q_media_width, $q_media_height, '#7F9DB9') . "</p>\n";
+        echo "</div><p>";
+        $questiondata->set_media($q_media, $q_media_width, $q_media_height, '#7F9DB9', true);
+        $render->render($questiondata, $string, 'paper/media.html');
+        echo "</p>\n";
         if (!isset($freq_log[$q_id][1]['correct'])) $freq_log[$q_id][1]['correct'] = 0;
         if (!isset($freq_log[$q_id][1]['partial'])) $freq_log[$q_id][1]['partial'] = 0;
         if (!isset($freq_log[$q_id][1]['incorrect'])) $freq_log[$q_id][1]['incorrect'] = 0;
@@ -1147,7 +1155,8 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
           if ($individual_option != '') echo "$individual_option\n";
           if (is_array($o_media[$i - 1])) {
             echo '<br />';
-            echo display_media($o_media[$i - 1][0], $o_media[$i - 1][1], $o_media[$i - 1][2], '');
+            $questiondata->set_media($o_media[$i - 1][0], $o_media[$i - 1][1], $o_media[$i - 1][2], '', true);
+            $render->render($questiondata, $string, 'paper/media.html');
           }
           echo "</td></tr>\n";
         }
@@ -1217,7 +1226,8 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
           echo ">$individual_option";
           if (is_array($o_media[$i - 1])) {
             echo '<br />';
-            echo display_media($o_media[$i - 1][0], $o_media[$i - 1][1], $o_media[$i - 1][2], '');
+            $questiondata->set_media($o_media[$i - 1][0], $o_media[$i - 1][1], $o_media[$i - 1][2], '', true);
+            $render->render($questiondata, $string, 'paper/media.html');
           }
           echo "</td></tr>\n";
         }
@@ -1571,7 +1581,10 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
     }
     echo "<ol class=\"extmatch\">";
     if ($tmp_media_array[0] != '') {
-      echo "<p align=\"center\">" . display_media($tmp_media_array[0],$tmp_media_width_array[0],$tmp_media_height_array[0], '') . "</p>\n";
+      echo "<div class=\"mediadiv\">";
+      $questiondata->set_media($tmp_media_array[0],$tmp_media_width_array[0],$tmp_media_height_array[0], '', true);
+      $render->render($questiondata, $string, 'paper/media.html');
+      echo "</div>\n";
     }
     $std_part = 0;
     $section = 0;
@@ -1580,7 +1593,10 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
       $correct_stems = 0;
       echo "<li>\n";
       if (isset($tmp_media_array[$i]) and $tmp_media_array[$i] != '') {
-        echo "<p>" . display_media($tmp_media_array[$i], $tmp_media_width_array[$i], $tmp_media_height_array[$i], '') . "</p>\n";
+        echo "<p>";
+        $questiondata->set_media($tmp_media_array[$i], $tmp_media_width_array[$i], $tmp_media_height_array[$i], '', true);
+        $render->render($questiondata, $string, 'paper/media.html');
+        echo "</p>\n";
       }
       if (isset($tmp_ext_scenarios[$i-1])) echo "<div>" . $tmp_ext_scenarios[$i-1] . "</div>\n";
 
@@ -1735,6 +1751,8 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
   $render = new render($configObject);
   $render->render_html5_js(json_encode($jstring));
 
+  // Check if any 3d file types are enabled and render js.
+  threed_handler::render_js($string);
 ?>
 
   <script>

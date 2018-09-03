@@ -27,7 +27,6 @@ require '../include/question_types.php';
 require '../include/mapping.inc';
 require '../include/errors.php';
 require '../include/display_functions.inc';
-require '../include/media.inc';
 $jstring = $string; //to pass it to JavaScript HTML5 modules
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
 

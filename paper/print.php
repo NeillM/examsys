@@ -28,7 +28,6 @@
 
 require '../include/staff_auth.inc';
 require '../include/print_functions.inc';
-require '../include/media.inc';
 require '../config/index.inc';
 require_once '../include/errors.php';
 
@@ -259,6 +258,8 @@ $current_screen = 1;
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
+  // Check if any 3d file types are enabled and render js.
+  threed_handler::render_js($string);
 ?>
 	
   <?php 

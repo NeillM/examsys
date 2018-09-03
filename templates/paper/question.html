@@ -46,9 +46,9 @@ lang.negmarking - negative marking
         {{data.scenario|raw}}<br /><br />
         {% endif %}
         {% if data.displaymedia %}
-        <p align="center">
+        <div class="mediadiv">
             {% include 'paper/media.html' %}
-        </p>
+        </div>
         {% endif %}
         {% if data.displayleadin %}
         {{data.leadin|raw}}

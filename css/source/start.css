@@ -399,3 +399,7 @@ div.error {
 .randomerror {
     color:#f00;
 }
+.threecaption {
+  font-size: small;
+  color: grey;
+}

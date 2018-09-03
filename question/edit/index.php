@@ -24,7 +24,6 @@
 
 require_once '../../include/staff_auth.inc';
 require_once '../../include/edit.inc';
-require_once '../../include/media.inc';
 require_once '../../include/metadata.inc';
 require_once '../../include/mapping.inc';
 require_once '../../include/errors.php';
@@ -67,6 +66,7 @@ function get_post_params($part_names, $option, $option_no) {
 }
 
 function save_options($question, $userObject, $db) {
+  global $string;
   $unified_part_names = $question->get_unified_fields();
 
   if ($question->get_type() == 'random') {
@@ -140,13 +140,18 @@ function save_options($question, $userObject, $db) {
       $old_media = $option->get_media();
       if (isset($_FILES["option_media$option_no"]) and $_FILES["option_media$option_no"]['name'] != $old_media['filename'] and ($_FILES["option_media$option_no"]['name'] != 'none' and $_FILES["option_media$option_no"]['name'] != '')) {
         if ($old_media['filename'] != '') {
-          deleteMedia($old_media['filename']);
+          media_handler::deleteMedia($old_media['filename']);
         }
-        $option->set_media(uploadFile("option_media$option_no"));
+        $newmedia = media_handler::uploadFile("option_media$option_no");
+        if ($newmedia !== false) {
+          $option->set_media($newmedia);
+        } else {
+          return $string['mediauploaderror'];
+        }
       } else {
         // Delete existing media if asked
         if (isset($_POST["delete_media$option_no"]) AND $_POST["delete_media$option_no"] == 'on') {
-          deleteMedia($old_media['filename']);
+          media_handler::deleteMedia($old_media['filename']);
           $option->set_media(array('filename' => '', 'width' => 0, 'height' => 0));
         }
       }
@@ -204,7 +209,7 @@ if ($critical_error == '' and $question->requires_media() and (isset($_POST['sub
     $new_media['width'] = (isset($_POST['q_media_width']) and $_POST['q_media_width'] != '') ? $_POST['q_media_width'] : 0;
     $new_media['height'] = (isset($_POST['q_media_height']) and $_POST['q_media_height'] != '') ? $_POST['q_media_height'] : 0;
   } else {
-    $new_media = uploadFile('q_media');
+    $new_media = media_handler::uploadFile('q_media');
   }
   if ($new_media !== false) {
     $question->set_media($new_media);
@@ -218,7 +223,7 @@ if ($critical_error == '' and $question->requires_media() and (isset($_POST['sub
     $label_images = array();
     for ($i = 1; $i <= 6; $i++) {
       if (isset($_FILES['label_media' . $i]) and $_FILES['label_media' . $i]['name'] != '') {
-        $lab_media = uploadFile('label_media' . $i);
+        $lab_media = media_handler::uploadFile('label_media' . $i);
         if ($lab_media !== false) {
           $label_images[] = $lab_media;
         }
@@ -482,6 +487,11 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
   $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::QUESTION);
+
+  $render = new render($configObject);
+
+  // Check if any 3d file types are enabled and render js.
+  threed_handler::render_js($string);
 ?>
 <script type="text/javascript" src="../../js/jquery-ui-1.10.4.min.js"></script>
 <script type="text/javascript" src="../../js/system_tooltips.js"></script>
@@ -491,17 +501,16 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <script type="text/javascript" src="../../js/jquery.mappingform.js"></script>
 <script type="text/javascript" src="../../js/jquery.formhelpers.js"></script>
 <?php
-if ($question != null and file_exists($cfg_web_root . 'js/validation/jquery.' . $question->get_type() . '.min.js')):
+if ($question != null and file_exists($cfg_web_root . 'js/validation/jquery.' . $question->get_type() . '.min.js')) {
 ?>
 <script type="text/javascript" src="../../js/jquery.validate.min.js"></script>
 <script type="text/javascript" src="../../js/validation/jquery.<?php echo $question->get_type() ?>.min.js"></script>
 <script type="text/javascript" src="../../js/toprightmenu.js"></script>
 <?php
-endif;
-if ($question != null and $question->requires_html5()):
-$render = new render($configObject);
-$render->render_html5_js(json_encode($jstring));
-endif;
+}
+if ($question != null and $question->requires_html5()) {
+  $render->render_html5_js(json_encode($jstring));
+}
 ?>
 <script>
 var qType = '<?php if (isset($question)) echo $question->get_type() ?>';
@@ -519,18 +528,17 @@ foreach ($langstrings as $langstring) {
 ?>
 };
 <?php
-if (!empty($_GET['tab']) and in_array($_GET['tab'], array('changes', 'comments', 'performance', 'mapping'))):
+if (!empty($_GET['tab']) and in_array($_GET['tab'], array('changes', 'comments', 'performance', 'mapping'))) {
 ?>
 $(function () {
-  $('.tabs li a[rel=<?php echo $_GET['tab'] ?>]').trigger('click');
+    $('.tabs li a[rel=<?php echo $_GET['tab'] ?>]').trigger('click');
 });
 <?php
-endif;
+}
 ?>
 </script>
 <?php
   if ($configObject->get_setting($texteditorplugin->get_name(), 'supports_mathjax') and $configObject->get_setting('core', 'paper_mathjax')) {
-    $render = new render($configObject);
     $render->render(null, null, 'mathjax.html');
   }
 ?>

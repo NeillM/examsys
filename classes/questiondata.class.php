@@ -53,7 +53,14 @@ abstract class questiondata {
    * Media type - movie
    */
   const MOVIE = 7;
-
+  /**
+   * Media type - 3d object
+   */
+  const THREED = 8;
+  /**
+   * Media type - archive
+   */
+  const ARCHIVE = 9;
   /**
    * DB connection
    * @var mysqli 
@@ -287,6 +294,24 @@ abstract class questiondata {
    * @var string
    */
   public $mediabordercolour;
+
+  /**
+   * Question media extenstion value
+   * @var string
+   */
+  public $mediaext;
+
+  /**
+   * Question media delay render flag
+   * @var string
+   */
+  public $mediadelay;
+
+  /**
+   * Extra settings for media
+   * @var string
+   */
+  public $mediaextra;
 
   /**
    * Question media edit state
@@ -632,7 +657,7 @@ abstract class questiondata {
           'optionno' => 'q' . $this->questionno . '_' . $tmp_part_id,
           'position' => $tmp_part_id
       ));
-      $this->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '', -1, false, $part_id);
+      $this->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '', false, -1, false, $part_id);
 
       // Set question options.
       $this->set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted);
@@ -663,11 +688,12 @@ abstract class questiondata {
    * @param integer $width media width
    * @param integer $height media height
    * @param string $border_color media border colour
+   * @param boolean $delay delay media rendering on screen
    * @param integer $imageid media id
    * @param boolean $locked is media locked
    * @param string $part_id option part id
    */
-  public function set_media($filename, $width, $height, $border_color, $imageid=-1, $locked=false, $part_id=null) {
+  public function set_media($filename, $width, $height, $border_color, $delay=false, $imageid=-1, $locked=false, $part_id=null) {
 
     $mediadirectory = rogo_directory::get_directory('media');
     $fn_parts = pathinfo($filename);
@@ -676,37 +702,86 @@ abstract class questiondata {
     $mediatype = null;
     $mediaborder = true;
     $url = $mediadirectory->url($filename);
-    // Is the file an image or something else (e.g. RasMol)?
+    $extra = array();
+
+    // Set file type.
+    $ext = '';
     if (!array_key_exists('extension', $fn_parts)) {
       $mediatype = self::FILE;
-    } elseif (array_key_exists('extension', $fn_parts) and in_array(strtolower($fn_parts['extension']), array('gif', 'jpg', 'jpeg', 'png'))) {
-      $mediatype = self::IMAGE;
-      if ($border_color == '') {
-        $mediaborder = false;
+    } else {
+      $ext = strtolower($fn_parts['extension']);
+      if (key_exists($ext, \media_handler::SUPPORTED)) {
+        // Supported types.
+        $mediatype = \media_handler::SUPPORTED[$ext];
+      } elseif ($ext == 'flv') {
+        // Deprecated type that can no longer be added but can be displayed.
+        $mediatype = self::FLASH;
+      } elseif ($ext == 'wmv') {
+        // Deprecated type that can no longer be added but can be displayed.
+        $mediatype = self::MOVIE;
       }
-    } elseif (in_array($fn_parts['extension'], array('wav', 'wma', 'mid'))) {
-      $mediatype = self::AUDIO;
-    } elseif (in_array($fn_parts['extension'], array('doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx', 'pdf'))) {
-      $mediatype = self::DOC;
-    } elseif ($fn_parts['extension'] == 'flv') {
-      $mediatype = self::FLASH;
-      if ($width == 0 or $height == 0) {
-        $width = 320;
-        $height = 260;
+
+      // Additional display logic.
+      switch ($mediatype) {
+        case self::IMAGE:
+          if ($border_color == '') {
+            $mediaborder = false;
+          }
+          break;
+        case self::MP3:
+          // Display filename if add or edit script
+          if (strpos(Url::fromGlobals(),'/edit/') !== false or strpos(Url::fromGlobals(),'/add/') !== false) {
+            $mediaedit = true;
+          }
+          break;
+        case self::FLASH:
+          if ($width == 0 or $height == 0) {
+            $width = 320;
+            $height = 260;
+          }
+          $url = $mediadirectory->url($filename, false, false, true);
+          break;
+        case self::THREED:
+          $width = 640;
+          $height = 480;
+          break;
+        case self::ARCHIVE:
+          // Currently we only expect this to be and obj file with materials.
+          // We search the archive for the first obj and mtl files (subsequent files of these types are ignored).
+          // Error if we do not have an obj and a mtl file.
+          $info = pathinfo($filename);
+          $dir = new DirectoryIterator($mediadirectory->location() . $info['filename']);
+          $foundobj = false;
+          $foundmtl = false;
+          foreach ($dir as $fileinfo) {
+            $filename = $fileinfo->getFilename();
+            $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+            if ($ext === 'obj' and $foundobj === false) {
+              $width = 640;
+              $height = 480;
+              $foundobj = true;
+              $extra['obj'] = $filename;
+            } elseif ($ext === 'mtl' and $foundmtl === false) {
+              $extra['mtl'] = $filename;
+              $foundmtl = true;
+            }
+          }
+          if (!$foundobj) {
+            // If mtl file not found object skeleton displayed.
+            // Error if obj file not found - set to file so not displayed.
+            $this->mediatype = questiondata::FILE;
+          }
+          break;
+        default:
+          break;
       }
-      $url = $mediadirectory->url($filename, false, false, true);
-    } elseif ($fn_parts['extension'] == 'mp3') {     // Embed MP3 using HTML5 audio tag.
-      $mediatype = self::MP3;
-      if (strpos(Url::fromGlobals(),'/edit/') !== false or strpos(Url::fromGlobals(),'/add/') !== false) {  // Display filename if add or edit script
-        $mediaedit = true;
-      }
-    } elseif ($fn_parts['extension'] == 'avi' or $fn_parts['extension'] == 'wmv') {
-      $mediatype = self::MOVIE;
     }
+
     if ($imageid > -1 and !$locked) {
       $mediadelete = true;
     }
-    // Set option media ot question media.
+
+    // Set option media to question media.
     if (!is_null($part_id)) {
       $option = $this->get_opt($part_id);
       $option['optionmedia'] = array(
@@ -719,7 +794,10 @@ abstract class questiondata {
           'mediaedit' => $mediaedit,
           'mediatype' => $mediatype,
           'mediaborder' => $mediaborder,
-          'mediabordercolour' => $border_color
+          'mediabordercolour' => $border_color,
+          'mediaext' => $ext,
+          'mediadelay' => $delay,
+          'mediaextra' => $extra,
       );
       $this->set_opt($part_id, $option);
     } else {
@@ -733,6 +811,9 @@ abstract class questiondata {
       $this->mediatype = $mediatype;
       $this->mediaborder = $mediaborder;
       $this->mediabordercolour = $border_color;
+      $this->mediaext = $ext;
+      $this->mediadelay = $delay;
+      $this->mediaextra = $extra;
     }
   }
 

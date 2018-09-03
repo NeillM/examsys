@@ -721,7 +721,13 @@ class EnhancedCalc extends Question implements questionInterface {
 			echo "<p>" . $this->scenario . "</p>\n";
 		}
 		if ($this->q_media != '') {
-			echo "<p align=\"center\">" . display_media($this->q_media, $this->q_media_width, $this->q_media_height, '') . "</p>\n";
+			$questiondata = new plugins\questions\enhancedcalc\renderdata();
+			$configObject = Config::get_instance();
+			$render = new render($configObject);
+			$questiondata->set_media($this->q_media, $this->q_media_width, $this->q_media_height, '');
+			echo "<div class=\"mediadiv\">";
+			$render->render($questiondata, $string, 'paper/media.html');
+			echo "</div>\n";
 		}
 
 		echo_content($leadin);
@@ -1059,7 +1065,9 @@ class EnhancedCalc extends Question implements questionInterface {
 		global $string;
 
 		$configObject = Config::get_instance();
-		$render = new render($configObject, __DIR__ . DIRECTORY_SEPARATOR . 'templates');
+		$renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'enhancedcalc' . DIRECTORY_SEPARATOR . 'templates';
+		$renderpath[] = $configObject->get('cfg_web_root') . DIRECTORY_SEPARATOR . 'templates';
+		$render = new render($configObject, $renderpath);
 
 		// Display question on paper
 		$screen_pre_submitted = null;
@@ -1160,8 +1168,16 @@ class EnhancedCalc extends Question implements questionInterface {
 			$questiondata['scenario'] = $this->scenario;
 		}
 		$questiondata['displaymedia'] = false;
-		if ($this->q_media != '') {
+		if ($extra['mediafile'] != '') {
 			$questiondata['displaymedia'] = true;
+			$questiondata['mediaid'] = $extra['mediaid'];
+			$questiondata['mediatype'] = $extra['mediatype'];
+			$questiondata['mediawidth'] = $extra['mediawidth'];
+			$questiondata['mediaheight'] = $extra['mediaheight'];
+			$questiondata['mediaborder'] = $extra['mediaborder'];
+			$questiondata['mediabordercolour'] = $extra['mediabordercolour'];
+			$questiondata['mediaurl'] = $extra['mediaurl'];
+			$questiondata['mediafile'] = $extra['mediafile'];
 		}
 
 		$marking_precision_feedback = '';

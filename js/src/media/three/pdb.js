@@ -1,0 +1,112 @@
+/**
+ * Set up pdb object
+ * @param string id object identifier
+ * @param string file the object file
+ * @param integer width width of renderer
+ * @param integer height height of renderer
+ * @param boolean delay flag to stop setup
+ */
+function initpdb(id, file, width, height, delay) {
+    if (delay !== true) {
+        threeaddscene(id);
+
+        camera[id] = new THREE.PerspectiveCamera(70, width / height, 1, 5000);
+        camera[id].position.z = 500;
+        scene[id].add(camera[id]);
+
+        var light = new THREE.AmbientLight(0xffffff, 0.8);
+        scene[id].add(light);
+
+        root[id] = new THREE.Group();
+        scene[id].add(root[id]);
+
+        renderer[id] = new THREE.WebGLRenderer({antialias: true});
+        renderer[id].setPixelRatio(window.devicePixelRatio);
+        renderer[id].setSize(width, height);
+        container[id].appendChild(renderer[id].domElement);
+
+        labelRenderer[id] = new THREE.CSS2DRenderer();
+        labelRenderer[id].setSize(width, height);
+        labelRenderer[id].domElement.style.position = 'relative';
+        var top = '-' + (height + 5) + 'px';
+        labelRenderer[id].domElement.style.top = top;
+        labelRenderer[id].domElement.style.pointerEvents = 'none';
+        container[id].appendChild(labelRenderer[id].domElement);
+
+        threesetcontrols(id);
+        loadpdb(id, file);
+        threeanimate(id);
+    }
+}
+
+/**
+ * Load the pdb file
+ * @param string id object identifier
+ * @param string file the object file
+ */
+function loadpdb(id, file) {
+    var loader = new THREE.PDBLoader();
+    var offset = new THREE.Vector3();
+    while (root[id].children.length > 0) {
+        var object = root[id].children[ 0 ];
+        object.parent.remove(object);
+    }
+    loader.load(file, function (molecule) {
+        var geometryAtoms = molecule.geometryAtoms;
+        var geometryBonds = molecule.geometryBonds;
+        var json = molecule.json;
+        var boxGeometry = new THREE.BoxBufferGeometry(1, 1, 1);
+        var sphereGeometry = new THREE.IcosahedronBufferGeometry(1, 2);
+        geometryAtoms.computeBoundingBox();
+        geometryAtoms.boundingBox.getCenter(offset).negate();
+        geometryAtoms.translate(offset.x, offset.y, offset.z);
+        geometryBonds.translate(offset.x, offset.y, offset.z);
+        var positions = geometryAtoms.getAttribute('position');
+        var colors = geometryAtoms.getAttribute('color');
+        var position = new THREE.Vector3();
+        var color = new THREE.Color();
+        for (var i = 0; i < positions.count; i ++) {
+            position.x = positions.getX(i);
+            position.y = positions.getY(i);
+            position.z = positions.getZ(i);
+            color.r = colors.getX(i);
+            color.g = colors.getY(i);
+            color.b = colors.getZ(i);
+            var material = new THREE.MeshPhongMaterial({color: color});
+            var object2 = new THREE.Mesh(sphereGeometry, material);
+            object2.position.copy(position);
+            object2.position.multiplyScalar(75);
+            object2.scale.multiplyScalar(25);
+            root[id].add(object2);
+            var atom = json.atoms[ i ];
+            var text = document.createElement( 'div' );
+            text.className = 'label';
+            text.style.color = "black";
+            text.style.fontWeight = "bold";
+            text.textContent = atom[ 4 ];
+            var label = new THREE.CSS2DObject( text );
+            label.position.copy(object2.position);
+            root[id].add(label);
+        }
+        positions = geometryBonds.getAttribute('position');
+        var start = new THREE.Vector3();
+        var end = new THREE.Vector3();
+        for (var j = 0; j < positions.count; j += 2) {
+            start.x = positions.getX(j);
+            start.y = positions.getY(j);
+            start.z = positions.getZ(j);
+            end.x = positions.getX(j + 1);
+            end.y = positions.getY(j + 1);
+            end.z = positions.getZ(j + 1);
+            start.multiplyScalar(75);
+            end.multiplyScalar(75);
+            var object3 = new THREE.Mesh(boxGeometry, new THREE.MeshPhongMaterial(0xffffff));
+            object3.position.copy(start);
+            object3.position.lerp(end, 0.5);
+            object3.scale.set(5, 5, start.distanceTo(end));
+            object3.lookAt(end);
+            root[id].add(object3);
+        }
+        threerender(id);
+    });
+}

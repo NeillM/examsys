@@ -218,13 +218,16 @@ Class QuestionEdit extends RogoObject {
       $old_media = $this->get_media();
       if ($media_data[$field]['name'] != $old_media['filename'] and ($media_data[$field]['name'] != 'none' and $media_data[$field]['name'] != '')) {
         if ($old_media['filename'] != '') {
-          deleteMedia($old_media['filename']);
+          media_handler::deleteMedia($old_media['filename']);
         }
-        $this->set_media(uploadFile($field));
+        $newmedia = media_handler::uploadFile($field);
+        if ($newmedia !== false) {
+          $this->set_media($newmedia);
+        }
       } else {
         // Delete existing media if asked
         if (isset($deletion_data['delete_media0']) and $deletion_data['delete_media0'] == 'on') {
-          deleteMedia($old_media['filename']);
+          media_handler::deleteMedia($old_media['filename']);
           $this->set_media(array('filename' => '', 'width' => 0, 'height' => 0));
         }
       }
@@ -280,17 +283,19 @@ Class QuestionEdit extends RogoObject {
       $media_name = (isset($old_media['filenames'][$i])) ? $old_media['filenames'][$i] : '';
       if ($media_data[$post_field]['name'] != $media_name and ($media_data[$post_field]['name'] != 'none' and $media_data[$post_field]['name'] != '')) {
         if ($media_name != '') {
-          deleteMedia($media_name);
+          media_handler::deleteMedia($media_name);
         }
-        $new_media = uploadFile($post_field);
-        $old_media['filenames'][$i] = $new_media['filename'];
-        $old_media['widths'][$i] = $new_media['width'];
-        $old_media['heights'][$i] = $new_media['height'];
-        $this->add_unified_field_modification('q_media' . $i, 'q_media' . $i, $old_media['filenames'][$i], $new_media['filename'], $this->_lang_strings['editscenario']);
+        $new_media = media_handler::uploadFile($post_field);
+        if ($new_media !== false) {
+          $old_media['filenames'][$i] = $new_media['filename'];
+          $old_media['widths'][$i] = $new_media['width'];
+          $old_media['heights'][$i] = $new_media['height'];
+          $this->add_unified_field_modification('q_media' . $i, 'q_media' . $i, $old_media['filenames'][$i], $new_media['filename'], $this->_lang_strings['editscenario']);
+        }
       } else {
         // Delete existing media if asked
         if (isset($deletion_data["delete_media$i"]) AND $deletion_data["delete_media$i"] == 'on') {
-          deleteMedia($media_name);
+          media_handler::deleteMedia($media_name);
           $this->add_unified_field_modification('q_media' . $i, 'q_media' . $i, $media_name, '', $this->_lang_strings['mediadeleted']);
           $old_media['filenames'][$i] = '';
           $old_media['widths'][$i] = 0;

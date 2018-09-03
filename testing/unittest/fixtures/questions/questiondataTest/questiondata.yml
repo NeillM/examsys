@@ -42,3 +42,9 @@ properties:
     recache_marks: 0
     externalid: null
     externalsys: null
+config:
+  -
+    component: 'core'
+    setting: 'system_mediatypes'
+    value: '{".gif":1,".jpg":1,".jpeg":1,".png":1,".doc":1,".docx":1,".ppt":1,".pptx":1,".xls":1,".xlsx":1,".pdf":1,".avi":1,".mpg":1,".mpeg":1,".mov":1,".mp3":1,".mid":1,".wav":1,".ram":1,".pdb":1,".ply":1,".obj":1,".mtl":1,".dds":1,".zip":1}'
+    type: 'assoc'

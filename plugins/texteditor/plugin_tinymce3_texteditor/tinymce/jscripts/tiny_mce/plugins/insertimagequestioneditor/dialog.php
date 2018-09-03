@@ -23,7 +23,6 @@
 */
 
 require '../../../../../../../../include/staff_auth.inc';
-require '../../../../../../../../include/media.inc';
 ?>
 <!DOCTYPE html>
 <html>
@@ -51,7 +50,7 @@ require '../../../../../../../../include/media.inc';
     //move original file
     $imageInfo = getimagesize($_FILES['FileName']['tmp_name']);
 
-    $destName  = unique_filename( $_FILES['FileName']['name'] );
+    $destName  = media_handler::unique_filename( $_FILES['FileName']['name'] );
     $destPath  = $mediadirectory->fullpath($destName);
 
     $worked    = move_uploaded_file( $_FILES['FileName']['tmp_name'], $destPath );

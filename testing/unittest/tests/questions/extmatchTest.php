@@ -14,7 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-use testing\unittest\unittest;
+use testing\unittest\unittestdatabase;
+use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
 /**
  * Test fill in the extmatch question class
@@ -24,7 +25,18 @@ use testing\unittest\unittest;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class extmatchtest extends unittest{
+class extmatchtest extends unittestdatabase{
+
+  /**
+   * Get init data set from yml
+   * @return dataset
+   */
+  public function getDataSet() {
+    return new YamlDataSet($this->get_base_fixture_directory()
+      . DIRECTORY_SEPARATOR. "questions"
+      . DIRECTORY_SEPARATOR . "questiondataTest"
+      . DIRECTORY_SEPARATOR . "questiondata.yml");
+  }
 
   /**
     * Test question header setter
@@ -126,7 +138,10 @@ class extmatchtest extends unittest{
             'mediaedit' => false,
             'mediatype' => 2,
             'mediaborder' => false,
-            'mediabordercolour' => ''),
+            'mediabordercolour' => '',
+            'mediaext' => 'png',
+            'mediadelay' => false,
+            'mediaextra' => array()),
           'unanswered' => false,
           'listsize' => 6,
           'subanswers' => 2,
@@ -176,7 +191,10 @@ class extmatchtest extends unittest{
             'mediaedit' => false,
             'mediatype' => 2,
             'mediaborder' => false,
-            'mediabordercolour' => ''),
+            'mediabordercolour' => '',
+            'mediaext' => 'jpg',
+            'mediadelay' => false,
+            'mediaextra' => array()),
           'unanswered' => false,
           'matchingoption' => array(
             array (

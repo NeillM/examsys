@@ -197,6 +197,11 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
   // Get the media directory object.
   $mediadirectory = rogo_directory::get_directory('media');
 
+  $configObj = Config::get_instance();
+  $questiondatatype = "plugins\questions\\" . $question['q_type'] . '\\renderdata';
+  $questiondata = new $questiondatatype();
+  $render = new render($configObj);
+
   $q_id = $question['q_id'];
   $option_no = count($question['options']);
 	
@@ -280,7 +285,10 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         if ($calculator == 1) echo '<br /><img class="sciCalculator" src="../artwork/calc.png" alt="' . $string['calculator'] . '" />';
         echo '</td><td>';
       }
-      echo '<p align="center">' . display_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '') . "</p>\n";
+      echo '<div class="mediadiv">';
+      $questiondata->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '', true);
+      $render->render($questiondata, $string, 'paper/media.html');
+      echo "</div>\n";
       $li_set = 1;
     }
     if ($question['q_type'] != 'likert') {
@@ -298,7 +306,10 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     // Special processing of Information Blocks.
     if ($li_set == 0) echo '<tr><td colspan="2" style="padding-left:10px; padding-right:10px">';
     if ($question['q_media'] != '') {
-      echo '<p align="center">' . display_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '') . "</p>\n";
+      echo '<div class="mediadiv">';
+      $questiondata->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '', true);
+      $render->render($questiondata, $string, 'paper/media.html');
+      echo "</div>\n";;
     }
     echo $question['leadin'];
     $li_set = 1;
@@ -435,7 +446,10 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
           if ($calculator == 1) echo '<br /><img class="sciCalculator" src="../artwork/calc.png" alt="' . $string['calculator'] . '" />';
           echo '</td><td>';
         }
-        echo '<p align="center">' . display_media($question['q_media'],$question['q_media_width'],$question['q_media_height'], '') . "</p>\n";
+        echo '<div class="mediadiv">';
+        $questiondata->set_media($question['q_media'], $question['q_media_width'], $question['q_media_height'], '', true);
+        $render->render($questiondata, $string, 'paper/media.html');
+        echo "</div>\n";
         $li_set = 1;
       }
 
@@ -549,7 +563,8 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         if ($display_option['option_text'] != '') echo $display_option['option_text'];
         if ($display_option['o_media'] != '') {
           if ($display_option['option_text'] != '') echo '<br />';
-          echo display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '');
+          $questiondata->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '', true);
+          $render->render($questiondata, $string, 'paper/media.html');
         }
         echo "</td></tr>\n";
         $marks += $display_option['marks_correct'];
@@ -608,7 +623,8 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
           if ($display_option['option_text'] != '') echo "<span class=\"$class_type\" id=\"$question_no" . "_" . "$tmp_part_id\">" . $display_option['option_text'] . '</span>';
           if ($display_option['o_media'] != '') {
             if ($display_option['option_text'] != '') echo '<br />';
-            echo display_media($display_option['o_media'],$display_option['o_media_width'],$display_option['o_media_height'], '');
+            $questiondata->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '', true);
+            $render->render($questiondata, $string, 'paper/media.html');
           }
           echo "</td></tr>\n";
         } elseif ($question['display_method'] == 'horizontal') {
@@ -619,7 +635,11 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             echo "<input type=\"radio\" name=\"q" . $question_no . "\" value=\"" . $tmp_part_id . "\" />";
           }
           if ($display_option['option_text'] != '') echo '&nbsp;' . $display_option['option_text'];
-          if ($display_option['o_media'] != '') echo '&nbsp;' . display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '');
+          if ($display_option['o_media'] != '') {
+            $questiondata->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '', true);
+            echo '&nbsp;';
+            $render->render($questiondata, $string, 'paper/media.html');
+          }
           echo "</div>";
         } else {
           if (isset($user_answers[$current_screen][$q_id]) and $tmp_part_id == $user_answers[$current_screen][$q_id]) {
@@ -656,7 +676,8 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         if ($display_option['option_text'] != '') echo "<span class=\"$class_type\" id=\"$question_no" . "_" . "$part_id\">" . $display_option['option_text'] . '</span>';
         if ($display_option['o_media'] != '') {
           if ($display_option['option_text'] != '') echo '<br />';
-          echo display_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '');
+          $questiondata->set_media($display_option['o_media'], $display_option['o_media_width'], $display_option['o_media_height'], '', true);
+          $render->render($questiondata, $string, 'paper/media.html');
         }
         echo "</td></tr>\n";
         if ($question['score_method'] == 'Mark per Option') {
@@ -1177,7 +1198,10 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     $matching_answers = explode('|', $question['options'][0]['correct']);
 
     if ($matching_media[0] != '') {
-      echo '<p align="center">' . display_media($matching_media[0],$matching_media_width[0],$matching_media_height[0], '') . '</p>';
+      echo '<div class="mediadiv">';
+      $questiondata->set_media($matching_media[0],$matching_media_width[0],$matching_media_height[0], '', true);
+      $render->render($questiondata, $string, 'paper/media.html');
+      echo '</div>';
     }
 
     array_unshift($matching_scenarios, '');
@@ -1214,7 +1238,10 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
       echo '<li>';
       if (isset($matching_scenarios[$part_id]) and $matching_scenarios[$part_id] != '') echo '<div>' . $matching_scenarios[$part_id] . '</div>';
       if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') {
-        echo "<div>" . display_media($matching_media[$part_id], $matching_media_width[$part_id], $matching_media_height[$part_id], '') . "</div>\n<br />";
+        echo "<div>";
+        $questiondata->set_media($matching_media[$part_id], $matching_media_width[$part_id], $matching_media_height[$part_id], '', true);
+        $render->render($questiondata, $string, 'paper/media.html');
+        echo "</div>\n<br />";
       }
       if(isset($matching_answers[$part_id-1])) {
         $sub_answers = explode('$', $matching_answers[$part_id - 1]);

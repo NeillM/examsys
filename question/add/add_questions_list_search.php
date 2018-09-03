@@ -24,7 +24,6 @@
 
 require '../../include/staff_auth.inc';
 require '../../include/errors.php';
-require '../../include/media.inc';
 
 $stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/search.php');

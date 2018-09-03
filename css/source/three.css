@@ -1,0 +1,15 @@
+.threebutton {
+    background-color: silver;
+    border-radius: 5px;
+    border: none;
+    color: black;
+    padding: 5px 15px;
+    text-align: center;
+    text-decoration: none;
+    margin: 2px 2px;
+}
+.threeblock {
+    border: thin solid black;
+    cursor:grab;
+    margin: auto;
+}

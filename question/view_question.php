@@ -25,7 +25,6 @@
 require '../include/staff_auth.inc';
 require '../include/question_types.php';
 require '../include/display_functions.inc';
-require '../include/media.inc';
 
 $marks_color = '#808080';
 $themecolor = '#316AC5';
@@ -107,6 +106,8 @@ $question['assigned_number'] = (isset($_GET['qNo'])) ? $_GET['qNo'] : 1;
   if($configObject->get_setting('core', 'paper_mathjax')) {
     $render->render(null, null, 'mathjax.html');
   }
+  // Check if any 3d file types are enabled and render js.
+  threed_handler::render_js($string);
   ?>
 </head>
 <body>

@@ -286,4 +286,8 @@ $string['tooltip_formula'] = 'Click link for more details in the online help.';
 // Textbox
 $string['reminders'] = 'Reminders';
 $string['reminder_no'] = 'Reminder #%d';
+// 3d
+$string['threeinfo'] = 'Hold the left mouse button to rotate the object and use the mouse wheel to zoom in/out. The final position of the object is not saved.';
+$string['threereset'] = 'Reset';
+$string['threeload'] = 'Load';
 

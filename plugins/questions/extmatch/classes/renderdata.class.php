@@ -189,7 +189,7 @@ class renderdata extends \questiondata {
       $matchstem[$id-1]['display'] = false;
       if (isset($matching_media[$id]) and $matching_media[$id] != '') {
         $matchstem[$id-1]['display'] = true;
-        $this->set_media($matching_media[$id], $matching_media_width[$id], $matching_media_height[$id], '', -1, false, $id);
+        $this->set_media($matching_media[$id], $matching_media_width[$id], $matching_media_height[$id], '', false, -1, false, $id);
         $mediaoption = $this->get_opt($id);
         $matchstem[$id-1]['media'] = $mediaoption['optionmedia'];
       }

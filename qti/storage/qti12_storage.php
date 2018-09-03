@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once '../include/media.inc';
 require_once '../include/load_config.php';
 
 // main question object
@@ -796,7 +795,7 @@ class ST_QTI12_Material // <material>
       }
 
       $basename = basename($imagefile);
-      $uniqueFilename = unique_filename($basename);
+      $uniqueFilename = media_handler::unique_filename($basename);
       $fullpath = $mediadirectory->fullpath($uniqueFilename);
 
       copy($imagefile, $fullpath);
@@ -836,7 +835,7 @@ class ST_QTI12_Material // <material>
 
             if ($filename) {
               $basename = basename($filename);
-              $uniqueFilename = unique_filename($basename);
+              $uniqueFilename = media_handler::unique_filename($basename);
               $fullpath = $mediadirectory->fullpath($uniqueFilename);
 
               copy($import_directory."/".$filename, $fullpath);

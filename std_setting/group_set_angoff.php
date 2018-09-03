@@ -23,7 +23,6 @@
 */
 
 require '../include/staff_auth.inc';
-require '../include/media.inc';
 require '../include/std_set_functions.inc';
 require_once '../include/errors.php';
 
@@ -205,11 +204,16 @@ $stmt->bind_param('i', $paperID);
 $stmt->execute();
 $stmt->store_result();
 $num_rows = $stmt->num_rows;
-$stmt->bind_result($screen, $q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes);  
+$stmt->bind_result($screen, $q_type, $q_id, $score_method, $display_method, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes);
+
+$configObj = Config::get_instance();
+$render = new render($configObj);
 
 echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"text-align:left\">\n";
 
 while ($stmt->fetch()) {
+  $questiondatatype = "plugins\questions\\" . $q_type . '\\renderdata';
+  $questiondata = new $questiondatatype();
   if ($prologue_show == 1 and $paper_prologue != '') {
     echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
     $prologue_show = 0;
@@ -248,13 +252,19 @@ while ($stmt->fetch()) {
       if (substr($q_media, -4) == '.gif' or substr($q_media, -4) == '.jpg' or substr($q_media, -4) == 'jpeg' or substr($q_media, -4) == '.png') {
         if ($li_set == 0) echo '<tr><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
         $li_set = 1;
-        echo "<p align=\"center\">" . display_media($q_media, $q_media_width, $q_media_height, '') . "</p>\n";
+        echo "<div class=\"mediadiv\">";
+        $questiondata->set_media($q_media, $q_media_width, $q_media_height, '');
+        $render->render($questiondata, $string, 'paper/media.html');
+        echo "<div>\n";
       } else {
         if ($li_set == 0) {
           echo '<tr><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
         }
         $li_set = 1;
-        echo "<p>" . display_media($q_media, $q_media_width, $q_media_height, '') . "</p>\n";
+        echo "<p>";
+        $questiondata->set_media($q_media, $q_media_width, $q_media_height, '');
+        $render->render($questiondata, $string, 'paper/media.html');
+        echo "</p>\n";
       }
     }
     if ($q_type != 'likert' and $q_type != 'calculation' and $q_type != 'info') {
