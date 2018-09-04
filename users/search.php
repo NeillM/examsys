@@ -24,7 +24,6 @@
  * @package
  */
 require '../include/staff_auth.inc';
-require_once '../include/demo_replace.inc';
 require_once '../include/errors.php';
 
 $demo = $userObject->has_role('Demo');
@@ -547,12 +546,12 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
                                                 <?= $string[mb_strtolower($tmp_title)] ?>
                                             <?php endif; ?>
                                         </td>
-                                        <td><?= $tmp_surname == '' ? demo_replace($tmp_surname, $demo, true, ' ') : demo_replace($tmp_surname, $demo, true, $tmp_surname{0}) ?></td>
-                                        <td><?= $tmp_first_names == '' ? demo_replace($tmp_first_names, $demo, true, ' ') : demo_replace($tmp_first_names, $demo, true, $tmp_first_names{0}) ?></td>
-                                        <td><?= demo_replace($tmp_username, $demo, false) ?></td>
+                                        <td><?= $tmp_surname == '' ? \demo::demo_replace($tmp_surname, $demo, true, ' ') : \demo::demo_replace($tmp_surname, $demo, true, $tmp_surname{0}) ?></td>
+                                        <td><?= $tmp_first_names == '' ? \demo::demo_replace($tmp_first_names, $demo, true, ' ') : \demo::demo_replace($tmp_first_names, $demo, true, $tmp_first_names{0}) ?></td>
+                                        <td><?= \demo::demo_replace($tmp_username, $demo, false) ?></td>
                                         <td class="fn">
                                             <?php if (false !== strpos($tmp_roles, 'Student')) : ?>
-                                                <?= is_null($tmp_student_id) ? $string['unknown'] : demo_replace_number($tmp_student_id, $demo) ?>
+                                                <?= is_null($tmp_student_id) ? $string['unknown'] : \demo::demo_replace_number($tmp_student_id, $demo) ?>
                                             <?php elseif (false !== strpos($tmp_roles, 'Staff')) : ?>
                                                 Staff
                                             <?php else: ?>

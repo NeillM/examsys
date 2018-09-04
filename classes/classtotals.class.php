@@ -30,8 +30,6 @@
 */
 
 require_once dirname(__DIR__) . '/include/calculate_marks.inc';
-require_once dirname(__DIR__) . '/include/demo_replace.inc';
-require_once dirname(__DIR__) . '/include/sort.inc';
 
 class ClassTotals {
 
@@ -95,7 +93,7 @@ class ClassTotals {
 
   public function __construct($studentsonly, $percent, $ordering, $absent, $sortby, $userObject, $propertyObj, $startdate, $enddate, $repcourse, $repmodule, $db, $string) {
     $this->db                 = $db;
-    $this->demo               = is_demo($userObject);
+    $this->demo               = \demo::is_demo($userObject);
     $this->paperID            = $propertyObj->get_property_id();
     $this->paper_type         = $propertyObj->get_paper_type();
     $this->calendar_year      = $propertyObj->get_calendar_year();
@@ -1144,10 +1142,10 @@ class ClassTotals {
         $this->student_cohort[$i]['userID']        = $userID;
         $this->student_cohort[$i]['name']          = trim(str_replace("'","",$surname) . ',' . $first_names);
         $this->student_cohort[$i]['title']         = $title;
-        $this->student_cohort[$i]['surname']       = demo_replace($surname, $this->demo);
-        $this->student_cohort[$i]['first_names']   = demo_replace($first_names, $this->demo);
-        $this->student_cohort[$i]['initials']      = demo_replace($initials, $this->demo);
-        $this->student_cohort[$i]['student_id']    = demo_replace_number($student_id, $this->demo);
+        $this->student_cohort[$i]['surname']       = \demo::demo_replace($surname, $this->demo);
+        $this->student_cohort[$i]['first_names']   = \demo::demo_replace($first_names, $this->demo);
+        $this->student_cohort[$i]['initials']      = \demo::demo_replace($initials, $this->demo);
+        $this->student_cohort[$i]['student_id']    = \demo::demo_replace_number($student_id, $this->demo);
         $this->student_cohort[$i]['student_grade'] = $grade;
         $this->student_cohort[$i]['module']        = $moduleid;
         $this->student_cohort[$i]['gender']        = $gender;
@@ -1292,11 +1290,11 @@ class ClassTotals {
       }
 
       if ($this->demo) {
-        $surname     = demo_replace($surname, true, true, $surname{0});
-        $initials    = demo_replace($initials, true, true, $initials{0});
-        $first_names = demo_replace($first_names, true, true, $first_names{0});
-        $email       = demo_replace($email);
-        $student_id  = demo_replace_number($student_id);
+        $surname     = \demo::demo_replace($surname, true, true, $surname{0});
+        $initials    = \demo::demo_replace($initials, true, true, $initials{0});
+        $first_names = \demo::demo_replace($first_names, true, true, $first_names{0});
+        $email       = \demo::demo_replace($email);
+        $student_id  = \demo::demo_replace_number($student_id);
       }
 
       $this->user_results[$metadataID] = array(
@@ -1445,7 +1443,7 @@ class ClassTotals {
     // Put the whole array in marks order.
     $sortby = 'mark';
     $ordering = 'desc';
-    $this->user_results = array_csort($this->user_results, $sortby, $ordering, SORT_NUMERIC);
+    $this->user_results = \sort::array_csort($this->user_results, $sortby, $ordering, SORT_NUMERIC);
 
     $display_rank = 1;
     $global_rank  = 1;
@@ -1474,7 +1472,7 @@ class ClassTotals {
     if ($this->percent < 100) {
       // Sort by mark order.
       $sortby = 'mark';
-      $this->user_results = array_csort($this->user_results, $sortby, $this->ordering, SORT_NUMERIC);
+      $this->user_results = \sort::array_csort($this->user_results, $sortby, $this->ordering, SORT_NUMERIC);
       $this->cohort_size = round(($user_no/100) * $this->percent);
 
       // Set visible/invisible flag where necessary.
@@ -1707,7 +1705,7 @@ class ClassTotals {
     } else {
       $method = SORT_STRING;
     }
-    $this->user_results = array_csort($this->user_results, $tmp_sort, $this->ordering, $method);
+    $this->user_results = \sort::array_csort($this->user_results, $tmp_sort, $this->ordering, $method);
   }
 
   /**

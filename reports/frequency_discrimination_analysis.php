@@ -28,7 +28,6 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
-require_once '../include/sort.inc';
 require_once '../include/errors.php';
 
 require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';
@@ -1408,7 +1407,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         $i++;
       }
     }
-    $top_words = array_csort($top_words,$sortby,$ordering);
+    $top_words = \sort::array_csort($top_words,$sortby,$ordering);
 
     $bottom_words = array();
     if (isset($bottom_log[$q_id]['words'])) {
@@ -1419,7 +1418,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         $i++;
       }
     }
-    $bottom_words = array_csort($bottom_words,$sortby,$ordering);
+    $bottom_words = \sort::array_csort($bottom_words,$sortby,$ordering);
 
     echo "<tr><td colspan=\"2\"><strong>" . $string['TopGroup'] . ":</strong></td><td colspan=\"2\"><strong>" . $string['BottomGroup'] . ":</strong></td></tr>\n";
     $mean_word_count_top = (isset($top_log[$q_id]) and $candidate_no != 0) ? $top_log[$q_id]['word_count'] / $candidate_no : 0;

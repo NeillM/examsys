@@ -25,7 +25,6 @@
 */
 
 require '../include/staff_student_auth.inc';
-require '../include/demo_replace.inc';
 require './osce.inc';
 
 if ($userObject->has_role('Demo')) $demo = true;
@@ -63,9 +62,9 @@ $result->close();
 
 $original_username = $username;
 if (isset($demo) and $demo == true) {
-  $surname = demo_replace($surname, $demo);
-  $first_names = demo_replace($first_names, $demo);
-  $student_id = demo_replace_number($student_id, $demo);
+  $surname = \demo::demo_replace($surname, $demo);
+  $first_names = \demo::demo_replace($first_names, $demo);
+  $student_id = \demo::demo_replace_number($student_id, $demo);
 }
 
 $paper_title  = $propertyObj->get_paper_title();

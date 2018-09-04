@@ -32,7 +32,6 @@ require_once '../include/errors.php';
 require_once '../include/mapping.inc';
 require_once '../include/finish_functions.inc';
 require_once '../include/paper_security.php';
-require_once '../include/demo_replace.inc';
 require_once '../LTI/ims-lti/UoN_LTI.php';
 
 //HTML5 part
@@ -53,7 +52,7 @@ $metadataid = param::optional('metadataID', 0, param::INT, param::FETCH_GET);
 $do_not_record = param::optional('dont_record', false, param::BOOLEAN, param::FETCH_GET);
 $log_override = param::optional('log_type', -1, param::INT, param::FETCH_GET);
 
-$demo		= is_demo($userObject);
+$demo = \demo::is_demo($userObject);
 $userID = $userObject->get_user_ID();
 
 //get the paper properties
@@ -333,8 +332,8 @@ require '../config/finish.inc';
       echo '<span style="margin-left:5px; font-size:90%; color:white; font-weight:bold">' . $string['student'] . ' ' . $tmp_student_id . '</span>';
     } elseif ($paper_type < 2 or $userObject->has_role(array('Staff', 'Admin', 'SysAdmin', 'External Examiner'))) {
       echo '<span style="margin-left:5px; font-size:90%; color:white; font-weight:bold">' . $string['answersscreen'];
-      $tmp_student_name = $tmp_title . ' ' . demo_replace($tmp_surname, $demo) . ', ' . demo_replace($tmp_initials, $demo);
-      $tmp_student_id = demo_replace_number($tmp_student_id, $demo);
+      $tmp_student_name = $tmp_title . ' ' . \demo::demo_replace($tmp_surname, $demo) . ', ' . \demo::demo_replace($tmp_initials, $demo);
+      $tmp_student_id = \demo::demo_replace_number($tmp_student_id, $demo);
       echo ' ' . $tmp_student_name;
       if ($tmp_student_id != '') {
         echo " ($tmp_student_id)";

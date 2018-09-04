@@ -26,7 +26,6 @@
 
 require '../include/staff_auth.inc';
 require '../include/sidebar_menu.inc';
-require '../include/sort.inc';
 require '../include/year_tabs.inc';
 require_once '../include/timezones.php';
 
@@ -557,7 +556,7 @@ $stmt->close();
   // Sort all papers correctly by start time
   $sortby = 'start_time';
   $ordering = 'asc';
-  $paper_details = array_csort($paper_details, $sortby, $ordering);
+  $paper_details = \sort::array_csort($paper_details, $sortby, $ordering);
 
   $cellID = 0;
   for ($i=1; $i<=12; $i++) {
