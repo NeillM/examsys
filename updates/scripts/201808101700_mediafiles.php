@@ -12,7 +12,7 @@ if ($updater_utils->check_version("7.0.0")) {
       }
     }
     $configObject->set_setting('system_mediatypes', $filetypes, Config::ASSOC);
-    $configObject->set_setting('paper_threejs', 0, Config::BOOLEAN);*/
+    $configObject->set_setting('paper_threejs', 0, Config::BOOLEAN);
     $maxsize = ini_get('upload_max_filesize');
     $unit = preg_replace('/[^bkmgtpezy]/i', '', $maxsize);
     $maxsize = preg_replace('/[^0-9\.]/', '', $maxsize);
