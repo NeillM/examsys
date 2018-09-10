@@ -357,7 +357,7 @@ Class InstallUtils {
     //LDAP
     if (!self::$cli) {
       self::$cfg_ldap_server = param::optional('ldap_server', null, param::TEXT, param::FETCH_POST);
-      self::$cfg_ldap_search_dn = param::optional('ldap_bind_rdn', null, param::TEXT, param::FETCH_POST);
+      self::$cfg_ldap_search_dn = param::optional('ldap_search_dn', null, param::TEXT, param::FETCH_POST);
       self::$cfg_ldap_bind_rdn = param::optional('ldap_bind_rdn', null, param::TEXT, param::FETCH_POST);
       self::$cfg_ldap_bind_password = param::optional('ldap_bind_password', null, param::TEXT, param::FETCH_POST);
       self::$cfg_ldap_user_prefix = param::optional('ldap_user_prefix', null, param::TEXT, param::FETCH_POST);
