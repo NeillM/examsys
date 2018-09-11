@@ -25,8 +25,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 
     this.noRotate = false;
     this.noZoom = false;
-    // Pan disabled in Rogo.
-    this.noPan = true;
+    this.noPan = false;
 
     this.staticMoving = false;
     this.dynamicDampingFactor = 0.2;

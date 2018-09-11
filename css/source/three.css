@@ -8,8 +8,20 @@
     text-decoration: none;
     margin: 2px 2px;
 }
+.threebutton:disabled {
+    color: grey;
+    cursor: not-allowed;
+}
 .threeblock {
     border: thin solid black;
     cursor:grab;
     margin: auto;
+}
+.threeloading {
+    border: thin solid black;
+    margin: auto;
+    background-image: url("/artwork/large_spin.gif");
+    background-repeat: no-repeat;
+    background-position: center;
+    display: none;
 }

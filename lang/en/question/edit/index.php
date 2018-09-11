@@ -287,7 +287,8 @@ $string['tooltip_formula'] = 'Click link for more details in the online help.';
 $string['reminders'] = 'Reminders';
 $string['reminder_no'] = 'Reminder #%d';
 // 3d
-$string['threeinfo'] = 'Hold the left mouse button to rotate the object and use the mouse wheel to zoom in/out. The final position of the object is not saved.';
+$string['threeinfo'] = 'Hold the left mouse button to rotate the object, hold the right button to pan,  and use the mouse wheel to zoom in/out. The final position of the object is not saved.';
 $string['threereset'] = 'Reset';
 $string['threeload'] = 'Load';
+$string['threeplyerror'] = 'Your browser does not support the display of %s files.';
 
