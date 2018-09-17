@@ -140,17 +140,5 @@ class requirements {
         throw new Exception('PHP extension ' . strtoupper($idx) . ' missing.');
       }
     }
-    // Install composer and dependencies.
-    if (!InstallUtils::$behat_install and !InstallUtils::$phpunit_install) {
-      if (self::composer() !== true) {
-        throw new Exception('Composer not installed / failed to install libraries.');
-      }
-    }
-    // Install NPM dependencies.
-    if (!InstallUtils::$behat_install and !InstallUtils::$phpunit_install) {
-      if (self::npm() !== true) {
-        throw new Exception('NPM not installed / failed to install libraries');
-      }
-    }
   }
 }
