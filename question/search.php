@@ -45,7 +45,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
   <link rel="stylesheet" type="text/css" href="../css/question_list.css" />
-  <link rel="stylesheet" type="text/css" href="../css/adhocwindow.css" />
+  <link rel="stylesheet" type="text/css" href="../css/question_leadin_popup.css" />
   <style type="text/css">
 		<?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
@@ -58,7 +58,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
 ?>
-  <script type="text/javascript" src="../js/adhocwindow.js"></script>
+  <script type="text/javascript" src="../js/jquery.question_leadin_popup.min.js"></script>
   <script>
     function addQID(qID, clearall) {
       if (clearall) {
@@ -431,15 +431,14 @@ if (isset($_GET['submit'])) {
       $tmp_leadin = $sct_parts[0];
     }
     if ($locked != '') {
-      echo '<td class="l" ';
+      echo '<td class="l';
     } else {
-      echo '<td class="u" ';
+      echo '<td class="u';
     }
     if (strlen($fullText) > $leadinlength) {
-      echo ' onmouseover="showAdHocWindow(event,\''.htmlspecialchars($fullText).'\');" ';
-      echo ' onmouseleave="hideAdHocWindow();" ';
+      echo ' extended-leadin" data-extended-leadin="'.htmlspecialchars($fullText);
     }
-    echo '>';
+    echo '">';
     if (trim($theme) != '') {
       echo '<span class="t">' . $theme . '</span><br />&nbsp;&nbsp;&nbsp;&nbsp;';
     }

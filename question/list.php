@@ -84,7 +84,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
   <link rel="stylesheet" type="text/css" href="../css/question_list.css" />
-  <link rel="stylesheet" type="text/css" href="../css/adhocwindow.css" ?>
+  <link rel="stylesheet" type="text/css" href="../css/question_leadin_popup.css" ?>
   <style type="text/css">
     label {padding-top:2px}
   <?php echo QuestionStatus::generate_status_css($status_array); ?>
@@ -100,7 +100,7 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../js/sidebar.js"></script>
   <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/adhocwindow.js"></script>
+  <script type="text/javascript" src="../js/jquery.question_leadin_popup.min.js"></script>
   <script>
     $(function () {
       if ($("#maindata").find("tr").size() > 1) {
@@ -359,15 +359,15 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
     if (trim($leadin) == '') $leadin = '<span style="color:#C00000">' . $string['noquestionleadin'] . '</span>';
 
     if ($locked == '') {
-      echo '<td class="u"';
+      echo '<td class="u';
     } else {
-      echo '<td class="l"';
+      echo '<td class="l';
     }
     if (strlen($leadin) > $leadinlength) {
-      echo ' onmouseover="showAdHocWindow(event,\''.htmlspecialchars(QuestionUtils::clean_leadin($leadin, 0)).'\');" ';
-      echo ' onmouseleave="hideAdHocWindow();" ';
+        $fullText = QuestionUtils::clean_leadin($leadin, 0);
+        echo ' extended-leadin" data-extended-leadin="'.htmlspecialchars($fullText);
     }
-    echo '>';
+    echo '">';
     if (trim($theme) != '') {
       echo '<span class="t">' . $theme . '</span><br />&nbsp;&nbsp;&nbsp;&nbsp;';
     }

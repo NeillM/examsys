@@ -358,7 +358,7 @@ function random_qMarks($random_questions) {
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/screen.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
-  <link rel="stylesheet" type="text/css" href="../css/adhocwindow.css" />
+  <link rel="stylesheet" type="text/css" href="../css/question_leadin_popup.css" />
   <!--[if lt IE 8]>
   <style type="text/css">
     td.ie-fullwidth {
@@ -387,7 +387,7 @@ function random_qMarks($random_questions) {
   <script type="text/javascript" src="../js/jquery.rquerystring.js"></script>
   <script type="text/javascript" src="../js/toprightmenu.js"></script>
   <script type="text/javascript" src="../js/page_scroll.js"></script>
-  <script type="text/javascript" src="../js/adhocwindow.js"></script>
+  <script type="text/javascript" src="../js/jquery.question_leadin_popup.min.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
@@ -1054,12 +1054,12 @@ function random_qMarks($random_questions) {
       echo "<td class=\"q_no\">$question_number.</td>";
     }
 
-    echo "<td class=\"l\" ";
+    echo "<td class=\"l";
     if (strlen($temp_array[$x]['fulltext']) > $leadinlength) {
-      echo ' onmouseover="showAdHocWindow(event,\''.htmlspecialchars($temp_array[$x]['fulltext']).'\');" ';
-      echo ' onmouseleave="hideAdHocWindow();" ';
+        $fullText = QuestionUtils::clean_leadin($temp_array[$x]['fulltext'], 0);
+        echo ' extended-leadin" data-extended-leadin="'.htmlspecialchars($fullText);
     }
-    echo '>';
+    echo '">';
     echo $theme_str;
     if ($temp_array[$x]['q_type'] == 'random') {
       echo $temp_array[$x]['leadin'];
