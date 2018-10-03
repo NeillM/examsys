@@ -265,17 +265,19 @@ class media_handler {
     $zip = new ZipArchive;
     $res = $zip->open($fullpath);
     if ($res === true) {
+      mkdir($mediadirectory->location() . $unique);
       $zip->extractTo($tmpdirectory);
       for ($i = 0; $i < $zip->numFiles; $i++) {
         $stat = $zip->statIndex($i);
         $filename = $stat['name'];
         $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-        if (!key_exists($ext, $permitted)) {
-          unlink($tmpdirectory . DIRECTORY_SEPARATOR . $filename);
+        if (key_exists($ext, $permitted)) {
+          copy($tmpdirectory . DIRECTORY_SEPARATOR . $filename, $mediadirectory->location() . $unique . DIRECTORY_SEPARATOR . $filename);
         }
+        unlink($tmpdirectory . DIRECTORY_SEPARATOR . $filename);
       }
       $zip->close();
-      rename($tmpdirectory, $mediadirectory->location() . $unique);
+      rmdir($tmpdirectory);
     } else {
       return false;
     }
