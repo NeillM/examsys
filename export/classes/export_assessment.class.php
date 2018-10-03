@@ -547,14 +547,46 @@ class export_assessment extends exporter {
     $j = 1;
     foreach ($log_array as $individual) {
       // Write out the raw data.
-      $csvdata[$j][] = $individual['gender'];
-      $csvdata[$j][] = $individual['title'];
-      $csvdata[$j][] = $individual['surname'];
-      $csvdata[$j][] = $individual['first_names'];
-      $csvdata[$j][] = $individual['student_id'];
-      $csvdata[$j][] = $individual['course'];
-      $csvdata[$j][] = $individual['year'];
-      $csvdata[$j][] = $individual['started'];
+      if (isset($individual['gender'])) {
+        $csvdata[$j][] = $individual['gender'];
+      } else {
+        $csvdata[$j][] = "";
+      }
+      if (isset($individual['title'])) {
+        $csvdata[$j][] = $individual['title'];
+      } else {
+        $csvdata[$j][] = "";
+      }
+      if (isset($individual['surname'])) {
+        $csvdata[$j][] = $individual['surname'];
+      } else {
+        $csvdata[$j][] = "";
+      }
+      if (isset($individual['first_names'])) {
+        $csvdata[$j][] = $individual['first_names'];
+      } else {
+        $csvdata[$j][] = "";
+      }
+      if (isset($individual['student_id'])) {
+        $csvdata[$j][] = $individual['student_id'];
+      } else {
+        $csvdata[$j][] = "";
+      }
+      if (isset($individual['course'])) {
+        $csvdata[$j][] = $individual['course'];
+      } else {
+        $csvdata[$j][] = "";
+      }
+      if (isset($individual['year'])) {
+        $csvdata[$j][] = $individual['year'];
+      } else {
+        $csvdata[$j][] = "";
+      }
+      if (isset($individual['started'])) {
+        $csvdata[$j][] = $individual['started'];
+      } else {
+        $csvdata[$j][] = "";
+      }
       for ($i = 0; $i < count($paper); $i++) {
         $tmp_question_ID = $paper[$i]['ID'];
         $tmp_screen = $paper[$i]['screen'];
