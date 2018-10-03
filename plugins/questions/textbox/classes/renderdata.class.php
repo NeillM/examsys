@@ -176,7 +176,6 @@ class renderdata extends \questiondata {
 
       if ($useranswer == '' and $screen_pre_submitted == 1) {
         $this->unanswered = true;
-        $background_colour = 'background-color:red; ';
       } else {
         $this->unanswered = false;
       }
