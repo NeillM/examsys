@@ -7,6 +7,10 @@ $(function() {
         // Check valid matrix labels  setup.
         start = element.id.search('_text');
         y = element.id.substr(start + 5);
+        // Check for empty strings.
+        if (value != "" && value.trim() == "") {
+            return false;
+        }
         if (value == "") {
             for (x = 1; x <= 10; x++) {
                 id = 'option_correct' + x + '_' + y;
@@ -22,6 +26,10 @@ $(function() {
         // Check valid matrix stem setup.
         start = element.id.search('_stem');
         x = element.id.substr(start + 5);
+        // Check for empty strings.
+        if (value != "" && value.trim() == "") {
+            return false;
+        }
         if (value == "") {
             for (y = 1; y <= 10; y++) {
                 id = 'option_correct' + x + '_' + y;
