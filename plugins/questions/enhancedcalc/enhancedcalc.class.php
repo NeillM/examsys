@@ -1168,7 +1168,7 @@ class EnhancedCalc extends Question implements questionInterface {
 			$questiondata['scenario'] = $this->scenario;
 		}
 		$questiondata['displaymedia'] = false;
-		if ($extra['mediafile'] != '') {
+		if (isset($extra['mediafile']) and $extra['mediafile'] != '') {
 			$questiondata['displaymedia'] = true;
 			$questiondata['mediaid'] = $extra['mediaid'];
 			$questiondata['mediatype'] = $extra['mediatype'];
@@ -1192,26 +1192,35 @@ class EnhancedCalc extends Question implements questionInterface {
 		$questiondata['feedbackprecision'] = $marking_precision_feedback;
 
 		$questiondata['leadin'] = $leadin;
-		// Find any previous failed/unanswered related question
-		$failed_answers = array();
-		foreach ($this->useranswer['vars'] as $key => $value) {
-			if ($value == 'ERROR' and isset($this->settings['vars'][$key]['min'])) {
-				$failed_answer_id = substr($this->settings['vars'][$key]['min'], 3);
-				foreach ($extra['current_question']['paper_questions'] as $question_on_paper) {
-					if (isset($question_on_paper['q_id']) and $failed_answer_id == $question_on_paper['q_id'] and isset($question_on_paper['assigned_number'])) {
-						$failed_answers[] = $question_on_paper['assigned_number'];
+		if (isset($extra['current_question'])) {
+			$screen = $extra['current_question']['screen'];
+			// Find any previous failed/unanswered related question
+			$failed_answers = array();
+			foreach ($this->useranswer['vars'] as $key => $value) {
+				if ($value == 'ERROR' and isset($this->settings['vars'][$key]['min'])) {
+					$failed_answer_id = substr($this->settings['vars'][$key]['min'], 3);
+					foreach ($extra['current_question']['paper_questions'] as $question_on_paper) {
+						if (isset($question_on_paper['q_id']) and $failed_answer_id == $question_on_paper['q_id'] and isset($question_on_paper['assigned_number'])) {
+							$failed_answers[] = $question_on_paper['assigned_number'];
+						}
 					}
 				}
 			}
+			// Only want distinct failed answers.
+			// We could have duplicates if answer/variable in a parent question is used in multiple variables in a child question.
+			$failed_answers = array_unique($failed_answers);
+		} else {
+			$screen = $extra['num_on_screen'];
+			$failed_answers = array();
 		}
-		// Only want distinct failed answers.
-		// We could have duplicates if answer/variable in a parent question is used in multiple variables in a child question.
-		$failed_answers = array_unique($failed_answers);
-		$screen = $extra['current_question']['screen'];
 		$questiondata['screen'] = $screen;
 		if (in_array('ERROR', $this->useranswer['vars'], true)) {
 			$questiondata['error'] = true;
-			$questiondata['failedanswer'] = sprintf($string['failedanswer'], implode(', ', $failed_answers));
+			if (count($failed_answers) > 0) {
+				$questiondata['failedanswer'] = sprintf($string['failedanswer'], implode(', ', $failed_answers));
+			} else {
+				$questiondata['failedanswer'] = "";
+			}
 		} else {
 			$questiondata['error'] = false;
 			$questiondata['numonscreen'] = $extra['num_on_screen'];
