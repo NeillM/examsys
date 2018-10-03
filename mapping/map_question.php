@@ -83,8 +83,9 @@ function display_q($configObject, $target_id, $db) {
 		$question['object'] = new EnhancedCalc($configObj);
 		$question['object']->load($question);
 	}
-  
-  display_question($configObject, $question, $paper_type, 0, 1, '', $question_no, $user_answers, $unanswered);
+
+  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
+  display_question($configObject, $question, $paper_type, 0, 1, '', $question_no, $user_answers, $unanswered, $texteditorplugin);
 
   $question_nos[] = $old_q_id;
   echo "</table>\n";
@@ -101,6 +102,9 @@ $render->render_html5_js(json_encode($jstring));
   <?php echo $configObject->get('cfg_js_root') ?>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/jquery.mappingform.js"></script>
+  <?php
+    $texteditorplugin->display_header();
+  ?>
   <script>
     $(function () {
       $('#cancel').click(function() {
