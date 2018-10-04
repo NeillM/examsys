@@ -2405,8 +2405,13 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         echo_content($paper[$question]['leadin']);
 
         $movie = ($tmp_display_correct_answer == '0') ? $paper[$question]['q_media'] : $paper[$question]['o_media'][0];
-        $answered = explode(',', $paper[$question]['user_answer']);
-        if (!isset($paper[$question]['user_answer']) or $answered[0] == 0) {
+        $answered = array();
+        if (!isset($paper[$question]['user_answer'])) {
+          $answered[0] = 0;
+        } else {
+          $answered = explode(',', $paper[$question]['user_answer']);
+        }
+        if ($answered[0] == 0) {
           reset_feedback($hide_if_unanswered);
           if ($hide_if_unanswered == '1') {
             $movie = $paper[$question]['q_media'];
