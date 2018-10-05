@@ -11,12 +11,26 @@ $(function() {
         if (value != "" && value.trim() == "") {
             return false;
         }
+        // Check the label of a selected radio button is not blank
+        // Ignore if stem is also blank.
         if (value == "") {
             for (x = 1; x <= 10; x++) {
                 id = 'option_correct' + x + '_' + y;
-                if ($('#' + id).is(':checked')) {
+                if ($('#' + id).is(':checked') && $('#question_stem' + x).val() != "") {
                     return false;
                 }
+            }
+            // Do not allow empty labels, apart from those not in use at the end of the list.
+            emptylabel = false;
+            for (x = (parseInt(y) + 1); x <= 10; x++) {
+                id = 'option_text' + x;
+                if ($('#' + id).val() != "") {
+                    emptylabel = true;
+                    break;
+                }
+            }
+            if (emptylabel) {
+                return false;
             }
         }
         return this.optional( element ) || true;
@@ -30,12 +44,26 @@ $(function() {
         if (value != "" && value.trim() == "") {
             return false;
         }
+        // Check the stem of a selected radio button is not blank
+        // Ignore if label is also blank.
         if (value == "") {
             for (y = 1; y <= 10; y++) {
                 id = 'option_correct' + x + '_' + y;
-                if ($('#' + id).is(':checked')) {
+                if ($('#' + id).is(':checked') && $('#option_text' + y).val() != "") {
                     return false;
                 }
+            }
+            // Do not allow empty stems, apart from those not in use at the end of the list.
+            emptystem = false;
+            for (y = (parseInt(x) + 1); y <= 10; y++) {
+                id = 'question_stem' + y;
+                if ($('#' + id).val() != "") {
+                    emptystem = true;
+                    break;
+                }
+            }
+            if (emptystem) {
+                return false;
             }
         }
         return this.optional( element ) || true;
