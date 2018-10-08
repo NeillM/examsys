@@ -118,8 +118,26 @@ $question['assigned_number'] = (isset($_GET['qNo'])) ? $_GET['qNo'] : 1;
   display_question($configObject, $question, $paper_type, 0, 1, '', $question_no, $user_answers, $unanswered, $texteditorplugin);
 
   $question_nos[] = $old_q_id;
-  echo "<table>\n";
+  echo "</table></div>";
+  // Paper dataset.
+  $dataset['name'] = 'paper';
+  $dataset['attributes']['timed'] = false;
+  $dataset['attributes']['refcount'] = 0;
+  $render->render($dataset, array(), 'paper/dataset.html');
+  // User dataset.
+  $datasetuser['name'] = 'user';
+  $datasetuser['attributes']['student'] = false;
+  $render->render($datasetuser, array(), 'paper/dataset.html');
+  // CSS dataset.
+  $datasetcss['name'] = 'css';
+  $datasetcss['attributes']['bgcolor'] = $bgcolor;
+  $datasetcss['attributes']['textsize'] = $textsize;
+  $datasetcss['attributes']['unanswered_color'] = $unanswered_color;
+  $datasetcss['attributes']['themecolor'] = $themecolor;
+  $datasetcss['attributes']['marks_color'] = $marks_color;
+  $datasetcss['attributes']['dismiss_color'] = '#A5A5A5';
+  $datasetcss['attributes']['special_needs'] = $userObject->is_special_needs();
+  $render->render($datasetcss, array(), 'paper/dataset.html');
  ?>
- </div>
  </body>
  </html>
