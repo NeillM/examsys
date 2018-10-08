@@ -6,12 +6,16 @@ if ($updater_utils->check_version("7.0.0")) {
     $updater_utils->execute_query($sql, false);
     // Install tinymce plugin.
     $defaulttexteditorns = 'plugins\texteditor\plugin_tinymce3_texteditor\plugin_tinymce3_texteditor';
-    $defaulttexteditor = new $defaulttexteditorns($mysqli);
-    $defaulttexteditor->install($mysql_admin_user, $mysql_admin_pass);
+    $defaulttexteditor = new $defaulttexteditorns();
+    $defaulttexteditor->update_plugin_version($defaulttexteditor->get_file_version());
+    $configObject->set_setting('installed', 1, \Config::BOOLEAN, 'plugin_tinymce3_texteditor');
     // Install plain plugin.
     $plaintexteditorns = 'plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor';
-    $plaintexteditor = new $plaintexteditorns($mysqli);
-    $plaintexteditor->install($mysql_admin_user, $mysql_admin_pass);
+    $plaintexteditor = new $plaintexteditorns();
+    $plaintexteditor->update_plugin_version($plaintexteditor->get_file_version());
+    $configObject->set_setting('installed', 1, \Config::BOOLEAN, 'plugin_plain_texteditor');
+    $settingssql = "INSERT IGNORE INTO config (component, setting, value, type) values ('plugin_plain_texteditor', 'supports_mathjax', 1, 'boolean')";
+    $updater_utils->execute_query($settingssql, false);
     // Enable one.
     if ($configObject->get_setting('core', 'misc_editor_name') === 'tinymce') {
       $defaulttexteditor->enable_plugin();
