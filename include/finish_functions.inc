@@ -606,8 +606,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
     $option_order = explode(',',$paper[$question]['option_order']);
     $question_no = $display_no;
 
-    $questiondatatype = "plugins\questions\\" . $q_type . '\\renderdata';
-    $questiondata = new $questiondatatype();
+    $questiondata = \questiondata::get_datastore($q_type);
 
     switch ($q_type) {
       case 'area':

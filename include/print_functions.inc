@@ -29,8 +29,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
   $q_id = $question['q_id'];
   $option_no = count($question['options']);
   $configObj = Config::get_instance();
-  $questiondatatype = "plugins\questions\\" . $question['q_type'] . '\\renderdata';
-  $questiondata = new $questiondatatype();
+  $questiondata = \questiondata::get_datastore($question['q_type']);
   $render = new render($configObj);
   // Determine if negative marking is used.
   $neg_marking = false;

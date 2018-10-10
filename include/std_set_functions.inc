@@ -37,8 +37,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
   $mediadirectory = rogo_directory::get_directory('media');
 
   $configObj = Config::get_instance();
-  $questiondatatype = "plugins\questions\\" . $options[0]['q_type'] . '\\renderdata';
-  $questiondata = new $questiondatatype();
+  $questiondata = \questiondata::get_datastore($options[0]['q_type']);
   $render = new render($configObj);
 
   $option_no = count($options);

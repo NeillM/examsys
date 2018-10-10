@@ -198,8 +198,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
   $mediadirectory = rogo_directory::get_directory('media');
 
   $configObj = Config::get_instance();
-  $questiondatatype = "plugins\questions\\" . $question['q_type'] . '\\renderdata';
-  $questiondata = new $questiondatatype();
+  $questiondata = \questiondata::get_datastore($question['q_type']);
   $render = new render($configObj);
 
   $q_id = $question['q_id'];

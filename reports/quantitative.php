@@ -29,8 +29,7 @@
       global $old_likert_scale, $old_score_method, $old_display_method, $table_on, $string;
 
     $configObj = Config::get_instance();
-    $questiondatatype = "plugins\questions\\" . $q_type . '\\renderdata';
-    $questiondata = new $questiondatatype();
+    $questiondata = \questiondata::get_datastore($q_type);
     $render = new render($configObj);
 
       if ($q_type != 'likert' and $q_type != 'textbox' and $table_on == 1) {

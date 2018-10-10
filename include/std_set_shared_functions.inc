@@ -421,8 +421,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
   $configObject->get('cfg_root_path');
   $qn_excluded = ($exclude == '1');
   $mediadirectory = rogo_directory::get_directory('media');
-  $questiondatatype = "plugins\questions\\" . $firstoption['q_type'] . '\\renderdata';
-  $questiondata = new $questiondatatype();
+  $questiondata = \questiondata::get_datastore($firstoption['q_type']);
   $render = new render($configObject);
   
   switch ($firstoption['q_type']) {

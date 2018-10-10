@@ -148,8 +148,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 
   $cfg_root_path = $configObject->get('cfg_root_path');
   $mediadirectory = rogo_directory::get_directory('media');
-  $questiondatatype = "plugins\questions\\" . $q_type . '\\renderdata';
-  $questiondata = new $questiondatatype();
+  $questiondata = \questiondata::get_datastore($q_type);
   $render = new render($configObject);
 
   if ($theme != '') echo "<tr><td colspan=\"2\"><h1 style=\"color:$themecolor\">$theme</h1></td></tr>\n";

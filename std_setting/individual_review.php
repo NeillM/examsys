@@ -482,8 +482,7 @@ function check_ebel_distinction_type($reviewID, $db) {
   $configObj = Config::get_instance();
   $render = new render($configObj);
   while ($result->fetch()) {
-    $questiondatatype = "plugins\questions\\" . $q_type . '\\renderdata';
-    $questiondata = new $questiondatatype();
+    $questiondata = \questiondata::get_datastore($q_type);
     if ($prologue_show == 1 and $current_screen == 1 and $paper_prologue != '') {
       echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
       $prologue_show = 0;

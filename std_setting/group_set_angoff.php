@@ -212,8 +212,7 @@ $render = new render($configObj);
 echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"text-align:left\">\n";
 
 while ($stmt->fetch()) {
-  $questiondatatype = "plugins\questions\\" . $q_type . '\\renderdata';
-  $questiondata = new $questiondatatype();
+  $questiondata = \questiondata::get_datastore($q_type);
   if ($prologue_show == 1 and $paper_prologue != '') {
     echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
     $prologue_show = 0;

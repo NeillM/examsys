@@ -41,8 +41,7 @@ $reviewer_email = check_var('reviewer_email', $form_fields, true, false, true);
 function display_question($question, &$question_no, $answers, $string) {
   $question_no++;
   $configObj = Config::get_instance();
-  $questiondatatype = "plugins\questions\\" . $question['q_type'] . '\\renderdata';
-  $questiondata = new $questiondatatype();
+  $questiondata = \questiondata::get_datastore('sct');
   $render = new render($configObj);
 
   if ($question['scenario'] != '') {

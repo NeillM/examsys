@@ -335,4 +335,13 @@ class questiondatatest extends unittestdatabase{
         );
     $this->assertEquals($option, $data->get_opt($part_id));
   }
+
+  /**
+   * Test retrieval of invalid datastore
+   * @group question
+   */
+  public function test_get_datastore() {
+    $data = questiondata::get_datastore('invalid');
+    $this->assertEquals('undefined', $data->questiontype);
+  }
 }

@@ -36,8 +36,7 @@ if ($dis_class != '') {
 }
 if ($current_media['filename'] != '') {
   $configObj = Config::get_instance();
-  $questiondatatype = "plugins\questions\\" . $question->get_type() . '\\renderdata';
-  $questiondata = new $questiondatatype();
+  $questiondata = \questiondata::get_datastore($question->get_type());
   $render = new render($configObj);
   $questiondata->set_media($current_media['filename'], $current_media['width'], $current_media['height'], '', false, $media_index_display, $locked);
 ?>

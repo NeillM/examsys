@@ -517,8 +517,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
   global $ex_no, $d_no, $d_total, $user_total, $language, $string;
 
   $configObject = Config::get_instance();
-  $questiondatatype = "plugins\questions\\" . $q_type . '\\renderdata';
-  $questiondata = new $questiondatatype();
+  $questiondata = \questiondata::get_datastore($q_type);
   $render = new render($configObject);
   $mediadirectory = rogo_directory::get_directory('media');
 

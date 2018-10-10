@@ -818,12 +818,15 @@ abstract class questiondata {
   }
 
   /**
-   * Get data store class
+   * Get data store class if it exists
    * @param string $qtype question type
-   * @return class
    */
   public static function get_datastore($qtype) {
-    $questionpluginns = 'plugins\\questions\\' . $qtype . '\\renderdata';
+    if (file_exists(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . $qtype)) {
+      $questionpluginns = 'plugins\\questions\\' . $qtype . '\\renderdata';
+    } else {
+      $questionpluginns = 'plugins\\questions\\undefined\\renderdata';
+    }
     return new $questionpluginns();
   }
 }
