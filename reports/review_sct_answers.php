@@ -41,7 +41,7 @@ function saveResponseData($optID, $experts, $max_experts, $db) {
 function display_question($question, &$question_no, $reviews, &$string, $db) {
   $question_no++;
   $configObj = Config::get_instance();
-  $questiondata = \questiondata::get_datastore($question['q_type']);
+  $questiondata = \questiondata::get_datastore('sct');
   $render = new render($configObj);
   if ($question['scenario'] != '') {
     echo "<tr><td class=\"q_no\">" . $question_no . ".&nbsp;</td><td style=\"background-color:#E4EEFC; border-bottom:1px solid #B5C4DF; font-weight:bold; padding:2px; color:#000040\">{$string['clinicalvignette']}</td></tr>\n";
