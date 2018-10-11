@@ -278,7 +278,7 @@ $photoname = UserUtils::student_photo_exist($username);
   // Get the questions.
   $question_no = 1;
   $max_cols = 0;
-  $cell_colors = array('#D99594', '#FABF8F', '#C2D69B');
+  $cell_colors = array('#D99694', '#E5B9B7', '#FFC169', '#C2D69B', '#C2DFFF','#5ea2ef','#4b0082', '#4b00FF','#9400d3','#9400FF');
   /**
    * Getting the max column number
    */
