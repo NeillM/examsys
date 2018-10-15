@@ -129,7 +129,7 @@ $photoname = UserUtils::student_photo_exist($username);
   /**
    * Getting the max column number
    */
-  $max_cols_result = $mysqli->prepare("SELECT display_method FROM papers, questions WHERE paper = ? AND papers.question = questions.q_id ORDER BY display_method limit 1");
+  $max_cols_result = $mysqli->prepare("SELECT display_method FROM papers, questions WHERE paper = ? AND papers.question = questions.q_id ORDER BY CHAR_LENGTH(display_method) - CHAR_LENGTH(REPLACE(display_method, '|', '')) desc limit 1");
   $max_cols_result->bind_param('i', $paperID);
   $max_cols_result->execute();
   $max_cols_result->bind_result($display_method);
@@ -147,10 +147,7 @@ $photoname = UserUtils::student_photo_exist($username);
   $result->execute();
   $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);
   while ($result->fetch()) {
-    if ($question_no == 1) {
-      // Header row
-      $cols = substr_count($display_method, '|');
-    }
+    $cols = substr_count($display_method, '|');
     if (trim($theme) != '') {
       echo "<tr><td colspan=\"4\" class=\"t\">$theme</td></tr>\n";
     }
