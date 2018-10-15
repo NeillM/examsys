@@ -295,6 +295,14 @@ abstract class log {
   }
 
   /**
+   * Paper type accessor method
+   * @return string
+   */
+  public function get_papertype() {
+    return $this->papertype;
+  }
+
+  /**
    * Get paper logs
    */
   abstract public function get_log();
