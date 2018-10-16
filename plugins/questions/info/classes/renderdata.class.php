@@ -54,7 +54,6 @@ class renderdata extends \questiondata {
       $this->displaymedia = true;
     }
     $this->displayleadin = true;
-    $this->questionno = $this->questionno - 1;
   }
 
   /**

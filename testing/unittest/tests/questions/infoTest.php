@@ -39,7 +39,8 @@ class infotest extends unittest{
     $data->questionno =  2;
     $data->set_question(1, '', '');
     $this->assertTrue($data->displaymedia);
-    $this->assertEquals(1, $data->questionno);
+    // Question number should not be affected by a info block.
+    $this->assertEquals(2, $data->questionno);
   }
 
 }

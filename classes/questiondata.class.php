@@ -592,7 +592,10 @@ abstract class questiondata {
       }
     }
 
-    $question_no++;
+    // info blocks do not count towards question number.
+    if ($question['q_type'] !== 'info') {
+      $question_no++;
+    }
 
     if ($question['theme'] != '') {
       $this->theme = $question['theme'];
