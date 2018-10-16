@@ -129,6 +129,9 @@ function check_ebel_distinction_type($reviewID, $db) {
   $texteditorplugin->display_header();
   $render = new render($configObject);
   $render->render_html5_js(json_encode($jstring));
+  if ($configObject->get_setting('core', 'paper_mathjax')) {
+    $render->render(null, null, 'mathjax.html');
+  }
 ?>
   <script>
   <?php
