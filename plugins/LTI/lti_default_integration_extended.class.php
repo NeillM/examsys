@@ -25,7 +25,7 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-class lti_default_integration_extended  extends lti_integration {
+class lti_default_integration_extended extends lti_integration {
 
   /**
    * Check last time logged in and decide if re-authentication should be done
@@ -60,4 +60,12 @@ class lti_default_integration_extended  extends lti_integration {
     return '';
   }
 
+  /**
+   * Translate source id in rogo external id.
+   * @param string $sourceid source id from VLE
+   * @return mixed module external id or null
+   */
+  public function module_id_translate($sourceid) {
+    return null;
+  }
 }
