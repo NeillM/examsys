@@ -46,7 +46,7 @@ lang.na - not applicable
 {% if data.displaylikertnotes %}
     <tr>
         <td></td>
-        <td colspan="{data.likertnotescolspan}}" class="note">
+        <td colspan="{{data.likertnotescolspan}}" class="note">
             <img src="{{path}}/artwork/notes_icon.gif" width="16" height="16" alt="Note" />
             &nbsp;<strong>{{lang.note}}:</strong>&nbsp;{{data.notes}}
         </td>
@@ -54,7 +54,7 @@ lang.na - not applicable
 {% endif %}
 {% if data.displaylikertscenario %}
     <tr>
-        <td colspan="{data.likertscenariocolspan}}">
+        <td colspan="{{data.likertscenariocolspan}}">
             {{data.scenario|raw}}
         </td>
     </tr>

@@ -39,7 +39,7 @@ lang.na - not applicable
 {% for i,p in data.options %}
         <tr {% if p.unans %} class="unans" {% endif %}>
             <td class="option">
-                <select name="{{p.optionno}}" id ="{{p.optionno}}" class="rankselect q"{{data.questionno}}">
+                <select name="{{p.optionno}}" id ="{{p.optionno}}" class="rankselect q{{data.questionno}}">
                     <option value="u"></option>
     {# Display each rank option with computed ordinal #}
     {% for idx,selected in p.selected %}
