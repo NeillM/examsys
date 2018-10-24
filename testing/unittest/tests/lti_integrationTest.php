@@ -296,7 +296,7 @@ class lti_integrationtest extends unittestdatabase {
         $this->config->set_setting('lti_integration', 'default', \Config::STRING);
         $moduleshortcode = 'PHAR4018';
         $moduletitle = 'Advanced Drug Discovery';
-        $expected = array(array('Manual', $moduleshortcode, 'CampusTODO', 'SchoolTODO', 0, "MISSING:$moduletitle"));
+        $expected = array(array('Manual', $moduleshortcode, 'CampusTODO', 'UNKNOWN School', 0, "MISSING:$moduletitle"));
         $lti = UoN_LTI::get_instance();
         $lti_i = $lti->load();
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
