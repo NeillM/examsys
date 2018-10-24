@@ -26,3 +26,4 @@ $string['phpextensionwarn'] = 'The PHP extension %s may be required for some fun
 $string['help'] = 'Not all requirements met. Please refer to the <a href = "https://rogo-eassessment-docs.atlassian.net" target="_blank">documentation</a> on how to install any missing requirements.';
 $string['langpacksmissing'] = 'Translation pack for language code "%s" missing. Please review our <a href = "http://rogo-oss.nottingham.ac.uk/langpacks/" target="_blank">langpacks</a> to see if one is available.';
 $string['langpacksfound'] = 'Translation packs installed.';
+$string['invalidconfig'] = 'An invalid config.inc.php file has been found.';
