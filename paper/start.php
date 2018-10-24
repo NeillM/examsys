@@ -453,7 +453,7 @@ $render->render($headerdata, $lang, 'header.html');
 
   if (in_array('students', $midexam_clarification)) {
     $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);
-    echo $exam_announcementObj->display_student_announcements();
+    $contentdata['examclarification'] = $exam_announcementObj->display_student_announcements();
   }
 
   $render->render($contentdata, $string, 'paper/header.html');
