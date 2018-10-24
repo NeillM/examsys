@@ -139,6 +139,9 @@ $paper_prologue = $propertyObj->get_paper_prologue();
     $texteditorplugin->display_header();
     $render = new render($configObject);
     $render->render_html5_js(json_encode($jstring));
+    if ($configObject->get_setting('core', 'paper_mathjax')) {
+      $render->render(null, null, 'mathjax.html');
+    }
   ?>
 </head>
 <body>
