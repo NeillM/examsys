@@ -1358,6 +1358,7 @@ class ClassTotals {
     $result->bind_result($log_id, $metadataID, $paper_type, $q_id, $screen, $duration, $user_answer, $q_type, $mark);
 
     while ($result->fetch()) {
+      $userID = $this->user_results[$metadataID]['userID'];
       // We have passed the check this students should be displayed.
       $this->user_results[$metadataID]['visible'] =  true;
 
@@ -1375,15 +1376,15 @@ class ClassTotals {
       $this->user_results[$metadataID]['questions']++;
       $this->user_results[$metadataID]['paper_type'] = $paper_type;
 
-			$single_mark = $this->getUserMark($q_id, $userID, $user_answer, $mark, $tmp_user_mark_array);
-			$tmp_mark += $single_mark;
+      $single_mark = $this->getUserMark($q_id, $userID, $user_answer, $mark, $tmp_user_mark_array);
+      $tmp_mark += $single_mark;
 
       if (($q_type == 'textbox') and !is_numeric($mark)) {
-			  $this->unmarked_textbox = true;
+        $this->unmarked_textbox = true;
         $marking_complete = 0;
       }
       if ($q_type == 'enhancedcalc' and !is_numeric($mark)) {
-			  $this->unmarked_enhancedcalc = true;
+        $this->unmarked_enhancedcalc = true;
         $marking_complete = 0;
       }
       $old_duration   = $duration;
