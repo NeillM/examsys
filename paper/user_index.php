@@ -116,9 +116,12 @@ function have_previously_started($attempts) {
 
 function calculate_duration($normal, $extra_time_mins, $special_needs_percentage) {
   $mins = $normal;
-  if ($extra_time_mins != NULL) $mins .= ' + ' . $extra_time_mins;
-  if ($special_needs_percentage != NULL) $mins .= ' + ' . ($normal / 100) * $special_needs_percentage;
-
+  if ($extra_time_mins != NULL) {
+    $mins += $extra_time_mins;
+  }
+  if ($special_needs_percentage != NULL) {
+    $mins += ($normal / 100) * $special_needs_percentage;
+  }
   return $mins;
 }
 
