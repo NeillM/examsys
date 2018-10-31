@@ -75,14 +75,15 @@ function display_q($configObject, $target_id, $db) {
   $screen_pre_submitted = 0;
   $user_answers = array();
 
-	if ($question['q_type'] == 'enhancedcalc') {
-		require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
-		if (!isset($configObj)) {
-			$configObj = Config::get_instance();
-		}
-		$question['object'] = new EnhancedCalc($configObj);
-		$question['object']->load($question);
-	}
+  if ($question['q_type'] == 'enhancedcalc') {
+    $question['screen'] = 1;
+    require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
+    if (!isset($configObj)) {
+      $configObj = Config::get_instance();
+    }
+    $question['object'] = new EnhancedCalc($configObj);
+    $question['object']->load($question);
+  }
 
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   display_question($configObject, $question, $paper_type, 0, 1, '', $question_no, $user_answers, $unanswered, $texteditorplugin);
