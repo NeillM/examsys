@@ -58,7 +58,7 @@ $(function () {
   resizeList();
   $(window).resize(resizeList);
 
-   $.ajaxSetup({ timeout: 3000 });
+   $.ajaxSetup({ timeout: 10000 });
    $('#list').ajaxError(function (event, jqXHR, ajaxSettings, thrownError) {
      doError();
    });
