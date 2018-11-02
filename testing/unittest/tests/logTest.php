@@ -65,12 +65,32 @@ class logtest extends unittestdatabase {
     $do_restart = false;
     $current_screen = 1;
     $previous = array('used_questions' => array(2 => 2),
-        'user_answers' => array(1 => array(2 => '1', 2 => '2')),
-        'user_dismiss' => array(1 => array(2 => '0000', 2 => '1000')),
+        'user_answers' => array(1 => array(2 => '2')),
+        'user_dismiss' => array(1 => array(2 => '1000')),
         'user_order' => array(1 => array(2 => '0,1,2,3')),
         'previous_duration' => 10,
         'screen_pre_submitted' => 1,
         'current_screen' => 1);
+    $this->assertEquals($previous, $log->get_previous_answers($metadataID, $do_restart, $current_screen, true));
+  }
+
+  /**
+   * Test retrieving previous answers from log late - multiple questions
+   * @group log
+   */
+  public function test_get_previous_answers_late_complex() {
+    $papertype = '2';
+    $log = \log::get_paperlog($papertype);
+    $metadataID = 8;
+    $do_restart = false;
+    $current_screen = 1;
+    $previous = array('used_questions' => array(3 => 3, 2 => 2),
+      'user_answers' => array(1 => array(2 => '1'), 2 => array(3 => '2')),
+      'user_dismiss' => array(1 => array(2 => '0000'), 2 => array(3 => '1000')),
+      'user_order' => array(1 => array(2 => '0,1,3,2'), 2 => array(3 => '0,1,2,3')),
+      'previous_duration' => 5,
+      'screen_pre_submitted' => 1,
+      'current_screen' => 1);
     $this->assertEquals($previous, $log->get_previous_answers($metadataID, $do_restart, $current_screen, true));
   }
 

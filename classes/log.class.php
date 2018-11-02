@@ -108,7 +108,7 @@ abstract class log {
     $this->metadataid = $metadataID;
     if ($check_log_late and $this->late) {
       // If we are after the deadline check for answers in original_paper_type_log - these will be over written below by new answers in log_late below.
-      return array_merge($this->get_log(), $this->get_log_late());
+      return $this->get_log_late();
     } else {
       // Get user answers from whichever log is pointed to by log$paper_type
      return $this->get_log();
@@ -116,14 +116,15 @@ abstract class log {
   }
 
   /**
-   * Get entries from the log late table
+   * Get entries from paper type log table and ovewrite with the log late table
    * @return array
    */
   public function get_log_late() {
-    $user_answers = array();
-    $user_dismiss = array();
-    $user_order = array();
-    $used_questions = array();
+    $log = $this->get_log();
+    $user_answers = $log['user_answers'];
+    $user_dismiss = $log['user_dismiss'];
+    $user_order = $log['user_order'];
+    $used_questions = $log['used_questions'];
     $log_data = $this->db->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log_late WHERE metadataID = ? ORDER BY id");
     $log_data->bind_param('i', $this->metadataid);
     $log_data->execute();
