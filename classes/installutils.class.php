@@ -1040,6 +1040,7 @@ Class InstallUtils {
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".log_metadata TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".lti_resource TO '". self::$cfg_db_student_user . "'@'".self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".lti_context TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".lti_user TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".marking_override TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".modules TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".modules_student TO '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
@@ -1244,6 +1245,7 @@ Class InstallUtils {
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".log_metadata TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".lti_resource TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".lti_context TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
+    $priv_SQL[] = "GRANT SELECT ON " . $dbname . ".lti_user TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE ON " . $dbname . ".marking_override TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT ON " . $dbname . ".modules TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
     $priv_SQL[] = "GRANT SELECT, INSERT, UPDATE, DELETE ON " . $dbname . ".modules_staff TO '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
