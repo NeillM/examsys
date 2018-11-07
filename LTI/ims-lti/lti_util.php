@@ -412,32 +412,48 @@ function sendOAuthBodyPOST($method, $endpoint, $oauth_consumer_key, $oauth_consu
 	$headers = explode("\r\n",$header);
 	$response = sendXmlOverPost($endpoint, $body, $headers);
 
-	if ($response === false) {
-		throw new Exception("Problem reading data from $endpoint, $php_errormsg");
+	if ($response['result'] === false) {
+		$configObject = Config::get_instance();
+		$logger = new \logger($configObject->db);
+		$userObj = \UserObject::get_instance();
+		$userid = $userObj->get_user_ID();
+		$type = 'LTI Post';
+		$errorstring = "Problem reading data from " . $endpoint . ", " . $response['error'];
+		$errorfile = $_SERVER['PHP_SELF'];
+		$errorline = __LINE__ - 10;
+		$logger->record_application_warning($userid, $type, $errorstring, $errorfile, $errorline);
 	}
-	return $response;
+	return $response['result'];
 }
 
+/**
+ * Send some xml via a curl post
+ *
+ * @param string $url service to send request to
+ * @param string $xml the xml to send
+ * @param string $header the header to send
+ * @return array
+ */
 function sendXmlOverPost($url, $xml, $header) {
-  if ( ! function_exists('curl_init') ) return false;
   $configObject = Config::get_instance();
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
 
   // For xml, change the content-type.
-  curl_setopt ($ch, CURLOPT_HTTPHEADER, $header);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 
   curl_setopt($ch, CURLOPT_POST, 1);
   curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
 
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // ask for results to be returned
-  curl_setopt($ch,CURLOPT_TIMEOUT, 10);
-  curl_setopt($ch,CURLOPT_SSL_VERIFYPEER, $configObject->get_setting('core', 'lti_ssl_verifypeer'));
-  curl_setopt($ch,CURLOPT_SSL_VERIFYHOST, $configObject->get_setting('core', 'lti_ssl_verifyhost'));
+  curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $configObject->get_setting('core', 'lti_ssl_verifypeer'));
+  curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $configObject->get_setting('core', 'lti_ssl_verifyhost'));
   // Send to remote and return data to caller.
-  $result = curl_exec($ch);
+  $response['result'] = curl_exec($ch);
+  $response['error'] = curl_error($ch);
   curl_close($ch);
-  return $result;
+  return $response;
 }
 
 function getPOXGradeRequest() {
@@ -467,6 +483,15 @@ function getPOXGradeRequest() {
 </imsx_POXEnvelopeRequest>';
 }
 
+/**
+ * Post grade
+ * @param float $grade the grade
+ * @param string $sourcedid the source system item id
+ * @param string $endpoint teh source system
+ * @param string $oauth_consumer_key oauth consumer key
+ * @param string $oauth_consumer_secret oauth consumer secret
+ * @return array|null
+ */
 function replaceResultRequest($grade, $sourcedid, $endpoint, $oauth_consumer_key, $oauth_consumer_secret) {
 	$method="POST";
 	$content_type = "application/xml";
@@ -477,7 +502,10 @@ function replaceResultRequest($grade, $sourcedid, $endpoint, $oauth_consumer_key
 			getPOXGradeRequest());
 
 	$response = sendOAuthBodyPOST($method, $endpoint, $oauth_consumer_key, $oauth_consumer_secret, $content_type, $postBody);
-	return parseResponse($response);
+	if ($response !== false) {
+		return parseResponse($response);
+	}
+	return null;
 }
 
 function parseResponse($response) {
