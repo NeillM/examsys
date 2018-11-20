@@ -810,12 +810,13 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         }
         break;
       case 'enhancedcalc':
-        if (!isset($freq_log[$q_id][1]['correct'])) $freq_log[$q_id][1]['correct'] = '';
+        if (!isset($freq_log[$q_id][1]['correct'])) {
+          $freq_log[$q_id][1]['correct'] = 0;
+        }
 
-	
         $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], 1, 'correct');
-				
-        if (isset($freq_log[$q_id][1]['correct']) and $user_total != 0) {
+
+        if ($freq_log[$q_id][1]['correct'] !== 0 and $user_total != 0) {
           $t = number_format(($freq_log[$q_id][1]['correct'] / $user_total)*100, 0);
         } else {
           $t = 0;
@@ -843,7 +844,11 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         echo "<td><input type=\"button\" onclick=\"return clacCorrect($q_id, $i)\" value=\"" . $string['Correct'] . "\" /></td>";
         echo "</tr>\n";
         echo "<tr><td colspan=\"7\">&nbsp;</td></tr>";
-        $p = (isset($freq_log[$q_id]) and $user_total != 0) ? $freq_log[$q_id][1]['correct']/$user_total : 0;
+        if ($freq_log[$q_id][1]['correct'] !== 0 and $user_total != 0) {
+          $p = $freq_log[$q_id][1]['correct']/$user_total;
+        } else {
+          $p = 0;
+        }
         echo "<tr><td></td><td>" . pStats($p, $q_id, 1) . "</td><td colspan=\"5\">" . dStats($d, $q_id, 1) . "</td></tr>";
         break;
       case 'true_false':
