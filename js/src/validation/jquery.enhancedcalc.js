@@ -9,7 +9,7 @@ $(function() {
     // a floating point or integer number i.e. 10.1,
     // a link to another questions answer or variable i.e. ans10 or var$A99,
     // a simple formula using [+,-,*,/] i.e. $A/$B
-    return this.optional( element ) || /^((\$[A-Z][0-9]*|var\$[A-Z][0-9]*|ans[0-9]*|[0-9]*[.]?[0-9]+)([+-/*]?))+$/.test( value );
+    return this.optional( element ) || /^((\$[A-Z][0-9]*|var\$[A-Z][0-9]*|ans[0-9]*|[-]?[0-9]*[.]?[0-9]+)([+-/*]?))+$/.test( value );
   }, lang['entervalidvariable']);
 
   $('#edit_form').validate({
