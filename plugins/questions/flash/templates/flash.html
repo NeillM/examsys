@@ -31,6 +31,11 @@ data.displayscenario - flag to indicate if there is a scenario to display
 data.scenario - the question scenario
 data.mediaurl - the media url
 #}
+<script>
+    function flash{{data.questionno}}_DoFSCommand(command, args) {
+        $('#q{{data.questionno}}').val(args);
+    }
+</script>
 <div align="center">
     <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://fpdownload.macromedia.com/get/shockwave/cabs/flash/swflash.cab" id="flash{{data.questionno}}" width="{{data.mediawidth}}px" height="{{data.mediaheight}}px" align="middle">
     <param name="wmode" value="opaque" />
@@ -47,4 +52,4 @@ data.mediaurl - the media url
             pluginspage="https://get.adobe.com/flashplayer/" />
     </object>
 </div>
-<input type="hidden" name="q{{data.questionno}}" value="0,0" />
+<input type="hidden" id="q{{data.questionno}}" name="q{{data.questionno}}" value="0,0" />
