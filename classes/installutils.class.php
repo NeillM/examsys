@@ -1561,7 +1561,9 @@ Class InstallUtils {
                               '1',
                               'Student',
                               '',
-                              self::$db
+                              self::$db,
+                              '',
+                              true
                             );
     }
     self::$db->commit();
