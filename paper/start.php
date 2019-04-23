@@ -258,6 +258,7 @@ $render = new render($configObject, $renderpath);
 $headerdata = array(
   'css' => array(
     '/css/start.css',
+	'/css/html5.css',
   ),
   'scripts' => array(
     '/js/jquery-1.11.1.min.js',
@@ -274,12 +275,15 @@ if ($papertype == '3') {
 } else {
  $lang['title'] = $string['assessment'];
 }
-if (Paper_utils::need_interactiveQ($screen_data, $current_screen, $mysqli)) {
-  $headerdata['scripts'][] = '/js/html5.images.min.js';
+$interactive_questions = Paper_utils::need_interactiveQ($screen_data, $current_screen, $mysqli);
+if ($interactive_questions) {
   $headerdata['scripts'][] = '/js/qsharedf.js';
   $headerdata['scripts'][] = '/js/qlabelling.js';
   $headerdata['scripts'][] = '/js/qhotspot.js';
   $headerdata['scripts'][] = '/js/qarea.js';
+  $headerdata['scripts'][] = '/js/core.min.js';
+  $headerdata['scripts'][] = '/js/html5_questions.min.js';
+  $headerdata['scripts'][] = '/js/html5.images.min.js';
 }
 if($configObject->get_setting('core', 'paper_mathjax')) {
   $headerdata['scripts'][] = '/js/mathjax-config.min.js';
@@ -385,7 +389,7 @@ $render->render($headerdata, $lang, 'header.html');
   if($propertyObj->get_calculator()) {
     $render->render(null, null, 'jcalc98.html');
   }
-
+  
   if ($current_screen < $no_screens) {
     $contentdata['action'] = Url::fromGlobals();
   } else {
@@ -621,4 +625,9 @@ $footerdata = array();
 if ($unanswered) {
   $footerdata['scripts'][] = '/js/paperfooter.min.js';
 }
+
+if ($interactive_questions) {
+  $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+}
+
 $render->render($footerdata, array(), 'footer.html');

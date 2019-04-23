@@ -121,6 +121,7 @@ require '../config/finish.inc';
   <link rel="stylesheet" type="text/css" href="../css/start.css" />
   <link rel="stylesheet" type="text/css" href="../css/finish.css" />
   <link rel="stylesheet" type="text/css" href="../css/key.css" />
+  <link rel="stylesheet" type="text/css" href="../css/html5.css" />
 <?php
   $css = '';
   if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF') {
@@ -212,6 +213,7 @@ require '../config/finish.inc';
   $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   display_feedback($propertyObj, $userID, $log_type, $userObject, $log_metadata, $mysqli, $status_array, $overrides, $preview_q_id);
 
+  $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
   echo "</body>\n</html>";
   $mysqli->close();
   ob_end_flush();

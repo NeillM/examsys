@@ -89,7 +89,11 @@ $question['assigned_number'] = (isset($_GET['qNo'])) ? $_GET['qNo'] : 1;
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/start.css" />
-
+<?php
+if ($q_type == 'hotspot') {
+?>
+  <link rel="stylesheet" type="text/css" href="../css/html5.css"/>
+<?php } ?>
   <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
   <script type="text/javascript" src="../js/start.min.js"></script>
 <?php
@@ -139,6 +143,9 @@ $question['assigned_number'] = (isset($_GET['qNo'])) ? $_GET['qNo'] : 1;
   $datasetcss['attributes']['dismiss_color'] = '#A5A5A5';
   $datasetcss['attributes']['special_needs'] = $userObject->is_special_needs();
   $render->render($datasetcss, array(), 'paper/dataset.html');
+  if ($q_type == 'hotspot') {
+    $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+  }
  ?>
  </body>
  </html>

@@ -92,8 +92,6 @@ function display_q($configObject, $target_id, $db) {
   echo "</table>\n";
 }
 
-$render = new render($configObject);
-$render->render_html5_js(json_encode($jstring));
 ?>
 <html>
 <head>
@@ -117,6 +115,11 @@ $render->render_html5_js(json_encode($jstring));
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" href="../css/start.css" type="text/css" />
   <link rel="stylesheet" href="../css/mapping_form.css" type="text/css" />
+  <link rel="stylesheet" href="../css/html5.css" type="text/css" />
+<?php
+  $render = new render($configObject);
+  $render->render_html5_js(json_encode($jstring));
+?>
   <style>
     .objheading {font-size:150%; font-weight:bold; color:#316AC5; padding-top:10px; border-top:1px solid #C0C0C0}
   </style>
@@ -159,5 +162,8 @@ if (isset($_POST['submit'])) {
 }
 ?>
   </div>
+<?php
+  $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+?>
 </body>
 </html>

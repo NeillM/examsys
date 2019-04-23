@@ -56,6 +56,7 @@ if (count($question->options) > 0) {
   $correct = '';
   $option_id = -1;
 }
+$imageurl = rogo_directory::get_directory('media')->url($media['filename']);
 ?>  
 
 
@@ -81,17 +82,18 @@ flashTarget = 'option_correct';
           <tbody>
             <tr>
               <td>
-							<?php
-							if ($media['filename'] != ''):
-								//"<!-- ======================== HTML5 part include finf ================= -->
-								echo "<canvas id='canvas1' width='" . ($media['width'] + 306) . "' height='" . $plugin_height . "'></canvas>\n";
-								echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-								echo "<script language='JavaScript' type='text/javascript'>\n";
-								echo "setUpQuestion(1, 'canvas1', '" . $language . "', '" . $media['filename'] . "', '" . trim($_POST['points1']) . "', '" . $fix_data . "', '', '#FFC0C0','hotspot','correction');\n";
-								echo "</script>\n";
-								//<!-- ==================================================== -->
-							endif;
-							?>                
+                <div
+                    id="question1"
+                    class="html5 hotspot analysis"
+                    data-number="1"
+                    data-type="hotspot"
+                    data-mode="analysis"
+                    data-image="<?php echo $imageurl; ?>"
+                    data-image-width="<?php echo $media['width']; ?>"
+                    data-image-height="<?php echo $media['height']; ?>"
+                    data-setup="<?php echo trim($_POST['points1']); ?>"
+                    data-answers="<?php echo $fix_data; ?>"
+                ></div>
                 <input type="hidden" name="option_correct1" id="option_correct1" value="" />
                 <input type="hidden" name="option_marks_correct" id="option_marks_correct" value="<?php echo $_POST['option_marks_correct']; ?>" />
                 <input type="hidden" name="option_marks_incorrect" id="option_marks_incorrect" value="<?php echo $_POST['option_marks_incorrect']; ?>" />

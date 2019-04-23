@@ -32,6 +32,14 @@ if (count($question->options) > 0) {
   $correct = '';
   $option_id = -1;
 }
+$imageurl = rogo_directory::get_directory('media')->url($media['filename']);
+if ($question->get_locked() != '') {
+  // The question is locked, limited editing.
+  $hotspot_mode = 'correction';
+} else {
+  // Full editing capabilities.
+  $hotspot_mode = 'edit';
+}
 ?>
 <script>
 //<![CDATA[
@@ -62,27 +70,25 @@ require_once 'detail_parts/details_scenario.php';
             <tr>
               <td>
                 <div id="hs_holder">
-									<?php
-									if ($media['filename'] != '' and !$show_correction_intermediate):
-										$tmp_correct = str_replace("'", "\'", trim($correct));
-										$tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
-										$tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
-
-    									$configObject          = Config::get_instance();
-    									//<!-- ======================== HTML5 part ================= -->
-    									echo "<canvas id='canvas1' width='" . ($media['width'] + 300) . "' height='" . ($plugin_height) . "'></canvas>\n";
-    									echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-    									echo "<script language='JavaScript' type='text/javascript'>\n";
-    									echo "setUpQuestion(1, 'flash1', '" . $language . "', '" . $media['filename'] . "', '" . $tmp_correct . "','','','#FFC0C0','hotspot','edit'); \n";
-    									echo "</script>\n";
-    									//<!-- ==================================================== -->
-									endif;
-									?>                
+                  <p><input type="submit" name="submit" value="Replace Media"/></p>
+                  <div
+                    id="question1"
+                    class="html5 hotspot edit"
+                    data-number="1"
+                    data-type="hotspot"
+                    data-mode="<?php echo $hotspot_mode; ?>"
+                    data-image="<?php echo $imageurl; ?>"
+                    data-image-width="<?php echo $media['width']; ?>"
+                    data-image-height="<?php echo $media['height']; ?>"
+                    data-setup="<?php echo $correct; ?>"
+                  ></div>
                   <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
                   <input type="hidden" id="points1" name="points1" value="<?php echo $correct ?>" />
-                  <input type="hidden" id="q_media" name="q_media" value="<?php echo $media['filename'] ?>" />
-                  <input type="hidden" id="q_media_width" name="q_media_width" value="<?php echo $media['width'] ?>" />
-                  <input type="hidden" id="q_media_height" name="q_media_height" value="<?php echo $media['height'] ?>" />
+                  <?php if(!isset($_POST['submit']) or $_POST['submit']!='Replace Media') { ?>
+                    <input type="hidden" id="q_media" name="q_media" value="<?php echo $media['filename'] ?>" />
+                    <input type="hidden" id="q_media_width" name="q_media_width" value="<?php echo $media['width'] ?>" />
+                    <input type="hidden" id="q_media_height" name="q_media_height" value="<?php echo $media['height'] ?>" />
+                  <?php } ?>
                 </div>
               </td>
             </tr>

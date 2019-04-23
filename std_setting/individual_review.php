@@ -105,6 +105,7 @@ function check_ebel_distinction_type($reviewID, $db) {
   <link rel="stylesheet" type="text/css" href="../css/finish.css" />
   <link rel="stylesheet" type="text/css" href="../css/key.css" />
   <link rel="stylesheet" type="text/css" href="../css/std_setting.css" />
+  <link rel="stylesheet" type="text/css" href="../css/html5.css" />
   <style>
 		table {table-layout:auto}
 		#maincontent {height:auto}
@@ -686,5 +687,8 @@ function check_ebel_distinction_type($reviewID, $db) {
 <input type="hidden" name="total_marks" id="total_marks" value="<?php echo $total_marks - $std_excluded ?>" />
 </form>
 </div>
+<?php
+  $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+?>
 </body>
 </html>

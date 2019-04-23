@@ -2182,22 +2182,22 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
 
         $extra = $tmp_display_students_response . ',' . $tmp_display_correct_answer . ',' . $tmp_exclude;
 
-        $tmp_correct = str_replace("'", "\'", trim($paper[$question]['correct'][0]));
-        $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
-        $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
+        $tmp_image = $mediadirectory->url($paper[$question]['q_media']);
 ?>
   <div>
-		<?php
-		  //"<!-- ======================== HTML5 part ================= -->
-		  echo "<canvas id='canvas" . $question_no . "' width='" . ($paper[$question]['q_media_width'] + 301) . "' height='" . ($paper[$question]['q_media_height'] + 30) . "'></canvas>\n";
-		  echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-		  echo "<script>\n";
-		  echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $paper[$question]['q_media'] . "', '" . $tmp_correct . "', '";
-			if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']);
-			echo "', '" . $extra . "','#FFC0C0','hotspot','script');\n";
-		  echo "</script>\n";
-			//<!-- ==================================================== -->
-		?>
+    <div
+      id="question<?php echo $question_no; ?>"
+      data-number="<?php echo $question_no; ?>"
+      class="html5 hotspot script"
+      data-type="hotspot"
+      data-mode="script"
+      data-image="<?php echo $tmp_image; ?>"
+      data-image-width="<?php echo $paper[$question]['q_media_width']; ?>"
+      data-image-height="<?php echo $paper[$question]['q_media_height']; ?>"
+      data-setup="<?php echo trim($paper[$question]['correct'][0]); ?>"
+      data-answer="<?php echo trim($paper[$question]['user_answer']); ?>"
+      data-exclusions="<?php echo $tmp_exclude; ?>"
+      ></div>
   </div>
 <?php
 

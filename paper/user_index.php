@@ -309,6 +309,7 @@ if ($exam_duration !== null) {
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/user_index.css" />
+  <link rel="stylesheet" type="text/css" href="../css/html5.css" />
   <style type="text/css">
     <?php
     if (isset($_SESSION['_lti_context'])) {

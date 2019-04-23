@@ -32,21 +32,18 @@ data.useranswer - the users answer
 data.screensubmitted - flag to indicate if question previously answered
 #}
 <div align="left">
-    <!-- ======================== HTML5 part include disp ================= -->
-    <canvas id="canvas{{data.questionno}}" width="{{data.mediawidth + 300}}px" height="{{data.mediaheight}}px"></canvas>
-    <br /><div style="width:100%;text-align: left;" id="canvasbox"></div>
-    <script>
-        setUpQuestion("{{data.questionno}}",
-        "flash{{data.questionno}}",
-        "{{data.language}}",
-        "{{data.mediafile}}",
-        "{{data.tmpcorrect}}",
-        "{{data.useranswer}}",
-        "{{data.screensubmitted}}",
-        "#FFC0C0",
-        "hotspot",
-        "answer");
-    </script>
-    <!-- ==================================================== -->
+            <div 
+              id="question{{data.questionno}}"
+              class="html5 hotspot answer"
+              data-number="{{data.questionno}}"
+              data-type="hotspot"
+              data-mode="answer"
+              data-image="{{data.mediafile}}"
+              data-image-width="{{data.mediawidth}}"
+              data-image-height="{{data.mediaheight}}"
+              data-setup="{{data.tmpcorrect}}"
+              data-answer="{{data.useranswer}}"
+              ></div>
+	
 </div>
 <input type="hidden" name="q{{data.questionno}}" id="q{{data.questionno}}" {% if data.unanswered %} value="u" {% else %} value="{{data.useranswer}}" {% endif %}/>

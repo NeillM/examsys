@@ -713,7 +713,7 @@ class export_assessment extends exporter {
               break;
             case 'extmatch':
               $correct_parts = explode(',',$question['correct']);
-              $answer_parts = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode('|',$individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
+              $answer_parts = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode('|',hotspot_helper::get_instance()->mark_with_letters($individual[$tmp_screen][$tmp_question_ID], $question['correct'])) : array_fill(0, count($correct_parts), 'u');
 
               $partID = 0;
               for ($outer=1; $outer < count($correct_parts); $outer++) {

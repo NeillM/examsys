@@ -244,6 +244,7 @@ $current_screen = 1;
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/print.css" />
+  <link rel="stylesheet" type="text/css" href="../css/html5.css" />
 
   <style type="text/css">
   <?php
@@ -357,6 +358,8 @@ $current_screen = 1;
   echo "</table>\n";
 
   $mysqli->close();
+  
+  $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 ?>
 <script>
   $(function () {

@@ -793,20 +793,20 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
         echo '<tr><td></td><td>';
       }
       $extra = '0,1,' . $exclude;
-      $tmp_correct = str_replace("'", "\'", trim($display_option['correct']));
-      $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
-      $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct); 
 ?>
     <div>
-		<?php
-		  //"<!-- ======================== HTML5 part ================= -->
-		  echo "<canvas id='canvas" . $question_no . "' width='" . ($display_option['q_media_width'] + 301) . "' height='" . ($display_option['q_media_height'] + 30) . "'></canvas>\n";
-		  echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-		  echo "<script>\n";
-		  echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $mediadirectory->url($display_option['q_media'], false, false, true) . "', '" . $tmp_correct . "', '', '" . $extra . "','#FFC0C0','hotspot','script');\n";
-		  echo "</script>\n";
-		  //<!-- ==================================================== -->
-		?>
+      <div
+        id="question<?php echo $question_no; ?>"
+        data-number="<?php echo $question_no; ?>"
+        class="html5 hotspot standardset"
+        data-type="hotspot"
+        data-mode="standardset"
+        data-image="<?php echo $mediadirectory->url($display_option['q_media']); ?>"
+        data-image-width="<?php echo $display_option['q_media_width']; ?>"
+        data-image-height="<?php echo $display_option['q_media_height']; ?>"
+        data-setup="<?php echo trim($display_option['correct']); ?>"
+        data-exclusions="<?php echo $exclude; ?>"
+        ></div>
     </div>
 <?php
       $layers = explode('|', $firstoption['correct']);

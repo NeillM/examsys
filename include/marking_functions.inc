@@ -752,10 +752,12 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
         $totalpos = $marks_correct;
         break;
       case 'hotspot':
+        // Marking MUST not be client side.
+        // The hotspot areas are stored in: $option_text
         $qid = 'q' . $question_no;
         $mark = 0;
         $all_correct = true;
-        $hotspot_answer = param::optional($qid, null, param::TEXT, param::FETCH_POST);
+        $hotspot_answer = hotspot_helper::get_instance()->mark(param::optional($qid, null, param::TEXT, param::FETCH_POST), $correct);
         if (!is_null($hotspot_answer)) {
           $saved_response = $hotspot_answer;
           $sub_parts = explode('|', $saved_response);
@@ -787,6 +789,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
         }
         break;
       case 'labelling':
+        // Marking MUST not be client side.
         $qid = 'q' . $question_no;
         // We cannot clean it fully in one go.
         $saved_response = param::optional($qid, '', param::RAW, param::FETCH_POST);

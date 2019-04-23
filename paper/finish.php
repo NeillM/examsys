@@ -219,6 +219,7 @@ require '../config/finish.inc';
 <link rel="stylesheet" type="text/css" href="../css/start.css" />
 <link rel="stylesheet" type="text/css" href="../css/finish.css" />
 <link rel="stylesheet" type="text/css" href="../css/key.css" />
+<link rel="stylesheet" type="text/css" href="../css/html5.css" />
 
 <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 
@@ -371,6 +372,9 @@ require '../config/finish.inc';
     } else {
       echo '<br /><div align="center"><input type="button" name="close" id="close" value="' . $string['closewindow'] . '" class="ok" /></div>';
     }
+  }
+  if ($show_feedback) {
+    $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
   }
   echo "</body>\n</html>";
   $mysqli->close();
