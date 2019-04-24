@@ -148,7 +148,7 @@ class hotspot_helper extends RogoStaticSingleton {
   }
 
  /**
-   * Tests if the answer for the laywer is correct.
+   * Tests if the answer for the layer is correct.
    *
    * @param string $answer
    * @param string $correct
