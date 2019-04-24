@@ -789,7 +789,6 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
         }
         break;
       case 'labelling':
-        // Marking MUST not be client side.
         $qid = 'q' . $question_no;
         // We cannot clean it fully in one go.
         $saved_response = param::optional($qid, '', param::RAW, param::FETCH_POST);

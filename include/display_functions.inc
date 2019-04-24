@@ -1016,7 +1016,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         $tmp_image = $mediadirectory->url($question['q_media']);
         if ($unanswered && $tmp_answer == 'u') {
           // Highlight all answers as revisiting and no answers added
-          $tmp_answer = substr(str_repeat('u|', $hotspot_no),0,-1);
+          $tmp_answer = substr(str_repeat('u|', $hotspot_no), 0, -1);
         }
         ?>
         <div align="left">
