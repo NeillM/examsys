@@ -15,5 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['title'] = 'Undergoing Maintenance';
-$string['msg'] = 'This site is currently undergoing routine maintenance. Please try again later.';
+$string['msg'] = 'This site is currently undergoing routine maintenance.';
+$string['retry'] = 'Please click here to try again.';
 $string['alticon'] = 'Under maintenance';
