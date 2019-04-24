@@ -147,49 +147,7 @@ class hotspot_helper extends RogoStaticSingleton {
     return implode(self::LAYER_SEPARATOR, $layer_answers);
   }
 
-  /**
-   * Marks an answer for assessment export, returning hotspot letters for CSV
-   *
-   * @param string $answers
-   * @param string $correct
-   * @return string
-   */
-  public function mark_with_letters($answers, $correct) {
-    // Assume all the parts are unanswered.
-    $all_unanswered = true;
-    $layer_answers = explode(self::LAYER_SEPARATOR, $answers);
-    $layer_correct = explode(self::LAYER_SEPARATOR, $correct);
-    // The number of answers and layers should match.
-    foreach ($layer_correct as $key => $correct_answer) {
-      if (!isset($layer_answers[$key])) {
-        $layer_answers[$key] = 'u';
-      }
-      $letter = 'u';
-      $correct = 0;
-      for($i=0; $i<count($layer_correct); $i++) {
-          $mark = explode(self::ANSWER_SEPARATOR, $this->mark_layer($layer_answers[$key], $layer_correct[$i]));
-          if($mark && $mark[0] == '1'){
-              $letter = chr($i + 65);
-          }
-          if($key == $i){
-              $correct = 1;
-			  break; // Stop accidental marking of overlaps
-          }
-      }
-      $layer_answers[$key] = $correct . ',' . $letter;
-      if ($layer_answers[$key] !== 'u') {
-        // An answer was provided.
-        $all_unanswered = false;
-      }
-    }
-
-    if ($all_unanswered) {
-      return 'u';
-    }
-    return implode(self::LAYER_SEPARATOR, $layer_answers);
-  }
-
-  /**
+ /**
    * Tests if the answer for the laywer is correct.
    *
    * @param string $answer
