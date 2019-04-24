@@ -147,6 +147,13 @@ class hotspot_helper extends RogoStaticSingleton {
     return implode(self::LAYER_SEPARATOR, $layer_answers);
   }
 
+  /**
+   * Marks an answer for assessment export, returning hotspot letters for CSV
+   *
+   * @param string $answers
+   * @param string $correct
+   * @return string
+   */
   public function mark_with_letters($answers, $correct) {
     // Assume all the parts are unanswered.
     $all_unanswered = true;
