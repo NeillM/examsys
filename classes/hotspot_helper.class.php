@@ -175,7 +175,7 @@ class hotspot_helper extends RogoStaticSingleton {
               $correct = 1;
           }
       }
-      $layer_answers[$key] = $correct.','.$letter;
+      $layer_answers[$key] = $correct . ',' . $letter;
       if ($layer_answers[$key] !== 'u') {
         // An answer was provided.
         $all_unanswered = false;
