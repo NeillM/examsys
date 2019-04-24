@@ -14,7 +14,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Base html5 hotspot question in answer mode.
+ * A component to serve localised Rogo language strings in JavaScript
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2016 The University of Nottingham
@@ -56,7 +56,7 @@ ROGO.lang.get_string = function(name, component, args) {
       // Return the new value for string and increment the match count.
       return args[match_count++];
     }
-    // No replacment sent, highlight this.
+    // No replacement sent, highlight this.
     ROGO.log('Missing parametr for string: ' + component + ':' + name, 'warn');
     return match;
   });

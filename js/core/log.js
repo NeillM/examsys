@@ -14,7 +14,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Wrapper for outputting loggin messages.
+ * Wrapper for outputting logging messages.
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2016 The University of Nottingham
@@ -22,6 +22,13 @@
 
 /* eslint no-console: "off" */
 
+/**
+ * Adds a message to the browser console.
+ *
+ * @param {String} message The message to be displayed
+ * @param {String} level The error level (error, warn, info, trace) (optional)
+ * @returns {void}
+ */
 ROGO.log = function(message, level) {
   if (!console) {
     return;
