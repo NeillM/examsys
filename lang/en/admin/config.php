@@ -91,3 +91,7 @@ $string['paper_mee'] = 'Enable/Disable deprecated mee maths rendering.';
 $string['system_mediatypes'] = 'Media types that can be uploaded to the system.';
 $string['paper_threejs'] = 'Enable/Disable deprecated threejs rendering.';
 $string['system_maxmediasize'] = 'Maximum size of media file that can be uploaded (in bytes).';
+$string['paper_textbox_editor_default'] = 'Default editor used for textbox questions';
+$string['editor_plaintext'] = 'Plain text editor';
+$string['editor_wysiwyg'] = 'WYSIWYG editor';
+$string['editor_mathjax'] = 'MathJax editor';

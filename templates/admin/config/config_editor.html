@@ -1,0 +1,16 @@
+<div class="config">
+    <div class="configheading">
+        <label for="{{data.setting}}">{{data.setting}}</label>
+        <img src="{{path}}/artwork/tooltip_icon.gif" class="help_tip" title="{{attribute(lang, data.setting)}}" />
+    </div>
+    <div class="configvalue">
+        <select id="{{data.setting}}" name="{{data.setting}}">
+            {% for editor in data.editors %}
+                 <option value="{{editor.editor}}" {{editor.selected}}>{{editor.editor_label}}</option>
+            {% endfor %}
+        </select>
+        {% if data.disabled != "" %}
+        <div class="configextra">{{lang.fileoverride}}</div>
+        {% endif %}
+    </div>
+</div>

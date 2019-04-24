@@ -78,6 +78,11 @@ class Config extends RogoStaticSingleton {
    */
   const TIMEZONES = 'timezones';
   /**
+   * Config setting editor type identifier
+   * @var string
+   */
+  const EDITOR = 'editor';
+  /**
    * Config setting string type identifier
    * @var string
    */
@@ -714,6 +719,7 @@ class Config extends RogoStaticSingleton {
     switch ($type) {
         case self::PASSWORD:
         case self::STRING:
+        case self::EDITOR:
           $check = is_string($value);
           break;
         case self::URL:
