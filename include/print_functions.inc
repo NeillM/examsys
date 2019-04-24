@@ -557,7 +557,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     data-answer="{$tmp_answer}"
     ></div>
 HTML;
-		echo "</div>\n";
+	echo "</div>\n";
 
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] != '') {
           echo "<input type=\"hidden\" name=\"q" . $question_no . "\" id=\"q" . $question_no . "\" value=\"" . $user_answers[$current_screen][$q_id] . "\" />\n";

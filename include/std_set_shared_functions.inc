@@ -793,8 +793,6 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
         echo '<tr><td></td><td>';
       }
       $extra = '0,1,' . $exclude;
-?>
-    <div>
       <div
         id="question<?php echo $question_no; ?>"
         data-number="<?php echo $question_no; ?>"
@@ -807,7 +805,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
         data-setup="<?php echo trim($display_option['correct']); ?>"
         data-exclusions="<?php echo $exclude; ?>"
         ></div>
-    </div>
+   </div>
 <?php
       $layers = explode('|', $firstoption['correct']);
       for ($i=1; $i<=count($layers); $i++) {
