@@ -173,6 +173,7 @@ class hotspot_helper extends RogoStaticSingleton {
           }
           if($key == $i){
               $correct = 1;
+			  break; // Stop accidental marking of overlaps
           }
       }
       $layer_answers[$key] = $correct . ',' . $letter;
