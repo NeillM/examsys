@@ -50,6 +50,8 @@ echo '<body>';
 echo draw_toprightmenu();
 $submit = (bool) param::optional('submit', null, param::TEXT, param::FETCH_POST);
 $unique_username = false;
+$problem = false;
+$username_problem = false;
 
 if ($submit) {
 
@@ -71,7 +73,8 @@ if ($submit) {
 }
 
 if ($submit and $unique_username) {
-  if ($new_username == '' or strpos($new_username, '_') !== false or $new_surname == '' or $new_email == '' or $new_first_names == '' or $new_roles == '' or $new_grade == '') {
+  $username_problem = ($new_username == '' or strpos($new_username, '_') !== false);
+  if ($username_problem or $new_surname == '' or $new_email == '' or $new_first_names == ''or $new_roles == '' or $new_grade == '') {
     $problem = true;
   } else {
     $new_userID = UserUtils::create_user($new_username, $new_password, $new_users_title, $new_first_names, $new_surname, $new_email, $new_grade, $new_gender, $new_year, $new_roles, $new_sid, $mysqli);
@@ -125,7 +128,7 @@ MESSAGE;
 <?php
     }
   }
-  if (!$submit or !$unique_username) {
+  if (!$submit or !$unique_username or $problem) {
 ?>
 
 <form method="post" id="theform" name="newUser" action="<?php echo $action; ?>" autocomplete="off">
@@ -224,7 +227,8 @@ foreach ($titles as $tmp_title) {
       $display_val = str_replace(' ', '', $value);
       $display_val = str_replace(',', '', $display_val);
       $display_val = $string[strtolower($display_val)];
-      echo "<option value=\"$value\" data-parent=\"$parentRole\">$display_val</option>";
+      $default = (isset($new_roles) && $new_roles == $value) ? 'selected="selected"' : '';
+      echo "<option value=\"$value\" data-parent=\"$parentRole\" $default>$display_val</option>";
     }
 
     if (substr($value,0,1) == '#') {
@@ -251,8 +255,9 @@ foreach ($titles as $tmp_title) {
     if ($old_school != $school) {
       echo "<optgroup data-role=\"Students\" label=\"$school\">\n";
     }
-    
-    echo "<option value=\"$name\">$name: $description</option>\n";
+
+    $default = (isset($new_grade) && $new_grade == $name) ? 'selected="selected"' : '';
+    echo "<option value=\"$name\" $default>$name: $description</option>\n";
     
     $old_school = $school;
     
@@ -265,21 +270,23 @@ foreach ($titles as $tmp_title) {
   echo "\n";
 ?>
 <optgroup data-role="Staff" label="<?php echo $string['universitystaff']; ?>">
-<option value="University Lecturer"><?php echo $string['academiclecturer'] ?></option>
-<option value="University Admin"><?php echo $string['administrator'] ?></option>
-<option value="Technical Staff"><?php echo $string['ittechnical'] ?></option>
-<option value="Standards Setter"><?php echo $string['standardssetter'] ?></option>
-<option value="Staff Internal Reviewer"><?php echo $string['internalreviewer'] ?></option>
+<option value="University Lecturer" <?php echo (isset($new_grade) && $new_grade == 'University Lecturer') ? 'selected="selected"' : '' ?>><?php echo $string['academiclecturer'] ?></option>
+<option value="University Admin" <?php echo (isset($new_grade) && $new_grade == 'University Admin') ? 'selected="selected"' : '' ?>><?php echo $string['administrator'] ?></option>
+<option value="Technical Staff" <?php echo (isset($new_grade) && $new_grade == 'Technical Staff') ? 'selected="selected"' : '' ?>><?php echo $string['ittechnical'] ?></option>
+<option value="Standards Setter" <?php echo (isset($new_grade) && $new_grade == 'Standards Setter') ? 'selected="selected"' : '' ?>><?php echo $string['standardssetter'] ?></option>
+<option value="Staff Internal Reviewer" <?php echo (isset($new_grade) && $new_grade == 'Staff Internal Reviewer') ? 'selected="selected"' : '' ?>><?php echo $string['internalreviewer'] ?></option>
 </optgroup>
 <optgroup data-role="Staff" label="<?php echo $string['externalstaff'] ?>">
 <?php
 if (strpos($_SERVER['HTTP_HOST'],'.uk') !== false) {
-  echo "<option value=\"NHS Lecturer\">" . $string['nhslecturer'] . "</option>\n";
-  echo "<option value=\"NHS Admin\">" . $string['nhsadmin'] . "</option>\n";
+  $nhslectturerdefault = (isset($new_grade) && $new_grade == 'NHS Lecturer') ? 'selected="selected"' : '';
+  echo "<option value=\"NHS Lecturer\" $nhslectturerdefault>" . $string['nhslecturer'] . "</option>\n";
+  $nhsadmindefault = (isset($new_grade) && $new_grade == 'NHS Admin') ? 'selected="selected"' : '';
+  echo "<option value=\"NHS Admin\" $nhsadmindefault>" . $string['nhsadmin'] . "</option>\n";
 }
 ?>
-<option value="Staff External Examiner"><?php echo $string['externalexaminer'] ?></option>
-<option value="Invigilator"><?php echo $string['invigilator'] ?></option>
+<option value="Staff External Examiner" <?php echo (isset($new_grade) && $new_grade == 'Staff External Examiner') ? 'selected="selected"' : '' ?>><?php echo $string['externalexaminer'] ?></option>
+<option value="Invigilator" <?php echo (isset($new_grade) && $new_grade == 'Invigilator') ? 'selected="selected"' : '' ?>><?php echo $string['invigilator'] ?></option>
 </optgroup>
 </select></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
@@ -294,6 +301,8 @@ $mysqli->close();
 
 if ($submit and !$unique_username) {
   echo '<script>alert("' . sprintf($string['usernameinuse'], $new_username) . '")</script>';
+} else if ($submit and $username_problem) {
+  echo '<script>alert("' . sprintf($string['usernameinvalid'], $new_username) . '")</script>';
 }
 
 $render->render_admin_footer();

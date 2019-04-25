@@ -58,6 +58,7 @@ $string['requsername'] = "Please enter a Username for the user.";
 $string['usernamechars'] = "A username cannot contain an underscore character.";
 $string['reqpassword'] = "Please enter a default Password for the user.";
 $string['usernameinuse'] = 'The username \'%s\' is already in use. Please enter a different one.';
+$string['usernameinvalid'] = 'The username \'%s\' is invalid. Please ensure it does not contain an underscore.';
 $string['dear'] = 'Dear';
 $string['email1'] = 'A new account has been created to access the online assessment and survey system Rogo. Your personal authentication details are:';
 $string['email2'] = 'To log into the system go to:';

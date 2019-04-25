@@ -80,8 +80,11 @@ var TypeCourseFilter = (function() {
     
     // Extend and override default properties
     settings = $.extend({}, settings, options);
-    
-    _disable();
+
+    if (!$(settings.parentField).val()) {
+      // Only disable is nothing is selected in the parent.
+      _disable();
+    }
     _setFilter();
   };
 
