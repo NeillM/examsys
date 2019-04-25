@@ -58,7 +58,7 @@ ROGO.html5.classes.hotspot_answer.prototype.setup = function(parent) {
 };
 
 /**
- * Parses the user’s answer so it can be displayed on the hotspot question.
+ * Parses the user's answer so it can be displayed on the hotspot question.
  * @param {String} answer_config
  * @returns {void}
  */
