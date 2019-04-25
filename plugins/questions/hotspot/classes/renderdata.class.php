@@ -100,10 +100,9 @@ class renderdata extends \questiondata {
     }
     $this->tmpcorrect = \hotspot_helper::get_instance()->correct_to_answer_mode(trim($option['correct']));
     $this->mediaheight = $tmp_height - 29;
-	$mediadirectory = \rogo_directory::get_directory('media');
-	$this->mediafile = $mediadirectory->url($this->mediafile);
-	
-	
+    $mediadirectory = \rogo_directory::get_directory('media');
+    $this->mediafile = $mediadirectory->url($this->mediafile);
+
     if (!is_null($useranswer)) {
       $this->useranswer = \hotspot_helper::get_instance()->answer_strip_correct_information(trim($useranswer));
       $this->screensubmitted = $screen_pre_submitted;

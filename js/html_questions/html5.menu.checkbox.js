@@ -14,14 +14,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * A menu item that pushes following items to the right.
+ * A menu_item displayed as a check box to the user
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2016 The University of Nottingham
  */
 
 /**
- * A menu item that pushes following items to the right.
+ * A menu item that displays a check box that the user can toggle on and off.
  *
  * @param {String}
  * @returns {ROGO.html5.menu_group}

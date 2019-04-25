@@ -14,12 +14,17 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Base html5 hotspot question in answer mode.
+ * HTML5 hotspot question answer mode functions
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2016 The University of Nottingham
  */
 
+/**
+ * Constructor
+ *
+ * @returns {ROGO.html5.classes.hotspot_answer}
+ */
 ROGO.html5.classes.hotspot_answer = function() {
   // Extend the hotspot prototype.
   ROGO.html5.classes.hotspot.call(this);
@@ -52,6 +57,11 @@ ROGO.html5.classes.hotspot_answer.prototype.setup = function(parent) {
   this.redraw();
 };
 
+/**
+ * Parses the user’s answer so it can be displayed on the hotspot question.
+ * @param {String} answer_config
+ * @returns {void}
+ */
 ROGO.html5.classes.hotspot_answer.prototype.setup_answers = function(answer_config) {
   this.answer = answer_config;
   if (!answer_config || answer_config === 'u') {

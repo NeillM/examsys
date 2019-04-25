@@ -14,7 +14,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * A menu_group holds a set of menu_items
+ * A menu_item displayed as a button to the user
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2016 The University of Nottingham

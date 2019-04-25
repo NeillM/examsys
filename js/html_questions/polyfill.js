@@ -12,6 +12,9 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+//
+// This file is based on public domain code, therefore not licensed under the GPL.
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith
 
 /**
  * Polyfill for IE

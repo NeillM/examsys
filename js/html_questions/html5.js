@@ -277,43 +277,6 @@ ROGO.html5.draw.ellipse = function(context, fill_colour, border_colour, coordina
   context.fill();
   context.stroke();
 
-  // Control points
-  /*context.strokeStyle = '#FF0000';
-  context.fillStyle = '#00FF00';
-  context.globalAlpha = 1;
-  context.fillRect(x, centrey - yfactor, 2, 2);
-  context.strokeRect(x, centrey - yfactor, 2, 2);
-  context.fillRect(centrex - xfactor, y, 2, 2);
-  context.strokeRect(centrex - xfactor, y, 2, 2);
-  context.fillRect(centrex + xfactor, y, 2, 2);
-  context.strokeRect(centrex + xfactor, y, 2, 2);
-  context.fillRect(bottomx, centrey - yfactor, 2, 2);
-  context.strokeRect(bottomx, centrey - yfactor, 2, 2);
-  context.fillRect(bottomx, centrey + yfactor, 2, 2);
-  context.strokeRect(bottomx, centrey + yfactor, 2, 2);
-  context.fillRect(centrex + xfactor, bottomy, 2, 2);
-  context.strokeRect(centrex + xfactor, bottomy, 2, 2);
-  context.fillRect(centrex - xfactor, bottomy, 2, 2);
-  context.strokeRect(centrex - xfactor, bottomy, 2, 2);
-  context.fillRect(x, centrey + yfactor, 2, 2);
-  context.strokeRect(x, centrey + yfactor, 2, 2);*/
-  
-  // Bounding box.
-  /*context.strokeStyle = '#00FF00';
-  context.fillStyle = '#FF0000';
-  context.fillRect(x, y, 2, 2);
-  context.strokeRect(x, y, 2, 2);
-  context.fillRect(bottomx, bottomy, 2, 2);
-  context.strokeRect(bottomx, bottomy, 2, 2);
-  context.globalAlpha = 0.5;
-  context.strokeRect(x, y, bottomx - x, bottomy - y);
-  // Centre
-  context.globalAlpha = 1;
-  context.strokeStyle = '#00FF00';
-  context.fillStyle = '#0000FF';
-  context.fillRect(centrex, centrey, 2, 2);
-  context.strokeRect(centrex, centrey, 2, 2);*/
-
   context.restore();
 };
 

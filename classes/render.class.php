@@ -55,7 +55,7 @@ class render {
     }
 
     /**
-     * Render an abitary template file.
+     * Render an arbitrary template file.
      *
      * @param array $data Data for the template
      * @param array $lang Language strings

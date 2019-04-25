@@ -14,7 +14,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Base html5 hotspot question in answer mode.
+ * Defines a shape that is in a HTML5 hotspot question layer.
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2016 The University of Nottingham
@@ -391,23 +391,6 @@ ROGO.html5.hotspot_shape.prototype.draw = function(context) {
     fill_transparancy += this.settings.highlight_tansparancy_mod;
     border_transparancy += this.settings.highlight_tansparancy_mod;
   }
-
-  // DEBUG Code --- Remove it.
-  // Make non-selectable areas translucent.
-  /*if (in_active_layer && active_shape) {
-    ROGO.log('Start calculating detect area', 'info');
-    var img = context.getImageData(0, 0, context.canvas.width, context.canvas.height);
-    for (var i = 0; i < img.data.length; i+= 4) {
-      var this_x = (i / 4) % context.canvas.width,
-        this_y = Math.floor(i / 4 / context.canvas.width);
-      if (!this.contains(this_x, this_y)) {
-        img.data[i + 3] = 127;
-      }
-    }
-    context.putImageData(img, 0, 0);
-    ROGO.log('Finished calculating detect area', 'info');
-  }*/
-  // EDND of DEBUG code.
 
   // Set up the colour definitions.
   border = 'rgba(' + border_colour + ', ' + border_transparancy + ')';

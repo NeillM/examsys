@@ -146,7 +146,7 @@ class hotspottest extends UnitTest {
    * Test that a point inside an polygon is marked as correct.
    */
   public function test_mark_polygon_correct() {
-    // A rectanglular polygon, that is the same dimensions as the rectangle test shape.
+    // A rectangular polygon, that is the same dimensions as the rectangle test shape.
     $correct = 'birds~45136~polygon~fa,51,fa,121,1db,121,1db,51~0~';
     // Top corner.
     $answer = '250,81';
@@ -159,7 +159,7 @@ class hotspottest extends UnitTest {
    * Test that answers that intersect the polygon line count as inside.
    */
   public function test_mark_polygon_correct2() {
-    // A rectanglular polygon, that is the same dimensions as the rectangle test shape.
+    // A rectangular polygon, that is the same dimensions as the rectangle test shape.
     $correct = 'birds~45136~polygon~1,1,1,9,9,9,9,1~0~';
 
     $answer = '0.9,0.9';
@@ -204,7 +204,7 @@ class hotspottest extends UnitTest {
    * Test that a point outside an polygon is marked as incorrect.
    */
   public function test_mark_polygon_incorrect() {
-    // A rectanglular polygon, that is the same dimensions as the rectangle test shape.
+    // A rectangular polygon, that is the same dimensions as the rectangle test shape.
     $correct = 'birds~45136~polygon~fa,51,fa,121,1db,121,1db,51~0~';
     // One pixel outside the top corner.
     $answer = '249,80';
@@ -219,9 +219,9 @@ class hotspottest extends UnitTest {
    * This test can fail if the edge detection is wrong.
    */
   public function test_mark_1d_polygon_incorrect() {
-    // A rectanglular polygon, that is the same dimensions as the rectangle test shape.
+    // A rectangular polygon, that is the same dimensions as the rectangle test shape.
     $correct = 'Question~16711680~polygon~e4,3f,e4,3f~2~';
-    // The point is not .
+    // The point is not in the shape.
     $answer = '163,134';
     $expected = '0,163,134';
     $result = hotspot_helper::get_instance()->mark($answer, $correct);
@@ -234,9 +234,9 @@ class hotspottest extends UnitTest {
    * This test can fail if the edge detection is wrong.
    */
   public function test_mark_1d_polygon_correct() {
-    // A rectanglular polygon, that is the same dimensions as the rectangle test shape.
+    // A rectangular polygon, that is the same dimensions as the rectangle test shape.
     $correct = 'Question~16711680~polygon~e4,3f,e4,3f~2~';
-    // The point is not .
+    // The point is on the line.
     $answer = '228,63';
     $expected = '1,228,63';
     $result = hotspot_helper::get_instance()->mark($answer, $correct);

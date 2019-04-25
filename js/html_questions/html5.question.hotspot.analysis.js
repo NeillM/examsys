@@ -14,7 +14,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Base html5 hotspot question in answer mode.
+ * Base html5 hotspot question in analysis mode.
  *
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2016 The University of Nottingham
