@@ -141,7 +141,7 @@ foreach ($displayconfigs as $area => $conf) {
         } elseif ($type === Config::EDITOR) {
             // Hardcoded list of editors plus mathjax if available
             $editors = array('plain' => $string['editor_plaintext'], 'WYSIWYG' => $string['editor_wysiwyg']);
-            if($configObject->get_setting('core', 'paper_mathjax')) {
+            if ($configObject->get_setting('core', 'paper_mathjax')) {
               $editors['mathjax'] = $string['editor_mathjax'];
             }
 
