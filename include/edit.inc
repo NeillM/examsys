@@ -55,8 +55,9 @@ function redirect($userObj, $q_id, $configObj, $db) {
   if (isset($_SESSION['nav_page'])) {
     // Replace scrOfY with POST param if set, otherwise remove cleanly
     parse_str($_SESSION['nav_query'], $param_array);
-    if (isset($_POST['scrOfY'])) {
-      $param_array['scrOfY'] = $_POST['scrOfY'];
+	$scrOfY = param::optional('scrOfY', null, param::FLOAT, param::FETCH_POST);
+    if (!is_null($scrOfY)) {
+      $param_array['scrOfY'] = $scrOfY;
     } elseif (isset($param_array['scrOfY'])) {
         unset($param_array['scrOfY']);
     }
