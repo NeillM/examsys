@@ -352,7 +352,7 @@ Class UpdaterUtils {
    * @param string $string 				- Language translations.
    * @param string $search  			- A string to look for to see if the new lines already exist
    * @param array $new_lines 		- An array of new lines to insert.
-   * @param int $default_line 		- Default line number to add to if no $target_line is found
+   * @param int $default_line 		- Default line number to add to if no $target_line is found. Use -1 for end-of-file.
    * @param string $cfg_web_root 	- Path to the root of Rogo.
    * @param string $target_line 	- A string to find on a target line to act as a location for the new lines
    * @param int $offset 					- A plus or negative offset from $target_line to insert the new lines
@@ -370,6 +370,12 @@ Class UpdaterUtils {
         $default_line = $line_no + $offset;
       }
       $line_no++;
+    }
+
+    if ($default_line == -1) {
+      $this->clean_php_closing_tag($string, $cfg_web_root); // In case of closing tags at EOF
+      $cfg = file($file_path);
+      $default_line = count($cfg);
     }
 
     if (!$found) {
@@ -426,5 +432,26 @@ Class UpdaterUtils {
       copy ($cfg_web_root . 'config/config.inc.php', $cfg_web_root . 'config/config.inc.' . $old_version . '.php');
     }
   }
+
+ /**
+  * Removes closing PHP tags from config.inc.php.
+  * There's little reason there should be any in there, as there's no output.
+  * Safety checks in place in case there is other closing tag usage.
+  * 
+  * @param string $string 				- Language translations.
+  * @param string $cfg_web_root 	- Path to the root of Rogo.
+  */
+ public function clean_php_closing_tag($string, $cfg_web_root) {
+   if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+     $cfg = file_get_contents($cfg_web_root . 'config/config.inc.php');
+     if (preg_match('/\?>\s*$/', $cfg)) {
+       $this->backup_file($cfg_web_root, 'php-tags');
+       $cfg = preg_replace('/\?>\s*$/', '', $cfg);
+       if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+         InstallUtils::logWarning(array(300 => $string['couldnotwrite']));
+       }
+     }
+   }
+ }
 
 }
