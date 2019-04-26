@@ -266,7 +266,11 @@ if (isset($_GET['submit'])) {
       $stemsSQL = '';
     }
 
-    $search_string = $themeSQL . $scenarioSQL . $leadinSQL . $stemsSQL;
+    $qIDSQL = ' OR questions.q_id = ?';
+    $variables[] = $searchterm;
+    $params .= 's';
+
+    $search_string = $themeSQL . $scenarioSQL . $leadinSQL . $stemsSQL . $qIDSQL;
     $search_string = 'AND (' . substr($search_string, 4) . ')';
   }
 
@@ -368,6 +372,7 @@ if (isset($_GET['submit'])) {
       . " AND questions.ownerID = users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom"
       . " AND deleted IS NULL ORDER BY leadin_plain, questions.q_id";
   }
+
   $result = $mysqli->prepare($sql);
   if (count($variables) > 0) {
     array_unshift($variables, $params);
