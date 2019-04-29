@@ -656,6 +656,8 @@ echo '" onsubmit="return confirmSubmit()" autocomplete="off">';   // Warning mes
     if ($screen_pre_submitted == 1 and $q_displayed == 0) echo "<tr><td colspan=\"2\"><span style=\"background-color:#FFC0C0\">&nbsp;&nbsp;&nbsp;&nbsp;</span> = unanswered question</td></tr>\n";
     if ($q_displayed == 0 and $current_screen == 1 and $paper_prologue != '') echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
     if ($q_displayed == 0 and $question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
+
+    echo "<tr><td colspan=\"2\"><a href=\"/question/edit/index.php?q_id=" . $question['q_id'] . "&qNo=$question_no&paperID=$paperID\" target=\"_blank\" style=\"padding-left: 40px;\">{$string['editquestion']}</a></td></tr>";
     
     display_question($configObject, $question, $propertyObj->get_paper_type(), $propertyObj->get_calculator(), $current_screen, $previous_q_type, $question_no, $question_offset, $start_of_day_ts, $texteditorplugin);
     $previous_q_type = $question['q_type'];
