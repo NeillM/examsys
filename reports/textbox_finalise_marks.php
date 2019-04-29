@@ -60,7 +60,7 @@ function load_question_mark($q_id, $db) {
 function displayMarks($id, $marks, $override, $user_mark) {
   $html = '<select name="override' . $id . '" id="override' . $id . '"><option value="NULL"></option>';
   $inc = 0.5;
-  for ($i=0; $i<=$marks; $i+=$inc) {
+  for ($i = 0.0; $i <= $marks; $i += $inc) { // ensure $i is a double for === below
     $display_i = $i;
     if ($i == 0.5) {
       $display_i = '&#189;';
@@ -219,7 +219,7 @@ SQL;
         $override = true;
       }
       if (trim($user_answer) != '') {
-      echo "<tr class=\"l\"><td class=\"ans\">" . nl2br($user_answer) . "<br />&nbsp;</td>";
+      echo "<tr class=\"l\"><td class=\"studentno\">$student_no</td><td class=\"ans\">" . nl2br($user_answer) . "<br />&nbsp;</td>";
 
       if (isset($secondary_marks[$log_id]['mark']) and isset($primary_marks[$log_id]['mark']) and abs($primary_marks[$log_id]['mark'] - $secondary_marks[$log_id]['mark']) > 1) {
         echo "<td class=\"primary noans\">" . $primary_marks[$log_id]['mark'] . "<input class=\"primarychk\" type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $primary_marks[$log_id]['mark'] . "\" $primary_checked /></td><td class=\"secondary noans\">" . $secondary_marks[$log_id]['mark'] . "<input type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $secondary_marks[$log_id]['mark'] . "\" $secondary_checked /><input type=\"hidden\" name=\"log_id$student_no\" value=\"$log_id\" /></td><td class=\"override noans\">" . displayMarks($student_no, $marks_correct, $override, $user_mark);
@@ -246,7 +246,7 @@ SQL;
       }
     } else {
       // User answer is blank.
-      echo "<tr class=\"l\"><td class=\"ans\" style=\"color: #C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" />&nbsp;" . $string['noanswer'] . "<br />&nbsp;</td>";
+      echo "<tr class=\"l\"><td class=\"studentno\">$student_no</td><td class=\"ans\" style=\"color: #C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" />&nbsp;" . $string['noanswer'] . "<br />&nbsp;</td>";
       if (isset($primary_marks[$log_id]['mark'])) {
         echo "<td class=\"primary noans\">" . $primary_marks[$log_id]['mark'] . "<input class=\"primarychk\" type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $primary_marks[$log_id]['mark'] . "\" $primary_checked/></td>";
       } else {
