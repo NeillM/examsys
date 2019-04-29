@@ -441,17 +441,17 @@ Class UpdaterUtils {
   * @param string $string 				- Language translations.
   * @param string $cfg_web_root 	- Path to the root of Rogo.
   */
- public function clean_php_closing_tag($string, $cfg_web_root) {
-   if (file_exists($cfg_web_root . 'config/config.inc.php')) {
-     $cfg = file_get_contents($cfg_web_root . 'config/config.inc.php');
-     if (preg_match('/\?>\s*$/', $cfg)) {
-       $this->backup_file($cfg_web_root, 'php-tags');
-       $cfg = preg_replace('/\?>\s*$/', '', $cfg);
-       if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
-         InstallUtils::logWarning(array(300 => $string['couldnotwrite']));
-       }
-     }
-   }
- }
+  public function clean_php_closing_tag($string, $cfg_web_root) {
+    if (file_exists($cfg_web_root . 'config/config.inc.php')) {
+      $cfg = file_get_contents($cfg_web_root . 'config/config.inc.php');
+      if (preg_match('/\?>\s*$/', $cfg)) {
+        $this->backup_file($cfg_web_root, 'php-tags');
+        $cfg = preg_replace('/\?>\s*$/', '', $cfg);
+        if (file_put_contents($cfg_web_root . 'config/config.inc.php', $cfg) === false) {
+          InstallUtils::logWarning(array(300 => $string['couldnotwrite']));
+        }
+      }
+    }
+  }
 
 }
