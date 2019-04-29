@@ -546,7 +546,7 @@ class Authentication {
 
     // If redirect is set, redirect user to same page but with GET
     if ($authobj->postredirect) {
-      header('Location: '.$_SERVER['REQUEST_URI']);
+      header('Location: ' . $_SERVER['REQUEST_URI'], true, 303);
       exit();
     }
   }
