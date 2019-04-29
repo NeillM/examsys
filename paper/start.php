@@ -279,7 +279,6 @@ $interactive_questions = Paper_utils::need_interactiveQ($screen_data, $current_s
 if ($interactive_questions) {
   $headerdata['scripts'][] = '/js/qsharedf.js';
   $headerdata['scripts'][] = '/js/qlabelling.js';
-  $headerdata['scripts'][] = '/js/qhotspot.js';
   $headerdata['scripts'][] = '/js/qarea.js';
   $headerdata['scripts'][] = '/js/core.min.js';
   $headerdata['scripts'][] = '/js/html5_questions.min.js';
