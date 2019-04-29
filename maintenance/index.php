@@ -38,7 +38,7 @@ $headerdata = array(
   ),
   'scripts' => array(),
 );
-$data = array();
+$data = array('retry_path' => param::required('from', param::URL, param::FETCH_GET));
 $render->render($headerdata, $string, 'header.html');
 $render->render($data, $string, '/maintenance/maintenance.html');
 $render->render_admin_footer();
