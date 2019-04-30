@@ -33,20 +33,28 @@ $(function() {
 
 
         $('input:radio[name=' + radioID + ']').removeAttr('checked').change();
-      });
+    });
 
-      $('td>input[type="radio"]:checked').parent().css('background-color', 'green');
-      $('td>select').each(function(){
-          if($(this).val() && $(this).val() != 'NULL'){
-              $(this).parent().css('background-color', 'green');
-          }
-      });
-      $('td>input[type="radio"], td>select').change(function(){
+    $('td>input[type="radio"]:checked').parent().addClass('marked');
+    $('td>select').each(function(){
+        if($(this).val() && $(this).val() != 'NULL'){
+            $(this).parent().addClass('marked');
+        }
+    });
+    $('td>input[type="radio"], td>select').change(function(){
         $('td>input[type="radio"]', $(this).parents('tr')).each(function(){
-            $(this).parent().css('background-color', $(this).prop('checked') ? 'green' : '');
+            if ($(this).prop('checked')) {
+                $(this).parent().addClass('marked');
+            } else {
+                $(this).parent().removeClass('marked');
+            }
         });
         $('td>select', $(this).parents('tr')).each(function(){
-          $(this).parent().css('background-color', ($(this).val() && $(this).val() != 'NULL') ? 'green' : '');
+            if ($(this).val() && $(this).val() != 'NULL') {
+                $(this).parent().addClass('marked');
+            } else {
+                $(this).parent().removeClass('marked');
+            }
         });
     });
     // Select all primary marks radio buttons.

@@ -40,9 +40,12 @@ input[type='radio'] {
   color: white;
   text-align: center;
 }
+.marked {
+  background-color: #DDFFDD;
+}
 .studentno {
-	padding-left:10px;
-	padding-right:10px;
-	vertical-align:top;
-	border-bottom:1px solid silver;
+  padding-left:10px;
+  padding-right:10px;
+  vertical-align:top;
+  border-bottom:1px solid silver;
 }
