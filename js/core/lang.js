@@ -57,7 +57,7 @@ ROGO.lang.get_string = function(name, component, args) {
       return args[match_count++];
     }
     // No replacement sent, highlight this.
-    ROGO.log('Missing parametr for string: ' + component + ':' + name, 'warn');
+    ROGO.log('Missing parameter for string: ' + component + ':' + name, 'warn');
     return match;
   });
 };
