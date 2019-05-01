@@ -251,7 +251,7 @@ if ($critical_error == '') {
   $do_save = false;
   $show_media_upload = false;
   $show_correction_intermediate = false;
-  if ($question->requires_media() and $current_media['filename'] == '') {
+  if ($question->requires_media() and ((isset($_POST['submit']) and $_POST['submit'] == 'Replace Media') or $current_media['filename'] == '')) {
     $show_media_upload = true;
 
   } elseif (isset($_POST['submit']) and $_POST['submit'] == $string['limitedsave']) {
@@ -482,6 +482,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <link rel="stylesheet" href="../../css/add_edit.css" type="text/css" />
 <link rel="stylesheet" href="../../css/mapping_form.css" type="text/css" />
 <link rel="stylesheet" href="../../css/warnings.css" type="text/css" />
+<link rel="stylesheet" href="../../css/html5.css" type="text/css" />
 <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
@@ -759,6 +760,9 @@ echo save_buttons($mode, $q_disabled, $question->get_locked(), $question->allow_
     </div>
   </form>
 <?php
+}
+if(isset($render)){
+  $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 }
 ?>
 </body>

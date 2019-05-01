@@ -536,20 +536,28 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $tmp_height = $question['q_media_height'] + 30;
         if ($tmp_height < (($hotspot_no * 36) + 25)) $tmp_height = (($hotspot_no * 36) + 25);
 
-        $tmp_correct = str_replace("'", "\'", trim($question['options'][0]['correct']));
-        $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
-        $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
-
-		//<!-- ======================== HTML5 part include disp ================= -->
-		echo "<canvas id='canvas" . $question_no . "' width='" . ($question['q_media_width'] + 300) . "' height='" . ($tmp_height-29) . "'></canvas>\n";
-		echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-		echo "<script language='JavaScript' type='text/javascript'>\n";
-		echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '";
-		if (isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);
-		echo "', '" . $screen_pre_submitted . "','#FFC0C0','hotspot','answer');\n";
-		echo "</script>\n";
-		//<!-- ==================================================== -->
-		echo "</div>\n";
+        $tmp_correct = hotspot_helper::get_instance()->correct_to_answer_mode(trim($question['options'][0]['correct']));
+        if (isset($user_answers[$current_screen][$q_id])) {
+          $tmp_answer = trim($user_answers[$current_screen][$q_id]);
+        } else {
+          $tmp_answer = '';
+        }
+        $tmp_image = $mediadirectory->url($question['q_media']);
+        echo <<<HTML
+   <div
+    id="question$question_no"
+    class="html5 hotspot answer"
+    data-number="$question_no"
+    data-type="hotspot"
+    data-mode="answer"
+    data-image="{$tmp_image}"
+    data-image-width="{$question['q_media_width']}"
+    data-image-height="{$question['q_media_height']}"
+    data-setup="{$tmp_correct}"
+    data-answer="{$tmp_answer}"
+    ></div>
+HTML;
+	echo "</div>\n";
 
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] != '') {
           echo "<input type=\"hidden\" name=\"q" . $question_no . "\" id=\"q" . $question_no . "\" value=\"" . $user_answers[$current_screen][$q_id] . "\" />\n";

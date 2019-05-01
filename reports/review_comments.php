@@ -305,17 +305,21 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         $tmp_width = ($q_media_width + 301);
         if ($tmp_width < 375) $tmp_width = 375;
         $tmp_height = $q_media_height + 30;
+        $tmp_image = $mediadirectory->url($q_media);
         ?>
         <div>
-        <?php
-        //"<!-- ======================== HTML5 part include finf ================= -->
-          echo "<canvas id='canvas" . $q_no . "' width='" . $tmp_width . "' height='" . $tmp_height . "'></canvas>\n";
-          echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-          echo "<script>\n";
-          echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '" . $q_media . "', '" . str_replace('&nbsp;', ' ', $correct) . "', '', '0,0,0000000000000','#FFC0C0','hotspot','script');\n";
-          echo "</script>\n";
-          //<!-- ==================================================== -->
-        ?>
+<div
+              id="question<?php echo $q_no; ?>"
+              class="html5 hotspot script"
+              data-number="<?php echo $q_no; ?>"
+              data-type="hotspot"
+              data-mode="script"
+              data-image="<?php echo $tmp_image; ?>"
+              data-image-width="<?php echo $q_media_width; ?>"
+              data-image-height="<?php echo $q_media_height; ?>"
+              data-setup="<?php echo trim($correct); ?>"
+              data-answer=""
+              ></div>
         </div>
         <?php
         break;
@@ -526,6 +530,7 @@ $result->close();
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
+  <link rel="stylesheet" type="text/css" href="../css/html5.css" />
   <style type="text/css">
     body {font-size:90%}
     table {font-size:100%;table-layout:auto}
@@ -729,5 +734,8 @@ $result->close();
 <input type="hidden" name="scrOfY" id="scrOfY" value="0" /><br />
 </form>
 </div>
+<?php
+  $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+?>
 </body>
 </html>

@@ -1,0 +1,313 @@
+.html5 {
+  border: #000 thin solid;
+  display: inline-block;
+  margin: 0.625em;
+  min-height: 320px;
+  min-width: 500px;
+  position: relative;
+}
+.hotspot .main {
+  display: flex;
+  align-items: flex-start;
+}
+
+.hotspot .layermenu {
+  display: inline-block;
+  margin: 0;
+}
+.hotspot .viewarea {
+  display: inline-block;
+  margin: 0;
+}
+
+.hotspot .layermenu {
+  border: graytext thin solid;
+  box-sizing: border-box;
+  display: inline-block;
+  margin: 0;
+  min-height: 500px;
+  position: relative;
+  width: 300px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.hotspot .layermenu .layer {
+  background-color: #edf5fc;
+  border: gray thin solid;
+  box-sizing: border-box;
+  display: block;
+  min-height: 2.5em;
+  padding: 0.125em;
+  position: relative;
+  width: 100%;
+  cursor: default;
+}
+
+.hotspot .layermenu .layer.active {
+  background-color: #ffbd69;
+}
+
+.hotspot .layermenu .layer .colourbar {
+  box-sizing: border-box;
+  height: 0.313em;
+  margin: 0 auto 0.25em auto;
+  width: 98%;
+}
+
+.hotspot .layermenu .layer .mainarea {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  margin: 0 auto;
+  width: 98%;
+}
+
+.hotspot .layermenu .layer .answer {
+  width: 20px;
+  height: 20px;
+  margin: auto;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.hotspot .layermenu .layer .answer.correct {
+  background-image: url("../js/images/toolbar/ico_tick_g.png");
+}
+
+.hotspot .layermenu .layer .answer.incorrect {
+  background-image: url("../js/images/toolbar/ico_tick_r.png");
+}
+
+.hotspot .layermenu .layer .label {
+  color: black;
+  display: inline-block;
+  box-sizing: border-box;
+  margin: auto 0.313em;
+  font-weight: bolder;
+}
+
+.hotspot .layermenu .layer.excluded .label {
+  color: red;
+  text-decoration: line-through;
+}
+
+.hotspot .layermenu .layer .textarea {
+  background: #FFFFFF;
+  border: gray thin solid;
+  box-sizing: border-box;
+  display: inline-block;
+  padding: 0.125em 0.313em;
+  flex: 1;
+  overflow-wrap: break-word; /* Allows extremely long words to wrap. */
+  min-width: 0; /* Stops the flex box having a minimum width of the longest word. */
+}
+
+.hotspot .layermenu .layer.excluded .textarea {
+  border-color: red;
+  color: red;
+  text-decoration: line-through;
+}
+
+.hotspot .layermenu .layer .textarea[contenteditable=true] {
+  cursor: text;
+}
+
+.hotspot .layermenu .layer .textarea.unans {
+	background-color: #FFC0C0;
+}
+
+.hotspot .layermenu .layer .colourselect {
+  width: 20px;
+  height: 20px;
+  margin: auto;
+  margin-left: 0.313em;
+  background-image: url("../js/images/toolbar/ico_palette.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.hotspot .layermenu .layer:hover {
+  border: orangered thin solid;
+}
+
+.hotspot .layermenu .layer:focus {
+  border: orangered medium solid;
+}
+
+.hotspot .layermenu .layer .colourselect {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.hotspot .layermenu .layer .colourselect:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.hotspot .layermenu .layer.active .colourselect {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.hotspot .layermenu .layer.active .colourselect:hover {
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.hotspot .editmenu {
+  background-color: menu;
+  color: menutext;
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border: graytext thin solid;
+  box-sizing: border-box;
+  height: 25px;
+  min-width: 450px;
+  position: relative;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+}
+
+.hotspot .editmenu .layerzone {
+  box-sizing: border-box;
+  display: inline;
+  min-width: 300px;
+  display: flex;
+}
+
+.hotspot .editmenu .menucontainer {
+  box-sizing: border-box;
+  display: inline-block;
+  margin: auto 0;
+  padding: 0 0.25em;
+}
+
+.hotspot .editmenu .menuitem:first-child {
+  margin-left: 0.25em;
+}
+
+.hotspot .editmenu .menuitem:last-child {
+  margin-right: 0.25em;
+}
+
+.hotspot .editmenu .menuitem {
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  box-sizing: border-box;
+  display: inline-block;
+  margin: auto 0.063em;
+}
+
+.hotspot .editmenu .menuitem:hover, .menu .menuitem.active:hover {
+  background-color: #ffeab7;
+}
+
+.hotspot .editmenu .menuitem.active {
+  background-color: #ffd389;
+}
+
+.hotspot .editmenu .menuseparator {
+  border: lightgray thin solid;
+  box-sizing: border-box;
+  display: inline-block;
+  height: 80%;
+  margin: auto 0;
+}
+
+.hotspot .editmenu .clear {
+  flex: 1;
+}
+
+.add_layer {
+  background-image: url("../js/images/toolbar/ico_plus.png");
+  width: 19px;
+  height: 18px;
+}
+
+.remove_layer {
+  background-image: url("../js/images/toolbar/ico_minus.png");
+  width: 19px;
+  height: 18px;
+}
+
+.move {
+  background-image: url("../js/images/toolbar/ico_resize.png");
+  width: 19px;
+  height: 18px;
+}
+
+.ellipse {
+  background-image: url("../js/images/toolbar/ico_ellipse.png");
+  width: 19px;
+  height: 18px;
+}
+.rectangle {
+  background-image: url("../js/images/toolbar/ico_rectangle.png");
+  width: 19px;
+  height: 18px;
+}
+.polygon {
+  background-image: url("../js/images/toolbar/ico_polygon.png");
+  width: 19px;
+  height: 18px;
+}
+
+.delete {
+  background-image: url("../js/images/toolbar/ico_erase.png");
+  width: 19px;
+  height: 18px;
+}
+
+.help {
+  background-image: url("../js/images/toolbar/ico_help.png");
+  width: 19px;
+  height: 18px;
+}
+
+.colourselector {
+  background: menu;
+  border: menutext thin solid;
+  width: 14.4em; /* 1.2em per colour on a row. */
+  padding: 0.2em;
+  position: absolute;
+  text-align: center;
+  z-index: 10; /* Put the colour selector on top of the other contnet. */
+}
+
+.colourselector .header {
+  background: menutext;
+  color: menu;
+  font-weight: bold;
+}
+
+.colourselector .selectarea {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0.15em 0;
+}
+
+.colourselector .colour {
+  background-clip: content-box;
+  border: lightgrey thin solid;
+  box-sizing: border-box;
+  height: 1em;
+  margin: 0.1em 0.1em;
+  width: 1em;
+}
+
+.colourselector .colour:hover, .colourselector .colour:focus {
+  border: black medium double;
+  cursor: pointer;
+}
+
+.colourselector .colour.selected {
+  border: orangered thin solid;
+}
+
+.colourselector .colour.selected:hover, .colourselector .colour.selected:focus {
+  border: limegreen medium double;
+}

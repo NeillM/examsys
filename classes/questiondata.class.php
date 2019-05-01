@@ -647,6 +647,7 @@ abstract class questiondata {
     // Processing for each stem.
     $this->options = array();
     $this->marks = $this->get_base_marks();
+	
     foreach ($question['options'] as $display_option) {
       $part_id++;
       $this->partid = $part_id;

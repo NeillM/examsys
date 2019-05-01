@@ -193,7 +193,6 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
 
 function display_question($configObject, &$question, $paper_type, $calculator, $current_screen, $old_q_type, &$question_no, $user_answers, &$unanswered, $texteditorplugin) {
   global $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $li_set, $bgcolor, $li_set, $used_questions, $user_dismiss, $user_order, $string, $language, $unanswered_color;
-
   // Get the media directory object.
   $mediadirectory = rogo_directory::get_directory('media');
 
@@ -999,29 +998,40 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         }
         break;
       case 'hotspot':
-        if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] == 'u' and  $screen_pre_submitted == 1) {
+        $class_mod = '';
+        if (isset($user_answers[$current_screen][$q_id]) and strpos($user_answers[$current_screen][$q_id], 'u') !== false and $screen_pre_submitted == 1) {
           $unanswered = true;
+          $class_mod = ' unans';
         }
         $hotspot_no = substr_count($question['options'][0]['correct'],'|') + 1;
         $tmp_height = $question['q_media_height'] + 30;
         if ($tmp_height < (($hotspot_no * 36) + 25)) $tmp_height = (($hotspot_no * 36) + 25);
 
-        $tmp_correct = str_replace("'", "\'", trim($question['options'][0]['correct']));
-        $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
-        $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
+        $tmp_correct = hotspot_helper::get_instance()->correct_to_answer_mode($question['options'][0]['correct']);
+        if (isset($user_answers[$current_screen][$q_id])) {
+          $tmp_answer = hotspot_helper::get_instance()->answer_strip_correct_information(trim($user_answers[$current_screen][$q_id]));
+        } else {
+          $tmp_answer = '';
+        }
+        $tmp_image = $mediadirectory->url($question['q_media']);
+        if ($unanswered && $tmp_answer == 'u') {
+          // Highlight all answers as revisiting and no answers added
+          $tmp_answer = substr(str_repeat('u|', $hotspot_no), 0, -1);
+        }
         ?>
         <div align="left">
-				<?php
-					//<!-- ======================== HTML5 part include disp ================= -->
-					echo "<canvas id='canvas" . $question_no . "' width='" . ($question['q_media_width'] + 300) . "' height='" . ($tmp_height-29) . "'></canvas>\n";
-					echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-					echo "<script>\n";
-					echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '";
-					if (isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);
-					echo "', '" . $screen_pre_submitted . "','#FFC0C0','hotspot','answer');\n";
-					echo "</script>\n";
-					//<!-- ==================================================== -->
-				?>
+            <div 
+              id="question<?php echo $question_no; ?>"
+              class="html5 hotspot answer<?php echo $class_mod; ?>"
+              data-number="<?php echo $question_no; ?>"
+              data-type="hotspot"
+              data-mode="answer"
+              data-image="<?php echo $tmp_image; ?>"
+              data-image-width="<?php echo $question['q_media_width']; ?>"
+              data-image-height="<?php echo $question['q_media_height']; ?>"
+              data-setup="<?php echo $tmp_correct; ?>"
+              data-answer="<?php echo $tmp_answer; ?>"
+              ></div>
         </div>
         <?php
         if (isset($user_answers[$current_screen][$q_id]) and $user_answers[$current_screen][$q_id] != '') {

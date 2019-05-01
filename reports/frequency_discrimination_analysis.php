@@ -1065,14 +1065,22 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
 
 		$configObject          = Config::get_instance();
-		//<!-- ======================== HTML5 part rep disc ================= -->
-		echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 302) . "' height='" . ($q_media_height + 25) . "'></canvas>\n";
-		echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-		echo "<script>\n";
-		echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '" . $q_media . "', '" . $tmp_correct . "', '" . $coords . "', '0','#FFC0C0','hotspot','analysis');\n";
-		echo "</script>\n";
-		//<!-- ==================================================== -->
-
+        
+        $tmp_image = $mediadirectory->url($q_media);
+        echo <<<HTML
+   <div
+    id="question$q_no"
+    class="html5 hotspot analysis"
+    data-number="$q_no"
+    data-type="hotspot"
+    data-mode="analysis"
+    data-image="{$tmp_image}"
+    data-image-width="{$q_media_width}"
+    data-image-height="{$q_media_height}"
+    data-setup="{$tmp_correct}"
+    data-answers="{$coords}"
+    ></div>
+HTML;
         echo "<p><table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
         for ($i = 1; $i <= count($layers); $i++) {
           echo "<tr><td>" . chr($i + 64) . ".</td>";
@@ -1726,6 +1734,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
 <link rel="stylesheet" type="text/css" href="../css/key.css" />
 <link rel="stylesheet" type="text/css" href="../css/finish.css" />
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
+<link rel="stylesheet" type="text/css" href="../css/html5.css" />
   <style type="text/css">
     body {margin-bottom: 10px}
     h1 {margin-left: 15px; font-size: 18pt}
@@ -2264,6 +2273,7 @@ SQL;
 <?php
 }
 $mysqli->close();
+$render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 ?>
 </body>
 </html>

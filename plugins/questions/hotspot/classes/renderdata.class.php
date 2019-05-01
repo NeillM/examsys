@@ -46,6 +46,12 @@ class renderdata extends \questiondata {
   public $tmpcorrect;
 
   /**
+   * Additional classes for rendering
+   * @var string
+   */
+  public $cssclasses = '';
+
+  /**
    * Constructor
    */
   function __construct() {
@@ -75,7 +81,7 @@ class renderdata extends \questiondata {
    * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    */
   public function set_question($screen_pre_submitted, $useranswer, $userdismissed) {
-    // Noting to do.
+    // Nothing to do.
   }
 
   /**
@@ -89,6 +95,8 @@ class renderdata extends \questiondata {
     $option = $this->get_opt($part_id);
     if ($useranswer == 'u' and  $screen_pre_submitted == 1) {
       $this->unanswered = true;
+      $this->cssclasses = ' unans';
+      $useranswer = substr(str_repeat('u|', count(explode(\hotspot_helper::LAYER_SEPARATOR, $option['correct']))),0, -1);
     } else {
       $this->unanswered = false;
     }
@@ -98,15 +106,13 @@ class renderdata extends \questiondata {
     if ($tmp_height < (($hotspot_no * 36) + 25)) {
       $tmp_height = (($hotspot_no * 36) + 25);
     }
-    $tmp_correct = str_replace("'", "\'", trim($option['correct']));
-    $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
-    $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
-
-    $this->tmpcorrect = $tmp_correct;
+    $this->tmpcorrect = \hotspot_helper::get_instance()->correct_to_answer_mode(trim($option['correct']));
     $this->mediaheight = $tmp_height - 29;
+    $mediadirectory = \rogo_directory::get_directory('media');
+    $this->mediafile = $mediadirectory->url($this->mediafile);
 
     if (!is_null($useranswer)) {
-      $this->useranswer = trim($useranswer);
+      $this->useranswer = \hotspot_helper::get_instance()->answer_strip_correct_information(trim($useranswer));
       $this->screensubmitted = $screen_pre_submitted;
     }
     if ($useranswer == '' or $useranswer == 'u') {

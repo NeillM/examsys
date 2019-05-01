@@ -3,6 +3,10 @@
     "browser": true,
     "jquery": true
   },
+  "globals": {
+    "_comment": "All intended global variables in Rogo should be listed here",
+    "ROGO": false
+  },
   "_comment": "For a list of rules see: http://eslint.org/docs/rules/",
   "extends": "eslint:recommended",
   "rules": {
