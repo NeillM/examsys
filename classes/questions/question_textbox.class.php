@@ -44,8 +44,8 @@ Class QuestionTEXTBOX extends QuestionEdit {
   function __construct($mysqli, $userObj, $lang_strings, $data = null) {
     // Get default text editor first, allow to be overridden
     $configObject = Config::get_instance();
-    $this->editor = $configObject->get_setting('paper_textbox_editor_default');
-
+    $this->editor = $configObject->get_setting('core', 'paper_textbox_editor_default');
+    
     parent::__construct($mysqli, $userObj, $lang_strings, $data);
     $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
   }
