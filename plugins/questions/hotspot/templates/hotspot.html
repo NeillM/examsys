@@ -15,7 +15,7 @@
 #}
 
 {#
-This template is for the flash question type.
+This template is for the hotspot question type.
 
 author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 copyright 2018 onwards The University of Nottingham
@@ -30,11 +30,12 @@ data.mediafile - the media file
 data.tmpcorrect - the correct answer
 data.useranswer - the users answer
 data.screensubmitted - flag to indicate if question previously answered
+data.cssclasses - extra CSS classes to apply to question
 #}
 <div align="left">
             <div 
               id="question{{data.questionno}}"
-              class="html5 hotspot answer"
+              class="html5 hotspot answer{{data.cssclasses}}"
               data-number="{{data.questionno}}"
               data-type="hotspot"
               data-mode="answer"

@@ -46,6 +46,12 @@ class renderdata extends \questiondata {
   public $tmpcorrect;
 
   /**
+   * Additional classes for rendering
+   * @var string
+   */
+  public $cssclasses = '';
+
+  /**
    * Constructor
    */
   function __construct() {
@@ -75,7 +81,7 @@ class renderdata extends \questiondata {
    * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    */
   public function set_question($screen_pre_submitted, $useranswer, $userdismissed) {
-    // Noting to do.
+    // Nothing to do.
   }
 
   /**
@@ -89,6 +95,8 @@ class renderdata extends \questiondata {
     $option = $this->get_opt($part_id);
     if ($useranswer == 'u' and  $screen_pre_submitted == 1) {
       $this->unanswered = true;
+      $this->cssclasses = ' unans';
+      $useranswer = substr(str_repeat('u|', count(explode(\hotspot_helper::LAYER_SEPARATOR, $option['correct']))),0, -1);
     } else {
       $this->unanswered = false;
     }

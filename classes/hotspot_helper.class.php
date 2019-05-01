@@ -147,7 +147,7 @@ class hotspot_helper extends RogoStaticSingleton {
     return implode(self::LAYER_SEPARATOR, $layer_answers);
   }
 
- /**
+  /**
    * Tests if the answer for the layer is correct.
    *
    * @param string $answer
