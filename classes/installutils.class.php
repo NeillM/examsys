@@ -1977,7 +1977,6 @@ if(!isset(\$_SERVER['HTTP_HOST'])) {
 
   // Override db config settings with configs in this file?
   \$file_config_override = true;
-  ?>
 CONFIG;
 
     $cfg_web_root = get_root_path();
