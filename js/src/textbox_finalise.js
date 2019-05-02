@@ -23,7 +23,7 @@ $(function() {
         str = $(this).attr('id');
 
         dropdownID = str.replace('mark', 'override');
-        $("#" + dropdownID).val('');
+        $("#" + dropdownID).val('').change();
     });
 
     $("select").click(function() {
@@ -32,7 +32,30 @@ $(function() {
         radioID = str.replace('override', 'mark');
 
 
-        $('input:radio[name=' + radioID + ']').removeAttr('checked');
+        $('input:radio[name=' + radioID + ']').removeAttr('checked').change();
+    });
+
+    $('td>input[type="radio"]:checked').parent().addClass('marked');
+    $('td>select').each(function(){
+        if($(this).val() && $(this).val() != 'NULL'){
+            $(this).parent().addClass('marked');
+        }
+    });
+    $('td>input[type="radio"], td>select').change(function(){
+        $('td>input[type="radio"]', $(this).parents('tr')).each(function(){
+            if ($(this).prop('checked')) {
+                $(this).parent().addClass('marked');
+            } else {
+                $(this).parent().removeClass('marked');
+            }
+        });
+        $('td>select', $(this).parents('tr')).each(function(){
+            if ($(this).val() && $(this).val() != 'NULL') {
+                $(this).parent().addClass('marked');
+            } else {
+                $(this).parent().removeClass('marked');
+            }
+        });
     });
     // Select all primary marks radio buttons.
     $("#selectallprimary").change(function() {
