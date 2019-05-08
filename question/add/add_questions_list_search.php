@@ -214,7 +214,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     . "FROM (questions, questions_modules, question_statuses) "
     . "WHERE questions.status = question_statuses.id AND questions.q_id = questions_modules.q_id "
     . "$andowner AND (leadin_plain LIKE ? OR theme LIKE ? "
-    . "OR scenario_plain LIKE ? OR notes LIKE ?) $andqtype AND deleted IS NULL "
+    . "OR scenario_plain LIKE ? OR notes LIKE ? OR questions.q_id = ?) $andqtype AND deleted IS NULL "
     . "UNION "
     . "SELECT DISTINCT questions.q_id, q_type, leadin_plain, leadin, "
     . "DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS display_date, locked, status, name "
@@ -223,9 +223,9 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     . "$andowner AND questions.q_id = options.o_id AND options.option_text LIKE ? $andqtype AND deleted IS NULL "
     . "ORDER BY $sortby $ordering, q_id");
     if ($qtype != '%') {
-      $result->bind_param('isssssiss', $owner, $searchterm, $searchterm, $searchterm, $searchterm, $qtype, $owner, $searchterm, $qtype);
+      $result->bind_param('issssisiss', $owner, $searchterm, $searchterm, $searchterm, $searchterm, $searchterm, $qtype, $owner, $searchterm, $qtype);
     } else {
-      $result->bind_param('issssis', $owner, $searchterm, $searchterm, $searchterm, $searchterm, $owner, $searchterm);
+      $result->bind_param('issssiis', $owner, $searchterm, $searchterm, $searchterm, $searchterm, $searchterm, $owner, $searchterm);
     }
     
     $result->execute();
