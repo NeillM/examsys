@@ -384,7 +384,21 @@ class Authentication {
             $createuser = false;
           }
 
-          if ($createuser == true) {
+          if ($createuser and !empty($info->lookupdata->username)) {
+            // The authentication plugin may not use the main Rogo users table, so we should check if the user already has an account.
+            $existinguserid = UserUtils::username_exists($info->lookupdata->username, $this->db);
+          } else {
+            $existinguserid = false;
+          }
+
+          if ($existinguserid !== false) {
+            // The user already exists in Rogo, but it was not in the table used by the authentication plugin.
+            $this->debug[] = 'Matching user account found in Rogo';
+            $authobj->success($objid, $existinguserid);
+            $this->success = true;
+            $this->userid = $authobj->rogoid;
+            $this->debug[] = '******* Rogo ID is:: ' . $this->userid . " after a user lookup from object $objid:" . $this->callbackregisterdata['auth'][$number][$objid] . ' *******';
+          } elseif ($createuser == true) {
             $this->debug[] = 'Going to try and create new user';
             $arraycheck = array('username', 'title', 'firstname', 'surname', 'email', 'coursecode', 'gender', 'yearofstudy', 'role', 'studentID', 'school', 'coursetitle', 'initials');
             foreach ($arraycheck as $itemcheck) {

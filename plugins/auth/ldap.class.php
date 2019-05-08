@@ -45,6 +45,20 @@ class ldap_auth extends outline_authentication {
     return $callbackarray;
   }
 
+  /**
+   * Creates a new entry in a the user table specified in the plugin configuration if enabled.
+   *
+   * The enable_fudgeuser must be set to true. This should not be done if the core users table is configured,
+   * but should if a custom user table is used.
+   *
+   * The object passed will have 3 parameters:
+   * - authobj This is the object passed to the authentication callbacks
+   * - postauthobj This is the object passed to the postathentication callbacks
+   * - userid The Rogo id of the user.
+   *
+   * @param stdClass $postauthsuccessobj
+   * @return stdClass The object passed, with any modifications.
+   */
   function createnewuserassociation($postauthsuccessobj) {
     if ($this->createnewuserassociation !== true) {
       return $postauthsuccessobj;
@@ -53,6 +67,8 @@ class ldap_auth extends outline_authentication {
       return $postauthsuccessobj;
     }
 
+    // To get here an account would not have been found in the initial authentication,
+    // but then have been created during the lookup phase of authentication.
     $username_col = $this->settings['username_col'];
     $id_col = $this->settings['id_col'];
     $table = $this->settings['table'];
@@ -75,6 +91,16 @@ class ldap_auth extends outline_authentication {
     return $displayerrformobj;
   }
 
+  /**
+   * Called if authentication fails.
+   *
+   * The object passed will have 2 parameters:
+   * - authobj This is the object passed to the authentication callbacks
+   * - postauthobj This is the object passed to the postathentication callbacks
+   *
+   * @param stdClass $postauthfailreturn
+   * @return stdClass The object passed, with any modifications.
+   */
   function failauth($postauthfailreturn) {
     $this->savetodebug('Fail function passed ' . var_export($postauthfailreturn, true));
 
@@ -96,10 +122,15 @@ class ldap_auth extends outline_authentication {
     $this->savetodebug('post run ' . var_export($postauthfailreturn, true));
 
     return $postauthfailreturn;
-
   }
 
-
+  /**
+   * Checks if the user is valid.
+   *
+   * @global string[] $string The language strings for the Rogo page.
+   * @param authobjreturn $authobj
+   * @return authobjreturn
+   */
   function auth($authobj) {
     global $string;
 
@@ -147,7 +178,12 @@ class ldap_auth extends outline_authentication {
       } else {
         $ldapconn = $ldap;
       }
-      if (!($search = @ldap_search($ldapconn, $ldap_search_dn, $ldap_user_prefix . $this->form['std']->username))) {
+      // Build the LDAP query to search for the user.
+      $search = $ldap_user_prefix . $this->form['std']->username;
+      if (isset($ldap_user_postfix)) {
+        $search .= $ldap_user_postfix;
+      }
+      if (!($search = @ldap_search($ldapconn, $ldap_search_dn, $search))) {
         $this->savetodebug($string['ldapservernosearch']);
         $authobj->fail($this->number);
 
@@ -157,6 +193,7 @@ class ldap_auth extends outline_authentication {
 
         if ($info['count'] == 1) {
           $this->savetodebug('Found user in ldap');
+          // Get the identifier we need to use to test the users password.
           $dn = $info[0]['dn'];
         } else {
           $this->savetodebug('<strong>' . $string['noldapaccount'] . '</strong>');
@@ -168,7 +205,6 @@ class ldap_auth extends outline_authentication {
       
       $configObject = Config::get_instance();
       if (@ldap_bind($ldap, $dn, iconv($configObject->get('cfg_page_charset'), 'UTF-8', $this->form['std']->password))) {
-
         $this->savetodebug('Successfully bound to ldap as the user with their password');
         ldap_unbind($ldap);
 
@@ -205,9 +241,12 @@ class ldap_auth extends outline_authentication {
           if(!isset($this->settings['search_field'])) {
             $this->settings['search_field'] = 'username';
           }
+          // This will be used by the Lookup plugin to search for the user if we allow auto creation of users.
+          // The search_field setting must match a type of field configured in the lookup plugin.
           $data->{$this->settings['search_field']} = $this->form['std']->username;
 
           if (isset($this->settings['enable_fudgecreateuser']) and $this->settings['enable_fudgecreateuser'] == true) {
+            // The enable_fudgecreateuser setting should be set only when the core user table is not used by the plugin.
             $this->createnewuserassociation = true;
           }
 
@@ -220,7 +259,6 @@ class ldap_auth extends outline_authentication {
 
           return $authobj;
         }
-
 
         $this->savetodebug('Successfully authenticated on this module username=' . $this->form['std']->username . ' id:' . $id);
 
@@ -245,5 +283,4 @@ class ldap_auth extends outline_authentication {
 
     return $authobj;
   }
-
 }
