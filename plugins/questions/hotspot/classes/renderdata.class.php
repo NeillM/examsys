@@ -101,7 +101,7 @@ class renderdata extends \questiondata {
       $this->unanswered = false;
     }
     // Adjust the height of the hotspot canvas based on the number of options available.
-    $hotspot_no = substr_count($option['correct'],'|') + 1;
+    $hotspot_no = substr_count($option['correct'], \hotspot_helper::LAYER_SEPARATOR) + 1;
     $tmp_height = $this->mediaheight + 30;
     if ($tmp_height < (($hotspot_no * 36) + 25)) {
       $tmp_height = (($hotspot_no * 36) + 25);
@@ -115,7 +115,7 @@ class renderdata extends \questiondata {
       $this->useranswer = \hotspot_helper::get_instance()->answer_strip_correct_information(trim($useranswer));
       $this->screensubmitted = $screen_pre_submitted;
     }
-    if ($useranswer == '' or $useranswer == 'u') {
+    if ($useranswer == '' or in_array('u', explode(\hotspot_helper::LAYER_SEPARATOR, $useranswer)) !== false) {
       $this->unanswered = true;
     } else {
       $this->unanswered = false;
@@ -124,7 +124,7 @@ class renderdata extends \questiondata {
     if ($this->scoremethod == 'Mark per Question') {
       $marks = $option['markscorrect'];
     } else {
-      $marks = (substr_count($option['correct'],'|') + 1) * $option['markscorrect'];
+      $marks = (substr_count($option['correct'], \hotspot_helper::LAYER_SEPARATOR) + 1) * $option['markscorrect'];
     }
     $this->marks = $marks;
   }

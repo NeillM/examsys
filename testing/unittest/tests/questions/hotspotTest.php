@@ -55,12 +55,13 @@ class hotspottest extends unittest{
     $useranswer = 'u';
     $data->set_option_answer(0, $useranswer, '', 1);
     $this->assertTrue($data->unanswered);
-    $useranswer = '1,325,995|1,825,965';
+    $useranswer = '325,995|825,965';
     $data->mediaheight = 1600;
     $data->scoremethod = 'Mark per Question';
     $data->set_option_answer(0, $useranswer, '', 1);
     $this->assertFalse($data->unanswered);
-    $this->assertEquals($option['correct'], $data->tmpcorrect);
+    $expected = 'Chocolate calculator~16711680~|Dictionary~16776960~';
+    $this->assertEquals($expected, $data->tmpcorrect);
     $this->assertEquals(1601, $data->mediaheight);
     $this->assertEquals($useranswer, $data->useranswer);
     $this->assertEquals(1, $data->screensubmitted);

@@ -27,7 +27,7 @@ use testing\unittest\UnitTest;
  * @group html5
  * @group hotspot
  */
-class hotspottest extends UnitTest {
+class html5hotspottest extends UnitTest {
   /**
    * Test that correct answers have their coordinates removed by the correct_to_answer_mode method.
    * 
