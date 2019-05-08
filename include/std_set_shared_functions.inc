@@ -793,6 +793,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
         echo '<tr><td></td><td>';
       }
       $extra = '0,1,' . $exclude;
+      ?>
       <div
         id="question<?php echo $question_no; ?>"
         data-number="<?php echo $question_no; ?>"
