@@ -679,23 +679,32 @@ function display_question ($configObject, &$question, $paper_type, $calculator, 
         }
         break;
       case 'hotspot':
-        echo "<div align=\"left\">";
-        $tmp_bgcolor = $bgcolor;
-        $hotspot_no = substr_count($question['options'][0]['correct'],'|') + 1;
+        // Adjust the height of the hotspot canvas based on the number of options available.
+        $hotspot_no = substr_count($question['options'][0]['correct'],\hotspot_helper::LAYER_SEPARATOR) + 1;
         $tmp_height = $question['q_media_height'] + 30;
-        if ($tmp_height < (($hotspot_no * 36) + 25)) $tmp_height = (($hotspot_no * 36) + 25);
+        if ($tmp_height < (($hotspot_no * 36) + 25)) {
+          $tmp_height = (($hotspot_no * 36) + 25);
+        }
         $tmp_correct = str_replace("'", "\'", trim($question['options'][0]['correct']));
         $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
         $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
-		//<!-- ======================== HTML5 part rev disp ================= -->
-		echo "<canvas id='canvas" . $question_no . "' width='" . ($question['q_media_width'] + 300) . "' height='" . $tmp_height . "'></canvas>\n";
-		echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-		echo "<script>\n";
-		echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '', '1,1,0000000000000000000000000000000000000000','#FFC0C0','hotspot','review');\n";
-		echo "</script>\n";
-		//<!-- ==================================================== -->
-		?>
-        </div><br />
+        $tmp_height= $tmp_height - 29;
+        $tmp_image = $mediadirectory->url($question['q_media']);
+        ?>
+        <div align="left">
+          <div
+              id="question<?php echo $question_no; ?>"
+              class="html5 hotspot standardset"
+              data-number="<?php echo $question_no; ?>"
+              data-type="hotspot"
+              data-mode="standardset"
+              data-image="<?php echo $tmp_image; ?>"
+              data-image-width="<?php echo $question['q_media_width']; ?>"
+              data-image-height="<?php echo $tmp_height ?>"
+              data-setup="<?php echo $tmp_correct; ?>"
+              data-exclusions=""
+          ></div>
+        </div>
         <?php
         $part_std_offset = 0;
         if ($hotspot_no>1) {

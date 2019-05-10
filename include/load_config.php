@@ -34,4 +34,6 @@ $configObject          = Config::get_instance();
 
 $cfg_web_root          = $configObject->get('cfg_web_root');
 
+$cfg_root_path = $configObject->get('cfg_root_path');
+
 $notice = UserNotices::get_instance();

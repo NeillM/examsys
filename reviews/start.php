@@ -305,6 +305,7 @@ echo "<html>\n<head>\n";
 
 <link rel="stylesheet" type="text/css" href="../css/body.css" />
 <link rel="stylesheet" type="text/css" href="../css/start.css" />
+<link rel="stylesheet" type="text/css" href="../css/html5.css" />
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 <link rel="stylesheet" type="text/css" href="../css/review.css" />
 <style type="text/css">
@@ -351,9 +352,10 @@ if ($css != '') {
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
+  $render = new render($configObject);
 
-  if (Paper_utils::need_interactiveQ($screen_data, $current_screen, $mysqli)) {
-    $render = new render($configObject);
+  $interactive_questions = Paper_utils::need_interactiveQ($screen_data, $current_screen, $mysqli);
+  if ($interactive_questions) {
     $render->render_html5_js(json_encode($jstring));
   }
 
@@ -722,6 +724,10 @@ if (isset($_COOKIE['refpane'])) {
   echo "<script>\n";
   echo "  changeRef(" . $_COOKIE['refpane'] . ");\n";
   echo "</script>\n";
+}
+
+if ($interactive_questions) {
+  $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 }
 ?>
 
