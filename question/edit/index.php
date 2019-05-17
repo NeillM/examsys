@@ -761,7 +761,7 @@ echo save_buttons($mode, $q_disabled, $question->get_locked(), $question->allow_
   </form>
 <?php
 }
-if(isset($render)){
+if(isset($render) && $question->requires_html5()) {
   $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 }
 ?>
