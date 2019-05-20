@@ -339,6 +339,7 @@ ROGO.html5.listener.hotspot.stop_colour_select_listeners = function(selectorid) 
 ROGO.html5.listener.hotspot.colour_select_cancel = function(event) {
   var question = ROGO.html5.listener.hotspot.get_question(event);
   ROGO.html5.questions[question.id].deactivate_colourselect(true);
+  return false;
 };
 
 /**
