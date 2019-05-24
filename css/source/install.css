@@ -12,3 +12,4 @@ td.line {width:98%}
 input[type=text], input[type=password] {width:200px}
 form {padding:1em}
 form div {padding-left:2em; clear:both;}
+label.nofloat {float: none}

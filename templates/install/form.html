@@ -18,15 +18,15 @@
     <br />
     <div>
         <label for="web_host">{{lang.webhost}}</label>
-        <input type="text" value="127.0.0.1" id="web_host" name="web_host" class="required" minlength="3" maxlength="10" />
+        <input type="text" value="127.0.0.1" id="web_host" name="web_host" class="required" minlength="3" maxlength="10" required="required" />
     </div>
     <div>
         <label for="rogo_data">{{lang.datadirectory}}</label>
-        <input type="text" id="rogo_data" name="rogo_data" value="{{data.dirsep}}" />
+        <input type="text" id="rogo_data" name="rogo_data" value="{{data.dirsep}}" required="required" />
     </div>
     <div>
         <label for="tmpdir">{{lang.tempdirectory}}</label>
-        <input type="text" id="tmpdir" name="tmpdir" value="/tmp/" />
+        <input type="text" id="tmpdir" name="tmpdir" value="/tmp/" required="required" />
     </div>
     <table class="h">
         <tr>
@@ -40,11 +40,11 @@
     <br />
     <div>
         <label for="mysql_admin_user">{{lang.dbusername}}</label>
-        <input type="text" value="" id="mysql_admin_user" name="mysql_admin_user" class="required" minlength="2" />
+        <input type="text" value="" id="mysql_admin_user" name="mysql_admin_user" class="required" minlength="2" required="required" />
     </div>
     <div>
         <label for="mysql_admin_pass">{{lang.dbpassword}}</label>
-        <input type="password" value="" id="mysql_admin_pass" name="mysql_admin_pass" class="required"/>
+        <input type="password" value="" id="mysql_admin_pass" name="mysql_admin_pass" class="required" required="required" />
     </div>
     <table class="h">
         <tr>
@@ -55,15 +55,15 @@
     <br />
     <div>
         <label for="mysql_db_host">{{lang.databasehost}}</label>
-        <input type="text" value="127.0.0.1" id="mysql_db_host" name="mysql_db_host" class="required" />
+        <input type="text" value="127.0.0.1" id="mysql_db_host" name="mysql_db_host" class="required" required="required" />
     </div>
     <div>
         <label for="mysql_db_port">{{lang.databaseport}}</label>
-        <input type="text" value="3306" id="mysql_db_port" name="mysql_db_port" class="required" />
+        <input type="text" value="3306" id="mysql_db_port" name="mysql_db_port" class="required" required="required" />
     </div>
     <div>
         <label for="mysql_db_name">{{lang.databasename}}</label>
-        <input type="text" value="rogo" id="mysql_db_name" name="mysql_db_name" class="required" minlength="3" />
+        <input type="text" value="rogo" id="mysql_db_name" name="mysql_db_name" class="required" minlength="3" required="required" />
     </div>
     <div>
         <label for="mysql_db_engine">{{lang.databaseengine}}</label>
@@ -84,7 +84,7 @@
     </div>
     <div>
         <label for="mysql_baseusername">{{lang.rdbbasename}}</label>
-        <input type="text" value="rogo" id="mysql_baseusername" name="mysql_baseusername" class="required" minlength="3" maxlength="10" />
+        <input type="text" value="rogo" id="mysql_baseusername" name="mysql_baseusername" class="required" minlength="3" maxlength="10" required="required" />
     </div>
     <table class="h">
         <tr>
@@ -94,35 +94,35 @@
     </table>
     <div>
         <label for="cfg_short_date">{{lang.date}}</label>
-        <input type="text" id="cfg_short_date" name="cfg_short_date" class="required" minlength="2" value="%d/%m/%y" />
+        <input type="text" id="cfg_short_date" name="cfg_short_date" class="required" minlength="2" value="%d/%m/%y" required="required" />
     </div>
     <div>
         <label for="cfg_long_date">{{lang.longdate}}</label>
-        <input type="text" id="cfg_long_date" name="cfg_long_date" class="required" minlength="2" value="%d/%m/%Y" />
+        <input type="text" id="cfg_long_date" name="cfg_long_date" class="required" minlength="2" value="%d/%m/%Y" required="required" />
     </div>
     <div>
         <label for="cfg_long_date_time">{{lang.longdatetime}}</label>
-        <input type="text" id="cfg_long_date_time" name="cfg_long_date_time" class="required" value="%d/%m/%Y %H:%i" />
+        <input type="text" id="cfg_long_date_time" name="cfg_long_date_time" class="required" value="%d/%m/%Y %H:%i" required="required" />
     </div>
     <div>
         <label for="cfg_short_date_time">{{lang.shortdatetime}}</label>
-        <input type="text" id="cfg_short_date_time" name="cfg_short_date_time" class="required" value="%d/%m/%y %H:%i" />
+        <input type="text" id="cfg_short_date_time" name="cfg_short_date_time" class="required" value="%d/%m/%y %H:%i" required="required" />
     </div>
     <div>
         <label for="cfg_long_date_php">{{lang.longdatephp}}</label>
-        <input type="text" id="cfg_long_date_php" name="cfg_long_date_php" class="required" value="d/m/Y" />
+        <input type="text" id="cfg_long_date_php" name="cfg_long_date_php" class="required" value="d/m/Y" required="required" />
     </div>
     <div>
         <label for="cfg_short_date_php">{{lang.shortdatephp}}</label>
-        <input type="text" id="cfg_short_date_php" name="cfg_short_date_php" class="required" value="d/m/y" />
+        <input type="text" id="cfg_short_date_php" name="cfg_short_date_php" class="required" value="d/m/y" required="required" />
     </div>
     <div>
         <label for="cfg_long_time_php">{{lang.longtimephp}}</label>
-        <input type="text" id="cfg_long_time_php" name="cfg_long_time_php" class="required" value="H:i:s" />
+        <input type="text" id="cfg_long_time_php" name="cfg_long_time_php" class="required" value="H:i:s" required="required" />
     </div>
     <div>
         <label for="cfg_short_time_php">{{lang.shorttimephp}}</label>
-        <input type="text" id="cfg_short_time_php" name="cfg_short_time_php" class="required" value="H:i" />
+        <input type="text" id="cfg_short_time_php" name="cfg_short_time_php" class="required" value="H:i" required="required" />
     </div>
     <div>
         <label for="cfg_search_leadin_length">{{lang.searchleadinlength}}</label>
@@ -260,11 +260,11 @@
     </div>
     <div>
         <label for="SysAdmin_first">{{lang.firstname}}</label>
-        <input type="text" value="" name="SysAdmin_first" id="SysAdmin_first" class="required" />
+        <input type="text" value="" name="SysAdmin_first" id="SysAdmin_first" class="required" required="required" />
     </div>
     <div>
         <label for="SysAdmin_last">{{lang.surname}}</label>
-        <input type="text" value="" id="SysAdmin_last" name="SysAdmin_last" class="required" minlength="3" />
+        <input type="text" value="" id="SysAdmin_last" name="SysAdmin_last" class="required" minlength="3" required="required" />
     </div>
     <div>
         <label for="SysAdmin_email">{{lang.emailaddress}}</label>
@@ -272,11 +272,11 @@
     </div>
     <div>
         <label for="SysAdmin_username">{{lang.username}}</label>
-        <input type="text" value="" id="SysAdmin_username" name="SysAdmin_username" class="required" minlength="3" />
+        <input type="text" value="" id="SysAdmin_username" name="SysAdmin_username" class="required" minlength="3" required="required" />
     </div>
     <div>
         <label for="SysAdmin_password">{{lang.password}}</label>
-        <input type="password" value="" id="SysAdmin_password" name="SysAdmin_password" class="required" minlength="8" />
+        <input type="password" value="" id="SysAdmin_password" name="SysAdmin_password" class="required" minlength="8" required="required" />
     </div>
     <table class="h">
         <tr>
@@ -312,13 +312,13 @@
         </tr>
     </table>
     <div>
-        <label>{{lang.IP}}</label>
-        <input name="labsecuritytype" value="ipaddress" type="radio" checked = "checked" />
+        <label for="labsecuritytypeip">{{lang.IP}}</label>
+        <input name="labsecuritytype" id="labsecuritytypeip" value="ipaddress" type="radio" checked = "checked" />
         <img src="../artwork/tooltip_icon.gif" class="help_tip" title="{{lang.labsecuritytypetip}}" />
     </div>
     <div>
-        <label>{{lang.hostname}}</label>
-        <input name="labsecuritytype" type="radio" value="hostname" />
+        <label for="labsecuritytypehost">{{lang.hostname}}</label>
+        <input name="labsecuritytype" id="labsecuritytypehost" type="radio" value="hostname" />
     </div>
     <table class="h">
         <tr>
@@ -329,7 +329,7 @@
     <br />
     <div>
         <label for="support_email">{{lang.supportemailaddress}}</label>
-        <input type="text" value="" id="support_email" name="support_email" class="" class="email" />
+        <input type="text" value="" id="support_email" name="support_email" class="required email" required="required" />
     </div>
     <table class="h">
         <tr>
@@ -340,19 +340,19 @@
     <div>
         <label for="emergency_support1">{{lang.name}}</label>
         <input type="text" value="" id="emergency_support1" name="emergency_support1" class="" />
-        {{lang.number}}
+        <label for="emergency_support_number1" class="nofloat">{{lang.number}}</label>
         <input type="text" value="" name="emergency_support_number1" class="" />
     </div>
     <div>
         <label for="emergency_support2">{{lang.name}}</label>
         <input type="text" value="" id="emergency_support2" name="emergency_support2" class="" />
-        {{lang.number}}
+        <label for="emergency_support_number2" class="nofloat">{{lang.number}}</label>
         <input type="text" value="" name="emergency_support_number2" class="" />
     </div>
     <div>
         <label for="emergency_support3">{{lang.name}}</label>
         <input type="text" value="" id="emergency_support3" name="emergency_support3" class="" />
-        {{lang.number}}
+        <label for="emergency_support_number3" class="nofloat">{{lang.number}}</label>
         <input type="text" value="" name="emergency_support_number3" class="" />
     </div>
     <div class="submit">
