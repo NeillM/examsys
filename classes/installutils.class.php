@@ -150,7 +150,7 @@ Class InstallUtils {
   static function displayForm() {
     global $string, $language, $timezone_array;
     $configObject = Config::get_instance();
-    $render = new render($configObject);
+    $render = new render_install($configObject);
     $data['action'] = Url::fromGlobals();
     $data['dirsep'] = dirname(__DIR__) . DIRECTORY_SEPARATOR;
     $default_timezone = date_default_timezone_get();
@@ -523,7 +523,7 @@ Class InstallUtils {
       $data['displaywarnings'] = false;
     }
     if (!self::$cli) {
-      $render = new render($configObject);
+      $render = new render_install($configObject);
       $render->render($data, $string, '/install/processed.html');
     } else {
       cli_utils::prompt($string['installed']);
@@ -1791,7 +1791,7 @@ Class InstallUtils {
         }
       } else {
         $configObject = Config::get_instance();
-        $render = new render($configObject);
+        $render = new render_install($configObject);
         $data['error'] = $error;
         $render->render($data, $string, '/install/error.html');
       }
@@ -1825,7 +1825,7 @@ Class InstallUtils {
   static function displayHeader() {
     global $string;
     $configObject = Config::get_instance();
-    $render = new render($configObject);
+    $render = new render_install($configObject);
     $headerdata = array(
       'css' => array(
         '/css/rogo_logo.css',
@@ -1862,7 +1862,7 @@ Class InstallUtils {
   */
   static function displayfooter() {
     $configObject = Config::get_instance();
-    $render = new render($configObject);
+    $render = new render_install($configObject);
     $render->render_admin_footer();
   }
 
