@@ -422,4 +422,43 @@ class paperutilstest extends unittestdatabase {
       unset($tmp_questions_array);
       $this->assertEquals($expected, PaperUtils::get_linked_question_parents($questions_array));
     }
+
+    /**
+     * Tests that the correct session is parsed from the paper title.
+     *
+     * @param string $title The title of the paper.
+     * @param string|bool $expected The expected value.
+     * @dataProvider academic_year_from_title_data
+     */
+    public function test_academic_year_from_title($title, $expected) {
+      $this->assertEquals($expected, Paper_utils::academic_year_from_title($title));
+    }
+    
+    /**
+     * Data for the academic_year_from_title tests.
+     *
+     * @return array
+     */
+    public function academic_year_from_title_data() {
+      return [
+        '4 Digit year' => ['Fun paper 2019/2020', '2019/20'],
+        '4 Digit year in middle' => ['Fun paper 2019/2020 with some text after the year', '2019/20'],
+        '4 Digit year double session' => ['Fun paper 2019/2021', '2019/21'],
+        '4 Digit year with spaces' => ['Fun paper 2019 / 2020', '2019/20'],
+        '4 Digit year with spaces in middle' => ['Fun paper 2019 / 2020 and some more text', '2019/20'],
+        '4/2 Digit year' => ['Fun paper 2019/20', '2019/20'],
+        '2 Digit year' => ['Fun paper 19/20', '2019/20'],
+        '2 Digit year double session' => ['Fun paper 19/21', '2019/20'], // Not sure this makes sense...
+        'No year' => ['Fun paper', false],
+        'Numbers that are not a year 1' => ['D24C08 Fun paper', false],
+        'Numbers that are not a year 2' => ['201920 Fun paper', false],
+        'Invalid 4 Digit year 1' => ['Fun paper 2019/ 2020', false],
+        'Invalid 4 Digit year 2' => ['Fun paper 2019 /2020', false],
+        '- separator' => ['2019-20', '2019/20'],
+        '* separator' => ['2019*20', '2019/20'], // Do we really want to support so many separation characters?
+        '? separator' => ['2019?20', '2019/20'],
+        '( separator' => ['2019(20', '2019/20'],
+        '. separator' => ['2019.20', '2019/20'],
+      ];
+    }
 }
