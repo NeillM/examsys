@@ -40,6 +40,7 @@ $scrofy = (!isset($_REQUEST['scrOfY'])) ? '' : $_REQUEST['scrOfY'];
 $calling = (!isset($_REQUEST['calling'])) ? '' : $_REQUEST['calling'];
 $ListKeyword = (!isset($_REQUEST['keyword'])) ? '' : $_REQUEST['keyword'];
 $team = (!isset($_REQUEST['team'])) ? '' : $_REQUEST['team'];
+$objective_modules = param::optional('objective_modules', '', param::TEXT, param::FETCH_POST);
 
 /**
  * Get post parameters for option and parse if function available for option type
@@ -235,7 +236,7 @@ if ($critical_error == '' and $question->requires_media() and (isset($_POST['sub
 if ($critical_error == '') {
   $question->add_default_correction_behaviours($cfg_web_root);
 
-  if ($mode == 'Edit') {
+  if ($mode == $string['edit']) {
     if (isset($_GET['qNo'])) {
       $q_no = $_GET['qNo'];
     } else {
@@ -412,13 +413,6 @@ if ($critical_error == '') {
             $logger->track_change('Paper', $paper_id, $userObject->get_user_ID(), '', $question->id, 'Add Question');
           }
 
-          save_keywords($question, $userObject->get_user_ID(), true, $mysqli, $string);
-
-          if (isset($_POST['objective_modules'])) {
-            // Write out curriculum mapping.
-            save_objective_mappings($mysqli, $_POST['objective_modules'], $paper_id, $question->id);
-          }
-
           // Stuff not to do on correction/limited save
           if (!isset($_POST['submit']) or $_POST['submit'] != $string['correct']) {
             // Save review comments and responses
@@ -427,7 +421,7 @@ if ($critical_error == '') {
             }
 
             // For likert, save the scale to a state to ease creation of multiple questions with same scale
-            if ($mode == 'Add' and $question->get_type() == 'likert') {
+            if ($mode == $string['add'] and $question->get_type() == 'likert') {
               $scale_type = $question->get_scale_type();
               $stateutil->setState($userObject->get_user_ID(), 'likert_format', $scale_type, '/question/edit/index.php', $mysqli);
 
@@ -441,8 +435,21 @@ if ($critical_error == '') {
         $errors[] = $vex->getMessage();
       }
     }
+  }
 
-    if (count($errors) == 0) redirect($userObject, $question->id, $configObject, $mysqli);
+  if ((count($errors) == 0) and ($do_save or $show_correction_intermediate)) {
+    // Ensure keywords and objectives are not lost during a limited saves with an intermediate step.
+    save_keywords($question, $userObject->get_user_ID(), true, $mysqli, $string);
+
+    if (!empty($objective_modules)) {
+      // Write out curriculum mapping.
+      save_objective_mappings($mysqli, $objective_modules, $paper_id, $question->id);
+    }
+  }
+
+  if ($do_save and (count($errors) == 0)) {
+    // Redirect if the save is a success.
+    redirect($userObject, $question->id, $configObject, $mysqli);
   }
 
   $q_type_display = '';
@@ -558,7 +565,7 @@ $(function () {
 		<div><img src="../../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
 		<div id="page-header-inner">
 			<h1><strong><?php
-      if ($mode == 'Add') echo 'Add ';
+      if ($mode == $string['add']) echo $string['add'] . ' ';
       echo $string['question'] . $q_type_display;
       ?></h1>
 		</div>
@@ -566,7 +573,7 @@ $(function () {
 <?php
 if ($critical_error == '') {
   $mapping_enabled = ($question->allow_mapping()) ? '' : ' class="disabled"';
-  $creation_date = ($mode == 'Edit') ? strftime( $configObject->get('cfg_short_date'), $question->get_created('timestamp')) : strftime( $configObject->get('cfg_short_date'), time());
+  $creation_date = ($mode == $string['edit']) ? strftime( $configObject->get('cfg_short_date'), $question->get_created('timestamp')) : strftime( $configObject->get('cfg_short_date'), time());
   $modified_date = ($question->get_last_edited('timestamp')) ? strftime( $configObject->get('cfg_short_date'), $question->get_last_edited('timestamp')) : $string['na'];
 ?>
     <div class="tab-bar">
