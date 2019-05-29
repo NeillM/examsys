@@ -431,7 +431,6 @@ if ($properties_list !== false and count($properties_list) > 0) {
     } else {
       $exam_started = true;
       $started_timestamp = $log_lab_end_time->get_started_timestamp();
-      //$start_date = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_long_time_php'), $started_timestamp);
       $start_date = date($configObject->get('cfg_long_time_php'), $started_timestamp);
     }
 

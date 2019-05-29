@@ -2611,7 +2611,7 @@ function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_r
       $html .= "$percent%</td></tr>\n";
     }
     
-    $dateformat = $configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php');
+    $dateformat = $configObject->get('cfg_short_datetime_php');
 
     if (!is_null($start_date)) {
       $html .= "<tr><td>" . $string['started'] . "</td><td style=\"text-align:right\">" . $start_date->format($dateformat) . "</td></tr>";

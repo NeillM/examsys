@@ -815,7 +815,7 @@ class PaperProperties {
       if ($this->start_date != '') {
         $start_datetime = DateTime::createFromFormat('U', $this->start_date);
         $start_datetime->setTimezone($this->get_date_time_zone());
-        $this->display_start_date = $start_datetime->format($this->configObject->get('cfg_long_date_php') . ' ' . $this->configObject->get('cfg_long_time_php'));
+        $this->display_start_date = $start_datetime->format($this->configObject->get('cfg_long_datetime_php'));
       }
     } else {
       $this->display_start_date = $display_start_date;
@@ -892,7 +892,7 @@ class PaperProperties {
       if ($this->end_date != '') {
         $end_datetime = DateTime::createFromFormat('U', $this->end_date);
         $end_datetime->setTimezone($this->get_date_time_zone());
-        $this->display_end_date = $end_datetime->format($this->configObject->get('cfg_long_date_php') . ' ' . $this->configObject->get('cfg_long_time_php'));
+        $this->display_end_date = $end_datetime->format($this->configObject->get('cfg_long_datetime_php'));
       }
     } else {
       $this->display_end_date = $display_end_date;

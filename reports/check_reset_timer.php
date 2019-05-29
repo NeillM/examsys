@@ -54,7 +54,7 @@ if ($user_details === false) {
 
 $name = $user_details['title'] . ' ' . $user_details['surname'] . ', ' . $user_details['first_names'] . ' (' . $user_details['student_id'] . ')';
 
-$display_format = $configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php');
+$display_format = $configObject->get('cfg_short_datetime_php');
 
 $started = $dateObj->format($display_format);
 ?>

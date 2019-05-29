@@ -2371,8 +2371,8 @@ for ($i=0; $i<$rows; $i++) {
   switch ($part) {
     case 'startdate':
     case 'enddate':
-      $old = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $old);
-      $new = date($configObject->get('cfg_long_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $new);
+      $old = date($configObject->get('cfg_short_datetime_php'), $old);
+      $new = date($configObject->get('cfg_short_datetime_php'), $new);
       break;
     case 'folder':
       $old = format_folders($old, $folders);
@@ -2437,7 +2437,7 @@ for ($i=0; $i<$rows; $i++) {
   }
 
   if (isset($string[$part])) $part = $string[$part];
-  echo "<tr><td>" . ucfirst($part) . "</td><td>$old</td><td>$new</td><td>" . date($configObject->get('cfg_short_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $changes[$i]['date']) . "</td><td>" . $changes[$i]['title'] . " " . $changes[$i]['surname'] . "</td><tr>\n";
+  echo "<tr><td>" . ucfirst($part) . "</td><td>$old</td><td>$new</td><td>" . date($configObject->get('cfg_very_short_datetime_php'), $changes[$i]['date']) . "</td><td>" . $changes[$i]['title'] . " " . $changes[$i]['surname'] . "</td><tr>\n";
 }
 $mysqli->close();
 ?>

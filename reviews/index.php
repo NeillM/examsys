@@ -136,7 +136,7 @@ if ($userObject->has_role(array('External Examiner'))) {
     if ($reviewed == '') {
       echo '<span style="color:white; background-color:#FF4040; padding-left:5px; padding-right:5px">' . $string['notreviewed'] . '</span>';
     } else {
-      echo '<span style="color:#808080">' . sprintf($string['reviewed'], date($configObject->get('cfg_short_date_php') . ' ' . $configObject->get('cfg_short_time_php'), $reviewed)) . '</span>';
+      echo '<span style="color:#808080">' . sprintf($string['reviewed'], date($configObject->get('cfg_very_short_datetime_php'), $reviewed)) . '</span>';
     }
     echo "</td></tr>\n<tr><td colspan=\"2\" style=\"font-size:80%\">&nbsp;</td>\n</tr>\n";
   }

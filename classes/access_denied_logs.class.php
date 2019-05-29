@@ -57,8 +57,6 @@ class access_denied_logs {
     $result->store_result();
     $result->bind_result($id, $tried, $ipaddress, $page, $msg, $userID, $title, $initials, $surname);
     while ($result->fetch()) {
-      $tried_date = new DateTime();
-      $tried_date->setTimestamp($tried);
       $this->logs[] = array('id' =>$id, 'tried' => $tried, 'ipaddress' => $ipaddress, 'page' => $page, 'msg' =>$msg, 'userID' => $userID, 'title' => $title, 'initials' => $initials, 'surname' => $surname);
     }
     $result->close();

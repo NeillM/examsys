@@ -92,7 +92,7 @@ class RAF {
 	 */
 	private function create_export_array($questions) {
 		$this->data['metadata']['rogo_version']	= $this->configObj->get_setting('core', 'rogo_version');
-		$this->data['metadata']['export_date']	= date($this->configObj->get('cfg_long_date_php') . ' ' . $this->configObj->get('cfg_long_time_php'));
+		$this->data['metadata']['export_date']	= date($this->configObj->get('cfg_long_datetime_php'));
 		$this->data['metadata']['company']			= $this->configObj->get_setting('core', 'misc_company');
 		$this->data['items'] = array();
 		
@@ -408,7 +408,7 @@ class RAF {
 		$result->close();
 		
 		
-		$date_format = $this->configObj->get('cfg_long_date_php') . ' ' . $this->configObj->get('cfg_short_time_php');
+		$date_format = $this->configObj->get('cfg_short_datetime_php');
 		
 		if ($this->raf_company == $this->configObj->get_setting('core', 'misc_company')) {  // The import file company is the same as the current installation. Use the same IDs.
 		  $old_q_id = $this->getQID_GUID($q['guid']);

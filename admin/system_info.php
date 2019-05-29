@@ -284,7 +284,7 @@ if ($configObject->get_setting('core', 'system_hostname_lookup')) {
   echo "<tr><td style=\"width:90px\">" . $string['servername'] . "</td><td>" . gethostbyaddr(gethostbyname($_SERVER['SERVER_NAME'])) . "</td></tr>\n";
   echo "<tr><td>" . $string['hostname'] . "</td><td>" . $_SERVER['HTTP_HOST'] . "</td></tr>\n";
   echo "<tr><td>" . $string['ipaddress'] . "</td><td>" . NetworkUtils::get_server_address() . "</td></tr>\n";
-  echo "<tr><td>" . $string['clock'] . "</td><td>" . date('d F Y H:i:s') . "</td></tr>\n";;
+  echo "<tr><td>" . $string['clock'] . "</td><td>" . date($configObject->get('cfg_long_datetime_php')) . "</td></tr>\n";;
   echo "<tr><td>" . $string['os'] . "</td><td>" . php_uname('s') . "</td></tr>\n";;
   echo "<tr><td>" . $string['webserver'] . "</td><td>" . $_SERVER['SERVER_SOFTWARE'] . "</td></tr>\n";
   echo "<tr><td>" . $string['php'] . "</td><td>" . phpversion() . "</td></tr>\n";

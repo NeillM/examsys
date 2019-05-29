@@ -40,7 +40,7 @@ if (is_null($properties->get_external_review_deadline())) {
 $external_review_deadline = DateTime::createFromFormat('Y-m-d', $properties->get_external_review_deadline(), $local_time);
 $external_review_deadline->setTimezone($local_time);
 
-$display_deadline = $external_review_deadline->format('l jS M Y');
+$display_deadline = $external_review_deadline->format($configObject->get('cfg_long_date_php'));
       
 ?>
 <!DOCTYPE html>

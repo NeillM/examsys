@@ -148,7 +148,7 @@ if (!isset($_POST['update'])) {
   }
 
   $lang['startingupdate'] = $string['startingupdate'];
-  $lang['startingat'] = sprintf($string['startingat'], date("H:i:s"));
+  $lang['startingat'] = sprintf($string['startingat'], date($configObject->get('cfg_long_time_php')));
 
   $update_mysqli->autocommit(false);
 
@@ -226,7 +226,7 @@ if (!isset($_POST['update'])) {
   $lang['readonly'] = $string['readonly'];
   $lang['finished'] = $string['finished'];
   $lang['config'] = $string['config'];
-  $lang['ended'] = sprintf($string['ended'], date("H:i:s"));
+  $lang['ended'] = sprintf($string['ended'], date($configObject->get('cfg_long_time_php')));
   $render->render($data, $lang, '/updates/update.html');
   $render->render_admin_footer();
   $update_mysqli->close();
