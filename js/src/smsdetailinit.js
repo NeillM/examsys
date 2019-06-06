@@ -1,4 +1,3 @@
-<?php
 // This file is part of Rogo
 //
 // Rogo is free software: you can redistribute it and/or modify
@@ -13,7 +12,18 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
-
-require '../lang/' . $language . '/admin/status_shared.php';
-
-$string['reorderproblem'] = 'There was a problem re-ordering the statuses. Please refresh the page and try again';
+//
+// Initialise sms module detail page.
+//
+// @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+// @copyright Copyright (c) 2019 The University of Nottingham
+//
+requirejs(['jquery', 'jquerytablesorter'], function ($) {
+    $(function () {
+        if ($("#maindata").find("tr").size() > 1) {
+            $("#maindata").tablesorter({
+                sortList: [[0,0]]
+            });
+        }
+    });
+});

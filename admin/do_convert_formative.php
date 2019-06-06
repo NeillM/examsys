@@ -24,6 +24,8 @@
 * @package
 */
 
+define('AJAX_REQUEST', true);
+
 require '../include/admin_auth.inc';
 require_once '../include/errors.php';
 
@@ -51,43 +53,4 @@ $update_params = array(
 );
 $assessment->db_update_assessment($paperid, $update_params);
 $mysqli->close();
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title>Paper Converted</title>
-  
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <style type="text/css">
-    body {background-color:#F1F5FB; font-size:80%; text-align:justifed}
-  </style>
-  
-  <script>
-    function closeWindow() {
-      window.opener.location.href = 'summative_scheduling.php';
-      self.close();
-    }
-  </script>
-</head>
-
-<body onload="closeWindow();">
-
-<table cellpadding="8" cellspacing="0" border="0" width="100%">
-<tr>
-<td valign="top"><img src="../artwork/formative.png" width="32" height="32" border="0" alt="" /></td>
-
-<td><p>Paper successfully converted.<p>
-
-<div style="text-align:center">
-<form action="" method="get" autocomplete="off">
-<input type="button" name="cancel" value="    OK    " onclick="javascript:self.opener.location.href='summative_scheduling.php'; window.close();" />
-</form>
-</div>
-</td></tr>
-</table>
-
-</body>
-</html>
+echo json_encode('SUCCESS');

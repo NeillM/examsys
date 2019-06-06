@@ -1,4 +1,3 @@
-<?php
 // This file is part of Rogo
 //
 // Rogo is free software: you can redistribute it and/or modify
@@ -13,7 +12,25 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
+//
+// Initialise questions status admin page.
+//
+// @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+// @copyright Copyright (c) 2019 The University of Nottingham
+//
+requirejs(['form', 'colourpicker', 'jquery', 'jqueryvalidate'], function (FORM, PICKER, $) {
+    var picker = new PICKER();
+    picker.init();
 
-require '../lang/' . $language . '/admin/status_shared.php';
+    var form = new FORM();
+    form.init();
 
-$string['reorderproblem'] = 'There was a problem re-ordering the statuses. Please refresh the page and try again';
+    $('#span_colour').click(function (e) {
+        e.stopPropagation();
+        picker.showPicker('colour', e);
+    });
+
+    $('html').click(function() {
+        picker.hidePicker();
+    });
+});

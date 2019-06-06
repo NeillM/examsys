@@ -47,20 +47,10 @@ $academic_year = $yearutils->get_academic_session($session);
     <link rel="stylesheet" type="text/css" href="../css/header.css" />
     <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
     <link rel="stylesheet" type="text/css" href="../css/list.css" />
-    
-    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-    <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
-    <script type="text/javascript" src="../js/staff_help.js"></script>
-    <script type="text/javascript" src="../js/toprightmenu.js"></script>
-    <script>
-      $(function () {
-        if ($("#maindata").find("tr").size() > 1) {
-          $("#maindata").tablesorter({ 
-            sortList: [[1,0]] 
-          });
-        }
-      });
-    </script>
+
+    <script src='../js/require.js'></script>
+    <script src='../js/main.min.js'></script>
+    <script src='../js/smsinit.min.js'></script>
   </head>
   <body>
 <?php

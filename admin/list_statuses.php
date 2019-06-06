@@ -40,13 +40,10 @@ $statuses = QuestionStatus::get_all_statuses($mysqli, $string);
   <link rel="stylesheet" type="text/css" href="../css/submenu_qstatus.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
 
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script src="../js/jquery-1.11.1.min.js" type="text/javascript"></script>
-  <script src="../js/jquery-ui-1.10.4.min.js" type="text/javascript"></script>
-  <script src="../js/jquery.q_status.js" type="text/javascript"></script>
-  <script src="../js/staff_help.js" type="text/javascript"></script>
-  <script src="../js/list_ul.js" type="text/javascript"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/liststatusesinit.min.js"></script>
 </head>
 
 <body>
@@ -75,5 +72,12 @@ foreach ($statuses as $status) {
 ?>
       </ul>
   </div>
+<?php
+// JS utils dataset.
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render = new render($configObject);
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

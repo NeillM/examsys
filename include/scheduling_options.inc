@@ -29,19 +29,6 @@ $next_session = $yearutils->get_next_session();
 $academic_year = $yearutils->get_academic_session($current_session);
 $next_academic_year = $yearutils->get_academic_session($next_session);
 ?>
-<script>
-  $(document).ready(function() {
-      $('#sms').click(function() {
-        $('#sms').append('<img src="../artwork/working.gif" class="busyicon" />');
-     });
-     $('#sms2').click(function() {
-        $('#sms2').append('<img src="../artwork/working.gif" class="busyicon" />');
-     });
-  });
-  function viewDetails() {
-    window.location = "scheduling_details.php?paperID=" + $('#lineID').val();
-  }
-</script>
 
 <div id="left-sidebar" class="sidebar">
 <form name="myform" autocomplete="off">
@@ -50,7 +37,7 @@ $next_academic_year = $yearutils->get_academic_session($next_session);
 </div>
 
 <div style="display:none" id="menu1b">
-	<div class="menuitem"<a href="#" onclick="viewDetails(); return false;"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="" /><?php echo $string['viewdetails'] ?></a></div>
+	<div id="details" class="menuitem"<a href="#""><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="" /><?php echo $string['viewdetails'] ?></a></div>
 </div>
 <div id="menu1c">
 <?php

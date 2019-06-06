@@ -46,6 +46,9 @@ if (!Paper_utils::paper_exists($paperid, $mysqli)) {
   <style type="text/css">
   body {background-color:#F1F5FB; font-size:80%; text-align:justifed}
   </style>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src='../js/convertformativeinit.min.js'></script>
 </head>
 
 <body>
@@ -57,7 +60,7 @@ if (!Paper_utils::paper_exists($paperid, $mysqli)) {
 <td><p><?php echo $string['msg']; ?></p>
 <br />
 <div style="text-align: right">
-<form action="do_convert_formative.php" method="post" autocomplete="off">
+<form id="convertformative" action="" method="post" autocomplete="off">
 <input type="hidden" name="paperID" value="<?php echo $_GET['paperID']; ?>" />
 <input type="submit" name="submit" value="<?php echo $string['convert']; ?>" class="ok" />&nbsp;
 <input type="button" name="cancel" value=" <?php echo $string['cancel']; ?> " onclick="javascript:window.close();" />

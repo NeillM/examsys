@@ -114,33 +114,10 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
     }
   </style>
 
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    $(function () {
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
-        }
-      });
-      
-      $('form').removeAttr('novalidate');
-
-      $('#span_colour').click(function (e) { e.stopPropagation(); showPicker('colour', e); });
-      
-      $('html').click(hidePicker);
-      
-      $('#cancel').click(function() {
-        history.back();
-      });
-      
-    });
-
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/statusinit.min.js"></script>
 </head>
 <body>
 <?php
