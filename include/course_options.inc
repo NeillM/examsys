@@ -23,24 +23,6 @@
 */
 
 ?>
-<script>
-  $(document).ready(function() {
-      $('#sms').click(function() {
-        $('#sms').append('<img src="../artwork/working.gif" class="busyicon" />');
-     });
-  });
-  function editCourse() {
-    document.location.href='./edit_course.php?courseID=' + $('#lineID').val();
-  }
-
-  function deleteCourse() {
-    notice=window.open("../delete/check_delete_course.php?courseID=" + $('#lineID').val() + "","notice","width=450,height=210,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-210, screen.height/2-105);
-    if (window.focus) {
-      notice.focus();
-    }
-  }
-</script>
 
 <div id="left-sidebar" class="sidebar">
 <form name="myform" autocomplete="off">
@@ -54,8 +36,8 @@
 <div style="display:none" id="menu1b">
 	<div class="menuitem"><a href="add_course.php"><img class="sidebar_icon" src="../artwork/degree_icon_16.png" alt="" /><?php echo $string['createcourse'] ?></a></div>
 	<div class="menuitem"><a href="bulk_import_courses.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['bulkcourseimport'] ?></a></div>
-	<div class="menuitem"><a href="#" onclick="editCourse(); return false;"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><?php echo $string['editcourse'] ?></a></div>
-	<div class="menuitem"><a href="#" onclick="deleteCourse(); return false;"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><?php echo $string['deletecourse'] ?></a></div>
+	<div class="menuitem editcourse"><a href="#"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><?php echo $string['editcourse'] ?></a></div>
+	<div class="menuitem deletecourse"><a href="#"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><?php echo $string['deletecourse'] ?></a></div>
 </div>
 
 <?php

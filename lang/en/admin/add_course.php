@@ -28,4 +28,4 @@ $string['codecourse'] = 'Please enter a code for the course.';
 $string['titlecourse'] = 'Please enter a title for the course.';
 $string['externalid'] = 'External ID';
 $string['externalsys'] = 'External System';
-?>
+$string['coursecodeinuse'] = 'The course code %s is already in use. Please enter an alternative code.';

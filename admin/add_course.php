@@ -25,28 +25,6 @@
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.php';
 
-$unique_course = true;
-if (isset($_POST['submit'])) {
-  // Check for unique username
-  $tmp_course = trim($_POST['course']);
-  
-  if (CourseUtils::course_exists($tmp_course, $mysqli)) {
-    $unique_course = false;
-  } else {
-    $unique_course = true;
-  }
-}
-
-if (isset($_POST['submit']) and $unique_course == true) {
-  $tmp_school = $_POST['school'];
-  $tmp_course = trim($_POST['course']);
-  $tmp_description = trim($_POST['description']);
-  $externalid = check_var('externalid', 'POST', false, false, true);
-  $externalsys = check_var('externalsys', 'POST', false, false, true);
-  CourseUtils::add_course((int)$tmp_school, $tmp_course, $tmp_description, $externalid, $externalsys, $mysqli);
-  header("location: list_courses.php");
-  exit();
-} else {
 ?>
 <!DOCTYPE html>
   <html>
@@ -62,26 +40,10 @@ if (isset($_POST['submit']) and $unique_course == true) {
     .warn {background-color:#FFD9D9; color:#800000; border:1px solid #800000}
   </style>
 
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    $(function () {
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
-        }
-      });
-      
-      $('form').removeAttr('novalidate');
-      
-      $('#cancel').click(function() {
-        history.back();
-      });
-    });  
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/courseinit.min.js"></script>
   </head>
 
   <body>
@@ -99,16 +61,10 @@ if (isset($_POST['submit']) and $unique_course == true) {
   </div>
   <br />
   <div align="center">
-  <form id="theform" name="edit_course" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
+  <form id="theform" name="edit_course" method="post" action="" autocomplete="off">
     <table cellpadding="0" cellspacing="2" border="0" style="text-align:left">
     <?php
-    if ($unique_course == false) {
-      echo "<tr><td class=\"field\">" . $string['code'] . "</td><td><input type=\"text\" size=\"10\" maxlength=\"255\" name=\"course\" class=\"warn\" value=\"$tmp_course\" required /></td></tr>\n";
-    } else {
-    ?>
-      <tr><td class="field"><?php echo $string['code'] ?></td><td><input type="text" size="10" maxlength="255"  name="course" value="<?php if (isset($_GET['moduleid'])) echo $_GET['moduleid']; ?>" required /></td></tr>
-    <?php
-    }
+      echo "<tr><td class=\"field\">" . $string['code'] . "</td><td><input type=\"text\" size=\"10\" maxlength=\"255\" name=\"course\" value=\"$tmp_course\" /></td></tr>\n";
     ?>
     <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" maxlength="255" name="description" value="<?php if (isset($_POST['description'])) echo $_POST['description']; ?>" required /></td></tr>
     <tr><td class="field"><?php echo $string['school'] ?></td><td><select name="school" required>
@@ -162,10 +118,18 @@ if (isset($_POST['submit']) and $unique_course == true) {
   </form>
   </div>
 <?php
-}
 $mysqli->close();
 ?>
 </div>
-
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['posturl'] = "do_add_course.php";
+$render->render($miscdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

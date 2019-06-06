@@ -32,16 +32,7 @@ $render = new render($configObject);
 
 ini_set("auto_detect_line_endings", true);
 $lang['title'] = $string['bulkcourseimport'];
-$additionaljs = "<script type=\"text/javascript\" src=\"../js/jquery.validate.min.js\"></script>
-                <script>
-                    $(function () {
-                      $('#import_form').validate();
-                      
-                      $('#cancel').click(function() {
-                        history.back();
-                      });
-                    });
-                </script>";
+$additionaljs = "<script type=\"text/javascript\" src=\"../js/bulkimportinit.min.js\"></script>";
 $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/dialog.css\" />
                 <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/breadcrumb.css\" />
                 <style type=\"text/css\">

@@ -33,39 +33,13 @@ if (!CourseUtils::courseid_exists($courseID, $mysqli)) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$unique_course = true;
-$tmp_course = '';
-
 $result = $mysqli->prepare("SELECT schoolid, name, description, externalid, externalsys FROM courses WHERE id = ?");
 $result->bind_param('i', $courseID);
 $result->execute();
 $result->bind_result($current_school, $coursename, $description, $current_externalid, $current_externalsys);
 $result->fetch();
 $result->close();
-$course_exists = false;
-if (isset($_POST['submit']) and $_POST['course'] != $_POST['old_course']) {
-  // Check for unique course name
-  $tmp_course = trim($_POST['course']);
-  $course_exists = CourseUtils::course_exists($tmp_course, $mysqli);
-}
 
-if (isset($_POST['submit']) and $course_exists == false) {
-  $tmp_course = trim($_POST['course']);
-  $new_school = $_POST['school'];
-  $new_description = trim($_POST['description']);
-
-  if (CourseUtils::update_course($courseID, $new_school, $tmp_course, $new_description, $current_externalid, $current_externalsys, $mysqli)) {
-  
-      $logger = new Logger($mysqli);
-      if ($coursename != $tmp_course)             $logger->track_change('Course', $courseID, $userObject->get_user_ID(), $coursename, $tmp_course, 'code');
-      if ($description != $new_description) $logger->track_change('Course', $courseID, $userObject->get_user_ID(), $description, $new_description, 'name');
-      if ($current_school != $new_school)   $logger->track_change('Course', $courseID, $userObject->get_user_ID(), $current_school, $new_school, 'school');
-  }
-  
-  $mysqli->close();
-  header("location: list_courses.php");
-  exit();
-} else {
 ?>
 <!DOCTYPE html>
 <html>
@@ -80,37 +54,14 @@ if (isset($_POST['submit']) and $course_exists == false) {
     .field {font-weight:bold; text-align:right; padding-right:10px}
   </style>
 
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    $(function () {
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
-        }
-      });
-      
-      $('form').removeAttr('novalidate');
-      
-      $('#cancel').click(function() {
-        history.back();
-      });
-    });
-    
-    function codeWarning() {
-      alert("<?php echo sprintf($string['coursecodeinuse'], $tmp_course); ?>");
-    }
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/courseinit.min.js"></script>
 </head>
 <?php
-  if ($unique_course == false) {
-    echo "<body onload=\"codeWarning()\">\n";
-  } else {
-    echo "<body>\n";
-  }
+
+  echo "<body>";
   require '../include/course_options.inc';
   require '../include/toprightmenu.inc';
 	
@@ -124,14 +75,10 @@ if (isset($_POST['submit']) and $course_exists == false) {
   </div>
   <br />
   <div align="center">
-  <form id="theform" name="edit_course" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?courseID=' . $courseID ?>" autocomplete="off">
+  <form id="theform" name="edit_course" method="post" action="" autocomplete="off">
     <table cellpadding="0" cellspacing="2" border="0" style="text-align:left">
     <?php
-    if ($unique_course == false) {
-      echo "<tr><td class=\"field\">" . $string['code'] . "</td><td><input type=\"text\" size=\"10\" maxlength=\"255\" name=\"course\" style=\"background-color:#FFD9D9; color:#800000; border:1px solid #800000\" value=\"" . $tmp_course . "\" required /><input type=\"hidden\" name=\"old_course\" value=\"" . $tmp_course . "\" /></td></tr>\n";
-    } else {
-      echo "<tr><td class=\"field\">" . $string['code'] . "</td><td><input type=\"text\" size=\"10\" maxlength=\"255\" name=\"course\" value=\"" . $coursename . "\" /><input type=\"hidden\" name=\"old_course\" value=\"" . $coursename . "\" required /></td></tr>\n";
-    }
+      echo "<tr><td class=\"field\">" . $string['code'] . "</td><td><input type=\"text\" size=\"10\" maxlength=\"255\" id=\"course\" name=\"course\" value=\"" . $coursename . "\" /><input type=\"hidden\" name=\"old_course\" value=\"" . $coursename . "\" required /></td></tr>\n";
     ?>
     <tr><td class="field"><?php echo $string['name']; ?></td><td><input type="text" size="70" maxlength="255" name="description" value="<?php echo $description; ?>" required /></td></tr>
     <tr><td class="field"><?php echo $string['school']; ?></td><td><select name="school" required>
@@ -170,9 +117,18 @@ if (isset($_POST['submit']) and $course_exists == false) {
   </form>
   </div>
 <?php
-}
 $mysqli->close();
 ?>
 </div>
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['posturl'] = "do_edit_course.php";
+$render->render($miscdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

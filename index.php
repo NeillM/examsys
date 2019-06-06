@@ -75,64 +75,10 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
    #displaycredits {position:absolute; bottom:22px; text-align:center; width:90%; cursor:pointer; color:#295AAD; font-weight:bold}
 	</style>
 
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="./js/staff_help.js"></script>
-  <script type="text/javascript" src="./js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="./js/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="./js/toprightmenu.js"></script>
-  <script type="text/javascript" src="./js/sidebar.js"></script>
-  <script>
-    $(function () {
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
-        }
-      });
-      $('form').removeAttr('novalidate');
-      
-      $('body').click(function() {
-        hideMenus();
-      });
-      
-		});
-		
-    function startPaper(paperID, fullsc) {
-      var winwidth = screen.width-80;
-      var winheight = screen.height-80;
-      if (fullsc == 0) {
-        window.open("./reviews/start.php?id="+paperID+"&review=1","paper","width="+winwidth+",height="+winheight+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      } else {
-        window.open("./reviews/start.php?id="+paperID+"&review=1","paper","fullscreen=yes,left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      }
-    }
-    
-    function illegalChar(codeID) {
-      if (codeID == 59) {
-        alert("Character ';' illegal - please use alternative characters in folder name.");
-      }
-      event.returnValue = false;
-    }
-
-    function newPaper(paperID) {
-      notice = window.open("./paper/new_paper1.php?folder=","properties","width=750,height=500,left="+(screen.width/2-375)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
-      if (window.focus) {
-        notice.focus();
-      }
-    }
-    
-    function hideAnnouncement(announcementID) {
-      $('#announcement' + announcementID).hide();
-      
-      var request = $.ajax({
-        url: "./ajax/staff/hide_announcement.php",
-        type: "get",
-        data: {announcementID: announcementID},
-        timeout: 30000, // timeout after 30 seconds
-        dataType: "html",
-      });
-    }
-  </script>
+  <script id="rogoconfig" src='js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src="js/require.js"></script>
+  <script src="js/main.min.js"></script>
+  <script src="js/staffindexinit.min.js"></script>
 </head>
 
 <body>
@@ -141,8 +87,8 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
   require './include/options_menu.inc';
   require './include/toprightmenu.inc';
   require './include/icon_display.inc';
-	
 	echo draw_toprightmenu();
+
 ?>
 
 <div id="content">
@@ -187,7 +133,7 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
   // Check for any news/announcements
   foreach ($announcements as $announcement) {
     if (!isset($_SESSION['announcement' . $announcement['id']])) {
-      echo "<div class=\"announcement\" id=\"announcement" . $announcement['id'] . "\"><img src=\"./artwork/close_note.png\" style=\"display:block; float:right\" onclick=\"hideAnnouncement(" . $announcement['id'] . ")\" /><div style=\"min-height:64px; padding-left:80px; padding-top:5px; background: transparent url('./artwork/" . $announcement['icon'] . "') no-repeat 5px 5px;\"><strong>" . $announcement['title'] . "</strong><br />\n<br />\n" . $announcement['msg'] . "</div></div>\n";
+      echo "<div class=\"announcement\" id=\"announcement" . $announcement['id'] . "\"><img id='announce' src=\"./artwork/close_note.png\" style=\"display:block; float:right\" data-id=\"" . $announcement['id'] . "\" /><div style=\"min-height:64px; padding-left:80px; padding-top:5px; background: transparent url('./artwork/" . $announcement['icon'] . "') no-repeat 5px 5px;\"><strong>" . $announcement['title'] . "</strong><br />\n<br />\n" . $announcement['msg'] . "</div></div>\n";
     }  
   }  
   
@@ -199,8 +145,8 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
     echo "<div class=\"subsect_table\" style=\"clear:both\"><div class=\"subsect_title\"><nobr>" . $string['papersforreview'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
   }
   foreach($review_papers as $review_paper) {
-    echo "<div class=\"f\"><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"#\" onclick=\"startPaper('" . $review_paper['crypt_name'] . "'," . $review_paper['fullscreen'] . "); return false;\">" . Paper_utils::displayIcon($review_paper['type'], '', '', '', '', '') . "</a></td>\n";
-    echo "  <td><a href=\"#\" onclick=\"startPaper('" . $review_paper['crypt_name'] . "'," . $review_paper['fullscreen'] . "); return false;\">" . $review_paper['paper_title'] . "</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " " . $review_paper['internal_review_deadline'] . "</div>";
+    echo "<div class=\"f review\" data-id='" . $review_paper['crypt_name'] . "' data-fs='" . $review_paper['fullscreen'] . "'><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"width:60px\" align=\"center\"><a href=\"#\">" . Paper_utils::displayIcon($review_paper['type'], '', '', '', '', '') . "</a></td>\n";
+    echo "  <td><a href=\"#\">" . $review_paper['paper_title'] . "</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " " . $review_paper['internal_review_deadline'] . "</div>";
     if ($review_paper['reviewed'] == '') {
       echo "<span style=\"color:white; background-color:#FF4040\">&nbsp;" . $string['notreviewed'] . "&nbsp;</span>";
     } else {
@@ -231,10 +177,9 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
 
     if (isset($_GET['newfolder']) and $_GET['newfolder'] == 'y' or $duplicate_folder == true) {
       if (isset($_POST['submit']) and $_POST['submit'] and $duplicate_folder == true) {
-        echo "<script>alert(\"" . $string['duplicatefoldername'] . "\")</script>";
-        echo "<div class=\"f\"><div class=\"f_icon\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></div><div class=\"f_details\"><input class=\"errfield\" type=\"text\" size=\"30\" name=\"folder_name\" value=\"$new_folder_name\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><br /><input type=\"submit\" name=\"submit\" class=\"ok\" style=\"width:90px; margin:1px; padding:3px\" value=\"" . $string['create'] . "\" /></div></div>\n";
+        echo "<div class=\"f\"><div class=\"f_icon\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></div><div class=\"f_details\"><input class=\"errfield\" type=\"text\" size=\"30\" id=\"folder_name\" name=\"folder_name\" value=\"$new_folder_name\" required /><br /><input type=\"submit\" name=\"submit\" class=\"ok\" style=\"width:90px; margin:1px; padding:3px\" value=\"" . $string['create'] . "\" /></div></div>\n";
       } elseif (!isset($_POST['submit'])) {
-        echo "<div class=\"f\"><div class=\"f_icon\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></div><div class=\"f_details\"><input type=\"text\" size=\"30\" name=\"folder_name\" value=\"\" placeholder=\"" . $string['foldername'] . "\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><br /><input type=\"submit\" name=\"submit\" class=\"ok\" style=\"width:90px; margin:1px; padding:3px\" value=\"" . $string['create'] . "\" /></div></div>\n";
+        echo "<div class=\"f\"><div class=\"f_icon\"><img src=\"./artwork/yellow_folder.png\" alt=\"Folder\" /></div><div class=\"f_details\"><input type=\"text\" size=\"30\" id=\"folder_name\" name=\"folder_name\" value=\"\" placeholder=\"" . $string['foldername'] . "\" required /><br /><input type=\"submit\" name=\"submit\" class=\"ok\" style=\"width:90px; margin:1px; padding:3px\" value=\"" . $string['create'] . "\" /></div></div>\n";
       }
     }
 
@@ -269,5 +214,16 @@ $announcements = announcement_utils::get_staff_announcements($mysqli);
 </div>
 </form>
 </div>
+
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+$jsmiscdataset['name'] = 'dataset';
+$jsmiscdataset['attributes']['duplicate'] = $duplicate_folder;
+$render->render($jsmiscdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

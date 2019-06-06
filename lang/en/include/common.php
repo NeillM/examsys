@@ -103,4 +103,5 @@ $string['register1'] = 'Register as ';
 $string['demomodule'] = 'Demo Module';
 $string['name'] = 'Name';
 $string['eassessmentmanagementsystem'] = 'eAssessment Management System';
-?>
+$string['up'] = 'up';
+$string['down'] = 'down';
