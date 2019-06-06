@@ -40,29 +40,10 @@ require '../include/sidebar_menu.inc';
     a:hover.clearall, a:link.clearall, a:visited.clearall{text-decoration: none;}
   </style>
 
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    $(function () {
-      if ($("#maindata").find("tr").size() > 1) {
-        $("#maindata").tablesorter({
-          dateFormat: '<?php echo $configObject->get('cfg_tablesorter_date_time') ?>',
-          sortList: [[4,1]]
-        });
-      }
-    });
-
-    function clearAll() {
-      return confirm("<?php echo $string['confirm_clear_all_logs'];?>");
-    }
-
-    function clear_a_log() {
-      return confirm("<?php echo $string['confirm_clear_a_log'];?>");
-    }
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/savefailinit.min.js"></script>
 </head>
 <body>
 <?php
@@ -76,7 +57,7 @@ echo draw_toprightmenu();
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
-  <div class="page_title"><?php echo $string['savefailattempts'] ?><a href="?clear=all" onclick="return clearAll()"><button class="clearall" ><?php echo $string['clear_all_button_text']; ?></button></a></div>
+  <div class="page_title"><?php echo $string['savefailattempts'] ?><a id ="clearall" href="?clear=all"><button class="clearall" ><?php echo $string['clear_all_button_text']; ?></button></a></div>
 </div>
 
 <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
@@ -111,7 +92,7 @@ if (isset($clear_all)) {
 
 } else {
   foreach ($log_list as $log) {
-    echo "<tr class=\"l\"><td><a href=\"?log_id=" . $log['id'] . "\" onclick=\"return clear_a_log()\"><img title=\"".$string['icon_msg']."\" alt=\"".$string['icon_msg']."\" src='../artwork/access_denied_16.gif'></a></td>
+    echo "<tr class=\"l\"><td><a href=\"?log_id=" . $log['id'] . "\"><img title=\"".$string['icon_msg']."\" alt=\"".$string['icon_msg']."\" src='../artwork/access_denied_16.gif'></a></td>
     <td>" . $log['title'] . " " . $log['initials'] . " " . $log['surname'] . "</td>
     <td><a href=\"../paper/details.php?paperID=" . $log['paperID'] . "\">" . $log['paper_title'] . "</a></td>
     <td>" . $log['screen'] . "</td>
@@ -127,6 +108,14 @@ if (isset($clear_all)) {
 </tbody>
 </table>
 </div>
-
+<?php
+$render = new render($configObject);
+$dataset['name'] = 'dataset';
+$dataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
+$render->render($dataset, array(), 'dataset.html');
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

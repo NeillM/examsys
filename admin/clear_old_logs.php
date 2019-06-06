@@ -39,11 +39,8 @@ ob_start();
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../js/sidebar.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
 </head>
 
 <body>
@@ -52,7 +49,7 @@ ob_start();
   require '../include/admin_options.inc';
   require '../include/toprightmenu.inc';
 	
-	echo draw_toprightmenu();
+	echo draw_toprightmenu(239);
 ?>
 
 <div id="content">

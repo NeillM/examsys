@@ -23,6 +23,20 @@
 */
 
 require '../include/sysadmin_auth.inc';
+
+$clear_all = param::optional('clear', null, param::TEXT, param::FETCH_GET);
+$clear_a_log = param::optional('log_id', null, param::INT, param::FETCH_GET);
+$logs = new access_denied_logs();
+if (isset($clear_all)) {
+  $logs->delete_access_denied_logs();
+  header('Location: view_access_denied.php', true, 303);
+  exit();
+
+} elseif (isset($clear_a_log)) {
+  $logs->delete_a_access_denied_log($clear_a_log);
+  header('Location: view_access_denied.php', true, 303);
+  exit();
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -40,29 +54,10 @@ require '../include/sysadmin_auth.inc';
     a:hover.clearall, a:link.clearall, a:visited.clearall{text-decoration: none;}
   </style>
 
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    $(function () {
-      if ($("#maindata").find("tr").size() > 1) {
-        $("#maindata").tablesorter({
-          dateFormat: '<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>',
-          sortList: [[0,1]]
-        });
-      }
-    });
-
-    function clearAll() {
-      return confirm("<?php echo $string['confirm_clear_all_logs'];?>");
-    }
-
-    function clear_a_log() {
-      return confirm("<?php echo $string['confirm_clear_a_log'];?>");
-    }
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/accessdeniedinit.min.js"></script>
 </head>
 <body>
 <?php
@@ -76,7 +71,7 @@ echo draw_toprightmenu();
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools'] ?></a></div>
-  <div class="page_title"><?php echo $string['deniedlogwarnings'] ?><a href="?clear=all" onclick="return clearAll()"><button class="clearall" ><?php echo $string['clear_all_button_text']; ?></button></a></div>
+  <div class="page_title"><?php echo $string['deniedlogwarnings'] ?><a href="?clear=all" id="clearall"><button class="clearall" ><?php echo $string['clear_all_button_text']; ?></button></a></div>
 </div>
 
 <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0" style="width:100%">
@@ -90,36 +85,32 @@ echo draw_toprightmenu();
 </thead>
 <tbody>
 <?php
-$logs = new access_denied_logs();
 $log_list = $logs->get_access_denied_logs();
-$clear_all = param::optional('clear', null, param::TEXT, param::FETCH_GET);
-$clear_a_log = param::optional('log_id', null, param::INT, param::FETCH_GET);
 
-if (isset($clear_all)) {
-  $logs->delete_access_denied_logs();
-  header( 'Location: view_access_denied.php' ) ;
+foreach ($log_list as $log ) {
+$tried_date = new DateTime();
+$tried_date->setTimestamp($log['tried']);
 
-} elseif (isset($clear_a_log)) {
-  $logs->delete_a_access_denied_log($clear_a_log);
-  header( 'Location: view_access_denied.php' ) ;
-
-} else {
-  foreach ($log_list as $log ) {
-    $tried_date = new DateTime();
-    $tried_date->setTimestamp($log['tried']);
-
-    echo "<tr class=\"l\">
-      <td class=\"d\"><a href=\"?log_id=". $log['id'] ."\" onclick=\"return clear_a_log()\" >" . $tried_date->format($configObject->get('cfg_long_datetime_php')) . "</a></td>
-      <td><a href=\"../users/details.php?submit=Search&userID=". $log['userID'] ."\">". $log['title'] ." ". $log['initials'] ." ". $log['surname'] ."</a></td>
-      <td>". $log['page'] ."</td>
-      <td>". $log['msg'] ."</td>
-      </tr>\n";
-  }
+echo "<tr class=\"l\">
+  <td class=\"d\"><a href=\"?log_id=". $log['id'] ."\">" . $tried_date->format($configObject->get('cfg_long_datetime_php')) . "</a></td>
+  <td><a href=\"../users/details.php?submit=Search&userID=". $log['userID'] ."\">". $log['title'] ." ". $log['initials'] ." ". $log['surname'] ."</a></td>
+  <td>". $log['page'] ."</td>
+  <td>". $log['msg'] ."</td>
+  </tr>\n";
 }
+
 ?>
 </tbody>
 </table>
 </div>
-
+<?php
+$render = new render($configObject);
+$dataset['name'] = 'dataset';
+$dataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
+$render->render($dataset, array(), 'dataset.html');
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

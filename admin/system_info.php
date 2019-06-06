@@ -61,10 +61,9 @@ function format_space($space) {
 		.off {width:30px; float:left; color:#C00000; font-weight:bold}
   </style>
 
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
 </head>
 
 <body>
@@ -289,12 +288,6 @@ if ($configObject->get_setting('core', 'system_hostname_lookup')) {
   echo "<tr><td>" . $string['webserver'] . "</td><td>" . $_SERVER['SERVER_SOFTWARE'] . "</td></tr>\n";
   echo "<tr><td>" . $string['php'] . "</td><td>" . phpversion() . "</td></tr>\n";
   echo "<tr><td>" . $string['mysql'] . "</td><td>" . $mysqli->server_info . "</td></tr>\n";
-
-  echo '<tr><td colspan="2">&nbsp;</td></tr>';
-  echo '<tr><td colspan="2" class="sechead">' . $string['clientcomputer'] . '</td></tr>';
-  echo '<tr><td>' . $string['ipaddress'] . '</td><td>' . NetworkUtils::get_client_address() . '</td></tr>';
-  echo '<tr><td>' . $string['clock'] . '</td><td><script>the_date = new Date(); document.write(the_date.toLocaleString("' . $language . '")); </script></td></tr>';
-  echo '<tr><td>' . $string['browser'] . '</td><td>' . $_SERVER['HTTP_USER_AGENT'] . '</td></tr>';
 
   echo '<tr><td colspan="2">&nbsp;</td></tr>';
   echo '<tr><td colspan="2" class="sechead">' . $string['partitions'] . '</td></tr>';

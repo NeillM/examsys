@@ -12,22 +12,22 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
-// 
-// Requirement functions
+//
+// Initialise admin index page.
 //
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-// @copyright Copyright (c) 2017 The University of Nottingham
+// @copyright Copyright (c) 2019 The University of Nottingham
 //
-requirejs(['jquery'], function ($) {
-  $(function () {
-    // Toggle IMS blurb if checked on load.
-    if ($('#cfg_ims_enabled').is(':checked')) {
-      $('#display_ims').toggle();
-    }
+requirejs(['alert'], function (ALERT) {
+    $(function () {
+        $("#clear_training_module").click(function() {
+            var alert = new ALERT();
+            return alert.show('msg1');
+        });
 
-    // Toggle IMS blurb when checkbox activated.
-    $('#cfg_ims_enabled').change(function () {
-      $('#display_ims').toggle();
+        $("#clear_old_logs").click(function() {
+            var alert = new ALERT();
+            return alert.show('msg2');
+        });
     });
-  });
 });

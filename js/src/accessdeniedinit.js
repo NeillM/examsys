@@ -12,22 +12,29 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
-// 
-// Requirement functions
+//
+//
+// Access deined page
 //
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-// @copyright Copyright (c) 2017 The University of Nottingham
+// @copyright Copyright (c) 2018 The University of Nottingham
 //
-requirejs(['jquery'], function ($) {
-  $(function () {
-    // Toggle IMS blurb if checked on load.
-    if ($('#cfg_ims_enabled').is(':checked')) {
-      $('#display_ims').toggle();
+//
+requirejs(['alert', 'jquery', 'jquerytablesorter'], function (ALERT, $) {
+    if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({
+            dateFormat: $('#dataset').attr('data-datetime'),
+            sortList: [[0,1]]
+        });
     }
 
-    // Toggle IMS blurb when checkbox activated.
-    $('#cfg_ims_enabled').change(function () {
-      $('#display_ims').toggle();
+    $(".d").click(function() {
+        var alert = new ALERT();
+        return alert.show('confirm_clear_a_log');
     });
-  });
+
+    $("#clearall").click(function() {
+        var alert = new ALERT();
+        return alert.show('confirm_clear_all_logs');
+    });
 });

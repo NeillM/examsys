@@ -1,7 +1,7 @@
 {% if data.displaywarnings == "false" %}
 <p style="margin-left:10px">{{lang.installed}}</p>
 <p style="margin-left:10px">
-    <input type="button" class="ok" name="config" value="{{lang.config}}" onclick="go_config()" />
+    <input id="config" type="button" class="ok" name="config" value="{{lang.config}}" />
 </p>
 {% else %}
 <h1>{{lang.errors14}}</h1>
