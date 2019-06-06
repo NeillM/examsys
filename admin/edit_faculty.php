@@ -34,41 +34,6 @@ if (is_null($details['name'])) {
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
-
-$duplicate = false;
-if (isset($_POST['submit'])) {
-  $faculty = check_var('new_faculty', 'POST', true, false, true);
-  $code = check_var('code', 'POST', false, false, true);
-  if (!FacultyUtils::update_faculty($facultyID, $faculty, $code, $details['externalid'], $details['externalsys'], $mysqli)) {
-    $duplicate = true;
-  } else {
-    $logger = new Logger($mysqli);
-    if ($details['name'] != $faculty) $logger->track_change('Faculty', $facultyID, $userObject->get_user_ID(), $details['name'], $faculty, $string['name']);
-    if ($details['code'] != $code) {
-      $logger->track_change('Faculty', $facultyID, $userObject->get_user_ID(), $details['code'], $code, $string['code']);
-    }
-  ?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo $string['editfaculty'] ?></title>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function () {
-      window.opener.location.href='list_faculties.php';
-      window.close();
-    });
-  </script>
-</head>
-<body>
-</body>
-</html>
-  <?php
-    exit;
-  }
-}
 ?>
 <!DOCTYPE html>
 <html>
@@ -81,44 +46,33 @@ if (isset($_POST['submit'])) {
     body {font-size:90%; margin:2px; background-color:#EAEAEA}
     h1 {font-size:140%; font-weight:normal}
   </style>
-  
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script>
-    $(function () {
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
-        }
-      });
-      $('form').removeAttr('novalidate');
-    });
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/editfacultyinit.min.js"></script>
 </head>
 
 <body>
 <h1><?php echo $string['editfaculty']; ?></h1>
-<form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
+<form id="theform" name="myform" action="" method="post" autocomplete="off">
 <table cellpadding="0" cellspacing="2" border="0">
 <?php
-if ($duplicate) {
-  echo '<td class="field">' . $string['name'] . '</td><td><input type="text" style="width:99%; background-color:#FFC0C0; border:solid 1px #C00000; color:#800000" name="new_faculty" value="' . $details['name'] .'" maxlength="80" required autofocus /></td></tr>';
-  echo "<script>\nalert('" . $string['warning'] . "');\n</script>\n";
-} else {
-  echo '<tr><td class="field">' . $string['name'] . '</td><td><input type="text" style="width:99%" name="new_faculty" value="' . $details['name'] . '" maxlength="80" required autofocus /></td></tr>';
-}
-?>
+  echo '<tr><td class="field">' . $string['name'] . '</td><td><input type="text" style="width:99%" id="new_faculty" name="new_faculty" value="' . $details['name'] . '" maxlength="80" required autofocus /></td></tr>';
+  ?>
 <tr><td class="field"><?php echo $string["code"] ?></td><td><input type="text" size="30" maxlength="30" name="code" value="<?php echo $details['code']; ?>"/></td></tr>
 <tr><td class="field"><?php echo $string["externalid"] ?></td><td><?php echo $details['externalid']; ?></td></tr>
 <tr><td class="field"><?php echo $string['externalsys'] ?></td><td><?php echo $details['externalsys']; ?></td></tr>
 <input type="hidden" name="facultyID" value="<?php echo $facultyID ?>" />
 </table>
-<div align="right"><input type="submit" name="submit" value="<?php echo $string['ok'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" style="margin-right:0" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /></div>
+<div align="right"><input type="submit" name="submit" value="<?php echo $string['ok'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" style="margin-right:0" /></div>
 </form>
 
 </body>
-</html>
 <?php
-$mysqli->close();
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
 ?>
+</html>

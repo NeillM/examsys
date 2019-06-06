@@ -42,14 +42,14 @@ function display_papers($day_no, $subtract, $current_year, $current_month, $pape
       if ($paper['start_day'] == ($day_no - $subtract) and $paper['cal_year'] == $current_year and $paper['month'] == $current_month) {
         echo '<tr';
         if ($userObject->has_role('SysAdmin')) {
-          echo ' onclick="deleteEvent(' . $paper['eventID'] . ')"';
+          echo ' class="event" data-evid="' . $paper['eventID'] . '"';
         }
         echo ' style="background-color:' . $paper['bgcolor'] . '; color:white"><td colspan="2">' . $paper['start_hour'];
         if ($paper['start_minute'] != 0) {
           echo ':' . $paper['start_minute'];
         }
         echo '&nbsp;' . $paper['am_pm'] . '</td>';
-        echo '<td class="p" id="p' . $cellID . '" onmouseover="showCallout2(' . $cellID . ', \'' . htmlspecialchars($paper['message']) . '\')" onmouseout="hideCallout2()">' . $paper['title'] . ' (' . ($paper['duration']/60) . ' hrs)</td></tr>';
+        echo '<td class="p pe" id="p' . $cellID . '" data-cellid="' . $cellID . '" data-message="' . htmlspecialchars($paper['message']) . '" >' . $paper['title'] . ' (' . ($paper['duration']/60) . ' hrs)</td></tr>';
         $cellID++;
       }
     } else {
@@ -95,7 +95,20 @@ function display_papers($day_no, $subtract, $current_year, $current_month, $pape
         echo '&nbsp;' . $paper['am_pm'] . '</td>';
         $properties = PaperProperties::get_paper_properties_by_id($paper['property_id'], $mysqli, $string);
         $paper['password']  = $properties->get_decrypted_password();
-        echo "<td class=\"p\"><div class=\"pd\"><a id=\"p$cellID\" href=\"../paper/details.php?paperID=" . $paper['property_id'] . "&module=" . $paper['idMod'] . "&folder=\" onmouseover=\"showCallout(" . $paper['type'] . ", $cellID, '" . $paper['start_time'] . "', '" . $paper['end_time'] . "', '" . $paper['duration'] . "', '" . $paper['labs'] . "', '" . $paper['password'] . "', '" . $paper['timezone'] . "', '$metadata')\" onmouseout=\"hideCallout()\">" . $paper['paper_title'] . "</a></div></td></tr>";
+        echo "<td class=\"p\">
+            <div class=\"pd\"
+            data-cellid='$cellID'
+            data-ptype=\"" . $paper['type'] . "\"
+            data-stime=\"" . $paper['start_time'] . "\"
+            data-etime=\"" . $paper['end_time'] . "\"
+            data-duration=\"" . $paper['duration'] . "\"
+            data-labs=\"" . $paper['labs'] . "\"
+            data-pass=\"" . $paper['password'] . "\"
+            data-tz=\"" . $paper['timezone'] . "\"
+            data-meta=\"" . $metadata  . "\">
+                <a id=\"p$cellID\" href=\"../paper/details.php?paperID=" . $paper['property_id'] . "&module=" . $paper['idMod'] . "&folder=\" >" . $paper['paper_title'] . "</a>
+            </div>
+        </td></tr>";
         $cellID++;
       }
     }
@@ -113,192 +126,11 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo page::title('Rog&#333;: ' . $string['calendar']); ?></title>
 
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    var mins = '<?php echo $string['mins'] ?>';
-    var lab_names = new Array();
-    <?php
-    // Get computer lab information.
-    $lab_details = array($string['default']=>array('-1'=>$string['alllabs']));
-    $stmt = $mysqli->prepare("SELECT labs.id, building, room_no, campus.name FROM labs, campus
-    WHERE labs.campus = campus.id AND room_no != '' ORDER BY campus, building, room_no");
-    $stmt->execute();
-    $stmt->bind_result($id, $building, $room_no, $campus);
-    while ($stmt->fetch()) {
-      $lab_details[$campus][$id] = $building . ' - ' . $room_no;
-      echo "  lab_names[$id] = \"$room_no - $building\"\n";
-    }
-    $stmt->close();
-    ?>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/calendarinit.min.js"></script>
 
-    function showCallout(type, cellID, start_time, end_time, duration, labs, password, timezone, metadata) {
-      var p = $('#p' + cellID);
-      var position = p.position();
-
-      var left_pos = position.left;
-      if (left_pos + 302 > $(window).width()) {
-        left_pos = $(window).width() - 302;
-        $('.notch').css('left', '180px');
-      } else {
-        $('.notch').css('left', '20px');
-      }
-
-      var top_pos = position.top;
-      if (top_pos - $(window).scrollTop() > ($(window).height() - 135)) {
-        top_pos -= 135;
-        $('.notch').hide();
-      } else {
-        $('.notch').show();
-      }
-
-      $('#callout').css('left', left_pos);
-      $('#callout').css('top', top_pos + p.height() + 12);
-      $('#duration').html(duration + ' ' + mins);
-
-      if (start_time == end_time) {
-        $('#start_time2').html(start_time);
-        $('#end_time2').html(end_time);
-        $('#start_time_warning').show();
-        $('#end_time_warning').show();
-        $('#start_time_ok').hide();
-        $('#end_time_ok').hide();
-      } else {
-        $('#start_time1').html(start_time);
-        $('#end_time1').html(end_time);
-        $('#start_time_ok').show();
-        $('#end_time_ok').show();
-        $('#start_time_warning').hide();
-        $('#end_time_warning').hide();
-      }
-
-      if (duration == '' && type != '4') {
-        $('#duration_warning').show();
-        $('#duration_ok').hide();
-      } else {
-        $('#duration_ok').show();
-        $('#duration_warning').hide();
-      }
-
-      if (timezone != '<?php echo $default_timezone ?>') {
-        $('#timezone').html(timezone);
-        $('#timezone_row').show();
-      } else {
-        $('#timezone_row').hide();
-      }
-
-      if (labs == '' && password == '' && type != '4') {
-        $('#lab_warning').show();
-        $('#lab_ok').hide();
-        lab_html = '';
-      } else {
-        $('#lab_ok').show();
-        $('#lab_warning').hide();
-        if (labs == '') {
-          lab_html = '';
-        } else {
-          lab_parts = labs.split(",");
-          lab_html = '';
-          $.each(lab_parts, function(key, value) {
-            if (lab_html == '') {
-              lab_html = lab_names[value];
-            } else {
-              lab_html += '<br />' + lab_names[value];
-            }
-          });
-        }
-      }
-      $('#labs').html(lab_html);
-      $('#password').html(password);
-      if (password == '') {
-        $('#pw_row').hide();
-      } else {
-        $('#pw_row').show();
-      }
-      $('#metadata').html(metadata);
-      if (metadata == '') {
-        $('#metadata_row').hide();
-      } else {
-        $('#metadata_row').show();
-      }
-      $('#callout').show();
-    }
-
-    function showCallout2(cellID, message) {
-      var p = $('#p' + cellID);
-      var position = p.position();
-
-      var left_pos = position.left;
-      if (left_pos + 302 > $(window).width()) {
-        left_pos = $(window).width() - 302;
-        $('.notch').css('left', '180px');
-      } else {
-        $('.notch').css('left', '20px');
-      }
-
-      var top_pos = position.top;
-      if (top_pos - $(window).scrollTop() > ($(window).height() - 80)) {
-        top_pos -= 80;
-        $('.notch').hide();
-      } else {
-        $('.notch').show();
-      }
-      $('#callout2').css('left', left_pos);
-      $('#callout2').css('top', top_pos + p.height() + 12);
-      $('#message').html(message);
-      $('#callout2').show();
-    }
-
-    function hideCallout() {
-      $('#callout').hide();
-    }
-
-    function hideCallout2() {
-      $('#callout2').hide();
-    }
-
-    <?php
-    if ($userObject->has_role('SysAdmin')) {    // Do not include add/delete functions if not SysAdmin.
-    ?>
-    function newEvent(id) {
-      notice = window.open("add_event.php?default=" + id + "","event","width=800,height=500,left="+(screen.width/2-400)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        notice.focus();
-      }
-    }
-
-    function deleteEvent(eventID) {
-      notice = window.open("../delete/check_delete_event.php?eventID=" + eventID + "","event","width=420,height=170,left="+(screen.width/2-210)+",top="+(screen.height/2-85)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        notice.focus();
-      }
-    }
-    <?php
-    }
-    ?>
-    $(function () {
-
-      $('#lab').change(function() {
-        $('#theform').submit();
-      });
-
-      $('#school').change(function() {
-        $('#theform').submit();
-      });
-
-      <?php
-      if ($userObject->has_role('SysAdmin')) {
-      ?>
-      $('.day, .daycur').dblclick(function() {
-        newEvent(this.id);
-      });
-      <?php
-      }
-      ?>
-
-    });
-
-  </script>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/calendar.css" />
@@ -332,6 +164,18 @@ $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
 </div>
 
 <?php
+// Get computer lab information.
+$lab_names = array();
+$lab_details = array($string['default'] => array('-1' => $string['alllabs']));
+$stmt = $mysqli->prepare("SELECT labs.id, building, room_no, campus.name FROM labs, campus
+WHERE labs.campus = campus.id AND room_no != '' ORDER BY campus, building, room_no");
+$stmt->execute();
+$stmt->bind_result($id, $building, $room_no, $campus);
+while ($stmt->fetch()) {
+    $lab_details[$campus][$id] = $building . ' - ' . $room_no;
+    $lab_names[$id] = $room_no . " - " . $building;
+}
+$stmt->close();
 // Get faculty and school info
 $schools = array($string['default']=>array('-1'=>$string['allschools']));
 $stmt = $mysqli->prepare("SELECT schools.id, faculty.code, faculty.name, schools.code, school FROM schools, faculty WHERE faculty.id = schools.facultyID AND faculty.deleted IS NULL and schools.deleted IS NULL ORDER BY faculty.name, school");
@@ -685,6 +529,16 @@ $stmt->close();
   $mysqli->close();
   ?>
 </form>
-
+<?php
+$render = new render($configObject);
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['lab_names'] = json_encode($lab_names);
+$miscdataset['attributes']['timezone'] = $default_timezone;
+$render->render($miscdataset, array(), 'dataset.html');
+// JS utils dataset.
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

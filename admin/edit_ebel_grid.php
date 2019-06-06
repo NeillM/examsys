@@ -93,27 +93,10 @@ if (isset($_POST['submit'])) {
     h1 {font-size:120%; color:#1E3287; margin-bottom:0px}
   </style>
 
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script src="../js/staff_help.js" type="text/javascript"></script>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    $(function () {
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
-        }
-      });
-      
-      $('form').removeAttr('novalidate');
-      
-      $('#cancel').click(function() {
-        history.back();
-      });
-    });
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/ebelinit.min.js"></script>
 </head>
   
 <body>

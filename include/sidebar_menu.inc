@@ -36,9 +36,10 @@ function makeMenu($options) {
   $width = ($longest_string * 7) + 35;
   if ($width < 60) $width = 60;  // Set a reasonable minumum width
   
-  echo "<script>\n";
-  echo "var myOptions" . $menuNo . "=new Array(";
+
   $line = 0;
+  $myoptions = array();
+  $myurls = array();
   foreach ($options as $title=>$url) {
     $tmp_parts = explode('[BR]', $title);
     if (count($tmp_parts) > 1) {
@@ -46,38 +47,25 @@ function makeMenu($options) {
     } else {
       $title = $tmp_parts[0];
     }
-  
-    if ($line == 0) {
-      echo '"' . $title .'"';
-    } else {
-      echo ',"' . $title .'"';
-    }
+    $myoptions[] = $title;
     $line++;
-  
   }
-  echo ");\n";
-  echo "var myURLs" . $menuNo . "=new Array(";
+
   $line = 0;
   foreach ($options as $title=>$url) {
-    if ($line == 0) {
-      echo '"' . $url .'"';
-    } else {
-      echo ',"' . $url .'"';
-    }
+    $myurls[] = $url;
     $line++;
-  
   }
-  echo ");\n";
-  echo "</script>\n";
-  
+
+  echo "<div id='popupmenu$menuNo' data-myOptions='" . json_encode($myoptions). "' data-myURLs='" . json_encode($myurls). "'></div>";
   $line = 0;
   echo "<div id=\"popup$menuNo\" class=\"popup\" style=\"width:" . $width . "px; z-index:30\">\n";
   
-  if (count($options) > 20) echo "<div id=\"" . $menuNo . "_up\" class=\"popupitem\" onmouseover=\"scrollUpStart('popup$menuNo',myOptions" . $menuNo . ",myURLs" . $menuNo . ",'myOptions" . $menuNo . "')\" onMouseOut=\"scrollUpEnd()\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/submenu_up_off.png\" width=\"9\" height=\"5\" alt=\"down\" border=\"0\" />&nbsp;</div>\n";
+  if (count($options) > 20) echo "<div data-menuno=\"" . $menuNo . "\" id=\"" . $menuNo . "_up\" class=\"popupitem scrollup\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/submenu_up_off.png\" width=\"9\" height=\"5\" alt=\"down\" border=\"0\" />&nbsp;</div>\n";
   foreach ($options as $title=>$url) {
     $itemID = $menuNo . '_' . $line;
     if (substr($url,0,1) == '-') {
-      echo "<div class=\"popupitemline\" id=\"$itemID\" onclick=\"hideMenus(event)\">1<hr noshade=\"noshade\" style=\"height:1px; border:none; background-color:#C0C0C0; color:#C0C0C0\" /></div>\n";
+      echo "<div class=\"popupitemline\" id=\"$itemID\">1<hr noshade=\"noshade\" style=\"height:1px; border:none; background-color:#C0C0C0; color:#C0C0C0\" /></div>\n";
       } elseif (substr($url,0,1) == '#') {
       echo "<div class=\"popupitembold\" id=\"$itemID\">" . substr($url,1) . "</div>\n";
     } else {
@@ -90,19 +78,8 @@ function makeMenu($options) {
     $line++;
     if ($line > 19) break;
   }
-  if (count($options) > 20) echo "<div id=\"" . $menuNo . "_down\" class=\"popupitem\" onmouseover=\"scrollDownStart('popup$menuNo',myOptions" . $menuNo . ",myURLs" . $menuNo . ",'myOptions" . $menuNo . "')\" onMouseOut=\"scrollDownEnd()\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/submenu_down_on.png\" width=\"9\" height=\"5\" alt=\"down\" border=\"0\" />&nbsp;</div>\n";
+  if (count($options) > 20) echo "<div data-menuno=\"" . $menuNo . "\" id=\"" . $menuNo . "_down\" class=\"popupitem scrolldown\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/submenu_down_on.png\" width=\"9\" height=\"5\" alt=\"down\" border=\"0\" />&nbsp;</div>\n";
   
   echo "</div>\n";
   $menuNo++;
 }
-
-function hideMenuScript($menu_no) {
-  echo "<script>\n";
-  echo "function hideMenus(evt) {\n";
-  for ($i=0; $i<$menu_no; $i++) {
-    echo "$('#popup$i').hide();\n";
-  }
-  echo "}\n";
-  echo "</script>\n";
-}
-?>

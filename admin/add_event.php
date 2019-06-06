@@ -24,8 +24,10 @@
 
 require '../include/sysadmin_auth.inc';
 
-if (isset($_GET['default'])) {
-  $parts = explode('_', substr($_GET['default'], 1));
+$default = param::optional('default', null, param::TEXT, param::FETCH_GET);
+
+if (!is_null($default)) {
+  $parts = explode('_', substr($default, 1));
   $day = $parts[0];
   if ($day < 10) {
     $day = '0' . $day;
@@ -51,60 +53,19 @@ if (isset($_GET['default'])) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/event.css" />
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script  src="../js/eventinit.min.js"></script>
 <?php
 $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 $texteditorplugin->display_header();
 $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::ANNOUNCEMENTS);
-
-if (isset($_POST['submit'])) {
-  $title = trim($_POST['title']);
-  $message = trim($_POST['message']);
-  $thedate = $_POST['fyear'] . $_POST['fmonth'] . $_POST['fday'] . $_POST['ftime'];
-  $duration = $_POST['duration'];
-  $bgcolor = '#' . $_POST['color'];
-
-  $result = $mysqli->prepare("INSERT INTO extra_cal_dates VALUES (NULL, ?, ?, ?, ?, ?, NULL)");
-  $result->bind_param('sssis', $title, $message, $thedate, $duration, $bgcolor);
-  $result->execute();  
-  $result->close();
 ?>
-  <script>
-    $(function () {
-      window.opener.location.reload();
-      window.close();
-    });
-  </script>
-  </head>
-  <body>
-    
-  </body>
-  </html>
-<?php
-  exit();
-}
-
-?>
-  <script>
-    $(function () {
-      $('.swatch').click(function() {
-        current = $('#color').val();
-        $('#' + current).css('border-color', '#F1F5FB');
-
-        newvalue = $(this).attr('id');
-        $('#' + newvalue).css('border-color', '#FFBD69');
-        $('#color').val(newvalue)
-      });
-      
-      $('#cancel').click(function() {
-        window.close();
-      });
-    });
-  </script>
   </head>
 <body>
   <div class="dialog_header"><?php echo $string['addevent'] ?></div>
-  <form name="theform" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" style="padding:10px" autocomplete="off">
+  <form id="theform" name="theform" method="post" action="" style="padding:10px" autocomplete="off">
     
   <table style="width:99%">
     <tr>
