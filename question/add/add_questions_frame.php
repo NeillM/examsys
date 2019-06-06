@@ -30,16 +30,38 @@ require '../../include/staff_auth.inc';
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo page::title('Rog&#333;: ' . $string['questionsbank']); ?></title>
+  <script src="../../js/require.js"></script>
+  <script src="../../js/main.min.js"></script>
+  <script src="../../js/questionsframeinit.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="../../css/add_questions.css" />
 </head>
+<body>
+<div>
+    <div class="wrapper">
+        <div id="qbuttons"></div>
+        <div id="qlist">
+            <iframe id="iframeurl" src="add_questions_list.php?type=unused" name="iframeurl" frameborder="0">
+                <p><?php echo $string['browsererr'];?></p>
+            </iframe>
+            <iframe id="previewurl" src ="preview_default.php" name="previewurl"  frameborder="0">
+                <p><?php echo $string['browsererr'];?></p>
+            </iframe>
+        </div>
+        <div name="controls" id="controls"></div>
+    </div>
+</div>
+<?php
+// Dataset.
+$render = new render($configObject);
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['paperid'] = param::required('paperID', param::INT, param::FETCH_GET);
+$miscdataset['attributes']['module'] = param::optional('module', '',param::INT, param::FETCH_GET);
+$miscdataset['attributes']['folder'] = param::optional('folder', '',param::INT, param::FETCH_GET);
+$miscdataset['attributes']['disp'] = param::required('display_pos', param::INT, param::FETCH_GET);
+$miscdataset['attributes']['srcofy'] = param::required('scrOfY', param::FLOAT, param::FETCH_GET);
+$miscdataset['attributes']['max'] = param::required('max_screen', param::INT, param::FETCH_GET);
+$render->render($miscdataset, array(), 'dataset.html');
+?>
+</body>
 
-  <frameset rows="*,32" frameborder="0" framespacing="0" border="0">
-    <frameset cols="154,*" frameborder="0" framespacing="0" border="0">
-      <frame scrolling="no" src="add_questions_buttons.php" name="qbuttons">
-      <frame scrolling="no" src="add_questions_iframe.php" name="qlist">
-    </frameset>
-    <frame scrolling="no" resizable="no" src="add_question_controls.php?paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $_GET['module']; ?>&folder=<?php echo $_GET['folder']; ?>&display_pos=<?php echo $_GET['display_pos']; ?>&scrOfY=<?php echo $_GET['scrOfY']; ?>&max_screen=<?php echo $_GET['max_screen']; ?>" name="controls">
-  </frameset>
-  <noframes>
-    <?php echo $string['frameserr'];?>
-  </noframes>
 </html>

@@ -14,6 +14,5 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['recyclebin'] = 'Recycle Bin';
 $string['msg'] = 'Keyword successfully deleted.';
-?>
+$string['title'] = 'Keyword Deleted';

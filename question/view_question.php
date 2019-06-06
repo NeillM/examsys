@@ -89,28 +89,22 @@ $question['assigned_number'] = (isset($_GET['qNo'])) ? $_GET['qNo'] : 1;
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/start.css" />
-<?php
-if ($q_type == 'hotspot') {
-?>
-  <link rel="stylesheet" type="text/css" href="../css/html5.css"/>
-<?php } ?>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/start.min.js"></script>
+
+  <script id="rogoconfig" src='../js/rogo.min.js'
+            data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
+            data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
+            data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>">
+  </script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script type="text/javascript" src="../js/startinit.min.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
 ?>
   
   <?php
-  $render = new render($configObject);
-  if ($question['q_type'] == 'hotspot' or $question['q_type'] == 'labelling' or $question['q_type'] == 'area') {
-    $render->render_html5_js(json_encode($jstring));
-  }
-  echo $configObject->get('cfg_js_root');
 
-  if($configObject->get_setting('core', 'paper_mathjax')) {
-    $render->render(null, null, 'mathjax.html');
-  }
   // Check if any 3d file types are enabled and render js.
   threed_handler::render_js($string);
   ?>
@@ -124,15 +118,17 @@ if ($q_type == 'hotspot') {
 
   $question_nos[] = $old_q_id;
   echo "</table></div>";
+
+  $render = new render($configObject);
   // Paper dataset.
   $dataset['name'] = 'paper';
   $dataset['attributes']['timed'] = false;
   $dataset['attributes']['refcount'] = 0;
-  $render->render($dataset, array(), 'paper/dataset.html');
+  $render->render($dataset, array(), 'dataset.html');
   // User dataset.
   $datasetuser['name'] = 'user';
   $datasetuser['attributes']['student'] = false;
-  $render->render($datasetuser, array(), 'paper/dataset.html');
+  $render->render($datasetuser, array(), 'dataset.html');
   // CSS dataset.
   $datasetcss['name'] = 'css';
   $datasetcss['attributes']['bgcolor'] = $bgcolor;
@@ -142,10 +138,16 @@ if ($q_type == 'hotspot') {
   $datasetcss['attributes']['marks_color'] = $marks_color;
   $datasetcss['attributes']['dismiss_color'] = '#A5A5A5';
   $datasetcss['attributes']['special_needs'] = $userObject->is_special_needs();
-  $render->render($datasetcss, array(), 'paper/dataset.html');
-  if ($q_type == 'hotspot') {
-    $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
-  }
- ?>
+  $render->render($datasetcss, array(), 'dataset.html');
+  // JS utils dataset.
+  $jsdataset['name'] = 'jsutils';
+  $jsdataset['attributes']['xls'] = json_encode($string);
+  $render->render($jsdataset, array(), 'dataset.html');
+  // Dataset.
+  $miscdataset['name'] = 'dataset';
+  $miscdataset['attributes']['language'] = $language;
+  $render->render($miscdataset, array(), 'dataset.html');
+  $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+?>
  </body>
  </html>

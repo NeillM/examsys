@@ -478,7 +478,6 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 ?>
 <!DOCTYPE html>
 <html>
-<head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 <title><?php echo page::title($mode . ' ' . $string['question'] . ' - ' . $q_type_full); ?></title>
@@ -489,69 +488,29 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <link rel="stylesheet" href="../../css/add_edit.css" type="text/css" />
 <link rel="stylesheet" href="../../css/mapping_form.css" type="text/css" />
 <link rel="stylesheet" href="../../css/warnings.css" type="text/css" />
-<link rel="stylesheet" href="../../css/html5.css" type="text/css" />
-<script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
 <?php
-  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-  $texteditorplugin->display_header();
-  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::QUESTION);
-
-  $render = new render($configObject);
-
-  // Check if any 3d file types are enabled and render js.
-  threed_handler::render_js($string);
+$texteditorplugin = \plugins\plugins_texteditor::get_editor();
+$texteditorplugin->display_header();
+$texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::QUESTION);
 ?>
-<script type="text/javascript" src="../../js/jquery-ui-1.10.4.min.js"></script>
-<script type="text/javascript" src="../../js/system_tooltips.js"></script>
-<script type="text/javascript" src="../../js/state.js"></script>
-<script type="text/javascript" src="../../js/staff_help.js"></script>
-<script type="text/javascript" src="../../js/jquery.addedit.js"></script>
-<script type="text/javascript" src="../../js/jquery.mappingform.js"></script>
-<script type="text/javascript" src="../../js/jquery.formhelpers.js"></script>
-<?php
-if ($question != null and file_exists($cfg_web_root . 'js/addedit/jquery.addedit.' . $question->get_type() . '.min.js')) { ?>
-<script type="text/javascript" src="../../js/addedit/jquery.addedit.<?php echo $question->get_type() ?>.min.js"></script>
-<?php }
-if ($question != null and file_exists($cfg_web_root . 'js/validation/jquery.' . $question->get_type() . '.min.js')) {
-?>
-<script type="text/javascript" src="../../js/jquery.validate.min.js"></script>
-<script type="text/javascript" src="../../js/validation/jquery.<?php echo $question->get_type() ?>.min.js"></script>
-<script type="text/javascript" src="../../js/toprightmenu.js"></script>
-<?php
-}
-if ($question != null and $question->requires_html5()) {
-  $render->render_html5_js(json_encode($jstring));
-}
-?>
-<script>
-var qType = '<?php if (isset($question)) echo $question->get_type() ?>';
-var lang = {
-<?php
-$langstrings = array('allowpartial', 'validationerror', 'enterleadin', 'enterdescription', 'showmore', 'hidemore', 'enteroption', 'enterformula', 'enteroptionshort', 'enteroption_kw', 'mrqconvert', 'entervignette', 'enteroptiontext', 'selectarea', 'randomenterquestion', 'mappingwarning', 'markchangewarning', 'entervalidvariable', 'entervaliddecimal');
-$first = true;
-foreach ($langstrings as $langstring) {
-  if (!$first) {
-    echo ',';
-  }
-  echo "'{$langstring}':'{$string[$langstring]}'";
-  $first = false;
-}
-?>
-};
-<?php
-if (!empty($_GET['tab']) and in_array($_GET['tab'], array('changes', 'comments', 'performance', 'mapping'))) {
-?>
-$(function () {
-    $('.tabs li a[rel=<?php echo $_GET['tab'] ?>]').trigger('click');
-});
-<?php
-}
-?>
+<script id="rogoconfig" src='../../js/rogo.min.js'
+        data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
+        data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
+        data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>">
 </script>
+<script src='../../js/require.js'></script>
+<script src='../../js/main.min.js'></script>
+<script src="../../js/questioneditinit.min.js"></script>
 <?php
-  if ($configObject->get_setting($texteditorplugin->get_name(), 'supports_mathjax') and $configObject->get_setting('core', 'paper_mathjax')) {
-    $render->render(null, null, 'mathjax.html');
-  }
+// Check if any 3d file types are enabled and render js.
+threed_handler::render_js($string);
+?>
+<?php
+if ($question != null and file_exists($cfg_web_root . 'plugins/questions/' . $question->get_type() . '/js/editinit.min.js')) {
+?>
+<script src="/plugins/questions/<?php echo $question->get_type() ?>/js/editinit.min.js"/></script>
+<?php
+}
 ?>
 </head>
 <body>
@@ -768,7 +727,21 @@ echo save_buttons($mode, $q_disabled, $question->get_locked(), $question->allow_
   </form>
 <?php
 }
-if(isset($render) && $question->requires_html5()) {
+// JS utils dataset.
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render = new render($configObject);
+$render->render($jsdataset, array(), 'dataset.html');
+// Dataset.
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['language'] = $language;
+if (!empty($_GET['tab']) and in_array($_GET['tab'], array('changes', 'comments', 'performance', 'mapping'))) {
+    $miscdataset['attributes']['tab'] = $_GET['tab'];
+} else {
+    $miscdataset['attributes']['tab'] = '';
+}
+$render->render($miscdataset, array(), 'dataset.html');
+if ($question->requires_html5()) {
   $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 }
 ?>

@@ -53,7 +53,19 @@ module.exports = function(grunt) {
       },
       corejs: {
         src: ['js/src/**/*.js']
-      }
+      },
+      questionsjs: {
+        src: ['plugins/questions/**/js/src/*.js']
+      },
+      ltijs: {
+        src: ['LTI/js/src/*.js']
+      },
+      toolsjs: {
+        src: ['tools/**/js/src/*.js']
+      },
+      authjs: {
+        src: ['plugins/auth/**/js/src/*.js']
+      },
     },
     uglify: {
       options: {
@@ -115,7 +127,43 @@ module.exports = function(grunt) {
           dest: 'js/',
           rename: buildName
         }]
-      }
+      },
+      questionsjs: {
+        files: [{
+          expand: true,
+          cwd: 'plugins/questions/',
+          src: '**/js/src/**/*.js',
+          dest: 'plugins/questions/',
+          rename: buildName
+        }]
+      },
+      ltijs: {
+        files: [{
+          expand: true,
+          cwd: 'LTI/',
+          src: 'js/src/*.js',
+          dest: 'LTI/',
+          rename: buildName
+        }]
+      },
+      toolsjs: {
+        files: [{
+          expand: true,
+          cwd: 'tools/',
+          src: '**/js/src/*.js',
+          dest: 'tools/',
+          rename: buildName
+        }]
+      },
+      authjs: {
+        files: [{
+          expand: true,
+          cwd: 'plugins/auth/',
+          src: '**/js/src/*.js',
+          dest: 'plugins/auth/',
+          rename: buildName
+        }]
+      },
     },
     cssmin: {
       options: {
@@ -155,5 +203,9 @@ module.exports = function(grunt) {
   grunt.registerTask('admin', ['eslint:admin', 'uglify:admin']);
   grunt.registerTask('corejs', ['eslint:corejs', 'uglify:corejs']);
   grunt.registerTask('html5', ['sprite:html5canvas', 'eslint:html5', 'uglify:html5']);
-  grunt.registerTask('default', ['admin', 'css', 'core', 'html5', 'corejs']);
+  grunt.registerTask('questionsjs', ['eslint:questionsjs', 'uglify:questionsjs']);
+  grunt.registerTask('ltijs', ['eslint:ltijs', 'uglify:ltijs']);
+  grunt.registerTask('toolsjs', ['eslint:toolsjs', 'uglify:toolsjs']);
+  grunt.registerTask('authjs', ['eslint:authjs', 'uglify:authjs']);
+  grunt.registerTask('default', ['admin', 'css', 'core', 'html5', 'corejs', 'questionsjs', 'ltijs', 'toolsjs', 'authjs']);
 }

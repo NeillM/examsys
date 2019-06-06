@@ -36,12 +36,11 @@ lang.previewmathjax - preview
 
 #}
 {% if data.editormathjax == true %}
-{% include 'mathjaxpreview.html' %}
 <p>{{lang.mathjaxinstructions|raw}}</p>
     {% if data.style == '' %}
-    <textarea onkeyup="Preview{{data.questionno}}.Update()" {% if data.unanswered %} class="unans" {% else %} class="plaintextarea" {% endif %} id="q{{data.questionno}}" name="q{{data.questionno}}" {% if data.editorcolumns %} cols="{{data.editorcolumns}}" {% endif %} {% if data.editorrows %} cols="{{data.editorrows}}" {% endif %}>{{data.useranswer}}</textarea>
+    <textarea {% if data.unanswered %} class="unans" {% else %} class="plaintextarea" {% endif %} id="q{{data.questionno}}" name="q{{data.questionno}}" {% if data.editorcolumns %} cols="{{data.editorcolumns}}" {% endif %} {% if data.editorrows %} cols="{{data.editorrows}}" {% endif %}>{{data.useranswer}}</textarea>
 {% else %}
-    <textarea onkeyup="Preview{{data.questionno}}.Update()" {% if data.unanswered %} class="unans" {% else %} class="plaintextarea" {% endif %} id="q{{data.questionno}}" name="q{{data.questionno}}" style="{{data.style}}" {% if data.editorcolumns %} cols="{{data.editorcolumns}}" {% endif %} {% if data.editorrows %} cols="{{data.editorrows}}" {% endif %}>{{data.useranswer}}</textarea>
+    <textarea {% if data.unanswered %} class="unans" {% else %} class="plaintextarea" {% endif %} id="q{{data.questionno}}" name="q{{data.questionno}}" style="{{data.style}}" {% if data.editorcolumns %} cols="{{data.editorcolumns}}" {% endif %} {% if data.editorrows %} cols="{{data.editorrows}}" {% endif %}>{{data.useranswer}}</textarea>
     {% endif %}
 {% else %}
     {% if data.style == '' %}
@@ -54,5 +53,14 @@ lang.previewmathjax - preview
 <p>{{lang.previewmathjax}}</p>
 <div id="MathPreview{{data.questionno}}" style="border:1px solid; padding: 3px; width:50%; margin-top:5px"></div>
 <div id="MathBuffer{{data.questionno}}" style="border:1px solid; padding: 3px; width:50%; margin-top:5px; visibility:hidden; position:absolute; top:0; left: 0"></div>
-<script>Preview{{data.questionno}}.Init();</script>
+<script>
+    requirejs(['mathjaxpreview'], function(MathJaxPreview) {
+        var Preview = new MathJaxPreview('{{data.questionno}}');
+        Preview.Init();
+        $("#q{{data.questionno}}").on('keyup', function(e) {
+            Preview.Update();
+            e.preventDefault();
+        });
+    });
+</script>
 {% endif %}

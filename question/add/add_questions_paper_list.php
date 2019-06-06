@@ -50,19 +50,9 @@ if (isset($_GET['teamID'])) {
     .f {padding-left:2px; width:20px}
     .s {padding-left:6px}
   </style>
-  
-  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../../js/jquery_tablesorter/jquery.tablesorter.js"></script>
-  <script>
-    $(function () {
-      if ($("#maindata").find("tr").size() > 1) {
-        $("#maindata").tablesorter({ 
-          dateFormat: '<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>',
-          sortList: [[1,0]] 
-        });
-      }
-    });
-  </script>
+  <script src='../../js/require.js'></script>
+  <script src='../../js/main.min.js'></script>
+  <script type="text/javascript" src="../../js/paperquestionsinit.min.js"></script>
 </head>
 <?php
 
@@ -91,7 +81,7 @@ if (!is_null($order)) {
 </thead>
 <tbody>
 <?php
-  $paper_icons = array('formative_16.gif', 'progress_16.gif', 'summative_16.gif', 'survey_16.gif', 'osce_16.gif', 'offline_16.gif', 'peer_review_16.gif');
+  $paper_icons = array('formative_16.gif', 'progress_16.gif', 'summative_16.gif', 'survey_16.gif', 'osce_16.gif', 'offline_16.gif', 'peer_16.gif');
   $paper_details = array();
   
   $type = param::optional('paper_type', null, param::INT, param::FETCH_GET); 
@@ -114,5 +104,11 @@ if (!is_null($order)) {
 ?>
 </tbody>
 </table>
+<?php
+$render = new render($configObject);
+$dataset['name'] = 'dataset';
+$dataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
+$render->render($dataset, array(), 'dataset.html');
+?>
 </body>
 </html>

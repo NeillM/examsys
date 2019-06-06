@@ -15,50 +15,35 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
-  require '../../include/staff_auth.inc';
-?>
-<html>
-<head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-<title>Add new Question</title>
-<script>
-  var questions = new Array();
-  <?php
-    $newHTML = '';
-    $question_no = 0;
-    if ($_POST['questions_to_add'] != '') {
-      $questions = explode(',', $_POST['questions_to_add']);
-      foreach ($questions as $item) {
-        $stmt = $mysqli->prepare("SELECT leadin FROM questions WHERE q_id=?");
-        $stmt->bind_param('i', $item);
-        $stmt->execute();
-        $stmt->bind_result($leadin);
-        $stmt->fetch();
-        $stmt->close();
+define('AJAX_REQUEST', true);
 
-        $leadin = trim(strip_tags($leadin));
-        $leadin = preg_replace( '/\r\n/', ' ',$leadin);
-        if (strlen($leadin) > 160) $leadin = substr($leadin,0,160) . '...';
-        $newHTML .= "<div style=\"background-color:highlight; color:white\" id=\"divquestion_$question_no\"><input type=\"hidden\" name=\"question_id$question_no\" value=\"$item\" /><input type=\"checkbox\" onclick=\"toggle(\'divquestion_$question_no\'); updateList();\" id=\"question_text$question_no\" name=\"question_text$question_no\" value=\"" . addslashes($leadin) . "\" checked>&nbsp;" .  addslashes($leadin) . "</div>";
-        $question_no++;
-        echo "questions.push([$item, '" . addslashes($leadin) . "']);";
-      }
+require '../../include/staff_auth.inc';
+$questionsarray = array();
+$questions_to_add = param::required('questions_to_add', param::TEXT, param::FETCH_POST);
+$questions = explode(',', $questions_to_add);
+foreach ($questions as $item) {
+  if ($item != '') {
+    $stmt = $mysqli->prepare("SELECT leadin FROM questions WHERE q_id=?");
+    $stmt->bind_param('i', $item);
+    $stmt->execute();
+    $stmt->bind_result($leadin);
+    $stmt->fetch();
+    $stmt->close();
+
+    $leadin = trim(strip_tags($leadin));
+    $leadin = preg_replace('/\r\n/', ' ', $leadin);
+    if (strlen($leadin) > 160) {
+      $leadin = substr($leadin, 0, 160) . '...';
     }
-    echo "window.top.opener.addQuestionsToList(questions);";
-    $mysqli->close();
-  ?>
-  window.top.close();
-</script>
-</head>
-
-<body>
-</body>
-</html>
+    $questionsarray[$item] = addslashes($leadin);
+  }
+}
+$mysqli->close();
+echo json_encode($questionsarray);

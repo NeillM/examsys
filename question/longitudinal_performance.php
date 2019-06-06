@@ -44,19 +44,10 @@ $q_id = check_var('q_id', 'GET', true, false, true);
     td {vertical-align:top; padding-top:3px; padding-bottom:3px; border-bottom:1px solid #C0C0C0}
     .num {text-align:right}
   </style>
-  
-  <script>
-    function loadPaper(paperID) {
-      window.opener.close();
-      window.opener.opener.location = "../paper/details.php?paperID=" + paperID;
-      window.close();
-    }
-    
-    function loadModule(moduleID) {
-      window.opener.location = "../module/index.php?module=" + moduleID;
-      window.close();
-    }
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js'></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/questioninfoinit.min.js"></script>
 </head>
 
 <body>
@@ -159,7 +150,7 @@ $q_id = check_var('q_id', 'GET', true, false, true);
       echo "<tr>";
     }
     echo "<td><img src=\"../artwork/" . $display_line['icon'] . "\" width=\"16\" height=\"16\" alt=\"icon\" /></td>";
-    echo "<td><a href=\"\" onclick=\"loadPaper(" . $display_line['paperID'] . ")\">" . $display_line['title'] . "</a></td><td>" . $display_line['calendar_year'] . "</td>";
+    echo "<td><a class=\"paperlink\" href=\"\" data-pid=\"" . $display_line['paperID'] . "\">" . $display_line['title'] . "</a></td><td>" . $display_line['calendar_year'] . "</td>";
     echo "<td class=\"num\">" . $display_line['screen'] . "</td>";
     if (isset($display_line['taken'])) {
       echo "<td>" . $display_line['taken'] . "</td>";
@@ -179,5 +170,10 @@ $q_id = check_var('q_id', 'GET', true, false, true);
 
 ?>
 </table>
+<div style="text-align:center; padding-top:5px">
+    <form autocomplete="off">
+        <input type="button" style="width:120px" name="ok" class="cancel" value="<?php echo $string['close']; ?>" />
+    </form>
+</div>
 </body>
 </html>

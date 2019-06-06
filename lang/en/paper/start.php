@@ -20,9 +20,6 @@ require_once dirname(dirname(dirname(__DIR__))) . '/lang/' . $language . '/quest
 require_once dirname(dirname(dirname(__DIR__))) . '/lang/' . $language . '/paper/hotspot_answer.php';
 require_once dirname(dirname(dirname(__DIR__))) . '/lang/' . $language . '/paper/hotspot_question.php';
 require_once dirname(dirname(dirname(__DIR__))) . '/lang/' . $language . '/paper/label_answer.php';
-$jstring = $string; //to pass it to JavaScript HTML5 modules
-//HTML5 part
-
 require_once dirname(dirname(dirname(__DIR__))) . '/lang/' . $language . '/include/months.php';
 require_once dirname(dirname(dirname(__DIR__))) . '/lang/' . $language . '/question/sct_shared.php';
 require_once dirname(dirname(dirname(__DIR__))) . '/lang/' . $language . '/include/paper_security.php';
@@ -80,6 +77,7 @@ $string['go_back'] = 'Go back';
 $string['pass'] = 'Pass';
 $string['entervalidcalcanswer'] = 'Invalid: Answer should be numerical (with a unit if required), or left blank if you are skipping the question.';
 $string['papercopyright'] = '© %s, %s';
+$string['htmlresp'] = 'html response';
 // Media.
 $string['iframes'] = 'Your browser does not support iframes!';
 $string['image'] = 'Image';

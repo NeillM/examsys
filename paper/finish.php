@@ -40,7 +40,6 @@ require_once '../lang/' . $language . '/question/edit/area.php';
 require_once '../lang/' . $language . '/paper/hotspot_answer.php';
 require_once '../lang/' . $language . '/paper/hotspot_question.php';
 require_once '../lang/' . $language . '/paper/label_answer.php';
-$jstring = $string; //to pass it to JavaScript HTML5 modules
 //HTML5 part
 
 $id = check_var('id', 'GET', true, false, true, param::ALPHANUM); // While it is an int, the numbers are too large for 32-bit PHP.
@@ -219,10 +218,14 @@ require '../config/finish.inc';
 <link rel="stylesheet" type="text/css" href="../css/start.css" />
 <link rel="stylesheet" type="text/css" href="../css/finish.css" />
 <link rel="stylesheet" type="text/css" href="../css/key.css" />
-<link rel="stylesheet" type="text/css" href="../css/html5.css" />
-
-<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-
+<script id="rogoconfig" src='../js/rogo.min.js'
+        data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
+        data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
+        data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>">
+</script>
+<script src='../js/require.js'></script>
+<script src='../js/main.min.js'></script>
+<script src='../js/finishinit.min.js'></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
@@ -254,43 +257,6 @@ require '../config/finish.inc';
   }
   if ($css != '') {
     echo "<style type=\"text/css\">\n$css</style>\n";
-  }
-
-  echo "<script type=\"text/javascript\" src=\"../js/student_help.js\"></script>\n";
-
-  $render = new render($configObject);
-  $render->render_html5_js(json_encode($jstring));
-
-  echo $configObject->get('cfg_js_root');
-?>
-<script>
-  window.history.go(1);
-	
-	$(document).ready(function () {
-    
-    $('.raw_textarea').each(function() {
-      var boxWidth = $(this).width();
-      var boxHeight = $(this).height();
-      
-      var targetID = 'div_' + $(this).attr('id');
-      
-      $('#' + targetID).width(boxWidth);
-      $('#' + targetID).height(boxHeight);
-    });
-    
-    $('#close').click(function() {
-      window.close();
-    });
-    
-    if (window.opener == null) {
-      $('#close').css('display','none');
-    }
-	});
-</script>
-<?php
-  if($configObject->get_setting('core', 'paper_mathjax')) {
-    $render = new render($configObject);
-    $render->render(null, null, 'mathjax.html');
   }
 
   // Check if any 3d file types are enabled and render js.
@@ -373,9 +339,16 @@ require '../config/finish.inc';
       echo '<br /><div align="center"><input type="button" name="close" id="close" value="' . $string['closewindow'] . '" class="ok" /></div>';
     }
   }
-  if ($show_feedback) {
-    $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
-  }
+  // JS utils dataset.
+  $jsdataset['name'] = 'jsutils';
+  $jsdataset['attributes']['xls'] = json_encode($string);
+  $render = new render($configObject);
+  $render->render($jsdataset, array(), 'dataset.html');
+  // Dataset.
+  $miscdataset['name'] = 'dataset';
+  $miscdataset['attributes']['language'] = $language;
+  $render->render($miscdataset, array(), 'dataset.html');
+  $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
   echo "</body>\n</html>";
   $mysqli->close();
 ?>

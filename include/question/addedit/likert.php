@@ -22,18 +22,6 @@
 * @package
 */
 
-?>
-<script>
-$(function() {
-  $('#scale_type').change(function() {
-    var state_name = 'likert_format';
-    var content = $('#scale_type').val();
-    updateState(state_name, content);
-  });
-});
-</script>
-<?php
-
 $scales = $question->get_scale_types();
 if ($mode == 'Add' and isset($state['likert_format'])) {
   $scale_value = $state['likert_format'];

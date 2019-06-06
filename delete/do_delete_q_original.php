@@ -49,37 +49,8 @@ if ($found == 0) {    // Only delete if the question is on zero papers.
   }
 }
 
-$mysqli->close();
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title><?php echo $string['questiondeleted']; ?></title>
-  
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
-
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function () {
-      window.opener.location.href = window.opener.location.href;
-      self.close();
-    });
-  </script>
-</head>
-
-<body>
-
-<p><?php echo $string['msg']; ?><p>
-
-<div style="text-align: center">
-<form action="" method="get" autocomplete="off">
-<input type="button" name="cancel" value="OK" class="ok" onclick="window.close();" />
-</form>
-</div>
-
-</body>
-</html>
+$render = new render($configObject);
+$lang['title'] = $string['questiondeleted'];
+$lang['success'] = $string['msg'];
+$data = array();
+$render->render($data, $lang, 'admin/do_delete.html');

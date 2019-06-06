@@ -47,7 +47,7 @@ lang.abstain - abstain
 {% for i,p in data.options %}
     <tr>
         <td>
-            <input type="checkbox" {% if data.papertype != 3 %} onclick="MRQ({{data.questionno}},{{p.position}},{{data.optionnumber}},{{data.allowedresponses}});" {% endif %} name="q{{data.questionno}}_{{p.position}}" id="q{{data.questionno}}_{{p.position}}" value="y" {% if p.selected %} checked="checked" {% endif %} />
+            <input type="checkbox" {% if data.papertype != 3 %} class="online" data-qno="{{data.questionno}}" data-pos="{{p.position}}" data-ono="{{data.optionnumber}}" data-allowed="{{data.allowedresponses}}" {% endif %} name="q{{data.questionno}}_{{p.position}}" id="q{{data.questionno}}_{{p.position}}" value="y" {% if p.selected %} checked="checked" {% endif %} />
         </td>
         <td>
             {% if p.optiontextdisplay %}
@@ -62,7 +62,7 @@ lang.abstain - abstain
 {% if data.negativemarking %}
     <tr>
         <td>
-            <input type="checkbox" onclick="MRQabstain({{data.questionno}},{{data.optionnumber}});" name="q{{data.questionno}}_abstain" id="q{{data.questionno}}_abstain" value="y" {% if data.abstainselected %} checked="checked" {% endif %} />
+            <input type="checkbox" class="abstain" data-qno="{{data.questionno}}" data-ono="{{data.optionnumber}}" name="q{{data.questionno}}_abstain" id="q{{data.questionno}}_abstain" value="y" {% if data.abstainselected %} checked="checked" {% endif %} />
         </td>
         <td>
             <span style="color:{{data.labelcolour}}">{{lang.abstain}}</span>

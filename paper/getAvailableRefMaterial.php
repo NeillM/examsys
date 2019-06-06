@@ -27,8 +27,7 @@ require '../include/errors.php';
 require '../lang/' . $language . '/paper/properties.php';
 
 $ref_line = 0;
-?>
-<?php
+
 // Get the current metadata settings for the paper
 $current_settings = array();
 $stmt = $mysqli->prepare("SELECT refID FROM reference_papers WHERE paperID = ?");

@@ -35,63 +35,22 @@ require '../../include/staff_auth.inc';
   <style type="text/css">
     body {margin-right:4px; margin-bottom:2px; background-color:#F0F0EA}
   </style>
-
-  <script>
-    var selected_q = Array();
-
-    function in_array (needle, haystack) { 
-      for (i=0; i<haystack.length; i++) { 
-        if (haystack[i] == needle) { 
-          return true; 
-        } 
-      } 
-      return false; 
-    }
-
-    function myToString(haystack) {
-      var str = '';
-      for (i=0; i<haystack.length; i++) {
-        if (i == 0) {
-          str = haystack[i];
-        } else {
-          str = str + ',' + haystack[i];
-        }
-      } 
-      return str;
-    }
-    
-    function myDelete(needle, haystack) {
-      var new_haystack = Array();
-      for (i=0; i<haystack.length; i++) {
-        if (haystack[i] != needle) {
-          new_haystack[new_haystack.length] = haystack[i];
-        }
-      }
-      
-      return new_haystack;
-    }
-    
-    function checkStatus(questionObj) {
-      var q_id = questionObj.name;
-      
-      if (in_array(q_id, selected_q) == true && questionObj.checked == false) {          // Question in array but user has unchecked
-        selected_q = myDelete(q_id, selected_q);
-      } else if (in_array(q_id, selected_q) == false && questionObj.checked == true) {   // User has checked question but it is not in the array
-        selected_q.push(q_id);
-      }
-      
-      document.getElementById('questions_to_add').value = myToString(selected_q);
-    }
-  </script>
+  <script src="../../js/require.js"></script>
+  <script src="../../js/main.min.js"></script>
+  <script src="../../js/randomquestionscontrolsinit.min.js"></script>
 </head>
 <body>
 
-<form name="theform" method="post" action="do_add_random_questions.php?q_no=<?php echo $_GET['q_no']; ?>" autocomplete="off">
-<div style="text-align:right"><input type="hidden" name="questions_to_add" id="questions_to_add" size="100" value="" /><input type="submit" name="submit" value="Add Questions" />
-<input type="hidden" name="questionlist" value="<?php if(isset($_GET['questionlist'])) echo $_GET['questionlist']; ?>" />
-<input type="hidden" name="question_no" value="<?php if(isset($_GET['question_no'])) echo $_GET['question_no']; ?>" />
+<div style="text-align:right">
+    <input type="hidden" name="questions_to_add" id="questions_to_add" size="100" value="" />
+    <input type="submit" name="submit" id="addrandomquestions" value="Add Questions" />
 </div>
-</form>
-
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

@@ -38,14 +38,6 @@ if ($num_options > 0) {
 }
 
 ?>
-<script>
-//<![CDATA[
-<?php // Bit of a hack to get the flash to stay centred ?>
-$(function () {
-  $('#question-holder').addClass('max');
-});
-//]]>
-</script>
 
 				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
 					<tbody>

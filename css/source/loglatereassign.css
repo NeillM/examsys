@@ -1,0 +1,15 @@
+body {
+    font-size: 90%;
+    background-color: #F1F5FB;
+    margin: 4px
+}
+th {
+    background-color: #295AAD;
+    color: white;
+    text-align: left;
+    font-weight: normal
+}
+.form-error {
+    display: none;
+    color: #C00000;
+}

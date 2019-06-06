@@ -43,22 +43,10 @@ $q_id = check_var('q_id', 'GET', true, false, true);
     .screen {font-size:90%; color:#808080}
     .num {text-align:right; padding-right:6px}
   </style>
-  
-  <script>
-    function loadPaper(paperID) {
-      window.opener.location = "../paper/details.php?paperID=" + paperID;
-      window.close();
-    }
-    
-    function loadModule(moduleID) {
-      window.opener.location = "../module/index.php?module=" + moduleID;
-      window.close();
-    }
-    
-    function openLongitudinal(questionID) {
-      window.open("longitudinal_performance.php?q_id=" + questionID);
-    }
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js'></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/questioninfoinit.min.js"></script>
 </head>
 
 <body>
@@ -70,7 +58,7 @@ $q_id = check_var('q_id', 'GET', true, false, true);
 
 <div style="text-align:center; padding-top:5px">
 <form autocomplete="off">
-<input type="button" style="width:120px" name="ok" onclick="javascript:window.close();" value="<?php echo $string['close']; ?>" />
+<input type="button" style="width:120px" name="ok" class="cancel" value="<?php echo $string['close']; ?>" />
 </form>
 </div>
 </body>

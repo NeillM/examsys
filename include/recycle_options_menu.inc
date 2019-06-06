@@ -25,11 +25,6 @@
 */
 
 ?>
-<script>
-  function restoreItem() {
-    document.location.href = 'restore_item.php?item_id=' + $('#itemID').val();
-  }
-</script>
 
 <div id="left-sidebar" class="sidebar">
 <form name="PapersMenu" action="" autocomplete="off">
@@ -38,7 +33,7 @@
 </div>
 
 <div style="display:none" id="menu1b">
-	<div class="menuitem" id="restore" onclick="restoreItem()"><a onclick="return false" href="#"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['restorethisitem'] ?></a></div>
+	<div class="menuitem" id="restore"><a onclick="return false" href="#"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['restorethisitem'] ?></a></div>
 </div>
 
 <input type="hidden" id="itemID" name="itemID" value="" />

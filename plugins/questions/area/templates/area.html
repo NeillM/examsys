@@ -34,22 +34,14 @@ data.areafulluseranswer - the full answer the user provided
 #}
 <br />
 <div align="left" {% if data.unanswered %} class="unans" style="padding:2px"{% endif %}>
-    <!-- ======================== HTML5 part include disp ================= -->
-    <canvas id="canvas{{data.questionno}}" width="{{data.mediawidth + 2}}px" height="{{data.mediaheight + 27}}px"></canvas>
+    <canvas class="area" id="canvas{{data.questionno}}"
+            data-qno="{{data.questionno}}"
+            data-qmedia="{{data.mediafile}}"
+            data-qcorrect="{{data.areadisplay}}"
+            data-user="{{data.areauseranswer}}"
+            data-marking="1"
+            width="{{data.mediawidth + 2}}px" height="{{data.mediaheight + 27}}px"></canvas>
     <br />
     <div style="width:100%;text-align: left;" id="canvasbox"></div>
-    <script>
-        setUpQuestion("{{data.questionno}}",
-        "q{{data.questionno}}",
-        "{{data.language}}",
-        "{{data.mediafile}}",
-        "{{data.areadisplay}}",
-        "{{data.areauseranswer}}",
-        1,
-        "#FFC0C0",
-        "area",
-        "answer");
-    </script>
-    <!-- ==================================================== -->
 </div>
 <input type="hidden" name="q{{data.questionno}}" id="q{{data.questionno}}" value="{{data.areafulluseranswer}}"/>

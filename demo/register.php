@@ -121,6 +121,7 @@ if (isset($_POST['submit'])) {
   }
 	
   // Send out email welcome.
+  $mailerror = false;
   if (isset($_POST['new_welcome']) and $_POST['new_welcome'] != '') {
     $tmp_email = trim($_POST['new_email']);
 
@@ -151,7 +152,7 @@ MESSAGE;
     $to = $tmp_email;
     $message .= "<p>" . $string['email2'] . " <a href=\"https://{$_SERVER['HTTP_HOST']}/\">https://{$_SERVER['HTTP_HOST']}/</a></p>";
     $message .= "</body>\n</html>";
-    mail($to, $subject, $message, $headers) or print "<p>" . $string['couldnotsend'] . " <strong>$tmp_email</strong>.</p>";
+    mail($to, $subject, $message, $headers) or $mailerror = true;
   }
 
   ?>
@@ -164,13 +165,20 @@ MESSAGE;
     <title><?php echo page::title('Rog&#333;: ' . $string['register']); ?></title>
 
     <link rel="stylesheet" type="text/css" href="../css/body.css"/>
+    <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+    <script src='../js/require.js'></script>
+    <script src='../js/main.min.js'></script>
 </head>
 <body>
 
 <div id="content">
   <p><?php echo $string['newaccountcreated'] . ' ' . $_POST['new_users_title'] . ' ' . $_POST['new_surname']; ?>.</p>
-
-  <p><input type="button" name="home" value="Staff Homepage" onclick="window.location='../index.php'" /></p>
+  <?php
+  if ($mailerror) {
+      echo "<p>" . $string['couldnotsend'] . " <strong>$tmp_email</strong>.</p>";
+  }
+  ?>
+  <p><input type="button" name="home" value="Staff Homepage" id="home" /></p>
 </div>
   <?php
 } else {
@@ -188,36 +196,16 @@ MESSAGE;
             .h {font-weight: bold; padding-top: 10px}
     </style>
 
-    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-    <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-    <script>
-        $(function () {
-          $('#theform').validate({
-            errorClass: 'errfield',
-            errorPlacement: function(error,element) {
-              return true;
-            }
-          });
-          $('form').removeAttr('novalidate');
-        });
-
-        function checkForm() {
-            username = $('#new_username').val();
-            for (a = 0; a < username.length; a++) {
-                char = username.substr(a, 1);
-                if (char == '_') {
-                    alert('<?php echo $string['usernamechars'] ?>');
-                    return false;
-                }
-            }
-        }
-    </script>
+    <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+    <script src='../js/require.js'></script>
+    <script src='../js/main.min.js'></script>
+    <script src="../js/registerinit.min.js"></script>
 </head>
 
 <body>
 <div id="content">
 <br />
-<form method="post" id="theform" name="newUser" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
+<form method="post" id="theform" name="newUser" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
     <div align="center">
         <table border="0" cellspacing="1" cellpadding="0" style="background-color:#95AEC8; text-align:left">
             <tr>
@@ -327,7 +315,11 @@ MESSAGE;
 
 <?php
 }
-$mysqli->close();
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
 ?>
 </div>
 </body>

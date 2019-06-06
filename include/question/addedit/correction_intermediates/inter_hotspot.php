@@ -59,16 +59,6 @@ if (count($question->options) > 0) {
 $imageurl = rogo_directory::get_directory('media')->url($media['filename']);
 ?>  
 
-
-<script>
-//<![CDATA[
-<?php // Bit of a hack to get the flash to stay centred ?>
-$(function () {
-  $('#question-holder').addClass('max');
-});
-flashTarget = 'option_correct';
-//]]>
-</script>
         <div class="form">
           <h3>Correction mode</h3>
         </div>

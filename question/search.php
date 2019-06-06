@@ -49,102 +49,17 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <style type="text/css">
 		<?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
-
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script id="rogoconfig" src='../js/rogo.min.js'
+            data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
+            data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>">
+  </script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/questionsearchinit.min.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
 ?>
-  <script type="text/javascript" src="../js/jquery.question_leadin_popup.min.js"></script>
-  <script>
-    function addQID(qID, clearall) {
-      if (clearall) {
-        $('#questionID').val(',' + qID);
-      } else {
-        $('#questionID').val($('#questionID').val() + ',' + qID);
-      }
-    }
-
-    function subQID(qID) {
-      var tmpq = ',' + qID;
-      $('#questionID').val($('#questionID').val().replace(tmpq, ''));
-    }
-
-    function clearAll() {
-      $('.highlight').removeClass('highlight');
-    }
-
-    function selQ(questionID, qType, lineID, evt) {
-      $('#menu2a').hide();
-      $('#menu2b').hide();
-      $('#menu2c').show();
-
-      highlight_line(questionID, qType, lineID, evt);
-    }
-
-    function selL(questionID, qType, lineID, evt) {
-      $('#menu2a').hide();
-      $('#menu2c').hide();
-      $('#menu2b').show();
-
-      highlight_line(questionID, qType, lineID, evt);
-    }
-    
-    function highlight_line(questionID, qType, lineID, evt) {
-      if (evt.ctrlKey == false && evt.metaKey == false) {
-        clearAll();
-        $('#l' + lineID).addClass('highlight');
-        addQID(questionID, true);
-      } else {
-        if ($('#l' + lineID).hasClass('highlight')) {
-          $('#l' + lineID).removeClass('highlight');
-          subQID(questionID);
-        } else {
-          $('#l' + lineID).addClass('highlight');
-          addQID(questionID, false);
-        }
-      }
-      $('#qType').val(qType);
-      $('#oldQuestionID').val(lineID);
-      
-      if (evt != null) {
-        evt.cancelBubble = true;
-      }
-    }
-
-    function qOff() {
-      $('#menu2a').show();
-      $('#menu2b').hide();
-      $('#menu2c').hide();
-      tmp_ID = $('#oldQuestionID').val();
-      if (tmp_ID != '') {
-        $('#link_' + tmp_ID).css('background-color', 'white');
-      }
-    }
-    
-    $(function () {
-      if ($("#maindata").find("tr").size() > 1) {
-        $("#maindata").tablesorter({
-          dateFormat: '<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>',
-          sortList: [[0,0]]
-        });
-      }
-      
-      $('.q').dblclick(function() {
-        ed();
-      });
-
-    });
-  </script>
-  <?php
-    if($configObject->get_setting('core', 'paper_mathjax')) {
-      $render = new render($configObject);
-      $render->render(null, null, 'mathjax.html');
-    }
-  ?>
 </head>
 
 <?php
@@ -423,9 +338,9 @@ if (isset($_GET['submit'])) {
 
     echo '<tr class="q' . $status_class . '"';
     if ($locked != '') {
-      echo " id=\"l$display_no\" onclick=\"selQ($q_id,'$q_type',$display_no,event)\">";
+      echo " id=\"l$display_no\" data-qid=\"$q_id\" data-qtype=\"$q_type\" data-dispno=\"$display_no\"  data-seltype=\"Q\">";
     } else {
-      echo " id=\"l$display_no\" onclick=\"selL($q_id,'$q_type',$display_no,event)\">";
+      echo " id=\"l$display_no\" data-qid=\"$q_id\" data-qtype=\"$q_type\" data-dispno=\"$display_no\"  data-seltype=\"L\">";
     }
     $fullText = QuestionUtils::clean_leadin($leadin, 0);
     $tmp_leadin = QuestionUtils::clean_leadin($leadin, $leadinlength);
@@ -467,5 +382,11 @@ if (isset($_GET['submit'])) {
 }
 ?>
 </div>
+<?php
+$render = new render($configObject);
+$dataset['name'] = 'dataset';
+$dataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
+$render->render($dataset, array(), 'dataset.html');
+?>
 </body>
 </html>

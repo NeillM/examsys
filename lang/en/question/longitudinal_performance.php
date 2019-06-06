@@ -22,4 +22,4 @@ $string['datetaken'] = 'Date Taken';
 $string['cohort'] = 'Cohort';
 $string['p'] = 'P';
 $string['d'] = 'D';
-?>
+$string['close'] = 'Close';

@@ -43,16 +43,13 @@ require '../../include/staff_auth.inc';
 		input[type="checkbox"] {margin-right:6px}
     .k {padding-left:2px}
   </style>
-
-  <script>
-    function findKeywords() {
-      document.myform.submit();
-    }
-  </script>
+  <script src='../../js/require.js'></script>
+  <script src='../../js/main.min.js'></script>
+  <script src="../../js/addkeyowrdsinit.min.js"></script>
 </head>
 
 <body>
-<form method="post" name="myform" action="add_questions_list.php?type=keyword" target="keywordlist" autocomplete="off">
+<form id="myform" method="post" name="myform" action="add_questions_list.php?type=keyword" target="keywordlist" autocomplete="off">
 <?php
   $keyword_no = 0;
   
@@ -64,7 +61,7 @@ require '../../include/staff_auth.inc';
     if ($old_moduleID != $moduleID) {
       echo "<table border=\"0\" style=\"padding-top:5px; padding-bottom:2px; width:100%; color:#1E3287; white-space:nowrap\"><tr><td>$moduleID</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
     }    
-    echo "<div class=\"k\"><label><input type=\"checkbox\" name=\"keyword" . $keyword_no . "\" value=\"$keywordID\" onclick=\"findKeywords()\" />$keyword</label></div>\n";
+    echo "<div class=\"k\"><label><input class=\"keyword\" type=\"checkbox\" name=\"keyword" . $keyword_no . "\" value=\"$keywordID\"/>$keyword</label></div>\n";
     $keyword_no++;
     $old_moduleID = $moduleID;    
   }
@@ -76,7 +73,7 @@ require '../../include/staff_auth.inc';
   $stmt->execute();
   $stmt->bind_result($keywordID, $keyword);
   while ($stmt->fetch()) {
-    echo "<div class=\"k\"><label onclick=\"findKeywords()\"><input type=\"checkbox\" name=\"keyword" . $keyword_no . "\" value=\"$keywordID\" />$keyword</label></div>\n";
+    echo "<div class=\"k\"><label><input class=\"keyword\" type=\"checkbox\" name=\"keyword" . $keyword_no . "\" value=\"$keywordID\" />$keyword</label></div>\n";
     $keyword_no++;
   }
   $stmt->close();

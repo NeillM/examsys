@@ -633,15 +633,17 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         if ($tmp_display_correct_answer == '0') {
           $paper[$question]['correct'][0] = '';
         }
-		//<!-- ======================== HTML5 part ================= -->
-		echo "<canvas id='canvas" . $question_no . "' width='" . ($paper[$question]['q_media_width'] + 2) . "' height='" . ($paper[$question]['q_media_height'] + 24) . "'></canvas>\n";
+
+		$extra = $tmp_display_students_response.$tmp_display_correct_answer.$tmp_display_question_mark.$tmp_display_feedback.$hide_if_unanswered;
+		echo "<canvas class='area' id='canvas" . $question_no . "'
+		data-qno='" . $question_no . "'
+		data-qmedia='" . $paper[$question]['q_media'] . "'
+		data-qcorrect='" . $paper[$question]['correct'][0] . "'
+		data-user='" . $tmp_user_answer . "'
+		data-marking='" . $extra . "'
+		 width='" . ($paper[$question]['q_media_width'] + 2) . "' height='" . ($paper[$question]['q_media_height'] + 24) . "'></canvas>\n";
 		echo "<div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-		echo "<script>\n";
-		$extra = $tmp_display_students_response.$tmp_display_correct_answer.$tmp_display_question_mark.$tmp_display_feedback.$hide_if_unanswered;			
-		echo "setUpQuestion(" . $question_no . ", 'q" . $question_no . "','" . $language . "', '" . $paper[$question]['q_media'] . "', '" . $paper[$question]['correct'][0] . "', '" . $tmp_user_answer . "',$extra,'#FFC0C0','area','script');\n";
-		echo "</script>\n";
-		//<!-- ==================================================== -->
-?>
+		?>
         <br />
         <?php
         if ($paper[$question]['correct_fback'] != '' and $tmp_display_feedback == '1') echo "<div class=\"fback\">" . nl2br($paper[$question]['correct_fback']) . "</div>\n";
@@ -2369,19 +2371,17 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
 				}
 
 				$extra = $tmp_std . ',' . $tmp_exclude . ',' . $tmp_feedback;
-	
-				//<!-- ======================== HTML5 part ================= -->
-				echo "<canvas id='canvas" . $question_no . "' width='" . ($paper[$question]['q_media_width'] + 250) . "' height='" . $tmp_height . "'></canvas>\n";
+
+				echo "<canvas class='labelling' id='canvas" . $question_no . "'
+				 data-qno='" . $question_no . "'
+				 data-qmedia='" . $paper[$question]['q_media'] . "'
+				 data-qcorrect='" . trim($paper[$question]['correct'][0])   . "'
+				 data-user='" . trim($paper[$question]['user_answer']) . "'
+				 data-marking='" . $extra . "'
+				 width='" . ($paper[$question]['q_media_width'] + 250) . "' height='" . $tmp_height . "'></canvas>\n";
 				echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-				echo "<script>\n";
-				echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $paper[$question]['q_media'] . "', '" . trim($paper[$question]['correct'][0]) . "', '";
-				if (isset($paper[$question]['user_answer'])) echo trim($paper[$question]['user_answer']);
-				echo "','";
-				if (isset($extra)) echo $extra;
-				echo "','#FFC0C0','labelling','script');\n";
-				echo "</script>\n";
-				//<!-- ==================================================== -->
   ?>
+  </script>
   <input type="hidden" name="q<?php echo $question_no; ?>" id="q<?php echo $question_no; ?>" value="" />
   </div>
 <?php
@@ -2418,16 +2418,14 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         }
 ?>
   <div align="center">
-  <script>
-    write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" id="flash<?php echo $question; ?>" width="<?php echo $paper[$question]['o_media_width'][0]; ?>" height="<?php echo $paper[$question]['o_media_height'][0]; ?>" align="middle">');
-    write_string('<param name="allowScriptAccess" value="sameDomain" />');
-    write_string('<param name="movie" value="<?php echo $mediadirectory->url($movie); ?>" />');
-    write_string('<param name="quality" value="high" />');
-    write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
-    write_string('<param name="FlashVars" value="dataIn=<?php if (isset($paper[$question]['user_answer'])) echo $paper[$question]['user_answer']; ?>" />');
-    write_string('<embed src="<?php echo $mediadirectory->url($movie) ?>" FlashVars="dataIn=<?php if (isset($paper[$question]['user_answer'])) echo $paper[$question]['user_answer']; ?>" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo $paper[$question]['o_media_width'][0]; ?>" height="<?php echo $paper[$question]['o_media_height'][0]; ?>" swLiveConnect=true id="flash<?php echo $question; ?>" name="flash<?php echo $question; ?>" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />');
-    write_string('</object>');
-  </script>
+    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" id="flash<?php echo $question; ?>" width="<?php echo $paper[$question]['o_media_width'][0]; ?>" height="<?php echo $paper[$question]['o_media_height'][0]; ?>" align="middle">
+        <param name="allowScriptAccess" value="sameDomain" />
+        <param name="movie" value="<?php echo $mediadirectory->url($movie); ?>" />
+        <param name="quality" value="high" />
+        <param name="bgcolor" value="<?php echo $bgcolor; ?>" />
+        <param name="FlashVars" value="dataIn=<?php if (isset($paper[$question]['user_answer'])) echo $paper[$question]['user_answer']; ?>" />
+        <embed src="<?php echo $mediadirectory->url($movie) ?>" FlashVars="dataIn=<?php if (isset($paper[$question]['user_answer'])) echo $paper[$question]['user_answer']; ?>" quality="high" bgcolor="<?php echo $bgcolor; ?>" width="<?php echo $paper[$question]['o_media_width'][0]; ?>" height="<?php echo $paper[$question]['o_media_height'][0]; ?>" swLiveConnect=true id="flash<?php echo $question; ?>" name="flash<?php echo $question; ?>" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />
+    </object>
   </div>
 <?php
         break;
@@ -2574,7 +2572,7 @@ function display_summary($paper_type, $marking, $pass_mark, $user_mark, $total_r
     $html .= '<tr><td colspan="3" style="padding:0 0 0.6em 0; font-weight:bold; font-size:120%">' . $string['summaryofmarks'] . '</td></tr>';
     if ($marking == 1) {
       $html .= "<tr><td style=\"width:8em\">" . $string['yourmark'] . "</td><td style=\"text-align:right; width:8em\">" . $user_mark . " " . $string['outof'] . " $total_marks</td><td></td></tr>\n";
-      $html .= "<tr><td>" . $string['randommark'] . "</td><td style=\"text-align:right\">" . number_format($total_random_mark, 2, '.', ',') . "</td><td><img onclick=\"launchHelp(43);\" src=\"../artwork/small_help_icon.gif\" style=\"cursor:pointer\" width=\"16\" height=\"16\" alt=\"help\" /></td></tr>\n";
+      $html .= "<tr><td>" . $string['randommark'] . "</td><td style=\"text-align:right\">" . number_format($total_random_mark, 2, '.', ',') . "</td><td><img id='randomlink' src=\"../artwork/small_help_icon.gif\" style=\"cursor:pointer\" width=\"16\" height=\"16\" alt=\"help\" /></td></tr>\n";
       $html .= "<tr><td>" . $string['passmark'] . "</td><td style=\"text-align:right\">$pass_mark%</td><td></td></tr>\n";
       $html .= "<tr><td>" . $string['yourpercentage'] . "</td><td style=\"text-align:right\">";
       if (isset($_GET['percent'])) {

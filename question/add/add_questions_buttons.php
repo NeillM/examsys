@@ -41,40 +41,9 @@
 		.grey {color:#909090}
   </style>
 
-	<script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
-  <script>
-    var selectedButton = 'unused';
-  
-    function buttonclick(sectionID, scriptName) {
-      parent.qlist.iframeurl.location = scriptName;
-      parent.qlist.previewurl.location = 'preview_default.php';
-      
-      $('.tab').each(function() {
-        $(this).removeClass('tabon');
-      });
-      $('.tabon').each(function() {
-        $(this).removeClass('tabon');
-        $(this).addClass('tab');
-      });
- 			$('#button_'+sectionID).removeClass('tab');
- 			$('#button_'+sectionID).addClass('tabon');
-      
-      
-      selectedButton = sectionID;
-    }
-
-    function buttonover(buttonID) {
-      if (buttonID != selectedButton) {
-        $('#button_'+buttonID).css('backgroundColor','#FFE7A2');
-      }
-    }
-
-    function buttonout(buttonID) {
-      if (buttonID != selectedButton) {
-        $('#button_'+buttonID).css('backgroundColor','white');
-      }
-    }
-  </script>
+  <script src="../../js/require.js"></script>
+  <script src="../../js/main.min.js"></script>
+  <script src="../../js/questionsbuttonsinit.min.js"></script>
 </head>
 <body>
 
@@ -82,21 +51,21 @@
 <tr><td style="vertical-align:top; text-align:center">
 
 <table cellspacing="0" cellpadding="0" style="font-size:90%; width:144px; text-align:left">
-<tr><td id="button_unused" class="tabon" onclick="buttonclick('unused','add_questions_list.php?type=unused')"><?php echo $string['myunused'] ?></td></tr>
-<tr><td id="button_alphabetic" class="tab" onclick="buttonclick('alphabetic','add_questions_list.php?type=all')"><?php echo $string['allmyquestions'] ?></td></tr>
-<tr><td id="button_keywords" class="tab" onclick="buttonclick('keywords','add_questions_keywords_frame.php')"><?php echo $string['bykeywords'] ?></td></tr>
-<tr><td id="button_status" class="tab" onclick="buttonclick('status','add_questions_by_status.php')"><?php echo $string['bystatus'] ?></td></tr>
-<tr><td id="button_papers" class="tab" onclick="buttonclick('papers','add_questions_paper_types.php')"><?php echo $string['bypaper'] ?></td></tr>
+<tr><td id="button_unused" class="tabon"><?php echo $string['myunused'] ?></td></tr>
+<tr><td id="button_alphabetic" class="tab"><?php echo $string['allmyquestions'] ?></td></tr>
+<tr><td id="button_keywords" class="tab"><?php echo $string['bykeywords'] ?></td></tr>
+<tr><td id="button_status" class="tab"><?php echo $string['bystatus'] ?></td></tr>
+<tr><td id="button_papers" class="tab"><?php echo $string['bypaper'] ?></td></tr>
 <?php
   $user_modules = $userObject->get_staff_modules();
 
   if (count($user_modules) > 0) {
-		echo '<tr><td id="button_team" class="tab" onclick="buttonclick(\'team\',\'add_questions_team_list.php\')">' . $string['byteam'] . '</td></tr>';
+		echo '<tr><td id="button_team" class="tab">' . $string['byteam'] . '</td></tr>';
 	} else {
 		echo '<tr><td id="button_team" class="tab grey">' . $string['byteam'] . '</td></tr>';
 	}
 ?>
-<tr><td id="button_search" class="tab" onclick="buttonclick('search','add_questions_list_search.php')"><?php echo $string['search'] ?></td></tr>
+<tr><td id="button_search" class="tab"><?php echo $string['search'] ?></td></tr>
 </table>
 
 </td></tr>

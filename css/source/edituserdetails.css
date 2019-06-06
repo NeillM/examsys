@@ -1,0 +1,11 @@
+body {
+    font-size:90%;
+    background-color:#EEF4FF;
+}
+.form-error {
+    border: 2px solid #C00000 !important;
+}
+#usernameerror {
+    display: none;
+    color:#C00000;
+}

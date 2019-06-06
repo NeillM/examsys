@@ -28,83 +28,6 @@ $stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/search.php');
 
 ?>
-<script type="text/javascript" src="../js/state.js"></script>
-<script>
-  function getLastID(IDs) {
-    var id_list = IDs.split(",");
-    last_elm = id_list.length - 1;
-
-    return id_list[last_elm];
-  }
-
-  function previewQ() {
-    notice=window.open("../question/view_question.php?q_id=" + getLastID($('#questionID').val()) + "","preview","left=10,top=10,width=800,height=600,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
-  }
-	
-  function ed() {
-    var loc = '../question/edit/index.php?q_id=' + getLastID($('#questionID').val());
-    if ($('#qType').val() == 'random' || $('#qType').val() == 'keyword_based') {
-      loc += '&type=' + $('#qType').val();
-    }
-    document.location = loc;
-  }
-
-  function deleteQuestion() {
-    notice=window.open("../delete/check_delete_q_original.php?q_id=" + $('#questionID').val() + "&divID=" + $('#oldQuestionID').val() + "","notice","width=500,height=200,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-250, screen.height/2-100);
-    if (window.focus) {
-      notice.focus();
-    }
-  }
-
-  function questionInfo() {
-    notice=window.open("../question/info.php?q_id=" + getLastID($('#questionID').val()) + "","question_info","width=700,height=600,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-250, screen.height/2-250);
-    if (window.focus) {
-      notice.focus();
-    }
-  }
-
-  function copyToPaper() {
-    notice=window.open("../question/copy_onto_paper.php?q_id=" + $('#questionID').val() + "","notice","width=600,height=" + (screen.height-50) + ",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-300, 10);
-    if (window.focus) {
-      notice.focus();
-    }
-  }
-
-  function linkToPaper() {
-    notice=window.open("../question/link_to_paper.php?q_id=" + $('#questionID').val() + "","linktopaper","width=600,height=" + (screen.height-50) + ",scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
-    notice.moveTo(screen.width/2-300, 10);
-    if (window.focus) {
-      notice.focus();
-    }
-  }
-
-  function updateMenu(ID) {
-    $('#menu' + ID).toggle();
-
-    <?php
-      echo "icon = (document.getElementById('icon' + ID).getAttribute('src').indexOf('down_arrow_icon.gif')!=-1) ? '{$configObject->get('cfg_root_path')}/artwork/up_arrow_icon.gif' : '{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif';\n";
-    ?>
-    alttag = ($('#icon' + ID).attr('alt') == 'Hide') ? 'Show' : 'Hide';
-    $('#icon' + ID).attr('src', icon);
-    $('#icon' + ID).attr('alt', alttag);
-
- 		updateState('menu' + ID, $('#menu' + ID).css('display'));
-
-  }
-
-  function updateDropdownState(mySel, NameOfState) {
-    setting = mySel.options[mySel.selectedIndex].value;
-    updateState(NameOfState, setting);
-  }
-
-  function selectDateRadio() {
-    $('#question_date5').attr('checked', true);
-  }
-
-</script>
 
 <div id="left-sidebar" class="sidebar">
 <form id="PapersMenu" name="PapersMenu"  action="<?php echo $_SERVER['PHP_SELF']; ?>" method="get" autocomplete="off">
@@ -136,8 +59,8 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/s
 <br />
 
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(8);"><?php echo $string['questionsections'] ?></a></td>
-  <td align="right"><a href="#" onclick="updateMenu(8)"><?php
+  <tr class="sections"><td><a href="#" style="font-weight:bold; color:black"><?php echo $string['questionsections'] ?></a></td>
+  <td align="right"><a href="#"><?php
     if (isset($state['menu8']) and $state['menu8'] == 'block') {
       echo "<img id=\"icon8\" src=\"../artwork/up_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Hide\" />";
     } else {
@@ -183,8 +106,8 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/s
 </div>
 
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(6);"><?php echo $string['whenmodified']; ?></a></td>
-  <td align="right"><a href="#" onclick="updateMenu(6);"><?php
+  <tr class="modified"><td><a href="#" style="font-weight:bold; color:black"><?php echo $string['whenmodified']; ?></a></td>
+  <td align="right"><a href="#"><?php
     if (isset($state['menu6']) and $state['menu6'] == 'table') {
       echo '<img id="icon6" src="../artwork/up_arrow_icon.gif" width="10" height="9" alt="Hide" />';
     } else {
@@ -221,7 +144,7 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/s
   } else {
     $target = 0;
   }
-  echo "<select name=\"fday\" onchange=\"selectDateRadio()\">\n";
+  echo "<select name=\"fday\" class=\"radio\">\n";
   for ($i=1; $i<=31; $i++) {
     if ($i < 10) {
       if ($i == $target) {
@@ -242,7 +165,7 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/s
   } else {
     $target = 0;
   }
-  echo "</select><select name=\"fmonth\" onchange=\"selectDateRadio()\">\n";
+  echo "</select><select name=\"fmonth\" class=\"radio\">\n";
   for ($i=1; $i<=12; $i++) {
     if ($i < 10) {
       if ($i == $target) {
@@ -258,7 +181,7 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/s
       }
     }
   }
-  echo "</select><select name=\"fyear\" onchange=\"selectDateRadio()\">\n";
+  echo "</select><select name=\"fyear\" class=\"radio\">\n";
   for ($i=1999; $i<=date("Y"); $i++) {
     if (isset($_GET['fyear']) and $_GET['fyear'] == $i) {
       echo "<option value=\"$i\" selected>$i</option>\n";
@@ -276,7 +199,7 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/s
   } else {
     $target = date("d");
   }
-  echo "<select name=\"tday\" onchange=\"selectDateRadio()\">\n";
+  echo "<select name=\"tday\" class=\"radio\">\n";
   for ($i=1; $i<=31; $i++) {
     if ($i < 10) {
       if ($i == $target) {
@@ -297,7 +220,7 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/s
   } else {
     $target = date("m");
   }
-  echo "</select><select name=\"tmonth\" onchange=\"selectDateRadio()\">\n";
+  echo "</select><select name=\"tmonth\" class=\"radio\">\n";
   for ($i=1; $i<=12; $i++) {
     if ($i < 10) {
       if ($i == $target) {
@@ -318,7 +241,7 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/s
   } else {
     $target = date("Y");
   }
-  echo "</select><select name=\"tyear\" onchange=\"selectDateRadio()\">\n";
+  echo "</select><select name=\"tyear\" class=\"radio\">\n";
   for ($i=1999; $i<=date("Y"); $i++) {
     if ($i == $target) {
       echo "<option value=\"$i\" selected>$i</option>\n";
@@ -333,8 +256,8 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/s
 </table>
 
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr><td><a href="#" style="font-weight:bold; color: black" onclick="updateMenu(9);"><?php echo $string['metadata'] ?></a></td>
-  <td align="right"><a href="#" onclick="updateMenu(9);"><?php
+  <tr class="metadata"><td><a href="#" style="font-weight:bold; color: black"><?php echo $string['metadata'] ?></a></td>
+  <td align="right"><a href="#"><?php
     if (isset($state['menu9']) and $state['menu9'] == 'block') {
       echo "<img id=\"icon9\" src=\"../artwork/up_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Hide\" />";
     } else {
@@ -419,20 +342,20 @@ if (!isset($status_array)) {
 </div>
 
 <div style="display:none" id="menu2b">
-	<div class="menuitem"><a id="preview" onclick="previewQ(); return false;" href="#"><img class="sidebar_icon" src="../artwork/small_play.png" alt="<?php echo $string['quickview']; ?>" /><?php echo $string['quickview']; ?></a></div>
-	<div class="menuitem"><a id="edit" onclick="ed(); return false;" href="#"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editquestion']; ?>" /><?php echo $string['editquestion']; ?></a></div>
-	<div class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="<?php echo $string['information']; ?>" /><?php echo $string['information']; ?></a></div>
-	<div class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="<?php echo $string['copyontopaperx']; ?>" /><?php echo $string['copyontopaperx']; ?></a></div>
-	<div class="menuitem"><a id="link" href="#" onclick="linkToPaper(); return false;"><img class="sidebar_icon" src="../artwork/link.png" alt="<?php echo $string['linktopaper']; ?>" /><?php echo $string['linktopaper']; ?></a></div>
-	<div class="menuitem"><a id="delete" href="#" onclick="deleteQuestion(); return false;"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="<?php echo $string['deletequestion']; ?>" /><?php echo $string['deletequestion']; ?></a></div>
+	<div class="menuitem"><a id="preview" href="#"><img class="sidebar_icon" src="../artwork/small_play.png" alt="<?php echo $string['quickview']; ?>" /><?php echo $string['quickview']; ?></a></div>
+	<div class="menuitem"><a id="edit" href="#"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editquestion']; ?>" /><?php echo $string['editquestion']; ?></a></div>
+	<div class="menuitem"><a id="information" href="#"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="<?php echo $string['information']; ?>" /><?php echo $string['information']; ?></a></div>
+	<div class="menuitem"><a id="copy" href="#"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="<?php echo $string['copyontopaperx']; ?>" /><?php echo $string['copyontopaperx']; ?></a></div>
+	<div class="menuitem"><a id="link" href="#"><img class="sidebar_icon" src="../artwork/link.png" alt="<?php echo $string['linktopaper']; ?>" /><?php echo $string['linktopaper']; ?></a></div>
+	<div class="menuitem"><a id="delete" href="#"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="<?php echo $string['deletequestion']; ?>" /><?php echo $string['deletequestion']; ?></a></div>
 </div>
 
 <div style="display:none" id="menu2c">
-	<div class="menuitem"><a id="preview" onclick="previewQ(); return false;" href="#"><img class="sidebar_icon" src="../artwork/small_play.png" alt="<?php echo $string['quickview']; ?>" /><?php echo $string['quickview']; ?></a></div>
-	<div class="menuitem"><a id="edit" onclick="ed(); return false;" href="#"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editquestion']; ?>" /><?php echo $string['editquestion']; ?></a></div>
-	<div class="menuitem"><a id="information" href="#" onclick="questionInfo(); return false;"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="<?php echo $string['information']; ?>" /><?php echo $string['information']; ?></a></div>
-	<div class="menuitem"><a id="copy" href="#" onclick="copyToPaper(); return false;"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="<?php echo $string['copyontopaperx']; ?>" /><?php echo $string['copyontopaperx']; ?></a></div>
-	<div class="menuitem"><a id="link" href="#" onclick="linkToPaper(); return false;"><img class="sidebar_icon" src="../artwork/link.png" alt="<?php echo $string['linktopaper']; ?>" /><?php echo $string['linktopaper']; ?></a></div>
+	<div class="menuitem"><a id="preview" href="#"><img class="sidebar_icon" src="../artwork/small_play.png" alt="<?php echo $string['quickview']; ?>" /><?php echo $string['quickview']; ?></a></div>
+	<div class="menuitem"><a id="edit" href="#"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editquestion']; ?>" /><?php echo $string['editquestion']; ?></a></div>
+	<div class="menuitem"><a id="information" href="#"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="<?php echo $string['information']; ?>" /><?php echo $string['information']; ?></a></div>
+	<div class="menuitem"><a id="copy" href="#"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="<?php echo $string['copyontopaperx']; ?>" /><?php echo $string['copyontopaperx']; ?></a></div>
+	<div class="menuitem"><a id="link" href="#"><img class="sidebar_icon" src="../artwork/link.png" alt="<?php echo $string['linktopaper']; ?>" /><?php echo $string['linktopaper']; ?></a></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="<?php echo $string['deletequestion']; ?>" /><?php echo $string['deletequestion']; ?></div>
 </div>
 

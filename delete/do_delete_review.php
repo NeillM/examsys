@@ -73,36 +73,9 @@ $result = $mysqli->prepare("UPDATE properties SET marking = '0' WHERE marking = 
 $result->bind_param('s', $old_marking);
 $result->execute();
 $result->close();
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title>Review Deleted</title>
-  
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function () {
-      window.opener.top.location.reload();
-      self.close();
-    });
-  </script>
-</head>
-
-<body>
-
-<p>Standards setting review successfully deleted.<p>
-
-<div class="button_bar">
-<form action="" method="get" autocomplete="off">
-<input type="button" name="cancel" value="OK" class="ok" onclick="javascript:window.opener.top.location.reload(); window.close();" />
-</form>
-</div>
-
-</body>
-</html>
+$render = new render($configObject);
+$lang['title'] = $string['title'];
+$lang['success'] = $string['success'];
+$data = array();
+$render->render($data, $lang, 'admin/do_delete.html');

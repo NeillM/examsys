@@ -39,4 +39,7 @@ $string['started'] = 'Started';
 $string['completed'] = 'Completed';
 $string['generalpapercomments'] = 'General Paper Comments';
 $string['cannotcomment'] = 'Cannot Comment';
-?>
+$string['threeinfo'] = 'Hold the left mouse button to rotate the object, hold the right button to pan, and use the mouse wheel to zoom in/out.';
+$string['threereset'] = 'Reset';
+$string['threeload'] = 'Load';
+$string['threeplyerror'] = 'Your browser does not support the display of %s files.';

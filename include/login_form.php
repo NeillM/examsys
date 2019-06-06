@@ -40,38 +40,17 @@ $cfg_root_path = $configObject->get('cfg_root_path');
       echo "<style type=\"text/css\">\n  body {background-color:transparent !important}\n</style>\n"; // Make the LTI screen blend in more.
     }
   ?>
-  <script type="text/javascript" src="<?php echo $cfg_root_path ?>/js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="<?php echo $cfg_root_path ?>/js/jquery.validate.min.js"></script>
-	<script>
-    $(function () {
-      $('#username').focus();
-			
-<?php
+    <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+    <script src='../js/require.js'></script>
+    <script src='../js/main.min.js'></script>
+    <script src="<?php echo $cfg_root_path ?>/js/logininit.min.js"></script>
+  <?php
   if (isset($displaystdformobj->scripts)) {
     foreach ($displaystdformobj->scripts as $script) {
-		  echo $script;
-		}
-	}
-
-?>
-      if (!isCanvasSupported()){
-        $('.html5warn').fadeIn();
-      }
-
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
-        }
-      });
-      $('form').removeAttr('novalidate');
-		});
-		
-		function isCanvasSupported(){
-			var elem = document.createElement('canvas');
-			return !!(elem.getContext && elem.getContext('2d'));
-		}
-  </script>
+      echo '<script src="' . $cfg_root_path . '/plugins/auth/js/' . $script . '"/></script>';
+    }
+  }
+  ?>
 </head>
 
 <body>

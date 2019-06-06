@@ -506,13 +506,14 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
           $tmp_bgcolor = $bgcolor;
         }
 
-		//<!-- ======================== HTML5 part include disp ================= -->
-		echo "<canvas id='canvas" . $question_no . "' width='" . ($question['q_media_width'] + 2) . "' height='" . ($question['q_media_height'] + 27) . "'></canvas>\n";
+		echo "<canvas class='area' id='canvas" . $question_no . "'
+		 data-qno='" . $question_no . "'
+		 data-qmedia='" . $question['q_media'] . "'
+		 data-qcorrect='" . $display_option['correct']  . "'
+		 data-user='" . $tmp_user_answer . "'
+		 data-marking='1'
+		 width='" . ($question['q_media_width'] + 2) . "' height='" . ($question['q_media_height'] + 27) . "'></canvas>\n";
 		echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-		echo "<script>\n";
-		echo "setUpQuestion(" . $question_no . ", 'q" . $question_no . "','" . $language . "', '" . $question['q_media'] . "', '" . $display_option['correct'] . "', '" . $tmp_user_answer . "',1,'#FFC0C0','area','answer');\n";
-		echo "</script>\n";
-		//<!-- ==================================================== -->
 ?>
         </div>
         <input type="hidden" name="q<?php echo $question_no; ?>" id="q<?php echo $question_no; ?>" value="<?php echo $full_user_ans; ?>"/>
@@ -659,9 +660,9 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
           }
         } else {
           if (isset($user_answers[$current_screen][$q_id]) and substr($user_answers[$current_screen][$q_id],$question['option_order'][$part_id-1],1) == 'y') {
-            echo "<tr><td><input type=\"checkbox\" onclick=\"MRQ($question_no,$tmp_part_id,$option_no,$mrq_correct);\" name=\"$optionID\" id=\"$optionID\" value=\"y\" checked=\"checked\" /></td><td>";
+            echo "<tr><td><input type=\"checkbox\" class=\"online\" data-qno=\"$question_no\" data-pos=\"$tmp_part_id\" data-ono=\"$option_no\" data-allowed=\"$mrq_correct\" name=\"$optionID\" id=\"$optionID\" value=\"y\" checked=\"checked\" /></td><td>";
           } else {
-            echo "<tr><td><input type=\"checkbox\" onclick=\"MRQ($question_no,$tmp_part_id,$option_no,$mrq_correct);\" name=\"$optionID\" id=\"$optionID\" value=\"y\" /></td><td>";
+            echo "<tr><td><input type=\"checkbox\" class=\"online\" data-qno=\"$question_no\" data-pos=\"$tmp_part_id\" data-ono=\"$option_no\" data-allowed=\"$mrq_correct\" name=\"$optionID\" id=\"$optionID\" value=\"y\" /></td><td>";
           }
         }
 
@@ -959,14 +960,20 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 $ans = $user_answers[$current_screen][$q_id];
               }
               if ($settings['editor'] == 'mathjax') {
-                $render = new render($configObject. dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins'
-                  . DIRECTORY_SEPARATOR . 'texteditor' . DIRECTORY_SEPARATOR . 'plugin_plain_texteditor' . DIRECTORY_SEPARATOR . 'templates');
-                $render->render(array('id' => 'q' . $question_no), null, 'mathjaxpreview.html');
                 echo "<p>" . $string['mathjaxinstructions'] . "</p>";
-                echo "<textarea onkeyup=\"Preview" . $question_no . ".Update()\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $ans . "</textarea>\n";
+                echo "<textarea id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $ans . "</textarea>\n";
                 echo "<p>" . $string['previewmathjax'] . "</p>";
                 echo "<div id=\"MathPreview" . $question_no . "\" style=\"border:1px solid; padding: 3px; width:50%; margin-top:5px\"></div><div id=\"MathBuffer" . $question_no . "\" style=\"border:1px solid; padding: 3px; width:50%; margin-top:5px; visibility:hidden; position:absolute; top:0; left: 0\"></div>";
-                echo "<script>Preview" . $question_no . ".Init();</script>";
+                echo "<script>
+                                requirejs(['mathjaxpreview'], function(MathJaxPreview) {
+                                  var Preview = new MathJaxPreview('$question_no');
+                                  Preview.Init();
+                                  $(\"#q$question_no\").on('keyup', function (e) {
+                                    Preview.Update();
+                                    e.preventDefault();
+                                  });
+                                });
+                </script>";
               } else {
                 echo "<textarea name=\"q" . $question_no . "\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\">" . $ans . "</textarea>\n";
               }
@@ -1089,15 +1096,14 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
   ?>
 			<div align="left">
 			<?php
-				//<!-- ======================== HTML5 part include disp ================= -->
-				echo "<canvas class=\"labelling\" id=\"canvas" . $question_no . "\" width=\"" . ($question['q_media_width'] + 220) . "\" height=\"" . $tmp_height . "\"></canvas>\n";
+				echo "<canvas class=\"labelling\" id=\"canvas" . $question_no . "\"
+				  data-qno='" . $question_no . "'
+				  data-qmedia='" . $question['q_media'] . "'
+				  data-qcorrect='" . $tmp_correct  . "'
+				  data-user='" . trim($user_answers[$current_screen][$q_id]) . "'
+				  data-marking='" . $display_option['marks_correct'] . "~" . $display_option['marks_incorrect'] . "~" . $question['score_method'] . "'
+				 width=\"" . ($question['q_media_width'] + 220) . "\" height=\"" . $tmp_height . "\"></canvas>\n";
 				echo "<br /><div id=\"canvasbox\"></div>\n";
-				echo "<script>\n";
-				echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '";
-				if (isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);
-				echo "', '" . $display_option['marks_correct'] . "~" . $display_option['marks_incorrect'] . "~" . $question['score_method'] . "','#FFC0C0','labelling','answer');\n";
-				echo "</script>\n";
-				//<!-- ==================================================== -->
 			?>
           </div>
         <?php
@@ -1110,43 +1116,31 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
       case 'flash':
 ?>
   <script>
-    var isInternetExplorer = navigator.appName.indexOf("Microsoft") != -1;
-    function flash<?php echo $question_no; ?>_DoFSCommand(command, args) {
-      var flash<?php echo $question_no; ?>Obj = isInternetExplorer ? document.all.flash<?php echo $question_no; ?> : document.flash<?php echo $question_no; ?>;
-      document.questions.q<?php echo $question_no; ?>.value = args;
-    }
-    if (navigator.appName && navigator.appName.indexOf("Microsoft") != -1 && navigator.userAgent.indexOf("Windows") != -1 && navigator.userAgent.indexOf("Windows 3.1") == -1) {
-      document.write('<script language=\"VBScript\"\>\n');
-      document.write('On Error Resume Next\n');
-      document.write('Sub flash<?php echo $question_no; ?>_FSCommand(ByVal command, ByVal args)\n');
-      document.write('	Call flash<?php echo $question_no; ?>_DoFSCommand(command, args)\n');
-      document.write('End Sub\n');
-      document.write('</script\>\n');
-    }
+      function flash<?php echo $question_no; ?>_DoFSCommand(command, args) {
+          $('#q<?php echo $question_no; ?>').val(args);
+      }
   </script>
   <div align="center">
-  <script>
-    write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" id="flash<?php echo $question_no; ?>" width="<?php echo $question['q_media_width']; ?>" height="<?php echo $question['q_media_height']; ?>" align="middle">');
-    write_string('<param name="wmode" value="opaque" />');
-    write_string('<param name="allowScriptAccess" value="sameDomain" />');
-    write_string('<param name="movie" value="<?php echo $mediadirectory->url($question['q_media']); ?>" />');
-    write_string('<param name="quality" value="high" />');
-    write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
+    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" id="flash<?php echo $question_no; ?>" width="<?php echo $question['q_media_width']; ?>" height="<?php echo $question['q_media_height']; ?>" align="middle">
+    <param name="wmode" value="opaque" />
+    <param name="allowScriptAccess" value="sameDomain" />
+    <param name="movie" value="<?php echo $mediadirectory->url($question['q_media']); ?>" />
+    <param name="quality" value="high" />
+    <param name="bgcolor" value="<?php echo $bgcolor; ?>" />
     <?php
       if ($question['scenario'] != '') {
-        echo 'write_string(\'<param name="FlashVars" value="' . $question['scenario'] . '">\')';
+        echo '<param name="FlashVars" value="' . $question['scenario'] . '">';
       }
-      echo 'write_string(\'<embed style="z-index:0;" src="' . $mediadirectory->url($question['q_media']) . '"';
+      echo '<embed style="z-index:0;" src="' . $mediadirectory->url($question['q_media']) . '"';
       if ($question['scenario'] != '') {
         echo ' FlashVars="' . $question['scenario'] . '"';
       }
-      echo ' wmode="opaque" quality="high" bgcolor="' . $bgcolor . '" width="' . $question['q_media_width'] . '" height="' . $question['q_media_height'] . '" swLiveConnect=true id="flash' . $question_no . '" name="flash' . $question_no . '" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />\');';
+      echo ' wmode="opaque" quality="high" bgcolor="' . $bgcolor . '" width="' . $question['q_media_width'] . '" height="' . $question['q_media_height'] . '" swLiveConnect=true id="flash' . $question_no . '" name="flash' . $question_no . '" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />';
     ?>
-    write_string('</object>');
-  </script>
+    </object>
   </div>
   <?php
-      echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"0,0\" />\n";
+      echo "<input type=\"hidden\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" value=\"0,0\" />\n";
       $marks += $display_option['marks_correct'];
       break;
     }                  // End switch
@@ -1194,9 +1188,9 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     } elseif ($question['q_type'] == 'mrq' and $display_option['marks_incorrect'] < 0) {
 		  // Include an abstain option if negative marking is used.
       if ($answer != '' and $answer == 'a') {
-				echo "<tr><td><input type=\"checkbox\" onclick=\"MRQabstain($question_no,$option_no);\" name=\"q" . $question_no . "_abstain\" id=\"q" . $question_no . "_abstain\" value=\"y\" checked=\"checked\" /></td><td><span style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</span></td></tr>";
+				echo "<tr><td><input type=\"checkbox\" class=\"abstain\" data-qno=\"$question_no\" data-ono=\"$option_no\" name=\"q" . $question_no . "_abstain\" id=\"q" . $question_no . "_abstain\" value=\"y\" checked=\"checked\" /></td><td><span style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</span></td></tr>";
 			} else {
-				echo "<tr><td><input type=\"checkbox\" onclick=\"MRQabstain($question_no,$option_no);\" name=\"q" . $question_no . "_abstain\" id=\"q" . $question_no . "_abstain\" value=\"y\" /></td><td><span style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</span></td></tr>";
+				echo "<tr><td><input type=\"checkbox\" class=\"abstain\" data-qno=\"$question_no\" data-ono=\"$option_no\" name=\"q" . $question_no . "_abstain\" id=\"q" . $question_no . "_abstain\" value=\"y\" /></td><td><span style=\"color:$labelcolor\">&lt;" . $string['abstain'] . "&gt;</span></td></tr>";
 			}
 		}
     echo '</table>';
@@ -1270,10 +1264,10 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
       } else {
         echo "<br />\n";
         if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == '' and $screen_pre_submitted == 1) {
-          echo "<div class=\"option\"><select class=\"unans\" onchange=\"multimatchingCheck('q" . $question_no . "_" . $part_id . "'," . count($matching_options) . "," . count($sub_answers) . ");\" name=\"q" . $question_no . "_" . $part_id . "[]\" id=\"q" . $question_no . "_" . $part_id . "\" multiple=\"multiple\" size=\"$list_size\">\n";
+          echo "<div class=\"option\"><select class=\"unans\" data-qno=\"q" . $question_no . "_" . $part_id . "\" data-opt=\"" . count($matching_options) . "\" data-sub=\"" . count($sub_answers) . "\" name=\"q" . $question_no . "_" . $part_id . "[]\" id=\"q" . $question_no . "_" . $part_id . "\" multiple=\"multiple\" size=\"$list_size\">\n";
           $unanswered = true;
         } else {
-          echo "<div class=\"option\"><select onchange=\"multimatchingCheck('q" . $question_no . "_" . $part_id . "'," . count($matching_options) . "," . count($sub_answers) . ");\" name=\"q" . $question_no . "_" . $part_id . "[]\" id=\"q" . $question_no . "_" . $part_id . "\" multiple=\"multiple\" size=\"$list_size\">\n";
+          echo "<div class=\"option\"><select data-qno=\"q" . $question_no . "_" . $part_id . "\" data-opt=\"" . count($matching_options) . "\" data-sub=\"" . count($sub_answers) . "\" name=\"q" . $question_no . "_" . $part_id . "[]\" id=\"q" . $question_no . "_" . $part_id . "\" multiple=\"multiple\" size=\"$list_size\">\n";
         }
       }
 

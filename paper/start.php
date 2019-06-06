@@ -29,10 +29,17 @@ require_once '../include/staff_student_auth.inc';
 require_once '../include/paper_security.php';
 require_once '../include/display_functions.inc';
 require_once '../include/errors.php';
-$jstring = $string; //to pass it to JavaScript HTML5 modules
 $userObject = UserObject::get_instance();
 
-if ($userObject->has_role('External Examiner') or $userObject->has_role('Internal Reviewer')) {    // Special users have their own separate UI.
+$id = check_var('id', 'GET', true, false, true, param::ALPHANUM); // While it is an int, the numbers are too large for 32-bit PHP.
+
+// Special users have their own separate UI.
+if ($userObject->has_role('External Examiner')) {
+  header("location: ../reviews/start.php?id=" . $id);
+  exit();
+}
+
+if ($userObject->has_role('Internal Reviewer')) {
   $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['accessdenied'], $msg, $string['accessdenied'], $configObject->get('cfg_root_path') . '/artwork/access_denied.png', '#C00000', true, true);
@@ -261,10 +268,7 @@ $headerdata = array(
 	'/css/html5.css',
   ),
   'scripts' => array(
-    '/js/jquery-1.11.1.min.js',
-    '/js/jquery.validate.min.js',
-    '/js/validation/jquery.paper.enhancedcalc.min.js',
-    '/js/start.min.js',
+    '/js/startinit.min.js',
   ),
   'metadata' => array(
     'pragma' => 'no-cache',
@@ -275,41 +279,35 @@ if ($papertype == '3') {
 } else {
  $lang['title'] = $string['assessment'];
 }
-$interactive_questions = Paper_utils::need_interactiveQ($screen_data, $current_screen, $mysqli);
-if ($interactive_questions) {
-  $headerdata['scripts'][] = '/js/qsharedf.js';
-  $headerdata['scripts'][] = '/js/qlabelling.js';
-  $headerdata['scripts'][] = '/js/qarea.js';
-  $headerdata['scripts'][] = '/js/core.min.js';
-  $headerdata['scripts'][] = '/js/html5_questions.min.js';
-  $headerdata['scripts'][] = '/js/html5.images.min.js';
-}
+
+$headerdata['mathjax'] = false;
 if($configObject->get_setting('core', 'paper_mathjax')) {
-  $headerdata['scripts'][] = '/js/mathjax-config.min.js';
-  $headerdata['scripts'][] = '/node_modules/mathjax/MathJax.js?config=TeX-MML-AM_HTMLorMML';
+  $headerdata['mathjax'] = true;
 }
+
 if($propertyObj->get_calculator()) {
-  $headerdata['scripts'][] = '/js/jquery-ui-1.10.4.min.js';
   $headerdata['scripts'][] = '/js/jcalc98.min.js';
   $headerdata['scripts'][] = '/js/jcalc98uon.min.js';
   $headerdata['css'][] = '/css/jcalc98.css';
 }
 
+$tmp_questions_array = $propertyObj->build_paper($is_question_preview_mode, $get_qid, $q_number);
+foreach ($tmp_questions_array as $question) {
+  if ($current_screen == $question['screen'] and file_exists($cfg_web_root . 'plugins/questions/' . $question['q_type'] . '/js/paperinit.min.js')) {
+    $headerdata['scripts'][$question['q_type']] = "/plugins/questions/" . $question['q_type'] . "/js/paperinit.min.js";
+  }
+}
+
 // Check if 3d file types are enabled and load js.
+$headerdata['three'] = false;
 if($configObject->get_setting('core', 'paper_threejs')) {
+  $headerdata['three'] = true;
   $headerdata['scripts'] = array_merge($headerdata['scripts'], threed_handler::get_js());
   $headerdata['css'] = array_merge($headerdata['css'], threed_handler::get_css());
 }
 $headerdata['mee'] = $configObject->get_setting('core', 'paper_mee');
 $headerdata['texteditor'] = $texteditorplugin->get_header_file();
 $render->render($headerdata, $lang, 'header.html');
-?>
-
-<script>
-  var lang_string = <?php echo json_encode($jstring); ?>;
-</script>
-
-<?php
 
   /*
   *
@@ -318,7 +316,6 @@ $render->render($headerdata, $lang, 'header.html');
   */
   $question_no = 0;
   $q_displayed = 0;
-  $tmp_questions_array = $propertyObj->build_paper($is_question_preview_mode, $get_qid, $q_number);
 
   // Look for random questions and overwrite as needed
   $questions_array = array();
@@ -589,7 +586,8 @@ $backofffactor = $configObject->get_setting('core', 'paper_autosave_backoff_fact
 $dataset['attributes']['savetimeout'] = ceil((($retrylimit * $backofffactor * $settimeout) + $settimeout + 5)) * 1000;
 $dataset['attributes']['saveretry'] = $retrylimit;
 $dataset['attributes']['timed'] = $timed;
-$render->render($dataset, array(), 'paper/dataset.html');
+$dataset['attributes']['unanswered'] = $unanswered;
+$render->render($dataset, array(), 'dataset.html');
 // CSS dataset.
 $datasetcss['name'] = 'css';
 $datasetcss['attributes']['bgcolor'] = $bgcolor;
@@ -602,14 +600,22 @@ $datasetcss['attributes']['marks_color'] = $marks_color;
 $datasetcss['attributes']['dismiss_color'] = $dismiss_color;
 $datasetcss['attributes']['max_ref_width'] = $max_ref_width;
 $datasetcss['attributes']['special_needs'] = $userObject->is_special_needs();
-$render->render($datasetcss, array(), 'paper/dataset.html');
+$render->render($datasetcss, array(), 'dataset.html');
 // User dataset.
 $datasetuser['name'] = 'user';
 $datasetuser['attributes']['student'] = $userObject->has_role('Student');
 if (!is_null($remaining_time)) {
   $datasetuser['attributes']['remaining_time'] = $remaining_time;
 }
-$render->render($datasetuser, array(), 'paper/dataset.html');
+$render->render($datasetuser, array(), 'dataset.html');
+// JS utils dataset.
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+// Dataset.
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['language'] = $language;
+$render->render($miscdataset, array(), 'dataset.html');
 
 if (count($reference_materials) > 0) {
   $refdata = array(
@@ -620,13 +626,5 @@ if (count($reference_materials) > 0) {
 }
 $mysqli->close();
 
-$footerdata = array();
-if ($unanswered) {
-  $footerdata['scripts'][] = '/js/paperfooter.min.js';
-}
-
-if ($interactive_questions) {
-  $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
-}
-
-$render->render($footerdata, array(), 'footer.html');
+$render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+$render->render(array(), array(), 'footer.html');

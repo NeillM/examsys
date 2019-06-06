@@ -35,7 +35,8 @@ if ($userObject->has_role('Invigilator')) {
   exit();
 }
 
-check_var('id', 'GET', true, false, false);
+$id = check_var('id', 'GET', true, false, true, param::ALPHANUM);
+$mode = param::optional('mode', '', param::ALPHA, param::FETCH_GET);
 
 function load_attempts($test_type, $paperID, $userObj, $db) {
   $prev_attempts = array();
@@ -129,9 +130,9 @@ function displayPrevTake($markTotal, $totalRandomMark, $marking_style, $disDate,
   global $total_marks, $low_bandwidth;
 
   if ($low_bandwidth == 0) {
-    echo "<tr><td><img src=\"../artwork/bullet_outline.gif\" class=\"bullet\" alt=\"bullet\" /><a href=\"\" onclick=\"reviewPaper($metadataID,$type); return false;\">$disDate</a></td><td style=\"text-align:right\" width=\"70\">";
+    echo "<tr><td class='previous' data-metaid='$metadataID' data-type='$type'><img src=\"../artwork/bullet_outline.gif\" class=\"bullet\" alt=\"bullet\" /><a href=\"\">$disDate</a></td><td style=\"text-align:right\" width=\"70\">";
   } else {
-    echo "<tr><td><a href=\"\" onclick=\"reviewPaper($metadataID,$type); return false;\">$disDate</a></td><td style=\"text-align:right\" width=\"70\">";
+    echo "<tr><td class='previous' data-metaid='$metadataID' data-type='$type'><a href=\"\">$disDate</a></td><td style=\"text-align:right\" width=\"70\">";
   }
   if ($total_marks > 0) {
 		if ($marking_style == 1) {
@@ -165,7 +166,7 @@ $total_random_mark = 0;
 $total_marks = 0;
 
 // Create paper object.
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli, $string, true);
 
 // Get lab information.
 $current_address = NetworkUtils::get_client_address();
@@ -319,81 +320,17 @@ if ($exam_duration !== null) {
     }
     ?>
   </style>
-
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript" src="../js/student_help.js"></script>
+  <script id="rogoconfig" src='../js/rogo.min.js'
+            data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
+            data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>">
+  </script>
+  <script src="../js/require.js"></script>
+  <script src="../js/main.min.js"></script>
+  <script src="../js/userindexinit.min.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
 ?>
-  <script>
-  function startPaper() {
-<?php
-	if ($userObject->has_role('External Examiner')) {
-		echo '  var paperURL = "../reviews/start.php?id=' . $_GET['id'] . '";'; // External examiners
-	} else {
-		echo '  var paperURL = "../paper/start.php?id=' . $_GET['id'] . '";';   // Normal staff and students
-	}
-	if ($userObject->has_role(array('Staff','Admin','SysAdmin')) and isset($_GET['mode']) and $_GET['mode'] == 'preview') {
-?>
-    paperURL += '&mode=preview';
-<?php
-  }
-  if ($fullscreen) {
-?>
-    exam = window.open(paperURL,"paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,menubar=no,titlebar=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable=yes");
-    if (window.focus) {
-      exam.focus();
-    }
-<?php
-  } else {
-?>
-    window.location = paperURL;
-<?php
-  }
-?>
-  }
-
-  function reviewPaper(metadataID, type) {
-    exam = window.open("finish.php?id=<?php echo $_GET['id']; ?>&metadataID="+metadataID+"&log_type="+type+"","paper","fullscreen=<?php echo $fullscreen; ?>,width="+(screen.width-80)+",height="+(screen.height-80)+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    if (window.focus) {
-      exam.focus();
-    }
-  }
-
-  $(function () {
-    $("#overlay").hide();
-
-    $("#info_dialog_ok").click(function(event) {
-      $("#info_overlay").hide();
-    });
-
-    $(document).click(function() {
-      $('#toprightmenu').fadeOut();
-    });
-    
-    $(document).tooltip({ items: ".help_tip[title]", position: { my: "top+10", at: "center+125" }  });
-
-    <?php if ($ipmismatch) {
-    ?>
-    $("#info_overlay").show();
-    $("#info_submit_dialog_title").html("<?php echo $string['ipmismatchtitle'] ?>");
-    $("#info_submit_dialog_msg").html("<?php echo $string['ipmismatchblurb'] ?>");
-    $("#info_submit_dialog").css('left', (($(window).width() / 2) - 250) + 'px');
-    $("#info_submit_dialog").css('top', (($(window).height() / 2) - 100) + 'px');
-    <?php
-    }
-    ?>
-    });
-    </script>
-    <?php
-      if($configObject->get_setting('core', 'paper_mathjax')) {
-        $render = new render($configObject);
-        $render->render(null, null, 'mathjax.html');
-      }
-    ?>
 </head>
 <body>
 <div style="text-align:right; padding-right:2px;"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
@@ -586,7 +523,7 @@ if ($textsize > 120) {
   $display_date = '';
 
     if ($start_available and $remaining_available and $metadata_security) {
-    echo "<input type=\"button\" class=\"ok\" style=\"width:" . $button_width . "px; font-weight:bold\" value=\"$start_label\" name=\"start\" id=\"start\" onclick=\"startPaper();\" onkeypress=\"startPaper();\" />\n";
+    echo "<input type=\"button\" class=\"ok\" style=\"width:" . $button_width . "px; font-weight:bold\" value=\"$start_label\" name=\"start\" id=\"start\" />\n";
   } else {
     echo "<input type=\"button\" class=\"notok\" style=\"width:" . $button_width . "px\" value=\"" . $string['start'] . "\" name=\"start\" disabled />\n";
   }
@@ -635,17 +572,6 @@ if ($textsize > 120) {
 </form>
 <div class="powered"><i>powered by</i> Rog&#333; <?php echo $configObject->get_setting('core', 'rogo_version'); ?></div>
 
-	<!-- Cache often used scripts and images -->
-	<script src="../js/start.min.js"></script>
-	<img class="noimg" src="../artwork/calc.png" />
-	<img class="noimg" src="../artwork/no_save.png" />
-	<img class="noimg" src="../artwork/fire_exit.png" />
-
-  <?php
-    $render = new render($configObject);
-    $render->render_html5_js(json_encode($jstring));
-  ?>
-	<img class="noimg" src="../js/images/combined.png" />
 <div id="info_overlay">
     <div id="info_submit_dialog">
         <div id="info_submit_dialog_icon"><img src="../artwork/question_mark_64.png" width="64" height="64" alt="<?php echo $string['questionmark'] ?>" /></div>
@@ -654,5 +580,18 @@ if ($textsize > 120) {
         <div id="info_submit_dialog_buttons"><input type="button" name="info_dialog_ok" id="info_dialog_ok" class="ok" value="<?php echo $string['ok'] ?>" /></div>
     </div>
 </div>
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+$dataset['name'] = 'dataset';
+$dataset['attributes']['ipmismatch'] = $ipmismatch;
+$dataset['attributes']['id'] = $id;
+$dataset['attributes']['mode'] = $mode;
+$dataset['attributes']['fullscreen'] = $fullscreen;
+$render->render($dataset, array(), 'dataset.html');
+?>
 </body>
 </html>

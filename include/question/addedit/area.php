@@ -53,7 +53,6 @@ $marks_partial = $configObject->get_setting('core', 'paper_marks_partial');
 $mark_range = range(100, 50);
 $error_range = range(0, 50);
 ?>
-
 				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
 					<tbody>
 <?php
@@ -75,13 +74,14 @@ if ($media['filename'] != '' and !$show_correction_intermediate):
   $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
   $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
 
-  //<!-- ======================== HTML5 part ================= -->
-  echo '<canvas id="canvas1" width="' . $plugin_width . '" height="' . ($plugin_height+3) . '"></canvas>' . "\n";
+  echo '<canvas class="area" id="canvas1"
+    data-qno="1"
+    data-qmedia="' . $media["filename"] . '"
+    data-qcorrect="' . $correct . '"
+    data-user""
+    data-marking=""
+    width="' . $plugin_width . '" height="' . ($plugin_height+3) . '"></canvas>' . "\n";
   echo '<br /><div style="width:100%;text-align: left;" id="canvasbox"></div>' . "\n";
-	echo '<script>' . "\n";
-	echo 'setUpQuestion(1, "option_correct", "' . $language . '", "' . $media['filename'] . '", "' . $correct . '", "", "", "#FFC0C0", "area", "2");' . "\n";
-  echo '</script>' . "\n";
-  //<!-- ==================================================== -->
 endif;
 ?>                
                 <input name="optionid1" value="<?php echo $option_id; ?>" type="hidden" />

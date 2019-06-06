@@ -41,15 +41,6 @@ if ($question->get_locked() != '') {
   $hotspot_mode = 'edit';
 }
 ?>
-<script>
-//<![CDATA[
-<?php // Bit of a hack to get the flash to stay centred ?>
-$(function () {
-  $('#question-holder').addClass('hotspot');
-});
-flashTarget = 'points';
-//]]>
-</script>
 
 				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
 					<tbody>

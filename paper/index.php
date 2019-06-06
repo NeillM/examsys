@@ -116,7 +116,6 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
   header("location: user_index.php?id=" . $paper_display[0]['crypt_name']);
   exit();
 } elseif ($paper_no == 0) {
-  echo "<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html;charset={$configObject->get('cfg_page_charset')}\" />\n<title>{$string['exams']}</title>\n";
   ?>
 <html>
 <head>
@@ -129,16 +128,11 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
   <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css"/>
   <link rel="stylesheet" type="text/css" href="../css/index.css"/>
-	
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
 <?php
-	if ($userObject->has_role('Staff')) {
-		echo '<script type="text/javascript" src="../js/staff_help.js"></script>';
-	} else {
-		echo '<script type="text/javascript" src="../js/student_help.js"></script>';
-	}
-  
   require_once '../include/toprightmenu.inc';
 ?>
 </head>
@@ -313,17 +307,11 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
   <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css"/>
   <link rel="stylesheet" type="text/css" href="../css/index.css"/>
-	
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
   <?php
-
-    if ($userObject->has_role('Staff')) {
-        echo '<script type="text/javascript" src="../js/staff_help.js"></script>';
-    } else {
-        echo '<script type="text/javascript" src="../js/student_help.js"></script>';
-    }
-
     require_once '../include/toprightmenu.inc';
   ?>
 </head>

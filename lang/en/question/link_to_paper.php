@@ -27,4 +27,4 @@ $string['newassessmentpaper'] = 'New Assessment Paper';
 $string['success'] = 'Question added to paper <strong>%s</strong>.';
 $string['duplicatename'] = "Sorry <strong>'%s'</strong> is a name already in use.";
 $string['papernotonmodule'] = 'Mappings not copied - destination paper not on module of mapped questions';
-?>
+$string['validateform'] = 'Please select which paper you would like to add the question to.';

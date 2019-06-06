@@ -33,15 +33,6 @@ if (count($question->options) > 0) {
   $option_id = -1;
 }
 ?>
-<script>
-//<![CDATA[
-<?php // Bit of a hack to get the flash to stay centred ?>
-$(function () {
-  $('#question-holder').addClass('labelling');
-});
-flashTarget = 'points';
-//]]>
-</script>
 
 				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
 					<tbody>
@@ -74,13 +65,14 @@ if ($media['filename'] != ''):
     }
   }
   $configObject          = Config::get_instance();
-  //<!-- ======================== HTML5 part ================= -->
-  echo "<canvas id='canvas1' width='" . ($media['width'] + 222) . "' height='" . $plugin_height . "'></canvas>\n";
+  echo "<canvas class='labelling' id='canvas1'
+    data-qno='1'
+    data-qmedia='" . $media['filename'] . "'
+    data-qcorrect='" .  trim(str_replace('"','&#034',str_replace("'",'&#039',str_replace('�','&#172',$correct))))  . "'
+    data-user='undefined'
+    data-marking='" . $img_str . "'
+    width='" . ($media['width'] + 222) . "' height='" . $plugin_height . "'></canvas>\n";
   echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-  echo "<script language='JavaScript' type='text/javascript'>\n";
-  echo "setUpQuestion(1, 'flash1', '" . $language . "', '" . $media["filename"] . "', '" . trim(str_replace('"','&#034',str_replace("'",'&#039',str_replace('�','&#172',$correct)))) . "', undefined, '" . $img_str . "','#FFC0C0','labelling','edit');\n";
-  echo "</script>\n";
-  //<!-- ==================================================== -->
 endif;
 ?>                
                 <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />

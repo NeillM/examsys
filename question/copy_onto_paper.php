@@ -43,67 +43,30 @@ if (isset($_GET['type']) and $_GET['type'] == 'objective') {
   $map_outcomes = false;
 }
 $mediadirectory = rogo_directory::get_directory('media');
-
-if (!isset($_POST['submit'])) {
 ?>
+
 <!DOCTYPE html>
 <html style="margin:0px; width:100%; height:100%;">
 <head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title><?php echo $string['copyontopaper']; ?></title>
+    <title><?php echo $string['copyontopaper']; ?></title>
 
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <style type="text/css">
-    body {background-color:#F1F5FB}
-    td {font-size:80%}
-  </style>
-
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    function checkForm() {
-      var checkOption = $('input:radio[name=paperID]:checked').val();
-
-      if (typeof checkOption == 'undefined') {
-        alert("Please select which paper you would like to add the question to.");
-        return false;
-      }
-      $('#working').show();
-    }
-
-    function resizeList() {
-      winH = $(window).height() - 150;
-
-      $('#paperlist').css('height', winH + 'px');
-    }
-
-    $(function () {
-      resizeList();
-
-      $(window).resize(function() {
-        resizeList();
-      });
-
-      $('#cancel').click(function() {
-        window.close();
-      });
-<?php
-  if ($map_outcomes) {
-?>
-      $('#outcomes').val(window.opener.getSelectedOutcomes());
-<?php
-  }
-?>
-    });
-  </script>
+    <link rel="stylesheet" type="text/css" href="../css/body.css" />
+    <link rel="stylesheet" type="text/css" href="../css/header.css" />
+    <link rel="stylesheet" type="text/css" href="../css/questionlink.css" />
+    <script src='../js/require.js'></script>
+    <script src='../js/main.min.js'></script>
+    <script src="../js/questionlinkinit.min.js"></script>
 </head>
+<?php
 
-<body>
+if (!isset($_POST['submit'])) {
+?>
 
 <?php
-  echo "<form style=\"width:100%; height:100%;\" method=\"post\" name=\"theForm\" onsubmit=\"return checkForm()\" action=\"" . $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'] . "\" autocomplete=\"off\">\n";
+  echo "<body class='submit'><form style=\"width:100%; height:100%;\" method=\"post\" id=\"theForm\" name=\"theForm\" action=\"" . $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'] . "\" autocomplete=\"off\">\n";
 ?>
   <table cellpadding="6" cellspacing="0" border="0" width="100%">
   <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/copy_onto_paper.png" width="32" height="32 alt="<?php echo $string['copyontopaper']; ?>" /></td><td class="midblue_header" style="background-color:white; font-size:150%; font-weight:bold; border-bottom:1px solid #CCD9EA"><?php echo $string['copyontopaper']; ?></td></tr>
@@ -112,7 +75,7 @@ if (!isset($_POST['submit'])) {
 
   <p style="margin-left:20px; margin-right:4px; text-align:justify; font-size:80%; text-indent:-16px"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="<?php echo $string['warning']; ?>" />&nbsp;<?php echo $string['msg1']; ?></p>
 
-  <div style="height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:4px" id="paperlist">
+  <div style="height:200px; overflow:auto; background-color:white; border:1px solid #CCD9EA; margin:4px" id="list">
   <table cellpadding="0" cellspacing="1" border="0" width="95%">
 <?php
 	$sql = "SELECT DISTINCT properties.property_id, paper_title, start_date, end_date, paper_type FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = modules.id AND (paper_ownerID=? OR idMod IN ('" . implode("','",array_keys($staff_modules)) . "')) AND deleted IS NULL ORDER BY paper_title";
@@ -126,7 +89,7 @@ if (!isset($_POST['submit'])) {
     } elseif ($start_date < date("Y-m-d H:i:s") and $end_date > date("Y-m-d H:i:s")) {
       echo "<tr><td style=\"width:16px\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"" . $string['warning'] . "\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\" disabled><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
     } else {
-      echo "<tr><td style=\"width:16px\">&nbsp;</td><td><input type=\"radio\" name=\"paperID\" value=\"$property_id\" id=\"$property_id\"><label for=\"$property_id\">$paper_title</label></td></tr>\n";
+      echo "<tr><td style=\"width:16px\">&nbsp;</td><td><input type=\"radio\" name=\"property_id\" value=\"$property_id\" id=\"$property_id\" ><label for=\"$property_id\">$paper_title</label></td></tr>\n";
     }
   }
   $result->close();
@@ -135,40 +98,9 @@ if (!isset($_POST['submit'])) {
   echo '<input type="hidden" id="outcomes" name="outcomes" value="" />';
   echo "<div align=\"center\"><img src=\"../artwork/working.gif\" id=\"working\" width=\"16\" height=\"16\" alt=\"Working\" style=\"display: none\" /> <input type=\"submit\" class=\"ok\" name=\"submit\" value=\"" . $string['ok'] . "\" /><input type=\"button\" class=\"cancel\" name=\"cancel\" id=\"cancel\" value=\"" . $string['cancel'] . "\" /></div>\n</form>\n";
 } else {
-  $property_id = $_POST['paperID'];
-	$properties = PaperProperties::get_paper_properties_by_id($property_id, $mysqli, $string);
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-  <title><?php echo $string['copyontopaper']; ?></title>
-
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <style type="text/css">
-    body {font-size:90%; text-align:center}
-  </style>
-  
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function () {
-      $("#close").click(function() {
-        window.close();
-      });
-      
-      $("#gotopaper").click(function() {
-        window.opener.location.href = '../paper/details.php?paperID=<?php echo $property_id ?>';
-        window.close();
-      });
-    });
-  </script>
-</head>
-<body>
-<?php
-  $property_id = $_POST['paperID'];
-	$properties = PaperProperties::get_paper_properties_by_id($property_id, $mysqli, $string);
+  $property_id = $_POST['property_id'];
+  $properties = PaperProperties::get_paper_properties_by_id($property_id, $mysqli, $string);
 
   $q_id = $_GET['q_id'];
   $logger = new Logger($mysqli);
@@ -397,11 +329,18 @@ if (!isset($_POST['submit'])) {
     }
 }
 
-  echo "<p>" . sprintf($string['success'], $properties->get_paper_title()) . "</p>\n";
-  echo "<p><input type=\"button\" value=\"" . $string['close'] . "\" class=\"ok\" id=\"close\" /><input type=\"button\" value=\"" . $string['gotopaper'] . "\" class=\"ok\" id=\"gotopaper\" /></p>\n";
+  echo "<body class='complete'><p>" . sprintf($string['success'], $properties->get_paper_title()) . "</p>\n";
+  echo "<p><input type=\"button\" value=\"" . $string['close'] . "\" class=\"cancel\" id=\"close\" /><input type=\"button\" value=\"" . $string['gotopaper'] . "\" class=\"ok\" id=\"gotopaper\"data-paperid='$property_id' /></p>\n";
 
   $mysqli->close();
 }
+$render = new render($configObject);
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['outcomes'] = $map_outcomes;
+$render->render($miscdataset, array(), 'dataset.html');// JS utils dataset.
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
 ?>
 </body>
 </html>

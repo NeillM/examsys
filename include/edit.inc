@@ -223,18 +223,13 @@ function save_buttons($mode, $disabled, $locked, $allow_correct, $userID, $check
       }
     }
 
-    $html .= '<input id="submit-save" name="' . $name . '" value="' . $value . '" type="submit" class="ok"' . $save_disabled . ' />';
-
     if ($allow_correct and $locked != '' and $paper_id != -1) {
       $html .= <<< HTML
-      <script>
-        var otherSummatives = $paper_count;
-        var postExam = true;
-        var postExamWarningShown = false;
-      </script>
-
+      <div id="savebutton" data-otherSummatives="$paper_count" data-postExam="1" data-postExamWarningShown="0"></div>
 HTML;
     }
+
+    $html .= '<input id="submit-save" name="' . $name . '" value="' . $value . '" type="submit" class="ok"' . $save_disabled . ' />';
 
   } else {
     $html .= '<input type="submit" id="addbank" name="addbank" value="' . $string['addtobank'] . '" class="ok">';

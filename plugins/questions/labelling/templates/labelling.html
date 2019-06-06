@@ -35,21 +35,15 @@ data.scoremethod - the scoremethod
 data.marks - the total marks available
 #}
 <div align="left">
-    <!-- ======================== HTML5 part include disp ================= -->
-    <canvas class="labelling" id="canvas{{data.questionno}}" width="{{data.mediawidth + 220}}px" height="{{data.mediaheight}}px"></canvas>
+    <canvas class="labelling" id="canvas{{data.questionno}}"
+            data-qno="{{data.questionno}}"
+            data-qmedia="{{data.mediafile}}"
+            data-qcorrect="{{data.tmpcorrect|raw}}"
+            data-user="{{data.useranswer|raw}}"
+            data-marking="{{data.markscorrect}}~{{data.marksincorrect}}~{{data.scoremethod}}"
+            width="{{data.mediawidth + 220}}px"
+            height="{{data.mediaheight}}px">
+    </canvas>
     <br /><div id="canvasbox"></div>
-    <script>
-    setUpQuestion("{{data.questionno}}",
-    "flash{{data.questionno}}",
-    "{{data.language}}",
-    "{{data.mediafile}}",
-    "{{data.tmpcorrect|raw}}",
-    "{{data.useranswer|raw}}",
-    "{{data.markscorrect}}~{{data.marksincorrect}}~{{data.scoremethod}}",
-    "#FFC0C0",
-    "labelling",
-    "answer");
-    </script>
-    <!-- ==================================================== -->
 </div>
 <input type="hidden" name="q{{data.questionno}}" id="q{{data.questionno}}" {% if data.unanswered %} value="0{{data.marks}}" {% else %} value="{{data.useranswer}}" {% endif %}/>

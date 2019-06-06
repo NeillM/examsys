@@ -1,0 +1,44 @@
+// This file is part of Rogo
+//
+// Rogo is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogo is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
+//
+// Paper keyword question validation.
+//
+// @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+// @copyright Copyright (c) 2018 The University of Nottingham
+//
+define(['jsxls', 'jquery', 'jqueryvalidate'], function(jsxls, $) {
+    return function() {
+        /**
+         * Add keyword validation methods to jquery-validate.
+         */
+        this.init = function () {
+            if ($('#option_text1').size() == 0) {
+                $('#addbank').attr('disabled', 'disabled');
+                $('#addpaper').attr('disabled', 'disabled');
+            }
+
+            $('#edit_form').validate({
+                rules: {
+                    leadin: 'required',
+                    option_text1: 'required'
+                },
+                messages: {
+                    leadin: '<br />' + jsxls.lang_string['enterleadin'],
+                    option_text1: '<br />' + jsxls.lang_string['enteroption_kw']
+                }
+            });
+        };
+    }
+});

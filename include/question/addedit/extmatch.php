@@ -49,6 +49,7 @@ for ($i = 0; $i < $question->max_stems; $i++) {
   if ((isset($stems[$i]) and $stems[$i] != '') or (isset($all_media['filenames'][$i + 1]) and $all_media['filenames'][$i + 1] != '')) $visible_questions = $i + 1;
 }
 ?>
+
         <div id="extmatch-options">
           <h2 class="midblue_header"><?php echo $string['availableoptions'] ?></h2>
           <dl id="extended-option-list">

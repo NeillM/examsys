@@ -25,27 +25,9 @@
 $num_options = count($question->options);
 $types = $question->get_sct_types();
 $type = ($question-> id != -1) ? $types[$question->get_display_method() - 1] : 1;
-
-$sct_type_js = '[';
-foreach ($question->get_sct_types() as $typs_js) {
-  $sct_type_js .= '[';
-  $label_str = '';
-  foreach ($typs_js as $label) {
-    $label_str .= "'$label',";
-  }
-  $sct_type_js .= rtrim($label_str, ',');
-  $sct_type_js .= '],';
-
-}
-$sct_type_js = rtrim($sct_type_js, ',') . ']';
-
 $disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
 ?>
-
-<script>
-var sct_types = <?php echo $sct_type_js ?>;
-</script>
-
+<div id="sctdataset" data-sct_types="<?php echo htmlspecialchars(json_encode($types), ENT_QUOTES, 'UTF-8'); ?>"></div>
 				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
 					<tbody>
 <?php

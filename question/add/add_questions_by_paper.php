@@ -54,38 +54,21 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
 <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
-
-  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
+  <script id="rogoconfig" src='../../js/rogo.min.js'
+            data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
+            data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>">
+  </script>
+  <script src='../../js/require.js'></script>
+  <script src='../../js/main.min.js'></script>
+  <script src="../../js/addquestionsinit.min.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
 ?>
-  <script>
-    function Qpreview(qID) {
-      parent.previewurl.location = '../view_question.php?q_id=' + qID;
-    }
 
-    function populateTicks() {
-      q_array = parent.top.controls.document.getElementById('questions_to_add').value.split(",");
-      for (i=0; i<q_array.length; i++) {
-        if (q_array[i]!='') {
-          var obj = document.getElementById(q_array[i]);
-          if (obj != null) {
-            obj.checked = true;
-          }
-        }
-      }
-    }
-  </script>
-  <?php
-    if($configObject->get_setting('core', 'paper_mathjax')) {
-      $render = new render($configObject);
-      $render->render(null, null, 'mathjax.html');
-    }
-  ?>
 </head>
 
-<body onload="populateTicks()">
+<body>
 <?php
   // Get the title of the paper.
   $stmt = $mysqli->prepare("SELECT paper_title FROM properties WHERE property_id = ?");
@@ -136,5 +119,13 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 ?>
 </table>
 </form>
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$jsdataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

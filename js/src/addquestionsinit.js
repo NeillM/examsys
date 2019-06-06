@@ -1,0 +1,39 @@
+// This file is part of Rogo
+//
+// Rogo is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogo is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
+//
+// Initialise add questions list section.
+//
+// @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+// @copyright Copyright (c) 2019 The University of Nottingham
+//
+requirejs(['addquestionscommon', 'jquery', 'jquerytablesorter'], function (COMMON, $) {
+    if ($("#maindata").find("tr").size() > 1) {
+        $("#maindata").tablesorter({
+            dateFormat: $('#dataset').attr('data-datetime'),
+            sortList: [[2,0]]
+        });
+    }
+
+    COMMON.populateTicks();
+
+    $('.viewq').click(function() {
+        COMMON.previewq($(this).attr('data-qid'));
+    });
+
+    $(":checkbox").change(function() {
+        var selected_q = window.parent.$("#questions_to_add").val().split(',');
+        COMMON.updatearray(this, selected_q);
+    });
+});

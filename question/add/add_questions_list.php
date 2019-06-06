@@ -45,53 +45,17 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
 <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
-  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../../js/jquery_tablesorter/jquery.tablesorter.js"></script>
+  <script id="rogoconfig" src='../../js/rogo.min.js'
+            data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
+            data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>">
+  </script>
+  <script src='../../js/require.js'></script>
+  <script src='../../js/main.min.js'></script>
+  <script src="../../js/addquestionsinit.min.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
 ?>
-  <script>
-    function populateTicks() {
-      var q_array = parent.top.controls.document.getElementById('questions_to_add').value.split(",");
-      for (i=0; i<q_array.length; i++) {
-        if (q_array[i]!='') {
-          var obj = document.getElementById(q_array[i]);
-          if (obj != null) {
-            obj.checked = true;
-          }
-        }
-      }
-    }
-    
-    $(function () {
-      if ($("#maindata").find("tr").size() > 1) {
-        $("#maindata").tablesorter({ 
-          dateFormat: 'uk',
-          sortList: [[2,0]] 
-        });
-      }
-      
-      populateTicks();
-      
-      $('.prev').click(function() {
-        q_id = $(this).attr('id');
-        parent.top.qlist.previewurl.location = '../view_question.php?q_id=' + q_id.substring(4);
-      });
-      
-      
-      $(":checkbox").change(function() {
-        parent.top.controls.checkStatus(this);
-      });
-
-    });
-  </script>
-  <?php
-    if($configObject->get_setting('core', 'paper_mathjax')) {
-      $render = new render($configObject);
-      $render->render(null, null, 'mathjax.html');
-    }
-  ?>
 </head>
 <body>
 <?php
@@ -267,7 +231,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     $status_class = 'status' . $status;
     echo "<tr class=\"$status_class\"><td>";
     if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="18" height="18" alt="' . $string['locked'] . '" />';
-    echo "</td><td><input type=\"checkbox\" name=\"$q_id\" value=\"$q_id\" /></td><td class=\"prev\" id=\"prev$q_id\">$tmp_leadin</td><td><nobr>&nbsp;" . $string[$q_type] . "</nobr></td><td>" . $display_date . "</td><td>" . $status_name . "</td></tr>\n";
+    echo "</td><td><input type=\"checkbox\" id='q$q_id' name=\"$q_id\" value=\"$q_id\" /></td><td class=\"prev viewq\" id=\"prev$q_id\" data-qid='$q_id'>$tmp_leadin</td><td><nobr>&nbsp;" . $string[$q_type] . "</nobr></td><td>" . $display_date . "</td><td>" . $status_name . "</td></tr>\n";
   }
   $result->close();
   $mysqli->close();
@@ -275,5 +239,13 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 </tbody>
 </table>
 </form>
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$jsdataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

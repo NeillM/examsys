@@ -15,5 +15,4 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['questionsbank'] = 'Questions Bank';
-$string['frameserr'] = 'Your browser does not support iframes.';
-?>
+$string['browsererr'] = 'Your browser does not support iframes.';

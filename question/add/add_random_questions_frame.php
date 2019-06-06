@@ -35,16 +35,34 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo $string['questionsbank']; ?></title>
+    <script src="../../js/require.js"></script>
+    <script src="../../js/main.min.js"></script>
+    <script src="../../js/randomquestionsframeinit.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="../../css/add_questions.css" />
 </head>
-
-  <frameset rows="*,32" frameborder="0" framespacing="0" border="0">
-    <frameset cols="134,*" frameborder="0" framespacing="0" border="0">
-      <frame scrolling="no" src="add_questions_buttons.php" name="qbuttons">
-      <frame scrolling="no" src="add_questions_iframe.php" name="qlist">
-    </frameset>
-    <frame scrolling="no" resizable="no" src="add_random_question_controls.php?q_no=<?php echo $_GET['q_no']; ?>&questionlist=<?php echo $questionlist; ?>&question_no=<?php echo $question_no; ?>" name="controls">
-  </frameset>
-  <noframes>
-    <?php echo $string['browsererr'];?>
-  </noframes>
+<body>
+<div>
+    <div class="wrapper">
+        <div id="qbuttons"></div>
+        <div id="qlist">
+            <iframe id="iframeurl" src="add_questions_list.php?type=unused" name="iframeurl" frameborder="0">
+                <p><?php echo $string['browsererr'];?></p>
+            </iframe>
+            <iframe id="previewurl" src ="preview_default.php" name="previewurl"  frameborder="0">
+                <p><?php echo $string['browsererr'];?></p>
+            </iframe>
+        </div>
+        <div name="controls" id="controls"></div>
+    </div>
+</div>
+<?php
+// Dataset.
+$render = new render($configObject);
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['qno'] = $_GET['q_no'];
+$miscdataset['attributes']['qlist'] = $questionlist;
+$miscdataset['attributes']['questionno'] = $question_no;
+$render->render($miscdataset, array(), 'dataset.html');
+?>
+</body>
 </html>

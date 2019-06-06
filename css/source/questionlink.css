@@ -1,0 +1,11 @@
+.submit {
+    background-color: #F1F5FB;
+}
+td {
+    font-size: 80%;
+}
+.complete {
+    font-size: 90%;
+    background-color: #EEECDC;
+    text-align: center;
+}

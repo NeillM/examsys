@@ -570,14 +570,6 @@ textarea[disabled], textarea[readonly="readonly"], select:disabled, input[type=t
   padding-right: 200px;
 }
 
-#question-holder.hotspot {
-  width: 1220px;
-}
-
-#question-holder.labelling {
-  width: 1046px;
-}
-
 /* media upload */
 #media-upload-holder {
 	position: fixed;

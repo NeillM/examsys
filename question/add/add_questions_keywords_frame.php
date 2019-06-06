@@ -30,13 +30,16 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title>Add Questions</title>
+  <title><?php echo $string['questionsbank'];?></title>
+    <script src="../../js/require.js"></script>
+    <script src="../../js/main.min.js"></script>
+    <script src="../../js/keywordsquestionsframeinit.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="../../css/add_questions.css" />
 </head>
-  <frameset cols="200,*" frameborder="0" framespacing="0" border="0">
-    <frame scrolling="auto" src="add_questions_keyword_list.php" name="keywords">
-    <frame scrolling="auto" resizable="no" src="add_questions_list.php?type=keyword" name="keywordlist">
-  </frameset>
-  <noframes>
-    <?php echo $string['frameserr'];?>
-  </noframes>
+<body>
+<div class="keywordwrapper">
+    <div id="klist"></div>
+    <div id="keywordqlist"></div>
+</div>
+</body>
 </html>

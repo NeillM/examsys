@@ -56,44 +56,16 @@ if (!QuestionUtils::question_exists($q_id, $mysqli)) {
 
 $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);
   
-if (isset($_POST['submit'])) {
-  $screenNo = check_var('screenNo', 'POST', true, false, true);
-  $questionNo = check_var('questionNo', 'POST', true, false, true);
-  $msg = check_var('msg', 'POST', true, false, true);
+$screenNo = check_var('screenNo', 'GET', true, false, true);
+$questionNo = check_var('questionNo', 'GET', true, false, true);
 
-  $exam_announcementObj->replace_announcement($q_id, $questionNo, $screenNo, $msg);
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo page::title($string['midexamclarification']); ?></title>
+$exam_announcements = $exam_announcementObj->get_announcements();
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function () {
-      opener.location.reload();
-      window.close();
-    });
-  </script>
-</head>
-<body>
-</body>
-</html>
-exit();
-<?php
+if (isset($exam_announcements[$q_id]['msg'])) {
+$msg = $exam_announcements[$q_id]['msg'];
 } else {
-  $screenNo = check_var('screenNo', 'GET', true, false, true);
-  $questionNo = check_var('questionNo', 'GET', true, false, true);
-
-  $exam_announcements = $exam_announcementObj->get_announcements();
-  
-  if (isset($exam_announcements[$q_id]['msg'])) {
-    $msg = $exam_announcements[$q_id]['msg'];
-  } else {
-    $msg = '';
-  }
+$msg = '';
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -104,37 +76,23 @@ exit();
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/examclarification.css" />
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/examclarificationinit.min.js"></script>
 
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
   $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::ANNOUNCEMENTS);
 ?>
-  <script>
-    $(function () {
-      var new_height = $(window).height() - 105;
-      $('#msg').height(new_height);
-      
-      $('form').submit(function() {
-        triggerSave();
-        if ($('#msg').val() == '') {
-          $('.defaultSkin table.mceLayout').css('border-color', '#C00000');
-          $('.defaultSkin table.mceLayout').css('box-shadow', '0 0 6px rgba(200, 0, 0, 0.85)');
-          $('.defaultSkin table.mceLayout tr.mceFirst td').css('border-top-color', '#C00000');
-          $('.defaultSkin table.mceLayout tr.mceLast td').css('border-bottom-color', '#C00000');
-          return false;
-        }
-      });
-    });
-  </script>
 </head>
 
 <body>
-<form name="myform" id="myform" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
+<form name="myform" id="myform" method="post" action="" autocomplete="off">
 <h1 class="dkblue_header"><?php echo sprintf($string['questionscreen'], $questionNo, $screenNo); ?></h1>
 <?php $texteditorplugin->get_textarea('msg', 'msg', htmlspecialchars($msg, ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD); ?><br />
-<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" class="cancel" /></div>
+<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>"  class="cancel" /></div>
 <input type="hidden" name="paperID" value="<?php echo $paperID ?>" />
 <input type="hidden" name="q_id" value="<?php echo $q_id ?>" />
 <input type="hidden" name="screenNo" value="<?php echo $screenNo ?>" />
@@ -143,6 +101,3 @@ exit();
 
 </body>
 </html>
-<?php
-}
-?>

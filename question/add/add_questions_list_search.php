@@ -26,7 +26,7 @@ require '../../include/staff_auth.inc';
 require '../../include/errors.php';
 
 $stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
-$state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/search.php');
+$state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/add/add_questions_list_search.php');
 
 // Get question statuses
 $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
@@ -46,50 +46,20 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 
 <?php echo QuestionStatus::generate_status_css($status_array); ?>
   </style>
-
-  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
+  <script id="rogoconfig" src='../../js/rogo.min.js'
+            data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
+            data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>">
+  </script>
+  <script src='../../js/require.js'></script>
+  <script src='../../js/main.min.js'></script>
+  <script src="../../js/addquestionslistinit.min.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
 ?>
-  <script type="text/javascript" src="../../js/state.js"></script>
-  <script>
-    function Qpreview(qID) {
-      parent.previewurl.location = '../view_question.php?q_id=' + qID;
-    }
-
-    function updateDropdownState(mySel, NameOfState) {
-      setting = mySel.options[mySel.selectedIndex].value;
-      updateState(NameOfState, setting);
-    }
-
-    function populateTicks() {
-      q_array = parent.top.controls.document.getElementById('questions_to_add').value.split(",");
-      for (i=0; i<q_array.length; i++) {
-        if (q_array[i]!='') {
-          var obj = document.getElementById(q_array[i]);
-          if (obj != null) {
-            obj.checked = true;
-          }
-        }
-      }
-    }
-    function checkForm() {
-      if ($('#searchterm').val() == '' || ($('#searchtype').val() == '%' && $('#owner').val() == '')) {
-        alert("<?php echo $string['msg1']; ?>");
-        return false;
-      }
-    }
-  </script>
-  <?php
-    if($configObject->get_setting('core', 'paper_mathjax')) {
-      $render = new render($configObject);
-      $render->render(null, null, 'mathjax.html');
-    }
-  ?>
 </head>
 
-<body onload="populateTicks(); document.search.searchterm.focus();">
+<body>
 <?php
 
   if (isset($_GET['display_pos'])) {
@@ -111,7 +81,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   <table class="header">
   <tr>
   <th colspan="6">
-  <form name="search" method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off" onsubmit="return checkForm();">
+  <form id="search" name="search" method="get" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
   &nbsp;<strong><?php echo $string['wordphrase']; ?></strong> <input type="text" size="30" name="searchterm" id="searchterm" <?php echo 'value="' . $searchterm . '" '; ?>/> <strong><?php echo $string['in']; ?></strong>
   <select name="searchtype" id="searchtype">
     <option value="%"><?php echo $string['anytype']; ?></option>
@@ -237,7 +207,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
       $status_class = 'status' . $status;
       echo "<tr class=\"$status_class\"><td style=\"width:16px\">";
       if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="18" height="18" alt="' . $string['locked'] . '" />';
-      echo "</td><td><input onclick=\"parent.top.controls.checkStatus(this)\" type=\"checkbox\" name=\"$q_id\" value=\"$q_id\" /></td><td onclick=\"Qpreview($q_id)\">$tmp_leadin</td><td><nobr>&nbsp;" . $string[$q_type] . "</nobr></td><td>&nbsp;$display_date</td><td>$status_name</td></tr>\n";
+      echo "</td><td><input type=\"checkbox\" id='q$q_id' name=\"$q_id\" value=\"$q_id\" /></td><td class='viewq' data-qid='$q_id' id='leadin'>$tmp_leadin</td><td><nobr>&nbsp;" . $string[$q_type] . "</nobr></td><td>&nbsp;$display_date</td><td>$status_name</td></tr>\n";
     }
     $result->close();
   }
@@ -245,5 +215,12 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   ?>
 </form>
 </table>
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

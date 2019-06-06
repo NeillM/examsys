@@ -1,0 +1,50 @@
+#qbuttons {
+    flex: 0 1;
+    order: 1;
+    height: 90vh;
+}
+
+#qlist {
+    flex: 1 0;
+    order: 2;
+    padding-bottom: 4px
+}
+
+#controls {
+    order: 3;
+}
+
+#iframeurl {
+    height: 60%;
+    width: 100%;
+    border: 1px solid #828790;
+}
+
+#previewurl {
+    height: 39%;
+    width: 100%;
+    border: 1px solid #828790;
+}
+
+.wrapper {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+/* We tell all items to be 100% width, via flex-basis */
+.wrapper > * {
+    flex: 1 100%;
+}
+
+#klist {
+    grid-area: klist;
+}
+
+#keywordqlist {
+    grid-area: keywordqlist;
+}
+
+.keywordwrapper {
+    display: grid;
+    grid-template-areas: 'klist keywordqlist';
+}

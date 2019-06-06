@@ -41,13 +41,11 @@ require '../include/errors.php';
     .desc {background-color:white; padding:3px}
     .desc:hover {background-color:#FFE7A2}
   </style>
-  
-  <script>
-    function createQ(type) {
-      window.close();
-      window.opener.location.href='./edit/index.php?type=' + type + '&module=<?php echo $_GET['module'] ?>';
-    }
-  </script>
+
+  <script id="rogoconfig" src='../js/rogo.min.js'></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/createquestioninit.min.js"></script>
 </head>
 <body>
 <?php
@@ -64,9 +62,16 @@ require '../include/errors.php';
   <table cellspacing="1" cellpadding="0" border="0">
 <?php
 foreach ($question_types as $type=>$details) {
-  echo "<tr onclick=\"createQ('$type')\"><td class=\"icon\"><img src=\"../artwork/new_$type.png\" width=\"48\" height=\"48\" /></td><td class=\"desc\"><strong>" . $details['title'] . "</strong><br />" . $details['desc'] . "</td></tr>\n";
+  echo "<tr class='q' data-qtype='$type'><td class=\"icon\"><img src=\"../artwork/new_$type.png\" width=\"48\" height=\"48\" /></td><td class=\"desc\"><strong>" . $details['title'] . "</strong><br />" . $details['desc'] . "</td></tr>\n";
 }
 ?>
-  </table>  
+  </table>
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['module'] = $_GET['module'];
+$render->render($miscdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

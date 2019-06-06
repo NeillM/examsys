@@ -45,7 +45,7 @@ data.other - text user entered into other textbox
 {% for i,p in data.options %}
     <tr>
         <td>
-            <input type="checkbox" {% if data.papertype != 3 %} onclick="MRQ({{data.questionno}},{{p.position}},{{data.optionnumber}},{{data.allowedresponses}});" {% endif %} name="q{{data.questionno}}_{{p.position}}" id="q{{data.questionno}}_{{p.position}}" value="y" {% if p.selected %} checked="checked" {% endif %} />
+            <input type="checkbox" {% if data.papertype != 3 %} class="online" data-qno="{{data.questionno}}" data-pos="{{p.position}}" data-ono="{{data.optionnumber}}" data-allowed="{{data.allowedresponses}}" {% endif %} name="q{{data.questionno}}_{{p.position}}" id="q{{data.questionno}}_{{p.position}}" value="y" {% if p.selected %} checked="checked" {% endif %} />
         </td>
         <td>
             {% if p.optiontextdisplay %}

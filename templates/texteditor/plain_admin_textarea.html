@@ -34,12 +34,11 @@ lang.previewmathjax - preview
 
 #}
 {% if data.editormathjax == true %}
-{% include 'mathjaxpreview.html' %}
 <p>{{lang.mathjaxinstructions|raw}}</p>
     {% if data.style == '' %}
-    <textarea onkeyup="Preview{{data.id}}.Update()" class="plaintextarea" id="q{{data.id}}" name="{{data.id}}">{{data.content}}</textarea>
+    <textarea class="plaintextarea" id="q{{data.id}}" name="{{data.id}}">{{data.content}}</textarea>
 {% else %}
-    <textarea onkeyup="Preview{{data.id}}.Update()" class="plaintextarea" id="q{{data.id}}" name="{{data.id}}" style="{{data.style}}">{{data.content}}</textarea>
+    <textarea class="plaintextarea" id="q{{data.id}}" name="{{data.id}}" style="{{data.style}}">{{data.content}}</textarea>
     {% endif %}
 {% else %}
     {% if data.style == '' %}
@@ -55,6 +54,15 @@ lang.previewmathjax - preview
     <div id="MathPreview{{data.id}}" style="border:1px solid; padding: 3px; width:50%; margin-top:5px"></div>
     <div id="MathBuffer{{data.id}}" style="border:1px solid; padding: 3px; width:50%; margin-top:5px; visibility:hidden; position:absolute; top:0; left: 0"></div>
 </td>
-<script>Preview{{data.id}}.Init();</script>
+<script>
+    requirejs(['mathjaxpreview'], function(MathJaxPreview) {
+        var Preview = new MathJaxPreview('{{data.id}}');
+        Preview.Init();
+        $("#q{{data.id}}").on('keyup', function (e) {
+            Preview.Update();
+            e.preventDefault();
+        });
+    });
+</script>
 </tr>
 {% endif %}
