@@ -121,87 +121,9 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
   <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
   <link rel="stylesheet" type="text/css" href="../css/popup_menu.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
-
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/popup_menu.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-
-    function popupPublishMarks() {
-      var winwidth = 785;
-      var winheight = 150;
-      templatewin = window.open("../reports/publishmarks.php","templatewin","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      templatewin.moveTo(screen.width/2-350,screen.height/2-275);
-    }
-
-    function setVars(metadataID, currentUserID) {
-      $('#metadataID').val(metadataID);
-      $('#userID').val(currentUserID);
-
-      if (metadataID == '') {
-        $('#item1').removeClass('popup_row');
-        $('#item1').addClass('popup_row_disabled');
-        $('#item2').removeClass('popup_row');
-        $('#item2').addClass('popup_row_disabled');
-      } else {
-        $('#item1').addClass('popup_row');
-        $('#item1').removeClass('popup_row_disabled');
-        $('#item2').addClass('popup_row');
-        $('#item2').removeClass('popup_row_disabled');
-      }
-    }
-
-	<?php
-		if (count($user_results) > 0) {
-	?>
-    $(function () {
-      if ($("#maindata").find("tr").size() > 1) {
-        $("#maindata").tablesorter({
-          // sort on the first column and third column, order asc
-          dateFormat: '<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>',
-          sortList: [[2,0],[3,0]]
-        });
-      }
-
-      $(document).click(function() {
-        $('#menudiv').hide();
-        $('#toprightmenu').hide();
-      });
-
-      // View OSCE Script
-      $('#item1').click(function() {
-        $('#menudiv').hide();
-        if ($('#metadataID').val() != '') {
-          var winwidth = 750;
-          var winheight = screen.height-80;
-          window.open("view_form.php?paperID=<?php echo $paperID; ?>&userID=" + $('#userID').val() + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-        }
-      });
-
-      // View Feedback
-      $('#item2').click(function() {
-        $('#menudiv').hide();
-        if ($('#metadataID').val() != '') {
-          var winwidth = screen.width-80;
-          var winheight = screen.height-80;
-          window.open("../students/objectives_feedback.php?id=<?php echo $crypt_name; ?>&userID=" + $('#userID').val() + "&metadataID=" + $('#metadataID').val() + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-        }
-      });
-
-      // View student profile
-      $('#item3').click(function() {
-        $('#menudiv').hide();
-        window.location = '../users/details.php?userID=' + $('#userID').val();
-      });
-
-    });
-	<?php
-		}
-	?>
-
-  </script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/ocseclasstotalsinit.min.js"></script>
 </head>
 
 <body>
@@ -292,9 +214,9 @@ echo draw_toprightmenu();
 
   for ($i=0; $i<$user_no; $i++) {
     if ($user_results[$i]['started'] == '') {   // No attendance
-      echo "<tr class=\"nonattend\" onclick=\"popMenu(3, event); setVars('', '" . $user_results[$i]['userID'] . "');\"><td>&nbsp;</td><td>" . $user_results[$i]['title'] . "</td><td>" . $user_results[$i]['surname'] . "</td><td>" . $user_results[$i]['first_names'] . "</td><td>" . $user_results[$i]['student_id'] . "</td><td colspan=\"" . ($column_no - 2) . "\" style=\"text-align:center\">&lt;" . $string['noattendance'] . "&gt;</td></tr>\n";
+      echo "<tr id=\"res" . ($i+1) . "\" class=\"nonattend\" data-paperid=\"" . $paperID . "\" data-userid=\"" . $user_results[$i]['userID'] . "\" data-metadataid=\"\" data-cryptname=\"" . $crypt_name . "\"><td>&nbsp;</td><td>" . $user_results[$i]['title'] . "</td><td>" . $user_results[$i]['surname'] . "</td><td>" . $user_results[$i]['first_names'] . "</td><td>" . $user_results[$i]['student_id'] . "</td><td colspan=\"" . ($column_no - 2) . "\" style=\"text-align:center\">&lt;" . $string['noattendance'] . "&gt;</td></tr>\n";
     } else {
-      echo "<tr onclick=\"popMenu(3, event); setVars('" . $user_results[$i]['metadataID'] . "', '" . $user_results[$i]['userID'] . "');\">\n";
+      echo "<tr id=\"res" . ($i+1) . "\" data-paperid=\"" . $paperID . "\" data-userid=\"" . $user_results[$i]['userID'] . "\" data-metadataid=\"" . $user_results[$i]['metadataID'] . "\" data-cryptname=\"" . $crypt_name . "\">\n";
       echo "<td class=\"greyln\"><img src=\"../artwork/osce_16.gif\" class=\"picon\" title=\"" . $string['osce'] . "\" alt=\"" . $string['osce'] . "\" /></td>";
       echo '<td class="greyln col">' . $user_results[$i]['title'] . '</td>';
       echo '<td class="greyln col">' . $user_results[$i]['surname'] . '</td>';
@@ -323,9 +245,9 @@ echo draw_toprightmenu();
 
 <br />
   <?php
-  echo "<table border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . $string['summary'] . "</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+  echo "<table class=\"graph\" border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . $string['summary'] . "</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
 
-  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"line-height:150%\">\n";
+  echo "<table class=\"graph\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"line-height:150%\">\n";
   echo "<tr><td align=\"right\" style=\"width:110px\">" . $string['cohortsize'] . "</td><td style=\"text-align:right; width:40px\">" . $user_no . "</td></tr>\n";
 
   if ($borderline_method) {
@@ -351,17 +273,16 @@ echo draw_toprightmenu();
         echo '<p>' . $string['gradepublish'] . '</p>';
     } else {
         echo "<div>\n";
-        echo "<form name=\"theform\" method=\"post\" autocomplete=\"off\">\n";
-        echo "<input type=\"button\" value=\"" . $string['publishmarks'] . "\" onclick=\"popupPublishMarks();\" style=\"margin:10px; width:160px\" />\n";
-        echo '<input type="hidden" name="publishmarks" value="" />';
+        echo "<form id=\"publishform\" name=\"publishform\" method=\"post\" autocomplete=\"off\">\n";
+        echo "<input id=\"publishmarksbutton\" type=\"button\" value=\"" . $string['publishmarks'] . "\" style=\"margin:10px; width:160px\" />\n";
+        echo '<input type="hidden" id="publishmarks" name="publishmarks" value="" />';
         echo "</form>\n</div>\n";
     }
   }
 
   $mysqli->close();
 ?>
-<input type="hidden" id="userID" value="" />
-<input type="hidden" id="metadataID" value="" />
+<input type="hidden" id="datatime" value="<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>" />
 </div>
 </body>
 </html>

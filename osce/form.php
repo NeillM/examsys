@@ -124,126 +124,17 @@ if (isset($_POST) and count($_POST) > 0) {
     ?>
     .t {color:<?php echo $propertyObj->get_themecolor(); ?>}
   </style>
-
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    function ans(q_id, rating,max_col) {
-      var colors = ['#D99694', '#E5B9B7', '#FFC169', '#C2D69B', '#C2DFFF','#5ea2ef','#4b0082', '#4b00FF','#9400d3','#9400FF'];
-      $('#q' + q_id + '_val').val(rating);
-      for(var i=0; i< max_col+1; i++) {
-        if (rating == i) {
-          $('#c' + q_id + '_' + i).css('background-color', colors[i - 1]);
-        } else {
-          $('#c' + q_id + '_' + i).css('background-color', '');
-        }
-      }
-      checkTotals();
-    }
-
-    function checkTotals() {
-      var rated=level1=level2=level3=level4=level5=level6=level7=level8=level9=level10=0;
-      for (i=1; i<=<?php echo $number_of_qs; ?>; i++) {
-        if ($('#q' + i + '_val').val() == '1') {
-          level1++;
-        } else if ($('#q' + i + '_val').val() == '2') {
-          level2++;
-        } else if ($('#q' + i + '_val').val() == '3') {
-          level3++;
-        } else if ($('#q' + i + '_val').val() == '4') {
-          level4++;
-        } else if ($('#q' + i + '_val').val() == '5') {
-          level5++;
-        } else if ($('#q' + i + '_val').val() == '6') {
-          level6++;
-        } else if ($('#q' + i + '_val').val() == '7') {
-          level7++;
-        } else if ($('#q' + i + '_val').val() == '8') {
-          level8++;
-        } else if ($('#q' + i + '_val').val() == '9') {
-          level9++;
-        } else if ($('#q' + i + '_val').val() == '10') {
-          level10++;
-        }
-      }
-      rated = level1 + level2 + level3 + level4 + level5 + level6 + level7 + level8 + level9 + level10;
-
-      $('#level1').val(level1);
-      $('#level2').val(level2);
-      $('#level3').val(level3);
-      $('#level4').val(level4);
-      $('#level5').val(level5);
-      $('#level6').val(level6);
-      $('#level7').val(level7);
-      $('#level8').val(level8);
-      $('#level9').val(level9);
-      $('#level10').val(level10);
-
-   <?php
-     if ($marking == '5') {
-       echo "if (rated == $('#q_no').val()) {\n";
-     } else {
-       echo "if (rated == $('#q_no').val() && $('#overall_val').val() != '0') {\n";
-     }
-   ?>
-        $('#save').prop('disabled', false);
-
-      } else {
-        $('#save').prop('disabled', true);
-
-      }
-    }
-
-    function overallset(q_id, rating) {
-      var colors = new Array();
-      <?php
-      switch ($marking) {
-        case '3':
-          $labels = $string['marking3'];
-          $colors = array('#D99594', '#FABF8F', '#C2D69B');
-          break;
-        case '4':
-          $labels = $string['marking4'];
-          $colors = array('#D99694', '#E5B9B7', '#FFC169', '#D7E3BC', '#C2D69B');
-          break;
-        case '5':
-          $labels = $string['marking5'];
-          $colors = array('#D99594', '#C2D69B');
-          break;
-        case '6':
-          $labels = $string['marking6'];
-          $colors = array('#D99694', '#E5B9B7', '#D7E3BC', '#C2D69B');
-          break;
-        case '7':
-          $labels = $string['marking7'];
-          $colors = array('#D99594', '#C2D69B');
-          break;
-      }
-      for ($i=0; $i<count($colors); $i++) {
-        echo "colors[" . ($i+1) . "]=\"" . $colors[$i] ."\";\n";
-      }
-      ?>
-
-      for (i=1; i<colors.length; i++) {
-        if (i == rating) {
-          $('#overall' + i).css('background-color', colors[i]);
-        } else {
-          $('#overall' + i).css('background-color', '');
-        }
-      }
-      $('#overall_val').val(rating);
-      checkTotals();
-    }
-
-    $(document).ready(checkTotals);
+  <script id="rogoconfig" src='../js/rogo.min.js'
+              data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
+              data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>">
   </script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/osceforminit.min.js"></script>
+
   <?php
-    require './ajaxsave.js.php';
     $texteditorplugin = \plugins\plugins_texteditor::get_editor();
     $texteditorplugin->display_header();
-    if($configObject->get_setting('core', 'paper_mathjax')) {
-      $render = new render($configObject);
-      $render->render(null, null, 'mathjax.html');
-    }
   ?>
 
   </head>
@@ -252,6 +143,30 @@ if (isset($_POST) and count($_POST) > 0) {
   <form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?id=' . $_GET['id']; ?>" id="osceform" name="osceform" autocomplete="off">
   <table cellpadding="0" cellspacing="0" border="0" style="width:100%"><tr>
 <?php
+
+switch ($marking) {
+  case '3':
+    $labels = $string['marking3'];
+    $colors = array('#D99594', '#FABF8F', '#C2D69B');
+    break;
+  case '4':
+    $labels = $string['marking4'];
+    $colors = array('#D99694', '#E5B9B7', '#FFC169', '#D7E3BC', '#C2D69B');
+    break;
+  case '5':
+    $labels = $string['marking5'];
+    $colors = array('#D99594', '#C2D69B');
+    break;
+  case '6':
+    $labels = $string['marking6'];
+    $colors = array('#D99694', '#E5B9B7', '#D7E3BC', '#C2D69B');
+    break;
+  case '7':
+    $labels = $string['marking7'];
+    $colors = array('#D99594', '#C2D69B');
+    break;
+}
+
 $photodirectory = rogo_directory::get_directory('user_photo');
 $photoname = UserUtils::student_photo_exist($username);
   if ($photoname) {
@@ -319,11 +234,11 @@ $photoname = UserUtils::student_photo_exist($username);
 
     for ($i=0; $i<$max_cols; $i++) {
       if (isset($stored_results[$q_id]) and $stored_results[$q_id] == $i) {
-        echo "<td style=\"background-color:" . $cell_colors[$i] . "\" class=\"r\" id=\"c" . $question_no . "_" . ($i+1) . "\" onclick=\"ans($question_no," . ($i+1) . "," . $cols . ")\">$i</td>";
+        echo "<td style=\"background-color:" . $cell_colors[$i] . "\" class=\"r\" id=\"c" . $question_no . "_" . ($i + 1) . "\" data-qid='" . $question_no . "' data-rating='" . ($i + 1) . "' data-cols='" . $cols . "'>$i</td>";
       } else if($i >= $cols) {
         echo "<td class=\"r\" style=\"background: #cfcfcf\">$i</td>";
       } else {
-        echo "<td class=\"r\" id=\"c" . $question_no . "_" . ($i+1) . "\" onclick=\"ans($question_no," . ($i+1) . "," . $cols . ")\">$i</td>";
+        echo "<td class=\"r\" id=\"c" . $question_no . "_" . ($i + 1) . "\" data-qid='" . $question_no . "' data-rating='" . ($i + 1) . "' data-cols='" . $cols . "'>$i</td>";
       }
     }
     echo "</tr>\n";
@@ -345,7 +260,7 @@ $photoname = UserUtils::student_photo_exist($username);
     for ($i=0; $i<count($labels); $i++) {
       echo '<td';
       if (($i+1) == $overall_rating) echo ' style="background-color:' . $colors[$i] . '"';
-      echo ' class="overall" id="overall' . ($i+1). '" onclick="overallset(' . $question_no . ',\'' . ($i+1). '\')">' . $labels[$i] . '</td>';
+      echo " class='overall' id='overall" . ($i+1). "' data-qno='" . $question_no . "' data-rating='" . ($i+1). "' data-colours='" . json_encode($colors) . "'>" . $labels[$i] . "</td>";
     }
     echo "</tr></table>\n</td></tr>";
   }
@@ -375,7 +290,24 @@ $photoname = UserUtils::student_photo_exist($username);
   </form>
 <?php
   $mysqli->close();
+
+  // JS utils dataset.
+  $jsdataset['name'] = 'jsutils';
+  $jsdataset['attributes']['xls'] = json_encode($string);
+  $render = new render($configObject);
+  $render->render($jsdataset, array(), 'dataset.html');
+  // Dataset.
+  $miscdataset['name'] = 'dataset';
+  $miscdataset['attributes']['number_of_qs'] = $number_of_qs;
+  $miscdataset['attributes']['marking'] = $marking;
+  $miscdataset['attributes']['self'] = $_SERVER['PHP_SELF'] ;
+  $miscdataset['attributes']['id'] = $_GET['id'];
+  $miscdataset['attributes']['timeout'] = $configObject->get_setting('core', 'paper_autosave_settimeout');
+  $miscdataset['attributes']['retry'] = $configObject->get_setting('core', 'paper_autosave_retrylimit');
+  $miscdataset['attributes']['backoff'] = $configObject->get_setting('core', 'paper_autosave_backoff_factor');
+  $render->render($miscdataset, array(), 'dataset.html');
 ?>
+
 </body>
 </html>
 <?php

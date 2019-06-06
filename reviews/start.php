@@ -32,13 +32,11 @@ require_once '../lang/' . $language . '/question/edit/area.php';
 require_once '../lang/' . $language . '/paper/hotspot_answer.php';
 require_once '../lang/' . $language . '/paper/hotspot_question.php';
 require_once '../lang/' . $language . '/paper/label_answer.php';
-$jstring = $string; //to pass it to JavaScript HTML5 modules
-//HTML5 part
 
-check_var('id', 'GET', true, false, false);
-
+$id = check_var('id', 'GET', true, false, true);
+$refpane = param::optional('refpane', 0, param::INT, param::FETCH_POST);
 // Get the paper properties
-$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($_GET['id'], $mysqli, $string, true);
+$propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli, $string, true);
 
 $start_of_day_ts = strtotime('midnight');
 
@@ -237,51 +235,8 @@ function keywordQOverwrite(&$questions, $random_q_data, $q_no, &$used_questions,
   $questions[] = $question;
 }
 
-/*
-*
-* Load any Reference Material into an array.
-* @param int $paperID - ID of the current paper
-* @param object $db   - Mysqli object
-* @return array				- Array of all reference material relevant to the current paper.
-*/
-function load_reference_materials($paperID, $db) {
-	$reference_materials = array();
-	$ref_no = 0;
-	$stmt = $db->prepare("SELECT title, content, width FROM (reference_material, reference_papers) WHERE reference_material.id = reference_papers.refID AND paperID = ?");
-	$stmt->bind_param('i', $paperID);
-	$stmt->execute();
-	$stmt->bind_result($reference_title, $reference_material, $reference_width);
-	while ($stmt->fetch()) {
-		$reference_materials[$ref_no]['title']		= $reference_title;
-		$reference_materials[$ref_no]['material']	= $reference_material;
-		$reference_materials[$ref_no]['width']		= $reference_width;
-		$ref_no++;
-	}
-	$stmt->close();
-	
-	return $reference_materials;
-}
-
-/*
-*
-* Looks through and returns the largest width for a set of reference materials.
-* @param array $reference_materials - Array of reference materials to check.
-* @return int				- The maximum width of any reference material for the current paper.
-*/
-function get_max_reference_width($reference_materials) {
-	$max_ref_width = 0;
-  foreach ($reference_materials as $reference_material) {
-		if ($reference_material['width'] > $max_ref_width) {
-			$max_ref_width = $reference_material['width'];
-		}
-	}
-	
-	return $max_ref_width;
-}
-
 // Load any reference materials.
-$reference_materials	= load_reference_materials($paperID, $mysqli);
-$max_ref_width 				= get_max_reference_width($reference_materials);
+list($reference_materials, $max_ref_width) = $propertyObj->load_reference_materials();
 
 // Extract the posted variables.
 $current_screen = 1;
@@ -308,199 +263,29 @@ echo "<html>\n<head>\n";
 <link rel="stylesheet" type="text/css" href="../css/html5.css" />
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 <link rel="stylesheet" type="text/css" href="../css/review.css" />
-<style type="text/css">
-  .var {font-weight: bold}
-  .value {display:none}
-<?php
-$css = '';
 
-if (($bgcolor != '#FFFFFF' and $bgcolor != 'white') or ($fgcolor != '#000000' and $fgcolor != 'black') or $textsize != 90) {
-  $css .= "body {background-color:$bgcolor;color:$fgcolor;font-size:$textsize%}\n";
-}
-if ($font != 'Arial') {
-  if (strpos($font,' ') === false) {
-    $css .= "body {font-family:$font,sans-serif}\n";
-    $css .= "pre {font-family:$font,sans-serif}\n";
-  } else {
-    $css .= "body {font-family:'$font',sans-serif}\n";
-    $css .= "pre {font-family:'$font',sans-serif}\n";
-  }
-}
-if ($themecolor != '#316AC5') {
-  $css .= ".theme {color:$themecolor}\n";
-}
-if ($marks_color != '#808080') {
-  $css .= ".mk {color:$marks_color}\n";
-}
-if ($fgcolor != '#000000' and $fgcolor != 'black') {
-  $css .= ".act {color:$fgcolor}\n";
-}
-if (count($reference_materials) > 0) {
-  $css .= "#maincontent {position:fixed; right:" . ($max_ref_width + 1) . "px}\n";
-  $css .= ".framecontent {width:" . ($max_ref_width - 12) . "px}\n";
-  $css .= ".refhead {width:" . ($max_ref_width - 12) . "px;}\n";
-}
-if ($css != '') {
-  echo $css;
-}
-?>
-
-</style>
-
-<script type="text/javascript" src="start.js"></script>
-<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+<script id="rogoconfig" src='../js/rogo.min.js'
+        data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
+        data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
+        data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>">
+</script>
+<script src='../js/require.js'></script>
+<script src='../js/main.min.js'></script>
+<script src='../js/reviewinit.min.js'></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
+
+  // Check if any 3d file types are enabled and render js.
+  threed_handler::render_js($string);
+
   $render = new render($configObject);
-
-  $interactive_questions = Paper_utils::need_interactiveQ($screen_data, $current_screen, $mysqli);
-  if ($interactive_questions) {
-    $render->render_html5_js(json_encode($jstring));
-  }
-
-    // Check if any 3d file types are enabled and render js.
-    threed_handler::render_js($string);
-
-  echo $configObject->get('cfg_js_root');
-?>
-<script>
-  window.history.go(1);
-<?php
-  if (count($reference_materials) > 0) {
-    echo "\$(function () {\n";
-    if (isset($_COOKIE['refpane'])) {
-      echo "  changeRef(" . $_COOKIE['refpane'] . ");\n";
-    } else {
-      echo "  resizeReference();\n";
-    }
-    echo "});\n";
-  }
-?>
-
-var lang = {
-  <?php
-  $langstrings = array('javacheck2','msgselectable1','msgselectable2','msgselectable3','msgselectable4');
-  $first = true;
-  foreach ($langstrings as $langstring) {
-    if (!$first) {
-      echo ',';
-    }
-    echo "'{$langstring}':'{$string[$langstring]}'";
-    $first = false;
-  }
-  ?>
-  };
-
-  var changeRef = function(refID) {
-    $('#refpane').val(refID);
-		winH = $(window).height();
-    resizeReference();
-    var flag = 0;
-    <?php
-      if (count($reference_materials) > 0) {
-        echo "    for (i=0; i<" . count($reference_materials) . "; i++) {\n";
-        echo "      if (i == refID) {\n";
-        echo "        $('#framecontent' + i).show();\n";
-        echo "        $('#refhead' + i).css('top', (31 * i) + 'px');\n";
-        echo "        flag = 1;\n";
-        echo "      } else {\n";
-        echo "        $('#framecontent' + i).hide();\n";
-        echo "        if (flag == 0) {\n";
-        echo "          $('#refhead' + i).css('top', (31 * i) + 'px');\n";
-        echo "        } else {\n";
-        echo "          $('#refhead' + i).css('top', (winH - (" . count($reference_materials) . " - i) * 31) + 'px');\n";
-        echo "        }\n";
-        echo "      }\n";
-        echo "    }\n";
-      }
-    ?>
-  }
-
-  function resizeReference() {
-		winH = $(window).height();
-<?php
-    if (count($reference_materials) > 0) {
-      $subtract = (31 * count($reference_materials)) + 11;
-      echo "    for (i=0; i<" . count($reference_materials) . "; i++) {\n";
-      echo "      $('#framecontent' + i).css('height', (winH - $subtract) + 'px');\n";
-      echo "    }\n";
-    }
-?>
-    var mainWidth = $('body').outerWidth() - $('#framecontent0').outerWidth(true);
-    $('#maincontent').width(mainWidth);
-  }
-<?php
-  if ($propertyObj->get_bidirectional() == 0) {
-?>
-  function confirmSubmit() {
-    var agree = confirm("<?php echo $string['confirmsubmit'] ?>");
-    if (agree) {
-      $('body').css('cursor','wait');
-      return true;
-    } else {
-      return false;
-    }
-  }
-<?php
-  } else {
-  }
-?>
-  $(function () {
-    $(function() {
-      $('.reveal').click(function() {
-        $('.var').toggle();
-        $('.value').toggle();
-      });
-    });
-
-    $('#jumpscreen').change(function () {
-      $('#button_pressed').val('jump_screen');
-      $('#qForm').attr('action',"start.php?id=<?php echo $_GET['id'] ?>&dont_record=true");
-      $('#qForm').submit();
-    });
-    
-    $('#previous').click(function() {
-      $('body').css('cursor','wait');
-      $('#qForm').attr('action', '<?php $_SERVER['PHP_SELF'] . "?id=" . $_GET['id']?>');
-    });
-    
-    $('#next').click(function() {
-      $('body').css('cursor','wait');
-    });
-    
-    $('#finish').click(function() {
-      $('body').css('cursor','wait');
-    });
-    
-    $('#qForm').submit(function(e) {
-      $('.commentsbox').each(function() {
-        if ($(this).val() != '') {
-          var commentID = $(this).attr('id');
-          var commentNo = commentID.substr(11);
-          if ( $('input[name=exttype' + commentNo + ']:checked', '#qForm').val() == undefined) {
-            alert("Please select one of the radio buttons for question " + commentNo);
-            $('body').css('cursor','default');
-            e.preventDefault();
-          }
-        }
-      });      
-      
-      
-    });
-  });
-</script>
-<?php
-  $render = new render($configObject);
-  if($configObject->get_setting('core', 'paper_mathjax')) {
-    $render->render(null, null, 'mathjax.html');
-  }
   if($propertyObj->get_calculator()) {
     $render->render(null, null, 'jcalc98_header.html');
   }
 ?>
 </head>
-<body onload="StartClock()" onunload="KillClock()">
+<body>
 <?php
 if($propertyObj->get_calculator()) {
   $render->render(null, null, 'jcalc98.html');
@@ -509,11 +294,11 @@ if($propertyObj->get_calculator()) {
 <div id="maincontent">
 <?php
 if ($current_screen < $no_screens) {
-  echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $_GET['id'];
+  echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"" . $_SERVER['PHP_SELF'] . "?id=" . $id;
 } else {
-  echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"finish.php?id=" . $_GET['id'];
+  echo "<form method=\"post\" id=\"qForm\" name=\"questions\" action=\"finish.php?id=" . $id;
 }
-echo '" onsubmit="return confirmSubmit()" autocomplete="off">';   // Warning message only in linear navigation mode.
+echo '" autocomplete="off">';   // Warning message only in linear navigation mode.
 ?>
   <table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%">
   <tr><td valign="top">
@@ -678,7 +463,10 @@ echo '" onsubmit="return confirmSubmit()" autocomplete="off">';   // Warning mes
   echo "<input type=\"hidden\" id=\"button_pressed\" name=\"button_pressed\" value=\"\" />\n";
 
   echo $bottom_html;
-  echo '<input type="text" style="background-color:transparent; text-align:center; color:white; border:0" id="theTime" size="8" /></td><td align="right">';
+  echo "<span style=\"color:white\">
+      <span id=\"theTime\" type=\"text\" class=\"thetime\"></span>
+  </span>";
+  echo '</td><td align="right">';
   if ($propertyObj->get_bidirectional() == 1 and $no_screens > 1) {
     if ($current_screen > 2) {
       echo '<input id="previous" type="submit" name="prev" value="&lt; ' . $string['screen'] . ' ' . ($current_screen - 2) . '" />';
@@ -709,27 +497,44 @@ echo '" onsubmit="return confirmSubmit()" autocomplete="off">';   // Warning mes
 <?php
 
 if (count($reference_materials) > 0) {
-  $top = 0;
-  $ref_no = 0;
-  foreach ($reference_materials as $reference_material) {
-    echo "<div class=\"refhead\" id=\"refhead" . $ref_no . "\" onclick=\"changeRef(" . $ref_no . ")\" style=\"top:{$top}px\">" . $reference_material['title'] . "</div>\n";
-    echo "<div class=\"framecontent\" id=\"framecontent" . $ref_no . "\" style=\"top:" . (31 + $top) . "px\">\n" . $reference_material['material'] . "</div>\n";
-    $top += 31;
-    $ref_no++;
-  }
+  $refdata = array(
+    'ref' => $reference_materials,
+    'refpane' => $refpane
+  );
+  $render->render($refdata, $string, 'paper/refmaterial.html');
 }
 $mysqli->close();
 
-if (isset($_COOKIE['refpane'])) {
-  echo "<script>\n";
-  echo "  changeRef(" . $_COOKIE['refpane'] . ");\n";
-  echo "</script>\n";
-}
-
-if ($interactive_questions) {
-  $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
-}
+// JS utils dataset.
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+// Dataset.
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['language'] = $language;
+$miscdataset['attributes']['bidirectional'] = $propertyObj->get_bidirectional();
+$miscdataset['attributes']['id'] = $id;
+$miscdataset['attributes']['self'] = $_SERVER['PHP_SELF'];
+$render->render($miscdataset, array(), 'dataset.html');
+// CSS dataset.
+$datasetcss['name'] = 'css';
+$datasetcss['attributes']['bgcolor'] = $bgcolor;
+$datasetcss['attributes']['fgcolor'] = $fgcolor;
+$datasetcss['attributes']['font'] = $font;
+$datasetcss['attributes']['textsize'] = $textsize;
+$datasetcss['attributes']['unanswered_color'] = $unanswered_color;
+$datasetcss['attributes']['themecolor'] = $themecolor;
+$datasetcss['attributes']['marks_color'] = $marks_color;
+$datasetcss['attributes']['dismiss_color'] = $dismiss_color;
+$datasetcss['attributes']['max_ref_width'] = $max_ref_width;
+$datasetcss['attributes']['special_needs'] = $userObject->is_special_needs();
+$render->render($datasetcss, array(), 'dataset.html');
+// Paper dataset.
+$dataset['name'] = 'paper';
+$dataset['attributes']['refcount'] = count($reference_materials);
+$render->render($dataset, array(), 'dataset.html');
+$render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 ?>
-
+<input type="hidden" name="refpane" id="refpane" value="<?php echo $refpane; ?>" />
 </body>
 </html>

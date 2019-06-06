@@ -29,6 +29,7 @@ require_once '../config/external_email_msg.php';
 $paperID = check_var('paperID', 'GET', true, false, true);
 $mode = check_var('mode', 'GET', true, false, true);
 $externalID = check_var('externalID', 'GET', true, false, true);
+$module = param::optional('module', '', param::INT, param::FETCH_GET);
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 $local_time = new DateTimeZone($configObject->get('cfg_timezone'));
@@ -54,24 +55,16 @@ $display_deadline = $external_review_deadline->format($configObject->get('cfg_lo
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/externalemail.css" />
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/externalemailinit.min.js"></script>
 
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
   $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::EXTERNAL);
 ?>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    $(function () {
-      
-      $('#back').click(function (){
-        window.location.href = 'pick_external.php?paperID=<?php echo $paperID ?>&mode=<?php echo $mode ?>&module=<?php echo $_GET['module'] ?>';
-      });
-      
-    });
-  </script>
 </head>
 
 <body>
@@ -108,10 +101,10 @@ $display_deadline = $external_review_deadline->format($configObject->get('cfg_lo
     <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
     <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a>
     <?php
-    if (isset($_GET['module']) and $_GET['module'] != '') {
-      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+    if ($module != '') {
+      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $module . '">' . module_utils::get_moduleid_from_id($module, $mysqli) . '</a>';
     }    
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '&module=' . $_GET['module'] . '">' . $properties->get_paper_title() . '</a>';
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '&module=' . $module . '">' . $properties->get_paper_title() . '</a>';
     ?>
     </div>
     <div class="page_title"><?php echo $string['emailtemplate'] ?></div>
@@ -173,6 +166,13 @@ if (isset($_POST['submit'])) {
 
   </form>
 <?php
+  // JS utils dataset.
+  $render = new render($configObject);
+  $miscdataset['name'] = 'dataset';
+  $miscdataset['attributes']['paper'] = $paperID;
+  $miscdataset['attributes']['mode'] = $mode;
+  $miscdataset['attributes']['module'] = $module;
+  $render->render($miscdataset, array(), 'dataset.html');
 }
 $mysqli->close();
 ?>

@@ -27,6 +27,8 @@ require_once '../include/errors.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+$mode = param::optional('mode', '', param::INT, param::FETCH_GET);
+$module = param::optional('module', '', param::INT, param::FETCH_GET);
 
 ?>
 <!DOCTYPE html>
@@ -44,30 +46,21 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
     body {font-size: 90%}
     input {width: 180px; margin: 1px}
   </style>
-  
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    $(function () {
-      
-      $('.external').click(function() {
-        var externalID = this.id;
-        window.location.href = 'external_email.php?paperID=<?php echo $paperID ?>&module=<?php echo $_GET['module'] ?>&externalID=' + externalID + '&mode=<?php echo $_GET['mode'] ?>';
-      });
-      
-    });
-  </script>
-</head>
+
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/pickexternalinit.min.js"></script>
+ </head>
 
 <body>
 <?php
 require '../include/toprightmenu.inc';
 echo draw_toprightmenu();
 
-if ($_GET['mode'] == 0) {
+if ($mode== 0) {
   $type = $string['initialinvitation'];
-} elseif ($_GET['mode'] == 1) {
+} elseif ($mode == 1) {
   $type = $string['reminder'];
 } else {
   $type = $string['viewcomments'];    
@@ -78,10 +71,10 @@ if ($_GET['mode'] == 0) {
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a>
   <?php
-  if (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+  if ($module != '') {
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $module. '">' . module_utils::get_moduleid_from_id($module, $mysqli) . '</a>';
 
-    $module_url = '&module=' . $_GET['module'];
+    $module_url = '&module=' . $module;
   } else {
     $module_url = '';
   }
@@ -102,6 +95,15 @@ if (count($externals) > 0) {
 } else {
   echo $notice->info_strip($string['noexternals'], 100) . "\n";
 }
+
+// JS utils dataset.
+$render = new render($configObject);
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['paper'] = $paperID;
+$miscdataset['attributes']['mode'] = $mode;
+$miscdataset['attributes']['module'] = $module;
+$miscdataset['attributes']['external'] = $externalID;
+$render->render($miscdataset, array(), 'dataset.html');
 
 $mysqli->close();
 ?>

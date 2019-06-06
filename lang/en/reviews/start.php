@@ -43,4 +43,5 @@ $string['tolerancefull'] = 'Tolerance for full marks';
 $string['tolerancepartial'] = 'Tolerance for partial marks';
 $string['togglevariables'] = 'Toggle Variables';
 $string['editquestion'] = 'Edit question (opens in a new tab)';
-?>
+$string['selectradio'] = 'Please select one of the radio buttons for question %s';
+

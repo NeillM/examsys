@@ -77,53 +77,9 @@ function quick_links($string) {
   ?>
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    function load(userID) {
-      window.location.href = "form.php?id=<?php echo $_GET['id']; ?>&userID=" + userID.substr(4);
-    }
-
-    $(function() {
-      $('.bl').on('click',function() {
-        load($(this).attr('id'));
-      });
-
-      $('.l').on('click',function() {
-        load($(this).attr('id'));
-      });
-
-      $('.qlink.td').on('click',function () {
-        var id = "<?php echo $_GET['id']; ?>";
-        var letter = $(this).data('val');
-        if (letter == 'All') {
-          window.location.reload();
-        } else {
-          $.getJSON("user_list.php?id=" + id + "&initial=" + letter, function (data) {
-            var user_list = $('#user_list');
-            user_list.empty().append('<tr><td colspan="3" class="letter"><a name="' + letter + '"></a>' + letter + '</td></tr>');
-            if (data.length == 0) {
-              user_list.append('<tr><td><?php echo $string['user_list']; ?><td></tr>');
-            } else {
-              $.each(data, function (key, value) {
-                if (value[5] == null) {
-                  user_list.append('<tr class="bl" id="user' + value[0] + '"><td class="indent">' + value[3] + '</td><td>' + value[1] + ',  <span class="n">' + value[2] + '</span></td><td>' + value[4] + '</td></tr>')
-                } else {
-                  user_list.append('<tr class="l" id="user' + value[0] + '"><td class="indent">' + value[3] + '</td><td>' + value[1] + ',  <span class="n">' + value[2] + '</span></td><td>' + value[4] + '</td></tr>')
-                }
-              });
-              // Binding the event after loading the ajax content
-              $('.bl').on('click', function () {
-                load($(this).attr('id'));
-              });
-              $('.l').on('click', function () {
-                load($(this).attr('id'));
-              });
-            }
-          });
-        }
-      });
-    });
-  </script>
+    <script src='../js/require.js'></script>
+    <script src='../js/main.min.js'></script>
+    <script src='../js/osceclasslistinit.min.js'></script>
   </head>
 
   <body>
@@ -170,7 +126,15 @@ function quick_links($string) {
   }
   echo "</table>\n</form>\n";
 
-  $mysqli->close();
+  // Dataset.
+  $render = new render($configObject);
+  $miscdataset['name'] = 'dataset';
+  $miscdataset['attributes']['id'] = $_GET['id'];
+  $render->render($miscdataset, array(), 'dataset.html');
+  // JS utils dataset.
+  $jsdataset['name'] = 'jsutils';
+  $jsdataset['attributes']['xls'] = json_encode($string);
+  $render->render($jsdataset, array(), 'dataset.html');
 ?>
 </body>
 </html>

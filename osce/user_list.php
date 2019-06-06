@@ -26,6 +26,8 @@
  * @package
  */
 
+define('AJAX_REQUEST', true);
+
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
 

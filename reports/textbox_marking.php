@@ -88,34 +88,15 @@ HTML;
   .noanswer {background-image: url(../artwork/small_yellow_warning_icon.gif); background-repeat:no-repeat; background-position: 2px center; background-color:#FFC0C0; padding-left:20px; padding-right:5px; color: #800000 !important}
   .marked {color:#808080}
   </style>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.textbox.js"></script> <!-- save marking in here -->
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    langStrings = {'saveerror': '<?php echo $string['saveerror'] ?>'};
-		
-    $(function () {
-        window.location.hash = 'q_id<?php echo $_GET['q_id']; ?>';
-			
-	$('#hidemarked').click(function() {
-            var request = $.ajax({
-                url: "../include/set_state.php",
-                type: "post",
-                data: {state_name: 'hidemarked', content: $('#hidemarked').is(':checked'), page: document.URL},
-                    dataType: "html",
-                success: function (responseText) {
-                    $("#theform").submit();
-                },
-            });
-        });
-    });
+  <script id="rogoconfig" src='../js/rogo.min.js'
+            data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
+            data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
+            data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>">
   </script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src='../js/textboxinit.min.js'></script>
   <?php
-    if($configObject->get_setting('core', 'paper_mathjax')) {
-      $render = new render($configObject);
-      $render->render(null, null, 'mathjax.html');
-    }
     $texteditorplugin = \plugins\plugins_texteditor::get_editor();
     $texteditorplugin->display_header();
 
@@ -443,6 +424,15 @@ $half_marks = true;
 
 </div>
 </form>
-
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+$jsmiscdataset['name'] = 'dataset';
+$jsmiscdataset['attributes']['hash'] = "q_id" . $_GET['q_id'];
+$render->render($jsmiscdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

@@ -134,9 +134,8 @@ function display_question($question, &$question_no, $reviews, &$string, $db) {
     .h {background-color:#F1F5FB; color:black}
   </style>
 
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
 </head>
 
 <body>

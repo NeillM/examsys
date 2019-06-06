@@ -40,13 +40,9 @@ $enddate		= check_var('enddate', 'GET', true, false, true);
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/qualitative.css" />
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.qualitative.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    var commentsStringMatches = '<?php echo $string['occurencesof'] ?>';
-    var commentsString = '<?php echo $string['comments'] ?>';
-  </script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/qualitativeinit.min.js"></script>
 </head>
 
 <body>
@@ -179,5 +175,12 @@ SQL;
   $mysqli->close();
 ?>
 </div>
+<?php
+// JS utils dataset.
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render = new render($configObject);
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

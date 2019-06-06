@@ -33,7 +33,6 @@ require_once '../lang/' . $language . '/question/edit/area.php';
 require_once '../lang/' . $language . '/paper/hotspot_answer.php';
 require_once '../lang/' . $language . '/paper/hotspot_question.php';
 require_once '../lang/' . $language . '/paper/label_answer.php';
-$jstring = $string; //to pass it to JavaScript HTML5 modules
 //HTML5 part
 
 $type = check_var('type', 'GET', true, false, true);
@@ -82,7 +81,7 @@ function displayRank($rank_position, $string) {
 function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_data, $type, $string, $language) {
 
   $html = "<tr><td></td><td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:98%\">\n";
-  $html .= "<tr><td colspan=\"5\"><strong>" . $string[$type . 'comments'] . "$qno</strong>&nbsp;<img onclick=\"editQ($questionID, $qno)\" class=\"pencil\" src=\"../artwork/pencil_16.png\" alt=\"" . $string['editquestion'] . "\" /></td></tr>\n";
+  $html .= "<tr><td colspan=\"5\"><strong>" . $string[$type . 'comments'] . "$qno</strong>&nbsp;<img class=\"pencil\" data-qid='$questionID' data-qno='$qno'src=\"../artwork/pencil_16.png\" alt=\"" . $string['editquestion'] . "\" /></td></tr>\n";
   $html .= "<tr><td style=\"width:20px\"><div class=\"reviewbar\">&nbsp;</div></td><td style=\"width:20%\"><div class=\"reviewbar\">" . $string['reviewer'] . "</div></td><td style=\"width:35%\"><div class=\"reviewbar\">" . $string['comment'] . "</div></td><td style=\"width:10%\"><div class=\"reviewbar\">" . $string['action'] . "</div></td><td style=\"width:35%\"><div class=\"reviewbar\">" . $string['response'] . "</div></td></tr>\n";
   
   foreach ($reviewer_data as $reviewerID=>$rev_data) {
@@ -163,7 +162,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo $leadin;
         if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'area') {
           echo "<div class=\"mediadiv\">";
-          $questiondata->set_media($q_media, $q_media_width, $q_media_height, '');
+          $questiondata->set_media($q_media, $q_media_width, $q_media_height, '', true);
           $render->render($questiondata, $string, 'paper/media.html');
           echo "</div>\n";
         }
@@ -172,7 +171,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n";
         if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'area') {
           echo "<div class=\"mediadiv\">";
-          $questiondata->set_media($q_media, $q_media_width, $q_media_height, '');
+          $questiondata->set_media($q_media, $q_media_width, $q_media_height, '', true);
           $render->render($questiondata, $string, 'paper/media.html');
           echo "</div>\n";
         }
@@ -184,13 +183,14 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       ?>
       <br />
 			<?php
-    			//<!-- ======================== HTML5 part include find ================= -->
-    			echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 2) . "' height='" . ($q_media_height + 1) . "'></canvas>\n";
+    			echo "<canvas class='area' id='canvas" . $q_no . "'
+    			data-qno='" . $q_no . "'
+    			data-qmedia='" . $q_media . "'
+    			data-qcorrect='" . $correct . "'
+    			data-user=''
+    			data-marking=''
+    			width='" . ($q_media_width + 2) . "' height='" . ($q_media_height + 1) . "'></canvas>\n";
     			echo "<div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-    			echo "<script>\n";
-    			echo "setUpQuestion(" . $q_no . ", 'q" . $q_no . "','" . $language . "', '" . $q_media . "', '" . $correct . "', '','','#FFC0C0','area','script');\n";
-    			echo "</script>\n";
-    			//<!-- ==================================================== -->
 			?>
       <input type="hidden" name="q<?php echo $q_no; ?>" id="q<?php echo $q_no; ?>" />
       <?php
@@ -288,15 +288,15 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
 ?>
   <div align="center">
 	<?php
-	$configObject          = Config::get_instance();
-	//<!-- ======================== HTML5 part rep disc ================= -->
-	echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 220) . "' height='" . $tmp_height . "'></canvas>\n";
+	echo "<canvas class='labelling' id='canvas" . $q_no . "'
+	data-qno='" . $q_no . "'
+	data-qmedia='" . $q_media . "'
+	data-qcorrect='" . trim($correct) . "'
+	data-user=''
+	data-marking=''
+	width='" . ($q_media_width + 220) . "' height='" . $tmp_height . "'></canvas>\n";
 	echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-	echo "<script>\n";
-	echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '" . $q_media . "', '" . trim($correct) . "', '', '','#FFC0C0','labelling','analysis');\n";
-	echo "</script>\n";
-	//<!-- ==================================================== -->
-	?>
+    ?>
 	</div>
   <br />
 <?php
@@ -447,7 +447,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n<ol type=\"A\">";
     if ($matching_media[0] != '') {
       echo "<div class=\"mediadiv\">";
-      $questiondata->set_media($matching_media[0], $tmp_media_width_array[0], $tmp_media_height_array[0], '');
+      $questiondata->set_media($matching_media[0], $tmp_media_width_array[0], $tmp_media_height_array[0], '', true);
       $render->render($questiondata, $string, 'paper/media.html');
       echo "</div>\n";
     }
@@ -455,7 +455,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       echo "<li>\n";
       if (isset($matching_media[$i]) and $matching_media[$i] != '') {
         echo "<div>";
-        $questiondata->set_media($matching_media[$i], $tmp_media_width_array[$i], $tmp_media_height_array[$i], '');
+        $questiondata->set_media($matching_media[$i], $tmp_media_width_array[$i], $tmp_media_height_array[$i], '', true);
         $render->render($questiondata, $string, 'paper/media.html');
         echo "</div>\n";
       }
@@ -567,38 +567,20 @@ $result->close();
     .reviewer_list th {background-color: #FCE699}
     .reviewer_list td {vertical-align:top; text-align:justify}
   </style>
-
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript" src="../js/page_scroll.js"></script>
+  <script id="rogoconfig" src='../js/rogo.min.js'
+            data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
+            data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
+            data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>">
+  </script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/reviewcommentsinit.min.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
-  $render = new render($configObject);
-  $render->render_html5_js(json_encode($jstring));
-  ?>
 
-	
-  <script>
-    function editQ(qid, qno) {
-      location.href='../question/edit/index.php?q_id=' + qid + '&qNo=' + qno + '&paperID=<?php echo $paperID; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>&calling=<?php echo $type; ?>_comments&scrOfY=' + $('#scrOfY').val() + '&tab=comments';
-    }
-    <?php
-    if (isset($_GET['scrOfY'])) {
-    ?>
-    $(function () {
-      window.scrollTo(0,<?php echo $_GET['scrOfY'] ?>);
-    });
-    <?php
-    }
-    ?>
-  </script>
-  <?php
-    if($configObject->get_setting('core', 'paper_mathjax')) {
-      $render = new render($configObject);
-      $render->render(null, null, 'mathjax.html');
-    }
+  // Check if any 3d file types are enabled and render js.
+  threed_handler::render_js($string);
   ?>
 </head>
 
@@ -619,14 +601,23 @@ $result->close();
 
   echo "<div class=\"page_title\">" . $string[$type . 'report'] . "</div></div>";
 
+  require '../include/toprightmenu.inc';
+
+  echo draw_toprightmenu(30);
+
   if (count($reviewer_data) == 0) {
-    echo $notice->info_strip($string['noreviewers'], 100) . "\n</body>\n</html>\n";
+    echo $notice->info_strip($string['noreviewers'], 100);
+    // JS utils dataset.
+    $jsdataset['name'] = 'jsutils';
+    $jsdataset['attributes']['xls'] = json_encode($string);
+    $render = new render($configObject);
+    $render->render($jsdataset, array(), 'dataset.html');
+    ?>
+    </body>
+</html>
+<?php
     exit;
   }
- 
-  require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu(30);
 ?>
   
 <br />
@@ -735,6 +726,26 @@ $result->close();
 </form>
 </div>
 <?php
+  // JS utils dataset.
+  $jsdataset['name'] = 'jsutils';
+  $jsdataset['attributes']['xls'] = json_encode($string);
+  $render = new render($configObject);
+  $render->render($jsdataset, array(), 'dataset.html');
+  // Dataset.
+  $miscdataset['name'] = 'dataset';
+  $miscdataset['attributes']['language'] = $language;
+  $miscdataset['attributes']['module'] = '';
+  $miscdataset['attributes']['folder'] = '';
+  if (isset($_GET['module'])) {
+    $miscdataset['attributes']['module'] = $_GET['module'];
+  }
+  if (isset($_GET['folder'])) {
+    $miscdataset['attributes']['folder'] = $_GET['folder'];
+  }
+  $miscdataset['attributes']['paperid'] = $paperID;
+  $miscdataset['attributes']['type'] = $type;
+  $miscdataset['attributes']['srcofy'] = $_GET['scrOfY'];
+  $render->render($miscdataset, array(), 'dataset.html');
   $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 ?>
 </body>

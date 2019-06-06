@@ -121,15 +121,12 @@ if (isset($_POST['submit'])) {
       '/css/textbox_finalise_marks.css',
     ),
     'scripts' => array(
-      '/js/jquery-1.11.1.min.js',
-      '/js/staff_help.js',
-      '/js/toprightmenu.js',
-      '/js/textbox_finalise.min.js',
+      '/js/textboxfinaliseinit.min.js',
     ),
   );
+  $headerdata['mathjax'] = false;
   if($configObject->get_setting('core', 'paper_mathjax')) {
-    $headerdata['scripts'][] = '/js/mathjax-config.min.js';
-    $headerdata['scripts'][] = '/node_modules/mathjax/MathJax.js?config=TeX-MML-AM_HTMLorMML';
+    $headerdata['mathjax'] = true;
   }
   $render->render($headerdata, $lang, 'header.html');
 

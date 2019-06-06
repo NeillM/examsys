@@ -86,55 +86,21 @@ ob_start();
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/popup_menu.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript" src="../js/class_totals.js"></script>
-  <script>
-    function setVars(tmpMetadataID, tmpUserID, tmpLogType, tmpReassign, tmpLogLate, tmpPercent, e) {
-      $('#metadataID').val(tmpMetadataID);
-      $('#userID').val(tmpUserID);
-      $('#log_type').val(tmpLogType);
-      $('#reassign').val(tmpReassign);
-      $('#loglate').val(tmpLogLate);
-      $('#percent').val(tmpPercent);
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src='../js/classtotalsreviewinit.min.js'></script>
 
-      if (tmpMetadataID == '') {
-        $('#item1b').css('color', '#C0C0C0');
-        $('#item2b').css('color', '#C0C0C0');
-      } else {
-        $('#item1b').css('color', '#000000');
-        $('#item2b').css('color', '#000000');
-      }
-    }
-    
-    var paperID = <?php echo $paperID ?>;
-    var crypt_name = '<?php echo $propertyObj->get_crypt_name() ?>';
-    
-    $(function () {
-      $("#maindata").tablesorter({ 
-        // sort on the first column and third column, order asc 
-        sortList: [[4,0]] 
-      });
-
-      $(document).click(function() {
-        $('#menudiv').hide();
-      });
-    });
-  </script>
 </head>
 
 
 <body>
 <div id="noteDiv" class="studentnote">
-<div style="text-align:right; margin-right:5px;"><img onclick="$('#noteDiv').hide();" src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
+<div style="text-align:right; margin-right:5px;"><img src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
 <div id="noteMsg"></div>
 </div>
 
 <div id="accessDiv" class="studentaccess">
-<div style="text-align:right; margin-right:5px;"><img onclick="$('#accessDiv').hide();" src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
+<div style="text-align:right; margin-right:5px;"><img src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
 <div id="accessMsg"></div>
 </div>
 
@@ -145,14 +111,14 @@ echo draw_toprightmenu(30);
 
 ?>
 <div id="menudiv" class="popupmenu">
-  <div class="popup_row" onclick="viewScript();">
+  <div class="popup_row" id="item1">
     <div class="popup_icon"><img src="../artwork/summative_16.gif" width="16" height="16" alt="" /></div>
-    <div class="popup_title" id="item1"><?php echo $string['examscript'] ?></div>
+    <div class="popup_title"><?php echo $string['examscript'] ?></div>
   </div>
   
-  <div class="popup_row" onclick="viewFeedback();">
+  <div class="popup_row" id="item2">
     <div class="popup_icon"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" /></div>
-    <div class="popup_title" id="item2"><?php echo $string['feedback']; ?></div>
+    <div class="popup_title"><?php echo $string['feedback']; ?></div>
   </div>
 </div>
 <?php
@@ -239,7 +205,7 @@ echo draw_toprightmenu(30);
         $bg_color = '#FFC0C0';
         $late_submissions = '';
         ?>
-        <tr class="nonattend" id="res<?php echo $i+1 ?>" onclick="popMenu(6, event); setVars('', '<?php echo $userID; ?>', '<?php echo $paper_type; ?>', '<?php echo $reassign ?>', '<?php echo $late_submissions ?>', '<?php echo $percent; ?>');"><td>&nbsp;</td>
+        <tr class="nonattend" id="res<?php echo $i+1 ?>" data-metadataid="" data-paperid="<?php echo $paperID ?>" data-cryptname="<?php echo $propertyObj->get_crypt_name() ?>" data-userid="<?php echo $userID; ?>" data-papertype="<?php echo $paper_type; ?>" data-reassign="<?php echo $reassign ?>" data-late="<?php echo $late_submissions ?>" data-percent="<?php echo $percent; ?>"><td>&nbsp;</td>
         <?php
         if ($user_results[$i]['student_id'] == '') {
           echo "<td class=\"grey\">" . $string['unknown'] . "</td>";
@@ -295,7 +261,7 @@ echo draw_toprightmenu(30);
           $icon = 'offline_16.gif';
           $alt = $string['displaypaper'];
         }
-        echo " style=\"cursor:hand\" onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['metadataID'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "');" . "\"";
+        echo " style=\"cursor:default\" data-metadataid=\"" . $user_results[$i]['metadataID'] . "\" data-paperid=\"" . $paperID . "\" data-cryptname=\"" . $propertyObj->get_crypt_name() . "\" data-userid=\"" . $user_results[$i]['userID'] . "\" data-papertype=\"" . $user_results[$i]['paper_type'] . "\" data-reassign=\"" . $reassign . "\" data-late=\"" . $late_submissions . "\" data-percent=\"" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "\");" . "\"";
         echo "><td class=\"$class $role_css\"><img src=\"../artwork/$icon\" class=\"picon\" /></td>";
         $student_id = $user_results[$i]['username'];
         
@@ -314,10 +280,10 @@ echo draw_toprightmenu(30);
         }
         // Add icons
         if (isset($notes[$user_results[$i]['userID']]) and $notes[$user_results[$i]['userID']] == 'y') {
-          echo '<img src="../artwork/notes_icon.gif" alt="Notes" class="note" onclick="viewNote(' . $user_results[$i]['userID'] . ', event)" />';
+          echo '<img src="../artwork/notes_icon.gif" alt="Notes" class="note" data-id="' . $user_results[$i]['userID'] . '" />';
         }
         if ($report->has_special_need($user_results[$i]['userID'])) {
-          echo '<img src="../artwork/accessibility_16.png" class="accessibility" onclick="viewAccessibility(' . $user_results[$i]['userID'] . ', event)" alt="' . $string['alternativearrangements'] . '" />';
+          echo '<img src="../artwork/accessibility_16.png" class="accessibility" data-id="' . $user_results[$i]['userID'] . '" alt="' . $string['alternativearrangements'] . '" />';
         }        
         echo '</td>';
         
@@ -554,7 +520,6 @@ echo draw_toprightmenu(30);
   }
   $mysqli->close();
 ?>
-<input type="hidden" id="metadataID" value="" /><input type="hidden" id="userID" value="" /><input type="hidden" id="log_type" value="" /><input type="hidden" id="reassign" value="" /><input type="hidden" id="loglate" value="" /><input type="hidden" id="percent" value="" />
 </div>
 </body>
 </html>

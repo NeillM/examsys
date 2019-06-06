@@ -127,18 +127,11 @@ require '../config/start.inc';
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo $string['sctreview'] ?></title>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <?php
-    if (isset($_POST['submit'])) {
-  ?>
-  <script>
-     $(function() {
-       alert('<?php echo $string['saved_msg'] ?>');
-     });
-   </script>
-   <?php
-    }
-  ?>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/sctreviewinit.min.js"></script>
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/start.css" />
   <link rel="stylesheet" type="text/css" href="../css/key.css" />
@@ -165,7 +158,7 @@ require '../config/start.inc';
   echo '<tr><td><div style="margin-left:0;font-size:180%;color:white;font-weight:bold">' . $propertyObj->get_paper_title() . '</div></td>';
   echo $logo_html;
   
-  echo "<form name=\"myform\" action=\"" . $_SERVER['PHP_SELF'] . "\" method=\"post\" autocomplete=\"off\">\n";
+  echo "<form id=\"myform\" name=\"myform\" action=\"" . $_SERVER['PHP_SELF'] . "\" method=\"post\" autocomplete=\"off\">\n";
   echo "<br />\n";
   
   echo "<div class=\"key\">" . $string['top_msg'] . "</div>\n<br />\n";
@@ -230,6 +223,12 @@ require '../config/start.inc';
 </form>
 
 </div>
-
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

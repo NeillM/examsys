@@ -110,12 +110,6 @@ li {padding-bottom:10px}
 .label {position:relative; padding:0; margin:0; width:110px; height:11px}
 </style>
 
-<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-<?php
-  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-  $texteditorplugin->display_header();
-?>
-
 </head>
 <body>
 <div style="position:relative; width:260px; height:88px; border: 2px solid #FCE699; z-index:10; float:right; top:10px; right:10px; font-size:75%; padding:5px; line-height:100%; background-color:#FFFFEE; color:#404040">

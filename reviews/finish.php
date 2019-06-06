@@ -89,13 +89,9 @@ function close_window($fullscreen) {
     blockquote {font-size:90%}
     .paper {font-size:180%; color:white; font-weight:bold}
   </style>
-
-  <script>
-    window.history.go(1);
-  </script>
 </head>
 
-<body oncontextmenu="return false;">
+<body>
   <form method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>?id=<?php echo $_GET['id'] ?>" autocomplete="off">
 <?php
   echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%; background-color:#5590CF">';

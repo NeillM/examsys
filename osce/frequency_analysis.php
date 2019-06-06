@@ -54,16 +54,8 @@ $themecolor = $propertyObj->get_themecolor();
     .overall {border:1px solid #909090; width:20%; height:35px; text-align:center}
     ul {margin-top:0; margin-bottom:0}
   </style>
-	
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    function reviewOSCE(userid) {
-      var winwidth = 750;
-      var winheight = screen.height-80;
-      window.open("view_form.php?paperID=<?php echo $paperID; ?>&username="+userid+"","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    }
-  </script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
   </head>
 
   <body>

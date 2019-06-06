@@ -68,24 +68,11 @@ if (isset($_POST['submit'])) {
     body {margin-bottom:10px}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    $(function () {
-      $("#selectall").click(function() {
-        if (this.checked) {
-          $(".check").each(function() {
-            this.checked = true;
-          });
-        } else {
-          $(".check").each(function() {
-            this.checked = false;
-          });
-        }
-      });
-    });
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/textboxremarkinit.min.js"></script>
+
 </head>
 
 <body>

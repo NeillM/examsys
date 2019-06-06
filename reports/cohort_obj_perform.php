@@ -46,10 +46,9 @@ $enddate = check_var('enddate', 'GET', true, false, true);
     h1 {margin-left:15px; font-size:18pt}
     p {margin-left:15px; margin-right:15px}
   </style>
-	
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
 </head>
 <body>
 <?php
