@@ -12,18 +12,24 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
-// 
-// Requirement functions
 //
-// @author Dr Joseph Bater <joseph.baxter@nottingham.ac.uk>
-// @copyright Copyright (c) 2017 The University of Nottingham
+// Init install screen.
 //
+// @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+// @copyright Copyright (c) 2019 The University of Nottingham
+//
+requirejs(['ui', 'jquery', 'jqueryvalidate', 'jqueryui'], function (UI, $) {
+    var ui = new UI();
+    // Validate ldap options, and toggle extra settings.
+    $("#installForm").validate();
+    $('#useLdap').change(function () {
+        $('#ldapOptions').toggle();
+    });
+    $('#uselookupLdap').change(function () {
+        $('#ldaplookupOptions').toggle();
+    });
 
-// Load upgrade screen.
-function run_update() {
-  window.location='../updates/upgrade.php';
-}
-// Load install screen.
-function run_install() {
-  window.location='install.php';
-}
+    $('#config').click(function() {
+        ui.go_config();
+    });
+});

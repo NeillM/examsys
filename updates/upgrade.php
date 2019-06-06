@@ -47,9 +47,9 @@ $headerdata = array(
     '/css/updater.css',
   ),
   'scripts' => array(
-    '/js/jquery-1.11.1.min.js',
-    '/js/jquery.validate.min.js',
-    '/js/update.min.js',
+    '/js/require.js',
+    '/js/main.min.js',
+    '/js/updateinit.min.js',
   ),
 );
 

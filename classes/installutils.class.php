@@ -1833,11 +1833,9 @@ Class InstallUtils {
         '/css/install.css',
       ),
       'scripts' => array(
-        '/js/jquery-1.11.1.min.js',
-        '/js/jquery.validate.min.js',
-        '/js/jquery-ui-1.10.4.min.js',
-        '/js/install.min.js',
-        '/js/system_tooltips.js',
+        '/js/require.js',
+        '/js/main.min.js',
+        '/js/installinit.min.js',
       ),
     );
     $lang['title'] = $string['install'];
@@ -1957,15 +1955,6 @@ Class InstallUtils {
 
 // Objectives mapping
 \$vle_apis = array();
-
-// Root path for JS
-  \$cfg_js_root = <<< SCRIPT
-<script>
-  if (typeof cfgRootPath == 'undefined') {
-    var cfgRootPath = '\$cfg_root_path';
-  }
-</script>
-SCRIPT;
 
 if(!isset(\$_SERVER['HTTP_HOST'])) {
   \$_SERVER['HTTP_HOST']='';

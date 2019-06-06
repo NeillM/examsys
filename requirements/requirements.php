@@ -131,12 +131,12 @@ foreach ($info as $idx => $val) {
   }
   echo "</div>";
 }
-echo "<div class=\"requirements-body\">";
+echo "<div id=\"action\" class=\"requirements-body\">";
 if ($phpversion and $phpallext and $dbversion) {
   if (InstallUtils::config_exists()){
-    echo "<button id=\"update\" class=\"updatebutton\" onclick=\"run_update()\">Update</button>";
+    echo "<button id=\"update\" class=\"updatebutton\">Update</button>";
   } else {
-    echo "<button id=\"install\" class=\"updatebutton\" onclick=\"run_install()\">Install</button>";
+    echo "<button id=\"install\" class=\"updatebutton\">Install</button>";
   }
 } else {
   echo "<p>" . $string['help'] . "</p>";

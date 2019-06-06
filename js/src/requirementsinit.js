@@ -12,18 +12,24 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
-// 
-// Updater functions
 //
-// @author Dr Joseph Bater <joseph.baxter@nottingham.ac.uk>
-// @copyright Copyright (c) 2017 The University of Nottingham
+// Initialise requirements page.
 //
+// @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+// @copyright Copyright (c) 2019 The University of Nottingham
+//
+requirejs(['jquery'], function ($) {
+    $(function () {
+        $("#requirementslist").load("../requirements/requirements.php");
+    });
 
-// Load home screen
-function go_config() {
-  window.location='../admin/config.php';
-}
-// Initialise form validation
-$(document).ready(function () {
-  $("#installForm").validate();
+    // Load upgrade screen.
+    $('body').on('click', '#update', function(){
+        window.location='../updates/upgrade.php';
+    });
+
+    // Load install screen.
+    $('body').on('click', '#install', function(){
+        window.location='install.php';
+    });
 });
