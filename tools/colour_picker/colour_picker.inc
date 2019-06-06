@@ -25,43 +25,7 @@
 * @package
 */
 ?>
-<script>
-  var textBox = '';
 
-  function showPicker(pickerID, evt) {
-    textBox = pickerID;
-
-    var pickerSpan = $('#span_' + pickerID);
-		var position = pickerSpan.position();    
-    
-    $('#picker').css('top', 20 + position.top + 'px');
-    $('#picker').css('left', position.left + 'px');
-    $('#picker').show();
-
-    evt.cancelBubble = true;
-  }
-  
-  function setColor(color, page) {
-    $('#' + textBox).val(color);
-    $('#span_' + textBox).css('background-color', color);
-    $('#picker').hide();
-    
-    if (page == '<?php echo $configObject->get('cfg_root_path') ?>/users/details.php') {
-      updateAccessDemo();
-    }
-  }
-  
-  function hidePicker() {
-    $('#picker').hide();
-  }
-  
-  function moreColours() {
-    notice=window.open("<?php echo $configObject->get('cfg_root_path') ?>/tools/colour_picker/more_colours.php?swatch=" + textBox + "","colours","width=450,height=370,left="+(screen.width/2-225)+",top="+(screen.height/2-185)+",scrollbars=no,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
-    if (window.focus) {
-      notice.focus();
-    }
-  }
-</script>
 
 <div id="picker" style="background-color:white; border:1px solid #808080; float:left; padding:1px; position:absolute; display:none; font-size:100%">
 <table cellspacing="0" cellpadding="0" style=\"background-color:#FAFAFA; font-size:100%; border-collapse:collapse\">
@@ -80,8 +44,10 @@
   echo "<tr><td colspan=\"21\" style=\"padding-left:5px; background-color: #EEEEEE; font-size:70%; font-weight:bold\">".$string['themecolours']."</td></tr>";
   echo "<tr style=\"height:4px\"><td colspan=\"21\"></td></tr>";
   echo "<tr style=\"height:14px\">\n<td style=\"width:5px\"></td>";
+  $i = 0;
   foreach ($row[1] as $colour) {
-    echo "<td style=\"border: 1px solid #C5C5C5; width:12px; background-color:$colour\" onclick=\"setColor('$colour', '" . $_SERVER['PHP_SELF'] . "')\"></td><td style=\"width:5px\"></td>";
+    echo "<td id=\"row$i\" style=\"border: 1px solid #C5C5C5; width:12px; background-color:$colour\" data-colour=\"$colour\" data-url=\"" . $_SERVER['PHP_SELF'] . "\"></td><td style=\"width:5px\"></td>";
+    $i++;
   }
   echo "</tr>\n";
   echo "<tr style=\"height:8px\"><td colspan=\"21\"></td></tr>";
@@ -99,7 +65,8 @@
     }
     echo "<tr style=\"height:12px\">\n<td style=\"width:5px\"></td>";
     foreach ($row[$row_no] as $colour) {
-      echo "<td style=\"" . $border_top . $border_bottom. "border-left: 1px solid #C5C5C5; border-right: 1px solid #C5C5C5; width:12px; background-color:$colour\" onclick=\"setColor('$colour', '" . $_SERVER['SCRIPT_NAME'] . "')\"></td><td style=\"width:5px\"></td>";
+      echo "<td id=\"row$i\" style=\"" . $border_top . $border_bottom. "border-left: 1px solid #C5C5C5; border-right: 1px solid #C5C5C5; width:12px; background-color:$colour\" data-colour=\"$colour\" data-url=\"" . $_SERVER['SCRIPT_NAME'] . "\"></td><td style=\"width:5px\"></td>";
+      $i++;
     }
     echo "</tr>\n";
   }
@@ -109,11 +76,12 @@
   
   echo "<tr style=\"height:14px\">\n<td style=\"width:5px\"></td>";
   foreach ($row[7] as $colour) {
-    echo "<td style=\"border: 1px solid #C5C5C5; width:12px; background-color:$colour\" onclick=\"setColor('$colour', '" . $_SERVER['SCRIPT_NAME'] . "')\"></td><td style=\"width:5px\"></td>";
+    echo "<td id=\"row$i\" style=\"border: 1px solid #C5C5C5; width:12px; background-color:$colour\" data-colour=\"$colour\" data-url=\"" . $_SERVER['SCRIPT_NAME'] . "\"></td><td style=\"width:5px\"></td>";
+    $i++;
   }
   echo "</tr>\n";
   echo "<tr style=\"height:4px\"><td colspan=\"21\" style=\"border-bottom: 1px solid #C5C5C5\"></td></tr>";
-  echo "<tr><td colspan=\"2\" style=\"padding-top:1px; padding-bottom:1px; background-color:#E9EEEE\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/palette.png\" width=\"16\" height=\"16\" border=\"0\" onclick=\"moreColours();\" /></td><td style=\"border-left: 1px solid #C5C5C5; font-size:80%\" colspan=\"19\" onclick=\"moreColours();\">&nbsp;".$string['more']."</td></tr>";
+  echo "<tr id='morecolours'><td colspan=\"2\" style=\"padding-top:1px; padding-bottom:1px; background-color:#E9EEEE\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/palette.png\" width=\"16\" height=\"16\" border=\"0\" /></td><td style=\"border-left: 1px solid #C5C5C5; font-size:80%\" colspan=\"19\">&nbsp;".$string['more']."</td></tr>";
 ?>
 </table>
 </div>

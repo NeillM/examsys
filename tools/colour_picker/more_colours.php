@@ -55,112 +55,22 @@ function rgb_hex($input) {
   <style type="text/css">
     body {background-color:#F0F1F2; margin:6px}
   </style>
-  <script>
-    var currentColor;
-
-    // function to generate the hex code
-    function d2h(d) {
-      var h = hD.substr(d&15,1);
-      while(d>15) {
-        d>>=4;h=hD.substr(d&15,1)+h;
-      }
-      return h;
-    }
-
-    function toHexCode(dec) {
-      // array to store the hex code for each value passed 
-      // to the getHex function
-      var hexCode= new Array();
-
-      // variable to define the dynamic array index
-      // for hexCode array
-      var i=0;
-
-      // while loop to run until dec variable
-      // is greater than 15
-      while (dec > 15) {
-        hexCode[i] = getHex(dec);
-
-        // evaluate dec each time to
-        // pass the while loop condition
-        dec = Math.floor(dec / 16);
-        i+=1;
-      }
-      // store the last value 
-      // skiped due to loop condition
-      // for dec < 15
-      hexCode[i] = getHex(dec);
-
-      // variable to store the hex Codes
-      var decToHex = "";
-
-      // reverse loop on hexCode to
-      // generate the right order of hex codes
-      for (i=hexCode.length-1; i>=0; i--) {
-        decToHex += hexCode[i]; 
-      }
-    
-      if (decToHex.length < 2) {
-        decToHex = '0' + decToHex;
-      }
-
-      return decToHex;
-    } 
-   
-    function updateHex() {
-      hexval = toHexCode(document.getElementById('r').value) + toHexCode(document.getElementById('g').value) + toHexCode(document.getElementById('b').value) + '';
-      document.getElementById('hex').value = hexval;
-      document.getElementById('swatch').style.backgroundColor = '#' + hexval;
-      currentColor = '#' + hexval;
-    }
-   
-    function updateSwatch(hexval) {
-      document.getElementById('r').value = parseInt(hexval.substring(0,2),16)
-      document.getElementById('g').value = parseInt(hexval.substring(2,4),16)
-      document.getElementById('b').value = parseInt(hexval.substring(4,6),16)
-      document.getElementById('hex').value = hexval;
-      document.getElementById('swatch').style.backgroundColor = '#' + hexval;
-      currentColor = '#' + hexval;
-    }
-   
-    function manualSwatch() {
-      hexval = document.getElementById('hex').value;
-      document.getElementById('r').value = parseInt(hexval.substring(0,2),16);
-      if (hexval.length > 2) {
-        document.getElementById('g').value = parseInt(hexval.substring(2,4),16);
-      }
-      if (hexval.length > 4) {
-        document.getElementById('b').value = parseInt(hexval.substring(4,6),16);
-      }
-      if (hexval.length == 6) {
-        document.getElementById('swatch').style.backgroundColor = '#' + document.getElementById('hex').value;
-        currentColor = '#' + document.getElementById('hex').value;
-      }
-    }
-   
-    function returnColour() {
-      window.opener.document.getElementById('span_<?php echo $_GET['swatch']; ?>').style.backgroundColor = currentColor;
-      window.opener.document.getElementById('<?php echo $_GET['swatch']; ?>').value = currentColor;
-      window.close();
-    }
-    
-    function initialSet() {
-      document.getElementById('current').style.backgroundColor = window.opener.document.getElementById('span_<?php echo $_GET['swatch']; ?>').style.backgroundColor;
-      document.getElementById('swatch').style.backgroundColor = window.opener.document.getElementById('span_<?php echo $_GET['swatch']; ?>').style.backgroundColor;
-    }
-  </script>
+  <script id="rogoconfig" src='../../js/rogo.min.js'></script>
+  <script src='../../js/require.js'></script>
+  <script src='../../js/main.min.js'></script>
+  <script src='js/morecoloursinit.min.js'></script>
 </head>
 
-<body onload="initialSet(); window.opener.document.getElementById('picker').style.display = 'none';">
+<body>
 <table cellspacing="1" cellpadding="0" border="0" style="font-size:90%; width:100%">
 <tr><td style="vertical-align:top">
 
 <table cellspacing="1" cellpadding="0" border="0" style="width:142px">
-<tr><td>R</td><td><input type="text" size="5" id="r" name="r" onkeyup="updateHex();" /></td></tr>
-<tr><td>G</td><td><input type="text" size="5" id="g" name="g" onkeyup="updateHex();" /></td></tr>
-<tr><td>B</td><td><input type="text" size="5" id="b" name="b" onkeyup="updateHex();" /></td></tr>
+<tr><td>R</td><td><input type="text" size="5" id="r" name="r" /></td></tr>
+<tr><td>G</td><td><input type="text" size="5" id="g" name="g" /></td></tr>
+<tr><td>B</td><td><input type="text" size="5" id="b" name="b" /></td></tr>
 <tr><td colspan="2">&nbsp;</td><td></tr>
-<tr><td>#</td><td><input type="text" size="10" id="hex" name="hex" onkeyup="manualSwatch();" /></td></tr>
+<tr><td>#</td><td><input type="text" size="10" id="hex" name="hex" /></td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
@@ -200,7 +110,7 @@ function rgb_hex($input) {
   for ($row=0; $row<20; $row++) {
     echo "<tr style=\"height:14px\">\n";
     foreach ($colours[$row] as $colour) {
-      echo "<td style=\"background-color:#$colour; width:14px\" onclick=\"updateSwatch('$colour')\"></td>";
+      echo "<td class='colour' style=\"background-color:#$colour; width:14px\" data-colour='$colour'></td>";
     }
     echo "</tr>\n";
   }
@@ -209,7 +119,13 @@ function rgb_hex($input) {
 
 </td></tr>
 <tr><td colspan="2">&nbsp;</td></tr>
-<tr><td colspan="2" style="text-align:center"><input type="button" name="ok" value="<?php echo $string['ok']; ?>" style="width:100px" onclick="returnColour();" />&nbsp;<input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:100px" onclick="window.close();" /></td></tr>
+<tr><td colspan="2" style="text-align:center"><input id="ok" type="button" name="ok" value="<?php echo $string['ok']; ?>" style="width:100px" />&nbsp;<input type="button" class="cancel" name="cancel" value="<?php echo $string['cancel']; ?>" style="width:100px" /></td></tr>
 </table>
+<?php
+$render = new render($configObject);
+$dataset['name'] = 'dataset';
+$dataset['attributes']['swatch'] =  $_GET['swatch'];
+$render->render($dataset, array(), 'dataset.html');
+?>
 </body>
 </html>
