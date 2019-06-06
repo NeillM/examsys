@@ -171,7 +171,6 @@
 /users/photos/*.*
 
 /updates/stopfile*
-html5
 /nbproject/private/
 nbproject/
 artwork/pspbrwse.jbf
@@ -200,3 +199,15 @@ geckodriver
 geckodriver.tar.gz
 selenium-chrome.zip
 selenium-server.jar
+
+# ignore minimised js apart from 3rd party
+*.min.js
+!/js/jquery-1.11.1.min.js
+!/js/jquery-migrate-1.2.1.min.js
+!/js/jquery-ui-1.10.4.min.js
+!/js/jquery.validate.min.js
+!/js/jquery.tablesorter.min.js
+!/plugins/texteditor/plugin_tinymce3_texteditor/mee/mee/jquery/*.min.js
+
+# ignore minimised css
+/css/*.css
