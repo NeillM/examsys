@@ -35,7 +35,6 @@ if (!Paper_utils::paper_exists($paperID, $mysqli)) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$mysqli->close();
 ?>
 <!DOCTYPE html>
 <html>
@@ -45,9 +44,11 @@ $mysqli->close();
   <title><?php echo page::title('Rog&#333;: ' . $string['confirmretirepaper']); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <style type="text/css">
-    body {background-color:#F1F5FB; font-size:90%}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/retirepaper.css" />
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/retirepaperinit.min.js"></script>
 </head>
 
 <body>
@@ -60,11 +61,12 @@ $mysqli->close();
 <br />
 
 <div style="text-align:right">
-<form action="do_retire_paper.php" method="post" autocomplete="off">
+<form id="theform" action="" method="post" autocomplete="off">
 <input type="hidden" name="paperID" value="<?php echo $paperID; ?>" />
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
 <input type="hidden" name="folder" value="<?php echo $_GET['folder']; ?>" />
-<input class="ok" type="submit" name="paper" value="<?php echo $string['paper']; ?>" onclick="" /><input class="ok" type="submit" name="questions" value="<?php echo $string['paperquestions']; ?>" onclick="" />
+<input type="hidden" id="questions" name="questions" value="" />
+<input id="paperbutton" class="ok" type="submit" name="paperbutton" value="<?php echo $string['paper']; ?>" /><input id="questionsbutton" class="ok" type="submit" name="questionsbutton" value="<?php echo $string['paperquestions']; ?>" />
 </form>
 </div>
 </td></tr>

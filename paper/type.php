@@ -76,40 +76,10 @@ if ($_GET['module'] != '0') {
     .subsect_table {margin-left: 10px; margin-bottom: 8px}
 	</style>
 
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../js/sidebar.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/state.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    function newPaper() {
-      notice = window.open("../paper/new_paper1.php?module=<?php echo $module ?>&type=<?php echo $type ?>","paper","width=700,height=500,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        notice.focus();
-      }
-    }
-    
-    function updatePaperCount() {
-      var n = $(".file:visible").length;
-      var papercount = n.toLocaleString("<?php echo $language ?>");
-      
-      var decimals = papercount.indexOf('.');
-        if (decimals !== -1) {
-          papercount = papercount.slice(0, decimals);
-        }
-      $("#paper_count").text(papercount);
-    }
-    
-    $(function () {
-      $('#showretired').click(function() {
-        $('.retired').toggle();
-        updatePaperCount();
-      });
-      
-      updatePaperCount();
-    });
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/papertypeinit.min.js"></script>
 </head>
 
 <body>
@@ -141,7 +111,7 @@ if ($_GET['module'] != '0') {
 <?php
 if (!$userObject->has_role('Standards Setter') && $module != 0) {
   // Don't want new papers created from the Unassigned folder.
-  echo "<br /><div class=\"f\"><div class=\"f_icon\"><a href=\"\" onclick=\"newPaper(); return false;\"><img src=\"../artwork/new_paper_48.png\" alt=\"" . $string['newpaper'] . "\" /></a></div><div class=\"f_details\"><a href=\"\" onclick=\"newPaper(); return false;\">" . $string['newpaper'] . "</a></div></div>\n";
+  echo "<br /><div class=\"f newpaper\"><div class=\"f_icon\"><a href=\"\"><img src=\"../artwork/new_paper_48.png\" alt=\"" . $string['newpaper'] . "\" /></a></div><div class=\"f_details\"><a href=\"\">" . $string['newpaper'] . "</a></div></div>\n";
 }
 
 if (!$userObject->has_role('Standards Setter') && $_GET['type'] == 2) {
@@ -198,6 +168,13 @@ if ($results->num_rows > 0) {
 $mysqli->close();
 ?>
 </div>
-
+<?php
+$render = new render($configObject);
+$jsdataset['name'] = 'dataset';
+$jsdataset['attributes']['module'] = $module;
+$jsdataset['attributes']['type'] = $type;
+$jsdataset['attributes']['language'] = $language;
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

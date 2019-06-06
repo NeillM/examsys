@@ -172,15 +172,8 @@ $textsize -= 10;
     .sum_field {width:8em}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <?php
-  if ($userObject->has_role('Staff')) {
-      echo '  <script type="text/javascript" src="../js/staff_help.js"></script>';
-  } else {
-      echo '  <script type="text/javascript" src="../js/student_help.js"></script>';
-  }
-  ?>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
 </head>
 <body>
     <?php

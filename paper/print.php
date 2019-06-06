@@ -37,8 +37,6 @@ require_once '../lang/' . $language . '/question/edit/area.php';
 require_once '../lang/' . $language . '/paper/hotspot_answer.php';
 require_once '../lang/' . $language . '/paper/hotspot_question.php';
 require_once '../lang/' . $language . '/paper/label_answer.php';
-$jstring = $string; //to pass it to JavaScript HTML5 modules
-//HTML5 part
 
 check_var('id', 'GET', true, false, false);
 
@@ -255,24 +253,20 @@ $current_screen = 1;
     }
   ?>
   </style>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+    <script id="rogoconfig" src='../js/rogo.min.js'
+            data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
+            data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
+            data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>">
+    </script>
+    <script src='../js/require.js'></script>
+    <script src='../js/main.min.js'></script>
+    <script src='../js/printinit.min.js'></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
   // Check if any 3d file types are enabled and render js.
   threed_handler::render_js($string);
 ?>
-	
-  <?php 
-  
-    $render = new render($configObject);
-    $render->render_html5_js(json_encode($jstring));
-    echo $configObject->get('cfg_js_root'); 
-  
-    if($configObject->get_setting('core', 'paper_mathjax')) {
-      $render->render(null, null, 'mathjax.html');
-    }
-  ?>
 </head>
 <body>
 
@@ -361,10 +355,16 @@ $current_screen = 1;
   
   $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 ?>
-<script>
-  $(function () {
-    window.print();
-  });
-</script>
+<?php
+  // JS utils dataset.
+  $jsdataset['name'] = 'jsutils';
+  $jsdataset['attributes']['xls'] = json_encode($string);
+  $render = new render($configObject);
+  $render->render($jsdataset, array(), 'dataset.html');
+  // Dataset.
+  $miscdataset['name'] = 'dataset';
+  $miscdataset['attributes']['language'] = $language;
+  $render->render($miscdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

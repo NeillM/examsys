@@ -143,52 +143,13 @@ $marks = $results_cache->get_paper_marks_by_student($userID);
     .key {position: relative; width: 300px; height: 173px; border: 2px solid #FCE699; z-index: 10; float: right; top: 30px; right: 10px; font-size: 75%; padding: 5px; line-height: 100%; background-color: #FFFFEE; color: #404040}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript" src="../js/popup_menu.js"></script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src="../js/require.js"></script>
+  <script src="../js/main.min.js"></script>
 <?php
-if ($userObject->has_role('Staff')) {
-	echo '<script type="text/javascript" src="../js/staff_help.js"></script>';
-} else {
-	echo '<script type="text/javascript" src="../js/student_help.js"></script>';
-}
 if (!$userObject->has_role('Student')) {  // Do not show JavaScript if a student
 ?>
-  <script>
-    function setVars (paper_type, crypt_name, paperID, metadataID) {
-      $('#paper_type').val(paper_type);
-      $('#crypt_name').val(crypt_name);
-      $('#paperID').val(paperID);
-      $('#metadataID').val(metadataID);
-    }
-
-    function viewScript() {
-      $('#menudiv').hide();
-      if ($('#metadataID').val() != '') {
-        var winwidth = screen.width-80;
-        var winheight = screen.height-80;
-        window.open("../paper/finish.php?id=" + $('#crypt_name').val() + "&metadataID=" + $('#metadataID').val() + "&log_type=" + $('#paper_type').val() + "&percent=" + $('#percent').val() + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      }
-    }
-    
-    function viewFeedback() {
-      $('#menudiv').hide();
-      var winwidth = screen.width-80;
-      var winheight = screen.height-80;
-      window.open("../mapping/user_feedback.php?id=" + $('#crypt_name').val() + "&userID=<?php echo $userID; ?>&metadataID=" + $('#metadataID').val() + "","feedback","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    }
-    
-    function viewPersonalCohort() {
-      window.location.href="../reports/personal_cohort_performance.php?paperID=" + $('#paperID').val() + "&userID=<?php echo $userID; ?>";
-    }
-    
-    function jumpToPaper() {
-      window.opener.location.href="../paper/details.php?paperID=" + $('#paperID').val();
-      self.close();
-    }
-
-    document.onmousedown = mouseSelect;
-  </script>
+  <script src="../js/performanceinit.min.js"></script>
 <?php
 }
 ?>
@@ -216,19 +177,19 @@ if (!$userObject->has_role('Student')) {  // Do not show JavaScript if a student
 if (!$userObject->has_role('Student')) {  // Do not create popup menu if student
 ?>
 <div id="menudiv" class="popupmenu" style="padding:5px; width:300px">
-  <div class="popup_row" onclick="viewScript();">
+  <div class="popup_row" id="item1">
     <div class="popup_icon"><img src="../artwork/summative_16.gif" width="16" height="16" alt="" /></div>
-    <div class="popup_title" id="item1"><?php echo $string['examscript'] ?></div>
+    <div class="popup_title"><?php echo $string['examscript'] ?></div>
   </div>
   
-  <div class="popup_row" onclick="viewFeedback();">
+  <div class="popup_row" id="item2">
     <div class="popup_icon"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" /></div>
-    <div class="popup_title" id="item2"><?php echo $string['objectives'] ?></div>
+    <div class="popup_title"><?php echo $string['objectives'] ?></div>
   </div>
   
-  <div class="popup_row" onclick="viewPersonalCohort();">
+  <div class="popup_row" id="item3">
     <div class="popup_icon"><img src="../artwork/personal_cohort.gif" width="16" height="16" alt="" /></div>
-    <div class="popup_title" id="item3"><?php echo $string['personalcohortperformance'] ?></div>
+    <div class="popup_title"><?php echo $string['personalcohortperformance'] ?></div>
   </div>
   
   <div class="popup_divider_row">
@@ -236,9 +197,9 @@ if (!$userObject->has_role('Student')) {  // Do not create popup menu if student
     <div class="popup_title"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></div>
   </div>
  
-  <div class="popup_row" onclick="viewPersonalCohort();">
+  <div class="popup_row" id="item4">
     <div class="popup_icon"></div>
-    <div class="popup_title" id="item3"><?php echo $string['jumptopaper'] ?></div>
+    <div class="popup_title"><?php echo $string['jumptopaper'] ?></div>
   </div>
 </div>
 <?php
@@ -260,7 +221,7 @@ echo "</table>\n<div>";
 $old_calendar_year = '';
 $plots_output = 0;
 $col = 0;
-
+echo '<table>';
 foreach ($papers as $paper) {
   $display_paper = true;
   
@@ -295,33 +256,26 @@ foreach ($papers as $paper) {
     if ($userObject->has_role('Student')) {
       $onclick = '';
     } else {
-      $onclick = " onclick=\"popMenu(3, event); setVars(" . $paper['paper_type'] . ", '" . $paper['crypt_name'] . "', " . $paper['paperID'] . ", '" . $paper['metadataID'] . "')\"";
+      $onclick = 'data-userid="' . $userID . '" data-papertype="' . $paper['paper_type'] . '" data-cryptname="' . $paper['crypt_name'] . '"data-paperid="' . $paper['paperID'] . '" data-metadataid="' . $paper['metadataID'] . '"';
     }
     
     if ($mark != '') {  // Do not plot if there is no student mark.
+        echo '<tr id="res' . $col . '"' . $onclick . '><td>';
       if ($col == 0) {
-        echo "<img src=\"draw_boxplot.php?exam=$exam&part=1&q1=$q1&q2=$q2&q3=$q3&min=$min&max=$max&passmark=$pass_mark&mark=$mark&scale=1\" width=\"166\" height=\"265\"$onclick alt=\"" . $string['boxplot'] . "\" class=\"indent\" />";
+        echo "<img src=\"draw_boxplot.php?exam=$exam&part=1&q1=$q1&q2=$q2&q3=$q3&min=$min&max=$max&passmark=$pass_mark&mark=$mark&scale=1\" width=\"166\" height=\"265\" alt=\"" . $string['boxplot'] . "\" class=\"indent\" />";
       } else {
-        echo "<img src=\"draw_boxplot.php?exam=$exam&part=1&q1=$q1&q2=$q2&q3=$q3&min=$min&max=$max&passmark=$pass_mark&mark=$mark&scale=0\" width=\"115\" height=\"265\"$onclick alt=\"" . $string['boxplot'] . "\" />";
+        echo "<img src=\"draw_boxplot.php?exam=$exam&part=1&q1=$q1&q2=$q2&q3=$q3&min=$min&max=$max&passmark=$pass_mark&mark=$mark&scale=0\" width=\"115\" height=\"265\" alt=\"" . $string['boxplot'] . "\" />";
       }
-      
+      echo '</td></tr>';
       $plots_output++;
       $col++;
     }
     $old_calendar_year = $paper['calendar_year'];
   }
 }
+echo '</table>';
 if ($plots_output == 0) {
   echo "<div style=\"margin:10px\">" . $string['noresults'] . "</div>\n";
-}
-
-if (!$userObject->has_role('Student')) {  // Do not show hidden fields if a student
-?>
-<input type="hidden" id="crypt_name" />
-<input type="hidden" id="paperID" />
-<input type="hidden" id="metadataID" />
-<input type="hidden" id="paper_type" />
-<?php
 }
 ?>
 </div>

@@ -22,75 +22,7 @@
 * @package
 */
 ?>
-<script>
-<?php
-  $module_list = explode(',', $module);
-
-  if ($properties->get_paper_type() == '3') {
-?>
-  function go(url, evt) {
-    $('#stats_menu').hide();
-    if ($('#completerpt').is(':checked')) {
-      completerpt = 1;
-    } else {
-      completerpt = 0;
-    }
-    window.location.href = url + "paperID=" + $('#paperID').val() + "&startdate=" + $('#start_year').val() + $('#start_month').val() + $('#start_day').val() + $('#start_hour').val() + $('#start_minute').val() + "00" + "&enddate=" + $('#end_year').val() + $('#end_month').val() + $('#end_day').val() + $('#end_hour').val() + $('#end_minute').val() + "00" + "&repcourse=" + $('#repcourse').val() + "&repyear=" + $('#repyear').val() + "&sortby=surname&module=<?php echo $module_list[0]; ?>&folder=<?php echo $folder; ?>&complete=" + completerpt;
-    evt.cancelBubble = true;
-    return false;
-  }
-<?php
-  } elseif ($properties->get_paper_type() == '6') {
-?>
-  function go(url, evt) {
-    var extra_data = '';
-
-    for (i=1; i<$('#meta_no').val(); i++) {
-      meta_ref = 'meta' + i;
-      extra_data += '&meta' + i + '=' +$('#' + meta_ref).val();
-    }
-
-    $('#stats_menu').hide();
-    window.location.href = url + "paperID=" + $('#paperID').val() + "&startdate=" + $('#start_year').val() + $('#start_month').val() + $('#start_day').val() + $('#start_hour').val() + $('#start_minute').val() + "00" + "&enddate=" + $('#end_year').val() + $('#end_month').val() + $('#end_day').val() + $('#end_hour').val() + $('#end_minute').val() + "00" + "&repmodule=" + $('#repmodule').val() + "&repcourse=" + $('#repcourse').val() + extra_data + "&module=<?php echo $module_list[0]; ?>";
-  }
-  <?php
-  } else {
-?>
-  function go(url, evt) {
-    var extra_data = '';
-
-    for (i=1; i<$('#meta_no').val(); i++) {
-      meta_ref = 'meta' + i;
-      extra_data += '&meta' + i + '=' + $('#' + meta_ref).val();
-    }
-    
-    $('#stats_menu').hide();
-    if ($('#absent').is(':checked')) {
-      absent = '&absent=1';
-    } else {
-      absent = '&absent=0';
-    }
-    if ($('#studentsonly').is(':checked')) {
-      studentsonly = '&studentsonly=1';
-    } else {
-      studentsonly = '&studentsonly=0';
-    }
-    window.location.href = url + "paperID=" + $('#paperID').val() + "&startdate=" + $('#start_year').val() + $('#start_month').val() + $('#start_day').val() + $('#start_hour').val() + $('#start_minute').val() + "00" + "&enddate=" + $('#end_year').val() + $('#end_month').val() + $('#end_day').val() + $('#end_hour').val() + $('#end_minute').val() + "00" + "&repmodule=" + $('#repmodule').val() + "&repcourse=" + $('#repcourse').val() + "&sortby=name&module=<?php echo $module_list[0]; ?>&folder=<?php echo $folder; ?>&percent=" + $('#percent').val() + absent + studentsonly + "&ordering=" + $('#direction').val() + extra_data;
-    
-    evt.cancelBubble = true;
-    return false;
-  }
-<?php
-  }
-?>
-  function checkAll() {
-    if ($('#direction')[0].selectedIndex == 0) {
-      $("#percent").prop("selectedIndex", 7);
-    }
-  }
-</script>
-
-<div class="popup" style="top:60px" id="stats_menu" onclick="showAssStatsMenu(true, event);">
+<div class="popup" style="top:60px" id="stats_menu">
 <form name="stats_menu" style="width:640px; border:0 solid #C0C0C0; font-size:110%" autocomplete="off">
 
 <div style="background-color:#F2B100; height:6px"></div>
@@ -223,7 +155,7 @@
     }
     echo "</select></td></tr>\n";
     
-    echo "<tr><td>" . $string['cohort'] . "</td><td><select name=\"direction\" id=\"direction\" onchange=\"checkAll();\">\n";
+    echo "<tr><td>" . $string['cohort'] . "</td><td><select name=\"direction\" id=\"direction\">\n";
     echo "<option value=\"asc\">" . $string['allcandidates'] . "</option>\n";
     echo "<option value=\"desc\">" . $string['top'] . "</option>\n";
     echo "<option value=\"asc\">" . $string['bottom'] . "</option>\n";
@@ -291,33 +223,33 @@
     // display Assessment stats options
 
     echo "<div class=\"reports_header\">" . $string['reviews'] . "</div>\n";
-    echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/review_comments.php?type=internal&scrOfY=0&',event)\">" . $string['internalpeerreview'] . "</a></div>\n";
+    echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/review_comments.php?type=internal&scrOfY=0&'>" . $string['internalpeerreview'] . "</a></div>\n";
 
 		if ($properties->q_type_exist('sct')) {
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/review_sct_answers.php?type=external&',event)\">" . $string['sctresponses'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/review_sct_answers.php?type=external&'>" . $string['sctresponses'] . "</a></div>\n";
     }
-    echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/review_comments.php?type=external&',event)\">" . $string['externalexaminers'] . "</a></div>\n";
+    echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/review_comments.php?type=external&'>" . $string['externalexaminers'] . "</a></div>\n";
     echo "<div class=\"reports_header\">" . $string['cohortreports'] . "</div>\n";
-    echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/class_totals.php?',event)\">" . $string['classtotals'] . "</a></div>\n";
+    echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/class_totals.php?'>" . $string['classtotals'] . "</a></div>\n";
     if ($properties->unmarked_enhancedcalc(1) or $properties->unmarked_textbox(1)) {
       echo "<div class=\"greybullet\">" . $string['classtotalsexcel2003'] . "</div>\n";
       echo "<div class=\"greybullet\">" . $string['classtotalscsv'] . "</div>\n";
     } else {
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/class_totals_xml.php?',event)\">" . $string['classtotalsexcel2003'] . "</a></div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/class_totals_csv.php?',event)\">" . $string['classtotalscsv'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/class_totals_xml.php?'>" . $string['classtotalsexcel2003'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/class_totals_csv.php?'>" . $string['classtotalscsv'] . "</a></div>\n";
     }
     if ($properties->get_paper_type() != '5') {
 			if ($properties->q_type_exist('textbox')) {
         echo "<div class=\"reports_header\">" . $string['textboxmarking'] . "</div>\n";
-        echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/textbox_select_q.php?action=mark&phase=1&',event)\">" . $string['primarymarkbyquestion'] . "</a></div>\n";
-        echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/textbox_remark.php?',event)\">" . $string['selectpapersforremarking'] . "</a></div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/textbox_select_q.php?action=mark&phase=1&'>" . $string['primarymarkbyquestion'] . "</a></div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/textbox_remark.php?'>" . $string['selectpapersforremarking'] . "</a></div>\n";
         $remark_array = textbox_marking_utils::get_remark_users($paperID, $mysqli);
         if (count($remark_array) > 0) {
-          echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/textbox_select_q.php?action=mark&phase=2&',event)\">" . $string['secondmarkbyquestion'] . "</a></div>\n";
+          echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/textbox_select_q.php?action=mark&phase=2&'>" . $string['secondmarkbyquestion'] . "</a></div>\n";
         } else {
           echo "<div class=\"greybullet\">" . $string['secondmarkbyquestion'] . "</div>\n";          
         }
-        echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/textbox_select_q.php?action=finalise&',event)\">" . $string['finalisemarks'] . "</a></div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/textbox_select_q.php?action=finalise&'>" . $string['finalisemarks'] . "</a></div>\n";
       }
     }
 
@@ -325,69 +257,69 @@
     echo "<div class=\"reports_header\">" . $string['itemanalysis'] . "</div>\n";
 
     if ($properties->get_paper_type() != '5') {
-		  echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/frequency_discrimination_analysis.php?',event)\">" . $string['frequencyanalysis'] . "</a></div>\n";
+		  echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/frequency_discrimination_analysis.php?'>" . $string['frequencyanalysis'] . "</a></div>\n";
 		}
 
 	  if ($properties->unmarked_enhancedcalc()) {
 			echo "<div class=\"greybullet\">" . $string['learningobjectiveanalysis'] . "</div>\n";
     } else {
-			echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/cohort_obj_perform.php?',event)\">" . $string['learningobjectiveanalysis'] . "</a></div>\n";
+			echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/cohort_obj_perform.php?'>" . $string['learningobjectiveanalysis'] . "</a></div>\n";
     }
 		echo "<div class=\"reports_header\">" . $string['exports'] . "</div>\n";
     if ($properties->get_paper_type() != '5') {
-			echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../export/assessment_data.php?',event)\">" . $string['exportresponsescsvnum'] . "</a></div>\n";
-			echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../export/assessment_data.php?mode=text&',event)\">" . $string['exportresponsescsvtext'] . "</a></div>\n";
-			echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../export/assessment_boolean.php?',event)\">" . $string['exportbooleancsv'] . "</a></div>\n";
+			echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../export/assessment_data.php?'>" . $string['exportresponsescsvnum'] . "</a></div>\n";
+			echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../export/assessment_data.php?mode=text&'>" . $string['exportresponsescsvtext'] . "</a></div>\n";
+			echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../export/assessment_boolean.php?'>" . $string['exportbooleancsv'] . "</a></div>\n";
     }
 		if ($properties->unmarked_enhancedcalc()) {
 			echo "<div class=\"greybullet\">" . $string['exportmarkscsv'] . "</div>\n";
 		} else {
-			echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../export/assessment_marks.php?',event)\">" . $string['exportmarkscsv'] . "</a></div>\n";
+			echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../export/assessment_marks.php?'>" . $string['exportmarkscsv'] . "</a></div>\n";
 		}
 	}
   
   switch ($properties->get_paper_type()) {
     case '3':     // Stats menu
       echo "<div class=\"reports_header\">" . $string['quantitativereports'] . "</div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/quantitative.php?',event)\">" . $string['xhtml'] . "</a></div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/quantitative_xml.php?',event)\">" . $string['word2003format'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/quantitative.php?'>" . $string['xhtml'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/quantitative_xml.php'>" . $string['word2003format'] . "</a></div>\n";
       
       echo "<div class=\"reports_header\">" . $string['qualitativeanalysis'] . "</div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/qualitative.php?',event)\">" . $string['xhtml'] . "</a></div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/qualitative_xml.php?',event)\">" . $string['word2003format'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/qualitative.php?'>" . $string['xhtml'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/qualitative_xml.php?'>" . $string['word2003format'] . "</a></div>\n";
       
       echo "<div class=\"reports_header\">" . $string['exports'] . "</div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../export/survey_xml_data.php?',event)\">" . $string['rawdataxml'] . "</a></div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../export/survey_csv_data.php?',event)\">" . $string['rawdatacsv'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../export/survey_xml_data.php?'>" . $string['rawdataxml'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../export/survey_csv_data.php'>" . $string['rawdatacsv'] . "</a></div>\n";
       break;
     case '4':     // OSCE menu
       echo "<div class=\"reports_header\">" . $string['cohortreports'] . "</div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/class_totals.php?',event)\">" . $string['classtotals'] . "</a></div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/class_totals_xml.php?',event)\">" . $string['classtotalsexcel2003'] . "</a></div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/class_totals_csv.php?',event)\">" . $string['classtotalscsv'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../osce/class_totals.php?'>" . $string['classtotals'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../osce/class_totals_xml.php?'>" . $string['classtotalsexcel2003'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../osce/class_totals_csv.php?'>" . $string['classtotalscsv'] . "</a></div>\n";
       
       echo "<div class=\"reports_header\">" . $string['itemanalysis'] . "</div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/frequency_analysis.php?',event)\">" . $string['frequencyanalysis'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='./osce/frequency_analysis.php?'>" . $string['frequencyanalysis'] . "</a></div>\n";
       
       echo "<div class=\"reports_header\">" . $string['exports'] . "</div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/portfolio_sheets.php?',event)\">" . $string['individualportfoliosheets'] . "</a></div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../osce/export_ratings.php?',event)\">" . $string['exportratingscsv'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../osce/portfolio_sheets.php?'>" . $string['individualportfoliosheets'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../osce/export_ratings.php?'>" . $string['exportratingscsv'] . "</a></div>\n";
       break;
     case '6':
       echo "<br />\n<div class=\"reports_header\">Reports</div>\n";
       if ($properties->get_display_question_mark() == '1') {
-        echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../peer_review/summary_report.php?percent=0&',event)\">" . $string['ReviewSummary1'] . "</a></div>\n";
-        echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../peer_review/summary_report.php?percent=1&',event)\">" . $string['ReviewSummary2'] . "</a></div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../peer_review/summary_report.php?percent=0&'>" . $string['ReviewSummary1'] . "</a></div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../peer_review/summary_report.php?percent=1&'>" . $string['ReviewSummary2'] . "</a></div>\n";
       } else {
-        echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../peer_review/summary_report.php?',event)\">" . $string['ReviewSummary3'] . "</a></div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../peer_review/summary_report.php?'>" . $string['ReviewSummary3'] . "</a></div>\n";
       }
-      echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../peer_review/summary_report_csv.php?',event)\">" . $string['ReviewSummary4'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../peer_review/summary_report_csv.php?'>" . $string['ReviewSummary4'] . "</a></div>\n";
       break;
   }
     
   if(($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2') && (strpos($checklist, 'stdset') !== false)) {
-    echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/standards_setting_csv.php?',event)\">" . $string['standardssettingcsv'] . "</a></div>\n";
-    echo "<div class=\"bullet\"><a href=\"#\" onclick=\"go('../reports/standards_setting_full_csv.php?',event)\">" . $string['standardssettingfullcsv'] . "</a></div>\n";
+    echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/standards_setting_csv.php?'>" . $string['standardssettingcsv'] . "</a></div>\n";
+    echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/standards_setting_full_csv.php?'>" . $string['standardssettingfullcsv'] . "</a></div>\n";
   }
 
 ?>

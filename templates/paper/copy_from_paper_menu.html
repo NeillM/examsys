@@ -1,12 +1,4 @@
-<script>
-  $(function () {
-    $(".cancel").click(function(event) {
-      $('#copy_from_submenu').hide();
-      event.stopPropagation();
-    });
-  });
-</script>
-<div class="popup" style="z-index: 20; font-size: 90%; background-color: white; top: 120px; width: 630px; height: 346px;" id="copy_from_submenu" onclick="showCopyFromMenu(true, event);">
+<div class="popup" style="z-index: 20; font-size: 90%; background-color: white; top: 120px; width: 630px; height: 346px;" id="copy_from_submenu">
     <form method="post" action="{{data.action}}" autocomplete="off">
         <input type="hidden" name="paper_type" value="{{data.papertype}}" />
         <input type="hidden" name="currentpid" value="{{data.paperid}}" />
@@ -48,7 +40,7 @@
                     </tr>
                     <tr>
                         <td align="center" colspan="2">
-                            <input type="button" class="cancel" value="{{lang.cancel}}" name="cancel" id="cancel">
+                            <input type="button" class="cancel" value="{{lang.cancel}}" name="cancel" id="cancel" data-popupid="copy_from_submenu">
                             <input type="submit" class="ok" value="{{lang.ok}}" name="submit" id="submit_button">
                         </td>
                     </tr>

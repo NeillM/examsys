@@ -27,63 +27,10 @@
 	.cancel {margin-right:8px}
 </style>
 
-<script>
-  function changeButton() {
-    if ($("#paper_type").val() == '2') {
-      $('#next_button').show();
-      $('#submit_button').hide();
-    } else {
-      $('#submit_button').show();
-      $('#next_button').hide();
-    }
-  }
-  
-  function nextTable() {
-    var paper_name = $('#new_paper').val();
-    $.post("../ajax/paper/check_name.php", {name:paper_name}, function(data, status) {
-      if (data == 'unique') {
-        $('#table1div').hide();
-        $('#table2div').show();        
-        $('#new_paper').subClass('errfield');
-      } else {
-        $('#new_paper').addClass('errfield');
-        alert("<?php echo $string['namewarning'] ?>");
-      }
-    });
- 
-  }
-  
-  function checkCopyForm() {
-    if ($("#paper_type").val() == '2') {
-      if ($('#period').val() == '') {
-        alert ("<?php echo $string['msg7'] ?>");
-        return false;
-      }
-      
-     if ($('#duration_hours').val() == '' || $('#duration_mins').val() == '') {
-        alert ("<?php echo $string['msg8'] ?>");
-        return false;
-      }
-      
-      if ($('#cohort_size').val() == '') {
-        alert ("<?php echo $string['msg9'] ?>");
-        return false;
-      }
-    }
-  }
-	
-  $(function () {
-    $(".cancel").click(function(event) {
-      $('#copy_submenu').hide();
-      event.stopPropagation();
-    });
-  });
-</script>
-
-<div class="popup" style="z-index:20; font-size:90%; background-color:white; top:120px; width:630px; height:346px" id="copy_submenu" onclick="showCopyMenu(true, event);">
+<div class="popup" style="z-index:20; font-size:90%; background-color:white; top:120px; width:630px; height:346px" id="copy_submenu">
 <?php
 if ($configObject->get_setting('core', 'cfg_summative_mgmt')) {
-  echo '<form method="post" action="../paper/copy.php" onsubmit="return checkCopyForm()" autocomplete="off">';
+  echo '<form method="post" action="../paper/copy.php" id="checkcopy" autocomplete="off">';
 } else {
   echo '<form method="post" action="../paper/copy.php" autocomplete="off">';
 }
@@ -105,7 +52,7 @@ if ($configObject->get_setting('core', 'cfg_summative_mgmt')) {
 
 <tr>
 <td style="text-align:right"><?php echo $string['type'] ?>&nbsp;</td>
-<td colspan="4"><select name="paper_type" id="paper_type" onchange="changeButton()">
+<td colspan="4"><select name="paper_type" id="paper_type" class="changepapertype">
 <?php
   switch ($properties->get_paper_type()) {
     case 0:
@@ -163,9 +110,9 @@ if ($configObject->get_setting('core', 'cfg_summative_mgmt')) {
 <tr>
 <?php
 if ($properties->get_paper_type() == '2' and $configObject->get_setting('core', 'cfg_summative_mgmt')) {
-  echo '<td align="center" colspan="5"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" /><input type="button" class="ok" value="' . $string['next'] . '" name="next" onclick="nextTable();" id="next_button" /><input type="submit" class="ok" style="display:none" value="' . $string['copypaper'] . '" name="submit" id="submit_button" /></td>';
+  echo '<td align="center" colspan="5"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" /><input type="button" class="ok" value="' . $string['next'] . '" name="next" id="next_button" /><input type="submit" class="ok" style="display:none" value="' . $string['copypaper'] . '" name="submit" id="submit_button" /></td>';
 } else {
-  echo '<td align="center" colspan="5"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" /><input type="button" class="ok" style="display:none" value="' . $string['next'] . '" name="next" onclick="nextTable();" id="next_button" /><input type="submit" class="ok" value="' . $string['copypaper'] . '" name="submit" id="submit_button" onclick="checkName()" /></td>';
+  echo '<td align="center" colspan="5"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" /><input type="button" class="ok" style="display:none" value="' . $string['next'] . '" name="next" id="next_button" /><input type="submit" class="ok" value="' . $string['copypaper'] . '" name="submit" id="submit_button" /></td>';
 }
 ?>
 </tr>
@@ -226,7 +173,7 @@ if ($properties->get_paper_type() == '2' and $configObject->get_setting('core', 
   
   echo '<tr><td colspan="6">&nbsp;</td></tr>';
   echo '<tr><td colspan="6">&nbsp;</td></tr>';
-  echo '<tr><td colspan="6" style="text-align:center"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" onclick="" /><input type="submit" class="ok" value="' . $string['copypaper'] . '" name="submit" /></td></tr>';
+  echo '<tr><td colspan="6" style="text-align:center"><input type="button" class="cancel" value="' . $string['cancel'] . '" name="cancel" id="cancel" data-popupid="copy_submenu" /><input type="submit" class="ok" value="' . $string['copypaper'] . '" name="submit" /></td></tr>';
 
 ?>
 </table>

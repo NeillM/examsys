@@ -25,26 +25,6 @@
 $stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState($configObject->get('cfg_root_path') . '/paper/search.php');
 ?>
-<script>
-  function updateDropdownState(mySel, NameOfState) {
-    setting = mySel.options[mySel.selectedIndex].value;
-    updateState(NameOfState, setting);
-  }
-
-  function updateMenu(ID) {
-    $('#menu' + ID).toggle();
-
-    <?php
-      echo "icon = ($('#icon' + ID).attr('src').indexOf('down_arrow_icon.gif')!=-1) ? '{$configObject->get('cfg_root_path')}/artwork/up_arrow_icon.gif' : '{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif';\n";
-    ?>
-    alttag = ($('#icon' + ID).attr('alt') == 'Hide') ? 'Show' : 'Hide';
-    $('#icon' + ID).attr('src', icon);
-    $('#icon' + ID).attr('alt', alttag);
-
- 		updateState('menu' + ID, $('#menu' + ID).css('display'));
-
-  }
-</script>
 
 <div id="left-sidebar" class="sidebar">
 <div style="padding-right:16px">
@@ -111,8 +91,8 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/paper/sear
 <br />
 
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(6);"><?php echo $string['accessibility'] ?></a></td>
-  <td align="right"><a href="#" onclick="updateMenu(6);"><?php
+  <tr class="accessibility"><td><a href="#" style="font-weight:bold; color:black"><?php echo $string['accessibility'] ?></a></td>
+  <td align="right"><a href="#"><?php
     if (isset($state['menu6']) and $state['menu6'] == 'table') {
       echo '<img id="icon6" src="../artwork/up_arrow_icon.gif" width="10" height="9" alt="Hide" />';
     } else {
@@ -191,8 +171,8 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/paper/sear
 </table>
 
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(9);"><?php echo $string['ownership'] ?></a></td>
-  <td align="right"><a href="#" onclick="updateMenu(9);"><?php
+  <tr class="ownership"><td><a href="#" style="font-weight:bold; color:black"><?php echo $string['ownership'] ?></a></td>
+  <td align="right"><a href="#"><?php
     if (isset($state['menu9']) and $state['menu9'] == 'block') {
       echo "<img id=\"icon9\" src=\"../artwork/up_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Hide\" />";
     } else {

@@ -26,6 +26,8 @@
 
 require '../include/staff_auth.inc';
 
+$paper_name = param::optional('paper_name', '', param::TEXT, param::FETCH_GET);
+$paper_type = param::optional('paper_type', '', param::TEXT, param::FETCH_GET);
 $paper_types = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
 ?>
 <!DOCTYPE html>
@@ -37,112 +39,34 @@ $paper_types = array('formative', 'progress', 'summative', 'survey', 'osce', 'of
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/new_paper.css" />
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/newpaperinit.min.js"></script>
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script>
-    $(function () {
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
-        }
-      });
-      $('form').removeAttr('novalidate');
-      
-      <?php
-      if (isset($_GET['type'])) {
-        echo "  activate('" . $paper_types[$_GET['type']] . "')\n";
-      }
-      ?>
-    });
-
-    function over(id) {
-      if (id != $('#paper_type').val()) {
-				$('#' + id).css('background-color', '#FFE7A2');
-      }
-      switch (id) {
-        case 'formative':
-          $('#description').html("<?php echo $string['description0']; ?>");
-          break;
-        case 'progress':
-          $('#description').html("<?php echo $string['description1']; ?>");
-          break;
-        case 'summative':
-          $('#description').html("<?php echo $string['description2']; ?>");
-          break;
-        case 'survey':
-          $('#description').html("<?php echo $string['description3']; ?>");
-          break;
-        case 'osce':
-          $('#description').html("<?php echo $string['description4']; ?>");
-          break;
-        case 'offline':
-          $('#description').html("<?php echo $string['description5']; ?>");
-          break;
-        case 'peer_review':
-          $('#description').html("<?php echo $string['description6']; ?>");
-          break;
-      }
-    }
-
-    function out(id) {
-      if (id != $('#paper_type').val()) {
-				$('#' + id).css('background-color', 'white');
-      }
-    }
-
-    function activate(id) {
-      $('#formative').css('background-color', 'white');
-      $('#progress').css('background-color', 'white');
-      $('#summative').css('background-color', 'white');
-      $('#survey').css('background-color', 'white');
-      $('#osce').css('background-color', 'white');
-      $('#offline').css('background-color', 'white');
-
-			$('#' + id).css('background-color', '#FFBD69');
-      $('#paper_type').val(id);
-    }
-
-    function checkForm() {
-      if ($('#paper_type').val() == '') {
-        alert("<?php echo $string['msg1']; ?>");
-        return false;
-      }
-      <?php
-        if ($configObject->get_setting('core', 'summative_warn_external')) {
-        ?>
-        if ($('#paper_type').val() == 'summative') {
-          return confirm("<?php echo $string['msg3']; ?>");
-        }
-        <?php
-        }
-        ?>
-    }
-  </script>
 </head>
 
 <body>
-<form id="theform" name="theform" action="new_paper2.php" method="post" onsubmit="return checkForm();" autocomplete="off">
+<form id="theform" name="theform" action="new_paper2.php" method="post" autocomplete="off">
 <div style="text-align:center; border:solid 1px #295AAD; background-color:white">
 <table cellpadding="0" cellspacing="0" border="0" style="background-color:white; width:100%">
 <tr>
 <td colspan="8" class="titlebar" style="text-align:left">&nbsp;<?php echo $string['papertype']; ?></td>
 </tr>
 <tr>
-<td class="icon" onclick="activate('formative')" onmouseover="over('formative')" onmouseout="out('formative')" id="formative"><img src="../artwork/formative.png" width="48" height="48" alt="Formative Self-Assessment" /><br /><?php echo $string['formative self-assessment']; ?></td>
-<td class="icon" onclick="activate('progress')" onmouseover="over('progress')" onmouseout="out('progress')" id="progress"><img src="../artwork/progress.png" width="48" height="48" alt="Progress Test" /><br /><?php echo $string['progress test']; ?></td>
+<td class="icon" id="formative"><img src="../artwork/formative.png" width="48" height="48" alt="<?php echo $string['formative self-assessment']; ?>" /><br /><?php echo $string['formative self-assessment']; ?></td>
+<td class="icon" id="progress"><img src="../artwork/progress.png" width="48" height="48" alt="<?php echo $string['progress test']; ?>" /><br /><?php echo $string['progress test']; ?></td>
 <?php
 if (!$configObject->get_setting('core', 'summative_hide_external')) {
     ?>
-<td class="icon" onclick="activate('summative')" onmouseover="over('summative')" onmouseout="out('summative')" id="summative"><img src="../artwork/summative.png" width="48" height="48" alt="Summative Exam" /><br /><?php echo $string['summative exam']; ?></td>
+<td class="icon" id="summative"><img src="../artwork/summative.png" width="48" height="48" alt="<?php echo $string['summative exam']; ?>" /><br /><?php echo $string['summative exam']; ?></td>
 <?php
 }
 ?>
-<td class="icon" onclick="activate('survey')" onmouseover="over('survey')" onmouseout="out('survey')" id="survey"><img src="../artwork/survey.png" width="48" height="48" alt="Survey" /><br /><?php echo $string['survey']; ?></td>
-<td class="icon" onclick="activate('osce')" onmouseover="over('osce')" onmouseout="out('osce')" id="osce"><img src="../artwork/osce.png" width="48" height="48" alt="OSCE" /><br /><?php echo $string['osce station']; ?></td>
-<td class="icon" onclick="activate('offline')" onmouseover="over('offline')" onmouseout="out('offline')" id="offline"><img src="../artwork/offline.png" width="48" height="48" alt="Offline" /><br /><?php echo $string['offline paper']; ?></td>
-<td class="icon" onclick="activate('peer_review')" onmouseover="over('peer_review')" onmouseout="out('peer_review')" id="peer_review"><img src="../artwork/peer_review.png" width="48" height="48" alt="Peer Review" /><br /><?php echo $string['peer review']; ?></td>
+<td class="icon" id="survey"><img src="../artwork/survey.png" width="48" height="48" alt="<?php echo $string['survey']; ?>" /><br /><?php echo $string['survey']; ?></td>
+<td class="icon" id="osce"><img src="../artwork/osce.png" width="48" height="48" alt="<?php echo $string['osce station']; ?>" /><br /><?php echo $string['osce station']; ?></td>
+<td class="icon" id="offline"><img src="../artwork/offline.png" width="48" height="48" alt="<?php echo $string['offline paper']; ?>" /><br /><?php echo $string['offline paper']; ?></td>
+<td class="icon" id="peer_review"><img src="../artwork/peer_review.png" width="48" height="48" alt="<?php echo $string['peer review']; ?>" /><br /><?php echo $string['peer review']; ?></td>
 <td>&nbsp;</td>
 </tr>
 <tr>
@@ -151,7 +75,14 @@ if (!$configObject->get_setting('core', 'summative_hide_external')) {
 </table>
 </div>
 <br />
-<?php echo $string['name']; ?> <input type="text" id="paper_name" name="paper_name" value="" maxlength="200" style="width:650px" required />
+<div id="warning" data-name="<?php echo $paper_name; ?>">
+<?php
+  if ($paper_name != '') {
+    echo sprintf($string['msg5'], $paper_name);
+  }
+?>
+</div>
+<?php echo $string['name']; ?> <input type="text" id="paper_name" name="paper_name" value="<?php echo $paper_name; ?>" maxlength="200" style="width:650px" required />
 <input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" />
 <?php
 if (isset($_GET['module'])) {
@@ -164,10 +95,23 @@ if (isset($_GET['module'])) {
 ?>
 <input type="hidden" name="default_academic_year" value="<?php echo $default_academic_year ?>" />
 <input type="hidden" name="folder" value="<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>" />
-<input type="hidden" id="paper_type" name="paper_type" value="" />
+<input type="hidden" id="paper_type" name="paper_type" value="<?php echo $paper_type; ?>" />
 <br />
 <br />
-<div style="text-align:right"><input onclick="window.close();" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" style="margin-right:8px" /><input type="submit" name="submit" value="<?php echo $string['next']; ?>" class="ok" /></div>
+<div style="text-align:right"><input type="button" id="cancel" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" style="margin-right:8px" /><input type="submit" name="submit" value="<?php echo $string['next']; ?>" class="ok"/></div>
 </form>
 </body>
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['warn'] = $configObject->get_setting('core', 'summative_warn_external');
+if (isset($_GET['type'])) {
+  $miscdataset['attributes']['type'] = $paper_types[$_GET['type']];
+}
+$render->render($miscdataset, array(), 'dataset.html');
+?>
 </html>

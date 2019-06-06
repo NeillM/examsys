@@ -1,0 +1,15 @@
+#uploaded td {
+    border: 1px solid #C0C0C0;
+}
+.num {
+    text-align: right;
+}
+.failed {
+    background-color: #FFC0C0;
+    color: #C00000;
+    font-weight: bold;
+}
+#content * {
+    margin: auto;
+    padding: auto;
+}

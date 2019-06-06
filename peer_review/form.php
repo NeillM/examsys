@@ -182,7 +182,33 @@ if ($userObject->has_role('Student')) {
 if ($group == '') {
   display_error($string['Error'], $string['NoGroup'], true, true);
 }
+?>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+  <title><?php echo $string['peerreview']; ?></title>
 
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <style type="text/css">
+    body {font-size:<?php echo $textsize; ?>%; font-family:<?php echo $font; ?>,sans-serif; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
+    td p {margin:0; padding:0}
+    p {margin:0; padding:0}
+    .paper {padding-left:5px; font-size:150%; color:white; font-weight:bold}
+    .group {padding-left:5px; color:white}
+    .title {font-size:130%; font-weight:bold; color:<?php echo $themecolor; ?>; border-top:1px solid #C0C0C0}
+    .col {text-align:center; color:<?php echo $labelcolor; ?>}
+    .phototd {vertical-align:top; border-top:1px solid #C0C0C0}
+    .photo {background-color:white; border-left: 1px solid #F1F1F1; border-top: 1px solid #F1F1F1; box-shadow: 2px 2px 4px #808080; padding:10px; margin-right:10px}
+    .thankyou {margin-left: 10px; font-size: 350%; font-weight: bold; line-height: 140%}
+  </style>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src='../js/peerreviewinit.min.js'></script>
+
+</head>
+<?php
 if (isset($_POST['submit'] )) {
   // Check for any previously saved records.
   $result = $mysqli->prepare("SELECT id, peerID, q_id, rating FROM log6 WHERE reviewerID = ? AND paperID = ?");
@@ -262,33 +288,7 @@ if (isset($_POST['submit'] )) {
   }
 
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo $string['peerreview']; ?></title>
 
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <style type="text/css">
-    body {font-size:<?php echo $textsize; ?>%; font-family:<?php echo $font; ?>,sans-serif; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
-    td p {margin:0; padding:0}
-    p {margin:0; padding:0}
-    .paper {padding-left:5px; font-size:150%; color:white; font-weight:bold}
-    .group {padding-left:5px; color:white}
-    .title {font-size:130%; font-weight:bold; color:<?php echo $themecolor; ?>; border-top:1px solid #C0C0C0}
-    .col {text-align:center; color:<?php echo $labelcolor; ?>}
-    .phototd {vertical-align:top; border-top:1px solid #C0C0C0}
-    .photo {background-color:white; border-left: 1px solid #F1F1F1; border-top: 1px solid #F1F1F1; box-shadow: 2px 2px 4px #808080; padding:10px; margin-right:10px}
-    .thankyou {margin-left: 10px; font-size: 350%; font-weight: bold; line-height: 140%}
-  </style>
-
-  <script>
-    function changeGroup() {
-      window.location = "form.php?id=<?php echo $_GET['id']; ?>&group=" + document.getElementById('group').value;
-    }
-  </script>
-</head>
 <body>
   <?php
   echo '<table cellpadding="4" cellspacing="0" border="0" style="width:100%; background-color:#5590CF">';
@@ -313,32 +313,7 @@ if (isset($_POST['submit'] )) {
   $result->close();
 
   ?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo $string['peerreview']; ?></title>
 
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <style type="text/css">
-  body {font-size:<?php echo $textsize; ?>%; font-family:<?php echo $font; ?>,sans-serif; background-color:<?php echo $bgcolor; ?>; color:<?php echo $fgcolor; ?>}
-  table {font-size:100%}
-  td p {margin:0}
-  .paper {padding-left:5px; font-size:150%; color:white; font-weight:bold}
-  .group {padding-left:5px; color:white}
-  .title {font-size:130%; font-weight:bold; color:<?php echo $themecolor; ?>; border-top:1px solid #C0C0C0}
-  .col {text-align:center; color:<?php echo $labelcolor; ?>}
-  .phototd {vertical-align:top; border-top:1px solid #C0C0C0}
-  .photo {background-color:white; border-left: 1px solid #F1F1F1; border-top: 1px solid #F1F1F1; box-shadow: 2px 2px 4px #808080; padding:10px; margin-right:10px}
-  </style>
-
-  <script>
-    function changeGroup() {
-      window.location = "form.php?id=<?php echo $_GET['id']; ?>&group=" + document.getElementById('group').value;
-    }
-  </script>
-</head>
 <body>
 
   <?php
@@ -349,7 +324,7 @@ if (isset($_POST['submit'] )) {
   if ($userObject->has_role('Student')) {
     echo $group;
   } else {
-    echo "<select name=\"group\" id=\"group\" onchange=\"changeGroup();\">\n";
+    echo "<select name=\"group\" id=\"group\">\n";
     $result = $mysqli->prepare("SELECT DISTINCT value FROM users_metadata WHERE idMod IN (" . implode(',', array_keys($modules)) . ") AND calendar_year = ? AND type = ? ORDER BY value");
     $result->bind_param('ss', $calendar_year, $type);
     $result->execute();
@@ -436,9 +411,14 @@ if (isset($_POST['submit'] )) {
   echo "</td></tr>\n";
   echo "</table>\n</form>\n";
 
+  // JS utils dataset.
+  $render = new render($configObject);
+  $miscdataset['name'] = 'dataset';
+  $miscdataset['attributes']['id'] = $_GET['id'];
+  $render->render($miscdataset, array(), 'dataset.html');
   ?>
-  </html>
   </body>
+  </html>
 <?php
 }
 ?>

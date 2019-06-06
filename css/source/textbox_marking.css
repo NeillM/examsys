@@ -67,22 +67,24 @@ td {
 	display: none;
 }
 #save_message {
-  color: white;
+	color: white;
 	background-color: #70AD47;
-  background-image: url('../artwork/green_save.png');
-  background-repeat: no-repeat;
-  padding-left: 36px;
-  height: 27px;
-  line-height: 27px;
-  font-weight: bold;
-  font-size: 110%;
+	background-image: url('../artwork/green_save.png');
+	background-repeat: no-repeat;
+	padding-left: 36px;
+	height: 27px;
+	line-height: 27px;
+	font-weight: bold;
+	font-size: 110%;
+	display: none;
 }
 #save_fail_message {
-  color: white;
+	color: white;
 	background-color: #C00000;
-  padding: 6px 6px 6px 18px;
-  font-weight: bold;
+	padding: 6px 6px 6px 18px;
+	font-weight: bold;
+	display: none;
 }
 .tbmark {
-  margin: 1px;
+	margin: 1px;
 }

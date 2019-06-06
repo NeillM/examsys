@@ -29,6 +29,8 @@ require_once '../include/errors.php';
 ini_set("auto_detect_line_endings", true);
 
 $paperID = check_var('paperID', 'GET', true, false, true);
+$moduleID = check_var('module', 'GET', false, false, true);
+$folderID = param::optional('folder', null, param::INT, param::FETCH_GET);
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
@@ -78,7 +80,7 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db) {
 
   $lines = file($fileName);
   $line_written = 0;
-  echo "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"margin-left:10px; border-collapse:collapse\">\n";
+  echo "<table id='uploaded' cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"margin-left:10px; border-collapse:collapse\">\n";
 
   foreach ($lines as $separate_line) {
     $error = '';
@@ -248,16 +250,13 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db) {
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/screen.css" />
-  <style type="text/css">
-    <?php
-    if (isset($_POST['submit'])) echo 'td {border:1px solid #C0C0C0}';
-    ?>
-    .num {text-align:right}
-    .failed {background-color:#FFC0C0; color:#C00000; font-weight:bold}
-    #content * {margin:auto; padding:auto};
-  </style></head>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-<body onclick="hideMenus()">
+  <link rel="stylesheet" type="text/css" href="../css/offlineimport.css" />
+</head>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/importmarksinit.min.js"></script>
+<body>
 <?php
   require '../include/paper_options.php';
   require '../include/toprightmenu.inc';
@@ -271,10 +270,18 @@ echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /><
 echo "<div class=\"breadcrumb\">";
 $modutils = module_utils::get_instance();
 echo '<a href="../index.php">' . $string['home'] . '</a>';
-if ($module != '') {
-  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $module . '">' . $modutils->get_moduleid_from_id($module, $mysqli) . '</a>';
-} elseif ($folder != '') {
-  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folder . '">' . $folder_name . '</a>';
+if ($folderID != '') {
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folderID . '">' . folder_utils::get_folder_name($folderID, $mysqli) . '</a>';
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?folder=' . $folderID . '&paperID=' . $paperID . '">' . $properties->get_paper_title() . '</a>';
+} else {
+  if (is_null($moduleID)) {
+    // Get the modules from paper properties
+    $modules = Paper_utils::get_modules($paperID, $mysqli);
+    $moduleID = key($modules);
+  }
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $moduleID . '">' .  module_utils::get_moduleid_from_id($moduleID, $mysqli) . '</a>';
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/type.php?module=' . $moduleID . '&type=' . $properties->get_paper_type() . '">' . Paper_utils::type_to_name($properties->get_paper_type(), $string) . '</a>';
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?module=' . $moduleID . '&paperID=' . $paperID . '">' . $properties->get_paper_title() . '</a>';
 }
 echo "</div><div class=\"page_title\">" . $string['importmarks'] . "</div>";
 echo "</div>";
@@ -287,15 +294,8 @@ if (isset($_POST['submit']) and $_POST['submit']) {
       marks_from_file( $configObject->get('cfg_tmpdir') . $userObject->get_username() . '_spotter_marks.csv', $paperID, $string, $properties, $mysqli);
       unlink( $configObject->get('cfg_tmpdir') . $userObject->get_username() . '_spotter_marks.csv');
       ?>
-      <!DOCTYPE html>
-      <html>
-      <head>
-      <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-      <title><?php echo $string['uploadmarks']; ?></title>
-      </head>
-      <body>
       <p><?php echo $string['marksloaded']; ?></p>
-      <p><input type="submit" name="submit" onclick="window.location='../paper/details.php?paperID=<?php echo $paperID; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'" value="OK" style="width:100px" /></p>
+      <p><input id="submit" type="submit" name="submit" value="OK" style="width:100px" /></p>
       <?php
     }
   }
@@ -323,7 +323,7 @@ if (isset($_POST['submit']) and $_POST['submit']) {
 <p><input type="file" size="50" name="csvfile" /><br />
 <input type="checkbox" name="header_row" value="1" checked />&nbsp;<?php echo $string['headerrow']; ?></p>
 
-<p><input type="submit" style="width:150px" value="<?php echo $string['uploadmarks']; ?>" name="submit" />&nbsp;<input style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
+<p><input type="submit" style="width:150px" value="<?php echo $string['uploadmarks']; ?>" name="submit" />&nbsp;<input class="cancel" style="width:100px" type="button" value="<?php echo $string['cancel']; ?>" /></p>
 </form>
 </div>
 </td>
@@ -336,5 +336,14 @@ if (isset($_POST['submit']) and $_POST['submit']) {
 </html>
 <?php
 }
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+$dataset['name'] = 'dataset';
+$dataset['attributes']['paperid'] =  $paperID;
+$dataset['attributes']['module'] =  $moduleID;
+$dataset['attributes']['folder'] =  $folderID;
+$render->render($dataset, array(), 'dataset.html');
 $mysqli->close();
-?>

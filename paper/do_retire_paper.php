@@ -24,20 +24,24 @@
 * @package
 */
 
+define('AJAX_REQUEST', true);
+
 require '../include/staff_auth.inc';
 require_once  '../include/errors.php';
 
 $paperID = check_var('paperID', 'POST', true, false, true);
+$questions = param::required('questions', param::BOOLEAN, param::FETCH_POST);
 
 if (!Paper_utils::paper_exists($paperID, $mysqli)) {
   $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+  echo json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
+  exit();
 }
 
 $logger = new Logger($mysqli);
 
-if (isset($_POST['questions'])) {
+if ($questions) {
   $status_array = QuestionStatus::get_all_statuses($mysqli, $string);
   $retired_status_id = -1;
   // TODO: ask which retired status to use if there is more than one?
@@ -78,49 +82,13 @@ $now = date("Y-m-d H:i:s");
 $update_params = array(
     'retired' => array('s', $now)
 );
-$assessment->db_update_assessment($paperID, $update_params);
+if (!$assessment->db_update_assessment($paperID, $update_params)) {
+  echo json_encode("ERROR");
+  exit();
+}
 
 $logger->track_change('paper', $paperID, $userObject->get_user_ID(), '', '', 'retired');
 
-
 $mysqli->close();
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo page::title('Rog&#333;: ' . $string['paperretired']); ?></title>
 
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-	<style type="text/css">
-	  body {background-color:#F1F5FB; font-size:90%}
-	</style>
-
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function () {
-      window.opener.location.reload(true);
-      window.close();
-    });
-  </script>
-</head>
-
-<body>
-
-<table cellpadding="8" cellspacing="0" border="0" width="100%">
-<tr>
-<td valign="top"><img src="../artwork/formative_retired.png" width="48" height="48" alt="<?php echo $string['paperretired']; ?>" /></td>
-
-<td><p><?php echo $string['msg']; ?><p>
-
-<div style="text-align:center">
-<form action="" method="get" autocomplete="off">
-<input type="button" name="ok" value="  <?php echo $string['ok']; ?>  " onclick="window.close();" />
-</form>
-</div>
-</td></tr>
-</table>
-
-</body>
-</html>
+echo json_encode("SUCCESS");

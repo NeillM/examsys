@@ -34,8 +34,6 @@ require_once '../include/paper_security.php';
 
 //HTML5 part
 require_once '../lang/' . $language . '/paper/finish.php';
-$jstring = $string; //to pass it to JavaScript HTML5 modules
-//HTML5 part
 
 check_var('id', 'GET', true, false, false);
 
@@ -152,17 +150,15 @@ require '../config/finish.inc';
     echo "<style type=\"text/css\">\n$css\n</style>\n";
   }
   ?>
-  
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/student_help.js"></script>
+  <script id="rogoconfig" src='../js/rogo.min.js'
+            data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
+            data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>">
+  </script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
   <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
-  $render = new render($configObject);
-  $render->render_html5_js(json_encode($jstring));
-  if($configObject->get_setting('core', 'paper_mathjax')) {
-    $render->render(null, null, 'mathjax.html');
-  }
 ?>
 </head>
 <body>
@@ -213,6 +209,11 @@ require '../config/finish.inc';
   $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   display_feedback($propertyObj, $userID, $log_type, $userObject, $log_metadata, $mysqli, $status_array, $overrides, $preview_q_id);
 
+  // Dataset.
+  $miscdataset['name'] = 'dataset';
+  $miscdataset['attributes']['language'] = $language;
+  $render = new render($configObject);
+  $render->render($miscdataset, array(), 'dataset.html');
   $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
   echo "</body>\n</html>";
   $mysqli->close();

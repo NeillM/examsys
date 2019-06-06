@@ -22,6 +22,8 @@
 * @package
 */
 
+define('AJAX_REQUEST', true);
+
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
 
@@ -40,7 +42,8 @@ $papertype = $assessment->get_type_value($paper_type);
 if ($papertype === false) {
     $errorline = __LINE__ - 2;
     $msg = __FILE__ . " Line: " . $errorline . " Error:" . $string['papertypenotfound'];
-    $notice->display_notice_and_exit($mysqli, "$paper_type" . $string['papertypenotfound'], $string['papertypenotfound'], $msg, '../artwork/page_not_found.png', '#C00000', true, true);
+    echo json_encode(array('ERROR',$notice->ajax_notice("$paper_type" . $string['papertypenotfound'], $msg)));
+    exit();
 }
 // Process the posted modules
 $modules = array();
@@ -113,28 +116,8 @@ try {
     $errorline = __LINE__ - 15;
     $log->record_application_warning($paper_owner, $type, $errorstring, $errorfile, $errorline);
     $msg = $errorline . " Error code: " . $e->getCode() . " - " . $errorstring;
-    $notice->display_notice_and_exit(null, $string['errorcreatingpaper'], $msg, '', '../artwork/page_not_found.png', '#C00000', true, true);
+    echo json_encode(array('ERROR',$notice->ajax_notice($string['errorcreatingpaper'], $msg)));
+    exit();
 }
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title>New Paper</title>
-  <script>
-    function jumpToPaper() {
-      <?php
-        if ($_POST['folder'] != '') {
-          echo 'window.opener.location = "details.php?paperID=' . $property_id . '&folder=' . $_POST['folder'] . '";';
-        } else {
-          echo 'window.opener.location = "details.php?paperID=' . $property_id . '&module=' . $first_module . '";';
-        }
-      ?>
-      window.close();
-    }
-  </script>
-</head>
-<body onload="jumpToPaper()">
-</body>
-</html>
+
+echo json_encode(array('SUCCESS', $property_id, $first_module, $_POST['folder']));

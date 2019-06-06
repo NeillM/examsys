@@ -90,7 +90,7 @@ Class question_info {
     $rows = count($data);
     for ($i=0; $i<$rows; $i++) {
       if (isset($data[$i]['paperID'])) {
-        echo "<tr><td>" . $string['copyof'] . "</td><td><a href=\"\" onclick=\"loadPaper('" . $data[$i]['paperID'] . "')\">" . $data[$i]['paper_title'] . "</a></td><td>" . $data[$i]['question_no'] . "</td></tr>\n";
+        echo "<tr><td>" . $string['copyof'] . "</td><td><a href=\"\" class=\"paperlink\" data-pid=\"" . $data[$i]['paperID'] . "\">" . $data[$i]['paper_title'] . "</a></td><td>" . $data[$i]['question_no'] . "</td></tr>\n";
       } else {
         echo "<tr><td>" . $string['copyof'] . "</td><td colspan=\"2\">Question ID #" . $data[$i]['question_id'] . "</td></tr>\n";
       }
@@ -102,7 +102,7 @@ Class question_info {
     $rows = count($data);
     for ($i=0; $i<$rows; $i++) {
       if (isset($data[$i]['paperID'])) {
-        echo "<tr><td>" . $string['sourcefor'] . "</td><td><a href=\"\" onclick=\"loadPaper('" . $data[$i]['paperID'] . "')\">" . $data[$i]['paper_title'] . "</a></td><td>" . $data[$i]['question_no'] . "</td></tr>\n";
+        echo "<tr><td>" . $string['sourcefor'] . "</td><td><a href=\"\" class=\"paperlink\" data-pid=\"" . $data[$i]['paperID'] . "\">" . $data[$i]['paper_title'] . "</a></td><td>" . $data[$i]['question_no'] . "</td></tr>\n";
       } else {
         echo "<tr><td>" . $string['sourcefor'] . "</td><td colspan=\"2\">Question ID #" . $data[$i]['question_id'] . "</td></tr>\n";
       }
@@ -112,7 +112,7 @@ Class question_info {
 
     echo "<table style=\"width:100%\">\n";
     echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
-    echo "<tr><td>" . $string['followingpapers'] . "</td><td style=\"text-align:right\"><input type=\"button\" name=\"longitudinal\" value=\"" . $string['Longitudinal'] . "\" onclick=\"openLongitudinal($q_id);\" /></td></tr>\n";
+    echo "<tr><td>" . $string['followingpapers'] . "</td><td style=\"text-align:right\"><input type=\"button\" id=\"longitudinal\" name=\"longitudinal\" value=\"" . $string['Longitudinal'] . "\" data-qid=\"$q_id\" /></td></tr>\n";
     echo "</table>\n";
 
     echo "<div style=\"margin:5px; display:block; height:195px; overflow-y:scroll; border:1px solid #295AAD; font-size:100%; background-color:white\">\n<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"width:100%\">";
@@ -128,7 +128,7 @@ Class question_info {
       if (!array_key_exists('title', $performance)) {
         $performance['title'] = '?';
       }
-      echo "<td><a href=\"\" onclick=\"loadPaper('$paper')\">" . $performance['title'] . "</a></td>";
+      echo "<td><a href=\"\" class=\"paperlink\" data-pid=\"" . $paper . "\">" . $performance['title'] . "</a></td>";
       if (!array_key_exists('screen', $performance)) {
         $performance['screen'] = '?';
       }

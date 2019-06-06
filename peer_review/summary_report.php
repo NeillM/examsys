@@ -62,47 +62,10 @@ require_once 'summary_report.inc';
     .title {padding-left:10px}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/popup_menu.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    function setVars(tmpUserID) {
-      $('#userID').val(tmpUserID);
-    }
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/summaryreportinit.min.js"></script>
 
-    function viewProfile() {
-      $('#menudiv').hide();
-      window.location = '../users/details.php?paperID=<?php echo $paperID; ?>&userID=' + $('#userID').val();
-    }
-
-    function viewReviews() {
-      $('#menudiv').hide();
-      var winwidth = screen.width-80;
-      var winheight = screen.height-80;
-      window.open("display_form.php?paperID=<?php echo $paperID; ?>&userID=" + $('#userID').val() + "","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    }
-
-    $(function () {
-      $('#maindata').click(function() {
-        $('#menudiv').hide();
-        $('#toprightmenu').hide();
-      });
-      
-      $('.head_title').click(function() {
-        $('#menudiv').hide();
-        $('#toprightmenu').hide();
-      })
-
-      if ($("#maindata").find("tr").size() > 1) {
-        $("#maindata").tablesorter({ 
-          sortList: [[2,0],[3,0]] 
-        });
-      }
-
-    });
-  </script>
 </head>
 
 <body>
@@ -112,14 +75,14 @@ require_once 'summary_report.inc';
 	echo draw_toprightmenu();
 ?>
 <div id="menudiv" class="popupmenu">
-  <div class="popup_row" onclick="viewReviews();">
-    <div class="popup_icon"><img src="../artwork/peer_review_16.gif" width="16" height="16" alt="" /></div>
-    <div class="popup_title" id="item1"><?php echo $string['Review Form'] ?></div>
+  <div class="popup_row" id="item1">
+    <div class="popup_icon"><img src="../artwork/peer_16.gif" width="16" height="16" alt="" /></div>
+    <div class="popup_title"><?php echo $string['Review Form'] ?></div>
   </div>
   
-  <div class="popup_row" onclick="viewProfile();">
+  <div class="popup_row" id="item2">
     <div class="popup_icon"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" /></div>
-    <div class="popup_title" id="item2"><?php echo $string['Student Profile']; ?></div>
+    <div class="popup_title"><?php echo $string['Student Profile']; ?></div>
   </div>
 </div>
 
@@ -201,7 +164,7 @@ require_once 'summary_report.inc';
   $user_number = 0;
   foreach ($user_data as $student_userID => $student) {
     if ($student_userID > 0) {
-      $master_array[$user_number]['icon'] = ($user_data[$student_userID]['have_review']) ? 'peer_review_16.gif' : 'peer_review_retired_16.png';
+      $master_array[$user_number]['icon'] = ($user_data[$student_userID]['have_review']) ? 'peer_16.gif' : 'peer_review_retired_16.png';
       $mean_total = 0;
       $master_array[$user_number]['userid'] = $student_userID;
       $master_array[$user_number]['student_id'] = $student['student_id'];
@@ -271,8 +234,8 @@ require_once 'summary_report.inc';
   
   for ($i=0; $i<$user_number; $i++) {
     if ($master_array[$i]['student_id'] != '') {
-      echo '<tr onclick="popMenu(2, event); setVars(' . $master_array[$i]['userid'] . ');">';
-      echo '<td class="greyln col"><img src="../artwork/' . $master_array[$i]['icon'] . '" width="16" height="16" alt="" onclick="popMenu(2, event); setVars(' . $master_array[$i]['userid'] . ');" /></td>';
+      echo '<tr style="cursor:default" id="res' . $i . '" data-paperid="' . $paperID . '" data-userid="' . $master_array[$i]['userid'] . '">';
+      echo '<td class="greyln col"><img src="../artwork/' . $master_array[$i]['icon'] . '" width="16" height="16" alt="" /></td>';
       echo '<td class="greyln col">' . $master_array[$i]['title'] . '</span></td>';
       echo '<td class="greyln col">' . $master_array[$i]['surname'] . '</span></td>';
       echo '<td class="greyln col">' . $master_array[$i]['first_names'] . '</td>';
@@ -318,11 +281,5 @@ require_once 'summary_report.inc';
   </tbody>
 </table>
 </div>
-
-<form autocomplete="off">
-<input type="hidden" id="userID" value="" />
-<input type="hidden" id="scrOfY" value="" />
-</form>
-
 </body>
 </html>

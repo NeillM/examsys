@@ -68,7 +68,7 @@ Class search_utils {
   static function display_staff_modules_dropdown($userObj, $string, $db) {
     $staff_modules = $userObj->get_staff_accessable_modules();
 
-    echo "<select style=\"width:185px\" onchange=\"updateDropdownState(this,'module')\" name=\"module\">\n";
+    echo "<select style=\"width:185px\" class=\"statechange\" data-type=\"module\" name=\"module\">\n";
     echo "<option value=\"\">" . $string['anymodule'] . "</option>\n";
 
     $old_school = '';
@@ -139,7 +139,7 @@ Class search_utils {
   static function display_owners_dropdown($userObj, $db, $type, $string, $state, $font_size = 90) {
     $owners = self::get_owners($userObj, $db);
 
-    echo "<select style=\"width:185px; font-size:$font_size%\" onchange=\"updateDropdownState(this,'owner')\" name=\"owner\" id=\"owner\">\n";
+    echo "<select style=\"width:185px; font-size:$font_size%\" class=\"statechange\" data-type=\"owner\" name=\"owner\" id=\"owner\">\n";
     echo "<option value=\"\">" . $string['anyowner']. "</option>\n";
     if ($type == 'questions') {
       echo "<option value=\"{$userObj->get_user_ID()}\">" . $string['myquestionsonly']. "</option>\n";
@@ -199,7 +199,7 @@ STATUS;
    * @return string HTML of the Bloom's Taxonomy dropdown menu
    */
   static function display_blooms_dropdown($string, $state) {
-    echo "<select style=\"width:185px\" onchange=\"updateDropdownState(this,'bloom')\" name=\"bloom\">\n";
+    echo "<select style=\"width:185px\" class=\"statechange\" data-type=\"bloom\" name=\"bloom\">\n";
     echo "<option value=\"%\">" . $string['alllevels'] . "</option>\n";
 
     $blooms_array = array('Knowledge','Comprehension','Application','Analysis','Synthesis','Evaluation');

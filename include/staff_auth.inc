@@ -81,7 +81,6 @@ $invigilator_allowed_pages = array(
                               "/invigilator/index.php"=>1,
                               "/invigilator/new_paper_note.php"=>1,
                               "/invigilator/new_student_note.php"=>1,
-                              "/invigilator/test.php"=>1,
                               "/invigilator/"=>1
                             );
 

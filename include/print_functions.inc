@@ -608,15 +608,14 @@ HTML;
         $tmp_correct = trim($question['options'][0]['correct']);
         $tmp_correct = str_replace("'", "&#039;", $tmp_correct);
 
-		//<!-- ======================== HTML5 part include disp ================= -->
-		echo "<canvas id='canvas" . $question_no . "' width='" . ($question['q_media_width'] + 220) . "' height='" . $tmp_height . "'></canvas>\n";
-		echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-		echo "<script language='JavaScript' type='text/javascript'>\n";
-		echo "setUpQuestion(" . $question_no . ", 'flash" . $question_no . "', '" . $language . "', '" . $question['q_media'] . "', '" . $tmp_correct . "', '";
-		if (isset($user_answers[$current_screen][$q_id])) echo trim($user_answers[$current_screen][$q_id]);
-		echo "', '" . $display_option['marks_correct'] . "~" . $display_option['marks_incorrect'] . "~" . $question['score_method'] . "','#FFC0C0','labelling','answer');\n";
-		echo "</script>\n";
-		//<!-- ==================================================== -->
+        echo "<canvas class='labelling' id='canvas" . $question_no . "'
+            data-qno='" . $question_no . "'
+            data-qmedia='" . $question['q_media'] . "'
+            data-qcorrect='" . $tmp_correct  . "'
+            data-user='" . trim($user_answers[$current_screen][$q_id]) . "'
+            data-marking='" . $display_option['marks_correct'] . "~" . $display_option['marks_incorrect'] . "~" . $question['score_method'] . "'
+            width='" . ($question['q_media_width'] + 220) . "' height='" . $tmp_height . "'></canvas>\n";
+        echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 
         if (!isset($user_answers[$current_screen][$q_id]) OR $user_answers[$current_screen][$q_id] == '') {
           echo "<input type=\"hidden\" name=\"q" . $question_no . "\" id=\"q" . $question_no . "\" value=\"0$" . $marks . ";\" />\n";
@@ -627,42 +626,30 @@ HTML;
       case 'flash':
 ?>
   <script>
-    var isInternetExplorer = navigator.appName.indexOf("Microsoft") != -1;
-    function flash<?php echo $question_no; ?>_DoFSCommand(command, args) {
-      var flash<?php echo $question_no; ?>Obj = isInternetExplorer ? document.all.flash<?php echo $question_no; ?> : document.flash<?php echo $question_no; ?>;
-      document.questions.q<?php echo $question_no; ?>.value = args;
-    }
-    if (navigator.appName && navigator.appName.indexOf("Microsoft") != -1 && navigator.userAgent.indexOf("Windows") != -1 && navigator.userAgent.indexOf("Windows 3.1") == -1) {
-      document.write('<script language=\"VBScript\"\>\n');
-      document.write('On Error Resume Next\n');
-      document.write('Sub flash<?php echo $question_no; ?>_FSCommand(ByVal command, ByVal args)\n');
-      document.write('	Call flash<?php echo $question_no; ?>_DoFSCommand(command, args)\n');
-      document.write('End Sub\n');
-      document.write('</script\>\n');
-    }
+      function flash<?php echo $question_no; ?>_DoFSCommand(command, args) {
+          $('#q<?php echo $question_no; ?>').val(args);
+      }
   </script>
   <div align="center">
-  <script>
-    write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" id="flash<?php echo $question_no; ?>" width="<?php echo $question['q_media_width']; ?>" height="<?php echo $question['q_media_height']; ?>" align="middle">');
-    write_string('<param name="allowScriptAccess" value="sameDomain" />');
-    write_string('<param name="movie" value="<?php echo $mediadirectory->url($question['q_media']); ?>" />');
-    write_string('<param name="quality" value="high" />');
-    write_string('<param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
+    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" id="flash<?php echo $question_no; ?>" width="<?php echo $question['q_media_width']; ?>" height="<?php echo $question['q_media_height']; ?>" align="middle">
+    <param name="allowScriptAccess" value="sameDomain" />');
+    <param name="movie" value="<?php echo $mediadirectory->url($question['q_media']); ?>" />');
+    <param name="quality" value="high" />');
+    <param name="bgcolor" value="<?php echo $bgcolor; ?>" />');
     <?php
       if ($question['scenario'] != '') {
-        echo 'write_string(\'<param name="FlashVars" value="' . $question['scenario'] . '">\')';
+        echo '<param name="FlashVars" value="' . $question['scenario'] . '">';
       }
-      echo 'write_string(\'<embed src="' . $mediadirectory->url($question['q_media']) . '"';
+      echo '<embed src="' . $mediadirectory->url($question['q_media']) . '"';
       if ($question['scenario'] != '') {
         echo ' FlashVars="' . $question['scenario'] . '"';
       }
-      echo ' quality="high" bgcolor="' . $bgcolor . '" width="' . $question['q_media_width'] . '" height="' . $question['q_media_height'] . '" swLiveConnect=true id="flash' . $question_no . '" name="flash' . $question_no . '" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />\');';
+      echo ' quality="high" bgcolor="' . $bgcolor . '" width="' . $question['q_media_width'] . '" height="' . $question['q_media_height'] . '" swLiveConnect=true id="flash' . $question_no . '" name="flash' . $question_no . '" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />';
     ?>
-    write_string('</object>');
-  </script>
+    </object>
   </div>
   <?php
-      echo "<input type=\"hidden\" name=\"q" . $question_no . "\" value=\"0,0\" />\n";
+      echo "<input type=\"hidden\" id=\"q" . $question_no . "\" name=\"q" . $question_no . "\" value=\"0,0\" />\n";
       $marks += $display_option['marks_correct'];
       break;
     }                  // End switch

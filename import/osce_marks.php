@@ -27,6 +27,7 @@ require_once '../include/errors.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 $moduleID = check_var('module', 'GET', false, false, true);
+$folderID = param::optional('folder', null, param::INT, param::FETCH_GET);
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string, false);
 
 function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string) {
@@ -216,6 +217,63 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string) {
   }
   echo "</ol>\n";
 }
+?>
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+
+        <title><?php echo $string['importoscemarks']; ?></title>
+
+        <link rel="stylesheet" href="../css/header.css" type="text/css" />
+        <link rel="stylesheet" href="../css/body.css" type="text/css">
+        <link rel="stylesheet" href="../css/dialog.css" type="text/css">
+        <link rel="stylesheet" href="../css/submenu.css" type="text/css">
+        <link rel="stylesheet" href="../css/osceimport.css" type="text/css">
+        <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+        <script src='../js/require.js'></script>
+        <script src='../js/main.min.js'></script>
+        <script src="../js/importmarksinit.min.js"></script>
+
+    </head>
+<?php
+require '../include/toprightmenu.inc';
+echo draw_toprightmenu();
+?>
+<body>
+<?php
+require '../include/paper_options.php';
+?>
+
+<div id="content">
+    <div class="head_title">
+        <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+      <?php
+      // Create page breadcrumbs.
+      echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
+      if ($folderID != '') {
+        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folderID . '">' . folder_utils::get_folder_name($folderID, $mysqli) . '</a>';
+        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?folder=' . $folderID . '&paperID=' . $paperID . '">' . $properties->get_paper_title() . '</a>';
+      } else {
+        if (is_null($moduleID)) {
+          // Get the modules from paper properties
+          $modules = Paper_utils::get_modules($paperID, $mysqli);
+          $moduleID = key($modules);
+        }
+        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $moduleID . '">' .  module_utils::get_moduleid_from_id($moduleID, $mysqli) . '</a>';
+        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/type.php?module=' . $moduleID . '&type=' . $properties->get_paper_type() . '">' . Paper_utils::type_to_name($properties->get_paper_type(), $string) . '</a>';
+        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?module=' . $moduleID . '&paperID=' . $paperID . '">' . $properties->get_paper_title() . '</a>';
+      }
+
+      // Display page title.
+      echo "</div><div class=\"page_title\">" . $string['importoscemarks'] . "</div>";
+      ?>
+    </div>
+    <br />
+    <br />
+<?php
 
 $gradebook = new gradebook($mysqli);
 $graded = $gradebook->paper_graded($paperID);
@@ -228,71 +286,13 @@ if (!$graded and isset($_POST['submit'])) {
       marks_from_file($notice, $userObject, $paperID, $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_osce_marks.csv', $mysqli, $string);
       unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_osce_marks.csv');
       ?>
-      <!DOCTYPE html>
-      <html>
-      <head>
-      <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-      <title><?php echo $string['importoscemarks']; ?></title>
-      </head>
-      <body>
       <p><?php echo $string['marksloaded']; ?></p>
-      <p><input type="submit" name="submit" onclick="window.location='../paper/details.php?paperID=<?php echo $_GET['paperID']; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'" value="<?php echo $string['ok']; ?>" style="width:100px" /></p>
+      <p><input id="submit" type="submit" name="submit" value="<?php echo $string['ok']; ?>" style="width:100px" /></p>
       <?php
     }
   }
 } else {
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-
-  <title><?php echo $string['importoscemarks']; ?></title>
-
-  <link rel="stylesheet" href="../css/header.css" type="text/css" />
-  <link rel="stylesheet" href="../css/body.css" type="text/css">
-  <link rel="stylesheet" href="../css/dialog.css" type="text/css">
-  <link rel="stylesheet" href="../css/submenu.css" type="text/css">
-  <style>
-    span.killer {float: none}
-  </style>	
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-	<script>
-    $(function () {
-		  $('html').click(function() {
-			  hideMenus();
-      });
-		});
-	</script>
-</head>
-<?php
-  require '../include/toprightmenu.inc';
-  echo draw_toprightmenu();
-?>
-<body>
-<?php
-  require '../include/paper_options.php';
-?>
-
-<div id="content">
-<div class="head_title">
-<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
-<?php
-  // Create page breadcrumbs.
-  echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a>";
-  if (!is_null($moduleID)) {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $moduleID . '">' . module_utils::get_moduleid_from_id($moduleID, $mysqli) . '</a>';
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/type.php?module=' . $moduleID . '&type=' . $properties->get_paper_type() . '">' . Paper_utils::type_to_name($properties->get_paper_type(), $string) . '</a>';
-  }
-  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?module=' . $moduleID . '&paperID=' . $paperID . '">' . $properties->get_paper_title() . '</a>';
-  // Display page title.
-  echo "</div><div class=\"page_title\">" . $string['importoscemarks'] . "</div>";
-?>
-</div>
-<br />
-<br />
 
 <table class="dialog_border" style="width:600px">
 <tr>
@@ -314,7 +314,7 @@ if (!$graded and isset($_POST['submit'])) {
 <p><strong><?php echo $string['csvfile']; ?></strong> <input type="file" size="50" name="csvfile" /><br />
 <input type="checkbox" name="header_row" value="1" checked />&nbsp;<?php echo $string['headerrow']; ?></p>
 
-<p><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></p>
+<p><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" /></p>
 </form>
 <?php
     if ($graded and isset($_POST['submit'])) {
@@ -332,5 +332,14 @@ if (!$graded and isset($_POST['submit'])) {
 </html>
 <?php
 }
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+$dataset['name'] = 'dataset';
+$dataset['attributes']['paperid'] =  $paperID;
+$dataset['attributes']['module'] =  $moduleID;
+$dataset['attributes']['folder'] =  $folderID;
+$render->render($dataset, array(), 'dataset.html');
 $mysqli->close();
-?>

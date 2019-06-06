@@ -38,4 +38,19 @@ label {
   color: white;
   padding: 4px;
 }
+#warning {
+  display: none;
+  margin: 18px auto;
+  padding: 16px;
+  width: 90%;
+  height: 10%;
+  text-align: center;
+  background-color: #FFD9D9;
+  color: #800000;
+  border: 2px solid #800000;
+}
+.ok {
+  margin-right: 0;
+  margin-top: 10px;
+}
 

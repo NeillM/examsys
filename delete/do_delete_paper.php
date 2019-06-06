@@ -60,22 +60,10 @@ $mysqli->close();
   
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
-  
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function () {
-      <?php
-        if ($_POST['module'] != '') {
-          echo "self.opener.location.href = '../module/index.php?module=" . $_POST['module'] . "';\n";
-        } elseif ($_POST['folder'] != '') {
-          echo "self.opener.location.href = '../folder/index.php?folder=" . $_POST['folder'] . "';\n";
-        } else {
-          echo "self.opener.location.href = '../index.php';\n";
-        }
-      ?>
-      self.close();
-    });
-  </script>
+
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/deletepaperinit.min.js"></script>
 </head>
 
 <body>
@@ -84,9 +72,16 @@ $mysqli->close();
 
 <div class="button_bar">
 <form action="" method="get" autocomplete="off">
-<input type="button" name="cancel" value="OK" class="ok" onclick="self.opener.location.href='../module/index.php?module=<?php echo $_POST['module']; ?>&folder=<?php echo $_POST['folder']; ?>'; window.close();" />
+<input type="button" name="cancel" value="OK" class="ok" />
 </form>
 </div>
-
+<?php
+// Dataset.
+$render= new render($configObject);
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['module'] = $_POST['module'];
+$miscdataset['attributes']['folder'] = $_POST['folder'];
+$render->render($miscdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

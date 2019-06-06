@@ -65,4 +65,6 @@ $string['problemwithpaper'] = 'There was a problem loading the paper';
 $string['warning'] = 'Warning';
 $string['overall_classification_warning'] = 'Please don\'t forget to set the overall classification for this test: ';
 $string['clickhere'] = 'Click here to set the overall classification';
-?>
+$string['invalidscreenbreak'] = 'Invalid screen break selected. Screen break was not deleted';
+$string['ajaxerror'] = 'There was a problem carrying out your action. Please refresh the page and try again';
+$string['screen1'] = "Screen 1";

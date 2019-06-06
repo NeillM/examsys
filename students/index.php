@@ -35,19 +35,25 @@ if ($userObject->has_role('External Examiner') or $userObject->has_role('Interna
   exit();
 }
 
-function drawTabs($tab_array, $current_tab) {
-	$html = '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%; float: right"><tr>';
-	foreach($tab_array as $individual_tab) {
-		$button_id = 'button-'.str_replace('/', '-', $individual_tab);
-		if ($individual_tab == $current_tab) {
-			$html .= "<td id=\"{$button_id}\" class=\"tabon\" onclick=\"switchYear('{$individual_tab}'); return false;\">$individual_tab</td>";
-		} else {
-			$html .= "<td id=\"{$button_id}\" class=\"taboff\" onclick=\"switchYear('{$individual_tab}'); return false;\">$individual_tab</td>";
-		}
-	}
-	$html .= "</tr></table>\n";
-	
-	return $html;
+/**
+ * Render the academic session menu tabs.
+ * @param array $tab_array array of available sessions
+ * @param integer $current_tab the current tab selected
+ * @param string $sessions_with_papers json encoded array of academic sessions with papers associated with them
+ * @return string
+ */
+function drawTabs($tab_array, $current_tab, $sessions_with_papers) {
+  $html = '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%; float: right"><tr>';
+  foreach($tab_array as $individual_tab) {
+    $button_id = 'button-' . $individual_tab;
+    if ($individual_tab == $current_tab) {
+      $html .= "<td id=\"{$button_id}\" class=\"tabon\" data-tab=\"$individual_tab\" data-sessions=\"" . json_encode($sessions_with_papers) . "\">$individual_tab</td>";
+    } else {
+      $html .= "<td id=\"{$button_id}\" class=\"taboff\" data-tab=\"$individual_tab\" data-sessions=\"" . json_encode($sessions_with_papers) . "\">$individual_tab</td>";
+    }
+  }
+  $html .= "</tr></table>\n";
+  return $html;
 }
 
 $sessions_with_papers = array();
@@ -224,24 +230,11 @@ if ($userObject->is_special_needs()) {
     body {padding-left:0; font-size:<?php echo $textsize ?>%; font-family:<?php echo $font ?>}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript" src="../js/student_help.js"></script>
-  <script>
-		function switchYear(toShow) {
-			var years = ['<?php echo implode('\',\'', $sessions_with_papers) ?>'];
-			for (var i = 0; i < years.length; i++) {
-				target = document.getElementById('papers-' + years[i].replace('/', '-'));
-				link = document.getElementById('button-' + years[i].replace('/', '-'));
-				if (target != null) {
-					target.style.display = (years[i] == toShow) ? 'block' : 'none';
-					if (link != null) {
-						link.style.backgroundColor = (years[i] == toShow) ? '#1E3C7B' : '#517DBF';
-					}
-				}
-			}
-		}
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src='../js/studentinit.min.js'></script>
+
   <?php require_once '../include/toprightmenu.inc'; ?>
 </head>
 <body>
@@ -264,7 +257,7 @@ if ($userObject->is_special_needs()) {
 $default_session = '';
 if (count($sessions_with_papers) > 0) {
 	$default_session = $sessions_with_papers[count($sessions_with_papers) - 1];
-	echo drawTabs($sessions_with_papers, $default_session);
+	echo drawTabs($sessions_with_papers, $default_session, $sessions_with_papers);
 }
 ?>
 	    </td>
@@ -304,7 +297,7 @@ if (!$userObject->has_role('Student')) {
 <?php
   				}
 ?>
-		<div id="papers-<?php echo str_replace('/', '-', $module['year']) ?>"<?php echo $visibility ?>>
+		<div id="papers-<?php echo $module['year'] ?>"<?php echo $visibility ?>>
 <?php
   				$last_session = $module['year'];
 
