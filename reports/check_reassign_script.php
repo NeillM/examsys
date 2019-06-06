@@ -102,29 +102,9 @@ if (isset($_POST['submit'])) {
     .ineligible:hover {background-color:#D99594}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    function doReassign(targetID) {
-      window.location = "do_reassign_script.php?temp_userID=<?php echo $userID; ?>&userID=" + targetID + "&assigned_account=<?php echo $temp_username; ?>";
-    }
-
-    function do_resize() {
-      var tmp_height = $(document).height() - 200;
-      $("#userlist").height(tmp_height);
-    }
-    
-    $(function () {
-      do_resize();
-      $(window).resize(function() {
-        do_resize();
-      });
-      
-      $('#cancel').click(function() {
-        window.close();
-      });
-    });
-    
-  </script>
+    <script src='../js/require.js'></script>
+    <script src='../js/main.min.js'></script>
+    <script src="../js/reassignuserinit.min.js"></script>
 </head>
 
 <body>
@@ -215,7 +195,7 @@ if (count($target_student) == 0) {
     } else {
       $user_icon = 'user_female_48.png';
     }
-    echo "<div class=\"$div_class\" style=\"background-image:url('../artwork/$user_icon')\" onclick=\"doReassign($individualID)\" id=\"$individualID\"><div class=\"name\">" . $individual['title'] . " " . $individual['surname'] . ", <span style=\"color:#808080\">" . $individual['first_names'] . "</span><br />(" . $individual['student_id'] . ")<br />";
+    echo "<div class=\"$div_class reassign\" style=\"background-image:url('../artwork/$user_icon')\" data-userid=\"$userID\" data-targetid=\"$individualID\" data-username=\"$temp_username\" id=\"$individualID\"><div class=\"name\">" . $individual['title'] . " " . $individual['surname'] . ", <span style=\"color:#808080\">" . $individual['first_names'] . "</span><br />(" . $individual['student_id'] . ")<br />";
     if ($eligible) {
       echo implode(', ', $modules_student_is_on);
     } else {
@@ -227,7 +207,7 @@ if (count($target_student) == 0) {
 }
 ?>
 <br />
-<div style="text-align:center"><input type="button" id="cancel" name="cancel" value="<?php echo $string['cancel']; ?>" class="ok" /></div>
+<div style="text-align:center"><input type="button" id="cancel" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" /></div>
 
 </body>
 </html>

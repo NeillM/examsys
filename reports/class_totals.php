@@ -86,34 +86,10 @@ if (($paper_type == '2' and $unmarked and !$propertyObj->is_active()) or (in_arr
     <link rel="stylesheet" type="text/css" href="../css/class_totals.css" />
     <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 
-    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-    <script type="text/javascript" src="../js/toprightmenu.js"></script>
-    <script>
-      $(function () {
-        // Fire off the request to mark_all_enhancedcalc.php
-        var request = $.ajax({
-          url: "../ajax/reports/mark_all_enhancedcalc.php",
-          type: "get",
-          data: {paperID: <?php echo $paperID; ?>, startdate: <?php echo $startdate; ?>, enddate: <?php echo $enddate; ?>},
-          timeout: 30000, // timeout after 30 seconds
-          dataType: "html",
-          success: function (data, textStatus, jqXHR) {
-            data = data.replace(/(\r\n|\n|\r)/gm,"");
-            if (data == 'Complete') {
-              window.location.reload();
-            } else {
-              $("#msg").html(data);
-            }
-          },
-          error: function (xhr, textStatus, errorThrown) {
-            $("#msg").html('Error: ' + textStatus);
-          },
-          fail: function (jqXHR, textStatus) {
-            $("#msg").html('Failed: ' + textStatus);
-          },
-        });
-      });
-    </script>
+    <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+    <script src='../js/require.js'></script>
+    <script src='../js/main.min.js'></script>
+    <script src='../js/classtotalsinit.min.js'></script>
   </head>
   <body>
   <?php
@@ -141,6 +117,11 @@ if (($paper_type == '2' and $unmarked and !$propertyObj->is_active()) or (in_arr
   echo "<div id=\"msg\">" . $string['marking'] . "</div>\n";
   echo "</div>\n";
   ?>
+
+  <input type="hidden" id="paperID" value="<?php echo $paperID ?>" />
+  <input type="hidden" id="startdate" value="<?php echo $startdate ?>" />
+  <input type="hidden" id="enddate" value="<?php echo $enddate; ?>" />
+  <input type="hidden" id="markall" value="1" />
   </body>
   </html>
   <?php
@@ -163,162 +144,27 @@ ob_start();
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/popup_menu.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript" src="../js/class_totals.js"></script>
-  <script>
-    function setVars(tmpMetadataID, tmpUserID, tmpLogType, tmpReassign, tmpLogLate, tmpPercent, e) {
-      $('#metadataID').val(tmpMetadataID);
-      $('#userID').val(tmpUserID);
-      $('#log_type').val(tmpLogType);
-      $('#reassign').val(tmpReassign);
-      $('#loglate').val(tmpLogLate);
-      $('#percent').val(tmpPercent);
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src='../js/classtotalsinit.min.js'></script>
 
-      if (tmpMetadataID == '') {
-        $('#item1').removeClass('popup_row');
-        $('#item1').addClass('popup_row_disabled');
-        $('#item2').removeClass('popup_row');
-        $('#item2').addClass('popup_row_disabled');
-      } else {
-        $('#item1').addClass('popup_row');
-        $('#item1').removeClass('popup_row_disabled');
-        $('#item2').addClass('popup_row');
-        $('#item2').removeClass('popup_row_disabled');
-      }
-
-      if (tmpReassign == 'y') {
-        $('#item5').addClass('popup_row');
-        $('#item5').removeClass('popup_row_disabled');
-
-        $('#item3').removeClass('popup_row');
-        $('#item3').addClass('popup_row_disabled');
-      } else {
-        $('#item3').addClass('popup_row');
-        $('#item3').removeClass('popup_row_disabled');
-
-        $('#item5').removeClass('popup_row');
-        $('#item5').addClass('popup_row_disabled');
-      }
-
-      if (tmpLogLate == 'y') {
-        $('#item7').addClass('popup_row');
-        $('#item7').removeClass('popup_row_disabled');
-        $('#log_late_icon').show();
-      } else {
-        $('#item7').removeClass('popup_row');
-        $('#item7').addClass('popup_row_disabled');
-        $('#log_late_icon').hide();
-      }
-    }
-
-    function confirmSubmit() {
-      var agree = confirm("Are you sure you want to email everyone on this list their marks?");
-      if (agree)
-        return true;
-      else
-        return false;
-    }
-
-    function popupEmailTemplate() {
-      var winwidth = 785;
-      var winheight = 550;
-      templatewin = window.open("emailtemplate.php","templatewin","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      templatewin.moveTo(screen.width/2-350,screen.height/2-275);
-    }
-
-    function popupPublishMarks() {
-      var winwidth = 785;
-      var winheight = 150;
-      templatewin = window.open("publishmarks.php","templatewin","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      templatewin.moveTo(screen.width/2-390,screen.height/2-75);
-    }
-
-    function viewProfile() {
-      $('#menudiv').hide();
-      if ($('#reassign').val() == 'n') {
-        window.top.location = '../users/details.php?paperID=<?php echo $paperID; ?>&userID=' + $('#userID').val();
-      }
-    }
-
-    function newStudentNote() {
-      $('#menudiv').hide();
-      note = window.open("../users/new_student_note.php?userID=" + $('#userID').val() + "&paperID=<?php echo $paperID; ?>&calling=class_totals","note","width=600,height=400,left="+(screen.width/2-300)+",top="+(screen.height/2-200)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        note.focus();
-      }
-    }
-
-    function reassignScript() {
-      $('#menudiv').hide();
-      if ($('#reassign').val() == 'y') {
-        reassign = window.open("check_reassign_script.php?userID=" + $('#userID').val() + "&paperID=<?php echo $paperID; ?>","reassign","width=600,height=500,left="+(screen.width/2-300)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-        if (window.focus) {
-          reassign.focus();
-        }
-      }
-    }
-
-    <?php
-    if ($paper_type == '1') {   // Do not allow reset of timer for Summative exams.
-    ?>
-    function resetTimer() {
-      $('#menudiv').hide();
-      reassign = window.open("check_reset_timer.php?userID=" + $('#userID').val() + "&paperID=<?php echo $paperID; ?>&metadataID=" + $('#metadataID').val() + "","reassign","width=550,height=200,left="+(screen.width/2-275)+",top="+(screen.height/2-100)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        reassign.focus();
-      }
-    }
-    <?php
-    }
-    ?>
-
-    function reassignLogLate() {
-      $('#menudiv').hide();
-      if ($('#loglate').val() == 'y') {
-        loglate = window.open("check_reassign_log_late.php?userID=" + $('#userID').val() + "&paperID=<?php echo $paperID; ?>&metadataID=" + $('#metadataID').val() + "&log_type=" + $('#log_type').val() + "","reassign","width=600,height=480,left="+(screen.width/2-300)+",top="+(screen.height/2-240)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-        if (window.focus) {
-          reassign.focus();
-        }
-      }
-    }
-
-    var paperID = <?php echo $paperID ?>;
-    var crypt_name = '<?php echo $propertyObj->get_crypt_name() ?>';
-
-    $(function() {
-      if ($("#maindata").find("tr").size() > 1) {
-        $("#maindata").tablesorter({
-          // sort on the first column and third column, order asc
-          dateFormat: '<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>',
-          sortList: [[2,0],[3,0]]
-        });
-      }
-
-      $(document).click(function() {
-        $('#menudiv').hide();
-      });
-    });
-  </script>
 </head>
 
 
 <body>
 <div id="noteDiv" class="studentnote">
-  <div class="popup_close"><img onclick="$('#noteDiv').hide();" src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
+  <div class="popup_close"><img src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
   <div id="noteMsg"></div>
 </div>
 
 <div id="accessDiv" class="studentaccess">
-  <div class="popup_close"><img onclick="$('#accessDiv').hide();" src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
+  <div class="popup_close"><img src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
   <div id="accessMsg"></div>
 </div>
 
 <div id="toiletDiv" class="toiletbreak">
-  <div class="popup_close"><img onclick="$('#toiletDiv').hide();" src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
+  <div class="popup_close"><img src="../artwork/close_note.png" class="popupclose" alt="Close" /></div>
   <div id="toiletMsg"></div>
 </div>
 
@@ -328,12 +174,12 @@ require '../include/toprightmenu.inc';
 echo draw_toprightmenu(30);
 ?>
 <div id="menudiv" class="popupmenu">
-  <div class="popup_row" onclick="viewScript();" id="item1">
+  <div class="popup_row" id="item1">
     <div class="popup_icon"><img src="../artwork/summative_16.gif" width="16" height="16" alt="" /></div>
     <div class="popup_title"><?php echo $string['examscript'] ?></div>
   </div>
 
-  <div class="popup_row" onclick="viewFeedback();" id="item2">
+  <div class="popup_row" id="item2">
     <div class="popup_icon"><img src="../artwork/ok_comment.png" width="16" height="16" alt="" /></div>
     <div class="popup_title"><?php echo $string['feedback']; ?></div>
   </div>
@@ -343,12 +189,12 @@ echo draw_toprightmenu(30);
     <div class="popup_title"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></div>
   </div>
 
-  <div class="popup_row" onclick="viewProfile();" id="item3">
+  <div class="popup_row" id="item3">
     <div class="popup_icon"><img src="../artwork/small_user_icon.gif" width="16" height="16" alt="" /></div>
     <div class="popup_title"><?php echo $string['studentprofile'] ?></div>
   </div>
 
-  <div class="popup_row" onclick="newStudentNote();" id="item4">
+  <div class="popup_row" id="item4">
     <div class="popup_icon"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="" /></div>
     <div class="popup_title"><?php echo $string['newnote'] ?></div>
   </div>
@@ -358,26 +204,25 @@ echo draw_toprightmenu(30);
     <div class="popup_title"><img src="../artwork/popup_divider.png" width="100%" height="3" alt="-" /></div>
   </div>
 
-  <div class="popup_row" onclick="reassignScript();" id="item5">
+  <div class="popup_row" id="item5">
     <div class="popup_icon"><img src="../artwork/guest_account_16.png" width="16" height="16" alt="" /></div>
     <div class="popup_title"><?php echo $string['reassigntouser']; ?></div>
   </div>
   <?php
-  if ($paper_type == '1') {   // Do not allow reset of timer for Summative exams.
-    $action = 'resetTimer();';
+  // Allow reset of timer for progressive exams.
+  if ($paper_type == '1') {
     $class = 'popup_row';
   } else {
-    $action = '$(\'#menudiv\').hide()';
     $class = 'popup_row_disabled';
   }
   ?>
-  <div class="<?php echo $class ?>" onclick="<?php echo $action ?>">
-    <div class="popup_icon"></div>
+  <div class="<?php echo $class ?>">
+      <div class="popup_icon"><img src="../artwork/clock_16.png" width="16" height="16" alt="" /></div>
     <div class="popup_title" id="item6"><?php echo $string['resettimer']; ?></div>
   </div>
 
-  <div class="popup_row" onclick="reassignLogLate();" id="item7">
-    <div class="popup_icon"><img id="log_late_icon" style="display:none" src="../artwork/log_late_16.gif" width="16" height="16" alt="" /></div>
+  <div class="popup_row" id="item7">
+    <div class="popup_icon"><img id="log_late_icon" src="../artwork/log_late_16.gif" width="16" height="16" alt="" /></div>
     <div class="popup_title"><?php echo $string['latesubmissions']; ?></div>
   </div>
 </div>
@@ -494,7 +339,7 @@ $late_submissions = '';
 $class = '';
 $user_results[$i]['attempt'] = 0;
 ?>
-<tr class="nonattend" id="res<?php echo $i+1 ?>" onclick="popMenu(6, event); setVars('', '<?php echo $userID; ?>', '<?php echo $paper_type; ?>', '<?php echo $reassign ?>', '<?php echo $late_submissions ?>', '<?php echo $percent; ?>');"><td>&nbsp;</td>
+<tr class="nonattend" id="res<?php echo $i+1 ?>" data-metadataid="" data-paperid="<?php echo $paperID ?>" data-cryptname="<?php echo $propertyObj->get_crypt_name() ?>" data-userid="<?php echo $userID; ?>" data-papertype="<?php echo $paper_type; ?>" data-reassign="<?php echo $reassign ?>" data-late="<?php echo $late_submissions ?>" data-percent="<?php echo $percent; ?>"><td>&nbsp;</td>
   <?php
   } else {
     // Setup the row for a user who took the exam.
@@ -543,7 +388,7 @@ $user_results[$i]['attempt'] = 0;
       $icon = 'offline_16.gif';
       $alt = $string['displaypaper'];
     }
-    echo " style=\"cursor:hand\" onclick=\"popMenu(5, event); setVars('" . $user_results[$i]['metadataID'] . "'," . $user_results[$i]['userID'] . ",'" . $user_results[$i]['paper_type'] . "','$reassign','$late_submissions','" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "');" . "\"";
+    echo " style=\"cursor:default\" data-metadataid=\"" . $user_results[$i]['metadataID'] . "\" data-paperid=\"" . $paperID . "\" data-cryptname=\"" . $propertyObj->get_crypt_name() . "\" data-userid=\"" . $user_results[$i]['userID'] . "\" data-papertype=\"" . $user_results[$i]['paper_type'] . "\" data-reassign=\"" . $reassign . "\" data-late=\"" . $late_submissions . "\" data-percent=\"" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "\"";
     echo "><td class=\"$class $role_css\"><img src=\"../artwork/$icon\" title=\"$alt\" alt=\"$alt\" class=\"picon\" /></td>";
   }
 
@@ -562,18 +407,18 @@ $user_results[$i]['attempt'] = 0;
     echo '&nbsp;&nbsp;';
   }
   if ($report->has_special_need($user_results[$i]['userID'])) {
-    echo '<img src="../artwork/accessibility_16.png" class="accessibility" alt="' . $string['alternativearrangements'] . '" onclick="viewAccessibility(' . $user_results[$i]['userID'] . ', event)" title="' . $string['viewaccessibility'] . '" />';
+    echo '<img src="../artwork/accessibility_16.png" class="accessibility" data-id="' . $user_results[$i]['userID'] . '" alt="' . $string['alternativearrangements'] . '" title="' . $string['viewaccessibility'] . '" />';
   }
   $student_id = $user_results[$i]['username'];
   if (!empty($user_results[$i]['attempt']) and $user_results[$i]['attempt'] > 1) {
     echo '&nbsp;<img src="../artwork/resit.png" width="16" height="16" alt="Resit" title="' . $string['resitcandidate'] . '" />';
   }
   if (isset($notes[$user_results[$i]['userID']]) and $notes[$user_results[$i]['userID']] == 'y') {
-    echo '<img src="../artwork/notes_icon.gif" alt="Notes" class="note" onclick="viewNote(' . $user_results[$i]['userID'] . ', event)" title="' . $string['viewstudentnote'] . '" />';
+    echo '<img src="../artwork/notes_icon.gif" alt="Notes" data-paperid="'. $paperID . '" data-id="' . $user_results[$i]['userID'] . '" class="note" title="' . $string['viewstudentnote'] . '" />';
   }
   if (isset($toilet_breaks[$user_results[$i]['userID']])) {
     foreach ($toilet_breaks[$user_results[$i]['userID']] as $toilet_break) {
-      echo '<img src="../artwork/wc.png" alt="Toilet" class="icon16_active" onclick="viewToiletBreak(' . $toilet_break . ', event)" />';
+      echo '<img src="../artwork/wc.png" alt="Toilet" class="icon16_active" data-id="' . $toilet_break . '"/>';
     }
   }
   echo "</td>";
@@ -660,7 +505,7 @@ $user_results[$i]['attempt'] = 0;
 
   if ($user_no > 0) {
     //Check for any paper notes
-    echo "<br /><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['papernotes'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+    echo "<table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['papernotes'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
     $result = $mysqli->prepare("SELECT note, DATE_FORMAT(note_date,'" . $configObject->get('cfg_long_date_time') . "'), note_workstation FROM paper_notes WHERE paper_id = ?");
     $result->bind_param('i', $paperID);
     $result->execute();
@@ -674,16 +519,15 @@ $user_results[$i]['attempt'] = 0;
       $result2->bind_result($lab_name);
       $result2->fetch();
       $result2->close();
-      echo "<div class=\"papernote\"><strong>$note_date</strong><p>$note</p><br /><span style=\"font-size:80%\">$note_workstation";
+      echo "<div class=\"papernote\"><strong>$note_date</strong><p>$note</p><span style=\"font-size:80%\">$note_workstation";
       if ($lab_name != '') echo " ($lab_name)";
       echo "</span></div>\n";
     }
-    echo "<br clear=\"all\" />";
     $result->close();
 
     $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);
     $exam_announcements = $exam_announcementObj->get_announcements();
-    echo "<br />\n<table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['midexamclarifications'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+    echo "<table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['midexamclarifications'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
     echo "<tr><td colspan=\"" . $cols . "\" height=\"9\"><table cellspacing=\"0\" cellpadding=\"2\">\n";
     foreach ($exam_announcements as $exam_announcement) {
       $msg = $exam_announcement['msg'];
@@ -692,20 +536,20 @@ $user_results[$i]['attempt'] = 0;
         $msg = str_replace('</p>', '', $msg);
       }
 
-      echo "<tr><td class=\"q_no\">Q" . $exam_announcement['q_number'] . "</td><td class=\"q_msg\">(" . $exam_announcement['created'] .")<br />" . $msg . "</td></tr>\n";
+      echo "<tr><td class=\"q_no\">Q" . $exam_announcement['q_number'] . "</td><td class=\"q_msg\">(" . $exam_announcement['created'] .")" . $msg . "</td></tr>\n";
     }
     echo "</table>\n";
 
-    echo "<br /><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['distributionchart'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+    echo "<table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['distributionchart'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
 
     echo "<div class=\"graph\"><img src=\"draw_distribution_chart.php?adjust=" . substr($marking, 0, 1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark&q1=" . $stats['q1'] . "&q2=" . $stats['q2'] . "&q3=" . $stats['q3'] . "\" width=\"830\" height=\"300\" alt=\"Distribution Chart\" /></div>\n";
 
-    echo "<br /><table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['scatterplot'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+    echo "<table border=\"0\" class=\"subheading\"><tr><td><nobr>" . $string['scatterplot'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
     echo "<div class=\"graph\"><img src=\"draw_scatter_plot.php?adjust=" . substr($marking, 0, 1) . "&pmk=$pass_mark&distinction_mark=$distinction_mark\" width=\"830\" height=\"300\" border=\"0\" alt=\"Distribution Chart\" /></div>\n";
 
 
     // Display summary -------------------------------------------------------------------------------------
-    echo "<table border=\"0\" style=\"width:100%\">";
+    echo "<table class=\"graph\" border=\"0\" style=\"width:100%\">";
     echo "<tr><td class=\"subheading\" style=\"width:50px\">" . $string['summary'] . "</td><td style=\"width:48%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td><td>&nbsp;&nbsp;</td><td class=\"subheading\" style=\"width:40px\">" . $string['deciles'] . "</td><td style=\"width:30%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td><td>&nbsp;&nbsp;</td><td class=\"subheading\" style=\"width:40px\">" . $string['quartiles'] . "</td><td style=\"width:100%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr>\n";
     echo "<tr><td colspan=\"2\" style=\"width:33%\">";
 
@@ -825,7 +669,7 @@ $user_results[$i]['attempt'] = 0;
 
     echo "</table></td>\n";
 
-    echo "</tr></table>\n<br />";
+    echo "</tr></table>\n";
 
     $emailtemplatedir = rogo_directory::get_directory('email_templates');
     // Email Class -----------------------------------------------------------------------------------------
@@ -933,14 +777,14 @@ $user_results[$i]['attempt'] = 0;
       echo '<p>' . $string['emailssent'] . '</p>';
     } else {
       if ($paper_type < 2) {
-        echo "<div>\n";
-        echo "<form name=\"theform\" method=\"post\" autocomplete=\"off\">\n";
-        echo "<input type=\"button\" value=\"" . $string['emailclassmarks'] . "\" onclick=\"popupEmailTemplate();\" style=\"margin:10px; width:160px\" />\n";
-        echo '<input type="hidden" name="emailclass" value="" />';
-        echo '<input type="hidden" name="emailtemplate" value="" />';
-        echo '<input type="hidden" name="ccaddress" value="" />';
-        echo '<input type="hidden" name="bccaddress" value="" />';
-        echo '<input type="hidden" name="subject" value="" />';
+        echo "<div class=\"graph\">\n";
+        echo "<form id=\"theform\" name=\"theform\" method=\"post\" autocomplete=\"off\">\n";
+        echo "<input id=\"emailmarks\" type=\"button\" value=\"" . $string['emailclassmarks'] . "\" style=\"margin:10px; width:160px\" />\n";
+        echo '<input type="hidden" id="emailclass" name="emailclass" value="" />';
+        echo '<input type="hidden" id="emailtemplate" name="emailtemplate" value="" />';
+        echo '<input type="hidden" id="ccaddress" name="ccaddress" value="" />';
+        echo '<input type="hidden" id="bccaddress" name="bccaddress" value="" />';
+        echo '<input type="hidden" id="subject" name="subject" value="" />';
         echo "</form>\n</div>\n";
       }
 
@@ -969,9 +813,9 @@ $user_results[$i]['attempt'] = 0;
         echo '<p>' . $string['gradepublish'] . '</p>';
       } else {
         echo "<div>\n";
-        echo "<form name=\"theform\" method=\"post\" autocomplete=\"off\">\n";
-        echo "<input type=\"button\" value=\"" . $string['publishmarks'] . "\" onclick=\"popupPublishMarks();\" style=\"margin:10px; width:160px\" />\n";
-        echo '<input type="hidden" name="publishmarks" value="" />';
+        echo "<form id=\"publishform\" name=\"publishform\" method=\"post\" autocomplete=\"off\">\n";
+        echo "<input id=\"publishmarksbutton\" type=\"button\" value=\"" . $string['publishmarks'] . "\" style=\"margin:10px; width:160px\" />\n";
+        echo '<input type="hidden" id="publishmarks" name="publishmarks" value="" />';
         echo "</form>\n</div>\n";
       }
     }
@@ -983,7 +827,15 @@ $user_results[$i]['attempt'] = 0;
   }
   $mysqli->close();
   ?>
-  <input type="hidden" id="metadataID" value="" /><input type="hidden" id="userID" value="" /><input type="hidden" id="log_type" value="" /><input type="hidden" id="reassign" value="" /><input type="hidden" id="loglate" value="" /><input type="hidden" id="percent" value="" />
+  <input type="hidden" id="datetime" value="<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>" />
+  <input type="hidden" id="markall" value="0" />
   </div>
+<?php
+  // JS utils dataset.
+  $render = new render($configObject);
+  $jsdataset['name'] = 'jsutils';
+  $jsdataset['attributes']['xls'] = json_encode($string);
+  $render->render($jsdataset, array(), 'dataset.html');
+  ?>
 </body>
 </html>

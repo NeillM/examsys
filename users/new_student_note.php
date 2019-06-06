@@ -43,44 +43,6 @@ if (!UserUtils::userid_exists($userID, $mysqli)) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-if (isset($_POST['submit'])) {
-	if ($_POST['note_id'] == '' or $_POST['note_id'] == '0') {
-		StudentNotes::add_note($userID, $_POST['note'], $paperID, $userObject->get_user_ID(), $mysqli);
-	} else {
-		StudentNotes::update_note($_POST['note'], $_POST['note_id'], $mysqli);
-	}
-?>
-<!DOCTYPE html>
-  <html>
-  <head><title><?php echo $string['note']; ?></title>
-  <?php
-    if ($_POST['calling'] == 'class_totals') {
-  ?>
-  <script>
-    function closeWindow() {
-      window.opener.location.reload();
-      window.close();
-    }
-  </script></head>
-  <body onload="window.opener.location.reload(); closeWindow();">
-  <?php
-    } else {
-  ?>
-  <script>
-    function closeWindow() {
-      window.opener.location = "details.php?userID=<?php echo $userID ?>&tab=notes";
-      window.close();
-    }
-  </script></head>
-  <body onload="closeWindow();">
-  <?php
-    }
-  ?>
-  <form autocomplete="off">
-    <br />&nbsp;<div align="center"><input type="button" name="home" value="   OK   " onclick="closeWindow();" /></div>
-  </form>
-  <?php
-  } else {
 ?>
 <!DOCTYPE html>
 <html>
@@ -93,49 +55,14 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/notes.css" />
   
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script>
-    $(function () {
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
-        }
-      });
-      $('form').removeAttr('novalidate');
-      
-      resizeTextbox();      
-      $("#note").focus();
-    });
-	 
-	  $(window).resize(function() {
-	    resizeTextbox();
-	  });
-    
-    function resizeTextbox() {
-	    var noteHeight = $(window).height() - 100;
-	    $("#note").css('height', noteHeight + 'px');     
-    }
-   
-    $('#theform').submit(function() {
-      if ($("#paperID").val() == '') {
-        alert("<?php echo $string['namecheck']; ?>");
-        return false;
-      }
-   
-      if ($("#note").val() == '') {
-        alert("<?php echo $string['notecheck']; ?>");
-        return false;
-      }
-     
-      return true;
-    });
-  </script>
+  <script src="../js/require.js"></script>
+  <script src="../js/main.min.js"></script>
+  <script src="../js/studentnoteinit.min.js"></script>
+
 </head>
 
 <body>
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="theform" id="theform" autocomplete="off">
+<form action="" method="post" name="theform" id="theform" autocomplete="off">
 <?php
 	$disabled = '';
 	$note_details = array('note_id'=>0, 'note'=>'');
@@ -178,15 +105,20 @@ if (isset($_POST['submit'])) {
   echo "<br />" . $string['note'] . "<br />\n";
   echo "<div style=\"text-align:center\"><textarea name=\"note\" id=\"note\" required>" . $note_details['note'] . "</textarea></div>\n";
 ?>
-<div style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"<?php echo $disabled ?> /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
-<input type="hidden" name="userID" value="<?php echo $userID ?>" />
+<div style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"<?php echo $disabled ?> /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" /></div>
+<input type="hidden" id="userID" name="userID" value="<?php echo $userID ?>" />
 <input type="hidden" name="calling" value="<?php if (isset($_GET['calling'])) echo $_GET['calling'] ?>" />
 <input type="hidden" name="note_id" value="<?php echo $note_details['note_id'] ?>" />
 </form>
-
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>
 <?php
-}
 $mysqli->close();
 ?>

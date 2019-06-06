@@ -28,13 +28,14 @@ require '../include/staff_auth.inc';
 require '../include/errors.php';
 
 $paperID   = check_var('paperID', 'POST', true, false, true);
-$startdate = check_var('startdate', 'POST', true, false, true);
-$enddate   = check_var('enddate', 'POST', true, false, true);
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
+$startdate = $properties->get_raw_start_date();
+$enddate   = $properties->get_raw_end_date();
 
 $report = new ClassTotals(1, 100, 'asc', 0, 'name', $userObject, $properties, $startdate, $enddate, '%', '', $mysqli, $string);
 $report->compile_report(true);
 
+$properties->set_recache_marks(0);  // Set the recache to zero to stop it caching again.
+$properties->save();
 $mysqli->close();
-?>

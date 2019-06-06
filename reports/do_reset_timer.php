@@ -22,6 +22,8 @@
 * @package
 */
 
+define('AJAX_REQUEST', true);
+
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
 
@@ -33,7 +35,8 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 if ($properties->get_paper_type() != '1') {   // Only allow timer reset of Progress Test papers.
   $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+  echo json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
+  exit();
 }
 
 $log_metadata = new LogMetadata($userID, $paperID, $mysqli);
@@ -41,38 +44,19 @@ $log_metadata = new LogMetadata($userID, $paperID, $mysqli);
 if ($log_metadata->get_record($metadataID) === false) {
   $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+  echo json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
+  exit();
 }
 
 $user_details = UserUtils::get_user_details($userID, $mysqli);
 if ($user_details === false) {
   $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+  echo json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
+  exit();
 }
 
 $log_metadata->set_started_to_null();
 
 $mysqli->close();
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title>Reset Timer</title>
-
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function () {
-      window.close();
-    });
-  </script>
-</head>
-
-<body>
-</body>
-</html>
+echo json_encode('SUCCESS');

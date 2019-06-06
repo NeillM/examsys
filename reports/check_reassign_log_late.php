@@ -60,47 +60,20 @@ if ($row_no == 0) {
   <title><?php echo page::title($string['latesubmission']); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <style type="text/css">
-    body {font-size:90%; background-color:#F1F5FB; margin:4px}
-    th {background-color:#295AAD; color:white; text-align:left; font-weight:normal}
-  </style>
-
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function() {
-      $("#myform").submit(function(e) {
-        if ($("#button_pressed").val() == 'Accept') {
-          var agree = confirm("<?php echo $string['msg3'] ?>");
-          if (!agree) {
-            e.preventDefault();
-          }
-        } else if ($("#button_pressed").val() == 'Reject') {
-          var agree = confirm("<?php echo $string['msg4'] ?>");
-          if (!agree) {
-            e.preventDefault();
-          }
-        }
-      });
-      
-      $("#accept").click(function() {
-        $("#button_pressed").val('Accept');
-      });
-    
-      $("#reject").click(function() {
-        $("#button_pressed").val('Reject');
-      });
-    
-    });
-  </script>
+  <link rel="stylesheet" type="text/css" href="../css/loglatereassign.css" />
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src='../js/loglateassignmentinit.min.js'></script>
 </head>
 
 <body>
-<form name="myform" id="myform" action="do_reassign_log_late.php" method="post" autocomplete="off">
+<div class="form-error"></div>
+<form name="myform" id="myform" action="" method="post" autocomplete="off">
 <?php
   // Check if the exam is still running. Re-assignment mid-exam would upset the data.
   $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
   if ($propertyObj->is_live()) {
-    echo "<h1>" . $string['warning'] . "</h1><p>" . $string['msg2'] . "</p><p><input type=\"button\" value=\"" . $string['ok'] . "\" class=\"ok\" onclick=\"window.close();\"/></p>\n</body>\n</html>\n";
+    echo "<h1>" . $string['warning'] . "</h1><p>" . $string['msg2'] . "</p><p><input type=\"button\" value=\"" . $string['ok'] . "\" class=\"cancel\" /></p>\n</body>\n</html>\n";
     exit();
   }
 
@@ -163,12 +136,20 @@ if ($row_no == 0) {
   echo "<div><textarea name=\"reason\" cols=\"40\" rows=\"5\" style=\"width:99%; font-family:Arial,sans-serif\"></textarea></div>\n<br />";
   echo "<div style=\"text-align:center\">\n";
 
-  echo "<input type=\"submit\" name=\"submit\" id=\"accept\" value=\"" . $string['accept'] . "\" class=\"ok\" />&nbsp;<input type=\"submit\" name=\"submit\" id=\"reject\" value=\"" . $string['reject'] . "\" class=\"ok\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"button\" name=\"cancel\" value=\"" . $string['Cancel'] . "\" class=\"cancel\" onclick=\"window.close();\" /></div>";
+  echo "<input type=\"submit\" name=\"submit\" id=\"accept\" value=\"" . $string['accept'] . "\" class=\"ok\" />&nbsp;<input type=\"submit\" name=\"submit\" id=\"reject\" value=\"" . $string['reject'] . "\" class=\"ok\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"button\" name=\"cancel\" value=\"" . $string['Cancel'] . "\" class=\"cancel\" /></div>";
   echo "<input type=\"hidden\" name=\"userID\" value=\"$userID\" /><input type=\"hidden\" name=\"paperID\" value=\"$paperID\" /><input type=\"hidden\" name=\"metadataID\" value=\"$metadataID\" /><input type=\"hidden\" name=\"log_type\" value=\"" . $_GET['log_type'] . "\" />";
 
   $mysqli->close();
 ?>
 <input type="hidden" name="button_pressed" id="button_pressed" value="" />
 </form>
+
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

@@ -1811,7 +1811,7 @@ class ClassTotals {
       <table border="0" cellpadding="0" cellspacing="0" style="width:100%">
         <tr>
           <td class="redwarn" style="width:40px; line-height:0; padding-left:0"><img src="../artwork/late_warning_icon.png" width="32" height="32" alt="<?php echo strip_tags($this->string['latesubmissionsmsg']) ?>" /></td>
-          <td class="redwarn"><?php echo $this->string['latesubmissionsmsg'] . ' (<a style="color:black" href="#" onclick="launchHelp(221); return false;">' . $this->string['moredetails'] . '</a>)'; ?></td>
+          <td class="redwarn"><?php echo $this->string['latesubmissionsmsg'] . ' (<a style="color:black" href="#" class="latelink" onclick="return false;">' . $this->string['moredetails'] . '</a>)'; ?></td>
         </tr>
       </table>
     <?php

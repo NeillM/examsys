@@ -117,4 +117,6 @@ $string['formative'] = 'Formative paper';
 $string['summative'] = 'Summative paper';
 $string['progress'] = 'Progress paper';
 
-?>
+// Ajax errors.
+$string['ajaxerror'] = 'Error: ';
+$string['ajaxfail'] = 'Fail: ';

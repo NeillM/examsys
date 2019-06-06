@@ -71,6 +71,10 @@ $started = $dateObj->format($display_format);
   <style>
     body {background-image: url('../artwork/reset_timer_48.png')}
   </style>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/resettimerinit.min.js"></script>
 </head>
 
 <body>
@@ -80,11 +84,11 @@ $started = $dateObj->format($display_format);
 <br />
 
 <div style="text-align:right">
-<form action="do_reset_timer.php" method="post" autocomplete="off">
+<form id="theform" action="" method="post" autocomplete="off">
 <input type="hidden" name="metadataID" value="<?php echo $metadataID; ?>" />
 <input type="hidden" name="userID" value="<?php echo $userID; ?>" />
 <input type="hidden" name="paperID" value="<?php echo $paperID; ?>" />
-<input class="ok" type="submit" name="submit" value="<?php echo $string['reset'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="window.close();" />
+<input class="ok" type="submit" name="submit" value="<?php echo $string['reset'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" />
 </form>
 </div>
 

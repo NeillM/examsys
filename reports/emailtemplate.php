@@ -58,47 +58,38 @@ if (file_exists($templatefile)) {
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/emailtemplate.css" />
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src='../js/emailtemplateinit.min.js'></script>
 
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
   $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::EMAIL);
 ?>
-  <script>
-    function submitValues() {
-      opener.document.theform.emailtemplate.value = tinyMCE.get('template').getContent();
-      opener.document.theform.ccaddress.value = document.templateform.ccaddress.value;
-      opener.document.theform.bccaddress.value = document.templateform.bccaddress.value;
-      opener.document.theform.subject.value = document.templateform.subject.value;
-      opener.document.theform.emailclass.value = "yes";
-      window.opener.document.theform.submit();
-      window.close();
-      return false;
-    }
-  </script>
 </head>
 
 <body>
-<form name="templateform" onsubmit="return submitValues()" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
+<form id="templateform" name="templateform" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
 
 <table cellpadding="2" cellspacing="0" border="0" width="100%" style="text-align:left">
 <tr>
-<td><?php echo $string['cc'] ?></td><td><input type="text" size="70" name="ccaddress" value="<?php echo $ccaddress ?>" /></td>
+<td><?php echo $string['cc'] ?></td><td><input type="text" size="70" id ="ccaddress" name="ccaddress" value="<?php echo $ccaddress ?>" /></td>
 <td style="text-align:right" rowspan="3" valign="top"><img src="../artwork/stamp.png" width="89" height="93" alt="stamp" /></td>
 </tr>
 <tr>
-<td><?php echo $string['bcc'] ?></td><td><input type="text" size="70" name="bccaddress" value="<?php echo $bccaddress ?>" /></td>
+<td><?php echo $string['bcc'] ?></td><td><input type="text" size="70" id="bccaddress" name="bccaddress" value="<?php echo $bccaddress ?>" /></td>
 </tr>
 <tr>
-<td><?php echo $string['subject'] ?></td><td><input type="text" size="70" name="subject" value="<?php echo $subject ?>" /></td>
+<td><?php echo $string['subject'] ?></td><td><input type="text" size="70" id="subject name="subject" value="<?php echo $subject ?>" /></td>
 </tr>
 <tr>
 <td colspan="3"><?php $texteditorplugin->get_textarea('template', 'template', htmlspecialchars($message, ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD); ?></td>
 </tr>
 <tr>
 <td colspan="3" style="text-align: center">
-<input type="submit" class="ok" name="submit" value="<?php echo $string['email_class'] ?>" /><input type="button" name="cancel" class="cancel" value="<?php echo $string['cancel'] ?>" onclick="window.close();" />
+<input type="submit" class="ok" name="submit" value="<?php echo $string['email_class'] ?>" /><input type="button" name="cancel" class="cancel" value="<?php echo $string['cancel'] ?>" />
 </td>
 </tr>
 </table>

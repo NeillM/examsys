@@ -1,0 +1,63 @@
+// This file is part of Rogo
+//
+// Rogo is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogo is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
+//
+// Initialise log late assignment page.
+//
+// @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+// @copyright Copyright (c) 2019 The University of Nottingham
+//
+requirejs(['alert', 'jquery'], function(ALERT, $) {
+    var alert = new ALERT();
+    $("#myform").submit(function(e) {
+        e.preventDefault();
+        var agree = false;
+        if ($("#button_pressed").val() == 'Accept') {
+            agree = alert.show("msg3");
+        } else if ($("#button_pressed").val() == 'Reject') {
+            agree = alert.show("msg4");
+        }
+        if (agree) {
+            $.ajax({
+                url: "do_reassign_log_late.php",
+                type: "post",
+                data: $('#myform').serialize(),
+                dataType: "json",
+                success: function (data) {
+                    if (data == 'SUCCESS') {
+                        window.opener.location.reload();
+                        window.close();
+                    } else {
+                        $('.form-error').show();
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert.plain(textStatus);
+                },
+            });
+        }
+    });
+
+    $("#accept").click(function() {
+        $("#button_pressed").val('Accept');
+    });
+
+    $("#reject").click(function() {
+        $("#button_pressed").val('Reject');
+    });
+
+    $(".cancel").click(function() {
+        window.close();
+    });
+});

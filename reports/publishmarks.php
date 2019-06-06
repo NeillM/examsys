@@ -36,15 +36,10 @@ require '../include/staff_auth.inc';
   <style type="text/css">
     body {font-size:90%; background-color:#F0F0F0; margin:4px}
   </style>
-
-  <script>
-    function submitValues() {
-      opener.document.theform.publishmarks.value = "yes";
-      window.opener.document.theform.submit();
-      window.close();
-      return false;
-    }
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js'></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/publishmarksinit.min.js"></script>
 </head>
 
 <body>
@@ -52,7 +47,7 @@ require '../include/staff_auth.inc';
 <?php
  if ($configObject->get_setting('core', 'cfg_gradebook_enabled')) {
 ?>
-<form name="templateform" onsubmit="return submitValues()" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
+<form id="publishform" name="publishform" method="post" action="" autocomplete="off">
 
 <table cellpadding="2" cellspacing="0" border="0" width="100%" style="text-align:left">
 <tr>
