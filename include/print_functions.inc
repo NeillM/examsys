@@ -669,6 +669,7 @@ HTML;
     if(!isset($question['object'])) {
       require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
       $question['object'] = new EnhancedCalc($configObj);
+      $question['scenario'] = '';
       $question['object']->load($question);
     }
     $settings = json_decode($question['settings'], true);
