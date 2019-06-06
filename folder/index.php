@@ -102,39 +102,11 @@ $parts = count($folders_array) - 1;
   ?>
 	</style>
 
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../js/sidebar.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/state.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    function deleteFolder() {
-      notice=window.open("../delete/check_delete_folder.php?folderID=<?php echo $folder; ?>","notice","width=500,height=210,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      notice.moveTo(screen.width/2-210,screen.height/2-105);
-      if (window.focus) {
-        notice.focus();
-      }
-    }
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/folderinit.min.js"></script>
 
-    function folderProperties() {
-      notice=window.open("properties.php?folder=<?php echo $folder; ?>","properties","width=600,height=600,left="+(screen.width/2-300)+",top="+(screen.height/2-300)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        notice.focus();
-      }
-    }
-
-    $(function () {
-      $('#showretired').click(function() {
-        $('.retired').toggle();
-      });
-      
-      $(document).click(function() {
-        hideMenus();
-      });
-      
-    });
-  </script>
 </head>
 
 <body>
@@ -237,6 +209,11 @@ $mysqli->close();
 </form>
 
 </div>
-
+<?php
+$render = new render($configObject);
+$jsdataset['name'] = 'dataset';
+$jsdataset['attributes']['folder'] = $folder;
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

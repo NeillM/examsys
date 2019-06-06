@@ -41,69 +41,33 @@ if (!UserUtils::userid_exists($userID, $mysqli)) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-if (isset($_POST['submit'])) {
-	if ($_POST['note_id'] == '' or $_POST['note_id'] == '0') {
-	  $note_msg = trim($_POST['note']);
-		if ($note_msg != '') {  // Check we are not saving nothing.
-			StudentNotes::add_note($userID, $note_msg, $paperID, $userObject->get_user_ID(), $mysqli);
-		}
-	} else {
-		StudentNotes::update_note($_POST['note'], $_POST['note_id'], $mysqli);
-	}
-
-?>
-<!DOCTYPE html>
-  <html>
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <head><title><?php echo $string['note'] ?></title>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-
-  <script>
-    $(function () {
-      window.opener.location.href='./index.php?tab=<?php echo $paperID ?>';
-      window.close();
-    });
-  </script>
-  </head>
-  <body>
-  <form autocomplete="off">
-    <br />&nbsp;<div align="center"><input type="button" name="home" value="<?php echo $string['ok'] ?>" onclick="window.close();" /></div>
-  </form>
-  <?php
-  } else {
-    $student_details = UserUtils::get_user_details($userID, $mysqli);
-		    
-		$note_details = StudentNotes::get_note($paperID, $userID, $mysqli);
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 
-	<title><?php echo $string['note'] ?></title>
+    <title><?php echo $string['note'] ?></title>
 
-	<link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/notes.css" />
-  
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function () {
-	    var noteHeight = $(document).height() - 110;
-	    $("#note").css('height', noteHeight + 'px')
-      $("#note").focus();
-    });
-	 
-	  $(window).resize(function() {
-	    var noteHeight = $(document).height() - 110;
-	    $("#note").css('height', noteHeight + 'px')
-	  });
-	</script>
+    <link rel="stylesheet" type="text/css" href="../css/body.css" />
+    <link rel="stylesheet" type="text/css" href="../css/notes.css" />
+    <script src='../js/require.js'></script>
+    <script src='../js/main.min.js'></script>
+    <script src="../js/invigilatornoteinit.min.js"></script>
+
 </head>
 
 <body>
 
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="myform" autocomplete="off">
+<?php
+
+$student_details = UserUtils::get_user_details($userID, $mysqli);
+$note_details = StudentNotes::get_note($paperID, $userID, $mysqli);
+?>
+
+
+<form action="" method="post" id="studentnote" name="studentnote" autocomplete="off">
 
 <?php
   echo '<div><strong>' . $string['studentname'] . ':</strong> ' . $student_details['title'] . ' ' . $student_details['surname'] . ', ' . $student_details['first_names'];
@@ -111,20 +75,16 @@ if (isset($_POST['submit'])) {
   echo '</div>';
   
 
-  echo "<input type=\"hidden\" name=\"paperID\" value=\"$paperID\" />\n";
+  echo "<input type=\"hidden\" id=\"paperID\" name=\"paperID\" value=\"$paperID\" />\n";
   echo "<strong>" . $string['note'] . ":</strong><br />\n";
   echo "<textarea name=\"note\" id=\"note\" cols=\"60\" rows=\"17\" style=\"font-size:110%; width:100%\" required>" . $note_details['note'] . "</textarea><br />\n";
 ?>
 
 <br />
-<div style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
+<div style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" /></div>
 <input type="hidden" name="userID" value="<?php echo $userID ?>" />
 <input type="hidden" name="note_id" value="<?php echo $note_details['note_id']; ?>" />
 </form>
 
 </body>
 </html>
-<?php
-}
-$mysqli->close();
-?>

@@ -43,6 +43,9 @@ $name = $user_details['title'] . ' ' . $user_details['first_name'] . ' ' . $user
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/confirm.css" />
+  <script src="../js/require.js"></script>
+  <script src="../js/main.min.js"></script>
+  <script src="../js/checkunfinishexaminit.min.js"></script>
 </head>
 
 <body>
@@ -51,11 +54,9 @@ $name = $user_details['title'] . ' ' . $user_details['first_name'] . ' ' . $user
   <p><?php echo $string['msg']; ?></p>
 
   <div class="button_bar">
-  <form action="do_unfinish_exam.php" method="post" autocomplete="off">
-  <input type="hidden" name="userID" value="<?php echo $userID ?>" />
-  <input type="hidden" name="paperID" value="<?php echo $paperID ?>" />
-  <input class="ok" type="submit" name="submit" value=" <?php echo $string['ok'] ?> " /><input class="cancel" type="button" name="cancel" value=" <?php echo $string['cancel'] ?> " onclick="javascript:window.close();" />
-  </form>
+  <input id="userID"  type="hidden" name="userID" value="<?php echo $userID ?>" />
+  <input id="paperID" type="hidden" name="paperID" value="<?php echo $paperID ?>" />
+  <input id="unfinishexam" class="ok" type="submit" name="submit" value=" <?php echo $string['ok'] ?> " /><input class="cancel" type="button" name="cancel" value=" <?php echo $string['cancel'] ?> " onclick="javascript:window.close();" />
   </div>
 
 </body>

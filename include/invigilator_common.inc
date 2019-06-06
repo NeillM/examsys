@@ -235,7 +235,7 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
   }
 
   ?>
-<tr class="<?php echo $class; ?>" id="l<?php echo $paperID ?>_<?php echo $tmp_userID ?>" onclick="popMenu(<?php echo $tmp_userID ?>, <?php echo $paperID ?>, <?php echo $allow_timing ? 'true' : 'false'; ?>, event);">
+<tr class="<?php echo $class; ?>" id="l<?php echo $paperID ?>_<?php echo $tmp_userID ?>" data-userid="<?php echo $tmp_userID ?>" data-paperid="<?php echo $paperID ?>" data-timing="<?php echo $allow_timing ? 'true' : 'false'; ?>">
   <td>
 <?php
   if (isset($notes_array[$tmp_userID]) and $notes_array[$tmp_userID] == 'y') {
@@ -279,10 +279,10 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
       echo "<div id=\"p$cellID\">";
     }
     if ($student_object['medical'] != '') {
-      echo '<img src="../artwork/medical_16.gif" class="16icon" alt="Medical" onmouseover="showCallout(\'' . $cellID . '\', \'' . addslashes($student_object['medical']) . '\')" onmouseout="hideCallout()" />';
+      echo '<img src="../artwork/medical_16.gif" class="16icon" id="medical" alt="Medical" data-id="' . $cellID . '" data-msg="' . addslashes($student_object['medical']) . '"/>';
     }
     if ($student_object['breaks'] != '') {
-      echo '<img src="../artwork/moon_16.gif" class="16icon" alt="Breaks" onmouseover="showCallout(\'' . $cellID . '\', \'' . addslashes($student_object['breaks']) . '\')" onmouseout="hideCallout()" />';
+      echo '<img src="../artwork/moon_16.gif" class="16icon" id="break" alt="Breaks" data-id="' . $cellID . '" data-msg="' . addslashes($student_object['breaks']) . '"/>';
     }
     if ($student_object['medical'] != '' or $student_object['breaks'] != '') {
       echo "</div>\n";

@@ -34,94 +34,39 @@ if (!Paper_utils::paper_exists($paperID, $mysqli)) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-if (isset($_POST['submit'])) {
-	if ($_POST['note_id'] == '' or $_POST['note_id'] == '0') {
-		PaperNotes::add_note($_POST['note'], $paperID, $userObject->get_user_ID(), $mysqli);
-	} else {
-		PaperNotes::update_note($_POST['note'], $_POST['note_id'], $mysqli);
-	}
+$current_address = NetworkUtils::get_client_address();
+
+$note_details = PaperNotes::get_note($paperID, $current_address, $mysqli);
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-
   <title><?php echo $string['note']; ?></title>
-
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function () {
-      window.opener.location.reload(true);
-      window.close();
-    });
-  </script>
-</head>
-<body>
-  <form autocomplete="off">
-    <br />&nbsp;<div align="center"><input type="button" name="home" value="<?php echo $string['ok'] ?>" class="ok" onclick="closeWindow();" /></div>
-  </form>
-  <?php
-  } else {
-    $current_address = NetworkUtils::get_client_address();
-
-		$note_details = PaperNotes::get_note($paperID, $current_address, $mysqli);
-?>
-<!DOCTYPE html>
-<html>
-<head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-	<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-
-	<title><?php echo $string['note']; ?></title>
-
-	<link rel="stylesheet" type="text/css" href="../css/body.css" />
+  <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/notes.css" />
-	
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script>
-    $(function () {
-	    var noteHeight = $(document).height() - 90;
-	    $("#note").css('height', noteHeight + 'px')
-      $("#note").focus();
-			
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
-        }
-      });
-      $('form').removeAttr('novalidate');
-    });
-	 
-	  $(window).resize(function() {
-	    var noteHeight = $(document).height() - 90;
-	    $("#note").css('height', noteHeight + 'px')
-	  });
-  </script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/invigilatornoteinit.min.js"></script>
 </head>
 
 <body>
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" name="theform" id="theform" autocomplete="off">
+<form action="" method="post" name="theform" id="theform" autocomplete="off">
 <table cellpadding="0" cellspacing="0" border="0" style="width:100%">
 <tr>
 <td>
 <?php
-  echo "<input type=\"hidden\" name=\"paperID\" value=\"" . $paperID . "\" />\n";
+  echo "<input type=\"hidden\" id=\"paperID\" name=\"paperID\" value=\"" . $paperID . "\" />\n";
   echo "<strong>" . $string['note'] . ":</strong><br />\n";
   echo "<textarea name=\"note\" id=\"note\" cols=\"60\" rows=\"17\" style=\"font-size:110%; width:99%\" required autofocus>" . $note_details['note'] . "</textarea><br />\n";
 ?>
 </td>
 </table>
 <br />
-<div style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="javascript:window.close();" /></div>
+<div style="text-align:center"><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" /></div>
 <input type="hidden" name="note_id" value="<?php echo $note_details['note_id'] ?>" />
 </form>
 
 </body>
 </html>
-<?php
-}
-$mysqli->close();
-?>

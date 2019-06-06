@@ -15,7 +15,5 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['newkeyword'] = 'New Keyword';
-$string['character'] = 'Character';
-$string['illegal'] = 'illegal - please use alternative characters in keyword.';
+$string['character'] = 'Character %s illegal - please use alternative characters in keyword.';
 $string['duplicate'] = 'Keyword already exists!';
-?>

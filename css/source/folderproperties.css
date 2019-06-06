@@ -1,0 +1,23 @@
+body {
+    background-color:#F1F5FB;
+    font-size:90%;
+}
+input[type=checkbox] {
+    margin-left:20px;
+    margin-right:8px;
+}
+.r1 {
+    background-color:white;
+}
+.r2 {
+    background-color:#FFBD69;
+}
+.school {
+    margin-top:10px; width:100%;
+    background-color:white;
+    color:#1E3287;
+}
+#duplicateerror {
+    display: none;
+    color:#800000;
+}

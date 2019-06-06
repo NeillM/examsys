@@ -28,32 +28,20 @@ if (isset($_GET['userID'])) {
   $student_id = $_GET['userID'];
 }
 
-if (isset($_POST['userID'])) {
-  $student_id = $_POST['userID'];
-}
-
 if (isset($_GET['paperID'])) {
   $paper_id = $_GET['paperID'];
 }
-
-if (isset($_POST['paperID'])) {
-  $paper_id = $_POST['paperID'];
-}
-
 
 $student = array();
 $student['user_ID'] = $student_id;
 
 $stmt = $mysqli->prepare('SELECT title, initials, surname FROM users WHERE user_deleted IS NULL AND id = ?');
-$stmt->bind_param('i', $userID);
+$stmt->bind_param('i', $student_id);
 $stmt->execute();
 $stmt->store_result();
-$stmt->bind_result($student['title'], $student['initials'], $student['surname']);
+$stmt->bind_result($title, $initials, $surname);
 $stmt->fetch();
-
-$title = $student['title'];
-$initials = $student['initials'];
-$surname = $student['surname'];
+$stmt->close();
 
 $current_address = NetworkUtils::get_client_address();
 
@@ -63,21 +51,6 @@ $lab_object = $lab_factory->get_lab_based_on_client($current_address);
 $propertyObj = PaperProperties::get_paper_properties_by_id($paper_id, $mysqli, $string);
 $log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $propertyObj, $mysqli);
 $log_extra_time = new LogExtraTime($log_lab_end_time, $student, $mysqli);
-
-$onload = '';
-
-if (isset($_POST['submit'])) {
-  $invigilator_id = $userObject->get_user_ID();
-
-  if ((int)$_POST['extra_time'] == 0) {
-    $log_extra_time->delete($invigilator_id);
-  } elseif ((int)$_POST['extra_time'] > 0) {
-    $special_needs_percentage = $_POST['extra_time'];
-
-    $log_extra_time->save($invigilator_id, $special_needs_percentage);
-  }
-  $onload = 'closeWindow();';
-}
 
 $special_needs_percentage = $log_extra_time->get_extra_time_secs();
 $special_needs_percentage = $special_needs_percentage / 60;
@@ -93,15 +66,13 @@ $time_range = range(0, 30, 1);
   <style>
     body {font-size:90%}
   </style>
-  <script>
-    function closeWindow() {
-      window.opener.location = window.opener.location.href;
-      window.close();
-    }
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js'></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src='../js/invigilatorextratimeinit.min.js'></script>
 </head>
-<body onload="<?php echo $onload; ?>">
-<form id="extend_time_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" autocomplete="off">
+<body>
+<form id="extend_time_form" method="post" action="" autocomplete="off">
     <p>&nbsp;<?php echo $title . ' ' . $initials . ' ' . $surname; ?></p>
 
     <div style="text-align:center">
@@ -123,7 +94,7 @@ $time_range = range(0, 30, 1);
       <?php echo $string['minutes'] ?>
     </div>
     <div style="text-align:center; margin-top:20px;">
-        <input type="submit" name="submit" value="<?php echo $string['ok'] ?>" class="ok" /><input type="button" name="close" value="<?php echo $string['cancel'] ?>" onclick="window.close();" class="cancel" />
+        <input type="submit" name="submit" value="<?php echo $string['ok'] ?>" class="ok" /><input type="button" name="close" value="<?php echo $string['cancel'] ?>" class="cancel" />
     </div>
     <input type="hidden" name="userID" value="<?php echo $student_id; ?>"/>
     <input type="hidden" name="paperID" value="<?php echo $paper_id; ?>"/>

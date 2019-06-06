@@ -35,70 +35,12 @@ require '../include/errors.php';
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <style type="text/css">
-    .qline {line-height:150%;cursor:pointer;color:#000000;background-color:white; -webkit-user-select:none; -moz-user-select:none;}
-    .qline:hover {background-color:#FFE7A2}
-    .qline.highlight {background-color:#FFBD69}
-  </style>
-  
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    function getLastID(IDs) {
-      var id_list = IDs.split(",");
-      last_elm = id_list.length - 1;
-      
-      return id_list[last_elm];
-    }
+  <link rel="stylesheet" type="text/css" href="../css/keywordlist.css" />
 
-    function addKeyID(keyID, clearall) {
-      if (clearall) {
-        $('#keywordID').val(',' + keyID);
-      } else {
-        $('#keywordID').val($('#keywordID').val() + ',' + keyID);
-      }
-    }
-
-    function subKeyID(keyID) {
-      var tmpq = ',' + keyID;
-      $('#keywordID').val($('#keywordID').val().replace(tmpq, ''));
-    }
-    
-    function clearAll() {
-      $('.highlight').removeClass('highlight');
-    }
-  
-    function selKey(questionID, evt) {
-
-      $('#menu1a').hide();
-      $('#menu1b').show();
-
-      if (evt.ctrlKey == false && evt.metaKey == false) {
-        clearAll();
-        $('#link_' + questionID).addClass('highlight');
-        addKeyID(questionID, true);
-      } else {
-        if ($('#link_' + questionID).hasClass('highlight')) {
-          $('#link_' + questionID).removeClass('highlight');
-          subKeyID(questionID);
-        } else {
-          $('#link_' + questionID).addClass('highlight');
-          addKeyID(questionID, false);
-        }
-      }
-    }
-    
-    function selKey2(divID, evt) {
-      $('#menu1a').hide();
-      $('#menu1b').show();
-
-      $('#id').val(divID);
-
-      $('#' + divID).css('background-color', '#B3C8E8');
-      evt.cancelBubble = true;
-    }
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/keywordlistinit.min.js"></script>
 </head>
 
 <body>
@@ -159,12 +101,19 @@ require '../include/errors.php';
 <table class="header">
 <?php
 foreach ($keyword_list as $keywordID => $keyword) {
-  echo "<tr class=\"qline\" id=\"link_$keywordID\" onclick=\"selKey($keywordID, event)\" ondblclick=\"editKeyword($keywordID)\"><td colspan=\"2\">&nbsp;$keyword</td></tr>\n";
+  echo "<tr class=\"qline\" id=\"link_$keywordID\" data-keywordid=\"$keywordID\"><td colspan=\"2\">&nbsp;$keyword</td></tr>\n";
 }
 $mysqli->close();
 ?>
 </table>
 </div>
-
+</body>
+<?php
+// Dataset.
+$render = new render($configObject);
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['module'] = $module;
+$render->render($miscdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

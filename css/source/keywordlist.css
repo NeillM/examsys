@@ -1,0 +1,13 @@
+.qline {
+    line-height:150%;
+    cursor:pointer;
+    color:#000000;background-color:white;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+}
+.qline:hover {
+    background-color:#FFE7A2;
+}
+.qline.highlight {
+    background-color:#FFBD69;
+}

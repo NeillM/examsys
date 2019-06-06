@@ -22,6 +22,8 @@
 * @package
 */
 
+define('AJAX_REQUEST', true);
+
 require '../include/invigilator_auth.inc';
 require_once '../include/errors.php';
 
@@ -36,36 +38,4 @@ $stmt->execute();
 $stmt->close();
     
 $mysqli->close();
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title>Exam Unfinished</title>
-  
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
-
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function () {
-      window.opener.location.reload();
-      self.close();
-    });
-  </script>
-</head>
-
-<body>
-
-<p>Exam successfully unfinished.<p>
-
-<div class="button_bar">
-<form action="" method="get" autocomplete="off">
-<input type="button" name="cancel" value="OK" class="ok" onclick="javascript:window.close();" />
-</form>
-</div>
-
-</body>
-</html>
+echo json_encode('');

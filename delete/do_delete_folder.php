@@ -61,6 +61,8 @@ if ($parent != '') {
   $result->bind_result($parentID);
   $result->fetch();
   $result->close();
+} else {
+  $parentID = '';
 }
 
 // Delete sub dirs.
@@ -102,19 +104,9 @@ $mysqli->close();
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function () {
-      <?php
-      if ($parent == '') {
-        echo "window.opener.location.href = '../index.php'\n";
-      } else {
-        echo "window.opener.location.href = '../folder/index.php?folder=$parentID'\n";
-      }
-      ?>
-      self.close();
-    });
-  </script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/deletefolderinit.min.js"></script>
 </head>
 
 <body>
@@ -125,13 +117,20 @@ $mysqli->close();
 <form action="" method="get" autocomplete="off">
 <?php
 if ($parent == '') {
-  echo "<input type=\"button\" name=\"cancel\" value=\"OK\" class=\"ok\" onclick=\"javascript:self.opener.location.href='../index.php';window.close();\" />\n";
+  echo "<input type=\"button\" name=\"cancel\" value=\"OK\" class=\"ok\" />\n";
 } else {
-  echo "<input type=\"button\" name=\"cancel\" value=\"OK\" class=\"ok\" onclick=\"javascript:self.opener.location.href='../folder.php?folder=$parentID';window.close();\" />\n";
+  echo "<input type=\"button\" name=\"cancel\" value=\"OK\" class=\"ok\" />\n";
 }
 ?>
 </form>
 </div>
-
+<?php
+// Dataset.
+$render= new render($configObject);
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['parent'] = $parent;
+$miscdataset['attributes']['parentid'] = $parentID;
+$render->render($miscdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

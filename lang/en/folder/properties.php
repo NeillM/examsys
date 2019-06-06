@@ -23,4 +23,4 @@ $string['teams'] = 'Teams(s)';
 $string['nameused'] = 'Warning folder name already used!';
 $string['enteraname'] = 'Please enter a name for the Folder.';
 $string['nameinuse'] = 'Folder name already in use. Please use an alternative name.';
-?>
+$string['illegal'] = "Character ';' illegal - please use alternative characters in folder name.";

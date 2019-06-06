@@ -28,33 +28,11 @@
     $module = '';
   }
 ?>
-<script>
-  function newKeyword() {
-    keywordwin=window.open("<?php echo $configObject->get('cfg_root_path') ?>/folder/new_keyword.php?module=<?php echo $module; ?>","keywords","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    if (window.focus) {
-      keywordwin.focus();
-    }
-  }
-
-  function editKeyword() {
-    keywordwin=window.open("<?php echo $configObject->get('cfg_root_path') ?>/folder/edit_keyword.php?keywordID=" + getLastID($('#keywordID').val()) + "&module=<?php echo $module; ?>","keywords","width=350,height=120,left="+(screen.width/2-175)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    if (window.focus) {
-      keywordwin.focus();
-    }
-  }
-
-  function deleteKeyword() {
-    keywordwin=window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_team_keyword.php?keywordID=" + $('#keywordID').val() + "&module=<?php echo $module; ?>","keywords","width=500,height=120,left="+(screen.width/2-250)+",top="+(screen.height/2-60)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    if (window.focus) {
-      keywordwin.focus();
-    }
-  }
-</script>
 
 <div id="left-sidebar" class="sidebar">
 <form name="myform" autocomplete="off">
 <div id="menu1a">
-	<div class="menuitem"><a href="#" onclick="newKeyword(); return false;"><img class="sidebar_icon" src="../artwork/key.png" alt="key" /><?php echo $string['createnewkeyword'] ?></a></div>
+	<div class="menuitem"><a href="#" id="add"><img class="sidebar_icon" src="../artwork/key.png" alt="key" /><?php echo $string['createnewkeyword'] ?></a></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['editkeyword'] ?></div>
 	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="" /><?php echo $string['deletekeyword'] ?></div>
 	<?php
@@ -68,9 +46,9 @@
 </div>
 
 <div style="display:none" id="menu1b">
-	<div class="menuitem"><a href="#" onclick="newKeyword()"><img class="sidebar_icon" src="../artwork/key.png" alt="key" /><?php echo $string['createnewkeyword'] ?></a></div>
-	<div class="menuitem"><a href="#" onclick="editKeyword(); return false;"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><?php echo $string['editkeyword'] ?></a></div>
-	<div class="menuitem"><a href="#" onclick="deleteKeyword(); return false;"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><?php echo $string['deletekeyword'] ?></a></div>
+	<div class="menuitem"><a href="#" id="add"><img class="sidebar_icon" src="../artwork/key.png" alt="key" /><?php echo $string['createnewkeyword'] ?></a></div>
+	<div class="menuitem"><a href="#" id="edit"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><?php echo $string['editkeyword'] ?></a></div>
+	<div class="menuitem"><a href="#" id="delete"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><?php echo $string['deletekeyword'] ?></a></div>
 	<div class="menuitem"><a href="export_keywords.php?module=<?php echo $module; ?>"><img class="sidebar_icon" src="../artwork/export_16.gif" alt="Export" /><?php echo $string['exportkeywords'] ?></a></div>
 	<div class="menuitem"><a href="import_keywords.php?module=<?php echo $module; ?>"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="Import" /><?php echo $string['importkeywords'] ?></a></div>
 </div>

@@ -81,257 +81,15 @@ if ($lab_object !== false) {
 <link rel="stylesheet" type="text/css" href="../css/header.css"/>
 <link rel="stylesheet" type="text/css" href="../css/invigilator.css"/>
 <link rel="stylesheet" type="text/css" href="../css/popup_menu.css"/>
-
-<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-<script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
-<script>
-
-  var ns6 = document.getElementById && !document.all;
-  var isMenu = false;
-  var overpopupmenu = false;
-
-  function mouseSelect(e) {
-    var obj = ns6 ? e.target.parentNode : event.srcElement.parentElement;
-    if (isMenu) {
-      if (overpopupmenu == false) {
-        isMenu = false;
-        overpopupmenu = false;
-        $('#menudiv').hide();
-        return true;
-      }
-      return true;
-    }
-  }
-
-  function popMenu(tmpUserID, paperID, showExtension, e) {
-    if ($('#old_highlightID').val() != '') {
-      $('#l' + $('#old_highlightID').val()).css('background-color', 'white');
-    }
-
-    $('#old_highlightID').val(paperID + '_' + tmpUserID);
-    $('#old_highlightColor').val( $('#l' + paperID + '_' + tmpUserID).css('background-color') );
-
-    $('#l' + paperID + '_' + tmpUserID).css('background-color', '#FFBD69');
-
-    if (!e) var e = window.event;
-    var currentX = e.clientX;
-    var currentY = e.clientY;
-    var scrOfX = $('body,html').scrollLeft();
-    var scrOfY = $('body,html').scrollTop();
-
-    $('#userID').val(tmpUserID);
-    $('#paperID').val(paperID);
-
-    top_pos = currentY + scrOfY;
-
-    if (top_pos > ($(window).height() + scrOfY - 130)) {
-      top_pos = $(window).height() + scrOfY - 130;
-    }
-
-    if (showExtension) {
-      $('.menu-time').show();
-    } else {
-      $('.menu-time').hide();
-    }
-
-    $('#menudiv').css('left', currentX + scrOfX);
-    $('#menudiv').css('top', top_pos);
-
-    $('#menudiv').show();
-
-    isMenu = true;
-    return false;
-  }
-
-  function showCallout(cellID, displayTxt) {
-    var p = $('#p' + cellID);
-    var position = p.position();
-
-    var left_pos = position.left;
-    if (left_pos + 302 > $(window).width()) {
-      left_pos = $(window).width() - 302;
-    }
-    $('#callout').css('left', left_pos);
-    $('#callout').css('top', position.top + p.height() + 12);
-
-    $('#calloutTxt').text(displayTxt);
-    $('#callout').show();
-  }
-
-  function hideCallout() {
-    $('#callout').hide();
-  }
-
-  // please keep these lines on when you copy the source
-  // made by: Nicolas - http://www.javascript-page.com
-  var clockID = 0;
-  function UpdateClock() {
-    if (clockID) {
-      clearTimeout(clockID);
-      clockID = 0;
-    }
-    var tDate = new Date();
-    $('.theTime').text(((tDate.getHours() < 10) ? "0" : "") + tDate.getHours() +
-            ((tDate.getMinutes() < 10) ? ":0" : ":") + tDate.getMinutes() +
-            ((tDate.getSeconds() < 10) ? ":0" : ":") + tDate.getSeconds());
-    clockID = setTimeout("UpdateClock()", 1000);
-  }
-
-  function StartClock() {
-    clockID = setTimeout("UpdateClock()", 500);
-  }
-
-  function KillClock() {
-    if (clockID) {
-      clearTimeout(clockID);
-      clockID = 0;
-    }
-  }
-
-  function newStudentNote() {
-    $('#menudiv').hide();
-    studentnote = window.open("new_student_note.php?userID=" + $('#userID').val() + "&paperID=" + $('#paperID').val() + "", "studentnote", "width=650,height=430,left=" + (screen.width / 2 - 300) + ",top=" + (screen.height / 2 - 200) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-
-    if (window.focus) {
-      studentnote.focus();
-    }
-  }
-
-  function newToiletBreak() {
-    $('#menudiv').hide();
-    $.post("../ajax/invigilator/toilet_break.php",
-    {
-      userID:$('#userID').val(),
-      paperID:$('#paperID').val()
-    },
-    function(data, status) {
-      refreshCohortList( $('#paperID').val() );
-    });
-  }
-
-  function unfinishExam() {
-    $('#menudiv').hide();
-    unfinish = window.open("check_unfinish_exam.php?userID=" + $('#userID').val() + "&paperID=" + $('#paperID').val() + "", "unfinish", "width=450,height=200,left=" + (screen.width / 2 - 275) + ",top=" + (screen.height / 2 - 100) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-
-    if (window.focus) {
-      unfinish.focus();
-    }
-  }
-
-  function refreshCohortList(paperID) {
-    dataSource = "../ajax/invigilator/refresh_cohort_list.php?paperID=" + paperID;
-
-    $("#cohortlist_" + paperID).load(dataSource);
-  }
-
-  function newPaperNote(paperID) {
-    papernote = window.open("new_paper_note.php?paperID=" + paperID + "","papernote","width=650,height=410,left="+(screen.width/2-300)+",top="+(screen.height/2-200)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    if (window.focus) {
-      papernote.focus();
-    }
-  }
-
-  function viewRubric(paperID) {
-    $('#opaque').show();
-    $('#rubric_' + paperID).show();
-  }
-
-  function extendTime() {
-    $('#menudiv').hide();
-    papernote = window.open("extend_time.php?paperID=" + $('#paperID').val() + "&userID=" + $('#userID').val(), "extendtime", "width=250,height=150,left=" + (screen.width / 2 - 300) + ",top=" + (screen.height / 2 - 200) + ",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-
-    if (window.focus) {
-      papernote.focus();
-    }
-  }
-
-  function resizeLists() {
-    var myHeight = $(window).height() - 230;
-    var mysheet = document.styleSheets[0];
-    var totalrules = mysheet.cssRules ? mysheet.cssRules.length : mysheet.rules.length
-    if (mysheet.deleteRule) { //if Firefox
-      mysheet.insertRule(".cohortlist {height:" + myHeight + "px; overflow:auto}", totalrules);
-      mysheet.insertRule(".clarifymsgtbl {height:" + myHeight + "px; overflow:auto}", totalrules);
-    } else if (mysheet.removeRule) { //else if IE
-      document.styleSheets[0].addRule(".cohortlist", "height:" + myHeight + "px; overflow:auto");
-      document.styleSheets[0].addRule(".clarifymsgtbl", "height:" + myHeight + "px; overflow:auto");
-    }
-  }
-
-  function clarifyMethod() {
-  <?php
-    if (is_array($properties_list)) {
-      foreach ($properties_list as $property_object) {
-        $paperID = $property_object->get_property_id();
-    ?>
-      $.get("check_exam_announcements.php", {paperID:"<?php echo $paperID; ?>"}, function(data) {
-
-        if ($('#store_<?php echo $paperID; ?>').html() != strip_tags(data)) {
-          $('#msg<?php echo $paperID; ?>').html(data);
-          $('#store_<?php echo $paperID; ?>').html(strip_tags(data));
-          $('#msg<?php echo $paperID; ?>').effect("highlight", {}, 20000);
-        }
-      });
-    <?php
-      }
-    }
-  ?>
-  }
-
-  function strip_tags(html) {
-   var tmp = document.createElement("DIV");
-   tmp.innerHTML = html;
-   return tmp.textContent || tmp.innerText || "";
-}
-
-  document.onmousedown = mouseSelect;
-
-  function changeTab() {
-    if (!$(this).parent().hasClass('disabled')) {
-      if (!$(this).parent().hasClass('on')) {
-        $('.tab-area').hide();
-        $('.tabs li').each(function () {
-          $(this).removeClass('on');
-        });
-        $(this).parent().addClass('on');
-
-        var id = $(this).attr('rel');
-        $('#' + id).fadeIn();
-      }
-    }
-
-    return false;
-  }
-
-  // Register the events we need
-  $(function () {
-    $('.menu-time').click(extendTime);
-    $('.menu-note').click(newStudentNote);
-    $('.menu-toilet').click(newToiletBreak);
-    $('.menu-unfinish').click(unfinishExam);
-    StartClock();
-    resizeLists();
-    $(window).unload(KillClock);
-    $(window).resize(resizeLists);
-
-    $('.tabs li a').click(changeTab);
-
-  <?php
-  if (isset($_GET['tab'])) {
-    echo "$(\"a[rel='paper" . $_GET['tab'] . "']\").click();\n";
-  }
-  $midexam_clarification = $configObject->get_setting('core', 'summative_midexam_clarification');
-  if (in_array('invigilators', $midexam_clarification)) {
-    echo "var clarificationCall = setInterval(clarifyMethod, 10000);\n";
-  }
-?>
- });
-</script>
-
+<script src='../js/require.js'></script>
+<script src='../js/main.min.js'></script>
+<script src="../js/invigilatorinit.min.js"></script>
 </head>
 
 <body>
 <?php
+$midexam_clarification = $configObject->get_setting('core', 'summative_midexam_clarification');
+
 if (!$lab_object) {
   $loggerObj = new Logger($mysqli);
   $loggerObj->record_access_denied($userObject->get_user_ID(),$string['fatalerrormsg0'], $string['unknowncomputer']);
@@ -361,7 +119,7 @@ if ($language != 'en') {
 if ($properties_list !== false and count($properties_list) > 0) {
 ?>
 
-<div id="menudiv" style="width:<?php echo $popup_width; ?>px" class="popupmenu" onmouseover="overpopupmenu=true;" onmouseout="overpopupmenu=false;">
+<div id="menudiv" style="width:<?php echo $popup_width; ?>px" class="popupmenu">
   <ul>
     <li class="menu-time"><?php echo $string['extendtime'] ?></li>
     <li class="menu-note"><?php echo $string['addnote'] ?></li>
@@ -375,10 +133,12 @@ if ($properties_list !== false and count($properties_list) > 0) {
     <ol class="tabs">
       <li class="on"><a href="#" rel="checklist"><?php echo $string['examchecklist'] ?></a></li>
       <?php
+      $papers = array();
       foreach ($properties_list as $property_object) {
         $paper_title = $property_object->get_paper_title();
         $paperID = $property_object->get_property_id();
-        echo "<li><a href=\"#\" rel=\"paper$paperID\">$paper_title</a></li>\n";
+        $papers[] = $paperID;
+        echo "<li class='tab' data-id='$paperID'><a href=\"#\" rel=\"paper$paperID\">$paper_title</a></li>\n";
       }
       ?>
     </ol>
@@ -394,7 +154,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
     $calendar_year  = $property_object->get_calendar_year();
     $rubric         = $property_object->get_rubric();
 
-    echo "<div class=\"rubric\" id=\"rubric_$property_id\"><div class=\"rubrictitle\">" . $string['examrubric'] . "<img onclick=\"$('#rubric_$property_id').hide(); $('#opaque').hide();\" src=\"../artwork/lrg_close.png\" class=\"rubricclose\" alt=\"Close\" /></div><div class=\"rubric_txt\">$rubric</div>\n</div>\n";
+    echo "<div class=\"rubric\" id=\"rubric_$property_id\"><div class=\"rubrictitle\">" . $string['examrubric'] . "<img id='close_rubric' data-id=\"rubric_$property_id\" src=\"../artwork/lrg_close.png\" class=\"rubricclose\" alt=\"Close\" /></div><div class=\"rubric_txt\">$rubric</div>\n</div>\n";
 
     // Get modules for this paper and check if timing is allowed
     $timed_modules = $all_modules = 0;
@@ -551,7 +311,7 @@ if ($properties_list !== false and count($properties_list) > 0) {
               </tr>
 
               <tr>
-                <td colspan="4"><input type="button" onclick="newPaperNote(<?php echo $property_id; ?>);" value="<?php echo $string['papernote'] ?>" class="ok" /><input type="button" onclick="viewRubric(<?php echo $property_id; ?>);" value="<?php echo $string['viewrubric'] ?>" class="ok" /></td>
+                <td colspan="4"><input type="button" id="newpaper" data-id="<?php echo $property_id; ?>" value="<?php echo $string['papernote'] ?>" class="ok" /><input type="button" id="viewrubric" data-id="<?php echo $property_id; ?>" value="<?php echo $string['viewrubric'] ?>" class="ok" /></td>
               </tr>
 
             </table>
@@ -610,6 +370,16 @@ $mysqli->close();
   <input type="hidden" id="old_highlightID" value="" />
   <input type="hidden" id="paperID" value="" />
   <div id="opaque"></div>
-
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['clarification'] = 0;
+if (in_array('invigilators', $midexam_clarification)) {
+  $miscdataset['attributes']['clarification'] = 1;
+}
+$miscdataset['attributes']['tab'] = param::optional('tab', '', param::INT, param::FETCH_GET);
+$render->render($miscdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

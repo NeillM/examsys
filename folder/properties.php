@@ -42,17 +42,6 @@ if ($ownerID != $userObject->get_user_ID()) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-if (isset($_POST['prefix']) and trim($_POST['prefix']) != '') {
-  $new_folder = $_POST['prefix'] . ';' . $_POST['folder'];
-} elseif (isset($_POST['folder'])) {
-  $new_folder = $_POST['folder'];
-}
-
-if (isset($_POST['moduleID'])) {
-  $moduleID = $_POST['moduleID'];
-} else {
-  $moduleID = 0;
-}
 ?>
 <!DOCTYPE html>
 <html>
@@ -63,180 +52,37 @@ if (isset($_POST['moduleID'])) {
   <title><?php echo $string['folderproperties']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <style type="text/css">
-    body {background-color:#F1F5FB; font-size:90%}
-    input[type=checkbox] {margin-left:20px; margin-right:8px}
-    .r1 {background-color:white}
-    .r2 {background-color:#FFBD69}
-		.school {margin-top:10px; width:100%; background-color:white; color:#1E3287}
-  </style>
+    <link rel="stylesheet" type="text/css" href="../css/folderproperties.css" />
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script>
-    $(function () {
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
-        }
-      });
-      $('form').removeAttr('novalidate');
-    });
-    
-    function toggle(objectID) {
-      if ($('#' + objectID).hasClass('r2')) {
-        $('#' + objectID).addClass('r1');
-        $('#' + objectID).removeClass('r2');
-      } else {
-        $('#' + objectID).addClass('r2');
-        $('#' + objectID).removeClass('r1');
-      }
-    }
-		
-    function checkForm() {
-      if ($('#folder').val() == "") {
-        alert ("<?php echo $string['enteraname']; ?>");
-        return false;
-      }    
-    }
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/folderpropertiesinit.min.js"></script>
 
-    function closeWindow() {
-      window.opener.location.href = '/folder/index.php?folder=<?php echo $folderID; ?>';
-      window.close();
-    }
-     
-    function illegalChar(codeID) {
-      if (codeID == 59) {
-        alert("Character ';' illegal - please use alternative characters in folder name.");
-      }
-      event.returnValue = false;
-    }
-  </script>
 </head>
 <?php
-$unique_name = true;
 
-if (isset($_POST['Submit'])) {
-  $module_array = array();
-  for ($i=0; $i<$_POST['module_no']; $i++) {
-    if (isset($_POST['module' . $i])) {
-      $module_array[] = $_POST['module' . $i];
-    }
-  }
-  
-  if ($_POST['old_prefix'] != '') {
-    $new_folder = $_POST['old_prefix'] . ';' . $new_folder;
-  }
-    
-  if (strtolower($new_folder) != strtolower($_POST['old_folder'])) {
-    $result = $mysqli->prepare("SELECT name FROM folders WHERE name = ? AND ownerID = ? LIMIT 1");
-    $result->bind_param('si', $new_folder, $userObject->get_user_ID());
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($name);
-    $result->fetch();
-    if ($result->num_rows > 0) {
-      $unique_name = false;
-    } else {
-      // Alter the name of the folder in the 'folders' table first.
-      $editProperties = $mysqli->prepare("UPDATE folders SET name = ?, color = ? WHERE id = ? AND ownerID = ?");
-      $editProperties->bind_param('sssi', $new_folder, $_POST['color'], $folderID, $userObject->get_user_ID());
-      $editProperties->execute();  
-      $editProperties->close();
+$result = $mysqli->prepare("SELECT name, color, DATE_FORMAT(created, '{$configObject->get('cfg_long_date_time')}'), title, initials, surname FROM folders, users WHERE folders.ownerID = users.id AND folders.id = ?");
+$result->bind_param('i', $folderID);
+$result->execute();
+$result->bind_result($full_path, $color, $created, $title, $initials, $surname);
+$result->fetch();
+$result->close();
 
-      $result2 = $mysqli->prepare("UPDATE folders SET name = REPLACE(name, ? , ?) WHERE name LIKE ? AND ownerID = ?");
-      $t0 = $_POST['old_folder'] . ';';
-      $t1 = $new_folder . ';';
-      $t2 = $_POST['old_folder'] . ';%';
-      $result2->bind_param('sssi', $t0, $t1, $t2, $userObject->get_user_ID());
-      $result2->execute();
-      $result2->close();
+$owner = $title . ' ' . $initials . ', ' . $surname;
 
-      // Alter the prefix of any child folders.
-      if ($mysqli->error) {
-        echo "<p class=\"error\">Folders Edit Error</p>\n<p>" . $string['showerror'] . "</p>\n";
-        echo "</body>\n</html>\n";
-        exit;
-      }
-      
-      // Next update the folder name in the 'properties' table (moves papers).
-      $editProperties = $mysqli->prepare("UPDATE properties SET folder = ? WHERE folder = ? AND paper_ownerID = ?");
-      $editProperties->bind_param('ssi', $new_folder, $_POST['old_folder'], $userObject->get_user_ID());
-      $editProperties->execute();  
-      $editProperties->close();
-    }
-    $result->free_result();
-    $result->close();
-  } else {
-    $editProperties = $mysqli->prepare("UPDATE folders SET color = ? WHERE id = ? AND ownerID = ?");
-    $editProperties->bind_param('sii', $_POST['color'], $folderID, $userObject->get_user_ID());
-    $editProperties->execute();  
-    $editProperties->close();
-  }
-
-  if (count($module_array) > 0 ) {
-    //set the folder staff_modules
-    $editProperties = $mysqli->prepare("DELETE FROM folders_modules_staff WHERE folders_id = ?");
-    $editProperties->bind_param('i', $folderID);
-    $editProperties->execute();  
-    $editProperties->close();
-
-    $editProperties = $mysqli->prepare("INSERT INTO folders_modules_staff VALUES(?, ?)");
-    foreach ($module_array as $idMod) {
-      $editProperties->bind_param('ii', $folderID,  $idMod);
-      $editProperties->execute();  
-    }
-    $editProperties->close();
-
-  }
-
-  if ($unique_name) {
-  ?>
-    <body onload="closeWindow();">
-    <form autocomplete="off">
-      <br />&nbsp;<div align="center"><input type="button" name="home" value="   OK   " onclick="closeWindow();" /></div>
-    </form>
-    </body>
-    </html>
-  <?php
-    exit;
-  }
-  $color = $_POST['color'];
-  $created = $_POST['created'];
-  $owner = $_POST['owner'];
-  $full_path = $_POST['folder'];
-  
-} else {
-  $result = $mysqli->prepare("SELECT name, color, DATE_FORMAT(created, '{$configObject->get('cfg_long_date_time')}'), title, initials, surname FROM folders, users WHERE folders.ownerID = users.id AND folders.id = ?");
-  $result->bind_param('i', $folderID);
-  $result->execute();
-  $result->bind_result($full_path, $color, $created, $title, $initials, $surname);
-  $result->fetch();
-  $result->close();
-  
-  $owner = $title . ' ' . $initials . ', ' . $surname;
-
-  $folder_staff_modules = array();
-  $result = $mysqli->prepare("SELECT idMod, moduleID FROM folders, folders_modules_staff, modules WHERE folders.id = folders_modules_staff.folders_id AND modules.id = folders_modules_staff.idMod AND folders.id = ?");
-  $result->bind_param('i', $folderID);
-  $result->execute();
-  $result->bind_result($idMod, $moduleID);
-  while ($result->fetch()) {
-    $folder_staff_modules[$idMod] = $moduleID;
-  }
-  $result->close();
-
+$folder_staff_modules = array();
+$result = $mysqli->prepare("SELECT idMod, moduleID FROM folders, folders_modules_staff, modules WHERE folders.id = folders_modules_staff.folders_id AND modules.id = folders_modules_staff.idMod AND folders.id = ?");
+$result->bind_param('i', $folderID);
+$result->execute();
+$result->bind_result($idMod, $moduleID);
+while ($result->fetch()) {
+  $folder_staff_modules[$idMod] = $moduleID;
 }
+$result->close();
 
-if ($unique_name) {
-  echo "<body>\n";
-} else {
-  echo "<body onload=\"javascript:alert('" . $string['nameinuse'] . "')\">\n";
-}
 ?>
 <body>
-<form id="theform" name="edit_form" method="post" onsubmit="return checkForm()" action="<?php echo $_SERVER['PHP_SELF'] . '?folder=' . $_GET['folder']; ?>" autocomplete="off">
+<form id="theform" name="edit_form" method="post" action="" autocomplete="off">
 <table border="0" cellpadding="4" cellspacing="0" width="100%">
 <tr>
 <td style="width:48px; background-color:white; text-align:left"><img src="../artwork/properties.png" width="48" height="48" alt="Properties" /></td><td style="background-color:white; text-align:left">&nbsp;&nbsp;<span class="midblue_header" style="font-size:160%; font-weight:bold"><?php echo $string['folderproperties']; ?></span></td>
@@ -252,11 +98,10 @@ if ($unique_name) {
       $prefix = substr($full_path,0,strrpos($full_path,';'));
       echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" style=\"width:100%\" >\n";
       echo "<tr><td style=\"text-align:right\"><nobr>" . $string['foldername'] . "&nbsp;</nobr></td><td colspan=\"3\"><input";
-      if (!$unique_name) {
-        echo ' style="color:#800000; background-color:#FFC0C0; border:1px solid #400000"';
-      }
-      echo " type=\"text\" size=\"50\" maxlength=\"255\" value=\"$current_folder\" id=\"folder\" name=\"folder\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><input type=\"hidden\" name=\"old_folder\" value=\"$full_path\"><input type=\"hidden\" name=\"old_prefix\" value=\"$prefix\"></td></tr>\n";
-      echo "<input type=\"hidden\" name=\"folderID\" value=\"" . $_GET['folder'] . "\" />";
+      echo " type=\"text\" size=\"50\" maxlength=\"255\" value=\"$current_folder\" id=\"folder\" name=\"folder\" required />";
+      echo "<span id=\"duplicateerror\">" . $string['nameinuse'] . "</span>";
+      echo "<input type=\"hidden\" name=\"old_folder\" value=\"$full_path\"><input type=\"hidden\" name=\"old_prefix\" value=\"$prefix\"></td></tr>\n";
+      echo "<input type=\"hidden\" name=\"folderID\" value=\"" . $folderID . "\" />";
       echo "<tr><td align=\"right\" valign=\"middle\">" . $string['colour'] . "&nbsp;</td><td>";
       echo "<input type=\"radio\" name=\"color\" value=\"yellow\"";
       if ($color == 'yellow') echo ' checked';
@@ -295,12 +140,12 @@ if ($unique_name) {
         }
         if (isset($folder_staff_modules[$IdMod])) {
           if ($userObject->is_staff_user_on_module($IdMod) or $userObject->has_role('SysAdmin')) {
-            echo "<div class=\"r2\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\" checked>&nbsp;<label for=\"module$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
+            echo "<div class=\"r2\" id=\"divmodule$module_no\"><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\" checked>&nbsp;<label for=\"module$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
           } else {
             echo "<div class=\"r2\" id=\"divmodule$module_no\"><input type=\"checkbox\" name=\"dummymodule$module_no\" value=\"" . $module['id'] . "\" checked disabled><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" style=\"display:none\" value=\"" . $module['idMod'] . "\" checked>&nbsp;<label for=\"module$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
           }
         } else {
-          echo "<div class=\"r1\" id=\"divmodule$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmodule$module_no')\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\">&nbsp;<label for=\"module$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
+          echo "<div class=\"r1\" id=\"divmodule$module_no\"><input type=\"checkbox\" name=\"module$module_no\" id=\"module$module_no\" value=\"" . $module['idMod'] . "\">&nbsp;<label for=\"module$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
         }
         $module_no++;
         $old_school = $module['school'];
@@ -310,7 +155,7 @@ if ($unique_name) {
       echo "<input type=\"hidden\" name=\"module_no\" id=\"module_no\" value=\"$module_no\" /></div>\n</td></tr>";
       ?>
     </table>
-  <div style="text-align:center; padding-top:10px"><input type="submit" class="ok" name="Submit" value="<?php echo $string['save']; ?>"><input type="button" name="home" class="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></div>
+  <div style="text-align:center; padding-top:10px"><input type="submit" class="ok" name="Submit" value="<?php echo $string['save']; ?>"><input type="button" name="home" class="cancel" value="<?php echo $string['cancel']; ?>" /></div>
 </td>
 </tr>
 </table>
@@ -321,6 +166,11 @@ if ($unique_name) {
 ?>
 </form>
 <?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
 $mysqli->close();
 ?>
 

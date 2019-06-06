@@ -25,29 +25,15 @@
 require '../include/staff_auth.inc';
 require '../include/errors.php';
 
-if (isset($_POST['submit'])) {
-  $result = $mysqli->prepare("UPDATE keywords_user SET keyword = ? WHERE id = ?");
-  $result->bind_param('si', $_POST['new_keyword'], $_POST['keywordID']);
-  $result->execute();  
-  $result->close();
-  ?>
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-<title><?php echo $string['editkeyword']; ?></title>
-</head>
-<body onload="window.opener.location.href='list_keywords.php?module=<?php echo $_POST['module']; ?>'; window.close();">
-</body>
-</html>
-  <?php
-} else {
-  $result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE id = ?");
-  $result->bind_param('i', $_GET['keywordID']);
-  $result->execute();
-  $result->bind_result($keyword);
-  $result->fetch();
-  $result->close();
+$keywordID = param::required('keywordID', param::INT, param::FETCH_GET);
+$module = param::optional('module', '', param::INT, param::FETCH_REQUEST);
+
+$result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE id = ?");
+$result->bind_param('i', $keywordID);
+$result->execute();
+$result->bind_result($keyword);
+$result->fetch();
+$result->close();
 ?>
 <!DOCTYPE html>
 <html>
@@ -58,63 +44,38 @@ if (isset($_POST['submit'])) {
   <title><?php echo $string['editkeyword']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <style type="text/css">
-    body {font-size:90%; background-color:#EEEEEE; padding:4px}
-    h1 {font-size:120%}
-  </style>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script>
-    $(function () {
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
-        }
-      });
-      $('form').removeAttr('novalidate');
-    });
-    
-    function illegalChar(codeID) {
-      if (codeID == 35) {
-        alert("<?php echo $string['character']; ?> '#' <?php echo $string['illegal']; ?>");
-        event.returnValue = false;
-      } else if (codeID == 38) {
-        alert("<?php echo $string['character']; ?> '&' <?php echo $string['illegal']; ?>");
-        event.returnValue = false;
-      } else if (codeID == 59) {
-        alert("<?php echo $string['character']; ?> ';' <?php echo $string['illegal']; ?>");
-        event.returnValue = false;
-      } else if (codeID == 63) {
-        alert("<?php echo $string['character']; ?> '?' <?php echo $string['illegal']; ?>");
-        event.returnValue = false;
-      } else if (codeID == 64) {
-        alert("<?php echo $string['character']; ?> '@' <?php echo $string['illegal']; ?>");
-        event.returnValue = false;
-      } else if (codeID == 94) {
-        alert("<?php echo $string['character']; ?> '^' <?php echo $string['illegal']; ?>");
-        event.returnValue = false;
-      } else if (codeID == 126) {
-        alert("<?php echo $string['character']; ?> '~' <?php echo $string['illegal']; ?>");
-        event.returnValue = false;
-      } else if (codeID == 13) {
-        document.myform.returnhit.value = '1';
-        document.myform.submit();
-      }
-    }
-  </script>
+  <link rel="stylesheet" type="text/css" href="../css/keyword.css" />
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/keywordinit.min.js"></script>
+
 </head>
 
 <body>
 <h1><?php echo $string['editkeyword']; ?></h1>
-<form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
-<div><input type="text" style="width:99%" name="new_keyword" value="<?php echo $keyword; ?>" onkeypress="illegalChar(event.keyCode)" required autofocus /><input type="hidden" name="keywordID" value="<?php echo $_GET['keywordID']; ?>" /></div>
-<div align="right"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" onclick="window.close();" /><input type="hidden" name="returnhit" value="" /><input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" /></div>
+<form id="theform" name="theform" action="" method="post" autocomplete="off">
+<div>
+    <input type="text" style="width:99%" id="new_keyword" name="new_keyword" value="<?php echo $keyword; ?>" required autofocus />
+    <input type="hidden" name="keywordID" value="<?php echo $_GET['keywordID']; ?>" />
+    <span id="duplicateerror"><?php echo $string['duplicate']; ?></span>
+</div>
+<div align="right">
+    <input type="submit" name="submit" value="<?php echo $string['ok']; ?>" class="ok" />
+    <input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" />
+    <input type="hidden" id="module" name="module" value="<?php echo $module; ?>" />
+</div>
 </form>
 
 </body>
 </html>
 <?php
-}
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+// Dataset.
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['posturl'] = 'do_edit_keyword.php';
+$render->render($miscdataset, array(), 'dataset.html');
 $mysqli->close();
-?>
