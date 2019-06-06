@@ -38,13 +38,13 @@ define(['jquery'], function ($) {
 
             var new_value = '';
             if ($('#status_' + qID).val().substr(0,1) == '1') {
-                for (var i = 1; i <= marks; i++) {
+                for (var j = 1; j <= marks; j++) {
                     new_value += '0';
                 }
                 $('#status_' + qID).val(new_value);
                 $('#button_' + qID).attr('src', '../artwork/exclude_off.gif');
             } else {
-                for (var i = 1; i <= marks; i++) {
+                for (var k = 1; k <= marks; k++) {
                     new_value += '1';
                 }
                 $('#status_' + qID).val(new_value);

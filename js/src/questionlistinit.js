@@ -23,7 +23,7 @@ requirejs(['list', 'questionlist', 'questionsearch', 'leadinpopup', 'sidebar'], 
     search.init($('#dataset').attr('data-datetime'));
     var question = new QUESTION();
 
-    this.check_checkboxes();
+    question.check_checkboxes();
 
     $(".check_type").click(function() {
         question.check_checkboxes();

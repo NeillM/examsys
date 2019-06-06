@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-requirejs(['folderproperties', 'form', 'jquery'], function (FOLDER, FORM, $) {
+requirejs(['alert', 'folderproperties', 'form', 'jquery'], function (ALERT, FOLDER, FORM, $) {
     var folder = new FOLDER();
     var form = new FORM();
     form.init();

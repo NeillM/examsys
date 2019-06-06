@@ -488,11 +488,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <link rel="stylesheet" href="../../css/add_edit.css" type="text/css" />
 <link rel="stylesheet" href="../../css/mapping_form.css" type="text/css" />
 <link rel="stylesheet" href="../../css/warnings.css" type="text/css" />
-<?php
-$texteditorplugin = \plugins\plugins_texteditor::get_editor();
-$texteditorplugin->display_header();
-$texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::QUESTION);
-?>
+
 <script id="rogoconfig" src='../../js/rogo.min.js'
         data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
         data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
@@ -502,6 +498,10 @@ $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::QUESTION);
 <script src='../../js/main.min.js'></script>
 <script src="../../js/questioneditinit.min.js"></script>
 <?php
+$texteditorplugin = \plugins\plugins_texteditor::get_editor();
+$texteditorplugin->display_header();
+$texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::QUESTION);
+
 // Check if any 3d file types are enabled and render js.
 threed_handler::render_js($string);
 ?>

@@ -170,8 +170,7 @@ if (!$unique_username and isset($new_username)) {
         <td><?php echo $string['usernameinuse']; ?></td>
     </tr>
   <?php
-}
-if ($username_problem and isset($new_username)) {
+} elseif ($username_problem and isset($new_username)) {
   ?>
     <tr>
         <td class="field"></td>

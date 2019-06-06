@@ -54,20 +54,6 @@ define(['jsxls', 'jquery', 'jqueryvalidate'], function(jsxls, $) {
                     alert(jsxls.lang_string['validationerror']);
                 }
             });
-
-            // Bit of a hack to get the options section to fit in.
-            var extraWidth = 0;
-            var img = $('#media0 img:first');
-            if (img.length == 1) {
-                if (img.width() > 820) {
-                    extraWidth = img.width() - 820;
-                }
-            }
-            var qh = $('#question-holder');
-            qh.addClass('wide');
-            if (extraWidth > 0) {
-                qh.width(qh.width() + extraWidth);
-            }
         };
     }
 });
