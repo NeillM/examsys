@@ -38,7 +38,7 @@ if (!$userObject->has_role('Standards Setter')) {
 	?>
 	<div class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/index.php?newfolder=y"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/folder_16.png" alt="New Folder" /><?php echo $string['createfolder'] ?></a></div>
 	<div class="menuitem"><a href="<?php echo $configObject->get('cfg_root_path') ?>/folder/list_keywords.php"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/key.png" alt="key" /><?php echo $string['mypersonalkeywords'] ?></a></div>
-  <div class="menuitem cascade"><a href="#" onclick="showMenu('popup0','general','search',myOptions0,myURLs0,event)" id="search"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/xmag.png" alt="Search" /><?php echo $string['search'] ?></a></div>
+  <div class="menuitem cascade showmenu" data-popupid="0" data-popuptype="general" data-popupname="search"><a href="#" id="search"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/xmag.png" alt="Search" /><?php echo $string['search'] ?></a></div>
 </div>
 <?php
   // -- Display top 10 recent papers ----------------------------------
@@ -63,7 +63,4 @@ if (!$userObject->has_role('Standards Setter')) {
 <?php
 if (!$userObject->has_role('Standards Setter')) {
   makeMenu(array($string['questions']=>"{$configObject->get('cfg_root_path')}/question/search.php",$string['papers']=>"{$configObject->get('cfg_root_path')}/paper/search.php",$string['people']=>"{$configObject->get('cfg_root_path')}/users/search.php"));
-
-  hideMenuScript($menuNo);
-}  
-?>
+}

@@ -40,35 +40,10 @@ require '../include/sysadmin_auth.inc';
 	  th a {color:black !important}
 	</style>
 
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/list.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    function edit(moduleID) {
-      document.location.href = './edit_module.php?moduleid=' + moduleID;
-    }
-    
-    $(function () {
-      if ($("#maindata").find("tr").size() > 1) {
-        $("#maindata").tablesorter({ 
-          sortList: [[0,0]] 
-        });
-      }
-
-      $(".l").click(function(event) {
-        event.stopPropagation();
-        selLine($(this).attr('id'),event);
-      });
-
-      $(".l").dblclick(function() {
-        edit($(this).attr('id'));
-      });
-    
-    });
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/moduleadmininit.min.js"></script>
 </head>
 
 <body>

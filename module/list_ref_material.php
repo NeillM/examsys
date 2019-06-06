@@ -46,53 +46,12 @@ if (!$module_code) {
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <style type="text/css">
-		.l {cursor:pointer}
-    .icon {
-      background-image: url('../artwork/ref_16.png');
-      background-repeat: no-repeat;
-      padding-left: 20px;
-      width: 16px;
-      height: 16px;
-    }
-  </style>
-  
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript" src="../js/list.js"></script>
-  <script>
-    function edit() {
-      window.location = "<?php echo $configObject->get('cfg_root_path') ?>/module/edit_ref_material.php?refID=" + $('#lineID').val() + "&module=<?php echo $modID; ?>";
-    }
-    
-    function deleteReference() {
-      notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_ref_material.php?refID=" + $('#lineID').val() + "&module=<?php echo $modID; ?>","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      notice.moveTo(screen.width/2-210, screen.height/2-85);
-      if (window.focus) {
-        notice.focus();
-      }
-    }
-    
-    $(function () {
-      if ($("#maindata").find("tr").size() > 1) {
-        $("#maindata").tablesorter({ 
-          sortList: [[0,0]]
-        });
-      }
+  <link rel="stylesheet" type="text/css" href="../css/refmaterialadmin.css" />
 
-      $(".l").click(function(event) {
-        event.stopPropagation();
-        selLine($(this).attr('id'),event);
-      });
-
-      $(".l").dblclick(function() {
-        edit($(this).attr('id'));
-      });
-
-    });
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/listrefmatinit.min.js"></script>
 </head>
 
 <body>
@@ -156,6 +115,12 @@ $mysqli->close();
 </table>
 
 </div>
-
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$dataset['name'] = 'dataset';
+$dataset['attributes']['module'] =  $modID;
+$render->render($dataset, array(), 'dataset.html');
+?>
 </body>
 </html>

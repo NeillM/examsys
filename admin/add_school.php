@@ -25,29 +25,6 @@
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.php';
 
-$school = '';
-$faculty = '';
-$exists = false;
-if (isset($_POST['submit'])) {
-  $school = check_var('school', 'POST', true, false, true);
-  $faculty = check_var('facultyID', 'POST', true, false, true);
-  $code = check_var('code', 'POST', false, false, true);
-  $externalid = check_var('externalid', 'POST', false, false, true);
-  $externalsys = check_var('externalsys', 'POST', false, false, true);
-  if (!is_null($code)) {
-    $exists = SchoolUtils::get_schoolid_by_code($code, $mysqli);
-  } else {
-    if (SchoolUtils::school_exists_in_faculty($faculty, $school, $mysqli)) {
-      $exists = true;
-    }
-  }
-  if ($exists === false) {
-    $insert_id = SchoolUtils::add_school($faculty, $school, $mysqli, $code, $externalid, $externalsys);
-    header("location: list_schools.php");
-    exit();
-  }
-}
-
 $faculties = 0;
 $faculty_list = array();
 $result = $mysqli->prepare("SELECT id, code, name FROM faculty WHERE deleted IS NULL ORDER BY name");
@@ -69,37 +46,12 @@ $result->close();
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <style type="text/css">
-    td {text-align:left}
-    .field {text-align:right; padding-right:10px}
-    .form-error {
-      width: 468px;
-      margin: 18px auto;
-      padding: 16px;
-      background-color: #FFD9D9;
-      color: #800000;
-      border: 2px solid #800000
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/school.css" />
 
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    $(function () {
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
-        }
-      });
-      $('form').removeAttr('novalidate');
-      $('#cancel').click(function() {
-        history.back();
-      });
-    });
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/schoolforminit.min.js"></script>
   </head>
 <body>
 <?php
@@ -118,16 +70,12 @@ $result->close();
 
   <br />
   <div align="center">
-  <form id="theform" name="add_school" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
-<?php
-  if ($exists) {
-?>
+  <form id="theform" name="add_school" method="post" action="" autocomplete="off">
+
     <div class="form-error"><?php echo $string['duplicateerror'] ?></div>
-<?php
-  }
-?>
+
     <table cellpadding="0" cellspacing="2" border="0">
-    <tr><td class="field"><?php echo $string['school']; ?></td><td><input type="text" size="70" maxlength="255" name="school" id="school" value="<?php echo $school ?>" placeholder="<?php echo $string['prompt'] ?>..." required /></td></tr>
+    <tr><td class="field"><?php echo $string['school']; ?></td><td><input type="text" size="70" maxlength="255" name="school" id="school" value="" placeholder="" required /></td></tr>
     <tr><td class="field"><?php echo $string['faculty']; ?></td><td><select name="facultyID">
     <?php
       foreach ($faculty_list as $faculty) {
@@ -160,5 +108,12 @@ $result->close();
   </form>
   </div>
 </div>
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['posturl'] = "do_add_school.php";
+$render->render($miscdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

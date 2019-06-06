@@ -30,16 +30,7 @@ require '../include/toprightmenu.inc';
 // Instantiate Twig renderer.
 $render = new render($configObject);
 $lang['title'] = $string['bulkmoduleimport'];
-$additionaljs = "<script type=\"text/javascript\" src=\"../js/jquery.validate.min.js\"></script>
-                <script>
-                    $(function () {
-                      $('#import_form').validate();
-                      
-                      $('#cancel').click(function() {
-                        history.back();
-                      });
-                    });
-                </script>";
+$additionaljs = "<script type=\"text/javascript\" src=\"../js/bulkimportinit.min.js\"></script>";
 $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/dialog.css\" />
                 <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/breadcrumb.css\" />
                 <style type=\"text/css\">

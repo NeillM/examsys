@@ -1,0 +1,56 @@
+
+html {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 90%;
+    background-color: #F1F5FB;
+}
+.header {
+    height: 56px;
+    width: 100%;
+    position: absolute;
+    border-bottom: 1px solid #CCD9EA;
+    background-color: white;
+}
+.content {
+    position: absolute;
+    overflow-y: scroll;
+    top: 70px;
+    bottom: 40px;
+    width: 98%;
+    border: 1px solid #CCD9EA;
+    font-size: 90%;
+    background-color: white;
+    margin-left: 1%;
+    margin-right: 1%;
+    margin-bottom: 4px;
+}
+.footer {
+    height: 40px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+}
+input[type=checkbox] {
+    margin-left:20px;
+}
+.r1 {
+    background-color:white;
+}
+.r2 {
+    background-color:#FFBD69;
+}
+.school {
+    margin-top:10px;
+    width:100%;
+    background-color:white;
+    color:#1E3287;
+}

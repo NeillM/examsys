@@ -29,35 +29,6 @@ $next_session = $yearutils->get_next_session();
 $academic_year = $yearutils->get_academic_session($current_session);
 $next_academic_year = $yearutils->get_academic_session($next_session);
 ?>
-<script>
-  $(document).ready(function() {
-      $('#sms').click(function() {
-        $('#sms').append('<img src="../artwork/working.gif" class="busyicon" />');
-     });
-     $('#sms2').click(function() {
-        $('#sms2').append('<img src="../artwork/working.gif" class="busyicon" />');
-     });
-  });
-  function editModule() {
-    window.location.href='./edit_module.php?moduleid=' + $('#lineID').val();
-  }
-
-  function jumpToModule() {
-    window.location = '<?php echo $configObject->get('cfg_root_path') ?>/module/index.php?module=' + $('#lineID').val();
-  }
-
-  function studentCohort() {
-    window.location = '<?php echo $configObject->get('cfg_root_path') ?>/users/search.php?search_surname=&search_username=&student_id=&module=' + $('#lineID').val() + '&calendar_year=<?php echo $current_session ?>&students=on&submit=Search&userID=&email=&oldUserID=&tmp_surname=&tmp_courseID=&tmp_yearID=';
-  }
-
-  function deleteModule() {
-    notice=window.open("../delete/check_delete_module.php?idMod=" + $('#lineID').val() + "","notice","width=450,height=180,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-225,screen.height/2-90);
-    if (window.focus) {
-      notice.focus();
-    }
-  }
-</script>
 
 <div id="left-sidebar" class="sidebar">
 <form name="myform" autocomplete="off">
@@ -73,10 +44,10 @@ $next_academic_year = $yearutils->get_academic_session($next_session);
 
 <div style="display:none" id="menu1b">
 	<div class="menuitem"><a href="add_module.php"><img class="sidebar_icon" src="../artwork/module_icon_16.png" alt="<?php echo $string['createmodule'] ?>" /><?php echo $string['createmodule'] ?></a></div>
-	<div class="menuitem"><a href="#" onclick="editModule(); return false;"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editmodule'] ?>" /><?php echo $string['editmodule'] ?></a></div>
-	<div class="menuitem"><a href="#" onclick="deleteModule(); return false;"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="<?php echo $string['deletemodule'] ?>" /><?php echo $string['deletemodule'] ?></a></div>
-	<div class="menuitem"><a href="#" onclick="jumpToModule(); return false;"><img class="sidebar_icon" src="../artwork/shortcut_16.png" alt="<?php echo $string['modulefolder'] ?>" /><?php echo $string['modulefolder'] ?></a></div>
-	<div class="menuitem"><a href="#" onclick="studentCohort(); return false;"><img class="sidebar_icon" src="../artwork/shortcut_16.png" alt="<?php echo $string['studentcohort'] ?>" /><?php echo $string['studentcohort'] ?> (<?php echo $academic_year ?>)</a></div>
+	<div class="menuitem editmodule"><a href="#"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editmodule'] ?>" /><?php echo $string['editmodule'] ?></a></div>
+	<div class="menuitem deletemodule"><a href="#" ><img class="sidebar_icon" src="../artwork/red_cross.png" alt="<?php echo $string['deletemodule'] ?>" /><?php echo $string['deletemodule'] ?></a></div>
+	<div class="menuitem jumpmodule"><a href="#"><img class="sidebar_icon" src="../artwork/shortcut_16.png" alt="<?php echo $string['modulefolder'] ?>" /><?php echo $string['modulefolder'] ?></a></div>
+	<div class="menuitem modulecohort"><a href="#"><img class="sidebar_icon" src="../artwork/shortcut_16.png" alt="<?php echo $string['studentcohort'] ?>" /><?php echo $string['studentcohort'] ?> (<?php echo $academic_year ?>)</a></div>
 </div>
 
 <br />

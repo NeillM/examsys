@@ -22,16 +22,16 @@
 // @version 1.0
 // @copyright Copyright (c) 2017 The University of Nottingham
 //
-
-$(function () {
-    $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-            return true;
+define(['jquery', 'jqueryvalidate'], function($) {
+    return function () {
+        this.init = function () {
+            $('#theform').validate({
+                errorClass: 'errfield',
+                errorPlacement: function (error, element) {
+                    return true;
+                }
+            });
+            $('form').removeAttr('novalidate');
         }
-    });
-    $('form').removeAttr('novalidate');
-    $('#cancel').click(function() {
-        history.back();
-    });
+    }
 });

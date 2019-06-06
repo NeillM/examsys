@@ -35,89 +35,12 @@ if ($module === false) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$moduleid_in_use = false;
-if (isset($_POST['submit']) and $_POST['modulecode'] != $_POST['old_modulecode']) {
-  // Check for unique moduleid
-  $new_modulecode = trim($_POST['modulecode']);
-  $moduleid_in_use = module_utils::module_exists($new_modulecode, $mysqli);
+$SMS = SMSutils::GetSmsUtils();
+$cfg_sms_sources = array();
+if (is_object($SMS)) {
+$cfg_sms_sources =  $SMS->getModuleSources();
 }
-if (isset($_POST['submit']) and $moduleid_in_use == false) {
-  if (isset($_POST['active'])) {
-    $module['active'] = 1;
-  } else {
-    $module['active'] = 0;
-  }
-
-  if (isset($_POST['selfenroll'])) {
-    $module['selfenroll'] = 1;
-  } else {
-    $module['selfenroll'] = 0;
-  }
-
-  if (isset($_POST['neg_marking'])) {
-    $module['neg_marking'] = 1;
-  } else {
-    $module['neg_marking'] = 0;
-  }
-
-  $module['checklist'] = '';
-  if (isset($_POST['peer']))     $module['checklist'] .= ',peer';
-  if (isset($_POST['external'])) $module['checklist'] .= ',external';
-  if (isset($_POST['stdset']))   $module['checklist'] .= ',stdset';
-  if (isset($_POST['mapping']))  $module['checklist'] .= ',mapping';
-  if ($module['checklist'] != '') {
-    $module['checklist'] = substr($module['checklist'], 1);
-  }
-  
-
-  // Update the properties of the module.
-  $module['moduleid'] = trim($_POST['modulecode']);
-  $module['fullname'] = trim($_POST['fullname']);
-
-
-  if (isset($_POST['timed_exams'])) {
-    $module['timed_exams'] = 1;
-  } else {
-    $module['timed_exams'] = 0;
-  }
-  if (isset($_POST['exam_q_feedback'])) {
-    $module['exam_q_feedback'] = 1;
-  } else {
-    $module['exam_q_feedback'] = 0;
-  }
-  if (isset($_POST['add_team_members'])) {
-    $module['add_team_members'] = 1;
-  } else {
-    $module['add_team_members'] = 0;
-  }
-
-  $vle_data = $_POST['vle_api'];
-  if ($vle_data == '') {
-    $module['map_level'] = 0;
-    $module['vle_api'] = '';
-  } else {
-    $vle_parts = explode('~', $vle_data);
-    $module['vle_api'] = $vle_parts[0];
-    $module['map_level'] = $vle_parts[1];
-  }
-
-  $module['sms'] = $_POST['sms_api'];
-  $module['academic_year_start'] = trim($_POST['academic_year_start']);
-  $module['schoolid'] = $_POST['schoolid'];
-  $module['ebel_grid_template'] = $_POST['ebel_grid_template'];
-  $module['externalid'] = check_var('externalid', 'POST', false, false, true);
-  module_utils::update_module_by_code($_POST['old_modulecode'], $module, $mysqli);
-
-  $mysqli->close();
-  header("location: list_modules.php");
-  exit();
-} else {
-  $SMS = SMSutils::GetSmsUtils();
-  $cfg_sms_sources = array();
-  if (is_object($SMS)) {
-    $cfg_sms_sources =  $SMS->getModuleSources();
-  }
-  $cfg_sms_sources = array($string['nolookup'] => '') + $cfg_sms_sources;
+$cfg_sms_sources = array($string['nolookup'] => '') + $cfg_sms_sources;
 ?>
 <!DOCTYPE html>
   <html>
@@ -128,17 +51,11 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <style type="text/css">
-    .field {text-align:right; padding-right:10px}
-  </style>
-
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
-  <script type="text/javascript" src="../js/system_tooltips.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
+  <link rel="stylesheet" type="text/css" href="../css/module.css" />
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/moduleeditinit.min.js"></script>
 <?php
   $vle_apis = $configObject->get('vle_apis');
   $mu = module_utils::get_instance();
@@ -149,60 +66,8 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
     $map_levels = array();
   }
 ?>
-    $(function () {
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
-        }
-      });
-      $('form').removeAttr('novalidate');
-<?php
-  if ($moduleid_in_use == true) {
-?>
-      $('#modulecode').addClass('errfield');
-<?php
-  }
-?>
-      $('#stdset').click(function() {
-        if ($('#stdset').prop('checked')) {
-          $('#ebelgrid').show();
-        } else {
-          $('#ebelgrid').hide();
-        }
-      });
-      
-      $('#cancel').click(function() {
-        history.back();
-      });
-    });
-
-    function setSidebarMenu() {
-      $('#menu1a').hide();
-      $('#menu1b').show();
-      $('#lineID').val('<?php echo $_GET['moduleid']; ?>');
-    }
-
-    $(document).ready(setSidebarMenu);
-
-  <?php
-  if ($moduleid_in_use == true) {
-  ?>
-  function moduleWarning() {
-    alert("<?php echo sprintf($string['moduleidinuse'], $new_modulecode); ?>");
-  }
-  <?php
-  }
-  ?>
-  </script>
   </head>
-  <?php
-  if ($moduleid_in_use == true) {
-    echo "<body onload=\"moduleWarning()\">\n";
-  } else {
-    echo "<body>\n";
-  }
-  ?>
+  <body>
   <?php
     require '../include/admin_module_options.inc';
 		require '../include/toprightmenu.inc';
@@ -217,7 +82,8 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
   </div>
   <br />
   <div align="center">
-  <form id="theform" name="module_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?moduleid=<?php echo $_GET['moduleid']; ?>" autocomplete="off">
+  <form id="theform" name="module_form" method="post" action="" autocomplete="off">
+    <div class="form-error"><?php echo $string['duplicateerror'] ?></div>
     <table cellpadding="0" cellspacing="1" border="0" style="text-align:left">
     <tr><td class="field"><?php echo $string['moduleid'] ?></td><td><input type="text" size="10" maxlength="25" id="modulecode" name="modulecode" value="<?php echo $module['moduleid'] ?>" required /></td></tr>
     <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" id="fullname" name="fullname" value="<?php echo $module['fullname'] ?>" required /></td></tr>
@@ -338,7 +204,16 @@ if (isset($_POST['submit']) and $moduleid_in_use == false) {
   </div>
 </div>
 <?php
-}
+// JS utils dataset.
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render = new render($configObject);
+$render->render($jsdataset, array(), 'dataset.html');
+// Dataset.
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['moduleid'] = $_GET['moduleid'];
+$miscdataset['attributes']['posturl'] = "do_edit_module.php?moduleid=" . $_GET['moduleid'];
+$render->render($miscdataset, array(), 'dataset.html');
 ?>
 </body>
 </html>

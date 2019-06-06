@@ -43,37 +43,8 @@ if (!$userObject->has_role(array('SysAdmin', 'Admin'))) {
   }
 }
 
-if (isset($_POST['submit'])) {
-  // Clear the team of all members.
-  UserUtils::clear_staff_modules_by_moduleID($moduleID, $mysqli);
-  
-  // Insert a record for each team member.
-  for ($i=0; $i<$_POST['staff_no']; $i++) {
-    if (isset($_POST["staff$i"]) and $_POST["staff$i"] != '') {
-      UserUtils::add_staff_to_module($_POST["staff$i"], $moduleID, $mysqli);
-    }
-  }
 ?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo $string['teammembers'] . ' ' . $module_details['moduleid']; ?></title>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function () {
-      window.opener.location.href = '../module/index.php?module=<?php echo $moduleID; ?>';
-      self.close();
-    });
-  </script>
-</head>
-<body>
-</body>
-</html>
-<?php
-  } else {
-  
-?>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -82,66 +53,14 @@ if (isset($_POST['submit'])) {
   <title><?php echo page::title('Rog&#333;: ' . $string['teammembers'] . ' ' . $module_details['moduleid']); ?></title>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <style type="text/css">
-    html {
-      position: absolute;
-      height: 100%;
-      width: 100%;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      font-size: 90%;
-      background-color: #F1F5FB;
-    }
-    .header {
-      height: 60px;
-      width: 100%;
-      position: absolute;
-    }
-    .content {
-      position: absolute;
-      overflow-y: scroll;
-      top: 64px;
-      bottom: 50px;
-      width: 98%;
-      border: 1px solid #CCD9EA;
-      font-size: 90%;
-      background-color: white;
-      margin-left: 1%;
-      margin-right: 1%;
-    }
-    .footer {
-      height: 40px;
-      width: 100%;
-      position: absolute;
-      bottom: 0;
-    }
-    hr {width:100%; border:0; height:1px; color:#E5E5E5; background-color:whit}
-    .r1 {background-color:white}
-    .r2 {background-color:#FFBD69}
-    .g {color:#808080}
-    .letter {padding-bottom:5px; width:95%; background-color:white; color:#1E3287}
-    input[type="checkbox"] {margin-left: 25px}
-  </style>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    function toggle(objectID) {
-      if ($('#' + objectID).hasClass('r2')) {
-        $('#' + objectID).addClass('r1');
-        $('#' + objectID).removeClass('r2');
-      } else {
-        $('#' + objectID).addClass('r2');
-        $('#' + objectID).removeClass('r1');
-      }
-    }
-  </script>
+  <link rel="stylesheet" type="text/css" href="../css/teams.css" />
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/teamsinit.min.js"></script>
 </head>
 <body>
-<form name="teamform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post" autocomplete="off">
+<form id="teamform" name="teamform" action="" method="post" autocomplete="off">
 
   <table cellpadding="0" cellspacing="0" border="0" width="100%" class="header">
   <tr><td style="width:66px; height:55px; background-color:white; border-bottom:1px solid #CCD9EA; text-align:center"><img src="../artwork/user_accounts_icon.png" width="48" height="48 alt="Members" /></td><td class="dkblue_header" style="background-color:white; font-size:150%; border-bottom:1px solid #CCD9EA"><strong><?php echo $string['teammembers']; ?> </strong><?php echo $module_details['moduleid']; ?></td></tr>
@@ -172,9 +91,9 @@ if (isset($_POST['submit'])) {
     }
    
     if ($match == true) {
-      echo "<div class=\"r2\" id=\"div$staff_no\"><input type=\"checkbox\" onclick=\"toggle('div$staff_no')\" name=\"staff$staff_no\" id=\"staff$staff_no\" value=\"" . $tmp_id . "\" checked=\"checked\" />";
+      echo "<div class=\"r2\" id=\"divstaff$staff_no\"><input type=\"checkbox\" name=\"staff$staff_no\" id=\"staff$staff_no\" value=\"" . $tmp_id . "\" checked=\"checked\" />";
     } else {
-      echo "<div class=\"r1\" id=\"div$staff_no\"><input type=\"checkbox\" onclick=\"toggle('div$staff_no')\" name=\"staff$staff_no\" id=\"staff$staff_no\" value=\"" . $tmp_id . "\" />";
+      echo "<div class=\"r1\" id=\"divstaff$staff_no\"><input type=\"checkbox\" name=\"staff$staff_no\" id=\"staff$staff_no\" value=\"" . $tmp_id . "\" />";
     }
     echo "<label for=\"staff$staff_no\">";
     if ($tmp_first_names != '') {
@@ -188,14 +107,22 @@ if (isset($_POST['submit'])) {
   }
   $result->close();
   echo "<input type=\"hidden\" name=\"staff_no\" value=\"$staff_no\" /></div></td>\n</tr>\n";
+  echo "<input type=\"hidden\" id=\"moduleID\" name=\"moduleID\" value=\"$moduleID\" /></div></td>\n</tr>\n";
 ?>
 
-<div class="footer" style="text-align:center"><input class="ok" type="submit" name="submit" value="<?php echo $string['ok']; ?>" /><input class="cancel" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="window.close()" /></div>
+<div class="footer" style="text-align:center"><input class="ok" type="submit" name="submit" value="<?php echo $string['ok']; ?>" /><input class="cancel" type="submit" name="cancel" value="<?php echo $string['cancel']; ?>" /></div>
 
 </form>
 </body>
 </html>
 <?php
-  }
+  // JS utils dataset.
+  $render = new render($configObject);
+  $jsdataset['name'] = 'jsutils';
+  $jsdataset['attributes']['xls'] = json_encode($string);
+  $render->render($jsdataset, array(), 'dataset.html');
+  $dataset['name'] = 'dataset';
+  $dataset['attributes']['posturl'] = 'do_edit_team.php';
+  $render->render($dataset, array(), 'dataset.html');
   $mysqli->close();
-?>
+

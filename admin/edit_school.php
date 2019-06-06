@@ -26,10 +26,6 @@ require '../include/sysadmin_auth.inc';
 require_once '../include/errors.php';
 
 $schoolid = check_var('schoolid', 'GET', true, false, true);
-
-$school = $string['prompt'];
-$faculty = '';
-
 $result = $mysqli->prepare("SELECT school, facultyID, code, externalid, externalsys FROM schools WHERE id = ? AND deleted IS NULL");
 $result->bind_param('i', $schoolid);
 $result->execute();
@@ -43,35 +39,6 @@ if ($result->num_rows == 0) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 $result->close();
-
-if (isset($_POST['submit'])) {
-  $school_tmp = check_var('school', 'POST', true, false, true);
-  $faculty = check_var('faculty', 'POST', true, false, true);
-  $code = check_var('code', 'POST', false, false, true);
-  $duplicate = false;
-  $changed = ($curr_faculty != $faculty or $school != $school_tmp or $curr_code != $code);
-  if (!SchoolUtils::update_school($schoolid, $faculty, $school_tmp, $code, $curr_externalid, $curr_externalsys, $mysqli)) {
-     $duplicate = true;
-  }
-
-  if ($changed and $duplicate) {
-    $error = 'duplicate';
-    $school = $school_tmp;
-    $curr_faculty = $faculty;
-  } else {
-    if ($changed) {     
-      $logger = new Logger($mysqli);
-      if ($school != $school_tmp)     $logger->track_change('School', $schoolid, $userObject->get_user_ID(), $school, $school_tmp, $string['name']);
-      if ($curr_faculty != $faculty)  $logger->track_change('School', $schoolid, $userObject->get_user_ID(), $curr_faculty, $faculty, $string['faculty']);
-      if ($curr_code != $code) {
-        $logger->track_change('School', $schoolid, $userObject->get_user_ID(), $curr_code, $code, $string['code']);
-      }
-    }
-
-    header("location: list_schools.php");
-    exit();
-  }
-}
 
 $faculties = 0;
 $faculty_list = array();
@@ -93,37 +60,12 @@ $result->close();
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <style type="text/css">
-    td {text-align:left}
-    .field {text-align:right; padding-right:10px}
-    .form-error {
-      width: 468px;
-      margin: 18px auto;
-      padding: 16px;
-      background-color: #FFD9D9;
-      color: #800000;
-      border: 2px solid #800000;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/school.css" />
 
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    $(function () {
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
-        }
-      });
-      $('form').removeAttr('novalidate');
-      $('#cancel').click(function() {
-        history.back();
-      });
-    });
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/schoolforminit.min.js"></script>
   </head>
 <body>
 <?php
@@ -142,14 +84,8 @@ $result->close();
 
   <br />
   <div align="center">
-  <form id="theform" name="add_school" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?schoolid=' . $schoolid ?>" autocomplete="off">
-<?php
-  if (isset($error) and $error = 'duplicate') {
-?>
+  <form id="theform" name="add_school" method="post" action="" autocomplete="off">
     <div class="form-error"><?php echo $string['duplicateerror'] ?></div>
-<?php
-  }
-?>
     <table cellpadding="0" cellspacing="2" border="0">
     <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" maxlength="255" id="school" name="school" value="<?php echo $school ?>" required /></td></tr>
     <tr><td class="field"><?php echo $string['faculty'] ?></td><td><select name="faculty">
@@ -168,5 +104,12 @@ $result->close();
   </form>
   </div>
 </div>
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['posturl'] = "do_edit_school.php?schoolid=" . $schoolid;
+$render->render($miscdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

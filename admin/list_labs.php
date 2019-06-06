@@ -37,47 +37,10 @@
     .foldername {float:left; width:380px; height:60px; padding-left:22px; font-size:90%}
   </style>
 
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    function selLab(labID, labNo, evt) {
-      tmp_ID = $('#oldLabNo').val();
-      if (tmp_ID != '') {
-        $('#' + tmp_ID).css('background-color', 'white');
-        $('#' + tmp_ID).css('color', 'black');
-      }
-      $('#' + labNo).css('background-color', '#316AC5');
-      $('#' + labNo).css('color', 'white');
-
-      $('#menu1a').hide();
-      $('#menu1b').show();
-
-      $('#labID').val(labID);
-      $('#labNo').val(labNo);
-      $('#oldLabNo').val(labNo);
-
-      evt.cancelBubble = true;
-    }
-
-    function deselLab() {
-      tmp_ID = $('#oldLabNo').val();
-      if (tmp_ID != '') {
-        $('#' + tmp_ID).css('background-color', 'white');
-        $('#' + tmp_ID).css('color', 'black');
-      }
-      $('#menu1a').show();
-      $('#menu1b').hide();
-
-    }
-		
-    $(function () {
-		  $('html').click(function() {
-			  deselLab();
-      });
-		});
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/lablistinit.min.js"></script>
 </head>
 
 <body>
@@ -128,9 +91,9 @@ if (count($labs) > 0) {
       echo "<table class=\"subsect\" style=\"width:99%\"><tr><td><nobr>" . $lab['campus'] . " (" . $campus_sizes[$lab['campus']] . ")</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n";
     }
     echo '<div class="foldername">';
-    echo '<table cellpadding="0" cellspacing="0" border="0"><tr><td style="width:66px; cursor:pointer" align="center">';
-    echo "  <img onclick=\"selLab('" . $lab['id'] . "','lab$lab_no',event)\" ondblclick=\"viewDetails('" . $lab['id'] . "')\" src=\"../artwork/computer_lab_48.png\" width=\"48\" height=\"48\" alt=\"" . $lab['name'] . "\" /><td>\n";
-    echo "  <td style=\"width:290px; cursor:pointer\"><span id=\"lab$lab_no\" onclick=\"selLab('" . $lab['id'] . "', 'lab$lab_no', event)\" ondblclick=\"viewDetails('" . $lab['id'] . "')\">" . $lab['name'] . "</span><br />";
+    echo '<table cellpadding="0" cellspacing="0" border="0"><tr class="l" data-labid="' . $lab['id']. '" data-labno="lab' . $lab_no . '"><td style="width:66px; cursor:pointer" align="center">';
+    echo "  <img src=\"../artwork/computer_lab_48.png\" width=\"48\" height=\"48\" alt=\"" . $lab['name'] . "\" /><td>\n";
+    echo "  <td style=\"width:290px; cursor:pointer\"><span id=\"lab$lab_no\" >" . $lab['name'] . "</span><br />";
     echo '  <span style="color:#808080">' . $lab['pc_number'];
     if ($lab['pc_number'] == 1) {
       echo ' ' . $string['machine'];

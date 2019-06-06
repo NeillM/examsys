@@ -46,21 +46,9 @@
     .recent a {color:black}
   </style>
 
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript" src="../js/sidebar.js"></script>
-  <script>
-    $(function () {
-      $('.mod').click(function() {
-        window.location = 'index.php?module=' + $(this).attr('id');
-      });
-      
-      $('.sch').click(function() {
-        $('#block' + $(this).attr('id')).toggle();
-      });
-    });
-  </script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/moduleorginit.min.js"></script>
     
 </head>
 

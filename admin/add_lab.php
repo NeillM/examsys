@@ -24,9 +24,6 @@
 require '../include/sysadmin_auth.inc';
 require '../include/errors.php';
 
-define('IP_INVALID', 1);
-define('IP_IN_USE', 2);
-
 $bad_addresses = array();
 $submit = param::optional('submit', null, param::TEXT, param::FETCH_POST);
 
@@ -40,49 +37,6 @@ $timetabling = param::optional('timetabling', null, param::TEXT, param::FETCH_PO
 $it_support = param::optional('it_support', null, param::TEXT, param::FETCH_POST);
 $plagarism = param::optional('plagarism', null, param::TEXT, param::FETCH_POST);
 $addresses = explode(PHP_EOL, trim(param::optional('addresses', null, param::TEXT, param::FETCH_POST)));
-
-if ($submit) { // Validate addresses
-    $labFactory = new LabFactory($mysqli);
-    $hostname_lookup = $configObject->get_setting('core', 'system_hostname_lookup');
-    if ($hostname_lookup) {
-      $test_re = '/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/';
-    } else {
-      $test_re = '/^(([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]).){3}([1-9]?[0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/';
-    }
-    foreach ($addresses as $address) {
-        $address = trim($address);
-        if (0 === preg_match($test_re, $address)) {
-            $bad_addresses[$address] = IP_INVALID;
-        } elseif ($labFactory->get_lab_from_address($address)) {
-            $bad_addresses[$address] = IP_IN_USE;
-        }
-    }
-
-    if (count($bad_addresses) === 0) { // Insert into Lab table.
-        $result = $mysqli->prepare("INSERT INTO labs (name, campus, building, room_no, timetabling, it_support, plagarism) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $result->bind_param('sisssss', $lab_name, $campus, $building, $room_no, $timetabling, $it_support, $plagarism);
-        $result->execute();
-        $labID = $mysqli->insert_id;
-        $result->close();
-
-        foreach ($addresses as $address) { // Insert the new IP addresses.
-            $address = trim($address);
-            if ($hostname_lookup) {
-              $hostname = $address;
-            } else {
-              $hostname = gethostbyaddr($address);
-            }
-
-            $result = $mysqli->prepare("INSERT INTO client_identifiers (lab, address, hostname, low_bandwidth) VALUES (?, ?, ?, ?)");
-            $result->bind_param('issi', $labID, $address, $hostname, $low_bandwidth);
-            $result->execute();
-            $result->close();
-        }
-
-        header("location: lab_details.php?labID={$labID}"); // Jump into new Lab page
-        exit;
-    }
-}
 
 $campusobj = new campus($mysqli);
 $campuses = $campusobj->get_all_campus_details();
@@ -105,22 +59,13 @@ if (null === $campus) {
         <link rel="stylesheet" type="text/css" href="../css/body.css" />
         <link rel="stylesheet" type="text/css" href="../css/header.css" />
         <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+        <link rel="stylesheet" type="text/css" href="../css/lab.css" />
 
-        <?php echo $configObject->get('cfg_js_root') ?>
-        <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-        <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-        <script type="text/javascript" src="../js/toprightmenu.js"></script>
-        <script>
-            $(function () {
-                $('#theform').validate({
-                    errorClass: 'errfield',
-                    errorPlacement: function (error, element) {
-                        return true;
-                    }
-                });
-                $('form').removeAttr('novalidate');
-            });
-        </script>
+        <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+        <script src='../js/require.js'></script>
+        <script src='../js/main.min.js'></script>
+        <script src="../js/labinit.min.js"></script>
+
     </head>
 
     <body>
@@ -131,32 +76,16 @@ if (null === $campus) {
         echo draw_toprightmenu(233);
         ?>
         <div id="content">
-            <form id="theform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
+            <form id="theform" action="" method="post" autocomplete="off">
                 <div class="head_title">
                     <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
                     <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./list_labs.php"><?php echo $string['computerlabs'] ?></a></div>
                     <div class="page_title"><?php echo $string['createnewlab'] ?></div>
                 </div>
 
-                <?php if (count($bad_addresses) > 0) : // Show error messages ?>
-                    <?php
-                    $ipInvalid = array_filter($bad_addresses, function($value) {
-                        return $value === IP_INVALID;
-                    });
-                    $ipInUse = array_filter($bad_addresses, function($value) {
-                        return $value === IP_IN_USE;
-                    });
-                    ?>
-                    <div style="color: #f00; font-weight: bold; margin-left: 10px;">
-                        <?php if (count($ipInvalid) > 0) : ?>
-                            <p><?= sprintf($string['badaddressesinvalid'], implode(', ', array_keys($ipInvalid))); ?></p>
-                        <?php endif; ?>
-                        <?php if (count($ipInUse) > 0) : ?>
-                            <p><?= sprintf($string['badaddressesinuse'], implode(', ', array_keys($ipInUse))); ?></p>
-                        <?php endif; ?>
-                    </div>
-                    <br />
-                <?php endif; ?>
+                <div class="invalidlab"></div>
+                <div class="inuselab"></div>
+                <br />
 
                 <table cellpadding="2" cellspacing="0" border="0" style="font-size:100%; margin-left:10px; margin-right:10px">
                     <tr>
@@ -221,5 +150,15 @@ if (null === $campus) {
                 </table>
             </form>
         </div>
+        <?php
+        // JS utils dataset.
+        $render = new render($configObject);
+        $miscdataset['name'] = 'dataset';
+        $miscdataset['attributes']['posturl'] = "do_add_lab.php";
+        $render->render($miscdataset, array(), 'dataset.html');// JS utils dataset.
+        $jsdataset['name'] = 'jsutils';
+        $jsdataset['attributes']['xls'] = json_encode($string);
+        $render->render($jsdataset, array(), 'dataset.html');
+        ?>
     </body>
 </html>

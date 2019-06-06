@@ -32,105 +32,9 @@ if (is_object($SMS)) {
 }
 $cfg_sms_sources = array($string['nolookup'] => '') + $cfg_sms_sources;
 
-$unique_moduleid = true;
-$tmp_modulecode = '';
 $vle_api = '';
 $map_level = 0;
 
-if (isset($_POST['submit'])) {
-  // Check for unique moduleID
-  $modulecode = trim($_POST['modulecode']);
-
-  if (module_utils::module_exists($modulecode, $mysqli)) {
-    $unique_moduleid = false;
-  }
-}
-
-if (isset($_POST['submit']) and $unique_moduleid == true) {
-  if (isset($_POST['active'])) {
-    $active = 1;
-  } else {
-    $active = 0;
-  }
-  if (isset($_POST['selfenroll'])) {
-    $selfenroll = 1;
-  } else {
-    $selfenroll = 0;
-  }
-  if (isset($_POST['neg_marking'])) {
-    $neg_marking = 1;
-  } else {
-    $neg_marking = 0;
-  }
-  $fullname = $schoolid = $sms_api = '';
-  $peer = $stdset = $mapping = false;
-
-  if (isset($_POST['fullname']))  $fullname = trim($_POST['fullname']);
-  if (isset($_POST['peer']))      $peer = true;
-  if (isset($_POST['external']))  $external = true;
-  if (isset($_POST['stdset']))    $stdset = true;
-  if (isset($_POST['mapping']))   $mapping = true;
-  if (isset($_POST['schoolid']))  $schoolid = $_POST['schoolid'];
-  $externalid = check_var('externalid', 'POST', false, false, true);
-  if (isset($_POST['vle_api'])) {
-    $vle_data = $_POST['vle_api'];
-    if ($vle_data == '') {
-      $map_level = 0;
-      $vle_api = '';
-    } else {
-      $vle_parts = explode('~', $vle_data);
-      $vle_api = $vle_parts[0];
-      $map_level = $vle_parts[1];
-    }
-  }
-  if (isset($_POST['sms_api']))   $sms_api = $_POST['sms_api'];
-
-  $sms_import = 1;
-
-  if (isset($_POST['timed_exams'])) {
-    $timed_exams = 1;
-  } else {
-    $timed_exams = 0;
-  }
-  if (isset($_POST['exam_q_feedback'])) {
-    $exam_q_feedback = 1;
-  } else {
-    $exam_q_feedback = 0;
-  }
-  if (isset($_POST['add_team_members'])) {
-    $add_team_members = 1;
-  } else {
-    $add_team_members = 0;
-  }
-
-  $academic_year_start = trim($_POST['academic_year_start']);
-
-  $ebel_grid_template = $_POST['ebel_grid_template'];
-
-  $modID = module_utils::add_modules($modulecode, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli, $sms_import, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start, $externalid);
-
-  // New sytle SMS enrolments.
-  if (!is_null($externalid)) {
-    $yearutils = new yearutils($mysqli);
-    $session = $yearutils->get_current_session();
-    $userObj = userObject::get_instance();
-    $smsplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
-    foreach($smsplugin_name as $name) {
-      $smspluginns = 'plugins\SMS\\' . $name. '\\' . $name;
-      $smsplugin = new $smspluginns($userObj->get_user_ID());
-      if ($sms_api === $smsplugin->get_name()) {
-        if ($smsplugin->supports_module_import() !== false) {
-          $smsplugin->update_module_enrolments($externalid, $session);
-        }
-        break;
-      }
-    }
-  }
-
-
-  header("location: list_modules.php");
-  exit();
-} else {
 ?>
 <!DOCTYPE html>
   <html>
@@ -142,24 +46,12 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-  <style type="text/css">
-    .field {text-align:right; padding-right:10px}
-    .form-error {
-      width: 468px;
-      margin: 18px auto;
-      padding: 16px;
-      background-color: #FFD9D9;
-      color: #800000;
-      border: 2px solid #800000
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/module.css" />
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/moduleinit.min.js"></script>
 
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
-  <script type="text/javascript" src="../js/system_tooltips.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
 <?php
   $vle_apis = $configObject->get('vle_apis');
   if (count($vle_apis) > 0) {
@@ -169,36 +61,6 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
   }
 ?>
 
-    $(function () {
-      $('#theform').validate({
-        rules: {
-          fullname: {
-            required: true,
-            maxlength: 80
-          }
-        }
-      });
-      $('form').removeAttr('novalidate');
-
-<?php
-  if ($unique_moduleid == false) {
-?>
-      $('#modulecode').addClass('errfield');
-<?php
-  }
-?>
-      $('#stdset').click(function() {
-        if ($('#stdset').prop('checked')) {
-          $('#ebelgrid').show();
-        } else {
-          $('#ebelgrid').hide();
-        }
-      });
-      $('#cancel').click(function() {
-        history.back();
-      });
-    });
-  </script>
   </head>
 
   <body>
@@ -217,16 +79,12 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 
   <br />
 
-  <form id="theform" name="module_form" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" autocomplete="off">
-<?php
-  if ($unique_moduleid == false) {
-?>
+  <form id="theform" name="module_form" method="post" action="" autocomplete="off">
+
     <div class="form-error"><?php echo $string['duplicateerror'] ?></div>
-<?php
-  }
-?>
+
     <table cellpadding="0" cellspacing="1" border="0" style="text-align:left; margin-left:auto; margin-right:auto">
-    <tr><td class="field"><?php echo $string['moduleid'] ?></td><td><input type="text" size="10" maxlength="25" id="modulecode" name="modulecode" value="<?php echo $tmp_modulecode ?>" required autofocus /></td></tr>
+    <tr><td class="field"><?php echo $string['moduleid'] ?></td><td><input type="text" size="10" maxlength="25" id="modulecode" name="modulecode" value="" required autofocus /></td></tr>
     <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" id="fullname" name="fullname" value="<?php if (isset($_POST['fullname'])) echo $_POST['fullname'] ?>" required /></td></tr>
 
 <?php
@@ -271,10 +129,9 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 <?php
   foreach ($vle_apis as $vle_name => $vle_api_data) {
     foreach ($vle_api_data['levels'] as $api_level) {
-      $selected = ($vle_api == $vle_name and $map_level == $api_level) ? ' selected="selected"' : '';
 
     ?>
-      <option value="<?php echo $vle_name . '~' . $api_level; ?>"<?php echo $selected ?>><?php echo $vle_api_data['name'] . ' (' . $vle_name . ') - ' . $map_levels[$api_level] . ' ' . $string['level'] ?></option>
+      <option value="<?php echo $vle_name . '~' . $api_level; ?>"><?php echo $vle_api_data['name'] . ' (' . $vle_name . ') - ' . $map_levels[$api_level] . ' ' . $string['level'] ?></option>
     <?php
     }
   }
@@ -305,7 +162,11 @@ if (isset($_POST['submit']) and $unique_moduleid == true) {
 
 	</div>
 <?php
-}
+// JS utils dataset.
+$render = new render($configObject);
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['posturl'] = "do_add_module.php";
+$render->render($miscdataset, array(), 'dataset.html');
 ?>
 </body>
 </html>

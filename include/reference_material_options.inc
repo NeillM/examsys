@@ -33,8 +33,8 @@
 
 <div style="display:none" id="menu1b">
 	<div class="menuitem"><a href="add_ref_material.php"><img class="sidebar_icon" src="../artwork/ref_16.png" alt="" /><?php echo $string['creatematerial'] ?></a></div>
-	<div class="menuitem"><a href="#" onclick="edit(); return false;"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><?php echo $string['editmaterial'] ?></a></div>
-	<div class="menuitem"><a href="#" onclick="deleteReference(); return false;"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><?php echo $string['deletematerial'] ?></a></div>
+	<div class="menuitem"><a id="edit" href="#"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><?php echo $string['editmaterial'] ?></a></div>
+	<div class="menuitem"><a id="delete" href="#"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><?php echo $string['deletematerial'] ?></a></div>
 </div>
 
 <input type="hidden" id="lineID" name="lineID" value="" />

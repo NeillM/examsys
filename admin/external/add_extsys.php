@@ -39,12 +39,7 @@ $toprightmenu = draw_toprightmenu(741);
 $lang['title'] = $string['addextsys'];
 $lang['view'] = $string['addextsys'];
 $lang['delete'] = $string['deleteextsys'];
-$additionaljs = "
-    <script type=\"text/javascript\" src=\"../../js/jquery.validate.min.js\"></script>
-    <script type=\"text/javascript\" src=\"../../js/jquery-ui-1.10.4.min.js\"></script>
-    <script type=\"text/javascript\" src=\"../../js/system_tooltips.js\"></script>
-    <script type=\"text/javascript\" src=\"js/extsys.min.js\"></script>
-    <script type=\"text/javascript\" src=\"js/extsys_validate.min.js\"></script>";
+$additionaljs = "<script type=\"text/javascript\" src=\"js/extsysinit.min.js\"></script>";
 $addtionalcss = "<style type=\"text/css\">
           td {text-align:left}
           .field {text-align:right; padding-right:10px}

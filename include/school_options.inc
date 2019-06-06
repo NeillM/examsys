@@ -23,19 +23,6 @@
 */
 
 ?>
-<script>
-  function editSchool() {
-    window.location.href='./edit_school.php?schoolid=' + $('#lineID').val();
-  }
-  
-  function deleteSchool() {
-    notice=window.open("../delete/check_delete_school.php?schoolID=" + $('#lineID').val() + "","schools","width=450,height=200,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-225,screen.height/2-100);
-    if (window.focus) {
-      notice.focus();
-    }
-  }
-</script>
 
 <div id="left-sidebar" class="sidebar">
 <form name="myform" autocomplete="off">
@@ -58,8 +45,8 @@
 
 <div style="display:none" id="menu1b">
 	<div class="menuitem"><a href="add_school.php"><img class="sidebar_icon" src="../artwork/school_icon_16.png" alt="<?php echo $string['createschool']; ?>" /><?php echo $string['createschool'] ?></a></div>
-	<div class="menuitem"><a href="#" onclick="editSchool(); return false;"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editschool'] ?>" /><?php echo $string['editschool'] ?></a></div>
-	<div class="menuitem"><a href="#" onclick="deleteSchool(); return false;"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><?php echo $string['deleteschool'] ?></a></div>
+	<div class="menuitem editschool"><a href="#"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editschool'] ?>" /><?php echo $string['editschool'] ?></a></div>
+	<div class="menuitem deleteschool"><a href="#"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><?php echo $string['deleteschool'] ?></a></div>
 </div>
 
 <input type="hidden" id="lineID" name="lineID" value="" />

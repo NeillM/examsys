@@ -50,4 +50,4 @@ $string['papersforreview'] = 'Papers for Review';
 $string['recent'] = 'Recent';
 $string['unassigned'] = 'Unassigned';
 $string['unassignedmsg'] = 'Questions/papers not on any module';
-?>
+$string['illegal'] = "Character ';' illegal - please use alternative characters in folder name.";

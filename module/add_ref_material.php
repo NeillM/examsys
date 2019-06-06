@@ -59,35 +59,15 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/refmaterial.css" />
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
 <?php
   $texteditorplugin->display_header();
   $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::CONFIG);
 ?>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-	<script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    $(function () {
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
-        }
-      });
-      $('form').removeAttr('novalidate');
-    });
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/refmaterialforminit.min.js"></script>
 
-    function toggle(objectID) {
-      if ($('#' + objectID).hasClass('r2')) {
-        $('#' + objectID).addClass('r1');
-        $('#' + objectID).removeClass('r2');
-      } else {
-        $('#' + objectID).addClass('r2');
-        $('#' + objectID).removeClass('r1');
-      }
-    }
-  </script>
 </head>
 
 <body>
@@ -138,9 +118,9 @@ for ($size=200; $size<850; $size+=50) {
     if ($_GET['module'] == $modID) $match = true;
     
     if ($match == true) {
-      echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no');\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\" checked><label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
+      echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\" checked><label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
     } else {
-      echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" onclick=\"toggle('divmod$module_no');\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\"><label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
+      echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\"><label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
     }
     $module_no++;
     $old_school = $module['school'];  
@@ -150,7 +130,7 @@ for ($size=200; $size<850; $size+=50) {
 ?>
 </td>
 </tr>
-<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" class="ok" style="font-size:90%" /><input onclick="history.back();" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" style="font-size:90%" /></td></tr>
+<tr><td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['ok']; ?>" class="ok" style="font-size:90%" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" style="font-size:90%" /></td></tr>
 </table>
 <input type="hidden" name="module" value="<?php echo $_GET['module']; ?>" />
 

@@ -1,0 +1,13 @@
+.invalidlab {
+    color: #f00;
+    font-weight: bold;
+    margin-left: 10px;
+    display: none;
+}
+
+.inuselab {
+    color: #f90;
+    font-weight: bold;
+    margin-left: 10px;
+    display: none;
+}

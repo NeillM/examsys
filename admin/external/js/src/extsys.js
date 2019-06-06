@@ -22,24 +22,34 @@
 // @version 1.0
 // @copyright Copyright (c) 2017 The University of Nottingham
 //
+define(['list', 'jquery', 'jquerytablesorter'], function(LIST, $) {
+    return function () {
+        this.deleteoption = function () {
+            var notice = window.open("../../delete/check_delete_extsys.php?id=" + $('#lineID').val() + "", "External Systems", "width=520,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+            notice.moveTo(screen.width / 2 - 270, screen.height / 2 - 85);
+            if (window.focus) {
+                notice.focus();
+            }
+        };
 
-function deleteoption() {
-    notice = window.open("../../delete/check_delete_extsys.php?id=" + $('#lineID').val() + "", "External Systems", "width=520,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width / 2 - 270, screen.height / 2 - 85);
-    if (window.focus) {
-      notice.focus();
+        this.init = function () {
+            var list = new LIST();
+            var scope = this;
+            if ($("#maindata").find("tr").size() > 1) {
+                $("#maindata").tablesorter({
+                    sortList: [[0, 0]]
+                });
+            }
+
+            $(".l").click(function (event) {
+                event.stopPropagation();
+                list.selLine($(this).attr('id'), event);
+            });
+
+            $("#delete").click(function () {
+                scope.deleteoption();
+            });
+
+        };
     }
-}
-
-$(function () {
-    if ($("#maindata").find("tr").size() > 1) {
-        $("#maindata").tablesorter({ 
-            sortList: [[0,0]] 
-        });
-    }
-
-    $(".l").click(function(event) {
-        event.stopPropagation();
-        selLine($(this).attr('id'),event);
-    });
 });

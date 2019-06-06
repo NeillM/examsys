@@ -23,22 +23,6 @@
 */
 
 ?>
-<script>
-  function viewDetails() {
-    document.location.href='./lab_details.php?labID=' + $('#labID').val();
-    $('#menu1a').show();
-    $('#menu1b').hide();
-  }
-  
-  function deleteLab() {
-    notice=window.open("../delete/check_delete_lab.php?labID=" + $('#labID').val() + "","notice","width=500,height=200,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-250,screen.height/2-100);
-    if (window.focus) {
-      notice.focus();
-    }
-
-  }
-</script>
 
 <div id="left-sidebar" class="sidebar">
 <form name="labform" autocomplete="off">
@@ -51,8 +35,8 @@
 
 <div style="display:none" id="menu1b">
 	<div class="menuitem"><a href="add_lab.php"><img class="sidebar_icon" src="../artwork/new_lab_16.png" alt="" /><?php echo $string['createnewlab'] ?></a></div>
-	<div class="menuitem" onclick="viewDetails()"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><a href="" onclick="return false;"><?php echo $string['vieweditdetails'] ?></a></div>
-	<div class="menuitem" onclick="deleteLab()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><a href="" onclick="return false;"><?php echo $string['deletelab'] ?></a></div>
+	<div class="menuitem" id="viewlab"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><a href="" onclick="return false;"><?php echo $string['vieweditdetails'] ?></a></div>
+	<div class="menuitem" id="deletelab"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><a href="" onclick="return false;"><?php echo $string['deletelab'] ?></a></div>
 	<div class="menuitem"><a href="campus/list_campuses.php"><img class="sidebar_icon" src="../artwork/new_campus_16.png" alt="" /><?php echo $string['listcampuses'] ?></a></div>
 </div>
 

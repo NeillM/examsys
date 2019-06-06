@@ -1,0 +1,10 @@
+.l {
+    cursor:pointer;
+}
+.icon {
+    background-image: url('../artwork/ref_16.png');
+    background-repeat: no-repeat;
+    padding-left: 20px;
+    width: 16px;
+    height: 16px;
+}

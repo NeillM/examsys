@@ -39,9 +39,7 @@ $lang['view'] = $string['addextsys'];
 $lang['delete'] = $string['deleteextsys'];
 $header = array(array('class' => 'col10', 'style' => 'width:50%', 'value' => $string['name']),
     array('class' => 'col10', 'style' => 'width:50%', 'value' => $string['type']));
-$additionaljs ="<script type=\"text/javascript\" src=\"../../js/jquery_tablesorter/jquery.tablesorter.js\"></script>
-    <script type=\"text/javascript\" src=\"../../js/list.js\"></script>
-    <script type=\"text/javascript\" src=\"js/extsys.min.js\"></script>";
+$additionaljs ="<script type=\"text/javascript\" src=\"js/extsysinit.min.js\"></script>";
 $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/list.css\"/>";
 $breadcrumb = array($string['home'] => "../../index.php", $string['administrativetools'] => "../index.php",
     $string['extsys'] => "list_extsys.php",);

@@ -43,11 +43,4 @@ $render = new render($configObject);
 $lang['title'] = $string['delete'];
 $lang['success'] = $string['success'];
 $data = array();
-$additionaljs = "<script>
-    $(function () {
-      window.opener.location.reload();
-      self.close();
-    });
-  </script>";
-$render->render($data, $lang, 'admin/do_delete.html', $additionaljs);
-?>
+$render->render($data, $lang, 'admin/do_delete.html');

@@ -37,37 +37,10 @@ if (!module_utils::get_moduleid_from_id($idMod, $mysqli)) {
 
 module_utils::delete_module($idMod, $mysqli);
 
+$render = new render($configObject);
+$lang['title'] = $string['title'];
+$lang['success'] = $string['msg'];
+$data = array();
+$render->render($data, $lang, 'admin/do_delete.html');
+
 $mysqli->close();
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title>Module Deleted</title>
-  
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
-
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function () {
-      window.opener.location='../admin/list_modules.php';
-      self.close();
-    });
-  </script>
-</head>
-
-<body>
-
-<p>Module successfully deleted.</p>
-
-<div class="button_bar">
-<form action="" method="get" autocomplete="off">
-<input type="button" name="cancel" value="OK" class="ok" onclick="javascript:updateParent();" />
-</form>
-</div>
-
-</body>
-</html>
