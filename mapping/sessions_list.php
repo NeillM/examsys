@@ -36,7 +36,7 @@ if (!$module) {
 }
 ?>
 <!DOCTYPE html>
-<html onclick="hideSessCopyMenu(event);">
+<html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
@@ -53,59 +53,11 @@ if (!$module) {
     .indent {padding-left:24px}
   </style>
 
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    function selSession(divID, identifier, session, VLE, evt) {
-      hideSessCopyMenu(evt);
-      tmp_ID = $('#oldDivID').val();
-      if (tmp_ID != '') {
-        $('#' + tmp_ID).css('background-color', 'white');
-      }
-
-      if (VLE != '') {
-        $('#menu1a').hide();
-        $('#menu1c').show();
-      } else {
-        $('#menu1a').hide();
-        $('#menu1b').show();
-      }
-
-      $('#oldDivID').val(divID);
-      $('#divID').val(divID);
-
-      $('#identifier').val(identifier);
-      $('#session').val(session);
-      $('#VLE').val(VLE);
-
-      $('#' + divID).css('background-color', '#FFBD69');
-      evt.cancelBubble = true;
-    }
-
-    function editSession(identifier, calendar_year) {
-      window.location.href="./edit_session.php?identifier=" + identifier + "&module=<?php echo $modID ?>&calendar_year=" + calendar_year;
-    }
-
-    function highlight(lineID) {
-      if (lineID != $('#oldDivID').val()) {
-        $('#' + lineID).css('background-color', '#FFE7A2');
-      }
-    }
-
-    function unhighlight(lineID) {
-      if (lineID != $('#oldDivID').val()) {
-        $('#' + lineID).css('background-color', '');
-      }
-    }
-
-    $(function () {
-		  $('html').click(function() {
-			  hideSessCopyMenu(event);
-      });
-		});
-  </script>
-</head>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/sessionslistinit.min.js"></script>
+ </head>
 
 <body>
 <?php
@@ -150,9 +102,9 @@ if (!$module) {
         $identifier = '';
       }
       if ($session['VLE'] != '') {
-        echo "<tr class=\"l\" id=\"$id\" onclick=\"selSession($id,'$identifier','" . $session['calendar_year'] . "','" . $session['VLE'] . "',event);\" ondblclick=\"editVLESession('" . $session['calendar_year'] . "');\">";
+        echo "<tr class=\"l\" id=\"$id\" data-identifier=\"$identifier\" data-year=\"" . $session['calendar_year'] . "\" data-vle=\"". $session['VLE'] . "\" ondblclick=\"editVLESession('" . $session['calendar_year'] . "');\">";
       } else {
-        echo "<tr class=\"l\" id=\"$id\" onclick=\"selSession($id,'$identifier','" . $session['calendar_year'] . "','" . $session['VLE'] . "',event);\" ondblclick=\"editSession('" . $session['identifier'] . "','" . $session['calendar_year'] . "');\">";
+        echo "<tr class=\"l\" id=\"$id\" data-identifier=\"$identifier\" data-year=\"" . $session['calendar_year'] . "\" data-vle=\"". $session['VLE'] . "\" data-id=\"" . $session['identifier'] . "\" data-year=\"" .$session['calendar_year'] . "\">";
       }
       echo "<td class=\"indent\">" . $session['occurrance'] . "</td><td class=\"title\">" . $session['title'] . "</td>";
       if ($objectives_no == 0) {
@@ -171,5 +123,21 @@ if (!$module) {
 </table>
 </div>
 
+<?php
+// Dataset.
+$render = new render($configObject);
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['module'] = $modID;
+$miscdataset['attributes']['vle'] = $vle_api;
+if ($vle_api != '') {
+  $miscdataset['attributes']['vlename'] = $vle_name;
+  $miscdataset['attributes']['vlehumanname'] = $vle_name_a;
+}
+$render->render($miscdataset, array(), 'dataset.html');
+// JS utils dataset.
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

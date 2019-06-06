@@ -289,7 +289,6 @@ END;
   h1 {font-size:160%; color:#295AAD}
   .info_bar {margin-bottom:8px}
   </style>
-   {$configObject->get('cfg_js_root')}
 </head>
 <body>
 <div id="content" class="content">

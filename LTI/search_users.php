@@ -66,9 +66,7 @@ $results = array_merge($external_results, $internal_results);
 $render = new render($configObject);
 $toprightmenu = draw_toprightmenu();
 $additionaljs = <<<JS
-  <script type="text/javascript" src="../js/list.js"></script>
-  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
-  <script type="text/javascript" src="js/search_users.js"></script>
+  <script src="/js/ltiusersinit.min.js"></script>
 JS;
 $additionalcss = <<<CSS
   <link rel="stylesheet" type="text/css" href="../css/list.css"/>

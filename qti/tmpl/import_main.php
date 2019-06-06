@@ -43,19 +43,10 @@ if (isset($_GET['module'])) {
 	<link rel="stylesheet" type="text/css" href="../css/dialog.css" />
 	<link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 
-	<script type="text/javascript" src="./js/mootools-1.2.4.js"></script> 
-  
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    // Popup window code
-    function newPopup(url) {
-      notice=window.open(url,"properties","width=827,height=510,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        notice.focus();
-      }
-    }
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src='../js/importinit.min.js'></script>
 </head>
 
 <?php
@@ -64,7 +55,7 @@ $import_result = $result;
 require '../include/paper_options.php';
 require '../include/toprightmenu.inc';
 
-echo draw_toprightmenu();
+echo draw_toprightmenu(224);
 
 $result = $import_result;
 ?>
@@ -131,31 +122,38 @@ if (isset($result['load']['errors'][0])) $bad--;
 <?php endif; ?>
 			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php echo $string['moreinformation'] ?></div>
 			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet">&nbsp;
-				<a href="" onclick="newPopup('<?php echo $qtiimportdirectory->url($dir . '/result.html'); ?>'); return false;"><?php echo $string['viewdetails'] ?></a>
+				<a class="openpopup" href="" data-url="<?php echo $qtiimportdirectory->url($dir . '/result.html'); ?>"><?php echo $string['viewdetails'] ?></a>
 			</div>
 <?php if ($show_debug) : ?>
 			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php echo $string['debuginformation'] ?></div>
 			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet">&nbsp;
-				<a href="" onclick="newPopup('<?php echo $qtiimportdirectory->url($dir . '/debug_load.html'); ?>'); return false;"><?php echo $string['loadingdebug'] ?></a>
+				<a class="openpopup" href="" data-url="<?php echo $qtiimportdirectory->url($dir . '/debug_load.html'); ?>"><?php echo $string['loadingdebug'] ?></a>
 			</div>
 			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet">&nbsp;
-				<a href="" onclick="newPopup('<?php echo $qtiimportdirectory->url($dir . '/debug_int.html'); ?>'); return false;"><?php echo $string['intermediateformatdebug'] ?></a>
+				<a class="openpopup" href="" data-url="<?php echo $qtiimportdirectory->url($dir . '/debug_int.html'); ?>"><?php echo $string['intermediateformatdebug'] ?></a>
 			</div>
 			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet">&nbsp;
-				<a href="" onclick="newPopup('<?php echo $qtiimportdirectory->url($dir . '/debug_save.html'); ?>'); return false;"><?php echo $string['savingdebug'] ?></a>
+				<a class="openpopup" href="" data-url="<?php echo $qtiimportdirectory->url($dir . '/debug_save.html'); ?>"><?php echo $string['savingdebug'] ?></a>
 			</div>
 			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet">&nbsp;
-				<a href="" onclick="newPopup('<?php echo $qtiimportdirectory->url($dir . '/debug_res.html'); ?>'); return false;"><?php echo $string['generaldebuginfo']?></a>
+				<a class="openpopup" href="" data-url="<?php echo $qtiimportdirectory->url($dir . '/debug_res.html'); ?>"><?php echo $string['generaldebuginfo']?></a>
 			</div>
 <?php endif; ?>
 			<br />
-      <div style="margin-left:25px"><input type="button" name="back" class="ok" value="<?php echo $string['backtopaper'] ?>" onclick="window.location='../paper/details.php?paperID=<?php echo $paperID ?>&module=<?php echo $module ?>'" />
+      <div style="margin-left:25px"><input id='back' type="button" name="back" class="ok" value="<?php echo $string['backtopaper'] ?>" />
       </div>
       <br />
 		</td>
 	</tr>
 </table>
 </div>
-
+<?php
+// Dataset.
+$render = new render($configObject);
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['id'] = $paperID;
+$miscdataset['attributes']['module'] = $module;
+$render->render($miscdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

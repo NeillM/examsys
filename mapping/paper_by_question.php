@@ -27,6 +27,8 @@ require '../include/mapping.inc';
 require '../include/errors.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
+$folderID = param::optional('folder', '', param::INT, param::FETCH_GET);
+$moduleID = param::optional('module', '', param::INT, param::FETCH_GET);
 
 //get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
@@ -50,26 +52,14 @@ $mediadirectory = rogo_directory::get_directory('media');
   <link rel="stylesheet" type="text/css" href="../css/mapping.css" />
   <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
+    <script id="rogoconfig" src='../js/rogo.min.js'
+            data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
+            data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>">
+    </script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/mappinginit.min.js"></script>
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    $(function () {
-      $('a[rel=external]').attr('target', '_blank');
-    });
-
-    function mapQuestion(qNo, pid, qid, session) {
-      mapWindow = window.open('./map_question.php?qNo=' + qNo + '&paperID=' + pid + '&q_id=' + qid + '&session=' + session, "",'height=' + (screen.height - 300) + ',width=' + (screen.width - 300) + ',scrollbars=yes,resizable=yes,statusbar=no');
-      mapWindow.moveTo(100,100);
-    }
-  </script>
-  <?php
-    if($configObject->get_setting('core', 'paper_mathjax')) {
-      $render = new render($configObject);
-      $render->render(null, null, 'mathjax.html');
-    }
-  ?>
 </head>
 
 <body>
@@ -88,10 +78,10 @@ $mediadirectory = rogo_directory::get_directory('media');
   echo "<div class=\"head_title\">\n";
   echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
-  if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
-  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    $modules = explode(',', $_GET['module']);
+  if ($folderID != '') {
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folderID . '">' . folder_utils::get_folder_name($folderID, $mysqli) . '</a>';
+  } elseif ($moduleID != '') {
+    $modules = explode(',', $moduleID);
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $modules[0] . '">' . module_utils::get_moduleid_from_id($modules[0], $mysqli) . '</a>';
   }
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div>';
@@ -105,9 +95,9 @@ $mediadirectory = rogo_directory::get_directory('media');
   <table class="header">
   <tr><th style="padding-top:1px">
   <table cellpadding="0" cellspacing="0" border="0" style="font-size:90%; width:378px">
-  <td class="taboff" onclick="window.location.href='paper_by_session.php?paperID=<?php echo $paperID; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['bysession']; ?></td>
-  <td class="tabon"><?php echo $string['byquestion']; ?></td>
-  <td class="taboff" onclick="window.location.href='paper_by_year.php?paperID=<?php echo $paperID; ?>&folder=<?php echo $_GET['folder']; ?>&module=<?php echo $_GET['module']; ?>'"><?php echo $string['longitudinal']; ?></td>
+  <td id="bysession" class="taboff"><?php echo $string['bysession']; ?></td>
+  <td id="byquestion" class="tabon"><?php echo $string['byquestion']; ?></td>
+  <td id="byyear" class="taboff"><?php echo $string['longitudinal']; ?></td>
   </table>
   </th><th style="width:100%; text-align:right">&nbsp;</th>
   </tr>
@@ -236,13 +226,13 @@ $mediadirectory = rogo_directory::get_directory('media');
       }
       echo $temp_array[$x]['leadin'] . "&nbsp;&nbsp;";
       if ($temp_array[$x]['q_type'] != 'info') {
-        echo "<img style=\"cursor: pointer\" onclick=\"mapQuestion('$question_number', '" . $paperID . "','" . $temp_array[$x]['q_id'] . "','" . $session . "')\" src=\"../artwork/map_question.gif\" width=\"16\" height=\"14\"/></td>";
+        echo "<img class=\"mapping\" style=\"cursor: pointer\" data-qno=\"$question_number\" data-pid=\"$paperID\" data-qid=\"" . $temp_array[$x]['q_id'] . "\" data-session=\"$session\" src=\"../artwork/map_question.gif\" width=\"16\" height=\"14\"/></td>";
       } elseif (strpos($temp_array[$x]['q_media'],'.swf') !== false) {
         echo "<td><img src=\"../artwork/flash_icon.png\" width=\"48\" height=\"48\" alt=\"Embedded Flash object\" border=\"0\" /></td>";
-        if ($temp_array[$x]['q_type'] != 'info') echo "<img style=\"cursor: pointer\" onclick=\"mapQuestion('$question_number', '" . $paperID . "','" . $temp_array[$x]['q_id'] . "','" . $session . "')\" src=\"../artwork/map_question.gif\" width=\"16\" height=\"14\"/></td>";
+        if ($temp_array[$x]['q_type'] != 'info') echo "<img class=\"mapping\" style=\"cursor: pointer\" data-qno=\"$question_number\" data-pid=\"$paperID\" data-qid=\"" . $temp_array[$x]['q_id'] . "\" data-session=\"$session\" src=\"../artwork/map_question.gif\" width=\"16\" height=\"14\"/></td>";
       } else {
         echo "<td><img src=\"" . $mediadirectory->url($temp_array[$x]['q_media']) . "\" width=\"" . ($temp_array[$x]['q_media_width'] / 3) . "\" height=\"" . ($temp_array[$x]['q_media_height'] /3) . "\" alt=\"Media file\" border=\"1\" />";
-        if ($temp_array[$x]['q_type'] != 'info') echo "<img style=\"cursor: pointer\" onclick=\"mapQuestion('$question_number', '" . $paperID . "','" . $temp_array[$x]['q_id'] . "','" . $session . "')\" src=\"../artwork/map_question.gif\" width=\"16\" height=\"14\"/></td>";
+        if ($temp_array[$x]['q_type'] != 'info') echo "<img class=\"mapping\" style=\"cursor: pointer\" data-qno=\"$question_number\" data-pid=\"$paperID\" data-qid=\"" . $temp_array[$x]['q_id'] . "\" data-session=\"$session\" src=\"../artwork/map_question.gif\" width=\"16\" height=\"14\"/></td>";
       }
       echo "</tr>\n";
 
@@ -268,7 +258,7 @@ $mediadirectory = rogo_directory::get_directory('media');
                 echo "$module: ";
               }
               echo strip_tags($mappingData['content'], '<b><i><strong><em><sub><sup>');
-              echo "&nbsp;&nbsp;&nbsp;<span title=\"$sessiontitle\" class=\"mapping\"><a href=\"" . $mappingData['session']['source_url'] . "\" rel=\"external\"><img src=\"../artwork/small_link.png\" width=\"11\" height=\"11\" /></a>&nbsp;<a href=\"" . $mappingData['session']['source_url'] . "\" rel=\"external\">" . $sessiondata ."</a></span>";
+              echo "&nbsp;&nbsp;&nbsp;<span title=\"$sessiontitle\" class=\"mapping\"><a href=\"" . $mappingData['session']['source_url'] . "\" rel=\"external\" target=\"_blank\"><img src=\"../artwork/small_link.png\" width=\"11\" height=\"11\" /></a>&nbsp;<a href=\"" . $mappingData['session']['source_url'] . "\" rel=\"external\" target=\"_blank\">" . $sessiondata ."</a></span>";
               echo '</li>';
             }
           }
@@ -283,5 +273,14 @@ $mediadirectory = rogo_directory::get_directory('media');
 ?>
 </table>
 </div>
+<?php
+// Dataset.
+$render = new render($configObject);
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['paper'] = $paperID;
+$miscdataset['attributes']['folder'] = $folderID;
+$miscdataset['attributes']['module'] = $moduleID;
+$render->render($miscdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

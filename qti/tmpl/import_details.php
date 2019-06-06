@@ -27,7 +27,6 @@ require_once '../include/staff_auth.inc';
 <head>
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 	<title><?php echo $string['importfromqti'] ?></title>
-	<script type="text/javascript" src="./qti/js/mootools-1.2.4.js"></script>
 
 	<style type="text/css">
 		body {background-color:white; color:black; font-family:Arial,sans-serif;margin:0px;}

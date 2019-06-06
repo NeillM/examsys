@@ -57,15 +57,20 @@ if (isset($_POST['Save'])) {
     $obj_id = 123;
   }
   $result->close();
-  while (isset($_POST["obj_$i"])) {
-    if ($_POST["obj_$i"] != $string['msg1']) {
-      $stmt = $mysqli->prepare("INSERT INTO objectives VALUES (?, ?, ?, ?, ?, ?)");
-      $stmt->bind_param('issssi', $obj_id, $_POST["obj_$i"], $modID, $identifier, $_POST['session'], $i);
-      $stmt->execute();
-      $stmt->close();
-    }
-    $obj_id++;
-    $i++;
+  if (isset($_POST["objectives"]) and $_POST["objectives"] != '') {
+      parse_str($_POST["objectives"], $sortarray);
+      $list = $sortarray['li'];
+      $j = 0;
+      foreach ($list as $i) {
+        if ($_POST["objnew_$i"] != $string['msg1']) {
+          $stmt = $mysqli->prepare("INSERT INTO objectives VALUES (?, ?, ?, ?, ?, ?)");
+          $stmt->bind_param('issssi', $obj_id, $_POST["objnew_$i"], $modID, $identifier, $_POST['session'], $j);
+          $stmt->execute();
+          $stmt->close();
+        }
+        $obj_id++;
+        $j++;
+      }
   }
 
   //redirect to list sessions
@@ -92,96 +97,20 @@ if (isset($_POST['Save'])) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+  <link rel="stylesheet" type="text/css" href="../css/jquery-ui.css" />
+  <link rel="stylesheet" type="text/css" href="../css/jquery-theme.css" />
   <style type="text/css">
     .editBox {width:90%}
     .field {text-align:right}
     .note {width:90%}
   </style>
 
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    $(function () {
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
-        }
-      });
-      $('form').removeAttr('novalidate');
-    });
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/mappingsessioninit.min.js"></script>
 
-    var ObjCount = 0;
-    function addNew(ulId) {
-      ul = document.getElementById(ulId);
-      li = document.createElement("li");
-      li.id = 'li_' + ulId + ObjCount;
-      li.style.margin = '0.5em';
-      li.style.marginLeft = '3.5em';
-      li.innerHTML = '<img src="./up_on.png" onclick="promote( \'' + li.id + '\' )" />&nbsp<img src="./down_on.png" onclick="demote( \'' + li.id + '\' )" />&nbsp<input class="editBox" name="obj_' + ObjCount + '" id="obj_' + ObjCount + '" type="text" value="" placeholder="<?php echo $string['msg1']; ?>" /></li>';
-      ul.insertBefore(li,ul.lastChild);
-      updateButtons();
-    }
-
-    function demote(liId) {
-      li = document.getElementById(liId);
-      ul = li.parentNode;
-      var i = 0;
-      while(ul.childNodes[i].id != liId) {
-        i++;
-      }
-      if ( i > 0 && i < (ul.childNodes.length - 2) ) {
-        temp = ul.removeChild(ul.childNodes[i]);
-        ul.insertBefore(temp,ul.childNodes[i+1]);
-      }
-      updateButtons();
-    }
-
-
-    function promote(liId) {
-      li = document.getElementById( liId );
-      ul = li.parentNode;
-      var i = 0;
-      while(ul.childNodes[i].id != liId) {
-        i++;
-      }
-      if( i > 1 ) {
-        temp = ul.removeChild(ul.childNodes[i]);
-        ul.insertBefore(temp,ul.childNodes[i-1]);
-      }
-      updateButtons();
-    }
-
-    function updateButtons() {
-      lis = document.getElementsByTagName('li');
-      ObjCount = 0;
-      for (var i = 1; i < (lis.length - 1) ; i++ ) {
-        if (lis[i].id != '') {
-          ObjCount++;
-          if (lis[i - 1].id == '') {
-            //disable up
-            lis[i].childNodes[0].src = './up_off.png';
-          } else {
-            lis[i].childNodes[0].src = './up_on.png';
-          }
-          if (lis[i+ 1].id == '') {
-            //disable down
-            lis[i].childNodes[2].src = './down_off.png';
-          } else {
-            lis[i].childNodes[2].src = './down_on.png';
-          }
-        }
-      }
-    }
-
-    function cancelForm() {
-      window.location = "./sessions_list.php?module=<?php  if(isset($_GET['module'])) echo $_GET['module']; ?>&folder=<?php if(isset($_GET['folder'])) echo $_GET['folder']; ?>";
-    }
-  </script>
   </head>
-  <body onclick="hideSessCopyMenu(event);">
+  <body>
 <?php
   require '../include/sessions_options.inc';
   require '../include/toprightmenu.inc';
@@ -289,30 +218,41 @@ if (isset($_POST['Save'])) {
     }
     echo "</select></td></tr>\n";
     echo '<tr><td class="field">' . $string['url'] . '</td><td><input name="url" class="editBox" type="text" value="" /></td></tr>';
-    echo "\n<tr><td colspan=\"2\"><ul id=\"objList\" style=\"margin-left:0px; list-style-type: none; width: 100%\">\t<li>\n\t<table callpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:93%; font-size:100%\">\n<tr>\n\t<td class=\"subheading\"></td>\n";
-    echo "\t<td valign=\"center\" style=\"color:gray; padding-left:1em; font-size:75%; width:100%\"></td>\t";
-    echo "\t<td></td></tr></table></li>\n";
+    echo "\n<tr><td colspan=\"2\"><ul id=\"objList\" style=\"margin-left:0px; list-style-type: none; width: 100%\">\n";
     for($i = 0; $i < 3; $i++) {
       $id = $i;
-      echo "\t<li id=\"li_$id\" style=\"margin:0.5em; margin-left:3.5em\">";
-      echo '<img src="./up_on.png" onclick="promote( \'li_' . $id . '\' )" />&nbsp<img src="./down_on.png" onclick="demote( \'li_' . $id . '\' )" />&nbsp';
-      echo "<input class='editBox' id=\"obj_" . $id . "\" name=\"obj_" . $id . "\" type=\"text\" value=\"\" placeholder=\"" . $string['msg1'] . "\" />";
+      echo "\t<li class=\"ui-state-default\" id=\"li_$id\" style=\"margin:0.5em; margin-left:3.5em\">";
+      echo "<span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>";
+      echo "<input class='editBox' id=\"objnew_" . $id . "\" name=\"objnew_" . $id . "\" type=\"text\" value=\"\" placeholder=\"" . $string['msg1'] . "\" />";
       echo "</li>\n";
     }
-    echo '<li style="margin:0.5em; margin-left:6em"><input style="width: 80px" type="button" value="' . $string['new'] . '"  onclick="addNew(\'objList\')"></li>';
     echo '</ul>';
+    echo '<input id="new" style="margin:0.5em; margin-left:6em; width: 80px" type="button" value="' . $string['new'] . '" />';
+    echo '<input id="objectives" name="objectives" type="hidden" value="" />';
+
 
     //add the save buttens
     echo '<ul style="margin-left:0px; list-style-type:none; width:100%">';
     echo '<li style="margin:0.5em; margin-left:0.5em; text-align:center">';
-    echo '<input name="Save" class="ok" type="submit" value="' . $string['save'] . '" /><input name="cancel" class="cancel" type="button" value="' . $string['cancel'] . '" onclick="cancelForm();" />';
+    echo '<input name="Save" class="ok" type="submit" value="' . $string['save'] . '" /><input name="cancel" class="cancel" type="button" value="' . $string['cancel'] . '" />';
     echo '</li>';
     echo "</ul>\n";
 
     echo "</td></tr>\n</table>\n</div>\n</form>\n";
-    echo '<script>updateButtons();</script>';
 ?>
     </div>
+    <?php
+    // Dataset.
+    $render = new render($configObject);
+    $miscdataset['name'] = 'dataset';
+    $miscdataset['attributes']['folder'] = $folder;
+    $miscdataset['attributes']['module'] = $module;
+    $render->render($miscdataset, array(), 'dataset.html');
+    // JS utils dataset.
+    $jsdataset['name'] = 'jsutils';
+    $jsdataset['attributes']['xls'] = json_encode($string);
+    $render->render($jsdataset, array(), 'dataset.html');
+    ?>
   </body>
   </html>
 <?php

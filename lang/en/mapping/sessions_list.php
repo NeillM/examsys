@@ -32,4 +32,6 @@ $string['msg4'] = 'No years available to copy';
 $string['msg5'] = 'Copy objectives from';
 $string['msg6'] = 'Copy objectives to';
 $string['copy'] = 'Copy';
-?>
+$string['vlemapping'] = 'This is %s-based module. To add a new session it must be added in the %s';
+$string['vlemappingedit'] = 'This is %s-based module. To change its session objectives you must edit the %s';
+$string['vlemappingdelete'] = 'This is %s-based module.To delete this session it must be removed from the %s';

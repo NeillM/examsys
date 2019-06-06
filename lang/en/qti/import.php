@@ -18,7 +18,7 @@ require '../lang/' . $language . '/include/paper_options.php';
 require 'shared.php';
 require '../lang/' . $language . '/question/edit/likert_scales.php';
 
-$string['import'] = 'Import';
+$string['import'] = 'QTI Import';
 $string['import2'] = 'Import';
 $string['importfromqti'] = 'Import from QTI';
 $string['file'] = 'File';
@@ -58,6 +58,7 @@ $string['qtiimport'] = 'QTI Import';
 $string['imported1_2'] = 'Imported from QTI 1.2 file';
 $string['paperlocked'] = 'Paper Locked';
 $string['paperlockedmsg'] = 'This paper is now locked and cannot be modified.';
+$string['lockedlink'] = "Details about paper locking.";
 
 $string['loadingsection'] = 'Loading section';
 $string['loadingblank'] = 'Loading blank string';

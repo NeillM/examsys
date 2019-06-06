@@ -27,7 +27,6 @@ require '../include/question_types.php';
 require '../include/mapping.inc';
 require '../include/errors.php';
 require '../include/display_functions.inc';
-$jstring = $string; //to pass it to JavaScript HTML5 modules
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
 
 if (file_exists($cfg_web_root . "lang/$language/paper/start.php")) {
@@ -91,27 +90,24 @@ function display_q($configObject, $target_id, $db) {
   $question_nos[] = $old_q_id;
   echo "</table>\n";
 }
-
 ?>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo $string['objectivemapping']; ?></title>
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.mappingform.js"></script>
+  <script id="rogoconfig" src='../js/rogo.min.js'
+          data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
+          data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
+          data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>">
+  </script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/mapquestioninit.min.js"></script>
   <?php
     $texteditorplugin = \plugins\plugins_texteditor::get_editor();
     $texteditorplugin->display_header();
   ?>
-  <script>
-    $(function () {
-      $('#cancel').click(function() {
-        window.close();
-      });
-    });  
-  </script>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" href="../css/start.css" type="text/css" />
   <link rel="stylesheet" href="../css/mapping_form.css" type="text/css" />
@@ -123,25 +119,18 @@ function display_q($configObject, $target_id, $db) {
   <style>
     .objheading {font-size:150%; font-weight:bold; color:#316AC5; padding-top:10px; border-top:1px solid #C0C0C0}
   </style>
+  <?php
+  // Check if any 3d file types are enabled and render js.
+  threed_handler::render_js($string);
+  ?>
 </head>
 <body>
   <div id="maincontent">
 <?php
-
-if (isset($_POST['submit'])) {
-  // Write out curriculum mapping.
-  save_objective_mappings($mysqli, $_POST['objective_modules'], $_POST['paperID'], $_POST['questionID']);
-  ?>
-  <script>
-    window.opener.location = window.opener.location;
-    window.close();
-  </script>
-  <?php
-} else {
   display_q($configObject, $_GET['q_id'], $mysqli);
 
   echo "<div id=\"obj_form\">\n";
-  echo "<form method=\"post\" autocomplete=\"off\">";
+  echo "<form id='theform' method=\"post\" autocomplete=\"off\">";
   try {
     echo render_objectives_mapping_form($mysqli, $paperID, $string);
   } catch(Exception $e) {
@@ -159,10 +148,18 @@ if (isset($_POST['submit'])) {
   echo "<div style=\"text-align:center; width:100%\"><input type=\"submit\" name=\"submit\" value=\"" . $string['save'] . "\" class=\"ok\" /><input class=\"cancel\" id=\"cancel\" type=\"button\" value=\"" . $string['cancel'] . "\" /></div>";
 
   echo "</form>\n</div>\n";
-}
 ?>
   </div>
 <?php
+  // JS utils dataset.
+  $jsdataset['name'] = 'jsutils';
+  $jsdataset['attributes']['xls'] = json_encode($string);
+  $render = new render($configObject);
+  $render->render($jsdataset, array(), 'dataset.html');
+  // Dataset.
+  $miscdataset['name'] = 'dataset';
+  $miscdataset['attributes']['language'] = $language;
+  $render->render($miscdataset, array(), 'dataset.html');
   $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 ?>
 </body>

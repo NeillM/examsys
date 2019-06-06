@@ -24,23 +24,6 @@
 
 
 ?>
-<script>
-  function editLTIkeys() {
-    window.location.href = './edit_LTIkeys.php?LTIkeysid=' + $('#lineID').val();
-  }
-
-  function deleteLTIkeys() {
-    notice = window.open("../delete/check_delete_LTIkeys.php?LTIkeysID=" + $('#lineID').val() + "", "LTIkeyss", "width=520,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width / 2 - 270, screen.height / 2 - 85);
-    if (window.focus) {
-      notice.focus();
-    }
-  }
-
-  function searchUserLinks() {
-    window.location.href = './search_users.php?LTIkeysid=' + $('#lineID').val();
-  }
-</script>
 
 <div id="left-sidebar" class="sidebar">
   <form name="myform" autocomplete="off">
@@ -55,9 +38,9 @@
 
 		<div style="display:none" id="menu1b">
 			<div class="menuitem"><a href="add_LTIkeys.php"><img class="sidebar_icon" src="../artwork/lti_key_16.png" alt="<?php echo $string['createLTIkeys'] ?>" /><?php echo $string['createLTIkeys'] ?></a></div>
-			<div class="menuitem"><a href="#" onclick="editLTIkeys(); return false;"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editLTIkeys'] ?>" /><?php echo $string['editLTIkeys'] ?></a></div>
-			<div class="menuitem"><a href="#" onclick="deleteLTIkeys(); return false;"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="<?php echo $string['deleteLTIkeys'] ?>" /><?php echo $string['deleteLTIkeys'] ?></a></div>
-      <div class="menuitem"><a href="#" onclick="searchUserLinks(); return false;"><img class="sidebar_icon" src="../artwork/clear_lti_link.png" alt="<?php echo $string['searchuserlinks'] ?>" /><?php echo $string['searchuserlinks'] ?></a></div>
+			<div class="menuitem"><a href="#" id="edit"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editLTIkeys'] ?>" /><?php echo $string['editLTIkeys'] ?></a></div>
+			<div class="menuitem"><a href="#" id="delete""><img class="sidebar_icon" src="../artwork/red_cross.png" alt="<?php echo $string['deleteLTIkeys'] ?>" /><?php echo $string['deleteLTIkeys'] ?></a></div>
+      <div class="menuitem"><a href="#" id="search"><img class="sidebar_icon" src="../artwork/clear_lti_link.png" alt="<?php echo $string['searchuserlinks'] ?>" /><?php echo $string['searchuserlinks'] ?></a></div>
 		</div>
 
     <input type="hidden" id="lineID" name="lineID" value=""/>

@@ -110,12 +110,14 @@ if (isset($_POST['submit'])) {
     .field {text-align:right; font-weight:bold}
     .note {width:90%}
   </style>
-	
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src='../js/loadmappinginit.min.js'></script>
 </head>
 
-<body onclick="hideSessCopyMenu(event);">
+<body>
 <?php
   require '../include/sessions_options.inc';
   require '../include/toprightmenu.inc';
@@ -166,7 +168,7 @@ if (isset($_POST['submit'])) {
   echo "</select></td>\n";
 ?>
 </tr>
-<tr><td colspan="2" style="text-align:center"><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" onclick="history.go(-1)" /></td></tr>
+<tr><td colspan="2" style="text-align:center"><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" /></td></tr>
 </form>
 </div>
 </td>
@@ -177,6 +179,20 @@ if (isset($_POST['submit'])) {
 </div>
 <?php	
 }
+// Dataset.
+$render = new render($configObject);
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['module'] = $modID;
+$miscdataset['attributes']['vle'] = $vle_api;
+if ($vle_api != '') {
+  $miscdataset['attributes']['vlename'] = $vle_name;
+  $miscdataset['attributes']['vlehumanname'] = $vle_name_a;
+}
+$render->render($miscdataset, array(), 'dataset.html');
+// JS utils dataset.
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
 $mysqli->close();
 ?>
 </body>

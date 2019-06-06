@@ -16,26 +16,21 @@
 
 /**
  *
- * @author Adam Clarke
+ * @author Anthony Brown
  * @version 1.0
- * @copyright Copyright (c) 2011 The University of Nottingham
+ * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
 
-require '../../include/staff_auth.inc';
+define('AJAX_REQUEST', true);
+require '../include/staff_auth.inc';
+require '../include/mapping.inc';
 
-?>
-<script>
-function local_LoadPanel(type)
-{
-    var url = load_source + '/load_' + type + '.php';
-	$('local_load_panel').load(url);
-}
-</script>
+$modules = param::required('objective_modules', param::TEXT, param::FETCH_POST);
+$paperid = param::required('paperID', param::INT, param::FETCH_POST);
+$questionid = param::required('questionID', param::INT, param::FETCH_POST);
 
-<button onclick="local_LoadPanel('question');">Question</button>
-<button onclick="local_LoadPanel('batch_q');">Batch Question</button>
-<button onclick="local_LoadPanel('paper');">Paper</button>
-<button onclick="local_LoadPanel('batch_p');">Batch Paper</button>
+// Write out curriculum mapping.
+save_objective_mappings($mysqli, $modules, $paperid, $questionid);
 
-<div id="local_load_panel"></div>
+echo json_encode("SUCCESS");

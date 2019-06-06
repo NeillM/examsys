@@ -39,15 +39,11 @@ require_once '../include/staff_auth.inc';
   <style type="text/css">
     span.killer {float:none}
   </style>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    $(function () {
-      $('#file_form').validate();
-    });
-  </script>
+
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script type="text/javascript" src="../js/importinit.min.js"></script>
 </head>
 
 <body>
@@ -55,7 +51,7 @@ require_once '../include/staff_auth.inc';
 require '../include/paper_options.php';
 require '../include/toprightmenu.inc';
 
-echo draw_toprightmenu();
+echo draw_toprightmenu(224);
 ?>
 <div id="content">
 <?php
@@ -81,7 +77,7 @@ echo "</div>";
 
 <table cellspacing="0" cellpadding="0" border="0" style="width:500px; text-align:left" class="dialog_border"> 
 	<tr> 
-		<td class="inline_dialog_header" style="width:55px"><img src="../artwork/ims_logo.png" width="47" height="44" alt="IMS Logo" /></td><td class="dialog_header" style="width:445px">QTI <?php echo $string['import'] ?></td> 
+		<td class="inline_dialog_header" style="width:55px"><img src="../artwork/ims_logo.png" width="47" height="44" alt="IMS Logo" /></td><td class="dialog_header" style="width:445px"><?php echo $string['import'] ?></td>
 	</tr> 
 	<tr> 
 		<td class="dialog_body" colspan="2"> 

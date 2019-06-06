@@ -58,8 +58,9 @@ $headerdata = array(
     '/css/check_delete.css',
   ),
   'scripts' => array(
-    '/js/jquery-1.11.1.min.js',
-    '/LTI/js/unlink_user.js',
+    '/js/require.js',
+    '/js/main.min.js',
+    '/LTI/js/unlink_user.min.js',
   ),
 );
 $data = array(

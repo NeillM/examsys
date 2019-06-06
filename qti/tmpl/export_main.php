@@ -45,19 +45,10 @@ require_once '../include/staff_auth.inc';
     .paper_head {font-size:140%}
     .screen_head {font-size:120%}
   </style>
-	
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    // Popup window code
-    function newPopup(url) {
-      notice=window.open(url,"properties","width=827,height=510,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        notice.focus();
-      }
-    }
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src='../js/exportinit.min.js'></script>
 </head>
 <?php
 // paper_options.php modifies result!  Store it temporarily
@@ -66,7 +57,7 @@ $export_result = $result;
 require '../include/paper_options.php';
 require '../include/toprightmenu.inc';
 
-echo draw_toprightmenu();
+echo draw_toprightmenu(225);
 
 $result = $export_result;
 ?>
@@ -137,21 +128,21 @@ if (!isset($qtiexportdirectory)) {
 			<?php endforeach; ?>
 			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php echo $string['moreinformation']; ?></div>
 			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;
-				<a href="" onclick="newPopup('<?php echo $qtiexportdirectory->url($path . '/result.html'); ?>'); return false;"><?php echo $string['viewdetails']; ?></a>
+				<a class="openpopup" href="" data-url="<?php echo $qtiexportdirectory->url($path . '/result.html'); ?>"><?php echo $string['viewdetails']; ?></a>
 			</div>
 <?php if ($show_debug) : ?>
 			<div style="margin-left:25px; line-height:150%; margin-top:10px; font-weight:bold"><?php echo $string['debuginformation']; ?></div>
 			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;
-				<a href="" onclick="newPopup('<?php echo $qtiexportdirectory->url($path . '/debug_load.html'); ?>'); return false;"><?php echo $string['loadingdebug']; ?></a>
+				<a class="openpopup" href="" data-url="<?php echo $qtiexportdirectory->url($path . '/debug_load.html'); ?>"><?php echo $string['loadingdebug']; ?></a>
 			</div>
 			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;
-				<a href="" onclick="newPopup('<?php echo $qtiexportdirectory->url($path . '/debug_int.html'); ?>'); return false;"><?php echo $string['intermediateformatdebug']; ?></a>
+				<a class="openpopup" href="" data-url="<?php echo $qtiexportdirectory->url($path . '/debug_int.html'); ?>"><?php echo $string['intermediateformatdebug']; ?></a>
 			</div>
 			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;
-				<a href="" onclick="newPopup('<?php echo $qtiexportdirectory->url($path . '/debug_save.html'); ?>'); return false;"><?php echo $string['savingdebug']; ?></a>
+				<a class="openpopup" href="" data-url="'<?php echo $qtiexportdirectory->url($path . '/debug_save.html'); ?>"><?php echo $string['savingdebug']; ?></a>
 			</div>
 			<div style="margin-left:25px; line-height:150%"><img src="../artwork/bullet_outline.gif" width="16" height="16" alt="bullet" />&nbsp;
-				<a href="" onclick="newPopup('<?php echo $qtiexportdirectory->url($path . '/debug_res.html'); ?>'); return false;"><?php echo $string['generaldebuginfo']; ?></a>
+				<a class="openpopup" href="" data-url="<?php echo $qtiexportdirectory->url($path . '/debug_res.html'); ?>"><?php echo $string['generaldebuginfo']; ?></a>
 			</div>
 <?php endif; ?>
 			<br />

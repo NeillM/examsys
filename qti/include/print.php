@@ -67,27 +67,6 @@ body {font-family:Arial,sans-serif; font-size:90%}
 	padding:6px;
 }
 </style>
-<script>
-  function print_nice_expand(id) {
-    $('print_nice_' + id).style.display = 'inline';
-  }
-
-  function print_nice_contract(id) {
-    $('print_nice_' + id).style.display = 'none';
-  }
-
-  function print_nice_expand_all(id) {
-    print_nice_expand(id)
-  }
-
-  function print_nice_toggle_raw(id) {
-    if ($('print_nice_raw_' + id).style.display == 'none') {
-      $('print_nice_raw_' + id).style.display = 'inline';
-    } else {
-      $('print_nice_raw_' + id).style.display = 'none';
-    }
-  }
-</script>
 
 <?php
 }
@@ -132,10 +111,10 @@ function print_p($elem, $expandfirst = true, $trim = 100, $max_level = 10, $prin
     }
     echo "<div class='print_cont'>";
     echo "<div class='print_head'>";
-    echo "<img src='$base_dir/qti/artwork/plus.png' width='16' height='16' onclick='print_nice_expand(".$nice_id.")'>";
-    echo "<img src='$base_dir/qti/artwork/star.png' width='16' height='16' onclick='print_nice_expand_all(".$nice_id.")'>";
-    echo "<img src='$base_dir/qti/artwork/minus.png' width='16' height='16' onclick='print_nice_contract(".$nice_id.")'>";
-    echo "<img src='$base_dir/qti/artwork/raw.png' width='16' height='16' onclick='print_nice_toggle_raw(".$nice_id.")'>";
+    echo "<img src='$base_dir/qti/artwork/plus.png' width='16' height='16' class='expand' data-id='".$nice_id."'>";
+    echo "<img src='$base_dir/qti/artwork/star.png' width='16' height='16' class='all' data-id='".$nice_id."'>";
+    echo "<img src='$base_dir/qti/artwork/minus.png' width='16' height='16' class='contract' data-id='".$nice_id."'>";
+    echo "<img src='$base_dir/qti/artwork/raw.png' width='16' height='16' class='raw' data-id='".$nice_id."'>";
     echo "&nbsp;&nbsp;";
     echo $title."</div>";
     echo "<div class='print_raw' id='print_nice_raw_".$nice_id."' style=\"display:none\"><pre>";

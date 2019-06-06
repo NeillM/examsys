@@ -43,30 +43,7 @@ function get_existing_years($db, $idMod) {
   return $years;
 }
 ?>
-<script>
-  function checkCopyYearForm() {
-    var formOK = true;
-    
-    sourceList = document.getElementById('source_y');
-    destList = document.getElementById('dest_y');
-
-    sourceYear = sourceList.options[sourceList.selectedIndex].value;
-    destYear = destList[destList.selectedIndex].value;
-
-    if (typeof(sourceYear) != 'undefined' && typeof(destYear) != 'undefined' && sourceYear != '' && destYear != '') {
-      if (sourceYear == destYear) {
-        alert('<?php echo $string['msg1']; ?>');
-        formOK = false;
-      }
-    }	else {
-      alert('<?php echo $string['msg2']; ?>');
-      formOK = false;
-    }
-
-    return formOK;
-  }
-</script>
-<div class="popup" style="display:none; top:115px; font-size:80%" id="session_copy_menu" onclick="showSessCopyMenu(event);">
+<div class="popup" style="display:none; top:115px; font-size:80%" id="session_copy_menu";">
 <table border="0" cellpadding="2" cellspacing="0" style="width:340px; border:0px solid #C0C0C0; background-color:white">
 <tr>
 <td style="background-color:#F2B100; height:3px"></td>
@@ -100,7 +77,7 @@ function get_existing_years($db, $idMod) {
 <?php
 	} else {
 ?>
-	<form action="copy_year.php" method="post" onsubmit="return checkCopyYearForm()" autocomplete="off">
+	<form id="copyform" action="copy_year.php" method="post" autocomplete="off">
 		<table width="100%">
 			<tr>
 				<td width="50%"><?php echo $string['msg5']; ?></td>

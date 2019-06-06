@@ -28,6 +28,8 @@ require '../include/mapping.inc';
 require '../include/errors.php';
 
 $paperID = check_var('paperID', 'GET', true, false, true);
+$folderID = param::optional('folder', '', param::INT, param::FETCH_GET);
+$moduleID = param::optional('module', '', param::INT, param::FETCH_GET);
 
 //get the paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
@@ -51,14 +53,11 @@ $paper_type  = $propertyObj->get_paper_type();
   <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 
-  <script src="../js/jquery-1.11.1.min.js" type="text/javascript"></script>
-  <script src="../js/staff_help.js" type="text/javascript"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    $(function () {
-      $('a[rel=external]').attr('target', '_blank');
-    });
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/mappinginit.min.js"></script>
+
 </head>
 
 <body>
@@ -77,10 +76,10 @@ $paper_type  = $propertyObj->get_paper_type();
   echo "<div class=\"head_title\">\n";
   echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
-  if (isset($_GET['folder']) and $_GET['folder'] != '') {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
-  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
-    $modules = explode(',', $_GET['module']);
+  if ($folderID != '') {
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folderID . '">' . folder_utils::get_folder_name($folderID, $mysqli) . '</a>';
+  } elseif ($moduleID != '') {
+    $modules = explode(',', $moduleID);
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $modules[0] . '">' . module_utils::get_moduleid_from_id($modules[0], $mysqli) . '</a>';
   }
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div>';
@@ -128,9 +127,9 @@ $paper_type  = $propertyObj->get_paper_type();
   <table class="header">
   <tr><th style="padding-top:1px">
   <table cellpadding="0" cellspacing="0" border="0" style="font-size:90%; width:378px">
-  <td class="tabon"><?php echo $string['bysession']; ?></td>
-  <td class="taboff" onclick="window.location.href='paper_by_question.php?paperID=<?php echo $paperID; ?>&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>'"><?php echo $string['byquestion']; ?></td>
-  <td class="taboff" onclick="window.location.href='paper_by_year.php?paperID=<?php echo $paperID; ?>&folder=<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>&module=<?php if (isset($_GET['module'])) echo $_GET['module']; ?>'"><?php echo $string['longitudinal']; ?></td>
+  <td id="bysession" class="tabon"><?php echo $string['bysession']; ?></td>
+  <td id="byquestion" class="taboff"><?php echo $string['byquestion']; ?></td>
+  <td id="byyear" class="taboff"><?php echo $string['longitudinal']; ?></td>
   </table>
   </th><th style="width:100%; text-align:right">&nbsp;</th>
   </tr>
@@ -181,7 +180,7 @@ $paper_type  = $propertyObj->get_paper_type();
         if ($sessionData['class_code'] != '') {
           echo $sessionData['class_code'] . ': ';
         }
-        echo $sessionData['title'] . ' <a href="' . $sessionData['source_url'] . '" rel="external"><img src="../artwork/small_link.png" width="11" height="11" alt="" /></a> ';
+        echo $sessionData['title'] . ' <a href="' . $sessionData['source_url'] . '" rel="external" target="_blank"><img src="../artwork/small_link.png" width="11" height="11" alt="" /></a> ';
 
         echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n</td></tr>\n";
         if (isset($sessionData["objectives"]) and is_array($sessionData["objectives"])) {
@@ -220,6 +219,14 @@ $paper_type  = $propertyObj->get_paper_type();
 ?>
 </table>
 </div>
-
+<?php
+// Dataset.
+$render = new render($configObject);
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['paper'] = $paperID;
+$miscdataset['attributes']['folder'] = $folderID;
+$miscdataset['attributes']['module'] = $moduleID;
+$render->render($miscdataset, array(), 'dataset.html');
+ ?>
 </body>
 </html>

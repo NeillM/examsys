@@ -30,8 +30,6 @@ require_once '../include/staff_auth.inc';
   
 	<title>Rog&#333; Import to QTI</title>
 
-	<script type="text/javascript" src="./qti/js/mootools-1.2.4.js"></script>
-
   <link rel="stylesheet" type="text/css" href="./css/body.css" />
 	<style type="text/css">
 		.divider {font-size:80%; padding-left:16px; padding-bottom:2px; font-weight:bold}
@@ -96,34 +94,10 @@ require_once '../include/staff_auth.inc';
   }
 </style>
 
-<script type="text/javascript">
-
-function print_nice_expand(id)
-{
-	$('print_nice_' + id).style.display = 'inline';
-	
-}
-
-function print_nice_contract(id)
-{
-	$('print_nice_' + id).style.display = 'none';
-}
-
-function print_nice_expand_all(id)
-{
-	print_nice_expand(id)
-}
-
-function print_nice_toggle_raw(id)
-{
-	if ($('print_nice_raw_' + id).style.display == 'none')
-	{
-		$('print_nice_raw_' + id).style.display = 'inline';
-	} else {
-		$('print_nice_raw_' + id).style.display = 'none';
-	}
-}
-</script>
+  <script id="rogoconfig" src='../../js/rogo.min.js'></script>
+  <script src='../../js/require.js'></script>
+  <script src='../../js/main.min.js'></script>
+  <script src="../../js/qtidebuginit.min.js"></script>
 </head>
 
 <body>

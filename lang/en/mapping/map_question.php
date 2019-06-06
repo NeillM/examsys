@@ -20,3 +20,5 @@ $string['objectives'] = 'Objectives';
 $string['objectivemapping'] = 'Objective Mapping';
 $string['noneabove'] = 'None of the Above';
 $string['noneabovemsg'] = 'Check here if the current question does not match any of the above objectives from %s.';
+$string['mathjaxinstructions'] = '<b>Tip:</b> Enter latex formula within <span class="tex2jax_ignore">$$</span> for inline mode, or <span class="tex2jax_ignore">$$$</span> for display mode.';
+$string['previewmathjax'] = 'Preview';

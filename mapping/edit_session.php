@@ -150,93 +150,20 @@ if (isset($_POST['Edit'])) {
     <link rel="stylesheet" type="text/css" href="../css/header.css" />
     <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
     <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
+    <link rel="stylesheet" type="text/css" href="../css/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/jquery-theme.css" />
     <style type="text/css">
       .editBox {width:90%}
       .field {text-align:right}
       .note {width:90%}
     </style>
-		
-    <script src="../js/staff_help.js" type="text/javascript"></script>
-    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-    <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-		<script type="text/javascript" src="../js/toprightmenu.js"></script>
-    <script>
-      $(function () {
-        $('#theform').validate({
-          errorClass: 'errfield',
-          errorPlacement: function(error,element) {
-            return true;
-          }
-        });
-        $('form').removeAttr('novalidate');
-      });
 
-      var ObjNewCount = 0;
-      var ObjCount = 0;
-      function addNew(ulId) {
-        ul = document.getElementById( ulId );
-        li = document.createElement("li");
-        li.id = 'li_' + ulId + ObjNewCount;
-        li.style.margin = '0.5em';
-        li.style.marginLeft = '3.5em';
-        li.innerHTML = '<img src="./up_on.png" onclick="promote( \'' + li.id + '\' )" />&nbsp<img src="./down_on.png" onclick="demote( \'' + li.id + '\' )" />&nbsp<input class="editBox" name="objnew_' + ObjNewCount + '" id="objnew_' + ObjNewCount + '" type="text" value="" placeholder="<?php echo $string['msg1']; ?>" /></li>';
-        ul.insertBefore(li,ul.lastChild);
-        ObjNewCount++;
-        updateButtons();
-      }
+    <script src='../js/require.js'></script>
+    <script src='../js/main.min.js'></script>
+    <script src="../js/mappingsessioninit.min.js"></script>
 
-      function demote( liId ) {
-        li = document.getElementById( liId );
-        ul = li.parentNode;
-        var i = 0;
-        while(ul.childNodes[i].id != liId) {
-          i++;
-        }
-        if ( i > 0 && i < (ul.childNodes.length - 2) ) {
-          temp = ul.removeChild(ul.childNodes[i]);
-          ul.insertBefore(temp,ul.childNodes[i+1]);
-        }
-        updateButtons();
-      }
-
-      function promote( liId ) {
-        li = document.getElementById( liId );
-        ul = li.parentNode;
-        var i = 0;
-        while(ul.childNodes[i].id != liId) {
-          i++;
-        }
-        if ( i > 1 ) {
-          temp = ul.removeChild(ul.childNodes[i]);
-          ul.insertBefore(temp,ul.childNodes[i-1]);
-        }
-        updateButtons();
-      }
-
-      function updateButtons() {
-        lis = document.getElementsByTagName('li');
-        ObjCount = 0;
-        for (var i = 1; i < (lis.length - 1) ; i++ ) {
-          if (lis[i].id != '') {
-            ObjCount++;
-            if (lis[i - 1].id == '') {
-              //disable up
-              lis[i].childNodes[0].src = './up_off.png';
-            } else {
-              lis[i].childNodes[0].src = './up_on.png';
-            }
-            if (lis[i+ 1].id == '') {
-              //disable down
-              lis[i].childNodes[2].src = './down_off.png';
-            } else {
-              lis[i].childNodes[2].src = './down_on.png';
-            }
-          }
-        }
-      }
-    </script>
   </head>
-  <body onclick="hideSessCopyMenu(event);">
+  <body>
 <?php
 require '../include/sessions_options.inc';
 require '../include/toprightmenu.inc';
@@ -336,19 +263,18 @@ echo "</select>\n</td></tr>\n";
 
 echo '<tr><td class="field">' . $string['url'] . '</td><td><input name="url" class="editBox" type="text" value="' . $sess['source_url'] . '" /></td></tr>';
 
-echo "\n<tr><td colspan=\"2\"><ul id=\"objList\" style=\"margin-left:0px; list-style-type:none; width:100%\">\t<li>\n\t<table callpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:93%; font-size:100%\">\n<tr>\n\t<td class=\"subheading\"></td>\n";
-echo "\t<td valign=\"center\" style=\"color:gray; padding-left:1em; font-size:75%; width:100%;\"></td>\t";
-echo "\t<td></td></tr></table></li>\n";
+echo "\n<tr><td colspan=\"2\"><ul id=\"objList\" style=\"margin-left:0px; list-style-type:none; width:100%\">\n";
 if (isset($sess['objectives'])) {
   foreach ($sess['objectives'] as $id => $obj) {
-    echo "\t<li id=\"li_$id\" style=\"margin:0.5em; margin-left:3.5em\">";
-    echo '<img src="./up_on.png" onclick="promote( \'li_' . $id . '\' )" />&nbsp<img src="./down_on.png" onclick="demote( \'li_' . $id . '\' )" />&nbsp';
-    echo "<input class='editBox' onfocus=\"clearTextbox('obj_" . $id . "');\" id=\"obj_" . $id . "\" name=\"obj_" . $id . "\" type=\"text\" value=\"" . htmlentities($obj, ENT_QUOTES, 'UTF-8') . "\" />";
+    echo "\t<li class=\"ui-state-default\" id=\"li_$id\" style=\"margin:0.5em; margin-left:3.5em\">";
+    echo "<span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>";
+    echo "<input class='editBox' id=\"obj_" . $id . "\" name=\"obj_" . $id . "\" type=\"text\" value=\"" . htmlentities($obj, ENT_QUOTES, 'UTF-8') .  "\" placeholder=\"" . $string['msg1'] . "\" />";
     echo "</li>\n";
   }
 }
-echo '<li style="margin: 0.5em; margin-left:6em"><input style="width:80px" type="button" value="' . $string['new'] . '"  onclick="addNew(\'objList\')"></li>';
 echo '</ul>';
+echo '<input id="new" style="margin:0.5em; margin-left:6em; width: 80px" type="button" value="' . $string['new'] . '" >';
+
 
 //add the save buttens
 echo '<ul style="margin-left:0px; list-style-type:none; width:100%">';
@@ -360,9 +286,20 @@ echo "</ul>\n";
 echo "<input type=\"hidden\" name=\"identifier\" value=\"$identifier\" />";
 echo "</td></tr>\n</table>\n</div>\n";
 echo "</form>\n";
-echo '<script>updateButtons();</script>';
 ?>
 </div>
+<?php
+// Dataset.
+$render = new render($configObject);
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['folder'] = $folder;
+$miscdataset['attributes']['module'] = $modID;
+$render->render($miscdataset, array(), 'dataset.html');
+// JS utils dataset.
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>
 <?php

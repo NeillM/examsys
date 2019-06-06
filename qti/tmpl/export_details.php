@@ -28,8 +28,6 @@ require_once '../include/staff_auth.inc';
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
 	<title>Export to QTI</title>
 
-	<script type="text/javascript" src="./qti/js/mootools-1.2.4.js"></script>
-	
 	<style type="text/css">
 		body {background-color:white; color:black; font-family:Arial,sans-serif;margin:0px;}
 		.divider {padding-left:6px; font-weight:bold}

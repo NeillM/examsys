@@ -28,98 +28,69 @@ require_once '../include/staff_auth.inc';
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-	<title>Rogō Export to QTI</title>
-  
-	<link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-	<style type="text/css">
-		.divider {font-size:80%; padding-left:16px; padding-bottom:2px; font-weight:bold}
-		a {color:black}
-		a:hover {color:blue}
-		.f {float:left; width:375px; padding-left:12px; font-size:80%}
-		.recent {color:blue; font-size:90%}
-		.param_section {margin:16px;padding:6px;border: 1px solid #dddddd;}
 
-	.exp_table {
-		border-left: 1px solid #dddddd;
-		border-top: 1px solid #dddddd;
-	}
+    <title>Rog&#333;: <?php echo $string['importfromqti'] ?></title>
 
-	.exp_table tr td,.exp_table tr th	{
-		border-bottom: 1px solid #dddddd;
-		border-right: 1px solid #dddddd;
-		padding: 1px;
-		font-size:80%;
-	}
-	
-	.paper_head {
-		font-size:140%;
-	}
-	
-	.screen_head {
-		font-size:120%;
-	}
-	</style>
-  
-	<script type="text/javascript" src="js/mootools-1.2.4.js"></script> 
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script>
-    // Popup window code
-    function newPopup(url) {
-      notice=window.open(url,"properties","width=827,height=510,left="+(screen.width/2-325)+",top="+(screen.height/2-250)+",scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        notice.focus();
-      }
-    }
-  </script>
+    <link rel="stylesheet" type="text/css" href="../css/body.css" />
+    <link rel="stylesheet" type="text/css" href="../css/header.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
+    <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
+    <style type="text/css">
+        span.killer {float:none}
+    </style>
+
+    <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+    <script src='../js/require.js'></script>
+    <script src='../js/main.min.js'></script>
+    <script type="text/javascript" src="../js/importinit.min.js"></script>
 </head>
 
 <?php
 require '../include/paper_options.php';
+
+require '../include/toprightmenu.inc';
+
+echo draw_toprightmenu(224);
 ?>
 <div id="content">
-<?php
-echo "<table class=\"header\">\n";
-echo "<tr><th colspan=\"5\"><div class=\"breadcrumb\">";
-if ($module != '') {
-  echo '<a href="../index.php">Home</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../module/index.php?module='.$module.'">'.$module.'</a>';
-} elseif ($folder != '') {
-  echo '<a href="../index.php">Home</a>&nbsp;&nbsp;<img src="../artwork/breadcrumb_arrow.png" width="4" height="7" alt="-" />&nbsp;&nbsp;<a href="../folder/index.php?folder='.$folder.'">'.$folder_name.'</a>';
-} else {
-  echo '<a href="../index.php">Home</a>';
-}
-echo "</div><div onclick=\"qOff()\" style=\"font-size:220%; font-weight:bold; margin-left:10px\">$paper_title</div>";
-echo "</th><th style=\"background-color:#F1F5FB; text-align:right; vertical-align:top; padding-top:2px; padding-right:6px\"><a href=\"#\" onclick=\"launchHelp(1); return false;\"><img src=\"../artwork/small_help_icon.gif\" width=\"16\" height=\"16\" alt=\"Help\" border=\"0\" /></a></td></tr>\n";
-echo "</table>";
-?>
-<br/>
-<br/>
-<br/>
-<br/>
-<div style="margin:9px;" align="center">
+  <?php
+  echo "<div class=\"head_title\">\n";
+  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
+  echo "<div class=\"breadcrumb\">";
+  $modutils = module_utils::get_instance();
+  echo '<a href="../index.php">' . $string['home'] . '</a>';
+  if (isset($_GET['module']) and $_GET['module'] != '') {
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . $modutils->get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+  } elseif ($folder != '') {
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folder . '">' . $folder_name . '</a>';
+  }
+  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a>';
 
-<table border="0" cellpadding="0" cellspacing="0" style="width:600px; border:1px solid #5582D2; text-align:left"> 
-	<tr> 
-		<td style="background-color:white; width:55px"><img src="../artwork/ims_logo.png" width="47" height="44" alt="IMS Logo" /></td><td style="width:445px"><span style="font-size:16pt; font-weight:bold; color:#5582D2"><?php echo $string['qtiimport'] ?></span></td>
-	</tr> 
-	<tr> 
-		<td align="left" style="background-color:#fff2a4" colspan="2"> 
-			
-			<div style="padding-top:16px;padding-left:16px;padding-right:16px;">
-          <table border="0" cellpadding="0" cellspacing="0" style="width:100%">
-			     <tr><td colspan="2" style="height:32px; text-align:right"><img src="../artwork/paper_locked_padlock.png" width="19" height="24" alt="Locked" />&nbsp;&nbsp;</td><td colspan="7" style="height:32px; vertical-align:middle;"><strong><?php echo $string['paperlocked'] ?></strong>&nbsp;&nbsp;&nbsp;<?php echo $string['paperlockedmsg'] ?><a href="#" class="blacklink" onclick="launchHelp(189); return false;">Click for more details.</a></td></tr>
-			    </table>
-          <br/>
-      </div>
-		</td>
-	</tr>
-</table>
+  echo "</div><div class=\"page_title\">" . $string['importfromqti'] . "</div>";
+  echo "</div>";
+  ?>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
 
-</div>
+    <table cellspacing="0" cellpadding="0" border="0" style="width:500px; text-align:left" class="dialog_border">
+        <tr>
+            <td class="inline_dialog_header" style="width:55px"><img src="../artwork/ims_logo.png" width="47" height="44" alt="IMS Logo" /></td><td class="dialog_header" style="width:445px"><?php echo $string['import'] ?></td>
+        </tr>
+        <tr>
+            <td class="dialog_body" colspan="2">
+
+                <div style="padding-top:16px;padding-left:16px;padding-right:16px;">
+                    <table border="0" cellpadding="0" cellspacing="0" style="width:100%">
+                        <tr><td colspan="2" style="height:32px; text-align:right"><img src="../artwork/paper_locked_padlock.png" width="19" height="24" alt="Locked" />&nbsp;&nbsp;</td><td colspan="7" style="height:32px; vertical-align:middle;"><strong><?php echo $string['paperlocked'] ?></strong>&nbsp;&nbsp;&nbsp;<?php echo $string['paperlockedmsg'] ?><a href="#" class="blacklink" onclick="return false;"><?php echo $string['lockedlink'] ?></a></td></tr>
+                    </table>
+                    <br/>
+                </div>
+            </td>
+        </tr>
+    </table>
 
 </div>
 </body>
-
 </html>

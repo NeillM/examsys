@@ -15,5 +15,6 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['recyclebin'] = 'Recycle Bin';
+$string['title'] = 'Delete Session';
 $string['msg'] = 'Session successfully deleted.';
 ?>
