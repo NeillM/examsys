@@ -6,8 +6,9 @@
   <title>{{lang.title}}</title>
   <link rel="stylesheet" type="text/css" href="{{path}}/css/body.css" />
   <link rel="stylesheet" type="text/css" href="{{path}}/css/check_delete.css" />
-  <script type="text/javascript" src="{{path}}/js/jquery-1.11.1.min.js"></script>
-  {{additionaljs|raw}}
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/deleteinit.min.js"></script>
 </head>
 
 <body>
@@ -16,7 +17,7 @@
 
 <div class="button_bar">
   <form action="" method="get" autocomplete="off">
-    <input type="button" name="ok" value="OK" class="ok" onclick="javascript:window.close();"/>
+    <input type="button" name="ok" value="OK" class="ok" />
   </form>
 </div>
 

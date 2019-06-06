@@ -1,0 +1,51 @@
+// This file is part of Rogo
+//
+// Rogo is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogo is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
+//
+// Initialise session page.
+//
+// @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+// @copyright Copyright (c) 2019 The University of Nottingham
+//
+requirejs(['form', 'sessions', 'alert', 'jquery'], function (FORM, SESSION, ALERT, $) {
+    var sess = new SESSION();
+    var form = new FORM();
+    form.init();
+
+    $('#theform').submit(function (e) {
+        e.preventDefault();
+        if (sess.checkForm()) {
+            $.ajax({
+                url: $('#dataset').attr('data-posturl'),
+                type: "post",
+                data: $('#theform').serialize(),
+                dataType: "json",
+                success: function (data) {
+                    if (data == 'SUCCESS') {
+                        window.location = 'academic_sessions.php';
+                    } else if (data == 'DUPLICATE') {
+                        $('#calendar_year').addClass('errfield');
+                        $('.form-error').show();
+                    }
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    var alert = new ALERT();
+                    alert.plain(textStatus);
+                },
+            });
+        } else {
+            return false;
+        }
+    });
+});

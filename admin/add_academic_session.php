@@ -22,29 +22,6 @@
 
 require '../include/sysadmin_auth.inc';
 
-$yearutils = new yearutils($mysqli);
-
-if (isset($_POST['submit'])) {
-    $calendar_year = trim($_POST['calendar_year']);
-
-    if ($yearutils->check_calendar_year($calendar_year)) {
-        $error = 'duplicate';
-    } else {
-
-        $academic_year = trim( $_POST['academic_year']);
-        (isset($_POST['cal_status'])) ? $cal_status = 1: $cal_status = 0;
-        (isset($_POST['stat_status'])) ? $stat_status = 1 : $stat_status = 0;
-
-        $result = $mysqli->prepare("INSERT INTO academic_year (calendar_year, academic_year, cal_status, stat_status) values(?, ?, ?, ?)");
-        $result->bind_param('isii', $calendar_year, $academic_year, $cal_status, $stat_status);
-        $result->execute();
-        $result->close();
-
-        header("location: academic_sessions.php");
-        exit();
-    }
-}
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -55,49 +32,13 @@ if (isset($_POST['submit'])) {
         <link rel="stylesheet" type="text/css" href="../css/body.css" />
         <link rel="stylesheet" type="text/css" href="../css/header.css" />
         <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
-        <style type="text/css">
-          td {text-align:left}
-          .field {text-align:right; padding-right:10px}
-          .form-error {
-            width: 468px;
-            margin: 18px auto;
-            padding: 16px;
-            background-color: #FFD9D9;
-            color: #800000;
-            border: 2px solid #800000;
-          }
-        </style>
+        <link rel="stylesheet" type="text/css" href="../css/session.css" />
 
-        <?php echo $configObject->get('cfg_js_root') ?>
-        <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-        <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-        <script type="text/javascript" src="../js/toprightmenu.js"></script>
-        <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
-        <script type="text/javascript" src="../js/staff_help.js"></script>
-        <script type="text/javascript" src="../js/system_tooltips.js"></script>
-        <script>
-          $(function () {
-            $('#theform').validate({
-              errorClass: 'errfield',
-              errorPlacement: function(error,element) {
-                return true;
-              }
-            });
-            $('form').removeAttr('novalidate');
-            $('#cancel').click(function() {
-              history.back();
-            });
-          });
-          
-          function checkForm() {
-            var year = $('#calendar_year').val();
-            var regexp = /^[1-9][0-9][0-9][0-9]$/; 
-            if (regexp.exec(year) === null) {
-               alert('<?php echo $string['invalidcalendaryear'] ?>');
-               return false;
-            }
-          }
-        </script>
+        <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+        <script src='../js/require.js'></script>
+        <script src='../js/main.min.js'></script>
+        <script src="../js/sessioninit.min.js"></script>
+
     </head>
     <body>
 <?php
@@ -116,14 +57,8 @@ if (isset($_POST['submit'])) {
 
         <br />
             <div align="center">
-                <form id="theform" name="add_session" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" onsubmit="return checkForm()" autocomplete="off">
-                    <?php
-                        if (isset($error) and $error = 'duplicate') {
-                    ?>
-                        <div class="form-error"><?php echo $string['duplicateerror'] ?></div>
-                    <?php
-                        }
-                    ?>
+                <form id="theform" name="add_session" method="post" action="" autocomplete="off">
+                    <div class="form-error"><?php echo $string['duplicateerror'] ?></div>
                     <table cellpadding="0" cellspacing="2" border="0">
                         <tr><td class="field"><?php echo $string['calendaryear'] ?> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['calendaryear_tt'] ?>" /></td><td><input type="text" size="4" maxlength="4" id="calendar_year" name="calendar_year" value="" required /></td></tr>
                         <tr><td class="field"><?php echo $string['academicyear'] ?> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['academicyear_tt'] ?>" /></td><td><input type="text" size="30" maxlength="30" id="academic_year" name="academic_year" value="" required /></td></tr>
@@ -134,5 +69,15 @@ if (isset($_POST['submit'])) {
                 </form>
             </div>
         </div>
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['posturl'] = "do_add_academic_session.php";
+$render->render($miscdataset, array(), 'dataset.html');
+?>
     </body>
 </html>
