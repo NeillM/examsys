@@ -39,18 +39,7 @@ class threed_handler extends media_handler {
    */
   public static function get_js() {
     $js = array(
-      '/node_modules/three/build/three.min.js',
-      '/js/media/three/controlers/TrackballControls.min.js',
-      '/js/media/three/threeshared.min.js',
-      '/js/media/three/loaders/PLYLoader.min.js',
-      '/js/media/three/ply.min.js',
-      '/js/media/three/loaders/DDSLoader.min.js',
-      '/js/media/three/loaders/MTLLoader.min.js',
-      '/js/media/three/loaders/OBJLoader.min.js',
-      '/js/media/three/obj.min.js',
-      '/js/media/three/loaders/PDBLoader.min.js',
-      '/js/media/three/renderers/CSS2DRenderer.min.js',
-      '/js/media/three/pdb.min.js',
+      '/js/threeinit.min.js',
     );
     return $js;
   }
