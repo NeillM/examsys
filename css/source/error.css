@@ -1,0 +1,15 @@
+body {
+    font-size:80%;
+}
+table {
+    border-collapse:collapse;
+    width:100%;
+}
+td {
+    border: 1px solid #C0C0C0;
+    padding:2px
+}
+.f {
+    background-color:#EEEEEE;
+    width:250px;
+}

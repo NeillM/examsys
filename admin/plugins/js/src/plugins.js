@@ -22,34 +22,31 @@
 // @version 1.0
 // @copyright Copyright (c) 2016 The University of Nottingham
 //
+//
+define(['list', 'jquery', 'jquerytablesorter'], function(LIST, $) {
+    return function() {
+        /*
+         * Plugin list functions:
+         * sort - order the list of plugins via the header
+         * highlight - highligts selected plugin
+         * double click - launches edit plugin on double click
+         */
+        this.init = function () {
+            var list = new LIST();
+            if ($("#maindata").find("tr").size() > 1) {
+                $("#maindata").tablesorter({
+                    sortList: [[0, 0]]
+                });
+            }
 
-/*
- * Launch edit page
- * @param integer plugin id
- */
-function edit(id) {
-    document.location.href='./edit_plugins.php?pid=' + id;
-}
+            $(".l").click(function (event) {
+                event.stopPropagation();
+                list.selLine($(this).attr('id'), event);
+            });
 
-/*
- * Plugin list functions:
- * sort - order the list of plugins via the header
- * highlight - highligts selected plugin
- * double click - launches edit plugin on double click
- */
-$(function () {
-    if ($("#maindata").find("tr").size() > 1) {
-        $("#maindata").tablesorter({ 
-            sortList: [[0,0]] 
-        });
+            $(".l").dblclick(function () {
+                list.edit('./edit_plugins.php?pid=', $(this).attr('id'));
+            });
+        };
     }
-
-    $(".l").click(function(event) {
-        event.stopPropagation();
-        selLine($(this).attr('id'),event);
-    });
-
-    $(".l").dblclick(function() {
-        edit($(this).attr('id'));
-    });
 });

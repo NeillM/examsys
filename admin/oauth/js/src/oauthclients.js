@@ -22,36 +22,45 @@
 // @version 1.0
 // @copyright Copyright (c) 2016 The University of Nottingham
 //
+define(['list', 'jquery', 'jquerytablesorter'], function(LIST, $) {
+    return function() {
+        this.viewoption = function () {
+            window.location.href = './edit_oauthclient.php?client=' + $('#lineID').val();
+        };
 
-function viewoption() {
-    window.location.href = './edit_oauthclient.php?client=' + $('#lineID').val();
-}
+        this.deleteoption = function () {
+            var notice = window.open("../../delete/check_delete_oauthclient.php?client=" + $('#lineID').val() + "", "LTIkeyss", "width=520,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+            notice.moveTo(screen.width / 2 - 270, screen.height / 2 - 85);
+            if (window.focus) {
+                notice.focus();
+            }
+        };
 
-function deleteoption() {
-    notice = window.open("../../delete/check_delete_oauthclient.php?client=" + $('#lineID').val() + "", "LTIkeyss", "width=520,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width / 2 - 270, screen.height / 2 - 85);
-    if (window.focus) {
-      notice.focus();
+        this.init = function () {
+            var list = new LIST();
+            var scope = this;
+            if ($("#maindata").find("tr").size() > 1) {
+                $("#maindata").tablesorter({
+                    sortList: [[0, 0]]
+                });
+            }
+
+            $(".l").click(function (event) {
+                event.stopPropagation();
+                list.selLine($(this).attr('id'), event);
+            });
+
+            $(".l").dblclick(function () {
+                list.edit('./edit_oauthclient.php?client=', $(this).attr('id'));
+            });
+
+            $("#delete").click(function () {
+                scope.deleteoption();
+            });
+
+            $("#view").click(function () {
+                scope.viewoption();
+            });
+        };
     }
-}
-
-function edit(id) {
-    document.location.href='./edit_oauthclient.php?client=' + id;
-}
-
-$(function () {
-    if ($("#maindata").find("tr").size() > 1) {
-        $("#maindata").tablesorter({ 
-            sortList: [[0,0]] 
-        });
-    }
-
-    $(".l").click(function(event) {
-        event.stopPropagation();
-        selLine($(this).attr('id'),event);
-    });
-
-    $(".l").dblclick(function() {
-        edit($(this).attr('id'));
-    });
 });

@@ -16,7 +16,7 @@
 
 /**
 *
-* Displays tasks for the papers frame (papers_menu.php).
+* Display system errors
 *
 * @author Simon Wilkinson
 * @version 1.0
@@ -46,23 +46,15 @@ if ($row_no == 0) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-if (isset($_POST['submit'])) {
-  $result = $mysqli->prepare("UPDATE sys_errors SET fixed = NOW() WHERE errstr = ? AND errfile = ? AND errline = ?");
-  $result->bind_param('ssi', $errstr, $errfile, $errline);
-  $result->execute();
-  $result->close();
-  
-  echo "<html>\n<head><meta http-equiv=\"content-type\" content=\"text/html;charset={{$configObject->get('cfg_page_charset')}}\" /><title>Error Details</title></head>\n<body onload=\"window.opener.location='sys_error_list.php'; window.close();\"></body>\n<html>\n";
-  exit;
-} else {
-  $result = $mysqli->prepare("SELECT id FROM sys_errors WHERE errstr = ? AND errfile = ? AND errline = ?");
-  $result->bind_param('ssi', $errstr, $errfile, $errline);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($id);
-  $similar_errors = $result->num_rows();
-  $result->close();
-}
+
+$result = $mysqli->prepare("SELECT id FROM sys_errors WHERE errstr = ? AND errfile = ? AND errline = ?");
+$result->bind_param('ssi', $errstr, $errfile, $errline);
+$result->execute();
+$result->store_result();
+$result->bind_result($id);
+$similar_errors = $result->num_rows();
+$result->close();
+
 $variables = unserialize(base64_decode($variables));
 
 ?>
@@ -74,21 +66,11 @@ $variables = unserialize(base64_decode($variables));
   <title><?php printf($string['errordetails'], $error_id); ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <style type="text/css">
-    body {font-size:80%}
-    table {border-collapse:collapse; width:100%}
-    td {border: 1px solid #C0C0C0; padding:2px}
-    .f {background-color:#EEEEEE; width:250px}
-  </style>
-
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function () {
-      $('#cancel').click(function() {
-        history.back();
-      });
-    });
-  </script>
+  <link rel="stylesheet" type="text/css" href="../css/error.css" />
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script  src="../js/errorinit.min.js"></script>
 
 </head>
 
@@ -115,8 +97,10 @@ $variables = unserialize(base64_decode($variables));
 </table>
 </div>
 <br />
-<form action="<?php echo $_SERVER['PHP_SELF']; ?>?errorID=<?php echo $_GET['errorID']; ?>" method="post" name="myform" autocomplete="off">
-<div style="text-align:center"><input type="button" name="close" id="cancel" value="<?php echo $string['close']; ?>" style="width:100px" onclick="javascript:window.close();" />&nbsp;&nbsp;
+<form id="myform" action="" method="post" name="myform" autocomplete="off">
+<div style="text-align:center">
+    <input type="button" name="close" id="cancel" value="<?php echo $string['close']; ?>" style="width:100px" class="cancel" />&nbsp;&nbsp;
+    <input type="hidden" name="errorID" id="errorID" value="<?php echo $_GET['errorID']; ?>" />
 <?php
 if ($fixed == '') {
   echo '<input type="submit" name="submit" value="' . $string['fixed'] . '" style="width:100px" />';

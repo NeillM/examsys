@@ -58,11 +58,7 @@ $lang['title'] = $string['addcampus'];
 $lang['create'] = $string['createnewcampus'];
 $lang['view'] = $string['viewcampus'];
 $lang['delete'] = $string['deletecampus'];
-$additionaljs = "<script type=\"text/javascript\" src=\"../../js/jquery.validate.min.js\"></script>
-    <script type=\"text/javascript\" src=\"../../js/jquery-ui-1.10.4.min.js\"></script>
-    <script type=\"text/javascript\" src=\"../../js/system_tooltips.js\"></script>
-    <script type=\"text/javascript\" src=\"js/campuses.min.js\"></script>
-    <script type=\"text/javascript\" src=\"js/campuses_validate.min.js\"></script>";
+$additionaljs = "<script type=\"text/javascript\" src=\"js/campusesinit.min.js\"></script>";
 $addtionalcss = "<style type=\"text/css\">
           td {text-align:left}
           .field {text-align:right; padding-right:10px}

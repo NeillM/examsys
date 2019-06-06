@@ -22,21 +22,21 @@
 // @version 1.0
 // @copyright Copyright (c) 2016 The University of Nottingham
 //
-
-/*
- * Plugin properties page functions:
- * validate - enforces valid input
- * cancel - close the properties page
- */
-$(function () {
-    $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-            return true;
-        }
-    });
-    $('form').removeAttr('novalidate');
-    $('#cancel').click(function() {
-        history.back();
-    });
+define(['jquery', 'jqueryvalidate'], function($) {
+    return function () {
+        /*
+         * Plugin properties page functions:
+         * validate - enforces valid input
+         * cancel - close the properties page
+         */
+        this.init = function () {
+            $('#theform').validate({
+                errorClass: 'errfield',
+                errorPlacement: function (error, element) {
+                    return true;
+                }
+            });
+            $('form').removeAttr('novalidate');
+        };
+    }
 });

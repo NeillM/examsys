@@ -1,4 +1,3 @@
-// JavaScript Document
 // This file is part of Rogo
 //
 // Rogo is free software: you can redistribute it and/or modify
@@ -13,27 +12,29 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
-
 //
-//
-// Campus admin page validate js functions
+// Initialise error.
 //
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-// @copyright Copyright (c) 2018 The University of Nottingham
+// @copyright Copyright (c) 2019 The University of Nottingham
 //
-define(['jquery', 'jqueryvalidate'], function($) {
-    return function() {
-        /**
-         * Add campus validation methods to jquery-validate.
-         */
-        this.init = function () {
-            $('#theform').validate({
-                errorClass: 'errfield',
-                errorPlacement: function (error, element) {
-                    return true;
+requirejs(['jquery'], function ($) {
+    $('#myform').submit(function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: "upd_sys_error_details.php",
+            type: "post",
+            data: $('#myform').serialize(),
+            dataType: "json",
+            success: function (data) {
+                if (data == 'SUCCESS') {
+                    window.opener.location.reload();
+                    window.close();
                 }
-            });
-            $('form').removeAttr('novalidate');
-        };
-    }
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                alert(textStatus);
+            },
+        });
+    });
 });

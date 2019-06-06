@@ -38,36 +38,9 @@ if ($mysqli->errno != 0) {
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title><?php echo $string['campusclientdel']; ?></title>
-  
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-  <link rel="stylesheet" type="text/css" href="../css/check_delete.css" />
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function () {
-      window.opener.location.reload();
-      self.close();
-    });
-  </script>
-</head>
-
-<body>
-
-<p><?php echo $string['campusdelsuccess']; ?><p>
-
-<div class="button_bar">
-  <form action="" method="get" autocomplete="off">
-    <input type="button" name="ok" value="OK" class="ok" onclick="javascript:window.close();"/>
-  </form>
-</div>
-
-</body>
-</html>
+$render = new render($configObject);
+$lang['title'] = $string['campusclientdel'];
+$lang['success'] = $string['campusdelsuccess'];
+$data = array();
+$render->render($data, $lang, 'admin/do_delete.html');

@@ -122,11 +122,7 @@ $lang['title'] = $string['editoauthclient'];
 $lang['create'] = $string['addoauthclient'];
 $lang['view'] = $string['editoauthclient'];
 $lang['delete'] = $string['deleteoauthclient'];
-$additionaljs = "<script type=\"text/javascript\" src=\"../../js/jquery.validate.min.js\"></script>
-    <script type=\"text/javascript\" src=\"../../js/jquery-ui-1.10.4.min.js\"></script>
-    <script type=\"text/javascript\" src=\"../../js/system_tooltips.js\"></script>
-    <script type=\"text/javascript\" src=\"js/oauthclients.min.js\"></script>
-    <script type=\"text/javascript\" src=\"js/oauthclients_validate.min.js\"></script>";
+$additionaljs = "<script type=\"text/javascript\" src=\"js/oauthclientsinit.min.js\"></script>";
 $addtionalcss = "<style type=\"text/css\">
           td {text-align:left}
           .field {text-align:right; padding-right:10px}

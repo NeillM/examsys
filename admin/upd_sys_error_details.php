@@ -16,31 +16,44 @@
 
 /**
  *
- * Delete an Oauth client - SysAdmin only.
+ * Update the system errors.
  *
- * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @author Simon Wilkinson
  * @version 1.0
- * @copyright Copyright (c) 2015 onwards The University of Nottingham
+ * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
 
+define('AJAX_REQUEST', true);
+
 require '../include/sysadmin_auth.inc';
-require_once '../include/errors.php';
+require '../include/errors.php';
 
-$client = check_var('client', 'POST', true, false, true);
+$errorID = check_var('errorID', 'POST', true, false, true);
+$found = false;
 
-$oauth = new oauth($configObject);
+$result = $mysqli->prepare("SELECT NULL FROM sys_errors where id = ?");
+$result->bind_param('i', $errorID);
+$result->execute();
+$result->store_result();
+if ($result->num_rows > 0) {
+  $found = true;
+}
+$result->close();
 
-if (!$oauth->check_oauthclient($client)) {
+if (!$found) {
   $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$oauth->delete_oauthclient($client);
+$result = $mysqli->prepare("UPDATE sys_errors SET fixed = NOW() WHERE id = ?");
+$result->bind_param('i', $errorID);
+$result->execute();
+$result->close();
 
-$render = new render($configObject);
-$lang['title'] = $string['oauthclientdel'];
-$lang['success'] = $string['oauthclientdelsuccess'];
-$data = array();
-$render->render($data, $lang, 'admin/do_delete.html');
+if ($mysqli->errno == 0) {
+  echo json_encode('SUCCESS');
+} else {
+  echo json_encode('ERROR');
+}

@@ -43,48 +43,10 @@ $state = $stateutil->getState();
     .errl {padding-right:6px; vertical-align:top; text-align:right}
 	</style>
 
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
-  <script type="text/javascript" src="../js/state.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/list.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    function refreshPage() {
-      window.location = 'sys_error_list.php';
-    }
-
-    function openBug(lineID, event) {
-      selLine(lineID, event);
-      displayDetails(lineID, event);
-    }
-
-    $(function () {
-      if ($("#maindata").find("tr").size() > 1) {
-        $("#maindata").tablesorter({
-          dateFormat: '<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>',
-          sortList: [[0,1]]
-        });
-      }
-
-      $(".l").click(function(event) {
-        event.stopPropagation();
-        selLine($(this).attr('id'),event);
-      });
-
-      $(".l").dblclick(function(event) {
-        event.stopPropagation();
-        openBug($(this).attr('id'),event);
-      });
-
-      $("#sys_errors_menu").click(function(event) {
-          event.stopPropagation();
-          displayDetails($('#lineID').val(), event);
-      });
-
-    });
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src='../js/errorlistinit.min.js'></script>
 </head>
 <body>
 <?php
@@ -108,7 +70,7 @@ $state = $stateutil->getState();
 <table class="header">
 <tr>
   <th colspan="4"><div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div class="page_title"><?php echo $string['systemerrors'] ?> (<?php echo number_format($result->num_rows) ?>)</div></th>
-<th colspan="3" style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /><br /><div style="padding-top:5px"><input class="chk" type="checkbox" name="showfixed" id="showfixed" value="1" onclick="refreshPage();"<?php if (isset($state['showfixed']) and $state['showfixed'] == 'true') echo ' checked="checked"'; ?> /> <?php echo $string['showfixed'] ?>&nbsp;</div></th>
+<th colspan="3" style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /><br /><div style="padding-top:5px"><input class="chk" type="checkbox" name="showfixed" id="showfixed" value="1" <?php if (isset($state['showfixed']) and $state['showfixed'] == 'true') echo ' checked="checked"'; ?> /> <?php echo $string['showfixed'] ?>&nbsp;</div></th>
 </tr>
 </table>
 <table class="header" id="maindata">
@@ -136,5 +98,11 @@ $state = $stateutil->getState();
 </table>
 
 </div>
+<?php
+$render = new render($configObject);
+$dataset['name'] = 'dataset';
+$dataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
+$render->render($dataset, array(), 'dataset.html');
+?>
 </body>
 </html>

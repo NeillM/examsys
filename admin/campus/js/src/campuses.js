@@ -19,40 +19,49 @@
 // Campus admin page js functions
 //
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-// @version 1.0
-// @copyright Copyright (c) 2016 The University of Nottingham
+// @copyright Copyright (c) 2018 The University of Nottingham
 //
-function viewoption() {
-    document.location.href='./edit_campuses.php?campus=' + $('#lineID').val();
-    $('#menu1a').show();
-    $('#menu1b').hide();
-}
+define(['list', 'jquery', 'jquerytablesorter'], function(LIST, $) {
+    return function() {
+        this.viewoption = function() {
+            document.location.href = './edit_campuses.php?campus=' + $('#lineID').val();
+            $('#menu1a').show();
+            $('#menu1b').hide();
+        };
 
-function deleteoption() {
-    notice=window.open("../../delete/check_delete_campus.php?campus=" + $('#lineID').val() + "","notice","width=500,height=200,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-250,screen.height/2-100);
-    if (window.focus) {
-        notice.focus();
+        this.deleteoption = function() {
+            notice = window.open("../../delete/check_delete_campus.php?campus=" + $('#lineID').val() + "", "notice", "width=500,height=200,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+            notice.moveTo(screen.width / 2 - 250, screen.height / 2 - 100);
+            if (window.focus) {
+                notice.focus();
+            }
+        };
+
+        this.init = function() {
+            var list = new LIST();
+            var scope = this;
+            if ($("#maindata").find("tr").size() > 1) {
+                $("#maindata").tablesorter({
+                    sortList: [[0, 0]]
+                });
+            }
+
+            $(".l").click(function (event) {
+                event.stopPropagation();
+                list.selLine($(this).attr('id'), event);
+            });
+
+            $(".l").dblclick(function () {
+                list.edit('./edit_campuses.php?campus=', $(this).attr('id'));
+            });
+
+            $("#delete").click(function () {
+                scope.deleteoption();
+            });
+
+            $("#view").click(function () {
+                scope.viewoption();
+            });
+        };
     }
-}
-
-function editoption(id) {
-    document.location.href='./edit_campuses.php?campus=' + id;
-}
-    
-$(function () {
-    if ($("#maindata").find("tr").size() > 1) {
-        $("#maindata").tablesorter({ 
-            sortList: [[0,0]] 
-        });
-    }
-
-    $(".l").click(function(event) {
-        event.stopPropagation();
-        selLine($(this).attr('id'),event);
-    });
-
-    $(".l").dblclick(function() {
-        editoption($(this).attr('id'));
-    });
 });
