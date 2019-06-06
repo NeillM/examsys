@@ -24,15 +24,11 @@
 
 function draw_toprightmenu($helpID = 1) {
   global $string;
-	
+
   $configObject = Config::get_instance();
   $userObject		= UserObject::get_instance();
   $rootpath = $configObject->get('cfg_root_path');
-  $html = "<script>
-    if (typeof cfgRootPath == 'undefined') {
-      var cfgRootPath = '$rootpath';
-    }
-  </script>";
+  $html = "";
 	
   if ($userObject->is_impersonated()) {
 		$impersonated_name = $userObject->get_title() . ' ' . $userObject->get_initials() . ' ' . $userObject->get_surname();
@@ -45,7 +41,11 @@ function draw_toprightmenu($helpID = 1) {
 	if ($userObject->has_role('SysAdmin')) {
     $html .= '<div class="trm_div" id="admintools">' . $string['administrativetools'] . '</div>';
   }
-  $html .= "<div class=\"trm_div\" onclick=\"toprightmenu_launchHelp($helpID)\">" . $string['helpsupport'] . "</div>";
+  $role = 'student';
+  if ($userObject->has_role(array('Staff'))) {
+    $role = 'staff';
+  } 
+  $html .= "<div class=\"trm_div\" id=\"helplink\" data-role=\"$role\" data-id=\"$helpID\">" . $string['helpsupport'] . "</div>";
   $html .= '<div class="trm_div" id="signout" style="background-image: url(\'' . $rootpath . '/artwork/logout16.gif\'); background-repeat: no-repeat; background-position: 0 3px">' . $string['signout'] . '</div>';
   $html .= '<div class="trm_div" id="aboutrogo">' . sprintf($string['aboutrogo'], $configObject->get_setting('core', 'rogo_version')) . '</div>';
 
@@ -53,4 +53,3 @@ function draw_toprightmenu($helpID = 1) {
 	
   return $html;
 }
-?>
