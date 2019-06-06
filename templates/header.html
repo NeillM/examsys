@@ -12,7 +12,13 @@
 {% for sheetname in data.css %}
         <link rel="stylesheet" type="text/css" href="{{path}}{{sheetname}}"/>
 {% endfor %}
-
+        <script id="rogoconfig" src='../js/rogo.min.js'
+                data-root="{{path}}"
+                data-mathjax="{{data.mathjax}}"
+                data-three="{{data.three}}">
+        </script>
+        <script src='{{path}}/js/require.js'></script>
+        <script src='{{path}}/js/main.min.js'></script>
 {% for scriptname in data.scripts %}
         <script type="text/javascript" src="{{path}}{{scriptname}}"></script>
 {% endfor %}

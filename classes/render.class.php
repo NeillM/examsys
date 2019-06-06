@@ -155,11 +155,6 @@ class render {
             'action' => $action, 'lang' => $lang);
         echo $this->twig->render('admin/update.html', $data);
     }
-    
-    public function render_html5_js($jsstring) {
-        $data = array ('path' => $this->config->get('cfg_root_path'), 'jsstring' => $jsstring);
-        echo $this->twig->render('html5_js.html', $data);
-    }
 
     /**
      * Render page breadcrumb from an associative array which keys must be the relative
