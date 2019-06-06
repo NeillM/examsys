@@ -25,23 +25,6 @@
 require '../include/sysadmin_auth.inc';
 require '../include/errors.php';
 
-if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] == '1')) {
-  $title = trim($_POST['title']);
-  $staff_msg = $_POST['staff_msg'];
-  $student_msg = $_POST['student_msg'];
-  $startdate = $_POST['fyear'] . $_POST['fmonth'] . $_POST['fday'] . $_POST['ftime'];
-  $enddate = $_POST['tyear'] . $_POST['tmonth'] . $_POST['tday'] . $_POST['ttime'];
-  $icon = str_replace('icon', '', $_POST['icon_type']);  // Take the word icon out, store only the number.
-  
-  $result = $mysqli->prepare("INSERT INTO announcements VALUES (NULL, ?, ?, ?, ?, ?, ?, NULL)");
-  $result->bind_param('ssssss', $title, $staff_msg, $student_msg, $icon, $startdate, $enddate);
-  $result->execute();  
-  $result->close();
-  
-  $mysqli->close();
-  header("location: list_announcements.php");
-  exit();
-}
 ?>
 <!DOCTYPE html>
 <html>
@@ -53,42 +36,15 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/announcement.css" />
-  
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+    <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+    <script src='../js/require.js'></script>
+    <script src='../js/main.min.js'></script>
+    <script src="../js/announcementinit.min.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
   $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::ANNOUNCEMENTS);
 ?>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script>
-    $(function () {
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
-        }
-      });
-      $('form').removeAttr('novalidate');
-   
-      $('#cancel').click(function() {
-        history.back();
-      });
-      
-      $('.icon').click(function() {
-        current = $('#icon_type').val();
-        $('#' + current).css('border-color', 'white');
-
-        newvalue = $(this).attr('id');
-        $('#' + newvalue).css('border-color', '#FFBD69');
-        $('#icon_type').val(newvalue)
-        
-      });
-      
-    });
-  </script>
 </head>
 
 <body>
@@ -106,7 +62,7 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
 </div>
 
 
-<form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
+<form id="theform" name="myform" action="" method="post" autocomplete="off">
 
 <table class="tblform">
   <tr>
@@ -150,8 +106,12 @@ if (isset($_POST['ok']) or (isset($_POST['returnhit']) and $_POST['returnhit'] =
 
 </form>
 </div>
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['posturl'] = "do_add_announcement.php";
+$render->render($miscdataset, array(), 'dataset.html');
+?>
 </body>
 </html>
-<?php
-$mysqli->close();
-?>

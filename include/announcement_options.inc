@@ -22,21 +22,6 @@
 * @package
 */
 ?>
-<script>
-  function editAnnouncement() {
-    window.location.href='./edit_announcement.php?announcementid=' + $('#lineID').val();
-  }
-  
-  function deleteAnnouncement() {
-    notice=window.open("../delete/check_delete_announcement.php?announcementID=" + $('#lineID').val() + "","announcements","width=450,height=180,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-225,screen.height/2-90);
-    if (window.focus) {
-      notice.focus();
-    }
-  }
-
-</script>
-
 <div id="left-sidebar" class="sidebar">
 <form name="myform" autocomplete="off">
 <div id="menu1a">
@@ -47,8 +32,8 @@
 
 <div style="display:none" id="menu1b">
 	<div class="menuitem"><a href="add_announcement.php"><img class="sidebar_icon" src="../artwork/megaphone_16.png" alt="<?php echo $string['createannouncement'] ?>" /><?php echo $string['createannouncement'] ?></a></div>
-	<div class="menuitem"><a href="#" onclick="editAnnouncement(); return false;"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editannouncement'] ?>" /><?php echo $string['editannouncement'] ?></a></div>
-	<div class="menuitem"><a href="#" onclick="deleteAnnouncement(); return false;"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="<?php echo $string['deleteannouncement'] ?>" /><?php echo $string['deleteannouncement'] ?></a></div>
+	<div class="menuitem"><a href="#" id="edit"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editannouncement'] ?>" /><?php echo $string['editannouncement'] ?></a></div>
+	<div class="menuitem"><a href="#" id="delete"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="<?php echo $string['deleteannouncement'] ?>" /><?php echo $string['deleteannouncement'] ?></a></div>
 </div>
 
 <input type="hidden" name="lineID" id="lineID" value="" />

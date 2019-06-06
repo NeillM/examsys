@@ -37,36 +37,8 @@ if (!announcement_utils::announcement_exist($announcementID, $mysqli)) {
 
 announcement_utils::delete($announcementID, $mysqli);
 
-$mysqli->close();
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title>Announcement Deleted</title>
-  
-  <link rel="stylesheet" type="text/css" href="../css/body.css" />
-
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function () {
-      window.opener.location.reload();
-      self.close();
-    });
-  </script>
-</head>
-
-<body>
-
-<p>Announcement successfully deleted.</p>
-
-<div class="button_bar">
-<form action="" method="get" autocomplete="off">
-<input type="button" name="cancel" value="OK" class="ok" onclick="window.close();" />
-</form>
-</div>
-
-</body>
-</html>
+$render = new render($configObject);
+$lang['title'] = $string['delete'];
+$lang['success'] = $string['success'];
+$data = array();
+$render->render($data, $lang, 'admin/do_delete.html');

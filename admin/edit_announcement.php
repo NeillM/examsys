@@ -33,24 +33,6 @@ if (!announcement_utils::announcement_exist($announcementid, $mysqli)) {
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-if (isset($_POST['save'])) {
-  $news_title = trim($_POST['title']);
-  $staff_msg = $_POST['staff_msg'];
-  $student_msg = $_POST['student_msg'];
-  $startdate = $_POST['fyear'] . $_POST['fmonth'] . $_POST['fday'] . $_POST['ftime'];
-  $enddate = $_POST['tyear'] . $_POST['tmonth'] . $_POST['tday'] . $_POST['ttime'];
-  $icon = str_replace('icon', '', $_POST['icon_type']);
-  
-  $result = $mysqli->prepare("UPDATE announcements SET title = ?, staff_msg = ?, student_msg = ?, icon = ?, startdate = ?, enddate = ? WHERE id = ?");
-  $result->bind_param('ssssssi', $news_title, $staff_msg, $student_msg, $icon, $startdate, $enddate, $announcementid);
-  $result->execute();  
-  $result->close();
-  
-  $mysqli->close();
-  header("location: list_announcements.php");
-  exit();
-}
-
 $result = $mysqli->prepare("SELECT title, staff_msg, student_msg, icon, DATE_FORMAT(startdate, '%Y%m%d%H%i'), DATE_FORMAT(enddate, '%Y%m%d%H%i') FROM announcements WHERE id = ?");
 $result->bind_param('i', $announcementid);
 $result->execute();
@@ -69,41 +51,16 @@ $result->close();
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/announcement.css" />
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/announcementinit.min.js"></script>
 <?php
 $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 $texteditorplugin->display_header();
 $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::ANNOUNCEMENTS);
 
 ?>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    $(function () {
-      $('#theform').validate({
-        errorClass: 'errfield',
-        errorPlacement: function(error,element) {
-          return true;
-        }
-      });
-      $('form').removeAttr('novalidate');
-   
-      $('#cancel').click(function() {
-        history.back();
-      });
-      
-      $('.icon').click(function() {
-        current = $('#icon_type').val();
-        $('#' + current).css('border-color', 'white');
-
-        newvalue = $(this).attr('id');
-        $('#' + newvalue).css('border-color', '#FFBD69');
-        $('#icon_type').val(newvalue)
-        
-      });
-      
-    });
-  </script>
 </head>
 
 <body>
@@ -120,7 +77,7 @@ $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::ANNOUNCEME
   <div class="page_title"><?php echo $string['editannouncement']; ?></div>
 </div>
 
-<form id="theform" name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
+<form id="theform" name="myform" action="" method="post" autocomplete="off">
 
 <table class="tblform">
 <tr>
@@ -170,7 +127,11 @@ if (substr($startdate, 0, 4) < date('Y')) {
 </div>
   
 </body>
-</html>
 <?php
-$mysqli->close();
+// JS utils dataset.
+$render = new render($configObject);
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['posturl'] = "do_edit_announcement.php";
+$render->render($miscdataset, array(), 'dataset.html');
 ?>
+</html>
