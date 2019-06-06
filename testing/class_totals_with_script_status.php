@@ -111,18 +111,10 @@ $stmt->close();
       background: transparent url('../artwork/working.gif') no-repeat left top;
     }
   </style>
-  <script src="../js/jquery-1.11.1.min.js" type="text/javascript"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    $(function () {
-      setTimeout(refreshPage, 15000); // milliseconds
-    });
-    function refreshPage() {
-      if ($('#refresh').is(':checked')) {
-        window.location = location.href;
-      }
-    }
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/classtotalsstatusinit.min.js"></script>
 </head>
 <body>
 <?php

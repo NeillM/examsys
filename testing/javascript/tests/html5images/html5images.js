@@ -16,27 +16,27 @@
 /**
  * Test that the html5.images.js file works correctly.
  */
-QUnit.test( "HTML5 images object", function(assert) {
-  var done = assert.async();
-  // Load the script we are testing.
-  jQuery.getScript('../../js/html5.images.min.js').done(function() {
+requirejs(['qunit', 'html5images'], function(QUnit, images) {
+  QUnit.start();
+  QUnit.test("HTML5 images object", function (assert) {
+    var done = assert.async();
     // Check the object if contains exists as we expect.
-    assert.ok(menuImages, 'menuImages is defined');
-    for (var image in menuImages) {
+    assert.ok(images.menuImages, 'menuImages is defined');
+    for (var image in images.menuImages) {
       if (image !== 'zzz') {
         // Every menu image must have a left, top, width and height property.
-        assert.deepEqual(typeof menuImages[image].left, 'number', image  + '.left is a number');
-        assert.deepEqual(typeof menuImages[image].top, 'number', image  + '.top is a number');
-        assert.deepEqual(typeof menuImages[image].width, 'number', image  + '.width is a number');
-        assert.deepEqual(typeof menuImages[image].height, 'number', image  + '.height is a number');
+        assert.deepEqual(typeof images.menuImages[image].left, 'number', image + '.left is a number');
+        assert.deepEqual(typeof images.menuImages[image].top, 'number', image + '.top is a number');
+        assert.deepEqual(typeof images.menuImages[image].width, 'number', image + '.width is a number');
+        assert.deepEqual(typeof images.menuImages[image].height, 'number', image + '.height is a number');
         // The value of left and top must be 0 or greater.
-        assert.ok(menuImages[image].left >= 0, image  + '.left is greater or equal to zero');
-        assert.ok(menuImages[image].top >= 0, image  + '.top is greater or equal to zero');
+        assert.ok(images.menuImages[image].left >= 0, image + '.left is greater or equal to zero');
+        assert.ok(images.menuImages[image].top >= 0, image + '.top is greater or equal to zero');
         // The value of width and height must be positive.
-        assert.ok(menuImages[image].width > 0, image  + '.width is greater than zero');
-        assert.ok(menuImages[image].height > 0, image  + '.height is greater than zero');
+        assert.ok(images.menuImages[image].width > 0, image + '.width is greater than zero');
+        assert.ok(images.menuImages[image].height > 0, image + '.height is greater than zero');
       } else {
-        assert.deepEqual(menuImages[image], 'zzz', 'zzz is correct');
+        assert.deepEqual(images.menuImages[image], 'zzz', 'zzz is correct');
       }
     }
     done();

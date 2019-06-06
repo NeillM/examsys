@@ -65,37 +65,10 @@ $result->close();
       margin: 15px;
     }
   </style>
-
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    $(function () {
-      $('#results').hide();
-      $('#start').click(function (e) {
-        e.preventDefault();
-        $('#the_form').validate();
-        if ($('#the_form').valid()) {
-          var period = $('#period').val();
-          var paper = $('#paper').val();
-          var passwd = $('#passwd').val();
-          $.post('class_totals_with_script_ajax.php',
-                  {
-                    period:period,
-                    paper:paper,
-                    passwd:passwd
-                  });
-          $('#results').show();
-          $('#form').hide();
-        }
-      });
-      $('#status').click(function() {
-        var period = $('#period').val();
-        var paper = $('#paper').val();
-        window.location.href = 'class_totals_with_script_status.php?period=' + period + '&paper=' + paper;
-      });
-    })
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/classtotalstestinit.min.js"></script>
 </head>
 <body>
 <?php

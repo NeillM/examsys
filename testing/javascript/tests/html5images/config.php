@@ -21,8 +21,6 @@ $setup->test = 'html5images';
 // Should be the complete path relative to the root of Rogo.
 // The files will be loaded in the order they are in the array.
 $setup->required_js = array(
-  'js/jquery-1.11.1.min.js',
-  'js/html5.images.min.js',
 );
 // Should store any text wanted in the #qunit-fixture div for the suite.
 $setup->fixture_html = <<<FIXTURE

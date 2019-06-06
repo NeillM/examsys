@@ -70,10 +70,9 @@ $month_end[8] = ($current_year + 1) . '0901000000';
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/statistics.css" />
 	<link rel="stylesheet" type="text/css" href="../css/tabs.css" />
-  
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
 </head>
 
 <body>

@@ -14,7 +14,8 @@
   <body>
     <div id="qunit"></div>
     <div id="qunit-fixture">{{scripts.config.fixture_html|raw}}</div>
-    <script src="{{webroot}}/node_modules/qunit/qunit/qunit.js"></script>
+    <script src="{{webroot}}/js/require.js"></script>
+    <script src="{{webroot}}/js/main.min.js"></script>
     <!-- Start loafing the Javascript unit tests. -->
 {% for item in scripts.tests %}
     <script src="{{webroot}}/{{item}}"></script>

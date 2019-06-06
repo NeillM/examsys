@@ -44,10 +44,9 @@ require '../include/sysadmin_auth.inc';
     h2 {margin-left: 20px; font-size: 150%}
     li {font-size: 110%}
   </style>
-	
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
 </head>
 <body>
 <?php
