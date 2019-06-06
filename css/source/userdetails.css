@@ -1,0 +1,26 @@
+.coltitle {
+    cursor: hand;
+    background-color: #1E3C7B;
+    color: white
+}
+.sch_check {
+    text-align: right;
+    width: 40px;
+    padding-right: 6px
+}
+.medical {
+    background-image: url('../artwork/medical_16.gif');
+    background-repeat: no-repeat;
+    vertical-align: top;
+    padding-left: 20px
+}
+.breaks {
+    background-image: url('../artwork/moon_16.gif');
+    background-repeat: no-repeat;
+    vertical-align: top;
+    padding-left: 20px
+}
+.field {
+    padding-left: 4px;
+    width: 95px
+}

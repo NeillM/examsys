@@ -33,111 +33,7 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/users/sear
 $calendar_year = check_var('calendar_year', 'GET', false, false, true);
 
 ?>
-<script type="text/javascript" src="../js/state.js"></script>
-<script>
-  function updateDropdownState(mySel, NameOfState) {
-    setting = mySel.options[mySel.selectedIndex].value;
-    updateState(NameOfState, setting);
-  }
-  
-  function updateMenu(ID) {
-    $('#menu' + ID).toggle();
 
-    <?php
-      echo "icon = ($('#icon' + ID).attr('src').indexOf('down_arrow_icon.gif')!=-1) ? '{$configObject->get('cfg_root_path')}/artwork/up_arrow_icon.gif' : '{$configObject->get('cfg_root_path')}/artwork/down_arrow_icon.gif';\n";
-    ?>
-    alttag = ($('#icon' + ID).attr('alt') == 'Hide') ? 'Show' : 'Hide';
-    $('#icon' + ID).attr('src', icon);
-    $('#icon' + ID).attr('alt', alttag);
-    
-    updateState('advanced', $('#menu' + ID).css('display'));
-  }
-  
-  function checkRoles() {
-    if ($('#roles').val().search("Student") == -1 && $('#roles').val().search("graduate") == -1) {
-      $('#performancesummary2b').addClass('grey');
-      $('#performancesummary2c').addClass('grey');
-    } else {
-      $('#performancesummary2b').removeClass('grey');
-      $('#performancesummary2c').removeClass('grey');
-    }
-  }
-
-  function viewPerformanceSummary() {
-    if ($('#roles').val().search("Student") == -1 && $('#roles').val().search("graduate")) {
-      alert("You have selected a non-student user.");
-    } else {
-      window.open("../students/performance_summary.php?userID=" + getLastID($('#userID').val()), "_blank");
-    }
-  }
-  
-  function deleteUser() {
-    notice = window.open("<?php echo $configObject->get('cfg_root_path') ?>/delete/check_delete_user.php?id=" + $('#userID').val() + "","notice","width=450,height=180,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-225, screen.height/2-90);
-    if (window.focus) {
-      notice.focus();
-    }
-  }
-  
-  function getLastID(IDs) {
-    var id_list = IDs.split(",");
-    last_elm = id_list.length - 1;
-
-    return id_list[last_elm];
-  }
-  
-  function performanceSummary() {
-    if ($('#roles').val().search("Student") == -1 && $('#roles').val().search("graduate")) {
-      alert("You have selected a non-student user.");
-    } else {
-      window.open("../students/performance_summary.php?userID=" + getLastID($('#userID').val()), "_blank");
-    }
-  }
-  
-  $(function () {
-    $('#performancesummary2b').click(function() {
-      performanceSummary();
-    });
-    
-    $('#performancesummary2c').click(function() {
-      performanceSummary();
-    });
-    
-    $('.viewprofile').click(function() {
-      document.location.href='details.php?userID=' + getLastID($('#userID').val());
-    });
-
-    $(function () {
-      $('#student_id').change(updateStaffChkBoxes);
-    });
-
-    var updateStaffChkBoxes = function () {
-      if ($(this).val !== '') {
-        $('.chkstaff').each(function() {
-          if ($(this).is(':checked')) {
-            $(this).prop('checked', false);
-            var state_name = $(this).attr('id');
-            var content = $(this).is(':checked');
-            updateState(state_name, content);
-          }
-        });
-      }
-    };
-    
-    $(function () {
-      $('.chkstaff').click(updateStudentID);
-    });
-
-    var updateStudentID = function () {
-      if ($(this).is(':checked')) {
-        if ($('#student_id').val !== '') {
-          $('#student_id').val('');
-        }
-      }
-    };
-
-  });
-  </script>
 <?php
 if (isset($_GET['search_surname'])) {
   $search_surname = stripslashes($_GET['search_surname']);
@@ -188,8 +84,8 @@ search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli);
 <br />
 
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
-  <tr><td><a href="#" style="font-weight:bold; color:black" onclick="updateMenu(3);"><?php echo $string['advanced'] ?></a></td>
-  <td style="text-align:right"><a href="#" onclick="updateMenu(3);"><?php
+  <tr id="advancedmenu" data-menuid="3"><td><a href="#" style="font-weight:bold; color:black"><?php echo $string['advanced'] ?></a></td>
+  <td style="text-align:right"><a href="#"><?php
     if (isset($state['advanced']) and $state['advanced'] == 'block') {
       echo "<img id=\"icon3\" src=\"../artwork/up_arrow_icon.gif\" width=\"10\" height=\"9\" alt=\"Hide\" />";
     } else {
@@ -337,7 +233,7 @@ search_utils::display_staff_modules_dropdown($userObject, $string, $mysqli);
     echo '<div class="menuitem"><a href="create_new_user.php"><img class="sidebar_icon" src="../artwork/small_user_icon.gif" alt="' . $string['createnewuser'] . '" />' . $string['createnewuser'] . '</a></div>';
   }
   if ($userObject->has_role('SysAdmin')) {
-    echo '<div class="menuitem" onclick="deleteUser()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="' . $string['deleteuser'] . '" /><a href="#" onclick="return false">' . $string['deleteuser'] . '</a></div>';
+    echo '<div class="menuitem" id="deleteuser"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="' . $string['deleteuser'] . '" /><a href="#">' . $string['deleteuser'] . '</a></div>';
   }
   if ($userObject->has_role(array('SysAdmin', 'Admin'))) {
     echo '<div class="menuitem"><a href="import_users.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="' . $string['importusers'] . '" />' . $string['importusers'] . '</a></div>';

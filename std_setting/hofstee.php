@@ -172,10 +172,9 @@ if (isset($_POST['submit'])) {
         .fail {color:#C00000}
     </style>
 
-    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-    <script type="text/javascript" src="../js/staff_help.js"></script>
-    <script type="text/javascript" src="../js/toprightmenu.js"></script>
-</head>
+    <script src='../js/require.js'></script>
+    <script src='../js/main.min.js'></script>
+    <script src='../js/hofsteeinit.min.js'></script>
 <body>
 <?php
   require '../include/toprightmenu.inc';
@@ -234,16 +233,6 @@ if (isset($_POST['submit'])) {
   }
   echo "<tr><td colspan=\"5\"><input type=\"checkbox\" name=\"whole_numbers\" id=\"checkbox\"$checked />" . $string['integeronly'] . "</td></tr>";
 	echo "</table>\n</div>\n";
-	
-	echo "<script type=\"text/javascript\" src=\"../js/hofstee.js\"></script>\n";
-	echo "<script type='text/javascript'>
-		var lang_cohort = '".  $string['cohort'] . "';
-		var lang_correct = '".  $string['correct'] . "';
-		var marks = ".  json_encode($marks) . ";
-		var stats = ".  json_encode($stats) . ";
-    hofstee_plot('canvas_graph_pass','pass');
-		</script>";
-  
 	echo "<div id=\"canvas_div_distinction\" style=\"float:left\">\n";
 	echo "<h1>" . $string['distinction'] . "</h1>\n";
 	echo "<canvas id=\"canvas_graph_distinction\" width=\"480\" height=\"450\"></canvas><br />\n";
@@ -258,11 +247,6 @@ if (isset($_POST['submit'])) {
 	echo "</tr>";
   echo "<tr><td colspan=\"5\">&nbsp;</td></tr>\n";
 	echo "</table>\n</div>\n";
-	
-	echo "<script type='text/javascript'>
-    hofstee_plot('canvas_graph_distinction','distinction');
-		</script>";
-  
   if (isset($insertID)) {
     echo "<input type=\"hidden\" name=\"insertID\" value=\"$insertID\" />\n";
   }
@@ -284,5 +268,16 @@ for ($i=0; $i<3; $i++) {
 <div style="text-align:center; width:960px"><input type="submit" name="submit" value="<?php echo $string['save'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" onclick="history.back();" /></div>
 </form>
 </div>
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['marks'] = json_encode($marks);
+$miscdataset['attributes']['stats'] = json_encode($stats);
+$render->render($miscdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

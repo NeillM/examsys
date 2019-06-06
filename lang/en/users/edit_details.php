@@ -18,7 +18,3 @@ require '../lang/' . $language . '/users/details.php';
 
 $string['edituserdetails'] = 'Edit User Details';
 $string['photo'] = 'Photo';
-$string['usernameexists'] = '<strong>ERROR:</strong> Username already exists.';
-$string['usernameinvalid'] = '<strong>ERROR:</strong> Username is not valid.';
-$string['unabletosaveuserdetails'] = '<strong>ERROR:</strong> Unable to save user details.';
-?>

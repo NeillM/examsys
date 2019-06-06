@@ -17,7 +17,7 @@
 $string['hofstee'] = 'Hofstee method';
 $string['integeronly'] = 'whole numbers';
 $string['cohort'] = 'Cumulative % students';
-$string['correct'] = "Students\' grades (%)";
+$string['correct'] = "Students grades (%)";
 $string['passmark'] = 'Pass Mark';
 $string['distinction'] = 'Distinction';
 $string['minpass'] = 'Min Pass';

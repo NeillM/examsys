@@ -42,9 +42,9 @@ function drawTabs($current_tab, $string, $session) {
   $html = '<table cellpadding="0" cellspacing="0" border="0" style="width:100%; font-size:100%; background-color:#F1F5FB"><tr><td style="width:264px"><strong>' . $string['modulesfor'] . ' ' . $session . ':</strong></td>';
   for ($i=1; $i<=3; $i++) {
     if ($i == $current_tab) {
-      $html .= "<td class=\"tabon\" onclick=\"showTab('list$i')\">" . $string[$i] . "</td>";
+      $html .= "<td class=\"tabon\" data-tabid=\"list$i\">" . $string[$i] . "</td>";
     } else {
-      $html .= "<td class=\"taboff\" onclick=\"showTab('list$i')\">" . $string[$i] . "</td>";
+      $html .= "<td class=\"taboff\" data-tabid=\"list$i\">" . $string[$i] . "</td>";
     }
   }
   $html .= "</tr></table>\n";
@@ -78,9 +78,9 @@ function list_modules($mod, $id, $student_mod, $string, $session) {
     }
 
     if (isset($student_mod[$idMod]) and $student_mod[$idMod]['attempt'] == $id) {
-      echo "<div class=\"r2\" id=\"divmod" . $id . "_" . $loop . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $loop . "')\" name=\"mod" . $id . "_" . $loop . "\" id=\"mod" . $id . "_" . $loop . "\" value=\"" . $idMod . "\" checked />&nbsp;<label for=\"mod" . $id . "_" . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
+      echo "<div class=\"r2\" id=\"divmod" . $id . "_" . $loop . "\"><input type=\"checkbox\" name=\"mod" . $id . "_" . $loop . "\" id=\"mod" . $id . "_" . $loop . "\" value=\"" . $idMod . "\" checked />&nbsp;<label for=\"mod" . $id . "_" . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
     } else {
-      echo "<div class=\"r1\" id=\"divmod" . $id . "_" . $loop . "\"><input type=\"checkbox\" onclick=\"toggle('divmod" . $id . "_" . $loop . "')\" name=\"mod" . $id . "_" . $loop . "\" id=\"mod" . $id . "_" . $loop . "\" value=\"" . $idMod . "\" />&nbsp;<label for=\"mod" . $id . "_" . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
+      echo "<div class=\"r1\" id=\"divmod" . $id . "_" . $loop . "\"><input type=\"checkbox\" name=\"mod" . $id . "_" . $loop . "\" id=\"mod" . $id . "_" . $loop . "\" value=\"" . $idMod . "\" />&nbsp;<label for=\"mod" . $id . "_" . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
     }
     $loop++;
     $old_letter = strtoupper(substr($moduleid, 0, 1));
@@ -88,51 +88,12 @@ function list_modules($mod, $id, $student_mod, $string, $session) {
   echo "</div>\n</div>\n";
 }
 
-if (isset($_POST['submit'])) {
-  for ($attempt=1; $attempt<=3; $attempt++) {
-    // Clear the student of all modules.
-    UserUtils::clear_student_modules_by_userID($_POST['userID'], $_POST['session'], $attempt, $mysqli);
-
-    // Insert a record for each module.
-    for ($i=0; $i<=$_POST['mod_count']; $i++) {
-      if (isset($_POST['mod' . $attempt . '_' . $i]) and $_POST['mod' . $attempt . '_' . $i] != '') {
-        UserUtils::add_student_to_module($_POST['userID'], $_POST['mod' . $attempt . '_' . $i], $attempt, $_POST['session'], $mysqli, 0);
-      }
-    }
-  }
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-
-  <title>Rog&#333;: <?php echo $_POST['session'] . ' ' . $string['modules']; ?></title>
-
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function() {
-        var user = 'userID=<?php echo $_POST['userID']; ?>';
-        var mod = '&tab=modules';
-        var student = '&student_id=<?php echo $_POST['student_id']; ?>';
-        var username = '&search_username=<?php echo $_POST['search_username']; ?>';
-        var surname = '&search_surname=<?php echo $_POST['search_surname']; ?>';
-      window.opener.location.href = 'details.php?' + user + mod + student + username + surname;
-      self.close();
-    });
-  </script>
-</head>
-<body>
-</body>
-</html>
-<?php
-  } else {
-    $yearutils = new yearutils($mysqli);
-    $session = check_var('session', 'GET', false, false, true);
-    if (empty($session)) {
-      $session = $yearutils->get_current_session();
-    }
-    $display_year = $yearutils->get_academic_session($session);
+$yearutils = new yearutils($mysqli);
+$session = check_var('session', 'GET', false, false, true);
+if (empty($session)) {
+  $session = $yearutils->get_current_session();
+}
+$display_year = $yearutils->get_academic_session($session);
 ?>
 <html>
 <head>
@@ -143,75 +104,14 @@ if (isset($_POST['submit'])) {
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
-  <style type="text/css">
-    html {
-      position: absolute;
-      height: 100%;
-      width: 100%;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      font-size: 90%;
-      background-color: #F1F5FB;
-    }
-    .content {
-      position: absolute;
-      overflow-y: no-scroll;
-      top: 0;
-      bottom: 40px;
-      width: 100%;
-      font-size: 90%;
-      background-color: white;
-      margin-bottom: 30px;
-      width: 98%;
-      margin-left: 1%;
-      margin-right: 1%;
-    }
-    .footer {
-      height: 40px;
-      width: 100%;
-      position: absolute;
-      bottom: 0;
-    }
-		.r1 {
-			text-indent:-23px;
-			padding-left:43px;
-			background-color:white;
-		}
-		.r2 {
-			text-indent:-23px;
-			padding-left:43px;
-			background-color:#FFBD69;
-		}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/usermodules.css" />
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    function toggle(objectID) {
-      if ($('#' + objectID).hasClass('r2')) {
-        $('#' + objectID).addClass('r1');
-        $('#' + objectID).removeClass('r2');
-      } else {
-        $('#' + objectID).addClass('r2');
-        $('#' + objectID).removeClass('r1');
-      }
-    }
-
-    function showTab(tabID) {
-      $('#list1').hide();
-      $('#list2').hide();
-      $('#list3').hide();
-
-      $('#' + tabID).show();
-    }
-  </script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/usermodulesinit.min.js"></script>
 </head>
 <body>
-<form name="teamform" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
+<form id="teamform" name="teamform" action="" method="post" autocomplete="off">
 
 <?php
   // Get existing modules for the user in passed calendar year.
@@ -252,19 +152,25 @@ if (isset($_POST['submit'])) {
   }
 
   echo "<input type=\"hidden\" name=\"mod_count\" value=\"$mod_count\" /></div></td>\n</tr>\n";
-  echo "<input type=\"hidden\" name=\"userID\" value=\"$userID\" /></div></td>\n</tr>\n";
+  echo "<input type=\"hidden\" id=\"userID\"  name=\"userID\" value=\"$userID\" /></div></td>\n</tr>\n";
   echo "<input type=\"hidden\" name=\"session\" value=\"$session\" /></div></td>\n</tr>\n";
-  echo "<input type=\"hidden\" name=\"student_id\" value=\"$student_id\" /></div></td>\n</tr>\n";
-  echo "<input type=\"hidden\" name=\"search_surname\" value=\"$search_surname\" /></div></td>\n</tr>\n";
-  echo "<input type=\"hidden\" name=\"search_username\" value=\"$search_username\" /></div></td>\n</tr>\n";
+  echo "<input type=\"hidden\" id=\"student_id\" name=\"student_id\" value=\"$student_id\" /></div></td>\n</tr>\n";
+  echo "<input type=\"hidden\" id=\"search_surname\" name=\"search_surname\" value=\"$search_surname\" /></div></td>\n</tr>\n";
+  echo "<input type=\"hidden\" id=\"search_username\" name=\"search_username\" value=\"$search_username\" /></div></td>\n</tr>\n";
 ?>
 
   <div class="footer" align="center"><input class="ok" type="submit" name="submit" value="<?php echo $string['ok'] ?>" /><input class="cancel" type="submit" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="window.close()" /></div>
 
 </form>
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>
 <?php
-  }
   $mysqli->close();
 ?>

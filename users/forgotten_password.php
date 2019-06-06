@@ -29,6 +29,7 @@ LangUtils::loadlangfile(str_replace($cfg_web_root, '', str_replace('\\', '/', ($
 $notice = UserNotices::get_instance();
 
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
+$configObject->set_db_object($mysqli);
 
 $email = (isset($_GET['email'])) ? $_GET['email'] : '';
 $message = '';
@@ -126,21 +127,10 @@ EMAIL;
 
   <link rel="stylesheet" href="../css/body.css" type="text/css" />
   <link rel="stylesheet" href="../css/screen.css" type="text/css" />
-  <style type="text/css">
-  body {font-size:90%}
-  .field {padding-top:4px; padding-left:6px; font-weight:bold}
-  </style>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script>
-  $(function() {
-    $('#forgotten_pw').validate({
-      messages: {
-        email: '<?php echo $string['emailaddressinvalid'] ?>'
-      }
-    });
-  });
-  </script>
+  <link rel="stylesheet" href="../css/password.css" type="text/css" />
+  <script src="../js/require.js"></script>
+  <script src="../js/main.min.js"></script>
+  <script src="../js/forgottenpasswordinit.min.js"></script>
 </head>
 
 <body>
@@ -197,10 +187,13 @@ if ($message == '') {
 ?>
     </table>
   </div>
-<?php
-//  $mysqli->close();
-?>
 </form>
-
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

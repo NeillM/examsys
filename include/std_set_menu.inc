@@ -34,35 +34,6 @@ if (isset($_GET['folder'])) {
 }
 ?>
 <div id="left-sidebar" class="sidebar">
-<script>
-  function deleteReview() {
-    notice=window.open("../delete/check_delete_review.php?std_setID=" + $('#std_setID').val() + "","notice","width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    notice.moveTo(screen.width/2-210, screen.height/2-85);
-    if (window.focus) {
-      notice.focus();
-    }
-  }
-  function editReview() {
-    var methodType = '';
-    if ($('#method').val() == 'Modified Angoff') {
-      methodType = 'modified_angoff';
-    } else if ($('#method').val() == 'Ebel') {
-      methodType = 'ebel';
-    } else {
-      methodType = 'hofstee';
-    }
-
-    if (groupReview == 'No') {
-      if (methodType == 'hofstee') {
-        window.location.href = "hofstee.php?paperID=<?php echo $_GET['paperID']; ?>&std_setID=" + $('#std_setID').val() + "&method=" + methodType + "&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>";
-      } else {
-        window.location.href = "individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&std_setID=" + $('#std_setID').val() + "&method=" + methodType;
-      }
-    } else {
-      window.location.href = "group_set_angoff.php?paperID=<?php echo $_GET['paperID']; ?>&std_setID=" + $('#std_setID').val() + "&reviewers=" + $('#setterID').val() + "&module=<?php echo $module; ?>&folder=<?php echo $folder; ?>&method=" + methodType;
-    }
-  }
-</script>
 
 <form name="StdSetMenu" action="" autocomplete="off">
 
@@ -71,7 +42,7 @@ if (isset($_GET['folder'])) {
 
 
 <div id="menu1">
-	<div class="grey menuitem" onclick="launchHelp(97)"><img class="sidebar_icon" src="../artwork/small_help_icon.gif" alt="Help" /><a href="#" onclick="return false"><?php echo $string['aboutstandardssetting'] ?></a></div>
+	<div class="grey menuitem" id="stdlink"><img class="sidebar_icon" src="../artwork/small_help_icon.gif" alt="Help" /><a href="#" onclick="return false"><?php echo $string['aboutstandardssetting'] ?></a></div>
 	<div class="grey menuitem"><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=modified_angoff&module=<?php echo $module; ?>&folder=<?php echo $folder ?>"><img class="sidebar_icon" src="../artwork/std_set_icon_16.gif" alt="Angoff Method" /><?php echo $string['createmodifiedangoff'] ?></a></div>
 	<div class="grey menuitem"><a href="individual_review.php?paperID=<?php echo $_GET['paperID']; ?>&method=ebel&module=<?php echo $module; ?>&folder=<?php echo $folder ?>"><img class="sidebar_icon" src="../artwork/std_set_icon_16.gif" alt="Ebel Method" /><?php echo $string['createebelmethod'] ?></a></div>
 	<div class="grey menuitem"><a href="hofstee.php?paperID=<?php echo $_GET['paperID']; ?>&module=<?php echo $module; ?>&folder=<?php echo $folder ?>"><img class="sidebar_icon" src="../artwork/std_set_icon_16.gif" alt="Ebel Method" /><?php echo $string['createhofsteemethod'] ?></a></div>
@@ -86,8 +57,8 @@ if (isset($_GET['folder'])) {
 </div>
 
 <div id="menu2b">
-	<div class="menuitem" onclick="editReview()"><img class="sidebar_icon" src="../artwork/edit.png" alt="Arrow" /><a onclick="return false" href="#"><?php echo $string['editrating'] ?></a></div>
-	<div class="menuitem" onclick="deleteReview()"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="Arrow" /><a href="#" onclick="return false"><?php echo $string['delete'] ?></a></div>
+	<div class="menuitem editreview"><img class="sidebar_icon" src="../artwork/edit.png" alt="Arrow" /><a onclick="return false" href="#"><?php echo $string['editrating'] ?></a></div>
+	<div class="menuitem deletereview"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="Arrow" /><a href="#" onclick="return false"><?php echo $string['delete'] ?></a></div>
 </div>
 
 <div id="menu2c">

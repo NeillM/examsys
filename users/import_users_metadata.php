@@ -54,20 +54,10 @@ if (!$module_details) {
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
 
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../js/sidebar.js"></script>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function () {
-      $(document).click(function() {
-        hideMenus();
-      });
-      
-      $('#cancel').click(function() {
-        history.back();
-      });
-    });
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/usersmetadatainit.min.js"></script>
   
   <style type="text/css">
     h1 {font-size:120%; font-weight:bold}
@@ -233,6 +223,16 @@ if ($file_problem) {
 <?php
   $mysqli->close();
   ob_end_flush();
+
+  $render = new render($configObject);
+  $jsdataset['name'] = 'dataset';
+  if (isset($_GET['folder'])) {
+    $jsdataset['attributes']['folder'] = $_GET['folder'];
+  } else {
+    $jsdataset['attributes']['folder'] = '';
+  }
+  $jsdataset['attributes']['module'] = $module;
+  $render->render($jsdataset, array(), 'dataset.html');
 ?>
 </body>
 </html>

@@ -31,104 +31,11 @@ require_once '../include/errors.php';
 
 $userID = check_var('userID', 'GET', true, false, true);
 
-$errors = false;
-
 $user_details = UserUtils::get_user_details($userID, $mysqli);
 if ($user_details === false) {
   $contactemail = support::get_email();
   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-}
-
-$submit = param::optional('submit', null, param::TEXT, param::FETCH_POST);
-$username = param::optional('username', null, param::ALPHANUM, param::FETCH_POST);
-$prev_username = param::optional('prev_username', null, param::ALPHANUM, param::FETCH_POST);
-
-if ($submit and $username != $prev_username) {
-  // Check new username is valid and is not already used. Overwriting usernames could screw up other accounts.
-  if (!UserUtils::username_is_valid($username)) {
-    $errors = $string['usernameinvalid'];
-  } elseif (UserUtils::username_exists($username, $mysqli)) {
-    $errors = $string['usernameexists'];
-  }
-}
-
-if ($submit and !$errors) {
-  $cfg_web_root = $configObject->get('cfg_web_root');
-
-  if (!empty($_FILES['photofile']['name'])) {
-    $photodirectory = rogo_directory::get_directory('user_photo');
-    // First check if the user has an image already, if they do delete it.
-    // This stops an image type of a different type blocking the display of the uploaded image.
-    $student_photo = UserUtils::student_photo_exist($username);
-    if ($student_photo !== false) {
-      unlink($photodirectory->fullpath($student_photo));
-    }
-    // Add the file.
-    $filename = $_FILES['photofile']['name'];
-    $explode = explode('.', $filename);
-    $count = count($explode) - 1;
-    // Ensure the file extenstion is lower case or it will not load on some Operating systems.
-    $file_ext = strtolower($explode[$count]);
-
-    if (!move_uploaded_file($_FILES['photofile']['tmp_name'],  $photodirectory->fullpath($username . '.' . $file_ext))) {
-      log_error($userObject->get_user_ID(), 'Edit User', 'Application Error', 'Error uploading user photo - error: ' . $_FILES['photofile']['error'], $_SERVER['PHP_SELF'], 49, '', null, null, null);
-    }
-  }
-
-  $initials = '';
-  $first_names = param::optional('first_names', null, param::TEXT, param::FETCH_POST);
-  $first_names_array = explode(' ', $first_names);
-  foreach ($first_names_array as $individual_name) {
-    $initials .= trim(substr($individual_name,0,1));
-  }
-  // Update 'users' table.
-  $tmp_roles = param::optional('roles', null, param::TEXT, param::FETCH_POST);
-
-  $gender = param::optional('gender', null, param::TEXT, param::FETCH_POST);
-  if ($gender == '') $gender = null;
-
-  $title = param::optional('title', null, param::TEXT, param::FETCH_POST);
-  $surname = param::optional('surname', null, param::TEXT, param::FETCH_POST);
-  $grade = param::optional('grade', null, param::TEXT, param::FETCH_POST);
-  $year = param::optional('year', null, param::INT, param::FETCH_POST);
-  $email = param::optional('email', null, param::EMAIL, param::FETCH_POST);
-  $sid = param::optional('sid', null, param::TEXT, param::FETCH_POST);
-
-  if (false === UserUtils::update_user($userID, $username, '', $title, $first_names, $surname, $email, $grade, $gender, $year, $tmp_roles, $sid, $mysqli, $initials)) {
-    $errors = $string['unabletosaveuserdetails'];
-  } else {
-    // Remove from teams if 'left'.
-    if (strtolower($tmp_roles) == 'left') {
-      UserUtils::clear_staff_modules_by_userID($userID, $mysqli);
-    }
-
-    // Remove from admin access if role changed from Admin
-    if ($userObject->has_role('SysAdmin')) {
-      if ($tmp_roles != $_POST['prev_roles'] and $_POST['prev_roles'] == 'Staff,Admin') {
-        UserUtils::clear_admin_access($userID, $mysqli);
-      }
-    }
-  }
-?>
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><?php echo $string['usermanagement'] ?></title>
-    <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-    <script>
-      $(function () {
-        window.opener.location = window.opener.parent.location.href.replace('&tab=admin', '');
-        window.opener.parent.location.reload(true);
-        window.close();
-      });
-    </script>
-  </head>
-  <body>
-
-  </body>
-</html>
-<?php
 }
 
 if ($user_details['gender'] == 'Male') {
@@ -149,12 +56,11 @@ if ($user_details['gender'] == 'Male') {
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
-  <style type="text/css">
-    body {font-size:90%; background-color:#EEF4FF}
-    .form-error {border: 2px solid #C00000 !important}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/edituserdetails.css" />
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
+  <script src="../js/require.js"></script>
+  <script src="../js/main.min.js"></script>
+  <script src="../js/edituserdetailsinit.min.js"></script>
 </head>
 
 <body>
@@ -163,7 +69,7 @@ if ($user_details['gender'] == 'Male') {
   </table>
   <br />
   
-  <form name="myform" action="<?php echo $_SERVER['PHP_SELF']; ?>?userID=<?php echo $userID ?>" method="post" enctype="multipart/form-data" autocomplete="off">
+  <form id="myform" name="myform" action="" method="post" enctype="multipart/form-data" autocomplete="off">
   <table cellspacing="0" cellpadding="2" border="0" style="width:100%; border:12px solid #EEF4FF">
 <?php
   echo "<tr><td>" . $string['name'] . "</td><td>";
@@ -178,11 +84,7 @@ if ($user_details['gender'] == 'Male') {
   }
   echo "</select> <input type=\"text\" value=\"" . $user_details['first_names'] . "\" name=\"first_names\" required /> <input type=\"text\" value=\"" . $user_details['surname'] . "\" name=\"surname\" required /></td></tr>\n";
   echo "<tr><td>" . $string['studentid'] . "</td><td><input type=\"text\" value=\"" . $user_details['student_id'] . "\" name=\"sid\" /></td></tr>\n";
-  if ($errors) {
-    echo "<tr><td>" . $string['username'] . "</td><td><input type=\"text\" value=\"" . $username . "\" name=\"username\" class=\"form-error\" required />&nbsp;&nbsp;<span style=\"color:#C00000\">" . $errors . "</span></td></tr>\n";
-  } else {
-    echo "<tr><td>" . $string['username'] . "</td><td><input type=\"text\" value=\"" . $user_details['username'] . "\" name=\"username\" required /></td></tr>\n";
-  }
+  echo "<tr><td>" . $string['username'] . "</td><td><input type=\"text\" value=\"" . $user_details['username'] . "\" id=\"username\" name=\"username\" required /><span id=\"usernameerror\"></span></td></tr>\n";
   echo "<tr><td>" . $string['email'] . "</td><td><input type=\"text\" value=\"" . $user_details['email'] . "\" name=\"email\" style=\"width:340px\" required /></td></tr>\n";
   echo "<tr><td>" . $string['course'] . "</td><td><select name=\"grade\" style=\"width:300px\">";
   $found = 0;
@@ -265,11 +167,19 @@ if ($user_details['gender'] == 'Male') {
   echo "</optgroup>\n</select>\n";
   echo "<input type=\"hidden\" name=\"prev_roles\" value=\"" . $user_details['roles'] . "\" /></td></tr>\n";
   echo "<input type=\"hidden\" name=\"prev_username\" value=\"" . $user_details['username'] . "\" /></td></tr>\n";
+  echo "<input type=\"hidden\" name=\"userID\" value=\"" . $userID . "\" /></td></tr>\n";
   echo "<tr><td>" . $string['photo'] . "</td><td><input type=\"file\" name=\"photofile\" /></td></tr>";
   ?>
   </table>
 
-    <div style="margin-top:24px; text-align:center"><input type="submit" name="submit" value="<?php echo $string['ok'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" onclick="window.close()" /></div>
+    <div style="margin-top:24px; text-align:center"><input type="submit" name="submit" value="<?php echo $string['ok'] ?>" class="ok" /><input class="cancel" type="button" id="cancel" name="cancel" value="<?php echo $string['cancel'] ?>" /></div>
   </form>
+  <?php
+  // JS utils dataset.
+  $render = new render($configObject);
+  $jsdataset['name'] = 'jsutils';
+  $jsdataset['attributes']['xls'] = json_encode($string);
+  $render->render($jsdataset, array(), 'dataset.html');
+  ?>
 </body>
 </html>

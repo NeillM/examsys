@@ -371,7 +371,7 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
         <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
         <style type="text/css">
             a {color:black}
-            .coltitle {cursor:hand; background-color:#F1F5FB; color:black}
+            .coltitle {background-color:#F1F5FB; color:black}
             #usertable td {padding-left:6px}
             .fn {color:#A5A5A5}
             .uline {line-height: 150%}
@@ -381,84 +381,10 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
             .l {line-height: 160%}
         </style>
 
-        <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-        <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
-        <script type="text/javascript" src="../js/staff_help.js"></script>
-        <script type="text/javascript" src="../js/toprightmenu.js"></script>
-        <script>
-            function addUserID(ID, clearall) {
-                if (clearall) {
-                    $('#userID').val(',' + ID);
-                } else {
-                    cur_value = $('#userID').val() + ',' + ID;
-                    $('#userID').val(cur_value);
-                }
-            }
-
-            function subUserID(ID) {
-                var tmpuserID = ',' + ID;
-                new_value = $('#userID').val().replace(tmpuserID, '');
-                $('#userID').val(new_value);
-            }
-
-            function clearAll() {
-                $('.highlight').removeClass('highlight');
-            }
-
-            function selUser(userID, lineID, menuID, roles, evt) {
-                $('#menu2a').hide();
-                $('#menu' + menuID).show();
-
-                if (evt.ctrlKey == false && evt.metaKey == false) {
-                    clearAll();
-                    $('#' + lineID).addClass('highlight');
-                    addUserID(userID, true);
-                } else {
-                    if ($('#' + lineID).hasClass('highlight')) {
-                        $('#' + lineID).removeClass('highlight');
-                        subUserID(userID);
-                    } else {
-                        $('#' + lineID).addClass('highlight');
-                        addUserID(userID, false);
-                    }
-                }
-                $('#roles').val(roles);
-                checkRoles();
-
-                evt.stopPropagation();
-            }
-
-            function userOff() {
-                $('#menu2a').show();
-                $('#menu2b').hide();
-                $('#menu2c').hide();
-
-                clearAll();
-            }
-
-            function profile(userID) {
-                document.location.href = 'details.php?search_surname=<?php echo $search_surname; ?>'
-                        + '&search_username=<?php echo $search_username ?>&student_id=<?php echo $student_id; ?>'
-                        + '&moduleID=<?php echo $team; ?><?php if (!is_null($moduleID)) echo '&module=' . $moduleID; ?>'
-                        + '&calendar_year=<?php echo $calendar_year ?>&students=<?php if ($get_students) echo 'on'; ?>'
-                        + '&submit=Search&userID=' + userID + '&email=<?php echo $email; ?>'
-                        + '&tmp_surname=<?php echo $temporary_surname; ?>&tmp_courseID=<?php echo $temporary_courseid; ?>'
-                        + '&tmp_yearID=<?php echo $temporary_yearid; ?>';
-            }
-
-            $(function () {
-                if ($("#maindata").find("tr").size() > 1) {
-                    $("#maindata").tablesorter({
-                        // sort on the third column, order asc
-                        sortList: [[3, 0]]
-                    });
-                }
-
-                $(document).click(function () {
-                    $('#menudiv').hide();
-                });
-            });
-        </script>
+        <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+        <script src='../js/require.js'></script>
+        <script src='../js/main.min.js'></script>
+        <script src="../js/usersearchinit.min.js"></script>
     </head>
     <body>
         <?php
@@ -530,7 +456,7 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
                             if (!is_null($submit) and count($roles) > 0) {
                                 while ($stmt->fetch()) :
                                     ?>
-                                    <tr class="l" id="<?= $x ?>" onclick="selUser('<?= $tmp_id ?>', <?= $x ?>, '2c', '<?= $tmp_roles ?>', event); return false;" ondblclick="profile('<?= $tmp_id ?>'); return false;">
+                                    <tr class="l" id="<?= $x ?>" data-userid="<?php echo $tmp_id; ?>" data-lineid="<?php echo $x; ?>" data-menuid="2c" data-roles="<?php echo $tmp_roles; ?>">
                                         <td>
                                             <?php if (false !== $photoname = UserUtils::student_photo_exist($tmp_username)) : ?>
                                                 <img src="../artwork/photo.png" width="16" height="16" alt="Photo" />
@@ -579,5 +505,33 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
                     ?>
                 </form>
             <?php endif; ?>
+            <?php
+            $render = new render($configObject);
+            $dataset['name'] = 'dataset';
+            $dataset['attributes']['surname'] = $search_surname;
+            $dataset['attributes']['username'] = $search_username;
+            $dataset['attributes']['sid'] = $student_id;
+            $dataset['attributes']['team'] = $team;
+            if (!is_null($moduleID)) {
+              $dataset['attributes']['module'] = $moduleID;
+            } else {
+              $dataset['attributes']['module'] = '';
+            }
+            $dataset['attributes']['year'] = $calendar_year;
+            if ($get_students) {
+              $dataset['attributes']['students'] = 'on';
+            } else {
+              $dataset['attributes']['students'] = 'off';
+            }
+            $dataset['attributes']['email'] = $email;
+            $dataset['attributes']['tmp_surname'] = $temporary_surname;
+            $dataset['attributes']['tmp_courseid'] = $temporary_courseid;
+            $dataset['attributes']['tmp_yearid'] = $temporary_yearid;
+            $render->render($dataset, array(), 'dataset.html');
+            // JS utils dataset.
+            $jsdataset['name'] = 'jsutils';
+            $jsdataset['attributes']['xls'] = json_encode($string);
+            $render->render($jsdataset, array(), 'dataset.html');
+            ?>
     </body>
 </html>

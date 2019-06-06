@@ -119,33 +119,10 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
 
   <link rel="stylesheet" href="../css/body.css" type="text/css" />
   <link rel="stylesheet" href="../css/screen.css" type="text/css" />
-  <style type="text/css">
-    body {font-size:90%}
-    .field {padding-top:4px; padding-left:6px; font-weight:bold}
-  </style>
-
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.validate.min.js"></script>
-  <script>
-  $(function() {
-    $('#forgotten_pw').validate({
-      rules: {
-        password_confirm: {
-          required: true,
-          equalTo: "#password"
-        }
-      },
-      messages: {
-        email: '<?php echo $string['emailaddressinvalid'] ?>',
-        password: '<?php echo $string['pleaseenterpassword'] ?>',
-        password_confirm: {
-          required: '<?php echo $string['pleaseconfirmpassword'] ?>',
-          equalTo: '<?php echo $string['passwordsnotmatch'] ?>'
-        }
-      }
-    });
-  });
-  </script>
+  <link rel="stylesheet" href="../css/password.css" type="text/css" />
+  <script src="../js/require.js"></script>
+  <script src="../js/main.min.js"></script>
+  <script src="../js/resetpasswordinit.min.js"></script>
 </head>
 
 <body>
@@ -232,10 +209,13 @@ if($message == '') {
 ?>
     </table>
   </div>
-<?php
-//  $mysqli->close();
-?>
 </form>
-
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

@@ -38,8 +38,6 @@ require_once '../lang/' . $language . '/question/edit/area.php';
 require_once '../lang/' . $language . '/paper/hotspot_answer.php';
 require_once '../lang/' . $language . '/paper/hotspot_question.php';
 require_once '../lang/' . $language . '/paper/label_answer.php';
-$jstring = $string; //to pass it to JavaScript HTML5 modules
-//HTML5 part
 
 $paperID    = check_var('paperID', 'GET', true, false, true);
 $startdate  = check_var('startdate', 'GET', true, false, true);
@@ -488,11 +486,11 @@ function excludeButton(&$buttonID, $question_id, $status, $parts, $marks) {
   if (strpos($status,'1') !== false) {
     $html = "<input type=\"hidden\" name=\"status_" . $buttonID . "\" id=\"status_" . $buttonID . "\" value=\"";
     for ($i=0; $i<$marks; $i++) $html .= '1';
-    $html .= "\" /><input type=\"hidden\" name=\"id_" . $buttonID . "\" value=\"$question_id\" /><input type=\"hidden\" name=\"marks_" . $buttonID . "\" value=\"$marks\" /><img src=\"../artwork/exclude_on.gif\" id=\"button_" . $buttonID . "\" style=\"cursor:pointer\" onclick=\"toggle('$buttonID',$parts,$marks)\" width=\"23\" height=\"22\" alt=\"Exclude\" class=\"in-exclusion\" />";
+    $html .= "\" /><input type=\"hidden\" name=\"id_" . $buttonID . "\" value=\"$question_id\" /><input type=\"hidden\" name=\"marks_" . $buttonID . "\" value=\"$marks\" /><img src=\"../artwork/exclude_on.gif\" id=\"button_" . $buttonID . "\" style=\"cursor:pointer\" data-id=\"$buttonID\" data-parts=\"$parts\" data-marks=\"$marks\" width=\"23\" height=\"22\" alt=\"Exclude\" class=\"in-exclusion\" />";
   } else {
     $html = "<input type=\"hidden\" name=\"status_" . $buttonID . "\" id=\"status_" . $buttonID . "\" value=\"";
     for ($i=0; $i<$marks; $i++) $html .= '0';
-    $html .= "\" /><input type=\"hidden\" name=\"id_" . $buttonID . "\" value=\"$question_id\" /><input type=\"hidden\" name=\"marks_" . $buttonID . "\" value=\"$marks\" /><img src=\"../artwork/exclude_off.gif\" id=\"button_" . $buttonID . "\" style=\"cursor:pointer\" onclick=\"toggle('$buttonID',$parts,$marks)\" width=\"23\" height=\"22\" alt=\"Exclude\" class=\"in-exclusion\" />";
+    $html .= "\" /><input type=\"hidden\" name=\"id_" . $buttonID . "\" value=\"$question_id\" /><input type=\"hidden\" name=\"marks_" . $buttonID . "\" value=\"$marks\" /><img src=\"../artwork/exclude_off.gif\" id=\"button_" . $buttonID . "\" style=\"cursor:pointer\" data-id=\"$buttonID\" data-parts=\"$parts\" data-marks=\"$marks\"  width=\"23\" height=\"22\" alt=\"Exclude\" class=\"in-exclusion\" />";
   }
 
   return $html;
@@ -534,7 +532,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
     if ($q_type == 'info') {
       echo "<td colspan=\"2\" style=\"padding-left:15px\">$leadin\n";
     } else {
-      echo "<td class=\"q_no\">$q_no.&nbsp;</td><td><div";
+      echo "<td class=\"q_no\" data-qno=\"$q_no\" data-qtype=\"$q_type\" data-qmedia=\"$q_media\" data-qcorrect=\"" . trim($correct) . "\">$q_no.&nbsp;</td><td><div";
       if ((($q_type == 'dichotomous' or $q_type == 'labelling' or $q_type == 'blank' or $q_type == 'hotspot') and $score_method == 'Mark per Question') or $q_type == 'flash') {
         echo ' id="q_' . ($ex_no+1) . '_1"';
         if ($exclusions->is_question_excluded($q_id)) {
@@ -753,7 +751,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
           echo "$html</td>";
 
           if ($display_method == 'textboxes') {
-            echo "<td><input type=\"button\" onclick=\"blankCorrect($q_id, $i)\" value=\"" . $string['Correct'] . "\" /></td>";
+            echo "<td><input type=\"button\" id=\"blankcorrect\" data-qid=\"$q_id\" data-i=\"$i\" value=\"" . $string['Correct'] . "\" /></td>";
           }
           echo "</tr>";
         }
@@ -841,7 +839,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         echo "<tr><td>" . excludeButton($ex_no, $q_id, $tmp_exclude, 1, 1) . "</td><td style=\"width:60px\"><strong>t=" . $t . "%</strong></td><td><strong>u=" . $u . "%</strong></td><td><strong>l=" . $l . "%</strong></td><td><span class=\"std\">" . $std . "</span></td><td id=\"q_" . $ex_no . "_1\"";
         if ($exclusions->is_question_excluded($q_id)) echo ' class="excluded"';
         echo ">$leadin</td>";
-        echo "<td><input type=\"button\" onclick=\"return clacCorrect($q_id, $i)\" value=\"" . $string['Correct'] . "\" /></td>";
+        echo "<td><input id=\"calccorrect\" type=\"button\" data-qid=\"$q_id\" value=\"" . $string['Correct'] . "\" /></td>";
         echo "</tr>\n";
         echo "<tr><td colspan=\"7\">&nbsp;</td></tr>";
         if ($freq_log[$q_id][1]['correct'] !== 0 and $user_total != 0) {
@@ -933,10 +931,6 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
 		//<!-- ======================== HTML5 part rep disc ================= -->
 		echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 220) . "' height='" . $tmp_height . "'></canvas>\n";
 		echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-		echo "<script>\n";
-		echo "setUpQuestion(" . $q_no . ", 'flash" . $q_no . "', '" . $language . "', '" . $q_media . "', '" . trim($correct) . "', '', '','#FFC0C0','labelling','analysis');\n";
-		echo "</script>\n";
-		//<!-- ==================================================== -->
 	?>
   <br />
 <?php
@@ -1000,41 +994,24 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         }
         echo $leadin;
         ?>
-          <script>
-          var isInternetExplorer = navigator.appName.indexOf("Microsoft") != -1;
-          function flash<?php echo $q_no; ?>_DoFSCommand(command, args) {
-            var flash<?php echo $q_no; ?>Obj = isInternetExplorer ? document.all.flash<?php echo $q_no; ?> : document.flash<?php echo $q_no; ?>;
-             //document.questions.q<?php echo $q_no; ?>.value = args;
-          }
-          if (navigator.appName && navigator.appName.indexOf("Microsoft") != -1 && navigator.userAgent.indexOf("Windows") != -1 && navigator.userAgent.indexOf("Windows 3.1") == -1) {
-            document.write('<script language=\"VBScript\"\>\n');
-            document.write('On Error Resume Next\n');
-            document.write('Sub flash<?php echo $q_no; ?>_FSCommand(ByVal command, ByVal args)\n');
-            document.write('	Call flash<?php echo $q_no; ?>_DoFSCommand(command, args)\n');
-            document.write('End Sub\n');
-            document.write('</script\>\n');
-          }
-        </script>
         <div style="text-align:center">
-        <script>
-          write_string('<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" id="flash<?php echo $q_no; ?>" width="<?php echo $q_media_width; ?>" height="<?php echo $q_media_height; ?>" align="middle">');
-          write_string('<param name="allowScriptAccess" value="sameDomain" />');
-          write_string('<param name="movie" value="<?php echo $mediadirectory->url($q_media); ?>" />');
-          write_string('<param name="quality" value="high" />');
-          write_string('<param name="bgcolor" value="#ffffff" />');
+          <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="https://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab" id="flash<?php echo $q_no; ?>" width="<?php echo $q_media_width; ?>" height="<?php echo $q_media_height; ?>" align="middle">
+          <param name="allowScriptAccess" value="sameDomain" />
+          <param name="movie" value="<?php echo $mediadirectory->url($q_media); ?>" />
+          <param name="quality" value="high" />
+          <param name="bgcolor" value="#ffffff" />
           <?php
             if ($scenario != '') {
-              echo 'write_string(\'<param name="FlashVars" value="' . $scenario . '">\')';
+              echo '<param name="FlashVars" value="' . $scenario . '">';
             }
-            echo 'write_string(\'<embed src="' . $mediadirectory->url($q_media) . '"';
+            echo '<embed src="' . $mediadirectory->url($q_media) . '"';
             if ($scenario != '') {
               echo ' FlashVars="' . $scenario . '"';
             }
-            echo ' quality="high" bgcolor="#ffffff" width="' . $q_media_width . '" height="' . $q_media_height . '" swLiveConnect=true id="flash' . $q_no . '" name="flash' . $q_no . '" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />\');';
+            echo ' quality="high" bgcolor="#ffffff" width="' . $q_media_width . '" height="' . $q_media_height . '" swLiveConnect=true id="flash' . $q_no . '" name="flash' . $q_no . '" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="https://www.macromedia.com/go/getflashplayer" />';
           ?>
-          write_string('</object>');
-        </script>
-        </div>
+          </object>
+         </div>
         <?php
         break;
       case 'hotspot':
@@ -1059,7 +1036,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
           }
         }
         $coords = rtrim($coords, '|');
-
+        echo "<div id='coords$q_no' data-value='$coords'></div>";
         $tmp_correct = str_replace("'", "\'", trim($correct));
         $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
         $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
@@ -1753,64 +1730,21 @@ HTML;
     .subsect_table {margin-left: 6px; margin-bottom: 10px}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script id="rogoconfig" src='../js/rogo.min.js'
+            data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
+            data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
+            data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>">
+  </script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src='../js/freqdiscinit.min.js'></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
 
-  $render = new render($configObject);
-  $render->render_html5_js(json_encode($jstring));
-
   // Check if any 3d file types are enabled and render js.
   threed_handler::render_js($string);
 ?>
-
-  <script>
-    function toggle(qID, parts, marks) {
-      for (i=1; i<=parts; i++) {
-        if ($('#status_' + qID).val().substr(0,1) == '1') {
-          $('#q_' + qID + '_' + i).removeClass('excluded');
-        } else {
-          $('#q_' + qID + '_' + i).addClass('excluded');
-        }
-      }
-
-      var new_value = '';
-      if ($('#status_' + qID).val().substr(0,1) == '1') {
-        for (i=1; i<=marks; i++) {
-          new_value += '0';
-        }
-        $('#status_' + qID).val(new_value);
-        $('#button_' + qID).attr('src', '../artwork/exclude_off.gif');
-      } else {
-        for (i=1; i<=marks; i++) {
-          new_value += '1';
-        }
-        $('#status_' + qID).val(new_value);
-        $('#button_' + qID).attr('src', '../artwork/exclude_on.gif');
-      }
-    }
-
-    function blankCorrect(q_id, part_no) {
-      window.open("blank_remark.php?q_id=" + q_id + "&blank=" + part_no + "&paperID=<?php echo $_GET['paperID']; ?>&startdate=<?php echo $_GET['startdate']; ?>&enddate=<?php echo $_GET['enddate']; ?>","remark","width=500,height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
-
-      return false;
-    }
-
-    function clacCorrect(q_id) {
-      window.open("enhanced_calc_remark.php?q_id=" + q_id + "&paperID=<?php echo $_GET['paperID']; ?>&startdate=<?php echo $_GET['startdate']; ?>&enddate=<?php echo $_GET['enddate']; ?>","remark","width=850,height="+(screen.height-80)+",left=20,top=10,scrollbars=yes,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
-
-      return false;
-    }
-  </script>
-  <?php
-    if($configObject->get_setting('core', 'paper_mathjax')) {
-      $render = new render($configObject);
-      $render->render(null, null, 'mathjax.html');
-    }
-  ?>
 </head>
 
 <body>
@@ -1997,7 +1931,7 @@ SQL;
         echo "</div>\n";
         if ($graded) {
             echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">";
-            echo "<tr><td><div class=\"yellowwarn\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"32\" height=\"32\" alt=\"Published\" /></div></td><td style=\"vertical-align:middle\"><div class=\"yellowwarn\">" . $string['paperpublishedwarning'] . " <a href=\"#\" class=\"blacklink\" onclick=\"launchHelp(189); return false;\">". $string['paperlockedclick'] ."</a></div></td></tr>\n";
+            echo "<tr><td><div class=\"yellowwarn\"><img src=\"../artwork/paper_locked_padlock.png\" width=\"32\" height=\"32\" alt=\"Published\" /></div></td><td style=\"vertical-align:middle\"><div class=\"yellowwarn\">" . $string['paperpublishedwarning'] . " <a href=\"#\" class=\"blacklink\">". $string['paperlockedclick'] ."</a></div></td></tr>\n";
             echo "</table>";
         }
         echo '<br /><div class="key">';
@@ -2273,6 +2207,19 @@ SQL;
 <?php
 }
 $mysqli->close();
+
+$render = new render($configObject);
+$dataset['name'] = 'dataset';
+$dataset['attributes']['id'] = $paperID;
+$dataset['attributes']['startdate'] = $startdate;
+$dataset['attributes']['enddate'] = $enddate;
+$dataset['attributes']['language'] = $language;
+$render->render($dataset, array(), 'dataset.html');
+// JS utils dataset.
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render = new render($configObject);
+$render->render($jsdataset, array(), 'dataset.html');
 $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 ?>
 </body>

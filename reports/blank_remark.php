@@ -45,14 +45,6 @@ $result->bind_result($option_text);
 $result->fetch();
 $result->close();
 
-// Read user properties from questions.
-$result = $mysqli->prepare("SELECT score_method, marks_correct, marks_incorrect FROM questions, options WHERE questions.q_id = options.o_id AND q_id = ?");
-$result->bind_param('i', $q_id);
-$result->execute();
-$result->bind_result($score_method, $marks_correct, $marks_incorrect);
-$result->fetch();
-$result->close();
-
 // Read user answers from log.
 $log_answers = array();
 if ($paper_type == '0') {
@@ -74,152 +66,23 @@ while ($result->fetch()) {
 }
 $result->close();
 
-if (isset($_POST['submit'])) {
-  $option_list_array = array();
 
-  // Iterate around all words marked for correction
-  for ($i=0; $i<$_POST['word_count']; $i++) {
-    if (isset($_POST['word' . $i])) {
-      // Encode commas.
-      $word = str_replace(',', '&#44;', $_POST['word' . $i]);
-      $option_list_array[] = $word;
-    }
-  }
-  $option_list = implode(',', $option_list_array);
+$blank_details = explode('[blank', $option_text);
+for ($i=1; $i<count($blank_details); $i++) {
+$end_start_tag = strpos($blank_details[$i],']');
+$start_end_tag = strpos($blank_details[$i],'[/blank]');
+$blank_options = substr($blank_details[$i],($end_start_tag+1),($start_end_tag-1));
+if ($i == $_GET['blank'] && $blank_options !== '') {
+  $blanks = explode(',', $blank_options);
+}
+}
 
-  $blank_details = explode('[blank', $option_text);
-  for ($i=1; $i<count($blank_details); $i++) {
-    $end_start_tag = strpos($blank_details[$i],']');
-    $start_end_tag = strpos($blank_details[$i],'[/blank]');
-    $blank_options = substr($blank_details[$i],($end_start_tag+1),($start_end_tag-1));
-
-    $new_option_text = substr($blank_details[$i],0,($end_start_tag+1));
-  }
-
-  for ($i=1; $i<count($blank_details); $i++) {
-    $tmp_parts = explode('[/blank]', $blank_details[$i]);
-
-    if ($i == $_GET['blank']) {
-      $blank_details[$i] = ']' . $option_list . '[/blank]' . $tmp_parts[1];
-    }
-  }
-
-  $new_option_text = $blank_details[0];
-  for ($i=1; $i<count($blank_details); $i++) {
-    $new_option_text .= '[blank' . $blank_details[$i];
-  }
-
-  // Save the new option text back to the Questions table.
-  $result = $mysqli->prepare("UPDATE options SET option_text = ? WHERE o_id = ?");
-  $result->bind_param('si', $new_option_text, $q_id);
-  $result->execute();
-  $result->close();
-	
-  $logger = new Logger($mysqli);
-  $success = $logger->track_change('Post-Exam Blank correction', $q_id, $userObject->get_user_ID(), $option_text, $new_option_text, 'Question/Stem');
-
-  // Remark student answers
-  $blank_details = explode("[blank", $new_option_text);
-  $no_answers = count($blank_details) - 1;
-  
-  $totalpos = 0;
-  for ($i = 1; $i <= $no_answers; $i++) {
-    if (preg_match("|mark=\"([0-9]{1,3})\"|", $blank_details[$i], $mark_matches)) {
-      $totalpos += $mark_matches[1];
-      $individual_q_mark = $mark_matches[1];
-    } else {
-      $totalpos += $marks_correct;
-      $individual_q_mark = $marks_correct;
-    }
-  }
-
-  foreach ($log_answers as $log_type=>$log_data) {
-    foreach ($log_data as $id => $user_parts) {
-      $mark = 0;
-      $have_answer = false;
-      $saved_response = '';
-      // Required to shift array indexes.
-      $blank_details_redo = array();
-      $j = 0;
-      $blank_details = explode("[blank", $new_option_text);
-      for ($i = 1; $i <= $no_answers; $i++) {
-        // Strip out answers from $blank_details
-        // n.b. First item in $blank_details not required
-        // Step 1. get all contents after ]
-        $blank_details_redo[$j] = substr($blank_details[$i], (strpos($blank_details[$i], ']') + 1));
-        // Step 2. get all contents before [/blank]
-        $blank_details_redo[$j] = substr($blank_details_redo[$j], 0, (strpos($blank_details[$i], '[/blank]') - 1));
-        // $blank_details_redo is now what was between ] and [/blank]
-        $answer_list = explode(',', $blank_details_redo[$j]);
-        if ($user_parts[$j] != 'u' and $user_parts[$j] != '') {
-          $have_answer = true;
-          $is_correct = false;
-          foreach ($answer_list as $individual_answer) {
-            if ($user_parts[$j] == strtolower(StringUtils::clean_and_trim($individual_answer))) {
-              $is_correct = true;
-              break;
-            }
-          }
-          $mark += ($is_correct) ? $individual_q_mark : $marks_incorrect;
-        }
-        $j++;
-      }
-      // Recalculate if mark per question
-      if ($score_method == 'Mark per Question') {
-        if ($have_answer) {
-          $mark = ($mark == $totalpos) ? $marks_correct : $marks_incorrect;
-        }
-      }
-      // Update marks in the database
-      $result = $mysqli->prepare("UPDATE log$log_type SET mark = ? WHERE id = ?");
-      $result->bind_param('ii', $mark, $id);
-      $result->execute();
-      $result->close();
-    }
-  }
-
-  // Set paper to re-cache marks again after the change.
-  $propertyObj->set_recache_marks(1);
-  $propertyObj->save();
-
-?>
-<!DOCTYPE html>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  <title><?php echo page::title($string['remark']); ?></title>
-
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function() {
-      window.opener.location = window.opener.location;
-      self.close();
-    });
-  </script>
-</head>
-<body>
-</body>
-</html>
-
-<?php
-} else {
-  $blank_details = explode('[blank', $option_text);
-  for ($i=1; $i<count($blank_details); $i++) {
-    $end_start_tag = strpos($blank_details[$i],']');
-    $start_end_tag = strpos($blank_details[$i],'[/blank]');
-    $blank_options = substr($blank_details[$i],($end_start_tag+1),($start_end_tag-1));
-    if ($i == $_GET['blank'] && $blank_options !== '') {
-      $blanks = explode(',', $blank_options);
-    }
-  }
-  
-  // Merge the same option on its own and with spaces (e.g. 'cat' and ' cat').
-  $new_blanks = array();
-  foreach ($blanks as $blank) {
-    $new_blanks[] = strtolower(trim($blank));
-  }
-  $blanks = array_unique($new_blanks);
+// Merge the same option on its own and with spaces (e.g. 'cat' and ' cat').
+$new_blanks = array();
+foreach ($blanks as $blank) {
+$new_blanks[] = strtolower(trim($blank));
+}
+$blanks = array_unique($new_blanks);
 ?>
 <!DOCTYPE html>
 <html>
@@ -240,37 +103,17 @@ if (isset($_POST['submit'])) {
     .msg {text-align:justify; margin:5px; font-size:90%; color:#001687}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    function toggle(objectID) {
-      if ($('#' + objectID).hasClass('r2')) {
-        $('#' + objectID).addClass('r1');
-        $('#' + objectID).removeClass('r2');
-      } else {
-        $('#' + objectID).addClass('r2');
-        $('#' + objectID).removeClass('r1');
-      }
-    }
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src='../js/blankremarkinit.min.js'></script>
 
-    function resizeList() {
-      winH = $(window).height() - 160;
 
-      $('#list').css('height', winH + 'px');
-    }
-    
-    $(function() {
-			resizeList();
-			
-			$(window).resize(function(){
-				resizeList();
-			});
-		});	
-  </script>
 </head>
 
 <body>
 
-<form method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?q_id=' . $_GET['q_id'] . '&blank=' . $_GET['blank'] . '&paperID=' . $_GET['paperID'] . '&startdate=' . $_GET['startdate'] . '&enddate=' . $_GET['enddate']; ?>" autocomplete="off">
+<form id="remarkform" method="post" action="" autocomplete="off">
   <table cellpadding="6" cellspacing="0" border="0" width="100%">
   <tr><td style="width:32px; background-color:white; border-bottom:1px solid #CCD9EA"><img src="../artwork/dictionary.png" width="32" height="32 alt="Word List" /></td><td style="background-color:white; font-size:150%; color:#5582D2; border-bottom:1px solid #CCD9EA"><strong><?php echo $string['uniqueanswers']; ?></td></tr>
   </table>
@@ -314,9 +157,9 @@ foreach ($unique_list as $word=>$occurrance) {
   }
 
   if ($match) {
-    echo '<tr id="div' . $word_count . '" class="r2"><td class="c1"><input type="checkbox" onclick="toggle(\'div'. $word_count . '\')" name="word' . $word_count . '" value="' . htmlspecialchars($word) . '" checked="checked" /></td><td class="c2">' . $word . '</td><td class="o">' . $occurrance . '</td></tr>';
+    echo '<tr id="div' . $word_count . '" class="r2"><td class="c1"><input type="checkbox" data-div="' . $word_count . '" id="word' . $word_count . '" name="word' . $word_count . '" value="' . htmlspecialchars($word) . '" checked="checked" /></td><td class="c2">' . $word . '</td><td class="o">' . $occurrance . '</td></tr>';
   } else {
-    echo '<tr id="div' . $word_count . '" class="r1"><td class="c1"><input type="checkbox" onclick="toggle(\'div'. $word_count . '\')" name="word' . $word_count . '" value="' . htmlspecialchars($word) . '" /></td><td class="c2">' . $word . '</td><td class="o">' . $occurrance . '</td></tr>';
+    echo '<tr id="div' . $word_count . '" class="r1"><td class="c1"><input type="checkbox" data-div="'. $word_count . '" id="word' . $word_count . '" name="word' . $word_count . '" value="' . htmlspecialchars($word) . '" /></td><td class="c2">' . $word . '</td><td class="o">' . $occurrance . '</td></tr>';
   }
   $word_count++;
 }
@@ -325,11 +168,21 @@ foreach ($unique_list as $word=>$occurrance) {
 </div>
 
 <input type="hidden" name="word_count" value="<?php echo $word_count; ?>" />
-<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" onclick="window.close();" /></div>
+<input type="hidden" name="q_id" value="<?php echo $_GET['q_id']; ?>" />
+<input type="hidden" name="blank" value="<?php echo $_GET['blank']; ?>" />
+<input type="hidden" name="paperID" value="<?php echo $_GET['paperID']; ?>" />
+<input type="hidden" name="startdate" value="<?php echo $_GET['startdate']; ?>" />
+<input type="hidden" name="enddate" value="<?php echo $_GET['enddate']; ?>" />
+<div style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['save']; ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel']; ?>" class="cancel" /></div>
 
 </form>
+<?php
+$render = new render($configObject);
+// JS utils dataset.
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render = new render($configObject);
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>
-<?php
-}
-?>

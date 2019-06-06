@@ -26,4 +26,4 @@ $string['largeresult'] = 'Large number of users found, only the first 10,000 are
   . ' Please try narrowing your search criteria.';
 $string['to'] = 'to';
 $string['of'] = 'of';
-?>
+$string['nonstudent'] = "You have selected a non-student user.";

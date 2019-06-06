@@ -121,12 +121,9 @@ $q_marks = array_flip($marks_arr);
     .overridden {background-color: #B3C8E8}
   </style>
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery-ui-1.10.4.min.js"></script>
-  <script type="text/javascript" src="../js/jquery.enhancedcalc_override.min.js"></script>
-  <script>
-    langStrings = {'saveerror': '<?php echo $string['saveerror'] ?>', 'nomarkmsg' : '<?php echo $string['nomarkmsg'] ?>'};
-  </script>
+  <script src="../js/require.js"></script>
+  <script src="../js/main.min.js"></script>
+  <script src="../js/calcremarkinit.min.js"></script>
 </head>
 
 <body>
@@ -244,12 +241,19 @@ foreach ($log_answers2 as $innerans) {
 </div>
 <div style="text-align:center">
   <button id="save_all" type="button" class="save-all"><?php echo $string['save'] ?></button>
-  <button id="" onclick="window.close();"><?php echo $string['done'] ?></button>
+  <button id="close"><?php echo $string['done'] ?></button>
 </div>
 
   <input type="hidden" id="q_id" name="q_id" value="<?php echo $q_id ?>" />
   <input type="hidden" id="paper_id" name="paper_id" value="<?php echo $paperID ?>" />
   <input type="hidden" id="marker_id" name="marker_id" value="<?php echo $userObject->get_user_ID() ?>" />
 </form>
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

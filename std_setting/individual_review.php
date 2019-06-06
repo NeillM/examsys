@@ -32,8 +32,6 @@ require_once '../lang/' . $language . '/question/edit/area.php';
 require_once '../lang/' . $language . '/paper/hotspot_answer.php';
 require_once '../lang/' . $language . '/paper/hotspot_question.php';
 require_once '../lang/' . $language . '/paper/label_answer.php';
-$jstring = $string; //to pass it to JavaScript HTML5 modules
-//HTML5 part
 
 $paperID = check_var('paperID', 'GET', true, false, true);
 check_var('method', 'GET', true, false, false);
@@ -52,7 +50,7 @@ $state = $stateutil->getState();
 function ebelDropdown($dropdownID, $ebel_grid) {
 	$selected = $ebel_grid[$dropdownID];
 
-  $html = "<select name=\"$dropdownID\" id=\"$dropdownID\" onchange=\"recountCategories();\">\n";
+  $html = "<select name=\"$dropdownID\" id=\"$dropdownID\" class='recountcat'>\n";
   $html .= "<option value=\"0\"></option>\n";
   $selected = intval($selected * 100);
   for ($individual_category=0; $individual_category<=100; $individual_category++) {
@@ -112,268 +110,21 @@ function check_ebel_distinction_type($reviewID, $db) {
     .var {font-weight: bold}
     .value {display:none}
   </style>
-	
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/state.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    $(function() {
-      $('.reveal').click(function() {
-        $('.var').toggle();
-        $('.value').toggle();
-      });
-    });
+  <script id="rogoconfig" src='../js/rogo.min.js'
+            data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
+            data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
+            data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>">
   </script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/stdsetreviewinit.min.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
-  $render = new render($configObject);
-  $render->render_html5_js(json_encode($jstring));
-  if ($configObject->get_setting('core', 'paper_mathjax')) {
-    $render->render(null, null, 'mathjax.html');
-  }
-?>
-  <script>
-  <?php
-    if ($_GET['method'] == 'ebel') {
+
+  // Check if any 3d file types are enabled and render js.
+  threed_handler::render_js($string);
   ?>
-    function roundNumber(num, dec) {
-      var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
-      return result;
-    }
-
-    function recountCategories() {
-      var EE = 0;
-      var EI = 0;
-      var EN = 0;
-      var ME = 0;
-      var MI = 0;
-      var MN = 0;
-      var HE = 0;
-      var HI = 0;
-      var HN = 0;
-
-      var origEE = 0;
-      var origEI = 0;
-      var origEN = 0;
-      var origME = 0;
-      var origMI = 0;
-      var origMN = 0;
-      var origHE = 0;
-      var origHI = 0;
-      var origHN = 0;
-
-      var question_no = parseInt($('#stdIDNo').val());
-
-      for (i=0; i<question_no; i++) {
-        var question_marks = parseInt($('#std' + i + '_marks').val());
-        switch ($('#valstd' + i).val()) {
-          case 'EE':
-            EE += question_marks;
-            break;
-          case 'EI':
-            EI += question_marks;
-            break;
-          case 'EN':
-            EN += question_marks;
-            break;
-          case 'ME':
-            ME += question_marks;
-            break;
-          case 'MI':
-            MI += question_marks;
-            break;
-          case 'MN':
-            MN += question_marks;
-            break;
-          case 'HE':
-            HE += question_marks;
-            break;
-          case 'HI':
-            HI += question_marks;
-            break;
-          case 'HN':
-            HN += question_marks;
-            break;
-        }
-        switch ($('#valstd' + i).val()) {
-          case 'EE':
-          case 'exclude_EE':
-            origEE += question_marks;
-            break;
-          case 'EI':
-          case 'exclude_EI':
-            origEI += question_marks;
-            break;
-          case 'EN':
-          case 'exclude_EN':
-            origEN += question_marks;
-            break;
-          case 'ME':
-          case 'exclude_ME':
-            origME += question_marks;
-            break;
-          case 'MI':
-          case 'exclude_MI':
-            origMI += question_marks;
-            break;
-          case 'MN':
-          case 'exclude_MN':
-            origMN += question_marks;
-            break;
-          case 'HE':
-          case 'exclude_HE':
-            origHE += question_marks;
-            break;
-          case 'HI':
-          case 'exclude_HI':
-            origHI += question_marks;
-            break;
-          case 'HN':
-          case 'exclude_HN':
-            origHN += question_marks;
-            break;
-        }
-      }
-      $('#ee').val(EE + ' <?php echo $string['marks'] ?>');
-      if (origEE != EE) {
-        $('#origee').val(origEE);
-        $('#origee2').val(origEE);
-      } else {
-        $('#origee').val('');
-        $('#origee2').val('');
-      }
-
-      $('#ei').val(EI + ' <?php echo $string['marks'] ?>');
-      if (origEI != EI) {
-        $('#origei').val(origEI);
-        $('#origei2').val(origEI);
-      } else {
-        $('#origei').val('');
-        $('#origei2').val('');
-      }
-
-      $('#en').val(EN + ' <?php echo $string['marks'] ?>');
-      if (origEN != EN) {
-        $('#origen').val(origEN);
-        $('#origen2').val(origEN);
-      } else {
-        $('#origen').val('');
-        $('#origen2').val('');
-      }
-
-      $('#me').val(ME + ' <?php echo $string['marks'] ?>');
-      if (origME != ME) {
-        $('#origme').val(origME);
-        $('#origme2').val(origME);
-      } else {
-        $('#origme').val('');
-        $('#origme2').val('');
-      }
-
-      $('#mi').val(MI + ' <?php echo $string['marks'] ?>');
-      if (origMI != MI) {
-        $('#origmi').val(origMI);
-        $('#origmi2').val(origMI);
-      } else {
-        $('#origmi').val('');
-        $('#origmi2').val('');
-      }
-
-      $('#mn').val(MN + ' <?php echo $string['marks'] ?>');
-      if (origMN != MN) {
-        $('#origmn').val(origMN);
-        $('#origmn2').val(origMN);
-      } else {
-        $('#origmn').val('');
-        $('#origmn2').val('');
-      }
-
-      $('#he').val(HE + ' <?php echo $string['marks'] ?>');
-      if (origHE != HE) {
-        $('#orighe').val(origHE);
-        $('#orighe2').val(origHE);
-      } else {
-        $('#orighe').val('');
-        $('#orighe2').val('');
-      }
-
-      $('#hi').val(HI + ' <?php echo $string['marks'] ?>');
-      if (origHI != HI) {
-        $('#orighi').val(origHI);
-        $('#orighi2').val(origHI);
-      } else {
-        $('#orighi').val('');
-        $('#orighi2').val('');
-      }
-
-      $('#hn').val(HN + ' <?php echo $string['marks'] ?>');
-      if (origHN != HN) {
-        $('#orighn').val(origHN);
-        $('#orighn2').val(origHN);
-      } else {
-        $('#orighn').val('');
-        $('#orighn2').val('');
-      }
-
-      $('#easy_total').val((EE + EI + EN) + ' <?php echo $string['marks'] ?>');
-      $('#medium_total').val((ME + MI + MN) + ' <?php echo $string['marks'] ?>');
-      $('#hard_total').val((HE + HI + HN) + ' <?php echo $string['marks'] ?>');
-      $('#essential_total').val((EE + ME + HE) + ' <?php echo $string['marks'] ?>');
-      $('#important_total').val((EI + MI + HI) + ' <?php echo $string['marks'] ?>');
-      $('#nice_total').val((EN + MN + HN) + ' <?php echo $string['marks'] ?>');
-
-      $('#easy2_total').val((EE + EI + EN) + ' <?php echo $string['marks'] ?>');
-      $('#medium2_total').val((ME + MI + MN) + ' <?php echo $string['marks'] ?>');
-      $('#hard2_total').val((HE + HI + HN) + ' <?php echo $string['marks'] ?>');
-      $('#essential2_total').val((EE + ME + HE) + ' <?php echo $string['marks'] ?>');
-      $('#important2_total').val((EI + MI + HI) + ' <?php echo $string['marks'] ?>');
-      $('#nice2_total').val((EN + MN + HN) + ' <?php echo $string['marks'] ?>');
-
-      $('#ee2').val(EE + ' <?php echo $string['marks'] ?>');
-      $('#ei2').val(EI + ' <?php echo $string['marks'] ?>');
-      $('#en2').val(EN + ' <?php echo $string['marks'] ?>');
-      $('#me2').val(ME + ' <?php echo $string['marks'] ?>');
-      $('#mi2').val(MI + ' <?php echo $string['marks'] ?>');
-      $('#mn2').val(MN + ' <?php echo $string['marks'] ?>');
-      $('#he2').val(HE + ' <?php echo $string['marks'] ?>');
-      $('#hi2').val(HI + ' <?php echo $string['marks'] ?>');
-      $('#hn2').val(HN + ' <?php echo $string['marks'] ?>');
-
-      var paper_marks = $('#total_marks').val();
-      var cut_marks = 0;
-      cut_marks += EE * $('#EE').val() * 100;
-      cut_marks += EI * $('#EI').val() * 100;
-      cut_marks += EN * $('#EN').val() * 100;
-      cut_marks += ME * $('#ME').val() * 100;
-      cut_marks += MI * $('#MI').val() * 100;
-      cut_marks += MN * $('#MN').val() * 100;
-      cut_marks += HE * $('#HE').val() * 100;
-      cut_marks += HI * $('#HI').val() * 100;
-      cut_marks += HN * $('#HN').val() * 100;
-      var total_marks = EE + EI + EN + ME + MI + MN + HE + HI + HN;
-      var cut_score = (cut_marks / paper_marks) * 100;
-      $('#cut_score').val('<?php echo $string['papermarks'] ?>=' + paper_marks + ',  <?php echo $string['reviewmarks'] ?>=' + total_marks + ',  <?php echo $string['cutscore'] ?>=' + roundNumber(cut_score/100,1) + '%');
-
-      cut_marks = 0;
-      cut_marks += EE * $('#EE2').val() * 100;
-      cut_marks += EI * $('#EI2').val() * 100;
-      cut_marks += EN * $('#EN2').val() * 100;
-      cut_marks += ME * $('#ME2').val() * 100;
-      cut_marks += MI * $('#MI2').val() * 100;
-      cut_marks += MN * $('#MN2').val() * 100;
-      cut_marks += HE * $('#HE2').val() * 100;
-      cut_marks += HI * $('#HI2').val() * 100;
-      cut_marks += HN * $('#HN2').val() * 100;
-      var total_marks = EE + EI + EN + ME + MI + MN + HE + HI + HN;
-      var cut_score = (cut_marks / paper_marks) * 100;
-      $('#cut_score2').val('<?php echo $string['papermarks'] ?>=' + document.getElementById('total_marks').value + ',  <?php echo $string['reviewmarks'] ?>=' + total_marks + ',  <?php echo $string['cutscore'] ?>=' + roundNumber(cut_score/100,1) + '%');
-    }
-  <?php
-    }
-  ?>
-  </script>
 </head>
 <?php
   if (isset($_GET['module'])) {
@@ -387,11 +138,7 @@ function check_ebel_distinction_type($reviewID, $db) {
     $folder = '';
   }
 
-  if ($_GET['method'] == 'ebel') {
-    echo "<body onload=\"recountCategories();\">\n";
-  } else {
-    echo "<body>\n";
-  }
+  echo "<body>\n";
   echo "<div id=\"maincontent\">\n";
 	
   require '../include/toprightmenu.inc';
@@ -525,7 +272,7 @@ function check_ebel_distinction_type($reviewID, $db) {
           if ($li_set == 0) echo '<tr><a name="' . $question_no . '"></a><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
           $li_set = 1;
           echo "<div class=\"mediadiv\">";
-          $questiondata->set_media($q_media, $q_media_width, $q_media_height, '');
+          $questiondata->set_media($q_media, $q_media_width, $q_media_height, '', true);
           $render->render($questiondata, $string, 'paper/media.html');
           echo "</div>\n";
         } else {
@@ -534,7 +281,7 @@ function check_ebel_distinction_type($reviewID, $db) {
           }
           $li_set = 1;
           echo "<div class=\"mediadiv\">";
-          $questiondata->set_media($q_media, $q_media_width, $q_media_height, '');
+          $questiondata->set_media($q_media, $q_media_width, $q_media_height, '', true);
           $render->render($questiondata, $string, 'paper/media.html');
           echo "</div>\n";
         }
@@ -688,7 +435,19 @@ function check_ebel_distinction_type($reviewID, $db) {
 </form>
 </div>
 <?php
-  $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+$dataset['name'] = 'dataset';
+$dataset['attributes']['method'] = $_GET['method'];
+$render->render($dataset, array(), 'dataset.html');
+// JS utils dataset.
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+// Dataset.
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['language'] = $language;
+$render->render($miscdataset, array(), 'dataset.html');
+$render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+
 ?>
 </body>
 </html>

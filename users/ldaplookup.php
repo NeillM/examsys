@@ -26,73 +26,6 @@
 
 require '../include/admin_auth.inc';
 
-if (isset($_REQUEST['LOOKUP'])) {
-  if (isset($_SESSION['ldaplookupdata'][$_REQUEST['LOOKUP']])) {
-    $lookup = Lookup::get_instance($configObject, $mysqli);
-    $data = new stdClass();
-    $data->lookupdata = $_SESSION['ldaplookupdata'][$_REQUEST['LOOKUP']];
-
-    $output = $lookup->userlookup($data);
-
-		if (!isset($output->lookupdata->yearofstudy)) {
-			$output->lookupdata->yearofstudy = '';
-		}
-		if (!isset($output->lookupdata->studentID)) {
-			$output->lookupdata->studentID = '';
-		}
-		if (!isset($output->lookupdata->coursecode)) {
-			$output->lookupdata->coursecode = '';
-		}
-		if (!isset($output->lookupdata->gender)) {
-			$output->lookupdata->gender = '';
-		}
-    $output->lookupdata->title = StringUtils::my_ucwords($output->lookupdata->title); // Stop problems with uppercase titles.
-    if ($output->lookupdata->title == 'Prof') {
-      $output->lookupdata->title = 'Professor';
-    }
-  ?>
-<!DOCTYPE html>
-<html>
-<head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-	<meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
-
-	<title>LDAP <?php echo $string['lookup'] ?></title>
-
-	<link rel="stylesheet" type="text/css" href="../css/body.css"/>
-	<link rel="stylesheet" type="text/css" href="../css/header.css"/>
-	<link rel="stylesheet" type="text/css" href="../css/screen.css"/>
-	<style type="text/css">
-		body {background-color: #F1F5FB; font-size: 90%}
-	</style>
-	
-	<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-	<script>
-    $(function () {
-		  window.opener.$('#new_users_title').val("<?php echo $output->lookupdata->title ?>");
-			window.opener.$('#new_surname').val("<?php echo $output->lookupdata->surname ?>");
-			window.opener.$('#new_first_names').val("<?php echo $output->lookupdata->firstname ?>");
-			window.opener.$('#new_username').val("<?php echo $output->lookupdata->username ?>");
-			window.opener.$('#new_email').val("<?php echo $output->lookupdata->email ?>");
-			window.opener.$('#new_grade').val("<?php echo $output->lookupdata->coursecode ?>");
-			window.opener.$('#new_gender').val("<?php echo $output->lookupdata->gender ?>");
-			window.opener.$('#new_yos').val("<?php echo $output->lookupdata->yearofstudy ?>");
-			window.opener.$('#new_studentid').val("<?php echo $output->lookupdata->studentID ?>");
-			
-			window.close();
-		});
-		
-	</script>
-</head>
-	<body>
-	CLOSING WINDOW
-	</body>
-	</html>
-<?php
-  }
-  unset($_SESSION['ldaplookupdata']);
-	exit();
-}
 ?>
 <!DOCTYPE html>
 <html>
@@ -108,14 +41,9 @@ if (isset($_REQUEST['LOOKUP'])) {
 		body {font-size:90%}
     th {background-color:#295AAD; color:white; text-align:left; font-weight:normal}
 	</style>
-	<script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script>
-    $(function () {
-      $('.l').click(function() {
-        window.location = 'ldaplookup.php?LOOKUP=' + $(this).attr('id');
-      })
-    });
-  </script>
+    <script src='../js/require.js'></script>
+    <script src='../js/main.min.js'></script>
+    <script src="../js/ldaplookupinit.min.js"></script>
 </head>
 <body>
 <?php
@@ -151,25 +79,22 @@ if (isset($_POST['submit'])) {
 				<table style="text-align:left">
 					<?php
 					if (isset($_POST['username']) and $_POST['username'] != '') {
-						echo "<tr><td>" . $string['username'] . "</td><td><input type=\"text\" name=\"username\" value=\"" . $_POST['username'] . "\" size=\"20\" style=\"border: 1px solid #800000; background-color:#FFC0C0\" /></td></tr>\n";
+						echo "<tr><td>" . $string['username'] . "</td><td><input type=\"text\" name=\"username\" value=\"" . $_POST['username'] . "\" size=\"20\" style=\"border: 1px solid #800000; background-color:#FFC0C0\" /><span>" . $string['nousersalert'] . "</span></td></tr>\n";
 					} else {
 						echo "<tr><td>" . $string['username'] . "</td><td><input type=\"text\" name=\"username\" value=\"\" size=\"20\" /></td></tr>\n";
 					}
 					if (isset($_POST['surname']) and $_POST['surname'] != '') {
-						echo "<tr><td>" . $string['surname'] . "</td><td><input type=\"text\" name=\"surname\" value=\"" . $_POST['surname'] . "\" size=\"40\" style=\"border: 1px solid #800000; background-color:#FFC0C0\" /></td></tr>\n";
+						echo "<tr><td>" . $string['surname'] . "</td><td><input type=\"text\" name=\"surname\" value=\"" . $_POST['surname'] . "\" size=\"40\" style=\"border: 1px solid #800000; background-color:#FFC0C0\" /><span>" . $string['nousersalert'] . "</span></td></tr>\n";
 					} else {
 						echo "<tr><td>" . $string['surname'] . "</td><td><input type=\"text\" name=\"surname\" value=\"\" size=\"40\" /></td></tr>\n";
 					}
 					?>
 					<tr>
-						<td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['lookup'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="window.close();" class="cancel" /></td>
+						<td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['lookup'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" /></td>
 					</tr>
 				</table>
 			</div>
     </form>
-    <script>
-      alert(<?php echo $string['nousersalert'] ?>);
-    </script>
     </body>
 </html>
 <?php
@@ -227,9 +152,9 @@ if (isset($_POST['submit'])) {
 			$user_data = \sort::array_csort($user_data, 'first_names', 'asc');
 		}
 		unset($_SESSION['ldaplookupdata']);
-		
+
     for ($i = 0; $i < $user; $i++) {
-		
+
       $title				= $user_data[$i]['title'];
       $first_names	= $user_data[$i]['first_names'];
       $surname			= $user_data[$i]['surname'];
@@ -242,11 +167,16 @@ if (isset($_POST['submit'])) {
 
       $_SESSION['ldaplookup'][$i] = $key;
       $_SESSION['ldaplookupdata'][$key] = $object;
-			
+
       echo "<tr class=\"l\" id=\"$key\"><td>$title</td><td>$first_names</td><td>$surname</td><td>$username</td><td>$email</td><td>$role</td></tr>\n";
     }
     echo "</table>\n";
   }
+
+  $render = new render($configObject);
+  $jsdataset['name'] = 'jsutils';
+  $jsdataset['attributes']['xls'] = json_encode($string);
+  $render->render($jsdataset, array(), 'dataset.html');
   echo "</body>\n</html>\n";
   exit();
 }
@@ -266,12 +196,18 @@ if (isset($_POST['submit'])) {
 				<td><input type="text" name="surname" size="40"/></td>
 			</tr>
 			<tr>
-				<td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['lookup'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="window.close();" class="cancel" />
+				<td colspan="2" style="text-align:center"><input type="submit" name="submit" value="<?php echo $string['lookup'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" />
 				</td>
 			</tr>
 		</table>
 	</div>
 </form>
-
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

@@ -32,8 +32,6 @@ require_once '../lang/' . $language . '/question/edit/area.php';
 require_once '../lang/' . $language . '/paper/hotspot_answer.php';
 require_once '../lang/' . $language . '/paper/hotspot_question.php';
 require_once '../lang/' . $language . '/paper/label_answer.php';
-$jstring = $string; //to pass it to JavaScript HTML5 modules
-//HTML5 part
 
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
 
@@ -130,19 +128,15 @@ $paper_prologue = $propertyObj->get_paper_prologue();
 		table {table-layout:auto}
 		#maincontent {height:auto}
   </style>
-  
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/state.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
+  <script id="rogoconfig" src='../js/rogo.min.js'
+            data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
+            data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>">
+  </script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
   <?php
     $texteditorplugin = \plugins\plugins_texteditor::get_editor();
     $texteditorplugin->display_header();
-    $render = new render($configObject);
-    $render->render_html5_js(json_encode($jstring));
-    if ($configObject->get_setting('core', 'paper_mathjax')) {
-      $render->render(null, null, 'mathjax.html');
-    }
   ?>
 </head>
 <body>
@@ -256,7 +250,7 @@ while ($stmt->fetch()) {
         if ($li_set == 0) echo '<tr><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
         $li_set = 1;
         echo "<div class=\"mediadiv\">";
-        $questiondata->set_media($q_media, $q_media_width, $q_media_height, '');
+        $questiondata->set_media($q_media, $q_media_width, $q_media_height, '', true);
         $render->render($questiondata, $string, 'paper/media.html');
         echo "<div>\n";
       } else {
@@ -265,7 +259,7 @@ while ($stmt->fetch()) {
         }
         $li_set = 1;
         echo "<p>";
-        $questiondata->set_media($q_media, $q_media_width, $q_media_height, '');
+        $questiondata->set_media($q_media, $q_media_width, $q_media_height, '', true);
         $render->render($questiondata, $string, 'paper/media.html');
         echo "</p>\n";
       }

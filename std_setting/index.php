@@ -50,9 +50,9 @@ function displayReview($review, $userObj) {
   
   $html = '';
   if ($setter_id == $userObj->get_user_ID() or $userObj->has_role('SysAdmin')) {
-    $html .= "<tr id=\"review{$review['std_setID']}\" class=\"l\" onclick=\"selReview(" . $review['std_setID'] . ", '$setter_id',{$review['std_setID']},'{$review['method']}','menu2b','{$review['group_review']}',event); return false;\" ondblclick=\"editReview(); return false;\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" /></td><td>&nbsp;";
+    $html .= "<tr id=\"review{$review['std_setID']}\" class=\"l\" data-id=\"" . $review['std_setID'] . "\" data-setter=\"" . $setter_id . "\" data-method=\"" . $review['method'] . "\" data-menu='menu2b' data-group=\"" . $review['group_review'] . "\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" /></td><td>&nbsp;";
   } else {
-    $html .= "<tr id=\"review{$review['std_setID']}\" class=\"l\" onclick=\"selReview(" . $review['std_setID'] . ", '$setter_id',{$review['std_setID']},'{$review['method']}','menu2c','{$review['group_review']}',event); return false;\" ondblclick=\"editReview(); return false;\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" /></td><td>&nbsp;";
+    $html .= "<tr id=\"review{$review['std_setID']}\" class=\"l\" data-id=\"" . $review['std_setID'] . "\" data-setter=\"" . $setter_id . "\" data-method=\"" . $review['method'] . "\" data-menu='menu2c' data-group=\"" . $review['group_review'] . "\"><td align=\"center\"><img src=\"$icon\" width=\"16\" height=\"16\" alt=\"icon\" /></td><td>&nbsp;";
   }
   if ($review['distinction_score'] != 'n/a') $review['distinction_score'] .= '%';
   if ($review['group_review'] != 'No') {
@@ -83,65 +83,11 @@ function displayReview($review, $userObj) {
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
-  
-  <?php echo $configObject->get('cfg_js_root') ?>
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
-  <script type="text/javascript" src="../js/staff_help.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    var groupReview;
 
-    function selReview(std_setID, setterID, reviewID, methodType, menuID, group, evt) {
-      groupReview = group;
-
-      tmp_ID = $('#oldReviewID').val();
-      if (tmp_ID != '') {
-        $('#review' + tmp_ID).css('background-color', 'white');
-      }
-      $('#menu2a').hide();
-      $('#menu2b').hide();
-      $('#menu2c').hide();
-      $('#' + menuID).show();
-
-      $('#std_setID').val(std_setID);
-      $('#setterID').val(setterID);
-      $('#method').val(methodType);
-
-      $('#review' + reviewID).css('background-color', '#FFBD69');
-      $('#oldReviewID').val(reviewID);
-      evt.cancelBubble = true;
-    }
-
-    function reviewOff() {
-      $('#menu2a').show();
-      $('#menu2b').hide();
-      $('#menu2c').hide();
-      tmp_ID = $('#oldReviewID').val();
-      if (tmp_ID != '') {
-        $('#review' + tmp_ID).css('background-color', 'white');
-      }
-    }
-
-    function roundNumber(num, dec) {
-      var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
-      return result;
-    }
-    
-    $(function () {
-      if ($("#maindata").find("tr").size() > 1) {
-        $("#maindata").tablesorter({ 
-          dateFormat: '<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>',
-          sortList: [[1,0]] 
-        });
-      }
-      
-      $(document).click(function() {
-        reviewOff();
-      });
-
-    });
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src='../js/stdsetinit.min.js'></script>
 </head>
 
 <body>
@@ -205,5 +151,14 @@ $mysqli->close();
 ?>
 </tbody>
 </table>
+<?php
+$render = new render($configObject);
+$dataset['name'] = 'dataset';
+$dataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
+$dataset['attributes']['paperid'] = $paperID;
+$dataset['attributes']['module'] = $module;
+$dataset['attributes']['folder'] = $folder;
+$render->render($dataset, array(), 'dataset.html');
+?>
 </body>
 </html>

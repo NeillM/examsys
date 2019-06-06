@@ -34,13 +34,7 @@ $render = new render($configObject);
 set_time_limit(0);
 ob_start();
 $lang['title'] = $string['importusers'];
-$additionaljs = "<script>
-            $(function () {
-                $('#cancel').click(function () {
-                    history.back();
-                });
-            });
-        </script>";
+$additionaljs = "";
 $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/dialog.css\" />
                 <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/list.css\" />
                 <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/breadcrumb.css\" />

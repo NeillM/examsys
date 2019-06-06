@@ -30,9 +30,7 @@ require '../include/toprightmenu.inc';
 
 $render = new render($configObject);
 $lang['title'] = $string['createnewuser'];
-$additionaljs = "<script type=\"text/javascript\" src=\"../js/jquery.validate.min.js\"></script>";
-$additionaljs .= "<script type=\"text/javascript\" src=\"../js/jquery.user.js\"></script>";
-$additionaljs .= "<script type=\"text/javascript\" src=\"../js/jquery.create_new_user.js\"></script>";
+$additionaljs = "<script src=\"../js/createuserinit.min.js\"></script>";
 
 $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/dialog.css\" />
         <link rel=\"stylesheet\" type=\"text/css\" href=\"/css/list.css\" />
@@ -164,7 +162,25 @@ foreach ($titles as $tmp_title) {
 <tr><td class="field"><?php echo $string['lastname'] ?></td><td><input<?php if (isset($new_surname) and $new_surname == '') echo ' class="required"'; ?> type="text" id="new_surname" name="new_surname" size="40" maxlength="35" value="<?php if (isset($new_surname)) echo $new_surname; ?>" required /></td></tr>
 <tr><td class="field"><?php echo $string['studentid'] ?></td><td><input id="new_studentid" type="text" size="15" name="new_sid" /><span style="color:#808080"><?php echo $string['onlyifstudent']; ?></span></td></tr>
 <tr><td class="field"><?php echo $string['email'] ?></td><td><input<?php if (isset($new_email) and $new_email == '') echo ' class="required"'; ?> type="email" id="new_email" name="new_email" size="40" maxlength="65" value="<?php if (isset($new_email)) echo $new_email; ?>" required /></td></tr>
-<tr><td class="field"><?php echo $string['username'] ?></td><td><input<?php if (isset($new_username) and ($new_username == '' or strpos($new_username, '_') !== false or !$unique_username)) echo ' class="required"'; ?> type="text" id="new_username" name="new_username" size="12" maxlength="15" value="<?php if (isset($new_username)) echo $new_username; ?>" autocomplete="off" required />
+<?php
+if (!$unique_username and isset($new_username)) {
+  ?>
+    <tr>
+        <td class="field"></td>
+        <td><?php echo $string['usernameinuse']; ?></td>
+    </tr>
+  <?php
+}
+if ($username_problem and isset($new_username)) {
+  ?>
+    <tr>
+        <td class="field"></td>
+        <td><?php echo $string['usernameinvalid']; ?></td>
+    </tr>
+  <?php
+}
+  ?>
+<tr><td class="field"><?php echo $string['username'] ?></td><td><input<?php if (isset($new_username) and ($new_username == '' or strpos($new_username, '_') !== false or !$unique_username)) echo ' class="required errfield"'; ?> type="text" id="new_username" name="new_username" size="12" maxlength="15" value="<?php if (isset($new_username)) echo $new_username; ?>" autocomplete="off" required />
 &nbsp;&nbsp;&nbsp;<?php echo $string['password'] ?> <input type="text" id="new_password" name="new_password" value="<?php
   if (isset($new_password)) {
     echo $new_password;
@@ -299,11 +315,4 @@ if (strpos($_SERVER['HTTP_HOST'],'.uk') !== false) {
   }
 $mysqli->close();
 
-if ($submit and !$unique_username) {
-  echo '<script>alert("' . sprintf($string['usernameinuse'], $new_username) . '")</script>';
-} else if ($submit and $username_problem) {
-  echo '<script>alert("' . sprintf($string['usernameinvalid'], $new_username) . '")</script>';
-}
-
 $render->render_admin_footer();
-?>

@@ -65,9 +65,9 @@ function drawTabs($current_tab, $col_span, $right_text, $user_roles, $bg_color, 
 
   foreach($tab_array as $individual_tab) {
     if ($individual_tab == $current_tab) {
-      $html .= "<td class=\"tabon\" onclick=\"showTab('" . $individual_tab . "_tab')\">" . $string[strtolower($individual_tab)] . "</td>";
+      $html .= "<td class=\"tabon\" data-tabid=\"" . $individual_tab . "_tab" . "\">" . $string[strtolower($individual_tab)] . "</td>";
     } else {
-      $html .= "<td class=\"taboff\" onclick=\"showTab('" . $individual_tab . "_tab')\">" . $string[strtolower($individual_tab)] . "</td>";
+      $html .= "<td class=\"taboff\" data-tabid=\"" . $individual_tab . "_tab" . "\">" . $string[strtolower($individual_tab)] . "</td>";
     }
   }
   $html .= "</tr></table></td><td align=\"right\" style=\"background-color:$bg_color\">$right_text</td></tr>\n";
@@ -211,157 +211,12 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
   <link rel="stylesheet" type="text/css" href="../css/tablesort.css" />
-  <style type="text/css">
-    .coltitle {cursor:hand; background-color:#1E3C7B; color:white}
-    .sch_check {text-align:right; width:40px; padding-right:6px}
-    .medical {background-image: url('../artwork/medical_16.gif'); background-repeat:no-repeat; vertical-align:top; padding-left:20px}
-    .breaks {background-image: url('../artwork/moon_16.gif'); background-repeat:no-repeat; vertical-align:top; padding-left:20px}
-    .field {padding-left:4px; width:95px}
-  </style>
+  <link rel="stylesheet" type="text/css" href="../css/userdetails.css" />
 
-  <script type="text/javascript" src="../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../js/jquery_tablesorter/jquery.tablesorter.js"></script>
-  <script type="text/javascript" src="../js/toprightmenu.js"></script>
-  <script>
-    function reviewPaper(started, userid, surname, papername, log_type, metadataID) {
-      var winwidth = screen.width - 80;
-      var winheight = screen.height - 80;
-      window.open("../paper/finish.php?id="+papername+"&previous="+started+"&userID="+userid+"&metadataID=" + metadataID + "&surname="+surname+"&log_type="+log_type+"","paper","width="+winwidth+",height="+winheight+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-    }
-
-    function showTab(tabID) {
-      $('#Log_tab').hide();
-      $('#Modules_tab').hide();
-      $('#Admin_tab').hide();
-      $('#Notes_tab').hide();
-      $('#Accessibility_tab').hide();
-      $('#Teams_tab').hide();
-      $('#Metadata_tab').hide();
-
-      $('#' + tabID).show();
-    }
-
-    function newStudentNote() {
-      note = window.open("new_student_note.php?userID=<?php echo $userID ?>","note","width=600,height=400,left="+(screen.width/2-300)+",top="+(screen.height/2-200)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        note.focus();
-      }
-    }
-
-    function addModule() {
-      note = window.open("add_student_module.php?userID=<?php echo $userID ?>","module","width=600,height=" + (screen.height - 120) + ",left="+(screen.width/2-300)+",top=50,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        note.focus();
-      }
-    }
-
-    function editModules(session, grade) {
-      var student = "&student_id=<?php echo $student_id;?>";
-      var username = "&search_username=<?php echo $search_username; ?>";
-      var surname = "&search_surname=<?php echo $search_surname; ?>";
-      editwin=window.open("edit_modules_popup.php?userID=<?php echo $userID ?>" + student + username + surname + "&session=" + session + "&grade=" + grade + "","editmodule","width=650,height=750,left="+(screen.width/2-250)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
-      if (window.focus) {
-        editwin.focus();
-      }
-    }
-
-    function editMultiTeams() {
-      editwin=window.open("../module/edit_multi_teams_popup.php?userID=<?php echo $userID ?>","editmodule","width=550,height=750,left="+(screen.width/2-200)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        editwin.focus();
-      }
-    }
-
-    function forceResetPassword(username) {
-      editwin=window.open("reset_pwd.php?userID=<?php echo $userID ?>","editmodule","width=600,height=400,left="+(screen.width/2-250)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        editwin.focus();
-      }
-    }
-
-    function resetPassword(email) {
-      editwin=window.open("forgotten_password.php?email=" + email + "","editmodule","width=600,height=400,left="+(screen.width/2-250)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-      if (window.focus) {
-        editwin.focus();
-      }
-    }
-
-    function updateAccessDemo() {
-      var textsize = $('select[name="textsize"] option:selected').text();
-      if (textsize == '<default>') {
-        textsize = '100%';
-      }
-      $('#demo_paper_background').css('font-size', textsize);
-
-      var font = $('select[name="font"] option:selected').text();
-      if (font == '<default>') {
-        font = 'Arial';
-      }
-      $('#demo_paper_background').css('font-family', font);
-
-      if ($("#bg_radio_on").attr('checked')) {
-        $('#demo_paper_background').css('background-color', $('#span_background').css('background-color'));
-      } else {
-        $('#demo_paper_background').css('background-color', '#FFFFFF');
-      }
-
-      if ($("#fg_radio_on").attr('checked')) {
-        $('#demo_paper_background').css('color', $('#span_foreground').css('background-color'));
-      } else {
-        $('#demo_paper_background').css('color', '#000000');
-      }
-
-      if ($("#theme_radio_on").attr('checked')) {
-        $('#demo_theme').css('color', $('#span_themecolor').css('background-color'));
-      } else {
-        $('#demo_theme').css('color', '#316AC5');
-      }
-
-      if ($("#labels_radio_on").attr('checked')) {
-        $('#demo_true_label').css('color', $('#span_labelcolor').css('background-color'));
-        $('#demo_false_label').css('color', $('#span_labelcolor').css('background-color'));
-      } else {
-        $('#demo_true_label').css('color', '#C00000');
-        $('#demo_false_label').css('color', '#C00000');
-      }
-
-      if ($("#unanswered_radio_on").attr('checked')) {
-        $('#demo_unanswered').css('background-color', $('#span_unansweredcolor').css('background-color'));
-      } else {
-        $('#demo_unanswered').css('background-color', '#FFC0C0');
-      }
-
-      if ($("#marks_radio_on").attr('checked')) {
-        $('#demo_marks').css('color', $('#span_marks_color').css('background-color'));
-      } else {
-        $('#demo_marks').css('color', '#808080');
-      }
-    }
-
-    $(function () {
-      updateAccessDemo();
-      
-      $('#userID').val(',<?php echo $userID ?>');
-      
-      $('#menu2a').hide();
-      $('#menu2b').show();
-      
-      $('#edit').click(function() {
-        editwin=window.open("edit_details.php?userID=<?php echo $userID ?>","edituser","width=600,height=450,left="+(screen.width/2-260)+",top="+(screen.height/2-375)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
-        if (window.focus) {
-          editwin.focus();
-        }        
-      });
-      
-      if ($("#maindata").find("tr").size() > 1) {
-        $("#maindata").tablesorter({
-          dateFormat: '<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>',
-          sortList: [[1,0]] 
-        });
-      }
-
-    });  
-  </script>
+  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../js/require.js'></script>
+  <script src='../js/main.min.js'></script>
+  <script src="../js/userdetailsinit.min.js"></script>
 </head>
 
 <body>
@@ -462,9 +317,9 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
     echo "<td class=\"field\">" . $string['password'] . "</td><td>";
     $authinfo = $authentication->version_info(true, false);
     if (stripos($authinfo, 'LDAP') === false) {    // Don't show if LDAP is on.
-      echo "<input type=\"button\" onclick=\"resetPassword('" .  urlencode($user_details['email']) . "')\" value=\"{$string['reset']}\" />&nbsp;";
+      echo "<input id=\"emailpasswordreset\" type=\"button\" value=\"{$string['reset']}\" />&nbsp;";
     }
-    echo "<input type=\"button\" onclick=\"forceResetPassword('" . $user_details['username'] . "')\" value=\"{$string['forcereset']}\" /></td></tr>\n";
+    echo "<input id=\"forcepasswordreset\" type=\"button\" value=\"{$string['forcereset']}\" /></td></tr>\n";
   } else {
     echo "<td class=\"field\"></td><td></td></tr>\n";
   }
@@ -636,16 +491,16 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
       }
       switch ($paper[$i]['type']) {
         case '0':
-          echo "<tr><td><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "'," . $userID . ",'" . str_replace("'","&#8217;",$user_details['surname']) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . ",'" . $paper[$i]['metadataID'] . "'); return false;\"><img src=\"../artwork/formative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $user_details['surname'] . "\" /></a></td><td><a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
+          echo "<tr><td><a class=\"paperreview\" href=\"#\" data-papername=\"" . $paper[$i]['crypt_name'] . "\" data-papertype=\"" . $paper[$i]['type'] . "\" data-metadataid=\"" . $paper[$i]['metadataID'] ."\"><img src=\"../artwork/formative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $user_details['surname'] . "\" /></a></td><td><a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case '1':
-          echo "<tr><td><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "'," . $userID . ",'" . str_replace("'","&#8217;",$user_details['surname']) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . ",'" . $paper[$i]['metadataID'] . "'); return false;\"><img src=\"../artwork/progress_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $user_details['surname'] . "\" /></a></td><td><a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
+          echo "<tr><td><a class=\"paperreview\" href=\"#\" data-papername=\"" . $paper[$i]['crypt_name'] . "\" data-papertype=\"" . $paper[$i]['type'] . "\" data-metadataid=\"" . $paper[$i]['metadataID'] ."\"><img src=\"../artwork/progress_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $user_details['surname'] . "\" /></a></td><td><a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case '2':
           if (stripos($user_details['roles'], 'External Examiner') !== false or stripos($user_details['roles'], 'Internal Reviewer') !== false) {
             echo "<tr><td><img src=\"../artwork/summative_16.gif\" width=\"16\" height=\"16\" /></td><td>&nbsp;<a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\"";
           } else {
-            echo "<tr><td><a href=\"#\" onclick=\"reviewPaper('" . $paper[$i]['started'] . "'," . $userID . ",'" . str_replace("'","&#8217;",$user_details['surname']) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . ",'" . $paper[$i]['metadataID'] . "'); return false;\"><img src=\"../artwork/summative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $user_details['surname'] . "\" /></a></td><td><a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\"";
+            echo "<tr><td><a class=\"paperreview\" href=\"#\" data-papername=\"" . $paper[$i]['crypt_name'] . "\" data-papertype=\"" . $paper[$i]['type'] . "\" data-metadataid=\"" . $paper[$i]['metadataID'] ."\"><img src=\"../artwork/summative_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $user_details['surname'] . "\" /></a></td><td><a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\"";
           }
           if ($paper[$i]['started'] == '') echo ' style="color:red"';
           echo ">" . $paper[$i]['q_paper'] . "</a></td><td";
@@ -656,13 +511,13 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
           echo "<tr><td><img src=\"../artwork/survey_16.gif\" width=\"16\" height=\"16\" alt=\"Survey data is anonymous, no entry.\" /></td><td><a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\" class=\"paper\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $string['survey'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
           break;
         case '4':
-          echo "<tr><td><a href=\"#\" onclick=\"reviewOSCE('" . $paper[$i]['started'] . "','" . $user_details['username'] . "','" . str_replace("'","&#8217;",$user_details['surname']) . "','" . $paper[$i]['crypt_name'] . "'," . $paper[$i]['type'] . "); return false;\"><img src=\"../artwork/osce_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $user_details['surname'] . "\" /></a></td><td><a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td></tr>\n";
+          echo "<tr><td><a class=\"oscereview\" href=\"#\" data-paperid=\"" . $paper[$i]['id'] . "\"><img src=\"../artwork/osce_16.gif\" width=\"16\" height=\"16\" alt=\"Display marked paper for " . $user_details['surname'] . "\" /></a></td><td><a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td></tr>\n";
           break;
         case '5':
           echo "<tr><td><img src=\"../artwork/offline_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td>" . $paper[$i]['q_paper'] . "</td><td>" . $string['offlinepaper'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td></tr>\n";
           break;
         case '6':
-          echo "<tr><td><img src=\"../artwork/peer_review_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td><a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td></tr>\n";
+          echo "<tr><td><img src=\"../artwork/peer_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td><a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $paper[$i]['paper_type'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td style=\"color:#808080\">" . $string['na'] . "</td></tr>\n";
           break;
         case 'Objectives-based feedback report':
           echo "<tr><td><img src=\"../artwork/objectives_feedback_16.gif\" width=\"16\" height=\"16\" alt=\"\" /></td><td><a href=\"../paper/details.php?paperID=" . $paper[$i]['id'] . "\">" . $paper[$i]['q_paper'] . "</a></td><td>" . $string['Objectives Feedback report'] . "</td><td>" . $paper[$i]['display_started'] . "</td><td>" . $paper[$i]['ipaddress'] . "</td></tr>\n";
@@ -735,7 +590,7 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
   if ($current_year == false) {
     echo "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $current_session;
     if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
-      echo "&nbsp;&nbsp;<a href=\"#\" onclick=\"editModules('" . $current_session . "','" . $user_details['grade'] . "'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a>";
+      echo "&nbsp;&nbsp;<a class=\"modules\" href=\"#\" data-session=\"" . $current_session . "\" data-grade=\"" . $user_details['grade'] . "\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a>";
     }
     echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
   }
@@ -745,7 +600,7 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
       $display_year = $year_names[$user_modules[$i]['calendar_year']];
       echo "<tr><td colspan=\"4\"><table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>" . $display_year;
       if (($user_modules[$i]['calendar_year'] == $most_recent_year or $user_modules[$i]['calendar_year'] == $current_session) and $userObject->has_role(array('Admin', 'SysAdmin'))) {
-        echo "&nbsp;&nbsp;<a href=\"#\" onclick=\"editModules('" . $user_modules[$i]['calendar_year'] . "','" . $user_details['grade'] . "'); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a>";
+        echo "&nbsp;&nbsp;<a class=\"modules\" href=\"#\" data-session=\"" . $user_modules[$i]['calendar_year'] . "\" data-grade=\"" . $user_details['grade'] . "\"); return false;\"><img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editmodules'] . "\" /></a>";
       }
       echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
     }
@@ -819,7 +674,7 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
   echo drawTabs('Notes', 4, '', $user_details['roles'], $bg_color, $string);
   echo "<tr><td class=\"coltitle\">&nbsp;&nbsp;&nbsp;" . $string['date'] . "</td><td class=\"coltitle\">" . $string['paper'] . "</td><td class=\"coltitle\">" . $string['note'] . "</td><td class=\"coltitle\">" . $string['author'] . "</td></tr>\n";
   
-	echo "<tr><td colspan=\"4\"><input type=\"button\" name=\"createname\" onclick=\"newStudentNote()\" value=\"" .  $string['newnote'] . "\" /></td></tr>\n";
+	echo "<tr><td colspan=\"4\"><input id=\"createname\" type=\"button\" name=\"createname\" value=\"" .  $string['newnote'] . "\" /></td></tr>\n";
 
   $results = $mysqli->prepare("SELECT note, DATE_FORMAT(note_date, \" {$configObject->get('cfg_short_date')}\"), paper_id, paper_title, CONCAT(title, ' ', initials, ' ', surname) AS note_author FROM (student_notes, properties, users) WHERE student_notes.paper_id=properties.property_id AND student_notes.note_authorID = users.id AND student_notes.userID = ?");
   $results->bind_param('i', $userID);
@@ -906,7 +761,7 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
 <tr>
 <td><?php echo $string['fontsize']; ?></td>
 <td colspan="2">
-<select name="textsize" id="textsize" onchange="updateAccessDemo()">
+<select class="access" name="textsize" id="textsize">
 <option value="0"><?php echo $string['angledefault']; ?></option>
 <?php
   $fontsizes = array(90, 100, 110, 120, 130, 140, 150, 175, 200, 300, 400);
@@ -924,7 +779,7 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
 <tr>
 <td><?php echo $string['typeface']; ?></td>
 <td colspan="2">
-<select name="font" id="font" onchange="updateAccessDemo()">
+<select class="access" name="font" id="font">
 <option value=""><?php echo $string['angledefault']; ?></option>
 <?php
   $fontfamily = array('Arial', 'Arial Black', 'Calibri', 'Comic Sans MS', 'Courier New', 'Helvetica', 'Tahoma', 'Times New Roman', 'Verdana');
@@ -941,78 +796,78 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
 </tr>
 <tr>
 <td><?php echo $string['background']; ?></td>
-<td><input type="radio" onchange="updateAccessDemo()" name="bg_radio" value="0"<?php if ($background == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
-<td><input type="radio" onchange="updateAccessDemo()" name="bg_radio" id="bg_radio_on" value="1"<?php if ($background != '') echo ' checked'; ?> />
+<td><input class="access" type="radio" name="bg_radio" value="0"<?php if ($background == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
+<td><input class="access" type="radio" name="bg_radio" id="bg_radio_on" value="1"<?php if ($background != '') echo ' checked'; ?> />
 <?php
   if ($background == '') {
-    echo "<div onclick=\"showPicker('background',event); \$('#bg_radio_on').attr('checked', true);\" id=\"span_background\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"background\" name=\"background\" value=\"$background\" />";
+    echo "<div class=\"showpicker\" data-pickertype=\"background\" id=\"span_background\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"background\" name=\"background\" value=\"$background\" />";
   } else {
-    echo "<div onclick=\"showPicker('background',event); \$('#bg_radio_on').attr('checked', true);\" id=\"span_background\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$background\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"background\" name=\"background\" value=\"$background\" />";
+    echo "<div class=\"showpicker\" data-pickertype=\"background\" id=\"span_background\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$background\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"background\" name=\"background\" value=\"$background\" />";
   }
 ?>
 </td>
 </tr>
 <tr>
 <td><?php echo $string['foreground']; ?></td>
-<td><input type="radio" onchange="updateAccessDemo()" name="fg_radio" value="0"<?php if ($foreground == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
-<td><input type="radio" onchange="updateAccessDemo()" name="fg_radio" id="fg_radio_on" value="1"<?php if ($foreground != '') echo ' checked'; ?> />
+<td><input class="access" type="radio" name="fg_radio" value="0"<?php if ($foreground == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
+<td><input class="access" type="radio" name="fg_radio" id="fg_radio_on" value="1"<?php if ($foreground != '') echo ' checked'; ?> />
 <?php
   if ($foreground == '') {
-    echo "<div onclick=\"showPicker('foreground',event); \$('#fg_radio_on').attr('checked', true);\" id=\"span_foreground\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"foreground\" name=\"foreground\" value=\"$foreground\" />";
+    echo "<div class=\"showpicker\" data-pickertype=\"foreground\" id=\"span_foreground\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"foreground\" name=\"foreground\" value=\"$foreground\" />";
   } else {
-    echo "<div onclick=\"showPicker('foreground',event); \$('#fg_radio_on').attr('checked', true);\" id=\"span_foreground\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$foreground\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"foreground\" name=\"foreground\" value=\"$foreground\" />";
+    echo "<div class=\"showpicker\" data-pickertype=\"foreground\" id=\"span_foreground\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$foreground\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"foreground\" name=\"foreground\" value=\"$foreground\" />";
   }
 ?>
 </td>
 </tr>
 <tr>
 <td><?php echo $string['markscolour']; ?></td>
-<td><input type="radio" onchange="updateAccessDemo()" name="marks_radio" value="0"<?php if ($marks_color == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
-<td><input type="radio" onchange="updateAccessDemo()" name="marks_radio" id="marks_radio_on" value="1"<?php if ($marks_color != '') echo ' checked'; ?> />
+<td><input class="access" type="radio" name="marks_radio" value="0"<?php if ($marks_color == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
+<td><input class="access" type="radio" name="marks_radio" id="marks_radio_on" value="1"<?php if ($marks_color != '') echo ' checked'; ?> />
 <?php
   if ($marks_color == '') {
-    echo "<div onclick=\"showPicker('marks_color',event); $('#marks_radio_on').attr('checked', true);\" id=\"span_marks_color\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"marks_color\" name=\"marks_color\" value=\"$marks_color\" />";
+    echo "<div class=\"showpicker\" data-pickertype=\"marks_color\" id=\"span_marks_color\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"marks_color\" name=\"marks_color\" value=\"$marks_color\" />";
   } else {
-    echo "<div onclick=\"showPicker('marks_color',event); $('#marks_radio_on').attr('checked', true);\" id=\"span_marks_color\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$marks_color\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"marks_color\" name=\"marks_color\" value=\"$marks_color\" />";
+    echo "<div class=\"showpicker\" data-pickertype=\"marks_color\" id=\"span_marks_color\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$marks_color\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"marks_color\" name=\"marks_color\" value=\"$marks_color\" />";
   }
 ?>
 </td>
 </tr>
 <tr>
 <td><?php echo $string['themecolour']; ?></td>
-<td><input type="radio" onchange="updateAccessDemo()" name="theme_radio" value="0"<?php if ($themecolor == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
-<td><input type="radio" onchange="updateAccessDemo()" name="theme_radio" id="theme_radio_on" value="1"<?php if ($themecolor != '') echo ' checked'; ?> />
+<td><input class="access" type="radio" name="theme_radio" value="0"<?php if ($themecolor == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
+<td><input class="access" type="radio" name="theme_radio" id="theme_radio_on" value="1"<?php if ($themecolor != '') echo ' checked'; ?> />
 <?php
   if ($themecolor == '') {
-    echo "<div onclick=\"showPicker('themecolor',event); $('#theme_radio_on').attr('checked', true);\" id=\"span_themecolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"$themecolor\" />";
+    echo "<div class=\"showpicker\" data-pickertype=\"themecolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"$themecolor\" />";
   } else {
-    echo "<div onclick=\"showPicker('themecolor',event); $('#theme_radio_on').attr('checked', true);\" id=\"span_themecolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$themecolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"$themecolor\" />";
+    echo "<div class=\"showpicker\" data-pickertype=\"themecolor\" id=\"span_themecolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$themecolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"themecolor\" name=\"themecolor\" value=\"$themecolor\" />";
   }
 ?>
 </td>
 </tr>
 <tr>
 <td><?php echo $string['labelscolour']; ?></td>
-<td><input type="radio" onchange="updateAccessDemo()" name="labels_radio" value="0"<?php if ($labelcolor == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
-<td><input type="radio" onchange="updateAccessDemo()" name="labels_radio" id="labels_radio_on" value="1"<?php if ($labelcolor != '') echo ' checked'; ?> />
+<td><input class="access" type="radio" name="labels_radio" value="0"<?php if ($labelcolor == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
+<td><input class="access" type="radio" name="labels_radio" id="labels_radio_on" value="1"<?php if ($labelcolor != '') echo ' checked'; ?> />
 <?php
   if ($labelcolor == '') {
-    echo "<div onclick=\"showPicker('labelcolor',event); $('#labels_radio_on').attr('checked', true);\" id=\"span_labelcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" />";
+    echo "<div class=\"showpicker\" data-pickertype=\"labelcolor\" id=\"span_labelcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" />";
   } else {
-    echo "<div onclick=\"showPicker('labelcolor',event); $('#labels_radio_on').attr('checked', true);\" id=\"span_labelcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$labelcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" />";
+    echo "<div class=\"showpicker\" data-pickertype=\"labelcolor\" id=\"span_labelcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$labelcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"labelcolor\" name=\"labelcolor\" value=\"$labelcolor\" />";
   }
 ?>
 </td>
 </tr>
 <tr>
 <td><?php echo $string['unanswered']; ?></td>
-<td><input type="radio" onchange="updateAccessDemo()" name="unanswered_radio" value="0"<?php if ($unansweredcolor == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
-<td><input type="radio" onchange="updateAccessDemo()" name="unanswered_radio" id="unanswered_radio_on" value="1"<?php if ($unansweredcolor != '') echo ' checked'; ?> />
+<td><input class="access" type="radio" name="unanswered_radio" value="0"<?php if ($unansweredcolor == '') echo ' checked'; ?> /><?php echo $string['default']; ?></td>
+<td><input class="access" type="radio" name="unanswered_radio" id="unanswered_radio_on" value="1"<?php if ($unansweredcolor != '') echo ' checked'; ?> />
 <?php
   if ($unansweredcolor == '') {
-    echo "<div onclick=\"showPicker('unansweredcolor',event); $('#unanswered_radio_on').attr('checked', true);\" id=\"span_unansweredcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"unansweredcolor\" name=\"unansweredcolor\" value=\"$unansweredcolor\" />";
+    echo "<div class=\"showpicker\" data-pickertype=\"unansweredcolor\" id=\"span_unansweredcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"unansweredcolor\" name=\"unansweredcolor\" value=\"$unansweredcolor\" />";
   } else {
-    echo "<div onclick=\"showPicker('unansweredcolor',event); $('#unanswered_radio_on').attr('checked', true);\" id=\"span_unansweredcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$unansweredcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"unansweredcolor\" name=\"unansweredcolor\" value=\"$unansweredcolor\" />";
+    echo "<div class=\"showpicker\" data-pickertype=\"unansweredcolor\" id=\"span_unansweredcolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$unansweredcolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"unansweredcolor\" name=\"unansweredcolor\" value=\"$unansweredcolor\" />";
   }
 ?>
 </td>
@@ -1023,9 +878,9 @@ if (!is_null($updateadmin) and $userObject->has_role('SysAdmin')) {
 <td><input type="radio" name="dismiss_radio" id="dismiss_radio_on" value="1"<?php if ($dismisscolor != '') echo ' checked'; ?> />
 <?php
   if ($dismisscolor == '') {
-    echo "<div onclick=\"showPicker('dismisscolor',event); $('#dismiss_radio_on').attr('checked', true);\" id=\"span_dismisscolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"dismisscolor\" name=\"dismisscolor\" value=\"$dismisscolor\" />";
+    echo "<div class=\"showpicker\" data-pickertype=\"dismisscolor\" id=\"span_dismisscolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:white\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"dismisscolor\" name=\"dismisscolor\" value=\"$dismisscolor\" />";
   } else {
-    echo "<div onclick=\"showPicker('dismisscolor',event); $('#dismiss_radio_on').attr('checked', true);\" id=\"span_dismisscolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$dismisscolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"dismisscolor\" name=\"dismisscolor\" value=\"$dismisscolor\" />";
+    echo "<div class=\"showpicker\" data-pickertype=\"dismisscolor\" id=\"span_dismisscolor\" style=\"display:inline; border:1px solid #C5C5C5; width:20px; background-color:$dismisscolor\">&nbsp;&nbsp;&nbsp;&nbsp;</div><input type=\"hidden\" id=\"dismisscolor\" name=\"dismisscolor\" value=\"$dismisscolor\" />";
   }
 ?>
 </td>
@@ -1104,7 +959,7 @@ if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
   echo drawTabs('Teams', 4, '', $user_details['roles'], $bg_color, $string);
   echo "<tr><td class=\"coltitle\">&nbsp;" . $string['team'] . "</td><td class=\"coltitle\">&nbsp;</td><td class=\"coltitle\">" . $string['dateadded'] . "</td></tr>\n";
   if ($userObject->has_role('Admin') or $userObject->has_role('SysAdmin')) {
-    echo "<tr><td colspan=\"4\">&nbsp;<img onclick=\"editMultiTeams(); return false;\" src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editteams'] . "\" />&nbsp;<a href=\"\" onclick=\"editMultiTeams(); return false;\">" . $string['editteams'] . "</a></td></tr>\n";
+    echo "<tr><td id=\"teams\" colspan=\"4\">&nbsp;<img src=\"../artwork/pencil_16.png\" width=\"16\" height=\"16\" alt=\"" . $string['editteams'] . "\" />&nbsp;<a href=\"#\">" . $string['editteams'] . "</a></td></tr>\n";
   }
 
   if ($userObject->has_role(array('SysAdmin', 'Admin')) or $userObject->get_user_ID() == $userID) {   // Only allow Admin/SysAdmin or current user to view this information
@@ -1125,6 +980,17 @@ if ($userObject->has_role(array('Admin', 'SysAdmin'))) {
 ?>
 </table>
 </div>
-
+<?php
+$render = new render($configObject);
+$dataset['name'] = 'dataset';
+$dataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
+$dataset['attributes']['userid'] = $userID;
+$dataset['attributes']['surname'] = str_replace("'","&#8217;",$user_details['surname']);
+$dataset['attributes']['email'] = urlencode($user_details['email']);
+$dataset['attributes']['sid'] = $student_id;
+$dataset['attributes']['searchusername'] = $search_username;
+$dataset['attributes']['searchsurname'] = $search_surname;
+$render->render($dataset, array(), 'dataset.html');
+?>
 </body>
 </html>
