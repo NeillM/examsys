@@ -13,31 +13,30 @@ Feature: Home page
          | Create folder |
          | My Personal Keywords |
          | Search |
-      Then I toggle the main menu
+      When I toggle the main menu
       Then I should see main menu with following items:
          | Item | 
          | Administrative Tools |
          | Help & Support |
          | Sign Out |
          | About Rogō | 
-      Then I click "Help & Support" "main_menu_item"
+      When I click "Help & Support" "main_menu_item"
       Then I should see popup page with title "Rogō: Help"
-      Then I close popup window
-      Then I toggle the main menu
-      Then I click "Administrative Tools" "main_menu_item"
+      When I close popup window
+      And I toggle the main menu
+      And I click "Administrative Tools" "main_menu_item"
       Then I should see page with title "Administrative Tools"
-      Then I toggle the main menu
-      Then I click "Sign Out" "main_menu_item"
+      When I toggle the main menu
+      And I click "Sign Out" "main_menu_item"
       Then I should be on the homepage
 
    @javascript
    Scenario: Admin user homepage
-      Given the following "academic_year" exist:
+      Given the following "academic year" exist:
          | calendar_year | academic_year |
          | 2015 | 2015/16 |
          | 2016 | 2016/17 |
          | 2017 | 2017/18 |
-
       When I login as "admin"
       And I should see "My Folders" "content_section"
       And I should see "Recycle Bin" "link"
@@ -49,9 +48,9 @@ Feature: Home page
          | Questions |
          | Papers |
          | People |
-      Then I should see "Administrative Tools" "menu_item"
+      And I should see "Administrative Tools" "menu_item"
       When I follow "Administrative Tools"
-      When I click admin tool "Academic Sessions"
+      And I click admin tool "Academic Sessions"
       Then I should see table with:
          | Calendar Year | Academic Year |
          | 2017 | 2017/18 |
@@ -63,18 +62,18 @@ Feature: Home page
       Given the following "users" exist:
          | username |roles |
          | teacher1 | Staff |
-      Given the following "modules" exist:
+      And the following "modules" exist:
          | moduleid | fullname |
          | m1 | m1 |
          | m2 | m2 |
          | m3 | m3 |
-      Given the following "module_teams" exist:
-         | modulename | username |
+      And the following "module team members" exist:
+         | moduleid | username |
          | m1 | teacher1 |
          | m2 | teacher1 |
          | m3 | teacher1 |
-      Given I login as "teacher1"
-      When I go to the homepage
+      When I login as "teacher1"
+      And I go to the homepage
       Then I should see "m1" "folder"
-      Then I should see "m2" "folder"
-      Then I should see "m3" "folder"
+      And I should see "m2" "folder"
+      And I should see "m3" "folder"

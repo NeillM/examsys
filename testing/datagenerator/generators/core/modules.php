@@ -78,11 +78,11 @@ class modules extends generator {
    */
   public function create_module_team($parameters) {
     loader::get('papers');
-    $modulename = $parameters['modulename'];
+    $moduleid = $parameters['moduleid'];
     $username = $parameters['username'];
     $db = loader::get_database();
     $userid = UserUtils::username_exists($username, $db);
-    $moduleid = papers::test_get_moduleidbyname($modulename, $db);
+    $moduleid = module_utils::get_idMod($moduleid, $db);
 
     if (empty($userid) or empty($moduleid)) {
       throw new data_error("Create new module team failed with wrong parameter $modulename | $username ");

@@ -57,7 +57,7 @@ class rogo_test extends MinkContext {
     }
     return $path;
   }
-  
+
   /**
    * Gets the page that the Mink session is viewing.
    * 
@@ -159,7 +159,35 @@ class rogo_test extends MinkContext {
     $page = $this->get_page();
     return $page->findAll($selector, $locator);
   }
-  
+
+  /**
+   * Waits for an action to be true.
+   *
+   * @param function $lambda
+   * @return boolean
+   * @throws Exception
+   */
+  public function spin($lambda) {
+    $wait = 15;
+    for ($i = 0; $i < $wait; $i++) {
+      try {
+        if ($lambda($this)) {
+          return true;
+        }
+      } catch (Exception $e) {
+        // do nothing
+      }
+      sleep(1);
+    }
+
+    $backtrace = debug_backtrace();
+
+    throw new Exception(
+        "Timeout thrown by " . $backtrace[1]['class'] . "::" . $backtrace[1]['function'] . "()\n" .
+        $backtrace[1]['file'] . ", line " . $backtrace[1]['line']
+    );
+  }
+
   /**
    * Returns whether the scenario is running in a browser that can run Javascript or not.
    *

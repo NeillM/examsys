@@ -69,6 +69,7 @@ class selectors {
     'main_menu_icon' => 'main_menu_icon',
     'main_menu_item' => 'main_menu_item', //<div id="toprightmenu" 
     'sub_search_menu_item' => 'sub_search_menu_item',
+    'paper_type' => 'paper_type',
   );
 
   /**
@@ -133,6 +134,9 @@ XPATH
 XPATH
     ,'folder' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' f_details ')]/a
+XPATH
+    ,'paper_type' => <<<XPATH
+//td[contains(concat(' ', normalize-space(@class), ' '), ' icon ') and contains(normalize-space(.) , %locator%)]
 XPATH
    );
 

@@ -204,7 +204,7 @@ $papertype = $assessment->get_type_value($paper_type);
     }
     echo '</optgroup></select></td></tr>';
   } else {
-    echo '<td style="text-align:right">' . $string['barriersneeded'] . '</td><td><input type="checkbox" name="barriers_needed" value="1" chacked="checked" /><td style="text-align:right">' . $string['duration'] . '</td><td>';
+    echo '<td style="text-align:right">' . $string['barriersneeded'] . '</td><td><input type="checkbox" name="barriers_needed" value="1" checked="checked" /><td style="text-align:right">' . $string['duration'] . '</td><td>';
 		echo '<select name="duration_hours" id="duration_hours">';
     echo "<option value=\"\"></option>\n";
     for ($i=0; $i<=12; $i++) {

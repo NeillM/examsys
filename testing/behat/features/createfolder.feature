@@ -4,9 +4,9 @@ Feature: Create folder
    As a admin
    I should be able to create new folder
 
-   Scenario: Admin user login
+   Scenario: Admin creates a folder
       Given I login as "admin"
-      Then I should see menu with following items:
+      And I should see menu with following items:
          | menu_items |
          | Administrative Tools |
          | Create folder |
@@ -16,7 +16,7 @@ Feature: Create folder
       And I should see "Recycle Bin" "link"
       And I should see "My Modules" "content_section"
       And I should see "All Modules..." "link"
-      Then I follow "Create folder"
-      Then I fill in "folder_name" with "my_folder"
-      Then I press "Create"
+      When I follow "Create folder"
+      And I fill in "folder_name" with "my_folder"
+      And I press "Create"
       Then I should see "my_folder" "folder"

@@ -30,5 +30,6 @@ trait include_frontend {
   use authentication,
       basic,
       forms,
-      menu;
+      menu,
+      paper;
 }

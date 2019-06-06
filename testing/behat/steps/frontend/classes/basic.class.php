@@ -17,6 +17,8 @@
 namespace testing\behat\steps\frontend;
 use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode,
+    testing\behat\rogo_test,
+    Behat\Mink\Exception\UnsupportedDriverActionException,
     Exception;
 
 /**
@@ -71,25 +73,100 @@ trait basic {
   public function i_wait_seconds($seconds) {
     $this->getSession()->wait($seconds * 1000, false);
   }
+
+  /**
+   * Sets focus to the names popup window.
+   *
+   * @And I focus :name popup
+   * @param string $name
+   * @return void
+   */
+  public function i_focus_popup($name) {
+    $session = $this->getSession();
+    $windows = $session->getDriver()->getWindowNames();
+
+    foreach ($windows as $window) {
+      $session->switchToWindow($window);
+      $title = $session->getDriver()->getWebDriverSession()->title();
+      if (trim($title) === trim($name)) {
+        return;
+      }
+    }
+    throw new Exception("Popup '$name' not found");
+  }
+
+  /**
+   * Sets the focus to the main Rogo screen away from any popups.
+   *
+   * @And I focus main window
+   */
+  public function i_focus_main_window() {
+    $session = $this->getSession();
+    if (is_null($this->mainwindow)) {
+      throw new Exception("Main window not set");
+    }
+    $session->switchToWindow($this->mainwindow);
+  }
   
   /**
-   * Check help page 
+   * Check there is a popup present.
    * 
    * @Then I should see popup page with title :title
    * @param String $title The page title
    * @throws Exception
    */
   public function i_see_popup_page($title) {
+    $session = $this->getSession();
+    $current = $session->getDriver()->getWebDriverSession()->window_handle();
+    $windows = $session->getDriver()->getWindowNames();
+    $found = false;
+    foreach ($windows as $window) {
+      $session->switchToWindow($window);
+      $name = $session->getDriver()->getWebDriverSession()->title();
+      if (trim($title) === trim($name)) {
+        $found = true;
+        break;
+      }
+    }
+    $session->switchToWindow($current);
 
+    if (!$found or empty($windows)) {
+      throw new Exception("The popup could not be found");
+    }
+  }
+
+  /**
+   * Tests that only the main window is open.
+   *
+   * @And only main window should be open
+   * @throws Exception
+   */
+  public function only_main_window() {
     $session = $this->getSession();
     $windows = $session->getDriver()->getWindowNames();
-
-    if (empty($windows)) {
-      throw new Exception("The page could not be found");
+    if (count($windows) > 1) {
+      throw new Exception("Popup windows found");
+    } else if (count($windows) < 1) {
+      throw new Exception("No windows found");
+    } else if ($windows[0] !== $this->mainwindow) {
+      throw new Exception("Main window not open");
     }
-    $this->getSession()->switchToWindow($windows[1]); // Set focus window
-    $thistitle= $session->getDriver()->getWebDriverSession()->title(); // Get window title
-    \PHPUnit\Framework\Assert::assertEquals($thistitle, $title, "Windows title not find");
+  }
+
+  /**
+   * Checks a popup was not found.
+   *
+   * @And I should not see popup page with title :title
+   * @param type $title
+   */
+  public function i_should_not_see_popup($title) {
+    try {
+      $this->i_see_popup_page($title);
+    } catch (Exception $ex) {
+      // The popup page was not found so all is good.
+      return;
+    }
+    throw new Exception("Popup window found");
   }
   
   /**
@@ -193,6 +270,41 @@ trait basic {
   public function i_click_admin_tool($name) {
     $elements = $this->find_all("xpath", "//div[@class='container' and contains(text(), '$name')]");
     $elements[0]->click();
+  }
+
+  /**
+   * Waits for the Rogo page in the focused window to load.
+   *
+   * @And I wait for page to load
+   */
+  public function i_wait_for_page_to_load() {
+    $session = $this->getSession();
+    $this->spin(function (rogo_test $context) use ($session) {
+      try {
+        // Now try testing via Javascript if the page is in a loaded state.
+        $js = <<<JS
+return document.readyState === 'complete'
+JS;
+        if ($session->evaluateScript($js)) {
+          // The status code indicates the page is fully loaded.
+          return true;
+        }
+      } catch (UnsupportedDriverActionException $ex) {
+        // Javascript evaluation is not supported so try looking at the last http status code.
+        try {
+          // Try testing for a response code of 200 (Any other code is not loaded)
+          if ($session->getStatusCode() === 200) {
+            // The status code indicates the page returned content successfully.
+            return true;
+          }
+        } catch (UnsupportedDriverActionException $ex) {
+          // All methods of determining if the page is fully loaded are not supported,
+          //  so we must assume it is and hope for the best.
+          return true;
+        }
+      }
+      return false;
+    });
   }
 
   /**

@@ -7,12 +7,12 @@ Feature: Administrative Tools
    @javascript
    Scenario Outline: Admin tools links
       Given I login as "admin"
-      Then I should see "Administrative Tools" "menu_item"
+      And I should see "Administrative Tools" "menu_item"
       When I follow "Administrative Tools"
-      Then I should see "<linkname>"
-      When I click "<linkname>" "admin_tool_link"
+      And I should see "<linkname>"
+      And I click "<linkname>" "admin_tool_link"
       Then I should see page with title "<page_title>"
-      Then I move backward one page
+      And I move backward one page
 
    Examples:
          | linkname | page_title |
@@ -40,10 +40,10 @@ Feature: Administrative Tools
    @javascript
    Scenario: more Admin tools links
       Given I login as "admin"
-      Then I should see "Administrative Tools" "menu_item"
+      And I should see "Administrative Tools" "menu_item"
       When I follow "Administrative Tools"
       Then I should see "Bug Reporting" "admin_tool_link"
-      Then I should see "Clear Old Logs" "admin_tool_link"
-      Then I should see "Clear Training" "admin_tool_link"
-      Then I should see "phpinfo()" "admin_tool_link"
+      And I should see "Clear Old Logs" "admin_tool_link"
+      And I should see "Clear Training" "admin_tool_link"
+      And I should see "phpinfo()" "admin_tool_link"
 

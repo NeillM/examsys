@@ -40,6 +40,14 @@ class academic_year extends generator {
    * @throws Exception If passed parameter is invailid
    */
   public function create_academic_year($parameters) {
+    if (isset($parameters['year'])) {
+      // Create relative year.
+      $date = new \DateTime($parameters['year']);
+      $year = $date->format('Y');
+      $parameters['calendar_year'] = $year;
+      $nextyear = substr($year, -2) + 1;
+      $parameters['academic_year'] = "$year/$nextyear";
+    }
 
     $academicyearpattern = '/[1-9]\d{3,}\/\d{2,}/'; //2016/17
     $calendaryearpattern = '/[1-9]\d{3,}/'; //2016

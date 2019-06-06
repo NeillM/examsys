@@ -16,7 +16,8 @@
 
 namespace testing\behat\steps\database;
 use Behat\Gherkin\Node\PyStringNode,
-    Behat\Gherkin\Node\TableNode;
+    Behat\Gherkin\Node\TableNode,
+    Behat\Behat\Tester\Exception\PendingException;
 
 /**
  * Core steps that add data into the Rogo database.
@@ -41,14 +42,18 @@ trait datageneration {
     'users' => array('users', 'core', 'create_user'),
     'papers' => array('papers', 'core', 'create_paper'),
     'questions' => array('questions', 'core', 'create_question'),
-    'modules' => array('modules', 'core', 'create_module'),  
-    'academic_year' => array('academic_year', 'core', 'create_academic_year'),    
-    'module_teams' => array('modules', 'core', 'create_module_team'),    
+    'modules' => array('modules', 'core', 'create_module'),
+    'academic year' => array('academic_year', 'core', 'create_academic_year'),
+    'module team members' => array('modules', 'core', 'create_module_team'),
+    'config' => array('config', 'core', 'change_setting'),
+    'campuses' => array('labs', 'core', 'create_campus'),
+    'labs' => array('labs', 'core', 'create_lab'),
+    'exam pcs' => array('labs', 'core', 'create_exam_pc'),
   );
 
   /**
    * Adds records to the database using an appropriate data generator.
-   * 
+   *
    * @Given /^the following "([^"]*)" exist:$/
    * @param string $type The type of data to be generated. It must appear in self::$datagenerator_map
    * @param TableNode $data The data to be loaded

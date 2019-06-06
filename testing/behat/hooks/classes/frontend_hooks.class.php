@@ -53,6 +53,9 @@ trait frontend_hooks {
   /** Stores the dataloader used to initilise the data the  */
   private static $dataloader;
 
+  /** @var string the name of the main Rogo window. */
+  protected $mainwindow;
+
   /**
    * Actions to perform before the suite is run.
    *
@@ -114,6 +117,14 @@ trait frontend_hooks {
 
     $session = $this->getSession();
 
+    try {
+      $windows = $session->getWindowNames();
+      $this->mainwindow = $windows[0];
+    } catch (\Behat\Mink\Exception\UnsupportedDriverActionException $e) {
+      // The current driver does not support window switching.
+      $this->mainwindow = null;
+    }
+
     if (self::is_first_scenario()) {
       selectors::register_rogo_selectors($session);
     }
@@ -133,6 +144,23 @@ trait frontend_hooks {
    * @AfterScenario
    */
   public function teardown_scenario(AfterScenarioScope $event) {
+    try {
+      // Close all popup windows.
+      $session = $this->getSession();
+      $driver = $session->getDriver();
+      $windows = $session->getWindowNames();
+      foreach ($windows as $key => $window) {
+        if ($window !== $this->mainwindow) {
+          $session->switchToWindow($window);
+          $driver->getWebDriverSession()->deleteWindow();
+        }
+      }
+      // Set focus to the main window.
+      $session->switchToWindow($this->mainwindow);
+    } catch (\Behat\Mink\Exception\UnsupportedDriverActionException $e) {
+      // The current driver does not support window switching.
+    }
+    $this->mainwindow = null;
     // Reset the config object.
     RogoConfig::set_mock_instance(clone(self::$rogo_config));
     // Rollback any database changes.
