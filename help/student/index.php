@@ -41,12 +41,10 @@ $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'stu
     
     <link rel="stylesheet" type="text/css" href="../../css/body.css" />
     <link rel="stylesheet" type="text/css" href="../../css/help.css" />
-    
-    <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
-    <script>
-      langStrings = {'confirmdelete': '<?php echo $string['confirmdelete'] ?>'};
-    </script>
-    <script type="text/javascript" src="../../js/help.js"></script>
+
+    <script src='../../js/require.js'></script>
+    <script src='../../js/main.min.js'></script>
+    <script type="text/javascript" src="../../js/helpinit.min.js"></script>
   </head>
   
   <body>
@@ -62,6 +60,16 @@ $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'stu
         <?php $help_system->display_page($id); ?>
       </div>
     </div>
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+$miscdataset['name'] = 'dataset';
+$miscdataset['attributes']['srcofy'] = param::optional('srcOfY', 0, param::FLOAT, param::FETCH_GET);
+$render->render($miscdataset, array(), 'dataset.html');
+?>
   </body>  
   
 </html>

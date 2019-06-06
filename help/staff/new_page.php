@@ -51,21 +51,15 @@ if (isset($_POST['save_changes'])) {
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/help.css" />
-  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
   
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
   $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::HELP_STAFF);
 ?>
-  <script type="text/javascript" src="../../js/help.js"></script>
-  <script>
-    $(function () {
-		  var docHeight = $(document).height();
-			docHeight = docHeight - 135;
-		  $('#edit1').css('height', docHeight + 'px');
-		});
-  </script>
+  <script src='../../js/require.js'></script>
+  <script src='../../js/main.min.js'></script>
+  <script type="text/javascript" src="../../js/helpinit.min.js"></script>
 </head>
 
 <body>
@@ -88,7 +82,7 @@ if (isset($_POST['save_changes'])) {
   <br />
   <?php echo $texteditorplugin->get_textarea('edit1', 'edit1', '', plugins\plugins_texteditor::TYPE_STANDARD); ?>
 
-  <div style="text-align:center; padding-top:8px"><input class="ok" type="submit" name="save_changes" value="<?php echo $string['save'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="history.back();" /></div>
+  <div style="text-align:center; padding-top:8px"><input class="ok" type="submit" name="save_changes" value="<?php echo $string['save'] ?>" /><input data-help="staffnew" class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="history.back();" /></div>
 </form>
   </div>
 </div>

@@ -58,7 +58,6 @@
         <name></name>
         <telephone></telephone>
     </contact3>
-    <help>1</help>
     <translations>0</translations>
     <lookup>
         <ldap>0</ldap>

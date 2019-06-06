@@ -68,7 +68,6 @@ if (isset($_POST['save_changes'])) {
 
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/help.css" />
-  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
 
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
@@ -76,14 +75,9 @@ if (isset($_POST['save_changes'])) {
   $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::HELP_STAFF);
 
 ?>
-  <script type="text/javascript" src="../../js/help.js"></script>
-  <script>
-    $(function () {
-		  var docHeight = $(document).height();
-			docHeight = docHeight - 135;
-		  $('#edit1').css('height', docHeight + 'px');
-		});
-  </script>
+  <script src='../../js/require.js'></script>
+  <script src='../../js/main.min.js'></script>
+  <script type="text/javascript" src="../../js/helpinit.min.js"></script>
 </head>
 
 <body>
@@ -126,9 +120,6 @@ if (isset($_POST['save_changes'])) {
     if ($page_details['checkout_time'] != '' and $current_time - $page_details['checkout_time'] < 10000) {
       $editor = UserUtils::get_user_details($page_details['checkout_authorID'], $mysqli);
       $editor_name = $editor['title'] . ' ' . $editor['initials'] . ' ' . $editor['surname'];
-      echo "<script>\n";
-      echo "  alert('" . $string['entertitle'] . " $editor_name. " . $string['isinreadonly'] . "')";
-      echo "</script>\n";
       $checkout_authorID = $page_details['checkout_authorID'];
       $disabled = ' disabled';
     } else {
@@ -142,7 +133,7 @@ if (isset($_POST['save_changes'])) {
   }
   ?>
   <input type="hidden" name="checkout_authorID" value="<?php echo $checkout_authorID ?>" />
-  <div style="text-align:center; padding-top:8px"><input class="ok" type="submit" name="save_changes" value="<?php echo $string['save'] ?>"<?php echo $disabled ?> /><input class="cancel" type="submit" name="cancel" value="<?php echo $string['cancel'] ?>" /></div>
+  <div style="text-align:center; padding-top:8px"><input class="ok" type="submit" name="save_changes" value="<?php echo $string['save'] ?>"<?php echo $disabled ?> /><input data-help="staffedit" class="cancel" type="submit" name="cancel" value="<?php echo $string['cancel'] ?>" /></div>
   <input type="hidden" name="edit_id" value="<?php echo $edit_id ?>" />
 </form>
   </div>
@@ -150,6 +141,18 @@ if (isset($_POST['save_changes'])) {
 </body>
 </html>
 <?php
+  // JS utils dataset.
+  $render = new render($configObject);
+  $jsdataset['name'] = 'jsutils';
+  $jsdataset['attributes']['xls'] = json_encode($string);
+  $render->render($jsdataset, array(), 'dataset.html');
+  $miscdataset['name'] = 'dataset';
+  if ($disabled == ' disabled') {
+    $miscdataset['attributes']['editor'] = $string['pagelocked'] . " $editor_name. " . $string['isinreadonly'];
+  } else {
+    $miscdataset['attributes']['editor'] = "";
+  }
+  $render->render($miscdataset, array(), 'dataset.html');
   $mysqli->close();
   }
 ?>

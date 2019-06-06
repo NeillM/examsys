@@ -61,7 +61,7 @@ Class OnlineHelp {
 	 * @param int $id - The ID of the current help page.
 	 */
   public function display_toolbar($id) {
-    echo "<script>\nvar id = $id;\n</script>\n";
+    echo "<div id='helpid' data-id='" . $id . "'></div>";
     echo '<form name="myform" action="search.php" method="get" autocomplete="off">';
     echo '<div class="toolbar_buttons"><img src="../back_off.png" title="' . $this->string['back'] . '" alt="' . $this->string['back'] . '" name="back" id="back" class="toolbar_icon" /><img src="../forwards_off.png" title="' . $this->string['forwards'] . '" alt="' . $this->string['forwards'] . '" name="forwards" id="forwards" class="toolbar_icon" /><img src="../home_off.png" title="' . $this->string['home'] . '" alt="' . $this->string['home'] . '" name="home" id="home" class="toolbar_icon" />';
     if ($this->userObject->has_role('SysAdmin')) {
@@ -80,12 +80,6 @@ Class OnlineHelp {
 	 * @param int $pageid - The ID of the current help page - used to highlight current page in TOC.
 	 */
   public function display_toc($pageid) {
-    if (isset($_GET['scrOfY'])) {
-      echo "<script>\nvar scrOfY = " . $_GET['scrOfY'] . ";\n</script>\n";
-    } else {
-      echo "<script>\nvar scrOfY = 0;\n</script>\n";
-    }
-    
     if ($this->type == 'student') {
       $sql = 'SELECT articleid, title FROM student_help WHERE id != 1 AND deleted IS NULL AND language = ? ORDER BY title, id';
     } else {

@@ -46,9 +46,10 @@ $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'stu
     a:visited {color:#0560A6}
     .row {height:28px; border-bottom: 1px solid #A6CBEB}
   </style>
-  
-  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../../js/help.js"></script>
+
+  <script src='../../js/require.js'></script>
+  <script src='../../js/main.min.js'></script>
+  <script type="text/javascript" src="../../js/helpinit.min.js"></script>
 </head>
 <body>
   <div id="wrapper">

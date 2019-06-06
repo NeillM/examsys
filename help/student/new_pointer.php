@@ -49,8 +49,9 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/help.css" />
 
-  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../../js/help.js"></script>
+  <script src='../../js/require.js'></script>
+  <script src='../../js/main.min.js'></script>
+  <script type="text/javascript" src="../../js/helpinit.min.js"></script>
 </head>
 <body>
 <div id="wrapper">
@@ -126,7 +127,7 @@ if (isset($_POST['submit'])) {
     ?>
 </div>
 <br />
-<div align="center"><input class="ok" type="submit" name="submit" value="<?php echo $string['createlink'] ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="history.back();" /></div>
+<div align="center"><input class="ok" type="submit" name="submit" value="<?php echo $string['createlink'] ?>" /><input data-help="studentpointer" class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="history.back();" /></div>
 </form>
   </div>
 </div>

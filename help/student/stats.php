@@ -59,8 +59,9 @@ $end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000'
     .stats td {vertical-align:top; border-bottom: 1px solid #295AAD; border-right: 1px solid #295AAD}
 		th {background-color:#295AAD; color:white; border:#295AAD 1px solid}
   </style>
-  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../../js/help.js"></script>
+  <script src='../../js/require.js'></script>
+  <script src='../../js/main.min.js'></script>
+  <script type="text/javascript" src="../../js/helpinit.min.js"></script>
 </head>
 <body>
 <div id="wrapper">
@@ -242,10 +243,17 @@ $end_date = $_POST['endyear'] . $_POST['endmonth'] . $_POST['endday'] . '000000'
   $search_results->close();
 
   echo "</td></tr></table>\n";
-
-  $mysqli->close();
 ?>
   </div>
 </div>
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+
+$mysqli->close();
+?>
 </body>
 </html>

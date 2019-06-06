@@ -59,16 +59,16 @@ function drawHeader($tmp_page_no) {
     if ($i == $tmp_page_no) {
       echo "&nbsp;[<strong>$i</strong>]&nbsp;";
     } else {
-      echo "&nbsp;<a class=\"page\" href=\"#\" onclick=\"displayPage($i,$page_total); return false;\">$i</a>&nbsp;";
+      echo "&nbsp;<a class=\"page changepage\" href=\"#\" data-show=\"$i\">$i</a>&nbsp;";
     }
   }
   if ($tmp_page_no > 1) {
-    echo '&nbsp;<img onclick="displayPage(' . ($tmp_page_no-1) . ',' . $page_total . ')" src="../previous_active.png" width="11" height="11" alt="' . $string['previous'] . '" />&nbsp;';
+    echo '&nbsp;<img class="changepage" data-show="' . ($tmp_page_no-1) . '" src="../previous_active.png" width="11" height="11" alt="' . $string['previous'] . '" />&nbsp;';
   } else {
     echo '&nbsp;<img src="../previous_inactive.png" width="11" height="11" alt="" />&nbsp;';
   }
   if ($tmp_page_no < $page_total) {
-    echo '&nbsp;&nbsp;<a class="page" href="" onclick="displayPage(' . ($tmp_page_no+1) . ',' . $page_total . '); return false;">' . $string['next'] . '</a>&nbsp;<img onclick="displayPage(' . ($tmp_page_no+1) . ',' . $page_total . ')" src="../next_active.png" width="11" height="11" alt="' . $string['next'] . '" border="0" />&nbsp;';
+    echo '&nbsp;&nbsp;<a class="page changepage" href="#" data-show="' . ($tmp_page_no+1) . '">' . $string['next'] . '</a>&nbsp;<img class="changepage" data-show="' . ($tmp_page_no+1) . '" src="../next_active.png" width="11" height="11" alt="' . $string['next'] . '" border="0" />&nbsp;';
   } else {
     echo '&nbsp;&nbsp;<span class="grey">' . $string['next'] . '</span>&nbsp;<img src="../next_inactive.png" width="11" height="11" alt="" />&nbsp;';
   }
@@ -86,18 +86,10 @@ function drawHeader($tmp_page_no) {
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/help.css" />
   <link rel="stylesheet" type="text/css" href="../../css/help_search.css" />
-  
-  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../../js/help.js"></script>
-  <script>
-    function displayPage(targetID, page_no) {
-      for (page=1; page<=page_no; page++) {
-        $('#page' + page).hide();
-      }
-      $('#page' + targetID).show();
-      $('#contents').scrollTop();
-    }
-  </script>
+
+  <script src='../../js/require.js'></script>
+  <script src='../../js/main.min.js'></script>
+  <script type="text/javascript" src="../../js/helpinit.min.js"></script>
 </head>
 <body>
   <div id="wrapper">
@@ -142,9 +134,9 @@ function drawHeader($tmp_page_no) {
           }
           $page_no++;
           if ($page_no == 1) {
-            echo "<div id=\"page$page_no\" style=\"display:block\">\n";
+            echo "<div id=\"page$page_no\" class=\"searchpage\" style=\"display:block\">\n";
           } else {
-            echo "<div id=\"page$page_no\" style=\"display:none\">\n";
+            echo "<div id=\"page$page_no\" class=\"searchpage\" style=\"display:none\">\n";
           }
           drawHeader($page_no);
           echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"width:100%\">\n";
@@ -166,5 +158,12 @@ function drawHeader($tmp_page_no) {
 ?>
     </div>
   </div>
+<?php
+  // JS utils dataset.
+  $render = new render($configObject);
+  $jsdataset['name'] = 'jsutils';
+  $jsdataset['attributes']['xls'] = json_encode($string);
+  $render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>

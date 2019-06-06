@@ -1,0 +1,57 @@
+// This file is part of Rogo
+//
+// Rogo is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogo is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
+//
+//
+// Alert functions
+//
+// @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+// @copyright Copyright (c) 2018 The University of Nottingham
+//
+//
+define(['jsxls', 'jquery'], function(jsxls, $) {
+    return function() {
+        /**
+         * Display js confrim dialog
+         * @param string msg the message
+         * @returns bool
+         */
+        this.show = function(msg) {
+            return confirm(jsxls.lang_string[msg]);
+        };
+        /**
+         * Display js alert dialog
+         * @param string msg the message
+         * @param string arg dynamic arguments for the message
+         */
+        this.notification = function(msg, arg) {
+            if ($.isArray(arg)) {
+                var message = jsxls.lang_string[msg];
+                arg.forEach(function(item, index) {
+                    message = message.replace('%s', item);
+                });
+                alert(message);
+            } else {
+                alert(jsxls.lang_string[msg].replace('%s', arg));
+            }
+        };
+        /**
+         * Display (non dynamic) js alert dialog
+         * @param string msg the message
+         */
+        this.plain = function(msg) {
+            alert(msg);
+        };
+    }
+});

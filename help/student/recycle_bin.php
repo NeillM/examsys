@@ -48,8 +48,9 @@ if (isset($_GET['id'])) {
     #contents th {color:white}
   </style>
 
-  <script type="text/javascript" src="../../js/jquery-1.11.1.min.js"></script>
-  <script type="text/javascript" src="../../js/help.js"></script>
+  <script src='../../js/require.js'></script>
+  <script src='../../js/main.min.js'></script>
+  <script type="text/javascript" src="../../js/helpinit.min.js"></script>
 </head>
 
 <body>
@@ -86,5 +87,12 @@ if (isset($_GET['id'])) {
 ?>
   </div>
 </div>
+<?php
+// JS utils dataset.
+$render = new render($configObject);
+$jsdataset['name'] = 'jsutils';
+$jsdataset['attributes']['xls'] = json_encode($string);
+$render->render($jsdataset, array(), 'dataset.html');
+?>
 </body>
 </html>
