@@ -52,10 +52,22 @@ function redirect($userObj, $q_id, $configObj, $db) {
     $result->close();
   }
 
-  if (isset($_SESSION['nav_page'])) {
+  $calling = param::optional('calling', null, param::STRING, param::FETCH_POST);
+  $paperID = param::optional('paperID', null, param::INT, param::FETCH_POST);
+  $scrOfY = param::optional('scrOfY', null, param::FLOAT, param::FETCH_POST);
+  if ($calling == 'paper' && !is_null($paperID) && $paperID != '-1') {
+    // Redirect back to paper the question was edited from
+    $param_array = array(
+      'paperID' => $paperID
+    );
+    if (!is_null($scrOfY)) {
+      $param_array['scrOfY'] = $scrOfY;
+    }
+    $url = $configObj->get('cfg_root_path') . '/paper/details.php?' . http_build_query($param_array);
+    header('Location: ' . $url, 303);
+  } elseif (isset($_SESSION['nav_page'])) {
     // Replace scrOfY with POST param if set, otherwise remove cleanly
     parse_str($_SESSION['nav_query'], $param_array);
-    $scrOfY = param::optional('scrOfY', null, param::FLOAT, param::FETCH_POST);
     if (!is_null($scrOfY)) {
       $param_array['scrOfY'] = $scrOfY;
     } elseif (isset($param_array['scrOfY'])) {
