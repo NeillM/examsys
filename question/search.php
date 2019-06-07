@@ -223,6 +223,14 @@ if (isset($_GET['submit'])) {
     $locked_string = " AND locked IS NULL";
   }
 
+  if (isset($_GET['filtercorrect'])) {
+    $correct_string = '';
+    switch($_GET['filtercorrect']){
+      case 'blank': $correct_string = " AND correct = ''"; break;
+      case 'nonblank': $correct_string = " AND correct != ''"; break;
+    }
+  }
+
   if ($_GET['question_date'] == 'dont remember') {
     $last_edited = '';
   } else {
@@ -274,7 +282,7 @@ if (isset($_GET['submit'])) {
       . " LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id"
       . " LEFT OUTER JOIN options ON options.o_id = questions.q_id"
       . " WHERE questions.status = question_statuses.id"
-      . " AND questions.ownerID = users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom"
+      . " AND questions.ownerID = users.id $search_string $module_string $user_string $status_string $locked_string $correct_string $last_edited $q_type $bloom"
       . " AND deleted IS NULL ORDER BY leadin_plain";
   } else {
     $sql = "SELECT DISTINCT title, initials, surname, q_type,"
@@ -284,7 +292,7 @@ if (isset($_GET['submit'])) {
       . " LEFT OUTER JOIN options ON options.o_id = questions.q_id"
       . " WHERE questions.status = question_statuses.id"
       . " AND questions.q_id = keywords_question.q_id $keywordsSQL"
-      . " AND questions.ownerID = users.id $search_string $module_string $user_string $status_string $locked_string $last_edited $q_type $bloom"
+      . " AND questions.ownerID = users.id $search_string $module_string $user_string $status_string $locked_string $correct_string $last_edited $q_type $bloom"
       . " AND deleted IS NULL ORDER BY leadin_plain, questions.q_id";
   }
 
