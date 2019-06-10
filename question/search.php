@@ -105,7 +105,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 if (isset($_GET['submit'])) {
   $error = '';
 
-  if (!isset($_GET['theme']) and !isset($_GET['scenario']) and !isset($_GET['leadin']) and !isset($_GET['options']) and !isset($_GET['keywords'])) {
+  if (!isset($_GET['theme']) and !isset($_GET['scenario']) and !isset($_GET['leadin']) and !isset($_GET['options']) and !isset($_GET['keywords']) and !isset($_GET['feedback'])) {
     $error = $string['notickedfields'];
   }
 
@@ -179,6 +179,17 @@ if (isset($_GET['submit'])) {
       $params .= 's';
     } else {
       $stemsSQL = '';
+    }
+
+    if (isset($_GET['feedback']) and $_GET['feedback']) {
+      $feedbackSQL = ' OR correct_fback LIKE ? OR incorrect_fback LIKE ? OR feedback_right LIKE ? OR feedback_wrong LIKE ?';
+      $variables[] = '%' . $searchterm . '%';
+      $variables[] = '%' . $searchterm . '%';
+      $variables[] = '%' . $searchterm . '%';
+      $variables[] = '%' . $searchterm . '%';
+      $params .= 'ssss';
+    } else {
+      $feedbackSQL = '';
     }
 
     $qIDSQL = ' OR questions.q_id = ?';

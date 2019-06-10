@@ -50,6 +50,7 @@ $string['theme'] = 'Theme';
 $string['scenario'] = 'Scenario';
 $string['leadin'] = 'Lead-in';
 $string['options'] = 'Options';
+$string['feedback'] = 'Feedback';
 $string['dont remember'] = 'Don\'t remember';
 $string['week'] = 'Within the last week';
 $string['month'] = 'Past month';
