@@ -59,9 +59,9 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/s
 <br />
 <?php
   $filtercorrect = array(
-      '' => 'With or without correct answer',
-      'blank' => 'No correct answer chosen',
-      'nonblank' => 'At least one correct answer',
+      '' => $string['answers_unselected'],
+      'blank' => $string['answers_blank'],
+      'nonblank' => $string['answers_nonblank'],
   );
   echo '<select name="filtercorrect" style="max-width:195px">';
   foreach($filtercorrect as $value => $label){
