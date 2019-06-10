@@ -169,7 +169,11 @@
 </table>
 </div>
 <?php
-
+  // JS utils dataset.
+  $render = new render($configObject);
+  $jsdataset['name'] = 'jsutils';
+  $jsdataset['attributes']['xls'] = json_encode($string);
+  $render->render($jsdataset, array(), 'dataset.html');
   $mysqli->close();
 ?>
 </body>

@@ -196,6 +196,10 @@ if (isset($_GET['folder'])) {
 }
 $jsdataset['attributes']['module'] = $module;
 $render->render($jsdataset, array(), 'dataset.html');
+// JS utils dataset.
+$miscdataset['name'] = 'jsutils';
+$miscdataset['attributes']['xls'] = json_encode($string);
+$render->render($miscdataset, array(), 'dataset.html');
 ?>
 </body>
 </html>

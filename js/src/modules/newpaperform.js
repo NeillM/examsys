@@ -91,7 +91,7 @@ define(['jsxls', 'alert', 'jquery', 'jqueryui'], function(jsxls, ALERT, $) {
                 alert.notification("msg1");
                 return false;
             }
-            if ($('#dataset').attr('data-warn') && $('#paper_type').val() == 'summative') {
+            if ($('#dataset').attr('data-warn') == '1' && $('#paper_type').val() == 'summative') {
                 return alert.show("msg3");
             }
             return true;
