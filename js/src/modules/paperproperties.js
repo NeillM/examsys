@@ -116,19 +116,19 @@ define(['alert', 'jquery', 'jqueryui'], function(ALERT, $) {
                 }
 
                 // Calculate the minimum to hour and minutes.
-                var calcultaed_min_thours = parseInt($('#fhour').val()) + parseInt($('#exam_duration_hours').val());
-                var calcultaed_min_tminutes = parseInt($('#fminute').val()) + parseInt($('#exam_duration_mins').val());
-                if (calcultaed_min_tminutes > 60) {
-                    calcultaed_min_thours  += calcultaed_min_tminutes % 60;
-                    calcultaed_min_tminutes -= 60;
+                var calculated_min_thours = parseInt($('#fhour').val()) + parseInt($('#exam_duration_hours').val());
+                var calculated_min_tminutes = parseInt($('#fminute').val()) + parseInt($('#exam_duration_mins').val());
+                if (calculated_min_tminutes > 60) {
+                    calculated_min_thours  += calculated_min_tminutes % 60;
+                    calculated_min_tminutes -= 60;
                 }
 
                 // Check that availability meets the duration requirement.
                 var durationnotmet = false;
-                if (parseInt($('#thour').val()) < calcultaed_min_thours) {
+                if (parseInt($('#thour').val()) < calculated_min_thours) {
                     durationnotmet = true;
                 }
-                if (parseInt($('#thour').val()) === calcultaed_min_thours && parseInt($('#tminute').val()) < calcultaed_min_tminutes) {
+                if (parseInt($('#thour').val()) === calculated_min_thours && parseInt($('#tminute').val()) < calculated_min_tminutes) {
                     durationnotmet = true;
                 }
                 if (durationnotmet) {
