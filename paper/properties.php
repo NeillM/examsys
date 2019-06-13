@@ -948,7 +948,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         echo "<option value=\"$i\">$i</option>\n";
       }
     }
-    echo "</select><select id=\"fhour\" name=\"fhour\" class=\"datecopy\"$sum_disabled>\n";
+    echo "</select><select id=\"fhour\" name=\"fhour\" $sum_disabled>\n";
     // Available from Hour
     if ($start_date == '') {
       echo '<option value=""></option>';
@@ -967,7 +967,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     }
     echo '</select>';
 		
-    echo "</select><select id=\"fminute\" name=\"fminute\" class=\"datecopy\"$sum_disabled>\n";
+    echo "</select><select id=\"fminute\" name=\"fminute\" $sum_disabled>\n";
     // Available from Minute
     if ($start_date == '') {
       echo '<option value=""></option>';
@@ -1057,7 +1057,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
         echo "<option value=\"$i\">$i</option>\n";
       }
     }
-    echo "</select><select id=\"thour\" name=\"thour\" class=\"datecopy\"$sum_disabled>\n";
+    echo "</select><select id=\"thour\" name=\"thour\" $sum_disabled>\n";
     // Available from Hour
     if ($start_date == '') {
       echo '<option value=""></option>';
@@ -1076,7 +1076,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
     }
     echo '</select>';
 		
-    echo "</select><select id=\"tminute\" name=\"tminute\" class=\"datecopy\"$sum_disabled>\n";
+    echo "</select><select id=\"tminute\" name=\"tminute\" $sum_disabled>\n";
     // Available from Minute
     if ($start_date == '') {
       echo '<option value=""></option>';
