@@ -115,6 +115,27 @@ define(['alert', 'jquery', 'jqueryui'], function(ALERT, $) {
                     return false;
                 }
 
+                // Calculate the minimum to hour and minutes.
+                var calcultaed_min_thours = parseInt($('#fhour').val()) + parseInt($('#exam_duration_hours').val());
+                var calcultaed_min_tminutes = parseInt($('#fminute').val()) + parseInt($('#exam_duration_mins').val());
+                if (calcultaed_min_tminutes > 60) {
+                    calcultaed_min_thours  += calcultaed_min_tminutes % 60;
+                    calcultaed_min_tminutes -= 60;
+                }
+
+                // Check that availability meets the duration requirement.
+                var durationnotmet = false;
+                if (parseInt($('#thour').val()) < calcultaed_min_thours) {
+                    durationnotmet = true;
+                }
+                if (parseInt($('#thour').val()) === calcultaed_min_thours && parseInt($('#tminute').val()) < calcultaed_min_tminutes) {
+                    durationnotmet = true;
+                }
+                if (durationnotmet) {
+                    alert.notification('durationnotmet');
+                    return false;
+                }
+
                 if ($('#session').val() == '') {
                     alert.notification('msg4');
                     return false;
