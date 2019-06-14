@@ -16,7 +16,6 @@
 
 $string['calendar'] = 'Calendar';
 $string['clearguestaccounts'] = 'Clear Guest Accounts';
-$string['clearoldlogs'] = 'Clear Old Logs';
 $string['clearorphanmedia'] = 'Clear Orphan Media';
 $string['cleartraining'] = 'Clear Training';
 $string['computerlabs'] = 'Computer Labs';
@@ -38,7 +37,6 @@ $string['testing'] = 'Testing';
 $string['bug'] = 'Bug Reporting';
 $string['usermanagement'] = 'User Management';
 $string['msg1'] = 'Are you sure you wish to clear all papers/questions from the Training module?';
-$string['msg2'] = 'Are you sure you wish to delete old Formative and Progress Test records?\n\n(Summative/Survey records will not be affected)';
 $string['announcments'] = 'News &amp; Announcements';
 $string['imslti'] = 'LTI Keys';
 $string['imssettings'] = 'IMS Settings';
