@@ -110,7 +110,7 @@ $lm_check->fetch();
 $lm_check->close();
 
 if (isset($lm_count) and $lm_count > 0) {
-  cli_utils::prompt($lm_count . 'Log0 rows to archive');
+  cli_utils::prompt($lm_count . ' Log0 rows to archive');
   $logquery = $mysqli->prepare("INSERT INTO log0_deleted SELECT l.* FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
   $logquery->bind_param('i', $user_to_delete);
   $logquery->execute();
@@ -141,7 +141,7 @@ $lm_check->fetch();
 $lm_check->close();
 
 if (isset($lm_count) and $lm_count > 0) {
-  cli_utils::prompt($lm_count . 'Log1 rows to archive');
+  cli_utils::prompt($lm_count . ' Log1 rows to archive');
   $logquery = $mysqli->prepare("INSERT INTO log1_deleted SELECT l.* FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
   $logquery->bind_param('i', $user_to_delete);
   $logquery->execute();
@@ -174,7 +174,7 @@ $lti_user_deleted_overall += $lti_user_deleted;
 $deletequery->close();
 
 if ($lti_user_deleted > 0) {
-  cli_utils::prompt($lti_user_deleted . 'LTI users to delete');
+  cli_utils::prompt($lti_user_deleted . ' LTI users to delete');
   $logger->track_change('Delete LTI user', $user_to_delete, $my_id, 1, 0, 'Clear old logs');
 }
 }
