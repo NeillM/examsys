@@ -98,99 +98,99 @@ $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($user_to_delete);
 while ($stmt->fetch()) {
-$log0_deleted = 0;
-$log1_deleted = 0;
-$lti_user_deleted = 0;
+  $log0_deleted = 0;
+  $log1_deleted = 0;
+  $lti_user_deleted = 0;
 
-$lm_check = $mysqli->prepare("SELECT count(lm.id) FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-$lm_check->bind_param('i', $user_to_delete);
-$lm_check->execute();
-$lm_check->bind_result($lm_count);
-$lm_check->fetch();
-$lm_check->close();
+  $lm_check = $mysqli->prepare("SELECT count(lm.id) FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+  $lm_check->bind_param('i', $user_to_delete);
+  $lm_check->execute();
+  $lm_check->bind_result($lm_count);
+  $lm_check->fetch();
+  $lm_check->close();
 
-if (isset($lm_count) and $lm_count > 0) {
-  cli_utils::prompt($lm_count . ' Log0 rows to archive');
-  $logquery = $mysqli->prepare("INSERT INTO log0_deleted SELECT l.* FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-  $logquery->bind_param('i', $user_to_delete);
-  $logquery->execute();
-  $logquery->close();
+  if (isset($lm_count) and $lm_count > 0) {
+    cli_utils::prompt($lm_count . ' Log0 rows to archive');
+    $logquery = $mysqli->prepare("INSERT INTO log0_deleted SELECT l.* FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+    $logquery->bind_param('i', $user_to_delete);
+    $logquery->execute();
+    $logquery->close();
 
-  $logquery = $mysqli->prepare("INSERT INTO log_metadata_deleted SELECT DISTINCT lm.* FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-  $logquery->bind_param('i', $user_to_delete);
-  $logquery->execute();
-  $logquery->close();
+    $logquery = $mysqli->prepare("INSERT INTO log_metadata_deleted SELECT DISTINCT lm.* FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+    $logquery->bind_param('i', $user_to_delete);
+    $logquery->execute();
+    $logquery->close();
 
-  // Delete from formative log.
-  $deletequery = $mysqli->prepare("DELETE l, lm FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+    // Delete from formative log.
+    $deletequery = $mysqli->prepare("DELETE l, lm FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+    $deletequery->bind_param('i', $user_to_delete);
+    $deletequery->execute();
+    $log0_deleted = $deletequery->affected_rows;
+    $log0_deleted_overall += $log0_deleted;
+    $deletequery->close();
+
+    // Record the delete in audit trail
+    $logger->track_change('Deleted records from log0', $user_to_delete, $my_id, $log0_deleted, 0, 'Clear old logs');
+  }
+
+  $lm_check = $mysqli->prepare("SELECT count(lm.id) FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+  $lm_check->bind_param('i', $user_to_delete);
+  $lm_check->execute();
+  $lm_check->bind_result($lm_count);
+  $lm_check->fetch();
+  $lm_check->close();
+
+  if (isset($lm_count) and $lm_count > 0) {
+    cli_utils::prompt($lm_count . ' Log1 rows to archive');
+    $logquery = $mysqli->prepare("INSERT INTO log1_deleted SELECT l.* FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+    $logquery->bind_param('i', $user_to_delete);
+    $logquery->execute();
+    $logquery->close();
+
+    $logquery = $mysqli->prepare("INSERT INTO log_metadata_deleted SELECT DISTINCT lm.* FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+    $logquery->bind_param('i', $user_to_delete);
+    $logquery->execute();
+    $logquery->close();
+
+    // Delete from formative log.
+    $deletequery = $mysqli->prepare("DELETE l, lm FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+    $deletequery->bind_param('i', $user_to_delete);
+    $deletequery->execute();
+    $log1_deleted = $deletequery->affected_rows;
+    $log1_deleted_overall += $log1_deleted;
+    $deletequery->close();
+
+    // Record the delete in audit trail
+    $logger->track_change('Deleted records from log1', $user_to_delete, $my_id, $log1_deleted, 0, 'Clear old logs');
+  }
+
+
+  // Delete from lti_user table.
+  $deletequery = $mysqli->prepare("DELETE FROM lti_user WHERE lti_user_equ = ?");
   $deletequery->bind_param('i', $user_to_delete);
   $deletequery->execute();
-  $log0_deleted = $deletequery->affected_rows;
-  $log0_deleted_overall += $log0_deleted;
+  $lti_user_deleted = $deletequery->affected_rows;
+  $lti_user_deleted_overall += $lti_user_deleted;
   $deletequery->close();
 
-  // Record the delete in audit trail
-  $logger->track_change('Deleted records from log0', $user_to_delete, $my_id, $log0_deleted, 0, 'Clear old logs');
-}
-
-$lm_check = $mysqli->prepare("SELECT count(lm.id) FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-$lm_check->bind_param('i', $user_to_delete);
-$lm_check->execute();
-$lm_check->bind_result($lm_count);
-$lm_check->fetch();
-$lm_check->close();
-
-if (isset($lm_count) and $lm_count > 0) {
-  cli_utils::prompt($lm_count . ' Log1 rows to archive');
-  $logquery = $mysqli->prepare("INSERT INTO log1_deleted SELECT l.* FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-  $logquery->bind_param('i', $user_to_delete);
-  $logquery->execute();
-  $logquery->close();
-
-  $logquery = $mysqli->prepare("INSERT INTO log_metadata_deleted SELECT DISTINCT lm.* FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-  $logquery->bind_param('i', $user_to_delete);
-  $logquery->execute();
-  $logquery->close();
-
-  // Delete from formative log.
-  $deletequery = $mysqli->prepare("DELETE l, lm FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-  $deletequery->bind_param('i', $user_to_delete);
-  $deletequery->execute();
-  $log1_deleted = $deletequery->affected_rows;
-  $log1_deleted_overall += $log1_deleted;
-  $deletequery->close();
-
-  // Record the delete in audit trail
-  $logger->track_change('Deleted records from log1', $user_to_delete, $my_id, $log1_deleted, 0, 'Clear old logs');
-}
-
-
-// Delete from lti_user table.
-$deletequery = $mysqli->prepare("DELETE FROM lti_user WHERE lti_user_equ = ?");
-$deletequery->bind_param('i', $user_to_delete);
-$deletequery->execute();
-$lti_user_deleted = $deletequery->affected_rows;
-$lti_user_deleted_overall += $lti_user_deleted;
-$deletequery->close();
-
-if ($lti_user_deleted > 0) {
-  cli_utils::prompt($lti_user_deleted . ' LTI users to delete');
-  $logger->track_change('Delete LTI user', $user_to_delete, $my_id, 1, 0, 'Clear old logs');
-}
+  if ($lti_user_deleted > 0) {
+    cli_utils::prompt($lti_user_deleted . ' LTI users to delete');
+    $logger->track_change('Delete LTI user', $user_to_delete, $my_id, 1, 0, 'Clear old logs');
+  }
 }
 $stmt->close();
 
 // Reset passwords
 if ($ldap) {
-$updatequery = $mysqli->prepare("UPDATE users SET password='' WHERE roles IN('Student', 'graduate', 'left')");
-$roles_string = 'Student, graduate and left';
+  $updatequery = $mysqli->prepare("UPDATE users SET password='' WHERE roles IN('Student', 'graduate', 'left')");
+  $roles_string = 'Student, graduate and left';
 } else {
-$updatequery = $mysqli->prepare("UPDATE users SET password='' WHERE roles IN('graduate', 'left')");
-$roles_string = 'graduate and left';
+  $updatequery = $mysqli->prepare("UPDATE users SET password='' WHERE roles IN('graduate', 'left')");
+  $roles_string = 'graduate and left';
 }
 $updatequery->execute();
 if ($updatequery->affected_rows > 0) {
-$logger->track_change('Reset passwords for roles ' . $roles_string, $my_id, $my_id, 1, 0, 'Clear old logs');
+  $logger->track_change('Reset passwords for roles ' . $roles_string, $my_id, $my_id, 1, 0, 'Clear old logs');
 }
 $updatequery->close();
 
