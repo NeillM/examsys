@@ -93,7 +93,7 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/s
   } else {
     $checked = ' checked="checked"';
   }
-	echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox1\" name=\"theme\"$checked /> <label for=\"checkbox1\">" . $string['theme'] . "</label></div>\n";
+  echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox1\" name=\"theme\"$checked /> <label for=\"checkbox1\">" . $string['theme'] . "</label></div>\n";
 	
   if (isset($state['checkbox2']) and $state['checkbox2'] == 'false') {
     $checked = '';
@@ -115,6 +115,13 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/s
     $checked = ' checked="checked"';
   }
 	echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox4\" name=\"options\"$checked /> <label for=\"checkbox4\">" . $string['options'] . "</label></div>\n";
+
+  if (isset($state['checkbox5']) and $state['checkbox5'] == 'false') {
+    $checked = '';
+  } else {
+    $checked = ' checked="checked"';
+  }
+  echo "<div><input class=\"chk\" type=\"checkbox\" id=\"checkbox5\" name=\"feedback\"$checked /> <label for=\"checkbox5\">" . $string['feedback'] . "</label></div>\n";
 ?>
 </div>
 
