@@ -57,6 +57,19 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/s
 	echo ' <label for="checkbox10">' . $string['inclockedquestions'] . '</label>';
 ?>
 <br />
+<?php
+  $filtercorrect = array(
+      '' => $string['answers_unselected'],
+      'blank' => $string['answers_blank'],
+      'nonblank' => $string['answers_nonblank'],
+  );
+  echo '<select name="filtercorrect" style="max-width:195px">';
+  foreach($filtercorrect as $value => $label){
+      echo '<option value="'.$value.'" '.($_GET['filtercorrect'] == $value ? 'selected="selected"' : '').'>'.$label.'</option>';
+  }
+  echo '</select>';
+?>
+<br/>
 
   <table cellpadding="4" cellspacing="0" border="0" width="100%">
   <tr class="sections"><td><a href="#" style="font-weight:bold; color:black"><?php echo $string['questionsections'] ?></a></td>
