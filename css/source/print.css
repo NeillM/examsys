@@ -114,3 +114,6 @@ pre {
   width: 40px;
   vertical-align: top;
 }
+.qtable > tbody > tr {
+  page-break-inside: avoid;
+}
