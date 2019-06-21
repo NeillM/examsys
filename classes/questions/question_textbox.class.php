@@ -28,7 +28,7 @@ Class QuestionTEXTBOX extends QuestionEdit {
 
   protected $columns = 80;
   protected $rows = 4;
-  protected $editor = 'plain';
+  protected $editor;
   protected $terms = '';
   public $max_options = 10;
   protected $_allow_change_marking_method = false;
@@ -42,8 +42,11 @@ Class QuestionTEXTBOX extends QuestionEdit {
   protected $_fields_settings = array('columns', 'rows', 'editor', 'terms');
 
   function __construct($mysqli, $userObj, $lang_strings, $data = null) {
+    // Get default text editor first, allow to be overridden
+    $configObject = Config::get_instance();
+    $this->editor = $configObject->get_setting('core', 'paper_textbox_editor_default');
+    
     parent::__construct($mysqli, $userObj, $lang_strings, $data);
-
     $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
   }
 

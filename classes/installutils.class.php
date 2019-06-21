@@ -779,6 +779,7 @@ Class InstallUtils {
     $configObject->set_setting('system_password_expire', 30, Config::INTEGER);
     $configObject->set_setting('lti_ssl_verifypeer', 1, Config::BOOLEAN);
     $configObject->set_setting('lti_ssl_verifyhost', 2, Config::INTEGER);
+    $configObject->set_setting('paper_textbox_editor_default', 'plain', Config::EDITOR);
     $filetypes = array();
     foreach (media_handler::SUPPORTED as $name => $type) {
       // Threejs disabled by default.

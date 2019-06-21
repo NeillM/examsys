@@ -138,6 +138,18 @@ foreach ($displayconfigs as $area => $conf) {
                 $i++;
             }
             $render->render($data, $string, 'admin/config/config_tz.html');
+        } elseif ($type === Config::EDITOR) {
+            // Hardcoded list of editors plus mathjax if available
+            $editors = array('plain' => $string['editor_plaintext'], 'WYSIWYG' => $string['editor_wysiwyg']);
+            if ($configObject->get_setting('core', 'paper_mathjax')) {
+              $editors['mathjax'] = $string['editor_mathjax'];
+            }
+
+            foreach ($editors as $editor => $editor_label) {
+              $data['editors'][$editor] = array('editor_label' => $editor_label, 'editor' => $editor, 'selected' => ($editor == $value)?'selected':'');
+            }
+
+            $render->render($data, $string, 'admin/config/config_editor.html');
         } elseif ($type === Config::ASSOC) {
             $idx = 0;
             foreach ($value as $i => $v) {
