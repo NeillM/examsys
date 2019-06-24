@@ -291,3 +291,7 @@ audio {
   margin: auto;
   text-align: center;
 }
+
+.highlight {
+  background-color: #FFFF00;
+}

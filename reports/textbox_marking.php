@@ -266,11 +266,11 @@ $half_marks = true;
   $old_screen = 1;
   $reminders = array();
   
-  $question_data = $mysqli->prepare("SELECT screen, q_type, q_id, id_num, option_text, theme, scenario, leadin, q_media, q_media_width, q_media_height, notes, marks_correct, correct_fback FROM (papers, questions, options) WHERE paper = ? AND papers.question = questions.q_id AND questions.q_id = options.o_id ORDER BY display_pos, id_num");
+  $question_data = $mysqli->prepare("SELECT screen, q_type, q_id, id_num, option_text, theme, scenario, leadin, q_media, q_media_width, q_media_height, notes, marks_correct, correct_fback, settings FROM (papers, questions, options) WHERE paper = ? AND papers.question = questions.q_id AND questions.q_id = options.o_id ORDER BY display_pos, id_num");
   $question_data->bind_param('i', $_GET['paperID']);
   $question_data->execute();
   $question_data->store_result();
-  $question_data->bind_result($screen, $q_type, $q_id, $option_id, $option_text, $theme, $scenario, $leadin, $q_media, $q_media_width, $q_media_height, $notes, $marks_correct, $correct_fback);
+  $question_data->bind_result($screen, $q_type, $q_id, $option_id, $option_text, $theme, $scenario, $leadin, $q_media, $q_media_width, $q_media_height, $notes, $marks_correct, $correct_fback, $settings);
   $num_rows = $question_data->num_rows;
   while ($question_data->fetch()) {
 	  $marks_array[$q_id] = $marks_correct;
@@ -334,7 +334,9 @@ $half_marks = true;
         }
       }
       echo "$leadin</td></tr>\n";
-      
+
+      $questionsettings[$q_id] = json_decode($settings, true);
+
       if ($q_type != 'info') {
         echo "<tr style=\"background-color:$tmp_color\"><td></td><td class=\"mk\"><br />($marks_correct ". $string['marks'] .")</td></tr>\n";
         echo "<tr style=\"background-color:$tmp_color\"><td>&nbsp;</td><td class=\"fback\"><br />" . nl2br($correct_fback) . "</td></tr>\n";
@@ -381,8 +383,8 @@ $half_marks = true;
             
       $out_of = $result->num_rows;
       echo '<p class="theme" style="padding-left:0">' . sprintf($string['mark_progress'], $answer_no, $out_of) . "</p>\n";
-      echo "<div id=\"ans_" . $answer_no . "\"><div class=\"student_ans\">" . nl2br(render_user_answer($user_answer, $string)) . "</div><div class=\"student_marks\">" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$textbox_q_id], $string) . "</div></div>\n";
- 
+      echo "<div id=\"ans_" . $answer_no . "\"><div class=\"student_ans\">" . nl2br(render_user_answer($user_answer, $questionsettings[$textbox_q_id], $string)) . "</div><div class=\"student_marks\">" . displayMarks($answer_no, $student_mark, $id, $logtype, $half_marks, $tmp_userID, $marks_array[$textbox_q_id], $string) . "</div></div>\n";
+
       if (count($reminders) > 0) {
         $reminders_selected = explode('|', $reminders_selected);
         echo '<ul class="reminders">';
@@ -411,8 +413,8 @@ $half_marks = true;
   }
   $result->close();
 
-  function render_user_answer($answer, $string) {
-    $answer = trim($answer);
+  function render_user_answer($answer, $settings, $string) {
+    $answer = trim(textbox_marking_utils::higlightterms($settings, $answer));
     $answer_display = '';
     if ($answer == '') {
       $answer_display = '<span class="noanswer">' . $string['noanswer'] . '</span>';

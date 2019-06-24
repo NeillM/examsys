@@ -1,0 +1,68 @@
+{#This file is part of Rogō
+
+Rogō is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Rogō is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for the textbox question edit display.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2018 onwards The University of Nottingham
+
+Required variables:
+
+data.termscount - number of existing terms
+data.terms - array of existing terms
+data.disclass - class to disable text
+data.readonly - class to make text readonly
+data.locked - flag to indicate if question is locked
+
+Required localised text -
+lang.qassessmentsummary - title of the section
+lang.terms - terms section info blurb
+lang.termno - title for a term (the number of the term will be appended)
+land.addterm - text for adding a new term
+#}
+<table id="q-options" class="form" summary="{{lang.qassessmentsummary}}">
+    <tbody id="termscontainer">
+    <tr>
+        <th></th>
+        <td><span class="note">{{lang.terms}}</span></td>
+    </tr>
+    {% if data.termscount > 0 %}
+        {% for item in data.terms %}
+        <tr class="spaced-top {% if loop.index is even %}alt{% endif %}">
+            <th><label id="terms{{loop.index}}label" for="terms{{loop.index}}">{{lang.termno}}{{loop.index}}</label></th>
+            <td><input id="terms{{loop.index}}" name="terms{{loop.index}}" type="text" class="terms form-med-large{{data.disclass}}"{{data.readonly}} value="{{item}}"/></td>
+        </tr>
+        {% endfor %}
+    {% endif %}
+    {% if not data.locked %}
+       {% set termscount = data.termscount + 1 %}
+        <tr class="spaced-top {% if termscount is even %}alt{% endif %}">
+            <th><label id="terms{{termscount}}label" for="terms{{termscount}}">{{lang.termno}}{{termscount}}</label></th>
+            <td><input id="terms{{termscount}}" name="terms{{termscount}}" type="text" class="terms form-med-large{{data.disclass}}"{{data.readonly}} value=""/></td>
+        </tr>
+    {% endif %}
+    </tbody>
+    {% if not data.locked %}
+    <tbody id="termsadd">
+        <tr>
+            <th></th><td><input id="addterm" value="{{lang.addterm}}" type="button" /></td>
+        </tr>
+    </tbody>
+    {% endif %}
+</table>
+<input type="hidden" id="terms" name="terms" value=""/>
+<div id="termattrs" data-disclass="{{data.disclass}}" data-readonly="{{data.readonly}}"></div>

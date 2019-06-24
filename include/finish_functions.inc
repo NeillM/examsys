@@ -1943,13 +1943,8 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         } else {
           $tmp_answer = '';
         }
-        if (isset($settings['terms'])) {
-          $correct_answers = explode(';', $settings['terms']);
-          if ($tmp_display_correct_answer == '1') {
-            foreach ($correct_answers as $single_answer) {
-              $tmp_answer = str_ireplace($single_answer, '<span style="background-color:#FFFF00">' . $single_answer . '</span>', $tmp_answer);
-            }
-          }
+        if ($tmp_display_correct_answer == '1') {
+          $tmp_answer = textbox_marking_utils::higlightterms($settings, $tmp_answer);
         }
         
         echo "<textarea class=\"raw_textarea\" id=\"textarea$question\" cols=\"" . $settings['columns'] . "\" rows=\"" . $settings['rows'] . "\"></textarea>\n";

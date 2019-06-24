@@ -76,7 +76,7 @@ require_once 'detail_parts/details_marking.php';
 <?php
 // For textbox only, option text is editable
 $orig_dis_readonly = $dis_readonly;
-$dis_class = $dis_readonly = '';
+$dis_readonly = '';
 
 $index = 1;
 foreach ($question->options as $o_id => $option) {
@@ -102,17 +102,22 @@ for ($index = $num_options + 1; $index <= $question->max_options; $index++) {
         <div class="form">
           <h2 class="midblue_header"><?php echo $string['assessmentdata'] ?></h2>
         </div>
-        
-        <table id="q-options" class="form" summary="<?php echo $string['qassessmentsummary'] ?>">
-          <tbody>
-            <tr>
-              <th><label for="terms"><?php echo $string['terms'] ?></label><br /><span class="note"><?php echo $string['termsmsg'] ?></span></th>
-              <td>
-                <textarea id="terms" name="terms" cols="100" rows="3" class="form-large"<?php echo $orig_dis_readonly ?>><?php echo $terms ?></textarea>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <?php
+        $renderpath[] = dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . 'textbox' . DIRECTORY_SEPARATOR . 'templates';
+        $termsrender = new render($configObject, $renderpath);
+        $renderdata['disclass'] = $dis_class;
+        $renderdata['locked'] = true;
+        if ($question->get_locked() == '') {
+          $renderdata['locked'] = false;
+        }
+        $renderdata['orig_dis_readonly'] = $orig_dis_readonly;
+        $renderdata['termscount'] = 0;
+        if (json_decode($terms) > 0) {
+          $renderdata['terms'] = array_filter(json_decode($terms), 'strlen');
+          $renderdata['termscount'] = count($renderdata['terms']);
+        }
+        $termsrender->render($renderdata, $string, 'edit.html');
+        ?>
 <?php
 $label_correct = $string['feedback'] . '<br /><span class="note">' . $string['feedbackmsg'] . '</span>';
 $feedback_rows = 4;

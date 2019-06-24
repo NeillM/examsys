@@ -49,12 +49,29 @@ Class textbox_marking_utils {
     return $remark_array;
   }
     
-	/**
-	 * Converts a time/date from 20140301103059 into 01/03/2014 10:30.
-	 * @param string $original - The date that needs to be convered.
-	 */
+  /**
+   * Converts a time/date from 20140301103059 into 01/03/2014 10:30.
+   * @param string $original - The date that needs to be convered.
+   * @return string
+   */
   static function nicedate($original) {
     return substr($original, 6, 2) . '/' . substr($original, 4, 2) . '/' . substr($original, 0, 4) . ' ' . substr($original, 8, 2) . ':' . substr($original, 10, 2);
   }
 
+  /**
+   * Highlight key terms in user answer.
+   *
+   * @param array $settings question settings
+   * @param string $answer user answer
+   * @return string
+   */
+  static function higlightterms($settings, $answer) {
+    if (isset($settings['terms'])) {
+      $correct_answers = json_decode($settings['terms']);
+      foreach ($correct_answers as $single_answer) {
+        $answer = str_ireplace($single_answer, '<span class="highlight">' . $single_answer . '</span>', $answer);
+      }
+    }
+    return $answer;
+  }
 }
