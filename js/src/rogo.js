@@ -20,6 +20,7 @@
 //
 var mathjax = 0;
 var three = 0;
+var editor = 'plain';
 // This is before jquery is loaded.
 if(document.getElementById("rogoconfig").getAttribute("data-mathjax")) {
     mathjax = 1;
@@ -27,13 +28,17 @@ if(document.getElementById("rogoconfig").getAttribute("data-mathjax")) {
 if(document.getElementById("rogoconfig").getAttribute("data-three")) {
     three = 1;
 }
+if (document.getElementById("rogoconfig").getAttribute("data-editor")) {
+    editor = document.getElementById("rogoconfig").getAttribute("data-editor");
+}
 var root = document.getElementById("rogoconfig").getAttribute("data-root");
 var require = {
     config: {
         'requireconfig.min': {
             cfgrootpath: root,
             mathjax: mathjax,
-            three: three
+            three: three,
+            editor: editor
         }
     }
 };

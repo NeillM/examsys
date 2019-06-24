@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-define(['qarea', 'qhotspot', 'qlabelling', 'jquery', 'jsxls'], function(qarea, qhotspot, qlabelling, $, jsxls) {
+define(['editor', 'qarea', 'qhotspot', 'qlabelling', 'jsxls', 'jquery'], function(Editor, Qarea, Qhotspot, Qlabelling, Jsxls, $) {
     return function() {
         var scope = this;
 
@@ -30,21 +30,21 @@ define(['qarea', 'qhotspot', 'qlabelling', 'jquery', 'jsxls'], function(qarea, q
             $("canvas[id^=canvas]").each(function() {
                 switch ($(this).attr('class')) {
                     case 'labelling':
-                        var label = new qlabelling();
+                        var label = new Qlabelling();
                         label.setUpLabelling($(this).attr('data-qno'),
                             "flash" + $(this).attr('data-qno'),
                             language, $(this).attr('data-qmedia'),
                             $(this).attr('data-qcorrect'), $(this).attr('data-user'), $(this).attr('data-marking'), "#FFC0C0", "answer");
                         break;
                     case 'hotspot':
-                        var hotspot = new qhotspot();
+                        var hotspot = new Qhotspot();
                         hotspot.setUpHotspot($(this).attr('data-qno'),
                             "flash" + $(this).attr('data-qno'),
                             language, $(this).attr('data-qmedia'),
                             $(this).attr('data-qcorrect'), $(this).attr('data-user'), $(this).attr('data-marking'), "#FFC0C0", "answer");
                         break;
                     case 'area':
-                        var area = new qarea();
+                        var area = new Qarea();
                         area.setUpArea($(this).attr('data-qno'),
                             "flash" + $(this).attr('data-qno'),
                             language, $(this).attr('data-qmedia'),
@@ -223,9 +223,9 @@ define(['qarea', 'qhotspot', 'qlabelling', 'jquery', 'jsxls'], function(qarea, q
          */
         this.confirmSubmitLinear = function(event) {
             if ($('#button_pressed').val() === 'finish') {
-                scope.showDialog(jsxls.lang_string['javacheck2']);
+                scope.showDialog(Jsxls.lang_string['javacheck2']);
             } else {
-                var msg = jsxls.lang_string['javacheck1'];
+                var msg = Jsxls.lang_string['javacheck1'];
                 if ($('.ecalc-answer').length > 0) {
                     var ecalcQuestions = [];
                     $('.ecalc-answer').each(function(){
@@ -234,7 +234,7 @@ define(['qarea', 'qhotspot', 'qlabelling', 'jquery', 'jsxls'], function(qarea, q
                         }
                     });
                     if (ecalcQuestions.length > 0) {
-                        msg = jsxls.lang_string['javacheck3'].replace('[X]', ecalcQuestions.join());
+                        msg = Jsxls.lang_string['javacheck3'].replace('[X]', ecalcQuestions.join());
                     }
                 }
                 scope.showDialog(msg);
@@ -257,7 +257,7 @@ define(['qarea', 'qhotspot', 'qlabelling', 'jquery', 'jsxls'], function(qarea, q
                 return false;
             }
             if ($('#button_pressed').val() === 'finish') {
-                scope.showDialog(jsxls.lang_string['javacheck2']);
+                scope.showDialog(Jsxls.lang_string['javacheck2']);
                 $("#dialog_ok").click(function(event) {
                     $('body').css('cursor','wait');
                     scope.submitted = true;
@@ -273,7 +273,7 @@ define(['qarea', 'qhotspot', 'qlabelling', 'jquery', 'jsxls'], function(qarea, q
                 });
 
                 if (ecalcQuestions.length > 0) {
-                    var msg = jsxls.lang_string['answerrequired'] + '<br/><br/><strong>' + jsxls.lang_string['answerrequired_confirm'] + '</strong>';
+                    var msg = Jsxls.lang_string['answerrequired'] + '<br/><br/><strong>' + Jsxls.lang_string['answerrequired_confirm'] + '</strong>';
                     msg = msg.replace('[X]', ecalcQuestions.join());
                     scope.showEnhancedcalcWarning(msg);
                     $("#enhancedcalc_warning_ok").click(function(event) {
@@ -294,7 +294,10 @@ define(['qarea', 'qhotspot', 'qlabelling', 'jquery', 'jsxls'], function(qarea, q
          */
         this.checkSubmit = function(event) {
             scope.stopAutoSave();
-            triggerSave();
+            Editor.triggerSave();
+            if (event === null) {
+                $('#button_pressed').attr('value', event.target.id);
+            }
 
             $("#dialog_cancel, #enhancedcalc_warning_cancel").click(function(event) {
                 if ($('#button_pressed').val() === 'jumpscreen') {
@@ -318,7 +321,7 @@ define(['qarea', 'qhotspot', 'qlabelling', 'jquery', 'jsxls'], function(qarea, q
          */
         this.conductSave = function(event) {
             var el = document.getElementById('paper');
-            triggerSave();
+            Editor.triggerSave();
             scope.stopAutoSave();
             $('#saveError').fadeOut('slow');
             $('#savemsg').html("<img src=\"../artwork/busy.gif\" class=\"busyicon\" />");
@@ -366,7 +369,7 @@ define(['qarea', 'qhotspot', 'qlabelling', 'jquery', 'jsxls'], function(qarea, q
             var el = document.getElementById('paper');
             scope.stopAutoSave();
             scope.ajaxSave(1, 'forcedSubmit');
-            scope.info_dialog(jsxls.lang_string['forcesave']);
+            scope.info_dialog(Jsxls.lang_string['forcesave']);
             $('#qForm').attr('action',"finish.php?id=" + el.dataset.pid + el.dataset.urlmod + "&dont_record=true");
             $('#qForm').submit();
         };
@@ -380,7 +383,7 @@ define(['qarea', 'qhotspot', 'qlabelling', 'jquery', 'jsxls'], function(qarea, q
             scope.stopAutoSave();
 
             // Save any data from wysiwyg
-            triggerSave();
+            Editor.triggerSave();
             var formData = $('#qForm').serialize();
 
             // Only auto save if the data has changed, OR 20 minutes has elapsed - stop sessions expiring. ?>
@@ -428,7 +431,7 @@ define(['qarea', 'qhotspot', 'qlabelling', 'jquery', 'jsxls'], function(qarea, q
             var date = new Date();
             var randomPageID = date.getTime();
             $('#randomPageID').val(randomPageID);
-            triggerSave();
+            Editor.triggerSave();
             $.ajax({
                 url: 'save_screen.php?id=' + el.dataset.pid + el.dataset.urlmod + '&ans_changed=' + ans_changed + '&submitType=' + submitType + '&rnd=' + randomPageID + el.dataset.urlmod,
                 type: 'post',

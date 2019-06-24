@@ -18,18 +18,18 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-define(['jsxls', 'jquery', 'jqueryvalidate'], function(jsxls, $) {
+define(['editor', 'jsxls', 'jquery', 'jqueryvalidate'], function(Editor, jsxls, $) {
     return function() {
         /**
          * Add mrq validation methods to jquery-validate.
          */
         this.init = function () {
             var button = null;
-            ($('.submit').focus(function () {
+            $('.submit').focus(function () {
                 button = $(this).attr('id');
-            }))
+            });
             $('#edit_form').submit(function (e) {
-                triggerSave();
+                Editor.triggerSave();
                 var checked = 0;
                 if (button == 'addbank' || button == 'addpaper' || button == 'submit-save') {
                     $('.mrq-correct').each(function () {

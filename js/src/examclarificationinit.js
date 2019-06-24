@@ -18,13 +18,13 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-requirejs(['jquery'], function ($) {
+requirejs(['editor', 'jquery'], function (Editor, $) {
     $(function () {
         var new_height = $(window).height() - 105;
         $('#msg').height(new_height);
 
         $('#myform').submit(function(e){
-            triggerSave();
+            Editor.triggerSave();
             if ($('#msg').val() == '') {
                 $('.defaultSkin table.mceLayout').css('border-color', '#C00000');
                 $('.defaultSkin table.mceLayout').css('box-shadow', '0 0 6px rgba(200, 0, 0, 0.85)');

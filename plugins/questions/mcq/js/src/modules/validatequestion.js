@@ -18,14 +18,14 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-define(['jsxls', 'jquery', 'jqueryvalidate'], function(jsxls, $) {
+define(['editor', 'jsxls', 'jquery', 'jqueryvalidate'], function(Editor, jsxls, $) {
     return function() {
         /**
          * Add mcq validation methods to jquery-validate.
          */
         this.init = function () {
             $('#edit_form').submit(function () {
-                triggerSave();
+                Editor.triggerSave();
             });
             $('#edit_form').validate({
                 ignore: '',

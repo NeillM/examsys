@@ -18,14 +18,14 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-define(['jsxls', 'jquery', 'jqueryvalidate'], function(jsxls, $) {
+define(['editor', 'jsxls', 'jquery', 'jqueryvalidate'], function(Editor, Jsxls, $) {
     return function() {
         /**
          * Add matrix validation methods to jquery-validate.
          */
         this.init = function () {
             $('#edit_form').submit(function () {
-                triggerSave();
+                Editor.triggerSave();
             });
 
             jQuery.validator.addMethod("matrixlabels", function (value, element) {
@@ -59,7 +59,7 @@ define(['jsxls', 'jquery', 'jqueryvalidate'], function(jsxls, $) {
                     }
                 }
                 return this.optional(element) || true;
-            }, jsxls.lang_string['entervalidvariable']);
+            }, Jsxls.lang_string['entervalidvariable']);
 
             jQuery.validator.addMethod("matrixstems", function (value, element) {
                 // Check valid matrix stem setup.
@@ -92,7 +92,7 @@ define(['jsxls', 'jquery', 'jqueryvalidate'], function(jsxls, $) {
                     }
                 }
                 return this.optional(element) || true;
-            }, jsxls.lang_string['entervalidvariable']);
+            }, Jsxls.lang_string['entervalidvariable']);
 
             $('#edit_form').validate({
                 rules: {
@@ -119,7 +119,7 @@ define(['jsxls', 'jquery', 'jqueryvalidate'], function(jsxls, $) {
                     question_stem10: 'matrixstems',
                 },
                 messages: {
-                    leadin: jsxls.lang_string['enterleadin'],
+                    leadin: Jsxls.lang_string['enterleadin'],
                 },
                 errorPlacement: function (error, element) {
                     if (element.attr('name') == 'leadin') {
@@ -131,7 +131,7 @@ define(['jsxls', 'jquery', 'jqueryvalidate'], function(jsxls, $) {
                     }
                 },
                 invalidHandler: function () {
-                    alert(jsxls.lang_string['validationerror']);
+                    alert(Jsxls.lang_string['validationerror']);
                 }
             });
         };

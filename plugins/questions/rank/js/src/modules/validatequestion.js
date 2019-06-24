@@ -18,15 +18,15 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-define(['jsxls', 'jquery', 'jqueryvalidate'], function(jsxls, $) {
+define(['editor', 'jsxls', 'jquery', 'jqueryvalidate'], function(Editor, Jsxls, $) {
     return function() {
         /**
          * Add rank validation methods to jquery-validate.
          */
         this.init = function () {
             $('#edit_form').submit(function () {
-                triggerSave();
-            })
+                Editor.triggerSave();
+            });
             $('#edit_form').validate({
                 ignore: '',
                 rules: {
@@ -35,9 +35,9 @@ define(['jsxls', 'jquery', 'jqueryvalidate'], function(jsxls, $) {
                     option_text2: 'required'
                 },
                 messages: {
-                    leadin: jsxls.lang_string['enterleadin'],
-                    option_text1: '<br />' + jsxls.lang_string['enteroptiontext'],
-                    option_text2: '<br />' + jsxls.lang_string['enteroptiontext']
+                    leadin: Jsxls.lang_string['enterleadin'],
+                    option_text1: '<br />' + Jsxls.lang_string['enteroptiontext'],
+                    option_text2: '<br />' + Jsxls.lang_string['enteroptiontext']
                 },
                 errorPlacement: function (error, element) {
                     if (element.attr('name') == 'leadin') {
@@ -49,7 +49,7 @@ define(['jsxls', 'jquery', 'jqueryvalidate'], function(jsxls, $) {
                     }
                 },
                 invalidHandler: function () {
-                    alert(jsxls.lang_string['validationerror']);
+                    alert(Jsxls.lang_string['validationerror']);
                 }
             });
         };

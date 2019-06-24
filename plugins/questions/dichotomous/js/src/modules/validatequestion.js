@@ -18,22 +18,22 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-define(['jsxls', 'jquery', 'jqueryvalidate'], function(jsxls, $) {
+define(['editor', 'jsxls', 'jquery', 'jqueryvalidate'], function(Editor, Jsxls, $) {
     return function() {
         /**
          * Add dichotomous validation methods to jquery-validate.
          */
         this.init = function () {
             $('#edit_form').submit(function () {
-                triggerSave();
-            })
+                Editor.triggerSave();
+            });
             $('#edit_form').validate({
                 ignore: '',
                 rules: {
                     leadin: 'required'
                 },
                 messages: {
-                    leadin: jsxls.lang_string['enterleadin'],
+                    leadin: Jsxls.lang_string['enterleadin'],
                 },
                 errorPlacement: function (error, element) {
                     if (element.attr('name') == 'leadin') {
@@ -45,7 +45,7 @@ define(['jsxls', 'jquery', 'jqueryvalidate'], function(jsxls, $) {
                     }
                 },
                 invalidHandler: function () {
-                    alert(jsxls.lang_string['validationerror']);
+                    alert(Jsxls.lang_string['validationerror']);
                 }
             });
         };

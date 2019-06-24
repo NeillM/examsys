@@ -1,22 +1,23 @@
-  tinyMCE.init({ 
-    mode : "specific_textareas", 
-    editor_selector : "editorStandard",
-    theme : "advanced", 
-    skin : "default",
-    plugins : "table,visualchars,nonbreaking", 
+requirejs(['tinyMCE', 'requireconfig.min'], function (tinyMCE, config) {
+  tinyMCE.init({
+    mode: "specific_textareas",
+    editor_selector: "editorStandard",
+    theme: "advanced",
+    skin: "default",
+    plugins: "table,visualchars,nonbreaking",
     // Theme options
-    theme_advanced_buttons1 : "cut,copy,paste,|,undo,|,bold,italic,underline,|,sub,sup,|,justifyleft,justifycenter,justifyright,|,numlist,bullist,|,tablecontrols", 
-    theme_advanced_buttons2 : "", 
-    theme_advanced_buttons3 : "",
-    theme_advanced_toolbar_location : "top", 
-    theme_advanced_toolbar_align : "left",
-    theme_advanced_path : false,
+    theme_advanced_buttons1: "cut,copy,paste,|,undo,|,bold,italic,underline,|,sub,sup,|,justifyleft,justifycenter,justifyright,|,numlist,bullist,|,tablecontrols", 
+    theme_advanced_buttons2: "",
+    theme_advanced_buttons3: "",
+    theme_advanced_toolbar_location: "top",
+    theme_advanced_toolbar_align: "left",
+    theme_advanced_path: false,
     theme_advanced_statusbar_location : "none",
-    // Example content CSS (should be your site CSS) 
-    content_css : cfgRootPath + "/css/editor.css",
+    // Example content CSS (should be your site CSS)
+    content_css: config.cfgrootpath + "/css/editor.css",
 
 
-    setup : function(ed) {
+    setup: function (ed) {
       // If there is no text content, return nothing.
       // After http://alastairc.ac/2010/03/removing-emtpy-html-tags-from-tinymce/
       ed.onPostProcess.add(function(ed, o) {
@@ -36,24 +37,24 @@
   });
 
   tinyMCE.init({
-      mode : "specific_textareas",
-      editor_selector : "editorStandardUans",
-      theme : "advanced",
-      skin : "default",
-      plugins : "table,visualchars,nonbreaking",
+      mode: "specific_textareas",
+      editor_selector: "editorStandardUans",
+      theme: "advanced",
+      skin: "default",
+      plugins: "table,visualchars,nonbreaking",
       // Theme options
-      theme_advanced_buttons1 : "cut,copy,paste,|,undo,|,bold,italic,underline,|,sub,sup,|,justifyleft,justifycenter,justifyright,|,numlist,bullist,|,tablecontrols",
-      theme_advanced_buttons2 : "",
-      theme_advanced_buttons3 : "",
-      theme_advanced_toolbar_location : "top",
-      theme_advanced_toolbar_align : "left",
-      theme_advanced_path : false,
-      theme_advanced_statusbar_location : "none",
+      theme_advanced_buttons1: "cut,copy,paste,|,undo,|,bold,italic,underline,|,sub,sup,|,justifyleft,justifycenter,justifyright,|,numlist,bullist,|,tablecontrols",
+      theme_advanced_buttons2: "",
+      theme_advanced_buttons3: "",
+      theme_advanced_toolbar_location: "top",
+      theme_advanced_toolbar_align: "left",
+      theme_advanced_path: false,
+      theme_advanced_statusbar_location: "none",
       // Example content CSS (should be your site CSS)
-      content_css : cfgRootPath + "/css/editor_pink.css",
+      content_css: config.cfgrootpath + "/css/editor_pink.css",
 
 
-      setup : function(ed) {
+      setup: function (ed) {
           // If there is no text content, return nothing.
           // After http://alastairc.ac/2010/03/removing-emtpy-html-tags-from-tinymce/
           ed.onPostProcess.add(function(ed, o) {
@@ -71,4 +72,5 @@
           });
       }
   });
+});
 

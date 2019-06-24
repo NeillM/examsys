@@ -489,10 +489,15 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <link rel="stylesheet" href="../../css/mapping_form.css" type="text/css" />
 <link rel="stylesheet" href="../../css/warnings.css" type="text/css" />
 
+<?php
+$editor = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+?>
+
 <script id="rogoconfig" src='../../js/rogo.min.js'
         data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
         data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
-        data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>">
+        data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>"
+        data-editor="<?php echo $editor[0]; ?>">
 </script>
 <script src='../../js/require.js'></script>
 <script src='../../js/main.min.js'></script>

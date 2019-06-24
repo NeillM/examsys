@@ -307,6 +307,8 @@ if($configObject->get_setting('core', 'paper_threejs')) {
 }
 $headerdata['mee'] = $configObject->get_setting('core', 'paper_mee');
 $headerdata['texteditor'] = $texteditorplugin->get_header_file();
+$editor = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+$headerdata['editor'] = $editor[0];
 $render->render($headerdata, $lang, 'header.html');
 
   /*

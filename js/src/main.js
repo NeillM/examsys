@@ -29,6 +29,8 @@ requirejs.config({
         jquerytablesorter: "/js/jquery.tablesorter.min",
         qunit: "/node_modules/qunit/qunit/qunit",
         mathjax: "/node_modules/mathjax/MathJax.js?config=TeX-MML-AM_HTMLorMML&amp;delayStartupUntil=configured",
+        editor: "editor.min",
+        tinyMCE: "/plugins/texteditor/plugin_tinymce3_texteditor/tinymce/jscripts/tiny_mce/tiny_mce",
         three: "/node_modules/three/build/three.min",
         colourpicker: "/tools/colour_picker/js/colour_picker.min",
         campuses: "/admin/campus/js/campuses.min",
@@ -184,6 +186,12 @@ requirejs.config({
                 });
                 MathJax.Hub.Startup.onload();
                 return MathJax;
+            }
+        },
+        tinyMCE: {
+            exports: 'tinyMCE',
+            init: function () {
+                return this.tinyMCE;
             }
         },
         // Non AMD libraries that need jquery.

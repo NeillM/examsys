@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-define(['jsxls', 'jquery', 'jqueryvalidate'], function(jsxls, $) {
+define(['editor', 'jsxls', 'jquery', 'jqueryvalidate'], function(Editor, Jsxls, $) {
     return function() {
         
         this.requiresIncrement = function(index) {
@@ -36,7 +36,7 @@ define(['jsxls', 'jquery', 'jqueryvalidate'], function(jsxls, $) {
         this.init = function() {
             scope = this;
             $('#edit_form').submit(function () {
-                triggerSave();
+                Editor.triggerSave();
             });
 
             jQuery.validator.addMethod("calcvariable", function (value, element) {
@@ -46,7 +46,7 @@ define(['jsxls', 'jquery', 'jqueryvalidate'], function(jsxls, $) {
                 // a link to another questions answer or variable i.e. ans10 or var$A99,
                 // a simple formula using [+,-,*,/] i.e. $A/$B
                 return this.optional(element) || /^((\$[A-Z][0-9]*|var\$[A-Z][0-9]*|ans[0-9]*|[-]?[0-9]*[.]?[0-9]+)([+-/*]?))+$/.test(value);
-            }, jsxls.lang_string['entervalidvariable']);
+            }, Jsxls.lang_string['entervalidvariable']);
 
             $('#edit_form').validate({
                 ignore: '',
@@ -165,18 +165,18 @@ define(['jsxls', 'jquery', 'jqueryvalidate'], function(jsxls, $) {
                     }
                 },
                 messages: {
-                    leadin: jsxls.lang_string['enterleadin'],
-                    option_formula1: jsxls.lang_string['enterformula'],
-                    option_increment1: '<br />' + jsxls.lang_string['entervaliddecimal'],
-                    option_increment2: '<br />' + jsxls.lang_string['entervaliddecimal'],
-                    option_increment3: '<br />' + jsxls.lang_string['entervaliddecimal'],
-                    option_increment4: '<br />' + jsxls.lang_string['entervaliddecimal'],
-                    option_increment5: '<br />' + jsxls.lang_string['entervaliddecimal'],
-                    option_increment6: '<br />' + jsxls.lang_string['entervaliddecimal'],
-                    option_increment7: '<br />' + jsxls.lang_string['entervaliddecimal'],
-                    option_increment8: '<br />' + jsxls.lang_string['entervaliddecimal'],
-                    option_increment9: '<br />' + jsxls.lang_string['entervaliddecimal'],
-                    option_increment10: '<br />' + jsxls.lang_string['entervaliddecimal']
+                    leadin: Jsxls.lang_string['enterleadin'],
+                    option_formula1: Jsxls.lang_string['enterformula'],
+                    option_increment1: '<br />' + Jsxls.lang_string['entervaliddecimal'],
+                    option_increment2: '<br />' + Jsxls.lang_string['entervaliddecimal'],
+                    option_increment3: '<br />' + Jsxls.lang_string['entervaliddecimal'],
+                    option_increment4: '<br />' + Jsxls.lang_string['entervaliddecimal'],
+                    option_increment5: '<br />' + Jsxls.lang_string['entervaliddecimal'],
+                    option_increment6: '<br />' + Jsxls.lang_string['entervaliddecimal'],
+                    option_increment7: '<br />' + Jsxls.lang_string['entervaliddecimal'],
+                    option_increment8: '<br />' + Jsxls.lang_string['entervaliddecimal'],
+                    option_increment9: '<br />' + Jsxls.lang_string['entervaliddecimal'],
+                    option_increment10: '<br />' + Jsxls.lang_string['entervaliddecimal']
                 },
                 errorPlacement: function (error, element) {
                     if (element.attr('name') == 'leadin') {
@@ -190,7 +190,7 @@ define(['jsxls', 'jquery', 'jqueryvalidate'], function(jsxls, $) {
                     }
                 },
                 invalidHandler: function () {
-                    alert(jsxls.lang_string['validationerror']);
+                    alert(Jsxls.lang_string['validationerror']);
                 }
             });
         };
