@@ -150,7 +150,8 @@ h2 {font-size:120%}
 MESSAGE;
 
     $to = $tmp_email;
-    $message .= "<p>" . $string['email2'] . " <a href=\"https://{$_SERVER['HTTP_HOST']}/\">https://{$_SERVER['HTTP_HOST']}/</a></p>";
+    $host = $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path');
+    $message .= "<p>" . $string['email2'] . " <a href=\"https://{$host}/\">https://{$host}/</a></p>";
     $message .= "</body>\n</html>";
     mail($to, $subject, $message, $headers) or $mailerror = true;
   }

@@ -96,7 +96,8 @@ h2 {font-size:120%}
 <body>
 EMAIL;
         $contactemail = support::get_primary_email();
-        $email_body .= sprintf($string['emailhtml'], $title, $surname, $_SERVER['HTTP_HOST'], $token, $contactemail);
+        $host = $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path');
+        $email_body .= sprintf($string['emailhtml'], $title, $surname, $host, $token, $contactemail);
 
         $email_body .= <<< EMAIL
 </body>

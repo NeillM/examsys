@@ -91,6 +91,7 @@ if ($submit and $unique_username) {
       $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n";
       $headers .= "bcc: $tmp_email\n";
       $sname = ucwords($new_surname);
+      $host = $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path');
       $message = <<< MESSAGE
 <!DOCTYPE html>
 <html>
@@ -110,11 +111,11 @@ h2 {font-size:120%}
 MESSAGE;
 
       if (strpos($new_roles,'Staff') !== false) {
-        $message .= "<p>" . $string['email2'] . " <a href=\"https://{$_SERVER['HTTP_HOST']}/\">https://{$_SERVER['HTTP_HOST']}/staff/</a></p>";
+        $message .= "<p>" . $string['email2'] . " <a href=\"https://{$host}/staff/\">https://{$host}/students/</a></p>";
       } elseif (strpos($new_roles,'Student') !== false) {
-        $message .= "<p>" . $string['email2'] . " <a href=\"https://{$_SERVER['HTTP_HOST']}/\">https://{$_SERVER['HTTP_HOST']}/students/</a></p>";
+        $message .= "<p>" . $string['email2'] . " <a href=\"https://{$host}/students/\">https://{$host}/students/</a></p>";
       } else {
-        $message .= "<p>" . $string['email2'] . " <a href=\"https://{$_SERVER['HTTP_HOST']}/\">https://{$_SERVER['HTTP_HOST']}/</a></p>";
+        $message .= "<p>" . $string['email2'] . " <a href=\"https://{$host}/\"></a>https://{$host}/students/</p>";
         $message .= "<p>" . $string['email3'] . "</p>";
       }
       $message .= "</body>\n</html>";
