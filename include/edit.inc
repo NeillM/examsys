@@ -52,7 +52,7 @@ function redirect($userObj, $q_id, $configObj, $db) {
     $result->close();
   }
 
-  $calling = param::optional('calling', null, param::STRING, param::FETCH_POST);
+  $calling = param::optional('calling', null, param::ALPHANUM, param::FETCH_POST);
   $paperID = param::optional('paperID', null, param::INT, param::FETCH_POST);
   $scrOfY = param::optional('scrOfY', null, param::FLOAT, param::FETCH_POST);
   if ($calling == 'paper' && !is_null($paperID) && $paperID != '-1') {
