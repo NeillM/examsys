@@ -67,7 +67,7 @@ $csv = '';
 
 header('Pragma: public');
 header("Content-type: application/vnd.ms-excel");
-header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper_title . "_" . $paperID) . "_standards_setting_full.csv");
+header("Content-Disposition: attachment; filename=\"" . \file_handler::make_filename_safe($paper_title . "_" . $paperID) . "_standards_setting_full.csv\"");
 
 if($stmt) {
   $stmt->bind_param('ss', $paperID, $paperID);

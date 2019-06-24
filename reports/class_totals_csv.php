@@ -66,7 +66,7 @@ $user_no = count($user_results);
 
 header('Pragma: public');
 header("Content-type: application/vnd.ms-excel");
-header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper) . "_CT.csv");
+header("Content-Disposition: attachment; filename=\"" . \file_handler::make_filename_safe($paper) . "_CT.csv\"");
 
 $csv = '';
 $percent_decimals = $configObject->get_setting('core', 'rpt_percent_decimals');

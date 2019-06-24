@@ -85,7 +85,7 @@ $user_results = \sort::array_csort($user_results, $sortby, $ordering);
 
 header('Pragma: public');
 header("Content-type: application/vnd.ms-excel");
-header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper) . ".xml");
+header("Content-Disposition: attachment; filename=\"" . \file_handler::make_filename_safe($paper) . ".xml\"");
 
 if ($borderline_method) {
   $col_count = 11;

@@ -60,7 +60,7 @@ $demo = \demo::is_demo($userObject);
 
 header('Pragma: public');
 header('Content-type: application/octet-stream');
-header("Content-Disposition: attachment; filename=new_" . str_replace(' ', '_', $paper) . "_EB.csv");
+header("Content-Disposition: attachment; filename=\"new_" . \file_handler::make_filename_safe($paper) . "_EB.csv\"");
 
 $displayDebug = false; //disable debug output in this script as it effects the output
 

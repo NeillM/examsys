@@ -58,7 +58,7 @@ $exclusions   = $report->get_exclusions();
 $user_no = count($user_results);
 header('Pragma: public');
 header('Content-type: application/octet-stream');
-header("Content-Disposition: attachment; filename=new_" . str_replace(' ', '_', $paper) . "_EM.csv");
+header("Content-Disposition: attachment; filename=\"new_" . \file_handler::make_filename_safe($paper) . "_EM.csv\"");
 
 function get_correct_labels($question, $tmp_exclude) {
   $correct_labels = array();

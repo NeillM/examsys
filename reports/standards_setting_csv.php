@@ -89,7 +89,7 @@ $csv = '';
 
 header('Pragma: public');
 header("Content-type: application/vnd.ms-excel");
-header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $_GET['paperID']) . "_standards_setting.csv");
+header("Content-Disposition: attachment; filename=\"" . \file_handler::make_filename_safe($_GET['paperID']) . "_standards_setting.csv\"");
 
 $percent_decimals = $configObject->get_setting('core', 'rpt_percent_decimals');
 

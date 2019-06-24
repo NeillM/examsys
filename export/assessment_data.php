@@ -68,7 +68,7 @@ $exclusions->load();
 $paper_buffer = $propertyObj->get_paper_questions();
 $paper_title = $propertyObj->get_paper_title();
 
-$file = str_replace(' ', '_', $paper_title) . "_ER.csv";
+$file = \file_handler::make_filename_safe($paper_title) . "_ER.csv";
 $handler = new \csv\csv_handler($file);
 $export = new \export\export_assessment($handler);
 $csvdata = array();

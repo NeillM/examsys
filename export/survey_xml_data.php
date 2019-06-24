@@ -71,7 +71,7 @@ $result->close();
 
 header('Pragma: public');
 header('Content-type: text/xml');
-header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper) . ".xml");
+header("Content-Disposition: attachment; filename=\"" . \file_handler::make_filename_safe($paper) . ".xml\"");
 
 $log_array = array();
 $hits = 0;

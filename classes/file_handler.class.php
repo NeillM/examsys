@@ -177,4 +177,13 @@ abstract class file_handler  {
     // Use handler specific function to create file.
     $this->create();
   }
+
+  /**
+   * Make filename safe for export
+   * @param string $filename the filename
+   * @return string
+   */
+  public static function make_filename_safe($filename) {
+    return str_replace(array(' ', ','), '_', $filename);
+  }
 }

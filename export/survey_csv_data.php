@@ -92,7 +92,7 @@ $question_no++;
 
 header('Pragma: public');
 header('Content-type: application/octet-stream');
-header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper_title) . ".csv");
+header("Content-Disposition: attachment; filename=\"" . \file_handler::make_filename_safe($paper_title) . ".csv\"");
 
 $user_no = 0;
 

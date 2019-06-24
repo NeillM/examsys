@@ -96,7 +96,7 @@ if ($results_cache->should_cache($propertyObj, $percent, $absent)) {
 
 header('Pragma: public');
 header("Content-type: application/vnd.ms-excel");
-header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper) . ".csv");
+header("Content-Disposition: attachment; filename=\"" . \file_handler::make_filename_safe($paper) . ".csv\"");
 
 $completed_no = 0;
 $total_score = 0;

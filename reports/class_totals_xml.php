@@ -62,7 +62,7 @@ $user_no = count($user_results);
 
 header('Pragma: public');
 header("Content-type: application/vnd.ms-excel");
-header("Content-Disposition: attachment; filename=" . str_replace(' ', '_', $paper) . "_CT.xml");
+header("Content-Disposition: attachment; filename=\"" . \file_handler::make_filename_safe($paper) . "_CT.xml\"");
 
 if ($marking == '0') {
   $marking_label = '%';

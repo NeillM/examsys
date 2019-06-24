@@ -38,7 +38,7 @@ require 'summary_report.inc';
 
 header('Pragma: public');
 header("Content-type: application/vnd.ms-excel");
-header("Content-Disposition: attachment; filename=data.csv");
+header("Content-Disposition: attachment; filename=\"data.csv\"");
 
 // Write out headings
 echo "Title,Surname,First Names,Student ID,Reviewed,Group";
