@@ -38,6 +38,7 @@ $string['d_definition'] = 'discrimination value';
 $string['t_definition'] = 'percentage of the <strong>total</strong> cohort answering item';
 $string['u_definition'] = 'percent of <strong>upper</strong> group answering item';
 $string['l_definition'] = 'percentage of <strong>lower</strong> group answering item';
+$string['X_definition'] = 'Number of students that left this question unanswered';
 $string['warning'] = 'Warning';
 $string['p_warning'] = '<strong>p < 0.2</strong> (i.e. very hard)';
 $string['d_warning'] = "<strong>d < 0.15</strong> (i.e. low)<br />Investigate the red flags and if you conclude that the item is poor, exclude using the <img src=\"../artwork/exclude_off.gif\" style=\"cursor:pointer; background-color:white\" width=\"23\" height=\"22\" alt=\"Exclude\" /> icon and then click 'Save' at the bottom";
@@ -70,3 +71,4 @@ $string['threeinfo'] = 'Hold the left mouse button to rotate the object, hold th
 $string['threereset'] = 'Reset';
 $string['threeload'] = 'Load';
 $string['threeplyerror'] = 'Your browser does not support the display of %s files.';
+$string['unanswered'] = 'Unanswered';
