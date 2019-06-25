@@ -19,41 +19,44 @@
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2016 The University of Nottingham
  */
-
-/**
- * A menu item that pushes following items to the right.
- *
- * @returns {ROGO.html5.menu_group}
- */
-ROGO.html5.menu_filler = function() {
-  // Extend the hotspot prototype.
-  ROGO.html5.menu_item.call(this, '');
+define(['html5_menuitem'], function(Menu_item) {
   /**
-   * @see ROGO.html5.menu_item.class
-   * @private
-   */
-  this.class = 'clear';
-  /**
-   * The menu items that are part of this group.
+   * A menu item that pushes following items to the right.
    *
-   * @type {ROGO.html5.menu_item}
-   * @private
+   * @returns {menu_group}
    */
-  this.items = [];
-};
+  function menu_filler() {
+    // Extend the hotspot prototype.
+    Menu_item.call(this, '');
+    /**
+     * @see menu_item.class
+     * @private
+     */
+    this.class = 'clear';
+    /**
+     * The menu items that are part of this group.
+     *
+     * @type {menu_item}
+     * @private
+     */
+    this.items = [];
+  }
 
-/**
- * Extend the menu_item prototype.
- * @type Object
- */
-ROGO.html5.menu_filler.prototype = Object.create(ROGO.html5.menu_item.prototype);
+  /**
+   * Extend the menu_item prototype.
+   * @type Object
+   */
+  menu_filler.prototype = Object.create(Menu_item.prototype);
 
-/**
- * This will never be a valid return result.
- *
- * @param {String} name
- * @returns {Boolean}
- */
-ROGO.html5.menu_filler.prototype.find = function(name) {
-  return false;
-};
+  /**
+   * This will never be a valid return result.
+   *
+   * @param {String} name
+   * @returns {Boolean}
+   */
+  menu_filler.prototype.find = function (name) {
+    return false;
+  };
+
+  return menu_filler;
+});

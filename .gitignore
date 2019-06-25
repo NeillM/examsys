@@ -209,5 +209,8 @@ selenium-server.jar
 !/js/jquery.tablesorter.min.js
 !/plugins/texteditor/plugin_tinymce3_texteditor/mee/mee/jquery/*.min.js
 
+# ignore file built by grunt
+/js/src/modules/html_questions/html5.image.js
+
 # ignore minimised css
 /css/*.css

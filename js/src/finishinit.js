@@ -18,9 +18,9 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-requirejs(['helplauncher', 'qarea', 'qhotspot', 'qlabelling', 'jquery'], function (HELPLAUNCHER, qarea, qhotspot, qlabelling, $) {
+requirejs(['helplauncher', 'html5', 'qarea', 'qlabelling', 'jquery'], function (Helplauncher, Html5, Qarea, Qlabelling, $) {
     $('#randomlink').click(function () {
-        HELPLAUNCHER.launchHelp(43, 'student');
+        Helplauncher.launchHelp(43, 'student');
     });
 
     $('.raw_textarea').each(function() {
@@ -41,25 +41,20 @@ requirejs(['helplauncher', 'qarea', 'qhotspot', 'qlabelling', 'jquery'], functio
         $('#close').css('display','none');
     }
 
+    var interactive = new Html5();
+    interactive.init($('#dataset').attr('data-rootpath'));
     var language = $('#dataset').attr('data-language');
     $("canvas[id^=canvas]").each(function() {
         switch ($(this).attr('class')) {
             case 'labelling':
-                var label = new qlabelling();
+                var label = new Qlabelling();
                 label.setUpLabelling($(this).attr('data-qno'),
                     "flash" + $(this).attr('data-qno'),
                     language, $(this).attr('data-qmedia'),
                     $(this).attr('data-qcorrect'), $(this).attr('data-user'), $(this).attr('data-marking'), "#FFC0C0", "script");
                 break;
-            case 'hotspot':
-                var hotspot = new qhotspot();
-                hotspot.setUpHotspot($(this).attr('data-qno'),
-                    "flash" + $(this).attr('data-qno'),
-                    language, $(this).attr('data-qmedia'),
-                    $(this).attr('data-qcorrect'), $(this).attr('data-user'), $(this).attr('data-marking'), "#FFC0C0", "script");
-                break;
             case 'area':
-                var area = new qarea();
+                var area = new Qarea();
                 area.setUpArea($(this).attr('data-qno'),
                     "flash" + $(this).attr('data-qno'),
                     language, $(this).attr('data-qmedia'),

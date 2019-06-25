@@ -21,54 +21,57 @@
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2016 The University of Nottingham
  */
+define(['log'], function(Log) {
+  return {
+    /**
+     * The location of the combined image relative to the root Rogo directory.
+     *
+     * @type {String}
+     */
+    location: 'js/images/combined.png',
 
-/**
- * The location of the combined image relative to the root Rogo directory.
- *
- * @type {String}
- */
-ROGO.html5.images.location = 'js/images/combined.png';
+    /**
+     * The combined image.
+     *
+     * @type {Image}
+     */
+    image: new Image(),
 
-/**
- * The combined image.
- *
- * @type {Image}
- */
-ROGO.html5.images.image = new Image();
+    /**
+     * Loads the combined image.
+     *
+     * @return {void}
+     */
+    load: function(webroot, questions) {
+      this.image = new Image();
+      this.image.src = webroot + this.location;
+      this.image.onload = function() {
+        Log('HTML5 combined image loaded.', 'info');
+        for (var i in questions) {
+          questions[i].redraw();
+        }
+      };
+    },
 
-/**
- * Loads the combined image.
- *
- * @return {void}
- */
-ROGO.html5.images.load = function() {
-  this.image = new Image();
-  this.image.src = ROGO.html5.webroot + this.location;
-  this.image.onload = function() {
-    ROGO.log('HTML5 combined image loaded.', 'info');
-    for (var i in ROGO.html5.questions) {
-      ROGO.html5.questions[i].redraw();
+    /**
+     * Defines the co-ordinates of images in the combined image
+     *
+     * To reduce the amount of network traffic by the html5 questions all
+     * of the UI images have be combined into a single image. This object
+     * maps the images name to it's location on the combined image.
+     *
+     * The combined image is /js/images/combined.png
+     *
+     * The individual images are in sub directories of /js/images/
+     *
+     * @type {Object}
+     */
+    map: {
+      {{#block "sprites"}}
+      {{#each sprites}}
+        'toolbar/{{{name}}}.png': { left: {{x}}, top: {{y}}, width: {{width}}, height: {{height}} },
+      {{/each}}
+      {{/block}}
     }
-  };
-};
-
-/**
- * Defines the co-ordinates of images in the combined image
- *
- * To reduce the amount of network traffic by the html5 questions all
- * of the UI images have be combined into a single image. This object
- * maps the images name to it's location on the combined image.
- *
- * The combined image is /js/images/combined.png
- *
- * The individual images are in sub directories of /js/images/
- *
- * @type {Object}
- */
-ROGO.html5.images.map = {
-  {{#block "sprites"}}
-  {{#each sprites}}
-    'toolbar/{{{name}}}.png': { left: {{x}}, top: {{y}}, width: {{width}}, height: {{height}} },
-  {{/each}}
-  {{/block}}
-};
+  }
+});

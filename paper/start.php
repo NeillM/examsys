@@ -617,6 +617,7 @@ $render->render($jsdataset, array(), 'dataset.html');
 // Dataset.
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['language'] = $language;
+$miscdataset['attributes']['rootpath'] = $cfg_root_path;
 $render->render($miscdataset, array(), 'dataset.html');
 
 if (count($reference_materials) > 0) {

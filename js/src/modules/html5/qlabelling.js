@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
+define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
     return function () {
         this.test;
         this.x, this.y, this.z, this.m;
@@ -78,7 +78,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
         this.active_shape = this.active_shape_move = this.active_shape_x = this.active_shape_y = -1;
         //defining panel's active parts
         //toolbar/pan_colours.png
-        qsharedf.def_colour_panel_parts(this);
+        Qsharedf.def_colour_panel_parts(this);
         this.panelActiveParts.push('toolbar/pan_sizes.png');
         this.panelActiveParts['toolbar/pan_sizes.png'] = new Array();
         for (i = 0; i < 7; i++)
@@ -171,7 +171,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
         }
 
         this.setUpLabelling = function(num, doorId, lang, image, config, answer, extra, colour, mode) {
-            mode = qsharedf.getmode(mode);
+            mode = Qsharedf.getmode(mode);
             this.canvas = document.getElementById('canvas' + num);
             this.canv_rect = this.canvas.getBoundingClientRect();
 
@@ -195,7 +195,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                 this.intervalID = window.setInterval(this.ql_redraw_canvas.bind(this), 10);
             }
             if (this.canvas && !this.canvas.getContext) {
-                alert(jsxls.lang_string['errorcanvas']);
+                alert(Jsxls.lang_string['errorcanvas']);
             }
             if (this.canvas && this.canvas.getContext) {
                 this.context = this.canvas.getContext('2d');
@@ -331,7 +331,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
 
                 //colours recalc
                 for (i = 0; i < this.currentColours.length; i++)
-                    this.currentColours[i] = qsharedf.hexifycolour(this.currentColours[i]);
+                    this.currentColours[i] = Qsharedf.hexifycolour(this.currentColours[i]);
 
                 this.imagesLoaded = 0;
                 var blank_count = 0;
@@ -680,7 +680,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
             for (var i = 0; i < this.answerBox.length; i++) {
                 for (var j = 0; j < this.answerBox[i].length; j++) {
                     if (typeof (this.answerBox[i][j]) != 'undefined' && this.answerBox[i][j][1] == 'text') {
-                        var wrapTemp = qsharedf.wrapText(this.answerBox[i][j][2], this.labelWidthEffect - this.menu_ext, true, this);
+                        var wrapTemp = Qsharedf.wrapText(this.answerBox[i][j][2], this.labelWidthEffect - this.menu_ext, true, this);
                         if (typeof (wrapTemp) != 'undefined') {
                             if (wrapTemp[1] > this.labelHeightEffect)
                                 this.labelHeightEffect = wrapTemp[1] + 4;
@@ -692,7 +692,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
             }
             for (i = 0; i < this.pholderBox.length; i++) {
                 if (typeof (this.pholderBox[i]) != 'undefined' && this.pholderBox[i][1] == 'text') {
-                    wrapTemp = qsharedf.wrapText(this.pholderBox[i][2], this.labelWidthEffect - this.menu_ext, true, this);
+                    wrapTemp = Qsharedf.wrapText(this.pholderBox[i][2], this.labelWidthEffect - this.menu_ext, true, this);
                     if (typeof (wrapTemp) != 'undefined') {
                         if (wrapTemp[1] > this.labelHeightEffect) {
                             this.labelHeightEffect = wrapTemp[1] + 4;
@@ -775,8 +775,8 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                     this.context.strokeRect(temp_x + 0.5, temp_y + 0.5, this.imglabelWidth, this.imglabelHeight);
                     if (this.exclusions[this.pholderBox[i][7]] == '1') {
                         var tmp_style = this.context.strokeStyle;
-                        qsharedf.lineDraw(this.context, '#FF0000', temp_x + 10.5, temp_y + 10.5, this.imglabelWidth - 20, this.imglabelHeight - 20, null, this);
-                        qsharedf.lineDraw(this.context, '#FF0000', temp_x + 10.5, temp_y + 10.5 + this.imglabelHeight - 20, this.imglabelWidth - 20, -this.imglabelHeight + 20, null, this);
+                        Qsharedf.lineDraw(this.context, '#FF0000', temp_x + 10.5, temp_y + 10.5, this.imglabelWidth - 20, this.imglabelHeight - 20, null, this);
+                        Qsharedf.lineDraw(this.context, '#FF0000', temp_x + 10.5, temp_y + 10.5 + this.imglabelHeight - 20, this.imglabelWidth - 20, -this.imglabelHeight + 20, null, this);
                         this.context.strokeStyle = tmp_style;
                     }
                 }
@@ -802,7 +802,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                 }
 
                 tmp_width = this.labelWidthEffect;
-                wrapped = qsharedf.wrapText(this.tmp_text, tmp_width, true, this);
+                wrapped = Qsharedf.wrapText(this.tmp_text, tmp_width, true, this);
                 if (this.qType == 'menu') {
                     this.tmp_text = '';
                     for (a = 0; a < this.answerBox.length; a++) {
@@ -824,17 +824,17 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                         }
                     }
                     tmp_width = this.labelWidthEffect - 19;
-                    wrapped = qsharedf.wrapText(this.tmp_text, tmp_width, true, this);
+                    wrapped = Qsharedf.wrapText(this.tmp_text, tmp_width, true, this);
                     tmp_width = 5;
                 }
                 if (typeof (this.pholderBox[i]) != 'undefined' && typeof (this.pholderBox[i][7]) != 'undefined' && this.exclusions[this.pholderBox[i][7]] == '1') {
                     this.context.fillStyle = '#FF0000';
                     tmp_style = this.context.strokeStyle;
-                    qsharedf.lineDraw(this.context, '#FF0000', temp_x + 5.5, temp_y + this.fontSizes[this.fontSizePos] - 1.5, tmp_width - 10, 0, null, this);
+                    Qsharedf.lineDraw(this.context, '#FF0000', temp_x + 5.5, temp_y + this.fontSizes[this.fontSizePos] - 1.5, tmp_width - 10, 0, null, this);
                     this.context.strokeStyle = tmp_style;
                 }
                 this.context.fillStyle = this.currentColours[2];
-                qsharedf.fillWrappedText(this.context, wrapped[0], Math.round(temp_x + tmp_width * 0.5) + 0.5, Math.round(temp_y + this.fontSizes[this.fontSizePos]) + 0.5, this);
+                Qsharedf.fillWrappedText(this.context, wrapped[0], Math.round(temp_x + tmp_width * 0.5) + 0.5, Math.round(temp_y + this.fontSizes[this.fontSizePos]) + 0.5, this);
                 this.context.fillStyle = this.currentColours[0];
 
                 var tmp_halfpoint = Math.round(this.lineThickness / 2) - this.lineThickness / 2;
@@ -907,11 +907,11 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                         this.context.fillStyle = this.currentColours[2];
                         this.context.font = this.fontSizes[this.fontSizePos] + "px Arial";
                         for (a = 0; a < this.menuBox.length; a++) {
-                            wrapped = qsharedf.wrapText(this.menuBox[a], this.labelWidthEffect, true, this);
+                            wrapped = Qsharedf.wrapText(this.menuBox[a], this.labelWidthEffect, true, this);
                             var temp_padding = this.fontChoices[this.fontSizePos] / 2 - 1;
                             if (wrapped[0].indexOf('|') > -1)
                                 temp_padding -= wrapped[1] / 4;
-                            qsharedf.fillWrappedText(this.context, wrapped[0], temp_x + 6, temp_y + tmp_trans + this.labelHeightEffect * (a + 1.5) + temp_padding, this);
+                            Qsharedf.fillWrappedText(this.context, wrapped[0], temp_x + 6, temp_y + tmp_trans + this.labelHeightEffect * (a + 1.5) + temp_padding, this);
                         }
                     }
                     this.context.lineWidth = this.lineThickness;
@@ -934,9 +934,9 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                     tmp_test = false;
 
                 if (tmp_test) {
-                    this.imgdata = images.menuImages['toolbar/ico_tick_g.png'];
+                    this.imgdata = Images.map['toolbar/ico_tick_g.png'];
                     if (this_box[3] == 'f')
-                        this.imgdata = images.menuImages['toolbar/ico_tick_r.png'];
+                        this.imgdata = Images.map['toolbar/ico_tick_r.png'];
 
                     var tmp_h = this.labelHeightEffect;
                     var tmp_w = this.labelWidthEffect;
@@ -1028,7 +1028,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
 
         this.ql_panelBoxBuild = function(but_name, pan_name) {
             var temp_but = this.buttonBox[this.buttonBoxNames[but_name]];
-            var imgdata = images.menuImages[pan_name];
+            var imgdata = Images.map[pan_name];
             var tmp_but_num = this.buttonBoxNames[but_name];
             this.ql_panelBox.push(tmp_but_num);
             this.ql_panelBox[tmp_but_num] = new Array();
@@ -1046,37 +1046,37 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
             var toolt1 = new Array('fillcolour', 'linecolour', 'textcolour', 'textsize', 'lines');
             var toolb2 = new Array('toolbar/ico_erase.png', 'toolbar/ico_resize.png', 'toolbar/ico_line.png', 'toolbar/ico_bobble.png', 'toolbar/ico_arrow.png')
             var toolt2 = new Array('erase', 'edit', 'line', 'bobble', 'arrow')
-            var posx = qsharedf.menuBuild_icons('toolbar/vert_1.png', 0, 0, 0, '', '', '', this);
+            var posx = Qsharedf.menuBuild_icons('toolbar/vert_1.png', 0, 0, 0, '', '', '', this);
             var spac = 4;
             posx = 4;
             var posy = 3;
             for (i = 0; i < toolb1.length; i++) {
-                posx = qsharedf.menuBuild_icons(toolb1[i], posx, posy, 0, '', '', jsxls.lang_string[toolt1[i]], this) + spac;
-                posx = qsharedf.menuBuild_icons('toolbar/ico_drop.png', posx - 2, posy, 0, '', '', '', this) + spac;
+                posx = Qsharedf.menuBuild_icons(toolb1[i], posx, posy, 0, '', '', Jsxls.lang_string[toolt1[i]], this) + spac;
+                posx = Qsharedf.menuBuild_icons('toolbar/ico_drop.png', posx - 2, posy, 0, '', '', '', this) + spac;
             }
 
-            posx = qsharedf.menuBuild_icons('toolbar/vert_1.png', 220, 0, 0, '', '', '', this);
+            posx = Qsharedf.menuBuild_icons('toolbar/vert_1.png', 220, 0, 0, '', '', '', this);
             spac = 5;
             posx = 224;
             for (i = 0; i < toolb2.length; i++) {
-                posx = qsharedf.menuBuild_icons(toolb2[i], posx, posy, 0, 'a', '', jsxls.lang_string[toolt2[i]], this) + spac;
+                posx = Qsharedf.menuBuild_icons(toolb2[i], posx, posy, 0, 'a', '', Jsxls.lang_string[toolt2[i]], this) + spac;
             }
             this.buttonBox[this.buttonBoxNames['toolbar/ico_resize.png']][5] = 2;
             this.buttonBox[this.buttonBoxNames['toolbar/ico_resize.png']][6] = 2;
 
-            posx = qsharedf.menuBuild_icons('toolbar/vert_2.png', posx, posy, 0, '', '', '', this) + spac;
+            posx = Qsharedf.menuBuild_icons('toolbar/vert_2.png', posx, posy, 0, '', '', '', this) + spac;
             var temp_opt = 2;
             if (this.labelMulti == 'multiple')
                 temp_opt = 0;
-            posx = qsharedf.menuBuild_icons('toolbar/ico_single.png', posx, posy, temp_opt, 'b', '', jsxls.lang_string['single'], this) + spac;
-            posx = qsharedf.menuBuild_icons('toolbar/ico_multiple.png', posx, posy, 2 - temp_opt, 'b', '', jsxls.lang_string['multiple'], this) + spac;
-            posx = qsharedf.menuBuild_icons('toolbar/vert_2.png', posx, posy, 0, '', '', '', this) + spac;
+            posx = Qsharedf.menuBuild_icons('toolbar/ico_single.png', posx, posy, temp_opt, 'b', '', Jsxls.lang_string['single'], this) + spac;
+            posx = Qsharedf.menuBuild_icons('toolbar/ico_multiple.png', posx, posy, 2 - temp_opt, 'b', '', Jsxls.lang_string['multiple'], this) + spac;
+            posx = Qsharedf.menuBuild_icons('toolbar/vert_2.png', posx, posy, 0, '', '', '', this) + spac;
             temp_opt = 2;
             if (this.qType == 'menu')
                 temp_opt = 0;
-            posx = qsharedf.menuBuild_icons('toolbar/ico_label.png', posx, posy, temp_opt, 'c', '', jsxls.lang_string['label'], this) + spac;
-            posx = qsharedf.menuBuild_icons('toolbar/ico_menu.png', posx, posy, 2 - temp_opt, 'c', '', jsxls.lang_string['menu'], this) + spac;
-            posx = qsharedf.menuBuild_icons('toolbar/ico_help.png', this.canvas.width - 23, posy, 0, '-', '', '', this) + spac;
+            posx = Qsharedf.menuBuild_icons('toolbar/ico_label.png', posx, posy, temp_opt, 'c', '', Jsxls.lang_string['label'], this) + spac;
+            posx = Qsharedf.menuBuild_icons('toolbar/ico_menu.png', posx, posy, 2 - temp_opt, 'c', '', Jsxls.lang_string['menu'], this) + spac;
+            posx = Qsharedf.menuBuild_icons('toolbar/ico_help.png', this.canvas.width - 23, posy, 0, '-', '', '', this) + spac;
 
             //setting the this.ql_panelBox array
             this.ql_panelBoxBuild('toolbar/ico_bucket.png', 'toolbar/pan_colours.png');
@@ -1141,7 +1141,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                 this.context.textAlign = "left";
                 this.context.fillStyle = '#C00000';
                 this.context.font = "13px Arial";
-                this.context.fillText(jsxls.lang_string['errorimageslabelling'], 15, 15);
+                this.context.fillText(Jsxls.lang_string['errorimageslabelling'], 15, 15);
             }
 
             //main redrawing part
@@ -1182,7 +1182,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                         draw_shape(this, this.shapeBox[i][1], this.shapeBox[i][2], this.shapeBox[i][3] - this.yOffset, this.shapeBox[i][4], this.shapeBox[i][5] - this.yOffset);
                         var timgd = this.context.getImageData(this.x, this.y, 1, 1);
                         var timgp = timgd.data;
-                        if (qsharedf.hexifycolour('' + ((timgp[0] * 256 + timgp[1]) * 256 + 1 * timgp[2])).toUpperCase() == '#FF0000')
+                        if (Qsharedf.hexifycolour('' + ((timgp[0] * 256 + timgp[1]) * 256 + 1 * timgp[2])).toUpperCase() == '#FF0000')
                             this.active_shape = i;
                     }
                 }
@@ -1242,8 +1242,8 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
 
                 //draw handlers for active shape
                 if (this.global_move && this.active_shape > -1) {
-                    qsharedf.edtDot(this.context, '#cc0000', this.shapeBox[this.active_shape][2], this.shapeBox[this.active_shape][3] - this.yOffset, 2 + 0.1 * this.lineThickness, this);
-                    qsharedf.edtDot(this.context, '#cc0000', this.shapeBox[this.active_shape][4], this.shapeBox[this.active_shape][5] - this.yOffset, 2 + 0.1 * this.lineThickness, this);
+                    Qsharedf.edtDot(this.context, '#cc0000', this.shapeBox[this.active_shape][2], this.shapeBox[this.active_shape][3] - this.yOffset, 2 + 0.1 * this.lineThickness, this);
+                    Qsharedf.edtDot(this.context, '#cc0000', this.shapeBox[this.active_shape][4], this.shapeBox[this.active_shape][5] - this.yOffset, 2 + 0.1 * this.lineThickness, this);
 
                     this.context.strokeStyle = this.currentColours[1];
                     this.context.fillStyle = this.currentColours[1];
@@ -1643,22 +1643,22 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                         loc_width + this.lineThickness,
                         loc_height + this.lineThickness);
 
-                    qsharedf.edtDot(
+                    Qsharedf.edtDot(
                         this.context, '#cc0000',
                         this.answerBox[this.active_box_id][this.active_box_combo][5] - this.lineThickness / 2 + 1.5,
                         this.answerBox[this.active_box_id][this.active_box_combo][6] - this.lineThickness / 2 + 1.5,
                         2.5 + 0.1 * this.lineThickness, this);
-                    qsharedf.edtDot(
+                    Qsharedf.edtDot(
                         this.context, '#cc0000',
                         this.answerBox[this.active_box_id][this.active_box_combo][5] - this.lineThickness / 2 + 1.5,
                         this.answerBox[this.active_box_id][this.active_box_combo][6] + loc_height + this.lineThickness / 2 + 1.5,
                         2.5 + 0.1 * this.lineThickness, this);
-                    qsharedf.edtDot(
+                    Qsharedf.edtDot(
                         this.context, '#cc0000',
                         this.answerBox[this.active_box_id][this.active_box_combo][5] + loc_width + this.lineThickness / 2 + 1.5,
                         this.answerBox[this.active_box_id][this.active_box_combo][6] - this.lineThickness / 2 + 1.5,
                         2.5 + 0.1 * this.lineThickness, this);
-                    qsharedf.edtDot(
+                    Qsharedf.edtDot(
                         this.context, '#cc0000',
                         this.answerBox[this.active_box_id][this.active_box_combo][5] + loc_width + this.lineThickness / 2 + 1.5,
                         this.answerBox[this.active_box_id][this.active_box_combo][6] + loc_height + this.lineThickness / 2 + 1.5,
@@ -1672,7 +1672,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                     if (this.edit_box_blink > 60)
                         this.edit_box_blink = 0;
                     if (this.edit_box_blink > 30) {
-                        var text_all = qsharedf.wrapText(tmp_edit_text, this.labelWidthEffect, true, this)[0];
+                        var text_all = Qsharedf.wrapText(tmp_edit_text, this.labelWidthEffect, true, this)[0];
 
                         var text_temp = '';
                         if (this.edit_box_pos > 0)
@@ -1713,7 +1713,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                     } else {
                         this.buttonBox[this.buttonBoxNames['toolbar/ico_menu.png']][0] = 'toolbar/ico_menu.png';
                     }
-                    qsharedf.menuRebuild(this.context, true, this);
+                    Qsharedf.menuRebuild(this.context, true, this);
 
                     this.context.fillStyle = this.currentColours[0];
                     this.context.fillRect(this.buttonBox[this.buttonBoxNames['toolbar/ico_bucket.png']][1] + 2, this.buttonBox[this.buttonBoxNames['toolbar/ico_bucket.png']][2] + 14, 16, 3);
@@ -1728,33 +1728,33 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                     for (n = 0; n < this.colorReference.length; n++)
                         if (this.currentColours[0] == this.colorReference[n])
                             m = n;
-                    qsharedf.menuRebuild_panel(this.panelActiveParts, this.ql_panelBox, 'toolbar/ico_bucket.png', 'toolbar/pan_colours.png', 0, m, this);
+                    Qsharedf.menuRebuild_panel(this.panelActiveParts, this.ql_panelBox, 'toolbar/ico_bucket.png', 'toolbar/pan_colours.png', 0, m, this);
                     //draw linetable
                     for (n = 0; n < this.colorReference.length; n++)
                         if (this.currentColours[1] == this.colorReference[n])
                             m = n;
-                    qsharedf.menuRebuild_panel(this.panelActiveParts, this.ql_panelBox, 'toolbar/ico_brush.png', 'toolbar/pan_colours.png', 0, m, this);
+                    Qsharedf.menuRebuild_panel(this.panelActiveParts, this.ql_panelBox, 'toolbar/ico_brush.png', 'toolbar/pan_colours.png', 0, m, this);
                     //draw fontcolourtable
                     for (n = 0; n < this.colorReference.length; n++)
                         if (this.currentColours[2] == this.colorReference[n])
                             m = n;
-                    qsharedf.menuRebuild_panel(this.panelActiveParts, this.ql_panelBox, 'toolbar/ico_letter.png', 'toolbar/pan_colours.png', 0, m, this);
+                    Qsharedf.menuRebuild_panel(this.panelActiveParts, this.ql_panelBox, 'toolbar/ico_letter.png', 'toolbar/pan_colours.png', 0, m, this);
                     //draw sizetable
-                    qsharedf.menuRebuild_panel(this.panelActiveParts, this.ql_panelBox, 'toolbar/ico_size.png', 'toolbar/pan_sizes.png', 1, this.fontSizePos, this);
+                    Qsharedf.menuRebuild_panel(this.panelActiveParts, this.ql_panelBox, 'toolbar/ico_size.png', 'toolbar/pan_sizes.png', 1, this.fontSizePos, this);
 
                     //display char size number on menu button
                     var tp = this.panelActiveParts['toolbar/pan_sizes.png'][this.fontSizePos].split(',');
-                    var imgdata = images.menuImages['toolbar/pan_sizes.png'];
+                    var imgdata = Images.map['toolbar/pan_sizes.png'];
                     var temp_but = this.buttonBox[this.buttonBoxNames['toolbar/ico_size.png']];
                     this.context.drawImage(this.menu_img, imgdata.left + 1 * tp[0], imgdata.top + 1 * tp[1], 18, 18, (temp_but[1] * 1 - 1), temp_but[2], 18, 18);
 
                     //draw linetable
-                    qsharedf.menuRebuild_panel(this.panelActiveParts, this.ql_panelBox, 'toolbar/ico_lines.png', 'toolbar/pan_lines.png', 2, this.lineThickness - 1, this);
+                    Qsharedf.menuRebuild_panel(this.panelActiveParts, this.ql_panelBox, 'toolbar/ico_lines.png', 'toolbar/pan_lines.png', 2, this.lineThickness - 1, this);
                 }
                 //tooltip
                 this.draw_limit = new Array(0, 27, this.canvas.width - 2, this.canvas.height - 2);
                 if (this.buttonOver != -1 && this.buttonClicked != 1 && this.buttonClicked != 3 && this.buttonClicked != 5 && this.buttonClicked != 7 && this.buttonClicked != 9)
-                    qsharedf.tooltip_draw(this.context, this.buttonBox[this.buttonOver], this);
+                    Qsharedf.tooltip_draw(this.context, this.buttonBox[this.buttonOver], this);
 
                 // border
                 this.context.lineWidth = 1;
@@ -1767,7 +1767,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
             this.ev = e || window.event;
             if (this.ev.target.id != this.canvas.id)
                 return true;
-            qsharedf.get_char_key(this);
+            Qsharedf.get_char_key(this);
 
             if (this.ev.type == 'keydown') {
                 this.isShift = this.ev.shiftKey ? true : false;
@@ -1858,13 +1858,13 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                 this.drag_box_id = -1;
                 this.drag_pho_id = -1;
                 this.drag_box_combo = -1;
-                if (this.qmode != 'analysis' && qsharedf.testWithin(this.x, this.y, 0, 0, this.canvas.width, this.canvas.height, this)) {
+                if (this.qmode != 'analysis' && Qsharedf.testWithin(this.x, this.y, 0, 0, this.canvas.width, this.canvas.height, this)) {
                     var over_object = false;
                     for (i = 0; i < this.answerBox.length; i++) {
                         for (j = 0; j < this.answerBox[i].length; j++) {
                             if (typeof (this.answerBox[i][j]) != 'undefined' && (this.labelMulti == 'multiple' || this.answerBox[i][j][4] == 0)) {
                                 if (this.answerBox[i][j][1] == 'image') {
-                                    if (qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.imglabelWidth, this.imglabelHeight, this) == true) {
+                                    if (Qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.imglabelWidth, this.imglabelHeight, this) == true) {
                                         over_object = true;
                                         if (this.drag_box_id == -1 || this.answerBox[i][j][9] != '') {
                                             this.drag_box_id = i;
@@ -1874,7 +1874,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                                 }
                                 if (this.answerBox[i][j][1] == 'text') {
                                     if (this.qType != 'menu') {
-                                        if (qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.labelWidthEffect, this.labelHeightEffect, this) == true) {
+                                        if (Qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.labelWidthEffect, this.labelHeightEffect, this) == true) {
                                             over_object = true;
                                             if (this.drag_box_id == -1 || this.answerBox[i][j][9] != '') {
                                                 this.drag_box_id = i;
@@ -1882,7 +1882,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                                             }
                                         }
                                     } else {
-                                        if (typeof (this.pholderBox[i]) != 'undefined' && ((this.qmode == 'edit' && qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.labelWidthEffect, this.labelHeightEffect, this) == true) || (this.qmode != 'edit' && this.pholderBox[i][5] >= 220 && qsharedf.testWithin(this.x, this.y, this.pholderBox[i][5], this.pholderBox[i][6], this.labelWidthEffect, this.labelHeightEffect, this) == true))) {
+                                        if (typeof (this.pholderBox[i]) != 'undefined' && ((this.qmode == 'edit' && Qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.labelWidthEffect, this.labelHeightEffect, this) == true) || (this.qmode != 'edit' && this.pholderBox[i][5] >= 220 && Qsharedf.testWithin(this.x, this.y, this.pholderBox[i][5], this.pholderBox[i][6], this.labelWidthEffect, this.labelHeightEffect, this) == true))) {
                                             this.drag_box_id = i;
                                             this.drag_pho_id = i;
                                             //this.drag_box_combo = 0;
@@ -1895,9 +1895,9 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                     }
                     for (i = 0; i < this.pholderBox.length; i++) {
                         var tmp_test = false;
-                        if (this.pholderBox[i][1] == 'image' && qsharedf.testWithin(this.x, this.y, this.pholderBox[i][5], this.pholderBox[i][6], this.imglabelWidth, this.imglabelHeight, this) == true)
+                        if (this.pholderBox[i][1] == 'image' && Qsharedf.testWithin(this.x, this.y, this.pholderBox[i][5], this.pholderBox[i][6], this.imglabelWidth, this.imglabelHeight, this) == true)
                             tmp_test = true;
-                        if (this.pholderBox[i][1] == 'text' && qsharedf.testWithin(this.x, this.y, this.pholderBox[i][5], this.pholderBox[i][6], this.labelWidthEffect, this.labelHeightEffect, this) == true)
+                        if (this.pholderBox[i][1] == 'text' && Qsharedf.testWithin(this.x, this.y, this.pholderBox[i][5], this.pholderBox[i][6], this.labelWidthEffect, this.labelHeightEffect, this) == true)
                             tmp_test = true;
 
                         if (tmp_test && this.drag_box_id == -1) {
@@ -1916,7 +1916,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                         if (this.buttonBox[i][0] == 'toolbar/ico_drop.png')
                             this.buttonBox[i][5] = this.buttonBox[i - 1][5];
 
-                        if (this.buttonBox[i][0].indexOf('vert_') == -1 && qsharedf.testWithin(this.x, this.y, this.buttonBox[i][1], this.buttonBox[i][2], this.buttonBox[i][3], this.buttonBox[i][4], this) == true && this.buttonBox[i][0] != 'toolbar/ico_multiple_off.png' && this.buttonBox[i][0] != 'toolbar/ico_menu_off.png') {
+                        if (this.buttonBox[i][0].indexOf('vert_') == -1 && Qsharedf.testWithin(this.x, this.y, this.buttonBox[i][1], this.buttonBox[i][2], this.buttonBox[i][3], this.buttonBox[i][4], this) == true && this.buttonBox[i][0] != 'toolbar/ico_multiple_off.png' && this.buttonBox[i][0] != 'toolbar/ico_menu_off.png') {
                             over_object = true;
                             buttonTest = i;
                             this.buttonBox[i][5] = 1;
@@ -1943,7 +1943,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
 
                     if (this.buttonClicked > -1 && typeof this.ql_panelBox[this.buttonClicked] != 'undefined') {
                         var tmp_but = -1, tmp_pan = -1;
-                        if (qsharedf.testWithin(this.x, this.y, this.ql_panelBox[this.buttonClicked][3], this.ql_panelBox[this.buttonClicked][4], this.ql_panelBox[this.buttonClicked][5], this.ql_panelBox[this.buttonClicked][6], this) == true) {
+                        if (Qsharedf.testWithin(this.x, this.y, this.ql_panelBox[this.buttonClicked][3], this.ql_panelBox[this.buttonClicked][4], this.ql_panelBox[this.buttonClicked][5], this.ql_panelBox[this.buttonClicked][6], this) == true) {
                             tmp_but = this.buttonBox[this.buttonClicked];
                             if (typeof this.ql_panelBox[this.buttonClicked][2] != 'undefined')
                                 tmp_pan = this.ql_panelBox[this.buttonClicked][2];
@@ -1959,7 +1959,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                                 test_width = 130;
                             for (i = 0; i < this.panelActiveParts[tmp_pan].length; i++) {
                                 var tp = this.panelActiveParts[tmp_pan][i].split(',');
-                                if (qsharedf.testWithin(this.x, this.y, tmp_but[1] + 1 * tp[0] + 0.5, tmp_but[2] + 25 + 1 * tp[1] + 0.5, test_width, 20, this) == true)
+                                if (Qsharedf.testWithin(this.x, this.y, tmp_but[1] + 1 * tp[0] + 0.5, tmp_but[2] + 25 + 1 * tp[1] + 0.5, test_width, 20, this) == true)
                                     panelOptionTest = i;
                             }
                         }
@@ -2173,7 +2173,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                     for (j = 0; j < this.answerBox[i].length; j++) {
                         if (typeof (this.answerBox[i][j]) != 'undefined' && (this.labelMulti == 'multiple' || this.answerBox[i][j][4] == 0)) {
                             if (this.answerBox[i][j][1] == 'image') {
-                                if (qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.imglabelWidth, this.imglabelHeight, this) == true) {
+                                if (Qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.imglabelWidth, this.imglabelHeight, this) == true) {
                                     if (this.drag_box_id == -1 || this.answerBox[i][j][9] != '') {
                                         this.drag_box_id = i;
                                         this.drag_box_combo = j;
@@ -2182,14 +2182,14 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                             }
                             if (this.answerBox[i][j][1] == 'text') {
                                 if (this.qType != 'menu') {
-                                    if (qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.labelWidthEffect, this.labelHeightEffect, this) == true) {
+                                    if (Qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.labelWidthEffect, this.labelHeightEffect, this) == true) {
                                         if (this.drag_box_id == -1 || this.answerBox[i][j][9] != '') {
                                             this.drag_box_id = i;
                                             this.drag_box_combo = j;
                                         }
                                     }
                                 } else {
-                                    if (typeof (this.pholderBox[i]) != 'undefined' && ((this.qmode == 'edit' && qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.labelWidthEffect, this.labelHeightEffect, this) == true) || (this.qmode != 'edit' && this.pholderBox[i][5] >= 220 && qsharedf.testWithin(this.x, this.y, this.pholderBox[i][5], this.pholderBox[i][6], this.labelWidthEffect, this.labelHeightEffect, this) == true))) {
+                                    if (typeof (this.pholderBox[i]) != 'undefined' && ((this.qmode == 'edit' && Qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.labelWidthEffect, this.labelHeightEffect, this) == true) || (this.qmode != 'edit' && this.pholderBox[i][5] >= 220 && Qsharedf.testWithin(this.x, this.y, this.pholderBox[i][5], this.pholderBox[i][6], this.labelWidthEffect, this.labelHeightEffect, this) == true))) {
                                         this.drag_box_id = i;
                                         this.drag_pho_id = i;
                                         this.drag_box_combo = j;
@@ -2201,7 +2201,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                 }
             }
 
-            if (qsharedf.testWithin(this.x, this.y, 0, 0, this.canvas.width, this.canvas.height, this)) {
+            if (Qsharedf.testWithin(this.x, this.y, 0, 0, this.canvas.width, this.canvas.height, this)) {
                 if (this.drag_box_id > -1 && this.drag_box_combo < 99) {
                     this.sub_x = this.x - this.answerBox[this.drag_box_id][this.drag_box_combo][5];
                     this.sub_y = this.y - this.answerBox[this.drag_box_id][this.drag_box_combo][6];
@@ -2455,8 +2455,8 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
             if (this.qmode == 'edit' && this.mov_id == -1 && this.active_box_id > -1 && this.answerBox[this.active_box_id][this.active_box_combo][1] != 'image') {
                 var temp_x = this.answerBox[this.active_box_id][this.active_box_combo][5];
                 var temp_y = this.answerBox[this.active_box_id][this.active_box_combo][6];
-                if (qsharedf.testWithin(this.x, this.y, temp_x, temp_y, this.labelWidthEffect, this.labelHeightEffect, this)) {
-                    var text_all = qsharedf.wrapText(this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2], this.labelWidthEffect, true, this);
+                if (Qsharedf.testWithin(this.x, this.y, temp_x, temp_y, this.labelWidthEffect, this.labelHeightEffect, this)) {
+                    var text_all = Qsharedf.wrapText(this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2], this.labelWidthEffect, true, this);
                     var text_lines = text_all[0].split('|').length;
                     var click_line = Math.floor(text_lines * ((this.y - temp_y) / this.labelHeightEffect));
                     this.context.font = this.fontSizes[this.fontSizePos] + "px Arial";
@@ -2514,7 +2514,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
                             loc_height = this.labelHeightEffect;
                         }
                         //answer box center within pholderBox
-                        if (qsharedf.testWithin(this.answerBox[this.drag_box_id][this.drag_box_combo][5] + loc_width / 2, this.answerBox[this.drag_box_id][this.drag_box_combo][6] + loc_height / 2, this.pholderBox[i][5], this.pholderBox[i][6], loc_width, loc_height, this) == true)
+                        if (Qsharedf.testWithin(this.answerBox[this.drag_box_id][this.drag_box_combo][5] + loc_width / 2, this.answerBox[this.drag_box_id][this.drag_box_combo][6] + loc_height / 2, this.pholderBox[i][5], this.pholderBox[i][6], loc_width, loc_height, this) == true)
                             dest_box = i;
                     }
                 }
@@ -2714,11 +2714,11 @@ define(['html5images', 'qsharedf', 'jsxls'], function(images, qsharedf, jsxls) {
             }
 
             if (this.qmode == 'edit') {
-                questions_result += parseInt(qsharedf.hexifycolour(this.currentColours[1]).substr(1), 16) + ';';
+                questions_result += parseInt(Qsharedf.hexifycolour(this.currentColours[1]).substr(1), 16) + ';';
                 questions_result += this.lineThickness + ';';
-                questions_result += parseInt(qsharedf.hexifycolour(this.currentColours[0]).substr(1), 16) + ';';
+                questions_result += parseInt(Qsharedf.hexifycolour(this.currentColours[0]).substr(1), 16) + ';';
                 questions_result += this.fontChoices[this.fontSizePos] + ';';
-                questions_result += parseInt(qsharedf.hexifycolour(this.currentColours[2]).substr(1), 16) + ';';
+                questions_result += parseInt(Qsharedf.hexifycolour(this.currentColours[2]).substr(1), 16) + ';';
                 questions_result += this.labelWidth + ';';
                 questions_result += this.labelHeight + ';';
                 questions_result += this.imglabelWidth + ';';

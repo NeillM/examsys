@@ -445,6 +445,7 @@ $render->render($jsdataset, array(), 'dataset.html');
 // Dataset.
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['language'] = $language;
+$miscdataset['attributes']['rootpath'] = $cfg_root_path;
 $render->render($miscdataset, array(), 'dataset.html');
 $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 

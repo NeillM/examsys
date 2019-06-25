@@ -488,6 +488,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <link rel="stylesheet" href="../../css/add_edit.css" type="text/css" />
 <link rel="stylesheet" href="../../css/mapping_form.css" type="text/css" />
 <link rel="stylesheet" href="../../css/warnings.css" type="text/css" />
+<link rel="stylesheet" href="../../css/html5.css" type="text/css" />
 
 <?php
 $editor = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
@@ -745,6 +746,7 @@ if (!empty($_GET['tab']) and in_array($_GET['tab'], array('changes', 'comments',
 } else {
     $miscdataset['attributes']['tab'] = '';
 }
+$miscdataset['attributes']['rootpath'] = $cfg_root_path;
 $render->render($miscdataset, array(), 'dataset.html');
 if ($question->requires_html5()) {
   $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');

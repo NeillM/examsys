@@ -512,6 +512,7 @@ $render->render($jsdataset, array(), 'dataset.html');
 // Dataset.
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['language'] = $language;
+$miscdataset['attributes']['rootpath'] = $cfg_root_path;
 $miscdataset['attributes']['bidirectional'] = $propertyObj->get_bidirectional();
 $miscdataset['attributes']['id'] = $id;
 $miscdataset['attributes']['self'] = $_SERVER['PHP_SELF'];

@@ -745,6 +745,7 @@ $result->close();
   $miscdataset['attributes']['paperid'] = $paperID;
   $miscdataset['attributes']['type'] = $type;
   $miscdataset['attributes']['srcofy'] = $_GET['scrOfY'];
+  $miscdataset['attributes']['rootpath'] = $cfg_root_path;
   $render->render($miscdataset, array(), 'dataset.html');
   $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 ?>

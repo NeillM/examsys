@@ -1,8 +1,9 @@
 <script>
-  ROGO.lang.set_strings({
-    {% for id, string in lang %}
-      '{{id}}': '{{string|e('js')}}',
-    {% endfor %}
-  }, 'html5');
-  ROGO.html5.init('{{data.rootpath|e('js')}}');
+    requirejs(['lang'], function(lang) {
+      lang.set_strings({
+        {% for id, string in lang %}
+          '{{id}}': '{{string|e('js')}}',
+        {% endfor %}
+      }, 'html5');
+    });
 </script>

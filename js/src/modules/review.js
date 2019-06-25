@@ -18,25 +18,20 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-define(['alert', 'start', 'qarea', 'qhotspot', 'qlabelling', 'jquery'], function(ALERT, start, qarea, qhotspot, qlabelling, $) {
+define(['alert', 'start', 'html5', 'qarea', 'qlabelling', 'jquery'], function(ALERT, start, html5, qarea, qlabelling, $) {
     return function() {
         /**
          * Initial html5 questions for paper review.
          */
         this.html5init = function () {
+            var interactive = new html5();
+            interactive.init($('#dataset').attr('data-rootpath'));
             var language = $('#dataset').attr('data-language');
             $("canvas[id^=canvas]").each(function() {
                 switch ($(this).attr('class')) {
                     case 'labelling':
                         var label = new qlabelling();
                         label.setUpLabelling($(this).attr('data-qno'),
-                            "flash" + $(this).attr('data-qno'),
-                            language, $(this).attr('data-qmedia'),
-                            $(this).attr('data-qcorrect'), $(this).attr('data-user'), $(this).attr('data-marking'), "#FFC0C0", "review");
-                        break;
-                    case 'hotspot':
-                        var hotspot = new qhotspot();
-                        hotspot.setUpHotspot($(this).attr('data-qno'),
                             "flash" + $(this).attr('data-qno'),
                             language, $(this).attr('data-qmedia'),
                             $(this).attr('data-qcorrect'), $(this).attr('data-user'), $(this).attr('data-marking'), "#FFC0C0", "review");

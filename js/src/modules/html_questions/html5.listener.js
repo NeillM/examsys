@@ -22,21 +22,25 @@
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2016 The University of Nottingham
  */
-
-/**
- * Activate listeners for question types that are on the page only.
- *
- * @param {Object} questiontypes @see ROGO.html5.question_types_on_page
- * @returns {undefined}
- */
-ROGO.html5.listener.init = function(questiontypes) {
-  for (var type in questiontypes) {
-    if (questiontypes[type] === true) {
-      // This type of question was found.
-      if (ROGO.html5.listener[type] && ROGO.html5.listener[type].init) {
-        // Call the question types listner initialisation.
-        ROGO.html5.listener[type].init();
+define(['hotspot_listener'], function(Hotspot_listener) {
+  return function() {
+    /**
+     * Activate listeners for question types that are on the page only.
+     *
+     * @param {Object} questiontypes @see html5.question_types_on_page
+     * @returns {undefined}
+     */
+    this.init = function (questiontypes, questions) {
+      for (var type in questiontypes) {
+        if (questiontypes[type] === true) {
+          // This type of question was found.
+          if (type === 'hotspot') {
+            // Call the question types listner initialisation.
+            var listener = new Hotspot_listener();
+            listener.init(questions);
+          }
+        }
       }
-    }
+    };
   }
-};
+});

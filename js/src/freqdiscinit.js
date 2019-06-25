@@ -18,24 +18,21 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-requirejs(['qhotspot', 'qlabelling', 'helplauncher', 'freqdisc', 'jquery'], function (qhotspot, qlabelling, HELPLAUNCHER, FREQ, $) {
-    var freqdisc = new FREQ();
+requirejs(['html5', 'qlabelling', 'helplauncher', 'freqdisc', 'jquery'], function (Html5, Qlabelling, Helplauncher, Freq, $) {
+    var freqdisc = new Freq();
     var language = $('#dataset').attr('data-language');
 
     $('.blacklink').click(function() {
-        HELPLAUNCHER.launchHelp(189, 'staff');
+        Helplauncher.launchHelp(189, 'staff');
     });
 
+    var interactive = new Html5();
+    interactive.init($('#dataset').attr('data-rootpath'));
     $(".q_no").each(function() {
         switch ($(this).attr('data-qtype')) {
             case 'labelling':
-                var label = new qlabelling();
+                var label = new Qlabelling();
                 label.setUpLabelling($(this).attr('data-qno'), "flash" + $(this).attr('data-qno'), language, $(this).attr('data-qmedia'), $(this).attr('data-qcorrect'), "", "", "#FFC0C0", "analysis");
-                break;
-            case 'hotspot':
-                var hotspot = new qhotspot();
-                var coords = $('#coords' + $(this).attr('data-qno')).attr('data-value');
-                hotspot.setUpHotspot($(this).attr('data-qno'), "flash" + $(this).attr('data-qno'), language, $(this).attr('data-qmedia'),  $(this).attr('data-qcorrect'), coords, "0", "#FFC0C0", "analysis");
                 break;
             default:
                 break;

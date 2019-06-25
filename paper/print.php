@@ -352,8 +352,7 @@ $current_screen = 1;
   echo "</table>\n";
 
   $mysqli->close();
-  
-  $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
+
 ?>
 <?php
   // JS utils dataset.
@@ -364,7 +363,10 @@ $current_screen = 1;
   // Dataset.
   $miscdataset['name'] = 'dataset';
   $miscdataset['attributes']['language'] = $language;
+  $miscdataset['attributes']['rootpath'] = $cfg_root_path;
   $render->render($miscdataset, array(), 'dataset.html');
+
+  $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 ?>
 </body>
 </html>

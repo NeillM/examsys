@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-define(['editor', 'qarea', 'qhotspot', 'qlabelling', 'jsxls', 'jquery'], function(Editor, Qarea, Qhotspot, Qlabelling, Jsxls, $) {
+define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(Editor, Html5, Qarea, Qlabelling, Jsxls, $) {
     return function() {
         var scope = this;
 
@@ -26,19 +26,14 @@ define(['editor', 'qarea', 'qhotspot', 'qlabelling', 'jsxls', 'jquery'], functio
          * Initialise html5 questions.
          */
         this.html5init = function () {
-            var language = $('#dataset').attr('data-language');
+            var interactive = new Html5();
+            interactive.init($('#dataset').attr('data-rootpath'));
+            language = $('#dataset').attr('data-language');
             $("canvas[id^=canvas]").each(function() {
                 switch ($(this).attr('class')) {
                     case 'labelling':
                         var label = new Qlabelling();
                         label.setUpLabelling($(this).attr('data-qno'),
-                            "flash" + $(this).attr('data-qno'),
-                            language, $(this).attr('data-qmedia'),
-                            $(this).attr('data-qcorrect'), $(this).attr('data-user'), $(this).attr('data-marking'), "#FFC0C0", "answer");
-                        break;
-                    case 'hotspot':
-                        var hotspot = new Qhotspot();
-                        hotspot.setUpHotspot($(this).attr('data-qno'),
                             "flash" + $(this).attr('data-qno'),
                             language, $(this).attr('data-qmedia'),
                             $(this).attr('data-qcorrect'), $(this).attr('data-user'), $(this).attr('data-marking'), "#FFC0C0", "answer");

@@ -218,6 +218,7 @@ require '../config/finish.inc';
 <link rel="stylesheet" type="text/css" href="../css/start.css" />
 <link rel="stylesheet" type="text/css" href="../css/finish.css" />
 <link rel="stylesheet" type="text/css" href="../css/key.css" />
+<link rel="stylesheet" type="text/css" href="../css/html5.css" />
 <script id="rogoconfig" src='../js/rogo.min.js'
         data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
         data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
@@ -347,6 +348,7 @@ require '../config/finish.inc';
   // Dataset.
   $miscdataset['name'] = 'dataset';
   $miscdataset['attributes']['language'] = $language;
+  $miscdataset['attributes']['rootpath'] = $cfg_root_path;
   $render->render($miscdataset, array(), 'dataset.html');
   $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
   echo "</body>\n</html>";

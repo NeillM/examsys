@@ -2332,6 +2332,7 @@ $dataset['attributes']['id'] = $paperID;
 $dataset['attributes']['startdate'] = $startdate;
 $dataset['attributes']['enddate'] = $enddate;
 $dataset['attributes']['language'] = $language;
+$dataset['attributes']['rootpath'] = $cfg_root_path;
 $render->render($dataset, array(), 'dataset.html');
 // JS utils dataset.
 $jsdataset['name'] = 'jsutils';

@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-define(['html5images', 'jsxls'], function(images, jsxls) {
+define(['html5images', 'jsxls'], function(Images, Jsxls) {
     return {
         getmode: function(mode) {
             if (typeof (mode) == 'undefined') {
@@ -508,7 +508,7 @@ define(['html5images', 'jsxls'], function(images, jsxls) {
         menuBuild_icons: function(name, posx, posy, state, set, text, tooltip, ref) {
             var iposy = posy;
             var iposx = posx;
-            imgdata = images.menuImages[name];
+            imgdata = Images.map[name];
             var iwidth = imgdata.width + 2;
             var iheight = imgdata.height + 1;
             if (name == 'toolbar/ico_drop.png') {
@@ -555,8 +555,8 @@ define(['html5images', 'jsxls'], function(images, jsxls) {
             }
             for (var n = 0; n < ref.buttonBox.length; n++) {
                 var state = ref.buttonBox[n][5];
-                imgdata = images.menuImages[ref.buttonBox[n][0]];
-                //imgdatab = menuImages['toolbar/but_back'+state+'.png'];
+                imgdata = Images.map[ref.buttonBox[n][0]];
+                //imgdatab = map['toolbar/but_back'+state+'.png'];
                 var iwidth = imgdata.width + 2;
                 if (ref.buttonBox[n][0] == 'toolbar/ico_drop.png') iwidth = 12;
                 //button background
@@ -598,7 +598,7 @@ define(['html5images', 'jsxls'], function(images, jsxls) {
         //recreates line 2, letter 1 or colour 0 (signed by panel_code) panel with selection highlighted
         menuRebuild_panel: function(panelActiveParts, panelBox, but_name, pan_name, panel_code, selection, ref) {
             var temp_but = ref.buttonBox[ref.buttonBoxNames[but_name]];
-            var imgdata = images.menuImages[pan_name];
+            var imgdata = Images.map[pan_name];
             ref.context.lineWidth = 1;
             ref.context.strokeStyle = '#000088';
             ref.context.fillStyle = '#FFFFFF';
@@ -634,8 +634,8 @@ define(['html5images', 'jsxls'], function(images, jsxls) {
                     ref.context.textAlign = "left";
                     ref.context.fillStyle = '#00156E';
                     ref.context.font = "11px Arial";
-                    ref.context.fillText(jsxls.lang_string['themecolours'], temp_but[1] + 5, temp_but[2] + 25 + 16);
-                    ref.context.fillText(jsxls.lang_string['standardcolours'], temp_but[1] + 5, temp_but[2] + 25 + 117);
+                    ref.context.fillText(Jsxls.lang_string['themecolours'], temp_but[1] + 5, temp_but[2] + 25 + 16);
+                    ref.context.fillText(Jsxls.lang_string['standardcolours'], temp_but[1] + 5, temp_but[2] + 25 + 117);
 
                     //building up the ref.colorReference
                     if (ref.colorReference.length == 0 && pan_name == 'toolbar/pan_colours.png') {
@@ -750,7 +750,7 @@ define(['html5images', 'jsxls'], function(images, jsxls) {
             }
 
             //buttons
-            imgdata = images.menuImages['toolbar/button.png'];
+            imgdata = Images.map['toolbar/button.png'];
             //y
             if (txt2 != '') {
                 ref.context.drawImage(ref.menu_img, imgdata.left + 1, imgdata.top, imgdata.width - 2, imgdata.height, mx + mw / 2 - imgdata.width / 2 - 40, my + mh - 12 - imgdata.height, imgdata.width, imgdata.height);

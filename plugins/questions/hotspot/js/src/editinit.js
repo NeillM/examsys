@@ -14,21 +14,10 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-requirejs(['qhotspot', 'jqueryhotspot'], function (qhotspot, HOTSPOT) {
+requirejs(['html5', 'jqueryhotspot'], function (html5, HOTSPOT) {
     var hotspot = new HOTSPOT();
     hotspot.init();
 
-    var language = $('#dataset').attr('data-language');
-    $("canvas[id^=canvas]").each(function() {
-        var type = "edit";
-        if ($(this).attr('class') == 'hotspotcorrection') {
-            type = "correction";
-        }
-        var hotspot = new qhotspot();
-        hotspot.setUpHotspot($(this).attr('data-qno'),
-            "flash" + $(this).attr('data-qno'),
-            language, $(this).attr('data-qmedia'),
-            $(this).attr('data-qcorrect'), $(this).attr('data-user'), $(this).attr('data-marking'), "#FFC0C0", type);
-
-    });
+    var interactive = new html5();
+    interactive.init($('#dataset').attr('data-rootpath'));
 });

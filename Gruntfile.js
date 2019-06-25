@@ -39,15 +39,6 @@ module.exports = function(grunt) {
       options: {
         configFile: 'testing/eslint/eslint.json'
       },
-      core: {
-        src: ['js/core/meta/namespaces.js', 'js/core/*.js'],
-        rules: {
-          'no-console': 'warn'
-        }
-      },
-      html5: {
-        src: ['js/html_questions/meta/namespaces.js', 'js/html_questions/*.js']
-      },
       admin: {
         src: ['admin/**/js/src/*.js']
       },
@@ -71,45 +62,6 @@ module.exports = function(grunt) {
       options: {
         mangle: false
       },
-      core: {
-        files: {
-          'js/core.min.js': ['js/core/meta/namespaces.js', 'js/core/*.js']
-        }
-      },
-      html5: {
-        options: {
-          compress: {}
-        },
-        files: {
-          'js/html5_questions.min.js': [
-            'js/html_questions/polyfill.js',
-            'js/html_questions/meta/namespaces.js',
-            'js/html_questions/html5.js',
-            'js/html_questions/html5.question.js',
-            'js/html_questions/html5.image.js',
-            'js/html_questions/html5.answer.hotspot.js',
-            'js/html_questions/html5.question.hotspot.js',
-            'js/html_questions/html5.question.hotspot.answer.js',
-            'js/html_questions/html5.question.hotspot.correction.js',
-            'js/html_questions/html5.question.hotspot.edit.js',
-            'js/html_questions/html5.question.hotspot.analysis.js',
-            'js/html_questions/html5.question.hotspot.standardset.js',
-            'js/html_questions/html5.question.hotspot.script.js',
-            'js/html_questions/html5.question.hotspot.layer.js',
-            'js/html_questions/html5.question.hotspot.shape.js',
-            'js/html_questions/html5.question.hotspot.colourselector.js',
-            'js/html_questions/html5.menu.js',
-            'js/html_questions/html5.menu.item.js',
-            'js/html_questions/html5.menu.button.js',
-            'js/html_questions/html5.menu.group.js',
-            'js/html_questions/html5.menu.filler.js',
-            'js/html_questions/html5.menu.checkbox.js',
-            'js/html_questions/html5.menu.hotspot.layerzone.js',
-            'js/html_questions/html5.listener.js',
-            'js/html_questions/html5.listener.hotspot.js'
-          ]
-        }
-       },
       admin: {
         files: [{
           expand: true,
@@ -182,7 +134,7 @@ module.exports = function(grunt) {
     sprite: {
       html5canvas: {
         dest: 'js/images/combined.png',
-        destCss: 'js/html_questions/html5.image.js',
+        destCss: 'js/src/modules/html_questions/html5.image.js',
         src: [
           'js/images/toolbar/*.png',
         ],
@@ -199,13 +151,11 @@ module.exports = function(grunt) {
 
   // Register tasks.
   grunt.registerTask('css', ['cssmin:standard']);
-  grunt.registerTask('core', ['eslint:core', 'uglify:core']);
   grunt.registerTask('admin', ['eslint:admin', 'uglify:admin']);
-  grunt.registerTask('corejs', ['eslint:corejs', 'uglify:corejs']);
-  grunt.registerTask('html5', ['sprite:html5canvas', 'eslint:html5', 'uglify:html5']);
+  grunt.registerTask('corejs', ['sprite:html5canvas', 'eslint:corejs', 'uglify:corejs']);
   grunt.registerTask('questionsjs', ['eslint:questionsjs', 'uglify:questionsjs']);
   grunt.registerTask('ltijs', ['eslint:ltijs', 'uglify:ltijs']);
   grunt.registerTask('toolsjs', ['eslint:toolsjs', 'uglify:toolsjs']);
   grunt.registerTask('authjs', ['eslint:authjs', 'uglify:authjs']);
-  grunt.registerTask('default', ['admin', 'css', 'core', 'html5', 'corejs', 'questionsjs', 'ltijs', 'toolsjs', 'authjs']);
+  grunt.registerTask('default', ['admin', 'css', 'corejs', 'questionsjs', 'ltijs', 'toolsjs', 'authjs']);
 }
