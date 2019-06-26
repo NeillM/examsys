@@ -40,10 +40,14 @@ require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPA
 $options = 'hu:p:a:l::';
 $longoptions = array(
   'help',
+  'user:',
+  'passwd:',
+  'account:',
+  'ldap::',
 );
 
 $optionslist = getopt($options, $longoptions);
-
+var_dump($optionslist);
 $help = 'Rogo archive script options'
   . PHP_EOL . PHP_EOL . "-h, --help \t\tDisplay help"
   . PHP_EOL . PHP_EOL . "-u, --user, \t\tDatabase username"
@@ -57,11 +61,27 @@ if (isset($optionslist['h']) or isset($optionslist['help'])) {
   exit(0);
 }
 
-$cfg_db_username = $optionslist['u'];
-$databasepassword = $optionslist['p'];
-$username = $optionslist['a'];
-if (isset($optionslist['l'])) {
-  $ldap = $optionslist['l'];
+if (isset($optionslist['u'])) {
+    $cfg_db_username = $optionslist['u'];
+} elseif (isset($optionslist['user'])) {
+    $cfg_db_username = $optionslist['user'];
+}
+if (isset($optionslist['p'])) {
+    $databasepassword = $optionslist['p'];
+} elseif (isset($optionslist['passwd'])) {
+    $databasepassword = $optionslist['passwd'];
+}
+if (isset($optionslist['a'])) {
+    $username = $optionslist['a'];
+} elseif (isset($optionslist['account'])) {
+    $username = $optionslist['account'];
+}
+if (isset($optionslist['l']) or isset($optionslist['ldap'])) {
+    if (isset($optionslist['l'])) {
+        $ldap = $optionslist['l'];
+    } elseif (isset($optionslist['ldap'])) {
+        $ldap = $optionslist['ldap'];
+    }
 } else {
   $ldap = 0;
 }
@@ -74,7 +94,7 @@ $databasecharset = $configObject->get('cfg_db_charset');
 if ($mysqli->connect_error == '') {
   $mysqli->set_charset($databasecharset);
 } else {
-  cli_utils::prompt('Unable to connect to database');
+  cli_utils::prompt('Unable to connect to database - ' . $mysqli->connect_error);
   exit(0);
 }
 
