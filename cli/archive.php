@@ -37,11 +37,9 @@ if (!file_exists($rogo_path . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARAT
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'load_config.php';
 
 // Lets look to see what arguments have been passed.
-$options = 'hu:p:a:l';
+$options = 'ha:l';
 $longoptions = array(
     'help',
-    'user:',
-    'passwd:',
     'account:',
     'ldap',
 );
@@ -49,27 +47,13 @@ $longoptions = array(
 $optionslist = getopt($options, $longoptions);
 $help = 'Rogo archive script options'
     . PHP_EOL . PHP_EOL . "-h, --help \t\tDisplay help"
-    . PHP_EOL . PHP_EOL . "-u, --user, \t\tDatabase username"
-    . PHP_EOL . PHP_EOL . "-p, --passwd, \t\tDatabase password"
-    . PHP_EOL . PHP_EOL . "-a, --account, \t\tRogo account to log process against"
-    . PHP_EOL . PHP_EOL . "-l, --ldap, \t\tRogo is using ldap accounts";
+    . PHP_EOL . PHP_EOL . "-a, --account, \t\tRogo account to log process against [Required]"
+    . PHP_EOL . PHP_EOL . "-l, --ldap, \t\tRogo is using ldap accounts [Optional]";
 
-if (isset($optionslist['h']) or isset($optionslist['help'])) {
+if ((isset($optionslist['h']) or isset($optionslist['help'])) or ((!isset($optionslist['a']) and !isset($optionslist['account'])))) {
     // Display some help information.
     cli_utils::prompt($help);
     exit(0);
-}
-
-if (isset($optionslist['u'])) {
-    $databaseusername = $optionslist['u'];
-} elseif (isset($optionslist['user'])) {
-    $databaseusername = $optionslist['user'];
-}
-
-if (isset($optionslist['p'])) {
-    $databasepassword = $optionslist['p'];
-} elseif (isset($optionslist['passwd'])) {
-    $databasepassword = $optionslist['passwd'];
 }
 
 if (isset($optionslist['a'])) {
@@ -88,8 +72,10 @@ $cfg_db_host = $configObject->get('cfg_db_host');
 $cfg_db_port = $configObject->get('cfg_db_port');
 $cfg_db_database = $configObject->get('cfg_db_database');
 $cfg_db_charset = $configObject->get('cfg_db_charset');
+$cfg_db_sysadmin_user = $configObject->get('cfg_db_sysadmin_user');
+$cfg_db_sysadmin_passwd = $configObject->get('cfg_db_sysadmin_passwd');
 
-@$mysqli = new mysqli($cfg_db_host, $databaseusername, $databasepassword, $cfg_db_database, $cfg_db_port);
+@$mysqli = new mysqli($cfg_db_host, $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database, $cfg_db_port);
 if ($mysqli->connect_error == '') {
     $mysqli->set_charset($cfg_db_charset);
 } else {
