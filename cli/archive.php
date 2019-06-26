@@ -37,13 +37,13 @@ if (!file_exists($rogo_path . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARAT
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'load_config.php';
 
 // Lets look to see what arguments have been passed.
-$options = 'hu:p:a:l::';
+$options = 'hu:p:a:l';
 $longoptions = array(
   'help',
   'user:',
   'passwd:',
   'account:',
-  'ldap::',
+  'ldap',
 );
 
 $optionslist = getopt($options, $longoptions);
@@ -52,7 +52,7 @@ $help = 'Rogo archive script options'
   . PHP_EOL . PHP_EOL . "-u, --user, \t\tDatabase username"
   . PHP_EOL . PHP_EOL . "-p, --passwd, \t\tDatabase password"
   . PHP_EOL . PHP_EOL . "-a, --account, \t\tRogo account to log process against"
-  . PHP_EOL . PHP_EOL . "-l, --ldap, \t\tRogo is using ldap accounts (0/1, default 0)";
+  . PHP_EOL . PHP_EOL . "-l, --ldap, \t\tRogo is using ldap accounts";
 
 if (isset($optionslist['h']) or isset($optionslist['help'])) {
   // Display some help information.
@@ -65,25 +65,25 @@ if (isset($optionslist['u'])) {
 } elseif (isset($optionslist['user'])) {
     $cfg_db_username = $optionslist['user'];
 }
+
 if (isset($optionslist['p'])) {
     $databasepassword = $optionslist['p'];
 } elseif (isset($optionslist['passwd'])) {
     $databasepassword = $optionslist['passwd'];
 }
+
 if (isset($optionslist['a'])) {
     $username = $optionslist['a'];
 } elseif (isset($optionslist['account'])) {
     $username = $optionslist['account'];
 }
+
 if (isset($optionslist['l']) or isset($optionslist['ldap'])) {
-    if (isset($optionslist['l'])) {
-        $ldap = $optionslist['l'];
-    } elseif (isset($optionslist['ldap'])) {
-        $ldap = $optionslist['ldap'];
-    }
+  $ldap = 1;
 } else {
   $ldap = 0;
 }
+
 $cfg_db_host = $configObject->get('cfg_db_host');
 $databaseport = $configObject->get('cfg_db_port');
 $cfg_db_database = $configObject->get('cfg_db_database');
@@ -201,9 +201,11 @@ $stmt->close();
 
 // Reset passwords
 if ($ldap) {
+  cli_utils::prompt('LDAP enabled - Resetting passwords');
   $updatequery = $mysqli->prepare("UPDATE users SET password='' WHERE roles IN('Student', 'graduate', 'left')");
   $roles_string = 'Student, graduate and left';
 } else {
+  cli_utils::prompt('LDAP disabled - Resetting passwords');
   $updatequery = $mysqli->prepare("UPDATE users SET password='' WHERE roles IN('graduate', 'left')");
   $roles_string = 'graduate and left';
 }
