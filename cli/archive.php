@@ -116,6 +116,9 @@ $stmt = $mysqli->prepare("SELECT id FROM users WHERE roles='left' OR roles='grad
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($user_to_delete);
+$numusers = $stmt->num_rows();
+cli_utils::prompt($numusers . ' users to archive');
+$usercount = 0;
 while ($stmt->fetch()) {
   $log0_deleted = 0;
   $log1_deleted = 0;
@@ -127,6 +130,8 @@ while ($stmt->fetch()) {
   $lm_check->bind_result($lm_count);
   $lm_check->fetch();
   $lm_check->close();
+
+  cli_utils::prompt('Archiving user' . $usercount . ' / ' . $numusers);
 
   if (isset($lm_count) and $lm_count > 0) {
     cli_utils::prompt($lm_count . ' Log0 rows to archive');
@@ -196,6 +201,7 @@ while ($stmt->fetch()) {
     cli_utils::prompt($lti_user_deleted . ' LTI users to delete');
     $logger->track_change('Delete LTI user', $user_to_delete, $my_id, 1, 0, 'Clear old logs');
   }
+  $usercount++;
 }
 $stmt->close();
 
