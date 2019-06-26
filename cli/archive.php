@@ -97,7 +97,6 @@ if ($mysqli->connect_error == '') {
     exit(0);
 }
 
-
 $logger = new Logger($mysqli);
 
 $stmt = $mysqli->prepare("SELECT id FROM users WHERE username = ?");
@@ -194,8 +193,7 @@ while ($stmt->fetch()) {
         // Record the delete in audit trail
         $logger->track_change('Deleted records from log1', $user_to_delete, $my_id, $log1_deleted, 0, 'Clear old logs');
     }
-
-
+    
     // Delete from lti_user table.
     $deletequery = $mysqli->prepare("DELETE FROM lti_user WHERE lti_user_equ = ?");
     $deletequery->bind_param('i', $user_to_delete);
