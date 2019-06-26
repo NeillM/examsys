@@ -30,7 +30,7 @@ set_time_limit(0);
 
 $rogo_path = dirname(__DIR__);
 if (!file_exists($rogo_path . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.inc.php')) {
-  echo 'Rogo is not installed.' . $error;
+  echo 'Rogo is not installed.';
   exit(0);
 }
 
