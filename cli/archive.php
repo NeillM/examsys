@@ -131,7 +131,7 @@ while ($stmt->fetch()) {
   $lm_check->fetch();
   $lm_check->close();
 
-  cli_utils::prompt('Archiving user' . $usercount . ' / ' . $numusers);
+  cli_utils::prompt('Archiving user ' . $usercount . ' / ' . $numusers);
 
   if (isset($lm_count) and $lm_count > 0) {
     cli_utils::prompt($lm_count . ' Log0 rows to archive');
