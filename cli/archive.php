@@ -44,7 +44,7 @@ $longoptions = array(
 
 $optionslist = getopt($options, $longoptions);
 
-$help = 'Rogo initialisation script options'
+$help = 'Rogo archive script options'
   . PHP_EOL . PHP_EOL . "-h, --help \t\tDisplay help"
   . PHP_EOL . PHP_EOL . "-u, --user, \t\tDatabase username"
   . PHP_EOL . PHP_EOL . "-p, --passwd, \t\tDatabase password"
