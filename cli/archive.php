@@ -73,9 +73,9 @@ if (isset($optionslist['p'])) {
 }
 
 if (isset($optionslist['a'])) {
-    $username = $optionslist['a'];
+    $my_id = $optionslist['a'];
 } elseif (isset($optionslist['account'])) {
-    $username = $optionslist['account'];
+    $my_id = $optionslist['account'];
 }
 
 if (isset($optionslist['l']) or isset($optionslist['ldap'])) {
@@ -97,16 +97,24 @@ if ($mysqli->connect_error == '') {
   exit(0);
 }
 
-cli_utils::prompt("Start Archive Process " . date("Y-m-d H:i:s"));
+
 
 $logger = new Logger($mysqli);
 
 $stmt = $mysqli->prepare("SELECT id FROM users WHERE username = ?");
 $stmt->bind_param('s', $my_id);
 $stmt->execute();
+$stmt->store_result();
 $stmt->bind_result($userid);
+if ($stmt->num_rows() !== 1) {
+    cli_utils::prompt('User `' . $my_id . '` does not exist');
+    $stmt->close();
+    exit(0);
+}
 $stmt->fetch();
 $stmt->close();
+
+cli_utils::prompt("Start Archive Process " . date("Y-m-d H:i:s"));
 
 $log0_deleted_overall = 0;
 $log1_deleted_overall = 0;
