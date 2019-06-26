@@ -61,9 +61,9 @@ if (isset($optionslist['h']) or isset($optionslist['help'])) {
 }
 
 if (isset($optionslist['u'])) {
-    $cfg_db_username = $optionslist['u'];
+    $databaseusername = $optionslist['u'];
 } elseif (isset($optionslist['user'])) {
-    $cfg_db_username = $optionslist['user'];
+    $databaseusername = $optionslist['user'];
 }
 
 if (isset($optionslist['p'])) {
@@ -73,9 +73,9 @@ if (isset($optionslist['p'])) {
 }
 
 if (isset($optionslist['a'])) {
-    $my_id = $optionslist['a'];
+    $account = $optionslist['a'];
 } elseif (isset($optionslist['account'])) {
-    $my_id = $optionslist['account'];
+    $account = $optionslist['account'];
 }
 
 if (isset($optionslist['l']) or isset($optionslist['ldap'])) {
@@ -85,13 +85,13 @@ if (isset($optionslist['l']) or isset($optionslist['ldap'])) {
 }
 
 $cfg_db_host = $configObject->get('cfg_db_host');
-$databaseport = $configObject->get('cfg_db_port');
+$cfg_db_port = $configObject->get('cfg_db_port');
 $cfg_db_database = $configObject->get('cfg_db_database');
-$databasecharset = $configObject->get('cfg_db_charset');
+$cfg_db_charset = $configObject->get('cfg_db_charset');
 
-@$mysqli = new mysqli($cfg_db_host, $cfg_db_username, $databasepassword, $cfg_db_database, $databaseport);
+@$mysqli = new mysqli($cfg_db_host, $databaseusername, $databasepassword, $cfg_db_database, $cfg_db_port);
 if ($mysqli->connect_error == '') {
-    $mysqli->set_charset($databasecharset);
+    $mysqli->set_charset($cfg_db_charset);
 } else {
     cli_utils::prompt('Unable to connect to database - ' . $mysqli->connect_error);
     exit(0);
@@ -100,12 +100,12 @@ if ($mysqli->connect_error == '') {
 $logger = new Logger($mysqli);
 
 $stmt = $mysqli->prepare("SELECT id FROM users WHERE username = ?");
-$stmt->bind_param('s', $my_id);
+$stmt->bind_param('s', $account);
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($userid);
 if ($stmt->num_rows() !== 1) {
-    cli_utils::prompt('User `' . $my_id . '` does not exist');
+    cli_utils::prompt('User `' . $account . '` does not exist');
     $stmt->close();
     exit(0);
 }
@@ -160,7 +160,7 @@ while ($stmt->fetch()) {
         $deletequery->close();
 
         // Record the delete in audit trail
-        $logger->track_change('Deleted records from log0', $user_to_delete, $my_id, $log0_deleted, 0, 'Clear old logs');
+        $logger->track_change('Deleted records from log0', $user_to_delete, $account, $log0_deleted, 0, 'Clear old logs');
     }
 
     $lm_check = $mysqli->prepare("SELECT count(lm.id) FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
@@ -191,9 +191,9 @@ while ($stmt->fetch()) {
         $deletequery->close();
 
         // Record the delete in audit trail
-        $logger->track_change('Deleted records from log1', $user_to_delete, $my_id, $log1_deleted, 0, 'Clear old logs');
+        $logger->track_change('Deleted records from log1', $user_to_delete, $account, $log1_deleted, 0, 'Clear old logs');
     }
-    
+
     // Delete from lti_user table.
     $deletequery = $mysqli->prepare("DELETE FROM lti_user WHERE lti_user_equ = ?");
     $deletequery->bind_param('i', $user_to_delete);
@@ -204,7 +204,7 @@ while ($stmt->fetch()) {
 
     if ($lti_user_deleted > 0) {
         cli_utils::prompt($lti_user_deleted . ' LTI users to delete');
-        $logger->track_change('Delete LTI user', $user_to_delete, $my_id, 1, 0, 'Clear old logs');
+        $logger->track_change('Delete LTI user', $user_to_delete, $account, 1, 0, 'Clear old logs');
     }
     $usercount++;
 }
@@ -222,7 +222,7 @@ if ($ldap) {
 }
 $updatequery->execute();
 if ($updatequery->affected_rows > 0) {
-    $logger->track_change('Reset passwords for roles ' . $roles_string, $my_id, $my_id, 1, 0, 'Clear old logs');
+    $logger->track_change('Reset passwords for roles ' . $roles_string, $account, $account, 1, 0, 'Clear old logs');
 }
 $updatequery->close();
 
