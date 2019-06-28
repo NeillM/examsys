@@ -28,4 +28,4 @@ $string['free'] = 'free';
 $string['not taken'] = 'not taken';
 $string['cleanup'] = 'Clean Up';
 $string['unset'] = '&lt;unset&gt;';
-?>
+$string['reservedwarning'] = 'Are you sure you want to clear this account? It was reserved under 15 minutes ago.';
