@@ -174,6 +174,9 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string) {
               case '6':
                 $cat2no = array('clear fail'=>1,'borderline'=>2,'clear pass'=>3,'honours pass'=>4);
                 break;
+              case '7':
+                $cat2no = ['fail' => 1, 'pass' => 2];
+                break;
             }
             if (isset($cat2no[strtolower(trim($fields[$question_no+2]))])) {
               $overall_rating = $cat2no[strtolower(trim($fields[$question_no+2]))];
