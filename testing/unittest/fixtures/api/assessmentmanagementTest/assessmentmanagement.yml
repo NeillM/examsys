@@ -11,6 +11,9 @@ academic_year:
   -
     calendar_year: 2018
     academic_year: "2018/19"
+  -
+    calendar_year: 2019
+    academic_year: "2019/20"
 properties:
   -
     property_id: 1
