@@ -38,18 +38,20 @@ if (!file_exists($rogo_path . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARAT
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'load_config.php';
 
 // Lets look to see what arguments have been passed.
-$options = 'ha:l';
+$options = 'ha:lr';
 $longoptions = array(
     'help',
     'account:',
     'ldap',
+    'archive',
 );
 
 $optionslist = getopt($options, $longoptions);
 $help = 'Rogo archive script options'
     . PHP_EOL . PHP_EOL . "-h, --help \t\tDisplay help"
     . PHP_EOL . PHP_EOL . "-a, --account, \t\tRogo account to log process against [Required]"
-    . PHP_EOL . PHP_EOL . "-l, --ldap, \t\tRogo is using ldap accounts [Optional]";
+    . PHP_EOL . PHP_EOL . "-l, --ldap, \t\tRogo is using ldap accounts [Optional]"
+    . PHP_EOL . PHP_EOL . "-r, --archive, \t\tArchive data to a seperate database [Optional]";
 
 if ((isset($optionslist['h']) or isset($optionslist['help'])) or ((!isset($optionslist['a']) and !isset($optionslist['account'])))) {
     // Display some help information.
@@ -69,6 +71,12 @@ if (isset($optionslist['l']) or isset($optionslist['ldap'])) {
     $ldap = 0;
 }
 
+if (isset($optionslist['r']) or isset($optionslist['archive'])) {
+    $archive = 1;
+} else {
+    $archive = 0;
+}
+
 $cfg_db_host = $configObject->get('cfg_db_host');
 $cfg_db_port = $configObject->get('cfg_db_port');
 $cfg_db_database = $configObject->get('cfg_db_database');
@@ -82,6 +90,27 @@ if ($mysqli->connect_error == '') {
 } else {
     cli_utils::prompt('Unable to connect to database - ' . $mysqli->connect_error);
     exit(0);
+}
+
+// Setup archive database connection.
+if ($archive) {
+    cli_utils::prompt('Connecting to archive database');
+    $cfg_archivedb_host = $configObject->get('cfg_archivedb_host');
+    $cfg_archivedb_port = $configObject->get('cfg_archivedb_port');
+    $cfg_archivedb_database = $configObject->get('cfg_archivedb_database');
+    $cfg_archivedb_charset = $configObject->get('cfg_archivedb_charset');
+    $cfg_archivedb_sysadmin_user = $configObject->get('cfg_archivedb_username');
+    $cfg_archivedb_sysadmin_passwd = $configObject->get('cfg_archivedb_passwd');
+    @$mysqliarchive = new mysqli($cfg_archivedb_host, $cfg_archivedb_sysadmin_user, $cfg_archivedb_sysadmin_passwd, $cfg_archivedb_database, $cfg_archivedb_port);
+    if ($mysqliarchive->connect_error == '') {
+        $mysqliarchive->set_charset($cfg_archivedb_charset);
+    } else {
+        cli_utils::prompt('Unable to connect to archive database - ' . $mysqliarchive->connect_error);
+        exit(0);
+    }
+} else {
+    $mysqliarchive = $mysqli;
+    $cfg_archivedb_database = $cfg_db_database;
 }
 
 $logger = new Logger($mysqli);
@@ -117,7 +146,7 @@ while ($stmt->fetch()) {
     $log1_deleted = 0;
     $lti_user_deleted = 0;
 
-    $lm_check = $mysqli->prepare("SELECT count(lm.id) FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+    $lm_check = $mysqli->prepare("SELECT count(lm.id) FROM " . $cfg_db_database . ".log0 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
     $lm_check->bind_param('i', $user_to_delete);
     $lm_check->execute();
     $lm_check->bind_result($lm_count);
@@ -128,18 +157,19 @@ while ($stmt->fetch()) {
 
     if (isset($lm_count) and $lm_count > 0) {
         cli_utils::prompt($lm_count . ' Log0 rows to archive');
-        $logquery = $mysqli->prepare("INSERT INTO log0_deleted SELECT l.* FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+        $logquery = $mysqliarchive->prepare("INSERT INTO " . $cfg_archivedb_database . ".log0_deleted SELECT l.* FROM " . $cfg_db_database . ".log0 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+        echo $mysqliarchive->error;
         $logquery->bind_param('i', $user_to_delete);
         $logquery->execute();
         $logquery->close();
 
-        $logquery = $mysqli->prepare("INSERT INTO log_metadata_deleted SELECT DISTINCT lm.* FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+        $logquery = $mysqliarchive->prepare("INSERT INTO " . $cfg_archivedb_database . ".log_metadata_deleted SELECT DISTINCT lm.* FROM " . $cfg_db_database . ".log0 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
         $logquery->bind_param('i', $user_to_delete);
         $logquery->execute();
         $logquery->close();
 
         // Delete from formative log.
-        $deletequery = $mysqli->prepare("DELETE l, lm FROM log0 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+        $deletequery = $mysqli->prepare("DELETE l, lm FROM " . $cfg_db_database . ".log0 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
         $deletequery->bind_param('i', $user_to_delete);
         $deletequery->execute();
         $log0_deleted = $deletequery->affected_rows;
@@ -150,7 +180,7 @@ while ($stmt->fetch()) {
         $logger->track_change('Deleted records from log0', $user_to_delete, $account, $log0_deleted, 0, 'Clear old logs');
     }
 
-    $lm_check = $mysqli->prepare("SELECT count(lm.id) FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+    $lm_check = $mysqli->prepare("SELECT count(lm.id) FROM " . $cfg_db_database . ".log1 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
     $lm_check->bind_param('i', $user_to_delete);
     $lm_check->execute();
     $lm_check->bind_result($lm_count);
@@ -159,18 +189,18 @@ while ($stmt->fetch()) {
 
     if (isset($lm_count) and $lm_count > 0) {
         cli_utils::prompt($lm_count . ' Log1 rows to archive');
-        $logquery = $mysqli->prepare("INSERT INTO log1_deleted SELECT l.* FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+        $logquery = $mysqliarchive->prepare("INSERT INTO " . $cfg_archivedb_database . ".log1_deleted SELECT l.* FROM " . $cfg_db_database . ".log1 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
         $logquery->bind_param('i', $user_to_delete);
         $logquery->execute();
         $logquery->close();
 
-        $logquery = $mysqli->prepare("INSERT INTO log_metadata_deleted SELECT DISTINCT lm.* FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+        $logquery = $mysqliarchive->prepare("INSERT INTO " . $cfg_archivedb_database . ".log_metadata_deleted SELECT DISTINCT lm.* FROM " . $cfg_db_database . ".log1 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
         $logquery->bind_param('i', $user_to_delete);
         $logquery->execute();
         $logquery->close();
 
         // Delete from formative log.
-        $deletequery = $mysqli->prepare("DELETE l, lm FROM log1 l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+        $deletequery = $mysqli->prepare("DELETE l, lm FROM " . $cfg_db_database . ".log1 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
         $deletequery->bind_param('i', $user_to_delete);
         $deletequery->execute();
         $log1_deleted = $deletequery->affected_rows;
@@ -182,7 +212,7 @@ while ($stmt->fetch()) {
     }
 
     // Delete from lti_user table.
-    $deletequery = $mysqli->prepare("DELETE FROM lti_user WHERE lti_user_equ = ?");
+    $deletequery = $mysqli->prepare("DELETE FROM " . $cfg_db_database . ".lti_user WHERE lti_user_equ = ?");
     $deletequery->bind_param('i', $user_to_delete);
     $deletequery->execute();
     $lti_user_deleted = $deletequery->affected_rows;
@@ -200,11 +230,11 @@ $stmt->close();
 // Reset passwords
 if ($ldap) {
     cli_utils::prompt('LDAP enabled - Resetting passwords');
-    $updatequery = $mysqli->prepare("UPDATE users SET password='' WHERE roles IN('Student', 'graduate', 'left')");
+    $updatequery = $mysqli->prepare("UPDATE " . $cfg_db_database . ".users SET password='' WHERE roles IN('Student', 'graduate', 'left')");
     $roles_string = 'Student, graduate and left';
 } else {
     cli_utils::prompt('LDAP disabled - Resetting passwords');
-    $updatequery = $mysqli->prepare("UPDATE users SET password='' WHERE roles IN('graduate', 'left')");
+    $updatequery = $mysqli->prepare("UPDATE " . $cfg_db_database . ".users SET password='' WHERE roles IN('graduate', 'left')");
     $roles_string = 'graduate and left';
 }
 $updatequery->execute();
