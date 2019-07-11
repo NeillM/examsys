@@ -15,7 +15,8 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Archive data
+ * Archive data for graduated and left users
+ * Moves formative and progress user responses to archive tables, deletes LTI links of users and resets their password
  * @author Simon Wilkinson
  * @author Dr Joseph baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2019 The University of Nottingham
