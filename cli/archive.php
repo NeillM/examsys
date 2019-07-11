@@ -158,7 +158,6 @@ while ($stmt->fetch()) {
     if (isset($lm_count) and $lm_count > 0) {
         cli_utils::prompt($lm_count . ' Log0 rows to archive');
         $logquery = $mysqliarchive->prepare("INSERT INTO " . $cfg_archivedb_database . ".log0_deleted SELECT l.* FROM " . $cfg_db_database . ".log0 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-        echo $mysqliarchive->error;
         $logquery->bind_param('i', $user_to_delete);
         $logquery->execute();
         $logquery->close();
