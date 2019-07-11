@@ -529,7 +529,9 @@ if ($properties->get_paper_type() == '2') {
 	
   makeMenu(array(
     $string['Continuous'] => $configObject->get('cfg_root_path') . "/paper/print.php?id=" . $properties->get_crypt_name(),
-    $string['Page-break per question'] => $configObject->get('cfg_root_path') . "/paper/print.php?id=". $properties->get_crypt_name() . "&break=1")
+    $string['Continuous - hide notes'] => $configObject->get('cfg_root_path') . "/paper/print.php?id=" . $properties->get_crypt_name() . "&hidenotes=1",
+    $string['Page-break per question'] => $configObject->get('cfg_root_path') . "/paper/print.php?id=". $properties->get_crypt_name() . "&break=1",
+    $string['Page-break per question - hide notes'] => $configObject->get('cfg_root_path') . "/paper/print.php?id=". $properties->get_crypt_name() . "&break=1&hidenotes=1")
   );
 
   require_once $cfg_web_root . 'include/reports_submenu.inc';

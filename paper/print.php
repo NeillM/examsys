@@ -47,9 +47,10 @@ check_var('id', 'GET', true, false, false);
  * @param integer $paper_type the paper type
  * @param array $user_answers the users answers
  * @param integer $current_screen screen we are printing
- * @param integer $q_no question we are printing 
+ * @param integer $q_no question we are printing
+ * @param boolean $hide_notes whether to hide notes for the question output
  */
-function randomQOverwrite(&$questions, $question, $paper_type, $user_answers, $current_screen, $q_no) {
+function randomQOverwrite(&$questions, $question, $paper_type, $user_answers, $current_screen, $q_no, $hide_notes) {
   global $mysqli, $used_questions;
 
   $selected_q_id = '';
@@ -84,7 +85,7 @@ function randomQOverwrite(&$questions, $question, $paper_type, $user_answers, $c
       $question['theme'] = $theme;
       $question['scenario'] = $scenario;
       $question['leadin'] = $leadin;
-      $question['notes'] = $notes;
+      $question['notes'] = $hide_notes ? '' : $notes;
       $question['q_type'] = $q_type;
       $question['q_id'] = $q_id;
       $question['display_pos'] = $q_no;
@@ -111,8 +112,9 @@ function randomQOverwrite(&$questions, $question, $paper_type, $user_answers, $c
  * @param array $user_answers the users answers
  * @param integer $current_screen screen we are printing
  * @param integer $q_no question we are printing 
+ * @param boolean $hide_notes whether to hide notes for the question output
  */
-function keywordQOverwrite(&$questions, $question, $paper_type, $user_answers, $current_screen, $q_no) {
+function keywordQOverwrite(&$questions, $question, $paper_type, $user_answers, $current_screen, $q_no, $hide_notes) {
   global $mysqli, $used_questions, $string;
 
   $selected_q_id = '';
@@ -162,7 +164,7 @@ function keywordQOverwrite(&$questions, $question, $paper_type, $user_answers, $
         $question['theme'] = $theme;
         $question['scenario'] = $scenario;
         $question['leadin'] = $leadin;
-        $question['notes'] = $notes;
+        $question['notes'] = $hide_notes ? '' : $notes;
         $question['q_type'] = $q_type;
         $question['q_id'] = $q_id;
         $question['display_pos'] = $q_no;
@@ -287,6 +289,7 @@ $current_screen = 1;
   $marks = 0;
   $old_theme = '';
   $previous_q_type = '';
+  $hide_notes = param::optional('hidenotes', false, param::BOOLEAN, param::FETCH_GET);
 
   $question_data = $mysqli->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes, display_pos, q_option_order, settings FROM papers, questions LEFT JOIN options on questions.q_id=options.o_id WHERE paper=? AND papers.question=questions.q_id ORDER BY display_pos, id_num");
   $question_data->bind_param('i', $property_id);
@@ -303,7 +306,7 @@ $current_screen = 1;
       $tmp_questions_array[$q_no]['theme'] = trim($theme);
       $tmp_questions_array[$q_no]['scenario'] = trim($scenario);
       $tmp_questions_array[$q_no]['leadin'] = trim($leadin);
-      $tmp_questions_array[$q_no]['notes'] = trim($notes);
+      $tmp_questions_array[$q_no]['notes'] = $hide_notes ? '' : trim($notes);
       $tmp_questions_array[$q_no]['q_type'] = $q_type;
       $tmp_questions_array[$q_no]['q_id'] = $q_id;
       $tmp_questions_array[$q_no]['display_pos'] = $display_pos;
@@ -330,9 +333,9 @@ $current_screen = 1;
       $tmp_q_no++;
     }
     if ($question['q_type'] == 'random') {
-      randomQOverwrite($questions_array, $question, $paper_type, $user_answers, $current_screen, $tmp_q_no);
+      randomQOverwrite($questions_array, $question, $paper_type, $user_answers, $current_screen, $tmp_q_no, $hide_notes);
     } elseif ($question['q_type'] == 'keyword_based') {
-      keywordQOverwrite($questions_array, $question, $paper_type, $user_answers, $current_screen, $tmp_q_no);
+      keywordQOverwrite($questions_array, $question, $paper_type, $user_answers, $current_screen, $tmp_q_no, $hide_notes);
     } else {
       $questions_array[] = $question;
     }
