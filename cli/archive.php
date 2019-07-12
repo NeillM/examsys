@@ -80,12 +80,14 @@ if (isset($optionslist['r']) or isset($optionslist['archive'])) {
 $cfg_db_host = $configObject->get('cfg_db_host');
 $cfg_db_port = $configObject->get('cfg_db_port');
 $cfg_db_database = $configObject->get('cfg_db_database');
-$cfg_db_charset = $configObject->get('cfg_db_charset');
+// Set the charset to that of the archive database server.
+$cfg_db_charset = $configObject->get('cfg_archivedb_charset');
 $cfg_db_sysadmin_user = $configObject->get('cfg_db_sysadmin_user');
 $cfg_db_sysadmin_passwd = $configObject->get('cfg_db_sysadmin_passwd');
 
 @$mysqli = new mysqli($cfg_db_host, $cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database, $cfg_db_port);
 if ($mysqli->connect_error == '') {
+    // // Sets the default character set to be used when sending data from and to the live database server.
     $mysqli->set_charset($cfg_db_charset);
 } else {
     cli_utils::prompt('Unable to connect to database - ' . $mysqli->connect_error);
@@ -98,11 +100,13 @@ if ($archive) {
     $cfg_archivedb_host = $configObject->get('cfg_archivedb_host');
     $cfg_archivedb_port = $configObject->get('cfg_archivedb_port');
     $cfg_archivedb_database = $configObject->get('cfg_archivedb_database');
-    $cfg_archivedb_charset = $configObject->get('cfg_archivedb_charset');
+    // Set the charset to that of the live database server.
+    $cfg_archivedb_charset = $configObject->get('cfg_db_charset');
     $cfg_archivedb_sysadmin_user = $configObject->get('cfg_archivedb_username');
     $cfg_archivedb_sysadmin_passwd = $configObject->get('cfg_archivedb_passwd');
     @$mysqliarchive = new mysqli($cfg_archivedb_host, $cfg_archivedb_sysadmin_user, $cfg_archivedb_sysadmin_passwd, $cfg_archivedb_database, $cfg_archivedb_port);
     if ($mysqliarchive->connect_error == '') {
+        // Sets the default character set to be used when sending data from and to the archive database server.
         $mysqliarchive->set_charset($cfg_archivedb_charset);
     } else {
         cli_utils::prompt('Unable to connect to archive database - ' . $mysqliarchive->connect_error);
