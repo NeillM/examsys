@@ -22,4 +22,4 @@ $string['selectschool'] = 'Please select a school for the module.';
 $string['nolookup'] = '&lt;No lookup&gt;';
 $string['nle'] = 'Networked Learning Environment (NLE)';
 $string['uoncm'] = 'Curriculum Map (UoNCM)';
-?>
+$string['syncerror'] = 'Error syncing moudle.';

@@ -219,6 +219,29 @@ class yearutils {
     }
 
     /**
+     * Get the previous academic session
+     * @param string - $specific_year_start - Academic year start for the specifc module in the format 'mm/dd'.
+     * @return string - The previous academic year.
+     */
+    public function get_previous_session($specific_year_start = '') {
+
+      $date_as_time = strtotime(date('Y/m/d'));
+      if ($this->check_year_start_format($specific_year_start)) {
+        $start_this_year = strtotime(date('Y') . '/' . $specific_year_start);
+      } else {
+        $start_this_year = strtotime(date('Y') . '/' . $this->academic_year_start);
+      }
+
+      if ($date_as_time < $start_this_year) {
+        $session = date('Y') - 2;
+      } else {
+        $session = date('Y') - 1;
+      }
+
+      return $session;
+    }
+
+    /**
      * Get the current academic session
      * @param int $calendar_year - the calendar year
      * @return string - The associated academic year

@@ -27,6 +27,7 @@ modules:
     sms: 'external'
     academic_year_start: "01/07"
     schoolid: 1
+    syncpreviousyear: 1
   -
     id: 2
     moduleid: "ABC200"
@@ -35,6 +36,7 @@ modules:
     sms: 'external'
     academic_year_start: "01/07"
     schoolid: 1
+    syncpreviousyear: 0
 schools:
   -
     id: 1

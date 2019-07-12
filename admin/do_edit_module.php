@@ -73,7 +73,8 @@ if ($moduleid_in_use == false) {
   $module['fullname'] = param::optional('fullname', '',param::TEXT, param::FETCH_POST);
   $module['timed_exams'] = param::optional('timed_exams', false,param::BOOLEAN, param::FETCH_POST);
   $module['exam_q_feedback'] = param::optional('exam_q_feedback', false,param::BOOLEAN, param::FETCH_POST);
-  $module['add_team_members']  = param::optional('add_team_members', false,param::BOOLEAN, param::FETCH_POST);
+  $module['add_team_members'] = param::optional('add_team_members', false, param::BOOLEAN, param::FETCH_POST);
+  $module['syncpreviousyear'] = param::optional('syncpreviousyear', false, param::BOOLEAN, param::FETCH_POST);
 
   $vle_data = param::optional('vle_api', '',param::TEXT, param::FETCH_POST);
   if ($vle_data == '') {

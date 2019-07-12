@@ -20,7 +20,7 @@
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
 //
-define(['requireconfig.min', 'list', 'jquery'], function(config, LIST, $) {
+define(['alert', 'requireconfig.min', 'list', 'jquery'], function(ALERT, config, LIST, $) {
     return function() {
         /**
          * Initialise module sidebar.
@@ -30,12 +30,27 @@ define(['requireconfig.min', 'list', 'jquery'], function(config, LIST, $) {
             var list = new LIST();
             list.init();
 
-            $('#sms').click(function() {
-                $('#sms').append('<img src="../artwork/working.gif" class="busyicon" />');
-            });
-
-            $('#sms2').click(function() {
-                $('#sms2').append('<img src="../artwork/working.gif" class="busyicon" />');
+            $('.sms').click(function() {
+                var imageid = "syncimage" + $(this).attr('id');
+                $(this).append('<img id="' + imageid + '" src="../artwork/working.gif" class="busyicon" />');
+                var alert = new ALERT();
+                $.ajax({
+                    url: $(this).attr('data-url'),
+                    type: "post",
+                    data: {session: $(this).attr('data-session'), id: $(this).attr('data-id')},
+                    dataType: "json",
+                    success: function (data) {
+                        if (data['response'] == 'ERROR') {
+                            alert.notification('syncerror');
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert.plain(textStatus);
+                    },
+                    complete: function () {
+                        $('#' + imageid).hide();
+                    },
+                });
             });
 
             $(".editmodule").click(function() {

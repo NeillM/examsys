@@ -77,6 +77,35 @@ abstract class plugins_sms extends \plugins\plugins {
         $checksql->close();
         return $success;
     }
+
+   /**
+    * Render module sync options
+    * @param array $moduleimport module import data from plugin
+    * @param integer $moduleid internal id for module
+    * @param string $externalid external id for module
+    * @return bool
+    */
+    public static function render_module_sync_options($moduleimport, $moduleid, $externalid) {
+      $configObject = \Config::get_instance();
+      $yearutils = new \yearutils($configObject->db);
+      $data['current_session'] = $yearutils->get_current_session();
+      $data['next_session'] = $yearutils->get_next_session();
+      $data['previous_session'] = $yearutils->get_previous_session();
+      $data['academic_year']= $yearutils->get_academic_session($data['current_session']);
+      $data['next_academic_year'] = $yearutils->get_academic_session($data['next_session']);
+      $data['prev_academic_year'] = $yearutils->get_academic_session($data['previous_session']);
+      $data['prevenabled'] = false;
+      $data['url'] = $moduleimport['url'];
+      $data['tooltip'] = $moduleimport['tooltip'];
+      $data['blurb'] = $moduleimport['blurb'];
+      $data['externalid'] = $externalid;
+      if (\module_utils::check_sync_previous_year($moduleid)) {
+        $data['prevenabled'] = true;
+      }
+      $render = new \render($configObject);
+      $render->render($data, array(), 'module/syncoptions.html');
+    }
+
     /**
      * Enable this plugin.
      */

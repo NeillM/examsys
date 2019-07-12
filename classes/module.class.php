@@ -110,11 +110,12 @@ Class module {
    * @param integer $add_team_members   - Are team members allowed to add others.
    * @param integer $map_level          - What level to link to in the curriculum map.
    * @param string $academic_year_start - Day the module changes academic year.
-   * @param string $externalid          - External system module id
+   * @param string $externalid          - External system module id.
+   * @param boolean $syncpreviousyear   - When syncing enrolmetns with SMS also sync previous academic year.
    *
    * @return boolean - True if module successfully added.
    */
-  public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0, $timed_exams = 0, $exam_q_feedback = 1, $add_team_members = 1, $map_level = 0, $academic_year_start = '07/01', $externalid = null) {
+  public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0, $timed_exams = 0, $exam_q_feedback = 1, $add_team_members = 1, $map_level = 0, $academic_year_start = '07/01', $externalid = null, $syncpreviousyear = false) {
     // We need the config object.
     $configObject = Config::get_instance();
     // Return false if missing madatory fields. schoolid is actually a number
@@ -136,8 +137,8 @@ Class module {
       $tmp_checklist = substr($checklist, 1);
     }
 
-    $result = $db->prepare("INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?)");
-    $result->bind_param('ssisssiiiiiiiiss', $moduleid, $fullname, $active, $vle_api, $tmp_checklist, $sms_api, $selfEnroll, $schoolID, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start, $externalid);
+    $result = $db->prepare("INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)");
+    $result->bind_param('ssisssiiiiiiiissi', $moduleid, $fullname, $active, $vle_api, $tmp_checklist, $sms_api, $selfEnroll, $schoolID, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start, $externalid, $syncpreviousyear);
     $result->execute();
     $result->close();
     if ($db->errno != 0) {
@@ -236,18 +237,19 @@ Class module {
                add_team_members = ?,
                map_level = ?,
                academic_year_start = ?,
-               externalid = ?
+               externalid = ?,
+               syncpreviousyear = ?
             WHERE
               id = ?
             LIMIT 1
             ";
 
     $result = $db->prepare($sql);
-    $result->bind_param('ssisssiiiiiiiissi', $modinfo['moduleid'], $modinfo['fullname'], $modinfo['active'], $modinfo['vle_api'],
+    $result->bind_param('ssisssiiiiiiiissii', $modinfo['moduleid'], $modinfo['fullname'], $modinfo['active'], $modinfo['vle_api'],
                                         $modinfo['checklist'], $modinfo['sms'], $modinfo['selfenroll'], $modinfo['schoolid'],
                                         $modinfo['neg_marking'], $modinfo['ebel_grid_template'], $modinfo['timed_exams'],
                                         $modinfo['exam_q_feedback'], $modinfo['add_team_members'], $modinfo['map_level'],
-                                        $modinfo['academic_year_start'], $modinfo['externalid'], $modinfo['idMod']);
+                                        $modinfo['academic_year_start'], $modinfo['externalid'], $modinfo['syncpreviousyear'], $modinfo['idMod']);
     $res = $result->execute();
 
     // An array to convert DB fields to lang strings argghhh!!!!
@@ -267,7 +269,8 @@ Class module {
                         'add_team_members' => 'addteammembers',
                         'map_level' => 'maplevel',
                         'academic_year_start' => 'academicyearstart',
-                        'externalid' => 'externalid'
+                        'externalid' => 'externalid',
+                        'syncpreviousyear' => 'syncpreviousyear'
                         );
 
     if ($res === true ) {
@@ -393,7 +396,8 @@ Class module {
           add_team_members,
           map_level,
           academic_year_start,
-          modules.externalid
+          modules.externalid,
+          syncpreviousyear
         FROM
           modules
         LEFT JOIN
@@ -415,7 +419,7 @@ Class module {
     }
     $result->execute();
     $result->store_result();
-    $result->bind_result($idMod, $moduleid, $fullname, $school, $active, $vle_api, $checklist, $sms, $selfenroll, $schoolid, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start, $externalid);
+    $result->bind_result($idMod, $moduleid, $fullname, $school, $active, $vle_api, $checklist, $sms, $selfenroll, $schoolid, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start, $externalid, $syncpreviousyear);
 
     $result->fetch();
     if ($result->num_rows == 0) {
@@ -441,7 +445,8 @@ Class module {
                   'add_team_members' => $add_team_members,
                   'map_level' => $map_level,
                   'academic_year_start' => $academic_year_start,
-                  'externalid' => $externalid);
+                  'externalid' => $externalid,
+                  'syncpreviousyear' => $syncpreviousyear);
   }
 
   /**
@@ -852,6 +857,47 @@ Class module {
     $result->bind_result($moduleid, $fullname, $externalid);
     while ($result->fetch()) {
       $modules[] = array('moduleid' => $moduleid, 'fullname' => $fullname, 'externalid' => $externalid);
+    }
+    $result->close();
+    return $modules;
+  }
+
+  /**
+   * Check if this module sync the previous acacdemic year enrolmetns
+   * @param integer $id module identifier
+   * @return bool
+   */
+  public static function check_sync_previous_year($id) {
+    $configObject = Config::get_instance();
+    $result = $configObject->db->prepare("SELECT syncpreviousyear FROM modules WHERE id = ?");
+    $result->bind_param('i', $id);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($syncpreviousyear);
+    $result->fetch();
+    // Return false if module id not found.
+    if ($result->num_rows == 0) {
+        $syncpreviousyear = false;
+    }
+    $result->close();
+    return $syncpreviousyear;
+  }
+
+  /**
+   * Get external id of modules that sync prevous year for the given SMS
+   * @param string $sms the student management system
+   * @return array
+   */
+  public static function get_sync_previous_year_modules($sms) {
+    $modules = array();
+    $configObject = Config::get_instance();
+    $result = $configObject->db->prepare("SELECT externalid FROM modules WHERE sms = ? and syncpreviousyear = 1");
+    $result->bind_param('s', $sms);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($externalid);
+    while ($result->fetch()) {
+      $modules[] = $externalid;
     }
     $result->close();
     return $modules;

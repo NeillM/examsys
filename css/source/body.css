@@ -295,3 +295,11 @@ audio {
 .highlight {
   background-color: #FFFF00;
 }
+
+.hide {
+  display: none;
+}
+
+.show {
+  display: block;
+}

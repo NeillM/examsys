@@ -52,4 +52,5 @@ $string['module'] = 'Module';
 $string['level'] = 'level';
 $string['tooltip_format'] = 'Format is MM/DD';
 $string['duplicateerror'] = 'Module ID in use, please use another.';
-?>
+$string['syncpreviousyear'] = 'Sync enrolments for previous academic year.';
+$string['tooltip_syncprev'] = 'Useful if you have a cohort who take their exams in a different academic year to the one they are enrolled on.';

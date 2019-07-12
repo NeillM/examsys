@@ -146,6 +146,7 @@ $map_level = 0;
     <tr><td class="field"><?php echo $string['timedexams'] ?></td><td><input type="checkbox" name="timed_exams" /></td></tr>
     <tr><td class="field"><?php echo $string['questionbasedfeedback'] ?></td><td><input type="checkbox" name="exam_q_feedback" checked="checked" /></td></tr>
     <tr><td class="field"><?php echo $string['addteammembers'] ?></td><td><input type="checkbox" name="add_team_members" checked="checked" /></td></tr>
+    <tr><td class="field"><?php echo $string['syncpreviousyear'] ?></td><td><input type="checkbox" name="syncpreviousyear" /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['tooltip_syncprev'] ?>" /></td></tr>
     <tr id="ebelgrid" style="display:none"><td class="field"><?php echo $string['ebelgrid'] ?></td><td><select name="ebel_grid_template"><option value=""></option><?php
     $result = $mysqli->prepare("SELECT id, name FROM ebel_grid_templates ORDER BY name");
     $result->execute();

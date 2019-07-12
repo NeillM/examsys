@@ -720,6 +720,7 @@ QUERY;
           `map_level` smallint(2) NOT NULL DEFAULT '0',
           `academic_year_start` char(5) NOT NULL,
           `externalid` varchar(255) default NULL,
+          `syncpreviousyear` BOOLEAN NOT NULL default false,
           PRIMARY KEY (`id`),
           UNIQUE INDEX `externalid` (`externalid`, `sms`),
           KEY `guideid` (`moduleid`),

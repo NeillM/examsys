@@ -21,10 +21,23 @@
 requirejs(['moduleform', 'modulessidebar', 'jquery'], function (FORM, SIDEBAR, $) {
     var sidebar = new SIDEBAR();
     sidebar.init();
-    $(function () {
-        var form = new FORM();
-        form.init();
 
-        form.setSidebarMenu();
-    });
+    var form = new FORM();
+    form.init();
+
+    form.setSidebarMenu();
+
+    // Display sms sync options if available to module.
+    var externalid = $('#externalid').val();
+
+    if (externalid == '') {
+        $('#syncoptions').hide();
+    } else {
+        $('#syncoptions').show();
+    }
+
+    $('#sms').attr('data-id', externalid);
+    $('#sms2').attr('data-id', externalid);
+    $('#sms3').attr('data-id', externalid);
+
 });

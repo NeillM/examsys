@@ -175,6 +175,7 @@ $cfg_sms_sources = array($string['nolookup'] => '') + $cfg_sms_sources;
     <tr><td class="field"><?php echo $string['timedexams'] ?></td><td><input type="checkbox" name="timed_exams"<?php if ($module['timed_exams'] == 1) echo ' checked="checked"' ?> /></td></tr>
     <tr><td class="field"><?php echo $string['questionbasedfeedback'] ?></td><td><input type="checkbox" name="exam_q_feedback"<?php if ($module['exam_q_feedback'] == 1) echo ' checked="checked"' ?> /></td></tr>
     <tr><td class="field"><?php echo $string['addteammembers'] ?></td><td><input type="checkbox" name="add_team_members"<?php if ($module['add_team_members'] == 1) echo ' checked="checked"' ?> /></td></tr>
+    <tr><td class="field"><?php echo $string['syncpreviousyear'] ?></td><td><input type="checkbox" name="syncpreviousyear"<?php if ($module['syncpreviousyear'] == 1) echo ' checked="checked"' ?> /><img src="../artwork/tooltip_icon.gif" class="help_tip" title="<?php echo $string['tooltip_syncprev'] ?>" /></td></tr>
     <tr id="ebelgrid" style="display:<?php
     if ($stdset == 1) {
       echo 'table-row';
@@ -194,7 +195,7 @@ $cfg_sms_sources = array($string['nolookup'] => '') + $cfg_sms_sources;
     }
     $result->close();
     ?></select></td></tr>
-    <tr><td class="field"><?php echo $string['externalid'] ?></td><td><input type="text" size="30" maxlength="255" name="externalid" value="<?php echo $module['externalid'] ?>"></td></tr>
+    <tr><td class="field"><?php echo $string['externalid'] ?></td><td><input type="text" size="30" maxlength="255" id="externalid" name="externalid" value="<?php echo $module['externalid'] ?>"></td></tr>
   <?php
     echo "</table>\n";
     echo "<input type=\"hidden\" name=\"old_modulecode\" value=\"" . $module['moduleid'] . "\" />\n";

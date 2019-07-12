@@ -29,6 +29,29 @@ requirejs(['list', 'modulessidebar', 'jquery', 'jquerytablesorter'], function (L
     var list = new LIST();
     list.init();
 
+    // Display sms sync options if available to module.
+    $(".l").click(function(event) {
+        var externalid = $(this).attr('data-externalid');
+        var syncprevious = $(this).attr('data-syncprevious');
+
+        if (externalid == '') {
+            $('#syncoptions').hide();
+        } else {
+            $('#syncoptions').show();
+        }
+
+        $('#sms').attr('data-id', externalid);
+        $('#sms2').attr('data-id', externalid);
+        $('#sms3').attr('data-id', externalid);
+
+        // Display previous year syn if enabled for the module.
+        if (syncprevious == '1') {
+            $('#sms3').show();
+        } else {
+            $('#sms3').hide();
+        }
+    });
+
     $(".l").dblclick(function() {
         list.edit('./edit_module.php?moduleid=', $(this).attr('id'));
     });

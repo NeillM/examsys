@@ -49,6 +49,7 @@ $exam_q_feedback = param::optional('exam_q_feedback', false,param::BOOLEAN, para
 $add_team_members = param::optional('add_team_members', false,param::BOOLEAN, param::FETCH_POST);
 $academic_year_start = param::optional('academic_year_start', '07/01',param::TEXT, param::FETCH_POST);
 $ebel_grid_template = param::optional('ebel_grid_template', null,param::TEXT, param::FETCH_POST);
+$syncpreviousyear = param::optional('syncpreviousyear', false, param::BOOLEAN, param::FETCH_POST);
 
 if (module_utils::module_exists($modulecode, $mysqli)) {
   $unique_moduleid = false;
@@ -67,7 +68,7 @@ if ($unique_moduleid == true) {
 
   $sms_import = 1;
 
-  if (!module_utils::add_modules($modulecode, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli, $sms_import, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start, $externalid)) {
+  if (!module_utils::add_modules($modulecode, $fullname, $active, $schoolid, $vle_api, $sms_api, $selfenroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $mysqli, $sms_import, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start, $externalid, $syncpreviousyear)) {
     echo json_encode('ERROR');
     exit();
   }

@@ -79,10 +79,13 @@ $next_academic_year = $yearutils->get_academic_session($next_session);
             $smsplugin = new $smspluginns($userObject->get_user_ID());
             $moduleimport = $smsplugin->supports_module_import();
             if ($moduleimport !== false) {
-    ?>
-    <div id="sms" class="menuitem"><a class="help_tip" title="<?php echo $moduleimport['tooltip'] ?>" href="<?php echo $moduleimport['url'] ?>?session=<?php echo $current_session ?>"><img class="sidebar_icon" src="../artwork/sync_16.png" alt="" /><?php echo $moduleimport['blurb'] ?> (<?php echo $academic_year ?>)</a></div>
-    <div id="sms2" class="menuitem"><a class="help_tip" title="<?php echo $moduleimport['tooltip'] ?>" href="<?php echo $moduleimport['url'] ?>?session=<?php echo $next_session ?>"><img class="sidebar_icon" src="../artwork/sync_16.png" alt="" /><?php echo $moduleimport['blurb'] ?> (<?php echo $next_academic_year ?>)</a></div>
-    <?php
+                $url = url::fromGlobals();
+                if ($url->getPath() === '/admin/edit_module.php') {
+                    $moduleid = param::required('moduleid', param::INT, param::FETCH_GET);
+                    \plugins\plugins_sms::render_module_sync_options($moduleimport, $moduleid, $module['externalid']);
+                } elseif ($url->getPath() === '/admin/list_modules.php') {
+                    \plugins\plugins_sms::render_module_sync_options($moduleimport, 0, '');
+                }
             }
         }
     }

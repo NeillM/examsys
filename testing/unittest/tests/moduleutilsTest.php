@@ -69,7 +69,8 @@ class moduleutilstest extends unittestdatabase {
                   'add_team_members' => null,
                   'map_level' => 0,
                   'academic_year_start' => '01/07',
-                  'externalid' => '987654321');
+                  'externalid' => '987654321',
+                  'syncpreviousyear' => 0);
         $details = module_utils::get_full_details('internal', 2, $this->db);
         $this->assertEquals($detailsarray, $details);
     }
@@ -95,7 +96,8 @@ class moduleutilstest extends unittestdatabase {
                   'add_team_members' => null,
                   'map_level' => 0,
                   'academic_year_start' => '01/07',
-                  'externalid' => '987654321');
+                  'externalid' => '987654321',
+                  'syncpreviousyear' => 0);
         $details = module_utils::get_full_details_by_ID(2, $this->db);
         $this->assertEquals($detailsarray, $details);
     }
@@ -121,7 +123,8 @@ class moduleutilstest extends unittestdatabase {
                   'add_team_members' => null,
                   'map_level' => 0,
                   'academic_year_start' => '01/07',
-                  'externalid' => '987654321');
+                  'externalid' => '987654321',
+                  'syncpreviousyear' => 0);
         $details = module_utils::get_full_details('external', '987654321', $this->db, 'external');
         $this->assertEquals($detailsarray, $details);
     }
@@ -132,5 +135,28 @@ class moduleutilstest extends unittestdatabase {
     public function test_get_full_details_invalid() {
         $details = module_utils::get_full_details('placeholder', 2, $this->db);
         $this->assertFalse($details);
+    }
+
+    /**
+     * Test get modules with prev year sync enabled
+     * @group modules
+     */
+    public function test_get_sync_previous_year_modules() {
+      $expected = array('123456789');
+      $actual = module_utils::get_sync_previous_year_modules('external');
+      $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * Test get check if previous year enabled for module
+     * @group modules
+     */
+    public function test_check_sync_previous_year() {
+      $actual = module_utils::check_sync_previous_year(2);
+      $expected = 0;
+      $this->assertEquals($expected, $actual);
+      $actual = module_utils::check_sync_previous_year(1);
+      $expected = 1;
+      $this->assertEquals($expected, $actual);
     }
 }

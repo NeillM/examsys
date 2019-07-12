@@ -23,6 +23,7 @@ modules:
     map_level: 1
     academic_year_start: '06/02'
     externalid: '987654321'
+    syncpreviousyear: 0
   -
     id: 2
     moduleid: 'TST'
@@ -42,3 +43,4 @@ modules:
     map_level: 1
     academic_year_start: '07/02'
     externalid: '123456789'
+    syncpreviousyear: 0
