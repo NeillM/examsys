@@ -161,15 +161,29 @@ while ($stmt->fetch()) {
 
     if (isset($lm_count) and $lm_count > 0) {
         cli_utils::prompt($lm_count . ' Log0 rows to archive');
-        $logquery = $mysqliarchive->prepare("INSERT INTO " . $cfg_archivedb_database . ".log0_deleted SELECT l.* FROM " . $cfg_db_database . ".log0 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-        $logquery->bind_param('i', $user_to_delete);
-        $logquery->execute();
+        $selectquery = $mysqli->prepare(get_logselectquery("log0", $cfg_db_database));
+        $selectquery->bind_param('i', $user_to_delete);
+        $selectquery->execute();
+        $selectquery->bind_result($id, $q_id, $mark, $adjmark, $totalpos, $user_answer, $errorstate, $screen, $duration, $updated, $dismiss, $option_order, $metadataID);
+        $logquery = $mysqliarchive->prepare(get_loginsertquery("log0_deleted", $cfg_archivedb_database));
+        while($selectquery->fetch()) {
+            $logquery->bind_param('iiiiisiiisssi', $id, $q_id, $mark, $adjmark, $totalpos, $user_answer, $errorstate, $screen, $duration, $updated, $dismiss, $option_order, $metadataID);
+            $logquery->execute();
+        }
         $logquery->close();
+        $selectquery->close();
 
-        $logquery = $mysqliarchive->prepare("INSERT INTO " . $cfg_archivedb_database . ".log_metadata_deleted SELECT DISTINCT lm.* FROM " . $cfg_db_database . ".log0 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-        $logquery->bind_param('i', $user_to_delete);
-        $logquery->execute();
+        $selectquery = $mysqli->prepare(get_metaselectquery("log0", $cfg_db_database));
+        $selectquery->bind_param('i', $user_to_delete);
+        $selectquery->execute();
+        $selectquery->bind_result($id, $userID, $paperID, $started, $ipaddress, $student_grade, $year, $attempt, $completed, $lab_name, $highest_screen);
+        $logquery = $mysqliarchive->prepare(get_metainsertquery($cfg_archivedb_database));
+        while($selectquery->fetch()) {
+            $logquery->bind_param('iiisssiissi', $id, $userID, $paperID, $started, $ipaddress, $student_grade, $year, $attempt, $completed, $lab_name, $highest_screen);
+            $logquery->execute();
+        }
         $logquery->close();
+        $selectquery->close();
 
         // Delete from formative log.
         $deletequery = $mysqli->prepare("DELETE l, lm FROM " . $cfg_db_database . ".log0 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
@@ -192,15 +206,29 @@ while ($stmt->fetch()) {
 
     if (isset($lm_count) and $lm_count > 0) {
         cli_utils::prompt($lm_count . ' Log1 rows to archive');
-        $logquery = $mysqliarchive->prepare("INSERT INTO " . $cfg_archivedb_database . ".log1_deleted SELECT l.* FROM " . $cfg_db_database . ".log1 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-        $logquery->bind_param('i', $user_to_delete);
-        $logquery->execute();
+        $selectquery =  $mysqli->prepare(get_logselectquery("log1", $cfg_db_database));
+        $selectquery->bind_param('i', $user_to_delete);
+        $selectquery->execute();
+        $selectquery->bind_result($id, $q_id, $mark, $adjmark, $totalpos, $user_answer, $errorstate, $screen, $duration, $updated, $dismiss, $option_order, $metadataID);
+        $logquery = $mysqliarchive->prepare(get_loginsertquery("log1_deleted", $cfg_archivedb_database));
+        while($selectquery->fetch()) {
+            $logquery->bind_param('iiiiisiiisssi', $id, $q_id, $mark, $adjmark, $totalpos, $user_answer, $errorstate, $screen, $duration, $updated, $dismiss, $option_order, $metadataID);
+            $logquery->execute();
+        }
         $logquery->close();
+        $selectquery->close();
 
-        $logquery = $mysqliarchive->prepare("INSERT INTO " . $cfg_archivedb_database . ".log_metadata_deleted SELECT DISTINCT lm.* FROM " . $cfg_db_database . ".log1 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-        $logquery->bind_param('i', $user_to_delete);
-        $logquery->execute();
+        $selectquery = $mysqli->prepare(get_metaselectquery("log1", $cfg_db_database));
+        $selectquery->bind_param('i', $user_to_delete);
+        $selectquery->execute();
+        $selectquery->bind_result($id, $userID, $paperID, $started, $ipaddress, $student_grade, $year, $attempt, $completed, $lab_name, $highest_screen);
+        $logquery = $mysqliarchive->prepare(get_metainsertquery($cfg_archivedb_database));
+        while($selectquery->fetch()) {
+            $logquery->bind_param('iiisssiissi', $id, $userID, $paperID, $started, $ipaddress, $student_grade, $year, $attempt, $completed, $lab_name, $highest_screen);
+            $logquery->execute();
+        }
         $logquery->close();
+        $selectquery->close();;
 
         // Delete from formative log.
         $deletequery = $mysqli->prepare("DELETE l, lm FROM " . $cfg_db_database . ".log1 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
@@ -249,3 +277,42 @@ $updatequery->close();
 cli_utils::prompt("Log0 records archived: " . $log0_deleted_overall);
 cli_utils::prompt("Log1 records archived: " . $log1_deleted_overall);
 cli_utils::prompt("End Archive Process " . date("Y-m-d H:i:s"));
+
+/**
+ * Get the log table select query
+ * @param string $table log table we want
+ * @param string $database the database to select from
+ * @return string
+ */
+function get_logselectquery($table, $database) {
+    return "SELECT l.id, l.q_id, l.mark, l.adjmark, l.totalpos, l.user_answer, l.errorstate, l.screen, l.duration, l.updated, l.dismiss, l.option_order, l.metadataID FROM " . $database . "." . $table ." l INNER JOIN " . $database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?";
+}
+
+/**
+ * Get the insert log query
+ * @param string $table log table we want
+ * @param string $database the database to insert into
+ * @return string
+ */
+function get_loginsertquery($table, $database) {
+    return "INSERT INTO " . $database . "." . $table . " (id, q_id, mark, adjmark, totalpos, user_answer, errorstate, screen, duration, updated, dismiss, option_order, metadataID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+}
+
+/**
+ * Get the metadata table select query
+ * @param string $table log table we want
+ * @param string $database the database to select from
+ * @return string
+ */
+function get_metaselectquery($table, $database) {
+    return "SELECT DISTINCT lm.id, lm.userID, lm.paperID, lm.started, lm.ipaddress, lm.student_grade, lm.year, lm.attempt, lm.completed, lm.lab_name, lm.highest_screen FROM " . $database . "." . $table . " l INNER JOIN " . $database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?";
+}
+
+/**
+ * Get the insert metadata query
+ * @param $database
+ * @return string
+ */
+function get_metainsertquery($database) {
+    return "INSERT INTO " . $database . ".log_metadata_deleted (id, userID, paperID, started, ipaddress, student_grade, year, attempt, completed, lab_name, highest_screen) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+}
