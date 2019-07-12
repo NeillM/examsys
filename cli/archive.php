@@ -145,110 +145,106 @@ $stmt->bind_result($user_to_delete);
 $numusers = $stmt->num_rows();
 cli_utils::prompt($numusers . ' users to potentially archive');
 $usercount = 1;
+
+// Prepare queries.
+$selectquery0 = $mysqli->prepare(get_logselectquery("log0", $cfg_db_database));
+$logquery0 = $mysqliarchive->prepare(get_loginsertquery("log0_deleted", $cfg_archivedb_database));
+$metaselectquery0 = $mysqli->prepare(get_metaselectquery("log0", $cfg_db_database));
+$metalogquery0 = $mysqliarchive->prepare(get_metainsertquery($cfg_archivedb_database));
+$selectquery1 = $mysqli->prepare(get_logselectquery("log1", $cfg_db_database));
+$logquery1 = $mysqliarchive->prepare(get_loginsertquery("log1_deleted", $cfg_archivedb_database));
+$metaselectquery1 = $mysqli->prepare(get_metaselectquery("log1", $cfg_db_database));
+$metalogquery1 = $mysqliarchive->prepare(get_metainsertquery($cfg_archivedb_database));
+$deletequerylti = $mysqli->prepare("DELETE FROM " . $cfg_db_database . ".lti_user WHERE lti_user_equ = ?");
+$deletequery0 = $mysqli->prepare("DELETE l, lm FROM " . $cfg_db_database . ".log0 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+$deletequery1 = $mysqli->prepare("DELETE l, lm FROM " . $cfg_db_database . ".log1 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+$lm_check0 = $mysqli->prepare("SELECT count(lm.id) FROM " . $cfg_db_database . ".log0 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+$lm_check1 = $mysqli->prepare("SELECT count(lm.id) FROM " . $cfg_db_database . ".log1 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+
 while ($stmt->fetch()) {
     $log0_deleted = 0;
     $log1_deleted = 0;
     $lti_user_deleted = 0;
 
-    $lm_check = $mysqli->prepare("SELECT count(lm.id) FROM " . $cfg_db_database . ".log0 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-    $lm_check->bind_param('i', $user_to_delete);
-    $lm_check->execute();
-    $lm_check->bind_result($lm_count);
-    $lm_check->fetch();
-    $lm_check->close();
+    $lm_check0->bind_param('i', $user_to_delete);
+    $lm_check0->execute();
+    $lm_check0->bind_result($lm_count);
+    $lm_check0->store_result();
+    $lm_check0->fetch();
 
     cli_utils::prompt('Checking user ' . $usercount . ' / ' . $numusers);
 
     if (isset($lm_count) and $lm_count > 0) {
         cli_utils::prompt($lm_count . ' Log0 rows to archive');
-        $selectquery = $mysqli->prepare(get_logselectquery("log0", $cfg_db_database));
-        $selectquery->bind_param('i', $user_to_delete);
-        $selectquery->execute();
-        $selectquery->bind_result($id, $q_id, $mark, $adjmark, $totalpos, $user_answer, $errorstate, $screen, $duration, $updated, $dismiss, $option_order, $metadataID);
-        $logquery = $mysqliarchive->prepare(get_loginsertquery("log0_deleted", $cfg_archivedb_database));
-        while($selectquery->fetch()) {
-            $logquery->bind_param('iiiiisiiisssi', $id, $q_id, $mark, $adjmark, $totalpos, $user_answer, $errorstate, $screen, $duration, $updated, $dismiss, $option_order, $metadataID);
-            $logquery->execute();
+        $selectquery0->bind_param('i', $user_to_delete);
+        $selectquery0->execute();
+        $selectquery0->bind_result($id, $q_id, $mark, $adjmark, $totalpos, $user_answer, $errorstate, $screen, $duration, $updated, $dismiss, $option_order, $metadataID);
+        $selectquery0->store_result();
+        while($selectquery0->fetch()) {
+            $logquery0->bind_param('iiiiisiiisssi', $id, $q_id, $mark, $adjmark, $totalpos, $user_answer, $errorstate, $screen, $duration, $updated, $dismiss, $option_order, $metadataID);
+            $logquery0->execute();
         }
-        $logquery->close();
-        $selectquery->close();
 
-        $selectquery = $mysqli->prepare(get_metaselectquery("log0", $cfg_db_database));
-        $selectquery->bind_param('i', $user_to_delete);
-        $selectquery->execute();
-        $selectquery->bind_result($id, $userID, $paperID, $started, $ipaddress, $student_grade, $year, $attempt, $completed, $lab_name, $highest_screen);
-        $logquery = $mysqliarchive->prepare(get_metainsertquery($cfg_archivedb_database));
-        while($selectquery->fetch()) {
-            $logquery->bind_param('iiisssiissi', $id, $userID, $paperID, $started, $ipaddress, $student_grade, $year, $attempt, $completed, $lab_name, $highest_screen);
-            $logquery->execute();
+        $metaselectquery0->bind_param('i', $user_to_delete);
+        $metaselectquery0->execute();
+        $metaselectquery0->bind_result($id, $userID, $paperID, $started, $ipaddress, $student_grade, $year, $attempt, $completed, $lab_name, $highest_screen);
+        $metaselectquery0->store_result();
+        while($metaselectquery0->fetch()) {
+            $metalogquery0->bind_param('iiisssiissi', $id, $userID, $paperID, $started, $ipaddress, $student_grade, $year, $attempt, $completed, $lab_name, $highest_screen);
+            $metalogquery0->execute();
         }
-        $logquery->close();
-        $selectquery->close();
 
         // Delete from formative log.
-        $deletequery = $mysqli->prepare("DELETE l, lm FROM " . $cfg_db_database . ".log0 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-        $deletequery->bind_param('i', $user_to_delete);
-        $deletequery->execute();
-        $log0_deleted = $deletequery->affected_rows;
+        $deletequery0->bind_param('i', $user_to_delete);
+        $deletequery0->execute();
+        $log0_deleted = $deletequery0->affected_rows;
         $log0_deleted_overall += $log0_deleted;
-        $deletequery->close();
 
         // Record the delete in audit trail
         $logger->track_change('Deleted records from log0', $user_to_delete, $account, $log0_deleted, 0, 'Clear old logs');
     }
 
-    $lm_check = $mysqli->prepare("SELECT count(lm.id) FROM " . $cfg_db_database . ".log1 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-    $lm_check->bind_param('i', $user_to_delete);
-    $lm_check->execute();
-    $lm_check->bind_result($lm_count);
-    $lm_check->fetch();
-    $lm_check->close();
+    $lm_check1->bind_param('i', $user_to_delete);
+    $lm_check1->execute();
+    $lm_check1->bind_result($lm_count);
+    $lm_check1->store_result();
+    $lm_check1->fetch();
 
     if (isset($lm_count) and $lm_count > 0) {
         cli_utils::prompt($lm_count . ' Log1 rows to archive');
-        $selectquery =  $mysqli->prepare(get_logselectquery("log1", $cfg_db_database));
-        $selectquery->bind_param('i', $user_to_delete);
-        $selectquery->execute();
-        $selectquery->bind_result($id, $q_id, $mark, $adjmark, $totalpos, $user_answer, $errorstate, $screen, $duration, $updated, $dismiss, $option_order, $metadataID);
-        $logquery = $mysqliarchive->prepare(get_loginsertquery("log1_deleted", $cfg_archivedb_database));
-        while($selectquery->fetch()) {
-            $logquery->bind_param('iiiiisiiisssi', $id, $q_id, $mark, $adjmark, $totalpos, $user_answer, $errorstate, $screen, $duration, $updated, $dismiss, $option_order, $metadataID);
-            $logquery->execute();
+        $selectquery1->bind_param('i', $user_to_delete);
+        $selectquery1->execute();
+        $selectquery1->bind_result($id, $q_id, $mark, $adjmark, $totalpos, $user_answer, $errorstate, $screen, $duration, $updated, $dismiss, $option_order, $metadataID);
+        $selectquery1->store_result();
+        while($selectquery1->fetch()) {
+            $logquery1->bind_param('iiiiisiiisssi', $id, $q_id, $mark, $adjmark, $totalpos, $user_answer, $errorstate, $screen, $duration, $updated, $dismiss, $option_order, $metadataID);
+            $logquery1->execute();
         }
-        $logquery->close();
-        $selectquery->close();
 
-        $selectquery = $mysqli->prepare(get_metaselectquery("log1", $cfg_db_database));
-        $selectquery->bind_param('i', $user_to_delete);
-        $selectquery->execute();
-        $selectquery->bind_result($id, $userID, $paperID, $started, $ipaddress, $student_grade, $year, $attempt, $completed, $lab_name, $highest_screen);
-        $logquery = $mysqliarchive->prepare(get_metainsertquery($cfg_archivedb_database));
-        while($selectquery->fetch()) {
-            $logquery->bind_param('iiisssiissi', $id, $userID, $paperID, $started, $ipaddress, $student_grade, $year, $attempt, $completed, $lab_name, $highest_screen);
-            $logquery->execute();
+        $metaselectquery1->bind_param('i', $user_to_delete);
+        $metaselectquery1->execute();
+        $metaselectquery1->bind_result($id, $userID, $paperID, $started, $ipaddress, $student_grade, $year, $attempt, $completed, $lab_name, $highest_screen);
+        $metaselectquery1->store_result();
+        while($metaselectquery1->fetch()) {
+            $metalogquery1->bind_param('iiisssiissi', $id, $userID, $paperID, $started, $ipaddress, $student_grade, $year, $attempt, $completed, $lab_name, $highest_screen);
+            $metalogquery1->execute();
         }
-        $logquery->close();
-        $selectquery->close();;
 
         // Delete from formative log.
-        $deletequery = $mysqli->prepare("DELETE l, lm FROM " . $cfg_db_database . ".log1 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-        $deletequery->bind_param('i', $user_to_delete);
-        $deletequery->execute();
-        $log1_deleted = $deletequery->affected_rows;
+        $deletequery1->bind_param('i', $user_to_delete);
+        $deletequery1->execute();
+        $log1_deleted = $deletequery1->affected_rows;
         $log1_deleted_overall += $log1_deleted;
-        $deletequery->close();
 
         // Record the delete in audit trail
         $logger->track_change('Deleted records from log1', $user_to_delete, $account, $log1_deleted, 0, 'Clear old logs');
     }
 
     // Delete from lti_user table.
-    $deletequery = $mysqli->prepare("DELETE FROM " . $cfg_db_database . ".lti_user WHERE lti_user_equ = ?");
-    $deletequery->bind_param('i', $user_to_delete);
-    $deletequery->execute();
-    $lti_user_deleted = $deletequery->affected_rows;
+    $deletequerylti->bind_param('i', $user_to_delete);
+    $deletequerylti->execute();
+    $lti_user_deleted = $deletequerylti->affected_rows;
     $lti_user_deleted_overall += $lti_user_deleted;
-    $deletequery->close();
 
     if ($lti_user_deleted > 0) {
         cli_utils::prompt($lti_user_deleted . ' LTI users to delete');
@@ -257,6 +253,19 @@ while ($stmt->fetch()) {
     $usercount++;
 }
 $stmt->close();
+$logquery0->close();
+$selectquery0->close();
+$logquery1->close();
+$selectquery1->close();
+$metalogquery0->close();
+$metaselectquery0->close();
+$metalogquery1->close();
+$metaselectquery1->close();
+$deletequerylti->close();
+$deletequery0->close();
+$deletequery1->close();
+$lm_check0->close();
+$lm_check1->close();
 
 // Reset passwords
 if ($ldap) {
@@ -273,6 +282,9 @@ if ($updatequery->affected_rows > 0) {
     $logger->track_change('Reset passwords for roles ' . $roles_string, $account, $account, 1, 0, 'Clear old logs');
 }
 $updatequery->close();
+
+$mysqli->close();
+$mysqliarchive->close();
 
 cli_utils::prompt("Log0 records archived: " . $log0_deleted_overall);
 cli_utils::prompt("Log1 records archived: " . $log1_deleted_overall);
