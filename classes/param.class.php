@@ -303,7 +303,9 @@ class param {
    */
   public static function optional($name, $default, $type, $from = self::FETCH_REQUEST, $opt = array('default' => null)) {
     $value = self::fetch($name, $from);
-    if (is_array($value)) {
+    if (is_null($value)) {
+      $clean = null;
+    } elseif (is_array($value)) {
       $clean = self::clean_array($value, $type, false, $opt);
     } else {
       $clean = self::clean($value, $type, $opt);
@@ -326,7 +328,9 @@ class param {
    */
   public static function required($name, $type, $from = self::FETCH_REQUEST, $opt = array('default' => null)) {
     $value = self::fetch($name, $from);
-    if (is_array($value)) {
+    if (is_null($value)) {
+      $clean = null;
+    } elseif (is_array($value)) {
       $clean = self::clean_array($value, $type, true, $opt);
     } else {
       $clean = self::clean($value, $type, $opt);
