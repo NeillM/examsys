@@ -133,7 +133,7 @@ Class MathsUtils {
     } elseif( 1 < $percentile and $percentile <= 100 ) {
       $p = $percentile * .01;
     } else {
-      return '';
+      return 0.0;
     }
     $allindex     = ($count-1) * $p;
     $intvalindex  = intval($allindex);
