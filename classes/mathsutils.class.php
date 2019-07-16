@@ -126,7 +126,7 @@ Class MathsUtils {
   static function percentile($data, $percentile) {
     $count = count($data);
     if ($count == 0) {
-      return '';
+      return 0.0;
     }
     if (0 < $percentile and $percentile < 1 ) {
       $p = $percentile;
