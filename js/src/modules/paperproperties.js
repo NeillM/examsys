@@ -115,6 +115,39 @@ define(['alert', 'jquery', 'jqueryui'], function(ALERT, $) {
                     return false;
                 }
 
+                // Check from time has been set.
+                if ($('#fhour').val() === '' || $('#fminute').val() === '') {
+                    alert.notification('missingfromtime');
+                    return false;
+                }
+
+                // Check to time has been set.
+                if ($('#thour').val() === '' || $('#tminute').val() === '') {
+                    alert.notification('missingtotime');
+                    return false;
+                }
+
+                // Calculate the minimum to hour and minutes.
+                var calculated_min_thours = parseInt($('#fhour').val()) + parseInt($('#exam_duration_hours').val());
+                var calculated_min_tminutes = parseInt($('#fminute').val()) + parseInt($('#exam_duration_mins').val());
+                if (calculated_min_tminutes > 60) {
+                    calculated_min_thours  += calculated_min_tminutes % 60;
+                    calculated_min_tminutes -= 60;
+                }
+
+                // Check that availability meets the duration requirement.
+                var durationnotmet = false;
+                if (parseInt($('#thour').val()) < calculated_min_thours) {
+                    durationnotmet = true;
+                }
+                if (parseInt($('#thour').val()) === calculated_min_thours && parseInt($('#tminute').val()) < calculated_min_tminutes) {
+                    durationnotmet = true;
+                }
+                if (durationnotmet) {
+                    alert.notification('durationnotmet');
+                    return false;
+                }
+
                 if ($('#session').val() == '') {
                     alert.notification('msg4');
                     return false;
