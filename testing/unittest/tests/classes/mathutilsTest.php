@@ -31,8 +31,10 @@ class mathutilstest extends UnitTest {
      */
     public function test_percentile() {
         $data = array(100,50,25,0);
-        $test = \MathsUtils::percentile($data, 0.25);
-        $this->assertEquals(62.5, $test);
+        $test = \MathsUtils::percentile($data, 0.50);
+        $this->assertEquals(37.5, $test);
+        $test = \MathsUtils::percentile($data, 0.55);
+        $this->assertEquals(33.75, $test);
     }
 
     /**
