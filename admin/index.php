@@ -114,7 +114,6 @@ require '../include/sysadmin_auth.inc';
   $menudata['bug']                  = array('https://rogo-eassessment.atlassian.net', 'bug.png');
   $menudata['calendar']             = array('calendar.php#week' . date("W"), 'calendar_icon.png');
   $menudata['clearguestaccounts']   = array('clear_guest_users.php', 'clear_guest_users.png');
-  $menudata['clearoldlogs']         = array('clear_old_logs.php', 'clear_logs.png');
   $menudata['clearorphanmedia']     = array('orphan_media.php', 'remove_orphan_icon.png');
   $menudata['cleartraining']        = array('clear_training_module.php', 'training.png');
   $menudata['computerlabs']         = array('list_labs.php', 'computer_lab_48.png');

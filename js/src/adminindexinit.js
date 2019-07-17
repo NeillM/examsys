@@ -24,10 +24,5 @@ requirejs(['alert'], function (ALERT) {
             var alert = new ALERT();
             return alert.show('msg1');
         });
-
-        $("#clear_old_logs").click(function() {
-            var alert = new ALERT();
-            return alert.show('msg2');
-        });
     });
 });
