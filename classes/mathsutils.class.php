@@ -128,6 +128,14 @@ Class MathsUtils {
     if ($count == 0) {
       return 0.0;
     }
+
+    // If any of the array elements are not a number we cannot calculate the percentile so return 0.
+    foreach ($data as $idx) {
+      if (!is_numeric($idx)) {
+        return 0.0;
+      }
+    }
+
     if (0 < $percentile and $percentile < 1 ) {
       $p = $percentile;
     } elseif( 1 < $percentile and $percentile <= 100 ) {
