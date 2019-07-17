@@ -119,6 +119,8 @@ Class MathsUtils {
 
   /**
    * Returns a percentile from a list of numbers
+   * Not sure what the idea here was as this is not a percentile calculation
+   * see https://www.dummies.com/education/math/statistics/how-to-calculate-percentiles-in-statistics/
    * @param array set of numbers to base the percentile on
    * @param float the percentile required
    * @return float the requested percentile
