@@ -118,6 +118,7 @@ function check_datetime($start_date, $end_date, $string, $db, $first_start = fal
   }
   // Allow 1 minute before the start time of the assessment.
   if ((time()+60) < $start_date or $end_comparison > $end_date) {
+    $configObject = Config::get_instance();
     $format = $configObject->get('cfg_short_datetime_php');
     $msg = sprintf($string['error_time'], date($format, $start_date), date($format, $end_date));
     $fullmsg = $msg . '<br /><br /><input type="button" name="close" value="' . $string['ok'] . '" onclick="close_window()" class="OK" />';
@@ -150,6 +151,7 @@ function check_finished($propertyObj, $userObj, $string, $db) {
   $stmt->close();
   
   if ($completed != '') {
+    $configObject = Config::get_instance();
     $format = $configObject->get('cfg_short_datetime_php');
     $msg = sprintf($string['alreadycompleted'], date($format, $completed));
     $fullmsg = $msg . '<br /><br /><input type="button" name="close" value="' . $string['ok'] . '" onclick="close_window()" class="OK" />';
