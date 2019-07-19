@@ -45,7 +45,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     $api = new \api\api($app, $mysqli, $configObject);
 
     // Request oauth token.
-    $app->post('/requesttoken', function (ServerRequestInterface $request, ResponseInterface $response) use ($oauth, $api) {
+    $app->post('/requesttoken', function(ServerRequestInterface $request, ResponseInterface $response) use($oauth, $api) {
         // Set api.
         $api->request = $request;
         $api->response = $response;
@@ -54,7 +54,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     });
 
     // Enrolment request.
-    $app->post('/modulemanagement/enrol', function (ServerRequestInterface $request, ResponseInterface $response) use ($api, $mysqli, $oauth, $render, $langpack) {
+    $app->post('/modulemanagement/enrol', function(ServerRequestInterface $request, ResponseInterface $response) use($api, $mysqli, $oauth, $render, $langpack) {
         $requesttype = 'modulemanagement';
         $responsetype = 'moduleManagementEnrolResponse';
         $operations = array('enrol', 'unenrol');
@@ -64,7 +64,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     });
 
     // Module management request.
-    $app->post('/modulemanagement', function (ServerRequestInterface $request, ResponseInterface $response) use ($api, $mysqli, $oauth, $render, $langpack) {
+    $app->post('/modulemanagement', function(ServerRequestInterface $request, ResponseInterface $response) use($api, $mysqli, $oauth, $render, $langpack) {
         $requesttype = 'modulemanagement';
         $responsetype = 'moduleManagementResponse';
         $operations = array('create', 'update', 'delete');
@@ -74,7 +74,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     });
 
     // Course management request.
-    $app->post('/coursemanagement', function (ServerRequestInterface $request, ResponseInterface $response) use ($api, $mysqli, $oauth, $render, $langpack) {
+    $app->post('/coursemanagement', function(ServerRequestInterface $request, ResponseInterface $response) use($api, $mysqli, $oauth, $render, $langpack) {
         $requesttype = 'coursemanagement';
         $responsetype = 'courseManagementResponse';
         $operations = array('create', 'update', 'delete');
@@ -84,7 +84,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     });
 
     // School management request.
-    $app->post('/schoolmanagement', function (ServerRequestInterface $request, ResponseInterface $response) use ($api, $mysqli, $oauth, $render, $langpack) {
+    $app->post('/schoolmanagement', function(ServerRequestInterface $request, ResponseInterface $response) use($api, $mysqli, $oauth, $render, $langpack) {
         $requesttype = 'schoolmanagement';
         $responsetype = 'schoolManagementResponse';
         $operations = array('create', 'update', 'delete');
@@ -94,7 +94,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     });
 
     // Faculty management request.
-    $app->post('/facultymanagement', function (ServerRequestInterface $request, ResponseInterface $response) use ($api, $mysqli, $oauth, $render, $langpack) {
+    $app->post('/facultymanagement', function(ServerRequestInterface $request, ResponseInterface $response) use($api, $mysqli, $oauth, $render, $langpack) {
         $requesttype = 'facultymanagement';
         $responsetype = 'facultyManagementResponse';
         $operations = array('create', 'update', 'delete');
@@ -104,7 +104,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     });
 
     // User management request.
-    $app->post('/usermanagement', function (ServerRequestInterface $request, ResponseInterface $response) use ($api, $mysqli, $oauth, $render, $langpack) {
+    $app->post('/usermanagement', function(ServerRequestInterface $request, ResponseInterface $response) use($api, $mysqli, $oauth, $render, $langpack) {
         $requesttype = 'usermanagement';
         $responsetype = 'userManagementResponse';
         $operations = array('create', 'update', 'delete');
@@ -114,7 +114,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
         process($requesttype, $operations, $fields, $responsetype, $oauth, $api, $langpack, $render, $xsd, $mysqli, $response, $request);
     });
     // Assessment management request
-    $app->post('/assessmentmanagement', function (ServerRequestInterface $request, ResponseInterface $response) use ($api, $mysqli, $oauth, $render, $langpack) {
+    $app->post('/assessmentmanagement', function(ServerRequestInterface $request, ResponseInterface $response) use($api, $mysqli, $oauth, $render, $langpack) {
         $requesttype = 'assessmentmanagement';
         $responsetype = 'assessmentManagementResponse';
         $operations = array('create', 'schedule', 'delete', 'update');
@@ -133,7 +133,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
      * @param object $langpack - language object
      * @return object
      */
-    $app->get('/gradebook/{filtername}/{filterid}', function (ServerRequestInterface $request, ResponseInterface $response, $args) use ($mysqli, $oauth, $api, $render, $langpack) {
+    $app->get('/gradebook/{filtername}/{filterid}', function(ServerRequestInterface $request, ResponseInterface $response, $args) use($mysqli, $oauth, $api, $render, $langpack) {
         // Set api.
         $api->request = $request;
         $api->response = $response;
@@ -196,8 +196,8 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
      * @param object $langpack - language object
      * @return object
      */
-    $container['notFoundHandler'] = function ($container, $render, $api, $langpack) {
-        return function ($request, $response) use ($container, $render, $api, $langpack) {
+    $container['notFoundHandler'] = function($container, $render, $api, $langpack) {
+        return function($request, $response) use($container, $render, $api, $langpack) {
             // Set api.
             $api->request = $request;
             $api->response = $response;
@@ -219,8 +219,8 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
      * @param object $langpack - language object
      * @return object
      */
-    $container['errorHandler'] = function ($container, $render, $api, $langpack) {
-        return function ($request, $response, $exception) use ($container, $render, $api, $langpack) {
+    $container['errorHandler'] = function($container, $render, $api, $langpack) {
+        return function($request, $response, $exception) use($container, $render, $api, $langpack) {
             // Set api.
             $api->request = $request;
             $api->response = $response;
@@ -252,8 +252,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
      * @param object $request - request interface
      * @return object
      */
-    function process($requesttype, $operations, $fields, $responsetype, $oauth, $api, $langpack, $render, $xsd, $mysqli, $response, $request)
-    {
+    functionprocess($requesttype, $operations, $fields, $responsetype, $oauth, $api, $langpack, $render, $xsd, $mysqli, $response, $request) {
         // Set api.
         $api->request = $request;
         $api->response = $response;
