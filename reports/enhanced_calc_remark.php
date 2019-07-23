@@ -177,7 +177,7 @@ krsort($log_answers2, SORT_NUMERIC);
 foreach ($log_answers2 as $innerans) {
   foreach ($innerans as $answerin2) {
     $answer = $log_answers[$answerin2];
-    if (empty($answer['distance'])) {
+    if (!isset($answer['distance']) or !is_numeric($answer['distance'])) {
       $answer['distance'] = 9999999;
     }
 
