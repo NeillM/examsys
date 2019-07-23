@@ -548,7 +548,8 @@ QUERY;
   /**
    * Change the correct answer after the question has been locked. Update user marks in summative log table
    * @param integer $new_correct new correct answer
-   * @param integer $paper_id
+   * @param integer $paper_id identifier of paper question is on
+   * @param string $string language strings
    * @return array
    */
   public function update_correct($new_correct, $paper_id, $string) {
