@@ -63,9 +63,10 @@ $state = $stateutil->getState($configObject->get('cfg_root_path') . '/question/s
       'blank' => $string['answers_blank'],
       'nonblank' => $string['answers_nonblank'],
   );
+  $getfiltercorrect = param::optional('filtercorrect', '', param::ALPHANUM, param::FETCH_GET);
   echo '<select name="filtercorrect" style="max-width:195px">';
   foreach($filtercorrect as $value => $label){
-      echo '<option value="'.$value.'" '.($_GET['filtercorrect'] == $value ? 'selected="selected"' : '').'>'.$label.'</option>';
+      echo '<option value="'.$value.'" '.($getfiltercorrect == $value ? 'selected="selected"' : '').'>'.$label.'</option>';
   }
   echo '</select>';
 ?>
