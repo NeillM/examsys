@@ -196,7 +196,7 @@ if (isset($_GET['submit'])) {
     $variables[] = $searchterm;
     $params .= 's';
 
-    $search_string = $themeSQL . $scenarioSQL . $leadinSQL . $stemsSQL . $qIDSQL;
+    $search_string = $themeSQL . $scenarioSQL . $leadinSQL . $stemsSQL . $feedbackSQL . $qIDSQL;
     $search_string = 'AND (' . substr($search_string, 4) . ')';
   }
 
