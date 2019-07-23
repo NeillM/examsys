@@ -122,6 +122,13 @@ if (($paper_type == '2' and $unmarked and !$propertyObj->is_active()) or (in_arr
   <input type="hidden" id="startdate" value="<?php echo $startdate ?>" />
   <input type="hidden" id="enddate" value="<?php echo $enddate; ?>" />
   <input type="hidden" id="markall" value="1" />
+  <?php
+  // JS utils dataset.
+  $render = new render($configObject);
+  $jsdataset['name'] = 'jsutils';
+  $jsdataset['attributes']['xls'] = json_encode($string);
+  $render->render($jsdataset, array(), 'dataset.html');
+  ?>
   </body>
   </html>
   <?php
@@ -822,7 +829,13 @@ $user_results[$i]['attempt'] = 0;
     echo "</table>\n";
   } else {
     $msg = sprintf($string['noattempts'], $report->nicedate($startdate), $report->nicedate($enddate));
-    echo $notice->info_strip($msg, 100) . "\n</div>\n</body>\n</html>";
+    echo $notice->info_strip($msg, 100) . "\n</div>\n";
+    // JS utils dataset.
+    $render = new render($configObject);
+    $jsdataset['name'] = 'jsutils';
+    $jsdataset['attributes']['xls'] = json_encode($string);
+    $render->render($jsdataset, array(), 'dataset.html');
+    echo "</body>\n</html>";
     exit;
   }
   $mysqli->close();
