@@ -38,11 +38,11 @@ $oauth = new oauth($configObject);
 $render = new render($configObject);
 $langpack = new \langpack();
 
-// Set up api.
-$api = new \api\api($app, $mysqli, $configObject);
-
 // Only routes only available if enabled.
 if ($configObject->get_setting('core', 'cfg_api_enabled')) {
+
+    // Set up api.
+    $api = new \api\api($app, $mysqli, $configObject);
 
     // Request oauth token.
     $app->post('/requesttoken', function(ServerRequestInterface $request, ResponseInterface $response) use($oauth, $api) {
@@ -125,7 +125,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     });
     /**
      * Gradebook consumption request
-     * 
+     *
      * @param mysqli $mysqli - db connection
      * @param object $oauth - oauth object
      * @param object $api - api object
@@ -154,7 +154,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
                 $api->log_response($apiid, $response_xml);
                 echo $response_xml;
             } else {
-            
+
                 $resp = array();
                 $gradebook = new \api\gradebook($mysqli);
                 // Map template.
@@ -176,7 +176,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
                 } else {
                     $template = 'api/error.xml';
                 }
-            
+
                 // Render response.
                 $response_xml = $render->render_xml($template, 'gradebookResponse', $resp);
                 $api->log_response($apiid, $response_xml);
@@ -186,127 +186,132 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
             }
         }
     });
-}
 
-$container = $app->getContainer();
-/**
- * 404 error handling.
- * @param object slim container
- * @param object $render - render object
- * @param object $api - api object
- * @param object $langpack - language object
- * @return object
- */
-$container['notFoundHandler'] = function ($container, $render, $api, $langpack) {
-    return function ($request, $response) use ($container, $render, $api, $langpack) {
+    $container = $app->getContainer();
+    /**
+     * 404 error handling.
+     * @param object slim container
+     * @param object $render - render object
+     * @param object $api - api object
+     * @param object $langpack - language object
+     * @return object
+     */
+    $container['notFoundHandler'] = function($container, $render, $api, $langpack) {
+        return function($request, $response) use($container, $render, $api, $langpack) {
+            // Set api.
+            $api->request = $request;
+            $api->response = $response;
+            // Log request.
+            $apiid = $api->log_request();
+            $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', '404')));
+            $api->log_response($apiid, $response_xml);
+            return $container['response']->withStatus(404)
+                ->withHeader('Content-Type', 'text/xml')
+                ->write($response_xml);
+        };
+    };
+
+    /**
+     * 500 error handling.
+     * @param object slim container
+     * @param object $render - render object
+     * @param object $api - api object
+     * @param object $langpack - language object
+     * @return object
+     */
+    $container['errorHandler'] = function($container, $render, $api, $langpack) {
+        return function($request, $response, $exception) use($container, $render, $api, $langpack) {
+            // Set api.
+            $api->request = $request;
+            $api->response = $response;
+            // Log request.
+            $apiid = $api->log_request();
+            $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', '500')));
+            $api->log_response($apiid, $response_xml);
+            return $container['response']->withStatus(500)
+                ->withHeader('Content-Type', 'text/xml')
+                ->write($response_xml);
+        };
+    };
+
+    /**
+     * Process the web service request.
+     *
+     * All request are authenticated, validated and processed.
+     * @param string $requesttype - name of request
+     * @param array $operations - operations available in request
+     * @param array $fields - expected request fields
+     * @param string $responsetype - name of response
+     * @param object $oauth - oauth object
+     * @param object $api - api object
+     * @param object $langpack - language object
+     * @param object $render - render object
+     * @param string $xsd - xsd filename
+     * @param mysqli $mysqli - db connection
+     * @param object $response - response interface
+     * @param object $request - request interface
+     * @return object
+     */
+    functionprocess($requesttype, $operations, $fields, $responsetype, $oauth, $api, $langpack, $render, $xsd, $mysqli, $response, $request) {
         // Set api.
         $api->request = $request;
         $api->response = $response;
+        $api->set_header();
         // Log request.
         $apiid = $api->log_request();
-        $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', '404')));
-        $api->log_response($apiid, $response_xml);
-        return $container['response']->withStatus(404)
-            ->withHeader('Content-Type', 'text/xml')
-            ->write($response_xml);
-    };
-};
 
-/**
- * 500 error handling.
- * @param object slim container
- * @param object $render - render object
- * @param object $api - api object
- * @param object $langpack - language object
- * @return object
- */
-$container['errorHandler'] = function ($container, $render, $api, $langpack) {
-    return function ($request, $response, $exception) use ($container, $render, $api, $langpack) {
-        // Set api.
-        $api->request = $request;
-        $api->response = $response;
-        // Log request.
-        $apiid = $api->log_request();
-        $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', '500')));
-        $api->log_response($apiid, $response_xml);
-        return $container['response']->withStatus(500)
-            ->withHeader('Content-Type', 'text/xml')
-            ->write($response_xml);
-    };
-};
-
-/**
- * Process the web service request.
- * 
- * All request are authenticated, validated and processed.
- * @param string $requesttype - name of request
- * @param array $operations - operations available in request
- * @param array $fields - expected request fields
- * @param string $responsetype - name of response
- * @param object $oauth - oauth object
- * @param object $api - api object
- * @param object $langpack - language object
- * @param object $render - render object
- * @param string $xsd - xsd filename
- * @param mysqli $mysqli - db connection
- * @param object $response - response interface
- * @param object $request - request interface
- * @return object
- */
-function process ($requesttype, $operations, $fields, $responsetype, $oauth, $api, $langpack, $render, $xsd, $mysqli, $response, $request) {
-    // Set api.
-    $api->request = $request;
-    $api->response = $response;
-    $api->set_header();
-    // Log request.
-    $apiid = $api->log_request();
-
-    // Check for auth tokens
-    $client_id = $oauth->check_auth();
-    if ($client_id == 'INVALID_TOKEN') {
-        $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'invalidtoken')));
-        $api->log_response($apiid, $response_xml);
-        echo $response_xml;
-    } else {
-        //Check Permissions
-        foreach ($operations as $operation) {
-            $perm[$operation] = $oauth->check_permissions($requesttype . '/' . $operation, $client_id);
-        }
-
-        // Log request.
-        $apiid = $api->log_request();
-        
-        // Check media type - only text/xml supported currently.
-        if (!$api->get_mediatype()) {
-            $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'mediatype')));
+        // Check for auth tokens
+        $client_id = $oauth->check_auth();
+        if ($client_id == 'INVALID_TOKEN') {
+            $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'invalidtoken')));
             $api->log_response($apiid, $response_xml);
             echo $response_xml;
         } else {
-            $responsedata = array();
-            $classname = '\\api\\' . $requesttype;
-            $requestobject = new $classname($mysqli, $client_id);
-
-            // Process the request.
-            $data = $api->process($requesttype, $xsd, $request);
-            
-            // XML.
-            $user_id = $oauth->get_client_user($client_id);
-            if ($data[0] == 'OK') {
-                $responsedata = $api->parse($requestobject, $fields, $operations, $perm, $user_id);
-                $template = 'api/success.xml';
-            } else {
-                $responsedata = $data[1];
-                $template = 'api/error.xml';
+            //Check Permissions
+            foreach ($operations as $operation) {
+                $perm[$operation] = $oauth->check_permissions($requesttype . '/' . $operation, $client_id);
             }
-            
-            // Render response.
-            $response_xml = $render->render_xml($template, $responsetype, $responsedata);
-            $api->log_response($apiid, $response_xml);
-            $body = $response->getBody();
-            $body->write($response_xml);
-            return $response;
+
+            // Log request.
+            $apiid = $api->log_request();
+
+            // Check media type - only text/xml supported currently.
+            if (!$api->get_mediatype()) {
+                $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'mediatype')));
+                $api->log_response($apiid, $response_xml);
+                echo $response_xml;
+            } else {
+                $responsedata = array();
+                $classname = '\\api\\' . $requesttype;
+                $requestobject = new $classname($mysqli, $client_id);
+
+                // Process the request.
+                $data = $api->process($requesttype, $xsd, $request);
+
+                // XML.
+                $user_id = $oauth->get_client_user($client_id);
+                if ($data[0] == 'OK') {
+                    $responsedata = $api->parse($requestobject, $fields, $operations, $perm, $user_id);
+                    $template = 'api/success.xml';
+                } else {
+                    $responsedata = $data[1];
+                    $template = 'api/error.xml';
+                }
+
+                // Render response.
+                $response_xml = $render->render_xml($template, $responsetype, $responsedata);
+                $api->log_response($apiid, $response_xml);
+                $body = $response->getBody();
+                $body->write($response_xml);
+                return $response;
+            }
         }
     }
-}
 
-$app->run();
+    $app->run();
+} else {
+    $notice = UserNotices::get_instance();
+    $contactemail = support::get_email();
+    $msg = sprintf($langpack->get_string('api/api', 'furtherassistance'), $contactemail, $contactemail);
+    $notice->display_notice_and_exit(null, $langpack->get_string('api/api', 'pagenotfound'), $msg, $langpack->get_string('api/api', 'pagenotfound'), '/artwork/page_not_found.png', '#C00000');
+}
