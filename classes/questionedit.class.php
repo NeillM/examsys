@@ -548,26 +548,27 @@ QUERY;
   /**
    * Change the correct answer after the question has been locked. Update user marks in summative log table
    * @param integer $new_correct new correct answer
-   * @param integer $paper_id
+   * @param integer $paper_id identifier of paper question is on
+   * @param string $string language strings
+   * @return array
    */
-  public function update_correct($new_correct, $paper_id) {
-    if ($paper_id == -1) {  // No valid Paper ID, we can't remark anything.
-      return;
-    }
-        
-    $paper_type = $this->get_paper_type($paper_id);
-    if ($paper_type == -1) $paper_type = 2;
-
+  public function update_correct($new_correct, $paper_id, $string) {
     $errors = array();
-    $changes = false;
+    if ($paper_id == -1) {  // No valid Paper ID, we can't remark anything.
+      $errors[] = $string['lockedquestionnoedit'];
+    } else {
+      $paper_type = $this->get_paper_type($paper_id);
+      if ($paper_type == -1) $paper_type = 2;
 
-    foreach ($this->_correctors as $corrector) {
-      $tmp_errors = $corrector->execute($new_correct, $paper_id, $changes, $paper_type);
-      if (count($tmp_errors) > 0) {
-        array_merge($errors, $tmp_errors);
+      $changes = false;
+
+      foreach ($this->_correctors as $corrector) {
+        $tmp_errors = $corrector->execute($new_correct, $paper_id, $changes, $paper_type);
+        if (count($tmp_errors) > 0) {
+          array_merge($errors, $tmp_errors);
+        }
       }
     }
-
     return $errors;
   }
 
