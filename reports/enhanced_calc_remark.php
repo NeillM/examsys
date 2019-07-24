@@ -177,16 +177,20 @@ krsort($log_answers2, SORT_NUMERIC);
 foreach ($log_answers2 as $innerans) {
   foreach ($innerans as $answerin2) {
     $answer = $log_answers[$answerin2];
+    // If distance not available set to 9999999.
     if (!isset($answer['distance'])) {
-      $answer['distance'] =$string['na'];
+        $answer['distance'] = 9999999;
+    // Else if distance is Inf or -Inf set to 0.
+    } elseif ($answer['distance'] == 'Inf' or $answer['distance'] == '-Inf') {
+        $answer['distance'] = 0;
+    // Else if distance not a number set to 9999999.
+    } elseif (!is_numeric($answer['distance'])) {
+        $answer['distance'] = 9999999;
     }
 
     if ($answer['distance'] == 9999999) {
       $distance = $string['na'];
     } else {
-      if($answer['distance'] == 'Inf' or $answer['distance'] == '-Inf' ) {
-        $answer['distance'] = 0;
-      }
       $distance  = number_format($answer['distance'], 2) . '%';
     }
 
