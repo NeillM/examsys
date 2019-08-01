@@ -252,7 +252,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
      * @param object $request - request interface
      * @return object
      */
-    functionprocess($requesttype, $operations, $fields, $responsetype, $oauth, $api, $langpack, $render, $xsd, $mysqli, $response, $request) {
+    function process($requesttype, $operations, $fields, $responsetype, $oauth, $api, $langpack, $render, $xsd, $mysqli, $response, $request) {
         // Set api.
         $api->request = $request;
         $api->response = $response;
