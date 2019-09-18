@@ -141,6 +141,10 @@ trait testcasetrait {
         }
         $query = 'SELECT ' . $columnsstring . ' FROM ' . $querydata['table'] . $wherestring . $orderbystring;
         $sql = $this->get_db_connection()->prepare($query);
+        if ($sql === false) {
+          $error = $this->get_db_connection()->error;
+          throw new \Exception("Query failed: $error");
+        }
         $sql->execute();
         $result = $sql->get_result();
         $data = array();
@@ -158,6 +162,10 @@ trait testcasetrait {
      */
     protected function rowcount(string $table) : int {
         $sql = $this->get_db_connection()->prepare("SELECT count(*) FROM " . $table);
+        if ($sql === false) {
+          $error = $this->get_db_connection()->error;
+          throw new \Exception("Row count failed: $error");
+        }
         $sql->execute();
         $sql->bind_result($count);
         $sql->fetch();
@@ -195,6 +203,10 @@ trait testcasetrait {
      */
     protected function delete_from_table(string $table) : void {
         $sql = $this->get_db_connection()->prepare('DELETE FROM ' . $table);
+        if ($sql === false) {
+          $error = $this->get_db_connection()->error;
+          throw new \Exception("Delete failed: $error");
+        }
         $sql->execute();
         $sql->close();
     }
@@ -220,6 +232,10 @@ trait testcasetrait {
                     }
                     $values = rtrim($values, ',');
                     $sql = $this->get_db_connection()->prepare('INSERT INTO ' . $tableName . '(' . $keys . ')' . ' values (' . $values . ')');
+                    if ($sql === false) {
+                      $error = $this->get_db_connection()->error;
+                      throw new \Exception("Insert failed: $error");
+                    }
                     $sql->execute();
                     $sql->close();
                 }
