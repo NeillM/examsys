@@ -22,7 +22,7 @@
     "grunt-contrib-cssmin": "^3.0.0",
     "grunt-contrib-uglify": "^2.0.0",
     "grunt-eslint": "^19.0.0",
-    "grunt-spritesmith": "^6.3.1",
+    "grunt-spritesmith": "^6.8.0",
     "mathjax": "^2.7.0",
     "three": "^0.91.0"
   }
