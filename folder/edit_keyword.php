@@ -55,8 +55,8 @@ $result->close();
 <h1><?php echo $string['editkeyword']; ?></h1>
 <form id="theform" name="theform" action="" method="post" autocomplete="off">
 <div>
-    <input type="text" style="width:99%" id="new_keyword" name="new_keyword" value="<?php echo $keyword; ?>" required autofocus />
-    <input type="hidden" name="keywordID" value="<?php echo $_GET['keywordID']; ?>" />
+    <input type="text" style="width:99%" id="new_keyword" name="new_keyword" value="<?php echo htmlspecialchars($keyword); ?>" required autofocus />
+    <input type="hidden" name="keywordID" value="<?php echo $keywordID; ?>" />
     <span id="duplicateerror"><?php echo $string['duplicate']; ?></span>
 </div>
 <div align="right">
