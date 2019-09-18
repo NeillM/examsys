@@ -374,5 +374,14 @@ $qbank = new QuestionBank($module, $module_code, $string, $notice, $mysqli);
 </table>
 </div>
 
+<?php
+$render = new render($configObject);
+// JS utils dataset.
+$miscdataset = [
+  'name' => 'jsutils',
+  'attributes' => ['xls' => json_encode($string)],
+];
+$render->render($miscdataset, array(), 'dataset.html');
+?>
 </body>
 </html>
