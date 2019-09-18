@@ -102,13 +102,14 @@ class requirements {
    * @param string $user db user
    * @param string $pass db password
    * @return boolean
+   * @throws Exception When the database cannot be connected to.
    */
   public static function check_db($host, $user, $pass) {
     $phpModules = get_loaded_extensions();
     if (in_array('mysqli', $phpModules)) {
       @$check = new mysqli($host, $user, $pass);
       if ($check->connect_error != '') {
-        return false;
+        throw new Exception($check->connect_error);
       }
       $configObject = Config::get_instance();
       $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
