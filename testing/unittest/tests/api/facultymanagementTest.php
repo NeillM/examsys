@@ -15,11 +15,10 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
-use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
 /**
  * Test facultyemanagement api class
- * 
+ *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
@@ -27,22 +26,39 @@ use PHPUnit\DbUnit\DataSet\YamlDataSet;
  */
 class facultymanagementtest extends unittestdatabase {
     /**
+     * @var integer Storage for faculty id in tests
+     */
+    private $faculty2, $faculty3;
+
+    /**
+     * Generate data for test.
+     * @throws \testing\datagenerator\not_found
+     */
+    public function datageneration() : void {
+        $this->faculty2 = $this->get_faculty_id('Administrative and Support Units');
+        $datagenerator = $this->get_datagenerator('faculty', 'core');
+        $faculty = $datagenerator->create_faculty(array('externalid' => 'abcdef', 'externalsys' => 'rogo test api', 'code' => 'TEST'));
+        $this->faculty3 = $faculty['id'];
+    }
+
+    /**
      * Create a response array for creation
-     * @return array the resposne array  
+     * @return array the resposne array
      */
     private function create_response_array() {
         return array(
             "statuscode" => 100,
             "status" => 'OK',
-            "id" => 3,
+            "id" => $this->faculty3 + 1,
             "externalid" => null,
             "error" => null,
             "node" => 'create',
             "nodeid" => 1);
     }
+
     /**
      * Create a parameter array for creation
-     * @return array the param array  
+     * @return array the param array
      */
     private function create_param_array() {
         return array(
@@ -51,68 +67,58 @@ class facultymanagementtest extends unittestdatabase {
             "code" => 'T3',
             "externalid" => "xyz");
     }
+
     /**
      * Create a parameter array for updates
-     * @return array the param array  
+     * @return array the param array
      */
     private function update_param_array() {
         return array(
             "nodeid" => 1,
-            "id" => 1,
+            "id" => $this->faculty,
             "name" => 'TESTUPDATE');
     }
+
     /**
      * Create a response array for updates
-     * @return array the resposne array  
+     * @return array the resposne array
      */
     private function update_response_array() {
         return array(
             "statuscode" => 100,
             "status" => 'OK',
-            "id" => 1,
+            "id" => $this->faculty,
             "externalid" => null,
             "error" => null,
             "node" => 'update',
             "nodeid" => 1);
     }
+
     /**
      * Create a response array for deletion
-     * @return array the response array  
+     * @return array the response array
      */
     private function delete_response_array() {
         return array(
             "statuscode" => 100,
             "status" => 'OK',
-            "id" => 1,
+            "id" => $this->faculty3,
             "externalid" => null,
             "error" => null,
             "node" => 'delete',
             "nodeid" => 1);
     }
+
     /**
      * Create a parameter array for deletion
-     * @return array the param array  
+     * @return array the param array
      */
     private function delete_param_array() {
         return array(
             "nodeid" => 1,
-            "id" => 1);
+            "id" => $this->faculty3);
     }
-    /**
-     * Get init data set from yml
-     * @return dataset
-     */
-    public function getDataSet() {
-        return new YamlDataSet($this->get_base_fixture_directory() . "api" . DIRECTORY_SEPARATOR . "facultymanagementTest" . DIRECTORY_SEPARATOR . "facultymanagement.yml");
-    }
-    /**
-     * Get expected data set from yml
-     * @param string $name fixture file name
-     * @return dataset
-     */
-    public function get_expected_data_set($name) {
-        return new YamlDataSet($this->get_base_fixture_directory() . "api" . DIRECTORY_SEPARATOR .  "facultymanagementTest" . DIRECTORY_SEPARATOR . $name . ".yml");
-    }
+
     /**
      * Test successful faculty creation - external system faculty
      * @group api
@@ -122,10 +128,10 @@ class facultymanagementtest extends unittestdatabase {
         $responsearray = $this->create_response_array();
         $params = $this->create_param_array();
         $faculty = new \api\facultymanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['externalid'] = "xyz";
-        $this->assertEquals($responsearray, $faculty->create($params, $userid));
+        $this->assertEquals($responsearray, $faculty->create($params, $this->admin['id']));
     }
+
     /**
      * Test successful faculty creation  - non external system faculty
      * @group api
@@ -137,9 +143,9 @@ class facultymanagementtest extends unittestdatabase {
             "name" => 'TEST3',
             "code" => 'T3');
         $faculty = new \api\facultymanagement($this->db, 'test1');
-        $userid = 1;
-        $this->assertEquals($responsearray, $faculty->create($params, $userid));
+        $this->assertEquals($responsearray, $faculty->create($params, $this->admin['id']));
     }
+
     /**
      * Test successful faculty creation  - name exits but new code
      * @group api
@@ -151,9 +157,9 @@ class facultymanagementtest extends unittestdatabase {
             "name" => 'Test name',
             "code" => 'T3');
         $faculty = new \api\facultymanagement($this->db, 'test1');
-        $userid = 1;
-        $this->assertEquals($responsearray, $faculty->create($params, $userid));
+        $this->assertEquals($responsearray, $faculty->create($params, $this->admin['id']));
     }
+
     /**
      * Test faculty creation exception faculty exists
      * @group api
@@ -163,16 +169,16 @@ class facultymanagementtest extends unittestdatabase {
         $responsearray = $this->create_response_array();
         $params = $this->create_param_array();
         $faculty = new \api\facultymanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 405;
         $responsearray['status'] = 'Faculty already exists';
-        $responsearray['id'] = 1;
-        $responsearray['externalid'] = "abcdef";
+        $responsearray['id'] = $this->faculty;
+        $responsearray['externalid'] = "abcdefghi";
         $params = array(
             "nodeid" => 1,
-            "name" => 'Test name');
-        $this->assertEquals($responsearray, $faculty->create($params, $userid));
+            "name" => 'UNKNOWN Faculty');
+        $this->assertEquals($responsearray, $faculty->create($params, $this->admin['id']));
     }
+
     /**
      * Test faculty creation exception faculty exists (code exits)
      * @group api
@@ -181,17 +187,17 @@ class facultymanagementtest extends unittestdatabase {
         $responsearray = $this->create_response_array();
         $params = $this->create_param_array();
         $faculty = new \api\facultymanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 405;
         $responsearray['status'] = 'Faculty already exists';
-        $responsearray['id'] = 1;
+        $responsearray['id'] = $this->faculty3;
         $responsearray['externalid'] = "abcdef";
         $params = array(
             "nodeid" => 1,
-            "name" => 'Test name',
+            "name" => 'UNKNOWN Faculty',
             "code" => 'TEST');
-        $this->assertEquals($responsearray, $faculty->create($params, $userid));
+        $this->assertEquals($responsearray, $faculty->create($params, $this->admin['id']));
     }
+
     /**
      * Test faculty create exception faculty not supplied
      * @group api
@@ -200,14 +206,14 @@ class facultymanagementtest extends unittestdatabase {
         // Test faculty update - ERROR faculty does not exist
         $responsearray = $this->create_response_array();
         $faculty = new \api\facultymanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 406;
         $responsearray['status'] = 'Faculty name not supplied';
         $responsearray['id'] = null;
         $params = array(
             "nodeid" => 1);
-        $this->assertEquals($responsearray, $faculty->create($params, $userid));
+        $this->assertEquals($responsearray, $faculty->create($params, $this->admin['id']));
     }
+
     /**
      * Test successful faculty update
      * @group api
@@ -217,10 +223,10 @@ class facultymanagementtest extends unittestdatabase {
         $responsearray = $this->update_response_array();
         $params = $this->update_param_array();
         $faculty = new \api\facultymanagement($this->db, 'test1');
-        $userid = 1;
-        $responsearray['externalid'] = "abcdef";
-        $this->assertEquals($responsearray, $faculty->update($params, $userid));
+        $responsearray['externalid'] = "abcdefghi";
+        $this->assertEquals($responsearray, $faculty->update($params, $this->admin['id']));
     }
+
     /**
      * Test faculty update exception nothing to update
      * @group api
@@ -229,15 +235,15 @@ class facultymanagementtest extends unittestdatabase {
         $responsearray = $this->update_response_array();
         $params = array(
             "nodeid" => 1,
-            "id" => 1,
-            "name" => 'Test name');
+            "id" => $this->faculty,
+            "name" => 'UNKNOWN Faculty');
         $faculty = new \api\facultymanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 407;
         $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
-        $this->assertEquals($responsearray, $faculty->update($params, $userid));
+        $this->assertEquals($responsearray, $faculty->update($params, $this->admin['id']));
     }
+
     /**
      * Test faculty update exception faculty does not exist
      * @group api
@@ -247,13 +253,13 @@ class facultymanagementtest extends unittestdatabase {
         $responsearray = $this->update_response_array();
         $params = $this->update_param_array();
         $faculty = new \api\facultymanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 401;
         $responsearray['status'] = 'Faculty does not exist';
         $responsearray['id'] = null;
-        $params['id'] = 100;
-        $this->assertEquals($responsearray, $faculty->update($params, $userid));
+        $params['id'] = 0;
+        $this->assertEquals($responsearray, $faculty->update($params, $this->admin['id']));
     }
+
     /**
      * Test successful faculty deletion
      * @group api
@@ -264,14 +270,21 @@ class facultymanagementtest extends unittestdatabase {
         $responsearray['externalid'] = "abcdef";
         $params = $this->delete_param_array();
         $faculty = new \api\facultymanagement($this->db, 'test1');
-        $userid = 1;
-        $this->assertEquals($responsearray, $faculty->delete($params, $userid));
+        $this->assertEquals($responsearray, $faculty->delete($params, $this->admin['id']));
         // Check that the remaining faculty are correct, when we delete a faculty we actually just add a timestamp to the table
         // which makes creating a fixture to check against difficult so doing this instead
-        $querytable = $this->getConnection()->createQueryTable('faculty', 'SELECT id, name FROM faculty WHERE deleted is NULL');
-        $expectedtable = $this->get_expected_data_set('deletefaculty')->getTable("faculty");  
-        $this->assertTablesEqual($expectedtable, $querytable);
+        $querytable = $this->query(array('columns' => array('name'), 'table' => 'faculty', 'where' => array(array('column' => 'deleted', 'value' => NULL, 'operator' => 'IS'))));
+        $expectedtable = array (
+            0 => array(
+                'name' => 'UNKNOWN Faculty'
+            ),
+            1 => array(
+                'name' => 'Administrative and Support Units'
+            ),
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
+
     /**
      * Test faculty deletion exception does not exist
      * @group api
@@ -281,17 +294,17 @@ class facultymanagementtest extends unittestdatabase {
         $responsearray = $this->delete_response_array();
         $params = $this->delete_param_array();
         $faculty = new \api\facultymanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 401;
         $responsearray['status'] = 'Faculty does not exist';
         $responsearray['id'] = null;
-        $params['id'] = 99;
-        $this->assertEquals($responsearray, $faculty->delete($params, $userid));
+        $params['id'] = 0;
+        $this->assertEquals($responsearray, $faculty->delete($params, $this->admin['id']));
         // No id supplied.
         $params = array(
             "nodeid" => 1);
-        $this->assertEquals($responsearray, $faculty->delete($params, $userid));
+        $this->assertEquals($responsearray, $faculty->delete($params, $this->admin['id']));
     }
+
     /**
      * Test faculty deletion exception faculty in use
      * @group api
@@ -301,11 +314,10 @@ class facultymanagementtest extends unittestdatabase {
         $responsearray = $this->delete_response_array();
         $params = $this->delete_param_array();
         $faculty = new \api\facultymanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 404;
         $responsearray['status'] = 'Faculty not deleted, as contains schools';
         $responsearray['id'] = null;
-        $params['id'] = 2;
-        $this->assertEquals($responsearray, $faculty->delete($params, $userid)); 
+        $params['id'] = $this->faculty2;
+        $this->assertEquals($responsearray, $faculty->delete($params, $this->admin['id']));
     }
 }

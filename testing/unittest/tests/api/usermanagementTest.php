@@ -15,34 +15,83 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
-use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
 /**
  * Test usermanagement api class
- * 
+ *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
 class usermanagementtest extends unittestdatabase {
+
+    /**
+     * @var integer Storage for user id in tests
+     */
+    private $user, $user2;
+
+    /**
+     * @var integer Storage for module id in tests
+     */
+    private $module2;
+
+    /**
+     * Generate data for test.
+     * @throws \testing\datagenerator\not_found
+     */
+    public function datageneration() : void {
+        $this->user = $this->get_user_id('test2');
+        $this->module2 = $this->get_module_id('SYSTEM');
+        $datagenerator = $this->get_datagenerator('users', 'core');
+        $user = $datagenerator->create_user(array('surname' => 'test3', 'username' => 'unit3', 'grade' => 'TEST2', 'initials' => null,
+            'title' => null, 'email' => null, 'gender' => null, 'first_names' => null, 'yearofstudy' => null, 'sid' => '141516171819'));
+        $this->user2 = $user['id'];
+        $datagenerator = $this->get_datagenerator('course', 'core');
+        $datagenerator->create_course(array('name' => 'TEST', 'description' => 'Test course', 'schoolid' => $this->school));
+        $datagenerator->create_course(array('name' => 'TEST2', 'description' => 'Test course 2', 'schoolid' => $this->school));
+        $datagenerator = $this->get_datagenerator('papers', 'core');
+        $pid = $datagenerator->create_paper(array('papertitle' => "Test create formative",
+            'startdate' => "2016-01-25 09:00:00",
+            'enddate' => "2016-01-25 10:00:00",
+            'duration' => 60,
+            'timezone' => "Europe/London",
+            'paperowner' => "admin",
+            'papertype' => "0",
+            'externalid' => "123abc456",
+            'externalsys' => "test rogo api",
+            'modulename' => "Training Module"));
+        $pid2 = $datagenerator->create_paper(array('papertitle' => "Test create osce",
+            'startdate' => "2016-01-25 09:00:00",
+            'enddate' => "2016-01-25 10:00:00",
+            'duration' => 60,
+            'timezone' => "Europe/London",
+            'paperowner' => "admin",
+            'papertype' => "4",
+            'modulename' => "Training Module"));
+        $datagenerator = $this->get_datagenerator('log', 'core');
+        $datagenerator->create_metadata(array('userID' => $this->student['id'], 'paperID' => $pid2['id']));
+        $datagenerator->create_osceoverall(array('userID' => $this->user2, 'q_paper' => $pid['id']));
+    }
+
     /**
      * Create a student response array for creation
-     * @return array the response array  
+     * @return array the response array
      */
     private function create_response_array() {
         return array(
             "statuscode" => 100,
             "status" => 'OK',
-            "id" => 1003,
+            "id" => $this->user2 + 1,
             "externalid" => null,
             "error" => array(),
             "node" => 'create',
             "nodeid" => 1);
     }
+
     /**
      * Create a student parameter array for creation
-     * @return array the param array  
+     * @return array the param array
      */
     private function create_param_array() {
         return array(
@@ -51,11 +100,12 @@ class usermanagementtest extends unittestdatabase {
             "surname" => "tester",
             "role" => "Student",
             "course" => "TEST2",
-            "modules" => array(array('name' => 'moduleid', 'id' => 0, 'value' => 1)));
+            "modules" => array(array('name' => 'moduleid', 'id' => 0, 'value' => $this->module)));
     }
+
     /**
      * Create a staff parameter array for creation
-     * @return array the param array  
+     * @return array the param array
      */
     private function create_staff_param_array() {
         return array(
@@ -64,73 +114,63 @@ class usermanagementtest extends unittestdatabase {
             "surname" => "staffy",
             "role" => "Staff",
             "course" => "University Lecturer",
-            "modules" => array(array('name' => 'moduleid', 'id' => 0, 'value' => 1)));
+            "modules" => array(array('name' => 'moduleid', 'id' => 0, 'value' => $this->module)));
     }
+
     /**
      * Create a response array for updates
-     * @return array the response array  
+     * @return array the response array
      */
     private function update_response_array() {
         return array(
             "statuscode" => 100,
             "status" => 'OK',
-            "id" => 1001,
-            "externalid" => null,
+            "id" => $this->user,
+            "externalid" => '00000001',
             "error" => array(),
             "node" => 'update',
             "nodeid" => 1);
     }
+
     /**
      * Create a parameter array for updates
-     * @return array the param array  
+     * @return array the param array
      */
     private function update_param_array() {
         return array(
             "nodeid" => 1,
-            "id" => 1001,
+            "id" => $this->user,
             "externalid" => null,
             "surname" => "",
             "forename" => "test",
-            "modules" => array(array('name' => 'moduleid', 'id' => 0, 'value' => 2)));
+            "modules" => array(array('name' => 'moduleid', 'id' => 0, 'value' => $this->module2)));
     }
+
     /**
      * Create a response array for deletion
-     * @return array the response array  
+     * @return array the response array
      */
     private function delete_response_array() {
         return array(
             "statuscode" => 100,
             "status" => 'OK',
-            "id" => 1001,
-            "externalid" => null,
+            "id" => $this->user,
+            "externalid" => '00000001',
             "error" => null,
             "node" => 'delete',
             "nodeid" => 1);
     }
+
     /**
      * Create a parameter array for deletion
-     * @return array the param array  
+     * @return array the param array
      */
     private function delete_param_array() {
         return array(
             "nodeid" => 1,
-            "id" => 1001);
+            "id" => $this->user);
     }
-    /**
-     * Get init data set from yml
-     * @return dataset
-     */
-    public function getDataSet() {
-        return new YamlDataSet($this->get_base_fixture_directory() . "api" . DIRECTORY_SEPARATOR . "usermanagementTest" . DIRECTORY_SEPARATOR . "usermanagement.yml");
-    }
-    /**
-     * Get expected data set from yml
-     * @param string $name fixture file name
-     * @return dataset
-     */
-    public function get_expected_data_set($name) {
-        return new YamlDataSet($this->get_base_fixture_directory() . "api" . DIRECTORY_SEPARATOR .  "usermanagementTest" . DIRECTORY_SEPARATOR . $name . ".yml");
-    }
+
     /**
      * Test successful student creation
      * @group api
@@ -140,13 +180,19 @@ class usermanagementtest extends unittestdatabase {
         $responsearray = $this->create_response_array();
         $params = $this->create_param_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
-        $this->assertEquals($responsearray, $user->create($params, $userid));
+        $create = $user->create($params, $this->admin['id']);
+        $this->assertEquals($responsearray, $create);
         // Check user is enrolled on expected moulde.
-        $querytable = $this->getConnection()->createQueryTable('modules_student', 'SELECT id, userID, idMod FROM modules_student');
-        $expectedtable = $this->get_expected_data_set('createuser')->getTable("modules_student");  
-        $this->assertTablesEqual($expectedtable, $querytable);
+        $querytable = $this->query(array('columns' => array('userID', 'idMod'), 'table' => 'modules_student'));
+        $expectedtable = array (
+            0 => array(
+                'userID' => $create['id'],
+                'idMod' => $this->module
+            )
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
+
     /**
      * Test successful staff creation
      * @group api
@@ -156,13 +202,19 @@ class usermanagementtest extends unittestdatabase {
         $responsearray = $this->create_response_array();
         $params = $this->create_staff_param_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
-        $this->assertEquals($responsearray, $user->create($params, $userid));
+        $create = $user->create($params, $this->admin['id']);
+        $this->assertEquals($responsearray, $create);
         // Check user is enrolled on expected moulde.
-        $querytable = $this->getConnection()->createQueryTable('modules_staff', 'SELECT memberID, idMod FROM modules_staff');
-        $expectedtable = $this->get_expected_data_set('createuser')->getTable("modules_staff");  
-        $this->assertTablesEqual($expectedtable, $querytable);
+        $querytable = $this->query(array('columns' => array('memberID', 'idMod'), 'table' => 'modules_staff'));
+        $expectedtable = array(
+            0 => array(
+                'memberID' => $create['id'],
+                'idMod' => $this->module
+            )
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
+
     /**
      * Test user creation exception user exists
      * @group api
@@ -172,13 +224,14 @@ class usermanagementtest extends unittestdatabase {
         $responsearray = $this->create_response_array();
         $params = $this->create_param_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 706;
         $responsearray['status'] = 'User already exists';
-        $responsearray['id'] = 1000;
-        $params['username'] = 'unit';
-        $this->assertEquals($responsearray, $user->create($params, $userid));
+        $responsearray['id'] = $this->student['id'];
+        $responsearray['externalid'] = '1234567890';
+        $params['username'] = 'test1';
+        $this->assertEquals($responsearray, $user->create($params, $this->admin['id']));
     }
+
     /**
      * Test user creation exception invalid user role
      * @group api
@@ -188,15 +241,15 @@ class usermanagementtest extends unittestdatabase {
         $responsearray = $this->create_response_array();
         $params = $this->create_param_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 707;
         $responsearray['status'] = 'User has invalid role';
         $responsearray['id'] = null;
         $params['username'] = 'unknowntest';
         $params['surname'] = 'unknown';
         $params['role'] = 'unknownrole';
-        $this->assertEquals($responsearray, $user->create($params, $userid));
+        $this->assertEquals($responsearray, $user->create($params, $this->admin['id']));
     }
+
     /**
      * Test user creation exception invalid course
      * @group api
@@ -206,7 +259,6 @@ class usermanagementtest extends unittestdatabase {
         $responsearray = $this->create_response_array();
         $params = $this->create_param_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 705;
         $responsearray['status'] = 'Course does not exist';
         $responsearray['id'] = null;
@@ -214,8 +266,9 @@ class usermanagementtest extends unittestdatabase {
         $params['surname'] = 'unknown';
         $params['role'] = 'Student';
         $params['course'] = 'TEST22';
-        $this->assertEquals($responsearray, $user->create($params, $userid));
+        $this->assertEquals($responsearray, $user->create($params, $this->admin['id']));
     }
+
     /**
      * Test staff creation exception invalid course
      * @group api
@@ -225,7 +278,6 @@ class usermanagementtest extends unittestdatabase {
         $responsearray = $this->create_response_array();
         $params = $this->create_staff_param_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 705;
         $responsearray['status'] = 'Course does not exist';
         $responsearray['id'] = null;
@@ -233,8 +285,9 @@ class usermanagementtest extends unittestdatabase {
         $params['surname'] = 'unknown';
         $params['role'] = 'Staff';
         $params['course'] = 'Invalid';
-        $this->assertEquals($responsearray, $user->create($params, $userid));
+        $this->assertEquals($responsearray, $user->create($params, $this->admin['id']));
     }
+
     /**
      * Test successful user update
      * @group api
@@ -244,13 +297,19 @@ class usermanagementtest extends unittestdatabase {
         $responsearray = $this->update_response_array();
         $params = $this->update_param_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
-        $this->assertEquals($responsearray, $user->update($params, $userid));
-        // Check user is enrolled on expected moulde.
-        $querytable = $this->getConnection()->createQueryTable('modules_student', 'SELECT id, userID, idMod FROM modules_student');
-        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("modules_student");  
-        $this->assertTablesEqual($expectedtable, $querytable);
+        $update = $user->update($params, $this->admin['id']);
+        $this->assertEquals($responsearray, $update);
+        // Check user is enrolled on expected module.
+        $querytable = $this->query(array('columns' => array('userID', 'idMod'), 'table' => 'modules_student'));
+        $expectedtable = array (
+            0 => array(
+                'userID' => $update['id'],
+                'idMod' => $this->module2
+            )
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
+
     /**
      * Test user update exception nothing to update - blank username
      * @group api
@@ -258,20 +317,25 @@ class usermanagementtest extends unittestdatabase {
     public function test_update_exception_noupdate() {
         $responsearray = $this->update_response_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 708;
         $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
+        $responsearray['externalid'] = null;
         // Username.
         $params = array(
             "nodeid" => 1,
-            "id" => 1002,
+            "id" => $this->user2,
             "username" => "");
-        $this->assertEquals($responsearray, $user->update($params, $userid));
-        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
-        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
-        $this->assertTablesEqual($expectedtable, $querytable);
+        $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
+        $querytable = $this->query(array('table' => 'users', 'columns' => array('username'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
+        $expectedtable = array(
+            0 => array (
+                'username' => "unit3"
+            )
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
+
     /**
      * Test user update exception nothing to update  - blank password
      * @group api
@@ -279,20 +343,25 @@ class usermanagementtest extends unittestdatabase {
     public function test_update_exception_noupdate2() {
         $responsearray = $this->update_response_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 708;
         $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
+        $responsearray['externalid'] = null;
         // Password.
         $params = array(
             "nodeid" => 1,
-            "id" => 1002,
+            "id" => $this->user2,
             "password" => "");
-        $this->assertEquals($responsearray, $user->update($params, $userid));
-        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
-        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
-        $this->assertTablesEqual($expectedtable, $querytable);
+        $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
+        $querytable = $this->query(array('table' => 'users', 'columns' => array('password'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
+        $expectedtable = array(
+            0 => array (
+                'password' => "$6$033jGxQoVIVcYEgX5/wSBQrGEpoYvSvi4cPyjX8C7NLIgcXI4c5WfYKtmYuE.AEaYVUitfeIVxNkhjEkRGZsb1"
+            )
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
+
     /**
      * Test user update exception nothing to update  - blank title
      * @group api
@@ -300,20 +369,25 @@ class usermanagementtest extends unittestdatabase {
     public function test_update_exception_noupdate3() {
         $responsearray = $this->update_response_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 708;
         $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
+        $responsearray['externalid'] = null;
         // Title.
         $params = array(
             "nodeid" => 1,
-            "id" => 1002,
+            "id" => $this->user2,
             "title" => "");
-        $this->assertEquals($responsearray, $user->update($params, $userid));
-        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
-        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
-        $this->assertTablesEqual($expectedtable, $querytable);
+        $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
+        $querytable = $this->query(array('table' => 'users', 'columns' => array('title'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
+        $expectedtable = array(
+            0 => array (
+                'title' => null
+            )
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
+
     /**
      * Test user update exception nothing to update  - blank forename
      * @group api
@@ -321,20 +395,25 @@ class usermanagementtest extends unittestdatabase {
     public function test_update_exception_noupdate4() {
         $responsearray = $this->update_response_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 708;
         $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
+        $responsearray['externalid'] = null;
         // Forename.
         $params = array(
             "nodeid" => 1,
-            "id" => 1002,
+            "id" => $this->user2,
             "forename" => "");
-        $this->assertEquals($responsearray, $user->update($params, $userid));
-        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
-        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
-        $this->assertTablesEqual($expectedtable, $querytable);
+        $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
+        $querytable = $this->query(array('table' => 'users', 'columns' => array('first_names'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
+        $expectedtable = array(
+            0 => array (
+                'first_names' => null
+            )
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
+
     /**
      * Test user update exception nothing to update  - blank surname
      * @group api
@@ -342,20 +421,25 @@ class usermanagementtest extends unittestdatabase {
     public function test_update_exception_noupdate5() {
         $responsearray = $this->update_response_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 708;
         $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
+        $responsearray['externalid'] = null;
         // Surname.
         $params = array(
             "nodeid" => 1,
-            "id" => 1002,
+            "id" => $this->user2,
             "surname" => "");
-        $this->assertEquals($responsearray, $user->update($params, $userid));
-        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
-        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
-        $this->assertTablesEqual($expectedtable, $querytable);
+        $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
+        $querytable = $this->query(array('table' => 'users', 'columns' => array('surname'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
+        $expectedtable = array(
+            0 => array (
+                'surname' => 'test3'
+            )
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
+
     /**
      * Test user update exception nothing to update  - blank email
      * @group api
@@ -363,20 +447,25 @@ class usermanagementtest extends unittestdatabase {
     public function test_update_exception_noupdate6() {
         $responsearray = $this->update_response_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 708;
         $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
+        $responsearray['externalid'] = null;
         // Email.
         $params = array(
             "nodeid" => 1,
-            "id" => 1002,
+            "id" => $this->user2,
             "email" => "");
-        $this->assertEquals($responsearray, $user->update($params, $userid));
-        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
-        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
-        $this->assertTablesEqual($expectedtable, $querytable);
+        $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
+        $querytable = $this->query(array('table' => 'users', 'columns' => array('email'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
+        $expectedtable = array(
+            0 => array (
+                'email' => null
+            )
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
+
     /**
      * Test user update exception nothing to update  - blank course
      * @group api
@@ -384,41 +473,51 @@ class usermanagementtest extends unittestdatabase {
     public function test_update_exception_noupdate7() {
         $responsearray = $this->update_response_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 708;
         $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
+        $responsearray['externalid'] = null;
         // Course.
         $params = array(
             "nodeid" => 1,
-            "id" => 1002,
+            "id" => $this->user2,
             "course" => "");
-        $this->assertEquals($responsearray, $user->update($params, $userid));
-        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
-        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
-        $this->assertTablesEqual($expectedtable, $querytable);
+        $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
+        $querytable = $this->query(array('table' => 'users', 'columns' => array('grade'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
+        $expectedtable = array(
+            0 => array (
+                'grade' => 'TEST2'
+            )
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
+
     /**
      * Test user update exception nothing to update  - blank gender
      * @group api
      */
     public function test_update_exception_noupdate8() {
         $responsearray = $this->update_response_array();
-        $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
+        $user = new \api\usermanagement($this->db, 'test1');;
         $responsearray['statuscode'] = 708;
         $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
+        $responsearray['externalid'] = null;
         // Gender.
         $params = array(
             "nodeid" => 1,
-            "id" => 1002,
+            "id" => $this->user2,
             "gender" => "");
-        $this->assertEquals($responsearray, $user->update($params, $userid));
-        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
-        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
-        $this->assertTablesEqual($expectedtable, $querytable);
+        $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
+        $querytable = $this->query(array('table' => 'users', 'columns' => array('gender'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
+        $expectedtable = array(
+            0 => array (
+                'gender' => null
+            )
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
+
     /**
      * Test user update exception nothing to update  - blank year
      * @group api
@@ -426,20 +525,25 @@ class usermanagementtest extends unittestdatabase {
     public function test_update_exception_noupdate9() {
         $responsearray = $this->update_response_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 708;
         $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
+        $responsearray['externalid'] = null;
         // Year.
         $params = array(
             "nodeid" => 1,
-            "id" => 1002,
+            "id" => $this->user2,
             "year" => "");
-        $this->assertEquals($responsearray, $user->update($params, $userid));
-        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
-        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
-        $this->assertTablesEqual($expectedtable, $querytable);
+        $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
+        $querytable = $this->query(array('table' => 'users', 'columns' => array('yearofstudy'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
+        $expectedtable = array(
+            0 => array (
+                'yearofstudy' => null
+            )
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
+
     /**
      * Test user update exception nothing to update  - blank role
      * @group api
@@ -447,41 +551,62 @@ class usermanagementtest extends unittestdatabase {
     public function test_update_exception_noupdate10() {
         $responsearray = $this->update_response_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 708;
         $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
+        $responsearray['externalid'] = null;
         // Role.
         $params = array(
             "nodeid" => 1,
-            "id" => 1002,
+            "id" => $this->user2,
             "role" => "");
-        $this->assertEquals($responsearray, $user->update($params, $userid));
-        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
-        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
-        $this->assertTablesEqual($expectedtable, $querytable);
+        $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
+        $querytable = $this->query(array('table' => 'users', 'columns' => array('roles'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
+        $expectedtable = array(
+            0 => array (
+                'roles' => 'Student'
+            )
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
+
     /**
-     * Test user update exception nothing to update  - blank sid
+     * Test user update exception nothing to update  - blank school
      * @group api
      */
     public function test_update_exception_noupdate11() {
         $responsearray = $this->update_response_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 708;
         $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
+        $responsearray['externalid'] = null;
         // Student id.
         $params = array(
             "nodeid" => 1,
-            "id" => 1002,
+            "id" => $this->user2,
             "studentid" => "");
-        $this->assertEquals($responsearray, $user->update($params, $userid));
-        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
-        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
-        $this->assertTablesEqual($expectedtable, $querytable);
+        $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
+        $querytable = $this->query(array('table' => 'users', 'columns' => array('roles', 'yearofstudy', 'gender', 'grade', 'email',
+            'surname', 'first_names', 'title', 'password', 'username', 'initials'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
+        $expectedtable = array(
+            0 => array (
+                'roles' => 'Student',
+                'yearofstudy' => null,
+                'gender' => null,
+                'grade' => 'TEST2',
+                'email' => null,
+                'surname' => 'test3',
+                'first_names' => null,
+                'title' => null,
+                'password' => "$6$033jGxQoVIVcYEgX5/wSBQrGEpoYvSvi4cPyjX8C7NLIgcXI4c5WfYKtmYuE.AEaYVUitfeIVxNkhjEkRGZsb1",
+                'username' => "unit3",
+                'initials' => null
+            )
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
+
     /**
      * Test user update exception nothing to update  - blank initials
      * @group api
@@ -489,20 +614,25 @@ class usermanagementtest extends unittestdatabase {
     public function test_update_exception_noupdate12() {
         $responsearray = $this->update_response_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 708;
         $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
+        $responsearray['externalid'] = null;
         // Initials.
         $params = array(
             "nodeid" => 1,
-            "id" => 1002,
+            "id" => $this->user2,
             "initials" => "");
-        $this->assertEquals($responsearray, $user->update($params, $userid));
-        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
-        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
-        $this->assertTablesEqual($expectedtable, $querytable);
+        $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
+        $querytable = $this->query(array('table' => 'users', 'columns' => array('initials'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
+        $expectedtable = array(
+            0 => array (
+                'initials' => null
+            )
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
+
     /**
      * Test user update exception nothing to update - blank modules
      * @group api
@@ -510,20 +640,36 @@ class usermanagementtest extends unittestdatabase {
     public function test_update_exception_noupdate13() {
         $responsearray = $this->update_response_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 708;
         $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
+        $responsearray['externalid'] = null;
         // Modules.
         $params = array(
             "nodeid" => 1,
-            "id" => 1002,
+            "id" => $this->user2,
             "modules" => array());
-        $this->assertEquals($responsearray, $user->update($params, $userid));
-        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
-        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
-        $this->assertTablesEqual($expectedtable, $querytable);
+        $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
+        $querytable = $this->query(array('table' => 'users', 'columns' => array('roles', 'yearofstudy', 'gender', 'grade', 'email',
+            'surname', 'first_names', 'title', 'password', 'username', 'initials'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
+        $expectedtable = array(
+            0 => array (
+                'roles' => 'Student',
+                'yearofstudy' => null,
+                'gender' => null,
+                'grade' => 'TEST2',
+                'email' => null,
+                'surname' => 'test3',
+                'first_names' => null,
+                'title' => null,
+                'password' => "$6$033jGxQoVIVcYEgX5/wSBQrGEpoYvSvi4cPyjX8C7NLIgcXI4c5WfYKtmYuE.AEaYVUitfeIVxNkhjEkRGZsb1",
+                'username' => "unit3",
+                'initials' => null
+            )
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
+
     /**
      * Test user update exception nothing to update - no changes
      * @group api
@@ -531,24 +677,40 @@ class usermanagementtest extends unittestdatabase {
     public function test_update_exception_noupdate14() {
         $responsearray = $this->update_response_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 708;
         $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
+        $responsearray['externalid'] = null;
         // Modules.
         $params = array(
             "nodeid" => 1,
-            "id" => 1002,
-            "password" => "12345678",
+            "id" => $this->user2,
+            "password" => "",
             "surname" => "test3",
             "username" => "unit3",
             "roles" => "Student",
             "course" => "TEST2");
-        $this->assertEquals($responsearray, $user->update($params, $userid));
-        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT * FROM users WHERE id = 1002');
-        $expectedtable = $this->get_expected_data_set('updateuser')->getTable("users");  
-        $this->assertTablesEqual($expectedtable, $querytable);
+        $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
+        $querytable = $this->query(array('table' => 'users', 'columns' => array('roles', 'yearofstudy', 'gender', 'grade', 'email',
+            'surname', 'first_names', 'title', 'password', 'username', 'initials'), 'where' => array(array('column' => 'id', 'value' => $this->user2))));
+        $expectedtable = array(
+            0 => array (
+                'roles' => 'Student',
+                'yearofstudy' => null,
+                'gender' => null,
+                'grade' => 'TEST2',
+                'email' => null,
+                'surname' => 'test3',
+                'first_names' => null,
+                'title' => null,
+                'password' => "$6$033jGxQoVIVcYEgX5/wSBQrGEpoYvSvi4cPyjX8C7NLIgcXI4c5WfYKtmYuE.AEaYVUitfeIVxNkhjEkRGZsb1",
+                'username' => "unit3",
+                'initials' => null
+            )
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
+
     /**
      * Test user update exception user does not exist
      * @group api
@@ -558,31 +720,15 @@ class usermanagementtest extends unittestdatabase {
         $responsearray = $this->update_response_array();
         $params = $this->update_param_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 701;
         $responsearray['status'] = 'User does not exist';
         $responsearray['id'] = null;
-        $params['id'] = '99';
+        $responsearray['externalid'] = null;
+        $params['id'] = 0;
         $params['surname'] = 'unknown';
-        $this->assertEquals($responsearray, $user->update($params, $userid));
+        $this->assertEquals($responsearray, $user->update($params, $this->admin['id']));
     }
-    /**
-     * Test user update exception user id = 0
-     * @group api
-     */
-    public function test_update_exception_user2() {
-        // Test user update - ERROR user does not exist
-        $responsearray = $this->update_response_array();
-        $params = $this->update_param_array();
-        $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
-        $responsearray['statuscode'] = 701;
-        $responsearray['status'] = 'User does not exist';
-        $responsearray['id'] = null;
-        $params['id'] = '0';
-        $params['surname'] = 'unknown';
-        $this->assertEquals($responsearray, $user->update($params, $userid));
-    }
+
     /**
      * Test successful user deletion
      * @group api
@@ -592,14 +738,24 @@ class usermanagementtest extends unittestdatabase {
         $responsearray = $this->delete_response_array();
         $params = $this->delete_param_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
-        $this->assertEquals($responsearray, $user->delete($params, $userid));
+        $this->assertEquals($responsearray, $user->delete($params, $this->admin['id']));
         // Check that the remaining user are correct, when we delete a user we actually just add a timestamp to the table
         // which makes creating a fixture to check against difficult so doing this instead
-        $querytable = $this->getConnection()->createQueryTable('users', 'SELECT id, password, surname, username, roles, grade FROM users WHERE user_deleted is NULL');
-        $expectedtable = $this->get_expected_data_set('deleteuser')->getTable("users");  
-        $this->assertTablesEqual($expectedtable, $querytable);
+        $querytable = $this->query(array('columns' => array('username'), 'table' => 'users', 'where' => array(array('column' => 'user_deleted', 'value' => NULL, 'operator' => 'IS'))));
+        $expectedtable = array(
+            0 => array (
+                'username' => 'admin'
+            ),
+            1 => array (
+                'username' => 'test1'
+            ),
+            2 => array (
+                'username' => 'unit3'
+            ),
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
+
     /**
      * Test user deletion exception user does not exist
      * @group api
@@ -609,17 +765,18 @@ class usermanagementtest extends unittestdatabase {
         $responsearray = $this->delete_response_array();
         $params = $this->delete_param_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 701;
         $responsearray['status'] = 'User does not exist';
         $responsearray['id'] = null;
-        $params['id'] = 99;
-        $this->assertEquals($responsearray, $user->delete($params, $userid));
+        $responsearray['externalid'] = null;
+        $params['id'] = 0;
+        $this->assertEquals($responsearray, $user->delete($params, $this->admin['id']));
         // Test id not supplied.
         $params = array(
             "nodeid" => 1);
-        $this->assertEquals($responsearray, $user->delete($params, $userid));
+        $this->assertEquals($responsearray, $user->delete($params, $this->admin['id']));
     }
+
     /**
      * Test user deletion exception user does not exist
      * @group api
@@ -629,16 +786,16 @@ class usermanagementtest extends unittestdatabase {
         $responsearray = $this->delete_response_array();
         $params = $this->delete_param_array();
         $user = new \api\usermanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 704;
         $responsearray['status'] = 'User not deleted, as they have taken a paper';
         $responsearray['id'] = null;
-        $params['id'] = 1000;
-        $this->assertEquals($responsearray, $user->delete($params, $userid));
+        $responsearray['externalid'] = null;
+        $params['id'] = $this->student['id'];
+        $this->assertEquals($responsearray, $user->delete($params, $this->admin['id']));
         // Test deleting a user in use. case 2 - in log4_overall
         $responsearray['statuscode'] = 704;
         $responsearray['status'] = 'User not deleted, as they have taken a paper';
-        $params['id'] = 1002;
-        $this->assertEquals($responsearray, $user->delete($params, $userid));
+        $params['id'] = $this->user2;
+        $this->assertEquals($responsearray, $user->delete($params, $this->admin['id']));
     }
 }

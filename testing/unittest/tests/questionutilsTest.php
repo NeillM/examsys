@@ -15,8 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
-use PHPUnit\DbUnit\DataSet\YamlDataSet;
-
 /**
  * Tests for the QuestionUtils class
  *
@@ -26,63 +24,102 @@ use PHPUnit\DbUnit\DataSet\YamlDataSet;
  * @package tests
  */
 class QuestionUtilsTest extends unittestdatabase {
-  /**
-   * Get expected data set from yml
-   * @param string $name fixture file name
-   * @return dataset
-   */
-  public function getDataSet() {
-    return new YamlDataSet($this->get_base_fixture_directory() . "questionutilsTest" . DIRECTORY_SEPARATOR . "questions.yml");
-  }
+    /**
+     * @var array Storage for question data in tests
+     */
+    private $question;
 
-  /**
-   * Get expected data set from yml
-   * @param string $name fixture file name
-   * @return dataset
-   */
-  public function get_expected_data_set($name) {
-    return new YamlDataSet($this->get_base_fixture_directory() . "questionutilsTest" . DIRECTORY_SEPARATOR . $name . ".yml");
-  }
+    /**
+     * @var array Storage for options data in tests
+     */
+    private $options1, $options2, $options3;
 
-  /**
-   * Test that we can detect if a summative question has been answered by a student.
-   *
-   * @group questions
-   */
-  public function test_question_answered_in_summative() {
-    // Answered by student.
-    $this->assertTrue(QuestionUtils::question_answered_in_summative(33, $this->db));
-    // Answered by non student.
-    $this->assertFalse(QuestionUtils::question_answered_in_summative(88, $this->db));
-    // Not answered.
-    $this->assertFalse(QuestionUtils::question_answered_in_summative(69, $this->db));
-  }
+    /**
+     * Generate data for test.
+     * @throws \testing\datagenerator\not_found
+     */
+    public function datageneration() : void {
+        $datagenerator = $this->get_datagenerator('questions', 'core');
+        $this->question = $datagenerator->create_question(array('type' => 'mcq',
+            'user' => 'admin',
+            'status' => 1,
+            'theme' => 'test theme',
+            'scenario' => 'test scenario',
+            'leadin' => 'test leadin',
+            'notes' => 'test notes',
+            'q_media' => '1517406311.png',
+            'q_media_width' => 480,
+            'q_media_height' => 105,
+            'q_option_order' => 'random',
+            'display_method' => 'vertical',
+            'score_method' => 'Mark per Option'));
+        $this->options1 = $datagenerator->add_options_to_question(array('question' => $this->question['id'],
+            'option_text' => 'true',
+            'correct' => 1,
+            'o_media' => '1517409282.jpg',
+            'o_media_width' => 951,
+            'o_media_height' => 121,
+            'marks_correct' => 2,
+            'marks_incorrect' => -2,
+            'marks_partial' => 0));
+        $this->options2 = $datagenerator->add_options_to_question(array('question' => $this->question['id'],
+            'option_text' => 'false',
+            'correct' => 1,
+            'marks_correct' => 2,
+            'marks_incorrect' => -2,
+            'marks_partial' => 0));
+        $this->options3 = $datagenerator->add_options_to_question(array('question' => $this->question['id'],
+            'option_text' => 'maybe',
+            'correct' => 1,
+            'marks_correct' => 2,
+            'marks_incorrect' => -2,
+            'marks_partial' => 0));
+        $datagenerator = $this->get_datagenerator('log', 'core');
+        $meta = $datagenerator->create_metadata(array('userID' => $this->admin['id'], 'paperID' => 1, 'started' => '2017-01-01 00:00:00', 'completed' => '2017-01-02 00:00:00'));
+        $datagenerator->create_summative(array('q_id' => 88, 'metadataID' => $meta['id']));
+        $meta = $datagenerator->create_metadata(array('userID' => $this->student['id'], 'paperID' => 2, 'started' => '2017-01-01 00:00:00', 'completed' => '2017-01-02 00:00:00'));
+        $datagenerator->create_summative(array('q_id' => 33, 'metadataID' => $meta['id']));
+    }
 
-  /**
-   * Test get question details
-   * @group questions
-   */
-  public function test_get_correct_answer() {
-    $question = array();
-    $expected['ID'] = 1;
-    $expected['type'] = 'mcq';
-    $expected['score_method'] = 'Mark per Option';
-    $expected['correct'] = ',1';
-    $expected['option_text'] = "maybe";
-    $expected['correct_text'] = "\ttrue\tfalse\tmaybe";
-    $this->assertEquals($expected, QuestionUtils::get_correct_answer($question, 1, $this->db));
-  }
+    /**
+     * Test that we can detect if a summative question has been answered by a student.
+     *
+     * @group questions
+     */
+    public function test_question_answered_in_summative() {
+        // Answered by student.
+        $this->assertTrue(QuestionUtils::question_answered_in_summative(33, $this->db));
+        // Answered by non student.
+        $this->assertFalse(QuestionUtils::question_answered_in_summative(88, $this->db));
+        // Not answered.
+        $this->assertFalse(QuestionUtils::question_answered_in_summative(69, $this->db));
+    }
 
-  /**
-   * Test fix correct (fill in the blank)
-   * @group questions
-   */
-  public function test_fix_correct() {
-    $expected = ',a';
-    $q_type = 'blank';
-    $correct = '';
-    $old_correct = '';
-    $option_text = '<div>test [blank]a,b,c[/blank]</div> ';
-    $this->assertEquals($expected, QuestionUtils::fix_correct($q_type, $correct, $old_correct, $option_text));
-  }
+    /**
+     * Test get question details
+     * @group questions
+     */
+    public function test_get_correct_answer() {
+        $question = array();
+        $expected['ID'] = $this->question['id'];
+        $expected['type'] = $this->question['q_type'];
+        $expected['score_method'] = $this->question['score_method'];
+        $expected['correct'] = ',' . $this->options3['correct'];
+        $expected['option_text'] = $this->options3['option_text'];
+        $expected['correct_text'] = "\t" . $this->options1['option_text'] . "\t" . $this->options2['option_text'] . "\t" . $this->options3['option_text'];
+        $this->assertEquals($expected, QuestionUtils::get_correct_answer($question, $this->question['id'], $this->db));
+    }
+
+    /**
+     * Test fix correct (fill in the blank)
+     * @group questions
+     */
+    public function test_fix_correct() {
+        $expected = ',a';
+        $q_type = 'blank';
+        $correct = '';
+        $old_correct = '';
+        $option_text = '<div>test [blank]a,b,c[/blank]</div> ';
+        $this->assertEquals($expected, QuestionUtils::fix_correct($q_type, $correct, $old_correct, $option_text));
+    }
 }

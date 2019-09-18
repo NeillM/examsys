@@ -6,11 +6,11 @@ Feature: Behat Database resetting
 
   Scenario: Storing and resetting: Users table
     Given I store the database state
-    And there are "4" records in the "users" table
+    And there are "3" records in the "users" table
     And the following "users" exist:
-      | username |
-      | student1 |
-      | staff 1 |
-    And there are "6" records in the "users" table
+      | username | sid | roles |
+      | student1 | 123456789 | Student |
+      | staff1   |           | Staff   |
+    And there are "5" records in the "users" table
     When I reset the database state
-    Then there are "4" records in the "users" table
+    Then there are "3" records in the "users" table

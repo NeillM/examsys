@@ -38,7 +38,7 @@ class UrlTest extends UnitTest {
      */
     public function testFromGlobals($expected, $server) {
         $url = \Url::fromGlobals($server);
-        $this->assertSame($expected, (string) $url);
+        $this->assertSame($expected, (string)$url);
     }
 
     /**

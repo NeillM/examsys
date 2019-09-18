@@ -15,9 +15,11 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace testing\behat\helpers\database;
-use PHPUnit\DbUnit\TestCaseTrait;
-use PHPUnit\DbUnit\DataSet\YamlDataSet;
-use PDO;
+
+use mysqli;
+use testing\datagenerator\loader;
+use testing\datagenerator\generator;
+use testing\testcasetrait;
 
 /**
  * Implements the PHP Unit database extension for Rogo Behat tests.
@@ -28,53 +30,67 @@ use PDO;
  * @subpackage behat
  */
 class Default_Loader extends Data_Loader {
-  use TestCaseTrait {
-    setUp as public load;
-    tearDown as public clean;
-  }
+    use testcasetrait {
 
-  public function __construct($load_help = false) {
-    parent::__construct($load_help);
-    $this->fixture_base = __DIR__ . '/../../../fixtures/base/';
-  }
-  
-  /**
-   * Create and return the connection to the rogo behat database that PHP unit database extension will use.
-   * @return type
-   */
-  protected function getConnection() {
-    $config = \Config::get_instance();
-    if (!isset($this->phpunit_db)) {
-      $database = $config->get('cfg_behat_db_database');
-      $host = $config->get('cfg_db_host');
-      $user = $config->get('cfg_behat_db_user');
-      $password = $config->get('cfg_behat_db_password');
-      $pdo_connection = new PDO("mysql:dbname=" . $database . ";" . "host=" . $host, $user, $password);
-      $this->phpunit_db = $this->createDefaultDBConnection($pdo_connection, $database);
     }
-    return $this->phpunit_db;
-  }
 
-  /**
-   * Gets the base data that should always be present in Rogo.
-   *
-   * There should be a yml file for every database table in Rogo.
-   */
-  protected function getDataSet() {
-    $base_location = $this->fixture_base;
-    // Get a list of all files to be loaded.
-    $fixtures = glob("$base_location*.yml");
-    if (count($fixtures) < 1) {
-      // We should find some yml files!
-      throw new \Exception('Could not find base fixture files');
+    public function __construct($load_help = false) {
+        parent::__construct($load_help);
+        $this->fixture_base = __DIR__ . '/../../../../fixtures/base/';
     }
-    // Create the dataset.
-    $firstfixture = array_shift($fixtures);
-    $dataset = new YamlDataSet($firstfixture);
-    // Build up the dataset.
-    foreach ($fixtures as $fixture) {
-      $dataset->addYamlFile($fixture);
+
+    /**
+     * Behat setup function.
+     */
+    public function load() : void {
+        $this->setUp();
+        $this->setup_dataset();
     }
-    return $dataset;
-  }
+
+    /**
+     * Behat teardown function.
+     */
+    public function clean() : void {
+        $this->tearDown();
+    }
+
+    /**
+     * Wrapper function for loader::get function to load data generators
+     * @param string $name The name of the generator.
+     * @param string $component The component the generator is from (optional).
+     * @return generator
+     * @throws \testing\datagenerator\no_database
+     * @throws \testing\datagenerator\not_found
+     */
+    public function get_datagenerator(string $name, string $component = 'core') : generator {
+        return loader::get($name, $component);
+    }
+
+    /**
+     * Set-up db connections.
+     * @return mysqli
+     */
+    protected function get_db_connection(): mysqli {
+        $config = \Config::get_instance();
+        if (!isset($this->phpunit_db)) {
+            // Open db connection.
+            $dbconfig['host'] = $config->get('cfg_db_host');
+            $dbconfig['user'] = $config->get('cfg_behat_db_user');
+            $dbconfig['password'] = $config->get('cfg_behat_db_password');
+            $dbconfig['database'] = $config->get('cfg_behat_db_database');
+            $dbconfig['port'] = $config->get('cfg_db_port');
+            $this->phpunit_db = $this->set_db_connection($dbconfig);
+        }
+        return $this->phpunit_db;
+    }
+
+    /**
+     * Gets the base data that should always be present in Rogo.
+     *
+     * There should be a yml file for every database table in Rogo.
+     */
+    protected function setup_dataset(): void {
+        // Base data generation.
+        $this->base_datageneration();
+    }
 }

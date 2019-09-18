@@ -44,7 +44,7 @@ class export_assessment extends exporter {
    * @param $data
    * @return string
    */
-  private static function hex_to_dec($data) {
+  public static function hex_to_dec($data) {
     $items = explode(',', $data);
     $response = '';
 

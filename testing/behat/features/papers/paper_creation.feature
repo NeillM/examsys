@@ -8,7 +8,6 @@ Feature: Paper creation
     Given the following "academic year" exist:
       | year |
       | last year |
-      | now |
       | next year |
     And the following "modules" exist:
       | moduleid | fullname |

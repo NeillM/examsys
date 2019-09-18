@@ -15,7 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
-use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
 /**
  * Test csv class
@@ -26,54 +25,53 @@ use PHPUnit\DbUnit\DataSet\YamlDataSet;
  * @package tests
  */
 class csv_handlerTest extends unittestdatabase {
-  /**
-   * Get init data set from yml
-   * @return dataset
-   */
-  public function getDataSet() {
-    return new YamlDataSet($this->get_base_fixture_directory() . "csv" . DIRECTORY_SEPARATOR . "csv.yml");
-  }
+    /**
+     * Generate data for test.
+     */
+    public function datageneration() : void {
+        // Currently only base data required.
+    }
 
-  /**
-   * Get test dir
-   * @return csv_handler
-   */
-  public function get_test_dir() {
-    return $this->get_base_fixture_directory() . "csv" . DIRECTORY_SEPARATOR . "files" . DIRECTORY_SEPARATOR;
-  }
+    /**
+     * Get test dir
+     * @return csv_handler
+     */
+    public function get_test_dir() {
+        return $this->get_base_fixture_directory() . "csv" . DIRECTORY_SEPARATOR . "files" . DIRECTORY_SEPARATOR;
+    }
 
-  /**
-   * Test invalid file type upload
-   * @group csv
-   */
-  public function test_move_upload_to_temp_invalid() {
-    $this->expectExceptionMessage('File has an invalid file extension. Only .csv is supported.');
-    $file['name'] = 'modules.xslx';
-    $file['tmp_name'] = 'modules.csv';
-    $file['error'] = 0;
-    \csv\csv_handler::move_upload_to_temp($file, $this->config->get('cfg_tmpdir'));
-  }
+    /**
+     * Test invalid file type upload
+     * @group csv
+     */
+    public function test_move_upload_to_temp_invalid() {
+        $this->expectExceptionMessage('File has an invalid file extension. Only .csv is supported.');
+        $file['name'] = 'modules.xslx';
+        $file['tmp_name'] = 'modules.csv';
+        $file['error'] = 0;
+        \csv\csv_handler::move_upload_to_temp($file, $this->config->get('cfg_tmpdir'));
+    }
 
-  /**
-   * Test invalid file type upload
-   * @group csv
-   */
-  public function test_move_upload_to_temp_noname() {
-    $this->expectExceptionMessage('No filename supplied.');
-    $file['name'] = '';
-    $file['tmp_name'] = '';
-    $file['error'] = 0;
-    \csv\csv_handler::move_upload_to_temp($file, $this->config->get('cfg_tmpdir'));
-  }
+    /**
+     * Test invalid file type upload
+     * @group csv
+     */
+    public function test_move_upload_to_temp_noname() {
+        $this->expectExceptionMessage('No filename supplied.');
+        $file['name'] = '';
+        $file['tmp_name'] = '';
+        $file['error'] = 0;
+        \csv\csv_handler::move_upload_to_temp($file, $this->config->get('cfg_tmpdir'));
+    }
 
-  /**
-   * Test get line
-   * @group csv
-   */
-  public function test_get_line() {
-    $csv = new \csv\csv_handler("test.csv", $this->get_test_dir());
-    $line = array('a' => '1', 'b' => '2', 'c' => '3');
-    $this->assertEquals($line, $csv->get_line());
-  }
+    /**
+     * Test get line
+     * @group csv
+     */
+    public function test_get_line() {
+        $csv = new \csv\csv_handler("test.csv", $this->get_test_dir());
+        $line = array('a' => '1', 'b' => '2', 'c' => '3');
+        $this->assertEquals($line, $csv->get_line());
+    }
 
 }

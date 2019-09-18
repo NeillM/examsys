@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
-use PHPUnit\DbUnit\DataSet\YamlDataSet;
+
 
 /**
  * Test access denied logs class
@@ -26,39 +26,45 @@ use PHPUnit\DbUnit\DataSet\YamlDataSet;
  * @package tests
  */
 class access_denied_logsTest extends unittestdatabase {
-  /**
-   * Get init data set from yml
-   * @return dataset
-   */
-  public function getDataSet() {
-    return new YamlDataSet($this->get_base_fixture_directory() . "classes" . DIRECTORY_SEPARATOR . "access_denied_logs.yml");
-  }
-  /**
-   * Test get all the logs from access denied record
-   * @group log
-   */
-  public function test_get_access_denied_logs() {
-    $log_obj = new access_denied_logs($this->db);
-    $this->assertEquals(2,count($log_obj->get_access_denied_logs()));
-  }
+    /*
+     * @var array Storage for denied log data in tests
+     */
+    private $denied1, $denied2;
 
-  /**
-   * Test deleting a access denied log record
-   * @group log
-   */
-  public function test_delete_a_access_denied_log() {
-    $log_obj = new access_denied_logs($this->db);
-    $this->assertTrue($log_obj->delete_a_access_denied_log(1));
-  }
+    /**
+     * Generate data for test.
+     * @throws \testing\datagenerator\not_found
+     */
+    public function datageneration() : void {
+        $datagenerator = $this->get_datagenerator('incident', 'core');
+        $this->denied1 = $datagenerator->create_denied(array('userid' => $this->admin['id'], 'page' => 'localhost'));
+        $this->denied2 =$datagenerator->create_denied(array('userid' => $this->admin['id'], 'page' => 'index.php'));
+    }
 
-  /**
-   * Test deleting all the access denied logs records
-   * @group log
-   */
-  public function test_delete_access_denied_logs() {
-    $log_obj = new access_denied_logs($this->db);
-    $this->assertTrue($log_obj->delete_access_denied_logs());
-  }
+    /**
+     * Test get all the logs from access denied record
+     * @group log
+     */
+    public function test_get_access_denied_logs() {
+        $log_obj = new access_denied_logs($this->db);
+        $this->assertEquals(2, count($log_obj->get_access_denied_logs()));
+    }
 
+    /**
+     * Test deleting a access denied log record
+     * @group log
+     */
+    public function test_delete_a_access_denied_log() {
+        $log_obj = new access_denied_logs($this->db);
+        $this->assertTrue($log_obj->delete_a_access_denied_log($this->denied1['id']));
+    }
 
+    /**
+     * Test deleting all the access denied logs records
+     * @group log
+     */
+    public function test_delete_access_denied_logs() {
+        $log_obj = new access_denied_logs($this->db);
+        $this->assertTrue($log_obj->delete_access_denied_logs());
+    }
 }

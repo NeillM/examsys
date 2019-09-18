@@ -15,7 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
-use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
 /**
  * Test Killer Question class
@@ -26,79 +25,117 @@ use PHPUnit\DbUnit\DataSet\YamlDataSet;
  * @package tests
  */
 class Killer_Questiontest extends unittestdatabase {
+    /**
+     * @var array Storage for paper data in tests
+     */
+    private $pid, $pid2;
 
-  /**
-   * Get init data set from yml
-   * @return dataset
-   */
-  public function getDataSet() {
-    return new YamlDataSet($this->get_base_fixture_directory() . "classes" . DIRECTORY_SEPARATOR . "killer_question.yml");
-  }
-  /**
-   * Get expected data set from yml
-   * @param string $name fixture file name
-   * @return dataset
-   */
-  public function get_expected_data_set($name) {
-    return new YamlDataSet($this->get_base_fixture_directory() . "classes" . DIRECTORY_SEPARATOR . $name . ".yml");
-  }
-  /**
-   * Test checks a questions a killer
-   * @group paper
-   */
-  public function test_is_a_killer_question() {
-    // Checks a question is killer or not.
-    $killer_question = new Killer_Question(1,$this->db);
-    $this->assertFalse( $killer_question->is_killer_question(1));
-  }
+    /*
+     * @var array Storage for question data in tests
+     */
+    private $question, $question2;
 
-  /**
-   * Test sets a killer question
-   * @group paper
-   */
-  public function test_set_question(){
-    $killer_question = new Killer_Question(1,$this->db);
-    $this->assertEquals(0, count($killer_question->get_questions()));
-  }
+    /**
+     * Generate data for test.
+     * @throws \testing\datagenerator\not_found
+     */
+    public function datageneration() : void {
+        $datagenerator = $this->get_datagenerator('papers', 'core');
+        $this->pid = $datagenerator->create_paper(array('papertitle' => "test osce",
+            'startdate' => "2018-02-19 00:00:00",
+            'enddate' => "2032-02-02 00:00:00",
+            'duration' => 60,
+            'paperowner' => "admin",
+            'labs' => "1",
+            'papertype' => "4",
+            'modulename' => "Training Module"));
+        $this->pid2 = $datagenerator->create_paper(array('papertitle' => "test osce 2",
+            'startdate' => "2018-02-19 00:00:00",
+            'enddate' => "2032-02-02 00:00:00",
+            'duration' => 60,
+            'paperowner' => "admin",
+            'labs' => "1",
+            'papertype' => "4",
+            'modulename' => "Training Module"));
+        $datagenerator = $this->get_datagenerator('questions', 'core');
+        $this->question = $datagenerator->create_question(array("user" => "admin",
+            "type" => 'true_false',
+            "leadin" => "Is the world round or flat?",
+            "scenario" => "This is a test"));
+        $datagenerator->add_question_to_paper(array('paper' => $this->pid['id'], 'question' => $this->question['id'], 'screen' => 1, 'displaypos' => 1));
+        $this->question2 = $datagenerator->create_question(array("user" => "admin",
+            "type" => 'true_false',
+            "leadin" => "Is the world round?",
+            "scenario" => "This is a test2"));
+        $datagenerator->add_question_to_paper(array('paper' => $this->pid['id'], 'question' => $this->question2['id'], 'screen' => 1, 'displaypos' => 1));
+    }
 
-  /**
-   * Test counts killer questions by paper
-   * @group paper
-   */
-  public function test_get_questions(){
-    $killer_question = new Killer_Question(1,$this->db);
-    $killer_question->set_question(1);
-    $killer_question->save();
-    $this->assertEquals(1, count($killer_question->get_questions()));
-  }
+    /**
+     * Test checks a questions a killer
+     * @group paper
+     */
+    public function test_is_a_killer_question() {
+        // Checks a question is killer or not.
+        $killer_question = new Killer_Question($this->pid['id'], $this->db);
+        $this->assertFalse($killer_question->is_killer_question(1));
+    }
 
-  /**
-   * Test checks copy killer questions from one paper to the other
-   * @group paper
-   */
-  public function test_copy_killer_questions(){
-    $killer_question = new Killer_Question(1,$this->db);
-    $killer_question->set_question(1);
-    $killer_question->save();
-    $killer_question->copy_killer_questions(2 );
-    $killer_question_new = new Killer_Question(2,$this->db);
-    $this->assertEquals(1, count($killer_question_new->get_questions()));
-    $querytable = $this->getConnection()->createQueryTable('killer_questions', 'SELECT paperID, q_id FROM killer_questions');
-    $expectedtable = $this->get_expected_data_set('copy_killer_questions')->getTable("killer_questions");
-    $this->assertTablesEqual($expectedtable, $querytable);
-  }
+    /**
+     * Test sets a killer question
+     * @group paper
+     */
+    public function test_set_question() {
+        $killer_question = new Killer_Question($this->pid['id'], $this->db);
+        $this->assertEquals(0, count($killer_question->get_questions()));
+    }
 
-  /**
-   * Test unsets the killer question
-   * @group paper
-   */
-  public function test_unset_question(){
-    $killer_question = new Killer_Question(1,$this->db);
-    $killer_question->unset_question(1);
-    $killer_question->save();
-    $this->assertEquals(0, count($killer_question->get_questions()));
-    $killer_question_new = new Killer_Question(2,$this->db);
-    $killer_question_new->unset_question(1);
-    $killer_question_new->save();
-  }
+    /**
+     * Test counts killer questions by paper
+     * @group paper
+     */
+    public function test_get_questions() {
+        $killer_question = new Killer_Question($this->pid['id'], $this->db);
+        $killer_question->set_question($this->question['id']);
+        $killer_question->save();
+        $this->assertEquals(1, count($killer_question->get_questions()));
+    }
+
+    /**
+     * Test checks copy killer questions from one paper to the other
+     * @group paper
+     */
+    public function test_copy_killer_questions() {
+        $killer_question = new Killer_Question($this->pid['id'], $this->db);
+        $killer_question->set_question($this->question['id']);
+        $killer_question->save();
+        $killer_question->copy_killer_questions($this->pid2['id']);
+        $killer_question_new = new Killer_Question($this->pid2['id'], $this->db);
+        $this->assertEquals(1, count($killer_question_new->get_questions()));
+        $querytable = $this->query(array('columns' => array('paperID', 'q_id'), 'table' => 'killer_questions'));
+        $expectedtable = array(
+            0 => array(
+                'paperID' => $this->pid['id'],
+                'q_id' => $this->question['id']
+            ),
+            1 => array(
+                'paperID' => $this->pid2['id'],
+                'q_id' => $this->question['id']
+            ),
+        );
+        $this->assertEquals($expectedtable, $querytable);
+    }
+
+    /**
+     * Test unsets the killer question
+     * @group paper
+     */
+    public function test_unset_question() {
+        $killer_question = new Killer_Question($this->pid['id'], $this->db);
+        $killer_question->unset_question($this->question['id']);
+        $killer_question->save();
+        $this->assertEquals(0, count($killer_question->get_questions()));
+        $killer_question_new = new Killer_Question($this->pid2['id'], $this->db);
+        $killer_question_new->unset_question($this->question['id']);
+        $killer_question_new->save();
+    }
 }

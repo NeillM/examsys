@@ -1,0 +1,13 @@
+## Data for the faculty table.
+---
+faculty:
+  -
+    id: 1
+    name: "UNKNOWN Faculty"
+    deleted:
+    externalid: "abcdefghi"
+    externalsys: "external"
+  -
+    id: 2
+    name: "Administrative and Support Units"
+    deleted:

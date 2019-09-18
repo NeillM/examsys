@@ -15,34 +15,82 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
-use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
 /**
  * Test modulemanagement api class
- * 
+ *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
 class modulemanagementtest extends unittestdatabase {
+
+    /**
+     * @var integer Storage for user id in test
+     */
+    private $user;
+
+    /**
+     * @var integer Storage for module id in tests
+     */
+    private $module2, $module3;
+
+    /**
+     * @var integer Storage for school id in tests
+     */
+    private $school2;
+
+    /**
+     * Generate data for test.
+     * @throws \testing\datagenerator\not_found
+     */
+    public function datageneration() : void {
+        $this->user = $this->get_user_id('test2');
+        $this->module2 = $this->get_module_id('SYSTEM');
+        $this->school2 = $this->get_school_id('Training');
+        $datagenerator = $this->get_datagenerator('academic_year', 'core');
+        $datagenerator->create_academic_year(array('calendar_year' => 2015, 'academic_year' => '2015/16'));
+        $datagenerator->create_academic_year(array('calendar_year' => 2016, 'academic_year' => '2016/17'));
+        $datagenerator = $this->get_datagenerator('modules', 'core');
+        $module = $datagenerator->create_module(array('fullname' => 'Test module 3', 'moduleid' => 'TEST3'));
+        $this->module3 = $module['id'];
+        $datagenerator->create_enrolment(array('userid' => $this->student['id'], 'moduleid' => $this->module3, 'calendar_year' => 2016));
+        $datagenerator->create_enrolment(array('userid' => $this->user, 'moduleid' => $this->module3, 'calendar_year' => 2016));
+        $datagenerator = $this->get_datagenerator('papers', 'core');
+        $datagenerator->create_paper(array('papertitle' => "Test create formative",
+            'calendaryear' => 2016,
+            'modulename' => "Online Help",
+            'paperowner' => "admin",
+            'papertype' => "0",
+            'duration' => 60,
+            'labs' => "1"));
+        $datagenerator = $this->get_datagenerator('api', 'core');
+        $client = $datagenerator->create_client(array('clientid' => 'test1', 'userid' => $this->admin['id'], 'secret' => 'test'));
+        $datagenerator->create_external(array('clientid' => $client['clientid'], 'name' => 'test rogo api', 'type' => 'api'));
+        $datagenerator = $this->get_datagenerator('labs', 'core');
+        $datagenerator->create_campus(array('name' => "Test Campus", 'isdefault' => 1));
+        $datagenerator->create_lab(array('name' => "Test lab", 'building' => "Test building", 'room' => 1));
+    }
+
     /**
      * Create a response array for creation
-     * @return array the response array  
+     * @return array the response array
      */
     private function create_response_array() {
         return array(
             "statuscode" => 100,
             "status" => 'OK',
-            "id" => 4,
+            "id" => $this->module3 + 1,
             "externalid" => null,
             "error" => null,
             "node" => 'create',
             "nodeid" => 1);
     }
+
     /**
      * Create a parameter array for creation
-     * @return array the param array  
+     * @return array the param array
      */
     private function create_param_array() {
         return array(
@@ -52,119 +100,111 @@ class modulemanagementtest extends unittestdatabase {
             "school" => 'Test school',
             "faculty" => 'Test faculty');
     }
+
     /**
      * Create a parameter array for updates
-     * @return array the param array  
+     * @return array the param array
      */
     private function update_param_array() {
         return array(
             "nodeid" => 1,
-            "id" => 2,
+            "id" => $this->module2,
             "name" => 'Test module 2 update');
     }
+
     /**
      * Create a response array for updates
-     * @return array the response array  
+     * @return array the response array
      */
     private function update_response_array() {
         return array(
             "statuscode" => 100,
             "status" => 'OK',
-            "id" => 2,
+            "id" => $this->module2,
             "externalid" => null,
             "error" => null,
             "node" => 'update',
             "nodeid" => 1);
     }
+
     /**
      * Create a parameter array for enrolment
-     * @return array the param array  
+     * @return array the param array
      */
     private function enrol_param_array() {
         return array(
             "nodeid" => 1,
-            "userid" => 1000,
-            "moduleid" => 1,
+            "userid" => $this->student['id'],
+            "moduleid" => $this->module,
             "session" => 2016,
             "attempt" => 1);
     }
+
     /**
      * Create a response array for enrolment
-     * @return array the response array  
+     * @return array the response array
      */
     private function enrol_response_array() {
         return array(
             "statuscode" => 100,
             "status" => 'OK',
-            "id" => 3,
             "externalid" => null,
             "error" => null,
             "node" => 'enrol',
             "nodeid" => 1);
     }
+
     /**
      * Create a parameter array for unenrolment
-     * @return array the param array  
+     * @return array the param array
      */
     private function unenrol_param_array() {
         return array(
             "nodeid" => 1,
-            "userid" => 1000,
-            "moduleid" => 3,
+            "userid" => $this->student['id'],
+            "moduleid" => $this->module3,
             "session" => 2016);
     }
+
     /**
      * Create a response array for unenrolment
-     * @return array the response array  
+     * @return array the response array
      */
     private function unenrol_response_array() {
         return array(
             "statuscode" => 100,
             "status" => 'OK',
-            "id" => 1,
             "externalid" => null,
             "error" => null,
             "node" => 'unenrol',
             "nodeid" => 1);
     }
+
     /**
      * Create a response array for deletion
-     * @return array the response array  
+     * @return array the response array
      */
     private function delete_response_array() {
         return array(
             "statuscode" => 100,
             "status" => 'OK',
-            "id" => 1,
+            "id" => $this->module,
             "externalid" => null,
             "error" => null,
             "node" => 'delete',
             "nodeid" => 1);
     }
+
     /**
      * Create a parameter array for deletion
-     * @return array the param array  
+     * @return array the param array
      */
     private function delete_param_array() {
         return array(
             "nodeid" => 1,
-            "id" => 1);
+            "id" => $this->module);
     }
-    /**
-     * Get init data set from yml
-     * @return dataset
-     */
-    public function getDataSet() {
-        return new YamlDataSet($this->get_base_fixture_directory() . "api" . DIRECTORY_SEPARATOR . "modulemanagementTest" . DIRECTORY_SEPARATOR . "modulemanagement.yml");
-    }
-    /**
-     * Get expected data set from yml
-     * @param string $name fixture file name
-     * @return dataset
-     */
-    public function get_expected_data_set($name) {
-        return new YamlDataSet($this->get_base_fixture_directory() . "api" . DIRECTORY_SEPARATOR .  "modulemanagementTest" . DIRECTORY_SEPARATOR . $name . ".yml");
-    }
+
     /**
      * Test successful module creation
      * @group api
@@ -174,18 +214,21 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray = $this->create_response_array();
         $params = $this->create_param_array();
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
-        $this->assertEquals($responsearray, $module->create($params, $userid));
+        $create = $module->create($params, $this->admin['id']);
+        $responsearray['id'] = $create['id'];
+        $this->assertEquals($responsearray, $create);
         // Create moudle in new school
-        $responsearray['id'] = 5;
         $params = array(
             "nodeid" => 1,
             "modulecode" => 'TEST5',
             "name" => 'Test module 5',
             "school" => 'Test school 2',
             "faculty" => 'Test faculty');
-        $this->assertEquals($responsearray, $module->create($params, $userid));
+        $create = $module->create($params, $this->admin['id']);
+        $responsearray['id'] = $create['id'];
+        $this->assertEquals($responsearray, $create);
     }
+
     /**
      * Test module creation exception module exists
      * @group api
@@ -195,14 +238,14 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray = $this->create_response_array();
         $params = $this->create_param_array();
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 505;
         $responsearray['status'] = 'Module already exists';
-        $responsearray['id'] = 1;
-        $responsearray['externalid'] = '12345678';
-        $params['modulecode'] = 'TEST';
-        $this->assertEquals($responsearray, $module->create($params, $userid));
+        $responsearray['id'] = $this->module;
+        $responsearray['externalid'] = 'abc123def';
+        $params['modulecode'] = 'TRAIN';
+        $this->assertEquals($responsearray, $module->create($params, $this->admin['id']));
     }
+
     /**
      * Test module creation exception module exists (duplicate externalid - empty string)
      * @group api
@@ -211,15 +254,15 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray = $this->create_response_array();
         $params = $this->create_param_array();
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 505;
         $responsearray['status'] = 'Module already exists';
-        $responsearray['id'] = 1;
-        $responsearray['externalid'] = '12345678';
-        $params['externalid'] = '12345678';
+        $responsearray['id'] = $this->module;
+        $responsearray['externalid'] = 'abc123def';
+        $params['externalid'] = 'abc123def';
         $params['sms'] = 'test rogo api';
-        $this->assertEquals($responsearray, $module->create($params, $userid));
+        $this->assertEquals($responsearray, $module->create($params, $this->admin['id']));
     }
+
     /**
      * Test module creation exception invalid faculty
      * @group api
@@ -229,7 +272,6 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray = $this->create_response_array();
         $params = $this->create_param_array();
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 506;
         $responsearray['status'] = 'Faculty not supplied';
         $responsearray['id'] = null;
@@ -239,8 +281,9 @@ class modulemanagementtest extends unittestdatabase {
             "name" => 'Test module 5',
             "school" => 'Test school 2',
             "faculty" => '');
-        $this->assertEquals($responsearray, $module->create($params, $userid));
+        $this->assertEquals($responsearray, $module->create($params, $this->admin['id']));
     }
+
     /**
      * Test successful module update
      * @group api
@@ -250,19 +293,28 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray = $this->update_response_array();
         $params = $this->update_param_array();
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
-        $this->assertEquals($responsearray, $module->update($params, $userid));
+        $this->assertEquals($responsearray, $module->update($params, $this->admin['id']));
         // Test module update module code.
         $params = array(
             "nodeid" => 1,
-            "id" => 2,
+            "id" => $this->module2,
             "modulecode" => 'TEST2UPDATE');
-        $this->assertEquals($responsearray, $module->update($params, $userid));
+        $this->assertEquals($responsearray, $module->update($params, $this->admin['id']));
         // Check update occured.
-        $querytable = $this->getConnection()->createQueryTable('modules', 'SELECT id, moduleid, fullname, active, schoolid, academic_year_start, sms FROM modules where id = 2');
-        $expectedtable = $this->get_expected_data_set('updatemodule')->getTable("modules");  
-        $this->assertTablesEqual($expectedtable, $querytable);
+        $querytable = $this->query(array('columns' => array('moduleid', 'fullname', 'active', 'schoolid', 'academic_year_start', 'sms'), 'table' => 'modules', 'where' => array(array('column' => 'id', 'value' => 2))));
+        $expectedtable = array(
+            0 => array(
+                'moduleid' => "TEST2UPDATE",
+                'fullname' => "Test module 2 update",
+                'active' => 1,
+                'schoolid' =>  $this->school2,
+                'academic_year_start' => "07/01",
+                'sms' => ""
+            )
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
+
     /**
      * Test module update, also supplying school and faculty that have not changed
      * @group api
@@ -271,39 +323,49 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray = $this->update_response_array();
         $params = $this->update_param_array();
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
         $params = array(
             "nodeid" => 1,
-            "id" => 2,
+            "id" =>  $this->module2,
             "modulecode" => 'TEST2UPDATE',
             "school" => 'Test school',
             "faculty" => 'Test faculty');
-        $this->assertEquals($responsearray, $module->update($params, $userid));
+        $this->assertEquals($responsearray, $module->update($params, $this->admin['id']));
     }
+
     /**
      * Test successful module update with a new external id
      * @group api
      */
     public function test_update_new_external_id() {
-      // Test module update name.
-      $responsearray = $this->update_response_array();
-      $params = $this->update_param_array();
-      $module = new \api\modulemanagement($this->db, 'test1');
-      $userid = 1;
-      $this->assertEquals($responsearray, $module->update($params, $userid));
-      // Test module update module code.
-      $params = array(
-        "nodeid" => 1,
-        "externalid" => '12345678',
-        "newexternalid" => '87654321');
-      $responsearray["id"]= 1;
-      $responsearray["externalid"] = "87654321";
-      $this->assertEquals($responsearray, $module->update($params, $userid));
-      // Check update occured.
-      $querytable = $this->getConnection()->createQueryTable('modules', 'SELECT id, moduleid, fullname, active, schoolid, academic_year_start, externalid, sms FROM modules where externalid = "87654321"');
-      $expectedtable = $this->get_expected_data_set('updatemodule2')->getTable("modules");
-      $this->assertTablesEqual($expectedtable, $querytable);
-  }
+        // Test module update name.
+        $responsearray = $this->update_response_array();
+        $params = $this->update_param_array();
+        $module = new \api\modulemanagement($this->db, 'test1');
+        $this->assertEquals($responsearray, $module->update($params, $this->admin['id']));
+        // Test module update module code.
+        $params = array(
+            "nodeid" => 1,
+            "externalid" => 'abc123def',
+            "newexternalid" => '87654321');
+        $responsearray["id"] = $this->module;
+        $responsearray["externalid"] = "87654321";
+        $this->assertEquals($responsearray, $module->update($params, $this->admin['id']));
+        // Check update occured.
+        $querytable = $this->query(array('columns' => array('moduleid', 'fullname', 'active', 'schoolid', 'academic_year_start', 'externalid', 'sms'), 'table' => 'modules', 'where' => array(array('column' => 'externalid', 'value' => '87654321'))));
+        $expectedtable = array(
+            0 => array(
+                'moduleid' => "TRAIN",
+                'fullname' => "Training Module",
+                'active' => 1,
+                'schoolid' =>  $this->school2,
+                'externalid' => "87654321",
+                'sms' => "test rogo api",
+                'academic_year_start' => '07/01'
+            )
+        );
+        $this->assertEquals($expectedtable, $querytable);
+    }
+
     /**
      * Test module update exception nothing to update
      * @group api
@@ -312,19 +374,19 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray = $this->update_response_array();
         $params = array(
             "nodeid" => 1,
-            "id" => 2,
-            "modulecode" => 'TEST2',
-            "name" => 'Test module 2',
-            "school" => 'Test school',
-            "faculty" => 'Test faculty',
-            "sms" => 'test rogo api');
+            "id" => $this->module2,
+            "modulecode" => 'SYSTEM',
+            "name" => 'Online Help',
+            "school" => 'Training',
+            "faculty" => 'Administrative and Support Units',
+            "sms" => '');
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 512;
         $responsearray['status'] = 'Request updates nothing';
         $responsearray['id'] = null;
-        $this->assertEquals($responsearray, $module->update($params, $userid));
+        $this->assertEquals($responsearray, $module->update($params, $this->admin['id']));
     }
+
     /**
      * Test module update exception module does not exist
      * @group api
@@ -334,13 +396,13 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray = $this->update_response_array();
         $params = $this->update_param_array();
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 501;
         $responsearray['status'] = 'Module does not exist';
         $responsearray['id'] = null;
-        $params['id'] = 99;
-        $this->assertEquals($responsearray, $module->update($params, $userid));
+        $params['id'] = 0;
+        $this->assertEquals($responsearray, $module->update($params, $this->admin['id']));
     }
+
     /**
      * Test module update exception module already exists
      * @group api
@@ -350,13 +412,13 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray = $this->update_response_array();
         $params = $this->update_param_array();
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 505;
         $responsearray['status'] = 'Module already exists';
-        $responsearray['id'] = 3;
+        $responsearray['id'] = $this->module3;
         $params['modulecode'] = 'TEST3';
-        $this->assertEquals($responsearray, $module->update($params, $userid));
+        $this->assertEquals($responsearray, $module->update($params, $this->admin['id']));
     }
+
     /**
      * Test module update exception faculty not supplied on school update
      * @group api
@@ -366,13 +428,13 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray = $this->update_response_array();
         $params = $this->update_param_array();
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 506;
         $responsearray['status'] = 'Faculty not supplied';
         $responsearray['id'] = null;
         $params['school'] = 'Test school 2';
-        $this->assertEquals($responsearray, $module->update($params, $userid));
+        $this->assertEquals($responsearray, $module->update($params, $this->admin['id']));
     }
+
     /**
      * Test module update exception school not supplied on faculty update
      * @group api
@@ -382,13 +444,13 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray = $this->update_response_array();
         $params = $this->update_param_array();
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 511;
         $responsearray['status'] = 'School not supplied';
         $responsearray['id'] = null;
         $params['faculty'] = 'Test faculty 2';
-        $this->assertEquals($responsearray, $module->update($params, $userid));
+        $this->assertEquals($responsearray, $module->update($params, $this->admin['id']));
     }
+
     /**
      * Test successful module enrolment
      * @group api
@@ -398,21 +460,26 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray = $this->enrol_response_array();
         $params = $this->enrol_param_array();
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
-        $this->assertEquals($responsearray, $module->enrol($params, $userid));
+        $enrol = $module->enrol($params, $this->admin['id']);
+        $responsearray['id'] = $enrol['id'];
+        $this->assertEquals($responsearray, $enrol);
         // Already enrolled, so just return id of existing enrolment.
         $responsearray['statuscode'] = 514;
-        $this->assertEquals($responsearray, $module->enrol($params, $userid));
+        $enrol = $module->enrol($params, $this->admin['id']);
+        $responsearray['id'] = $enrol['id'];
+        $this->assertEquals($responsearray, $enrol);
         // No session supplied - user current.
-        $responsearray['id'] = 4;
         $responsearray['statuscode'] = 100;
         $params = array(
             "nodeid" => 1,
-            "userid" => 1000,
-            "moduleid" => 2,
+            "userid" => $this->student['id'],
+            "moduleid" => $this->module2,
             "attempt" => 1);
-        $this->assertEquals($responsearray, $module->enrol($params, $userid));
+        $enrol = $module->enrol($params, $this->admin['id']);
+        $responsearray['id'] = $enrol['id'];
+        $this->assertEquals($responsearray, $enrol);
     }
+
     /**
      * Test successful module enrolment using user external id
      * @group api
@@ -423,13 +490,15 @@ class modulemanagementtest extends unittestdatabase {
         $params = array(
             "nodeid" => 1,
             "studentid" => "00000001",
-            "moduleid" => 1,
+            "moduleid" => $this->module,
             "session" => 2016,
             "attempt" => 1);
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
-        $this->assertEquals($responsearray, $module->enrol($params, $userid));
+        $enrol = $module->enrol($params, $this->admin['id']);
+        $responsearray['id'] = $enrol['id'];
+        $this->assertEquals($responsearray, $enrol);
     }
+
     /**
      * Test module enrolment exception invalid module
      * @group api
@@ -439,13 +508,13 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray = $this->enrol_response_array();
         $params = $this->enrol_param_array();
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 508;
         $responsearray['status'] = 'User not enrolled';
         $responsearray['id'] = null;
-        $params['moduleid'] = 99;
-        $this->assertEquals($responsearray, $module->enrol($params, $userid));
+        $params['moduleid'] = 0;
+        $this->assertEquals($responsearray, $module->enrol($params, $this->admin['id']));
     }
+
     /**
      * Test module enrolment exception invalid user
      * @group api
@@ -455,13 +524,13 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray = $this->enrol_response_array();
         $params = $this->enrol_param_array();
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 507;
         $responsearray['status'] = 'User does not exist';
         $responsearray['id'] = null;
-        $params['userid'] = 999;
-        $this->assertEquals($responsearray, $module->enrol($params, $userid));
+        $params['userid'] = 0;
+        $this->assertEquals($responsearray, $module->enrol($params, $this->admin['id']));
     }
+
     /**
      * Test successful module un-enrolment
      * @group api
@@ -471,9 +540,11 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray = $this->unenrol_response_array();
         $params = $this->unenrol_param_array();
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
-        $this->assertEquals($responsearray, $module->unenrol($params, $userid));   
+        $enrol = $module->unenrol($params, $this->admin['id']);
+        $responsearray['id'] = $enrol['id'];
+        $this->assertEquals($responsearray, $enrol);
     }
+
     /**
      * Test successful module un-enrolment using externalid
      * @group api
@@ -481,15 +552,16 @@ class modulemanagementtest extends unittestdatabase {
     public function test_unenrol_success_external() {
         // Test module enrolment - SUCCESS.
         $responsearray = $this->unenrol_response_array();
-        $responsearray['id'] = 2;
         $params = array("nodeid" => 1,
             "studentid" => "00000001",
-            "moduleid" => 3,
+            "moduleid" => $this->module3,
             "session" => 2016);
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
-        $this->assertEquals($responsearray, $module->unenrol($params, $userid));   
+        $enrol = $module->unenrol($params, $this->admin['id']);
+        $responsearray['id'] = $enrol['id'];
+        $this->assertEquals($responsearray, $enrol);
     }
+
     /**
      * Test module un-enrolment exception incorrect session supplied
      * @group api
@@ -499,24 +571,24 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray = $this->unenrol_response_array();
         $params = $this->unenrol_param_array();
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 509;
         $responsearray['status'] = 'User not un-enrolled';
         $responsearray['id'] = null;
         $params['session'] = 2015;
-        $this->assertEquals($responsearray, $module->unenrol($params, $userid));
+        $this->assertEquals($responsearray, $module->unenrol($params, $this->admin['id']));
         // No session supplied.
         $enrolparams = $this->enrol_param_array();
-        $module->enrol($enrolparams, $userid);
+        $module->enrol($enrolparams, $this->admin['id']);
         $responsearray['statuscode'] = 510;
         $responsearray['status'] = 'Session not supplied';
         $responsearray['id'] = null;
         $params = array(
             "nodeid" => 1,
-            "userid" => 1000,
-            "moduleid" => 1);
-        $this->assertEquals($responsearray, $module->unenrol($params, $userid));
+            "userid" => $this->student['id'],
+            "moduleid" => $this->module);
+        $this->assertEquals($responsearray, $module->unenrol($params, $this->admin['id']));
     }
+
     /**
      * Test module un-enrolment exception incorrect module
      * @group api
@@ -526,13 +598,13 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray = $this->unenrol_response_array();
         $params = $this->unenrol_param_array();
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 509;
         $responsearray['status'] = 'User not un-enrolled';
         $responsearray['id'] = null;
-        $params['moduleid'] = 2;
-        $this->assertEquals($responsearray, $module->unenrol($params, $userid));
+        $params['moduleid'] = $this->module2;
+        $this->assertEquals($responsearray, $module->unenrol($params, $this->admin['id']));
     }
+
     /**
      * Test module un-enrolment exception invalid user
      * @group api
@@ -542,13 +614,13 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray = $this->unenrol_response_array();
         $params = $this->unenrol_param_array();
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 507;
         $responsearray['status'] = 'User does not exist';
         $responsearray['id'] = null;
-        $params['userid'] = 999;
-        $this->assertEquals($responsearray, $module->unenrol($params, $userid));
+        $params['userid'] = 0;
+        $this->assertEquals($responsearray, $module->unenrol($params, $this->admin['id']));
     }
+
     /**
      * Test successful module deletion
      * @group api
@@ -556,17 +628,32 @@ class modulemanagementtest extends unittestdatabase {
     public function test_delete_success() {
         // Test module deletion - SUCCESS.
         $responsearray = $this->delete_response_array();
-        $responsearray['externalid'] = '12345678';
+        $responsearray['externalid'] = 'abc123def';
         $params = $this->delete_param_array();
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
-        $this->assertEquals($responsearray, $module->delete($params, $userid));
+        $this->assertEquals($responsearray, $module->delete($params, $this->admin['id']));
         // Check that the remaining modules are correct, when we delete a module we actually just add a timestamp to the table
         // which makes creating a fixture to check against difficult so doing this instead
-        $querytable = $this->getConnection()->createQueryTable('modules', 'SELECT id, moduleid, fullname, active, schoolid, academic_year_start FROM modules WHERE mod_deleted is NULL');
-        $expectedtable = $this->get_expected_data_set('deletemodule')->getTable("modules");  
-        $this->assertTablesEqual($expectedtable, $querytable);
+        $querytable = $this->query(array('columns' => array('moduleid', 'fullname', 'active', 'schoolid', 'academic_year_start'), 'table' => 'modules', 'where' => array(array('column' => 'mod_deleted', 'value' => NULL, 'operator' => 'IS'))));
+        $expectedtable = array(
+            0 => array(
+                'moduleid' => "SYSTEM",
+                'fullname' => "Online Help",
+                'active' => 1,
+                'schoolid' => $this->school2,
+                'academic_year_start' => '07/01',
+            ),
+            1 => array(
+                'moduleid' => "TEST3",
+                'fullname' => "Test module 3",
+                'active' => 1,
+                'schoolid' => $this->school,
+                'academic_year_start' => '07/01',
+            ),
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
+
     /**
      * Test module deletion exception invalid module
      * @group api
@@ -576,18 +663,18 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray = $this->delete_response_array();
         $params = $this->delete_param_array();
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 501;
         $responsearray['status'] = 'Module does not exist';
         $responsearray['id'] = null;
-        $params['id'] = 99;
-        $this->assertEquals($responsearray, $module->delete($params, $userid));
+        $params['id'] = 0;
+        $this->assertEquals($responsearray, $module->delete($params, $this->admin['id']));
         // Test no module supplied.
         $params = array(
             "nodeid" => 1);
-        $this->assertEquals($responsearray, $module->delete($params, $userid));
+        $this->assertEquals($responsearray, $module->delete($params, $this->admin['id']));
     }
-     /**
+
+    /**
      * Test module deletion exception module in use
      * @group api
      */
@@ -596,16 +683,15 @@ class modulemanagementtest extends unittestdatabase {
         $responsearray = $this->delete_response_array();
         $params = $this->delete_param_array();
         $module = new \api\modulemanagement($this->db, 'test1');
-        $userid = 1;
         $responsearray['statuscode'] = 502;
         $responsearray['status'] = 'Module not deleted, as linked to a paper or enrolement';
         $responsearray['id'] = null;
-        $params['id'] = 2;
-        $this->assertEquals($responsearray, $module->delete($params, $userid)); 
+        $params['id'] = $this->module2;
+        $this->assertEquals($responsearray, $module->delete($params, $this->admin['id']));
         // Test deleting a module in use - second check module has a user.
         $responsearray['statuscode'] = 502;
         $responsearray['status'] = 'Module not deleted, as linked to a paper or enrolement';
-        $params['id'] = 3;
-        $this->assertEquals($responsearray, $module->delete($params, $userid)); 
+        $params['id'] = $this->module3;
+        $this->assertEquals($responsearray, $module->delete($params, $this->admin['id']));
     }
 }

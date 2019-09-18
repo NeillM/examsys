@@ -1,0 +1,278 @@
+## Data for the config table.
+---
+config:
+  -
+    component: "core"
+    setting: "api_allow_superuser"
+    value: "0"
+    type: "boolean"
+  -
+    component: "core"
+    setting: "api_oauth_access_lifetime"
+    value: "1209600"
+    type: "integer"
+  -
+    component: "core"
+    setting: "api_oauth_always_issue_new_refresh_token"
+    value: "1"
+    type: "boolean"
+  -
+    component: "core"
+    setting: "api_oauth_refresh_token_lifetime"
+    value: "1209600"
+    type: "integer"
+  -
+    component: "core"
+    setting: "apilogfile"
+    value: ""
+    type: "string"
+  -
+    component: "core"
+    setting: "cfg_api_enabled"
+    value: "1"
+    type: "boolean"
+  -
+    component: "core"
+    setting: "cfg_calc_settings"
+    value: "{\"host\":\"\",\"port\":\"\",\"timeout\":\"\"}"
+    type: "assoc"
+  -
+    component: "core"
+    setting: "cfg_calc_type"
+    value: "phpEval"
+    type: "string"
+  -
+    component: "core"
+    setting: "cfg_gradebook_enabled"
+    value: "1"
+    type: "boolean"
+  -
+    component: "core"
+    setting: "cfg_ims_enabled"
+    value: "0"
+    type: "boolean"
+  -
+    component: "core"
+    setting: "cfg_lti_allow_module_create"
+    value: "0"
+    type: "boolean"
+  -
+    component: "core"
+    setting: "cfg_lti_allow_module_self_reg"
+    value: "0"
+    type: "boolean"
+  -
+    component: "core"
+    setting: "cfg_lti_allow_staff_module_register"
+    value: "0"
+    type: "boolean"
+  -
+    component: "core"
+    setting: "cfg_summative_mgmt"
+    value: "1"
+    type: "boolean"
+  -
+    component: "core"
+    setting: "emergency_support_contact1"
+    value: "{\"name\":\"Tester\",\"number\":\"123456789\"}"
+    type: "assoc"
+  -
+    component: "core"
+    setting: "emergency_support_contact2"
+    value: "{\"name\":\"Tester2\",\"number\":\"987654321\"}"
+    type: "assoc"
+  -
+    component: "core"
+    setting: "emergency_support_contact3"
+    value: "{\"name\":\"Tester3\",\"number\":\"67891234\"}"
+    type: "assoc"
+  -
+    component: "core"
+    setting: "lti_auth_timeout"
+    value: "9072000"
+    type: "integer"
+  -
+    component: "core"
+    setting: "lti_integration"
+    value: ""
+    type: "string"
+  -
+    component: "core"
+    setting: "misc_company"
+    value: "behat test"
+    type: "string"
+  -
+    component: "core"
+    setting: "misc_dictionary_file"
+    value: ""
+    type: "string"
+  -
+    component: "core"
+    setting: "misc_logo_email"
+    value: "alt_logo.png"
+    type: "string"
+  -
+    component: "core"
+    setting: "misc_logo_main"
+    value: "logo.png"
+    type: "string"
+  -
+    component: "core"
+    setting: "misc_search_leadin_length"
+    value: "160"
+    type: "integer"
+  -
+    component: "core"
+    setting: "paper_autosave_backoff_factor"
+    value: "1.5"
+    type: "double"
+  -
+    component: "core"
+    setting: "paper_autosave_frequency"
+    value: "30"
+    type: "integer"
+  -
+    component: "core"
+    setting: "paper_autosave_retrylimit"
+    value: "3"
+    type: "integer"
+  -
+    component: "core"
+    setting: "paper_autosave_settimeout"
+    value: "5"
+    type: "integer"
+  -
+    component: "core"
+    setting: "paper_marks_negative"
+    value: "[0,-0.25,-0.5,-1,-2,-3,-4,-5,-6,-7,-8,-9,-10]"
+    type: "csv"
+  -
+    component: "core"
+    setting: "paper_marks_partial"
+    value: "[0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,2,3,4,5]"
+    type: "csv"
+  -
+    component: "core"
+    setting: "paper_marks_postive"
+    value: "[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]"
+    type: "csv"
+  -
+    component: "core"
+    setting: "paper_mathjax"
+    value: "1"
+    type: "boolean"
+  -
+    component: "core"
+    setting: "paper_max_duration"
+    value: "779"
+    type: "integer"
+  -
+    component: "core"
+    setting: "paper_timezones"
+    value: "{\"Pacific\/Samoa\":\"(UTC-11:00) Samoa\",\"Pacific\/Honolulu\":\"(UTC-10:00) Hawaii\",\"America\/Anchorage\":\"(UTC-09:00) Alaska\",\"America\/Los_Angeles\":\"(UTC-08:00) Pacific Time (US and Canada)\",\"America\/Denver\":\"(UTC-07:00) Arizona\",\"America\/Tegucigalpa\":\"(UTC-06:00) Central Time (US and Canada)\",\"America\/New_York\":\"(UTC-05:00) Eastern Time (US and Canada)\",\"America\/Caracas\":\"(UTC-04:30) Caracas\",\"America\/Halifax\":\"(UTC-04:00) Santiago\",\"America\/St_Johns\":\"(UTC-03:30) Newfoundland\",\"America\/Sao_Paulo\":\"(UTC-03:00) Buenos Aires\",\"Atlantic\/South_Georgia\":\"(UTC-02:00) Mid-Atlantic\",\"Atlantic\/Azores\":\"(UTC-01:00) Azores\",\"Europe\/London\":\"(UTC) Dublin, Edinburgh, Lisbon, London\",\"Europe\/Amsterdam\":\"(UTC+01:00) Amsterdam, Berlin, Stockholm\",\"Europe\/Athens\":\"(UTC+02:00) Athens, Bucharest\",\"Africa\/Johannesburg\":\"(UTC+02:00) Cape Town, Johannesburg\",\"Asia\/Kuwait\":\"(UTC+03:00) Kuwait, Riyadh\",\"Asia\/Tehran\":\"(UTC+03:30) Tehran\",\"Europe\/Moscow\":\"(UTC+04:00) Moscow, St. Petersburg, Volgograd\",\"Asia\/Kabul\":\"(UTC+04:30) Kabul\",\"Asia\/Karachi\":\"(UTC+05:00) Islamabad, Karachi\",\"Asia\/Calcutta\":\"(UTC+05:30) Kolkata, Mumbai, New Delhi\",\"Asia\/Dhaka\":\"(UTC+06:00) Dhaka\",\"Asia\/Rangoon\":\"(UTC+06:30) Yango (Rangoon)\",\"Asia\/Bangkok\":\"(UTC+07:00) Bangkok, Hanoi, Jakarta\",\"Asia\/Kuala_Lumpur\":\"(UTC+07:00) Bangkok, Hanoi, Jakarta\",\"Asia\/Hong_Kong\":\"(UTC+08:00) Beijing, Chongqing, Hong Kong\",\"Asia\/Tokyo\":\"(UTC+09:00) Osaka, Sapporo, Tokyo\",\"Australia\/Adelaide\":\"(UTC+09:30) Adelaide\",\"Australia\/Melbourne\":\"(UTC+10:00) Canberra, Melbourne, Sydney\",\"Asia\/Vladivostok\":\"(UTC+11:00) Solomon Is., New Caledonia\",\"Pacific\/Auckland\":\"(UTC+12:00) Auckland, Wellington\"}"
+    type: "timezones"
+  -
+    component: "core"
+    setting: "rpt_percent_decimals"
+    value: "2"
+    type: "integer"
+  -
+    component: "core"
+    setting: "stdset_hofstee_distinction"
+    value: "{\"min_pass\":\"median\",\"max_pass\":100,\"min_fail\":0,\"max_fail\":100}"
+    type: "assoc"
+  -
+    component: "core"
+    setting: "stdset_hofstee_pass"
+    value: "{\"min_pass\":0,\"max_pass\":\"median\",\"min_fail\":0,\"max_fail\":100}"
+    type: "assoc"
+  -
+    component: "core"
+    setting: "stdset_hofstee_whole_numbers"
+    value: "1"
+    type: "boolean"
+  -
+    component: "core"
+    setting: "summative_cohort_sizes"
+    value: "[\"<whole cohort>\",\"0-10\",\"11-20\",\"21-30\",\"31-40\",\"41-50\",\"51-75\",\"76-100\",\"101-150\",\"151-200\",\"201-300\",\"301-400\",\"401-500\"]"
+    type: "csv"
+  -
+    component: "core"
+    setting: "summative_hide_external"
+    value: "0"
+    type: "boolean"
+  -
+    component: "core"
+    setting: "summative_hour_warning"
+    value: "10"
+    type: "integer"
+  -
+    component: "core"
+    setting: "summative_max_sittings"
+    value: "6"
+    type: "integer"
+  -
+    component: "core"
+    setting: "summative_midexam_clarification"
+    value: "[\"invigilators\",\"students\"]"
+    type: "csv"
+  -
+    component: "core"
+    setting: "summative_warn_external"
+    value: "0"
+    type: "boolean"
+  -
+    component: "core"
+    setting: "support_contact_email"
+    value: "[\"test@example.com\"]"
+    type: "email"
+  -
+    component: "core"
+    setting: "system_academic_year_start"
+    value: "07/01"
+    type: "string"
+  -
+    component: "core"
+    setting: "system_hostname_lookup"
+    value: "0"
+    type: "boolean"
+  -
+    component: "core"
+    setting: "system_install_type"
+    value: ""
+    type: "string"
+  -
+    component: "core"
+    setting: "system_maintenance_mode"
+    value: "0"
+    type: "boolean"
+  -
+    component: "core"
+    setting: "system_password_expire"
+    value: "30"
+    type: "integer"
+  -
+    component: 'core'
+    setting: 'system_mediatypes'
+    value: '{".gif":1,".jpg":1,".jpeg":1,".png":1,".doc":1,".docx":1,".ppt":1,".pptx":1,".xls":1,".xlsx":1,".pdf":1,".avi":1,".mpg":1,".mpeg":1,".mov":1,".mp3":1,".mid":1,".wav":1,".ram":1,".pdb":1,".ply":1,".obj":1,".mtl":1,".dds":1,".zip":1}'
+    type: 'assoc'
+  -
+    component: "plugin_tinymce3_texteditor"
+    setting: "installed"
+    value: 1
+    type: "boolean"
+  -
+    component: "plugin_plain_texteditor"
+    setting: "installed"
+    value: 1
+    type: "boolean"
+  -
+    component: "plugin_plain_texteditor"
+    setting: "supports_mathjax"
+    value: 1
+    type: "boolean"
+  -
+    component: "plugin_texteditor"
+    setting: "enabled_plugin"
+    value: "[\"plugin_tinymce3_texteditor\"]"
+    type: "json"

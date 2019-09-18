@@ -15,16 +15,16 @@ Feature: Login
 
   Scenario: Student user login
     Given the following "users" exist:
-      | username |
-      | student1 |
+      | username | sid |
+      | student1 | 42424242 |
     When I login as "student1"
     Then I should see "No exams found"
 
   @javascript
   Scenario: Student user login with JavaScript
     Given the following "users" exist:
-      | username |
-      | student1 |
+      | username | sid |
+      | student1 | 42424242 |
     When I login as "student1"
     Then I should see "No exams found"
 

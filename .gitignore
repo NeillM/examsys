@@ -190,6 +190,7 @@ web.config
 node_modules/
 crowdin.yml
 config/campuses.inc
+testing/unittest/config/.phpunit.result.cache
 
 .vagrant/*
 .npm/*

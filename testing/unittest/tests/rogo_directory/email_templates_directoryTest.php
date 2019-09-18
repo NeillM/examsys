@@ -26,9 +26,9 @@ use org\bovigo\vfs\vfsStreamWrapper;
  * @package tests
  */
 class email_templates_directorytest extends DirectoryUnitTest {
-  /** @see parent::directory_class */
-  protected $directory_class = 'email_templates';
+    /** @see parent::directory_class */
+    protected $directory_class = 'email_templates';
 
-  /** @see parent::directory_name */
-  protected $directory_name = 'email_templates';
+    /** @see parent::directory_name */
+    protected $directory_name = 'email_templates';
 }

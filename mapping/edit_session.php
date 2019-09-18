@@ -110,12 +110,7 @@ if (isset($_POST['Edit'])) {
       //deal with new objs
       case 'objnew':
         if ($maxID == 0) {
-          $result = $mysqli->prepare("SELECT MAX(obj_id) AS largest FROM objectives");
-          $result->execute();
-          $result->bind_result($largest);
-          while ($result->fetch()) {
-            $maxID = $largest + 1;
-          }
+          $maxID =  mappingutils::get_objectives_start();
         }
         if ($value != '' and $value != 'Type New Objective here...') {
           $sequence++;

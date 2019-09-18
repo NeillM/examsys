@@ -15,6 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace testing\unittest;
+
 use org\bovigo\vfs\vfsStreamWrapper;
 use rogo_directory;
 
@@ -28,54 +29,54 @@ use rogo_directory;
  * @package tests
  */
 abstract class DirectoryUnitTest extends UnitTest {
-  /** @var string The name of the rogo_directory sub-class to be tested. */
-  protected $directory_class;
+    /** @var string The name of the rogo_directory sub-class to be tested. */
+    protected $directory_class;
 
-  /** @var string The relative path of the directory the class is expected to create. */
-  protected $directory_name;
+    /** @var string The relative path of the directory the class is expected to create. */
+    protected $directory_name;
 
-  /**
-   * Test that the rogo_directory::get_directory method returns a media directory class.
-   *
-   * @group rogo_directory
-   */
-  public function test_get_directory() {
-    $directory = rogo_directory::get_directory($this->directory_class);
-    $this->assertInstanceOf('rogo_directory', $directory);
-    $this->assertInstanceOf($this->directory_class, $directory);
-  }
+    /**
+     * Test that the rogo_directory::get_directory method returns a media directory class.
+     *
+     * @group rogo_directory
+     */
+    public function test_get_directory() {
+        $directory = rogo_directory::get_directory($this->directory_class);
+        $this->assertInstanceOf('rogo_directory', $directory);
+        $this->assertInstanceOf($this->directory_class, $directory);
+    }
 
-  /**
-   * Test that the rogo_directory::get_directory method will not create new instances of the media directory.
-   *
-   * @group rogo_directory
-   */
-  public function test_get_directory_double_load() {
-    $directory1 = rogo_directory::get_directory($this->directory_class);
-    $directory2 = rogo_directory::get_directory($this->directory_class);
-    $this->assertSame($directory2, $directory1);
-  }
+    /**
+     * Test that the rogo_directory::get_directory method will not create new instances of the media directory.
+     *
+     * @group rogo_directory
+     */
+    public function test_get_directory_double_load() {
+        $directory1 = rogo_directory::get_directory($this->directory_class);
+        $directory2 = rogo_directory::get_directory($this->directory_class);
+        $this->assertSame($directory2, $directory1);
+    }
 
-  /**
-   * Tests the directory create function.
-   *
-   * @group rogo_directory
-   */
-  public function test_create() {
-    $this->assertFalse(vfsStreamWrapper::getRoot()->hasChildren());
-    $directory = rogo_directory::get_directory($this->directory_class);
-    $this->assertFalse(vfsStreamWrapper::getRoot()->hasChild($this->directory_name));
-    $directory->create();
-    $this->assertTrue(vfsStreamWrapper::getRoot()->hasChild($this->directory_name));
-  }
+    /**
+     * Tests the directory create function.
+     *
+     * @group rogo_directory
+     */
+    public function test_create() {
+        $this->assertFalse(vfsStreamWrapper::getRoot()->hasChildren());
+        $directory = rogo_directory::get_directory($this->directory_class);
+        $this->assertFalse(vfsStreamWrapper::getRoot()->hasChild($this->directory_name));
+        $directory->create();
+        $this->assertTrue(vfsStreamWrapper::getRoot()->hasChild($this->directory_name));
+    }
 
-  /**
-   * Test that a valid cache time has been set.
-   *
-   * @group rogo_directory
-   */
-  public function test_cachetime() {
-    $directory = rogo_directory::get_directory($this->directory_class);
-    $this->assertGreaterThanOrEqual(0, $directory->cachetime());
-  }
+    /**
+     * Test that a valid cache time has been set.
+     *
+     * @group rogo_directory
+     */
+    public function test_cachetime() {
+        $directory = rogo_directory::get_directory($this->directory_class);
+        $this->assertGreaterThanOrEqual(0, $directory->cachetime());
+    }
 }

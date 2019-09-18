@@ -1,0 +1,17 @@
+## Data for the schools table.
+---
+schools:
+   -
+    id: 1
+    school: "UNKNOWN School"
+    facultyID: 1
+    deleted:
+    externalid: "ABC"
+    externalsys: "external"
+   -
+    id: 2
+    school: "Training"
+    facultyID: 2
+    deleted:
+    externalid: "berty"
+    externalsys: "external"

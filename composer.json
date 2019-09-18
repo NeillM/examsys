@@ -16,14 +16,14 @@
         "james-heinrich/getid3": "^1.9"
     },
     "require-dev": {
-        "phpunit/phpunit": "^7.0",
-        "phpunit/dbunit": "^4.0",
+        "phpunit/phpunit": "^8",
         "behat/behat": "~3",
         "behat/mink-extension": "~2",
         "behat/mink-goutte-driver": "*",
         "behat/mink-selenium2-driver": "*",
         "mikey179/vfsstream": "^1.6",
-        "symfony/var-dumper": "^4.0"
+        "symfony/var-dumper": "^4.0",
+        "symfony/yaml": "^4.3"
     },
     "minimum-stability": "stable"
 }

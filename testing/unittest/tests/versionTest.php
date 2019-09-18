@@ -18,7 +18,7 @@ namespace testing\unittest;
 
 /**
  * Test version class
- * 
+ *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
@@ -35,6 +35,7 @@ class versiontest extends UnitTest {
         $this->assertFalse(\version::is_version_higher("1.0.1", "1.0.2"));
         $this->assertFalse(\version::is_version_higher("1.0.0", "1.0.0"));
     }
+
     /**
      * Test is_version_higher major versions
      * @group version
@@ -45,6 +46,7 @@ class versiontest extends UnitTest {
         $this->assertFalse(\version::is_version_higher("1.0.1", "1.1.1"));
         $this->assertFalse(\version::is_version_higher("1.1.0", "1.1.0"));
     }
+
     /**
      * Test is_version_higher release versions
      * @group version
@@ -55,6 +57,7 @@ class versiontest extends UnitTest {
         $this->assertFalse(\version::is_version_higher("1.0.1", "2.0.1"));
         $this->assertFalse(\version::is_version_higher("2.1.0", "2.1.0"));
     }
+
     /**
      * Test check_version_format
      * @group version
@@ -68,6 +71,7 @@ class versiontest extends UnitTest {
         $this->assertEquals(0, \version::check_version_format("2"));
         $this->assertEquals(0, \version::check_version_format("2.1.2.1"));
     }
+
     /**
      * Test sort_version
      * @group version

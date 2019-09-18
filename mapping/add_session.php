@@ -35,28 +35,15 @@ if (!module_utils::get_moduleid_from_id($modID, $mysqli)) {
 
 if (isset($_POST['Save'])) {
   //save session
-
-  $identifier = time();
-
   $occurrence = $_POST['session_year'] . '-' . $_POST['session_month'] . '-' . $_POST['session_day'] . ' ' . $_POST['session_time'];
 
   $stmt = $mysqli->prepare("INSERT INTO sessions VALUES (NULL, ?, ?, ?, ?, ?, ?)");
-  $identifier = intVal($identifier);
+  $identifier = mappingutils::generate_session_identifier();
   $stmt->bind_param('ssssss', $identifier, $modID, $_POST['session_title'], $_POST['url'], $_POST['session'], $occurrence);
   $stmt->execute();
   $stmt->close();
 
-  $result = $mysqli->prepare("SELECT MAX(obj_id) AS largest FROM objectives");
-  $result->execute();
-  $result->bind_result($largest);
-  $i = 0;
-  while ($result->fetch()) {
-    $obj_id = $largest + 1;
-  }
-  if ($obj_id < 10) {
-    $obj_id = 123;
-  }
-  $result->close();
+  $obj_id = mappingutils::get_objectives_start();
   if (isset($_POST["objectives"]) and $_POST["objectives"] != '') {
       parse_str($_POST["objectives"], $sortarray);
       $list = $sortarray['li'];

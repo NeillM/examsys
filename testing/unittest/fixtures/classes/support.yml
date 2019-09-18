@@ -1,6 +1,0 @@
-config:
-  -
-    component: "core"
-    setting: "support_contact_email"
-    value: "[\"test@example.com\",\"joseph.baxter@example.com\"]"
-    type: "email"

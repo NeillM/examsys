@@ -1,0 +1,52 @@
+<?php
+// This file is part of Rogō
+//
+// Rogō is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogō is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+
+namespace testing\datagenerator;
+
+use \FacultyUtils;
+
+/**
+ * Generates Rogo faculty.
+ *
+ * @author Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2019 The University of Nottingham
+ * @package testing
+ * @subpackage datagenerator
+ */
+class faculty extends generator {
+    /** @var int Stores how many faculties have been created. */
+    protected static $facultiescreated = 0;
+
+    /**
+     * Create a new faculty
+     *
+     * @param array parameters
+     * options are (name, code, externalid, externalsys)
+     * @return array
+     * @throws data_error If passed parameter is invalid
+     */
+    public function create_faculty($parameters) {
+        $facultiescreated = ++self::$facultiescreated;
+        $defaults = array('name' => 'Faculty ' . $facultiescreated, 'code' => null, 'externalid' => null, 'externalsys' => null);
+        $settings = $this->set_defaults_and_clean($defaults, $parameters);
+        $facultyid = FacultyUtils::add_faculty($settings['name'], $this->db, $settings['code'], $settings['externalid'], $settings['externalsys']);
+        if (!$facultyid) {
+            throw new data_error("Create new faculty failed with parameters: " . implode("--", $settings));
+        }
+        $settings['id'] = $facultyid;
+        return $settings;
+    }
+}

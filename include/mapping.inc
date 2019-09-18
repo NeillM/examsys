@@ -425,18 +425,7 @@ function getObjectivesByMapping($thisModuleid, $session, $paperID, $questionID, 
 
 function copyObjectives($objectives, $idMod, $module, $dest_session, $db) {
 	// Get highest identifier - can't rely on time as we may loop in < 1 second
-	$result = $db->prepare("SELECT MAX(identifier) AS largest FROM sessions WHERE idMod = ?");
-	$result->bind_param('s', $idMod);
-	$result->execute();
-	$result->bind_result($largest);
-	$i = 0;
-	while ($result->fetch()) {
-		$identifier = $largest + 1;
-	}
-	if ($identifier < 10) {
-		$identifier = intval(time());
-	}
-	$result->close();
+	$identifier = mappingutils::get_sessions_start();
 
 	// Loop through the sessions for the source year
 	foreach ($objectives[$module] as $session) {
@@ -455,18 +444,9 @@ function copyObjectives($objectives, $idMod, $module, $dest_session, $db) {
     }
 
     // Get starting point for objective ID
-    $result = $db->prepare("SELECT MAX(obj_id) AS largest FROM objectives");
-    $result->execute();
-    $result->bind_result($largest);
-    while ($result->fetch()) {
-      $obj_id = $largest + 1;
-    }
-    if ($obj_id < 10) {
-      $obj_id = 123;
-    }
-    $result->close();
+    $obj_id = mappingutils::get_objectives_start();
 
-		// Loop through the objectives for the original session
+    // Loop through the objectives for the original session
     if (isset($session['objectives'])) {
       foreach ($session['objectives'] as $objective) {
         // Save them against the new session identifier

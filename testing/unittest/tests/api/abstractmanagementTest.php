@@ -15,11 +15,10 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
-use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
 /**
  * Test abstract api functions
- * 
+ *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2017 onwards The University of Nottingham
@@ -27,12 +26,17 @@ use PHPUnit\DbUnit\DataSet\YamlDataSet;
  */
 class abstractmanagementtest extends unittestdatabase {
     /**
-     * Get init data set from yml
-     * @return dataset
+     * Generate data for test.
+     * @throws \testing\datagenerator\not_found
      */
-    public function getDataSet() {
-        return new YamlDataSet($this->get_base_fixture_directory() . "api" . DIRECTORY_SEPARATOR . "abstractmanagementTest" . DIRECTORY_SEPARATOR . "abstractmanagement.yml");
+    public function datageneration() : void {
+        $datagenerator = $this->get_datagenerator('api', 'core');
+        $client = $datagenerator->create_client(array('clientid' => 'test1', 'userid' => $this->admin['id'], 'secret' => 'test'));
+        $datagenerator->create_external(array('clientid' => $client['clientid'], 'name' => 'test rogo api', 'type' => 'api'));
+        $client = $datagenerator->create_client(array('clientid' => 'test2', 'userid' => $this->admin['id'], 'secret' => 'test2'));
+        $datagenerator->create_external(array('name' => 'test rogo plugin', 'type' => 'plugin'));
     }
+
     /**
      * Test get external system api
      * @group api
@@ -43,6 +47,7 @@ class abstractmanagementtest extends unittestdatabase {
         $this->assertEquals($response, $faculty->get_external_system('test rogo api'));
         $this->assertEquals($response, $faculty->get_external_system(null));
     }
+
     /**
      * Test get external system plugin
      * @group api
@@ -52,6 +57,7 @@ class abstractmanagementtest extends unittestdatabase {
         $response = 'test rogo plugin';
         $this->assertEquals($response, $faculty->get_external_system('test rogo plugin'));
     }
+
     /**
      * Test get external system api super user
      * @group api

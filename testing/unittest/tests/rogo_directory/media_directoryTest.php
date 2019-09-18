@@ -26,9 +26,9 @@ use org\bovigo\vfs\vfsStreamWrapper;
  * @package tests
  */
 class media_directorytest extends DirectoryUnitTest {
-  /** @see parent::directory_class */
-  protected $directory_class = 'media';
+    /** @see parent::directory_class */
+    protected $directory_class = 'media';
 
-  /** @see parent::directory_name */
-  protected $directory_name = 'media';
+    /** @see parent::directory_name */
+    protected $directory_name = 'media';
 }

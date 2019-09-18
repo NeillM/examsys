@@ -25,39 +25,39 @@ namespace testing\datagenerator;
  * @subpackage datagenerator
  */
 class config extends generator {
-  /**
-   * Changes a Rogo setting.
-   *
-   * @param array|stdClass $data
-   * @throws data_error
-   */
-  public function change_setting($data) {
-    // If an object is passed convert it into an array.
-    if (is_object($data)) {
-      $data = (array)$data;
-    }
-    // Check that the right type has been passed.
-    if (!is_array($data)) {
-      throw new data_error('Must pass an array or object');
-    }
-    $defaults = array(
-      'component' => 'core',
-      'setting' => 'no_setting',
-      'value' => '',
-    );
-    $values = $this->set_defaults_and_clean($defaults, $data);
-    $component = $values['component'];
-    $setting = $values['setting'];
-    $value = $values['value'];
+    /**
+     * Changes a Rogo setting.
+     *
+     * @param array|stdClass $data
+     * @throws data_error
+     */
+    public function change_setting($data) {
+        // If an object is passed convert it into an array.
+        if (is_object($data)) {
+            $data = (array)$data;
+        }
+        // Check that the right type has been passed.
+        if (!is_array($data)) {
+            throw new data_error('Must pass an array or object');
+        }
+        $defaults = array(
+            'component' => 'core',
+            'setting' => 'no_setting',
+            'value' => '',
+        );
+        $values = $this->set_defaults_and_clean($defaults, $data);
+        $component = $values['component'];
+        $setting = $values['setting'];
+        $value = $values['value'];
 
-    $config = \Config::get_instance();
-    $type = $config->get_setting_type($component, $setting);
-    if (is_null($type)) {
-      throw new data_error("$component/$setting is not a valid Rogo setting");
+        $config = \Config::get_instance();
+        $type = $config->get_setting_type($component, $setting);
+        if (is_null($type)) {
+            throw new data_error("$component/$setting is not a valid Rogo setting");
+        }
+        if (!$config->check_type($value, $type)) {
+            throw new data_error("$value is not of the expected type ($type)");
+        }
+        $config->set_setting($setting, $value, $type, $component);
     }
-    if (!$config->check_type($value, $type)) {
-      throw new data_error("$value is not of the expected type ($type)");
-    }
-    $config->set_setting($setting, $value, $type, $component);
-  }
 }

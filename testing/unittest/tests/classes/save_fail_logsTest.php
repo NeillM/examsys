@@ -15,7 +15,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
-use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
 /**
  * Test save fail logs class
@@ -26,40 +25,55 @@ use PHPUnit\DbUnit\DataSet\YamlDataSet;
  * @package tests
  */
 class save_fail_logsTest extends unittestdatabase {
-  /**
-   * Get init data set from yml
-   * @return dataset
-   */
-  public function getDataSet() {
-    return new YamlDataSet($this->get_base_fixture_directory() . "classes" . DIRECTORY_SEPARATOR . "save_fail_logs.yml");
-  }
-  /**
-   * Test get all the logs from fail logs record
-   * @group log
-   */
-  public function test_get_save_fail_logs() {
-    $log_obj = new save_fail_logs($this->db);
-    $this->assertEquals(2,count($log_obj->get_save_fail_logs()));
-  }
 
-  /**
-   * Test deleting a save fail log record
-   * @group log
-   */
-  public function test_delete_a_save_fail_log() {
-    $log_obj = new save_fail_logs($this->db);
-    $log_obj->delete_a_save_fail_log('1');
-    $this->assertTrue($log_obj->delete_a_save_fail_log(1));
-  }
+    /**
+     * Generate data for test.
+     * @throws \testing\datagenerator\not_found
+     */
+    public function datageneration() : void {
+        $datagenerator = $this->get_datagenerator('papers', 'core');
+        $pid1 = $datagenerator->create_paper(array('papertitle' => "test formative",
+            'bidirectional' => '1',
+            'fullscreen' => "1",
+            'paperowner' => "admin",
+            'papertype' => "0",
+            'modulename' => "Training Module"));
+        $pid2 = $datagenerator->create_paper(array('papertitle' => "test formative 2",
+            'bidirectional' => '1',
+            'fullscreen' => "1",
+            'paperowner' => "admin",
+            'papertype' => "0",
+            'modulename' => "Training Module"));
+        $datagenerator = $this->get_datagenerator('incident', 'core');
+        $datagenerator->create_fail(array('userid' => $this->admin['id'], 'paperid' => $pid1['id']));
+        $datagenerator->create_fail(array('userid' => $this->admin['id'], 'paperid' => $pid2['id']));
+    }
 
-  /**
-   * Test deleting all the save fail logs records
-   * @group log
-   */
-  public function test_delete_save_fail_logs() {
-    $log_obj = new save_fail_logs($this->db);
-    $this->assertTrue($log_obj->delete_save_fail_logs());
-  }
+    /**
+     * Test get all the logs from fail logs record
+     * @group log
+     */
+    public function test_get_save_fail_logs() {
+        $log_obj = new save_fail_logs($this->db);
+        $this->assertEquals(2, count($log_obj->get_save_fail_logs()));
+    }
 
+    /**
+     * Test deleting a save fail log record
+     * @group log
+     */
+    public function test_delete_a_save_fail_log() {
+        $log_obj = new save_fail_logs($this->db);
+        $log_obj->delete_a_save_fail_log('1');
+        $this->assertTrue($log_obj->delete_a_save_fail_log(1));
+    }
 
+    /**
+     * Test deleting all the save fail logs records
+     * @group log
+     */
+    public function test_delete_save_fail_logs() {
+        $log_obj = new save_fail_logs($this->db);
+        $this->assertTrue($log_obj->delete_save_fail_logs());
+    }
 }

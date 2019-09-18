@@ -15,24 +15,26 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
-use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
 /**
  * Test support class
- * 
+ *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2017 onwards The University of Nottingham
  * @package tests
  */
 class supporttest extends unittestdatabase {
+
     /**
-     * Get init data set from yml
-     * @return dataset
+     * Generate data for test.
+     * @throws \testing\datagenerator\not_found
      */
-    public function getDataSet() {
-        return new YamlDataSet($this->get_base_fixture_directory() . "classes" . DIRECTORY_SEPARATOR . "support.yml");
+    public function datageneration() : void {
+        $datagenerator = $this->get_datagenerator('config', 'core');
+        $datagenerator->change_setting(array('component' => 'core', 'setting' => 'support_contact_email', 'value' => array("test@example.com", "joseph.baxter@example.com")));
     }
+
     /**
      * Test get email addresses
      * @group support
@@ -40,6 +42,7 @@ class supporttest extends unittestdatabase {
     public function test_get_email() {
         $this->assertEquals("test@example.com;joseph.baxter@example.com", \support::get_email());
     }
+
     /**
      * Test get primary email address
      * @group support

@@ -1,9 +1,0 @@
-modules_student:
-  -
-    id: 1
-    userID: 1003
-    idMod: 1
-modules_staff:
-  -
-    memberID: 1003
-    idMod: 1

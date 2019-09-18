@@ -25,36 +25,39 @@ namespace testing\datagenerator;
  * @subpackage datagenerator
  */
 class generator {
-  /**
-   * Get a random value from a static array of the class.
-   * 
-   * @param string $variable The name of the variable.
-   * @return mixed A value from the array.
-   * @throws data_error
-   */
-  protected function random_value($variable) {
-    $class = get_class($this);
-    if (!property_exists($class, $variable)) {
-      throw new data_error("$class::\$$variable not found");
-    }
-    if (!is_array($class::${$variable})) {
-      throw new data_error("$class::\$$variable is not an array");
-    }
-    $size = count($class::${$variable});
-    $position = rand(0, $size - 1);
-    return $class::${$variable}[$position];
-  }
+    /** @var mysqli Store the database connection object to be used by data generators. */
+    public $db = null;
 
-  /**
-   * Will return an array that contains only the indicies from $defaults,
-   * using the values from $paramterts if they are set.
-   *
-   * @param array $defaults Contains all the indicies that should be returned along their their default values.
-   * @param array $parameters The values that should over write the defaults.
-   * @return array
-   */
-  protected function set_defaults_and_clean(array $defaults, array $parameters) {
-    $return = array_merge($defaults, $parameters);
-    return array_intersect_key($return, $defaults);
-  }
+    /**
+     * Get a random value from a static array of the class.
+     *
+     * @param string $variable The name of the variable.
+     * @return mixed A value from the array.
+     * @throws data_error
+     */
+    protected function random_value($variable) {
+        $class = get_class($this);
+        if (!property_exists($class, $variable)) {
+            throw new data_error("$class::\$$variable not found");
+        }
+        if (!is_array($class::${$variable})) {
+            throw new data_error("$class::\$$variable is not an array");
+        }
+        $size = count($class::${$variable});
+        $position = rand(0, $size - 1);
+        return $class::${$variable}[$position];
+    }
+
+    /**
+     * Will return an array that contains only the indicies from $defaults,
+     * using the values from $paramterts if they are set.
+     *
+     * @param array $defaults Contains all the indicies that should be returned along their their default values.
+     * @param array $parameters The values that should over write the defaults.
+     * @return array
+     */
+    protected function set_defaults_and_clean(array $defaults, array $parameters) {
+        $return = array_merge($defaults, $parameters);
+        return array_intersect_key($return, $defaults);
+    }
 }

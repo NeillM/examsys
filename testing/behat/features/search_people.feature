@@ -7,11 +7,11 @@ Feature: Searching People
    @javascript
    Scenario: Test search People
       Given the following "users" exist:
-         | username |roles |
-         | teacher1 | Staff |
-         | teacher2 | Staff |
-         | teacher3 | Staff |
-         | student1 | Student |
+         | username | roles | sid |
+         | teacher1 | Staff |     |
+         | teacher2 | Staff |     |
+         | teacher3 | Staff |     |
+         | student1 | Student | 987654321 |
       When I login as "admin"
       Then I should see menu with following items:
          | menu_items |

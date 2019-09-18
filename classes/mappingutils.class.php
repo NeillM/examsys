@@ -58,4 +58,52 @@ class MappingUtils {
 
     return $vle_api_data;
   }
+
+  /**
+   * Get starting point for objective ID
+   * @return int
+   */
+  public static function get_objectives_start() {
+      $config = Config::get_instance();
+      $result = $config->db->prepare("SELECT MAX(obj_id) AS largest FROM objectives");
+      $result->execute();
+      $result->bind_result($largest);
+      while ($result->fetch()) {
+          $obj_id = $largest + 1;
+      }
+      // Copied this logic from old inline code. Not sure of the point of it.
+      if ($obj_id < 10) {
+          $obj_id = 123;
+      }
+      $result->close();
+      return $obj_id;
+  }
+
+  /**
+   * Get highest session identifier
+   * @return int
+   */
+  public static function get_sessions_start() {
+    $config = Config::get_instance();
+    $result = $config->db->prepare("SELECT MAX(identifier) AS largest FROM sessions");
+    $result->execute();
+    $result->bind_result($largest);
+    while ($result->fetch()) {
+        $identifier = $largest + 1;
+    }
+    // Copied this logic from old inline code. Not sure of the point of it.
+    if ($identifier < 10) {
+        $identifier = self::generate_session_identifier();
+    }
+    $result->close();
+    return $identifier;
+  }
+
+    /**
+     * Generate session identifier
+     * @return int
+     */
+    public static function generate_session_identifier() {
+        return intVal(time());
+    }
 }

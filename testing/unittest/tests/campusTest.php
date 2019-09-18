@@ -15,11 +15,10 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
-use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
 /**
  * Test campus class
- * 
+ *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
@@ -27,12 +26,21 @@ use PHPUnit\DbUnit\DataSet\YamlDataSet;
  */
 class campustest extends unittestdatabase {
     /**
-     * Get init data set from yml
-     * @return dataset
+     * @var array Storage for campus data in tests
      */
-    public function getDataSet() {
-        return new YamlDataSet($this->get_base_fixture_directory() . "campusTest" . DIRECTORY_SEPARATOR . "campus.yml");
+    private $campus, $campus2;
+
+    /**
+     * Generate data for test.
+     * @throws \testing\datagenerator\not_found
+     */
+    public function datageneration() : void {
+        $datagenerator = $this->get_datagenerator('labs', 'core');
+        $this->campus = $datagenerator->create_campus(array('name' => "Test Campus", 'isdefault' => 1));
+        $datagenerator->create_lab(array('name' => "Test lab", 'building' => "Test building", 'room' => 1, 'campus' => $this->campus['name']));
+        $this->campus2 = $datagenerator->create_campus(array('name' => "Test Campus 2", 'isdefault' => 0));
     }
+
     /**
      * Test get all campus details function
      * @group campus
@@ -41,13 +49,14 @@ class campustest extends unittestdatabase {
         $campus = new campus($this->db);
         // Test details found success.
         $campusarray = array();
-        $campusarray[10] = array('campusname' => 'Test Campus', 'isdefault' => 1);
-        $campusarray[11] = array('campusname' => 'Test Campus 2', 'isdefault' => 0);
+        $campusarray[$this->campus['id']] = array('campusname' => $this->campus['name'], 'isdefault' => $this->campus['isdefault']);
+        $campusarray[$this->campus2['id']] = array('campusname' => $this->campus2['name'], 'isdefault' => $this->campus2['isdefault']);
         $this->assertEquals($campusarray, $campus->get_all_campus_details());
         // Test details not found error.
-        $this->delete_dataset($this->getDataSet());
+        $this->teardown_dataset();
         $this->assertFalse($campus->get_all_campus_details());
     }
+
     /**
      * Test get campus details function
      * @group campus
@@ -55,12 +64,13 @@ class campustest extends unittestdatabase {
     public function test_get_campus_details() {
         $campus = new campus($this->db);
         // Test details found success.
-        $expected = array('campusid' => 10, 'campusname' => 'Test Campus', 'isdefault' => 1);
-        $this->assertEquals($expected, $campus->get_campus_details(10));
+        $expected = array('campusid' => $this->campus['id'], 'campusname' => $this->campus['name'], 'isdefault' => $this->campus['isdefault']);
+        $this->assertEquals($expected, $campus->get_campus_details($this->campus['id']));
         // Test details not found error.
         $expected = false;
-        $this->assertEquals($expected, $campus->get_campus_details(12));
+        $this->assertEquals($expected, $campus->get_campus_details(0));
     }
+
     /**
      * Test check campus name in use function
      * @group campus
@@ -68,10 +78,11 @@ class campustest extends unittestdatabase {
     public function test_check_campus_name_inuse() {
         $campus = new campus($this->db);
         // Test campus name in use - true.
-        $this->assertTrue($campus->check_campus_name_inuse('Test Campus'));
+        $this->assertTrue($campus->check_campus_name_inuse($this->campus['name']));
         // Test campus name in use - false.
         $this->assertFalse($campus->check_campus_name_inuse('Another campus'));
     }
+
     /**
      * Test check campus id in use function
      * @group campus
@@ -79,8 +90,8 @@ class campustest extends unittestdatabase {
     public function test_check_campus_in_use() {
         $campus = new campus($this->db);
         // Test campus in use - true.
-        $this->assertTrue($campus->check_campus_in_use(10));
+        $this->assertTrue($campus->check_campus_in_use($this->campus['id']));
         // Test campus in use - false.
-        $this->assertFalse($campus->check_campus_in_use(11));
+        $this->assertFalse($campus->check_campus_in_use($this->campus2['id']));
     }
 }

@@ -43,7 +43,6 @@ Feature: Administrative Tools
       And I should see "Administrative Tools" "menu_item"
       When I follow "Administrative Tools"
       Then I should see "Bug Reporting" "admin_tool_link"
-      And I should see "Clear Old Logs" "admin_tool_link"
       And I should see "Clear Training" "admin_tool_link"
       And I should see "phpinfo()" "admin_tool_link"
 

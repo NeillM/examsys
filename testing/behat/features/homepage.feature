@@ -60,7 +60,7 @@ Feature: Home page
    @javascript
    Scenario: Staff user homepage
       Given the following "users" exist:
-         | username |roles |
+         | username | roles |
          | teacher1 | Staff |
       And the following "modules" exist:
          | moduleid | fullname |

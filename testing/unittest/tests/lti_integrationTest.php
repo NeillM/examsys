@@ -15,12 +15,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
-use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
+require_once dirname(dirname(dirname(__DIR__))) . '/LTI/ims-lti/UoN_LTI.php';
 
 /**
  * Test lti integration class
- * 
+ *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
@@ -28,12 +28,18 @@ use PHPUnit\DbUnit\DataSet\YamlDataSet;
  */
 class lti_integrationtest extends unittestdatabase {
     /**
-     * Get init data set from yml
-     * @return dataset
+     * Generate data for test.
+     * @throws \testing\datagenerator\not_found
      */
-    public function getDataSet() {
-        return new YamlDataSet($this->get_base_fixture_directory() . "lti_integrationTest" . DIRECTORY_SEPARATOR . "lti_integration.yml");
+    public function datageneration() : void {
+        $datagenerator = $this->get_datagenerator('lti', 'core');
+        $key = $datagenerator->create_key(array('name' => 'test lti', 'secret' => 'testsecret', 'oauth_consumer_key' => 'testkey'));
+        $datagenerator->create_context(array('oauth_consumer_key' => $key['id'], 'externalid' => 1, 'internalid' => 1));
+        $datagenerator->create_context(array('oauth_consumer_key' => $key['id'], 'externalid' => 2, 'internalid' => 1));
+        $datagenerator->create_user(array('oauth_consumer_key' => $key['id'], 'externalid' => 1, 'internalid' => 3));
+        $datagenerator->create_user(array('oauth_consumer_key' => $key['id'], 'externalid' => 2, 'internalid' => 1));
     }
+
     /**
      * Test sms spi - saturn sms
      * @group lti
@@ -52,6 +58,7 @@ class lti_integrationtest extends unittestdatabase {
         $expected = '';
         $this->assertEquals($expected, $lti_i->sms_api($data));
     }
+
     /**
      * Test sms spi - campus sms
      * @group lti
@@ -69,6 +76,7 @@ class lti_integrationtest extends unittestdatabase {
         $expected = '';
         $this->assertEquals($expected, $lti_i->sms_api($data));
     }
+
     /**
      * Test sms spi - generic sms
      * @group lti
@@ -84,6 +92,7 @@ class lti_integrationtest extends unittestdatabase {
         $expected = '';
         $this->assertEquals($expected, $lti_i->sms_api($data));
     }
+
     /**
      * Test module code translate - saturn sms - success
      * @group lti
@@ -100,6 +109,7 @@ class lti_integrationtest extends unittestdatabase {
         $expected = array(array('SMS', $exploded[0], 'UK', 'UNKNOWN School', 0, "SATURN MISSING:$moduletitle"));
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
     }
+
     /**
      * Test module code translate - saturn sms - meta module
      * @group lti
@@ -117,6 +127,7 @@ class lti_integrationtest extends unittestdatabase {
             array('SMS', 'CS11JB_UNMC', 'MY', 'UNKNOWN School', 0, "SATURN MISSING:10 Credits Stage 1 Japanese"));
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
     }
+
     /**
      * Test module code translate - saturn sms - fake module
      * @group lti
@@ -139,6 +150,7 @@ class lti_integrationtest extends unittestdatabase {
         $expected = array(array('Manual', 'FAKE_UNNC', 'CN', 'Politics', 1, $moduletitle));
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
     }
+
     /**
      * Test module code translate - saturn sms - fake module
      * @group lti
@@ -153,6 +165,7 @@ class lti_integrationtest extends unittestdatabase {
         $moduletitle = 'Invalid module';
         $this->assertFalse($lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
     }
+
     /**
      * Test module code translate - saturn sms - not course title
      * @group lti
@@ -169,6 +182,7 @@ class lti_integrationtest extends unittestdatabase {
         $expected = array(array('Manual', 'FAKE_UNNC', 'CN', 'UNKNOWN School', 1, 'MISSING: '));
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
     }
+
     /**
      * Test module code translate - campus solutions sms - no modulecode
      * @group lti
@@ -184,6 +198,7 @@ class lti_integrationtest extends unittestdatabase {
         $exploded = explode('-', $moduleshortcode);
         $this->assertFalse($lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
     }
+
     /**
      * Test module code translate - campus solutions sms - success
      * @group lti
@@ -200,6 +215,7 @@ class lti_integrationtest extends unittestdatabase {
         $expected = array(array('SMS', $exploded[0], 'UNUK', 'UNKNOWN School', 0, $moduletitle, 'Campus Solutions'));
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
     }
+
     /**
      * Test module code translate - campus solutions sms - not course title
      * @group lti
@@ -216,6 +232,7 @@ class lti_integrationtest extends unittestdatabase {
         $expected = array(array('SMS', $exploded[0], 'UNUK', 'UNKNOWN School', 0, 'MISSING COURSE TITLE', 'Campus Solutions'));
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
     }
+
     /**
      * Test module code translate - campus solutions sms - meta module - not supported
      * @group lti
@@ -230,6 +247,7 @@ class lti_integrationtest extends unittestdatabase {
         $moduletitle = 'Mathematics for Computer Science (COMP 1111) (COMP 1112) (16-17)';
         $this->assertFalse($lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
     }
+
     /**
      * Test module code translate - campus solutions sms - fake module
      * @group lti
@@ -240,9 +258,9 @@ class lti_integrationtest extends unittestdatabase {
         $this->config->set('cfg_sms_api', '');
         $lti = UoN_LTI::get_instance();
         $lti_i = $lti->load();
-		// UnKnown school UK
+        // UnKnown school UK
         $moduleshortcode = 'ZZ-CAREERS-ECON-UK-1617';
-		$moduletitle = 'Fake module';
+        $moduletitle = 'Fake module';
         $exploded = explode('-', $moduleshortcode);
         $expected = array(array('Manual', 'CAREERS-ECON', 'UNUK', 'UNKNOWN School', 1, $moduletitle));
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
@@ -251,7 +269,7 @@ class lti_integrationtest extends unittestdatabase {
         $exploded = explode('-', $moduleshortcode);
         $expected = array(array('Manual', 'CAREERS-ECON', 'UNUK', 'Economics', 1, $moduletitle));
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
-		// UnKnown school MY
+        // UnKnown school MY
         $moduleshortcode = 'ZZ-CAREERS-ECON-MY-1617';
         $exploded = explode('-', $moduleshortcode);
         $expected = array(array('Manual', 'CAREERS-ECON_UNMC', 'UNMC', 'UNKNOWN School', 1, $moduletitle));
@@ -261,7 +279,7 @@ class lti_integrationtest extends unittestdatabase {
         $exploded = explode('-', $moduleshortcode);
         $expected = array(array('Manual', 'CAREERS-ECON_UNMC', 'UNMC', 'Economics', 1, $moduletitle));
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
-		// UnKnown school CN
+        // UnKnown school CN
         $moduleshortcode = 'ZZ-CAREERS-ECON-CN-1617';
         $exploded = explode('-', $moduleshortcode);
         $expected = array(array('Manual', 'CAREERS-ECON_UNNC', 'UNNC', 'UNKNOWN School', 1, $moduletitle));
@@ -272,6 +290,7 @@ class lti_integrationtest extends unittestdatabase {
         $expected = array(array('Manual', 'CAREERS-ECON_UNNC', 'UNNC', 'Economics', 1, $moduletitle));
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
     }
+
     /**
      * Test module code translate - campus solutions sms - invalid module
      * @group lti
@@ -286,6 +305,7 @@ class lti_integrationtest extends unittestdatabase {
         $moduletitle = 'Invalid module';
         $this->assertFalse($lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
     }
+
     /**
      * Test module code translate - default sms
      * @group lti
@@ -301,9 +321,10 @@ class lti_integrationtest extends unittestdatabase {
         $lti_i = $lti->load();
         $this->assertEquals($expected, $lti_i->module_code_translate($this->db, $moduleshortcode, $moduletitle));
     }
+
     /**
-     * Test allow staff edit  
-     * @group lti 
+     * Test allow staff edit
+     * @group lti
      */
     public function test_allow_staff_edit_link() {
         $this->config->set('cfg_sms_api', 'generic_sms');
@@ -312,9 +333,10 @@ class lti_integrationtest extends unittestdatabase {
         $lti_i = $lti->load();
         $this->assertFalse($lti_i->allow_staff_edit_link());
     }
+
     /**
-     * Test allow self reg  
-     * @group lti 
+     * Test allow self reg
+     * @group lti
      */
     public function test_allow_module_self_reg() {
         $this->config->set('cfg_sms_api', 'generic_sms');
@@ -326,9 +348,10 @@ class lti_integrationtest extends unittestdatabase {
         $this->config->set_setting('cfg_lti_allow_module_self_reg', false, \Config::BOOLEAN);
         $this->assertFalse($lti_i->allow_module_self_reg());
     }
+
     /**
-     * Test allow staff self reg  
-     * @group lti 
+     * Test allow staff self reg
+     * @group lti
      */
     public function test_allow_staff_module_register() {
         $this->config->set('cfg_sms_api', 'generic_sms');
@@ -340,9 +363,10 @@ class lti_integrationtest extends unittestdatabase {
         $this->config->set_setting('cfg_lti_allow_staff_module_register', false, \Config::BOOLEAN);
         $this->assertFalse($lti_i->allow_staff_module_register());
     }
+
     /**
-     * Test allow module creation 
-     * @group lti 
+     * Test allow module creation
+     * @group lti
      */
     public function test_allow_module_create() {
         $this->config->set('cfg_sms_api', 'generic_sms');
@@ -354,9 +378,10 @@ class lti_integrationtest extends unittestdatabase {
         $this->config->set_setting('cfg_lti_allow_module_create', false, \Config::BOOLEAN);
         $this->assertFalse($lti_i->allow_module_create());
     }
+
     /**
      * Test user time check
-     * @group lti 
+     * @group lti
      */
     public function test_user_time_check() {
         // Default.

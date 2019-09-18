@@ -1,7 +1,0 @@
-courses:
-  -
-    id: 2
-    name: "TEST2"
-    description: "Test course 2"
-    schoolid: 1
-    externalid: null

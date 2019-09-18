@@ -7,7 +7,7 @@ Feature: Searching Papers,People and their related Academic Sessions
    @javascript
    Scenario: Test search Papers and People
       Given the following "users" exist:
-         | username |roles |
+         | username | roles |
          | myteacher1 | Staff |
          | myteacher2 | Staff |
          | myteacher3 | Staff |

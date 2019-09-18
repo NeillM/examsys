@@ -18,40 +18,42 @@ namespace testing\unittest;
 
 /**
  * Test param class
- * 
+ *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2017 onwards The University of Nottingham
  * @package tests
  */
 class paramtest extends UnitTest {
-  /**
-   * Test clean INT with range
-   * @group param
-   */
-  public function test_clean_int_with_range() {
-      $ok = \param::clean(1, \param::INT, array('default' => null, 'min_range' => 0, 'max_range' => 8));
-      $bad = \param::clean(9, \param::INT, array('default' => null, 'min_range' => 0, 'max_range' => 8));
-      $this->assertEquals(1, $ok);
-      $this->assertEquals(null, $bad);
-  }
-  /**
-   * Test clean INT no options
-   * @group param
-   */
-  public function test_clean_int_not_options() {
-      $bad = \param::clean(9, \param::INT);
-      $this->assertEquals(9, $bad);
-  }
-  /**
-   * Test clean REGEXP
-   * @group param
-   */
-  public function test_clean_regexp() {
-      $regexp = '#^[A-Z][0-9]$#';
-      $ok = \param::clean('A1', \param::REGEXP, array('default' => null, 'regexp' => $regexp));
-      $bad = \param::clean('A', \param::REGEXP, array('default' => null, 'regexp' => $regexp));
-      $this->assertEquals('A1', $ok);
-      $this->assertEquals(null, $bad);
-  }
+    /**
+     * Test clean INT with range
+     * @group param
+     */
+    public function test_clean_int_with_range() {
+        $ok = \param::clean(1, \param::INT, array('default' => null, 'min_range' => 0, 'max_range' => 8));
+        $bad = \param::clean(9, \param::INT, array('default' => null, 'min_range' => 0, 'max_range' => 8));
+        $this->assertEquals(1, $ok);
+        $this->assertEquals(null, $bad);
+    }
+
+    /**
+     * Test clean INT no options
+     * @group param
+     */
+    public function test_clean_int_not_options() {
+        $bad = \param::clean(9, \param::INT);
+        $this->assertEquals(9, $bad);
+    }
+
+    /**
+     * Test clean REGEXP
+     * @group param
+     */
+    public function test_clean_regexp() {
+        $regexp = '#^[A-Z][0-9]$#';
+        $ok = \param::clean('A1', \param::REGEXP, array('default' => null, 'regexp' => $regexp));
+        $bad = \param::clean('A', \param::REGEXP, array('default' => null, 'regexp' => $regexp));
+        $this->assertEquals('A1', $ok);
+        $this->assertEquals(null, $bad);
+    }
 }

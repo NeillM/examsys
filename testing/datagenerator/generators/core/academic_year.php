@@ -16,10 +16,7 @@
 
 namespace testing\datagenerator;
 
-use \encryp,
-    \module_utils,
-    \Config,
-    \yearutils;
+use \yearutils;
 
 /**
  * Generates Rogo academic_year.
@@ -31,41 +28,42 @@ use \encryp,
  */
 class academic_year extends generator {
 
-  /**
-   * Create academic_year
-   * 
-   * @param array parameters
-   *  string parameters[academic_year] This is academic_year value
-   *  string parameters[calendar_year] This is calendar_year
-   * @throws Exception If passed parameter is invailid
-   */
-  public function create_academic_year($parameters) {
-    if (isset($parameters['year'])) {
-      // Create relative year.
-      $date = new \DateTime($parameters['year']);
-      $year = $date->format('Y');
-      $parameters['calendar_year'] = $year;
-      $nextyear = substr($year, -2) + 1;
-      $parameters['academic_year'] = "$year/$nextyear";
+    /**
+     * Create academic_year
+     *
+     * @param array parameters
+     *  string parameters[academic_year] This is academic_year value
+     *  string parameters[calendar_year] This is calendar_year
+     * @throws data_error If passed parameter is invalid
+     */
+    public function create_academic_year($parameters) {
+        // Behat feature my added relative years such as next year, previous year
+        // now skipped as current year always created in data generation.
+        if (isset($parameters['year']) and $parameters['year'] != 'now') {
+            // Create relative year.
+            $date = new \DateTime($parameters['year']);
+            $year = $date->format('Y');
+            $parameters['calendar_year'] = $year;
+            $nextyear = substr($year, -2) + 1;
+            $parameters['academic_year'] = "$year/$nextyear";
+        }
+
+        $academicyearpattern = '/[1-9]\d{3,}\/\d{2,}/'; //2016/17
+        $calendaryearpattern = '/[1-9]\d{3,}/'; //2016
+
+        if (!(preg_match($academicyearpattern, $parameters['academic_year'])) or !(preg_match($calendaryearpattern, $parameters['calendar_year']))) {
+            throw new data_error('year number format is worng, should be like | 2016 | 2016/17 |');
+        } else {
+
+            $academic_year = $parameters['academic_year'];
+            $calendar_year = (int)$parameters['calendar_year'];
+            $sql = "INSERT INTO academic_year(calendar_year, academic_year) VALUES (?,?)";
+            $query = $this->db->prepare($sql);
+            $query->bind_param('is', $calendar_year, $academic_year);
+
+            if (!$query->execute()) {
+                throw new data_error("academic_year {$calendar_year} not inserted into database");
+            }
+        }
     }
-
-    $academicyearpattern = '/[1-9]\d{3,}\/\d{2,}/'; //2016/17
-    $calendaryearpattern = '/[1-9]\d{3,}/'; //2016
-
-    if (!(preg_match($academicyearpattern, $parameters['academic_year'])) or ! (preg_match($calendaryearpattern, $parameters['calendar_year']))) {
-      throw new data_error('year number format is worng, should be like | 2016 | 2016/17 |');
-    } else {
-
-      $academic_year = $parameters['academic_year'];
-      $calendar_year = (int) $parameters['calendar_year'];
-      $db = loader::get_database();
-      $sql = "INSERT INTO academic_year(calendar_year, academic_year) VALUES (?,?)";
-      $query = $db->prepare($sql);
-      $query->bind_param('is', $calendar_year, $academic_year);
-
-      if (!$query->execute()) {
-        throw new data_error("academic_year {$calendar_year} not inserted into database");
-      }
-    }
-  }
 }

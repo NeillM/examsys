@@ -15,39 +15,41 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
-use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
 /**
  * Test plugin_manager class
- * 
+ *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
 class plugin_managertest extends unittestdatabase {
-    
+
     /**
-     * Get init data set from yml
-     * @return dataset
+     * Generate data for test.
+     * @throws \testing\datagenerator\not_found
      */
-    public function getDataSet() {
-        return new YamlDataSet($this->get_base_fixture_directory() . "plugin_managerTest" . DIRECTORY_SEPARATOR . "pluginmanager.yml");
+    public function datageneration() : void {
+        $datagenerator = $this->get_datagenerator('config', 'core');
+        $datagenerator->change_setting(array('component' => 'plugin_plain_texteditor', 'setting' => 'installed', 'value' => 0));
     }
+
     /**
      * Test listing enabled plugin for type
      * @group plugins
      */
     public function test_get_plugin_type_enabled() {
-        $this->assertEquals(array('testplugin'), plugin_manager::get_plugin_type_enabled('testplugintype'));
+        $this->assertEquals(array('plugin_tinymce3_texteditor'), plugin_manager::get_plugin_type_enabled('plugin_texteditor'));
     }
+
     /**
      * Test plugin installed
      * @group plugins
      */
     public function test_plugin_installed() {
-        $this->assertTrue(plugin_manager::plugin_installed('testplugin'));
-        $this->assertFalse(plugin_manager::plugin_installed('notestplugin'));
+        $this->assertTrue(plugin_manager::plugin_installed('plugin_tinymce3_texteditor'));
+        $this->assertFalse(plugin_manager::plugin_installed('plugin_plain_texteditor'));
         $this->assertFalse(plugin_manager::plugin_installed('unknowntestplugin'));
     }
 }

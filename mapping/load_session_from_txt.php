@@ -37,25 +37,9 @@ if (isset($_POST['submit'])) {
       echo uploadError($_FILES['txtfile']['error']);
       exit;
     } else {
-      $result = $mysqli->prepare("SELECT MAX(obj_id) AS largest FROM objectives");
-      $result->execute();
-      $result->bind_result($largest);
-      $i = 0;
-      while ($result->fetch()) {
-        $obj_id = $largest + 1;
-      }
-      if ($obj_id < 10) {
-        $obj_id = 123;
-      }
-      $result->close();
-      
-      $identifier = 0;
-      $result = $mysqli->prepare("SELECT MAX(identifier) AS largest FROM sessions");
-      $result->execute();
-      $result->bind_result($largest);
-      $result->fetch();
-      $result->close();
-      $identifier = $largest + 1;
+      $obj_id = mappingutils::get_objectives_start();
+
+      $identifier = mappingutils::get_sessions_start();
       
       $lines = file($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_load_objectives.txt');
       foreach ($lines as $separate_line) {

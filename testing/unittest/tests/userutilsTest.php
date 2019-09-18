@@ -15,57 +15,76 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
-use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
 /**
  * Test userutils class
- * 
+ *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
 class userutilstest extends unittestdatabase {
+
     /**
-     * Get init data set from yml
-     * @return dataset
+     * @var integer Storage for module id in tests
      */
-    public function getDataSet() {
-        return new YamlDataSet($this->get_base_fixture_directory() . "userutilsTest" . DIRECTORY_SEPARATOR . "userutils.yml");
-    }
+    private $module2;
+
     /**
-     * Get expected data set from yml
-     * @param string $name fixture file name
-     * @return dataset
+     * Generate data for test.
+     * @throws \testing\datagenerator\not_found
      */
-    public function get_expected_data_set($name) {
-      return new YamlDataSet($this->get_base_fixture_directory() . "userutilsTest" . DIRECTORY_SEPARATOR . $name . ".yml");
+    public function datageneration() : void {
+        $this->module2 = $this->get_module_id('SYSTEM');
+        $datagenerator = $this->get_datagenerator('academic_year', 'core');
+        $datagenerator->create_academic_year(array('calendar_year' => 2016, 'academic_year' => '2016/17'));
+        $datagenerator = $this->get_datagenerator('modules', 'core');
+        $datagenerator->create_enrolment(array('userid' => $this->student['id'], 'moduleid' => $this->module, 'calendar_year' => 2016));
     }
+
     /**
-     * Test gettign enrolment id
+     * Test getting enrolment id
      * @group user
      */
     public function test_get_enrolement_id() {
         // Enrolment exists.
-        $this->assertEquals(1, UserUtils::get_enrolement_id(1000, 3, 2016, $this->db));
+        $this->assertIsInt(UserUtils::get_enrolement_id($this->student['id'], $this->module, 2016, $this->db));
         // Enrolment does not exist.
-        $this->assertEquals(false, UserUtils::get_enrolement_id(1, 3, 2016, $this->db));
+        $this->assertEquals(false, UserUtils::get_enrolement_id($this->student['id'], $this->module2, 2016, $this->db));
     }
+
     /**
      * Test updating user
      * @group user
      */
     public function test_update_user() {
-      // Student ID exists.
-      $this->assertEquals(true, UserUtils::update_user(1, 'student1', '12345678', 'Mr', 'Joe', 'Baxter', 'joseph.baxter@example.com', 'TEST', 'Male', 1, 'Student', '12345678', $this->db));
-      // Student ID does not exist.
-      $this->assertEquals(true, UserUtils::update_user(2, 'student2', '87654321', 'Dr', 'Joseph', 'Baxter', 'joe.baxter@example.com', 'TEST', 'Male', 1, 'Student', '87654321', $this->db, "J"));
-      // Check tables update as expected.
-      $querytable = $this->getConnection()->createQueryTable('users', 'SELECT id, username, roles, grade, title, initials, surname, first_names, email, gender FROM users');
-      $expectedtable = $this->get_expected_data_set('updated')->getTable("users");
-      $this->assertTablesEqual($expectedtable, $querytable);
-      $querytable = $this->getConnection()->createQueryTable('sid', 'SELECT userID, student_id FROM sid');
-      $expectedtable = $this->get_expected_data_set('updated')->getTable("sid");
-      $this->assertTablesEqual($expectedtable, $querytable);
+        // Student ID exists.
+        $this->assertEquals(true, UserUtils::update_user($this->student['id'], 'student1', '12345678', 'Mr', 'Joe', 'Baxter', 'joseph.baxter@example.com', 'TEST', 'Male', 1, 'Student', '12345678', $this->db));
+        // Check tables update as expected.
+        $querytable = $this->query(array('columns' => array('username', 'roles', 'grade', 'title', 'initials', 'surname', 'first_names', 'email', 'gender'),
+            'table' => 'users', 'where' => array(array('column' => 'id', 'value' => $this->student['id']))));
+        $expectedtable = array(
+            0 => array(
+                'username' => "student1",
+                'roles' => "Student",
+                'grade' => "TEST",
+                'title' => "Mr",
+                'initials' => "J",
+                'surname' => "Baxter",
+                'first_names' => "Joe",
+                'email' => "joseph.baxter@example.com",
+                'gender' => "Male"
+            ),
+        );
+        $this->assertEquals($expectedtable, $querytable);
+        $querytable = $this->query(array('columns' => array('userID', 'student_id'), 'table' => 'sid', 'where' => array(array('column' => 'userID', 'value' => $this->student['id']))));
+        $expectedtable =array(
+            0 => array (
+                'userID' => $this->student['id'],
+                'student_id' => '12345678'
+            ),
+        );
+        $this->assertEquals($expectedtable, $querytable);
     }
 }

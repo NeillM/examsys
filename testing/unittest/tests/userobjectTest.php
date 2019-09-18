@@ -15,11 +15,10 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
-use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
 /**
  * Test userobject class
- * 
+ *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2017 onwards The University of Nottingham
@@ -27,18 +26,21 @@ use PHPUnit\DbUnit\DataSet\YamlDataSet;
  */
 class userobjecttest extends unittestdatabase {
     /**
-     * Get init data set from yml
-     * @return dataset
+     * Generate data for test.
+     * @throws \testing\datagenerator\not_found
      */
-    public function getDataSet() {
-        return new YamlDataSet($this->get_base_fixture_directory() . "userobjectTest" . DIRECTORY_SEPARATOR . "userobject.yml");
-    } 
+    public function datageneration() : void {
+        $datagenerator = $this->get_datagenerator('log', 'core');
+        $datagenerator->create_metadata(array('userID' => $this->student['id'], 'paperID' => 1, 'started' => '2017-01-01 00:00:00', 'completed' => '2017-01-02 00:00:00'));
+        $datagenerator->create_metadata(array('userID' => $this->student['id'], 'paperID' => 2, 'started' => '2017-01-01 00:00:00'));
+    }
+
     /**
      * Test user completed paper
      * @group user
      */
     public function test_user_completed_paper() {
-        $this->userobject->load(1);
+        $this->set_active_user($this->student['id']);
         // User completed a paper.
         $this->assertTrue($this->userobject->user_completed_paper(1));
         // User did not complete a paper.

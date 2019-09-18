@@ -15,24 +15,23 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
-use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
 /**
  * Test encrypt class
- * 
+ *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2017 onwards The University of Nottingham
  * @package tests
  */
-class versiontest extends unittestdatabase {
+class encryptest extends unittestdatabase {
     /**
-     * Get init data set from yml
-     * @return dataset
+     * Generate data for test.
      */
-    public function getDataSet() {
-      return new YamlDataSet($this->get_base_fixture_directory() . "encrypTest" . DIRECTORY_SEPARATOR . "encryp.yml");
+    public function datageneration() : void {
+        // Currently only base data required.
     }
+
     /**
      * Test gen_password - non readable asked for.
      * @group encryption
@@ -46,6 +45,7 @@ class versiontest extends unittestdatabase {
         $this->assertEquals(8, strlen($pass['password']));
         $this->assertTrue($enc->is_readable());
     }
+
     /**
      * Test gen_password - non readable asked for, non default length.
      * @group encryption
@@ -58,6 +58,7 @@ class versiontest extends unittestdatabase {
         $this->assertEquals(10, strlen($pass['password']));
         $this->assertTrue($enc->is_readable());
     }
+
     /**
      * Test gen_password - readable asked for
      * @group encryption
@@ -69,6 +70,7 @@ class versiontest extends unittestdatabase {
         $this->assertEquals($pass['password'], str_replace(' ', '', $pass['display_password']));
         $this->assertTrue($enc->is_readable());
     }
+
     /**
      * Test gen_password - readable asked for, non default length.
      * @group encryption
@@ -80,6 +82,7 @@ class versiontest extends unittestdatabase {
         $this->assertEquals($pass['password'], str_replace(' ', '', $pass['display_password']));
         $this->assertTrue($enc->is_readable());
     }
+
     /**
      * Test gen_password - no dictionary available
      * @group encryption
@@ -91,6 +94,7 @@ class versiontest extends unittestdatabase {
         $this->assertEquals($pass['password'], $pass['display_password']);
         $this->assertEquals(12, strlen($pass['password']));
     }
+
     /**
      * Test gen_password - dictionary too small
      * @group encryption

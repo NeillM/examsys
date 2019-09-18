@@ -16,7 +16,6 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
-use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
 /**
  * Testcase for class Url.
@@ -28,44 +27,50 @@ use PHPUnit\DbUnit\DataSet\YamlDataSet;
  * @group page
  */
 class pageTest extends unittestdatabase {
-  /**
-   * Get init data set from yml
-   * @return dataset
-   */
-  public function getDataSet() {
-    return new YamlDataSet($this->get_base_fixture_directory() . "classes" . DIRECTORY_SEPARATOR . "page.yml");
-  }
 
-  /**
-   * Test title generation
-   * @group page
-   */
-  public function test_title() {
-    $this->userobject->load(1);
-    $this->assertEquals('title unittest', \page::title('title'));
-  }
+    /**
+     * @var string Storage for system install type
+     */
+    private $type;
 
-  /**
-   * Test title generation in demo mode
-   * @group page
-   */
-  public function test_title_demo() {
-    $this->userobject->load(1);
-    $this->userobject->set_demo();
-    $langpack = new \langpack();
-    $demomode = $langpack->get_string('classes/page', 'demomode');
-    $this->assertEquals('title unittest (' . $demomode . ')', \page::title('title'));
-  }
+    /**
+     * Generate data for test.
+     * @throws \testing\datagenerator\not_found
+     */
+    public function datageneration() : void {
+        $datagenerator = $this->get_datagenerator('config', 'core');
+        $this->type = 'unittest';
+        $datagenerator->change_setting(array('component' => 'core', 'setting' => 'system_install_type', 'value' => $this->type));
+    }
 
-  /**
-   * Test title generation in impersonation mode
-   * @group page
-   */
-  public function test_title_impersonate() {
-    $this->userobject->load(1);
-    $this->userobject->impersonate(2);
-    $langpack = new \langpack();
-    $as = $langpack->get_string('classes/page', 'as');
-    $this->assertEquals('title unittest ' .  $as . ' Mr Tester', \page::title('title'));
-  }
+    /**
+     * Test title generation
+     * @group page
+     */
+    public function test_title() {
+        $this->set_active_user($this->admin['id']);
+        $this->assertEquals('title ' . $this->type, \page::title('title'));
+    }
+
+    /**
+     * Test title generation in demo mode
+     * @group page
+     */
+    public function test_title_demo() {
+        $this->set_active_user($this->admin['id'], self::USEROBJECT_DEMO);
+        $langpack = new \langpack();
+        $demomode = $langpack->get_string('classes/page', 'demomode');
+        $this->assertEquals('title ' . $this->type . ' (' . $demomode . ')', \page::title('title'));
+    }
+
+    /**
+     * Test title generation in impersonation mode
+     * @group page
+     */
+    public function test_title_impersonate() {
+        $this->set_active_user($this->admin['id'], self::USEROBJECT_IMPERSONATE, $this->student['id']);
+        $langpack = new \langpack();
+        $as = $langpack->get_string('classes/page', 'as');
+        $this->assertEquals('title ' . $this->type . ' ' . $as . ' Dr User1', \page::title('title'));
+    }
 }

@@ -15,39 +15,45 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
-use PHPUnit\DbUnit\DataSet\YamlDataSet;
 
 /**
  * Test courseutils class
- * 
+ *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
 class courseutilstest extends unittestdatabase {
-    
     /**
-     * Get init data set from yml
-     * @return dataset
+     * @var array Storage for course data in tests
      */
-    public function getDataSet() {
-        return new YamlDataSet($this->get_base_fixture_directory() . "courseutilsTest" . DIRECTORY_SEPARATOR . "courseutils.yml");
+    private $course, $course2;
+
+    /**
+     * Generate data for test.
+     * @throws \testing\datagenerator\not_found
+     */
+    public function datageneration() : void {
+        $datagenerator = $this->get_datagenerator('course', 'core');
+        $this->course = $datagenerator->create_course(array('name' => 'test', 'description' => 'a test', 'schoolid' => 1, 'externalid' => 'ABCD', 'externalsys' => 'external'));
+        $this->course2 = $datagenerator->create_course(array('name' => 'test2', 'description' => 'a test 2', 'schoolid' => 1, 'externalid' => 'WXYZ', 'externalsys' => 'external'));
     }
+
     /**
      * Test comparing  courses with external list
      * @group courses
      */
     public function test_diff_external_courses_to_internal_courses() {
-        $external = array("ABCD", "EFGH", "IJKL");
-        $this->assertEquals(array("WXYZ"), CourseUtils::diff_external_courses_to_internal_courses($external, 'external', $this->db));
+        $external = array($this->course['externalid'], "EFGH", "IJKL");
+        $this->assertEquals(array($this->course2['externalid']), CourseUtils::diff_external_courses_to_internal_courses($external, 'external', $this->db));
     }
+
     /**
      * Test gettings course id  given external id
      * @group courses
      */
     public function test_get_courseid_from_externalid() {
-        $external = "ABCD";
-        $this->assertEquals(1, CourseUtils::get_courseid_from_externalid($external, 'external', $this->db));
+        $this->assertEquals($this->course['id'], CourseUtils::get_courseid_from_externalid($this->course['externalid'], 'external', $this->db));
     }
 }

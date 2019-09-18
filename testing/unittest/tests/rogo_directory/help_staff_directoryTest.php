@@ -26,9 +26,9 @@ use org\bovigo\vfs\vfsStreamWrapper;
  * @package tests
  */
 class help_staff_directorytest extends DirectoryUnitTest {
-  /** @see parent::directory_class */
-  protected $directory_class = 'help_staff';
+    /** @see parent::directory_class */
+    protected $directory_class = 'help_staff';
 
-  /** @see parent::directory_name */
-  protected $directory_name = 'help/staff/images';
+    /** @see parent::directory_name */
+    protected $directory_name = 'help/staff/images';
 }

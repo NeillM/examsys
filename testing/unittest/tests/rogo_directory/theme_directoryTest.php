@@ -26,9 +26,9 @@ use org\bovigo\vfs\vfsStreamWrapper;
  * @package tests
  */
 class theme_directorytest extends DirectoryUnitTest {
-  /** @see parent::directory_class */
-  protected $directory_class = 'theme';
+    /** @see parent::directory_class */
+    protected $directory_class = 'theme';
 
-  /** @see parent::directory_name */
-  protected $directory_name = 'theme';
+    /** @see parent::directory_name */
+    protected $directory_name = 'theme';
 }
