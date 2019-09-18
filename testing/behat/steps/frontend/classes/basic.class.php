@@ -117,22 +117,19 @@ trait basic {
    */
   public function i_see_popup_page($title) {
     $session = $this->getSession();
-    $current = $session->getDriver()->getWebDriverSession()->window_handle();
-    $windows = $session->getDriver()->getWindowNames();
-    $found = false;
-    foreach ($windows as $window) {
-      $session->switchToWindow($window);
-      $name = $session->getDriver()->getWebDriverSession()->title();
-      if (trim($title) === trim($name)) {
-        $found = true;
-        break;
+    $this->spin(function (rogo_test $context) use ($session, $title) {
+      $current = $session->getDriver()->getWebDriverSession()->window_handle();
+      $windows = $session->getDriver()->getWindowNames();
+      foreach ($windows as $window) {
+        $session->switchToWindow($window);
+        $name = $session->getDriver()->getWebDriverSession()->title();
+        if (trim($title) === trim($name)) {
+          return true;
+        }
       }
-    }
-    $session->switchToWindow($current);
-
-    if (!$found or empty($windows)) {
-      throw new Exception("The popup could not be found");
-    }
+      $session->switchToWindow($current);
+      return false;
+    });
   }
 
   /**
@@ -143,14 +140,13 @@ trait basic {
    */
   public function only_main_window() {
     $session = $this->getSession();
-    $windows = $session->getDriver()->getWindowNames();
-    if (count($windows) > 1) {
-      throw new Exception("Popup windows found");
-    } else if (count($windows) < 1) {
-      throw new Exception("No windows found");
-    } else if ($windows[0] !== $this->mainwindow) {
-      throw new Exception("Main window not open");
-    }
+    $this->spin(function (rogo_test $context) use ($session) {
+      $windows = $session->getDriver()->getWindowNames();
+      if (count($windows) === 1 and $windows[0] === $context->mainwindow) {
+        return true;
+      }
+      return false;
+    });
   }
 
   /**
@@ -160,13 +156,20 @@ trait basic {
    * @param type $title
    */
   public function i_should_not_see_popup($title) {
-    try {
-      $this->i_see_popup_page($title);
-    } catch (Exception $ex) {
-      // The popup page was not found so all is good.
-      return;
-    }
-    throw new Exception("Popup window found");
+    $session = $this->getSession();
+    $this->spin(function (rogo_test $context) use ($session, $title) {
+      $current = $session->getDriver()->getWebDriverSession()->window_handle();
+      $windows = $session->getDriver()->getWindowNames();
+      foreach ($windows as $window) {
+        $session->switchToWindow($window);
+        $name = $session->getDriver()->getWebDriverSession()->title();
+        if (trim($title) === trim($name)) {
+          return false;
+        }
+      }
+      $session->switchToWindow($current);
+      return true;
+    });
   }
   
   /**
@@ -176,15 +179,20 @@ trait basic {
    * @throws Exception
    */
   public function i_close_popup_window() {
-    
     $session = $this->getSession();
     $windows = $session->getDriver()->getWindowNames();
 
     if (empty($windows)) {
-      throw new Exception("The page could not be found");
+      throw new Exception("No windows open");
     }
-    $this->getSession()->executeScript('window.close()');
-    $this->getSession()->switchToWindow($windows[0]); 
+    if (count($windows) === 1) {
+      throw new Exception("No popup windows open");
+    }
+    for ($i = 1; $i < count($windows); $i++) {
+      $this->getSession()->switchToWindow($windows[$i]);
+      $this->getSession()->executeScript('window.close()');
+    }
+    $this->getSession()->switchToWindow($windows[0]);
   }
   
   
