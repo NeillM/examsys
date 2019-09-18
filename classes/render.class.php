@@ -44,11 +44,11 @@ class render {
      */
     function __construct($configObject, $templatedir = null) {
         if (is_null($templatedir)) {
-            $loader = new \Twig_Loader_Filesystem(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates');
+            $loader = new \Twig\Loader\FilesystemLoader(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates');
         } else {
-            $loader = new \Twig_Loader_Filesystem($templatedir);
+            $loader = new \Twig\Loader\FilesystemLoader($templatedir);
         }
-        $this->twig = new \Twig_Environment($loader, array(
+        $this->twig = new \Twig\Environment($loader, array(
             'cache' => false
         ));
         $this->config = $configObject;

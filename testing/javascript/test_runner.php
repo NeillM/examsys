@@ -38,8 +38,8 @@ if (file_exists(dirname(dirname(__DIR__)) . '/node_modules/qunit/qunit/qunit.js'
     $success = $loader->locate($suite);
     
     // Start generating the page
-    $twigloader = new \Twig_Loader_Filesystem(__DIR__ . DIRECTORY_SEPARATOR . 'templates');
-    $renderer = new \Twig_Environment($twigloader, array(
+    $twigloader = new \Twig\Loader\FilesystemLoader(__DIR__ . DIRECTORY_SEPARATOR . 'templates');
+    $renderer = new \Twig\Environment($twigloader, array(
         'cache' => false
     ));
     $data = array(
