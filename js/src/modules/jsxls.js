@@ -18,8 +18,18 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-define (['jquery'], function($) {
+define (['jquery', 'log'], function($, log) {
+    var strings = {};
+    // Try to fetch the strings.
+    var json_strings = $('#jsutils').attr('data-xls');
+    if (json_strings) {
+        // Language strings on the page, parse them for use.
+        strings = JSON.parse(json_strings);
+    } else {
+        // Warn the the strings are not loaded on the page, so we can find and fix it.
+        log('jsxls: Strings not found', 'warn');
+    }
     return {
-        lang_string: JSON.parse($('#jsutils').attr('data-xls')),
+        lang_string: strings,
     }
 });
