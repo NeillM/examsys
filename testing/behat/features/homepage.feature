@@ -5,7 +5,7 @@ Feature: Home page
    I should be able to see home page after login
 
    @javascript
-   Scenario: Admin user login
+   Scenario: Admin user has functional menu
       Given I login as "admin"
       Then I should see menu with following items:
          | menu_items |
