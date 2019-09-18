@@ -285,9 +285,14 @@ Class InstallUtils {
     }
 
     // Check mysql version.
-    if (!requirements::check_db(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd)) {
-      $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
-      self::displayError(array('002' => sprintf($string['errors17'], $mysql_min_ver)), true);
+    try {
+      if (!requirements::check_db(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd)) {
+        $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
+        self::displayError(array('002' => sprintf($string['errors17'], $mysql_min_ver)), true);
+      }
+    } catch (Exception $e) {
+      // Could not connect to the database.
+      self::displayError(array('005' => sprintf($string['errors20'], $e->getMessage())), true);
     }
 
     if (!self::$cli) {

@@ -117,6 +117,7 @@ $string['errors16'] = 'Rogō requires ability to write its config file %s/config
 $string['errors17'] = 'Rogō requires MySQL version %s or above.';
 $string['errors18'] = 'The Rogō data directory requires %s path to exist';
 $string['errors19'] = 'The Rogō data directory requires %s must be writable';
+$string['errors20'] = 'Rogō cannot connect to the database (%s)';
 $string['installscript'] = 'Rogō Install script';
 $string['systeminstallation'] = 'System Installation';
 $string['labsecuritytype'] = "Summative Exam Lab Security";

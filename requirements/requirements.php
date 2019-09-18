@@ -89,11 +89,16 @@ if (!$phpversion) {
 // db version.
 if (InstallUtils::config_exists()){
   $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
-  $dbversion = requirements::check_db($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'));
-  if (!$dbversion) {
-    $info['dbversion'] = array(sprintf($string['dbversion'], $mysql_min_ver), false);
-  } else {
-    $info['dbversion'] = array($string['dbsuccess'], true);
+  try {
+    $dbversion = requirements::check_db($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'));
+    if (!$dbversion) {
+      $info['dbversion'] = array(sprintf($string['dbversion'], $mysql_min_ver), false);
+    } else {
+      $info['dbversion'] = array($string['dbsuccess'], true);
+    }
+  } catch (Exception $e) {
+    $dbversion = false;
+    $info['dbversion'] = array(sprintf($string['dbconnection'], $e->getMessage()), false);
   }
 } else {
   // On install skip check here as done in insall process.
