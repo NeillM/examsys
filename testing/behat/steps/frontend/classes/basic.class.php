@@ -175,10 +175,10 @@ trait basic {
   /**
    * Close popup window back to main window
    * 
-   * @Then /^I close popup window$/
+   * @Then I close popup window :title
    * @throws Exception
    */
-  public function i_close_popup_window() {
+  public function i_close_popup_window($title) {
     $session = $this->getSession();
     $windows = $session->getDriver()->getWindowNames();
 
@@ -188,9 +188,17 @@ trait basic {
     if (count($windows) === 1) {
       throw new Exception("No popup windows open");
     }
+    $closed = false;
     for ($i = 1; $i < count($windows); $i++) {
       $this->getSession()->switchToWindow($windows[$i]);
-      $this->getSession()->executeScript('window.close()');
+      $name = $session->getDriver()->getWebDriverSession()->title();
+      if (trim($name) === trim($title)) {
+        $this->getSession()->executeScript('window.close()');
+        $closed = true;
+      }
+    }
+    if (!$closed) {
+      throw new Exception("Popup with title '$title' not found");
     }
     $this->getSession()->switchToWindow($windows[0]);
   }

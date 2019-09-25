@@ -22,7 +22,7 @@ Feature: Home page
          | About Rogō | 
       When I click "Help & Support" "main_menu_item"
       Then I should see popup page with title "Rogō: Help"
-      When I close popup window
+      When I close popup window "Rogō: Help"
       And I toggle the main menu
       And I click "Administrative Tools" "main_menu_item"
       Then I should see page with title "Administrative Tools"
