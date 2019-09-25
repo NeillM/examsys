@@ -1,3 +1,6 @@
         </div>
+{% for scriptname in scripts %}
+        <script type="text/javascript" src="{{path}}{{scriptname}}"></script>
+{% endfor %}
     </body>
 </html>
