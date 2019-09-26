@@ -149,9 +149,6 @@ if ($userObject->has_role(array('External Examiner'))) {
   }
   echo "</table>\n";
   echo "</div>\n";
-
-  $mysqli->close();
-  
 } else {
 ?>
 <div class="head_title">
