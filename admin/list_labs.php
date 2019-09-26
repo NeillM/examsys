@@ -62,11 +62,12 @@
 $labs = array();
 $campus_sizes = array();
 
-$lab_data = $mysqli->prepare("SELECT labs.id, labs.name, count(address) AS pc_number, campus.name, labs.building, client_identifiers.low_bandwidth
-  FROM (client_identifiers, labs, campus)
-  WHERE client_identifiers.lab = labs.id AND labs.campus = campus.id
-  GROUP BY labs.id, labs.name, campus.name, labs.building, client_identifiers.low_bandwidth
-  ORDER BY campus.name, labs.name");
+$lab_data = $mysqli->prepare("SELECT l.id, l.name, count(ci.address) AS pc_number, c.name, l.building, ci.low_bandwidth
+  FROM campus c
+  JOIN labs l ON l.campus = c.id
+  LEFT JOIN client_identifiers ci ON ci.lab = l.id
+  GROUP BY l.id, l.name, c.name, l.building, ci.low_bandwidth
+  ORDER BY c.name, l.name");
 $lab_data->execute();
 $lab_data->store_result();
 $lab_data->bind_result($id, $name, $pc_number, $campus, $building, $low_bandwidth);
