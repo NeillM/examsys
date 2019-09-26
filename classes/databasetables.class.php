@@ -1243,7 +1243,7 @@ QUERY;
           `background` varchar(20) default NULL,
           `foreground` varchar(20) default NULL,
           `textsize` int(11) default NULL,
-          `extra_time` tinyint(4) default NULL,
+          `extra_time` smallint default NULL,
           `marks_color` varchar(20) default NULL,
           `themecolor` varchar(20) default NULL,
           `labelcolor` varchar(20) default NULL,
