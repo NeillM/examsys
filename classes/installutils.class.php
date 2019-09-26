@@ -1841,7 +1841,6 @@ Class InstallUtils {
       'scripts' => array(
         '/js/require.js',
         '/js/main.min.js',
-        '/js/installinit.min.js',
       ),
     );
     $lang['title'] = $string['install'];
@@ -1867,7 +1866,10 @@ Class InstallUtils {
   static function displayfooter() {
     $configObject = Config::get_instance();
     $render = new render_install($configObject);
-    $render->render_admin_footer();
+    $scripts = [
+      '/js/installinit.min.js',
+    ];
+    $render->render_admin_footer($scripts);
   }
 
   static function writeConfigFile() {

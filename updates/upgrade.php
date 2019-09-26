@@ -49,9 +49,11 @@ $headerdata = array(
   'scripts' => array(
     '/js/require.js',
     '/js/main.min.js',
-    '/js/updateinit.min.js',
   ),
 );
+$footerscripts = [
+  '/js/updateinit.min.js',
+];
 
 $lang['title'] = sprintf($string['updtitle'], $old_version, $version);
 $render->render($headerdata, $lang, 'header.html');
@@ -71,7 +73,7 @@ if ($updater_utils->check_version($min_version)) {
   $lang['warning1'] = sprintf($string['versionwarning1'], $old_version);
   $lang['warning2'] = sprintf($string['versionwarning2'], $min_version);
   $render->render($data, $lang, '/updates/update.html');
-  $render->render_admin_footer();
+  $render->render_admin_footer($footerscripts);
   exit;
 }
 $configwarning = false;
@@ -103,7 +105,7 @@ if (!isset($_POST['update'])) {
   $data['configwarning'] = $configwarning;
   $data['updating'] = true;
   $render->render($data, $lang, '/updates/update.html');
-  $render->render_admin_footer();
+  $render->render_admin_footer($footerscripts);
 } else {
 
   if ($configObject->get('cfg_db_charset') == null) {
@@ -120,7 +122,7 @@ if (!isset($_POST['update'])) {
     $data['dberror'] = true;
     $lang['dberror'] = sprintf($string['dberror'], $mysql_admin_user);
     $render->render($data, $lang, '/updates/update.html');
-    $render->render_admin_footer();
+    $render->render_admin_footer($footerscripts);
     exit;
   }
 
@@ -228,6 +230,6 @@ if (!isset($_POST['update'])) {
   $lang['config'] = $string['config'];
   $lang['ended'] = sprintf($string['ended'], date($configObject->get('cfg_long_time_php')));
   $render->render($data, $lang, '/updates/update.html');
-  $render->render_admin_footer();
+  $render->render_admin_footer($footerscripts);
   $update_mysqli->close();
 }

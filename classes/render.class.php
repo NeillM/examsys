@@ -122,10 +122,12 @@ class render {
     
     /**
      * Render admin page footer.
+     * @param array $javascript additional javascript required
      * @return void
      */
-    public function render_admin_footer() {
-        echo $this->twig->render('admin/footer.html');
+    public function render_admin_footer($javascript = []) {
+        $data = ['scripts' => $javascript];
+        echo $this->twig->render('admin/footer.html', $data);
     }
     
     /**
