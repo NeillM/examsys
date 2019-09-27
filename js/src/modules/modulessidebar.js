@@ -44,7 +44,7 @@ define(['alert', 'requireconfig.min', 'list', 'jquery'], function(ALERT, config,
                             alert.notification('syncerror');
                         }
                     },
-                    error: function (xhr, textStatus, errorThrown) {
+                    error: function (xhr, textStatus) {
                         alert.plain(textStatus);
                     },
                     complete: function () {

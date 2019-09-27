@@ -48,7 +48,7 @@ requirejs(['usermodules', 'form', 'alert', 'jquery'], function(USER, FORM, ALERT
                     self.close();
                 }
             },
-            error: function (xhr, textStatus, errorThrown) {
+            error: function (xhr, textStatus) {
                 alert.plain(textStatus);
             },
         });

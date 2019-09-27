@@ -38,7 +38,7 @@ define(['requireconfig.min', 'jquery'], function(config, $) {
      * @param string content state value
      */
     this.updateState = function (state_name, content) {
-      $.post(config.cfgrootpath + '/include/set_state.php', {state_name: state_name, content: content, page: document.URL}, function(responseText){ }, "html");
+      $.post(config.cfgrootpath + '/include/set_state.php', {state_name: state_name, content: content, page: document.URL}, function() {}, "html");
     };
 
     /**

@@ -27,7 +27,7 @@ define(['jquery', 'jqueryvalidate'], function($) {
         this.init = function () {
             $('#theform').validate({
                 errorClass: 'errfield',
-                errorPlacement: function (error, element) {
+                errorPlacement: function () {
                     return true;
                 }
             });

@@ -51,10 +51,10 @@ define(['html5_menuitem'], function(Menu_item) {
   /**
    * This will never be a valid return result.
    *
-   * @param {String} name
+   * @param {String} name (Not used by this method, should be passed by calling code)
    * @returns {Boolean}
    */
-  menu_filler.prototype.find = function (name) {
+  menu_filler.prototype.find = function () {
     return false;
   };
 

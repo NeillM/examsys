@@ -36,7 +36,7 @@ requirejs(['performance', 'popupmenu'], function (PERF, POPUP) {
         performance.jumpToPaper();
     });
     $("tr[id^=res]").each(function(){
-        $(this).click(function(e) {
+        $(this).click(function() {
             performance.papertype = $(this).attr('data-papertype');
             performance.cryptname = $(this).attr('data-cryptname');
             performance.paperid = $(this).attr('data-paperid');

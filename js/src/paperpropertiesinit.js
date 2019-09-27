@@ -92,7 +92,7 @@ requirejs(['paperproperties', 'colourpicker', 'datecopy', 'form', 'alert', 'help
                         properties.buttonclick('general','tab1');
                     }
                 },
-                error: function (xhr, textStatus, errorThrown) {
+                error: function (xhr, textStatus) {
                     alert.plain(textStatus);
                 },
             });

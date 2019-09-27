@@ -43,7 +43,7 @@ requirejs(['jsxls', 'form', 'jquery'], function (jsxls, FORM, $) {
                     }
                 }
             },
-            error: function(xhr, textStatus, errorThrown) {
+            error: function(xhr, textStatus) {
                 alert(textStatus);
             },
         });

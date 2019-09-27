@@ -40,7 +40,7 @@ requirejs(['jquery'], function ($) {
                     window.close();
                 }
             },
-            error: function (xhr, textStatus, errorThrown) {
+            error: function (xhr, textStatus) {
                 alert(textStatus);
             },
         });

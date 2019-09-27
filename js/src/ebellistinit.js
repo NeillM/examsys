@@ -27,11 +27,11 @@ requirejs(['ebellist', 'list', 'jquery'], function (EBEL, LIST, $) {
         ebel.editTemplate();
     });
 
-    $("#edit").click(function(event) {
+    $("#edit").click(function() {
         ebel.editTemplate();
     });
 
-    $("#delete").click(function(event) {
+    $("#delete").click(function() {
         ebel.deleteTemplate();
     });
 });

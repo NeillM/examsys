@@ -36,7 +36,7 @@ requirejs(['form', 'jquery'], function (FORM, $) {
                     $('.form-error').show();
                 }
             },
-            error: function (xhr, textStatus, errorThrown) {
+            error: function (xhr, textStatus) {
                 alert(textStatus);
             },
         });

@@ -42,7 +42,7 @@ requirejs(['errorlist', 'state', 'list', 'jquery', 'jquerytablesorter'], functio
         error.displayDetails($('#lineID').val(), event);
     });
 
-    $("#showfixed").click(function (event) {
+    $("#showfixed").click(function () {
         window.location = 'sys_error_list.php';
     });
 });

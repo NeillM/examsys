@@ -44,7 +44,7 @@ requirejs(['datecopy', 'form', 'newpaperform', 'jquery'], function (DATECOPY, FO
         }
     });
 
-    $("input[id^=mod]").click(function(e) {
+    $("input[id^=mod]").click(function() {
         form.toggle($(this).attr('data-mod'));
     });
 });

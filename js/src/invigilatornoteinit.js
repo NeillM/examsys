@@ -42,7 +42,7 @@ requirejs(['form', 'jquery', 'jqueryui'], function (FORM, $) {
                     window.close();
                 }
             },
-            error: function(xhr, textStatus, errorThrown) {
+            error: function(xhr, textStatus) {
                 alert(textStatus);
             },
         });
@@ -63,7 +63,7 @@ requirejs(['form', 'jquery', 'jqueryui'], function (FORM, $) {
                     window.close();
                 }
             },
-            error: function(xhr, textStatus, errorThrown) {
+            error: function(xhr, textStatus) {
                 alert(textStatus);
             },
         });

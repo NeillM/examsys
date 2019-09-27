@@ -42,7 +42,7 @@ requirejs(['alert', 'jquery'], function(ALERT, $) {
                         $('.form-error').show();
                     }
                 },
-                error: function (xhr, textStatus, errorThrown) {
+                error: function (xhr, textStatus) {
                     alert.plain(textStatus);
                 },
             });

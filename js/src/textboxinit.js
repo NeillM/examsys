@@ -22,7 +22,7 @@ requirejs(['textboxmarking', 'jquery', 'jqueryui'], function (TEXTBOX, $) {
     window.location.hash = $('#dataset').attr('data-hash');
     var textbox = new TEXTBOX();
     $.ajaxSetup({timeout: 3000});
-    $('#content').ajaxError(function (event, jqXHR, ajaxSettings, thrownError) {
+    $('#content').ajaxError(function () {
         textbox.doError();
     });
 
@@ -36,7 +36,7 @@ requirejs(['textboxmarking', 'jquery', 'jqueryui'], function (TEXTBOX, $) {
             type: "post",
             data: {state_name: 'hidemarked', content: $('#hidemarked').is(':checked'), page: document.URL},
             dataType: "html",
-            success: function (responseText) {
+            success: function () {
                 $("#theform").submit();
             },
         });

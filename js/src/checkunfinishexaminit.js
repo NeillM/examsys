@@ -20,16 +20,16 @@
 //
 requirejs(['jquery'], function ($) {
     $(function () {
-        $('#unfinishexam').click(function(e) {
+        $('#unfinishexam').click(function() {
             $.ajax({
                 url: "do_unfinish_exam.php",
                 type: "post",
                 data: {userID: $('#userID').val(), paperID: $('#paperID').val()},
                 dataType: "json",
-                success: function (data) {
+                success: function () {
                     window.close();
                 },
-                error: function(xhr, textStatus, errorThrown) {
+                error: function(xhr, textStatus) {
                     alert(textStatus);
                 },
             });

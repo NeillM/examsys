@@ -52,7 +52,7 @@ requirejs(['form', 'alert', 'jquery'], function (FORM, ALERT, $) {
                break;
           }
         },
-        error: function(xhr, textStatus, errorThrown) {
+        error: function(xhr, textStatus) {
           alert(textStatus);
         },
       });

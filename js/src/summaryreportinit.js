@@ -32,7 +32,7 @@ requirejs(['peerreview', 'popupmenu', 'jquery', 'jquerytablesorter'], function (
         peer.viewProfile();
     });
 
-    $("tr[id^=res]").click(function(e) {
+    $("tr[id^=res]").click(function() {
         peer.userid = $(this).attr('data-userid');
         peer.paperid = $(this).attr('data-paperid');
     });

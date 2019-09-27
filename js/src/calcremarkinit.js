@@ -24,7 +24,7 @@ requirejs(['calcremark', 'jquery'], function (REMARK, $) {
     $(window).resize(remark.resizeList);
 
     $.ajaxSetup({ timeout: 10000 });
-    $('#list').ajaxError(function (event, jqXHR, ajaxSettings, thrownError) {
+    $('#list').ajaxError(function () {
         remark.doError();
     });
 

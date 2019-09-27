@@ -44,7 +44,7 @@ requirejs(['editor', 'jquery'], function (Editor, $) {
                         window.close();
                     }
                 },
-                error: function(xhr, textStatus, errorThrown) {
+                error: function(xhr, textStatus) {
                     alert(textStatus);
                 },
             });

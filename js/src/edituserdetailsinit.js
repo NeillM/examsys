@@ -38,7 +38,7 @@ requirejs(['alert', 'jquery'], function(ALERT, $) {
                     $('#usernameerror').show();
                 }
             },
-            error: function (xhr, textStatus, errorThrown) {
+            error: function (xhr, textStatus) {
                 alert.plain(textStatus);
             },
         });

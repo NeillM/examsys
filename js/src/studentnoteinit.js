@@ -61,7 +61,7 @@ requirejs(['alert', 'form', 'studentnote', 'jquery'], function (ALERT, FORM, NOT
                     alert.notification(data['type']);
                 }
             },
-            error: function (xhr, textStatus, errorThrown) {
+            error: function (xhr, textStatus) {
                 alert(textStatus);
             },
         });

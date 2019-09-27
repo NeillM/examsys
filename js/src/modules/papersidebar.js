@@ -398,7 +398,7 @@ define(['requireconfig.min', 'jsxls', 'state', 'sidebar', 'jquery'], function(co
          */
         this.nextTable = function() {
             var paper_name = $('#new_paper').val();
-            $.post("../ajax/paper/check_name.php", {name:paper_name}, function(data, status) {
+            $.post("../ajax/paper/check_name.php", {name:paper_name}, function(data) {
                 if (data == 'unique') {
                     $('#table1div').hide();
                     $('#table2div').show();

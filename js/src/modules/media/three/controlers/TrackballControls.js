@@ -326,12 +326,10 @@ define(['three'], function (THREE) {
 
         }
 
-        function keyup(event) {
-
+        function keyup() {
             if (_this.enabled === false) return;
             _state = _prevState;
             window.addEventListener('keydown', keydown, false);
-
         }
 
         function mousedown(event) {

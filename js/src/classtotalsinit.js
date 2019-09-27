@@ -34,15 +34,15 @@ requirejs(['jsxls', 'classtotals', 'popupmenu', 'jquery', 'jquerytablesorter'], 
                 data: {paperID: $('#paperID').val(), startdate: $('#startdate').val(), enddate: $('#enddate').val()},
                 timeout: 30000, // timeout after 30 seconds
                 dataType: "html",
-                success: function (data, textStatus, jqXHR) {
-                data = data.replace(/(\r\n|\n|\r)/gm,"");
-                if (data == 'Complete') {
-                    window.location.reload();
-                } else {
-                    $("#msg").html(data);
-                }
+                success: function (data) {
+                    data = data.replace(/(\r\n|\n|\r)/gm,"");
+                    if (data == 'Complete') {
+                        window.location.reload();
+                    } else {
+                        $("#msg").html(data);
+                    }
                 },
-                error: function (xhr, textStatus, errorThrown) {
+                error: function (xhr, textStatus) {
                     $("#msg").html(jsxls.lang_string('ajaxerror') + textStatus);
                 },
                 fail: function (jqXHR, textStatus) {

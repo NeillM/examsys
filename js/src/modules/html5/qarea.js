@@ -529,7 +529,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
             }
         };
 
-        this.qa_mouseDragMoveOutside = function(e) {
+        this.qa_mouseDragMoveOutside = function() {
             if (this.isMouseOutsiceCanvas && this.poly_temp.length > 2) {
                 if (this.qmode == 'edit' && this.qconfig == '' && this.poly_temp.split(',').length > 3) this.qconfig = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16) + ',' + Math.round(this.poly_temp_points[1]).toString(16);
                 if (this.qmode == 'answer' && this.qanswer == '' && this.poly_temp.split(',').length > 3) this.qanswer = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16) + ',' + Math.round(this.poly_temp_points[1]).toString(16);

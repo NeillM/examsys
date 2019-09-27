@@ -23,7 +23,7 @@ requirejs(['userindex', 'jsxls', 'jquery'], function (USER, jsxls, $) {
 
     $("#overlay").hide();
 
-    $("#info_dialog_ok").click(function(event) {
+    $("#info_dialog_ok").click(function() {
         $("#info_overlay").hide();
     });
 
@@ -35,15 +35,15 @@ requirejs(['userindex', 'jsxls', 'jquery'], function (USER, jsxls, $) {
         $("#info_submit_dialog").css('top', (($(window).height() / 2) - 100) + 'px');
     }
 
-    $("#start").click(function(event) {
+    $("#start").click(function() {
         user.startPaper();
     });
 
-    $("#start").keypress(function(event) {
+    $("#start").keypress(function() {
         user.startPaper();
     });
 
-    $(".previous").click(function(event) {
+    $(".previous").click(function() {
         user.reviewPaper($(this).attr('data-metaid'), $(this).attr('data-type'));
     });
 });

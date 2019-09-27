@@ -80,7 +80,7 @@ requirejs(['reference', 'start', 'jquery'], function (REF, START, $) {
             }
         });
 
-        $("#info_dialog_ok").click(function(event) {
+        $("#info_dialog_ok").click(function() {
             $("#info_overlay").hide();
         });
 

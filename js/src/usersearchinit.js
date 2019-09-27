@@ -62,7 +62,7 @@ requirejs(['usersearch', 'state', 'menu', 'jquery', 'jquerytablesorter'], functi
         search.selUser($(this).attr('data-userid'), $(this).attr('data-lineid'), $(this).attr('data-menuid'), $(this).attr('data-roles'), e);
     });
 
-    $(".l").dblclick(function(e) {
+    $(".l").dblclick(function() {
         search.profile($(this).attr('data-userid'));
     });
 

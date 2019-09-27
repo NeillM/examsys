@@ -42,7 +42,7 @@ requirejs(['jsxls', 'helplauncher', 'ui', 'leadinpopup', 'papersidebar', 'paperd
 
     if (!$('#dataset').attr('data-locked')) {
         $.ajaxSetup({timeout: 3000});
-        $('#content').ajaxError(function (event, jqXHR, ajaxSettings, thrownError) {
+        $('#content').ajaxError(function () {
             details.showAJAXError();
         });
 
@@ -102,7 +102,7 @@ requirejs(['jsxls', 'helplauncher', 'ui', 'leadinpopup', 'papersidebar', 'paperd
                     $(ui.item).replaceWith(row);
                 }
             },
-            update: function (event, ui) {
+            update: function () {
                 $('.qline').css('background-color', '#fff');
                 var order = $('#sortable tbody').sortable('serialize', {attribute: 'data-order'});
                 var newpos = $(ui.item).parent().children('.qline:not(.breakline)').index(ui.item) + 1;

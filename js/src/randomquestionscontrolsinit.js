@@ -20,7 +20,7 @@
 //
 requirejs(['questioneditrandom', 'jquery'], function (ADD, $) {
     $(function () {
-        $('#addrandomquestions').click(function(e) {
+        $('#addrandomquestions').click(function() {
             $.ajax({
                 url: "do_add_random_questions.php",
                 type: "post",
@@ -31,7 +31,7 @@ requirejs(['questioneditrandom', 'jquery'], function (ADD, $) {
                     add.addQuestionsToList(data);
                     window.close();
                 },
-                error: function(xhr, textStatus, errorThrown) {
+                error: function(xhr, textStatus) {
                     alert(textStatus);
                 },
             });

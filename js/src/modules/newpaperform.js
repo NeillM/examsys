@@ -186,7 +186,7 @@ define(['jsxls', 'alert', 'jquery', 'jqueryui'], function(jsxls, ALERT, $) {
                         window.close();
                     }
                 },
-                error: function (xhr, textStatus, errorThrown) {
+                error: function (xhr, textStatus) {
                     alert.plain(textStatus);
                 },
             });

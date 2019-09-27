@@ -49,7 +49,7 @@ define(['jquery', 'helplauncher'], function($, HELPLAUNCHER) {
                 scope.reassignScript();
             });
 
-            $('#item6').click(function(e) {
+            $('#item6').click(function() {
                 scope.resetTimer();
             });
 
@@ -69,15 +69,15 @@ define(['jquery', 'helplauncher'], function($, HELPLAUNCHER) {
                 scope.view('break', $(this).attr('data-id'), $(this).attr('data-paperid'), event);
             });
 
-            $('#emailmarks').click(function(e) {
+            $('#emailmarks').click(function() {
                 scope.popupEmailTemplate();
             });
 
-            $('#publishmarksbutton').click(function(e) {
+            $('#publishmarksbutton').click(function() {
                 scope.popupPublishMarks();
             });
 
-            $('.popup_row_disabled').click(function(e) {
+            $('.popup_row_disabled').click(function() {
                 $('#menudiv').hide();
             });
 
@@ -93,7 +93,7 @@ define(['jquery', 'helplauncher'], function($, HELPLAUNCHER) {
                 $('#toiletDiv').hide();
             });
 
-            $("tr[id^=res]").click(function(e) {
+            $("tr[id^=res]").click(function() {
                 scope.metadataid = $(this).data("metadataid");
                 scope.userid = $(this).data("userid");
                 scope.papertype = $(this).data("papertype");
@@ -201,7 +201,7 @@ define(['jquery', 'helplauncher'], function($, HELPLAUNCHER) {
                     div = "#noteDiv";
             }
 
-            $(selector).load(dataSource, function(responseTxt, statusTxt, xhr) {
+            $(selector).load(dataSource, function(responseTxt, statusTxt) {
                 if ("success" == statusTxt) {
                     $(div).show(), $(div).css("left", currentX + scrOfX + 16 + "px");
                     var top_pos = currentY + scrOfY - 16;

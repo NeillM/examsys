@@ -47,7 +47,7 @@ requirejs(['announcement', 'form', 'jquery'], function (ANNOUNCEMENT, FORM, $) {
                     window.location = 'list_announcements.php';
                 }
             },
-            error: function(xhr, textStatus, errorThrown) {
+            error: function(xhr, textStatus) {
                 alert(textStatus);
             },
         });

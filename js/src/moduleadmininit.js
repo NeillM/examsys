@@ -30,7 +30,7 @@ requirejs(['list', 'modulessidebar', 'jquery', 'jquerytablesorter'], function (L
     list.init();
 
     // Display sms sync options if available to module.
-    $(".l").click(function(event) {
+    $(".l").click(function() {
         var externalid = $(this).attr('data-externalid');
         var syncprevious = $(this).attr('data-syncprevious');
 

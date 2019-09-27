@@ -32,7 +32,7 @@ requirejs(['mappingsessions', 'mappingsidebar', 'form', 'jquery', 'jqueryui'], f
     $('#objList').sortable();
 
     $('#objList').sortable({
-        update: function( event, ui ) {
+        update: function() {
             $('#objectives').val($('#objList').sortable("serialize"));
         }
     });

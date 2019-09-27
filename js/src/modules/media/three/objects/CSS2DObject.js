@@ -24,22 +24,16 @@
 define(['three'], function (THREE) {
 
     function CSS2DObject (element) {
-
         THREE.Object3D.call(this);
 
         this.element = element;
         this.element.style.position = 'absolute';
 
-        this.addEventListener('removed', function (event) {
-
+        this.addEventListener('removed', function () {
             if (this.element.parentNode !== null) {
-
                 this.element.parentNode.removeChild(this.element);
-
             }
-
-        })
-
+        });
     }
 
     CSS2DObject.prototype = Object.create(THREE.Object3D.prototype);

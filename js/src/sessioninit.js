@@ -39,7 +39,7 @@ requirejs(['form', 'sessions', 'alert', 'jquery'], function (FORM, SESSION, ALER
                         $('.form-error').show();
                     }
                 },
-                error: function (xhr, textStatus, errorThrown) {
+                error: function (xhr, textStatus) {
                     var alert = new ALERT();
                     alert.plain(textStatus);
                 },
