@@ -21,7 +21,7 @@
 // A modularised version of the example from mrdoob / http://mrdoob.com/
 // https://github.com/mrdoob/three.js/blob/master/examples/js/loaders/OBJLoader.js
 
-define(['three'], function (THREE) {
+define([], function () {
 
     return function() {
 

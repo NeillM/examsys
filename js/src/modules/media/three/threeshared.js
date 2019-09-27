@@ -19,7 +19,7 @@
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
 
-define(['three'], function (THREE) {
+define([], function () {
     return {
         /**
          * Animate the object

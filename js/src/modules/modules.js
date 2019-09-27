@@ -22,7 +22,7 @@
 // @version 1.0
 // @copyright Copyright (c) 2015 The University of Nottingham
 //
-define(['jquery'], function($) {
+define([], function() {
     return function() {
         /**
          * Open new paper dialog.
