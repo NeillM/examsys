@@ -142,7 +142,8 @@ class api {
      * @return string - parameter 
      */
     public function get_parameter($parameter) {
-        return $this->request->getQueryParam($parameter);
+        $paramlist = $this->request->getQueryParams();
+        return ($paramlist[$parameter]);
     }
     
      /**
@@ -150,7 +151,7 @@ class api {
       * @return string - path
       */
     public function get_path() {
-        return $this->request->getUri()->getBasePath() . '/' . $this->request->getUri()->getPath();
+        return $this->request->getUri()->getPath();
     }
     
     
@@ -159,7 +160,7 @@ class api {
      * @return string|bool - media type if valid, false otherwise
      */
     public function get_mediatype() {
-        $mediatype = $this->request->getMediaType();
+        $mediatype = $this->request->getHeaderLine('Content-Type');
         if ($mediatype == 'text/xml') {
             $this->mediatype = $mediatype;
             return $mediatype;

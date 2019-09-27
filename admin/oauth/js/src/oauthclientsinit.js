@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-requirejs(['oauth', 'oauthclients', 'oauthvalidate'], function (OAUTH, OAUTHCLIENTS, OAUTHVAL) {
+requirejs(['oauthclients', 'oauthvalidate'], function (OAUTHCLIENTS, OAUTHVAL) {
     var oauthclients = new OAUTHCLIENTS();
     oauthclients.init();
     var oauthval = new OAUTHVAL();

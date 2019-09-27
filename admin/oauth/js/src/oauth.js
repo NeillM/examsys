@@ -22,7 +22,7 @@
 // @version 1.0
 // @copyright Copyright (c) 2016 The University of Nottingham
 //
-define(['jquery', 'jquerytablesorter'], function($) {
+define(['list', 'jquery', 'jquerytablesorter'], function(LIST, $) {
     return function() {
         this.deleteoption = function () {
             var notice = window.open("../../delete/check_delete_oauthkeys.php?id=" + $('#lineID').val() + "", "OAuthkeys", "width=520,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
@@ -33,6 +33,7 @@ define(['jquery', 'jquerytablesorter'], function($) {
         };
 
         this.init = function () {
+            var list = new LIST();
             var scope = this;
             if ($("#maindata").find("tr").size() > 1) {
                 $("#maindata").tablesorter({
@@ -42,7 +43,7 @@ define(['jquery', 'jquerytablesorter'], function($) {
 
             $(".l").click(function (event) {
                 event.stopPropagation();
-                selLine($(this).attr('id'), event);
+                list.selLine($(this).attr('id'), event);
             });
 
             $("#delete").click(function () {
