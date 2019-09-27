@@ -31,7 +31,7 @@ requirejs(['textboxmarking', 'jquery', 'jqueryui'], function (TEXTBOX, $) {
     });
 
     $('#hidemarked').click(function() {
-        var request = $.ajax({
+        $.ajax({
             url: "../include/set_state.php",
             type: "post",
             data: {state_name: 'hidemarked', content: $('#hidemarked').is(':checked'), page: document.URL},

@@ -28,7 +28,7 @@ requirejs(['jsxls', 'classtotals', 'popupmenu', 'jquery', 'jquerytablesorter'], 
 
         if ($('#markall').val()) {
             // Fire off the request to mark_all_enhancedcalc.php
-            var request = $.ajax({
+            $.ajax({
                 url: "../ajax/reports/mark_all_enhancedcalc.php",
                 type: "get",
                 data: {paperID: $('#paperID').val(), startdate: $('#startdate').val(), enddate: $('#enddate').val()},

@@ -278,8 +278,7 @@ define(['requireconfig.min', 'jsxls', 'state', 'sidebar', 'jquery'], function(co
                 $("#icon_" + qNumber).addClass("killer_icon");
             }
 
-            var posting = $.post(url, { paperID: this.paperid, q_id: qID, qNumber: qNumber } );
-
+            $.post(url, { paperID: this.paperid, q_id: qID, qNumber: qNumber } );
         };
 
         /**

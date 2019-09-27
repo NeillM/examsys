@@ -21,7 +21,6 @@
 requirejs(['jquery'], function ($) {
     $(function () {
         $('.external').click(function () {
-            var externalID = this.id;
             window.location.href = 'external_email.php?paperID=' + $('#dataset').attr('data-paper') + '&module=' + $('#dataset').attr('data-module') + '&externalID=' + $('#dataset').attr('data-external') + '&mode=' + $('#dataset').attr('data-mode');
         });
     });

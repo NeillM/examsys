@@ -105,7 +105,6 @@ requirejs(['jsxls', 'helplauncher', 'ui', 'leadinpopup', 'papersidebar', 'paperd
             update: function () {
                 $('.qline').css('background-color', '#fff');
                 var order = $('#sortable tbody').sortable('serialize', {attribute: 'data-order'});
-                var newpos = $(ui.item).parent().children('.qline:not(.breakline)').index(ui.item) + 1;
                 $.get('../ajax/paper/order-questions.php?paperID=' + paperid + '&' + order, function (data) {
                     if (data == 'ERROR') {
                         details.showAJAXError();

@@ -1110,7 +1110,6 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                     var rr = Math.atan2(yy, xx);
                     var pp = 0.5;
                     tt = 4 + 1.3 * _self.lineThickness;
-                    var hh = Math.abs(tt / Math.cos(tt));
                     var x1 = 1 * tx2 + Math.cos(rr) * tt / 2;
                     var y1 = 1 * ty2 + Math.sin(rr) * tt / 2;
                     var x2 = Math.round(x1 + Math.cos(rr - Math.PI + pp) * tt);

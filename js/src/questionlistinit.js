@@ -38,7 +38,6 @@ requirejs(['list', 'questionlist', 'questionsearch', 'leadinpopup', 'sidebar'], 
         var remainder = passed_id.substring(1);
         var parts = remainder.split("_");
         var questionID = parts[0];
-        var lineID = parts[1];
 
         $('#menu2a').hide();
         if ($('#' + passed_id).hasClass('lock')) {

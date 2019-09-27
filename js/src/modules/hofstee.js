@@ -87,7 +87,7 @@ define(['jquery', 'jsxls'], function($, jsxls) {
 
             if (this.canvas && this.canvas.getContext) {
                 this.context = this.canvas.getContext('2d');
-                var intervalID = window.setInterval(this.g_redraw_canvas(), 10);
+                window.setInterval(this.g_redraw_canvas(), 10);
             }
         };
 

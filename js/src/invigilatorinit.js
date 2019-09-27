@@ -60,7 +60,7 @@ requirejs(['invigilator', 'jquery', 'jqueryui'], function (INV, $) {
     }
 
     if ($('#dataset').attr('data-clarification') == 1) {
-        var clarificationCall = setInterval(inv.clarifyMethod, 10000);
+        setInterval(inv.clarifyMethod, 10000);
     }
 
     $('#close_rubric').click(function() {

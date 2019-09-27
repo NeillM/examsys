@@ -130,7 +130,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                     document.onkeyup = this.qa_mouseDragMove.bind(this);
                     document.onkeypress = this.qa_mouseDragMove.bind(this);
                 }
-                var intervalID = window.setInterval(this.qa_redraw_canvas.bind(this), 10);
+                window.setInterval(this.qa_redraw_canvas.bind(this), 10);
             }
             if (this.canvas && !this.canvas.getContext) {
                 alert(Jsxls.lang_string['errorcanvas']);
