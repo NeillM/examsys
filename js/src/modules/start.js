@@ -403,7 +403,10 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
         this.startAutoSave = function() {
             var el = document.getElementById('paper');
             clearTimeout(scope.autoSaveRef);// Cancel any outstanding timeouts to make sure only one auto save is ever registered.
-            scope.autoSaveRef = setTimeout(scope.autoSave, el.dataset.savefreq);
+            if (typeof el.dataset.savefreq !== 'undefined') {
+                // Only autosave if a timeout is defined.
+                scope.autoSaveRef = setTimeout(scope.autoSave, el.dataset.savefreq);
+            }
         };
 
         /**
