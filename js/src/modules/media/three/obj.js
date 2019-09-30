@@ -61,6 +61,7 @@ define(['three', 'threeshared', 'OBJLoader', 'MTLLoader', 'DDSLoader', 'Trackbal
          * @return boolean
          */
         this.load = function () {
+            var file, dir;
             var scope = this;
             var manager = new THREE.LoadingManager();
             manager.onLoad = function () {
@@ -86,7 +87,7 @@ define(['three', 'threeshared', 'OBJLoader', 'MTLLoader', 'DDSLoader', 'Trackbal
                     return false;
                 }
                 file = scope.file.substr(scope.file.indexOf('filename=') + 9);
-                var dir = file.replace('.zip', '');
+                dir = file.replace('.zip', '');
                 // Loader.
                 loader = new OBJLoader(manager);
                 loader.setPath('/getfile.php?type=media&filename=' + dir + '/');

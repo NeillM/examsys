@@ -64,9 +64,9 @@ define(['jquery'], function($) {
            var  winH = $(window).height();
             var refcount = $('#paper').attr('data-refcount');
             if (refcount > 0) {
-                $subtract = (31 * refcount) + 11;
+                var subtract = (31 * refcount) + 11;
                 for (var i = 0; i < refcount; i++) {
-                    $('#framecontent' + i).css('height', (winH - $subtract) + 'px');
+                    $('#framecontent' + i).css('height', (winH - subtract) + 'px');
                 }
                 var mainWidth = $('body').outerWidth() - $('#framecontent0').outerWidth(true);
                 $('#maincontent').width(mainWidth);

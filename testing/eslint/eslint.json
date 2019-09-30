@@ -5,12 +5,22 @@
   },
   "globals": {
     "_comment": "All intended global variables in Rogo should be listed here",
-    "ROGO": false
+    "ROGO": false,
+    "_comment": "Require JS globals",
+    "requirejs": false,
+    "define": false,
+    "_comment": "Globals we create in RequireJS",
+    "tinyMCE": false,
+    "MathJax": false,
+    "_comment": "JS types we use but ESLint seems to not like",
+    "ArrayBuffer": false,
+    "DataView": false,
+    "Int32Array": false,
+    "Uint8Array": false
   },
   "_comment": "For a list of rules see: http://eslint.org/docs/rules/",
   "extends": "eslint:recommended",
   "rules": {
-    "no-undef": "warn",
     "no-unused-vars": "warn"
   }
 }

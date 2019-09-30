@@ -81,7 +81,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
         Qsharedf.def_colour_panel_parts(this);
         this.panelActiveParts.push('toolbar/pan_sizes.png');
         this.panelActiveParts['toolbar/pan_sizes.png'] = new Array();
-        for (i = 0; i < 7; i++)
+        for (var i = 0; i < 7; i++)
             this.panelActiveParts['toolbar/pan_sizes.png'][i] = 3 + ',' + (i * 19 + 3);
         //'toolbar/pan_lines.png
         this.panelActiveParts.push('toolbar/pan_lines.png');
@@ -222,7 +222,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                     if (this.qmode == 'edit') {
                         this.extraImgs = extra.split(';');
                     } else if (this.qmode == 'script') {
-                        tmp_extra = extra.split(",");
+                        var tmp_extra = extra.split(",");
                         if (typeof (tmp_extra[0]) != 'undefined')
                             this.extra_std = tmp_extra[0];
                         if (typeof (tmp_extra[1]) != 'undefined')
@@ -366,7 +366,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                             var myLabelType = "text"; // text or image label?
                             var mli_ext_pass = false;
                             var mli_formats = new Array('jpeg', 'jpg', 'png', 'gif');
-                            for (a = 0; a < mli_formats.length; a++)
+                            for (var a = 0; a < mli_formats.length; a++)
                                 if (mli_answr.toLowerCase().indexOf('.' + mli_formats[a]) != -1)
                                     mli_ext_pass = true;
                             if (typeof (mli_answr) != 'undefined' && mli_ext_pass)
@@ -500,7 +500,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
 
                 for (i = 0; i < this.answerBox.length; i++) {
                     tmp_count = this.answerBox[i].length;
-                    for (j = tmp_count - 1; j >= 0; j--)
+                    for (var j = tmp_count - 1; j >= 0; j--)
                         if (typeof (this.answerBox[i][j]) == 'undefined')
                             this.answerBox[i].splice(j, 1);
                 }
@@ -516,7 +516,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                     if (tmp_add) {
                         tmp_arr[4] = tmp_arr[5] = tmp_arr[6] = tmp_arr[7] = 0
                         var tmp_len = 0;
-                        for (k = 0; k < this.answerBox.length; k++)
+                        for (var k = 0; k < this.answerBox.length; k++)
                             for (l = 0; l < this.answerBox[k].length; l++)
                                 if (this.answerBox[k][l][2] != '')
                                     tmp_len++
@@ -592,7 +592,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                     var ans_x, ans_y, ans_n, ans_b, new_j, new_i = 0;
 
 
-                    for (l = 0; l < answer_l2.length / 4; l++) {
+                    for (var l = 0; l < answer_l2.length / 4; l++) {
                         if (answer_l2[l * 4] != '') {
                             ans_x = Number(answer_l2[l * 4 + 0]);
                             ans_y = Number(answer_l2[l * 4 + 1]);
@@ -654,7 +654,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                 }
 
                 //adding empty labels to 20
-                for (n = this.answerBox.length; n < 20; n++) {
+                for (var n = this.answerBox.length; n < 20; n++) {
                     this.answerBox[n] = new Array();
                     this.answerBox[n][0] = new Array(n, "text", "", "", 0, 5, 30, 5, 30, "", "");
                 }
@@ -824,7 +824,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                         }
                     }
                     tmp_width = this.labelWidthEffect - 19;
-                    wrapped = Qsharedf.wrapText(this.tmp_text, tmp_width, true, this);
+                    var wrapped = Qsharedf.wrapText(this.tmp_text, tmp_width, true, this);
                     tmp_width = 5;
                 }
                 if (typeof (this.pholderBox[i]) != 'undefined' && typeof (this.pholderBox[i][7]) != 'undefined' && this.exclusions[this.pholderBox[i][7]] == '1') {
@@ -861,7 +861,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                         tmp_height = this.labelHeightEffect * this.menuBox.length;
                         var tmp_trans = this.lineThickness - 1;
 
-                        too_close = 0;
+                        var too_close = 0;
                         if ((temp_y + tmp_trans + this.labelHeightEffect + tmp_height) > this.canvas.height)
                             too_close = 2
                         if ((temp_y + tmp_trans + this.labelHeightEffect) < tmp_height)
@@ -990,8 +990,8 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                 this_box = this.pholderBox[i];
 
             if (typeof this_box != 'undefined' && (this.labelMulti == 'multiple' || this_box[4] == 0)) {
-                temp_x = this_box[5];
-                temp_y = this_box[6];
+                var temp_x = this_box[5];
+                var temp_y = this_box[6];
 
                 if (this.qmode == 'script' && this.qType == "menu" && this.active_box == i) {
                     this_box = this.pholderBox[i];
@@ -1316,7 +1316,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                         var tmp_area = 0;
                         //creating sorted list of labels and selecting next available
                         for (i = this.answerBox.length - 1; i >= 0; i--)
-                            for (j = this.answerBox[i].length - 1; j >= 0; j--) {
+                            for (var j = this.answerBox[i].length - 1; j >= 0; j--) {
                                 tmp_area = 2;
                                 if (this.answerBox[i][j][5] >= 220)
                                     tmp_area = 1;
@@ -1331,7 +1331,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
 
                         //locate position of the selected
                         var tmp_pos = '';
-                        for (key in tmp_pos_array)
+                        for (var key in tmp_pos_array)
                             if (tmp_pos_array[key] == this.active_box_id + ',' + this.active_box_combo)
                                 tmp_pos = key;
 
@@ -1460,7 +1460,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                     for (j = 0; j < this.answerBox[i].length; j++) {
                         tmpw = tmpp[a][2];
                         tmph = tmpp[a][3];
-                        ax = tmpx;
+                        var ax = tmpx;
                         if (this.answerBox[i][j][2] == '' && (this.qmode == 'answer' || this.qmode == 'script' || this.qmode == 'analysis'))
                             ax = -500;
 
@@ -1537,7 +1537,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                     this.tmp_text = '';
                     for (var a = 0; a < this.answerBox.length; a++) {
                         if (typeof (this.answerBox[a]) != 'undefined') {
-                            for (b = 0; b < this.answerBox[a].length; b++) {
+                            for (var b = 0; b < this.answerBox[a].length; b++) {
                                 if (this.answerBox[a][b][5] == this.pholderBox[this.drag_pho_id][5] && this.answerBox[a][b][6] == this.pholderBox[this.drag_pho_id][6]) {
                                     this.tmp_text = this.answerBox[a][b][2];
                                 }
@@ -1723,9 +1723,9 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                     this.context.fillRect(this.buttonBox[this.buttonBoxNames['toolbar/ico_letter.png']][1] + 2, this.buttonBox[this.buttonBoxNames['toolbar/ico_letter.png']][2] + 14, 16, 3);
 
                     this.panelOverColour = '';
-                    m = 0;
+                    var m = 0;
                     //draw colourtable
-                    for (n = 0; n < this.colorReference.length; n++)
+                    for (var n = 0; n < this.colorReference.length; n++)
                         if (this.currentColours[0] == this.colorReference[n])
                             m = n;
                     Qsharedf.menuRebuild_panel(this.panelActiveParts, this.ql_panelBox, 'toolbar/ico_bucket.png', 'toolbar/pan_colours.png', 0, m, this);
@@ -1858,13 +1858,13 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                 this.drag_box_id = -1;
                 this.drag_pho_id = -1;
                 this.drag_box_combo = -1;
-                if (this.qmode != 'analysis' && Qsharedf.testWithin(this.x, this.y, 0, 0, this.canvas.width, this.canvas.height, this)) {
+                if (this.qmode != 'analysis' && Qsharedf.testWithin(this.x, this.y, 0, 0, this.canvas.width, this.canvas.height)) {
                     var over_object = false;
                     for (i = 0; i < this.answerBox.length; i++) {
                         for (j = 0; j < this.answerBox[i].length; j++) {
                             if (typeof (this.answerBox[i][j]) != 'undefined' && (this.labelMulti == 'multiple' || this.answerBox[i][j][4] == 0)) {
                                 if (this.answerBox[i][j][1] == 'image') {
-                                    if (Qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.imglabelWidth, this.imglabelHeight, this) == true) {
+                                    if (Qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.imglabelWidth, this.imglabelHeight) == true) {
                                         over_object = true;
                                         if (this.drag_box_id == -1 || this.answerBox[i][j][9] != '') {
                                             this.drag_box_id = i;
@@ -1874,7 +1874,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                                 }
                                 if (this.answerBox[i][j][1] == 'text') {
                                     if (this.qType != 'menu') {
-                                        if (Qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.labelWidthEffect, this.labelHeightEffect, this) == true) {
+                                        if (Qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.labelWidthEffect, this.labelHeightEffect) == true) {
                                             over_object = true;
                                             if (this.drag_box_id == -1 || this.answerBox[i][j][9] != '') {
                                                 this.drag_box_id = i;
@@ -1882,7 +1882,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                                             }
                                         }
                                     } else {
-                                        if (typeof (this.pholderBox[i]) != 'undefined' && ((this.qmode == 'edit' && Qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.labelWidthEffect, this.labelHeightEffect, this) == true) || (this.qmode != 'edit' && this.pholderBox[i][5] >= 220 && Qsharedf.testWithin(this.x, this.y, this.pholderBox[i][5], this.pholderBox[i][6], this.labelWidthEffect, this.labelHeightEffect, this) == true))) {
+                                        if (typeof (this.pholderBox[i]) != 'undefined' && ((this.qmode == 'edit' && Qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.labelWidthEffect, this.labelHeightEffect) == true) || (this.qmode != 'edit' && this.pholderBox[i][5] >= 220 && Qsharedf.testWithin(this.x, this.y, this.pholderBox[i][5], this.pholderBox[i][6], this.labelWidthEffect, this.labelHeightEffect) == true))) {
                                             this.drag_box_id = i;
                                             this.drag_pho_id = i;
                                             //this.drag_box_combo = 0;
@@ -1895,9 +1895,9 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                     }
                     for (i = 0; i < this.pholderBox.length; i++) {
                         var tmp_test = false;
-                        if (this.pholderBox[i][1] == 'image' && Qsharedf.testWithin(this.x, this.y, this.pholderBox[i][5], this.pholderBox[i][6], this.imglabelWidth, this.imglabelHeight, this) == true)
+                        if (this.pholderBox[i][1] == 'image' && Qsharedf.testWithin(this.x, this.y, this.pholderBox[i][5], this.pholderBox[i][6], this.imglabelWidth, this.imglabelHeight) == true)
                             tmp_test = true;
-                        if (this.pholderBox[i][1] == 'text' && Qsharedf.testWithin(this.x, this.y, this.pholderBox[i][5], this.pholderBox[i][6], this.labelWidthEffect, this.labelHeightEffect, this) == true)
+                        if (this.pholderBox[i][1] == 'text' && Qsharedf.testWithin(this.x, this.y, this.pholderBox[i][5], this.pholderBox[i][6], this.labelWidthEffect, this.labelHeightEffect) == true)
                             tmp_test = true;
 
                         if (tmp_test && this.drag_box_id == -1) {
@@ -1916,7 +1916,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                         if (this.buttonBox[i][0] == 'toolbar/ico_drop.png')
                             this.buttonBox[i][5] = this.buttonBox[i - 1][5];
 
-                        if (this.buttonBox[i][0].indexOf('vert_') == -1 && Qsharedf.testWithin(this.x, this.y, this.buttonBox[i][1], this.buttonBox[i][2], this.buttonBox[i][3], this.buttonBox[i][4], this) == true && this.buttonBox[i][0] != 'toolbar/ico_multiple_off.png' && this.buttonBox[i][0] != 'toolbar/ico_menu_off.png') {
+                        if (this.buttonBox[i][0].indexOf('vert_') == -1 && Qsharedf.testWithin(this.x, this.y, this.buttonBox[i][1], this.buttonBox[i][2], this.buttonBox[i][3], this.buttonBox[i][4]) == true && this.buttonBox[i][0] != 'toolbar/ico_multiple_off.png' && this.buttonBox[i][0] != 'toolbar/ico_menu_off.png') {
                             over_object = true;
                             buttonTest = i;
                             this.buttonBox[i][5] = 1;
@@ -1943,7 +1943,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
 
                     if (this.buttonClicked > -1 && typeof this.ql_panelBox[this.buttonClicked] != 'undefined') {
                         var tmp_but = -1, tmp_pan = -1;
-                        if (Qsharedf.testWithin(this.x, this.y, this.ql_panelBox[this.buttonClicked][3], this.ql_panelBox[this.buttonClicked][4], this.ql_panelBox[this.buttonClicked][5], this.ql_panelBox[this.buttonClicked][6], this) == true) {
+                        if (Qsharedf.testWithin(this.x, this.y, this.ql_panelBox[this.buttonClicked][3], this.ql_panelBox[this.buttonClicked][4], this.ql_panelBox[this.buttonClicked][5], this.ql_panelBox[this.buttonClicked][6]) == true) {
                             tmp_but = this.buttonBox[this.buttonClicked];
                             if (typeof this.ql_panelBox[this.buttonClicked][2] != 'undefined')
                                 tmp_pan = this.ql_panelBox[this.buttonClicked][2];
@@ -1959,7 +1959,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                                 test_width = 130;
                             for (i = 0; i < this.panelActiveParts[tmp_pan].length; i++) {
                                 var tp = this.panelActiveParts[tmp_pan][i].split(',');
-                                if (Qsharedf.testWithin(this.x, this.y, tmp_but[1] + 1 * tp[0] + 0.5, tmp_but[2] + 25 + 1 * tp[1] + 0.5, test_width, 20, this) == true)
+                                if (Qsharedf.testWithin(this.x, this.y, tmp_but[1] + 1 * tp[0] + 0.5, tmp_but[2] + 25 + 1 * tp[1] + 0.5, test_width, 20) == true)
                                     panelOptionTest = i;
                             }
                         }
@@ -2043,6 +2043,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                 }
 
                 //accessibility tab select of labels
+                var key;
                 if (this.key_code == 9) { //tab
                     if (this.access_switch == -1)
                         this.access_switch++;
@@ -2170,7 +2171,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                 this.y = this.ev.targetTouches[0].pageY - this.canv_rect.top;
 
                 for (i = 0; i < this.answerBox.length; i++) {
-                    for (j = 0; j < this.answerBox[i].length; j++) {
+                    for (var j = 0; j < this.answerBox[i].length; j++) {
                         if (typeof (this.answerBox[i][j]) != 'undefined' && (this.labelMulti == 'multiple' || this.answerBox[i][j][4] == 0)) {
                             if (this.answerBox[i][j][1] == 'image') {
                                 if (Qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.imglabelWidth, this.imglabelHeight, this) == true) {
@@ -2182,14 +2183,14 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                             }
                             if (this.answerBox[i][j][1] == 'text') {
                                 if (this.qType != 'menu') {
-                                    if (Qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.labelWidthEffect, this.labelHeightEffect, this) == true) {
+                                    if (Qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.labelWidthEffect, this.labelHeightEffect) == true) {
                                         if (this.drag_box_id == -1 || this.answerBox[i][j][9] != '') {
                                             this.drag_box_id = i;
                                             this.drag_box_combo = j;
                                         }
                                     }
                                 } else {
-                                    if (typeof (this.pholderBox[i]) != 'undefined' && ((this.qmode == 'edit' && Qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.labelWidthEffect, this.labelHeightEffect, this) == true) || (this.qmode != 'edit' && this.pholderBox[i][5] >= 220 && Qsharedf.testWithin(this.x, this.y, this.pholderBox[i][5], this.pholderBox[i][6], this.labelWidthEffect, this.labelHeightEffect, this) == true))) {
+                                    if (typeof (this.pholderBox[i]) != 'undefined' && ((this.qmode == 'edit' && Qsharedf.testWithin(this.x, this.y, this.answerBox[i][j][5], this.answerBox[i][j][6], this.labelWidthEffect, this.labelHeightEffect) == true) || (this.qmode != 'edit' && this.pholderBox[i][5] >= 220 && Qsharedf.testWithin(this.x, this.y, this.pholderBox[i][5], this.pholderBox[i][6], this.labelWidthEffect, this.labelHeightEffect) == true))) {
                                         this.drag_box_id = i;
                                         this.drag_pho_id = i;
                                         this.drag_box_combo = j;
@@ -2201,7 +2202,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                 }
             }
 
-            if (Qsharedf.testWithin(this.x, this.y, 0, 0, this.canvas.width, this.canvas.height, this)) {
+            if (Qsharedf.testWithin(this.x, this.y, 0, 0, this.canvas.width, this.canvas.height)) {
                 if (this.drag_box_id > -1 && this.drag_box_combo < 99) {
                     this.sub_x = this.x - this.answerBox[this.drag_box_id][this.drag_box_combo][5];
                     this.sub_y = this.y - this.answerBox[this.drag_box_id][this.drag_box_combo][6];
@@ -2455,7 +2456,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
             if (this.qmode == 'edit' && this.mov_id == -1 && this.active_box_id > -1 && this.answerBox[this.active_box_id][this.active_box_combo][1] != 'image') {
                 var temp_x = this.answerBox[this.active_box_id][this.active_box_combo][5];
                 var temp_y = this.answerBox[this.active_box_id][this.active_box_combo][6];
-                if (Qsharedf.testWithin(this.x, this.y, temp_x, temp_y, this.labelWidthEffect, this.labelHeightEffect, this)) {
+                if (Qsharedf.testWithin(this.x, this.y, temp_x, temp_y, this.labelWidthEffect, this.labelHeightEffect)) {
                     var text_all = Qsharedf.wrapText(this.pholderBox[this.answerBox[this.active_box_id][this.active_box_combo][0]][2], this.labelWidthEffect, true, this);
                     var text_lines = text_all[0].split('|').length;
                     var click_line = Math.floor(text_lines * ((this.y - temp_y) / this.labelHeightEffect));
@@ -2463,9 +2464,9 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                     var text_full = text_all[0].split('|')[click_line];
                     var text_padd = ((this.qType == "menu") ? 3 : (this.labelWidthEffect - this.context.measureText(text_full).width) / 2);
                     var text_line_pos = 0;
-                    for (a = 1; a <= text_full.length; a++) {
+                    for (var a = 1; a <= text_full.length; a++) {
                         var temp_width = this.context.measureText(text_full.substr(0, a)).width;
-                        temp_lett = temp_width / a / 2;
+                        var temp_lett = temp_width / a / 2;
                         if ((temp_x + text_padd + temp_width - temp_lett) <= this.x)
                             text_line_pos = a;
                     }
@@ -2514,7 +2515,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                             loc_height = this.labelHeightEffect;
                         }
                         //answer box center within pholderBox
-                        if (Qsharedf.testWithin(this.answerBox[this.drag_box_id][this.drag_box_combo][5] + loc_width / 2, this.answerBox[this.drag_box_id][this.drag_box_combo][6] + loc_height / 2, this.pholderBox[i][5], this.pholderBox[i][6], loc_width, loc_height, this) == true)
+                        if (Qsharedf.testWithin(this.answerBox[this.drag_box_id][this.drag_box_combo][5] + loc_width / 2, this.answerBox[this.drag_box_id][this.drag_box_combo][6] + loc_height / 2, this.pholderBox[i][5], this.pholderBox[i][6], loc_width, loc_height) == true)
                             dest_box = i;
                     }
                 }
@@ -2581,8 +2582,8 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                     if (tmp_add) {
                         tmp_arr[4] = tmp_arr[5] = tmp_arr[6] = tmp_arr[7] = 0
                         var tmp_len = 0;
-                        for (k = 0; k < this.answerBox.length; k++)
-                            for (l = 0; l < this.answerBox[k].length; l++)
+                        for (var k = 0; k < this.answerBox.length; k++)
+                            for (var l = 0; l < this.answerBox[k].length; l++)
                                 if (this.answerBox[k][l][2] != '')
                                     tmp_len++
                         if (tmp_len < 40)
@@ -2666,6 +2667,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
             var questions_result = '';
             var answer_result = '';
             var temp_answ = new Array();
+            var j;
 
             if (this.qmode == 'answer') {
                 for (i = 0; i < this.pholderBox.length; i++) {
@@ -2679,8 +2681,8 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                     for (j = 0; j < this.answerBox[i].length; j++) {
                         if (typeof (this.answerBox[i][j]) != 'undefined' && this.answerBox[i][j][2] != '') {
                             if (this.answerBox[i][j][3].substr(0, 1) == 't' || this.answerBox[i][j][3].substr(0, 1) == 'f') {
-                                tmp_pho = this.answerBox[i][j][3].substr(1);
-                                tmp_ans = '$' + this.fix_names(this.answerBox[i][j][2]) + '$' + this.answerBox[i][j][3].substr(0, 1) + '$';
+                                var tmp_pho = this.answerBox[i][j][3].substr(1);
+                                var tmp_ans = '$' + this.fix_names(this.answerBox[i][j][2]) + '$' + this.answerBox[i][j][3].substr(0, 1) + '$';
                                 if (tmp_pho == '') {
                                     if (this.answerBox[i][j][5] >= 220)
                                         tmp_info[this.answerBox[i][j][5] + '$' + (this.answerBox[i][j][6] - 25 + this.yOffset)] = tmp_ans;
@@ -2692,9 +2694,9 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                         }
                     }
                 }
-                for (key in tmp_info) {
+                for (var key in tmp_info) {
                     answer_result += key + tmp_info[key];
-                    tmp_tst = tmp_info[key].split('$');
+                    var tmp_tst = tmp_info[key].split('$');
                     if (tmp_tst[2] == 't')
                         questions_correct++;
                     if (tmp_tst[2] == 'f')
@@ -2779,7 +2781,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
 
                 for (i = 0; i < this.shapeBox.length; i++) {
                     for (j = 0; j < this.shapeBox[i].length; j++) {
-                        value = this.shapeBox[i][j];
+                        var value = this.shapeBox[i][j];
                         if (j > 1)
                             value--; //shift back for 1px border
                         questions_result += value + '$';

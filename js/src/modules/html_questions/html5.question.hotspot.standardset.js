@@ -25,7 +25,7 @@ define(['lang', 'hotspot', 'html5_chk', 'jquery'], function(Lang, Hotspot, Menu_
    *
    * @returns {hotspot_script}
    */
-  hotspot_standardset = function () {
+  var hotspot_standardset = function () {
     // Extend the hotspot prototype.
     Hotspot.call(this);
     this.set_mode('standardset');

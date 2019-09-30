@@ -29,7 +29,7 @@ define(['requireconfig.min', 'jquery'], function (config, $) {
          */
         launchHelp: function (helpID, role) {
             if (role == 'staff' || role == 'student') {
-                helpwin = window.open(config.cfgrootpath + "/help/" + role + "/index.php?id=" + helpID + "", "help", "width=" + (screen.width - 100) + ",height=" + (screen.height - 100) + ",scrollbars=yes,resizable=yes,toolbar=no,location=no,directories=no,status=no,menubar=no");
+                var helpwin = window.open(config.cfgrootpath + "/help/" + role + "/index.php?id=" + helpID + "", "help", "width=" + (screen.width - 100) + ",height=" + (screen.height - 100) + ",scrollbars=yes,resizable=yes,toolbar=no,location=no,directories=no,status=no,menubar=no");
                 helpwin.moveTo(10, 10);
                 if (window.focus) {
                     helpwin.focus();

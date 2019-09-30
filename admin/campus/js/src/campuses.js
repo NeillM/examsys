@@ -30,7 +30,7 @@ define(['list', 'jquery', 'jquerytablesorter'], function(LIST, $) {
         };
 
         this.deleteoption = function() {
-            notice = window.open("../../delete/check_delete_campus.php?campus=" + $('#lineID').val() + "", "notice", "width=500,height=200,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+            var notice = window.open("../../delete/check_delete_campus.php?campus=" + $('#lineID').val() + "", "notice", "width=500,height=200,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
             notice.moveTo(screen.width / 2 - 250, screen.height / 2 - 100);
             if (window.focus) {
                 notice.focus();

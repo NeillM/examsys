@@ -28,7 +28,7 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
         this.html5init = function () {
             var interactive = new Html5();
             interactive.init($('#dataset').attr('data-rootpath'));
-            language = $('#dataset').attr('data-language');
+            var language = $('#dataset').attr('data-language');
             $("canvas[id^=canvas]").each(function() {
                 switch ($(this).attr('class')) {
                     case 'labelling':
@@ -93,9 +93,9 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
          */
         this.UpdateTimerWithRemainingTime = function(remaining_time, close) {
 
-            minutes = Math.floor( remaining_time / 60 );
+            var minutes = Math.floor( remaining_time / 60 );
             minutes = Math.round( minutes );
-            seconds = remaining_time % 60;
+            var seconds = remaining_time % 60;
 
             scope.UpdateClock(0, minutes, seconds);
 
@@ -491,7 +491,7 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
                             var htmlend = ret_data.indexOf("</title>");
                             var htmltitle = ret_data.substring(htmlstart, htmlend);
                             if (htmltitle === '') {
-                                htmltitle = jxls.lang_string('htmlresp');
+                                htmltitle = Jsxls.lang_string('htmlresp');
                             }
                             scope.saveFail('record_marks', this.url, htmltitle, submitType);
                         }

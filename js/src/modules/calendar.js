@@ -160,7 +160,7 @@ define(['jsxls', 'jquery'], function(jsxls, $) {
          * @param integer id event date
          */
         this.newEvent = function(id) {
-            notice = window.open("add_event.php?default=" + id + "","event","width=800,height=500,left="+(screen.width/2-400)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+            var notice = window.open("add_event.php?default=" + id + "","event","width=800,height=500,left="+(screen.width/2-400)+",top="+(screen.height/2-250)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
             if (window.focus) {
                 notice.focus();
             }
@@ -171,7 +171,7 @@ define(['jsxls', 'jquery'], function(jsxls, $) {
          * @param integer eventID event id
          */
         this.deleteEvent = function(eventID) {
-            notice = window.open("../delete/check_delete_event.php?eventID=" + eventID + "","event","width=420,height=170,left="+(screen.width/2-210)+",top="+(screen.height/2-85)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+            var notice = window.open("../delete/check_delete_event.php?eventID=" + eventID + "","event","width=420,height=170,left="+(screen.width/2-210)+",top="+(screen.height/2-85)+",scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
             if (window.focus) {
                 notice.focus();
             }

@@ -171,26 +171,11 @@ define(['html5images', 'jsxls'], function(Images, Jsxls) {
         },
 
         //tests if given point is within given rectangle
-        testWithin: function (ax, ay, bx, by, cx, cy, ref) {
+        testWithin: function (ax, ay, bx, by, cx, cy) {
             var testres = false;
-            if ((ax > bx) && (ax < (bx + cx)) && (ay > by) && (ay < (by + cy))) testres = true;
-
-            var showtest = false;
-            if (showtest) {
-                if (typeof (tw) == 'undefined') tw = true;
-                ref.context.strokeStyle = '#AAA';
-                if (tw) {
-                    tw = false;
-                    if (testres) {
-                        ref.context.strokeStyle = '#0F0';
-                    } else {
-                        ref.context.strokeStyle = '#F00';
-                    }
-                }
-                ref.context.strokeRect(bx, by, cx, cy);
-                twr = [bx, by, cx, cy, ref.context.strokeStyle];
+            if ((ax > bx) && (ax < (bx + cx)) && (ay > by) && (ay < (by + cy))) {
+              testres = true;
             }
-
             return testres;
         },
 
@@ -250,7 +235,7 @@ define(['html5images', 'jsxls'], function(Images, Jsxls) {
             if ((yy + hh) > ref.draw_limit[3]) hh = ref.draw_limit[3] - yy;
 
             var kappa = .5522848;
-            ox = (ww / 2) * kappa,
+            var ox = (ww / 2) * kappa,
                 oy = (hh / 2) * kappa,
                 xe = xx + ww,
                 ye = yy + hh,
@@ -421,24 +406,24 @@ define(['html5images', 'jsxls'], function(Images, Jsxls) {
                                 tpe[m][7] += ',' + ty3;
 
                                 //distances between points
-                                dx = tx3 - tpe[m][0];
-                                dy = ty3 - tpe[m][1];
-                                distn1 = Math.sqrt(dx * dx + dy * dy);
+                                var dx = tx3 - tpe[m][0];
+                                var dy = ty3 - tpe[m][1];
+                                var distn1 = Math.sqrt(dx * dx + dy * dy);
                                 dx = tx3 - tpe[m][2];
                                 dy = ty3 - tpe[m][3];
-                                distn2 = Math.sqrt(dx * dx + dy * dy);
+                                var distn2 = Math.sqrt(dx * dx + dy * dy);
                                 dx = tx3 - tpe[n][0];
                                 dy = ty3 - tpe[n][1];
-                                distn3 = Math.sqrt(dx * dx + dy * dy);
+                                var distn3 = Math.sqrt(dx * dx + dy * dy);
                                 dx = tx3 - tpe[n][2];
                                 dy = ty3 - tpe[n][3];
-                                distn4 = Math.sqrt(dx * dx + dy * dy);
+                                var distn4 = Math.sqrt(dx * dx + dy * dy);
 
                                 //order of point coordinats
-                                pos1 = Math.abs(tpe[m][2] - tpe[m][0]) - Math.abs(tpe[m][2] - tx3) - Math.abs(tpe[m][0] - tx3);
-                                pos2 = Math.abs(tpe[m][3] - tpe[m][1]) - Math.abs(tpe[m][3] - ty3) - Math.abs(tpe[m][1] - ty3);
-                                pos3 = Math.abs(tpe[n][2] - tpe[n][0]) - Math.abs(tpe[n][2] - tx3) - Math.abs(tpe[n][0] - tx3);
-                                pos4 = Math.abs(tpe[n][3] - tpe[n][1]) - Math.abs(tpe[n][3] - ty3) - Math.abs(tpe[n][1] - ty3);
+                                var pos1 = Math.abs(tpe[m][2] - tpe[m][0]) - Math.abs(tpe[m][2] - tx3) - Math.abs(tpe[m][0] - tx3);
+                                var pos2 = Math.abs(tpe[m][3] - tpe[m][1]) - Math.abs(tpe[m][3] - ty3) - Math.abs(tpe[m][1] - ty3);
+                                var pos3 = Math.abs(tpe[n][2] - tpe[n][0]) - Math.abs(tpe[n][2] - tx3) - Math.abs(tpe[n][0] - tx3);
+                                var pos4 = Math.abs(tpe[n][3] - tpe[n][1]) - Math.abs(tpe[n][3] - ty3) - Math.abs(tpe[n][1] - ty3);
 
                                 if (pos1 == 0 && pos2 == 0 && pos3 == 0 && pos4 == 0 && distn1 > 1 && distn2 > 1 && distn3 > 1 && distn4 > 1) {
                                     tpi[++int_count] = new Array();
@@ -497,7 +482,7 @@ define(['html5images', 'jsxls'], function(Images, Jsxls) {
                     ref.context.arc(tpi[m][0], tpi[m][1], 3, 0, Math.PI * 2, true);
                     ref.context.closePath();
                     ref.context.stroke();
-                    any_overlaping = true;
+                    ref.any_overlaping = true;
                 }
             }
             ref.context.strokeStyle = css;
@@ -508,7 +493,7 @@ define(['html5images', 'jsxls'], function(Images, Jsxls) {
         menuBuild_icons: function(name, posx, posy, state, set, text, tooltip, ref) {
             var iposy = posy;
             var iposx = posx;
-            imgdata = Images.map[name];
+            var imgdata = Images.map[name];
             var iwidth = imgdata.width + 2;
             var iheight = imgdata.height + 1;
             if (name == 'toolbar/ico_drop.png') {
@@ -528,7 +513,7 @@ define(['html5images', 'jsxls'], function(Images, Jsxls) {
             ref.buttonBox[ref.buttonBox.length - 1][0] = name;
             ref.buttonBox[ref.buttonBox.length - 1][1] = iposx;
             ref.buttonBox[ref.buttonBox.length - 1][2] = iposy;
-            bpad = 2;
+            var bpad = 2;
             if (text == '') bpad = 0;
             ref.buttonBox[ref.buttonBox.length - 1][3] = iwidth + textWidth + bpad * 2;
             ref.buttonBox[ref.buttonBox.length - 1][4] = iheight;
@@ -555,7 +540,7 @@ define(['html5images', 'jsxls'], function(Images, Jsxls) {
             }
             for (var n = 0; n < ref.buttonBox.length; n++) {
                 var state = ref.buttonBox[n][5];
-                imgdata = Images.map[ref.buttonBox[n][0]];
+                var imgdata = Images.map[ref.buttonBox[n][0]];
                 //imgdatab = map['toolbar/but_back'+state+'.png'];
                 var iwidth = imgdata.width + 2;
                 if (ref.buttonBox[n][0] == 'toolbar/ico_drop.png') iwidth = 12;
@@ -565,7 +550,7 @@ define(['html5images', 'jsxls'], function(Images, Jsxls) {
                     if (state == 1) ref.context.fillStyle = '#ffeab7';
                     ref.context.fillRect(ref.buttonBox[n][1], ref.buttonBox[n][2], ref.buttonBox[n][3] + 1, ref.buttonBox[n][4] + 1);
                 }
-                bpad = 1;
+                var bpad = 1;
                 if (ref.buttonBox[n][8] == '') bpad = 0;
                 ref.context.drawImage(ref.menu_img, imgdata.left, imgdata.top, imgdata.width, imgdata.height, ref.buttonBox[n][1] + 1 + bpad, ref.buttonBox[n][2] + 1, iwidth - 2, imgdata.height);
                 if (ref.buttonBox[n][8] != '') {
@@ -586,6 +571,7 @@ define(['html5images', 'jsxls'], function(Images, Jsxls) {
             ref.panelActiveParts['toolbar/pan_colours.png'] = new Array();
             var lw = 12;
             var lh = 18;
+            var i;
             for (i = 0; i < 10; i++) ref.panelActiveParts['toolbar/pan_colours.png'][0 + i] = (i * lh + 1) + ',' + (7 + lw * 1);
             for (i = 0; i < 10; i++) ref.panelActiveParts['toolbar/pan_colours.png'][10 + i] = (i * lh + 1) + ',' + (15 + lw * 2);
             for (i = 0; i < 10; i++) ref.panelActiveParts['toolbar/pan_colours.png'][20 + i] = (i * lh + 1) + ',' + (15 + lw * 3);
@@ -639,7 +625,7 @@ define(['html5images', 'jsxls'], function(Images, Jsxls) {
 
                     //building up the ref.colorReference
                     if (ref.colorReference.length == 0 && pan_name == 'toolbar/pan_colours.png') {
-                        for (n = 0; n < panelActiveParts[pan_name].length; n++) {
+                        for (var n = 0; n < panelActiveParts[pan_name].length; n++) {
                             var tpc = panelActiveParts[pan_name][n].split(',');
                             var timgd = ref.context.getImageData(temp_but[1] + 1 * tpc[0] + 9, temp_but[2] + 25 + 1 * tpc[1] + 9, 1, 1);
                             var timgp = timgd.data;
@@ -695,7 +681,8 @@ define(['html5images', 'jsxls'], function(Images, Jsxls) {
             ref.buttonClicked = -1;
             if (ref.buttonOver != -1) {
                 //double button?
-                var m = n = ref.buttonOver;
+                var m, n;
+                m = n = ref.buttonOver;
                 if (ref.buttonBox[n][0] == 'toolbar/ico_drop.png') n = m - 1;
                 if (n < ref.buttonBox.length - 1 && ref.buttonBox[n + 1][0] == 'toolbar/ico_drop.png') m = n + 1;
                 ref.buttonClicked = ref.buttonOver = n;
@@ -740,9 +727,9 @@ define(['html5images', 'jsxls'], function(Images, Jsxls) {
             //msg text
             ref.context.fillStyle = '#000000';
             ref.context.textAlign = "center";
-            txt0 = txt1.split('|');
-            posy = my + 25;
-            for (n = 0; n < txt0.length; n++) {
+            var txt0 = txt1.split('|');
+            var posy = my + 25;
+            for (var n = 0; n < txt0.length; n++) {
                 ref.context.font = "12px Arial";
                 var wrapped = this.wrapText(txt0[n], mw - 20, true, ref);
                 this.fillWrappedText(ref.context, wrapped[0], mx + mw / 2, posy, ref);
@@ -750,7 +737,7 @@ define(['html5images', 'jsxls'], function(Images, Jsxls) {
             }
 
             //buttons
-            imgdata = Images.map['toolbar/button.png'];
+            var imgdata = Images.map['toolbar/button.png'];
             //y
             if (txt2 != '') {
                 ref.context.drawImage(ref.menu_img, imgdata.left + 1, imgdata.top, imgdata.width - 2, imgdata.height, mx + mw / 2 - imgdata.width / 2 - 40, my + mh - 12 - imgdata.height, imgdata.width, imgdata.height);
@@ -765,11 +752,11 @@ define(['html5images', 'jsxls'], function(Images, Jsxls) {
             }
             //n
             if (txt4 != '') {
-                bw = 120;
+                var bw = 120;
                 ref.context.drawImage(ref.menu_img, imgdata.left + 1, imgdata.top, 10, imgdata.height, mx + mw / 2 - bw / 2 - 10, my + mh - 12 - imgdata.height, 10, imgdata.height);
                 ref.context.drawImage(ref.menu_img, imgdata.left + imgdata.width - 12, imgdata.top, 10, imgdata.height, mx + mw / 2 + bw / 2, my + mh - 12 - imgdata.height, 10, imgdata.height);
                 ref.context.drawImage(ref.menu_img, imgdata.left + 10, imgdata.top, 10, imgdata.height, mx + mw / 2 - bw / 2, my + mh - 12 - imgdata.height, bw, imgdata.height);
-                panel_buttons[0] = new Array('C', mx + mw / 2 - bw / 2 - 10, my + mh - 12 - imgdata.height, bw + 20, imgdata.height);
+                ref.panel_buttons[0] = new Array('C', mx + mw / 2 - bw / 2 - 10, my + mh - 12 - imgdata.height, bw + 20, imgdata.height);
                 ref.context.fillText(txt4, mx + mw / 2, my + mh - 20);
             }
         },

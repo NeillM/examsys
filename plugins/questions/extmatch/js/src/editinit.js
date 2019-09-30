@@ -22,14 +22,14 @@ requirejs(['jqueryextmatch', 'questioneditextmatch', 'jquery'], function (EXT, A
         addedit.updateExtMatchOptions(this);
     });
     // Bit of a hack to get the options section to fit in.
-    extraWidth = 0;
-    img = $('#media0 img:first');
+    var extraWidth = 0;
+    var img = $('#media0 img:first');
     if (img.length == 1) {
         if (img.width() > 820) {
             extraWidth = img.width() - 820;
         }
     }
-    qh = $('#question-holder');
+    var qh = $('#question-holder');
     qh.addClass('wide');
     if (extraWidth > 0) {
         qh.width(qh.width() + extraWidth);

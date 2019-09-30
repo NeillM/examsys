@@ -43,7 +43,10 @@ module.exports = function(grunt) {
         src: ['admin/**/js/src/*.js']
       },
       corejs: {
-        src: ['js/src/**/*.js']
+        src: [
+          'js/src/**/*.js',
+          '!js/src/jcalc98.js'
+        ]
       },
       questionsjs: {
         src: ['plugins/questions/**/js/src/*.js']

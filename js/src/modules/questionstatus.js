@@ -60,7 +60,7 @@ define(['jsxls', 'jquery', 'jqueryui'], function(jsxls, $) {
             var url = $(this).attr('href');
             url += '?id=' + id;
             if ($(this).hasClass('launchwin')) {
-              notice = window.open(url, "deleteitem", "width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+              var notice = window.open(url, "deleteitem", "width=420,height=170,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
               notice.moveTo(screen.width / 2 - 210, screen.height / 2 - 85);
               if (window.focus) {
                 notice.focus();

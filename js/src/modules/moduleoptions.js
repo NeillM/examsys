@@ -29,7 +29,7 @@ define(['requireconfig.min', 'jquery'], function(config, $) {
          */
         this.teammembers = function () {
             $('#addteammember').click(function () {
-                notice = window.open(config.cfgrootpath + "/module/edit_team_popup.php?module=" + $('#dataset').attr('data-module') + "&calling=paper_list&folder=" + $('#dataset').attr('data-folder'), "properties", "width=450,height=" + (screen.height - 200) + ",left=" + (screen.width / 2 - 325) + ",top=10,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+                var notice = window.open(config.cfgrootpath + "/module/edit_team_popup.php?module=" + $('#dataset').attr('data-module') + "&calling=paper_list&folder=" + $('#dataset').attr('data-folder'), "properties", "width=450,height=" + (screen.height - 200) + ",left=" + (screen.width / 2 - 325) + ",top=10,scrollbars=no,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
                 if (window.focus) {
                     notice.focus();
                 }

@@ -63,7 +63,7 @@ define(['user', 'jquery', 'jqueryui'], function(USER, $) {
         };
 
         this.moreColours = function() {
-            notice=window.open("/tools/colour_picker/more_colours.php?swatch=" + this.textBox + "","colours","width=450,height=370,left="+(screen.width/2-225)+",top="+(screen.height/2-185)+",scrollbars=no,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
+            var notice = window.open("/tools/colour_picker/more_colours.php?swatch=" + this.textBox + "","colours","width=450,height=370,left="+(screen.width/2-225)+",top="+(screen.height/2-185)+",scrollbars=no,toolbar=no,location=no,directories=no,status=yes,menubar=no,resizable");
             if (window.focus) {
                 notice.focus();
             }

@@ -20,7 +20,7 @@
 //
 // A modularised version of the example from https://www.mathjax.org/
 
-define(['mathjax'], function (Mathjax) {
+define(['mathjax'], function (MathJax) {
     /**
      * Preview mathajx entered into a textarea
      * @param id textarea identifier

@@ -19,7 +19,7 @@
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2016 The University of Nottingham
  */
-define(['hotspot_shape', 'html5images', 'html5helper'], function(Hotspot_shape, Images, Helper) {
+define(['hotspot_shape', 'html5images', 'html5helper', 'log'], function(Hotspot_shape, Images, Helper, Log) {
   /**
    * Constructor for the layer class.
    *
@@ -28,7 +28,7 @@ define(['hotspot_shape', 'html5images', 'html5helper'], function(Hotspot_shape, 
    * @param {hotspot} parent The question that the layer is attached to.
    * @returns {hotspot_layer}
    */
-  hotspot_layer = function(index, config_text, parent) {
+  var hotspot_layer = function(index, config_text, parent) {
     var config = config_text.split("~");
     /**
      * @type {Integer}
@@ -563,7 +563,7 @@ define(['hotspot_shape', 'html5images', 'html5helper'], function(Hotspot_shape, 
         coordinates = [x.toString(16), y.toString(16), x.toString(16), y.toString(16)].join(',');
         break;
       default:
-       log('Invalid shape (' + shape + '), cannot add to layer.', 'error');
+       Log('Invalid shape (' + shape + '), cannot add to layer.', 'error');
         return;
     }
     this.shapes.push(new Hotspot_shape(shape, coordinates, index, this));

@@ -75,7 +75,8 @@ define(['jquery'], function($) {
          * Check if save button can be enabled.
          */
         this.checkTotals = function() {
-            var rated=level1=level2=level3=level4=level5=level6=level7=level8=level9=level10=0;
+            var rated, level1, level2, level3, level4, level5, level6, level7, level8, level9, level10;
+            rated = level1 = level2 = level3 = level4 = level5 = level6 = level7 = level8 = level9 = level10 = 0;
             for (var i = 1; i <= $('#dataset').attr('data-number_of_qs'); i++) {
                 if ($('#q' + i + '_val').val() == '1') {
                     level1++;

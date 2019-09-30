@@ -74,7 +74,7 @@ requirejs(['help', 'alert', 'jquery'], function (HELP, ALERT, $) {
 
         $('#submenu' + sectionID).toggle();
 
-        icon = ($('#button' + sectionID).attr('src') == '../open_book.png') ? '../closed_book.png' : '../open_book.png';
+        var icon = ($('#button' + sectionID).attr('src') == '../open_book.png') ? '../closed_book.png' : '../open_book.png';
         $('#button' + sectionID).attr('src', icon);
     });
 
@@ -84,7 +84,7 @@ requirejs(['help', 'alert', 'jquery'], function (HELP, ALERT, $) {
 
         $('#pointer_submenu' + sectionID).toggle();
 
-        icon = ($('#pointer_button' + sectionID).attr('src') == '../open_book.png') ? '../closed_book.png' : '../open_book.png';
+        var icon = ($('#pointer_button' + sectionID).attr('src') == '../open_book.png') ? '../closed_book.png' : '../open_book.png';
         $('#pointer_button' + sectionID).attr('src', icon);
     });
 

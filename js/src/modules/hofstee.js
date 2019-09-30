@@ -54,8 +54,8 @@ define(['jquery', 'jsxls'], function($, jsxls) {
             this.stats = stats;
             //recalculating data
             var data, last_data = 0;
-            j = -1;
-            for (i = 0; i < marks.length; i++) {
+            var j = -1;
+            for (var i = 0; i < marks.length; i++) {
                 data = 1 * marks[i];
                 if (data != last_data) j++;
                 this.graph_data[j] = [data, (i + 1) * 100 / marks.length, i];
@@ -124,6 +124,13 @@ define(['jquery', 'jsxls'], function($, jsxls) {
                 this.context.shadowBlur = 0;
             }
         };
+
+        /**
+         * Private variables that should be remembered between calls of g_redraw_canvas.
+         *
+         * @type {Number}
+         */
+        var cx, cy;
 
         /**
          * Redraw Canvas.
@@ -232,7 +239,7 @@ define(['jquery', 'jsxls'], function($, jsxls) {
                 this.tx2 = this.graph_x;
                 this.ty2 = this.canvas.height - this.graph_y;
                 this.xs = this.ys = '';
-                for (i = 0; i < this.graph_data.length; i++) {
+                for (var i = 0; i < this.graph_data.length; i++) {
                     this.tx1 = this.graph_x + this.graph_data[i][0] * this.scale_x;
                     this.ty1 = this.canvas.height - this.graph_y - this.scale_y * this.graph_data[i][1];
 
@@ -258,7 +265,7 @@ define(['jquery', 'jsxls'], function($, jsxls) {
                             this.ys = Math.round(this.ys * 100) / 100;
                             var dcx = Math.round(cx);
                             var dcy = Math.round(cy);
-                            for (j = 1; j < (this.ys * this.scale_y / 5); j++) this.drawLine('#A5A5A5', dcx, dcy + 5 * j, 0, -3);
+                            for (var j = 1; j < (this.ys * this.scale_y / 5); j++) this.drawLine('#A5A5A5', dcx, dcy + 5 * j, 0, -3);
                             for (j = 1; j < (this.xs * this.scale_x / 5); j++) this.drawLine('#A5A5A5', dcx - 5 * j, dcy, 3, 0);
                             this.xs += '%';
                             this.ys += '%';
@@ -350,9 +357,9 @@ define(['jquery', 'jsxls'], function($, jsxls) {
          * @param object e event
          */
         this.g_mouseDragMove = function(e) {
-            rect = this.canvas.getBoundingClientRect();
-            loc_lft = rect.left;
-            loc_top = rect.top;
+            var rect = this.canvas.getBoundingClientRect();
+            var loc_lft = rect.left;
+            var loc_top = rect.top;
             var xm = e.clientX;
             var ym = e.clientY;
             this.x = xm - loc_lft;
@@ -402,7 +409,7 @@ define(['jquery', 'jsxls'], function($, jsxls) {
          */
         this.tfchange = function(event, keys) {
             if (this.result_type == event.target.name.substr(3)) {
-                target = ((event.target.name[0] == 'x') ? 0 : 2) + 1 * event.target.name[1] - 1;
+                var target = ((event.target.name[0] == 'x') ? 0 : 2) + 1 * event.target.name[1] - 1;
                 var ev0 = this.boundaries[target];
                 var ev = Number(event.target.value.replace('%', ''));
                 if (isNaN(ev)) ev = ev0;

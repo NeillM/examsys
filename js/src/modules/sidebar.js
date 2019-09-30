@@ -83,7 +83,7 @@ define(['jsxls', 'requireconfig.min', 'jquery', 'jqueryui'], function(jsxls, con
                         limit = arrayID.length-1;
                     }
                     var line = 0;
-                    for (i=this.scrollLine; i<=limit; i++) {
+                    for (var i = this.scrollLine; i <= limit; i++) {
                         var submenuItemID = submenuID.substr(5,1) + '_' + line;
                         if (urlID[i].substr(0,1) == '-') {
                             $('#' + submenuItemID).html('<hr nonshade="nonshade" style="height:1px; border:none; background-color:#C0C0C0; color:#C0C0C0" />');
@@ -133,7 +133,7 @@ define(['jsxls', 'requireconfig.min', 'jquery', 'jqueryui'], function(jsxls, con
                     limit = arrayID.length-1;
                 }
                 var line = 0;
-                for (i=this.scrollLine; i<=limit; i++) {
+                for (var i = this.scrollLine; i <= limit; i++) {
                     var submenuItemID = submenuID.substr(5,1) + '_' + line;
                     if (urlID[i].substr(0,1) == '-') {
                         $('#' + submenuItemID).html('<hr nonshade="nonshade" style="height:1px; border:none; background-color:#C0C0C0; color:#C0C0C0" />');
@@ -186,7 +186,7 @@ define(['jsxls', 'requireconfig.min', 'jquery', 'jqueryui'], function(jsxls, con
                 $('#' + downID).html('<img src="' + config.cfgrootpath + '/artwork/submenu_down_on.png" width="9" height="5" alt="'+ jsxls.lang_string("down") + '" />&nbsp;');
             }
             var line = 0;
-            for (i=this.scrollLine;i<=limit;i++) {
+            for (var i = this.scrollLine; i <= limit; i++) {
                 var submenuItemID = submenuID.substr(5,1) + '_' + line;
                 if (urlID[i].substr(0,1) == '-') {
                     $('#' + submenuItemID).html('<hr nonshade="nonshade" style="height:1px; border:none; background-color:#C0C0C0; color:#C0C0C0" />');

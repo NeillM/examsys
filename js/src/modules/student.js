@@ -28,8 +28,8 @@ define(['jquery', 'jqueryui'], function($) {
         this.switchYear = function(toShow, sessions) {
             var years = JSON.parse(sessions);
             for (var i = 0; i < years.length; i++) {
-                target = $('#papers-' + years[i]);
-                link = $('#button-' + years[i]);
+                var target = $('#papers-' + years[i]);
+                var link = $('#button-' + years[i]);
                 if (years[i] == toShow) {
                     target.show();
                     link.css({'background-color': '#1E3C7B'});

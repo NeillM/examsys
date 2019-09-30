@@ -163,7 +163,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                 if (answer != "" && answer != undefined && answer != "undefined" && answer != null && answer != "null" && answer != "u") {
                     this.is_an_answer = true;
                     var answer_l1 = answer.split("|");
-                    for (i = 0; i < answer_l1.length; i++) {
+                    for (var i = 0; i < answer_l1.length; i++) {
                         this.answerBox[i] = this.yoffset_fix(answer_l1[i], this.yoffset_fix_value, this.yoffset_fiy_value).split(",");
                     }
                 }
@@ -217,11 +217,6 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                 posx = Qsharedf.menuBuild_icons('toolbar/vert_2.png', posx, posy, 0, '', '', '', this) + spac;
                 posx = Qsharedf.menuBuild_icons('toolbar/ico_zoom.png', posx, posy, 0, '', Jsxls.lang_string['Magnify'], Jsxls.lang_string['tt_Magnify'], this) + spac;
                 posx = Qsharedf.menuBuild_icons('toolbar/ico_help.png', this.canvas.width - 23, posy, 0, '', '', '', this) + spac;
-
-                area_buttons[0] = new Array('toolbar/ico_cross_on.png', Jsxls.lang_string['But_Delete_point']);
-                area_buttons[5] = new Array('toolbar/ico_area.png', Jsxls.lang_string['But_your_answer']);
-                area_buttons[6] = new Array('toolbar/ico_tick.png', Jsxls.lang_string['But_correct_answer']);
-                area_buttons[7] = new Array('toolbar/ico_warn.png', Jsxls.lang_string['But_show_error']);
             }
 
             if (this.qmode == 'script') {
@@ -290,7 +285,8 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
 
         this.qa_test_calc = function(type) {
             //type = data or image
-            var li1 = li2 = li3 = 0;
+            var li1, li2, li3, li4, j;
+            li1 = li2 = li3 = 0;
             var trsh = 64;
             this.do_the_test_calc = false;
 
@@ -360,10 +356,11 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                     var img_final = this.context.getImageData(1, 1, this.canvas.width - 2, this.canvas.height - 2);
                     var img_final_data = img_final.data;
                     var err_final_data = this.err_image.data;
-                    var li1 = li2 = li3 = 0;
+                    var li1, li2, li3, li4;
+                    li1 = li2 = li3 = 0;
                     var trsh = 64;
 
-                    for (j = 0; j < err_final_data.length; j += 4) {
+                    for (var j = 0; j < err_final_data.length; j += 4) {
                         li1 = li2 = li3 = li4 = 0;
                         if (err_final_data[j + 0] * 1 > trsh && err_final_data[j + 2] * 1 > trsh && err_final_data[j + 1] * 1 < trsh) li1++;
                         if (err_final_data[j + 0] * 1 > trsh && err_final_data[j + 2] * 1 < trsh && err_final_data[j + 1] * 1 < trsh) li2++;
@@ -484,7 +481,8 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                     this.context.beginPath();
 
                     this.imgdata = Images.map['toolbar/loupe.png'];
-                    var loupe_x = zoom_x = this.x;
+                    var loupe_x, zoom_x;
+                    loupe_x = zoom_x = this.x;
                     var loupe_y = this.oy;
                     var zoom_y = this.oy;
                     var loupe_width = this.imgdata.width; //87
@@ -587,6 +585,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                 this.key_code = 0;
             }
 
+            var ttx, tty;
             if (this.key_code >= 37 && this.key_code <= 40 && this.access_sel > -1) {
                 if (this.qmode == 'answer' && this.qanswer != '') this.qtest = this.qanswer;
                 if (this.qmode == 'edit' && this.qconfig != '') this.qtest = this.qconfig;
@@ -640,7 +639,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                 }
             } else { //change of cursor
                 this.drag_box_id = -1;
-                if (Qsharedf.testWithin(this.x, this.y, 0, 0, this.canvas.width, this.canvas.height, this)) {
+                if (Qsharedf.testWithin(this.x, this.y, 0, 0, this.canvas.width, this.canvas.height)) {
                     var over_object = false;
 
                     //this.test for buttons
@@ -649,7 +648,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                         this.buttonBox[i][5] = this.buttonBox[i][6];
                         if (this.buttonBox[i][0] == 'toolbar/ico_drop.png') this.buttonBox[i][5] = this.buttonBox[i - 1][5];
 
-                        if (this.buttonBox[i][0].indexOf('vert_') == -1 && Qsharedf.testWithin(this.x, this.y, this.buttonBox[i][1], this.buttonBox[i][2], this.buttonBox[i][3], this.buttonBox[i][4], this) == true) {
+                        if (this.buttonBox[i][0].indexOf('vert_') == -1 && Qsharedf.testWithin(this.x, this.y, this.buttonBox[i][1], this.buttonBox[i][2], this.buttonBox[i][3], this.buttonBox[i][4]) == true) {
                             over_object = true;
                             buttonTest = i;
                             this.buttonBox[i][5] = 1;
@@ -680,8 +679,8 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                         for (var n = 1; n < pp.length / 2; n++) {
                             ttx = (parseInt(pp[n * 2].trim(), 16) - parseInt(pp[n * 2 - 2].trim(), 16)) / 2 + parseInt(pp[n * 2 - 2].trim(), 16);
                             tty = (parseInt(pp[n * 2 + 1].trim(), 16) - parseInt(pp[n * 2 - 1].trim(), 16)) / 2 + parseInt(pp[n * 2 - 1].trim(), 16);
-                            if (Qsharedf.testWithin(this.x, this.oy, ttx - 3.5, tty - 3.5, 7, 7, this)) this.handler_dot = n;
-                            if (Qsharedf.testWithin(this.x, this.oy, parseInt(pp[n * 2 - 2].trim(), 16) - 3.5, parseInt(pp[n * 2 - 1].trim(), 16) - 3.5, 7, 7, this)) this.handler_sqr = n;
+                            if (Qsharedf.testWithin(this.x, this.oy, ttx - 3.5, tty - 3.5, 7, 7)) this.handler_dot = n;
+                            if (Qsharedf.testWithin(this.x, this.oy, parseInt(pp[n * 2 - 2].trim(), 16) - 3.5, parseInt(pp[n * 2 - 1].trim(), 16) - 3.5, 7, 7)) this.handler_sqr = n;
                         }
                     }
 
@@ -764,7 +763,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
             this.oy = this.y - this.yoffset;
             this.access_sel = -1;
 
-            if (Qsharedf.testWithin(this.x, this.y, 0, 0, this.canvas.width, this.canvas.height, this)) {
+            if (Qsharedf.testWithin(this.x, this.y, 0, 0, this.canvas.width, this.canvas.height)) {
                 this.dragging = true;
             }
             if (this.handler_dot > -1 && !this.global_delpoint) {
@@ -832,8 +831,8 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
 
             //this.test panel buttons
             if (this.panel_buttons.length > 0) {
-                for (n = 0; n < this.panel_buttons.length; n++) {
-                    if (Qsharedf.testWithin(this.x, this.y, this.panel_buttons[n][1], this.panel_buttons[n][2], this.panel_buttons[n][3], this.panel_buttons[n][4], this)) this.panel_button_selected = this.panel_buttons[n][0];
+                for (var n = 0; n < this.panel_buttons.length; n++) {
+                    if (Qsharedf.testWithin(this.x, this.y, this.panel_buttons[n][1], this.panel_buttons[n][2], this.panel_buttons[n][3], this.panel_buttons[n][4])) this.panel_button_selected = this.panel_buttons[n][0];
                 }
             }
 
