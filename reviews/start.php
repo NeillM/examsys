@@ -513,7 +513,7 @@ $render->render($jsdataset, array(), 'dataset.html');
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['language'] = $language;
 $miscdataset['attributes']['rootpath'] = $cfg_root_path;
-$miscdataset['attributes']['bidirectional'] = $propertyObj->get_bidirectional();
+$miscdataset['attributes']['bidirectional'] = (bool)$propertyObj->get_bidirectional();
 $miscdataset['attributes']['id'] = $id;
 $miscdataset['attributes']['self'] = $_SERVER['PHP_SELF'];
 $render->render($miscdataset, array(), 'dataset.html');
