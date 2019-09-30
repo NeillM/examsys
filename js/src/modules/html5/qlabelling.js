@@ -1087,10 +1087,6 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
         }
 
         this.ql_redraw_canvas = function() {
-            var tmp_count = 0;
-            for (i = 0; i < this.answerBox.length; i++)
-                tmp_count += this.answerBox[i].length //?
-
             this.char_labels = 0;
             this.draw_limit = new Array(0, 27, this.canvas.width - 2, this.canvas.height - 2);
 
@@ -2241,11 +2237,9 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                 //if there are more like this in the same position - remove those duplicates
                 var del_list = [];
                 for (i = 0; i < this.answerBox.length; i++) {
-                    var subindex_count = 0;
                     var ref_pos = []; //array of positions for reference
                     for (j = 0; j < this.answerBox[i].length; j++) {
                         var this_pos = this.answerBox[i][j][5] + ',' + this.answerBox[i][j][6];
-                        subindex_count++;
                         if (ref_pos.indexOf(this_pos) > -1 && this.mov_id == -1 && this.mov_combo == -1)
                             del_list.push(Array(i, j));
                         ref_pos.push(this_pos);
@@ -2554,13 +2548,11 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
             //if new  - create new instance of the dragged label with new next_combo_nr
             if (this.qmode == 'edit' && this.labelMulti == 'multiple' && this.qType == 'label') {
                 var label_num_test = [];
-                var label_num_test_length = 0;
                 for (i = 0; i < this.answerBox.length; i++)
                     for (j = 0; j < this.answerBox[i].length; j++) {
                         if (this.answerBox[i][j][2] != '') {
                             if (typeof (label_num_test[this.answerBox[i][j][5] + '_' + this.answerBox[i][j][6] + '_' + this.answerBox[i][j][2]]) == 'undefined') {
                                 label_num_test[this.answerBox[i][j][5] + '_' + this.answerBox[i][j][6] + '_' + this.answerBox[i][j][2]] = 1;
-                                label_num_test_length++;
                             } else {
                                 this.answerBox[i][j][1] = 'erase';
                             }
@@ -2728,13 +2720,11 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                 questions_result += this.qType + ';';
 
                 var label_num_test = [];
-                var label_num_test_length = 0;
                 for (i = 0; i < this.answerBox.length; i++)
                     for (j = 0; j < this.answerBox[i].length; j++) {
                         if (this.answerBox[i][j][2] != '') {
                             if (typeof (label_num_test[this.answerBox[i][j][5] + '_' + this.answerBox[i][j][6] + '_' + this.answerBox[i][j][2]]) == 'undefined') {
                                 label_num_test[this.answerBox[i][j][5] + '_' + this.answerBox[i][j][6] + '_' + this.answerBox[i][j][2]] = 1;
-                                label_num_test_length++;
                             } else {
                                 this.answerBox[i][j][1] = 'erase';
                             }
