@@ -264,7 +264,7 @@ echo "<html>\n<head>\n";
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 <link rel="stylesheet" type="text/css" href="../css/review.css" />
 
-<script id="rogoconfig" src='../js/rogo.min.js'
+<script id="rogoconfig"
         data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
         data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
         data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>">

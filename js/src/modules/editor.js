@@ -21,7 +21,7 @@
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
 //
-define(['requireconfig.min', 'tinyMCE'], function(Config, Tinymce3) {
+define(['rogoconfig', 'tinyMCE'], function(Config, Tinymce3) {
     return {
         /**
          * Trigger save.

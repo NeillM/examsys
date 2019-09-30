@@ -22,7 +22,7 @@
 // @version 1.0
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-define(['requireconfig.min', 'jquery'], function(config, $) {
+define(['rogoconfig', 'jquery'], function(config, $) {
     return function() {
         /**
          * Open a window to edit the summative papers properties.

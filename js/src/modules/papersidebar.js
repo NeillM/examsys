@@ -22,7 +22,7 @@
 // @version 1.0
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-define(['requireconfig.min', 'jsxls', 'state', 'sidebar', 'jquery'], function(config, jsxls, STATE, SIDEBAR, $) {
+define(['rogoconfig', 'jsxls', 'state', 'sidebar', 'jquery'], function(config, jsxls, STATE, SIDEBAR, $) {
     return function() {
         /**
          * Initialise paper sidebar.

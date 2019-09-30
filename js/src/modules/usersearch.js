@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-define(['alert', 'requireconfig.min', 'state', 'jquery', 'jqueryui'], function(ALERT, config, STATE, $) {
+define(['alert', 'rogoconfig', 'state', 'jquery', 'jqueryui'], function(ALERT, config, STATE, $) {
     return function () {
         /**
          * Remove student ID search term is staff role selected.

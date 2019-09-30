@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-define(['requireconfig.min', 'jquery'], function(config, $) {
+define(['rogoconfig', 'jquery'], function(config, $) {
     return function() {
         /**
          * Open a window to delete a reference.

@@ -40,7 +40,7 @@ require_once '../include/errors.php';
     .warn {background-color:#FFD9D9; color:#800000; border:1px solid #800000}
   </style>
 
-  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
   <script src="../js/courseinit.min.js"></script>

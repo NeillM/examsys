@@ -20,7 +20,7 @@
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
 //
-define(['alert', 'requireconfig.min', 'list', 'jquery'], function(ALERT, config, LIST, $) {
+define(['alert', 'rogoconfig', 'list', 'jquery'], function(ALERT, config, LIST, $) {
     return function() {
         /**
          * Initialise module sidebar.

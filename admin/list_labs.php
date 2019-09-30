@@ -37,7 +37,7 @@
     .foldername {float:left; width:380px; height:60px; padding-left:22px; font-size:90%}
   </style>
 
-  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
   <script src="../js/lablistinit.min.js"></script>

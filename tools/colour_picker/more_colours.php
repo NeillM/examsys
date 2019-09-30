@@ -55,7 +55,7 @@ function rgb_hex($input) {
   <style type="text/css">
     body {background-color:#F0F1F2; margin:6px}
   </style>
-  <script id="rogoconfig" src='../../js/rogo.min.js'></script>
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../../js/require.js'></script>
   <script src='../../js/main.min.js'></script>
   <script src='js/morecoloursinit.min.js'></script>

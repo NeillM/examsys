@@ -44,7 +44,7 @@ $q_id = check_var('q_id', 'GET', true, false, true);
     td {vertical-align:top; padding-top:3px; padding-bottom:3px; border-bottom:1px solid #C0C0C0}
     .num {text-align:right}
   </style>
-  <script id="rogoconfig" src='../js/rogo.min.js'></script>
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
   <script src="../js/questioninfoinit.min.js"></script>

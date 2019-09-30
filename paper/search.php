@@ -105,7 +105,7 @@ if (isset($_POST['day']) and $_POST['day'] != '') {
   .f a {color:black}
   .f {float:left; width:375px; height:74px; padding-left:12px}
   </style>
-  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
   <script src="../js/papersearchinit.min.js"></script>
