@@ -18,6 +18,9 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
+
+/* eslint no-unused-vars: "warn" */
+
 define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
     return function() {
         this.isMouseOutsiceCanvas = false;
