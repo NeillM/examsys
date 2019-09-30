@@ -91,7 +91,7 @@ requirejs(['jsxls', 'helplauncher', 'ui', 'leadinpopup', 'papersidebar', 'paperd
                     row.addClass('qline');
                     row.attr('id', 'link_break' + (breaks + 1));
                     row.attr('data-order', 'link_break' + (breaks + 1));
-                    row.html('<td colspan="6"><h4><span class="opaque screen_no">jsxls.lang_string["screen1"]</span></h4></td>');
+                    row.html('<td colspan="6"><h4><span class="opaque screen_no">' + jsxls.lang_string["screen1"] + '</span></h4></td>');
                     row.mouseover(function () {
                         $(this).find('img.handle').show();
                     });
