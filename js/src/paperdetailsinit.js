@@ -84,7 +84,6 @@ requirejs(['jsxls', 'helplauncher', 'ui', 'leadinpopup', 'papersidebar', 'paperd
             },
             beforeStop: function (event, ui) {
                 if (!ui.item.hasClass('qline')) {
-                    var text = ui.helper.text();
                     var breaks = $('.breakline').size();
                     var row = $(document.createElement('tr'));
                     row.addClass('breakline');
