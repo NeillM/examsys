@@ -56,15 +56,15 @@ define(['jquery', 'jqueryui'], function($) {
      * @returns bool
      */
     this.popMenu = function(e) {
-      if (!e) e = window.event;
-      var currentX = e.clientX;
-      var currentY = e.clientY;
+      if (!e) {
+          e = window.event;
+      }
       var scrOfX = $(document).scrollLeft();
       var scrOfY = $(document).scrollTop();
 
       $('#menudiv').show();
 
-      var top_pos = currentY + scrOfY;
+      var top_pos = e.clientY + scrOfY;
       var div_height = $('#menudiv').height() + 6;
       if (top_pos > ($(window).height() + scrOfY - div_height)) {
         top_pos = $(window).height() + scrOfY - div_height;
