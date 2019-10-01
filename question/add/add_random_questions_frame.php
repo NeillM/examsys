@@ -37,13 +37,46 @@
   <title><?php echo $string['questionsbank']; ?></title>
     <script src="../../js/require.js"></script>
     <script src="../../js/main.min.js"></script>
-    <script src="../../js/randomquestionsframeinit.min.js"></script>
   <link rel="stylesheet" type="text/css" href="../../css/add_questions.css" />
+  <style type="text/css">
+    html {height:100%}
+    body {height:100%; background-color:#F0F0F0; margin-top:4px; margin-bottom:2px; margin-left:4px; margin-right:4px}
+    #controls {font-size:90%}
+		.tab {padding-left:10px; height:25px; cursor:default}
+    .tab:hover {background-color: #FFE7A2}
+    .tabon {padding-left:10px; height:25px; cursor:default; background-color:#FFBD69}
+		.grey {color:#909090}
+  </style>
 </head>
 <body>
 <div>
     <div class="wrapper">
-        <div id="qbuttons"></div>
+        <div id="qbuttons">
+            <table cellspacing="0" cellpadding="0" style="font-size:90%; width:126px; height:99%; background-color:white; border:1px solid #828790">
+            <tr><td style="vertical-align:top; text-align:center">
+
+            <table cellspacing="0" cellpadding="0" style="font-size:90%; width:144px; text-align:left">
+            <tr><td id="button_unused" class="tabon"><?php echo $string['myunused'] ?></td></tr>
+            <tr><td id="button_alphabetic" class="tab"><?php echo $string['allmyquestions'] ?></td></tr>
+            <tr><td id="button_keywords" class="tab"><?php echo $string['bykeywords'] ?></td></tr>
+            <tr><td id="button_status" class="tab"><?php echo $string['bystatus'] ?></td></tr>
+            <tr><td id="button_papers" class="tab"><?php echo $string['bypaper'] ?></td></tr>
+            <?php
+              $user_modules = $userObject->get_staff_modules();
+
+              if (count($user_modules) > 0) {
+                echo '<tr><td id="button_team" class="tab">' . $string['byteam'] . '</td></tr>';
+              } else {
+                echo '<tr><td id="button_team" class="tab grey">' . $string['byteam'] . '</td></tr>';
+              }
+            ?>
+            <tr><td id="button_search" class="tab"><?php echo $string['search'] ?></td></tr>
+            </table>
+
+            </td></tr>
+            </table>
+        </div>
+        </div>
         <div id="qlist">
             <iframe id="iframeurl" src="add_questions_list.php?type=unused" name="iframeurl" frameborder="0">
                 <p><?php echo $string['browsererr'];?></p>
@@ -64,5 +97,6 @@ $miscdataset['attributes']['qlist'] = $questionlist;
 $miscdataset['attributes']['questionno'] = $question_no;
 $render->render($miscdataset, array(), 'dataset.html');
 ?>
+<script src="../../js/randomquestionsframeinit.min.js"></script>
 </body>
 </html>

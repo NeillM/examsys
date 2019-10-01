@@ -33,7 +33,6 @@
   <title><?php echo $string['questionsbank'];?></title>
     <script src="../../js/require.js"></script>
     <script src="../../js/main.min.js"></script>
-    <script src="../../js/keywordsquestionsframeinit.min.js"></script>
   <link rel="stylesheet" type="text/css" href="../../css/add_questions.css" />
 </head>
 <body>
@@ -41,5 +40,6 @@
     <div id="klist"></div>
     <div id="keywordqlist"></div>
 </div>
+<script src="../../js/keywordsquestionsframeinit.min.js"></script>
 </body>
 </html>
