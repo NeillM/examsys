@@ -45,7 +45,6 @@ require '../../include/staff_auth.inc';
   </style>
   <script src='../../js/require.js'></script>
   <script src='../../js/main.min.js'></script>
-  <script src="../../js/addkeyowrdsinit.min.js"></script>
 </head>
 
 <body>
@@ -81,5 +80,6 @@ require '../../include/staff_auth.inc';
   echo "<input type=\"hidden\" name=\"keyword_no\" value=\"$keyword_no\" />";
 ?>
 </form>
+<script src="../../js/addkeyowrdsinit.min.js"></script>
 </body>
 </html>

@@ -23,50 +23,20 @@
 */
 
 require '../../include/staff_auth.inc';
-?>
-<html>
-<head>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
-  <title>Rog&#333;</title>
-  
-  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
-	<style type="text/css">
-    body {margin-right:4px; margin-bottom:2px; background-color:#F0F0F0; font-size:90%}
-  </style>
-</head><script src="../../js/require.js"></script>
-<script src="../../js/main.min.js"></script>
-<script src="../../js/questionscontrolsinit.min.js"></script>
-<body>
-<?php
-  echo "<form id='addquestions' name=\"theform\" method=\"post\" action=\"\" autocomplete=\"off\">\n";
-  echo "<div align=\"right\">" . $string['screen'] . "&nbsp;<select name=\"screen\">\n";
 
-  $max_screen = $_GET['max_screen'];
-  for ($i=1; $i<=$max_screen + 1; $i++) {
-    if ($i == $max_screen) {
-      echo "<option value=\"$i\" selected>$i</option>\n";
-    } else {
-      echo "<option value=\"$i\">$i</option>\n";
-    }
+echo "<form id='addquestions' name=\"theform\" method=\"post\" action=\"\" autocomplete=\"off\">\n";
+echo "<div align=\"right\">" . $string['screen'] . "&nbsp;<select name=\"screen\">\n";
+
+$max_screen = $_GET['max_screen'];
+for ($i=1; $i<=$max_screen + 1; $i++) {
+  if ($i == $max_screen) {
+    echo "<option value=\"$i\" selected>$i</option>\n";
+  } else {
+    echo "<option value=\"$i\">$i</option>\n";
   }
+}
 ?>
 </select>&nbsp;
 <input type="hidden" name="questions_to_add" id="questions_to_add" value="" /><input type="submit" name="submit" value="<?php echo $string['addquestions'] ?>" /></div>
-
 </form>
-<?php
-// Dataset.
-$render = new render($configObject);
-$miscdataset['name'] = 'dataset';
-$miscdataset['attributes']['paperid'] = $_GET['paperID'];
-$miscdataset['attributes']['module'] = $_GET['module'];
-$miscdataset['attributes']['folder'] = $_GET['folder'];
-$miscdataset['attributes']['disp'] = $_GET['display_pos'];
-$miscdataset['attributes']['srcofy'] = $_GET['scrOfY'];
-$miscdataset['attributes']['max'] = $_GET['max_screen'];
-$render->render($miscdataset, array(), 'dataset.html');
-?>
-</body>
-</html>
+<script src="../../js/src/questionscontrolsinit.js"></script>

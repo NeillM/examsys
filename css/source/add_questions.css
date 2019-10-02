@@ -1,3 +1,16 @@
+html {
+    height:100%
+}
+
+body {
+    background-color: #F0F0F0;
+    height: 100%;
+    margin-bottom: 2px;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-top: 4px;
+}
+
 #qbuttons {
     flex: 0 1;
     order: 1;
@@ -11,6 +24,7 @@
 }
 
 #controls {
+    font-size: 90%;
     order: 3;
 }
 
@@ -47,4 +61,25 @@
 .keywordwrapper {
     display: grid;
     grid-template-areas: 'klist keywordqlist';
+}
+
+.tab {
+    cursor: default;
+    height: 25px;
+    padding-left: 10px;
+}
+
+.tab:hover {
+    background-color: #FFE7A2;
+}
+
+.tabon {
+   background-color: #FFBD69;
+   cursor: default; 
+   height: 25px;
+   padding-left: 10px;
+}
+
+.grey {
+    color: #909090;
 }

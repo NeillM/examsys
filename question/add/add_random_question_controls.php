@@ -37,7 +37,6 @@ require '../../include/staff_auth.inc';
   </style>
   <script src="../../js/require.js"></script>
   <script src="../../js/main.min.js"></script>
-  <script src="../../js/randomquestionscontrolsinit.min.js"></script>
 </head>
 <body>
 
@@ -52,5 +51,6 @@ $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render->render($jsdataset, array(), 'dataset.html');
 ?>
+<script src="../../js/randomquestionscontrolsinit.min.js"></script>
 </body>
 </html>

@@ -52,7 +52,6 @@ if (isset($_GET['teamID'])) {
   </style>
   <script src='../../js/require.js'></script>
   <script src='../../js/main.min.js'></script>
-  <script type="text/javascript" src="../../js/paperquestionsinit.min.js"></script>
 </head>
 <?php
 
@@ -110,5 +109,6 @@ $dataset['name'] = 'dataset';
 $dataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
 $render->render($dataset, array(), 'dataset.html');
 ?>
+<script type="text/javascript" src="../../js/paperquestionsinit.min.js"></script>
 </body>
 </html>

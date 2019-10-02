@@ -51,7 +51,6 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   </script>
   <script src='../../js/require.js'></script>
   <script src='../../js/main.min.js'></script>
-  <script src="../../js/addquestionsinit.min.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
@@ -247,5 +246,6 @@ $jsdataset['attributes']['xls'] = json_encode($string);
 $jsdataset['attributes']['datetime'] = $configObject->get('cfg_tablesorter_date_time');
 $render->render($jsdataset, array(), 'dataset.html');
 ?>
+<script src="../../js/addquestionsinit.min.js"></script>
 </body>
 </html>

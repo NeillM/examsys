@@ -52,7 +52,6 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   </script>
   <script src='../../js/require.js'></script>
   <script src='../../js/main.min.js'></script>
-  <script src="../../js/addquestionslistinit.min.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
@@ -222,5 +221,7 @@ $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render->render($jsdataset, array(), 'dataset.html');
 ?>
+
+<script src="../../js/addquestionslistinit.min.js"></script>
 </body>
 </html>

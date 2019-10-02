@@ -20,7 +20,6 @@
 //
 requirejs(['jquery'], function ($) {
     $(function() {
-        $("#qbuttons").load("add_questions_buttons.php");
         var qno = $("#dataset").attr('data-qno');
         var qlist = $("#dataset").attr('data-qlist');
         var questionno = $("#dataset").attr('data-questionno');

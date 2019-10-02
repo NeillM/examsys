@@ -23,6 +23,8 @@
 */
 
 require '../../include/staff_auth.inc';
+
+$maxscreen = param::required('max_screen', param::INT, param::FETCH_GET);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -32,13 +34,37 @@ require '../../include/staff_auth.inc';
   <title><?php echo page::title('Rog&#333;: ' . $string['questionsbank']); ?></title>
   <script src="../../js/require.js"></script>
   <script src="../../js/main.min.js"></script>
-  <script src="../../js/questionsframeinit.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/add_questions.css" />
 </head>
 <body>
 <div>
     <div class="wrapper">
-        <div id="qbuttons"></div>
+        <div id="qbuttons">
+            <table cellspacing="0" cellpadding="0" style="font-size:90%; width:126px; height:99%; background-color:white; border:1px solid #828790">
+            <tr><td style="vertical-align:top; text-align:center">
+
+            <table cellspacing="0" cellpadding="0" style="font-size:90%; width:144px; text-align:left">
+            <tr><td id="button_unused" class="tabon"><?php echo $string['myunused'] ?></td></tr>
+            <tr><td id="button_alphabetic" class="tab"><?php echo $string['allmyquestions'] ?></td></tr>
+            <tr><td id="button_keywords" class="tab"><?php echo $string['bykeywords'] ?></td></tr>
+            <tr><td id="button_status" class="tab"><?php echo $string['bystatus'] ?></td></tr>
+            <tr><td id="button_papers" class="tab"><?php echo $string['bypaper'] ?></td></tr>
+            <?php
+              $user_modules = $userObject->get_staff_modules();
+
+              if (count($user_modules) > 0) {
+                echo '<tr><td id="button_team" class="tab">' . $string['byteam'] . '</td></tr>';
+              } else {
+                echo '<tr><td id="button_team" class="tab grey">' . $string['byteam'] . '</td></tr>';
+              }
+            ?>
+            <tr><td id="button_search" class="tab"><?php echo $string['search'] ?></td></tr>
+            </table>
+
+            </td></tr>
+            </table>
+        </div>
         <div id="qlist">
             <iframe id="iframeurl" src="add_questions_list.php?type=unused" name="iframeurl" frameborder="0">
                 <p><?php echo $string['browsererr'];?></p>
@@ -47,7 +73,26 @@ require '../../include/staff_auth.inc';
                 <p><?php echo $string['browsererr'];?></p>
             </iframe>
         </div>
-        <div name="controls" id="controls"></div>
+      <div name="controls" id="controls">
+          <form id="addquestions" name="theform" method="post" action="" autocomplete="off">
+            <div align="right"><label for="screen"><?php echo $string['screen'] ?></label>
+                  <select name="screen">
+                  <?php
+                  for ($i = 1; $i <= $maxscreen + 1; $i++) {
+                    if ($i == $maxscreen) {
+                        $selected = 'selected="selected"';
+                    } else {
+                        $selected = '';
+                    }
+                    echo "<option value=\"$i\" $selected>$i</option>\n";
+                  }
+                  ?>
+                  </select>
+                  <input type="hidden" name="questions_to_add" id="questions_to_add" value="" />
+                  <input type="submit" name="submit" value="<?php echo $string['addquestions'] ?>" />
+              </div>
+          </form>
+      </div>
     </div>
 </div>
 <?php
@@ -59,9 +104,9 @@ $miscdataset['attributes']['module'] = param::optional('module', '',param::INT, 
 $miscdataset['attributes']['folder'] = param::optional('folder', '',param::INT, param::FETCH_GET);
 $miscdataset['attributes']['disp'] = param::required('display_pos', param::INT, param::FETCH_GET);
 $miscdataset['attributes']['srcofy'] = param::required('scrOfY', param::FLOAT, param::FETCH_GET);
-$miscdataset['attributes']['max'] = param::required('max_screen', param::INT, param::FETCH_GET);
+$miscdataset['attributes']['max'] = $maxscreen;
 $render->render($miscdataset, array(), 'dataset.html');
 ?>
+<script src="../../js/questionsframeinit.min.js"></script>
 </body>
-
 </html>
