@@ -36,15 +36,6 @@ $maxscreen = param::required('max_screen', param::INT, param::FETCH_GET);
   <script src="../../js/main.min.js"></script>
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/add_questions.css" />
-  <style type="text/css">
-    html {height:100%}
-    body {height:100%; background-color:#F0F0F0; margin-top:4px; margin-bottom:2px; margin-left:4px; margin-right:4px}
-    #controls {font-size:90%}
-    .tab {padding-left:10px; height:25px; cursor:default}
-    .tab:hover {background-color: #FFE7A2}
-    .tabon {padding-left:10px; height:25px; cursor:default; background-color:#FFBD69}
-		.grey {color:#909090}
-  </style>
 </head>
 <body>
 <div>
