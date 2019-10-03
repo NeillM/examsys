@@ -98,9 +98,9 @@ function render_calc($id, $question, $question_screen, $settings, $cur_screen) {
 
   $disabled = ($question_screen < $cur_screen) ? '' : ' disabled';
   foreach ($variables as $variable) {
-    $question = str_replace($variable, '<input type="radio" name="ref" value="var' . $variable . $id . '"{$disabled}>&nbsp;' . $variable, $question);
+    $question = str_replace($variable, '<input type="radio" name="ref" value="var' . $variable . $id . '"' . $disabled . '>&nbsp;' . $variable, $question);
   }
-  $question .= ' <input type="radio" name="ref" value="ans' . $id . '"><input type="text" name="answer' . $id . '" size="14" value="student answer"{$disabled} />';
+  $question .= ' <input type="radio" name="ref" value="ans' . $id . '"' . $disabled . '><input type="text" name="answer' . $id . '" size="14" value="student answer"' . $disabled . ' />';
 
   return $question;
 }

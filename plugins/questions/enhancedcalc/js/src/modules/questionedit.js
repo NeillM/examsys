@@ -59,11 +59,7 @@ define(['requireconfig.min', 'jquery'], function(config, $) {
          * Copy value to variable.
          */
         this.copyValue = function() {
-            for (var i=0; i < document.myform.ref.length; i++) {
-                if (document.myform.ref[i].checked) {
-                    var selectedRef = document.myform.ref[i].value;
-                }
-            }
+            var selectedRef = $('input[type=radio][name=ref]:checked').val();
             window.opener.document.getElementById($('#dataset').attr('data-elementid')).value = selectedRef;
             window.opener.document.getElementById($('#dataset').attr('data-iconid')).src = config.cfgrootpath +'/artwork/variable_link_on.png';
             window.close();

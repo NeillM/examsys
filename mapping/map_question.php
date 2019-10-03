@@ -76,6 +76,7 @@ function display_q($configObject, $target_id, $db) {
 
   if ($question['q_type'] == 'enhancedcalc') {
     $question['screen'] = 1;
+    $question['paper_questions'] = [];
     require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
     if (!isset($configObj)) {
       $configObj = Config::get_instance();
