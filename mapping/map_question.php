@@ -97,7 +97,7 @@ function display_q($configObject, $target_id, $db) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo $string['objectivemapping']; ?></title>
-  <script id="rogoconfig" src='../js/rogo.min.js'
+  <script id="rogoconfig"
           data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
           data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
           data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>">

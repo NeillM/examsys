@@ -38,7 +38,7 @@ define(['jquery', 'helplauncher'], function($, HELPLAUNCHER) {
          * Initialise help links on screen.
          */
         this.addHelpLinks = function () {
-            $('.help-link').each(function (e) {
+            $('.help-link').each(function () {
                 var rel = 0;
                 if ($(this).attr('rel') !== undefined) {
                     rel = $(this).attr('rel');

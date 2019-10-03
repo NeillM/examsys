@@ -43,7 +43,7 @@ requirejs(['list', 'form', 'alert', 'jquery'], function (LIST, FORM, ALERT, $) {
                     window.close();
                 }
             },
-            error: function (xhr, textStatus, errorThrown) {
+            error: function (xhr, textStatus) {
                 alert.plain(textStatus);
             },
         });

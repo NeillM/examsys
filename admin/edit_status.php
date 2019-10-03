@@ -114,7 +114,7 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
     }
   </style>
 
-  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
   <script src="../js/statusinit.min.js"></script>

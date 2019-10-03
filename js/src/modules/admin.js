@@ -41,7 +41,7 @@ define(['jquery'], function($) {
         this.hideAnnouncement = function(announcementID) {
             $('#announcement' + announcementID).hide();
 
-            var request = $.ajax({
+            $.ajax({
                 url: "./ajax/staff/hide_announcement.php",
                 type: "get",
                 data: {announcementID: announcementID},

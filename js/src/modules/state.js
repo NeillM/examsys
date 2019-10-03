@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-define(['requireconfig.min', 'jquery'], function(config, $) {
+define(['rogoconfig', 'jquery'], function(config, $) {
   return function() {
     /**
      * Initialise state saving for checkboxes on screen.
@@ -38,7 +38,7 @@ define(['requireconfig.min', 'jquery'], function(config, $) {
      * @param string content state value
      */
     this.updateState = function (state_name, content) {
-      $.post(config.cfgrootpath + '/include/set_state.php', {state_name: state_name, content: content, page: document.URL}, function(responseText){ }, "html");
+      $.post(config.cfgrootpath + '/include/set_state.php', {state_name: state_name, content: content, page: document.URL}, function() {}, "html");
     };
 
     /**

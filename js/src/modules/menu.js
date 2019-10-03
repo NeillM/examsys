@@ -22,7 +22,7 @@
 // @version 1.0
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-define(['requireconfig.min', 'state', 'jquery'], function(config, STATE, $) {
+define(['rogoconfig', 'state', 'jquery'], function(config, STATE, $) {
     return function () {
         /**
          * Display/Hide menu sections.

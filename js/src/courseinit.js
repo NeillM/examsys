@@ -39,7 +39,7 @@ requirejs(['alert', 'form', 'jquery'], function (ALERT, FORM, $) {
                     alert.notification('coursecodeinuse', data);
                 }
             },
-            error: function (xhr, textStatus, errorThrown) {
+            error: function (xhr, textStatus) {
                 alert(textStatus);
             },
         });

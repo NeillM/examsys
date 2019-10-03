@@ -43,7 +43,7 @@ requirejs.config({
         plugins: "/admin/plugins/js/plugins.min",
         pluginsvalidate: "/admin/plugins/js/plugins_validate.min",
         ltisearchusers: "/LTI/js/search_users.min",
-        requireconfig: "requireconfig.min",
+        rogoconfig: "requireconfig.min",
         jsxls: "jsxls.min",
         lang: "lang.min",
         textboxmarking: "textboxmarking.min",
@@ -195,7 +195,7 @@ requirejs.config({
         jquerymrq: "/plugins/questions/mrq/js/modules/validatequestion.min",
         jqueryrandom: "/plugins/questions/random/js/modules/validatequestion.min",
         jqueryrank: "/plugins/questions/rank/js/modules/validatequestion.min",
-        jquerysct: "/plugins/questions/sct/js/modules/validatequestion.min",
+        jquerysct: "/plugins/questions/sct/js/modules/validatequestion.min"
     },
     shim: {
         // Mathjax configration.
@@ -226,7 +226,7 @@ requirejs.config({
 });
 
 // Read Rogo configuration and enable/disable functionality accordingly
-requirejs(['requireconfig.min'], function(config) {
+requirejs(['rogoconfig'], function(config) {
     if (config.mathjax) {
         requirejs(['mathjax']);
     }

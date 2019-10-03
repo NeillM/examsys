@@ -42,7 +42,7 @@ require '../include/errors.php';
     .desc:hover {background-color:#FFE7A2}
   </style>
 
-  <script id="rogoconfig" src='../js/rogo.min.js'></script>
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
   <script src="../js/createquestioninit.min.js"></script>

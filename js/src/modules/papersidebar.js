@@ -22,7 +22,7 @@
 // @version 1.0
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-define(['requireconfig.min', 'jsxls', 'state', 'sidebar', 'jquery'], function(config, jsxls, STATE, SIDEBAR, $) {
+define(['rogoconfig', 'jsxls', 'state', 'sidebar', 'jquery'], function(config, jsxls, STATE, SIDEBAR, $) {
     return function() {
         /**
          * Initialise paper sidebar.
@@ -278,8 +278,7 @@ define(['requireconfig.min', 'jsxls', 'state', 'sidebar', 'jquery'], function(co
                 $("#icon_" + qNumber).addClass("killer_icon");
             }
 
-            var posting = $.post(url, { paperID: this.paperid, q_id: qID, qNumber: qNumber } );
-
+            $.post(url, { paperID: this.paperid, q_id: qID, qNumber: qNumber } );
         };
 
         /**
@@ -398,7 +397,7 @@ define(['requireconfig.min', 'jsxls', 'state', 'sidebar', 'jquery'], function(co
          */
         this.nextTable = function() {
             var paper_name = $('#new_paper').val();
-            $.post("../ajax/paper/check_name.php", {name:paper_name}, function(data, status) {
+            $.post("../ajax/paper/check_name.php", {name:paper_name}, function(data) {
                 if (data == 'unique') {
                     $('#table1div').hide();
                     $('#table2div').show();

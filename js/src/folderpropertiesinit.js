@@ -49,7 +49,7 @@ requirejs(['alert', 'folderproperties', 'form', 'jquery'], function (ALERT, FOLD
                         $('#duplicateerror').show();
                     }
                 },
-                error: function (xhr, textStatus, errorThrown) {
+                error: function (xhr, textStatus) {
                     alert.plain(textStatus);
                 },
             });

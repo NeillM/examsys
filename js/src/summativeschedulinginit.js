@@ -21,7 +21,6 @@
 requirejs(['list', 'jquery'], function (LIST, $) {
     var list = new LIST();
     list.init();
-    var scope = this;
 
     $(".l").dblclick(function() {
         list.edit("scheduling_details.php?paperID=", $('#lineID').val());

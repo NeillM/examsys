@@ -26,7 +26,7 @@ define(['jquery'], function($) {
         this.findKeywords = function() {
             $.post("add_questions_list.php?type=keyword",
                 $('#myform').serialize(),
-                function(data,status){
+                function(data){
                     $('#keywordqlist').html(data);
                 }
             );

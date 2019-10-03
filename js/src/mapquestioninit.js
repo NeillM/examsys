@@ -36,7 +36,7 @@ requirejs(['alert', 'questionmapping', 'jquery'], function (ALERT, MAPPING, $) {
                     window.close();
                 }
             },
-            error: function (xhr, textStatus, errorThrown) {
+            error: function (xhr, textStatus) {
                 alert.plain(textStatus);
             },
         });

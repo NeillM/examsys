@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-define(['jsxls', 'requireconfig.min', 'jquery', 'jqueryui'], function(jsxls, config, $) {
+define(['jsxls', 'rogoconfig', 'jquery', 'jqueryui'], function(jsxls, config, $) {
     return function() {
         /**
          * Initialise sidebar.

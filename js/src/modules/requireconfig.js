@@ -18,15 +18,33 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-define(['module'], function(module) {
+define(['jquery', 'log'], function($, Log) {
+    var config = $('#rogoconfig');
+    var mathjax = 0;
+    var three = 0;
+    var editor = config.data('editor');
+    var cfgrootpath = config.data('root');
+    if (config.data('mathjax')) {
+        mathjax = 1;
+    }
+    if (config.data('three')) {
+        three = 1;
+    }
+    if (typeof editor === 'undefined') {
+        editor = 'plain';
+    }
+    if (typeof cfgrootpath === 'undefined') {
+        Log('Root path not set, using default', 'warn');
+        cfgrootpath = '';
+    }
     return {
         // Root path.
-        cfgrootpath: module.config().cfgrootpath,
+        cfgrootpath: cfgrootpath,
         // Mathjax enabled?
-        mathjax: module.config().mathjax,
+        mathjax: mathjax,
         // ThreeJS enabled?
-        three: module.config().three,
+        three: three,
         // Editor enabled?
-        editor: module.config().editor,
+        editor: editor
     }
 });

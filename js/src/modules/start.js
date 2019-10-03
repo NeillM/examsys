@@ -214,9 +214,8 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
 
         /**
          * If a linear paper we inform the user they cannot go back once submitted and warn about linked questions.
-         * @param object event event
          */
-        this.confirmSubmitLinear = function(event) {
+        this.confirmSubmitLinear = function() {
             if ($('#button_pressed').val() === 'finish') {
                 scope.showDialog(Jsxls.lang_string['javacheck2']);
             } else {
@@ -294,7 +293,7 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
                 $('#button_pressed').attr('value', event.target.id);
             }
 
-            $("#dialog_cancel, #enhancedcalc_warning_cancel").click(function(event) {
+            $("#dialog_cancel, #enhancedcalc_warning_cancel").click(function() {
                 if ($('#button_pressed').val() === 'jumpscreen') {
                     $('#jumpscreen option').each(function () {
                         if (this.defaultSelected) {
@@ -314,7 +313,7 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
          * Save the users responses.
          * @param object event event
          */
-        this.conductSave = function(event) {
+        this.conductSave = function() {
             var el = document.getElementById('paper');
             Editor.triggerSave();
             scope.stopAutoSave();
@@ -469,7 +468,7 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
                     scope.saveFail(textStatus + ': ' + xhr.status, this.url, '', submitType);
                     return;
                 },
-                success: function (ret_data, textStatus, jqXHR) {
+                success: function (ret_data) {
                     if (ret_data == randomPageID) {
                         $('#save_failed').val('');
                         //Cache the form data to look for changes on next auto save

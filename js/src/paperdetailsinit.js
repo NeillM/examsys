@@ -42,7 +42,7 @@ requirejs(['jsxls', 'helplauncher', 'ui', 'leadinpopup', 'papersidebar', 'paperd
 
     if (!$('#dataset').attr('data-locked')) {
         $.ajaxSetup({timeout: 3000});
-        $('#content').ajaxError(function (event, jqXHR, ajaxSettings, thrownError) {
+        $('#content').ajaxError(function () {
             details.showAJAXError();
         });
 
@@ -84,14 +84,13 @@ requirejs(['jsxls', 'helplauncher', 'ui', 'leadinpopup', 'papersidebar', 'paperd
             },
             beforeStop: function (event, ui) {
                 if (!ui.item.hasClass('qline')) {
-                    var text = ui.helper.text();
                     var breaks = $('.breakline').size();
                     var row = $(document.createElement('tr'));
                     row.addClass('breakline');
                     row.addClass('qline');
                     row.attr('id', 'link_break' + (breaks + 1));
                     row.attr('data-order', 'link_break' + (breaks + 1));
-                    row.html('<td colspan="6"><h4><span class="opaque screen_no">jsxls.lang_string["screen1"]</span></h4></td>');
+                    row.html('<td colspan="6"><h4><span class="opaque screen_no">' + jsxls.lang_string["screen1"] + '</span></h4></td>');
                     row.mouseover(function () {
                         $(this).find('img.handle').show();
                     });
@@ -102,10 +101,9 @@ requirejs(['jsxls', 'helplauncher', 'ui', 'leadinpopup', 'papersidebar', 'paperd
                     $(ui.item).replaceWith(row);
                 }
             },
-            update: function (event, ui) {
+            update: function () {
                 $('.qline').css('background-color', '#fff');
                 var order = $('#sortable tbody').sortable('serialize', {attribute: 'data-order'});
-                var newpos = $(ui.item).parent().children('.qline:not(.breakline)').index(ui.item) + 1;
                 $.get('../ajax/paper/order-questions.php?paperID=' + paperid + '&' + order, function (data) {
                     if (data == 'ERROR') {
                         details.showAJAXError();

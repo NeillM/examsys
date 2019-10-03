@@ -18,6 +18,9 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
+
+/* eslint no-unused-vars: "warn" */
+
 define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
     return function() {
         this.isMouseOutsiceCanvas = false;
@@ -130,7 +133,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                     document.onkeyup = this.qa_mouseDragMove.bind(this);
                     document.onkeypress = this.qa_mouseDragMove.bind(this);
                 }
-                var intervalID = window.setInterval(this.qa_redraw_canvas.bind(this), 10);
+                window.setInterval(this.qa_redraw_canvas.bind(this), 10);
             }
             if (this.canvas && !this.canvas.getContext) {
                 alert(Jsxls.lang_string['errorcanvas']);
@@ -285,7 +288,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
 
         this.qa_test_calc = function(type) {
             //type = data or image
-            var li1, li2, li3, li4, j;
+            var li1, li2, li3, j;
             li1 = li2 = li3 = 0;
             var trsh = 64;
             this.do_the_test_calc = false;
@@ -304,7 +307,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
             if (type == 'image') {
                 this.timga = this.err_image.data;
                 for (j = 0; j < this.timga.length; j += 4) {
-                    li1 = li2 = li3 = li4 = 0;
+                    li1 = li2 = li3 = 0;
                     if (this.timga[j + 0] * 1 > trsh && this.timga[j + 2] * 1 > trsh && this.timga[j + 1] * 1 < trsh) li1++;
                     if (this.timga[j + 0] * 1 > trsh && this.timga[j + 2] * 1 < trsh && this.timga[j + 1] * 1 < trsh) li2++;
                     if (this.timga[j + 0] * 1 < trsh && this.timga[j + 2] * 1 > trsh && this.timga[j + 1] * 1 < trsh) li3++;
@@ -356,13 +359,12 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
                     var img_final = this.context.getImageData(1, 1, this.canvas.width - 2, this.canvas.height - 2);
                     var img_final_data = img_final.data;
                     var err_final_data = this.err_image.data;
-                    var li1, li2, li3, li4;
-                    li1 = li2 = li3 = 0;
+                    var li2, li3;
+                    li2 = li3 = 0;
                     var trsh = 64;
 
                     for (var j = 0; j < err_final_data.length; j += 4) {
-                        li1 = li2 = li3 = li4 = 0;
-                        if (err_final_data[j + 0] * 1 > trsh && err_final_data[j + 2] * 1 > trsh && err_final_data[j + 1] * 1 < trsh) li1++;
+                        li2 = li3 = 0;
                         if (err_final_data[j + 0] * 1 > trsh && err_final_data[j + 2] * 1 < trsh && err_final_data[j + 1] * 1 < trsh) li2++;
                         if (err_final_data[j + 0] * 1 < trsh && err_final_data[j + 2] * 1 > trsh && err_final_data[j + 1] * 1 < trsh) li3++;
                         if (li2 == 1 || li3 == 1) {
@@ -529,7 +531,7 @@ define(['html5images', 'qsharedf', 'jsxls'], function(Images, Qsharedf, Jsxls) {
             }
         };
 
-        this.qa_mouseDragMoveOutside = function(e) {
+        this.qa_mouseDragMoveOutside = function() {
             if (this.isMouseOutsiceCanvas && this.poly_temp.length > 2) {
                 if (this.qmode == 'edit' && this.qconfig == '' && this.poly_temp.split(',').length > 3) this.qconfig = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16) + ',' + Math.round(this.poly_temp_points[1]).toString(16);
                 if (this.qmode == 'answer' && this.qanswer == '' && this.poly_temp.split(',').length > 3) this.qanswer = this.poly_temp + Math.round(this.poly_temp_points[0]).toString(16) + ',' + Math.round(this.poly_temp_points[1]).toString(16);

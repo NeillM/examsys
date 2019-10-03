@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-requirejs(['performance', 'popupmenu'], function (PERF, POPUP) {
+requirejs(['jquery', 'performance', 'popupmenu'], function ($, PERF, POPUP) {
     var performance = new PERF();
     var popup = new POPUP();
     popup.init();
@@ -36,7 +36,7 @@ requirejs(['performance', 'popupmenu'], function (PERF, POPUP) {
         performance.jumpToPaper();
     });
     $("tr[id^=res]").each(function(){
-        $(this).click(function(e) {
+        $(this).click(function() {
             performance.papertype = $(this).attr('data-papertype');
             performance.cryptname = $(this).attr('data-cryptname');
             performance.paperid = $(this).attr('data-paperid');

@@ -60,7 +60,7 @@ requirejs(['questionedit', 'questionmapping', 'state', 'jquery'], function (ADDE
         addedit.showNextOption(this, e);
     });
 
-    $('label.fullwidth input').click(function (e) {
+    $('label.fullwidth input').click(function () {
         $(this).parent().toggleClass('on');
     });
 

@@ -189,7 +189,7 @@ define(['jquery'], function($) {
                         return;
                     }
                 },
-                error: function(xhr, textStatus, errorThrown) {
+                error: function(xhr, textStatus) {
                     if (textStatus == 'timeout' ) {
                         this.saveFail();
                         return;
@@ -204,7 +204,7 @@ define(['jquery'], function($) {
                     this.saveFail();
                     return;
                 },
-                success: function (ret_data, jqXHR, textStatus) {
+                success: function (ret_data) {
                     if (ret_data == randomPageID) {
                         this.saveSuccess();
                         return;

@@ -34,7 +34,7 @@ requirejs(['jsxls', 'osce', 'jquery'], function (jsxls, OSCE, $) {
     });
 
     $("td[id^=c]").each(function(){
-        $(this).click(function(e) {
+        $(this).click(function() {
             osce.ans($(this).attr('data-qid'), $(this).attr('data-rating'), $(this).attr('data-cols'));
         });
     });

@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-define(['jquery'], function($) {
+define([], function() {
     return function() {
         /**
          * Open window to map objectives to a question.

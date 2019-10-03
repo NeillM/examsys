@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-define(['alert', 'form', 'jquery'], function(ALERT, FORM, $) {
+define(['alert'], function(ALERT) {
     return function () {
         /**
          * Notify user / stop submission if illegal character used in keyword.

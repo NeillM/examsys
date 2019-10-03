@@ -44,7 +44,7 @@ requirejs(['alert', 'keyword', 'form', 'jquery'], function (ALERT, KEYWORD, FORM
                     window.close();
                 }
             },
-            error: function (xhr, textStatus, errorThrown) {
+            error: function (xhr, textStatus) {
                 alert.plain(textStatus);
             },
         });

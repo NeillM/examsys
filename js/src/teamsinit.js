@@ -50,7 +50,7 @@ requirejs(['form', 'alert', 'jquery'], function(FORM, ALERT, $) {
                     window.close();
                 }
             },
-            error: function (xhr, textStatus, errorThrown) {
+            error: function (xhr, textStatus) {
                 alert.plain(textStatus);
             },
         });

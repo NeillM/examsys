@@ -43,7 +43,7 @@ $state = $stateutil->getState();
     .errl {padding-right:6px; vertical-align:top; text-align:right}
 	</style>
 
-  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
   <script src='../js/errorlistinit.min.js'></script>

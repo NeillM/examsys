@@ -382,7 +382,7 @@ $scrOfY = param::optional('scrOfY', null, param::FLOAT, param::FETCH_GET);
       echo QuestionStatus::generate_status_css($status_array);
     ?>
   </style>
-  <script id="rogoconfig" src='../js/rogo.min.js'
+  <script id="rogoconfig"
         data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
         data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>">
   </script>

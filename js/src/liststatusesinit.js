@@ -22,13 +22,13 @@ requirejs(['questionstatus', 'jquery', 'jqueryui'], function (STATUS, $) {
     var status = new STATUS();
 
     $.ajaxSetup({timeout: 3000});
-    $(document).ajaxError(function (event, jqXHR, ajaxSettings, thrownError) {
+    $(document).ajaxError(function () {
         status.showReorderError();
     });
 
     $('#statuses').sortable({
         axis: 'y',
-        update: function (event, ui) {
+        update: function () {
             $.post("../ajax/admin/update_status_order.php", {statuses: $('#statuses').sortable('serialize')})
                 .done(status.reorderSuccess);
         }

@@ -37,7 +37,7 @@ requirejs(['popupmenu', 'osce', 'jquery', 'jquerytablesorter'], function (POPUP,
         osce.viewProfile(this);
     });
 
-    $("tr[id^=res]").click(function(e) {
+    $("tr[id^=res]").click(function() {
         osce.cryptname = $(this).attr('data-cryptname');
         osce.paperid = $(this).attr('data-paperid');
         osce.metadataid = $(this).attr('data-metadataid');

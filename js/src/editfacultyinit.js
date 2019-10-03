@@ -41,7 +41,7 @@ requirejs(['form', 'alert', 'jquery'], function (FORM, ALERT, $) {
             alert.notification('facultywarning');
           }
         },
-        error: function(xhr, textStatus, errorThrown) {
+        error: function(xhr, textStatus) {
           alert(textStatus);
         },
       });

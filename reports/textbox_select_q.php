@@ -51,7 +51,7 @@ $paper = $propertyObj->get_paper_title();
     .warning {width: 12px; height: 11px; margin-right: 4px}
   </style>
 
-  <script id="rogoconfig" src='../js/rogo.min.js'
+  <script id="rogoconfig"
             data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
             data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
             data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>">

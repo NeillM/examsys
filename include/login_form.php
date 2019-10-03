@@ -40,7 +40,7 @@ $cfg_root_path = $configObject->get('cfg_root_path');
       echo "<style type=\"text/css\">\n  body {background-color:transparent !important}\n</style>\n"; // Make the LTI screen blend in more.
     }
   ?>
-    <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+    <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
     <script src='../js/require.js'></script>
     <script src='../js/main.min.js'></script>
     <script src="<?php echo $cfg_root_path ?>/js/logininit.min.js"></script>

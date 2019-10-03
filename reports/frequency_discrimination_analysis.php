@@ -1847,7 +1847,7 @@ HTML;
     .subsect_table {margin-left: 6px; margin-bottom: 10px}
   </style>
 
-  <script id="rogoconfig" src='../js/rogo.min.js'
+  <script id="rogoconfig"
             data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
             data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
             data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>">

@@ -39,7 +39,7 @@ requirejs(['alert', 'jquery'], function(ALERT, $) {
                     window.close();
                 }
             },
-            error: function (xhr, textStatus, errorThrown) {
+            error: function (xhr, textStatus) {
                 alert.plain(textStatus);
             },
         });

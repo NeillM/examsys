@@ -46,7 +46,7 @@ if (is_null($details['name'])) {
     body {font-size:90%; margin:2px; background-color:#EAEAEA}
     h1 {font-size:140%; font-weight:normal}
   </style>
-  <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
   <script src="../js/editfacultyinit.min.js"></script>

@@ -38,7 +38,7 @@ define(['jsxls', 'jquery'], function(jsxls, $) {
         this.notification = function(msg, arg) {
             if ($.isArray(arg)) {
                 var message = jsxls.lang_string[msg];
-                arg.forEach(function(item, index) {
+                arg.forEach(function(item) {
                     message = message.replace('%s', item);
                 });
                 alert(message);

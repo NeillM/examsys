@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-requirejs(['requireconfig.min', 'referancelist', 'list', 'jquery', 'jquerytablesorter'], function (config, REF, LIST, $) {
+requirejs(['rogoconfig', 'referancelist', 'list', 'jquery', 'jquerytablesorter'], function (config, REF, LIST, $) {
     var ref = new REF();
     var list = new LIST();
     list.init();

@@ -87,7 +87,7 @@ define(['jquery', 'jsxls'], function($, jsxls) {
 
             if (this.canvas && this.canvas.getContext) {
                 this.context = this.canvas.getContext('2d');
-                var intervalID = window.setInterval(this.g_redraw_canvas(), 10);
+                window.setInterval(this.g_redraw_canvas(), 10);
             }
         };
 
@@ -318,9 +318,8 @@ define(['jquery', 'jsxls'], function($, jsxls) {
 
         /**
          * Mouse drag down event action.
-         * @param object e event
          */
-        this.g_mouseDragUp = function(e) {
+        this.g_mouseDragUp = function() {
             this.dragging = false;
             if (this.testWithin(this.x, this.y, this.d_x - 5, this.d_y - 15 + 0, 20, 20)) {
                 this.boundaries[0] = this.temp_boundaries[0];
@@ -346,9 +345,8 @@ define(['jquery', 'jsxls'], function($, jsxls) {
 
         /**
          * Mouse drag down event action.
-         * @param object e event
          */
-        this.g_mouseDragDown = function(e) {
+        this.g_mouseDragDown = function() {
             this.dragging = true;
         };
 

@@ -381,7 +381,7 @@ if (true === $has_result = !is_null($submit) or ! is_null($paper_id) or ! is_nul
             .l {line-height: 160%}
         </style>
 
-        <script id="rogoconfig" src='../js/rogo.min.js' data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+        <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
         <script src='../js/require.js'></script>
         <script src='../js/main.min.js'></script>
         <script src="../js/usersearchinit.min.js"></script>

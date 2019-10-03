@@ -219,7 +219,7 @@ require '../config/finish.inc';
 <link rel="stylesheet" type="text/css" href="../css/finish.css" />
 <link rel="stylesheet" type="text/css" href="../css/key.css" />
 <link rel="stylesheet" type="text/css" href="../css/html5.css" />
-<script id="rogoconfig" src='../js/rogo.min.js'
+<script id="rogoconfig"
         data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
         data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
         data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>">

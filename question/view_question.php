@@ -90,7 +90,7 @@ $question['assigned_number'] = (isset($_GET['qNo'])) ? $_GET['qNo'] : 1;
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/start.css" />
 
-  <script id="rogoconfig" src='../js/rogo.min.js'
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
             data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
             data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
             data-three="<?php echo $configObject->get_setting('core', 'paper_threejs'); ?>">

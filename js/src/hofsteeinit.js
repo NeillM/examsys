@@ -23,7 +23,7 @@ requirejs(['hofstee', 'jquery'], function (HOFSTEE, $) {
     var hofstee_plot_dist = new HOFSTEE();
     hofstee_plot_pass.init($('#dataset').attr('data-marks'), $('#dataset').attr('data-stats'), 'canvas_graph_pass','pass');
     hofstee_plot_dist.init($('#dataset').attr('data-marks'), $('#dataset').attr('data-stats'), 'canvas_graph_distinction','distinction');
-    $("#checkbox").change(function (event) {
+    $("#checkbox").change(function () {
         hofstee_plot_pass.redraw = true;
         hofstee_plot_pass.g_redraw_canvas();
         hofstee_plot_dist.redraw = true;

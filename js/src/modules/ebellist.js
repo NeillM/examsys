@@ -20,7 +20,7 @@
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
 //
-define(['requireconfig.min', 'jquery'], function(config, $) {
+define(['rogoconfig', 'jquery'], function(config, $) {
     return function() {
         /**
          * Open edit ebel template.

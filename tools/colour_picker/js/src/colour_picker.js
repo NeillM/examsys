@@ -24,7 +24,7 @@ define(['user', 'jquery', 'jqueryui'], function(USER, $) {
             this.textBox = '';
             var scope = this;
             $("td[id^=row]").each(function(){
-                $(this).click(function(e) {
+                $(this).click(function() {
                     scope.setColor($(this).attr('data-colour'), $(this).attr('data-url'));
                 });
             });

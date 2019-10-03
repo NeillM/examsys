@@ -19,7 +19,7 @@
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
 
-requirejs(['requireconfig.min', 'jquery'], function(config, $) {
+requirejs(['rogoconfig', 'jquery'], function(config, $) {
 
     /**
      * Initialise the threejs object

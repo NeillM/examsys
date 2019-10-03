@@ -29,7 +29,7 @@ define(['jquery', 'jqueryui'], function($) {
          * @param object e event
          * @returns bool
          */
-        this.mouseSelect = function(e) {
+        this.mouseSelect = function() {
             if (this.isMenu) {
                 if (this.overpopupmenu == false) {
                     this.isMenu = false;
@@ -175,7 +175,7 @@ define(['jquery', 'jqueryui'], function($) {
                     userID:$('#userID').val(),
                     paperID:$('#paperID').val()
                 },
-                function(data, status) {
+                function() {
                     scope.refreshCohortList( $('#paperID').val() );
                 });
         };
