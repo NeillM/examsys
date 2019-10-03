@@ -5,7 +5,7 @@ Feature: Home page
    I should be able to see home page after login
 
    @javascript
-   Scenario: Admin user login
+   Scenario: Admin user has functional menu
       Given I login as "admin"
       Then I should see menu with following items:
          | menu_items |
@@ -22,7 +22,7 @@ Feature: Home page
          | About Rogō | 
       When I click "Help & Support" "main_menu_item"
       Then I should see popup page with title "Rogō: Help"
-      When I close popup window
+      When I close popup window "Rogō: Help"
       And I toggle the main menu
       And I click "Administrative Tools" "main_menu_item"
       Then I should see page with title "Administrative Tools"

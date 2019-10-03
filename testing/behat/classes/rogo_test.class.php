@@ -181,11 +181,11 @@ class rogo_test extends MinkContext {
     }
 
     $backtrace = debug_backtrace();
-
-    throw new Exception(
-        "Timeout thrown by " . $backtrace[1]['class'] . "::" . $backtrace[1]['function'] . "()\n" .
-        $backtrace[1]['file'] . ", line " . $backtrace[1]['line']
-    );
+    $message = "Timeout thrown by " . $backtrace[1]['class'] . "::" . $backtrace[1]['function'] . "()";
+    if (isset($backtrace[1]['file'])) {
+      $message .= " in " . $backtrace[1]['file'] . ", line " . $backtrace[1]['line'];
+    }
+    throw new Exception($message);
   }
 
   /**
