@@ -79,6 +79,8 @@ $string['questionsbykeyword'] = 'Questions by Keyword';
 $string['search'] = 'Search';
 $string['createnewquestion'] = 'Create new Question';
 
+$string['studentcohort'] = 'View student cohort';
+
 $string['dates'] = 'Dates';
 $string['to'] = 'to';
 $string['course'] = 'Course';

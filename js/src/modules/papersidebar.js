@@ -118,6 +118,11 @@ define(['rogoconfig', 'jsxls', 'state', 'sidebar', 'jquery'], function(config, j
             $('.reports').click(function(e) {
                 scope.go($(this).attr('data-url'), e);
             });
+            
+            $('.studentcohort').click(function(e) {
+                e.preventDefault();
+                scope.students();
+            });
         };
 
         /**
@@ -429,6 +434,21 @@ define(['rogoconfig', 'jsxls', 'state', 'sidebar', 'jquery'], function(config, j
                     alert (jsxls.lang_string['msg9']);
                     return false;
                 }
+            }
+        };
+
+        /**
+         * Open the list of students for the paper.
+         */
+        this.students = function() {
+            var url = config.cfgrootpath + "/users/paper.php?paperID=" + this.paperid;
+            var left = screen.width / 2 - 431;
+            var top = screen.height / 2 - 325;
+            var properties = "width=888,height=650,left=" + left + ",top=" + top + ",scrollbars=no,toolbar=no,location=no,"
+                    + "directories=no,status=no,menubar=no,resizable";
+            var notice = window.open(url, "properties", properties);
+            if (window.focus) {
+                notice.focus();
             }
         };
     }

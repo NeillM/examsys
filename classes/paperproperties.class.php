@@ -23,7 +23,7 @@
  * @package
  */
 class PaperProperties {
-
+  /** @var mysqli The Rogo database connection. */
   private $db;
   private $configObject;
 
@@ -2527,6 +2527,77 @@ class PaperProperties {
       $student_list[] = $users[$student_no]['userid'];
     }
     return $student_list;
+  }
+
+  /**
+   * Tests if the paper has access restricted by metadata.
+   *
+   * @return bool
+   */
+  public function has_metadata() : bool {
+    $sql = "SELECT NULL FROM paper_metadata_security WHERE paperID = ? LIMIT 1";
+    $query = $this->db->prepare($sql);
+    $query->bind_param('i', $pid);
+    $pid = $this->get_property_id();
+    $query->execute();
+    $query->store_result();
+    return ($query->num_rows > 0);
+  }
+
+  /**
+   * Get a list of users who can take the paper.
+   *
+   * @return \users\UserList
+   */
+  public function get_users() : \users\UserList {
+    $users = new \users\UserList();
+    $pid = $this->get_property_id();
+    $year = $this->get_calendar_year();
+    if ($this->has_metadata()) {
+      $sql = "SELECT u.id, u.first_names, u.grade, u.surname, u.roles, u.title, u.username, u.yearofstudy, s.student_id
+              FROM users u
+              JOIN modules_student ms ON ms.userID = u.id
+              JOIN properties_modules pm ON pm.idMod = ms.idMod
+              JOIN users_metadata um ON um.userID = u.id AND um.idMod = ms.idMod AND um.idMod = pm.idMod AND um.calendar_year = ms.calendar_year
+              JOIN paper_metadata_security ps ON ps.name = um.type AND ps.value = um.value
+              LEFT JOIN sid s ON s.userID = u.id
+              WHERE pm.property_id = ? AND ms.calendar_year = ? AND ps.paperID = ?
+              GROUP BY u.id, u.first_names, u.grade, u.surname, u.roles, u.title, u.username, u.yearofstudy, s.student_id
+              ORDER BY u.surname, u.first_names, s.student_id";
+      $params = ['iii', &$pid, &$year, &$pid];
+    } else {
+      $sql = "SELECT u.id, u.first_names, u.grade, u.surname, u.roles, u.title, u.username, u.yearofstudy, s.student_id
+              FROM users u
+              JOIN modules_student ms ON ms.userID = u.id
+              JOIN properties_modules pm ON pm.idMod = ms.idMod
+              LEFT JOIN sid s ON s.userID = u.id
+              WHERE pm.property_id = ? AND ms.calendar_year = ?
+              GROUP BY u.id, u.first_names, u.grade, u.surname, u.roles, u.title, u.username, u.yearofstudy, s.student_id
+              ORDER BY u.surname, u.first_names, s.student_id";
+      $params = ['ii', &$pid, &$year];
+    }
+    $query = $this->db->prepare($sql);
+    if ($query === false) {
+      throw new \coding_exception($this->db->error);
+    }
+    call_user_func_array([$query, 'bind_param'], $params);
+    $query->execute();
+    $query->bind_result($id, $firstname, $grade, $lastname, $role, $title, $username, $studentyear, $sid);
+    while ($query->fetch()) {
+      $user = new \users\User();
+      $user->firstname = $firstname;
+      $user->grade = $grade;
+      $user->id = $id;
+      $user->lastname = $lastname;
+      $user->role = $role;
+      $user->studentid = $sid;
+      $user->title = $title;
+      $user->username = $username;
+      $user->year = $studentyear;
+      $users->add($user);
+    }
+    $query->close();
+    return $users;
   }
 
   /**
