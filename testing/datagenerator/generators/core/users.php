@@ -158,6 +158,50 @@ class users extends generator {
     protected static $defaultusername = 'person';
 
     /**
+     * Creates an item of metadata for a user.
+     *
+     * Parameters:
+     * - type string The type of meta data.
+     * - value string The value of the metadata.
+     * - calendar_year int The id of the the year.
+     *
+     * @param int $userid Internal id of a Rogo user.
+     * @param int $moduleid Internal id of a module.
+     * @param array|stdClass $parameters
+     * @return array Contains the values that were inserted into the database for the metadata.
+     * @throws data_error
+     */
+    public function create_metadata(int $userid, int $moduleid, $parameters) : array {
+        // If an object is passed convert it into an array.
+        if (is_object($parameters)) {
+            $parameters = (array)$parameters;
+        }
+        // Check that the right type has been passed.
+        if (!is_array($parameters)) {
+            throw new data_error('Must pass an array or object');
+        }
+        // Check the user exists.
+        if (!\UserUtils::userid_exists($userid, $this->db)) {
+            throw new data_error("User {$userID} does not exist");
+        }
+        // Check the module exists.
+        if (!\module_utils::get_moduleid_from_id($moduleid, $this->db)) {
+            throw new data_error("Module {$moduleid} does not exist");
+        }
+        $yearutils = new \yearutils($this->db);
+        $defaults = array(
+            'userID' => $userid,
+            'idMod' => $moduleid,
+            'type' => 'SomeType',
+            'value' => 'Default',
+            'calendar_year' => $yearutils->get_current_session(),
+        );
+        $values = $this->set_defaults_and_clean($defaults, $parameters);
+        $this->insert_metadata($values);
+        return $values;
+    }
+
+    /**
      * Create a Rogo user based on the parameters passed. The parameters should
      * correspond to fields in the users database table.
      *
@@ -232,6 +276,24 @@ class users extends generator {
 
         $values['id'] = $this->insert_user($values);
         return $values;
+    }
+
+    /**
+     * Inserts metadata into the database.
+     *
+     * @param Array $data
+     * @return void
+     * @throws data_error
+     */
+    protected function insert_metadata(array $data) : void {
+        $sql = "INSERT INTO users_metadata (userID, idMod, type, value, calendar_year) VALUES (?, ?, ?, ?, ?)";
+        $query = $this->db->prepare($sql);
+        $query->bind_param('iissi', $data['userID'], $data['idMod'], $data['type'], $data['value'], $data['calendar_year']);
+        if (!$query->execute()) {
+            // The metadata was not successfully inserted.
+            $msg = "Metadata {$data['value']} for user {$data['userID']} on module {$data['userID']} was not inserted into database";
+            throw new data_error($msg);
+        }
     }
 
     /**
