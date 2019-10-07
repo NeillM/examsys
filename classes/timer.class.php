@@ -24,10 +24,7 @@
 
 class Timer {
 
-  /**
-   * @var LogStartTime $log_start_time
-   */
-
+  /** @var LogMetadata */
   private $log_start_time;
 
   private $exam_duration;
@@ -45,22 +42,28 @@ class Timer {
   }
 
   /**
-   * @return DateTime
+   * @return void
    */
   public function start() {
-    return $this->log_start_time->insert();
+    $metdataid = $this->log_start_time->get_metadata_id();
+    $this->log_start_time->get_record($metadataID, true);
   }
 
   /**
    * @return bool
    */
   public function is_started() {
-    return ($this->get_start_time() !== null);
+    return ($this->get_start_datetime() !== null);
   }
 
 
+  /**
+   * This never seems to be used.
+   *
+   * @deprecated since version 7.1.0
+   */
   public function reset() {
-    $this->log_start_time->delete();
+    $this->log_start_time->set_started_to_null();
     $this->start_datetime = null;
   }
 

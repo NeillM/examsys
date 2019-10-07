@@ -372,10 +372,9 @@ $render->render($headerdata, $lang, 'header.html');
 
     } else {
 
-      $timer          = new Timer($log_metadata, $propertyObj->get_exam_duration(), $special_needs_percentage);
-      $start_datetime = $timer->get_start_datetime();
+      $timer = new Timer($log_metadata, $propertyObj->get_exam_duration(), $special_needs_percentage);
 
-      if ($start_datetime === false) {
+      if (!$timer->is_started()) {
         $timer->start();
       }
 
