@@ -34,6 +34,7 @@ class academic_year extends generator {
      * @param array parameters
      *  string parameters[academic_year] This is academic_year value
      *  string parameters[calendar_year] This is calendar_year
+     * @return array The record created.
      * @throws data_error If passed parameter is invalid
      */
     public function create_academic_year($parameters) {
@@ -65,5 +66,6 @@ class academic_year extends generator {
                 throw new data_error("academic_year {$calendar_year} not inserted into database");
             }
         }
+        return $parameters;
     }
 }

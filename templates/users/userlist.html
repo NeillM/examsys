@@ -1,0 +1,82 @@
+{#This file is part of Rogō
+
+ Rogō is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Rogō is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for displaying a /users/UserList object.
+
+author Neill Magill <neill.magill@nottingham.ac.uk>
+copyright 2019 onwards The University of Nottingham
+
+Required variables -
+data - /users/UserList object
+
+Required localised strings -
+lang.title - Page title
+lang.usertitle - Title
+lang.surname - Surname
+lang.firstname - First names
+lang.studentid - Student id
+lang.year - Year
+lang.course - Course
+lang.nostudents - No students for the paper
+#}
+
+<div id="content" class="content">
+  <div class="head_title">
+    <div class="page_title">
+      {{lang.title}}
+    </div>
+  </div>
+  <table id="userlist" class="header tablesorter" cellspacing="0" cellpadding="0" border="0" style="width:100%">
+    <thead>
+      <tr>
+        <th>{{lang.usertitle}}</th>
+        <th>{{lang.surname}}</th>
+        <th>{{lang.firstname}}</th>
+        <th>{{lang.username}}</th>
+        <th>{{lang.studentid}}</th>
+        <th>{{lang.year}}</th>
+        <th>{{lang.course}}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for id, user in data %}
+      <tr class="l" id="user{{id}}" data-userid="{{user.id}}" data-roles="{{user.role}}">
+        <td>{{user.title}}</td>
+        <td>{{user.lastname}}</td>
+        <td>{{user.firstname}}</td>
+        <td>{{user.username}}</td>
+        <td>{{user.studentid}}</td>
+        <td>{{user.year}}</td>
+        <td>{{user.grade}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% if data.length == 0 %}
+  <div class="yellowwarn">{{lang.nostudents}}</div>
+  {% endif %}
+</div>
+<script type="text/javascript">
+  requirejs(['jquery', 'jquerytablesorter'], function ($) {
+    if ($("#userlist").find("tr").size() > 1) {
+      $("#userlist").tablesorter({
+        sortList: [[1, 0]]
+      });
+    }
+  });
+</script>

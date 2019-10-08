@@ -173,6 +173,9 @@ echo "<div id=\"menu1\">\n";
 		}
 	?>
 	<div class="menuitem cascade showmenu" id="qti" data-popupid="2" data-popuptype="papertasks" data-popupname="qti"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/ims_16.png" alt="<?php echo $string['importexport'] ?>" /><?php echo $string['importexport'] ?></a></div>
+	<?php if ($properties->get_calendar_year()) { ?>
+  <div class="menuitem studentcohort"><a href="#"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/small_user_icon.gif" alt="" /><?php echo $string['studentcohort'] ?></a></div>
+  <?php } ?>
 </div>
 
 <br />
