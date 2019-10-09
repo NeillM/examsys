@@ -222,22 +222,32 @@ class state {
    * @return array
    */
   private static function get_table_statuses() {
-    $sql = "SELECT TABLE_NAME, TABLE_ROWS, AUTO_INCREMENT, CREATE_TIME "
+    $sql = "SELECT TABLE_NAME, AUTO_INCREMENT, CREATE_TIME "
         . "FROM information_schema.tables WHERE TABLE_SCHEMA = ?  AND TABLE_TYPE = 'BASE TABLE'";
     $query = self::$db->prepare($sql);
     $query->bind_param('s', self::$schema);
     $query->execute();
-    $query->bind_result($name, $rows, $increment, $created);
+    $query->bind_result($name, $increment, $created);
     $return = array();
     while ($query->fetch()) {
       $return[$name] = array(
         'name' => $name,
-        'rows' => $rows,
+        'rows' => 0,
         'auto_increment' => $increment,
         'created' => $created,
       );
     }
     $query->close();
+    // Row counts in the information schema seem to be inaccurate so we need to count on each table ourselves.
+    foreach ($return as $table => &$record) {
+      $rowcount = "SELECT COUNT(*) AS count FROM $table";
+      $cquery = self::$db->query($rowcount);
+      if ($cquery === false) {
+        throw new \Exception($rowcount . ' :: ' . self::$db->errno . ' : ' . self::$db->error);
+      }
+      $result  = $cquery->fetch_array(MYSQLI_ASSOC);
+      $record['rows'] = $result['count'];
+    }
     return $return;
   }
 

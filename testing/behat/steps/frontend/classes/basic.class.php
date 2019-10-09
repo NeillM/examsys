@@ -63,6 +63,28 @@ trait basic {
       throw new \Exception("The \"$selector\" with the value of \"$content\" is hidden");
     }
   }
+
+  /**
+   * Checks that text is not visible to the user
+   *
+   * @Then /^I should not see "([^"]*)" "([^"]*)"$/
+   * @param string $content
+   * @param string $selector
+   * @return void
+   * @throws Exception
+   */
+  public function i_should_not_see($content, $selector) {
+    $element = $this->find($selector, $content);
+    if (is_null($element)) {
+      // Element is not present at all so all is good.
+      return;
+    }
+    if ($this->running_javascript() and !$element->isVisible()) {
+      // The element is present but hidden from the user.
+      return;
+    }
+    throw new \Exception("The \"$selector\" with the value of \"$content\" is visibile");
+  }
     
   /**
    * Keep browser live, for debuging

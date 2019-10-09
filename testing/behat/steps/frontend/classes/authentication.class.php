@@ -40,6 +40,13 @@ trait authentication {
     $this->i_set_field("ROGO_USER", $username);
     $this->i_set_field("ROGO_PW", $username);
     $this->i_click("rogo-login-form-std", "button");
+    $this->i_wait_for_page_to_load();
+    try {
+      $this->i_should_not_see("rogo-login-form-std", "button");
+    } catch (\Exception $e) {
+      // We are still on the login page, so lets give a reasonable message.
+      throw new \Exception("Login failed for $username");
+    }
   }
   
   /**
