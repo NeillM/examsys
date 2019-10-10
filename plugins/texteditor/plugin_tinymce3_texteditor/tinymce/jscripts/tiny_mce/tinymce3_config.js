@@ -1,4 +1,4 @@
-requirejs(['tinyMCE', 'requireconfig.min', 'jquery'], function (tinyMCE, config, $) {
+requirejs(['tinyMCE', 'rogoconfig', 'jquery'], function (tinyMCE, config, $) {
     tinyMCE.init({
         mode: "specific_textareas",
         forced_root_block: 'div',

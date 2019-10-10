@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-requirejs(['requireconfig.min', 'jquery'], function (config, $) {
+requirejs(['rogoconfig', 'jquery'], function (config, $) {
     $(function () {
         $('.guestlogin').click(function () {
             window.location.href = config.cfgrootpath + "/users/guest_account.php";
