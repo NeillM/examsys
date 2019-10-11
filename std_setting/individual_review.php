@@ -104,6 +104,7 @@ function check_ebel_distinction_type($reviewID, $db) {
   <link rel="stylesheet" type="text/css" href="../css/key.css" />
   <link rel="stylesheet" type="text/css" href="../css/std_setting.css" />
   <link rel="stylesheet" type="text/css" href="../css/html5.css" />
+  <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <style>
 		table {table-layout:auto}
 		#maincontent {height:auto}

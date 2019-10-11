@@ -106,7 +106,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
     $matching_users_answers = explode('|', $options[0]['correct']);
   }
 
-  if ($options[0]['q_type'] != 'info') {
+  if (!in_array($options[0]['q_type'], array('info', 'keyword_based', 'random'))) {
     $i = 0;
     foreach ($options as $display_option) {
       $part_id++;
@@ -131,6 +131,12 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
   }
 
   switch($options[0]['q_type']) {
+    case 'random':
+      echo "<br/><br/><div class=\"q_warning\">" . $string['randomwarning'] . "</div><br/><br/>";
+      break;
+    case 'keyword_based':
+      echo "<br/><br/><div class=\"q_warning\">" . $string['keywordwarning'] . "</div><br/><br/>";
+      break;
     case 'area':
       $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
       echo "<div>";
@@ -467,7 +473,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
 
   // Display possible marks for question (if not Survey)
   if ($options[0]['q_type'] != 'hotspot' and $options[0]['q_type'] != 'likert' and $options[0]['q_type'] != 'mcq' and $options[0]['q_type'] != 'dichotomous') echo '</blockquote>';
-  if ($q_type < 3 and $options[0]['q_type'] != 'info') {
+  if ($q_type < 3 and !in_array($options[0]['q_type'], array('info', 'keyword_based', 'random'))) {
 
       echo "<div class=\"mk\">($marks ";
       if ($marks == 1) {

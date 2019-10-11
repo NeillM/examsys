@@ -231,7 +231,7 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array) {
   $correct_no = 0;
   $old_score_method = '';
   
-  $result = $mysqli->prepare("SELECT q_type, q_id, marks_correct, marks_incorrect, correct, score_method, option_text, settings FROM papers, questions LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.paper = ? AND papers.question = questions.q_id AND q_type != 'info' ORDER BY q_id, o_id, id_num");
+  $result = $mysqli->prepare("SELECT q_type, q_id, marks_correct, marks_incorrect, correct, score_method, option_text, settings FROM papers, questions LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.paper = ? AND papers.question = questions.q_id AND q_type not in ('info', 'keyword_based', 'random') ORDER BY q_id, o_id, id_num");
   $result->bind_param('i', $paper_id);
   $result->execute();
   $result->store_result();

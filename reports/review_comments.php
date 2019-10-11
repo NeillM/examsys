@@ -156,6 +156,10 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   if ($q_type != 'extmatch' and $q_type != 'matrix') {
     if ($q_type == 'info') {
       echo "<td colspan=\"2\" style=\"padding-left:10px; padding-right:10px\">$leadin\n";
+    } elseif ($q_type == 'random') {
+      echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin<br/><br/><div class=\"q_warning\">" . $string['randomwarning'] . "</div></td></tr>";
+    } elseif ($q_type == 'keyword_based') {
+      echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin<br/><br/><div class=\"q_warning\">" . $string['keywordwarning'] . "</div></td></tr>";
     } else {
       if ($scenario != '') {
         echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$scenario<br />\n";
@@ -388,7 +392,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         }
         break;
     }
-    if ($q_type != 'info' and $q_type != 'blank' and $q_type != 'labelling' and $q_type != 'hotspot') echo "</table></p>\n";
+    if (!in_array($q_type, array('info', 'keyword_based', 'random', 'blank', 'labelling', 'hotspot'))) echo "</table></p>\n";
   } elseif ($q_type == 'matrix') {
     $matching_scenarios = explode('|', $scenario);
     $correct_answers = explode('|', $correct);
@@ -487,7 +491,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   echo "</td></tr>\n";
 
   // Display comments here.
-  if ($q_type != 'info') echo displayComments($q_id, $comments, $q_type, $q_no, $reviewer_data, $type, $string, $language);
+  if (!in_array($q_type, array('info', 'keyword_based', 'random'))) echo displayComments($q_id, $comments, $q_type, $q_no, $reviewer_data, $type, $string, $language);
   echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
 }
 

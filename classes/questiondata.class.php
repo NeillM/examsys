@@ -826,7 +826,7 @@ abstract class questiondata {
    * @param string $qtype question type
    */
   public static function get_datastore($qtype) {
-    if (file_exists(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . $qtype)) {
+    if (file_exists(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . $qtype . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'renderdata.class.php')) {
       $questionpluginns = 'plugins\\questions\\' . $qtype . '\\renderdata';
     } else {
       $questionpluginns = 'plugins\\questions\\undefined\\renderdata';

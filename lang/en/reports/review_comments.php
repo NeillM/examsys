@@ -43,3 +43,5 @@ $string['threeinfo'] = 'Hold the left mouse button to rotate the object, hold th
 $string['threereset'] = 'Reset';
 $string['threeload'] = 'Load';
 $string['threeplyerror'] = 'Your browser does not support the display of %s files.';
+$string['randomwarning'] = '<strong>Warning:</strong> Random question block questions cannot be analysed in this report.';
+$string['keywordwarning'] = '<strong>Warning:</strong> Keyword-based questions cannot be analysed in this report.';

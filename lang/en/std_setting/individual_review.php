@@ -53,4 +53,5 @@ $string['formula'] = 'Formula';
 $string['tolerancefull'] = 'Tolerance for full marks';
 $string['tolerancepartial'] = 'Tolerance for partial marks';
 $string['togglevariables'] = 'Toggle Variables';
-?>
+$string['randomwarning'] = '<strong>Warning:</strong> Random question block questions cannot be analysed in this report.';
+$string['keywordwarning'] = '<strong>Warning:</strong> Keyword-based questions cannot be analysed in this report.';
