@@ -1401,7 +1401,7 @@ QUERY;
    * @param int $user_id
    * @param mixed $data either ID of an existing question or the type if a new question is to be created
    * @throws ClassNotFoundException
-   * @return object a question object of the correct type
+   * @return QuestionEdit a question object of the correct type
    */
   public static function question_factory($mysqli, $user_id, &$lang_strings, $data) {
     $object = null;
