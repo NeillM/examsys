@@ -250,7 +250,7 @@ SQL;
         foreach ($tmp_answer_parts as $tmp_individual_answer) {
           $i++;
           $tmp_sub_parts = array();
-          $tmp_sub_parts = explode('|',$tmp_individual_answer);
+          $tmp_sub_parts = explode('|', $tmp_individual_answer);
           foreach ($tmp_sub_parts as $tmp_individual_part) {
             if ($tmp_individual_answer == 'u') {
               if (isset($log_array[$screen][$question_ID][$i]['u'])) {

@@ -246,9 +246,9 @@ foreach ($user_results as $individual) {
         if ($question['q_type'] == 'extmatch' and $question['score_method'] == 'Mark per Option') {
           $sub_parts = 0;
           $paper_answers = explode('|', $question['correct'][0]);
-          for ($a=0; $a<count($paper_answers); $a++) {
+          for ($a = 0; $a < count($paper_answers); $a++) {
             $sub_parts += substr_count($paper_answers[$a], '$');
-            if ($paper_answers[$a] != '' and substr($tmp_exclude, $a+$sub_parts, 1) == '0') {
+            if ($paper_answers[$a] != '' and substr($tmp_exclude, $a + $sub_parts, 1) == '0') {
               $num_ix = 0;
               $correct_subparts = explode('$', $paper_answers[$a]);
               foreach ($correct_subparts as $subpart) {

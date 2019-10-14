@@ -186,21 +186,29 @@ function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_te
       $matching_correct   = explode('|', $correct_array[0]);
 
       $text_scenarios = 0;
-      for ($part_id=0; $part_id<count($matching_scenarios); $part_id++) {
-        if (trim(strip_tags($matching_scenarios[$part_id])) != '') $text_scenarios++;
+      for ($part_id = 0; $part_id < count($matching_scenarios); $part_id++) {
+        if (trim(strip_tags($matching_scenarios[$part_id])) != '') {
+          $text_scenarios++;
+        }
       }
       $media_scenarios = 0;
-      for ($part_id=1; $part_id<count($matching_media); $part_id++) {
-        if ($matching_media[$part_id] != '') $media_scenarios++;
+      for ($part_id = 1; $part_id < count($matching_media); $part_id++) {
+        if ($matching_media[$part_id] != '') {
+          $media_scenarios++;
+        }
       }
       $scenario_no = max($text_scenarios, $media_scenarios);
 
       $correct_answers = 0;
-      for ($part_id=0; $part_id<count($matching_correct); $part_id++) {
-        if ($matching_correct[$part_id] != '') $correct_answers++;
+      for ($part_id = 0; $part_id < count($matching_correct); $part_id++) {
+        if ($matching_correct[$part_id] != '') {
+          $correct_answers++;
+        }
       }
 
-      if ($score_method == 'Mark per Option' and $correct_answers < $scenario_no) $temp_array[$row_no]['warnings'] = $string['answermissing'];
+      if ($score_method == 'Mark per Option' and $correct_answers < $scenario_no) {
+        $temp_array[$row_no]['warnings'] = $string['answermissing'];
+      }
     } elseif ($q_type == 'labelling') {
       if (!have_valid_labels($temp_array[$row_no]['correct'])) {
         $temp_array[$row_no]['warnings'] = $string['nolabels'];

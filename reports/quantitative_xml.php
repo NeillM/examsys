@@ -247,27 +247,29 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
         break;
     }
   } else {
-    $tmp_media_array = explode('|',$q_media);
-    $tmp_media_width_array = explode('|',$q_media_width);
-    $tmp_media_height_array = explode('|',$q_media_height);
-    $tmp_ext_scenarios = explode('|',$scenario);
-    $tmp_answers_array = explode('|',$correct_buf[0]);
+    $tmp_media_array = explode('|', $q_media);
+    $tmp_media_width_array = explode('|', $q_media_width);
+    $tmp_media_height_array = explode('|', $q_media_height);
+    $tmp_ext_scenarios = explode('|', $scenario);
+    $tmp_answers_array = explode('|', $correct_buf[0]);
     echo "<w:p><w:r><w:t>$question_number. $leadin</w:t></w:r></w:p><w:p/>";
-    for ($i=1; $i<=(substr_count($scenario,'|')+1); $i++) {
-      if ($tmp_ext_scenarios[$i-1])  echo "<w:p><w:r><w:t>" . $tmp_ext_scenarios[$i-1] . "</w:t></w:r></w:p><w:p/>";
+    for ($i = 1; $i <= (substr_count($scenario, '|') + 1); $i++) {
+      if ($tmp_ext_scenarios[$i - 1]) {
+        echo "<w:p><w:r><w:t>" . $tmp_ext_scenarios[$i - 1] . "</w:t></w:r></w:p><w:p/>";
+      }
       $option_no = 1;
       foreach ($options as $individual_option) {
-        if ($tmp_answers_array[$i-1] == $option_no) {
+        if ($tmp_answers_array[$i - 1] == $option_no) {
           if ($log[$screen][$q_id][$i][$option_no] == '') {
             echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
           } else {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>' . $log[$screen][$q_id][$i][$option_no] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i][$option_no]/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
+            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>' . $log[$screen][$q_id][$i][$option_no] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i][$option_no] / $candidates) * 100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
           }
         } else {
           if ($log[$screen][$q_id][$i][$option_no] == '') {
             echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
           } else {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>' . $log[$screen][$q_id][$i][$option_no] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i][$option_no]/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
+            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>' . $log[$screen][$q_id][$i][$option_no] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i][$option_no] / $candidates) * 100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
           }
         }
         $option_no++;

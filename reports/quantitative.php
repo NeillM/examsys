@@ -341,11 +341,11 @@
         }
         echo "</table>\n</td></tr>\n";
       } elseif ($q_type == 'extmatch') {
-        $tmp_media_array = explode('|',$q_media);
-        $tmp_media_width_array = explode('|',$q_media_width);
-        $tmp_media_height_array = explode('|',$q_media_height);
-        $tmp_ext_scenarios = explode('|',$scenario);
-        $tmp_answers_array = explode('|',$correct_buf[0]);
+        $tmp_media_array = explode('|', $q_media);
+        $tmp_media_width_array = explode('|', $q_media_width);
+        $tmp_media_height_array = explode('|', $q_media_height);
+        $tmp_ext_scenarios = explode('|', $scenario);
+        $tmp_answers_array = explode('|', $correct_buf[0]);
         echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td><p>$leadin</p>\n<ol type=\"i\">";
         if ($tmp_media_array[0] != '') {
           echo "<div class=\"mediadiv\">";
@@ -353,7 +353,7 @@
           $render->render($questiondata, $string, 'paper/media.html');
           echo "</div>\n";
         }
-        for ($i=1; $i<=(substr_count($scenario,'|')+1); $i++) {
+        for ($i = 1; $i <= (substr_count($scenario, '|') + 1); $i++) {
           echo "<li>\n";
           if ($tmp_media_array[$i] != '') {
             echo "<p>";
@@ -361,33 +361,37 @@
             $render->render($questiondata, $string, 'paper/media.html');
             echo "</p>\n";
           }
-          if ($tmp_ext_scenarios[$i-1]) echo "<p>" . $tmp_ext_scenarios[$i-1] . "</p>\n";
+          if ($tmp_ext_scenarios[$i - 1]) {
+            echo "<p>" . $tmp_ext_scenarios[$i-1] . "</p>\n";
+          }
           echo "<p>\n<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
           $option_no = 1;
           foreach ($options as $individual_option) {
             $specific_answers = array();
-            $specific_answers = explode('|', $tmp_answers_array[$i-1]);
+            $specific_answers = explode('|', $tmp_answers_array[$i - 1]);
             $answer_match = false;
-            for ($x=0; $x<count($specific_answers); $x++) {
-              if ($option_no == $specific_answers[$x]) $answer_match = true;
+            for ($x = 0; $x < count($specific_answers); $x++) {
+              if ($option_no == $specific_answers[$x]) {
+                $answer_match = true;
+              }
             }
             if ($answer_match == true) {
               if ($log[$screen][$q_id][$i][$option_no] == '') {
                 echo "<tr><td class=\"figures\" style=\"font-weight:bold\">0</td><td style=\"font-weight:bold\">$individual_option</td></tr>\n";
               } else {
-                echo "<tr><td class=\"figures\" style=\"font-weight:bold\">" . $log[$screen][$q_id][$i][$option_no] . "&nbsp;(" . round(($log[$screen][$q_id][$i][$option_no]/$candidates)*100) . "%)</td><td style=\"font-weight:bold\">$individual_option</td></tr>\n";
+                echo "<tr><td class=\"figures\" style=\"font-weight:bold\">" . $log[$screen][$q_id][$i][$option_no] . "&nbsp;(" . round(($log[$screen][$q_id][$i][$option_no] / $candidates) * 100) . "%)</td><td style=\"font-weight:bold\">$individual_option</td></tr>\n";
               }
             } else {
               if ($log[$screen][$q_id][$i][$option_no] == '') {
                 echo "<tr><td class=\"figures\">0</td><td>$individual_option</td></tr>\n";
               } else {
-                echo "<tr><td class=\"figures\">" . $log[$screen][$q_id][$i][$option_no] . "&nbsp;(" . round(($log[$screen][$q_id][$i][$option_no]/$candidates)*100) . "%)</td><td>$individual_option</td></tr>\n";
+                echo "<tr><td class=\"figures\">" . $log[$screen][$q_id][$i][$option_no] . "&nbsp;(" . round(($log[$screen][$q_id][$i][$option_no] / $candidates) * 100) . "%)</td><td>$individual_option</td></tr>\n";
               }
             }
             $option_no++;
           }
           if ($log[$screen][$q_id][$i]['u'] > 0) {
-            echo "<tr style=\"color:#808080\"><td class=\"figures\">" . $log[$screen][$q_id][$i]['u'] . "&nbsp;(" . round(($log[$screen][$q_id][$i]['u']/$candidates)*100) . "%)</td><td>" . $string['unanswered'] . "</td></tr>\n";
+            echo "<tr style=\"color:#808080\"><td class=\"figures\">" . $log[$screen][$q_id][$i]['u'] . "&nbsp;(" . round(($log[$screen][$q_id][$i]['u'] / $candidates) * 100) . "%)</td><td>" . $string['unanswered'] . "</td></tr>\n";
           } else {
             echo "<tr style=\"color:#808080\"><td class=\"figures\">0</td><td>" . $string['unanswered'] . "</td></tr>\n";
           }

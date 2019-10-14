@@ -157,7 +157,9 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
       break;
     case 'extmatch':
       if ($score_method == 'Mark per Question') {
-        if ($tmp_exclude{0} == '0') $marks = $question_marks;
+        if ($tmp_exclude{0} == '0') {
+          $marks = $question_marks;
+        }
       } else {
         $correct_array = explode('|', $correct[0]);
         $i = 0;
@@ -336,7 +338,9 @@ function qRandomMarks($question_type, $tmp_exclude, $marks_correct, $option_text
         }
         $i++;
       }
-      if ($score_method == 'Mark per Question') $random_mark = $prob * $marks_correct;
+      if ($score_method == 'Mark per Question') {
+        $random_mark = $prob * $marks_correct;
+      }
       break;
     case 'sct':
       $max_correct = 0;

@@ -417,16 +417,16 @@ class ClassTotals {
     $numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii');
 
     if ($q_type != 'mrq' and $q_type != 'rank' and strlen($exclude) > 1) {
-      for ($i=0; $i<strlen($exclude); $i++) {
+      for ($i = 0; $i < strlen($exclude); $i++) {
         if ($exclude{$i} == '1') {
           if ($subpart == '') {
             if ($q_type == 'extmatch') {
               $subpart = $numerals[$i];
             } else {
-              $subpart = chr($i+97);
+              $subpart = chr($i + 97);
             }
           } else {
-            $subpart .= ', Q' . $q_no . chr($i+97);
+            $subpart .= ', Q' . $q_no . chr($i + 97);
           }
         }
       }
@@ -621,7 +621,7 @@ class ClassTotals {
 
     $tmp_exclude = $this->exclusions->get_exclusions_by_qid($q_id);
 
-    $multi_part_qns = array('extmatch'=>1, 'matrix'=>1, 'blank'=>1, 'dichotomous'=>1, 'enhancedcalc'=>1, 'labelling'=>1, 'hotspot'=>1);
+    $multi_part_qns = array('extmatch' => 1, 'matrix' => 1, 'blank' => 1, 'dichotomous' => 1, 'enhancedcalc' => 1, 'labelling' => 1, 'hotspot' => 1);
 
     $skip_random = false;
     if (!isset($this->paper_buffer[$q_id])) {
@@ -648,12 +648,14 @@ class ClassTotals {
 
     if (!$skip_random and $question['score_method'] != 'Mark per Question' and isset($multi_part_qns[$question['q_type']])) {
       if ($question['q_type'] == 'extmatch' or $question['q_type'] == 'matrix') {
-        if (!isset($tmp_user_mark_array[$q_id])) $tmp_user_mark_array[$q_id] = array();
+        if (!isset($tmp_user_mark_array[$q_id])) {
+          $tmp_user_mark_array[$q_id] = array();
+        }
         $paper_answers = explode('|', $question['correct'][0]);
         $user_answers = explode('|', $tmp_user_answer);
         $section = 0;
         $count_paper_answers = count($paper_answers);
-        for ($a=0; $a<$count_paper_answers; $a++) {
+        for ($a = 0; $a < $count_paper_answers; $a++) {
           if ($paper_answers[$a] != '') {
             $answers_correct = 0;
             $answers_incorrect = 0;
@@ -683,7 +685,9 @@ class ClassTotals {
               $section_mark = ($answers_correct * $question['marks_correct']) + ($answers_incorrect * $question['marks_incorrect']);
               $tmp_mark += $section_mark;
               // This is excluding whole question parts (not answers/marks).
-              if ($exclude_on == false) $tmp_user_mark_array[$q_id][] = $section_mark;
+              if ($exclude_on == false) {
+                $tmp_user_mark_array[$q_id][] = $section_mark;
+              }
             } else {   // Matrix
               if ($tmp_exclude{$a} == '0') {
                 if ($paper_answers[$a] == $user_answers[$a]) {

@@ -62,7 +62,7 @@ Class QuestionEXTMATCH extends QuestionEdit {
   protected $_answer_negative = array();
 
   /** @var int The maximum number of options in the question. */
-  public $max_options = 23;
+  public $max_options = 26;
 
   /** @var int The minimum number of options in the question. */
   protected $min_options = 3;

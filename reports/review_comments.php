@@ -150,7 +150,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   $questiondata = \questiondata::get_datastore($q_type);
   $render = new render($configObject);
 
-  if ($theme != '') echo "<tr><td colspan=\"2\"><h1 style=\"color:$themecolor\">$theme</h1></td></tr>\n";
+  if ($theme != '') {
+    echo "<tr><td colspan=\"2\"><h1 style=\"color:$themecolor\">$theme</h1></td></tr>\n";
+  }
   echo "<tr>\n";
 
   if ($q_type != 'extmatch' and $q_type != 'matrix') {
@@ -170,7 +172,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           $render->render($questiondata, $string, 'paper/media.html');
           echo "</div>\n";
         }
-        if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'blank') echo "<p>\n<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"margin-left:30px\">\n";
+        if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'blank') {
+          echo "<p>\n<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"margin-left:30px\">\n";
+        }
       } else {
         echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n";
         if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'area') {
@@ -179,7 +183,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
           $render->render($questiondata, $string, 'paper/media.html');
           echo "</div>\n";
         }
-        if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'blank') echo "<p>\n<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"margin-left:30px\">\n";
+        if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'blank') {
+          echo "<p>\n<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"margin-left:30px\">\n";
+        }
       }
     }
     switch ($q_type) {
@@ -392,7 +398,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         }
         break;
     }
-    if (!in_array($q_type, array('info', 'keyword_based', 'random', 'blank', 'labelling', 'hotspot'))) echo "</table></p>\n";
+    if (!in_array($q_type, array('info', 'keyword_based', 'random', 'blank', 'labelling', 'hotspot'))) {
+      echo "</table></p>\n";
+    }
   } elseif ($q_type == 'matrix') {
     $matching_scenarios = explode('|', $scenario);
     $correct_answers = explode('|', $correct);
@@ -432,17 +440,17 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   } elseif ($q_type == 'extmatch') {
     $matching_scenarios = explode('|', $scenario);
     $matching_media = explode('|', $q_media);
-    $tmp_media_width_array = explode('|',$q_media_width);
-    $tmp_media_height_array = explode('|',$q_media_height);
-    $tmp_answers_array = explode('|',$correct_buf[0]);
-    $tmp_std_array = explode(',',$std);
+    $tmp_media_width_array = explode('|', $q_media_width);
+    $tmp_media_height_array = explode('|', $q_media_height);
+    $tmp_answers_array = explode('|', $correct_buf[0]);
+    $tmp_std_array = explode(',', $std);
     $std_part = 0;
 
     array_unshift($matching_scenarios, '');
     $max_scenarios = max(count($matching_scenarios), count($matching_media));
     $scenario_no = 0;
     for ($part_id = 1; $part_id < $max_scenarios; $part_id++) {
-      if ((isset($matching_scenarios[$part_id]) and trim(strip_tags($matching_scenarios[$part_id],'<img>')) != '')
+      if ((isset($matching_scenarios[$part_id]) and trim(strip_tags($matching_scenarios[$part_id], '<img>')) != '')
               or (isset($matching_media[$part_id]) and $matching_media[$part_id] != '')) {
         $scenario_no++;
       }
@@ -455,7 +463,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       $render->render($questiondata, $string, 'paper/media.html');
       echo "</div>\n";
     }
-    for ($i=1; $i<=$scenario_no; $i++) {
+    for ($i = 1; $i <= $scenario_no; $i++) {
       echo "<li>\n";
       if (isset($matching_media[$i]) and $matching_media[$i] != '') {
         echo "<div>";
@@ -463,10 +471,12 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
         $render->render($questiondata, $string, 'paper/media.html');
         echo "</div>\n";
       }
-      if ($matching_scenarios[$i]) echo $matching_scenarios[$i] . '<br />';
+      if ($matching_scenarios[$i]) {
+        echo $matching_scenarios[$i] . '<br />';
+      }
       $option_no = 1;
       $specific_answers = array();
-      $specific_answers = explode('$', $tmp_answers_array[$i-1]);
+      $specific_answers = explode('$', $tmp_answers_array[$i - 1]);
       if (count($specific_answers) > 1) {
         echo '<select multiple="multiple" size="10">';
       } else {
@@ -474,8 +484,10 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
       }
       foreach ($options as $individual_option) {
         $answer_match = false;
-        for ($x=0; $x<count($specific_answers); $x++) {
-          if ($option_no == $specific_answers[$x]) $answer_match = true;
+        for ($x = 0; $x < count($specific_answers); $x++) {
+          if ($option_no == $specific_answers[$x]) {
+            $answer_match = true;
+          }
         }
         if ($answer_match == true) {
           echo "<option value=\"\" selected=\"selected\">$individual_option</option>\n";
@@ -491,7 +503,9 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
   echo "</td></tr>\n";
 
   // Display comments here.
-  if (!in_array($q_type, array('info', 'keyword_based', 'random'))) echo displayComments($q_id, $comments, $q_type, $q_no, $reviewer_data, $type, $string, $language);
+  if (!in_array($q_type, array('info', 'keyword_based', 'random'))) {
+    echo displayComments($q_id, $comments, $q_type, $q_no, $reviewer_data, $type, $string, $language);
+  }
   echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
 }
 

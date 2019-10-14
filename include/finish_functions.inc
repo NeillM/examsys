@@ -1634,12 +1634,16 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         $matching_media_incorrect_fback = explode('|', $paper[$question]['incorrect_fback']);
 
         $text_scenarios = 0;
-        for ($part_id=0; $part_id<10; $part_id++) {
-          if (isset($matching_scenarios[$part_id]) and trim(strip_tags($matching_scenarios[$part_id])) != '') $text_scenarios++;
+        for ($part_id = 0; $part_id < 10; $part_id++) {
+          if (isset($matching_scenarios[$part_id]) and trim(strip_tags($matching_scenarios[$part_id])) != '') {
+            $text_scenarios++;
+          }
         }
         $media_scenarios = 0;
-        for ($part_id=1; $part_id<=10; $part_id++) {
-          if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') $media_scenarios++;
+        for ($part_id = 1; $part_id <= 10; $part_id++) {
+          if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') {
+            $media_scenarios++;
+          }
         }
         $total_scenarios = max($text_scenarios, $media_scenarios);
 
@@ -1653,17 +1657,19 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
         $section = 0;
         $std_part = 0;
         $option_answered = 0;
-        for ($scenario_no=0; $scenario_no<$total_scenarios; $scenario_no++) {
+        for ($scenario_no = 0; $scenario_no < $total_scenarios; $scenario_no++) {
           if (isset($matching_scenarios[$scenario_no])) {
             $single_scenario = $matching_scenarios[$scenario_no];
           } else {
             $single_scenario = '';
           }
           echo '<li>';
-          if ($single_scenario != '') echo "$single_scenario<br />";
-          if (isset($matching_media[$i+1]) and $matching_media[$i+1] != '') {
+          if ($single_scenario != '') {
+            echo "$single_scenario<br />";
+          }
+          if (isset($matching_media[$i + 1]) and $matching_media[$i + 1] != '') {
             echo "<div>";
-            $questiondata->set_media($matching_media[$i+1], $matching_media_width[$i+1], $matching_media_height[$i+1], '', true);
+            $questiondata->set_media($matching_media[$i + 1], $matching_media_width[$i + 1], $matching_media_height[$i + 1], '', true);
             $render->render($questiondata, $string, 'paper/media.html');
             echo "</div>\n";
           }
@@ -1688,7 +1694,9 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
             $std_part++;
             if ($tmp_display_correct_answer == '1') {
               echo '<td>';
-              if (isset($paper[$question]['std'][$std_part-1])) echo display_std($paper[$question]['std'][$std_part-1]);
+              if (isset($paper[$question]['std'][$std_part - 1])) {
+                echo display_std($paper[$question]['std'][$std_part - 1]);
+              }
               echo '</td>';
             } else {
               echo '<td></td>';
@@ -1706,7 +1714,9 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 }
                 $all_correct = false;
               }
-              if ($user_answers[$i] != '' and $user_answers[$i] != 'u') echo display_response($tmp_display_students_response, 'cross') . '&nbsp;';
+              if ($user_answers[$i] != '' and $user_answers[$i] != 'u') {
+                echo display_response($tmp_display_students_response, 'cross') . '&nbsp;';
+              }
             }
             if ($tmp_exclude{$section} == '0') {
               echo "<select name=\"q" . $question. "_" . $std_part;
@@ -1722,8 +1732,8 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
               $option_answered = 1;
             }
             $tmp_option_no = 1;
-            for ($option_no=0; $option_no < count($paper[$question]['option_text']); $option_no++) {
-              if ($option_order[$option_no]+1 == $user_answers[$i]) {
+            for ($option_no = 0; $option_no < count($paper[$question]['option_text']); $option_no++) {
+              if ($option_order[$option_no] + 1 == $user_answers[$i]) {
                 echo "<option value=\"\" selected=\"selected\">" . $paper[$question]['option_text'][$option_order[$option_no]] .  "</option>\n";
               } else {
                 echo "<option value=\"\">" . $paper[$question]['option_text'][$option_order[$option_no]] .  "</option>\n";
@@ -1731,15 +1741,15 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
               $tmp_option_no++;
             }
             echo '</select>';
-            if ($tmp_display_correct_answer == '1' and isset($paper[$question]['option_text'][$correct_answers[$i]-1])) {
-              echo '&nbsp;&nbsp;<strong>' . $paper[$question]['option_text'][$correct_answers[$i]-1] . '</strong>';
+            if ($tmp_display_correct_answer == '1' and isset($paper[$question]['option_text'][$correct_answers[$i] - 1])) {
+              echo '&nbsp;&nbsp;<strong>' . $paper[$question]['option_text'][$correct_answers[$i] - 1] . '</strong>';
             }
             echo "</td>\n";
-          } else {                              // Multiple answer Extended Matching
-            for ($option_no=0; $option_no < count($paper[$question]['option_text']); $option_no++) {
+          } else { // Multiple answer Extended Matching
+            for ($option_no = 0; $option_no < count($paper[$question]['option_text']); $option_no++) {
               $matching_option = 0;
               foreach ($separate_answers as $single_answer) {
-                if ($single_answer == $option_order[$tmp_option_no-1]+1) {
+                if ($single_answer == $option_order[$tmp_option_no - 1] + 1) {
                   $matching_option = 1;
                 }
               }
@@ -1748,7 +1758,7 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 $std_part++;
                 $matching_user_option = 0;
                 foreach ($separate_user_answers as $single_user_answer) {
-                  if ($single_user_answer == $option_order[$tmp_option_no-1]+1) {
+                  if ($single_user_answer == $option_order[$tmp_option_no - 1] + 1) {
                     $matching_user_option = 1;
                   }
                 }
@@ -1757,7 +1767,9 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 echo '<tr>';
                 if ($tmp_display_correct_answer == '1') {
                   echo '<td>';
-                  if (isset($paper[$question]['std'][$std_part-1])) echo display_std($paper[$question]['std'][$std_part-1]);
+                  if (isset($paper[$question]['std'][$std_part - 1])) {
+                    echo display_std($paper[$question]['std'][$std_part-1]);
+                  }
                   echo '</td>';
                 } else {
                   echo '<td></td>';
@@ -1770,12 +1782,14 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                   $all_correct = false;
                 }
                 echo '&nbsp;</td><td';
-                if ($tmp_exclude{$section} == '1') echo ' class="exclude"';
+                if ($tmp_exclude{$section} == '1') {
+                  echo ' class="exclude"';
+                }
                 echo ">$strong_on" . $paper[$question]['option_text'][$option_order[$option_no]] . "$strong_off</td></tr>\n";
               } else {
                 $matching_user_option = 0;
                 foreach ($separate_user_answers as $single_user_answer) {
-                  if ($single_user_answer == $option_order[$tmp_option_no-1]+1) {
+                  if ($single_user_answer == $option_order[$tmp_option_no - 1] + 1) {
                     $matching_user_option = 1;
                   }
                 }
