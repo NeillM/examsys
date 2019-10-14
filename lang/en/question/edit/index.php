@@ -290,4 +290,6 @@ $string['threeinfo'] = 'Hold the left mouse button to rotate the object, hold th
 $string['threereset'] = 'Reset';
 $string['threeload'] = 'Load';
 $string['threeplyerror'] = 'Your browser does not support the display of %s files.';
-
+// Extended matching
+$string['stemerror'] = 'Scenario %d must have media or text in the stem';
+$string['stemdisplayerror'] = 'Every scenario must have a stem, or evey scenario must have media';
