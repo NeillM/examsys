@@ -26,7 +26,15 @@ data.mee - load deprecated mee js for old style maths.
 #}
 <link rel="stylesheet" type="text/css" href="{{path}}/plugins/texteditor/plugin_tinymce3_texteditor/css/tinymce3.css" />
 {% if data.mee %}
-<script type="text/javascript" src="{{path}}/js/jquery-migrate-1.2.1.min.js"></script>
-<script type="text/javascript" src="{{path}}/plugins/texteditor/plugin_tinymce3_texteditor/mee/mee/js/mee_src.js"></script>
-<script type="text/javascript" src="{{path}}/plugins/texteditor/plugin_tinymce3_texteditor/mee/mee/js/mee.js"></script>
+<script>
+    requirejs(['mathjax', 'jquery'], function (MathJax, $) {
+        $('.mee').each(function() {
+            $(this).prepend("$$");
+            $(this).append("$$");
+        });
+        if ($(".mee").length > 0) {
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+    });
+</script>
 {% endif %}
