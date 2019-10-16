@@ -969,7 +969,7 @@ function display_question ($configObject, &$question, $paper_type, $calculator, 
       if (count($matching_options) < 10) {
         $list_size = count($matching_options);
       }
-      echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
+      echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\"><tr>\n";
       if (count($sub_answers) > 1) {
         echo "<td valign='top'>";
         if (isset($std_parts[$part_id - 1 + $part_std_offset])) {
