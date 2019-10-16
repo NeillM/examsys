@@ -349,7 +349,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
           echo '</div></li>';
           $rating_part++;
         } else {
-          echo '<div class="no_marks">(Hold down &lt;CTRL&gt; key, then click mouse to toggle options on/off)</div>';
+          echo '<div class="no_marks">' . $string['multiselect_instructions'] . '</div>';
           echo '</div><br /></li>';
           for ($i = 1; $i <= $answer_count; $i++) {
             $review_val = get_review($options[0]['q_type'], $std_method, $q_id, $rating_part + 1, $tmp_reviews, $is_group);
