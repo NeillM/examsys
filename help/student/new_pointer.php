@@ -49,6 +49,7 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/help.css" />
 
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../../js/require.js'></script>
   <script src='../../js/main.min.js'></script>
   <script type="text/javascript" src="../../js/helpinit.min.js"></script>

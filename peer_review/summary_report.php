@@ -62,6 +62,7 @@ require_once 'summary_report.inc';
     .title {padding-left:10px}
   </style>
 
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
   <script src="../js/summaryreportinit.min.js"></script>

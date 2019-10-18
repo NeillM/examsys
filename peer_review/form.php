@@ -203,6 +203,7 @@ if ($group == '') {
     .photo {background-color:white; border-left: 1px solid #F1F1F1; border-top: 1px solid #F1F1F1; box-shadow: 2px 2px 4px #808080; padding:10px; margin-right:10px}
     .thankyou {margin-left: 10px; font-size: 350%; font-weight: bold; line-height: 140%}
   </style>
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
   <script src='../js/peerreviewinit.min.js'></script>

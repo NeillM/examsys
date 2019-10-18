@@ -129,6 +129,7 @@ EMAIL;
   <link rel="stylesheet" href="../css/body.css" type="text/css" />
   <link rel="stylesheet" href="../css/screen.css" type="text/css" />
   <link rel="stylesheet" href="../css/password.css" type="text/css" />
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src="../js/require.js"></script>
   <script src="../js/main.min.js"></script>
   <script src="../js/forgottenpasswordinit.min.js"></script>

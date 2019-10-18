@@ -134,6 +134,7 @@ function display_question($question, &$question_no, $reviews, &$string, $db) {
     .h {background-color:#F1F5FB; color:black}
   </style>
 
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
 </head>

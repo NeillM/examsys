@@ -81,6 +81,7 @@ if ($lab_object !== false) {
 <link rel="stylesheet" type="text/css" href="../css/header.css"/>
 <link rel="stylesheet" type="text/css" href="../css/invigilator.css"/>
 <link rel="stylesheet" type="text/css" href="../css/popup_menu.css"/>
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
 <script src='../js/require.js'></script>
 <script src='../js/main.min.js'></script>
 <script src="../js/invigilatorinit.min.js"></script>

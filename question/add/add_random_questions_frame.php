@@ -35,6 +35,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo $string['questionsbank']; ?></title>
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
     <script src="../../js/require.js"></script>
     <script src="../../js/main.min.js"></script>
   <link rel="stylesheet" type="text/css" href="../../css/add_questions.css" />

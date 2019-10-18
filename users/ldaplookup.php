@@ -41,6 +41,7 @@ require '../include/admin_auth.inc';
 		body {font-size:90%}
     th {background-color:#295AAD; color:white; text-align:left; font-weight:normal}
 	</style>
+    <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
     <script src='../js/require.js'></script>
     <script src='../js/main.min.js'></script>
     <script src="../js/ldaplookupinit.min.js"></script>

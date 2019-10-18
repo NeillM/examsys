@@ -121,6 +121,7 @@ $q_marks = array_flip($marks_arr);
     .overridden {background-color: #B3C8E8}
   </style>
 
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src="../js/require.js"></script>
   <script src="../js/main.min.js"></script>
   <script src="../js/calcremarkinit.min.js"></script>

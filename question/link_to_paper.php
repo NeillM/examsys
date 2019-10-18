@@ -49,6 +49,7 @@ if (isset($_GET['type']) and $_GET['type'] == 'objective') {
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/questionlink.css" />
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
  <script src="../js/questionlinkinit.min.js"></script>

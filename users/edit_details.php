@@ -58,6 +58,7 @@ if ($user_details['gender'] == 'Male') {
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/edituserdetails.css" />
 
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src="../js/require.js"></script>
   <script src="../js/main.min.js"></script>
   <script src="../js/edituserdetailsinit.min.js"></script>

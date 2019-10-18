@@ -88,6 +88,7 @@ function display_lab_stats($lab_count, $string, $db) {
   <link rel="stylesheet" type="text/css" href="../css/statistics.css" />
   <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
 
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
 </head>
