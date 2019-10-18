@@ -63,6 +63,7 @@ define(['log', 'html5images', 'html5listener', 'hotspot_answer', 'hotspot_analys
       // Set the web root.
       if (typeof webroot !== 'string') {
         Log('webroot is not a string it is a ' + (typeof webroot), 'error');
+        this.webroot = '/';
       } else {
         if (!webroot.endsWith('/')) {
           webroot += '/';

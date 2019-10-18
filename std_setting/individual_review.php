@@ -436,9 +436,6 @@ function check_ebel_distinction_type($reviewID, $db) {
 </form>
 </div>
 <?php
-$dataset['name'] = 'dataset';
-$dataset['attributes']['method'] = $_GET['method'];
-$render->render($dataset, array(), 'dataset.html');
 // JS utils dataset.
 $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
@@ -447,6 +444,7 @@ $render->render($jsdataset, array(), 'dataset.html');
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['language'] = $language;
 $miscdataset['attributes']['rootpath'] = $cfg_root_path;
+$miscdataset['attributes']['method'] = $_GET['method'];
 $render->render($miscdataset, array(), 'dataset.html');
 $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 
