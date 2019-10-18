@@ -214,6 +214,11 @@ $render = new render($configObject);
 $jsdataset['name'] = 'dataset';
 $jsdataset['attributes']['folder'] = $folder;
 $render->render($jsdataset, array(), 'dataset.html');
+$miscdataset = [
+  'name' => 'jsutils',
+  'attributes' => ['xls' => json_encode($string)],
+];
+$render->render($miscdataset, array(), 'dataset.html');
 ?>
 </body>
 </html>
