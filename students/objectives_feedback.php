@@ -172,6 +172,7 @@ $textsize -= 10;
     .sum_field {width:8em}
   </style>
 
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
 </head>

@@ -35,6 +35,7 @@ require '../../include/staff_auth.inc';
   <style type="text/css">
     body {margin-right:4px; margin-bottom:2px; background-color:#F0F0EA}
   </style>
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src="../../js/require.js"></script>
   <script src="../../js/main.min.js"></script>
 </head>

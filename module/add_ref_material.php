@@ -59,14 +59,14 @@ if (isset($_POST['submit'])) {
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/refmaterial.css" />
-<?php
-  $texteditorplugin->display_header();
-  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::CONFIG);
-?>
   <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
   <script src="../js/refmaterialforminit.min.js"></script>
+<?php
+  $texteditorplugin->display_header();
+  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::CONFIG);
+?>
 
 </head>
 
@@ -78,7 +78,7 @@ if (isset($_POST['submit'])) {
 ?>
 <div class="head_title" style="font-size:90%">
 	<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
-  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="details.php?module=<?php echo $_GET['module'] ?>"><?php echo module_utils::get_moduleid_from_id($_GET['module'], $mysqli); ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="list_ref_material.php?module=<?php echo $_GET['module']; ?>"><?php echo $string['referencematerial']; ?></a></div>
+  <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="index.php?module=<?php echo $_GET['module'] ?>"><?php echo module_utils::get_moduleid_from_id($_GET['module'], $mysqli); ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="list_ref_material.php?module=<?php echo $_GET['module']; ?>"><?php echo $string['referencematerial']; ?></a></div>
   <div class="page_title"><?php echo $string['newreferencematerial'] ?></div>
 </div>
 

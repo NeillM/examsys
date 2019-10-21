@@ -233,6 +233,12 @@ if ($file_problem) {
   }
   $jsdataset['attributes']['module'] = $module;
   $render->render($jsdataset, array(), 'dataset.html');
+
+  $miscdataset = [
+    'name' => 'jsutils',
+    'attributes' => ['xls' => json_encode($string)],
+  ];
+  $render->render($miscdataset, array(), 'dataset.html');
 ?>
 </body>
 </html>

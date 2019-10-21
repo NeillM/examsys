@@ -51,15 +51,16 @@ if (isset($_POST['save_changes'])) {
   
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/help.css" />
-  
+
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
+  <script src='../../js/require.js'></script>
+  <script src='../../js/main.min.js'></script>
+  <script type="text/javascript" src="../../js/helpinit.min.js"></script>  
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();
   $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::HELP_STAFF);
 ?>
-  <script src='../../js/require.js'></script>
-  <script src='../../js/main.min.js'></script>
-  <script type="text/javascript" src="../../js/helpinit.min.js"></script>
 </head>
 
 <body>
