@@ -152,11 +152,15 @@ function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_te
 
   if ($tmp_excluded == '0000000000000000000000000000000000000000' and $status_array[$status]->get_validate()) {
     if ($score_method == 'SelectedPositive' and $q_type == 'mrq') {
-      if ($question_marks > (count($option_text) / 2)) $temp_array[$row_no]['warnings'] = $string['toomanycorrect'];
+      if ($question_marks > (count($option_text) / 2)) {
+        $temp_array[$row_no]['warnings'][] = $string['toomanycorrect'];
+      }
     } elseif ($q_type == 'dichotomous') {
-      if ($score_method == 'Mark per Option' and $question_marks < count($option_text)) $temp_array[$row_no]['warnings'] = sprintf($string['dichotomouswarning'], $question_marks, count($option_text));
+      if ($score_method == 'Mark per Option' and $question_marks < count($option_text)) {
+        $temp_array[$row_no]['warnings'][] = sprintf($string['dichotomouswarning'], $question_marks, count($option_text));
+      }
     } elseif ($q_type == 'mcq' and $correct_array[0] == '') {
-      $temp_array[$row_no]['warnings'] = $string['nocorrect'];
+      $temp_array[$row_no]['warnings'][] = $string['nocorrect'];
     } elseif ($q_type == 'enhancedcalc') {
       $bkt_mismatch = false;
       $formula = $settings['answers'];
@@ -168,17 +172,17 @@ function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_te
         }
       }
       if ($bkt_mismatch) {
-        $temp_array[$row_no]['warnings'] = $string['mismatchbrackets'];
+        $temp_array[$row_no]['warnings'][] = $string['mismatchbrackets'];
       }
     } elseif ($q_type == 'mrq' and !in_array('y', $correct_array)) {
-      $temp_array[$row_no]['warnings'] = $string['nocorrect'];
+      $temp_array[$row_no]['warnings'][] = $string['nocorrect'];
     } elseif ($q_type == 'textbox' and $question_marks == 0) {
-      $temp_array[$row_no]['warnings'] = $string['zeromarks'];
+      $temp_array[$row_no]['warnings'][] = $string['zeromarks'];
     } elseif ($q_type == 'blank') {
 		  $open_blank = substr_count($option_text[0], '[blank'); 
 		  $close_blank = substr_count($option_text[0], '[/blank');
 		  if ($open_blank != $close_blank) {
-				$temp_array[$row_no]['warnings'] = $string['mismatchblanktags'];
+				$temp_array[$row_no]['warnings'][] = $string['mismatchblanktags'];
 			}
 		} elseif ($q_type == 'extmatch' or $q_type == 'matrix') {
       $matching_scenarios = explode('|', $temp_array[$row_no]['scenario']);
@@ -199,19 +203,19 @@ function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_te
       }
 
       if ($missing_answer) {
-        $temp_array[$row_no]['warnings'] = $string['answermissing'];
+        $temp_array[$row_no]['warnings'][] = $string['answermissing'];
       }
     } elseif ($q_type == 'labelling') {
       if (!have_valid_labels($temp_array[$row_no]['correct'])) {
-        $temp_array[$row_no]['warnings'] = $string['nolabels'];
+        $temp_array[$row_no]['warnings'][] = $string['nolabels'];
       }
     } elseif ($q_type == 'random' and $properties->get_paper_type() == '2') {
-      $temp_array[$row_no]['warnings'] = $string['notsummativeexams'];
+      $temp_array[$row_no]['warnings'][] = $string['notsummativeexams'];
     } elseif ($q_type == 'keyword_based' and $properties->get_paper_type() == '2') {
-      $temp_array[$row_no]['warnings'] = $string['notsummativeexams'];
+      $temp_array[$row_no]['warnings'][] = $string['notsummativeexams'];
     }
     if ($q_type == 'mcq' and $score_method == 'vertical_other') {
-      $temp_array[$row_no]['warnings'] = $string['mcqsurvey'];
+      $temp_array[$row_no]['warnings'][] = $string['mcqsurvey'];
     }
     if ($q_type == 'mcq') {  // Check duplicate options
       $have_text = false;
@@ -226,7 +230,7 @@ function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_te
         $option_text_copy = array_map('strtolower', $option_text_check);
         $unique_options = array_unique($option_text_copy);
         if (count($option_text_copy) > count($unique_options)) {
-          $temp_array[$row_no]['warnings'] = $string['duplicateoptions'];
+          $temp_array[$row_no]['warnings'][] = $string['duplicateoptions'];
         }
       }
       
@@ -549,7 +553,7 @@ $scrOfY = param::optional('scrOfY', null, param::FLOAT, param::FETCH_GET);
       $temp_array[$row_no]['display_pos']     = $display_pos;
       $temp_array[$row_no]['correct']         = $correct;
       $temp_array[$row_no]['status']          = $status;
-      $temp_array[$row_no]['warnings']        = '';
+      $temp_array[$row_no]['warnings']        = [];
       $temp_array[$row_no]['random']          = array();
 
       $q_mod_check[] = $q_id;
@@ -804,7 +808,7 @@ $scrOfY = param::optional('scrOfY', null, param::FLOAT, param::FETCH_GET);
   for ($x=1; $x<=$row_no; $x++) {
     $status = $status_array[$temp_array[$x]['status']];
     if ($temp_array[$x]['options'] == 0 and isset($temp_array[$x]['o_media']) and count($temp_array[$x]['o_media']) == 0 and !in_array($temp_array[$x]['q_type'], $nooptions) and ($temp_array[$x]['q_type'] != 'textbox' or $temp_array[$x]['correct'] != 'placeholder')) {
-      $temp_array[$x]['warnings'] .= $string['nooptionsdefined'];
+      $temp_array[$x]['warnings'][] = $string['nooptionsdefined'];
     }
     if ($status->get_display_warning()) $paper_warnings['status'][$status->get_name()][] = $question_number + 1;
     if ($old_screen != $temp_array[$x]['screen']) {
@@ -905,8 +909,8 @@ $scrOfY = param::optional('scrOfY', null, param::FLOAT, param::FETCH_GET);
     echo $theme_str;
     if ($temp_array[$x]['q_type'] == 'random') {
       echo $temp_array[$x]['leadin'];
-      if ($temp_array[$x]['warnings'] != '') {
-        echo '<span class="q_warning">' . $temp_array[$x]['warnings'] . '</span>';
+      foreach ($temp_array[$x]['warnings'] as $warning) {
+        echo '<span class="q_warning">' . $warning . '</span>';
       }
     } elseif ($temp_array[$x]['leadin'] != '') {
       echo $temp_array[$x]['leadin'];
@@ -914,7 +918,9 @@ $scrOfY = param::optional('scrOfY', null, param::FLOAT, param::FETCH_GET);
 				echo ' <img src="../artwork/exclude_small.gif" width="15" height="11" alt="Excluded" />';
 			}
       if (isset($exam_announcements[$temp_array[$x]['q_id']])) echo ' <img src="../artwork/comment_14_11.png" width="14" height="11" alt="Exam Clarification" />';
-      if ($temp_array[$x]['warnings'] != '') echo '<div class="q_warning">' . $temp_array[$x]['warnings'] . '</div>';
+      foreach ($temp_array[$x]['warnings'] as $warning) {
+        echo '<div class="q_warning">' . $warning . '</div>';
+      }
     } elseif (strpos($temp_array[$x]['q_media'],'.swf') !== false) {
       echo "<img src=\"../artwork/flash_icon.png\" width=\"48\" height=\"48\" alt=\"Embedded Flash object\" border=\"0\" />";
     } elseif (strpos($temp_array[$x]['q_media'],'.flv') !== false) {
