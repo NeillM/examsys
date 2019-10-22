@@ -191,19 +191,37 @@ function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_te
       $matching_correct   = explode('|', $correct_array[0]);
 
       $missing_answer = false;
+      $display_error = false;
+      $stems = 0;
+      $media = 0;
       for ($part_id = 0; $part_id < 10; $part_id++) {
         $has_stem = (isset($matching_scenarios[$part_id]) and (trim(param::clean($matching_scenarios[$part_id], param::TEXT)) !== ''));
         $has_media = (isset($matching_media[$part_id]) and ($matching_media[$part_id] !== ''));
-        if (!$has_stem and !$has_media) {
-          continue;
+        if ($has_stem) {
+          $stems++;
         }
-        if (empty($matching_correct[$part_id])) {
+        if ($has_media) {
+          $media++;
+        }
+        // All scenarions must have either a stem or all scenarios must have a media,
+        // the question will not display correctly if some have one and some the other.
+        // It is valid for them all to have one and others to have other.
+        // The question does not support gaps in the scenarios either.
+        $allstems = ($stems == $part_id);
+        $allmedia = ($media == $part_id);
+        if (($has_stem or $has_media) and !($allstems or $allmedia)) {
+          $display_error = true;
+        }
+        if (empty($matching_correct[$part_id]) and ($has_stem or $has_media)) {
           $missing_answer = true;
         }
       }
 
       if ($missing_answer) {
         $temp_array[$row_no]['warnings'][] = $string['answermissing'];
+      }
+      if ($display_error) {
+        $temp_array[$row_no]['warnings'][] = $string['displayproblem'];
       }
     } elseif ($q_type == 'labelling') {
       if (!have_valid_labels($temp_array[$row_no]['correct'])) {

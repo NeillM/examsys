@@ -44,6 +44,7 @@ $string['toomanycorrect'] = 'Too many correct options';
 $string['mismatchbrackets'] = 'Mismatching brackets found.';
 $string['mismatchblanktags'] = 'Mismatching opening/closing [blank] tags.';
 $string['answermissing'] = 'Correct answer missing for some options.';
+$string['displayproblem'] = 'The question will not display correctly.';
 $string['nolabels'] = 'No labels added to image.';
 $string['mcqsurvey'] = "MCQ with 'other' should only be used on surveys";
 $string['dichotomouswarning'] = '%d out of %d';
