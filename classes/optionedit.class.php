@@ -492,7 +492,7 @@ QUERY;
   }
 
   /**
-   * Gets a option for the correct question type.
+   * Gets an option for the correct question type.
    *
    * @param mysqli $mysqli Database connection
    * @param int $user_id The id of the user editing the question.
