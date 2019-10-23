@@ -271,9 +271,13 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
   if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
     if ($question['scenario'] != '' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'matrix' and $question['q_type'] != 'likert' and $question['q_type'] != 'enhancedcalc') {
       echo '<tr><td class="q_no">' . $question['assigned_number'] . '.&nbsp;';
-      if ($calculator == 1) echo '<br /><img class="sciCalculator" src="../artwork/calc.png" alt="' . $string['calculator'] . '" />';
+      if ($calculator == 1) {
+        echo '<br /><img class="sciCalculator" src="../artwork/calc.png" alt="' . $string['calculator'] . '" />';
+      }
       echo "</td><td>";
-      if ($question['notes'] != '') echo '<p class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
+      if ($question['notes'] != '') {
+        echo '<p class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
+      }
       echo $question['scenario'] . "<br />\n<br />";
       $li_set = 1;
     }
@@ -292,11 +296,15 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     if ($question['q_type'] != 'likert') {
       if ($li_set == 0) {
         echo '<tr><td class="q_no">' . $question['assigned_number'] . '.&nbsp;';
-        if ($calculator == 1) echo '<br /><img class="sciCalculator" src="../artwork/calc.png" alt="' . $string['calculator'] . '" />';
+        if ($calculator == 1) {
+          echo '<br /><img class="sciCalculator" src="../artwork/calc.png" alt="' . $string['calculator'] . '" />';
+        }
         echo '</td><td>';
       }
       $li_set = 1;
-      if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and in_array($question['q_type'], array('extmatch', 'matrix', 'enhancedcalc')))) echo '<p class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
+      if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and in_array($question['q_type'], array('extmatch', 'matrix', 'enhancedcalc')))) {
+        echo '<p class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
+      }
       if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'enhancedcalc') echo $question['leadin'];
     }
   }
@@ -1202,7 +1210,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
 
     if ($matching_media[0] != '') {
       echo '<div class="mediadiv">';
-      $questiondata->set_media($matching_media[0],$matching_media_width[0],$matching_media_height[0], '', true);
+      $questiondata->set_media($matching_media[0], $matching_media_width[0], $matching_media_height[0], '', true);
       $render->render($questiondata, $string, 'paper/media.html');
       echo '</div>';
     }
@@ -1217,42 +1225,44 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
       }
     }
 
-
-
     $col1_no = ceil(count($matching_options) / 2);
     echo "<table class=\"extmatch_opt_table\">\n<tr><td><ol>\n";
-    for ($i=0; $i<count($matching_options); $i++) {
+    for ($i = 0; $i < count($matching_options); $i++) {
 
       echo "<li>" . $matching_options[$i] . "</li>";
-      if ($i == ($col1_no-1)) {
-        echo "</ol></td><td style=\"vertical-align:top\"><ol start=\"" . ($i+2) . "\">";
+      if ($i == ($col1_no - 1)) {
+        echo "</ol></td><td style=\"vertical-align:top\"><ol start=\"" . ($i + 2) . "\">";
       }
     }
     echo "</ol></td></tr>\n</table>\n";
 
     echo '<ol class="extmatch">';
-    for ($part_id=1; $part_id<=$scenario_no; $part_id++) {
+    for ($part_id = 1; $part_id <= $scenario_no; $part_id++) {
       if(isset($matching_answers[$part_id-1])) {
-        $answer_no = substr_count($matching_answers[$part_id-1],'$') + 1;
-        $marks += (substr_count($matching_answers[$part_id-1],'$') + 1) * $display_option['marks_correct'];
+        $answer_no = substr_count($matching_answers[$part_id - 1],'$') + 1;
+        $marks += (substr_count($matching_answers[$part_id - 1],'$') + 1) * $display_option['marks_correct'];
       } else {
         $answer_no = 0;
       }
       echo '<li>';
-      if (isset($matching_scenarios[$part_id]) and $matching_scenarios[$part_id] != '') echo '<div>' . $matching_scenarios[$part_id] . '</div>';
+      if (isset($matching_scenarios[$part_id]) and $matching_scenarios[$part_id] != '') {
+        echo '<div>' . $matching_scenarios[$part_id] . '</div>';
+      }
       if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') {
         echo "<div>";
         $questiondata->set_media($matching_media[$part_id], $matching_media_width[$part_id], $matching_media_height[$part_id], '', true);
         $render->render($questiondata, $string, 'paper/media.html');
         echo "</div>\n<br />";
       }
-      if(isset($matching_answers[$part_id-1])) {
+      if(isset($matching_answers[$part_id - 1])) {
         $sub_answers = explode('$', $matching_answers[$part_id - 1]);
       } else {
         $sub_answers = array();
       }
       $list_size = 10;
-      if (count($matching_options) < 10) $list_size = count($matching_options);
+      if (count($matching_options) < 10) {
+        $list_size = count($matching_options);
+      }
       if ($answer_no == 1) {
         if (isset($matching_users_answers[$part_id - 1]) and $matching_users_answers[$part_id - 1] == 'u' and $screen_pre_submitted == 1) {
           echo "<select class=\"unans\" name=\"q" . $question_no . "_" . $part_id . "\" size=\"1\">\n";
@@ -1277,22 +1287,24 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
       }
 
       $tmp_option_no = 0;
-      for ($option_no=0; $option_no<count($matching_options); $option_no++) {
+      for ($option_no = 0; $option_no < count($matching_options); $option_no++) {
         $tmp_answer_match = false;
         foreach ($multi_answers as $separate_tmp_answer) {
-          if ($separate_tmp_answer == ($question['option_order'][$tmp_option_no]+1)) {
+          if ($separate_tmp_answer == ($question['option_order'][$tmp_option_no] + 1)) {
             $tmp_answer_match = true;
           }
         }
         if ($tmp_answer_match == true) {
-          echo "<option value=\"" . ($question['option_order'][$option_no]+1) . "\" selected>" . chr($option_no+65) . ". " . $matching_options[$option_no] . "</option>\n";
+          echo "<option value=\"" . ($question['option_order'][$option_no] + 1) . "\" selected>" . chr($option_no + 65) . ". " . $matching_options[$option_no] . "</option>\n";
         } else {
-          echo "<option value=\"" . ($question['option_order'][$option_no]+1) . "\">" . chr($option_no+65) . ". " . $matching_options[$option_no] . "</option>\n";
+          echo "<option value=\"" . ($question['option_order'][$option_no] + 1) . "\">" . chr($option_no + 65) . ". " . $matching_options[$option_no] . "</option>\n";
         }
         $tmp_option_no++;
       }
       echo '</select>';
-      if ($answer_no > 1) echo '<div class="mk">' . $string['holddownctrlkey'] . '</div>';
+      if ($answer_no > 1) {
+        echo '<div class="mk">' . $string['holddownctrlkey'] . '</div>';
+      }
       echo '</div></li>';
     }
     echo '</ol><input type="hidden" name="multimatching' . $question_no . '_options" value="' . count($matching_options) . '" />';
@@ -1373,7 +1385,9 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
   } else {
     echo "</td></tr>\n";
   }
-  if ($question['q_type'] != 'info') echo "<input type=\"hidden\" name=\"order$question_no\" value=\"" . implode(',', $question['option_order']) . "\" />\n";
+  if ($question['q_type'] != 'info') {
+    echo "<input type=\"hidden\" name=\"order$question_no\" value=\"" . implode(',', $question['option_order']) . "\" />\n";
+  }
   $used_questions[$q_id] = $q_id;
 }
 ?>

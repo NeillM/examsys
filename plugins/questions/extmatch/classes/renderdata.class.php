@@ -164,7 +164,7 @@ class renderdata extends \questiondata {
     $max_scenarios = max(count($matching_scenarios), count($matching_media));
     $scenario_no = 0;
     for ($id = 1; $id < $max_scenarios; $id++) {
-      if ((isset($matching_scenarios[$id]) and trim(strip_tags($matching_scenarios[$id],'<img>')) != '')
+      if ((isset($matching_scenarios[$id]) and trim(strip_tags($matching_scenarios[$id], '<img>')) != '')
         or (isset($matching_media[$id]) and $matching_media[$id] != '')) {
         $scenario_no++;
       }
@@ -175,25 +175,25 @@ class renderdata extends \questiondata {
     $this->matchoptionsno = count($matching_options);
     $matchstem = array();
     $marks = $this->marks;
-    for ($id=1; $id<=$scenario_no; $id++) {
-      if(isset($matching_answers[$id-1])) {
-        $answer_no = substr_count($matching_answers[$id-1],'$') + 1;
-        $marks += (substr_count($matching_answers[$id-1],'$') + 1) * $option['markscorrect'];
+    for ($id = 1; $id <= $scenario_no; $id++) {
+      if(isset($matching_answers[$id - 1])) {
+        $answer_no = substr_count($matching_answers[$id - 1],'$') + 1;
+        $marks += (substr_count($matching_answers[$id - 1],'$') + 1) * $option['markscorrect'];
       } else {
         $answer_no = 0;
       }
-      $matchstem[$id-1]['answerno'] = $answer_no;
+      $matchstem[$id - 1]['answerno'] = $answer_no;
       if (isset($matching_scenarios[$id]) and $matching_scenarios[$id] != '') {
-        $matchstem[$id-1]['scenario'] = $matching_scenarios[$id];
+        $matchstem[$id - 1]['scenario'] = $matching_scenarios[$id];
       }
-      $matchstem[$id-1]['display'] = false;
+      $matchstem[$id - 1]['display'] = false;
       if (isset($matching_media[$id]) and $matching_media[$id] != '') {
-        $matchstem[$id-1]['display'] = true;
+        $matchstem[$id - 1]['display'] = true;
         $this->set_media($matching_media[$id], $matching_media_width[$id], $matching_media_height[$id], '', false, -1, false, $id);
         $mediaoption = $this->get_opt($id);
-        $matchstem[$id-1]['media'] = $mediaoption['optionmedia'];
+        $matchstem[$id - 1]['media'] = $mediaoption['optionmedia'];
       }
-      if(isset($matching_answers[$id-1])) {
+      if(isset($matching_answers[$id - 1])) {
         $sub_answers = explode('$', $matching_answers[$id - 1]);
       } else {
         $sub_answers = array();
@@ -204,20 +204,20 @@ class renderdata extends \questiondata {
       }
       if ($answer_no == 1) {
         if (isset($matching_users_answers[$id - 1]) and $matching_users_answers[$id - 1] == 'u' and $screen_pre_submitted == 1) {
-          $matchstem[$id-1]['unanswered'] = true;
+          $matchstem[$id - 1]['unanswered'] = true;
           $this->unanswered = true;
         } else {
-          $matchstem[$id-1]['unanswered'] = false;
+          $matchstem[$id - 1]['unanswered'] = false;
         }
       } else {
-        $matchstem[$id-1]['listsize'] = $list_size;
-        $matchstem[$id-1]['subanswers'] = count($sub_answers);
-        $matchstem[$id-1]['matchingoptions'] = count($matching_options);
+        $matchstem[$id - 1]['listsize'] = $list_size;
+        $matchstem[$id - 1]['subanswers'] = count($sub_answers);
+        $matchstem[$id - 1]['matchingoptions'] = count($matching_options);
         if (isset($matching_users_answers[$id - 1]) and $matching_users_answers[$id - 1] == '' and $screen_pre_submitted == 1) {
-          $matchstem[$id-1]['unanswered'] = true;
+          $matchstem[$id - 1]['unanswered'] = true;
           $this->unanswered = true;
         } else {
-          $matchstem[$id-1]['unanswered'] = false;
+          $matchstem[$id - 1]['unanswered'] = false;
         }
       }
 
@@ -227,20 +227,20 @@ class renderdata extends \questiondata {
       }
 
       $tmp_option_no = 0;
-      for ($option_no=0; $option_no<count($matching_options); $option_no++) {
+      for ($option_no = 0; $option_no < count($matching_options); $option_no++) {
         $tmp_answer_match = false;
         foreach ($multi_answers as $separate_tmp_answer) {
-          if ($separate_tmp_answer == $option_order[$tmp_option_no]+1) {
+          if ($separate_tmp_answer == $option_order[$tmp_option_no] + 1) {
             $tmp_answer_match = true;
           }
         }
         if ($tmp_answer_match == true) {
-          $matchstem[$id-1]['matchingoption'][$option_no]['selected'] = true;
+          $matchstem[$id - 1]['matchingoption'][$option_no]['selected'] = true;
         } else {
-          $matchstem[$id-1]['matchingoption'][$option_no]['selected'] = false;
+          $matchstem[$id - 1]['matchingoption'][$option_no]['selected'] = false;
         }
-        $matchstem[$id-1]['matchingoption'][$option_no]['value'] = $option_order[$option_no]+1;
-        $matchstem[$id-1]['matchingoption'][$option_no]['option'] = chr($option_no+65) . '. ' . $matching_options[$option_no];
+        $matchstem[$id - 1]['matchingoption'][$option_no]['value'] = $option_order[$option_no] + 1;
+        $matchstem[$id - 1]['matchingoption'][$option_no]['option'] = chr($option_no + 65) . '. ' . $matching_options[$option_no];
         $tmp_option_no++;
       }
     }

@@ -95,7 +95,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     }
   }
 
-  if ($question['theme'] != '') echo '<tr><td colspan="2" class="theme">' . $question['theme'] . '</td></tr>';
+  if ($question['theme'] != '') {
+    echo '<tr><td colspan="2" class="theme">' . $question['theme'] . '</td></tr>';
+  }
 
   if ($question['q_type'] != 'info' and $question['q_type'] != 'sct') {
     if ($question['scenario'] != '' and $question['q_type'] != 'extmatch' and $question['q_type'] != 'matrix' and $question['q_type'] != 'likert') {
@@ -119,8 +121,12 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
       }
       $li_set = 1;
-      if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and $question['q_type'] == 'extmatch')) echo '<p class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
-      if ($question['q_type'] != 'hotspot') echo $question['leadin'];
+      if (($question['notes'] != '' and $question['scenario'] == '') or ($question['notes'] != '' and $question['q_type'] == 'extmatch')) {
+        echo '<p class="note"><img src="../artwork/notes_icon.gif" width="16" height="16" alt="' . $string['note'] . '" />&nbsp;<strong>' . $string['note'] . ':</strong>&nbsp;' . $question['notes'] . '</p>';
+      }
+      if ($question['q_type'] != 'hotspot') {
+        echo $question['leadin'];
+      }
     }
   }
   if ($question['q_type'] == 'info') {
@@ -139,7 +145,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
 
   $part_id = 0;
   $marks = 0;
-  if ($question['q_type'] != 'likert') $old_likert_label = '';
+  if ($question['q_type'] != 'likert') {
+    $old_likert_label = '';
+  }
 
   // Pre-question processing
   switch ($question['q_type']) {
@@ -709,35 +717,40 @@ HTML;
       echo '</div>';
     }
     $text_scenarios = 0;
-    for ($part_id=0; $part_id<count($matching_scenarios); $part_id++) {
-      if (trim(strip_tags($matching_scenarios[$part_id],'<img>')) != '') $text_scenarios++;
+    for ($part_id = 0; $part_id < count($matching_scenarios); $part_id++) {
+      if (trim(strip_tags($matching_scenarios[$part_id], '<img>')) != '') {
+        $text_scenarios++;
+      }
     }
     $media_scenarios = 0;
-    for ($part_id=1; $part_id<count($matching_media); $part_id++) {
-      if ($matching_media[$part_id] != '') $media_scenarios++;
+    for ($part_id = 1; $part_id < count($matching_media); $part_id++) {
+      if ($matching_media[$part_id] != '') {
+        $media_scenarios++;
+      }
     }
     $scenario_no = max($text_scenarios, $media_scenarios);
 
     $col1_no = ceil(count($matching_options) / 2);
     echo "<table class=\"extmatch_opt_table\">\n<tr><td><ol>\n";
-    for ($i=0; $i<count($matching_options); $i++) {
-
+    for ($i = 0; $i < count($matching_options); $i++) {
       echo "<li>" . $matching_options[$i] . "</li>";
-      if ($i == ($col1_no-1)) {
-        echo "</ol></td><td style=\"vertical-align:top\"><ol start=\"" . ($i+2) . "\">";
+      if ($i == ($col1_no - 1)) {
+        echo "</ol></td><td style=\"vertical-align:top\"><ol start=\"" . ($i + 2) . "\">";
       }
     }
     echo "</ol></td></tr>\n</table>\n";
 
     echo '<ol class="extmatch">';
-    for ($part_id=1; $part_id<=$scenario_no; $part_id++) {
-      $answer_no = substr_count($matching_answers[$part_id-1],'$') + 1;
-      $marks += (substr_count($matching_answers[$part_id-1],'$') + 1) * $display_option['marks_correct'];
+    for ($part_id = 1; $part_id <= $scenario_no; $part_id++) {
+      $answer_no = substr_count($matching_answers[$part_id - 1], '$') + 1;
+      $marks += (substr_count($matching_answers[$part_id - 1], '$') + 1) * $display_option['marks_correct'];
 
       $sub_answers = explode('$', $matching_answers[$part_id - 1]);
 
       echo '<li>';
-      if (isset($matching_scenarios[$part_id - 1]) and $matching_scenarios[$part_id - 1] != '') echo '<div>' . $matching_scenarios[$part_id - 1] . '</div>';
+      if (isset($matching_scenarios[$part_id - 1]) and $matching_scenarios[$part_id - 1] != '') {
+        echo '<div>' . $matching_scenarios[$part_id - 1] . '</div>';
+      }
       if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') {
         echo "<div>";
         $questiondata->set_media($matching_media[$part_id], $matching_media_width[$part_id], $matching_media_height[$part_id], '');
@@ -745,7 +758,7 @@ HTML;
         echo "</div>\n";
       }
 
-      for ($i=0; $i<count($sub_answers); $i++) {
+      for ($i = 0; $i < count($sub_answers); $i++) {
         echo '<img src="../artwork/print_box_a.png" width="30" height="30" />&nbsp;';
       }
 
@@ -794,7 +807,9 @@ HTML;
   }
 
   // Display possible marks for question (if not Survey)
-  if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'likert' and $question['q_type'] != 'info' and $question['q_type'] != 'enhancedcalc') echo '</blockquote>';
+  if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'likert' and $question['q_type'] != 'info' and $question['q_type'] != 'enhancedcalc') {
+    echo '</blockquote>';
+  }
   if ($paper_type < 3) {
     if ($marks == 0) {
       echo "</td></tr>\n<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
@@ -812,12 +827,10 @@ HTML;
       if ($neg_marking) echo ', ' . $string['negmarking'];
       echo ")</div>\n<br /></td></tr>\n";
     }
-  } else {
-    //echo "</td></tr>\n";
   }
-  if ($question['q_type'] != 'info') echo "<input type=\"hidden\" name=\"order$question_no\" value=\"" . implode(',', $question['option_order']) . "\" />\n";
-  $used_questions[$q_id] = $q_id;
 
-  //echo "</table>\n";
+  if ($question['q_type'] != 'info') {
+    echo "<input type=\"hidden\" name=\"order$question_no\" value=\"" . implode(',', $question['option_order']) . "\" />\n";
+  }
+  $used_questions[$q_id] = $q_id;
 }
-?>

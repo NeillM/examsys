@@ -180,10 +180,12 @@ foreach ($log_array as $individual) {
           }
           break;
         case 'extmatch':
-          $sections = substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID],'|') + 1;
-          for ($sec=1; $sec<=$sections; $sec++) {
-            if ($sec > 1) echo ',';
-            echo 'Q' . ($i+1) . '.' . $sec;
+          $sections = substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], '|') + 1;
+          for ($sec = 1; $sec <= $sections; $sec++) {
+            if ($sec > 1) {
+              echo ',';
+            }
+            echo 'Q' . ($i + 1) . '.' . $sec;
           }
           break;
         case 'matrix':
@@ -237,7 +239,7 @@ foreach ($log_array as $individual) {
           break;
         case 'extmatch':
           $log_array[$tmp_user_ID][$tmp_question_ID] = $log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID];
-          $tmp_answers = str_replace('|',',',$log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID]);
+          $tmp_answers = str_replace('|', ',', $log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID]);
           echo $tmp_answers;
           break;
         case 'matrix':

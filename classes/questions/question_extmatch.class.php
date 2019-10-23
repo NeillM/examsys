@@ -25,16 +25,49 @@
  */
 
 Class QuestionEXTMATCH extends QuestionEdit {
-  
+  /** @var string[] The stem text for the scenarios. */
   protected $stems = array();
+
+  /**
+   * An array of the names of the media files used in the question.
+   *
+   * The first entry is the leadin media, the rest of the entries are for the scenarios.
+   *
+   * @var string[]
+   */
   protected $all_media_names = array();
+
+  /**
+   * An array of the heights of the media files used in the question.
+   *
+   * The first entry is the leadin media, the rest of the entries are for the scenarios.
+   *
+   * @var int[]
+   */
   protected $all_media_heights = array();
+
+  /**
+   * An array of the widths of the media files used in the question.
+   *
+   * The first entry is the leadin media, the rest of the entries are for the scenarios.
+   *
+   * @var int[]
+   */
   protected $all_media_widths = array();
+
+  /** @var string[] The feedback given when answered correctly for the scenarios. */
   protected $all_feedback = array();
-  protected $_answer_negative = array();
   
+  /** @var string[] The feedback given when answered incorrectly for the scenarios. */
+  protected $_answer_negative = array();
+
+  /** @var int The maximum number of options in the question. */
   public $max_options = 26;
+
+  /** @var int The minimum number of options in the question. */
   protected $min_options = 3;
+
+  /** @var int The maximum number of scenarios in the question. */
   public $max_stems = 10;
   
   protected $_fields_required = array('type', 'leadin', 'option_order', 'owner_id', 'status');

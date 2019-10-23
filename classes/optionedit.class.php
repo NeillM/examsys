@@ -491,6 +491,18 @@ QUERY;
     return $options;
   }
 
+  /**
+   * Gets an option for the correct question type.
+   *
+   * @param mysqli $mysqli Database connection
+   * @param int $user_id The id of the user editing the question.
+   * @param QuestionEdit $question The question being edited.
+   * @param int $number The option number.
+   * @param array $lang_strings
+   * @param int|array $data
+   * @return \OptionEdit for a specific question type.
+   * @throws ClassNotFoundException
+   */
   public static function option_factory($mysqli, $user_id, $question, $number, &$lang_strings, $data=-1) {
     $object = null;
     $root = get_root_path();

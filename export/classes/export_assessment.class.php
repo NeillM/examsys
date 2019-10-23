@@ -164,22 +164,22 @@ class export_assessment extends exporter {
           case 'extmatch':
             $correct_parts = explode(',', $question['correct']);
             $partID = 0;
-            for ($sec=1; $sec < count($correct_parts); $sec++) {
+            for ($sec = 1; $sec < count($correct_parts); $sec++) {
               if ($correct_parts[$sec] != '' and substr($tmp_exclude, $partID, 1) == '0') {
                 if (strpos($correct_parts[$sec], '$') === false) {
-                  $col1 = 'Q' . ($i+1) . $numerals[$sec-1];
+                  $col1 = 'Q' . ($i + 1) . $numerals[$sec - 1];
                   self::add_random_column_standard($i, $sec, $csvdata, $col1, $is_random);
                 } else {
                   $num_ix = 0;
                   $correct_subparts = explode('$', $correct_parts[$sec]);
                   foreach ($correct_subparts as $subpart) {
-                    $col1 = 'Q' . ($i+1) . $numerals[$sec-1] . chr($num_ix + 65);
+                    $col1 = 'Q' . ($i + 1) . $numerals[$sec - 1] . chr($num_ix + 65);
                     self::add_random_column_standard($i, $sec, $csvdata, $col1, $is_random, $numerals[$num_ix]);
                     $num_ix++;
                   }
                 }
               }
-              $partID += substr_count($correct_parts[$sec],'$') + 1;
+              $partID += substr_count($correct_parts[$sec], '$') + 1;
             }
             break;
           case 'hotspot':
@@ -335,11 +335,11 @@ class export_assessment extends exporter {
             }
             break;
           case 'extmatch':
-            $correct_parts = explode(',',$question['correct']);
+            $correct_parts = explode(',', $question['correct']);
             $correct_text_parts = explode("\t", $question['correct_text']);
             $partID = 1;
-            for ($outer=1; $outer < count($correct_parts); $outer++) {
-              if ($correct_parts[$outer] != '' and substr($tmp_exclude,$partID-1,1) == '0') {
+            for ($outer = 1; $outer < count($correct_parts); $outer++) {
+              if ($correct_parts[$outer] != '' and substr($tmp_exclude, $partID - 1, 1) == '0') {
                 if ($is_random) {
                   $csvdata[0][] = '';
                   $csvdata[0][] = '';
@@ -359,7 +359,7 @@ class export_assessment extends exporter {
                   }
                 }
               }
-              $partID += substr_count($correct_parts[$outer],'$') + 1;
+              $partID += substr_count($correct_parts[$outer], '$') + 1;
             }
             break;
           case 'matrix':
@@ -712,16 +712,16 @@ class export_assessment extends exporter {
               }
               break;
             case 'extmatch':
-              $correct_parts = explode(',',$question['correct']);
-              $answer_parts = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode('|',$individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
+              $correct_parts = explode(',', $question['correct']);
+              $answer_parts = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode('|', $individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
 
               $partID = 0;
-              for ($outer=1; $outer < count($correct_parts); $outer++) {
-                if ($correct_parts[$outer] != '' and substr($tmp_exclude,$partID,1) == '0') {
+              for ($outer = 1; $outer < count($correct_parts); $outer++) {
+                if ($correct_parts[$outer] != '' and substr($tmp_exclude, $partID, 1) == '0') {
                   $correct_subparts = explode('$', $correct_parts[$outer]);
                   $correct_text_parts = explode("\t", $question['correct_text']);
-                  if (isset($answer_parts[$outer-1])) {
-                    $answer_subparts = explode('$', $answer_parts[$outer-1]);
+                  if (isset($answer_parts[$outer - 1])) {
+                    $answer_subparts = explode('$', $answer_parts[$outer - 1]);
                     for ($k = 0; $k < count($correct_subparts); $k++) {
 
                       $diff = count($correct_subparts) - count($answer_subparts);
@@ -768,7 +768,7 @@ class export_assessment extends exporter {
                     }
                   }
                 }
-                $partID += substr_count($correct_parts[$outer],'$') + 1;
+                $partID += substr_count($correct_parts[$outer], '$') + 1;
               }
               break;
             case 'matrix':

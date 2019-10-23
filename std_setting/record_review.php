@@ -300,22 +300,26 @@ while ($result->fetch()) {
             $correct_options = explode('|', $correct);
             $matching_scenarios = explode('|', $scenario);
             $text_scenarios = 0;
-            for ($part_id=0; $part_id<10; $part_id++) {
-              if (isset($matching_scenarios[$part_id]) and $matching_scenarios[$part_id] != '') $text_scenarios++;
+            for ($part_id = 0; $part_id < 10; $part_id++) {
+              if (isset($matching_scenarios[$part_id]) and $matching_scenarios[$part_id] != '') {
+                $text_scenarios++;
+              }
             }
 
             $matching_media = explode('|', $q_media);
             $media_scenarios = 0;
-            for ($part_id=1; $part_id<10; $part_id++) {
-              if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') $media_scenarios++;
+            for ($part_id = 1; $part_id < 10; $part_id++) {
+              if (isset($matching_media[$part_id]) and $matching_media[$part_id] != '') {
+                $media_scenarios++;
+              }
             }
             $scenarios = max($text_scenarios, $media_scenarios);
             $part_id = 1;
             $scenario_no = 0;
-            for ($scenario_no=0; $scenario_no<$scenarios; $scenario_no++) {
+            for ($scenario_no = 0; $scenario_no < $scenarios; $scenario_no++) {
               $correct_answers = explode('$', $correct_options[$scenario_no]);
               $answer_count = count($correct_answers);
-              for ($i=1; $i<=$answer_count; $i++) {
+              for ($i = 1; $i <= $answer_count; $i++) {
                 $qid = 'std' . $question_no . '_' . $part_id;
                 $qstd = param::optional($qid, '', param::ALPHANUM, param::FETCH_POST);
                 if ($rating == '') {
