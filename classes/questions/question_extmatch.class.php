@@ -255,5 +255,60 @@ Class QuestionEXTMATCH extends QuestionEdit {
   public function set_correct_fback($value) {
     $this->correct_fback = implode('|', $this->all_feedback);
   }
+
+  /**
+   * Validate the extended matching option is correct.
+   *
+   * @return string|bool
+   */
+  protected function validate() {
+    $return = parent::validate();
+
+    $media = 0; // Count of scenarios with valid media.
+    $stems = 0; // Count of scenarios with a valid stem text.
+    $used = 0; // Count of scenarios that have values.
+    $errors = []; // Stores error messages.
+
+    foreach ($this->stems as $key => $stem) {
+      // Test if the stem is active.
+      $inuse = !empty($stem) or !empty($this->all_media_names[$key]) or !empty($this->all_feedback[$key])
+          or !empty($this->correct_fback[$key]);
+      $no_text = (trim(param::clean($stem, param::TEXT)) === '');
+      $no_media = ($this->all_media_names[$key] === '');
+      if ($inuse and $no_text and $no_media) {
+        // The stem and media must not be empty.
+        $scenario = $key + 1;
+        $errors[] = sprintf($this->_lang_strings['stemerror'], $scenario);
+      }
+      if ($inuse) {
+        $used++;
+      }
+      if (!$no_text) {
+        $stems++;
+      }
+      if (!$no_media) {
+        $media++;
+      }
+    }
+
+    // The question requires that every scenario has either a stem or every scenario has media.
+    // Some with one and some with another breaks Rogo...
+    if ($used !== $stems and $used !== $media) {
+      // Make this the first error.
+      array_unshift($errors, $this->_lang_strings['stemdisplayerror']);
+    }
+
+    // Combine the errors into a single string for output.
+    if (!empty($errors)) {
+      $errorstring = '<ul><li>' . implode('</li><li>', $errors) . '</l></ul>';
+      if ($return === true) {
+        $return = $errorstring;
+      } else {
+        $return .= "<br/>$errorstring";
+      }
+    }
+    
+    return $return;
+  }
 }
 

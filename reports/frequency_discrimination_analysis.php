@@ -1715,16 +1715,8 @@ HTML;
 
       $option_no = 1;
       foreach ($options as $individual_option) {
-        $specific_answers = array();
         $specific_answers = explode('$', $tmp_answers_array[$i - 1]);
-        $answer_match = false;
-        $count_specific_answers = count($specific_answers);
-        for ($x = 0; $x < $count_specific_answers; $x++) {
-          if ($option_no == $specific_answers[$x]) {
-            $answer_match = true;
-          }
-        }
-        if ($answer_match == true) {
+        if (in_array($option_no, $specific_answers)) {
           $correct_stems++;
         }
         $option_no++;
@@ -1745,14 +1737,7 @@ HTML;
       $correct_stems = 0;
       foreach ($options as $individual_option) {
         $specific_answers = explode('$', $tmp_answers_array[$i-1]);
-        $answer_match = false;
-        $count_specific_answers = count($specific_answers);
-        for ($x = 0; $x < $count_specific_answers; $x++) {
-          if ($option_no == $specific_answers[$x]) {
-            $answer_match = true;
-          }
-        }
-        if ($answer_match == true) {
+        if (in_array($option_no, $specific_answers)) {
           if (isset($top_log[$q_id][$i][$option_no]) and $candidate_no != 0) {
             $t = $top_log[$q_id][$i][$option_no] / $candidate_no;
           } else {
