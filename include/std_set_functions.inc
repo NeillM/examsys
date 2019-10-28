@@ -155,6 +155,11 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
         echo "<div>";
         echo $scale_html;
         echo "</div>\n";
+      } elseif ($options[0]['display_method'] == 'horizontal') {
+        echo '</blockquote>';
+        echo "<div>";
+        echo $scale_html;
+        echo "</div>\n";
       } elseif ($options[0]['display_method'] == 'dropdown') {
         echo '</select>&nbsp;';
         echo $scale_html;
