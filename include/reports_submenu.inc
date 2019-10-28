@@ -299,7 +299,7 @@
       echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../osce/class_totals_csv.php?'>" . $string['classtotalscsv'] . "</a></div>\n";
       
       echo "<div class=\"reports_header\">" . $string['itemanalysis'] . "</div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='./osce/frequency_analysis.php?'>" . $string['frequencyanalysis'] . "</a></div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../osce/frequency_analysis.php?'>" . $string['frequencyanalysis'] . "</a></div>\n";
       
       echo "<div class=\"reports_header\">" . $string['exports'] . "</div>\n";
       echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../osce/portfolio_sheets.php?'>" . $string['individualportfoliosheets'] . "</a></div>\n";
