@@ -39,7 +39,11 @@ class renderdata extends \questiondata {
    * Disable/Enable display of question header sections for template rendering
    */
   public function set_question_head() {
-    // Nothing to do.
+      $this->displayscenario = false;
+      $this->displaymedia = false;
+      $this->displaydefault = true;
+      $this->displaynotes = false;
+      $this->displayleadin = true;
   }
 
   /**

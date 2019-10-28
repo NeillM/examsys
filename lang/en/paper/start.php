@@ -53,6 +53,7 @@ $string['javacheck1'] = 'Have you completed all the questions on this screen, yo
 $string['javacheck2'] = "Are you sure you wish to finish?<br /><br /><strong>After clicking 'OK' you will not be able to go back.</strong>";
 $string['javacheck3'] = 'Have you completed all the questions on this screen, you will NOT be able to go back.<br /><br /><strong>The answer to question(s) [X] should be provided as it forms the basis of a subsequent question.</strong>';
 $string['error_random'] = '<strong>ERROR:</strong> Unable to find unique question for random question block.';
+$string['error_random_closing'] = 'Unable to find unique question for random question block. This paper cannot be taken at this time. The paper will close after confirmation.';
 $string['error_keywords'] = '<strong>ERROR:</strong> Unable to find unique question for supplied keywords.';
 $string['error_paper'] = 'The requested paper cannot be found.';
 $string['error_qtype'] = 'No question type defined.';

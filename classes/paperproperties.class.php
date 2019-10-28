@@ -2245,9 +2245,10 @@ class PaperProperties {
      * @param array $screen_data 		- Holds a list of question types and IDs used on all screens in the paper.
      * @param array $used_questions - Array of question IDs already used on the paper.
      * @param array $string   			- Contains language translations.
+     * @param bool $hide_notes hide question notes
      * @return array
      */
-    public function randomQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_questions, $string) {
+    public function randomQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_questions, $string, $hide_notes = false) {
       $selected_q_id = '';
       $current_screen = $random_q_data['screen'];
       $q_no = $random_q_data['no_on_screen'];
@@ -2263,6 +2264,10 @@ class PaperProperties {
         $unique = false;
         while ($unique == false and $try < 9999) {
           $selected_q_id = random_utils::generate_random_qid_from_block($random_q_data['q_id'], $this->db);
+          if ($selected_q_id === false) {
+              $unique = false;
+              break;
+          }
           if (!isset($used_questions[$selected_q_id])) {
             $unique = true;
           }
@@ -2297,7 +2302,7 @@ class PaperProperties {
                 $question['theme'] = $theme;
                 $question['scenario'] = $scenario;
                 $question['leadin'] = $leadin;
-                $question['notes'] = $notes;
+                $question['notes'] = $hide_notes ? '' : trim($notes);
                 $question['q_type'] = $q_type;
                 $question['q_id'] = $q_id;
                 $question['score_method'] = $score_method;

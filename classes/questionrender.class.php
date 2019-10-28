@@ -67,7 +67,11 @@ class questionrender {
     $renderpath = $texteditorplugin->get_render_paths();
     $strings = $texteditorplugin->get_strings();
     $string = array_merge($string, $strings);
-    $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . $question['q_type'] . DIRECTORY_SEPARATOR . 'templates';
+    if (file_exists(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . $question['q_type'] . DIRECTORY_SEPARATOR . 'templates')) {
+        $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . $question['q_type'] . DIRECTORY_SEPARATOR . 'templates';
+    } else {
+        $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . 'undefined' . DIRECTORY_SEPARATOR . 'templates';
+    }
     $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates';
     $render = new render($this->config, $renderpath);
 

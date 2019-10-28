@@ -29,11 +29,14 @@ Class random_utils {
    * Generate a random question id from the random block
    * @param integer $id id of the random block
    * @param mysqli $db db connection
-   * @return integerrandom question id
+   * @return integer|false random question id or false on error
    */
   static public function generate_random_qid_from_block($id, $db) {
     // Get list of questions.
     $randomids = self::get_random_qids_for_question($id, $db);
+    if (count($randomids) == 0) {
+        return false;
+    }
     //  Get random question.
     $random_q_no = count($randomids);
     $selected_no = rand(0,$random_q_no-1);

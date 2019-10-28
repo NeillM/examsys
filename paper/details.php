@@ -145,7 +145,7 @@ function check_duplicates($q_screens, $string) {
  * @param array $status_array		- Array of status objects
  * @param object $db						- MySQLi connection.
  */
-function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_text, $correct_array, $string, $status_array, $settings, $properties, $db) {
+function checkProblems($q_type, &$temp_array, $row_no, $q_id, $tmp_excluded, $option_text, $correct_array, $string, $status_array, $settings, $properties, $db) {
 	$question_marks = $temp_array[$row_no]['original_marks'];
 	$status 				= $temp_array[$row_no]['status'];
 	$score_method 	= $temp_array[$row_no]['score_method'];
@@ -227,8 +227,12 @@ function checkProblems($q_type, &$temp_array, $row_no, $tmp_excluded, $option_te
       if (!have_valid_labels($temp_array[$row_no]['correct'])) {
         $temp_array[$row_no]['warnings'][] = $string['nolabels'];
       }
-    } elseif ($q_type == 'random' and $properties->get_paper_type() == '2') {
-      $temp_array[$row_no]['warnings'][] = $string['notsummativeexams'];
+    } elseif ($q_type == 'random') {
+      if ($properties->get_paper_type() == '2') {
+          $temp_array[$row_no]['warnings'][] = $string['notsummativeexams'];
+      } elseif (\random_utils::generate_random_qid_from_block($q_id, $db)) {
+          $temp_array[$row_no]['warnings'][] = $string['randomblockempty'];
+      }
     } elseif ($q_type == 'keyword_based' and $properties->get_paper_type() == '2') {
       $temp_array[$row_no]['warnings'][] = $string['notsummativeexams'];
     }
@@ -546,7 +550,7 @@ $scrOfY = param::optional('scrOfY', null, param::FLOAT, param::FETCH_GET);
       $temp_array[$row_no2]['display_method'] = $old_display_method;
       $temp_array[$row_no2]['score_method'] = $old_score_method;
       if ($row_no2 > 0 and $properties->get_paper_type() < 3) {
-        checkProblems($old_q_type, $temp_array, $row_no2, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $old_settings, $properties, $mysqli);
+        checkProblems($old_q_type, $temp_array, $row_no2, $old_q_id, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $old_settings, $properties, $mysqli);
       }
       $old_correct      = array();
       $old_option_text  = array();
@@ -659,7 +663,7 @@ $scrOfY = param::optional('scrOfY', null, param::FLOAT, param::FETCH_GET);
     if ($properties->get_paper_type() < 3) {
       $tmp_exclude = $exclusions->get_exclusions_by_qid($old_q_id);
 
-			checkProblems($old_q_type, $temp_array, $row_no2, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $old_settings, $properties, $mysqli);
+			checkProblems($old_q_type, $temp_array, $row_no2, $old_q_id, $tmp_exclude, $old_option_text, $old_correct, $string, $status_array, $old_settings, $properties, $mysqli);
 		}
 		
 

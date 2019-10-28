@@ -69,3 +69,4 @@ $string['clickhere'] = 'Click here to set the overall classification';
 $string['invalidscreenbreak'] = 'Invalid screen break selected. Screen break was not deleted';
 $string['ajaxerror'] = 'There was a problem carrying out your action. Please refresh the page and try again';
 $string['screen1'] = "Screen 1";
+$string['randomblockempty'] = 'Random block is empty';

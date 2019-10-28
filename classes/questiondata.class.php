@@ -611,7 +611,9 @@ abstract class questiondata {
     $this->qmediaheight = $question['q_media_height'];
     $this->leadin = $question['leadin'];
     $this->language = $language;
-    $this->settings = $question['settings'];
+    if (isset($question['settings'])) {
+        $this->settings = $question['settings'];
+    }
     if (isset($question['object'])) {
       $this->object = $question['object'];
     }
@@ -640,7 +642,9 @@ abstract class questiondata {
 
     // Pre-question processing
     $this->questionno = $question_no;
-    $this->displaymethod = $question['display_method'];
+    if (isset($question['display_method'])) {
+        $this->displaymethod = $question['display_method'];
+    }
     $this->scoremethod = $question['score_method'];
     $this->set_question($screen_pre_submitted, $useranswer, $userdismissed);
 
@@ -671,17 +675,18 @@ abstract class questiondata {
 
     $this->process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted);
 
-    $this->finalmarks = $this->get_marks($display_option['marks_correct']);
-    if ($paper_properties['type'] < 3) {
-      if ($this->finalmarks != 0) {
-        if ($question['score_method'] == 'Bonus Mark') {
-          $this->scoremethod = 'bonus';
-          $plural = ($display_option['marks_correct'] == 1) ?  $string['mark'] : $string['marks'];
-          $this->bonus = sprintf($string['bonusmark'], $display_option['marks_correct'], $plural);  // Used on ranking questions
+    if (isset($display_option['marks_correct'])) {
+      $this->finalmarks = $this->get_marks($display_option['marks_correct']);
+      if ($paper_properties['type'] < 3) {
+        if ($this->finalmarks != 0) {
+          if ($question['score_method'] == 'Bonus Mark') {
+             $this->scoremethod = 'bonus';
+             $plural = ($display_option['marks_correct'] == 1) ? $string['mark'] : $string['marks'];
+             $this->bonus = sprintf($string['bonusmark'], $display_option['marks_correct'], $plural);  // Used on ranking questions
+          }
         }
       }
     }
-
     $used_questions[$q_id] = $q_id;
   }
 
