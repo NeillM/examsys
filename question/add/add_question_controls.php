@@ -39,4 +39,3 @@ for ($i=1; $i<=$max_screen + 1; $i++) {
 </select>&nbsp;
 <input type="hidden" name="questions_to_add" id="questions_to_add" value="" /><input type="submit" name="submit" value="<?php echo $string['addquestions'] ?>" /></div>
 </form>
-<script src="../../js/src/questionscontrolsinit.js"></script>
