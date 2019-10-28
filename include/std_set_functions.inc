@@ -182,8 +182,9 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
       $question['object'] = new EnhancedCalc($configObj);
       $question['object']->load($question);
       $question['object']->load_all_user_answers($allanswers);
-
-      $extra = array('num_on_screen' => $question_no, 'reviewers' => true);
+      $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
+      $stdset = reviewScale($question_no, '', $marks, $std_method, substr($tmp_exclude,0,1), $review_val, $stdID, $std_excluded, $is_group);
+      $extra = array('num_on_screen' => $question_no, 'reviewers' => true, 'stdset' => $stdset);
 
       echo '<tr><td class="q_no">' . $question_no. '.&nbsp;</td><td>';
       $question['object']->render_paper($extra);
@@ -191,9 +192,6 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
       $allanswers[$screen][$q_id]['uans'] =  $question['object']->get_real_answer();
 
       $marks = $question['object']->calculate_question_mark();
-
-      $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
-      echo "<div>" . reviewScale($question_no, '', $marks, $std_method, substr($tmp_exclude,0,1), $review_val, $stdID, $std_excluded, $is_group) . "</div>\n";
 
       // Negative marked?
       $neg_marking = $question['object']->is_negative_marked();
@@ -472,10 +470,11 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
       }
       break;
   }
-
-  // Display possible marks for question (if not Survey)
-  if ($options[0]['q_type'] != 'hotspot' and $options[0]['q_type'] != 'likert' and $options[0]['q_type'] != 'mcq' and $options[0]['q_type'] != 'dichotomous') echo '</blockquote>';
-  if ($q_type < 3 and !in_array($options[0]['q_type'], array('info', 'keyword_based', 'random'))) {
+  // Already rendered marks for question type using template.
+  if ($options[0]['q_type'] != 'enhancedcalc') {
+    // Display possible marks for question (if not Survey)
+    if ($options[0]['q_type'] != 'hotspot' and $options[0]['q_type'] != 'likert' and $options[0]['q_type'] != 'mcq' and $options[0]['q_type'] != 'dichotomous') echo '</blockquote>';
+    if ($q_type < 3 and !in_array($options[0]['q_type'], array('info', 'keyword_based', 'random'))) {
 
       echo "<div class=\"mk\">($marks ";
       if ($marks == 1) {
@@ -484,14 +483,15 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
         echo $string['marks'];
       }
       if ($options[0]['score_method'] == 'Bonus Mark') {
-        $plural = ($options[0]['marks_correct'] == 1) ?  $string['mark'] : $string['marks'];
+        $plural = ($options[0]['marks_correct'] == 1) ? $string['mark'] : $string['marks'];
         echo ' ' . sprintf($string['bonusmark'], $options[0]['marks_correct'], $plural);  // Used on ranking questions
         $marks += $options[0]['marks_correct'];
       }
-    if ($neg_marking) echo ', ' . $string['negmarking'];
-    echo ")</div>\n<br /></td></tr>\n";
+      if ($neg_marking) echo ', ' . $string['negmarking'];
+      echo ")</div>\n<br /></td></tr>\n";
 
-    $total_marks += $marks;
+      $total_marks += $marks;
+    }
   }
 }
 ?>

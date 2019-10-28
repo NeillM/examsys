@@ -42,6 +42,8 @@ data.failedanswer - warning displayed if this is a child of a linked question an
 data.answer - the users previous answer
 data.numonscreen - the question number
 data.assignednumber - question number
+data.showstdset - flag to indicate if the standard settings scale should be displayed
+data.stdset - the standard settings scale html
 
 Required localised text -
 lang.answer_to - answer to
@@ -111,6 +113,11 @@ lang.significant_figures - significant figues
     <span class="calc_fb">({{lang.answer_to}} {{data.feedbackprecisionvalue}} {{lang.significant_figures}})</span>
     {% endif %}
 </div>
+{% if data.showstdset %}
+<div>
+    {{data.stdset|raw}}
+</div>
+{% endif %}
 {% endif %}
 {# If not a survey paper #}
 {% if data.papertype != 3 %}
