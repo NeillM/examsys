@@ -230,7 +230,7 @@ function checkProblems($q_type, &$temp_array, $row_no, $q_id, $tmp_excluded, $op
     } elseif ($q_type == 'random') {
       if ($properties->get_paper_type() == '2') {
           $temp_array[$row_no]['warnings'][] = $string['notsummativeexams'];
-      } elseif (\random_utils::generate_random_qid_from_block($q_id, $db)) {
+      } elseif (\random_utils::generate_random_qid_from_block($q_id, $db) === false) {
           $temp_array[$row_no]['warnings'][] = $string['randomblockempty'];
       }
     } elseif ($q_type == 'keyword_based' and $properties->get_paper_type() == '2') {
