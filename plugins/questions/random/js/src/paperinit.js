@@ -16,7 +16,7 @@
 //
 requirejs(['alert', 'jquery'], function (Alert, $) {
     // If a random question cannot be found we need to close the paper as it cannot be taken safely.
-    if ($('.randomerror')) {
+    if ($('.randomerror').length > 0) {
         var alert = new Alert();
         alert.notification('error_random_closing');
         window.close();
