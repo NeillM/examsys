@@ -98,7 +98,7 @@ require '../include/sysadmin_auth.inc';
   }
   echo '<hr>';
   //incorporated images
-  $helpimage_regexp = '#width="(?<width>.*?)" height="(?<height>.*?)" alt=".*?" src="' . $help_directory->url('(?<filename>.*)') . '"#';
+  $helpimage_regexp = '#src=".*filename=(?<filename>.*)" alt=".*?" width="(?<width>.*?)" height="(?<height>.*?)"#';
   foreach ($help_toc as $help_item) {
     //search for <img scr=
     $test = array();

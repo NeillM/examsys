@@ -65,7 +65,7 @@ require  '../../../../../../../../include/staff_auth.inc';
       $class = 'class="image_no_brd"';
     }
 
-    $html = '<img width="' . $imageInfo[0] . '" height="' . $imageInfo[1] . '" alt="' . $_POST['alt'] . '" src="' . $helpdirectory->url($realname) . '" ' . $class . ' />';
+    $html = '<img ' . $class . ' src="' . $helpdirectory->url($realname) . '" alt="' . $_POST['alt'] . '" width="' . $imageInfo[0] . '" height="' . $imageInfo[1] . '" />';
 
     ?>
         <script type="text/javascript" src="../../tiny_mce_popup.js"></script>
