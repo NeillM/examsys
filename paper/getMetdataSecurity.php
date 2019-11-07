@@ -79,5 +79,4 @@ if ($_GET['modules'] != '') {
 }
 
 $mysqli->close();
-echo "</table>\n<input type=\"hidden\" name=\"meta_dropdown_no\" value=\"$meta_no\" />";
-?>
+echo "</table>\n<input type=\"hidden\" id=\"meta_dropdown_no\" name=\"meta_dropdown_no\" value=\"$meta_no\" data-loaded='0'/>";

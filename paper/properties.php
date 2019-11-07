@@ -1642,7 +1642,7 @@ $mysqli->close();
 
 </td>
 </tr>
-<tr><td colspan="2" align="right"><input type="submit" class="ok" name="Submit" value="<?php echo $string['ok']; ?>" /><input type="button" name="home" class="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></td></tr>
+<tr><td colspan="2" align="right"><input type="submit" class="ok" id="submitpropeties" name="Submit" value="<?php echo $string['ok']; ?>" disabled="disabled"/><input type="button" name="home" class="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" /></td></tr>
 </table>
 
 <input type="hidden" id="noadd" name="noadd" value="<?php if (isset($_GET['noadd'])) echo $_GET['noadd']; ?>" />

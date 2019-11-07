@@ -63,5 +63,4 @@ if ($_GET['modules'] != '') {
 }
 
 $mysqli->close();
-echo "\n<input type=\"hidden\" name=\"reference_no\" value=\"$ref_line\" />";
-?>
+echo "\n<input type=\"hidden\" id=\"reference_no\" name=\"reference_no\" value=\"$ref_line\" data-loaded='0'/>";

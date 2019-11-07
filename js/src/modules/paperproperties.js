@@ -24,6 +24,7 @@ define(['alert', 'jquery', 'jqueryui'], function(ALERT, $) {
          * Get the paper metadata.
          */
         this.getMeta = function() {
+            var scope = this;
             var mod_codes = '';
             var module_no = $('#module_no').val();
 
@@ -36,8 +37,28 @@ define(['alert', 'jquery', 'jqueryui'], function(ALERT, $) {
                     }
                 }
             }
-            $('#metadata_security').load('getMetdataSecurity.php', 'modules=' + mod_codes + '&paperID=' + this.paperid + '&session=' + $('#session').val() );
-            $('#reference_list').load('getAvailableRefMaterial.php', 'modules=' + mod_codes + '&paperID=' + this.paperid);
+
+            // Load metadata.
+            $('#metadata_security').load('getMetdataSecurity.php', 'modules=' + mod_codes + '&paperID=' + this.paperid + '&session=' + $('#session').val(), function() {
+                    $('#meta_dropdown_no').attr('data-loaded', 1);
+                    scope.enablesubmit();
+                }
+            );
+            // Load reference list.
+            $('#reference_list').load('getAvailableRefMaterial.php', 'modules=' + mod_codes + '&paperID=' + this.paperid, function() {
+                    $('#reference_no').attr('data-loaded', 1);
+                    scope.enablesubmit();
+                }
+            );
+        };
+
+        /**
+         * Enable submit button only if metadata and reference list loaded.
+         */
+        this.enablesubmit = function() {
+            if ($('#meta_dropdown_no').attr('data-loaded') == 1 && $('#reference_no').attr('data-loaded') == 1) {
+                $('#submitpropeties').prop('disabled', false);
+            }
         };
 
         /**
