@@ -8,10 +8,6 @@
     <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
     <link rel="stylesheet" type="text/css" href="../css/header.css" />
     <link rel="stylesheet" type="text/css" href="../css/requirements.css" />
-    <script src="../js/require.js"></script>
-    <script src="../js/main.min.js"></script>
-    <script src="../js/requirementsinit.min.js"></script>
-
   </head>
   <body>
     <table cellpadding="0" cellspacing="0" border="0" class="header">
@@ -44,5 +40,13 @@
         </footer>
       </div>
     </div>
+    <div id="rogoconfig" data-root=""></div>
+    <script>
+        var rogopath = window.location.pathname.substr(0, window.location.pathname.lastIndexOf('/install'));
+        document.getElementById('rogoconfig').setAttribute('data-root', rogopath)
+    </script>
+    <script src="../js/require.js"></script>
+    <script src="../js/main.min.js"></script>
+    <script src="../js/requirementsinit.min.js"></script>
   </body>
 </html>
