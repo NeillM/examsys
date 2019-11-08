@@ -46,6 +46,7 @@ if (!Paper_utils::paper_exists($paperid, $mysqli)) {
   <style type="text/css">
   body {background-color:#F1F5FB; font-size:80%; text-align:justifed}
   </style>
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
   <script src='../js/convertformativeinit.min.js'></script>

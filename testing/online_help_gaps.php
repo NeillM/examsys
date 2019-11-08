@@ -45,6 +45,7 @@ require '../include/sysadmin_auth.inc';
     li {font-size: 110%}
   </style>
 
+  <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
 </head>
