@@ -235,6 +235,9 @@ echo '" autocomplete="off">';   // Warning message only in linear navigation mod
   $user_answers = array();
   $questions_array = $propertyObj->build_paper(false, null, null);
 
+  echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
+  echo "<col width=\"40\"><col>\n";
+  
   // Random / Keyword questions.
   $tmp_questions_array = array();
   $tmp_q_no = 0;
