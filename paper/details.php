@@ -722,11 +722,11 @@ $scrOfY = param::optional('scrOfY', null, param::FLOAT, param::FETCH_GET);
       $module = key($modules);
     }
     // link to module
-    $href = '../module/index.php?module=' . $module ;
+    $href = '/module/index.php?module=' . $module ;
     $links[$href] = module_utils::get_moduleid_from_id($module, $mysqli);
  
     // link to module
-    $href = '../paper/type.php?module=' . $module . '&type=' . $properties->get_paper_type();
+    $href = '/paper/type.php?module=' . $module . '&type=' . $properties->get_paper_type();
     $links[$href] = Paper_utils::type_to_name($properties->get_paper_type(), $string);
   }
 
