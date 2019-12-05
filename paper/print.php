@@ -38,7 +38,7 @@ require_once '../lang/' . $language . '/paper/hotspot_answer.php';
 require_once '../lang/' . $language . '/paper/hotspot_question.php';
 require_once '../lang/' . $language . '/paper/label_answer.php';
 
-$id = check_var('id', 'GET', true, false, true, param::INT);
+$id = check_var('id', 'GET', true, false, true, param::ALPHANUM); // While it is an int, the numbers are too large for 32-bit PHP.
 
 if (isset($_POST['sessionid'])) require '../include/marking_functions.inc';
 
