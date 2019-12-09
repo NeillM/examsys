@@ -407,6 +407,7 @@ div.error {
 #qForm table > tbody > tr > td > span > div, #qForm table > tbody > tr > td > span > p  {
 	display: inline-block;
 	margin: 0;
+	text-decoration: inherit;
 }
 
 .enhancedcalc {
