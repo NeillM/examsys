@@ -138,7 +138,6 @@ requirejs.config({
         moduleform: "js/modules/moduleform.min",
         newpaperform: "js/modules/newpaperform.min",
         studentnote: "js/modules/studentnote.min",
-        keyword: "js/modules/keyword.min",
         calendar: "js/modules/calendar.min",
         referancelist: "js/modules/referancelist.min",
         mapping: "js/modules/mapping.min",
