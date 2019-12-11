@@ -96,15 +96,6 @@ $current_screen = 1;
   <link rel="stylesheet" type="text/css" href="../css/print.css" />
   <link rel="stylesheet" type="text/css" href="../css/html5.css" />
 
-  <style type="text/css">
-  <?php
-    if (isset($_GET['break']) and $_GET['break'] == 1) {
-      echo ".qtable {page-break-after:always}\n";
-    } else {
-      echo ".qtable {page-break-after:auto}\n";
-    }
-  ?>
-  </style>
     <script id="rogoconfig"
             data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
             data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"
@@ -167,6 +158,9 @@ $current_screen = 1;
     display_question($question, $paper_type, $current_screen, $previous_q_type, $question_no, $question_offset, $user_answers);
     $previous_q_type = $question['q_type'];
     $q_displayed++;
+    if (param::optional('break', false, param::BOOLEAN, param::FETCH_GET)) {
+      echo "<tr class='page_break'></tr>";
+    }
   }
   echo "</table>\n";
 

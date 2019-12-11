@@ -117,3 +117,6 @@ pre {
 .qtable > tbody > tr {
   page-break-inside: avoid;
 }
+.page_break {
+  page-break-after: always;
+}
