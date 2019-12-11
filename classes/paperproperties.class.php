@@ -2122,9 +2122,10 @@ class PaperProperties {
      * @param boolean $is_question_preview_mode is the paper being previewed
      * @param integer $get_qid question id
      * @param integer $q_number question number on preview screen
+     * @param bool $hide_notes hide question notes
      * @return array
      */
-    public function build_paper($is_question_preview_mode, $get_qid, $q_number) {
+    public function build_paper($is_question_preview_mode, $get_qid, $q_number, $hide_notes = false) {
         $paperID = $this->get_property_id();
         $questioninfo = "q_type,
                           q_id,
@@ -2209,7 +2210,7 @@ class PaperProperties {
             $tmp_questions_array[$q_no]['theme'] = trim($theme);
             $tmp_questions_array[$q_no]['scenario'] = trim($scenario);
             $tmp_questions_array[$q_no]['leadin'] = trim($leadin);
-            $tmp_questions_array[$q_no]['notes'] = trim($notes);
+            $tmp_questions_array[$q_no]['notes'] = $hide_notes ? '' : trim($notes);
             $tmp_questions_array[$q_no]['q_type'] = $q_type;
             $tmp_questions_array[$q_no]['q_id'] = $q_id;
             $tmp_questions_array[$q_no]['display_pos'] = $display_pos;
@@ -2366,9 +2367,10 @@ class PaperProperties {
      * @param array $screen_data 		- Holds a list of question types and IDs used on all screens in the paper.
      * @param array $used_questions - Array of question IDs already used on the paper.
      * @param array $string   			- Contains language translations.
+     * @param bool $hide_notes hide question notes
      * @return array
      */
-    public function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_questions, $string) {
+    public function keywordQOverwrite($random_q_data, $user_answers, &$screen_data, &$used_questions, $string, $hide_notes = false) {
       $selected_q_id = '';
       $unique = true;
       $current_screen = $random_q_data['screen'];
@@ -2428,7 +2430,7 @@ class PaperProperties {
             $question['theme'] = $theme;
             $question['scenario'] = $scenario;
             $question['leadin'] = $leadin;
-            $question['notes'] = $notes;
+            $question['notes'] = $hide_notes ? '' : trim($notes);
             $question['q_type'] = $q_type;
             $question['q_id'] = $q_id;
             $question['display_pos'] = $q_no;
