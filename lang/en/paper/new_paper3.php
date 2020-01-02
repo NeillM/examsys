@@ -16,4 +16,4 @@
 
 $string['papertypenotfound'] = 'Paper type could not be found.';
 $string['errorcreatingpaper'] = 'Error creating paper';
-?>
+$string['dbinsertfailed'] = 'Failed to insert into database';

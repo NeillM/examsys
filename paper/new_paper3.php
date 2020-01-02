@@ -110,14 +110,30 @@ try {
 } catch (Exception $e) {
     $log = new logger($mysqli);
     // Log warning to system.
-    $type = 'Paper Creation';
     $errorstring = $e->getMessage();
-    $errorfile = $_SERVER['PHP_SELF'];
-    $errorline = __LINE__ - 15;
-    $log->record_application_warning($paper_owner, $type, $errorstring, $errorfile, $errorline);
+    $errorline = __LINE__ - 14;
+    $log->record_application_warning($paper_owner,  'Paper Creation', $errorstring, $_SERVER['PHP_SELF'], $errorline);
     $msg = $errorline . " Error code: " . $e->getCode() . " - " . $errorstring;
-    echo json_encode(array('ERROR',$notice->ajax_notice($string['errorcreatingpaper'], $msg)));
+    echo json_encode(array(
+        'ERROR',
+        $notice->ajax_notice($string['errorcreatingpaper'], $msg)
+    ));
     exit();
 }
 
-echo json_encode(array('SUCCESS', $property_id, $first_module, $_POST['folder']));
+if ($property_id !== false) {
+    echo json_encode(array(
+        'SUCCESS',
+        $property_id,
+        $first_module,
+        $_POST['folder']
+    ));
+} else {$log = new logger($mysqli);
+    // Log warning to system.
+    $errorline = __LINE__ - 33;
+    $log->record_application_warning($paper_owner, 'Paper Creation', $string['dbinsertfailed'], $_SERVER['PHP_SELF'], $errorline);
+    echo json_encode(array(
+        'ERROR',
+        $notice->ajax_notice($string['errorcreatingpaper'], $string['dbinsertfailed'])
+    ));
+}
