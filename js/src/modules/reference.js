@@ -38,43 +38,12 @@ define(['jquery'], function($) {
         this.changeRef = function (refID) {
             $('#refpane').val(refID);
             var refcount = $('#paper').attr('data-refcount');
-            this.resizeReference();
-            var flag = 0;
             for (var i = 0; i < refcount; i++) {
                 if (i == refID) {
                     $('#framecontent' + i).show();
-                    $('#refhead' + i).css('top', (31 * i) + 'px');
-                    flag = 1;
                 } else {
                     $('#framecontent' + i).hide();
-                    if (flag === 0) {
-                        $('#refhead' + i).css('top', (31 * i) + 'px');
-                    } else {
-                        $('#refhead' + i).css('top', '');
-                        $('#refhead' + i).css('bottom', ((refcount - (i + 1)) * 31) + 'px');
-                    }
                 }
-            }
-        };
-
-        /**
-         * Resize the reference panel.
-         */
-        this.resizeReference = function () {
-           var  winH = $(window).height();
-            var refcount = $('#paper').attr('data-refcount');
-            if (refcount > 0) {
-                var subtract = (31 * refcount) + 11;
-                for (var i = 0; i < refcount; i++) {
-                    $('#framecontent' + i).css('height', (winH - subtract) + 'px');
-                }
-                var mainWidth = $('body').outerWidth() - $('#framecontent0').outerWidth(true);
-                $('#maincontent').width(mainWidth);
-                $('#maincontent').css('position', 'fixed');
-                var maxwidth = $('#css').attr('data-max_ref_width');
-                $('#maincontent').css('right', maxwidth + 1);
-                $('.framecontent').width(maxwidth - 12);
-                $('.refhead').width(maxwidth - 12);
             }
         };
     }

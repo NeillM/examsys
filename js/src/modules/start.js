@@ -591,7 +591,6 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
             var marks_color = $('#css').attr('data-marks_color');
             var unanswered_color = $('#css').attr('data-unanswered_color');
             var dismiss_color = $('#css').attr('data-dismiss_color');
-            var max_ref_width = $('#css').attr('data-max_ref_width');
             if (special_needs && bgcolor !== '#FFFFFF' && bgcolor !== 'white') {
                 $('select,input').css('background-color', bgcolor);
                 $('select,input').css('color', fgcolor);
@@ -621,13 +620,6 @@ define(['editor', 'html5', 'qarea', 'qlabelling', 'jsxls', 'jquery'], function(E
             }
             if (dismiss_color !== '#A5A5A5') {
                 $('.inact').css('color', dismiss_color);
-            }
-            var refcount = $('#paper').attr('data-refcount');
-            if (refcount > 0) {
-                var mainWidth = $('body').outerWidth() - $('#framecontent0').outerWidth(true);
-                $('#maincontent').width(mainWidth);
-                $('#maincontent').css('position', 'fixed');
-                $('#maincontent').css('right', max_ref_width + 1);
             }
         };
     }

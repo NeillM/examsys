@@ -169,13 +169,12 @@ pre {
   top: 0;
   overflow: auto;
   height: 100%;
+  display: flex;
 }
 .framecontent {
   padding: 6px;
   font-size: 95%;
-  position: absolute;
   top: 30px;
-  right: 0;
   overflow: auto;
   background: white;
   color: black;
@@ -186,9 +185,7 @@ pre {
   font-weight: bold;
   border-bottom: 1px solid #C0C0C0;
   padding: 6px;
-  position: fixed;
   height: 18px;
-  right: 0;
   border-left: 1px solid #535353;
   background: #EEEEEE;
 }
@@ -412,4 +409,26 @@ div.error {
 
 .enhancedcalc {
   padding-bottom:10px;
+}
+
+.questions {
+  flex: 2
+}
+
+.references {
+  flex: 1;
+}
+
+.footerbar {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #5590CF;
+  min-height: 29px;
+  justify-content: space-between;
+}
+
+.timer {
+  width: 14em;
+  text-align: center;
+  color: white;
 }

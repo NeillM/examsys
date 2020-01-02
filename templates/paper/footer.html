@@ -20,7 +20,7 @@ This template is for the paper footer display.
 author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 copyright 2018 onwards The University of Nottingham
 
-Required variables - 
+Required variables -
 data.current_screen - the current screen
 data.page_start - timestamp when screen was first viewed
 data.old_screen - the last screen
@@ -47,7 +47,7 @@ lang.screen
             </table>
         </td>
     </tr>
-    <tr>
+    <div>
         <td>
             <br />
             <input type="hidden" name="current_screen" value="{{data.current_screen}}" />
@@ -84,41 +84,38 @@ lang.screen
 {% if data.adminview %}
             <input id="finish" type="button" value="{{lang.finish}}" />
 {% else %}
-            <table cellpadding="0" cellspacing="0" border="0" style="width:100%; background-color:#5590CF; min-height:29px">
-                <tr>
+            <div class="footerbar">
     {% if data.fire %}
-                    <td id="fire_exit"></td>
+                <div id ="fire_exit"></div>
     {% endif %}
-                    <td class="copyright">{{data.copyright}}</td>
-                    <td style="width:14em;text-align:center">
-
-                        <span style="color:white">
-                             {{data.timerlabel}} <span id="theTime" type="text" class="thetime"></span>
-                        </span>
-                    </td>
-                    <td align="right">
-                        <span id="savemsg"></span>
+                <div class="copyright">
+                    {{data.copyright}}
+                </div>
+                <div class="timer">
+                    {{data.timerlabel}} <span id="theTime" type="text" class="thetime"></span>
+                </div>
+                <div class="controls">
+                    <span id="savemsg"></span>
     {# Display additional controls for bidirectional papers #}
     {% if data.bidirectional %}
         {% if data.previous %}
-                        <input id="previous" type="button" value="{{data.previousbutton}}" />
+                    <input id="previous" type="button" value="{{data.previousbutton}}" />
         {% endif %}
         {% if data.jumpscreen %}
-                        <select name="jumpscreen" id="jumpscreen">
+                    <select name="jumpscreen" id="jumpscreen">
             {% for id,selected in data.jumpscreenoptions %}
-                            <option value="{{id}}"{{selected}}>{{id}}</option>
+                        <option value="{{id}}"{{selected}}>{{id}}</option>
             {% endfor %}
-                        </select>
+                    </select>
         {% endif %}
     {% endif %}
     {% if data.endscreen %}
-                        <input id="finish" type="button" value="{{lang.finish}}" />
+                    <input id="finish" type="button" value="{{lang.finish}}" />
     {% else %}
-                        <input id="next" type="button" value="{{data.nextbutton}}" />
+                    <input id="next" type="button" value="{{data.nextbutton}}" />
     {% endif %}
-                    </td>
-                </tr>
-            </table>
+                </div>
+            </div>
 {% endif %}
         </td>
     </tr>
