@@ -22,30 +22,23 @@
 * @package
 */
 
-$label_correct = (isset($label_correct)) ? $label_correct : $string['generalfeedback'];
-$label_incorrect = (isset($label_incorrect)) ? $label_incorrect : $string['fbincorrect'] . '<br /><span class="note">' . $string['fbincorrectmsg'] . '</span>';
 $show_incorrect = (isset($show_incorrect)) ? $show_incorrect : false;
-$feedback_rows = (isset($feedback_rows)) ? $feedback_rows : 3;
+$mandatory_editor = false;
+$field_editor = (isset($field_correct)) ? $field_correct : 'correct_fback';
+$label_editor = (isset($label_correct)) ? $label_correct : '<label for="' . $field_editor . '">' . $string['generalfeedback'] . '</label>';
+$value_editor =  $question->get_correct_fback();
 ?>
-        <table id="q-feedback" class="form">
-          <tbody>
-            <tr>
-              <th><label for="correct_fback"><?php echo $label_correct ?></label></th>
-              <td>
-                <textarea id="correct_fback" name="correct_fback" cols="100" rows="<?php echo $feedback_rows ?>" class="form-large"><?php echo $question->get_correct_fback() ?></textarea>
-              </td>
-            </tr>
+<table id="q-feedback" class="form">
+  <tbody>
 <?php
-if ($show_incorrect):
+    require 'details_editor.php';
+
+    if ($show_incorrect) {
+        $field_editor = (isset($field_incorrect)) ? $field_incorrect : 'incorrect_fback';
+        $label_editor = (isset($label_incorrect)) ? $label_incorrect : '<label for="' . $field_editor . '">' . $string['fbincorrect'] . '</label><br /><span class="note">' . $string['fbincorrectmsg'] . '</span>';
+        $value_editor = $question->get_incorrect_fback();
+        require 'details_editor.php';
+    }
 ?>
-            <tr>
-              <th><label for="incorrect_fback"><?php echo $label_incorrect ?></label></th>
-              <td>
-                <textarea id="incorrect_fback" name="incorrect_fback" cols="100" rows="<?php echo $feedback_rows ?>" class="form-large"><?php echo $question->get_incorrect_fback() ?></textarea>
-              </td>
-            </tr>
-<?php
-endif;
-?>
-          </tbody>
-        </table>
+  </tbody>
+</table>
