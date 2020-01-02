@@ -151,7 +151,9 @@ abstract class plugins_texteditor extends \plugins\plugins {
      * @return boolean
      */
     public function clean_leadin($leadin) {
-        if (strpos($leadin, 'class="mee"') === false AND strpos($leadin, 'class=mee') === false) {
+        if (strpos($leadin, 'class="mee"') === false AND strpos($leadin, 'class=mee') === false
+            AND preg_match_all("#\[tex\](.*?)\[/tex\]#si",$leadin) === 0
+            AND preg_match_all("#\[texi\](.*?)\[/texi\]#si",$leadin) === 0) {
             return true;
         } else {
             return false;

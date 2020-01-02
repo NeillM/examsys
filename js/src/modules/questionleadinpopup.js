@@ -18,7 +18,7 @@
 // @author ?
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-define(['jquery', 'jqueryui'], function($) {
+define(['mathjax', 'jquery', 'jqueryui'], function(MathJax, $) {
     return function() {
         /**
          * Initialise leadin overlay display.
@@ -29,9 +29,10 @@ define(['jquery', 'jqueryui'], function($) {
                 // Delete any extra ones that may have appeared
                 $('.question-leadin-popup').remove();
                 $('<p class="question-leadin-popup" id="question-leadin-popup-' + $(this).parent().attr('id') + '"></p>')
-                    .text(extendedLeadin)
+                    .html(extendedLeadin)
                     .appendTo('body')
                     .fadeIn(200);
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
             }, function () {
                 var popupId = $(this).parent().attr('id');
                 $('#question-leadin-popup-' + popupId).fadeOut(200, function () {
