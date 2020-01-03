@@ -1842,6 +1842,7 @@ HTML;
 <link rel="stylesheet" type="text/css" href="../css/finish.css" />
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 <link rel="stylesheet" type="text/css" href="../css/html5.css" />
+<link rel="stylesheet" href="../node_modules/mediaelement/build/mediaelementplayer.min.css"/>
   <style type="text/css">
     body {margin-bottom: 10px}
     h1 {margin-left: 15px; font-size: 18pt}

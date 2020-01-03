@@ -18,12 +18,14 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-requirejs(['jquery', 'start', 'review', 'reference', 'jsxls'], function ($, START, REVIEW, REF, Jsxlx) {
+requirejs(['media', 'jquery', 'start', 'review', 'reference', 'jsxls'], function (Media, $, START, REVIEW, REF, Jsxlx) {
+    var media = new Media();
+    media.init();
     var review = new REVIEW();
     review.html5init();
     var ref = new REF();
     ref.init();
-    var start = new START()
+    var start = new START();
     $(function() {
         start.generatePaperCss();
         start.StartClock();

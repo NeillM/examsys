@@ -207,7 +207,12 @@ requirejs.config({
         jquerymrq: "plugins/questions/mrq/js/modules/validatequestion.min",
         jqueryrandom: "plugins/questions/random/js/modules/validatequestion.min",
         jqueryrank: "plugins/questions/rank/js/modules/validatequestion.min",
-        jquerysct: "plugins/questions/sct/js/modules/validatequestion.min"
+        jquerysct: "plugins/questions/sct/js/modules/validatequestion.min",
+        mejs: "node_modules/mediaelement/build/mediaelement-and-player.min",
+        mejs_cs: "node_modules/mediaelement/build/lang/cs",
+        mejs_pl: "node_modules/mediaelement/build/lang/pl",
+        mejs_sk: "node_modules/mediaelement/build/lang/sk",
+        media: "js/modules/media.min",
     },
     shim: {
         // Mathjax configration.
@@ -228,7 +233,20 @@ requirejs.config({
             exports: 'tinyMCE',
             init: function () {
                 return this.tinyMCE;
-            }
+            },
+        },
+        mejs: {
+            deps: ['require'],
+            exports: "mejs",
+        },
+        mejs_cs: {
+            deps: ['mejs'],
+        },
+        mejs_pl: {
+            deps: ['mejs'],
+        },
+        mejs_sk: {
+            deps: ['mejs'],
         },
         // Non AMD libraries that need jquery.
         jqueryvalidate: ["jquery"],

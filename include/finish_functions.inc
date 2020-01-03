@@ -776,7 +776,8 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
             if ($tmp_exclude{$tmp_part_id} == '1') echo ' class="exclude"';
             echo ">";
             if (trim($paper[$question]['option_text'][$tmp_part_id]) != '') echo $paper[$question]['option_text'][$tmp_part_id] . '<br />';
-            echo "<img src=\"" . $mediadirectory->url($paper[$question]['o_media'][$tmp_part_id]) . "\" width=\"" . $paper[$question]['o_media_width'][$tmp_part_id] . "\" height=\"" . $paper[$question]['o_media_height'][$tmp_part_id] . "\" border=\"0\" /></td></tr>\n";
+            $questiondata->set_media($paper[$question]['o_media'][$tmp_part_id], $paper[$question]['o_media_width'][$tmp_part_id] ,$paper[$question]['o_media_height'][$tmp_part_id], '', true);
+            $render->render($questiondata, $string, 'paper/media.html');
           }
 
           // Feedback
@@ -864,7 +865,8 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 echo '<br />';
               }
               if ($paper[$question]['o_media'][$tmp_part_id] != '') {
-                echo '<img src="' . $mediadirectory->url($paper[$question]['o_media'][$tmp_part_id]) . '" height="' . $paper[$question]['o_media_height'][$tmp_part_id] . '" width="' . $paper[$question]['o_media_width'][$tmp_part_id] . '" style="border:6px solid #C0FFC0" />';
+                $questiondata->set_media($paper[$question]['o_media'][$tmp_part_id], $paper[$question]['o_media_width'][$tmp_part_id] ,$paper[$question]['o_media_height'][$tmp_part_id], '', true);
+                $render->render($questiondata, $string, 'paper/media.html');
                 if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and $tmp_display_correct_answer == '1') echo ' ' . $strong_on . $string['iscorrect'] . $strong_off;
               }
               echo '</td></tr>';
@@ -883,7 +885,8 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 if ($tmp_exclude{0} == '1') echo '</span>';
               }
               if ($paper[$question]['o_media'][$tmp_part_id] != '') {
-                echo '<img src="' . $mediadirectory->url($paper[$question]['o_media'][$tmp_part_id]) . '" height="' . $paper[$question]['o_media_height'][$tmp_part_id] . '" width="' . $paper[$question]['o_media_width'][$tmp_part_id] . '" style="border:6px solid #C0FFC0" />';
+                $questiondata->set_media($paper[$question]['o_media'][$tmp_part_id], $paper[$question]['o_media_width'][$tmp_part_id] ,$paper[$question]['o_media_height'][$tmp_part_id], '', true);
+                $render->render($questiondata, $string, 'paper/media.html');
                 if (trim($paper[$question]['option_text'][$tmp_part_id]) == '' and $tmp_display_correct_answer == '1') echo ' <strong>' . $string['iscorrect'] . '</strong>';
               }
               echo '</td></tr>';
@@ -900,7 +903,8 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 echo '<br />';
               }
               if ($paper[$question]['o_media'][$tmp_part_id] != '') {
-                echo '<img src="' . $mediadirectory->url($paper[$question]['o_media'][$tmp_part_id]) . '" height="' . $paper[$question]['o_media_height'][$tmp_part_id] . '" width="' . $paper[$question]['o_media_width'][$tmp_part_id] . '" />';
+                $questiondata->set_media($paper[$question]['o_media'][$tmp_part_id], $paper[$question]['o_media_width'][$tmp_part_id] ,$paper[$question]['o_media_height'][$tmp_part_id], '', true);
+                $render->render($questiondata, $string, 'paper/media.html');
               }
               echo "</td></tr>";
             } else {
@@ -912,7 +916,8 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
                 echo '<br />';
               }
               if ($paper[$question]['o_media'][$tmp_part_id] != '') {
-                echo '<img src="' . $mediadirectory->url($paper[$question]['o_media'][$tmp_part_id]) . '" height="' . $paper[$question]['o_media_height'][$tmp_part_id] . '" width="' . $paper[$question]['o_media_width'][$tmp_part_id] . '" />';
+                $questiondata->set_media($paper[$question]['o_media'][$tmp_part_id], $paper[$question]['o_media_width'][$tmp_part_id] ,$paper[$question]['o_media_height'][$tmp_part_id], '', true);
+                $render->render($questiondata, $string, 'paper/media.html');
               }
               echo '</td></tr>';
             }

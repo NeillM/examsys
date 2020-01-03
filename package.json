@@ -24,6 +24,7 @@
     "grunt-eslint": "^19.0.0",
     "grunt-spritesmith": "^6.8.0",
     "mathjax": "^2.7.0",
+    "mediaelement": "^4.2.14",
     "three": "^0.91.0"
   }
 }

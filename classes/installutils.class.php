@@ -787,8 +787,9 @@ Class InstallUtils {
     $configObject->set_setting('paper_textbox_editor_default', 'plain', Config::EDITOR);
     $filetypes = array();
     foreach (media_handler::SUPPORTED as $name => $type) {
-      // Threejs disabled by default.
-      if ($type === questiondata::THREED or $type === questiondata::ARCHIVE) {
+      // Threejs and old multimedia types disabled by default.
+      $defaultdisabled = array(questiondata::THREED, questiondata::ARCHIVE, questiondata::MOVIE, questiondata::AUDIO);
+      if (in_array($type, $defaultdisabled)) {
         $filetypes[$name] = 0;
       } else {
         $filetypes[$name] = 1;

@@ -18,7 +18,9 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-requirejs(['html5', 'qlabelling', 'helplauncher', 'freqdisc', 'jquery'], function (Html5, Qlabelling, Helplauncher, Freq, $) {
+requirejs(['media', 'html5', 'qlabelling', 'helplauncher', 'freqdisc', 'jquery'], function (Media, Html5, Qlabelling, Helplauncher, Freq, $) {
+    var media = new Media();
+    media.init();
     var freqdisc = new Freq();
     var language = $('#dataset').attr('data-language');
 

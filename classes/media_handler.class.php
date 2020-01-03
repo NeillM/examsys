@@ -42,9 +42,10 @@ class media_handler {
     'mpg' => questiondata::MOVIE,
     'mpeg' => questiondata::MOVIE,
     'mov' => questiondata::MOVIE,
-    'mp3' => questiondata::MP3,
+    'mp3' => questiondata::HTML5AUDIO,
+    'mp4' => questiondata::HTML5VIDEO,
     'mid' => questiondata::AUDIO,
-    'wav' => questiondata::AUDIO,
+    'wav' => questiondata::HTML5AUDIO,
     'ram' => questiondata::AUDIO,
     'pdb' => questiondata::THREED,
     'ply' => questiondata::THREED,
@@ -155,6 +156,7 @@ class media_handler {
         }
         break;
       case questiondata::MOVIE:
+      case questiondata::HTML5VIDEO:
         $file_width = $file_info['video']['resolution_x'];
         $file_height = $file_info['video']['resolution_y'];
         if ($file_width == 0 or $file_height == 0) {
@@ -162,7 +164,7 @@ class media_handler {
         }
         break;
       case questiondata::AUDIO:
-      case questiondata::MP3:
+      case questiondata::HTML5AUDIO:
         if (!isset($file_info['playtime_seconds'])) {
           $bad_file = true;
         } elseif ($file_info['playtime_seconds'] == 0) {

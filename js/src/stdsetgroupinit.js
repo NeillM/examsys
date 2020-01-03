@@ -13,36 +13,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 //
-// Initialise std set review page.
+// Initialise std set group angoff page.
 //
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-requirejs(['media', 'start', 'stdsetreview', 'state', 'jquery'], function (Media, START, STD, STATE, $) {
+requirejs(['media'], function (Media) {
     var media = new Media();
     media.init();
-    var std = new STD();
-    var state = new STATE();
-    state.init();
-
-    $('.reveal').click(function() {
-        $('.var').toggle();
-        $('.value').toggle();
-    });
-
-    var method = $('#dataset').attr('data-method');
-    $(function() {
-        if (method == 'ebel') {
-            std.recountCategories();
-        }
-    });
-
-    $('.recountcat').change(function() {
-        if (method == 'ebel') {
-            std.recountCategories();
-        }
-    });
-
-    var start = new START();
-    start.html5init();
 });

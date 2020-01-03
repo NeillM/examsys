@@ -46,9 +46,9 @@ abstract class questiondata {
    */
   const FLASH = 5;
   /**
-   * Media type - mp3
+   * Media type - html5 audio
    */
-  const MP3 = 6;
+  const HTML5AUDIO = 6;
   /**
    * Media type - movie
    */
@@ -61,6 +61,10 @@ abstract class questiondata {
    * Media type - archive
    */
   const ARCHIVE = 9;
+  /**
+   * Media type - html5 video
+   */
+  const HTML5VIDEO = 10;
   /**
    * DB connection
    * @var mysqli 
@@ -737,7 +741,7 @@ abstract class questiondata {
             $mediaborder = false;
           }
           break;
-        case self::MP3:
+        case self::HTML5AUDIO:
           // Display filename if add or edit script
           if (strpos(Url::fromGlobals(),'/edit/') !== false or strpos(Url::fromGlobals(),'/add/') !== false) {
             $mediaedit = true;

@@ -489,6 +489,7 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
 <link rel="stylesheet" href="../../css/mapping_form.css" type="text/css" />
 <link rel="stylesheet" href="../../css/warnings.css" type="text/css" />
 <link rel="stylesheet" href="../../css/html5.css" type="text/css" />
+<link rel="stylesheet" href="../../node_modules/mediaelement/build/mediaelementplayer.min.css"/>
 
 <?php
 $editor = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');

@@ -18,7 +18,9 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-requirejs(['reference', 'start', 'jquery'], function (REF, START, $) {
+requirejs(['media', 'reference', 'start', 'jquery'], function (Media, REF, START, $) {
+    var media = new Media();
+    media.init();
     var start = new START();
     var ref = new REF();
     ref.init();

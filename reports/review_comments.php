@@ -549,6 +549,7 @@ $result->close();
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
   <link rel="stylesheet" type="text/css" href="../css/html5.css" />
+  <link rel="stylesheet" href="../node_modules/mediaelement/build/mediaelementplayer.min.css"/>
   <style type="text/css">
     body {font-size:90%}
     table {font-size:100%;table-layout:auto}

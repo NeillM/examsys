@@ -61,11 +61,8 @@ lang.deleteimage - delete image
         <param name="movie" value="{{path}}/paper/player_flv_maxi.swf" />
         <param name="FlashVars" value="flv={{data.mediaurl}}&amp;buffermessage=&amp;showplayer=always&amp;showvolume=1&amp;showstop=1&amp;showtime=1&amp;margin=1" />
     </object>
-{# Display mp3 #}
+{# Display HTML5 audio #}
 {% elseif data.mediatype == 6 %}
-    {% if data.mediaedit %}
-    {{data.mediafile}}&nbsp;
-    {% endif %}
     <audio src="{{data.mediaurl}}" controls>
     </audio>
 {# Display movie #}
@@ -85,6 +82,9 @@ lang.deleteimage - delete image
          data-mtl="{{data.mediaextra.mtl}}"
          data-obj="{{data.mediaextra.obj}}">
     </div>
+{# Display HTML5 video #}
+{% elseif data.mediatype == 10 %}
+    <video src="{{data.mediaurl}}" width="{{data.mediawidth}}" height="{{data.mediaheight}}" type="video/mp4"></video>
 {% else %}
     <embed src="{{data.mediaurl}}" width="{{data.mediawidth}}" height="{{data.mediaheight}}" border="1" alt="{{lang.datafile}}" wmode="opaque"></embed>
 {% endif %}

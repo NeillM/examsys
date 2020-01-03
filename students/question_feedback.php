@@ -120,6 +120,7 @@ require '../config/finish.inc';
   <link rel="stylesheet" type="text/css" href="../css/finish.css" />
   <link rel="stylesheet" type="text/css" href="../css/key.css" />
   <link rel="stylesheet" type="text/css" href="../css/html5.css" />
+  <link rel="stylesheet" href="../node_modules/mediaelement/build/mediaelementplayer.min.css"/>
 <?php
   $css = '';
   if ($userObject->is_special_needs() and $bgcolor != '#FFFFFF') {
@@ -156,6 +157,7 @@ require '../config/finish.inc';
   </script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
+  <script src="../js/questionfeedbackinit.min.js"></script>
   <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
   $texteditorplugin->display_header();

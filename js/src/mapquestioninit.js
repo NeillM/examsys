@@ -18,7 +18,10 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-requirejs(['alert', 'questionmapping', 'jquery'], function (ALERT, MAPPING, $) {
+requirejs(['media', 'alert', 'questionmapping', 'jquery'], function (Media, ALERT, MAPPING, $) {
+    var media = new Media();
+    media.init();
+
     var mapping = new MAPPING();
     mapping.init();
 

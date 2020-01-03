@@ -113,6 +113,7 @@ function display_q($configObject, $target_id, $db) {
   <link rel="stylesheet" href="../css/start.css" type="text/css" />
   <link rel="stylesheet" href="../css/mapping_form.css" type="text/css" />
   <link rel="stylesheet" href="../css/html5.css" type="text/css" />
+  <link rel="stylesheet" href="../node_modules/mediaelement/build/mediaelementplayer.min.css"/>
 
   <style>
     .objheading {font-size:150%; font-weight:bold; color:#316AC5; padding-top:10px; border-top:1px solid #C0C0C0}

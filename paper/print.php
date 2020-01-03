@@ -95,6 +95,7 @@ $current_screen = 1;
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/print.css" />
   <link rel="stylesheet" type="text/css" href="../css/html5.css" />
+  <link rel="stylesheet" href="../node_modules/mediaelement/build/mediaelementplayer.min.css"/>
 
     <script id="rogoconfig"
             data-root="<?php echo $configObject->get('cfg_root_path'); ?>"

@@ -123,6 +123,7 @@ echo "<html>\n<head>\n";
 <link rel="stylesheet" type="text/css" href="../css/html5.css" />
 <link rel="stylesheet" type="text/css" href="../css/warnings.css" />
 <link rel="stylesheet" type="text/css" href="../css/review.css" />
+<link rel="stylesheet" href="../node_modules/mediaelement/build/mediaelementplayer.min.css"/>
 
 <script id="rogoconfig"
         data-root="<?php echo $configObject->get('cfg_root_path'); ?>"

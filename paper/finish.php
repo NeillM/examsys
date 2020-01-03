@@ -219,6 +219,7 @@ require '../config/finish.inc';
 <link rel="stylesheet" type="text/css" href="../css/finish.css" />
 <link rel="stylesheet" type="text/css" href="../css/key.css" />
 <link rel="stylesheet" type="text/css" href="../css/html5.css" />
+<link rel="stylesheet" href="../node_modules/mediaelement/build/mediaelementplayer.min.css"/>
 <script id="rogoconfig"
         data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
         data-mathjax="<?php echo $configObject->get_setting('core', 'paper_mathjax'); ?>"

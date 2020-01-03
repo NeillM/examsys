@@ -124,6 +124,7 @@ $paper_prologue = $propertyObj->get_paper_prologue();
   <link rel="stylesheet" type="text/css" href="../css/key.css" />
   <link rel="stylesheet" type="text/css" href="../css/std_setting.css" />
   <link rel="stylesheet" type="text/css" href="../css/html5.css" />
+  <link rel="stylesheet" href="../node_modules/mediaelement/build/mediaelementplayer.min.css"/>
   <style>
 		table {table-layout:auto}
 		#maincontent {height:auto}
@@ -134,6 +135,7 @@ $paper_prologue = $propertyObj->get_paper_prologue();
   </script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
+  <script src="../js/stdsetgroupinit.min.js"></script>
   <?php
     $texteditorplugin = \plugins\plugins_texteditor::get_editor();
     $texteditorplugin->display_header();
@@ -316,6 +318,10 @@ $mysqli->close();
 </form>
 </div>
 <?php
+  // Dataset.
+  $miscdataset['name'] = 'dataset';
+  $miscdataset['attributes']['language'] = $language;
+  $render->render($miscdataset, array(), 'dataset.html');
   $render->render(array('rootpath' => $cfg_root_path), html5_helper::get_instance()->get_lang_strings(), 'html5_footer.html');
 ?>
 </body>
