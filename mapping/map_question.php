@@ -125,6 +125,7 @@ function display_q($configObject, $target_id, $db) {
 </head>
 <body>
   <div id="maincontent">
+    <div class="questions">
 <?php
   display_q($configObject, $_GET['q_id'], $mysqli);
 
@@ -146,7 +147,7 @@ function display_q($configObject, $target_id, $db) {
   echo "<input type=\"hidden\" name=\"questionID\" value=\"{$_GET['q_id']}\" />\n";
   echo "<div style=\"text-align:center; width:100%\"><input type=\"submit\" name=\"submit\" value=\"" . $string['save'] . "\" class=\"ok\" /><input class=\"cancel\" id=\"cancel\" type=\"button\" value=\"" . $string['cancel'] . "\" /></div>";
 
-  echo "</form>\n</div>\n";
+  echo "</form>\n</div>\n</div>\n";
 ?>
   </div>
 <?php

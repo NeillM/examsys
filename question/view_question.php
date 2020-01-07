@@ -89,6 +89,7 @@ $question['assigned_number'] = (isset($_GET['qNo'])) ? $_GET['qNo'] : 1;
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/start.css" />
+  <link rel="stylesheet" href="../../node_modules/mediaelement/build/mediaelementplayer.min.css"/>
 
   <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"
             data-root="<?php echo $configObject->get('cfg_root_path'); ?>"

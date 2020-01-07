@@ -18,7 +18,9 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2018 The University of Nottingham
 //
-requirejs(['textboxmarking', 'jquery', 'jqueryui'], function (TEXTBOX, $) {
+requirejs(['media', 'textboxmarking', 'jquery', 'jqueryui'], function (Media, TEXTBOX, $) {
+    var media = new Media();
+    media.init();
     window.location.hash = $('#dataset').attr('data-hash');
     var textbox = new TEXTBOX();
     $.ajaxSetup({timeout: 3000});
