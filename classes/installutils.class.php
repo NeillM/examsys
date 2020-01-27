@@ -753,6 +753,7 @@ Class InstallUtils {
         'max_fail' => 100
         ), Config::ASSOC);
     $configObject->set_setting('stdset_hofstee_whole_numbers', true, Config::BOOLEAN);
+    $configObject->set_setting('stdset_copy_std_setting', false, Config::BOOLEAN);
     $configObject->set_setting('summative_hour_warning', 10, Config::INTEGER);
     $configObject->set_setting('system_install_type', '', Config::STRING);
     $configObject->set_setting('cfg_ims_enabled', false, Config::BOOLEAN);

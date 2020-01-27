@@ -157,6 +157,11 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
   }
   // Copying all the killer questions
   $KillerQuestionsObj->copy_killer_questions($new_paper_id);
+
+  // If option set, copy standard settings from old to new paper
+  if (param::optional('copy_std_setting', false, param::BOOLEAN, param::FETCH_POST)) {
+    StandardSetting::copy_std_setting_to_paper_linked($paperid, $new_paper_id, $mysqli);
+  }
 } else {    // Copy the paper and the questions.
   $mediadirectory = rogo_directory::get_directory('media');
 
@@ -188,7 +193,9 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
     $qData->store_result();
     $qData->bind_result($q_id, $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $owner, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $scenario_plain, $leadin_plain, $checkout_time, $checkout_author, $deleted, $locked, $std, $status, $q_option_order, $score_method, $settings, $guid, $o_id, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $id_num, $marks_correct, $marks_incorrect, $marks_partial);
     while ($qData->fetch()) {
-      $old_qids[$question] = $question;
+      if (!in_array($question, $old_qids)) {
+        $old_qids[] = $question;
+      }
       // Question data
       if ($line == 0) {
         if ($q_type != 'info') $q_no++;
@@ -449,6 +456,11 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
         }
         $result->close();
       }
+  }
+
+  // If option set, copy standard settings from old to new paper
+  if (param::optional('copy_std_setting', false, param::BOOLEAN, param::FETCH_POST)) {
+    StandardSetting::copy_std_setting_to_paper_copied($paperid, $new_paper_id, $old_qids, $new_qids, $mysqli);
   }
 }
 ?>

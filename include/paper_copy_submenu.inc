@@ -81,7 +81,7 @@ if ($configObject->get_setting('core', 'cfg_summative_mgmt')) {
     }
   }
 ?>
-  </select><td><tr>
+  </select></td></tr>
 <?php
   echo '<tr><td style="text-align:right">' . $string['academicsession'] . '</td><td>';
   echo "<select name=\"session\">\n";
@@ -91,20 +91,24 @@ if ($configObject->get_setting('core', 'cfg_summative_mgmt')) {
   echo "</select></td>\n";
 ?>
 </tr>
-
-<tr><td colspan="5">&nbsp;</td></tr>
 <tr>
+<td></td>
+<td colspan="4"><input type="checkbox" name="copy_std_setting" id="copy_std_setting" <?php if ($configObject->get_setting('core', 'stdset_copy_std_setting')) { echo 'checked="checked" '; } ?>/> <label for="copy_std_setting"><?php echo $string['copystdsetting']; ?></label>
+</td>
+</tr>
+<tr><td colspan="5">&nbsp;</td></tr>
+<tr id="copytype_selector">
 <td>&nbsp;</td>
-<td>&nbsp;<input type="radio" name="copytype" value="paperonly" /><?php echo $string['paperonly'] ?></td>
+<td>&nbsp;<input type="radio" name="copytype" id="copytype_paperonly" value="paperonly" /><label for="copytype_paperonly"><?php echo $string['paperonly'] ?></label></td>
 <td>&nbsp;</td>
-<td>&nbsp;<input type="radio" name="copytype" value="paperquestions" checked /><?php echo $string['paperandquestions'] ?></td>
+<td>&nbsp;<input type="radio" name="copytype" id="copytype_paperquestions" value="paperquestions" checked /><label for="copytype_paperquestions"><?php echo $string['paperandquestions'] ?></td>
 <td>&nbsp;</td>
 </tr>
 <tr>
 <td style="width:130px" align="center">&nbsp;</td>
-<td style="width:170px" align="center"><img src="../artwork/copy_paper_only.png" width="120" height="130" /></td>
+<td style="width:170px" align="center"><label for="copytype_paperonly"><img src="../artwork/copy_paper_only.png" width="120" height="130" /></label></td>
 <td>&nbsp;&nbsp;&nbsp;</td>
-<td style="width:170px" align="center"><img src="../artwork/copy_paper_questions.png" width="120" height="130" /></td>
+<td style="width:170px" align="center"><label for="copytype_paperquestions"><img src="../artwork/copy_paper_questions.png" width="120" height="130" /></label></td>
 <td style="width:110px" align="center">&nbsp;</td>
 </tr>
 <tr>

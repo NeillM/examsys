@@ -140,6 +140,7 @@ $string['tooltip_daterange'] = 'Use dates to control the reporting window.';
 $string['copyname'] = 'Copy Name';
 $string['paperonly'] = 'Paper Only';
 $string['paperandquestions'] = 'Paper and Questions';
+$string['copystdsetting'] = 'Copy standards setting with paper';
 $string['next'] = 'Next &gt;&gt;';
 $string['reorderinfo'] = 'You can now reorder questions and screen breaks by dragging them to their new position';
 $string['insertscreenbreak'] = 'Insert screen break';
