@@ -1044,8 +1044,8 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
               data-image="<?php echo $tmp_image; ?>"
               data-image-width="<?php echo $question['q_media_width']; ?>"
               data-image-height="<?php echo $question['q_media_height']; ?>"
-              data-setup="<?php echo $tmp_correct; ?>"
-              data-answer="<?php echo $tmp_answer; ?>"
+              data-setup="<?php echo htmlentities($tmp_correct); ?>"
+              data-answer="<?php echo htmlentities($tmp_answer); ?>"
               ></div>
         </div>
         <?php

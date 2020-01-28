@@ -327,7 +327,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
               data-image="<?php echo $tmp_image; ?>"
               data-image-width="<?php echo $q_media_width; ?>"
               data-image-height="<?php echo $q_media_height; ?>"
-              data-setup="<?php echo trim($correct); ?>"
+              data-setup="<?php echo htmlentities(trim($correct)); ?>"
               data-answer=""
               ></div>
         </div>

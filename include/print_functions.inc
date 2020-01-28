@@ -544,9 +544,9 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $tmp_height = $question['q_media_height'] + 30;
         if ($tmp_height < (($hotspot_no * 36) + 25)) $tmp_height = (($hotspot_no * 36) + 25);
 
-        $tmp_correct = hotspot_helper::get_instance()->correct_to_answer_mode(trim($question['options'][0]['correct']));
+        $tmp_correct = htmlentities(hotspot_helper::get_instance()->correct_to_answer_mode(trim($question['options'][0]['correct'])));
         if (isset($user_answers[$current_screen][$q_id])) {
-          $tmp_answer = trim($user_answers[$current_screen][$q_id]);
+          $tmp_answer = htmlentities(trim($user_answers[$current_screen][$q_id]));
         } else {
           $tmp_answer = '';
         }
@@ -614,7 +614,7 @@ HTML;
           $tmp_bgcolor = $bgcolor;
         }
         $tmp_correct = trim($question['options'][0]['correct']);
-        $tmp_correct = str_replace("'", "&#039;", $tmp_correct);
+        $tmp_correct = htmlentities(str_replace("'", "&#039;", $tmp_correct));
 
         echo "<canvas class='labelling' id='canvas" . $question_no . "'
             data-qno='" . $question_no . "'

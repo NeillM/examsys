@@ -71,8 +71,8 @@ require_once 'detail_parts/details_scenario.php';
                     data-image="<?php echo $imageurl; ?>"
                     data-image-width="<?php echo $media['width']; ?>"
                     data-image-height="<?php echo $media['height']; ?>"
-                    data-setup="<?php echo $correct; ?>"
-                  ></div>
+                    data-setup="<?php echo htmlentities($correct); ?>"
+                 ></div>
                   <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
                   <input type="hidden" id="points1" name="points1" value="<?php echo $correct ?>" />
                   <?php if(!isset($_POST['submit']) or $_POST['submit']!='Replace Media') { ?>

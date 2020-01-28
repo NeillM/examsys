@@ -803,7 +803,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
         data-image="<?php echo $mediadirectory->url($display_option['q_media']); ?>"
         data-image-width="<?php echo $display_option['q_media_width']; ?>"
         data-image-height="<?php echo $display_option['q_media_height']; ?>"
-        data-setup="<?php echo trim($display_option['correct']); ?>"
+        data-setup="<?php echo htmlentities(trim($display_option['correct'])); ?>"
         data-exclusions="<?php echo $exclude; ?>"
         ></div>
    </div>

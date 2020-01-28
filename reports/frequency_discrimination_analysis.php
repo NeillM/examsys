@@ -1155,7 +1155,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
         echo "<div id='coords$q_no' data-value='$coords'></div>";
         $tmp_correct = str_replace("'", "\'", trim($correct));
         $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
-        $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
+        $tmp_correct = htmlentities(preg_replace('/\r\n/', '', $tmp_correct));
 
 		$configObject          = Config::get_instance();
         

@@ -2210,8 +2210,8 @@ function display_feedback($propertyObj, $temp_userID, $log_type, $userObj, $log_
       data-image="<?php echo $tmp_image; ?>"
       data-image-width="<?php echo $paper[$question]['q_media_width']; ?>"
       data-image-height="<?php echo $paper[$question]['q_media_height']; ?>"
-      data-setup="<?php echo trim($paper[$question]['correct'][0]); ?>"
-      data-answer="<?php echo trim($paper[$question]['user_answer']); ?>"
+      data-setup="<?php echo htmlentities(trim($paper[$question]['correct'][0])); ?>"
+      data-answer="<?php echo htmlentities(trim($paper[$question]['user_answer'])); ?>"
       data-exclusions="<?php echo $tmp_exclude; ?>"
       ></div>
   </div>
