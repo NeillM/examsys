@@ -322,9 +322,9 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
       $stmt->close();
       if (isset($objsBySession[$thisModuleid]) and count($objsBySession[$thisModuleid]) > 0) {
         // Get internal objectives from Rogo.
+        $sql = "SELECT obj_id, objective, sequence FROM objectives WHERE identifier=? AND calendar_year = ? ORDER BY sequence";
+        $stmt = $db->prepare($sql);
         foreach ($objsBySession[$thisModuleid] as $identifier => $sess) {
-          $sql = "SELECT obj_id, objective, sequence FROM objectives WHERE identifier=? AND calendar_year = ? ORDER BY sequence";
-          $stmt = $db->prepare($sql);
           $stmt->bind_param('ss',$identifier,$sess['calendar_year']);
           $stmt->execute();
           $stmt->bind_result($obj_id, $objective, $sequence);
@@ -336,8 +336,8 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
             $objsBySession[$thisModuleid][$identifier]['objectives'][$obj_id]['sequence'] = $sequence;
             $i++;
           }
-          $stmt->close();
         }
+        $stmt->close();
       }
     }
   }
