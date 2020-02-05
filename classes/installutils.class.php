@@ -786,6 +786,7 @@ Class InstallUtils {
     $configObject->set_setting('lti_ssl_verifypeer', 1, Config::BOOLEAN);
     $configObject->set_setting('lti_ssl_verifyhost', 2, Config::INTEGER);
     $configObject->set_setting('paper_textbox_editor_default', 'plain', Config::EDITOR);
+    $configObject->set_setting('paper_hide_repeat_scenario', 0, Config::BOOLEAN);
     $filetypes = array();
     foreach (media_handler::SUPPORTED as $name => $type) {
       // Threejs and old multimedia types disabled by default.

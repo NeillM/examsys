@@ -1,0 +1,26 @@
+<?php
+// This file is part of Rogō
+//
+// Rogō is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Rogō is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * GJLU-109 / ROGO-2576 update script
+ * Allow global setting to hide the same scenario for consequent questions in a paper
+ */
+
+if ($updater_utils->check_version("7.1.1") and !$updater_utils->has_updated('lancaster/feature/GJLU-109')) {
+    $configObject->set_setting('paper_hide_repeat_scenario', 0, Config::BOOLEAN);
+
+    $updater_utils->record_update('lancaster/feature/GJLU-109');
+}

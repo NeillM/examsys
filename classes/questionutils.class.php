@@ -576,4 +576,20 @@ SQL;
 
         return $old_correct;
     }
+
+    /**
+     * Check one scenario against another for similarity. Hardcoded to above 95% at present.
+     * @param string $scenario1 First scenario to compare
+     * @param string $scenario2 Second scenario to compare
+     * 
+     * @return bool
+     */
+    public static function is_scenario_similar(string $scenario1, string $scenario2) {
+      similar_text(strip_tags($scenario1), strip_tags($scenario2), $similarity);
+      if ($similarity > 95) {
+        return true;
+      } else {
+        return false;
+      }
+    }
 }

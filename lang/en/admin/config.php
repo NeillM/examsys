@@ -96,3 +96,4 @@ $string['paper_textbox_editor_default'] = 'Default editor used for textbox quest
 $string['editor_plaintext'] = 'Plain text editor';
 $string['editor_wysiwyg'] = 'WYSIWYG editor';
 $string['editor_mathjax'] = 'MathJax editor';
+$string['paper_hide_repeat_scenario'] = 'Hide repeat scenarios on papers (>95% similarity)';

@@ -465,6 +465,10 @@ $render->render($headerdata, $lang, 'header.html');
   
   // Display each question
   $unanswered = false;
+
+  // Initialise for scenario filtering
+  $last_scenario = '';
+
   foreach ($questions_array as &$question) {
 
     // Question not on this screen, don't display
@@ -487,6 +491,14 @@ $render->render($headerdata, $lang, 'header.html');
     }
     $questionrender->questiondata->labelcolour = $labelcolor;
     $questionrender->questiondata->displaycalc = $calculator;
+    // Check if last scenario is the same as this one, and on the same screen,
+    // for skipping repeat scenario display if turned on
+    if ($configObject->get_setting('core', 'paper_hide_repeat_scenario')) {
+      if (QuestionUtils::is_scenario_similar($question['scenario'], $last_scenario)) {
+        $questionrender->add_override('displayscenario', false);
+      }
+      $last_scenario = $question['scenario'];
+    }
     $questionrender->display_question($screen_pre_submitted, $q_displayed, $string, $question, $paperID, $current_screen, $question_no, $user_answers);
     if ($questionrender->questiondata->unanswered) {
       $unanswered = true;
