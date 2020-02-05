@@ -27,4 +27,3 @@ $string['overall'] = 'Overall';
 $string['Complete'] = 'Complete';
 $string['Missing'] = 'Missing';
 $string['q'] = 'Q';
-?>

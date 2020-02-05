@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -25,7 +26,8 @@ namespace api;
 /**
  * Assessment class
  */
-class assessmentmanagement extends \api\abstractmanagement {
+class assessmentmanagement extends \api\abstractmanagement
+{
     
     /**
      * Language pack component.
@@ -64,7 +66,8 @@ class assessmentmanagement extends \api\abstractmanagement {
      * @param array $labs list of labs we ant assignments to run in
      * @return array validated list of labs assignment will run in, and any non fatal errors
      */
-    private function check_labs($labs) {
+    private function check_labs($labs)
+    {
         $langpack = new \langpack();
         $labsarray = array();
         $labfactory = new \LabFactory($this->db);
@@ -94,7 +97,8 @@ class assessmentmanagement extends \api\abstractmanagement {
      * @param string $exception - the thrown exception
      * @return array containg the relevant status code and status message
      */
-    private function handle_exception($exception) {
+    private function handle_exception($exception)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('paper_calendar_year_invalid', 'paper_owner_role_invalid',
             'paper_owner_does_not_exist', 'paper_title_inuse', 'paper_startdate_invalid', 'paper_general_error','paper_type_invalid', 'paper_externalid_inuse', 'paper_no_modules'));
@@ -125,7 +129,8 @@ class assessmentmanagement extends \api\abstractmanagement {
      * @param integer $userid rogo user id linked to web service client
      * @return array assessment id and status
      */
-    public function create($params, $userid) {
+    public function create($params, $userid)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('paper_not_created', 'paper_scheduled_summative', 'paper_invalid_module',
              'paper_invalid_lab', 'paper_module_error'));
@@ -197,8 +202,20 @@ class assessmentmanagement extends \api\abstractmanagement {
             }
             // Create exam.
             try {
-                $id = $paper->create($params['title'], $papertype, $params['owner'], $params['startdatetime'],
-                    $params['enddatetime'], $labs, $params['duration'], $params['session'], $modulesarray, $params['timezone'], $params['externalid'], $params['externalsys']);
+                $id = $paper->create(
+                    $params['title'],
+                    $papertype,
+                    $params['owner'],
+                    $params['startdatetime'],
+                    $params['enddatetime'],
+                    $labs,
+                    $params['duration'],
+                    $params['session'],
+                    $modulesarray,
+                    $params['timezone'],
+                    $params['externalid'],
+                    $params['externalsys']
+                );
                 if ($id) {
                     $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'error' => $error, 'externalid' => $params['externalid']);
                 } else {
@@ -217,7 +234,8 @@ class assessmentmanagement extends \api\abstractmanagement {
      * @param integer $userid rogo user id linked to web service client
      * @return array assessment id and status
      */
-    public function update($params, $userid) {
+    public function update($params, $userid)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('paper_scheduled_summative', 'paper_does_not_exist',
             'paper_not_updated', 'paper_invalid_module', 'paper_invalid_lab', 'paper_module_error', 'paper_nothing_to_update'));
@@ -273,7 +291,7 @@ class assessmentmanagement extends \api\abstractmanagement {
             $params['startdatetime'] = $details['startdatetime'];
         } else {
             // Mark something is to be updated.
-            $startdate = str_replace("T", " ", $params['startdatetime']);
+            $startdate = str_replace('T', ' ', $params['startdatetime']);
             if ($startdate != $details['startdatetime']) {
                 $change = true;
             }
@@ -283,7 +301,7 @@ class assessmentmanagement extends \api\abstractmanagement {
             $params['enddatetime'] = $details['enddatetime'];
         } else {
             // Mark something is to be updated.
-            $enddate = str_replace("T", " ", $params['enddatetime']);
+            $enddate = str_replace('T', ' ', $params['enddatetime']);
             if ($enddate != $details['enddatetime']) {
                 $change = true;
             }
@@ -345,13 +363,27 @@ class assessmentmanagement extends \api\abstractmanagement {
             }
             
             if (empty($params['duration'])) {
-                $params['duration'] = $details['duration'];   
+                $params['duration'] = $details['duration'];
             }
             // Update exam.
             if ($change) {
                 try {
-                    $id = $paper->update($params['id'], $params['title'], $papertype, $params['owner'], $params['startdatetime'],
-                        $params['enddatetime'], $labs, $params['duration'], $params['session'], $modulesarray, $params['timezone'], $userid, $details['externalid'], $details['externalsys']);
+                    $id = $paper->update(
+                        $params['id'],
+                        $params['title'],
+                        $papertype,
+                        $params['owner'],
+                        $params['startdatetime'],
+                        $params['enddatetime'],
+                        $labs,
+                        $params['duration'],
+                        $params['session'],
+                        $modulesarray,
+                        $params['timezone'],
+                        $userid,
+                        $details['externalid'],
+                        $details['externalsys']
+                    );
                     if ($id) {
                         $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'error' => $error, 'externalid' => $details['externalid']);
                     } else {
@@ -374,7 +406,8 @@ class assessmentmanagement extends \api\abstractmanagement {
      * @param integer $userid rogo user id linked to web service client
      * @return array summative assessment id and status
      */
-    public function schedule($params, $userid) {
+    public function schedule($params, $userid)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('paper_not_created', 'paper_not_scheduled', 'paper_invalid_module'));
         $error = array();
@@ -437,8 +470,20 @@ class assessmentmanagement extends \api\abstractmanagement {
         }
         // Create.
         try {
-            $paperid = $paper->create($params['title'], $papertype, $params['owner'], $start,
-                $end, $labs, $params['duration'], $params['session'], $modulesarray, $configObject->get('cfg_timezone'), $params['externalid'], $params['externalsys']);
+            $paperid = $paper->create(
+                $params['title'],
+                $papertype,
+                $params['owner'],
+                $start,
+                $end,
+                $labs,
+                $params['duration'],
+                $params['session'],
+                $modulesarray,
+                $configObject->get('cfg_timezone'),
+                $params['externalid'],
+                $params['externalsys']
+            );
             if ($paperid) {
                 // Schedule.
                 $id = $paper->schedule($paperid, $params['month'], $params['barriers'], $params['cohort_size'], $params['notes'], $params['sittings'], $params['campus']);
@@ -473,7 +518,8 @@ class assessmentmanagement extends \api\abstractmanagement {
      * @param integer $userid rogo user id linked to web service client
      * @return array assessment id and status
      */
-    public function delete($params, $userid) {
+    public function delete($params, $userid)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('paper_not_deleted_inuse', 'paper_not_deleted'
             , 'paper_does_not_exist'));

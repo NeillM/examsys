@@ -23,7 +23,7 @@
  
 // Only run from the command line!
 if (PHP_SAPI != 'cli') {
-  die("Please run this script from the CLI!\n");
+    die("Please run this script from the CLI!\n");
 }
 
 set_time_limit(0);
@@ -34,8 +34,8 @@ $language = 'en';
 
 $rogo_path = dirname(__DIR__);
 if (!file_exists($rogo_path . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.inc.php')) {
-  echo 'Rogo is not installed.' . $error;
-  exit(0);
+    echo 'Rogo is not installed.' . $error;
+    exit(0);
 }
 
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'load_config.php';
@@ -61,8 +61,8 @@ $help = 'Rogo initialisation script options'
 
 if (isset($optionslist['h']) or isset($optionslist['help'])) {
   // Display some help information.
-  cli_utils::prompt($help);
-  exit(0);
+    cli_utils::prompt($help);
+    exit(0);
 }
 
 $cfg_db_username = $optionslist['u'];
@@ -78,36 +78,36 @@ $cfg_db_inv_username  = $configObject->get('cfg_db_inv_user');
 
 $cfg_web_host = $configObject->get('cfg_web_host');
 if ($cfg_web_host == '') {
-  $cfg_web_host = $cfg_db_host;
+    $cfg_web_host = $cfg_db_host;
 }
 
 InstallUtils::$cli = true;
 
 @$mysqli = new mysqli($cfg_db_host, $cfg_db_username, $databasepassword, $cfg_db_database, $databaseport);
 if ($mysqli->connect_error == '') {
-  $mysqli->set_charset($databasecharset);
+    $mysqli->set_charset($databasecharset);
 } else {
-  cli_utils::prompt('Unable to connect to database');
-  exit(0);
+    cli_utils::prompt('Unable to connect to database');
+    exit(0);
 }
 
 // Set db object in config.
 $configObject->set_db_object($mysqli);
 
 if (isset($optionslist['o'])) {
-  $update_staff_help = $optionslist['o'];
+    $update_staff_help = $optionslist['o'];
 } else {
-  $update_staff_help = 0;
+    $update_staff_help = 0;
 }
 if (isset($optionslist['q'])) {
-  $update_student_help = $optionslist['q'];
+    $update_student_help = $optionslist['q'];
 } else {
-  $update_student_help = 0;
+    $update_student_help = 0;
 }
 if (isset($optionslist['l'])) {
-  $update_langpacks = $optionslist['l'];
+    $update_langpacks = $optionslist['l'];
 } else {
-  $update_langpacks = 0;
+    $update_langpacks = 0;
 }
 // Ensure any caches are cleared.
 if (function_exists('opcache_reset')) {
@@ -121,97 +121,97 @@ $version = $configObject->getxml('version');
 // Get the installed version.
 $old_version = $configObject->get_setting('core', 'rogo_version');
 if ($version == $old_version) {
-  cli_utils::prompt('Nothing to update.');
-  exit(0);
+    cli_utils::prompt('Nothing to update.');
+    exit(0);
 }
-if ($updater_utils->check_version("6.4.0")) {
-  cli_utils::prompt('This version of Rogo requires at least version 6.4.0 is installed prior to upgrade.');
-  exit(0);
+if ($updater_utils->check_version('6.4.0')) {
+    cli_utils::prompt('This version of Rogo requires at least version 6.4.0 is installed prior to upgrade.');
+    exit(0);
 }
 // Get update file dir.
 $migration_path = 'updates' . DIRECTORY_SEPARATOR . 'scripts';
 // Check pre-requisites.
 try {
-  requirements::check();
+    requirements::check();
 } catch (Exception $e) {
-  cli_utils::prompt($e->getMessage());
-  exit(0);
+    cli_utils::prompt($e->getMessage());
+    exit(0);
 }
 if (!InstallUtils::configFileIsWriteable()) {
-  cli_utils::prompt($string['updatefromversion'] . ' ' . $old_version . ' to ' . $version);
-  cli_utils::prompt($string['warning1']);
-  cli_utils::prompt($string['warning2']);
-  exit(0);
+    cli_utils::prompt($string['updatefromversion'] . ' ' . $old_version . ' to ' . $version);
+    cli_utils::prompt($string['warning1']);
+    cli_utils::prompt($string['warning2']);
+    exit(0);
 } elseif (!InstallUtils::configPathIsWriteable()) {
-  cli_utils::prompt($string['updatefromversion'] . ' ' . $old_version . ' to ' . $version);
-  cli_utils::prompt($string['warning3']);
-  cli_utils::prompt($string['warning4']);
-  exit(0);
+    cli_utils::prompt($string['updatefromversion'] . ' ' . $old_version . ' to ' . $version);
+    cli_utils::prompt($string['warning3']);
+    cli_utils::prompt($string['warning4']);
+    exit(0);
 }
 // Backup the config file before proceeding.
 $updater_utils->backup_file($cfg_web_root, $old_version);
 // Update.
 cli_utils::prompt($string['startingupdate']);
-cli_utils::prompt("Starting at " . date("H:i:s"));
+cli_utils::prompt('Starting at ' . date('H:i:s'));
 $mysqli->autocommit(false);
 
 // Run individual update files
 $files = scandir($migration_path);
 foreach ($files as $file) {
-  if (StringUtils::ends_with($file, '.php')) {
-    cli_utils::prompt($migration_path . '/' . $file);
-    include $migration_path . '/' . $file;
-    $mysqli->commit();
-  }
+    if (StringUtils::ends_with($file, '.php')) {
+        cli_utils::prompt($migration_path . '/' . $file);
+        include $migration_path . '/' . $file;
+        $mysqli->commit();
+    }
 }
 
 $mysqli->commit();
 
 // Update the staff online help files.
 if ($update_staff_help) {
-  try {
-    OnlineHelp::load_staff_help();
-    cli_utils::prompt($string['staffloaded']);
-  } catch (Exception $e) {
-    if ($e->getMessage() === 'CANNOT_FIND') {
-      cli_utils::prompt($string['logwarning2']);
-    } else {
-      cli_utils::prompt($string['logwarning1']);
+    try {
+        OnlineHelp::load_staff_help();
+        cli_utils::prompt($string['staffloaded']);
+    } catch (Exception $e) {
+        if ($e->getMessage() === 'CANNOT_FIND') {
+            cli_utils::prompt($string['logwarning2']);
+        } else {
+            cli_utils::prompt($string['logwarning1']);
+        }
     }
-  }
 }
 // Update the student online help files.
 if ($update_student_help) {
-  try {
-    $ext = OnlineHelp::load_student_help();
-    cli_utils::prompt($string['studentloaded']);
-  } catch (Exception $e) {
-    if ($e->getMessage() === 'CANNOT_FIND') {
-      cli_utils::prompt($string['logwarning4']);
-    } else {
-      cli_utils::prompt($string['logwarning3']);
+    try {
+        $ext = OnlineHelp::load_student_help();
+        cli_utils::prompt($string['studentloaded']);
+    } catch (Exception $e) {
+        if ($e->getMessage() === 'CANNOT_FIND') {
+            cli_utils::prompt($string['logwarning4']);
+        } else {
+            cli_utils::prompt($string['logwarning3']);
+        }
     }
-  }
 }
 $mysqli->commit();
 
 // Update language packs.
 if ($update_langpacks) {
-  try {
-    InstallUtils::download_langpacks();
-    cli_utils::prompt($string['langsuccess']);
-  } catch (Exception $e) {
-    switch ($e->getMessage()) {
-      case 'CANNOT_DOWNLOAD_XML':
-        cli_utils::prompt($string['cannotdownloadxml']);
-      case 'CANNOT_DOWNLOAD_ZIP':
-        cli_utils::prompt($string['cannotdownloadzip']);
-        break;
-      default:
-        cli_utils::prompt($string['cannotextract']);
-        break;
+    try {
+        InstallUtils::download_langpacks();
+        cli_utils::prompt($string['langsuccess']);
+    } catch (Exception $e) {
+        switch ($e->getMessage()) {
+            case 'CANNOT_DOWNLOAD_XML':
+                cli_utils::prompt($string['cannotdownloadxml']);
+            case 'CANNOT_DOWNLOAD_ZIP':
+                cli_utils::prompt($string['cannotdownloadzip']);
+                break;
+            default:
+                cli_utils::prompt($string['cannotextract']);
+                break;
+        }
     }
-  }
 }
 
 // Final housekeeping activities - put all updates above this line
@@ -219,7 +219,7 @@ $configObject->set_setting('rogo_version', $version, Config::VERSION);
 $updater_utils->execute_query('FLUSH PRIVILEGES', false);
 $updater_utils->execute_query('TRUNCATE sys_errors', false);
 $mysqli->close();
-cli_utils::prompt("Ended at " . date("H:i:s"));
+cli_utils::prompt('Ended at ' . date('H:i:s'));
 $filter = FILTER_SANITIZE_STRING;
 $options = array(
   'options' => array(

@@ -24,11 +24,12 @@
  * Oauth helper class.
  * Interfaces with the vendor/bshaffer/oauth2-server-php
  */
-class oauth {
+class oauth
+{
     
     /**
      * The db connection.
-     * @var mysqli 
+     * @var mysqli
      */
     private $db;
     
@@ -45,7 +46,8 @@ class oauth {
     /**
      * Called when the object is unserialised.
      */
-    public function __wakeup() {
+    public function __wakeup()
+    {
         // The serialised database object will be invalid,
         // this object should only be serialised during an error report,
         // so adding the current database connect seems like a waste of time.
@@ -55,18 +57,21 @@ class oauth {
     /**
      * Constructor
      * @param object $configObject - rogo configuration object
-     * @return void 
+     * @return void
      */
-    function __construct($configObject) {
-        $this->db = \DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), 
-                                 $configObject->get('cfg_db_sysadmin_user'), 
-                                 $configObject->get('cfg_db_sysadmin_passwd'), 
-                                 $configObject->get('cfg_db_database'), 
-                                 $configObject->get('cfg_db_charset'), 
-                                 \UserNotices::get_instance(), 
-                                 $configObject->get('dbclass'));
+    function __construct($configObject)
+    {
+        $this->db = \DBUtils::get_mysqli_link(
+            $configObject->get('cfg_db_host'),
+            $configObject->get('cfg_db_sysadmin_user'),
+            $configObject->get('cfg_db_sysadmin_passwd'),
+            $configObject->get('cfg_db_database'),
+            $configObject->get('cfg_db_charset'),
+            \UserNotices::get_instance(),
+            $configObject->get('dbclass')
+        );
         $configObject->set_db_object($this->db);
-        $dsn = "mysql:dbname=" . $configObject->get('cfg_db_database') . ";" . "host=" . $configObject->get('cfg_db_host');
+        $dsn = 'mysql:dbname=' . $configObject->get('cfg_db_database') . ';' . 'host=' . $configObject->get('cfg_db_host');
         $username = $configObject->get('cfg_db_sysadmin_user');
         $password = $configObject->get('cfg_db_sysadmin_passwd');
         // $dsn is the Data Source Name for your database, for exmaple "mysql:dbname=my_oauth2_db;host=localhost"
@@ -79,7 +84,7 @@ class oauth {
         );
         // Pass a storage object or array of storage objects to the OAuth2 server class
         $this->server = new \OAuth2\Server($this->storage, $config);
-        // Add the "Authorization Code" grant type 
+        // Add the "Authorization Code" grant type
         $this->server->addGrantType(new \OAuth2\GrantType\AuthorizationCode($this->storage));
         // Add the "Refresh Token" grant type
         $this->server->addGrantType(new \OAuth2\GrantType\RefreshToken($this->storage, $config));
@@ -87,12 +92,13 @@ class oauth {
     
     /**
      * Delete ALL permissions for client.
-     * @param string $action 
+     * @param string $action
      * @param string $client
-     * @return bool 
+     * @return bool
      */
-    private function delete_permissions($client) {
-        $result = $this->db->prepare("DELETE FROM webservice_permissions WHERE client_id = ?");
+    private function delete_permissions($client)
+    {
+        $result = $this->db->prepare('DELETE FROM webservice_permissions WHERE client_id = ?');
         $result->bind_param('s', $client);
         $result->execute();
         $result->close();
@@ -100,12 +106,13 @@ class oauth {
     
     /**
      * Check if client has permission to take an action
-     * @param string $action 
-     * @param string $client 
-     * @return bool 
+     * @param string $action
+     * @param string $client
+     * @return bool
      */
-    public function check_permissions($action, $client) {
-        $result = $this->db->prepare("SELECT count(client_id) FROM webservice_permissions WHERE client_id = ? AND action = ? AND access = true");
+    public function check_permissions($action, $client)
+    {
+        $result = $this->db->prepare('SELECT count(client_id) FROM webservice_permissions WHERE client_id = ? AND action = ? AND access = true');
         $result->bind_param('ss', $client, $action);
         $result->execute();
         $result->bind_result($count);
@@ -120,13 +127,14 @@ class oauth {
     
     /**
      * Enable/Disable permission for client.
-     * @param string $action 
-     * @param string $client 
-     * @param bool $access 
-     * @return void 
+     * @param string $action
+     * @param string $client
+     * @param bool $access
+     * @return void
      */
-    public function set_permission($action, $client, $access) {
-        $result = $this->db->prepare("UPDATE webservice_permissions SET access = ? WHERE client_id = ? AND action = ?");
+    public function set_permission($action, $client, $access)
+    {
+        $result = $this->db->prepare('UPDATE webservice_permissions SET access = ? WHERE client_id = ? AND action = ?');
         $result->bind_param('iss', $access, $client, $action);
         $result->execute();
         // If adding permision insert on failed update.
@@ -138,13 +146,14 @@ class oauth {
     
     /**
      * Create permission for client.
-     * @param string $action 
-     * @param string $client 
-     * @param bool $access 
-     * @return void 
+     * @param string $action
+     * @param string $client
+     * @param bool $access
+     * @return void
      */
-    public function add_permission($action, $client, $access) {
-        $result = $this->db->prepare("INSERT INTO webservice_permissions (client_id, action, access) values (?, ?, ?)");
+    public function add_permission($action, $client, $access)
+    {
+        $result = $this->db->prepare('INSERT INTO webservice_permissions (client_id, action, access) values (?, ?, ?)');
         $result->bind_param('ssi', $client, $action, $access);
         $result->execute();
         $result->close();
@@ -153,7 +162,8 @@ class oauth {
     /**
      * Get ouath storage object
      */
-    public function get_storage() {
+    public function get_storage()
+    {
         return $this->storage;
     }
     
@@ -161,19 +171,21 @@ class oauth {
      * Handle a request to a resource and authenticate the access token
      * return string|void - client id if authenticated, void otherwise
      */
-    public function check_auth() {
+    public function check_auth()
+    {
         $verify = $this->server->verifyResourceRequest(\OAuth2\Request::createFromGlobals());
         if (!$verify) {
             return 'INVALID_TOKEN';
-        } 
+        }
         $token = $this->server->getAccessTokenData(\OAuth2\Request::createFromGlobals());
         return $token['client_id'];
     }
     
     /**
-     * Handle a request for an OAuth2.0 access token and send the response to the client 
+     * Handle a request for an OAuth2.0 access token and send the response to the client
      */
-    public function request_token() {
+    public function request_token()
+    {
         $this->server->handleTokenRequest(\OAuth2\Request::createFromGlobals())->send('xml');
     }
     
@@ -183,7 +195,8 @@ class oauth {
      * @param int $userid the user authorising
      * @return array - success (true) or failure (false) and status message.
      */
-    public function authorise($authorised = false, $userid = '') {
+    public function authorise($authorised = false, $userid = '')
+    {
         $request = \OAuth2\Request::createFromGlobals();
         $response = new \OAuth2\Response();
         // validate the authorize request
@@ -193,7 +206,7 @@ class oauth {
         }
         try {
             $this->server->handleAuthorizeRequest($request, $response, $authorised, $userid);
-        } catch (Exception $e){
+        } catch (Exception $e) {
             return array(false, $e->getMessage());
         }
         $response->send('xml');
@@ -205,8 +218,9 @@ class oauth {
      * @param string $id - access/refresh token
      * @return string|bool token type or false
      */
-    public function id_exists($id) {
-        $result = $this->db->prepare("SELECT count(access_token) FROM oauth_access_tokens WHERE access_token = ?");
+    public function id_exists($id)
+    {
+        $result = $this->db->prepare('SELECT count(access_token) FROM oauth_access_tokens WHERE access_token = ?');
         $result->bind_param('s', $id);
         $result->execute();
         $result->bind_result($count);
@@ -215,7 +229,7 @@ class oauth {
         if ($count == 1) {
             return 'access_token';
         } else {
-            $result = $this->db->prepare("SELECT count(refresh_token) FROM oauth_refresh_tokens WHERE refresh_token = ?");
+            $result = $this->db->prepare('SELECT count(refresh_token) FROM oauth_refresh_tokens WHERE refresh_token = ?');
             $result->bind_param('s', $id);
             $result->execute();
             $result->bind_result($count);
@@ -235,14 +249,15 @@ class oauth {
      * @param string $type - token type
      * @return void
      */
-    public function delete_auth($id, $type) {
+    public function delete_auth($id, $type)
+    {
         if ($type == 'access_token') {
-            $result = $this->db->prepare("DELETE FROM oauth_access_tokens WHERE access_token = ?");
+            $result = $this->db->prepare('DELETE FROM oauth_access_tokens WHERE access_token = ?');
             $result->bind_param('s', $id);
             $result->execute();
             $result->close();
         } elseif ($type == 'refresh_token') {
-            $result = $this->db->prepare("DELETE FROM oauth_refresh_tokens WHERE refresh_token = ?");
+            $result = $this->db->prepare('DELETE FROM oauth_refresh_tokens WHERE refresh_token = ?');
             $result->bind_param('s', $id);
             $result->execute();
             $result->close();
@@ -254,8 +269,9 @@ class oauth {
      * @param string $client - oauth client
      * @return int|bool - user id if one exists, false otherwise
      */
-    public function get_client_user($client) {
-        $result = $this->db->prepare("SELECT user_id FROM oauth_clients WHERE client_id = ?");
+    public function get_client_user($client)
+    {
+        $result = $this->db->prepare('SELECT user_id FROM oauth_clients WHERE client_id = ?');
         $result->bind_param('s', $client);
         $result->execute();
         $result->store_result();
@@ -274,8 +290,9 @@ class oauth {
      * @param string $client - oauth client
      * @return  bool
      */
-    public function check_oauthclient($client) {
-        $result = $this->db->prepare("SELECT count(client_id) FROM oauth_clients WHERE client_id = ?");
+    public function check_oauthclient($client)
+    {
+        $result = $this->db->prepare('SELECT count(client_id) FROM oauth_clients WHERE client_id = ?');
         $result->bind_param('s', $client);
         $result->execute();
         $result->bind_result($count);
@@ -293,12 +310,13 @@ class oauth {
      * @param string $client - oauth client
      * @return void
      */
-    public function delete_oauthclient($client) {
+    public function delete_oauthclient($client)
+    {
         // Delete external system mappings.
         $external = new \external_systems();
         $external->delete_external_system_mapping($client);
         // Delete client.
-        $result = $this->db->prepare("DELETE FROM oauth_clients WHERE client_id = ?");
+        $result = $this->db->prepare('DELETE FROM oauth_clients WHERE client_id = ?');
         $result->bind_param('s', $client);
         $result->execute();
         $result->close();

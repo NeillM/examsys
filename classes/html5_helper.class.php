@@ -21,28 +21,30 @@
  * @copyright Copyright (c) 2016 The University of Nottingham
  * @package core
  */
-class html5_helper extends RogoStaticSingleton {
+class html5_helper extends RogoStaticSingleton
+{
   /**
    * The active instance of this class.
    *
    * @var html5_helper
    */
-  protected static $inst;
+    protected static $inst;
 
   /**
    * The name of the class that is instantiated as the singleton.
    *
    * @var string
    */
-  protected static $class_name = 'html5_helper';
+    protected static $class_name = 'html5_helper';
 
   /**
    * Get an array of language strings used by html5 questions.
    *
    * @return array
    */
-  public function get_lang_strings() {
-    $hotspot_strings = hotspot_helper::get_instance()->get_lang_strings();
-    return $hotspot_strings;
-  }
+    public function get_lang_strings()
+    {
+        $hotspot_strings = hotspot_helper::get_instance()->get_lang_strings();
+        return $hotspot_strings;
+    }
 }

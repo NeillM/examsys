@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,7 +27,8 @@ use \SchoolUtils;
  * @package testing
  * @subpackage datagenerator
  */
-class school extends generator {
+class school extends generator
+{
     /** @var int Stores how many schools have been created. */
     protected static $schoolscreated = 0;
 
@@ -40,7 +42,8 @@ class school extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function create_school($parameters) {
+    public function create_school($parameters)
+    {
         if (empty($parameters['facultyID'])) {
             throw new data_error('facultyID must be provided');
         }
@@ -50,7 +53,7 @@ class school extends generator {
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $schoolid = SchoolUtils::add_school($parameters['facultyID'], $settings['school'], $this->db, $settings['code'], $settings['externalid'], $settings['externalsys']);
         if (!$schoolid) {
-            throw new data_error("Create new faculty failed with parameters: " . implode("--", $settings));
+            throw new data_error('Create new faculty failed with parameters: ' . implode('--', $settings));
         }
         $settings['id'] = $schoolid;
         return $settings;

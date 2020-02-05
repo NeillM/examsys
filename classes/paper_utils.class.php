@@ -22,12 +22,15 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-Class Paper_utils extends RogoStaticSingleton {
-  public static $inst = NULL;
-  public static $class_name = 'PaperUtils';
+class Paper_utils extends RogoStaticSingleton
+{
+    public static $inst = null;
+    public static $class_name = 'PaperUtils';
 
   /**
   * constructor
   */
-  private function __construct() {}
+    private function __construct()
+    {
+    }
 }

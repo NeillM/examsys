@@ -21,4 +21,3 @@ $string['msg'] = 'Removing this question from the paper will only alter the pape
 $string['msg2'] = 'You are trying to delete a question from a locked paper, this is not possible.';
 $string['delete'] = 'Remove Question';
 $string['deletes'] = 'Remove Questions';
-?>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -27,7 +28,7 @@ require '../include/staff_auth.inc';
 $paper_name = param::required('paper_name', param::TEXT, param::FETCH_POST);
 
 if (!Paper_utils::is_paper_title_unique($paper_name, $mysqli)) {
-  echo json_encode("ERROR");
-  exit();
+    echo json_encode('ERROR');
+    exit();
 }
-echo json_encode("SUCCESS");
+echo json_encode('SUCCESS');

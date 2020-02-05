@@ -17,7 +17,7 @@
 $string['hofstee'] = 'Hofstee method';
 $string['integeronly'] = 'whole numbers';
 $string['cohort'] = 'Cumulative % students';
-$string['correct'] = "Students grades (%)";
+$string['correct'] = 'Students grades (%)';
 $string['passmark'] = 'Pass Mark';
 $string['distinction'] = 'Distinction';
 $string['minpass'] = 'Min Pass';
@@ -39,4 +39,3 @@ $string['marking1'] = 'Set paper pass/distinction marks to standard setting';
 $string['marking2'] = 'Set paper to standard setting and scale marks';
 $string['examnotfinished'] = 'Exam not Finished';
 $string['notfinishedmsg'] = 'Hofstee standard setting cannot be performed before the scheduled end date of the exam.';
-?>

@@ -22,45 +22,46 @@
  * @package
  */
 
-Class ToiletBreaks {
+class ToiletBreaks
+{
   
-	static function add_toilet_break($userID, $paperID, $db) {
-    $result = $db->prepare("INSERT INTO toilet_breaks VALUES (NULL, ?, ?, NOW())");
-    $result->bind_param('ii', $userID, $paperID);
-    $result->execute();
- 		$result->close();
-	}
-  
-	static function toilet_break_by_id($breakID, $db) {
-		$configObject = Config::get_instance();
-		$date_format = $configObject->get('cfg_long_date_time');
-
-    $result = $db->prepare("SELECT DATE_FORMAT(break_taken, '" . $date_format . "') FROM toilet_breaks WHERE id = ?");
-    $result->bind_param('i', $breakID);
-    $result->execute();
-    $result->bind_result($break_taken);
-    $result->fetch();
- 		$result->close();
-    
-    return $break_taken;
-	}
-  
-  
-  static function get_all_breaks_by_paper($paperID, $db) {
-    $notes = array();
-    // Query any student toilet breaks for the current paper
-    $result = $db->prepare("SELECT userID, id FROM toilet_breaks WHERE paperID = ? ORDER BY break_taken");
-    $result->bind_param('i', $paperID);
-    $result->execute();
-    $result->bind_result($userID, $breakID);
-    while ($result->fetch()) {
-      $notes[$userID][] = $breakID;
+    static function add_toilet_break($userID, $paperID, $db)
+    {
+        $result = $db->prepare('INSERT INTO toilet_breaks VALUES (NULL, ?, ?, NOW())');
+        $result->bind_param('ii', $userID, $paperID);
+        $result->execute();
+        $result->close();
     }
-    $result->close();
-    
-    return $notes;
-  }
   
- 
+    static function toilet_break_by_id($breakID, $db)
+    {
+        $configObject = Config::get_instance();
+        $date_format = $configObject->get('cfg_long_date_time');
+
+        $result = $db->prepare("SELECT DATE_FORMAT(break_taken, '" . $date_format . "') FROM toilet_breaks WHERE id = ?");
+        $result->bind_param('i', $breakID);
+        $result->execute();
+        $result->bind_result($break_taken);
+        $result->fetch();
+        $result->close();
+    
+        return $break_taken;
+    }
+  
+  
+    static function get_all_breaks_by_paper($paperID, $db)
+    {
+        $notes = array();
+      // Query any student toilet breaks for the current paper
+        $result = $db->prepare('SELECT userID, id FROM toilet_breaks WHERE paperID = ? ORDER BY break_taken');
+        $result->bind_param('i', $paperID);
+        $result->execute();
+        $result->bind_result($userID, $breakID);
+        while ($result->fetch()) {
+            $notes[$userID][] = $breakID;
+        }
+        $result->close();
+    
+        return $notes;
+    }
 }
-?>

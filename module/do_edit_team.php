@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -32,19 +33,19 @@ $moduleID = check_var('moduleID', 'POST', true, false, true);
 $module_details = module_utils::get_full_details_by_ID($moduleID, $mysqli);
 
 if (!$module_details) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
-  exit();
-}
-
-if (!$userObject->has_role(array('SysAdmin', 'Admin'))) {
-  if ($module_details['add_team_members'] == 0) {
     $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
     exit();
-  }
+}
+
+if (!$userObject->has_role(array('SysAdmin', 'Admin'))) {
+    if ($module_details['add_team_members'] == 0) {
+        $contactemail = support::get_email();
+        $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+        json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
+        exit();
+    }
 }
 
 // Clear the team of all members.
@@ -53,10 +54,10 @@ UserUtils::clear_staff_modules_by_moduleID($moduleID, $mysqli);
 // Insert a record for each team member.
 $staffno = param::optional('staff_no', 0, param::INT, param::FETCH_POST);
 for ($i = 0; $i < $staffno; $i++) {
-  $staff = param::optional("staff$i", '', param::TEXT, param::FETCH_POST);
-  if ($staff != '') {
-    UserUtils::add_staff_to_module($staff, $moduleID, $mysqli);
-  }
+    $staff = param::optional("staff$i", '', param::TEXT, param::FETCH_POST);
+    if ($staff != '') {
+        UserUtils::add_staff_to_module($staff, $moduleID, $mysqli);
+    }
 }
 
 echo json_encode('SUCCESS');

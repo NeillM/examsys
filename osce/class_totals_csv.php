@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -65,17 +66,17 @@ $user_no = $report->get_user_no();
 $q_medians = load_osce_medians($mysqli);
 
 if ($propertyObj->get_pass_mark() == 101) {
-  $borderline_method = true;
+    $borderline_method = true;
 } else {
-  $borderline_method = false;
+    $borderline_method = false;
 }
 
 if ($borderline_method) {
-  $passmark = getBlinePassmk($user_results, $user_no, $propertyObj);
+    $passmark = getBlinePassmk($user_results, $user_no, $propertyObj);
 } elseif ($propertyObj->get_pass_mark() == 102) {
-  $passmark = 'N/A';
+    $passmark = 'N/A';
 } else {
-  $passmark = $propertyObj->get_pass_mark();
+    $passmark = $propertyObj->get_pass_mark();
 }
 $distinction_mark = $propertyObj->get_distinction_mark();
 
@@ -87,55 +88,56 @@ $stats = $report->get_stats();                        // Generate the main stati
 
 $results_cache = new ResultsCache($mysqli);
 if ($results_cache->should_cache($propertyObj, $percent, $absent)) {
-  $results_cache->save_paper_cache($paperID, $stats);                 // Cache general paper stats
+    $results_cache->save_paper_cache($paperID, $stats);                 // Cache general paper stats
   
-  $results_cache->save_student_mark_cache($paperID, $user_results);   // Cache student/paper marks
+    $results_cache->save_student_mark_cache($paperID, $user_results);   // Cache student/paper marks
   
-  $results_cache->save_median_question_marks($paperID, $q_medians);    // Cache the question/paper medians
+    $results_cache->save_median_question_marks($paperID, $q_medians);    // Cache the question/paper medians
 }
 
 header('Pragma: public');
-header("Content-type: application/vnd.ms-excel");
-header("Content-Disposition: attachment; filename=\"" . \file_handler::make_filename_safe($paper) . ".csv\"");
+header('Content-type: application/vnd.ms-excel');
+header('Content-Disposition: attachment; filename="' . \file_handler::make_filename_safe($paper) . '.csv"');
 
 $completed_no = 0;
 $total_score = 0;
 
 // Output table heading
 if ($borderline_method) {
-  $table_order = array($string['title'], $string['surname'], $string['firstnames'], $string['studentid'], $string['course'], $string['total'], $string['rating'], $string['classification'], $string['starttime'], $string['examiner']);
+    $table_order = array($string['title'], $string['surname'], $string['firstnames'], $string['studentid'], $string['course'], $string['total'], $string['rating'], $string['classification'], $string['starttime'], $string['examiner']);
 } else {
-  $table_order = array($string['title'], $string['surname'], $string['firstnames'], $string['studentid'], $string['course'], $string['total'], $string['classification'], $string['starttime'], $string['examiner']);
+    $table_order = array($string['title'], $string['surname'], $string['firstnames'], $string['studentid'], $string['course'], $string['total'], $string['classification'], $string['starttime'], $string['examiner']);
 }
 
 $col_no = 0;
 foreach ($table_order as $col_string) {
-  if ($col_no > 0) echo ',';
-  echo $col_string;
-  $col_no++;
+    if ($col_no > 0) {
+        echo ',';
+    }
+    echo $col_string;
+    $col_no++;
 }
 echo "\n";
 
-for ($i=0; $i<$user_no; $i++) {
-  echo $user_results[$i]['title'] . ',"' . $user_results[$i]['surname'] . '","' . $user_results[$i]['first_names'] . '",';
-  if ($user_results[$i]['student_id'] == '') {
-    echo "Unknown,";
-  } else {
-    echo $user_results[$i]['student_id'] . ",";
-  }
-  if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.
-    echo ",,No Attendance,,\n";
-  } else {
-    echo $user_results[$i]['grade'] . "," . $user_results[$i]['numeric_score'];
-    if ($borderline_method) {
-      echo "," . $user_results[$i]['rating'];
+for ($i = 0; $i < $user_no; $i++) {
+    echo $user_results[$i]['title'] . ',"' . $user_results[$i]['surname'] . '","' . $user_results[$i]['first_names'] . '",';
+    if ($user_results[$i]['student_id'] == '') {
+        echo 'Unknown,';
+    } else {
+        echo $user_results[$i]['student_id'] . ',';
     }
-    echo "," . $user_results[$i]['classification'] . "," . $user_results[$i]['display_started'] . ",\"" . $user_results[$i]['examiner'] . "\"\n";
-  }
+    if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.
+        echo ",,No Attendance,,\n";
+    } else {
+        echo $user_results[$i]['grade'] . ',' . $user_results[$i]['numeric_score'];
+        if ($borderline_method) {
+            echo ',' . $user_results[$i]['rating'];
+        }
+        echo ',' . $user_results[$i]['classification'] . ',' . $user_results[$i]['display_started'] . ',"' . $user_results[$i]['examiner'] . "\"\n";
+    }
 }
 echo ",,,,,,,,,\n";
 
 echo "Cohort Size,$user_no,,,,,,,,\n";
 
 $mysqli->close();
-?>

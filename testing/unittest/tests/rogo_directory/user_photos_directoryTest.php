@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -25,7 +26,8 @@ use org\bovigo\vfs\vfsStreamWrapper;
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
-class user_photo_directorytest extends DirectoryUnitTest {
+class user_photo_directorytest extends DirectoryUnitTest
+{
     /** @see parent::directory_class */
     protected $directory_class = 'user_photo';
 

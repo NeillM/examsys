@@ -24,4 +24,3 @@ $string['objectivesfile'] = 'Objectives File';
 $string['session'] = 'Session';
 $string['import'] = 'Import';
 $string['cancel'] = 'Cancel';
-?>

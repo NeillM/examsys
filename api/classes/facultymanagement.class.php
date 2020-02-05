@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -25,7 +26,8 @@ namespace api;
 /**
  * Faculty class
  */
-class facultymanagement extends \api\abstractmanagement {
+class facultymanagement extends \api\abstractmanagement
+{
     
     /**
      * Language pack component.
@@ -53,7 +55,8 @@ class facultymanagement extends \api\abstractmanagement {
      * @param integer $userid rogo user id linked to web service client
      * @return - success status and faculty id
      */
-    public function create($params, $userid) {
+    public function create($params, $userid)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('faculty_not_created', 'faculty_already_exists', 'faculty_name_not_supplied'));
         
@@ -112,7 +115,8 @@ class facultymanagement extends \api\abstractmanagement {
      * @param integer $userid rogo user id linked to web service client
      * @return - success status and faculty id
      */
-    public function update($params, $userid) {
+    public function update($params, $userid)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('faculty_not_updated', 'faculty_does_not_exist'
             , 'faculty_already_exists', 'faculty_name_not_supplied', 'faculty_nothing_to_update'));
@@ -167,9 +171,10 @@ class facultymanagement extends \api\abstractmanagement {
      * Delete faculty
      * @param array $parms delete faculty parameters
      * @param integer $userid rogo user id linked to web service client
-     * @return success status and faculty id 
+     * @return success status and faculty id
      */
-    public function delete($params, $userid) {
+    public function delete($params, $userid)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('faculty_not_deleted_inuse', 'faculty_not_deleted'
             , 'faculty_does_not_exist'));

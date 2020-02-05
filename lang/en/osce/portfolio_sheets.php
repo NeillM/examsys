@@ -22,4 +22,3 @@ $string['date'] = 'Date:';
 $string['classification'] = 'Classification:';
 $string['pass'] = 'Pass';
 $string['fail'] = 'Fail';
-?>

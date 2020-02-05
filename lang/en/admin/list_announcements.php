@@ -21,4 +21,3 @@ $string['newsannouncements'] = 'News &amp; Announcements';
 $string['title'] = 'Title';
 $string['startdate'] = 'Start Date';
 $string['enddate'] = 'End Date';
-?>

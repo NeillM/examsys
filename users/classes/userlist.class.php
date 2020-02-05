@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -22,7 +23,8 @@ namespace users;
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2019 The University of Nottingham
  */
-class UserList implements \Iterator {
+class UserList implements \Iterator
+{
     /** @var User[] The users in the list. */
     protected $users = [];
 
@@ -35,7 +37,8 @@ class UserList implements \Iterator {
      * @param \users\User $user
      * @return void
      */
-    public function add(User $user) : void {
+    public function add(User $user): void
+    {
         $this->users[] = $user;
     }
 
@@ -43,7 +46,8 @@ class UserList implements \Iterator {
      * @see \Iterator::current()
      * @link http://php.net/manual/en/iterator.current.php
      */
-    public function current() {
+    public function current()
+    {
         return ($this->valid()) ? $this->users[$this->position] : null;
     }
 
@@ -52,7 +56,8 @@ class UserList implements \Iterator {
      *
      * @return User[]
      */
-    public function get_all() : Array {
+    public function get_all(): array
+    {
         return $this->users;
     }
 
@@ -60,7 +65,8 @@ class UserList implements \Iterator {
      * @see \Iterator::key()
      * @link http://php.net/manual/en/iterator.key.php
      */
-    public function key() {
+    public function key()
+    {
         return ($this->valid()) ? $this->position : null;
     }
 
@@ -69,7 +75,8 @@ class UserList implements \Iterator {
      *
      * @return int
      */
-    public function length() : int {
+    public function length(): int
+    {
         return count($this->users);
     }
 
@@ -77,7 +84,8 @@ class UserList implements \Iterator {
      * @see \Iterator::next()
      * @link http://php.net/manual/en/iterator.next.php
      */
-    public function next() : void {
+    public function next(): void
+    {
         $this->position++;
     }
 
@@ -85,7 +93,8 @@ class UserList implements \Iterator {
      * @see \Iterator::rewind()
      * @link http://php.net/manual/en/iterator.rewind.php
      */
-    public function rewind() : void {
+    public function rewind(): void
+    {
         $this->position = 0;
     }
 
@@ -93,7 +102,8 @@ class UserList implements \Iterator {
      * @see \Iterator::valid()
      * @link http://php.net/manual/en/iterator.valid.php
      */
-    public function valid() : bool {
+    public function valid(): bool
+    {
         return isset($this->users[$this->position]);
     }
 }

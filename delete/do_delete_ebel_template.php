@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -31,7 +32,7 @@ $gridID = check_var('gridID', 'POST', true, false, true);
 
 $row_no = 0;
 
-$result = $mysqli->prepare("SELECT name FROM ebel_grid_templates WHERE id = ?");
+$result = $mysqli->prepare('SELECT name FROM ebel_grid_templates WHERE id = ?');
 $result->bind_param('i', $gridID);
 $result->execute();
 $result->store_result();
@@ -41,14 +42,14 @@ $row_no = $result->num_rows;
 $result->close();
 
 if ($row_no == 0) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$result = $mysqli->prepare("DELETE FROM ebel_grid_templates WHERE id = ?");
+$result = $mysqli->prepare('DELETE FROM ebel_grid_templates WHERE id = ?');
 $result->bind_param('i', $gridID);
-$result->execute();  
+$result->execute();
 $result->close();
 
 $render = new render($configObject);

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -39,5 +40,3 @@ $anonymiseObj->process_names();
 $anonymiseObj->process_sids();
 
 echo 'Done';
-
-?>

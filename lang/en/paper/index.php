@@ -51,4 +51,3 @@ $string['nodurationwarning'] = 'Exam duration not set';
 $string['startwarning'] = 'Paper starts before %d:00';
 $string['nolabswarning'] = 'No labs set';
 $string['finished'] = 'Finished';
-?>

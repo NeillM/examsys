@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -31,15 +32,16 @@ require_once '../include/errors.php';
 
 $folder = check_var('folder', 'GET', true, false, true);
 
-function getLastFolder($path) {
-  $parts = explode(';' , $path);
-  $part_no = count($parts);
+function getLastFolder($path)
+{
+    $parts = explode(';', $path);
+    $part_no = count($parts);
 
-  if ($part_no > 0) {
-    return $parts[$part_no-1];
-  } else {
-    return $parts[0];
-  }
+    if ($part_no > 0) {
+        return $parts[$part_no - 1];
+    } else {
+        return $parts[0];
+    }
 }
 
 $stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
@@ -53,15 +55,15 @@ $file_no = 0;
 $orig_folder_name = folder_utils::get_folder_name($folder, $mysqli);
 
 if ($orig_folder_name == '') {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 if (!folder_utils::has_permission($folder, $userObject, $mysqli)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 $parent_list = folder_utils::get_parent_list($orig_folder_name, $userObject, $mysqli);
@@ -69,14 +71,14 @@ $parent_list = folder_utils::get_parent_list($orig_folder_name, $userObject, $my
 $module = '';
 
 if (isset($_POST['submit'])) {
-  $folder_parent = folder_utils::get_folder_name($folder, $mysqli);
+    $folder_parent = folder_utils::get_folder_name($folder, $mysqli);
   
-  $new_folder_name = $folder_parent . ';' . $_POST['folder_name'];
+    $new_folder_name = $folder_parent . ';' . $_POST['folder_name'];
 
-  $duplicate_folder = folder_utils::folder_exists($new_folder_name, $userObject, $mysqli);
-  if ($duplicate_folder == false) {
-    folder_utils::create_folder($new_folder_name, $userObject, $mysqli);
-  }
+    $duplicate_folder = folder_utils::folder_exists($new_folder_name, $userObject, $mysqli);
+    if ($duplicate_folder == false) {
+        folder_utils::create_folder($new_folder_name, $userObject, $mysqli);
+    }
 }
 
 $folders_array = explode(';', $orig_folder_name);
@@ -94,13 +96,13 @@ $parts = count($folders_array) - 1;
   <link rel="stylesheet" type="text/css" href="../css/submenu.css" />
   <style type="text/css">
   <?php
-  if (isset($state['showretired']) and $state['showretired'] == 'true') {
-    echo ".retired {display:block}\n";
-  } else {
-    echo ".retired {display:none}\n";
-  }
-  ?>
-	</style>
+    if (isset($state['showretired']) and $state['showretired'] == 'true') {
+        echo ".retired {display:block}\n";
+    } else {
+        echo ".retired {display:none}\n";
+    }
+    ?>
+    </style>
 
   <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
@@ -114,31 +116,33 @@ $parts = count($folders_array) - 1;
   require '../include/folder_options.inc';
   require '../include/toprightmenu.inc';
 
-	echo draw_toprightmenu();
+    echo draw_toprightmenu();
 ?>
 <div id="content">
 <form name="myform" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING']; ?>" method="post" autocomplete="off">
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
 <?php
-  echo "<div style=\"position:absolute; right: 6px; top: 24px\"><input class=\"chk\" type=\"checkbox\" name=\"showretired\" id=\"showretired\" value=\"on\"\"";
-  if (isset($state['showretired']) and $state['showretired'] == 'true') echo ' checked="checked"';
-  echo " /> " . $string['showretired'] . "</div>\n";
+  echo '<div style="position:absolute; right: 6px; top: 24px"><input class="chk" type="checkbox" name="showretired" id="showretired" value="on""';
+if (isset($state['showretired']) and $state['showretired'] == 'true') {
+    echo ' checked="checked"';
+}
+  echo ' /> ' . $string['showretired'] . "</div>\n";
 ?>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a>
 <?php
 if (count($parent_list) > 0) {
-  foreach ($parent_list as $parent_id=>$parent_name) {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="index.php?folder=' . $parent_id . '">' . getLastFolder($parent_name) . '</a>';
-  }
+    foreach ($parent_list as $parent_id => $parent_name) {
+        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="index.php?folder=' . $parent_id . '">' . getLastFolder($parent_name) . '</a>';
+    }
 }
 echo "</div>\n";
 
 echo '<div class="page_title">';
 if ($folder != '') {
-  echo $folders_array[$parts];
+    echo $folders_array[$parts];
 } elseif ($_GET['module'] != '') {
-  echo $module_details['moduleid'] . ': <span style="font-weight:normal">' . $module_details['fullname'] . '</span>';
+    echo $module_details['moduleid'] . ': <span style="font-weight:normal">' . $module_details['fullname'] . '</span>';
 }
 echo '</div>';
 
@@ -148,7 +152,7 @@ echo "</div>\n<br />\n";
 // Get any sub-folders first.
 $module_sql = '';
 if (count($staff_modules) > 0) {
-  $module_sql = " OR idMod IN ('" . implode("','",array_keys($staff_modules)) . "')";
+    $module_sql = " OR idMod IN ('" . implode("','", array_keys($staff_modules)) . "')";
 }
 
 $tmp_folder_name = $orig_folder_name . ';%';
@@ -169,16 +173,16 @@ $folder_details->bind_param('is', $userObject->get_user_ID(), $tmp_folder_name);
 $folder_details->execute();
 $folder_details->bind_result($id, $name, $color);
 while ($folder_details->fetch()) {
-  $display_name = str_replace("$orig_folder_name;","",$name);
-  if (substr_count($display_name,';') == 0) {
-    echo "<div class=\"f\" ><div class=\"f_icon\"><a href=\"../folder/index.php?folder=$id\"><img class=\"f_icon\" src=\"../artwork/" . $color . "_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../folder/index.php?folder=$id\" class=\"blacklink\">$display_name</a></div></div>\n";
-  }
+    $display_name = str_replace("$orig_folder_name;", '', $name);
+    if (substr_count($display_name, ';') == 0) {
+        echo "<div class=\"f\" ><div class=\"f_icon\"><a href=\"../folder/index.php?folder=$id\"><img class=\"f_icon\" src=\"../artwork/" . $color . "_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../folder/index.php?folder=$id\" class=\"blacklink\">$display_name</a></div></div>\n";
+    }
 }
 $folder_details->close();
 
 // New folder.
 if (isset($_GET['newfolder']) and $_GET['newfolder'] == 'y' and !isset($_POST['submit'])) {
-  echo "<div class=\"f\"><div class=\"f_icon\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></div><div class=\"f_details\"><input type=\"text\" size=\"30\" name=\"folder_name\" value=\"\" placeholder=\"" . $string['foldername'] . "\" required onkeypress=\"if (event.keyCode == 59) illegalChar(event.keyCode);\" /><br /><input type=\"submit\" name=\"submit\" class=\"ok\" style=\"width:90px; margin:1px; padding:3px\" value=\"" . $string['create'] . "\" /></div></div>\n";
+    echo '<div class="f"><div class="f_icon"><img src="../artwork/yellow_folder.png" alt="Folder" /></div><div class="f_details"><input type="text" size="30" name="folder_name" value="" placeholder="' . $string['foldername'] . '" required onkeypress="if (event.keyCode == 59) illegalChar(event.keyCode);" /><br /><input type="submit" name="submit" class="ok" style="width:90px; margin:1px; padding:3px" value="' . $string['create'] . "\" /></div></div>\n";
 }
 
 // Get current owner papers.
@@ -197,11 +201,11 @@ $results->bind_result($paper_ownerID, $property_id, $paper_type, $screens, $pape
 $results->store_result();
 $sent_clear_all = false;
 if ($results->num_rows > 0) {
-  while ($results->fetch()) {
-    display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObject);
-    $file_no++;
-  }
-  $results->close();
+    while ($results->fetch()) {
+        display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObject);
+        $file_no++;
+    }
+    $results->close();
 }
 
 $mysqli->close();

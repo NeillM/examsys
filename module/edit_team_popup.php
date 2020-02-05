@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -30,17 +31,17 @@ $moduleID = check_var('module', 'GET', true, false, true);
 $module_details = module_utils::get_full_details_by_ID($moduleID, $mysqli);
 
 if (!$module_details) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 if (!$userObject->has_role(array('SysAdmin', 'Admin'))) {
-  if ($module_details['add_team_members'] == 0) {
-    $contactemail = support::get_email();
-    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);  
-  }
+    if ($module_details['add_team_members'] == 0) {
+        $contactemail = support::get_email();
+        $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+        $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    }
 }
 
 ?>
@@ -69,7 +70,7 @@ if (!$userObject->has_role(array('SysAdmin', 'Admin'))) {
 <?php
   $team_members = UserUtils::get_staff_modules_list_by_modID($_GET['module'], $mysqli);
 
-  echo "<div class=\"content\" id=\"list\">";
+  echo '<div class="content" id="list">';
   $staff_no = 0;
   $old_letter = '';
 
@@ -80,31 +81,33 @@ if (!$userObject->has_role(array('SysAdmin', 'Admin'))) {
   $result->execute();
   $result->store_result();
   $result->bind_result($tmp_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title);
-  while ($result->fetch()) {
+while ($result->fetch()) {
     if ($old_letter != strtoupper(substr($tmp_surname, 0, 1))) {
-      echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . strtoupper(substr($tmp_surname, 0, 1)) . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>";
+        echo '<div class="subsect_table"><div class="subsect_title"><nobr>' . strtoupper(substr($tmp_surname, 0, 1)) . '</nobr></div><div class="subsect_hr"><hr noshade="noshade" /></div></div>';
     }
   
     $match = false;
     foreach ($team_members as $member) {
-      if ($member == $tmp_id) $match = true;
+        if ($member == $tmp_id) {
+            $match = true;
+        }
     }
    
     if ($match == true) {
-      echo "<div class=\"r2\" id=\"divstaff$staff_no\"><input type=\"checkbox\" name=\"staff$staff_no\" id=\"staff$staff_no\" value=\"" . $tmp_id . "\" checked=\"checked\" />";
+        echo "<div class=\"r2\" id=\"divstaff$staff_no\"><input type=\"checkbox\" name=\"staff$staff_no\" id=\"staff$staff_no\" value=\"" . $tmp_id . '" checked="checked" />';
     } else {
-      echo "<div class=\"r1\" id=\"divstaff$staff_no\"><input type=\"checkbox\" name=\"staff$staff_no\" id=\"staff$staff_no\" value=\"" . $tmp_id . "\" />";
+        echo "<div class=\"r1\" id=\"divstaff$staff_no\"><input type=\"checkbox\" name=\"staff$staff_no\" id=\"staff$staff_no\" value=\"" . $tmp_id . '" />';
     }
     echo "<label for=\"staff$staff_no\">";
     if ($tmp_first_names != '') {
-      $display_text = $tmp_first_names;
+        $display_text = $tmp_first_names;
     } else {
-      $display_text = $tmp_initials;
+        $display_text = $tmp_initials;
     }
     echo $tmp_surname . '<span class="g">, ' . $display_text . '. ' . $tmp_title . "</span></label></div>\n";
     $old_letter = strtoupper(substr($tmp_surname, 0, 1));
     $staff_no++;
-  }
+}
   $result->close();
   echo "<input type=\"hidden\" name=\"staff_no\" value=\"$staff_no\" /></div></td>\n</tr>\n";
   echo "<input type=\"hidden\" id=\"moduleID\" name=\"moduleID\" value=\"$moduleID\" /></div></td>\n</tr>\n";

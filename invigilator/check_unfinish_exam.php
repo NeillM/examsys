@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Confirm that it is OK to set a student's exam to 'unfinished'.
 *
 * @author Simon Wilkinson
@@ -26,10 +27,8 @@
 
 require '../include/invigilator_auth.inc';
 require '../include/errors.php';
-  
 $userID = check_var('userID', 'GET', true, false, true);
 $paperID = check_var('paperID', 'GET', true, false, true);
-
 $user_details = UserUtils::get_user_details($userID, $mysqli);
 $name = $user_details['title'] . ' ' . $user_details['first_name'] . ' ' . $user_details['surname'];
 ?>

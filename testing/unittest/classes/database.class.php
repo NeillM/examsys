@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -17,6 +18,7 @@
 namespace testing\unittest;
 
 use InstallUtils,
+
     Config,
     cli_utils,
     mysqli;
@@ -31,13 +33,15 @@ use InstallUtils,
  * @package testing
  * @category unittest
  */
-class database {
+class database
+{
     /**
      * Creates a Rogo database for phpunit testing.
      *
      * @throws Exception
      */
-    public static function install_database() {
+    public static function install_database()
+    {
         $config = Config::get_instance();
         $config->use_phpunit_site();
         InstallUtils::$cli = true;
@@ -100,7 +104,8 @@ class database {
      *
      * @return boolean
      */
-    public static function get_db_details() {
+    public static function get_db_details()
+    {
         $config = Config::get_instance();
         cli_utils::prompt('Database setup');
         InstallUtils::$db_admin_username = $config->get('cfg_phpunit_db_user');
@@ -112,7 +117,8 @@ class database {
     /**
      * Drop the phpunit database and users.
      */
-    public static function drop_db() {
+    public static function drop_db()
+    {
         $config = Config::get_instance();
         $config->use_phpunit_site();
         $basedb = $config->get('base_database');
@@ -143,7 +149,8 @@ class database {
      * @param string $password
      * @return boolean
      */
-    public static function connect_database($username, $password) {
+    public static function connect_database($username, $password)
+    {
         $config = Config::get_instance();
         $config->use_phpunit_site();
         InstallUtils::$db = new mysqli($config->get('cfg_db_host'), $username, $password, '', $config->get('cfg_db_port'));

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -87,36 +88,37 @@ if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObjec
   // No further security checks.
 } else {    // Treat as student with extra security checks.
   // Check for additional password on the paper
-  check_paper_password($propertyObj->get_property_id(), $password, $string, $mysqli);
+    check_paper_password($propertyObj->get_property_id(), $password, $string, $mysqli);
 
   // Check time security
-  check_datetime($start_date, $end_date, $string, $mysqli);
+    check_datetime($start_date, $end_date, $string, $mysqli);
 
   // Check room security
-  $low_bandwidth = check_labs(  $propertyObj->get_paper_type(),
-                                $propertyObj->get_labs(),
-                                $current_address,
-                                $propertyObj->get_password(),
-                                $string,
-                                $mysqli
-                              );
+    $low_bandwidth = check_labs(
+        $propertyObj->get_paper_type(),
+        $propertyObj->get_labs(),
+        $current_address,
+        $propertyObj->get_password(),
+        $string,
+        $mysqli
+    );
 
   // Get modules if the user is a student and the paper is not formative
-  $attempt = check_modules($userObject, $modIDs, $calendar_year, $string, $mysqli);
+    $attempt = check_modules($userObject, $modIDs, $calendar_year, $string, $mysqli);
 
   // Check for any metadata security restrictions
-  check_metadata($property_id, $userObject, $modIDs, $string, $mysqli);
+    check_metadata($property_id, $userObject, $modIDs, $string, $mysqli);
 }
 
 // Get lab info used in log metadata
 $lab_factory = new LabFactory($mysqli);
-if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)){
-  $lab_name = $lab_object->get_name();
-  $lab_id = $lab_object->get_id();
+if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)) {
+    $lab_name = $lab_object->get_name();
+    $lab_id = $lab_object->get_id();
 }
 
 if (time() > $end_date and ($paper_type == '1' or $paper_type == '2')) {
-  $paper_type = '_late';
+    $paper_type = '_late';
 }
 
 // Lookup previous sessionid from log_metadata.started property_id
@@ -131,9 +133,9 @@ $metadataID = $log_metadata->get_metadata_id();
 *                                with dont_record set to true so this is not executed
 */
 if ($is_question_preview_mode == false) {
-  if ($old_screen != '' and !$do_not_record) {
-    record_marks($propertyObj->get_property_id(), $mysqli, $propertyObj->get_paper_type(), $metadataID);
-  }
+    if ($old_screen != '' and !$do_not_record) {
+        record_marks($propertyObj->get_property_id(), $mysqli, $propertyObj->get_paper_type(), $metadataID);
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -157,13 +159,13 @@ if ($is_question_preview_mode == false) {
   <p class="norun"><?php echo $string['donotrun'] ?></p>
   <p><strong><?php echo $string['bottom_msg'] ?> </strong><input type="submit" name="next" value="<?php echo $string['continue'] ?>" class="ok" /></p>
 <?php
-  echo "<input type=\"hidden\" name=\"current_screen\" value=\"" . ($post_screen - 1) . "\" />\n";
-  $currentdatetime = date("YmdHis", time());
+  echo '<input type="hidden" name="current_screen" value="' . ($post_screen - 1) . "\" />\n";
+  $currentdatetime = date('YmdHis', time());
   $postsessionid = param::optional('sessionid', $currentdatetime, param::ALPHANUM, param::FETCH_POST);
-  echo "<input type=\"hidden\" name=\"sessionid\" value=\"" . $postsessionid . "\" />\n";
-  echo "<input type=\"hidden\" name=\"page_start\" value=\"" . $currentdatetime . "\" />\n";
-  echo "<input type=\"hidden\" name=\"old_screen\" value=\"" . ($post_screen - 1) . "\" />\n";
-  echo "<input type=\"hidden\" name=\"previous_duration\" value=\"" . $previous_duration . "\" />\n";
+  echo '<input type="hidden" name="sessionid" value="' . $postsessionid . "\" />\n";
+  echo '<input type="hidden" name="page_start" value="' . $currentdatetime . "\" />\n";
+  echo '<input type="hidden" name="old_screen" value="' . ($post_screen - 1) . "\" />\n";
+  echo '<input type="hidden" name="previous_duration" value="' . $previous_duration . "\" />\n";
   echo "<input type=\"hidden\" name=\"button_pressed\" value=\"\" />\n";
   echo "<input type=\"hidden\" name=\"fire_alarm\" value=\"1\" />\n";
 

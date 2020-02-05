@@ -22,4 +22,3 @@ $string['type'] = 'Type';
 $string['modified'] = 'Modified';
 $string['locked'] = 'Locked';
 $string['warningnoleadin'] = 'WARNING: no question lead-in!';
-?>

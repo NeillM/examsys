@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -54,11 +55,11 @@ $maxscreen = param::required('max_screen', param::INT, param::FETCH_GET);
             <?php
               $user_modules = $userObject->get_staff_modules();
 
-              if (count($user_modules) > 0) {
+            if (count($user_modules) > 0) {
                 echo '<tr><td id="button_team" class="tab">' . $string['byteam'] . '</td></tr>';
-              } else {
+            } else {
                 echo '<tr><td id="button_team" class="tab grey">' . $string['byteam'] . '</td></tr>';
-              }
+            }
             ?>
             <tr><td id="button_search" class="tab"><?php echo $string['search'] ?></td></tr>
             </table>
@@ -79,15 +80,15 @@ $maxscreen = param::required('max_screen', param::INT, param::FETCH_GET);
             <div align="right"><label for="screen"><?php echo $string['screen'] ?></label>
                   <select name="screen">
                   <?php
-                  for ($i = 1; $i <= $maxscreen + 1; $i++) {
-                    if ($i == $maxscreen) {
-                        $selected = 'selected="selected"';
-                    } else {
-                        $selected = '';
+                    for ($i = 1; $i <= $maxscreen + 1; $i++) {
+                        if ($i == $maxscreen) {
+                            $selected = 'selected="selected"';
+                        } else {
+                            $selected = '';
+                        }
+                        echo "<option value=\"$i\" $selected>$i</option>\n";
                     }
-                    echo "<option value=\"$i\" $selected>$i</option>\n";
-                  }
-                  ?>
+                    ?>
                   </select>
                   <input type="hidden" name="questions_to_add" id="questions_to_add" value="" />
                   <input type="submit" name="submit" value="<?php echo $string['addquestions'] ?>" />
@@ -101,8 +102,8 @@ $maxscreen = param::required('max_screen', param::INT, param::FETCH_GET);
 $render = new render($configObject);
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['paperid'] = param::required('paperID', param::INT, param::FETCH_GET);
-$miscdataset['attributes']['module'] = param::optional('module', '',param::INT, param::FETCH_GET);
-$miscdataset['attributes']['folder'] = param::optional('folder', '',param::INT, param::FETCH_GET);
+$miscdataset['attributes']['module'] = param::optional('module', '', param::INT, param::FETCH_GET);
+$miscdataset['attributes']['folder'] = param::optional('folder', '', param::INT, param::FETCH_GET);
 $miscdataset['attributes']['disp'] = param::required('display_pos', param::INT, param::FETCH_GET);
 $miscdataset['attributes']['srcofy'] = param::required('scrOfY', param::FLOAT, param::FETCH_GET);
 $miscdataset['attributes']['max'] = $maxscreen;

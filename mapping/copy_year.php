@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -29,20 +30,20 @@ require_once '../include/mapping.inc';
 $errors = array();
 
 if (empty($_POST['source_y']) or empty($_POST['dest_y']) or empty($_POST['moduleID'])) {
-  $errors[] = "Undefined source or destination year";
+    $errors[] = 'Undefined source or destination year';
 } elseif ($_POST['source_y'] == $_POST['dest_y']) {
-  $errors[] = "Source and destination years cannot be the same";
+    $errors[] = 'Source and destination years cannot be the same';
 } else {
   // Get the sessions for the source year
 
-  $module_code = module_utils::get_moduleid_from_id($_POST['moduleID'], $mysqli);
-  $modules_array = array($_POST['moduleID'] => $module_code);
-  $objectives = getObjectives($modules_array, $_POST['source_y'], '', '', $mysqli);
-  try {
-    copyObjectives($objectives, $_POST['moduleID'], $module_code, $_POST['dest_y'], $mysqli);
-  } catch(Exception $ex) {
-    $errors[] = "An error occured when copying the objectives. Please try again.";
-  }
+    $module_code = module_utils::get_moduleid_from_id($_POST['moduleID'], $mysqli);
+    $modules_array = array($_POST['moduleID'] => $module_code);
+    $objectives = getObjectives($modules_array, $_POST['source_y'], '', '', $mysqli);
+    try {
+        copyObjectives($objectives, $_POST['moduleID'], $module_code, $_POST['dest_y'], $mysqli);
+    } catch (Exception $ex) {
+        $errors[] = 'An error occured when copying the objectives. Please try again.';
+    }
 }
 
 ?>
@@ -58,9 +59,9 @@ if (empty($_POST['source_y']) or empty($_POST['dest_y']) or empty($_POST['module
 </head>
 <?php
 if (count($errors) == 0) {
-  echo "<body onload=\"window.location='" . $configObject->get('cfg_root_path') . "/mapping/sessions_list.php?module=" . $_POST['moduleID'] . "';\"></body></html>";
+    echo "<body onload=\"window.location='" . $configObject->get('cfg_root_path') . '/mapping/sessions_list.php?module=' . $_POST['moduleID'] . "';\"></body></html>";
 } else {
-?>
+    ?>
   <body onclick="hideMenus()">
   <div id="content">
     <table border="0" width="100%" height="100%">
@@ -75,13 +76,13 @@ if (count($errors) == 0) {
     <td style="background-color:#FFC0C0">
     <p><?php echo $string['problem']; ?></p>
     <ul>
-<?php
-    foreach($errors as $error) {
-?>
+    <?php
+    foreach ($errors as $error) {
+        ?>
         <li style="font-size:90%"><?php echo $error; ?></li>
-<?php
+        <?php
     }
-?>
+    ?>
     </ul>
     <div align="center"><input style="width:120px" type="button" value="&lt; Back" name="back" onclick="window.history.go(-1);"></div>
     </td>
@@ -93,5 +94,5 @@ if (count($errors) == 0) {
     </table>
     </body>
     </html>
-<?php
+    <?php
 }

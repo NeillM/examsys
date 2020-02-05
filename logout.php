@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,17 +25,15 @@
 
 require_once __DIR__ . '/include/load_config.php';
 $configObject = Config::get_instance();
-
 if ($configObject->get('cfg_session_name') != '') {
-  session_name($configObject->get('cfg_session_name'));
+    session_name($configObject->get('cfg_session_name'));
 } else {
-  session_name('RogoAuthentication');
+    session_name('RogoAuthentication');
 }
 $return = session_start();
-
 session_unset();
 if (session_status() == PHP_SESSION_ACTIVE) {
-  session_destroy();
+    session_destroy();
 }
 session_write_close();
 setcookie(session_name(), '', 0, '/');

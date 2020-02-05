@@ -20,4 +20,3 @@ $string['correct'] = 'Correct';
 $string['wordphrase'] = 'Word/Phrase';
 $string['occurrence'] = 'Occurrence';
 $string['uniqueanswers'] = 'Unique Answers';
-?>

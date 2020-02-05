@@ -26,7 +26,8 @@ use testing\unittest\unittestdatabase;
  * @package tests
  * @group page
  */
-class pageTest extends unittestdatabase {
+class pageTest extends unittestdatabase
+{
 
     /**
      * @var string Storage for system install type
@@ -37,7 +38,8 @@ class pageTest extends unittestdatabase {
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $datagenerator = $this->get_datagenerator('config', 'core');
         $this->type = 'unittest';
         $datagenerator->change_setting(array('component' => 'core', 'setting' => 'system_install_type', 'value' => $this->type));
@@ -47,7 +49,8 @@ class pageTest extends unittestdatabase {
      * Test title generation
      * @group page
      */
-    public function test_title() {
+    public function test_title()
+    {
         $this->set_active_user($this->admin['id']);
         $this->assertEquals('title ' . $this->type, \page::title('title'));
     }
@@ -56,7 +59,8 @@ class pageTest extends unittestdatabase {
      * Test title generation in demo mode
      * @group page
      */
-    public function test_title_demo() {
+    public function test_title_demo()
+    {
         $this->set_active_user($this->admin['id'], self::USEROBJECT_DEMO);
         $langpack = new \langpack();
         $demomode = $langpack->get_string('classes/page', 'demomode');
@@ -67,7 +71,8 @@ class pageTest extends unittestdatabase {
      * Test title generation in impersonation mode
      * @group page
      */
-    public function test_title_impersonate() {
+    public function test_title_impersonate()
+    {
         $this->set_active_user($this->admin['id'], self::USEROBJECT_IMPERSONATE, $this->student['id']);
         $langpack = new \langpack();
         $as = $langpack->get_string('classes/page', 'as');

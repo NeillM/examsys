@@ -17,4 +17,3 @@
 $string['student'] = 'Student:';
 $string['group'] = 'Group:';
 $string['close'] = 'Close';
-?>

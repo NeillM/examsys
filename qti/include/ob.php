@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -21,35 +22,42 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
+
 ob_start();
 
-class OB {
-  var $content;
+class OB
+{
+    var $content;
 
-  function ClearAndSave() {
-    $this->content = ob_get_contents();
-    ob_clean();
-  }
+    function ClearAndSave()
+    {
+        $this->content = ob_get_contents();
+        ob_clean();
+    }
 
-  function Clear() {
-    $this->content = '';
-    ob_clean();
-  }
+    function Clear()
+    {
+        $this->content = '';
+        ob_clean();
+    }
 
-  function GetContent() {
-    return ob_get_contents();
-  }
+    function GetContent()
+    {
+        return ob_get_contents();
+    }
 
-  function Restore() {
-    ob_clean();
-    echo $this->content;
-  }
+    function Restore()
+    {
+        ob_clean();
+        echo $this->content;
+    }
 
-  function DoInclude($filename) {
-    $this->ClearAndSave();
-    include $filename;
-    $res = $this->GetContent();
-    $this->Restore();
-    return $res;
-  }
+    function DoInclude($filename)
+    {
+        $this->ClearAndSave();
+        include $filename;
+        $res = $this->GetContent();
+        $this->Restore();
+        return $res;
+    }
 }

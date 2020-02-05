@@ -19,4 +19,3 @@ require '../lang/' . $language . '/include/paper_types.php';
 $string['papersbyschool'] = 'Papers by School';
 $string['statistics'] = 'Statistics';
 $string['school'] = 'School';
-?>

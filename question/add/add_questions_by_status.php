@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -23,7 +24,6 @@
 */
 
 require '../../include/staff_auth.inc';
-
 // Get question statuses
 $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 ?>
@@ -42,7 +42,7 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
     a:hover {color:black}
     .divider {font-size:90%; padding-left:16px; padding-bottom:2px; font-weight:bold}
     .f {float:left; width:375px; padding-left:12px; font-size:90%}
-		img {padding:5px}
+      img {padding:5px}
   </style>
 </head>
 
@@ -50,9 +50,9 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 <br />
 <?php
 foreach ($status_array as $sid => $status) {
-?>
+    ?>
 <div class="f"><a href="add_questions_list.php?type=status&status=<?php echo $sid ?>"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a>&nbsp;<a href="add_questions_list.php?type=status&status=<?php echo $sid ?>"><?php echo $status->get_name(); ?></a></div>
-<?php
+    <?php
 }
 ?>
 </body>

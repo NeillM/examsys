@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -25,17 +26,17 @@ require_once '../include/errors.php';
 
 $year = check_var('year', 'GET', true, false, true);
 
-$result = $mysqli->prepare("SELECT academic_year, cal_status, stat_status FROM academic_year WHERE calendar_year = ?");
+$result = $mysqli->prepare('SELECT academic_year, cal_status, stat_status FROM academic_year WHERE calendar_year = ?');
 $result->bind_param('i', $year);
 $result->execute();
 $result->store_result();
 $result->bind_result($curr_academic_year, $curr_cal_status, $curr_stat_status);
 $result->fetch();
 if ($result->num_rows == 0) {
-  $result->close();
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $result->close();
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 $result->close();
 
@@ -77,8 +78,12 @@ $result->close();
                 <form id="theform" name="edit_session" method="post" action="" autocomplete="off">
                     <table cellpadding="0" cellspacing="2" border="0">
                         <tr><td class="field"><?php echo $string['academicyear'] ?></td><td><input type="text" size="30" maxlength="30" id="academic_year" name="academic_year" value="<?php echo $curr_academic_year ?>" required /></td></tr>
-                        <tr><td class="field"><?php echo $string['calstatus'] ?></td><td><input type="checkbox" id="cal_status" name="cal_status" value="" <?php if($curr_cal_status) echo " checked" ?> /></td></tr>
-                        <tr><td class="field"><?php echo $string['statstatus'] ?></td><td><input type="checkbox" id="stat_status" name="stat_status" value="" <?php if($curr_stat_status) echo " checked" ?>  /></td></tr>
+                        <tr><td class="field"><?php echo $string['calstatus'] ?></td><td><input type="checkbox" id="cal_status" name="cal_status" value="" <?php if ($curr_cal_status) {
+                            echo ' checked';
+                                              } ?> /></td></tr>
+                        <tr><td class="field"><?php echo $string['statstatus'] ?></td><td><input type="checkbox" id="stat_status" name="stat_status" value="" <?php if ($curr_stat_status) {
+                            echo ' checked';
+                                              } ?>  /></td></tr>
                     </table>
                   <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"><input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" /></p>
                 </form>
@@ -91,7 +96,7 @@ $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render->render($jsdataset, array(), 'dataset.html');
 $miscdataset['name'] = 'dataset';
-$miscdataset['attributes']['posturl'] = "do_edit_academic_session.php?year=" . $year;
+$miscdataset['attributes']['posturl'] = 'do_edit_academic_session.php?year=' . $year;
 $render->render($miscdataset, array(), 'dataset.html');
 ?>
     </body>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -32,19 +33,19 @@ $userID = check_var('id', 'POST', true, false, true);
 // Check that all the past user IDs actually exist.
 $id_list = explode(',', $userID);
 foreach ($id_list as $id) {
-  if ($id != '') {
-    if (!UserUtils::userid_exists($id, $mysqli)) {
-      $contactemail = support::get_email();
-      $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-      $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    if ($id != '') {
+        if (!UserUtils::userid_exists($id, $mysqli)) {
+            $contactemail = support::get_email();
+            $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+            $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+        }
     }
-  }
 }
 
 foreach ($id_list as $single_id) {
-  if ($single_id != '') {
-		UserUtils::delete_userID($single_id, $mysqli);
-  }
+    if ($single_id != '') {
+        UserUtils::delete_userID($single_id, $mysqli);
+    }
 }
 
 

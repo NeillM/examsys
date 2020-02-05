@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -28,7 +29,8 @@ use rogo_directory;
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
-abstract class DirectoryUnitTest extends UnitTest {
+abstract class DirectoryUnitTest extends UnitTest
+{
     /** @var string The name of the rogo_directory sub-class to be tested. */
     protected $directory_class;
 
@@ -40,7 +42,8 @@ abstract class DirectoryUnitTest extends UnitTest {
      *
      * @group rogo_directory
      */
-    public function test_get_directory() {
+    public function test_get_directory()
+    {
         $directory = rogo_directory::get_directory($this->directory_class);
         $this->assertInstanceOf('rogo_directory', $directory);
         $this->assertInstanceOf($this->directory_class, $directory);
@@ -51,7 +54,8 @@ abstract class DirectoryUnitTest extends UnitTest {
      *
      * @group rogo_directory
      */
-    public function test_get_directory_double_load() {
+    public function test_get_directory_double_load()
+    {
         $directory1 = rogo_directory::get_directory($this->directory_class);
         $directory2 = rogo_directory::get_directory($this->directory_class);
         $this->assertSame($directory2, $directory1);
@@ -62,7 +66,8 @@ abstract class DirectoryUnitTest extends UnitTest {
      *
      * @group rogo_directory
      */
-    public function test_create() {
+    public function test_create()
+    {
         $this->assertFalse(vfsStreamWrapper::getRoot()->hasChildren());
         $directory = rogo_directory::get_directory($this->directory_class);
         $this->assertFalse(vfsStreamWrapper::getRoot()->hasChild($this->directory_name));
@@ -75,7 +80,8 @@ abstract class DirectoryUnitTest extends UnitTest {
      *
      * @group rogo_directory
      */
-    public function test_cachetime() {
+    public function test_cachetime()
+    {
         $directory = rogo_directory::get_directory($this->directory_class);
         $this->assertGreaterThanOrEqual(0, $directory->cachetime());
     }

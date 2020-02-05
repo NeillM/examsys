@@ -23,74 +23,77 @@
 /**
  * Log helper class.
  */
-abstract class log {
+abstract class log
+{
 
   /**
    *  DB connection
    * @var mysqli
    */
-  protected $db;
+    protected $db;
 
   /**
    * Unique identifier of paper/user entry in log
-   * @var integer 
+   * @var integer
    */
-  protected $metadataid;
+    protected $metadataid;
 
   /**
    * Does this paper type allow multiple attempts
-   * @var boolean 
+   * @var boolean
    */
-  protected $dorestart;
+    protected $dorestart;
 
   /**
    * What screen is the user on
-   * @var integer 
+   * @var integer
    */
-  protected $currentscreen;
+    protected $currentscreen;
 
   /**
    * Paper type
    * @var string
    */
-  protected $papertype;
+    protected $papertype;
 
   /**
    * Screen duration
    * @var integer
    */
-  protected $previousduration;
+    protected $previousduration;
 
   /**
    * Screen previously submitted
    * @var boolean
    */
-  protected $screenpresubmitted;
+    protected $screenpresubmitted;
 
   /**
    * Flag to indicate if paper type uses log late table
    * @var boolean
    */
-  protected $late;
+    protected $late;
 
   /**
    * Called when the object is unserialised.
    */
-  public function __wakeup() {
-    // The serialised database object will be invalid,
-    // this object should only be serialised during an error report,
-    // so adding the current database connect seems like a waste of time.
-    $this->db = null;
-  }
+    public function __wakeup()
+    {
+      // The serialised database object will be invalid,
+      // this object should only be serialised during an error report,
+      // so adding the current database connect seems like a waste of time.
+        $this->db = null;
+    }
 
   /**
    * Constructor
    */
-  public function __construct() {
-    $configObj = Config::get_instance();
-    $this->db = $configObj->db;
-    $this->late = false;
-  }
+    public function __construct()
+    {
+        $configObj = Config::get_instance();
+        $this->db = $configObj->db;
+        $this->late = false;
+    }
 
   /**
    * Get previous answers for a paper/user in log - used to load exam script
@@ -100,75 +103,78 @@ abstract class log {
    * @param boolean so we need to check the log late table
    * @return array
    */
-  public function get_previous_answers($metadataID, $do_restart, $current_screen, $check_log_late = false) {
-    $this->previousduration = 0;
-    $this->screenpresubmitted = 0;
-    $this->dorestart = $do_restart;
-    $this->currentscreen = $current_screen;
-    $this->metadataid = $metadataID;
-    if ($check_log_late and $this->late) {
-      // If we are after the deadline check for answers in original_paper_type_log - these will be over written below by new answers in log_late below.
-      return $this->get_log_late();
-    } else {
-      // Get user answers from whichever log is pointed to by log$paper_type
-     return $this->get_log();
+    public function get_previous_answers($metadataID, $do_restart, $current_screen, $check_log_late = false)
+    {
+        $this->previousduration = 0;
+        $this->screenpresubmitted = 0;
+        $this->dorestart = $do_restart;
+        $this->currentscreen = $current_screen;
+        $this->metadataid = $metadataID;
+        if ($check_log_late and $this->late) {
+          // If we are after the deadline check for answers in original_paper_type_log - these will be over written below by new answers in log_late below.
+            return $this->get_log_late();
+        } else {
+          // Get user answers from whichever log is pointed to by log$paper_type
+            return $this->get_log();
+        }
     }
-  }
 
   /**
    * Get entries from paper type log table and ovewrite with the log late table
    * @return array
    */
-  public function get_log_late() {
-    $log = $this->get_log();
-    $user_answers = $log['user_answers'];
-    $user_dismiss = $log['user_dismiss'];
-    $user_order = $log['user_order'];
-    $used_questions = $log['used_questions'];
-    $log_data = $this->db->prepare("SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log_late WHERE metadataID = ? ORDER BY id");
-    $log_data->bind_param('i', $this->metadataid);
-    $log_data->execute();
-    $log_data->store_result();
-    $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
-    while ($log_data->fetch()) {
-      $user_answers[$log_screen][$log_q_id] = $log_user_answer;
-      $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
-      $user_order[$log_screen][$log_q_id] = $option_order;
-      $used_questions[$log_q_id] = $log_q_id;
-      // Bump up the current screen if restarting
-      if ($this->dorestart and $log_screen > $this->currentscreen) {
-        $this->currentscreen = $log_screen;
-      }
-      if ($log_screen == $this->currentscreen) {
-        $this->previousduration = $log_duration;
-        $this->screenpresubmitted = 1;
-      }
+    public function get_log_late()
+    {
+        $log = $this->get_log();
+        $user_answers = $log['user_answers'];
+        $user_dismiss = $log['user_dismiss'];
+        $user_order = $log['user_order'];
+        $used_questions = $log['used_questions'];
+        $log_data = $this->db->prepare('SELECT id, q_id, user_answer, duration, screen, dismiss, option_order FROM log_late WHERE metadataID = ? ORDER BY id');
+        $log_data->bind_param('i', $this->metadataid);
+        $log_data->execute();
+        $log_data->store_result();
+        $log_data->bind_result($log_id, $log_q_id, $log_user_answer, $log_duration, $log_screen, $current_dismiss, $option_order);
+        while ($log_data->fetch()) {
+            $user_answers[$log_screen][$log_q_id] = $log_user_answer;
+            $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
+            $user_order[$log_screen][$log_q_id] = $option_order;
+            $used_questions[$log_q_id] = $log_q_id;
+          // Bump up the current screen if restarting
+            if ($this->dorestart and $log_screen > $this->currentscreen) {
+                $this->currentscreen = $log_screen;
+            }
+            if ($log_screen == $this->currentscreen) {
+                $this->previousduration = $log_duration;
+                $this->screenpresubmitted = 1;
+            }
+        }
+        $log_data->close();
+        return array('used_questions' => $used_questions,
+        'user_answers' => $user_answers,
+        'user_dismiss' => $user_dismiss,
+        'user_order' => $user_order,
+        'previous_duration' => $this->previousduration,
+        'screen_pre_submitted' => $this->screenpresubmitted,
+        'current_screen' => $this->currentscreen);
     }
-    $log_data->close();
-    return array('used_questions' => $used_questions,
-      'user_answers' => $user_answers,
-      'user_dismiss' => $user_dismiss,
-      'user_order' => $user_order,
-      'previous_duration' => $this->previousduration,
-      'screen_pre_submitted' => $this->screenpresubmitted,
-      'current_screen' => $this->currentscreen);
-  }
 
   /**
    * Update screen variables to keep track of user journey
    * @param integer $log_screen screen identifier
    * @param integer $log_duration time in seconds spent on screen
    */
-  public function process_screen_variables($log_screen, $log_duration) {
-    // Bump up the current screen if restarting
-    if ($this->dorestart and $log_screen > $this->currentscreen) {
-      $this->currentscreen = $log_screen;
+    public function process_screen_variables($log_screen, $log_duration)
+    {
+      // Bump up the current screen if restarting
+        if ($this->dorestart and $log_screen > $this->currentscreen) {
+            $this->currentscreen = $log_screen;
+        }
+        if ($log_screen == $this->currentscreen) {
+            $this->previousduration = $log_duration;
+            $this->screenpresubmitted = 1;
+        }
     }
-    if ($log_screen == $this->currentscreen) {
-      $this->previousduration = $log_duration;
-      $this->screenpresubmitted = 1;
-    }
-  }
 
   /**
    * Get list of users that have taken the exam order by total mark ascending.
@@ -179,15 +185,16 @@ abstract class log {
    * @param boolean $studentonly flag to set student only filter
    * @return array
    */
-  public function get_log_users($paperid, $startdate, $enddate, $userlist, $studentonly = false) {
-    $user_list = array();
-    if ($studentonly) {
-      $rolefilter = self::get_student_only();
-    } else {
-      $rolefilter = '';
-    }
-    $userfilter = self::get_user_filter($userlist);
-    $sql = "SELECT
+    public function get_log_users($paperid, $startdate, $enddate, $userlist, $studentonly = false)
+    {
+        $user_list = array();
+        if ($studentonly) {
+            $rolefilter = self::get_student_only();
+        } else {
+            $rolefilter = '';
+        }
+        $userfilter = self::get_user_filter($userlist);
+        $sql = "SELECT
             log_metadata.userID,
             SUM(mark) AS total_mark 
           FROM
@@ -206,20 +213,20 @@ abstract class log {
             started
           ORDER BY
             total_mark, log_metadata.userID";
-    $result = $this->db->prepare($sql);
-    $result->bind_param('iss', $paperid, $startdate, $enddate);
-    $result->execute();
-    $result->bind_result($tmp_userID, $total_mark);
-    $i = 0;
-    while ($result->fetch()) {
-      $user_list[$i]['userid'] = $tmp_userID;
-      $user_list[$i]['totalmark'] = $total_mark;
-      $i++;
+        $result = $this->db->prepare($sql);
+        $result->bind_param('iss', $paperid, $startdate, $enddate);
+        $result->execute();
+        $result->bind_result($tmp_userID, $total_mark);
+        $i = 0;
+        while ($result->fetch()) {
+            $user_list[$i]['userid'] = $tmp_userID;
+            $user_list[$i]['totalmark'] = $total_mark;
+            $i++;
+        }
+        $result->free_result();
+        $result->close();
+        return $user_list;
     }
-    $result->free_result();
-    $result->close();
-    return $user_list;
-  }
 
   /**
    * Get list of users that have taken the exam order by total mark ascending.
@@ -232,14 +239,15 @@ abstract class log {
    * @param boolean $studentonly flag to set student only filter
    * @return array
    */
-  public function get_assessment_data($paperid, $startdate, $enddate, $userlist, $course = '%', $studentonly = false) {
-    $data = array();
-    if ($studentonly) {
-      $rolefilter = self::get_student_only();
-    } else {
-      $rolefilter = '';
-    }
-    $sql = "SELECT DISTINCT
+    public function get_assessment_data($paperid, $startdate, $enddate, $userlist, $course = '%', $studentonly = false)
+    {
+        $data = array();
+        if ($studentonly) {
+            $rolefilter = self::get_student_only();
+        } else {
+            $rolefilter = '';
+        }
+        $sql = "SELECT DISTINCT
         username,
         log_metadata.userID,
         title,
@@ -271,102 +279,106 @@ abstract class log {
         first_names,
         started,
         userID";
-    $result = $this->db->prepare($sql);
-    $result->bind_param('isss', $paperid, $course, $startdate, $enddate);
-    $result->execute();
-    $result->bind_result($username, $uID, $title, $surname, $first_names, $grade, $gender, $year, $started, $question_ID, $user_answer, $screen);
-    $i = 0;
-    while ($result->fetch()) {
-      $data[$i]['username'] = $username;
-      $data[$i]['uID'] = $uID;
-      $data[$i]['title'] = $title;
-      $data[$i]['surname'] = $surname;
-      $data[$i]['first_names'] = $first_names;
-      $data[$i]['grade'] = $grade;
-      $data[$i]['gender'] = $gender;
-      $data[$i]['year'] = $year;
-      $data[$i]['started'] = $started;
-      $data[$i]['question_ID'] = $question_ID;
-      $data[$i]['user_answer'] = $user_answer;
-      $data[$i]['screen'] = $screen;
-      $i++;
+        $result = $this->db->prepare($sql);
+        $result->bind_param('isss', $paperid, $course, $startdate, $enddate);
+        $result->execute();
+        $result->bind_result($username, $uID, $title, $surname, $first_names, $grade, $gender, $year, $started, $question_ID, $user_answer, $screen);
+        $i = 0;
+        while ($result->fetch()) {
+            $data[$i]['username'] = $username;
+            $data[$i]['uID'] = $uID;
+            $data[$i]['title'] = $title;
+            $data[$i]['surname'] = $surname;
+            $data[$i]['first_names'] = $first_names;
+            $data[$i]['grade'] = $grade;
+            $data[$i]['gender'] = $gender;
+            $data[$i]['year'] = $year;
+            $data[$i]['started'] = $started;
+            $data[$i]['question_ID'] = $question_ID;
+            $data[$i]['user_answer'] = $user_answer;
+            $data[$i]['screen'] = $screen;
+            $i++;
+        }
+        $result->close();
+        return $data;
     }
-    $result->close();
-    return $data;
-  }
 
   /**
    * Paper type accessor method
    * @return string
    */
-  public function get_papertype() {
-    return $this->papertype;
-  }
+    public function get_papertype()
+    {
+        return $this->papertype;
+    }
 
   /**
    * Get paper logs
    */
-  abstract public function get_log();
+    abstract public function get_log();
 
   /**
    * Get paper log class
    * @param string $papertype paper type
    * @return class
    */
-  public static function get_paperlog($papertype) {
-    switch ($papertype) {
-      case '0':
-        $papertype = 'formative';
-        break;
-      case '1':
-        $papertype = 'progressive';
-        break;
-      case '2':
-        $papertype = 'summative';
-        break;
-      case '3':
-        $papertype = 'survey';
-        break;
-      case '4':
-        $papertype = 'osce';
-        break;
-      case '5':
-        $papertype = 'offline';
-        break;
-      case '6':
-        $papertype = 'peer_review';
-        break;
-      default:
-        throw new \Exception("Unsupported paper type.");
+    public static function get_paperlog($papertype)
+    {
+        switch ($papertype) {
+            case '0':
+                $papertype = 'formative';
+                break;
+            case '1':
+                $papertype = 'progressive';
+                break;
+            case '2':
+                $papertype = 'summative';
+                break;
+            case '3':
+                $papertype = 'survey';
+                break;
+            case '4':
+                $papertype = 'osce';
+                break;
+            case '5':
+                $papertype = 'offline';
+                break;
+            case '6':
+                $papertype = 'peer_review';
+                break;
+            default:
+                throw new \Exception('Unsupported paper type.');
+        }
+        $paperpluginns = 'plugins\\papers\\' . $papertype . '\\log';
+        return new $paperpluginns();
     }
-    $paperpluginns = 'plugins\\papers\\' . $papertype . '\\log';
-    return new $paperpluginns();
-  }
 
   /**
    * Retrieve student only sql filter.
    * @return string
    */
-  public static function get_student_only() {
-      return " AND (users.roles LIKE '%Student%' OR users.roles = 'graduate')";
-  }
+    public static function get_student_only()
+    {
+        return " AND (users.roles LIKE '%Student%' OR users.roles = 'graduate')";
+    }
 
   /**
    * Retrieve user sql filter.
    * @param array $userlist list of users
    * @return string
    */
-  public static function get_user_filter($userlist) {
-    if (!is_array($userlist)) {
-      $userfilter = '';
-    } elseif (count($userlist) === 1) {
-      $userfilter = 'AND userID = ' . $userlist[0];
-    } elseif (count($userlist) > 0) {
-      $userfilter = 'AND userID IN (' . implode(',', $userlist) . ')';
-    } else {
-      // No users found? So ensure query returns 0 rows.
-      $userfilter = 'AND userID = 0';
+    public static function get_user_filter($userlist)
+    {
+        if (!is_array($userlist)) {
+            $userfilter = '';
+        } elseif (count($userlist) === 1) {
+            $userfilter = 'AND userID = ' . $userlist[0];
+        } elseif (count($userlist) > 0) {
+            $userfilter = 'AND userID IN (' . implode(',', $userlist) . ')';
+        } else {
+          // No users found? So ensure query returns 0 rows.
+            $userfilter = 'AND userID = 0';
+        }
+        return $userfilter;
     }
-    return $userfilter;
-  }
 }

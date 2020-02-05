@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -37,15 +38,15 @@ require '../config/index.inc';  // Get the logo
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <?php
     if ($userObject->has_role(array('External Examiner'))) {
-  ?>
+        ?>
   <title><?php echo $string['externalexaminerarea']; ?></title>
-  <?php
+        <?php
     } else {
-  ?>
+        ?>
   <title><?php echo $string['papersforreview']; ?></title>
-  <?php
+        <?php
     }
-  ?>
+    ?>
   <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
   <script src='../js/main.min.js'></script>
@@ -71,7 +72,7 @@ require '../include/toprightmenu.inc';
 echo draw_toprightmenu(1);
 
 if ($userObject->has_role(array('External Examiner'))) {
-?>
+    ?>
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
   <div style="padding:6px 6px 6px 16px">
@@ -88,69 +89,71 @@ if ($userObject->has_role(array('External Examiner'))) {
 <p style="margin-left:15px; margin-right:15px; text-align:justify"><?php echo $string['msg2']; ?></p>
 
 <table cellpadding="0" cellspacing="2" border="0" style="margin-left:10px; font-size:90%">
-<?php
-  $start_of_day_ts = strtotime('midnight');
+    <?php
+    $start_of_day_ts = strtotime('midnight');
 
-  $result = $mysqli->prepare("SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, MAX(screen) AS max_screen, UNIX_TIMESTAMP(external_review_deadline) AS external_review_deadline, crypt_name FROM (properties, properties_reviewers, papers) WHERE properties.property_id = properties_reviewers.paperID AND deleted IS NULL AND (DATE_ADD(start_date, INTERVAL 1 WEEK) > NOW() OR start_date IS NULL) AND properties.property_id = papers.paper AND reviewerID = ? GROUP BY paper ORDER BY paper_title");
-  $result->bind_param('i', $userObject->get_user_ID());
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($paper_type, $paper_title, $property_id, $bidirectional, $fullscreen, $max_screen, $external_review_deadline, $crypt_name);
-  while ($result->fetch()) {
-    $reviewed = '';
-    if ($fullscreen == '') $fullscreen = 0;
-    $log_results = $mysqli->prepare("SELECT UNIX_TIMESTAMP(MAX(started)) AS started FROM review_metadata WHERE reviewerID = ? and paperID = ?");
-    $log_results->bind_param('ii', $userObject->get_user_ID(), $property_id);
-    $log_results->execute();
-    $log_results->store_result();
-    $log_results->bind_result($reviewed);
-    $log_results->fetch();
-    $log_results->close();
+    $result = $mysqli->prepare('SELECT paper_type, paper_title, property_id, bidirectional, fullscreen, MAX(screen) AS max_screen, UNIX_TIMESTAMP(external_review_deadline) AS external_review_deadline, crypt_name FROM (properties, properties_reviewers, papers) WHERE properties.property_id = properties_reviewers.paperID AND deleted IS NULL AND (DATE_ADD(start_date, INTERVAL 1 WEEK) > NOW() OR start_date IS NULL) AND properties.property_id = papers.paper AND reviewerID = ? GROUP BY paper ORDER BY paper_title');
+    $result->bind_param('i', $userObject->get_user_ID());
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($paper_type, $paper_title, $property_id, $bidirectional, $fullscreen, $max_screen, $external_review_deadline, $crypt_name);
+    while ($result->fetch()) {
+        $reviewed = '';
+        if ($fullscreen == '') {
+            $fullscreen = 0;
+        }
+        $log_results = $mysqli->prepare('SELECT UNIX_TIMESTAMP(MAX(started)) AS started FROM review_metadata WHERE reviewerID = ? and paperID = ?');
+        $log_results->bind_param('ii', $userObject->get_user_ID(), $property_id);
+        $log_results->execute();
+        $log_results->store_result();
+        $log_results->bind_result($reviewed);
+        $log_results->fetch();
+        $log_results->close();
     
-    $restartdate = '';
-    $display_deadline = date($configObject->get('cfg_long_date_php'), $external_review_deadline);
+        $restartdate = '';
+        $display_deadline = date($configObject->get('cfg_long_date_php'), $external_review_deadline);
     
-    echo "<tr><td align=\"center\"><a href=\"../paper/user_index.php?id=$crypt_name\">" . Paper_utils::displayIcon($paper_type, $paper_title, '', '', '', '') . "</a></td>\n";
-    echo "  <td><a href=\"../paper/user_index.php?id=$crypt_name\">$paper_title</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " ";
-    if ($start_of_day_ts > $external_review_deadline) {
-      printf($string['expired'], $configObject->get_setting('core', 'misc_company'));
-    } else {
-      if ($display_deadline == '00/00/0000') {
-        echo $string['notset'];
-      } else {
-        echo $display_deadline;
-      }
+        echo "<tr><td align=\"center\"><a href=\"../paper/user_index.php?id=$crypt_name\">" . Paper_utils::displayIcon($paper_type, $paper_title, '', '', '', '') . "</a></td>\n";
+        echo "  <td><a href=\"../paper/user_index.php?id=$crypt_name\">$paper_title</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . ' ';
+        if ($start_of_day_ts > $external_review_deadline) {
+            printf($string['expired'], $configObject->get_setting('core', 'misc_company'));
+        } else {
+            if ($display_deadline == '00/00/0000') {
+                echo $string['notset'];
+            } else {
+                echo $display_deadline;
+            }
+        }
+        echo '</div>';
+        if ($reviewed == '') {
+            echo '<span style="color:white; background-color:#FF4040; padding-left:5px; padding-right:5px">' . $string['notreviewed'] . '</span>';
+        } else {
+            echo '<span style="color:#808080">' . sprintf($string['reviewed'], date($configObject->get('cfg_very_short_datetime_php'), $reviewed)) . '</span>';
+        }
+        echo "</td></tr>\n<tr><td colspan=\"2\" style=\"font-size:80%\">&nbsp;</td>\n</tr>\n";
     }
-    echo '</div>';
-    if ($reviewed == '') {
-      echo '<span style="color:white; background-color:#FF4040; padding-left:5px; padding-right:5px">' . $string['notreviewed'] . '</span>';
-    } else {
-      echo '<span style="color:#808080">' . sprintf($string['reviewed'], date($configObject->get('cfg_very_short_datetime_php'), $reviewed)) . '</span>';
+
+    if ($result->num_rows == 0) {
+        echo '<tr><td colspan="2"><p style="color:red">' . $string['nopapersfound'] . "</p></td></tr>\n";
     }
-    echo "</td></tr>\n<tr><td colspan=\"2\" style=\"font-size:80%\">&nbsp;</td>\n</tr>\n";
-  }
+    $result->close();
+  
+    echo "</table>\n";
+  
+  
+    $released_papers = ReviewUtils::get_past_papers($userObject->get_user_ID(), $mysqli);
+    echo '<h1>' . $string['postexamreviews'] . '</h1>';
+  
+    echo '<p style="margin-left:15px; margin-right:15px; text-align:justify">' .  $string['msg3'] . "</p>\n";
 
-  if ($result->num_rows == 0) {
-    echo "<tr><td colspan=\"2\"><p style=\"color:red\">" . $string['nopapersfound'] . "</p></td></tr>\n";
-  }
-  $result->close();
-  
-  echo "</table>\n";
-  
-  
-  $released_papers = ReviewUtils::get_past_papers($userObject->get_user_ID(), $mysqli);
-  echo '<h1>' . $string['postexamreviews'] . '</h1>';
-  
-  echo "<p style=\"margin-left:15px; margin-right:15px; text-align:justify\">" .  $string['msg3'] . "</p>\n";
-
-  echo "<table style=\"margin-left:15px\">\n";
-  foreach ($released_papers as $paperID=>$paper_details) {
-    echo "<tr><td><a href=\"class_totals.php?id=" . $paper_details['crypt_name'] . "\"><img src=\"../artwork/summative_16.gif\" width=\"16\" height=\"16\" style=\"margin-right:5px\" />" . $paper_details['paper_title'] . "</a></td><td class=\"datepad\">" . $paper_details['start_date'] . "</td></tr>\n";
-  }
-  echo "</table>\n";
-  echo "</div>\n";
+    echo "<table style=\"margin-left:15px\">\n";
+    foreach ($released_papers as $paperID => $paper_details) {
+        echo '<tr><td><a href="class_totals.php?id=' . $paper_details['crypt_name'] . '"><img src="../artwork/summative_16.gif" width="16" height="16" style="margin-right:5px" />' . $paper_details['paper_title'] . '</a></td><td class="datepad">' . $paper_details['start_date'] . "</td></tr>\n";
+    }
+    echo "</table>\n";
+    echo "</div>\n";
 } else {
-?>
+    ?>
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
 </div>
@@ -159,24 +162,24 @@ if ($userObject->has_role(array('External Examiner'))) {
 <p style="margin-left:15px; margin-right:15px; text-align:justify"><?php echo $string['msg4']; ?></p>
 <p style="margin-left:15px; margin-right:15px; text-align:justify"><?php echo $string['msg2']; ?></p>
 <table cellpadding="0" cellspacing="2" border="0" style="margin-left:10px; font-size:90%">
-<?php
-  $internalreview = new internalreview($mysqli);
-  $review_papers = $internalreview->get_review_papers($userObject->get_user_ID());
-  foreach($review_papers as $review_paper) {    
-    echo "<tr><td align=\"center\"><a target='_blank' href=\"start.php?id=" . $review_paper['crypt_name'] . "\">" . Paper_utils::displayIcon($review_paper['type'], $review_paper['paper_title'], '', '', '', '') . "</a></td>\n";
-    echo "<td><a target='_blank' href=\"start.php?id=" . $review_paper['crypt_name'] . "\">" . $review_paper['paper_title'] . "</a><br /><div style=\"color:#C00000\">" . $string['deadline'] . " " . $review_paper['internal_review_deadline'] . "</div>";
-    if ($review_paper['reviewed'] == '') {
-      echo "<span style=\"color:white; background-color:#FF4040\">&nbsp;" . $string['notreviewed'] . "&nbsp;</span>";
-    } else {
-      echo "<span style=\"color:#808080\">" . sprintf($string['reviewed'], $review_paper['reviewed']) . "</span>";
+    <?php
+    $internalreview = new internalreview($mysqli);
+    $review_papers = $internalreview->get_review_papers($userObject->get_user_ID());
+    foreach ($review_papers as $review_paper) {
+        echo "<tr><td align=\"center\"><a target='_blank' href=\"start.php?id=" . $review_paper['crypt_name'] . '">' . Paper_utils::displayIcon($review_paper['type'], $review_paper['paper_title'], '', '', '', '') . "</a></td>\n";
+        echo "<td><a target='_blank' href=\"start.php?id=" . $review_paper['crypt_name'] . '">' . $review_paper['paper_title'] . '</a><br /><div style="color:#C00000">' . $string['deadline'] . ' ' . $review_paper['internal_review_deadline'] . '</div>';
+        if ($review_paper['reviewed'] == '') {
+            echo '<span style="color:white; background-color:#FF4040">&nbsp;' . $string['notreviewed'] . '&nbsp;</span>';
+        } else {
+            echo '<span style="color:#808080">' . sprintf($string['reviewed'], $review_paper['reviewed']) . '</span>';
+        }
+        echo "</td></tr>\n<tr><td colspan=\"2\" style=\"font-size:80%\">&nbsp;</td>\n</tr>\n";
     }
-    echo "</td></tr>\n<tr><td colspan=\"2\" style=\"font-size:80%\">&nbsp;</td>\n</tr>\n";
-  }
-  if (count($review_papers) == 0) {
-    echo "<tr><td colspan=\"2\"><p style=\"color:red\">" . $string['nopapersfound'] . "</p></td></tr>\n";
-  }
-  echo "</table>\n";
-  echo "</div>\n";
+    if (count($review_papers) == 0) {
+        echo '<tr><td colspan="2"><p style="color:red">' . $string['nopapersfound'] . "</p></td></tr>\n";
+    }
+    echo "</table>\n";
+    echo "</div>\n";
 }
 ?>
 <br />

@@ -17,4 +17,3 @@
 $string['recyclebin'] = 'Recycle Bin';
 $string['title'] = 'Delete Session';
 $string['msg'] = 'Session successfully deleted.';
-?>

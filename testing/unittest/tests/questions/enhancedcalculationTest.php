@@ -23,11 +23,13 @@
  * @package tests
  * @group questions
  */
-class enhancedcalculationTest extends \testing\unittest\UnitTest {
+class enhancedcalculationTest extends \testing\unittest\UnitTest
+{
     /**
      * Test a range of valid answers, that should not be filtered.
      */
-    public function test_process_user_answer_valid() {
+    public function test_process_user_answer_valid()
+    {
         require_once dirname(dirname(dirname(dirname(__DIR__)))) . '/plugins/questions/enhancedcalc/enhancedcalc.class.php';
         $emptyarray = array();
         $post1 = array(

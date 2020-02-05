@@ -38,4 +38,3 @@ $string['No'] = 'No';
 $string['campus'] = 'Campus';
 $string['notes'] = 'Notes';
 $string['examtasks'] = 'Exam Tasks';
-?>

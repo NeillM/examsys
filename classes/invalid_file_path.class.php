@@ -21,14 +21,16 @@
  * @copyright Copyright (c) 2017 The University of Nottingham
  * @package core
  */
-class invalid_file_path extends Exception {
+class invalid_file_path extends Exception
+{
   /**
    * Constructor for the exception.
    *
    * @param string $file path for the file that was not found.
    */
-  public function __construct() {
-    $strings = LangUtils::loadlangfile('exceptions/messages.php', array());
-    parent::__construct($strings['invalidfilepath']);
-  }
+    public function __construct()
+    {
+        $strings = LangUtils::loadlangfile('exceptions/messages.php', array());
+        parent::__construct($strings['invalidfilepath']);
+    }
 }

@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -30,15 +31,15 @@ $show_notes = (isset($show_notes)) ? $show_notes : true;
                 <input type="text" id="theme" name="theme" class="form-large<?php echo $dis_class ?>" value="<?php echo $question->get_theme() ?>"<?php echo $dis_readonly ?> />
               </td>
             </tr>
-<?php 
-if ($show_notes):
-?>
+<?php
+if ($show_notes) :
+    ?>
             <tr>
               <th><label for="notes"><?php echo $string['notes'] ?></label><br /><span class="note"><?php echo $string['notesmsg'] ?></span></th>
               <td>
                 <textarea id="notes" name="notes" cols="100" rows="2" class="form-large<?php echo $dis_class ?>"<?php echo $dis_readonly ?>><?php echo $question->get_notes() ?></textarea>
               </td>
             </tr>
-<?php 
+    <?php
 endif;
 ?>

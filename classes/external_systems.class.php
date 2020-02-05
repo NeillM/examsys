@@ -23,7 +23,8 @@
 /**
  * External Systems helper class.
  */
-class external_systems {
+class external_systems
+{
     /**
      * The db connection
      * @var mysqli
@@ -41,9 +42,10 @@ class external_systems {
     const PLUGIN = 'plugin';
     /**
      * Constructor
-     * @return void 
+     * @return void
      */
-    function __construct() {
+    function __construct()
+    {
         $configObject = Config::get_instance();
         $this->db = $configObject->db;
     }
@@ -51,7 +53,8 @@ class external_systems {
     /**
      * Called when the object is unserialised.
      */
-    public function __wakeup() {
+    public function __wakeup()
+    {
         // The serialised database object will be invalid,
         // this object should only be serialised during an error report,
         // so adding the current database connect seems like a waste of time.
@@ -61,11 +64,12 @@ class external_systems {
     /**
      * Get external system mapping info given user id
      * @param integer $client oauth client id
-     * @return array external system name and id 
+     * @return array external system name and id
      */
-    public function get_mapped_externalsystem_info($client) {
+    public function get_mapped_externalsystem_info($client)
+    {
         $info = array();
-        $result = $this->db->prepare("SELECT s.name, m.ext_id FROM external_systems s, external_systems_mapping m WHERE s.id = m.ext_id AND m.client_id = ?");
+        $result = $this->db->prepare('SELECT s.name, m.ext_id FROM external_systems s, external_systems_mapping m WHERE s.id = m.ext_id AND m.client_id = ?');
         $result->bind_param('s', $client);
         $result->execute();
         $result->bind_result($name, $id);
@@ -85,9 +89,10 @@ class external_systems {
      * Get external systems
      * @return array external systems
      */
-    public function get_all_externalsystems() {
+    public function get_all_externalsystems()
+    {
         $exts = array();
-        $result = $this->db->prepare("SELECT id, name FROM external_systems");
+        $result = $this->db->prepare('SELECT id, name FROM external_systems');
         $result->execute();
         $result->bind_result($extid, $name);
         while ($result->fetch()) {
@@ -100,9 +105,10 @@ class external_systems {
      * Get external systems details
      * @return array external systems
      */
-    public function get_all_externalsystems_details() {
+    public function get_all_externalsystems_details()
+    {
         $exts = array();
-        $result = $this->db->prepare("SELECT id, name, type FROM external_systems");
+        $result = $this->db->prepare('SELECT id, name, type FROM external_systems');
         $result->execute();
         $result->bind_result($extid, $name, $type);
         while ($result->fetch()) {
@@ -115,9 +121,10 @@ class external_systems {
      * Get API external systems
      * @return array external systems
      */
-    public function get_all_api_externalsystems() {
+    public function get_all_api_externalsystems()
+    {
         $exts = array();
-        $result = $this->db->prepare("SELECT id, name FROM external_systems WHERE type = ?");
+        $result = $this->db->prepare('SELECT id, name FROM external_systems WHERE type = ?');
         $api = self::API;
         $result->bind_param('s', $api);
         $result->execute();
@@ -134,8 +141,9 @@ class external_systems {
      * @param integer $extsys external system id
      * @return boolean true on success
      */
-    public function insert_external_system_mapping($client, $extsys) {
-        $result = $this->db->prepare("INSERT INTO external_systems_mapping (client_id, ext_id) values (?, ?)");
+    public function insert_external_system_mapping($client, $extsys)
+    {
+        $result = $this->db->prepare('INSERT INTO external_systems_mapping (client_id, ext_id) values (?, ?)');
         $result->bind_param('si', $client, $extsys);
         $result->execute();
         $result->close();
@@ -150,10 +158,11 @@ class external_systems {
      * @param integer $extsys external system id
      * @return boolean true on success
      */
-    public function update_external_system_mapping($client, $extsys) {
+    public function update_external_system_mapping($client, $extsys)
+    {
         $extsysinfo = $this->get_mapped_externalsystem_info($client);
         if (count($extsysinfo) > 0) {
-            $result = $this->db->prepare("UPDATE external_systems_mapping SET ext_id = ? WHERE client_id = ?");
+            $result = $this->db->prepare('UPDATE external_systems_mapping SET ext_id = ? WHERE client_id = ?');
             $result->bind_param('is', $extsys, $client);
             $result->execute();
             $result->close();
@@ -171,10 +180,11 @@ class external_systems {
      * Delete external system mapping for client
      * @param integer $client oauth client id
      */
-    public function delete_external_system_mapping($client) {
+    public function delete_external_system_mapping($client)
+    {
         $extsysinfo = $this->get_mapped_externalsystem_info($client);
         if (count($extsysinfo) > 0) {
-            $result = $this->db->prepare("DELETE FROM external_systems_mapping WHERE client_id = ?");
+            $result = $this->db->prepare('DELETE FROM external_systems_mapping WHERE client_id = ?');
             $result->bind_param('s', $client);
             $result->execute();
             $result->close();
@@ -186,11 +196,12 @@ class external_systems {
      * @param string $type type of external system
      * @return boolean true on success
      */
-    public function insert_external_system($name, $type) {
+    public function insert_external_system($name, $type)
+    {
         if (empty($name)) {
             return false;
         }
-        $result = $this->db->prepare("INSERT INTO external_systems (name, type) VALUES (?, ?)");
+        $result = $this->db->prepare('INSERT INTO external_systems (name, type) VALUES (?, ?)');
         $result->bind_param('ss', $name, $type);
         $result->execute();
         $result->close();
@@ -203,8 +214,9 @@ class external_systems {
      * Delete external system
      * @param string $id id of external system
      */
-    public function delete_external_system($id) {
-        $result = $this->db->prepare("DELETE FROM external_systems WHERE id = ?");
+    public function delete_external_system($id)
+    {
+        $result = $this->db->prepare('DELETE FROM external_systems WHERE id = ?');
         $result->bind_param('i', $id);
         $result->execute();
         $result->close();
@@ -214,9 +226,10 @@ class external_systems {
      * @param integer $id internal id of external system
      * @return boolean
      */
-    public function external_system_exists($id) {
+    public function external_system_exists($id)
+    {
         $exists = false;
-        $result = $this->db->prepare("SELECT NULL FROM external_systems WHERE id = ?");
+        $result = $this->db->prepare('SELECT NULL FROM external_systems WHERE id = ?');
         $result->bind_param('i', $id);
         $result->execute();
         $result->store_result();
@@ -231,7 +244,8 @@ class external_systems {
      * @param integer $id internal id of external system
      * @return boolean
      */
-    public function external_system_inuse($id) {
+    public function external_system_inuse($id)
+    {
         $exists = false;
         if ($this->external_system_exists($id)) {
             // If not api external system flag as in use
@@ -240,7 +254,7 @@ class external_systems {
                 return true;
             }
             // Check is api mapped to user.
-            $result = $this->db->prepare("SELECT NULL FROM external_systems_mapping WHERE ext_id = ? LIMIT 1");
+            $result = $this->db->prepare('SELECT NULL FROM external_systems_mapping WHERE ext_id = ? LIMIT 1');
             $result->bind_param('i', $id);
             $result->execute();
             $result->store_result();

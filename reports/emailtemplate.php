@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -27,26 +28,26 @@ require_once '../include/errors.php';
 
 $emailtemplatedir = rogo_directory::get_directory('email_templates');
 if (!$emailtemplatedir->check_permissions()) {
-    $msg = "File:emailtemplete.php Line :" . (__LINE__ -1) . "  Error:" . $string['filepermission'];
+    $msg = 'File:emailtemplete.php Line :' . (__LINE__ - 1) . '  Error:' . $string['filepermission'];
     $notice->display_notice_and_exit($mysqli, $string['filepermission'], $string['filepermission'], $msg, '../artwork/exclamation_red_bg.png', '#C00000', true, true);
 }
 
- $templatefile = $emailtemplatedir->fullpath($userObject->get_user_ID() . ".txt");
+ $templatefile = $emailtemplatedir->fullpath($userObject->get_user_ID() . '.txt');
 $message = '';
 if (file_exists($templatefile)) {
-	$file = fopen($templatefile,'r');
-	$from = fgets($file, 64000);
-	$ccaddress = fgets($file, 64000);
-	$bccaddress = fgets($file, 64000);
-	$subject = fgets($file, 64000);
-	while (!feof($file)) {
-		$message .= fgets($file, 64000);
-	}
+    $file = fopen($templatefile, 'r');
+    $from = fgets($file, 64000);
+    $ccaddress = fgets($file, 64000);
+    $bccaddress = fgets($file, 64000);
+    $subject = fgets($file, 64000);
+    while (!feof($file)) {
+        $message .= fgets($file, 64000);
+    }
 } else {
-	$from = '';
-	$ccaddress = '';
-	$bccaddress = '';
-	$subject = '';
+    $from = '';
+    $ccaddress = '';
+    $bccaddress = '';
+    $subject = '';
 }
 ?>
 <!DOCTYPE html>

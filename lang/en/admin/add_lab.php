@@ -39,4 +39,3 @@ $string['backtolabs'] = 'Back to labs list';
 $string['noipaddresses'] = 'Cannot create lab as there are no IP Addresses listed.';
 $string['nolabname'] = 'Cannot create a lab with a blank name.';
 $string['listcampuses'] = 'Campuses';
-?>

@@ -15,4 +15,3 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['showerror'] = 'System error';
-?>

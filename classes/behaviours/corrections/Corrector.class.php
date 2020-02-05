@@ -23,34 +23,37 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-abstract class Corrector {
-  protected $_mysqli;
-  protected $_lang_strings;
-  protected $_question;
+abstract class Corrector
+{
+    protected $_mysqli;
+    protected $_lang_strings;
+    protected $_question;
 
-  function __construct($mysqli, $lang_strings, $question) {
-    $this->_mysqli = $mysqli;
-    $this->_lang_strings = $lang_strings;
-    $this->_question = $question;
-  }
+    function __construct($mysqli, $lang_strings, $question)
+    {
+        $this->_mysqli = $mysqli;
+        $this->_lang_strings = $lang_strings;
+        $this->_question = $question;
+    }
 
   /**
    * Change the correct answer after the question has been locked. Update user marks in summative log table
    * @param integer $new_correct new correct answer
    * @param integer $paper_id
    */
-  abstract function execute($new_correct, $paper_id, &$changes, $paper_type);
+    abstract function execute($new_correct, $paper_id, &$changes, $paper_type);
 
   /**
    * Invalidate the cache for the given paper
    * @param  integer $paper_id ID of paper for which the cache should be invalidated
    */
-  protected function invalidate_paper_cache($paper_id) {
-    $properties = new PaperProperties($this->_mysqli);
-    $properties->set_property_id($paper_id);
-    $properties->load();
+    protected function invalidate_paper_cache($paper_id)
+    {
+        $properties = new PaperProperties($this->_mysqli);
+        $properties->set_property_id($paper_id);
+        $properties->load();
 
-    $properties->set_recache_marks(1);
-    $properties->save();
-  }
+        $properties->set_recache_marks(1);
+        $properties->save();
+    }
 }

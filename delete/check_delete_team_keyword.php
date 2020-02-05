@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Confirm that it is OK to proceed deleting a keyword.
 *
 * @author Simon Wilkinson
@@ -26,22 +27,19 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
-
 $keywordIDs = check_var('keywordID', 'GET', true, false, true);
-
 $keyword_names = array();
-$result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE id IN (" . substr($keywordIDs, 1) . ")");
+$result = $mysqli->prepare('SELECT keyword FROM keywords_user WHERE id IN (' . substr($keywordIDs, 1) . ')');
 $result->execute();
 $result->bind_result($keyword);
 while ($result->fetch()) {
-  $keyword_names[] = $keyword;
+    $keyword_names[] = $keyword;
 }
 $result->close();
-
 if (count($keyword_names) < substr_count($keywordIDs, ',')) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 ?>
@@ -62,12 +60,12 @@ if (count($keyword_names) < substr_count($keywordIDs, ',')) {
 $i = 0;
 $keywordss = '';
 foreach ($keyword_names as $keyword_name) {
-  if ($i == 0) {
-    $keywordss = $keyword_name;
-  } else {
-    $keywordss .= ', ' . $keyword_name;
-  }
-  $i++;
+    if ($i == 0) {
+        $keywordss = $keyword_name;
+    } else {
+        $keywordss .= ', ' . $keyword_name;
+    }
+    $i++;
 }
 ?>
 <p><?php printf($string['msg'], $keywordss); ?></p>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -32,13 +33,13 @@ $userID = check_var('id', 'GET', true, false, true);
 // Check that all the past user IDs actually exist.
 $id_list = explode(',', $userID);
 foreach ($id_list as $id) {
-  if ($id != '') {
-    if (!UserUtils::userid_exists($id, $mysqli)) {
-      $contactemail = support::get_email();
-      $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-      $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    if ($id != '') {
+        if (!UserUtils::userid_exists($id, $mysqli)) {
+            $contactemail = support::get_email();
+            $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+            $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+        }
     }
-  }
 }
 
 $user_no = count($id_list) - 1;
@@ -61,11 +62,11 @@ $mysqli->close();
 
 <p>
 <?php
-  if ($user_no == 1) {
+if ($user_no == 1) {
     echo $string['msg1'];
-  } else {
+} else {
     echo sprintf($string['msg2'], $user_no);
-  }
+}
 ?>
 <p>
 <div class="button_bar">

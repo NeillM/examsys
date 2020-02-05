@@ -33,4 +33,3 @@ $string['taken'] = 'Taken';
 $string['unused'] = 'Unused';
 $string['computerlab'] = 'Computer Lab';
 $string['examno'] = 'Exam No';
-?>

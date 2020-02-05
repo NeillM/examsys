@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,10 +27,11 @@ namespace testing\behat\steps\frontend;
  * @package testing
  * @subpackage behat
  */
-trait include_frontend {
-  use authentication,
-      basic,
-      forms,
-      menu,
-      paper;
+trait include_frontend
+{
+    use authentication;
+    use basic;
+    use forms;
+    use menu;
+    use paper;
 }

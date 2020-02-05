@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -32,30 +33,30 @@ $userID = check_var('userID', 'REQUEST', true, false, true);  // User ID is the 
 
 // Does the paper exist?
 if (!Paper_utils::paper_exists($paperID, $mysqli)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  echo json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
-  exit();
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    echo json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
+    exit();
 }
 // Does the student exist?
 if (!UserUtils::userid_exists($userID, $mysqli)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  echo json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
-  exit();
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    echo json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
+    exit();
 }
 
 $noteid = param::optional('note_id', 0, param::INT, param::FETCH_POST);
 $note = param::optional('note', '', param::TEXT, param::FETCH_POST);
 if ($noteid === 0) {
-  if ($note != '') {  // Check we are not saving nothing.
-    StudentNotes::add_note($userID, $note, $paperID, $userObject->get_user_ID(), $mysqli);
-  } else {
-    echo json_encode('ERROR');
-    exit();
-  }
+    if ($note != '') {  // Check we are not saving nothing.
+        StudentNotes::add_note($userID, $note, $paperID, $userObject->get_user_ID(), $mysqli);
+    } else {
+        echo json_encode('ERROR');
+        exit();
+    }
 } else {
-  StudentNotes::update_note($note, $noteid, $mysqli);
+    StudentNotes::update_note($note, $noteid, $mysqli);
 }
 
 echo json_encode('SUCCESS');

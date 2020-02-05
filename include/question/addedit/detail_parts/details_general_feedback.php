@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -33,12 +34,12 @@ $value_editor =  $question->get_correct_fback();
 <?php
     require 'details_editor.php';
 
-    if ($show_incorrect) {
-        $field_editor = (isset($field_incorrect)) ? $field_incorrect : 'incorrect_fback';
-        $label_editor = (isset($label_incorrect)) ? $label_incorrect : '<label for="' . $field_editor . '">' . $string['fbincorrect'] . '</label><br /><span class="note">' . $string['fbincorrectmsg'] . '</span>';
-        $value_editor = $question->get_incorrect_fback();
-        require 'details_editor.php';
-    }
+if ($show_incorrect) {
+    $field_editor = (isset($field_incorrect)) ? $field_incorrect : 'incorrect_fback';
+    $label_editor = (isset($label_incorrect)) ? $label_incorrect : '<label for="' . $field_editor . '">' . $string['fbincorrect'] . '</label><br /><span class="note">' . $string['fbincorrectmsg'] . '</span>';
+    $value_editor = $question->get_incorrect_fback();
+    require 'details_editor.php';
+}
 ?>
   </tbody>
 </table>

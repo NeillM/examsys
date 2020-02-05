@@ -24,4 +24,3 @@ $string['duration'] = 'Duration';
 $string['colour'] = 'Colour';
 $string['mins'] = 'mins';
 $string['hours'] = 'hours';
-?>

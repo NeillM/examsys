@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -21,6 +22,7 @@
  * @copyright Copyright (c) 2011 The University of Nottingham
  * @package
  */
+
 require_once '../include/staff_auth.inc';
 ?>
 <!DOCTYPE html>
@@ -54,21 +56,21 @@ echo draw_toprightmenu(224);
 ?>
 <div id="content">
   <?php
-  echo "<div class=\"head_title\">\n";
-  echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
-  echo "<div class=\"breadcrumb\">";
-  $modutils = module_utils::get_instance();
-  echo '<a href="../index.php">' . $string['home'] . '</a>';
-  if (isset($_GET['module']) and $_GET['module'] != '') {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . $modutils->get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
-  } elseif ($folder != '') {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folder . '">' . $folder_name . '</a>';
-  }
-  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a>';
+    echo "<div class=\"head_title\">\n";
+    echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
+    echo '<div class="breadcrumb">';
+    $modutils = module_utils::get_instance();
+    echo '<a href="../index.php">' . $string['home'] . '</a>';
+    if (isset($_GET['module']) and $_GET['module'] != '') {
+        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . $modutils->get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
+    } elseif ($folder != '') {
+        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folder . '">' . $folder_name . '</a>';
+    }
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a>';
 
-  echo "</div><div class=\"page_title\">" . $string['importfromqti'] . "</div>";
-  echo "</div>";
-  ?>
+    echo '</div><div class="page_title">' . $string['importfromqti'] . '</div>';
+    echo '</div>';
+    ?>
     <br/>
     <br/>
     <br/>

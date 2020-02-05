@@ -77,4 +77,3 @@ $string['student'] = 'Student';
 $string['started'] = 'Started';
 $string['finished'] = 'Finished';
 $string['comments'] = 'Comments:';
-?>

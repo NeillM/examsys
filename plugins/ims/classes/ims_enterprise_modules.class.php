@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō - http://Rogō.org/ using code original part of Moodle - http://moodle.org
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -23,32 +24,35 @@ namespace plugins\ims;
  * @copyright 2011 Aaron C Spike
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class ims_enterprise_modules {
+class ims_enterprise_modules
+{
 
   /** @var array IMS group description names */
-  private $imsnames;
+    private $imsnames;
 
   /** @var array Rogō module field names */
-  private $moduleattrs;
+    private $moduleattrs;
 
   /**
    * Loads default
    */
-  public function __construct() {
-    $this->imsnames = array(
-      'short' => 'short',
-      'long' => 'long',
-      'full' => 'full');
-    $this->moduleattrs = array('moduleid', 'fullname');
-  }
+    public function __construct()
+    {
+        $this->imsnames = array(
+        'short' => 'short',
+        'long' => 'long',
+        'full' => 'full');
+        $this->moduleattrs = array('moduleid', 'fullname');
+    }
 
   /**
    * moduleattrs getter
    * @return array
    */
-  public function get_moduleattrs() {
-    return $this->moduleattrs;
-  }
+    public function get_moduleattrs()
+    {
+        return $this->moduleattrs;
+    }
 
   /**
    * This function is only used when first setting up the plugin, to
@@ -57,17 +61,18 @@ class ims_enterprise_modules {
    * @param string $moduleattr
    * @return string
    */
-  public function determine_default_modulemapping($moduleattr) {
-    switch ($moduleattr) {
-      case 'fullname':
-        $imsname = 'short';
-        break;
-      case 'shortname':
-        $imsname = 'modulecode';
-        break;
-      default:
-        $imsname = 'ignore';
+    public function determine_default_modulemapping($moduleattr)
+    {
+        switch ($moduleattr) {
+            case 'fullname':
+                $imsname = 'short';
+                break;
+            case 'shortname':
+                $imsname = 'modulecode';
+                break;
+            default:
+                $imsname = 'ignore';
+        }
+        return $imsname;
     }
-    return $imsname;
-  }
 }

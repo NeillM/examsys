@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -40,7 +41,9 @@ require_once '../lang/' . $language . '/paper/label_answer.php';
 
 $id = check_var('id', 'GET', true, false, true, param::ALPHANUM); // While it is an int, the numbers are too large for 32-bit PHP.
 
-if (isset($_POST['sessionid'])) require '../include/marking_functions.inc';
+if (isset($_POST['sessionid'])) {
+    require '../include/marking_functions.inc';
+}
 
 $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($id, $mysqli, $string, true);
 
@@ -53,22 +56,22 @@ $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($property_id, $labs, $paper_title, $paper_type, $paper_prologue, $marking, $screen, $start_date, $end_date, $paper_bgcolor, $paper_fgcolor, $paper_themecolor, $paper_labelcolor, $bidirectional, $calendar_year, $password);
 if ($stmt->num_rows == 0) {  // No record found, the paper can't exist
-  $stmt->close();
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $stmt->close();
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 while ($stmt->fetch()) {
-  $row_no++;
-  $no_screens = $screen;
-  if (!isset($screen_data[$no_screens])) {
-    $screen_data[$no_screens] = 1;
-  } else {
-    $screen_data[$no_screens]++;
-  }
-  if ($row_no == 1) {
-    $original_paper_type = $paper_type;
-  }
+    $row_no++;
+    $no_screens = $screen;
+    if (!isset($screen_data[$no_screens])) {
+        $screen_data[$no_screens] = 1;
+    } else {
+        $screen_data[$no_screens]++;
+    }
+    if ($row_no == 1) {
+        $original_paper_type = $paper_type;
+    }
 }
 $stmt->free_result();
 $stmt->close();
@@ -80,12 +83,12 @@ $current_screen = 1;
 <html>
 <head>
   <?php
-  if ($paper_type == '3') {
-    echo "<title>" . $string['survey'] . "</title>\n";
-  } else {
-    echo "<title>" . $string['assessment'] . "</title>\n";
-  }
-  ?>
+    if ($paper_type == '3') {
+        echo '<title>' . $string['survey'] . "</title>\n";
+    } else {
+        echo '<title>' . $string['assessment'] . "</title>\n";
+    }
+    ?>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="imagetoolbar" content="no">
   <meta http-equiv="imagetoolbar" content="false">
@@ -136,33 +139,37 @@ $current_screen = 1;
   //look for braching and random questions and overwrite as needed
   $questions_array = array();
   $tmp_q_no = 0;
-  foreach ($tmp_questions_array as &$question) {
+foreach ($tmp_questions_array as &$question) {
     if ($question['q_type'] != 'info') {
-      $tmp_q_no++;
+        $tmp_q_no++;
     }
     if ($question['q_type'] == 'random') {
-      $questions_array[] = $propertyObj->randomQOverwrite($question, $user_answers, $screen_data, $used_questions, $string);
+        $questions_array[] = $propertyObj->randomQOverwrite($question, $user_answers, $screen_data, $used_questions, $string);
     } elseif ($question['q_type'] == 'keyword_based') {
-      $questions_array[] = $propertyObj->keywordQOverwrite($question, $user_answers, $screen_data, $used_questions, $string);
+        $questions_array[] = $propertyObj->keywordQOverwrite($question, $user_answers, $screen_data, $used_questions, $string);
     } else {
-      $questions_array[] = $question;
+        $questions_array[] = $question;
     }
-  }
+}
   unset($tmp_questions_array);
 
   //display the questions
   echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\" class=\"qtable\">\n";
   echo "<col width=\"40\"><col>\n";
-  foreach($questions_array as &$question) {
-    if ($q_displayed == 0 and $current_screen == 1 and $paper_prologue != '') echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
-    if ($q_displayed == 0 and $question['theme'] == '') echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
+foreach ($questions_array as &$question) {
+    if ($q_displayed == 0 and $current_screen == 1 and $paper_prologue != '') {
+        echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
+    }
+    if ($q_displayed == 0 and $question['theme'] == '') {
+        echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
+    }
     display_question($question, $paper_type, $current_screen, $previous_q_type, $question_no, $question_offset, $user_answers);
     $previous_q_type = $question['q_type'];
     $q_displayed++;
     if (param::optional('break', false, param::BOOLEAN, param::FETCH_GET)) {
-      echo "<tr class='page_break'></tr>";
+        echo "<tr class='page_break'></tr>";
     }
-  }
+}
   echo "</table>\n";
 
   $mysqli->close();

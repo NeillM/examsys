@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -30,11 +31,10 @@ $breakID  = check_var('breakID', 'GET', true, false, true);
 $details = ToiletBreaks::toilet_break_by_id($breakID, $mysqli);
 
 if ($details === false) {
-  echo "<div style=\"padding:10px\">" . $string['err'] . "</div>\n";
+    echo '<div style="padding:10px">' . $string['err'] . "</div>\n";
 } else {
-  echo "<div style=\"padding:10px\">" . $string['toiletbreak'] . "</div>\n";
-  echo "<div style=\"padding:10px\">" . $details . "</div>\n";
+    echo '<div style="padding:10px">' . $string['toiletbreak'] . "</div>\n";
+    echo '<div style="padding:10px">' . $details . "</div>\n";
 }
 
 $mysqli->close();
-?>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -27,30 +28,30 @@
 require '../include/sysadmin_auth.inc';
 
 // Query 'objectives' to get the IDs of the 'relationships' records to delete.
-$obj_data = $mysqli->prepare("SELECT obj_id FROM objectives WHERE identifier = ? AND idMod = ? AND calendar_year = ?");
+$obj_data = $mysqli->prepare('SELECT obj_id FROM objectives WHERE identifier = ? AND idMod = ? AND calendar_year = ?');
 $obj_data->bind_param('dis', $_POST['identifier'], $_POST['moduleID'], $_POST['session']);
 $obj_data->execute();
 $obj_data->store_result();
 $obj_data->bind_result($obj_id);
 while ($obj_data->fetch()) {
   // Delete from 'relationships' table.
-  $result = $mysqli->prepare("DELETE FROM relationships WHERE obj_id = ? AND idMod = ? AND calendar_year = ? AND vle_api = ''");
-  $result->bind_param('iis', $obj_id, $_POST['moduleID'], $_POST['session']);
-  $result->execute();  
-  $result->close();
+    $result = $mysqli->prepare("DELETE FROM relationships WHERE obj_id = ? AND idMod = ? AND calendar_year = ? AND vle_api = ''");
+    $result->bind_param('iis', $obj_id, $_POST['moduleID'], $_POST['session']);
+    $result->execute();
+    $result->close();
 }
 $obj_data->close();
 
 // Delete from 'sessions' table.
-$result = $mysqli->prepare("DELETE FROM sessions WHERE identifier = ? AND idMod = ? AND calendar_year = ?");
+$result = $mysqli->prepare('DELETE FROM sessions WHERE identifier = ? AND idMod = ? AND calendar_year = ?');
 $result->bind_param('dis', $_POST['identifier'], $_POST['moduleID'], $_POST['session']);
-$result->execute();  
+$result->execute();
 $result->close();
 
 // Delete from 'objectives' table.
-$result = $mysqli->prepare("DELETE FROM objectives WHERE identifier = ? AND idMod = ? AND calendar_year = ?");
+$result = $mysqli->prepare('DELETE FROM objectives WHERE identifier = ? AND idMod = ? AND calendar_year = ?');
 $result->bind_param('dis', $_POST['identifier'], $_POST['moduleID'], $_POST['session']);
-$result->execute();  
+$result->execute();
 $result->close();
 
 $render = new render($configObject);

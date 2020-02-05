@@ -22,26 +22,31 @@
  * @package
  */
 
-class IE_Main {
-  var $output;
-  var $errors = array();
-  var $warnings = array();
+class IE_Main
+{
+    var $output;
+    var $errors = array();
+    var $warnings = array();
 
-  function AddError($message, $id = '0') {
-    $this->errors[$id][] = $message;
-  }
+    function AddError($message, $id = '0')
+    {
+        $this->errors[$id][] = $message;
+    }
 
-  function AddWarning($message, $id = '0') {
-    $this->warnings[$id][] = $message;
-  }
+    function AddWarning($message, $id = '0')
+    {
+        $this->warnings[$id][] = $message;
+    }
 
-  function Save($params, &$data) {
-    $this->AddError("This export type is not supported");
-//  $this->AddError($string['errmsg1']);
-  }
+    function Save($params, &$data)
+    {
+        $this->AddError('This export type is not supported');
+  //  $this->AddError($string['errmsg1']);
+    }
 
-  function Load($params) {
-    $this->AddError("This import type is not supported");
-//  $this->AddError($string['errmsg2']);
-  }
+    function Load($params)
+    {
+        $this->AddError('This import type is not supported');
+  //  $this->AddError($string['errmsg2']);
+    }
 }

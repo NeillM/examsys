@@ -20,7 +20,8 @@
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2015 The University of Nottingham
  */
-class yearutils {
+class yearutils
+{
 
     /**
      * A mysqli object.
@@ -35,28 +36,29 @@ class yearutils {
     /**
      * Constant for all academic years.
      */
-    const ALL = "ALL";
+    const ALL = 'ALL';
     /**
      * Constant for academic years viewable in the calendar.
      */
-    const CAL = "CAL";
+    const CAL = 'CAL';
     /**
      * Constant for academic years viewable in statistics.
      */
-    const STAT = "STAT";
+    const STAT = 'STAT';
     /**
      * Constant for academic years visible in both the calendar and statisics.
      */
-    const BOTH = "BOTH";
+    const BOTH = 'BOTH';
     /**
      * Constant for academic years visible in user searches
      */
-    const USERS = "USERS";
+    const USERS = 'USERS';
 
     /**
      * Called when the object is unserialised.
      */
-    public function __wakeup() {
+    public function __wakeup()
+    {
         // The serialised database object will be invalid,
         // this object should only be serialised during an error report,
         // so adding the current database connect seems like a waste of time.
@@ -67,7 +69,8 @@ class yearutils {
      * Constructor
      * @param rogo db $mysqli
      */
-    function __construct($mysqli) {
+    function __construct($mysqli)
+    {
         $configObject = Config::get_instance();
 
         $this->mysqli = $mysqli;
@@ -88,31 +91,32 @@ class yearutils {
      *        BOTH (active calendar and statistical years), USERS (years with active users)
      * @return array - associative array of calendar and academic years
      */
-    public function get_supported_years($state = self::ALL) {
+    public function get_supported_years($state = self::ALL)
+    {
 
         if ($state == self::STAT) {
-            $filter = "WHERE stat_status = 1 AND deleted is NULL ORDER BY calendar_year ASC";
-        } else if ($state == self::CAL) {
-            $filter = "WHERE cal_status = 1 AND deleted is NULL ORDER BY calendar_year ASC";
-        } else if ($state == self::BOTH) {
-          $filter = "WHERE cal_status = 1 AND stat_status = 1 AND deleted is NULL ORDER BY calendar_year ASC";
-        } else if ($state == self::USERS) {
-            $paperyears = $this->mysqli->prepare("SELECT DISTINCT calendar_year FROM modules_student");
+            $filter = 'WHERE stat_status = 1 AND deleted is NULL ORDER BY calendar_year ASC';
+        } elseif ($state == self::CAL) {
+            $filter = 'WHERE cal_status = 1 AND deleted is NULL ORDER BY calendar_year ASC';
+        } elseif ($state == self::BOTH) {
+            $filter = 'WHERE cal_status = 1 AND stat_status = 1 AND deleted is NULL ORDER BY calendar_year ASC';
+        } elseif ($state == self::USERS) {
+            $paperyears = $this->mysqli->prepare('SELECT DISTINCT calendar_year FROM modules_student');
             $paperyears->execute();
             $paperyears->bind_result($year);
             $years = array();
             while ($paperyears->fetch()) {
-              $years[] = $year;
+                $years[] = $year;
             }
             $paperyears->close();
             if (count($years) > 0) {
-              $years = ltrim(implode(",", $years), ',');
-              $filter = "WHERE deleted is NULL AND calendar_year in ($years) ORDER BY calendar_year ASC";
+                $years = ltrim(implode(',', $years), ',');
+                $filter = "WHERE deleted is NULL AND calendar_year in ($years) ORDER BY calendar_year ASC";
             } else {
-              return array();
+                return array();
             }
         } else {
-            $filter = "WHERE deleted is NULL ORDER BY calendar_year ASC";
+            $filter = 'WHERE deleted is NULL ORDER BY calendar_year ASC';
         }
 
         $supported_years = array();
@@ -135,20 +139,21 @@ class yearutils {
      * @param string $yeartype - supported year search type.
      * @return string - options list
      */
-    public function get_calendar_year_dropdown_options($paper_type, $calendar_year, $string, $yeartype = self::ALL) {
-        $list = "";
+    public function get_calendar_year_dropdown_options($paper_type, $calendar_year, $string, $yeartype = self::ALL)
+    {
+        $list = '';
         if ($paper_type != '2' and $paper_type != '4') {
-            $list = "<option value=\"\">" . $string['na'] .  "</option>\n";
+            $list = '<option value="">' . $string['na'] .  "</option>\n";
         }
 
         $years = $this->get_supported_years($yeartype);
 
         foreach ($years as $calendar => $academic) {
-            $list .= "<option value=\"" . $calendar . "\"";
+            $list .= '<option value="' . $calendar . '"';
             if ($calendar_year == $calendar) {
                 $list .= 'selected';
             }
-            $list .= ">" . $academic . "</option>\n";
+            $list .= '>' . $academic . "</option>\n";
         }
         return $list;
     }
@@ -158,10 +163,11 @@ class yearutils {
      * @param string - $specific_year_start - Academic year start for the specifc module.
      * @return string - True is correct format, flase otherwise
      */
-    public function check_year_start_format($specific_year_start) {
+    public function check_year_start_format($specific_year_start)
+    {
 
         // Fisrt check correct format xx/xx
-        if(!preg_match('/([0-9]{2})\/([0-9]{2})/', $specific_year_start)) {
+        if (!preg_match('/([0-9]{2})\/([0-9]{2})/', $specific_year_start)) {
             return false;
         }
         
@@ -169,7 +175,6 @@ class yearutils {
         $year = date('Y');
         list($month, $day) = explode('/', $specific_year_start);
         return checkdate($month, $day, $year);
-
     }
     
     /**
@@ -177,7 +182,8 @@ class yearutils {
      * @param string - $specific_year_start - Academic year start for the specifc module in the format 'mm/dd'.
      * @return string - The current academic year.
      */
-    public function get_current_session($specific_year_start = '') {
+    public function get_current_session($specific_year_start = '')
+    {
 
         $date_as_time = strtotime(date('Y/m/d'));
         if ($this->check_year_start_format($specific_year_start)) {
@@ -200,7 +206,8 @@ class yearutils {
      * @param string - $specific_year_start - Academic year start for the specifc module in the format 'mm/dd'.
      * @return string - The next academic year.
      */
-    public function get_next_session($specific_year_start = '') {
+    public function get_next_session($specific_year_start = '')
+    {
 
         $date_as_time = strtotime(date('Y/m/d'));
         if ($this->check_year_start_format($specific_year_start)) {
@@ -223,22 +230,23 @@ class yearutils {
      * @param string - $specific_year_start - Academic year start for the specifc module in the format 'mm/dd'.
      * @return string - The previous academic year.
      */
-    public function get_previous_session($specific_year_start = '') {
+    public function get_previous_session($specific_year_start = '')
+    {
 
-      $date_as_time = strtotime(date('Y/m/d'));
-      if ($this->check_year_start_format($specific_year_start)) {
-        $start_this_year = strtotime(date('Y') . '/' . $specific_year_start);
-      } else {
-        $start_this_year = strtotime(date('Y') . '/' . $this->academic_year_start);
-      }
+        $date_as_time = strtotime(date('Y/m/d'));
+        if ($this->check_year_start_format($specific_year_start)) {
+            $start_this_year = strtotime(date('Y') . '/' . $specific_year_start);
+        } else {
+            $start_this_year = strtotime(date('Y') . '/' . $this->academic_year_start);
+        }
 
-      if ($date_as_time < $start_this_year) {
-        $session = date('Y') - 2;
-      } else {
-        $session = date('Y') - 1;
-      }
+        if ($date_as_time < $start_this_year) {
+            $session = date('Y') - 2;
+        } else {
+            $session = date('Y') - 1;
+        }
 
-      return $session;
+        return $session;
     }
 
     /**
@@ -246,9 +254,10 @@ class yearutils {
      * @param int $calendar_year - the calendar year
      * @return string - The associated academic year
      */
-    public function get_academic_session($calendar_year) {
+    public function get_academic_session($calendar_year)
+    {
 
-        $result = $this->mysqli->prepare("SELECT academic_year FROM academic_year WHERE calendar_year = ?");
+        $result = $this->mysqli->prepare('SELECT academic_year FROM academic_year WHERE calendar_year = ?');
         $result->bind_param('i', $calendar_year);
         $result->execute();
         $result->bind_result($academic_year);
@@ -263,9 +272,10 @@ class yearutils {
      * @param int $calendar_year - the calendar year
      * @return bool - true if calendar year exists, false otherwise
      */
-    public function check_calendar_year($calendar_year) {
+    public function check_calendar_year($calendar_year)
+    {
 
-        $result = $this->mysqli->prepare("SELECT 1 FROM academic_year WHERE calendar_year = ? LIMIT 1");
+        $result = $this->mysqli->prepare('SELECT 1 FROM academic_year WHERE calendar_year = ? LIMIT 1');
         $result->bind_param('i', $calendar_year);
         $result->execute();
         $result->store_result();
@@ -277,21 +287,20 @@ class yearutils {
 
         $result->close();
         return false;
-
     }
     
     /**
      * Check atleast two academic session exists.
      * @return bool - number of active academic sessions
      */
-     public function count_active_academic_session() {
+    public function count_active_academic_session()
+    {
 
-        $result = $this->mysqli->prepare("SELECT count(calendar_year) FROM academic_year WHERE deleted IS NULL");
+        $result = $this->mysqli->prepare('SELECT count(calendar_year) FROM academic_year WHERE deleted IS NULL');
         $result->execute();
         $result->bind_result($count);
         $result->fetch();
         return $count;
-
     }
 
     /**
@@ -300,12 +309,13 @@ class yearutils {
      *
      * @return bool - Return false if no year is passed.
      */
-     public function delete_year($calendar_year, $user) {
+    public function delete_year($calendar_year, $user)
+    {
         if ($calendar_year == '') {
-          return false;
+            return false;
         }
 
-        $result = $this->mysqli->prepare("UPDATE academic_year SET deleted = NOW(), deletedby = ? WHERE calendar_year = ? AND deleted is NULL");
+        $result = $this->mysqli->prepare('UPDATE academic_year SET deleted = NOW(), deletedby = ? WHERE calendar_year = ? AND deleted is NULL');
         $result->bind_param('ii', $user, $calendar_year);
         $result->execute();
         $result->close();
@@ -316,15 +326,16 @@ class yearutils {
      * @param int $calendar_year - the calendar year
      * @return bool - true if calendar year is in use, false otherwise
      */
-    public function check_calendar_year_in_use($calendar_year) {
+    public function check_calendar_year_in_use($calendar_year)
+    {
 
-        $result = $this->mysqli->prepare("(SELECT calendar_year FROM modules_student WHERE calendar_year = ?) "
-          . "UNION (SELECT calendar_year FROM objectives WHERE calendar_year = ?) "
-          . "UNION (SELECT calendar_year FROM properties WHERE calendar_year = ?) "
-          . "UNION (SELECT calendar_year FROM relationships WHERE calendar_year = ?) "
-          . "UNION (SELECT calendar_year FROM sessions WHERE calendar_year = ?) "
-          . "UNION (SELECT academic_year FROM sms_imports WHERE academic_year = ?) "
-          . "UNION (SELECT calendar_year FROM users_metadata WHERE calendar_year = ?) LIMIT 1");
+        $result = $this->mysqli->prepare('(SELECT calendar_year FROM modules_student WHERE calendar_year = ?) '
+          . 'UNION (SELECT calendar_year FROM objectives WHERE calendar_year = ?) '
+          . 'UNION (SELECT calendar_year FROM properties WHERE calendar_year = ?) '
+          . 'UNION (SELECT calendar_year FROM relationships WHERE calendar_year = ?) '
+          . 'UNION (SELECT calendar_year FROM sessions WHERE calendar_year = ?) '
+          . 'UNION (SELECT academic_year FROM sms_imports WHERE academic_year = ?) '
+          . 'UNION (SELECT calendar_year FROM users_metadata WHERE calendar_year = ?) LIMIT 1');
         $result->bind_param('iiiiiii', $calendar_year, $calendar_year, $calendar_year, $calendar_year, $calendar_year, $calendar_year, $calendar_year);
         $result->execute();
         $result->store_result();
@@ -335,6 +346,5 @@ class yearutils {
         }
         $result->close();
         return false;
-
     }
 }

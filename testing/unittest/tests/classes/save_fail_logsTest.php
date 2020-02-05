@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,26 +25,28 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2017 onwards The University of Nottingham
  * @package tests
  */
-class save_fail_logsTest extends unittestdatabase {
+class save_fail_logsTest extends unittestdatabase
+{
 
     /**
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $datagenerator = $this->get_datagenerator('papers', 'core');
-        $pid1 = $datagenerator->create_paper(array('papertitle' => "test formative",
+        $pid1 = $datagenerator->create_paper(array('papertitle' => 'test formative',
             'bidirectional' => '1',
-            'fullscreen' => "1",
-            'paperowner' => "admin",
-            'papertype' => "0",
-            'modulename' => "Training Module"));
-        $pid2 = $datagenerator->create_paper(array('papertitle' => "test formative 2",
+            'fullscreen' => '1',
+            'paperowner' => 'admin',
+            'papertype' => '0',
+            'modulename' => 'Training Module'));
+        $pid2 = $datagenerator->create_paper(array('papertitle' => 'test formative 2',
             'bidirectional' => '1',
-            'fullscreen' => "1",
-            'paperowner' => "admin",
-            'papertype' => "0",
-            'modulename' => "Training Module"));
+            'fullscreen' => '1',
+            'paperowner' => 'admin',
+            'papertype' => '0',
+            'modulename' => 'Training Module'));
         $datagenerator = $this->get_datagenerator('incident', 'core');
         $datagenerator->create_fail(array('userid' => $this->admin['id'], 'paperid' => $pid1['id']));
         $datagenerator->create_fail(array('userid' => $this->admin['id'], 'paperid' => $pid2['id']));
@@ -53,7 +56,8 @@ class save_fail_logsTest extends unittestdatabase {
      * Test get all the logs from fail logs record
      * @group log
      */
-    public function test_get_save_fail_logs() {
+    public function test_get_save_fail_logs()
+    {
         $log_obj = new save_fail_logs($this->db);
         $this->assertEquals(2, count($log_obj->get_save_fail_logs()));
     }
@@ -62,7 +66,8 @@ class save_fail_logsTest extends unittestdatabase {
      * Test deleting a save fail log record
      * @group log
      */
-    public function test_delete_a_save_fail_log() {
+    public function test_delete_a_save_fail_log()
+    {
         $log_obj = new save_fail_logs($this->db);
         $log_obj->delete_a_save_fail_log('1');
         $this->assertTrue($log_obj->delete_a_save_fail_log(1));
@@ -72,7 +77,8 @@ class save_fail_logsTest extends unittestdatabase {
      * Test deleting all the save fail logs records
      * @group log
      */
-    public function test_delete_save_fail_logs() {
+    public function test_delete_save_fail_logs()
+    {
         $log_obj = new save_fail_logs($this->db);
         $this->assertTrue($log_obj->delete_save_fail_logs());
     }

@@ -18,4 +18,3 @@ require '../lang/' . $language . '/std_setting/index.php';
 
 $string['validate'] = 'Validate';
 $string['nostandardsset'] = 'No standards have been set for this paper yet.';
-?>

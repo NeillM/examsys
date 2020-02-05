@@ -35,4 +35,3 @@ $string['description3'] = 'A questionnaire used for eliciting views and feedback
 $string['description4'] = 'Objective Structured Clinical Examination (OSCE) assessment type used for medical and health sciences fields.';
 $string['description5'] = 'This paper type allows marks from offline papers to be loaded into Rogo.';
 $string['description6'] = 'Generates a form for students to review their peers.';
-?>

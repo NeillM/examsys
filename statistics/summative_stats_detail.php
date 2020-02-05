@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -69,7 +70,7 @@ $month_end[8] = ($current_year + 1) . '0901000000';
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/statistics.css" />
-	<link rel="stylesheet" type="text/css" href="../css/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="../css/tabs.css" />
 
   <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
@@ -79,14 +80,14 @@ $month_end[8] = ($current_year + 1) . '0901000000';
 <body>
 <?php
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
+    
+    echo draw_toprightmenu();
 ?>
 <div id="content">
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../statistics/index.php"><?php echo $string['statistics']; ?></a></div>
-  <div class="page_title"><?php echo $string['summativeexamstats'] ?>: <span style="font-weight:normal"><?php echo $string[$month_names[$current_month - 1]] . ' (' .$_GET['calyear']; ?>/<?php echo (substr($_GET['calyear'],2,2)+1) ?>)</span></div>
+  <div class="page_title"><?php echo $string['summativeexamstats'] ?>: <span style="font-weight:normal"><?php echo $string[$month_names[$current_month - 1]] . ' (' . $_GET['calyear']; ?>/<?php echo (substr($_GET['calyear'], 2, 2) + 1) ?>)</span></div>
 </div>
 
 <table class="header" style="font-size:90%">
@@ -103,35 +104,35 @@ $month_end[8] = ($current_year + 1) . '0901000000';
 $total_student_no = 0;
 $distinct_users = array();
 
-$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date, '" . $configObject->get('cfg_long_date_time') . "') AS display_start_date, start_date, end_date FROM properties WHERE paper_type = '2' AND start_date >= " . $month_start[$current_month] . " AND end_date < " . $month_end[$current_month] . " AND labs != '' AND deleted IS NULL ORDER BY start_date");
+$result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date, '" . $configObject->get('cfg_long_date_time') . "') AS display_start_date, start_date, end_date FROM properties WHERE paper_type = '2' AND start_date >= " . $month_start[$current_month] . ' AND end_date < ' . $month_end[$current_month] . " AND labs != '' AND deleted IS NULL ORDER BY start_date");
 $result->execute();
 $result->store_result();
 $result->bind_result($property_id, $paper_title, $display_start_date, $start_date, $end_date);
 while ($result->fetch()) {
-  $paper_count = 0;
+    $paper_count = 0;
   
-  $paper_data = $mysqli->prepare("SELECT DISTINCT userid FROM log_metadata, users WHERE log_metadata.userID = users.ID AND roles IN ('Student', 'graduate') AND paperID = ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ?");
-  $paper_data->bind_param('iss', $property_id, $start_date, $end_date);
-  $paper_data->execute();
-  $paper_data->store_result();
-  $paper_data->bind_result($tmp_userID);
-  $user_no = $paper_data->num_rows;
-  while ($paper_data->fetch()) {
-    $distinct_users[$tmp_userID] = 1;
-  }
-  $paper_data->close();
+    $paper_data = $mysqli->prepare("SELECT DISTINCT userid FROM log_metadata, users WHERE log_metadata.userID = users.ID AND roles IN ('Student', 'graduate') AND paperID = ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ?");
+    $paper_data->bind_param('iss', $property_id, $start_date, $end_date);
+    $paper_data->execute();
+    $paper_data->store_result();
+    $paper_data->bind_result($tmp_userID);
+    $user_no = $paper_data->num_rows;
+    while ($paper_data->fetch()) {
+        $distinct_users[$tmp_userID] = 1;
+    }
+    $paper_data->close();
   
-  if ($user_no == 0) {
-    $class = ' grey';
-  } else {
-    $class = '';    
-  }
+    if ($user_no == 0) {
+        $class = ' grey';
+    } else {
+        $class = '';
+    }
   
-  echo "<tr><td>" . $display_start_date . "</td><td><a href=\"../paper/details.php?paperID=$property_id\">" . $paper_title . "</a></td><td class=\"n$class\">$user_no</td></tr>\n";
-  $total_student_no += $user_no;
+    echo '<tr><td>' . $display_start_date . "</td><td><a href=\"../paper/details.php?paperID=$property_id\">" . $paper_title . "</a></td><td class=\"n$class\">$user_no</td></tr>\n";
+    $total_student_no += $user_no;
 }
 
-echo "<tr><td colspan=\"3\" class=\"n subtotal\">" . number_format($total_student_no) . "</td></tr>\n";
+echo '<tr><td colspan="3" class="n subtotal">' . number_format($total_student_no) . "</td></tr>\n";
 
 $result->close();
 $mysqli->close();

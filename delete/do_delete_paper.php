@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -31,9 +32,9 @@ $paperID = check_var('paperID', 'POST', true, false, true);
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 if ($properties->get_summative_lock() == 1) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['paperlocked'], $msg, $string['paperlocked'], '../artwork/padlock_48.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['paperlocked'], $msg, $string['paperlocked'], '../artwork/padlock_48.png', '#C00000', true, true);
 }
 
 $new_title = $properties->get_paper_title() . ' [deleted ' .  date($configObject->get('cfg_short_date_php')) . ']';
@@ -78,7 +79,7 @@ $mysqli->close();
 </div>
 <?php
 // Dataset.
-$render= new render($configObject);
+$render = new render($configObject);
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['module'] = $_POST['module'];
 $miscdataset['attributes']['folder'] = $_POST['folder'];

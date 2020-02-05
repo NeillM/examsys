@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -48,9 +49,9 @@ if (file_exists(dirname(dirname(__DIR__)) . '/node_modules/qunit/qunit/qunit.js'
     );
     
     if ($success) {
-      $template = 'test_runner.html';
+        $template = 'test_runner.html';
     } else {
-      $template = 'suite_not_found.html';
+        $template = 'suite_not_found.html';
     }
     
     // Output the page.

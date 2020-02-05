@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ namespace testing\datagenerator;
  * @package testing
  * @subpackage datagenerator
  */
-class labs extends generator {
+class labs extends generator
+{
     /** @var int Stores how many campuses have been created. */
     protected static $campusescreated = 0;
 
@@ -41,7 +43,8 @@ class labs extends generator {
      * @return array
      * @throws data_error
      */
-    public function create_campus($parameters) {
+    public function create_campus($parameters)
+    {
         // If an object is passed convert it into an array.
         if (is_object($parameters)) {
             $parameters = (array)$parameters;
@@ -67,7 +70,8 @@ class labs extends generator {
      * @return array
      * @throws data_error
      */
-    public function create_exam_pc($parameters) {
+    public function create_exam_pc($parameters)
+    {
         // If an object is passed convert it into an array.
         if (is_object($parameters)) {
             $parameters = (array)$parameters;
@@ -102,7 +106,8 @@ class labs extends generator {
      * @return array
      * @throws data_error
      */
-    public function create_lab($parameters) {
+    public function create_lab($parameters)
+    {
         // If an object is passed convert it into an array.
         if (is_object($parameters)) {
             $parameters = (array)$parameters;
@@ -137,7 +142,8 @@ class labs extends generator {
      * @param string $name
      * @return int The id of the campus record, or 0 if none is found.
      */
-    protected function get_campus_id($name) {
+    protected function get_campus_id($name)
+    {
         $campuses = $this->get_campuses();
         foreach ($campuses as $id => $campus) {
             if (trim($campus['campusname']) === trim($name)) {
@@ -152,7 +158,8 @@ class labs extends generator {
      *
      * @return array
      */
-    protected function get_campuses() {
+    protected function get_campuses()
+    {
         $helper = new \campus($this->db);
         return $helper->get_all_campus_details();
     }
@@ -162,7 +169,8 @@ class labs extends generator {
      *
      * @return string
      */
-    protected function get_default_campus() {
+    protected function get_default_campus()
+    {
         $campuses = $this->get_campuses();
         foreach ($campuses as $campus) {
             if (!empty($campus['isdefault'])) {
@@ -179,7 +187,8 @@ class labs extends generator {
      * @param string $name
      * @return int|false The database id of the lab, or false if it could not be found.
      */
-    protected function get_lab_id($name) {
+    protected function get_lab_id($name)
+    {
         $helper = new \LabFactory($this->db);
         return $helper->get_lab_id($name);
     }
@@ -191,8 +200,9 @@ class labs extends generator {
      * @throws data_error If passed parameter is invalid
      * @return int The database id of the new lab record.
      */
-    protected function insert_campus($values) {
-        $query = $this->db->prepare("INSERT INTO campus (name, isdefault) VALUES (?, ?)");
+    protected function insert_campus($values)
+    {
+        $query = $this->db->prepare('INSERT INTO campus (name, isdefault) VALUES (?, ?)');
         $query->bind_param('si', $values['name'], $values['isdefault']);
         if (!$query->execute()) {
             // The campus was not successfully inserted.
@@ -208,8 +218,9 @@ class labs extends generator {
      * @return int The database id of the new lab record.
      * @throws data_error If passed parameter is invalid
      */
-    protected function insert_exam_pc($values) {
-        $query = $this->db->prepare("INSERT INTO client_identifiers (lab, address, hostname, low_bandwidth) VALUES (?, ?, ?, ?)");
+    protected function insert_exam_pc($values)
+    {
+        $query = $this->db->prepare('INSERT INTO client_identifiers (lab, address, hostname, low_bandwidth) VALUES (?, ?, ?, ?)');
         $query->bind_param('issi', $values['lab'], $values['address'], $values['hostname'], $values['low_bandwidth']);
         if (!$query->execute()) {
             // The exam pc was not successfully inserted.
@@ -225,8 +236,9 @@ class labs extends generator {
      * @return int The database id of the new lab record.
      * @throws data_error If passed parameter is invalid
      */
-    protected function insert_lab($values) {
-        $sql = "INSERT INTO labs (name, campus, building, room_no, timetabling, it_support, plagarism) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    protected function insert_lab($values)
+    {
+        $sql = 'INSERT INTO labs (name, campus, building, room_no, timetabling, it_support, plagarism) VALUES (?, ?, ?, ?, ?, ?, ?)';
         $query = $this->db->prepare($sql);
         $query->bind_param('sisssss', $values['name'], $values['campus'], $building, $room_no, $timetabling, $it_support, $plagarism);
         if (!$query->execute()) {

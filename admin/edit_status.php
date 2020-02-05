@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -30,44 +31,44 @@ $data = array();
 $s_id = (isset($_REQUEST['id'])) ? $_REQUEST['id'] : -1;
 
 if ($s_id != -1) {
-  $q_status = new QuestionStatus($mysqli, $string, $s_id);
-  $title = $string['edit'] . ' ' . $string['status'];
+    $q_status = new QuestionStatus($mysqli, $string, $s_id);
+    $title = $string['edit'] . ' ' . $string['status'];
 } else {
-  $q_status = new QuestionStatus($mysqli, $string, array());
-  $title = $string['add'] . ' ' . $string['status'];
+    $q_status = new QuestionStatus($mysqli, $string, array());
+    $title = $string['add'] . ' ' . $string['status'];
 }
 
 if (isset($_POST['submit'])) {
-  $data['name'] = $_POST['name'];
-  $data['exclude_marking'] = (isset($_POST['exclude_marking'])) ? true : false;
-  $data['retired'] = (isset($_POST['retired'])) ? true : false;
-  $data['is_default'] = (isset($_POST['is_default'])) ? true : false;
-  $data['change_locked'] = (isset($_POST['change_locked'])) ? true : false;
-  $data['validate'] = (isset($_POST['validate'])) ? true : false;
-  $data['display_warning'] = (isset($_POST['display_warning'])) ? true : false;
-  $data['colour'] = $_POST['colour'];
+    $data['name'] = $_POST['name'];
+    $data['exclude_marking'] = (isset($_POST['exclude_marking'])) ? true : false;
+    $data['retired'] = (isset($_POST['retired'])) ? true : false;
+    $data['is_default'] = (isset($_POST['is_default'])) ? true : false;
+    $data['change_locked'] = (isset($_POST['change_locked'])) ? true : false;
+    $data['validate'] = (isset($_POST['validate'])) ? true : false;
+    $data['display_warning'] = (isset($_POST['display_warning'])) ? true : false;
+    $data['colour'] = $_POST['colour'];
 
-  if (isset($q_status)) {
-    $q_status->set_name($data['name']);
-    $q_status->set_exclude_marking($data['exclude_marking']);
-    $q_status->set_retired($data['retired']);
-    $q_status->set_is_default($data['is_default']);
-    $q_status->set_change_locked($data['change_locked']);
-    $q_status->set_validate($data['validate']);
-    $q_status->set_display_warning($data['display_warning']);
-    $q_status->set_colour($data['colour']);
-  } else {
-    $q_status = new QuestionStatus($mysqli, $string, $data);
-  }
-
-  try {
-    if ($q_status->save()) {
-      header("location: list_statuses.php");
-      exit();
+    if (isset($q_status)) {
+        $q_status->set_name($data['name']);
+        $q_status->set_exclude_marking($data['exclude_marking']);
+        $q_status->set_retired($data['retired']);
+        $q_status->set_is_default($data['is_default']);
+        $q_status->set_change_locked($data['change_locked']);
+        $q_status->set_validate($data['validate']);
+        $q_status->set_display_warning($data['display_warning']);
+        $q_status->set_colour($data['colour']);
+    } else {
+        $q_status = new QuestionStatus($mysqli, $string, $data);
     }
-  } catch (ItemExistsException $ex) {
-    $error = 'duplicate';
-  }
+
+    try {
+        if ($q_status->save()) {
+            header('location: list_statuses.php');
+            exit();
+        }
+    } catch (ItemExistsException $ex) {
+        $error = 'duplicate';
+    }
 }
 
 $em_checked = ($q_status->get_exclude_marking()) ? ' checked="checked"' : '';
@@ -124,9 +125,9 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
   require '../include/status_options.inc.php';
   require '../include/toprightmenu.inc';
   require '../tools/colour_picker/colour_picker.inc';
-	
-	echo draw_toprightmenu();
-	
+    
+    echo draw_toprightmenu();
+    
 ?>
   <div id="content">
     <div class="head_title">
@@ -138,11 +139,11 @@ $display_warning_checked = ($q_status->get_display_warning()) ? ' checked="check
     <form id="theform" name="status_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" autocomplete="off">
 <?php
 
-  if (isset($error) and $error = 'duplicate') {
-?>
+if (isset($error) and $error = 'duplicate') {
+    ?>
       <div class="form-error"><?php echo $string['duplicateerror'] ?></div>
-<?php
-  }
+    <?php
+}
 ?>
       <table class="admin-form">
         <tr><th><label for="name"><?php echo $string['name'] ?></label></th><td><input type="text" size="50" id="name" name="name" value="<?php echo $q_status->get_name(); ?>" required autofocus /></td></tr>

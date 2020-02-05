@@ -176,6 +176,3 @@ $string['standardcolours'] = 'Standard Colours';
 $string['more'] = 'More...';
 $string['cancel'] = 'Cancel';
 $string['OK'] = 'OK';
-
-
-?>

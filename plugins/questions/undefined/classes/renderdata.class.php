@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -25,26 +26,30 @@ namespace plugins\questions\undefined;
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
 
-class renderdata extends \questiondata {
-  use \defaultgetmarks;
+class renderdata extends \questiondata
+{
+    use \defaultgetmarks;
+
   /**
    * Constructor
    */
-  function __construct() {
-    parent::__construct();
-    $this->questiontype = 'undefined';
-  }
+    function __construct()
+    {
+        parent::__construct();
+        $this->questiontype = 'undefined';
+    }
 
   /**
    * Disable/Enable display of question header sections for template rendering
    */
-  public function set_question_head() {
-      $this->displayscenario = false;
-      $this->displaymedia = false;
-      $this->displaydefault = true;
-      $this->displaynotes = false;
-      $this->displayleadin = true;
-  }
+    public function set_question_head()
+    {
+        $this->displayscenario = false;
+        $this->displaymedia = false;
+        $this->displaydefault = true;
+        $this->displaynotes = false;
+        $this->displayleadin = true;
+    }
 
   /**
    * Question level settings for template rendering
@@ -52,9 +57,10 @@ class renderdata extends \questiondata {
    * @param mixed $useranswer user answer
    * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    */
-  public function set_question($screen_pre_submitted, $useranswer, $userdismissed) {
-    // Nothing to do.
-  }
+    public function set_question($screen_pre_submitted, $useranswer, $userdismissed)
+    {
+      // Nothing to do.
+    }
 
   /**
    * Option level settings for template rendering
@@ -63,9 +69,10 @@ class renderdata extends \questiondata {
    * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
-    // Nothing to do.
-  }
+    public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
+    {
+      // Nothing to do.
+    }
 
   /**
    * Additional option level settings for template rendering
@@ -74,7 +81,8 @@ class renderdata extends \questiondata {
    * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
-    // Nothing to do.
-  }
+    public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
+    {
+      // Nothing to do.
+    }
 }

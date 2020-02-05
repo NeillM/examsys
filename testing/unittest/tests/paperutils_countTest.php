@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
-class paperutils_counttest extends unittestdatabase {
+class paperutils_counttest extends unittestdatabase
+{
 
     /**
      * @var integer Storage for user id in tests
@@ -35,7 +37,8 @@ class paperutils_counttest extends unittestdatabase {
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
         $datagenerator->create_academic_year(array('calendar_year' => 2015, 'academic_year' => '2015/16'));
         $datagenerator->create_academic_year(array('calendar_year' => 2016, 'academic_year' => '2016/17'));
@@ -44,58 +47,58 @@ class paperutils_counttest extends unittestdatabase {
             'title' => 'Dr', 'email' => 'staff1@example.com', 'gender' => 'Male', 'first_names' => 'a', 'yearofstudy' => null, 'roles' => 'Staff'));
         $this->uid3 = $user['id'];
         $datagenerator = $this->get_datagenerator('papers', 'core');
-        $pid1 = $datagenerator->create_paper(array('papertitle' => "Test progressive",
+        $pid1 = $datagenerator->create_paper(array('papertitle' => 'Test progressive',
             'calendaryear' => 2015,
-            'modulename' => "Training Module",
-            'paperowner' => "staff1",
-            'papertype' => "1"));
-        $pid2 = $datagenerator->create_paper(array('papertitle' => "Test summative 1",
+            'modulename' => 'Training Module',
+            'paperowner' => 'staff1',
+            'papertype' => '1'));
+        $pid2 = $datagenerator->create_paper(array('papertitle' => 'Test summative 1',
             'calendaryear' => 2016,
-            'modulename' => "Training Module",
-            'paperowner' => "staff1",
-            'papertype' => "2"));
-        $pid3 = $datagenerator->create_paper(array('papertitle' => "Test survey",
+            'modulename' => 'Training Module',
+            'paperowner' => 'staff1',
+            'papertype' => '2'));
+        $pid3 = $datagenerator->create_paper(array('papertitle' => 'Test survey',
             'calendaryear' => 2015,
-            'modulename' => "Online Help",
-            'paperowner' => "staff1",
-            'papertype' => "3"));
-        $pid4 = $datagenerator->create_paper(array('papertitle' => "Test osce 1",
+            'modulename' => 'Online Help',
+            'paperowner' => 'staff1',
+            'papertype' => '3'));
+        $pid4 = $datagenerator->create_paper(array('papertitle' => 'Test osce 1',
             'calendaryear' => 2016,
-            'modulename' => "Training Module",
-            'paperowner' => "staff1",
-            'papertype' => "4"));
-        $pid5 = $datagenerator->create_paper(array('papertitle' => "Test osce 2",
+            'modulename' => 'Training Module',
+            'paperowner' => 'staff1',
+            'papertype' => '4'));
+        $pid5 = $datagenerator->create_paper(array('papertitle' => 'Test osce 2',
             'calendaryear' => 2016,
-            'modulename' => "Training Module",
-            'paperowner' => "admin",
-            'papertype' => "4"));
-        $pid6 = $datagenerator->create_paper(array('papertitle' => "Test summative 2",
+            'modulename' => 'Training Module',
+            'paperowner' => 'admin',
+            'papertype' => '4'));
+        $pid6 = $datagenerator->create_paper(array('papertitle' => 'Test summative 2',
             'calendaryear' => 2016,
-            'modulename' => "Training Module",
-            'paperowner' => "admin",
-            'papertype' => "2"));
+            'modulename' => 'Training Module',
+            'paperowner' => 'admin',
+            'papertype' => '2'));
         \Paper_utils::delete_paper($pid6['id'], $this->admin['id'], $this->db);
         $this->set_active_user($this->admin['id']);
-        \Paper_utils::remove_modules(array(), $pid2['id'], $this->db, $this->userobject, "all");
-        \Paper_utils::remove_modules(array(), $pid4['id'], $this->db, $this->userobject, "all");
+        \Paper_utils::remove_modules(array(), $pid2['id'], $this->db, $this->userobject, 'all');
+        \Paper_utils::remove_modules(array(), $pid4['id'], $this->db, $this->userobject, 'all');
         $datagenerator = $this->get_datagenerator('questions', 'core');
-        $question = $datagenerator->create_question(array("user" => "staff1",
-            "leadin" => "this is a test 1",
-            "type" => 'enhancedcalc'));
+        $question = $datagenerator->create_question(array('user' => 'staff1',
+            'leadin' => 'this is a test 1',
+            'type' => 'enhancedcalc'));
         $datagenerator->add_to_module(array('question' => $question['id'], 'module' => 1));
         $datagenerator->add_question_to_paper(array('paper' => $pid1['id'], 'question' => $question['id'], 'screen' => 1, 'displaypos' => 1));
-        $question = $datagenerator->create_question(array("user" => "staff1",
-            "leadin" => "this is a test 2",
-            "type" => 'enhancedcalc'));
+        $question = $datagenerator->create_question(array('user' => 'staff1',
+            'leadin' => 'this is a test 2',
+            'type' => 'enhancedcalc'));
         $datagenerator->add_question_to_paper(array('paper' => $pid4['id'], 'question' => $question['id'], 'screen' => 1, 'displaypos' => 1));
-        $datagenerator->create_question(array("user" => "staff1",
-            "leadin" => "this is a test 3",
-            "type" => 'enhancedcalc'));
+        $datagenerator->create_question(array('user' => 'staff1',
+            'leadin' => 'this is a test 3',
+            'type' => 'enhancedcalc'));
         $datagenerator->add_to_module(array('question' => $question['id'], 'module' => 2));
-        $datagenerator->create_question(array("user" => "staff1",
-            "leadin" => "this is a test 4",
-            "type" => 'enhancedcalc',
-            "deleted" => true));
+        $datagenerator->create_question(array('user' => 'staff1',
+            'leadin' => 'this is a test 4',
+            'type' => 'enhancedcalc',
+            'deleted' => true));
     }
 
     /**
@@ -104,7 +107,8 @@ class paperutils_counttest extends unittestdatabase {
      *
      * @group PaperUtils
      */
-    public function test_count_unassigned_papers() {
+    public function test_count_unassigned_papers()
+    {
         // Get the Rogo database connection.
         $db = $this->config->db;
         $paperutils = new PaperUtils();
@@ -122,7 +126,8 @@ class paperutils_counttest extends unittestdatabase {
      *
      * @group PaperUtils
      */
-    public function test_count_unassigned_questions() {
+    public function test_count_unassigned_questions()
+    {
         // Get the Rogo database connection.
         $db = $this->config->db;
         $paperutils = new PaperUtils();

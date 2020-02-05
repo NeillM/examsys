@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Confirm that it is OK to proceed deleting a computer lab.
 *
 * @author Simon Wilkinson
@@ -31,7 +32,7 @@ $labID = check_var('labID', 'GET', true, false, true);
 
 $lab_no = 0;
 
-$result = $mysqli->prepare("SELECT name FROM labs WHERE id = ?");
+$result = $mysqli->prepare('SELECT name FROM labs WHERE id = ?');
 $result->bind_param('i', $labID);
 $result->execute();
 $result->store_result();
@@ -41,9 +42,9 @@ $lab_no = $result->num_rows;
 $result->close();
 
 if ($lab_no == 0) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 $mysqli->close();

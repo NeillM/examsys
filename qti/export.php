@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -41,51 +42,53 @@ $dest = check_var('dest', 'GET', true, false, true);
 $status_tmp = QuestionStatus::get_all_statuses($mysqli, $string, true);
 $statuses = array();
 foreach ($status_tmp as $sid => $status) {
-  $statuses[$sid] = $status->get_name();
+    $statuses[$sid] = $status->get_name();
 }
 
 $ob = new OB();
 
 if (isset($_GET['debug'])) {
-  $show_debug = true;
+    $show_debug = true;
 } else {
-  $show_debug = false;
+    $show_debug = false;
 }
 
 // load in some paper information to display
 if ($ids != '') {
-  $type = 'paper';
+    $type = 'paper';
 
   // get paper properties
-  $properties = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli, $string);
-  $paper_title = $properties->get_paper_title();
+    $properties = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli, $string);
+    $paper_title = $properties->get_paper_title();
 } else {
-  $ids = GetVar("q_id");
-  $type = 'question';
+    $ids = GetVar('q_id');
+    $type = 'question';
 
-  $paper_title = 'Questions';
+    $paper_title = 'Questions';
 }
 
 // set up classes
 $load_params = new stdClass();
 $load_params->source = 'rogo';
 $load_params->type = $type;
-$load_params->ids = explode(",", $ids);
+$load_params->ids = explode(',', $ids);
 $paperID = $load_params->ids[0];
 $import = new IE_Local_Load();
 $import->setStatuses($statuses);
 
-if ($dest == "qti12") {
-  $export = new IE_QTI12_Save();
+if ($dest == 'qti12') {
+    $export = new IE_QTI12_Save();
 } else {
-  die("Invalid destination - $dest");
+    die("Invalid destination - $dest");
 }
 
 // create dir for qti to save into, and put in params
 $qtiexportdirectory = rogo_directory::get_directory('qti_export');
 $base_dir = $qtiexportdirectory->location();
-$dir = GetAuthorName($userObject->get_user_ID())."/".date("Y-m-d")."/".date("H.i.s"); //TODO replace with userobject function
-if (!file_exists($base_dir.$dir)) mkdir($base_dir.$dir, 0755, true);
+$dir = GetAuthorName($userObject->get_user_ID()) . '/' . date('Y-m-d') . '/' . date('H.i.s'); //TODO replace with userobject function
+if (!file_exists($base_dir . $dir)) {
+    mkdir($base_dir . $dir, 0755, true);
+}
 $save_params = new stdClass();
 $save_params->dir = $dir;
 $save_params->base_dir = $base_dir;
@@ -128,69 +131,69 @@ $ob->Restore();
 /////////////////////////
 
 // display result page
-require "tmpl/export_main.php";
+require 'tmpl/export_main.php';
 $mainoutput = $ob->GetContent();
 
 // store page with details of all questions imported or exported
 $ob->Clear();
-require "tmpl/export_details.php";
-$result_debug_file = $base_dir.$dir."/result.html";
+require 'tmpl/export_details.php';
+$result_debug_file = $base_dir . $dir . '/result.html';
 $output = $ob->GetContent();
 file_put_contents($result_debug_file, $output);
 
 // save access information and other stuff into the destination folder
-$access_file = $base_dir.$dir."/access.xml";
+$access_file = $base_dir . $dir . '/access.xml';
 $ob->Clear();
-require "tmpl/access.php";
+require 'tmpl/access.php';
 $access = $ob->GetContent();
 file_put_contents($access_file, $access);
 
 // store intermediate format debug information
-$load_debug_file = $base_dir.$dir."/debug_int.html";
+$load_debug_file = $base_dir . $dir . '/debug_int.html';
 $ob->Clear();
-require "tmpl/debug_head.php";
+require 'tmpl/debug_head.php';
 print_p($data);
 $data_p = $ob->GetContent();
 file_put_contents($load_debug_file, $data_p);
 
 // store intermediate format debug information -  plain version
-$load_debug_file = $base_dir.$dir."/debug_int.txt";
+$load_debug_file = $base_dir . $dir . '/debug_int.txt';
 $ob->Clear();
-require "tmpl/debug_head.php";
+require 'tmpl/debug_head.php';
 print_r($data);
 $data_p = $ob->GetContent();
 file_put_contents($load_debug_file, $data_p);
 
 // save load debug info
-$load_debug_file = $base_dir.$dir."/debug_load.html";
+$load_debug_file = $base_dir . $dir . '/debug_load.html';
 $ob->Clear();
-include "tmpl/debug_head.php";
+include 'tmpl/debug_head.php';
 echo $result['load']['debug'];
 $data_p = $ob->GetContent();
 file_put_contents($load_debug_file, $data_p);
 
 // save save debug info
-$save_debug_file = $base_dir.$dir."/debug_save.html";
+$save_debug_file = $base_dir . $dir . '/debug_save.html';
 $ob->Clear();
-include "tmpl/debug_head.php";
+include 'tmpl/debug_head.php';
 echo $result['save']['debug'];
 $data_p = $ob->GetContent();
 file_put_contents($save_debug_file, $data_p);
 
 // save other debug info
-$result_debug_file = $base_dir.$dir."/debug_res.html";
+$result_debug_file = $base_dir . $dir . '/debug_res.html';
 $ob->Clear();
 unset($result['save']['debug']);
 unset($result['load']['debug']);
 unset($result['save']['data']);
 unset($result['load']['data']);
-require "tmpl/debug_head.php";
+require 'tmpl/debug_head.php';
 print_p($result);
 $result_p = $ob->GetContent();
 file_put_contents($result_debug_file, $result_p);
 
 // save other debug info -  plain version
-$result_debug_file = $base_dir.$dir."/debug_res.txt";
+$result_debug_file = $base_dir . $dir . '/debug_res.txt';
 $ob->Clear();
 print_r($result);
 $result_p = $ob->GetContent();
@@ -198,5 +201,3 @@ file_put_contents($result_debug_file, $result_p);
 
 $ob->Clear();
 echo $mainoutput;
-
-?>

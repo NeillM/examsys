@@ -24,38 +24,41 @@
  * @package
  */
 
-Class OptionAREA extends OptionEdit {
-  protected $_fields_required = array('question_id', 'marks_correct', 'correct');
+class OptionAREA extends OptionEdit
+{
+    protected $_fields_required = array('question_id', 'marks_correct', 'correct');
 
   /**
    * Is this option blank?
    * @return boolean
    */
-  public function is_blank() {
-    return ($this->correct == '');
-  }
+    public function is_blank()
+    {
+        return ($this->correct == '');
+    }
   
   /**
-   * Check that the minimum set of fields exist in the given data to create a new option 
+   * Check that the minimum set of fields exist in the given data to create a new option
    * @param array $data
    * @param array $files expects PHP FILES array
    * @param integer $index option number
    * @return boolean
    */
-  public function minimum_fields_exist($data, $files, $index) {
-    return true;
-  }
+    public function minimum_fields_exist($data, $files, $index)
+    {
+        return true;
+    }
 
   /**
    * @param string $value
    */
-  public function set_correct($value) {
-    if (strpos($value, ';') !== false) {
-      $tmp = explode(';', $value);
-      $value = $tmp[1];
+    public function set_correct($value)
+    {
+        if (strpos($value, ';') !== false) {
+            $tmp = explode(';', $value);
+            $value = $tmp[1];
+        }
+        $value = rtrim($value, ', ');
+        parent::set_correct($value);
     }
-    $value = rtrim($value, ', ');
-    parent::set_correct($value);
-  }
 }
-

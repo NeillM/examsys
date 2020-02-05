@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -39,26 +40,26 @@ $type = check_var('type', 'GET', true, false, true);
 $module = check_var('module', 'GET', true, false, true);
 
 if ($module == 0) {
-  $module_details['moduleid'] = 'Unassigned';
-  $module_details['active'] = 1;
+    $module_details['moduleid'] = 'Unassigned';
+    $module_details['active'] = 1;
 } else {
-  $module_details = module_utils::get_full_details_by_ID($module, $mysqli);
+    $module_details = module_utils::get_full_details_by_ID($module, $mysqli);
 }
 
 if ($module != 0 and strpos($module_details['checklist'], 'mapping') === false and $_GET['type'] == 'objective') {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 if (!$module_details) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 } elseif ($module_details['active'] == 0) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);	
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 $qbank = new QuestionBank($module, $module_details['moduleid'], $string, $notice, $mysqli);
@@ -92,27 +93,27 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
   require '../include/module_options.inc';
   require '../include/toprightmenu.inc';
 
-	echo draw_toprightmenu();
+    echo draw_toprightmenu();
   
-  if ($type == 'type') {
-    $display_type = $string['bytype']; 
+if ($type == 'type') {
+    $display_type = $string['bytype'];
     $zero_warning = $string['noquestions'];
-  } elseif ($type == 'bloom') {
-    $display_type = $string['byblooms']; 
+} elseif ($type == 'bloom') {
+    $display_type = $string['byblooms'];
     $zero_warning = $string['noquestionsbloom'];
-  } elseif ($type == 'keyword') {
+} elseif ($type == 'keyword') {
     $display_type = $string['bykeyword'];
     $zero_warning = $string['noquestionskeyword'];
-  } elseif ($type == 'status') {
+} elseif ($type == 'status') {
     $display_type = $string['bystatus'];
     $zero_warning = $string['noquestionsstatus'];
-  } elseif ($type == 'performance') {
+} elseif ($type == 'performance') {
     $display_type = $string['byperformance'];
     $zero_warning = $string['noquestionsperformance'];
-  } elseif ($type == 'objective') {
+} elseif ($type == 'objective') {
     $display_type = $string['byobjective'];
     $zero_warning = $string['noquestionsobjective'];
-  }
+}
 ?>
 <div id="content">
   
@@ -126,77 +127,79 @@ $bank_types = $qbank->get_categories($type);
 $stats      = $qbank->get_stats($type);
 
 if (count($stats) == 0) {
-	echo $notice->info_strip($zero_warning, 100) . "\n</div>\n</body>\n</html>";
-  exit;
+    echo $notice->info_strip($zero_warning, 100) . "\n</div>\n</body>\n</html>";
+    exit;
 }
 
 if ($type != 'keyword') {
-  echo "<br />\n";
+    echo "<br />\n";
 }
 if ($type == 'performance') {
-  echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $string['bydifficulty'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
+    echo '<div class="subsect_table"><div class="subsect_title"><nobr>' . $string['bydifficulty'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
 }
 
 $old_section = '';
 
-foreach ($bank_types as $id=>$type_name) {
-  $grey_text = '';
-  $url = 'list.php?type=' . $type . '&subtype=' . $id . '&module=' . $module;
+foreach ($bank_types as $id => $type_name) {
+    $grey_text = '';
+    $url = 'list.php?type=' . $type . '&subtype=' . $id . '&module=' . $module;
   
-  if ($type == 'keyword') {
-    if ($old_section != $type_name{0}) {
-      echo "<br clear=\"all\" />\n";
-      echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $type_name{0} . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
-    }
-    $old_section = $type_name{0};
-  } elseif ($type == 'performance' and $id == 'highest') {
-    echo "<br clear=\"left\" />\n";
-    echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $string['bydiscrimination'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
-  } elseif ($type == 'objective') {
-    $ids = $type_name['ids'];
-    $type_name = $type_name['label'];
+    if ($type == 'keyword') {
+        if ($old_section != $type_name{0}) {
+            echo "<br clear=\"all\" />\n";
+            echo '<div class="subsect_table"><div class="subsect_title"><nobr>' . $type_name{0} . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
+        }
+        $old_section = $type_name{0};
+    } elseif ($type == 'performance' and $id == 'highest') {
+        echo "<br clear=\"left\" />\n";
+        echo '<div class="subsect_table"><div class="subsect_title"><nobr>' . $string['bydiscrimination'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
+    } elseif ($type == 'objective') {
+        $ids = $type_name['ids'];
+        $type_name = $type_name['label'];
 
-    $q_count = 0;
-    foreach ($ids as $o_id) {
-      if (isset($stats[$o_id])) {
-        $q_count += $stats[$o_id];
-      }
+        $q_count = 0;
+        foreach ($ids as $o_id) {
+            if (isset($stats[$o_id])) {
+                $q_count += $stats[$o_id];
+            }
+        }
+        $stats[$id] = $q_count;
     }
-    $stats[$id] = $q_count;
-  }
 
-  if ($_GET['type'] == 'objective') {
-    $class = 'f100';
-  } else {
-    $class = 'f2';
-  }
+    if ($_GET['type'] == 'objective') {
+        $class = 'f100';
+    } else {
+        $class = 'f2';
+    }
   
-  if (isset($stats[$id])) {
-    if (($type != 'objective' and $type != 'performance') or $stats[$id] > 0) {
-      $grey_text = number_of_questions($stats[$id], $string);
-      echo display_folder($url, $type_name, $grey_text, $class);
+    if (isset($stats[$id])) {
+        if (($type != 'objective' and $type != 'performance') or $stats[$id] > 0) {
+            $grey_text = number_of_questions($stats[$id], $string);
+            echo display_folder($url, $type_name, $grey_text, $class);
+        }
+    } elseif (isset($stats[$type_name])) {
+        $grey_text = number_of_questions($stats[$type_name], $string);
+        echo display_folder($url, $type_name, $grey_text, $class);
     }
-  } elseif (isset($stats[$type_name])) {
-    $grey_text = number_of_questions($stats[$type_name], $string);
-    echo display_folder($url, $type_name, $grey_text, $class);
-  }
 }
 
-function number_of_questions($question_no, $string) {
-  $html = '<br /><span class="grey">' . number_format($question_no) . ' ';
-  if ($question_no == 1) {
-    $html .= $string['question'];
-  } else {
-    $html .= $string['questions'];
-  }
-  $html .= '</span>';
+function number_of_questions($question_no, $string)
+{
+    $html = '<br /><span class="grey">' . number_format($question_no) . ' ';
+    if ($question_no == 1) {
+        $html .= $string['question'];
+    } else {
+        $html .= $string['questions'];
+    }
+    $html .= '</span>';
 
-  return $html;
+    return $html;
 }
 
-function display_folder($url, $type_name, $grey_text, $class) {
-  $type_name = strip_tags($type_name);
-  return "<div class=\"$class\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\" class=\"blacklink\">" . $type_name . "</a>$grey_text</div></div>\n";
+function display_folder($url, $type_name, $grey_text, $class)
+{
+    $type_name = strip_tags($type_name);
+    return "<div class=\"$class\"><div class=\"f_icon\"><a href=\"$url\"><img src=\"../artwork/yellow_folder.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"$url\" class=\"blacklink\">" . $type_name . "</a>$grey_text</div></div>\n";
 }
 
 $render = new render($configObject);

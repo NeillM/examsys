@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -31,31 +32,31 @@ require '../include/admin_auth.inc';
 $lookupid = param::required('LOOKUP', param::INT, param::FETCH_GET);
 
 if (isset($_SESSION['ldaplookupdata'][$lookupid])) {
-  $lookup = Lookup::get_instance($configObject, $mysqli);
-  $data = new stdClass();
-  $data->lookupdata = $_SESSION['ldaplookupdata'][$lookupid];
+    $lookup = Lookup::get_instance($configObject, $mysqli);
+    $data = new stdClass();
+    $data->lookupdata = $_SESSION['ldaplookupdata'][$lookupid];
 
-  $output = $lookup->userlookup($data);
+    $output = $lookup->userlookup($data);
 
-  if (!isset($output->lookupdata->yearofstudy)) {
-    $output->lookupdata->yearofstudy = '';
-  }
-  if (!isset($output->lookupdata->studentID)) {
-    $output->lookupdata->studentID = '';
-  }
-  if (!isset($output->lookupdata->coursecode)) {
-    $output->lookupdata->coursecode = '';
-  }
-  if (!isset($output->lookupdata->gender)) {
-    $output->lookupdata->gender = '';
-  }
-  $output->lookupdata->title = StringUtils::my_ucwords($output->lookupdata->title); // Stop problems with uppercase titles.
-  if ($output->lookupdata->title == 'Prof') {
-    $output->lookupdata->title = 'Professor';
-  }
+    if (!isset($output->lookupdata->yearofstudy)) {
+        $output->lookupdata->yearofstudy = '';
+    }
+    if (!isset($output->lookupdata->studentID)) {
+        $output->lookupdata->studentID = '';
+    }
+    if (!isset($output->lookupdata->coursecode)) {
+        $output->lookupdata->coursecode = '';
+    }
+    if (!isset($output->lookupdata->gender)) {
+        $output->lookupdata->gender = '';
+    }
+    $output->lookupdata->title = StringUtils::my_ucwords($output->lookupdata->title); // Stop problems with uppercase titles.
+    if ($output->lookupdata->title == 'Prof') {
+        $output->lookupdata->title = 'Professor';
+    }
 
-  unset($_SESSION['ldaplookupdata']);
-  echo json_encode(array('type' => 'SUCCESS',
+    unset($_SESSION['ldaplookupdata']);
+    echo json_encode(array('type' => 'SUCCESS',
     'title' => $output->lookupdata->title,
     'surname' => $output->lookupdata->surname,
     'firstname' => $output->lookupdata->firstname,
@@ -65,8 +66,8 @@ if (isset($_SESSION['ldaplookupdata'][$lookupid])) {
     'gender' => $output->lookupdata->gender,
     'yearofstudy' => $output->lookupdata->yearofstudy,
     'studentID' => $output->lookupdata->studentID));
-  exit();
+    exit();
 } else {
-  unset($_SESSION['ldaplookupdata']);
-  echo json_encode(array('type' => 'ERROR'));
+    unset($_SESSION['ldaplookupdata']);
+    echo json_encode(array('type' => 'ERROR'));
 }

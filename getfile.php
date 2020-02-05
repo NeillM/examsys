@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -32,26 +33,27 @@ $forcedownload = check_var('forcedownload', 'REQUEST', false, true, true, param:
 $forcedownload = !empty($forcedownload);
 
 try {
-  $directory = rogo_directory::get_directory($type);
+    $directory = rogo_directory::get_directory($type);
 } catch (directory_not_found $e) {
-  send_404();
+    send_404();
 }
 
 try {
-  $directory->send_file($filename, $forcedownload);
+    $directory->send_file($filename, $forcedownload);
 } catch (Exception $e) {
   // The file does not exist or is not readable by the web server, exit.
-  send_404();
+    send_404();
 }
 
 /**
  * Send a not found response.
  */
-function send_404() {
-  if (substr(php_sapi_name(), 0, 3) == 'cgi') {
-    header("Status: 404 Not Found");
-  } else {
-    header('HTTP/1.0 404 not found');
-  }
-  exit;
+function send_404()
+{
+    if (substr(php_sapi_name(), 0, 3) == 'cgi') {
+        header('Status: 404 Not Found');
+    } else {
+        header('HTTP/1.0 404 not found');
+    }
+    exit;
 }

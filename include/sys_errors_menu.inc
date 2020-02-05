@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -28,15 +29,14 @@
 <br />
 
 <div id="menu1a">
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/information_icon_grey.gif" alt="<?php echo $string['displaydetails'] ?>" /><?php echo $string['displaydetails'] ?></div>
+    <div class="grey menuitem"><img class="sidebar_icon" src="../artwork/information_icon_grey.gif" alt="<?php echo $string['displaydetails'] ?>" /><?php echo $string['displaydetails'] ?></div>
 </div>
 
 <div style="display:none" id="menu1b">
-	<div id="sys_errors_menu" class="menuitem"><a href="#"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="<?php echo $string['displaydetails'] ?>" /><?php echo $string['displaydetails'] ?></a></div>
+    <div id="sys_errors_menu" class="menuitem"><a href="#"><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="<?php echo $string['displaydetails'] ?>" /><?php echo $string['displaydetails'] ?></a></div>
 </div>
 
 <form name="errorsMenu" autocomplete="off">
 <input type="hidden" name="lineID" id="lineID" value="" />
 </form>
 </div>
-

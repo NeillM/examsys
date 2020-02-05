@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ namespace testing\datagenerator;
  * @package testing
  * @subpackage datagenerator
  */
-class log extends generator {
+class log extends generator
+{
 
     /**
      * Create metadata log
@@ -34,7 +36,8 @@ class log extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function create_metadata($parameters) {
+    public function create_metadata($parameters)
+    {
         if (empty($parameters['userID'])) {
             throw new data_error('userID must be provided');
         }
@@ -46,11 +49,21 @@ class log extends generator {
             'userID' => $parameters['userID'], 'paperID' => $parameters['paperID']);
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $sql = $this->db->prepare('INSERT INTO log_metadata VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-        $sql->bind_param('iisssiissi', $settings['userID'], $settings['paperID'], $settings['started'],
-            $settings['ipaddress'], $settings['student_grade'], $settings['year'], $settings['attempt']
-            , $settings['completed'], $settings['lab_name'], $settings['highest_screen']);
+        $sql->bind_param(
+            'iisssiissi',
+            $settings['userID'],
+            $settings['paperID'],
+            $settings['started'],
+            $settings['ipaddress'],
+            $settings['student_grade'],
+            $settings['year'],
+            $settings['attempt'],
+            $settings['completed'],
+            $settings['lab_name'],
+            $settings['highest_screen']
+        );
         if (!$sql->execute()) {
-            throw new data_error("Create new metadata log failed with parameters: " . implode("--", $settings));
+            throw new data_error('Create new metadata log failed with parameters: ' . implode('--', $settings));
         }
         $settings['id'] = $sql->insert_id;
         $sql->close();
@@ -65,7 +78,8 @@ class log extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function create_osceoverall($parameters) {
+    public function create_osceoverall($parameters)
+    {
         if (empty($parameters['userID'])) {
             throw new data_error('userID must be provided');
         }
@@ -77,11 +91,21 @@ class log extends generator {
             'userID' => $parameters['userID'], 'q_paper' => $parameters['q_paper']);
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $sql = $this->db->prepare('INSERT INTO log4_overall VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-        $sql->bind_param('isisissisi', $settings['userID'], $settings['started'], $settings['q_paper'],
-            $settings['overall_rating'], $settings['numeric_score'], $settings['feedback'], $settings['student_grade']
-            , $settings['examinerID'], $settings['osce_type'], $settings['year']);
+        $sql->bind_param(
+            'isisissisi',
+            $settings['userID'],
+            $settings['started'],
+            $settings['q_paper'],
+            $settings['overall_rating'],
+            $settings['numeric_score'],
+            $settings['feedback'],
+            $settings['student_grade'],
+            $settings['examinerID'],
+            $settings['osce_type'],
+            $settings['year']
+        );
         if (!$sql->execute()) {
-            throw new data_error("Create new osce overall log failed with parameters: " . implode("--", $settings));
+            throw new data_error('Create new osce overall log failed with parameters: ' . implode('--', $settings));
         }
         $settings['id'] = $sql->insert_id;
         $sql->close();
@@ -97,7 +121,8 @@ class log extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function create_osce($parameters) {
+    public function create_osce($parameters)
+    {
         if (empty($parameters['log4_overallID'])) {
             throw new data_error('log4_overallID must be provided');
         }
@@ -109,7 +134,7 @@ class log extends generator {
         $sql = $this->db->prepare('INSERT INTO log4 VALUES (NULL, ?, ?, ?, ?)');
         $sql->bind_param('issi', $settings['q_id'], $settings['rating'], $settings['q_parts'], $settings['log4_overallID']);
         if (! $sql->execute()) {
-            throw new data_error("Create new osce log failed with parameters: " . implode("--", $settings));
+            throw new data_error('Create new osce log failed with parameters: ' . implode('--', $settings));
         }
         $settings['id'] = $sql->insert_id;
         $sql->close();
@@ -125,7 +150,8 @@ class log extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function create_offline($parameters) {
+    public function create_offline($parameters)
+    {
         if (empty($parameters['metadataID'])) {
             throw new data_error('metadataID must be provided');
         }
@@ -137,8 +163,8 @@ class log extends generator {
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $sql = $this->db->prepare('INSERT INTO log5 VALUES (NULL, ?, ?, ?, ?, ?)');
         $sql->bind_param('iddii', $settings['q_id'], $settings['mark'], $settings['adjmark'], $settings['totalpos'], $settings['metadataID']);
-         if (!$sql->execute()) {
-            throw new data_error("Create new offline log failed with parameters: " . implode("--", $settings));
+        if (!$sql->execute()) {
+            throw new data_error('Create new offline log failed with parameters: ' . implode('--', $settings));
         }
         $settings['id'] = $sql->insert_id;
         $sql->close();
@@ -153,7 +179,8 @@ class log extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function create_peerreview($parameters) {
+    public function create_peerreview($parameters)
+    {
         if (empty($parameters['q_id'])) {
             throw new data_error('q_id must be provided');
         }
@@ -163,7 +190,7 @@ class log extends generator {
         $sql = $this->db->prepare('INSERT INTO log6 VALUES (NULL, ?, ?, ?, ?, ?, ?)');
         $sql->bind_param('iiisii', $settings['paperID'], $settings['reviewerID'], $settings['peerID'], $settings['started'], $settings['q_id'], $settings['rating']);
         if (!$sql->execute()) {
-            throw new data_error("Create new offline log failed with parameters: " . implode("--", $settings));
+            throw new data_error('Create new offline log failed with parameters: ' . implode('--', $settings));
         }
         $settings['id'] = $sql->insert_id;
         $sql->close();
@@ -180,7 +207,8 @@ class log extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function create_late($parameters) {
+    public function create_late($parameters)
+    {
         return $this->create_exam('_late', $parameters);
     }
 
@@ -194,7 +222,8 @@ class log extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function create_summative($parameters) {
+    public function create_summative($parameters)
+    {
         return $this->create_exam(\assessment::TYPE_SUMMATIVE, $parameters);
     }
 
@@ -208,7 +237,8 @@ class log extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function create_formative($parameters) {
+    public function create_formative($parameters)
+    {
         return $this->create_exam(\assessment::TYPE_FORMATIVE, $parameters);
     }
 
@@ -222,7 +252,8 @@ class log extends generator {
      * @throws data_error If passed parameter is invalid
      * @return integer
      */
-    public function create_progress($parameters) {
+    public function create_progress($parameters)
+    {
         return $this->create_exam(\assessment::TYPE_PROGRESS, $parameters);
     }
 
@@ -236,7 +267,8 @@ class log extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function create_survey($parameters) {
+    public function create_survey($parameters)
+    {
         return $this->create_exam(\assessment::TYPE_SURVEY, $parameters);
     }
 
@@ -247,7 +279,8 @@ class log extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    private function create_exam($type, $parameters) {
+    private function create_exam($type, $parameters)
+    {
         if (!isset($type)) {
             throw new data_error('type must be provided');
         }
@@ -263,11 +296,23 @@ class log extends generator {
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
 
         $sql = $this->db->prepare('INSERT INTO log' . $type . ' VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-        $sql->bind_param('iddisiiisssi', $parameters['q_id'], $settings['mark'], $settings['adjmark'],
-            $settings['totalpos'], $settings['user_answer'], $settings['errorstate'], $settings['screen']
-            , $settings['duration'], $settings['updated'], $settings['dismiss'], $parameters['option_order'], $parameters['metadataID']);
+        $sql->bind_param(
+            'iddisiiisssi',
+            $parameters['q_id'],
+            $settings['mark'],
+            $settings['adjmark'],
+            $settings['totalpos'],
+            $settings['user_answer'],
+            $settings['errorstate'],
+            $settings['screen'],
+            $settings['duration'],
+            $settings['updated'],
+            $settings['dismiss'],
+            $parameters['option_order'],
+            $parameters['metadataID']
+        );
         if (!$sql->execute()) {
-            throw new data_error("Create new paper log failed with parameters: " . $type . "--" . $parameters['q_id'] . "--" . $parameters['metadataID'] . "--" . implode("--", $settings));
+            throw new data_error('Create new paper log failed with parameters: ' . $type . '--' . $parameters['q_id'] . '--' . $parameters['metadataID'] . '--' . implode('--', $settings));
         }
         $settings['id'] = $sql->insert_id;
         $sql->close();

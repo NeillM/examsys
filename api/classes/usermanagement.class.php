@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -25,7 +26,8 @@ namespace api;
 /**
  * Person class
  */
-class usermanagement extends \api\abstractmanagement {
+class usermanagement extends \api\abstractmanagement
+{
     
     /**
      * Language pack component.
@@ -69,7 +71,8 @@ class usermanagement extends \api\abstractmanagement {
      * @param string $role  - role of user
      * @return array error status
      */
-    private function user_modules($id, $modules, $role) {
+    private function user_modules($id, $modules, $role)
+    {
         $langpack = new \langpack();
         $error = array();
         $yearutils = new \yearutils($this->db);
@@ -79,7 +82,7 @@ class usermanagement extends \api\abstractmanagement {
                 if ($module['name'] == 'moduleid') {
                     if ($role == 'Student') {
                         $enrol = \UserUtils::add_student_to_module($id, $module['value'], 1, $session, $this->db, 1);
-                        if (!$enrol) {   
+                        if (!$enrol) {
                             $error[$module['id']] = sprintf($langpack->get_string($this->langcomponent, 'enrol_onto_module_fail'), $module['value']);
                         }
                     } elseif ($role == 'Staff') {
@@ -100,7 +103,8 @@ class usermanagement extends \api\abstractmanagement {
      * @return string|bool course student is enrolled on or staff type if staff, false if staff member course is invalid,
      * 'UNKNOWN if user role is invalid.
      */
-    private function check_roles($params) {
+    private function check_roles($params)
+    {
         $roles = array_merge(self::$studentroles, self::$staffroles);
         if (!in_array($params['role'], $roles)) {
             return 'UNKNOWN';
@@ -124,8 +128,9 @@ class usermanagement extends \api\abstractmanagement {
      * @param array $params create user params
      * @param integer $userid rogo user id linked to web service client
      * @return - success status and user id
-     */ 
-    public function create($params, $userid) {
+     */
+    public function create($params, $userid)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('user_invalid_role', 'user_not_created', 'course_does_not_exist', 'user_already_exists'));
         $error = array();
@@ -145,9 +150,21 @@ class usermanagement extends \api\abstractmanagement {
         }
         if ($course) {
             // Create.
-            $id = \UserUtils::create_user($params['username'], $params['password'], $params['title'],
-                $params['forename'], $params['surname'], $params['email'], $params['course'],
-                $params['gender'], $params['year'], $params['role'], $params['studentid'], $this->db, $params['initials']);
+            $id = \UserUtils::create_user(
+                $params['username'],
+                $params['password'],
+                $params['title'],
+                $params['forename'],
+                $params['surname'],
+                $params['email'],
+                $params['course'],
+                $params['gender'],
+                $params['year'],
+                $params['role'],
+                $params['studentid'],
+                $this->db,
+                $params['initials']
+            );
             if ($id) {
                 if (!empty($params['modules'])) {
                     $error = $this->user_modules($id, $params['modules'], $params['role']);
@@ -174,8 +191,9 @@ class usermanagement extends \api\abstractmanagement {
      * @param array $params update user params
      * @param integer $userid rogo user id linked to web service client
      * @return - success status and user id
-     */ 
-    public function update($params, $userid) {
+     */
+    public function update($params, $userid)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('user_invalid_role', 'user_does_not_exist'
             , 'user_not_updated', 'user_not_created', 'course_does_not_exist', 'user_already_exists', 'user_nothing_to_update'));
@@ -235,9 +253,22 @@ class usermanagement extends \api\abstractmanagement {
             }
             if ($course) {
                 // Update.
-                $update = \UserUtils::update_user($params['id'], $params['username'], $params['password'], $params['title'],
-                            $params['forename'], $params['surname'], $params['email'], $params['course'],
-                            $params['gender'], $params['year'], $params['role'], $params['studentid'], $this->db, $params['initials']);
+                $update = \UserUtils::update_user(
+                    $params['id'],
+                    $params['username'],
+                    $params['password'],
+                    $params['title'],
+                    $params['forename'],
+                    $params['surname'],
+                    $params['email'],
+                    $params['course'],
+                    $params['gender'],
+                    $params['year'],
+                    $params['role'],
+                    $params['studentid'],
+                    $this->db,
+                    $params['initials']
+                );
                 if ($update) {
                     if (!empty($params['modules'])) {
                         $error = $this->user_modules($params['id'], $params['modules'], $params['role']);
@@ -257,9 +288,10 @@ class usermanagement extends \api\abstractmanagement {
      * Delete user
      * @param array $parms delete user parameters
      * @param integer $userid rogo user id linked to web service client
-     * @return  
+     * @return
      */
-    public function delete($params, $userid) {
+    public function delete($params, $userid)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('user_paper_exists' ,'user_not_deleted',
             'user_does_not_exist'));
@@ -286,5 +318,5 @@ class usermanagement extends \api\abstractmanagement {
              $data = array('statuscode' => $this->statuscodes['USER_DOES_NOT_EXIST'], 'status' => $strings['user_does_not_exist'], 'id' => null, 'externalid' => null);
         }
         return $this->get_response($data, 'delete', $params['nodeid']);
-    }  
+    }
 }

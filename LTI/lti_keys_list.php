@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -46,10 +47,10 @@ require '../include/sysadmin_auth.inc';
 
 <body>
 <?php
-	require '../include/lti_keys_options.inc';
+    require '../include/lti_keys_options.inc';
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
+    
+    echo draw_toprightmenu();
 ?>
 <div id="content">
 
@@ -72,12 +73,12 @@ require '../include/sysadmin_auth.inc';
   <tbody>
     <?php
     $id = 0;
-    $result = $mysqli->prepare("SELECT id, oauth_consumer_key, secret, name, context_id FROM lti_keys WHERE deleted IS NULL");
+    $result = $mysqli->prepare('SELECT id, oauth_consumer_key, secret, name, context_id FROM lti_keys WHERE deleted IS NULL');
     $result->execute();
     $result->bind_result($ltis['id'], $ltis['oauth_consumer_key'], $ltis['secret'], $ltis['name'], $ltis['context_id']);
     while ($result->fetch()) {
-      $id = $ltis['id'];
-      echo "<tr id=\"$id\" class=\"l\"><td class=\"col10\">" . $ltis['name'] . "</td><td>" . $ltis['oauth_consumer_key'] . "</td><td>" . $ltis['secret'] . "</td><td>" . $ltis['context_id'] . "</div></td></tr>\n";
+        $id = $ltis['id'];
+        echo "<tr id=\"$id\" class=\"l\"><td class=\"col10\">" . $ltis['name'] . '</td><td>' . $ltis['oauth_consumer_key'] . '</td><td>' . $ltis['secret'] . '</td><td>' . $ltis['context_id'] . "</div></td></tr>\n";
     }
     $result->close();
     $mysqli->close();

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,7 +27,8 @@ use \UserUtils;
  * @package testing
  * @subpackage datagenerator
  */
-class users extends generator {
+class users extends generator
+{
     /** @var string[] An array of surnames that can be used for users. */
     protected static $surnames = array(
         'Ahmed',
@@ -171,7 +173,8 @@ class users extends generator {
      * @return array Contains the values that were inserted into the database for the metadata.
      * @throws data_error
      */
-    public function create_metadata(int $userid, int $moduleid, $parameters) : array {
+    public function create_metadata(int $userid, int $moduleid, $parameters): array
+    {
         // If an object is passed convert it into an array.
         if (is_object($parameters)) {
             $parameters = (array)$parameters;
@@ -214,7 +217,8 @@ class users extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array Contains the values that were inserted into the database for the user.
      */
-    public function create_user($parameters) {
+    public function create_user($parameters)
+    {
         // If an object is passed convert it into an array.
         if (is_object($parameters)) {
             $parameters = (array)$parameters;
@@ -285,8 +289,9 @@ class users extends generator {
      * @return void
      * @throws data_error
      */
-    protected function insert_metadata(array $data) : void {
-        $sql = "INSERT INTO users_metadata (userID, idMod, type, value, calendar_year) VALUES (?, ?, ?, ?, ?)";
+    protected function insert_metadata(array $data): void
+    {
+        $sql = 'INSERT INTO users_metadata (userID, idMod, type, value, calendar_year) VALUES (?, ?, ?, ?, ?)';
         $query = $this->db->prepare($sql);
         $query->bind_param('iissi', $data['userID'], $data['idMod'], $data['type'], $data['value'], $data['calendar_year']);
         if (!$query->execute()) {
@@ -303,15 +308,30 @@ class users extends generator {
      * @throws data_error If passed parameter is invalid
      * @return int The id of the row inserted into the database.
      */
-    protected function insert_user($data) {
-        $sql = "INSERT INTO users "
-            . "(password, grade, surname, initials, username, title, email, roles, first_names,"
-            . " gender, special_needs, yearofstudy, user_deleted, password_expire)"
-            . " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    protected function insert_user($data)
+    {
+        $sql = 'INSERT INTO users '
+            . '(password, grade, surname, initials, username, title, email, roles, first_names,'
+            . ' gender, special_needs, yearofstudy, user_deleted, password_expire)'
+            . ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
         $query = $this->db->prepare($sql);
-        $query->bind_param('ssssssssssiisi', $data['password'], $data['grade'], $data['surname'], $data['initials'], $data['username'],
-            $data['title'], $data['email'], $data['roles'], $data['first_names'], $data['gender'], $data['special_needs'],
-            $data['yearofstudy'], $data['user_deleted'], $data['password_expire']);
+        $query->bind_param(
+            'ssssssssssiisi',
+            $data['password'],
+            $data['grade'],
+            $data['surname'],
+            $data['initials'],
+            $data['username'],
+            $data['title'],
+            $data['email'],
+            $data['roles'],
+            $data['first_names'],
+            $data['gender'],
+            $data['special_needs'],
+            $data['yearofstudy'],
+            $data['user_deleted'],
+            $data['password_expire']
+        );
         if (!$query->execute()) {
             // The user was not successfully inserted.
             throw new data_error("User {$data['username']} not inserted into database");
@@ -321,7 +341,7 @@ class users extends generator {
 
         // Add student id.
         if ($data['roles'] == 'Student') {
-            $result = $this->db->prepare("INSERT INTO sid VALUES(?, ?)");
+            $result = $this->db->prepare('INSERT INTO sid VALUES(?, ?)');
             $result->bind_param('si', $data['sid'], $userid);
             $result->execute();
             $result->close();
@@ -337,7 +357,8 @@ class users extends generator {
      * @param string|array $roles
      * @return string
      */
-    protected function validate_roles($roles) {
+    protected function validate_roles($roles)
+    {
         if (!is_array($roles)) {
             $roles = explode(',', $roles);
         }

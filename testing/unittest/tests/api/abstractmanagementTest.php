@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,12 +25,14 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2017 onwards The University of Nottingham
  * @package tests
  */
-class abstractmanagementtest extends unittestdatabase {
+class abstractmanagementtest extends unittestdatabase
+{
     /**
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $datagenerator = $this->get_datagenerator('api', 'core');
         $client = $datagenerator->create_client(array('clientid' => 'test1', 'userid' => $this->admin['id'], 'secret' => 'test'));
         $datagenerator->create_external(array('clientid' => $client['clientid'], 'name' => 'test rogo api', 'type' => 'api'));
@@ -41,7 +44,8 @@ class abstractmanagementtest extends unittestdatabase {
      * Test get external system api
      * @group api
      */
-    public function test_get_external_system_api() {
+    public function test_get_external_system_api()
+    {
         $faculty = new \api\facultymanagement($this->db, 'test1');
         $response = 'test rogo api';
         $this->assertEquals($response, $faculty->get_external_system('test rogo api'));
@@ -52,7 +56,8 @@ class abstractmanagementtest extends unittestdatabase {
      * Test get external system plugin
      * @group api
      */
-    public function test_get_external_system_plugin() {
+    public function test_get_external_system_plugin()
+    {
         $faculty = new \api\facultymanagement($this->db);
         $response = 'test rogo plugin';
         $this->assertEquals($response, $faculty->get_external_system('test rogo plugin'));
@@ -62,7 +67,8 @@ class abstractmanagementtest extends unittestdatabase {
      * Test get external system api super user
      * @group api
      */
-    public function test_get_external_system_api_super() {
+    public function test_get_external_system_api_super()
+    {
         $faculty = new \api\facultymanagement($this->db, 'test2');
         $response = 'test rogo api';
         $this->config->set_setting('api_allow_superuser', 1, 'boolean');

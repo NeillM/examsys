@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace testing\behat;
+
 use Behat\MinkExtension\Context\MinkContext,
+
     Behat\Behat\Tester\Exception\PendingException;
 use testing\datagenerator\loader;
 use coding_exception,
@@ -32,7 +35,8 @@ use coding_exception,
  * @package testing
  * @subpackage behat
  */
-class rogo_test extends MinkContext {
+class rogo_test extends MinkContext
+{
   /**
    * Get a data generator for adding information into the Rogo database.
    *
@@ -41,34 +45,37 @@ class rogo_test extends MinkContext {
    * @return \testing\datagenerator\datagenerator
    * @throws \testing\datagenerator\not_found
    */
-  protected function get_datagenerator($name, $component = 'core') {
-    return loader::get($name, $component);
-  }
+    protected function get_datagenerator($name, $component = 'core')
+    {
+        return loader::get($name, $component);
+    }
 
   /**
    * {@inheritdoc}
    */
-  public function locatePath($path) {
-    // Get the base url for the site, ensure it has a trailing slash.
-    $baseurl = rtrim($this->getMinkParameter('base_url'), '/') . '/';
-    if (strpos($path, 'http') !== 0) {
-      // The path is not a fully qualified url.
-      $path = $baseurl . ltrim($path, '/');
+    public function locatePath($path)
+    {
+      // Get the base url for the site, ensure it has a trailing slash.
+        $baseurl = rtrim($this->getMinkParameter('base_url'), '/') . '/';
+        if (strpos($path, 'http') !== 0) {
+          // The path is not a fully qualified url.
+            $path = $baseurl . ltrim($path, '/');
+        }
+        return $path;
     }
-    return $path;
-  }
 
   /**
    * Gets the page that the Mink session is viewing.
-   * 
+   *
    * @return \Behat\Mink\Element\DocumentElement
    */
-  protected function get_page() {
-    // Get the Mink session.
-    $session = $this->getSession();
-    // Get the current page.
-    return $session->getPage();
-  }
+    protected function get_page()
+    {
+      // Get the Mink session.
+        $session = $this->getSession();
+      // Get the current page.
+        return $session->getPage();
+    }
 
   /**
    * Tests if the correct prarmeters have been passed.
@@ -79,45 +86,47 @@ class rogo_test extends MinkContext {
    * @throws coding_exception if the details are invalid
    * @throws exception If the selector type is not allowed
    */
-  protected function validate_selector($selector, $locator) {
-    if ($selector == 'named' or $selector == 'named_exact' or $selector == 'named_partial') {
-      // The locator must be an array.
-      if (!is_array($locator) and count($locator) !== 2) {
-        throw new coding_exception('The locator for a named selector must be an aray with two values');
-      }
-      $name = $locator[0];
-      if (!selectors::is_allowed_named($name)) {
-        throw new Exception("The named selector $name is not enabled in rogo behat tests");
-      }
+    protected function validate_selector($selector, $locator)
+    {
+        if ($selector == 'named' or $selector == 'named_exact' or $selector == 'named_partial') {
+          // The locator must be an array.
+            if (!is_array($locator) and count($locator) !== 2) {
+                throw new coding_exception('The locator for a named selector must be an aray with two values');
+            }
+            $name = $locator[0];
+            if (!selectors::is_allowed_named($name)) {
+                throw new Exception("The named selector $name is not enabled in rogo behat tests");
+            }
+        }
     }
-  }
 
   /**
    * Finds first element with specified selector inside the current element.
-   * 
+   *
    * @param string $name selector name
    * @param string $value the value to search for
    * @return \Behat\Mink\Element\NodeElement|null
    * @throws coding_exception
    * @throws exception If the element cannot be found
-   * 
+   *
    * @see \testing\behat\selectors for Rogo specific selectors
    * @see \Behat\Mink\Element\ElementInterface::findAll for the supported selectors
    */
-  public function find($name, $value) {
-    if (selectors::is_allowed_named($name)) {
-      $selector = 'named';
-      $locator = array($name, $value);
-    } else {
-      $selector = $name;
-      $locator = $value;
+    public function find($name, $value)
+    {
+        if (selectors::is_allowed_named($name)) {
+            $selector = 'named';
+            $locator = array($name, $value);
+        } else {
+            $selector = $name;
+            $locator = $value;
+        }
+        $page = $this->get_page();
+        return $page->find($selector, $locator);
     }
-    $page = $this->get_page();
-    return $page->find($selector, $locator);
-  }
 
   /**
-   * Checks if an element with the specified selector 
+   * Checks if an element with the specified selector
    *
    * @param string $name selector name
    * @param string $value the value to search for
@@ -126,17 +135,18 @@ class rogo_test extends MinkContext {
    * @see \testing\behat\selectors for Rogo specific selectors
    * @see \Behat\Mink\Element\ElementInterface::findAll for the supported selectors
    */
-  public function has($name, $value) {
-    if (selectors::is_allowed_named($name)) {
-      $selector = 'named';
-      $locator = array($name, $value);
-    } else {
-      $selector = $name;
-      $locator = $value;
+    public function has($name, $value)
+    {
+        if (selectors::is_allowed_named($name)) {
+            $selector = 'named';
+            $locator = array($name, $value);
+        } else {
+            $selector = $name;
+            $locator = $value;
+        }
+        $page = $this->get_page();
+        return $page->has($selector, $locator);
     }
-    $page = $this->get_page();
-    return $page->has($selector, $locator);
-  }
 
   /**
    * Find all elements that match the criteria.
@@ -148,17 +158,18 @@ class rogo_test extends MinkContext {
    * @see \testing\behat\selectors for Rogo specific selectors
    * @see \Behat\Mink\Element\ElementInterface::findAll for the supported selectors
    */
-  public function find_all($name, $value) {
-    if (selectors::is_allowed_named($name)) {
-      $selector = 'named';
-      $locator = array($name, $value);
-    } else {
-      $selector = $name;
-      $locator = $value;
+    public function find_all($name, $value)
+    {
+        if (selectors::is_allowed_named($name)) {
+            $selector = 'named';
+            $locator = array($name, $value);
+        } else {
+            $selector = $name;
+            $locator = $value;
+        }
+        $page = $this->get_page();
+        return $page->findAll($selector, $locator);
     }
-    $page = $this->get_page();
-    return $page->findAll($selector, $locator);
-  }
 
   /**
    * Waits for an action to be true.
@@ -167,33 +178,35 @@ class rogo_test extends MinkContext {
    * @return boolean
    * @throws Exception
    */
-  public function spin($lambda) {
-    $wait = 15;
-    for ($i = 0; $i < $wait; $i++) {
-      try {
-        if ($lambda($this)) {
-          return true;
+    public function spin($lambda)
+    {
+        $wait = 15;
+        for ($i = 0; $i < $wait; $i++) {
+            try {
+                if ($lambda($this)) {
+                    return true;
+                }
+            } catch (Exception $e) {
+              // do nothing
+            }
+            sleep(1);
         }
-      } catch (Exception $e) {
-        // do nothing
-      }
-      sleep(1);
-    }
 
-    $backtrace = debug_backtrace();
-    $message = "Timeout thrown by " . $backtrace[1]['class'] . "::" . $backtrace[1]['function'] . "()";
-    if (isset($backtrace[1]['file'])) {
-      $message .= " in " . $backtrace[1]['file'] . ", line " . $backtrace[1]['line'];
+        $backtrace = debug_backtrace();
+        $message = 'Timeout thrown by ' . $backtrace[1]['class'] . '::' . $backtrace[1]['function'] . '()';
+        if (isset($backtrace[1]['file'])) {
+            $message .= ' in ' . $backtrace[1]['file'] . ', line ' . $backtrace[1]['line'];
+        }
+        throw new Exception($message);
     }
-    throw new Exception($message);
-  }
 
   /**
    * Returns whether the scenario is running in a browser that can run Javascript or not.
    *
    * @return boolean
    */
-  public function running_javascript() {
-    return get_class($this->getSession()->getDriver()) !== 'Behat\Mink\Driver\GoutteDriver';
-  }
+    public function running_javascript()
+    {
+        return get_class($this->getSession()->getDriver()) !== 'Behat\Mink\Driver\GoutteDriver';
+    }
 }

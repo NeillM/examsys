@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -25,7 +26,8 @@ namespace api;
 /**
  * API Class
  */
-class api {
+class api
+{
 
     /**
      * The slim application.
@@ -70,7 +72,8 @@ class api {
      * @param mysqli $db db connection
      * @param object $configObject configurations
      */
-    public function __construct($app, $db, $configObject) {
+    public function __construct($app, $db, $configObject)
+    {
         $this->app = $app;
         // Get configs.
         $configObject->set_db_object($db);
@@ -84,31 +87,33 @@ class api {
     }
     
     /**
-     * Log api request to file 
+     * Log api request to file
      * @return string unique id for the request
      */
-    public function log_request() {
+    public function log_request()
+    {
         $id = uniqid('', true);
         if ($this->logfile != '') {
-            $updatelog = "\n\n" . "--" . date("YmdHis") . "--\n\nApi Log Id: " . $id .
+            $updatelog = "\n\n" . '--' . date('YmdHis') . "--\n\nApi Log Id: " . $id .
             "\nUser Agent: " . $this->get_user_agent() .
             "\nAccess Token: " . $this->get_parameter('access_token') .
             "\nResource Path: " . $this->get_path() . "\n\n" . $this->get_body();
-            file_put_contents($this->logfile , $updatelog, FILE_APPEND);
+            file_put_contents($this->logfile, $updatelog, FILE_APPEND);
         }
         return $id;
     }
     
     /**
-     * Log api response to file 
+     * Log api response to file
      * @param string $id unique id linking to the request for this response
      * @param string $xml xml string to log
      */
-    public function log_response($id, $xml) {
+    public function log_response($id, $xml)
+    {
         if ($this->logfile != '') {
-            $updatelog = "\n\n" . "--" . date("YmdHis") . "--\n\nApi Log Id: " . $id .
+            $updatelog = "\n\n" . '--' . date('YmdHis') . "--\n\nApi Log Id: " . $id .
             "\n\n" . $xml;
-            file_put_contents($this->logfile , $updatelog, FILE_APPEND);
+            file_put_contents($this->logfile, $updatelog, FILE_APPEND);
         }
     }
 
@@ -116,32 +121,36 @@ class api {
      * Set the header for the response.
      * @param string $type - header type
      */
-    public function set_header($type = 'text/xml') {
-        $this->response->withHeader("Content-Type", $type);
+    public function set_header($type = 'text/xml')
+    {
+        $this->response->withHeader('Content-Type', $type);
     }
 
     /**
      * Get the body of the request.
      * @return string - body of request.
      */
-    public function get_body() {
+    public function get_body()
+    {
         return $this->request->getBody();
     }
 
     /**
      * Get the user agent of the request.
-     * @return string - user agent 
+     * @return string - user agent
      */
-    public function get_user_agent() {
+    public function get_user_agent()
+    {
         return $this->request->getHeaderLine('USER_AGENT');
     }
     
     /**
      * Get a parameter of the request.
      * @param $parameter string parameter name
-     * @return string - parameter 
+     * @return string - parameter
      */
-    public function get_parameter($parameter) {
+    public function get_parameter($parameter)
+    {
         $paramlist = $this->request->getQueryParams();
         return ($paramlist[$parameter]);
     }
@@ -150,7 +159,8 @@ class api {
       * Get the path of the request.
       * @return string - path
       */
-    public function get_path() {
+    public function get_path()
+    {
         return $this->request->getUri()->getPath();
     }
     
@@ -159,7 +169,8 @@ class api {
      * Get the media type of the request.
      * @return string|bool - media type if valid, false otherwise
      */
-    public function get_mediatype() {
+    public function get_mediatype()
+    {
         $mediatype = $this->request->getHeaderLine('Content-Type');
         if ($mediatype == 'text/xml') {
             $this->mediatype = $mediatype;
@@ -175,7 +186,8 @@ class api {
      * @param string $type - filename of validation schema
      * @return array - status and response
      */
-    public function process($folder, $type) {
+    public function process($folder, $type)
+    {
         $langpack = new \langpack();
         // Set response header
         $this->set_header($this->get_mediatype());
@@ -200,9 +212,9 @@ class api {
      * @param integer $userid rogo user id linked to web service client
      * @return string - successful operation response or error response
      */
-    public function parse($tasktype, $fields, $actions, $perms, $userid) {
+    public function parse($tasktype, $fields, $actions, $perms, $userid)
+    {
         // Parse the request.
         return $this->api->parse($tasktype, $fields, $actions, $perms, $userid);
     }
-    
 }

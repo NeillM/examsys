@@ -14,6 +14,5 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['oauthkeydel']='LTI Key Deleted';
+$string['oauthkeydel'] = 'LTI Key Deleted';
 $string['oauthkeysuccess'] = 'OAuth Key successfully deleted';
-?>

@@ -28,4 +28,3 @@ $string['deletingfiles'] = 'Files to be deleted';
 $string['delete'] = 'Delete Files';
 $string['noorphanedfiles'] = 'No Orphaned Files Found';
 $string['toremove'] = 'To Remove:';
-?>

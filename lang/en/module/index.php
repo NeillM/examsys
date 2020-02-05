@@ -49,4 +49,3 @@ $string['students'] = 'students';
 $string['addmetadata'] = 'Add Metadata';
 $string['extradataaboutstudents'] = 'Tag extra data to students on %s';
 $string['noteammembers'] = 'No team members found.';
-?>

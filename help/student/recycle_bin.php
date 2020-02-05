@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -23,15 +24,13 @@
 */
 
 require '../../include/sysadmin_auth.inc';
-
 $id = null;
 $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $language, $mysqli);
-
 if (isset($_GET['id'])) {
-  $restore = $mysqli->prepare("UPDATE student_help SET deleted = NULL WHERE id = ? AND language = ?");
-  $restore->bind_param('is', $_GET['id'], $language);
-  $restore->execute();
-  $restore->close();
+    $restore = $mysqli->prepare('UPDATE student_help SET deleted = NULL WHERE id = ? AND language = ?');
+    $restore->bind_param('is', $_GET['id'], $language);
+    $restore->execute();
+    $restore->close();
 }
 ?>
 <!DOCTYPE html>
@@ -66,23 +65,24 @@ if (isset($_GET['id'])) {
   <div id="contents">
 <?php
   $result = $mysqli->prepare("SELECT articleid, title, body_plain, DATE_FORMAT(deleted,'{$configObject->get('cfg_long_date_time')}') AS deleted FROM student_help WHERE deleted IS NOT NULL AND language = ? ORDER BY title");
-  $result->bind_param('s', $language);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($id, $title, $body, $deleted);
-  if ($result->num_rows == 0) {
-    echo "<p>" . $string['empty'] . "</p>\n";
-  } else {
+$result->bind_param('s', $language);
+$result->execute();
+$result->store_result();
+$result->bind_result($id, $title, $body, $deleted);
+if ($result->num_rows == 0) {
+    echo '<p>' . $string['empty'] . "</p>\n";
+} else {
     echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"font-size:100%; border-collapse:collapse; border:1px solid #6B82B2\">\n";
     echo "<tr style=\"border-collapse:collapse; border-top: 1px solid #295AAD; border-bottom:1px solid #295AAD; border-left:1px solid #295AAD; background-color:#295AAD\">\n";
     echo "<th>&nbsp;</th><th>{$string['title']}</th><th>{$string['content']}</th><th>{$string['deleted']}</th></tr>\n";
-
     while ($result->fetch()) {
-      if ($body == '') $body = '&nbsp;';
-      echo "<tr><td><a href=\"" . $_SERVER['PHP_SELF'] . "?id=$id\"><img src=\"../../artwork/import_16.gif\" class=\"icon16_active\" alt=\"" . $string['restore'] . "\" /></a></td><td><nobr>$title</nobr></td><td>$body</td><td><nobr>$deleted</nobr></td></tr>\n";
+        if ($body == '') {
+            $body = '&nbsp;';
+        }
+        echo '<tr><td><a href="' . $_SERVER['PHP_SELF'] . "?id=$id\"><img src=\"../../artwork/import_16.gif\" class=\"icon16_active\" alt=\"" . $string['restore'] . "\" /></a></td><td><nobr>$title</nobr></td><td>$body</td><td><nobr>$deleted</nobr></td></tr>\n";
     }
     echo "</table>\n";
-  }
+}
   
   $mysqli->close();
 ?>

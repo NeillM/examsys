@@ -20,4 +20,3 @@ $string['error2'] = 'No academic year set so no students could be found.';
 $string['error3'] = 'No students have been found on the module.';
 $string['user_list'] = 'No students have been found.';
 $string['all']  = 'All';
-?>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,13 +25,15 @@ use testing\unittest\unittest;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class blanktest extends unittest {
+class blanktest extends unittest
+{
 
     /**
      * Test question header setter
      * @group question
      */
-    public function test_set_question_head() {
+    public function test_set_question_head()
+    {
         $data = questiondata::get_datastore('blank');
         $data->set_question_head();
         $this->assertTrue($data->displaydefault);
@@ -51,7 +54,8 @@ class blanktest extends unittest {
      * Test question option setter - textbox responses
      * @group question
      */
-    public function test_set_option_answer_textbox() {
+    public function test_set_option_answer_textbox()
+    {
         $data = questiondata::get_datastore('blank');
         $option['optiontext'] = '<div>London is the capital of [blank]England,Scotland,Wales,Northern Ireland[/blank] and is in the [blank]United Kingdom,United States of America[/blank]</div>';
         $option['markscorrect'] = 1;
@@ -78,7 +82,8 @@ class blanktest extends unittest {
      * Test question option setter - with size element
      * @group question
      */
-    public function test_set_option_answer_textbox_size() {
+    public function test_set_option_answer_textbox_size()
+    {
         $data = questiondata::get_datastore('blank');
         $option['optiontext'] = '<div>London is the capital of [blank|size="100"|]England,Scotland,Wales,Northern Ireland[/blank] and is in the [blank]United Kingdom,United States of America[/blank]</div>';
         $option['markscorrect'] = 1;
@@ -100,7 +105,8 @@ class blanktest extends unittest {
      * Test question option setter - with mark element
      * @group question
      */
-    public function test_set_option_answer_textbox_marks() {
+    public function test_set_option_answer_textbox_marks()
+    {
         $data = questiondata::get_datastore('blank');
         $option['optiontext'] = '<div>London is the capital of [blank|mark="3"|]England,Scotland,Wales,Northern Ireland[/blank] and is in the [blank]United Kingdom,United States of America[/blank]</div>';
         $option['markscorrect'] = 1;
@@ -117,7 +123,8 @@ class blanktest extends unittest {
      * Test question option setter - with mark and size elements
      * @group question
      */
-    public function test_set_option_answer_textbox_marks_size() {
+    public function test_set_option_answer_textbox_marks_size()
+    {
         $data = questiondata::get_datastore('blank');
         $option['optiontext'] = '<div>London is the capital of [blank|size="100"|mark="3"|]England,Scotland,Wales,Northern Ireland[/blank] and is in the [blank]United Kingdom,United States of America[/blank]</div>';
         $option['markscorrect'] = 1;
@@ -140,7 +147,8 @@ class blanktest extends unittest {
      * Test question option setter - dropdown responses
      * @group question
      */
-    public function test_set_option_answer_dropdown() {
+    public function test_set_option_answer_dropdown()
+    {
         $data = questiondata::get_datastore('blank');
         $option['optiontext'] = '<div>London is the capital of [blank]England,Scotland,Wales,Northern Ireland[/blank] and is in the [blank]United Kingdom,United States of America[/blank]</div>';
         $option['markscorrect'] = 1;
@@ -176,5 +184,4 @@ class blanktest extends unittest {
         $data->set_option_answer(0, $useranswer, '', 1);
         $this->assertEquals(1, $data->marks);
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,13 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
 * @package
 */
-
 
 // TODO: fix use of 'rel' on textarea
 
@@ -29,18 +29,18 @@ $options = $question->options;
 $option_ids = array_keys($options);
 $num_options = count($options);
 if ($num_options > 0) {
-  $option = reset($options);
-  $option_media = $option->get_media();
-  $option_id = $option->id;
+    $option = reset($options);
+    $option_media = $option->get_media();
+    $option_id = $option->id;
 } else {
-  $option_media = array('filename' => '', 'width' => '0', 'height' => '0');
-  $option_id = -1;
+    $option_media = array('filename' => '', 'width' => '0', 'height' => '0');
+    $option_id = -1;
 }
 
 ?>
 
-				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
-					<tbody>
+                <table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
+                    <tbody>
 <?php
 require_once 'detail_parts/details_theme_notes.php';
 require_once 'detail_parts/details_leadin.php';
@@ -54,8 +54,8 @@ $media_index = '1';
 require 'detail_parts/details_media.php';
 require_once 'detail_parts/details_marking.php';
 ?>
-					</tbody>
-				</table>
+                    </tbody>
+                </table>
         <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
         <input name="option_text1" value="Flash option placeholder text (non-editable, not displayed to students)" type="hidden" />
         

@@ -29,4 +29,3 @@ $string['import'] = 'Import';
 $string['alreadyexists'] = 'already exists';
 $string['added'] = 'added';
 $string['failed'] = 'failed';
-?>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -30,11 +31,11 @@ require_once '../include/errors.php';
 $status_id = check_var('id', 'GET', true, false, true);
 
 try {
-  $status = new QuestionStatus($mysqli, $string, $status_id);
+    $status = new QuestionStatus($mysqli, $string, $status_id);
 } catch (DatabaseException $ex) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 $q_count = QuestionUtils::get_question_count_by_status($status_id, $mysqli);
@@ -55,7 +56,7 @@ $q_count = QuestionUtils::get_question_count_by_status($status_id, $mysqli);
 
 <?php
 if ($q_count == 0) {
-?>
+    ?>
     <p><?php echo $string['msg'] ?></p>
     <br />
     <div class="button_bar">
@@ -64,9 +65,9 @@ if ($q_count == 0) {
       <input class="delete" type="submit" name="submit" value="<?php echo $string['delete']; ?>" /><input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
     </form>
     </div>
-<?php
+    <?php
 } else {
-?>
+    ?>
     <p><?php echo $string['questionassigned'] ?></p>
     <br />
     <div class="button_bar">
@@ -74,7 +75,7 @@ if ($q_count == 0) {
       <input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel']; ?>" onclick="javascript:window.close();" />
     </form>
     </div>
-<?php
+    <?php
 }
 ?>
 </body>

@@ -16,7 +16,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace testing\behat\steps\frontend;
+
 use Behat\Gherkin\Node\PyStringNode,
+
     Behat\Gherkin\Node\TableNode,
     testing\behat\selectors,
     Exception;
@@ -29,7 +31,8 @@ use Behat\Gherkin\Node\PyStringNode,
  * @package testing
  * @subpackage behat
  */
-trait menu {
+trait menu
+{
 
   /**
    * Check for menu items.
@@ -38,19 +41,20 @@ trait menu {
    * @param TableNode $menuitems The menu's items
    * @throws Exception
    */
-  public function i_should_see_menu_with_following_item(TableNode $menuitems) {
+    public function i_should_see_menu_with_following_item(TableNode $menuitems)
+    {
 
-    if (empty($menuitems)) {
-      throw new Exception("The menu element or its items list are empty");
+        if (empty($menuitems)) {
+            throw new Exception('The menu element or its items list are empty');
+        }
+        foreach ($menuitems->getHash() as $menuitem) {
+            $title = $menuitem['menu_items'];
+            $element = $this->find('link', $title);
+            if (empty($element)) {
+                throw new Exception("$title is not in the menu");
+            }
+        }
     }
-    foreach ($menuitems->getHash() as $menuitem) {
-      $title = $menuitem["menu_items"];
-      $element = $this->find('link', $title);
-      if (empty($element)) {
-        throw new Exception("$title is not in the menu");
-      }
-    }
-  }
 
    /**
    * Check for menu section items.
@@ -61,19 +65,20 @@ trait menu {
    * @throws Exception
    */
   
-  public function i_should_see_menu_section_with_following_item($menu_section, TableNode $menuitems) {
-    if (empty($menuitems) || empty($menu_section)) {
-      throw new Exception("The menu name or items is empty");
+    public function i_should_see_menu_section_with_following_item($menu_section, TableNode $menuitems)
+    {
+        if (empty($menuitems) || empty($menu_section)) {
+            throw new Exception('The menu name or items is empty');
+        }
+        foreach ($menuitems->getHash() as $menuitem) {
+            $title = $menuitem['items'];
+          //$element = $this->find('sub_menu', $title);
+            $menuitem = $this->find('xpath', "//div[contains(concat(' ', normalize-space(@class), ' '), ' submenuheading ') and contains(normalize-space(.) , '" . $menu_section . "')]/following-sibling::div/div[contains(concat(' ', normalize-space(@class), ' '), ' menuitem ') and contains(normalize-space(.) , '" . $title  . "')]");
+            if (empty($menuitem)) {
+                throw new Exception('menu section item is not exist in the submenu');
+            }
+        }
     }
-    foreach ($menuitems->getHash() as $menuitem) {
-      $title = $menuitem["items"];
-      //$element = $this->find('sub_menu', $title);
-      $menuitem = $this->find("xpath", "//div[contains(concat(' ', normalize-space(@class), ' '), ' submenuheading ') and contains(normalize-space(.) , '" . $menu_section . "')]/following-sibling::div/div[contains(concat(' ', normalize-space(@class), ' '), ' menuitem ') and contains(normalize-space(.) , '" . $title  . "')]");
-      if (empty($menuitem)) {
-        throw new Exception("menu section item is not exist in the submenu");
-      }
-    }
-  }
    
    /**
    * Check for submenu items.
@@ -82,19 +87,20 @@ trait menu {
    * @param TableNode $menuitems The menu's items
    * @throws Exception
    */
-  public function i_should_see_submenu_with_following_item(TableNode $menuitems) {
+    public function i_should_see_submenu_with_following_item(TableNode $menuitems)
+    {
 
-    if (empty($menuitems)) {
-      throw new Exception("The submenu items list is empty");
+        if (empty($menuitems)) {
+            throw new Exception('The submenu items list is empty');
+        }
+        foreach ($menuitems->getHash() as $menuitem) {
+            $title = $menuitem['menu_items'];
+            $element = $this->find('sub_menu', $title);
+            if (empty($element)) {
+                throw new Exception("$title is not in the submenu");
+            }
+        }
     }
-    foreach ($menuitems->getHash() as $menuitem) {
-      $title = $menuitem["menu_items"];
-      $element = $this->find('sub_menu', $title);
-      if (empty($element)) {
-        throw new Exception("$title is not in the submenu");
-      }
-    }
-  }
   
   
   /**
@@ -102,28 +108,30 @@ trait menu {
    *
    * @Then /^(?:|I )should not see main menu$/
    */
-  public function i_not_see_main_menu() {
-    $node = null;
-    if (!$node = $this->find("xpath", selectors::get_selectors('main_menu'))) {
-      throw new Exception("Could not find main menu");
+    public function i_not_see_main_menu()
+    {
+        $node = null;
+        if (!$node = $this->find('xpath', selectors::get_selectors('main_menu'))) {
+            throw new Exception('Could not find main menu');
+        }
+        if ($node->isVisible()) {
+            throw new Exception('Main menu should be not visible.');
+        }
     }
-    if ($node->isVisible()) {
-      throw new Exception("Main menu should be not visible.");
-    }
-  }
 
   /**
    * Toggle the main menu.
    *
    * @Then /^(?:|I )toggle the main menu$/
    */
-  public function toggle_main_menu() {
-    $node = null;
-    if (!$node = $this->find("xpath", selectors::get_selectors("main_menu_icon"))) {
-      throw new Exception("Could not find main menu");
+    public function toggle_main_menu()
+    {
+        $node = null;
+        if (!$node = $this->find('xpath', selectors::get_selectors('main_menu_icon'))) {
+            throw new Exception('Could not find main menu');
+        }
+        $node->click();
     }
-    $node->click();
-  }
 
   /**
    * Checks for main menu items.
@@ -132,24 +140,25 @@ trait menu {
    * @param TableNode $menuitems The menu's items
    * @throws Exception
    */
-  public function i_see_main_menu(TableNode $menuitems) {
-    if (empty($menuitems)) {
-      throw new Exception("The menu element or its items list are empty");
-    }
-    $toprightmenu = $this->find("xpath", "//div[contains(@id, 'toprightmenu') and contains(@style, 'display: block;')]");
+    public function i_see_main_menu(TableNode $menuitems)
+    {
+        if (empty($menuitems)) {
+            throw new Exception('The menu element or its items list are empty');
+        }
+        $toprightmenu = $this->find('xpath', "//div[contains(@id, 'toprightmenu') and contains(@style, 'display: block;')]");
 
-    if (empty($toprightmenu)) {
-      throw new Exception('Main menu is not found');
-    }
+        if (empty($toprightmenu)) {
+            throw new Exception('Main menu is not found');
+        }
 
-    foreach ($menuitems->getHash() as $menuitem) {
-      $title = $menuitem['Item'];
-      $element = $this->find('main_menu_item', $title);
-      if (empty($element)) {
-        throw new Exception("$title is not in the submenu");
-      }
+        foreach ($menuitems->getHash() as $menuitem) {
+            $title = $menuitem['Item'];
+            $element = $this->find('main_menu_item', $title);
+            if (empty($element)) {
+                throw new Exception("$title is not in the submenu");
+            }
+        }
     }
-  }
 
   /**
    * Checks for popup search menu items.
@@ -158,22 +167,23 @@ trait menu {
    * @param TableNode $menuitems The menu's items
    * @throws Exception
    */
-  public function i_see_search_menu(TableNode $menuitems) {
-    if (empty($menuitems)) {
-      throw new Exception("The search menu element or its items list are empty");
-    }
-    $searchmenu = $this->find("xpath", selectors::get_selectors("search_menu"));
+    public function i_see_search_menu(TableNode $menuitems)
+    {
+        if (empty($menuitems)) {
+            throw new Exception('The search menu element or its items list are empty');
+        }
+        $searchmenu = $this->find('xpath', selectors::get_selectors('search_menu'));
 
-    if (empty($searchmenu)) {
-      throw new Exception('popup search menu is not found');
-    }
+        if (empty($searchmenu)) {
+            throw new Exception('popup search menu is not found');
+        }
 
-    foreach ($menuitems->getHash() as $menuitem) {
-      $item = $menuitem['Item'];
-      $element = $this->find("sub_search_menu_item", $item);
-      if (empty($element)) {
-            throw new Exception("$item in sub menu could not be found");
-      }
+        foreach ($menuitems->getHash() as $menuitem) {
+            $item = $menuitem['Item'];
+            $element = $this->find('sub_search_menu_item', $item);
+            if (empty($element)) {
+                throw new Exception("$item in sub menu could not be found");
+            }
+        }
     }
-  }
 }

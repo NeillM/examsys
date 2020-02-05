@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,6 +25,6 @@
 
 require '../../../../include/sysadmin_auth.inc';
 
-include "combine_images.php";
-include "make_js.php";
-include "make_styles.php";
+include 'combine_images.php';
+include 'make_js.php';
+include 'make_styles.php';

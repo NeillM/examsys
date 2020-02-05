@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -19,6 +20,7 @@
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  */
+
 namespace import;
 
 /**
@@ -27,30 +29,32 @@ namespace import;
  * @author Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright (c) 2018, University of Nottingham
  */
-abstract class importer {
+abstract class importer
+{
   /**
    * The handler for the file
    * @var object
    */
-  protected $handler;
+    protected $handler;
 
   /**
    * The config object
    * @var object
    */
-  protected $config;
+    protected $config;
 
   /**
    * The constructor
    * @param \file_handler $handler
    */
-  public function __construct($handler) {
-    $this->config = \Config::get_instance();
-    $this->handler = $handler;
-  }
+    public function __construct($handler)
+    {
+        $this->config = \Config::get_instance();
+        $this->handler = $handler;
+    }
 
   /**
    * Perform the import
    */
-  abstract public function execute();
+    abstract public function execute();
 }

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,13 +25,15 @@ use testing\unittest\unittest;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class areatest extends unittest {
+class areatest extends unittest
+{
 
     /**
      * Test question header setter
      * @group question
      */
-    public function test_set_question_head() {
+    public function test_set_question_head()
+    {
         $data = questiondata::get_datastore('area');
         $data->set_question_head();
         $this->assertTrue($data->displaydefault);
@@ -48,7 +51,8 @@ class areatest extends unittest {
      * Test question option setter
      * @group question
      */
-    public function test_set_option_answer() {
+    public function test_set_option_answer()
+    {
         $data = questiondata::get_datastore('area');
         $option['correct'] = 1;
         $option['markscorrect'] = 1;
@@ -62,5 +66,4 @@ class areatest extends unittest {
         $this->assertEquals($useranswer, $data->areafulluseranswer);
         $this->assertEquals(2, $data->marks);
     }
-
 }

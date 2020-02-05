@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -35,16 +36,16 @@ $code = check_var('code', 'POST', false, false, true);
 $externalid = check_var('externalid', 'POST', false, false, true);
 $externalsys = check_var('externalsys', 'POST', false, false, true);
 if (!is_null($code)) {
-  $exists = SchoolUtils::get_schoolid_by_code($code, $mysqli);
+    $exists = SchoolUtils::get_schoolid_by_code($code, $mysqli);
 } elseif (SchoolUtils::school_exists_in_faculty($faculty, $school, $mysqli)) {
-  $exists = true;
+    $exists = true;
 }
 if ($exists === false) {
-  if (SchoolUtils::add_school($faculty, $school, $mysqli, $code, $externalid, $externalsys)) {
-    echo json_encode('SUCCESS');
-  } else {
-    echo json_encode('ERROR');
-  }
+    if (SchoolUtils::add_school($faculty, $school, $mysqli, $code, $externalid, $externalsys)) {
+        echo json_encode('SUCCESS');
+    } else {
+        echo json_encode('ERROR');
+    }
 } else {
-  echo json_encode($school);
+    echo json_encode($school);
 }

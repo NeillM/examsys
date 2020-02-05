@@ -25,7 +25,7 @@
 */
  
 
-Class AJAXUtils {
-  public static $errors = array('TIMEOUT' => 900, 'PHPERROR' => 901, 'DBERROR' => 902, 'UNKNOWN' => 999);
+class AJAXUtils
+{
+    public static $errors = array('TIMEOUT' => 900, 'PHPERROR' => 901, 'DBERROR' => 902, 'UNKNOWN' => 999);
 }
-?>

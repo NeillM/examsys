@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -36,7 +37,7 @@ if (!CourseUtils::courseid_exists($courseID, $mysqli)) {
     exit();
 }
 
-$result = $mysqli->prepare("SELECT schoolid, name, description, externalid, externalsys FROM courses WHERE id = ?");
+$result = $mysqli->prepare('SELECT schoolid, name, description, externalid, externalsys FROM courses WHERE id = ?');
 $result->bind_param('i', $courseID);
 $result->execute();
 $result->bind_result($current_school, $coursename, $description, $current_externalid, $current_externalsys);
@@ -57,16 +58,15 @@ if ($course_exists == false) {
     $new_description = param::required('description', param::TEXT, param::FETCH_POST);
 
     if (CourseUtils::update_course($courseID, $new_school, $tmp_course, $new_description, $current_externalid, $current_externalsys, $mysqli)) {
-
         $logger = new Logger($mysqli);
         if ($coursename != $tmp_course) {
-          $logger->track_change('Course', $courseID, $userObject->get_user_ID(), $coursename, $tmp_course, 'code');
+            $logger->track_change('Course', $courseID, $userObject->get_user_ID(), $coursename, $tmp_course, 'code');
         }
         if ($description != $new_description) {
-          $logger->track_change('Course', $courseID, $userObject->get_user_ID(), $description, $new_description, 'name');
+            $logger->track_change('Course', $courseID, $userObject->get_user_ID(), $description, $new_description, 'name');
         }
         if ($current_school != $new_school) {
-          $logger->track_change('Course', $courseID, $userObject->get_user_ID(), $current_school, $new_school, 'school');
+            $logger->track_change('Course', $courseID, $userObject->get_user_ID(), $current_school, $new_school, 'school');
         }
     } else {
         echo json_encode('ERROR');

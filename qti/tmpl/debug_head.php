@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -21,6 +22,7 @@
  * @copyright Copyright (c) 2011 The University of Nottingham
  * @package
  */
+
 require_once '../include/staff_auth.inc';
 ?>
 <html>
@@ -28,36 +30,36 @@ require_once '../include/staff_auth.inc';
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   
-	<title>Rog&#333; Import to QTI</title>
+    <title>Rog&#333; Import to QTI</title>
 
   <link rel="stylesheet" type="text/css" href="./css/body.css" />
-	<style type="text/css">
-		.divider {font-size:80%; padding-left:16px; padding-bottom:2px; font-weight:bold}
-		a {color:black}
-		a:hover {color:blue}
-		.f {float:left; width:375px; padding-left:12px; font-size:80%}
-		.recent {color:blue; font-size:90%}
-		.param_section {margin:16px;padding:6px;border: 1px solid #dddddd;}
+    <style type="text/css">
+        .divider {font-size:80%; padding-left:16px; padding-bottom:2px; font-weight:bold}
+        a {color:black}
+        a:hover {color:blue}
+        .f {float:left; width:375px; padding-left:12px; font-size:80%}
+        .recent {color:blue; font-size:90%}
+        .param_section {margin:16px;padding:6px;border: 1px solid #dddddd;}
 
-	.exp_table {
-		border-left: 1px solid #dddddd;
-		border-top: 1px solid #dddddd;
-	}
+    .exp_table {
+        border-left: 1px solid #dddddd;
+        border-top: 1px solid #dddddd;
+    }
 
-	.exp_table tr td,.exp_table tr th {
-		border-bottom: 1px solid #dddddd;
-		border-right: 1px solid #dddddd;
-		padding: 1px;
-		font-size:80%;
-	}
-	
-	.paper_head {
-		font-size:140%;
-	}
-	
-	.screen_head {
-		font-size:120%;
-	}
+    .exp_table tr td,.exp_table tr th {
+        border-bottom: 1px solid #dddddd;
+        border-right: 1px solid #dddddd;
+        padding: 1px;
+        font-size:80%;
+    }
+    
+    .paper_head {
+        font-size:140%;
+    }
+    
+    .screen_head {
+        font-size:120%;
+    }
 
   .print_cont {
     /*border: 1px solid #CCCCCC;*/

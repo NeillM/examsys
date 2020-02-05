@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -80,7 +81,7 @@ echo draw_toprightmenu(243);
     if (isset($_POST['submit'])) {
         for ($i = 1; $i <= 100; $i++) {
             if (isset($_POST["clear$i"])) {
-                $stmt = $mysqli->prepare("SELECT users.id FROM temp_users, users WHERE temp_users.id = ? AND temp_users.assigned_account = users.username");
+                $stmt = $mysqli->prepare('SELECT users.id FROM temp_users, users WHERE temp_users.id = ? AND temp_users.assigned_account = users.username');
                 $stmt->bind_param('i', $_POST["clear$i"]);
                 $stmt->execute();
                 $stmt->bind_result($temp_userID);
@@ -88,12 +89,12 @@ echo draw_toprightmenu(243);
                 $stmt->close();
 
                 // Delete from the temp_users list.
-                $stmt = $mysqli->prepare("DELETE FROM temp_users WHERE id = ?");
+                $stmt = $mysqli->prepare('DELETE FROM temp_users WHERE id = ?');
                 $stmt->bind_param('i', $_POST["clear$i"]);
                 $stmt->execute();
 
                 // Delete from the log_metadata table just in case a temp user has started but has no records.
-                $stmt = $mysqli->prepare("DELETE FROM log_metadata WHERE userID = ?");
+                $stmt = $mysqli->prepare('DELETE FROM log_metadata WHERE userID = ?');
                 $stmt->bind_param('i', $temp_userID);
                 $stmt->execute();
             }
@@ -133,7 +134,7 @@ echo draw_toprightmenu(243);
                 }
                 $result->close();
 
-                $result = $mysqli->prepare("SELECT DISTINCT paperID, paper_title FROM log2, log_metadata, properties, users WHERE log2.metadataID = log_metadata.id AND log_metadata.userID = users.id AND log_metadata.paperID = properties.property_id AND username = ?");
+                $result = $mysqli->prepare('SELECT DISTINCT paperID, paper_title FROM log2, log_metadata, properties, users WHERE log2.metadataID = log_metadata.id AND log_metadata.userID = users.id AND log_metadata.paperID = properties.property_id AND username = ?');
                 $now = time();
                 for ($i = 1; $i <= 100; $i++) {
                     if (isset($used[$i]['reserved']) and $used[$i]['reserved'] != '') {
@@ -144,10 +145,18 @@ echo draw_toprightmenu(243);
                         $result->bind_result($q_paper, $paper_title);
                         $result->fetch();
 
-                        if ($used[$i]['surname'] == '') $used[$i]['surname'] = '<span style="color:#C00000">' . $string['unset'] . '</span>';
-                        if ($used[$i]['first_names'] == '') $used[$i]['first_names'] = '<span style="color:#C00000">' . $string['unset'] . '</span>';
-                        if ($used[$i]['title'] == '') $used[$i]['title'] = '<span style="color:#C00000">' . $string['unset'] . '</span>';
-                        if ($used[$i]['student_id'] == '') $used[$i]['student_id'] = '<span style="color:#C00000">' . $string['unset'] . '</span>';
+                        if ($used[$i]['surname'] == '') {
+                            $used[$i]['surname'] = '<span style="color:#C00000">' . $string['unset'] . '</span>';
+                        }
+                        if ($used[$i]['first_names'] == '') {
+                            $used[$i]['first_names'] = '<span style="color:#C00000">' . $string['unset'] . '</span>';
+                        }
+                        if ($used[$i]['title'] == '') {
+                            $used[$i]['title'] = '<span style="color:#C00000">' . $string['unset'] . '</span>';
+                        }
+                        if ($used[$i]['student_id'] == '') {
+                            $used[$i]['student_id'] = '<span style="color:#C00000">' . $string['unset'] . '</span>';
+                        }
 
                         // Check if account allocated in last 15 minutes.
                         $diff = ($now - strtotime($used[$i]['reservedtime'])) / 60;
@@ -156,21 +165,21 @@ echo draw_toprightmenu(243);
                             $reservedwarning = true;
                         }
 
-                        echo "<tr><td class=\"l\">";
+                        echo '<tr><td class="l">';
                         if ($paper_title == '') {
-                            echo "<input class=\"clear\" data-reservedwarning=\"" . $reservedwarning . "\" type=\"checkbox\" name=\"clear$i\" value=\"" . $used[$i]['id'] . "\" />";
+                            echo '<input class="clear" data-reservedwarning="' . $reservedwarning . "\" type=\"checkbox\" name=\"clear$i\" value=\"" . $used[$i]['id'] . '" />';
                         } else {
                             echo "<input class=\"clear\" data-reservedwarning=\"false\" type=\"checkbox\" name=\"clear$i\" value=\"\" disabled />";
                         }
-                        echo "</td><td class=\"l\">user$i</td><td class=\"l\">" . $used[$i]['surname'] . "</td><td class=\"l\">" . $used[$i]['first_names'] . "</td><td class=\"l\">" . $used[$i]['title'] . "</td><td class=\"l\">" . $used[$i]['student_id'] . "</td><td class=\"l\">" . $used[$i]['reserved'] . "</td>";
+                        echo "</td><td class=\"l\">user$i</td><td class=\"l\">" . $used[$i]['surname'] . '</td><td class="l">' . $used[$i]['first_names'] . '</td><td class="l">' . $used[$i]['title'] . '</td><td class="l">' . $used[$i]['student_id'] . '</td><td class="l">' . $used[$i]['reserved'] . '</td>';
                         if ($paper_title == '') {
-                            echo "<td class=\"loff\">" . $string['not taken'] . "</td>";
+                            echo '<td class="loff">' . $string['not taken'] . '</td>';
                         } else {
                             echo "<td class=\"l\"><a href=\"../paper/details.php?paperID=$q_paper\">$paper_title</td>";
                         }
-                        echo "</tr>";
+                        echo '</tr>';
                     } else {
-                        echo "<tr><td class=\"loff\"><input class=\"clear\" data-reservedwarning=\"false\" type=\"checkbox\" name=\"clear$i\" value=\"\" disabled /></td><td class=\"loff\">user$i</td><td class=\"loff\">guest$i</td><td colspan=\"6\" class=\"loff\" style=\"text-align:center\">" . $string['free'] . "</td></tr>";
+                        echo "<tr><td class=\"loff\"><input class=\"clear\" data-reservedwarning=\"false\" type=\"checkbox\" name=\"clear$i\" value=\"\" disabled /></td><td class=\"loff\">user$i</td><td class=\"loff\">guest$i</td><td colspan=\"6\" class=\"loff\" style=\"text-align:center\">" . $string['free'] . '</td></tr>';
                     }
                 }
                 $result->close();

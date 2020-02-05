@@ -36,4 +36,3 @@ $string['emailmsg4'] = 'Note:';
 $string['emailmsg5'] = 'Never share your university username/password with anyone.';
 $string['emailmsg6'] = 'Cheating in summative examinations is an academic offence and will not be tolerated.';
 $string['emailmsg7'] = 'Could not send mail to.';
-?>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -29,12 +30,14 @@ use testing\testcasetrait;
  * @package testing
  * @subpackage behat
  */
-class Default_Loader extends Data_Loader {
+class Default_Loader extends Data_Loader
+{
     use testcasetrait {
 
     }
 
-    public function __construct($load_help = false) {
+    public function __construct($load_help = false)
+    {
         parent::__construct($load_help);
         $this->fixture_base = __DIR__ . '/../../../../fixtures/base/';
     }
@@ -42,7 +45,8 @@ class Default_Loader extends Data_Loader {
     /**
      * Behat setup function.
      */
-    public function load() : void {
+    public function load(): void
+    {
         $this->setUp();
         $this->setup_dataset();
     }
@@ -50,7 +54,8 @@ class Default_Loader extends Data_Loader {
     /**
      * Behat teardown function.
      */
-    public function clean() : void {
+    public function clean(): void
+    {
         $this->tearDown();
     }
 
@@ -62,7 +67,8 @@ class Default_Loader extends Data_Loader {
      * @throws \testing\datagenerator\no_database
      * @throws \testing\datagenerator\not_found
      */
-    public function get_datagenerator(string $name, string $component = 'core') : generator {
+    public function get_datagenerator(string $name, string $component = 'core'): generator
+    {
         return loader::get($name, $component);
     }
 
@@ -70,7 +76,8 @@ class Default_Loader extends Data_Loader {
      * Set-up db connections.
      * @return mysqli
      */
-    protected function get_db_connection(): mysqli {
+    protected function get_db_connection(): mysqli
+    {
         $config = \Config::get_instance();
         if (!isset($this->phpunit_db)) {
             // Open db connection.
@@ -89,7 +96,8 @@ class Default_Loader extends Data_Loader {
      *
      * There should be a yml file for every database table in Rogo.
      */
-    protected function setup_dataset(): void {
+    protected function setup_dataset(): void
+    {
         // Base data generation.
         $this->base_datageneration();
     }

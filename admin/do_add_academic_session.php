@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -29,22 +30,21 @@ $yearutils = new yearutils($mysqli);
 $calendar_year = param::required('calendar_year', param::INT, param::FETCH_POST);
 
 if ($yearutils->check_calendar_year($calendar_year)) {
-    echo json_encode("DUPLICATE");
+    echo json_encode('DUPLICATE');
     exit();
 } else {
-
     $academic_year = param::required('academic_year', param::TEXT, param::FETCH_POST);
     $cal_status = param::optional('cal_status', false, param::BOOLEAN, param::FETCH_POST);
     $stat_status = param::optional('stat_status', false, param::BOOLEAN, param::FETCH_POST);
 
-    $result = $mysqli->prepare("INSERT INTO academic_year (calendar_year, academic_year, cal_status, stat_status) values(?, ?, ?, ?)");
+    $result = $mysqli->prepare('INSERT INTO academic_year (calendar_year, academic_year, cal_status, stat_status) values(?, ?, ?, ?)');
     $result->bind_param('isii', $calendar_year, $academic_year, $cal_status, $stat_status);
     $result->execute();
     $result->close();
 
     if ($mysqli->errno == 0) {
-        echo json_encode("SUCCESS");
+        echo json_encode('SUCCESS');
     } else {
-        echo json_encode("ERROR");
+        echo json_encode('ERROR');
     }
 }

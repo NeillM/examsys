@@ -23,16 +23,18 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
-Class Logger {
-  private $_mysqli;
+class Logger
+{
+    private $_mysqli;
 
   /**
    * Create a new logger object
    * @param db_link $mysqli Reference to database connection
    */
-  function __construct($mysqli) {
-    $this->_mysqli = $mysqli;
-  }
+    function __construct($mysqli)
+    {
+        $this->_mysqli = $mysqli;
+    }
 
   /**
    * Save a change to the change log table
@@ -44,28 +46,32 @@ Class Logger {
    * @param string $part Scope of change
    * @return boolean Success or failure of the database operation
    */
-  public function track_change($message, $object_id, $user_id, $orig_val, $new_val, $part) {
-    $success = true;
+    public function track_change($message, $object_id, $user_id, $orig_val, $new_val, $part)
+    {
+        $success = true;
 
-    if ($object_id > 0) {
+        if ($object_id > 0) {
+            if (is_array($orig_val)) {
+                $orig_val = implode(',', $orig_val);
+            }
+            if (is_array($new_val)) {
+                $new_val = implode(',', $new_val);
+            }
 
-      if (is_array($orig_val)) $orig_val = implode(',', $orig_val);
-      if (is_array($new_val)) $new_val = implode(',', $new_val);
+            if ($part === 'password') {
+                $new_val = '********';
+                $orig_val = '********';
+            }
+            $query = 'INSERT INTO track_changes(type, typeID, editor, old, new, changed, part) VALUES (?,?,?,?,?,NOW(),?)';
 
-      if ($part === 'password') {
-        $new_val = '********';
-        $orig_val = '********';
-      }
-      $query = "INSERT INTO track_changes(type, typeID, editor, old, new, changed, part) VALUES (?,?,?,?,?,NOW(),?)";
+            $result = $this->_mysqli->prepare($query);
+            $result->bind_param('siisss', $message, $object_id, $user_id, $orig_val, $new_val, $part);
+            $success = $result->execute();
+            $result->close();
+        }
 
-      $result = $this->_mysqli->prepare($query);
-      $result->bind_param('siisss', $message, $object_id, $user_id, $orig_val, $new_val, $part);
-      $success = $result->execute();
-      $result->close();
+        return $success;
     }
-
-    return $success;
-  }
 
   /**
    * Enter description here ...
@@ -78,16 +84,17 @@ Class Logger {
    * @param boolean $changes Indication of whether there are changes to the system. Set to true if we have logged a change here, otherwise unaltered
    * @return boolean Success or failure of the database operation
    */
-  public function check_and_track_change($message, $object_id, $user_id, $orig_val, $new_val, $part, &$changes) {
-    $success = true;
+    public function check_and_track_change($message, $object_id, $user_id, $orig_val, $new_val, $part, &$changes)
+    {
+        $success = true;
 
-    if ($orig_val != $new_val) {
-      $success = $this->track_change($message, $object_id, $user_id, $orig_val, $new_val, $part);
-      $changes = true;
+        if ($orig_val != $new_val) {
+            $success = $this->track_change($message, $object_id, $user_id, $orig_val, $new_val, $part);
+            $changes = true;
+        }
+
+        return $success;
     }
-
-    return $success;
-  }
 
   /**
    * Get all the changes from the log table for a given type of object
@@ -98,26 +105,27 @@ Class Logger {
    *                           array(<part name> => <callback>)
    * @return array             The list of changes
    */
-  public function get_changes($type, $typeID, $callbacks = '') {
-    $change_data = array();
+    public function get_changes($type, $typeID, $callbacks = '')
+    {
+        $change_data = array();
 
-    $query = 'SELECT title, initials, surname, old, new, part, UNIX_TIMESTAMP(changed) AS changed FROM track_changes, users WHERE track_changes.editor = users.id AND type = ? AND typeID = ? ORDER BY changed desc';
-    $result = $this->_mysqli->prepare($query);
-    $result->bind_param('si', $type, $typeID);
-    $result->execute();
-    $result->bind_result($title, $initials, $surname, $old, $new, $part, $changed);
-    while ($result->fetch()) {
-      $change_data[] = array('title'=>$title, 'initials'=>$initials, 'surname'=>$surname, 'old'=>$old, 'new'=>$new, 'part'=>$part, 'date'=>$changed);
+        $query = 'SELECT title, initials, surname, old, new, part, UNIX_TIMESTAMP(changed) AS changed FROM track_changes, users WHERE track_changes.editor = users.id AND type = ? AND typeID = ? ORDER BY changed desc';
+        $result = $this->_mysqli->prepare($query);
+        $result->bind_param('si', $type, $typeID);
+        $result->execute();
+        $result->bind_result($title, $initials, $surname, $old, $new, $part, $changed);
+        while ($result->fetch()) {
+            $change_data[] = array('title' => $title, 'initials' => $initials, 'surname' => $surname, 'old' => $old, 'new' => $new, 'part' => $part, 'date' => $changed);
 
-      // Fire callback if defined for this part type
-      if (is_array($callbacks) and isset($callbacks[$part])) {
-        call_user_func($callbacks[$part], $old, $new);
-      }
+          // Fire callback if defined for this part type
+            if (is_array($callbacks) and isset($callbacks[$part])) {
+                call_user_func($callbacks[$part], $old, $new);
+            }
+        }
+        $result->close();
+
+        return $change_data;
     }
-    $result->close();
-
-    return $change_data;
-  }
 
   /**
    * Record that a user tried to access a page and tried to was denied access.
@@ -126,32 +134,34 @@ Class Logger {
    * @param string $title The type of error
    * @param string $msg Details about why the user was denied access
    */
-  public function record_access_denied($user_id, $title, $msg) {
-    $current_address = NetworkUtils::get_client_address();
+    public function record_access_denied($user_id, $title, $msg)
+    {
+        $current_address = NetworkUtils::get_client_address();
 
-    $configObject = Config::get_instance();
+        $configObject = Config::get_instance();
 
-    $path = str_replace($configObject->get('cfg_web_root'), '', $_SERVER['SCRIPT_FILENAME']);
+        $path = str_replace($configObject->get('cfg_web_root'), '', $_SERVER['SCRIPT_FILENAME']);
 
-    if (isset($_SERVER['QUERY_STRING'])) {
-      // The page has a query part for it's URL.
-      $page = $path . '?'. $_SERVER['QUERY_STRING'];
+        if (isset($_SERVER['QUERY_STRING'])) {
+          // The page has a query part for it's URL.
+            $page = $path . '?' . $_SERVER['QUERY_STRING'];
+        }
+
+        $result = $this->_mysqli->prepare('INSERT INTO denied_log VALUES(NULL, ?, NOW(), ?, ?, ?, ?)');
+        $result->bind_param('issss', $user_id, $current_address, $page, $title, $msg);
+        $result->execute();
+        $result->close();
     }
 
-    $result = $this->_mysqli->prepare('INSERT INTO denied_log VALUES(NULL, ?, NOW(), ?, ?, ?, ?)');
-    $result->bind_param('issss', $user_id, $current_address, $page, $title, $msg);
-    $result->execute();
-    $result->close();
-  }
+    public function record_access($user_id, $type, $page)
+    {
+        $current_address = NetworkUtils::get_client_address();
 
-  public function record_access($user_id, $type, $page) {
-    $current_address = NetworkUtils::get_client_address();
-
-    $result = $this->_mysqli->prepare('INSERT INTO access_log VALUES(NULL, ?, ?, NOW(), ?, ?)');
-    $result->bind_param('isss', $user_id, $type, $current_address, $page);
-    $result->execute();
-    $result->close();
-  }
+        $result = $this->_mysqli->prepare('INSERT INTO access_log VALUES(NULL, ?, ?, NOW(), ?, ?)');
+        $result->bind_param('isss', $user_id, $type, $current_address, $page);
+        $result->execute();
+        $result->close();
+    }
 
   /**
    * Record application warning
@@ -162,15 +172,16 @@ Class Logger {
    * @param integer $errorline the line number
    * @param array|string $variables variables to log
    */
-  public function record_application_warning($userid, $type, $errorstring, $errorfile, $errorline, $variables = '') {
-    if ($variables != '' and !is_string($variables)) {
-        $variables = base64_encode(serialize($variables));
+    public function record_application_warning($userid, $type, $errorstring, $errorfile, $errorline, $variables = '')
+    {
+        if ($variables != '' and !is_string($variables)) {
+            $variables = base64_encode(serialize($variables));
+        }
+        $log_error = $this->_mysqli->prepare('INSERT INTO sys_errors (id, occurred, userID, auth_user, errtype, errstr, errfile, errline, variables) 
+        VALUES (NULL, NOW(), ?, ?, ?, ?, ?, ?, ?)');
+        $errortype = 'Application Warning';
+        $log_error->bind_param('issssss', $userid, $type, $errortype, $errorstring, $errorfile, $errorline, $variables);
+        $log_error->execute();
+        $log_error->close();
     }
-    $log_error = $this->_mysqli->prepare("INSERT INTO sys_errors (id, occurred, userID, auth_user, errtype, errstr, errfile, errline, variables) 
-        VALUES (NULL, NOW(), ?, ?, ?, ?, ?, ?, ?)");
-    $errortype = 'Application Warning';
-    $log_error->bind_param('issssss', $userid, $type, $errortype, $errorstring, $errorfile, $errorline, $variables);
-    $log_error->execute();
-    $log_error->close();
-  }
 }

@@ -22,17 +22,19 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package Authentication
  */
-class displaystdformobjfield extends stdClass {
-  public $description;
-  public $type;
-  public $name;
-  public $default;
+class displaystdformobjfield extends stdClass
+{
+    public $description;
+    public $type;
+    public $name;
+    public $default;
 
-  function __construct() {
-    $this->description = '';
-    $this->type = '';
-    $this->name = '';
-    $this->default = '';
-    $this->options = '';
-  }
+    function __construct()
+    {
+        $this->description = '';
+        $this->type = '';
+        $this->name = '';
+        $this->default = '';
+        $this->options = '';
+    }
 }

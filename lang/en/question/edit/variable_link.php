@@ -16,5 +16,3 @@
 
 $string['variablelink'] = 'Variable Link';
 $string['screen'] = 'Screen';
-
-?>

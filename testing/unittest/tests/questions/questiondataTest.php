@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class questiondatatest extends unittestdatabase {
+class questiondatatest extends unittestdatabase
+{
     /**
      * @var array Storage for paper data  in tests
      */
@@ -34,29 +36,31 @@ class questiondatatest extends unittestdatabase {
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
         $datagenerator->create_academic_year(array('calendar_year' => 2018, 'academic_year' => '2018/19'));
         $datagenerator = $this->get_datagenerator('papers', 'core');
-        $this->pid1 = $datagenerator->create_paper(array('papertitle' => "test formative",
-            'startdate' => "2018-02-19 00:00:00",
-            'enddate' => "2032-02-02 00:00:00",
+        $this->pid1 = $datagenerator->create_paper(array('papertitle' => 'test formative',
+            'startdate' => '2018-02-19 00:00:00',
+            'enddate' => '2032-02-02 00:00:00',
             'duration' => 60,
             'calendaryear' => 2018,
-            'timezone' => "Europe/London",
-            'paperowner' => "admin",
-            'labs' => "1",
-            'papertype' => "0",
-            'modulename' => "Training Module"));
+            'timezone' => 'Europe/London',
+            'paperowner' => 'admin',
+            'labs' => '1',
+            'papertype' => '0',
+            'modulename' => 'Training Module'));
         $datagenerator->set_post_creation_settings($this->pid1['id'], array(
-            'paper_prologue' => "paper test prologue"));
+            'paper_prologue' => 'paper test prologue'));
     }
 
     /**
      * Test question data setup
      * @group question
      */
-    public function test_setup_question_data() {
+    public function test_setup_question_data()
+    {
         // General test here. Any question type specific tests should go in the relevant question type test class.
         $data = questiondata::get_datastore('mcq');
         $screen_pre_submitted = 1;
@@ -282,7 +286,8 @@ class questiondatatest extends unittestdatabase {
      * Test question attribute getter
      * @group question
      */
-    public function test_get() {
+    public function test_get()
+    {
         $data = questiondata::get_datastore('area');
         $this->assertNull($data->notes);
         $data->notes = 'notes';
@@ -293,7 +298,8 @@ class questiondatatest extends unittestdatabase {
      * Test question option setter/getter
      * @group question
      */
-    public function test_get_set_opt() {
+    public function test_get_set_opt()
+    {
         $data = questiondata::get_datastore('area');
         $option2 = array('test' => 2, 'test2' => array(2, 1));
         $data->set_opt(2, $option2);
@@ -306,7 +312,8 @@ class questiondatatest extends unittestdatabase {
      * Test question media data setup
      * @group question
      */
-    public function test_set_media() {
+    public function test_set_media()
+    {
         $data = questiondata::get_datastore('area');
         // Test question media.
         $filename = 'test.png';
@@ -353,7 +360,8 @@ class questiondatatest extends unittestdatabase {
      * Test retrieval of invalid datastore
      * @group question
      */
-    public function test_get_datastore() {
+    public function test_get_datastore()
+    {
         $data = questiondata::get_datastore('invalid');
         $this->assertEquals('undefined', $data->questiontype);
     }

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ namespace testing\datagenerator;
  * @package testing
  * @subpackage datagenerator
  */
-class generator {
+class generator
+{
     /** @var mysqli Store the database connection object to be used by data generators. */
     public $db = null;
 
@@ -35,7 +37,8 @@ class generator {
      * @return mixed A value from the array.
      * @throws data_error
      */
-    protected function random_value($variable) {
+    protected function random_value($variable)
+    {
         $class = get_class($this);
         if (!property_exists($class, $variable)) {
             throw new data_error("$class::\$$variable not found");
@@ -56,7 +59,8 @@ class generator {
      * @param array $parameters The values that should over write the defaults.
      * @return array
      */
-    protected function set_defaults_and_clean(array $defaults, array $parameters) {
+    protected function set_defaults_and_clean(array $defaults, array $parameters)
+    {
         $return = array_merge($defaults, $parameters);
         return array_intersect_key($return, $defaults);
     }

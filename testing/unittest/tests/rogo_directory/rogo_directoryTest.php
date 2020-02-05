@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,11 +27,13 @@ use org\bovigo\vfs\vfsStream;
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
-class rogo_directorytest extends unittestdatabase {
+class rogo_directorytest extends unittestdatabase
+{
     /**
      * Generate data for test.
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         // Currently only base data required.
     }
 
@@ -40,14 +43,16 @@ class rogo_directorytest extends unittestdatabase {
     /** @var string The url we will use for Rogo for these tests. */
     protected $webroot = 'htttp://www.example.com/';
 
-    public function setUp() : void {
+    public function setUp(): void
+    {
         parent::setUp();
         $this->rogodirectory = $this->getMockForAbstractClass('rogo_directory', array(), '', true, true, true, array('valid_path'));
         // Ensure the root path is set to a known value.
         $this->config->set('cfg_root_path', $this->webroot);
     }
 
-    public function tearDown() : void {
+    public function tearDown(): void
+    {
         $this->rogodirectory = null;
         parent::tearDown();
     }
@@ -57,7 +62,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_create() {
+    public function test_create()
+    {
         // Set the location of the rogo directory to be a sub direcotry called test.
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         $this->assertFalse(vfsStreamWrapper::getRoot()->hasChild('test'));
@@ -71,7 +77,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_create_multilevel() {
+    public function test_create_multilevel()
+    {
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/test2/');
         $this->assertFalse(vfsStreamWrapper::getRoot()->hasChild('test'));
         $this->rogodirectory->create();
@@ -84,7 +91,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_create_not_writable() {
+    public function test_create_not_writable()
+    {
         parent::expectException(directory_not_found::class);
         // Set the location of the rogo directory to be a sub direcotry called test.
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
@@ -98,7 +106,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_create_root_has_700_permissions() {
+    public function test_create_root_has_700_permissions()
+    {
         // Set the location of the rogo directory to be a sub direcotry called test.
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         vfsStream::setup(unittestdatabase::DATA_DIRECTORY, 0700);
@@ -112,7 +121,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_create_when_directory_exists() {
+    public function test_create_when_directory_exists()
+    {
         // Set the location of the rogo directory to be a sub direcotry called test.
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         // The contents of the directory.
@@ -139,7 +149,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_clear() {
+    public function test_clear()
+    {
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         // The contents of the directory.
         $structure = array(
@@ -164,7 +175,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_clear_empty() {
+    public function test_clear_empty()
+    {
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         $structure = array(
             'test' => array(),
@@ -182,7 +194,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_clear_read_only() {
+    public function test_clear_read_only()
+    {
         $this->config->set('cfg_readonly_host', true);
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         // The contents of the directory.
@@ -208,7 +221,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_clear_empty_read_only() {
+    public function test_clear_empty_read_only()
+    {
         $this->config->set('cfg_readonly_host', true);
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         $structure = array(
@@ -228,7 +242,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_clear_no_directory() {
+    public function test_clear_no_directory()
+    {
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         $this->assertFalse(vfsStreamWrapper::getRoot()->hasChild('test'));
         $this->assertFalse($this->rogodirectory->clear());
@@ -239,7 +254,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_clear_no_permissions() {
+    public function test_clear_no_permissions()
+    {
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         // The contents of the directory.
         $structure = array(
@@ -265,7 +281,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_clear_no_permissions2() {
+    public function test_clear_no_permissions2()
+    {
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         // The contents of the directory.
         $structure = array(
@@ -293,7 +310,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_verify_file() {
+    public function test_verify_file()
+    {
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         $this->rogodirectory->expects($this->once())->method('valid_path')->willReturn(true);
         // The contents of the directory.
@@ -313,7 +331,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_verify_invalid_file() {
+    public function test_verify_invalid_file()
+    {
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         // The contents of the directory.
         $structure = array(
@@ -352,7 +371,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_verify_file_that_does_not_exist() {
+    public function test_verify_file_that_does_not_exist()
+    {
         parent::expectException(file_not_found::class);
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         // The contents of the directory.
@@ -371,7 +391,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_verify_file_that_does_not_exist2() {
+    public function test_verify_file_that_does_not_exist2()
+    {
         parent::expectException(file_not_found::class);
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         // The contents of the directory.
@@ -392,7 +413,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_verify_file_that_does_not_exist3() {
+    public function test_verify_file_that_does_not_exist3()
+    {
         parent::expectException(file_not_found::class);
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         // The contents of the directory.
@@ -415,7 +437,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_check_permissions() {
+    public function test_check_permissions()
+    {
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data'));
         $this->assertTrue($this->rogodirectory->check_permissions());
     }
@@ -425,7 +448,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_check_permissions_read_only() {
+    public function test_check_permissions_read_only()
+    {
         $this->config->set('cfg_readonly_host', true);
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data'));
         vfsStreamWrapper::getRoot()->chmod(0500);
@@ -437,7 +461,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_check_permissions_not_writable() {
+    public function test_check_permissions_not_writable()
+    {
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data'));
         vfsStreamWrapper::getRoot()->chmod(0000);
         $this->assertFalse($this->rogodirectory->check_permissions());
@@ -448,7 +473,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_check_permissions_not_writable_read_only() {
+    public function test_check_permissions_not_writable_read_only()
+    {
         $this->config->set('cfg_readonly_host', true);
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data'));
         $this->assertFalse($this->rogodirectory->check_permissions());
@@ -459,7 +485,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_check_permissions_not_writable2() {
+    public function test_check_permissions_not_writable2()
+    {
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data'));
         vfsStreamWrapper::getRoot()->chmod(0500);
         $this->assertFalse($this->rogodirectory->check_permissions());
@@ -470,7 +497,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_check_permissions_not_readable() {
+    public function test_check_permissions_not_readable()
+    {
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data'));
         vfsStreamWrapper::getRoot()->chmod(0300); // Write and execute.
         $this->assertFalse($this->rogodirectory->check_permissions());
@@ -481,7 +509,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_check_permissions_not_executable() {
+    public function test_check_permissions_not_executable()
+    {
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data'));
         vfsStreamWrapper::getRoot()->chmod(0600); // Read and write.
         $this->assertTrue($this->rogodirectory->check_permissions());
@@ -492,7 +521,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_get_directory_failure() {
+    public function test_get_directory_failure()
+    {
         parent::expectException(directory_not_found::class);
         rogo_directory::get_directory('fakedirectorytype');
     }
@@ -502,7 +532,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_get_directory_failure2() {
+    public function test_get_directory_failure2()
+    {
         parent::expectException(directory_not_found::class);
         rogo_directory::get_directory('DBUtils');
     }
@@ -512,7 +543,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_url_defaults() {
+    public function test_url_defaults()
+    {
         $structure = array(
             'test' => array(
                 'testfile.txt' => 'test content',
@@ -531,7 +563,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_url_no_forcedownload() {
+    public function test_url_no_forcedownload()
+    {
         $structure = array(
             'test' => array(
                 'testfile.txt' => 'test content',
@@ -550,7 +583,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_url_forcedownload() {
+    public function test_url_forcedownload()
+    {
         $structure = array(
             'test' => array(
                 'testfile.txt' => 'test content',
@@ -569,7 +603,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_url_verify_file() {
+    public function test_url_verify_file()
+    {
         $url = $this->rogodirectory->url('testfile.txt', false, false);
         $this->assertStringContainsString($this->webroot . 'getfile.php?', $url);
         $this->assertStringContainsString('type=Mock_rogo_directory', $url);
@@ -582,7 +617,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_url_verify_file_exception() {
+    public function test_url_verify_file_exception()
+    {
         parent::expectException(file_not_found::class);
         $url = $this->rogodirectory->url('testfile.txt', false, true);
     }
@@ -592,7 +628,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_url_not_escaped() {
+    public function test_url_not_escaped()
+    {
         $structure = array(
             'test' => array(
                 'testfile.txt' => 'test content',
@@ -611,7 +648,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_url_escaped() {
+    public function test_url_escaped()
+    {
         $structure = array(
             'test' => array(
                 'testfile.txt' => 'test content',
@@ -631,7 +669,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_url_escaped2() {
+    public function test_url_escaped2()
+    {
         $structure = array(
             'test' => array(
                 'testfile.txt' => 'test content',
@@ -651,7 +690,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_copy_from_default() {
+    public function test_copy_from_default()
+    {
         // This test needs to mock more than just the abstract methods so we need to build our own mock object.
         $methods = array('location', 'base_directory', 'default_base_directory');
         $this->rogodirectory = $this->getMockForAbstractClass('rogo_directory', array(), '', true, true, true, $methods);
@@ -678,7 +718,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_clear_subdir() {
+    public function test_clear_subdir()
+    {
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         $this->rogodirectory->expects($this->once())->method('valid_path')->willReturn(true);
         // The contents of the directory.
@@ -705,7 +746,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_subdir_clear_empty() {
+    public function test_subdir_clear_empty()
+    {
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         $this->rogodirectory->expects($this->once())->method('valid_path')->willReturn(true);
         $structure = array(
@@ -724,7 +766,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_clear_subdir_read_only() {
+    public function test_clear_subdir_read_only()
+    {
         $this->config->set('cfg_readonly_host', true);
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         // The contents of the directory.
@@ -747,7 +790,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_clear_subdir_empty_read_only() {
+    public function test_clear_subdir_empty_read_only()
+    {
         $this->config->set('cfg_readonly_host', true);
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         $structure = array(
@@ -766,7 +810,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_clear_subdir_no_directory() {
+    public function test_clear_subdir_no_directory()
+    {
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         $this->assertFalse($this->rogodirectory->clear_subdir('subdir'));
     }
@@ -776,7 +821,8 @@ class rogo_directorytest extends unittestdatabase {
      *
      * @group rogo_directory
      */
-    public function test_clear_subdir_no_permissions() {
+    public function test_clear_subdir_no_permissions()
+    {
         $this->rogodirectory->expects($this->any())->method('location')->willReturn($this->config->get('cfg_rogo_data') . '/test/');
         // The contents of the directory.
         $structure = array(

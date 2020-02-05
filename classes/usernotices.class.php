@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* A Class to hold functions designed to display notices to users. Including  
+* A Class to hold functions designed to display notices to users. Including
 * access denied messages.
 *
 * @author Anthony Brown, Simon Wilkinson
@@ -23,12 +23,15 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
-Class UserNotices extends RogoStaticSingleton {
-  public static $inst = NULL;
-  public static $class_name = 'user_notices';
+class UserNotices extends RogoStaticSingleton
+{
+    public static $inst = null;
+    public static $class_name = 'user_notices';
 
   /**
   * constructor
   */
-  private function __construct() {}
+    private function __construct()
+    {
+    }
 }

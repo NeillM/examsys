@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,7 +27,8 @@ use \CourseUtils;
  * @package testing
  * @subpackage datagenerator
  */
-class course extends generator {
+class course extends generator
+{
 
     /** @var int Stores how many courses have been created. */
     protected static $coursescreated = 0;
@@ -40,7 +42,8 @@ class course extends generator {
      * @return array
      * @throws data_error If passed parameter is invalid
      */
-    public function create_course($parameters) {
+    public function create_course($parameters)
+    {
         if (empty($parameters['schoolid'])) {
             throw new data_error('facultyID must be provided');
         }
@@ -49,7 +52,7 @@ class course extends generator {
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $courseid = CourseUtils::add_course($parameters['schoolid'], $settings['name'], $settings['description'], $settings['externalid'], $settings['externalsys'], $this->db);
         if (!$courseid) {
-            throw new data_error("Create new course failed with parameters: " . $parameters['schoolid'] . "--" . implode("--", $settings));
+            throw new data_error('Create new course failed with parameters: ' . $parameters['schoolid'] . '--' . implode('--', $settings));
         }
         $settings['id'] = $courseid;
         return $settings;

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace testing\behat;
+
 use Symfony\Component\Yaml\Yaml,
+
     Config;
 
 /**
@@ -26,9 +29,10 @@ use Symfony\Component\Yaml\Yaml,
  * @package testing
  * @category behat
  */
-class environment {
+class environment
+{
   /** The default values for the website that behat will use for testing. */
-  const DEFAULT_WEBSITE = 'http://localhost:8000';
+    const DEFAULT_WEBSITE = 'http://localhost:8000';
 
   /**
    * Builds the behat.yml file in testing/behat/config
@@ -37,11 +41,12 @@ class environment {
    *
    * @throws Exception
    */
-  public static function build_config() {
-    $basedir = self::get_basedir();
+    public static function build_config()
+    {
+        $basedir = self::get_basedir();
 
-    $config = array(
-      'default' => array(
+        $config = array(
+        'default' => array(
         'autoload' => array(
           $basedir . DIRECTORY_SEPARATOR . 'contexts',
         ),
@@ -85,116 +90,125 @@ class environment {
             ),
           ),
         ),
-      ),
-    );
+        ),
+        );
 
-    if (!file_put_contents(self::get_yml_location(), Yaml::dump($config, 10, 2))) {
-      throw new Exception('Could not write the behat.yml page.');
+        if (!file_put_contents(self::get_yml_location(), Yaml::dump($config, 10, 2))) {
+            throw new Exception('Could not write the behat.yml page.');
+        }
     }
-  }
 
   /**
    * Gets the website defined for the behat site in the config file or uses the default.
    *
    * @return string
    */
-  public static function get_behat_website() {
-    $behatwebsite = Config::get_instance()->get('cfg_behat_website');
-    return $behatwebsite;
-  }
+    public static function get_behat_website()
+    {
+        $behatwebsite = Config::get_instance()->get('cfg_behat_website');
+        return $behatwebsite;
+    }
 
   /**
    * Get the fully qualified path of the testing/behat directory.
    *
    * @return string
    */
-  protected static function get_basedir() {
-    return self::get_rogo_basedir() . DIRECTORY_SEPARATOR . 'testing'. DIRECTORY_SEPARATOR . 'behat';
-  }
+    protected static function get_basedir()
+    {
+        return self::get_rogo_basedir() . DIRECTORY_SEPARATOR . 'testing' . DIRECTORY_SEPARATOR . 'behat';
+    }
   
   /**
    * Get the full path to the behat.yml file.
-   * 
-   * @return string 
+   *
+   * @return string
    */
-  public static function get_yml_location() {
-    return self::get_basedir() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'behat.yml';
-  }
+    public static function get_yml_location()
+    {
+        return self::get_basedir() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'behat.yml';
+    }
 
   /**
    * Check if the behat web server instance is running.
    *
    * @return boolean
    */
-  public static function is_server_running() {
-    $return = false;
-    $curl = curl_init();
-    curl_setopt($curl, CURLOPT_URL, self::get_behat_website());
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-    curl_exec($curl);
-    if (curl_errno($curl) === 0) {
-      $return = true;
+    public static function is_server_running()
+    {
+        $return = false;
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, self::get_behat_website());
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_exec($curl);
+        if (curl_errno($curl) === 0) {
+            $return = true;
+        }
+        curl_close($curl);
+        return $return;
     }
-    curl_close($curl);
-    return $return;
-  }
 
   /**
    * Check if the behat database needs refreshing.
    *
    * @return boolean
    */
-  public static function upgrade_needed() {
-    $config = Config::get_instance();
-    if (self::rogo_behat_version() != $config->getxml('version')) {
-      return true;
+    public static function upgrade_needed()
+    {
+        $config = Config::get_instance();
+        if (self::rogo_behat_version() != $config->getxml('version')) {
+            return true;
+        }
+        return false;
     }
-    return false;
-  }
 
   /**
    * Gets the location of the file that stores the version of code that behat is setup to run.
    *
    * @return string
    */
-  public static function get_version_location() {
-    return self::get_basedir() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'version.php';
-  }
+    public static function get_version_location()
+    {
+        return self::get_basedir() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'version.php';
+    }
 
   /**
    * Writes a file that contains the version number of the Rogo code.
    *
    * @return void
    */
-  public static function save_version() {
-    $codeversion = Config::get_instance()->getxml('version');
-    $file = self::get_version_location();
-    if (!file_put_contents($file, $codeversion)) {
-      throw new Exception('Could not write version file.');
+    public static function save_version()
+    {
+        $codeversion = Config::get_instance()->getxml('version');
+        $file = self::get_version_location();
+        if (!file_put_contents($file, $codeversion)) {
+            throw new Exception('Could not write version file.');
+        }
     }
-  }
 
   /**
    * Get the version of Rogo that behat is initialised for.
    *
    * @return string
    */
-  public static function rogo_behat_version() { 
-    $file = self::get_version_location();
-    if (file_exists($file)) {
-      $version = file_get_contents($file);
-    } else {
-      $version = '';
+    public static function rogo_behat_version()
+    {
+        $file = self::get_version_location();
+        if (file_exists($file)) {
+            $version = file_get_contents($file);
+        } else {
+            $version = '';
+        }
+        return $version;
     }
-    return $version;
-  }
 
   /**
    * Returns the directory that Rogo is installed in.
    *
    * @return string
    */
-  protected static function get_rogo_basedir() {
-    return dirname(dirname(dirname(__DIR__)));
-  }
+    protected static function get_rogo_basedir()
+    {
+        return dirname(dirname(dirname(__DIR__)));
+    }
 }

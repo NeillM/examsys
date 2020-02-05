@@ -20,4 +20,3 @@ $string['editmaterial'] = 'Edit Material';
 $string['deletematerial'] = 'Delete Material';
 $string['referencename'] = 'Reference Name';
 $string['modules'] = 'Modules';
-?>

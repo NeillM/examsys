@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -46,8 +47,8 @@ require '../include/sysadmin_auth.inc';
 <?php
   require '../include/announcement_options.inc';
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
+    
+    echo draw_toprightmenu();
 ?>
 <div id="content">
 
@@ -75,17 +76,17 @@ $result = $mysqli->prepare("SELECT id, title, startdate, DATE_FORMAT(startdate, 
 $result->execute();
 $result->bind_result($announcementid, $title, $startdate, $startdate_display, $enddate_display);
 while ($result->fetch()) {
-  $announcements[$announce_no]['announcementid'] = $announcementid;
-  $announcements[$announce_no]['title'] = $title;
-  $announcements[$announce_no]['startdate_display'] = $startdate_display;
-  $announcements[$announce_no]['enddate_display'] = $enddate_display;
+    $announcements[$announce_no]['announcementid'] = $announcementid;
+    $announcements[$announce_no]['title'] = $title;
+    $announcements[$announce_no]['startdate_display'] = $startdate_display;
+    $announcements[$announce_no]['enddate_display'] = $enddate_display;
   
-  $announce_no++;
+    $announce_no++;
 }
 $result->close();
 
-for ($i=0; $i<$announce_no; $i++) {
-  echo "<tr id=\"" . $announcements[$i]['announcementid'] . "\" class=\"l\"><td>" . $announcements[$i]['title'] . "</td><td>" . $announcements[$i]['startdate_display']  . "</td><td>" . $announcements[$i]['enddate_display']  . "</td></tr>\n";
+for ($i = 0; $i < $announce_no; $i++) {
+    echo '<tr id="' . $announcements[$i]['announcementid'] . '" class="l"><td>' . $announcements[$i]['title'] . '</td><td>' . $announcements[$i]['startdate_display']  . '</td><td>' . $announcements[$i]['enddate_display']  . "</td></tr>\n";
 }
 
 $mysqli->close();

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,28 +27,28 @@ require '../include/sysadmin_auth.inc';
 require_once '../include/errors.php';
 
 $schoolid = check_var('schoolid', 'GET', true, false, true);
-$result = $mysqli->prepare("SELECT school, facultyID, code, externalid, externalsys FROM schools WHERE id = ? AND deleted IS NULL");
+$result = $mysqli->prepare('SELECT school, facultyID, code, externalid, externalsys FROM schools WHERE id = ? AND deleted IS NULL');
 $result->bind_param('i', $schoolid);
 $result->execute();
 $result->store_result();
 $result->bind_result($school, $curr_faculty, $curr_code, $curr_externalid, $curr_externalsys);
 $result->fetch();
 if ($result->num_rows == 0) {
-  $result->close();
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $result->close();
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 $result->close();
 
 $faculties = 0;
 $faculty_list = array();
-$result = $mysqli->prepare("SELECT id, code, name FROM faculty WHERE deleted IS NULL ORDER BY name");
+$result = $mysqli->prepare('SELECT id, code, name FROM faculty WHERE deleted IS NULL ORDER BY name');
 $result->execute();
 $result->bind_result($facultyID, $code, $name);
 while ($result->fetch()) {
-  $faculty_list[] = array($facultyID, $code, $name);
-  $faculties++;
+    $faculty_list[] = array($facultyID, $code, $name);
+    $faculties++;
 }
 $result->close();
 ?>
@@ -71,8 +72,8 @@ $result->close();
 <?php
   require '../include/school_options.inc';
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
+    
+    echo draw_toprightmenu();
 ?>
 <div id="content">
 
@@ -90,10 +91,10 @@ $result->close();
     <tr><td class="field"><?php echo $string['name'] ?></td><td><input type="text" size="70" maxlength="255" id="school" name="school" value="<?php echo $school ?>" required /></td></tr>
     <tr><td class="field"><?php echo $string['faculty'] ?></td><td><select name="faculty">
     <?php
-      foreach ($faculty_list as $faculty) {
+    foreach ($faculty_list as $faculty) {
         $sel = ($faculty[0] == $curr_faculty) ? ' selected="selected"' : '';
         echo "<option value=\"{$faculty[0]}\"{$sel}>{$faculty[1]} {$faculty[2]}</option>\n";
-      }
+    }
     ?>
     </select></td></tr>
     <tr><td class="field"><?php echo $string['code'] ?></td><td><input type="text" size="30" maxlength="30" name="code" value="<?php echo $curr_code; ?>"/></td></tr>
@@ -108,7 +109,7 @@ $result->close();
 // JS utils dataset.
 $render = new render($configObject);
 $miscdataset['name'] = 'dataset';
-$miscdataset['attributes']['posturl'] = "do_edit_school.php?schoolid=" . $schoolid;
+$miscdataset['attributes']['posturl'] = 'do_edit_school.php?schoolid=' . $schoolid;
 $render->render($miscdataset, array(), 'dataset.html');
 ?>
 </body>

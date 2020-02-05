@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -28,18 +29,18 @@ $media_index_display = ($media_index == '') ? '0' : $media_index;
 $current_media = (isset($current_media)) ? $current_media : $question->get_media();
 $media_label = (isset($media_label)) ? $media_label : $string['media'];
 if ($dis_class != '') {
-  $disabled = ' disabled="disabled"';
-  $locked = true;
+    $disabled = ' disabled="disabled"';
+    $locked = true;
 } else {
-  $disabled = '';
-  $locked = false;
+    $disabled = '';
+    $locked = false;
 }
 if ($current_media['filename'] != '') {
-  $configObj = Config::get_instance();
-  $questiondata = \questiondata::get_datastore($question->get_type());
-  $render = new render($configObj);
-  $questiondata->set_media($current_media['filename'], $current_media['width'], $current_media['height'], '', false, $media_index_display, $locked);
-?>
+    $configObj = Config::get_instance();
+    $questiondata = \questiondata::get_datastore($question->get_type());
+    $render = new render($configObj);
+    $questiondata->set_media($current_media['filename'], $current_media['width'], $current_media['height'], '', false, $media_index_display, $locked);
+    ?>
             <tr>
               <th><?php echo $string['current'] . ' ' . $media_label ?></th>
               <td>
@@ -48,7 +49,7 @@ if ($current_media['filename'] != '') {
                 ?>
               </td>
             </tr>
-<?php      
+    <?php
 }
 ?>
             <tr>

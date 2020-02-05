@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -29,11 +30,11 @@
 <div id="left-sidebar" class="sidebar">
 <form name="PapersMenu" action="" autocomplete="off">
 <div id="menu1a">
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/import_grey_16.gif" alt="" /><?php echo $string['restorethisitem'] ?></div>
+    <div class="grey menuitem"><img class="sidebar_icon" src="../artwork/import_grey_16.gif" alt="" /><?php echo $string['restorethisitem'] ?></div>
 </div>
 
 <div style="display:none" id="menu1b">
-	<div class="menuitem" id="restore"><a onclick="return false" href="#"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['restorethisitem'] ?></a></div>
+    <div class="menuitem" id="restore"><a onclick="return false" href="#"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['restorethisitem'] ?></a></div>
 </div>
 
 <input type="hidden" id="itemID" name="itemID" value="" />

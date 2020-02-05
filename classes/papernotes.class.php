@@ -23,71 +23,76 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-Class PaperNotes {
+class PaperNotes
+{
   /**
    * Creates a list of students who have notes against a particular paper.
-   * @param int $paperID	- ID of the paper we wish to look up.
+   * @param int $paperID    - ID of the paper we wish to look up.
    * @param object $db    - MySQL connection
    */
-  static function get_all_notes_by_paper($paperID, $db) {
-    $notes = array();
-    // Query any student notes for the current paper
-    $result = $db->prepare("SELECT userID FROM student_notes WHERE paper_id = ?");
-    $result->bind_param('i', $paperID);
-    $result->execute();
-    $result->bind_result($userID);
-    while ($result->fetch()) {
-      $notes[$userID] = 'y';
-    }
-    $result->close();
+    static function get_all_notes_by_paper($paperID, $db)
+    {
+        $notes = array();
+      // Query any student notes for the current paper
+        $result = $db->prepare('SELECT userID FROM student_notes WHERE paper_id = ?');
+        $result->bind_param('i', $paperID);
+        $result->execute();
+        $result->bind_result($userID);
+        while ($result->fetch()) {
+            $notes[$userID] = 'y';
+        }
+        $result->close();
 
-    return $notes;
-  }
+        return $notes;
+    }
 
   /**
    * Retrieves a note based on a paper and IP address.
    * @param int $paperID    - ID of the paper we wish to look up.
-   * @param string $address	- The IP address of the workstation where the note was made.
+   * @param string $address - The IP address of the workstation where the note was made.
    * @param object $db      - MySQL connection
    * @return array          - Array containing the id and text of a paper note.
    */
-  static function get_note($paperID, $address, $db) {
-    $result = $db->prepare("SELECT note_id, note FROM paper_notes WHERE paper_id = ? AND note_workstation = ?");
-    $result->bind_param('is', $paperID, $address);
-    $result->execute();
-    $result->bind_result($note_id, $note);
-    $result->fetch();
-    $result->close();
+    static function get_note($paperID, $address, $db)
+    {
+        $result = $db->prepare('SELECT note_id, note FROM paper_notes WHERE paper_id = ? AND note_workstation = ?');
+        $result->bind_param('is', $paperID, $address);
+        $result->execute();
+        $result->bind_result($note_id, $note);
+        $result->fetch();
+        $result->close();
 
-		return array('note_id'=>$note_id, 'note'=>$note);
-	}
+        return array('note_id' => $note_id, 'note' => $note);
+    }
 
   /**
    * Adds a new paper note.
-   * @param string $note  	- The text of the note (message).
+   * @param string $note    - The text of the note (message).
    * @param int $paperID    - ID of the paper the note is associated with.
-   * @param int $authorID 	- User ID of the member of staff/invigilator creating the note.
+   * @param int $authorID   - User ID of the member of staff/invigilator creating the note.
    * @param object $db      - MySQL connection
    */
-  static function add_note($note, $paperID, $authorID, $db) {
-		$current_address = NetworkUtils::get_client_address();
+    static function add_note($note, $paperID, $authorID, $db)
+    {
+        $current_address = NetworkUtils::get_client_address();
 
-		$result = $db->prepare("INSERT INTO paper_notes VALUES (NULL, ?, NOW(), ?, ?, ?)");
-		$result->bind_param('siis', $note, $paperID, $authorID, $current_address);
-		$result->execute();
-		$result->close();
-	}
+        $result = $db->prepare('INSERT INTO paper_notes VALUES (NULL, ?, NOW(), ?, ?, ?)');
+        $result->bind_param('siis', $note, $paperID, $authorID, $current_address);
+        $result->execute();
+        $result->close();
+    }
 
   /**
    * Updates an existing paper note.
-   * @param string $note  	- The text of the note (message).
+   * @param string $note    - The text of the note (message).
    * @param int $note_id    - ID of the paper note.
    * @param object $db      - MySQL connection
    */
-	static function update_note($note, $note_id, $db) {
-		$result = $db->prepare("UPDATE paper_notes SET note = ? WHERE note_id = ?");
-    $result->bind_param('si', $note, $note_id);
-    $result->execute();
-    $result->close();
-	}
+    static function update_note($note, $note_id, $db)
+    {
+        $result = $db->prepare('UPDATE paper_notes SET note = ? WHERE note_id = ?');
+        $result->bind_param('si', $note, $note_id);
+        $result->execute();
+        $result->close();
+    }
 }

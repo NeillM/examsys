@@ -30,4 +30,3 @@ $string['longitudinal'] = 'Longitudinal';
 $string['screen'] = 'Screen';
 $string['warning'] = 'Warning';
 $string['nomatchsession'] = 'The session in the paper title (%s) does not match the paper session (%s).';
-?>

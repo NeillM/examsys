@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,9 +16,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Rogō Test Harness.
-* 
+*
 * @author Anthony Brown
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -25,7 +26,6 @@
 */
 
 require '../include/sysadmin_auth.inc';
-
 $langpack = new \langpack();
 $strings = $langpack->get_all_strings('testing/index');
 ?>
@@ -35,14 +35,14 @@ $strings = $langpack->get_all_strings('testing/index');
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>"/>
 
-	<title>Rog&#333;: <?php echo $strings['testsuite'] ?></title>
+    <title>Rog&#333;: <?php echo $strings['testsuite'] ?></title>
 
-	<style>
-		.content {font-size:80%}
-		li {margin-left:20px; line-height:150%}
-	</style>
-	<link rel="stylesheet" type="text/css" href="../css/body.css" />
-	<link rel="stylesheet" type="text/css" href="../css/header.css" />
+   <style>
+        .content {font-size:80%}
+       li {margin-left:20px; line-height:150%}
+    </style>
+   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style>
     h2 {margin-left: 20px; font-size: 150%}
     li {font-size: 110%}
@@ -54,8 +54,7 @@ $strings = $langpack->get_all_strings('testing/index');
 <body>
 <?php
   require '../include/toprightmenu.inc';
-
-	echo draw_toprightmenu();
+echo draw_toprightmenu();
 ?>
 <div id="content">
   
@@ -66,17 +65,17 @@ $strings = $langpack->get_all_strings('testing/index');
   </div>
 
   <h2><?php echo $strings['developmenttests'] ?></h2>
-	<ol>
+    <ol>
         <li><a href="help_test.php"><?php echo $strings['helpconsistency'] ?></a></li>
-		<li><a href="online_help_gaps.php"><?php echo $strings['helpgaps'] ?></a></li>
-	</ol>
+        <li><a href="online_help_gaps.php"><?php echo $strings['helpgaps'] ?></a></li>
+ </ol>
   
   <h2><?php echo $strings['posttests'] ?></h2>
-	<ol>
-		<li><a href="class_totals_with_script.php"><?php echo $strings['summativecheck'] ?></a></li>
+    <ol>
+        <li><a href="class_totals_with_script.php"><?php echo $strings['summativecheck'] ?></a></li>
     <li><a href="checkenhancedcalc.php"><?php echo $strings['calccheck'] ?></a></li>
     <li><a href="test_email.php"><?php echo $strings['emailcheck'] ?></a></li>
-	</ol>
+    </ol>
   
 </div>
 </body>

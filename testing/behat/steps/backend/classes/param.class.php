@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -17,6 +18,7 @@
 namespace testing\behat\steps\backend;
 
 use Behat\Gherkin\Node\PyStringNode,
+
     Behat\Gherkin\Node\TableNode,
     Behat\Behat\Tester\Exception\PendingException;
 
@@ -28,7 +30,8 @@ use Behat\Gherkin\Node\PyStringNode,
  * @package testing
  * @subpackage behat
  */
-trait param {
+trait param
+{
   /**
    * Pass a value to the param::clean() method using the specified type of filter and store the result.
    *
@@ -36,14 +39,15 @@ trait param {
    * @param mixed $value A value that should be cleaned.
    * @param string $type The type the clean function expects.
    */
-  public function i_clean_value_as_type($value, $type) {
-    if (!defined("\param::$type")) {
-      throw new \coding_exception('You must provicde the name of a constant of the param class');
+    public function i_clean_value_as_type($value, $type)
+    {
+        if (!defined("\param::$type")) {
+            throw new \coding_exception('You must provicde the name of a constant of the param class');
+        }
+        $this->original = $value;
+        $this->type = $type;
+        $this->clean = \param::clean($value, constant("\param::$type"));
     }
-    $this->original = $value;
-    $this->type = $type;
-    $this->clean = \param::clean($value, constant("\param::$type"));
-  }
 
   /**
    * Tests that the result of the last cleaning step gave the expected result.
@@ -54,18 +58,19 @@ trait param {
    * @Given /^the clean result should be "([^"]*)"$/
    * @param mixed $result
    */
-  public function the_clean_result_should_be($result) {
-    $failmessage = "'$this->original' was cleaned as a '$this->type'";
-    if ($result === 'null') {
-      $this->assertNull($this->clean, $failmessage);
-    } else if ($result === 'true') {
-      $this->assertTrue($this->clean, $failmessage);
-    } else if ($result === 'false') {
-      $this->assertFalse($this->clean, $failmessage);
-    } else {
-      $this->assertEquals($result, $this->clean, $failmessage);
+    public function the_clean_result_should_be($result)
+    {
+        $failmessage = "'$this->original' was cleaned as a '$this->type'";
+        if ($result === 'null') {
+            $this->assertNull($this->clean, $failmessage);
+        } elseif ($result === 'true') {
+            $this->assertTrue($this->clean, $failmessage);
+        } elseif ($result === 'false') {
+            $this->assertFalse($this->clean, $failmessage);
+        } else {
+            $this->assertEquals($result, $this->clean, $failmessage);
+        }
     }
-  }
 
   /**
    * Fake values being sent via get or post requests by directly adding them to the relevant global arrays.
@@ -80,28 +85,29 @@ trait param {
    * @Given the following parameters have been passed:
    * @param TableNode $paramters A table of values
    */
-  public function the_following_parameters_have_been_passed(TableNode $paramters) {
-    foreach ($paramters->getHash() as $paramter) {
-      $name = $paramter['name'];
-      $value = $paramter['value'];
-      if (preg_match('/^array:\s?((?:[\w\d-]+(?:,\s?)?)+);$/', $value, $matches)) {
-        // Pass the matching group to the method. This is the value it expects.
-        $value = $this->cast_to_array($matches[1]);
-      }
-      switch ($paramter['method']) {
-        case 'GET':
-          $_GET[$name] = $value;
-          $_REQUEST[$name] = $value;
-          break;
-        case 'POST':
-          $_POST[$name] = $value;
-          $_REQUEST[$name] = $value;
-          break;
-        default:
-          throw new \coding_exception('Only GET and POST are valid methods');
-      }
+    public function the_following_parameters_have_been_passed(TableNode $paramters)
+    {
+        foreach ($paramters->getHash() as $paramter) {
+            $name = $paramter['name'];
+            $value = $paramter['value'];
+            if (preg_match('/^array:\s?((?:[\w\d-]+(?:,\s?)?)+);$/', $value, $matches)) {
+                // Pass the matching group to the method. This is the value it expects.
+                $value = $this->cast_to_array($matches[1]);
+            }
+            switch ($paramter['method']) {
+                case 'GET':
+                    $_GET[$name] = $value;
+                    $_REQUEST[$name] = $value;
+                    break;
+                case 'POST':
+                    $_POST[$name] = $value;
+                    $_REQUEST[$name] = $value;
+                    break;
+                default:
+                    throw new \coding_exception('Only GET and POST are valid methods');
+            }
+        }
     }
-  }
 
   /**
    * Use the param::optional() method to retrive a parameter. It is hard coded in the step to return null as a default.
@@ -112,23 +118,24 @@ trait param {
    * @param string $type The type the paramter should be filtered as
    * @throws \coding_exception
    */
-  public function i_look_for_the_optional_parameter_as_a($from, $name, $type) {
-    if (!defined("\param::$type")) {
-      throw new \coding_exception('You must provicde the name of a constant of the param class');
+    public function i_look_for_the_optional_parameter_as_a($from, $name, $type)
+    {
+        if (!defined("\param::$type")) {
+            throw new \coding_exception('You must provicde the name of a constant of the param class');
+        }
+        $this->original = $name;
+        $this->type = $type;
+        if ($from == 'GET') {
+            $from = \param::FETCH_GET;
+        } elseif ($from == 'POST') {
+            $from = \param::FETCH_POST;
+        } elseif ($from == 'REQUEST') {
+            $from = \param::FETCH_REQUEST;
+        } else {
+            throw new \coding_exception('$from must be one of: GET, POST, REQUEST');
+        }
+        $this->clean = \param::optional($name, null, constant("\param::$type"), $from);
     }
-    $this->original = $name;
-    $this->type = $type;
-    if ($from == 'GET') {
-      $from = \param::FETCH_GET;
-    } else if ($from == 'POST') {
-      $from = \param::FETCH_POST;
-    } else if ($from == 'REQUEST') {
-      $from = \param::FETCH_REQUEST;
-    } else {
-      throw new \coding_exception('$from must be one of: GET, POST, REQUEST');
-    }
-    $this->clean = \param::optional($name, null, constant("\param::$type"), $from);
-  }
 
   /**
    * Use the param::require() method to retrive a parameter.
@@ -139,23 +146,24 @@ trait param {
    * @param string $type The type the paramter should be filtered as
    * @throws \coding_exception
    */
-  public function i_look_for_the_required_parameter_as_a($from, $name, $type) {
-    if (!defined("\param::$type")) {
-      throw new \coding_exception('You must provicde the name of a constant of the param class');
+    public function i_look_for_the_required_parameter_as_a($from, $name, $type)
+    {
+        if (!defined("\param::$type")) {
+            throw new \coding_exception('You must provicde the name of a constant of the param class');
+        }
+        $this->original = $name;
+        $this->type = $type;
+        if ($from == 'GET') {
+            $from = \param::FETCH_GET;
+        } elseif ($from == 'POST') {
+            $from = \param::FETCH_POST;
+        } elseif ($from == 'REQUEST') {
+            $from = \param::FETCH_REQUEST;
+        } else {
+            throw new \coding_exception('$from must be one of: GET, POST, REQUEST');
+        }
+        $this->clean = \param::required($name, constant("\param::$type"), $from);
     }
-    $this->original = $name;
-    $this->type = $type;
-    if ($from == 'GET') {
-      $from = \param::FETCH_GET;
-    } else if ($from == 'POST') {
-      $from = \param::FETCH_POST;
-    } else if ($from == 'REQUEST') {
-      $from = \param::FETCH_REQUEST;
-    } else {
-      throw new \coding_exception('$from must be one of: GET, POST, REQUEST');
-    }
-    $this->clean = \param::required($name, constant("\param::$type"), $from);
-  }
 
   /**
    * Use the param::require() method to retrive a parameter.
@@ -166,27 +174,28 @@ trait param {
    * @param string $type The type the paramter should be filtered as
    * @throws \coding_exception
    */
-  public function i_look_for_the_required_parameter_as_a_type_there_should_be_an_exception($from, $name, $type) {
-    if (!defined("\param::$type")) {
-      throw new \coding_exception('You must provicde the name of a constant of the param class');
+    public function i_look_for_the_required_parameter_as_a_type_there_should_be_an_exception($from, $name, $type)
+    {
+        if (!defined("\param::$type")) {
+            throw new \coding_exception('You must provicde the name of a constant of the param class');
+        }
+        $this->original = $name;
+        $this->type = $type;
+        if ($from == 'GET') {
+            $from = \param::FETCH_GET;
+        } elseif ($from == 'POST') {
+            $from = \param::FETCH_POST;
+        } elseif ($from == 'REQUEST') {
+            $from = \param::FETCH_REQUEST;
+        } else {
+            throw new \coding_exception('$from must be one of: GET, POST, REQUEST');
+        }
+        try {
+            \param::required($name, constant("\param::$type"), $from);
+        } catch (\MissingParameter $e) {
+          // Validate the type of exception.
+            return;
+        }
+        throw new \Exception('No exception was thrown by \param::required()');
     }
-    $this->original = $name;
-    $this->type = $type;
-    if ($from == 'GET') {
-      $from = \param::FETCH_GET;
-    } else if ($from == 'POST') {
-      $from = \param::FETCH_POST;
-    } else if ($from == 'REQUEST') {
-      $from = \param::FETCH_REQUEST;
-    } else {
-      throw new \coding_exception('$from must be one of: GET, POST, REQUEST');
-    }
-    try {
-      \param::required($name, constant("\param::$type"), $from);
-    } catch (\MissingParameter $e) {
-      // Validate the type of exception.
-      return;
-    }
-    throw new \Exception('No exception was thrown by \param::required()');
-  }
 }

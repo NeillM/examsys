@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -25,7 +26,6 @@
 */
 
 require '../include/staff_auth.inc';
-
 $paper_name = param::optional('paper_name', '', param::TEXT, param::FETCH_GET);
 $paper_type = param::optional('paper_type', '', param::TEXT, param::FETCH_GET);
 $paper_types = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline', 'peer_review');
@@ -60,7 +60,7 @@ $paper_types = array('formative', 'progress', 'summative', 'survey', 'osce', 'of
 if (!$configObject->get_setting('core', 'summative_hide_external')) {
     ?>
 <td class="icon" id="summative"><img src="../artwork/summative.png" width="48" height="48" alt="<?php echo $string['summative exam']; ?>" /><br /><?php echo $string['summative exam']; ?></td>
-<?php
+    <?php
 }
 ?>
 <td class="icon" id="survey"><img src="../artwork/survey.png" width="48" height="48" alt="<?php echo $string['survey']; ?>" /><br /><?php echo $string['survey']; ?></td>
@@ -77,24 +77,28 @@ if (!$configObject->get_setting('core', 'summative_hide_external')) {
 <br />
 <div id="warning" data-name="<?php echo $paper_name; ?>">
 <?php
-  if ($paper_name != '') {
+if ($paper_name != '') {
     echo sprintf($string['msg5'], $paper_name);
-  }
+}
 ?>
 </div>
 <?php echo $string['name']; ?> <input type="text" id="paper_name" name="paper_name" value="<?php echo $paper_name; ?>" maxlength="200" style="width:650px" required />
-<input type="hidden" name="module" value="<?php if (isset($_GET['module'])) echo $_GET['module']; ?>" />
+<input type="hidden" name="module" value="<?php if (isset($_GET['module'])) {
+    echo $_GET['module'];
+                                          } ?>" />
 <?php
 if (isset($_GET['module'])) {
-  $module_details = module_utils::get_full_details_by_ID($_GET['module'], $mysqli);
-  $yearutils = new yearutils($mysqli);
-  $default_academic_year = $yearutils->get_current_session($module_details['academic_year_start']);
+    $module_details = module_utils::get_full_details_by_ID($_GET['module'], $mysqli);
+    $yearutils = new yearutils($mysqli);
+    $default_academic_year = $yearutils->get_current_session($module_details['academic_year_start']);
 } else {
-  $default_academic_year = $configObject->get_setting('core', 'system_academic_year_start');
+    $default_academic_year = $configObject->get_setting('core', 'system_academic_year_start');
 }
 ?>
 <input type="hidden" name="default_academic_year" value="<?php echo $default_academic_year ?>" />
-<input type="hidden" name="folder" value="<?php if (isset($_GET['folder'])) echo $_GET['folder']; ?>" />
+<input type="hidden" name="folder" value="<?php if (isset($_GET['folder'])) {
+    echo $_GET['folder'];
+                                          } ?>" />
 <input type="hidden" id="paper_type" name="paper_type" value="<?php echo $paper_type; ?>" />
 <br />
 <br />
@@ -110,7 +114,7 @@ $render->render($jsdataset, array(), 'dataset.html');
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['warn'] = $configObject->get_setting('core', 'summative_warn_external');
 if (isset($_GET['type'])) {
-  $miscdataset['attributes']['type'] = $paper_types[$_GET['type']];
+    $miscdataset['attributes']['type'] = $paper_types[$_GET['type']];
 }
 $render->render($miscdataset, array(), 'dataset.html');
 ?>

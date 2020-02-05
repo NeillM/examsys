@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -24,15 +25,13 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
-
 $facultyID = check_var('facultyID', 'REQUEST', true, false, true);
-
 // Check the Faculty ID actually exists for editing.
 $details = FacultyUtils::get_faculty_details_by_id($facultyID, $mysqli);
 if (is_null($details['name'])) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 ?>
 <!DOCTYPE html>
@@ -58,9 +57,9 @@ if (is_null($details['name'])) {
 <table cellpadding="0" cellspacing="2" border="0">
 <?php
   echo '<tr><td class="field">' . $string['name'] . '</td><td><input type="text" style="width:99%" id="new_faculty" name="new_faculty" value="' . $details['name'] . '" maxlength="80" required autofocus /></td></tr>';
-  ?>
-<tr><td class="field"><?php echo $string["code"] ?></td><td><input type="text" size="30" maxlength="30" name="code" value="<?php echo $details['code']; ?>"/></td></tr>
-<tr><td class="field"><?php echo $string["externalid"] ?></td><td><?php echo $details['externalid']; ?></td></tr>
+?>
+<tr><td class="field"><?php echo $string['code'] ?></td><td><input type="text" size="30" maxlength="30" name="code" value="<?php echo $details['code']; ?>"/></td></tr>
+<tr><td class="field"><?php echo $string['externalid'] ?></td><td><?php echo $details['externalid']; ?></td></tr>
 <tr><td class="field"><?php echo $string['externalsys'] ?></td><td><?php echo $details['externalsys']; ?></td></tr>
 <input type="hidden" name="facultyID" value="<?php echo $facultyID ?>" />
 </table>

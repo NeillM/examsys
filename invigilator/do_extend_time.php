@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -22,40 +23,39 @@
  * @package
  */
 
-
 define('AJAX_REQUEST', true);
 
 require '../include/invigilator_auth.inc';
 
 $student_id = param::optional('userID', 0, param::INT, param::FETCH_POST);
 if ($student_id !== 0) {
-  $paper_id = param::optional('paperID', 0, param::INT, param::FETCH_POST);
-  if ($paper_id !== 0) {
-    $student = array();
-    $student['user_ID'] = $student_id;
+    $paper_id = param::optional('paperID', 0, param::INT, param::FETCH_POST);
+    if ($paper_id !== 0) {
+        $student = array();
+        $student['user_ID'] = $student_id;
 
-    $current_address = NetworkUtils::get_client_address();
+        $current_address = NetworkUtils::get_client_address();
 
-    $lab_factory = new LabFactory($mysqli);
-    $lab_object = $lab_factory->get_lab_based_on_client($current_address);
+        $lab_factory = new LabFactory($mysqli);
+        $lab_object = $lab_factory->get_lab_based_on_client($current_address);
 
-    $propertyObj = PaperProperties::get_paper_properties_by_id($paper_id, $mysqli, $string);
-    $log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $propertyObj, $mysqli);
-    $log_extra_time = new LogExtraTime($log_lab_end_time, $student, $mysqli);
+        $propertyObj = PaperProperties::get_paper_properties_by_id($paper_id, $mysqli, $string);
+        $log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $propertyObj, $mysqli);
+        $log_extra_time = new LogExtraTime($log_lab_end_time, $student, $mysqli);
 
-    $invigilator_id = $userObject->get_user_ID();
+        $invigilator_id = $userObject->get_user_ID();
 
-    $extratime = param::optional('extra_time', 0, param::INT, param::FETCH_POST);
-    if ($extratime == 0) {
-      $log_extra_time->delete($invigilator_id);
-    } elseif ($extratime > 0) {
-      $special_needs_percentage = $extratime;
-      $log_extra_time->save($invigilator_id, $special_needs_percentage);
+        $extratime = param::optional('extra_time', 0, param::INT, param::FETCH_POST);
+        if ($extratime == 0) {
+            $log_extra_time->delete($invigilator_id);
+        } elseif ($extratime > 0) {
+            $special_needs_percentage = $extratime;
+            $log_extra_time->save($invigilator_id, $special_needs_percentage);
+        }
+
+        echo json_encode('SUCCESS');
+        exit();
     }
-
-    echo json_encode('SUCCESS');
-    exit();
-  }
 }
 
 echo json_encode('ERROR');

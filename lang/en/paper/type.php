@@ -20,7 +20,7 @@ $string['showretired'] = 'Show retired';
 $string['screen'] = 'Screen';
 $string['screens'] = 'Screens';
 $string['mins'] = 'mins';
-$string['SelfenrolURL'] = "Self-enrol URL";
+$string['SelfenrolURL'] = 'Self-enrol URL';
 $string['createnewpaper'] = 'Create new Paper';
 $string['manageobjectives'] = 'Manage Objectives';
 $string['managekeywords'] = 'Manage Keywords';
@@ -32,4 +32,3 @@ $string['nomodulesset'] = 'No modules set';
 $string['unspecifiedsession'] = 'Unspecified Session';
 $string['examcalendar'] = 'Summative Exam Calendar';
 $string['newpaper'] = 'New Paper';
-?>

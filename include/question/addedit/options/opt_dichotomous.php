@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -25,11 +26,11 @@
 $hidden = (($num_options == 0 and $index > 5) or ($num_options > 0 and $index > $num_options)) ? ' hide' : '';
 $correct_t = ($option->get_correct() == 't') ? ' checked="checked"' : '';
 $correct_f = ($option->get_correct() == 'f') ? ' checked="checked"' : '';
-if ($index %2 == 0) {
-  $alt = ' alt';
-  $alt_c = ' class="alt"';
+if ($index % 2 == 0) {
+    $alt = ' alt';
+    $alt_c = ' class="alt"';
 } else {
-  $alt = $alt_c = '';
+    $alt = $alt_c = '';
 }
 $spaced = ($index > 1) ? " class=\"spaced-top{$alt}\"" : $alt_c;
 $locked = ($dis_class != '');
@@ -48,26 +49,26 @@ $locked = ($dis_class != '');
             </tr>
 <?php
 
-  if ($option->id != -1) { 
+if ($option->id != -1) {
     $media = $option->get_media();
     if ($media['filename'] != '') {
-      $configObj = Config::get_instance();
-      $questiondata = new plugins\questions\dichotomous\renderdata();
-      $render = new render($configObj);
-      $questiondata->set_media($media['filename'], $media['width'], $media['height'], '', false, $index, $locked);
-?>
+        $configObj = Config::get_instance();
+        $questiondata = new plugins\questions\dichotomous\renderdata();
+        $render = new render($configObj);
+        $questiondata->set_media($media['filename'], $media['width'], $media['height'], '', false, $index, $locked);
+        ?>
               <tr<?php echo $alt_c ?>>
                 <th><?php echo $string['current'] . ' ' . $string['media'] ?></th>
                 <td>
                   <?php
-                  $render->render($questiondata, $string, 'paper/media.html');
-                  ?>
+                    $render->render($questiondata, $string, 'paper/media.html');
+                    ?>
                 </td>
                 <td>&nbsp;</td>
               </tr>
-<?php
-     }
-   }
+        <?php
+    }
+}
 
 ?>
             <tr<?php echo $alt_c ?>>

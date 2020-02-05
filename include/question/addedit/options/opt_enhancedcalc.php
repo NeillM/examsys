@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -23,11 +24,11 @@
 */
 
 $classes = array();
-if ($index %2 == 0) {
-  $classes[] = 'alt';
+if ($index % 2 == 0) {
+    $classes[] = 'alt';
 }
 if ((count($vars) == 0 and $index > 5) or (count($vars) > 0 and $index > count($vars))) {
-  $classes[] = 'hide';
+    $classes[] = 'hide';
 }
 $class_mod = (count($classes) > 0) ? ' ' . implode(' ', $classes) : '';
 
@@ -36,16 +37,16 @@ $disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
 
 $min_value = $variable->get_min();
 if (substr($min_value, 0, 3) == 'var' or substr($min_value, 0, 3) == 'ans') {
-  $min_link_icon = '../../artwork/variable_link_on.png';
+    $min_link_icon = '../../artwork/variable_link_on.png';
 } else {
-  $min_link_icon = '../../artwork/variable_link_off.png';
+    $min_link_icon = '../../artwork/variable_link_off.png';
 }
 
 $max_value = $variable->get_max();
 if (substr($max_value, 0, 3) == 'var' or substr($max_value, 0, 3) == 'ans') {
-  $max_link_icon = '../../artwork/variable_link_on.png';
+    $max_link_icon = '../../artwork/variable_link_on.png';
 } else {
-  $max_link_icon = '../../artwork/variable_link_off.png';
+    $max_link_icon = '../../artwork/variable_link_off.png';
 }
 ?>
           <tbody class="option<?php echo $class_mod ?>">

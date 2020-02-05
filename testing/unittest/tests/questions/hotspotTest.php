@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,13 +25,15 @@ use testing\unittest\unittest;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class hotspottest extends unittest {
+class hotspottest extends unittest
+{
 
     /**
      * Test question header setter
      * @group question
      */
-    public function test_set_question_head() {
+    public function test_set_question_head()
+    {
         $data = questiondata::get_datastore('hotspot');
         $data->set_question_head();
         $this->assertTrue($data->displaydefault);
@@ -47,7 +50,8 @@ class hotspottest extends unittest {
      * Test question option setter
      * @group question
      */
-    public function test_set_option_answer() {
+    public function test_set_option_answer()
+    {
         $data = questiondata::get_datastore('hotspot');
         $option['correct'] = 'Chocolate calculator~16711680~polygon~16a,399,152,3c7,1a9,3ed,106,407,f9,3a6~0~|Dictionary~16776960~ellipse~392,382,2d1,418~0~';
         $option['markscorrect'] = 1;
@@ -70,5 +74,4 @@ class hotspottest extends unittest {
         $data->set_option_answer(0, $useranswer, '', 1);
         $this->assertEquals(2, $data->marks);
     }
-
 }

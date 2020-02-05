@@ -58,7 +58,7 @@ $string['qtiimport'] = 'QTI Import';
 $string['imported1_2'] = 'Imported from QTI 1.2 file';
 $string['paperlocked'] = 'Paper Locked';
 $string['paperlockedmsg'] = 'This paper is now locked and cannot be modified.';
-$string['lockedlink'] = "Details about paper locking.";
+$string['lockedlink'] = 'Details about paper locking.';
 
 $string['loadingsection'] = 'Loading section';
 $string['loadingblank'] = 'Loading blank string';
@@ -66,4 +66,3 @@ $string['loadingblankdrop'] = 'Loading blank dropdown';
 $string['fileoutput'] = 'File Output';
 
 $string['type'] = 'Paper Type';
-?>

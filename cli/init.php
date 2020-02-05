@@ -23,7 +23,7 @@
  
 // Only run from the command line!
 if (PHP_SAPI != 'cli') {
-  die("Please run this script from the CLI!\n");
+    die("Please run this script from the CLI!\n");
 }
 
 set_time_limit(0);
@@ -33,9 +33,9 @@ autoloader::init();
 
 $error = PHP_EOL . 'For details about installing Rogo visit: ' . PHP_EOL . 'https://rogo-eassessment-docs.atlassian.net/wiki/pages/viewpage.action?pageId=491546';
 
-if (!file_exists(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR .'settings.xml')) {
-  cli_utils::prompt('settings.xml is requried to perform an install of Rogo.' . $error);
-  exit(0);
+if (!file_exists(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'settings.xml')) {
+    cli_utils::prompt('settings.xml is requried to perform an install of Rogo.' . $error);
+    exit(0);
 }
 
 $language = 'en';
@@ -44,7 +44,7 @@ require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPA
 $cfg_web_root = get_root_path();
 // Ensure there is a trailing slash.
 if (substr($cfg_web_root, -1) !== '/') {
-  $cfg_web_root .= '/';
+    $cfg_web_root .= '/';
 }
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $language . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'install.php';
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'timezones.php';
@@ -67,8 +67,8 @@ $help = 'Rogo initialisation script options'
 
 if (isset($optionslist['h']) or isset($optionslist['help'])) {
   // Display some help information.
-  cli_utils::prompt($help);
-  exit(0);
+    cli_utils::prompt($help);
+    exit(0);
 }
 
 $databaseuser = $optionslist['u'];
@@ -83,34 +83,34 @@ if (function_exists('opcache_reset')) {
 }
 
 try {
-  InstallUtils::$cli = true;
+    InstallUtils::$cli = true;
   // Check if already installed.
-  InstallUtils::checkDirPermissionsPre();
-  InstallUtils::configFile();
-  $configObject = Config::get_instance();
-  $version = $configObject->getxml('version');
+    InstallUtils::checkDirPermissionsPre();
+    InstallUtils::configFile();
+    $configObject = Config::get_instance();
+    $version = $configObject->getxml('version');
   // Load an verifiy settings.xml
-  InstallUtils::loadSettings();
+    InstallUtils::loadSettings();
   // Check pre-requisites.
-  try {
-    requirements::check();
-  } catch (Exception $e) {
-    cli_utils::prompt($e->getMessage());
-    exit(0);
-  }
+    try {
+        requirements::check();
+    } catch (Exception $e) {
+        cli_utils::prompt($e->getMessage());
+        exit(0);
+    }
   // Install.
-  InstallUtils::checkDirPermissionsPost();
-  $args = array(
+    InstallUtils::checkDirPermissionsPost();
+    $args = array(
     'mysql_admin_user' => $databaseuser,
     'mysql_admin_pass' => $databasepassword,
     'mysql_db_host' => $databasehost,
     'mysql_db_port' => $databaseport,
     'mysql_db_name' => $databasename
-  );
-  InstallUtils::processForm($args);
+    );
+    InstallUtils::processForm($args);
 } catch (Exception $e) {
-  cli_utils::prompt($e->getMessage());
-  cli_utils::prompt($error);
+    cli_utils::prompt($e->getMessage());
+    cli_utils::prompt($error);
 }
 cli_utils::prompt('You should now remove settings.xml from this system.');
 exit(0);

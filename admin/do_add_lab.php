@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -63,33 +64,33 @@ foreach ($addresses as $address) {
 }
 
 if ($bad_addresses > 0) {
-  echo json_encode(array('INVALID', $ipInvalid, $ipInUse));
-  exit();
+    echo json_encode(array('INVALID', $ipInvalid, $ipInUse));
+    exit();
 } else {
   // Insert into Lab table.
-  $result = $mysqli->prepare("INSERT INTO labs (name, campus, building, room_no, timetabling, it_support, plagarism) VALUES (?, ?, ?, ?, ?, ?, ?)");
-  $result->bind_param('sisssss', $lab_name, $campus, $building, $room_no, $timetabling, $it_support, $plagarism);
-  $result->execute();
-  $labID = $mysqli->insert_id;
-  $result->close();
+    $result = $mysqli->prepare('INSERT INTO labs (name, campus, building, room_no, timetabling, it_support, plagarism) VALUES (?, ?, ?, ?, ?, ?, ?)');
+    $result->bind_param('sisssss', $lab_name, $campus, $building, $room_no, $timetabling, $it_support, $plagarism);
+    $result->execute();
+    $labID = $mysqli->insert_id;
+    $result->close();
 
-  if ($mysqli->errno != 0) {
-      echo json_encode(array('ERROR', $mysqli->errno));
-      exit();
-  }
+    if ($mysqli->errno != 0) {
+        echo json_encode(array('ERROR', $mysqli->errno));
+        exit();
+    }
 
-  foreach ($addresses as $address) { // Insert the new IP addresses.
-      $address = trim($address);
-      if ($hostname_lookup) {
-          $hostname = $address;
-      } else {
-          $hostname = gethostbyaddr($address);
-      }
+    foreach ($addresses as $address) { // Insert the new IP addresses.
+        $address = trim($address);
+        if ($hostname_lookup) {
+            $hostname = $address;
+        } else {
+            $hostname = gethostbyaddr($address);
+        }
 
-      $result = $mysqli->prepare("INSERT INTO client_identifiers (lab, address, hostname, low_bandwidth) VALUES (?, ?, ?, ?)");
-      $result->bind_param('issi', $labID, $address, $hostname, $low_bandwidth);
-      $result->execute();
-      $result->close();
-  }
-  echo json_encode(array('OK', $labID));
+        $result = $mysqli->prepare('INSERT INTO client_identifiers (lab, address, hostname, low_bandwidth) VALUES (?, ?, ?, ?)');
+        $result->bind_param('issi', $labID, $address, $hostname, $low_bandwidth);
+        $result->execute();
+        $result->close();
+    }
+    echo json_encode(array('OK', $labID));
 }

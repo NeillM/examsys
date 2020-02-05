@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -29,11 +30,11 @@
 require_once __DIR__ . '/load_config.php';
 
 if (!InstallUtils::config_exists()) {
-  require_once __DIR__  . '/path_functions.inc.php';
-  $cfg_web_root = get_root_path() . '/';
-  $root = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_ROOT']), '', $cfg_web_root), '/'), '/');
-  header("location: " . $root . "/install/index.html", true, 303);
-  exit();
+    require_once __DIR__  . '/path_functions.inc.php';
+    $cfg_web_root = get_root_path() . '/';
+    $root = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_ROOT']), '', $cfg_web_root), '/'), '/');
+    header('location: ' . $root . '/install/index.html', true, 303);
+    exit();
 }
 
 // Cookie sessions only.
@@ -45,14 +46,14 @@ if ($configObject->get('cfg_secure_connection')) {
 }
 //start the session early as the lang class looks in the session
 if ($configObject->get('cfg_session_name') != '') {
-  session_name($configObject->get('cfg_session_name'));
+    session_name($configObject->get('cfg_session_name'));
 } else {
-  session_name('RogoAuthentication');
+    session_name('RogoAuthentication');
 }
 
-if (ini_get('session.save_handler') === "memcache" or ini_get('session.save_handler') === "memcached") {
-  $sessionhandler = new memcachesessionhandler();
-  session_set_save_handler($sessionhandler);
+if (ini_get('session.save_handler') === 'memcache' or ini_get('session.save_handler') === 'memcached') {
+    $sessionhandler = new memcachesessionhandler();
+    session_set_save_handler($sessionhandler);
 }
 $return = session_start();
 
@@ -63,7 +64,7 @@ require_once $cfg_web_root . 'lang/' . $language . '/include/common.php'; // Inc
 require_once $cfg_web_root . 'include/custom_error_handler.inc';
 
 if (is_null($configObject->get('cfg_db_port'))) {
-  $configObject->set('cfg_db_port', 3306);
+    $configObject->set('cfg_db_port', 3306);
 }
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
 $configObject->set_db_object($mysqli);
@@ -72,12 +73,14 @@ $fp_link = "<p style=\"margin-left:60px\"><a href=\"{$configObject->get('cfg_roo
 
 // Check for secure protocol
 if ($configObject->get('cfg_secure_connection')) {
-  if (! ( (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS'] == 'on') or
-          (isset($_SERVER['REQUEST_SCHEME']) and $_SERVER['REQUEST_SCHEME'] == 'https') or 
-          (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) and $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') ) ) {
-    $msg = $string['secureconnectionmsg'] . ' <a href="https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '">https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '</a>.';
-    $notice->display_notice_and_exit($mysqli, $string['secureconnection'], $msg, $string['secureconnection'], '../artwork/secure_connection.png', $title_color = '#C00000', true, true);
-  }
+    if (
+        ! ( (isset($_SERVER['HTTPS']) and $_SERVER['HTTPS'] == 'on') or
+          (isset($_SERVER['REQUEST_SCHEME']) and $_SERVER['REQUEST_SCHEME'] == 'https') or
+          (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) and $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') )
+    ) {
+        $msg = $string['secureconnectionmsg'] . ' <a href="https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '">https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '</a>.';
+        $notice->display_notice_and_exit($mysqli, $string['secureconnection'], $msg, $string['secureconnection'], '../artwork/secure_connection.png', $title_color = '#C00000', true, true);
+    }
 }
 
 $authentication = new Authentication($configObject, $mysqli, $_REQUEST, $_SESSION);
@@ -88,10 +91,10 @@ $authentication->get_auth_obj($getauthobj);
 $userObject = UserObject::get_instance();
 $userObject->db_user_change();
 if (!$userObject->has_role('SysAdmin')) {
-  if (version::is_version_higher($configObject->getxml('version'), $configObject->get_setting('core', 'rogo_version')) or $configObject->get_setting('core', 'system_maintenance_mode')) {
-      header("location: " . $configObject->get('cfg_root_path') . "/maintenance/index.php?from=".urlencode($_SERVER['REQUEST_URI']), true, 303);
-      exit();
-  }
+    if (version::is_version_higher($configObject->getxml('version'), $configObject->get_setting('core', 'rogo_version')) or $configObject->get_setting('core', 'system_maintenance_mode')) {
+        header('location: ' . $configObject->get('cfg_root_path') . '/maintenance/index.php?from=' . urlencode($_SERVER['REQUEST_URI']), true, 303);
+        exit();
+    }
 }
 $included_files = get_included_files();
 

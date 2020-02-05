@@ -17,4 +17,3 @@
 require '../lang/' . $language . '/delete/delete.php';
 
 $string['msg'] = 'Are you sure you wish to delete this folder?<br /><br />Deleting the folder will <strong>not</strong> delete the papers contained within.';
-?>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -34,28 +35,28 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 
 $clarif_types = $configObject->get_setting('core', 'summative_midexam_clarification');
 if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->is_live() and $properties->get_bidirectional() == '1' and count($clarif_types) > 0) {
-  $exam_clarifications = true;
+    $exam_clarifications = true;
 } else {
-  $exam_clarifications = false;
+    $exam_clarifications = false;
 }
 
 // Check the paper is not set to be linear.
 // Check if paper is Summative Exam.
 // Check if paper is not live.
 if (!$exam_clarifications) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  echo json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
-  exit();
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    echo json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
+    exit();
 }
 
 // Check that the questionID exists
 $q_id = check_var('q_id', 'REQUEST', true, false, true);
 if (!QuestionUtils::question_exists($q_id, $mysqli)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  echo json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
-  exit();
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    echo json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
+    exit();
 }
 
 $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);

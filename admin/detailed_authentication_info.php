@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -47,9 +48,8 @@ require_once '../include/sidebar_menu.inc';
 
 <body>
 <?php
-	require '../include/toprightmenu.inc';
-
-	echo draw_toprightmenu();
+    require '../include/toprightmenu.inc';
+echo draw_toprightmenu();
 ?>
 <div id="content">
 <div class="head_title">
@@ -59,52 +59,49 @@ require_once '../include/sidebar_menu.inc';
 </div>
 <?php
 $authinfo = $authentication->version_info();
-
 $plugin_no = count($authinfo->plugins);
-
 echo "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"margin:10px\">\n";
-echo "<tr><td class=\"sechead\">" . $string['No'] . "</td><td class=\"sechead\">" . $string['Name'] . "</td><td class=\"sechead\">" . $string['Class'] . "</td><td class=\"sechead\">" . $string['Version'] . "</td><td class=\"sechead\" style=\"text-align:center\">" . $string['Settings'] . "</td></tr>";
-for ($i=1; $i<$plugin_no; $i++) {
+echo '<tr><td class="sechead">' . $string['No'] . '</td><td class="sechead">' . $string['Name'] . '</td><td class="sechead">' . $string['Class'] . '</td><td class="sechead">' . $string['Version'] . '</td><td class="sechead" style="text-align:center">' . $string['Settings'] . '</td></tr>';
+for (
+    $i = 1; $i < $plugin_no; $i++
+) {
+    $settinginfo = '';
+    foreach ($authinfo->plugins[$i]->settings as $setting => $value) {
+        if ($settinginfo != '') {
+            $settinginfo .= ', &nbsp; ';
+        }
+        if (is_array($value)) {
+            $sub_info = '';
+            foreach ($value as $sub_key => $sub_value) {
+                if ($sub_info == '') {
+                    $sub_info = "$sub_key = > $sub_value";
+                } else {
+                    $sub_info .= ", $sub_key = > $sub_value";
+                }
+            }
+            $settinginfo .= $setting . "=array($sub_info)";
+        } else {
+            $settinginfo .= $setting . '=' . $value;
+        }
+    }
   
-  $settinginfo = '';
-  foreach ($authinfo->plugins[$i]->settings as $setting => $value) {
-    if ($settinginfo != '') $settinginfo .= ', &nbsp; ';
-		if (is_array($value)) {
-			$sub_info = '';
-			foreach ($value as $sub_key => $sub_value) {
-			  if ($sub_info == '') {
-					$sub_info = "$sub_key = > $sub_value";
-				} else {
-					$sub_info .= ", $sub_key = > $sub_value";
-				}
-			}
-			$settinginfo .= $setting . "=array($sub_info)";
-		} else {
-			$settinginfo .= $setting . '=' . $value;
-		}
-  }
-  
-  echo "<tr><td>" . $authinfo->plugins[$i]->number . ".</td><td><nobr>" . $authinfo->plugins[$i]->name . "</nobr></td><td>" . $authinfo->plugins[$i]->classname . "</td><td>" . $authinfo->plugins[$i]->version . "</td><td>$settinginfo</td></tr>\n";
+    echo '<tr><td>' . $authinfo->plugins[$i]->number . '.</td><td><nobr>' . $authinfo->plugins[$i]->name . '</nobr></td><td>' . $authinfo->plugins[$i]->classname . '</td><td>' . $authinfo->plugins[$i]->version . "</td><td>$settinginfo</td></tr>\n";
 }
 echo "</table>\n";
-
 echo "<br />\n";
-
 echo "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"margin:10px\">\n";
-echo "<tr><td class=\"sechead\">" . $string['Name'] . "</td><td class=\"sechead\">" . $string['Function'] . "</td><td class=\"sechead\">" . $string['Description'] . "</td><td class=\"sechead\">" . $string['ID'] . "</td></tr>";
-
-$old_function='';
-
+echo '<tr><td class="sechead">' . $string['Name'] . '</td><td class="sechead">' . $string['Function'] . '</td><td class="sechead">' . $string['Description'] . '</td><td class="sechead">' . $string['ID'] . '</td></tr>';
+$old_function = '';
 foreach ($authinfo->callbacks as $callback_name => $callback_details) {
-  foreach ($callback_details as $callback) {
-    if ($callback->functionname != $old_function) {
-      echo "<tr><td colspan=4><hr></td></tr>";
+    foreach ($callback_details as $callback) {
+        if ($callback->functionname != $old_function) {
+            echo '<tr><td colspan=4><hr></td></tr>';
+        }
+        echo '<tr><td>' . $callback_name . '&nbsp;</td><td>' . $callback->functionname . '&nbsp;</td><td>' . $callback->plugindescname . '&nbsp;</td><td>' . $callback->pluginconfigid . "&nbsp;</td></tr>\n";
+        $old_function = $callback->functionname;
     }
-    echo "<tr><td>" . $callback_name . "&nbsp;</td><td>" . $callback->functionname . "&nbsp;</td><td>" . $callback->plugindescname . "&nbsp;</td><td>" . $callback->pluginconfigid . "&nbsp;</td></tr>\n";
-    $old_function=$callback->functionname;
-  }
 }
-echo "<tr><td colspan=4><hr></td></tr>";
+echo '<tr><td colspan=4><hr></td></tr>';
 echo "</table>\n";
 
 ?>

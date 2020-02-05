@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō - http://Rogō.org/ heavily based on code original part of Moodle - http://moodle.org
 //
 // Rogo is free software: you can redistribute it and/or modify

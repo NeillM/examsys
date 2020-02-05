@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,31 +25,34 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2017 onwards The University of Nottingham
  * @package tests
  */
-class supporttest extends unittestdatabase {
+class supporttest extends unittestdatabase
+{
 
     /**
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $datagenerator = $this->get_datagenerator('config', 'core');
-        $datagenerator->change_setting(array('component' => 'core', 'setting' => 'support_contact_email', 'value' => array("test@example.com", "joseph.baxter@example.com")));
+        $datagenerator->change_setting(array('component' => 'core', 'setting' => 'support_contact_email', 'value' => array('test@example.com', 'joseph.baxter@example.com')));
     }
 
     /**
      * Test get email addresses
      * @group support
      */
-    public function test_get_email() {
-        $this->assertEquals("test@example.com;joseph.baxter@example.com", \support::get_email());
+    public function test_get_email()
+    {
+        $this->assertEquals('test@example.com;joseph.baxter@example.com', \support::get_email());
     }
 
     /**
      * Test get primary email address
      * @group support
      */
-    public function test_get_primary_email() {
-        $this->assertEquals("test@example.com", \support::get_primary_email());
+    public function test_get_primary_email()
+    {
+        $this->assertEquals('test@example.com', \support::get_primary_email());
     }
-
 }

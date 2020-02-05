@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,8 +27,8 @@ $num_options = count($question->options);
 $labels = $question->get_tf_labels();
 $disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
 ?>
-				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
-					<tbody>
+                <table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
+                    <tbody>
 <?php
 require_once 'details_common.php';
 $disp_method_class = 'dichotomous-display';
@@ -43,8 +44,8 @@ echo ViewHelper::render_options($question->get_option_orders(), $question->get_o
                 </select>
               </td>
             </tr>
-					</tbody>
-				</table>
+                    </tbody>
+                </table>
 
 <?php
 require_once 'detail_parts/details_marking.php';
@@ -65,17 +66,17 @@ require_once 'detail_parts/details_general_feedback.php';
 <?php
 $index = 1;
 foreach ($question->options as $o_id => $option) {
-  include 'options/opt_dichotomous.php';
-  $index++;
+    include 'options/opt_dichotomous.php';
+    $index++;
 }
 
 for ($index = $num_options + 1; $index <= $question->max_options; $index++) {
-  $option = OptionEdit::option_factory($mysqli, $userObject->get_user_ID(), $question, $index, $string);
-  include 'options/opt_dichotomous.php';
+    $option = OptionEdit::option_factory($mysqli, $userObject->get_user_ID(), $question, $index, $string);
+    include 'options/opt_dichotomous.php';
 }
 
-if($question->get_locked() == '') {
-?>
+if ($question->get_locked() == '') {
+    ?>
           <tbody class="add-option-holder">
             <tr>
               <th>&nbsp;</th>
@@ -84,7 +85,7 @@ if($question->get_locked() == '') {
               </td>
             </tr>
           </tbody>
-<?php
+    <?php
 }
 ?>
         </table>

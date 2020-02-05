@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -25,101 +26,105 @@ namespace plugins\questions\textbox;
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
 
-class renderdata extends \questiondata {
-  use \defaultgetmarks;
+class renderdata extends \questiondata
+{
+    use \defaultgetmarks;
+
   /**
    * List of textboxes viewed
    * @var array
    */
-  public $textboxesseen;
+    public $textboxesseen;
 
   /**
    * Number of columns in editor
    * @var integer
    */
-  public $editorcolumns;
+    public $editorcolumns;
 
   /**
    * Number of rows in editor
    * @var integer
    */
-  public $editorrows;
+    public $editorrows;
 
   /**
    * Editor type
    * @var string
    */
-  public $editor;
+    public $editor;
 
   /**
    * Editor config file
    * @var string
    */
-  public $file;
+    public $file;
 
   /**
    * Editor type
    * @var string
    */
-  public $type;
+    public $type;
 
   /**
    * Editor style
    * @var string
    */
-  public $style;
+    public $style;
 
   /**
    * Editor config file template
    * @var string
    */
-  public $editorconfig;
+    public $editorconfig;
 
   /**
    * Editor textarea file template
    * @var string
    */
-  public $editortextarea;
+    public $editortextarea;
 
   /**
    * User answer
    * @var string
    */
-  public $useranswer;
+    public $useranswer;
 
   /**
    * Mathjax state
    * @var boolean
    */
-  public $editormathjax;
+    public $editormathjax;
 
   /**
    * Constructor
    */
-  function __construct() {
-    parent::__construct();
-    $this->questiontype = 'textbox';
-    $this->textboxesseen = array();
-    $this->editormathjax = false;
-    $this->editor  = '';
-  }
+    function __construct()
+    {
+        parent::__construct();
+        $this->questiontype = 'textbox';
+        $this->textboxesseen = array();
+        $this->editormathjax = false;
+        $this->editor  = '';
+    }
 
   /**
    * Disable/Enable display of question header sections for template rendering
    */
-  public function set_question_head() {
-    $this->displaydefault = true;
-    if ($this->notes != '') {
-      $this->displaynotes = true;
+    public function set_question_head()
+    {
+        $this->displaydefault = true;
+        if ($this->notes != '') {
+            $this->displaynotes = true;
+        }
+        if ($this->scenario != '') {
+            $this->displayscenario = true;
+        }
+        $this->displayleadin = true;
+        if ($this->qmedia != '') {
+            $this->displaymedia = true;
+        }
     }
-    if ($this->scenario != '') {
-      $this->displayscenario = true;
-    }
-    $this->displayleadin = true;
-    if ($this->qmedia != '') {
-      $this->displaymedia = true;
-    }
-  }
 
   /**
    * Question level settings for template rendering
@@ -127,9 +132,10 @@ class renderdata extends \questiondata {
    * @param mixed $useranswer user answer
    * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    */
-  public function set_question($screen_pre_submitted, $useranswer, $userdismissed) {
-    // Noting to do.
-  }
+    public function set_question($screen_pre_submitted, $useranswer, $userdismissed)
+    {
+      // Noting to do.
+    }
 
   /**
    * Option level settings for template rendering
@@ -138,59 +144,60 @@ class renderdata extends \questiondata {
    * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
-    global $string;
-    $option = $this->get_opt($part_id);
-    $textboxes_seen = $this->textboxesseen;
-    if (!in_array($this->questionno, $textboxes_seen)) {
-      $textboxes_seen[] = $this->questionno;
-      $settings = json_decode($this->settings, true);
-      $this->editorcolumns = $settings['columns'];
-      $this->editorrows = $settings['rows'];
-      $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-      $te = explode('_', $texteditorplugin->get_name());
-      $this->editor = $te[1];
-      // We can override the enabled texteditor with plain/mathjax at the question level.
-      if (isset($settings['editor'])) {
-        if ($settings['editor'] == 'mathjax') {
-          $this->editormathjax = true;
-          $this->editor = 'plain';
-        } elseif ($settings['editor'] == 'plain') {
-          $this->editormathjax = false;
-          $this->editor = 'plain';
+    public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
+    {
+        global $string;
+        $option = $this->get_opt($part_id);
+        $textboxes_seen = $this->textboxesseen;
+        if (!in_array($this->questionno, $textboxes_seen)) {
+            $textboxes_seen[] = $this->questionno;
+            $settings = json_decode($this->settings, true);
+            $this->editorcolumns = $settings['columns'];
+            $this->editorrows = $settings['rows'];
+            $texteditorplugin = \plugins\plugins_texteditor::get_editor();
+            $te = explode('_', $texteditorplugin->get_name());
+            $this->editor = $te[1];
+          // We can override the enabled texteditor with plain/mathjax at the question level.
+            if (isset($settings['editor'])) {
+                if ($settings['editor'] == 'mathjax') {
+                    $this->editormathjax = true;
+                    $this->editor = 'plain';
+                } elseif ($settings['editor'] == 'plain') {
+                    $this->editormathjax = false;
+                    $this->editor = 'plain';
+                }
+            }
+
+            $this->file = $this->editor . '_config_answered';
+            if ($useranswer == '' and $screen_pre_submitted == 1) {
+                $type = \plugins\plugins_texteditor::TYPE_STANDARD_UANS;
+            } else {
+                $type = \plugins\plugins_texteditor::TYPE_STANDARD;
+            }
+
+            $this->editorconfig = $this->editor . '_config.html';
+
+            $textbox_width  = ( 40 + ( $settings['columns'] * 8 ) );
+            $textbox_height = ( $settings['rows'] * 28 );
+
+            $background_colour = '';
+
+            if ($useranswer == '' and $screen_pre_submitted == 1) {
+                $this->unanswered = true;
+            } else {
+                $this->unanswered = false;
+            }
+            $this->useranswer = $useranswer;
+
+            $this->editortextarea = $this->editor . '_textarea.html';
+            $this->type = $texteditorplugin->get_type($type);
+            $this->style = $background_colour . 'width:' . $textbox_width . 'px; height:' . $textbox_height . 'px';
+            $this->textboxesseen = $textboxes_seen;
+            $marks = $this->marks;
+            $marks += $option['markscorrect'];
+            $this->marks = $marks;
         }
-      }
-
-      $this->file = $this->editor . '_config_answered';
-      if ($useranswer == '' and $screen_pre_submitted == 1) {
-        $type = \plugins\plugins_texteditor::TYPE_STANDARD_UANS;
-      } else {
-        $type = \plugins\plugins_texteditor::TYPE_STANDARD;
-      }
-
-      $this->editorconfig = $this->editor . '_config.html';
-
-      $textbox_width  = ( 40 + ( $settings['columns'] * 8 ) );
-      $textbox_height = ( $settings['rows'] * 28 );
-
-      $background_colour = '';
-
-      if ($useranswer == '' and $screen_pre_submitted == 1) {
-        $this->unanswered = true;
-      } else {
-        $this->unanswered = false;
-      }
-      $this->useranswer = $useranswer;
-
-      $this->editortextarea = $this->editor . '_textarea.html';
-      $this->type = $texteditorplugin->get_type($type);
-      $this->style = $background_colour . "width:" . $textbox_width . "px; height:" . $textbox_height . "px";
-      $this->textboxesseen = $textboxes_seen;
-      $marks = $this->marks;
-      $marks += $option['markscorrect'];
-      $this->marks = $marks;
     }
-  }
 
   /**
    * Additional option level settings for template rendering
@@ -199,7 +206,8 @@ class renderdata extends \questiondata {
    * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
-    // Nothing to do.
-  }
+    public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
+    {
+      // Nothing to do.
+    }
 }

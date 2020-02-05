@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -21,22 +22,23 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
+
   require '../include/load_config.php';
-  require '../include/staff_student_auth.inc';
+require '../include/staff_student_auth.inc';
 ?>
 <!DOCTYPE html>
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-	
+   
   <title><?php echo $string['credits']; ?></title>
-	
+    
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/rogo_logo.css" />
   <style type="text/css">
     html, body {height: 100%}
-		td {vertical-align:top}
+        td {vertical-align:top}
     .ok {position:absolute; bottom: -50px}
   </style>
 </head>

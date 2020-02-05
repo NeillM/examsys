@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -18,17 +19,18 @@ namespace plugins;
 
 /**
 * Plugin functionality
-* 
+*
 * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 * @copyright Copyright (c) 2016 onwards The University of Nottingham
 */
 
 /**
  * Abstract plugin class.
- * 
+ *
  * This class should be extend by classes for plugins
  */
-abstract class plugins {
+abstract class plugins
+{
     /**
      * The database connection.
      * @var mysqli
@@ -77,7 +79,8 @@ abstract class plugins {
     /**
      * Called when the object is unserialised.
      */
-    public function __wakeup() {
+    public function __wakeup()
+    {
         // The serialised database object will be invalid,
         // this object should only be serialised during an error report,
         // so adding the current database connect seems like a waste of time.
@@ -89,7 +92,8 @@ abstract class plugins {
      * These should be implemented by overriding these methods in the plugin types base class
      * @return bool true on success
      */
-    protected function type_install() {
+    protected function type_install()
+    {
         // By defult do nothing unless overridden.
         return true;
     }
@@ -98,7 +102,8 @@ abstract class plugins {
      * These should be implemented by overriding these methods in the plugin types base class
      * @return bool true on success
      */
-    protected function type_uninstall() {
+    protected function type_uninstall()
+    {
         // By defult do nothing unless overridden.
         return true;
     }
@@ -107,15 +112,17 @@ abstract class plugins {
      * Get install path of plugin
      * @return string path
      */
-    public function get_path() {
+    public function get_path()
+    {
         return dirname(__DIR__) . DIRECTORY_SEPARATOR . $this->plugin_type . DIRECTORY_SEPARATOR . $this->plugin;
     }
     /**
      * Remove plugin version
      * @return bool true on success
      */
-    private function delete_plugin_version() {
-        $deletesql = $this->db->prepare("DELETE FROM plugins WHERE component = ?");
+    private function delete_plugin_version()
+    {
+        $deletesql = $this->db->prepare('DELETE FROM plugins WHERE component = ?');
         $deletesql->bind_param('s', $this->plugin);
         $deletesql->execute();
         $deletesql->close();
@@ -127,7 +134,8 @@ abstract class plugins {
     /**
      * Constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->config = \Config::get_instance();
         $this->db = $this->config->db;
         // Get path to plugin.
@@ -141,7 +149,8 @@ abstract class plugins {
      * @param string $dbpasswd password for user
      * @return string installation success or otherwise the error response
      */
-    public function install($dbuser, $dbpasswd) {
+    public function install($dbuser, $dbpasswd)
+    {
         // Disable at start of process, enable at end if successful.
         $this->config->set_setting('installed', 0, \Config::BOOLEAN, $this->plugin);
         // Check plugin dependencies.
@@ -158,12 +167,12 @@ abstract class plugins {
                     $installfile = $pluginpath . 'install.sql';
                     if (file_exists($installfile)) {
                         if (!\DBUtils::run_sql($installfile, $dbuser, $dbpasswd)) {
-                            throw new \Exception("DBUtils::run_sql install.sql failed.");
+                            throw new \Exception('DBUtils::run_sql install.sql failed.');
                         }
                     }
                     // Run plugin type install steps.
                     if (!$this->type_install()) {
-                        throw new \Exception("type_install failed.");
+                        throw new \Exception('type_install failed.');
                     }
                 } catch (\Exception $e) {
                     return 'SCHEMA_FAIL';
@@ -182,7 +191,7 @@ abstract class plugins {
                             $v = ltrim(rtrim(basename($file), '.sql'), 'update');
                             // Check version format is correct.
                             if (\version::check_version_format($v)) {
-                              $fileversion[] = $v;
+                                $fileversion[] = $v;
                             }
                         }
                         if (count($fileversion) > 0) {
@@ -196,7 +205,7 @@ abstract class plugins {
                                 $updatefile = $pluginpath . 'update' . $version . '.sql';
                                 if (file_exists($updatefile)) {
                                     if (!\DBUtils::run_sql($updatefile, $dbuser, $dbpasswd)) {
-                                        throw new \Exception("DBUtils::run_sql update" . $version . ".sql failed.");
+                                        throw new \Exception('DBUtils::run_sql update' . $version . '.sql failed.');
                                     }
                                 }
                             }
@@ -206,7 +215,7 @@ abstract class plugins {
                             $v = ltrim(rtrim(basename($file), '.php'), 'update');
                             // Check version format is correct.
                             if (\version::check_version_format($v)) {
-                              $fileversion[] = $v;
+                                $fileversion[] = $v;
                             }
                         }
                         if (count($fileversion) > 0) {
@@ -219,9 +228,9 @@ abstract class plugins {
                                 }
                                 $updatefile = $pluginpath . 'update' . $version . '.php';
                                 if (file_exists($updatefile)) {
-                                  include $updatefile;
+                                    include $updatefile;
                                 } else {
-                                  throw new \Exception("update file " . $version . ".php failed.");
+                                    throw new \Exception('update file ' . $version . '.php failed.');
                                 }
                             }
                         }
@@ -245,7 +254,8 @@ abstract class plugins {
      * @param string $dbpasswd password for user
      * @return string uninstall success or otherwise the error response
      */
-    public function uninstall($dbuser, $dbpasswd){
+    public function uninstall($dbuser, $dbpasswd)
+    {
         $currentversion = $this->get_plugin_version();
         // Only uninstall if code and db versions match.
         if ($currentversion == $this->version) {
@@ -255,12 +265,12 @@ abstract class plugins {
                 $uninstallfile = $pluginpath . 'uninstall.sql';
                 if (file_exists($uninstallfile)) {
                     if (!\DBUtils::run_sql($uninstallfile, $dbuser, $dbpasswd)) {
-                        throw new \Exception("DBUtils::run_sql uninstall.sql failed.");
+                        throw new \Exception('DBUtils::run_sql uninstall.sql failed.');
                     }
                 }
                 // Run plugin type uninstall steps.
                 if (!$this->type_uninstall()) {
-                    throw new \Exception("type_uninstall failed.");
+                    throw new \Exception('type_uninstall failed.');
                 }
             } catch (\Exception $e) {
                 return 'DROP_SCHEMA_FAIL';
@@ -277,7 +287,8 @@ abstract class plugins {
      * Check plugin dependencies
      * @return bool|string true if dependencies met, error string otherwise
      */
-    public function check_plugin_dependencies() {
+    public function check_plugin_dependencies()
+    {
         $new_plugin_version = $this->version;
         if (!\version::check_version_format($new_plugin_version)) {
             // Cannot install plugin with incorrect version format.
@@ -307,11 +318,12 @@ abstract class plugins {
      * @param string $version the plugin version
      * @return bool true on success
      */
-    public function update_plugin_version($version) {
+    public function update_plugin_version($version)
+    {
         $currentversion = $this->get_plugin_version();
         // If not installed, install.
         if ($currentversion === false) {
-            $insertsql = $this->db->prepare("INSERT INTO plugins (component, version, type) VALUES (?, ?, ?)");
+            $insertsql = $this->db->prepare('INSERT INTO plugins (component, version, type) VALUES (?, ?, ?)');
             $insertsql->bind_param('sss', $this->plugin, $version, $this->plugin_type);
             $insertsql->execute();
             $insertsql->close();
@@ -325,7 +337,7 @@ abstract class plugins {
             // Do not support rolling back plugins.
             return false;
         } elseif (\version::is_version_higher($version, $currentversion)) {
-            $updatesql = $this->db->prepare("UPDATE plugins SET version = ? WHERE component = ?");
+            $updatesql = $this->db->prepare('UPDATE plugins SET version = ? WHERE component = ?');
             $updatesql->bind_param('ss', $version, $this->plugin);
             $updatesql->execute();
             $updatesql->close();
@@ -341,10 +353,11 @@ abstract class plugins {
      * @param string $plugin name of plugin
      * @return string|bool version of plugin or false
      */
-    public function get_plugin_version() {
+    public function get_plugin_version()
+    {
         // If already set no need to query db.
         if (empty($this->installedversion)) {
-            $sql = $this->db->prepare("SELECT version FROM plugins WHERE component = ?");
+            $sql = $this->db->prepare('SELECT version FROM plugins WHERE component = ?');
             $sql->bind_param('s', $this->plugin);
             $sql->execute();
             $sql->bind_result($this->installedversion);
@@ -362,28 +375,32 @@ abstract class plugins {
      * Get version of plugin from version file
      * @return string value of version
      */
-    public function get_file_version() {
+    public function get_file_version()
+    {
         return $this->version;
     }
     /**
      * Get rogo required version from version file
      * @return string value of required version
      */
-    public function get_file_requires() {
+    public function get_file_requires()
+    {
         return $this->requires;
     }
     /**
      * Get installed version of plugin
      * @return string value of installed version
      */
-    public function get_installed_version() {
+    public function get_installed_version()
+    {
         return $this->installedversion;
     }
     /**
      * Get lang component of the plugin.
      * @return string value of lang component
      */
-    public function get_lang_component() {
+    public function get_lang_component()
+    {
         return $this->langcomponent;
     }
 }

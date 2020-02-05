@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogo
 //
 // Rogo is free software: you can redistribute it and/or modify
@@ -29,92 +30,93 @@ require_once '../include/errors.php';
 require_once '../include/toprightmenu.inc';
 
 if (isset($_GET['userID'])) {
-  if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
-    if ($_GET['userID'] != '') {
-      $userID = $_GET['userID'];
-    } else {
-      display_error($string['idmissing'], $string['idmissing_msg'], false, true, false);
+    if ($userObject->has_role(array('SysAdmin', 'Admin', 'Staff'))) {
+        if ($_GET['userID'] != '') {
+            $userID = $_GET['userID'];
+        } else {
+            display_error($string['idmissing'], $string['idmissing_msg'], false, true, false);
+        }
+    } else {  // Student is trying to hack into another students userID on the URL.
+        header('HTTP/1.0 404 Not Found');
+        $contactemail = support::get_email();
+        $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+        $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
     }
-  } else {  // Student is trying to hack into another students userID on the URL.
-    header("HTTP/1.0 404 Not Found");
-    $contactemail = support::get_email();
-    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-  }
 } else {
-  $userID = $userObject->get_user_ID();
+    $userID = $userObject->get_user_ID();
 }
 
 if (!UserUtils::userid_exists($userID, $mysqli)) {   // Check for valid user ID.
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 /**
  * Gets a list of papers for which feadback is available for.
  * @param int $userID - The ID of the user to display the plots for. Usually the current student user but could be a member of staff viewing a student.
- * @param object $db	- Mysqli database link.
- * @return array			- List of papers that the user has sat and have been released.
+ * @param object $db    - Mysqli database link.
+ * @return array            - List of papers that the user has sat and have been released.
  */
-function get_taken_papers($userID, $db) {
-  $papers = array();
+function get_taken_papers($userID, $db)
+{
+    $papers = array();
 
-  $i = 0;
+    $i = 0;
   
   // Query for Summative and Offline papers
-  $result = $db->prepare("SELECT DISTINCT log_metadata.id, paperID, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release, type FROM log_metadata, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log_metadata.paperID = properties.property_id AND paper_type IN ('2', '5') AND userID = ? AND feedback_release.type = 'cohort_performance' ORDER BY calendar_year DESC");
-  $result->bind_param('i', $userID);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($metadataID, $paperID, $paper_title, $paper_type, $pass_mark, $calendar_year, $started, $crypt_name, $idfeedback_release, $feedback_type);
-  while ($result->fetch()) {
-    $papers[$i]['metadataID']     = $metadataID;
-    $papers[$i]['paperID']        = $paperID;
-    $papers[$i]['paper_title']    = $paper_title;
-    $papers[$i]['paper_type']     = $paper_type;
-    $papers[$i]['calendar_year']  = $calendar_year;
-    $papers[$i]['started']        = $started;
-    $papers[$i]['crypt_name']     = $crypt_name;
-    $papers[$i]['pass_mark']      = $pass_mark;
-    $results_cache = new ResultsCache($db);
-    $papers[$i]['stats']          = $results_cache->get_paper_cache($paperID);
-    $papers[$i]['idfeedback_release'] = $idfeedback_release;
-    $papers[$i]['feedback_type']	= $feedback_type;
+    $result = $db->prepare("SELECT DISTINCT log_metadata.id, paperID, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release, type FROM log_metadata, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log_metadata.paperID = properties.property_id AND paper_type IN ('2', '5') AND userID = ? AND feedback_release.type = 'cohort_performance' ORDER BY calendar_year DESC");
+    $result->bind_param('i', $userID);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($metadataID, $paperID, $paper_title, $paper_type, $pass_mark, $calendar_year, $started, $crypt_name, $idfeedback_release, $feedback_type);
+    while ($result->fetch()) {
+        $papers[$i]['metadataID']     = $metadataID;
+        $papers[$i]['paperID']        = $paperID;
+        $papers[$i]['paper_title']    = $paper_title;
+        $papers[$i]['paper_type']     = $paper_type;
+        $papers[$i]['calendar_year']  = $calendar_year;
+        $papers[$i]['started']        = $started;
+        $papers[$i]['crypt_name']     = $crypt_name;
+        $papers[$i]['pass_mark']      = $pass_mark;
+        $results_cache = new ResultsCache($db);
+        $papers[$i]['stats']          = $results_cache->get_paper_cache($paperID);
+        $papers[$i]['idfeedback_release'] = $idfeedback_release;
+        $papers[$i]['feedback_type']    = $feedback_type;
 
-    $i++;
-  }
-  $result->close();
+        $i++;
+    }
+    $result->close();
   
   // Query for OSCE stations
-  $result = $db->prepare("SELECT DISTINCT log4_overall.id, q_paper, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release, type FROM log4_overall, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log4_overall.q_paper = properties.property_id AND paper_type IN ('4') AND userID = ? AND feedback_release.type = 'cohort_performance' ORDER BY calendar_year DESC");
-  $result->bind_param('i', $userID);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($metadataID, $paperID, $paper_title, $paper_type, $pass_mark, $calendar_year, $started, $crypt_name, $idfeedback_release, $feedback_type);
-  while ($result->fetch()) {
-    $papers[$i]['metadataID']     = $metadataID;
-    $papers[$i]['paperID']        = $paperID;
-    $papers[$i]['paper_title']    = $paper_title;
-    $papers[$i]['paper_type']     = $paper_type;
-    $papers[$i]['calendar_year']  = $calendar_year;
-    $papers[$i]['started']        = $started;
-    $papers[$i]['crypt_name']     = $crypt_name;
-    $papers[$i]['pass_mark']      = $pass_mark;
-    $results_cache = new ResultsCache($db);
-    $papers[$i]['stats']          = $results_cache->get_paper_cache($paperID);
-    $papers[$i]['idfeedback_release'] = $idfeedback_release;
-    $papers[$i]['feedback_type']	= $feedback_type;
+    $result = $db->prepare("SELECT DISTINCT log4_overall.id, q_paper, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release, type FROM log4_overall, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log4_overall.q_paper = properties.property_id AND paper_type IN ('4') AND userID = ? AND feedback_release.type = 'cohort_performance' ORDER BY calendar_year DESC");
+    $result->bind_param('i', $userID);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($metadataID, $paperID, $paper_title, $paper_type, $pass_mark, $calendar_year, $started, $crypt_name, $idfeedback_release, $feedback_type);
+    while ($result->fetch()) {
+        $papers[$i]['metadataID']     = $metadataID;
+        $papers[$i]['paperID']        = $paperID;
+        $papers[$i]['paper_title']    = $paper_title;
+        $papers[$i]['paper_type']     = $paper_type;
+        $papers[$i]['calendar_year']  = $calendar_year;
+        $papers[$i]['started']        = $started;
+        $papers[$i]['crypt_name']     = $crypt_name;
+        $papers[$i]['pass_mark']      = $pass_mark;
+        $results_cache = new ResultsCache($db);
+        $papers[$i]['stats']          = $results_cache->get_paper_cache($paperID);
+        $papers[$i]['idfeedback_release'] = $idfeedback_release;
+        $papers[$i]['feedback_type']    = $feedback_type;
 
-    $i++;
-  }
-  $result->close();
+        $i++;
+    }
+    $result->close();
   
-  $sortby = 'calendar_year';
-  $ordering = 'desc';
-  $papers = \sort::array_csort($papers, $sortby, $ordering);
+    $sortby = 'calendar_year';
+    $ordering = 'desc';
+    $papers = \sort::array_csort($papers, $sortby, $ordering);
 
-  return $papers;
+    return $papers;
 }
 
 $papers = get_taken_papers($userID, $mysqli);
@@ -148,16 +150,16 @@ $marks = $results_cache->get_paper_marks_by_student($userID);
   <script src="../js/main.min.js"></script>
 <?php
 if (!$userObject->has_role('Student')) {  // Do not show JavaScript if a student
-?>
+    ?>
   <script src="../js/performanceinit.min.js"></script>
-<?php
+    <?php
 }
 ?>
 </head>
 
 <body>
 <?php
-	echo draw_toprightmenu();
+    echo draw_toprightmenu();
 ?>
 
 <div class="key">
@@ -175,7 +177,7 @@ if (!$userObject->has_role('Student')) {  // Do not show JavaScript if a student
 
 <?php
 if (!$userObject->has_role('Student')) {  // Do not create popup menu if student
-?>
+    ?>
 <div id="menudiv" class="popupmenu" style="padding:5px; width:300px">
   <div class="popup_row" id="item1">
     <div class="popup_icon"><img src="../artwork/summative_16.gif" width="16" height="16" alt="" /></div>
@@ -202,7 +204,7 @@ if (!$userObject->has_role('Student')) {  // Do not create popup menu if student
     <div class="popup_title"><?php echo $string['jumptopaper'] ?></div>
   </div>
 </div>
-<?php
+    <?php
 }
 
 $demo = \demo::is_demo($userObject);
@@ -214,7 +216,7 @@ $name = \demo::demo_replace($student_details['title'], $demo) . ' ' . \demo::dem
 <div style="position:absolute; top:0px; left:0px; width:100%">
 <?php
 echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:90%\">\n";
-echo "<tr><th><div style=\"padding-left:10px; font-size:200%; font-weight:bold\">" . $string['performsummary'] . "</div><div style=\"padding-left:10px; padding-bottom:6px\">$name</div></th>";
+echo '<tr><th><div style="padding-left:10px; font-size:200%; font-weight:bold">' . $string['performsummary'] . "</div><div style=\"padding-left:10px; padding-bottom:6px\">$name</div></th>";
 echo "<th style=\"text-align:right; vertical-align:top\"><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></th></tr>\n";
 echo "</table>\n<div>";
 
@@ -223,59 +225,59 @@ $plots_output = 0;
 $col = 0;
 echo '<table>';
 foreach ($papers as $paper) {
-  $display_paper = true;
+    $display_paper = true;
   
-  if ($paper['stats']['max_mark'] == '') {
-    $display_paper = false;
-  }
-  if ($userObject->has_role('Student') and $paper['feedback_type'] != 'cohort_performance') {
-    $display_paper = false;
-  }
+    if ($paper['stats']['max_mark'] == '') {
+        $display_paper = false;
+    }
+    if ($userObject->has_role('Student') and $paper['feedback_type'] != 'cohort_performance') {
+        $display_paper = false;
+    }
 
-  if ($display_paper) {
-    if ($old_calendar_year != $paper['calendar_year']) {
-      //echo '<a name="' . $paper['calendar_year'] . '"></a><table border="0" class="subsect"><tr><td><nobr>' . $paper['calendar_year'] . '</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table>';
-      echo '<a name="' . $paper['calendar_year'] . '"></a><div class="subsect_table"><div class="subsect_title"><nobr>' . $paper['calendar_year'] . '</nobr></div><div class="subsect_hr"><hr noshade="noshade" /></div></div>';
-      $col = 0;
-    }
+    if ($display_paper) {
+        if ($old_calendar_year != $paper['calendar_year']) {
+          //echo '<a name="' . $paper['calendar_year'] . '"></a><table border="0" class="subsect"><tr><td><nobr>' . $paper['calendar_year'] . '</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table>';
+            echo '<a name="' . $paper['calendar_year'] . '"></a><div class="subsect_table"><div class="subsect_title"><nobr>' . $paper['calendar_year'] . '</nobr></div><div class="subsect_hr"><hr noshade="noshade" /></div></div>';
+            $col = 0;
+        }
   
-    if ($col == 8) {				// Put in line break after 8 box/whisker plots.
-      echo '<br />';
-      $col = 0;
-    }
+        if ($col == 8) {                // Put in line break after 8 box/whisker plots.
+            echo '<br />';
+            $col = 0;
+        }
   
-    $q1 = $paper['stats']['q1'];
-    $q2 = $paper['stats']['q2'];
-    $q3 = $paper['stats']['q3'];
-    $min = $paper['stats']['min_percent'];
-    $max = $paper['stats']['max_percent'];
-    $pass_mark = $paper['pass_mark'];
-    $mark = (isset($marks[$paper['paperID']])) ? $marks[$paper['paperID']] : '';
-    $exam = $paper['paper_title'];
+        $q1 = $paper['stats']['q1'];
+        $q2 = $paper['stats']['q2'];
+        $q3 = $paper['stats']['q3'];
+        $min = $paper['stats']['min_percent'];
+        $max = $paper['stats']['max_percent'];
+        $pass_mark = $paper['pass_mark'];
+        $mark = (isset($marks[$paper['paperID']])) ? $marks[$paper['paperID']] : '';
+        $exam = $paper['paper_title'];
   
-    if ($userObject->has_role('Student')) {
-      $onclick = '';
-    } else {
-      $onclick = 'data-userid="' . $userID . '" data-papertype="' . $paper['paper_type'] . '" data-cryptname="' . $paper['crypt_name'] . '"data-paperid="' . $paper['paperID'] . '" data-metadataid="' . $paper['metadataID'] . '"';
-    }
+        if ($userObject->has_role('Student')) {
+            $onclick = '';
+        } else {
+            $onclick = 'data-userid="' . $userID . '" data-papertype="' . $paper['paper_type'] . '" data-cryptname="' . $paper['crypt_name'] . '"data-paperid="' . $paper['paperID'] . '" data-metadataid="' . $paper['metadataID'] . '"';
+        }
     
-    if ($mark != '') {  // Do not plot if there is no student mark.
-        echo '<tr id="res' . $col . '"' . $onclick . '><td>';
-      if ($col == 0) {
-        echo "<img src=\"draw_boxplot.php?exam=$exam&part=1&q1=$q1&q2=$q2&q3=$q3&min=$min&max=$max&passmark=$pass_mark&mark=$mark&scale=1\" width=\"166\" height=\"265\" alt=\"" . $string['boxplot'] . "\" class=\"indent\" />";
-      } else {
-        echo "<img src=\"draw_boxplot.php?exam=$exam&part=1&q1=$q1&q2=$q2&q3=$q3&min=$min&max=$max&passmark=$pass_mark&mark=$mark&scale=0\" width=\"115\" height=\"265\" alt=\"" . $string['boxplot'] . "\" />";
-      }
-      echo '</td></tr>';
-      $plots_output++;
-      $col++;
+        if ($mark != '') {  // Do not plot if there is no student mark.
+            echo '<tr id="res' . $col . '"' . $onclick . '><td>';
+            if ($col == 0) {
+                echo "<img src=\"draw_boxplot.php?exam=$exam&part=1&q1=$q1&q2=$q2&q3=$q3&min=$min&max=$max&passmark=$pass_mark&mark=$mark&scale=1\" width=\"166\" height=\"265\" alt=\"" . $string['boxplot'] . '" class="indent" />';
+            } else {
+                echo "<img src=\"draw_boxplot.php?exam=$exam&part=1&q1=$q1&q2=$q2&q3=$q3&min=$min&max=$max&passmark=$pass_mark&mark=$mark&scale=0\" width=\"115\" height=\"265\" alt=\"" . $string['boxplot'] . '" />';
+            }
+            echo '</td></tr>';
+            $plots_output++;
+            $col++;
+        }
+        $old_calendar_year = $paper['calendar_year'];
     }
-    $old_calendar_year = $paper['calendar_year'];
-  }
 }
 echo '</table>';
 if ($plots_output == 0) {
-  echo "<div style=\"margin:10px\">" . $string['noresults'] . "</div>\n";
+    echo '<div style="margin:10px">' . $string['noresults'] . "</div>\n";
 }
 ?>
 </div>

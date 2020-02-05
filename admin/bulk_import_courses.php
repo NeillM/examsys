@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -30,19 +31,19 @@ require '../include/toprightmenu.inc';
 // Instantiate Twig renderer.
 $render = new render($configObject);
 
-ini_set("auto_detect_line_endings", true);
+ini_set('auto_detect_line_endings', true);
 $lang['title'] = $string['bulkcourseimport'];
-$additionaljs = "<script type=\"text/javascript\" src=\"../js/bulkimportinit.min.js\"></script>";
-$addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/dialog.css\" />
-                <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/breadcrumb.css\" />
-                <style type=\"text/css\">
+$additionaljs = '<script type="text/javascript" src="../js/bulkimportinit.min.js"></script>';
+$addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/dialog.css" />
+                <link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
+                <style type="text/css">
                     p {margin:0; padding:0}
                     h1 {font-size:120%; font-weight:bold}
                     label.error {display:block; color:#f00}
                     .existing {color:#808080}
                     .added {color:black}
                     .failed {color:#C00000}
-                </style>";
+                </style>';
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 ?>
 <body>
@@ -58,17 +59,17 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
     '/admin/list_courses.php' => $string['courses'],
     '/users/bulk_import_courses.php' => $string['bulkcourseimport'],
   ));
-?>
+    ?>
 <br />
 <br />
 <?php
-  if (isset($_POST['submit'])) {
+if (isset($_POST['submit'])) {
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
-      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_course_create.csv"))  {
-        echo uploadError($_FILES['csvfile']['error']);
-        exit;
-      } else {
-        ?>
+        if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_course_create.csv')) {
+            echo uploadError($_FILES['csvfile']['error']);
+            exit;
+        } else {
+            ?>
         <br /><br /><br />
         <div align="center">
         <table border="0" cellpadding="4" cellspacing="0" style="border:1px solid #95AEC8; font-size:120%; width:500px">
@@ -79,77 +80,77 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
         <td align="left" style="background-color:#F1F5FB">
         <table cellspaing="0" cellpadding="2" border="0" style="margin-top:15px; margin-bottom:15px">
 
-        <?php
-        // Get a list of courses held by Rogo.
-        $course_list = array();
-        $result = $mysqli->prepare("SELECT DISTINCT name FROM courses WHERE deleted IS NULL");
-        $result->execute();
-        $result->bind_result($course_name);
-        while ($result->fetch()) {
-          $course_list[] = $course_name;
-        }
-        $result->close();
-        
-        // Get a list of schools held by Rogo.
-        $unknown_schoolID = 0;
-        $school_list = array();
-        $result = $mysqli->prepare("SELECT DISTINCT id, school FROM schools WHERE deleted IS NULL");
-        $result->execute();
-        $result->bind_result($school_id, $school_name);
-        while ($result->fetch()) {
-          $school_list[$school_name] = $school_id;
-          if ($school_name == 'unknown') {
-            $unknown_schoolID = $school_id;
-          }
-        }
-        $result->close();
-
-        $coursesAdded = 0;
-        $lines = file($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_course_create.csv");
-
-        $students = array();
-        foreach ($lines as $separate_line) {
-          if (trim($separate_line) != '') {
-            $fields = explode(',', $separate_line);
-            
-            if (trim($fields[0]) != 'Course ID' and trim($fields[0]) != 'ID') {  // Ignore header line
-              $courseid = trim($fields[0]);
-              $description = trim($fields[1]);
-              if (isset($school_list[trim($fields[2])])) {
-                $schoolID = $school_list[trim($fields[2])];
-              } else {
-                if ($unknown_schoolID == 0) {
-                  $result = $mysqli->prepare("SELECT id FROM faculty WHERE name='Administrative and Support Units' LIMIT 1");
-                  $result->execute();
-                  $result->bind_result($facultyID);
-                  $result->fetch();
-                  $result->close();
-
-                  $unknown_schoolID = SchoolUtils::add_school($facultyID, '', $mysqli);
-                }
-                $schoolID = $unknown_schoolID;
-              }              
-
-              if (in_array($courseid, $course_list)) {
-                echo "<tr><td></td><td class=\"existing\">$courseid</td><td class=\"existing\">$description</td><td class=\"existing\">". $string['alreadyexists'] . "</td></tr>\n";
-              } else {
-                $success = CourseUtils::add_course($schoolID, $courseid, $description, null, null, $mysqli);
-                if ($success) {
-                  echo "<tr><td><img src=\"../artwork/green_plus_16.png\" wodth=\"16\" height=\"16\" alt=\"Add\" /></td><td class=\"added\">$courseid</td><td class=\"added\">$description</td><td class=\"added\">". $string['added'] . "</td></tr>\n";
-                  $coursesAdded++;
-                } else {
-                  echo "<tr><td><img src=\"../artwork/red_cross_16.png\" wodth=\"16\" height=\"16\" alt=\"Failed\" /></td><td class=\"failed\">$courseid</td><td class=\"failed\">$description</td><td class=\"failed\">". $string['failed'] . "</td></tr>\n";
-                }
-              }
+            <?php
+          // Get a list of courses held by Rogo.
+            $course_list = array();
+            $result = $mysqli->prepare('SELECT DISTINCT name FROM courses WHERE deleted IS NULL');
+            $result->execute();
+            $result->bind_result($course_name);
+            while ($result->fetch()) {
+                $course_list[] = $course_name;
             }
-          }
-        }
-      }
-    }
-    unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_course_create.csv");
+            $result->close();
+        
+          // Get a list of schools held by Rogo.
+            $unknown_schoolID = 0;
+            $school_list = array();
+            $result = $mysqli->prepare('SELECT DISTINCT id, school FROM schools WHERE deleted IS NULL');
+            $result->execute();
+            $result->bind_result($school_id, $school_name);
+            while ($result->fetch()) {
+                $school_list[$school_name] = $school_id;
+                if ($school_name == 'unknown') {
+                    $unknown_schoolID = $school_id;
+                }
+            }
+            $result->close();
 
-    echo "</table>";
-    echo "<div style=\"text-align:center\"><input type=\"button\" name=\"ok\" value=\"" . $string['ok'] . "\" onclick=\"window.location='list_courses.php'\" style=\"width:100px\" /></div>\n<br />\n";
+            $coursesAdded = 0;
+            $lines = file($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_course_create.csv');
+
+            $students = array();
+            foreach ($lines as $separate_line) {
+                if (trim($separate_line) != '') {
+                    $fields = explode(',', $separate_line);
+            
+                    if (trim($fields[0]) != 'Course ID' and trim($fields[0]) != 'ID') {  // Ignore header line
+                        $courseid = trim($fields[0]);
+                        $description = trim($fields[1]);
+                        if (isset($school_list[trim($fields[2])])) {
+                            $schoolID = $school_list[trim($fields[2])];
+                        } else {
+                            if ($unknown_schoolID == 0) {
+                                $result = $mysqli->prepare("SELECT id FROM faculty WHERE name='Administrative and Support Units' LIMIT 1");
+                                $result->execute();
+                                $result->bind_result($facultyID);
+                                $result->fetch();
+                                $result->close();
+
+                                $unknown_schoolID = SchoolUtils::add_school($facultyID, '', $mysqli);
+                            }
+                            $schoolID = $unknown_schoolID;
+                        }
+
+                        if (in_array($courseid, $course_list)) {
+                              echo "<tr><td></td><td class=\"existing\">$courseid</td><td class=\"existing\">$description</td><td class=\"existing\">" . $string['alreadyexists'] . "</td></tr>\n";
+                        } else {
+                            $success = CourseUtils::add_course($schoolID, $courseid, $description, null, null, $mysqli);
+                            if ($success) {
+                                echo "<tr><td><img src=\"../artwork/green_plus_16.png\" wodth=\"16\" height=\"16\" alt=\"Add\" /></td><td class=\"added\">$courseid</td><td class=\"added\">$description</td><td class=\"added\">" . $string['added'] . "</td></tr>\n";
+                                $coursesAdded++;
+                            } else {
+                                echo "<tr><td><img src=\"../artwork/red_cross_16.png\" wodth=\"16\" height=\"16\" alt=\"Failed\" /></td><td class=\"failed\">$courseid</td><td class=\"failed\">$description</td><td class=\"failed\">" . $string['failed'] . "</td></tr>\n";
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    unlink($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_course_create.csv');
+
+    echo '</table>';
+    echo '<div style="text-align:center"><input type="button" name="ok" value="' . $string['ok'] . "\" onclick=\"window.location='list_courses.php'\" style=\"width:100px\" /></div>\n<br />\n";
 
     $mysqli->close();
     ?>
@@ -161,8 +162,8 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
     </td></tr>
     </table>
     <?php
-  } else {
-?>
+} else {
+    ?>
 <table class="dialog_border">
 <tr>
 <td class="dialog_header" style="width:56px"><img src="../artwork/upload_48.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header" style="width:90%"><?php echo $string['bulkcourseimport']; ?></span></td>
@@ -187,7 +188,7 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 </tr>
 </table>
 
-<?php
-  }
+    <?php
+}
   $render->render_admin_footer();
 ?>

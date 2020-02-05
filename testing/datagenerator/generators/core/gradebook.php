@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ namespace testing\datagenerator;
  * @package testing
  * @subpackage datagenerator
  */
-class gradebook extends generator {
+class gradebook extends generator
+{
 
     /**
      * Create a new gradebook paper entry
@@ -34,7 +36,8 @@ class gradebook extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function create_paper($parameters) {
+    public function create_paper($parameters)
+    {
         if (empty($parameters['paperid'])) {
             throw new data_error('paperid must be provided');
         }
@@ -43,7 +46,7 @@ class gradebook extends generator {
         $sql = $this->db->prepare('INSERT INTO gradebook_paper VALUES (?, ?)');
         $sql->bind_param('is', $parameters['paperid'], $settings['timestamp']);
         if (!$sql->execute()) {
-            throw new data_error("Create new gradebook paper failed with parameters: " . $parameters['paperid'] . "--" . implode("--", $settings));
+            throw new data_error('Create new gradebook paper failed with parameters: ' . $parameters['paperid'] . '--' . implode('--', $settings));
         }
         $sql->close();
         return $settings;
@@ -58,7 +61,8 @@ class gradebook extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function create_user($parameters) {
+    public function create_user($parameters)
+    {
         if (empty($parameters['userid'])) {
             throw new data_error('userid must be provided');
         }
@@ -71,7 +75,7 @@ class gradebook extends generator {
         $sql = $this->db->prepare('INSERT INTO gradebook_user VALUES (?, ?, ?, ?, ?)');
         $sql->bind_param('iidds', $parameters['paperid'], $parameters['userid'], $settings['grade'], $settings['adjustedgrade'], $settings['classification']);
         if (!$sql->execute()) {
-            throw new data_error("Create new gradebook user failed with parameters: " . $parameters['userid'] . "--" . $parameters['paperid'] . "--" . implode("--", $settings));
+            throw new data_error('Create new gradebook user failed with parameters: ' . $parameters['userid'] . '--' . $parameters['paperid'] . '--' . implode('--', $settings));
         }
         $sql->close();
         return $settings;

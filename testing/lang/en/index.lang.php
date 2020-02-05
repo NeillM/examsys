@@ -25,4 +25,3 @@ $string['posttests'] = 'Post-Installation Tests';
 $string['summativecheck'] = 'Summative Exam check';
 $string['calccheck'] = 'Check enhancedcalc setup';
 $string['emailcheck'] = 'Check email sending';
-?>

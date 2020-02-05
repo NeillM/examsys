@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -58,12 +59,12 @@ $module = param::optional('module', '', param::INT, param::FETCH_GET);
 require '../include/toprightmenu.inc';
 echo draw_toprightmenu();
 
-if ($mode== 0) {
-  $type = $string['initialinvitation'];
+if ($mode == 0) {
+    $type = $string['initialinvitation'];
 } elseif ($mode == 1) {
-  $type = $string['reminder'];
+    $type = $string['reminder'];
 } else {
-  $type = $string['viewcomments'];    
+    $type = $string['viewcomments'];
 }
 
 ?>
@@ -71,15 +72,15 @@ if ($mode== 0) {
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a>
   <?php
-  if ($module != '') {
-    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $module. '">' . module_utils::get_moduleid_from_id($module, $mysqli) . '</a>';
+    if ($module != '') {
+        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $module . '">' . module_utils::get_moduleid_from_id($module, $mysqli) . '</a>';
 
-    $module_url = '&module=' . $module;
-  } else {
-    $module_url = '';
-  }
-  echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . $module_url . '">' . $properties->get_paper_title() . '</a>';
-  ?>
+        $module_url = '&module=' . $module;
+    } else {
+        $module_url = '';
+    }
+    echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . $module_url . '">' . $properties->get_paper_title() . '</a>';
+    ?>
   </div>
   <div class="page_title"><?php echo $string['externalexaminers'] ?>: <span style="font-weight:normal"><?php echo $type ?></span></div>
 </div>
@@ -88,12 +89,12 @@ if ($mode== 0) {
 $externals = $properties->get_externals();
 
 if (count($externals) > 0) {
-  echo "<br />\n<div class=\"key\">" . $string['msg'] . "</div>\n<div style=\"margin: 15px\">\n";
-  foreach ($externals as $externalID=>$external_name) {
-    echo "<input type=\"button\" name=\"$externalID\" id=\"$externalID\" value=\"$external_name\" class=\"external\" /><br />";
-  }
+    echo "<br />\n<div class=\"key\">" . $string['msg'] . "</div>\n<div style=\"margin: 15px\">\n";
+    foreach ($externals as $externalID => $external_name) {
+        echo "<input type=\"button\" name=\"$externalID\" id=\"$externalID\" value=\"$external_name\" class=\"external\" /><br />";
+    }
 } else {
-  echo $notice->info_strip($string['noexternals'], 100) . "\n";
+    echo $notice->info_strip($string['noexternals'], 100) . "\n";
 }
 
 // JS utils dataset.

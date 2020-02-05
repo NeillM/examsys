@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -30,9 +31,9 @@ $campusobj = new campus($mysqli);
 $campuses = $campusobj->get_all_campus_details();
 foreach ($campuses as $key => $campus) {
     if ($campus['isdefault']) {
-        $campuses[$key]['isdefault'] = "<img src=\"../../artwork/tick.gif\" id=\"yes\" />";
+        $campuses[$key]['isdefault'] = '<img src="../../artwork/tick.gif" id="yes" />';
     } else {
-        $campuses[$key]['isdefault'] = "<img src=\"../../artwork/cross.gif\" id=\"no\" />";
+        $campuses[$key]['isdefault'] = '<img src="../../artwork/cross.gif" id="no" />';
     }
 }
 $render = new render($configObject);
@@ -43,13 +44,12 @@ $lang['view'] = $string['viewcampus'];
 $lang['delete'] = $string['deletecampus'];
 $header = array(array('class' => 'col10', 'style' => 'width:80%', 'value' => $string['campus']),
 array('class' => 'col', 'style' => 'width:20%', 'value' => $string['isdefault']));
-$additionaljs = "<script type=\"text/javascript\" src=\"js/campusesinit.min.js\"></script>";
-$addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/list.css\"/>";
-$breadcrumb = array($string['home'] => "../../index.php", $string['administrativetools'] => "../index.php",
- $string['computerlabs'] => "../list_labs.php");
+$additionaljs = '<script type="text/javascript" src="js/campusesinit.min.js"></script>';
+$addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/list.css"/>';
+$breadcrumb = array($string['home'] => '../../index.php', $string['administrativetools'] => '../index.php',
+ $string['computerlabs'] => '../list_labs.php');
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('add_campuses.php', 'new_campus_16.png', $lang, $toprightmenu);
 $render->render_admin_content($breadcrumb, $lang);
 $render->render_admin_list($campuses, $header);
 $render->render_admin_footer();
-                     

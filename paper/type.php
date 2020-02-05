@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -36,21 +37,21 @@ $stateutil = new StateUtils($userObject->get_user_ID(), $mysqli);
 $state = $stateutil->getState();
 
 if ($_GET['module'] != '0') {
-  $module_details = module_utils::get_full_details_by_ID($module, $mysqli);
+    $module_details = module_utils::get_full_details_by_ID($module, $mysqli);
 
-  if (!$module_details) {
-   $contactemail = support::get_email();
-   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-  } elseif ($module_details['active'] == 0) {
-   $contactemail = support::get_email();
-   $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-   $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);	
-  }
+    if (!$module_details) {
+        $contactemail = support::get_email();
+        $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+        $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    } elseif ($module_details['active'] == 0) {
+        $contactemail = support::get_email();
+        $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+        $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    }
 } else {
-  $module_details['moduleid'] = 'Unassigned';
-  $module_details['fullname'] = 'Questions/papers not on any module'; 
-  $module_details['checklist'] = '';
+    $module_details['moduleid'] = 'Unassigned';
+    $module_details['fullname'] = 'Questions/papers not on any module';
+    $module_details['checklist'] = '';
 }
 ?>
 <!DOCTYPE html>
@@ -66,15 +67,15 @@ if ($_GET['module'] != '0') {
   <style type="text/css">
   <?php
     if (isset($state['showretired']) and $state['showretired'] == 'true') {
-      echo ".retired {display:block}\n";
+        echo ".retired {display:block}\n";
     } else {
-      echo ".retired {display:none}\n";
+        echo ".retired {display:none}\n";
     }
     ?>
     a {color: black !important}
     .sum_cal {margin-left: 28px; margin-top: 10px; margin-bottom: 12px}
     .subsect_table {margin-left: 10px; margin-bottom: 8px}
-	</style>
+    </style>
 
   <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
@@ -87,22 +88,24 @@ if ($_GET['module'] != '0') {
   require '../include/module_options.inc';
   require '../include/toprightmenu.inc';
 
-	echo draw_toprightmenu();
+    echo draw_toprightmenu();
   
-  if (isset($state['showretired']) and $state['showretired'] == 'true') {
+if (isset($state['showretired']) and $state['showretired'] == 'true') {
     $types_used = module_utils::paper_types($module, true, $mysqli);
-  } else {
-    $types_used = module_utils::paper_types($module, false, $mysqli);    
-  }
+} else {
+    $types_used = module_utils::paper_types($module, false, $mysqli);
+}
 ?>
 <div id="content">
         
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
 <?php
-  echo "<div style=\"position:absolute; right: 6px; top: 24px\"><label><input class=\"chk\" type=\"checkbox\" name=\"showretired\" id=\"showretired\" value=\"on\"\"";
-  if (isset($state['showretired']) and $state['showretired'] == 'true') echo ' checked="checked"';
-  echo " />" . $string['showretired'] . "</label></div>\n";
+  echo '<div style="position:absolute; right: 6px; top: 24px"><label><input class="chk" type="checkbox" name="showretired" id="showretired" value="on""';
+if (isset($state['showretired']) and $state['showretired'] == 'true') {
+    echo ' checked="checked"';
+}
+  echo ' />' . $string['showretired'] . "</label></div>\n";
 ?>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=<?php echo $module ?>"><?php echo $module_details['moduleid'] ?></a></div>
   <div class="page_title"><?php echo $string['papers'] ?>: <span style="font-weight:normal"><?php echo $string[strtolower($types_array[$type])] ?> (<span id="paper_count"><?php echo $types_used[$type] ?></span>)</div>
@@ -111,33 +114,33 @@ if ($_GET['module'] != '0') {
 <?php
 if (!$userObject->has_role('Standards Setter') && $module != 0) {
   // Don't want new papers created from the Unassigned folder.
-  echo "<br /><div class=\"f newpaper\"><div class=\"f_icon\"><a href=\"\"><img src=\"../artwork/new_paper_48.png\" alt=\"" . $string['newpaper'] . "\" /></a></div><div class=\"f_details\"><a href=\"\">" . $string['newpaper'] . "</a></div></div>\n";
+    echo '<br /><div class="f newpaper"><div class="f_icon"><a href=""><img src="../artwork/new_paper_48.png" alt="' . $string['newpaper'] . '" /></a></div><div class="f_details"><a href="">' . $string['newpaper'] . "</a></div></div>\n";
 }
 
 if (!$userObject->has_role('Standards Setter') && $_GET['type'] == 2) {
-  echo "<div class=\"f\"><div class=\"f_icon\"><a href=\"../admin/calendar.php#week" . date("W") . "\"><img src=\"../artwork/calendar_icon.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../admin/calendar.php#week" . date("W") . "\">" . $string['examcalendar'] . "<br />" . date('Y') . "</a></div></div>\n";
+    echo '<div class="f"><div class="f_icon"><a href="../admin/calendar.php#week' . date('W') . '"><img src="../artwork/calendar_icon.png" alt="Folder" /></a></div><div class="f_details"><a href="../admin/calendar.php#week' . date('W') . '">' . $string['examcalendar'] . '<br />' . date('Y') . "</a></div></div>\n";
 }
 
 $select = "SELECT properties.calendar_year, properties.paper_ownerID, properties.property_id, MAX(papers.screen) AS screens, properties.paper_title,
     DATE_FORMAT(start_date,'%Y%m%d%H%i%s') AS start_date, DATE_FORMAT(start_date,'{$configObject->get('cfg_long_date_time')}') AS display_start_date,
     DATE_FORMAT(end_date,'{$configObject->get('cfg_long_date_time')}') AS display_end_date, properties.exam_duration, users.title, users.initials,
     users.surname, properties.retired, properties.password";
-$groupby = " GROUP BY properties.calendar_year, properties.paper_title, properties.property_id, properties.paper_ownerID, properties.retired, users.surname,
-    properties.exam_duration, properties.password, users.title, users.initials";
-$orderby = " ORDER BY properties.calendar_year DESC, properties.paper_title";
+$groupby = ' GROUP BY properties.calendar_year, properties.paper_title, properties.property_id, properties.paper_ownerID, properties.retired, users.surname,
+    properties.exam_duration, properties.password, users.title, users.initials';
+$orderby = ' ORDER BY properties.calendar_year DESC, properties.paper_title';
 if ($_GET['module'] != '0') {
-  $sql = $select .
-    " FROM (properties, properties_modules, users) LEFT JOIN papers ON properties.property_id = papers.paper
+    $sql = $select .
+    ' FROM (properties, properties_modules, users) LEFT JOIN papers ON properties.property_id = papers.paper
     WHERE properties.property_id = properties_modules.property_id AND properties_modules.idMod = ? AND properties.paper_type = ? AND properties.paper_ownerID = users.id 
-    AND properties.deleted IS NULL" . $groupby . $orderby;
-  $results = $mysqli->prepare($sql);
-  $results->bind_param('is', $module, $type);
+    AND properties.deleted IS NULL' . $groupby . $orderby;
+    $results = $mysqli->prepare($sql);
+    $results->bind_param('is', $module, $type);
 } else {
-  $sql = $select .
-  " FROM (properties, users) LEFT JOIN properties_modules ON properties.property_id = properties_modules.property_id LEFT JOIN papers ON properties.property_id = papers.paper
-  WHERE properties_modules.idMod IS NULL AND properties.paper_type = ? AND properties.paper_ownerID = users.id AND paper_ownerID = ? AND properties.deleted IS NULL" . $groupby . $orderby;
-  $results = $mysqli->prepare($sql);
-  $results->bind_param('si', $type, $userObject->get_user_ID());
+    $sql = $select .
+    ' FROM (properties, users) LEFT JOIN properties_modules ON properties.property_id = properties_modules.property_id LEFT JOIN papers ON properties.property_id = papers.paper
+  WHERE properties_modules.idMod IS NULL AND properties.paper_type = ? AND properties.paper_ownerID = users.id AND paper_ownerID = ? AND properties.deleted IS NULL' . $groupby . $orderby;
+    $results = $mysqli->prepare($sql);
+    $results->bind_param('si', $type, $userObject->get_user_ID());
 }
 $results->execute();
 $results->bind_result($calendar_year, $paper_ownerID, $property_id, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password);
@@ -145,25 +148,25 @@ $results->store_result();
 $old_calendar_year = 'zzzz';
 $sent_clear_all = false;
 if ($results->num_rows > 0) {
-  while ($results->fetch()) {
-    if ($old_calendar_year != $calendar_year) {
-      if ($sent_clear_all) {
-        echo "<br clear=\"left\" />";
-      }
-      $sent_clear_all = true;
+    while ($results->fetch()) {
+        if ($old_calendar_year != $calendar_year) {
+            if ($sent_clear_all) {
+                echo '<br clear="left" />';
+            }
+            $sent_clear_all = true;
       
-      if ($calendar_year == '') {
-        $display_calendar_year = $string['unspecifiedsession'];
-      } else {
-        $display_calendar_year = $calendar_year;      
-      }
+            if ($calendar_year == '') {
+                $display_calendar_year = $string['unspecifiedsession'];
+            } else {
+                $display_calendar_year = $calendar_year;
+            }
 
-      echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>" . $display_calendar_year . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
+            echo '<div class="subsect_table"><div class="subsect_title"><nobr>' . $display_calendar_year . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
+        }
+        display_paper_icon($paper_ownerID, $property_id, $type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObject);
+        $old_calendar_year = $calendar_year;
     }
-    display_paper_icon($paper_ownerID, $property_id, $type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObject); 
-    $old_calendar_year = $calendar_year;
-  }
-  $results->close();
+    $results->close();
 }
 $mysqli->close();
 ?>

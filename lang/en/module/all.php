@@ -29,4 +29,3 @@ $string['recent'] = 'Recent';
 $string['questions'] = 'Questions';
 $string['papers'] = 'Papers';
 $string['people'] = 'People';
-?>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,20 +27,22 @@ use rogo_directory;
  * @package testing
  * @subpackage behat
  */
-class directory {
+class directory
+{
   /**
    * Clear the contents of the Rogo directories.
    */
-  public static function reset_directories() {
-    $mediadirectory = rogo_directory::get_directory('media');
-    $mediadirectory->clear();
-    $qtiimportdirectory = rogo_directory::get_directory('qti_import');
-    $qtiimportdirectory->clear();
-    $qtiexportdirectory = rogo_directory::get_directory('qti_export');
-    $qtiexportdirectory->clear();
-    $emailtemplatesdirectory = rogo_directory::get_directory('email_templates');
-    $emailtemplatesdirectory->clear();
-    $photodirectory = rogo_directory::get_directory('user_photo');
-    $photodirectory->clear();
-  }
+    public static function reset_directories()
+    {
+        $mediadirectory = rogo_directory::get_directory('media');
+        $mediadirectory->clear();
+        $qtiimportdirectory = rogo_directory::get_directory('qti_import');
+        $qtiimportdirectory->clear();
+        $qtiexportdirectory = rogo_directory::get_directory('qti_export');
+        $qtiexportdirectory->clear();
+        $emailtemplatesdirectory = rogo_directory::get_directory('email_templates');
+        $emailtemplatesdirectory->clear();
+        $photodirectory = rogo_directory::get_directory('user_photo');
+        $photodirectory->clear();
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ namespace testing\datagenerator;
  * @package testing
  * @subpackage datagenerator
  */
-class loader {
+class loader
+{
     /** @var mysqli Store the database connection object to be used by data generators. */
     protected static $db = null;
 
@@ -37,7 +39,8 @@ class loader {
      * @throws not_found
      * @throws no_database
      */
-    public static function get($name, $component = 'core') {
+    public static function get($name, $component = 'core')
+    {
         $locationbase = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'generators' . DIRECTORY_SEPARATOR;
         $location = $locationbase . $component . DIRECTORY_SEPARATOR . $name . '.php';
         if (file_exists($location)) {
@@ -67,8 +70,8 @@ class loader {
      *
      * @param mysqli $database
      */
-    public static function set_database($database) {
+    public static function set_database($database)
+    {
         self::$db = $database;
     }
-
 }

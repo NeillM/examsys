@@ -32,4 +32,3 @@ $string['warning'] = 'Warning';
 $string['nomatchsession'] = 'The session in the paper title (%s) does not match the paper session (%s).';
 $string['noquestiononscreen'] = '<strong>Warning:</strong> there are no questions on this screen.<br />This will produce an error if the paper is tested!';
 $string['questiononnotmap'] = '<strong>Warning:</strong> This question does not map to the module!';
-?>

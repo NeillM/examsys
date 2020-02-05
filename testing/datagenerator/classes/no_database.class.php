@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,9 +25,11 @@ namespace testing\datagenerator;
  * @package testing
  * @subpackage datagenerator
  */
-class no_database extends \Exception {
-  public function __construct() {
-    $message = "No database set.";
-    parent::__construct($message);
-  }
+class no_database extends \Exception
+{
+    public function __construct()
+    {
+        $message = 'No database set.';
+        parent::__construct($message);
+    }
 }

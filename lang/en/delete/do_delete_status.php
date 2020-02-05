@@ -14,5 +14,5 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['delete']='Delete Status';
+$string['delete'] = 'Delete Status';
 $string['success'] = 'Status successfully deleted';

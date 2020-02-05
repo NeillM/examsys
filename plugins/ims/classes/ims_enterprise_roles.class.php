@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō - http://Rogō.org/ using code original part of Moodle - http://moodle.org
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,53 +25,56 @@ namespace plugins\ims;
  * @copyright  2015 onwards, University of Nottingham
  * @author     Barry Oosthuizen <barry.oosthuizen@nottingham.ac.uk> based on code by Eugene Venter
  */
-class ims_enterprise_roles {
+class ims_enterprise_roles
+{
 
   /** @var imscode => ims role name. Role name mapping. */
-  private $imsroles;
+    private $imsroles;
   /** $var The code for the Learner role as defined by the IMS Enterprise specification */
-  const ROLE_LEARNER = '01';
+    const ROLE_LEARNER = '01';
   /** $var The code for the Instructor role as defined by the IMS Enterprise specification */
-  const ROLE_INSTRUCTOR = '02';
+    const ROLE_INSTRUCTOR = '02';
   /** $var The code for the Content Developer role as defined by the IMS Enterprise specification */
-  const ROLE_CONTENT_DEVELOPER = '03';
+    const ROLE_CONTENT_DEVELOPER = '03';
   /** $var The code for the Member role as defined by the IMS Enterprise specification */
-  const ROLE_MEMBER = '04';
+    const ROLE_MEMBER = '04';
   /** $var The code for the Manager role as defined by the IMS Enterprise specification */
-  const ROLE_MANAGER = '05';
+    const ROLE_MANAGER = '05';
   /** $var The code for the Mentor role as defined by the IMS Enterprise specification */
-  const ROLE_MENTOR = '06';
+    const ROLE_MENTOR = '06';
   /** $var The code for the Administrator role as defined by the IMS Enterprise specification */
-  const ROLE_ADMINISTRATOR = '07';
+    const ROLE_ADMINISTRATOR = '07';
   /** $var The code for the TeachingAssistant role as defined by the IMS Enterprise specification */
-  const ROLE_TEACHINGASSISTANT = '08';
+    const ROLE_TEACHINGASSISTANT = '08';
 
   /**
    * Constructor.
    */
-  public function __construct() {
-    $this->imsroles = array(
-      self::ROLE_LEARNER => 'Learner',
-      self::ROLE_INSTRUCTOR => 'Instructor',
-      self::ROLE_CONTENT_DEVELOPER => 'Content Developer',
-      self::ROLE_MEMBER => 'Member',
-      self::ROLE_MANAGER => 'Manager',
-      self::ROLE_MENTOR => 'Mentor',
-      self::ROLE_ADMINISTRATOR => 'Administrator',
-      self::ROLE_TEACHINGASSISTANT => 'TeachingAssistant'
-    );
-    // PLEASE NOTE: It may seem odd that "Content Developer" has a space in it
-    // but "TeachingAssistant" doesn't. That's what the spec says though!!!
-  }
+    public function __construct()
+    {
+        $this->imsroles = array(
+        self::ROLE_LEARNER => 'Learner',
+        self::ROLE_INSTRUCTOR => 'Instructor',
+        self::ROLE_CONTENT_DEVELOPER => 'Content Developer',
+        self::ROLE_MEMBER => 'Member',
+        self::ROLE_MANAGER => 'Manager',
+        self::ROLE_MENTOR => 'Mentor',
+        self::ROLE_ADMINISTRATOR => 'Administrator',
+        self::ROLE_TEACHINGASSISTANT => 'TeachingAssistant'
+        );
+      // PLEASE NOTE: It may seem odd that "Content Developer" has a space in it
+      // but "TeachingAssistant" doesn't. That's what the spec says though!!!
+    }
 
   /**
    * Returns the mapped roles
    *
    * @return array of IMS roles indexed by IMS code.
    */
-  public function get_imsroles() {
-    return $this->imsroles;
-  }
+    public function get_imsroles()
+    {
+        return $this->imsroles;
+    }
 
   /**
    * This function is only used when first setting up the plugin, to
@@ -79,52 +83,55 @@ class ims_enterprise_roles {
    *
    * @param string $imscode
    */
-  public function get_default_rolemapping($imscode) {
-    switch ($imscode) {
-      case self::ROLE_LEARNER:
-      case self::ROLE_MEMBER:
-        $role = 'Student';
-        break;
-      case self::ROLE_INSTRUCTOR:
-      case self::ROLE_CONTENT_DEVELOPER:
-      case self::ROLE_MANAGER:
-      case self::ROLE_MENTOR:
-      case self::ROLE_ADMINISTRATOR:
-      case self::ROLE_TEACHINGASSISTANT:
-        $role = 'Staff';
-        break;
-      default:
-        return 0; // Zero for no match.
+    public function get_default_rolemapping($imscode)
+    {
+        switch ($imscode) {
+            case self::ROLE_LEARNER:
+            case self::ROLE_MEMBER:
+                $role = 'Student';
+                break;
+            case self::ROLE_INSTRUCTOR:
+            case self::ROLE_CONTENT_DEVELOPER:
+            case self::ROLE_MANAGER:
+            case self::ROLE_MENTOR:
+            case self::ROLE_ADMINISTRATOR:
+            case self::ROLE_TEACHINGASSISTANT:
+                $role = 'Staff';
+                break;
+            default:
+                return 0; // Zero for no match.
+        }
+        return $role;
     }
-    return $role;
-  }
 
   /**
    * Check if we are allowed to create a user with this role
    * @param string $role
    * @return boolean
    */
-  public static function validate_role($role) {
-    $allowedroles = array('student', 'staff', 'invigilator', 'external examiner');
-    if (in_array($role, $allowedroles)) {
-      return true;
+    public static function validate_role($role)
+    {
+        $allowedroles = array('student', 'staff', 'invigilator', 'external examiner');
+        if (in_array($role, $allowedroles)) {
+            return true;
+        }
+        return false;
     }
-    return false;
-  }
 
   /**
    * Get role mappings options
    * @return array Array of role mapping options
    */
-  public static function get_role_mappings() {
-    global $string;
+    public static function get_role_mappings()
+    {
+        global $string;
 
-    $rolemappings = array();
-    $rolemappings['Ignore'] = $string['ignore'];
-    $rolemappings['Student'] = $string['student'];
-    $rolemappings['Staff'] = $string['staff'];
-    $rolemappings['Invigilator'] = $string['invigilator'];
-    $rolemappings['External Examiner'] = $string['externalexaminer'];
-    return $rolemappings;
-  }
+        $rolemappings = array();
+        $rolemappings['Ignore'] = $string['ignore'];
+        $rolemappings['Student'] = $string['student'];
+        $rolemappings['Staff'] = $string['staff'];
+        $rolemappings['Invigilator'] = $string['invigilator'];
+        $rolemappings['External Examiner'] = $string['externalexaminer'];
+        return $rolemappings;
+    }
 }

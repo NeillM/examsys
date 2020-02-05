@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -32,15 +33,15 @@ $id = param::required('id', param::INT, param::FETCH_GET);
 $external = new \external_systems();
 
 if (!$external->external_system_exists($id)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 if ($external->external_system_inuse($id)) {
-  $notice->display_notice($string['cannotdelete'], $string['extssysinuse'], '../artwork/exclamation_64.png', 'black', true, false);
-  echo '<p><button type="button" onclick="javascript:window.close();">' . $string['cancel'] .  '</button></p>';
-  echo "\n</body>\n</html>";
-  exit;
+    $notice->display_notice($string['cannotdelete'], $string['extssysinuse'], '../artwork/exclamation_64.png', 'black', true, false);
+    echo '<p><button type="button" onclick="javascript:window.close();">' . $string['cancel'] .  '</button></p>';
+    echo "\n</body>\n</html>";
+    exit;
 }
 $render = new render($configObject);
 $lang['msg'] = $string['msg'];
@@ -49,4 +50,3 @@ $lang['cancel'] = $string['cancel'];
 $data['action'] = 'do_delete_extsys.php';
 $data['id'] = $id;
 $render->render($data, $lang, 'admin/check_delete.html');
-?>

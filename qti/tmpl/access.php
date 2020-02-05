@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -21,10 +22,11 @@
  * @copyright Copyright (c) 2011 The University of Nottingham
  * @package
  */
+
 $userObj = UserObject::get_instance();
 $userID = $userObj->get_user_ID();
 ?>
 <?php echo("<?xml version='1.0' standalone='no'?>\n") ?>
 <export>
-	<owner><?php echo $userID; ?></owner>
+    <owner><?php echo $userID; ?></owner>
 </export>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,6 +25,7 @@
  * @package testing
  * @category unittest
  */
+
 ini_set('display_errors', 1);
 require_once dirname(dirname(dirname(__DIR__))) . '/include/autoload.inc.php';
 autoloader::init();

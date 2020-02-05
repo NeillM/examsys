@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -30,9 +31,9 @@ require '../include/errors.php';
 $refID = check_var('refID', 'POST', true, false, true);
 
 if (!refmaterials_utils::refmaterials_exist($refID, $mysqli)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 refmaterials_utils::delete($refID, $mysqli);
@@ -42,4 +43,3 @@ $lang['title'] = $string['delete'];
 $lang['success'] = $string['success'];
 $data = array();
 $render->render($data, $lang, 'admin/do_delete.html');
-

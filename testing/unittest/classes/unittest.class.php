@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -28,7 +29,8 @@ use PHPUnit\Framework\TestCase;
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
-abstract class UnitTest extends TestCase {
+abstract class UnitTest extends TestCase
+{
     /** @var object $default_config config object used during test. */
     public $config;
 
@@ -42,7 +44,8 @@ abstract class UnitTest extends TestCase {
      * Set-up config and db connections.
      * @return void
      */
-    public function setUp() : void {
+    public function setUp(): void
+    {
         parent::setUp();
         $this->config = RogoConfig::get_instance();
         $this->config->use_phpunit_site();
@@ -55,7 +58,8 @@ abstract class UnitTest extends TestCase {
      * Tear down config object and close db connections.
      * @return void
      */
-    public function tearDown() : void {
+    public function tearDown(): void
+    {
         // Reset the config object.
         RogoConfig::set_mock_instance(clone($this->default_config));
         parent::tearDown();

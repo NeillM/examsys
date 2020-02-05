@@ -25,4 +25,3 @@ $string['unansweredbackground'] = 'Unanswered background';
 $string['questiondismiss'] = 'Question dismiss';
 $string['fontsize'] = 'Font size';
 $string['typeface'] = 'Typeface';
-?>

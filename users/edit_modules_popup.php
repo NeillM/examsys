@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -33,65 +34,67 @@ $search_surname = check_var('search_surname', 'REQUEST', false, false, true);
 $search_username = check_var('search_username', 'REQUEST', false, false, true);
 
 if (!UserUtils::userid_exists($userID, $mysqli)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-function drawTabs($current_tab, $string, $session) {
-  $html = '<table cellpadding="0" cellspacing="0" border="0" style="width:100%; font-size:100%; background-color:#F1F5FB"><tr><td style="width:264px"><strong>' . $string['modulesfor'] . ' ' . $session . ':</strong></td>';
-  for ($i=1; $i<=3; $i++) {
-    if ($i == $current_tab) {
-      $html .= "<td class=\"tabon\" data-tabid=\"list$i\">" . $string[$i] . "</td>";
-    } else {
-      $html .= "<td class=\"taboff\" data-tabid=\"list$i\">" . $string[$i] . "</td>";
+function drawTabs($current_tab, $string, $session)
+{
+    $html = '<table cellpadding="0" cellspacing="0" border="0" style="width:100%; font-size:100%; background-color:#F1F5FB"><tr><td style="width:264px"><strong>' . $string['modulesfor'] . ' ' . $session . ':</strong></td>';
+    for ($i = 1; $i <= 3; $i++) {
+        if ($i == $current_tab) {
+            $html .= "<td class=\"tabon\" data-tabid=\"list$i\">" . $string[$i] . '</td>';
+        } else {
+            $html .= "<td class=\"taboff\" data-tabid=\"list$i\">" . $string[$i] . '</td>';
+        }
     }
-  }
-  $html .= "</tr></table>\n";
-  return $html;
+    $html .= "</tr></table>\n";
+    return $html;
 }
 
-function list_modules($mod, $id, $student_mod, $string, $session) {
-  $old_letter = '';
+function list_modules($mod, $id, $student_mod, $string, $session)
+{
+    $old_letter = '';
 
-  if ($id == '1') {
-    echo "<div class=\"content\" style=\"display:block\" id=\"list$id\">";
-  } else {
-    echo "<div class=\"content\" style=\"display:none\" id=\"list$id\">";
-  }
-
-  echo drawTabs($id, $string, $session);
-
-  if ($id == '1') {
-    echo "<div style=\"width:100%; height:100%; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%\" id=\"list$id\">";
-  } else {
-    echo "<div style=\"width:100%; height:100%; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%\" id=\"list$id\">";
-  }
-
-  $loop = 0;
-  foreach ($mod as $idMod => $mod_info) {
-    $moduleid = $mod_info['moduleid'];
-    $fullname = $mod_info['fullname'];
-
-    if ($old_letter != strtoupper(substr($moduleid,0,1))) {
-      echo "<table border=\"0\" style=\"padding-bottom:5px; width:100%; color:#1E3287\"><tr><td><nobr>&nbsp;" . strtoupper(substr($moduleid,0,1)) . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-    }
-
-    if (isset($student_mod[$idMod]) and $student_mod[$idMod]['attempt'] == $id) {
-      echo "<div class=\"r2\" id=\"divmod" . $id . "_" . $loop . "\"><input type=\"checkbox\" name=\"mod" . $id . "_" . $loop . "\" id=\"mod" . $id . "_" . $loop . "\" value=\"" . $idMod . "\" checked />&nbsp;<label for=\"mod" . $id . "_" . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
+    if ($id == '1') {
+        echo "<div class=\"content\" style=\"display:block\" id=\"list$id\">";
     } else {
-      echo "<div class=\"r1\" id=\"divmod" . $id . "_" . $loop . "\"><input type=\"checkbox\" name=\"mod" . $id . "_" . $loop . "\" id=\"mod" . $id . "_" . $loop . "\" value=\"" . $idMod . "\" />&nbsp;<label for=\"mod" . $id . "_" . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
+        echo "<div class=\"content\" style=\"display:none\" id=\"list$id\">";
     }
-    $loop++;
-    $old_letter = strtoupper(substr($moduleid, 0, 1));
-  }
-  echo "</div>\n</div>\n";
+
+    echo drawTabs($id, $string, $session);
+
+    if ($id == '1') {
+        echo "<div style=\"width:100%; height:100%; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%\" id=\"list$id\">";
+    } else {
+        echo "<div style=\"width:100%; height:100%; overflow-y:scroll; border:1px solid #95AEC8; font-size:90%\" id=\"list$id\">";
+    }
+
+    $loop = 0;
+    foreach ($mod as $idMod => $mod_info) {
+        $moduleid = $mod_info['moduleid'];
+        $fullname = $mod_info['fullname'];
+
+        if ($old_letter != strtoupper(substr($moduleid, 0, 1))) {
+            echo '<table border="0" style="padding-bottom:5px; width:100%; color:#1E3287"><tr><td><nobr>&nbsp;' . strtoupper(substr($moduleid, 0, 1)) . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+        }
+
+        if (isset($student_mod[$idMod]) and $student_mod[$idMod]['attempt'] == $id) {
+            echo '<div class="r2" id="divmod' . $id . '_' . $loop . '"><input type="checkbox" name="mod' . $id . '_' . $loop . '" id="mod' . $id . '_' . $loop . '" value="' . $idMod . '" checked />&nbsp;<label for="mod' . $id . '_' . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
+        } else {
+            echo '<div class="r1" id="divmod' . $id . '_' . $loop . '"><input type="checkbox" name="mod' . $id . '_' . $loop . '" id="mod' . $id . '_' . $loop . '" value="' . $idMod . '" />&nbsp;<label for="mod' . $id . '_' . $loop . "\">$moduleid:&nbsp;$fullname</label></div>\n";
+        }
+        $loop++;
+        $old_letter = strtoupper(substr($moduleid, 0, 1));
+    }
+    echo "</div>\n</div>\n";
 }
 
 $yearutils = new yearutils($mysqli);
 $session = check_var('session', 'GET', false, false, true);
 if (empty($session)) {
-  $session = $yearutils->get_current_session();
+    $session = $yearutils->get_current_session();
 }
 $display_year = $yearutils->get_academic_session($session);
 ?>
@@ -117,14 +120,14 @@ $display_year = $yearutils->get_academic_session($session);
 <?php
   // Get existing modules for the user in passed calendar year.
   $student_modules = array();
-  $result = $mysqli->prepare("SELECT idMod, moduleid, attempt FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID = ? AND calendar_year = ?");
+  $result = $mysqli->prepare('SELECT idMod, moduleid, attempt FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID = ? AND calendar_year = ?');
   $result->bind_param('is', $userID, $session);
   $result->execute();
   $result->bind_result($idMod, $moduleid, $attempt);
-  while ($result->fetch()) {
+while ($result->fetch()) {
     $student_modules[$idMod]['moduleid'] = $moduleid;
     $student_modules[$idMod]['attempt'] = $attempt;
-  }
+}
   $result->close();
 
   $module_no = 0;
@@ -133,24 +136,24 @@ $display_year = $yearutils->get_academic_session($session);
   $mod_count = 0;
 
   // Get a list of all modules for display.
-  $result = $mysqli->prepare("SELECT modules.id, moduleid, fullname FROM modules, schools WHERE modules.schoolid = schools.id AND active = 1 AND deleted IS NULL AND mod_deleted IS NULL ORDER BY moduleid");
+  $result = $mysqli->prepare('SELECT modules.id, moduleid, fullname FROM modules, schools WHERE modules.schoolid = schools.id AND active = 1 AND deleted IS NULL AND mod_deleted IS NULL ORDER BY moduleid');
   $result->execute();
   $result->store_result();
   $result->bind_result($idMod, $moduleid, $fullname);
-  while ($result->fetch()) {
+while ($result->fetch()) {
     $modules[$idMod]['moduleid'] = $moduleid;
     $modules[$idMod]['fullname'] = $fullname;
     $mod_count++;
-  }
+}
   $result->close();
 
-  if ($mod_count == 0) {
-    echo "<div style=\"color:#C00000\">&nbsp;<img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" />&nbsp;" . $string['nomodules'] . " <strong>" . $display_year . "</strong>.</div>";
-  } else {
+if ($mod_count == 0) {
+    echo '<div style="color:#C00000">&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="Warning" />&nbsp;' . $string['nomodules'] . ' <strong>' . $display_year . '</strong>.</div>';
+} else {
     list_modules($modules, 1, $student_modules, $string, $display_year);
     list_modules($modules, 2, $student_modules, $string, $display_year);
     list_modules($modules, 3, $student_modules, $string, $display_year);
-  }
+}
 
   echo "<input type=\"hidden\" name=\"mod_count\" value=\"$mod_count\" /></div></td>\n</tr>\n";
   echo "<input type=\"hidden\" id=\"userID\"  name=\"userID\" value=\"$userID\" /></div></td>\n</tr>\n";

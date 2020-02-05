@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -27,20 +28,17 @@
 require_once '../include/staff_auth.inc';
 require_once '../include/sidebar_menu.inc';
 require_once '../include/errors.php';
-
 $module = check_var('module', 'GET', true, false, true);
 set_time_limit(0);
 ob_start();
-ini_set("auto_detect_line_endings", true);
-
+ini_set('auto_detect_line_endings', true);
 // Folder security checks
 $folder = '';
-
 $module_details = module_utils::get_full_details_by_ID($_GET['module'], $mysqli);
 if (!$module_details) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 ?>
 <!DOCTYPE html>
@@ -75,8 +73,8 @@ if (!$module_details) {
 <?php
   $file_problem = false;
       
-  if (isset($_POST['submit'])) {
-  ?>
+if (isset($_POST['submit'])) {
+    ?>
 <br />
 <table border="0" cellpadding="4" cellspacing="0" class="dialog_border" style="width:700px">
 <tr>
@@ -87,95 +85,92 @@ if (!$module_details) {
 
 <br />
 
-<?php
+    <?php
     if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
-      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_import_metadata.csv"))  {
-        echo uploadError($_FILES['csvfile']['error']);
-        exit();
-      } else {
+        if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_import_metadata.csv')) {
+            echo uploadError($_FILES['csvfile']['error']);
+            exit();
+        } else {
         // Load the IDs for all students in the module
-        $student_id_array = array();
-        $student_data     = array();
-        
-        $stmt = $mysqli->prepare("SELECT users.id, username, student_id, users.title, surname, first_names FROM (users, modules_student, modules) LEFT JOIN sid ON users.id = sid.userID WHERE users.id = modules_student.userID AND modules_student.idMod = modules.id AND idMod = ? AND calendar_year = ? ORDER BY username");
-        $stmt->bind_param('ss', $_GET['module'], $_POST['session']);
-        $stmt->execute();
-        $stmt->bind_result($id, $username, $student_id, $title, $surname, $first_names);
-        while ($stmt->fetch()) {
-          $student_id_array[$username]    = $id;    // Reference by Username
-          $student_id_array[$student_id]  = $id;    // Reference by Student ID
+                  $student_id_array = array();
+            $student_data     = array();
+            $stmt = $mysqli->prepare('SELECT users.id, username, student_id, users.title, surname, first_names FROM (users, modules_student, modules) LEFT JOIN sid ON users.id = sid.userID WHERE users.id = modules_student.userID AND modules_student.idMod = modules.id AND idMod = ? AND calendar_year = ? ORDER BY username');
+            $stmt->bind_param('ss', $_GET['module'], $_POST['session']);
+            $stmt->execute();
+            $stmt->bind_result($id, $username, $student_id, $title, $surname, $first_names);
+            while ($stmt->fetch()) {
+                $student_id_array[$username]    = $id;
+        // Reference by Username
+                $student_id_array[$student_id]  = $id;
+        // Reference by Student ID
           
-          $student_data[$id]['title']       = $title;
-          $student_data[$id]['surname']     = $surname;
-          $student_data[$id]['first_names'] = $first_names;
-        }
-        $stmt->close();
-
-        $lines = file($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_import_metadata.csv');
-        $type  = '';
-        $value = '';
-
-        $line_no = 0;
-        $col_no  = 0;
-        $headings = array();
-       
-        echo "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"font-size:90%\">\n";
-       
-        $stmt = $mysqli->prepare("REPLACE INTO users_metadata (userID, idMod, type, value, calendar_year) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param('iisss', $student_id, $module, $type, $value, $_POST['session']);
-        foreach ($lines as $separate_line) {
-          $cols = explode(',', $separate_line);
-          if ($line_no == 0) {  // Read the header row
-            $heading = $cols;
-            $col_no = count($cols);
-            
-            echo "<tr><th></th><th>Username</th><th colspan=\"3\">Student Name</th>";
-            for ($i=1; $i<$col_no; $i++) {
-              echo "<th>" . trim($heading[$i]) . "</th>";
+                $student_data[$id]['title']       = $title;
+                $student_data[$id]['surname']     = $surname;
+                $student_data[$id]['first_names'] = $first_names;
             }
-            echo "</tr>\n";   
-          } else {
-            // 'username' can be either the real username or sid
-            $username = trim($cols[0]);
-
-            // Check see if user was found
-            if (!isset($student_id_array[$username])) {
-              if (UserUtils::userid_exists($username, $mysqli) or UserUtils::username_exists($username, $mysqli)) {
-                echo "<tr><td><img src=\"../artwork/red_cross_16.png\" wodth=\"16\" height=\"16\" alt=\"Failed\" /></td><td class=\"failed\">$username</td><td colspan=\"" . (3 + $col_no) . "\" class=\"failed\" style=\"text-align:center\">&lt;user not registered on " . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . "&gt;</td>";
-              } else {
-                echo "<tr><td><img src=\"../artwork/red_cross_16.png\" wodth=\"16\" height=\"16\" alt=\"Failed\" /></td><td class=\"failed\">$username</td><td colspan=\"" . (3 + $col_no) . "\" class=\"failed\" style=\"text-align:center\">&lt;unknown user&gt;</td>";
-              }
-            } else {
-              $student_id = $student_id_array[$username];
-              echo "<tr><td><img src=\"../artwork/green_plus_16.png\" wodth=\"16\" height=\"16\" alt=\"Add\" /></td><td>$username</td><td>" . $student_data[$student_id]['title'] . "</td><td>" . $student_data[$student_id]['surname'] . "</td><td>" . $student_data[$student_id]['first_names'] . "</td>";
-              for ($i=1; $i<$col_no; $i++) {
-                $type = trim($heading[$i]);
-                $value = trim($cols[$i]);
-                echo "<td>$value</td>";
-								if ($type != '') {
-									$stmt->execute();
-								}
-							}
-              echo "</tr>\n";
+            $stmt->close();
+            $lines = file($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_import_metadata.csv');
+            $type  = '';
+            $value = '';
+            $line_no = 0;
+            $col_no  = 0;
+            $headings = array();
+            echo "<table cellspacing=\"0\" cellpadding=\"2\" border=\"0\" style=\"font-size:90%\">\n";
+            $stmt = $mysqli->prepare('REPLACE INTO users_metadata (userID, idMod, type, value, calendar_year) VALUES (?, ?, ?, ?, ?)');
+            $stmt->bind_param('iisss', $student_id, $module, $type, $value, $_POST['session']);
+            foreach ($lines as $separate_line) {
+                $cols = explode(',', $separate_line);
+                if ($line_no == 0) {
+                // Read the header row
+                      $heading = $cols;
+                    $col_no = count($cols);
+                    echo '<tr><th></th><th>Username</th><th colspan="3">Student Name</th>';
+                    for (
+                        $i = 1; $i < $col_no; $i++
+                    ) {
+                        echo '<th>' . trim($heading[$i]) . '</th>';
+                    }
+                      echo "</tr>\n";
+                } else {
+                // 'username' can be either the real username or sid
+                      $username = trim($cols[0]);
+                // Check see if user was found
+                    if (!isset($student_id_array[$username])) {
+                        if (UserUtils::userid_exists($username, $mysqli) or UserUtils::username_exists($username, $mysqli)) {
+                            echo "<tr><td><img src=\"../artwork/red_cross_16.png\" wodth=\"16\" height=\"16\" alt=\"Failed\" /></td><td class=\"failed\">$username</td><td colspan=\"" . (3 + $col_no) . '" class="failed" style="text-align:center">&lt;user not registered on ' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '&gt;</td>';
+                        } else {
+                            echo "<tr><td><img src=\"../artwork/red_cross_16.png\" wodth=\"16\" height=\"16\" alt=\"Failed\" /></td><td class=\"failed\">$username</td><td colspan=\"" . (3 + $col_no) . '" class="failed" style="text-align:center">&lt;unknown user&gt;</td>';
+                        }
+                    } else {
+                        $student_id = $student_id_array[$username];
+                        echo "<tr><td><img src=\"../artwork/green_plus_16.png\" wodth=\"16\" height=\"16\" alt=\"Add\" /></td><td>$username</td><td>" . $student_data[$student_id]['title'] . '</td><td>' . $student_data[$student_id]['surname'] . '</td><td>' . $student_data[$student_id]['first_names'] . '</td>';
+                        for (
+                            $i = 1; $i < $col_no; $i++
+                        ) {
+                            $type = trim($heading[$i]);
+                            $value = trim($cols[$i]);
+                            echo "<td>$value</td>";
+                            if ($type != '') {
+                                $stmt->execute();
+                            }
+                        }
+                        echo "</tr>\n";
+                    }
+                }
+                $line_no++;
             }
-          }
-          $line_no++;
+            $stmt->close();
         }
-        $stmt->close();
-      }
       
-      echo "</table>\n";
-      
-      echo "<br />\n<div style=\"text-align:center\"><input type=\"button\" name=\"ok\" value=\"" . $string['ok'] . "\" style=\"width:100px\" onclick=\"window.location='../module/index.php?module=" . $_GET['module'] . "';\" /></div>\n<br />\n</td></tr></table>\n</body>\n</html>\n";
-
-      unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_import_metadata.csv");
-
-      $mysqli->close();
-      exit;
+        echo "</table>\n";
+        echo "<br />\n<div style=\"text-align:center\"><input type=\"button\" name=\"ok\" value=\"" . $string['ok'] . "\" style=\"width:100px\" onclick=\"window.location='../module/index.php?module=" . $_GET['module'] . "';\" /></div>\n<br />\n</td></tr></table>\n</body>\n</html>\n";
+        unlink($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_import_metadata.csv');
+        $mysqli->close();
+        exit;
     } else {
-      $file_problem = true;
+        $file_problem = true;
     }
-  }
+}
 ?>
 <br />
 <table border="0" cellpadding="4" cellspacing="0" class="dialog_border" style="width:700px">
@@ -194,21 +189,21 @@ if (!$module_details) {
 <tr><td><?php echo $string['year']; ?></td><td><select name="session">
 <?php
   $yearutils = new yearutils($mysqli);
-  $current_year = $yearutils->get_current_session();
-  $previous_year = $current_year -1;
-  $next_year = $current_year + 1;
-  echo "<option value=\"$previous_year\">$previous_year</option>\n";
-  echo "<option value=\"$current_year\" selected>$current_year</option>\n";
-  echo "<option value=\"$next_year\">$next_year</option>\n";
+$current_year = $yearutils->get_current_session();
+$previous_year = $current_year - 1;
+$next_year = $current_year + 1;
+echo "<option value=\"$previous_year\">$previous_year</option>\n";
+echo "<option value=\"$current_year\" selected>$current_year</option>\n";
+echo "<option value=\"$next_year\">$next_year</option>\n";
 
 ?>
 </select></td></tr>
 <tr><?php
 if ($file_problem) {
-  echo '<td></td><td style="color:#C00000"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" />&nbsp;Please specify a file for upload.</td></tr><tr>';
-  echo '<td style="color:#C00000; font-weight:bold">' . $string['file'] . '</td><td><input type="file" size="50" name="csvfile" required />';
+    echo '<td></td><td style="color:#C00000"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" />&nbsp;Please specify a file for upload.</td></tr><tr>';
+    echo '<td style="color:#C00000; font-weight:bold">' . $string['file'] . '</td><td><input type="file" size="50" name="csvfile" required />';
 } else {
-  echo '<td>' . $string['file'] . '</td><td><input type="file" size="50" name="csvfile" required />';
+    echo '<td>' . $string['file'] . '</td><td><input type="file" size="50" name="csvfile" required />';
 }
 ?></td></tr>
 </table>
@@ -222,23 +217,21 @@ if ($file_problem) {
 
 <?php
   $mysqli->close();
-  ob_end_flush();
-
-  $render = new render($configObject);
-  $jsdataset['name'] = 'dataset';
-  if (isset($_GET['folder'])) {
+ob_end_flush();
+$render = new render($configObject);
+$jsdataset['name'] = 'dataset';
+if (isset($_GET['folder'])) {
     $jsdataset['attributes']['folder'] = $_GET['folder'];
-  } else {
+} else {
     $jsdataset['attributes']['folder'] = '';
-  }
+}
   $jsdataset['attributes']['module'] = $module;
-  $render->render($jsdataset, array(), 'dataset.html');
-
-  $miscdataset = [
+$render->render($jsdataset, array(), 'dataset.html');
+$miscdataset = [
     'name' => 'jsutils',
     'attributes' => ['xls' => json_encode($string)],
   ];
-  $render->render($miscdataset, array(), 'dataset.html');
+$render->render($miscdataset, array(), 'dataset.html');
 ?>
 </body>
 </html>

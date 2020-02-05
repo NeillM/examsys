@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,7 +27,8 @@ use \yearutils;
  * @package testing
  * @subpackage datagenerator
  */
-class lti extends generator {
+class lti extends generator
+{
 
     /**
      * Create a new lti key
@@ -38,7 +40,8 @@ class lti extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function create_key($parameters) {
+    public function create_key($parameters)
+    {
         if (empty($parameters['name'])) {
             throw new data_error('name must be provided');
         }
@@ -56,7 +59,7 @@ class lti extends generator {
         $sql->bind_param('sssss', $settings['oauth_consumer_key'], $settings['secret'], $parameters['name'], $settings['contextid'], $settings['deleted']);
 
         if (!$sql->execute()) {
-            throw new data_error("Create new lti key failed with parameters: " . $parameters['name'] . "--" . implode("--", $settings));
+            throw new data_error('Create new lti key failed with parameters: ' . $parameters['name'] . '--' . implode('--', $settings));
         }
         $settings['id'] = $sql->insert_id;
         $settings['name'] = $parameters['name'];
@@ -74,7 +77,8 @@ class lti extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function create_context($parameters) {
+    public function create_context($parameters)
+    {
         if (empty($parameters['oauth_consumer_key'])) {
             throw new data_error('oauth_consumer_key must be provided');
         }
@@ -89,7 +93,7 @@ class lti extends generator {
         $internalid = $parameters['internalid'];
         $sql->bind_param('si', $key, $internalid);
         if (!$sql->execute()) {
-            throw new data_error("Create new lti context failed with parameters: " . $key . "--" . $internalid);
+            throw new data_error('Create new lti context failed with parameters: ' . $key . '--' . $internalid);
         }
         $values['lti_context_key'] = $key;
         $values['c_internal_id'] = $internalid;
@@ -107,7 +111,8 @@ class lti extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function create_user($parameters) {
+    public function create_user($parameters)
+    {
         if (empty($parameters['oauth_consumer_key'])) {
             throw new data_error('oauth_consumer_key must be provided');
         }
@@ -122,7 +127,7 @@ class lti extends generator {
         $internalid = $parameters['internalid'];
         $sql->bind_param('si', $key, $internalid);
         if (!$sql->execute()) {
-            throw new data_error("Create new lti context failed with parameters: " . $key . "--" . $internalid);
+            throw new data_error('Create new lti context failed with parameters: ' . $key . '--' . $internalid);
         }
         $values['lti_user_key'] = $key;
         $values['lti_user_equ'] = $internalid;
@@ -140,7 +145,8 @@ class lti extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function create_resource($parameters) {
+    public function create_resource($parameters)
+    {
         if (empty($parameters['oauth_consumer_key'])) {
             throw new data_error('oauth_consumer_key must be provided');
         }
@@ -159,7 +165,7 @@ class lti extends generator {
         $internaltype = $parameters['internaltype'];
         $sql->bind_param('sss', $key, $internalid, $internaltype);
         if (!$sql->execute()) {
-            throw new data_error("Create new lti context failed with parameters: " . $key . "--" . $internalid . "--" . $internaltype);
+            throw new data_error('Create new lti context failed with parameters: ' . $key . '--' . $internalid . '--' . $internaltype);
         }
         $values['lti_resource_key'] = $key;
         $values['internal_id'] = $internalid;

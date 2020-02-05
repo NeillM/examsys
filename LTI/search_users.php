@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -37,9 +38,9 @@ $externalid = check_var('externalid', '_POST', false, true, true);
 $lti = new UoN_LTI();
 $lti->init_lti0($mysqli);
 if (!$lti->lti_key_exists($lti_key)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 $lti_details = $lti->get_lti_key($lti_key);
@@ -47,17 +48,17 @@ $lti_details = $lti->get_lti_key($lti_key);
 // Get the data to be displayed on the page.
 $formvalues = array();
 if (!is_null($internalid)) {
-  $internal_results = $lti->get_links_by_username($internalid, $lti_details['id']);
-  $formvalues['internalid'] = $internalid;
+    $internal_results = $lti->get_links_by_username($internalid, $lti_details['id']);
+    $formvalues['internalid'] = $internalid;
 } else {
-  $internal_results = array();
+    $internal_results = array();
 }
 
 if (!is_null($externalid)) {
-  $external_results = $lti->get_user_by_external_id($externalid, $lti_details['oauth_consumer_key']);
-  $formvalues['externalid'] = $externalid;
+    $external_results = $lti->get_user_by_external_id($externalid, $lti_details['oauth_consumer_key']);
+    $formvalues['externalid'] = $externalid;
 } else {
-  $external_results = array();
+    $external_results = array();
 }
 
 $results = array_merge($external_results, $internal_results);
@@ -72,9 +73,9 @@ $additionalcss = <<<CSS
   <link rel="stylesheet" type="text/css" href="../css/list.css"/>
 CSS;
 $breadcrumb = array(
-  $string['home'] => "../../index.php",
-  $string['administrativetools'] => "../admin/index.php",
-  $string['ltikeys'] => "lti_keys_list.php"
+  $string['home'] => '../../index.php',
+  $string['administrativetools'] => '../admin/index.php',
+  $string['ltikeys'] => 'lti_keys_list.php'
 );
 $lang = array(
   'title' => sprintf($string['ltiusersearch'], $lti_details['name']),

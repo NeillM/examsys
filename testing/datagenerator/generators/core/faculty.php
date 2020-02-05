@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,7 +27,8 @@ use \FacultyUtils;
  * @package testing
  * @subpackage datagenerator
  */
-class faculty extends generator {
+class faculty extends generator
+{
     /** @var int Stores how many faculties have been created. */
     protected static $facultiescreated = 0;
 
@@ -38,13 +40,14 @@ class faculty extends generator {
      * @return array
      * @throws data_error If passed parameter is invalid
      */
-    public function create_faculty($parameters) {
+    public function create_faculty($parameters)
+    {
         $facultiescreated = ++self::$facultiescreated;
         $defaults = array('name' => 'Faculty ' . $facultiescreated, 'code' => null, 'externalid' => null, 'externalsys' => null);
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $facultyid = FacultyUtils::add_faculty($settings['name'], $this->db, $settings['code'], $settings['externalid'], $settings['externalsys']);
         if (!$facultyid) {
-            throw new data_error("Create new faculty failed with parameters: " . implode("--", $settings));
+            throw new data_error('Create new faculty failed with parameters: ' . implode('--', $settings));
         }
         $settings['id'] = $facultyid;
         return $settings;

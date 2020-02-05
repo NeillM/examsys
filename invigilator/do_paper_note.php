@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -31,18 +32,18 @@ $paperID = check_var('paperID', 'REQUEST', true, false, true);
 
 // Does the paper exist?
 if (!Paper_utils::paper_exists($paperID, $mysqli)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  echo json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
-  exit();
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    echo json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
+    exit();
 }
 
 $noteid = param::optional('note_id', 0, param::INT, param::FETCH_POST);
 $note = param::optional('note', '', param::TEXT, param::FETCH_POST);
 if ($noteid === 0) {
-  PaperNotes::add_note($note, $paperID, $userObject->get_user_ID(), $mysqli);
+    PaperNotes::add_note($note, $paperID, $userObject->get_user_ID(), $mysqli);
 } else {
-  PaperNotes::update_note($note, $noteid, $mysqli);
+    PaperNotes::update_note($note, $noteid, $mysqli);
 }
 
 echo json_encode('SUCCESS');

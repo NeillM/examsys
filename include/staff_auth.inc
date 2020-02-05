@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -29,113 +30,113 @@ $userObject = UserObject::get_instance();
 
 if (!$userObject->has_role(array('Staff', 'External Examiner', 'SysCron', 'Invigilator', 'Internal Reviewer'))) {
   // Current user is not Staff, External Examiner or the system cron so display warning and exit.
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '/artwork/exclamation_48.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '/artwork/exclamation_48.png', '#C00000', true, true);
 }
 
 // Redirect External Examiners if they are straying
-// $external_allowed_pages is an array that contains the set of scripts that External Examiners 
+// $external_allowed_pages is an array that contains the set of scripts that External Examiners
 // CAN access all other pages should redirect to the /reviews/ section
 $url = Url::fromGlobals();
 $path = $url->getPath();
-$external_allowed_pages = array(   
-                              "/help/staff/index.php"=>1,
-                              "/help/staff/search.php"=>1,
-                              "/help/staff/toolbar.php"=>1,
-                              "/help/staff/toc_title.php"=>1,
-                              "/help/staff/toc.php"=>1,
-                              "/help/staff/display_page.php"=>1,
-                              "/reviews/index.php"=>1,
-                              "/reviews/start.php"=>1,
-                              "/reviews/finish.php"=>1,
-                              "/reviews/class_totals.php"=>1,
-                              "/reports/draw_distribution_chart.php"=>1,
-                              "/reports/draw_scatter_plot.php"=>1,
-                              "/ajax/reports/getNote.php"=>1,
-                              "/ajax/reports/getAccessibility.php"=>1,
-                              "/osce/form.php"=>1,
-                              "/reviews/"=>1
+$external_allowed_pages = array(
+                              '/help/staff/index.php' => 1,
+                              '/help/staff/search.php' => 1,
+                              '/help/staff/toolbar.php' => 1,
+                              '/help/staff/toc_title.php' => 1,
+                              '/help/staff/toc.php' => 1,
+                              '/help/staff/display_page.php' => 1,
+                              '/reviews/index.php' => 1,
+                              '/reviews/start.php' => 1,
+                              '/reviews/finish.php' => 1,
+                              '/reviews/class_totals.php' => 1,
+                              '/reports/draw_distribution_chart.php' => 1,
+                              '/reports/draw_scatter_plot.php' => 1,
+                              '/ajax/reports/getNote.php' => 1,
+                              '/ajax/reports/getAccessibility.php' => 1,
+                              '/osce/form.php' => 1,
+                              '/reviews/' => 1
                             );
 
-$internal_allowed_pages = array(   
-                              "/help/staff/index.php"=>1,
-                              "/help/staff/search.php"=>1,
-                              "/help/staff/toolbar.php"=>1,
-                              "/help/staff/toc_title.php"=>1,
-                              "/help/staff/toc.php"=>1,
-                              "/help/staff/display_page.php"=>1,
-                              "/reviews/index.php"=>1,
-                              "/reviews/start.php"=>1,
-                              "/reviews/finish.php"=>1,
-                              "/reviews/"=>1
+$internal_allowed_pages = array(
+                              '/help/staff/index.php' => 1,
+                              '/help/staff/search.php' => 1,
+                              '/help/staff/toolbar.php' => 1,
+                              '/help/staff/toc_title.php' => 1,
+                              '/help/staff/toc.php' => 1,
+                              '/help/staff/display_page.php' => 1,
+                              '/reviews/index.php' => 1,
+                              '/reviews/start.php' => 1,
+                              '/reviews/finish.php' => 1,
+                              '/reviews/' => 1
                             );
 
-$invigilator_allowed_pages = array(   
-                              "/ajax/invigilator/refresh_cohort_list.php"=>1,
-                              "/ajax/invigilator/toilet_break.php"=>1,
-                              "/invigilator/check_exam_announcements.php"=>1,
-                              "/invigilator/check_unfinish_exam.php"=>1,
-                              "/invigilator/do_unfinish_exam.php"=>1,
-                              "/invigilator/extend_time.php"=>1,
-                              "/invigilator/index.php"=>1,
-                              "/invigilator/new_paper_note.php"=>1,
-                              "/invigilator/new_student_note.php"=>1,
-                              "/invigilator/"=>1
+$invigilator_allowed_pages = array(
+                              '/ajax/invigilator/refresh_cohort_list.php' => 1,
+                              '/ajax/invigilator/toilet_break.php' => 1,
+                              '/invigilator/check_exam_announcements.php' => 1,
+                              '/invigilator/check_unfinish_exam.php' => 1,
+                              '/invigilator/do_unfinish_exam.php' => 1,
+                              '/invigilator/extend_time.php' => 1,
+                              '/invigilator/index.php' => 1,
+                              '/invigilator/new_paper_note.php' => 1,
+                              '/invigilator/new_student_note.php' => 1,
+                              '/invigilator/' => 1
                             );
 
 $standards_setter_allowed_pages = array(
-                                      "/index.php"=>1,
-                                      "/module/index.php"=>1,
-                                      "/paper/type.php"=>1,
-                                      "/std_setting/index.php"=>1,
-                                      "/std_setting/individual_review.php"=>1,
-                                      "/std_setting/hofstee.php"=>1,
-                                      "/std_setting/get_group.php"=>1,
-                                      "/std_setting/group_set_angoff.php"=>1,
-                                      "/delete/check_delete_review.php"=>1,
-                                      "/delete/do_delete_review.php"=>1,
-                                      "/"=>1
+                                      '/index.php' => 1,
+                                      '/module/index.php' => 1,
+                                      '/paper/type.php' => 1,
+                                      '/std_setting/index.php' => 1,
+                                      '/std_setting/individual_review.php' => 1,
+                                      '/std_setting/hofstee.php' => 1,
+                                      '/std_setting/get_group.php' => 1,
+                                      '/std_setting/group_set_angoff.php' => 1,
+                                      '/delete/check_delete_review.php' => 1,
+                                      '/delete/do_delete_review.php' => 1,
+                                      '/' => 1
                             );
 
-$standards_setter_allowed_pages = array_merge($external_allowed_pages, $standards_setter_allowed_pages);                           
+$standards_setter_allowed_pages = array_merge($external_allowed_pages, $standards_setter_allowed_pages);
 
 if ($userObject->has_role('External Examiner')) {
-  if (!isset($external_allowed_pages[$path])) {
-    header("location: " . $configObject->get('cfg_root_path') . "/reviews/");
-  }
+    if (!isset($external_allowed_pages[$path])) {
+        header('location: ' . $configObject->get('cfg_root_path') . '/reviews/');
+    }
 } elseif ($userObject->has_role('Internal Reviewer')) {
-  if (!isset($internal_allowed_pages[$path])) {
-    header("location: " . $configObject->get('cfg_root_path') . "/reviews/");
-  }
+    if (!isset($internal_allowed_pages[$path])) {
+        header('location: ' . $configObject->get('cfg_root_path') . '/reviews/');
+    }
 } elseif ($userObject->has_role('Invigilator')) {
-  if (!isset($invigilator_allowed_pages[$path])) {
-    header("location: " . $configObject->get('cfg_root_path') . "/invigilator/");
-  }
-} elseif($userObject->has_role('Standards Setter')) {
-  if (!isset($standards_setter_allowed_pages[$path])) {
-    header("location: " . $configObject->get('cfg_root_path') . "/");
-  }
+    if (!isset($invigilator_allowed_pages[$path])) {
+        header('location: ' . $configObject->get('cfg_root_path') . '/invigilator/');
+    }
+} elseif ($userObject->has_role('Standards Setter')) {
+    if (!isset($standards_setter_allowed_pages[$path])) {
+        header('location: ' . $configObject->get('cfg_root_path') . '/');
+    }
 }
 
 // Redirect the system cron if it is straying
 // $cron_allowed_pages is an array that contains the set of scripts that the system cron
 // CAN access all other pages should exit the cron
-$cron_allowed_pages = array("/testing/testing/class_totals_with_script_cli.php");
+$cron_allowed_pages = array('/testing/testing/class_totals_with_script_cli.php');
 
 if ($userObject->has_role('SysCron')) {
-  if (!isset($cron_allowed_pages[$path])) {
-    $logger = new Logger($mysqli);
-    $logger->record_access_denied($userObject->get_user_ID(), $path, $string['crondisallowed']);
-    exit;
-  }
+    if (!isset($cron_allowed_pages[$path])) {
+        $logger = new Logger($mysqli);
+        $logger->record_access_denied($userObject->get_user_ID(), $path, $string['crondisallowed']);
+        exit;
+    }
 }
 
 // Get teams if the user is not an External Examiner, internal reviewer, sys cron or and invigilator.
 if ($userObject->has_role('External Examiner') or $userObject->has_role('Internal Reviewer') or $userObject->has_role('SysCron') or $userObject->has_role('Invigilator')) {
-  $staff_modules = array();
+    $staff_modules = array();
 } else {
-  $staff_modules = $userObject->get_staff_modules();
+    $staff_modules = $userObject->get_staff_modules();
 }
 
 $types_array = array('Formative Self-Assessments', 'Progress Tests', 'Summative Exams', 'Surveys', 'OSCE Stations', 'Offline Papers', 'Peer Review');
@@ -152,87 +153,86 @@ if ($userObject->has_role('SysAdmin')) {
 } elseif ($userObject->has_role('External Examiner') or $userObject->has_role('Internal Reviewer') or $userObject->has_role('SysCron') or $userObject->has_role('Invigilator')) {
 } else {
   // Normal users can access things they own or are on the staff_module of only.
-  $on_staff_module = false;
+    $on_staff_module = false;
 
   // Can the user acsess the module?
-  if (isset($_GET['module']) and $_GET['module'] != '' and $_GET['module'] != '0' and !isset($_GET['paperID'])) {
-    $staff_module_match = false;
-    $module_list = explode(',', $_GET['module']);
-    foreach ($module_list as $module) {
-      if ($userObject->is_staff_user_on_module((int)$module)) {
-        $staff_module_match = true;
-      }
+    if (isset($_GET['module']) and $_GET['module'] != '' and $_GET['module'] != '0' and !isset($_GET['paperID'])) {
+        $staff_module_match = false;
+        $module_list = explode(',', $_GET['module']);
+        foreach ($module_list as $module) {
+            if ($userObject->is_staff_user_on_module((int)$module)) {
+                $staff_module_match = true;
+            }
+        }
+        if ($staff_module_match == false) {
+            $contactemail = support::get_email();
+            $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+            $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
+        }
     }
-    if ($staff_module_match == false) {
-      $contactemail = support::get_email();
-      $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-      $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
-    }
-  }
 
   // Can the user acsess the paper?
-  if ((isset($_REQUEST['paperID']) and !($_REQUEST['paperID'] == '' or  $_REQUEST['paperID'] == '-1') )) {
-    $tmp_paperID = $_REQUEST['paperID'];
-    if (substr($tmp_paperID, 0, 5) != 'find:' and substr($tmp_paperID, 0, 5) != 'list:') {
-      $paper_ownerID = Paper_utils::get_ownerID($tmp_paperID, $mysqli);
+    if ((isset($_REQUEST['paperID']) and !($_REQUEST['paperID'] == '' or  $_REQUEST['paperID'] == '-1') )) {
+        $tmp_paperID = $_REQUEST['paperID'];
+        if (substr($tmp_paperID, 0, 5) != 'find:' and substr($tmp_paperID, 0, 5) != 'list:') {
+            $paper_ownerID = Paper_utils::get_ownerID($tmp_paperID, $mysqli);
     
-      if ($paper_ownerID == $userObject->get_user_ID()) {
-        $on_staff_module = true;
-      } else {
-        $paper_modules = Paper_utils::get_modules($tmp_paperID, $mysqli);
-        foreach ($paper_modules as $paper_moduleID=>$paper_module) {
-          if ($userObject->is_staff_user_on_module($paper_moduleID)) {
-            $on_staff_module = true;
-          }
-        }
-      }
+            if ($paper_ownerID == $userObject->get_user_ID()) {
+                $on_staff_module = true;
+            } else {
+                $paper_modules = Paper_utils::get_modules($tmp_paperID, $mysqli);
+                foreach ($paper_modules as $paper_moduleID => $paper_module) {
+                    if ($userObject->is_staff_user_on_module($paper_moduleID)) {
+                        $on_staff_module = true;
+                    }
+                }
+            }
 
-      if ($on_staff_module == false and !in_array('SYSTEM', array_values($paper_modules))) {
-        $contactemail = support::get_email();
-        $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-        $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
-      }
+            if ($on_staff_module == false and !in_array('SYSTEM', array_values($paper_modules))) {
+                $contactemail = support::get_email();
+                $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+                $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
+            }
+        }
     }
-  }
 
   // Can the user access the question?
-  if (isset($_REQUEST['q_id'])) {
-    $tmp_q_id = ltrim($_REQUEST['q_id'], ',');
-    $q_id_list = explode(',', $tmp_q_id);
-    foreach ($q_id_list as $tmp_q_id) {
-      if ($tmp_q_id != -1) {
-        $access = false;
+    if (isset($_REQUEST['q_id'])) {
+        $tmp_q_id = ltrim($_REQUEST['q_id'], ',');
+        $q_id_list = explode(',', $tmp_q_id);
+        foreach ($q_id_list as $tmp_q_id) {
+            if ($tmp_q_id != -1) {
+                $access = false;
         
-        $ownerID = QuestionUtils::get_ownerID($tmp_q_id, $mysqli);
+                $ownerID = QuestionUtils::get_ownerID($tmp_q_id, $mysqli);
         
-        if ($ownerID == $userObject->get_user_ID()) {
-          $access = true;
-        } else {
-          $question_modules = QuestionUtils::get_modules($tmp_q_id, $mysqli);
-          foreach ($question_modules as $question_moduleID=>$question_module) {
-            if ($userObject->is_staff_user_on_module($question_moduleID)) {
-              $access = true;
-            }
-          }
-        }
+                if ($ownerID == $userObject->get_user_ID()) {
+                    $access = true;
+                } else {
+                    $question_modules = QuestionUtils::get_modules($tmp_q_id, $mysqli);
+                    foreach ($question_modules as $question_moduleID => $question_module) {
+                        if ($userObject->is_staff_user_on_module($question_moduleID)) {
+                                $access = true;
+                        }
+                    }
+                }
 
-        // Allow acsess to the TRAIN module for training!
-        if ($access == false and !in_array('SYSTEM', array_values($question_modules))) {
-          $contactemail = support::get_email();
-          $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-          $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
+                // Allow acsess to the TRAIN module for training!
+                if ($access == false and !in_array('SYSTEM', array_values($question_modules))) {
+                    $contactemail = support::get_email();
+                    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+                    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
+                }
+            }
         }
-      }
     }
-  }
   
   // Can the user access reference material?
-  if (isset($_REQUEST['refID'])) {
-    if (!refmaterials_utils::check_access($userObject, $_REQUEST['refID'], $mysqli)) {
-      $contactemail = support::get_email();
-      $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-      $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
+    if (isset($_REQUEST['refID'])) {
+        if (!refmaterials_utils::check_access($userObject, $_REQUEST['refID'], $mysqli)) {
+            $contactemail = support::get_email();
+            $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+            $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
+        }
     }
-  }
 }
-?>

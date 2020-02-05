@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ namespace testing\datagenerator;
  * @package testing
  * @subpackage datagenerator
  */
-class folder extends generator {
+class folder extends generator
+{
     /** @var int Stores how many courses have been created. */
     protected static $folderscreated = 0;
 
@@ -37,7 +39,8 @@ class folder extends generator {
      * @return array
      * @throws data_error If passed parameter is invalid
      */
-    public function create_folder($parameters) {
+    public function create_folder($parameters)
+    {
         if (empty($parameters['ownerID'])) {
             throw new data_error('ownerID must be provided');
         }
@@ -50,10 +53,10 @@ class folder extends generator {
         } else {
             $settings['deleted'] = null;
         }
-        $query = $this->db->prepare("INSERT INTO folders VALUES (NULL, ?, ?, ?, ?, ?)");
+        $query = $this->db->prepare('INSERT INTO folders VALUES (NULL, ?, ?, ?, ?, ?)');
         $query->bind_param('issss', $parameters['ownerID'], $settings['name'], $now, $settings['colour'], $settings['deleted']);
         if (!$query->execute()) {
-            throw new data_error("Create new folder failed with parameters: " . $parameters['ownerID'] . "--" . implode("--", $settings));
+            throw new data_error('Create new folder failed with parameters: ' . $parameters['ownerID'] . '--' . implode('--', $settings));
         }
         $settings['id'] = $query->insert_id;
         $query->close();

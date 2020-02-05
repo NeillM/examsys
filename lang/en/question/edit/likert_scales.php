@@ -54,4 +54,3 @@ $string['qmpsatisfied5'] = 'Very Satisfied|Satisfied|Neutral|Dissatisfied|Very D
 // True/false (OK, not strictly likert scale)
 $string['qmptf'] = 'True|False';
 $string['qmpyn'] = 'Yes|No';
-?>

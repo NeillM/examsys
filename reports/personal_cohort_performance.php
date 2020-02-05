@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogo
 //
 // Rogo is free software: you can redistribute it and/or modify
@@ -37,9 +38,9 @@ $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $s
 $log_type = $propertyObj->get_paper_type();
 
 if ($log_type != '2' and $log_type != '4' and $log_type != '5') {   // Exit if wrong type of paper
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 $results_cache = new ResultsCache($mysqli);
@@ -49,9 +50,9 @@ $medians       = $results_cache->get_median_question_marks_by_paper($paperID);
 $student_marks = $results_cache->get_student_question_marks_by_paper($userID, $log_type, $paperID);
 
 if (count($student_marks) == 0) {   // Exit if the student does not have any marks
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 $old_q_id           = 0;
@@ -74,21 +75,21 @@ $result->execute();
 $result->store_result();
 $result->bind_result($theme, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $scenario, $option_text, $o_media, $correct, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $marks_correct, $marks_incorrect, $display_last_edited, $display_pos, $status, $correct_fback, $feedback_right, $locked, $settings);
 while ($result->fetch()) {
-  if ($old_q_id != $q_id or $old_display_pos != $display_pos) {
-    $question_marks[$old_q_id] = qMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
+    if ($old_q_id != $q_id or $old_display_pos != $display_pos) {
+        $question_marks[$old_q_id] = qMarks($old_q_type, $tmp_exclude, $old_marks, $old_option_text, $old_correct, $old_display_method, $old_score_method);
 
-    $old_correct      = array();
-    $old_option_text  = array();
-  }
+        $old_correct      = array();
+        $old_option_text  = array();
+    }
   
-  $old_q_id           = $q_id;
-  $old_display_pos    = $display_pos;
-  $old_q_type         = $q_type;
-  $old_option_text[]  = $option_text;
-  $old_correct[]      = $correct;
-  $old_marks          = $marks_correct;
-  $old_display_method = $display_method;
-  $old_score_method   = $score_method;
+    $old_q_id           = $q_id;
+    $old_display_pos    = $display_pos;
+    $old_q_type         = $q_type;
+    $old_option_text[]  = $option_text;
+    $old_correct[]      = $correct;
+    $old_marks          = $marks_correct;
+    $old_display_method = $display_method;
+    $old_score_method   = $score_method;
 }
 $result->close();
 
@@ -126,7 +127,7 @@ $student_details = UserUtils::get_user_details($userID, $mysqli);
 $name = \demo::demo_replace($student_details['title'], $demo) . ' ' . \demo::demo_replace($student_details['surname'], $demo) . ', ' . \demo::demo_replace($student_details['first_names'], $demo) . ' (' . \demo::demo_replace($student_details['student_id'], $demo) . ')';
 
 echo "<table class=\"header\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:90%\">\n";
-echo "<tr><th><div style=\"padding-left:10px; font-size:200%; font-weight:bold\">" . $propertyObj->get_paper_title() . "</div><div style=\"padding-left:10px\">$name</div></th></tr>\n";
+echo '<tr><th><div style="padding-left:10px; font-size:200%; font-weight:bold">' . $propertyObj->get_paper_title() . "</div><div style=\"padding-left:10px\">$name</div></th></tr>\n";
 echo "</table>\n<ol>";
 
 // Get the questions on the paper
@@ -137,18 +138,17 @@ $result->bind_param('i', $paperID);
 $result->execute();
 $result->bind_result($q_id, $theme, $leadin, $q_type);
 while ($result->fetch()) {
-  echo "<li>$leadin";
+    echo "<li>$leadin";
   
-  if (substr(strtolower($leadin), -4) == '</p>') {
-
-  } elseif (substr(strtolower($leadin), -6) == '</div>') {
-    echo '<br />';
-  } else {
-    echo '<br /><br />';
-  }
+    if (substr(strtolower($leadin), -4) == '</p>') {
+    } elseif (substr(strtolower($leadin), -6) == '</div>') {
+        echo '<br />';
+    } else {
+        echo '<br /><br />';
+    }
   
-  echo '<img src="draw_barchart.php?tpm=' . $question_marks[$q_id] . '&mark=' . $student_marks[$q_id] . '&median=' . $medians[$q_id] . '" width="300" height="65" alt="" />';
-  echo "</li>\n";
+    echo '<img src="draw_barchart.php?tpm=' . $question_marks[$q_id] . '&mark=' . $student_marks[$q_id] . '&median=' . $medians[$q_id] . '" width="300" height="65" alt="" />';
+    echo "</li>\n";
 }
 $result->close();
 

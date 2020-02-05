@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -50,8 +51,8 @@ $statuses = QuestionStatus::get_all_statuses($mysqli, $string);
 <?php
   require '../include/status_options.inc.php';
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
+    
+    echo draw_toprightmenu();
 ?>
   <div id="content">
     
@@ -64,10 +65,10 @@ $statuses = QuestionStatus::get_all_statuses($mysqli, $string);
       <ul id="statuses" class="selectlist">
 <?php
 foreach ($statuses as $status) {
-  $def_mod = ($status->get_is_default()) ? ' default' : '';
-?>
+    $def_mod = ($status->get_is_default()) ? ' default' : '';
+    ?>
         <li id="status_<?php echo $status->id ?>" class="selectable<?php echo $def_mod ?>" data-id="<?php echo $status->id ?>"><?php echo $status->get_name(); ?></li>
-<?php
+    <?php
 }
 ?>
       </ul>

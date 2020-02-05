@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -55,7 +56,7 @@ require '../include/toprightmenu.inc';
 
 echo draw_toprightmenu(233);
 
-$result = $mysqli->prepare("SELECT modules.id, moduleid, fullname, schools.code, school, active, modules.externalid FROM modules LEFT JOIN schools ON modules.schoolid = schools.id WHERE mod_deleted IS NULL");
+$result = $mysqli->prepare('SELECT modules.id, moduleid, fullname, schools.code, school, active, modules.externalid FROM modules LEFT JOIN schools ON modules.schoolid = schools.id WHERE mod_deleted IS NULL');
 $result->execute();
 $result->bind_result($id, $moduleid, $fullname, $schoolcode, $school, $active, $externalid);
 $result->store_result();
@@ -83,7 +84,9 @@ $result->store_result();
         <tbody>
         <?php
         while ($result->fetch()) {
-            if ($school == '') $school = '<span style="color:#808080">unknown</span>';
+            if ($school == '') {
+                $school = '<span style="color:#808080">unknown</span>';
+            }
             if ($active == 1) {
                 $tmp_active = $string['yes'];
                 $class = 'l';

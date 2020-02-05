@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,13 +25,15 @@ use testing\unittest\unittest;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class flashtest extends unittest {
+class flashtest extends unittest
+{
 
     /**
      * Test question header setter
      * @group question
      */
-    public function test_set_question_head() {
+    public function test_set_question_head()
+    {
         $data = questiondata::get_datastore('flash');
         $data->set_question_head();
         $this->assertTrue($data->displaydefault);
@@ -48,7 +51,8 @@ class flashtest extends unittest {
      * Test question option setter
      * @group question
      */
-    public function test_set_option_answer() {
+    public function test_set_option_answer()
+    {
         $data = questiondata::get_datastore('flash');
         $option['markscorrect'] = 1;
         $data->set_opt(0, $option);
@@ -56,5 +60,4 @@ class flashtest extends unittest {
         $data->set_option_answer(0, '', '', 0);
         $this->assertEquals(2, $data->marks);
     }
-
 }

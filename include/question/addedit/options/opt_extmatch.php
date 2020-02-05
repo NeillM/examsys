@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -24,10 +25,10 @@
 
 // TODO: hide
 $mandatory = ($index <= 2) ? '<span class="mandatory">*</span> ' : '';
-if ($index %2 == 0) {
-  $alt_c = ' class="alt"';
+if ($index % 2 == 0) {
+    $alt_c = ' class="alt"';
 } else {
-  $alt = $alt_c = '';
+    $alt = $alt_c = '';
 }
 $stem = (isset($stems[$index - 1])) ? $stems[$index - 1] : '';
 $feedback = (isset($all_feedback[$index - 1])) ? $all_feedback[$index - 1] : '';
@@ -46,20 +47,20 @@ $locked = ($dis_class != '');
 <?php
 
 if (isset($all_media['filenames'][$index]) and $all_media['filenames'][$index] != '') {
-  $configObj = Config::get_instance();
-  $questiondata = new plugins\questions\extmatch\renderdata();
-  $render = new render($configObj);
-  $questiondata->set_media($all_media['filenames'][$index], $all_media['widths'][$index], $all_media['heights'][$index], '', false, $index, $locked);
-?>
+    $configObj = Config::get_instance();
+    $questiondata = new plugins\questions\extmatch\renderdata();
+    $render = new render($configObj);
+    $questiondata->set_media($all_media['filenames'][$index], $all_media['widths'][$index], $all_media['heights'][$index], '', false, $index, $locked);
+    ?>
               <tr<?php echo $alt_c ?>>
                 <th><?php echo $string['current'] . ' ' . $string['media'] ?></th>
                 <td>
                   <?php
-                  $render->render($questiondata, $string, 'paper/media.html');
-                  ?>
+                    $render->render($questiondata, $string, 'paper/media.html');
+                    ?>
                 </td>
               </tr>
-<?php
+    <?php
 }
 ?>
             <tr<?php echo $alt_c ?>>

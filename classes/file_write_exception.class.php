@@ -26,6 +26,7 @@
  * @author Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright (c) 2018, University of Nottingham
  */
-class file_write_exception extends \Exception {
+class file_write_exception extends \Exception
+{
   // Intentionally empty.
 }

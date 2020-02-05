@@ -26,4 +26,3 @@ $string['september'] = 'September';
 $string['october'] = 'October';
 $string['november'] = 'November';
 $string['december'] = 'December';
-?>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -28,12 +29,12 @@ require_once '../include/errors.php';
 $courseID = check_var('courseID', 'REQUEST', true, false, true);
 
 if (!CourseUtils::courseid_exists($courseID, $mysqli)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$result = $mysqli->prepare("SELECT schoolid, name, description, externalid, externalsys FROM courses WHERE id = ?");
+$result = $mysqli->prepare('SELECT schoolid, name, description, externalid, externalsys FROM courses WHERE id = ?');
 $result->bind_param('i', $courseID);
 $result->execute();
 $result->bind_result($current_school, $coursename, $description, $current_externalid, $current_externalsys);
@@ -61,12 +62,12 @@ $result->close();
 </head>
 <?php
 
-  echo "<body>";
+  echo '<body>';
   require '../include/course_options.inc';
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
-  ?>
+    
+    echo draw_toprightmenu();
+?>
   <div id="content">
   <div class="head_title">
     <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
@@ -78,7 +79,7 @@ $result->close();
   <form id="theform" name="edit_course" method="post" action="" autocomplete="off">
     <table cellpadding="0" cellspacing="2" border="0" style="text-align:left">
     <?php
-      echo "<tr><td class=\"field\">" . $string['code'] . "</td><td><input type=\"text\" size=\"10\" maxlength=\"255\" id=\"course\" name=\"course\" value=\"" . $coursename . "\" /><input type=\"hidden\" name=\"old_course\" value=\"" . $coursename . "\" required /></td></tr>\n";
+      echo '<tr><td class="field">' . $string['code'] . '</td><td><input type="text" size="10" maxlength="255" id="course" name="course" value="' . $coursename . '" /><input type="hidden" name="old_course" value="' . $coursename . "\" required /></td></tr>\n";
     ?>
     <tr><td class="field"><?php echo $string['name']; ?></td><td><input type="text" size="70" maxlength="255" name="description" value="<?php echo $description; ?>" required /></td></tr>
     <tr><td class="field"><?php echo $string['school']; ?></td><td><select name="school" required>
@@ -90,20 +91,22 @@ $result->close();
       $old_faculty = '';
       $old_facultycode = '';
       $old_facultyid = 0;
-      while ($result->fetch()) {
+    while ($result->fetch()) {
         if ($facultyid != $old_facultyid) {
-          if ($old_facultycode . ' ' . $old_faculty != '') echo "</optgroup>\n";
-          echo "<optgroup label=\"$facultycode $faculty\">\n";
+            if ($old_facultycode . ' ' . $old_faculty != '') {
+                echo "</optgroup>\n";
+            }
+            echo "<optgroup label=\"$facultycode $faculty\">\n";
         }
         if ($current_school == $schoolid) {
-          echo "<option value=\"$schoolid\" selected>$code $school</option>\n";
+            echo "<option value=\"$schoolid\" selected>$code $school</option>\n";
         } else {
-          echo "<option value=\"$schoolid\">$code $school</option>\n";
+            echo "<option value=\"$schoolid\">$code $school</option>\n";
         }
         $old_facultyid = $facultyid;
         $old_faculty = $faculty;
         $old_facultycode = $facultycode;
-      }
+    }
       echo "</optgroup>\n";
       $result->close();
       
@@ -127,7 +130,7 @@ $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render->render($jsdataset, array(), 'dataset.html');
 $miscdataset['name'] = 'dataset';
-$miscdataset['attributes']['posturl'] = "do_edit_course.php";
+$miscdataset['attributes']['posturl'] = 'do_edit_course.php';
 $render->render($miscdataset, array(), 'dataset.html');
 ?>
 </body>

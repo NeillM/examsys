@@ -39,4 +39,3 @@ $string['editlab'] = 'Edit Lab';
 $string['badaddressesinvalid'] = 'The following IP addresses are invalid: %s.';
 $string['badaddressesinuse'] = 'The following IP addresses are already in use: %s.';
 $string['computerlabs'] = 'Computer Labs';
-?>

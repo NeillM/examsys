@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -25,18 +26,18 @@
 require '../../include/staff_auth.inc';
 
 if ($_POST['questions_to_add'] != '') {
-  $logger = new Logger($mysqli);
-  $questions = explode(',',$_POST['questions_to_add']);
-  $display_pos = $_GET['display_pos'];
+    $logger = new Logger($mysqli);
+    $questions = explode(',', $_POST['questions_to_add']);
+    $display_pos = $_GET['display_pos'];
   
-  foreach ($questions as $item) {
-    Paper_utils::add_question($_GET['paperID'], $item, $_POST['screen'], $display_pos, $mysqli);
-    $display_pos++;
+    foreach ($questions as $item) {
+        Paper_utils::add_question($_GET['paperID'], $item, $_POST['screen'], $display_pos, $mysqli);
+        $display_pos++;
 
-    // Create a track changes record to say new question added.
-    $tmp_paperID = intval($_GET['paperID']);
-    $success = $logger->track_change('Paper', $tmp_paperID, $userObject->get_user_ID(), '', $item, 'Add Question');
-  }
+      // Create a track changes record to say new question added.
+        $tmp_paperID = intval($_GET['paperID']);
+        $success = $logger->track_change('Paper', $tmp_paperID, $userObject->get_user_ID(), '', $item, 'Add Question');
+    }
 }
 $mysqli->close();
 $paperID = '';
@@ -44,11 +45,21 @@ $type = '';
 $scrOfY = '';
 $module = '';
 $folder = '';
-if (isset($_GET['paperID'])) $paperID = $_GET['paperID'];
-if (isset($_GET['type'])) $type = $_GET['type'];
-if (isset($_GET['scrOfY'])) $scrOfY = $_GET['scrOfY'];
-if (isset($_GET['module'])) $module = $_GET['module'];
-if (isset($_GET['folder'])) $folder = $_GET['folder'];
+if (isset($_GET['paperID'])) {
+    $paperID = $_GET['paperID'];
+}
+if (isset($_GET['type'])) {
+    $type = $_GET['type'];
+}
+if (isset($_GET['scrOfY'])) {
+    $scrOfY = $_GET['scrOfY'];
+}
+if (isset($_GET['module'])) {
+    $module = $_GET['module'];
+}
+if (isset($_GET['folder'])) {
+    $folder = $_GET['folder'];
+}
 ?>
 <html>
 <head>

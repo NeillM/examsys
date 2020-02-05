@@ -1,4 +1,4 @@
-<?php 
+<?php
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
 
 /**
  *
- * Utility class for languages and translations. 
+ * Utility class for languages and translations.
  *
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @version 1.0
@@ -24,7 +24,8 @@
  * @package core
  */
 
-class langpack {
+class langpack
+{
        
     /**
      * Server lang directory type
@@ -33,9 +34,10 @@ class langpack {
     private $langdir;
     
     /**
-     * Constructor 
+     * Constructor
      */
-    function __construct() {
+    function __construct()
+    {
         $configObject = Config::get_instance();
         $cfg_web_root = $configObject->get('cfg_web_root');
         $this->langdir = LangUtils::getLang($cfg_web_root);
@@ -46,7 +48,8 @@ class langpack {
      * @param array $component lang component name
      * @return string absolute lang file name
      */
-    private function get_filename($component) {
+    private function get_filename($component)
+    {
         $componentparts = explode('/', $component);
         $file = array_pop($componentparts);
         $path = implode(DIRECTORY_SEPARATOR, $componentparts);
@@ -61,7 +64,8 @@ class langpack {
      * @param string $name string to translate
      * @return string translated value
      */
-    public function get_string($component, $name) {
+    public function get_string($component, $name)
+    {
         $filename = $this->get_filename($component);
         include $filename;
         return $string[$name];
@@ -73,7 +77,8 @@ class langpack {
      * @param array $names strings to translate
      * @return array list of translated values
      */
-    public function get_strings($component, $names) {
+    public function get_strings($component, $names)
+    {
         $filename = $this->get_filename($component);
         include $filename;
         $strings = array();
@@ -88,7 +93,8 @@ class langpack {
      * @param string $component lang file component name
      * @return array list of translated values
      */
-    public function get_all_strings($component) {
+    public function get_all_strings($component)
+    {
         $string = array();
         $filename = $this->get_filename($component);
         include $filename;

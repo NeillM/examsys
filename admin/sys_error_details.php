@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,11 +27,8 @@
 
 require '../include/sysadmin_auth.inc';
 require '../include/errors.php';
-
 $errorID = check_var('errorID', 'GET', true, false, true);
-
 $row_no = 0;
-
 $result = $mysqli->prepare("SELECT sys_errors.id, auth_user, title, initials, surname, DATE_FORMAT(occurred,'%d/%m/%y&nbsp;%H:%i:%s'), userID, errtype, errstr, errfile, errline, php_self, query_string, request_method, DATE_FORMAT(fixed,'%d/%m/%y&nbsp;%H:%i:%s'), paperID, post_data, variables, backtrace FROM sys_errors LEFT JOIN users ON sys_errors.userID=users.id WHERE sys_errors.id=?");
 $result->bind_param('i', $errorID);
 $result->execute();
@@ -39,22 +37,20 @@ $result->bind_result($error_id, $auth_user, $title, $initials, $surname, $occurr
 $row_no = $result->num_rows;
 $result->fetch();
 $result->close();
-
 if ($row_no == 0) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 
-$result = $mysqli->prepare("SELECT id FROM sys_errors WHERE errstr = ? AND errfile = ? AND errline = ?");
+$result = $mysqli->prepare('SELECT id FROM sys_errors WHERE errstr = ? AND errfile = ? AND errline = ?');
 $result->bind_param('ssi', $errstr, $errfile, $errline);
 $result->execute();
 $result->store_result();
 $result->bind_result($id);
 $similar_errors = $result->num_rows();
 $result->close();
-
 $variables = unserialize(base64_decode($variables));
 
 ?>
@@ -92,8 +88,10 @@ $variables = unserialize(base64_decode($variables));
 <tr><td class="f" style="vertical-align: top" ><?php echo $string['occurrenceoferror'] ?></td><td><?php echo $similar_errors ?></td></tr>
 <tr><td class="f"><?php echo $string['datefixed'] ?></td><td><?php echo ($fixed == '' ? 'n/a' : $fixed); ?></td></tr>
 <tr><td class="f" style="vertical-align: top"><?php echo $string['backtrace'] ?></td><td><?php echo $backtrace ?></td></tr>
-<tr><td class="f" style="vertical-align: top"><?php echo $string['variables'] ?></td><td><?php if(isset($variables) and !($variables === '' or $variables === false)) {
-      ini_set('xdebug.var_display_max_data','-1'); var_dump($variables); } ?></td></tr>
+<tr><td class="f" style="vertical-align: top"><?php echo $string['variables'] ?></td><td><?php if (isset($variables) and !($variables === '' or $variables === false)) {
+    ini_set('xdebug.var_display_max_data', '-1');
+    var_dump($variables);
+                                              } ?></td></tr>
 </table>
 </div>
 <br />
@@ -103,9 +101,9 @@ $variables = unserialize(base64_decode($variables));
     <input type="hidden" name="errorID" id="errorID" value="<?php echo $_GET['errorID']; ?>" />
 <?php
 if ($fixed == '') {
-  echo '<input type="submit" name="submit" value="' . $string['fixed'] . '" style="width:100px" />';
+    echo '<input type="submit" name="submit" value="' . $string['fixed'] . '" style="width:100px" />';
 } else {
-  echo '<input type="submit" name="submit" value="' . $string['fixed'] . '" style="width:100px" disabled />';
+    echo '<input type="submit" name="submit" value="' . $string['fixed'] . '" style="width:100px" disabled />';
 }
 ?>
 </div>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -34,7 +35,7 @@ $tutorial = check_var('tutorial', 'GET', true, false, true);
   <meta http-equiv="content-type" content="text/html;charset=utf-8" />
   <title><?php echo page::title('Rog&#333;: ' . $string['onlinetutorial']); ?></title>
   <style type="text/css">
-    html, body {margin:0;	padding:0; height:100%; width:100%}
+    html, body {margin:0;   padding:0; height:100%; width:100%}
   </style>
 </head>
 <body>
@@ -42,13 +43,13 @@ $tutorial = check_var('tutorial', 'GET', true, false, true);
 
    echo "<embed width=\"100%\" height=\"100%\" src=\"./images/$tutorial\" />";
 
-   if (!$userObject->has_role('SysAdmin')) {   // Don't record the homepage or SysAdmin activities.
-    $result = $mysqli->prepare("INSERT INTO help_tutorial_log VALUES (NULL, ?, ?, NOW(), ?)");
+if (!$userObject->has_role('SysAdmin')) {   // Don't record the homepage or SysAdmin activities.
+    $result = $mysqli->prepare('INSERT INTO help_tutorial_log VALUES (NULL, ?, ?, NOW(), ?)');
     $result->bind_param('sis', $staff, $userObject->get_user_ID(), $tutorial);
     $staff = 'staff';
     $result->execute();
     $result->close();
-  }
+}
 ?>
 </body>
 </html>

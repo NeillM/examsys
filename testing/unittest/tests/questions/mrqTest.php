@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,13 +25,15 @@ use testing\unittest\unittest;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class mrqtest extends unittest {
+class mrqtest extends unittest
+{
 
     /**
      * Test question header setter
      * @group question
      */
-    public function test_set_question_head() {
+    public function test_set_question_head()
+    {
         $data = questiondata::get_datastore('mrq');
         $data->set_question_head();
         $this->assertTrue($data->displaydefault);
@@ -51,7 +54,8 @@ class mrqtest extends unittest {
      * Test question question setter
      * @group question
      */
-    public function test_set_question() {
+    public function test_set_question()
+    {
         $data = questiondata::get_datastore('mrq');
         $useranswer = 'nnnnn';
         $data->scoremethod = 'Mark per Question';
@@ -71,7 +75,8 @@ class mrqtest extends unittest {
      * Test question option setter
      * @group question
      */
-    public function test_set_option_answer() {
+    public function test_set_option_answer()
+    {
         $data = questiondata::get_datastore('mrq');
         $option['position'] = 1;
         $option['optiontext'] = '';
@@ -97,7 +102,8 @@ class mrqtest extends unittest {
      * Test question additional option setter
      * @group question
      */
-    public function test_process_options() {
+    public function test_process_options()
+    {
         $data = questiondata::get_datastore('mrq');
         // Test other.
         $useranswer = 'nnnyn';

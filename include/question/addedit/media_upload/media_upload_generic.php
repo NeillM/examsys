@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -21,6 +22,7 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
+
 ?>
 <div id="media-upload-holder">
   <div id="media-upload">

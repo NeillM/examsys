@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -25,24 +26,24 @@
 $media = $question->get_media();
 $plugin_height = max($media['height'] + 25, 475);
 if (count($question->options) > 0) {
-  $option = reset($question->options);
-  $correct = $option->get_correct();
-  $option_id = $option->id;
+    $option = reset($question->options);
+    $correct = $option->get_correct();
+    $option_id = $option->id;
 } else {
-  $correct = '';
-  $option_id = -1;
+    $correct = '';
+    $option_id = -1;
 }
 ?>
 
-				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
-					<tbody>
+                <table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
+                    <tbody>
 <?php
 require_once 'detail_parts/details_theme_notes.php';
 require_once 'detail_parts/details_scenario.php';
 require_once 'detail_parts/details_leadin.php';
 ?>
-					</tbody>
-				</table>
+                    </tbody>
+                </table>
         
         <table class="form hotspot" summary="Hotspot flash movie">
           <thead>
@@ -55,24 +56,24 @@ require_once 'detail_parts/details_leadin.php';
               <td>
 <?php
 
-if ($media['filename'] != ''):
-  $img_str = '';
-  if (strtolower($mode) != strtolower($string['edit'])) {
-    foreach ($label_images as $lab_img) {
-      if (isset($lab_img['filename']) and $lab_img['filename'] != '') {
-        $img_str .= implode(',', $lab_img) . ';';
-      }
+if ($media['filename'] != '') :
+    $img_str = '';
+    if (strtolower($mode) != strtolower($string['edit'])) {
+        foreach ($label_images as $lab_img) {
+            if (isset($lab_img['filename']) and $lab_img['filename'] != '') {
+                $img_str .= implode(',', $lab_img) . ';';
+            }
+        }
     }
-  }
-  $configObject          = Config::get_instance();
-  echo "<canvas class='labelling' id='canvas1'
+    $configObject          = Config::get_instance();
+    echo "<canvas class='labelling' id='canvas1'
     data-qno='1'
     data-qmedia='" . $media['filename'] . "'
-    data-qcorrect='" .  trim(str_replace('"','&#034',str_replace("'",'&#039',str_replace('�','&#172',$correct))))  . "'
+    data-qcorrect='" .  trim(str_replace('"', '&#034', str_replace("'", '&#039', str_replace('�', '&#172', $correct))))  . "'
     data-user='undefined'
     data-marking='" . $img_str . "'
     width='" . ($media['width'] + 222) . "' height='" . $plugin_height . "'></canvas>\n";
-  echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
+    echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
 endif;
 ?>                
                 <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />

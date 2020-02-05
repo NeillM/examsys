@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -23,8 +23,7 @@
 */
 
 if ($show_correction_intermediate) {
-  include 'correction_intermediates/inter_hotspot.php';
+    include 'correction_intermediates/inter_hotspot.php';
 } else {
-  include 'hotspot_standard.php';
+    include 'hotspot_standard.php';
 }
-?>

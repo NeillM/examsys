@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Confirm that it is OK to proceed deleting a question from a paper.
 *
 * @author Simon Wilkinson
@@ -28,8 +29,8 @@ require '../include/staff_auth.inc';
 require '../include/errors.php';
 
 $questionID = check_var('questionID', 'GET', true, false, true);
-$pID				=	check_var('pID', 'GET', true, false, true);
-$paperID 		= check_var('paperID', 'GET', true, false, true);
+$pID                =   check_var('pID', 'GET', true, false, true);
+$paperID        = check_var('paperID', 'GET', true, false, true);
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 ?>
@@ -49,10 +50,10 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 
 
 <?php
-  if ($properties->get_summative_lock()) {
-		echo "<p>" . $string['msg2'] . "</p>\n";
-	} else {
-?>
+if ($properties->get_summative_lock()) {
+      echo '<p>' . $string['msg2'] . "</p>\n";
+} else {
+    ?>
 <p><?php echo $string['msg'] ?></p>
 
 <div class="button_bar">
@@ -64,13 +65,12 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 <input type="hidden" name="pID" value="<?php echo $pID ?>" />
 <input type="hidden" name="paperID" value="<?php echo $paperID ?>" />
 
-<?php
-  if (substr_count($_GET['pID'], ',')  > 1) {
-    echo '<input class="delete" type="submit" name="submit" value="' . $string['deletes'] . '" />';
-  } else {
-    echo '<input class="delete" type="submit" name="submit" value="' . $string['delete'] . '" />';
-  }
-
+    <?php
+    if (substr_count($_GET['pID'], ',')  > 1) {
+        echo '<input class="delete" type="submit" name="submit" value="' . $string['deletes'] . '" />';
+    } else {
+        echo '<input class="delete" type="submit" name="submit" value="' . $string['delete'] . '" />';
+    }
 }
 ?>
 <input class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="javascript:window.close();" />
@@ -80,5 +80,5 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 </body>
 </html>
 <?php
-	$mysqli->close();
+    $mysqli->close();
 ?>

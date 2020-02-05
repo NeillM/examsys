@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -47,8 +48,8 @@ require '../include/sysadmin_auth.inc';
 <?php
   require '../include/course_options.inc';
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
+    
+    echo draw_toprightmenu();
 ?>
 <div id="content">
 
@@ -76,21 +77,23 @@ $result = $mysqli->prepare("SELECT courses.id, schools.code, school, name, descr
 $result->execute();
 $result->bind_result($id, $schoolcode, $school, $name, $description);
 while ($result->fetch()) {
-  if ($school == '') $school = '<span style="color:#808080">unknown</span>';
-  $courses[$course_no]['id'] = $id;
-  $courses[$course_no]['code'] = $name;
-  $courses[$course_no]['name'] = $description;
-  $courses[$course_no]['schoolcode'] = $schoolcode;
-  $courses[$course_no]['school'] = $school;
-  $course_no++;
+    if ($school == '') {
+        $school = '<span style="color:#808080">unknown</span>';
+    }
+    $courses[$course_no]['id'] = $id;
+    $courses[$course_no]['code'] = $name;
+    $courses[$course_no]['name'] = $description;
+    $courses[$course_no]['schoolcode'] = $schoolcode;
+    $courses[$course_no]['school'] = $school;
+    $course_no++;
 }
 $result->close();
 $mysqli->close();
 
-for ($i=0; $i<$course_no; $i++) {
-  $id = $courses[$i]['id'];
+for ($i = 0; $i < $course_no; $i++) {
+    $id = $courses[$i]['id'];
 
-  echo "<tr id=\"$id\" class=\"l\"><td class=\"col\">" . $courses[$i]['code'] . "</td><td>" . $courses[$i]['name'] . "</td><td>" . $courses[$i]['schoolcode'] . ' ' . $courses[$i]['school'] . "</td></tr>\n";
+    echo "<tr id=\"$id\" class=\"l\"><td class=\"col\">" . $courses[$i]['code'] . '</td><td>' . $courses[$i]['name'] . '</td><td>' . $courses[$i]['schoolcode'] . ' ' . $courses[$i]['school'] . "</td></tr>\n";
 }
 
 ?>

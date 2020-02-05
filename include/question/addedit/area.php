@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -31,19 +32,19 @@ $error_full = ($question->get_error_full() == '') ? 5 : $question->get_error_ful
 $correct_partial = ($question->get_correct_partial() == '') ? 90 : $question->get_correct_partial();
 $error_partial = ($question->get_error_partial() == '') ? 10 : $question->get_error_partial();
 if (count($question->options) > 0) {
-  $option = reset($question->options);
-  $correct = $option->get_correct();
-  $option_id = $option->id;
-  $mark_correct = $option->get_marks_correct();
-  $mark_incorrect = $option->get_marks_incorrect();
-  $mark_partial = $option->get_marks_partial();
-  $mark_partial = ($mark_partial != '') ? number_format($mark_partial, 1) : 0;
+    $option = reset($question->options);
+    $correct = $option->get_correct();
+    $option_id = $option->id;
+    $mark_correct = $option->get_marks_correct();
+    $mark_incorrect = $option->get_marks_incorrect();
+    $mark_partial = $option->get_marks_partial();
+    $mark_partial = ($mark_partial != '') ? number_format($mark_partial, 1) : 0;
 } else {
-  $correct = '';
-  $option_id = -1;
-  $mark_correct = 1;
-  $mark_incorrect = 0;
-  $mark_partial = 0.5;
+    $correct = '';
+    $option_id = -1;
+    $mark_correct = 1;
+    $mark_incorrect = 0;
+    $mark_partial = 0.5;
 }
 
 $configObject = Config::get_instance();
@@ -53,15 +54,15 @@ $marks_partial = $configObject->get_setting('core', 'paper_marks_partial');
 $mark_range = range(100, 50);
 $error_range = range(0, 50);
 ?>
-				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
-					<tbody>
+                <table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
+                    <tbody>
 <?php
 require_once 'detail_parts/details_theme_notes.php';
 require_once 'detail_parts/details_scenario.php';
 require_once 'detail_parts/details_leadin.php';
 ?>
-					</tbody>
-				</table>
+                    </tbody>
+                </table>
         
         <table class="form" summary="Hotspot flash movie">
           <tbody>
@@ -69,19 +70,19 @@ require_once 'detail_parts/details_leadin.php';
               <th class="align-top"><span class="mandatory">*</span> <?php echo $string['image'] ?></th>
               <td>
 <?php
-if ($media['filename'] != '' and !$show_correction_intermediate):
-  $tmp_correct = str_replace("'", "\'", trim($correct));
-  $tmp_correct = str_replace("&nbsp;", " ", $tmp_correct);
-  $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
+if ($media['filename'] != '' and !$show_correction_intermediate) :
+    $tmp_correct = str_replace("'", "\'", trim($correct));
+    $tmp_correct = str_replace('&nbsp;', ' ', $tmp_correct);
+    $tmp_correct = preg_replace('/\r\n/', '', $tmp_correct);
 
-  echo '<canvas class="area" id="canvas1"
+    echo '<canvas class="area" id="canvas1"
     data-qno="1"
-    data-qmedia="' . $media["filename"] . '"
+    data-qmedia="' . $media['filename'] . '"
     data-qcorrect="' . $correct . '"
     data-user""
     data-marking=""
-    width="' . $plugin_width . '" height="' . ($plugin_height+3) . '"></canvas>' . "\n";
-  echo '<br /><div style="width:100%;text-align: left;" id="canvasbox"></div>' . "\n";
+    width="' . $plugin_width . '" height="' . ($plugin_height + 3) . '"></canvas>' . "\n";
+    echo '<br /><div style="width:100%;text-align: left;" id="canvasbox"></div>' . "\n";
 endif;
 ?>                
                 <input name="optionid1" value="<?php echo $option_id; ?>" type="hidden" />
@@ -149,12 +150,12 @@ $allow_change_method = ($question->allow_change_marking_method() and $dis_class 
             </td>
           </tr>
           <?php
-          if ($question->allow_partial_marks()):
-            $show_partial = ($question->get_score_method() == $string['allowpartial']) ? '' : ' hide';
-          ?>
+            if ($question->allow_partial_marks()) :
+                $show_partial = ($question->get_score_method() == $string['allowpartial']) ? '' : ' hide';
+                ?>
           <tr class="marks-partial<?php echo $show_partial ?>">
             <th>
-              <?php echo $string['tolerance_partial'] ?>
+                <?php echo $string['tolerance_partial'] ?>
             </th>
             <td>
               <select id="correct_partial" name="correct_partial">
@@ -179,15 +180,15 @@ $allow_change_method = ($question->allow_change_marking_method() and $dis_class 
               </select>
             </td>
           </tr>
+                <?php
+            endif;
+            ?>
           <?php
-          endif;
-          ?>
-          <?php
-          if ($allow_neg or $mark_incorrect != 0):
-          ?>
+            if ($allow_neg or $mark_incorrect != 0) :
+                ?>
           <tr>
             <th>
-              <?php echo $string['marksincorrect'] ?>
+                <?php echo $string['marksincorrect'] ?>
             </th>
             <td colspan="2">&nbsp;</td>
             <td>
@@ -198,17 +199,17 @@ $allow_change_method = ($question->allow_change_marking_method() and $dis_class 
               </select>
             </td>
           </tr>
-          <?php
-          endif;
-          ?>
+                <?php
+            endif;
+            ?>
           </tbody>
         </table>
 
 <?php
-if (!$allow_neg and $mark_incorrect == 0):
-?>
+if (!$allow_neg and $mark_incorrect == 0) :
+    ?>
 <input type="hidden" id="option_marks_incorrect" name="option_marks_incorrect" value="<?php echo $mark_incorrect ?>" />
-<?php
+    <?php
 endif;
 require_once 'detail_parts/details_general_feedback.php';
 ?>

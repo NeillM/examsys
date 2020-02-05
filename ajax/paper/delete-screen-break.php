@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -27,17 +28,15 @@
 require '../../include/staff_auth.inc';
 
 if (isset($_GET['paperID']) and $_GET['paperID'] != '' and isset($_GET['screen']) and is_numeric($_GET['screen'])) {
-  $paper_id = $_GET['paperID'];
-  $screen_no = $_GET['screen'];
+    $paper_id = $_GET['paperID'];
+    $screen_no = $_GET['screen'];
 
-  $result = $mysqli->prepare("UPDATE papers SET screen=screen-1 WHERE paper=? AND screen>=?");
-  $result->bind_param('ii', $paper_id, $screen_no);
-  $result->execute();
-  $result->close();
+    $result = $mysqli->prepare('UPDATE papers SET screen=screen-1 WHERE paper=? AND screen>=?');
+    $result->bind_param('ii', $paper_id, $screen_no);
+    $result->execute();
+    $result->close();
 
-  print 'SUCCESS';
+    print 'SUCCESS';
 } else {
-  print 'INVALID INPUT';
+    print 'INVALID INPUT';
 }
-
-

@@ -21,13 +21,16 @@
  * @copyright Copyright (c) 2016 The University of Nottingham
  * @package core
  */
-class help_student extends rogo_directory {
-  public function location() {
-    return $this->base_directory() . 'help' . DIRECTORY_SEPARATOR . 'student' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR;
-  }
+class help_student extends rogo_directory
+{
+    public function location()
+    {
+        return $this->base_directory() . 'help' . DIRECTORY_SEPARATOR . 'student' . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR;
+    }
 
-  public function cachetime() {
-    // Cache for 24 hours.
-    return 86400;
-  }
+    public function cachetime()
+    {
+      // Cache for 24 hours.
+        return 86400;
+    }
 }

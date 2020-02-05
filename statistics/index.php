@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -46,8 +47,8 @@ require '../include/sidebar_menu.inc';
 
 <?php
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
+    
+    echo draw_toprightmenu();
 
   $mysqli->close();
 ?>
@@ -62,21 +63,21 @@ require '../include/sidebar_menu.inc';
   
 <?php
   $summative_year =  date('Y');
-  if (date('n') < 7) {
+if (date('n') < 7) {
     $summative_year--;
-  }
+}
 
-	$menudata = array();
-	$menudata['papersbyschool']			= array('papers_by_school.php?calyear=' . $summative_year, 'paper_stats.png');
-	$menudata['questionsbyschool']	= array('questions_by_school.php', 'question_stats.png');
-	$menudata['summativeexamstats']	= array('summative_stats.php?calyear=' . $summative_year, 'summative_scheduling.png');
-	$menudata['summativefeedback']	= array('summative_feedback.php?calyear=' . $summative_year, 'summative_feedback_stats.png');
+    $menudata = array();
+    $menudata['papersbyschool']         = array('papers_by_school.php?calyear=' . $summative_year, 'paper_stats.png');
+    $menudata['questionsbyschool']  = array('questions_by_school.php', 'question_stats.png');
+    $menudata['summativeexamstats'] = array('summative_stats.php?calyear=' . $summative_year, 'summative_scheduling.png');
+    $menudata['summativefeedback']  = array('summative_feedback.php?calyear=' . $summative_year, 'summative_feedback_stats.png');
 
-	foreach($menudata as $menukey => $menuitem) {
-		$parts = explode('.php', $menuitem[0]);
-		echo '<a class="blacklink" href="' . $menuitem[0] . '" id="' . $parts[0] . '">';
-		echo '<div class="container"><img src="../artwork/' . $menuitem[1] . '" alt="" class="icon" /><br />' . $string[$menukey] . '</div></a>';
-	}
+foreach ($menudata as $menukey => $menuitem) {
+    $parts = explode('.php', $menuitem[0]);
+    echo '<a class="blacklink" href="' . $menuitem[0] . '" id="' . $parts[0] . '">';
+    echo '<div class="container"><img src="../artwork/' . $menuitem[1] . '" alt="" class="icon" /><br />' . $string[$menukey] . '</div></a>';
+}
 
 ?>
 </div>

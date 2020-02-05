@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
-class gradebookttest extends unittestdatabase {
+class gradebookttest extends unittestdatabase
+{
 
     /**
      * @var array Storage for paper data in tests
@@ -35,21 +37,22 @@ class gradebookttest extends unittestdatabase {
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
         $datagenerator->create_academic_year(array('calendar_year' => 2016, 'academic_year' => '2016/17'));
         $datagenerator = $this->get_datagenerator('papers', 'core');
-        $this->pid1 = $datagenerator->create_paper(array('papertitle' => "Test create summative",
-            'startdate' => "2016-01-25 09:00:00",
-            'enddate' => "2016-01-25 10:00:00",
+        $this->pid1 = $datagenerator->create_paper(array('papertitle' => 'Test create summative',
+            'startdate' => '2016-01-25 09:00:00',
+            'enddate' => '2016-01-25 10:00:00',
             'duration' => 60,
             'calendaryear' => 2016,
-            'paperowner' => "admin",
-            'labs' => "1",
-            'papertype' => "2",
-            'externalid' => "xyz987uvw",
-            'externalsys' => "test rogo api",
-            'modulename' => "Training Module"));
+            'paperowner' => 'admin',
+            'labs' => '1',
+            'papertype' => '2',
+            'externalid' => 'xyz987uvw',
+            'externalsys' => 'test rogo api',
+            'modulename' => 'Training Module'));
         $datagenerator = $this->get_datagenerator('gradebook', 'core');
         $datagenerator->create_paper(array('paperid' => $this->pid1['id'], 'timestamp' => '2016-01-25 10:10:00'));
         $datagenerator->create_user(array('paperid' => $this->pid1['id'], 'userid' => $this->student['id'], 'grade' => 60, 'adjustedgrade' => 62, 'classification' => 'Pass'));
@@ -62,7 +65,8 @@ class gradebookttest extends unittestdatabase {
      * Test gradebook paper
      * @group api
      */
-    public function test_gradebook_paper() {
+    public function test_gradebook_paper()
+    {
         $gradebook = new \api\gradebook($this->db);
         // Test paper gradebook - SUCCESS.
         $expected = array();
@@ -79,7 +83,8 @@ class gradebookttest extends unittestdatabase {
      * Test gradebook module
      * @group api
      */
-    public function test_gradebook_module() {
+    public function test_gradebook_module()
+    {
         $gradebook = new \api\gradebook($this->db);
         // Test module gradebook - SUCCESS.
         $expected = array();
@@ -96,33 +101,35 @@ class gradebookttest extends unittestdatabase {
      * Test gradebook paper using external ids
      * @group api
      */
-    public function test_gradebook_paper_ext() {
+    public function test_gradebook_paper_ext()
+    {
         $gradebook = new \api\gradebook($this->db);
         // Test paper gradebook - SUCCESS.
         $expected = array();
         $users = array();
-        $users["1234567890"] = array('raw_grade' => 60, 'adjusted_grade' => 62.0,
+        $users['1234567890'] = array('raw_grade' => 60, 'adjusted_grade' => 62.0,
             'classification' => 'Pass', 'username' => 'test1');
-        $expected["xyz987uvw"] = $users;
-        $this->assertEquals(array('OK', $expected), $gradebook->get('extpaper', "xyz987uvw", "test rogo api"));
+        $expected['xyz987uvw'] = $users;
+        $this->assertEquals(array('OK', $expected), $gradebook->get('extpaper', 'xyz987uvw', 'test rogo api'));
         // Test paper gradebook - ERROR not found.
-        $this->assertEquals(array('BAD', array('Gradebook not found for extpaper xyz123uvw')), $gradebook->get('extpaper', "xyz123uvw", "test rogo api"));
+        $this->assertEquals(array('BAD', array('Gradebook not found for extpaper xyz123uvw')), $gradebook->get('extpaper', 'xyz123uvw', 'test rogo api'));
     }
 
     /**
      * Test gradebook module using external ids
      * @group api
      */
-    public function test_gradebook_module_ext() {
+    public function test_gradebook_module_ext()
+    {
         $gradebook = new \api\gradebook($this->db);
         // Test module gradebook - SUCCESS.
         $expected = array();
         $papers = array();
-        $papers["xyz987uvw"]["1234567890"] = array('raw_grade' => 60, 'adjusted_grade' => 62.0,
+        $papers['xyz987uvw']['1234567890'] = array('raw_grade' => 60, 'adjusted_grade' => 62.0,
             'classification' => 'Pass', 'username' => 'test1');
-        $expected["abc123def"] = $papers;
-        $this->assertEquals(array('OK', $expected), $gradebook->get('extmodule', "abc123def", "test rogo api"));
+        $expected['abc123def'] = $papers;
+        $this->assertEquals(array('OK', $expected), $gradebook->get('extmodule', 'abc123def', 'test rogo api'));
         // Test module gradebook - ERROR not found.
-        $this->assertEquals(array('BAD', array('Gradebook not found for extmodule abc789def')), $gradebook->get('extmodule', "abc789def", "test rogo api"));
+        $this->assertEquals(array('BAD', array('Gradebook not found for extmodule abc789def')), $gradebook->get('extmodule', 'abc789def', 'test rogo api'));
     }
 }

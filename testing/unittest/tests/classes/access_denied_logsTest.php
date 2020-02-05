@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -16,7 +17,6 @@
 
 use testing\unittest\unittestdatabase;
 
-
 /**
  * Test access denied logs class
  *
@@ -25,7 +25,8 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2017 onwards The University of Nottingham
  * @package tests
  */
-class access_denied_logsTest extends unittestdatabase {
+class access_denied_logsTest extends unittestdatabase
+{
     /*
      * @var array Storage for denied log data in tests
      */
@@ -35,17 +36,19 @@ class access_denied_logsTest extends unittestdatabase {
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $datagenerator = $this->get_datagenerator('incident', 'core');
         $this->denied1 = $datagenerator->create_denied(array('userid' => $this->admin['id'], 'page' => 'localhost'));
-        $this->denied2 =$datagenerator->create_denied(array('userid' => $this->admin['id'], 'page' => 'index.php'));
+        $this->denied2 = $datagenerator->create_denied(array('userid' => $this->admin['id'], 'page' => 'index.php'));
     }
 
     /**
      * Test get all the logs from access denied record
      * @group log
      */
-    public function test_get_access_denied_logs() {
+    public function test_get_access_denied_logs()
+    {
         $log_obj = new access_denied_logs($this->db);
         $this->assertEquals(2, count($log_obj->get_access_denied_logs()));
     }
@@ -54,7 +57,8 @@ class access_denied_logsTest extends unittestdatabase {
      * Test deleting a access denied log record
      * @group log
      */
-    public function test_delete_a_access_denied_log() {
+    public function test_delete_a_access_denied_log()
+    {
         $log_obj = new access_denied_logs($this->db);
         $this->assertTrue($log_obj->delete_a_access_denied_log($this->denied1['id']));
     }
@@ -63,7 +67,8 @@ class access_denied_logsTest extends unittestdatabase {
      * Test deleting all the access denied logs records
      * @group log
      */
-    public function test_delete_access_denied_logs() {
+    public function test_delete_access_denied_logs()
+    {
         $log_obj = new access_denied_logs($this->db);
         $this->assertTrue($log_obj->delete_access_denied_logs());
     }

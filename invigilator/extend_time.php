@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -23,18 +24,16 @@
  */
 
 require '../include/invigilator_auth.inc';
-
 if (isset($_GET['userID'])) {
-  $student_id = $_GET['userID'];
+    $student_id = $_GET['userID'];
 }
 
 if (isset($_GET['paperID'])) {
-  $paper_id = $_GET['paperID'];
+    $paper_id = $_GET['paperID'];
 }
 
 $student = array();
 $student['user_ID'] = $student_id;
-
 $stmt = $mysqli->prepare('SELECT title, initials, surname FROM users WHERE user_deleted IS NULL AND id = ?');
 $stmt->bind_param('i', $student_id);
 $stmt->execute();
@@ -42,19 +41,14 @@ $stmt->store_result();
 $stmt->bind_result($title, $initials, $surname);
 $stmt->fetch();
 $stmt->close();
-
 $current_address = NetworkUtils::get_client_address();
-
 $lab_factory = new LabFactory($mysqli);
 $lab_object = $lab_factory->get_lab_based_on_client($current_address);
-
 $propertyObj = PaperProperties::get_paper_properties_by_id($paper_id, $mysqli, $string);
 $log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $propertyObj, $mysqli);
 $log_extra_time = new LogExtraTime($log_lab_end_time, $student, $mysqli);
-
 $special_needs_percentage = $log_extra_time->get_extra_time_secs();
 $special_needs_percentage = $special_needs_percentage / 60;
-
 $time_range = range(0, 30, 1);
 
 ?>
@@ -79,17 +73,16 @@ $time_range = range(0, 30, 1);
       <?php echo $string['extendtimeby'] ?>
         <select id="extra_time" name="extra_time">
           <?php
-          foreach ($time_range as $time_increment) {
-            $selected = '';
-
-            if ($time_increment === $special_needs_percentage) {
-              $selected = 'selected';
+            foreach ($time_range as $time_increment) {
+                $selected = '';
+                if ($time_increment === $special_needs_percentage) {
+                    $selected = 'selected';
+                }
+                ?>
+              <option value="<?php echo $time_increment; ?>" <?php echo $selected ?>><?php echo $time_increment; ?></option>
+                <?php
             }
             ?>
-              <option value="<?php echo $time_increment; ?>" <?php echo $selected ?>><?php echo $time_increment; ?></option>
-            <?php
-          }
-          ?>
         </select>
       <?php echo $string['minutes'] ?>
     </div>

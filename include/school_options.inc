@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -27,26 +28,26 @@
 <div id="left-sidebar" class="sidebar">
 <form name="myform" autocomplete="off">
 <div id="menu1a">
-	<?php
-	if ($faculties > 0) {
-	?>
-		<div class="menuitem"><a href="add_school.php"><img class="sidebar_icon" src="../artwork/school_icon_16.png" alt="<?php echo $string['createschool'] ?>" /><?php echo $string['createschool'] ?></a></div>
-	<?php
-	} else {
-	?>
-		<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/school_icon_16_grey.png" alt="<?php echo $string['createschool'] ?>" /><?php echo $string['createschool'] ?></div>
-	<?php
-	}
-	?>
+    <?php
+    if ($faculties > 0) {
+        ?>
+        <div class="menuitem"><a href="add_school.php"><img class="sidebar_icon" src="../artwork/school_icon_16.png" alt="<?php echo $string['createschool'] ?>" /><?php echo $string['createschool'] ?></a></div>
+        <?php
+    } else {
+        ?>
+        <div class="grey menuitem"><img class="sidebar_icon" src="../artwork/school_icon_16_grey.png" alt="<?php echo $string['createschool'] ?>" /><?php echo $string['createschool'] ?></div>
+        <?php
+    }
+    ?>
 
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editschool']; ?>" /><?php echo $string['editschool'] ?></div>
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" width="16" height="16" alt="" /><?php echo $string['deleteschool'] ?></div>
+    <div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" width="16" height="16" alt="<?php echo $string['editschool']; ?>" /><?php echo $string['editschool'] ?></div>
+    <div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" width="16" height="16" alt="" /><?php echo $string['deleteschool'] ?></div>
 </div>
 
 <div style="display:none" id="menu1b">
-	<div class="menuitem"><a href="add_school.php"><img class="sidebar_icon" src="../artwork/school_icon_16.png" alt="<?php echo $string['createschool']; ?>" /><?php echo $string['createschool'] ?></a></div>
-	<div class="menuitem editschool"><a href="#"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editschool'] ?>" /><?php echo $string['editschool'] ?></a></div>
-	<div class="menuitem deleteschool"><a href="#"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><?php echo $string['deleteschool'] ?></a></div>
+    <div class="menuitem"><a href="add_school.php"><img class="sidebar_icon" src="../artwork/school_icon_16.png" alt="<?php echo $string['createschool']; ?>" /><?php echo $string['createschool'] ?></a></div>
+    <div class="menuitem editschool"><a href="#"><img class="sidebar_icon" src="../artwork/edit.png" alt="<?php echo $string['editschool'] ?>" /><?php echo $string['editschool'] ?></a></div>
+    <div class="menuitem deleteschool"><a href="#"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><?php echo $string['deleteschool'] ?></a></div>
 </div>
 
 <input type="hidden" id="lineID" name="lineID" value="" />

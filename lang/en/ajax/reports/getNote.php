@@ -15,4 +15,3 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 $string['err'] = '<strong>ERROR:</strong> Requested note cannot be found.';
-?>

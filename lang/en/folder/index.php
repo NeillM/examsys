@@ -30,4 +30,3 @@ $string['type'] = 'Type';
 $string['author'] = 'Author';
 $string['create'] = 'Create';
 $string['foldername'] = 'Folder Name';
-?>

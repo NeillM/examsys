@@ -15,4 +15,3 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 require '../lang/' . $language . '/module/add_ref_material.php';
-?>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -64,17 +65,17 @@ $user_no = $report->get_user_no();
 $q_medians = load_osce_medians($mysqli);
 
 if ($propertyObj->get_pass_mark() == 101) {
-  $borderline_method = true;
+    $borderline_method = true;
 } else {
-  $borderline_method = false;
+    $borderline_method = false;
 }
 
 if ($borderline_method) {
-  $passmark = getBlinePassmk($user_results, $user_no, $propertyObj);
+    $passmark = getBlinePassmk($user_results, $user_no, $propertyObj);
 } elseif ($propertyObj->get_pass_mark() == 102) {
-  $passmark = 'N/A';
+    $passmark = 'N/A';
 } else {
-  $passmark = $propertyObj->get_pass_mark();
+    $passmark = $propertyObj->get_pass_mark();
 }
 $distinction_mark = $propertyObj->get_distinction_mark();
 
@@ -85,25 +86,25 @@ $user_results = \sort::array_csort($user_results, $sortby, $ordering);
 
 $completed_no = 0;
 $total_score = 0;
-$classifications = array(''=>'', 1=>0, 2=>0, 3=>0, 4=>0, 5=>0, 'ERROR'=>0, 'pass' => 0, 'fail' => 0);
+$classifications = array('' => '', 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 'ERROR' => 0, 'pass' => 0, 'fail' => 0);
 
-for ($i=0; $i<$user_no; $i++) {
-  if ($user_results[$i]['metadataID'] != '') {   // No attendance
-    $classifications[$user_results[$i]['rating']]++;
-    $total_score += $user_results[$i]['mark'];
-    $completed_no++;
-  }
+for ($i = 0; $i < $user_no; $i++) {
+    if ($user_results[$i]['metadataID'] != '') {   // No attendance
+        $classifications[$user_results[$i]['rating']]++;
+        $total_score += $user_results[$i]['mark'];
+        $completed_no++;
+    }
 }
 
 $stats = $report->get_stats();                        // Generate the main statistics
 
 $results_cache = new ResultsCache($mysqli);
 if ($results_cache->should_cache($propertyObj, $percent, $absent)) {
-  $results_cache->save_paper_cache($paperID, $stats);                 // Cache general paper stats
+    $results_cache->save_paper_cache($paperID, $stats);                 // Cache general paper stats
 
-  $results_cache->save_student_mark_cache($paperID, $user_results);   // Cache student/paper marks
+    $results_cache->save_student_mark_cache($paperID, $user_results);   // Cache student/paper marks
 
-  $results_cache->save_median_question_marks($paperID, $q_medians);   // Cache the question/paper medians
+    $results_cache->save_median_question_marks($paperID, $q_medians);   // Cache the question/paper medians
 }
 
 rating_num_text($user_results, $user_no, $propertyObj, $string);
@@ -159,130 +160,130 @@ echo draw_toprightmenu();
 <div style="font-size:90%">
 <?php
   //output table heading
-  if ($borderline_method) {
-    $table_order = array(''=>16, 'Title'=>45, $string['surname']=>170, $string['firstnames']=>270, $string['studentid']=>80, $string['course']=>55, $string['total']=>50, $string['rating']=>'rating', $string['classification']=>80, $string['starttime']=>170, $string['examiner']=>100);
-  } else {
-    $table_order = array(''=>16, 'Title'=>45, $string['surname']=>170, $string['firstnames']=>270, $string['studentid']=>80, $string['course']=>55, $string['total']=>50, $string['classification']=>80, $string['starttime']=>170, $string['examiner']=>100);
-  }
+if ($borderline_method) {
+    $table_order = array('' => 16, 'Title' => 45, $string['surname'] => 170, $string['firstnames'] => 270, $string['studentid'] => 80, $string['course'] => 55, $string['total'] => 50, $string['rating'] => 'rating', $string['classification'] => 80, $string['starttime'] => 170, $string['examiner'] => 100);
+} else {
+    $table_order = array('' => 16, 'Title' => 45, $string['surname'] => 170, $string['firstnames'] => 270, $string['studentid'] => 80, $string['course'] => 55, $string['total'] => 50, $string['classification'] => 80, $string['starttime'] => 170, $string['examiner'] => 100);
+}
   $metadata_cols = array();
-  if (isset($user_results[0])){
+if (isset($user_results[0])) {
     foreach ($user_results[0] as $key => $val) {
-      if (strrpos($key,'meta_') !== false) {
-        $key_display = ucfirst(str_replace('meta_','',$key));
-        $table_order[$key_display] = 150;
-        $metadata_cols[$key] = $key;
-      }
+        if (strrpos($key, 'meta_') !== false) {
+            $key_display = ucfirst(str_replace('meta_', '', $key));
+            $table_order[$key_display] = 150;
+            $metadata_cols[$key] = $key;
+        }
     }
-  }
+}
 
   $column_no = count($table_order) + count($metadata_cols);
 
   echo "<div class=\"head_title\">\n";
   echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
-  if (isset($_GET['folder']) and $_GET['folder'] != '') {
+if (isset($_GET['folder']) and $_GET['folder'] != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
-  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
+} elseif (isset($_GET['module']) and $_GET['module'] != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
-  }
+}
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div>';
 
-  if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
+if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
     $report_title = sprintf($string['classtotalsmodule'], $_GET['repmodule']);
-  } else {
+} else {
     $report_title = $string['classtotals'];
-  }
+}
   echo "<div class=\"page_title\">$report_title</div>\n";
   echo "</div>\n";
 
   // Output table header
   echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:100%\">\n";
   echo "<thead>\n";
-  if (isset($user_results[0])) {
+if (isset($user_results[0])) {
     echo "<tr>\n";
     foreach ($table_order as $display => $col_width) {
-      echo "<th style=\"width:" . $col_width . "px\" class=\"vert_div\">$display</th>\n";
+        echo '<th style="width:' . $col_width . "px\" class=\"vert_div\">$display</th>\n";
     }
     echo "</tr>\n";
-  }
+}
   echo "</thead>\n<tbody>";
 
-	if ($user_no == 0) {
+if ($user_no == 0) {
     $msg = sprintf($string['noattempts'], $report->nicedate($startdate), $report->nicedate($enddate));
-		echo "</tbody>\n</table>\n" . $notice->info_strip($msg) . "\n</div>\n</body>\n</html>";
+    echo "</tbody>\n</table>\n" . $notice->info_strip($msg) . "\n</div>\n</body>\n</html>";
     exit;
-	}
+}
 
-  for ($i=0; $i<$user_no; $i++) {
+for ($i = 0; $i < $user_no; $i++) {
     if ($user_results[$i]['started'] == '') {   // No attendance
-      echo "<tr id=\"res" . ($i+1) . "\" class=\"nonattend\" data-paperid=\"" . $paperID . "\" data-userid=\"" . $user_results[$i]['userID'] . "\" data-metadataid=\"\" data-cryptname=\"" . $crypt_name . "\"><td>&nbsp;</td><td>" . $user_results[$i]['title'] . "</td><td>" . $user_results[$i]['surname'] . "</td><td>" . $user_results[$i]['first_names'] . "</td><td>" . $user_results[$i]['student_id'] . "</td><td colspan=\"" . ($column_no - 2) . "\" style=\"text-align:center\">&lt;" . $string['noattendance'] . "&gt;</td></tr>\n";
+        echo '<tr id="res' . ($i + 1) . '" class="nonattend" data-paperid="' . $paperID . '" data-userid="' . $user_results[$i]['userID'] . '" data-metadataid="" data-cryptname="' . $crypt_name . '"><td>&nbsp;</td><td>' . $user_results[$i]['title'] . '</td><td>' . $user_results[$i]['surname'] . '</td><td>' . $user_results[$i]['first_names'] . '</td><td>' . $user_results[$i]['student_id'] . '</td><td colspan="' . ($column_no - 2) . '" style="text-align:center">&lt;' . $string['noattendance'] . "&gt;</td></tr>\n";
     } else {
-      echo "<tr id=\"res" . ($i+1) . "\" data-paperid=\"" . $paperID . "\" data-userid=\"" . $user_results[$i]['userID'] . "\" data-metadataid=\"" . $user_results[$i]['metadataID'] . "\" data-cryptname=\"" . $crypt_name . "\">\n";
-      echo "<td class=\"greyln\"><img src=\"../artwork/osce_16.gif\" class=\"picon\" title=\"" . $string['osce'] . "\" alt=\"" . $string['osce'] . "\" /></td>";
-      echo '<td class="greyln col">' . $user_results[$i]['title'] . '</td>';
-      echo '<td class="greyln col">' . $user_results[$i]['surname'] . '</td>';
-      echo '<td class="greyln col">' . $user_results[$i]['first_names'] . '</td>';
-      echo '<td class="greyln col">' . $user_results[$i]['student_id'] . '</td>';
-      echo '<td class="greyln col">' . $user_results[$i]['grade'] . '</td>';
-      echo '<td class="greyln col">' . $user_results[$i]['mark'] . '</td>';
+        echo '<tr id="res' . ($i + 1) . '" data-paperid="' . $paperID . '" data-userid="' . $user_results[$i]['userID'] . '" data-metadataid="' . $user_results[$i]['metadataID'] . '" data-cryptname="' . $crypt_name . "\">\n";
+        echo '<td class="greyln"><img src="../artwork/osce_16.gif" class="picon" title="' . $string['osce'] . '" alt="' . $string['osce'] . '" /></td>';
+        echo '<td class="greyln col">' . $user_results[$i]['title'] . '</td>';
+        echo '<td class="greyln col">' . $user_results[$i]['surname'] . '</td>';
+        echo '<td class="greyln col">' . $user_results[$i]['first_names'] . '</td>';
+        echo '<td class="greyln col">' . $user_results[$i]['student_id'] . '</td>';
+        echo '<td class="greyln col">' . $user_results[$i]['grade'] . '</td>';
+        echo '<td class="greyln col">' . $user_results[$i]['mark'] . '</td>';
 
-      if ($borderline_method) {
-        echo '<td class="greyln col">' . $user_results[$i]['rating'] . '</td>';
-      }
+        if ($borderline_method) {
+            echo '<td class="greyln col">' . $user_results[$i]['rating'] . '</td>';
+        }
 
-      echo '<td class="greyln col">' . $user_results[$i]['classification'];
-			if ($user_results[$i]['killer_fail'] == $string['fail']) {
-        echo '&nbsp;<img src="../artwork/skull_16.png" width=16" height="16" alt="skull" />';
-      }
-      echo '</td>';
-      echo '<td class="greyln col">' . $user_results[$i]['display_started'] . '</td>';
-      echo '<td class="greyln col">' . $user_results[$i]['examiner'] . '</td>';
-      echo "</tr>\n";
+        echo '<td class="greyln col">' . $user_results[$i]['classification'];
+        if ($user_results[$i]['killer_fail'] == $string['fail']) {
+            echo '&nbsp;<img src="../artwork/skull_16.png" width=16" height="16" alt="skull" />';
+        }
+        echo '</td>';
+        echo '<td class="greyln col">' . $user_results[$i]['display_started'] . '</td>';
+        echo '<td class="greyln col">' . $user_results[$i]['examiner'] . '</td>';
+        echo "</tr>\n";
     }
-  }
-  ?>
+}
+?>
 </tbody>
 </table>
 
 <br />
   <?php
-  echo "<table class=\"graph\" border=\"0\" style=\"padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287\"><tr><td>" . $string['summary'] . "</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+    echo '<table class="graph" border="0" style="padding-left:10px; padding-right:2px; padding-bottom:5px; width:100%; color:#1E3287"><tr><td>' . $string['summary'] . "</td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
 
-  echo "<table class=\"graph\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"line-height:150%\">\n";
-  echo "<tr><td align=\"right\" style=\"width:110px\">" . $string['cohortsize'] . "</td><td style=\"text-align:right; width:40px\">" . $user_no . "</td></tr>\n";
+    echo "<table class=\"graph\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"line-height:150%\">\n";
+    echo '<tr><td align="right" style="width:110px">' . $string['cohortsize'] . '</td><td style="text-align:right; width:40px">' . $user_no . "</td></tr>\n";
 
-  if ($borderline_method) {
-    echo "<tr><td align=\"right\">" . $string['passmark'] . "</td><td style=\"text-align:right\">" . round($passmark, 2) . "</td><td>% (" . $string['borderlinemethod'] . ")</td></tr>\n";
-  } elseif ($propertyObj->get_pass_mark() != 102) {  // Not the N/A option
-    echo "<tr><td align=\"right\">" . $string['passmark'] . "</td><td style=\"text-align:right\">" . $propertyObj->get_pass_mark() . "</td><td>%</td></tr>\n";
-  }
-
-  $labels = get_labels($propertyObj);
-  foreach ($labels as $i => $label) {
-    echo "<tr><td align=\"right\">" . $string[strtolower($label)] . "</td><td style=\"text-align:right\">" . $classifications[$i] . "</td></tr>\n";
-  }
-  echo "</table>\n";
-
-  $finished = false;
-  if ($propertyObj->get_end_date() <= time()) {
-    $finished = true;
-  }
-  if ($configObject->get_setting('core', 'cfg_gradebook_enabled') and $finished and !$report->paper_graded()) {
-    if (isset($_POST['publishmarks']) and $_POST['publishmarks'] == 'yes') {
-        $report->create_gradebook();
-        $report->store_grades();
-        echo '<p>' . $string['gradepublish'] . '</p>';
-    } else {
-        echo "<div>\n";
-        echo "<form id=\"publishform\" name=\"publishform\" method=\"post\" autocomplete=\"off\">\n";
-        echo "<input id=\"publishmarksbutton\" type=\"button\" value=\"" . $string['publishmarks'] . "\" style=\"margin:10px; width:160px\" />\n";
-        echo '<input type="hidden" id="publishmarks" name="publishmarks" value="" />';
-        echo "</form>\n</div>\n";
+    if ($borderline_method) {
+        echo '<tr><td align="right">' . $string['passmark'] . '</td><td style="text-align:right">' . round($passmark, 2) . '</td><td>% (' . $string['borderlinemethod'] . ")</td></tr>\n";
+    } elseif ($propertyObj->get_pass_mark() != 102) {  // Not the N/A option
+        echo '<tr><td align="right">' . $string['passmark'] . '</td><td style="text-align:right">' . $propertyObj->get_pass_mark() . "</td><td>%</td></tr>\n";
     }
-  }
 
-  $mysqli->close();
-?>
+    $labels = get_labels($propertyObj);
+    foreach ($labels as $i => $label) {
+        echo '<tr><td align="right">' . $string[strtolower($label)] . '</td><td style="text-align:right">' . $classifications[$i] . "</td></tr>\n";
+    }
+    echo "</table>\n";
+
+    $finished = false;
+    if ($propertyObj->get_end_date() <= time()) {
+        $finished = true;
+    }
+    if ($configObject->get_setting('core', 'cfg_gradebook_enabled') and $finished and !$report->paper_graded()) {
+        if (isset($_POST['publishmarks']) and $_POST['publishmarks'] == 'yes') {
+            $report->create_gradebook();
+            $report->store_grades();
+            echo '<p>' . $string['gradepublish'] . '</p>';
+        } else {
+            echo "<div>\n";
+            echo "<form id=\"publishform\" name=\"publishform\" method=\"post\" autocomplete=\"off\">\n";
+            echo '<input id="publishmarksbutton" type="button" value="' . $string['publishmarks'] . "\" style=\"margin:10px; width:160px\" />\n";
+            echo '<input type="hidden" id="publishmarks" name="publishmarks" value="" />';
+            echo "</form>\n</div>\n";
+        }
+    }
+
+    $mysqli->close();
+    ?>
 <input type="hidden" id="datatime" value="<?php echo $configObject->get('cfg_tablesorter_date_time'); ?>" />
 </div>
 </body>

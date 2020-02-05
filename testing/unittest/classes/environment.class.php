@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -28,14 +29,16 @@ use Config;
  * @package testing
  * @category unittest
  */
-class environment {
+class environment
+{
 
     /**
      * Get the fully qualified path of the testing/unittest directory.
      *
      * @return string
      */
-    protected static function get_basedir() {
+    protected static function get_basedir()
+    {
         return self::get_rogo_basedir() . DIRECTORY_SEPARATOR . 'testing' . DIRECTORY_SEPARATOR . 'unittest';
     }
 
@@ -44,7 +47,8 @@ class environment {
      *
      * @return string
      */
-    public static function get_xml_location() {
+    public static function get_xml_location()
+    {
         return self::get_basedir() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'phpunit.xml';
     }
 
@@ -53,7 +57,8 @@ class environment {
      *
      * @return boolean
      */
-    public static function upgrade_needed() {
+    public static function upgrade_needed()
+    {
         $config = Config::get_instance();
         if (self::rogo_phpunit_version() != $config->getxml('version')) {
             return true;
@@ -66,7 +71,8 @@ class environment {
      *
      * @return string
      */
-    public static function get_version_location() {
+    public static function get_version_location()
+    {
         return self::get_basedir() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'version.php';
     }
 
@@ -75,7 +81,8 @@ class environment {
      *
      * @return void
      */
-    public static function save_version() {
+    public static function save_version()
+    {
         $codeversion = Config::get_instance()->getxml('version');
         $file = self::get_version_location();
         if (!file_put_contents($file, $codeversion)) {
@@ -88,7 +95,8 @@ class environment {
      *
      * @return string
      */
-    public static function rogo_phpunit_version() {
+    public static function rogo_phpunit_version()
+    {
         $file = self::get_version_location();
         if (file_exists($file)) {
             $version = file_get_contents($file);
@@ -103,7 +111,8 @@ class environment {
      *
      * @return string
      */
-    protected static function get_rogo_basedir() {
+    protected static function get_rogo_basedir()
+    {
         return dirname(dirname(dirname(__DIR__)));
     }
 }

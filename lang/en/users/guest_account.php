@@ -33,4 +33,3 @@ $string['enterfirstname'] = 'Please enter your first name.';
 $string['entersurname'] = 'Please enter your surname.';
 $string['error'] = 'Error';
 $string['mandatory'] = 'Mandatory data missing.';
-?>

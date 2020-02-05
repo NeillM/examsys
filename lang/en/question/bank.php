@@ -42,4 +42,3 @@ $string['noquestionskeyword'] = 'No questions found in bank by keyword.';
 $string['noquestionsperformance'] = 'No questions found in bank by performance.';
 $string['noquestionsobjective'] = 'No questions found link bank linked to learning objectives.';
 $string['search'] = 'Search';
-?>

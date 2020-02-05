@@ -35,34 +35,35 @@
  * @param string $pword       - The password set on the assessment (optional)
  * @param array $string       - Language translation strings.
  * @param object $db          - The MySQL connection.
- * 
+ *
  * @return int - 1 = lab requires low bandwidth, 0 = lab is high bandwidth
  */
-function check_labs($paper_type, $lab_needed, $address, $pword, $string, $db) {
-  $low_bandwidth = 0;
-  $lab_name = NULL;
-  $lab_id = NULL;
-  $notice = UserNotices::get_instance();
+function check_labs($paper_type, $lab_needed, $address, $pword, $string, $db)
+{
+    $low_bandwidth = 0;
+    $lab_name = null;
+    $lab_id = null;
+    $notice = UserNotices::get_instance();
 
-  if ($lab_needed != '') {
-    $stmt = $db->prepare("SELECT low_bandwidth FROM client_identifiers WHERE address = ? AND lab IN ($lab_needed)");
-    $stmt->bind_param('s', $address);
-    $stmt->execute();
-    $stmt->bind_result($low_bandwidth);
-    $stmt->store_result();
-    $stmt->fetch();
-    if ($stmt->num_rows == 0) {
-      $notice->access_denied($db, $string, $string['denied_location'], true, true);
+    if ($lab_needed != '') {
+        $stmt = $db->prepare("SELECT low_bandwidth FROM client_identifiers WHERE address = ? AND lab IN ($lab_needed)");
+        $stmt->bind_param('s', $address);
+        $stmt->execute();
+        $stmt->bind_result($low_bandwidth);
+        $stmt->store_result();
+        $stmt->fetch();
+        if ($stmt->num_rows == 0) {
+            $notice->access_denied($db, $string, $string['denied_location'], true, true);
+        }
+        $stmt->close();
+    } else {
+      // Exit if a summative exam is on no labs and no password. There has to be some for of security.
+        if ($paper_type == '2' and trim($pword) == '') {
+            $notice->access_denied($db, $string, $string['specificpassword'], true, true);
+        }
     }
-    $stmt->close();
-  } else {
-    // Exit if a summative exam is on no labs and no password. There has to be some for of security.
-    if ($paper_type == '2' and trim($pword) == '') {
-      $notice->access_denied($db, $string, $string['specificpassword'], true, true);
-    }
-  }
 
-  return $low_bandwidth;
+    return $low_bandwidth;
 }
 
 /**
@@ -76,26 +77,27 @@ function check_labs($paper_type, $lab_needed, $address, $pword, $string, $db) {
  *                            and finish.php should not ask, password should already be set.
  * @param object $db        - The MySQL connection.
  */
-function check_paper_password($paperID, $password, $string, $db, $show_form = false) {
-  if ($password != '') {
-    if (!isset($_SESSION['paperpwd']) or $password != $_SESSION['paperpwd']) {
-      if ($show_form) {
-        $paperproperties = new PaperProperties($db);
-        $decrypt_password = preg_replace("/^$paperID/", '', $paperproperties->decrypt_password($password));
-        if (isset($_POST['paperpwd']) and $_POST['paperpwd'] == $decrypt_password) {
-          $_SESSION['paperpwd'] = $password;
-        } else {
-          $notice = UserNotices::get_instance();
-          $notice->display_notice($string['passwordrequired'], $string['enterpw'], '/artwork/fingerprint_48.png', '#C00000', true, true);
-          echo render_password_form($string);
-          $notice->exit_php();
+function check_paper_password($paperID, $password, $string, $db, $show_form = false)
+{
+    if ($password != '') {
+        if (!isset($_SESSION['paperpwd']) or $password != $_SESSION['paperpwd']) {
+            if ($show_form) {
+                $paperproperties = new PaperProperties($db);
+                $decrypt_password = preg_replace("/^$paperID/", '', $paperproperties->decrypt_password($password));
+                if (isset($_POST['paperpwd']) and $_POST['paperpwd'] == $decrypt_password) {
+                    $_SESSION['paperpwd'] = $password;
+                } else {
+                    $notice = UserNotices::get_instance();
+                    $notice->display_notice($string['passwordrequired'], $string['enterpw'], '/artwork/fingerprint_48.png', '#C00000', true, true);
+                    echo render_password_form($string);
+                    $notice->exit_php();
+                }
+            } else {
+                $notice = UserNotices::get_instance();
+                $notice->access_denied($db, $string, $string['specificpassword'], true, true);
+            }
         }
-      } else {
-        $notice = UserNotices::get_instance();
-        $notice->access_denied($db, $string, $string['specificpassword'], true, true);
-      }
     }
-  }
 }
 
 /**
@@ -109,21 +111,22 @@ function check_paper_password($paperID, $password, $string, $db, $show_form = fa
  *                               We should not allow new starts after the end time.
  *                               Optional. Default: false.
  */
-function check_datetime($start_date, $end_date, $string, $db, $first_start = false) {
-  $notice = UserNotices::get_instance();
-  $end_comparison = time();
-  if (!$first_start) {
-    // If the exam has already been started allow access for 60 minutes after the end of the exam.
-    $end_comparison -= 3600;
-  }
+function check_datetime($start_date, $end_date, $string, $db, $first_start = false)
+{
+    $notice = UserNotices::get_instance();
+    $end_comparison = time();
+    if (!$first_start) {
+      // If the exam has already been started allow access for 60 minutes after the end of the exam.
+        $end_comparison -= 3600;
+    }
   // Allow 1 minute before the start time of the assessment.
-  if ((time()+60) < $start_date or $end_comparison > $end_date) {
-    $configObject = Config::get_instance();
-    $format = $configObject->get('cfg_short_datetime_php');
-    $msg = sprintf($string['error_time'], date($format, $start_date), date($format, $end_date));
-    $fullmsg = $msg . '<br /><br /><input type="button" name="close" value="' . $string['ok'] . '" onclick="close_window()" class="OK" />';
-    $notice->display_notice_and_exit($db, $string['accessdenied'], $fullmsg, $msg, '/artwork/summative_scheduling.png', '#C00000', true, true);
-  }
+    if ((time() + 60) < $start_date or $end_comparison > $end_date) {
+        $configObject = Config::get_instance();
+        $format = $configObject->get('cfg_short_datetime_php');
+        $msg = sprintf($string['error_time'], date($format, $start_date), date($format, $end_date));
+        $fullmsg = $msg . '<br /><br /><input type="button" name="close" value="' . $string['ok'] . '" onclick="close_window()" class="OK" />';
+        $notice->display_notice_and_exit($db, $string['accessdenied'], $fullmsg, $msg, '/artwork/summative_scheduling.png', '#C00000', true, true);
+    }
 }
 
 /**
@@ -133,45 +136,47 @@ function check_datetime($start_date, $end_date, $string, $db, $first_start = fal
  * @param array $string tranlsations
  * @param object $db database object
  */
-function check_finished($propertyObj, $userObj, $string, $db) {
-  $notice = UserNotices::get_instance();
+function check_finished($propertyObj, $userObj, $string, $db)
+{
+    $notice = UserNotices::get_instance();
   
-  if ($propertyObj->get_paper_type() != '2' and $propertyObj->get_paper_type() != '1') {
-    return true;
-  }
+    if ($propertyObj->get_paper_type() != '2' and $propertyObj->get_paper_type() != '1') {
+        return true;
+    }
   
-  $userID = $userObj->get_user_ID();
-  $paperID = $propertyObj->get_property_id();
+    $userID = $userObj->get_user_ID();
+    $paperID = $propertyObj->get_property_id();
   
-  $stmt = $db->prepare("SELECT UNIX_TIMESTAMP(completed) FROM log_metadata WHERE userID = ? AND paperID = ?");
-  $stmt->bind_param('ii', $userID, $paperID);
-  $stmt->execute();
-  $stmt->bind_result($completed);
-  $stmt->fetch();
-  $stmt->close();
+    $stmt = $db->prepare('SELECT UNIX_TIMESTAMP(completed) FROM log_metadata WHERE userID = ? AND paperID = ?');
+    $stmt->bind_param('ii', $userID, $paperID);
+    $stmt->execute();
+    $stmt->bind_result($completed);
+    $stmt->fetch();
+    $stmt->close();
   
-  if ($completed != '') {
-    $configObject = Config::get_instance();
-    $format = $configObject->get('cfg_short_datetime_php');
-    $msg = sprintf($string['alreadycompleted'], date($format, $completed));
-    $fullmsg = $msg . '<br /><br /><input type="button" name="close" value="' . $string['ok'] . '" onclick="close_window()" class="OK" />';
-    $notice->display_notice_and_exit($db, $string['accessdenied'], $fullmsg, $msg, '/artwork/square_exclamation_48.png', '#C00000', true, true);
-  }
+    if ($completed != '') {
+        $configObject = Config::get_instance();
+        $format = $configObject->get('cfg_short_datetime_php');
+        $msg = sprintf($string['alreadycompleted'], date($format, $completed));
+        $fullmsg = $msg . '<br /><br /><input type="button" name="close" value="' . $string['ok'] . '" onclick="close_window()" class="OK" />';
+        $notice->display_notice_and_exit($db, $string['accessdenied'], $fullmsg, $msg, '/artwork/square_exclamation_48.png', '#C00000', true, true);
+    }
 }
 
-function check_staff_modules($moduleID, $userObject) {
-  $on_module = false;
-  $modIDs = array_keys($moduleID);
+function check_staff_modules($moduleID, $userObject)
+{
+    $on_module = false;
+    $modIDs = array_keys($moduleID);
   
-  $staff_mods = $userObject->get_staff_accessable_modules();
+    $staff_mods = $userObject->get_staff_accessable_modules();
     
-  foreach ($modIDs as $modID) {
-    if (isset($staff_mods[$modID])) {
-      $on_module = true;
-      break;
+    foreach ($modIDs as $modID) {
+        if (isset($staff_mods[$modID])) {
+            $on_module = true;
+            break;
+        }
     }
-  }
-  return $on_module;
+    return $on_module;
 }
 
 /**
@@ -183,46 +188,49 @@ function check_staff_modules($moduleID, $userObject) {
  * @param object $db database object
  * @return integer
  */
-function check_modules($userObj, $moduleIDs, $calendar_year, $string, $db) {
-  $notice = UserNotices::get_instance();
-  $attempt = 1;
-  $usern = $userObj->get_username();
-  $contactemail = support::get_email();
-  if (stripos($usern, 'user') !== 0) {  // Do not check modules for guest accounts (e.g. user1...user100).
-     if (count($moduleIDs) > 0) {
-      $cal_year_sql = '';
-      if ($calendar_year != '') $cal_year_sql = "AND calendar_year = '$calendar_year'";
+function check_modules($userObj, $moduleIDs, $calendar_year, $string, $db)
+{
+    $notice = UserNotices::get_instance();
+    $attempt = 1;
+    $usern = $userObj->get_username();
+    $contactemail = support::get_email();
+    if (stripos($usern, 'user') !== 0) {  // Do not check modules for guest accounts (e.g. user1...user100).
+        if (count($moduleIDs) > 0) {
+            $cal_year_sql = '';
+            if ($calendar_year != '') {
+                $cal_year_sql = "AND calendar_year = '$calendar_year'";
+            }
 
-      $stmt = $db->prepare("SELECT moduleid, attempt FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID = ? AND idMod IN (" . implode(',', $moduleIDs) . ") $cal_year_sql");
-      $stmt->bind_param('i', $userObj->get_user_ID());
-      $stmt->execute();
-      $stmt->bind_result($moduleid, $attempt);
-      $stmt->store_result();
-      if ($stmt->num_rows == 0) {
-        $moduleslist = '';
-        foreach ($moduleIDs as $modID) {
-          $mod_details = module_utils::get_full_details_by_ID($modID, $db);
-          if ($moduleslist == '') {
-            $moduleslist = $mod_details['moduleid'];
-          } else {
-            $moduleslist .= ', ' . $mod_details['moduleid'];
-          }
+            $stmt = $db->prepare('SELECT moduleid, attempt FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID = ? AND idMod IN (' . implode(',', $moduleIDs) . ") $cal_year_sql");
+            $stmt->bind_param('i', $userObj->get_user_ID());
+            $stmt->execute();
+            $stmt->bind_result($moduleid, $attempt);
+            $stmt->store_result();
+            if ($stmt->num_rows == 0) {
+                $moduleslist = '';
+                foreach ($moduleIDs as $modID) {
+                    $mod_details = module_utils::get_full_details_by_ID($modID, $db);
+                    if ($moduleslist == '') {
+                         $moduleslist = $mod_details['moduleid'];
+                    } else {
+                        $moduleslist .= ', ' . $mod_details['moduleid'];
+                    }
+                }
+                 $reason = sprintf($string['notregistered'], $userObj->get_first_names(), $userObj->get_surname(), $userObj->get_username(), $moduleslist);
+                 $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+                 $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $reason, '../artwork/page_not_found.png', '#C00000', true, true);
+            } else {
+                  $stmt->fetch();
+            }
+            $stmt->close();
+        } else {
+            $reason = sprintf($string['nomodules'], $userObj->get_first_names(), $userObj->get_surname(), $userObj->get_username());
+            $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+            $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $reason, '../artwork/page_not_found.png', '#C00000', true, true);
         }
-        $reason = sprintf($string['notregistered'], $userObj->get_first_names(), $userObj->get_surname(), $userObj->get_username(), $moduleslist);
-        $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-        $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $reason, '../artwork/page_not_found.png', '#C00000', true, true);
-      } else {
-        $stmt->fetch();
-      }
-      $stmt->close();
-    } else {
-      $reason = sprintf($string['nomodules'], $userObj->get_first_names(), $userObj->get_surname(), $userObj->get_username());
-      $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-      $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $reason, '../artwork/page_not_found.png', '#C00000', true, true);
     }
-  }
 
-  return $attempt;
+    return $attempt;
 }
 
 /**
@@ -233,20 +241,21 @@ function check_modules($userObj, $moduleIDs, $calendar_year, $string, $db) {
  * @param array $string tranlsations
  * @param object $db database object
  */
-function check_metadata($property_id, $userObj, $moduleIDs, $string, $db) {
-  $contactemail = support::get_email();
-  if (!$userObj->is_temporary_account()) {			// Do not check metadata security if temporary account
-    $notice = UserNotices::get_instance();
-    $metadata = Paper_utils::get_metadata($property_id, $db);
+function check_metadata($property_id, $userObj, $moduleIDs, $string, $db)
+{
+    $contactemail = support::get_email();
+    if (!$userObj->is_temporary_account()) {          // Do not check metadata security if temporary account
+        $notice = UserNotices::get_instance();
+        $metadata = Paper_utils::get_metadata($property_id, $db);
 
-    foreach ($metadata as $security_type=>$security_value) {
-      if (!$userObj->has_metadata($moduleIDs, $security_type, $security_value)) {
-        $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-        $reason = sprintf($string['error_metadata'], $userObj->get_first_names(), $userObj->get_surname(), $userObj->get_username(), $security_type, $security_value);
-        $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $reason, '../artwork/page_not_found.png', '#C00000', true, true);
-      }
+        foreach ($metadata as $security_type => $security_value) {
+            if (!$userObj->has_metadata($moduleIDs, $security_type, $security_value)) {
+                $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+                $reason = sprintf($string['error_metadata'], $userObj->get_first_names(), $userObj->get_surname(), $userObj->get_username(), $security_type, $security_value);
+                $notice->display_notice_and_exit($db, $string['pagenotfound'], $msg, $reason, '../artwork/page_not_found.png', '#C00000', true, true);
+            }
+        }
     }
-  }
 }
 
 /**
@@ -257,32 +266,33 @@ function check_metadata($property_id, $userObj, $moduleIDs, $string, $db) {
  * @param object $userObj user object
  * @param object $db database object
  */
-function check_ipmismatch($paperid, $current_address, $string, $userObj, $db) {
-  $log_metadata = new LogMetadata($userObj->get_user_ID(), $paperid, $db);
-  $log_metadata->get_record('', false);
+function check_ipmismatch($paperid, $current_address, $string, $userObj, $db)
+{
+    $log_metadata = new LogMetadata($userObj->get_user_ID(), $paperid, $db);
+    $log_metadata->get_record('', false);
   // Warn user they are logged into mulitple devices in this exam and log them out.
-  if (!is_null($log_metadata->get_ipaddress()) and $current_address !== $log_metadata->get_ipaddress()) {
-    $msg = sprintf($string['ipmismatchblurb'], $userObj->get_first_names(), $userObj->get_surname(), $userObj->get_username(), $log_metadata->get_ipaddress());
-    $notice = UserNotices::get_instance();
-    $notice->display_notice_and_exit($db, $string['ipmismatchtitle'], $msg, $msg, '../artwork/page_not_found.png', '#C00000');
-  }
+    if (!is_null($log_metadata->get_ipaddress()) and $current_address !== $log_metadata->get_ipaddress()) {
+        $msg = sprintf($string['ipmismatchblurb'], $userObj->get_first_names(), $userObj->get_surname(), $userObj->get_username(), $log_metadata->get_ipaddress());
+        $notice = UserNotices::get_instance();
+        $notice->display_notice_and_exit($db, $string['ipmismatchtitle'], $msg, $msg, '../artwork/page_not_found.png', '#C00000');
+    }
 }
 
-function render_password_form($string) {
-  $url = $_SERVER['PHP_SELF'];
-  if ($_SERVER['QUERY_STRING'] != '') {
-    $url .= '?' . $_SERVER['QUERY_STRING'];
-  }
+function render_password_form($string)
+{
+    $url = $_SERVER['PHP_SELF'];
+    if ($_SERVER['QUERY_STRING'] != '') {
+        $url .= '?' . $_SERVER['QUERY_STRING'];
+    }
 
-  $html = "<form action=\"$url\" method=\"post\" autocomplete=\"off\">";
-  $html .= "<p style=\"margin-left:70px\">";
-  $html .= "      <input type=\"password\" name=\"paperpwd\" id=\"paperpwd\" /><br />";
-  $html .= "      <input type=\"submit\" value=\"{$string['ok']}\" class=\"ok\" style=\"width:100px\" />";
-  $html .= "    </p>";
-  $html .= "  </form>";
-  $html .= "</body>";
-  $html .= "</html>";
+    $html = "<form action=\"$url\" method=\"post\" autocomplete=\"off\">";
+    $html .= '<p style="margin-left:70px">';
+    $html .= '      <input type="password" name="paperpwd" id="paperpwd" /><br />';
+    $html .= "      <input type=\"submit\" value=\"{$string['ok']}\" class=\"ok\" style=\"width:100px\" />";
+    $html .= '    </p>';
+    $html .= '  </form>';
+    $html .= '</body>';
+    $html .= '</html>';
 
-  return $html;
+    return $html;
 }
-?>

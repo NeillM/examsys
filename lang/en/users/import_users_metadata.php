@@ -24,4 +24,3 @@ $string['import'] = 'Import';
 $string['uploadedcorrectly'] = 'uploaded correctly.';
 $string['notrecognised'] = 'usernames not recognised:';
 $string['loadingdata'] = 'Loading data...';
-?>

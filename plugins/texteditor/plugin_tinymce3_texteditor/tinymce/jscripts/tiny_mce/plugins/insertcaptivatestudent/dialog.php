@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogo
 //
 // Rogo is free software: you can redistribute it and/or modify
@@ -57,8 +58,8 @@ if (isset($_FILES['FileName']) and $_FILES['FileName'] != '') {
     //$imageInfo = getimagesize($_FILES['FileName']['tmp_name']);
     $worked = move_uploaded_file($_FILES['FileName']['tmp_name'], $path);
     if (!$worked) {
-      echo "Failed to copy file to: " . $path;
-      exit;
+        echo 'Failed to copy file to: ' . $path;
+        exit;
     }
     $html = '<div><table style="cursor:pointer" onclick="openTutorial(\'' . $helpdirectory->url($realname, false, false, true) . '\')" border="0" cellspacing="0" cellpadding="0"><tbody><tr><td rowspan="2" style="width:70px"><img border="0" alt="Demo Movie" src="../../../../../../../../artwork/large_play_icon.png" width="64" height="64" alt="play" /></td><td><div style="font-size:125%; color:blue">' . $_POST['title'] . '</div><div style="font-size:90%; color:#808080">Flash required</div></td></tr></tbody></table></div>';
 
@@ -69,15 +70,15 @@ if (isset($_FILES['FileName']) and $_FILES['FileName'] != '') {
 tinyMCEPopup.requireLangPack();
 
 var ExampleDialog = {
-	init : function() {
-	},
+    init : function() {
+    },
 
-	insert : function() {
-		// Insert the contents from the input into the document
+    insert : function() {
+        // Insert the contents from the input into the document
     var html = '<?php echo str_replace("'", "\'", $html); ?>';
-		tinyMCEPopup.editor.execCommand('mceInsertContent', false, html);
-		tinyMCEPopup.close();
-	}
+        tinyMCEPopup.editor.execCommand('mceInsertContent', false, html);
+        tinyMCEPopup.close();
+    }
 };
 
 tinyMCEPopup.onInit.add(ExampleDialog.init, ExampleDialog);
@@ -87,13 +88,14 @@ tinyMCEPopup.onInit.add(ExampleDialog.init, ExampleDialog);
     <?php
 } else {
   //defaut state
-  echo "<body class=\"dialog_body\">";
-  showForm('');
-  exit;
+    echo '<body class="dialog_body">';
+    showForm('');
+    exit;
 }
 
-function showForm($error) {
-?>
+function showForm($error)
+{
+    ?>
 <script>
     var winx = (screen.width / 2) - 250;
     var winy = (screen.height / 2) - 150;
@@ -115,7 +117,7 @@ function showForm($error) {
 </table>
 </form>
 
-<?php
+    <?php
 }
 ?>
 </body>

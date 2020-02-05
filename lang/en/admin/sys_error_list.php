@@ -24,4 +24,3 @@ $string['user'] = 'User';
 $string['userid'] = 'UserID';
 $string['showfixed'] = 'Show fixed errors';
 $string['displaydetails'] = 'Display Details';
-?>

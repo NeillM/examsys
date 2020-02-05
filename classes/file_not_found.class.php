@@ -21,15 +21,17 @@
  * @copyright Copyright (c) 2015 The University of Nottingham
  * @package core
  */
-class file_not_found extends Exception {
+class file_not_found extends Exception
+{
   /**
    * Constructor for the exception.
    *
    * @param string $file path for the file that was not found.
    */
-  public function __construct($file) {
-    $strings = LangUtils::loadlangfile('exceptions/messages.php', array());
-    $message = sprintf($strings['filenotfound'], array($file));
-    parent::__construct($message);
-  }
+    public function __construct($file)
+    {
+        $strings = LangUtils::loadlangfile('exceptions/messages.php', array());
+        $message = sprintf($strings['filenotfound'], array($file));
+        parent::__construct($message);
+    }
 }

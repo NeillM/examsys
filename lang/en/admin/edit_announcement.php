@@ -24,4 +24,3 @@ $string['Available from'] = 'Available from';
 $string['Available to'] = 'Available to';
 $string['Staff Message'] = 'Staff Message';
 $string['Student Message'] = 'Student Message';
-?>

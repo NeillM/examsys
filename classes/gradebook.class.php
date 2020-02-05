@@ -23,7 +23,8 @@
 /**
  * Gradebook helper class.
  */
-class gradebook {
+class gradebook
+{
     
     /**
      * The db connection
@@ -57,7 +58,8 @@ class gradebook {
     /**
      * Called when the object is unserialised.
      */
-    public function __wakeup() {
+    public function __wakeup()
+    {
         // The serialised database object will be invalid,
         // this object should only be serialised during an error report,
         // so adding the current database connect seems like a waste of time.
@@ -67,19 +69,21 @@ class gradebook {
     /**
      * Constructor
      * @param object $db
-     * @return void 
+     * @return void
      */
-    function __construct($db) {
+    function __construct($db)
+    {
         $this->db = $db;
     }
     
     /**
      * Check if the paper has been graded.
-     * @param integer $paperid 
+     * @param integer $paperid
      * @return bool true if already graded
      */
-    public function paper_graded($paperid) {
-        $result = $this->db->prepare("SELECT count(paperid) FROM gradebook_paper WHERE paperid = ?");
+    public function paper_graded($paperid)
+    {
+        $result = $this->db->prepare('SELECT count(paperid) FROM gradebook_paper WHERE paperid = ?');
         $result->bind_param('i', $paperid);
         $result->execute();
         $result->bind_result($count);
@@ -94,18 +98,19 @@ class gradebook {
     
     /**
      * Store grade in gradebook.
-     * @param integer $userid 
-     * @param integer $paperid 
+     * @param integer $userid
+     * @param integer $paperid
      * @param integer $grade - raw grade
      * @param double $adjusted - adjusted grade
-     * @param integer $classification 
+     * @param integer $classification
      * @return bool true if grade added to gradebook
      */
-    public function store_grade($userid, $paperid, $grade, $adjusted, $classification) {
+    public function store_grade($userid, $paperid, $grade, $adjusted, $classification)
+    {
         
         $student = \UserUtils::has_user_role($userid, 'Student', $this->db);
         if ($student) {
-            $sqluser = $this->db->prepare("INSERT INTO gradebook_user (paperid, userid, raw_grade, adjusted_grade, classification) VALUES (?, ?, ?, ?, ?)");
+            $sqluser = $this->db->prepare('INSERT INTO gradebook_user (paperid, userid, raw_grade, adjusted_grade, classification) VALUES (?, ?, ?, ?, ?)');
             $sqluser->bind_param('iiids', $paperid, $userid, $grade, $adjusted, $classification);
             $sqluser->execute();
             $sqluser->close();
@@ -116,17 +121,17 @@ class gradebook {
         } else {
             return false;
         }
-       
     }
     
     /**
      * Create a gradebook for the paper
-     * @param integer $paperid 
-     * @return bool true if created 
+     * @param integer $paperid
+     * @return bool true if created
      */
-    public function create_gradebook($paperid) {
+    public function create_gradebook($paperid)
+    {
         if (!$this->paper_graded($paperid)) {
-            $sqlpaper = $this->db->prepare("INSERT INTO gradebook_paper (paperid) VALUES (?)");
+            $sqlpaper = $this->db->prepare('INSERT INTO gradebook_paper (paperid) VALUES (?)');
             $sqlpaper->bind_param('i', $paperid);
             $sqlpaper->execute();
             $sqlpaper->close();
@@ -144,9 +149,10 @@ class gradebook {
      * @param string $paperidtype type of id to serach on
      * @param int $paperid id to search with
      * @param string $externalsys external system source
-     * @return array|bool gradebook for paper or false  
+     * @return array|bool gradebook for paper or false
      */
-    public function get_paper_gradebook($paperidtype, $paperid, $externalsys = null) {
+    public function get_paper_gradebook($paperidtype, $paperid, $externalsys = null)
+    {
         if ($paperidtype == self::EXTPAPER) {
             $pid = \Paper_utils::get_id_from_externalid($paperid, $externalsys, $this->db);
         } else {
@@ -154,8 +160,8 @@ class gradebook {
         }
         
         if ($this->paper_graded($pid)) {
-            $sql = $this->db->prepare("SELECT gu.userid, s.student_id, u.username, gu.raw_grade, ROUND(gu.adjusted_grade, 2), gu.classification FROM
-                gradebook_paper p, gradebook_user gu, users u, sid s WHERE p.paperid = gu.paperid AND u.id = gu.userid AND u.id = s.userID AND p.paperid = ?");
+            $sql = $this->db->prepare('SELECT gu.userid, s.student_id, u.username, gu.raw_grade, ROUND(gu.adjusted_grade, 2), gu.classification FROM
+                gradebook_paper p, gradebook_user gu, users u, sid s WHERE p.paperid = gu.paperid AND u.id = gu.userid AND u.id = s.userID AND p.paperid = ?');
             $sql->bind_param('i', $pid);
             $sql->execute();
             $sql->bind_result($userid, $studentid, $username, $raw_grade, $adjusted_grade, $classification);
@@ -180,12 +186,13 @@ class gradebook {
     /**
      * Get a gradebook for a paper with more user data than the default gradebook
      * @param int $paperid id to search with
-     * @return array|bool detailed gradebook for paper or false  
+     * @return array|bool detailed gradebook for paper or false
      */
-    public function get_user_detailed_paper_gradebook($paperid) {
+    public function get_user_detailed_paper_gradebook($paperid)
+    {
         if ($this->paper_graded($paperid)) {
-            $sql = $this->db->prepare("SELECT gu.userid, s.student_id, u.username, u.surname, u.first_names, gu.raw_grade, ROUND(gu.adjusted_grade, 2), gu.classification FROM
-                gradebook_paper p, gradebook_user gu, users u, sid s WHERE p.paperid = gu.paperid AND u.id = gu.userid AND u.id = s.userID AND p.paperid = ?");
+            $sql = $this->db->prepare('SELECT gu.userid, s.student_id, u.username, u.surname, u.first_names, gu.raw_grade, ROUND(gu.adjusted_grade, 2), gu.classification FROM
+                gradebook_paper p, gradebook_user gu, users u, sid s WHERE p.paperid = gu.paperid AND u.id = gu.userid AND u.id = s.userID AND p.paperid = ?');
             $sql->bind_param('i', $paperid);
             $sql->execute();
             $sql->bind_result($userid, $studentid, $username, $surname, $first_names, $raw_grade, $adjusted_grade, $classification);
@@ -209,14 +216,15 @@ class gradebook {
      * @param string $externalsys external system source
      * @return array|bool gradebook for module or false
      */
-    public function get_module_gradebook($moduleidtype, $moduleid, $externalsys = null) {
+    public function get_module_gradebook($moduleidtype, $moduleid, $externalsys = null)
+    {
         if ($moduleidtype == self::EXTMODULE) {
             $modid = \module_utils::get_id_from_externalid($moduleid, $externalsys, $this->db);
         } else {
             $modid = $moduleid;
         }
         
-        $sql = $this->db->prepare("SELECT
+        $sql = $this->db->prepare('SELECT
             p.paperid, pr.externalid, gu.userid, s.student_id, u.username, gu.raw_grade, ROUND(gu.adjusted_grade, 2), gu.classification
             FROM
                 gradebook_paper p, 
@@ -231,7 +239,7 @@ class gradebook {
                 p.paperid = gu.paperid AND 
                 u.id = gu.userid AND
                 u.id = s.userID  AND
-                m.idMod = ?");
+                m.idMod = ?');
         $sql->bind_param('i', $modid);
         $sql->execute();
         $sql->bind_result($paperid, $extpaperid, $userid, $studentid, $username, $raw_grade, $adjusted_grade, $classification);
@@ -242,7 +250,7 @@ class gradebook {
             if ($moduleidtype == self::EXTMODULE) {
                 $papers[$extpaperid][$studentid] = $users;
             } else {
-                $papers[$paperid][$userid] = $users;    
+                $papers[$paperid][$userid] = $users;
             }
         }
         $sql->close();

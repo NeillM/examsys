@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -40,7 +41,7 @@ require '../../include/staff_auth.inc';
     a:hover {color:black}
     .divider {font-size:90%; padding-left:16px; padding-bottom:2px; font-weight:bold}
     .f {float:left; width:375px; padding-left:12px; font-size:90%}
-		img {padding:5px}
+        img {padding:5px}
   </style>
 </head>
 
@@ -63,9 +64,9 @@ require '../../include/staff_auth.inc';
 <br />
 <?php
 
-  foreach ($teams as $teamID=>$team_name) {
+foreach ($teams as $teamID => $team_name) {
     echo '<div class="f"><a href="add_questions_paper_list.php?teamID=' . $teamID . '"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="Folder" align="middle" /></a><a href="add_questions_paper_list.php?teamID=' . $teamID . '">' . $team_name .  '</a></div>';
-  }
+}
 ?>
 
 </body>

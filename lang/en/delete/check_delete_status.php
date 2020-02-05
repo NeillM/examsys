@@ -18,4 +18,3 @@ require '../lang/' . $language . '/delete/delete.php';
 
 $string['msg'] = 'Are you sure you wish to delete this status?';
 $string['questionassigned'] = 'You cannot delete a question status to which questions are assigned';
-?>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -27,19 +28,19 @@ require '../include/sysadmin_auth.inc';
 $default = param::optional('default', null, param::TEXT, param::FETCH_GET);
 
 if (!is_null($default)) {
-  $parts = explode('_', substr($default, 1));
-  $day = $parts[0];
-  if ($day < 10) {
-    $day = '0' . $day;
-  }
-  $month = $parts[1];
-  if ($month < 10) {
-    $month = '0' . $month;
-  }
-  $year = $parts[2];
-  $default_date = date($year . $month . $day . "H00");
+    $parts = explode('_', substr($default, 1));
+    $day = $parts[0];
+    if ($day < 10) {
+        $day = '0' . $day;
+    }
+    $month = $parts[1];
+    if ($month < 10) {
+        $month = '0' . $month;
+    }
+    $year = $parts[2];
+    $default_date = date($year . $month . $day . 'H00');
 } else {
-  $default_date = date('YmdH00');
+    $default_date = date('YmdH00');
 }
 ?>
 <!DOCTYPE html>
@@ -78,7 +79,7 @@ $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::ANNOUNCEME
     </tr>
     <tr>
       <td><?php echo $string['date'] ?></td>
-      <td><?php echo date_utils::timedate_select('f', $default_date, false, date('Y'), date('Y')+2, $string) ?></td>
+      <td><?php echo date_utils::timedate_select('f', $default_date, false, date('Y'), date('Y') + 2, $string) ?></td>
     </tr>
     <tr>
       <td><?php echo $string['duration'] ?></td>

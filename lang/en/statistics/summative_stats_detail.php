@@ -22,4 +22,3 @@ $string['date'] = 'Date';
 $string['papers'] = 'Papers';
 $string['uniquestudents'] = 'Unique students = %s';
 $string['students'] = 'Students';
-?>

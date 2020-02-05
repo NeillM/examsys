@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -30,39 +31,39 @@ require '../include/errors.php';
 $std_setID = check_var('std_setID', 'POST', true, false, true);
 
 $row_no = 0;
-$result = $mysqli->prepare("SELECT id FROM std_set WHERE id = ?");
+$result = $mysqli->prepare('SELECT id FROM std_set WHERE id = ?');
 $result->bind_param('i', $std_setID);
-$result->execute();  
+$result->execute();
 $result->store_result();
 $row_no = $result->num_rows;
 $result->close();
 
 if ($row_no == 0) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 // Delete main std_set record.
-$result = $mysqli->prepare("DELETE FROM std_set WHERE id = ?");
+$result = $mysqli->prepare('DELETE FROM std_set WHERE id = ?');
 $result->bind_param('i', $std_setID);
-$result->execute();  
+$result->execute();
 $result->close();
 
 // Delete from sthe std_set_questions table.
-$result = $mysqli->prepare("DELETE FROM std_set_questions WHERE std_setID = ?");
+$result = $mysqli->prepare('DELETE FROM std_set_questions WHERE std_setID = ?');
 $result->bind_param('i', $std_setID);
-$result->execute();  
+$result->execute();
 $result->close();
 
 // Delete from ebel table.
-$result = $mysqli->prepare("DELETE FROM ebel WHERE std_setID = ?");
+$result = $mysqli->prepare('DELETE FROM ebel WHERE std_setID = ?');
 $result->bind_param('i', $std_setID);
 $result->execute();
 $result->close();
 
 // Delete from hofstee table.
-$result = $mysqli->prepare("DELETE FROM hofstee WHERE std_setID = ?");
+$result = $mysqli->prepare('DELETE FROM hofstee WHERE std_setID = ?');
 $result->bind_param('i', $std_setID);
 $result->execute();
 $result->close();

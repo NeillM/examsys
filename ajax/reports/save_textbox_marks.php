@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogo
 //
 // Rogo is free software: you can redistribute it and/or modify
@@ -41,26 +42,26 @@ $user_id = check_var('user_id', 'POST', true, false, true);
 $reminders = isset($_POST['reminders']) ? $_POST['reminders'] : '';
 
 if ($mark != 'NULL') {
-  $sql = <<< QUERY
+    $sql = <<< QUERY
 INSERT INTO textbox_marking (paperID, q_id, answer_id, markerID, mark, comments, date, phase, logtype, student_userID, reminders)
 VALUES (?, ?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?) ON DUPLICATE KEY UPDATE
 markerID = ?, mark = ?, comments = ?, reminders = ?, date = NOW()
 QUERY;
 
-  try {
-    $result = $mysqli->prepare($sql);
-    $x = $mysqli->error;
-    if ($result) {
-      $result->bind_param('iiiidsiiisidss', $paperID, $q_id, $log_id, $marker_id, $mark, $comments, $phase, $log, $user_id, $reminders, $marker_id, $mark, $comments, $reminders);
-      $result2 = $result->execute();
-      if ($result2 !== false) {
-        $status = 'OK';
-      }
-      $result->close();
+    try {
+        $result = $mysqli->prepare($sql);
+        $x = $mysqli->error;
+        if ($result) {
+            $result->bind_param('iiiidsiiisidss', $paperID, $q_id, $log_id, $marker_id, $mark, $comments, $phase, $log, $user_id, $reminders, $marker_id, $mark, $comments, $reminders);
+            $result2 = $result->execute();
+            if ($result2 !== false) {
+                $status = 'OK';
+            }
+            $result->close();
+        }
+    } catch (exception $ex) {
+      // No need to do anything
     }
-  } catch (exception $ex) {
-    // No need to do anything
-  }
 } else {
     $status = 'OK';
 }

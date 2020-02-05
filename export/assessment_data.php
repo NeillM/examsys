@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -41,7 +42,7 @@ $demo = \demo::is_demo($userObject);
 
 $mode = param::optional('mode', 'numeric', param::ALPHA, param::FETCH_GET);
 if ($mode != 'text') {
-  $mode = 'numeric';
+    $mode = 'numeric';
 }
 
 // The repmodule parameter can be an comma separated list of integers.
@@ -68,22 +69,21 @@ $exclusions->load();
 $paper_buffer = $propertyObj->get_paper_questions();
 $paper_title = $propertyObj->get_paper_title();
 
-$file = \file_handler::make_filename_safe($paper_title) . "_ER.csv";
+$file = \file_handler::make_filename_safe($paper_title) . '_ER.csv';
 $handler = new \csv\csv_handler($file);
 $export = new \export\export_assessment($handler);
 $csvdata = array();
 
 if ($student_no > 0) {
-  $log_array = $propertyObj->get_paper_assessment_data($repcourse, $startdate, $enddate, $student_list, $studentonly, $demo);
+    $log_array = $propertyObj->get_paper_assessment_data($repcourse, $startdate, $enddate, $student_list, $studentonly, $demo);
   // Header.
-  $export->create_dynamic_header($paper_buffer, $exclusions);
+    $export->create_dynamic_header($paper_buffer, $exclusions);
   // Correct answers line.
-  $csvdata = $export->create_correct_answer($paper_buffer, $exclusions, $mode, $string, $language);
+    $csvdata = $export->create_correct_answer($paper_buffer, $exclusions, $mode, $string, $language);
   // Data lines.
-  $csvdata = array_merge($csvdata, $export->create_data($log_array, $paper_buffer, $exclusions, $mode, $string, $language));
+    $csvdata = array_merge($csvdata, $export->create_data($log_array, $paper_buffer, $exclusions, $mode, $string, $language));
 } else {
-  $export->dynamic_headers = array();
-  $csvdata[] = str_getcsv($string['nodata'] . ',,,,,,,');
-
+    $export->dynamic_headers = array();
+    $csvdata[] = str_getcsv($string['nodata'] . ',,,,,,,');
 }
 $export->execute($csvdata);

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ namespace testing\behat\helpers\database;
  * @package testing
  * @subpackage behat
  */
-abstract class Data_Loader {
+abstract class Data_Loader
+{
     /** @var PHPUnit_Extensions_Database_DB_DefaultDatabaseConnection Database connector used by the PUP Unit database extension. */
     protected $phpunit_db;
 
@@ -37,7 +39,8 @@ abstract class Data_Loader {
     /** @var boolean Defines if the Rogo help files should be loaded. */
     protected $load_help;
 
-    public function __construct($load_help = false) {
+    public function __construct($load_help = false)
+    {
         $this->fixture_base = __DIR__ . '/../../../../fixtures/base/';
         $this->help_base = __DIR__ . '/../../../../../install/';
         $this->load_help = $load_help;
@@ -48,7 +51,8 @@ abstract class Data_Loader {
      *
      * Required by testcasetrait
      */
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         if ($this->load_help) {
             $this->load_help();
         }
@@ -57,7 +61,8 @@ abstract class Data_Loader {
     /**
      * So some base tear down of the database
      */
-    protected function tearDown(): void {
+    protected function tearDown(): void
+    {
         // Intentionally empty.
     }
 
@@ -66,7 +71,8 @@ abstract class Data_Loader {
      *
      * @throws \Exception
      */
-    protected function load_help() {
+    protected function load_help()
+    {
         $db = state::get_db();
         $db->autocommit(false);
         // An array of the names of the files we expect to be present, that contain the records to insert help.

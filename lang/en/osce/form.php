@@ -29,4 +29,3 @@ $string['marking6'] = array('Clear FAIL', 'BORDERLINE', 'Clear PASS', 'Honours P
 $string['marking7'] = array('Fail', 'Pass');
 $string['savefailed'] = 'Save Failed!';
 $string['tryagain'] = 'Please try again.';
-?>

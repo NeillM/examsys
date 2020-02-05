@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -28,33 +29,33 @@
 <br />
 
 <div id="menu1a">
-	<div class="menuitem addfaculty"><a href="#"><img class="sidebar_icon" src="../artwork/faculty_16.png" alt="" /><?php echo $string['createfaculty'] ?></a></div>
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['editfaculty'] ?></div>
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="" /><?php echo $string['deletefaculty'] ?></div>
+    <div class="menuitem addfaculty"><a href="#"><img class="sidebar_icon" src="../artwork/faculty_16.png" alt="" /><?php echo $string['createfaculty'] ?></a></div>
+    <div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['editfaculty'] ?></div>
+    <div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="" /><?php echo $string['deletefaculty'] ?></div>
 </div>
 
 <div style="display:none" id="menu1b">
-	<div class="menuitem addfaculty"><a href="#"><img class="sidebar_icon" src="../artwork/faculty_16.png" alt="" /><?php echo $string['createfaculty'] ?></a></div>
-	<div class="menuitem editfaculty"><a href="#"><img class="sidebar_icon" onclick="editFaculty()" src="../artwork/edit.png" alt="" /><?php echo $string['editfaculty'] ?></a></div>
-	<div class="menuitem deletefaculty"><a href="#"><img class="sidebar_icon" onclick="deleteCourse()" src="../artwork/red_cross.png" alt="" /><?php echo $string['deletefaculty'] ?></a></div>
+    <div class="menuitem addfaculty"><a href="#"><img class="sidebar_icon" src="../artwork/faculty_16.png" alt="" /><?php echo $string['createfaculty'] ?></a></div>
+    <div class="menuitem editfaculty"><a href="#"><img class="sidebar_icon" onclick="editFaculty()" src="../artwork/edit.png" alt="" /><?php echo $string['editfaculty'] ?></a></div>
+    <div class="menuitem deletefaculty"><a href="#"><img class="sidebar_icon" onclick="deleteCourse()" src="../artwork/red_cross.png" alt="" /><?php echo $string['deletefaculty'] ?></a></div>
 </div>
 
 
 <?php
 if ($userObject->has_role(array('SysAdmin'))) {
     $smsplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
-    foreach($smsplugin_name as $name) {
+    foreach ($smsplugin_name as $name) {
         $smspluginns = 'plugins\SMS\\' . $name . '\\' . $name;
         $smsplugin = new $smspluginns($userObject->get_user_ID());
         $facultyimport = $smsplugin->supports_faculty_import();
         if ($facultyimport !== false) {
-?>
+            ?>
 <div id="menu1b">
     <div id="sms" class="menuitem">
         <a class="help_tip" title="<?php echo $facultyimport['tooltip'] ?>" href="<?php echo $facultyimport['url'] ?>"><img class="sidebar_icon" src="../artwork/sync_16.png" alt="" /><?php echo $facultyimport['blurb'] ?></a>
     </div>
 </div>
-<?php
+            <?php
         }
     }
 }

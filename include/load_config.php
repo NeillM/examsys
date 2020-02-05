@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,16 +25,11 @@
  * @package
  */
 
-$root                  = str_replace( '/include', '/', str_replace('\\', '/', dirname(__FILE__) ) );
-
+$root                  = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
 require_once 'defines.inc.php';
 require_once __DIR__ . '/autoload.inc.php';
 autoloader::init();
-
 $configObject          = Config::get_instance();
-
 $cfg_web_root          = $configObject->get('cfg_web_root');
-
 $cfg_root_path = $configObject->get('cfg_root_path');
-
 $notice = UserNotices::get_instance();

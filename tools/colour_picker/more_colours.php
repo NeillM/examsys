@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Displays advanced colour picking options. Called from 'colour_picker.inc'.
 *
 * @author Simon Wilkinson
@@ -26,21 +27,28 @@
 
 require '../../include/staff_auth.inc';
 
-function rgb_hex($input) {
-  $input = str_replace('rgb(','',$input);
-  $input = str_replace(')','',$input);
-  $parts = explode(',',$input);
+function rgb_hex($input)
+{
+    $input = str_replace('rgb(', '', $input);
+    $input = str_replace(')', '', $input);
+    $parts = explode(',', $input);
   
-  $r = dechex($parts[0]);
-  if ($r == '0') $r = '00';
+    $r = dechex($parts[0]);
+    if ($r == '0') {
+        $r = '00';
+    }
   
-  $g = dechex($parts[1]);
-  if ($g == '0') $g = '00';
+    $g = dechex($parts[1]);
+    if ($g == '0') {
+        $g = '00';
+    }
   
-  $b = dechex($parts[2]);
-  if ($b == '0') $b = '00';
+    $b = dechex($parts[2]);
+    if ($b == '0') {
+        $b = '00';
+    }
   
-  return $r . $g . $b;
+    return $r . $g . $b;
 }
 ?>
 <!DOCTYPE html>
@@ -107,13 +115,13 @@ function rgb_hex($input) {
   $colours[18] = array('EFEFEF','DCDCDC','C1C1C1','9D9D9D','828282','DBCAB9','CCB8A5','BDA792','A3917F','9A8979','FBCEBC','F1BBA5','E1AA93','CE9F8B','B18B7B','FCD7B3','F3CAA2','E7B98C','C8A078','B29171');
   $colours[19] = array('FFFFFF','F7F7F7','EDEDED','DDDDDD','C9C9C9','F4EFEB','EFE8E1','E6DED6','DBD3CC','D0C9C2','FEF5F2','FAE8E1','F0DBD3','E1CBC2','D6BEB5','FEF7F0','FAECDE','F1E2D3','E3D3C3','DACABA');
 
-  for ($row=0; $row<20; $row++) {
+for ($row = 0; $row < 20; $row++) {
     echo "<tr style=\"height:14px\">\n";
     foreach ($colours[$row] as $colour) {
-      echo "<td class='colour' style=\"background-color:#$colour; width:14px\" data-colour='$colour'></td>";
+        echo "<td class='colour' style=\"background-color:#$colour; width:14px\" data-colour='$colour'></td>";
     }
     echo "</tr>\n";
-  }
+}
 ?>
 </table>
 

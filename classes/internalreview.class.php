@@ -23,24 +23,26 @@
 /**
  * Internal review helper class.
  */
- class internalreview {
+class internalreview
+{
      
     /*
-     * Db connection
-     * @var $db
-     */
+    * Db connection
+    * @var $db
+    */
     private $db;
     
     /*
-     * Config object
-     * @var $config
-     */
+    * Config object
+    * @var $config
+    */
     private $config;
 
     /**
      * Called when the object is unserialised.
      */
-    public function __wakeup() {
+    public function __wakeup()
+    {
         // The serialised database object will be invalid,
         // this object should only be serialised during an error report,
         // so adding the current database connect seems like a waste of time.
@@ -51,7 +53,8 @@
      * Constuctor
      * @param mysqli $db
      */
-    function __construct($db) {
+    function __construct($db)
+    {
         $this->db = $db;
         $this->config = Config::get_instance();
     }
@@ -61,7 +64,8 @@
      * @param int $userID  - Question ID of the random question to be loaded.
      * @return array Paper details the current user should review.
      */
-    public function get_review_papers($userID) {
+    public function get_review_papers($userID)
+    {
         $papers = array();
         $result = $this->db->prepare("SELECT
             paper_title,
@@ -83,14 +87,14 @@
         $result->bind_result($paper_title, $property_id, $fullscreen, $internal_review_deadline, $crypt_name, $paper_type);
         $result->store_result();
         while ($result->fetch()) {
-            $papers[$property_id] = array('paper_title'=>$paper_title, 'crypt_name'=>$crypt_name, 'fullscreen'=>$fullscreen, 'reviewed'=>'', 'internal_review_deadline'=>$internal_review_deadline, 'type' => $paper_type);
+            $papers[$property_id] = array('paper_title' => $paper_title, 'crypt_name' => $crypt_name, 'fullscreen' => $fullscreen, 'reviewed' => '', 'internal_review_deadline' => $internal_review_deadline, 'type' => $paper_type);
         }
         $result->close();
-        $result2 = $this->db->prepare("SELECT paperID,
+        $result2 = $this->db->prepare('SELECT paperID,
             DATE_FORMAT(MAX(started), ?) AS started
             FROM review_metadata
             WHERE reviewerID = ?
-            GROUP BY paperID ORDER BY paperID");
+            GROUP BY paperID ORDER BY paperID');
         $longdatetime = $this->config->get('cfg_long_date_time');
         $result2->bind_param('si', $longdatetime, $userID);
         $result2->execute();
@@ -104,4 +108,4 @@
         $result2->close();
         return $papers;
     }
- }
+}

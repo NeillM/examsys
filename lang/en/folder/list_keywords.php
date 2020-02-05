@@ -22,4 +22,3 @@ $string['editkeyword'] = 'Edit Keyword';
 $string['deletekeyword'] = 'Delete Keyword';
 $string['exportkeywords'] = 'Export Keywords';
 $string['importkeywords'] = 'Import Keywords';
-?>

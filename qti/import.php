@@ -29,10 +29,10 @@ $status_tmp = QuestionStatus::get_all_statuses($mysqli, $string, true);
 $statuses = array();
 $default_status = -1;
 foreach ($status_tmp as $sid => $status) {
-  $statuses[$sid] = $status->get_name();
-  if ($status->get_is_default()) {
-    $default_status = $sid;
-  }
+    $statuses[$sid] = $status->get_name();
+    if ($status->get_is_default()) {
+        $default_status = $sid;
+    }
 }
 
 $stmt = $mysqli->prepare("SELECT paper_title, moduleID, DATE_FORMAT(start_date,'%Y%m%d%H%i%S') AS start_date,
@@ -45,17 +45,16 @@ $stmt->bind_param('i', $paperID);
 $stmt->execute();
 $stmt->bind_result($paper_title, $paper_moduleID, $start_date, $end_date, $paper_type);
 while ($stmt->fetch()) {
-
-  if (date("YmdHis", time()) >= $start_date and date("YmdHis", time()) <= $end_date) {
-    $active_date = 1;
-  } else {
-    $active_date = 0;
-  }
-  if (date("YmdHis", time()) >= $start_date and $start_date != '' and $paper_type == '2') {
-    $summative_lock = 1;
-  } else {
-    $summative_lock = 0;
-  }
+    if (date('YmdHis', time()) >= $start_date and date('YmdHis', time()) <= $end_date) {
+        $active_date = 1;
+    } else {
+        $active_date = 0;
+    }
+    if (date('YmdHis', time()) >= $start_date and $start_date != '' and $paper_type == '2') {
+        $summative_lock = 1;
+    } else {
+        $summative_lock = 0;
+    }
 }
 $stmt->close();
 $moduleID = $paper_moduleID;
@@ -67,30 +66,32 @@ $paper_type = $properties->get_paper_type();
 $start_date = $properties->get_start_date();
 
 if ($paper_type == '2' and time() > $start_date and $start_date != '') {
-  $summative_lock = 1;
-  include "tmpl/import_locked.php";
-  exit;
+    $summative_lock = 1;
+    include 'tmpl/import_locked.php';
+    exit;
 } else {
-  $summative_lock = 0;
+    $summative_lock = 0;
 }
 
 if (!array_key_exists('file', $_FILES)) {
-  include "tmpl/import_file.php";
-  exit;
+    include 'tmpl/import_file.php';
+    exit;
 }
 
 if (isset($_GET['debug'])) {
-  $show_debug = true;
+    $show_debug = true;
 } else {
-  $show_debug = false;
+    $show_debug = false;
 }
 
 // Create dir for QTI to save into
 $qtiimportdirectory = rogo_directory::get_directory('qti_import');
 $base_dir = $qtiimportdirectory->location();
-$dir = GetAuthorName($userObject->get_user_ID())."/".date("Y-m-d")."/".date("H.i.s"); //todo replace with userobject function
+$dir = GetAuthorName($userObject->get_user_ID()) . '/' . date('Y-m-d') . '/' . date('H.i.s'); //todo replace with userobject function
 
-if (!file_exists($base_dir.$dir)) mkdir($base_dir.$dir, 0755, true);
+if (!file_exists($base_dir . $dir)) {
+    mkdir($base_dir . $dir, 0755, true);
+}
 $save_params = new stdClass();
 $save_params->dir = $dir;
 $save_params->base_dir = $base_dir;
@@ -101,20 +102,20 @@ $load_params->dir = $dir;
 $load_params->base_dir = $base_dir;
 
 // upload file
-$ext = pathinfo($_FILES["file"]["name"], PATHINFO_EXTENSION);
-$file = $base_dir.$dir."/import.".$ext;
-move_uploaded_file($_FILES["file"]["tmp_name"], $file);
+$ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+$file = $base_dir . $dir . '/import.' . $ext;
+move_uploaded_file($_FILES['file']['tmp_name'], $file);
 
 // set up QTI load classes
 $import = new IE_QTI_Load();
 $load_params->sourcefile = $file;
-$load_params->original_filename = $_FILES["file"]["name"];
+$load_params->original_filename = $_FILES['file']['name'];
 
 // setup Rogo save classes
 $export = new IE_Local_Save();
 $save_params->paper = $paperID;
 $save_params->sourcefile = $file;
-$save_params->original_filename = $_FILES["file"]["name"];
+$save_params->original_filename = $_FILES['file']['name'];
 $export->setStatuses(array_flip($statuses));
 $export->setDefaultStatus($default_status);
 
@@ -152,13 +153,13 @@ $ob->Restore();
 /////////////////////////
 
 // display result page
-include "tmpl/import_main.php";
+include 'tmpl/import_main.php';
 $mainoutput = $ob->GetContent();
 
 // store page that was presented to the user
 $ob->Clear();
-include "tmpl/import_details.php";
-$result_debug_file = $base_dir.$dir."/result.html";
+include 'tmpl/import_details.php';
+$result_debug_file = $base_dir . $dir . '/result.html';
 $output = $ob->GetContent();
 //$ob->Restore();
 file_put_contents($result_debug_file, $output);
@@ -168,40 +169,40 @@ file_put_contents($result_debug_file, $output);
 ///////////////////////
 
 // store intermediate format debug information
-$load_debug_file = $base_dir.$dir."/debug_int.html";
+$load_debug_file = $base_dir . $dir . '/debug_int.html';
 $ob->Clear();
-include "tmpl/debug_head.php";
+include 'tmpl/debug_head.php';
 print_p($data);
 $data_p = $ob->GetContent();
 //$ob->Restore();
 file_put_contents($load_debug_file, $data_p);
 
 // save load debug info
-$load_debug_file = $base_dir.$dir."/debug_load.html";
+$load_debug_file = $base_dir . $dir . '/debug_load.html';
 $ob->Clear();
-include "tmpl/debug_head.php";
+include 'tmpl/debug_head.php';
 echo $result['load']['debug'];
 $data_p = $ob->GetContent();
 //$ob->Restore();
 file_put_contents($load_debug_file, $data_p);
 
 // save save debug info
-$save_debug_file = $base_dir.$dir."/debug_save.html";
+$save_debug_file = $base_dir . $dir . '/debug_save.html';
 $ob->Clear();
-include "tmpl/debug_head.php";
+include 'tmpl/debug_head.php';
 echo $result['save']['debug'];
 $data_p = $ob->GetContent();
 //$ob->Restore();
 file_put_contents($save_debug_file, $data_p);
 
 // save other debug info
-$result_debug_file = $base_dir.$dir."/debug_res.html";
+$result_debug_file = $base_dir . $dir . '/debug_res.html';
 $ob->Clear();
 unset($result['save']['debug']);
 unset($result['load']['debug']);
 unset($result['save']['data']);
 unset($result['load']['data']);
-include "tmpl/debug_head.php";
+include 'tmpl/debug_head.php';
 print_p($result);
 $result_p = $ob->GetContent();
 //$ob->Restore();
@@ -209,4 +210,3 @@ file_put_contents($result_debug_file, $result_p);
 
 $ob->Clear();
 echo $mainoutput;
-?>

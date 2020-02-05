@@ -19,4 +19,3 @@ require '../lang/' . $language . '/delete/delete.php';
 $string['msg'] = 'Are you sure you wish to delete this academic session?';
 $string['warning1'] = 'The academic session is in use and so cannot be deleted.';
 $string['warning2'] = 'At least one academic session must be in the system.';
-?>

@@ -19,18 +19,20 @@
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
-trait mpqgetmarks {
+trait mpqgetmarks
+{
   /**
    * Get total marks for question
    * Apply marks per question if applicable
    * @param $markscorrect
    * @return float
    */
-  public function get_marks ($markscorrect) {
-    $marks = $this->marks;
-    if ($this->scoremethod == 'Mark per Question') {
-      $marks = $markscorrect;
+    public function get_marks($markscorrect)
+    {
+        $marks = $this->marks;
+        if ($this->scoremethod == 'Mark per Question') {
+            $marks = $markscorrect;
+        }
+        return $marks;
     }
-    return $marks;
-  }
 }

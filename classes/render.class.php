@@ -24,7 +24,8 @@
  * Render helper class.
  * Interfaces with /vender/twig.
  */
-class render {
+class render
+{
     
     /**
      * Twig object
@@ -40,9 +41,10 @@ class render {
      * Constructor
      * @param object $configObject - rogo configuration object
      * @param string|array $templatedir - path to templates or list of paths to search for template
-     * @return void 
+     * @return void
      */
-    function __construct($configObject, $templatedir = null) {
+    function __construct($configObject, $templatedir = null)
+    {
         if (is_null($templatedir)) {
             $loader = new \Twig\Loader\FilesystemLoader(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates');
         } else {
@@ -63,9 +65,10 @@ class render {
      * @param string $additionaljs additional javascript required
      * @param string $additionalcss additional css required
      */
-    public function render($data, $lang, $template, $additionaljs = "", $additionalcss = "") {
+    public function render($data, $lang, $template, $additionaljs = '', $additionalcss = '')
+    {
         if (isset($lang['title'])) {
-          $lang['title'] = page::title($lang['title']);
+            $lang['title'] = page::title($lang['title']);
         }
         $data = array('data' => $data, 'lang' => $lang, 'path' => $this->config->get('cfg_root_path'), 'charset' => $this->config->get('cfg_page_charset'),
         'additionaljs' => $additionaljs, 'additionalcss' => $additionalcss);
@@ -79,7 +82,8 @@ class render {
      * @param array $response - response data
      * @return $string xml response
      */
-    public function render_xml($template, $reponsename, $response) {
+    public function render_xml($template, $reponsename, $response)
+    {
         $data = array('name' => $reponsename, 'response' => $response);
         return $this->twig->render($template, $data);
     }
@@ -90,7 +94,8 @@ class render {
      * @param array $header - headers for data
      * @return void
      */
-    public function render_admin_list($data, $header) {
+    public function render_admin_list($data, $header)
+    {
         $data = array('data' => $data, 'header' => $header, 'path' => $this->config->get('cfg_root_path'));
         echo $this->twig->render('admin/list.html', $data);
     }
@@ -102,7 +107,8 @@ class render {
      * @param string $additionalcss additional css required
      * @return void
      */
-    public function render_admin_header($lang, $additionaljs, $additionalcss) {
+    public function render_admin_header($lang, $additionaljs, $additionalcss)
+    {
         $lang['title'] = page::title($lang['title']);
         $data = array('lang' => $lang, 'additionaljs' => $additionaljs, 'additionalcss' => $additionalcss,
         'charset' => $this->config->get('cfg_page_charset'), 'path' => $this->config->get('cfg_root_path'));
@@ -115,7 +121,8 @@ class render {
      * @param array $lang translations used in header
      * @return void
      */
-    public function render_admin_content($breadcrumb, $lang) {
+    public function render_admin_content($breadcrumb, $lang)
+    {
         $data = array('breadcrumb' => $breadcrumb, 'lang' => $lang, 'path' => $this->config->get('cfg_root_path'));
         echo $this->twig->render('admin/content.html', $data);
     }
@@ -125,7 +132,8 @@ class render {
      * @param array $javascript additional javascript required
      * @return void
      */
-    public function render_admin_footer($javascript = []) {
+    public function render_admin_footer($javascript = [])
+    {
         $data = ['scripts' => $javascript];
         echo $this->twig->render('admin/footer.html', $data);
     }
@@ -139,7 +147,8 @@ class render {
      * @param string $template - options template to use
      * @return void
      */
-    public function render_admin_options($script, $image, $lang, $toprightmenu, $template = 'admin/options.html') {
+    public function render_admin_options($script, $image, $lang, $toprightmenu, $template = 'admin/options.html')
+    {
         $data = array('script' => $script, 'image' => $image, 'lang' => $lang, 'toprightmenu' => $toprightmenu);
         echo $this->twig->render($template, $data);
     }
@@ -152,7 +161,8 @@ class render {
      * @param array $lang - array of language strings
      * @return void
      */
-    public function render_admin_update($plugins, $header, $action, $lang) {
+    public function render_admin_update($plugins, $header, $action, $lang)
+    {
         $data = array ('plugins' => $plugins, 'header' => $header, 'path' => $this->config->get('cfg_root_path'),
             'action' => $action, 'lang' => $lang);
         echo $this->twig->render('admin/update.html', $data);
@@ -165,7 +175,8 @@ class render {
      * @param array $links
      * @return string
      */
-    public function render_admin_navigation(array $links) {
+    public function render_admin_navigation(array $links)
+    {
         $path = $this->config->get('cfg_root_path');
         $current = count($links) > 0 ? array_pop($links) : '';
         

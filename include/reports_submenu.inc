@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,12 +16,13 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
+
 ?>
 <div class="popup" style="top:60px" id="stats_menu">
 <form name="stats_menu" style="width:640px; border:0 solid #C0C0C0; font-size:110%" autocomplete="off">
@@ -32,133 +34,128 @@
 
 <?php
   $month_names = array('january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december');
-  $month_nos = array('01','02','03','04','05','06','07','08','09','10','11','12');
-
-  $date_array = getdate();
-  
-  $now_data = date('Y') . '-' . date('m') . '-' . date('d') . ' ' . date('H') . ':' . date('i') . ':00';
-  $now_time = date('U', strtotime($now_data));
-  if ($properties->get_start_date() > $now_time) {
+$month_nos = array('01','02','03','04','05','06','07','08','09','10','11','12');
+$date_array = getdate();
+$now_data = date('Y') . '-' . date('m') . '-' . date('d') . ' ' . date('H') . ':' . date('i') . ':00';
+$now_time = date('U', strtotime($now_data));
+if ($properties->get_start_date() > $now_time) {
     $target_start_date = $properties->get_created();
-  } else {
+} else {
     $target_start_date = $properties->get_start_date();
-  }
-  if ($properties->get_end_date() > $now_time) {
+}
+if ($properties->get_end_date() > $now_time) {
     $target_end_date = $now_time;
-  } else {
+} else {
     $target_end_date = $properties->get_end_date();
-  }
+}
 
-  $start_year = date("Y", $target_start_date);
-  $start_month = date("m", $target_start_date);
-  $start_day = date("d", $target_start_date);
-  $start_hour = date("H", $target_start_date);
-  $start_minute = date("i", $target_start_date);
-	
-  $end_year = date("Y", $target_end_date);
-  $end_month = date("m", $target_end_date);
-  $end_day = date("d", $target_end_date);
-  $end_hour = date("H", $target_end_date);
-  $end_minute = date("i", $target_end_date);
-	
-  if ($end_year > date('Y') or ($end_year == date('Y') and $end_month > date('m'))) {
+  $start_year = date('Y', $target_start_date);
+$start_month = date('m', $target_start_date);
+$start_day = date('d', $target_start_date);
+$start_hour = date('H', $target_start_date);
+$start_minute = date('i', $target_start_date);
+  
+  $end_year = date('Y', $target_end_date);
+$end_month = date('m', $target_end_date);
+$end_day = date('d', $target_end_date);
+$end_hour = date('H', $target_end_date);
+$end_minute = date('i', $target_end_date);
+  
+if ($end_year > date('Y') or ($end_year == date('Y') and $end_month > date('m'))) {
     $end_day = date('d');
     $end_month = date('m');
-  }
+}
   
-  if ($start_year > $date_array['year']) {
+if ($start_year > $date_array['year']) {
     $start_year = $date_array['year'];
     $start_month = $date_array['mon'];
     $start_day = $date_array['mday'];
     $start_hour = $date_array['hours'];
     $end_min = $date_array['minutes'];
-  } elseif ($start_year == $date_array['year'] and intval($start_month) > $date_array['mon']) {
+} elseif ($start_year == $date_array['year'] and intval($start_month) > $date_array['mon']) {
     $start_month = $date_array['mon'];
     $start_day = $date_array['mday'];
     $start_hour = $date_array['hours'];
     $start_min = $date_array['minutes'];
-  } elseif ($start_year == $date_array['year'] and intval($start_month) == $date_array['mon'] and intval($start_day) > $date_array['mday']) {
+} elseif ($start_year == $date_array['year'] and intval($start_month) == $date_array['mon'] and intval($start_day) > $date_array['mday']) {
     $start_day = $date_array['mday'];
     $start_hour = $date_array['hours'];
     $start_min = $date_array['minutes'];
-  }
+}
   
-  echo "<tr><td>" . $string['dates'] . "</td><td>";
-  
-  $default_start = $start_year . $start_month . $start_day . $start_hour . $start_minute . '00';
-  $start_year = 2001;
-  $end_year = ($date_array['year'] + 1);
-  echo date_utils::timedate_select('start_', date($default_start), true, $start_year, $end_year, $string);
-  
-  // ---------------------------------------------------------------------------------
+  echo '<tr><td>' . $string['dates'] . '</td><td>';
+$default_start = $start_year . $start_month . $start_day . $start_hour . $start_minute . '00';
+$start_year = 2001;
+$end_year = ($date_array['year'] + 1);
+echo date_utils::timedate_select('start_', date($default_start), true, $start_year, $end_year, $string);
+// ---------------------------------------------------------------------------------
   echo ' ' . $string['to'] . ' ';
-  // End Day
-  if ($end_year > $date_array['year']) {
+// End Day
+if ($end_year > $date_array['year']) {
     $end_year = $date_array['year'];
     $end_month = $date_array['mon'];
     $end_day = $date_array['mday'];
-  } elseif ($end_month > $date_array['mon'] and $end_year == $date_array['year']) {
+} elseif ($end_month > $date_array['mon'] and $end_year == $date_array['year']) {
     $end_month = $date_array['mon'];
     $end_day = $date_array['mday'];
-  } elseif ($end_day > $date_array['mday'] and $end_month == $date_array['mon'] and $end_year == $date_array['year']) {
+} elseif ($end_day > $date_array['mday'] and $end_month == $date_array['mon'] and $end_year == $date_array['year']) {
     $end_day = $date_array['mday'];
-  }
-  if ($end_month < 10) $end_month = '0' . $end_month;
-  if ($end_day < 10)   $end_day   = '0' . $end_day;
+}
+if ($end_month < 10) {
+    $end_month = '0' . $end_month;
+}
+if ($end_day < 10) {
+    $end_day   = '0' . $end_day;
+}
   
   $default_end = $end_year . $end_month . $end_day . $end_hour . $end_minute . '00';
-  $start_year = 2001;
-  $end_year = ($date_array['year'] + 1);
-  echo date_utils::timedate_select('end_', date($default_end), true, $start_year, $end_year, $string);
-  
-  echo "&nbsp;<img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_daterange'] . "\" />\n</td></tr>\n";
-  
-  echo "<tr><td>" . $string['course'] . "</td><td><select name=\"repcourse\" id=\"repcourse\" style=\"width:375px\">\n";
-  echo "<option value=\"%\">" . $string['anycourse'] . "</option>\n";
-  $result = $mysqli->prepare("SELECT DISTINCT student_grade, description FROM log_metadata, courses WHERE log_metadata.student_grade = courses.name AND paperID = ? ORDER BY student_grade");
-  $result->bind_param('i', $_GET['paperID']);
-  $result->execute();
-  $result->bind_result($student_grade, $description);
-  while ($result->fetch()) {
+$start_year = 2001;
+$end_year = ($date_array['year'] + 1);
+echo date_utils::timedate_select('end_', date($default_end), true, $start_year, $end_year, $string);
+echo '&nbsp;<img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_daterange'] . "\" />\n</td></tr>\n";
+echo '<tr><td>' . $string['course'] . "</td><td><select name=\"repcourse\" id=\"repcourse\" style=\"width:375px\">\n";
+echo '<option value="%">' . $string['anycourse'] . "</option>\n";
+$result = $mysqli->prepare('SELECT DISTINCT student_grade, description FROM log_metadata, courses WHERE log_metadata.student_grade = courses.name AND paperID = ? ORDER BY student_grade');
+$result->bind_param('i', $_GET['paperID']);
+$result->execute();
+$result->bind_result($student_grade, $description);
+while ($result->fetch()) {
     echo "<option value=\"$student_grade\">$student_grade: $description</option>\n";
-  }
+}
   $result->close();
-  echo "</select></td></tr>\n";
-
-  $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
-
-  $checklist = '';
-  if (count($moduleIDs) > 0) {
+echo "</select></td></tr>\n";
+$moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
+$checklist = '';
+if (count($moduleIDs) > 0) {
     $ids = array_keys($moduleIDs);
-    $stmt = $mysqli->prepare("SELECT checklist FROM modules WHERE id IN (" . implode(',', $ids) . ")");
+    $stmt = $mysqli->prepare('SELECT checklist FROM modules WHERE id IN (' . implode(',', $ids) . ')');
     $stmt->execute();
     $stmt->bind_result($tmp_checklist);
     $check = array();
     while ($stmt->fetch()) {
-      if ($tmp_checklist != '') {
-        $tmp = explode(',', $tmp_checklist);
-        foreach ($tmp as $c => $type) {
-          $check[] = $type;
+        if ($tmp_checklist != '') {
+            $tmp = explode(',', $tmp_checklist);
+            foreach ($tmp as $c => $type) {
+                $check[] = $type;
+            }
         }
-      }
     }
     $checklist = implode(',', $check);
     $stmt->close();
-  }
+}
   
   // Module drop down
-  if ($properties->get_paper_type() != '3') {
-    echo "<tr><td>" . $string['module'] . "</td><td><select name=\"repmodule\" id=\"repmodule\" style=\"width:150px\">\n";
-    echo "<option value=\"\">" . $string['anymodule'] . "</option>\n";
-    foreach ($moduleIDs as $modID=>$modCode) {
-      echo "<option value=\"" . $modID . "\">" . $modCode . "</option>\n";
+if ($properties->get_paper_type() != '3') {
+    echo '<tr><td>' . $string['module'] . "</td><td><select name=\"repmodule\" id=\"repmodule\" style=\"width:150px\">\n";
+    echo '<option value="">' . $string['anymodule'] . "</option>\n";
+    foreach ($moduleIDs as $modID => $modCode) {
+        echo '<option value="' . $modID . '">' . $modCode . "</option>\n";
     }
     echo "</select></td></tr>\n";
-    
-    echo "<tr><td>" . $string['cohort'] . "</td><td><select name=\"direction\" id=\"direction\">\n";
-    echo "<option value=\"asc\">" . $string['allcandidates'] . "</option>\n";
-    echo "<option value=\"desc\">" . $string['top'] . "</option>\n";
-    echo "<option value=\"asc\">" . $string['bottom'] . "</option>\n";
+    echo '<tr><td>' . $string['cohort'] . "</td><td><select name=\"direction\" id=\"direction\">\n";
+    echo '<option value="asc">' . $string['allcandidates'] . "</option>\n";
+    echo '<option value="desc">' . $string['top'] . "</option>\n";
+    echo '<option value="asc">' . $string['bottom'] . "</option>\n";
     echo "</select>\n";
     echo "<select name=\"percent\" id=\"percent\">\n";
     echo "<option value=\"1\">1%</option>\n";
@@ -172,155 +169,148 @@
     echo "<option value=\"100\" selected>100%</option>\n";
     echo "</select>\n";
     echo "</td></tr>\n";
-  }
+}
   
-  echo "<tr><td colspan=\"2\"><label for=\"absent\">" . $string['incabsentcandidates'] . "</label>&nbsp;<input type=\"checkbox\" name=\"absent\" id=\"absent\" value=\"1\" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for=\"studentsonly\">" . $string['studentsonly'] . "</label>&nbsp;<input type=\"checkbox\" name=\"studentsonly\" id=\"studentsonly\" value=\"1\" checked=\"checked\" /> <img src=\"../artwork/tooltip_icon.gif\" class=\"help_tip\" title=\"" . $string['tooltip_studentattempts'] . "\" /></td></tr>\n";
-
-  if ($properties->get_paper_type() == '3') {
-    echo "<tr><td>" . $string['year'] . "</td><td><select name=\"repyear\" id=\"repyear\">\n";
-    $years = array('%'=>$string['anyyear'],'1'=>$string['year'].' 1','2'=>$string['year'].' 2','3'=>$string['year'].' 3','4'=>$string['year'].' 4','5'=>$string['year'].' 5');
+  echo '<tr><td colspan="2"><label for="absent">' . $string['incabsentcandidates'] . '</label>&nbsp;<input type="checkbox" name="absent" id="absent" value="1" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<label for="studentsonly">' . $string['studentsonly'] . '</label>&nbsp;<input type="checkbox" name="studentsonly" id="studentsonly" value="1" checked="checked" /> <img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_studentattempts'] . "\" /></td></tr>\n";
+if ($properties->get_paper_type() == '3') {
+    echo '<tr><td>' . $string['year'] . "</td><td><select name=\"repyear\" id=\"repyear\">\n";
+    $years = array('%' => $string['anyyear'],'1' => $string['year'] . ' 1','2' => $string['year'] . ' 2','3' => $string['year'] . ' 3','4' => $string['year'] . ' 4','5' => $string['year'] . ' 5');
     foreach ($years as $key => $value) {
-      echo "<option value=\"$key\">$value</option>\n";
+        echo "<option value=\"$key\">$value</option>\n";
     }
     echo "</select>\n</td></tr>\n";
-    echo "<tr><td>&nbsp;</td><td><input type=\"checkbox\" id=\"completerpt\" name=\"completerpt\" value\"1\" />&nbsp;" . $string['completedatasets'] . "</td></tr>\n";
-  }
+    echo '<tr><td>&nbsp;</td><td><input type="checkbox" id="completerpt" name="completerpt" value"1" />&nbsp;' . $string['completedatasets'] . "</td></tr>\n";
+}
   
   // Get any metadata fields
   $metadata = array();
-  if (count($moduleIDs) > 0) {
-    $result = $mysqli->prepare("SELECT DISTINCT type, value FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.moduleid IN ('" . implode("','",$moduleIDs) . "') ORDER BY type, value");
+if (count($moduleIDs) > 0) {
+    $result = $mysqli->prepare("SELECT DISTINCT type, value FROM users_metadata, modules WHERE users_metadata.idMod = modules.id AND modules.moduleid IN ('" . implode("','", $moduleIDs) . "') ORDER BY type, value");
     $result->execute();
     $result->bind_result($meta_type, $meta_value);
     while ($result->fetch()) {
-      $metadata[$meta_type][] = $meta_value;
+        $metadata[$meta_type][] = $meta_value;
     }
     $result->close();
-  }
+}
   
   $meta_no = 1;
-
-  if (count($metadata) > 0) {
+if (count($metadata) > 0) {
     echo "<tr><td colspan=\"2\"><hr style=\"height:1px; color:#C0C0C0; background-color:#C0C0C0; border:0px\" /></td></tr>\n";
-  }
-  foreach ($metadata as $meta_type=>$value_array) {
+}
+foreach ($metadata as $meta_type => $value_array) {
     if ($properties->get_paper_type() != '6' or $properties->get_rubric() == $meta_type) {
-      echo "<tr><td>$meta_type</td><td><select name=\"meta$meta_no\" id=\"meta$meta_no\">";
-      echo "<option value=\"$meta_type=%\">&lt;". $string['all']."&gt;</option>";
-      foreach ($value_array as $meta_value) {
-        echo "<option value=\"$meta_type=$meta_value\">$meta_value</option>\n";
-      }
-      echo "</select></td></tr>\n";
-      $meta_no++;
+        echo "<tr><td>$meta_type</td><td><select name=\"meta$meta_no\" id=\"meta$meta_no\">";
+        echo "<option value=\"$meta_type=%\">&lt;" . $string['all'] . '&gt;</option>';
+        foreach ($value_array as $meta_value) {
+            echo "<option value=\"$meta_type=$meta_value\">$meta_value</option>\n";
+        }
+        echo "</select></td></tr>\n";
+        $meta_no++;
     }
-  }
+}
   
-  echo "</table><input type=\"hidden\" name=\"meta_no\" id=\"meta_no\" value=\"$meta_no\" /><input type=\"hidden\" name=\"paperID\" id=\"paperID\" value=\"" . $_GET['paperID'] . "\" />";
+  echo "</table><input type=\"hidden\" name=\"meta_no\" id=\"meta_no\" value=\"$meta_no\" /><input type=\"hidden\" name=\"paperID\" id=\"paperID\" value=\"" . $_GET['paperID'] . '" />';
+echo "<table style=\"width:100%; padding: 0px 10px 10px 10px\"><tr><td style=\"vertical-align:top; width:45%; padding-right:6px\">\n";
+if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2' or $properties->get_paper_type() == '5') {
+// display Assessment stats options
 
-  echo "<table style=\"width:100%; padding: 0px 10px 10px 10px\"><tr><td style=\"vertical-align:top; width:45%; padding-right:6px\">\n";
-  
-  if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2' or $properties->get_paper_type() == '5') {
-    // display Assessment stats options
-
-    echo "<div class=\"reports_header\">" . $string['reviews'] . "</div>\n";
+    echo '<div class="reports_header">' . $string['reviews'] . "</div>\n";
     echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/review_comments.php?type=internal&scrOfY=0&'>" . $string['internalpeerreview'] . "</a></div>\n";
-
-		if ($properties->q_type_exist('sct')) {
-      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/review_sct_answers.php?type=external&'>" . $string['sctresponses'] . "</a></div>\n";
+    if ($properties->q_type_exist('sct')) {
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/review_sct_answers.php?type=external&'>" . $string['sctresponses'] . "</a></div>\n";
     }
-    echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/review_comments.php?type=external&'>" . $string['externalexaminers'] . "</a></div>\n";
-    echo "<div class=\"reports_header\">" . $string['cohortreports'] . "</div>\n";
+      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/review_comments.php?type=external&'>" . $string['externalexaminers'] . "</a></div>\n";
+    echo '<div class="reports_header">' . $string['cohortreports'] . "</div>\n";
     echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/class_totals.php?'>" . $string['classtotals'] . "</a></div>\n";
     if ($properties->unmarked_enhancedcalc(1) or $properties->unmarked_textbox(1)) {
-      echo "<div class=\"greybullet\">" . $string['classtotalsexcel2003'] . "</div>\n";
-      echo "<div class=\"greybullet\">" . $string['classtotalscsv'] . "</div>\n";
+        echo '<div class="greybullet">' . $string['classtotalsexcel2003'] . "</div>\n";
+        echo '<div class="greybullet">' . $string['classtotalscsv'] . "</div>\n";
     } else {
-      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/class_totals_xml.php?'>" . $string['classtotalsexcel2003'] . "</a></div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/class_totals_csv.php?'>" . $string['classtotalscsv'] . "</a></div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/class_totals_xml.php?'>" . $string['classtotalsexcel2003'] . "</a></div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/class_totals_csv.php?'>" . $string['classtotalscsv'] . "</a></div>\n";
     }
     if ($properties->get_paper_type() != '5') {
-			if ($properties->q_type_exist('textbox')) {
-        echo "<div class=\"reports_header\">" . $string['textboxmarking'] . "</div>\n";
-        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/textbox_select_q.php?action=mark&phase=1&'>" . $string['primarymarkbyquestion'] . "</a></div>\n";
-        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/textbox_remark.php?'>" . $string['selectpapersforremarking'] . "</a></div>\n";
-        $remark_array = textbox_marking_utils::get_remark_users($paperID, $mysqli);
-        if (count($remark_array) > 0) {
-          echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/textbox_select_q.php?action=mark&phase=2&'>" . $string['secondmarkbyquestion'] . "</a></div>\n";
-        } else {
-          echo "<div class=\"greybullet\">" . $string['secondmarkbyquestion'] . "</div>\n";          
+        if ($properties->q_type_exist('textbox')) {
+            echo '<div class="reports_header">' . $string['textboxmarking'] . "</div>\n";
+            echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/textbox_select_q.php?action=mark&phase=1&'>" . $string['primarymarkbyquestion'] . "</a></div>\n";
+            echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/textbox_remark.php?'>" . $string['selectpapersforremarking'] . "</a></div>\n";
+            $remark_array = textbox_marking_utils::get_remark_users($paperID, $mysqli);
+            if (count($remark_array) > 0) {
+                echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/textbox_select_q.php?action=mark&phase=2&'>" . $string['secondmarkbyquestion'] . "</a></div>\n";
+            } else {
+                echo '<div class="greybullet">' . $string['secondmarkbyquestion'] . "</div>\n";
+            }
+              echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/textbox_select_q.php?action=finalise&'>" . $string['finalisemarks'] . "</a></div>\n";
         }
-        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/textbox_select_q.php?action=finalise&'>" . $string['finalisemarks'] . "</a></div>\n";
-      }
     }
 
-    echo "</td><td style=\"vertical-align:top\">";
-    echo "<div class=\"reports_header\">" . $string['itemanalysis'] . "</div>\n";
-
+      echo '</td><td style="vertical-align:top">';
+    echo '<div class="reports_header">' . $string['itemanalysis'] . "</div>\n";
     if ($properties->get_paper_type() != '5') {
-		  echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/frequency_discrimination_analysis.php?'>" . $string['frequencyanalysis'] . "</a></div>\n";
-		}
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/frequency_discrimination_analysis.php?'>" . $string['frequencyanalysis'] . "</a></div>\n";
+    }
 
-	  if ($properties->unmarked_enhancedcalc()) {
-			echo "<div class=\"greybullet\">" . $string['learningobjectiveanalysis'] . "</div>\n";
+    if ($properties->unmarked_enhancedcalc()) {
+        echo '<div class="greybullet">' . $string['learningobjectiveanalysis'] . "</div>\n";
     } else {
-			echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/cohort_obj_perform.php?'>" . $string['learningobjectiveanalysis'] . "</a></div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/cohort_obj_perform.php?'>" . $string['learningobjectiveanalysis'] . "</a></div>\n";
     }
-		echo "<div class=\"reports_header\">" . $string['exports'] . "</div>\n";
+      echo '<div class="reports_header">' . $string['exports'] . "</div>\n";
     if ($properties->get_paper_type() != '5') {
-			echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../export/assessment_data.php?'>" . $string['exportresponsescsvnum'] . "</a></div>\n";
-			echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../export/assessment_data.php?mode=text&'>" . $string['exportresponsescsvtext'] . "</a></div>\n";
-			echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../export/assessment_boolean.php?'>" . $string['exportbooleancsv'] . "</a></div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../export/assessment_data.php?'>" . $string['exportresponsescsvnum'] . "</a></div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../export/assessment_data.php?mode=text&'>" . $string['exportresponsescsvtext'] . "</a></div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../export/assessment_boolean.php?'>" . $string['exportbooleancsv'] . "</a></div>\n";
     }
-		if ($properties->unmarked_enhancedcalc()) {
-			echo "<div class=\"greybullet\">" . $string['exportmarkscsv'] . "</div>\n";
-		} else {
-			echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../export/assessment_marks.php?'>" . $string['exportmarkscsv'] . "</a></div>\n";
-		}
-	}
+    if ($properties->unmarked_enhancedcalc()) {
+        echo '<div class="greybullet">' . $string['exportmarkscsv'] . "</div>\n";
+    } else {
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../export/assessment_marks.php?'>" . $string['exportmarkscsv'] . "</a></div>\n";
+    }
+}
   
-  switch ($properties->get_paper_type()) {
-    case '3':     // Stats menu
-      echo "<div class=\"reports_header\">" . $string['quantitativereports'] . "</div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/quantitative.php?'>" . $string['xhtml'] . "</a></div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/quantitative_xml.php'>" . $string['word2003format'] . "</a></div>\n";
-      
-      echo "<div class=\"reports_header\">" . $string['qualitativeanalysis'] . "</div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/qualitative.php?'>" . $string['xhtml'] . "</a></div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/qualitative_xml.php?'>" . $string['word2003format'] . "</a></div>\n";
-      
-      echo "<div class=\"reports_header\">" . $string['exports'] . "</div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../export/survey_xml_data.php?'>" . $string['rawdataxml'] . "</a></div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../export/survey_csv_data.php'>" . $string['rawdatacsv'] . "</a></div>\n";
-      break;
-    case '4':     // OSCE menu
-      echo "<div class=\"reports_header\">" . $string['cohortreports'] . "</div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../osce/class_totals.php?'>" . $string['classtotals'] . "</a></div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../osce/class_totals_xml.php?'>" . $string['classtotalsexcel2003'] . "</a></div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../osce/class_totals_csv.php?'>" . $string['classtotalscsv'] . "</a></div>\n";
-      
-      echo "<div class=\"reports_header\">" . $string['itemanalysis'] . "</div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../osce/frequency_analysis.php?'>" . $string['frequencyanalysis'] . "</a></div>\n";
-      
-      echo "<div class=\"reports_header\">" . $string['exports'] . "</div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../osce/portfolio_sheets.php?'>" . $string['individualportfoliosheets'] . "</a></div>\n";
-      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../osce/export_ratings.php?'>" . $string['exportratingscsv'] . "</a></div>\n";
-      break;
+switch ($properties->get_paper_type()) {
+    case '3':
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 echo '<div class="reports_header">' . $string['quantitativereports'] . "</div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/quantitative.php?'>" . $string['xhtml'] . "</a></div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/quantitative_xml.php'>" . $string['word2003format'] . "</a></div>\n";
+        echo '<div class="reports_header">' . $string['qualitativeanalysis'] . "</div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/qualitative.php?'>" . $string['xhtml'] . "</a></div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/qualitative_xml.php?'>" . $string['word2003format'] . "</a></div>\n";
+        echo '<div class="reports_header">' . $string['exports'] . "</div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../export/survey_xml_data.php?'>" . $string['rawdataxml'] . "</a></div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../export/survey_csv_data.php'>" . $string['rawdatacsv'] . "</a></div>\n";
+
+        break;
+    case '4':
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 echo '<div class="reports_header">' . $string['cohortreports'] . "</div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../osce/class_totals.php?'>" . $string['classtotals'] . "</a></div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../osce/class_totals_xml.php?'>" . $string['classtotalsexcel2003'] . "</a></div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../osce/class_totals_csv.php?'>" . $string['classtotalscsv'] . "</a></div>\n";
+        echo '<div class="reports_header">' . $string['itemanalysis'] . "</div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../osce/frequency_analysis.php?'>" . $string['frequencyanalysis'] . "</a></div>\n";
+        echo '<div class="reports_header">' . $string['exports'] . "</div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../osce/portfolio_sheets.php?'>" . $string['individualportfoliosheets'] . "</a></div>\n";
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../osce/export_ratings.php?'>" . $string['exportratingscsv'] . "</a></div>\n";
+
+        break;
     case '6':
-      echo "<br />\n<div class=\"reports_header\">Reports</div>\n";
-      if ($properties->get_display_question_mark() == '1') {
-        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../peer_review/summary_report.php?percent=0&'>" . $string['ReviewSummary1'] . "</a></div>\n";
-        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../peer_review/summary_report.php?percent=1&'>" . $string['ReviewSummary2'] . "</a></div>\n";
-      } else {
-        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../peer_review/summary_report.php?'>" . $string['ReviewSummary3'] . "</a></div>\n";
-      }
-      echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../peer_review/summary_report_csv.php?'>" . $string['ReviewSummary4'] . "</a></div>\n";
-      break;
-  }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 echo "<br />\n<div class=\"reports_header\">Reports</div>\n";
+        if ($properties->get_display_question_mark() == '1') {
+            echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../peer_review/summary_report.php?percent=0&'>" . $string['ReviewSummary1'] . "</a></div>\n";
+            echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../peer_review/summary_report.php?percent=1&'>" . $string['ReviewSummary2'] . "</a></div>\n";
+        } else {
+            echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../peer_review/summary_report.php?'>" . $string['ReviewSummary3'] . "</a></div>\n";
+        }
+        echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../peer_review/summary_report_csv.php?'>" . $string['ReviewSummary4'] . "</a></div>\n";
+
+        break;
+}
     
-  if(($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2') && (strpos($checklist, 'stdset') !== false)) {
+if (($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2') && (strpos($checklist, 'stdset') !== false)) {
     echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/standards_setting_csv.php?'>" . $string['standardssettingcsv'] . "</a></div>\n";
     echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/standards_setting_full_csv.php?'>" . $string['standardssettingfullcsv'] . "</a></div>\n";
-  }
+}
 
 ?>
 </td></tr></table>

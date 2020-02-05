@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,6 +27,7 @@ namespace testing\behat\steps\common;
  * @package testing
  * @subpackage behat
  */
-trait include_common {
-  use transforms;
+trait include_common
+{
+    use transforms;
 }

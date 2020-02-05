@@ -21,4 +21,3 @@ $string['type'] = 'Type';
 $string['modified'] = 'Modified';
 $string['screen'] = 'Screen';
 $string['status'] = 'Status';
-?>

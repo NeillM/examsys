@@ -21,4 +21,3 @@ $string['bystatus'] = 'by Status';
 $string['bypaper'] = 'by Paper';
 $string['byteam'] = 'by Team';
 $string['search'] = 'Search';
-?>

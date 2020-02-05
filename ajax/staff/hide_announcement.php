@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -28,4 +29,3 @@ require '../../include/errors.php';
 $announcementID  = check_var('announcementID', 'GET', true, false, true);
 
 $_SESSION['announcement' . $announcementID] = 'hide';
-?>

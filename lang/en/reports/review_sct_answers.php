@@ -22,4 +22,3 @@ $string['outof'] = 'out of';
 $string['briefreasonwhy'] = 'Brief reason why?';
 $string['sctresponses'] = 'SCT Responses/Reasons';
 $string['savetobank'] = 'Save Results to Question Bank';
-?>

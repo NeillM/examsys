@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -27,13 +28,15 @@ use testing\unittest\UnitTest;
  * @group html5
  * @group hotspot
  */
-class html5hotspottest extends UnitTest {
+class html5hotspottest extends UnitTest
+{
     /**
      * Test that correct answers have their coordinates removed by the correct_to_answer_mode method.
      *
      * This tests mupliple shapes with 1 shape per layers.
      */
-    public function test_correct_to_answer_mode1() {
+    public function test_correct_to_answer_mode1()
+    {
         // Three layers are defined, the first contains an ellipse, the second a recangle, the third a polygon.
         $input = 'Deer~16776960~ellipse~384,335,51b,3c3~0~|birds~45136~rectangle~fa,51,1db,121~0~|AT-AT~12582912~polygon~15d,154,167,150,18d,144,220,11e,2a1,13e,2a5,153,2e7,183~0~';
         $expected = 'Deer~16776960~|birds~45136~|AT-AT~12582912~';
@@ -46,7 +49,8 @@ class html5hotspottest extends UnitTest {
      *
      * This tests mupliple shapes with 3 shapes in one layer.
      */
-    public function test_correct_to_answer_mode2() {
+    public function test_correct_to_answer_mode2()
+    {
         // Three layers are defined, the first contains an ellipse, the second a recangle, the third a polygon.
         $input = 'Deer~16776960~ellipse~384,335,51b,3c3~0~rectangle~fa,51,1db,121~1~polygon~15d,154,167,150,18d,144,220,11e,2a1,13e,2a5,153,2e7,183~2~';
         $expected = 'Deer~16776960~';
@@ -57,7 +61,8 @@ class html5hotspottest extends UnitTest {
     /**
      * Test that the marking result is removed from a stored user answer.
      */
-    public function test_answer_strip_correct_information() {
+    public function test_answer_strip_correct_information()
+    {
         // Two layers, the first layer the user has answered correctly, the second layer the user has answered incorrectly.
         $input = '1,300,50|0,24,80';
         $expected = '300,50|24,80';
@@ -68,7 +73,8 @@ class html5hotspottest extends UnitTest {
     /**
      * Test that a point inside an ellipse is marked as correct.
      */
-    public function test_mark_ellipse_correct() {
+    public function test_mark_ellipse_correct()
+    {
         // The bounding box coordinates are encoded as hexidecimal.
         $correct = 'Deer~16776960~ellipse~384,335,51b,3c3~0~';
         $answer = '1115,891';
@@ -80,7 +86,8 @@ class html5hotspottest extends UnitTest {
     /**
      * Test that a point outside an ellipse is marked as incorrect.
      */
-    public function test_mark_ellipse_incorrect() {
+    public function test_mark_ellipse_incorrect()
+    {
         // The bounding box coordinates are encoded as hexidecimal.
         $correct = 'Deer~16776960~ellipse~384,335,51b,3c3~0~';
         // One pixel inside the bounding rectangle.
@@ -93,7 +100,8 @@ class html5hotspottest extends UnitTest {
     /**
      * Test that if an ellipse is one dimensional it is marked as incorrect.
      */
-    public function test_mark_ellipse_one_dimensional_incorrect1() {
+    public function test_mark_ellipse_one_dimensional_incorrect1()
+    {
         // The bounding box coordinates are encoded as hexidecimal.
         $correct = 'Deer~16776960~ellipse~1,1,1,9~0~';
         // One pixel inside the bounding rectangle.
@@ -106,7 +114,8 @@ class html5hotspottest extends UnitTest {
     /**
      * Test that if an ellipse is one dimensional it is marked as incorrect.
      */
-    public function test_mark_ellipse_one_dimensional_incorrect2() {
+    public function test_mark_ellipse_one_dimensional_incorrect2()
+    {
         // The bounding box coordinates are encoded as hexidecimal.
         $correct = 'Deer~16776960~ellipse~1,1,9,1~0~';
         // One pixel inside the bounding rectangle.
@@ -119,7 +128,8 @@ class html5hotspottest extends UnitTest {
     /**
      * Test that a point inside an rectangle is marked as correct.
      */
-    public function test_mark_rectangle_correct() {
+    public function test_mark_rectangle_correct()
+    {
         // The bounding box coordinates are encoded as hexidecimal.
         $correct = 'birds~45136~rectangle~fa,51,1db,121~0~';
         // Top corner.
@@ -132,7 +142,8 @@ class html5hotspottest extends UnitTest {
     /**
      * Test that a point outside an rectangle is marked as incorrect.
      */
-    public function test_mark_rectangle_incorrect() {
+    public function test_mark_rectangle_incorrect()
+    {
         // The bounding box coordinates are encoded as hexidecimal.
         $correct = 'birds~45136~rectangle~fa,51,1db,121~0~';
         // One pixel outside the top corner.
@@ -145,7 +156,8 @@ class html5hotspottest extends UnitTest {
     /**
      * Test that a point inside an polygon is marked as correct.
      */
-    public function test_mark_polygon_correct() {
+    public function test_mark_polygon_correct()
+    {
         // A rectangular polygon, that is the same dimensions as the rectangle test shape.
         $correct = 'birds~45136~polygon~fa,51,fa,121,1db,121,1db,51~0~';
         // Top corner.
@@ -158,7 +170,8 @@ class html5hotspottest extends UnitTest {
     /**
      * Test that answers that intersect the polygon line count as inside.
      */
-    public function test_mark_polygon_correct2() {
+    public function test_mark_polygon_correct2()
+    {
         // A rectangular polygon, that is the same dimensions as the rectangle test shape.
         $correct = 'birds~45136~polygon~1,1,1,9,9,9,9,1~0~';
 
@@ -203,7 +216,8 @@ class html5hotspottest extends UnitTest {
     /**
      * Test that a point outside an polygon is marked as incorrect.
      */
-    public function test_mark_polygon_incorrect() {
+    public function test_mark_polygon_incorrect()
+    {
         // A rectangular polygon, that is the same dimensions as the rectangle test shape.
         $correct = 'birds~45136~polygon~fa,51,fa,121,1db,121,1db,51~0~';
         // One pixel outside the top corner.
@@ -218,7 +232,8 @@ class html5hotspottest extends UnitTest {
      *
      * This test can fail if the edge detection is wrong.
      */
-    public function test_mark_1d_polygon_incorrect() {
+    public function test_mark_1d_polygon_incorrect()
+    {
         // A rectangular polygon, that is the same dimensions as the rectangle test shape.
         $correct = 'Question~16711680~polygon~e4,3f,e4,3f~2~';
         // The point is not in the shape.
@@ -233,7 +248,8 @@ class html5hotspottest extends UnitTest {
      *
      * This test can fail if the edge detection is wrong.
      */
-    public function test_mark_1d_polygon_correct() {
+    public function test_mark_1d_polygon_correct()
+    {
         // A rectangular polygon, that is the same dimensions as the rectangle test shape.
         $correct = 'Question~16711680~polygon~e4,3f,e4,3f~2~';
         // The point is on the line.
@@ -246,7 +262,8 @@ class html5hotspottest extends UnitTest {
     /**
      * Test that when there are multiple layers that each layer is marked correctly.
      */
-    public function test_mark_multiple_layers() {
+    public function test_mark_multiple_layers()
+    {
         $correct = 'birds~45136~polygon~fa,51,fa,121,1db,121,1db,51~0~|Deer~16776960~ellipse~384,335,51b,3c3~0~';
         $answer = '250,81|901,821';
         $expected = '1,250,81|0,901,821';
@@ -257,7 +274,8 @@ class html5hotspottest extends UnitTest {
     /**
      * Test when the user answer is in the first of multiple shapes.
      */
-    public function test_mark_multiple_shapes1() {
+    public function test_mark_multiple_shapes1()
+    {
         $correct = 'birds~45136~polygon~fa,51,fa,121,1db,121,1db,51~0~ellipse~384,335,51b,3c3~1~';
         $answer = '250,81';
         $expected = '1,250,81';
@@ -268,7 +286,8 @@ class html5hotspottest extends UnitTest {
     /**
      * Test when the user answer is in the last of multiple shapes.
      */
-    public function test_mark_multiple_shapes2() {
+    public function test_mark_multiple_shapes2()
+    {
         $correct = 'birds~45136~polygon~fa,51,fa,121,1db,121,1db,51~0~ellipse~384,335,51b,3c3~1~';
         $answer = '1115,891';
         $expected = '1,1115,891';
@@ -279,7 +298,8 @@ class html5hotspottest extends UnitTest {
     /**
      * Test when the user answer is not in any of multiple shapes.
      */
-    public function test_mark_multiple_shapes3() {
+    public function test_mark_multiple_shapes3()
+    {
         $correct = 'birds~45136~polygon~fa,51,fa,121,1db,121,1db,51~0~ellipse~384,335,51b,3c3~1~';
         $answer = '901,821';
         $expected = '0,901,821';
@@ -290,7 +310,8 @@ class html5hotspottest extends UnitTest {
     /**
      * No answer for a one layer question.
      */
-    public function test_mark_unaswered1() {
+    public function test_mark_unaswered1()
+    {
         $correct = 'birds~45136~polygon~fa,51,fa,121,1db,121,1db,51~0~ellipse~384,335,51b,3c3~1~';
         $answer = '';
         $expected = 'u';
@@ -301,7 +322,8 @@ class html5hotspottest extends UnitTest {
     /**
      * This is a possible remarking scenario, or not attempted at all.
      */
-    public function test_mark_unaswered2() {
+    public function test_mark_unaswered2()
+    {
         $correct = 'birds~45136~polygon~fa,51,fa,121,1db,121,1db,51~0~|Deer~16776960~ellipse~384,335,51b,3c3~0~';
         $answer = '';
         $expected = 'u';
@@ -312,7 +334,8 @@ class html5hotspottest extends UnitTest {
     /**
      * No answer, but some interaction.
      */
-    public function test_mark_unaswered3() {
+    public function test_mark_unaswered3()
+    {
         $correct = 'birds~45136~polygon~fa,51,fa,121,1db,121,1db,51~0~|Deer~16776960~ellipse~384,335,51b,3c3~0~';
         $answer = '|';
         $expected = 'u';
@@ -323,7 +346,8 @@ class html5hotspottest extends UnitTest {
     /**
      * Partially answered.
      */
-    public function test_mark_partial_unaswered() {
+    public function test_mark_partial_unaswered()
+    {
         $correct = 'birds~45136~polygon~fa,51,fa,121,1db,121,1db,51~0~|Deer~16776960~ellipse~384,335,51b,3c3~0~';
         $answer = '250,81|';
         $expected = '1,250,81|u';

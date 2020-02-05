@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -56,51 +57,51 @@ $ipInvalid = array();
 $ipInUse = array();
 
 foreach ($addresses as $address) {
-  $address = trim($address);
-  if (0 === preg_match($test_re, $address)) {
-    $bad_addresses++;
-    $ipInvalid[] = $address;
-  } elseif ($lab = $labFactory->get_lab_from_address($address) and $labID != $lab) {
-    $bad_addresses++;
-    $ipInUse[] = $address;
-  }
+    $address = trim($address);
+    if (0 === preg_match($test_re, $address)) {
+        $bad_addresses++;
+        $ipInvalid[] = $address;
+    } elseif ($lab = $labFactory->get_lab_from_address($address) and $labID != $lab) {
+        $bad_addresses++;
+        $ipInUse[] = $address;
+    }
 }
 
 if ($bad_addresses > 0) {
-  echo json_encode(array('INVALID', $ipInvalid, $ipInUse));
-  exit();
+    echo json_encode(array('INVALID', $ipInvalid, $ipInUse));
+    exit();
 } else {
   // Update Lab table.
-  $result = $mysqli->prepare("UPDATE labs SET name = ?, campus = ?, building = ?, room_no = ?, timetabling = ?, it_support = ?, plagarism = ? WHERE id = ?");
-  $result->bind_param('sisssssi', $name, $campus, $building, $room_no, $timetabling, $it_support, $plagarism, $labID);
-  $result->execute();
-  $result->close();
+    $result = $mysqli->prepare('UPDATE labs SET name = ?, campus = ?, building = ?, room_no = ?, timetabling = ?, it_support = ?, plagarism = ? WHERE id = ?');
+    $result->bind_param('sisssssi', $name, $campus, $building, $room_no, $timetabling, $it_support, $plagarism, $labID);
+    $result->execute();
+    $result->close();
 
-  if ($mysqli->errno != 0) {
-      echo json_encode(array('ERROR', $mysqli->errno));
-      exit();
-  }
+    if ($mysqli->errno != 0) {
+        echo json_encode(array('ERROR', $mysqli->errno));
+        exit();
+    }
 
   // Delete the existing addresses for the lab first.
-  $result = $mysqli->prepare("DELETE FROM client_identifiers WHERE lab = ?");
-  $result->bind_param('i', $labID);
-  $result->execute();
-  $result->close();
+    $result = $mysqli->prepare('DELETE FROM client_identifiers WHERE lab = ?');
+    $result->bind_param('i', $labID);
+    $result->execute();
+    $result->close();
 
   // Re-insert addresses
-  foreach ($addresses as $address) {
-      $address = trim($address);
-      if ($hostname_lookup) {
-          $hostname = $address;
-      } else {
-          $hostname = gethostbyaddr($address);
-      }
+    foreach ($addresses as $address) {
+        $address = trim($address);
+        if ($hostname_lookup) {
+            $hostname = $address;
+        } else {
+            $hostname = gethostbyaddr($address);
+        }
 
-      $result = $mysqli->prepare("INSERT INTO client_identifiers (lab, address, hostname, low_bandwidth) VALUES (?, ?, ?, ?)");
-      $result->bind_param('issi', $labID, $address, $hostname, $low_bandwidth);
-      $result->execute();
-      $result->close();
-  }
+        $result = $mysqli->prepare('INSERT INTO client_identifiers (lab, address, hostname, low_bandwidth) VALUES (?, ?, ?, ?)');
+        $result->bind_param('issi', $labID, $address, $hostname, $low_bandwidth);
+        $result->execute();
+        $result->close();
+    }
 
-  echo json_encode(array('OK', $labID));
+    echo json_encode(array('OK', $labID));
 }

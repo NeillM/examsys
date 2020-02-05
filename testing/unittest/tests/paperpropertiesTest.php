@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
-class paperpropertiestest extends unittestdatabase {
+class paperpropertiestest extends unittestdatabase
+{
 
     /**
      * @var array Storage for paper data in tests
@@ -55,89 +57,90 @@ class paperpropertiestest extends unittestdatabase {
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
         $datagenerator->create_academic_year(array('calendar_year' => 2015, 'academic_year' => '2015/16'));
         $datagenerator = $this->get_datagenerator('modules', 'core');
         $datagenerator->create_module(array('fullname' => 'Test module 3', 'moduleid' => 'TEST3', 'timed_exams' => 1));
         $datagenerator->create_enrolment(array('userid' => $this->student['id'], 'moduleid' => $this->module, 'calendar_year' => 2015));
         $datagenerator = $this->get_datagenerator('papers', 'core');
-        $this->pid1 = $datagenerator->create_paper(array('papertitle' => "Test summative 1",
+        $this->pid1 = $datagenerator->create_paper(array('papertitle' => 'Test summative 1',
             'calendaryear' => 2015,
-            'modulename' => "Training Module",
-            'paperowner' => "admin",
-            'papertype' => "2"));
-        $this->pid2 = $datagenerator->create_paper(array('papertitle' => "Test summative 2",
+            'modulename' => 'Training Module',
+            'paperowner' => 'admin',
+            'papertype' => '2'));
+        $this->pid2 = $datagenerator->create_paper(array('papertitle' => 'Test summative 2',
             'calendaryear' => 2015,
-            'password' => "EC1VbYJtOq8NsidA+q60rDEzjZZ8eHmHm6dEtfVBpeQ=",
-            'modulename' => "Test module 3",
-            'paperowner' => "admin",
-            'papertype' => "2"));
-        $this->pid3 = $datagenerator->create_paper(array('papertitle' => "Test progressive",
+            'password' => 'EC1VbYJtOq8NsidA+q60rDEzjZZ8eHmHm6dEtfVBpeQ=',
+            'modulename' => 'Test module 3',
+            'paperowner' => 'admin',
+            'papertype' => '2'));
+        $this->pid3 = $datagenerator->create_paper(array('papertitle' => 'Test progressive',
             'calendaryear' => 2015,
             'duration' => 60,
-            'modulename' => "Test module 3",
-            'paperowner' => "admin",
-            'papertype' => "1"));
-        $this->pid4 = $datagenerator->create_paper(array('papertitle' => "Test formative",
+            'modulename' => 'Test module 3',
+            'paperowner' => 'admin',
+            'papertype' => '1'));
+        $this->pid4 = $datagenerator->create_paper(array('papertitle' => 'Test formative',
             'calendaryear' => 2015,
-            'modulename' => "Test module 3",
-            'paperowner' => "admin",
-            'papertype' => "0"));
+            'modulename' => 'Test module 3',
+            'paperowner' => 'admin',
+            'papertype' => '0'));
         $datagenerator = $this->get_datagenerator('questions', 'core');
-        $this->question = $datagenerator->create_question(array("user" => "admin",
-            "type" => 'enhancedcalc',
-            "leadin" => "test"));
+        $this->question = $datagenerator->create_question(array('user' => 'admin',
+            'type' => 'enhancedcalc',
+            'leadin' => 'test'));
         $datagenerator->add_question_to_paper(array('paper' => $this->pid2['id'], 'question' => $this->question['id'], 'screen' => 1, 'displaypos' => 1));
         $logdatagenerator = $this->get_datagenerator('log', 'core');
         $meta = $logdatagenerator->create_metadata(array('userID' => $this->student['id'], 'paperID' => $this->pid2['id'], 'year' => 1, 'started' => '2015-01-01 09:00:00'));
         $meta2 = $logdatagenerator->create_metadata(array('userID' => $this->admin['id'] , 'paperID' => $this->pid2['id'], 'started' => '2015-02-01 10:00:00'));
         $this->log = $logdatagenerator->create_summative(array('q_id' => $this->question['id'], 'metadataID' => $meta['id'], 'screen' => 1, 'user_answer' => 1));
         $this->log2 = $logdatagenerator->create_summative(array('q_id' => $this->question['id'], 'metadataID' => $meta2['id'], 'mark' => 1));
-        $this->question2 = $datagenerator->create_question(array("user" => "admin",
-            "type" => 'enhancedcalc',
-            "theme" => 'test theme',
-            "leadin" => "test leadin",
-            "scenario" => "test scenario",
-            "notes" => "test notes",
-            "display_method" => null,
-            "score_method" => "Allow partial Marks",
-            "settings" => "{\"strictdisplay\":true,\"strictzeros\":false,\"dp\":\"0\",\"tolerance_full\":\"0\",\"fulltoltyp\":\"#\",\"tolerance_partial\":\"0\",\"parttoltyp\":\"#\",\"marks_partial\":0,\"marks_incorrect\":0,\"marks_correct\":1,\"marks_unit\":0,\"show_units\":true,\"answers\":[{\"formula\":\"\$A*\$B\",\"units\":\"cm\"}],\"vars\":{\"\$A\":{\"min\":\"2\",\"max\":\"10\",\"inc\":\"1\",\"dec\":\"0\"},\"\$B\":{\"min\":\"5\",\"max\":\"10\",\"inc\":\"1\",\"dec\":\"0\"}}}"));
+        $this->question2 = $datagenerator->create_question(array('user' => 'admin',
+            'type' => 'enhancedcalc',
+            'theme' => 'test theme',
+            'leadin' => 'test leadin',
+            'scenario' => 'test scenario',
+            'notes' => 'test notes',
+            'display_method' => null,
+            'score_method' => 'Allow partial Marks',
+            'settings' => '{"strictdisplay":true,"strictzeros":false,"dp":"0","tolerance_full":"0","fulltoltyp":"#","tolerance_partial":"0","parttoltyp":"#","marks_partial":0,"marks_incorrect":0,"marks_correct":1,"marks_unit":0,"show_units":true,"answers":[{"formula":"$A*$B","units":"cm"}],"vars":{"$A":{"min":"2","max":"10","inc":"1","dec":"0"},"$B":{"min":"5","max":"10","inc":"1","dec":"0"}}}'));
         $this->log3 = $logdatagenerator->create_summative(array('q_id' => $this->question2['id'], 'metadataID' => $meta['id'], 'screen' => 2, 'user_answer' => 2));
         $this->log4 = $logdatagenerator->create_summative(array('q_id' => $this->question2['id'], 'metadataID' => $meta2['id']));
         $datagenerator->add_question_to_paper(array('paper' => $this->pid2['id'], 'question' => $this->question2['id'], 'screen' => 2, 'displaypos' => 1));
         $this->qpaper = $datagenerator->add_question_to_paper(array('paper' => $this->pid1['id'], 'question' => $this->question2['id'], 'screen' => 1, 'displaypos' => 1));
-        $this->question3 = $datagenerator->create_question(array("user" => "admin",
-            "type" => 'enhancedcalc',
-            "leadin" => "test 3"));
+        $this->question3 = $datagenerator->create_question(array('user' => 'admin',
+            'type' => 'enhancedcalc',
+            'leadin' => 'test 3'));
         $this->log5 = $logdatagenerator->create_summative(array('q_id' => $this->question3['id'], 'metadataID' => $meta['id'], 'screen' => 3, 'user_answer' => 5, 'mark' => 1));
         $this->log6 = $logdatagenerator->create_summative(array('q_id' => $this->question3['id'], 'metadataID' => $meta2['id']));
         $datagenerator->add_question_to_paper(array('paper' => $this->pid2['id'], 'question' => $this->question3['id'], 'screen' => 3, 'displaypos' => 1));
-        $this->question4 = $datagenerator->create_question(array("user" => "admin",
-            "type" => 'enhancedcalc',
-            "leadin" => "test 4"));
+        $this->question4 = $datagenerator->create_question(array('user' => 'admin',
+            'type' => 'enhancedcalc',
+            'leadin' => 'test 4'));
         $this->log7 = $logdatagenerator->create_summative(array('q_id' => $this->question4['id'] , 'metadataID' => $meta['id'], 'screen' => 4, 'user_answer' => 7, 'mark' => 1));
         $this->log8 = $logdatagenerator->create_summative(array('q_id' => $this->question4['id'] , 'metadataID' => $meta2['id'], 'mark' => 1));
         $datagenerator->add_question_to_paper(array('paper' => $this->pid2['id'], 'question' => $this->question4['id'] , 'screen' => 4, 'displaypos' => 1));
-        $this->question5 = $datagenerator->create_question(array("user" => "admin",
-            "type" => 'area',
-            "leadin" => "test 5"));
+        $this->question5 = $datagenerator->create_question(array('user' => 'admin',
+            'type' => 'area',
+            'leadin' => 'test 5'));
         $this->log9 = $logdatagenerator->create_summative(array('q_id' => $this->question5['id'], 'metadataID' => $meta['id'], 'screen' => 5, 'user_answer' => 10));
         $this->log10 = $logdatagenerator->create_summative(array('q_id' => $this->question5['id'], 'metadataID' => $meta2['id']));
         $datagenerator->add_question_to_paper(array('paper' => $this->pid2['id'], 'question' => $this->question5['id'], 'screen' => 5, 'displaypos' => 1));
-        $this->question6 = $datagenerator->create_question(array("user" => "admin",
-            "type" => 'mcq',
-            "theme" => 'test theme 2',
-            "leadin" => "test leadin 2",
-            "scenario" => "test scenario 2",
-            "notes" => "test notes 2",
-            "score_method" => "Mark per Option",
-            "display_method" => "vertical",
-            "q_option_order" => "random",
-            "q_media" => '1517406311.png',
-            "q_media_width" => '480',
-            "q_media_height" => '105',
-            "settings" => '[]'));
+        $this->question6 = $datagenerator->create_question(array('user' => 'admin',
+            'type' => 'mcq',
+            'theme' => 'test theme 2',
+            'leadin' => 'test leadin 2',
+            'scenario' => 'test scenario 2',
+            'notes' => 'test notes 2',
+            'score_method' => 'Mark per Option',
+            'display_method' => 'vertical',
+            'q_option_order' => 'random',
+            'q_media' => '1517406311.png',
+            'q_media_width' => '480',
+            'q_media_height' => '105',
+            'settings' => '[]'));
         $this->qpaper2 = $datagenerator->add_question_to_paper(array('paper' => $this->pid1['id'], 'question' => $this->question6['id'], 'screen' => 1, 'displaypos' => 2));
         $this->options = $datagenerator->add_options_to_question(array('question' => $this->question6['id'],
             'option_text' => 'true',
@@ -166,7 +169,8 @@ class paperpropertiestest extends unittestdatabase {
      * Test setting paper password
      * @group paper
      */
-    public function test_set_password() {
+    public function test_set_password()
+    {
         // Load user id 1.
         $this->set_active_user($this->admin['id']);
         // Set new password.
@@ -183,12 +187,12 @@ class paperpropertiestest extends unittestdatabase {
         $actual = $this->query(array('columns' => array('type', 'typeID', 'editor', 'new', 'old', 'part'), 'table' => 'track_changes'));
         $expected = array(
             0 => array(
-                'type' => "Paper",
+                'type' => 'Paper',
                 'typeID' =>  $this->pid2['id'],
                 'editor' =>  $this->admin['id'],
-                'new' =>  "********",
-                'old' => "********",
-                'part' => "password"
+                'new' =>  '********',
+                'old' => '********',
+                'part' => 'password'
             )
         );
         // Check track changes masks password.
@@ -199,7 +203,8 @@ class paperpropertiestest extends unittestdatabase {
      * Test calculation question getter - all users
      * @group paper
      */
-    public function test_get_enhancedcalc_questions_all() {
+    public function test_get_enhancedcalc_questions_all()
+    {
         // Load user id 1.
         $this->set_active_user($this->admin['id']);
         $properties = PaperProperties::get_paper_properties_by_id($this->pid2['id'], $this->db, '');
@@ -211,7 +216,8 @@ class paperpropertiestest extends unittestdatabase {
      * Test calculation question getter - all users after unmarked_enhancedcalc called for student
      * @group paper
      */
-    public function test_get_enhancedcalc_questions_all_2() {
+    public function test_get_enhancedcalc_questions_all_2()
+    {
         // Load user id 1.
         $this->set_active_user($this->admin['id']);
         $properties = PaperProperties::get_paper_properties_by_id($this->pid2['id'], $this->db, '');
@@ -225,7 +231,8 @@ class paperpropertiestest extends unittestdatabase {
      * Test calculation question getter - student users
      * @group paper
      */
-    public function test_get_enhancedcalc_questions_student() {
+    public function test_get_enhancedcalc_questions_student()
+    {
         // Load user id 1.
         $this->set_active_user($this->admin['id']);
         $properties = PaperProperties::get_paper_properties_by_id($this->pid2['id'], $this->db, '');
@@ -237,7 +244,8 @@ class paperpropertiestest extends unittestdatabase {
      * Test calculation question getter - student users after unmarked_enhancedcalc called for all
      * @group paper
      */
-    public function test_get_enhancedcalc_questions_student_2() {
+    public function test_get_enhancedcalc_questions_student_2()
+    {
         // Load user id 1.
         $this->set_active_user($this->admin['id']);
         $properties = PaperProperties::get_paper_properties_by_id($this->pid2['id'], $this->db, '');
@@ -251,7 +259,8 @@ class paperpropertiestest extends unittestdatabase {
      * Test building a paper
      * @group paper
      */
-    public function test_build_paper() {
+    public function test_build_paper()
+    {
         $properties = PaperProperties::get_paper_properties_by_id($this->pid1['id'], $this->db, '');
         $expected = array(
             1 => array(
@@ -342,7 +351,8 @@ class paperpropertiestest extends unittestdatabase {
      * Test building a paper = question preview
      * @group paper
      */
-    public function test_build_paper_question_preview() {
+    public function test_build_paper_question_preview()
+    {
         $properties = PaperProperties::get_paper_properties_by_id($this->pid1['id'], $this->db, '');
         $expected = array(1 => array(
             'assigned_number' => 1,
@@ -381,7 +391,8 @@ class paperpropertiestest extends unittestdatabase {
      * Test display timer
      * @group paper
      */
-    public function test_display_timer() {
+    public function test_display_timer()
+    {
         // Summative - no timed modules
         $properties = PaperProperties::get_paper_properties_by_id($this->pid1['id'], $this->db, '');
         $this->assertFalse($properties->display_timer());
@@ -400,10 +411,11 @@ class paperpropertiestest extends unittestdatabase {
      * Test get student list for paper
      * @group paper
      */
-    public function test_get_user_list() {
+    public function test_get_user_list()
+    {
         $expected = array($this->student['id']);
-        $startdate = "2015-01-01 00:00:00";
-        $enddate = "2015-02-01 11:00:00";
+        $startdate = '2015-01-01 00:00:00';
+        $enddate = '2015-02-01 11:00:00';
         $percentile = 100;
         $studentonly = true;
         $modules = '';
@@ -421,12 +433,12 @@ class paperpropertiestest extends unittestdatabase {
         $percentile = 100;
         // Out of range.
         $expected = array();
-        $startdate = "2017-01-01 00:00:00";
-        $enddate = "2017-02-01 11:00:00";
+        $startdate = '2017-01-01 00:00:00';
+        $enddate = '2017-02-01 11:00:00';
         $this->assertEquals($expected, $properties->get_user_list($startdate, $enddate, $percentile, $studentonly, $modules));
         // Not in module.
-        $startdate = "2015-01-01 00:00:00";
-        $enddate = "2015-02-01 11:00:00";
+        $startdate = '2015-01-01 00:00:00';
+        $enddate = '2015-02-01 11:00:00';
         $modules = '2';
         $this->assertEquals($expected, $properties->get_user_list($startdate, $enddate, $percentile, $studentonly, $modules));
         // In module.
@@ -439,7 +451,8 @@ class paperpropertiestest extends unittestdatabase {
      * Test get assessment data for paper
      * @group paper
      */
-    public function test_paper_assessment_data() {
+    public function test_paper_assessment_data()
+    {
         $expected[0][1][$this->question['id']] = $this->log['user_answer'];
         $expected[0][2][$this->question2['id']] = $this->log3['user_answer'];
         $expected[0][3][$this->question3['id']] = $this->log5['user_answer'];
@@ -449,17 +462,17 @@ class paperpropertiestest extends unittestdatabase {
         $expected[0]['username'] = 'test1';
         $expected[0]['course'] = 'TEST2';
         $expected[0]['year'] = 1;
-        $expected[0]['started'] = "2015-01-01 09:00:00";
+        $expected[0]['started'] = '2015-01-01 09:00:00';
         $expected[0]['title'] = 'Dr';
         $expected[0]['surname'] = 'User1';
-        $expected[0]['first_names'] = "A";
-        $expected[0]['name'] = "User1,A";
+        $expected[0]['first_names'] = 'A';
+        $expected[0]['name'] = 'User1,A';
         $expected[0]['gender'] = null;
         $expected[0]['student_id'] = '1234567890';
         $properties = PaperProperties::get_paper_properties_by_id($this->pid2['id'], $this->db, '');
-        $course = "TEST2";
-        $startdate = "2015-01-01 00:00:00";
-        $enddate = "2015-02-01 11:00:00";
+        $course = 'TEST2';
+        $startdate = '2015-01-01 00:00:00';
+        $enddate = '2015-02-01 11:00:00';
         $percentile = 100;
         $studentonly = true;
         $modules = '';
@@ -472,11 +485,13 @@ class paperpropertiestest extends unittestdatabase {
      * Test get paper details
      * @group paper
      */
-    public function test_get_paper_questions() {
+    public function test_get_paper_questions()
+    {
         $properties = PaperProperties::get_paper_properties_by_id($this->pid1['id'], $this->db, '');
         $expected[0]['ID'] = $this->question2['id'];
         $expected[0]['type'] = $this->question2['q_type'];
-        $expected[0]['screen'] = $this->qpaper['screen'];;
+        $expected[0]['screen'] = $this->qpaper['screen'];
+        ;
         $expected[0]['correct'] = ',';
         $expected[0]['correct_text'] = "\t";
         $expected[0]['score_method'] = $this->question2['score_method'];

@@ -18,6 +18,7 @@
 namespace testing\datagenerator;
 
 use \Exception,
+
     \UserUtils,
     \QuestionUtils,
     \random_utils;
@@ -30,7 +31,8 @@ use \Exception,
  * @package testing
  * @subpackage datagenerator
  */
-class questions extends generator {
+class questions extends generator
+{
 
     /**
      * Create a new question
@@ -43,37 +45,38 @@ class questions extends generator {
      * @throws no_database
      * @throws not_found
      */
-    public function insert_question($data) {
+    public function insert_question($data)
+    {
         loader::get('papers');
         $username = $data['user'];
         $userid = UserUtils::username_exists($username, $this->db);
 
         $defaults = array(
-            "q_type" => null,
-            "theme" => "",
-            "leadin" => "test question leadin",
-            "notes" => "",
-            "display_method" => "vertical",
-            "ownerID" => $userid,
-            "q_media" => null,
-            "q_media_width" => 0,
-            "q_media_height" => 0,
-            "creation_date" => date('Y-m-d H:i:s'),
-            "last_edited" => date('Y-m-d H:i:s'),
-            "bloom" => null,
-            "scenario" => "defult scenario",
-            "scenario_plain" => "defult scenario_plain",
-            "leadin_plain" => "",
-            "checkout_time" => null,
-            "checkout_authorID" => "",
-            "deleted" => false,
-            "locked" => null,
-            "std" => "",
-            "status" => 1,
-            "q_option_order" => "display order",
-            "score_method" => "Mark per Option",
-            "settings" => "",
-            "guid" => uniqid()
+            'q_type' => null,
+            'theme' => '',
+            'leadin' => 'test question leadin',
+            'notes' => '',
+            'display_method' => 'vertical',
+            'ownerID' => $userid,
+            'q_media' => null,
+            'q_media_width' => 0,
+            'q_media_height' => 0,
+            'creation_date' => date('Y-m-d H:i:s'),
+            'last_edited' => date('Y-m-d H:i:s'),
+            'bloom' => null,
+            'scenario' => 'defult scenario',
+            'scenario_plain' => 'defult scenario_plain',
+            'leadin_plain' => '',
+            'checkout_time' => null,
+            'checkout_authorID' => '',
+            'deleted' => false,
+            'locked' => null,
+            'std' => '',
+            'status' => 1,
+            'q_option_order' => 'display order',
+            'score_method' => 'Mark per Option',
+            'settings' => '',
+            'guid' => uniqid()
         );
         $qdata = $this->set_defaults_and_clean($defaults, $data);
         $now = date('Y-m-d H:i:s');
@@ -89,22 +92,45 @@ creation_date, last_edited, locked, deleted, status, settings, guid)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 SQLQUERY;
         try {
-
             $result = $this->db->prepare($sqlquery);
-            $result->bind_param('ssssssssssssssissssisssssss', $qdata['q_type'], $qdata['theme'], $qdata['scenario'],
-                $qdata['scenario_plain'], $qdata['leadin'], $qdata['leadin_plain'], $qdata['notes'], $qdata['correct_fback'],
-                $qdata['incorrect_fback'], $qdata['score_method'], $qdata['display_method'], $qdata['q_option_order'], $qdata['std'],
-                $qdata['bloom'], $qdata['ownerID'], $qdata['q_media'], $qdata['q_media_width'], $qdata['q_media_height'], $qdata['checkout_time'],
-                $qdata['checkout_authorID'], $qdata['creation_date'], $qdata['last_edited'], $qdata['locked'], $qdata['deleted'], $qdata['status'],
-                $qdata['settings'], $qdata['guid']);
+            $result->bind_param(
+                'ssssssssssssssissssisssssss',
+                $qdata['q_type'],
+                $qdata['theme'],
+                $qdata['scenario'],
+                $qdata['scenario_plain'],
+                $qdata['leadin'],
+                $qdata['leadin_plain'],
+                $qdata['notes'],
+                $qdata['correct_fback'],
+                $qdata['incorrect_fback'],
+                $qdata['score_method'],
+                $qdata['display_method'],
+                $qdata['q_option_order'],
+                $qdata['std'],
+                $qdata['bloom'],
+                $qdata['ownerID'],
+                $qdata['q_media'],
+                $qdata['q_media_width'],
+                $qdata['q_media_height'],
+                $qdata['checkout_time'],
+                $qdata['checkout_authorID'],
+                $qdata['creation_date'],
+                $qdata['last_edited'],
+                $qdata['locked'],
+                $qdata['deleted'],
+                $qdata['status'],
+                $qdata['settings'],
+                $qdata['guid']
+            );
             $result->execute();
             $qdata['id'] = $result->insert_id;
             $result->close();
             return $qdata;
         } catch (Exception $e) {
-            echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
+            echo 'Error No: ' . $e->getCode() . ' - ' . $e->getMessage() . '<br />';
             echo nl2br($e->getTraceAsString());
-            throw new data_error("MySQL error " . $this->_mysqli->error . "<br /> Query:<br /> $sqlquery", $this->_mysqli->errno);
+            throw new data_error('MySQL error ' . $this->_mysqli->error . "<br /> Query:<br /> $sqlquery", $this->_mysqli->errno);
         }
     }
 
@@ -119,7 +145,8 @@ SQLQUERY;
      * @throws not_found
      * @return array
      */
-    public function create_question($parameters) {
+    public function create_question($parameters)
+    {
 
         $types = \QuestionEdit::$types;
         // Basic check mandatory parameters for creating question.
@@ -146,7 +173,8 @@ SQLQUERY;
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function add_question_to_paper($parameters) {
+    public function add_question_to_paper($parameters)
+    {
         if (empty($parameters['paper'])) {
             throw new data_error('paper must be provided');
         }
@@ -171,14 +199,15 @@ SQLQUERY;
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function add_options_to_question($parameters) {
+    public function add_options_to_question($parameters)
+    {
         if (empty($parameters['question'])) {
             throw new data_error('question must be provided');
         }
         $defaults = array('option_text' => null, 'o_media' => '', 'o_media_width' => '0', 'o_media_height' => '0', 'feedback_right' => null, 'feedback_wrong' => null, 'correct' => null, 'marks_correct' => null, 'marks_incorrect' => null, 'marks_partial' => null);
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
 
-        $result = $this->db->prepare("INSERT INTO options VALUE (?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)");
+        $result = $this->db->prepare('INSERT INTO options VALUE (?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)');
         $result->bind_param('isssssssddd', $parameters['question'], $settings['option_text'], $settings['o_media'], $settings['o_media_width'], $settings['o_media_height'], $settings['feedback_right'], $settings['feedback_wrong'], $settings['correct'], $settings['marks_correct'], $settings['marks_incorrect'], $settings['marks_partial']);
         $result->execute();
         $result->close();
@@ -193,7 +222,8 @@ SQLQUERY;
      *  string parameters[question]
      * @throws data_error If passed parameter is invalid
      */
-    public function add_to_module($parameters) {
+    public function add_to_module($parameters)
+    {
         if (empty($parameters['question'])) {
             throw new data_error('question must be provided');
         }
@@ -215,7 +245,8 @@ SQLQUERY;
      *  string parameters[question]
      * @throws data_error If passed parameter is invalid
      */
-    public function add_to_random_block($parameters) {
+    public function add_to_random_block($parameters)
+    {
         if (empty($parameters['question'])) {
             throw new data_error('question must be provided');
         }
@@ -227,5 +258,4 @@ SQLQUERY;
             throw new data_error('question ' . $parameters['question'] . ' not inserted into random block');
         }
     }
-
 }

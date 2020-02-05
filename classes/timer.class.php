@@ -22,39 +22,43 @@
 * @package
 */
 
-class Timer {
+class Timer
+{
 
   /** @var LogMetadata */
-  private $log_start_time;
+    private $log_start_time;
 
-  private $exam_duration;
-  private $start_datetime;
-  private $special_needs_percentage;
+    private $exam_duration;
+    private $start_datetime;
+    private $special_needs_percentage;
 
   /**
    * @param LogStartTime $log_start_time
    * @param int $exam_duration
    */
-  public function __construct($log_metadata, $exam_duration, $special_needs_percentage) {
-    $this->log_start_time = $log_metadata;
-    $this->exam_duration  = $exam_duration;
-    $this->special_needs_percentage  = $special_needs_percentage;
-  }
+    public function __construct($log_metadata, $exam_duration, $special_needs_percentage)
+    {
+        $this->log_start_time = $log_metadata;
+        $this->exam_duration  = $exam_duration;
+        $this->special_needs_percentage  = $special_needs_percentage;
+    }
 
   /**
    * @return void
    */
-  public function start() {
-    $metdataid = $this->log_start_time->get_metadata_id();
-    $this->log_start_time->get_record($metadataID, true);
-  }
+    public function start()
+    {
+        $metdataid = $this->log_start_time->get_metadata_id();
+        $this->log_start_time->get_record($metadataID, true);
+    }
 
   /**
    * @return bool
    */
-  public function is_started() {
-    return ($this->get_start_datetime() !== null);
-  }
+    public function is_started()
+    {
+        return ($this->get_start_datetime() !== null);
+    }
 
 
   /**
@@ -62,58 +66,55 @@ class Timer {
    *
    * @deprecated since version 7.1.0
    */
-  public function reset() {
-    $this->log_start_time->set_started_to_null();
-    $this->start_datetime = null;
-  }
+    public function reset()
+    {
+        $this->log_start_time->set_started_to_null();
+        $this->start_datetime = null;
+    }
 
   /**
    * @return int
    */
-  public function calculate_remaining_time() {
+    public function calculate_remaining_time()
+    {
 
-    $exam_duration_mins = $this->exam_duration;
-    $exam_duration_secs = $exam_duration_mins * 60;
+        $exam_duration_mins = $this->exam_duration;
+        $exam_duration_secs = $exam_duration_mins * 60;
 
-    if ($this->special_needs_percentage > 0) {
-      $exam_duration_secs += $exam_duration_secs * $this->special_needs_percentage/100;
+        if ($this->special_needs_percentage > 0) {
+            $exam_duration_secs += $exam_duration_secs * $this->special_needs_percentage / 100;
+        }
+
+      // get existing start time or create a new one
+        $start_datetime = $this->get_start_datetime();
+
+        if ($start_datetime === null or $start_datetime === false) {
+            $remaining_time_secs = $exam_duration_secs;
+        } else {
+            $start_timestamp     = $start_datetime->getTimestamp();
+            $now_datetime        = new DateTime();
+            $now_timestamp       = $now_datetime->getTimestamp();
+            $time_elapsed_secs   = $now_timestamp - $start_timestamp;
+            $remaining_time_secs = $exam_duration_secs - $time_elapsed_secs;
+        }
+
+        if ($remaining_time_secs < 1) {
+            $remaining_time_secs = 0;
+        }
+
+        return ceil($remaining_time_secs);
     }
-
-    // get existing start time or create a new one
-    $start_datetime = $this->get_start_datetime();
-
-    if ($start_datetime === null or $start_datetime === false) {
-      $remaining_time_secs = $exam_duration_secs;
-    } else {
-      $start_timestamp     = $start_datetime->getTimestamp();
-      $now_datetime        = new DateTime;
-      $now_timestamp       = $now_datetime->getTimestamp();
-      $time_elapsed_secs   = $now_timestamp - $start_timestamp;
-      $remaining_time_secs = $exam_duration_secs - $time_elapsed_secs;
-    }
-
-    if ($remaining_time_secs < 1) {
-      $remaining_time_secs = 0;
-    }
-
-    return ceil($remaining_time_secs);
-
-  }
 
   /**
    * @return DateTime
    */
-  public function get_start_datetime(){
+    public function get_start_datetime()
+    {
 
-    if ($this->start_datetime == null) {
-      $this->start_datetime = $this->log_start_time->get_start_datetime();
+        if ($this->start_datetime == null) {
+            $this->start_datetime = $this->log_start_time->get_start_datetime();
+        }
+
+        return $this->start_datetime;
     }
-
-    return $this->start_datetime;
-  }
-
-
-
 }
-
-?>

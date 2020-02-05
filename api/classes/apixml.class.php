@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -25,7 +26,8 @@ namespace api;
 /**
  * API XML class
  */
-class apixml extends \api\apiabstract {
+class apixml extends \api\apiabstract
+{
     /**
      * Language pack component.
      */
@@ -42,9 +44,10 @@ class apixml extends \api\apiabstract {
     );
     /**
      * Constructor
-     * @param string $request - the xml request 
+     * @param string $request - the xml request
      */
-    public function __construct($request) {
+    public function __construct($request)
+    {
         $this->xml = $request;
     }
     
@@ -54,7 +57,8 @@ class apixml extends \api\apiabstract {
      * @param string $type - the filename
      * @return array - errors
      */
-    public function validate($folder, $type) {
+    public function validate($folder, $type)
+    {
         // Enable user error handling.
         libxml_use_internal_errors(true);
         // Load dom object.
@@ -66,7 +70,7 @@ class apixml extends \api\apiabstract {
         if (!$this->data->schemaValidate($schema)) {
             $errors = libxml_get_errors();
             foreach ($errors as $error) {
-                $errorresp[] = sprintf("[%s] Line %s - %s", $error->line, $error->code, trim($error->message));
+                $errorresp[] = sprintf('[%s] Line %s - %s', $error->line, $error->code, trim($error->message));
             }
             libxml_clear_errors();
         }
@@ -84,10 +88,11 @@ class apixml extends \api\apiabstract {
      * @param integer $userid rogo user id linked to web service client
      * @return string - successful operation response or error response
      */
-    public function parse($tasktype, $fields, $actions, $perms, $userid) {
+    public function parse($tasktype, $fields, $actions, $perms, $userid)
+    {
         $langpack = new \langpack();
         $response = array();
-        $xpath = new \DOMXPath($this->data); 
+        $xpath = new \DOMXPath($this->data);
         foreach ($actions as $action) {
             $parentnode = $xpath->query($action);
             $error = false;
@@ -117,7 +122,7 @@ class apixml extends \api\apiabstract {
                             }
                         }
                     }
-                    if ($node->hasAttribute('id')) { 
+                    if ($node->hasAttribute('id')) {
                         $params['nodeid'] = $node->getAttribute('id');
                     }
                 } else {
@@ -125,7 +130,7 @@ class apixml extends \api\apiabstract {
                     $data = array('statuscode' => $this->statuscodes['API_NO_PERMISSION'], 'status' => $langpack->get_string($this->langcomponent, 'nopermission'), 'id' => null);
                 }
                 if ($error) {
-                    if ($node->hasAttribute('id')) { 
+                    if ($node->hasAttribute('id')) {
                         $response[] = $tasktype->get_response($data, $action, $node->getAttribute('id'));
                     } else {
                         $response[] = $tasktype->get_response($data, $action);

@@ -24,4 +24,3 @@ $string['msg2'] = 'Please select the CSV file you wish to load:';
 $string['headerrow'] = 'File contains header row';
 $string['errorsaving'] = 'Error updating logs';
 $string['notfound'] = 'username not found!';
-?>

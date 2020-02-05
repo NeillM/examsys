@@ -114,7 +114,7 @@ if ($archive) {
 
 $logger = new Logger($mysqli);
 
-$stmt = $mysqli->prepare("SELECT id FROM " . $cfg_db_database . ".users WHERE username = ?");
+$stmt = $mysqli->prepare('SELECT id FROM ' . $cfg_db_database . '.users WHERE username = ?');
 $stmt->bind_param('s', $account);
 $stmt->execute();
 $stmt->store_result();
@@ -127,13 +127,13 @@ if ($stmt->num_rows() !== 1) {
 $stmt->fetch();
 $stmt->close();
 
-cli_utils::prompt("Start Archive Process " . date("Y-m-d H:i:s"));
+cli_utils::prompt('Start Archive Process ' . date('Y-m-d H:i:s'));
 
 $log0_deleted_overall = 0;
 $log1_deleted_overall = 0;
 $lti_user_deleted_overall = 0;
 
-$stmt = $mysqli->prepare("SELECT id FROM " . $cfg_db_database . ".users WHERE roles='left' OR roles='graduate'");
+$stmt = $mysqli->prepare('SELECT id FROM ' . $cfg_db_database . ".users WHERE roles='left' OR roles='graduate'");
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($user_to_delete);
@@ -142,19 +142,19 @@ cli_utils::prompt($numusers . ' users to potentially archive');
 $usercount = 1;
 
 // Prepare queries.
-$selectquery0 = $mysqli->prepare(get_logselectquery("log0", $cfg_db_database));
-$logquery0 = $mysqliarchive->prepare(get_loginsertquery("log0_deleted", $cfg_archivedb_database));
-$metaselectquery0 = $mysqli->prepare(get_metaselectquery("log0", $cfg_db_database));
+$selectquery0 = $mysqli->prepare(get_logselectquery('log0', $cfg_db_database));
+$logquery0 = $mysqliarchive->prepare(get_loginsertquery('log0_deleted', $cfg_archivedb_database));
+$metaselectquery0 = $mysqli->prepare(get_metaselectquery('log0', $cfg_db_database));
 $metalogquery0 = $mysqliarchive->prepare(get_metainsertquery($cfg_archivedb_database));
-$selectquery1 = $mysqli->prepare(get_logselectquery("log1", $cfg_db_database));
-$logquery1 = $mysqliarchive->prepare(get_loginsertquery("log1_deleted", $cfg_archivedb_database));
-$metaselectquery1 = $mysqli->prepare(get_metaselectquery("log1", $cfg_db_database));
+$selectquery1 = $mysqli->prepare(get_logselectquery('log1', $cfg_db_database));
+$logquery1 = $mysqliarchive->prepare(get_loginsertquery('log1_deleted', $cfg_archivedb_database));
+$metaselectquery1 = $mysqli->prepare(get_metaselectquery('log1', $cfg_db_database));
 $metalogquery1 = $mysqliarchive->prepare(get_metainsertquery($cfg_archivedb_database));
-$deletequerylti = $mysqli->prepare("DELETE FROM " . $cfg_db_database . ".lti_user WHERE lti_user_equ = ?");
-$deletequery0 = $mysqli->prepare("DELETE l, lm FROM " . $cfg_db_database . ".log0 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-$deletequery1 = $mysqli->prepare("DELETE l, lm FROM " . $cfg_db_database . ".log1 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-$lm_check0 = $mysqli->prepare("SELECT count(lm.id) FROM " . $cfg_db_database . ".log0 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
-$lm_check1 = $mysqli->prepare("SELECT count(lm.id) FROM " . $cfg_db_database . ".log1 l INNER JOIN " . $cfg_db_database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?");
+$deletequerylti = $mysqli->prepare('DELETE FROM ' . $cfg_db_database . '.lti_user WHERE lti_user_equ = ?');
+$deletequery0 = $mysqli->prepare('DELETE l, lm FROM ' . $cfg_db_database . '.log0 l INNER JOIN ' . $cfg_db_database . '.log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?');
+$deletequery1 = $mysqli->prepare('DELETE l, lm FROM ' . $cfg_db_database . '.log1 l INNER JOIN ' . $cfg_db_database . '.log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?');
+$lm_check0 = $mysqli->prepare('SELECT count(lm.id) FROM ' . $cfg_db_database . '.log0 l INNER JOIN ' . $cfg_db_database . '.log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?');
+$lm_check1 = $mysqli->prepare('SELECT count(lm.id) FROM ' . $cfg_db_database . '.log1 l INNER JOIN ' . $cfg_db_database . '.log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?');
 
 while ($stmt->fetch()) {
     $log0_deleted = 0;
@@ -175,7 +175,7 @@ while ($stmt->fetch()) {
         $selectquery0->execute();
         $selectquery0->bind_result($id, $q_id, $mark, $adjmark, $totalpos, $user_answer, $errorstate, $screen, $duration, $updated, $dismiss, $option_order, $metadataID);
         $selectquery0->store_result();
-        while($selectquery0->fetch()) {
+        while ($selectquery0->fetch()) {
             $logquery0->bind_param('iiiiisiiisssi', $id, $q_id, $mark, $adjmark, $totalpos, $user_answer, $errorstate, $screen, $duration, $updated, $dismiss, $option_order, $metadataID);
             $logquery0->execute();
         }
@@ -184,7 +184,7 @@ while ($stmt->fetch()) {
         $metaselectquery0->execute();
         $metaselectquery0->bind_result($id, $userID, $paperID, $started, $ipaddress, $student_grade, $year, $attempt, $completed, $lab_name, $highest_screen);
         $metaselectquery0->store_result();
-        while($metaselectquery0->fetch()) {
+        while ($metaselectquery0->fetch()) {
             $metalogquery0->bind_param('iiisssiissi', $id, $userID, $paperID, $started, $ipaddress, $student_grade, $year, $attempt, $completed, $lab_name, $highest_screen);
             $metalogquery0->execute();
         }
@@ -211,7 +211,7 @@ while ($stmt->fetch()) {
         $selectquery1->execute();
         $selectquery1->bind_result($id, $q_id, $mark, $adjmark, $totalpos, $user_answer, $errorstate, $screen, $duration, $updated, $dismiss, $option_order, $metadataID);
         $selectquery1->store_result();
-        while($selectquery1->fetch()) {
+        while ($selectquery1->fetch()) {
             $logquery1->bind_param('iiiiisiiisssi', $id, $q_id, $mark, $adjmark, $totalpos, $user_answer, $errorstate, $screen, $duration, $updated, $dismiss, $option_order, $metadataID);
             $logquery1->execute();
         }
@@ -220,7 +220,7 @@ while ($stmt->fetch()) {
         $metaselectquery1->execute();
         $metaselectquery1->bind_result($id, $userID, $paperID, $started, $ipaddress, $student_grade, $year, $attempt, $completed, $lab_name, $highest_screen);
         $metaselectquery1->store_result();
-        while($metaselectquery1->fetch()) {
+        while ($metaselectquery1->fetch()) {
             $metalogquery1->bind_param('iiisssiissi', $id, $userID, $paperID, $started, $ipaddress, $student_grade, $year, $attempt, $completed, $lab_name, $highest_screen);
             $metalogquery1->execute();
         }
@@ -265,11 +265,11 @@ $lm_check1->close();
 // Reset passwords
 if ($ldap) {
     cli_utils::prompt('LDAP enabled - Resetting passwords');
-    $updatequery = $mysqli->prepare("UPDATE " . $cfg_db_database . ".users SET password='' WHERE roles IN('Student', 'graduate', 'left')");
+    $updatequery = $mysqli->prepare('UPDATE ' . $cfg_db_database . ".users SET password='' WHERE roles IN('Student', 'graduate', 'left')");
     $roles_string = 'Student, graduate and left';
 } else {
     cli_utils::prompt('LDAP disabled - Resetting passwords');
-    $updatequery = $mysqli->prepare("UPDATE " . $cfg_db_database . ".users SET password='' WHERE roles IN('graduate', 'left')");
+    $updatequery = $mysqli->prepare('UPDATE ' . $cfg_db_database . ".users SET password='' WHERE roles IN('graduate', 'left')");
     $roles_string = 'graduate and left';
 }
 $updatequery->execute();
@@ -283,9 +283,9 @@ if ($archive) {
     $mysqliarchive->close();
 }
 
-cli_utils::prompt("Log0 records archived: " . $log0_deleted_overall);
-cli_utils::prompt("Log1 records archived: " . $log1_deleted_overall);
-cli_utils::prompt("End Archive Process " . date("Y-m-d H:i:s"));
+cli_utils::prompt('Log0 records archived: ' . $log0_deleted_overall);
+cli_utils::prompt('Log1 records archived: ' . $log1_deleted_overall);
+cli_utils::prompt('End Archive Process ' . date('Y-m-d H:i:s'));
 
 /**
  * Get the log table select query
@@ -293,8 +293,9 @@ cli_utils::prompt("End Archive Process " . date("Y-m-d H:i:s"));
  * @param string $database the database to select from
  * @return string
  */
-function get_logselectquery($table, $database) {
-    return "SELECT l.id, l.q_id, l.mark, l.adjmark, l.totalpos, l.user_answer, l.errorstate, l.screen, l.duration, l.updated, l.dismiss, l.option_order, l.metadataID FROM " . $database . "." . $table ." l INNER JOIN " . $database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?";
+function get_logselectquery($table, $database)
+{
+    return 'SELECT l.id, l.q_id, l.mark, l.adjmark, l.totalpos, l.user_answer, l.errorstate, l.screen, l.duration, l.updated, l.dismiss, l.option_order, l.metadataID FROM ' . $database . '.' . $table . ' l INNER JOIN ' . $database . '.log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?';
 }
 
 /**
@@ -303,8 +304,9 @@ function get_logselectquery($table, $database) {
  * @param string $database the database to insert into
  * @return string
  */
-function get_loginsertquery($table, $database) {
-    return "INSERT INTO " . $database . "." . $table . " (id, q_id, mark, adjmark, totalpos, user_answer, errorstate, screen, duration, updated, dismiss, option_order, metadataID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+function get_loginsertquery($table, $database)
+{
+    return 'INSERT INTO ' . $database . '.' . $table . ' (id, q_id, mark, adjmark, totalpos, user_answer, errorstate, screen, duration, updated, dismiss, option_order, metadataID) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 }
 
 /**
@@ -313,8 +315,9 @@ function get_loginsertquery($table, $database) {
  * @param string $database the database to select from
  * @return string
  */
-function get_metaselectquery($table, $database) {
-    return "SELECT DISTINCT lm.id, lm.userID, lm.paperID, lm.started, lm.ipaddress, lm.student_grade, lm.year, lm.attempt, lm.completed, lm.lab_name, lm.highest_screen FROM " . $database . "." . $table . " l INNER JOIN " . $database . ".log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?";
+function get_metaselectquery($table, $database)
+{
+    return 'SELECT DISTINCT lm.id, lm.userID, lm.paperID, lm.started, lm.ipaddress, lm.student_grade, lm.year, lm.attempt, lm.completed, lm.lab_name, lm.highest_screen FROM ' . $database . '.' . $table . ' l INNER JOIN ' . $database . '.log_metadata lm ON l.metadataID = lm.id WHERE lm.userID = ?';
 }
 
 /**
@@ -322,6 +325,7 @@ function get_metaselectquery($table, $database) {
  * @param $database
  * @return string
  */
-function get_metainsertquery($database) {
-    return "INSERT INTO " . $database . ".log_metadata_deleted (id, userID, paperID, started, ipaddress, student_grade, year, attempt, completed, lab_name, highest_screen) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+function get_metainsertquery($database)
+{
+    return 'INSERT INTO ' . $database . '.log_metadata_deleted (id, userID, paperID, started, ipaddress, student_grade, year, attempt, completed, lab_name, highest_screen) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 }

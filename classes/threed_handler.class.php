@@ -20,35 +20,39 @@
  * @version 1.0
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
-class threed_handler extends media_handler {
+class threed_handler extends media_handler
+{
 
   /**
    * Render three js files
    * @param $string translation array
    */
-  public static function render_js($string) {
-    $configObject = Config::get_instance();
-    $render = new render($configObject);
-    $data['threeenabled'] = $configObject->get_setting('core', 'paper_threejs');
-    $render->render($data, $string, 'threejs.html');
-  }
+    public static function render_js($string)
+    {
+        $configObject = Config::get_instance();
+        $render = new render($configObject);
+        $data['threeenabled'] = $configObject->get_setting('core', 'paper_threejs');
+        $render->render($data, $string, 'threejs.html');
+    }
 
   /**
    * Get the js files required to load 3D images.
    * @return array
    */
-  public static function get_js() {
-    $js = array(
-      '/js/threeinit.min.js',
-    );
-    return $js;
-  }
+    public static function get_js()
+    {
+        $js = array(
+        '/js/threeinit.min.js',
+        );
+        return $js;
+    }
 
   /**
    * Get the css files required to load 3D images.
    * @return array
    */
-  public static function get_css() {
-    return array('/css/three.css');
-  }
+    public static function get_css()
+    {
+        return array('/css/three.css');
+    }
 }

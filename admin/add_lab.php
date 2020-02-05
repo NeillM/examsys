@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -21,6 +22,7 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
+
 require '../include/sysadmin_auth.inc';
 require '../include/errors.php';
 
@@ -103,7 +105,9 @@ if (null === $campus) {
                             <div>
                                 <select name="campus">
                                     <?php foreach ($campuses as $key => $campusarray) : ?>
-                                        <option value="<?= $key; ?>"<?php if ($campus == $key) : ?> selected<?php endif; ?>><?= $campusarray['campusname']; ?></option>
+                                        <option value="<?= $key; ?>"<?php if ($campus == $key) :
+                                            ?> selected<?php
+                                                       endif; ?>><?= $campusarray['campusname']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -119,9 +123,13 @@ if (null === $campus) {
 
                             <div><?php echo $string['bandwidth'] ?></div>
                             <div>
-                                <input type="radio" name="low_bandwidth" value="1"<?php if ($low_bandwidth) : ?> checked<?php endif; ?> /><?php echo $string['low'] ?>
+                                <input type="radio" name="low_bandwidth" value="1"<?php if ($low_bandwidth) :
+                                    ?> checked<?php
+                                                                                  endif; ?> /><?php echo $string['low'] ?>
                                 &nbsp;&nbsp;&nbsp;
-                                <input type="radio" name="low_bandwidth" value="0"<?php if (!$low_bandwidth) : ?> checked<?php endif; ?> /><?php echo $string['high'] ?>
+                                <input type="radio" name="low_bandwidth" value="0"<?php if (!$low_bandwidth) :
+                                    ?> checked<?php
+                                                                                  endif; ?> /><?php echo $string['high'] ?>
                             </div>
                             <br />
 
@@ -154,7 +162,7 @@ if (null === $campus) {
         // JS utils dataset.
         $render = new render($configObject);
         $miscdataset['name'] = 'dataset';
-        $miscdataset['attributes']['posturl'] = "do_add_lab.php";
+        $miscdataset['attributes']['posturl'] = 'do_add_lab.php';
         $render->render($miscdataset, array(), 'dataset.html');// JS utils dataset.
         $jsdataset['name'] = 'jsutils';
         $jsdataset['attributes']['xls'] = json_encode($string);

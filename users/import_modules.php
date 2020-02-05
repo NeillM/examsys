@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -27,18 +28,18 @@
 require_once '../include/admin_auth.inc';
 require '../include/toprightmenu.inc';
 
-ini_set("auto_detect_line_endings", true);
+ini_set('auto_detect_line_endings', true);
 
 // Instantiate Twig renderer.
 $render = new render($configObject);
 $lang['title'] = $string['impmodtitle'];
-$additionaljs = "";
-$addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/dialog.css\" />
-                <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/list.css\" />
-                <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/breadcrumb.css\" />
-                <style type=\"text/css\">
+$additionaljs = '';
+$addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/dialog.css" />
+                <link rel="stylesheet" type="text/css" href="../css/list.css" />
+                <link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
+                <style type="text/css">
                     label.error {display:block; color:#f00}
-                </style>";
+                </style>';
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 ?>
   <body>
@@ -55,14 +56,14 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
       '/users/import_users.php' => $string['importmodules'],
   ));
   $file_problem = false;
-  echo "<br /><br />";
+  echo '<br /><br />';
   if (isset($_POST['submit'])) {
-    if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
-      if (!move_uploaded_file($_FILES['csvfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_cohort_update.csv"))  {
-        echo uploadError($_FILES['csvfile']['error']);
-        exit;
-      } else {
-        ?>
+      if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
+          if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_cohort_update.csv')) {
+              echo uploadError($_FILES['csvfile']['error']);
+              exit;
+          } else {
+                ?>
         <table class="dialog_border" style="width:600px">
         <tr>
         <td class="dialog_header"><img src="../artwork/modules_icon.png" width="48" height="48" alt="Icon" />&nbsp;&nbsp;<?php echo $string['importmodules'] ?></td>
@@ -70,121 +71,129 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
         <tr>
         <td class="dialog_body">
 
-        <?php
-        // Get a list of modules held by Rogo.
-        $module_list = array();
-        $result = $mysqli->prepare("SELECT DISTINCT id, moduleid FROM modules");
-        $result->execute();
-        $result->bind_result($idMod, $moduleid);
-        while ($result->fetch()) {
-          $module_list[$moduleid] = $idMod;
-        }
-        $result->close();
+              <?php
+            // Get a list of modules held by Rogo.
+                $module_list = array();
+                $result = $mysqli->prepare('SELECT DISTINCT id, moduleid FROM modules');
+                $result->execute();
+                $result->bind_result($idMod, $moduleid);
+                while ($result->fetch()) {
+                    $module_list[$moduleid] = $idMod;
+                }
+                $result->close();
 
-        $modulesAdded = 0;
-        $missing_users = array();
-        $unknow_ModuleID = array();
-        $lines = file($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_cohort_update.csv");
+                $modulesAdded = 0;
+                $missing_users = array();
+                $unknow_ModuleID = array();
+                $lines = file($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_cohort_update.csv');
 
-        // Build an array of unique student names.
-        $students = array();
-        foreach ($lines as $separate_line) {
-          if (trim($separate_line) != '') {
-            $fields = explode(',', $separate_line);
+            // Build an array of unique student names.
+                $students = array();
+                foreach ($lines as $separate_line) {
+                    if (trim($separate_line) != '') {
+                        $fields = explode(',', $separate_line);
             
-            $sid = trim($fields[0]);
-            $session = trim($fields[2]);
-            // Modules will be added later.
+                        $sid = trim($fields[0]);
+                        $session = trim($fields[2]);
+                      // Modules will be added later.
             
-            $students[$sid]['sid'] = $sid;
-            $students[$sid]['session'] = $session;
-            $students[$sid]['modules'] = array();
-          }
-        }
+                        $students[$sid]['sid'] = $sid;
+                        $students[$sid]['session'] = $session;
+                        $students[$sid]['modules'] = array();
+                    }
+                }
 
-        // Query the modules for each student
-        foreach ($students as $student) {
-          $student_databaseID = UserUtils::studentid_exists($student['sid'], $mysqli);
+            // Query the modules for each student
+                foreach ($students as $student) {
+                    $student_databaseID = UserUtils::studentid_exists($student['sid'], $mysqli);
           
-          if ($student_databaseID !== false) {
-            $students[$student['sid']]['dbID'] = $student_databaseID;
+                    if ($student_databaseID !== false) {
+                        $students[$student['sid']]['dbID'] = $student_databaseID;
 
-            $result = $mysqli->prepare("SELECT moduleid, attempt FROM modules_student, modules WHERE modules_student.idMod = modules.id AND  userID = ? AND calendar_year = ?");
-            $result->bind_param('is', $student_databaseID, $student['session']);
-            $result->execute();
-            $result->store_result();
-            $result->bind_result($moduleid, $attempt);
-            while ($result->fetch()) {
-              if (isset($module_list[$moduleid])) {
-                $students[$student['sid']]['modules'][$moduleid][] = $attempt;
-              }
-            }
-            $result->close();
-          }
-        }
+                        $result = $mysqli->prepare('SELECT moduleid, attempt FROM modules_student, modules WHERE modules_student.idMod = modules.id AND  userID = ? AND calendar_year = ?');
+                        $result->bind_param('is', $student_databaseID, $student['session']);
+                        $result->execute();
+                        $result->store_result();
+                        $result->bind_result($moduleid, $attempt);
+                        while ($result->fetch()) {
+                            if (isset($module_list[$moduleid])) {
+                                $students[$student['sid']]['modules'][$moduleid][] = $attempt;
+                            }
+                        }
+                        $result->close();
+                    }
+                }
 
-        foreach ($lines as $separate_line) {
-          $fields = explode(',', $separate_line);
-          if (!stristr($fields[0], "ID") and !stristr($fields[0], "Student ID")) {
-            $sid = trim($fields[0]);
-            $module = trim($fields[1]);
-            $session = trim($fields[2]);
-            if (isset($fields[3])) {
-              $attempt = trim($fields[3]);
-            } else {
-              $attempt = 1;
-            }
+                foreach ($lines as $separate_line) {
+                    $fields = explode(',', $separate_line);
+                    if (!stristr($fields[0], 'ID') and !stristr($fields[0], 'Student ID')) {
+                        $sid = trim($fields[0]);
+                        $module = trim($fields[1]);
+                        $session = trim($fields[2]);
+                        if (isset($fields[3])) {
+                            $attempt = trim($fields[3]);
+                        } else {
+                            $attempt = 1;
+                        }
             
-            if (isset($module_list[$module])) {
-              $require_insert = true;
-              if (isset($students[$sid]['modules'][$module])) {
-                foreach ($students[$sid]['modules'][$module] as $individual_attempt) {
-                  if ($individual_attempt == $attempt) {
-                    $require_insert = false;
-                  }
+                        if (isset($module_list[$module])) {
+                            $require_insert = true;
+                            if (isset($students[$sid]['modules'][$module])) {
+                                foreach ($students[$sid]['modules'][$module] as $individual_attempt) {
+                                    if ($individual_attempt == $attempt) {
+                                        $require_insert = false;
+                                    }
+                                }
+                            }
+                            if ($require_insert) {
+                                if (isset($students[$sid]['dbID'])) {
+                                    $success = UserUtils::add_student_to_module($students[$sid]['dbID'], $module_list[$module], $attempt, $session, $mysqli);
+                                    if ($success) {
+                                        $modulesAdded++;
+                                    }
+                                } else {
+                                    $missing_users[$sid]['module'][] = $module;
+                                }
+                            }
+                        } else {
+                            $unknow_ModuleID[] = $module;
+                        }
+                    }
                 }
-              }
-              if ($require_insert) {
-                if (isset($students[$sid]['dbID'])) {
-                  $success = UserUtils::add_student_to_module($students[$sid]['dbID'], $module_list[$module], $attempt, $session, $mysqli);
-                  if ($success) {
-                    $modulesAdded++;
-                  }
-                } else {
-                  $missing_users[$sid]['module'][] = $module;
-                }
-              }
-            } else {
-              $unknow_ModuleID[] = $module;
-            }
           }
-        }
-      }
-      unlink( $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_cohort_update.csv");
+          unlink($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_cohort_update.csv');
 
-      echo "<table>\n";
-			echo "<tr><td>" . $string['enrolementsperformed'] . "</td><td>$modulesAdded</td></tr>\n";
-      echo "<tr><td>" . $string['missingusers'] . "</td><td><div>" . count($missing_users) . "<div>\n";
-      if (count($missing_users) > 0) echo '<ul>';
-			foreach ($missing_users as $sid => $module) {
-        echo "<li>$sid<br />";
-        foreach ($module['module'] as $moduleid) {
-          echo "$moduleid<br />";
-        }
-				echo "</li>";
-      }
-      if (count($missing_users) > 0) echo '</ul>';
-			echo "</td></tr>\n";
-			
-      echo "<tr><td>" . $string['missingmodules'] . "</td><td><div>" . count($unknow_ModuleID) . "</div>\n<ul>";
-      if (count($unknow_ModuleID) > 0) echo '<ul>';
-      foreach ($unknow_ModuleID as $moduleID) {
-        echo "<li>$moduleID</li>";
-      }
-      if (count($unknow_ModuleID) > 0) echo '</ul>';
-			echo "</td></tr>\n";
-			echo "</table>\n";
-      ?>
+          echo "<table>\n";
+            echo '<tr><td>' . $string['enrolementsperformed'] . "</td><td>$modulesAdded</td></tr>\n";
+          echo '<tr><td>' . $string['missingusers'] . '</td><td><div>' . count($missing_users) . "<div>\n";
+          if (count($missing_users) > 0) {
+              echo '<ul>';
+          }
+          foreach ($missing_users as $sid => $module) {
+              echo "<li>$sid<br />";
+              foreach ($module['module'] as $moduleid) {
+                  echo "$moduleid<br />";
+              }
+              echo '</li>';
+          }
+          if (count($missing_users) > 0) {
+              echo '</ul>';
+          }
+            echo "</td></tr>\n";
+            
+          echo '<tr><td>' . $string['missingmodules'] . '</td><td><div>' . count($unknow_ModuleID) . "</div>\n<ul>";
+          if (count($unknow_ModuleID) > 0) {
+              echo '<ul>';
+          }
+          foreach ($unknow_ModuleID as $moduleID) {
+              echo "<li>$moduleID</li>";
+          }
+          if (count($unknow_ModuleID) > 0) {
+              echo '</ul>';
+          }
+            echo "</td></tr>\n";
+            echo "</table>\n";
+            ?>
       </div>
       </td>
       </tr>
@@ -192,14 +201,14 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
       </div>
       </td></tr>
       </table>
-      <?php
-      $mysqli->close();
-      exit();
-    } else {
-      $file_problem = true;
-    }
+          <?php
+            $mysqli->close();
+            exit();
+      } else {
+          $file_problem = true;
+      }
   }
-?>
+    ?>
 <table style="width:730px" class="dialog_border">
 <tr>
   <td style="width:56px; background-color:white"><img src="../artwork/modules_import.png" width="48" height="48" alt="Icon" /></td><td class="dialog_header midblue_header" style="width:90%"><?php echo $string['importmodules']; ?></td>
@@ -217,10 +226,10 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 <form id="import_form" name="import" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" enctype="multipart/form-data" autocomplete="off">
 <?php
 if ($file_problem) {
-  echo '<div style="color:#C00000"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" />&nbsp;Please specify a file for upload.</div>';
-  echo '<p style="color:#C00000; font-weight:bold">' . $string['csvfile'] . ' <input type="file" size="50" name="csvfile" required /></p>';
+    echo '<div style="color:#C00000"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="!" />&nbsp;Please specify a file for upload.</div>';
+    echo '<p style="color:#C00000; font-weight:bold">' . $string['csvfile'] . ' <input type="file" size="50" name="csvfile" required /></p>';
 } else {
-  echo '<p style="font-weight:bold">' . $string['csvfile'] . ' <input type="file" size="50" name="csvfile" required /></p>';
+    echo '<p style="font-weight:bold">' . $string['csvfile'] . ' <input type="file" size="50" name="csvfile" required /></p>';
 }
 ?>
 <br />

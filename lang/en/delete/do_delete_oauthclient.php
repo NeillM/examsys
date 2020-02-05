@@ -16,4 +16,3 @@
 
 $string['oauthclientdel'] = 'OAuth Client Deleted';
 $string['oauthclientdelsuccess'] = 'OAuth Client successfully deleted.';
-?>

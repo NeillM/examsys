@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -25,13 +26,13 @@ require '../include/sysadmin_auth.inc';
 require_once '../include/errors.php';
 
 // Get all sessions.
-$result = $mysqli->prepare("SELECT calendar_year, academic_year, cal_status, stat_status FROM academic_year WHERE deleted is NULL");
+$result = $mysqli->prepare('SELECT calendar_year, academic_year, cal_status, stat_status FROM academic_year WHERE deleted is NULL');
 $result->execute();
 $result->store_result();
 $result->bind_result($calendar_year, $academic_year, $cal_status, $stat_status);
 // Put sessions into array so we can close hte db connection.
 $sessions = array();
-while($result->fetch()) {
+while ($result->fetch()) {
     $sessions[$calendar_year] = array($academic_year, $cal_status, $stat_status);
 }
 $num_sessions = count($sessions);
@@ -86,17 +87,17 @@ $result->close();
 <?php
 
 if ($num_sessions > 0) {
-    $yes = "<img src=\"../artwork/tick.gif\" id=\"yes\" />";
-    $no = "<img src=\"../artwork/cross.gif\" id=\"no\" />";
+    $yes = '<img src="../artwork/tick.gif" id="yes" />';
+    $no = '<img src="../artwork/cross.gif" id="no" />';
     foreach ($sessions as $year => $info) {
-       echo "<tr id=\"$year\" class=\"l\"><td>$year</td><td>$info[0]</td>"
-      . "<td class=\"no\" style=\"text-align:left\">" . (($info[1] == 0) ? $no : $yes) . "</td>"
-      . "<td class=\"no\" style=\"text-align:left\">" . (($info[2] == 0) ? $no : $yes) . "</td>"
-      . "</tr>\n";
+        echo "<tr id=\"$year\" class=\"l\"><td>$year</td><td>$info[0]</td>"
+        . '<td class="no" style="text-align:left">' . (($info[1] == 0) ? $no : $yes) . '</td>'
+        . '<td class="no" style="text-align:left">' . (($info[2] == 0) ? $no : $yes) . '</td>'
+        . "</tr>\n";
     }
 } else {
-  echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-  echo "<tr><td colspan=\"4\">" . $string['musthavesession'] . "</td></tr>\n";
+    echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+    echo '<tr><td colspan="4">' . $string['musthavesession'] . "</td></tr>\n";
 }
 
 ?>

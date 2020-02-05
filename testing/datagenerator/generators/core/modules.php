@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -17,6 +18,7 @@
 namespace testing\datagenerator;
 
 use \module_utils,
+
     \yearutils,
     UserUtils;
 
@@ -28,7 +30,8 @@ use \module_utils,
  * @package testing
  * @subpackage datagenerator
  */
-class modules extends generator {
+class modules extends generator
+{
 
     /**
      * Create a new module
@@ -43,7 +46,8 @@ class modules extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function create_module($parameters) {
+    public function create_module($parameters)
+    {
         if (empty($parameters['moduleid'])) {
             throw new data_error('moduleid must be provided');
         }
@@ -59,7 +63,7 @@ class modules extends generator {
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         $modid = module_utils::add_modules($settings['moduleid'], $settings['fullname'], $settings['active'], $settings['schoolID'], $settings['vle_api'], $settings['sms_api'], $settings['selfEnroll'], $settings['peer'], $settings['external'], $settings['stdset'], $settings['mapping'], $settings['neg_marking'], $settings['ebel_grid_template'], $settings['db'], $settings['sms_import'], $settings['timed_exams'], $settings['exam_q_feedback'], $settings['add_team_members'], $settings['map_level'], $settings['academic_year_start'], $settings['externalID']);
         if (empty($modid)) {
-            throw new data_error("Create new module failed with parameters: " . implode("--", $settings));
+            throw new data_error('Create new module failed with parameters: ' . implode('--', $settings));
         }
         $settings['id'] = $modid;
         return $settings;
@@ -73,7 +77,8 @@ class modules extends generator {
      *  string $username
      * @throws data_error If passed parameter is invalid
      */
-    public function create_module_team($parameters) {
+    public function create_module_team($parameters)
+    {
         $moduleid = $parameters['moduleid'];
         $username = $parameters['username'];
         $userid = UserUtils::username_exists($username, $this->db);
@@ -96,7 +101,8 @@ class modules extends generator {
      *  string parameters[userid]
      * @throws data_error If passed parameter is invalid
      */
-    public function create_enrolment($parameters) {
+    public function create_enrolment($parameters)
+    {
         if (empty($parameters['moduleid'])) {
             throw new data_error('moduleid must be provided');
         }
@@ -115,7 +121,7 @@ class modules extends generator {
 
         $id = UserUtils::add_student_to_module($userid, $moduleid, $settings['attempt'], $settings['calendar_year'], $this->db, $settings['auto_update']);
         if ($id === false) {
-            throw new data_error("Create new module enrolment failed with parameters: " . $userid . "--" . $moduleid . "--" . implode("--", $settings));
+            throw new data_error('Create new module enrolment failed with parameters: ' . $userid . '--' . $moduleid . '--' . implode('--', $settings));
         }
     }
 }

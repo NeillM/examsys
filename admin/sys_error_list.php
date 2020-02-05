@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -41,7 +42,7 @@ $state = $stateutil->getState();
   <link rel="stylesheet" type="text/css" href="../css/list.css" />
   <style type="text/css">
     .errl {padding-right:6px; vertical-align:top; text-align:right}
-	</style>
+    </style>
 
   <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
   <script src='../js/require.js'></script>
@@ -53,13 +54,13 @@ $state = $stateutil->getState();
   require '../include/sys_errors_menu.inc';
   require '../include/toprightmenu.inc';
 
-	echo draw_toprightmenu();
+    echo draw_toprightmenu();
 
-  if (isset($state['showfixed']) and $state['showfixed'] == 'true') {
+if (isset($state['showfixed']) and $state['showfixed'] == 'true') {
     $sql = "SELECT fixed, sys_errors.id, title, initials, surname, DATE_FORMAT(occurred,'{$configObject->get('cfg_long_date_time')}'), errtype, errstr, errfile, errline, users.id FROM sys_errors LEFT JOIN users ON users.id = sys_errors.userID ORDER BY sys_errors.id DESC";
-  } else {
+} else {
     $sql = "SELECT fixed, sys_errors.id, title, initials, surname, DATE_FORMAT(occurred,'{$configObject->get('cfg_long_date_time')}'), errtype, errstr, errfile, errline, users.id FROM sys_errors LEFT JOIN users ON users.id = sys_errors.userID WHERE fixed IS NULL ORDER BY sys_errors.id DESC";
-  }
+}
 
   $result = $mysqli->prepare($sql);
   $result->execute();
@@ -70,7 +71,9 @@ $state = $stateutil->getState();
 <table class="header">
 <tr>
   <th colspan="4"><div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a></div><div class="page_title"><?php echo $string['systemerrors'] ?> (<?php echo number_format($result->num_rows) ?>)</div></th>
-<th colspan="3" style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /><br /><div style="padding-top:5px"><input class="chk" type="checkbox" name="showfixed" id="showfixed" value="1" <?php if (isset($state['showfixed']) and $state['showfixed'] == 'true') echo ' checked="checked"'; ?> /> <?php echo $string['showfixed'] ?>&nbsp;</div></th>
+<th colspan="3" style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /><br /><div style="padding-top:5px"><input class="chk" type="checkbox" name="showfixed" id="showfixed" value="1" <?php if (isset($state['showfixed']) and $state['showfixed'] == 'true') {
+    echo ' checked="checked"';
+                                                                                                                                                                                                                                             } ?> /> <?php echo $string['showfixed'] ?>&nbsp;</div></th>
 </tr>
 </table>
 <table class="header" id="maindata">
@@ -80,19 +83,19 @@ $state = $stateutil->getState();
 <tbody>
 
 <?php
-  while ($result->fetch()) {
+while ($result->fetch()) {
     if ($fixed == '') {
-      echo "<tr class=\"l\" id=\"$errorID\"><td><nobr>$occurred<nobr></td><td>$errtype</td><td>$errstr</td><td>$errfile</td><td class=\"errl\">$errline</td><td><nobr>$title $initials $surname</nobr></td></tr>\n";
+        echo "<tr class=\"l\" id=\"$errorID\"><td><nobr>$occurred<nobr></td><td>$errtype</td><td>$errstr</td><td>$errfile</td><td class=\"errl\">$errline</td><td><nobr>$title $initials $surname</nobr></td></tr>\n";
     } else {
-      echo "<tr class=\"l deleted\" id=\"$errorID\"><td><nobr>$occurred</nobr></td><td>$errtype</td><td>$errstr</td><td>$errfile</td><td class=\"errl\">$errline</td><td>";
-      if ($surname == '') {
-        echo '<span class="grey">unauthenticated</span>';
-      } else {
-        echo "<nobr>$title $initials $surname</nobr>";
-      }
-      echo "</td></tr>\n";
+        echo "<tr class=\"l deleted\" id=\"$errorID\"><td><nobr>$occurred</nobr></td><td>$errtype</td><td>$errstr</td><td>$errfile</td><td class=\"errl\">$errline</td><td>";
+        if ($surname == '') {
+            echo '<span class="grey">unauthenticated</span>';
+        } else {
+            echo "<nobr>$title $initials $surname</nobr>";
+        }
+        echo "</td></tr>\n";
     }
-  }
+}
 ?>
 </tbody>
 </table>

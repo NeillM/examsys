@@ -8,7 +8,7 @@
 // Enable Cosign Authentication
 $cosign_cfg['CosignProtected'] = true;
 
-// Hostname of server running cosignd 
+// Hostname of server running cosignd
 $cosign_cfg['CosignHostname'] = 'weblogin.umich.edu';
 
 // The port on which cosignd listens
@@ -24,7 +24,7 @@ $cosign_cfg['CosignRedirect'] = 'https://weblogin.umich.edu';
 $cosign_cfg['CosignFilterDB'] = '/var/cosign/filter/';
 
 // Expiration time of service cookie in seconds
-$cosign_cfg['CosignCookieExpireTime'] = 3600*24;
+$cosign_cfg['CosignCookieExpireTime'] = 3600 * 24;
 
 // Debug log file path
 $cosign_cfg['CosignFilterLog'] = '/tmp/cosign-filter.log';
@@ -35,9 +35,9 @@ $cosign_cfg['CosignFilterDebug'] = true;
 // Version of Cosign protocol
 $cosign_cfg['CosignProtocolVersion'] = 3;
 
-// The URL to which a user is redirected to if an error is 
+// The URL to which a user is redirected to if an error is
 // encountered during a POST
-$cosign_cfg['CosignPostErrorRedirect'] = $cosign_cfg['CosignRedirect'].'/cosign/post_error.html';
+$cosign_cfg['CosignPostErrorRedirect'] = $cosign_cfg['CosignRedirect'] . '/cosign/post_error.html';
 
 // A list space separated factors that must be satisfied by the user
 $cosign_cfg['CosignRequireFactor'] = '';
@@ -93,10 +93,8 @@ $cosign_cfg['CosignCryptoCAPath'] = '/path/to/CAdir';
 ** Kerberos directives section
 */
 
-//  Toggles whether the value of TGT will be requested from cosignd 
+//  Toggles whether the value of TGT will be requested from cosignd
 $cosign_cfg['CosignGetKerberosTickets'] = false;
 
 // Kerberos ticket filter DB directory. Must end with trailing slash
 $cosign_cfg['CosignTicketPrefix'] = '/var/cosign/tickets/';
-
-?>

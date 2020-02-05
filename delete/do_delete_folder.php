@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -30,12 +31,12 @@ require '../include/errors.php';
 $folderID = check_var('folderID', 'POST', true, false, true);
 
 if ($userObject->get_user_ID() != folder_utils::get_ownerID($folderID, $mysqli)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$result = $mysqli->prepare("SELECT name FROM folders WHERE id = ?");
+$result = $mysqli->prepare('SELECT name FROM folders WHERE id = ?');
 $result->bind_param('i', $folderID);
 $result->execute();
 $result->bind_result($name);
@@ -45,38 +46,38 @@ $result->close();
 $directories = explode(';', $name);
 $parent = '';
 if (count($directories) > 1) {
-  for ($i=1; $i<count($directories); $i++) {
-    if ($parent == '') {
-      $parent = $directories[$i-1];
-    } else {
-      $parent .= ';' . $directories[$i-1];
+    for ($i = 1; $i < count($directories); $i++) {
+        if ($parent == '') {
+            $parent = $directories[$i - 1];
+        } else {
+            $parent .= ';' . $directories[$i - 1];
+        }
     }
-  }
 }
 
 if ($parent != '') {
-  $result = $mysqli->prepare("SELECT id FROM folders WHERE name = ? AND ownerID = ?");
-  $result->bind_param('si', $parent, $userObject->get_user_ID());
-  $result->execute();
-  $result->bind_result($parentID);
-  $result->fetch();
-  $result->close();
+    $result = $mysqli->prepare('SELECT id FROM folders WHERE name = ? AND ownerID = ?');
+    $result->bind_param('si', $parent, $userObject->get_user_ID());
+    $result->execute();
+    $result->bind_result($parentID);
+    $result->fetch();
+    $result->close();
 } else {
-  $parentID = '';
+    $parentID = '';
 }
 
 // Delete sub dirs.
 $sub_folder_name = $name . ';%';
-$result = $mysqli->prepare("SELECT id FROM folders WHERE name LIKE ? AND ownerID = ? AND deleted IS NULL");
+$result = $mysqli->prepare('SELECT id FROM folders WHERE name LIKE ? AND ownerID = ? AND deleted IS NULL');
 $result->bind_param('si', $sub_folder_name, $userObject->get_user_ID());
 $result->execute();
 $result->store_result();
 $result->bind_result($subID);
 while ($result->fetch()) {
-  $delete = $mysqli->prepare("UPDATE folders SET deleted = NOW(), name=CONCAT(name,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE id = ? AND ownerID = ?");
-  $delete->bind_param('ii', $subID, $userObject->get_user_ID());
-  $delete->execute();
-  $delete->close();
+    $delete = $mysqli->prepare("UPDATE folders SET deleted = NOW(), name=CONCAT(name,' [deleted ',DATE_FORMAT(NOW(),'%d/%m/%Y'),']') WHERE id = ? AND ownerID = ?");
+    $delete->bind_param('ii', $subID, $userObject->get_user_ID());
+    $delete->execute();
+    $delete->close();
 }
 $result->close();
 
@@ -117,16 +118,16 @@ $mysqli->close();
 <form action="" method="get" autocomplete="off">
 <?php
 if ($parent == '') {
-  echo "<input type=\"button\" name=\"cancel\" value=\"OK\" class=\"ok\" />\n";
+    echo "<input type=\"button\" name=\"cancel\" value=\"OK\" class=\"ok\" />\n";
 } else {
-  echo "<input type=\"button\" name=\"cancel\" value=\"OK\" class=\"ok\" />\n";
+    echo "<input type=\"button\" name=\"cancel\" value=\"OK\" class=\"ok\" />\n";
 }
 ?>
 </form>
 </div>
 <?php
 // Dataset.
-$render= new render($configObject);
+$render = new render($configObject);
 $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['parent'] = $parent;
 $miscdataset['attributes']['parentid'] = $parentID;

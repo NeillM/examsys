@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogo
 //
 // Rogo is free software: you can redistribute it and/or modify
@@ -51,7 +52,7 @@ $result->bind_param('i', $paperID);
 $result->execute();
 $result->bind_result($q_id, $settings);
 while ($result->fetch()) {
-  $q_ids[$q_id] = $settings;
+    $q_ids[$q_id] = $settings;
 }
 $result->close();
 
@@ -59,7 +60,7 @@ $possible = array();
 
 // Check random blocks questions for calculation questions
 $random = $mysqli->prepare("SELECT q_id, settings FROM questions WHERE q_type ='enhancedcalc' AND q_id in ("
-    . "SELECT DISTINCT random_link.q_id FROM random_link, papers WHERE question = random_link.id  AND paper = ?)");
+    . 'SELECT DISTINCT random_link.q_id FROM random_link, papers WHERE question = random_link.id  AND paper = ?)');
 $random->bind_param('i', $paperID);
 $random->execute();
 $random->bind_result($random_id, $random_settings);
@@ -70,7 +71,7 @@ $random->close();
 
 // Check keyword based questions for calculation questions
 $keyword = $mysqli->prepare("SELECT q_id, settings FROM questions WHERE q_type ='enhancedcalc' AND q_id in ("
-    . "SELECT DISTINCT keywords_question.q_id FROM keywords_question, keywords_link, papers WHERE question = keywords_link.q_id AND keywordID = keyword_id AND paper = ?)");
+    . 'SELECT DISTINCT keywords_question.q_id FROM keywords_question, keywords_link, papers WHERE question = keywords_link.q_id AND keywordID = keyword_id AND paper = ?)');
 $keyword->bind_param('i', $paperID);
 $keyword->execute();
 $keyword->bind_result($keyword_id, $keyword_settings);
@@ -116,7 +117,7 @@ foreach ($q_ids as $q_id => $setting) {
 
 $problem_questions = array();
 
-foreach($statuses as $qid => $data) {
+foreach ($statuses as $qid => $data) {
     if ($data[Q_MARKING_UNMARKED] > 0 or $data[Q_MARKING_ERROR] > 0) {     // Record unmarked and marking error problems.
         $q_no = get_question_no($qid, $questions);
         // Use the is if we cannot find the number.
@@ -135,7 +136,6 @@ if (count($problem_questions) > 0) {
 }
 
 if ($error) {
-
     $userid = $userObject->get_user_ID();
     $username = $userObject->get_username();
     $error_type = 'Application Error';
@@ -143,23 +143,23 @@ if ($error) {
     $errfile = $_SERVER['PHP_SELF'];
     $post_data = '';
     if (isset($_POST)) {
-      foreach ($_POST as $key => $value) {
-        if ($key != 'ROGO_PW') {
-          if (is_array($value)) {
-            $value = var_export($value, true);
-          }
-          if ($post_data == '') {
-            $post_data = "$key=$value";
-          } else {
-            $post_data .= ", $key=$value";
-          }
-        } else {
-          $post_data .= ", $key=<HIDDEN>";
+        foreach ($_POST as $key => $value) {
+            if ($key != 'ROGO_PW') {
+                if (is_array($value)) {
+                    $value = var_export($value, true);
+                }
+                if ($post_data == '') {
+                    $post_data = "$key=$value";
+                } else {
+                    $post_data .= ", $key=$value";
+                }
+            } else {
+                $post_data .= ", $key=<HIDDEN>";
+            }
         }
-      }
     }
 
-    $log_error = $mysqli->prepare("INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, NULL, NULL)");
+    $log_error = $mysqli->prepare('INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, NULL, NULL)');
     $log_error->bind_param('issssssssis', $userid, $username, $error_type, $errstr, $errfile, $errline, $_SERVER['PHP_SELF'], $_SERVER['QUERY_STRING'], $_SERVER['REQUEST_METHOD'], $paperID, $post_data);
     $log_error->execute();
     $log_error->close();
@@ -171,13 +171,12 @@ if ($error) {
 
 echo $return_status;
 
-function get_question_no($qid, $questions) {
-    foreach($questions as $question) {
+function get_question_no($qid, $questions)
+{
+    foreach ($questions as $question) {
         if ($qid == $question['q_id']) {
             $problem_qid = $question['q_no'];
             return $problem_qid;
         }
     }
 }
-?>
-

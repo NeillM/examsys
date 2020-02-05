@@ -23,4 +23,3 @@ $string['date'] = 'Date';
 $string['passscore'] = 'Pass Score';
 $string['method'] = 'Method';
 $string['review'] = 'Review';
-?>

@@ -45,4 +45,3 @@ $string['msg8'] = 'WARNING: You must specify a duration in minutes that the exam
 $string['msg9'] = 'WARNING: You must specify a size for the cohort.';
 $string['msg10'] = 'WARNING: A paper cannot finish before it starts';
 $string['na'] = 'N/A';
-?>

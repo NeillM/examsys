@@ -19,4 +19,3 @@ $string['note'] = 'Note:';
 $string['studentname'] = 'Student Name:';
 $string['namecheck'] = 'Please select a paper name.';
 $string['notecheck'] = 'Please enter some text for your note.';
-?>

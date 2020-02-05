@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -25,49 +26,51 @@
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.php';
 require_once 'include/inc.php';
-
 $file = check_var('file', 'GET', true, false, true);
-$file = str_replace("..", "", $file);
+$file = str_replace('..', '', $file);
 $path = check_var('path', 'GET', true, false, true);
-$path = str_replace("..", "", $path);
+$path = str_replace('..', '', $path);
 $title = check_var('path', 'GET', true, false, true);
-
 $qtiexportdirectory = rogo_directory::get_directory('qti_export');
 $base_dir = $qtiexportdirectory->location();
-
-$accessfile = $base_dir.$path."/access.xml";
-if (!file_exists($accessfile)) exit;
+$accessfile = $base_dir . $path . '/access.xml';
+if (!file_exists($accessfile)) {
+    exit;
+}
 
 $xmlStr = file_get_contents($accessfile);
 $xml = simplexml_load_string($xmlStr);
+if ($userObject->get_user_ID() != $xml->owner) {
+    exit;
+}
 
-if ($userObject->get_user_ID() != $xml->owner) exit;
-
-$xmlfile = $base_dir.$path."/".$file;
-$ext = strtolower(substr($file, strrpos($file, ".") + 1));
-
+$xmlfile = $base_dir . $path . '/' . $file;
+$ext = strtolower(substr($file, strrpos($file, '.') + 1));
 $filename = $file;
-if ($title) $filename = CleanFileName($title).".".$ext;
+if ($title) {
+    $filename = CleanFileName($title) . '.' . $ext;
+}
 
-function head($text) {
-  header($text);
+function head($text)
+{
+
+    header($text);
 }
 
 head('Pragma: public');
-if ($ext == "xml") {
-  head('Content-Type: text/xml; charset=UTF-8');
-} elseif ($ext == "zip") {
-  head('Content-Type: application/zip');
-} else if ($ext == "png") {
-  head('Content-Type: image/png');
-} else if ($ext == "gif") {
-  head('Content-Type: image/gif');
-} else if ($ext == "jpg" || $ext == "jpeg") {
-  head('Content-Type: image/jpeg');
+if ($ext == 'xml') {
+    head('Content-Type: text/xml; charset=UTF-8');
+} elseif ($ext == 'zip') {
+    head('Content-Type: application/zip');
+} elseif ($ext == 'png') {
+    head('Content-Type: image/png');
+} elseif ($ext == 'gif') {
+    head('Content-Type: image/gif');
+} elseif ($ext == 'jpg' || $ext == 'jpeg') {
+    head('Content-Type: image/jpeg');
 }
-head('Content-Length: '.filesize($xmlfile));
-head('Content-Disposition: attachment;filename="'.$filename.'"');
-
+head('Content-Length: ' . filesize($xmlfile));
+head('Content-Disposition: attachment;filename="' . $filename . '"');
 $fp = fopen($xmlfile, 'r');
 fpassthru($fp);
 fclose($fp);

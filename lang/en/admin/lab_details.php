@@ -33,4 +33,3 @@ $string['plagarism'] = 'Plagarism';
 $string['ipaddresses'] = 'IP Addresses';
 $string['edit'] = 'Edit';
 $string['listcampuses'] = 'Campuses';
-?>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -23,22 +24,22 @@
 */
 
 $num_options = count($question->options);
-if($num_options > 0) {
-  $option = reset($question->options);
-  $option_id = $option->id;
-  $scanario_text = $option->get_text();
-  if ($question->get_display_method() == 'textboxes') {
-    $inst1_hidden = ' hide';
-    $inst2_hidden = '';
-  } else {
+if ($num_options > 0) {
+    $option = reset($question->options);
+    $option_id = $option->id;
+    $scanario_text = $option->get_text();
+    if ($question->get_display_method() == 'textboxes') {
+        $inst1_hidden = ' hide';
+        $inst2_hidden = '';
+    } else {
+        $inst1_hidden = '';
+        $inst2_hidden = ' hide';
+    }
+} else {
+    $option_id = -1;
+    $scanario_text = '';
     $inst1_hidden = '';
     $inst2_hidden = ' hide';
-  }
-} else {
-  $option_id = -1;
-  $scanario_text = '';
-  $inst1_hidden = '';
-  $inst2_hidden = ' hide';
 }
 $scenario_message = <<< MESSAGE
 <span class="note blank-instructions{$inst1_hidden}" id="instructions1">{$string['blankinstructionsddl']}</span>
@@ -47,8 +48,8 @@ MESSAGE;
 $scenario_height = 250;
 
 ?>
-				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
-					<tbody>
+                <table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
+                    <tbody>
 <?php
 require_once 'detail_parts/details_theme_notes.php';
 require_once 'detail_parts/details_media.php';
@@ -68,8 +69,8 @@ require_once 'detail_parts/details_presentation.php';
 ?>
               </td>
             </tr>
-					</tbody>
-				</table>
+                    </tbody>
+                </table>
         <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
 
 <?php

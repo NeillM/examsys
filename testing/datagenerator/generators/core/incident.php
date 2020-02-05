@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ namespace testing\datagenerator;
  * @package testing
  * @subpackage datagenerator
  */
-class incident extends generator {
+class incident extends generator
+{
 
     /**
      * Create a new fail log
@@ -37,7 +39,8 @@ class incident extends generator {
      * @return array
      * @throws data_error If passed parameter is invalid
      */
-    public function create_fail($parameters) {
+    public function create_fail($parameters)
+    {
         if (empty($parameters['userid'])) {
             throw new data_error('userid must be provided');
         }
@@ -51,11 +54,20 @@ class incident extends generator {
 
         $now = time();
         $sql = $this->db->prepare('INSERT INTO save_fail_log VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?)');
-        $sql->bind_param('iiisssss', $parameters['userid'], $parameters['paperid'], $settings['screen'], $settings['ipaddress'], $now,
-            $settings['status'], $settings['request_rul'], $settings['response_data']);
+        $sql->bind_param(
+            'iiisssss',
+            $parameters['userid'],
+            $parameters['paperid'],
+            $settings['screen'],
+            $settings['ipaddress'],
+            $now,
+            $settings['status'],
+            $settings['request_rul'],
+            $settings['response_data']
+        );
 
         if (!$sql->execute()) {
-            throw new data_error("Create new save fail log failed with parameters: " . $parameters['userid'] . "--" . $parameters['paperid'] . "--" . implode("--", $settings));
+            throw new data_error('Create new save fail log failed with parameters: ' . $parameters['userid'] . '--' . $parameters['paperid'] . '--' . implode('--', $settings));
         }
         $settings['id'] = $sql->insert_id;
         $sql->close();
@@ -73,7 +85,8 @@ class incident extends generator {
      * @return array
      * @throws data_error If passed parameter is invalid
      */
-    public function create_denied($parameters) {
+    public function create_denied($parameters)
+    {
         if (empty($parameters['userid'])) {
             throw new data_error('userid must be provided');
         }
@@ -91,7 +104,7 @@ class incident extends generator {
         $sql->bind_param('isssss', $userid, $settings['created'], $settings['ipaddress'], $page, $settings['title'], $settings['msg']);
 
         if (!$sql->execute()) {
-            throw new data_error("Create new access denied log failed with parameters: " . $userid . "--" . $page . "--" . implode("--", $settings));
+            throw new data_error('Create new access denied log failed with parameters: ' . $userid . '--' . $page . '--' . implode('--', $settings));
         }
         $settings['id'] = $sql->insert_id;
         $sql->close();

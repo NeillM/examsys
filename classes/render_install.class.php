@@ -25,7 +25,8 @@
  * This class should override any methods in the render class that require a configured database
  * and remove the requirement.
  */
-class render_install extends render {
+class render_install extends render
+{
     /**
      * Render an arbitrary template file during installation before the database is installed.
      *
@@ -37,7 +38,8 @@ class render_install extends render {
      * @param string $additionaljs additional javascript required
      * @param string $additionalcss additional css required
      */
-    public function render($data, $lang, $template, $additionaljs = "", $additionalcss = "") {
+    public function render($data, $lang, $template, $additionaljs = '', $additionalcss = '')
+    {
         $data = array('data' => $data, 'lang' => $lang, 'path' => $this->config->get('cfg_root_path'), 'charset' => $this->config->get('cfg_page_charset'),
         'additionaljs' => $additionaljs, 'additionalcss' => $additionalcss);
         echo $this->twig->render($template, $data);

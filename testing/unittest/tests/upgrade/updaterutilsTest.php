@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,11 +25,13 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
-class updaterutilstest extends unittestdatabase {
+class updaterutilstest extends unittestdatabase
+{
     /**
      * Generate data for test.
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         // Currently only base data required.
     }
 
@@ -38,7 +41,8 @@ class updaterutilstest extends unittestdatabase {
     /**
      * Do some setup for the tests.
      */
-    public function setUp() : void {
+    public function setUp(): void
+    {
         parent::setUp();
         // Create the updater utils object.
         $this->updateutil = new UpdaterUtils($this->config->db, $this->config->get('cfg_db_database'));
@@ -47,7 +51,8 @@ class updaterutilstest extends unittestdatabase {
     /**
      * Clean up.
      */
-    public function tearDown() : void {
+    public function tearDown(): void
+    {
         $this->updateutil = null;
         parent::tearDown();
     }
@@ -57,7 +62,8 @@ class updaterutilstest extends unittestdatabase {
      *
      * @group update
      */
-    public function test_check_version_upgrade_non_dev() {
+    public function test_check_version_upgrade_non_dev()
+    {
         $this->config->set('cfg_dev_system', false);
         $this->config->set_setting('rogo_version', '6.1.0', Config::VERSION);
         $this->config->override_xml('6.2.0', 'version');
@@ -79,7 +85,8 @@ class updaterutilstest extends unittestdatabase {
      *
      * @group update
      */
-    public function test_check_version_no_upgrade_non_dev() {
+    public function test_check_version_no_upgrade_non_dev()
+    {
         $this->config->set('cfg_dev_system', false);
         $this->config->set_setting('rogo_version', '6.2.0', Config::VERSION);
         $this->config->override_xml('6.2.0', 'version');
@@ -99,7 +106,8 @@ class updaterutilstest extends unittestdatabase {
      *
      * @group update
      */
-    public function test_check_version_downgrade_non_dev() {
+    public function test_check_version_downgrade_non_dev()
+    {
         $this->config->set('cfg_dev_system', false);
         $this->config->set_setting('rogo_version', '6.3.0', Config::VERSION);
         $this->config->override_xml('6.2.0', 'version');
@@ -121,7 +129,8 @@ class updaterutilstest extends unittestdatabase {
      *
      * @group update
      */
-    public function test_check_version_upgrade_dev() {
+    public function test_check_version_upgrade_dev()
+    {
         $this->config->set('cfg_dev_system', true);
         $this->config->set_setting('rogo_version', '6.1.0', Config::VERSION);
         $this->config->override_xml('6.2.0', 'version');
@@ -143,7 +152,8 @@ class updaterutilstest extends unittestdatabase {
      *
      * @group update
      */
-    public function test_check_version_no_upgrade_dev() {
+    public function test_check_version_no_upgrade_dev()
+    {
         $this->config->set('cfg_dev_system', true);
         $this->config->set_setting('rogo_version', '6.2.0', Config::VERSION);
         $this->config->override_xml('6.2.0', 'version');
@@ -163,7 +173,8 @@ class updaterutilstest extends unittestdatabase {
      *
      * @group update
      */
-    public function test_check_version_downgrade_dev() {
+    public function test_check_version_downgrade_dev()
+    {
         $this->config->set('cfg_dev_system', false);
         $this->config->set_setting('rogo_version', '6.3.0', Config::VERSION);
         $this->config->override_xml('6.2.0', 'version');

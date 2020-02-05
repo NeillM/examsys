@@ -25,7 +25,8 @@
 */
 
 
-Class SchoolUtils {
+class SchoolUtils
+{
 
     /**
      * Adds a new school to the 'schools' table and returns its new ID.
@@ -38,16 +39,17 @@ Class SchoolUtils {
      *
      * @return int              - The ID of the school.
      */
-    static function add_school($facultyID, $school, $db, $code = null, $externalid = null, $externalsys = null) {
+    static function add_school($facultyID, $school, $db, $code = null, $externalid = null, $externalsys = null)
+    {
         if ($facultyID === '' or $school === '') {
-          return false;
+            return false;
         }
-        $result = $db->prepare("INSERT INTO schools(school, facultyID, code, externalid, externalsys) VALUES (?, ?, ?, ?, ?)");
+        $result = $db->prepare('INSERT INTO schools(school, facultyID, code, externalid, externalsys) VALUES (?, ?, ?, ?, ?)');
         $result->bind_param('sisss', $school, $facultyID, $code, $externalid, $externalsys);
         $result->execute();
         $result->close();
         if ($db->errno != 0) {
-          return false;
+            return false;
         }
 
         return $db->insert_id;
@@ -59,15 +61,16 @@ Class SchoolUtils {
      *
      * @return array            - An array of schools keyed by ID and holding school name and faculty ID.
      */
-     static function get_school_list_by_id($db) {
+    static function get_school_list_by_id($db)
+    {
         $school_list = array();
 
-        $stmt = $db->prepare("SELECT id, school, facultyID FROM schools WHERE deleted IS NULL");
+        $stmt = $db->prepare('SELECT id, school, facultyID FROM schools WHERE deleted IS NULL');
         $stmt->execute();
         $stmt->bind_result($id, $school, $faculityID);
         while ($stmt->fetch()) {
-          $school_list[$id]['school'] = $school;
-          $school_list[$id]['faculityID'] = $faculityID;
+            $school_list[$id]['school'] = $school;
+            $school_list[$id]['faculityID'] = $faculityID;
         }
         $stmt->close();
 
@@ -81,20 +84,21 @@ Class SchoolUtils {
      *
      * @return int|bool              - ID of the school, or false if non-existant.
      */
-    static function get_school_id_by_name($school_name, $db) {
+    static function get_school_id_by_name($school_name, $db)
+    {
         if ($school_name == '') {
-          return false;
+            return false;
         }
 
-        $stmt = $db->prepare("SELECT id FROM schools WHERE deleted IS NULL and school = ?");
+        $stmt = $db->prepare('SELECT id FROM schools WHERE deleted IS NULL and school = ?');
         $stmt->bind_param('s', $school_name);
         $stmt->execute();
         $stmt->store_result();
         $stmt->bind_result($id);
         $stmt->fetch();
         if ($stmt->num_rows == 0) {
-          $stmt->close();
-          return false;
+            $stmt->close();
+            return false;
         }
         $stmt->close();
         return $id;
@@ -109,8 +113,9 @@ Class SchoolUtils {
      *
      * @return int|bool id of school or false
     */
-    static function get_schoolid_from_externalid($externalid, $externalsys, $db) {
-        $result = $db->prepare("SELECT id FROM schools WHERE externalid = ? AND externalsys = ?  AND deleted IS NULL");
+    static function get_schoolid_from_externalid($externalid, $externalsys, $db)
+    {
+        $result = $db->prepare('SELECT id FROM schools WHERE externalid = ? AND externalsys = ?  AND deleted IS NULL');
         $result->bind_param('ss', $externalid, $externalsys);
         $result->execute();
         $result->store_result();
@@ -131,10 +136,11 @@ Class SchoolUtils {
      *
      * @return array            - List of schools the member of staff has access to.
      */
-    static function get_admin_schools($admin_userid, $db) {
+    static function get_admin_schools($admin_userid, $db)
+    {
         $school_list = array();
 
-        $stmt = $db->prepare("SELECT schools_id FROM admin_access WHERE userID = ?");
+        $stmt = $db->prepare('SELECT schools_id FROM admin_access WHERE userID = ?');
         $stmt->bind_param('i', $admin_userid);
         $stmt->execute();
         $stmt->bind_result($school);
@@ -154,7 +160,8 @@ Class SchoolUtils {
      *
      * @return bool           - True if school name already exists for the faculty
      */
-    static function school_exists_in_faculty($facultyID, $school, $db) {
+    static function school_exists_in_faculty($facultyID, $school, $db)
+    {
         $row_no = 0;
 
         $query = 'SELECT id FROM schools WHERE school = ? AND facultyID = ? AND deleted IS NULL';
@@ -175,7 +182,8 @@ Class SchoolUtils {
      *
      * @return bool         - True if the school ID is found
      */
-    static function schoolid_exists($schoolID, $db) {
+    static function schoolid_exists($schoolID, $db)
+    {
         $row_no = 0;
 
         $query = 'SELECT id FROM schools WHERE id = ? AND deleted IS NULL';
@@ -196,7 +204,8 @@ Class SchoolUtils {
      *
      * @return bool         - True if the school name is found
      */
-    static function school_name_exists($school, $db) {
+    static function school_name_exists($school, $db)
+    {
         $schoolID = 0;
         $row_no = 0;
 
@@ -223,7 +232,8 @@ Class SchoolUtils {
      *
      * @return int|bool         - id of school or false if not found
      */
-    static function get_schoolid_by_code($code, $db) {
+    static function get_schoolid_by_code($code, $db)
+    {
         $stmt = $db->prepare('SELECT id FROM schools WHERE code = ?');
         $stmt->bind_param('s', $code);
         $stmt->execute();
@@ -239,7 +249,8 @@ Class SchoolUtils {
         return $schoolid;
     }
 
-    static function get_school_faculty($schoolID, $db) {
+    static function get_school_faculty($schoolID, $db)
+    {
         $school_name = false;
 
         $stmt = $db->prepare('SELECT school FROM schools WHERE id = ? AND deleted IS NULL');
@@ -260,12 +271,13 @@ Class SchoolUtils {
      *
      * @return bool         - Return false if no schoolID is passed.
      */
-     static function delete_school($schoolID, $db) {
+    static function delete_school($schoolID, $db)
+    {
         if ($schoolID == '') {
-          return false;
+            return false;
         }
 
-        $result = $db->prepare("UPDATE schools SET deleted = NOW() WHERE id = ?");
+        $result = $db->prepare('UPDATE schools SET deleted = NOW() WHERE id = ?');
         $result->bind_param('i', $schoolID);
         $result->execute();
         $result->close();
@@ -273,7 +285,7 @@ Class SchoolUtils {
             return false;
         }
         return true;
-      }
+    }
       
     /**
      * Updates a school
@@ -287,24 +299,25 @@ Class SchoolUtils {
      *
      * @return bool - true on success
      */
-    static function update_school($id, $facultyID, $school, $code, $externalid, $externalsys, $db) {
+    static function update_school($id, $facultyID, $school, $code, $externalid, $externalsys, $db)
+    {
         if ($facultyID === '' or $school === '') {
-          return false;
+            return false;
         }
         if (is_null($code)) {
-          $schoolID = SchoolUtils::school_name_exists($school, $db);
+            $schoolID = SchoolUtils::school_name_exists($school, $db);
           // Do not update if school name is in use, unless we are updating that school.
-          if ($schoolID !== false and $schoolID != $id) {
-            return false;
-          }
+            if ($schoolID !== false and $schoolID != $id) {
+                return false;
+            }
         }
 
-        $result = $db->prepare("UPDATE schools set school = ?, facultyID = ?, code = ?, externalid = ?, externalsys= ? where id = ?");
+        $result = $db->prepare('UPDATE schools set school = ?, facultyID = ?, code = ?, externalid = ?, externalsys= ? where id = ?');
         $result->bind_param('sisssi', $school, $facultyID, $code, $externalid, $externalsys, $id);
         $result->execute();
         $result->close();
         if ($db->errno != 0) {
-          return false;
+            return false;
         }
 
         return true;
@@ -312,41 +325,43 @@ Class SchoolUtils {
     
   /**
    * Get factulty details
-   * @param integer $id 
-   * @param mysqli $db 
+   * @param integer $id
+   * @param mysqli $db
    * @return array details
    */
-  static function get_school_details_by_id($id, $db) {
-    $result = $db->prepare("SELECT school, code, facultyID, externalid, externalsys FROM schools WHERE id = ?");
-    $result->bind_param('i', $id);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($name, $code, $faculty, $externalid, $externalsys);
-    $result->fetch();
-    $result->close();
+    static function get_school_details_by_id($id, $db)
+    {
+        $result = $db->prepare('SELECT school, code, facultyID, externalid, externalsys FROM schools WHERE id = ?');
+        $result->bind_param('i', $id);
+        $result->execute();
+        $result->store_result();
+        $result->bind_result($name, $code, $faculty, $externalid, $externalsys);
+        $result->fetch();
+        $result->close();
 
-    return array('name' => $name, 'faculty' => $faculty, 'code' => $code, 'externalid' => $externalid, 'externalsys' => $externalsys);
-  }
+        return array('name' => $name, 'faculty' => $faculty, 'code' => $code, 'externalid' => $externalid, 'externalsys' => $externalsys);
+    }
   
   /**
    * Check if school contains modules or courses
    * @param integer $id school id
-   * @param mysqli $db 
+   * @param mysqli $db
    * @return bool true if school is in use
    */
-  static function school_in_use($id, $db) {
-    $result = $db->prepare("SELECT NULL FROM courses WHERE schoolid = ? AND deleted is NULL
-        UNION SELECT NULL FROM modules WHERE schoolid = ? AND mod_deleted is NULL");
-    $result->bind_param('ii', $id, $id);
-    $result->execute();
-    $result->store_result();
-    if ($result->num_rows > 0) {
+    static function school_in_use($id, $db)
+    {
+        $result = $db->prepare('SELECT NULL FROM courses WHERE schoolid = ? AND deleted is NULL
+        UNION SELECT NULL FROM modules WHERE schoolid = ? AND mod_deleted is NULL');
+        $result->bind_param('ii', $id, $id);
+        $result->execute();
+        $result->store_result();
+        if ($result->num_rows > 0) {
+            $result->close();
+            return true;
+        }
         $result->close();
-        return true;
+        return false;
     }
-    $result->close();
-    return false;
-  }
   
   /**
    * Generate a school id based on name and faculty.
@@ -355,20 +370,21 @@ Class SchoolUtils {
    * @param mysqli $db
    * @return integer|bool - new school id or false on error
   */
-  static function generate_school_id($school, $faculty, $db) {
-    $facultyid = FacultyUtils::facultyid_by_name($faculty, $db);
-    if (!$facultyid) {
-        // Add new faculty.
-        $facultyid = FacultyUtils::add_faculty($faculty, $db);
+    static function generate_school_id($school, $faculty, $db)
+    {
+        $facultyid = FacultyUtils::facultyid_by_name($faculty, $db);
+        if (!$facultyid) {
+            // Add new faculty.
+            $facultyid = FacultyUtils::add_faculty($faculty, $db);
+        }
+      // Add new school to faculty.
+        if ($facultyid) {
+            $schoolid = SchoolUtils::add_school($facultyid, $school, $db);
+        } else {
+            return false;
+        }
+        return $schoolid;
     }
-    // Add new school to faculty.
-    if ($facultyid) {
-        $schoolid = SchoolUtils::add_school($facultyid, $school, $db);
-    } else {
-        return false;
-    }
-    return $schoolid;
-  }
   
   /**
    * Compare the schools in the external system and rogo
@@ -377,41 +393,43 @@ Class SchoolUtils {
    * @param mysqli $db db connection
    * @return array list of schools in rogo but not in external system
    */
-  static function diff_external_schools_to_internal_schools($external, $sms, $db) {
-    $result = $db->prepare("SELECT id, externalid, deleted FROM schools WHERE externalid IS NOT NULL and externalsys = ?");
-    $result->bind_param('s', $sms);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($id, $externalid, $deleted);
-    $diff = array();
-    while ($result->fetch()) {
-      // Mark for delete if not found in external list.
-      if(!in_array($externalid, $external)) {
-        $diff[] = $externalid;
-      } else {
-        // Restore if deleted in Rogo but found in external list.
-        if(!is_null($deleted)) {
-          self::restore_school($db, $id);
+    static function diff_external_schools_to_internal_schools($external, $sms, $db)
+    {
+        $result = $db->prepare('SELECT id, externalid, deleted FROM schools WHERE externalid IS NOT NULL and externalsys = ?');
+        $result->bind_param('s', $sms);
+        $result->execute();
+        $result->store_result();
+        $result->bind_result($id, $externalid, $deleted);
+        $diff = array();
+        while ($result->fetch()) {
+          // Mark for delete if not found in external list.
+            if (!in_array($externalid, $external)) {
+                $diff[] = $externalid;
+            } else {
+              // Restore if deleted in Rogo but found in external list.
+                if (!is_null($deleted)) {
+                    self::restore_school($db, $id);
+                }
+            }
         }
-      }
+        $result->close();
+        return $diff;
     }
-    $result->close();
-    return $diff;
-  }
   /**
    * Restore school from recycle bin
    * @param mysqli $db db connection
    * @param integer $id rogo id of school
    * @return boolean true on success, false otherwise
    */
-  static function restore_school($db, $id) {
-    $result = $db->prepare("UPDATE schools set deleted = NULL where id = ?");
-    $result->bind_param('i', $id);
-    $result->execute();
-    $result->close();
-    if ($db->errno != 0) {
-      return false;
+    static function restore_school($db, $id)
+    {
+        $result = $db->prepare('UPDATE schools set deleted = NULL where id = ?');
+        $result->bind_param('i', $id);
+        $result->execute();
+        $result->close();
+        if ($db->errno != 0) {
+            return false;
+        }
+        return true;
     }
-    return true;
-  }
 }

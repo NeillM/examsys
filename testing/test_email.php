@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -36,19 +37,19 @@ require '../include/sysadmin_auth.inc';
 <body>
 <?php
 if (isset($_POST['submit'])) {
-  $to = trim($_POST['email']);
-  $subject = 'Test email from Rogo ' . $configObject->get_setting('core', 'rogo_version');
-  $message = 'This is a test email message sent at ' . date("F j, Y, g:i a") . ' from ' . gethostbyaddr(gethostbyname($_SERVER['SERVER_NAME'])) . '.';
-  $headers = 'From: ' . trim($_POST['email']);
+    $to = trim($_POST['email']);
+    $subject = 'Test email from Rogo ' . $configObject->get_setting('core', 'rogo_version');
+    $message = 'This is a test email message sent at ' . date('F j, Y, g:i a') . ' from ' . gethostbyaddr(gethostbyname($_SERVER['SERVER_NAME'])) . '.';
+    $headers = 'From: ' . trim($_POST['email']);
 
-  mail($to, $subject, $message, $headers);
-  echo "Email sent, please check your inbox.";
+    mail($to, $subject, $message, $headers);
+    echo 'Email sent, please check your inbox.';
 } else {
-?>
+    ?>
   <form name="myform" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" autocomplete="off">
     <input type="text" name="email" style="width: 250px" placeholder="email address" required /> <input type="submit" name="submit" value="Send" class="ok" /> 
   </form>
-<?php
+    <?php
 }
 ?>
 </body>

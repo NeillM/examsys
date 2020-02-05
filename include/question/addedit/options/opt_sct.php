@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -23,11 +24,11 @@
 */
 
 $mandatory = '<span class="mandatory">*</span>';
-if ($index %2 == 0) {
-  $alt = ' alt';
-  $alt_c = ' class="alt"';
+if ($index % 2 == 0) {
+    $alt = ' alt';
+    $alt_c = ' class="alt"';
 } else {
-  $alt = $alt_c = '';
+    $alt = $alt_c = '';
 }
 $spaced = ($index > 1) ? " class=\"spaced-top{$alt}\"" : $alt_c;
 ?>

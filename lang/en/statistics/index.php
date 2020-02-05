@@ -19,4 +19,3 @@ $string['questionsbyschool'] = 'Questions by School';
 $string['papersbyschool'] = 'Papers by School';
 $string['summativeexamstats'] = 'Summative Exams by Month';
 $string['summativefeedback'] = 'Summative Exam Feedback';
-?>

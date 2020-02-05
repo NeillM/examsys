@@ -19,13 +19,15 @@
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
-trait defaultgetmarks {
+trait defaultgetmarks
+{
   /**
    * Get total marks for question
    * @param $markscorrect
    * @return float
    */
-  public function get_marks ($markscorrect) {
-    return $this->marks;
-  }
+    public function get_marks($markscorrect)
+    {
+        return $this->marks;
+    }
 }

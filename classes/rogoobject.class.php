@@ -23,47 +23,52 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-Class RogoObject {
-  protected $_fields_editable = array();
-  protected $_modified_fields = array();
+class RogoObject
+{
+    protected $_fields_editable = array();
+    protected $_modified_fields = array();
   
   // 'Compound' fields are concatenated within a question
-  protected $_fields_compound = array();
+    protected $_fields_compound = array();
   
   /**
    * Record the value of a modified field so that it can be used for change tracking
    * @param string $name
    * @param string $value
    */
-  protected function set_modified_field($name, $value, $message = '') {
-    if (!array_key_exists($name, $this->_modified_fields)) {
-      $this->_modified_fields[$name]['value'] = $value;
-      $this->_modified_fields[$name]['message'] = $message;
+    protected function set_modified_field($name, $value, $message = '')
+    {
+        if (!array_key_exists($name, $this->_modified_fields)) {
+            $this->_modified_fields[$name]['value'] = $value;
+            $this->_modified_fields[$name]['message'] = $message;
+        }
     }
-  }
   
   /**
    * The the array of fields (properties) for this class
    * MUST be implemented by sub-classes
-   * @return multitype:string 
+   * @return multitype:string
    */
-  public function get_editable_fields() {
-    throw new MethodNotImplementedException("Method 'get_editable_fields' not implemented.");
-  }
+    public function get_editable_fields()
+    {
+        throw new MethodNotImplementedException("Method 'get_editable_fields' not implemented.");
+    }
   
   /**
    * The the array of compound fields (properties) for this class
-   * @return multitype:string 
+   * @return multitype:string
    */
-  public function get_compound_fields() {
-    return $this->_fields_compound;
-  }
+    public function get_compound_fields()
+    {
+        return $this->_fields_compound;
+    }
 
   /**
    * Has the question been changed?
    * @return boolean
    */
-  public function has_changes() {
-    return (count($this->_modified_fields) > 0);
-  }
+    public function has_changes()
+    {
+        return (count($this->_modified_fields) > 0);
+    }
 }

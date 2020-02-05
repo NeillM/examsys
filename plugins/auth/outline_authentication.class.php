@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,29 +27,28 @@
 
 $configObject = Config::get_instance();
 
-class outline_authentication {
-
-  protected $name;
-  protected $number;
-  protected $returndata;
-  protected $retdata;
-  protected $form;
-  protected $settings;
-  protected $db;
-  protected $calling_object;
-  protected $session;
-  protected $request;
-
-  public $debug = array();
-  public $debugpointer = 0;
-
-  protected $error = NULL;
-  public $rogoid = false;
+class outline_authentication
+{
 
 
-  protected $authapiversion;
-  protected $callbackarray;
-  protected $impliments_api_auth_version = 0;
+
+    protected $name;
+    protected $number;
+    protected $returndata;
+    protected $retdata;
+    protected $form;
+    protected $settings;
+    protected $db;
+    protected $calling_object;
+    protected $session;
+    protected $request;
+    public $debug = array();
+    public $debugpointer = 0;
+    protected $error = null;
+    public $rogoid = false;
+    protected $authapiversion;
+    protected $callbackarray;
+    protected $impliments_api_auth_version = 0;
 
   /**
    * @param $calling_object object its called from
@@ -59,114 +59,124 @@ class outline_authentication {
    * @param $returndata object where data is stored
    * @param $form object a class with form data in
    */
-  function __construct($number, $name, $authapiversion) {
-    $this->authapiversion = $authapiversion;
-    $this->name = $name;
-    $this->number = $number;
-  }
+    function __construct($number, $name, $authapiversion)
+    {
+        $this->authapiversion = $authapiversion;
+        $this->name = $name;
+        $this->number = $number;
+    }
 
   /*
    * Check the API version of the stack and the plugin are compatible
    * returns true if it is compatible false otherwise
    */
-  function apicheck() {
+    function apicheck()
+    {
 
-    if ($this->authapiversion != $this->impliments_api_auth_version) {
-      $this->savetodebug('This auth object is implementing an different version of the api than this plugin does');
-      $this->set_error('Wrong API');
+        if ($this->authapiversion != $this->impliments_api_auth_version) {
+            $this->savetodebug('This auth object is implementing an different version of the api than this plugin does');
+            $this->set_error('Wrong API');
+            return false;
+        }
 
-      return false;
+        return true;
     }
 
-    return true;
-  }
-
-  function set_error($msg) {
-    if (strlen($this->error) > 0) {
-      $this->error .= '<br />';
-    }
-    $this->error .= $msg;
-  }
-
-  function init($object) {
-    $this->db = new mysqli();
-    $this->db = & $object->db;
-    $this->calling_object = & $object->calling_object;
-    $this->form = & $object->form;
-    $this->settings = & $object->settings;
-    $this->session = & $object->calling_object->session;
-    $this->request = & $object->calling_object->request;
-  }
-
-  function error_handling($context = null) {
-    $context1 = array();
-    if (is_null($context)) {
-      // if no array set get currently define variables in this object
-      $context = get_defined_vars($this);
+    function set_error($msg)
+    {
+        if (strlen($this->error) > 0) {
+            $this->error .= '<br />';
+        }
+        $this->error .= $msg;
     }
 
-    $context1=error_handling($context);
-    if (isset($context1['settings'])) {
-      $context1['settings'] = 'hidden for security';
+    function init($object)
+    {
+        $this->db = new mysqli();
+        $this->db = & $object->db;
+        $this->calling_object = & $object->calling_object;
+        $this->form = & $object->form;
+        $this->settings = & $object->settings;
+        $this->session = & $object->calling_object->session;
+        $this->request = & $object->calling_object->request;
     }
-    return $context1;
-  }
+
+    function error_handling($context = null)
+    {
+        $context1 = array();
+        if (is_null($context)) {
+        // if no array set get currently define variables in this object
+                $context = get_defined_vars($this);
+        }
+
+        $context1 = error_handling($context);
+        if (isset($context1['settings'])) {
+            $context1['settings'] = 'hidden for security';
+        }
+        return $context1;
+    }
 
 
   // Fake function used in mocking but if things go wrong have an outline here
-  function mock($callingobject, $settings, $number, $name, $db, $returndata, $form) {
-    return false;
-  }
+    function mock($callingobject, $settings, $number, $name, $db, $returndata, $form)
+    {
+        return false;
+    }
 
 
   /**
    * @param $debugmessage string the debug message to store
    */
-  function savetodebug($debugmessage) {
-    $this->debug[] = $debugmessage;
-  }
+    function savetodebug($debugmessage)
+    {
+        $this->debug[] = $debugmessage;
+    }
 
   /**
    * @param $section string the section to get the callback from
    *
    * @return mixed
    */
-  function get_callback($section) {
-    return $this->calling_object->get_callback($section);
-  }
-
-  /**
-   * @param $objid int the objectid
-   *
-   * @return mixed
-   */
-  function get_new_debug_messages($number = NULL) {
-    if (is_null($number)) {
-      $returnarray = array();
-      while (isset($this->debug[$this->debugpointer])) {
-        $returnarray[$this->debugpointer] = $this->debug[$this->debugpointer++];
-      }
-
-      return $returnarray;
-    } else {
-      return $this->calling_object->authPluginObj[$number]->get_new_debug_messages();
+    function get_callback($section)
+    {
+        return $this->calling_object->get_callback($section);
     }
-  }
 
   /**
    * @param $objid int the objectid
    *
    * @return mixed
    */
-  function get_module_authinfo($objid) {
-    return $this->calling_object->authinfo[$objid];
-  }
+    function get_new_debug_messages($number = null)
+    {
+        if (is_null($number)) {
+            $returnarray = array();
+            while (isset($this->debug[$this->debugpointer])) {
+                    $returnarray[$this->debugpointer] = $this->debug[$this->debugpointer++];
+            }
+
+            return $returnarray;
+        } else {
+            return $this->calling_object->authPluginObj[$number]->get_new_debug_messages();
+        }
+    }
+
+  /**
+   * @param $objid int the objectid
+   *
+   * @return mixed
+   */
+    function get_module_authinfo($objid)
+    {
+        return $this->calling_object->authinfo[$objid];
+    }
 
 
-  function register_callback_sections() {
-    //this is blank so that classes that dont register anything dont break
-    return array();
-  }
+    function register_callback_sections()
+    {
+      //this is blank so that classes that dont register anything dont break
+        return array();
+    }
 
   /**
    * @param $callback callback routine
@@ -177,52 +187,54 @@ class outline_authentication {
    *
    * @return bool
    */
-  function register_callback($callback, $section, $number, $name, $insert = false) {
-    $this->callbackarray[] = array($callback, $section, $number, $name, $insert);
-  }
+    function register_callback($callback, $section, $number, $name, $insert = false)
+    {
+        $this->callbackarray[] = array($callback, $section, $number, $name, $insert);
+    }
 
 
   /**
    *
    */
-  function register_callback_routines() {
-    //this is blank so that classes that dont register anything dont break
-    return array();
-  }
+    function register_callback_routines()
+    {
+      //this is blank so that classes that dont register anything dont break
+        return array();
+    }
 
   /**
    * @param $setting string the setting to return or false if it doesnt exist
    *
    * @return mixed
    */
-  function get_settings($setting) {
-    if (!isset($this->settings[$setting])) {
-      return false;
+    function get_settings($setting)
+    {
+        if (!isset($this->settings[$setting])) {
+            return false;
+        }
+
+        return $this->settings[$setting];
     }
 
-    return $this->settings[$setting];
-  }
+    function get_info()
+    {
+        $data = new stdClass();
+        $data->name = $this->name;
+        $data->number = $this->number;
+        $data->classname = get_class($this);
+        $data->classname = substr($data->classname, 0, strpos($data->classname, '_auth'));
+        $data->version = $this->version;
+        $data->settings = $this->settings;
+        $data->api_implimented = $this->impliments_api_auth_version;
+        $data->error = $this->error;
+        if (isset($this->callbackarray)) {
+            foreach ($this->callbackarray as $callback) {
+                $funcname = $callback[0][1];
+                $where = $callback[1];
+                $data->callbackfunctions[] = array($funcname, $where);
+            }
+        }
 
-  function get_info() {
-    $data = new stdClass();
-    $data->name = $this->name;
-    $data->number = $this->number;
-    $data->classname = get_class($this);
-    $data->classname = substr($data->classname, 0, strpos($data->classname, '_auth'));
-    $data->version = $this->version;
-    $data->settings = $this->settings;
-    $data->api_implimented = $this->impliments_api_auth_version;
-    $data->error = $this->error;
-    if (isset($this->callbackarray)) {
-      foreach ($this->callbackarray as $callback) {
-        $funcname = $callback[0][1];
-        $where = $callback[1];
-        $data->callbackfunctions[] = array($funcname, $where);
-      }
+        return $data;
     }
-
-    return $data;
-  }
 }
-
-

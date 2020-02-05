@@ -22,23 +22,25 @@
 * @package
 */
 
-class SummativeTimer {
+class SummativeTimer
+{
 
   /*
    * @var LogExtraTime $log_extra_time
   */
 
-  private $log_extra_time;
-  private $exam_duration;
-  private $start_time;
+    private $log_extra_time;
+    private $exam_duration;
+    private $start_time;
 
   /*
    * @param LogExtraTime $log_extra_time
    */
 
-  public function __construct( LogExtraTime $log_extra_time ) {
-    $this->log_extra_time = $log_extra_time;
-  }
+    public function __construct(LogExtraTime $log_extra_time)
+    {
+        $this->log_extra_time = $log_extra_time;
+    }
 
   /*
    * This takes the end time for the student's exam session and calculates the time remaining by
@@ -47,84 +49,91 @@ class SummativeTimer {
    *
    * @return int
    */
-  public function calculate_remaining_time_secs() {
+    public function calculate_remaining_time_secs()
+    {
 
-    //has the lab got an end time set?
-    $session_end_datetime = $this->get_session_end_datetime();
+      //has the lab got an end time set?
+        $session_end_datetime = $this->get_session_end_datetime();
 
-    if ($session_end_datetime === false) {
-      // Invigilator hasn't pressed Start - we aren't timing the exam
-      return false;
+        if ($session_end_datetime === false) {
+          // Invigilator hasn't pressed Start - we aren't timing the exam
+            return false;
+        }
+
+        $session_end_timestamp = $session_end_datetime->getTimestamp();
+
+      //has the student been given extra time?
+        $extra_time = $this->get_extra_time_secs();
+        if ($extra_time === false) {
+            $extra_time = 0;
+        }
+
+        $now_timestamp = time();
+
+        $special_needs_secs = $this->calculate_special_needs_secs();
+
+        $remaining_time_secs = $session_end_timestamp - $now_timestamp + $extra_time + $special_needs_secs;
+
+        if ($remaining_time_secs < 1) {
+            $remaining_time_secs = 0;
+        }
+
+        return ceil($remaining_time_secs);
     }
-
-    $session_end_timestamp = $session_end_datetime->getTimestamp();
-
-    //has the student been given extra time?
-    $extra_time = $this->get_extra_time_secs();
-    if ($extra_time === false) {
-      $extra_time = 0;
-    }
-
-    $now_timestamp = time();
-
-    $special_needs_secs = $this->calculate_special_needs_secs();
-
-    $remaining_time_secs = $session_end_timestamp - $now_timestamp + $extra_time + $special_needs_secs;
-
-    if ($remaining_time_secs < 1) {
-      $remaining_time_secs = 0;
-    }
-
-    return ceil($remaining_time_secs);
-  }
 
   /*
    * @return int
    */
-  private function get_paper_exam_start_time(){
-    return $this->log_extra_time->get_paper_exam_start_time();
-  }
-
-  /*
-   * @return int
-   */
-  private function get_paper_exam_duration(){
-    return $this->log_extra_time->get_paper_exam_duration();
-  }
-
-  /*
-   * @return int
-   */
-  private function get_extra_time_secs(){
-    $extra_time = $this->log_extra_time->get_extra_time_secs();
-
-    if($extra_time === false) {
-      return false;
+    private function get_paper_exam_start_time()
+    {
+        return $this->log_extra_time->get_paper_exam_start_time();
     }
-    return $extra_time;
-  }
 
   /*
    * @return int
    */
-  private function calculate_special_needs_secs(){
-    $students_special_needs_percentage = $this->log_extra_time->get_students_special_needs_percentage();
-    $exam_duration                     = $this->get_paper_exam_duration();
+    private function get_paper_exam_duration()
+    {
+        return $this->log_extra_time->get_paper_exam_duration();
+    }
 
-    return ( $exam_duration * 60  ) * ( $students_special_needs_percentage / 100 );
-  }
+  /*
+   * @return int
+   */
+    private function get_extra_time_secs()
+    {
+        $extra_time = $this->log_extra_time->get_extra_time_secs();
+
+        if ($extra_time === false) {
+            return false;
+        }
+        return $extra_time;
+    }
+
+  /*
+   * @return int
+   */
+    private function calculate_special_needs_secs()
+    {
+        $students_special_needs_percentage = $this->log_extra_time->get_students_special_needs_percentage();
+        $exam_duration                     = $this->get_paper_exam_duration();
+
+        return ( $exam_duration * 60  ) * ( $students_special_needs_percentage / 100 );
+    }
 
   /*
    * return int
    */
-  private function get_session_end_datetime(){
-    return $this->log_extra_time->get_session_end_datetime();
-  }
+    private function get_session_end_datetime()
+    {
+        return $this->log_extra_time->get_session_end_datetime();
+    }
 
   /*
    * return int
    */
-  private function get_default_session_end_datetime(){
-    return $this->log_extra_time->get_default_session_end_datetime();
-  }
+    private function get_default_session_end_datetime()
+    {
+        return $this->log_extra_time->get_default_session_end_datetime();
+    }
 }

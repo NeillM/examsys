@@ -24,15 +24,16 @@
  * @package
  */
 
-Class QuestionMCQ extends QuestionEdit {
+class QuestionMCQ extends QuestionEdit
+{
 
-  protected $min_options = 2;
-  protected $_allow_change_marking_method = false;
+    protected $min_options = 2;
+    protected $_allow_change_marking_method = false;
   
-  function __construct($mysqli, $userObj, $lang_strings, $data = null) {
-    parent::__construct($mysqli, $userObj, $lang_strings, $data);
+    function __construct($mysqli, $userObj, $lang_strings, $data = null)
+    {
+        parent::__construct($mysqli, $userObj, $lang_strings, $data);
 
-    $this->_display_methods = array('vertical' => $this->_lang_strings['vertical'], 'vertical_other' => $this->_lang_strings['verticalother'], 'horizontal' => $this->_lang_strings['horizontal'], 'dropdown' => $this->_lang_strings['dropdownlist']);
-  }
+        $this->_display_methods = array('vertical' => $this->_lang_strings['vertical'], 'vertical_other' => $this->_lang_strings['verticalother'], 'horizontal' => $this->_lang_strings['horizontal'], 'dropdown' => $this->_lang_strings['dropdownlist']);
+    }
 }
-

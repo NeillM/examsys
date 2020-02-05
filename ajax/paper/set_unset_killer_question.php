@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -16,7 +17,7 @@
 
 /**
 *
-*	Work out if a question is set to be a killer question or not and then
+*   Work out if a question is set to be a killer question or not and then
 * set or unset accordingly.
 *
 * @author Simon Wilkinson
@@ -28,23 +29,22 @@
 require '../../include/staff_auth.inc';
 require '../../include/errors.php';
 
-$paperID	= check_var('paperID', 'POST', true, false, true);
-$q_id			= check_var('q_id', 'POST', true, false, true);
-$qNumber	= check_var('qNumber', 'POST', true, false, true);
+$paperID    = check_var('paperID', 'POST', true, false, true);
+$q_id           = check_var('q_id', 'POST', true, false, true);
+$qNumber    = check_var('qNumber', 'POST', true, false, true);
 
 $killer_questions = new Killer_question($paperID, $mysqli);
-$killer_questions->load();			// Get the existing killer questions for the paper.
+$killer_questions->load();          // Get the existing killer questions for the paper.
 
 $logger = new Logger($mysqli);
 
 if ($killer_questions->is_killer_question($q_id)) {
-	$killer_questions->unset_question($q_id);
-  $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), 'on', 'off', "killer question $qNumber");
+    $killer_questions->unset_question($q_id);
+    $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), 'on', 'off', "killer question $qNumber");
 } else {
-	$killer_questions->set_question($q_id);
-  $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), 'off', 'on', "killer question $qNumber");
+    $killer_questions->set_question($q_id);
+    $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), 'off', 'on', "killer question $qNumber");
 }
 $killer_questions->save();
 
 $mysqli->close();
-?>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -36,44 +37,45 @@ $displayDebug = false; //disable debud output in this script as it effects the o
  * @param array $string - language settings
  * @return string
  */
-function displayReviewCsv($review, $string) {
+function displayReviewCsv($review, $string)
+{
 
-  if ($review['review_total'] == $review['total_marks']) {
-    $rowOutcome = 'Ok';
-  } else {
-    $rowOutcome = 'Review Total != Total Marks';
-  }
+    if ($review['review_total'] == $review['total_marks']) {
+        $rowOutcome = 'Ok';
+    } else {
+        $rowOutcome = 'Review Total != Total Marks';
+    }
 
-  if ($review['group_review'] != 'No') {
-    $rowOutcome = "Group review";
-  }
+    if ($review['group_review'] != 'No') {
+        $rowOutcome = 'Group review';
+    }
   
-  $output = '';
-  $output = addslashes($rowOutcome) . ",";
+    $output = '';
+    $output = addslashes($rowOutcome) . ',';
 
-  if ($review['distinction_score'] != 'n/a') {
-    $review['distinction_score'] .= '%';
-  }
+    if ($review['distinction_score'] != 'n/a') {
+        $review['distinction_score'] .= '%';
+    }
 
-  if ($review['group_review'] != 'No') {
-    $output .= "Group review,";
-  } else {
-    $output .= addslashes($review['name']) . ",";
-  }
-  if ($review['distinction_score'] == '0.000000%') {
-    $review['distinction_score'] = 'top 20%';
-  }
+    if ($review['group_review'] != 'No') {
+        $output .= 'Group review,';
+    } else {
+        $output .= addslashes($review['name']) . ',';
+    }
+    if ($review['distinction_score'] == '0.000000%') {
+        $review['distinction_score'] = 'top 20%';
+    }
 
-  $output .= addslashes($review['display_date']) . ",";
-  $output .= addslashes($review['pass_score']) . ",";
-  $output .= addslashes($review['distinction_score']) . ",";
-  $output .= addslashes($review['review_total']) . ",";
-  $output .= addslashes($review['total_marks']) . ",";
-  $output .= addslashes($review['method']) . ",";
+    $output .= addslashes($review['display_date']) . ',';
+    $output .= addslashes($review['pass_score']) . ',';
+    $output .= addslashes($review['distinction_score']) . ',';
+    $output .= addslashes($review['review_total']) . ',';
+    $output .= addslashes($review['total_marks']) . ',';
+    $output .= addslashes($review['method']) . ',';
 
-  $output .= "\n";
+    $output .= "\n";
 
-  return $output;
+    return $output;
 }
 
 $paperID    = check_var('paperID', 'GET', true, false, true);
@@ -88,34 +90,31 @@ $reviews = get_reviews($mysqli, 'index', $paperID, $total_mark, $no_reviews);
 $csv = '';
 
 header('Pragma: public');
-header("Content-type: application/vnd.ms-excel");
-header("Content-Disposition: attachment; filename=\"" . \file_handler::make_filename_safe($_GET['paperID']) . "_standards_setting.csv\"");
+header('Content-type: application/vnd.ms-excel');
+header('Content-Disposition: attachment; filename="' . \file_handler::make_filename_safe($_GET['paperID']) . '_standards_setting.csv"');
 
 $percent_decimals = $configObject->get_setting('core', 'rpt_percent_decimals');
 
 if (is_array($reviews)) {
+    $csv .= addslashes($string['validate']) . ',';
+    $csv .= addslashes($string['standardsetter']) . ',';
+    $csv .= addslashes($string['date']) . ',';
+    $csv .= addslashes($string['passscore']) . ',';
+    $csv .= addslashes($string['distinction']) . ',';
+    $csv .= addslashes($string['reviewmarks']) . ',';
+    $csv .= addslashes($string['papertotal']) . ',';
+    $csv .= addslashes($string['method']) . ',';
+    $csv .= "\n";
 
-  $csv .= addslashes($string['validate']) . ",";
-  $csv .= addslashes($string['standardsetter']) . ",";
-  $csv .= addslashes($string['date']) . ",";
-  $csv .= addslashes($string['passscore']) . ",";
-  $csv .= addslashes($string['distinction']) . ",";
-  $csv .= addslashes($string['reviewmarks']) . ",";
-  $csv .= addslashes($string['papertotal']) . ",";
-  $csv .= addslashes($string['method']) . ",";
-  $csv .= "\n";
+    $csv .= ",,,,,,,\n";
 
-  $csv .= ",,,,,,,\n";
-
-  foreach ($reviews as $review) {
-    $csv .= displayReviewCsv($review, $string);
-  }
-
+    foreach ($reviews as $review) {
+        $csv .= displayReviewCsv($review, $string);
+    }
 } else {
-  $csv .= strip_tags($string['nostandardsset']);
+    $csv .= strip_tags($string['nostandardsset']);
 }
 
-echo mb_convert_encoding($csv, "UTF-16LE", "UTF-8");
+echo mb_convert_encoding($csv, 'UTF-16LE', 'UTF-8');
 
 $mysqli->close();
-?>

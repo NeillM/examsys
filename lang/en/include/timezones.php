@@ -47,5 +47,3 @@ $string['Australia/Adelaide'] = '(UTC+09:30) Adelaide';
 $string['Australia/Melbourne'] = '(UTC+10:00) Canberra, Melbourne, Sydney';
 $string['Asia/Vladivostok'] = '(UTC+11:00) Solomon Is., New Caledonia';
 $string['Pacific/Auckland'] = '(UTC+12:00) Auckland, Wellington';
-
-?>

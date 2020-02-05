@@ -30,4 +30,3 @@ $string['byquestion'] = 'by Question';
 $string['longitudinal'] = 'Longitudinal';
 $string['warning'] = 'Warning';
 $string['nomatchsession'] = 'The session in the paper title (%s) does not match the paper session (%s).';
-?>

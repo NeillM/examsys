@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -30,15 +31,15 @@ $userID = check_var('userID', 'REQUEST', true, false, true);  // User ID is the 
 
 // Does the paper exist?
 if (!Paper_utils::paper_exists($paperID, $mysqli)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 // Does the student exist?
 if (!UserUtils::userid_exists($userID, $mysqli)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 ?>
@@ -72,13 +73,15 @@ $note_details = StudentNotes::get_note($paperID, $userID, $mysqli);
 
 <?php
   echo '<div><strong>' . $string['studentname'] . ':</strong> ' . $student_details['title'] . ' ' . $student_details['surname'] . ', ' . $student_details['first_names'];
-  if ($student_details['student_id'] != '') echo ' (' . $student_details['student_id'] . ')';
+if ($student_details['student_id'] != '') {
+    echo ' (' . $student_details['student_id'] . ')';
+}
   echo '</div>';
   
 
   echo "<input type=\"hidden\" id=\"paperID\" name=\"paperID\" value=\"$paperID\" />\n";
-  echo "<strong>" . $string['note'] . ":</strong><br />\n";
-  echo "<textarea name=\"note\" id=\"note\" cols=\"60\" rows=\"17\" style=\"font-size:110%; width:100%\" required>" . $note_details['note'] . "</textarea><br />\n";
+  echo '<strong>' . $string['note'] . ":</strong><br />\n";
+  echo '<textarea name="note" id="note" cols="60" rows="17" style="font-size:110%; width:100%" required>' . $note_details['note'] . "</textarea><br />\n";
 ?>
 
 <br />

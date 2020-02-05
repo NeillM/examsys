@@ -24,34 +24,37 @@
  * @package
  */
 
-Class OptionSCT extends OptionEdit {
+class OptionSCT extends OptionEdit
+{
   
-  public function save($option_number = 0) {
-    if ($this->_question->get_max_experts() == 0) {
-      $this->set_marks_correct(0);
-    } else {
-      $this->set_marks_correct($this->correct / $this->_question->get_max_experts());
-    }
+    public function save($option_number = 0)
+    {
+        if ($this->_question->get_max_experts() == 0) {
+            $this->set_marks_correct(0);
+        } else {
+            $this->set_marks_correct($this->correct / $this->_question->get_max_experts());
+        }
     
-    return parent::save($option_number);
-  }
+        return parent::save($option_number);
+    }
 
   /**
    * Set the option correct answer
    * @param string $value
    */
-  public function set_correct($value) {
-    if($value != $this->correct and !in_array('correct', array_keys($this->_question->get_unified_fields()))) {
-      $this->set_modified_field('correct', $this->correct, "Option #{$this->_number} Experts");
+    public function set_correct($value)
+    {
+        if ($value != $this->correct and !in_array('correct', array_keys($this->_question->get_unified_fields()))) {
+            $this->set_modified_field('correct', $this->correct, "Option #{$this->_number} Experts");
+        }
+        $this->correct = $value;
     }
-    $this->correct = $value;
-  }
   /**
    * Set the option marks for correct answers
    * @param string $value
    */
-  public function set_marks_correct($value, $log_change=true) {
-    $this->marks_correct = $value;
-  }
+    public function set_marks_correct($value, $log_change = true)
+    {
+        $this->marks_correct = $value;
+    }
 }
-

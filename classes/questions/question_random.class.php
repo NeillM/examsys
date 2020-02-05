@@ -24,18 +24,18 @@
  * @package
  */
 
-Class QuestionRANDOM extends QuestionEdit {
+class QuestionRANDOM extends QuestionEdit
+{
 
-  public $max_options = 1000;  // Probably irrelevant
-  protected $_allow_change_marking_method = false;
-  protected $questions = array();
-  protected $_allow_correction = false;
+    public $max_options = 1000;  // Probably irrelevant
+    protected $_allow_change_marking_method = false;
+    protected $questions = array();
+    protected $_allow_correction = false;
   
-  protected $_fields_editable = array('leadin', 'status');
+    protected $_fields_editable = array('leadin', 'status');
 
-  function __construct($mysqli, $userObj, $lang_strings, $data = null) {
-    parent::__construct($mysqli, $userObj, $lang_strings, $data);
-
-  }
+    function __construct($mysqli, $userObj, $lang_strings, $data = null)
+    {
+        parent::__construct($mysqli, $userObj, $lang_strings, $data);
+    }
 }
-

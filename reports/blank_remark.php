@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -28,59 +29,54 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.php';
-
 $q_id     = check_var('q_id', 'GET', true, false, true);
 $paperID  = check_var('paperID', 'GET', true, false, true);
-
 // Get some paper properties
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
-
 $paper_type = $propertyObj->get_paper_type();
-
 // Read whole question from database.
-$result = $mysqli->prepare("SELECT option_text FROM options WHERE o_id = ?");
+$result = $mysqli->prepare('SELECT option_text FROM options WHERE o_id = ?');
 $result->bind_param('i', $q_id);
 $result->execute();
 $result->bind_result($option_text);
 $result->fetch();
 $result->close();
-
 // Read user answers from log.
 $log_answers = array();
 if ($paper_type == '0') {
-  $result = $mysqli->prepare("(SELECT 0 AS type, l.id, l.user_answer FROM log0 l, log_metadata lm WHERE l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE 'Staff%' AND student_grade NOT LIKE '%nhs%') UNION ALL (SELECT 1 AS type, l.id, l.user_answer FROM log1 l, log_metadata lm WHERE l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE 'Staff%' AND student_grade NOT LIKE '%nhs%')");
-  $result->bind_param('iissiiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate'], $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
+    $result = $mysqli->prepare("(SELECT 0 AS type, l.id, l.user_answer FROM log0 l, log_metadata lm WHERE l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE 'Staff%' AND student_grade NOT LIKE '%nhs%') UNION ALL (SELECT 1 AS type, l.id, l.user_answer FROM log1 l, log_metadata lm WHERE l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE 'Staff%' AND student_grade NOT LIKE '%nhs%')");
+    $result->bind_param('iissiiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate'], $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
 } else {
-  $result = $mysqli->prepare("SELECT $paper_type AS type, l.id, l.user_answer FROM log$paper_type l, log_metadata lm WHERE l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? AND lm.started <= ? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE 'Staff%' AND student_grade NOT LIKE '%nhs%'");
-  $result->bind_param('iiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
+    $result = $mysqli->prepare("SELECT $paper_type AS type, l.id, l.user_answer FROM log$paper_type l, log_metadata lm WHERE l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? AND lm.started <= ? AND student_grade NOT LIKE 'university%' AND student_grade NOT LIKE 'Staff%' AND student_grade NOT LIKE '%nhs%'");
+    $result->bind_param('iiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
 }
 $result->execute();
 $result->bind_result($type, $id, $user_answer);
 while ($result->fetch()) {
-  // Decode user answers into an array of lowercase strings.
-  $tmp_answer = json_decode($user_answer);
-  foreach ($tmp_answer as &$answer) {
-    $answer = strtolower(StringUtils::clean_and_trim($answer));
-  }
-  $log_answers[$type][$id] = $tmp_answer;
+// Decode user answers into an array of lowercase strings.
+    $tmp_answer = json_decode($user_answer);
+    foreach ($tmp_answer as &$answer) {
+        $answer = strtolower(StringUtils::clean_and_trim($answer));
+    }
+    $log_answers[$type][$id] = $tmp_answer;
 }
 $result->close();
-
-
 $blank_details = explode('[blank', $option_text);
-for ($i=1; $i<count($blank_details); $i++) {
-$end_start_tag = strpos($blank_details[$i],']');
-$start_end_tag = strpos($blank_details[$i],'[/blank]');
-$blank_options = substr($blank_details[$i],($end_start_tag+1),($start_end_tag-1));
-if ($i == $_GET['blank'] && $blank_options !== '') {
-  $blanks = explode(',', $blank_options);
-}
+for (
+    $i = 1; $i < count($blank_details); $i++
+) {
+    $end_start_tag = strpos($blank_details[$i], ']');
+    $start_end_tag = strpos($blank_details[$i], '[/blank]');
+    $blank_options = substr($blank_details[$i], ($end_start_tag + 1), ($start_end_tag - 1));
+    if ($i == $_GET['blank'] && $blank_options !== '') {
+        $blanks = explode(',', $blank_options);
+    }
 }
 
 // Merge the same option on its own and with spaces (e.g. 'cat' and ' cat').
 $new_blanks = array();
 foreach ($blanks as $blank) {
-$new_blanks[] = strtolower(trim($blank));
+    $new_blanks[] = strtolower(trim($blank));
 }
 $blanks = array_unique($new_blanks);
 ?>
@@ -130,38 +126,37 @@ $blanks = array_unique($new_blanks);
 // Make sure words that are already defined as correct appear in the list even if no users have
 // given them as an answer
 $unique_list = array_fill_keys($blanks, 0);
-
 foreach ($log_answers as $log_type) {
-  foreach ($log_type as $id=>$log_answer) {
-    foreach ($log_answer as $word) {
-      if ($word != 'u') {
-        if (isset($unique_list[$word])) {
-          $unique_list[$word]++;
-        } else {
-          $unique_list[$word] = 1;
+    foreach ($log_type as $id => $log_answer) {
+        foreach ($log_answer as $word) {
+            if ($word != 'u') {
+                if (isset($unique_list[$word])) {
+                    $unique_list[$word]++;
+                } else {
+                    $unique_list[$word] = 1;
+                }
+            }
         }
-      }
     }
-  }
 }
 
 $word_count = 0;
 ksort($unique_list);
-foreach ($unique_list as $word=>$occurrance) {
-  $match = false;
-  foreach ($blanks as $blank) {
-    if (strtolower($word) == strtolower($blank)) {
-      $match = true;
-      $word = $blank;
+foreach ($unique_list as $word => $occurrance) {
+    $match = false;
+    foreach ($blanks as $blank) {
+        if (strtolower($word) == strtolower($blank)) {
+            $match = true;
+            $word = $blank;
+        }
     }
-  }
 
-  if ($match) {
-    echo '<tr id="div' . $word_count . '" class="r2"><td class="c1"><input type="checkbox" data-div="' . $word_count . '" id="word' . $word_count . '" name="word' . $word_count . '" value="' . htmlspecialchars($word) . '" checked="checked" /></td><td class="c2">' . $word . '</td><td class="o">' . $occurrance . '</td></tr>';
-  } else {
-    echo '<tr id="div' . $word_count . '" class="r1"><td class="c1"><input type="checkbox" data-div="'. $word_count . '" id="word' . $word_count . '" name="word' . $word_count . '" value="' . htmlspecialchars($word) . '" /></td><td class="c2">' . $word . '</td><td class="o">' . $occurrance . '</td></tr>';
-  }
-  $word_count++;
+    if ($match) {
+        echo '<tr id="div' . $word_count . '" class="r2"><td class="c1"><input type="checkbox" data-div="' . $word_count . '" id="word' . $word_count . '" name="word' . $word_count . '" value="' . htmlspecialchars($word) . '" checked="checked" /></td><td class="c2">' . $word . '</td><td class="o">' . $occurrance . '</td></tr>';
+    } else {
+        echo '<tr id="div' . $word_count . '" class="r1"><td class="c1"><input type="checkbox" data-div="' . $word_count . '" id="word' . $word_count . '" name="word' . $word_count . '" value="' . htmlspecialchars($word) . '" /></td><td class="c2">' . $word . '</td><td class="o">' . $occurrance . '</td></tr>';
+    }
+    $word_count++;
 }
 ?>
 </table>

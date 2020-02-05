@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -16,7 +17,7 @@
 
 /**
 * Admin screen to edit a campus
-* 
+*
 * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 * @copyright Copyright (c) 2016 onwards The University of Nottingham
 */
@@ -42,22 +43,20 @@ if (isset($_POST['submit'])) {
     $duplicate = $campusobj->check_campus_name_inuse($name);
     if (!$duplicate or $name == $details['campusname']) {
         if ($details['isdefault'] or empty($_POST['defaultchk'])) {
-
             $params['name'] = array('s', $name);
             $params['isdefault'] = array('i', 1);
             DBUtils::exec_db_update('campus', 'id', $params, $campus, $mysqli);
             
-            $update = $mysqli->prepare("UPDATE campus SET isdefault = 0 WHERE id != ?");
-            $update->bind_param("i", $campus);
+            $update = $mysqli->prepare('UPDATE campus SET isdefault = 0 WHERE id != ?');
+            $update->bind_param('i', $campus);
             $update->execute();
             $update->close();
-
         } else {
             $params['name'] = array('s', $name);
             $params['isdefault'] = array('i', 0);
             DBUtils::exec_db_update('campus', 'id', $params, $campus, $mysqli);
         }
-        header("location: list_campuses.php", true, 303);
+        header('location: list_campuses.php', true, 303);
         exit();
     }
 }
@@ -68,8 +67,8 @@ $lang['title'] = $string['editcampus'];
 $lang['create'] = $string['createnewcampus'];
 $lang['view'] = $string['viewcampus'];
 $lang['delete'] = $string['deletecampus'];
-$additionaljs = "<script type=\"text/javascript\" src=\"js/campusesinit.min.js\"></script>";
-$addtionalcss = "<style type=\"text/css\">
+$additionaljs = '<script type="text/javascript" src="js/campusesinit.min.js"></script>';
+$addtionalcss = '<style type="text/css">
           td {text-align:left}
           .field {text-align:right; padding-right:10px}
           .form-error {
@@ -80,8 +79,8 @@ $addtionalcss = "<style type=\"text/css\">
             color: #800000;
             border: 2px solid #800000;
           }
-        </style>";
-$breadcrumb = array($string['home'] => "../../index.php", $string['administrativetools'] => "../index.php", $string['computerlabs'] => "../list_labs.php", $string['campuses'] => "list_campuses.php" );
+        </style>';
+$breadcrumb = array($string['home'] => '../../index.php', $string['administrativetools'] => '../index.php', $string['computerlabs'] => '../list_labs.php', $string['campuses'] => 'list_campuses.php' );
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('add_campuses.php', 'new_campus_16.png', $lang, $toprightmenu);
 $render->render_admin_content($breadcrumb, $lang);
@@ -91,20 +90,20 @@ $render->render_admin_content($breadcrumb, $lang);
 <br />
 <div align="center">
 <?php
-    if (isset($_POST['submit']) and $duplicate) {
-        echo $notice->info_strip($string['duplicate'], 100);
-    }
+if (isset($_POST['submit']) and $duplicate) {
+    echo $notice->info_strip($string['duplicate'], 100);
+}
 ?>
     <form id="theform" name="add_session" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" autocomplete="off">
         <table cellpadding="0" cellspacing="2" border="0">
-        <?php 
-            echo "<tr><td class=\"field\">" . $string['name'] . "</td><td><input type=\"text\" size=\"80\" maxlength=\"80\" id=\"name\" name=\"name\" value=\"" . $details['campusname'] . "\" required /></td></tr>";
-            if ($details['isdefault']) {
-                echo "<tr><td class=\"field\">" . $string['default'] . "</td><td><input type=\"checkbox\" name=\"defaultchk\" checked disabled/></td></tr>";
-            } else {
-                echo "<tr><td class=\"field\">" . $string['default'] . "</td><td><input type=\"checkbox\" name=\"defaultchk\"/></td></tr>";
-            }
-            echo "<input type=\"hidden\" name=\"campus\" id=\"campus\" value=\"" . $details['campusid']. "\"/>";
+        <?php
+            echo '<tr><td class="field">' . $string['name'] . '</td><td><input type="text" size="80" maxlength="80" id="name" name="name" value="' . $details['campusname'] . '" required /></td></tr>';
+        if ($details['isdefault']) {
+            echo '<tr><td class="field">' . $string['default'] . '</td><td><input type="checkbox" name="defaultchk" checked disabled/></td></tr>';
+        } else {
+            echo '<tr><td class="field">' . $string['default'] . '</td><td><input type="checkbox" name="defaultchk"/></td></tr>';
+        }
+            echo '<input type="hidden" name="campus" id="campus" value="' . $details['campusid'] . '"/>';
         ?>
         </table>
       <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"><input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" /></p>

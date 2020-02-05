@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -25,7 +26,8 @@ namespace api;
 /**
  * School class
  */
-class schoolmanagement extends \api\abstractmanagement {
+class schoolmanagement extends \api\abstractmanagement
+{
     
     /**
      * Language pack component.
@@ -54,7 +56,8 @@ class schoolmanagement extends \api\abstractmanagement {
      * @param integer $userid rogo user id linked to web service client
      * @return - success status and school id
      */
-    public function create($params, $userid) {
+    public function create($params, $userid)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('school_not_created', 'school_already_exists', 'faculty_not_supplied' ,'external_faculty_invalid'));
         $faculty = true;
@@ -122,7 +125,8 @@ class schoolmanagement extends \api\abstractmanagement {
      * @param integer $userid rogo user id linked to web service client
      * @return - success status and school id
      */
-    public function update($params, $userid) {
+    public function update($params, $userid)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('school_not_updated', 'school_does_not_exist'
             , 'faculty_not_supplied' , 'school_nothing_to_update', 'external_faculty_invalid'));
@@ -184,14 +188,14 @@ class schoolmanagement extends \api\abstractmanagement {
             if ($details['faculty'] != $facultyid) {
                 $change = true;
             }
-        // Get faculty if not provided.           
+        // Get faculty if not provided.
         } elseif (!isset($params['faculty'])) {
             $facultyid = $details['faculty'];
         } else {
             $faculty = false;
         }
         
-        if ($faculty) {        
+        if ($faculty) {
             // Update school.
             if ($change) {
                 $update = \SchoolUtils::update_school($schoolid, $facultyid, $params['name'], $params['code'], $details['externalid'], $details['externalsys'], $this->db);
@@ -215,7 +219,8 @@ class schoolmanagement extends \api\abstractmanagement {
      * @param integer $userid rogo user id linked to web service client
      * @return success status and school id
      */
-    public function delete($params, $userid) {
+    public function delete($params, $userid)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('school_not_deleted_inuse', 'school_not_deleted'
             , 'school_does_not_exist'));

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -38,15 +39,15 @@ $bgcolor = $fgcolor = $textsize = $marks_color = $themecolor = $labelcolor = $fo
 $propertyObj->set_paper_colour_scheme($userObject, $bgcolor, $fgcolor, $textsize, $marks_color, $themecolor, $labelcolor, $font, $unanswered_color, $dismiss_color);
 
 $paperID    = $propertyObj->get_property_id();
-$paper_type	= $propertyObj->get_paper_type();
-$start_date	= $propertyObj->get_start_date();
+$paper_type = $propertyObj->get_paper_type();
+$start_date = $propertyObj->get_start_date();
 
 if ($userObject->has_role('External Examiner')) {
-  $review_type = 'External';
-	$review_deadline = strtotime($propertyObj->get_external_review_deadline());
+    $review_type = 'External';
+    $review_deadline = strtotime($propertyObj->get_external_review_deadline());
 } else {
-  $review_type = 'Internal';
-	$review_deadline = strtotime($propertyObj->get_internal_review_deadline());
+    $review_type = 'Internal';
+    $review_deadline = strtotime($propertyObj->get_internal_review_deadline());
 }
 
 $userid = $userObject->get_user_ID();
@@ -54,23 +55,24 @@ $userid = $userObject->get_user_ID();
 $review = new Review($paperID, $userid, $review_type, $mysqli);
 
 if (isset($_POST['close'])) {
-  $review->record_general_comments($_POST['paper_comments'], false);
-  echo close_window($propertyObj->get_fullscreen());
-  exit();
+    $review->record_general_comments($_POST['paper_comments'], false);
+    echo close_window($propertyObj->get_fullscreen());
+    exit();
 } elseif (isset($_POST['finish'])) {
-  $review->record_general_comments($_POST['paper_comments'], true);
-  echo close_window($propertyObj->get_fullscreen());
-  exit(); 
+    $review->record_general_comments($_POST['paper_comments'], true);
+    echo close_window($propertyObj->get_fullscreen());
+    exit();
 }
 
-function close_window($fullscreen) {
-  if ($fullscreen == 1) {
-    $html = "<html>\n<head>\n<title>Rog&#333;</title>\n</head>\n<body onload=\"window.close(); window.opener.location.reload();\"></body>\n</html>";
-  } else {
-    header("location: index.php", true, 303);
-    exit();
-  }
-  return $html;
+function close_window($fullscreen)
+{
+    if ($fullscreen == 1) {
+        $html = "<html>\n<head>\n<title>Rog&#333;</title>\n</head>\n<body onload=\"window.close(); window.opener.location.reload();\"></body>\n</html>";
+    } else {
+        header('location: index.php', true, 303);
+        exit();
+    }
+    return $html;
 }
 ?>
 <html>
@@ -103,12 +105,12 @@ function close_window($fullscreen) {
   $configObject = Config::get_instance();
   $start_of_day_ts = strtotime('midnight');
 
-  if (isset($_POST['old_screen']) and (($_POST['old_screen'] != '' and $start_of_day_ts <= $review_deadline and time() <= $start_date) or $start_date == '')) {
+if (isset($_POST['old_screen']) and (($_POST['old_screen'] != '' and $start_of_day_ts <= $review_deadline and time() <= $start_date) or $start_date == '')) {
     $review->record_comments($_POST['old_screen']);
-  } else {
+} else {
     echo $string['deadline'] . ' = ' . date($configObject->get('cfg_long_date_php'), $review_deadline);
-  }
-  ?>
+}
+?>
   <blockquote>
     <h1><?php echo $string['generalcomments'] ?></h1>
     <p><?php echo $string['generalmsg'] ?></p>

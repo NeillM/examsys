@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -28,6 +29,7 @@ namespace csv;
  * @author Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright (c) 2018, University of Nottingham
  */
-class csv_load_exception extends \file_load_exception {
+class csv_load_exception extends \file_load_exception
+{
   // Intentionally empty.
 }

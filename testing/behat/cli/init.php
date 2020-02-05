@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -22,6 +23,7 @@
  * @package testing
  * @category behat
  */
+
 ini_set('display_errors', 1);
 require_once dirname(dirname(dirname(__DIR__))) . '/include/autoload.inc.php';
 autoloader::init();
@@ -42,31 +44,31 @@ $optionslist = getopt($options, $longoptions);
 
 if (isset($optionslist['h']) or isset($optionslist['help'])) {
   // Display some help information.
-  cli_utils::prompt(help::init_help());
-  exit(0);
+    cli_utils::prompt(help::init_help());
+    exit(0);
 }
 
 // Work out what type of composer and npm dependancy installation method we should use.
 if (isset($optionslist['update'])) {
-  $composer_method = composer_utils::UPDATE;
-  $npm_method = npm_utils::UPDATE;
+    $composer_method = composer_utils::UPDATE;
+    $npm_method = npm_utils::UPDATE;
 } else {
-  $composer_method = composer_utils::INSTALL;
-  $npm_method = npm_utils::INSTALL;
+    $composer_method = composer_utils::INSTALL;
+    $npm_method = npm_utils::INSTALL;
 }
 
 // Load the behat config file.
 try {
-  $config = Config::get_instance();
-  if (!$config->is_behat_configured()) {
-    // Stop if behat is not configured correctly.
-    throw new Exception('Behat not configured correctly.');
-  }
-  $config->use_behat_site();
+    $config = Config::get_instance();
+    if (!$config->is_behat_configured()) {
+      // Stop if behat is not configured correctly.
+        throw new Exception('Behat not configured correctly.');
+    }
+    $config->use_behat_site();
 } catch (Exception $e) {
-  cli_utils::prompt($e->getMessage());
-  cli_utils::prompt(help::error());
-  exit(0);
+    cli_utils::prompt($e->getMessage());
+    cli_utils::prompt(help::error());
+    exit(0);
 }
 
 // Ensure any caches are cleared.
@@ -78,26 +80,26 @@ chdir(__DIR__);
 
 try {
   // Ensure composer and it's dependancies are installed and upto date.
-  composer_utils::setup($composer_method);
+    composer_utils::setup($composer_method);
   // Ensure npm and it's dependancies are installed and upto date.
-  npm_utils::setup($npm_method);
+    npm_utils::setup($npm_method);
   // The composer autoloader may not have been generated before this point so we should ensure it is.
-  autoloader::init();
+    autoloader::init();
   // Create the behat.yml file.
-  environment::build_config();
+    environment::build_config();
   // Create the database.
-  if (isset($optionslist['clean']) or environment::upgrade_needed()) {
-    database::install_database();
-    // Store the version of Rogo that behat is initialised for.
-    environment::save_version();
-  } else {
-    cli_utils::prompt('Database does not need updating.');
-  }
+    if (isset($optionslist['clean']) or environment::upgrade_needed()) {
+        database::install_database();
+      // Store the version of Rogo that behat is initialised for.
+        environment::save_version();
+    } else {
+        cli_utils::prompt('Database does not need updating.');
+    }
   // Display the command to run tests.
-  cli_utils::prompt(help::run_help());
+    cli_utils::prompt(help::run_help());
 } catch (Exception $e) {
-  cli_utils::prompt($e->getMessage());
-  cli_utils::prompt(help::error());
+    cli_utils::prompt($e->getMessage());
+    cli_utils::prompt(help::error());
 }
 
 exit(0);

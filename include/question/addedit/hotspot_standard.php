@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -25,31 +26,31 @@
 $media = $question->get_media();
 $plugin_height = max($media['height'] + 25, 400);
 if (count($question->options) > 0) {
-  $option = reset($question->options);
-  $correct = $option->get_correct();
-  $option_id = $option->id;
+    $option = reset($question->options);
+    $correct = $option->get_correct();
+    $option_id = $option->id;
 } else {
-  $correct = '';
-  $option_id = -1;
+    $correct = '';
+    $option_id = -1;
 }
 $imageurl = rogo_directory::get_directory('media')->url($media['filename']);
 if ($question->get_locked() != '') {
   // The question is locked, limited editing.
-  $hotspot_mode = 'correction';
+    $hotspot_mode = 'correction';
 } else {
   // Full editing capabilities.
-  $hotspot_mode = 'edit';
+    $hotspot_mode = 'edit';
 }
 ?>
 
-				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
-					<tbody>
+                <table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
+                    <tbody>
 <?php
 require_once 'detail_parts/details_theme_notes.php';
 require_once 'detail_parts/details_scenario.php';
 ?>
-					</tbody>
-				</table>
+                    </tbody>
+                </table>
         
         <table class="form hotspot" summary="Hotspot flash movie">
           <thead>
@@ -75,7 +76,7 @@ require_once 'detail_parts/details_scenario.php';
                  ></div>
                   <input name="optionid1" value="<?php echo $option_id ?>" type="hidden" />
                   <input type="hidden" id="points1" name="points1" value="<?php echo $correct ?>" />
-                  <?php if(!isset($_POST['submit']) or $_POST['submit']!='Replace Media') { ?>
+                  <?php if (!isset($_POST['submit']) or $_POST['submit'] != 'Replace Media') { ?>
                     <input type="hidden" id="q_media" name="q_media" value="<?php echo $media['filename'] ?>" />
                     <input type="hidden" id="q_media_width" name="q_media_width" value="<?php echo $media['width'] ?>" />
                     <input type="hidden" id="q_media_height" name="q_media_height" value="<?php echo $media['height'] ?>" />

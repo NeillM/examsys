@@ -20,4 +20,3 @@ $string['generalcomments'] = 'General Comments';
 $string['generalmsg'] = 'Please use the area below to record any general comments about the difficulty, appropriateness or other comments about the paper as a whole.';
 $string['saveclose'] = 'Save &amp; Close';
 $string['savefinish'] = 'Save &amp; Finish';
-?>

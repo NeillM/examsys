@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,12 +25,14 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2017 onwards The University of Nottingham
  * @package tests
  */
-class userobjecttest extends unittestdatabase {
+class userobjecttest extends unittestdatabase
+{
     /**
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $datagenerator = $this->get_datagenerator('log', 'core');
         $datagenerator->create_metadata(array('userID' => $this->student['id'], 'paperID' => 1, 'started' => '2017-01-01 00:00:00', 'completed' => '2017-01-02 00:00:00'));
         $datagenerator->create_metadata(array('userID' => $this->student['id'], 'paperID' => 2, 'started' => '2017-01-01 00:00:00'));
@@ -39,7 +42,8 @@ class userobjecttest extends unittestdatabase {
      * Test user completed paper
      * @group user
      */
-    public function test_user_completed_paper() {
+    public function test_user_completed_paper()
+    {
         $this->set_active_user($this->student['id']);
         // User completed a paper.
         $this->assertTrue($this->userobject->user_completed_paper(1));

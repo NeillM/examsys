@@ -25,5 +25,3 @@ $string['errormessage'] = 'If you change from repeated to unique labels some of 
 $string['continue'] = 'Do you want to continue?';
 $string['errorcanvas'] = 'Canvas not supported';
 $string['errorimageslabelling'] = 'Labelling question cannot be displayed because some images were not loaded.';
-
-?>

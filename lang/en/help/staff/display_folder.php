@@ -18,4 +18,3 @@ require '../../lang/' . $language . '/help/staff/index.php';
 
 $string['topics'] = 'Topics';
 $string['items'] = 'items';
-?>

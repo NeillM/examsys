@@ -16,4 +16,3 @@
 
 require '../../lang/' . $language . '/include/months.php';
 require '../../lang/' . $language . '/help/staff/stats.php';
-?>

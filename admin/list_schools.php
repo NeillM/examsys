@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -45,8 +46,8 @@
 
 <body>
 <?php
-  $result = $mysqli->prepare("SELECT schools.id, schools.code, schools.school, faculty.name, faculty.code, (COUNT(modules.id) - COUNT(modules.mod_deleted)) FROM (schools, faculty)
-    LEFT JOIN modules ON schools.id = modules.schoolid WHERE schools.facultyID = faculty.id AND schools.deleted IS NULL GROUP BY faculty.code, faculty.name, schools.code, schools.school, schools.id");
+  $result = $mysqli->prepare('SELECT schools.id, schools.code, schools.school, faculty.name, faculty.code, (COUNT(modules.id) - COUNT(modules.mod_deleted)) FROM (schools, faculty)
+    LEFT JOIN modules ON schools.id = modules.schoolid WHERE schools.facultyID = faculty.id AND schools.deleted IS NULL GROUP BY faculty.code, faculty.name, schools.code, schools.school, schools.id');
   $result->execute();
   $result->store_result();
   $result->bind_result($id, $code, $school, $faculty, $faculty_code, $module_no);
@@ -54,7 +55,7 @@
   require '../include/school_options.inc';
   require '../include/toprightmenu.inc';
   echo draw_toprightmenu();
-?>
+    ?>
 <div id="content">
 
 <div class="head_title">
@@ -76,13 +77,13 @@
 <tbody>
 <?php
 if ($faculties > 0) {
-  while ($result->fetch()) {
-    echo "<tr id=\"$id\" class=\"l\"><td>$code</td><td>$school</td><td>$faculty_code $faculty</td><td class=\"no\">" . number_format($module_no) . "</td></tr>\n";
-  }
-  $result->close();
+    while ($result->fetch()) {
+        echo "<tr id=\"$id\" class=\"l\"><td>$code</td><td>$school</td><td>$faculty_code $faculty</td><td class=\"no\">" . number_format($module_no) . "</td></tr>\n";
+    }
+    $result->close();
 } else {
-  echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-  echo "<tr><td colspan=\"4\">{$string['musthavefaculty']}</td></tr>\n";
+    echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+    echo "<tr><td colspan=\"4\">{$string['musthavefaculty']}</td></tr>\n";
 }
 
 $mysqli->close();

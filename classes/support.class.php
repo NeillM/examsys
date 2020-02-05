@@ -23,22 +23,25 @@
 /**
  * Support helper class.
  */
-class support {
+class support
+{
   /**
    * Get support email addresses
    * @return string
    */
-  public static function get_email() {
-    $configObj = Config::get_instance();
-    return implode(";", $configObj->get_setting('core', 'support_contact_email'));
-  }
+    public static function get_email()
+    {
+        $configObj = Config::get_instance();
+        return implode(';', $configObj->get_setting('core', 'support_contact_email'));
+    }
   /**
    * Get primary support email address
    * @return string
    */
-  public static function get_primary_email() {
-    $configObj = Config::get_instance();
-    $emaillist = $configObj->get_setting('core', 'support_contact_email');
-    return $emaillist[0];
-  }
+    public static function get_primary_email()
+    {
+        $configObj = Config::get_instance();
+        $emaillist = $configObj->get_setting('core', 'support_contact_email');
+        return $emaillist[0];
+    }
 }

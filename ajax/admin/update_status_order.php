@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -25,32 +26,32 @@
 require '../../include/sysadmin_auth.inc';
 
 if (!isset($_POST['statuses'])) {
-	$rval = 'ERROR';
-} else {
-  $rval = 'OK';
-  $success = true;
-  $mysqli->autocommit(false);
-
-  parse_str($_POST['statuses'], $statuses);
-
-  foreach ($statuses['status'] as $index => $id) {
-    $sql = 'UPDATE question_statuses SET display_order = ? WHERE id = ?';
-    $result = $mysqli->prepare($sql);
-    $result->bind_param('ii', $index, $id);
-    if (!$result->execute()) {
-      $success = false;
-    }
-    $result->close();
-  }
-
-  if (!$success) {
-    $mysqli->rollback();
     $rval = 'ERROR';
-  } else {
-    $mysqli->commit();
-  }
+} else {
+    $rval = 'OK';
+    $success = true;
+    $mysqli->autocommit(false);
 
-  $mysqli->autocommit(true);
+    parse_str($_POST['statuses'], $statuses);
+
+    foreach ($statuses['status'] as $index => $id) {
+        $sql = 'UPDATE question_statuses SET display_order = ? WHERE id = ?';
+        $result = $mysqli->prepare($sql);
+        $result->bind_param('ii', $index, $id);
+        if (!$result->execute()) {
+            $success = false;
+        }
+        $result->close();
+    }
+
+    if (!$success) {
+        $mysqli->rollback();
+        $rval = 'ERROR';
+    } else {
+        $mysqli->commit();
+    }
+
+    $mysqli->autocommit(true);
 }
 
 echo $rval;

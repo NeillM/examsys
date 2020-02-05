@@ -29,4 +29,3 @@ $string['module'] = 'Module';
 $string['course'] = 'Course';
 $string['school'] = 'School';
 $string['faculty'] = 'Faculty';
-?>

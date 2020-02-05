@@ -24,34 +24,36 @@
  * @package
  */
 
-Class QuestionAREA extends QuestionEdit {
+class QuestionAREA extends QuestionEdit
+{
 
-  protected $_fields_required = array('type', 'leadin', 'option_order', 'owner_id', 'status');
+    protected $_fields_required = array('type', 'leadin', 'option_order', 'owner_id', 'status');
 
-  protected $points1 = '';
-  protected $correct_full;
-  protected $error_full;
-  protected $correct_partial;
-  protected $error_partial;
-  protected $_requires_media = true;
-  protected $_requires_html5 = true;
-  protected $_allow_partial_marks = true;
-  protected $_allow_negative_marks = true;
-  protected $score_method = 'Allow partial Marks';
-  public $max_options = 1;
+    protected $points1 = '';
+    protected $correct_full;
+    protected $error_full;
+    protected $correct_partial;
+    protected $error_partial;
+    protected $_requires_media = true;
+    protected $_requires_html5 = true;
+    protected $_allow_partial_marks = true;
+    protected $_allow_negative_marks = true;
+    protected $score_method = 'Allow partial Marks';
+    public $max_options = 1;
 
-  protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'bloom', 'status', 'correct_full', 'error_full', 'correct_partial', 'error_partial');
-  protected $_fields_settings = array('correct_full', 'error_full', 'correct_partial', 'error_partial');
+    protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'score_method', 'bloom', 'status', 'correct_full', 'error_full', 'correct_partial', 'error_partial');
+    protected $_fields_settings = array('correct_full', 'error_full', 'correct_partial', 'error_partial');
 
-  function __construct($mysqli, $userObj, $lang_strings, $data = null) {
-    parent::__construct($mysqli, $userObj, $lang_strings, $data);
+    function __construct($mysqli, $userObj, $lang_strings, $data = null)
+    {
+        parent::__construct($mysqli, $userObj, $lang_strings, $data);
 
-    // Convert the max number of options into a list of variables
-    $this->option_order = 'display order';
-    $this->_fields_change = array('option_marks_correct', 'option_marks_partial', 'option_marks_incorrect', 'correct_full', 'error_full', 'correct_partial', 'error_partial');
-    $this->_fields_unified = array('correct' => $this->_lang_strings['correctanswer'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect'], 'marks_partial' => $this->_lang_strings['markspartial']);
-    $this->_score_methods = array($this->_lang_strings['markperoption'], $this->_lang_strings['allowpartial']);
-  }
+      // Convert the max number of options into a list of variables
+        $this->option_order = 'display order';
+        $this->_fields_change = array('option_marks_correct', 'option_marks_partial', 'option_marks_incorrect', 'correct_full', 'error_full', 'correct_partial', 'error_partial');
+        $this->_fields_unified = array('correct' => $this->_lang_strings['correctanswer'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect'], 'marks_partial' => $this->_lang_strings['markspartial']);
+        $this->_score_methods = array($this->_lang_strings['markperoption'], $this->_lang_strings['allowpartial']);
+    }
 
 
   /**
@@ -59,13 +61,14 @@ Class QuestionAREA extends QuestionEdit {
    * @return boolean Success or failure of the save operation
    * @throws ValidationException
    */
-  public function save($clear_checkout = true) {
-    // Make sure 'correct' value is set for option
-    if ((!isset($this->correct) or $this->correct = '') and $this->points1 != '' and count($this->options) > 0) {
-      $this->set_points1($this->points1);
+    public function save($clear_checkout = true)
+    {
+      // Make sure 'correct' value is set for option
+        if ((!isset($this->correct) or $this->correct = '') and $this->points1 != '' and count($this->options) > 0) {
+            $this->set_points1($this->points1);
+        }
+        return parent::save($clear_checkout);
     }
-    return parent::save($clear_checkout);
-  }
 
 
   // ACCESSORS
@@ -73,80 +76,88 @@ Class QuestionAREA extends QuestionEdit {
    * Set the question leadin, stripping any carriage returns
    * @param string $value
    */
-  public function set_leadin($value) {
-    $value = str_replace("\r\n", ' ', $value);
-    if ($value != $this->leadin) {
-      $this->set_modified_field('leadin', $this->leadin);
-      $this->leadin = $value;
+    public function set_leadin($value)
+    {
+        $value = str_replace("\r\n", ' ', $value);
+        if ($value != $this->leadin) {
+            $this->set_modified_field('leadin', $this->leadin);
+            $this->leadin = $value;
+        }
     }
-  }
 
   /**
    * @param $correct_full
    */
-  public function set_correct_full($value) {
-    if ($value != $this->correct_full) {
-      $this->set_modified_field('correct_full', $this->correct_full);
-      $this->correct_full = $value;
+    public function set_correct_full($value)
+    {
+        if ($value != $this->correct_full) {
+            $this->set_modified_field('correct_full', $this->correct_full);
+            $this->correct_full = $value;
+        }
     }
-  }
 
   /**
    * @return mixed
    */
-  public function get_correct_full() {
-    return $this->correct_full;
-  }
+    public function get_correct_full()
+    {
+        return $this->correct_full;
+    }
 
   /**
    * @param $correct_partial
    */
-  public function set_correct_partial($value) {
-    if ($value != $this->correct_partial) {
-      $this->set_modified_field('correct_partial', $this->correct_partial);
-      $this->correct_partial = $value;
+    public function set_correct_partial($value)
+    {
+        if ($value != $this->correct_partial) {
+            $this->set_modified_field('correct_partial', $this->correct_partial);
+            $this->correct_partial = $value;
+        }
     }
-  }
 
   /**
    * @return mixed
    */
-  public function get_correct_partial() {
-    return $this->correct_partial;
-  }
+    public function get_correct_partial()
+    {
+        return $this->correct_partial;
+    }
 
   /**
    * @param $error_full
    */
-  public function set_error_full($value) {
-    if ($value != $this->error_full) {
-      $this->set_modified_field('error_full', $this->error_full);
-      $this->error_full = $value;
+    public function set_error_full($value)
+    {
+        if ($value != $this->error_full) {
+            $this->set_modified_field('error_full', $this->error_full);
+            $this->error_full = $value;
+        }
     }
-  }
 
   /**
    * @return mixed
    */
-  public function get_error_full() {
-    return $this->error_full;
-  }
+    public function get_error_full()
+    {
+        return $this->error_full;
+    }
 
   /**
    * @param $error_partial
    */
-  public function set_error_partial($value) {
-    if ($value != $this->error_partial) {
-      $this->set_modified_field('error_partial', $this->error_partial);
-      $this->error_partial = $value;
+    public function set_error_partial($value)
+    {
+        if ($value != $this->error_partial) {
+            $this->set_modified_field('error_partial', $this->error_partial);
+            $this->error_partial = $value;
+        }
     }
-  }
 
   /**
    * @return mixed
    */
-  public function get_error_partial() {
-    return $this->error_partial;
-  }
+    public function get_error_partial()
+    {
+        return $this->error_partial;
+    }
 }
-

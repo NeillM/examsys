@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -33,7 +34,8 @@ use testing\testcasetrait;
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
-abstract class unittestdatabase extends TestCase {
+abstract class unittestdatabase extends TestCase
+{
     use testcasetrait {
 
     }
@@ -105,8 +107,9 @@ abstract class unittestdatabase extends TestCase {
      * Set-up test suite
      * @throws \Exception
      */
-    private function setup_suite() : void {
-        $this->fixture_base = dirname(dirname(__DIR__) ). DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . 'base' . DIRECTORY_SEPARATOR;
+    private function setup_suite(): void
+    {
+        $this->fixture_base = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . 'base' . DIRECTORY_SEPARATOR;
         $this->config = RogoConfig::get_instance();
         $this->default_config = clone($this->config);
         $db = $this->get_db_connection();
@@ -135,14 +138,16 @@ abstract class unittestdatabase extends TestCase {
      * @throws \testing\datagenerator\no_database
      * @throws \testing\datagenerator\not_found
      */
-    public function get_datagenerator(string $name, string $component = 'core') : generator {
+    public function get_datagenerator(string $name, string $component = 'core'): generator
+    {
         return loader::get($name, $component);
     }
 
     /**
      * Phpunit setup function.
      */
-    public function setUp() : void {
+    public function setUp(): void
+    {
         $this->setup_suite();
         $this->setup_dataset();
     }
@@ -150,7 +155,8 @@ abstract class unittestdatabase extends TestCase {
     /**
      * Tear down config object and close db connections.
      */
-    public function tearDown() : void {
+    public function tearDown(): void
+    {
         // Reset the config object.
         RogoConfig::set_mock_instance(clone($this->default_config));
         // Destory user object.
@@ -164,7 +170,8 @@ abstract class unittestdatabase extends TestCase {
      * Get the fixure directory location for tests.
      * @return string path to fixtures directory
      */
-    public function get_base_fixture_directory() : string {
+    public function get_base_fixture_directory(): string
+    {
         return dirname(__DIR__) . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR;
     }
 
@@ -172,7 +179,8 @@ abstract class unittestdatabase extends TestCase {
      * Get the admin user.
      * @return array
      */
-    public function get_base_admin() : array {
+    public function get_base_admin(): array
+    {
         $id = $this->get_user_id('admin');
         $data = \userutils::get_user_details($id, $this->db);
         $data['id'] = $id;
@@ -183,7 +191,8 @@ abstract class unittestdatabase extends TestCase {
      * Get the student user.
      * @return array
      */
-    public function get_base_student() : array {
+    public function get_base_student(): array
+    {
         $id = $this->get_user_id('test1');
         $data = \userutils::get_user_details($id, $this->db);
         $data['id'] = $id;
@@ -195,7 +204,8 @@ abstract class unittestdatabase extends TestCase {
      * @param string $username username
      * @return int
      */
-    public function get_user_id(string $username) : int {
+    public function get_user_id(string $username): int
+    {
         $exists = \userutils::username_exists($username, $this->db);
         if ($exists === false) {
             // Set to invalid id.
@@ -208,7 +218,8 @@ abstract class unittestdatabase extends TestCase {
      * Get the id of the module loaded by the base file.
      * @return int
      */
-    public function get_base_module() : int {
+    public function get_base_module(): int
+    {
         return $this->get_module_id('TRAIN');
     }
 
@@ -217,7 +228,8 @@ abstract class unittestdatabase extends TestCase {
      * @param string $module module
      * @return int
      */
-    public function get_module_id(string $module) : int {
+    public function get_module_id(string $module): int
+    {
         $exists = \module_utils::get_idMod($module, $this->db);
         if ($exists === false) {
             // Set to invalid id.
@@ -230,7 +242,8 @@ abstract class unittestdatabase extends TestCase {
      * Get the id of the module loaded by the base file.
      * @return int
      */
-    public function get_base_faculty() : int {
+    public function get_base_faculty(): int
+    {
         return $this->get_faculty_id('UNKNOWN Faculty');
     }
 
@@ -239,7 +252,8 @@ abstract class unittestdatabase extends TestCase {
      * @param string $faculty faculty
      * @return int
      */
-    public function get_faculty_id(string $faculty) : int {
+    public function get_faculty_id(string $faculty): int
+    {
         $exists = \facultyutils::facultyid_by_name($faculty, $this->db);
         if ($exists === false) {
             // Set to invalid id.
@@ -252,7 +266,8 @@ abstract class unittestdatabase extends TestCase {
      * Get the id of the school loaded by the base file.
      * @return int
      */
-    public function get_base_school() : int {
+    public function get_base_school(): int
+    {
         return $this->get_school_id('UNKNOWN School');
     }
 
@@ -261,7 +276,8 @@ abstract class unittestdatabase extends TestCase {
      * @param string $school school
      * @return int
      */
-    public function get_school_id(string $school) : int {
+    public function get_school_id(string $school): int
+    {
         $exists = \schoolutils::get_school_id_by_name($school, $this->db);
         if ($exists === false) {
             // Set to invalid id.
@@ -276,7 +292,8 @@ abstract class unittestdatabase extends TestCase {
      * @param int $state userobject state
      * @param int $impersonate user to impersonate
      */
-    public function set_active_user(int $id, int $state = self::USEROBJECT_DEEFAULT, int $impersonate = null) : void {
+    public function set_active_user(int $id, int $state = self::USEROBJECT_DEEFAULT, int $impersonate = null): void
+    {
         $this->userobject->load($id);
         if ($state === self::USEROBJECT_DEMO) {
             $this->userobject->set_demo();
@@ -289,7 +306,8 @@ abstract class unittestdatabase extends TestCase {
      * Set-up db connections.
      * @return mysqli
      */
-    protected function get_db_connection() : mysqli {
+    protected function get_db_connection(): mysqli
+    {
         $this->config = RogoConfig::get_instance();
         if (!isset($this->db)) {
             // Open db connection.
@@ -306,7 +324,8 @@ abstract class unittestdatabase extends TestCase {
     /**
      * Load/Generate test data
      */
-    protected function setup_dataset() : void {
+    protected function setup_dataset(): void
+    {
         // Base data generation.
         $this->base_datageneration();
         // Load base ids into memory.
@@ -322,7 +341,8 @@ abstract class unittestdatabase extends TestCase {
     /**
      * Clear data added to test db by dataset
      */
-    protected function teardown_dataset() : void {
+    protected function teardown_dataset(): void
+    {
         $this->disable_fk_check();
         foreach ($this->table_names as $table) {
             $this->delete_from_table($table);
@@ -333,5 +353,5 @@ abstract class unittestdatabase extends TestCase {
     /**
      * Test specific data generation
      */
-    abstract public function datageneration() : void;
+    abstract public function datageneration(): void;
 }

@@ -19,7 +19,5 @@ require '../lang/' . $language . '/statistics/questions_by_school.php';
 
 $string['nostandardsset'] = 'No standards have been set for this paper yet.';
 $string['incomplete'] = 'Incomplete';
-$string['groupreview'] = "Group review";
-$string['noncompatible'] = "Noncompatible"
-
-?>
+$string['groupreview'] = 'Group review';
+$string['noncompatible'] = 'Noncompatible';

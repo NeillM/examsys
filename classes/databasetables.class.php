@@ -22,12 +22,14 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
-class databaseTables {
+class databaseTables
+{
 
-  private $tableList = array();
+    private $tableList = array();
 
-  function __construct($charset, $engine = 'InnoDB', $helpEngine = 'MyISAM') {
-    $this->tableList['access_log'] = <<<QUERY
+    function __construct($charset, $engine = 'InnoDB', $helpEngine = 'MyISAM')
+    {
+        $this->tableList['access_log'] = <<<QUERY
       CREATE TABLE `access_log` (
         `id` int(11) unsigned NOT NULL auto_increment,
         `userID` int(11) unsigned default NULL,
@@ -39,7 +41,7 @@ class databaseTables {
       ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['admin_access'] = <<<QUERY
+        $this->tableList['admin_access'] = <<<QUERY
       CREATE TABLE `admin_access` (
         `adminID` int(11) NOT NULL auto_increment,
         `userID` int(10) unsigned default NULL,
@@ -49,7 +51,7 @@ QUERY;
       ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['announcements'] = <<<QUERY
+        $this->tableList['announcements'] = <<<QUERY
       CREATE TABLE `announcements` (
         `id` int(11) NOT NULL AUTO_INCREMENT,
         `title` varchar(255) DEFAULT NULL,
@@ -63,7 +65,7 @@ QUERY;
       ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['cache_median_question_marks'] = <<<QUERY
+        $this->tableList['cache_median_question_marks'] = <<<QUERY
       CREATE TABLE `cache_median_question_marks` (
         `paperID` mediumint(8) unsigned NOT NULL,
         `questionID` int(10) unsigned NOT NULL DEFAULT '0',
@@ -73,7 +75,7 @@ QUERY;
       ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['cache_paper_stats'] = <<<QUERY
+        $this->tableList['cache_paper_stats'] = <<<QUERY
       CREATE TABLE `cache_paper_stats` (
         `paperID` mediumint(8) unsigned NOT NULL,
         `cached` int(10) unsigned DEFAULT NULL,
@@ -92,7 +94,7 @@ QUERY;
       ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['cache_student_paper_marks'] = <<<QUERY
+        $this->tableList['cache_student_paper_marks'] = <<<QUERY
       CREATE TABLE `cache_student_paper_marks` (
         `paperID` mediumint(8) unsigned NOT NULL,
         `userID` int(10) unsigned NOT NULL DEFAULT '0',
@@ -104,7 +106,7 @@ QUERY;
 QUERY;
 
 
-    $this->tableList['class_totals_test_local'] = <<<QUERY
+        $this->tableList['class_totals_test_local'] = <<<QUERY
         CREATE TABLE `class_totals_test_local` (
           `id` int(11) NOT NULL AUTO_INCREMENT,
           `user_id` int(10) unsigned DEFAULT NULL,
@@ -115,7 +117,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
         
-    $this->tableList['config'] = <<<QUERY
+        $this->tableList['config'] = <<<QUERY
         CREATE TABLE `config` (
           `component` varchar(100) NOT NULL DEFAULT 'core',
           `setting` varchar(100) NOT NULL DEFAULT '',
@@ -125,7 +127,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['courses'] = <<<QUERY
+        $this->tableList['courses'] = <<<QUERY
         CREATE TABLE `courses` (
           `id` int(11) NOT NULL auto_increment,
           `name` varchar(255) default NULL,
@@ -141,7 +143,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['denied_log'] = <<<QUERY
+        $this->tableList['denied_log'] = <<<QUERY
       CREATE TABLE `denied_log` (
         `id` int(11) unsigned NOT NULL auto_increment,
         `userID` int(11) unsigned default NULL,
@@ -154,7 +156,7 @@ QUERY;
       ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['ebel'] = <<<QUERY
+        $this->tableList['ebel'] = <<<QUERY
           CREATE TABLE `ebel` (
             `std_setID` int(10) unsigned NOT NULL,
             `category` char(3) NOT NULL,
@@ -163,7 +165,7 @@ QUERY;
           ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['ebel_grid_templates'] = <<<QUERY
+        $this->tableList['ebel_grid_templates'] = <<<QUERY
           CREATE TABLE `ebel_grid_templates` (
             `id` int(11) NOT NULL auto_increment,
             `EE` tinyint(4) default NULL,
@@ -189,7 +191,7 @@ QUERY;
           ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['exam_announcements'] = <<<QUERY
+        $this->tableList['exam_announcements'] = <<<QUERY
           CREATE TABLE `exam_announcements` (
             `paperID` mediumint(8) unsigned NOT NULL,
             `q_id` int(4) unsigned NOT NULL DEFAULT '0',
@@ -201,7 +203,7 @@ QUERY;
           ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['extra_cal_dates'] = <<<QUERY
+        $this->tableList['extra_cal_dates'] = <<<QUERY
           CREATE TABLE `extra_cal_dates` (
             `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
             `title` varchar(255) NOT NULL,
@@ -214,7 +216,7 @@ QUERY;
           ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['faculty'] = <<<QUERY
+        $this->tableList['faculty'] = <<<QUERY
           CREATE TABLE `faculty` (
             `id` int(11) NOT NULL auto_increment,
             `code` varchar(30) default NULL,
@@ -228,7 +230,7 @@ QUERY;
           ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['feedback_release'] = <<<QUERY
+        $this->tableList['feedback_release'] = <<<QUERY
         CREATE TABLE `feedback_release` (
           `idfeedback_release` int(11) NOT NULL auto_increment,
           `paper_id` mediumint(8) unsigned default NULL,
@@ -238,7 +240,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['folders'] = <<<QUERY
+        $this->tableList['folders'] = <<<QUERY
         CREATE TABLE `folders` (
           `id` int(4) NOT NULL auto_increment,
           `ownerID` int(10) unsigned default NULL,
@@ -250,7 +252,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['folders_modules_staff'] = <<<QUERY
+        $this->tableList['folders_modules_staff'] = <<<QUERY
         CREATE TABLE `folders_modules_staff` (
           `folders_id` int(10) unsigned NOT NULL DEFAULT '0',
           `idMod` int(11) unsigned NOT NULL DEFAULT '0',
@@ -258,7 +260,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['help_log'] = <<<QUERY
+        $this->tableList['help_log'] = <<<QUERY
         CREATE TABLE `help_log` (
           `id` int(11) NOT NULL auto_increment,
           `type` enum('student','staff') default NULL,
@@ -269,7 +271,7 @@ QUERY;
         ) ENGINE={$helpEngine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['help_searches'] = <<<QUERY
+        $this->tableList['help_searches'] = <<<QUERY
         CREATE TABLE `help_searches` (
           `id` int(11) NOT NULL auto_increment,
           `type` enum('student','staff') default NULL,
@@ -281,7 +283,7 @@ QUERY;
         ) ENGINE={$helpEngine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['help_tutorial_log'] = <<<QUERY
+        $this->tableList['help_tutorial_log'] = <<<QUERY
         CREATE TABLE `help_tutorial_log` (
           `id` int(11) NOT NULL auto_increment,
           `type` enum('student','staff') default NULL,
@@ -292,7 +294,7 @@ QUERY;
         ) ENGINE={$helpEngine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['hofstee'] = <<<QUERY
+        $this->tableList['hofstee'] = <<<QUERY
         CREATE TABLE `hofstee` (
           `std_setID` int(10) unsigned NOT NULL,
           `whole_numbers` tinyint(4) DEFAULT NULL,
@@ -309,7 +311,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['client_identifiers'] = <<<QUERY
+        $this->tableList['client_identifiers'] = <<<QUERY
         CREATE TABLE `client_identifiers` (
           `id` int(11) NOT NULL auto_increment,
           `lab` smallint(5) unsigned default NULL,
@@ -322,7 +324,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['keywords_question'] = <<<QUERY
+        $this->tableList['keywords_question'] = <<<QUERY
         CREATE TABLE `keywords_question` (
           `q_id` int(11) NOT NULL,
           `keywordID` int(11) NOT NULL,
@@ -330,7 +332,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['keywords_link'] = <<<QUERY
+        $this->tableList['keywords_link'] = <<<QUERY
         CREATE TABLE `keywords_link` (
           `q_id` INT(4) NOT NULL,
           `keyword_id` INT(11) NOT NULL,
@@ -338,7 +340,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['keywords_user'] = <<<QUERY
+        $this->tableList['keywords_user'] = <<<QUERY
         CREATE TABLE `keywords_user` (
           `id` int(11) NOT NULL auto_increment,
           `userID` int(10) unsigned default NULL,
@@ -349,7 +351,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['killer_questions'] = <<<QUERY
+        $this->tableList['killer_questions'] = <<<QUERY
         CREATE TABLE `killer_questions` (
           `id` int(4) unsigned NOT NULL auto_increment,
           `paperID` mediumint(8) unsigned NOT NULL,
@@ -359,7 +361,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['labs'] = <<<QUERY
+        $this->tableList['labs'] = <<<QUERY
         CREATE TABLE `labs` (
           `id` smallint(5) unsigned NOT NULL auto_increment,
           `name` varchar(255) default NULL,
@@ -373,7 +375,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['log0'] = <<<QUERY
+        $this->tableList['log0'] = <<<QUERY
         CREATE TABLE `log0` (
           `id` int(8) NOT NULL auto_increment,
           `q_id` int(4) NOT NULL DEFAULT '0',
@@ -394,7 +396,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
-    $this->tableList['log0_deleted'] = <<<QUERY
+        $this->tableList['log0_deleted'] = <<<QUERY
         CREATE TABLE `log0_deleted` (
           `id` int(8) NOT NULL UNIQUE,
           `q_id` int(4) NOT NULL DEFAULT '0',
@@ -412,7 +414,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['log1'] = <<<QUERY
+        $this->tableList['log1'] = <<<QUERY
         CREATE TABLE `log1` (
           `id` int(8) NOT NULL auto_increment,
           `q_id` int(4) NOT NULL DEFAULT '0',
@@ -433,7 +435,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
-    $this->tableList['log1_deleted'] = <<<QUERY
+        $this->tableList['log1_deleted'] = <<<QUERY
         CREATE TABLE `log1_deleted` (
           `id` int(8) NOT NULL UNIQUE,
           `q_id` int(4) NOT NULL DEFAULT '0',
@@ -451,7 +453,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['log2'] = <<<QUERY
+        $this->tableList['log2'] = <<<QUERY
         CREATE TABLE `log2` (
           `id` int(8) NOT NULL auto_increment,
           `q_id` int(4) NOT NULL DEFAULT '0',
@@ -472,7 +474,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
-    $this->tableList['log3'] = <<<QUERY
+        $this->tableList['log3'] = <<<QUERY
         CREATE TABLE `log3` (
           `id` int(8) NOT NULL auto_increment,
           `q_id` int(4) NOT NULL DEFAULT '0',
@@ -493,7 +495,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset} PACK_KEYS=1
 QUERY;
 
-    $this->tableList['log4'] = <<<QUERY
+        $this->tableList['log4'] = <<<QUERY
         CREATE TABLE `log4` (
           `id` int NOT NULL auto_increment,
           `q_id` int(11) DEFAULT NULL,
@@ -506,7 +508,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['log4_overall'] = <<<QUERY
+        $this->tableList['log4_overall'] = <<<QUERY
         CREATE TABLE `log4_overall` (
           `id` int(11) NOT NULL auto_increment,
           `userID` int(10) unsigned default NULL,
@@ -526,7 +528,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['log5'] = <<<QUERY
+        $this->tableList['log5'] = <<<QUERY
         CREATE TABLE `log5` (
           `id` int(11) NOT NULL auto_increment,
           `q_id` int(11) DEFAULT NULL,
@@ -540,7 +542,7 @@ QUERY;
        ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['log6'] = <<<QUERY
+        $this->tableList['log6'] = <<<QUERY
         CREATE TABLE `log6` (
           `id` int(11) NOT NULL auto_increment,
           `paperID` mediumint(8) unsigned DEFAULT NULL,
@@ -555,7 +557,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['log_extra_time'] = <<<QUERY
+        $this->tableList['log_extra_time'] = <<<QUERY
         CREATE TABLE `log_extra_time` (
           `id` int(10) unsigned NOT NULL auto_increment,
           `labID` smallint(5) unsigned NOT NULL,
@@ -568,7 +570,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['log_lab_end_time'] = <<<QUERY
+        $this->tableList['log_lab_end_time'] = <<<QUERY
         CREATE TABLE `log_lab_end_time` (
           `id` int(10) unsigned NOT NULL auto_increment,
           `labID` smallint(5) unsigned NOT NULL,
@@ -581,7 +583,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['log_late'] = <<<QUERY
+        $this->tableList['log_late'] = <<<QUERY
         CREATE TABLE `log_late` (
           `id` int(8) NOT NULL auto_increment,
           `q_id` int(4) NOT NULL default '0',
@@ -601,7 +603,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['log_metadata'] = <<<QUERY
+        $this->tableList['log_metadata'] = <<<QUERY
         CREATE TABLE `log_metadata` (
           `id` int(11) unsigned NOT NULL auto_increment,
           `userID` int(10) unsigned default NULL,
@@ -621,7 +623,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['log_metadata_deleted'] = <<<QUERY
+        $this->tableList['log_metadata_deleted'] = <<<QUERY
         CREATE TABLE `log_metadata_deleted` (
           `id` int(11) unsigned NOT NULL UNIQUE,
           `userID` int(10) unsigned DEFAULT NULL,
@@ -637,7 +639,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['lti_context'] = <<<QUERY
+        $this->tableList['lti_context'] = <<<QUERY
           CREATE TABLE IF NOT EXISTS `lti_context` (
           `lti_context_key` VARCHAR(255) NOT NULL,
           `c_internal_id` int(11) NOT NULL,
@@ -647,7 +649,7 @@ QUERY;
           ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['lti_keys'] = <<<QUERY
+        $this->tableList['lti_keys'] = <<<QUERY
           CREATE TABLE IF NOT EXISTS `lti_keys` (
           `id` mediumint(9) NOT NULL AUTO_INCREMENT,
           `oauth_consumer_key` char(255) NOT NULL,
@@ -661,7 +663,7 @@ QUERY;
           ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['lti_resource'] = <<<QUERY
+        $this->tableList['lti_resource'] = <<<QUERY
         CREATE TABLE IF NOT EXISTS `lti_resource` (
         `lti_resource_key` varchar(255) NOT NULL,
         `internal_id` varchar(255) DEFAULT NULL,
@@ -673,7 +675,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['lti_user'] = <<<QUERY
+        $this->tableList['lti_user'] = <<<QUERY
           CREATE TABLE IF NOT EXISTS `lti_user` (
           `lti_user_key` varchar(255) NOT NULL,
           `lti_user_equ` int(10) unsigned,
@@ -683,7 +685,7 @@ QUERY;
          ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['marking_override'] = <<<QUERY
+        $this->tableList['marking_override'] = <<<QUERY
         CREATE TABLE `marking_override` (
           `id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
           `log_id` INT(11) UNSIGNED NOT NULL,
@@ -700,7 +702,7 @@ QUERY;
           ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['modules'] = <<<QUERY
+        $this->tableList['modules'] = <<<QUERY
         CREATE TABLE `modules` (
           `id` int(11) NOT NULL auto_increment,
           `moduleid` char(255) default NULL,
@@ -729,7 +731,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['modules_staff'] = <<<QUERY
+        $this->tableList['modules_staff'] = <<<QUERY
         CREATE TABLE `modules_staff` (
           `groupID` int(4) NOT NULL auto_increment,
           `idMod` int(11) NOT NULL,
@@ -741,7 +743,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['academic_year'] = <<<QUERY
+        $this->tableList['academic_year'] = <<<QUERY
         CREATE TABLE `academic_year` (
           `calendar_year` int(4) NOT NULL,
           `academic_year` varchar(30) NOT NULL,
@@ -753,7 +755,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['modules_student'] = <<<QUERY
+        $this->tableList['modules_student'] = <<<QUERY
         CREATE TABLE `modules_student` (
           `id` int(11) NOT NULL auto_increment,
           `userID` int(10) unsigned DEFAULT NULL,
@@ -768,7 +770,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['objectives'] = <<<QUERY
+        $this->tableList['objectives'] = <<<QUERY
         CREATE TABLE `objectives` (
         `obj_id` int(11) NOT NULL,
         `objective` text NOT NULL,
@@ -781,7 +783,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['options'] = <<<QUERY
+        $this->tableList['options'] = <<<QUERY
         CREATE TABLE `options` (
           `o_id` int(4) NOT NULL default '0',
           `option_text` text,
@@ -800,7 +802,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['paper_feedback'] = <<<QUERY
+        $this->tableList['paper_feedback'] = <<<QUERY
         CREATE TABLE `paper_feedback` (
           `id` int(11) unsigned NOT NULL auto_increment,
           `paperID` mediumint(8) unsigned NOT NULL,
@@ -811,7 +813,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['paper_metadata_security'] = <<<QUERY
+        $this->tableList['paper_metadata_security'] = <<<QUERY
         CREATE TABLE `paper_metadata_security` (
           `id` int(11) NOT NULL auto_increment,
           `paperID` mediumint(8) unsigned NOT NULL,
@@ -822,7 +824,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['paper_notes'] = <<<QUERY
+        $this->tableList['paper_notes'] = <<<QUERY
         CREATE TABLE `paper_notes` (
           `note_id` int(11) NOT NULL auto_increment,
           `note` text,
@@ -834,7 +836,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['papers'] = <<<QUERY
+        $this->tableList['papers'] = <<<QUERY
         CREATE TABLE `papers` (
           `p_id` int(4) NOT NULL auto_increment,
           `paper` mediumint(8) unsigned DEFAULT NULL,
@@ -849,7 +851,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['password_tokens'] = <<<QUERY
+        $this->tableList['password_tokens'] = <<<QUERY
         CREATE TABLE `password_tokens` (
           `id` int(11) NOT NULL auto_increment,
           `user_id` int(11) unsigned DEFAULT NULL,
@@ -859,7 +861,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['performance_details'] = <<<QUERY
+        $this->tableList['performance_details'] = <<<QUERY
           CREATE TABLE `performance_details` (
           `perform_id` int(11) DEFAULT NULL,
           `part_no` tinyint(4) DEFAULT NULL,
@@ -869,7 +871,7 @@ QUERY;
           ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['performance_main']  = <<<QUERY
+        $this->tableList['performance_main']  = <<<QUERY
           CREATE TABLE `performance_main` (
           `id` int(11) NOT NULL AUTO_INCREMENT,
           `q_id` int(10) unsigned DEFAULT NULL,
@@ -882,7 +884,7 @@ QUERY;
           ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['properties'] = <<<QUERY
+        $this->tableList['properties'] = <<<QUERY
         CREATE TABLE `properties` (
           `property_id` mediumint(8) unsigned NOT NULL auto_increment,
           `paper_title` varchar(255) default NULL,
@@ -937,7 +939,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['properties_modules'] = <<<QUERY
+        $this->tableList['properties_modules'] = <<<QUERY
         CREATE TABLE `properties_modules` (
           `property_id` mediumint(8) unsigned NOT NULL DEFAULT '0',
           `idMod` int(11) unsigned NOT NULL DEFAULT '0',
@@ -946,7 +948,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['properties_reviewers'] = <<<QUERY
+        $this->tableList['properties_reviewers'] = <<<QUERY
          CREATE TABLE `properties_reviewers` (
           `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
           `paperID` mediumint(8) unsigned DEFAULT NULL,
@@ -958,7 +960,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['question_exclude'] = <<<QUERY
+        $this->tableList['question_exclude'] = <<<QUERY
         CREATE TABLE `question_exclude` (
           `id` int(11) NOT NULL auto_increment,
           `q_paper` int(11) default NULL,
@@ -972,7 +974,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['question_statuses'] = <<<QUERY
+        $this->tableList['question_statuses'] = <<<QUERY
         CREATE TABLE `question_statuses` (
           `id` int(4) NOT NULL AUTO_INCREMENT,
           `name` varchar(255) NOT NULL,
@@ -988,7 +990,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['questions'] = <<<QUERY
+        $this->tableList['questions'] = <<<QUERY
         CREATE TABLE `questions` (
           `q_id` int(4) NOT NULL auto_increment,
           `q_type` enum('blank','calculation','dichotomous','flash','hotspot','labelling','likert','matrix','mcq','mrq','rank','textbox','info','extmatch','random','sct','keyword_based','true_false','area','enhancedcalc') default NULL,
@@ -1025,7 +1027,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-$this->tableList['questions_metadata'] = <<<QUERY
+        $this->tableList['questions_metadata'] = <<<QUERY
         CREATE TABLE `questions_metadata` (
           `id` int(11) NOT NULL auto_increment,
           `questionID` int(11) default NULL,
@@ -1035,7 +1037,7 @@ $this->tableList['questions_metadata'] = <<<QUERY
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-$this->tableList['questions_modules'] = <<<QUERY
+        $this->tableList['questions_modules'] = <<<QUERY
         CREATE TABLE `questions_modules` (
           `q_id` int(4) NOT NULL,
           `idMod` int(11) NOT NULL ,
@@ -1044,7 +1046,7 @@ $this->tableList['questions_modules'] = <<<QUERY
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-$this->tableList['random_link'] = <<<QUERY
+        $this->tableList['random_link'] = <<<QUERY
         CREATE TABLE `random_link` (
           `id` INT(4) NOT NULL,
           `q_id` INT(4) NOT NULL,
@@ -1053,7 +1055,7 @@ $this->tableList['random_link'] = <<<QUERY
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['recent_papers'] = <<<QUERY
+        $this->tableList['recent_papers'] = <<<QUERY
         CREATE TABLE `recent_papers` (
           `userID` int(10) unsigned NOT NULL default '0',
           `paperID` mediumint(8) unsigned NOT NULL default '0',
@@ -1062,7 +1064,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['reference_material'] = <<<QUERY
+        $this->tableList['reference_material'] = <<<QUERY
         CREATE TABLE `reference_material` (
           `id` int(11) NOT NULL AUTO_INCREMENT,
           `title` varchar(255) DEFAULT NULL,
@@ -1074,7 +1076,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['reference_modules'] = <<<QUERY
+        $this->tableList['reference_modules'] = <<<QUERY
         CREATE TABLE `reference_modules` (
           `id` int(11) NOT NULL AUTO_INCREMENT,
           `refID` mediumint(8) unsigned DEFAULT NULL,
@@ -1083,7 +1085,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['reference_papers'] = <<<QUERY
+        $this->tableList['reference_papers'] = <<<QUERY
         CREATE TABLE `reference_papers` (
           `id` int(11) NOT NULL AUTO_INCREMENT,
           `paperID` mediumint(8) unsigned DEFAULT NULL,
@@ -1092,7 +1094,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['relationships'] = <<<QUERY
+        $this->tableList['relationships'] = <<<QUERY
         CREATE TABLE `relationships` (
           `rel_id` int(11) NOT NULL auto_increment,
           `idMod` int(11) unsigned DEFAULT NULL,
@@ -1109,7 +1111,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['review_comments'] = <<<QUERY
+        $this->tableList['review_comments'] = <<<QUERY
         CREATE TABLE `review_comments` (
           `id` int(11) NOT NULL auto_increment,
           `q_id` int(11) default NULL,
@@ -1124,7 +1126,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['review_metadata'] = <<<QUERY
+        $this->tableList['review_metadata'] = <<<QUERY
         CREATE TABLE `review_metadata` (
           `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
           `reviewerID` int(10) unsigned NOT NULL,
@@ -1139,7 +1141,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['save_fail_log'] = <<<QUERY
+        $this->tableList['save_fail_log'] = <<<QUERY
           CREATE TABLE `save_fail_log` (
           `id` int(4) unsigned NOT NULL AUTO_INCREMENT,
           `userID` int(10) unsigned NOT NULL,
@@ -1155,7 +1157,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['scheduling'] = <<<QUERY
+        $this->tableList['scheduling'] = <<<QUERY
           CREATE TABLE `scheduling` (
           `id` int(11) NOT NULL AUTO_INCREMENT,
           `paperID` mediumint(8) unsigned DEFAULT NULL,
@@ -1170,7 +1172,7 @@ QUERY;
            ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['schools'] = <<<QUERY
+        $this->tableList['schools'] = <<<QUERY
         CREATE TABLE `schools` (
           `id` int(11) NOT NULL auto_increment,
           `code` varchar(30) default NULL,
@@ -1186,7 +1188,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['sct_reviews'] = <<<QUERY
+        $this->tableList['sct_reviews'] = <<<QUERY
         CREATE TABLE `sct_reviews` (
           `id` int(11) NOT NULL auto_increment,
           `reviewer_name` text,
@@ -1199,7 +1201,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['sessions'] = <<<QUERY
+        $this->tableList['sessions'] = <<<QUERY
         CREATE TABLE `sessions` (
           `sess_id` int(11) NOT NULL auto_increment,
           `identifier` bigint(20) unsigned NOT NULL,
@@ -1213,7 +1215,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['sid'] = <<<QUERY
+        $this->tableList['sid'] = <<<QUERY
         CREATE TABLE `sid` (
           `student_id` char(15) NOT NULL,
           `userID` int(10) unsigned NOT NULL,
@@ -1221,7 +1223,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['sms_imports'] = <<<QUERY
+        $this->tableList['sms_imports'] = <<<QUERY
         CREATE TABLE `sms_imports` (
           `id` int(11) NOT NULL auto_increment,
           `updated` date default NULL,
@@ -1236,7 +1238,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['special_needs'] = <<<QUERY
+        $this->tableList['special_needs'] = <<<QUERY
         CREATE TABLE `special_needs` (
           `special_id` int(11) NOT NULL auto_increment,
           `userID` int(10) unsigned default NULL,
@@ -1257,8 +1259,8 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-if ($helpEngine != 'ndbcluster') {
-    $this->tableList['staff_help'] = <<<QUERY
+        if ($helpEngine != 'ndbcluster') {
+                $this->tableList['staff_help'] = <<<QUERY
         CREATE TABLE `staff_help` (
           `id` smallint(6) NOT NULL auto_increment,
           `title` mediumtext,
@@ -1278,8 +1280,8 @@ if ($helpEngine != 'ndbcluster') {
           FULLTEXT KEY `title` (`title`,`body_plain`)
         ) ENGINE={$helpEngine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
-} else {
-    $this->tableList['staff_help'] = <<<QUERY
+        } else {
+              $this->tableList['staff_help'] = <<<QUERY
         CREATE TABLE `staff_help` (
           `id` smallint(6) NOT NULL auto_increment,
           `title` mediumtext,
@@ -1298,8 +1300,8 @@ QUERY;
           KEY `articleid` (`articleid`)
         ) ENGINE={$helpEngine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
-}
-    $this->tableList['std_set'] = <<<QUERY
+        }
+        $this->tableList['std_set'] = <<<QUERY
         CREATE TABLE `std_set` (
           `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `setterID` int(10) unsigned NOT NULL,
@@ -1313,7 +1315,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['std_set_questions'] = <<<QUERY
+        $this->tableList['std_set_questions'] = <<<QUERY
         CREATE TABLE `std_set_questions` (
           `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
           `std_setID` int(10) unsigned NOT NULL,
@@ -1323,7 +1325,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['state'] = <<<QUERY
+        $this->tableList['state'] = <<<QUERY
         CREATE TABLE `state` (
           `userID` int(10) unsigned DEFAULT NULL,
           `state_name` varchar(255) DEFAULT NULL,
@@ -1333,8 +1335,8 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-if ($helpEngine != 'ndbcluster') {
-    $this->tableList['student_help'] = <<<QUERY
+        if ($helpEngine != 'ndbcluster') {
+            $this->tableList['student_help'] = <<<QUERY
         CREATE TABLE `student_help` (
           `id` smallint(6) NOT NULL auto_increment,
           `title` mediumtext,
@@ -1353,8 +1355,8 @@ if ($helpEngine != 'ndbcluster') {
           FULLTEXT KEY `title` (`title`,`body_plain`)
         ) ENGINE={$helpEngine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
-} else {
-    $this->tableList['student_help'] = <<<QUERY
+        } else {
+            $this->tableList['student_help'] = <<<QUERY
         CREATE TABLE `student_help` (
           `id` smallint(6) NOT NULL auto_increment,
           `title` mediumtext,
@@ -1372,8 +1374,8 @@ QUERY;
           KEY `articleid` (`articleid`)
         ) ENGINE={$helpEngine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
-}
-    $this->tableList['student_notes'] = <<<QUERY
+        }
+        $this->tableList['student_notes'] = <<<QUERY
         CREATE TABLE `student_notes` (
           `note_id` int(11) NOT NULL auto_increment,
           `userID` int(10) unsigned default NULL,
@@ -1385,7 +1387,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['sys_errors'] = <<<QUERY
+        $this->tableList['sys_errors'] = <<<QUERY
         CREATE TABLE `sys_errors` (
           `id` int(11) NOT NULL auto_increment,
           `occurred` datetime default NULL,
@@ -1407,7 +1409,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['sys_updates'] = <<<QUERY
+        $this->tableList['sys_updates'] = <<<QUERY
         CREATE TABLE `sys_updates` (
           `name` varchar(255) DEFAULT NULL,
           `updated` datetime NOT NULL,
@@ -1415,7 +1417,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['temp_users'] = <<<QUERY
+        $this->tableList['temp_users'] = <<<QUERY
         CREATE TABLE `temp_users` (
           `id` int(11) NOT NULL auto_increment,
           `first_names` char(60) default NULL,
@@ -1428,7 +1430,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['textbox_marking'] = <<<QUERY
+        $this->tableList['textbox_marking'] = <<<QUERY
 				CREATE TABLE `textbox_marking` (
 					`id` int(11) NOT NULL auto_increment,
 					`paperID` mediumint(8) unsigned default NULL,
@@ -1449,7 +1451,7 @@ QUERY;
 					) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['textbox_remark'] = <<<QUERY
+        $this->tableList['textbox_remark'] = <<<QUERY
         CREATE TABLE `textbox_remark` (
           `id` int(11) NOT NULL auto_increment,
           `paperID` mediumint(8) unsigned default NULL,
@@ -1458,7 +1460,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['toilet_breaks'] = <<<QUERY
+        $this->tableList['toilet_breaks'] = <<<QUERY
         CREATE TABLE `toilet_breaks` (
           `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
           `userID` int(10) unsigned NOT NULL,
@@ -1469,7 +1471,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['track_changes'] = <<<QUERY
+        $this->tableList['track_changes'] = <<<QUERY
         CREATE TABLE `track_changes` (
           `id` int(4) NOT NULL auto_increment,
           `type` varchar(40) default NULL,
@@ -1485,7 +1487,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['users'] = <<<QUERY
+        $this->tableList['users'] = <<<QUERY
         CREATE TABLE `users` (
           `password` char(90) NOT NULL,
           `grade` char(30) default NULL,
@@ -1508,7 +1510,7 @@ QUERY;
         ) ENGINE={$engine} AUTO_INCREMENT=0 DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['users_metadata'] = <<<QUERY
+        $this->tableList['users_metadata'] = <<<QUERY
         CREATE TABLE `users_metadata` (
           `userID` int(10) unsigned default NULL,
           `idMod` int(11) default NULL,
@@ -1519,7 +1521,7 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['webservice_permissions'] = <<<QUERY
+        $this->tableList['webservice_permissions'] = <<<QUERY
         CREATE TABLE webservice_permissions (
             client_id varchar(80) NOT NULL,
             action varchar(80) NOT NULL,
@@ -1528,14 +1530,14 @@ QUERY;
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-    $this->tableList['permissions'] = <<<QUERY
+        $this->tableList['permissions'] = <<<QUERY
         CREATE TABLE permissions (
             action varchar(80) NOT NULL,
             PRIMARY KEY (action)
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-$this->tableList['gradebook_paper'] = <<<QUERY
+        $this->tableList['gradebook_paper'] = <<<QUERY
         CREATE TABLE gradebook_paper (
             paperid int(8) NOT NULL,
             timestamp timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -1543,7 +1545,7 @@ $this->tableList['gradebook_paper'] = <<<QUERY
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-$this->tableList['gradebook_user'] = <<<QUERY
+        $this->tableList['gradebook_user'] = <<<QUERY
         CREATE TABLE gradebook_user (
             paperid int(8) NOT NULL,
             userid int(10) NOT NULL,
@@ -1554,7 +1556,7 @@ $this->tableList['gradebook_user'] = <<<QUERY
         )  ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-$this->tableList['oauth_clients'] = <<<QUERY
+        $this->tableList['oauth_clients'] = <<<QUERY
         CREATE TABLE oauth_clients (
             client_id VARCHAR(80) NOT NULL,
             client_secret VARCHAR(80),
@@ -1567,7 +1569,7 @@ $this->tableList['oauth_clients'] = <<<QUERY
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-$this->tableList['oauth_access_tokens'] = <<<QUERY
+        $this->tableList['oauth_access_tokens'] = <<<QUERY
         CREATE TABLE oauth_access_tokens (
             access_token VARCHAR(40) NOT NULL,
             client_id VARCHAR(80) NOT NULL,
@@ -1578,7 +1580,7 @@ $this->tableList['oauth_access_tokens'] = <<<QUERY
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-$this->tableList['oauth_authorization_codes'] = <<<QUERY
+        $this->tableList['oauth_authorization_codes'] = <<<QUERY
         CREATE TABLE oauth_authorization_codes (
             authorization_code VARCHAR(40) NOT NULL,
             client_id VARCHAR(80) NOT NULL,
@@ -1590,7 +1592,7 @@ $this->tableList['oauth_authorization_codes'] = <<<QUERY
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-$this->tableList['oauth_refresh_tokens'] = <<<QUERY
+        $this->tableList['oauth_refresh_tokens'] = <<<QUERY
         CREATE TABLE oauth_refresh_tokens (
             refresh_token VARCHAR(40) NOT NULL,
             client_id VARCHAR(80) NOT NULL,
@@ -1601,7 +1603,7 @@ $this->tableList['oauth_refresh_tokens'] = <<<QUERY
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-$this->tableList['oauth_users'] = <<<QUERY
+        $this->tableList['oauth_users'] = <<<QUERY
         CREATE TABLE oauth_users (
             username VARCHAR(255) NOT NULL,
             password TEXT,
@@ -1611,14 +1613,14 @@ $this->tableList['oauth_users'] = <<<QUERY
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-$this->tableList['oauth_scopes'] = <<<QUERY
+        $this->tableList['oauth_scopes'] = <<<QUERY
         CREATE TABLE oauth_scopes (
             scope TEXT,
             is_default BOOLEAN
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-$this->tableList['oauth_jwt'] = <<<QUERY
+        $this->tableList['oauth_jwt'] = <<<QUERY
         CREATE TABLE oauth_jwt (
             client_id VARCHAR(80) NOT NULL,
             subject VARCHAR(80),
@@ -1627,7 +1629,7 @@ $this->tableList['oauth_jwt'] = <<<QUERY
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-$this->tableList['campus'] = <<<QUERY
+        $this->tableList['campus'] = <<<QUERY
         CREATE TABLE campus (
             id int(8) NOT NULL AUTO_INCREMENT,
             name VARCHAR(80) NOT NULL UNIQUE,
@@ -1637,7 +1639,7 @@ $this->tableList['campus'] = <<<QUERY
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-$this->tableList['plugins'] = <<<QUERY
+        $this->tableList['plugins'] = <<<QUERY
         CREATE TABLE `plugins` (
             `component` VARCHAR(50) NOT NULL,
             `version` VARCHAR(50) NOT NULL,
@@ -1647,7 +1649,7 @@ $this->tableList['plugins'] = <<<QUERY
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-$this->tableList['external_systems'] = <<<QUERY
+        $this->tableList['external_systems'] = <<<QUERY
         CREATE TABLE external_systems (
             `id` int(8) NOT NULL AUTO_INCREMENT,
             `name` varchar(255) NOT NULL,
@@ -1657,7 +1659,7 @@ $this->tableList['external_systems'] = <<<QUERY
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
 
-$this->tableList['external_systems_mapping'] = <<<QUERY
+        $this->tableList['external_systems_mapping'] = <<<QUERY
         CREATE TABLE external_systems_mapping (
             `client_id` varchar(80) NOT NULL,
             `ext_id` int(8) NOT NULL,
@@ -1665,13 +1667,14 @@ $this->tableList['external_systems_mapping'] = <<<QUERY
             UNIQUE INDEX `client_id_idx` (`client_id`)
         ) ENGINE={$engine} DEFAULT CHARSET={$charset}
 QUERY;
-  }
-  
-  function next() {
-    if (count($this->tableList) > 0) {
-      return array_pop($this->tableList);
-    } else {
-      return false;
     }
-  }
+  
+    function next()
+    {
+        if (count($this->tableList) > 0) {
+            return array_pop($this->tableList);
+        } else {
+            return false;
+        }
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
-class userutilstest extends unittestdatabase {
+class userutilstest extends unittestdatabase
+{
 
     /**
      * @var integer Storage for module id in tests
@@ -35,7 +37,8 @@ class userutilstest extends unittestdatabase {
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $this->module2 = $this->get_module_id('SYSTEM');
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
         $datagenerator->create_academic_year(array('calendar_year' => 2016, 'academic_year' => '2016/17'));
@@ -47,7 +50,8 @@ class userutilstest extends unittestdatabase {
      * Test getting enrolment id
      * @group user
      */
-    public function test_get_enrolement_id() {
+    public function test_get_enrolement_id()
+    {
         // Enrolment exists.
         $this->assertIsInt(UserUtils::get_enrolement_id($this->student['id'], $this->module, 2016, $this->db));
         // Enrolment does not exist.
@@ -58,7 +62,8 @@ class userutilstest extends unittestdatabase {
      * Test updating user
      * @group user
      */
-    public function test_update_user() {
+    public function test_update_user()
+    {
         // Student ID exists.
         $this->assertEquals(true, UserUtils::update_user($this->student['id'], 'student1', '12345678', 'Mr', 'Joe', 'Baxter', 'joseph.baxter@example.com', 'TEST', 'Male', 1, 'Student', '12345678', $this->db));
         // Check tables update as expected.
@@ -66,20 +71,20 @@ class userutilstest extends unittestdatabase {
             'table' => 'users', 'where' => array(array('column' => 'id', 'value' => $this->student['id']))));
         $expectedtable = array(
             0 => array(
-                'username' => "student1",
-                'roles' => "Student",
-                'grade' => "TEST",
-                'title' => "Mr",
-                'initials' => "J",
-                'surname' => "Baxter",
-                'first_names' => "Joe",
-                'email' => "joseph.baxter@example.com",
-                'gender' => "Male"
+                'username' => 'student1',
+                'roles' => 'Student',
+                'grade' => 'TEST',
+                'title' => 'Mr',
+                'initials' => 'J',
+                'surname' => 'Baxter',
+                'first_names' => 'Joe',
+                'email' => 'joseph.baxter@example.com',
+                'gender' => 'Male'
             ),
         );
         $this->assertEquals($expectedtable, $querytable);
         $querytable = $this->query(array('columns' => array('userID', 'student_id'), 'table' => 'sid', 'where' => array(array('column' => 'userID', 'value' => $this->student['id']))));
-        $expectedtable =array(
+        $expectedtable = array(
             0 => array (
                 'userID' => $this->student['id'],
                 'student_id' => '12345678'

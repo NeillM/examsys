@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -34,34 +35,42 @@ $cfg_cron_user = $configObject->get('cfg_cron_user');
 $cfg_cron_passwd = $configObject->get('cfg_cron_passwd');
 
 // DB connection.
-$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_sysadmin_user'),
-  $configObject->get('cfg_db_sysadmin_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'),
-  $configObject->get('notice'), $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
+$mysqli = DBUtils::get_mysqli_link(
+    $configObject->get('cfg_db_host'),
+    $configObject->get('cfg_db_sysadmin_user'),
+    $configObject->get('cfg_db_sysadmin_passwd'),
+    $configObject->get('cfg_db_database'),
+    $configObject->get('cfg_db_charset'),
+    $configObject->get('notice'),
+    $configObject->get('dbclass'),
+    $configObject->get('cfg_db_port')
+);
 
 $configObject->set_db_object($mysqli);
 $support_email = support::get_email();
 
 // Exit if not on command line.
 if (php_sapi_name() != 'cli') {
-  require '../include/sysadmin_auth.inc';
-  $msg = sprintf($string['furtherassistance'], $support_email, $support_email);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
+    require '../include/sysadmin_auth.inc';
+    $msg = sprintf($string['furtherassistance'], $support_email, $support_email);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
 }
 
 if ($cfg_cron_user == null or $cfg_cron_passwd == null) {
-  echo 'This script requires the cron use to be set-up';
-  exit;
+    echo 'This script requires the cron use to be set-up';
+    exit;
 }
 
 set_time_limit(0);
 
 // Timestamp function for logging.
-function timestamp() {
-  $time = microtime(true);
-  $microsecond = sprintf("%06d", ($time - floor($time)) * 1000000);
-  $datetime = new DateTime( date('Y-m-d H:i:s.'.$microsecond, $time) );
+function timestamp()
+{
+    $time = microtime(true);
+    $microsecond = sprintf('%06d', ($time - floor($time)) * 1000000);
+    $datetime = new DateTime(date('Y-m-d H:i:s.' . $microsecond, $time));
 
-  return $datetime->format("Y-m-d H:i:s.u");
+    return $datetime->format('Y-m-d H:i:s.u');
 }
 
 echo "\n" . timestamp() . ": Starting class totals check.\n";
@@ -69,7 +78,7 @@ echo "\n" . timestamp() . ": Starting class totals check.\n";
 // rootpath my be required depending on web server setup.
 //$rootpath =  basename(dirname(dirname(__FILE__)));
 $rootpath = '';
-$userresult = $mysqli->prepare("SELECT id FROM users WHERE username = ? LIMIT 1");
+$userresult = $mysqli->prepare('SELECT id FROM users WHERE username = ? LIMIT 1');
 $userresult->bind_param('s', $cfg_cron_user);
 $userresult->execute();
 $userresult->bind_result($userid);
@@ -93,19 +102,19 @@ $testresult->bind_result($user_id, $paper_id, $errors);
 // Log and email errors to support.
 $message = '';
 while ($testresult->fetch()) {
-  $errors = strip_tags($errors);
-  $message .= 'Failure: user - ' . $user_id . ', paper - ' . $paper_id . ', error - '. $errors . "\n";
+    $errors = strip_tags($errors);
+    $message .= 'Failure: user - ' . $user_id . ', paper - ' . $paper_id . ', error - ' . $errors . "\n";
 }
 $testresult->close();
 $headers = "From: $support_email\n";
 $headers .= "MIME-Version: 1.0\nContent-type: text/plain; charset=UTF-8\n";
 $subject = 'Rogo Summative Exam check';
 if ($message != '') {
-  echo $message;
-  $sent = mail($support_email, $subject, $message, $headers);
-  if ($sent) {
-    echo "Email sent to $support_email";
-  }
+    echo $message;
+    $sent = mail($support_email, $subject, $message, $headers);
+    if ($sent) {
+        echo "Email sent to $support_email";
+    }
 }
 $mysqli->close();
 echo "\n" . timestamp() . ": Finishing class totals check.\n";

@@ -18,4 +18,3 @@ require '../lang/' . $language . '/delete/delete.php';
 
 $string['confirmdelete'] = 'Confirm Delete';
 $string['msg'] = 'Are you sure you wish to delete this reference material?';
-?>

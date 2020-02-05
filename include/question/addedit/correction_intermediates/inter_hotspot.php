@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -24,37 +25,37 @@
 
 // Query log2 table for existing student answers.
 $fix_data = '';
-$result = $mysqli->prepare("SELECT id, user_answer FROM log2 WHERE q_id = ?");
+$result = $mysqli->prepare('SELECT id, user_answer FROM log2 WHERE q_id = ?');
 $result->bind_param('i', $question->id);
-$result->execute();  
+$result->execute();
 $result->bind_result($id, $user_answer);
 while ($result->fetch()) {
-  if ($user_answer != 'u') {
-    $tmp_user_answer = '';
-    $layers = explode('|', $user_answer);
-    foreach ($layers as $layer) {
-      $sub_parts = explode(',', $layer);
-      if ($tmp_user_answer == '') {
-        $tmp_user_answer = $sub_parts[1] . ',' . $sub_parts[2];
-      } else {
-        $tmp_user_answer .= '|' . $sub_parts[1] . ',' . $sub_parts[2];
-      }
+    if ($user_answer != 'u') {
+        $tmp_user_answer = '';
+        $layers = explode('|', $user_answer);
+        foreach ($layers as $layer) {
+            $sub_parts = explode(',', $layer);
+            if ($tmp_user_answer == '') {
+                $tmp_user_answer = $sub_parts[1] . ',' . $sub_parts[2];
+            } else {
+                $tmp_user_answer .= '|' . $sub_parts[1] . ',' . $sub_parts[2];
+            }
+        }
+        $fix_data .= ';' . $id . ',' . $tmp_user_answer;
     }
-    $fix_data .= ';' . $id . ',' . $tmp_user_answer;
-  }
 }
 $result->close();
-$fix_data = substr($fix_data,1);
+$fix_data = substr($fix_data, 1);
   
 $media = $question->get_media();
 $plugin_height = max($media['height'] + 25, 380);
 if (count($question->options) > 0) {
-  $option = reset($question->options);
-  $correct = $option->get_correct();
-  $option_id = $option->id;
+    $option = reset($question->options);
+    $correct = $option->get_correct();
+    $option_id = $option->id;
 } else {
-  $correct = '';
-  $option_id = -1;
+    $correct = '';
+    $option_id = -1;
 }
 $imageurl = rogo_directory::get_directory('media')->url($media['filename']);
 ?>  
@@ -93,10 +94,14 @@ $imageurl = rogo_directory::get_directory('media')->url($media['filename']);
                 <input type="hidden" name="calling" value="<?php echo $_POST['calling']; ?>" />
                 <input type="hidden" name="folder" value="<?php echo $_POST['folder']; ?>" />
                 <input type="hidden" name="scrOfY" value="<?php echo $_POST['scrOfY']; ?>" />
-                <input type="hidden" name="points" value="<?php if (isset($points)) echo $points; ?>" />
+                <input type="hidden" name="points" value="<?php if (isset($points)) {
+                    echo $points;
+                                                          } ?>" />
                 <input type="hidden" name="points1" value="<?php echo $_POST['points1']; ?>" />
                 <input type="hidden" name="correctedpoints" value="" />
-                <input type="hidden" name="checkout_author" value="<?php if (isset($_POST['checkout_author'])) echo $_POST['checkout_author']; ?>" />
+                <input type="hidden" name="checkout_author" value="<?php if (isset($_POST['checkout_author'])) {
+                    echo $_POST['checkout_author'];
+                                                                   } ?>" />
               </td>
             </tr>
             <tr>

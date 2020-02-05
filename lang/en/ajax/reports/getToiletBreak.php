@@ -16,4 +16,3 @@
 
 $string['err'] = '<strong>ERROR:</strong> Requested toilet break cannot be found.';
 $string['toiletbreak'] = '<strong>Toilet Break</strong>';
-?>

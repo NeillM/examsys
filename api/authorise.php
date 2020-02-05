@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
 
-function error($error, $string, $mysqli, $configObject, $notice) {
+function error($error, $string, $mysqli, $configObject, $notice)
+{
     $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $error, '../artwork/page_not_found.png', '#C00000', true, true);
@@ -37,9 +39,9 @@ if (!$configObject->get_setting('core', 'cfg_api_enabled')) {
 
 // Check for required parameters and record in denied log if missing.
 try {
-  $client_id = param::required('client_id', param::ALPHANUM, param::FETCH_REQUEST);
+    $client_id = param::required('client_id', param::ALPHANUM, param::FETCH_REQUEST);
 } catch (MissingParameter $e) {
-  error($string['clientnotsupplied'], $string, $mysqli, $configObject, $notice);
+    error($string['clientnotsupplied'], $string, $mysqli, $configObject, $notice);
 }
 try {
     $state = param::required('state', param::ALPHANUM, param::FETCH_REQUEST);
@@ -55,7 +57,7 @@ if (isset($_POST['submit'])) {
         error('User id of logged in user does not match that of the client.', $string, $mysqli, $configObject, $notice);
     }
     // Set the request token to be authorized or not authorized
-    if ($authorised == "yes") {
+    if ($authorised == 'yes') {
         $resp = $oauth->authorise(true, $userid);
     } else {
         $resp = $oauth->authorise(false, $userid);

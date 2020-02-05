@@ -35,4 +35,3 @@ $string['top_msg'] = 'This screen is designed to allow you to answer the followi
 $string['briefreasonwhy'] = 'Brief reason why?';
 $string['nosctquestions'] = 'No SCT questions found on paper';
 $string['fireexit'] = 'Fire Exit';
-?>

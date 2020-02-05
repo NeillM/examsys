@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -47,8 +48,8 @@
 <?php
   require '../include/ebel_grid_options.php';
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
+    
+    echo draw_toprightmenu();
 ?>
 <div id="content">
 
@@ -65,12 +66,12 @@
 $old_faculty = '';
 $id = 0;
 
-$result = $mysqli->prepare("SELECT id, name FROM ebel_grid_templates");
+$result = $mysqli->prepare('SELECT id, name FROM ebel_grid_templates');
 $result->execute();
 $result->bind_result($id, $name);
 while ($result->fetch()) {
-  echo "<tr id=\"$id\" class=\"l\"><td colspan=\"2\"><div class=\"col10\">$name</div></td></tr>\n";
-  $id++;
+    echo "<tr id=\"$id\" class=\"l\"><td colspan=\"2\"><div class=\"col10\">$name</div></td></tr>\n";
+    $id++;
 }
 $result->close();
 $mysqli->close();

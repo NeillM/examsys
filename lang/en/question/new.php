@@ -35,4 +35,3 @@ $string['rank_desc'] = 'Rank a set of options in order.';
 $string['sct_desc'] = 'Questions designed to assess clinical data interpretation skills.';
 $string['textbox_desc'] = 'Textboxes capture free-text student responses. Can be used in surveys and assessments. Textbox answers on assessments require manual marking by academics.';
 $string['true_false_desc'] = 'A single question which is answered True or False.';
-?>

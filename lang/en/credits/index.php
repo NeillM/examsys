@@ -27,4 +27,3 @@ $string['graphics'] = 'Graphics';
 $string['calculator'] = 'Calculator';
 $string['3rdparty'] = '3rd Party subsystems';
 $string['calcmsg'] = 'NOTE: Not open source but included with permission';
-?>

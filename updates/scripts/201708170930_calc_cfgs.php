@@ -1,6 +1,6 @@
 <?php
 
-if ($updater_utils->check_version("6.5.0")) {
+if ($updater_utils->check_version('6.5.0')) {
     if (!$updater_utils->has_updated('rogo2080')) {
         if ($configObject->get('enhancedcalc_type') === 'phpEval') {
             $configObject->set_setting('cfg_calc_type', 'phpEval', Config::STRING);

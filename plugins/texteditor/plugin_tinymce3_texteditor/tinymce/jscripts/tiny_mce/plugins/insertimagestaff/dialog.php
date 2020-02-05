@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogo
 //
 // Rogo is free software: you can redistribute it and/or modify
@@ -41,7 +42,7 @@ require  '../../../../../../../../include/staff_auth.inc';
     .note {font-size:90%; color:#808080}
   </style>
 <?php
-  if (isset($_FILES['FileName']) and $_FILES['FileName'] != '') {
+if (isset($_FILES['FileName']) and $_FILES['FileName'] != '') {
     //proc upload
     $helpdirectory = rogo_directory::get_directory('help_staff');
    
@@ -56,13 +57,13 @@ require  '../../../../../../../../include/staff_auth.inc';
     $imageInfo = getimagesize($_FILES['FileName']['tmp_name']);
     $worked = move_uploaded_file($_FILES['FileName']['tmp_name'], $path);
     if (!$worked) {
-      echo "Failed to copy file to: " . $path;
-      exit;
+        echo 'Failed to copy file to: ' . $path;
+        exit;
     }
     if (isset($_POST['border']) and $_POST['border'] == 1) {
-      $class = 'class="image_brd"';
+        $class = 'class="image_brd"';
     } else {
-      $class = 'class="image_no_brd"';
+        $class = 'class="image_no_brd"';
     }
 
     $html = '<img ' . $class . ' src="' . $helpdirectory->url($realname) . '" alt="' . $_POST['alt'] . '" width="' . $imageInfo[0] . '" height="' . $imageInfo[1] . '" />';
@@ -73,15 +74,15 @@ require  '../../../../../../../../include/staff_auth.inc';
 tinyMCEPopup.requireLangPack();
 
 var ExampleDialog = {
-	init : function() {
-	},
+    init : function() {
+    },
 
-	insert : function() {
-		// Insert the contents from the input into the document
+    insert : function() {
+        // Insert the contents from the input into the document
         var html = '<?php echo $html; ?>';
-		tinyMCEPopup.editor.execCommand('mceInsertContent', false, html);
-		tinyMCEPopup.close();
-	}
+        tinyMCEPopup.editor.execCommand('mceInsertContent', false, html);
+        tinyMCEPopup.close();
+    }
 };
 
 tinyMCEPopup.onInit.add(ExampleDialog.init, ExampleDialog);
@@ -92,13 +93,14 @@ tinyMCEPopup.onInit.add(ExampleDialog.init, ExampleDialog);
     <?php
 } else {
   //defaut state
-  echo "<body class=\"dialog_body\">";
-  showForm('');
-  exit;
+    echo '<body class="dialog_body">';
+    showForm('');
+    exit;
 }
 
-function showForm($error) {
-?>
+function showForm($error)
+{
+    ?>
 <script>
     var winx = (screen.width / 2) - 250;
     var winy = (screen.height / 2) - 150;
@@ -121,7 +123,7 @@ function showForm($error) {
 </table>
 </form>
 
-<?php
+    <?php
 }
 ?>
 </body>

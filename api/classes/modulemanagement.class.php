@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -25,7 +26,8 @@ namespace api;
 /**
  * Course class
  */
-class modulemanagement extends \api\abstractmanagement {
+class modulemanagement extends \api\abstractmanagement
+{
        
     /**
      * Language pack component.
@@ -60,7 +62,8 @@ class modulemanagement extends \api\abstractmanagement {
      * @param integer $userid rogo user id linked to web service client
      * @return array - success status and enrolment id
      */
-    public function enrol($params, $userid) {
+    public function enrol($params, $userid)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('user_not_enrolled', 'user_does_not_exist', 'user_already_enrolled'));
         $userexists = false;
@@ -118,7 +121,8 @@ class modulemanagement extends \api\abstractmanagement {
      * @param integer $userid rogo user id linked to web service client
      * @return array - success status and enrolment id
      */
-    public function unenrol($params, $userid) {
+    public function unenrol($params, $userid)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('user_not_unenrolled', 'user_does_not_exist', 'session_not_supplied'));
         $userexists = false;
@@ -173,7 +177,8 @@ class modulemanagement extends \api\abstractmanagement {
      * @param integer $userid rogo user id linked to web service client
      * @return - success status and module id
      */
-    public function create($params, $userid) {
+    public function create($params, $userid)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('module_not_created', 'module_already_exists', 'faculty_not_supplied', 'school_not_supplied', 'external_school_invalid'));
         $faculty = true;
@@ -230,8 +235,29 @@ class modulemanagement extends \api\abstractmanagement {
                 if (!isset($params['externalid'])) {
                     $params['externalid'] = null;
                 }
-                $id = \module_utils::add_modules($params['modulecode'], $params['name'], 1, $schoolid, '', $params['sms'],
-                    '', false, false, false, false, 0, '', $this->db, false, '', '', '', 0, '07/01', $params['externalid']);
+                $id = \module_utils::add_modules(
+                    $params['modulecode'],
+                    $params['name'],
+                    1,
+                    $schoolid,
+                    '',
+                    $params['sms'],
+                    '',
+                    false,
+                    false,
+                    false,
+                    false,
+                    0,
+                    '',
+                    $this->db,
+                    false,
+                    '',
+                    '',
+                    '',
+                    0,
+                    '07/01',
+                    $params['externalid']
+                );
                 if ($id) {
                     $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $id, 'externalid' => $params['externalid']);
                 } else {
@@ -250,7 +276,8 @@ class modulemanagement extends \api\abstractmanagement {
      * @param integer $userid rogo user id linked to web service client
      * @return - success status and module id
      */
-    public function update($params, $userid) {
+    public function update($params, $userid)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('module_not_updated', 'module_does_not_exist', 'faculty_not_supplied', 'school_not_supplied', 'module_nothing_to_update',
              'external_school_invalid', 'module_already_exists'));
@@ -265,11 +292,12 @@ class modulemanagement extends \api\abstractmanagement {
             }
             $params['sms'] = $this->get_external_system($params['sms']);
             // Try using external system id to update course.
-            $params['id'] = \module_utils::get_id_from_externalid($params['externalid'], $params['sms'], $this->db);;
+            $params['id'] = \module_utils::get_id_from_externalid($params['externalid'], $params['sms'], $this->db);
+            ;
             $moduleid = (bool) $params['id'];
         }
         
-        if(!$moduleid) {
+        if (!$moduleid) {
             $data = array('statuscode' => $this->statuscodes['MODULE_DOES_NOT_EXIST'], 'status' => $strings['module_does_not_exist'], 'id' => null, 'externalid' => null);
             return $this->get_response($data, 'update', $params['nodeid']);
         }
@@ -351,8 +379,15 @@ class modulemanagement extends \api\abstractmanagement {
                     if (empty($params['school']) and !empty($params['faculty'])) {
                         $data = array('statuscode' => $this->statuscodes['MODULE_INVALID_SCHOOL'], 'status' => $strings['school_not_supplied'], 'id' => null, 'externalid' => null);
                     } else {
-                        $update = \module_utils::update_module_by_id($params['id'], $params['modulecode'], 
-                            $params['name'], $schoolid, $params['sms'], $this->db, $details['externalid']);
+                        $update = \module_utils::update_module_by_id(
+                            $params['id'],
+                            $params['modulecode'],
+                            $params['name'],
+                            $schoolid,
+                            $params['sms'],
+                            $this->db,
+                            $details['externalid']
+                        );
                         if ($update) {
                             $data = array('statuscode' => $this->statuscodes['OK'], 'status' => 'OK', 'id' => $params['id'], 'externalid' => $details['externalid']);
                         } else {
@@ -375,7 +410,8 @@ class modulemanagement extends \api\abstractmanagement {
      * @param integer $userid rogo user id linked to web service client
      * @return success status and module id
      */
-    public function delete($params, $userid) {
+    public function delete($params, $userid)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('module_not_deleted_inuse', 'module_not_deleted',
             'module_does_not_exist'));

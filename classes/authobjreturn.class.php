@@ -23,62 +23,67 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package Authentication
  */
-class authobjreturn {
-  public $returned;
-  public $returneds;
-  public $rogoid;
-  public $rogoids;
-  public $data;
-  public $datas;
-  public $statuses;
-  public $username;
-  public $postredirect = false;
+class authobjreturn
+{
+    public $returned;
+    public $returneds;
+    public $rogoid;
+    public $rogoids;
+    public $data;
+    public $datas;
+    public $statuses;
+    public $username;
+    public $postredirect = false;
 
-  function __construct() {
-    $this->returned		= ROGO_AUTH_OBJ_FAILED;
-    $this->returneds	= array();
-    $this->statuses		= array();
-    $this->rogoid			= 0;
-    $this->rogoids		= array();
-    $this->data				= new stdClass();
-    $this->datas			= array();
-  }
+    function __construct()
+    {
+        $this->returned     = ROGO_AUTH_OBJ_FAILED;
+        $this->returneds    = array();
+        $this->statuses     = array();
+        $this->rogoid           = 0;
+        $this->rogoids      = array();
+        $this->data             = new stdClass();
+        $this->datas            = array();
+    }
 
   /*
    * set the authobjreturn objet to fail state
-	 * @param int $number - Internal ID of the plugin in the stack.
+     * @param int $number - Internal ID of the plugin in the stack.
    */
-  function fail($number) {
-    $this->returned = ROGO_AUTH_OBJ_FAILED;
-    $this->returneds[] = $this->returned;
-    $this->statuses[$number] = $this->returned;
-    $this->rogoid = 0;
-  }
+    function fail($number)
+    {
+        $this->returned = ROGO_AUTH_OBJ_FAILED;
+        $this->returneds[] = $this->returned;
+        $this->statuses[$number] = $this->returned;
+        $this->rogoid = 0;
+    }
 
   /*
    * Set the authobjreturn object to success state
-	 * @param int $number - Internal ID of the plugin in the stack.
-	 * @param int $rogoid - User ID of the successful user.
+     * @param int $number - Internal ID of the plugin in the stack.
+     * @param int $rogoid - User ID of the successful user.
    */
-  function success($number, $rogoid) {
-    $this->rogoid = $rogoid;
-    $this->rogoids[] = $this->rogoid;
-    $this->returned = ROGO_AUTH_OBJ_SUCCESS;
-    $this->returneds[] = $this->returned;
-    $this->statuses[$number] = $this->returned;
-  }
+    function success($number, $rogoid)
+    {
+        $this->rogoid = $rogoid;
+        $this->rogoids[] = $this->rogoid;
+        $this->returned = ROGO_AUTH_OBJ_SUCCESS;
+        $this->returneds[] = $this->returned;
+        $this->statuses[$number] = $this->returned;
+    }
 
   /*
    * Set the authobjreturn object to lookup state
-	 * @param int $number  - Internal ID of the plugin in the stack.
-	 * @param object $data - Data for user to be looked up.
+     * @param int $number  - Internal ID of the plugin in the stack.
+     * @param object $data - Data for user to be looked up.
    */
-  function lookupmissing($number, $data) {
-    $this->rogoid = 0;
-    $this->returned = ROGO_AUTH_OBJ_LOOKUPONLY;
-    $this->returneds[] = $this->returned;
-    $this->statuses[$number] = $this->returned;
-    $this->data = $data;
-    $this->datas[] = $this->data;
-  }
+    function lookupmissing($number, $data)
+    {
+        $this->rogoid = 0;
+        $this->returned = ROGO_AUTH_OBJ_LOOKUPONLY;
+        $this->returneds[] = $this->returned;
+        $this->statuses[$number] = $this->returned;
+        $this->data = $data;
+        $this->datas[] = $this->data;
+    }
 }

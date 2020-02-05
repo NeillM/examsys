@@ -23,4 +23,3 @@ $string['importfile'] = 'Import File';
 $string['invalidzip'] = 'This is an invalid ZIP file.';
 $string['invalidraf'] = 'This is an invalid Rogo Assessment File (RAF).';
 $string['type'] = 'Type';
-?>

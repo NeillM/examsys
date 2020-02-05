@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -25,7 +26,8 @@ use plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class plaineditortest extends unittestdatabase {
+class plaineditortest extends unittestdatabase
+{
     /**
      * @var integer new version of plugin being installed
      */
@@ -34,7 +36,8 @@ class plaineditortest extends unittestdatabase {
     /**
      * Generate data for test.
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $text = new plugin_plain_texteditor();
         $this->newversion = $text->get_file_version();
     }
@@ -43,32 +46,33 @@ class plaineditortest extends unittestdatabase {
      * Test install plain
      * @group texteditor
      */
-    public function test_install_plain() {
+    public function test_install_plain()
+    {
         $text = new plugin_plain_texteditor();
         $this->assertEquals('OK', $text->install($this->config->get('cfg_phpunit_db_user'), $this->config->get('cfg_phpunit_db_password')));
         // Check tables are correct.
         $queryTable = $this->query(array('columns' => array('component', 'type', 'version'), 'table' => 'plugins'));
         $expectedTable = array(
             0 => array (
-                'component' => "plugin_plain_texteditor",
-                'type' => "texteditor",
+                'component' => 'plugin_plain_texteditor',
+                'type' => 'texteditor',
                 'version' => $this->newversion
             )
         );
         $this->assertEquals($expectedTable, $queryTable);
-        $queryTable = $this->query(array('columns' => array('component', 'setting', 'value', 'type'), 'table' => 'config', 'orderby' => array(1, 2), 'where' => array(array('column' => 'component', 'value' => "plugin_plain_texteditor"))));
+        $queryTable = $this->query(array('columns' => array('component', 'setting', 'value', 'type'), 'table' => 'config', 'orderby' => array(1, 2), 'where' => array(array('column' => 'component', 'value' => 'plugin_plain_texteditor'))));
         $expectedTable = array(
             0 => array (
-                'component' => "plugin_plain_texteditor",
-                'setting' => "installed",
+                'component' => 'plugin_plain_texteditor',
+                'setting' => 'installed',
                 'value' => 1,
-                'type' => "boolean"
+                'type' => 'boolean'
             ),
             1 => array(
-                'component' => "plugin_plain_texteditor",
-                'setting' => "supports_mathjax",
+                'component' => 'plugin_plain_texteditor',
+                'setting' => 'supports_mathjax',
                 'value' => 1,
-                'type' => "boolean"
+                'type' => 'boolean'
             )
         );
         $this->assertEquals($expectedTable, $queryTable);
@@ -78,25 +82,26 @@ class plaineditortest extends unittestdatabase {
      * Test uninstall plain
      * @group texteditor
      */
-    public function test_uninstall_plain() {
+    public function test_uninstall_plain()
+    {
         $text = new plugin_plain_texteditor();
         $text->install($this->config->get('cfg_phpunit_db_user'), $this->config->get('cfg_phpunit_db_password'));
         $this->assertEquals('OK', $text->uninstall($this->config->get('cfg_phpunit_db_user'), $this->config->get('cfg_phpunit_db_password')));
         // Check tables are correct.
         $this->assertEquals(0, $this->rowcount('plugins'));
-        $queryTable = $this->query(array('columns' => array('component', 'setting', 'value', 'type'), 'table' => 'config', 'orderby' => array(1, 2), 'where' => array(array('column' => 'component', 'value' => "plugin_plain_texteditor"))));
+        $queryTable = $this->query(array('columns' => array('component', 'setting', 'value', 'type'), 'table' => 'config', 'orderby' => array(1, 2), 'where' => array(array('column' => 'component', 'value' => 'plugin_plain_texteditor'))));
         $expectedTable = array(
             0 => array (
-                'component' => "plugin_plain_texteditor",
-                'setting' => "installed",
+                'component' => 'plugin_plain_texteditor',
+                'setting' => 'installed',
                 'value' => 0,
-                'type' => "boolean"
+                'type' => 'boolean'
             ),
             1 => array(
-                'component' => "plugin_plain_texteditor",
-                'setting' => "supports_mathjax",
+                'component' => 'plugin_plain_texteditor',
+                'setting' => 'supports_mathjax',
                 'value' => 1,
-                'type' => "boolean"
+                'type' => 'boolean'
             )
         );
         $this->assertEquals($expectedTable, $queryTable);
@@ -106,7 +111,8 @@ class plaineditortest extends unittestdatabase {
      * Test enable plain
      * @group texteditor
      */
-    public function test_enable_plain() {
+    public function test_enable_plain()
+    {
         $text = new plugin_plain_texteditor();
         $text->install($this->config->get('cfg_phpunit_db_user'), $this->config->get('cfg_phpunit_db_password'));
         $text->enable_plugin();
@@ -114,8 +120,8 @@ class plaineditortest extends unittestdatabase {
         $queryTable = $this->query(array('columns' => array('component', 'type', 'version'), 'table' => 'plugins'));
         $expectedTable = array(
             0 => array (
-                'component' => "plugin_plain_texteditor",
-                'type' => "texteditor",
+                'component' => 'plugin_plain_texteditor',
+                'type' => 'texteditor',
                 'version' => $this->newversion
             )
         );
@@ -126,7 +132,8 @@ class plaineditortest extends unittestdatabase {
      * Test get header file
      * @group texteditor
      */
-    public function test_get_header_file() {
+    public function test_get_header_file()
+    {
         $plain = new plugin_plain_texteditor();
         $this->assertEquals('plain.html', $plain->get_header_file());
     }
@@ -135,7 +142,8 @@ class plaineditortest extends unittestdatabase {
      * Test get editor etype
      * @group texteditor
      */
-    public function test_get_type() {
+    public function test_get_type()
+    {
         $plain = new plugin_plain_texteditor();
         $this->assertEquals('plain', $plain->get_type(\plugins\plugins_texteditor::TYPE_STANDARD));
         $this->config->set_setting('supports_mathjax', 1, \Config::BOOLEAN, $plain->get_name());
@@ -148,28 +156,31 @@ class plaineditortest extends unittestdatabase {
      * Test clena leadin check
      * @group texteditor
      */
-    public function clean_leadin() {
+    public function clean_leadin()
+    {
         $plain = new plugin_plain_texteditor();
-        $this->assertTrue($plain->cleanleadin("test - <div class=\"mee\">\alpha</div>"));
-        $this->assertTrue($plain->cleanleadin("test - \alpha"));
+        $this->assertTrue($plain->cleanleadin('test - <div class="mee">\alpha</div>'));
+        $this->assertTrue($plain->cleanleadin('test - \alpha'));
     }
 
     /**
      * Test repalce text for save
      * @group texteditor
      */
-    public function test_prepare_text_for_save() {
+    public function test_prepare_text_for_save()
+    {
         $plain = new plugin_plain_texteditor();
-        $this->assertEquals("[tex]\sigma[/tex]", $plain->prepare_text_for_save("[tex]\sigma[/tex]"));
-        $this->assertEquals("[texi]\sigma[/texi]", $plain->prepare_text_for_save("[texi]\sigma[/texi]"));
+        $this->assertEquals('[tex]\sigma[/tex]', $plain->prepare_text_for_save('[tex]\sigma[/tex]'));
+        $this->assertEquals('[texi]\sigma[/texi]', $plain->prepare_text_for_save('[texi]\sigma[/texi]'));
     }
 
     /**
      * Test text for display
      * @group texteditor
      */
-    public function test_get_text_for_display() {
+    public function test_get_text_for_display()
+    {
         $plain = new plugin_plain_texteditor();
-        $this->assertEquals("<div class=\"mee\">\alpha</div>", $plain->get_text_for_display("<div class=\"mee\">\alpha</div>"));
+        $this->assertEquals('<div class="mee">\alpha</div>', $plain->get_text_for_display('<div class="mee">\alpha</div>'));
     }
 }

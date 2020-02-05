@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,11 +25,13 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class textboxtest extends unittestdatabase {
+class textboxtest extends unittestdatabase
+{
     /**
      * Generate data for test.
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         // Currently only base data required.
     }
 
@@ -36,7 +39,8 @@ class textboxtest extends unittestdatabase {
      * Test question header setter
      * @group question
      */
-    public function test_set_question_head() {
+    public function test_set_question_head()
+    {
         $data = questiondata::get_datastore('textbox');
         $data->set_question_head();
         $this->assertTrue($data->displaydefault);
@@ -56,7 +60,8 @@ class textboxtest extends unittestdatabase {
      * Test question option setter - mathjax
      * @group question
      */
-    public function test_set_option_answer_mathjax() {
+    public function test_set_option_answer_mathjax()
+    {
         $data = questiondata::get_datastore('textbox');
         $data->settings = json_encode(array('columns' => 40, 'rows' => 10, 'editor' => 'mathjax'));
         $data->questionno = 2;
@@ -77,14 +82,14 @@ class textboxtest extends unittestdatabase {
         $data->set_option_answer(0, 'test', '', 1);
         $this->assertEquals('test', $data->useranswer);
         $this->assertFalse($data->unanswered);
-
     }
 
     /**
      * Test question option setter - tinymce
      * @group question
      */
-    public function test_set_option_answer_tinymce() {
+    public function test_set_option_answer_tinymce()
+    {
         ob_start(); // Start output buffering
         $data = questiondata::get_datastore('textbox');
         $data->settings = json_encode(array('columns' => 40, 'rows' => 10, 'editor' => 'WYSIWYG'));
@@ -107,5 +112,4 @@ class textboxtest extends unittestdatabase {
         $output = ob_get_contents(); // Store buffer in variable
         ob_end_clean(); // End buffering and clean up
     }
-
 }

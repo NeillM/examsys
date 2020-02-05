@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -16,7 +17,7 @@
 
 /**
 * Abstract API functionality
-* 
+*
 * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 * @copyright Copyright (c) 2015 onwards The University of Nottingham
 */
@@ -25,15 +26,16 @@ namespace api;
 
 /**
  * Abstract management class.
- * 
+ *
  * This class should be extend by classes used to creation academic constructs such as
  *  modules, schools, courses etc.
  */
-abstract class abstractmanagement {
+abstract class abstractmanagement
+{
            
     /**
      * Abstract create function
-     * 
+     *
      * Operation to create an academic construct such as a module or school.
      * @param array $params - parametes in request
      * @param integer $userid rogo user id linked to web service client
@@ -43,7 +45,7 @@ abstract class abstractmanagement {
     
     /**
      * Abstract delete function
-     * 
+     *
      * Operation to delete an academic construct such as a module or school.
      * @param array $params - parametes in request
      * @param integer $userid rogo user id linked to web service client
@@ -69,7 +71,8 @@ abstract class abstractmanagement {
      * @param mysqli $mysqli the database connection
      * @param string $client_id the oauth client connecting
      */
-    public function __construct($mysqli, $client_id = null) {
+    public function __construct($mysqli, $client_id = null)
+    {
         $this->db = $mysqli;
         $this->client_id = $client_id;
         $this->config = \Config::get_instance();
@@ -77,7 +80,7 @@ abstract class abstractmanagement {
     
     /**
      * Response creator
-     * 
+     *
      * A response to an academic construct operation.
      * @param array $data - Response data
      * @param string $action - Relevant action
@@ -85,19 +88,20 @@ abstract class abstractmanagement {
      * @param array $error - array of errors generated
      * return array response to operation, id of construct or error message.
      */
-    public function get_response($data, $action, $nodeid = null, $error = null) {
+    public function get_response($data, $action, $nodeid = null, $error = null)
+    {
         // Not all APIs support externalid so set to null if not set.
         if (!isset($data['externalid'])) {
             $data['externalid'] = null;
         }
         return $response = array(
-            "statuscode" => $data['statuscode'],
-            "status" => $data['status'],
-            "id" => $data['id'],
-            "externalid" => $data['externalid'],
-            "error" => $error,
-            "node" => $action,
-            "nodeid" => $nodeid);
+            'statuscode' => $data['statuscode'],
+            'status' => $data['status'],
+            'id' => $data['id'],
+            'externalid' => $data['externalid'],
+            'error' => $error,
+            'node' => $action,
+            'nodeid' => $nodeid);
     }
     
     /**
@@ -107,7 +111,8 @@ abstract class abstractmanagement {
      * @param array $update request update values
      * @return bool true if a value has been updated
      */
-    public function check_if_updated($parameters, $current, $update) {
+    public function check_if_updated($parameters, $current, $update)
+    {
         foreach ($parameters as $check) {
             if (!empty($update[$check])) {
                 if ($current[$check] != $update[$check]) {
@@ -123,7 +128,8 @@ abstract class abstractmanagement {
      * @param string $externalsys system provided in request (used by sms plugins)
      * @return string external system
      */
-    public function get_external_system($externalsys) {
+    public function get_external_system($externalsys)
+    {
         if (is_null($this->client_id)) {
             // SMS plugin
             return $externalsys;

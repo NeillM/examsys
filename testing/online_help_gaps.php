@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,9 +16,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Using English as a base-language, checks for missing pages in other languages.
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -32,14 +33,14 @@ require '../include/sysadmin_auth.inc';
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
 
-	<title>Rog&#333;: Online Help gaps</title>
+ <title>Rog&#333;: Online Help gaps</title>
 
-	<style>
-		.content {font-size:80%}
-		li {margin-left:20px; line-height:150%}
-	</style>
-	<link rel="stylesheet" type="text/css" href="../css/body.css" />
-	<link rel="stylesheet" type="text/css" href="../css/header.css" />
+    <style>
+        .content {font-size:80%}
+       li {margin-left:20px; line-height:150%}
+    </style>
+   <link rel="stylesheet" type="text/css" href="../css/body.css" />
+   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <style>
     h2 {margin-left: 20px; font-size: 150%}
     li {font-size: 110%}
@@ -52,8 +53,7 @@ require '../include/sysadmin_auth.inc';
 <body>
 <?php
   require '../include/toprightmenu.inc';
-
-	echo draw_toprightmenu();
+echo draw_toprightmenu();
 ?>
 <div id="content">
   
@@ -65,46 +65,41 @@ require '../include/sysadmin_auth.inc';
   
 <?php
   // Get a list of the distinct languages used.
-  $languages = get_languages($mysqli);  
-
-  if (isset($_GET['type'])) {
+  $languages = get_languages($mysqli);
+if (isset($_GET['type'])) {
     $help_table = $_GET['type'];
-  } else {
+} else {
     $help_table = 'staff_help';
-  }
+}
   
   // Get a list of the pages in the English (en) version.
   $en_pages = array();
-  
-  if ($help_table == 'staff_help') {
+if ($help_table == 'staff_help') {
     $result = $mysqli->prepare("SELECT articleid, title, body, type, roles FROM $help_table WHERE language = 'en' AND deleted IS NULL");
-  } else {
+} else {
     $result = $mysqli->prepare("SELECT articleid, title, body, type, NULL AS roles FROM $help_table WHERE language = 'en' AND deleted IS NULL");
-  }
+}
   $result->execute();
-  $result->bind_result($articleid, $title, $body, $type, $roles);
-  while ($result->fetch()) {
+$result->bind_result($articleid, $title, $body, $type, $roles);
+while ($result->fetch()) {
     $en_pages[$articleid]['title'] = $title;
     $en_pages[$articleid]['body'] = $body;
     $en_pages[$articleid]['type'] = $type;
     $en_pages[$articleid]['roles'] = $roles;
-  }
+}
   $result->close();
-  
-  foreach ($languages as $language) {
+foreach ($languages as $language) {
     echo "<h1>$language</h1>\n";
-    echo "<ul>";
+    echo '<ul>';
     $lang_pages = pages_in_lang($language, $help_table, $mysqli);
-    
     foreach ($en_pages as $pageID => $page_details) {
-      if (!isset($lang_pages[$pageID])) {
-        create_page($language, $pageID, $page_details, $help_table, $mysqli);
-        echo "<li>Creating #$pageID - " . $page_details['title'] . "</li>";
-        
-      }
+        if (!isset($lang_pages[$pageID])) {
+            create_page($language, $pageID, $page_details, $help_table, $mysqli);
+            echo "<li>Creating #$pageID - " . $page_details['title'] . '</li>';
+        }
     }
-    echo "</ul>";
-  }
+    echo '</ul>';
+}
   
 ?>
   
@@ -114,15 +109,16 @@ require '../include/sysadmin_auth.inc';
 
 <?php
 
-function create_page($language, $articleid, $page_details, $help_table, $db) {
-  $title = $page_details['title'];
-  $body = $page_details['body'];
-  $body_plain = strip_tags($page_details['body']);
-  $type = $page_details['type'];
-  $roles = $page_details['roles'];
+function create_page($language, $articleid, $page_details, $help_table, $db)
+{
 
-  if ($help_table == 'staff_help') {
-    $result = $db->prepare("INSERT INTO $help_table (
+    $title = $page_details['title'];
+    $body = $page_details['body'];
+    $body_plain = strip_tags($page_details['body']);
+    $type = $page_details['type'];
+    $roles = $page_details['roles'];
+    if ($help_table == 'staff_help') {
+        $result = $db->prepare("INSERT INTO $help_table (
         id,
         title,
         body,
@@ -146,9 +142,9 @@ function create_page($language, $articleid, $page_details, $help_table, $db) {
         NULL,
         ?,
         ?)");
-    $result->bind_param('ssssssi', $title, $body, $body_plain, $type, $roles, $language, $articleid);
-  } else {
-    $result = $db->prepare("INSERT INTO $help_table (
+        $result->bind_param('ssssssi', $title, $body, $body_plain, $type, $roles, $language, $articleid);
+    } else {
+        $result = $db->prepare("INSERT INTO $help_table (
         id,
         title,
         body,
@@ -170,44 +166,44 @@ function create_page($language, $articleid, $page_details, $help_table, $db) {
         NULL,
         ?,
         ?)");
-    $result->bind_param('sssssi', $title, $body, $body_plain, $type, $language, $articleid);
-  }
-	$result->execute();
-	$result->close();
+        $result->bind_param('sssssi', $title, $body, $body_plain, $type, $language, $articleid);
+    }
+    $result->execute();
+    $result->close();
 }
 
-function pages_in_lang($lang, $help_table, $db) {
-  $lang_pages = array();
-  
-  $result = $db->prepare("SELECT articleid FROM $help_table WHERE language = ? AND deleted IS NULL");
-  $result->bind_param('s', $lang);
-  $result->execute();
-  $result->bind_result($articleid);
-  while ($result->fetch()) {
-    $lang_pages[$articleid] = $articleid;
-  }
-  $result->close();
-  
-  return $lang_pages;
+function pages_in_lang($lang, $help_table, $db)
+{
+
+    $lang_pages = array();
+    $result = $db->prepare("SELECT articleid FROM $help_table WHERE language = ? AND deleted IS NULL");
+    $result->bind_param('s', $lang);
+    $result->execute();
+    $result->bind_result($articleid);
+    while ($result->fetch()) {
+        $lang_pages[$articleid] = $articleid;
+    }
+    $result->close();
+    return $lang_pages;
 }
 
-function get_languages($db) {
-  $languages = array();
-  
-  $result = $db->prepare("SELECT DISTINCT(language) FROM staff_help WHERE language != 'en'");
-  $result->execute();
-  $result->bind_result($language);
-  while ($result->fetch()) {
-    $languages[] = $language;
-  }
-  $result->close();  
-  
-  if (isset($_GET['lang'])) {
+function get_languages($db)
+{
+
+    $languages = array();
+    $result = $db->prepare("SELECT DISTINCT(language) FROM staff_help WHERE language != 'en'");
+    $result->execute();
+    $result->bind_result($language);
+    while ($result->fetch()) {
+        $languages[] = $language;
+    }
+    $result->close();
+    if (isset($_GET['lang'])) {
     // Take a language through GET, useful for creating whole new languages.
-    $languages[] = $_GET['lang'];
-  }
+          $languages[] = $_GET['lang'];
+    }
   
-  return $languages;
+    return $languages;
 }
 
 ?>

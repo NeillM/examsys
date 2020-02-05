@@ -24,20 +24,21 @@
  * @package
  */
 
-Class QuestionBLANK extends QuestionEdit {
+class QuestionBLANK extends QuestionEdit
+{
   
-  public $max_options = 1;
-  protected $_answer_negative = null;
+    public $max_options = 1;
+    protected $_answer_negative = null;
 
 
-  function __construct($mysqli, $userObj, $lang_strings, $data = null) {
-    parent::__construct($mysqli, $userObj, $lang_strings, $data);
+    function __construct($mysqli, $userObj, $lang_strings, $data = null)
+    {
+        parent::__construct($mysqli, $userObj, $lang_strings, $data);
     
-    $this->_fields_unified = array('text' => $this->_lang_strings['questionstem'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
-    $this->_display_methods = array('dropdown' => $this->_lang_strings['dropdownlists'], 'textboxes' => $this->_lang_strings['textboxes']);
+        $this->_fields_unified = array('text' => $this->_lang_strings['questionstem'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
+        $this->_display_methods = array('dropdown' => $this->_lang_strings['dropdownlists'], 'textboxes' => $this->_lang_strings['textboxes']);
     
-    // 'correct' is not a unified field for Dichotomous questions
-    $this->_fields_editable[] = 'correct';
-  }
+      // 'correct' is not a unified field for Dichotomous questions
+        $this->_fields_editable[] = 'correct';
+    }
 }
-

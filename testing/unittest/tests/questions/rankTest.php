@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,13 +25,15 @@ use testing\unittest\unittest;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class ranktest extends unittest {
+class ranktest extends unittest
+{
 
     /**
      * Test question header setter
      * @group question
      */
-    public function test_set_question_head() {
+    public function test_set_question_head()
+    {
         $data = questiondata::get_datastore('rank');
         $data->set_question_head();
         $this->assertTrue($data->displaydefault);
@@ -51,7 +54,8 @@ class ranktest extends unittest {
      * Test question option setter - not answered
      * @group question
      */
-    public function test_set_option_answer() {
+    public function test_set_option_answer()
+    {
         $data = questiondata::get_datastore('rank');
         $data->papertype = '0';
         $data->scoremethod = 'Mark per Option';
@@ -81,7 +85,8 @@ class ranktest extends unittest {
      * Test question option setter - partially answered
      * @group question
      */
-    public function test_set_option_answer_partial() {
+    public function test_set_option_answer_partial()
+    {
         $data = questiondata::get_datastore('rank');
         $data->papertype = '0';
         $data->scoremethod = 'Mark per Option';
@@ -111,7 +116,8 @@ class ranktest extends unittest {
      * Test question additional option setter
      * @group question
      */
-    public function test_process_options() {
+    public function test_process_options()
+    {
         $data = questiondata::get_datastore('rank');
         // Test dismiss and negative marking.
         $useranswer = '1,u,u';

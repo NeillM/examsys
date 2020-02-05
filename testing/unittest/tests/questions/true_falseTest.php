@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,13 +25,15 @@ use testing\unittest\unittest;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class true_falsetest extends unittest {
+class true_falsetest extends unittest
+{
 
     /**
      * Test question header setter
      * @group question
      */
-    public function test_set_question_head() {
+    public function test_set_question_head()
+    {
         $data = questiondata::get_datastore('true_false');
         $data->set_question_head();
         $this->assertTrue($data->displaydefault);
@@ -51,7 +54,8 @@ class true_falsetest extends unittest {
      * Test question option setter - tinymce
      * @group question
      */
-    public function test_set_option_answer() {
+    public function test_set_option_answer()
+    {
         $data = questiondata::get_datastore('true_false');
         $option['markscorrect'] = 1;
         $data->set_opt(0, $option);
@@ -75,5 +79,4 @@ class true_falsetest extends unittest {
         $this->assertfalse($data->abstainselected);
         $this->assertTrue($data->trueselected);
     }
-
 }

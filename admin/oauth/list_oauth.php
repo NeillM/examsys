@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -48,9 +49,9 @@ array('class' => 'col', 'style' => 'width:15%', 'value' => $string['client']),
 array('class' => 'col', 'style' => 'width:40%', 'value' => $string['token']),
 array('class' => 'col', 'style' => 'width:10%', 'value' => $string['type']),
 array('class' => 'col', 'style' => 'width:10%', 'value' => $string['expires']));
-$additionaljs = "<script type=\"text/javascript\" src=\"js/oauthinit.min.js\"></script>";
-$addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../../css/list.css\"/>";
-$breadcrumb = array($string['home'] => "../../index.php", $string['administrativetools'] => "../index.php");
+$additionaljs = '<script type="text/javascript" src="js/oauthinit.min.js"></script>';
+$addtionalcss = '<link rel="stylesheet" type="text/css" href="../../css/list.css"/>';
+$breadcrumb = array($string['home'] => '../../index.php', $string['administrativetools'] => '../index.php');
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('list_oauthclient.php', 'lti_key_16.png', $lang, $toprightmenu, 'admin/options_list.html');
 $render->render_admin_content($breadcrumb, $lang);

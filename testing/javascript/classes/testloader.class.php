@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,12 +25,13 @@ namespace testing\javascript;
  * @package testing
  * @subpackage javascript
  */
-class TestLoader {
+class TestLoader
+{
   /** @var array An array of all the Javascript unit tests. */
-  public $tests = array();
+    public $tests = array();
   
   /** @var \stdClass The configuration for the suite. */
-  public $config;
+    public $config;
 
   /**
    * Find all tests and adds their location to the $tests property.
@@ -37,30 +39,31 @@ class TestLoader {
    * @param string $suite The name of a suite to get the javascript tests for.
    * @return bool Flags if the suite was loaded correctly.
    */
-  public function locate($suite) {
-    $test_location = SuiteLoader::get_base_directory() . $suite . DIRECTORY_SEPARATOR;
-    // Get and load the configuration file for the suite.
-    $setup = new \stdClass();
-    $configfile = $test_location . 'config.php';
-    if (file_exists($configfile)) {
-      include $configfile;
+    public function locate($suite)
+    {
+        $test_location = SuiteLoader::get_base_directory() . $suite . DIRECTORY_SEPARATOR;
+      // Get and load the configuration file for the suite.
+        $setup = new \stdClass();
+        $configfile = $test_location . 'config.php';
+        if (file_exists($configfile)) {
+            include $configfile;
+        }
+        if (!isset($setup->test) || $setup->test !== $suite) {
+            return false;
+        }
+        $this->config = $setup;
+      // Get the root location of Rogo.
+        $config = \Config::get_instance();
+        $rootpath = $config->get('cfg_web_root');
+      // Get the test files.
+        $files = glob($test_location . '*.js');
+      // Add the relative location of the files to the tests array.
+        foreach ($files as $file) {
+            $path_parts = pathinfo($file);
+            $directory = str_replace('\\', '/', $path_parts['dirname']);
+            $relativepath = str_replace($rootpath, '', $directory);
+            $this->tests[] = $relativepath . '/' . $path_parts['basename'];
+        }
+        return true;
     }
-    if (!isset($setup->test) || $setup->test !== $suite) {
-      return false;
-    }
-    $this->config = $setup;
-    // Get the root location of Rogo.
-    $config = \Config::get_instance();
-    $rootpath = $config->get('cfg_web_root');
-    // Get the test files.
-    $files = glob($test_location . '*.js');
-    // Add the relative location of the files to the tests array.
-    foreach ($files as $file) {
-      $path_parts = pathinfo($file);
-      $directory = str_replace('\\', '/', $path_parts['dirname']);
-      $relativepath = str_replace($rootpath, '', $directory);
-      $this->tests[] = $relativepath . '/' . $path_parts['basename'];
-    }
-    return true;
-  }
 }

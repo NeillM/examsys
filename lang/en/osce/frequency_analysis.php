@@ -16,4 +16,3 @@
 
 $string['frequencyanalysis'] = 'Frequency Analysis';
 $string['studentsonly'] = 'students only';
-?>

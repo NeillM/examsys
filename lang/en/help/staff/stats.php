@@ -30,4 +30,3 @@ $string['filter'] = 'Filter';
 $string['nohits'] = 'There were no hits';
 $string['nosearches'] = 'There were no searches';
 $string['notutorials'] = 'There were no tutorials viewed.';
-?>

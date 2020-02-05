@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -48,8 +49,8 @@ require '../include/errors.php';
 <body>
 <?php
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
+    
+    echo draw_toprightmenu();
 ?>
 <div id="content">
 <div class="head_title">
@@ -62,10 +63,10 @@ require '../include/errors.php';
 <tr>
 <th><?php echo $string['school'] ?></th>
 <?php
-	$types = array('area', 'dichotomous', 'enhancedcalc', 'extmatch', 'blank', 'hotspot', 'info', 'labelling', 'likert', 'matrix', 'mcq', 'mrq', 'keyword_based', 'random', 'rank', 'sct', 'textbox', 'true_false');
-  foreach ($types as $type) {
-	  echo '<th class="qtype">' . $string[$type] . '</th>';
-	}
+    $types = array('area', 'dichotomous', 'enhancedcalc', 'extmatch', 'blank', 'hotspot', 'info', 'labelling', 'likert', 'matrix', 'mcq', 'mrq', 'keyword_based', 'random', 'rank', 'sct', 'textbox', 'true_false');
+foreach ($types as $type) {
+    echo '<th class="qtype">' . $string[$type] . '</th>';
+}
 ?>
 </tr>
 <?php
@@ -76,9 +77,9 @@ $result = $mysqli->prepare("SELECT schools.id, schools.code, school, faculty.cod
 $result->execute();
 $result->bind_result($id, $code, $school, $faculty_code, $faculty);
 while ($result->fetch()) {
-  $master_array[$id]['name'] = $code . ' ' . $school;
-  $master_array[$id]['faculty'] = $faculty_code . ' ' . $faculty;
-  $master_array[$id]['types'] = array('blank'=>0, 'dichotomous'=>0, 'flash'=>0, 'hotspot'=>0, 'labelling'=>0, 'likert'=>0, 'matrix'=>0, 'mcq'=>0, 'mrq'=>0, 'rank'=>0, 'textbox'=>0, 'info'=>0, 'extmatch'=>0, 'random'=>0, 'sct'=>0, 'keyword_based'=>0, 'true_false'=>0, 'area'=>0, 'enhancedcalc'=>0);
+    $master_array[$id]['name'] = $code . ' ' . $school;
+    $master_array[$id]['faculty'] = $faculty_code . ' ' . $faculty;
+    $master_array[$id]['types'] = array('blank' => 0, 'dichotomous' => 0, 'flash' => 0, 'hotspot' => 0, 'labelling' => 0, 'likert' => 0, 'matrix' => 0, 'mcq' => 0, 'mrq' => 0, 'rank' => 0, 'textbox' => 0, 'info' => 0, 'extmatch' => 0, 'random' => 0, 'sct' => 0, 'keyword_based' => 0, 'true_false' => 0, 'area' => 0, 'enhancedcalc' => 0);
 }
 $result->close();
 
@@ -99,7 +100,7 @@ $stats = $mysqli->prepare($statssql);
 $stats->execute();
 $stats->bind_result($id, $question_type, $count);
 while ($stats->fetch()) {
-  $master_array[$id]['types'][$question_type]++;
+    $master_array[$id]['types'][$question_type]++;
 }
 $stats->close();
 
@@ -107,30 +108,30 @@ $old_faculty = '';
 $faculty_stats = $types;
 
 foreach ($master_array as $school => $data) {
-  if ($old_faculty != $data['faculty']) {
-	  if ($old_faculty != '') {
-			echo output_faculty_stats($faculty_stats, $types);
-	  }
-		echo '<tr><td colspan="19" class="faculty">' . $data['faculty'] . '</td></tr>';
-		$faculty_stats = $types;
-	}
-  echo "<tr><td>" . $data['name'] . "</td>";
-	
-	foreach ($types as $type) {
-	  if ($data['types'][$type] == 0) {
-			echo "<td class=\"n grey\">" . $data['types'][$type] . "</td>";
-		} else {
-			echo "<td class=\"n\">" . number_format($data['types'][$type]) . "</td>";
-		}
-		if (isset($faculty_stats[$type])) {
-			$faculty_stats[$type] += $data['types'][$type];
-		} else {
-			$faculty_stats[$type] = $data['types'][$type];
-		}
-	}
-	echo "</tr>\n";
+    if ($old_faculty != $data['faculty']) {
+        if ($old_faculty != '') {
+            echo output_faculty_stats($faculty_stats, $types);
+        }
+        echo '<tr><td colspan="19" class="faculty">' . $data['faculty'] . '</td></tr>';
+        $faculty_stats = $types;
+    }
+    echo '<tr><td>' . $data['name'] . '</td>';
+    
+    foreach ($types as $type) {
+        if ($data['types'][$type] == 0) {
+            echo '<td class="n grey">' . $data['types'][$type] . '</td>';
+        } else {
+            echo '<td class="n">' . number_format($data['types'][$type]) . '</td>';
+        }
+        if (isset($faculty_stats[$type])) {
+            $faculty_stats[$type] += $data['types'][$type];
+        } else {
+            $faculty_stats[$type] = $data['types'][$type];
+        }
+    }
+    echo "</tr>\n";
 
-	$old_faculty = $data['faculty'];
+    $old_faculty = $data['faculty'];
 }
 echo output_faculty_stats($faculty_stats, $types);
 ?>
@@ -140,15 +141,16 @@ echo output_faculty_stats($faculty_stats, $types);
 </body>
 </html>
 <?php
-function output_faculty_stats($stats, $types) {
-  $html = '<tr><td>&nbsp;</td>';
-	
-	foreach ($types as $type) {
-	  $html .= '<td class="n subtotal">' . number_format($stats[$type]) . '</td>';
-	}
-	
-	$html .= '</tr>';
-	
-	return $html;
+function output_faculty_stats($stats, $types)
+{
+    $html = '<tr><td>&nbsp;</td>';
+    
+    foreach ($types as $type) {
+        $html .= '<td class="n subtotal">' . number_format($stats[$type]) . '</td>';
+    }
+    
+    $html .= '</tr>';
+    
+    return $html;
 }
 ?>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,13 +25,11 @@
 
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.php';
-
 $userid = check_var('userID', 'GET', true, false, true);
-
 if (!UserUtils::userid_exists($userid, $mysqli)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 $username     = UserUtils::get_username($userid, $mysqli);
@@ -38,10 +37,9 @@ $enc = new encryp();
 $generated_password = $enc->gen_password(true);
 $new_password = $generated_password['password'];
 $display_password = $generated_password['display_password'];
-
 $success = UserUtils::update_password($username, $new_password, $userid, $mysqli);
 if (!$success) {
-  display_error($string['resetfailed'], $string['failuremsg'], $configObject->get('cfg_root_path') . '/artwork/exclamation_red_bg.png', '#C00000', true, true, true);
+    display_error($string['resetfailed'], $string['failuremsg'], $configObject->get('cfg_root_path') . '/artwork/exclamation_red_bg.png', '#C00000', true, true, true);
 }
 $mysqli->close();
 $render = new render($configObject);
@@ -55,9 +53,9 @@ $headerdata = array(
 $lang['title'] = $string['passwordreset'];
 $lang['pwdreset'] = $string['passwordreset'];
 if ($enc->is_readable()) {
-  $lang['pwdinfo'] = $string['passwordreadable'];
+    $lang['pwdinfo'] = $string['passwordreadable'];
 } else {
-  $lang['pwdinfo'] = $string['passwordnonreadable'];
+    $lang['pwdinfo'] = $string['passwordnonreadable'];
 }
 $lang['msg'] = $string['msg'];
 $lang['ok'] = $string['ok'];

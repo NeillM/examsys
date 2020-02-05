@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -28,14 +29,13 @@ $clear_all = param::optional('clear', null, param::TEXT, param::FETCH_GET);
 $clear_a_log = param::optional('log_id', null, param::INT, param::FETCH_GET);
 $logs = new access_denied_logs();
 if (isset($clear_all)) {
-  $logs->delete_access_denied_logs();
-  header('Location: view_access_denied.php', true, 303);
-  exit();
-
+    $logs->delete_access_denied_logs();
+    header('Location: view_access_denied.php', true, 303);
+    exit();
 } elseif (isset($clear_a_log)) {
-  $logs->delete_a_access_denied_log($clear_a_log);
-  header('Location: view_access_denied.php', true, 303);
-  exit();
+    $logs->delete_a_access_denied_log($clear_a_log);
+    header('Location: view_access_denied.php', true, 303);
+    exit();
 }
 ?>
 <!DOCTYPE html>
@@ -87,15 +87,15 @@ echo draw_toprightmenu();
 <?php
 $log_list = $logs->get_access_denied_logs();
 
-foreach ($log_list as $log ) {
-$tried_date = new DateTime();
-$tried_date->setTimestamp($log['tried']);
+foreach ($log_list as $log) {
+    $tried_date = new DateTime();
+    $tried_date->setTimestamp($log['tried']);
 
-echo "<tr class=\"l\">
-  <td class=\"d\"><a href=\"?log_id=". $log['id'] ."\">" . $tried_date->format($configObject->get('cfg_long_datetime_php')) . "</a></td>
-  <td><a href=\"../users/details.php?submit=Search&userID=". $log['userID'] ."\">". $log['title'] ." ". $log['initials'] ." ". $log['surname'] ."</a></td>
-  <td>". $log['page'] ."</td>
-  <td>". $log['msg'] ."</td>
+    echo '<tr class="l">
+  <td class="d"><a href="?log_id=' . $log['id'] . '">' . $tried_date->format($configObject->get('cfg_long_datetime_php')) . '</a></td>
+  <td><a href="../users/details.php?submit=Search&userID=' . $log['userID'] . '">' . $log['title'] . ' ' . $log['initials'] . ' ' . $log['surname'] . '</a></td>
+  <td>' . $log['page'] . '</td>
+  <td>' . $log['msg'] . "</td>
   </tr>\n";
 }
 

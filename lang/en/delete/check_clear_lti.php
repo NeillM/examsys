@@ -18,4 +18,3 @@ require '../lang/' . $language . '/delete/delete.php';
 
 $string['msg'] = 'Are you sure you wish to clear the LTI links associated with this user?';
 $string['clearlti'] = 'Clear LTI';
-?>

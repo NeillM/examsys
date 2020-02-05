@@ -23,53 +23,57 @@
 /**
  * Question rendering helper class.
  */
-class questionrender {
+class questionrender
+{
 
   /**
    * Config object
    * @var object
    */
-  protected $config;
+    protected $config;
 
   /**
    * Question data class
    * @var class
    */
-  public $questiondata;
+    public $questiondata;
 
   /**
    * Fields to override on rendering
    * @var mixed[]
    */
-  protected $override_fields;
+    protected $override_fields;
 
   /**
    * Constructor
    * @param string $qtype question type
    */
-  function __construct($qtype) {
-    $this->config = Config::get_instance();
-    $this->questiondata = questiondata::get_datastore($qtype);
-    $this->override_fields = [];
-  }
+    function __construct($qtype)
+    {
+        $this->config = Config::get_instance();
+        $this->questiondata = questiondata::get_datastore($qtype);
+        $this->override_fields = [];
+    }
 
   /**
    * Add to override list
    * @param string $field_name Name of field to override in questiondata class
    * @param mixed $value Value to override
    */
-  function add_override($field_name, $value) {
-    $this->override_fields[$field_name] = $value;
-  }
+    function add_override($field_name, $value)
+    {
+        $this->override_fields[$field_name] = $value;
+    }
 
   /**
    * Remove from override list
    * @param string $field_name Name of field to remove from overrides
    * @param mixed $value Value to override
    */
-  function remove_override($field_name) {
-    unset($this->override_fields[$field_name]);
-  }
+    function remove_override($field_name)
+    {
+        unset($this->override_fields[$field_name]);
+    }
 
   /**
    * Render question
@@ -86,31 +90,31 @@ class questionrender {
    * @param integer $question_no current question number
    * @param array $user_answers users answers
    */
-  public function display_question($screen_pre_submitted, $q_displayed, $string, &$question, $pid, $current_screen, &$question_no, $user_answers) {
+    public function display_question($screen_pre_submitted, $q_displayed, $string, &$question, $pid, $current_screen, &$question_no, $user_answers)
+    {
 
-    $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-    $renderpath = $texteditorplugin->get_render_paths();
-    $strings = $texteditorplugin->get_strings();
-    $string = array_merge($string, $strings);
-    if (file_exists(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . $question['q_type'] . DIRECTORY_SEPARATOR . 'templates')) {
-        $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . $question['q_type'] . DIRECTORY_SEPARATOR . 'templates';
-    } else {
-        $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . 'undefined' . DIRECTORY_SEPARATOR . 'templates';
-    }
-    $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates';
-    $render = new render($this->config, $renderpath);
-
-    $this->questiondata->setup_question_data($screen_pre_submitted, $q_displayed, $string, $question, $pid, $current_screen, $question_no, $user_answers);
-    if (!empty($this->override_fields)) {
-      foreach ($this->override_fields as $field => $value) {
-        if (property_exists($this->questiondata, $field)) { // Make sure we're not overriding something that doesn't exist
-          $this->questiondata->$field = $value;
+        $texteditorplugin = \plugins\plugins_texteditor::get_editor();
+        $renderpath = $texteditorplugin->get_render_paths();
+        $strings = $texteditorplugin->get_strings();
+        $string = array_merge($string, $strings);
+        if (file_exists(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . $question['q_type'] . DIRECTORY_SEPARATOR . 'templates')) {
+            $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . $question['q_type'] . DIRECTORY_SEPARATOR . 'templates';
+        } else {
+            $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . 'questions' . DIRECTORY_SEPARATOR . 'undefined' . DIRECTORY_SEPARATOR . 'templates';
         }
-      }
-    }
-    $render->render($this->questiondata, $string, 'paper/question_header.html');
-    // Plugin question use there own templating for question body.
-    $this->questiondata->render_question($render, $string);
-  }
+        $renderpath[] = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'templates';
+        $render = new render($this->config, $renderpath);
 
+        $this->questiondata->setup_question_data($screen_pre_submitted, $q_displayed, $string, $question, $pid, $current_screen, $question_no, $user_answers);
+        if (!empty($this->override_fields)) {
+            foreach ($this->override_fields as $field => $value) {
+                if (property_exists($this->questiondata, $field)) { // Make sure we're not overriding something that doesn't exist
+                    $this->questiondata->$field = $value;
+                }
+            }
+        }
+        $render->render($this->questiondata, $string, 'paper/question_header.html');
+      // Plugin question use there own templating for question body.
+        $this->questiondata->render_question($render, $string);
+    }
 }

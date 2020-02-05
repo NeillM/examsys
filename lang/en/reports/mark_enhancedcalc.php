@@ -17,4 +17,3 @@
 $string['serverconnectionerr'] = '<strong>ERROR:</strong> Connection to R server failed.';
 $string['calculationguestionmarking'] = 'Calculation Question Marking';
 $string['markingcomplete'] = 'Marking Complete';
-?>

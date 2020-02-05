@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -22,7 +23,8 @@ namespace users;
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2019 The University of Nottingham
  */
-class User {
+class User
+{
     /** @var string The first names og the user. */
     public $firstname;
 

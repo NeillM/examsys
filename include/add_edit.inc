@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -32,92 +33,96 @@ require_once 'errors.php';
  * @param mixed $sHTML
  *
  */
-function clearMSOtags($sHTML) {
+function clearMSOtags($sHTML)
+{
 
-  if (trim($sHTML) == '<p>&nbsp;</p>' or trim($sHTML) == '<p></p>' or trim($sHTML) == '<div>&nbsp;</div>' or trim($sHTML) == '<div></div>' or trim($sHTML) == '<br />') {
-    $sHTML = '';
-  } else {
-    if (strpos($sHTML, 'mso-') !== false or strpos($sHTML, 'MsoNormal') !== false or strpos($sHTML, '<o:p>') !== false) {
-      $allowedTags = '<div><b><i><strong><em><sup><sub><table><tr><td><tbody><th>';
-      $sHTML = strip_tags($sHTML, $allowedTags);
+    if (trim($sHTML) == '<p>&nbsp;</p>' or trim($sHTML) == '<p></p>' or trim($sHTML) == '<div>&nbsp;</div>' or trim($sHTML) == '<div></div>' or trim($sHTML) == '<br />') {
+        $sHTML = '';
+    } else {
+        if (strpos($sHTML, 'mso-') !== false or strpos($sHTML, 'MsoNormal') !== false or strpos($sHTML, '<o:p>') !== false) {
+            $allowedTags = '<div><b><i><strong><em><sup><sub><table><tr><td><tbody><th>';
+            $sHTML = strip_tags($sHTML, $allowedTags);
+        }
+      // Further processing.
+        $sHTML = str_ireplace('PADDING-TOP: 0cm', '', $sHTML);
+        $sHTML = str_ireplace('PADDING-BOTTOM: 0cm', '', $sHTML);
+        $sHTML = str_ireplace('BACKGROUND-COLOR: transparent;', '', $sHTML);
+        $sHTML = str_ireplace('<o:p></o:p>', '', $sHTML);
+        $sHTML = str_ireplace('<strong></strong>', '', $sHTML);
+        $sHTML = str_ireplace('COLOR: black', '', $sHTML);
+
+      // Convert strange codes.
+        $sHTML = str_ireplace('%u2013', '-', $sHTML);
+        $sHTML = str_ireplace('%u2018', "'", $sHTML);
+        $sHTML = str_ireplace('%u2019', "'", $sHTML);
+
+      // Some regular expressions
+        $sHTML = preg_replace('/FONT-SIZE: [0-9]+pt/', '', $sHTML);
+        $sHTML = preg_replace('/FONT-FAMILY: [\'a-zA-Z 0-9,]*/', '', $sHTML);
+        $sHTML = preg_replace('/FONT: [0-9]+pt/', '', $sHTML);
+        $sHTML = preg_replace('/LINE-HEIGHT: [0-9]+%/', '', $sHTML);
+
+        $sHTML = preg_replace('/lang="[\-A-Za-z]*"/', '', $sHTML);
+        $sHTML = preg_replace('/mso-[\-A-Za-z]+: [_\. \'#\-A-Za-z0-9,]+/', '', $sHTML);
+
+      // Do at end.
+        $sHTML = str_ireplace('  ', ' ', $sHTML);
+        $sHTML = str_ireplace(' ;', '', $sHTML);
+        $sHTML = str_ireplace('style="; ', 'style="', $sHTML);
+        $sHTML = str_ireplace('style=""', '', $sHTML);
+        $sHTML = str_ireplace('style=" "', '', $sHTML);
+        $sHTML = str_ireplace('<span >', '<span>', $sHTML);
+        $sHTML = str_ireplace('; ">', '">', $sHTML);
     }
-    // Further processing.
-    $sHTML = str_ireplace('PADDING-TOP: 0cm', '', $sHTML);
-    $sHTML = str_ireplace('PADDING-BOTTOM: 0cm', '', $sHTML);
-    $sHTML = str_ireplace('BACKGROUND-COLOR: transparent;', '', $sHTML);
-    $sHTML = str_ireplace('<o:p></o:p>', '', $sHTML);
-    $sHTML = str_ireplace('<strong></strong>', '', $sHTML);
-    $sHTML = str_ireplace('COLOR: black', '', $sHTML);
-
-    // Convert strange codes.
-    $sHTML = str_ireplace('%u2013', '-', $sHTML);
-    $sHTML = str_ireplace('%u2018', "'", $sHTML);
-    $sHTML = str_ireplace('%u2019', "'", $sHTML);
-
-    // Some regular expressions
-    $sHTML = preg_replace('/FONT-SIZE: [0-9]+pt/','',$sHTML);
-    $sHTML = preg_replace('/FONT-FAMILY: [\'a-zA-Z 0-9,]*/','',$sHTML);
-    $sHTML = preg_replace('/FONT: [0-9]+pt/','',$sHTML);
-    $sHTML = preg_replace('/LINE-HEIGHT: [0-9]+%/','',$sHTML);
-
-    $sHTML = preg_replace('/lang="[\-A-Za-z]*"/', '', $sHTML);
-    $sHTML = preg_replace('/mso-[\-A-Za-z]+: [_\. \'#\-A-Za-z0-9,]+/','',$sHTML);
-
-    // Do at end.
-    $sHTML = str_ireplace('  ', ' ', $sHTML);
-    $sHTML = str_ireplace(' ;', '', $sHTML);
-    $sHTML = str_ireplace('style="; ', 'style="', $sHTML);
-    $sHTML = str_ireplace('style=""', '', $sHTML);
-    $sHTML = str_ireplace('style=" "', '', $sHTML);
-    $sHTML = str_ireplace('<span >', '<span>', $sHTML);
-    $sHTML = str_ireplace('; ">', '">', $sHTML);
-  }
-  return $sHTML;
+    return $sHTML;
 }
 
 /**
  * Create wysiwyg editor.
- * 
- * @param string $name - name for editor 
+ *
+ * @param string $name - name for editor
  * @param string $replace - id for editor
  * @param string $content - current content
  * @param string $type - TinyMCE only - type of editor i.e. standard
  * @return html of editor
  */
-function wysiwyg_editor($name, $replace, $content='', $type = '') {
-  global $string;
-  $html = '';
-  $content = htmlspecialchars($content);
-  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-  $html .=  $texteditorplugin->get_textarea($name, $replace, $content, $type);
-  return $html;
+function wysiwyg_editor($name, $replace, $content = '', $type = '')
+{
+    global $string;
+    $html = '';
+    $content = htmlspecialchars($content);
+    $texteditorplugin = \plugins\plugins_texteditor::get_editor();
+    $html .=  $texteditorplugin->get_textarea($name, $replace, $content, $type);
+    return $html;
 }
 
-function option_order($selected = '') {
-  $items = array('Display Order','Alphabetic','Random');
+function option_order($selected = '')
+{
+    $items = array('Display Order','Alphabetic','Random');
 
-  $html = "<select id=\"option_order\" name=\"option_order\">\n";
-  foreach ($items as $item) {
-    if ($selected == strtolower($item)) {
-      $html .= "<option value=\"" . strtolower($item) . "\" selected>$item</option>\n";
-    } else {
-      $html .= "<option value=\"" . strtolower($item) . "\">$item</option>\n";
+    $html = "<select id=\"option_order\" name=\"option_order\">\n";
+    foreach ($items as $item) {
+        if ($selected == strtolower($item)) {
+            $html .= '<option value="' . strtolower($item) . "\" selected>$item</option>\n";
+        } else {
+            $html .= '<option value="' . strtolower($item) . "\">$item</option>\n";
+        }
     }
-  }
-  $html .= "</select>\n";
+    $html .= "</select>\n";
 
-  if ($selected != '') {
-    $html .= '<input type="hidden" name="old_option_order" value="' . $selected . '" />';
-  }
+    if ($selected != '') {
+        $html .= '<input type="hidden" name="old_option_order" value="' . $selected . '" />';
+    }
 
-  return $html;
+    return $html;
 }
 
-function render_changes($changes, &$string) {
-  $cutoff = 70;
-  $i = 0;
-  if (count($changes) > 0) {
-    $html = <<< HTML
+function render_changes($changes, &$string)
+{
+    $cutoff = 70;
+    $i = 0;
+    if (count($changes) > 0) {
+        $html = <<< HTML
         <table class="data">
           <thead>
             <tr>
@@ -133,30 +138,30 @@ function render_changes($changes, &$string) {
 
 HTML;
 
-    foreach($changes as $change) {
-      $alt = ($i++ % 2 == 1) ? ' class="alt"' : '';
-      $change['old'] = strip_tags($change['old']);
-      $change['new'] = strip_tags($change['new']);
-      $change_old = $change['old'];
-      $change_old_more = '';
-      $change_new = $change['new'];
-      $change_new_more = '';
-      if (strlen($change['old']) > $cutoff) {
-        $split_pos = strrpos(substr($change['old'], 0, $cutoff), ' ');
-        $change_old = substr($change['old'], 0, $split_pos);
-        $change_old_more = substr($change['old'], $split_pos);
-        $change_old_more = "<span class=\"more-ellip\">&hellip;</span><span class=\"more-text\">{$change_old_more}</span><br /><a href=\"#\" class=\"more\">{$string['showmore']}</a>";
-      }
-      if (strlen($change['new']) > $cutoff) {
-        $split_pos = strrpos(substr($change['new'], 0, $cutoff), ' ');
-        $change_new = substr($change['new'], 0, $split_pos);
-        $change_new_more = substr($change['new'], $split_pos);
-        $change_new_more = "<span class=\"more-ellip\">&hellip;</span><span class=\"more-text\">{$change_new_more}</span><br /><a href=\"#\" class=\"more\">{$string['showmore']}</a>";
-      }
-			if ($change['section'] == $string['markscorrect'] or $change['section'] == $string['marksincorrect'] or $change['section'] == $string['markspartial']) {
-				$change['section'] = '<span style="color:#C00000">' . $change['section'] . '</span>';
-			}
-      $html .= <<< HTML
+        foreach ($changes as $change) {
+            $alt = ($i++ % 2 == 1) ? ' class="alt"' : '';
+            $change['old'] = strip_tags($change['old']);
+            $change['new'] = strip_tags($change['new']);
+            $change_old = $change['old'];
+            $change_old_more = '';
+            $change_new = $change['new'];
+            $change_new_more = '';
+            if (strlen($change['old']) > $cutoff) {
+                $split_pos = strrpos(substr($change['old'], 0, $cutoff), ' ');
+                $change_old = substr($change['old'], 0, $split_pos);
+                $change_old_more = substr($change['old'], $split_pos);
+                $change_old_more = "<span class=\"more-ellip\">&hellip;</span><span class=\"more-text\">{$change_old_more}</span><br /><a href=\"#\" class=\"more\">{$string['showmore']}</a>";
+            }
+            if (strlen($change['new']) > $cutoff) {
+                $split_pos = strrpos(substr($change['new'], 0, $cutoff), ' ');
+                $change_new = substr($change['new'], 0, $split_pos);
+                $change_new_more = substr($change['new'], $split_pos);
+                $change_new_more = "<span class=\"more-ellip\">&hellip;</span><span class=\"more-text\">{$change_new_more}</span><br /><a href=\"#\" class=\"more\">{$string['showmore']}</a>";
+            }
+            if ($change['section'] == $string['markscorrect'] or $change['section'] == $string['marksincorrect'] or $change['section'] == $string['markspartial']) {
+                $change['section'] = '<span style="color:#C00000">' . $change['section'] . '</span>';
+            }
+            $html .= <<< HTML
             <tr{$alt}>
               <td>{$change['date']}</td>
               <td>{$change['action']}</td>
@@ -167,29 +172,29 @@ HTML;
             </tr>
 
 HTML;
-    }
+        }
 
-    $html .= <<< HTML
+        $html .= <<< HTML
 
   				</tbody>
         </table>
 
 HTML;
-  } else {
-    // Shouldn't happen if we're recording question creation as a change
-    $html = <<< HTML
+    } else {
+      // Shouldn't happen if we're recording question creation as a change
+        $html = <<< HTML
         <p>{$string['nochangesrecorded']}</p>
 
 HTML;
+    }
 
-  }
-
-  return $html;
+    return $html;
 }
 
-function render_comments($comments, &$string) {
-  if (count($comments) > 0) {
-    $html = <<< HTML
+function render_comments($comments, &$string)
+{
+    if (count($comments) > 0) {
+        $html = <<< HTML
         <table class="data" summary="{$string['reviewerscomments']}">
           <thead>
             <tr>
@@ -204,29 +209,29 @@ function render_comments($comments, &$string) {
 
 HTML;
 
-    $i = 0;
-    foreach ($comments as $id => $comment) {
-      switch ($comment['category']) {
-        case 1:
-          $status = array('ok', $string['ok']);
-          break;
-        case 2:
-          $status = array('minor', $string['minor']);
-          break;
-        case 3:
-          $status = array('major', $string['major']);
-          break;
-        default:
-          $status = array('cannot', $string['cannot']);
-          break;
-      }
-      $img_status = $status[0];
+        $i = 0;
+        foreach ($comments as $id => $comment) {
+            switch ($comment['category']) {
+                case 1:
+                    $status = array('ok', $string['ok']);
+                    break;
+                case 2:
+                    $status = array('minor', $string['minor']);
+                    break;
+                case 3:
+                    $status = array('major', $string['major']);
+                    break;
+                default:
+                    $status = array('cannot', $string['cannot']);
+                    break;
+            }
+            $img_status = $status[0];
 
-      $alt = ($i % 2 == 0) ? ' class="alt"' : '';
-      $comment_str = ($comment['comment'] == '') ? $string['nocomments'] : nl2br($comment['comment']);
-      $type_translated = $string[strtolower($comment['type'])];
+            $alt = ($i % 2 == 0) ? ' class="alt"' : '';
+            $comment_str = ($comment['comment'] == '') ? $string['nocomments'] : nl2br($comment['comment']);
+            $type_translated = $string[strtolower($comment['type'])];
 
-      $html .= <<< HTML
+            $html .= <<< HTML
   					<tr{$alt}>
               <td><img src="../../artwork/{$img_status}_comment.png" width="16" height="16" alt="{$status[1]}" /></td>
               <td>{$comment['name']}<br /><span class="note">{$type_translated}</span></td>
@@ -236,17 +241,17 @@ HTML;
 
 HTML;
 
-      $actions = array('Not actioned' => $string['notactioned'], 'Read - disagree' => $string['readdisagree'], 'Read - actioned' => $string['readactioned']);
+            $actions = array('Not actioned' => $string['notactioned'], 'Read - disagree' => $string['readdisagree'], 'Read - actioned' => $string['readactioned']);
 
-      foreach ($actions as $action => $act_text) {
-        $sel = ($comment['action'] == $action) ? ' selected="selected"' : '';
-        $html .= <<< HTML
+            foreach ($actions as $action => $act_text) {
+                $sel = ($comment['action'] == $action) ? ' selected="selected"' : '';
+                $html .= <<< HTML
       						<option value="{$action}"{$sel}>{$act_text}</option>
 
 HTML;
-      }
+            }
 
-      $html .= <<< HTML
+            $html .= <<< HTML
                   </select>
                 <input type="hidden" name="comment_ids[]" value="{$id}" />
               </td>
@@ -256,21 +261,20 @@ HTML;
             </tr>
 
 HTML;
-      $i++;
-    }
+            $i++;
+        }
 
-    $html .= <<< HTML
+        $html .= <<< HTML
             </tbody>
         </table>
 
 HTML;
-  } else {
-    $html = <<< HTML
+    } else {
+        $html = <<< HTML
         <p>{$string['commentsmsg']}</p>
 
 HTML;
-  }
+    }
 
-  return $html;
+    return $html;
 }
-

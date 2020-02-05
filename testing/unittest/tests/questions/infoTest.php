@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,13 +25,15 @@ use testing\unittest\unittest;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class infotest extends unittest {
+class infotest extends unittest
+{
 
     /**
      * Test question setter
      * @group question
      */
-    public function test_set_question() {
+    public function test_set_question()
+    {
         $data = questiondata::get_datastore('info');
         $data->set_question(1, '', '');
         $this->assertFalse($data->displaymedia);
@@ -42,5 +45,4 @@ class infotest extends unittest {
         // Question number should not be affected by a info block.
         $this->assertEquals(2, $data->questionno);
     }
-
 }

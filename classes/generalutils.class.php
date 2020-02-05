@@ -24,13 +24,14 @@
  * @package
  */
 
-Class GeneralUtils {
-  public function arrays_are_equal($a, $b) {
-    if (array_diff($a, $b) || array_diff($b, $a)) {
-        return false;
-    }else{
-        return true;
+class GeneralUtils
+{
+    public function arrays_are_equal($a, $b)
+    {
+        if (array_diff($a, $b) || array_diff($b, $a)) {
+            return false;
+        } else {
+            return true;
+        }
     }
-  }
 }
-?>

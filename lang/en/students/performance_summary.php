@@ -33,4 +33,3 @@ $string['passmark'] = 'Pass mark';
 $string['minimumscore'] = 'Min score';
 $string['examname'] = 'Exam Name';
 $string['studentsmark'] = 'Student\'s percentage';
-?>

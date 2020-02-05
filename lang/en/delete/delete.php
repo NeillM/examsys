@@ -18,4 +18,3 @@ $string['confirmdelete'] = 'Confirm Delete';
 $string['recyclebin'] = 'Recycle Bin';
 $string['delete'] = 'Delete';
 $string['cannotdelete'] = 'Unable to delete';
-?>

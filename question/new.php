@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -52,17 +53,17 @@ require '../include/errors.php';
   $types = array('area', 'enhancedcalc', 'dichotomous', 'extmatch', 'blank', 'info', 'matrix', 'hotspot', 'labelling', 'likert', 'mcq', 'mrq', 'keyword_based', 'random', 'rank', 'sct', 'textbox', 'true_false');
 
   $question_types = array();
-  foreach ($types as $type) {
+foreach ($types as $type) {
     $question_types[$type]['desc'] = $string[$type . '_desc'];
     $question_types[$type]['title'] = $string[$type];
-  }
+}
   
   $break_no = round(count($question_types) / 2);
 ?>
   <table cellspacing="1" cellpadding="0" border="0">
 <?php
-foreach ($question_types as $type=>$details) {
-  echo "<tr class='q' data-qtype='$type'><td class=\"icon\"><img src=\"../artwork/new_$type.png\" width=\"48\" height=\"48\" /></td><td class=\"desc\"><strong>" . $details['title'] . "</strong><br />" . $details['desc'] . "</td></tr>\n";
+foreach ($question_types as $type => $details) {
+    echo "<tr class='q' data-qtype='$type'><td class=\"icon\"><img src=\"../artwork/new_$type.png\" width=\"48\" height=\"48\" /></td><td class=\"desc\"><strong>" . $details['title'] . '</strong><br />' . $details['desc'] . "</td></tr>\n";
 }
 ?>
   </table>

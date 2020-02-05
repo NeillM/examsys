@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -25,7 +26,8 @@ use plugins\texteditor\plugin_tinymce3_texteditor\plugin_tinymce3_texteditor;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class tinymce3editortest extends unittestdatabase {
+class tinymce3editortest extends unittestdatabase
+{
     /**
      * @var integer new version of plugin being installed
      */
@@ -34,7 +36,8 @@ class tinymce3editortest extends unittestdatabase {
     /**
      * Generate data for test.
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $text = new plugin_tinymce3_texteditor();
         $this->newversion = $text->get_file_version();
     }
@@ -43,26 +46,27 @@ class tinymce3editortest extends unittestdatabase {
      * Test install tinymce3
      * @group texteditor
      */
-    public function test_install_tinymce3() {
+    public function test_install_tinymce3()
+    {
         $text = new plugin_tinymce3_texteditor();
         $this->assertEquals('OK', $text->install($this->config->get('cfg_phpunit_db_user'), $this->config->get('cfg_phpunit_db_password')));
         // Check tables are correct.
         $queryTable = $this->query(array('columns' => array('component', 'type', 'version'), 'table' => 'plugins'));
         $expectedTable = array(
             0 => array (
-                'component' => "plugin_tinymce3_texteditor",
-                'type' => "texteditor",
+                'component' => 'plugin_tinymce3_texteditor',
+                'type' => 'texteditor',
                 'version' => $this->newversion
             )
         );
         $this->assertEquals($expectedTable, $queryTable);
-        $queryTable = $this->query(array('columns' => array('component', 'setting', 'value', 'type'), 'table' => 'config', 'orderby' => array(1, 2), 'where' => array(array('column' => 'component', 'value' => "plugin_tinymce3_texteditor"))));
+        $queryTable = $this->query(array('columns' => array('component', 'setting', 'value', 'type'), 'table' => 'config', 'orderby' => array(1, 2), 'where' => array(array('column' => 'component', 'value' => 'plugin_tinymce3_texteditor'))));
         $expectedTable = array(
             0 => array (
-                'component' => "plugin_tinymce3_texteditor",
-                'setting' => "installed",
+                'component' => 'plugin_tinymce3_texteditor',
+                'setting' => 'installed',
                 'value' => 1,
-                'type' => "boolean"
+                'type' => 'boolean'
             )
         );
         $this->assertEquals($expectedTable, $queryTable);
@@ -72,19 +76,20 @@ class tinymce3editortest extends unittestdatabase {
      * Test uninstall tinymce3
      * @group texteditor
      */
-    public function test_uninstall_tinymce3() {
+    public function test_uninstall_tinymce3()
+    {
         $text = new plugin_tinymce3_texteditor();
         $text->install($this->config->get('cfg_phpunit_db_user'), $this->config->get('cfg_phpunit_db_password'));
         $this->assertEquals('OK', $text->uninstall($this->config->get('cfg_phpunit_db_user'), $this->config->get('cfg_phpunit_db_password')));
         // Check tables are correct.
         $this->assertEquals(0, $this->rowcount('plugins'));
-        $queryTable = $this->query(array('columns' => array('component', 'setting', 'value', 'type'), 'table' => 'config', 'orderby' => array(1, 2), 'where' => array(array('column' => 'component', 'value' => "plugin_tinymce3_texteditor"))));
+        $queryTable = $this->query(array('columns' => array('component', 'setting', 'value', 'type'), 'table' => 'config', 'orderby' => array(1, 2), 'where' => array(array('column' => 'component', 'value' => 'plugin_tinymce3_texteditor'))));
         $expectedTable = array(
             0 => array(
-                'component' => "plugin_tinymce3_texteditor",
-                'setting' => "installed",
+                'component' => 'plugin_tinymce3_texteditor',
+                'setting' => 'installed',
                 'value' => 0,
-                'type' => "boolean"
+                'type' => 'boolean'
             )
         );
         $this->assertEquals($expectedTable, $queryTable);
@@ -94,7 +99,8 @@ class tinymce3editortest extends unittestdatabase {
      * Test enable tinymce3
      * @group texteditor
      */
-    public function test_enable_tinymce3() {
+    public function test_enable_tinymce3()
+    {
         $text = new plugin_tinymce3_texteditor();
         $text->install($this->config->get('cfg_phpunit_db_user'), $this->config->get('cfg_phpunit_db_password'));
         $text->enable_plugin();
@@ -102,8 +108,8 @@ class tinymce3editortest extends unittestdatabase {
         $queryTable = $this->query(array('columns' => array('component', 'type', 'version'), 'table' => 'plugins'));
         $expectedTable = array(
             0 => array (
-                'component' => "plugin_tinymce3_texteditor",
-                'type' => "texteditor",
+                'component' => 'plugin_tinymce3_texteditor',
+                'type' => 'texteditor',
                 'version' => $this->newversion
             )
         );
@@ -114,7 +120,8 @@ class tinymce3editortest extends unittestdatabase {
      * Test get header file
      * @group texteditor
      */
-    public function test_get_header_file() {
+    public function test_get_header_file()
+    {
         $tinymce = new plugin_tinymce3_texteditor();
         $this->assertEquals('tinymce3.html', $tinymce->get_header_file());
     }
@@ -123,7 +130,8 @@ class tinymce3editortest extends unittestdatabase {
      * Test get editor etype
      * @group texteditor
      */
-    public function test_get_type() {
+    public function test_get_type()
+    {
         $tinymce = new plugin_tinymce3_texteditor();
         $this->assertEquals('editorSimple', $tinymce->get_type(\plugins\plugins_texteditor::TYPE_SIMPLE));
         $this->assertEquals('editorBasic', $tinymce->get_type(\plugins\plugins_texteditor::TYPE_BASIC));
@@ -135,29 +143,32 @@ class tinymce3editortest extends unittestdatabase {
      * Test replace <div class="mee"></div> tags with [tex][/tex]
      * @group texteditor
      */
-    public function test_prepare_text_for_save() {
+    public function test_prepare_text_for_save()
+    {
         $tinymce = new plugin_tinymce3_texteditor();
-        $this->assertEquals("[tex]\sigma[/tex]", $tinymce->prepare_text_for_save("<div class=\"mee\">\sigma</div>"));
-        $this->assertEquals("[texi]\sigma[/texi]", $tinymce->prepare_text_for_save("<span class=\"mee\">\sigma</span>"));
+        $this->assertEquals('[tex]\sigma[/tex]', $tinymce->prepare_text_for_save('<div class="mee">\sigma</div>'));
+        $this->assertEquals('[texi]\sigma[/texi]', $tinymce->prepare_text_for_save('<span class="mee">\sigma</span>'));
     }
 
     /**
      * Test replace [tex][/tex] tags with <div class="mee"></div>
      * @group texteditor
      */
-    public function test_get_text_for_display() {
+    public function test_get_text_for_display()
+    {
         $tinymce = new plugin_tinymce3_texteditor();
-        $this->assertEquals("<div class=\"mee\">\alpha</div>", $tinymce->get_text_for_display("[tex]\alpha[/tex]"));
-        $this->assertEquals("<span class=\"mee\">\alpha</span>", $tinymce->get_text_for_display("[texi]\alpha[/texi]"));
+        $this->assertEquals('<div class="mee">\alpha</div>', $tinymce->get_text_for_display('[tex]\alpha[/tex]'));
+        $this->assertEquals('<span class="mee">\alpha</span>', $tinymce->get_text_for_display('[texi]\alpha[/texi]'));
     }
 
     /**
      * Test clena leadin check
      * @group texteditor
      */
-    public function clean_leadin() {
+    public function clean_leadin()
+    {
         $tinymce = new plugin_tinymce3_texteditor();
-        $this->assertFalse($tinymce->cleanleadin("test - <div class=\"mee\">\alpha</div>"));
-        $this->assertTrue($tinymce->cleanleadin("test - \alpha"));
+        $this->assertFalse($tinymce->cleanleadin('test - <div class="mee">\alpha</div>'));
+        $this->assertTrue($tinymce->cleanleadin('test - \alpha'));
     }
 }

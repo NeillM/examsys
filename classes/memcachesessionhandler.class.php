@@ -20,18 +20,20 @@
  * @version 1.0
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
-class memcachesessionhandler extends SessionHandler {
+class memcachesessionhandler extends SessionHandler
+{
   /**
    * Read session data
    * @param string $id The session id to read data for.
    * @return string
    */
-  public function read($id) {
-    $data = parent::read($id);
-    if(empty($data)) {
-      return '';
-    } else {
-      return $data;
+    public function read($id)
+    {
+        $data = parent::read($id);
+        if (empty($data)) {
+            return '';
+        } else {
+            return $data;
+        }
     }
-  }
 }

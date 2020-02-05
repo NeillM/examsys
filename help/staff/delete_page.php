@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -31,5 +32,4 @@ $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'sta
 $help_system->delete_page($originalID);
 
 $mysqli->close();
-header("location: index.php?id=1");
-?>
+header('location: index.php?id=1');

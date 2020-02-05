@@ -27,4 +27,3 @@ $string['msg4'] = 'No user found matching above details.';
 $string['Reassign answers'] = 'Reassign answers/marks from';
 $string['to following user'] = 'to following user';
 $string['user_not_on_paper_modules'] = 'The student is not on any of the paper\'s modules.';
-?>

@@ -23,22 +23,24 @@
 /**
  * Version class
  */
-class version {
+class version
+{
     /**
      * Rogo version format
      * @var string
      */
-    const VERSION_FORMAT = "/^(?P<release>[0-9]{1,3}).(?P<major>[0-9]{1,3}).(?P<minor>[0-9]{1,3})$/";
+    const VERSION_FORMAT = '/^(?P<release>[0-9]{1,3}).(?P<major>[0-9]{1,3}).(?P<minor>[0-9]{1,3})$/';
     /**
      * Check if version is higher.
      * @param string $new new version to check
      * @param string $old old version to check
      * @return boolean true new version higher than old, false otherwise
      */
-    static public function is_version_higher($new, $old) {
+    public static function is_version_higher($new, $old)
+    {
         preg_match(self::VERSION_FORMAT, $new, $newarray);
         preg_match(self::VERSION_FORMAT, $old, $oldarray);
-        if (count($newarray) > 0 and count($oldarray) > 0 ) {
+        if (count($newarray) > 0 and count($oldarray) > 0) {
             if ($newarray['release'] > $oldarray['release']) {
                 // Higher release number.
                 return true;
@@ -64,15 +66,17 @@ class version {
      * @param string $version to check
      * @return boolean true if correct, false otherwise
      */
-    static public function check_version_format($version) {
-        return preg_match(self::VERSION_FORMAT,$version);
+    public static function check_version_format($version)
+    {
+        return preg_match(self::VERSION_FORMAT, $version);
     }
     /**
      * Sort list of versions into ascending order
      * @param array list of versions
      * @return array sorted list of versions
      */
-    static public function sort_version($fileversion) {
+    public static function sort_version($fileversion)
+    {
         $unsorted = array();
         $sorted = array();
         // Filter the relase, major and minor numbers.

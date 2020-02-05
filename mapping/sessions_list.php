@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson, Anthony Brown
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -30,9 +31,9 @@ $modID = check_var('module', 'GET', true, false, true);
 $module = module_utils::get_moduleid_from_id($modID, $mysqli);
 
 if (!$module) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 ?>
 <!DOCTYPE html>
@@ -63,8 +64,8 @@ if (!$module) {
 <?php
   require '../include/sessions_options.inc';
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
+    
+    echo draw_toprightmenu();
 ?>
 <div id="content">
   
@@ -73,50 +74,50 @@ if (!$module) {
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=<?php echo $modID ?>"><?php echo $module ?></a></div>
   <div class="page_title"><?php echo $string['manageobjectives'] ?></div>
 </div>
-<?php  
+<?php
   echo "<table class=\"header\">\n";
-  echo "<tr><th class=\"col10\">" . $string['date'] . "</th>\n";
-  echo "<th class=\"col\">" . $string['name'] . "</th>\n";
-  echo "<th class=\"col\">" . $string['objectives'] . "</th><th>&nbsp;</th></tr>\n";
+  echo '<tr><th class="col10">' . $string['date'] . "</th>\n";
+  echo '<th class="col">' . $string['name'] . "</th>\n";
+  echo '<th class="col">' . $string['objectives'] . "</th><th>&nbsp;</th></tr>\n";
 
   $old_session = '';
   $id = 0;
   $first = true;
-  if (!empty($objsBySession) and isset($objsBySession[$module])) {
+if (!empty($objsBySession) and isset($objsBySession[$module])) {
     foreach ($objsBySession[$module] as $session) {
-      if (isset($session['objectives'])) {
-        $objectives_no = count($session['objectives']);
-      } else {
-        $objectives_no = 0;
-      }
-      if ($old_session != $session['calendar_year']) {
-      	if (!$first) {
-	      	echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
-      	}
-	      $first = false;
-      	echo "<tr><td colspan=\"4\"><table border=\"0\" class=\"subsect\" style=\"margin-left:10px; width:99%\"><tr><td><nobr>" . $session['calendar_year'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
-      }
-      if (isset($session['identifier'])) {
-        $identifier = $session['identifier'];
-      } else {
-        $identifier = '';
-      }
-      if ($session['VLE'] != '') {
-        echo "<tr class=\"l\" id=\"$id\" data-identifier=\"$identifier\" data-year=\"" . $session['calendar_year'] . "\" data-vle=\"". $session['VLE'] . "\" ondblclick=\"editVLESession('" . $session['calendar_year'] . "');\">";
-      } else {
-        echo "<tr class=\"l\" id=\"$id\" data-identifier=\"$identifier\" data-year=\"" . $session['calendar_year'] . "\" data-vle=\"". $session['VLE'] . "\" data-id=\"" . $session['identifier'] . "\" data-year=\"" .$session['calendar_year'] . "\">";
-      }
-      echo "<td class=\"indent\">" . $session['occurrance'] . "</td><td class=\"title\">" . $session['title'] . "</td>";
-      if ($objectives_no == 0) {
-        echo "<td class=\"zero_obj_no\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" />&nbsp;$objectives_no</td>";
-      } else {
-        echo "<td class=\"obj_no\">$objectives_no</td>";
-      }
-      echo "<td>&nbsp;</td></tr>\n";
-      $old_session = $session['calendar_year'];
-      $id++;
+        if (isset($session['objectives'])) {
+            $objectives_no = count($session['objectives']);
+        } else {
+            $objectives_no = 0;
+        }
+        if ($old_session != $session['calendar_year']) {
+            if (!$first) {
+                echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
+            }
+            $first = false;
+            echo '<tr><td colspan="4"><table border="0" class="subsect" style="margin-left:10px; width:99%"><tr><td><nobr>' . $session['calendar_year'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table></td></tr>\n";
+        }
+        if (isset($session['identifier'])) {
+            $identifier = $session['identifier'];
+        } else {
+            $identifier = '';
+        }
+        if ($session['VLE'] != '') {
+            echo "<tr class=\"l\" id=\"$id\" data-identifier=\"$identifier\" data-year=\"" . $session['calendar_year'] . '" data-vle="' . $session['VLE'] . "\" ondblclick=\"editVLESession('" . $session['calendar_year'] . "');\">";
+        } else {
+            echo "<tr class=\"l\" id=\"$id\" data-identifier=\"$identifier\" data-year=\"" . $session['calendar_year'] . '" data-vle="' . $session['VLE'] . '" data-id="' . $session['identifier'] . '" data-year="' . $session['calendar_year'] . '">';
+        }
+        echo '<td class="indent">' . $session['occurrance'] . '</td><td class="title">' . $session['title'] . '</td>';
+        if ($objectives_no == 0) {
+            echo "<td class=\"zero_obj_no\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"Warning\" />&nbsp;$objectives_no</td>";
+        } else {
+            echo "<td class=\"obj_no\">$objectives_no</td>";
+        }
+        echo "<td>&nbsp;</td></tr>\n";
+        $old_session = $session['calendar_year'];
+        $id++;
     }
-  }
+}
 
   $mysqli->close();
 ?>
@@ -130,8 +131,8 @@ $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['module'] = $modID;
 $miscdataset['attributes']['vle'] = $vle_api;
 if ($vle_api != '') {
-  $miscdataset['attributes']['vlename'] = $vle_name;
-  $miscdataset['attributes']['vlehumanname'] = $vle_name_a;
+    $miscdataset['attributes']['vlename'] = $vle_name;
+    $miscdataset['attributes']['vlehumanname'] = $vle_name_a;
 }
 $render->render($miscdataset, array(), 'dataset.html');
 // JS utils dataset.

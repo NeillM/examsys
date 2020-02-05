@@ -22,4 +22,3 @@ $string['title'] = 'Title';
 $string['first_names'] = 'First Names';
 $string['email'] = 'Email';
 $string['role'] = 'Role';
-?>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -63,31 +64,31 @@ $paper_type  = $propertyObj->get_paper_type();
 <body>
 <?php
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu(147);
+    
+    echo draw_toprightmenu(147);
 ?>
 <div id="content">
 <?php
-  if (!isset($_GET['ordering'])) {
+if (!isset($_GET['ordering'])) {
     $ordering = 'screen';
     $direction = 'asc';
-  }
+}
 
   echo "<div class=\"head_title\">\n";
   echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
-  if ($folderID != '') {
+if ($folderID != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folderID . '">' . folder_utils::get_folder_name($folderID, $mysqli) . '</a>';
-  } elseif ($moduleID != '') {
+} elseif ($moduleID != '') {
     $modules = explode(',', $moduleID);
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $modules[0] . '">' . module_utils::get_moduleid_from_id($modules[0], $mysqli) . '</a>';
-  }
+}
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div>';
-  echo "<div class=\"page_title\">" . $string['mappedobjectives'] . "</div>\n</div>\n";
+  echo '<div class="page_title">' . $string['mappedobjectives'] . "</div>\n</div>\n";
 
   // Get any questions to exclude.
-	$exclusions = new Exclusion($paperID, $mysqli);
-	$exclusions->load();
+    $exclusions = new Exclusion($paperID, $mysqli);
+    $exclusions->load();
 
   $old_p_id = 0;
   $row_no = 0;
@@ -99,11 +100,11 @@ $paper_type  = $propertyObj->get_paper_type();
   $result->bind_param('ii', $paperID, $paperID);
   $result->execute();
   $result->bind_result($random_mark, $total_mark, $p_id, $q_id, $q_type, $screen, $leadin, $q_media, $q_media_width, $q_media_height, $display_last_edited, $display_pos);
-  while ($result->fetch()) {
+while ($result->fetch()) {
     $row_no++;
     $temp_array[$q_id]['screen'] = $screen;
     $temp_array[$q_id]['q_type'] = $q_type;
-    $temp_array[$q_id]['leadin'] = trim(str_replace('&nbsp;',' ',(strip_tags($leadin))));
+    $temp_array[$q_id]['leadin'] = trim(str_replace('&nbsp;', ' ', (strip_tags($leadin))));
     $temp_array[$q_id]['p_id'] = $p_id;
     $temp_array[$q_id]['q_id'] = $q_id;
     $temp_array[$q_id]['display_last_edited'] = $display_last_edited;
@@ -114,16 +115,18 @@ $paper_type  = $propertyObj->get_paper_type();
 
     $temp_array[$q_id]['qnumber'] = $display_pos - $info_count;
 
-    if($q_type == 'info') $info_count++;
+    if ($q_type == 'info') {
+        $info_count++;
+    }
 
     $total_random_mark = $random_mark;
     $total_marks = $total_mark;
     $temp_total_marks = $total_mark;
     $questionID_list .= $q_id . ',';
-  }
+}
   $result->close();
 
-  ?>
+?>
   <table class="header">
   <tr><th style="padding-top:1px">
   <table cellpadding="0" cellspacing="0" border="0" style="font-size:90%; width:378px">
@@ -135,23 +138,23 @@ $paper_type  = $propertyObj->get_paper_type();
   </tr>
   <tr><td colspan="2" style="background-color:#1E3C7B">&nbsp;</td></tr>
   <?php
-  $questionID_list = substr($questionID_list,0,-1);
-  $total_random_mark = 0;
-  $total_marks = 0;
-  if ($row_no > 0) {
-		$tmp_match = Paper_utils::academic_year_from_title($paper_title);
-		
-		if ($tmp_match !== false and $tmp_match != $session) {
-			echo "<tr><td colspan=\"4\" style=\"padding: 0\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; font-size:100%\">\n";
-			echo "<tr><td class=\"redwarn\" style=\"width:40px\"><img src=\"../artwork/exclamation_red_bg.png\" width=\"32\" height=\"32\" alt=\"Warning\" style=\"margin-bottom:-1px\" /></td><td colspan=\"7\" class=\"redwarn\"><strong>" . $string['warning'] . "</strong>&nbsp;&nbsp;";
-			printf($string['nomatchsession'], $tmp_match, $session);
-			echo "</td></tr>\n</table>\n</td></tr>\n";
-		}
-    $ul_start = false;
-    $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
-    $objsBySession = getObjectives($moduleIDs, $session, $paperID, $questionID_list, $mysqli);
-    if ($objsBySession == 'error') {
-      ?>
+    $questionID_list = substr($questionID_list, 0, -1);
+    $total_random_mark = 0;
+    $total_marks = 0;
+    if ($row_no > 0) {
+        $tmp_match = Paper_utils::academic_year_from_title($paper_title);
+        
+        if ($tmp_match !== false and $tmp_match != $session) {
+            echo "<tr><td colspan=\"4\" style=\"padding: 0\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; font-size:100%\">\n";
+            echo '<tr><td class="redwarn" style="width:40px"><img src="../artwork/exclamation_red_bg.png" width="32" height="32" alt="Warning" style="margin-bottom:-1px" /></td><td colspan="7" class="redwarn"><strong>' . $string['warning'] . '</strong>&nbsp;&nbsp;';
+            printf($string['nomatchsession'], $tmp_match, $session);
+            echo "</td></tr>\n</table>\n</td></tr>\n";
+        }
+        $ul_start = false;
+        $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
+        $objsBySession = getObjectives($moduleIDs, $session, $paperID, $questionID_list, $mysqli);
+        if ($objsBySession == 'error') {
+            ?>
       <table border="0" cellpadding="0" cellspacing="0" style="width:100%">
         <tr>
           <td class="redwarn" style="width:40px; line-height:0"><img src="../artwork/exclamation_red_bg.png" width="32" height="32" alt="Warning" /></td>
@@ -160,63 +163,64 @@ $paper_type  = $propertyObj->get_paper_type();
       </table>
       </body>
       </html>
-      <?php
-      exit();
-    }
-    unset($objsBySession['none_of_the_above']);
-    ?>
+            <?php
+            exit();
+        }
+        unset($objsBySession['none_of_the_above']);
+        ?>
     <tr>
     <td style="padding:0px">
-    <?php
-    foreach($objsBySession as $module => $sessions ) {
-      if (count($objsBySession) > 1) {
-        echo "<tr><td><h1>$module " . $string['objectives'] . "</h1></td></tr>";
-      }
-      foreach($sessions as $identifier => $sessionData) {
-        if ($ul_start) {
-          echo '</ul>';
-        }
-        echo "<tr><td colspan=\"2\" style=\"padding-left:4px\"><table border=\"0\" style=\"padding-top:6px; padding-bottom:2px; width:100%; color:#1E3287\"><tr><td><nobr>";
-        if ($sessionData['class_code'] != '') {
-          echo $sessionData['class_code'] . ': ';
-        }
-        echo $sessionData['title'] . ' <a href="' . $sessionData['source_url'] . '" rel="external" target="_blank"><img src="../artwork/small_link.png" width="11" height="11" alt="" /></a> ';
-
-        echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n</td></tr>\n";
-        if (isset($sessionData["objectives"]) and is_array($sessionData["objectives"])) {
-          echo '<tr><td colspan="2"><ul>';
-          foreach ($sessionData["objectives"] as $id => $objectives) {
-            if (is_array($objectives['mapped'])) {
-              echo '<li class="mapped">' . strip_tags($objectives['content'], '<b><i><strong><em><sub><sup>') . ' <span class="mapping">';
-              $i = 0;
-              foreach ($objectives['mapped'] as $q_id) {
-								if ($exclusions->get_exclusions_by_qid($q_id) != '0000000000000000000000000000000000000000') {
-                  $class = 'q_excluded';
-                } else {
-                  $class = 'q_ok';
-                }
-                if ($i != 0) echo ', ';
-                $i++;
-                echo "<a class=\"$class\" href=\"../question/view_question.php?q_id=" . $q_id . "&qNo=" . $temp_array[$q_id]['qnumber'] . "\" target=\"_blank\">Q" . $temp_array[$q_id]['qnumber'] . "</a>";
-              }
-              echo'</span></li>';
-            } else {
-              // Could display unmapped objective here!
-              echo '<li class="unmapped">' . strip_tags($objectives['content'], '<b><i><strong><em><sub><sup>') . '</li>';
+        <?php
+        foreach ($objsBySession as $module => $sessions) {
+            if (count($objsBySession) > 1) {
+                echo "<tr><td><h1>$module " . $string['objectives'] . '</h1></td></tr>';
             }
-          }
-          echo '</ul></td></tr>';
-        }
-      }
+            foreach ($sessions as $identifier => $sessionData) {
+                if ($ul_start) {
+                    echo '</ul>';
+                }
+                echo '<tr><td colspan="2" style="padding-left:4px"><table border="0" style="padding-top:6px; padding-bottom:2px; width:100%; color:#1E3287"><tr><td><nobr>';
+                if ($sessionData['class_code'] != '') {
+                    echo $sessionData['class_code'] . ': ';
+                }
+                echo $sessionData['title'] . ' <a href="' . $sessionData['source_url'] . '" rel="external" target="_blank"><img src="../artwork/small_link.png" width="11" height="11" alt="" /></a> ';
 
+                echo "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n</td></tr>\n";
+                if (isset($sessionData['objectives']) and is_array($sessionData['objectives'])) {
+                    echo '<tr><td colspan="2"><ul>';
+                    foreach ($sessionData['objectives'] as $id => $objectives) {
+                        if (is_array($objectives['mapped'])) {
+                              echo '<li class="mapped">' . strip_tags($objectives['content'], '<b><i><strong><em><sub><sup>') . ' <span class="mapping">';
+                              $i = 0;
+                            foreach ($objectives['mapped'] as $q_id) {
+                                if ($exclusions->get_exclusions_by_qid($q_id) != '0000000000000000000000000000000000000000') {
+                                    $class = 'q_excluded';
+                                } else {
+                                    $class = 'q_ok';
+                                }
+                                if ($i != 0) {
+                                    echo ', ';
+                                }
+                                $i++;
+                                echo "<a class=\"$class\" href=\"../question/view_question.php?q_id=" . $q_id . '&qNo=' . $temp_array[$q_id]['qnumber'] . '" target="_blank">Q' . $temp_array[$q_id]['qnumber'] . '</a>';
+                            }
+                            echo'</span></li>';
+                        } else {
+                          // Could display unmapped objective here!
+                            echo '<li class="unmapped">' . strip_tags($objectives['content'], '<b><i><strong><em><sub><sup>') . '</li>';
+                        }
+                    }
+                    echo '</ul></td></tr>';
+                }
+            }
+        }
+        if ($ul_start) {
+            echo '</ul>';
+        }
+        echo "</td></tr>\n</table>";
     }
-    if ($ul_start) {
-      echo '</ul>';
-    }
-    echo "</td></tr>\n</table>";
-  }
-  $mysqli->close();
-?>
+    $mysqli->close();
+    ?>
 </table>
 </div>
 <?php
@@ -227,6 +231,6 @@ $miscdataset['attributes']['paper'] = $paperID;
 $miscdataset['attributes']['folder'] = $folderID;
 $miscdataset['attributes']['module'] = $moduleID;
 $render->render($miscdataset, array(), 'dataset.html');
- ?>
+?>
 </body>
 </html>

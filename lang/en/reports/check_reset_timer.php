@@ -17,4 +17,3 @@
 $string['resettimer'] = 'Reset Timer';
 $string['reset'] = 'Reset';
 $string['msg1'] = 'Are you sure you wish to reset the timer?';
-?>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -16,7 +17,7 @@
 
 /**
 * Admin screen to add external systems.
-* 
+*
 * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 * @copyright Copyright (c) 2017 onwards The University of Nottingham
 */
@@ -28,9 +29,9 @@ require '../../include/toprightmenu.inc';
 $external = new \external_systems();
 
 if (isset($_POST['submit'])) {
-    $name = param::required('name', param::ALPHANUM, param::FETCH_POST);   
+    $name = param::required('name', param::ALPHANUM, param::FETCH_POST);
     $external->insert_external_system($name, \external_systems::API);
-    header("location: list_extsys.php", true, 303);
+    header('location: list_extsys.php', true, 303);
     exit();
 }
 
@@ -39,8 +40,8 @@ $toprightmenu = draw_toprightmenu(741);
 $lang['title'] = $string['addextsys'];
 $lang['view'] = $string['addextsys'];
 $lang['delete'] = $string['deleteextsys'];
-$additionaljs = "<script type=\"text/javascript\" src=\"js/extsysinit.min.js\"></script>";
-$addtionalcss = "<style type=\"text/css\">
+$additionaljs = '<script type="text/javascript" src="js/extsysinit.min.js"></script>';
+$addtionalcss = '<style type="text/css">
           td {text-align:left}
           .field {text-align:right; padding-right:10px}
           .form-error {
@@ -51,8 +52,8 @@ $addtionalcss = "<style type=\"text/css\">
             color: #800000;
             border: 2px solid #800000;
           }
-        </style>";
-$breadcrumb = array($string['home'] => "../../index.php", $string['administrativetools'] => "../index.php", $string['listextsys'] => "list_extsys.php");
+        </style>';
+$breadcrumb = array($string['home'] => '../../index.php', $string['administrativetools'] => '../index.php', $string['listextsys'] => 'list_extsys.php');
 $action = $_SERVER['PHP_SELF'];
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('add_extsys.php', 'sync_16.png', $lang, $toprightmenu, 'admin/options_list.html');

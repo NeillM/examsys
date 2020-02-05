@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -47,8 +48,8 @@
 <?php
   require '../include/lab_options.inc';
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu(231);
+    
+    echo draw_toprightmenu(231);
 ?>
 <div id="content">
 
@@ -62,55 +63,57 @@
 $labs = array();
 $campus_sizes = array();
 
-$lab_data = $mysqli->prepare("SELECT l.id, l.name, count(ci.address) AS pc_number, c.name, l.building, ci.low_bandwidth
+$lab_data = $mysqli->prepare('SELECT l.id, l.name, count(ci.address) AS pc_number, c.name, l.building, ci.low_bandwidth
   FROM campus c
   JOIN labs l ON l.campus = c.id
   LEFT JOIN client_identifiers ci ON ci.lab = l.id
   GROUP BY l.id, l.name, c.name, l.building, ci.low_bandwidth
-  ORDER BY c.name, l.name");
+  ORDER BY c.name, l.name');
 $lab_data->execute();
 $lab_data->store_result();
 $lab_data->bind_result($id, $name, $pc_number, $campus, $building, $low_bandwidth);
 while ($lab_data->fetch()) {
-  $labs[] = array('id'=>$id, 'name'=>$name, 'pc_number'=>$pc_number, 'campus'=>$campus, 'building'=>$building, 'low_bandwidth'=>$low_bandwidth);
+    $labs[] = array('id' => $id, 'name' => $name, 'pc_number' => $pc_number, 'campus' => $campus, 'building' => $building, 'low_bandwidth' => $low_bandwidth);
 }
 $lab_data->close();
 
 $old_campus = '';
 $lab_no = 0;
 if (count($labs) > 0) {
-  foreach($labs as $lab) {
-    if (isset($campus_sizes[$lab['campus']])) {
-      $campus_sizes[$lab['campus']]++;
-    } else {
-      $campus_sizes[$lab['campus']] = 1;
+    foreach ($labs as $lab) {
+        if (isset($campus_sizes[$lab['campus']])) {
+            $campus_sizes[$lab['campus']]++;
+        } else {
+            $campus_sizes[$lab['campus']] = 1;
+        }
     }
-  }
 
-  foreach($labs as $lab) {
-    if ($old_campus != $lab['campus']) {
-      echo "<table class=\"subsect\" style=\"width:99%\"><tr><td><nobr>" . $lab['campus'] . " (" . $campus_sizes[$lab['campus']] . ")</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n";
+    foreach ($labs as $lab) {
+        if ($old_campus != $lab['campus']) {
+            echo '<table class="subsect" style="width:99%"><tr><td><nobr>' . $lab['campus'] . ' (' . $campus_sizes[$lab['campus']] . ")</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#CCCCCC; background-color:#CCCCCC; width:100%\" /></td></tr></table>\n";
+        }
+        echo '<div class="foldername">';
+        echo '<table cellpadding="0" cellspacing="0" border="0"><tr class="l" data-labid="' . $lab['id'] . '" data-labno="lab' . $lab_no . '"><td style="width:66px; cursor:pointer" align="center">';
+        echo '  <img src="../artwork/computer_lab_48.png" width="48" height="48" alt="' . $lab['name'] . "\" /><td>\n";
+        echo "  <td style=\"width:290px; cursor:pointer\"><span id=\"lab$lab_no\" >" . $lab['name'] . '</span><br />';
+        echo '  <span style="color:#808080">' . $lab['pc_number'];
+        if ($lab['pc_number'] == 1) {
+            echo ' ' . $string['machine'];
+        } else {
+            echo ' ' . $string['machines'];
+        }
+        if ($lab['building'] != '') {
+            echo ', ' . $lab['building'];
+        }
+        echo '</span>';
+        if ($lab['low_bandwidth'] == 1) {
+            echo '<br /><span style="background-color:#C00000; color:white">&nbsp;' . $string['lowbandwidth'] . '&nbsp;</span>';
+        }
+        echo '</td></tr></table>';
+        echo "</div>\n";
+        $old_campus = $lab['campus'];
+        $lab_no++;
     }
-    echo '<div class="foldername">';
-    echo '<table cellpadding="0" cellspacing="0" border="0"><tr class="l" data-labid="' . $lab['id']. '" data-labno="lab' . $lab_no . '"><td style="width:66px; cursor:pointer" align="center">';
-    echo "  <img src=\"../artwork/computer_lab_48.png\" width=\"48\" height=\"48\" alt=\"" . $lab['name'] . "\" /><td>\n";
-    echo "  <td style=\"width:290px; cursor:pointer\"><span id=\"lab$lab_no\" >" . $lab['name'] . "</span><br />";
-    echo '  <span style="color:#808080">' . $lab['pc_number'];
-    if ($lab['pc_number'] == 1) {
-      echo ' ' . $string['machine'];
-    } else {
-      echo ' '. $string['machines'];
-    }
-    if ($lab['building'] != '') echo ', ' . $lab['building'];
-    echo '</span>';
-    if ($lab['low_bandwidth'] == 1) {
-      echo '<br /><span style="background-color:#C00000; color:white">&nbsp;' . $string['lowbandwidth'] . '&nbsp;</span>';
-    }
-    echo '</td></tr></table>';
-    echo "</div>\n";
-    $old_campus = $lab['campus'];
-    $lab_no++;
-  }
 }
 
 $mysqli->close();

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -31,14 +32,14 @@ $faculty = check_var('new_faculty', 'POST', true, false, true);
 $code = check_var('code', 'POST', false, false, true);
 $details = FacultyUtils::get_faculty_details_by_id($facultyID, $mysqli);
 if (!FacultyUtils::update_faculty($facultyID, $faculty, $code, $details['externalid'], $details['externalsys'], $mysqli)) {
-  echo json_encode('ERROR');
+    echo json_encode('ERROR');
 } else {
-  $logger = new Logger($mysqli);
-  if ($details['name'] != $faculty) {
-    $logger->track_change('Faculty', $facultyID, $userObject->get_user_ID(), $details['name'], $faculty, $string['name']);
-  }
-  if ($details['code'] != $code) {
-    $logger->track_change('Faculty', $facultyID, $userObject->get_user_ID(), $details['code'], $code, $string['code']);
-  }
-  echo json_encode('SUCCESS');
+    $logger = new Logger($mysqli);
+    if ($details['name'] != $faculty) {
+        $logger->track_change('Faculty', $facultyID, $userObject->get_user_ID(), $details['name'], $faculty, $string['name']);
+    }
+    if ($details['code'] != $code) {
+        $logger->track_change('Faculty', $facultyID, $userObject->get_user_ID(), $details['code'], $code, $string['code']);
+    }
+    echo json_encode('SUCCESS');
 }

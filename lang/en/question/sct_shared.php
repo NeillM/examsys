@@ -26,4 +26,3 @@ $string['becomes'] = 'becomes';
 $string['is'] = 'is';
 $string['of'] = 'of';
 $string['experts'] = 'Experts';
-?>

@@ -18,4 +18,3 @@ require '../lang/' . $language . '/delete/delete.php';
 
 $string['msg'] = 'Deleting the paper does <em>not</em> delete the actual questions in the question bank.<br /><br /><strong>Are you sure you wish to delete this paper?</strong>';
 $string['paperlocked'] = 'Paper Locked';
-?>

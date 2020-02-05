@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,9 +16,10 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace plugins\texteditor\plugin_plain_texteditor;
+
 /**
 * Text editor plugin helper file
-* 
+*
 * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 * @copyright Copyright (c) 2017 onwards The University of Nottingham
 */
@@ -25,45 +27,49 @@ namespace plugins\texteditor\plugin_plain_texteditor;
 /**
  * SMS import plugin.
  */
-class plugin_plain_texteditor extends \plugins\plugins_texteditor {
+class plugin_plain_texteditor extends \plugins\plugins_texteditor
+{
   /**
    * Name of the plugin;
    * @var string
    */
-  protected $plugin = 'plugin_plain_texteditor';
+    protected $plugin = 'plugin_plain_texteditor';
 
   /**
    * Language pack component.
    * @var string
    */
-  public $langcomponent = 'plugins/texteditor/plugin_plain_texteditor/plugin_plain_texteditor';
+    public $langcomponent = 'plugins/texteditor/plugin_plain_texteditor/plugin_plain_texteditor';
 
   /**
    * Constructor
    */
-  public function __construct() {
-    parent::__construct();
-  }
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
   /**
    * Get text editor base file
    * @return string
    */
-  public function get_header_file() {
-    return 'plain.html';
-  }
+    public function get_header_file()
+    {
+        return 'plain.html';
+    }
 
   /**
    * Get text editor javascript
    * @param array $configfile config file
    */
-  public function get_javascript_config($configfile = '') {
-    $render = new \render($this->config, $this->get_render_paths());
-    $plaindata['file'] = 'plain_' . $configfile;
-    if ($plaindata['file'] != 'plain_') {
-      $render->render($plaindata, null, 'plain_config.html');
+    public function get_javascript_config($configfile = '')
+    {
+        $render = new \render($this->config, $this->get_render_paths());
+        $plaindata['file'] = 'plain_' . $configfile;
+        if ($plaindata['file'] != 'plain_') {
+            $render->render($plaindata, null, 'plain_config.html');
+        }
     }
-  }
 
   /**
    * Get text editor textarea.
@@ -73,75 +79,82 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor {
    * @param string $type type of editor i.e. i.e. standard, simple, etc
    * @param string $styleoverwrite overwrite base styling
    */
-  public function get_textarea($name, $id, $content, $type, $styleoverwrite = '') {
-    // Reneder mathjax utils.
-    $data['editormathjax'] = false;
-    if ($this->get_type($type) === 'mathjax') {
-      $data['editormathjax'] = true;
+    public function get_textarea($name, $id, $content, $type, $styleoverwrite = '')
+    {
+      // Reneder mathjax utils.
+        $data['editormathjax'] = false;
+        if ($this->get_type($type) === 'mathjax') {
+            $data['editormathjax'] = true;
+        }
+      // Render textarea.
+        $render = new \render($this->config, $this->get_render_paths());
+        $data['id'] = $id;
+        $data['questionno'] = $id;
+        $data['content'] = $content;
+        $data['style'] = $styleoverwrite;
+        $render->render($data, $this->get_strings(), 'plain_admin_textarea.html');
     }
-    // Render textarea.
-    $render = new \render($this->config, $this->get_render_paths());
-    $data['id'] = $id;
-    $data['questionno'] = $id;
-    $data['content'] = $content;
-    $data['style'] = $styleoverwrite;
-    $render->render($data, $this->get_strings(), 'plain_admin_textarea.html');
-  }
 
   /**
    * Return editor specific type class
    * @param string $type generic type
    * @return string
    */
-  public function get_type($type) {
-    if ($type == \plugins\plugins_texteditor::TYPE_MATHJAX and $this->config->get_setting($this->plugin, 'supports_mathjax')) {
-      return 'mathjax';
+    public function get_type($type)
+    {
+        if ($type == \plugins\plugins_texteditor::TYPE_MATHJAX and $this->config->get_setting($this->plugin, 'supports_mathjax')) {
+            return 'mathjax';
+        }
+        return 'plain';
     }
-    return 'plain';
-  }
 
   /**
    * Leadin clean function check
    * @param $leadin
    * @return boolean
    */
-  public function clean_leadin($leadin) {
-    return true;
-  }
+    public function clean_leadin($leadin)
+    {
+        return true;
+    }
 
   /**
    * Plain text editor applies no conversion to stored text
    * @param string $text from database
    * @return string
    */
-  public function get_text_for_display($text) {
-    return $text;
-  }
+    public function get_text_for_display($text)
+    {
+        return $text;
+    }
 
   /**
    * Plain text editor applies no conversion to db text
    * @param string $text from database
    * @return string
    */
-  public function prepare_text_for_save($text) {
-    return $text;
-  }
+    public function prepare_text_for_save($text)
+    {
+        return $text;
+    }
 
   /**
    * Get header data.
    * @return array
    */
-  public function get_header_data() {
-    // Intentionally empty.
-    return array();
-  }
+    public function get_header_data()
+    {
+      // Intentionally empty.
+        return array();
+    }
 
   /**
    * Get text editor base path
    * @return string
    */
-  public function get_header_path() {
-    // Intentionally blank as plain path loaded by core.
-    return '';
-  }
+    public function get_header_path()
+    {
+      // Intentionally blank as plain path loaded by core.
+        return '';
+    }
 }

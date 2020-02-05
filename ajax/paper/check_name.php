@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -30,7 +31,7 @@ require_once '../../include/errors.php';
 $name = check_var('name', 'POST', true, false, true);
 
 if (Paper_utils::is_paper_title_unique($name, $mysqli)) {
-  echo 'unique';
+    echo 'unique';
 } else {
-  echo 'duplicate';
+    echo 'duplicate';
 }

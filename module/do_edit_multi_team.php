@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -34,9 +35,9 @@ UserUtils::clear_staff_modules_by_userID($userID, $mysqli);
 
 // Insert a record for each team member.
 for ($i = 0; $i < $_POST['module_no']; $i++) {
-  if (isset($_POST["mod$i"]) and $_POST["mod$i"] != '') {
-    UserUtils::add_staff_to_module($userID, $_POST["mod$i"], $mysqli);
-  }
+    if (isset($_POST["mod$i"]) and $_POST["mod$i"] != '') {
+        UserUtils::add_staff_to_module($userID, $_POST["mod$i"], $mysqli);
+    }
 }
 
 echo json_encode('SUCCESS');

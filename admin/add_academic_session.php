@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -76,7 +77,7 @@ $jsdataset['name'] = 'jsutils';
 $jsdataset['attributes']['xls'] = json_encode($string);
 $render->render($jsdataset, array(), 'dataset.html');
 $miscdataset['name'] = 'dataset';
-$miscdataset['attributes']['posturl'] = "do_add_academic_session.php";
+$miscdataset['attributes']['posturl'] = 'do_add_academic_session.php';
 $render->render($miscdataset, array(), 'dataset.html');
 ?>
     </body>

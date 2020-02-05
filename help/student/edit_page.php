@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -33,32 +34,32 @@ header('Content-Type: text/html; charset=utf-8');
 $page_details = $help_system->get_page_details($pageid);
 
 if ($page_details === false) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 if (isset($_POST['save_changes'])) {
   // Update help file record
-  $tmp_body = $_POST['edit1'];
-  $tmp_title = $_POST['page_title'];
-  $tmp_roles = $_POST['page_roles'];
+    $tmp_body = $_POST['edit1'];
+    $tmp_title = $_POST['page_title'];
+    $tmp_roles = $_POST['page_roles'];
   
-  $help_system->save_page($tmp_title, $tmp_body, $tmp_roles, $pageid, $_POST['edit_id']);
+    $help_system->save_page($tmp_title, $tmp_body, $tmp_roles, $pageid, $_POST['edit_id']);
   
-  $mysqli->close();
-  header("location: index.php?id=$pageid");
-  exit;
+    $mysqli->close();
+    header("location: index.php?id=$pageid");
+    exit;
 } elseif (isset($_POST['cancel'])) {
   // Release authoring lock.
-  if ($_POST['checkout_authorID'] == $userObject->get_user_ID()) {
-    $help_system->release_edit_lock($_POST['edit_id']);
-  }
-  $mysqli->close();
-  header("location: ../student/index.php?id=$pageid");
-  exit();
+    if ($_POST['checkout_authorID'] == $userObject->get_user_ID()) {
+        $help_system->release_edit_lock($_POST['edit_id']);
+    }
+    $mysqli->close();
+    header("location: ../student/index.php?id=$pageid");
+    exit();
 } else {
-?>
+    ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -72,11 +73,11 @@ if (isset($_POST['save_changes'])) {
   <script src='../../js/require.js'></script>
   <script src='../../js/main.min.js'></script>
   <script type="text/javascript" src="../../js/helpinit.min.js"></script>
-<?php
-  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-  $texteditorplugin->display_header();
-  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::HELP_STUDENT);
-?>
+    <?php
+    $texteditorplugin = \plugins\plugins_texteditor::get_editor();
+    $texteditorplugin->display_header();
+    $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::HELP_STUDENT);
+    ?>
 </head>
 
 <body>
@@ -90,37 +91,37 @@ if (isset($_POST['save_changes'])) {
   </div>
   <div id="contents">
 <form name="add_form" method="post" action="<?php echo $_SERVER['PHP_SELF'] . "?id=$pageid"; ?>" autocomplete="off">
-<?php
-  if ($page_details['page_type'] == 'pointer') {
-    $edit_id = $page_details['body'];
-    $ogiginal_details = $help_system->get_page_details($edit_id);
-    $page_details['body'] = $ogiginal_details['body'];
-  } else {
-    $edit_id = $pageid;
-  }
+    <?php
+    if ($page_details['page_type'] == 'pointer') {
+        $edit_id = $page_details['body'];
+        $ogiginal_details = $help_system->get_page_details($edit_id);
+        $page_details['body'] = $ogiginal_details['body'];
+    } else {
+        $edit_id = $pageid;
+    }
 
-  echo "<p style=\"margin-left:20px\"><input type=\"text\" style=\"color:#295AAD; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold\" size=\"50\" name=\"page_title\" value=\"" . $page_details['title'] . "\" required /></p>\n";
-  echo $texteditorplugin->get_textarea('edit1', 'edit1', htmlspecialchars($page_details['body'], ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD);
+    echo '<p style="margin-left:20px"><input type="text" style="color:#295AAD; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold" size="50" name="page_title" value="' . $page_details['title'] . "\" required /></p>\n";
+    echo $texteditorplugin->get_textarea('edit1', 'edit1', htmlspecialchars($page_details['body'], ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD);
 
   // Check for lockout.
-  $current_time = date('YmdHis');
-  $disabled = '';
-  if ($userObject->get_user_ID() != $page_details['checkout_authorID']) {
-    if ($page_details['checkout_time'] != '' and $current_time - $page_checkout_time < 10000) {
-      $editor = UserUtils::get_user_details($page_details['checkout_authorID'], $mysqli);
-      $editor_name = $editor['title'] . ' ' . $editor['initials'] . ' ' . $editor['surname'];
-      $checkout_authorID = $page_details['checkout_authorID'];
-      $disabled = ' disabled';
-    } else {
-      // Set the lock to the current time/author.
-      $help_system->set_edit_lock($edit_id);
+    $current_time = date('YmdHis');
+    $disabled = '';
+    if ($userObject->get_user_ID() != $page_details['checkout_authorID']) {
+        if ($page_details['checkout_time'] != '' and $current_time - $page_checkout_time < 10000) {
+            $editor = UserUtils::get_user_details($page_details['checkout_authorID'], $mysqli);
+            $editor_name = $editor['title'] . ' ' . $editor['initials'] . ' ' . $editor['surname'];
+            $checkout_authorID = $page_details['checkout_authorID'];
+            $disabled = ' disabled';
+        } else {
+          // Set the lock to the current time/author.
+            $help_system->set_edit_lock($edit_id);
 
-      $checkout_authorID = $userObject->get_user_ID();
+            $checkout_authorID = $userObject->get_user_ID();
+        }
+    } elseif ($disabled == '' and $userObject->get_user_ID() == $page_details['checkout_authorID']) {
+        $checkout_authorID = $userObject->get_user_ID();
     }
-  } elseif ($disabled == '' and $userObject->get_user_ID() == $page_details['checkout_authorID']) {
-    $checkout_authorID = $userObject->get_user_ID();
-  }
-?>
+    ?>
   <input type="hidden" name="checkout_authorID" value="<?php echo $checkout_authorID; ?>" />
   <div style="text-align:center; padding-top:8px"><input class="ok" type="submit" name="save_changes" value="<?php echo $string['save'] ?>"<?php echo $disabled; ?> /><input data-help="studentedit" class="cancel" type="submit" name="cancel" value="<?php echo $string['cancel'] ?>" /></div>
   <input type="hidden" name="edit_id" value="<?php echo $edit_id ?>" />
@@ -129,19 +130,19 @@ if (isset($_POST['save_changes'])) {
 </div>
 </body>
 </html>
-<?php
+    <?php
   // JS utils dataset.
-  $render = new render($configObject);
-  $jsdataset['name'] = 'jsutils';
-  $jsdataset['attributes']['xls'] = json_encode($string);
-  $render->render($jsdataset, array(), 'dataset.html');
-  $miscdataset['name'] = 'dataset';
-  if ($disabled == ' disabled') {
-    $miscdataset['attributes']['editor'] = $string['pagelocked'] . " $editor_name. " . $string['isinreadonly'];
-  } else {
-    $miscdataset['attributes']['editor'] = "";
-  }
-  $render->render($miscdataset, array(), 'dataset.html');
-  $mysqli->close();
-  }
+    $render = new render($configObject);
+    $jsdataset['name'] = 'jsutils';
+    $jsdataset['attributes']['xls'] = json_encode($string);
+    $render->render($jsdataset, array(), 'dataset.html');
+    $miscdataset['name'] = 'dataset';
+    if ($disabled == ' disabled') {
+        $miscdataset['attributes']['editor'] = $string['pagelocked'] . " $editor_name. " . $string['isinreadonly'];
+    } else {
+        $miscdataset['attributes']['editor'] = '';
+    }
+    $render->render($miscdataset, array(), 'dataset.html');
+    $mysqli->close();
+}
 ?>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -29,18 +30,18 @@ require '../include/errors.php';
 $announcementid = check_var('announcementid', 'REQUEST', true, false, true);
 
 if (!announcement_utils::announcement_exist($announcementid, $mysqli)) {
-	echo json_encode('ERROR');
-	exit();
+    echo json_encode('ERROR');
+    exit();
 }
 
 $news_title = param::required('title', param::TEXT, param::FETCH_POST);
 $staff_msg = param::required('staff_msg', param::TEXT, param::FETCH_POST);
 $student_msg = param::required('student_msg', param::TEXT, param::FETCH_POST);
-$fyear= param::required('fyear', param::TEXT, param::FETCH_POST);
+$fyear = param::required('fyear', param::TEXT, param::FETCH_POST);
 $fmonth = param::required('fmonth', param::TEXT, param::FETCH_POST);
 $fday = param::required('fday', param::TEXT, param::FETCH_POST);
 $ftime = param::required('ftime', param::TEXT, param::FETCH_POST);
-$tyear= param::required('tyear', param::TEXT, param::FETCH_POST);
+$tyear = param::required('tyear', param::TEXT, param::FETCH_POST);
 $tmonth = param::required('tmonth', param::TEXT, param::FETCH_POST);
 $tday = param::required('tday', param::TEXT, param::FETCH_POST);
 $ttime = param::required('ttime', param::TEXT, param::FETCH_POST);
@@ -48,13 +49,13 @@ $startdate = $fyear . $fmonth . $fday . $ftime;
 $enddate = $tyear . $tmonth . $tday . $ttime;
 $icon = str_replace('icon', '', param::required('icon_type', param::TEXT, param::FETCH_POST));  // Take the word icon out, store only the number.
 
-$result = $mysqli->prepare("UPDATE announcements SET title = ?, staff_msg = ?, student_msg = ?, icon = ?, startdate = ?, enddate = ? WHERE id = ?");
+$result = $mysqli->prepare('UPDATE announcements SET title = ?, staff_msg = ?, student_msg = ?, icon = ?, startdate = ?, enddate = ? WHERE id = ?');
 $result->bind_param('ssssssi', $news_title, $staff_msg, $student_msg, $icon, $startdate, $enddate, $announcementid);
 $result->execute();
 $result->close();
 
 if ($mysqli->errno == 0) {
-	echo json_encode('SUCCESS');
+    echo json_encode('SUCCESS');
 } else {
-	echo json_encode('ERROR');
+    echo json_encode('ERROR');
 }

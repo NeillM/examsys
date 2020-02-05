@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -32,28 +33,28 @@ require '../include/errors.php';
 $errorID = check_var('errorID', 'POST', true, false, true);
 $found = false;
 
-$result = $mysqli->prepare("SELECT NULL FROM sys_errors where id = ?");
+$result = $mysqli->prepare('SELECT NULL FROM sys_errors where id = ?');
 $result->bind_param('i', $errorID);
 $result->execute();
 $result->store_result();
 if ($result->num_rows > 0) {
-  $found = true;
+    $found = true;
 }
 $result->close();
 
 if (!$found) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$result = $mysqli->prepare("UPDATE sys_errors SET fixed = NOW() WHERE id = ?");
+$result = $mysqli->prepare('UPDATE sys_errors SET fixed = NOW() WHERE id = ?');
 $result->bind_param('i', $errorID);
 $result->execute();
 $result->close();
 
 if ($mysqli->errno == 0) {
-  echo json_encode('SUCCESS');
+    echo json_encode('SUCCESS');
 } else {
-  echo json_encode('ERROR');
+    echo json_encode('ERROR');
 }

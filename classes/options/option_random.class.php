@@ -22,62 +22,63 @@
  * @copyright Copyright (c) 2016 The University of Nottingham
  */
 
-Class OptionRANDOM extends OptionEdit {
+class OptionRANDOM extends OptionEdit
+{
 
   /**
    * Persist the object to the database
    * @return boolean Success or failure of the save operation
    */
-  public function save($option_number = 0) {
-    $success = false;
-    $logger = new Logger($this->_mysqli);
+    public function save($option_number = 0)
+    {
+        $success = false;
+        $logger = new Logger($this->_mysqli);
 
-    $valid = $this->validate();
+        $valid = $this->validate();
 
-    $randomid = $this->_data[1];
-    $this->_data[1] = null;
+        $randomid = $this->_data[1];
+        $this->_data[1] = null;
           
-    if ($valid === true) {
-      // If $id is -1 we're inserting a new record
-      if ($this->id == -1) {
-        $params = array_merge(array('issiisssddd'), $this->_data);
-        $query = <<< QUERY
+        if ($valid === true) {
+          // If $id is -1 we're inserting a new record
+            if ($this->id == -1) {
+                $params = array_merge(array('issiisssddd'), $this->_data);
+                $query = <<< QUERY
 INSERT INTO options(o_id, option_text, o_media, o_media_width, o_media_height, feedback_right, feedback_wrong, correct, marks_correct, marks_incorrect, marks_partial)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 QUERY;
-      } else {
-        // Otherwise we're updating an existing one
-        $params = array_merge(array('issiisssdddi'), $this->_data, array(&$this->id));
-        $query = <<< QUERY
+            } else {
+              // Otherwise we're updating an existing one
+                $params = array_merge(array('issiisssdddi'), $this->_data, array(&$this->id));
+                $query = <<< QUERY
 UPDATE options
 SET o_id = ?, option_text = ?, o_media = ?, o_media_width = ?, o_media_height = ?, feedback_right = ?, feedback_wrong = ?, correct = ?, marks_correct = ?, marks_incorrect = ?, marks_partial = ?
 WHERE id_num = ?
 QUERY;
-      }
-      $result = $this->_mysqli->prepare($query);
-      call_user_func_array (array($result,'bind_param'), $params);
-      $result->execute();
-      $success = ($result->affected_rows > -1);
+            }
+            $result = $this->_mysqli->prepare($query);
+            call_user_func_array(array($result,'bind_param'), $params);
+            $result->execute();
+            $success = ($result->affected_rows > -1);
 
-      if ($success) {
-        if ($this->id == -1) {
-          $this->id = $this->_mysqli->insert_id;
-          $this->track_new($logger, $option_number);
+            if ($success) {
+                if ($this->id == -1) {
+                    $this->id = $this->_mysqli->insert_id;
+                    $this->track_new($logger, $option_number);
+                } else {
+                  // Log any changes
+                    $this->save_changes($logger, $option_number);
+                }
+              // Insert reference into random_link table not option_text
+                $success = random_utils::insert_random_link($this->_data[0], $randomid, $this->_mysqli);
+            }
+            $result->close();
+
+            $this->_modified_fields = array();
         } else {
-          // Log any changes
-          $this->save_changes($logger, $option_number);
+            throw new ValidationException($valid);
         }
-        // Insert reference into random_link table not option_text
-        $success = random_utils::insert_random_link($this->_data[0], $randomid, $this->_mysqli);
-      }
-      $result->close();
 
-      $this->_modified_fields = array();
-    } else {
-      throw new ValidationException($valid);
+        return $success;
     }
-
-    return $success;
-  }
 }
-

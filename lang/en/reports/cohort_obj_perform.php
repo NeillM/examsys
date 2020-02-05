@@ -32,4 +32,3 @@ $string['completely'] = 'Completely/Mostly acquired';
 $string['partically'] = 'Partically acquired';
 $string['mostly'] = 'Mostly not acquired';
 $string['shortcut'] = 'Shortcut';
-?>

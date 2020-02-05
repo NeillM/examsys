@@ -27,4 +27,3 @@ $string['confirm_clear_all_logs'] = 'Are you sure you want delete all the logs?'
 $string['confirm_clear_a_log'] = 'Are you sure you want delete this log?';
 $string['clear_all_button_text'] = 'Clear all logs';
 $string['icon_msg'] = 'Delete log';
-?>

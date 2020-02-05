@@ -23,7 +23,8 @@
 /**
  * Restful API helper class.
  */
-class restful {
+class restful
+{
     /**
      * @var DB connection
      */
@@ -37,18 +38,20 @@ class restful {
     /**
      * Called when the object is unserialised.
      */
-    public function __wakeup() {
+    public function __wakeup()
+    {
       // The serialised database object will be invalid,
       // this object should only be serialised during an error report,
       // so adding the current database connect seems like a waste of time.
-      $this->db = null;
+        $this->db = null;
     }
 
     /**
      * Constuctor
      * @param mysqli $db
      */
-    function __construct($db) {
+    function __construct($db)
+    {
         $this->db = $db;
     }
     /**
@@ -57,7 +60,8 @@ class restful {
      * @param array $requestoptions curl options from the requestor
      * @return string response from api
      */
-    public function get($url, $requestoptions = array()) {
+    public function get($url, $requestoptions = array())
+    {
         $curl = curl_init();
         // Curl options.
         $options = array(CURLOPT_URL => $url,
@@ -91,7 +95,8 @@ class restful {
      * Returns the last recived http code
      * @return integer http code
      */
-    public function get_last_http_code() {
+    public function get_last_http_code()
+    {
         return $this->http_code;
     }
 }

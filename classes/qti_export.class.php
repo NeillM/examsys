@@ -21,15 +21,18 @@
  * @copyright Copyright (c) 2015 The University of Nottingham
  * @package core
  */
-class qti_export extends rogo_directory {
-  protected $filepermissions = 0755;
+class qti_export extends rogo_directory
+{
+    protected $filepermissions = 0755;
 
-  public function location() {
-    return $this->base_directory() . 'qti' . DIRECTORY_SEPARATOR . 'exports' . DIRECTORY_SEPARATOR;
-  }
+    public function location()
+    {
+        return $this->base_directory() . 'qti' . DIRECTORY_SEPARATOR . 'exports' . DIRECTORY_SEPARATOR;
+    }
 
-  public function cachetime() {
-    // Cache for 2 minutes.
-    return 120;
-  }
+    public function cachetime()
+    {
+      // Cache for 2 minutes.
+        return 120;
+    }
 }

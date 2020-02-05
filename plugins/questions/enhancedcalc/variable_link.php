@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -41,16 +42,17 @@ $iconid = check_var('iconID', 'GET', true, false, true);
  * @param integer $cur_screen the screen are we on
  * @return string
  */
-function parse_leadin($id, $question, $type, $question_screen, $settings, $cur_screen) {
-  if ($type == 'calculation') {
-    $question = render_legacy_calc($id, $question, $question_screen, $cur_screen);
-  } elseif ($type == 'enhancedcalc') {
-    $question = render_calc($id, $question, $question_screen, $settings, $cur_screen);
-  } else {
-    $question = '<span style="color:#C0C0C0">' . $question . '</span>';
-  }
+function parse_leadin($id, $question, $type, $question_screen, $settings, $cur_screen)
+{
+    if ($type == 'calculation') {
+        $question = render_legacy_calc($id, $question, $question_screen, $cur_screen);
+    } elseif ($type == 'enhancedcalc') {
+        $question = render_calc($id, $question, $question_screen, $settings, $cur_screen);
+    } else {
+        $question = '<span style="color:#C0C0C0">' . $question . '</span>';
+    }
 
-  return $question;
+    return $question;
 }
 
 /**
@@ -62,23 +64,24 @@ function parse_leadin($id, $question, $type, $question_screen, $settings, $cur_s
  * @param integer $cur_screen the screen are we on
  * @return string
  */
-function render_legacy_calc($id, $question, $question_screen, $cur_screen) {
-  $variables = array ('A','B','C','D','E','F','G','H');
+function render_legacy_calc($id, $question, $question_screen, $cur_screen)
+{
+    $variables = array ('A','B','C','D','E','F','G','H');
 
-  foreach ($variables as $variable) {
-    if ($question_screen < $cur_screen) {
-      $question = str_replace('$' . $variable, '<input type="radio" name="ref" value="var' . $variable . $id . '">&nbsp;$' . $variable, $question);
-    } else {
-      $question = str_replace('$' . $variable, '<input type="radio" name="ref" value="var' . $variable . $id . '" disabled>&nbsp;$' . $variable, $question);
+    foreach ($variables as $variable) {
+        if ($question_screen < $cur_screen) {
+            $question = str_replace('$' . $variable, '<input type="radio" name="ref" value="var' . $variable . $id . '">&nbsp;$' . $variable, $question);
+        } else {
+            $question = str_replace('$' . $variable, '<input type="radio" name="ref" value="var' . $variable . $id . '" disabled>&nbsp;$' . $variable, $question);
+        }
     }
-  }
-  if ($question_screen < $cur_screen) {
-    $question .= ' <input type="radio" name="ref" value="ans' . $id . '"><input type="text" name="answer' . $id . '" size="14" value="student answer" />';
-  } else {
-    $question .= ' <input type="radio" name="ref" value="ans' . $id . '" disabled><input type="text" name="answer' . $id . '" size="14" value="student answer" disabled />';
-  }
+    if ($question_screen < $cur_screen) {
+        $question .= ' <input type="radio" name="ref" value="ans' . $id . '"><input type="text" name="answer' . $id . '" size="14" value="student answer" />';
+    } else {
+        $question .= ' <input type="radio" name="ref" value="ans' . $id . '" disabled><input type="text" name="answer' . $id . '" size="14" value="student answer" disabled />';
+    }
 
-  return $question;
+    return $question;
 }
 
 /**
@@ -91,18 +94,19 @@ function render_legacy_calc($id, $question, $question_screen, $cur_screen) {
  * @param integer $cur_screen the screen are we on
  * @return mixed|string
  */
-function render_calc($id, $question, $question_screen, $settings, $cur_screen) {
-  $setting_arr = json_decode($settings, true);
+function render_calc($id, $question, $question_screen, $settings, $cur_screen)
+{
+    $setting_arr = json_decode($settings, true);
 
-  $variables = array_keys($setting_arr['vars']);
+    $variables = array_keys($setting_arr['vars']);
 
-  $disabled = ($question_screen < $cur_screen) ? '' : ' disabled';
-  foreach ($variables as $variable) {
-    $question = str_replace($variable, '<input type="radio" name="ref" value="var' . $variable . $id . '"' . $disabled . '>&nbsp;' . $variable, $question);
-  }
-  $question .= ' <input type="radio" name="ref" value="ans' . $id . '"' . $disabled . '><input type="text" name="answer' . $id . '" size="14" value="student answer"' . $disabled . ' />';
+    $disabled = ($question_screen < $cur_screen) ? '' : ' disabled';
+    foreach ($variables as $variable) {
+        $question = str_replace($variable, '<input type="radio" name="ref" value="var' . $variable . $id . '"' . $disabled . '>&nbsp;' . $variable, $question);
+    }
+    $question .= ' <input type="radio" name="ref" value="ans' . $id . '"' . $disabled . '><input type="text" name="answer' . $id . '" size="14" value="student answer"' . $disabled . ' />';
 
-  return $question;
+    return $question;
 }
 
 ?>
@@ -145,31 +149,31 @@ function render_calc($id, $question, $question_screen, $settings, $cur_screen) {
   $paper_details = array();
   $q_no = 0;
 
-  $result = $mysqli->prepare("SELECT q_id, leadin, q_type, settings, screen FROM papers, questions WHERE paper = ? AND papers.question = questions.q_id ORDER BY screen, display_pos");
+  $result = $mysqli->prepare('SELECT q_id, leadin, q_type, settings, screen FROM papers, questions WHERE paper = ? AND papers.question = questions.q_id ORDER BY screen, display_pos');
   $result->bind_param('i', $paperid);
   $result->execute();
   $result->store_result();
   $result->bind_result($q_id, $leadin, $q_type, $settings, $screen);
-  while ($result->fetch()) {
+while ($result->fetch()) {
     $paper_details[$q_no]['q_id'] = $q_id;
     $paper_details[$q_no]['leadin'] = $leadin;
     $paper_details[$q_no]['q_type'] = $q_type;
     $paper_details[$q_no]['screen'] = $screen;
     $paper_details[$q_no]['settings'] = $settings;
     $q_no++;
-  }
+}
   $result->close();
 
   $current_screen = 0;
   $getqid = param::optional('q_id', -1, param::INT, param::FETCH_GET);
-  if ($getqid != -1) {
-    for ($i=0; $i<$q_no; $i++) {
-      if ($paper_details[$i]['q_id'] == $getqid) {
-        $current_screen = $paper_details[$i]['screen'];
-      }
+if ($getqid != -1) {
+    for ($i = 0; $i < $q_no; $i++) {
+        if ($paper_details[$i]['q_id'] == $getqid) {
+            $current_screen = $paper_details[$i]['screen'];
+        }
     }
-  } else {
-    $result = $mysqli->prepare("SELECT MAX(screen) FROM papers WHERE paper = ?");
+} else {
+    $result = $mysqli->prepare('SELECT MAX(screen) FROM papers WHERE paper = ?');
     $result->bind_param('i', $paperid);
     $result->execute();
     $result->store_result();
@@ -177,21 +181,21 @@ function render_calc($id, $question, $question_screen, $settings, $cur_screen) {
     $result->fetch();
     $result->close();
     if ($max_screen > 1) {
-      $current_screen = $max_screen;
+        $current_screen = $max_screen;
     }
-  }
+}
 
-  for ($i=0; $i<$q_no; $i++) {
+for ($i = 0; $i < $q_no; $i++) {
     if ($paper_details[$i]['screen'] > 1 and $old_screen != $paper_details[$i]['screen']) {
-      echo '<tr><td colspan="2">&nbsp;</td></tr>';
-      echo '<tr><td class="screenbrk" colspan="2"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $paper_details[$i]['screen'] . '</span></td></tr>';
+        echo '<tr><td colspan="2">&nbsp;</td></tr>';
+        echo '<tr><td class="screenbrk" colspan="2"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $paper_details[$i]['screen'] . '</span></td></tr>';
     }
     echo "<tr><td class=\"q_no\">$question_no.</td><td>" . parse_leadin($paper_details[$i]['q_id'], $paper_details[$i]['leadin'], $paper_details[$i]['q_type'], $paper_details[$i]['screen'], $paper_details[$i]['settings'], $current_screen) . "</td></tr>\n";
     if ($paper_details[$i]['q_type'] != 'info') {
-      $question_no++;
+        $question_no++;
     }
     $old_screen = $paper_details[$i]['screen'];
-  }
+}
 
   $mysqli->close();
 ?>

@@ -23,13 +23,15 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-Class module_utils extends RogoStaticSingleton {
-  public static $inst = NULL;
-  public static $class_name = 'module'; //name of the new dynamic class
+class module_utils extends RogoStaticSingleton
+{
+    public static $inst = null;
+    public static $class_name = 'module'; //name of the new dynamic class
 
   /**
   * constructor
   */
-  private function __construct() {}
-
+    private function __construct()
+    {
+    }
 }

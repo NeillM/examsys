@@ -25,52 +25,57 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-class lti_default_integration_extended extends lti_integration {
+class lti_default_integration_extended extends lti_integration
+{
 
   /**
    * Check last time logged in and decide if re-authentication should be done
    * @param string $time last time logged in
-   * @return bool true if user require re-authentication 
+   * @return bool true if user require re-authentication
    */
-  public function user_time_check($time) {
-    // takes laast time logged in and optionally the user and decides if reauthentication should be done (true)
-    return false;
-  }
+    public function user_time_check($time)
+    {
+      // takes laast time logged in and optionally the user and decides if reauthentication should be done (true)
+        return false;
+    }
 
   /**
-   * Convert VLE module shortcode into Rogo moduleid 
+   * Convert VLE module shortcode into Rogo moduleid
    * @param mysqli $mysqli db connection
    * @param string $moduleshortcode VLE module shortcode
    * @param string $course_title VLE module title
    * @return array rogo module information
    */
-  public function module_code_translate($mysqli, $c_internal_id, $course_title = '') {
+    public function module_code_translate($mysqli, $c_internal_id, $course_title = '')
+    {
 
-    // This function translates the incoming course code and course title it returns an array (containing possibly multiple records)
-    // of an array containing string if Manual or SMS for sms ones,
-    // the module code,
-    // a campus code (text) ,
-    // school as a string (gets lookedup against rogo to get id later,
-    // a 1 for self reg enable [0 for disable]
-    // and the course title.
-    return array(array('Manual', $c_internal_id, 'CampusTODO', 'UNKNOWN School', 0, "MISSING:$course_title"));
-  }
+      // This function translates the incoming course code and course title it returns an array (containing possibly multiple records)
+      // of an array containing string if Manual or SMS for sms ones,
+      // the module code,
+      // a campus code (text) ,
+      // school as a string (gets lookedup against rogo to get id later,
+      // a 1 for self reg enable [0 for disable]
+      // and the course title.
+        return array(array('Manual', $c_internal_id, 'CampusTODO', 'UNKNOWN School', 0, "MISSING:$course_title"));
+    }
 
   /**
    * Returns the empty string as generic sms does not check against sms for modules also defualt lti only creates manual modules in module_code_translate
    * @param array $data module data from module_code_translate
    * @return string SMS url
    */
-  public function sms_api($data) {
-    return '';
-  }
+    public function sms_api($data)
+    {
+        return '';
+    }
 
   /**
    * Translate source id in rogo external id.
    * @param string $sourceid source id from VLE
    * @return mixed module external id or null
    */
-  public function module_id_translate($sourceid) {
-    return null;
-  }
+    public function module_id_translate($sourceid)
+    {
+        return null;
+    }
 }

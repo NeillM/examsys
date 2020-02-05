@@ -22,15 +22,17 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package Authentication
  */
-class authtypereturn {
-  public $success, $rogoid, $url, $message;
+class authtypereturn
+{
+    public $success, $rogoid, $url, $message;
 
-  function __construct() {
-    $this->debug = array();
-    $this->debugpointer = 0;
-    $this->success = false;
-    $this->rogoid = 0;
-    $this->url = '';
-    $this->message = '';
-  }
+    function __construct()
+    {
+        $this->debug = array();
+        $this->debugpointer = 0;
+        $this->success = false;
+        $this->rogoid = 0;
+        $this->url = '';
+        $this->message = '';
+    }
 }

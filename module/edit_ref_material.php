@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -28,36 +29,36 @@ require '../include/errors.php';
 $refID = check_var('refID', 'GET', true, false, true);
 $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 if (!refmaterials_utils::refmaterials_exist($refID, $mysqli)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 if (isset($_POST['submit'])) {
-  $content = $texteditorplugin->prepare_text_for_save($_POST['ref_content']);
+    $content = $texteditorplugin->prepare_text_for_save($_POST['ref_content']);
   // Write the reference material
-  $result = $mysqli->prepare("UPDATE reference_material SET title = ?, content = ?, width = ? WHERE id = ?");
-  $result->bind_param('sssi', $_POST['title'], $content, $_POST['width'], $_GET['refID']);
-  $result->execute();
+    $result = $mysqli->prepare('UPDATE reference_material SET title = ?, content = ?, width = ? WHERE id = ?');
+    $result->bind_param('sssi', $_POST['title'], $content, $_POST['width'], $_GET['refID']);
+    $result->execute();
   
   // Add it to the modules
-  $result = $mysqli->prepare("DELETE FROM reference_modules WHERE refID = ?");
-  $result->bind_param('i', $_GET['refID']);
-  $result->execute();
+    $result = $mysqli->prepare('DELETE FROM reference_modules WHERE refID = ?');
+    $result->bind_param('i', $_GET['refID']);
+    $result->execute();
 
-  for ($i=0; $i<$_POST['module_no']; $i++) {
-    if (isset($_POST['mod' . $i])) {
-      $result = $mysqli->prepare("INSERT INTO reference_modules VALUES (NULL, ?, ?)");
-      $result->bind_param('ii', $_GET['refID'], $_POST['mod' . $i]);
-      $result->execute();
+    for ($i = 0; $i < $_POST['module_no']; $i++) {
+        if (isset($_POST['mod' . $i])) {
+            $result = $mysqli->prepare('INSERT INTO reference_modules VALUES (NULL, ?, ?)');
+            $result->bind_param('ii', $_GET['refID'], $_POST['mod' . $i]);
+            $result->execute();
+        }
     }
-  }
   
-  header("location: list_ref_material.php?module=" . $_POST['module']);
-  exit();
+    header('location: list_ref_material.php?module=' . $_POST['module']);
+    exit();
 }
 
-$result = $mysqli->prepare("SELECT title, content, width FROM reference_material WHERE id = ?");
+$result = $mysqli->prepare('SELECT title, content, width FROM reference_material WHERE id = ?');
 $result->bind_param('i', $_GET['refID']);
 $result->execute();
 $result->bind_result($title, $content, $width);
@@ -66,12 +67,12 @@ $result->close();
 
 $ref_modules = array();
 
-$result = $mysqli->prepare("SELECT moduleID FROM reference_modules, modules WHERE reference_modules.idMod = modules.id AND refID = ?");
+$result = $mysqli->prepare('SELECT moduleID FROM reference_modules, modules WHERE reference_modules.idMod = modules.id AND refID = ?');
 $result->bind_param('i', $_GET['refID']);
 $result->execute();
 $result->bind_result($moduleID);
 while ($result->fetch()) {
-  $ref_modules[] = $moduleID;
+    $ref_modules[] = $moduleID;
 }
 $result->close();
 
@@ -99,10 +100,10 @@ $result->close();
 <?php
   require '../include/toprightmenu.inc';
 
-	echo draw_toprightmenu();
+    echo draw_toprightmenu();
 ?>
 <div class="head_title" style="font-size:90%">
-	<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+    <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="details.php?module=<?php echo $_GET['module'] ?>"><?php echo module_utils::get_moduleid_from_id($_GET['module'], $mysqli); ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="list_ref_material.php?module=<?php echo $_GET['module']; ?>"><?php echo $string['referencematerial']; ?></a></div>
   <div class="page_title">Reference Material</div>
 </div>
@@ -111,26 +112,26 @@ $result->close();
 <br />
 <table border="0" style="text-align:left; margin-left:auto; margin-right:auto; font-size:80%">
 <tr><td><?php echo $string['name']; ?> <input type="text" name="title" size="40" value="<?php echo $title; ?>" required autofocus />&nbsp;&nbsp;&nbsp;<?php echo $string['width']; ?> <select name="width"><?php
-for ($size=200; $size<850; $size+=50) {
-  if ($width == $size) {
-    echo "<option value=\"$size\" selected>" . $size . "px</option>\n";
-  } else {
-    echo "<option value=\"$size\">" . $size . "px</option>\n";
-  }
+for ($size = 200; $size < 850; $size += 50) {
+    if ($width == $size) {
+        echo "<option value=\"$size\" selected>" . $size . "px</option>\n";
+    } else {
+        echo "<option value=\"$size\">" . $size . "px</option>\n";
+    }
 }
 ?></select></td><td><?php echo $string['modules']; ?></td></tr>
 <tr><td><?php $texteditorplugin->get_textarea('ref_content', 'ref_content', $texteditorplugin->get_text_for_display($content), plugins\plugins_texteditor::TYPE_STANDARD); ?></td><td style="vertical-align:top">
 <?php
-  echo "<div style=\"margin-top:1px; display:block; width:420px; height:604px; overflow-y:scroll; border:1px solid #909090; font-size:90%\">";
+  echo '<div style="margin-top:1px; display:block; width:420px; height:604px; overflow-y:scroll; border:1px solid #909090; font-size:90%">';
 
   $extra_modules = array();
-  $result = $mysqli->prepare("SELECT idMod FROM reference_modules WHERE refID = ?");
+  $result = $mysqli->prepare('SELECT idMod FROM reference_modules WHERE refID = ?');
   $result->bind_param('i', $_GET['refID']);
   $result->execute();
   $result->bind_result($idMod);
-  while ($result->fetch()) {
+while ($result->fetch()) {
     $extra_modules[] = $idMod;
-  }
+}
   $result->close();
 
   $module_array = $userObject->get_staff_accessable_modules($extra_modules);
@@ -138,33 +139,35 @@ for ($size=200; $size<850; $size+=50) {
   $module_no = 0;
   $old_school = '';
   $old_schoolcode = '';
-  foreach ($module_array as $modID=>$module) {
+foreach ($module_array as $modID => $module) {
     if (is_null($module['schoolcode'])) {
-      if ($module['school'] != $old_school or !is_null($old_schoolcode)) {
-        echo "<table border=\"0\" class=\"school\"><tr><td><nobr>" . $module['school'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-      }
+        if ($module['school'] != $old_school or !is_null($old_schoolcode)) {
+            echo '<table border="0" class="school"><tr><td><nobr>' . $module['school'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+        }
     } else {
         if ($module['schoolcode'] != $old_schoolcode) {
-          echo "<table border=\"0\" class=\"school\"><tr><td><nobr>" . $module['schoolcode']  . ' ' . $module['school'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+            echo '<table border="0" class="school"><tr><td><nobr>' . $module['schoolcode']  . ' ' . $module['school'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
         }
     }
     $match = false;
     foreach ($ref_modules as $separate_module) {
-      if ($separate_module == $module['id']) $match = true;
+        if ($separate_module == $module['id']) {
+            $match = true;
+        }
     }
     if ($match == true) {
-      if ($userObject->is_staff_user_on_module($modID) or $userObject->has_role('SysAdmin')) {
-        echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\" checked><label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'], 0, 60) . "</label></div>\n";
-      } else {
-        echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['id'] . "\" checked disabled><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" style=\"display:none\" value=\"$modID\" checked>" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</div>\n";
-      }
+        if ($userObject->is_staff_user_on_module($modID) or $userObject->has_role('SysAdmin')) {
+            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\" checked><label for=\"mod$module_no\">" . $module['id'] . ': ' . substr($module['fullname'], 0, 60) . "</label></div>\n";
+        } else {
+            echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"dummymod$module_no\" value=\"" . $module['id'] . "\" checked disabled><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" style=\"display:none\" value=\"$modID\" checked>" . $module['id'] . ': ' . substr($module['fullname'], 0, 60) . "</div>\n";
+        }
     } else {
-      echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\"><label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'], 0, 60) . "</label></div>\n";
+        echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\"><label for=\"mod$module_no\">" . $module['id'] . ': ' . substr($module['fullname'], 0, 60) . "</label></div>\n";
     }
     $module_no++;
     $old_school = $module['school'];
-    $old_schoolcode = $module['schoolcode']; 
-  }
+    $old_schoolcode = $module['schoolcode'];
+}
   echo "<input type=\"hidden\" name=\"module_no\" id=\"module_no\" value=\"$module_no\" /></div>\n";
 ?>
 </td>

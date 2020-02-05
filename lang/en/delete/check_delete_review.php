@@ -17,4 +17,3 @@
 require '../lang/' . $language . '/delete/delete.php';
 
 $string['confirmmsg'] = 'Are you sure you wish to delete this review made on <strong>%s</strong>?';
-?>

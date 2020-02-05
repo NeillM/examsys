@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,4 +25,3 @@
 
 header('Location: ../students/objectives_feedback.php?' . $_SERVER['QUERY_STRING']);
 exit;
-?>

@@ -18,4 +18,3 @@ $string['personalcohortperformance'] = 'Personal/Cohort Performance';
 $string['availablemarks'] = 'Available Marks';
 $string['studentsmark'] = 'Student\'s Mark';
 $string['medianclassmark'] = 'Median Class Mark';
-?>

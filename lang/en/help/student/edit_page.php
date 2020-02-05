@@ -15,5 +15,3 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 require '../../lang/' . $language . '/help/staff/edit_page.php';
-
-?>

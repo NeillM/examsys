@@ -17,4 +17,3 @@
 require '../lang/' . $language . '/delete/delete.php';
 
 $string['msg'] = 'Are you sure you wish to delete this event?';
-?>

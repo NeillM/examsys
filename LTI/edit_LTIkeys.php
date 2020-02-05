@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -31,12 +32,12 @@ $lti->init_lti0($mysqli);
 $LTIkeysid = check_var('LTIkeysid', 'GET', true, false, true);
 
 if (!$lti->lti_key_exists($LTIkeysid)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
-$result = $mysqli->prepare("SELECT id, oauth_consumer_key, secret, name, context_id FROM lti_keys WHERE id = ?");
+$result = $mysqli->prepare('SELECT id, oauth_consumer_key, secret, name, context_id FROM lti_keys WHERE id = ?');
 $result->bind_param('i', $LTIkeysid);
 $result->execute();
 $result->bind_result($ltis['id'], $ltis['oauth_consumer_key'], $ltis['secret'], $ltis['name'], $ltis['context_id']);
@@ -44,24 +45,32 @@ $result->fetch();
 $result->close();
 $submit = param::optional('submit', null, param::TEXT, param::FETCH_POST);
 if (!is_null($submit)) {
-  $ltiname = trim(param::optional('ltiname', null, param::TEXT, param::FETCH_POST));
-  $ltikey = trim(param::optional('ltikey', null, param::TEXT, param::FETCH_POST));
-  $ltisec = trim(param::optional('ltisec', null, param::TEXT, param::FETCH_POST));
-  $lticontext = trim(param::optional('lticontext', null, param::TEXT, param::FETCH_POST));
+    $ltiname = trim(param::optional('ltiname', null, param::TEXT, param::FETCH_POST));
+    $ltikey = trim(param::optional('ltikey', null, param::TEXT, param::FETCH_POST));
+    $ltisec = trim(param::optional('ltisec', null, param::TEXT, param::FETCH_POST));
+    $lticontext = trim(param::optional('lticontext', null, param::TEXT, param::FETCH_POST));
   
-  $insert_id = $lti->update_lti_key($LTIkeysid, $ltiname, $ltikey, $ltisec, $lticontext);
+    $insert_id = $lti->update_lti_key($LTIkeysid, $ltiname, $ltikey, $ltisec, $lticontext);
   
   // Log changes
-  $logger = new Logger($mysqli);
-  if ($ltis['name'] != $ltiname)              $logger->track_change('LTI Key', $LTIkeysid, $userObject->get_user_ID(), $ltis['name'], $ltiname, 'name');
-  if ($ltis['oauth_consumer_key'] != $ltikey) $logger->track_change('LTI Key', $LTIkeysid, $userObject->get_user_ID(), $ltis['name'], $ltikey, 'key');
-  if ($ltis['secret'] != $ltisec)             $logger->track_change('LTI Key', $LTIkeysid, $userObject->get_user_ID(), $ltis['secret'], $ltisec, 'secret');
-  if ($ltis['context_id'] != $lticontext)     $logger->track_change('LTI Key', $LTIkeysid, $userObject->get_user_ID(), $ltis['context_id'], $lticontext, 'context');
+    $logger = new Logger($mysqli);
+    if ($ltis['name'] != $ltiname) {
+        $logger->track_change('LTI Key', $LTIkeysid, $userObject->get_user_ID(), $ltis['name'], $ltiname, 'name');
+    }
+    if ($ltis['oauth_consumer_key'] != $ltikey) {
+        $logger->track_change('LTI Key', $LTIkeysid, $userObject->get_user_ID(), $ltis['name'], $ltikey, 'key');
+    }
+    if ($ltis['secret'] != $ltisec) {
+        $logger->track_change('LTI Key', $LTIkeysid, $userObject->get_user_ID(), $ltis['secret'], $ltisec, 'secret');
+    }
+    if ($ltis['context_id'] != $lticontext) {
+        $logger->track_change('LTI Key', $LTIkeysid, $userObject->get_user_ID(), $ltis['context_id'], $lticontext, 'context');
+    }
 
-  header("location: lti_keys_list.php");
-  exit();
+    header('location: lti_keys_list.php');
+    exit();
 } else {
-  ?>
+    ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -89,12 +98,12 @@ if (!is_null($submit)) {
   <script src="../js/ltikeyeditinit.min.js"></script>
 </head>
 <body>
-<?php
-  require '../include/lti_keys_options.inc';
-  require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
-?>
+    <?php
+    require '../include/lti_keys_options.inc';
+    require '../include/toprightmenu.inc';
+    
+    echo draw_toprightmenu();
+    ?>
 <div id="content">
 
 <div class="head_title">
@@ -131,7 +140,7 @@ if (!is_null($submit)) {
       <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"><input class="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" onclick="javascript:history.back();"/></p>
     </form>
   </div>
-  <?php
+    <?php
 }
 ?>
 </div>

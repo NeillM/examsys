@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -35,14 +36,14 @@ $paperID  = check_var('paperID', 'GET', true, false, true);
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 
 if (!$propertyObj) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 $paper_type = $propertyObj->get_paper_type();
 
 // Read question from database.
-$result = $mysqli->prepare("SELECT leadin, settings FROM questions WHERE q_id = ?");
+$result = $mysqli->prepare('SELECT leadin, settings FROM questions WHERE q_id = ?');
 $result->bind_param('i', $q_id);
 $result->execute();
 $result->bind_result($leadin, $settings);
@@ -52,29 +53,29 @@ $result->close();
 // Read user answers from log.
 $log_answers = array();
 if ($paper_type == '0') {
-  $result = $mysqli->prepare("(SELECT 0 AS type, l.id, l.mark, l.user_answer, lm.userID FROM log0 l, log_metadata lm, users u WHERE lm.userID = u.id AND (u.roles LIKE '%Student%' OR u.roles = 'graduate') AND l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?) UNION ALL (SELECT 1 AS type, l.id, l.mark, l.user_answer, lm.userID FROM log1 l, log_metadata lm, users u WHERE lm.userID = u.id AND (u.roles LIKE '%Student%' OR u.roles = 'graduate') AND l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?)");
-  $result->bind_param('iissiiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate'], $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
+    $result = $mysqli->prepare("(SELECT 0 AS type, l.id, l.mark, l.user_answer, lm.userID FROM log0 l, log_metadata lm, users u WHERE lm.userID = u.id AND (u.roles LIKE '%Student%' OR u.roles = 'graduate') AND l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?) UNION ALL (SELECT 1 AS type, l.id, l.mark, l.user_answer, lm.userID FROM log1 l, log_metadata lm, users u WHERE lm.userID = u.id AND (u.roles LIKE '%Student%' OR u.roles = 'graduate') AND l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?)");
+    $result->bind_param('iissiiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate'], $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
 } else {
-  $result = $mysqli->prepare("SELECT $paper_type AS type, l.id, l.mark, l.user_answer, lm.userID FROM log$paper_type l, log_metadata lm, users u WHERE lm.userID = u.id AND (u.roles LIKE '%Student%' OR u.roles = 'graduate') AND l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?");
-  $result->bind_param('iiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
+    $result = $mysqli->prepare("SELECT $paper_type AS type, l.id, l.mark, l.user_answer, lm.userID FROM log$paper_type l, log_metadata lm, users u WHERE lm.userID = u.id AND (u.roles LIKE '%Student%' OR u.roles = 'graduate') AND l.metadataID = lm.id AND l.q_id = ? AND lm.paperID = ? AND lm.started >= ? AND lm.started <= ?");
+    $result->bind_param('iiss', $q_id, $paperID, $_GET['startdate'], $_GET['enddate']);
 }
 $result->execute();
 $result->bind_result($type, $id, $mark, $user_answer, $user_id);
 while ($result->fetch()) {
-  if ($mark !== '') {
-    $answer_obj = new enhancedcalc($configObject);
-    $answer_obj->set_useranswer($user_answer);
-    $answer_obj->set_settings($settings);
-    $dist = $answer_obj->get_answer_distance();
-    if ($dist === false) {
-      $dist = 9999999;
-    }
+    if ($mark !== '') {
+        $answer_obj = new enhancedcalc($configObject);
+        $answer_obj->set_useranswer($user_answer);
+        $answer_obj->set_settings($settings);
+        $dist = $answer_obj->get_answer_distance();
+        if ($dist === false) {
+            $dist = 9999999;
+        }
 
-    // Don't include absolutely correct answers in the list.
-    if (!$answer_obj->is_user_ans_correct()) {
-      $log_answers[] = array('paper_type' => $type, 'id' => $id, 'answer_obj' => $answer_obj, 'mark' => strval($mark), 'user_id' => $user_id, 'distance' => $dist);
+      // Don't include absolutely correct answers in the list.
+        if (!$answer_obj->is_user_ans_correct()) {
+            $log_answers[] = array('paper_type' => $type, 'id' => $id, 'answer_obj' => $answer_obj, 'mark' => strval($mark), 'user_id' => $user_id, 'distance' => $dist);
+        }
     }
-  }
 }
 $result->close();
 
@@ -86,7 +87,7 @@ $result->bind_param('ii', $q_id, $paperID);
 $result->execute();
 $result->bind_result($log_id, $new_mark_type, $reason);
 while ($result->fetch()) {
-  $overrides[$log_id] = array('type' => $new_mark_type, 'reason' => $reason);
+    $overrides[$log_id] = array('type' => $new_mark_type, 'reason' => $reason);
 }
 
 $question_obj = new enhancedcalc($configObject);
@@ -95,7 +96,7 @@ $question_obj->set_settings($settings);
 $q_vars = $question_obj->get_question_vars();
 $marks_arr = $question_obj->get_question_marks();
 if ($marks_arr == false) {
-  $marks_arr = array();
+    $marks_arr = array();
 }
 $q_marks = array_flip($marks_arr);
 ?>
@@ -149,9 +150,9 @@ $q_marks = array_flip($marks_arr);
       <tr class="separate">
 <?php
 foreach ($q_vars as $var => $dummy) {
-?>
+    ?>
         <th class="shortcolumn separate"><?php echo $var ?></th>
-<?php
+    <?php
 }
 ?>
         <th class="longcolumn separate"><?php echo $string['useranswer'] ?></th>
@@ -170,66 +171,66 @@ foreach ($q_vars as $var => $dummy) {
 $mark_types = array('correct', 'partial', 'incorrect');
 $log_answers2 = array();
 foreach ($log_answers as $id => $ans) {
-  $dist = $ans['distance'];
-  $log_answers2[$dist][] = $id;
+    $dist = $ans['distance'];
+    $log_answers2[$dist][] = $id;
 }
 krsort($log_answers2, SORT_NUMERIC);
 
 foreach ($log_answers2 as $innerans) {
-  foreach ($innerans as $answerin2) {
-    $answer = $log_answers[$answerin2];
-    // If distance not available set to 9999999.
-    if (!isset($answer['distance'])) {
-        $answer['distance'] = 9999999;
-    // Else if distance is Inf or -Inf set to 0.
-    } elseif ($answer['distance'] == 'Inf' or $answer['distance'] == '-Inf') {
-        $answer['distance'] = 0;
-    // Else if distance not a number set to 9999999.
-    } elseif (!is_numeric($answer['distance'])) {
-        $answer['distance'] = 9999999;
-    }
+    foreach ($innerans as $answerin2) {
+        $answer = $log_answers[$answerin2];
+      // If distance not available set to 9999999.
+        if (!isset($answer['distance'])) {
+            $answer['distance'] = 9999999;
+        // Else if distance is Inf or -Inf set to 0.
+        } elseif ($answer['distance'] == 'Inf' or $answer['distance'] == '-Inf') {
+            $answer['distance'] = 0;
+        // Else if distance not a number set to 9999999.
+        } elseif (!is_numeric($answer['distance'])) {
+            $answer['distance'] = 9999999;
+        }
 
-    if ($answer['distance'] == 9999999) {
-      $distance = $string['na'];
-    } else {
-      $distance  = number_format($answer['distance'], 2) . '%';
-    }
+        if ($answer['distance'] == 9999999) {
+            $distance = $string['na'];
+        } else {
+            $distance  = number_format($answer['distance'], 2) . '%';
+        }
 
-    $new_type = '';
-    $reason = '';
-    $or_class = '';
-    if (isset($overrides[$answer['id']])) {
-      $new_type = $overrides[$answer['id']]['type'];
-      $reason = $overrides[$answer['id']]['reason'];
-      $or_class = ' class="overridden"';
-    } else {
-      // Populate with existing mark type
-      if (isset($q_marks[$answer['mark']])) {
-        $new_type = $q_marks[$answer['mark']];
-      }
-    }
-    echo "<tr{$or_class}>";
-    $u_vars = $answer['answer_obj']->get_user_vars();
-    foreach ($u_vars as $label => $value) {
-      echo "<td class=\"shortcolumn\">$value</td>\n";
-    }
-    echo "<td class=\"longcolumn\">" . $answer['answer_obj']->get_user_answer_full();
+        $new_type = '';
+        $reason = '';
+        $or_class = '';
+        if (isset($overrides[$answer['id']])) {
+            $new_type = $overrides[$answer['id']]['type'];
+            $reason = $overrides[$answer['id']]['reason'];
+            $or_class = ' class="overridden"';
+        } else {
+          // Populate with existing mark type
+            if (isset($q_marks[$answer['mark']])) {
+                $new_type = $q_marks[$answer['mark']];
+            }
+        }
+        echo "<tr{$or_class}>";
+        $u_vars = $answer['answer_obj']->get_user_vars();
+        foreach ($u_vars as $label => $value) {
+            echo "<td class=\"shortcolumn\">$value</td>\n";
+        }
+        echo '<td class="longcolumn">' . $answer['answer_obj']->get_user_answer_full();
 
-    echo "</td>\n";
-    echo "<td class=\"longcolumn\">" . $answer['answer_obj']->get_real_answer();
-    if ($answer['answer_obj']->get_show_units()) {
-      echo ' ' . $answer['answer_obj']->get_user_answer_units_used();
-    }
-    echo "</td>\n";
-    echo '<td class="longcolumn">' . $distance . "</td>\n";
+        echo "</td>\n";
+        echo '<td class="longcolumn">' . $answer['answer_obj']->get_real_answer();
+        if ($answer['answer_obj']->get_show_units()) {
+            echo ' ' . $answer['answer_obj']->get_user_answer_units_used();
+        }
+        echo "</td>\n";
+        echo '<td class="longcolumn">' . $distance . "</td>\n";
 
-    foreach ($mark_types as $mt) {
-      $checked = ($mt == $new_type) ? ' checked="checked"' : '';
-  ?>
+        foreach ($mark_types as $mt) {
+            $checked = ($mt == $new_type) ? ' checked="checked"' : '';
+            ?>
     <td class="shortcolumn"><input type="radio" name="mark_<?php echo $answer['id'] ?>" value="<?php echo $mt ?>"<?php echo $checked ?> /></td>
-  <?php
-    }
-  ?>
+            <?php
+        }
+        ?>
     <td><input type="textbox" id="reason_<?php echo $answer['id'] ?>" name="reason_<?php echo $answer['id'] ?>" size="30" maxlength="255" value="<?php echo $reason ?>" /></td>
     <td>
       <input type="hidden" id="save_<?php echo $answer['id'] ?>" data-logid="<?php echo $answer['id'] ?>" class="save-row" />
@@ -237,8 +238,8 @@ foreach ($log_answers2 as $innerans) {
       <input type="hidden" id="user_id_<?php echo $answer['id'] ?>" name="user_id_<?php echo $answer['id'] ?>" value="<?php echo $answer['user_id'] ?>" />
     </td>
     </tr>
-  <?php
-  }
+        <?php
+    }
 }
 ?>
     </tbody>

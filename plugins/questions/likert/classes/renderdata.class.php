@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -25,68 +26,72 @@ namespace plugins\questions\likert;
  * @copyright Copyright (c) 2018 The University of Nottingham
  */
 
-class renderdata extends \questiondata {
-  use \defaultgetmarks;
+class renderdata extends \questiondata
+{
+    use \defaultgetmarks;
+
   /**
    * Na option state
-   * @var integer 
+   * @var integer
    */
-  public $displayna;
+    public $displayna;
 
   /**
    * Note column span length
-   * @var integer 
+   * @var integer
    */
-  public $likertnotescolspan;
+    public $likertnotescolspan;
 
   /**
    * Scenario column span length
-   * @var integer 
+   * @var integer
    */
-  public $likertscenariocolspan;
+    public $likertscenariocolspan;
 
   /**
    * List of scale labels.
    * @var array
    */
-  public $scale;
+    public $scale;
 
   /**
    * List of scale options.
    * @var array
    */
-  public $scaleopt;
+    public $scaleopt;
 
   /**
    * Id of scale
    * @var integer
    */
-  public $id;
+    public $id;
 
   /**
    * Number of options in the scale.
    * @var integer
    */
-  var $scale_size;
+    var $scale_size;
 
   /**
    * Constructor
    */
-  function __construct() {
-    parent::__construct();
-    $this->questiontype = 'likert';
-    $this->displayna = false;
-  }
+    function __construct()
+    {
+        parent::__construct();
+        $this->questiontype = 'likert';
+        $this->displayna = false;
+    }
 
   /**
    * Disable/Enable display of question header sections for template rendering
    */
-  public function set_question_head() {
-    if ($this->qmedia != '') {
-      $this->displaymedia = true;
+    public function set_question_head()
+    {
+        if ($this->qmedia != '') {
+            $this->displaymedia = true;
+        }
+        $this->displaydefault = false;
     }
-    $this->displaydefault = false;
-  }
 
   /**
    * Question level settings for template rendering
@@ -94,32 +99,33 @@ class renderdata extends \questiondata {
    * @param mixed $useranswer user answer
    * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    */
-  public function set_question($screen_pre_submitted, $useranswer, $userdismissed) {
-    $likert_display = explode('|',$this->displaymethod);
-    $this->scale_size = substr_count($this->displaymethod,'|');
-    if ($likert_display[$this->scale_size] == 'true') {
-      $this->displayna = true;
+    public function set_question($screen_pre_submitted, $useranswer, $userdismissed)
+    {
+        $likert_display = explode('|', $this->displaymethod);
+        $this->scale_size = substr_count($this->displaymethod, '|');
+        if ($likert_display[$this->scale_size] == 'true') {
+            $this->displayna = true;
+        }
+        if ($this->notes != '') {
+            $this->displaylikertnotes = true;
+            $this->likertnotescolspan = $this->scale_size + 1;
+        } else {
+            $this->displaylikertnotes = true;
+            $this->displaylikertnotes = false;
+        }
+        if ($this->scenario != '') {
+            $this->displaylikertscenario = true;
+            $this->likertscenariocolspan = $this->scale_size + 2;
+        } else {
+            $this->displaylikertscenario = false;
+        }
+        $disp[0] = $likert_display[0];
+        $temp_end = $this->scale_size - 1;
+        for ($i = 1; $i <= $temp_end; $i++) {
+            $disp[$i] = $likert_display[$i];
+        }
+        $this->scale = $disp;
     }
-    if ($this->notes != '') {
-      $this->displaylikertnotes = true;
-      $this->likertnotescolspan = $this->scale_size + 1;
-    } else {
-      $this->displaylikertnotes = true;
-      $this->displaylikertnotes = false;
-    }
-    if ($this->scenario != '') {
-      $this->displaylikertscenario = true;
-      $this->likertscenariocolspan = $this->scale_size + 2;
-    } else {
-      $this->displaylikertscenario = false;
-    }
-    $disp[0] = $likert_display[0];
-    $temp_end = $this->scale_size - 1;
-    for ($i=1; $i<=$temp_end; $i++) {
-      $disp[$i] = $likert_display[$i];
-    }
-    $this->scale = $disp;
-  }
 
   /**
    * Option level settings for template rendering
@@ -128,32 +134,33 @@ class renderdata extends \questiondata {
    * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
-    if ($useranswer == 'u' and $screen_pre_submitted == 1) {
-      $this->unanswered = true;
-    } else {
-      $this->unanswered = false;
+    public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
+    {
+        if ($useranswer == 'u' and $screen_pre_submitted == 1) {
+            $this->unanswered = true;
+        } else {
+            $this->unanswered = false;
+        }
+        $this->id = $this->questionno . '_' . $part_id;
+        $scale = array();
+        if ($this->displayna) {
+          // If n/a enabled set if selected.
+            if ($useranswer == 'n/a') {
+                $scale['n/a'] = true;
+            } else {
+                $scale['n/a'] = false;
+            }
+        }
+      // Loop through scale and set if selected.
+        for ($i = 1; $i <= $this->scale_size; $i++) {
+            if ($i == $useranswer) {
+                $scale[$i] = true;
+            } else {
+                $scale[$i] = false;
+            }
+        }
+        $this->scaleopt = $scale;
     }
-    $this->id = $this->questionno . "_" . $part_id;
-    $scale = array();
-    if ($this->displayna) {
-      // If n/a enabled set if selected.
-      if ($useranswer == 'n/a') {
-        $scale['n/a'] = true;
-      } else {
-        $scale['n/a'] = false;
-      }
-    }
-    // Loop through scale and set if selected.
-    for ($i = 1; $i <= $this->scale_size; $i++) {
-      if ($i == $useranswer) {
-        $scale[$i] = true;
-      } else {
-        $scale[$i] = false;
-      }
-    }
-    $this->scaleopt = $scale;
-  }
 
   /**
    * Additional option level settings for template rendering
@@ -162,7 +169,8 @@ class renderdata extends \questiondata {
    * @param string $userdismissed list of enable/disable flag for options the user has dismissed
    * @param boolean $screen_pre_submitted has the user submitted and answer previously
    */
-  public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted) {
-   // Nothing to do.
-  }
+    public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
+    {
+     // Nothing to do.
+    }
 }

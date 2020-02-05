@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,10 +25,11 @@ namespace plugins;
 
 /**
  * Abstract mapping class.
- * 
+ *
  * This class should be extend by classes used define text editor plugins.
  */
-abstract class plugins_texteditor extends \plugins\plugins {
+abstract class plugins_texteditor extends \plugins\plugins
+{
     /**
      * Type of the editor.
      * @var string
@@ -150,10 +152,13 @@ abstract class plugins_texteditor extends \plugins\plugins {
      * @param $leadin
      * @return boolean
      */
-    public function clean_leadin($leadin) {
-        if (strpos($leadin, 'class="mee"') === false AND strpos($leadin, 'class=mee') === false
-            AND preg_match_all("#\[tex\](.*?)\[/tex\]#si",$leadin) === 0
-            AND preg_match_all("#\[texi\](.*?)\[/texi\]#si",$leadin) === 0) {
+    public function clean_leadin($leadin)
+    {
+        if (
+            strpos($leadin, 'class="mee"') === false and strpos($leadin, 'class=mee') === false
+            and preg_match_all('#\[tex\](.*?)\[/tex\]#si', $leadin) === 0
+            and preg_match_all('#\[texi\](.*?)\[/texi\]#si', $leadin) === 0
+        ) {
             return true;
         } else {
             return false;
@@ -172,19 +177,20 @@ abstract class plugins_texteditor extends \plugins\plugins {
      * @param string $text the text to be processed
      * @return string
      */
-    public function prepare_text_for_save($text) {
+    public function prepare_text_for_save($text)
+    {
         // Replace deprecated mee maths
-        preg_match_all("#<div class=\"mee\">(.*?)\</div>#si",$text,$tex_matches);
+        preg_match_all('#<div class="mee">(.*?)\</div>#si', $text, $tex_matches);
         if (count($tex_matches[0]) > 0) {
-            foreach($tex_matches[0] as $m) {
-                $new = str_replace(array('<div class="mee">','</div>'),array('[tex]','[/tex]'),$m);
+            foreach ($tex_matches[0] as $m) {
+                $new = str_replace(array('<div class="mee">','</div>'), array('[tex]','[/tex]'), $m);
                 $text = str_replace($m, $new, $text);
             }
         }
-        preg_match_all("#<span class=\"mee\">(.*?)\</span>#si",$text,$tex_matches);
+        preg_match_all('#<span class="mee">(.*?)\</span>#si', $text, $tex_matches);
         if (count($tex_matches[0]) > 0) {
-            foreach($tex_matches[0] as $m) {
-                $new = str_replace(array('<span class="mee">','</span>'),array('[texi]','[/texi]'),$m);
+            foreach ($tex_matches[0] as $m) {
+                $new = str_replace(array('<span class="mee">','</span>'), array('[texi]','[/texi]'), $m);
                 $text = str_replace($m, $new, $text);
             }
         }
@@ -196,19 +202,20 @@ abstract class plugins_texteditor extends \plugins\plugins {
      * @param string $text the text to be processed
      * @return string
      */
-    public function get_text_for_display($text) {
+    public function get_text_for_display($text)
+    {
         // Support deprecated mee maths
-        preg_match_all("#\[tex\](.*?)\[/tex\]#si",$text,$tex_matches);
+        preg_match_all('#\[tex\](.*?)\[/tex\]#si', $text, $tex_matches);
         if (count($tex_matches[0]) > 0) {
-            foreach($tex_matches[0] as $m) {
-                $new = str_replace(array('[tex]','[/tex]'),array('<div class="mee">','</div>'),$m);
+            foreach ($tex_matches[0] as $m) {
+                $new = str_replace(array('[tex]','[/tex]'), array('<div class="mee">','</div>'), $m);
                 $text = str_replace($m, $new, $text);
             }
         }
-        preg_match_all("#\[texi\](.*?)\[/texi\]#si",$text,$tex_matches);
+        preg_match_all('#\[texi\](.*?)\[/texi\]#si', $text, $tex_matches);
         if (count($tex_matches[0]) > 0) {
-            foreach($tex_matches[0] as $m) {
-                $new = str_replace(array('[texi]','[/texi]'),array('<span class="mee">','</span>'),$m);
+            foreach ($tex_matches[0] as $m) {
+                $new = str_replace(array('[texi]','[/texi]'), array('<span class="mee">','</span>'), $m);
                 $text = str_replace($m, $new, $text);
             }
         }
@@ -219,7 +226,8 @@ abstract class plugins_texteditor extends \plugins\plugins {
      * Get data to render in header.
      * @return array
      */
-    public function get_header_data() {
+    public function get_header_data()
+    {
         // Enable/Disable deprecated mee maths.
         $data['mee'] = $this->config->get_setting('core', 'paper_mee');
         return $data;
@@ -229,7 +237,8 @@ abstract class plugins_texteditor extends \plugins\plugins {
      * Enable this plugin
      * Only one module text editor plugin should be enabled at anyone time
      */
-    public function enable_plugin() {
+    public function enable_plugin()
+    {
         $enabled = array($this->plugin);
         $this->config->set_setting('enabled_plugin', $enabled, \Config::JSON, 'plugin_texteditor');
     }
@@ -238,7 +247,8 @@ abstract class plugins_texteditor extends \plugins\plugins {
      * Disable this plugin
      *
      */
-    public function disable_plugin() {
+    public function disable_plugin()
+    {
       // Nothing to do as only one module text editor plugin is enable at a time enable_plugin handles everything.
     }
 
@@ -246,56 +256,62 @@ abstract class plugins_texteditor extends \plugins\plugins {
      * Get plugin name
      * @return string
      */
-    public function get_name() {
-      return $this->plugin;
+    public function get_name()
+    {
+        return $this->plugin;
     }
 
     /**
      * Render text editor header
      */
-    public function display_header() {
-      $render = new \render($this->config, $this->get_render_paths());
-      $render->render($this->get_header_data(), null, $this->get_header_file());
+    public function display_header()
+    {
+        $render = new \render($this->config, $this->get_render_paths());
+        $render->render($this->get_header_data(), null, $this->get_header_file());
     }
 
     /**
      * Get text editor base path
      * @return string
      */
-    public function get_header_path() {
-      return $this->get_path() . DIRECTORY_SEPARATOR . 'templates';
+    public function get_header_path()
+    {
+        return $this->get_path() . DIRECTORY_SEPARATOR . 'templates';
     }
 
     /**
      * Get the enabled text editor
      * @return object
      */
-    public static function get_editor() {
-      $texteditorplugin_name = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
-      $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
-      return new $texteditorpluginns();
+    public static function get_editor()
+    {
+        $texteditorplugin_name = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
+        $texteditorpluginns = 'plugins\texteditor\\' . $texteditorplugin_name[0] . '\\' . $texteditorplugin_name[0];
+        return new $texteditorpluginns();
     }
 
     /**
      * Get path to render templates
      * @return array
      */
-    public function get_render_paths() {
-      $renderpath = array($this->get_header_path());
+    public function get_render_paths()
+    {
+        $renderpath = array($this->get_header_path());
       // Always get plain text editor.
-      $renderpath[] = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'templates'. DIRECTORY_SEPARATOR . 'texteditor';
-      return $renderpath;
+        $renderpath[] = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'texteditor';
+        return $renderpath;
     }
 
     /**
      * Get texteditor langpack
      * @return array
      */
-    public function get_strings() {
-      $langpack = new \langpack();
-      $strings = $langpack->get_all_strings($this->langcomponent);
+    public function get_strings()
+    {
+        $langpack = new \langpack();
+        $strings = $langpack->get_all_strings($this->langcomponent);
       // Always get plain text editor.
-      $strings = array_merge($strings, $langpack->get_all_strings('/texteditor'));
-      return $strings;
+        $strings = array_merge($strings, $langpack->get_all_strings('/texteditor'));
+        return $strings;
     }
 }

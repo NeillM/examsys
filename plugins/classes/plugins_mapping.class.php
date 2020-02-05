@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,10 +25,11 @@ namespace plugins;
 
 /**
  * Abstract mapping class.
- * 
+ *
  * This class should be extend by classes used define mapping plugins.
  */
-abstract class plugins_mapping extends \plugins\plugins {
+abstract class plugins_mapping extends \plugins\plugins
+{
     /**
      * Type of the plugin.
      * @var string
@@ -41,9 +43,10 @@ abstract class plugins_mapping extends \plugins\plugins {
      * @param string $source variable to map
      * @return string $target mapped variable
      */
-    static public function do_mapping($db, $source) {
+    public static function do_mapping($db, $source)
+    {
         $mappingplugin_name = \plugin_manager::get_plugin_type_enabled('plugin_mapping');
-        // Only one mapping plugin should be enabeld at anyone time so the array 
+        // Only one mapping plugin should be enabeld at anyone time so the array
         // returned by get_plugin_type_enabled should only be of length 1.
         if (count($mappingplugin_name) > 0) {
             $mappingplugin_name = $mappingplugin_name[0];
@@ -58,7 +61,8 @@ abstract class plugins_mapping extends \plugins\plugins {
      * Enable this plugin
      * Only one module mapping plugin should be enabled at anyone time
      */
-    public function enable_plugin() {
+    public function enable_plugin()
+    {
         $enabled = array($this->plugin);
         $this->config->set_setting('enabled_plugin', $enabled, \Config::JSON, 'plugin_mapping');
     }
@@ -66,7 +70,8 @@ abstract class plugins_mapping extends \plugins\plugins {
      * Disable this plugin
      * Only one module mapping plugin should be enabled at anyone time
      */
-    public function disable_plugin() {
+    public function disable_plugin()
+    {
         $enabled = $this->config->get_setting('plugin_mapping', 'enabled_plugin');
         if ($this->plugin == $enabled[0]) {
             $this->config->set_setting('enabled_plugin', array(), \Config::JSON, 'plugin_mapping');

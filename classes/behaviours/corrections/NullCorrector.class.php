@@ -24,26 +24,27 @@
  * @package
  */
 
-class NullCorrector {
-  private $_mysqli;
-  private $_lang_strings;
-  private $_question;
+class NullCorrector
+{
+    private $_mysqli;
+    private $_lang_strings;
+    private $_question;
 
-  function __construct($mysqli, $lang_strings, $question) {
-    $this->_mysqli = $mysqli;
-    $this->_lang_strings = $lang_strings;
-    $this->_question = $question;
-  }
+    function __construct($mysqli, $lang_strings, $question)
+    {
+        $this->_mysqli = $mysqli;
+        $this->_lang_strings = $lang_strings;
+        $this->_question = $question;
+    }
 
   /**
    * Change the correct answer after the question has been locked. Update user marks in summative log table
    * @param integer $new_correct new correct answer
    * @param integer $paper_id
    */
-  public function execute($new_correct, $paper_id, &$changes, $paper_type) {
-    // At the moment do nothing - might consider throwing an unsupported operation exception
-    return array();
-  }
-
-
+    public function execute($new_correct, $paper_id, &$changes, $paper_type)
+    {
+      // At the moment do nothing - might consider throwing an unsupported operation exception
+        return array();
+    }
 }

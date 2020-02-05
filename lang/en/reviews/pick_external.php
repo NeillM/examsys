@@ -20,4 +20,3 @@ $string['reminder'] = 'Reminder';
 $string['viewcomments'] = 'View Comments';
 $string['msg'] = 'Please click on the external examiner you would like to email to bring up editor.';
 $string['noexternals'] = "There are currently no externals assigned to the paper. Please use 'Edit Properties' to add some.";
-?>

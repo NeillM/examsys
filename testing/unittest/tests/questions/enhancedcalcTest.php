@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class enhancedcalctest extends unittestdatabase {
+class enhancedcalctest extends unittestdatabase
+{
     /**
      * @var array Storage for paper data in tests
      */
@@ -39,29 +41,30 @@ class enhancedcalctest extends unittestdatabase {
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
         $datagenerator->create_academic_year(array('calendar_year' => 2018, 'academic_year' => '2018/19'));
         $datagenerator = $this->get_datagenerator('papers', 'core');
-        $this->pid1 = $datagenerator->create_paper(array('papertitle' => "test formative",
-            'startdate' => "2018-02-19 00:00:00",
-            'enddate' => "2032-02-02 00:00:00",
+        $this->pid1 = $datagenerator->create_paper(array('papertitle' => 'test formative',
+            'startdate' => '2018-02-19 00:00:00',
+            'enddate' => '2032-02-02 00:00:00',
             'duration' => 60,
             'calendaryear' => 2018,
-            'timezone' => "Europe/London",
-            'paperowner' => "admin",
-            'labs' => "1",
-            'papertype' => "0",
-            'modulename' => "Training Module"));
+            'timezone' => 'Europe/London',
+            'paperowner' => 'admin',
+            'labs' => '1',
+            'papertype' => '0',
+            'modulename' => 'Training Module'));
         $datagenerator = $this->get_datagenerator('questions', 'core');
-        $this->question = $datagenerator->create_question(array("user" => "admin",
-            "type" => 'enhancedcalc',
-            "leadin" => "<div>A square is \$A cm by \$B cm. What is the area correct to a whole number?</div>",
-            "scenario" => "Calculation scenario",
-            "display_method" => "",
-            "score_method" => "Allow partial Marks",
-            "notes" => "Calculation student notes",
-            "settings" => "{\"strictdisplay\":true,\"strictzeros\":false,\"dp\":\"0\",\"tolerance_full\":\"0\",\"fulltoltyp\":\"#\",\"tolerance_partial\":\"0\",\"parttoltyp\":\"#\",\"marks_partial\":0,\"marks_incorrect\":0,\"marks_correct\":3,\"marks_unit\":0,\"show_units\":true,\"answers\":[{\"formula\":\"\$A*\$B\",\"units\":\"cm\"}],\"vars\":{\"\$A\":{\"min\":\"2\",\"max\":\"10\",\"inc\":\"1\",\"dec\":\"0\"},\"\$B\":{\"min\":\"5\",\"max\":\"10\",\"inc\":\"1\",\"dec\":\"0\"}}}"));
+        $this->question = $datagenerator->create_question(array('user' => 'admin',
+            'type' => 'enhancedcalc',
+            'leadin' => '<div>A square is $A cm by $B cm. What is the area correct to a whole number?</div>',
+            'scenario' => 'Calculation scenario',
+            'display_method' => '',
+            'score_method' => 'Allow partial Marks',
+            'notes' => 'Calculation student notes',
+            'settings' => '{"strictdisplay":true,"strictzeros":false,"dp":"0","tolerance_full":"0","fulltoltyp":"#","tolerance_partial":"0","parttoltyp":"#","marks_partial":0,"marks_incorrect":0,"marks_correct":3,"marks_unit":0,"show_units":true,"answers":[{"formula":"$A*$B","units":"cm"}],"vars":{"$A":{"min":"2","max":"10","inc":"1","dec":"0"},"$B":{"min":"5","max":"10","inc":"1","dec":"0"}}}'));
         $datagenerator->add_question_to_paper(array('paper' => $this->pid1['id'], 'question' => $this->question['id'], 'screen' => 1, 'displaypos' => 1));
     }
 
@@ -69,7 +72,8 @@ class enhancedcalctest extends unittestdatabase {
      * Test question header setter
      * @group question
      */
-    public function test_set_question_head() {
+    public function test_set_question_head()
+    {
         $data = questiondata::get_datastore('enhancedcalc');
         $data->set_question_head();
         $this->assertTrue($data->displaydefault);
@@ -83,7 +87,8 @@ class enhancedcalctest extends unittestdatabase {
      * Test question question setter
      * @group question
      */
-    public function test_set_question() {
+    public function test_set_question()
+    {
         $data = questiondata::get_datastore('enhancedcalc');
         $cfg_web_root = $this->config->get('cfg_web_root');
         require_once $cfg_web_root . 'plugins/questions/enhancedcalc/enhancedcalc.class.php';
@@ -98,7 +103,8 @@ class enhancedcalctest extends unittestdatabase {
      * Test question option setter
      * @group question
      */
-    public function test_set_option_answer() {
+    public function test_set_option_answer()
+    {
         ob_start(); // Start output buffering
         $data = questiondata::get_datastore('enhancedcalc');
         $data->marks = 0;

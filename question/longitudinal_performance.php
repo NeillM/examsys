@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -77,16 +78,16 @@ $q_id = check_var('q_id', 'GET', true, false, true);
   
   $found = false;
   $target_id = $q_id;
-  do {
+do {
     $data = question_info::check_copies($target_id, $mysqli);
     if (count($data) > 0 and isset($data[0]['paperID'])) {
-      $q_id_list[] = $data[0]['question_id'];
-      $target_id = $data[0]['question_id'];
-      $found = true;
+        $q_id_list[] = $data[0]['question_id'];
+        $target_id = $data[0]['question_id'];
+        $found = true;
     } else {
-      $found = false;
+        $found = false;
     }
-  } while ($found);
+} while ($found);
   
   $q_id_list[] = $q_id;
   
@@ -94,79 +95,79 @@ $q_id = check_var('q_id', 'GET', true, false, true);
   
   $data = question_info::check_copied($q_id, $mysqli);
   $rows = count($data);
-  for ($i=0; $i<$rows; $i++) {
+for ($i = 0; $i < $rows; $i++) {
     if (isset($data[$i]['paperID'])) {
-      $q_id_list[] = $data[$i]['question_id'];
+        $q_id_list[] = $data[$i]['question_id'];
     }
-  }
+}
   
   $display_data = array();
   
   $row = -1;
-  foreach ($q_id_list as $lookup_q_id) {  
+foreach ($q_id_list as $lookup_q_id) {
     $performance_array = question_info::question_performance($lookup_q_id, $mysqli);
     if (count($performance_array) > 0) {
-      $row++;
-      foreach ($performance_array as $paper => $performance) {
-        $display_data[$row]['q_id'] = $lookup_q_id;
-        if (!array_key_exists('icon', $performance)) {
-          $performance['icon']= 'red_flag.png';
-        }
-        $display_data[$row]['icon'] = $performance['icon'];
-        $display_data[$row]['paperID'] = $paper;
-        if (!array_key_exists('title', $performance)) {
-          $performance['title'] = '?';
-        }
-        $display_data[$row]['title'] = $performance['title'];
-        if (!array_key_exists('screen', $performance)) {
-          $performance['screen'] = '?';
-        }
-        $display_data[$row]['screen'] = $performance['screen'];
-        if (!array_key_exists('calendar_year', $performance)) {
-          $performance['calendar_year'] = '?';
-        }
-        $display_data[$row]['calendar_year'] = $performance['calendar_year'];
+        $row++;
+        foreach ($performance_array as $paper => $performance) {
+            $display_data[$row]['q_id'] = $lookup_q_id;
+            if (!array_key_exists('icon', $performance)) {
+                $performance['icon'] = 'red_flag.png';
+            }
+            $display_data[$row]['icon'] = $performance['icon'];
+            $display_data[$row]['paperID'] = $paper;
+            if (!array_key_exists('title', $performance)) {
+                $performance['title'] = '?';
+            }
+            $display_data[$row]['title'] = $performance['title'];
+            if (!array_key_exists('screen', $performance)) {
+                $performance['screen'] = '?';
+            }
+            $display_data[$row]['screen'] = $performance['screen'];
+            if (!array_key_exists('calendar_year', $performance)) {
+                $performance['calendar_year'] = '?';
+            }
+            $display_data[$row]['calendar_year'] = $performance['calendar_year'];
         
-        if (isset($performance['performance'][1]['taken'])) {
-          $display_data[$row]['taken'] = $performance['performance'][1]['taken'];
-          $display_data[$row]['cohort'] = $performance['performance'][1]['cohort'];
-          $display_data[$row]['parts'] = question_info::display_parts($performance['performance'], $q_type);
-          $display_data[$row]['p'] = question_info::display_p($performance['performance'], $q_type);
-          $display_data[$row]['d'] = question_info::display_d($performance['performance'], $q_type);
+            if (isset($performance['performance'][1]['taken'])) {
+                $display_data[$row]['taken'] = $performance['performance'][1]['taken'];
+                $display_data[$row]['cohort'] = $performance['performance'][1]['cohort'];
+                $display_data[$row]['parts'] = question_info::display_parts($performance['performance'], $q_type);
+                $display_data[$row]['p'] = question_info::display_p($performance['performance'], $q_type);
+                $display_data[$row]['d'] = question_info::display_d($performance['performance'], $q_type);
+            }
         }
-      }
     }
-  }
+}
   
   $sortby = 'calendar_year';
   $ordering = 'asc';
   $display_data = \sort::array_csort($display_data, $sortby, $ordering);
  
   $row = 0;
-  foreach ($display_data as $display_line) {
+foreach ($display_data as $display_line) {
     if ($display_line['q_id'] == $q_id) {
-      echo "<tr style=\"font-weight:bold\">";
+        echo '<tr style="font-weight:bold">';
     } else {
-      echo "<tr>";
+        echo '<tr>';
     }
-    echo "<td><img src=\"../artwork/" . $display_line['icon'] . "\" width=\"16\" height=\"16\" alt=\"icon\" /></td>";
-    echo "<td><a class=\"paperlink\" href=\"\" data-pid=\"" . $display_line['paperID'] . "\">" . $display_line['title'] . "</a></td><td>" . $display_line['calendar_year'] . "</td>";
-    echo "<td class=\"num\">" . $display_line['screen'] . "</td>";
+    echo '<td><img src="../artwork/' . $display_line['icon'] . '" width="16" height="16" alt="icon" /></td>';
+    echo '<td><a class="paperlink" href="" data-pid="' . $display_line['paperID'] . '">' . $display_line['title'] . '</a></td><td>' . $display_line['calendar_year'] . '</td>';
+    echo '<td class="num">' . $display_line['screen'] . '</td>';
     if (isset($display_line['taken'])) {
-      echo "<td>" . $display_line['taken'] . "</td>";
-      echo "<td class=\"num\">" . $display_line['cohort'] . "</td>";
-      echo "<td class=\"num\">" . $display_line['parts'] . "</td>";
-      echo "<td class=\"num\">" . $display_line['p'] . "</td>";
-      echo "<td class=\"num\">" . $display_line['d'] . "</td>";
+        echo '<td>' . $display_line['taken'] . '</td>';
+        echo '<td class="num">' . $display_line['cohort'] . '</td>';
+        echo '<td class="num">' . $display_line['parts'] . '</td>';
+        echo '<td class="num">' . $display_line['p'] . '</td>';
+        echo '<td class="num">' . $display_line['d'] . '</td>';
     } else {
-      echo "<td></td>";
-      echo "<td></td>";
-      echo "<td></td>";
-      echo "<td></td>";
-      echo "<td></td>";
+        echo '<td></td>';
+        echo '<td></td>';
+        echo '<td></td>';
+        echo '<td></td>';
+        echo '<td></td>';
     }
     echo "</tr>\n";
-  }
+}
 
 ?>
 </table>

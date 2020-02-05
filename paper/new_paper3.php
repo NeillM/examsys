@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -34,28 +35,28 @@ $paper_type = check_var('paper_type', 'POST', true, false, true);
 $paper_owner = check_var('paper_owner', 'POST', true, false, true);
 $session = $_POST['session'];
 if (empty($session)) {
-  $yearutils = new yearutils($mysqli);
-  $session = $yearutils->get_current_session();
+    $yearutils = new yearutils($mysqli);
+    $session = $yearutils->get_current_session();
 }
 
 $papertype = $assessment->get_type_value($paper_type);
 if ($papertype === false) {
     $errorline = __LINE__ - 2;
-    $msg = __FILE__ . " Line: " . $errorline . " Error:" . $string['papertypenotfound'];
+    $msg = __FILE__ . ' Line: ' . $errorline . ' Error:' . $string['papertypenotfound'];
     echo json_encode(array('ERROR',$notice->ajax_notice("$paper_type" . $string['papertypenotfound'], $msg)));
     exit();
 }
 // Process the posted modules
 $modules = array();
 $first = true;
-for ($i=0; $i<$_POST['module_no']; $i++) {
-  if (isset($_POST['mod' . $i])) {
-    if ($first == true) {
-      $first_module = $_POST['mod' . $i];
-      $first = false;
+for ($i = 0; $i < $_POST['module_no']; $i++) {
+    if (isset($_POST['mod' . $i])) {
+        if ($first == true) {
+            $first_module = $_POST['mod' . $i];
+            $first = false;
+        }
+        $modules[] = $_POST['mod' . $i];
     }
-    $modules[] = $_POST['mod' . $i];
-  }
 }
 
 if (isset($_POST['timezone'])) {
@@ -72,32 +73,44 @@ if ($configObject->get_setting('core', 'cfg_summative_mgmt') and $papertype == $
         $duration += $_POST['duration_mins'];
     }
 
-    $start_date = NULL;
-    $end_date = NULL;
+    $start_date = null;
+    $end_date = null;
 } else {
-    $duration = NULL;
+    $duration = null;
     if ((bool) date('L', strtotime($_POST['fyear'] . '-01-01'))) {
         $leap = true;
     } else {
         $leap = false;
     }
 
-    if ($leap == true and $_POST['fmonth'] == '02' and ($_POST['fday'] == '30' or $_POST['fday'] == '31')) $_POST['fday'] = '29';
-    if ($leap == false and $_POST['fmonth'] == '02' and ($_POST['fday'] == '29' or $_POST['fday'] == '30' or $_POST['fday'] == '31')) $_POST['fday'] = '28';
-    if (($_POST['fmonth'] == '04' or $_POST['fmonth'] == '06' or $_POST['fmonth'] == '09' or $_POST['fmonth'] == '11') and $_POST['fday'] == '31') $_POST['fday'] = '30';
+    if ($leap == true and $_POST['fmonth'] == '02' and ($_POST['fday'] == '30' or $_POST['fday'] == '31')) {
+        $_POST['fday'] = '29';
+    }
+    if ($leap == false and $_POST['fmonth'] == '02' and ($_POST['fday'] == '29' or $_POST['fday'] == '30' or $_POST['fday'] == '31')) {
+        $_POST['fday'] = '28';
+    }
+    if (($_POST['fmonth'] == '04' or $_POST['fmonth'] == '06' or $_POST['fmonth'] == '09' or $_POST['fmonth'] == '11') and $_POST['fday'] == '31') {
+        $_POST['fday'] = '30';
+    }
 
     $start_date = $_POST['fyear'] . $_POST['fmonth'] . $_POST['fday'] . $_POST['ftime'];
 
 
-    if ($leap == true and $_POST['tmonth'] == '02' and ($_POST['tday'] == '30' or $_POST['tday'] == '31')) $_POST['tday'] = '29';
-    if ($leap == false and $_POST['tmonth'] == '02' and ($_POST['tday'] == '29' or $_POST['tday'] == '30' or $_POST['tday'] == '31')) $_POST['tday'] = '28';
-    if (($_POST['tmonth'] == '04' or $_POST['tmonth'] == '06' or $_POST['tmonth'] == '09' or $_POST['tmonth'] == '11') and $_POST['tday'] == '31') $_POST['tday'] = '30';
+    if ($leap == true and $_POST['tmonth'] == '02' and ($_POST['tday'] == '30' or $_POST['tday'] == '31')) {
+        $_POST['tday'] = '29';
+    }
+    if ($leap == false and $_POST['tmonth'] == '02' and ($_POST['tday'] == '29' or $_POST['tday'] == '30' or $_POST['tday'] == '31')) {
+        $_POST['tday'] = '28';
+    }
+    if (($_POST['tmonth'] == '04' or $_POST['tmonth'] == '06' or $_POST['tmonth'] == '09' or $_POST['tmonth'] == '11') and $_POST['tday'] == '31') {
+        $_POST['tday'] = '30';
+    }
 
     $end_date = $_POST['tyear'] . $_POST['tmonth'] . $_POST['tday'] . $_POST['ttime'];
 }
 
 try {
-    $property_id = $assessment->create($paper_name, $papertype, $paper_owner , $start_date, $end_date, '', $duration, $session, $modules, $timezone);
+    $property_id = $assessment->create($paper_name, $papertype, $paper_owner, $start_date, $end_date, '', $duration, $session, $modules, $timezone);
 
     if ($configObject->get_setting('core', 'cfg_summative_mgmt') and $papertype == $assessment::TYPE_SUMMATIVE) {
         if (isset($_POST['barriers_needed'])) {
@@ -112,8 +125,8 @@ try {
     // Log warning to system.
     $errorstring = $e->getMessage();
     $errorline = __LINE__ - 14;
-    $log->record_application_warning($paper_owner,  'Paper Creation', $errorstring, $_SERVER['PHP_SELF'], $errorline);
-    $msg = $errorline . " Error code: " . $e->getCode() . " - " . $errorstring;
+    $log->record_application_warning($paper_owner, 'Paper Creation', $errorstring, $_SERVER['PHP_SELF'], $errorline);
+    $msg = $errorline . ' Error code: ' . $e->getCode() . ' - ' . $errorstring;
     echo json_encode(array(
         'ERROR',
         $notice->ajax_notice($string['errorcreatingpaper'], $msg)
@@ -128,7 +141,8 @@ if ($property_id !== false) {
         $first_module,
         $_POST['folder']
     ));
-} else {$log = new logger($mysqli);
+} else {
+    $log = new logger($mysqli);
     // Log warning to system.
     $errorline = __LINE__ - 33;
     $log->record_application_warning($paper_owner, 'Paper Creation', $string['dbinsertfailed'], $_SERVER['PHP_SELF'], $errorline);

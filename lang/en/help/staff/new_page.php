@@ -17,4 +17,3 @@
 require '../../lang/' . $language . '/help/staff/index.php';
 
 $string['pagetitle'] = 'Page Title...';
-?>

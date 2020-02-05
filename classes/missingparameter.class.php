@@ -22,4 +22,6 @@
  * @copyright Copyright (c) 2016 The University of Nottingham
  * @package core
  */
-class MissingParameter extends Exception {}
+class MissingParameter extends Exception
+{
+}

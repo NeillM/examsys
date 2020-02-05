@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -33,17 +34,17 @@ $userID = check_var('userID', 'GET', true, false, true);
 
 $user_details = UserUtils::get_user_details($userID, $mysqli);
 if ($user_details === false) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 if ($user_details['gender'] == 'Male') {
-  $generic_icon = '../artwork/user_male_48.png';
+    $generic_icon = '../artwork/user_male_48.png';
 } elseif ($user_details['gender'] == 'Female') {
-  $generic_icon = '../artwork/user_female_48.png';
+    $generic_icon = '../artwork/user_female_48.png';
 } else {
-  $generic_icon = '../artwork/user_mx_48.png';
+    $generic_icon = '../artwork/user_mx_48.png';
 }
 ?>
 <!DOCTYPE html>
@@ -73,69 +74,71 @@ if ($user_details['gender'] == 'Male') {
   <form id="myform" name="myform" action="" method="post" enctype="multipart/form-data" autocomplete="off">
   <table cellspacing="0" cellpadding="2" border="0" style="width:100%; border:12px solid #EEF4FF">
 <?php
-  echo "<tr><td>" . $string['name'] . "</td><td>";
+  echo '<tr><td>' . $string['name'] . '</td><td>';
   $title_array = explode(',', $string['title_types']);
   echo '<select name="title">';
-  foreach ($title_array as $individual_title) {
+foreach ($title_array as $individual_title) {
     if ($individual_title == $user_details['title']) {
-      echo '<option value="' . $individual_title . '" selected>' . $individual_title . '</option>';
+        echo '<option value="' . $individual_title . '" selected>' . $individual_title . '</option>';
     } else {
-      echo '<option value="' . $individual_title . '">' . $individual_title . '</option>';
+        echo '<option value="' . $individual_title . '">' . $individual_title . '</option>';
     }
-  }
-  echo "</select> <input type=\"text\" value=\"" . $user_details['first_names'] . "\" name=\"first_names\" required /> <input type=\"text\" value=\"" . $user_details['surname'] . "\" name=\"surname\" required /></td></tr>\n";
-  echo "<tr><td>" . $string['studentid'] . "</td><td><input type=\"text\" value=\"" . $user_details['student_id'] . "\" name=\"sid\" /></td></tr>\n";
-  echo "<tr><td>" . $string['username'] . "</td><td><input type=\"text\" value=\"" . $user_details['username'] . "\" id=\"username\" name=\"username\" required /><span id=\"usernameerror\"></span></td></tr>\n";
-  echo "<tr><td>" . $string['email'] . "</td><td><input type=\"text\" value=\"" . $user_details['email'] . "\" name=\"email\" style=\"width:340px\" required /></td></tr>\n";
-  echo "<tr><td>" . $string['course'] . "</td><td><select name=\"grade\" style=\"width:300px\">";
+}
+  echo '</select> <input type="text" value="' . $user_details['first_names'] . '" name="first_names" required /> <input type="text" value="' . $user_details['surname'] . "\" name=\"surname\" required /></td></tr>\n";
+  echo '<tr><td>' . $string['studentid'] . '</td><td><input type="text" value="' . $user_details['student_id'] . "\" name=\"sid\" /></td></tr>\n";
+  echo '<tr><td>' . $string['username'] . '</td><td><input type="text" value="' . $user_details['username'] . "\" id=\"username\" name=\"username\" required /><span id=\"usernameerror\"></span></td></tr>\n";
+  echo '<tr><td>' . $string['email'] . '</td><td><input type="text" value="' . $user_details['email'] . "\" name=\"email\" style=\"width:340px\" required /></td></tr>\n";
+  echo '<tr><td>' . $string['course'] . '</td><td><select name="grade" style="width:300px">';
   $found = 0;
-  $course_details = $mysqli->prepare("SELECT DISTINCT name, description FROM courses ORDER BY name");
+  $course_details = $mysqli->prepare('SELECT DISTINCT name, description FROM courses ORDER BY name');
   $course_details->execute();
   $course_details->bind_result($name, $description);
-  while ($course_details->fetch()) {
+while ($course_details->fetch()) {
     if ($name == $user_details['grade']) {
-      $found = 1;
-      echo "<option value=\"$name\" selected>$name: $description</option>\n";
+        $found = 1;
+        echo "<option value=\"$name\" selected>$name: $description</option>\n";
     } else {
-      echo "<option value=\"$name\">$name: $description</option>\n";
+        echo "<option value=\"$name\">$name: $description</option>\n";
     }
-  }
-  if ($found == 0) echo "<option value=\"" . $user_details['grade'] . "\" selected>" . $user_details['grade'] . ": " . $string['unknown'] . "</option>\n";
+}
+if ($found == 0) {
+    echo '<option value="' . $user_details['grade'] . '" selected>' . $user_details['grade'] . ': ' . $string['unknown'] . "</option>\n";
+}
   $course_details->close();
 
   echo "</select></td></tr>\n";
-  echo "<tr><td>" . $string['yearofstudy'] . "</td><td><select name=\"year\">";
-  for ($i=1; $i<=6; $i++) {
+  echo '<tr><td>' . $string['yearofstudy'] . '</td><td><select name="year">';
+for ($i = 1; $i <= 6; $i++) {
     if ($i == $user_details['yearofstudy']) {
-      echo "<option value=\"$i\" selected>$i</option>";
+        echo "<option value=\"$i\" selected>$i</option>";
     } else {
-      echo "<option value=\"$i\">$i</option>";
+        echo "<option value=\"$i\">$i</option>";
     }
-  }
-  echo "</select></td></tr>";
+}
+  echo '</select></td></tr>';
 
-  echo "<tr><td>" . $string['gender'] . "</td><td><select name=\"gender\">";
-  if ($user_details['gender'] == 'Male') {
-    echo "<option value=\"Male\" selected>" . $string['male'] . "</option>\n<option value=\"Female\">" . $string['female'] . "</option>\n<option value=\"Other\">" . $string['other'] . "</option>";
-  } elseif ($user_details['gender'] == 'Female') {
-    echo "<option value=\"Male\">" . $string['male'] . "</option>\n<option value=\"Female\" selected>" . $string['female'] . "</option>\n<option value=\"Other\">" . $string['other'] . "</option>";
-  } elseif ($user_details['gender'] == 'Other') {
-    echo "<option value=\"Male\">" . $string['male'] . "</option>\n<option value=\"Female\">" . $string['female'] . "</option>\n<option value=\"Other\" selected>" . $string['other'] . "</option>";
-  } else {
+  echo '<tr><td>' . $string['gender'] . '</td><td><select name="gender">';
+if ($user_details['gender'] == 'Male') {
+    echo '<option value="Male" selected>' . $string['male'] . "</option>\n<option value=\"Female\">" . $string['female'] . "</option>\n<option value=\"Other\">" . $string['other'] . '</option>';
+} elseif ($user_details['gender'] == 'Female') {
+    echo '<option value="Male">' . $string['male'] . "</option>\n<option value=\"Female\" selected>" . $string['female'] . "</option>\n<option value=\"Other\">" . $string['other'] . '</option>';
+} elseif ($user_details['gender'] == 'Other') {
+    echo '<option value="Male">' . $string['male'] . "</option>\n<option value=\"Female\">" . $string['female'] . "</option>\n<option value=\"Other\" selected>" . $string['other'] . '</option>';
+} else {
     echo "<option value=\"\"></option>\n<option value=\"Male\">" . $string['male'] . "</option>\n<option value=\"Female\">" . $string['female'] . "</option>\n<option value=\"Other\">" . $string['other'] . "</option>\n";
-  }
-  echo "</select></td></tr>";
+}
+  echo '</select></td></tr>';
 
-  echo "<tr><td>" . $string['status'] . "</td><td><select name=\"roles\">";
+  echo '<tr><td>' . $string['status'] . '</td><td><select name="roles">';
   $old_optgroup = '';
 
   $roles_array = array('#Staff', 'Staff');
-  if ($userObject->has_role('SysAdmin')) {
+if ($userObject->has_role('SysAdmin')) {
     $roles_array[] = 'Staff,Admin';
     $roles_array[] = 'Staff,SysAdmin';
-  } elseif ($userObject->has_role('Admin')) {
+} elseif ($userObject->has_role('Admin')) {
     $roles_array[] = 'Staff,Admin';
-  }
+}
   $roles_array[] = 'Staff,Student';
   $roles_array[] = 'External Examiner';
   $roles_array[] = 'Internal Reviewer';
@@ -149,38 +152,40 @@ if ($user_details['gender'] == 'Male') {
   $roles_array[] = 'Suspended';
   $roles_array[] = 'Locked';
 
-  foreach ($roles_array as $value) {
-    if (substr($value,0,1) == '#') {
-      if ($old_optgroup != '') echo "</optgroup>\n";
-      echo "<optgroup label=\"" . $string[substr($value,1)] . "\">\n";
-      $old_optgroup = $value;
+foreach ($roles_array as $value) {
+    if (substr($value, 0, 1) == '#') {
+        if ($old_optgroup != '') {
+            echo "</optgroup>\n";
+        }
+        echo '<optgroup label="' . $string[substr($value, 1)] . "\">\n";
+        $old_optgroup = $value;
     } else {
-      $display_val = str_replace(' ', '', $value);
-      $display_val = str_replace(',', '', $display_val);
-      $display_val = $string[strtolower($display_val)];
-      if (strtolower($value) == strtolower($user_details['roles'])) {
-        echo "<option value=\"$value\" selected>$display_val</option>";
-      } else {
-        echo "<option value=\"$value\">$display_val</option>";
-      }
+        $display_val = str_replace(' ', '', $value);
+        $display_val = str_replace(',', '', $display_val);
+        $display_val = $string[strtolower($display_val)];
+        if (strtolower($value) == strtolower($user_details['roles'])) {
+            echo "<option value=\"$value\" selected>$display_val</option>";
+        } else {
+            echo "<option value=\"$value\">$display_val</option>";
+        }
     }
-  }
+}
   echo "</optgroup>\n</select>\n";
-  echo "<input type=\"hidden\" name=\"prev_roles\" value=\"" . $user_details['roles'] . "\" /></td></tr>\n";
-  echo "<input type=\"hidden\" name=\"prev_username\" value=\"" . $user_details['username'] . "\" /></td></tr>\n";
-  echo "<input type=\"hidden\" name=\"userID\" value=\"" . $userID . "\" /></td></tr>\n";
-  echo "<tr><td>" . $string['photo'] . "</td><td><input type=\"file\" name=\"photofile\" /></td></tr>";
-  ?>
+  echo '<input type="hidden" name="prev_roles" value="' . $user_details['roles'] . "\" /></td></tr>\n";
+  echo '<input type="hidden" name="prev_username" value="' . $user_details['username'] . "\" /></td></tr>\n";
+  echo '<input type="hidden" name="userID" value="' . $userID . "\" /></td></tr>\n";
+  echo '<tr><td>' . $string['photo'] . '</td><td><input type="file" name="photofile" /></td></tr>';
+?>
   </table>
 
     <div style="margin-top:24px; text-align:center"><input type="submit" name="submit" value="<?php echo $string['ok'] ?>" class="ok" /><input class="cancel" type="button" id="cancel" name="cancel" value="<?php echo $string['cancel'] ?>" /></div>
   </form>
   <?php
   // JS utils dataset.
-  $render = new render($configObject);
-  $jsdataset['name'] = 'jsutils';
-  $jsdataset['attributes']['xls'] = json_encode($string);
-  $render->render($jsdataset, array(), 'dataset.html');
-  ?>
+    $render = new render($configObject);
+    $jsdataset['name'] = 'jsutils';
+    $jsdataset['attributes']['xls'] = json_encode($string);
+    $render->render($jsdataset, array(), 'dataset.html');
+    ?>
 </body>
 </html>

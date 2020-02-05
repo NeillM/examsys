@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -26,8 +27,12 @@
   $mysqli->close();
   $questionlist = '';
   $question_no = '';
-  if( isset($_GET['questionlist']) ) $questionlist = $_GET['questionlist'];
-  if( isset($_GET['question_no']) ) $question_no = $_GET['question_no'];
+if (isset($_GET['questionlist'])) {
+    $questionlist = $_GET['questionlist'];
+}
+if (isset($_GET['question_no'])) {
+    $question_no = $_GET['question_no'];
+}
  
 ?>
 <html>
@@ -57,11 +62,11 @@
             <?php
               $user_modules = $userObject->get_staff_modules();
 
-              if (count($user_modules) > 0) {
+            if (count($user_modules) > 0) {
                 echo '<tr><td id="button_team" class="tab">' . $string['byteam'] . '</td></tr>';
-              } else {
+            } else {
                 echo '<tr><td id="button_team" class="tab grey">' . $string['byteam'] . '</td></tr>';
-              }
+            }
             ?>
             <tr><td id="button_search" class="tab"><?php echo $string['search'] ?></td></tr>
             </table>

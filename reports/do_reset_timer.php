@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -33,27 +34,27 @@ $paperID    = check_var('paperID', 'POST', true, false, true);
 
 $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 if ($properties->get_paper_type() != '1') {   // Only allow timer reset of Progress Test papers.
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  echo json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
-  exit();
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    echo json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
+    exit();
 }
 
 $log_metadata = new LogMetadata($userID, $paperID, $mysqli);
 
 if ($log_metadata->get_record($metadataID) === false) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  echo json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
-  exit();
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    echo json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
+    exit();
 }
 
 $user_details = UserUtils::get_user_details($userID, $mysqli);
 if ($user_details === false) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  echo json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
-  exit();
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    echo json_encode($notice->ajax_notice($string['pagenotfound'], $msg));
+    exit();
 }
 
 $log_metadata->set_started_to_null();

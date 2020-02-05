@@ -43,4 +43,3 @@ $string['question'] = '<strong>Q no</strong> - number of questions mapped to obj
 
 $string['idmissing'] = 'Student ID Missing';
 $string['idmissing_msg'] = 'No student ID has been passed. To view a specific feedback report for a student access via Class Totals report.';
-?>

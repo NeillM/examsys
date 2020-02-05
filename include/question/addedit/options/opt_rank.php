@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -24,23 +25,29 @@
 
 $hidden = (($num_options == 0 and $index > 6) or ($num_options > 0 and $index > $num_options)) ? ' hide' : '';
 for ($i = 0; $i <= 20; $i++) {
-  $postfix = '';
-  if ($language == 'en') {
-    $postfix = 'th';
-    if ($i == 1) $postfix = 'st';
-    if ($i == 2) $postfix = 'nd';
-    if ($i == 3) $postfix = 'rd';
+    $postfix = '';
+    if ($language == 'en') {
+        $postfix = 'th';
+        if ($i == 1) {
+            $postfix = 'st';
+        }
+        if ($i == 2) {
+            $postfix = 'nd';
+        }
+        if ($i == 3) {
+            $postfix = 'rd';
+        }
     }
-  if ($i == 0) {
-    $correct_vals[$i] = $string['na'];
-  } else {
-    $correct_vals[$i] = $i . $postfix;
-  }
+    if ($i == 0) {
+        $correct_vals[$i] = $string['na'];
+    } else {
+        $correct_vals[$i] = $i . $postfix;
+    }
 }
-if ($index %2 == 0) {
-  $alt_c = ' class="alt"';
+if ($index % 2 == 0) {
+    $alt_c = ' class="alt"';
 } else {
-  $alt_c = '';
+    $alt_c = '';
 }
 $spaced = ($index > 1) ? ' spaced-top' : '';
 ?>
@@ -53,7 +60,7 @@ $spaced = ($index > 1) ? ' spaced-top' : '';
               </td>
               <td class="small align-centre spaced-bottom<?php echo $spaced ?>">
                 <select id="option_correct<?php echo $index ?>" name="option_correct<?php echo $index ?>">
-<?php 
+<?php
 echo ViewHelper::render_options($correct_vals, $option->get_correct(), 3, true);
 ?>
                 </select>

@@ -27,4 +27,3 @@ $string['keywords'] = 'Keywords';
 $string['teams'] = 'Teams';
 $string['mappingdisabled'] = 'Mapping Disabled';
 $string['questionnotonpaper'] = 'This question is Not on a paper and hence can not be mapped';
-?>

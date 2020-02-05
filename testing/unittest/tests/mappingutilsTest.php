@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2019 onwards The University of Nottingham
  * @package tests
  */
-class mappingutilsstest extends unittestdatabase {
+class mappingutilsstest extends unittestdatabase
+{
     /**
      * @var integer Storage for session id in tests
      */
@@ -34,9 +36,10 @@ class mappingutilsstest extends unittestdatabase {
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $datagenerator = $this->get_datagenerator('objective', 'core');
-        $session = $datagenerator->create_session(array('idMod' => $this->module, 'occurrence' => "2017-01-09 11:00:00"));
+        $session = $datagenerator->create_session(array('idMod' => $this->module, 'occurrence' => '2017-01-09 11:00:00'));
         $this->sessid = $session['identifier'];
         $datagenerator->create_objective(array('idMod' => $this->module, 'identifier' => $this->sessid, 'objective' => 'a'));
         $datagenerator->create_objective(array('idMod' => $this->module, 'identifier' => $this->sessid, 'objective' => 'b', 'sequence' => 2));
@@ -47,7 +50,8 @@ class mappingutilsstest extends unittestdatabase {
      * Test get objectives start id
      * @group mapping
      */
-    public function test_get_objectives_start() {
+    public function test_get_objectives_start()
+    {
         $expected = 126;
         $this->assertEquals($expected, \mappingutils::get_objectives_start());
     }
@@ -56,7 +60,8 @@ class mappingutilsstest extends unittestdatabase {
      * Test get sessions start id
      * @group mapping
      */
-    public function test_get_sessions_start() {
+    public function test_get_sessions_start()
+    {
         $expected = $this->sessid + 1;
         $this->assertEquals($expected, \mappingutils::get_sessions_start());
     }

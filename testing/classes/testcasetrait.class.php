@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,12 +25,13 @@ use mysqli;
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2019 onwards The University of Nottingham
  */
-trait testcasetrait {
+trait testcasetrait
+{
 
     /**
      * Load/Generate test data
      */
-    abstract protected function setup_dataset() : void;
+    abstract protected function setup_dataset(): void;
 
     /**
      * load data generators
@@ -37,7 +39,7 @@ trait testcasetrait {
      * @param string $component The component the generator is from (optional).
      * @return generator
      */
-    abstract public function get_datagenerator(string $name, string $component = 'core') : \testing\datagenerator\generator;
+    abstract public function get_datagenerator(string $name, string $component = 'core'): \testing\datagenerator\generator;
 
     /**
      * Set-up db connections.
@@ -50,16 +52,23 @@ trait testcasetrait {
      * @param array $dbconfig database configuration
      * @return mysqli
      */
-    protected function set_db_connection(array $dbconfig) : mysqli {
-        return new mysqli($dbconfig['host'], $dbconfig['user'], $dbconfig['password'],
-            $dbconfig['database'], $dbconfig['port']);
+    protected function set_db_connection(array $dbconfig): mysqli
+    {
+        return new mysqli(
+            $dbconfig['host'],
+            $dbconfig['user'],
+            $dbconfig['password'],
+            $dbconfig['database'],
+            $dbconfig['port']
+        );
     }
 
     /**
      * Generate data for test.
      * @throws Exception
      */
-    protected function base_datageneration() : void {
+    protected function base_datageneration(): void
+    {
         // Always need this academic year.
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
         $calendaryear = date('Y');
@@ -67,12 +76,12 @@ trait testcasetrait {
         $datagenerator->create_academic_year(array('calendar_year' => $calendaryear, 'academic_year' => $academicyear));
         // Base users.
         $datagenerator = $this->get_datagenerator('users', 'core');
-        $datagenerator->create_user(array('surname' => 'Administrator', 'username' => 'admin', 'roles' => 'Staff,SysAdmin', 'grade' => "University Lecturer",
-            'initials' => "S", 'title' => "Miss", 'email' => "admin@example.com", 'first_names' => "System", 'gender' => null));
-        $datagenerator->create_user(array('surname' => 'User1', 'username' => 'test1', 'roles' => 'Student', 'grade' => "TEST2",
-            'initials' => "A", 'title' => "Dr", 'first_names' => "A", 'sid' => "1234567890", 'gender' => null));
-        $datagenerator->create_user(array('surname' => 'User2', 'username' => 'test2', 'roles' => 'Student', 'grade' => "TEST2",
-            'initials' => "A", 'title' => "Dr", 'first_names' => "A", 'sid' => "00000001", 'gender' => null));
+        $datagenerator->create_user(array('surname' => 'Administrator', 'username' => 'admin', 'roles' => 'Staff,SysAdmin', 'grade' => 'University Lecturer',
+            'initials' => 'S', 'title' => 'Miss', 'email' => 'admin@example.com', 'first_names' => 'System', 'gender' => null));
+        $datagenerator->create_user(array('surname' => 'User1', 'username' => 'test1', 'roles' => 'Student', 'grade' => 'TEST2',
+            'initials' => 'A', 'title' => 'Dr', 'first_names' => 'A', 'sid' => '1234567890', 'gender' => null));
+        $datagenerator->create_user(array('surname' => 'User2', 'username' => 'test2', 'roles' => 'Student', 'grade' => 'TEST2',
+            'initials' => 'A', 'title' => 'Dr', 'first_names' => 'A', 'sid' => '00000001', 'gender' => null));
         $fixtures = glob("$this->fixture_base*.yml");
         if (count($fixtures) < 1) {
             // We should find some yml files!
@@ -96,7 +105,8 @@ trait testcasetrait {
      *
      * @return array
      */
-    protected function query(array $querydata) : array {
+    protected function query(array $querydata): array
+    {
         // Generate columns.
         $columnsstring = '*';
         if (isset($querydata['columns']) && is_array($querydata['columns'])) {
@@ -142,8 +152,8 @@ trait testcasetrait {
         $query = 'SELECT ' . $columnsstring . ' FROM ' . $querydata['table'] . $wherestring . $orderbystring;
         $sql = $this->get_db_connection()->prepare($query);
         if ($sql === false) {
-          $error = $this->get_db_connection()->error;
-          throw new \Exception("Query failed: $error");
+            $error = $this->get_db_connection()->error;
+            throw new \Exception("Query failed: $error");
         }
         $sql->execute();
         $result = $sql->get_result();
@@ -160,11 +170,12 @@ trait testcasetrait {
      * @param string $table the table
      * @return int
      */
-    protected function rowcount(string $table) : int {
-        $sql = $this->get_db_connection()->prepare("SELECT count(*) FROM " . $table);
+    protected function rowcount(string $table): int
+    {
+        $sql = $this->get_db_connection()->prepare('SELECT count(*) FROM ' . $table);
         if ($sql === false) {
-          $error = $this->get_db_connection()->error;
-          throw new \Exception("Row count failed: $error");
+            $error = $this->get_db_connection()->error;
+            throw new \Exception("Row count failed: $error");
         }
         $sql->execute();
         $sql->bind_result($count);
@@ -176,7 +187,8 @@ trait testcasetrait {
     /**
      * Get database table names
      */
-    protected function get_table_names() : void {
+    protected function get_table_names(): void
+    {
         $tablelist = $this->get_db_connection()->query('SHOW TABLES');
         foreach ($tablelist->fetch_all(MYSQLI_NUM) as $table) {
             $this->table_names[] = $table[0];
@@ -186,26 +198,29 @@ trait testcasetrait {
     /**
      * Disable foreign key checks on database
      */
-    protected function disable_fk_check() : void {
-        $this->get_db_connection()->query("SET FOREIGN_KEY_CHECKS = 0");
+    protected function disable_fk_check(): void
+    {
+        $this->get_db_connection()->query('SET FOREIGN_KEY_CHECKS = 0');
     }
 
     /**
      * Enable foreign key checks on database
      */
-    protected function enable_fk_check() : void {
-        $this->get_db_connection()->query("SET FOREIGN_KEY_CHECKS = 1");
+    protected function enable_fk_check(): void
+    {
+        $this->get_db_connection()->query('SET FOREIGN_KEY_CHECKS = 1');
     }
 
     /**
      * Delete data from a table
      * @param string $table table name
      */
-    protected function delete_from_table(string $table) : void {
+    protected function delete_from_table(string $table): void
+    {
         $sql = $this->get_db_connection()->prepare('DELETE FROM ' . $table);
         if ($sql === false) {
-          $error = $this->get_db_connection()->error;
-          throw new \Exception("Delete failed: $error");
+            $error = $this->get_db_connection()->error;
+            throw new \Exception("Delete failed: $error");
         }
         $sql->execute();
         $sql->close();
@@ -215,12 +230,13 @@ trait testcasetrait {
      * Insert data into test db
      * @param array $data data to insert
      */
-    private function insert_into_db(array $data) : void {
+    private function insert_into_db(array $data): void
+    {
         foreach ($data as $tableName => $rows) {
             if (!is_null($rows)) {
                 foreach ($rows as $idx => $val) {
-                    $keys = implode(",", array_keys($val));
-                    $values = "";
+                    $keys = implode(',', array_keys($val));
+                    $values = '';
                     foreach (array_values($val) as $v) {
                         if (is_string($v)) {
                             $v = $this->get_db_connection()->real_escape_string($v);
@@ -233,8 +249,8 @@ trait testcasetrait {
                     $values = rtrim($values, ',');
                     $sql = $this->get_db_connection()->prepare('INSERT INTO ' . $tableName . '(' . $keys . ')' . ' values (' . $values . ')');
                     if ($sql === false) {
-                      $error = $this->get_db_connection()->error;
-                      throw new \Exception("Insert failed: $error");
+                        $error = $this->get_db_connection()->error;
+                        throw new \Exception("Insert failed: $error");
                     }
                     $sql->execute();
                     $sql->close();
@@ -242,5 +258,4 @@ trait testcasetrait {
             }
         }
     }
-
 }

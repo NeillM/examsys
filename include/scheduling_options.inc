@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -33,33 +34,33 @@ $next_academic_year = $yearutils->get_academic_session($next_session);
 <div id="left-sidebar" class="sidebar">
 <form name="myform" autocomplete="off">
 <div id="menu1a">
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/information_icon_grey.gif" alt="" /><?php echo $string['viewdetails'] ?></div>
+    <div class="grey menuitem"><img class="sidebar_icon" src="../artwork/information_icon_grey.gif" alt="" /><?php echo $string['viewdetails'] ?></div>
 </div>
 
 <div style="display:none" id="menu1b">
-	<div id="details" class="menuitem"<a href="#""><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="" /><?php echo $string['viewdetails'] ?></a></div>
+    <div id="details" class="menuitem"<a href="#""><img class="sidebar_icon" src="../artwork/information_icon.gif" alt="" /><?php echo $string['viewdetails'] ?></a></div>
 </div>
 <div id="menu1c">
 <?php
-    if ($userObject->has_role(array('SysAdmin'))) {
-        $smsplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
-        foreach($smsplugin_name as $name) {
-            $smspluginns = 'plugins\SMS\\' . $name . '\\' . $name;
-            $smsplugin = new $smspluginns($userObject->get_user_ID());
-            $assessmentimport = $smsplugin->supports_assessment_import() ;
-            if ($assessmentimport !== false) {
-    ?>
+if ($userObject->has_role(array('SysAdmin'))) {
+    $smsplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
+    foreach ($smsplugin_name as $name) {
+        $smspluginns = 'plugins\SMS\\' . $name . '\\' . $name;
+        $smsplugin = new $smspluginns($userObject->get_user_ID());
+        $assessmentimport = $smsplugin->supports_assessment_import() ;
+        if ($assessmentimport !== false) {
+            ?>
     <div id="sms" class="menuitem">
         <a class="help_tip" title="<?php echo $assessmentimport['tooltip'] ?>" href="<?php echo $assessmentimport['url'] ?>?session=<?php echo $current_session ?>"><img class="sidebar_icon" src="../artwork/sync_16.png" alt="" /><?php echo $assessmentimport['blurb'] ?> (<?php echo $academic_year ?>)</a>
     </div>
     <div id="sms2" class="menuitem">
         <a class="help_tip" title="<?php echo $assessmentimport['tooltip'] ?>" href="<?php echo $assessmentimport['url'] ?>?session=<?php echo $next_session ?>"><img class="sidebar_icon" src="../artwork/sync_16.png" alt="" /><?php echo $assessmentimport['blurb'] ?> (<?php echo $next_academic_year ?>)</a>
     </div>
-    <?php
-            }
+            <?php
         }
     }
-    ?>
+}
+?>
 </div>
 <input type="hidden" id="lineID" name="lineID" value="" />
 </form>

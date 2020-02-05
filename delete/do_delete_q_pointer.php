@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -35,53 +36,53 @@ $properties = PaperProperties::get_paper_properties_by_id($tmp_paperID, $mysqli,
 
 // Check that the paper is not summative and not locked.
 if ($properties->get_summative_lock()) {
-	exit;
+    exit;
 }
 
-$tmp_pIDs = explode(',', substr($_POST['pID'], 1));  
+$tmp_pIDs = explode(',', substr($_POST['pID'], 1));
 $tmp_questionIDs = explode(',', substr($_POST['questionID'], 1));
 
-for ($i=0; $i<count($tmp_pIDs); $i++) {
-  if ($result = $mysqli->prepare("DELETE FROM papers WHERE p_id = ?")) {
-    $result->bind_param('i', $tmp_pIDs[$i]);
-    $result->execute();
-    $result->close();
+for ($i = 0; $i < count($tmp_pIDs); $i++) {
+    if ($result = $mysqli->prepare('DELETE FROM papers WHERE p_id = ?')) {
+        $result->bind_param('i', $tmp_pIDs[$i]);
+        $result->execute();
+        $result->close();
 
-		// Look up any std set IDs for the paper.
-		$std_setIDs = array();
-		$result = $mysqli->prepare("SELECT id FROM std_set WHERE paperID = ?");
-    $result->bind_param('i', $tmp_paperID);
-		$result->execute();
-		$result->bind_result($id);
-		while ($result->fetch()) {
-			$std_setIDs[] = $id;
-		}
-    $result->close();
+        // Look up any std set IDs for the paper.
+        $std_setIDs = array();
+        $result = $mysqli->prepare('SELECT id FROM std_set WHERE paperID = ?');
+        $result->bind_param('i', $tmp_paperID);
+        $result->execute();
+        $result->bind_result($id);
+        while ($result->fetch()) {
+            $std_setIDs[] = $id;
+        }
+        $result->close();
 
-		// Delete any corresponding standard setting record for that question and paper.
-		if (count($std_setIDs) > 0) {
-			$sql = "DELETE FROM std_set_questions WHERE questionID IN (" . implode(',', $tmp_questionIDs) . ") AND std_setID IN (" . implode(',', $std_setIDs) . ")";
-			$result = $mysqli->prepare($sql);
-			$result->execute();
-			$result->close();
-		}
+        // Delete any corresponding standard setting record for that question and paper.
+        if (count($std_setIDs) > 0) {
+            $sql = 'DELETE FROM std_set_questions WHERE questionID IN (' . implode(',', $tmp_questionIDs) . ') AND std_setID IN (' . implode(',', $std_setIDs) . ')';
+            $result = $mysqli->prepare($sql);
+            $result->execute();
+            $result->close();
+        }
 
-    // Create a track changes record to say new question added.
-    $logger = new Logger($mysqli);
-    $logger->track_change('Paper', $tmp_paperID, $userObject->get_user_ID(), $tmp_questionIDs[$i], '', 'Delete Question');
-  } else {
-    display_error('Papers Delete Error', $string['showerror']);
-  }
+      // Create a track changes record to say new question added.
+        $logger = new Logger($mysqli);
+        $logger->track_change('Paper', $tmp_paperID, $userObject->get_user_ID(), $tmp_questionIDs[$i], '', 'Delete Question');
+    } else {
+        display_error('Papers Delete Error', $string['showerror']);
+    }
 }
 
 if ($_POST['paperID'] != '') {
-  if ($result = $mysqli->prepare("UPDATE properties SET random_mark = NULL, total_mark = NULL WHERE property_id = ?")) {
-    $result->bind_param('i', $tmp_paperID);
-    $result->execute();
-    $result->close();
-  } else {
-    display_error($string['updateerror'], $string['showerror']);
-  }
+    if ($result = $mysqli->prepare('UPDATE properties SET random_mark = NULL, total_mark = NULL WHERE property_id = ?')) {
+        $result->bind_param('i', $tmp_paperID);
+        $result->execute();
+        $result->close();
+    } else {
+        display_error($string['updateerror'], $string['showerror']);
+    }
 }
 $mysqli->close();
 

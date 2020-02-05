@@ -24,40 +24,44 @@
  * @package
  */
 
-Class OptionMATRIX extends OptionEdit {
+class OptionMATRIX extends OptionEdit
+{
   
-  protected $all_corrects = array();
-  protected $_fields_compound = array('correct' => 'raw');
+    protected $all_corrects = array();
+    protected $_fields_compound = array('correct' => 'raw');
   
   // ACCESSORS
   
   /**
-   * Get all the correct answers for this option.  Actually the correct answer across the board. Return as an array of array of correct 
+   * Get all the correct answers for this option.  Actually the correct answer across the board. Return as an array of array of correct
    * answers for each 'question'
    * @return string
    */
-  public function get_all_corrects() {
-    $this->get_correct();
-    return $this->all_corrects;
-  }
-  
-  public function set_all_corrects($value) {
-    $stems = $this->_question->get_all_stems();
-    $this->all_corrects = array();
-
-    for ($i = 0; $i < $this->_question->max_stems; $i++) {
-      $this->all_corrects[] = (isset($stems[$i]) and $stems[$i] != '') ? $value[$i] : '';
+    public function get_all_corrects()
+    {
+        $this->get_correct();
+        return $this->all_corrects;
     }
-    $this->set_correct('dummy');
-  }
-
-  public function get_correct() {
-    $this->all_corrects = ($this->correct != '') ? explode('|', $this->correct) : array();
-    return $this->correct;
-  }
   
-  public function set_correct($value) {
-    $this->correct = implode('|', $this->all_corrects);
-  }
-}
+    public function set_all_corrects($value)
+    {
+        $stems = $this->_question->get_all_stems();
+        $this->all_corrects = array();
 
+        for ($i = 0; $i < $this->_question->max_stems; $i++) {
+            $this->all_corrects[] = (isset($stems[$i]) and $stems[$i] != '') ? $value[$i] : '';
+        }
+        $this->set_correct('dummy');
+    }
+
+    public function get_correct()
+    {
+        $this->all_corrects = ($this->correct != '') ? explode('|', $this->correct) : array();
+        return $this->correct;
+    }
+  
+    public function set_correct($value)
+    {
+        $this->correct = implode('|', $this->all_corrects);
+    }
+}

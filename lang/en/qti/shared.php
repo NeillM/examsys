@@ -33,4 +33,3 @@ $string['questionsrow'] = 'questions row';
 $string['optionsrows'] = 'options rows';
 $string['newkeywords'] = 'new keywords';
 $string['addingquestiondetails'] = 'adding question %d as display_pos = %d on screen %d';
-?>

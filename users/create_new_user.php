@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -30,16 +31,16 @@ require '../include/toprightmenu.inc';
 
 $render = new render($configObject);
 $lang['title'] = $string['createnewuser'];
-$additionaljs = "<script src=\"../js/createuserinit.min.js\"></script>";
+$additionaljs = '<script src="../js/createuserinit.min.js"></script>';
 
-$addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"/css/dialog.css\" />
-        <link rel=\"stylesheet\" type=\"text/css\" href=\"/css/list.css\" />
-        <style type=\"text/css\">
+$addtionalcss = '<link rel="stylesheet" type="text/css" href="/css/dialog.css" />
+        <link rel="stylesheet" type="text/css" href="/css/list.css" />
+        <style type="text/css">
           .dialog_table {background-color:#F1F5FB; border: 1px solid #95AEC8; margin-top:40px; margin-left:auto; margin-right:auto}
           .field {text-align:right; padding-right:6px; width:120px}
-        </style>";
+        </style>';
 
-$breadcrumb = array($string['home'] => "../index.php");
+$breadcrumb = array($string['home'] => '../index.php');
 $action = $_SERVER['PHP_SELF'];
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 include '../include/user_search_options.php';
@@ -52,47 +53,46 @@ $problem = false;
 $username_problem = false;
 
 if ($submit) {
-
-  $new_password = trim(check_var('new_password', 'POST', true, false, true, param::TEXT));
-  $new_surname = UserUtils::my_ucwords(trim(check_var('new_surname', 'POST', true, false, true, param::TEXT)));
-  $new_username = trim(check_var('new_username', 'POST', true, false, true, param::TEXT));
-  $new_email = trim(check_var('new_email', 'POST', true, false, true, param::EMAIL));
-  $new_first_names = UserUtils::my_ucwords(trim(check_var('new_first_names', 'POST', true, false, true, param::TEXT)));
-  $new_grade = check_var('new_grade', 'POST', false, false, true, param::TEXT);
-  $new_year = check_var('new_year', 'POST', true, false, true, param::INT);
-  $new_roles = check_var('new_roles', 'POST', false, false, true, param::TEXT);
-  $new_sid = check_var('new_sid', 'POST', false, false, true, param::ALPHANUM);
-  $new_users_title = check_var('new_users_title', 'POST', true, false, true, param::ALPHANUM);
-  $new_gender = check_var('new_gender', 'POST', false, false, true, param::ALPHANUM);
-  $new_welcome = check_var('new_welcome', 'POST', false, false, true, param::BOOLEAN);
+    $new_password = trim(check_var('new_password', 'POST', true, false, true, param::TEXT));
+    $new_surname = UserUtils::my_ucwords(trim(check_var('new_surname', 'POST', true, false, true, param::TEXT)));
+    $new_username = trim(check_var('new_username', 'POST', true, false, true, param::TEXT));
+    $new_email = trim(check_var('new_email', 'POST', true, false, true, param::EMAIL));
+    $new_first_names = UserUtils::my_ucwords(trim(check_var('new_first_names', 'POST', true, false, true, param::TEXT)));
+    $new_grade = check_var('new_grade', 'POST', false, false, true, param::TEXT);
+    $new_year = check_var('new_year', 'POST', true, false, true, param::INT);
+    $new_roles = check_var('new_roles', 'POST', false, false, true, param::TEXT);
+    $new_sid = check_var('new_sid', 'POST', false, false, true, param::ALPHANUM);
+    $new_users_title = check_var('new_users_title', 'POST', true, false, true, param::ALPHANUM);
+    $new_gender = check_var('new_gender', 'POST', false, false, true, param::ALPHANUM);
+    $new_welcome = check_var('new_welcome', 'POST', false, false, true, param::BOOLEAN);
 
   // Check for valid and unique username
-  $unique_username = UserUtils::username_is_valid($new_username) && !UserUtils::username_exists($new_username, $mysqli);
+    $unique_username = UserUtils::username_is_valid($new_username) && !UserUtils::username_exists($new_username, $mysqli);
 }
 
 if ($submit and $unique_username) {
-  $username_problem = ($new_username == '' or strpos($new_username, '_') !== false);
-  if ($username_problem or $new_surname == '' or $new_email == '' or $new_first_names == ''or $new_roles == '' or $new_grade == '') {
-    $problem = true;
-  } else {
-    $new_userID = UserUtils::create_user($new_username, $new_password, $new_users_title, $new_first_names, $new_surname, $new_email, $new_grade, $new_gender, $new_year, $new_roles, $new_sid, $mysqli);
+    $username_problem = ($new_username == '' or strpos($new_username, '_') !== false);
+    if ($username_problem or $new_surname == '' or $new_email == '' or $new_first_names == '' or $new_roles == '' or $new_grade == '') {
+        $problem = true;
+    } else {
+        $new_userID = UserUtils::create_user($new_username, $new_password, $new_users_title, $new_first_names, $new_surname, $new_email, $new_grade, $new_gender, $new_year, $new_roles, $new_sid, $mysqli);
 
-    // Send out email welcome.
-    if (isset($new_welcome) and $new_welcome != '') {
-      $result = $mysqli->prepare("SELECT email FROM users WHERE username = ?");
-      $result->bind_param('s', $userObject->get_username());
-      $result->execute();
-      $result->bind_result($tmp_email);
-      $result->fetch();
-      $result->close();
+      // Send out email welcome.
+        if (isset($new_welcome) and $new_welcome != '') {
+            $result = $mysqli->prepare('SELECT email FROM users WHERE username = ?');
+            $result->bind_param('s', $userObject->get_username());
+            $result->execute();
+            $result->bind_result($tmp_email);
+            $result->fetch();
+            $result->close();
 
-      $subject = "{$string['newrogoaccount']}";
-      $headers = "From: $tmp_email\n";
-      $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n";
-      $headers .= "bcc: $tmp_email\n";
-      $sname = ucwords($new_surname);
-      $host = $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path');
-      $message = <<< MESSAGE
+            $subject = "{$string['newrogoaccount']}";
+            $headers = "From: $tmp_email\n";
+            $headers .= "MIME-Version: 1.0\nContent-type: text/html; charset=UTF-8\n";
+            $headers .= "bcc: $tmp_email\n";
+            $sname = ucwords($new_surname);
+            $host = $_SERVER['HTTP_HOST'] . $configObject->get('cfg_root_path');
+            $message = <<< MESSAGE
 <!DOCTYPE html>
 <html>
 <head>
@@ -110,181 +110,202 @@ h2 {font-size:120%}
 {$string['password']}: {$new_password}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#808080\">{$string['casesensitive']}</span></p>
 MESSAGE;
 
-      if (strpos($new_roles,'Staff') !== false) {
-        $message .= "<p>" . $string['email2'] . " <a href=\"https://{$host}/staff/\">https://{$host}/students/</a></p>";
-      } elseif (strpos($new_roles,'Student') !== false) {
-        $message .= "<p>" . $string['email2'] . " <a href=\"https://{$host}/students/\">https://{$host}/students/</a></p>";
-      } else {
-        $message .= "<p>" . $string['email2'] . " <a href=\"https://{$host}/\"></a>https://{$host}/students/</p>";
-        $message .= "<p>" . $string['email3'] . "</p>";
-      }
-      $message .= "</body>\n</html>";
-      mail ($new_email, $subject, $message, $headers) or print "<p>" . $string['couldnotsend'] . " <strong>" . $new_email . "</strong>.</p>";
-    }
-?>
+            if (strpos($new_roles, 'Staff') !== false) {
+                $message .= '<p>' . $string['email2'] . " <a href=\"https://{$host}/staff/\">https://{$host}/students/</a></p>";
+            } elseif (strpos($new_roles, 'Student') !== false) {
+                $message .= '<p>' . $string['email2'] . " <a href=\"https://{$host}/students/\">https://{$host}/students/</a></p>";
+            } else {
+                $message .= '<p>' . $string['email2'] . " <a href=\"https://{$host}/\"></a>https://{$host}/students/</p>";
+                $message .= '<p>' . $string['email3'] . '</p>';
+            }
+            $message .= "</body>\n</html>";
+            mail($new_email, $subject, $message, $headers) or print '<p>' . $string['couldnotsend'] . ' <strong>' . $new_email . '</strong>.</p>';
+        }
+        ?>
 <p>&nbsp;<?php echo $string['newaccountcreated'] . ' ' . $new_users_title . ' ' . $new_surname ?>.</p>
 <div>&nbsp;<input type="button" name="gotouser" value="View Account" class="ok" onclick="window.location='details.php?userID=<?php echo $new_userID ?>'" /></div>
-<?php
+        <?php
     }
-  }
-  if (!$submit or !$unique_username or $problem) {
-?>
+}
+if (!$submit or !$unique_username or $problem) {
+    ?>
 
 <form method="post" id="theform" name="newUser" action="<?php echo $action; ?>" autocomplete="off">
 <table border="0" cellspacing="0" cellpadding="3" class="dialog_table">
 <tr><td class="dialog_header" style="border-bottom: 1px solid #95AEC8; line-height:170%" colspan="2"><img src="../artwork/user_female_32.png" width="32" height="32" alt="User Icon" style="float:left; padding-right:8px" /><?php echo $string['createnewuser'] ?></td></tr>
-<?php
-  $authinfo = $authentication->version_info();
-  $ldap_enabled = false;
-  foreach ($authinfo->plugins as $p) {
-    if ($p->name == 'LDAP') {
-      $ldap_enabled = true;
-      break;
+    <?php
+    $authinfo = $authentication->version_info();
+    $ldap_enabled = false;
+    foreach ($authinfo->plugins as $p) {
+        if ($p->name == 'LDAP') {
+            $ldap_enabled = true;
+            break;
+        }
     }
-  }
-  if ($ldap_enabled == true) {
-    echo '<tr><td colspan="2"><input type="button" name="lookup" id="ldaplookup" value="' . $string['getldapdetails'] . '" /></td></tr>';
-  }
-?>
+    if ($ldap_enabled == true) {
+        echo '<tr><td colspan="2"><input type="button" name="lookup" id="ldaplookup" value="' . $string['getldapdetails'] . '" /></td></tr>';
+    }
+    ?>
 <tr><td class="field"><?php echo $string['title'] ?></td><td>
 <select id="new_users_title" name="new_users_title" size="1" required>
 
-<?php
-if ($language != 'en') {
-  echo "<option label=\"\"></option>\n";
-}
-$titles = explode(',', $string['title_types']);
-foreach ($titles as $tmp_title) {
-  echo "<option value=\"$tmp_title\">$tmp_title</option>";
-}
-?>
+    <?php
+    if ($language != 'en') {
+        echo "<option label=\"\"></option>\n";
+    }
+    $titles = explode(',', $string['title_types']);
+    foreach ($titles as $tmp_title) {
+        echo "<option value=\"$tmp_title\">$tmp_title</option>";
+    }
+    ?>
 </select></td></tr>
-<tr><td class="field"><?php echo $string['firstnames'] ?></td><td><input<?php if ($submit and (!isset($new_first_names) or $new_first_names == '')) echo ' class="required"'; ?> type="text" id="new_first_names" name="new_first_names" size="40" maxlength="60" value="<?php if (isset($new_first_names)) echo $new_first_names; ?>" required /></td></tr>
-<tr><td class="field"><?php echo $string['lastname'] ?></td><td><input<?php if (isset($new_surname) and $new_surname == '') echo ' class="required"'; ?> type="text" id="new_surname" name="new_surname" size="40" maxlength="35" value="<?php if (isset($new_surname)) echo $new_surname; ?>" required /></td></tr>
+<tr><td class="field"><?php echo $string['firstnames'] ?></td><td><input<?php if ($submit and (!isset($new_first_names) or $new_first_names == '')) {
+    echo ' class="required"';
+                      } ?> type="text" id="new_first_names" name="new_first_names" size="40" maxlength="60" value="<?php if (isset($new_first_names)) {
+                      echo $new_first_names;
+                      } ?>" required /></td></tr>
+<tr><td class="field"><?php echo $string['lastname'] ?></td><td><input<?php if (isset($new_surname) and $new_surname == '') {
+    echo ' class="required"';
+                      } ?> type="text" id="new_surname" name="new_surname" size="40" maxlength="35" value="<?php if (isset($new_surname)) {
+                      echo $new_surname;
+                      } ?>" required /></td></tr>
 <tr><td class="field"><?php echo $string['studentid'] ?></td><td><input id="new_studentid" type="text" size="15" name="new_sid" /><span style="color:#808080"><?php echo $string['onlyifstudent']; ?></span></td></tr>
-<tr><td class="field"><?php echo $string['email'] ?></td><td><input<?php if (isset($new_email) and $new_email == '') echo ' class="required"'; ?> type="email" id="new_email" name="new_email" size="40" maxlength="65" value="<?php if (isset($new_email)) echo $new_email; ?>" required /></td></tr>
-<?php
-if (!$unique_username and isset($new_username)) {
-  ?>
+<tr><td class="field"><?php echo $string['email'] ?></td><td><input<?php if (isset($new_email) and $new_email == '') {
+    echo ' class="required"';
+                      } ?> type="email" id="new_email" name="new_email" size="40" maxlength="65" value="<?php if (isset($new_email)) {
+                      echo $new_email;
+                      } ?>" required /></td></tr>
+    <?php
+    if (!$unique_username and isset($new_username)) {
+        ?>
     <tr>
         <td class="field"></td>
         <td><?php echo $string['usernameinuse']; ?></td>
     </tr>
-  <?php
-} elseif ($username_problem and isset($new_username)) {
-  ?>
+        <?php
+    } elseif ($username_problem and isset($new_username)) {
+        ?>
     <tr>
         <td class="field"></td>
         <td><?php echo $string['usernameinvalid']; ?></td>
     </tr>
-  <?php
-}
-  ?>
-<tr><td class="field"><?php echo $string['username'] ?></td><td><input<?php if (isset($new_username) and ($new_username == '' or strpos($new_username, '_') !== false or !$unique_username)) echo ' class="required errfield"'; ?> type="text" id="new_username" name="new_username" size="12" maxlength="15" value="<?php if (isset($new_username)) echo $new_username; ?>" autocomplete="off" required />
+        <?php
+    }
+    ?>
+<tr><td class="field"><?php echo $string['username'] ?></td><td><input<?php if (isset($new_username) and ($new_username == '' or strpos($new_username, '_') !== false or !$unique_username)) {
+    echo ' class="required errfield"';
+                      } ?> type="text" id="new_username" name="new_username" size="12" maxlength="15" value="<?php if (isset($new_username)) {
+                      echo $new_username;
+                      } ?>" autocomplete="off" required />
 &nbsp;&nbsp;&nbsp;<?php echo $string['password'] ?> <input type="text" id="new_password" name="new_password" value="<?php
-  if (isset($new_password)) {
+if (isset($new_password)) {
     echo $new_password;
-  } else {
+} else {
     $enc = new encryp();
     $generated_password = $enc->gen_password(true);
     echo $generated_password['password'];
-  }
+}
 ?>" size="12" autocomplete="off" required /></td></tr>
 <tr><td class="field"><?php echo $string['yearofstudy'] ?></td><td>
 <select id="new_yos" name="new_year" required>
-<?php
-  for ($tmp_year=1; $tmp_year<=6; $tmp_year++) {
-    if ($tmp_year == 1) {
-      echo "<option value=\"$tmp_year\" selected>$tmp_year</option>\n";
-    } else {
-      echo "<option value=\"$tmp_year\">$tmp_year</option>\n";
+    <?php
+    for ($tmp_year = 1; $tmp_year <= 6; $tmp_year++) {
+        if ($tmp_year == 1) {
+            echo "<option value=\"$tmp_year\" selected>$tmp_year</option>\n";
+        } else {
+            echo "<option value=\"$tmp_year\">$tmp_year</option>\n";
+        }
     }
-  }
-?>
+    ?>
 </select>
 </td></tr>
 <tr>
 <td class="field"><?php echo $string['gender'] ?></td><td>
 <select id="new_gender" name="new_gender" size="1">
 <option label=" "></option>
-<option value="Male"<?php if (isset($new_gender) and $new_gender == 'Male') echo ' selected' ?>><?php echo $string['male'] ?></option>
-<option value="Female"<?php if (isset($new_gender) and $new_gender == 'Female') echo ' selected' ?>><?php echo $string['female'] ?></option>
-<option value="Other"<?php if (isset($new_gender) and $new_gender == 'Other') echo ' selected' ?>><?php echo $string['other'] ?></option>
+<option value="Male"<?php if (isset($new_gender) and $new_gender == 'Male') {
+    echo ' selected';
+                    } ?>><?php echo $string['male'] ?></option>
+<option value="Female"<?php if (isset($new_gender) and $new_gender == 'Female') {
+    echo ' selected';
+                      } ?>><?php echo $string['female'] ?></option>
+<option value="Other"<?php if (isset($new_gender) and $new_gender == 'Other') {
+    echo ' selected';
+                     } ?>><?php echo $string['other'] ?></option>
 </select>
 </td>
 </tr>
 <tr><td class="field"><?php echo $string['status'] ?></td><td>
-<?php
-  echo "<select name=\"new_roles\" id=\"new_roles\" class=\"required\" required>";
-  echo "<option label=\"\" value=\"\"> </option>";
+    <?php
+    echo '<select name="new_roles" id="new_roles" class="required" required>';
+    echo '<option label="" value=""> </option>';
 
-  $old_optgroup = '';
+    $old_optgroup = '';
 
-  $roles_array = array('#Staff', 'Staff');
-  if ($userObject->has_role('SysAdmin')) {
-    $roles_array[] = 'Staff,Admin';
-    $roles_array[] = 'Staff,SysAdmin';
-  } elseif ($userObject->has_role('Admin')) {
-    $roles_array[] = 'Staff,Admin';
-  }
-  $roles_array[] = 'External Examiner';
-  $roles_array[] = 'Internal Reviewer';
-  $roles_array[] = 'Staff,Standards Setter';
-  $roles_array[] = 'Invigilator';
-  $roles_array[] = '#Students';
-  $roles_array[] = 'Student';
-  $roles_array[] = 'Staff,Student';
-
-  foreach ($roles_array as $value) {
-    if (substr($value,0,1) == '#') {
-      $parentRole = substr($value,1);
-      echo "<optgroup label=\"" . $string[$parentRole] . "\">\n";
-    } else {
-      $display_val = str_replace(' ', '', $value);
-      $display_val = str_replace(',', '', $display_val);
-      $display_val = $string[strtolower($display_val)];
-      $default = (isset($new_roles) && $new_roles == $value) ? 'selected="selected"' : '';
-      echo "<option value=\"$value\" data-parent=\"$parentRole\" $default>$display_val</option>";
+    $roles_array = array('#Staff', 'Staff');
+    if ($userObject->has_role('SysAdmin')) {
+        $roles_array[] = 'Staff,Admin';
+        $roles_array[] = 'Staff,SysAdmin';
+    } elseif ($userObject->has_role('Admin')) {
+        $roles_array[] = 'Staff,Admin';
     }
+    $roles_array[] = 'External Examiner';
+    $roles_array[] = 'Internal Reviewer';
+    $roles_array[] = 'Staff,Standards Setter';
+    $roles_array[] = 'Invigilator';
+    $roles_array[] = '#Students';
+    $roles_array[] = 'Student';
+    $roles_array[] = 'Staff,Student';
 
-    if (substr($value,0,1) == '#') {
-      $old_optgroup = $value;
-      if($old_optgroup != $value) {
-        echo "</optgroup>\n";
-      }
+    foreach ($roles_array as $value) {
+        if (substr($value, 0, 1) == '#') {
+            $parentRole = substr($value, 1);
+            echo '<optgroup label="' . $string[$parentRole] . "\">\n";
+        } else {
+            $display_val = str_replace(' ', '', $value);
+            $display_val = str_replace(',', '', $display_val);
+            $display_val = $string[strtolower($display_val)];
+            $default = (isset($new_roles) && $new_roles == $value) ? 'selected="selected"' : '';
+            echo "<option value=\"$value\" data-parent=\"$parentRole\" $default>$display_val</option>";
+        }
+
+        if (substr($value, 0, 1) == '#') {
+            $old_optgroup = $value;
+            if ($old_optgroup != $value) {
+                echo "</optgroup>\n";
+            }
+        }
     }
-
-  }
-  echo "</optgroup>\n</select>\n";
-?>
+    echo "</optgroup>\n</select>\n";
+    ?>
 </td></tr>
 <tr><td class="field" id="typecourse"><?php echo $string['typecourse']; ?></td><td>
 <select name="new_grade" id="new_grade" size="1" style="width:350px" data-prev-parent="" required>
-<?php  
-  echo "<option label=\"\" value=\"\"> </option>";
+    <?php
+    echo '<option label="" value=""> </option>';
   
-  $old_school = '';
-  $result = $mysqli->prepare("SELECT DISTINCT c.name, c.description, s.school FROM courses c INNER JOIN schools s ON c.schoolid=s.id WHERE s.school NOT IN ('university','NHS','N/A') ORDER BY s.school, c.name");
-  $result->execute();
-  $result->bind_result($name, $description, $school);
-  while ($result->fetch()) {
-    if ($old_school != $school) {
-      echo "<optgroup data-role=\"Students\" label=\"$school\">\n";
-    }
+    $old_school = '';
+    $result = $mysqli->prepare("SELECT DISTINCT c.name, c.description, s.school FROM courses c INNER JOIN schools s ON c.schoolid=s.id WHERE s.school NOT IN ('university','NHS','N/A') ORDER BY s.school, c.name");
+    $result->execute();
+    $result->bind_result($name, $description, $school);
+    while ($result->fetch()) {
+        if ($old_school != $school) {
+            echo "<optgroup data-role=\"Students\" label=\"$school\">\n";
+        }
 
-    $default = (isset($new_grade) && $new_grade == $name) ? 'selected="selected"' : '';
-    echo "<option value=\"$name\" $default>$name: $description</option>\n";
+        $default = (isset($new_grade) && $new_grade == $name) ? 'selected="selected"' : '';
+        echo "<option value=\"$name\" $default>$name: $description</option>\n";
     
-    $old_school = $school;
+        $old_school = $school;
     
-    if ($old_school != $school) {
-      echo "</optgroup>";
+        if ($old_school != $school) {
+            echo '</optgroup>';
+        }
     }
-  }
-  $result->close();
+    $result->close();
   
-  echo "\n";
-?>
+    echo "\n";
+    ?>
 <optgroup data-role="Staff" label="<?php echo $string['universitystaff']; ?>">
 <option value="University Lecturer" <?php echo (isset($new_grade) && $new_grade == 'University Lecturer') ? 'selected="selected"' : '' ?>><?php echo $string['academiclecturer'] ?></option>
 <option value="University Admin" <?php echo (isset($new_grade) && $new_grade == 'University Admin') ? 'selected="selected"' : '' ?>><?php echo $string['administrator'] ?></option>
@@ -293,14 +314,14 @@ if (!$unique_username and isset($new_username)) {
 <option value="Staff Internal Reviewer" <?php echo (isset($new_grade) && $new_grade == 'Staff Internal Reviewer') ? 'selected="selected"' : '' ?>><?php echo $string['internalreviewer'] ?></option>
 </optgroup>
 <optgroup data-role="Staff" label="<?php echo $string['externalstaff'] ?>">
-<?php
-if (strpos($_SERVER['HTTP_HOST'],'.uk') !== false) {
-  $nhslectturerdefault = (isset($new_grade) && $new_grade == 'NHS Lecturer') ? 'selected="selected"' : '';
-  echo "<option value=\"NHS Lecturer\" $nhslectturerdefault>" . $string['nhslecturer'] . "</option>\n";
-  $nhsadmindefault = (isset($new_grade) && $new_grade == 'NHS Admin') ? 'selected="selected"' : '';
-  echo "<option value=\"NHS Admin\" $nhsadmindefault>" . $string['nhsadmin'] . "</option>\n";
-}
-?>
+    <?php
+    if (strpos($_SERVER['HTTP_HOST'], '.uk') !== false) {
+        $nhslectturerdefault = (isset($new_grade) && $new_grade == 'NHS Lecturer') ? 'selected="selected"' : '';
+        echo "<option value=\"NHS Lecturer\" $nhslectturerdefault>" . $string['nhslecturer'] . "</option>\n";
+        $nhsadmindefault = (isset($new_grade) && $new_grade == 'NHS Admin') ? 'selected="selected"' : '';
+        echo "<option value=\"NHS Admin\" $nhsadmindefault>" . $string['nhsadmin'] . "</option>\n";
+    }
+    ?>
 <option value="Staff External Examiner" <?php echo (isset($new_grade) && $new_grade == 'Staff External Examiner') ? 'selected="selected"' : '' ?>><?php echo $string['externalexaminer'] ?></option>
 <option value="Invigilator" <?php echo (isset($new_grade) && $new_grade == 'Invigilator') ? 'selected="selected"' : '' ?>><?php echo $string['invigilator'] ?></option>
 </optgroup>
@@ -311,8 +332,8 @@ if (strpos($_SERVER['HTTP_HOST'],'.uk') !== false) {
 <input type="submit" name="submit" value="<?php echo $string['createaccount'] ?>" class="ok" /><input type="button" name="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" onclick="history.back();" /></td></tr>
 </table>
 </form>
-<?php
-  }
+    <?php
+}
 $mysqli->close();
 
 $render->render_admin_footer();

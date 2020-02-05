@@ -21,13 +21,16 @@
  * @copyright Copyright (c) 2015 The University of Nottingham
  * @package core
  */
-class user_photo extends rogo_directory {
-  public function location() {
-    return $this->base_directory() . 'users' . DIRECTORY_SEPARATOR . 'photos' . DIRECTORY_SEPARATOR;
-  }
+class user_photo extends rogo_directory
+{
+    public function location()
+    {
+        return $this->base_directory() . 'users' . DIRECTORY_SEPARATOR . 'photos' . DIRECTORY_SEPARATOR;
+    }
 
-  public function cachetime() {
-    // Cache for 1 hour.
-    return 3600;
-  }
+    public function cachetime()
+    {
+      // Cache for 1 hour.
+        return 3600;
+    }
 }

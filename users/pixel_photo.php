@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -34,27 +35,27 @@ $photodirectory = rogo_directory::get_directory('user_photo');
 $photoname = UserUtils::student_photo_exist($_GET['username']);
 
 if ($photoname) {
-  $fullpath = $photodirectory->fullpath($photoname);
-  $fileinfo = new finfo(FILEINFO_MIME_TYPE);
+    $fullpath = $photodirectory->fullpath($photoname);
+    $fileinfo = new finfo(FILEINFO_MIME_TYPE);
   // Should be able to handle several filetypes.
-  switch ($fileinfo->file($fullpath)) {
-    case 'image/jpeg':
-    case 'image/pjpeg':
-      $im = imagecreatefromjpeg($fullpath);
-      break;
-    case 'image/png':
-      $im = imagecreatefrompng($fullpath);
-      break;
-    case 'image/gif':
-      $im = imagecreatefromgif($fullpath);
-      break;
-    default:
-      // Just create a 1 pixel image if everything else fails.
-      $im = imagecreate(1, 1);
-      break;
-  }
+    switch ($fileinfo->file($fullpath)) {
+        case 'image/jpeg':
+        case 'image/pjpeg':
+            $im = imagecreatefromjpeg($fullpath);
+            break;
+        case 'image/png':
+            $im = imagecreatefrompng($fullpath);
+            break;
+        case 'image/gif':
+            $im = imagecreatefromgif($fullpath);
+            break;
+        default:
+          // Just create a 1 pixel image if everything else fails.
+            $im = imagecreate(1, 1);
+            break;
+    }
 } else {
-  $im = imagecreate(1, 1);
+    $im = imagecreate(1, 1);
 }
 
 imagefilter($im, IMG_FILTER_PIXELATE, 7, true);

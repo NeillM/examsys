@@ -20,4 +20,3 @@ $string['date'] = 'Date';
 $string['modules'] = 'Modules';
 $string['enroled'] = 'Enroled';
 $string['deleted'] = 'Deleted';
-?>

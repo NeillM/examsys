@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -25,33 +26,33 @@
 require '../../include/staff_auth.inc';
 
 if (isset($_GET['paperID'])) {
-  $paperID = $_GET['paperID'];
+    $paperID = $_GET['paperID'];
 } else {
-  $paperID = '';
+    $paperID = '';
 }
 
 if (isset($_GET['display_pos'])) {
-  $display_pos = $_GET['display_pos'];
+    $display_pos = $_GET['display_pos'];
 } else {
-  $display_pos = '';
+    $display_pos = '';
 }
 
 if (isset($_GET['module'])) {
-  $module = $_GET['module'];
+    $module = $_GET['module'];
 } else {
-  $module = '';
+    $module = '';
 }
 
 if (isset($_GET['folder'])) {
-  $folder = $_GET['folder'];
+    $folder = $_GET['folder'];
 } else {
-  $folder = '';
+    $folder = '';
 }
 
 if (isset($_GET['scrOfY'])) {
-  $scrOfY = $_GET['scrOfY'];
+    $scrOfY = $_GET['scrOfY'];
 } else {
-  $scrOfY = '';
+    $scrOfY = '';
 }
 
 ?>
@@ -81,24 +82,24 @@ if (isset($_GET['scrOfY'])) {
 <?php
   $user_modules = $userObject->get_staff_modules();
 
-  if (count($user_modules) > 0) {
-		$sql = "SELECT modules.id, modules.moduleid, modules.fullname, COUNT(groupID) AS count_no
+if (count($user_modules) > 0) {
+      $sql = 'SELECT modules.id, modules.moduleid, modules.fullname, COUNT(groupID) AS count_no
 			FROM (modules_staff, modules)
-			WHERE modules_staff.idMod=modules.id AND idMod IN (" . implode(',', array_keys($user_modules)) . ")
-			GROUP BY modules.fullname, modules.moduleid, modules.id";
-		$result = $mysqli->prepare($sql);
-		$result->execute();
-		$result->bind_result($mod_id, $moduleid, $module_name, $count_no);
-		while ($result->fetch()) {
-			echo '<div class="foldername">';
-			echo '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%"><tr><td style="width:66px" align="center">';
-			echo '  <a href="add_questions_list.php?type=team&teamID=' . $mod_id . '&paperID=' . $paperID . '&display_pos=' . $display_pos . '&module=' . $module . '&folder=' . $folder . ' &scrOfY=' . $scrOfY . '"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="' . $module_name . '" /></a><td>';
-			echo '  <td width="290"><a href="add_questions_list.php?type=team&teamID=' . $mod_id . '&paperID=' . $paperID . '&display_pos=' . $display_pos . '&module=' . $module . '&folder=' . $folder . ' &scrOfY=' . $scrOfY . '">' . $moduleid . ': ' . $module_name . '</a><br />';
-			echo '  <span style="color:#808080">' . $count_no . ' ' . $string['members'] . '</span></td></tr></table>';
-			echo "</div>\n";
-		}
-		$result->close();
-	}
+			WHERE modules_staff.idMod=modules.id AND idMod IN (' . implode(',', array_keys($user_modules)) . ')
+			GROUP BY modules.fullname, modules.moduleid, modules.id';
+      $result = $mysqli->prepare($sql);
+      $result->execute();
+      $result->bind_result($mod_id, $moduleid, $module_name, $count_no);
+    while ($result->fetch()) {
+        echo '<div class="foldername">';
+        echo '<table cellpadding="0" cellspacing="0" border="0" style="font-size:100%"><tr><td style="width:66px" align="center">';
+        echo '  <a href="add_questions_list.php?type=team&teamID=' . $mod_id . '&paperID=' . $paperID . '&display_pos=' . $display_pos . '&module=' . $module . '&folder=' . $folder . ' &scrOfY=' . $scrOfY . '"><img src="../../artwork/yellow_folder.png" width="48" height="48" alt="' . $module_name . '" /></a><td>';
+        echo '  <td width="290"><a href="add_questions_list.php?type=team&teamID=' . $mod_id . '&paperID=' . $paperID . '&display_pos=' . $display_pos . '&module=' . $module . '&folder=' . $folder . ' &scrOfY=' . $scrOfY . '">' . $moduleid . ': ' . $module_name . '</a><br />';
+        echo '  <span style="color:#808080">' . $count_no . ' ' . $string['members'] . '</span></td></tr></table>';
+        echo "</div>\n";
+    }
+      $result->close();
+}
   $mysqli->close();
 ?>
 </body>

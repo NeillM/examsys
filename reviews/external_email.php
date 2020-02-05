@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -35,7 +36,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 $local_time = new DateTimeZone($configObject->get('cfg_timezone'));
 
 if (is_null($properties->get_external_review_deadline())) {
-  $notice->display_notice_and_exit($mysqli, $string['error'], $string['noexaminers'], $string['noexaminers'], '/artwork/square_exclamation_48.png', '#C00000', true, true);
+    $notice->display_notice_and_exit($mysqli, $string['error'], $string['noexaminers'], $string['noexaminers'], '/artwork/square_exclamation_48.png', '#C00000', true, true);
 }
 
 $external_review_deadline = DateTime::createFromFormat('Y-m-d', $properties->get_external_review_deadline(), $local_time);
@@ -73,16 +74,16 @@ $display_deadline = $external_review_deadline->format($configObject->get('cfg_lo
   
   $to = $external_details['email'];
   $cfgcompany = $configObject->get_setting('core', 'misc_company');
-  if ($mode == 0) {
+if ($mode == 0) {
     $message = $string['message0'];
     $subject = sprintf($string['subject_msg0'], $cfgcompany);
-  } elseif ($mode == 1) {
-    $message = $string['message1'];    
+} elseif ($mode == 1) {
+    $message = $string['message1'];
     $subject = sprintf($string['subject_msg1'], $cfgcompany);
-  } else {
+} else {
     $message = $string['message2'];
     $subject = sprintf($string['subject_msg2'], $cfgcompany);
-  }
+}
   $message = str_replace('$users_name', $userObject->get_first_first_name(), $message);
   $message = str_replace('$support_email', $support_email, $message);
   $message = str_replace('$rogo_url', $url, $message);
@@ -95,15 +96,15 @@ $display_deadline = $external_review_deadline->format($configObject->get('cfg_lo
   $message = str_replace('$cfg_company', $cfgcompany, $message);
     
   require '../include/toprightmenu.inc';
-	echo draw_toprightmenu();
+    echo draw_toprightmenu();
 ?>
   <div class="head_title" style="font-size:90%">
     <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
     <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a>
     <?php
     if ($module != '') {
-      echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $module . '">' . module_utils::get_moduleid_from_id($module, $mysqli) . '</a>';
-    }    
+        echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $module . '">' . module_utils::get_moduleid_from_id($module, $mysqli) . '</a>';
+    }
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '&module=' . $module . '">' . $properties->get_paper_title() . '</a>';
     ?>
     </div>
@@ -113,29 +114,29 @@ $display_deadline = $external_review_deadline->format($configObject->get('cfg_lo
   <br />
 <?php
 if (isset($_POST['submit'])) {
-  $to_list = explode(';', $_POST['toaddress']);
+    $to_list = explode(';', $_POST['toaddress']);
   
-  foreach ($to_list as $individual_to) {
-    $to = trim($individual_to);
-    $subject = trim($_POST['subject']);
-    $message = "<html>\n<head><style>\nbody {margin:20px; font-family:Arial,sans-serif; line-height:160%; text-align:justify; color:#3F3F3F; font-size:90%}\na {color:#316ac5}\n</style>\n</head>\n<body>\n" . $_POST['message'] . "</body></html>\n";
+    foreach ($to_list as $individual_to) {
+        $to = trim($individual_to);
+        $subject = trim($_POST['subject']);
+        $message = "<html>\n<head><style>\nbody {margin:20px; font-family:Arial,sans-serif; line-height:160%; text-align:justify; color:#3F3F3F; font-size:90%}\na {color:#316ac5}\n</style>\n</head>\n<body>\n" . $_POST['message'] . "</body></html>\n";
 
-    $headers = "MIME-Version: 1.0" . "\r\n";
-    $headers .= "Content-type:text/html;charset=" . $configObject->get('cfg_page_charset') . "\r\n";
-    $headers .= 'From: ' . $userObject->get_email() . "\r\n";
-    if (trim($_POST['ccaddress']) != '') {
-      $headers .= 'CC: ' . trim($_POST['ccaddress']) . "\r\n";
-    }
-    if (trim($_POST['bccaddress']) != '') {
-      $headers .= 'BCC: ' . trim($_POST['ccaddress']) . "\r\n";
-    }
+        $headers = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type:text/html;charset=' . $configObject->get('cfg_page_charset') . "\r\n";
+        $headers .= 'From: ' . $userObject->get_email() . "\r\n";
+        if (trim($_POST['ccaddress']) != '') {
+            $headers .= 'CC: ' . trim($_POST['ccaddress']) . "\r\n";
+        }
+        if (trim($_POST['bccaddress']) != '') {
+            $headers .= 'BCC: ' . trim($_POST['ccaddress']) . "\r\n";
+        }
 
-    mail($to, $subject, $message, $headers);
-  }
-  echo "<p>" . $string['emailsent'] . "</p>";
-  echo "<p><input type=\"button\" value=\"" . $string['back'] . "\" name=\"back\" id=\"back\" class=\"ok\" /></p>";
+        mail($to, $subject, $message, $headers);
+    }
+    echo '<p>' . $string['emailsent'] . '</p>';
+    echo '<p><input type="button" value="' . $string['back'] . '" name="back" id="back" class="ok" /></p>';
 } else {
-?>
+    ?>
   <form name="templateform" method="post" action="<?php echo $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'] ?>" autocomplete="off">
 
     <table cellpadding="1" cellspacing="0" border="0" style="text-align:left; margin-left:auto; margin-right:auto">
@@ -165,14 +166,14 @@ if (isset($_POST['submit'])) {
     </table>
 
   </form>
-<?php
+    <?php
   // JS utils dataset.
-  $render = new render($configObject);
-  $miscdataset['name'] = 'dataset';
-  $miscdataset['attributes']['paper'] = $paperID;
-  $miscdataset['attributes']['mode'] = $mode;
-  $miscdataset['attributes']['module'] = $module;
-  $render->render($miscdataset, array(), 'dataset.html');
+    $render = new render($configObject);
+    $miscdataset['name'] = 'dataset';
+    $miscdataset['attributes']['paper'] = $paperID;
+    $miscdataset['attributes']['mode'] = $mode;
+    $miscdataset['attributes']['module'] = $module;
+    $render->render($miscdataset, array(), 'dataset.html');
 }
 $mysqli->close();
 ?>

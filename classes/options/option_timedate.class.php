@@ -24,17 +24,18 @@
  * @package
  */
 
-Class OptionTIMEDATE extends OptionEdit {
+class OptionTIMEDATE extends OptionEdit
+{
   
   /**
-   * Check that the minimum set of fields exist in the given data to create a new option 
+   * Check that the minimum set of fields exist in the given data to create a new option
    * @param array $data
    * @param array $files expects PHP FILES array
    * @param integer $index option number
    * @return boolean
    */
-  public function is_blank() {
-    return ($this->correct == '');
-  }
+    public function is_blank()
+    {
+        return ($this->correct == '');
+    }
 }
-

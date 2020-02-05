@@ -23,20 +23,22 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-Class module {
+class module
+{
 
   /** @var string Language component name. */
-  protected $langcomponent = 'classes/module';
+    protected $langcomponent = 'classes/module';
   /** @var array language strings */
-  protected $langstrings; 
+    protected $langstrings;
   
   /**
   * constructor
   */
-  public function __construct() {
-    $langpack = new \langpack();
-    $this->langstrings = $langpack->get_all_strings($this->langcomponent);
-  }
+    public function __construct()
+    {
+        $langpack = new \langpack();
+        $this->langstrings = $langpack->get_all_strings($this->langcomponent);
+    }
 
   /**
    * Gets a list of staff on a modules' team.
@@ -45,22 +47,23 @@ Class module {
    * @param object $db     - MySQLi database connection.
    * @return array - List of staff on the module.
    */
-  public function get_staff_members($idMod, $db) {
-    $members = array();
+    public function get_staff_members($idMod, $db)
+    {
+        $members = array();
 
-    $result = $db->prepare("SELECT DISTINCT surname, initials, title, users.id FROM (modules_staff, users) WHERE modules_staff.memberID = users.id AND idMod = ? AND user_deleted IS NULL ORDER BY surname, initials");
-    $result->bind_param('i', $idMod);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($surname, $initials, $title, $userID);
-    while ($result->fetch()) {
-      $title = str_replace('Professor', 'Prof', $title);
-      $members[] = array('surname'=>$surname, 'initials'=>$initials, 'title'=>$title, 'userID'=>$userID);
+        $result = $db->prepare('SELECT DISTINCT surname, initials, title, users.id FROM (modules_staff, users) WHERE modules_staff.memberID = users.id AND idMod = ? AND user_deleted IS NULL ORDER BY surname, initials');
+        $result->bind_param('i', $idMod);
+        $result->execute();
+        $result->store_result();
+        $result->bind_result($surname, $initials, $title, $userID);
+        while ($result->fetch()) {
+            $title = str_replace('Professor', 'Prof', $title);
+            $members[] = array('surname' => $surname, 'initials' => $initials, 'title' => $title, 'userID' => $userID);
+        }
+        $result->close();
+
+        return $members;
     }
-    $result->close();
-
-    return $members;
-  }
 
   /**
    * Gets a list of students on a module.
@@ -70,22 +73,23 @@ Class module {
    * @param object $db            - MySQLi database connection.
    * @return array - List of students on the module.
    */
-  public function get_student_members($calendar_year, $idMod, $db) {
-    $members = array();
+    public function get_student_members($calendar_year, $idMod, $db)
+    {
+        $members = array();
 
-    $result = $db->prepare("SELECT DISTINCT surname, initials, title, users.id, username, student_id 
-        FROM (modules_student, users) LEFT JOIN sid ON users.id = sid.userID WHERE modules_student.userID = users.id AND calendar_year = ? AND idMod = ? ORDER BY surname, initials");
-    $result->bind_param('ii', $calendar_year, $idMod);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($surname, $initials, $title, $userID, $username, $sid);
-    while ($result->fetch()) {
-      $members[] = array('surname' => $surname, 'initials' => $initials, 'title' => $title, 'userID' => $userID, 'username' => $username, 'studentid' => $sid);
+        $result = $db->prepare('SELECT DISTINCT surname, initials, title, users.id, username, student_id 
+        FROM (modules_student, users) LEFT JOIN sid ON users.id = sid.userID WHERE modules_student.userID = users.id AND calendar_year = ? AND idMod = ? ORDER BY surname, initials');
+        $result->bind_param('ii', $calendar_year, $idMod);
+        $result->execute();
+        $result->store_result();
+        $result->bind_result($surname, $initials, $title, $userID, $username, $sid);
+        while ($result->fetch()) {
+            $members[] = array('surname' => $surname, 'initials' => $initials, 'title' => $title, 'userID' => $userID, 'username' => $username, 'studentid' => $sid);
+        }
+        $result->close();
+
+        return $members;
     }
-    $result->close();
-
-    return $members;
-  }
 
   /**
    * Creates a new module.
@@ -115,49 +119,58 @@ Class module {
    *
    * @return boolean - True if module successfully added.
    */
-  public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0, $timed_exams = 0, $exam_q_feedback = 1, $add_team_members = 1, $map_level = 0, $academic_year_start = '07/01', $externalid = null, $syncpreviousyear = false) {
-    // We need the config object.
-    $configObject = Config::get_instance();
-    // Return false if missing madatory fields. schoolid is actually a number
-    if ($moduleid == '' or $fullname == '' or $schoolID === '') {
-      return false;
-    }
-
-    // Don't create a duplicate module with the same module ID.
-    if (module_utils::module_exists($moduleid, $db) !== false) {
-      return false;
-    }
-
-    $checklist = '';
-    if ($peer == true) $checklist .= ',peer';
-    if ($external == true) $checklist .= ',external';
-    if ($stdset == true) $checklist .= ',stdset';
-    if ($mapping == true) $checklist .= ',mapping';
-    if ($checklist != '') {
-      $tmp_checklist = substr($checklist, 1);
-    }
-
-    $result = $db->prepare("INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)");
-    $result->bind_param('ssisssiiiiiiiissi', $moduleid, $fullname, $active, $vle_api, $tmp_checklist, $sms_api, $selfEnroll, $schoolID, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start, $externalid, $syncpreviousyear);
-    $result->execute();
-    $result->close();
-    if ($db->errno != 0) {
-      return false;
-    }
-
-    $idMod = $db->insert_id;
-    // Old style SMS enrolments.
-    // Note: New style SMS enrolments sync post module addition.
-    if ($externalid == '') {
-        $smsurl = $configObject->get_setting('core', 'cfg_sms_url');
-        // If sms import enabled on module and sms_api matches sms integration update enrolements.
-        if ($sms_import == 1 and substr($sms_api, 0, strlen($smsurl)) === $smsurl) {
-          $SMS = SmsUtils::GetSmsUtils();
-          $SMS->update_module_enrolement($moduleid, $idMod, $sms_api, $db);
+    public function add_modules($moduleid, $fullname, $active, $schoolID, $vle_api, $sms_api, $selfEnroll, $peer, $external, $stdset, $mapping, $neg_marking, $ebel_grid_template, $db, $sms_import = 0, $timed_exams = 0, $exam_q_feedback = 1, $add_team_members = 1, $map_level = 0, $academic_year_start = '07/01', $externalid = null, $syncpreviousyear = false)
+    {
+      // We need the config object.
+        $configObject = Config::get_instance();
+      // Return false if missing madatory fields. schoolid is actually a number
+        if ($moduleid == '' or $fullname == '' or $schoolID === '') {
+            return false;
         }
+
+      // Don't create a duplicate module with the same module ID.
+        if (module_utils::module_exists($moduleid, $db) !== false) {
+            return false;
+        }
+
+        $checklist = '';
+        if ($peer == true) {
+            $checklist .= ',peer';
+        }
+        if ($external == true) {
+            $checklist .= ',external';
+        }
+        if ($stdset == true) {
+            $checklist .= ',stdset';
+        }
+        if ($mapping == true) {
+            $checklist .= ',mapping';
+        }
+        if ($checklist != '') {
+            $tmp_checklist = substr($checklist, 1);
+        }
+
+        $result = $db->prepare('INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)');
+        $result->bind_param('ssisssiiiiiiiissi', $moduleid, $fullname, $active, $vle_api, $tmp_checklist, $sms_api, $selfEnroll, $schoolID, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start, $externalid, $syncpreviousyear);
+        $result->execute();
+        $result->close();
+        if ($db->errno != 0) {
+            return false;
+        }
+
+        $idMod = $db->insert_id;
+      // Old style SMS enrolments.
+      // Note: New style SMS enrolments sync post module addition.
+        if ($externalid == '') {
+            $smsurl = $configObject->get_setting('core', 'cfg_sms_url');
+            // If sms import enabled on module and sms_api matches sms integration update enrolements.
+            if ($sms_import == 1 and substr($sms_api, 0, strlen($smsurl)) === $smsurl) {
+                $SMS = SmsUtils::GetSmsUtils();
+                $SMS->update_module_enrolement($moduleid, $idMod, $sms_api, $db);
+            }
+        }
+        return $idMod;
     }
-    return $idMod;
-  }
 
   /**
    * Update any part of a modules DB record.
@@ -167,61 +180,62 @@ Class module {
    * @param object $db              - MySQLi database connection.
    * @return boolean
    */
-  public function update_module_by_code($orig_moduleid, $updateData, $db) {
-    global $string;
+    public function update_module_by_code($orig_moduleid, $updateData, $db)
+    {
+        global $string;
 
-    if ($orig_moduleid == '') {
-      return false;
-    }
-
-    $orig_modinfo = $modinfo = module_utils::get_full_details_by_name($orig_moduleid, $db);
-
-    if ($modinfo === false) {
-      // The module must exist to update it!
-      return false;
-    }
-
-    $orig_school_name = $modinfo['school'];
-    $orig_school_id = $modinfo['schoolid'];
-
-    $changed = false;
-    foreach ($updateData as $key => $val) {
-      $key = strtolower($key);
-      if ($key == 'idmod') {
-        //never change the id :-)
-        continue;
-      }
-      if ($modinfo[$key] != $val) {
-        $modinfo[$key] = $val;
-        $changed = true;
-      }
-    }
-
-    if (!$changed) {
-      // Nothing has changed return
-      return true;
-    }
-
-    // Check mandatory fields
-    if ($modinfo['moduleid'] == '' and $modinfo['fullname'] == '') {
-      return false;
-    }
-
-    if ($orig_school_name != $modinfo['school']) {
-      // We have updated the school so we need to get the new id from the schools table
-      if ($orig_school_id != $modinfo['schoolid']) {
-        // Do nothing as the id has already been updated
-      } else {
-        // Lookup the schoolID
-        $modinfo['schoolid'] = SchoolUtils::get_school_id_by_name($modinfo['school'], $db);
-        if ($modinfo['schoolid'] === false) {
-          // School not found ERROR
-          return false;
+        if ($orig_moduleid == '') {
+            return false;
         }
-      }
-    }
 
-    $sql = "UPDATE modules SET
+        $orig_modinfo = $modinfo = module_utils::get_full_details_by_name($orig_moduleid, $db);
+
+        if ($modinfo === false) {
+          // The module must exist to update it!
+            return false;
+        }
+
+        $orig_school_name = $modinfo['school'];
+        $orig_school_id = $modinfo['schoolid'];
+
+        $changed = false;
+        foreach ($updateData as $key => $val) {
+            $key = strtolower($key);
+            if ($key == 'idmod') {
+              //never change the id :-)
+                continue;
+            }
+            if ($modinfo[$key] != $val) {
+                $modinfo[$key] = $val;
+                $changed = true;
+            }
+        }
+
+        if (!$changed) {
+          // Nothing has changed return
+            return true;
+        }
+
+      // Check mandatory fields
+        if ($modinfo['moduleid'] == '' and $modinfo['fullname'] == '') {
+            return false;
+        }
+
+        if ($orig_school_name != $modinfo['school']) {
+          // We have updated the school so we need to get the new id from the schools table
+            if ($orig_school_id != $modinfo['schoolid']) {
+              // Do nothing as the id has already been updated
+            } else {
+              // Lookup the schoolID
+                $modinfo['schoolid'] = SchoolUtils::get_school_id_by_name($modinfo['school'], $db);
+                if ($modinfo['schoolid'] === false) {
+                  // School not found ERROR
+                    return false;
+                }
+            }
+        }
+
+        $sql = 'UPDATE modules SET
                moduleid = ?,
                fullname = ?,
                active = ?,
@@ -242,18 +256,34 @@ Class module {
             WHERE
               id = ?
             LIMIT 1
-            ";
+            ';
 
-    $result = $db->prepare($sql);
-    $result->bind_param('ssisssiiiiiiiissii', $modinfo['moduleid'], $modinfo['fullname'], $modinfo['active'], $modinfo['vle_api'],
-                                        $modinfo['checklist'], $modinfo['sms'], $modinfo['selfenroll'], $modinfo['schoolid'],
-                                        $modinfo['neg_marking'], $modinfo['ebel_grid_template'], $modinfo['timed_exams'],
-                                        $modinfo['exam_q_feedback'], $modinfo['add_team_members'], $modinfo['map_level'],
-                                        $modinfo['academic_year_start'], $modinfo['externalid'], $modinfo['syncpreviousyear'], $modinfo['idMod']);
-    $res = $result->execute();
+        $result = $db->prepare($sql);
+        $result->bind_param(
+            'ssisssiiiiiiiissii',
+            $modinfo['moduleid'],
+            $modinfo['fullname'],
+            $modinfo['active'],
+            $modinfo['vle_api'],
+            $modinfo['checklist'],
+            $modinfo['sms'],
+            $modinfo['selfenroll'],
+            $modinfo['schoolid'],
+            $modinfo['neg_marking'],
+            $modinfo['ebel_grid_template'],
+            $modinfo['timed_exams'],
+            $modinfo['exam_q_feedback'],
+            $modinfo['add_team_members'],
+            $modinfo['map_level'],
+            $modinfo['academic_year_start'],
+            $modinfo['externalid'],
+            $modinfo['syncpreviousyear'],
+            $modinfo['idMod']
+        );
+        $res = $result->execute();
 
-    // An array to convert DB fields to lang strings argghhh!!!!
-    $lang_mappings = array(
+      // An array to convert DB fields to lang strings argghhh!!!!
+        $lang_mappings = array(
                         'moduleid' => 'moduleid',
                         'fullname' => 'name',
                         'schoolid' => 'school',
@@ -273,32 +303,33 @@ Class module {
                         'syncpreviousyear' => 'syncpreviousyear'
                         );
 
-    if ($res === true ) {
-      // Log any changes
-      $userObject = UserObject::get_instance();
-      // We only log if change is made via UI.
-      if (!is_null($userObject)) {
-        $logger = new Logger($db);
-        foreach ($modinfo as $key => $val) {
-          $key = strtolower($key);
-          if ($key == 'idmod') {
-            continue;
-          }
-          if ($orig_modinfo[$key] != $val) {
-            $logger->track_change( 'Module',
-              $modinfo['idMod'],
-              $userObject->get_user_ID(),
-              $orig_modinfo[$key],
-              $modinfo[$key],
-              $string[$lang_mappings[$key]]
-            );
-          }
+        if ($res === true) {
+          // Log any changes
+            $userObject = UserObject::get_instance();
+          // We only log if change is made via UI.
+            if (!is_null($userObject)) {
+                $logger = new Logger($db);
+                foreach ($modinfo as $key => $val) {
+                      $key = strtolower($key);
+                    if ($key == 'idmod') {
+                        continue;
+                    }
+                    if ($orig_modinfo[$key] != $val) {
+                        $logger->track_change(
+                            'Module',
+                            $modinfo['idMod'],
+                            $userObject->get_user_ID(),
+                            $orig_modinfo[$key],
+                            $modinfo[$key],
+                            $string[$lang_mappings[$key]]
+                        );
+                    }
+                }
+            }
         }
-      }
-    }
 
-    return true;
-  }
+        return true;
+    }
 
   /**
    * Check if a module with the given code already exists
@@ -306,28 +337,29 @@ Class module {
    * @param object $db       - Database link class
    * @return boolean - True if there is already a module with the code
    */
-  public function module_exists($moduleid, $db) {
-    if ($moduleid == '') {  // No ID, don't bother to check the database.
-      return false;
+    public function module_exists($moduleid, $db)
+    {
+        if ($moduleid == '') {  // No ID, don't bother to check the database.
+            return false;
+        }
+
+      // Check for unique moduleID
+        $exists = true;
+
+        $result = $db->prepare('SELECT moduleid FROM modules WHERE moduleid = ? AND mod_deleted IS NULL');
+        $result->bind_param('s', $moduleid);
+        $result->execute();
+        $result->store_result();
+        $result->bind_result($tmp_moduleid);
+        $result->fetch();
+        if ($result->num_rows == 0) {
+            $exists = false;
+        }
+        $result->free_result();
+        $result->close();
+
+        return $exists;
     }
-
-    // Check for unique moduleID
-    $exists = true;
-
-    $result = $db->prepare("SELECT moduleid FROM modules WHERE moduleid = ? AND mod_deleted IS NULL");
-    $result->bind_param('s', $moduleid);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($tmp_moduleid);
-    $result->fetch();
-    if ($result->num_rows == 0) {
-      $exists = false;
-    }
-    $result->free_result();
-    $result->close();
-
-    return $exists;
-  }
 
   /**
    * Get the full details of a module given its module code
@@ -335,14 +367,15 @@ Class module {
    * @param object $db    - Database link class
    * @return array - Associative array containing the details of the module
    */
-  public function get_full_details_by_name($modID, $db) {
-    $moduleid = self::get_idMod($modID, $db);
-    if ($moduleid === false) {
-      return false;
-    }
+    public function get_full_details_by_name($modID, $db)
+    {
+        $moduleid = self::get_idMod($modID, $db);
+        if ($moduleid === false) {
+            return false;
+        }
 
-    return self::get_full_details_by_ID($moduleid, $db);
-  }
+        return self::get_full_details_by_ID($moduleid, $db);
+    }
 
   /**
    * Get the full details of a module given its internal id or external id
@@ -367,18 +400,19 @@ Class module {
    *                     'add_team_members' => int 1
    *                     'map_level ' => int 1
    */
-  public function get_full_details($idtype, $id, $db, $externalsys = null) {
-    $types = array('internal', 'external');
-    if (!in_array($idtype, $types)) {
-      return false;
-    }
-    if ($idtype === 'internal') {
-      $idsql = 'modules.id = ?';
-    } else {
-      $idsql = 'modules.externalid = ? and modules.sms = ?';
-    }
-    // returns false if not self enrol else returns needed data;
-    $sql = "SELECT
+    public function get_full_details($idtype, $id, $db, $externalsys = null)
+    {
+        $types = array('internal', 'external');
+        if (!in_array($idtype, $types)) {
+            return false;
+        }
+        if ($idtype === 'internal') {
+            $idsql = 'modules.id = ?';
+        } else {
+            $idsql = 'modules.externalid = ? and modules.sms = ?';
+        }
+      // returns false if not self enrol else returns needed data;
+        $sql = "SELECT
           modules.id,
           moduleid,
           fullname,
@@ -408,27 +442,27 @@ Class module {
            $idsql AND
            mod_deleted IS NULL
         ";
-    $result = $db->prepare($sql);
-    if ($db->error) {
-      echo $this->langstrings['showerror'] . "<br >";
-    }
-    if ($idtype === 'internal') {
-      $result->bind_param('i', $id);
-    } else {
-      $result->bind_param('ss', $id, $externalsys); 
-    }
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($idMod, $moduleid, $fullname, $school, $active, $vle_api, $checklist, $sms, $selfenroll, $schoolid, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start, $externalid, $syncpreviousyear);
+        $result = $db->prepare($sql);
+        if ($db->error) {
+            echo $this->langstrings['showerror'] . '<br >';
+        }
+        if ($idtype === 'internal') {
+            $result->bind_param('i', $id);
+        } else {
+            $result->bind_param('ss', $id, $externalsys);
+        }
+        $result->execute();
+        $result->store_result();
+        $result->bind_result($idMod, $moduleid, $fullname, $school, $active, $vle_api, $checklist, $sms, $selfenroll, $schoolid, $neg_marking, $ebel_grid_template, $timed_exams, $exam_q_feedback, $add_team_members, $map_level, $academic_year_start, $externalid, $syncpreviousyear);
 
-    $result->fetch();
-    if ($result->num_rows == 0) {
-      $result->close();
-      return false;
-    }
-    $result->close();
+        $result->fetch();
+        if ($result->num_rows == 0) {
+            $result->close();
+            return false;
+        }
+        $result->close();
 
-    return array( 'idMod' => $idMod,
+        return array( 'idMod' => $idMod,
                   'moduleid' => $moduleid,
                   'fullname' => $fullname,
                   'school' => $school,
@@ -447,15 +481,16 @@ Class module {
                   'academic_year_start' => $academic_year_start,
                   'externalid' => $externalid,
                   'syncpreviousyear' => $syncpreviousyear);
-  }
+    }
 
   /**
    * Wrapper function for get_full_details
    * @see module_utils::get_full_details
    */
-  public function get_full_details_by_ID($modID, $db) {
-    return self::get_full_details('internal', $modID, $db);
-  }
+    public function get_full_details_by_ID($modID, $db)
+    {
+        return self::get_full_details('internal', $modID, $db);
+    }
 
   /**
    * Check if the module with the given ID is set to allow team members to add other members of staff to the team
@@ -463,14 +498,15 @@ Class module {
    * @param object $db    - Database link class
    * @return boolean - Can team members add others to the team
    */
-  public function is_allowed_add_team_members_by_name($modID, $db) {
-    $moduleid = self::get_idMod($modID, $db);
-    if ($moduleid === false) {
-      return false;
-    }
+    public function is_allowed_add_team_members_by_name($modID, $db)
+    {
+        $moduleid = self::get_idMod($modID, $db);
+        if ($moduleid === false) {
+            return false;
+        }
 
-    return self::is_allowed_add_team_members_by_id($moduleid, $db);
-  }
+        return self::is_allowed_add_team_members_by_id($moduleid, $db);
+    }
 
   /**
    * Check if the module with the given ID is set to allow team members to add other members of staff to the team
@@ -478,17 +514,18 @@ Class module {
    * @param object $db     - Database link class
    * @return boolean - Can team members add others to the team
    */
-  public function is_allowed_add_team_members_by_id($modID, $db) {
-    $data = self::get_full_details_by_ID($modID, $db);
-    if ($data === false) {
-      return false;
-    }
-    if ($data['add_team_members'] == 0) {
-      return false;
-    }
+    public function is_allowed_add_team_members_by_id($modID, $db)
+    {
+        $data = self::get_full_details_by_ID($modID, $db);
+        if ($data === false) {
+            return false;
+        }
+        if ($data['add_team_members'] == 0) {
+            return false;
+        }
 
-    return true;
-  }
+        return true;
+    }
 
   /**
    * The Module ID (code) of a module given its database ID
@@ -496,27 +533,28 @@ Class module {
    * @param object $db     - Database link object
    * @return string  -  Module ID (code) of the module or false if not found
    */
-  public function get_moduleid_from_id($modID, $db) {
-    $modID = intval($modID);
+    public function get_moduleid_from_id($modID, $db)
+    {
+        $modID = intval($modID);
 
-    if ($modID === 0) {
-      $moduleid = 'Unassigned';
-    } else {
-      $result = $db->prepare("SELECT moduleid FROM modules WHERE id = ? AND mod_deleted IS NULL");
-      $result->bind_param('i', $modID);
-      $result->execute();
-      $result->store_result();
-      $result->bind_result($moduleid);
-      $result->fetch();
-      if ($result->num_rows == 0) {
-        $result->close();
-        return false;
-      }
-      $result->close();
+        if ($modID === 0) {
+            $moduleid = 'Unassigned';
+        } else {
+            $result = $db->prepare('SELECT moduleid FROM modules WHERE id = ? AND mod_deleted IS NULL');
+            $result->bind_param('i', $modID);
+            $result->execute();
+            $result->store_result();
+            $result->bind_result($moduleid);
+            $result->fetch();
+            if ($result->num_rows == 0) {
+                $result->close();
+                return false;
+            }
+            $result->close();
+        }
+
+        return $moduleid;
     }
-
-    return $moduleid;
-  }
 
   /**
    * The database ID of a module given its Module ID (code)
@@ -524,82 +562,85 @@ Class module {
    * @param  mysqli  $db        Database link object
    * @return string             Database ID of the module or false if not found
    */
-  public function get_idMod($module_id, $db) {
-    if (is_array($module_id)) {
-      $ids = array();
+    public function get_idMod($module_id, $db)
+    {
+        if (is_array($module_id)) {
+            $ids = array();
 
-      $sql = implode("','", $module_id);
-      $sql = str_replace("',' ", "','", $sql);
+            $sql = implode("','", $module_id);
+            $sql = str_replace("',' ", "','", $sql);
 
-      $result = $db->prepare("SELECT id FROM modules WHERE moduleid IN ('$sql') AND mod_deleted IS NULL");
-      $result->execute();
-      $result->store_result();
-      $result->bind_result($id);
-      while ($result->fetch()) {
-        $ids[] = $id;
-      }
-      $result->close();
+            $result = $db->prepare("SELECT id FROM modules WHERE moduleid IN ('$sql') AND mod_deleted IS NULL");
+            $result->execute();
+            $result->store_result();
+            $result->bind_result($id);
+            while ($result->fetch()) {
+                $ids[] = $id;
+            }
+            $result->close();
 
-      if (count($ids) == 0) {
-        return false;
-      }
-      return $ids;
-    } else {
-      $result = $db->prepare("SELECT id FROM modules WHERE moduleid = ? AND mod_deleted IS NULL");
-      $result->bind_param('s', $module_id);
-      $result->execute();
-      $result->store_result();
-      $result->bind_result($id);
-      $result->fetch();
-      if ($result->num_rows == 0) {
-        $result->close();
-        return false;
-      }
-      $result->close();
-      return $id;
+            if (count($ids) == 0) {
+                return false;
+            }
+            return $ids;
+        } else {
+            $result = $db->prepare('SELECT id FROM modules WHERE moduleid = ? AND mod_deleted IS NULL');
+            $result->bind_param('s', $module_id);
+            $result->execute();
+            $result->store_result();
+            $result->bind_result($id);
+            $result->fetch();
+            if ($result->num_rows == 0) {
+                $result->close();
+                return false;
+            }
+            $result->close();
+            return $id;
+        }
     }
-  }
 
   /**
    * Get a complete list of the Module ID (code) and title of modules indexed by database ID
    * @param  mysqli $db Database link object
    * @return array      Array of module details indexed by ID
    */
-  public function get_module_list_by_id($db) {
-    $modules = array();
+    public function get_module_list_by_id($db)
+    {
+        $modules = array();
 
-    $result = $db->prepare("SELECT id, moduleid, fullname FROM modules WHERE mod_deleted IS NULL");
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($id, $moduleid, $fullname);
-    while ($result->fetch()) {
-      $modules[$id]['code'] = $moduleid;
-      $modules[$id]['name'] = $fullname;
+        $result = $db->prepare('SELECT id, moduleid, fullname FROM modules WHERE mod_deleted IS NULL');
+        $result->execute();
+        $result->store_result();
+        $result->bind_result($id, $moduleid, $fullname);
+        while ($result->fetch()) {
+            $modules[$id]['code'] = $moduleid;
+            $modules[$id]['name'] = $fullname;
+        }
+        $result->close();
+
+        return $modules;
     }
-    $result->close();
-
-    return $modules;
-  }
 
   /**
    * Set the deleted date for the module identified by database ID
    * @param  integer $idMod Database ID of the module to delete
    * @param  mysqli  $db    Database link object
    */
-  public function delete_module($idMod, $db) {
-    if ($idMod == '') {
-      return false;
-    }
+    public function delete_module($idMod, $db)
+    {
+        if ($idMod == '') {
+            return false;
+        }
 
-    $result = $db->prepare("UPDATE modules SET mod_deleted = NOW() WHERE id = ?");
-    $result->bind_param('i', $idMod);
-    $result->execute();
-    $result->close();
-    if ($db->errno != 0) {
-        return false;
+        $result = $db->prepare('UPDATE modules SET mod_deleted = NOW() WHERE id = ?');
+        $result->bind_param('i', $idMod);
+        $result->execute();
+        $result->close();
+        if ($db->errno != 0) {
+            return false;
+        }
+        return true;
     }
-    return true;
-  }
 
   /**
    * Check if a list of modules allow timing. ALL of the given modules must be set to allow timing for this to be true
@@ -607,46 +648,49 @@ Class module {
    * @param  mysqli $db         Database link object
    * @return boolean            True if all modules are set to allow timed exams
    */
-  public function modules_allow_timing($module_ids, $db) {
-    if (count($module_ids) == 0) {
-		  return false;
-		}
-		// Only allow timing if ALL the modules of the paper allow
-    $mod_id_list = implode(',', $module_ids);
+    public function modules_allow_timing($module_ids, $db)
+    {
+        if (count($module_ids) == 0) {
+            return false;
+        }
+        // Only allow timing if ALL the modules of the paper allow
+        $mod_id_list = implode(',', $module_ids);
 
-    $stmt = $db->prepare("SELECT id FROM modules WHERE id IN ($mod_id_list) AND timed_exams = 0");
-    $stmt->execute();
-    $stmt->store_result();
-    $allow_timing = ($stmt->num_rows === 0);
-    $stmt->close();
+        $stmt = $db->prepare("SELECT id FROM modules WHERE id IN ($mod_id_list) AND timed_exams = 0");
+        $stmt->execute();
+        $stmt->store_result();
+        $allow_timing = ($stmt->num_rows === 0);
+        $stmt->close();
 
-    return $allow_timing;
-  }
-
-  public static function get_vle_api_data($vle_apis) {
-    // Set up mapping APIs
-    $configObject = Config::get_instance();
-
-    if (is_array($vle_apis)) {
-      foreach (array_keys($vle_apis) as $vle_api_id) {
-        $classname = 'CM_' .$vle_api_id;
-        require_once $configObject->get('cfg_web_root') . "/plugins/CM/{$classname}.class.php";
-        $api = new $classname();
-        $vle_apis[$vle_api_id]['name'] = $api->getFriendlyName(false, true);
-        $vle_apis[$vle_api_id]['levels'] = $api->getMappingLevels();
-      }
+        return $allow_timing;
     }
-    return $vle_apis;
-  }
 
-  public static function paper_types($idMod, $show_retired, $db) {
-    $userObject = UserObject::get_instance();
+    public static function get_vle_api_data($vle_apis)
+    {
+      // Set up mapping APIs
+        $configObject = Config::get_instance();
 
-    $paper_types = array();
+        if (is_array($vle_apis)) {
+            foreach (array_keys($vle_apis) as $vle_api_id) {
+                $classname = 'CM_' . $vle_api_id;
+                require_once $configObject->get('cfg_web_root') . "/plugins/CM/{$classname}.class.php";
+                $api = new $classname();
+                $vle_apis[$vle_api_id]['name'] = $api->getFriendlyName(false, true);
+                $vle_apis[$vle_api_id]['levels'] = $api->getMappingLevels();
+            }
+        }
+        return $vle_apis;
+    }
 
-    if ($idMod == '0') {    // Unused papers.
-      if ($show_retired) {
-        $sql = 'SELECT DISTINCT paper_type, COUNT(properties.property_id)
+    public static function paper_types($idMod, $show_retired, $db)
+    {
+        $userObject = UserObject::get_instance();
+
+        $paper_types = array();
+
+        if ($idMod == '0') {    // Unused papers.
+            if ($show_retired) {
+                $sql = 'SELECT DISTINCT paper_type, COUNT(properties.property_id)
              FROM properties LEFT JOIN properties_modules
              ON properties.property_id = properties_modules.property_id
              WHERE idMod IS NULL
@@ -654,8 +698,8 @@ Class module {
              AND deleted IS NULL
              GROUP BY paper_type
              ORDER BY paper_type';
-      } else {
-        $sql = 'SELECT DISTINCT paper_type, COUNT(properties.property_id)
+            } else {
+                $sql = 'SELECT DISTINCT paper_type, COUNT(properties.property_id)
              FROM properties LEFT JOIN properties_modules
              ON properties.property_id = properties_modules.property_id
              WHERE idMod IS NULL
@@ -664,20 +708,20 @@ Class module {
              AND retired IS NULL
              GROUP BY paper_type
              ORDER BY paper_type';
-      }
-      $result = $db->prepare($sql);
-      $result->bind_param('i', $userObject->get_user_ID());
-    } else {
-      if ($show_retired) {
-        $sql = 'SELECT DISTINCT paper_type, COUNT(properties.property_id)
+            }
+            $result = $db->prepare($sql);
+            $result->bind_param('i', $userObject->get_user_ID());
+        } else {
+            if ($show_retired) {
+                $sql = 'SELECT DISTINCT paper_type, COUNT(properties.property_id)
              FROM properties, properties_modules
              WHERE properties.property_id = properties_modules.property_id
              AND idMod = ?
              AND deleted IS NULL
              GROUP BY paper_type
              ORDER BY paper_type';
-      } else {
-        $sql = 'SELECT DISTINCT paper_type, COUNT(properties.property_id)
+            } else {
+                $sql = 'SELECT DISTINCT paper_type, COUNT(properties.property_id)
              FROM properties, properties_modules
              WHERE properties.property_id = properties_modules.property_id
              AND idMod = ?
@@ -685,24 +729,24 @@ Class module {
              AND retired IS NULL
              GROUP BY paper_type
              ORDER BY paper_type';
-      }
-      $result = $db->prepare($sql);
-      $result->bind_param('i', $idMod);
-    }
+            }
+            $result = $db->prepare($sql);
+            $result->bind_param('i', $idMod);
+        }
 
-    $result->execute();
-    $result->bind_result($type, $number);
-    while ($result->fetch()) {
-      $paper_types[$type] = $number;
-    }
-    $result->close();
+        $result->execute();
+        $result->bind_result($type, $number);
+        while ($result->fetch()) {
+            $paper_types[$type] = $number;
+        }
+        $result->close();
 
-    return $paper_types;
-  }
+        return $paper_types;
+    }
   
   /**
    * Update module based on id
-   * @param integer $id 
+   * @param integer $id
    * @param string $code - shortcode of module
    * @param string $name - fullname
    * @param integer $schoolid - school module is run under
@@ -711,45 +755,47 @@ Class module {
    * @param string $externalid - external system module id
    * @return bool true on success
    */
-  public static function update_module_by_id($id, $code, $name, $schoolid, $sms, $db, $externalid = null) {
-    $sql = "UPDATE modules SET
+    public static function update_module_by_id($id, $code, $name, $schoolid, $sms, $db, $externalid = null)
+    {
+        $sql = 'UPDATE modules SET
                moduleid = ?,
                fullname = ?,
                sms = ?,
                schoolid = ?,
                externalid = ?
             WHERE
-              id = ?";
-    $result = $db->prepare($sql);
-    $result->bind_param('sssisi', $code, $name, $sms, $schoolid, $externalid, $id);
-    $res = $result->execute();
+              id = ?';
+        $result = $db->prepare($sql);
+        $result->bind_param('sssisi', $code, $name, $sms, $schoolid, $externalid, $id);
+        $res = $result->execute();
     
-    if ($db->errno != 0) {
-        return false;
-    }
+        if ($db->errno != 0) {
+            return false;
+        }
 
-    return true;
-  }
+        return true;
+    }
   
   /**
    * Check if papers or enrolements exist on this module
    * @param integer $id module us
    * @return bool true if module is in use
    */
-  public static function module_in_use($id, $db) {
-    $result = $db->prepare("SELECT NULL FROM properties_modules WHERE idMod = ?
-        UNION SELECT NULL FROM modules_student WHERE idMod = ?");
-    $result->bind_param('ii', $id, $id);
-    $result->execute();
-    $result->store_result();
-    $result->fetch();
-    if ($result->num_rows > 0) {
+    public static function module_in_use($id, $db)
+    {
+        $result = $db->prepare('SELECT NULL FROM properties_modules WHERE idMod = ?
+        UNION SELECT NULL FROM modules_student WHERE idMod = ?');
+        $result->bind_param('ii', $id, $id);
+        $result->execute();
+        $result->store_result();
+        $result->fetch();
+        if ($result->num_rows > 0) {
+            $result->close();
+            return true;
+        }
         $result->close();
-        return true;
+        return false;
     }
-    $result->close();
-    return false;
-  }
   
   /**
    * Get the module id given external id
@@ -760,21 +806,22 @@ Class module {
    *
    * @return int|bool id of school or false
   */
-  static function get_id_from_externalid($externalid, $externalsys, $db) {
-    $result = $db->prepare("SELECT id FROM modules WHERE externalid = ? AND sms = ? AND mod_deleted IS NULL");
-    $result->bind_param('ss', $externalid, $externalsys);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($id);
-    $result->fetch();
-    if ($result->num_rows == 0) {
-      $modid = false;
-    } else {
-      $modid = $id;
+    static function get_id_from_externalid($externalid, $externalsys, $db)
+    {
+        $result = $db->prepare('SELECT id FROM modules WHERE externalid = ? AND sms = ? AND mod_deleted IS NULL');
+        $result->bind_param('ss', $externalid, $externalsys);
+        $result->execute();
+        $result->store_result();
+        $result->bind_result($id);
+        $result->fetch();
+        if ($result->num_rows == 0) {
+            $modid = false;
+        } else {
+            $modid = $id;
+        }
+        $result->close();
+        return $modid;
     }
-    $result->close();
-    return $modid;
-  }
   
   /**
    * Compare the modules in the external system and rogo
@@ -783,27 +830,28 @@ Class module {
    * @param mysqli $db db connection
    * @return array list of modules in rogo but not in external system
    */
-  static function diff_external_modules_to_internal_modules($external, $sms, $db) {
-    $result = $db->prepare("SELECT id, externalid, mod_deleted FROM modules WHERE externalid IS NOT NULL AND sms = ?");
-    $result->bind_param('s', $sms);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($id, $externalid, $deleted);
-    $diff = array();
-    while ($result->fetch()) {
-      // Mark for delete if not found in external list.
-      if(!in_array($externalid, $external)) {
-        $diff[] = $externalid;
-      } else {
-        // Restore if deleted in Rogo but found in external list.
-        if(!is_null($deleted)) {
-          self::restore_module($db, $id);
+    static function diff_external_modules_to_internal_modules($external, $sms, $db)
+    {
+        $result = $db->prepare('SELECT id, externalid, mod_deleted FROM modules WHERE externalid IS NOT NULL AND sms = ?');
+        $result->bind_param('s', $sms);
+        $result->execute();
+        $result->store_result();
+        $result->bind_result($id, $externalid, $deleted);
+        $diff = array();
+        while ($result->fetch()) {
+          // Mark for delete if not found in external list.
+            if (!in_array($externalid, $external)) {
+                $diff[] = $externalid;
+            } else {
+              // Restore if deleted in Rogo but found in external list.
+                if (!is_null($deleted)) {
+                    self::restore_module($db, $id);
+                }
+            }
         }
-      }
+        $result->close();
+        return $diff;
     }
-    $result->close();
-    return $diff;
-  }
   
   /**
    * Log enrolments and unenrolments into sms_imports table
@@ -817,12 +865,13 @@ Class module {
    * @param integer $session acedemic year import is related to
    * @param mysqli $db db connection
    */
-  static function log_sms_imports($idMod, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type, $session, $db) {
-      $result = $db->prepare("INSERT INTO sms_imports VALUES (NULL, NOW(), ?, ?, ?, ?, ?, ?, ?)");
-      $result->bind_param('sisisss', $idMod, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type, $session);
-      $result->execute();
-      $result->close();
-  }
+    static function log_sms_imports($idMod, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type, $session, $db)
+    {
+        $result = $db->prepare('INSERT INTO sms_imports VALUES (NULL, NOW(), ?, ?, ?, ?, ?, ?, ?)');
+        $result->bind_param('sisisss', $idMod, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type, $session);
+        $result->execute();
+        $result->close();
+    }
   
   /**
    * Restore module from recycle bin
@@ -830,16 +879,17 @@ Class module {
    * @param integer $id rogo id of module
    * @return boolean true on success, false otherwise
    */
-  static function restore_module($db, $id) {
-    $result = $db->prepare("UPDATE modules set mod_deleted = NULL where id = ?");
-    $result->bind_param('i', $id);
-    $result->execute();
-    $result->close();
-    if ($db->errno != 0) {
-      return false;
+    static function restore_module($db, $id)
+    {
+        $result = $db->prepare('UPDATE modules set mod_deleted = NULL where id = ?');
+        $result->bind_param('i', $id);
+        $result->execute();
+        $result->close();
+        if ($db->errno != 0) {
+            return false;
+        }
+        return true;
     }
-    return true;
-  }
   
   /**
    * Get the modules whose final grade for a student is affected by a paper
@@ -848,58 +898,61 @@ Class module {
    * @param mylsqi $db db connection
    * @return array list of module details
    */
-  public static function get_modules_for_paper($paperid, $userid, $db) {
-    $modules = array();
-    $result = $db->prepare("SELECT m.moduleid, m.fullname, m.externalid FROM properties_modules pm, modules_student ms, modules m WHERE pm.idMod = ms.idMod AND m.id = pm.idMod AND pm.property_id = ? AND ms.userID = ?");
-    $result->bind_param('ii', $paperid, $userid);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($moduleid, $fullname, $externalid);
-    while ($result->fetch()) {
-      $modules[] = array('moduleid' => $moduleid, 'fullname' => $fullname, 'externalid' => $externalid);
+    public static function get_modules_for_paper($paperid, $userid, $db)
+    {
+        $modules = array();
+        $result = $db->prepare('SELECT m.moduleid, m.fullname, m.externalid FROM properties_modules pm, modules_student ms, modules m WHERE pm.idMod = ms.idMod AND m.id = pm.idMod AND pm.property_id = ? AND ms.userID = ?');
+        $result->bind_param('ii', $paperid, $userid);
+        $result->execute();
+        $result->store_result();
+        $result->bind_result($moduleid, $fullname, $externalid);
+        while ($result->fetch()) {
+            $modules[] = array('moduleid' => $moduleid, 'fullname' => $fullname, 'externalid' => $externalid);
+        }
+        $result->close();
+        return $modules;
     }
-    $result->close();
-    return $modules;
-  }
 
   /**
    * Check if this module sync the previous acacdemic year enrolmetns
    * @param integer $id module identifier
    * @return bool
    */
-  public static function check_sync_previous_year($id) {
-    $configObject = Config::get_instance();
-    $result = $configObject->db->prepare("SELECT syncpreviousyear FROM modules WHERE id = ?");
-    $result->bind_param('i', $id);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($syncpreviousyear);
-    $result->fetch();
-    // Return false if module id not found.
-    if ($result->num_rows == 0) {
-        $syncpreviousyear = false;
+    public static function check_sync_previous_year($id)
+    {
+        $configObject = Config::get_instance();
+        $result = $configObject->db->prepare('SELECT syncpreviousyear FROM modules WHERE id = ?');
+        $result->bind_param('i', $id);
+        $result->execute();
+        $result->store_result();
+        $result->bind_result($syncpreviousyear);
+        $result->fetch();
+      // Return false if module id not found.
+        if ($result->num_rows == 0) {
+            $syncpreviousyear = false;
+        }
+        $result->close();
+        return $syncpreviousyear;
     }
-    $result->close();
-    return $syncpreviousyear;
-  }
 
   /**
    * Get external id of modules that sync prevous year for the given SMS
    * @param string $sms the student management system
    * @return array
    */
-  public static function get_sync_previous_year_modules($sms) {
-    $modules = array();
-    $configObject = Config::get_instance();
-    $result = $configObject->db->prepare("SELECT externalid FROM modules WHERE sms = ? and syncpreviousyear = 1");
-    $result->bind_param('s', $sms);
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($externalid);
-    while ($result->fetch()) {
-      $modules[] = $externalid;
+    public static function get_sync_previous_year_modules($sms)
+    {
+        $modules = array();
+        $configObject = Config::get_instance();
+        $result = $configObject->db->prepare('SELECT externalid FROM modules WHERE sms = ? and syncpreviousyear = 1');
+        $result->bind_param('s', $sms);
+        $result->execute();
+        $result->store_result();
+        $result->bind_result($externalid);
+        while ($result->fetch()) {
+            $modules[] = $externalid;
+        }
+        $result->close();
+        return $modules;
     }
-    $result->close();
-    return $modules;
-  }
 }

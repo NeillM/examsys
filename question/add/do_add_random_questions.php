@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -29,21 +30,21 @@ $questionsarray = array();
 $questions_to_add = param::required('questions_to_add', param::TEXT, param::FETCH_POST);
 $questions = explode(',', $questions_to_add);
 foreach ($questions as $item) {
-  if ($item != '') {
-    $stmt = $mysqli->prepare("SELECT leadin FROM questions WHERE q_id=?");
-    $stmt->bind_param('i', $item);
-    $stmt->execute();
-    $stmt->bind_result($leadin);
-    $stmt->fetch();
-    $stmt->close();
+    if ($item != '') {
+        $stmt = $mysqli->prepare('SELECT leadin FROM questions WHERE q_id=?');
+        $stmt->bind_param('i', $item);
+        $stmt->execute();
+        $stmt->bind_result($leadin);
+        $stmt->fetch();
+        $stmt->close();
 
-    $leadin = trim(strip_tags($leadin));
-    $leadin = preg_replace('/\r\n/', ' ', $leadin);
-    if (strlen($leadin) > 160) {
-      $leadin = substr($leadin, 0, 160) . '...';
+        $leadin = trim(strip_tags($leadin));
+        $leadin = preg_replace('/\r\n/', ' ', $leadin);
+        if (strlen($leadin) > 160) {
+            $leadin = substr($leadin, 0, 160) . '...';
+        }
+        $questionsarray[$item] = addslashes($leadin);
     }
-    $questionsarray[$item] = addslashes($leadin);
-  }
 }
 $mysqli->close();
 echo json_encode($questionsarray);

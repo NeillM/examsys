@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Displays the popup DIV which contains colour swatches for selection.
 * Can further call 'more_colours.php' in a new window for event more colours.
 *
@@ -24,6 +25,7 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
+
 ?>
 
 
@@ -40,48 +42,48 @@
   // Standard colours
   $row[7] = array('#C00000','#FF0000','#FFC000','#FFFF00','#92D050','#00B050','#00B0F0','#0070C0','#002060','#7030A0');
   
-  echo "<tr style=\"height:4px\"><td colspan=\"21\"></td></tr>";
-  echo "<tr><td colspan=\"21\" style=\"padding-left:5px; background-color: #EEEEEE; font-size:70%; font-weight:bold\">".$string['themecolours']."</td></tr>";
-  echo "<tr style=\"height:4px\"><td colspan=\"21\"></td></tr>";
+  echo '<tr style="height:4px"><td colspan="21"></td></tr>';
+  echo '<tr><td colspan="21" style="padding-left:5px; background-color: #EEEEEE; font-size:70%; font-weight:bold">' . $string['themecolours'] . '</td></tr>';
+  echo '<tr style="height:4px"><td colspan="21"></td></tr>';
   echo "<tr style=\"height:14px\">\n<td style=\"width:5px\"></td>";
   $i = 0;
-  foreach ($row[1] as $colour) {
-    echo "<td id=\"row$i\" style=\"border: 1px solid #C5C5C5; width:12px; background-color:$colour\" data-colour=\"$colour\" data-url=\"" . $_SERVER['PHP_SELF'] . "\"></td><td style=\"width:5px\"></td>";
+foreach ($row[1] as $colour) {
+    echo "<td id=\"row$i\" style=\"border: 1px solid #C5C5C5; width:12px; background-color:$colour\" data-colour=\"$colour\" data-url=\"" . $_SERVER['PHP_SELF'] . '"></td><td style="width:5px"></td>';
     $i++;
-  }
+}
   echo "</tr>\n";
-  echo "<tr style=\"height:8px\"><td colspan=\"21\"></td></tr>";
+  echo '<tr style="height:8px"><td colspan="21"></td></tr>';
   
-  for ($row_no=2; $row_no<=6; $row_no++) {
+for ($row_no = 2; $row_no <= 6; $row_no++) {
     if ($row_no == 2) {
-      $border_top = 'border-top: 1px solid #C5C5C5; ';
+        $border_top = 'border-top: 1px solid #C5C5C5; ';
     } else {
-      $border_top = '';
+        $border_top = '';
     }
     if ($row_no == 6) {
-      $border_bottom = 'border-bottom: 1px solid #C5C5C5; ';
+        $border_bottom = 'border-bottom: 1px solid #C5C5C5; ';
     } else {
-      $border_bottom = '';
+        $border_bottom = '';
     }
     echo "<tr style=\"height:12px\">\n<td style=\"width:5px\"></td>";
     foreach ($row[$row_no] as $colour) {
-      echo "<td id=\"row$i\" style=\"" . $border_top . $border_bottom. "border-left: 1px solid #C5C5C5; border-right: 1px solid #C5C5C5; width:12px; background-color:$colour\" data-colour=\"$colour\" data-url=\"" . $_SERVER['SCRIPT_NAME'] . "\"></td><td style=\"width:5px\"></td>";
-      $i++;
+        echo "<td id=\"row$i\" style=\"" . $border_top . $border_bottom . "border-left: 1px solid #C5C5C5; border-right: 1px solid #C5C5C5; width:12px; background-color:$colour\" data-colour=\"$colour\" data-url=\"" . $_SERVER['SCRIPT_NAME'] . '"></td><td style="width:5px"></td>';
+        $i++;
     }
     echo "</tr>\n";
-  }
-  echo "<tr style=\"height:4px\"><td colspan=\"21\"></td></tr>";
-  echo "<tr><td colspan=\"21\" style=\"padding-left:5px; background-color: #EEEEEE; font-size:70%; font-weight:bold\">".$string['standardcolours']."</td></tr>";
-  echo "<tr style=\"height:4px\"><td colspan=\"21\"></td></tr>";
+}
+  echo '<tr style="height:4px"><td colspan="21"></td></tr>';
+  echo '<tr><td colspan="21" style="padding-left:5px; background-color: #EEEEEE; font-size:70%; font-weight:bold">' . $string['standardcolours'] . '</td></tr>';
+  echo '<tr style="height:4px"><td colspan="21"></td></tr>';
   
   echo "<tr style=\"height:14px\">\n<td style=\"width:5px\"></td>";
-  foreach ($row[7] as $colour) {
-    echo "<td id=\"row$i\" style=\"border: 1px solid #C5C5C5; width:12px; background-color:$colour\" data-colour=\"$colour\" data-url=\"" . $_SERVER['SCRIPT_NAME'] . "\"></td><td style=\"width:5px\"></td>";
+foreach ($row[7] as $colour) {
+    echo "<td id=\"row$i\" style=\"border: 1px solid #C5C5C5; width:12px; background-color:$colour\" data-colour=\"$colour\" data-url=\"" . $_SERVER['SCRIPT_NAME'] . '"></td><td style="width:5px"></td>';
     $i++;
-  }
+}
   echo "</tr>\n";
-  echo "<tr style=\"height:4px\"><td colspan=\"21\" style=\"border-bottom: 1px solid #C5C5C5\"></td></tr>";
-  echo "<tr id='morecolours'><td colspan=\"2\" style=\"padding-top:1px; padding-bottom:1px; background-color:#E9EEEE\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/palette.png\" width=\"16\" height=\"16\" border=\"0\" /></td><td style=\"border-left: 1px solid #C5C5C5; font-size:80%\" colspan=\"19\">&nbsp;".$string['more']."</td></tr>";
+  echo '<tr style="height:4px"><td colspan="21" style="border-bottom: 1px solid #C5C5C5"></td></tr>';
+  echo "<tr id='morecolours'><td colspan=\"2\" style=\"padding-top:1px; padding-bottom:1px; background-color:#E9EEEE\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/palette.png\" width=\"16\" height=\"16\" border=\"0\" /></td><td style=\"border-left: 1px solid #C5C5C5; font-size:80%\" colspan=\"19\">&nbsp;" . $string['more'] . '</td></tr>';
 ?>
 </table>
 </div>

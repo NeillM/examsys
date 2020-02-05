@@ -37,11 +37,10 @@ $string['msgselectable2'] = ' items can be selected.';
 $string['msgselectable3'] = 'You have already selected ';
 $string['msgselectable4'] = '. Please select a different ranking.';
 $string['confirmsubmit'] = 'Have you completed all the questions on this screen, you will NOT be able to go back.\nAre you sure you wish to continue?';
-$string['AllItemsCorrect'] = "All items correct";
+$string['AllItemsCorrect'] = 'All items correct';
 $string['formula'] = 'Formula';
 $string['tolerancefull'] = 'Tolerance for full marks';
 $string['tolerancepartial'] = 'Tolerance for partial marks';
 $string['togglevariables'] = 'Toggle Variables';
 $string['editquestion'] = 'Edit question (opens in a new tab)';
 $string['selectradio'] = 'Please select one of the radio buttons for question %s';
-

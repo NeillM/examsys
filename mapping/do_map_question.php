@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -33,4 +34,4 @@ $questionid = param::required('questionID', param::INT, param::FETCH_POST);
 // Write out curriculum mapping.
 save_objective_mappings($mysqli, $modules, $paperid, $questionid);
 
-echo json_encode("SUCCESS");
+echo json_encode('SUCCESS');

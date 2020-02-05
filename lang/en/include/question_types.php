@@ -51,4 +51,3 @@ $string['highest'] = 'Highest';
 $string['high'] = 'High';
 $string['intermediate'] = 'Intermediate';
 $string['low'] = 'Low';
-?>

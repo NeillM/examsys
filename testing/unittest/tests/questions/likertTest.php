@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,13 +25,15 @@ use testing\unittest\unittest;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class likerttest extends unittest {
+class likerttest extends unittest
+{
 
     /**
      * Test question header setter
      * @group question
      */
-    public function test_set_question_head() {
+    public function test_set_question_head()
+    {
         $data = questiondata::get_datastore('likert');
         $data->set_question_head();
         $this->assertFalse($data->displaydefault);
@@ -44,7 +47,8 @@ class likerttest extends unittest {
      * Test question setter
      * @group question
      */
-    public function test_set_question_na() {
+    public function test_set_question_na()
+    {
         $data = questiondata::get_datastore('likert');
         $data->displaymethod = '0|1|2|3|4|true';
         $data->set_question(0, '', '');
@@ -58,7 +62,8 @@ class likerttest extends unittest {
      * Test question setter
      * @group question
      */
-    public function test_set_question_nona() {
+    public function test_set_question_nona()
+    {
         $data = questiondata::get_datastore('likert');
         $data->displaymethod = '0|1|2|3|4|false';
         $data->notes = 'note';
@@ -76,7 +81,8 @@ class likerttest extends unittest {
      * Test question option setter - na not selected
      * @group question
      */
-    public function test_set_option_answer() {
+    public function test_set_option_answer()
+    {
         $data = questiondata::get_datastore('likert');
         $data->displaymethod = '0|1|2|3|4|true';
         $data->scale_size = substr_count($data->displaymethod, '|');
@@ -92,7 +98,8 @@ class likerttest extends unittest {
      * Test question option setter - na selected
      * @group question
      */
-    public function test_set_option_answer_naselected() {
+    public function test_set_option_answer_naselected()
+    {
         $data = questiondata::get_datastore('likert');
         $data->displaymethod = '0|1|2|3|4|true';
         $data->scale_size = substr_count($data->displaymethod, '|');
@@ -106,7 +113,8 @@ class likerttest extends unittest {
      * Test question option setter - unanswered
      * @group question
      */
-    public function test_set_option_answer_unanswered() {
+    public function test_set_option_answer_unanswered()
+    {
         $data = questiondata::get_datastore('likert');
         $data->questionno = '1';
         $data->displayna = false;
@@ -116,5 +124,4 @@ class likerttest extends unittest {
         $this->assertTrue($data->unanswered);
         $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => false, 5 => false), $data->scaleopt);
     }
-
 }

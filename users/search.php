@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -23,6 +24,7 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
+
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
 
@@ -102,7 +104,7 @@ if (!is_null($submit)) {
 
     // find by name
     if (!is_null($search_surname)) {
-        $tmp_surname = str_replace("*", "%", trim($search_surname));
+        $tmp_surname = str_replace('*', '%', trim($search_surname));
 
         // lookup titles
         $tmp_titles = explode(',', $string['title_types']);
@@ -112,7 +114,7 @@ if (!is_null($submit)) {
                 $parameters[] = $tmp_title;
                 $types[] = 'ss';
             }
-            $tmp_surname = preg_replace("/(" . $tmp_title . " )/i", "", $tmp_surname);
+            $tmp_surname = preg_replace('/(' . $tmp_title . ' )/i', '', $tmp_surname);
         }
 
         // find initials
@@ -216,32 +218,33 @@ if (!is_null($submit)) {
         $sql_counter = 'SELECT COUNT(DISTINCT users.id) AS counter';
         $sql_fields = 'SELECT DISTINCT users.id, roles, student_id, surname, initials, first_names, title, users.username, grade, yearofstudy, email, special_id';
         // Student template.
-        $sql_student_template = " FROM users
+        $sql_student_template = ' FROM users
           LEFT JOIN modules_student ON users.id = modules_student.userID
           LEFT JOIN sid ON users.id = sid.userID
           LEFT JOIN special_needs ON users.id = special_needs.userID 
           LEFT JOIN modules ON modules_student.idMod = modules.id
-          WHERE user_deleted IS NULL" . $studentconditions . " AND " . implode(' AND ', $conditions);
+          WHERE user_deleted IS NULL' . $studentconditions . ' AND ' . implode(' AND ', $conditions);
         // Staff template.
         // Need to get only staff,student roles to aviud duplication.
         $conditions = str_replace('Student', 'Staff,Student', $conditions);
-        $sql_staff_template = " FROM users
+        $sql_staff_template = ' FROM users
           LEFT JOIN modules_staff ON users.id = modules_staff.memberID 
           LEFT JOIN sid ON users.id = sid.userID
           LEFT JOIN special_needs ON users.id = special_needs.userID 
           LEFT JOIN modules ON modules_staff.idMod = modules.id
-          WHERE user_deleted IS NULL" . $staffconditions . " AND " . implode(' AND ', $conditions);
+          WHERE user_deleted IS NULL' . $staffconditions . ' AND ' . implode(' AND ', $conditions);
         // UNION the templates and order,sort,limit,offset.
         $sql_count = sprintf('%s%s UNION %s%s', $sql_counter, $sql_student_template, $sql_counter, $sql_staff_template);
-        $sql_list = sprintf('%s%s UNION %s%s ORDER BY %s %s LIMIT %d OFFSET %d',
-          $sql_fields,
-          $sql_student_template,
-          $sql_fields,
-          $sql_staff_template,
-          $sortby,
-          $ordering,
-          $limit,
-          $offset
+        $sql_list = sprintf(
+            '%s%s UNION %s%s ORDER BY %s %s LIMIT %d OFFSET %d',
+            $sql_fields,
+            $sql_student_template,
+            $sql_fields,
+            $sql_staff_template,
+            $sortby,
+            $ordering,
+            $limit,
+            $offset
         );
 
         // arguments to bind to queries
@@ -273,7 +276,7 @@ if (!is_null($submit)) {
         // fetch total items count
         $stmt->bind_result($count);
         while ($stmt->fetch()) {
-          $counter += $count;
+            $counter += $count;
         }
         $stmt->close();
 
@@ -422,7 +425,9 @@ if (true === $has_result = !is_null($submit) or ! is_null($module_id)) {
                         <?php else : ?>
                             </a>
                         <?php endif; ?>
-                        <?php if ($i < $pages) : ?>&nbsp;|&nbsp;<?php endif; ?>
+                        <?php if ($i < $pages) :
+                            ?>&nbsp;|&nbsp;<?php
+                        endif; ?>
                     <?php endfor; ?>
                 </div>
             <?php endif; ?>
@@ -443,11 +448,11 @@ if (true === $has_result = !is_null($submit) or ! is_null($module_id)) {
                             </tr>
                         </thead>
                         <?php
-                            if (!is_null($submit) and empty($roles)) {
-                                echo '</table>';
-                                echo $notice->info_strip($string['msg1'], 100);
-                            } else {
-                        ?>
+                        if (!is_null($submit) and empty($roles)) {
+                            echo '</table>';
+                            echo $notice->info_strip($string['msg1'], 100);
+                        } else {
+                            ?>
                         <tbody>
                             <?php
                             $x = 0;
@@ -478,7 +483,7 @@ if (true === $has_result = !is_null($submit) or ! is_null($module_id)) {
                                                 <?= is_null($tmp_student_id) ? $string['unknown'] : \demo::demo_replace_number($tmp_student_id, $demo) ?>
                                             <?php elseif (false !== strpos($tmp_roles, 'Staff')) : ?>
                                                 Staff
-                                            <?php else: ?>
+                                            <?php else : ?>
                                                 <?= $string['na'] ?>
                                             <?php endif; ?>
                                         </td>
@@ -498,9 +503,9 @@ if (true === $has_result = !is_null($submit) or ! is_null($module_id)) {
                             ?>
                         </tbody>
                     </table>
-                    <?php
+                            <?php
                         }
-                    ?>
+                        ?>
                 </form>
             <?php endif; ?>
             <?php
@@ -511,15 +516,15 @@ if (true === $has_result = !is_null($submit) or ! is_null($module_id)) {
             $dataset['attributes']['sid'] = $student_id;
             $dataset['attributes']['team'] = $team;
             if (!is_null($moduleID)) {
-              $dataset['attributes']['module'] = $moduleID;
+                $dataset['attributes']['module'] = $moduleID;
             } else {
-              $dataset['attributes']['module'] = '';
+                $dataset['attributes']['module'] = '';
             }
             $dataset['attributes']['year'] = $calendar_year;
             if ($get_students) {
-              $dataset['attributes']['students'] = 'on';
+                $dataset['attributes']['students'] = 'on';
             } else {
-              $dataset['attributes']['students'] = 'off';
+                $dataset['attributes']['students'] = 'off';
             }
             $dataset['attributes']['email'] = $email;
             $dataset['attributes']['tmp_surname'] = $temporary_surname;

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -32,27 +33,27 @@ $code = check_var('code', 'POST', false, false, true);
 $externalid = check_var('externalid', 'POST', false, false, true);
 $externalsys = check_var('externalsys', 'POST', false, false, true);
 if (!is_null($add_faculty)) {
-	// Check for existing faculty code.
-	if (!is_null($code)) {
-		if (FacultyUtils::get_facultyid_by_code($code, $mysqli)) {
-			$duplicate = 'DUPLICATE_CODE';
-		}
-	} else {
-		// Check for existing faculty name.
-		if (FacultyUtils::facultyname_exists($add_faculty, $mysqli)) {
-			$duplicate = 'DUPLICATE_NAME';
-		}
-	}
-	if ($duplicate === false) {
-		FacultyUtils::add_faculty($add_faculty, $mysqli, $code, $externalid, $externalsys);
-	}
+    // Check for existing faculty code.
+    if (!is_null($code)) {
+        if (FacultyUtils::get_facultyid_by_code($code, $mysqli)) {
+            $duplicate = 'DUPLICATE_CODE';
+        }
+    } else {
+        // Check for existing faculty name.
+        if (FacultyUtils::facultyname_exists($add_faculty, $mysqli)) {
+            $duplicate = 'DUPLICATE_NAME';
+        }
+    }
+    if ($duplicate === false) {
+        FacultyUtils::add_faculty($add_faculty, $mysqli, $code, $externalid, $externalsys);
+    }
 }
 if (!$duplicate) {
-	if ($add_faculty != '') {
-		echo json_encode("SUCCESS");
-	} else {
-		echo json_encode("FAILURE");
-	}
+    if ($add_faculty != '') {
+        echo json_encode('SUCCESS');
+    } else {
+        echo json_encode('FAILURE');
+    }
 } else {
-	echo json_encode($duplicate);
+    echo json_encode($duplicate);
 }

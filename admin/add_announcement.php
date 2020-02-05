@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -42,17 +43,16 @@ require '../include/errors.php';
     <script src="../js/announcementinit.min.js"></script>
 <?php
   $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-  $texteditorplugin->display_header();
-  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::ANNOUNCEMENTS);
+$texteditorplugin->display_header();
+$texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::ANNOUNCEMENTS);
 ?>
 </head>
 
 <body>
 <?php
   require '../include/announcement_options.inc';
-  require '../include/toprightmenu.inc';
-
-	echo draw_toprightmenu();
+require '../include/toprightmenu.inc';
+echo draw_toprightmenu();
 ?>
 <div id="content">
 <div class="head_title">
@@ -83,11 +83,11 @@ require '../include/errors.php';
   </tr>
   <tr>
     <td class="field"><?php echo $string['Available from']; ?></td>
-    <td><?php echo date_utils::timedate_select('f', date('YmdH00'), false, date('Y'), date('Y')+2, $string); ?></td>
+    <td><?php echo date_utils::timedate_select('f', date('YmdH00'), false, date('Y'), date('Y') + 2, $string); ?></td>
   </tr>
   <tr>
     <td class="field"><?php echo $string['Available to']; ?></td>
-    <td><?php echo date_utils::timedate_select('t', date('YmdH00'), false, date('Y'), date('Y')+2, $string); ?></td>
+    <td><?php echo date_utils::timedate_select('t', date('YmdH00'), false, date('Y'), date('Y') + 2, $string); ?></td>
   </tr>
   <tr>
     <td class="field"><?php echo $string['Staff Message']; ?></td>
@@ -110,7 +110,7 @@ require '../include/errors.php';
 // JS utils dataset.
 $render = new render($configObject);
 $miscdataset['name'] = 'dataset';
-$miscdataset['attributes']['posturl'] = "do_add_announcement.php";
+$miscdataset['attributes']['posturl'] = 'do_add_announcement.php';
 $render->render($miscdataset, array(), 'dataset.html');
 ?>
 </body>

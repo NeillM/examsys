@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace testing\behat\steps\frontend;
+
 use Behat\Gherkin\Node\PyStringNode,
+
     Behat\Gherkin\Node\TableNode;
 
 /**
@@ -26,7 +29,8 @@ use Behat\Gherkin\Node\PyStringNode,
  * @package testing
  * @subpackage behat
  */
-trait forms {
+trait forms
+{
   /**
    * Fill in a form field.
    *
@@ -36,11 +40,12 @@ trait forms {
    * @param string $value The value the field should be set to
    * @throws PendingException
    */
-  public function i_set_field($field, $value) {
-    $element = $this->find('field', $field);
-    if (is_null($element)) {
-      throw new \Exception("The form field $field could not be found");
+    public function i_set_field($field, $value)
+    {
+        $element = $this->find('field', $field);
+        if (is_null($element)) {
+            throw new \Exception("The form field $field could not be found");
+        }
+        $element->setValue($value);
     }
-    $element->setValue($value);
-  }
 }

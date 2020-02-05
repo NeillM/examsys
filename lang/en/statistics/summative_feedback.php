@@ -22,4 +22,3 @@ $string['objectivefeedback'] = 'Objective Feedback';
 $string['questionfeedback'] = 'Question Feedback';
 $string['cohortperformance'] = 'Cohort Performance';
 $string['externalexaminers'] = 'External Examiners';
-?>

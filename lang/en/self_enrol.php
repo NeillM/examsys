@@ -26,4 +26,3 @@ $string['notactive'] = 'This module is not currently active.';
 $string['icanaccess'] = 'Show papers I can Access';
 $string['enrolmentcompleted'] = 'Enrolment completed';
 $string['nomodule'] = 'Module code <strong>%s</strong> not found.';
-?>

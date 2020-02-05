@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -34,17 +35,17 @@ $paperID = check_var('paperID', 'REQUEST', false, false, true);
 
 // Does the paper exist?
 if (!is_null($paperID) and !Paper_utils::paper_exists($paperID, $mysqli)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  echo json_encode(array('response' => 'ERROR', 'type' => $notice->ajax_notice($string['pagenotfound'], $msg)));
-  exit();
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    echo json_encode(array('response' => 'ERROR', 'type' => $notice->ajax_notice($string['pagenotfound'], $msg)));
+    exit();
 }
 // Does the student exist?
 if (!UserUtils::userid_exists($userID, $mysqli)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  echo json_encode(array('response' => 'ERROR', 'type' => $notice->ajax_notice($string['pagenotfound'], $msg)));
-  exit();
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    echo json_encode(array('response' => 'ERROR', 'type' => $notice->ajax_notice($string['pagenotfound'], $msg)));
+    exit();
 }
 
 $note_id = param::required('note_id', param::INT, param::FETCH_POST);
@@ -52,9 +53,9 @@ $note = param::required('note', param::TEXT, param::FETCH_POST);
 $calling = param::required('calling', param::TEXT, param::FETCH_POST);
 
 if ($note_id == '' or $note_id == '0') {
-  StudentNotes::add_note($userID, $note, $paperID, $userObject->get_user_ID(), $mysqli);
+    StudentNotes::add_note($userID, $note, $paperID, $userObject->get_user_ID(), $mysqli);
 } else {
-  StudentNotes::update_note($note, $note_id, $mysqli);
+    StudentNotes::update_note($note, $note_id, $mysqli);
 }
 
 echo json_encode(array('response' => 'SUCCESS', 'type' => $calling));

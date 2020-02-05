@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,9 +25,11 @@ namespace testing\datagenerator;
  * @package testing
  * @subpackage datagenerator
  */
-class not_found extends \Exception {
-  public function __construct($name, $component = 'core') {
-    $message = "Could not load the $component\\$name datagenerator.";
-    parent::__construct($message);
-  }
+class not_found extends \Exception
+{
+    public function __construct($name, $component = 'core')
+    {
+        $message = "Could not load the $component\\$name datagenerator.";
+        parent::__construct($message);
+    }
 }

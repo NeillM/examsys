@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -29,8 +30,8 @@ set_time_limit(0);
 require '../include/sysadmin_auth.inc';
 
 if ($configObject->get('cfg_sms_api') == '') {
-  log_error(0, 'CRON JOB', 'Application Error', "'cfg_sms_api' setting in config.inc.php is set to blank.", 'users_from_SMS.php', 0, '', null, null, null);
-  exit();
+    log_error(0, 'CRON JOB', 'Application Error', "'cfg_sms_api' setting in config.inc.php is set to blank.", 'users_from_SMS.php', 0, '', null, null, null);
+    exit();
 }
 $sms_connection = SmsUtils::GetSmsUtils();
 
@@ -57,7 +58,7 @@ $academic_year = $yearutils->get_academic_session($session);
 <?php
 require '../include/toprightmenu.inc';
 require '../include/admin_module_options.inc';
-	
+    
 echo draw_toprightmenu();
 ?>
 <div id="content">
@@ -77,47 +78,47 @@ echo draw_toprightmenu();
 // Only include sms integration modules.
 // Do not include deleted modules or non-active modules.
 $sms_url = $configObject->get_setting('core', 'cfg_sms_url') . '%';
-$module_data = $mysqli->prepare("SELECT modules.id, moduleid, sms FROM modules WHERE sms LIKE ? AND mod_deleted IS NULL AND active = 1 ORDER BY moduleid");
+$module_data = $mysqli->prepare('SELECT modules.id, moduleid, sms FROM modules WHERE sms LIKE ? AND mod_deleted IS NULL AND active = 1 ORDER BY moduleid');
 $module_data->bind_param('s', $sms_url);
 $module_data->execute();
 $module_data->store_result();
 $module_data->bind_result($idMod, $module, $sms);
 while ($module_data->fetch()) {
-  $sms_connection->update_module_enrolement($module, $idMod, $sms, $mysqli, $session);  
-  echo "<tr class=\"l\"><td>$academic_year</td><td>$module</td><td>$sms</td><td>" . $sms_connection->get_enrolement_no($module) . "</td><td>" . $sms_connection->get_deletion_no($module) . "</td></tr>\n";
+    $sms_connection->update_module_enrolement($module, $idMod, $sms, $mysqli, $session);
+    echo "<tr class=\"l\"><td>$academic_year</td><td>$module</td><td>$sms</td><td>" . $sms_connection->get_enrolement_no($module) . '</td><td>' . $sms_connection->get_deletion_no($module) . "</td></tr>\n";
 }
 $module_data->close();
 
 $errorinfo = $sms_connection->geterrors();
 
 if (count($errorinfo['usernamematch']) > 0) {
-  log_error(0, 'CRON JOB', 'Application Warning', implode('\r\n', $errorinfo['usernamematch']), 'users_from_SMS.php', 0, '', null, $errorinfo['usernamematchdata'], null);
+    log_error(0, 'CRON JOB', 'Application Warning', implode('\r\n', $errorinfo['usernamematch']), 'users_from_SMS.php', 0, '', null, $errorinfo['usernamematchdata'], null);
 }
 
 if (count($errorinfo['unabletodetermineusername']) > 0) {
-  log_error(0, 'CRON JOB', 'Application Warning', implode('\r\n', $errorinfo['unabletodetermineusername']), 'users_from_SMS.php', 0, '', null, $errorinfo['unabletodetermineusernamedata'], null);
+    log_error(0, 'CRON JOB', 'Application Warning', implode('\r\n', $errorinfo['unabletodetermineusername']), 'users_from_SMS.php', 0, '', null, $errorinfo['unabletodetermineusernamedata'], null);
 }
 
 $errorstr = '';
 if (count($errorinfo['moduleerrorstate']) > 0) {
-  foreach ($errorinfo['moduleerrorstate'] as $key => $value) {
-    $cnt= count($value);
-    $errorstr .= 'Error state: ' . $key . " <br />\r\n$cnt module(s):: ";
-    foreach ($value as $value2) {
-      $errorstr .= $value2 . ", ";
+    foreach ($errorinfo['moduleerrorstate'] as $key => $value) {
+        $cnt = count($value);
+        $errorstr .= 'Error state: ' . $key . " <br />\r\n$cnt module(s):: ";
+        foreach ($value as $value2) {
+            $errorstr .= $value2 . ', ';
+        }
+        $errorstr .= "<br />\r\n";
     }
-    $errorstr .= "<br />\r\n";
-  }
-  log_error(0, 'CRON JOB', 'Application Warning', $errorstr, 'users_from_SMS.php', 0, '', null, $errorinfo['moduleerrorstatedata'], null);
+    log_error(0, 'CRON JOB', 'Application Warning', $errorstr, 'users_from_SMS.php', 0, '', null, $errorinfo['moduleerrorstatedata'], null);
 }
 
 $errorstr = '';
 if (count($errorinfo['modulenodata']) > 0) {
-  $errorstr .=  "The following " .count($errorinfo['modulenodata']) . " modules returned no data: <br />\r\n";
-  foreach ($errorinfo['modulenodata'] as $key => $value) {
-    $errorstr .= "$value, ";
-  }
-  log_error(0, 'CRON JOB', 'Application Warning', $errorstr, 'users_from_SMS.php', 0, '', null, $errorinfo['modulenodatadata'], null);
+    $errorstr .=  'The following ' . count($errorinfo['modulenodata']) . " modules returned no data: <br />\r\n";
+    foreach ($errorinfo['modulenodata'] as $key => $value) {
+        $errorstr .= "$value, ";
+    }
+    log_error(0, 'CRON JOB', 'Application Warning', $errorstr, 'users_from_SMS.php', 0, '', null, $errorinfo['modulenodatadata'], null);
 }
 
 $mysqli->close();

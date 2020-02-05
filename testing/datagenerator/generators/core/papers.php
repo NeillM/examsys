@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -17,6 +18,7 @@
 namespace testing\datagenerator;
 
 use \Config,
+
     \yearutils,
     \assessment,
     \UserUtils;
@@ -29,7 +31,8 @@ use \Config,
  * @package testing
  * @subpackage datagenerator
  */
-class papers extends generator {
+class papers extends generator
+{
     /**
      * Creates metadata restrictions for a paper.
      *
@@ -42,7 +45,8 @@ class papers extends generator {
      * @return array
      * @throws data_error
      */
-    public function create_metadata(int $paperid, $parameters) : array {
+    public function create_metadata(int $paperid, $parameters): array
+    {
         // If an object is passed convert it into an array.
         if (is_object($parameters)) {
             $parameters = (array)$parameters;
@@ -79,7 +83,8 @@ class papers extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function create_paper($parameters) {
+    public function create_paper($parameters)
+    {
 
         if (is_object($parameters)) {
             $parameters = (array)$parameters;
@@ -125,7 +130,7 @@ class papers extends generator {
         if (!empty($settings['calendaryear'])) {
             $settings['session'] = $settings['calendaryear'];
         } else {
-            $settings['session'] = date("Y");
+            $settings['session'] = date('Y');
 
             $yearutils = new yearutils($this->db);
             $supported = $yearutils->get_supported_years();
@@ -133,7 +138,7 @@ class papers extends generator {
             if (!array_key_exists($settings['session'], $supported)) {
                 $generator = new academic_year();
                 $parameters['calendar_year'] = $settings['session'];
-                $parameters['academic_year'] = $settings['session'] . '/' . (date("y") + 1);
+                $parameters['academic_year'] = $settings['session'] . '/' . (date('y') + 1);
                 $generator->create_academic_year($parameters);
             }
         }
@@ -142,7 +147,6 @@ class papers extends generator {
         if (is_array($modulename)) {
             foreach ($modulename as $m) {
                 $settings['moduleids'][] = self::test_get_moduleidbyname($m, $this->db);
-
             }
         } else {
             $settings['moduleids'][] = self::test_get_moduleidbyname($modulename, $this->db);
@@ -159,7 +163,7 @@ class papers extends generator {
         } catch (Exception $e) {
             $message = $e->getMessage();
             echo $message;
-            throw new data_error("Error: " . $message);
+            throw new data_error('Error: ' . $message);
         }
         $settings['id'] = $pid;
         return $settings;
@@ -172,8 +176,9 @@ class papers extends generator {
      * @return int The id of the record inserted.
      * @throws data_error
      */
-    protected function insert_mertadata(array $data) : int {
-        $sql = "INSERT INTO paper_metadata_security (paperID, name, value) VALUES (?, ?, ?)";
+    protected function insert_mertadata(array $data): int
+    {
+        $sql = 'INSERT INTO paper_metadata_security (paperID, name, value) VALUES (?, ?, ?)';
         $query = $this->db->prepare($sql);
         $query->bind_param('iss', $data['paperID'], $data['name'], $data['value']);
         if (!$query->execute()) {
@@ -189,7 +194,8 @@ class papers extends generator {
      * @param array $parameters
      * @throws data_error If passed parameter is invalid
      */
-    public function set_post_creation_settings(int $pid, array $parameters) {
+    public function set_post_creation_settings(int $pid, array $parameters)
+    {
         $default = array('paper_prologue' => null, 'paper_postscript' => null, 'bgcolor' => 'white',
             'fgcolor' => 'black', 'themecolor' => '#316AC5', 'labelcolor' => '#C00000',
             'fullscreen' => 0, 'marking' => 0, 'bidirectional' => 1,
@@ -218,8 +224,9 @@ class papers extends generator {
      * @param obj $db
      * @return int moduleid
      */
-    public static function test_get_moduleidbyname($modulename, $db) {
-        $result = $db->prepare("SELECT id FROM modules where fullname = ?");
+    public static function test_get_moduleidbyname($modulename, $db)
+    {
+        $result = $db->prepare('SELECT id FROM modules where fullname = ?');
         $result->bind_param('s', $modulename);
         $result->execute();
         $result->bind_result($moduleid);
@@ -232,5 +239,4 @@ class papers extends generator {
         $result->close();
         return $moduleid;
     }
-
 }

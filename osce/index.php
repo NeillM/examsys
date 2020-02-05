@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -34,32 +35,32 @@ $result = $mysqli->prepare("SELECT crypt_name, paper_title FROM properties WHERE
 $result->execute();
 $result->bind_result($crypt_name, $paper_title);
 while ($result->fetch()) {
-  $paper_display[$paper_no]['id'] = $crypt_name;
-  $paper_display[$paper_no]['paper_title'] = $paper_title;
-  $paper_no++;
+    $paper_display[$paper_no]['id'] = $crypt_name;
+    $paper_display[$paper_no]['paper_title'] = $paper_title;
+    $paper_no++;
 }
 $result->close();
 
 if ($paper_no == 1) {
   // There is only one paper live, just redirect.
-  header("location: " . $configObject->get('cfg_root_path') . "/osce/class_list.php?id=" . $paper_display[0]['id']);
-	exit();
+    header('location: ' . $configObject->get('cfg_root_path') . '/osce/class_list.php?id=' . $paper_display[0]['id']);
+    exit();
 } elseif ($paper_no == 0) {
   // No live OSCE stations can be found.
-	$notice->display_notice_and_exit($mysqli, $string['warning'], $string['cannotfind'], $string['cannotfind'], '../artwork/exclamation_48.png', '#C00000', true, true);
+    $notice->display_notice_and_exit($mysqli, $string['warning'], $string['cannotfind'], $string['cannotfind'], '../artwork/exclamation_48.png', '#C00000', true, true);
 } else {
   // Multiple OSCE stations are found, present a list of choices to the user.
-  echo "<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html;charset={$configObject->get('cfg_page_charset')}\" />\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<title>" . $string['exams'] . "</title>\n</head>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/body.css\" />\n<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/osce_list.css\" />\n<body>\n";
+    echo "<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html;charset={$configObject->get('cfg_page_charset')}\" />\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<title>" . $string['exams'] . "</title>\n</head>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/body.css\" />\n<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/osce_list.css\" />\n<body>\n";
   
-  echo "<div class=\"title\">" . $string['multiplestations'] . "</div>\n";
+    echo '<div class="title">' . $string['multiplestations'] . "</div>\n";
 
-  echo "<p style=\"margin-left:10px\">" . $string['pleaseselect'] . "</p>\n";
-  echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\">\n";
-  for ($i=0; $i<$paper_no; $i++) {
-    echo "<tr><td width=\"66\" style=\"text-align:right\"><a href=\"" . $configObject->get('cfg_root_path') . "/osce/class_list.php?id=" . $paper_display[$i]['id'] . "\"><img src=\"../artwork/osce.png\" width=\"48\" height=\"48\" alt=\"Type: OSCE Station\" border=\"0\" /></a></td>\n";
-    echo "  <td><a href=\"" . $configObject->get('cfg_root_path') . "/osce/class_list.php?id=" . $paper_display[$i]['id'] . "\">" . $paper_display[$i]['paper_title'] . "</a></td></tr>\n";
-  }
-  echo "</table>\n";
+    echo '<p style="margin-left:10px">' . $string['pleaseselect'] . "</p>\n";
+    echo "<table cellpadding=\"0\" cellspacing=\"4\" border=\"0\">\n";
+    for ($i = 0; $i < $paper_no; $i++) {
+        echo '<tr><td width="66" style="text-align:right"><a href="' . $configObject->get('cfg_root_path') . '/osce/class_list.php?id=' . $paper_display[$i]['id'] . "\"><img src=\"../artwork/osce.png\" width=\"48\" height=\"48\" alt=\"Type: OSCE Station\" border=\"0\" /></a></td>\n";
+        echo '  <td><a href="' . $configObject->get('cfg_root_path') . '/osce/class_list.php?id=' . $paper_display[$i]['id'] . '">' . $paper_display[$i]['paper_title'] . "</a></td></tr>\n";
+    }
+    echo "</table>\n";
 }
 
 $mysqli->close();

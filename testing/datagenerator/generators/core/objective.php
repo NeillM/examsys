@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -17,6 +18,7 @@
 namespace testing\datagenerator;
 
 use \yearutils,
+
     \mappingutils;
 
 /**
@@ -27,7 +29,8 @@ use \yearutils,
  * @package testing
  * @subpackage datagenerator
  */
-class objective extends generator {
+class objective extends generator
+{
 
     /**
      * Create a new module
@@ -40,7 +43,8 @@ class objective extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function create_objective($parameters) {
+    public function create_objective($parameters)
+    {
         if (empty($parameters['idMod'])) {
             throw new data_error('idMod must be provided');
         }
@@ -58,10 +62,17 @@ class objective extends generator {
 
         $obj_id = mappingutils::get_objectives_start();
         $sql = $this->db->prepare('INSERT INTO objectives VALUES (?, ?, ?, ?, ?, ?)');
-        $sql->bind_param('isiiii', $obj_id, $settings['objective'], $settings['idMod'], $settings['identifier'],
-            $settings['calendar_year'], $settings['sequence']);
+        $sql->bind_param(
+            'isiiii',
+            $obj_id,
+            $settings['objective'],
+            $settings['idMod'],
+            $settings['identifier'],
+            $settings['calendar_year'],
+            $settings['sequence']
+        );
         if (!$sql->execute()) {
-            throw new data_error("Create new objective failed with parameters: " . implode("--", $settings));
+            throw new data_error('Create new objective failed with parameters: ' . implode('--', $settings));
         }
         $sql->close();
         $settings['obj_id'] = $obj_id;
@@ -78,13 +89,14 @@ class objective extends generator {
      * @throws data_error If passed parameter is invalid
      * @return array
      */
-    public function create_session($parameters) {
+    public function create_session($parameters)
+    {
         if (empty($parameters['idMod'])) {
             throw new data_error('idMod must be provided');
         }
         $identifier = mappingutils::get_sessions_start();
         $defaults = array(
-            'title' => 'test', 'calendar_year' => null, 'occurrence' => null, 'source_url' => "https://www.example.com",
+            'title' => 'test', 'calendar_year' => null, 'occurrence' => null, 'source_url' => 'https://www.example.com',
             'idMod' => $parameters['idMod'], 'identifier' => $identifier);
         $settings = $this->set_defaults_and_clean($defaults, $parameters);
         if (is_null($settings['calendar_year'])) {
@@ -93,15 +105,21 @@ class objective extends generator {
         }
 
         $sql = $this->db->prepare('INSERT INTO sessions VALUES (NULL, ?, ?, ?, ?, ?, ?)');
-        $sql->bind_param('iissis', $settings['identifier'], $settings['idMod'], $settings['title'],
-            $settings['source_url'], $settings['calendar_year'], $settings['occurrence']);
+        $sql->bind_param(
+            'iissis',
+            $settings['identifier'],
+            $settings['idMod'],
+            $settings['title'],
+            $settings['source_url'],
+            $settings['calendar_year'],
+            $settings['occurrence']
+        );
         if (!$sql->execute()) {
-            throw new data_error("Create new session failed with parameters: " . implode("--", $settings));
+            throw new data_error('Create new session failed with parameters: ' . implode('--', $settings));
         }
         $settings['sess_id'] = $sql->insert_id;
         $settings['identifier'] = $identifier;
         $sql->close();
         return $settings;
     }
-
 }

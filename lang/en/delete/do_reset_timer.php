@@ -16,4 +16,3 @@
 
 $string['timerreset'] = 'Timer reset';
 $string['msg']        = 'The timer was successfully reset.';
-?>

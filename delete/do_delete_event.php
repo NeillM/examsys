@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -29,9 +30,9 @@ require '../include/errors.php';
 
 $eventID = check_var('eventID', 'POST', true, false, true);
 
-$result = $mysqli->prepare("UPDATE extra_cal_dates SET deleted = NOW() WHERE id = ?");
+$result = $mysqli->prepare('UPDATE extra_cal_dates SET deleted = NOW() WHERE id = ?');
 $result->bind_param('i', $eventID);
-$result->execute();  
+$result->execute();
 $result->close();
 
 $render = new render($configObject);

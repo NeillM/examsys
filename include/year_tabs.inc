@@ -15,7 +15,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -24,13 +24,14 @@
 
 /**
  * Draw tabs of available years to view.
- * 
- * @param string $current_tab - the tab currently in view 
+ *
+ * @param string $current_tab - the tab currently in view
  * @param string $type type of year - academic or calendar
  * @param string $extra - extra html to add to table cell
  * @return string $html - the html for the tab
  */
-function drawTabs($current_tab, $type, $extra = '') {
+function drawTabs($current_tab, $type, $extra = '')
+{
 
     global $mysqli;
 
@@ -38,29 +39,27 @@ function drawTabs($current_tab, $type, $extra = '') {
 
     $html = '<table cellpadding="0" cellspacing="0" border="0" style="margin-top:8px; margin-left:auto; margin-right:0px"><tr>';
 
-    if ($type == "calendar") {
-        $supported_years = $yearutils->get_supported_years("CAL");
+    if ($type == 'calendar') {
+        $supported_years = $yearutils->get_supported_years('CAL');
     } else {
-        $supported_years = $yearutils->get_supported_years("STAT");
+        $supported_years = $yearutils->get_supported_years('STAT');
     }
 
     foreach ($supported_years as $calendar => $academic) {
-        if ($type == "academic") {
+        if ($type == 'academic') {
             $tab_year = $academic;
         } else {
             $tab_year = $calendar;
         }
 
         if ($calendar == $current_tab) {
-            $html .= "<td class=\"tabon\" onclick=\"location.href='" . $_SERVER['PHP_SELF'] . "?calyear=" . $calendar . $extra . "'\">" . $tab_year . "</td>";
+            $html .= "<td class=\"tabon\" onclick=\"location.href='" . $_SERVER['PHP_SELF'] . '?calyear=' . $calendar . $extra . "'\">" . $tab_year . '</td>';
         } else {
-            $html .= "<td class=\"taboff\" onclick=\"location.href='" . $_SERVER['PHP_SELF'] . "?calyear=" . $calendar . $extra ."'\">" . $tab_year . "</td>";
+            $html .= "<td class=\"taboff\" onclick=\"location.href='" . $_SERVER['PHP_SELF'] . '?calyear=' . $calendar . $extra . "'\">" . $tab_year . '</td>';
         }
-
     }
 
-    $html .= "</tr></table>";
+    $html .= '</tr></table>';
   
     return $html;
 }
-?>

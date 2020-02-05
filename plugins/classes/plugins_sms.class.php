@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,10 +25,11 @@ namespace plugins;
 
 /**
  * Abstract SMS class.
- * 
+ *
  * This class should be extend by classes used define sms plugins.
  */
-abstract class plugins_sms extends \plugins\plugins {
+abstract class plugins_sms extends \plugins\plugins
+{
     /**
      * Type of the plugin.
      * @var string
@@ -37,7 +39,8 @@ abstract class plugins_sms extends \plugins\plugins {
      * Install steps for sms plugin.
      * @return bool true on success
      */
-    protected function type_install() {
+    protected function type_install()
+    {
         // Add external system to external systems table
         $external = new \external_systems();
         return $external->insert_external_system($this::SMS, \external_systems::PLUGIN);
@@ -46,10 +49,11 @@ abstract class plugins_sms extends \plugins\plugins {
      * Uninstall steps for sms plugin.
      * @return bool true on success
      */
-    protected function type_uninstall() {
+    protected function type_uninstall()
+    {
         $success = true;
         // Do not remove external systems if in use.
-        $checksql = $this->db->prepare("SELECT NULL FROM faculty WHERE externalsys = ?
+        $checksql = $this->db->prepare('SELECT NULL FROM faculty WHERE externalsys = ?
             UNION
                 SELECT NULL FROM courses WHERE externalsys = ?
             UNION
@@ -57,15 +61,15 @@ abstract class plugins_sms extends \plugins\plugins {
             UNION
                 SELECT NULL FROM modules WHERE sms = ?
             UNION
-                SELECT NULL FROM properties WHERE externalsys = ? LIMIT 1");
-        $pluginname = '\\plugins\\SMS\\' . $this->plugin. '\\' . $this->plugin;
+                SELECT NULL FROM properties WHERE externalsys = ? LIMIT 1');
+        $pluginname = '\\plugins\\SMS\\' . $this->plugin . '\\' . $this->plugin;
         $name = $pluginname::SMS;
         $checksql->bind_param('sssss', $name, $name, $name, $name, $name);
         $checksql->execute();
         $checksql->store_result();
         if ($checksql->num_rows != 1) {
             // Remove external system from external systems table
-            $insertsql = $this->db->prepare("DELETE IGNORE FROM external_systems WHERE name = ? AND type = ?");
+            $insertsql = $this->db->prepare('DELETE IGNORE FROM external_systems WHERE name = ? AND type = ?');
             $plugin = \external_systems::PLUGIN;
             $insertsql->bind_param('ss', $name, $plugin);
             $insertsql->execute();
@@ -85,31 +89,33 @@ abstract class plugins_sms extends \plugins\plugins {
     * @param string $externalid external id for module
     * @return bool
     */
-    public static function render_module_sync_options($moduleimport, $moduleid, $externalid) {
-      $configObject = \Config::get_instance();
-      $yearutils = new \yearutils($configObject->db);
-      $data['current_session'] = $yearutils->get_current_session();
-      $data['next_session'] = $yearutils->get_next_session();
-      $data['previous_session'] = $yearutils->get_previous_session();
-      $data['academic_year']= $yearutils->get_academic_session($data['current_session']);
-      $data['next_academic_year'] = $yearutils->get_academic_session($data['next_session']);
-      $data['prev_academic_year'] = $yearutils->get_academic_session($data['previous_session']);
-      $data['prevenabled'] = false;
-      $data['url'] = $moduleimport['url'];
-      $data['tooltip'] = $moduleimport['tooltip'];
-      $data['blurb'] = $moduleimport['blurb'];
-      $data['externalid'] = $externalid;
-      if (\module_utils::check_sync_previous_year($moduleid)) {
-        $data['prevenabled'] = true;
-      }
-      $render = new \render($configObject);
-      $render->render($data, array(), 'module/syncoptions.html');
+    public static function render_module_sync_options($moduleimport, $moduleid, $externalid)
+    {
+        $configObject = \Config::get_instance();
+        $yearutils = new \yearutils($configObject->db);
+        $data['current_session'] = $yearutils->get_current_session();
+        $data['next_session'] = $yearutils->get_next_session();
+        $data['previous_session'] = $yearutils->get_previous_session();
+        $data['academic_year'] = $yearutils->get_academic_session($data['current_session']);
+        $data['next_academic_year'] = $yearutils->get_academic_session($data['next_session']);
+        $data['prev_academic_year'] = $yearutils->get_academic_session($data['previous_session']);
+        $data['prevenabled'] = false;
+        $data['url'] = $moduleimport['url'];
+        $data['tooltip'] = $moduleimport['tooltip'];
+        $data['blurb'] = $moduleimport['blurb'];
+        $data['externalid'] = $externalid;
+        if (\module_utils::check_sync_previous_year($moduleid)) {
+            $data['prevenabled'] = true;
+        }
+        $render = new \render($configObject);
+        $render->render($data, array(), 'module/syncoptions.html');
     }
 
     /**
      * Enable this plugin.
      */
-    public function enable_plugin() {
+    public function enable_plugin()
+    {
         $enabled = $this->config->get_setting('plugin_SMS', 'enabled_plugin');
         if (!is_null($enabled)) {
             if (is_array($enabled)) {
@@ -127,7 +133,8 @@ abstract class plugins_sms extends \plugins\plugins {
     /**
      * Disable this plugin.
      */
-    public function disable_plugin() {
+    public function disable_plugin()
+    {
         $enabled = $this->config->get_setting('plugin_SMS', 'enabled_plugin');
         if (!is_null($enabled)) {
             $newenabled = array();

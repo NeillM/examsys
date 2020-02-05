@@ -24,12 +24,13 @@
 * @package
 */
 
-function get_root_path() {
-  $path_parts = pathinfo(dirname(__FILE__));
-  return normalise_path($path_parts['dirname']);
+function get_root_path()
+{
+    $path_parts = pathinfo(dirname(__FILE__));
+    return normalise_path($path_parts['dirname']);
 }
 
-function normalise_path($path) {
-  return str_replace('\\', '/', $path);
+function normalise_path($path)
+{
+    return str_replace('\\', '/', $path);
 }
-?>

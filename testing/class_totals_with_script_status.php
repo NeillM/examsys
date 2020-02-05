@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -30,49 +31,47 @@
  */
 
 require dirname(__DIR__) . '/include/sysadmin_auth.inc';
-
 $end_dateSQL = 'NOW()';
 if (isset($_GET['period']) and $_GET['period'] != '') {
-  if ($_GET['period'] == 'day') {
-    $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 DAY)';
-  } elseif ($_GET['period'] == 'week') {
-    $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 WEEK)';
-  } elseif ($_GET['period'] == 'month') {
-    $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 MONTH)';
-  } elseif ($_GET['period'] == 'year') {
-    $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 YEAR)';
-  } elseif ($_GET['period'] == '2year') {
-    $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 2 YEAR)';
-  } elseif ($_GET['period'] == '3year') {
-    $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 3 YEAR)';
-  } elseif ($_GET['period'] == '6year') {
-    $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 6 YEAR)';
-  }
+    if ($_GET['period'] == 'day') {
+        $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 DAY)';
+    } elseif ($_GET['period'] == 'week') {
+        $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 WEEK)';
+    } elseif ($_GET['period'] == 'month') {
+        $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 MONTH)';
+    } elseif ($_GET['period'] == 'year') {
+        $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 1 YEAR)';
+    } elseif ($_GET['period'] == '2year') {
+        $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 2 YEAR)';
+    } elseif ($_GET['period'] == '3year') {
+        $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 3 YEAR)';
+    } elseif ($_GET['period'] == '6year') {
+        $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 6 YEAR)';
+    }
 } else {
-  $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 5 YEAR)';
+    $start_dateSQL = 'SUBDATE(NOW(), INTERVAL 5 YEAR)';
 }
 
 $papers = 0;
 if (isset($_GET['paper']) and $_GET['paper'] != '') {
-  $stmt = $mysqli->prepare("SELECT property_id FROM properties WHERE property_id=?");
-  $stmt->bind_param('i', $_GET['paper']);
+    $stmt = $mysqli->prepare('SELECT property_id FROM properties WHERE property_id=?');
+    $stmt->bind_param('i', $_GET['paper']);
 } else {
-  $stmt = $mysqli->prepare("SELECT property_id FROM properties WHERE paper_type = '2' AND start_date > $start_dateSQL AND end_date < $end_dateSQL AND deleted IS NULL ORDER BY start_date");
+    $stmt = $mysqli->prepare("SELECT property_id FROM properties WHERE paper_type = '2' AND start_date > $start_dateSQL AND end_date < $end_dateSQL AND deleted IS NULL ORDER BY start_date");
 }
 $stmt->execute();
 $stmt->bind_result($paperID);
 while ($stmt->fetch()) {
-  $papers++;
+    $papers++;
 }
 $stmt->close();
-
 $results = array();
-$stmt = $mysqli->prepare("SELECT paper_id, status, errors FROM class_totals_test_local WHERE user_id = ? ORDER BY id");
+$stmt = $mysqli->prepare('SELECT paper_id, status, errors FROM class_totals_test_local WHERE user_id = ? ORDER BY id');
 $stmt->bind_param('i', $userObject->get_user_ID());
 $stmt->execute();
 $stmt->bind_result($paper_id, $status, $errors);
 while ($stmt->fetch()) {
-  $results[] = array('paper_id' => $paper_id, 'status' => $status, 'errors' => $errors);
+    $results[] = array('paper_id' => $paper_id, 'status' => $status, 'errors' => $errors);
 }
 $stmt->close();
 ?>
@@ -119,8 +118,8 @@ $stmt->close();
 <body>
 <?php
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
+  
+    echo draw_toprightmenu();
 ?>
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
@@ -130,43 +129,43 @@ $stmt->close();
   
 <div id="content">
 <?php
-if (count($results) == 0):
-?>
+if (count($results) == 0) :
+    ?>
   <p>No papers analysed.
-<?php
-    if (count($papers) > 0):
-?>
+    <?php
+    if (count($papers) > 0) :
+        ?>
     Refresh page for updates.
-<?php
+        <?php
     endif;
-?>
+    ?>
   </p>
-<?php
-else:
-?>
+    <?php
+else :
+    ?>
   <p><input type="checkbox" id="refresh" name="refresh" checked="checked" /> <label for="refresh">Auto refresh</label></p>
-  <p>Analysed <?php echo count($results) ?> out of <?php echo $papers ?> (<?php echo number_format(((count($results))/$papers * 100), 0) ?>%)</p>
+  <p>Analysed <?php echo count($results) ?> out of <?php echo $papers ?> (<?php echo number_format(((count($results)) / $papers * 100), 0) ?>%)</p>
   <ul class="papers">
-<?php
-  foreach ($results as $result) {
-?>
+    <?php
+    foreach ($results as $result) {
+        ?>
     <li class="<?php echo $result['status'] ?>"><a href="../paper/details.php?paperID=<?php echo $result['paper_id'] ?>">Paper ID <?php echo $result['paper_id'] ?></a>
-<?php
-    if ($result['status'] == 'failure') {
-      echo $result['errors'];
-    }
-?>
+        <?php
+        if ($result['status'] == 'failure') {
+            echo $result['errors'];
+        }
+        ?>
     </li>
-<?php
-  }
-?>
+        <?php
+    }
+    ?>
   </ul>
-<?php
-  if (count($results) == $papers):
-?>
+    <?php
+    if (count($results) == $papers) :
+        ?>
     <p>Analysis complete.</p>
-<?php
-  endif;
+        <?php
+    endif;
 endif;
 ?>
 </div>

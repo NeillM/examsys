@@ -23,5 +23,3 @@ $string['errormessage2'] = 'This may result in holes in the hotspot and incorrec
 $string['cancel'] = 'Do you want to cancel the last line?';
 $string['errorcanvas'] = 'Canvas not supported';
 $string['errorimageshotspot'] = 'Hotspot question cannot be displayed because some images were not loaded.';
-
-?>

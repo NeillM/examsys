@@ -16,4 +16,3 @@
 
 $string['manageteams'] = 'Manage Teams';
 $string['teams'] = 'Edit Teams';
-?>

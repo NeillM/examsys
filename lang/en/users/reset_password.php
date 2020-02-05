@@ -31,4 +31,3 @@ $string['enternewpassword'] = 'Enter a new password.';
 $string['confirmpassword'] = 'Confirm password';
 $string['reset'] = 'Reset';
 $string['passwordupdated'] = 'Password updated.';
-?>

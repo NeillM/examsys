@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -30,14 +31,13 @@ $paperID = check_var('paperID', 'POST', true, false, true);
 
 // Does the paper exist?
 if (!Paper_utils::paper_exists($paperID, $mysqli)) {
-  exit();
+    exit();
 }
 // Does the student exist?
 if (!UserUtils::userid_exists($userID, $mysqli)) {
-  exit();
+    exit();
 }
 
 ToiletBreaks::add_toilet_break($userID, $paperID, $mysqli);
     
 $mysqli->close();
-?>

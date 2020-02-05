@@ -29,4 +29,3 @@ $string['hard'] = 'Hard';
 $string['essential'] = 'Essential';
 $string['important'] = 'Important';
 $string['nicetoknow'] = 'Nice to Know';
-?>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -32,30 +33,30 @@ $keywordID = param::required('keywordID', param::INT, param::FETCH_POST);
 $module = param::optional('module', '', param::INT, param::FETCH_REQUEST);
 
 if ($module == '') {
-  $type = 'personal';
-  $owner = $userObject->get_user_ID();
+    $type = 'personal';
+    $owner = $userObject->get_user_ID();
 } else {
-  $type = 'team';
-  $owner = $module;
+    $type = 'team';
+    $owner = $module;
 }
 $exists = false;
 
-$result = $mysqli->prepare("SELECT NULL FROM keywords_user WHERE keyword = ? AND userID = ? AND keyword_type = ? and id != ?");
+$result = $mysqli->prepare('SELECT NULL FROM keywords_user WHERE keyword = ? AND userID = ? AND keyword_type = ? and id != ?');
 $result->bind_param('sisi', $new_keyword, $owner, $type, $keywordID);
 $result->execute();
 $result->store_result();
 if ($result->num_rows > 0) {
-  $exists = true;
+    $exists = true;
 }
 $result->close();
 if (!$exists) {
-  $result = $mysqli->prepare("UPDATE keywords_user SET keyword = ? WHERE id = ?");
-  $result->bind_param('si', $new_keyword, $keywordID);
-  $result->execute();
-  $result->close();
+    $result = $mysqli->prepare('UPDATE keywords_user SET keyword = ? WHERE id = ?');
+    $result->bind_param('si', $new_keyword, $keywordID);
+    $result->execute();
+    $result->close();
 } else {
-  echo json_encode('DUPLICATE');
-  exit();
+    echo json_encode('DUPLICATE');
+    exit();
 }
 
 echo json_encode('SUCCESS');

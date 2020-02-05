@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,7 +27,8 @@ use \Behat\Mink\Session;
  * @package testing
  * @subpackage behat
  */
-class selectors {
+class selectors
+{
   /**
    * An array of selector types that can be used by behat tests,
    * unless built into behat directly they should also have an
@@ -34,7 +36,7 @@ class selectors {
    *
    * @var array
    */
-  protected static $allowedrogoselectors = array(
+    protected static $allowedrogoselectors = array(
     // Built in selectors.
     'id' => 'id',
     'id_or_name' => 'id_or_name',
@@ -56,21 +58,21 @@ class selectors {
     'sub_menu' => 'sub_menu', //<div id="popup3" class="popup"
     'menu_section' => 'menu_section', //<div class="submenuheading"
     'navigation' => 'navigation', //<div class="breadcrumb"
-    'paper_title' => 'paper_title', // PAPER_title => <div class="PAGE_title" 
+    'paper_title' => 'paper_title', // PAPER_title => <div class="PAGE_title"
     'content' => 'content', //<table id="sortable" class="header"
     'admin_tool_link' => 'admin_tool_link',
     'pop_page_title' => 'pop_page_title',
     'menu_item' => 'menu_item',
-    'page_title' => 'page_title',  
+    'page_title' => 'page_title',
     'content_section' => 'content_section',
     'folder' => 'folder',
-    'search_menu' => 'search_menu',  
+    'search_menu' => 'search_menu',
     'main_menu' => 'main_menu',
     'main_menu_icon' => 'main_menu_icon',
-    'main_menu_item' => 'main_menu_item', //<div id="toprightmenu" 
+    'main_menu_item' => 'main_menu_item', //<div id="toprightmenu"
     'sub_search_menu_item' => 'sub_search_menu_item',
     'paper_type' => 'paper_type',
-  );
+    );
 
   /**
    * An array containing XPATH selectors for elements of Rogo that behat can select.
@@ -78,7 +80,7 @@ class selectors {
    *
    * @var array
    */
-  protected static $rogoselectors = array(
+    protected static $rogoselectors = array(
     'menu_item' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' menuitem ') and contains(normalize-space(.) , %locator%)]
 XPATH
@@ -138,7 +140,7 @@ XPATH
     ,'paper_type' => <<<XPATH
 //td[contains(concat(' ', normalize-space(@class), ' '), ' icon ') and contains(normalize-space(.) , %locator%)]
 XPATH
-   );
+    );
 
   /**
    * Get the custom Rogo selector list or a selector.
@@ -146,13 +148,14 @@ XPATH
    * @param string $selectorname
    * @return array
    */
-  public static function get_selectors($selectorname = null) {
-    if (empty($selectorname)){
-      return self::$rogoselectors;
-    } else {
-      return self::$rogoselectors[$selectorname];
+    public static function get_selectors($selectorname = null)
+    {
+        if (empty($selectorname)) {
+            return self::$rogoselectors;
+        } else {
+            return self::$rogoselectors[$selectorname];
+        }
     }
-  }
 
   /**
    * Checks if the the named selector is allowed in Rogo behat tests.
@@ -160,9 +163,10 @@ XPATH
    * @param string $namesselector
    * @return boolean
    */
-  public static function is_allowed_named($namesselector) {
-    return isset(self::$allowedrogoselectors[$namesselector]);
-  }
+    public static function is_allowed_named($namesselector)
+    {
+        return isset(self::$allowedrogoselectors[$namesselector]);
+    }
 
   /**
    * Adds the custom Rogo selectors to behat.
@@ -170,10 +174,11 @@ XPATH
    * @param \testing\behat\Behat\Mink\Session $session The mink session
    * @return void
    */
-  public static function register_rogo_selectors(Session $session) {
-    foreach (self::get_selectors() as $name => $xpath) {
-      $session->getSelectorsHandler()->getSelector('named_exact')->registerNamedXpath($name, $xpath);
-      $session->getSelectorsHandler()->getSelector('named_partial')->registerNamedXpath($name, $xpath);
+    public static function register_rogo_selectors(Session $session)
+    {
+        foreach (self::get_selectors() as $name => $xpath) {
+            $session->getSelectorsHandler()->getSelector('named_exact')->registerNamedXpath($name, $xpath);
+            $session->getSelectorsHandler()->getSelector('named_partial')->registerNamedXpath($name, $xpath);
+        }
     }
-  }
 }

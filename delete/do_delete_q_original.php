@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -29,24 +30,24 @@ require '../include/errors.php';
 
 $qIDs = check_var('q_id', 'POST', true, false, true);
 if ($qIDs{0} == ',') {
-  $qIDs = substr($qIDs, 1);
+    $qIDs = substr($qIDs, 1);
 }
 
 $tmp_q_ids = explode(',', $_POST['q_id']);
 
 $result = $mysqli->prepare("SELECT DISTINCT paper_title, paper, paper_type FROM (papers, properties) WHERE papers.paper = properties.property_id AND properties.deleted IS NULL AND question IN ($qIDs)");
-$result->execute();  
+$result->execute();
 $result->store_result();
 $result->bind_result($paper_title, $paper, $paper_type);
 $found = $result->num_rows;
 $result->close();
 
 if ($found == 0) {    // Only delete if the question is on zero papers.
-  for ($i=1; $i<count($tmp_q_ids); $i++) {
-    $qID = $tmp_q_ids[$i];  
+    for ($i = 1; $i < count($tmp_q_ids); $i++) {
+        $qID = $tmp_q_ids[$i];
 
-    QuestionUtils::delete_question($qID, $mysqli);
-  }
+        QuestionUtils::delete_question($qID, $mysqli);
+    }
 }
 
 $render = new render($configObject);

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,13 +25,15 @@ use testing\unittest\unittest;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class dichotomoustest extends unittest {
+class dichotomoustest extends unittest
+{
 
     /**
      * Test question header setter
      * @group question
      */
-    public function test_set_question_head() {
+    public function test_set_question_head()
+    {
         $data = questiondata::get_datastore('dichotomous');
         $data->set_question_head();
         $this->assertTrue($data->displaydefault);
@@ -51,7 +54,8 @@ class dichotomoustest extends unittest {
      * Test question option setter
      * @group question
      */
-    public function test_set_option_answer() {
+    public function test_set_option_answer()
+    {
         $data = questiondata::get_datastore('dichotomous');
         $option['markscorrect'] = 1;
         $option['position'] = 1;
@@ -79,7 +83,8 @@ class dichotomoustest extends unittest {
      * Test question additional option setter
      * @group question
      */
-    public function test_process_options() {
+    public function test_process_options()
+    {
         $data = questiondata::get_datastore('dichotomous');
         $useranswer = 'uuu';
         $option['marksincorrect'] = -1;
@@ -91,5 +96,4 @@ class dichotomoustest extends unittest {
         $data->process_options(0, $useranswer, '', 1);
         $this->assertFalse($data->negativemarking);
     }
-
 }

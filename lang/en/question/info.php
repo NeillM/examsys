@@ -42,4 +42,3 @@ $string['na'] = 'N/A';
 $string['type'] = 'Type';
 $string['questionno'] = 'Question No';
 $string['copies'] = 'Copies:';
-?>

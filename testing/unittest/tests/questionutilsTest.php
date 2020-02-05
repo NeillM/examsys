@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,6 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
+
 /**
  * Tests for the QuestionUtils class
  *
@@ -23,7 +25,8 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2017 onwards The University of Nottingham
  * @package tests
  */
-class QuestionUtilsTest extends unittestdatabase {
+class QuestionUtilsTest extends unittestdatabase
+{
     /**
      * @var array Storage for question data in tests
      */
@@ -38,7 +41,8 @@ class QuestionUtilsTest extends unittestdatabase {
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $datagenerator = $this->get_datagenerator('questions', 'core');
         $this->question = $datagenerator->create_question(array('type' => 'mcq',
             'user' => 'admin',
@@ -86,7 +90,8 @@ class QuestionUtilsTest extends unittestdatabase {
      *
      * @group questions
      */
-    public function test_question_answered_in_summative() {
+    public function test_question_answered_in_summative()
+    {
         // Answered by student.
         $this->assertTrue(QuestionUtils::question_answered_in_summative(33, $this->db));
         // Answered by non student.
@@ -99,7 +104,8 @@ class QuestionUtilsTest extends unittestdatabase {
      * Test get question details
      * @group questions
      */
-    public function test_get_correct_answer() {
+    public function test_get_correct_answer()
+    {
         $question = array();
         $expected['ID'] = $this->question['id'];
         $expected['type'] = $this->question['q_type'];
@@ -114,7 +120,8 @@ class QuestionUtilsTest extends unittestdatabase {
      * Test fix correct (fill in the blank)
      * @group questions
      */
-    public function test_fix_correct() {
+    public function test_fix_correct()
+    {
         $expected = ',a';
         $q_type = 'blank';
         $correct = '';

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -25,7 +26,8 @@ namespace api;
 /**
  * Course class
  */
-class coursemanagement extends \api\abstractmanagement {
+class coursemanagement extends \api\abstractmanagement
+{
     
     /**
      * Language pack component.
@@ -55,14 +57,15 @@ class coursemanagement extends \api\abstractmanagement {
      * @param integer $userid rogo user id linked to web service client
      * @return - success status and course id
      */
-    public function update($params, $userid) {
+    public function update($params, $userid)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('course_not_updated', 'course_does_not_exist',
             'course_already_exists', 'faculty_not_supplied', 'school_not_supplied', 'course_nothing_to_update', 'external_school_invalid'));
         $faculty = true;
         if (isset($params['id']) and $params['id'] !== '') {
             // Using internal rogo id to update course.
-            $courseid = \CourseUtils::courseid_exists($params['id'], $this->db);  
+            $courseid = \CourseUtils::courseid_exists($params['id'], $this->db);
         } elseif (!empty($params['externalid'])) {
             // What external system is the client mapped to.
             if (empty($params['externalsys'])) {
@@ -111,7 +114,7 @@ class coursemanagement extends \api\abstractmanagement {
         }
         // Mark something is to be updated.
         if ($details['schoolid'] != $schoolid) {
-          $change = true;
+            $change = true;
         }
         // If creating/updating module with a new school, faculty needs to be supplied.
         if ($faculty) {
@@ -154,7 +157,8 @@ class coursemanagement extends \api\abstractmanagement {
      * @param integer $userid rogo user id linked to web service client
      * @return - success status and course id
      */
-    public function create($params, $userid) {
+    public function create($params, $userid)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('course_not_created', 'course_already_exists', 'faculty_not_supplied', 'external_school_invalid'));
         $faculty = true;
@@ -216,9 +220,10 @@ class coursemanagement extends \api\abstractmanagement {
      * Delete course
      * @param array $parms delete course parameters
      * @param integer $userid rogo user id linked to web service client
-     * @return success status and course id 
+     * @return success status and course id
      */
-    public function delete($params, $userid) {
+    public function delete($params, $userid)
+    {
         $langpack = new \langpack();
         $strings = $langpack->get_strings($this->langcomponent, array('course_not_deleted_inuse', 'course_not_deleted'
             , 'course_does_not_exist'));

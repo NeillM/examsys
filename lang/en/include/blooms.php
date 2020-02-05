@@ -23,4 +23,3 @@ $string['application'] = 'Application';
 $string['analysis'] = 'Analysis';
 $string['synthesis'] = 'Synthesis';
 $string['evaluation'] = 'Evaluation';
-?>

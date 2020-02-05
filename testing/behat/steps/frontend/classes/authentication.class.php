@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace testing\behat\steps\frontend;
+
 use Behat\Gherkin\Node\PyStringNode,
+
     Behat\Behat\Definition\Call\Given as Given,
     Behat\Gherkin\Node\TableNode;
 
@@ -27,27 +30,29 @@ use Behat\Gherkin\Node\PyStringNode,
  * @package testing
  * @subpackage behat
  */
-trait authentication {
+trait authentication
+{
   /**
    * Log into Rogo.
    *
    * @Given /^I login as "([^"]*)"$/
    * @param $username The username to be logged in.
    */
-  public function i_login_as($username) {
-    // Goto the base Rogo path.
-    $this->getSession()->visit($this->locatePath('/'));
-    $this->i_set_field("ROGO_USER", $username);
-    $this->i_set_field("ROGO_PW", $username);
-    $this->i_click("rogo-login-form-std", "button");
-    $this->i_wait_for_page_to_load();
-    try {
-      $this->i_should_not_see("rogo-login-form-std", "button");
-    } catch (\Exception $e) {
-      // We are still on the login page, so lets give a reasonable message.
-      throw new \Exception("Login failed for $username");
+    public function i_login_as($username)
+    {
+      // Goto the base Rogo path.
+        $this->getSession()->visit($this->locatePath('/'));
+        $this->i_set_field('ROGO_USER', $username);
+        $this->i_set_field('ROGO_PW', $username);
+        $this->i_click('rogo-login-form-std', 'button');
+        $this->i_wait_for_page_to_load();
+        try {
+            $this->i_should_not_see('rogo-login-form-std', 'button');
+        } catch (\Exception $e) {
+          // We are still on the login page, so lets give a reasonable message.
+            throw new \Exception("Login failed for $username");
+        }
     }
-  }
   
   /**
    * Log out Rogo.
@@ -55,8 +60,9 @@ trait authentication {
    * @Then /^I log out$/
    * @param $username The username to be logged in.
    */
-  public function i_log_out() {
-    $this->toggle_main_menu();
-    $this->i_click("signout", "id");
-  }
+    public function i_log_out()
+    {
+        $this->toggle_main_menu();
+        $this->i_click('signout', 'id');
+    }
 }

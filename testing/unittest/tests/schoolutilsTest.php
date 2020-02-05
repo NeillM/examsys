@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
-class schoolutilstest extends unittestdatabase {
+class schoolutilstest extends unittestdatabase
+{
     /**
      * @var integer id for default school in tests
      */
@@ -44,7 +46,8 @@ class schoolutilstest extends unittestdatabase {
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $this->school2 = $this->get_school_id('Training');
         $this->faculty2 = $this->get_faculty_id('Administrative and Support Units');
         $datagenerator = $this->get_datagenerator('school', 'core');
@@ -60,7 +63,8 @@ class schoolutilstest extends unittestdatabase {
      * Test updating a school
      * @group school
      */
-    public function test_update_school() {
+    public function test_update_school()
+    {
         // Check successful update.
         $this->assertTrue(SchoolUtils::update_school($this->school, $this->faculty, 'test update school', null, '123456', 'external', $this->db));
         // Check unsuccessful update - duplicate name.
@@ -73,17 +77,17 @@ class schoolutilstest extends unittestdatabase {
         $querytable = $this->query(array('columns' => array('school', 'facultyID', 'code', 'externalid', 'externalsys'), 'table' => 'schools'));
         $expectedtable = array(
             0 => array(
-                'school' => "test update school",
+                'school' => 'test update school',
                 'facultyID' => $this->faculty,
                 'code' => null,
-                'externalid' => "123456",
-                'externalsys' => "external"),
+                'externalid' => '123456',
+                'externalsys' => 'external'),
             1 => array(
-                'school' => "Training",
+                'school' => 'Training',
                 'facultyID' => $this->faculty2,
                 'code' => null,
-                'externalid' => "berty",
-                'externalsys' => "external"),
+                'externalid' => 'berty',
+                'externalsys' => 'external'),
             2 => array(
                 'school' => $this->school3['school'],
                 'facultyID' => $this->school3['facultyID'],
@@ -98,7 +102,8 @@ class schoolutilstest extends unittestdatabase {
      * Test checking is school in use
      * @group school
      */
-    public function test_school_in_use() {
+    public function test_school_in_use()
+    {
         // Check in use.
         $this->assertTrue(SchoolUtils::school_in_use($this->school2, $this->db));
         // Check not in use.
@@ -109,16 +114,18 @@ class schoolutilstest extends unittestdatabase {
      * Test getting school id from external id
      * @group school
      */
-    public function test_get_schoolid_from_externalid() {
-        $this->assertEquals($this->school, SchoolUtils::get_schoolid_from_externalid("ABC", 'external', $this->db));
+    public function test_get_schoolid_from_externalid()
+    {
+        $this->assertEquals($this->school, SchoolUtils::get_schoolid_from_externalid('ABC', 'external', $this->db));
     }
 
     /**
      * Test comparing  faculties with external list
      * @group school
      */
-    public function test_diff_external_schools_to_internal_schools() {
-        $external = array("ABC", "berty", "IJKL");
-        $this->assertEquals(array("qwerty"), SchoolUtils::diff_external_schools_to_internal_schools($external, 'external', $this->db));
+    public function test_diff_external_schools_to_internal_schools()
+    {
+        $external = array('ABC', 'berty', 'IJKL');
+        $this->assertEquals(array('qwerty'), SchoolUtils::diff_external_schools_to_internal_schools($external, 'external', $this->db));
     }
 }

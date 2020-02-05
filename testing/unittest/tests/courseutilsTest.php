@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
-class courseutilstest extends unittestdatabase {
+class courseutilstest extends unittestdatabase
+{
     /**
      * @var array Storage for course data in tests
      */
@@ -34,7 +36,8 @@ class courseutilstest extends unittestdatabase {
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $datagenerator = $this->get_datagenerator('course', 'core');
         $this->course = $datagenerator->create_course(array('name' => 'test', 'description' => 'a test', 'schoolid' => 1, 'externalid' => 'ABCD', 'externalsys' => 'external'));
         $this->course2 = $datagenerator->create_course(array('name' => 'test2', 'description' => 'a test 2', 'schoolid' => 1, 'externalid' => 'WXYZ', 'externalsys' => 'external'));
@@ -44,8 +47,9 @@ class courseutilstest extends unittestdatabase {
      * Test comparing  courses with external list
      * @group courses
      */
-    public function test_diff_external_courses_to_internal_courses() {
-        $external = array($this->course['externalid'], "EFGH", "IJKL");
+    public function test_diff_external_courses_to_internal_courses()
+    {
+        $external = array($this->course['externalid'], 'EFGH', 'IJKL');
         $this->assertEquals(array($this->course2['externalid']), CourseUtils::diff_external_courses_to_internal_courses($external, 'external', $this->db));
     }
 
@@ -53,7 +57,8 @@ class courseutilstest extends unittestdatabase {
      * Test gettings course id  given external id
      * @group courses
      */
-    public function test_get_courseid_from_externalid() {
+    public function test_get_courseid_from_externalid()
+    {
         $this->assertEquals($this->course['id'], CourseUtils::get_courseid_from_externalid($this->course['externalid'], 'external', $this->db));
     }
 }

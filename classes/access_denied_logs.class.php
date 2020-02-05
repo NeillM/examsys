@@ -22,77 +22,80 @@
  * @package
  */
 
-class access_denied_logs {
+class access_denied_logs
+{
 
-  private $db;
-  private $logs;
+    private $db;
+    private $logs;
 
   /**
    * Uses for access denied logs
    */
-  public function __construct() {
-    $configObject = Config::get_instance();
-    $this->db = $configObject->db;
-    $this->logs = array();
-  }
+    public function __construct()
+    {
+        $configObject = Config::get_instance();
+        $this->db = $configObject->db;
+        $this->logs = array();
+    }
 
   /**
    * Called when the object is unserialised.
    */
-  public function __wakeup() {
-    // The serialised database object will be invalid,
-    // this object should only be serialised during an error report,
-    // so adding the current database connect seems like a waste of time.
-    $this->db = null;
-  }
+    public function __wakeup()
+    {
+      // The serialised database object will be invalid,
+      // this object should only be serialised during an error report,
+      // so adding the current database connect seems like a waste of time.
+        $this->db = null;
+    }
 
   /**
    * Get all the logs from denied access table
    * returns associative array of logs
    */
-  public function get_access_denied_logs() {
-    $this->logs = array();
-    $result = $this->db->prepare("SELECT denied_log.id, UNIX_TIMESTAMP(tried), ipaddress, page, msg, users.id, users.title, initials, surname FROM denied_log, users WHERE denied_log.userID = users.id ORDER BY tried DESC LIMIT 10000");
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($id, $tried, $ipaddress, $page, $msg, $userID, $title, $initials, $surname);
-    while ($result->fetch()) {
-      $this->logs[] = array('id' =>$id, 'tried' => $tried, 'ipaddress' => $ipaddress, 'page' => $page, 'msg' =>$msg, 'userID' => $userID, 'title' => $title, 'initials' => $initials, 'surname' => $surname);
+    public function get_access_denied_logs()
+    {
+        $this->logs = array();
+        $result = $this->db->prepare('SELECT denied_log.id, UNIX_TIMESTAMP(tried), ipaddress, page, msg, users.id, users.title, initials, surname FROM denied_log, users WHERE denied_log.userID = users.id ORDER BY tried DESC LIMIT 10000');
+        $result->execute();
+        $result->store_result();
+        $result->bind_result($id, $tried, $ipaddress, $page, $msg, $userID, $title, $initials, $surname);
+        while ($result->fetch()) {
+            $this->logs[] = array('id' => $id, 'tried' => $tried, 'ipaddress' => $ipaddress, 'page' => $page, 'msg' => $msg, 'userID' => $userID, 'title' => $title, 'initials' => $initials, 'surname' => $surname);
+        }
+        $result->close();
+        return $this->logs;
     }
-    $result->close();
-    return $this->logs;
-  }
 
   /**
    * Clear All the logs from table
    */
-  public function delete_access_denied_logs() {
-    $result = $this->db->prepare("DELETE FROM denied_log");
-    $result->execute();
-    $result->close();
-    if ($this->db->errno == 0) {
-      return true;
-    } else {
-      return false;
+    public function delete_access_denied_logs()
+    {
+        $result = $this->db->prepare('DELETE FROM denied_log');
+        $result->execute();
+        $result->close();
+        if ($this->db->errno == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
-  }
 
   /**
    * Delete a log from the table
    * @param $log_id
    */
-  public function delete_a_access_denied_log($log_id) {
-    $result = $this->db->prepare("DELETE FROM denied_log WHERE id = ?");
-    $result->bind_param('i', $log_id);
-    $result->execute();
-    $result->close();
-    if ($this->db->errno == 0) {
-      return true;
-    } else {
-      return false;
+    public function delete_a_access_denied_log($log_id)
+    {
+        $result = $this->db->prepare('DELETE FROM denied_log WHERE id = ?');
+        $result->bind_param('i', $log_id);
+        $result->execute();
+        $result->close();
+        if ($this->db->errno == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
-  }
-
-
-
 }

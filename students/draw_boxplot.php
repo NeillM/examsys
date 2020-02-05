@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,9 +16,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Draws the distribution bar chart used with class_totals.php.
-* 
+*
 * @author Niko Miranowicz, Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -37,22 +38,25 @@ $q2           = check_var('q2', 'GET', true, false, true);
 $q3           = check_var('q3', 'GET', true, false, true);
 $passmark     = check_var('passmark', 'GET', true, false, true);
 
-function find_break($text) {
-  $break = 0;
-  $txt_len = strlen($text);
-  for ($i=25; $i<$txt_len; $i++) {
-    if ($text{$i} == ' ' or $text{$i} == '_' or $text{$i} == '-' or $text{$i} == ':' or $text{$i} == ',') {
-      if ($break == 0) $break = $i;
+function find_break($text)
+{
+    $break = 0;
+    $txt_len = strlen($text);
+    for ($i = 25; $i < $txt_len; $i++) {
+        if ($text{$i} == ' ' or $text{$i} == '_' or $text{$i} == '-' or $text{$i} == ':' or $text{$i} == ',') {
+            if ($break == 0) {
+                $break = $i;
+            }
+        }
     }
-  }
   
-  return $break;
+    return $break;
 }
 
 if ($scale == '1') {
-  $Image = ImageCreate(166, 265);   // Scale mode
+    $Image = ImageCreate(166, 265);   // Scale mode
 } else {
-  $Image = ImageCreate(115, 265);  // Draw box-whisker plot
+    $Image = ImageCreate(115, 265);  // Draw box-whisker plot
 }
 
 $gap = 24;
@@ -70,43 +74,43 @@ $font      = '../fonts/SourceSansPro-Regular.ttf';
 $bold_font = '../fonts/SourceSansPro-Semibold.ttf';
 
 if ($scale == '1') {   // Scale mode
-  for ($label=1; $label<10; $label++) {
-    imagettftext($Image, 10, 0, 25, 255 - ($label * $gap), $black, $font, 10 * $label);
-    ImageLine($Image, 45, 250 - ($label * $gap), 50, 250 - ($label * $gap), $dkgrey);
-  }
-  imagettftext($Image, 10, 0, 20, 15, $black, $font, '100');
-  ImageLine($Image, 45, 10, 50, 10, $dkgrey);
-  imagettftext($Image, 10, 0, 35, 255, $black, $font, '0');
-  ImageLine($Image, 45, 250, 50, 250, $dkgrey);
+    for ($label = 1; $label < 10; $label++) {
+        imagettftext($Image, 10, 0, 25, 255 - ($label * $gap), $black, $font, 10 * $label);
+        ImageLine($Image, 45, 250 - ($label * $gap), 50, 250 - ($label * $gap), $dkgrey);
+    }
+    imagettftext($Image, 10, 0, 20, 15, $black, $font, '100');
+    ImageLine($Image, 45, 10, 50, 10, $dkgrey);
+    imagettftext($Image, 10, 0, 35, 255, $black, $font, '0');
+    ImageLine($Image, 45, 250, 50, 250, $dkgrey);
   
-  ImageLine($Image, 50, 10, 50, 257, $dkgrey);
-  imagettftext($Image, 12, 90, 12, 132, $black, $bold_font, $string['percent']);
+    ImageLine($Image, 50, 10, 50, 257, $dkgrey);
+    imagettftext($Image, 12, 90, 12, 132, $black, $bold_font, $string['percent']);
   
-  for ($label=0; $label<=10; $label++) {
-    ImageLine($Image, 51, 250 - ($label * $gap), 70, 250 - ($label * $gap), $ltgrey);
-  }
-  $trans1 = 121;
-  $margin = 51;  
+    for ($label = 0; $label <= 10; $label++) {
+        ImageLine($Image, 51, 250 - ($label * $gap), 70, 250 - ($label * $gap), $ltgrey);
+    }
+    $trans1 = 121;
+    $margin = 51;
 } else {
-  $trans1 = 70;
-  $margin = 0;
+    $trans1 = 70;
+    $margin = 0;
 }
 
-$trans2 = 20;  
+$trans2 = 20;
 
 if (strlen($exam) > 35) {
-  $break = find_break($exam);
-  $line1 = trim(substr($exam, 0, $break));
-  $line2 = trim(substr($exam, $break));
+    $break = find_break($exam);
+    $line1 = trim(substr($exam, 0, $break));
+    $line2 = trim(substr($exam, $break));
 } else {
-  $line1 = '';
-  $line2 = $exam;
+    $line1 = '';
+    $line2 = $exam;
 }
 
 // halflines y axis
-for ($label=0; $label<=10; $label++) {
-  ImageLine($Image, 0 + $margin, 250 - ($label * $gap), 115 + $margin, 250 - ($label * $gap), $ltgrey);
-}		
+for ($label = 0; $label <= 10; $label++) {
+    ImageLine($Image, 0 + $margin, 250 - ($label * $gap), 115 + $margin, 250 - ($label * $gap), $ltgrey);
+}
 
 // x axis
 ImageLine($Image, $margin + 0, 250, $margin + 114, 250, $dkgrey);
@@ -115,35 +119,34 @@ imagettftext($Image, 10, 90, $margin + 35, 240, $black, $font, $line2);
 ImageLine($Image, $margin + 114, 250, $margin + 114, 256, $dkgrey);
 
 //box-and-whiskers
-ImageRectangle($Image, $trans1 - $trans2, 250 - (round($q1, 2) * $gap/10) , $trans1 + $trans2, 250 - (round($q3, 2) * $gap/10) , $blue);		
+ImageRectangle($Image, $trans1 - $trans2, 250 - (round($q1, 2) * $gap / 10), $trans1 + $trans2, 250 - (round($q3, 2) * $gap / 10), $blue);
 $q2 = floor($q2);
-ImageLine($Image, $trans1 - $trans2, 250 - ($q2 * $gap/10)  , $trans1 + $trans2, 250 - ($q2 * $gap/10), $blue);                // Median vertical
-ImageLine($Image, $trans1 - $trans2, 249 - ($q2 * $gap/10)  , $trans1 + $trans2, 249 - ($q2 * $gap/10), $blue);                // Median vertical
+ImageLine($Image, $trans1 - $trans2, 250 - ($q2 * $gap / 10), $trans1 + $trans2, 250 - ($q2 * $gap / 10), $blue);                // Median vertical
+ImageLine($Image, $trans1 - $trans2, 249 - ($q2 * $gap / 10), $trans1 + $trans2, 249 - ($q2 * $gap / 10), $blue);                // Median vertical
 
-ImageLine($Image, $trans1 - $trans2, 250 - ($min_mark * $gap/10), $trans1 + $trans2, 250 - ($min_mark * $gap/10) , $blue);                // Min vertical
-ImageLine($Image, $trans1, 250 - ($min_mark * $gap/10), $trans1, 250 - (round($q1, 2) * $gap/10), $blue);   // Min whisker		
-ImageLine($Image, $trans1 - $trans2, 250 - ($max_mark * $gap/10), $trans1 + $trans2, 250 - ($max_mark * $gap/10) , $blue);                // Max vertical
-ImageLine($Image, $trans1, 250 - ($max_mark * $gap/10), $trans1, 250 - (round($q3, 2) * $gap/10), $blue);   // Max whisker
+ImageLine($Image, $trans1 - $trans2, 250 - ($min_mark * $gap / 10), $trans1 + $trans2, 250 - ($min_mark * $gap / 10), $blue);                // Min vertical
+ImageLine($Image, $trans1, 250 - ($min_mark * $gap / 10), $trans1, 250 - (round($q1, 2) * $gap / 10), $blue);   // Min whisker
+ImageLine($Image, $trans1 - $trans2, 250 - ($max_mark * $gap / 10), $trans1 + $trans2, 250 - ($max_mark * $gap / 10), $blue);                // Max vertical
+ImageLine($Image, $trans1, 250 - ($max_mark * $gap / 10), $trans1, 250 - (round($q3, 2) * $gap / 10), $blue);   // Max whisker
 
 //passmark
 $style = array($red, $red, $red, $red, $red, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT, IMG_COLOR_TRANSPARENT);
 imagesetstyle($Image, $style);
-ImageLine($Image, $trans1-$trans2-7, 250 - ($passmark * $gap/10), $trans1+$trans2+7, 250 - ($passmark * $gap/10), IMG_COLOR_STYLED);
+ImageLine($Image, $trans1 - $trans2 - 7, 250 - ($passmark * $gap / 10), $trans1 + $trans2 + 7, 250 - ($passmark * $gap / 10), IMG_COLOR_STYLED);
 
 //mark
 if ($student_mark !== '') {
-  $marksize = 3;
-  ImageLine($Image, $trans1-$marksize-1, 250 - ($student_mark * $gap/10) - $marksize, $trans1+$marksize-1, 250 - ($student_mark * $gap/10)+$marksize, $ltamber);
-  ImageLine($Image, $trans1-$marksize-1, 250 - ($student_mark * $gap/10) + $marksize, $trans1+$marksize-1, 250 - ($student_mark * $gap/10)-$marksize, $ltamber);
-  ImageLine($Image, $trans1-$marksize+1, 250 - ($student_mark * $gap/10) - $marksize, $trans1+$marksize+1, 250 - ($student_mark * $gap/10)+$marksize, $ltamber);
-  ImageLine($Image, $trans1-$marksize+1, 250 - ($student_mark * $gap/10) + $marksize, $trans1+$marksize+1, 250 - ($student_mark * $gap/10)-$marksize, $ltamber);
-  ImageLine($Image, $trans1-$marksize, 250 - ($student_mark * $gap/10) - $marksize, $trans1+$marksize, 250 - ($student_mark * $gap/10)+$marksize, $amber);
-  ImageLine($Image, $trans1+$marksize, 250 - ($student_mark * $gap/10) - $marksize, $trans1-$marksize, 250 - ($student_mark * $gap/10)+$marksize, $amber);
+    $marksize = 3;
+    ImageLine($Image, $trans1 - $marksize - 1, 250 - ($student_mark * $gap / 10) - $marksize, $trans1 + $marksize - 1, 250 - ($student_mark * $gap / 10) + $marksize, $ltamber);
+    ImageLine($Image, $trans1 - $marksize - 1, 250 - ($student_mark * $gap / 10) + $marksize, $trans1 + $marksize - 1, 250 - ($student_mark * $gap / 10) - $marksize, $ltamber);
+    ImageLine($Image, $trans1 - $marksize + 1, 250 - ($student_mark * $gap / 10) - $marksize, $trans1 + $marksize + 1, 250 - ($student_mark * $gap / 10) + $marksize, $ltamber);
+    ImageLine($Image, $trans1 - $marksize + 1, 250 - ($student_mark * $gap / 10) + $marksize, $trans1 + $marksize + 1, 250 - ($student_mark * $gap / 10) - $marksize, $ltamber);
+    ImageLine($Image, $trans1 - $marksize, 250 - ($student_mark * $gap / 10) - $marksize, $trans1 + $marksize, 250 - ($student_mark * $gap / 10) + $marksize, $amber);
+    ImageLine($Image, $trans1 + $marksize, 250 - ($student_mark * $gap / 10) - $marksize, $trans1 - $marksize, 250 - ($student_mark * $gap / 10) + $marksize, $amber);
 
-  imagettftext($Image, 10, 0, $margin + 55, 264, $amber, $bold_font, round($student_mark) . '%');
+    imagettftext($Image, 10, 0, $margin + 55, 264, $amber, $bold_font, round($student_mark) . '%');
 }
 
 
 ImagePNG($Image);
 ImageDestroy($Image);
-?>

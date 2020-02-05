@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -25,22 +26,23 @@
 require '../include/sysadmin_auth.inc';
 require '../include/sidebar_menu.inc';
 require '../include/errors.php';
-  
 check_var('day', 'GET', true, false, false);
 
-function get_list($list, $db) {
-  $html = '';
-  if ($list != '') {
-    $result = $db->prepare("SELECT id, title, surname, first_names FROM users WHERE username IN ('" . str_replace(",","','",$list) . "') ORDER BY surname, initials");
-    $result->execute();
-    $result->store_result();
-    $result->bind_result($id, $title, $surname, $first_names);
-    while ($result->fetch()) {
-      $html .= '<a href="../users/details.php?userID=' . $id . '">' . $title . ' ' . $surname . ', ' . $first_names . '</a><br />';
-    }
-  }
+function get_list($list, $db)
+{
 
-  return $html;
+    $html = '';
+    if ($list != '') {
+        $result = $db->prepare("SELECT id, title, surname, first_names FROM users WHERE username IN ('" . str_replace(',', "','", $list) . "') ORDER BY surname, initials");
+        $result->execute();
+        $result->store_result();
+        $result->bind_result($id, $title, $surname, $first_names);
+        while ($result->fetch()) {
+            $html .= '<a href="../users/details.php?userID=' . $id . '">' . $title . ' ' . $surname . ', ' . $first_names . '</a><br />';
+        }
+    }
+
+    return $html;
 }
 ?>
 <!DOCTYPE html>
@@ -65,8 +67,8 @@ function get_list($list, $db) {
 <body>
 <?php
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
+  
+    echo draw_toprightmenu();
 ?>
 
 <div id="content">
@@ -74,7 +76,7 @@ function get_list($list, $db) {
 <div class="head_title">
   <img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" />
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./list_modules.php"><?php echo $string['modules']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="sms_import_summary.php"><?php echo $string['smsimportsummary']; ?></a></div>
-  <div class="page_title"><?php echo $string['smsimportson'] ?> <?php echo substr($_GET['day'],6,2) . '/' . substr($_GET['day'],4,2) . '/' . substr($_GET['day'],0,4) ?></div>
+  <div class="page_title"><?php echo $string['smsimportson'] ?> <?php echo substr($_GET['day'], 6, 2) . '/' . substr($_GET['day'], 4, 2) . '/' . substr($_GET['day'], 0, 4) ?></div>
 </div>
 
 <table id="maindata" class="header tablesorter" cellspacing="0" cellpadding="2" border="0">
@@ -91,20 +93,20 @@ function get_list($list, $db) {
 </thead>
 <tbody>
 <?php
-  $result = $mysqli->prepare("SELECT "
-    . "idMod, moduleid, sms_imports.academic_year, enrolements, enrolement_details, deletions, deletion_details, import_type "
-    . "FROM sms_imports, modules, academic_year "
-    . "WHERE sms_imports.idMod=modules.id "
-    . "AND sms_imports.academic_year = academic_year.calendar_year "
-    . "AND updated=? ORDER BY moduleid");
+  $result = $mysqli->prepare('SELECT '
+    . 'idMod, moduleid, sms_imports.academic_year, enrolements, enrolement_details, deletions, deletion_details, import_type '
+    . 'FROM sms_imports, modules, academic_year '
+    . 'WHERE sms_imports.idMod=modules.id '
+    . 'AND sms_imports.academic_year = academic_year.calendar_year '
+    . 'AND updated=? ORDER BY moduleid');
   $db = $mysqli;
   if ($db->error) {
-    try {
-      throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
-    } catch (Exception $e) {
-      echo "Error No: " . $e->getCode() . " - " . $e->getMessage() . "<br />";
-      echo nl2br($e->getTraceAsString());
-    }
+      try {
+          throw new Exception("MySQL error $db->error <br /> Query:<br /> $query", $db->errno);
+      } catch (Exception $e) {
+          echo 'Error No: ' . $e->getCode() . ' - ' . $e->getMessage() . '<br />';
+          echo nl2br($e->getTraceAsString());
+      }
   }
 
   $result->bind_param('s', $_GET['day']);
@@ -112,10 +114,10 @@ function get_list($list, $db) {
   $result->store_result();
   $result->bind_result($idMod, $moduleid, $academic_year, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type);
   while ($result->fetch()) {
-    echo "<tr><td class=\"col10\"><a href=\"../module/index.php?module=$idMod\">$moduleid</a></td><td>$academic_year</td><td class=\"no\">$enrolements</td><td>" . get_list($enrolement_details, $mysqli) . "</td><td class=\"no\">$deletions</td><td>" . get_list($deletion_details, $mysqli) . "</td><td>" . $import_type . "</td></tr>\n";
+      echo "<tr><td class=\"col10\"><a href=\"../module/index.php?module=$idMod\">$moduleid</a></td><td>$academic_year</td><td class=\"no\">$enrolements</td><td>" . get_list($enrolement_details, $mysqli) . "</td><td class=\"no\">$deletions</td><td>" . get_list($deletion_details, $mysqli) . '</td><td>' . $import_type . "</td></tr>\n";
   }
 
-?>
+    ?>
 </tbody>
 </table>
 

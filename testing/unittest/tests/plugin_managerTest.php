@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,13 +25,15 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
-class plugin_managertest extends unittestdatabase {
+class plugin_managertest extends unittestdatabase
+{
 
     /**
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $datagenerator = $this->get_datagenerator('config', 'core');
         $datagenerator->change_setting(array('component' => 'plugin_plain_texteditor', 'setting' => 'installed', 'value' => 0));
     }
@@ -39,7 +42,8 @@ class plugin_managertest extends unittestdatabase {
      * Test listing enabled plugin for type
      * @group plugins
      */
-    public function test_get_plugin_type_enabled() {
+    public function test_get_plugin_type_enabled()
+    {
         $this->assertEquals(array('plugin_tinymce3_texteditor'), plugin_manager::get_plugin_type_enabled('plugin_texteditor'));
     }
 
@@ -47,7 +51,8 @@ class plugin_managertest extends unittestdatabase {
      * Test plugin installed
      * @group plugins
      */
-    public function test_plugin_installed() {
+    public function test_plugin_installed()
+    {
         $this->assertTrue(plugin_manager::plugin_installed('plugin_tinymce3_texteditor'));
         $this->assertFalse(plugin_manager::plugin_installed('plugin_plain_texteditor'));
         $this->assertFalse(plugin_manager::plugin_installed('unknowntestplugin'));

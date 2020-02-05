@@ -22,5 +22,3 @@ $string['modulecode'] = 'Module Code';
 $string['url'] = 'URL';
 $string['enrolements'] = 'Enrolments';
 $string['deletions'] = 'Deletions';
-?>
-

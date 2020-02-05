@@ -16,7 +16,7 @@
 
 /**
 * Abstract LTI integration helper
-* 
+*
 * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 * @copyright Copyright (c) 2016 onwards The University of Nottingham
 */
@@ -24,7 +24,8 @@
 /**
  * Abstract class for LTI integration.
  */
-abstract class lti_integration {
+abstract class lti_integration
+{
     /**
      * @var $config Config object
      */
@@ -33,7 +34,8 @@ abstract class lti_integration {
     /**
      * Constructor
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->config = Config::get_instance();
     }
 
@@ -42,7 +44,8 @@ abstract class lti_integration {
      * @param string $data module data
      * @return bool
      */
-    public function allow_staff_edit_link() {
+    public function allow_staff_edit_link()
+    {
         return false;
     }
 
@@ -50,7 +53,8 @@ abstract class lti_integration {
      * Is student self reg onto module enabled in lti
      * @return bool
      */
-    public function allow_module_self_reg() {
+    public function allow_module_self_reg()
+    {
         return $this->config->get_setting('core', 'cfg_lti_allow_module_self_reg');
     }
 
@@ -58,7 +62,8 @@ abstract class lti_integration {
      * Is staff self reg onto module enabled in lti
      * @return bool
      */
-    public function allow_staff_module_register() {
+    public function allow_staff_module_register()
+    {
         return $this->config->get_setting('core', 'cfg_lti_allow_staff_module_register');
     }
 
@@ -66,19 +71,20 @@ abstract class lti_integration {
      * Is module creation enabled in lti
      * @return bool
      */
-    public function allow_module_create() {
+    public function allow_module_create()
+    {
         return $this->config->get_setting('core', 'cfg_lti_allow_module_create');
     }
     
     /**
      * Check last time logged in and decide if re-authentication should be done
      * @param string $time last time logged in
-     * @return bool true if user require re-authentication 
+     * @return bool true if user require re-authentication
      */
     abstract public function user_time_check($time);
     
     /**
-     * Convert VLE module shortcode into Rogo moduleid 
+     * Convert VLE module shortcode into Rogo moduleid
      * @param mysqli $mysqli db connection
      * @param string $moduleshortcode VLE module shortcode
      * @param string $course_title VLE module title

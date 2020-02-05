@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -28,15 +29,15 @@ $lti = new UoN_LTI();
 $lti->init_lti0($mysqli);
 $submit = param::optional('submit', null, param::TEXT, param::FETCH_POST);
 if (!is_null($submit)) {
-  $ltiname = trim(param::optional('ltiname', null, param::TEXT, param::FETCH_POST));
-  $ltikey = trim(param::optional('ltikey', null, param::TEXT, param::FETCH_POST));
-  $ltisec = trim(param::optional('ltisec', null, param::TEXT, param::FETCH_POST));
-  $lticontext = trim(param::optional('lticontext', null, param::TEXT, param::FETCH_POST));
-  $insert_id = $lti->add_lti_key($ltiname, $ltikey, $ltisec, $lticontext);
-  header("location: lti_keys_list.php");
-  exit();
+    $ltiname = trim(param::optional('ltiname', null, param::TEXT, param::FETCH_POST));
+    $ltikey = trim(param::optional('ltikey', null, param::TEXT, param::FETCH_POST));
+    $ltisec = trim(param::optional('ltisec', null, param::TEXT, param::FETCH_POST));
+    $lticontext = trim(param::optional('lticontext', null, param::TEXT, param::FETCH_POST));
+    $insert_id = $lti->add_lti_key($ltiname, $ltikey, $ltisec, $lticontext);
+    header('location: lti_keys_list.php');
+    exit();
 } else {
-  ?>
+    ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -64,12 +65,12 @@ if (!is_null($submit)) {
   <script src="../js/ltikeyeditinit.min.js"></script>
 </head>
 <body>
-<?php
-  require '../include/lti_keys_options.inc';
-  require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
-?>
+    <?php
+    require '../include/lti_keys_options.inc';
+    require '../include/toprightmenu.inc';
+    
+    echo draw_toprightmenu();
+    ?>
 <div id="content">
 
 <div class="head_title">
@@ -102,7 +103,7 @@ if (!is_null($submit)) {
       <p><input type="submit" class="ok" name="submit" value="<?php echo $string['add']; ?>"/><input class="cancel" type="button" name="home" value="<?php echo $string['cancel']; ?>" onclick="javascript:history.back();"/></p>
     </form>
   </div>
-  <?php
+    <?php
 }
 ?>
 </div>

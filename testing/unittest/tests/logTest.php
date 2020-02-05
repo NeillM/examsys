@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class logtest extends unittestdatabase {
+class logtest extends unittestdatabase
+{
     /**
      * @var integer Storage for user id in tests
      */
@@ -59,7 +61,8 @@ class logtest extends unittestdatabase {
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $this->user = $this->get_user_id('test2');
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
         $datagenerator->create_academic_year(array('calendar_year' => 2018, 'academic_year' => '2018/19'));
@@ -67,22 +70,22 @@ class logtest extends unittestdatabase {
         $this->user2 = $datagenerator->create_user(array('surname' => 'zstaff', 'username' => 'staff1', 'grade' => 'University Lecturer', 'initials' => 'a',
             'title' => 'Dr', 'email' => 'staff1@example.com', 'gender' => 'Male', 'first_names' => 'a', 'yearofstudy' => 1, 'roles' => 'Staff'));
         $datagenerator = $this->get_datagenerator('papers', 'core');
-        $this->pid = $datagenerator->create_paper(array('papertitle' => "Paper 1",
+        $this->pid = $datagenerator->create_paper(array('papertitle' => 'Paper 1',
             'calendaryear' => 2018,
-            'paperowner' => "admin",
-            'papertype' => "3",
-            'modulename' => "Training Module"));
+            'paperowner' => 'admin',
+            'papertype' => '3',
+            'modulename' => 'Training Module'));
         $logdatagenerator = $this->get_datagenerator('log', 'core');
-        $this->pid2 = $datagenerator->create_paper(array('papertitle' => "Paper 2",
+        $this->pid2 = $datagenerator->create_paper(array('papertitle' => 'Paper 2',
             'calendaryear' => 2018,
-            'paperowner' => "admin",
-            'papertype' => "2",
-            'modulename' => "Training Module"));
-        $this->pid3 = $datagenerator->create_paper(array('papertitle' => "Paper 3",
+            'paperowner' => 'admin',
+            'papertype' => '2',
+            'modulename' => 'Training Module'));
+        $this->pid3 = $datagenerator->create_paper(array('papertitle' => 'Paper 3',
             'calendaryear' => 2018,
-            'paperowner' => "admin",
-            'papertype' => "0",
-            'modulename' => "Training Module"));
+            'paperowner' => 'admin',
+            'papertype' => '0',
+            'modulename' => 'Training Module'));
         $datagenerator = $this->get_datagenerator('questions', 'core');
         $this->question = $datagenerator->create_question(array('type' => 'mcq',
             'user' => 'admin',
@@ -179,13 +182,14 @@ class logtest extends unittestdatabase {
      * Test retrieving previous answers - with restart
      * @group log
      */
-    public function test_get_previous_answers() {
+    public function test_get_previous_answers()
+    {
         $papertype = '0';
         $log = \log::get_paperlog($papertype);
         $do_restart = true;
         $current_screen = 1;
         $previous = array('used_questions' => array($this->question['id'] => $this->question['id']),
-            'user_answers' => array(2 => array($this->question['id']=> $this->log11['user_answer'])),
+            'user_answers' => array(2 => array($this->question['id'] => $this->log11['user_answer'])),
             'user_dismiss' => array(2 => array($this->question['id'] => $this->log11['dismiss'])),
             'user_order' => array(2 => array($this->question['id'] => $this->log11['option_order'])),
             'previous_duration' => $this->log11['duration'],
@@ -198,7 +202,8 @@ class logtest extends unittestdatabase {
      * Test retrieving previous answers from log late
      * @group log
      */
-    public function test_get_previous_answers_late() {
+    public function test_get_previous_answers_late()
+    {
         $papertype = '2';
         $log = \log::get_paperlog($papertype);
         $do_restart = false;
@@ -217,14 +222,15 @@ class logtest extends unittestdatabase {
      * Test retrieving previous answers from log late - multiple questions
      * @group log
      */
-    public function test_get_previous_answers_late_complex() {
+    public function test_get_previous_answers_late_complex()
+    {
         $papertype = '2';
         $log = \log::get_paperlog($papertype);
         $do_restart = false;
         $current_screen = 1;
         $previous = array('used_questions' => array($this->question2['id'] => $this->question2['id'], $this->question['id'] => $this->question['id']),
             'user_answers' => array(1 => array($this->question['id'] => $this->log8['user_answer']), 2 => array($this->question2['id'] => $this->log2['user_answer'])),
-            'user_dismiss' => array(1 => array($this->question['id']=> $this->log8['dismiss']), 2 => array($this->question2['id'] => $this->log2['dismiss'])),
+            'user_dismiss' => array(1 => array($this->question['id'] => $this->log8['dismiss']), 2 => array($this->question2['id'] => $this->log2['dismiss'])),
             'user_order' => array(1 => array($this->question['id'] => $this->log8['option_order']), 2 => array($this->question2['id'] => $this->log2['option_order'])),
             'previous_duration' => $this->log8['duration'],
             'screen_pre_submitted' => $this->log8['screen'],
@@ -236,7 +242,8 @@ class logtest extends unittestdatabase {
      * Test retrieving users in log for survey (where it is not supported)
      * @group log
      */
-    public function test_get_log_users_survey() {
+    public function test_get_log_users_survey()
+    {
         $papertype = '3';
         $log = \log::get_paperlog($papertype);
         $this->assertEquals(array(), $log->get_log_users($this->pid['id'], '', '', array(), false));
@@ -246,7 +253,8 @@ class logtest extends unittestdatabase {
      * Test retrieving users in log for summative
      * @group log
      */
-    public function test_get_log_users_summative() {
+    public function test_get_log_users_summative()
+    {
         $papertype = '2';
         $log = \log::get_paperlog($papertype);
         $expected[0]['userid'] = $this->user2['id'];
@@ -268,7 +276,8 @@ class logtest extends unittestdatabase {
      * Test retrieving users in log for formative
      * @group log
      */
-    public function test_get_log_users_formative() {
+    public function test_get_log_users_formative()
+    {
         $papertype = '0';
         $log = \log::get_paperlog($papertype);
         $expected[0]['userid'] = $this->user2['id'];
@@ -297,7 +306,8 @@ class logtest extends unittestdatabase {
      * Test retrieving assessment data in log for survey (where it is not supported)
      * @group log
      */
-    public function test_get_assessment_data_survey() {
+    public function test_get_assessment_data_survey()
+    {
         $papertype = '3';
         $log = \log::get_paperlog($papertype);
         $this->assertEquals(array(), $log->get_assessment_data($this->pid['id'], '', '', ''));
@@ -307,7 +317,8 @@ class logtest extends unittestdatabase {
      * Test retrieving assessment data in log for summative
      * @group log
      */
-    public function test_get_assessment_data_summative() {
+    public function test_get_assessment_data_summative()
+    {
         $papertype = '2';
         $log = \log::get_paperlog($papertype);
         // Student only.
@@ -315,11 +326,11 @@ class logtest extends unittestdatabase {
         $expected[0]['uID'] = $this->student['id'];
         $expected[0]['title'] = 'Dr';
         $expected[0]['surname'] = 'User1';
-        $expected[0]['first_names'] = "A";
+        $expected[0]['first_names'] = 'A';
         $expected[0]['grade'] = 'TEST2';
         $expected[0]['gender'] = null;
         $expected[0]['year'] = 2;
-        $expected[0]['started'] = "2018-01-01 00:00:00";
+        $expected[0]['started'] = '2018-01-01 00:00:00';
         $expected[0]['question_ID'] = $this->question['id'];
         $expected[0]['user_answer'] = '1';
         $expected[0]['screen'] = 1;
@@ -327,11 +338,11 @@ class logtest extends unittestdatabase {
         $expected[1]['uID'] = $this->student['id'];
         $expected[1]['title'] = 'Dr';
         $expected[1]['surname'] = 'User1';
-        $expected[1]['first_names'] = "A";
+        $expected[1]['first_names'] = 'A';
         $expected[1]['grade'] = 'TEST2';
         $expected[1]['gender'] = null;
         $expected[1]['year'] = 2;
-        $expected[1]['started'] = "2018-01-01 00:00:00";
+        $expected[1]['started'] = '2018-01-01 00:00:00';
         $expected[1]['question_ID'] = $this->question2['id'];
         $expected[1]['user_answer'] = '1';
         $expected[1]['screen'] = 2;
@@ -351,7 +362,7 @@ class logtest extends unittestdatabase {
         $expected[2]['grade'] = $this->user2['grade'];
         $expected[2]['gender'] = $this->user2['gender'];
         $expected[2]['year'] = $this->user2['yearofstudy'];
-        $expected[2]['started'] = "2018-01-04 00:00:00";
+        $expected[2]['started'] = '2018-01-04 00:00:00';
         $expected[2]['question_ID'] = $this->question['id'];
         $expected[2]['user_answer'] = '1';
         $expected[2]['screen'] = 1;
@@ -363,7 +374,7 @@ class logtest extends unittestdatabase {
         $expected[3]['grade'] = $this->user2['grade'];
         $expected[3]['gender'] = $this->user2['gender'];
         $expected[3]['year'] = $this->user2['yearofstudy'];
-        $expected[3]['started'] = "2018-01-04 00:00:00";
+        $expected[3]['started'] = '2018-01-04 00:00:00';
         $expected[3]['question_ID'] = $this->question2['id'];
         $expected[3]['user_answer'] = '0';
         $expected[3]['screen'] = 2;
@@ -374,7 +385,8 @@ class logtest extends unittestdatabase {
      * Test retrieving assessment data in log for formative
      * @group log
      */
-    public function test_get_assessment_data_formative() {
+    public function test_get_assessment_data_formative()
+    {
         $papertype = '0';
         $log = \log::get_paperlog($papertype);
         // Student only.
@@ -382,11 +394,11 @@ class logtest extends unittestdatabase {
         $expected[0]['uID'] = $this->student['id'];
         $expected[0]['title'] = 'Dr';
         $expected[0]['surname'] = 'User1';
-        $expected[0]['first_names'] = "A";
+        $expected[0]['first_names'] = 'A';
         $expected[0]['grade'] = 'TEST2';
         $expected[0]['gender'] = null;
         $expected[0]['year'] = 2;
-        $expected[0]['started'] = "2017-01-01 00:00:00";
+        $expected[0]['started'] = '2017-01-01 00:00:00';
         $expected[0]['question_ID'] = $this->question['id'];
         $expected[0]['user_answer'] = '1';
         $expected[0]['screen'] = 1;
@@ -394,11 +406,11 @@ class logtest extends unittestdatabase {
         $expected[1]['uID'] = $this->student['id'];
         $expected[1]['title'] = 'Dr';
         $expected[1]['surname'] = 'User1';
-        $expected[1]['first_names'] = "A";
+        $expected[1]['first_names'] = 'A';
         $expected[1]['grade'] = 'TEST2';
         $expected[1]['gender'] = null;
         $expected[1]['year'] = 2;
-        $expected[1]['started'] = "2018-01-01 00:00:00";
+        $expected[1]['started'] = '2018-01-01 00:00:00';
         $expected[1]['question_ID'] = $this->question['id'];
         $expected[1]['user_answer'] = '1';
         $expected[1]['screen'] = 1;
@@ -418,7 +430,7 @@ class logtest extends unittestdatabase {
         $expected[2]['grade'] = $this->user2['grade'];
         $expected[2]['gender'] = $this->user2['gender'];
         $expected[2]['year'] = $this->user2['yearofstudy'];
-        $expected[2]['started'] = "2016-01-01 00:00:00";
+        $expected[2]['started'] = '2016-01-01 00:00:00';
         $expected[2]['question_ID'] = $this->question['id'];
         $expected[2]['user_answer'] = '4';
         $expected[2]['screen'] = 1;
@@ -430,7 +442,7 @@ class logtest extends unittestdatabase {
         $expected[3]['grade'] = $this->user2['grade'];
         $expected[3]['gender'] = $this->user2['gender'];
         $expected[3]['year'] = $this->user2['yearofstudy'];
-        $expected[3]['started'] = "2016-01-01 00:00:00";
+        $expected[3]['started'] = '2016-01-01 00:00:00';
         $expected[3]['question_ID'] = $this->question['id'];
         $expected[3]['user_answer'] = '3';
         $expected[3]['screen'] = 1;

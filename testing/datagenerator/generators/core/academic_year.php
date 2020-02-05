@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,7 +27,8 @@ use \yearutils;
  * @package testing
  * @subpackage datagenerator
  */
-class academic_year extends generator {
+class academic_year extends generator
+{
 
     /**
      * Create academic_year
@@ -37,7 +39,8 @@ class academic_year extends generator {
      * @return array The record created.
      * @throws data_error If passed parameter is invalid
      */
-    public function create_academic_year($parameters) {
+    public function create_academic_year($parameters)
+    {
         // Behat feature my added relative years such as next year, previous year
         // now skipped as current year always created in data generation.
         if (isset($parameters['year']) and $parameters['year'] != 'now') {
@@ -55,10 +58,9 @@ class academic_year extends generator {
         if (!(preg_match($academicyearpattern, $parameters['academic_year'])) or !(preg_match($calendaryearpattern, $parameters['calendar_year']))) {
             throw new data_error('year number format is worng, should be like | 2016 | 2016/17 |');
         } else {
-
             $academic_year = $parameters['academic_year'];
             $calendar_year = (int)$parameters['calendar_year'];
-            $sql = "INSERT INTO academic_year(calendar_year, academic_year) VALUES (?,?)";
+            $sql = 'INSERT INTO academic_year(calendar_year, academic_year) VALUES (?,?)';
             $query = $this->db->prepare($sql);
             $query->bind_param('is', $calendar_year, $academic_year);
 

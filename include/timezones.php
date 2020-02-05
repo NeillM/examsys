@@ -51,4 +51,3 @@ $timezone_array = array(
   'Asia/Vladivostok' => $string['Asia/Vladivostok'],
   'Pacific/Auckland' => $string['Pacific/Auckland'],
 );
-?>

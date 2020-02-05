@@ -22,20 +22,22 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package Authentication
  */
-class displaystdformobjbutton extends stdClass {
-  public $pretext;
-  public $posttext;
-  public $type;
-  public $name;
-  public $value;
-  public $style;
+class displaystdformobjbutton extends stdClass
+{
+    public $pretext;
+    public $posttext;
+    public $type;
+    public $name;
+    public $value;
+    public $style;
 
-  function __construct() {
-    $this->pretext = '';
-    $this->posttext = '';
-    $this->type = '';
-    $this->name = '';
-    $this->value = '';
-    $this->style = '';
-  }
+    function __construct()
+    {
+        $this->pretext = '';
+        $this->posttext = '';
+        $this->type = '';
+        $this->name = '';
+        $this->value = '';
+        $this->style = '';
+    }
 }

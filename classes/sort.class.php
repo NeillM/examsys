@@ -20,7 +20,8 @@
  * @version 1.0
  * @copyright Copyright (c) 2014 The University of Nottingham
  */
-class sort {
+class sort
+{
   /**
    * Sort a multi-dimensional array
    * @param $marray array to sort
@@ -29,18 +30,19 @@ class sort {
    * @param int $sort_method sorting method
    * @return array
    */
-  public static function array_csort($marray, $sort_by, $sort_order, $sort_method = SORT_STRING) {
-    $sortarr = array();
-    foreach ($marray as $row) {
-      $sortarr[] = $row[$sort_by];
-    }
+    public static function array_csort($marray, $sort_by, $sort_order, $sort_method = SORT_STRING)
+    {
+        $sortarr = array();
+        foreach ($marray as $row) {
+            $sortarr[] = $row[$sort_by];
+        }
 
-    $sortarr = array_map('strtolower', $sortarr);
-    if ($sort_order == 'asc') {
-      array_multisort($sortarr, SORT_ASC, $sort_method, $marray);
-    } else {
-      array_multisort($sortarr, SORT_DESC, $sort_method, $marray);
+        $sortarr = array_map('strtolower', $sortarr);
+        if ($sort_order == 'asc') {
+            array_multisort($sortarr, SORT_ASC, $sort_method, $marray);
+        } else {
+            array_multisort($sortarr, SORT_DESC, $sort_method, $marray);
+        }
+        return $marray;
     }
-    return $marray;
-  }
 }

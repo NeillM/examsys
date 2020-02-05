@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,34 +27,37 @@
 
 require_once 'question_mcq.class.php';
 
-Class QuestionMRQ extends QuestionEdit {
+class QuestionMRQ extends QuestionEdit
+{
 
-  protected $min_options = 3;
-  protected $_fields_force = array('display_method');
+    protected $min_options = 3;
+    protected $_fields_force = array('display_method');
   
-  function __construct($mysqli, $userObj, $lang_strings, $data = null) {
-    parent::__construct($mysqli, $userObj, $lang_strings, $data);
+    function __construct($mysqli, $userObj, $lang_strings, $data = null)
+    {
+        parent::__construct($mysqli, $userObj, $lang_strings, $data);
     
-    $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
+        $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
     
-    // 'correct' is not a unified field for MRQ
-    $this->_fields_editable[] = 'correct';
-  }
-
-  public function convert_to_mcq($correct_answer) {
-    // TODO: update question and get new MCQ object based on it
-    $this->set_type('mcq');
-    $this->set_display_method('vertical');
-
-    foreach ($this->options as $option) {
-      $option->set_correct($correct_answer);
+      // 'correct' is not a unified field for MRQ
+        $this->_fields_editable[] = 'correct';
     }
-    
-    $this->save();
 
-    $q =  new QuestionMCQ($this->_mysqli, $this->_userObj, $this->_lang_strings, $this->id);
-    return $q;
-  }
+    public function convert_to_mcq($correct_answer)
+    {
+      // TODO: update question and get new MCQ object based on it
+        $this->set_type('mcq');
+        $this->set_display_method('vertical');
+
+        foreach ($this->options as $option) {
+            $option->set_correct($correct_answer);
+        }
+    
+        $this->save();
+
+        $q =  new QuestionMCQ($this->_mysqli, $this->_userObj, $this->_lang_strings, $this->id);
+        return $q;
+    }
 
 
   // ACCESSORS
@@ -62,17 +66,20 @@ Class QuestionMRQ extends QuestionEdit {
    * Get the question display method
    * @return string
    */
-  public function get_display_method() {
-    return $this->display_method;
-  }
+    public function get_display_method()
+    {
+        return $this->display_method;
+    }
   
   /**
    * Set the question display method
    * @param string $value
    */
-  public function set_display_method($value) {
-    if ($value == $this->_answer_negative) $value = '';
-    parent::set_display_method($value);
-  }
+    public function set_display_method($value)
+    {
+        if ($value == $this->_answer_negative) {
+            $value = '';
+        }
+        parent::set_display_method($value);
+    }
 }
-

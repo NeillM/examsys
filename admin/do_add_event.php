@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -35,12 +36,12 @@ $thedate = param::required('fyear', param::TEXT, param::FETCH_POST) .
 $duration = param::required('duration', param::INT, param::FETCH_POST);
 $bgcolor = '#' . param::required('color', param::ALPHANUM, param::FETCH_POST);
 
-$result = $mysqli->prepare("INSERT INTO extra_cal_dates VALUES (NULL, ?, ?, ?, ?, ?, NULL)");
+$result = $mysqli->prepare('INSERT INTO extra_cal_dates VALUES (NULL, ?, ?, ?, ?, ?, NULL)');
 $result->bind_param('sssis', $title, $message, $thedate, $duration, $bgcolor);
 $result->execute();
 $result->close();
 if ($mysqli->errno == 0) {
-  echo json_encode('SUCCESS');
+    echo json_encode('SUCCESS');
 } else {
-  echo json_encode('ERROR');
+    echo json_encode('ERROR');
 }

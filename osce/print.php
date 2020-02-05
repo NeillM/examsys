@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -63,35 +64,35 @@ $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $s
   // Get the questions.
   $question_no = 1;
   $cell_colors = array('#FF8080','#FFC169','#50E850');
-  $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE papers.paper = ? AND papers.question = questions.q_id ORDER BY display_pos");
+  $result = $mysqli->prepare('SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE papers.paper = ? AND papers.question = questions.q_id ORDER BY display_pos');
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);
-  while ($result->fetch()) {
+while ($result->fetch()) {
     if ($question_no == 1) {
       // Header row
-      $cols = substr_count($display_method, '|');
-      $headings = explode('|', $display_method);
-      echo '<tr><td></td>';
-      for ($i=0; $i<$cols; $i++) {
-        echo "<td style=\"width:80px; font-weight:bold\">" . $headings[$i] . "</td>";
-      }
-      echo "</tr>\n";
+        $cols = substr_count($display_method, '|');
+        $headings = explode('|', $display_method);
+        echo '<tr><td></td>';
+        for ($i = 0; $i < $cols; $i++) {
+            echo '<td style="width:80px; font-weight:bold">' . $headings[$i] . '</td>';
+        }
+        echo "</tr>\n";
     }
     if (trim($theme) != '') {
-      echo "<tr><td colspan=\"4\" class=\"theme\">$theme</td></tr>\n";
+        echo "<tr><td colspan=\"4\" class=\"theme\">$theme</td></tr>\n";
     }
-    echo "<tr><td class=\"question\">";
+    echo '<tr><td class="question">';
     if (trim($notes) != '') {
-      echo "<span style=\"color:$labelcolor\"><img src=\"../artwork/notes_icon.gif\" width=\"16\" height=\"16\" alt=\"note\" />&nbsp;$notes</span><br />\n";
+        echo "<span style=\"color:$labelcolor\"><img src=\"../artwork/notes_icon.gif\" width=\"16\" height=\"16\" alt=\"note\" />&nbsp;$notes</span><br />\n";
     }
     echo "$leadin</td>";
-    for ($i=0; $i<$cols; $i++) {
-      echo "<td>[&nbsp;&nbsp;&nbsp;]</td>";
+    for ($i = 0; $i < $cols; $i++) {
+        echo '<td>[&nbsp;&nbsp;&nbsp;]</td>';
     }
     echo "</tr>\n";
     $question_no++;
-  }
+}
   $result->close();
 ?>  
   </table>
@@ -107,13 +108,13 @@ $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $s
     $marking = $propertyObj->get_marking();
 
     if ($marking == '3') {
-      echo '<td>[' . $string['clear fail'] . ']</td><td class="overall">[' . $string['borderline'] . ']</td><td class="overall">[' . $string['clear pass'] . ']</td>';
+        echo '<td>[' . $string['clear fail'] . ']</td><td class="overall">[' . $string['borderline'] . ']</td><td class="overall">[' . $string['clear pass'] . ']</td>';
     } elseif ($marking == '4') {
-      echo '<td>[' . $string['fail'] . ']</td><td class="overall">[' . $string['borderline fail'] . ']</td><td class="overall">[' . $string['borderline pass'] . ']</td><td class="overall">[' . $string['pass'] . ']</td><td class="overall">[' . $string['good pass'] . ']</td>';
+        echo '<td>[' . $string['fail'] . ']</td><td class="overall">[' . $string['borderline fail'] . ']</td><td class="overall">[' . $string['borderline pass'] . ']</td><td class="overall">[' . $string['pass'] . ']</td><td class="overall">[' . $string['good pass'] . ']</td>';
     } else {
-      echo '<td>[' . $string['clear fail'] . ']</td><td class="overall">[' . $string['borderline'] . ']</td><td class="overall">[' . $string['clear pass'] . ']</td><td class="overall">[' . $string['honours pass'] . ']</td>';
+        echo '<td>[' . $string['clear fail'] . ']</td><td class="overall">[' . $string['borderline'] . ']</td><td class="overall">[' . $string['clear pass'] . ']</td><td class="overall">[' . $string['honours pass'] . ']</td>';
     }
-  ?>
+    ?>
   </tr>
   </table>
   <br />

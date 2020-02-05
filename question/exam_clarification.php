@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -32,26 +33,26 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 
 $clarif_types = $configObject->get_setting('core', 'summative_midexam_clarification');
 if ($properties->get_paper_type() == '2' and $userObject->has_role(array('SysAdmin', 'Admin')) and $properties->is_live() and $properties->get_bidirectional() == '1' and count($clarif_types) > 0) {
-  $exam_clarifications = true;  
+    $exam_clarifications = true;
 } else {
-  $exam_clarifications = false;  
+    $exam_clarifications = false;
 }
 
 // Check the paper is not set to be linear.
 // Check if paper is Summative Exam.
 // Check if paper is not live.
 if (!$exam_clarifications) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 // Check that the questionID exists
 $q_id = check_var('q_id', 'REQUEST', true, false, true);
 if (!QuestionUtils::question_exists($q_id, $mysqli)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 $exam_announcementObj = new ExamAnnouncements($paperID, $mysqli, $string);
@@ -62,9 +63,9 @@ $questionNo = check_var('questionNo', 'GET', true, false, true);
 $exam_announcements = $exam_announcementObj->get_announcements();
 
 if (isset($exam_announcements[$q_id]['msg'])) {
-$msg = $exam_announcements[$q_id]['msg'];
+    $msg = $exam_announcements[$q_id]['msg'];
 } else {
-$msg = '';
+    $msg = '';
 }
 $editor = \plugin_manager::get_plugin_type_enabled('plugin_texteditor');
 ?>

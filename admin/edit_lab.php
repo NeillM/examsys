@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -21,17 +22,18 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
+
 require '../include/sysadmin_auth.inc';
 require '../include/errors.php';
 
 $labID = check_var('labID', 'REQUEST', true, false, true);
 
 // Find lab
-$results = $mysqli->prepare("SELECT labs.name, campus.id, building, room_no, timetabling, it_support, plagarism"
-        . " FROM labs, campus"
-        . " WHERE labs.campus = campus.id"
-        . " AND labs.id = ?"
-        . " LIMIT 1");
+$results = $mysqli->prepare('SELECT labs.name, campus.id, building, room_no, timetabling, it_support, plagarism'
+        . ' FROM labs, campus'
+        . ' WHERE labs.campus = campus.id'
+        . ' AND labs.id = ?'
+        . ' LIMIT 1');
 $results->bind_param('i', $labID);
 $results->execute();
 $results->store_result();
@@ -49,7 +51,7 @@ $results->close();
 
 // Find associated addresses
 $addresses = array();
-$result = $mysqli->prepare("SELECT address, low_bandwidth FROM client_identifiers WHERE lab = ?");
+$result = $mysqli->prepare('SELECT address, low_bandwidth FROM client_identifiers WHERE lab = ?');
 $result->bind_param('i', $labID);
 $result->execute();
 $result->bind_result($address, $low_bandwidth);
@@ -117,7 +119,9 @@ $campuses = $campusobj->get_all_campus_details();
                             <div>
                                 <select name="campus">
                                     <?php foreach ($campuses as $key => $campusarray) : ?>
-                                        <option value="<?= $key; ?>"<?php if ($campus == $key) : ?> selected<?php endif; ?>><?= $campusarray['campusname']; ?></option>
+                                        <option value="<?= $key; ?>"<?php if ($campus == $key) :
+                                            ?> selected<?php
+                                                       endif; ?>><?= $campusarray['campusname']; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -133,9 +137,13 @@ $campuses = $campusobj->get_all_campus_details();
 
                             <div><?php echo $string['bandwidth'] ?></div>
                             <div>
-                                <input type="radio" name="low_bandwidth" value="1"<?php if ($low_bandwidth) : ?> checked<?php endif; ?> /><?php echo $string['low'] ?>
+                                <input type="radio" name="low_bandwidth" value="1"<?php if ($low_bandwidth) :
+                                    ?> checked<?php
+                                                                                  endif; ?> /><?php echo $string['low'] ?>
                                 &nbsp;&nbsp;&nbsp;
-                                <input type="radio" name="low_bandwidth" value="0"<?php if (!$low_bandwidth) : ?> checked<?php endif; ?> /><?php echo $string['high'] ?>
+                                <input type="radio" name="low_bandwidth" value="0"<?php if (!$low_bandwidth) :
+                                    ?> checked<?php
+                                                                                  endif; ?> /><?php echo $string['high'] ?>
                             </div>
                             <br />
 
@@ -168,7 +176,7 @@ $campuses = $campusobj->get_all_campus_details();
         // JS utils dataset.
         $render = new render($configObject);
         $miscdataset['name'] = 'dataset';
-        $miscdataset['attributes']['posturl'] = "do_edit_lab.php?labID=" . $labID;
+        $miscdataset['attributes']['posturl'] = 'do_edit_lab.php?labID=' . $labID;
         $render->render($miscdataset, array(), 'dataset.html');
         $jsdataset['name'] = 'jsutils';
         $jsdataset['attributes']['xls'] = json_encode($string);

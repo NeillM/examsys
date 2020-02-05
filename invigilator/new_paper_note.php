@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -29,9 +30,9 @@ $paperID = check_var('paperID', 'REQUEST', true, false, true);
 
 // Does the paper exist?
 if (!Paper_utils::paper_exists($paperID, $mysqli)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 $current_address = NetworkUtils::get_client_address();
@@ -58,9 +59,9 @@ $note_details = PaperNotes::get_note($paperID, $current_address, $mysqli);
 <tr>
 <td>
 <?php
-  echo "<input type=\"hidden\" id=\"paperID\" name=\"paperID\" value=\"" . $paperID . "\" />\n";
-  echo "<strong>" . $string['note'] . ":</strong><br />\n";
-  echo "<textarea name=\"note\" id=\"note\" cols=\"60\" rows=\"17\" style=\"font-size:110%; width:99%\" required autofocus>" . $note_details['note'] . "</textarea><br />\n";
+  echo '<input type="hidden" id="paperID" name="paperID" value="' . $paperID . "\" />\n";
+  echo '<strong>' . $string['note'] . ":</strong><br />\n";
+  echo '<textarea name="note" id="note" cols="60" rows="17" style="font-size:110%; width:99%" required autofocus>' . $note_details['note'] . "</textarea><br />\n";
 ?>
 </td>
 </table>

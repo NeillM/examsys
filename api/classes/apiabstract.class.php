@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,30 +25,31 @@ namespace api;
 
 /**
  * Abstract API class.
- * 
+ *
  * Use this class when defining supported media types such as 'xml/text'.
  */
-abstract class apiabstract {
+abstract class apiabstract
+{
 
     /**
      * Abstract constructor
-     * @param string $request api request 
+     * @param string $request api request
      */
     abstract public function __construct($request);
     
     /**
      * Abstract validate request
-     * 
+     *
      * Validate the request body against a schema/dtd.
      * @param string $folder location of schema
-     * @param string $type file type 
+     * @param string $type file type
      * @return array - list of errors in the request body
      */
     abstract protected function validate($folder, $type);
     
     /**
      * Abstract parse request
-     * 
+     *
      * Carry out the operations in the request.
      * @param object $tasktype task object
      * @param array $fields expected fields
@@ -67,7 +69,8 @@ abstract class apiabstract {
      * Get the request data
      * @return array the request data
      */
-    public function getdata() {
+    public function getdata()
+    {
         return $this->data;
     }
 }

@@ -22,4 +22,3 @@ $string['retired'] = 'Retired';
 $string['incomplete'] = 'Incomplete';
 $string['experimental'] = 'Experimental';
 $string['beta'] = 'Beta ';
-?>

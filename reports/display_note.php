@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
-
-  require '../include/staff_auth.inc';
+  
+require '../include/staff_auth.inc';
 ?>
 <!DOCTYPE html>
 <html>
@@ -42,15 +43,15 @@
 
 <?php
   $result = $mysqli->prepare("SELECT note, DATE_FORMAT(note_date,'%d/%m/%Y %H:%i') AS note_date, title, initials, surname FROM student_notes, users WHERE student_notes.note_authorID=users.id AND paper_id=? AND student_notes.userID=?");
-  $result->bind_param('is', $_GET['paperID'], $_GET['userID']);
-  $result->execute();
-  $result->bind_result($note, $note_date, $title, $initials, $surname);
-  while ($result->fetch()) {
+$result->bind_param('is', $_GET['paperID'], $_GET['userID']);
+$result->execute();
+$result->bind_result($note, $note_date, $title, $initials, $surname);
+while ($result->fetch()) {
     echo "<p>$note</p>";
     echo "<p><em>$title $initials $surname - $note_date</em></p>";
-  }
+}
   $result->close();
-  $mysqli->close();
+$mysqli->close();
 ?>
 <br />
 <div align="center"><input type="button" value="Close" name="close" onclick="window.close();" /></div>

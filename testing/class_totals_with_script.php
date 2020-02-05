@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -30,13 +31,12 @@
  */
 
 require dirname(__DIR__) . '/include/sysadmin_auth.inc';
-
 $papers = array();
 $result = $mysqli->prepare("SELECT property_id, paper_title, DATE_FORMAT(start_date,'%d/%m/%Y') FROM properties WHERE paper_type = '2' AND start_date < NOW() AND deleted IS NULL ORDER BY property_id");
 $result->execute();
 $result->bind_result($paperID, $title, $display_start_date);
 while ($result->fetch()) {
-  $papers[] = array('paperID'=>$paperID, 'title'=>$title, 'display_start_date'=>$display_start_date);
+    $papers[] = array('paperID' => $paperID, 'title' => $title, 'display_start_date' => $display_start_date);
 }
 $result->close();
 ?>
@@ -73,8 +73,8 @@ $result->close();
 <body>
 <?php
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
+  
+    echo draw_toprightmenu();
 ?>
 <div id="content">
 
@@ -105,10 +105,10 @@ $result->close();
       <select id="paper">
         <option value="">-- All papers --</option>
 <?php
-foreach ($papers as $paper):
-?>
+foreach ($papers as $paper) :
+    ?>
         <option value="<?php echo $paper['paperID'] ?>"><?php echo '[' . $paper['paperID'] . '] ' . $paper['title'] ?> (<?php echo $paper['display_start_date'] ?>)</option>
-<?php
+    <?php
 endforeach;
 ?>
       </select>

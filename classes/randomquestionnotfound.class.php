@@ -22,4 +22,7 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-class RandomQuestionNotFound extends Exception { }
+class RandomQuestionNotFound extends Exception
+{
+
+}

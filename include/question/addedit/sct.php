@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Rob Ingram
 * @version 1.0
 * @copyright Copyright (c) 2013 The University of Nottingham
@@ -28,8 +29,8 @@ $type = ($question-> id != -1) ? $types[$question->get_display_method() - 1] : 1
 $disabled = ($dis_class != '') ? ' disabled="disabled"' : '';
 ?>
 <div id="sctdataset" data-sct_types="<?php echo htmlspecialchars(json_encode($types), ENT_QUOTES, 'UTF-8'); ?>"></div>
-				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
-					<tbody>
+                <table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
+                    <tbody>
 <?php
 require_once 'detail_parts/details_theme_notes.php';
 require_once 'detail_parts/details_media.php';
@@ -76,13 +77,13 @@ echo ViewHelper::render_options($question->get_display_methods(), $question->get
 $experts = range(0, 40);
 $index = 1;
 foreach ($question->options as $o_id => $option) {
-  include 'options/opt_sct.php';
-  $index++;
+    include 'options/opt_sct.php';
+    $index++;
 }
 
 for ($index = $num_options + 1; $index <= $question->max_options; $index++) {
-  $option = OptionEdit::option_factory($mysqli, $userObject->get_user_ID(), $question, $index, $string);
-  include 'options/opt_sct.php';
+    $option = OptionEdit::option_factory($mysqli, $userObject->get_user_ID(), $question, $index, $string);
+    include 'options/opt_sct.php';
 }
 
 ?>

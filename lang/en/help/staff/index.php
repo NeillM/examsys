@@ -28,4 +28,3 @@ $string['search'] = 'Search';
 $string['confirmdelete'] = 'Are you sure you wish to delete the current page?';
 $string['top'] = 'Top of Page';
 $string['msg'] = '<strong>Warning:</strong> This page has been deleted.';
-?>

@@ -25,4 +25,3 @@ $string['note'] = 'NOTE';
 $string['updatepassmark'] = 'Update paper pass mark';
 $string['saveratings'] = 'Save Ratings';
 $string['screen'] = 'Screen';
-?>

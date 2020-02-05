@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,27 +27,27 @@
 require_once '../include/load_config.php';
 
 if (is_null($configObject->get('cfg_web_root'))) {
-  require_once '../include/path_functions.inc.php';
-  $cfg_web_root = get_root_path() . '/';
-  $configObject->set('cfg_web_root', $cfg_web_root);
+    require_once '../include/path_functions.inc.php';
+    $cfg_web_root = get_root_path() . '/';
+    $configObject->set('cfg_web_root', $cfg_web_root);
 } elseif (!file_exists($configObject->get('cfg_web_root'))) {
   // A configuration file exists, but the configured web root does not exist.
-  require_once '../include/path_functions.inc.php';
-  $cfg_web_root = get_root_path() . '/';
-  $configObject->set('cfg_web_root', $cfg_web_root);
-  $badconfigfile = true;
+    require_once '../include/path_functions.inc.php';
+    $cfg_web_root = get_root_path() . '/';
+    $configObject->set('cfg_web_root', $cfg_web_root);
+    $badconfigfile = true;
 }
 $language = LangUtils::getLang($cfg_web_root);
 
 // Install lang packs if not installed.
 $langpackfound = 0;
-if(!LangUtils::langPackInstalled($language)) {
-  try {
-    InstallUtils::download_langpacks();
-    $langpackfound = 1;
-  } catch (Exception $e) {
-    $langpackfound = 2;
-  }
+if (!LangUtils::langPackInstalled($language)) {
+    try {
+        InstallUtils::download_langpacks();
+        $langpackfound = 1;
+    } catch (Exception $e) {
+        $langpackfound = 2;
+    }
 }
 
 LangUtils::loadlangfile(str_replace($cfg_web_root, '', str_replace('\\', '/', ($_SERVER['SCRIPT_FILENAME']))));
@@ -54,14 +55,14 @@ LangUtils::loadlangfile(str_replace($cfg_web_root, '', str_replace('\\', '/', ($
 if (!isset($string)) {
   // The language files were not loaded. This means that either it is not configured for the Rogo root directory,
   // or there is a differnece in case on a system that is not case sensitive.
-  InstallUtils::displayError(['91' => 'Could not load language files. Please check the case of the cfg_web_root setting.']);
-  die();
+    InstallUtils::displayError(['91' => 'Could not load language files. Please check the case of the cfg_web_root setting.']);
+    die();
 }
 
 if (isset($badconfigfile)) {
   // The cfg_web_root setting directory does not exist.
-  InstallUtils::displayError(['92' => $string['invalidconfig']]);
-  die();
+    InstallUtils::displayError(['92' => $string['invalidconfig']]);
+    die();
 }
 
 $php_min_ver = $configObject->getxml('php', 'min_version');
@@ -70,51 +71,51 @@ $phpext = requirements::check_php_extensions();
 $phpallext = true;
 foreach ($phpext as $idx => $val) {
     if (!$val) {
-      $phpallext = false;
+        $phpallext = false;
     }
 }
 
 // Lang packs.
 if ($langpackfound === 1) {
-  $info['langpacks'] = array($string['langpacksfound'], true);
+    $info['langpacks'] = array($string['langpacksfound'], true);
 } elseif ($langpackfound === 2) {
-  $info['langpacks'] = array(sprintf($string['langpacksmissing'], $language), 'warn');
+    $info['langpacks'] = array(sprintf($string['langpacksmissing'], $language), 'warn');
 }
 // php version.
 if (!$phpversion) {
-  $info['phpversion'] = array(sprintf($string['phpversion'],$php_min_ver), false);
+    $info['phpversion'] = array(sprintf($string['phpversion'], $php_min_ver), false);
 } else {
-  $info['phpversion'] = array($string['phpsuccess'],true);
+    $info['phpversion'] = array($string['phpsuccess'],true);
 }
 // db version.
-if (InstallUtils::config_exists()){
-  $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
-  try {
-    $dbversion = requirements::check_db($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'));
-    if (!$dbversion) {
-      $info['dbversion'] = array(sprintf($string['dbversion'], $mysql_min_ver), false);
-    } else {
-      $info['dbversion'] = array($string['dbsuccess'], true);
+if (InstallUtils::config_exists()) {
+    $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
+    try {
+        $dbversion = requirements::check_db($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'));
+        if (!$dbversion) {
+            $info['dbversion'] = array(sprintf($string['dbversion'], $mysql_min_ver), false);
+        } else {
+            $info['dbversion'] = array($string['dbsuccess'], true);
+        }
+    } catch (Exception $e) {
+        $dbversion = false;
+        $info['dbversion'] = array(sprintf($string['dbconnection'], $e->getMessage()), false);
     }
-  } catch (Exception $e) {
-    $dbversion = false;
-    $info['dbversion'] = array(sprintf($string['dbconnection'], $e->getMessage()), false);
-  }
 } else {
   // On install skip check here as done in insall process.
-  $dbversion = true;
+    $dbversion = true;
 }
 // php extensions.
 foreach ($phpext as $idx => $val) {
     if ($val === false) {
-      $blurb = sprintf($string['phpextension'], $idx);
-      $info[$idx] = array($blurb, false);
+        $blurb = sprintf($string['phpextension'], $idx);
+        $info[$idx] = array($blurb, false);
     } elseif ($val === true) {
-      $blurb = sprintf($string['phpextensionsuccess'], $idx);
-      $info[$idx] = array($blurb, true);
+        $blurb = sprintf($string['phpextensionsuccess'], $idx);
+        $info[$idx] = array($blurb, true);
     } else {
-      $blurb = sprintf($string['phpextensionwarn'], $idx);
-      $info[$idx] = array($blurb, 'warn');
+        $blurb = sprintf($string['phpextensionwarn'], $idx);
+        $info[$idx] = array($blurb, 'warn');
     }
 }
 
@@ -126,24 +127,24 @@ $html = <<<HTML
 HTML;
 echo $html;
 foreach ($info as $idx => $val) {
-  echo "<div class=\"requirements-body\"><div class=\"requirements-body-item\">$val[0]</div><div class=\"requirements-body-item\">";
-  if ($val[1] === true) {
-    echo "<img src=\"../artwork/tick.png\" id=\"yes\" /></div>";
-  } elseif ($val[1] === false) {
-    echo "<img src=\"../artwork/cross.png\" id=\"no\" /></div>";
-  } else {
-    echo "<img src=\"../artwork/exclamation.png\" id=\"warn\" /></div>";
-  }
-  echo "</div>";
+    echo "<div class=\"requirements-body\"><div class=\"requirements-body-item\">$val[0]</div><div class=\"requirements-body-item\">";
+    if ($val[1] === true) {
+        echo '<img src="../artwork/tick.png" id="yes" /></div>';
+    } elseif ($val[1] === false) {
+        echo '<img src="../artwork/cross.png" id="no" /></div>';
+    } else {
+        echo '<img src="../artwork/exclamation.png" id="warn" /></div>';
+    }
+    echo '</div>';
 }
-echo "<div id=\"action\" class=\"requirements-body\">";
+echo '<div id="action" class="requirements-body">';
 if ($phpversion and $phpallext and $dbversion) {
-  if (InstallUtils::config_exists()){
-    echo "<button id=\"update\" class=\"updatebutton\">Update</button>";
-  } else {
-    echo "<button id=\"install\" class=\"updatebutton\">Install</button>";
-  }
+    if (InstallUtils::config_exists()) {
+        echo '<button id="update" class="updatebutton">Update</button>';
+    } else {
+        echo '<button id="install" class="updatebutton">Install</button>';
+    }
 } else {
-  echo "<p>" . $string['help'] . "</p>";
+    echo '<p>' . $string['help'] . '</p>';
 }
-echo "</div>";
+echo '</div>';

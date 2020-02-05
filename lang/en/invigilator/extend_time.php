@@ -17,4 +17,3 @@
 $string['extendtime']   = 'Extend Time';
 $string['extendtimeby'] = 'Extend time by';
 $string['minutes']      = 'minutes';
-?>

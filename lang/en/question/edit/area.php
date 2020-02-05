@@ -18,4 +18,3 @@ $string['popUp_yes'] = 'Yes';
 $string['popUp_no'] = 'No';
 $string['errorcanvas'] = 'Canvas not supported';
 $string['errorimagesarea'] = 'area question cannot be displayed because some images were not loaded.';
-?>

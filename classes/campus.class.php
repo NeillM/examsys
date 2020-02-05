@@ -23,7 +23,8 @@
 /**
  * Campus helper class.
  */
-class campus {
+class campus
+{
     
     // DB connection
     private $db;
@@ -31,27 +32,30 @@ class campus {
   /**
    * Called when the object is unserialised.
    */
-  public function __wakeup() {
-    // The serialised database object will be invalid,
-    // this object should only be serialised during an error report,
-    // so adding the current database connect seems like a waste of time.
-    $this->db = null;
-  }
+    public function __wakeup()
+    {
+      // The serialised database object will be invalid,
+      // this object should only be serialised during an error report,
+      // so adding the current database connect seems like a waste of time.
+        $this->db = null;
+    }
 
     /**
      * @brief Constuctor
      * @param mysqli $db
      */
-    function __construct($db) {
+    function __construct($db)
+    {
         $this->db = $db;
     }
    
     /**
-     * Get details for all campus 
+     * Get details for all campus
      * @return array|bool details or false on error
      */
-    public function get_all_campus_details() {
-        $result = $this->db->prepare("SELECT id, name, isdefault FROM campus");
+    public function get_all_campus_details()
+    {
+        $result = $this->db->prepare('SELECT id, name, isdefault FROM campus');
         $result->execute();
         $result->store_result();
         $result->bind_result($campusid, $campusname, $isdefault);
@@ -68,12 +72,13 @@ class campus {
     }
     
     /**
-     * Get details of campus 
+     * Get details of campus
      * @param integer $id campus id
      * @return array|bool details or false on error
      */
-    public function get_campus_details($id) {
-        $result = $this->db->prepare("SELECT id, name, isdefault FROM campus WHERE id = ?");
+    public function get_campus_details($id)
+    {
+        $result = $this->db->prepare('SELECT id, name, isdefault FROM campus WHERE id = ?');
         $result->bind_param('i', $id);
         $result->execute();
         $result->store_result();
@@ -92,8 +97,9 @@ class campus {
      * @param string $name name of campus
      * @return bool true if in use
      */
-    public function check_campus_name_inuse($name) {
-        $result = $this->db->prepare("SELECT NULL FROM campus WHERE name = ?");
+    public function check_campus_name_inuse($name)
+    {
+        $result = $this->db->prepare('SELECT NULL FROM campus WHERE name = ?');
         $result->bind_param('s', $name);
         $result->execute();
         $result->store_result();
@@ -111,8 +117,9 @@ class campus {
      * @param string $id - id of campus
      * @return bool true labs associated with campus, false otherwise
     */
-    public function check_campus_in_use($id) {
-        $result = $this->db->prepare("SELECT NULL FROM labs WHERE campus = ?");
+    public function check_campus_in_use($id)
+    {
+        $result = $this->db->prepare('SELECT NULL FROM labs WHERE campus = ?');
         $result->bind_param('i', $id);
         $result->execute();
         $result->store_result();
@@ -125,4 +132,3 @@ class campus {
         return false;
     }
 }
-

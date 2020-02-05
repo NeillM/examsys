@@ -22,9 +22,11 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package Authentication
  */
-class auth_obj extends stdClass {
+class auth_obj extends stdClass
+{
 
-  function error_handling($context = null) {
-    return error_handling($this);
-  }
+    function error_handling($context = null)
+    {
+        return error_handling($this);
+    }
 }

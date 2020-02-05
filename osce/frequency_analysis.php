@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -33,7 +34,7 @@ $enddate   = check_var('enddate', 'GET', true, false, true);
 
 // Get properties of the paper.
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
-$paper			= $propertyObj->get_paper_title();
+$paper          = $propertyObj->get_paper_title();
 $labelcolor = $propertyObj->get_labelcolor();
 $themecolor = $propertyObj->get_themecolor();
 ?>
@@ -62,23 +63,23 @@ $themecolor = $propertyObj->get_themecolor();
   <body>
 <?php
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
-	
-  if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
+    
+    echo draw_toprightmenu();
+    
+if (isset($_GET['repmodule']) and $_GET['repmodule'] != '') {
     $report_title = $string['frequencyanalysis'] . ' (' . $_GET['repmodule'] . ' ' . $string['studentsonly'] . ')';
-  } else {
+} else {
     $report_title = $string['frequencyanalysis'];
-  }
+}
 
   echo "<div class=\"head_title\">\n";
-	echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
+    echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
-  if (isset($_GET['folder']) and $_GET['folder'] != '') {
+if (isset($_GET['folder']) and $_GET['folder'] != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
-  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
+} elseif (isset($_GET['module']) and $_GET['module'] != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
-  }
+}
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $_GET['paperID'] . '">' . $paper . '</a></div>';
 
   echo "<div class=\"page_title\">$report_title</div>";
@@ -88,66 +89,72 @@ $themecolor = $propertyObj->get_themecolor();
   $old_userID = '';
   $frequencies = array();
   $user_no = 0;
-  $result = $mysqli->prepare("SELECT log4.q_id, log4.rating, l4o.userID FROM log4 INNER JOIN log4_overall l4o ON log4.log4_overallID = l4o.id WHERE l4o.q_paper = ? AND l4o.started >= ? AND l4o.started <= ? ORDER BY l4o.userID");
+  $result = $mysqli->prepare('SELECT log4.q_id, log4.rating, l4o.userID FROM log4 INNER JOIN log4_overall l4o ON log4.log4_overallID = l4o.id WHERE l4o.q_paper = ? AND l4o.started >= ? AND l4o.started <= ? ORDER BY l4o.userID');
   $result->bind_param('iss', $_GET['paperID'], $startdate, $enddate);
   $result->execute();
   $result->bind_result($q_id, $rating, $userObject->get_user_ID());
-  while ($result->fetch()) {
-    if ($userObject->get_user_ID() != $old_userID) $user_no++;
-    if (!isset($frequencies[$q_id])) $frequencies[$q_id] = array(0=>0, 1=>0, 2=>0, 3=>0, 4=>0, 5=>0);
+while ($result->fetch()) {
+    if ($userObject->get_user_ID() != $old_userID) {
+        $user_no++;
+    }
+    if (!isset($frequencies[$q_id])) {
+        $frequencies[$q_id] = array(0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0);
+    }
     if (isset($frequencies[$q_id][$rating])) {
-      $frequencies[$q_id][$rating]++;
+        $frequencies[$q_id][$rating]++;
     } else {
-      $frequencies[$q_id][$rating] = 1;
+        $frequencies[$q_id][$rating] = 1;
     }
     $old_userID = $userObject->get_user_ID();
-  }
+}
   $result->close();
 
-  if ($user_no == 0) {
-		echo $notice->info_strip('This paper has not been attempted by anyone.', 100);
-  } else {
-		echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"margin:10px; border-collapse:collapse\"><tr>\n";
+if ($user_no == 0) {
+      echo $notice->info_strip('This paper has not been attempted by anyone.', 100);
+} else {
+      echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" style=\"margin:10px; border-collapse:collapse\"><tr>\n";
     
-		// Get the questions.
+      // Get the questions.
     $question_no = 1;
-    $sub_totals = array(0=>0, 1=>0, 2=>0, 3=>0, 4=>0, 5=>0);
+    $sub_totals = array(0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0);
     $cell_colors = array('#FFCBCB', '#FFE3B3', '#C0FFC0');
-    $result = $mysqli->prepare("SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper = ? AND papers.question = questions.q_id ORDER BY display_pos");
+    $result = $mysqli->prepare('SELECT q_id, q_type, theme, notes, scenario, leadin, display_method FROM papers, questions WHERE paper = ? AND papers.question = questions.q_id ORDER BY display_pos');
     $result->bind_param('i', $_GET['paperID']);
     $result->execute();
     $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);
     while ($result->fetch()) {
-      if ($question_no == 1) {
-        // Header row
-        $cols = substr_count($display_method, '|');
-        $headings = explode('|', $display_method);
-        echo '<tr><td></td>';
-        for ($i=0; $i<$cols; $i++) {
-          echo "<td colspan=\"2\" style=\"text-align:center; color:$labelcolor; font-weight:bold\">" . $headings[$i] . "</td>";
+        if ($question_no == 1) {
+          // Header row
+            $cols = substr_count($display_method, '|');
+            $headings = explode('|', $display_method);
+            echo '<tr><td></td>';
+            for ($i = 0; $i < $cols; $i++) {
+                echo "<td colspan=\"2\" style=\"text-align:center; color:$labelcolor; font-weight:bold\">" . $headings[$i] . '</td>';
+            }
+            echo "</tr>\n";
+        }
+        if (trim($theme) != '') {
+            echo "<tr><td colspan=\"4\" class=\"theme\">$theme</td></tr>\n";
+        }
+        echo '<tr id="row_' . $question_no . '"><td class="question">';
+        if (trim($notes) != '') {
+            echo "<span style=\"color:$labelcolor\"><img src=\"../artwork/notes_icon.gif\" width=\"16\" height=\"16\" alt=\"note\" />&nbsp;$notes</span><br />\n";
+        }
+        echo "$leadin</td>";
+
+        for ($i = 0; $i < $cols; $i++) {
+            if (!isset($frequencies[$q_id][$i]) or $frequencies[$q_id][$i] == '') {
+                $frequencies[$q_id][$i] = 0;
+            }
+            echo '<td class="rating" style="background-color:' . $cell_colors[$i] . '">' . $frequencies[$q_id][$i] . '</td><td class="rating" style="background-color:' . $cell_colors[$i] . '">' . round(($frequencies[$q_id][$i] / $user_no) * 100) . '%</td>';
         }
         echo "</tr>\n";
-      }
-      if (trim($theme) != '') {
-        echo "<tr><td colspan=\"4\" class=\"theme\">$theme</td></tr>\n";
-      }
-      echo "<tr id=\"row_" . $question_no . "\"><td class=\"question\">";
-      if (trim($notes) != '') {
-        echo "<span style=\"color:$labelcolor\"><img src=\"../artwork/notes_icon.gif\" width=\"16\" height=\"16\" alt=\"note\" />&nbsp;$notes</span><br />\n";
-      }
-      echo "$leadin</td>";
-
-      for ($i=0; $i<$cols; $i++) {
-        if (!isset($frequencies[$q_id][$i]) or $frequencies[$q_id][$i] == '') $frequencies[$q_id][$i] = 0;
-        echo "<td class=\"rating\" style=\"background-color:" . $cell_colors[$i] . "\">" . $frequencies[$q_id][$i] . "</td><td class=\"rating\" style=\"background-color:" . $cell_colors[$i] . "\">" . round(($frequencies[$q_id][$i]/$user_no) * 100) . "%</td>";
-      }
-      echo "</tr>\n";
-      $question_no++;
+        $question_no++;
     }
     $result->close();
     $mysqli->close();
-  }
-  ?>
+}
+?>
   </tr></table>
 
 </body>

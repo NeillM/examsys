@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -29,7 +30,7 @@ require_once '../include/errors.php';
 
 $campus = check_var('campus', 'POST', true, false, true);
 
-$result = $mysqli->prepare("DELETE FROM campus WHERE id = ?");
+$result = $mysqli->prepare('DELETE FROM campus WHERE id = ?');
 $result->bind_param('i', $campus);
 $result->execute();
 $result->close();

@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-$string['campuses'] = "Campuses";
-$string['campus'] = "Campus";
-$string['createnewcampus'] = "Create new Campus";
-$string['viewcampus'] = "View/Edit details";
-$string['deletecampus'] = "Delete Campus";
+$string['campuses'] = 'Campuses';
+$string['campus'] = 'Campus';
+$string['createnewcampus'] = 'Create new Campus';
+$string['viewcampus'] = 'View/Edit details';
+$string['deletecampus'] = 'Delete Campus';
 $string['computerlabs'] = 'Computer Labs';
-$string['isdefault'] = "Default Campus?";
+$string['isdefault'] = 'Default Campus?';

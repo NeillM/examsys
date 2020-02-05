@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Confirm that it is OK to proceed deleting a school.
 *
 * @author Simon Wilkinson
@@ -30,16 +31,16 @@ require_once '../include/errors.php';
 $schoolID = check_var('schoolID', 'GET', true, false, true);
 
 if (!SchoolUtils::schoolid_exists($schoolID, $mysqli)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 if (SchoolUtils::school_in_use($schoolID, $mysqli)) {
-  $notice->display_notice($string['cannotdelete'], $string['modulesattached'], '../artwork/exclamation_64.png', 'black', true, false);
-  echo '<p><button type="button" onclick="javascript:window.close();">' . $string['cancel'] .  '</button></p>';
-  echo "\n</body>\n</html>";
-  exit;
+    $notice->display_notice($string['cannotdelete'], $string['modulesattached'], '../artwork/exclamation_64.png', 'black', true, false);
+    echo '<p><button type="button" onclick="javascript:window.close();">' . $string['cancel'] .  '</button></p>';
+    echo "\n</body>\n</html>";
+    exit;
 }
 
 $mysqli->close();

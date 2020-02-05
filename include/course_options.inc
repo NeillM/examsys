@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -27,34 +28,34 @@
 <div id="left-sidebar" class="sidebar">
 <form name="myform" autocomplete="off">
 <div id="menu1a">
-	<div class="menuitem"><a href="add_course.php"><img class="sidebar_icon" src="../artwork/degree_icon_16.png" alt="" /><?php echo $string['createcourse'] ?></a></div>
-	<div class="menuitem"><a href="bulk_import_courses.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['bulkcourseimport'] ?></a></div>
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['editcourse'] ?></div>
-	<div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="" /><?php echo $string['deletecourse'] ?></div>
+    <div class="menuitem"><a href="add_course.php"><img class="sidebar_icon" src="../artwork/degree_icon_16.png" alt="" /><?php echo $string['createcourse'] ?></a></div>
+    <div class="menuitem"><a href="bulk_import_courses.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['bulkcourseimport'] ?></a></div>
+    <div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['editcourse'] ?></div>
+    <div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="" /><?php echo $string['deletecourse'] ?></div>
 </div>
 
 <div style="display:none" id="menu1b">
-	<div class="menuitem"><a href="add_course.php"><img class="sidebar_icon" src="../artwork/degree_icon_16.png" alt="" /><?php echo $string['createcourse'] ?></a></div>
-	<div class="menuitem"><a href="bulk_import_courses.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['bulkcourseimport'] ?></a></div>
-	<div class="menuitem editcourse"><a href="#"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><?php echo $string['editcourse'] ?></a></div>
-	<div class="menuitem deletecourse"><a href="#"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><?php echo $string['deletecourse'] ?></a></div>
+    <div class="menuitem"><a href="add_course.php"><img class="sidebar_icon" src="../artwork/degree_icon_16.png" alt="" /><?php echo $string['createcourse'] ?></a></div>
+    <div class="menuitem"><a href="bulk_import_courses.php"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" /><?php echo $string['bulkcourseimport'] ?></a></div>
+    <div class="menuitem editcourse"><a href="#"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><?php echo $string['editcourse'] ?></a></div>
+    <div class="menuitem deletecourse"><a href="#"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><?php echo $string['deletecourse'] ?></a></div>
 </div>
 
 <?php
 if ($userObject->has_role(array('SysAdmin'))) {
     $smsplugin_name = plugin_manager::get_plugin_type_enabled('plugin_sms');
-    foreach($smsplugin_name as $name) {
+    foreach ($smsplugin_name as $name) {
         $smspluginns = 'plugins\SMS\\' . $name . '\\' . $name;
         $smsplugin = new $smspluginns($userObject->get_user_ID());
         $courseimport = $smsplugin->supports_course_import() ;
         if ($courseimport !== false) {
-?>
+            ?>
 <div id="menu1b">
     <div id="sms" class="menuitem">
         <a class="help_tip" title="<?php echo $courseimport['tooltip'] ?>" href="<?php echo $courseimport['url'] ?>"><img class="sidebar_icon" src="../artwork/sync_16.png" alt="" /><?php echo $courseimport['blurb'] ?></a>
     </div>
 </div>
-<?php
+            <?php
         }
     }
 }

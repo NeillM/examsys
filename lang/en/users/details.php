@@ -129,4 +129,3 @@ $string['colour'] = 'Colour';
 $string['themecolours'] = 'Theme Colours';
 $string['standardcolours'] = 'Standard Colours';
 $string['more'] = 'More...';
-?>

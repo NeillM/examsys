@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -30,21 +31,20 @@ $paperID = check_var('paperID', 'GET', true, false, true);
 
 if ($userObject->has_role('External Examiner')) {
   // Security: Check the external can access this paper.
-  if (!ReviewUtils::is_external_on_paper($userObject->get_user_ID(), $paperID, $mysqli)) {
-    echo "<div style=\"padding:10px\">" . $string['pagenotfound'] . "</div>\n";
-    $mysqli->close();
-    exit();
-  }
+    if (!ReviewUtils::is_external_on_paper($userObject->get_user_ID(), $paperID, $mysqli)) {
+        echo '<div style="padding:10px">' . $string['pagenotfound'] . "</div>\n";
+        $mysqli->close();
+        exit();
+    }
 }
 
 $details = StudentNotes::get_note($paperID, $userID, $mysqli);
 
 if ($details === false) {
-  echo "<div style=\"padding:10px\">" . $string['err'] . "</div>\n";
+    echo '<div style="padding:10px">' . $string['err'] . "</div>\n";
 } else {
-  echo "<div style=\"padding:10px\">" . $details['note'] . "</div>\n";
-  echo "<div style=\"padding:10px\"><em>" . $details['author_title'] . " " . $details['author_initials'] . " " . $details['author_surname'] . " - " . $details['date'] . "</em></div>\n";
+    echo '<div style="padding:10px">' . $details['note'] . "</div>\n";
+    echo '<div style="padding:10px"><em>' . $details['author_title'] . ' ' . $details['author_initials'] . ' ' . $details['author_surname'] . ' - ' . $details['date'] . "</em></div>\n";
 }
 
 $mysqli->close();
-?>

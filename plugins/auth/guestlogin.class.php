@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -28,55 +29,58 @@
 require_once 'outline_authentication.class.php';
 
 
-class guestlogin_auth extends outline_authentication {
+class guestlogin_auth extends outline_authentication
+{
 
-  public $impliments_api_auth_version = 1;
-  public $version = 0.9;
 
-  function register_callback_routines() {
 
-    $callbackarray[] = array(array($this, 'loginbutton'), 'displaystdform', $this->number, $this->name);
-    //$callbackarray[] = array(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
+    public $impliments_api_auth_version = 1;
+    public $version = 0.9;
 
-    return $callbackarray;
-  }
+    function register_callback_routines()
+    {
 
-  function errordisp($displayerrformobj) {
-    global $string;
-    $configObject = Config::get_instance();
-    $cfg_root_path = $configObject->get('cfg_root_path');
-    if ($_SERVER['PHP_SELF'] == "$cfg_root_path/index.php") {
-      $this->savetodebug('adding temp account notice to error screen');
-      $message2 = $string['ifstuckinvigilator'] . " <a href=\"$cfg_root_path/users/guest_account.php\" style=\"color:blue\"><strong>" . $string['tempaccount'] . "</strong></a>";
-      $displayerrformobj->li[] = $message2;
+        $callbackarray[] = array(array($this, 'loginbutton'), 'displaystdform', $this->number, $this->name);
+//$callbackarray[] = array(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
+
+        return $callbackarray;
     }
 
-    return $displayerrformobj;
-  }
+    function errordisp($displayerrformobj)
+    {
+        global $string;
+        $configObject = Config::get_instance();
+        $cfg_root_path = $configObject->get('cfg_root_path');
+        if ($_SERVER['PHP_SELF'] == "$cfg_root_path/index.php") {
+            $this->savetodebug('adding temp account notice to error screen');
+            $message2 = $string['ifstuckinvigilator'] . " <a href=\"$cfg_root_path/users/guest_account.php\" style=\"color:blue\"><strong>" . $string['tempaccount'] . '</strong></a>';
+            $displayerrformobj->li[] = $message2;
+        }
 
-  function loginbutton($displaystdformobj) {
-    global $string;
-    
-    $config = Config::get_instance();
-
-    $this->savetodebug('Button Check');
-    // Check client address of current user is in a lab.
-    $address = NetworkUtils::get_client_address();
-    $labfactory = new LabFactory($this->db);
-    $lab = false;
-    $lab = $labfactory->get_lab_from_address($address);
-    if ($lab) {
-      $this->savetodebug('Adding New Button');
-      $newbutton = new displaystdformobjbutton();
-      $newbutton->type = 'button';
-      $newbutton->value = ' ' . $string['guestbutton'] . ' ';
-      $newbutton->name = 'guestlogin';
-      $newbutton->class = 'guestlogin';
-      $displaystdformobj->buttons[] = $newbutton;
-      $displaystdformobj->scripts[] = "guestlogin.min.js";
+        return $displayerrformobj;
     }
 
-    return $displaystdformobj;
-  }
+    function loginbutton($displaystdformobj)
+    {
+        global $string;
+        $config = Config::get_instance();
+        $this->savetodebug('Button Check');
+// Check client address of current user is in a lab.
+        $address = NetworkUtils::get_client_address();
+        $labfactory = new LabFactory($this->db);
+        $lab = false;
+        $lab = $labfactory->get_lab_from_address($address);
+        if ($lab) {
+            $this->savetodebug('Adding New Button');
+            $newbutton = new displaystdformobjbutton();
+            $newbutton->type = 'button';
+            $newbutton->value = ' ' . $string['guestbutton'] . ' ';
+            $newbutton->name = 'guestlogin';
+            $newbutton->class = 'guestlogin';
+            $displaystdformobj->buttons[] = $newbutton;
+            $displaystdformobj->scripts[] = 'guestlogin.min.js';
+        }
 
+        return $displaystdformobj;
+    }
 }

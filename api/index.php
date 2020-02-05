@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -22,13 +23,15 @@
 
 require_once '../include/load_config.php';
 
-$mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), 
-                                 $configObject->get('cfg_db_webservice_user'), 
-                                 $configObject->get('cfg_db_webservice_passwd'), 
-                                 $configObject->get('cfg_db_database'), 
-                                 $configObject->get('cfg_db_charset'), 
-                                 UserNotices::get_instance(), 
-                                 $configObject->get('dbclass'));
+$mysqli = DBUtils::get_mysqli_link(
+    $configObject->get('cfg_db_host'),
+    $configObject->get('cfg_db_webservice_user'),
+    $configObject->get('cfg_db_webservice_passwd'),
+    $configObject->get('cfg_db_database'),
+    $configObject->get('cfg_db_charset'),
+    UserNotices::get_instance(),
+    $configObject->get('dbclass')
+);
 
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -41,7 +44,6 @@ $langpack = new \langpack();
 
 // Only routes only available if enabled.
 if ($configObject->get_setting('core', 'cfg_api_enabled')) {
-
     $render = new render($configObject);
     $app = Slim\Factory\AppFactory::create();
     $app->addRoutingMiddleware();
@@ -50,7 +52,11 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     $apiErrorHandler = function (
         ServerRequestInterface $request,
         Throwable $exception
-    ) use ($app, $render, $langpack) {
+    ) use (
+        $app,
+        $render,
+        $langpack
+) {
         $error = $exception->getCode();
         if ($error == 404) {
             $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', '404')));
@@ -60,7 +66,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
         // Send response.
         $response = $app->getResponseFactory()->createResponse();
         $response->getBody()->write($response_xml);
-        $response->withHeader("Content-Type", 'text/xml');
+        $response->withHeader('Content-Type', 'text/xml');
         return $response;
     };
 
@@ -72,7 +78,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     $api = new \api\api($app, $mysqli, $configObject);
 
     // Request oauth token.
-    $app->post('/requesttoken', function(ServerRequestInterface $request, ResponseInterface $response) use($oauth, $api) : Psr\Http\Message\ResponseInterface {
+    $app->post('/requesttoken', function (ServerRequestInterface $request, ResponseInterface $response) use ($oauth, $api): Psr\Http\Message\ResponseInterface {
         // Set api.
         $api->request = $request;
         $api->response = $response;
@@ -82,7 +88,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     });
 
     // Enrolment request.
-    $app->post('/modulemanagement/enrol', function(ServerRequestInterface $request, ResponseInterface $response) use($api, $mysqli, $oauth, $render, $langpack) : Psr\Http\Message\ResponseInterface {
+    $app->post('/modulemanagement/enrol', function (ServerRequestInterface $request, ResponseInterface $response) use ($api, $mysqli, $oauth, $render, $langpack): Psr\Http\Message\ResponseInterface {
         $requesttype = 'modulemanagement';
         $responsetype = 'moduleManagementEnrolResponse';
         $operations = array('enrol', 'unenrol');
@@ -92,7 +98,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     });
 
     // Module management request.
-    $app->post('/modulemanagement', function(ServerRequestInterface $request, ResponseInterface $response) use($api, $mysqli, $oauth, $render, $langpack) : Psr\Http\Message\ResponseInterface {
+    $app->post('/modulemanagement', function (ServerRequestInterface $request, ResponseInterface $response) use ($api, $mysqli, $oauth, $render, $langpack): Psr\Http\Message\ResponseInterface {
         $requesttype = 'modulemanagement';
         $responsetype = 'moduleManagementResponse';
         $operations = array('create', 'update', 'delete');
@@ -102,7 +108,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     });
 
     // Course management request.
-    $app->post('/coursemanagement', function(ServerRequestInterface $request, ResponseInterface $response) use($api, $mysqli, $oauth, $render, $langpack) : Psr\Http\Message\ResponseInterface {
+    $app->post('/coursemanagement', function (ServerRequestInterface $request, ResponseInterface $response) use ($api, $mysqli, $oauth, $render, $langpack): Psr\Http\Message\ResponseInterface {
         $requesttype = 'coursemanagement';
         $responsetype = 'courseManagementResponse';
         $operations = array('create', 'update', 'delete');
@@ -112,7 +118,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     });
 
     // School management request.
-    $app->post('/schoolmanagement', function(ServerRequestInterface $request, ResponseInterface $response) use($api, $mysqli, $oauth, $render, $langpack) : Psr\Http\Message\ResponseInterface {
+    $app->post('/schoolmanagement', function (ServerRequestInterface $request, ResponseInterface $response) use ($api, $mysqli, $oauth, $render, $langpack): Psr\Http\Message\ResponseInterface {
         $requesttype = 'schoolmanagement';
         $responsetype = 'schoolManagementResponse';
         $operations = array('create', 'update', 'delete');
@@ -122,7 +128,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     });
 
     // Faculty management request.
-    $app->post('/facultymanagement', function(ServerRequestInterface $request, ResponseInterface $response) use($api, $mysqli, $oauth, $render, $langpack) : Psr\Http\Message\ResponseInterface {
+    $app->post('/facultymanagement', function (ServerRequestInterface $request, ResponseInterface $response) use ($api, $mysqli, $oauth, $render, $langpack): Psr\Http\Message\ResponseInterface {
         $requesttype = 'facultymanagement';
         $responsetype = 'facultyManagementResponse';
         $operations = array('create', 'update', 'delete');
@@ -132,7 +138,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
     });
 
     // User management request.
-    $app->post('/usermanagement', function(ServerRequestInterface $request, ResponseInterface $response) use($api, $mysqli, $oauth, $render, $langpack) : Psr\Http\Message\ResponseInterface {
+    $app->post('/usermanagement', function (ServerRequestInterface $request, ResponseInterface $response) use ($api, $mysqli, $oauth, $render, $langpack): Psr\Http\Message\ResponseInterface {
         $requesttype = 'usermanagement';
         $responsetype = 'userManagementResponse';
         $operations = array('create', 'update', 'delete');
@@ -142,7 +148,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
         return process($requesttype, $operations, $fields, $responsetype, $oauth, $api, $langpack, $render, $xsd, $mysqli, $response, $request);
     });
     // Assessment management request
-    $app->post('/assessmentmanagement', function(ServerRequestInterface $request, ResponseInterface $response) use($api, $mysqli, $oauth, $render, $langpack) : Psr\Http\Message\ResponseInterface {
+    $app->post('/assessmentmanagement', function (ServerRequestInterface $request, ResponseInterface $response) use ($api, $mysqli, $oauth, $render, $langpack): Psr\Http\Message\ResponseInterface {
         $requesttype = 'assessmentmanagement';
         $responsetype = 'assessmentManagementResponse';
         $operations = array('create', 'schedule', 'delete', 'update');
@@ -161,7 +167,7 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
      * @param object $langpack - language object
      * @return object
      */
-    $app->get('/gradebook/{filtername}/{filterid}', function(ServerRequestInterface $request, ResponseInterface $response, $args) use($mysqli, $oauth, $api, $render, $langpack) : Psr\Http\Message\ResponseInterface {
+    $app->get('/gradebook/{filtername}/{filterid}', function (ServerRequestInterface $request, ResponseInterface $response, $args) use ($mysqli, $oauth, $api, $render, $langpack): Psr\Http\Message\ResponseInterface {
         // Set api.
         $api->request = $request;
         $api->response = $response;
@@ -180,7 +186,6 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
                 $response_xml = $render->render_xml('api/error.xml', 'rogo', array($langpack->get_string('api/commonapi', 'nopermission')));
                 $api->log_response($apiid, $response_xml);
             } else {
-
                 $resp = array();
                 $gradebook = new \api\gradebook($mysqli);
                 // Map template.
@@ -231,7 +236,8 @@ if ($configObject->get_setting('core', 'cfg_api_enabled')) {
      * @param object $request - request interface
      * @return object
      */
-    function process($requesttype, $operations, $fields, $responsetype, $oauth, $api, $langpack, $render, $xsd, $mysqli, $response, $request) : Psr\Http\Message\ResponseInterface {
+    function process($requesttype, $operations, $fields, $responsetype, $oauth, $api, $langpack, $render, $xsd, $mysqli, $response, $request): Psr\Http\Message\ResponseInterface
+    {
         // Set api.
         $api->request = $request;
         $api->response = $response;

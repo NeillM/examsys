@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,13 +25,15 @@ namespace testing\unittest;
  * @copyright Copyright (c) 2015 onwards The University of Nottingham
  * @package tests
  */
-class langpacktest extends UnitTest {
+class langpacktest extends UnitTest
+{
 
     /**
      * Test get_string
      * @group lang
      */
-    public function test_get_string() {
+    public function test_get_string()
+    {
         $lang = new \langpack();
         $component = 'api/usermanagement';
         $name = '404';
@@ -42,7 +45,8 @@ class langpacktest extends UnitTest {
      * Test get_strings
      * @group lang
      */
-    public function test_get_strings() {
+    public function test_get_strings()
+    {
         $lang = new \langpack();
         $component = 'api/usermanagement';
         $names = array('user_invalid_role', 'user_does_not_exist');
@@ -55,7 +59,8 @@ class langpacktest extends UnitTest {
      * Test get_all_strings
      * @group lang
      */
-    public function test_get_all_strings() {
+    public function test_get_all_strings()
+    {
         $lang = new \langpack();
         $component = 'classes/assessment';
         $strings = $lang->get_all_strings($component);

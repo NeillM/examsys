@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -65,17 +66,17 @@ $user_no = $report->get_user_no();
 $q_medians = load_osce_medians($mysqli);
 
 if ($propertyObj->get_pass_mark() == 101) {
-  $borderline_method = true;
+    $borderline_method = true;
 } else {
-  $borderline_method = false;
+    $borderline_method = false;
 }
 
 if ($borderline_method) {
-  $passmark = getBlinePassmk($user_results, $user_no, $propertyObj);
+    $passmark = getBlinePassmk($user_results, $user_no, $propertyObj);
 } elseif ($propertyObj->get_pass_mark() == 102) {
-  $passmark = 'N/A';
+    $passmark = 'N/A';
 } else {
-  $passmark = $propertyObj->get_pass_mark();
+    $passmark = $propertyObj->get_pass_mark();
 }
 $distinction_mark = $propertyObj->get_distinction_mark();
 
@@ -84,13 +85,13 @@ rating_num_text($user_results, $user_no, $propertyObj, $string);
 $user_results = \sort::array_csort($user_results, $sortby, $ordering);
 
 header('Pragma: public');
-header("Content-type: application/vnd.ms-excel");
-header("Content-Disposition: attachment; filename=\"" . \file_handler::make_filename_safe($paper) . ".xml\"");
+header('Content-type: application/vnd.ms-excel');
+header('Content-Disposition: attachment; filename="' . \file_handler::make_filename_safe($paper) . '.xml"');
 
 if ($borderline_method) {
-  $col_count = 11;
+    $col_count = 11;
 } else {
-  $col_count = 10;
+    $col_count = 10;
 }
 
 // Write results to XML ---------------------------------------------------------------------------
@@ -106,7 +107,7 @@ echo '  <Title>' . $paper . '</Title>';
 echo '  <Author>Rogo</Author>';
 $tmp_start = substr($_GET['startdate'], 6, 2) . '/' . substr($_GET['startdate'], 4, 2) . '/' . substr($_GET['startdate'], 0, 4) . ' ' . substr($_GET['startdate'], 8, 2) . ':' . substr($_GET['startdate'], 10, 2);
 $tmp_end = substr($_GET['enddate'], 6, 2) . '/' . substr($_GET['enddate'], 4, 2) . '/' . substr($_GET['enddate'], 0, 4) . ' ' . substr($_GET['enddate'], 8, 2) . ':' . substr($_GET['enddate'], 10, 2);
-echo '  <Description>Class totals for assessment taken between ' . $tmp_start . ' and ' . $tmp_end .'.</Description>';
+echo '  <Description>Class totals for assessment taken between ' . $tmp_start . ' and ' . $tmp_end . '.</Description>';
 echo '  <LastAuthor>Rogo</LastAuthor>';
 echo '  <Created>' . date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z</Created>';
 echo '  <Company>The University of Nottingham</Company>';
@@ -189,7 +190,7 @@ echo '    <Cell ss:StyleID="s28"/>';
 echo '    <Cell ss:StyleID="s28"/>';
 echo '    <Cell ss:StyleID="s28"/>';
 if ($borderline_method) {
-  echo '    <Cell ss:StyleID="s28"/>';
+    echo '    <Cell ss:StyleID="s28"/>';
 }
 echo '    <Cell ss:StyleID="s28"/>';
 echo '    <Cell ss:StyleID="s28"/>';
@@ -203,7 +204,7 @@ echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['studentid']
 echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['course'] . '</Data></Cell>';
 echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['total'] . '</Data></Cell>';
 if ($borderline_method) {
-  echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['rating'] . '</Data></Cell>';
+    echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['rating'] . '</Data></Cell>';
 }
 echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['classification'] . '</Data></Cell>';
 echo '    <Cell ss:StyleID="s30"><Data ss:Type="String">' . $string['starttime'] . '</Data></Cell>';
@@ -212,30 +213,30 @@ echo '  </Row>';
 
 $absent_no = 0;
 $xmean2_total = 0;
-for ($i=0; $i<$user_no; $i++) {
-  echo '<Row>';
-  echo '<Cell><Data ss:Type="String">' . $user_results[$i]['title'] . '</Data></Cell>';
-  echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['surname']) . '</Data></Cell>';
-  echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['first_names']) . '</Data></Cell>';
-  echo '<Cell><Data ss:Type="String">' . $user_results[$i]['student_id'] . '</Data></Cell>';
-  echo '<Cell><Data ss:Type="String">' . $user_results[$i]['grade'] . '</Data></Cell>';
-  if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.{
-    echo '<Cell/>';
-    echo '<Cell/>';
-    echo '<Cell><Data ss:Type="String">No Attendance</Data></Cell>';
-    echo '<Cell/>';
-    echo '</Row>';
-    $absent_no++;
-  } else {
-    echo '<Cell><Data ss:Type="Number">' . $user_results[$i]['numeric_score'] . '</Data></Cell>';
-    if ($borderline_method) {
-      echo '<Cell><Data ss:Type="String">' . $user_results[$i]['rating'] . '</Data></Cell>';
+for ($i = 0; $i < $user_no; $i++) {
+    echo '<Row>';
+    echo '<Cell><Data ss:Type="String">' . $user_results[$i]['title'] . '</Data></Cell>';
+    echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['surname']) . '</Data></Cell>';
+    echo '<Cell><Data ss:Type="String">' . htmlentities($user_results[$i]['first_names']) . '</Data></Cell>';
+    echo '<Cell><Data ss:Type="String">' . $user_results[$i]['student_id'] . '</Data></Cell>';
+    echo '<Cell><Data ss:Type="String">' . $user_results[$i]['grade'] . '</Data></Cell>';
+    if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.{
+        echo '<Cell/>';
+        echo '<Cell/>';
+        echo '<Cell><Data ss:Type="String">No Attendance</Data></Cell>';
+        echo '<Cell/>';
+        echo '</Row>';
+        $absent_no++;
+    } else {
+        echo '<Cell><Data ss:Type="Number">' . $user_results[$i]['numeric_score'] . '</Data></Cell>';
+        if ($borderline_method) {
+            echo '<Cell><Data ss:Type="String">' . $user_results[$i]['rating'] . '</Data></Cell>';
+        }
+        echo '<Cell><Data ss:Type="String">' . $user_results[$i]['classification'] . '</Data></Cell>';
+        echo '<Cell><Data ss:Type="String">' . $user_results[$i]['display_started'] . '</Data></Cell>';
+        echo '<Cell><Data ss:Type="String">' . $user_results[$i]['examiner'] . '</Data></Cell>';
+        echo '</Row>';
     }
-    echo '<Cell><Data ss:Type="String">' . $user_results[$i]['classification'] . '</Data></Cell>';
-    echo '<Cell><Data ss:Type="String">' . $user_results[$i]['display_started'] . '</Data></Cell>';
-    echo '<Cell><Data ss:Type="String">' . $user_results[$i]['examiner'] . '</Data></Cell>';
-    echo '</Row>';
-  }
 }
 
 echo '  </Table>';
@@ -269,4 +270,3 @@ echo ' </Worksheet>';
 echo '</Workbook>';
 
 $mysqli->close();
-?>

@@ -26,7 +26,8 @@ use testing\unittest\UnitTest;
  * @package tests
  * @group url
  */
-class UrlTest extends UnitTest {
+class UrlTest extends UnitTest
+{
 
     /**
      * Test for Url::fromGlobals.
@@ -36,7 +37,8 @@ class UrlTest extends UnitTest {
      * @param array $server
      * @return void
      */
-    public function testFromGlobals($expected, $server) {
+    public function testFromGlobals($expected, $server)
+    {
         $url = \Url::fromGlobals($server);
         $this->assertSame($expected, (string)$url);
     }
@@ -46,7 +48,8 @@ class UrlTest extends UnitTest {
      *
      * @return array
      */
-    public function fromGlobalsProvider() {
+    public function fromGlobalsProvider()
+    {
         return array(
             array(
                 'http://localhost/script.php',
@@ -85,7 +88,8 @@ class UrlTest extends UnitTest {
      * @param mixed $default
      * @return void
      */
-    public function testGetPart($expected, $url, $name, $default) {
+    public function testGetPart($expected, $url, $name, $default)
+    {
         $this->assertSame($expected, (new Url($url))->getPart($name, $default));
     }
 
@@ -94,7 +98,8 @@ class UrlTest extends UnitTest {
      *
      * @return array
      */
-    public function getPartProvider() {
+    public function getPartProvider()
+    {
         return array(
             array('http', 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::SCHEME, null),
             array('user', 'http://user:pass@localhost:8080/path?foo=bar#anchor', Url::USER, null),
@@ -112,7 +117,8 @@ class UrlTest extends UnitTest {
      *
      * @return void
      */
-    public function testSetQueryValues() {
+    public function testSetQueryValues()
+    {
         $url = new Url('http://localhost/?foo=bar');
         $this->assertSame('foo=bar', $url->getQuery());
 

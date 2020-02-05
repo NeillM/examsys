@@ -25,4 +25,3 @@ $string['false'] = 'False';
 $string['yes'] = 'Yes';
 $string['no'] = 'No';
 $string['abstain'] = 'Abstain';
-?>

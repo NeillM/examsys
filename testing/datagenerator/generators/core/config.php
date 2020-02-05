@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,14 +25,16 @@ namespace testing\datagenerator;
  * @package testing
  * @subpackage datagenerator
  */
-class config extends generator {
+class config extends generator
+{
     /**
      * Changes a Rogo setting.
      *
      * @param array|stdClass $data
      * @throws data_error
      */
-    public function change_setting($data) {
+    public function change_setting($data)
+    {
         // If an object is passed convert it into an array.
         if (is_object($data)) {
             $data = (array)$data;

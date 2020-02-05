@@ -23,140 +23,150 @@
  * @package
  */
 
-class Killer_Question {
+class Killer_Question
+{
 
-  private $db;
-  private $paperID;
-	private $questions;
+    private $db;
+    private $paperID;
+    private $questions;
 
   /**
    * Called when the object is unserialised.
    */
-  public function __wakeup() {
-    // The serialised database object will be invalid,
-    // this object should only be serialised during an error report,
-    // so adding the current database connect seems like a waste of time.
-    $this->db = null;
-  }
-
-	/**
-	 * @param int $paperID  - ID of the current paper.
-	 * @param object $db    - Link to mysqli
-	 */
-	 public function __construct($paperID, $db) {
-  	$this->db = $db;
-    $this->paperID = $paperID;
-  }
-
-	/**
-	 * Load all killer questions for the current paper.
-	 */
-  public function load() {
-    $this->questions = array();
-
-    $result = $this->db->prepare("SELECT q_id FROM killer_questions WHERE paperID = ?");
-    $result->bind_param('i', $this->paperID);
-    $result->execute();
-    $result->bind_result($q_id);
-    while ($result->fetch()) {
-      $this->questions[$q_id] = true;
+    public function __wakeup()
+    {
+      // The serialised database object will be invalid,
+      // this object should only be serialised during an error report,
+      // so adding the current database connect seems like a waste of time.
+        $this->db = null;
     }
-    $result->close();
-  }
 
-	/**
-	 * Saves questions back to the database.
-	 */
-	public function save() {
-		// Clear all previous killer questions for this paper.
-		$result = $this->db->prepare("DELETE FROM killer_questions WHERE paperID = ?");
-		$result->bind_param('i', $this->paperID);
-		$result->execute();
-		$result->close();
+    /**
+     * @param int $paperID  - ID of the current paper.
+     * @param object $db    - Link to mysqli
+     */
+    public function __construct($paperID, $db)
+    {
+        $this->db = $db;
+        $this->paperID = $paperID;
+    }
 
-		// Insert new records for each killer question.
-		$result = $this->db->prepare("INSERT INTO killer_questions VALUES (NULL, ?, ?)");
-	  foreach($this->questions as $questionID => $value) {
-			$result->bind_param('ii', $this->paperID, $questionID);
-			$result->execute();
-		}
-		$result->close();
-	}
+    /**
+     * Load all killer questions for the current paper.
+     */
+    public function load()
+    {
+        $this->questions = array();
 
-	/**
-	 * Returns true/false if a particular question is a killer one or not.
-	 */
-	public function is_killer_question($q_id) {
-	  if (!is_array($this->questions)) {
-			$this->load();
-		}
+        $result = $this->db->prepare('SELECT q_id FROM killer_questions WHERE paperID = ?');
+        $result->bind_param('i', $this->paperID);
+        $result->execute();
+        $result->bind_result($q_id);
+        while ($result->fetch()) {
+            $this->questions[$q_id] = true;
+        }
+        $result->close();
+    }
 
-	  if (isset($this->questions[$q_id])) {
-		  return true;
-		} else {
-			return false;
-		}
-	}
+    /**
+     * Saves questions back to the database.
+     */
+    public function save()
+    {
+        // Clear all previous killer questions for this paper.
+        $result = $this->db->prepare('DELETE FROM killer_questions WHERE paperID = ?');
+        $result->bind_param('i', $this->paperID);
+        $result->execute();
+        $result->close();
 
-	/**
-	 * Sets a question as being killer.
-	 */
-	public function set_question($q_id) {
-	  if (!is_array($this->questions)) {
-			$this->load();
-		}
+        // Insert new records for each killer question.
+        $result = $this->db->prepare('INSERT INTO killer_questions VALUES (NULL, ?, ?)');
+        foreach ($this->questions as $questionID => $value) {
+            $result->bind_param('ii', $this->paperID, $questionID);
+            $result->execute();
+        }
+        $result->close();
+    }
 
-		$this->questions[$q_id] = true;
-	}
+    /**
+     * Returns true/false if a particular question is a killer one or not.
+     */
+    public function is_killer_question($q_id)
+    {
+        if (!is_array($this->questions)) {
+            $this->load();
+        }
 
-	/**
-	 * Unsets a question as being killer.
-	 */
-	public function unset_question($q_id) {
-	  if (!is_array($this->questions)) {
-			$this->load();
-		}
+        if (isset($this->questions[$q_id])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-		unset($this->questions[$q_id]);
-	}
+    /**
+     * Sets a question as being killer.
+     */
+    public function set_question($q_id)
+    {
+        if (!is_array($this->questions)) {
+            $this->load();
+        }
+
+        $this->questions[$q_id] = true;
+    }
+
+    /**
+     * Unsets a question as being killer.
+     */
+    public function unset_question($q_id)
+    {
+        if (!is_array($this->questions)) {
+            $this->load();
+        }
+
+        unset($this->questions[$q_id]);
+    }
 
   /**
    * return all the killer question by paper
    * @return mixed
    */
-  public function get_questions(){
+    public function get_questions()
+    {
 
-    $this->questions = array();
+        $this->questions = array();
 
-    $result = $this->db->prepare("SELECT q_id FROM killer_questions WHERE paperID = ?");
-    $result->bind_param('i', $this->paperID);
-    $result->execute();
-    $result->bind_result($q_id);
-    while ($result->fetch()) {
-      $this->questions[] = $q_id;
+        $result = $this->db->prepare('SELECT q_id FROM killer_questions WHERE paperID = ?');
+        $result->bind_param('i', $this->paperID);
+        $result->execute();
+        $result->bind_result($q_id);
+        while ($result->fetch()) {
+            $this->questions[] = $q_id;
+        }
+        $result->close();
+
+        return $this->questions;
     }
-    $result->close();
-
-    return $this->questions;
-  }
 
   /**
    * Copy Killer questions from one paper to another
    */
-	public function copy_killer_questions($newPaper) {
-    $killerQuestionresult = $this->db->prepare("SELECT q_id FROM killer_questions WHERE paperID = ?");
-    $killerQuestionresult->bind_param('i', $this->paperID);
-    $killerQuestionresult->execute();
-    $killerQuestionresult->store_result();
-    $killerQuestionresult->bind_result($q_id);
+    public function copy_killer_questions($newPaper)
+    {
+        $killerQuestionresult = $this->db->prepare('SELECT q_id FROM killer_questions WHERE paperID = ?');
+        $killerQuestionresult->bind_param('i', $this->paperID);
+        $killerQuestionresult->execute();
+        $killerQuestionresult->store_result();
+        $killerQuestionresult->bind_result($q_id);
 
-    while ($killerQuestionresult->fetch()) {
-      $addKillerQuestion = $this->db->prepare("INSERT INTO killer_questions( paperID, q_id ) VALUES (?, ?)");
-      $addKillerQuestion->bind_param('ii', $newPaper, $q_id);
-      $addKillerQuestion->execute();
-      $addKillerQuestion->close();
+        while ($killerQuestionresult->fetch()) {
+            $addKillerQuestion = $this->db->prepare('INSERT INTO killer_questions( paperID, q_id ) VALUES (?, ?)');
+            $addKillerQuestion->bind_param('ii', $newPaper, $q_id);
+            $addKillerQuestion->execute();
+            $addKillerQuestion->close();
+        }
+
+        $killerQuestionresult->close();
     }
-
-    $killerQuestionresult->close();
-  }
 }

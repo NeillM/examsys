@@ -17,4 +17,4 @@
 $string['success'] = 'Academic Session successfully deleted.';
 $string['failure'] = 'Academic Session unknown.';
 $string['title'] = 'Academic Session Deletion';
-$string['ok'] = "OK";
+$string['ok'] = 'OK';

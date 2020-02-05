@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,7 +27,8 @@ namespace testing\unittest;
  * @package testing
  * @category unittest
  */
-class help {
+class help
+{
     /** The URL to documentation for phpunit in Rogo. */
     const DOCUMENTATION = 'https://rogo-eassessment-docs.atlassian.net/wiki/display/ROGO/Unit+testing';
 
@@ -35,7 +37,8 @@ class help {
      *
      * @return string
      */
-    public static function get_phpunit_location() {
+    public static function get_phpunit_location()
+    {
         return 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'phpunit';
     }
 
@@ -44,7 +47,8 @@ class help {
      *
      * @return string
      */
-    public static function get_test_run_command() {
+    public static function get_test_run_command()
+    {
         return self::get_phpunit_location() . ' -c ' . environment::get_xml_location();
     }
 
@@ -53,7 +57,8 @@ class help {
      *
      * @return string
      */
-    public static function run_help() {
+    public static function run_help()
+    {
         $message = PHP_EOL . 'Phpunit is now installed and can be run from the root Rogo directory using:'
             . PHP_EOL . self::get_test_run_command();
         return $message;
@@ -64,7 +69,8 @@ class help {
      *
      * @return string
      */
-    public static function error() {
+    public static function error()
+    {
         $message = PHP_EOL . 'For details about Phpunit testing in Rogo visit: ' . PHP_EOL . self::DOCUMENTATION;
         return $message;
     }
@@ -74,7 +80,8 @@ class help {
      *
      * @return string
      */
-    public static function init_help() {
+    public static function init_help()
+    {
         $message = 'Rogo Phpunit initialisation script options'
             . PHP_EOL . PHP_EOL . "-h, --help \tDisplay help"
             . PHP_EOL . "--clean \tForce a database install"

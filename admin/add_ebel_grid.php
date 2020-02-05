@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -24,32 +25,33 @@
 
 require '../include/sysadmin_auth.inc';
 
-function ebelDropdown($dropdownID, $required = false) {
-  if ($required) {
-    $html = "<select name=\"$dropdownID\" required>\n";
-  } else {
-    $html = "<select name=\"$dropdownID\">\n";
-  }
-  $html .= "<option value=\"\"></option>\n";
-  for ($individual_category=0; $individual_category<=100; $individual_category++) {
-    $html .= "<option value=\"$individual_category\">$individual_category%</option>\n";
-  }
-  $html .= "</select>\n";
-  return $html;
+function ebelDropdown($dropdownID, $required = false)
+{
+    if ($required) {
+        $html = "<select name=\"$dropdownID\" required>\n";
+    } else {
+        $html = "<select name=\"$dropdownID\">\n";
+    }
+    $html .= "<option value=\"\"></option>\n";
+    for ($individual_category = 0; $individual_category <= 100; $individual_category++) {
+        $html .= "<option value=\"$individual_category\">$individual_category%</option>\n";
+    }
+    $html .= "</select>\n";
+    return $html;
 }
   
 if (isset($_POST['submit'])) {
-  $result = $mysqli->prepare("INSERT INTO ebel_grid_templates VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-  $result->bind_param('iiiiiiiiiiiiiiiiiis', $_POST['EE'], $_POST['EI'], $_POST['EN'], $_POST['ME'], $_POST['MI'], $_POST['MN'], $_POST['HE'], $_POST['HI'], $_POST['HN'], $_POST['EE2'], $_POST['EI2'], $_POST['EN2'], $_POST['ME2'], $_POST['MI2'], $_POST['MN2'], $_POST['HE2'], $_POST['HI2'], $_POST['HN2'], $_POST['name']);
-  $result->execute();
-  $result->close();
+    $result = $mysqli->prepare('INSERT INTO ebel_grid_templates VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    $result->bind_param('iiiiiiiiiiiiiiiiiis', $_POST['EE'], $_POST['EI'], $_POST['EN'], $_POST['ME'], $_POST['MI'], $_POST['MN'], $_POST['HE'], $_POST['HI'], $_POST['HN'], $_POST['EE2'], $_POST['EI2'], $_POST['EN2'], $_POST['ME2'], $_POST['MI2'], $_POST['MN2'], $_POST['HE2'], $_POST['HI2'], $_POST['HN2'], $_POST['name']);
+    $result->execute();
+    $result->close();
 
-  $mysqli->close();
+    $mysqli->close();
   
-  header("location: list_ebel_grids.php");
-  exit();
+    header('location: list_ebel_grids.php');
+    exit();
 } else {
-?>
+    ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -71,12 +73,12 @@ if (isset($_POST['submit'])) {
 </head>
   
 <body>
-  <?php
+    <?php
     require '../include/ebel_grid_options.php';
-		require '../include/toprightmenu.inc';
+        require '../include/toprightmenu.inc';
 
-		echo draw_toprightmenu();
-  ?>
+        echo draw_toprightmenu();
+    ?>
   <div id="content">
     
   <div class="head_title">
@@ -115,7 +117,7 @@ if (isset($_POST['submit'])) {
   </form>
   </blockquote>
 </div>
-<?php
+    <?php
 }
 ?>
 </body>

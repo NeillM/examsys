@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,38 +27,34 @@
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
-  
 $keywordIDs = check_var('keywordID', 'POST', true, false, true);
-
 $keyword_names = array();
-$result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE id IN (" . substr($keywordIDs, 1) . ")");
+$result = $mysqli->prepare('SELECT keyword FROM keywords_user WHERE id IN (' . substr($keywordIDs, 1) . ')');
 $result->execute();
 $result->bind_result($keyword);
 while ($result->fetch()) {
-  $keyword_names[] = $keyword;
+    $keyword_names[] = $keyword;
 }
 $result->close();
-
 if (count($keyword_names) < substr_count($keywordIDs, ',')) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 
 $keyword_list = explode(',', substr($keywordIDs, 1));
 foreach ($keyword_list as $individualID) {
-  // Delete the keyword
-  $result = $mysqli->prepare("DELETE FROM keywords_user WHERE id = ?");
-  $result->bind_param('i', $individualID);
-  $result->execute();  
-  $result->close();
-
-  // Remove the deleted keyword from questions
-  $result = $mysqli->prepare("DELETE FROM keywords_question WHERE keywordID = ?");
-  $result->bind_param('i', $individualID);
-  $result->execute();  
-  $result->close();
+// Delete the keyword
+    $result = $mysqli->prepare('DELETE FROM keywords_user WHERE id = ?');
+    $result->bind_param('i', $individualID);
+    $result->execute();
+    $result->close();
+// Remove the deleted keyword from questions
+    $result = $mysqli->prepare('DELETE FROM keywords_question WHERE keywordID = ?');
+    $result->bind_param('i', $individualID);
+    $result->execute();
+    $result->close();
 }
 
 $render = new render($configObject);

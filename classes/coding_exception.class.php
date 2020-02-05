@@ -22,13 +22,15 @@
  * @copyright Copyright (c) 2015 The University of Nottingham
  * @package core
  */
-class coding_exception extends Exception {
+class coding_exception extends Exception
+{
   /**
    * Constructor for the exception.
    *
    * @param string $message
    */
-  public function __construct($message) {
-    parent::__construct($message);
-  }
+    public function __construct($message)
+    {
+        parent::__construct($message);
+    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -27,12 +28,12 @@ require_once '../include/errors.php';
 
 $faculties = 0;
 $faculty_list = array();
-$result = $mysqli->prepare("SELECT id, code, name FROM faculty WHERE deleted IS NULL ORDER BY name");
+$result = $mysqli->prepare('SELECT id, code, name FROM faculty WHERE deleted IS NULL ORDER BY name');
 $result->execute();
 $result->bind_result($facultyID, $code, $name);
 while ($result->fetch()) {
-  $faculty_list[] = array($facultyID, $code, $name);
-  $faculties++;
+    $faculty_list[] = array($facultyID, $code, $name);
+    $faculties++;
 }
 $result->close();
 
@@ -57,8 +58,8 @@ $result->close();
 <?php
   require '../include/school_options.inc';
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
+    
+    echo draw_toprightmenu();
 ?>
 <div id="content">
 
@@ -78,10 +79,10 @@ $result->close();
     <tr><td class="field"><?php echo $string['school']; ?></td><td><input type="text" size="70" maxlength="255" name="school" id="school" value="" placeholder="" required /></td></tr>
     <tr><td class="field"><?php echo $string['faculty']; ?></td><td><select name="facultyID">
     <?php
-      foreach ($faculty_list as $faculty) {
+    foreach ($faculty_list as $faculty) {
         $selected = ($faculty[0] == $faculty) ? ' selected="selected"' : '';
         echo "<option value=\"{$faculty[0]}\"$selected>{$faculty[1]} {$faculty[2]}</option>\n";
-      }
+    }
     ?>
     </select></td></tr>
     <tr><td class="field"><?php echo $string['code'] ?></td><td><input type="text" size="30" maxlength="30" name="code" value=""/></td></tr>
@@ -92,14 +93,14 @@ $result->close();
     <tr><td class="field"><?php echo $string['externalsys'] ?></td><td><select name="externalsys">
     <?php
       echo "<option value=\"\"></option>\n";
-      foreach ($extsys as $i => $s) {
+    foreach ($extsys as $i => $s) {
         if (isset($externalsys) and $s == $externalsys) {
-          $selected = "selected";
+            $selected = 'selected';
         } else {
-          $selected = "";
+            $selected = '';
         }
         echo "<option value=\"$s\" $selected>$s</option>\n";
-      }
+    }
     ?>
     </select></td></tr>
     <tr><td class="field"><?php echo $string['externalid'] ?></td><td><input type="text" size="30" maxlength="255" name="externalid" value=""></td></tr>
@@ -112,7 +113,7 @@ $result->close();
 // JS utils dataset.
 $render = new render($configObject);
 $miscdataset['name'] = 'dataset';
-$miscdataset['attributes']['posturl'] = "do_add_school.php";
+$miscdataset['attributes']['posturl'] = 'do_add_school.php';
 $render->render($miscdataset, array(), 'dataset.html');
 ?>
 </body>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,12 +25,14 @@ namespace testing\unittest;
  * @copyright Copyright (c) 2017 onwards The University of Nottingham
  * @package tests
  */
-class paramtest extends UnitTest {
+class paramtest extends UnitTest
+{
     /**
      * Test clean INT with range
      * @group param
      */
-    public function test_clean_int_with_range() {
+    public function test_clean_int_with_range()
+    {
         $ok = \param::clean(1, \param::INT, array('default' => null, 'min_range' => 0, 'max_range' => 8));
         $bad = \param::clean(9, \param::INT, array('default' => null, 'min_range' => 0, 'max_range' => 8));
         $this->assertEquals(1, $ok);
@@ -40,7 +43,8 @@ class paramtest extends UnitTest {
      * Test clean INT no options
      * @group param
      */
-    public function test_clean_int_not_options() {
+    public function test_clean_int_not_options()
+    {
         $bad = \param::clean(9, \param::INT);
         $this->assertEquals(9, $bad);
     }
@@ -49,7 +53,8 @@ class paramtest extends UnitTest {
      * Test clean REGEXP
      * @group param
      */
-    public function test_clean_regexp() {
+    public function test_clean_regexp()
+    {
         $regexp = '#^[A-Z][0-9]$#';
         $ok = \param::clean('A1', \param::REGEXP, array('default' => null, 'regexp' => $regexp));
         $bad = \param::clean('A', \param::REGEXP, array('default' => null, 'regexp' => $regexp));

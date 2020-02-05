@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -44,8 +45,8 @@
 <body>
 <?php
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
+    
+    echo draw_toprightmenu();
 ?>
 
 <div id="content">
@@ -74,10 +75,10 @@
   $result->execute();
   $result->store_result();
   $result->bind_result($updated, $display_updated, $module_no, $enrolement_no, $deletion_no);
-  while ($result->fetch()) {
+while ($result->fetch()) {
     echo "<tr id=\"$updated\" class=\"l\"><td style=\"padding-left:10px\">$display_updated</td><td class=\"no\">$module_no</td><td class=\"no\">$enrolement_no</td><td class=\"no\">$deletion_no</td><td></td></tr>\n";
     $id++;
-  }
+}
 ?>
 </tbody>
 </table>

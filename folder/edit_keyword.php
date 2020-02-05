@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -24,11 +25,9 @@
 
 require '../include/staff_auth.inc';
 require '../include/errors.php';
-
 $keywordID = param::required('keywordID', param::INT, param::FETCH_GET);
 $module = param::optional('module', '', param::INT, param::FETCH_REQUEST);
-
-$result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE id = ?");
+$result = $mysqli->prepare('SELECT keyword FROM keywords_user WHERE id = ?');
 $result->bind_param('i', $keywordID);
 $result->execute();
 $result->bind_result($keyword);

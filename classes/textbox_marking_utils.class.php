@@ -25,7 +25,8 @@
  */
 
 
-Class textbox_marking_utils {
+class textbox_marking_utils
+{
 
   /**
   * Returns an array of user IDs who are down for second marking.
@@ -34,29 +35,31 @@ Class textbox_marking_utils {
   * @param $db      - Database connection
   * @return array   - List of users who are set for remarking.
   */
-  static function get_remark_users($paperID, $db) {
-    $remark_array = array();
+    static function get_remark_users($paperID, $db)
+    {
+        $remark_array = array();
     
-    $result = $db->prepare("SELECT userID FROM textbox_remark WHERE paperID = ?");
-    $result->bind_param('i', $paperID);
-    $result->execute();
-    $result->bind_result($userID);
-    while ($result->fetch()) {
-      $remark_array[$userID] = true;
+        $result = $db->prepare('SELECT userID FROM textbox_remark WHERE paperID = ?');
+        $result->bind_param('i', $paperID);
+        $result->execute();
+        $result->bind_result($userID);
+        while ($result->fetch()) {
+            $remark_array[$userID] = true;
+        }
+        $result->close();
+    
+        return $remark_array;
     }
-    $result->close();
-    
-    return $remark_array;
-  }
     
   /**
    * Converts a time/date from 20140301103059 into 01/03/2014 10:30.
    * @param string $original - The date that needs to be convered.
    * @return string
    */
-  static function nicedate($original) {
-    return substr($original, 6, 2) . '/' . substr($original, 4, 2) . '/' . substr($original, 0, 4) . ' ' . substr($original, 8, 2) . ':' . substr($original, 10, 2);
-  }
+    static function nicedate($original)
+    {
+        return substr($original, 6, 2) . '/' . substr($original, 4, 2) . '/' . substr($original, 0, 4) . ' ' . substr($original, 8, 2) . ':' . substr($original, 10, 2);
+    }
 
   /**
    * Highlight key terms in user answer.
@@ -65,13 +68,14 @@ Class textbox_marking_utils {
    * @param string $answer user answer
    * @return string
    */
-  static function higlightterms($settings, $answer) {
-    if (isset($settings['terms'])) {
-      $correct_answers = json_decode($settings['terms']);
-      foreach ($correct_answers as $single_answer) {
-        $answer = str_ireplace($single_answer, '<span class="highlight">' . $single_answer . '</span>', $answer);
-      }
+    static function higlightterms($settings, $answer)
+    {
+        if (isset($settings['terms'])) {
+            $correct_answers = json_decode($settings['terms']);
+            foreach ($correct_answers as $single_answer) {
+                $answer = str_ireplace($single_answer, '<span class="highlight">' . $single_answer . '</span>', $answer);
+            }
+        }
+        return $answer;
     }
-    return $answer;
-  }
 }

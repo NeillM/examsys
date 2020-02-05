@@ -24,4 +24,3 @@ $string['completemsg'] = 'Your paper and questions have been copied but the foll
 $string['filecopywarning'] = 'File Copy Warning';
 $string['calculation_link_update_error'] = 'Error recalculating links for linked calculation questions - <strong>\'%s\'</strong>';
 $string['paperlockedwarning'] = 'This paper is now locked and cannot be modified.';
-?>

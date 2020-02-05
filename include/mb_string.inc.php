@@ -23,33 +23,35 @@
  */
 
 if (!function_exists('mb_ucasefirst')) {
-  function mb_ucasefirst($str, $enc='UTF-8') {
-    $first = mb_substr($str, 0, 1, $enc);
-    $rest = mb_substr($str, 1, mb_strlen($str, $enc) - 1, $enc);
+    function mb_ucasefirst($str, $enc = 'UTF-8')
+    {
+        $first = mb_substr($str, 0, 1, $enc);
+        $rest = mb_substr($str, 1, mb_strlen($str, $enc) - 1, $enc);
 
-    return mb_strtoupper($first, $enc) . $rest;
-  }
+        return mb_strtoupper($first, $enc) . $rest;
+    }
 }
 
 // Taken from:
 // SiT (Support Incident Tracker) - Support call tracking system
 // Copyright (C) 2010-2011 The Support Incident Tracker Project
 // Copyright (C) 2000-2009 Salford Software Ltd. and Contributors
-if (!function_exists("mb_substr_replace")) {
+if (!function_exists('mb_substr_replace')) {
 
-  function mb_substr_replace($string, $replacement, $start, $length = null, $encoding = null) {
-    if ($encoding == null) {
-      if ($length == null) {
-        return mb_substr($string, 0, $start) . $replacement;
-      } else {
-        return mb_substr($string, 0, $start) . $replacement . mb_substr($string, $start + $length);
-      }
-    } else {
-      if ($length == null) {
-        return mb_substr($string, 0, $start, $encoding) . $replacement;
-      } else {
-        return mb_substr($string, 0, $start, $encoding) . $replacement . mb_substr($string, $start + $length, mb_strlen($string, $encoding), $encoding);
-      }
+    function mb_substr_replace($string, $replacement, $start, $length = null, $encoding = null)
+    {
+        if ($encoding == null) {
+            if ($length == null) {
+                return mb_substr($string, 0, $start) . $replacement;
+            } else {
+                return mb_substr($string, 0, $start) . $replacement . mb_substr($string, $start + $length);
+            }
+        } else {
+            if ($length == null) {
+                return mb_substr($string, 0, $start, $encoding) . $replacement;
+            } else {
+                return mb_substr($string, 0, $start, $encoding) . $replacement . mb_substr($string, $start + $length, mb_strlen($string, $encoding), $encoding);
+            }
+        }
     }
-  }
 }

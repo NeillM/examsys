@@ -17,13 +17,14 @@
 
 /**
  * Utility class to handle URLs.
- * 
+ *
  * @author Pedro Ferreira <pedro.ferreira1@nottingham.ac.uk>
  * @version 1.0
  * @copyright Copyright (c) 2017 onwards The University of Nottingham
  * @package classes
  */
-class Url {
+class Url
+{
 
     /**
      * URL part names.
@@ -54,7 +55,8 @@ class Url {
      * @param string $url
      * @throws \InvalidArgumentException
      */
-    public function __construct($url) {
+    public function __construct($url)
+    {
         if (false === filter_var($url, FILTER_VALIDATE_URL)) {
             throw new \InvalidArgumentException('Invalid URL: ' . $url);
         }
@@ -69,7 +71,8 @@ class Url {
      * @return \Url
      * @throws \InvalidArgumentException
      */
-    public static function fromGlobals(array $server = null) {
+    public static function fromGlobals(array $server = null)
+    {
         if (null === $server) {
             $server = $_SERVER;
         }
@@ -94,7 +97,8 @@ class Url {
      *
      * @return void
      */
-    protected function parse() {
+    protected function parse()
+    {
         $this->parts = parse_url($this->url);
     }
 
@@ -105,7 +109,8 @@ class Url {
      * @param string|null $default
      * @return string|null
      */
-    public function getPart($name, $default = null) {
+    public function getPart($name, $default = null)
+    {
         if (null === $this->parts) {
             $this->parse();
         }
@@ -118,7 +123,8 @@ class Url {
      *
      * @return string
      */
-    public function getScheme() {
+    public function getScheme()
+    {
         return $this->getPart(static::SCHEME, 'http');
     }
 
@@ -127,7 +133,8 @@ class Url {
      *
      * @return string
      */
-    public function getHost() {
+    public function getHost()
+    {
         return $this->getPart(static::HOST, 'localhost');
     }
 
@@ -136,7 +143,8 @@ class Url {
      *
      * @return int
      */
-    public function getPort() {
+    public function getPort()
+    {
         return (int) $this->getPart(static::PORT, 80);
     }
 
@@ -145,7 +153,8 @@ class Url {
      *
      * @return string|null
      */
-    public function getUser() {
+    public function getUser()
+    {
         return $this->getPart(static::USER);
     }
 
@@ -154,7 +163,8 @@ class Url {
      *
      * @return string|null
      */
-    public function getPass() {
+    public function getPass()
+    {
         return $this->getPart(static::PASS);
     }
 
@@ -163,7 +173,8 @@ class Url {
      *
      * @return string
      */
-    public function getPath() {
+    public function getPath()
+    {
         return $this->getPart(static::PATH, '/');
     }
 
@@ -172,7 +183,8 @@ class Url {
      *
      * @return string|null
      */
-    public function getQuery() {
+    public function getQuery()
+    {
         return $this->getPart(static::QUERY);
     }
 
@@ -181,7 +193,8 @@ class Url {
      *
      * @return string|null
      */
-    public function getFragment() {
+    public function getFragment()
+    {
         return $this->getPart(static::FRAGMENT);
     }
 
@@ -190,7 +203,8 @@ class Url {
      *
      * @return string
      */
-    public function getRelative() {
+    public function getRelative()
+    {
         $relative = $this->getPath();
 
         if (null !== $query = $this->getQuery()) {
@@ -209,7 +223,8 @@ class Url {
      *
      * @return string
      */
-    public function getCanonical() {
+    public function getCanonical()
+    {
         $canonical = $this->getScheme() . '://';
 
         if (null !== $user = $this->getUser()) {
@@ -240,7 +255,8 @@ class Url {
      *
      * @return array
      */
-    public function getQueryAsArray() {
+    public function getQueryAsArray()
+    {
         $query = $this->getQuery();
 
         if (null === $query or '' === trim($query)) {
@@ -263,7 +279,8 @@ class Url {
      * @param array $values
      * @return Url
      */
-    public function setQueryValues(array $values) {
+    public function setQueryValues(array $values)
+    {
         $this->parse();
 
         if (0 === count($values)) {
@@ -289,7 +306,8 @@ class Url {
      *
      * @return Uri
      */
-    public function setQueryValue($name, $value) {
+    public function setQueryValue($name, $value)
+    {
         $values = $this->getQueryAsArray();
         $values[$name] = $value;
 
@@ -298,10 +316,11 @@ class Url {
 
     /**
      * Output current URL in canonical format.
-     * 
+     *
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         return $this->getCanonical();
     }
 }

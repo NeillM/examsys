@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -27,58 +28,59 @@ require '../include/errors.php';
   
 $gridID = check_var('id', 'GET', true, false, true);
 
-function ebelDropdown($dropdownID, $default, $required = false) {
-  if ($required) {
-    $html = "<select name=\"$dropdownID\" required>\n";
-  } else {
-    $html = "<select name=\"$dropdownID\">\n";
-  }
-  $html .= "<option value=\"\"></option>\n";
-  for ($individual_category=0; $individual_category<=100; $individual_category++) {
-    if ($individual_category == $default) {
-      $html .= "<option value=\"$individual_category\" selected>$individual_category%</option>\n";
+function ebelDropdown($dropdownID, $default, $required = false)
+{
+    if ($required) {
+        $html = "<select name=\"$dropdownID\" required>\n";
     } else {
-      $html .= "<option value=\"$individual_category\">$individual_category%</option>\n";
+        $html = "<select name=\"$dropdownID\">\n";
     }
-  }
-  $html .= "</select>\n";
-  return $html;
+    $html .= "<option value=\"\"></option>\n";
+    for ($individual_category = 0; $individual_category <= 100; $individual_category++) {
+        if ($individual_category == $default) {
+            $html .= "<option value=\"$individual_category\" selected>$individual_category%</option>\n";
+        } else {
+            $html .= "<option value=\"$individual_category\">$individual_category%</option>\n";
+        }
+    }
+    $html .= "</select>\n";
+    return $html;
 }
 
 if (isset($_POST['submit'])) {
-  $types = array('EE', 'EI', 'EN', 'ME', 'MI', 'MN', 'HE', 'HI', 'HN', 'EE2', 'EI2', 'EN2', 'ME2', 'MI2', 'MN2', 'HE2', 'HI2', 'HN2');
-  foreach ($types as $type) {
-    if (isset($_POST[$type])) {
-      $$type = (int)$_POST[$type];
-    } else {
-      $$type = 0;
+    $types = array('EE', 'EI', 'EN', 'ME', 'MI', 'MN', 'HE', 'HI', 'HN', 'EE2', 'EI2', 'EN2', 'ME2', 'MI2', 'MN2', 'HE2', 'HI2', 'HN2');
+    foreach ($types as $type) {
+        if (isset($_POST[$type])) {
+            $$type = (int)$_POST[$type];
+        } else {
+            $$type = 0;
+        }
     }
-  }
   
-  $result = $mysqli->prepare("UPDATE ebel_grid_templates SET EE = ?, EI = ?, EN = ?, ME = ?, MI = ?, MN = ?, HE = ?, HI = ?, HN = ?, EE2 = ?, EI2 = ?, EN2 = ?, ME2 = ?, MI2 = ?, MN2 = ?, HE2 = ?, HI2 = ?, HN2 = ?, name = ? WHERE id = ?");
-  $result->bind_param('iiiiiiiiiiiiiiiiiisi', $EE, $EI, $EN, $ME, $MI, $MN, $HE, $HI, $HN, $EE2, $EI2, $EN2, $ME2, $MI2, $MN2, $HE2, $HI2, $HN2, $_POST['name'], $gridID);
-  $result->execute();
-  $result->close();
-  
-  $mysqli->close();
-  
-  header("location: list_ebel_grids.php");
-  exit();
-} else {
-  $result = $mysqli->prepare("SELECT EE, EI, EN, ME, MI, MN, HE, HI, HN, EE2, EI2, EN2, ME2, MI2, MN2, HE2, HI2, HN2, name FROM ebel_grid_templates WHERE id = ?");
-  $result->bind_param('i', $gridID);
-  $result->execute();
-  $result->store_result();
-  $result->bind_result($EE, $EI, $EN, $ME, $MI, $MN, $HE, $HI, $HN, $EE2, $EI2, $EN2, $ME2, $MI2, $MN2, $HE2, $HI2, $HN2, $name);
-  $result->fetch();
-  if ($result->num_rows == 0) {
+    $result = $mysqli->prepare('UPDATE ebel_grid_templates SET EE = ?, EI = ?, EN = ?, ME = ?, MI = ?, MN = ?, HE = ?, HI = ?, HN = ?, EE2 = ?, EI2 = ?, EN2 = ?, ME2 = ?, MI2 = ?, MN2 = ?, HE2 = ?, HI2 = ?, HN2 = ?, name = ? WHERE id = ?');
+    $result->bind_param('iiiiiiiiiiiiiiiiiisi', $EE, $EI, $EN, $ME, $MI, $MN, $HE, $HI, $HN, $EE2, $EI2, $EN2, $ME2, $MI2, $MN2, $HE2, $HI2, $HN2, $_POST['name'], $gridID);
+    $result->execute();
     $result->close();
-    $contactemail = support::get_email();
-    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
-  }
-  $result->close();
-?>
+  
+    $mysqli->close();
+  
+    header('location: list_ebel_grids.php');
+    exit();
+} else {
+    $result = $mysqli->prepare('SELECT EE, EI, EN, ME, MI, MN, HE, HI, HN, EE2, EI2, EN2, ME2, MI2, MN2, HE2, HI2, HN2, name FROM ebel_grid_templates WHERE id = ?');
+    $result->bind_param('i', $gridID);
+    $result->execute();
+    $result->store_result();
+    $result->bind_result($EE, $EI, $EN, $ME, $MI, $MN, $HE, $HI, $HN, $EE2, $EI2, $EN2, $ME2, $MI2, $MN2, $HE2, $HI2, $HN2, $name);
+    $result->fetch();
+    if ($result->num_rows == 0) {
+        $result->close();
+        $contactemail = support::get_email();
+        $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+        $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    }
+    $result->close();
+    ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -100,12 +102,12 @@ if (isset($_POST['submit'])) {
 </head>
   
 <body>
-  <?php
+    <?php
     require '../include/ebel_grid_options.php';
-		require '../include/toprightmenu.inc';
+        require '../include/toprightmenu.inc';
 
-		echo draw_toprightmenu();
-  ?>
+        echo draw_toprightmenu();
+    ?>
   <div id="content">
   
   <div class="head_title">
@@ -141,7 +143,7 @@ if (isset($_POST['submit'])) {
   </form>
   </blockquote>
 </div>
-<?php
+    <?php
 }
 ?>
 </body>

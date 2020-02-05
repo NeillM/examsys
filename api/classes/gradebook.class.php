@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -25,19 +26,21 @@ namespace api;
 /**
  * Gradebook class
  */
-class gradebook extends \api\abstractpublish {
+class gradebook extends \api\abstractpublish
+{
     
     // Language pack component.
     private $langcomponent = 'api/gradebook';
        
     /**
      * @brief Get data.
-     * @param string $filtername 
+     * @param string $filtername
      * @param integer $filterid
      * @param string $externalsys
      * @return array
      */
-    public function get($filtername, $filterid, $externalsys = null) {
+    public function get($filtername, $filterid, $externalsys = null)
+    {
         $langpack = new \langpack();
         $gradebook = new \gradebook($this->db);
         switch ($filtername) {
@@ -59,5 +62,4 @@ class gradebook extends \api\abstractpublish {
             return array('BAD', array(sprintf($langpack->get_string($this->langcomponent, 'notfound'), $filtername, $filterid)));
         }
     }
-    
 }

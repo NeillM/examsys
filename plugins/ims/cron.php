@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -22,11 +23,12 @@
  * @copyright Copyright (c) 2015 The University of Nottingham
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 use plugins\ims\ims_enterprise;
 
 // Only run from the command line!
 if (PHP_SAPI != 'cli') {
-  die("Please run this test from CLI!\n");
+    die("Please run this test from CLI!\n");
 }
 
 set_time_limit(0);
@@ -39,11 +41,16 @@ require_once '../../include/autoload.inc.php';
 autoloader::init();
 
 $configObject = \Config::get_instance();
-if ($configObject->get_setting('core', 'cfg_ims_enabled')) { 
-    
-    $mysqli = \DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_sysadmin_user'),
-        $configObject->get('cfg_db_sysadmin_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'),
-        $notice, $configObject->get('dbclass'));
+if ($configObject->get_setting('core', 'cfg_ims_enabled')) {
+    $mysqli = \DBUtils::get_mysqli_link(
+        $configObject->get('cfg_db_host'),
+        $configObject->get('cfg_db_sysadmin_user'),
+        $configObject->get('cfg_db_sysadmin_passwd'),
+        $configObject->get('cfg_db_database'),
+        $configObject->get('cfg_db_charset'),
+        $notice,
+        $configObject->get('dbclass')
+    );
 
     $ims_enterprise = new ims_enterprise($mysqli);
     $ims_enterprise->process();

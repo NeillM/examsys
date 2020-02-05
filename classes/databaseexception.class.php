@@ -22,4 +22,7 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-class DatabaseException extends Exception { }
+class DatabaseException extends Exception
+{
+
+}

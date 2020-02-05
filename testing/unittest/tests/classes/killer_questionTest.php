@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2017 onwards The University of Nottingham
  * @package tests
  */
-class Killer_Questiontest extends unittestdatabase {
+class Killer_Questiontest extends unittestdatabase
+{
     /**
      * @var array Storage for paper data in tests
      */
@@ -39,34 +41,35 @@ class Killer_Questiontest extends unittestdatabase {
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $datagenerator = $this->get_datagenerator('papers', 'core');
-        $this->pid = $datagenerator->create_paper(array('papertitle' => "test osce",
-            'startdate' => "2018-02-19 00:00:00",
-            'enddate' => "2032-02-02 00:00:00",
+        $this->pid = $datagenerator->create_paper(array('papertitle' => 'test osce',
+            'startdate' => '2018-02-19 00:00:00',
+            'enddate' => '2032-02-02 00:00:00',
             'duration' => 60,
-            'paperowner' => "admin",
-            'labs' => "1",
-            'papertype' => "4",
-            'modulename' => "Training Module"));
-        $this->pid2 = $datagenerator->create_paper(array('papertitle' => "test osce 2",
-            'startdate' => "2018-02-19 00:00:00",
-            'enddate' => "2032-02-02 00:00:00",
+            'paperowner' => 'admin',
+            'labs' => '1',
+            'papertype' => '4',
+            'modulename' => 'Training Module'));
+        $this->pid2 = $datagenerator->create_paper(array('papertitle' => 'test osce 2',
+            'startdate' => '2018-02-19 00:00:00',
+            'enddate' => '2032-02-02 00:00:00',
             'duration' => 60,
-            'paperowner' => "admin",
-            'labs' => "1",
-            'papertype' => "4",
-            'modulename' => "Training Module"));
+            'paperowner' => 'admin',
+            'labs' => '1',
+            'papertype' => '4',
+            'modulename' => 'Training Module'));
         $datagenerator = $this->get_datagenerator('questions', 'core');
-        $this->question = $datagenerator->create_question(array("user" => "admin",
-            "type" => 'true_false',
-            "leadin" => "Is the world round or flat?",
-            "scenario" => "This is a test"));
+        $this->question = $datagenerator->create_question(array('user' => 'admin',
+            'type' => 'true_false',
+            'leadin' => 'Is the world round or flat?',
+            'scenario' => 'This is a test'));
         $datagenerator->add_question_to_paper(array('paper' => $this->pid['id'], 'question' => $this->question['id'], 'screen' => 1, 'displaypos' => 1));
-        $this->question2 = $datagenerator->create_question(array("user" => "admin",
-            "type" => 'true_false',
-            "leadin" => "Is the world round?",
-            "scenario" => "This is a test2"));
+        $this->question2 = $datagenerator->create_question(array('user' => 'admin',
+            'type' => 'true_false',
+            'leadin' => 'Is the world round?',
+            'scenario' => 'This is a test2'));
         $datagenerator->add_question_to_paper(array('paper' => $this->pid['id'], 'question' => $this->question2['id'], 'screen' => 1, 'displaypos' => 1));
     }
 
@@ -74,7 +77,8 @@ class Killer_Questiontest extends unittestdatabase {
      * Test checks a questions a killer
      * @group paper
      */
-    public function test_is_a_killer_question() {
+    public function test_is_a_killer_question()
+    {
         // Checks a question is killer or not.
         $killer_question = new Killer_Question($this->pid['id'], $this->db);
         $this->assertFalse($killer_question->is_killer_question(1));
@@ -84,7 +88,8 @@ class Killer_Questiontest extends unittestdatabase {
      * Test sets a killer question
      * @group paper
      */
-    public function test_set_question() {
+    public function test_set_question()
+    {
         $killer_question = new Killer_Question($this->pid['id'], $this->db);
         $this->assertEquals(0, count($killer_question->get_questions()));
     }
@@ -93,7 +98,8 @@ class Killer_Questiontest extends unittestdatabase {
      * Test counts killer questions by paper
      * @group paper
      */
-    public function test_get_questions() {
+    public function test_get_questions()
+    {
         $killer_question = new Killer_Question($this->pid['id'], $this->db);
         $killer_question->set_question($this->question['id']);
         $killer_question->save();
@@ -104,7 +110,8 @@ class Killer_Questiontest extends unittestdatabase {
      * Test checks copy killer questions from one paper to the other
      * @group paper
      */
-    public function test_copy_killer_questions() {
+    public function test_copy_killer_questions()
+    {
         $killer_question = new Killer_Question($this->pid['id'], $this->db);
         $killer_question->set_question($this->question['id']);
         $killer_question->save();
@@ -129,7 +136,8 @@ class Killer_Questiontest extends unittestdatabase {
      * Test unsets the killer question
      * @group paper
      */
-    public function test_unset_question() {
+    public function test_unset_question()
+    {
         $killer_question = new Killer_Question($this->pid['id'], $this->db);
         $killer_question->unset_question($this->question['id']);
         $killer_question->save();

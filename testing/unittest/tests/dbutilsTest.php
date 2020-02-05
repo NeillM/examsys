@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
-class dbutilstest extends unittestdatabase {
+class dbutilstest extends unittestdatabase
+{
     /**
      * @var array Storage for campus data in tests
      */
@@ -34,16 +36,19 @@ class dbutilstest extends unittestdatabase {
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $datagenerator = $this->get_datagenerator('labs', 'core');
-        $this->campus = $datagenerator->create_campus(array('name' => "Main Campus", 'isdefault' => 1));;
+        $this->campus = $datagenerator->create_campus(array('name' => 'Main Campus', 'isdefault' => 1));
+        ;
     }
 
     /**
      * Test generic db insert function
      * @group dbutils
      */
-    public function test_exec_db_insert() {
+    public function test_exec_db_insert()
+    {
         $table = 'campus';
         $params = array('name' => array('s', 'Test Campus'), 'isdefault' => array('i', 0));
         DBUtils::exec_db_insert($table, $params, $this->db);
@@ -65,40 +70,41 @@ class dbutilstest extends unittestdatabase {
      * Test function check_sqlparams
      * @group dbutils
      */
-    public function test_check_sqlparams() {
-        $bindtype = array("i", "i", "s");
-        $bindvalue = array(4, 7, "hello");
-        $sql = "select something from somewhere where thisis = ? and thatis = ? and theyall = ? ";
+    public function test_check_sqlparams()
+    {
+        $bindtype = array('i', 'i', 's');
+        $bindvalue = array(4, 7, 'hello');
+        $sql = 'select something from somewhere where thisis = ? and thatis = ? and theyall = ? ';
         $checker = DBUtils::check_sqlparams($bindtype, $bindvalue, $sql);
         $this->assertTrue($checker);
 
-        $bindtype = array("i", "i", "s");
-        $bindvalue = array("4", 7, "hello"); // "4" is not int
-        $sql = "select something from somewhere where thisis = ? and thatis = ? and theyall = ? ";
+        $bindtype = array('i', 'i', 's');
+        $bindvalue = array('4', 7, 'hello'); // "4" is not int
+        $sql = 'select something from somewhere where thisis = ? and thatis = ? and theyall = ? ';
         $checker = DBUtils::check_sqlparams($bindtype, $bindvalue, $sql);
         $this->assertFalse($checker);
 
-        $bindtype = array("i", "i", "s", "d"); // More types than values
-        $bindvalue = array(4, 7, "hello");
-        $sql = "select something from somewhere where thisis = ? and thatis = ? and theyall = ? ";
+        $bindtype = array('i', 'i', 's', 'd'); // More types than values
+        $bindvalue = array(4, 7, 'hello');
+        $sql = 'select something from somewhere where thisis = ? and thatis = ? and theyall = ? ';
         $checker = DBUtils::check_sqlparams($bindtype, $bindvalue, $sql);
         $this->assertFalse($checker);
 
-        $bindtype = array("i", "i", "s");
-        $bindvalue = array(4, 7, "hello", "100"); // More value than types
-        $sql = "select something from somewhere where thisis = ? and thatis = ? and theyall = ? ";
+        $bindtype = array('i', 'i', 's');
+        $bindvalue = array(4, 7, 'hello', '100'); // More value than types
+        $sql = 'select something from somewhere where thisis = ? and thatis = ? and theyall = ? ';
         $checker = DBUtils::check_sqlparams($bindtype, $bindvalue, $sql);
         $this->assertFalse($checker);
 
-        $bindtype = array("i", "i", "s");
-        $bindvalue = array(4, 7, "hello");
-        $sql = "select something from somewhere where thisis = ? and thatis = ? and theyall = ? but notwant = ?"; // More ? than value/type
+        $bindtype = array('i', 'i', 's');
+        $bindvalue = array(4, 7, 'hello');
+        $sql = 'select something from somewhere where thisis = ? and thatis = ? and theyall = ? but notwant = ?'; // More ? than value/type
         $checker = DBUtils::check_sqlparams($bindtype, $bindvalue, $sql);
         $this->assertFalse($checker);
 
-        $bindtype = array("i", "i", "s");
+        $bindtype = array('i', 'i', 's');
         $bindvalue = array(4, 7, 5); // 5 is not string
-        $sql = "select something from somewhere where thisis = ? and thatis = ? and theyall = ? ";
+        $sql = 'select something from somewhere where thisis = ? and thatis = ? and theyall = ? ';
         $checker = DBUtils::check_sqlparams($bindtype, $bindvalue, $sql);
         $this->assertFalse($checker);
     }
@@ -107,7 +113,8 @@ class dbutilstest extends unittestdatabase {
      * Test generic db upadte function
      * @group dbutils
      */
-    public function test_exec_db_update() {
+    public function test_exec_db_update()
+    {
         $table = 'campus';
         $tableid = 'id';
         $params = array('isdefault' => array('i', 0));

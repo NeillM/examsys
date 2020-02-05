@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -84,7 +85,7 @@ if (isset($_POST['Uninstall']) or isset($_POST['Update'])) {
         }
     }
     if (count($error) == 0) {
-        header("location: index.php", true, 303);
+        header('location: index.php', true, 303);
         exit();
     }
 }
@@ -97,9 +98,9 @@ $lang['dbpasswd'] = $string['dbpasswd'];
 $lang['dbsettings'] = $string['dbsettings'];
 $lang['update'] = $string['update'];
 $lang['uninstall'] = $string['uninstall'];
-$additionaljs = "";
-$addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . $config['cfg_root_path'] . "/css/list.css\"/>";
-$breadcrumb = array($string['home'] => "../index.php", $string['administrativetools'] => "../admin/index.php");
+$additionaljs = '';
+$addtionalcss = '<link rel="stylesheet" type="text/css" href="' . $config['cfg_root_path'] . '/css/list.css"/>';
+$breadcrumb = array($string['home'] => '../index.php', $string['administrativetools'] => '../admin/index.php');
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('', '', $lang, $toprightmenu, 'admin/options_empty.html');
 $render->render_admin_content($breadcrumb, $lang);
@@ -108,14 +109,14 @@ foreach ($pluginslist as $plugin => $pluginns) {
     $p = new $pluginns($mysqli);
     $newversion = $p->get_file_version();
     $oldversion = $p->get_plugin_version();
-    $update = "";
+    $update = '';
     if (version::is_version_higher($newversion, $oldversion) or $newversion === $oldversion or $oldversion === false) {
         $install = true;
         if (!empty($error[$plugin])) {
-            $update = "<div class=\"error\">" . $error[$plugin] . "</div>";
+            $update = '<div class="error">' . $error[$plugin] . '</div>';
             $install = false;
-         } else {
-            $update = "<input type=\"checkbox\" class=\"ok\" name=\"chk_" . $plugin . "\">";
+        } else {
+            $update = '<input type="checkbox" class="ok" name="chk_' . $plugin . '">';
         }
     } else {
         $install = false;

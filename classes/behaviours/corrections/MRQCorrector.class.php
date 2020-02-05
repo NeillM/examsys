@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,99 +27,103 @@
 
 include_once 'Corrector.class.php';
 
-class MRQCorrector extends Corrector {
+class MRQCorrector extends Corrector
+{
   /**
    * Change the correct answer after the question has been locked. Update user marks in summative log table
    * @param integer $new_correct new correct answer
    * @param integer $paper_id
    */
-  public function execute($new_correct, $paper_id, &$changes, $paper_type) {
-    $new_correct_val = $new_correct['option_correct'];
-    $errors = array();
+    public function execute($new_correct, $paper_id, &$changes, $paper_type)
+    {
+        $new_correct_val = $new_correct['option_correct'];
+        $errors = array();
 
-    $old_correct_list = '';
-    $i = 0;
-    $correct_count = 0;
-    foreach ($this->_question->options as $option) {
-      if ($i == 0) {
-        $mark_correct = $option->get_marks_correct();
-        $mark_incorrect = $option->get_marks_incorrect();
-      }
-      $old_correct = $option->get_correct();
-      $old_correct_list .= $old_correct . ',';
-      if ($new_correct_val[$i] == $this->_question->get_answer_positive()) $correct_count++;
-      if ($new_correct_val[$i] != $old_correct) {
-        $option->set_correct($new_correct_val[$i]);
-        $changes = true;
+        $old_correct_list = '';
+        $i = 0;
+        $correct_count = 0;
+        foreach ($this->_question->options as $option) {
+            if ($i == 0) {
+                $mark_correct = $option->get_marks_correct();
+                $mark_incorrect = $option->get_marks_incorrect();
+            }
+            $old_correct = $option->get_correct();
+            $old_correct_list .= $old_correct . ',';
+            if ($new_correct_val[$i] == $this->_question->get_answer_positive()) {
+                $correct_count++;
+            }
+            if ($new_correct_val[$i] != $old_correct) {
+                $option->set_correct($new_correct_val[$i]);
+                $changes = true;
 
-        $opt_no = $i + 1;
-      }
-      $i++;
-    }
+                $opt_no = $i + 1;
+            }
+            $i++;
+        }
 
-    if ($this->_question->get_display_method() == 'other') {
-      $new_correct_val[] = $this->_question->get_answer_negative();
-    }
+        if ($this->_question->get_display_method() == 'other') {
+            $new_correct_val[] = $this->_question->get_answer_negative();
+        }
 
-    if ($changes) {
-      $this->_question->add_unified_field_modification('correct', $this->_lang_strings['correctanswer'], rtrim($old_correct_list, ','),  implode(',', $new_correct_val), $this->_lang_strings['postexamchange']);
+        if ($changes) {
+            $this->_question->add_unified_field_modification('correct', $this->_lang_strings['correctanswer'], rtrim($old_correct_list, ','), implode(',', $new_correct_val), $this->_lang_strings['postexamchange']);
 
-      try {
-    	  if (!$this->_question->save()) {
-    	    $errors[] = $this->_lang_strings['datasaveerror'];
-    	  } else {
-          // Remark the student's answers in 'log{$paper_type}'.
-          $totalpos = 0;
-          $score_method = $this->_question->get_score_method();
+            try {
+                if (!$this->_question->save()) {
+                    $errors[] = $this->_lang_strings['datasaveerror'];
+                } else {
+                // Remark the student's answers in 'log{$paper_type}'.
+                    $totalpos = 0;
+                    $score_method = $this->_question->get_score_method();
 
-          $totalpos = ($score_method == 'Mark per Question') ? $mark_correct : $mark_correct * $correct_count;
+                    $totalpos = ($score_method == 'Mark per Question') ? $mark_correct : $mark_correct * $correct_count;
 
-    	    $result = $this->_mysqli->prepare("SELECT l.user_answer, l.id FROM log{$paper_type} l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ?");
-          $result->bind_param('ii', $this->_question->id, $paper_id);
-          $result->execute();
-          $result->store_result();
-          $result->bind_result($user_answer, $id);
-          while ($result->fetch()) {
-            $user_answers = str_split($user_answer);
+                    $result = $this->_mysqli->prepare("SELECT l.user_answer, l.id FROM log{$paper_type} l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ?");
+                    $result->bind_param('ii', $this->_question->id, $paper_id);
+                    $result->execute();
+                    $result->store_result();
+                    $result->bind_result($user_answer, $id);
+                    while ($result->fetch()) {
+                        $user_answers = str_split($user_answer);
 
-            $mark = 0;
-            $all_correct = true;
+                        $mark = 0;
+                        $all_correct = true;
 
-            for ($i=0; $i < count($new_correct_val); $i++) {
-              if ($score_method == 'Mark per Option') {
-                if ($new_correct_val[$i] == $this->_question->get_answer_positive()) {
-                  $mark += ($new_correct_val[$i] == $user_answers[$i]) ? $mark_correct : $mark_incorrect;
+                        for ($i = 0; $i < count($new_correct_val); $i++) {
+                            if ($score_method == 'Mark per Option') {
+                                if ($new_correct_val[$i] == $this->_question->get_answer_positive()) {
+                                    $mark += ($new_correct_val[$i] == $user_answers[$i]) ? $mark_correct : $mark_incorrect;
+                                }
+                            } elseif ($new_correct_val[$i] != $user_answers[$i]) {
+                                $all_correct = false;
+                            }
+                        }
+
+                        if ($score_method == 'Mark per Question') {
+                            if ($all_correct) {
+                                $mark = $mark_correct;
+                            } else {
+                                $mark = $mark_incorrect;
+                            }
+                        }
+
+                        $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark = ?, totalpos = ? WHERE id = ?");
+                        $updateLog->bind_param('dii', $mark, $totalpos, $id);
+                        $updateLog->execute();
+                        $updateLog->close();
+                    }
+                    $result->free_result();
+                    $result->close();
                 }
-              } elseif ($new_correct_val[$i] != $user_answers[$i]) {
-                $all_correct = false;
-              }
+            } catch (ValidationException $vex) {
+                $errors[] = $vex->getMessage();
             }
 
-            if ($score_method == 'Mark per Question') {
-              if ($all_correct) {
-                $mark = $mark_correct;
-              } else {
-                $mark = $mark_incorrect;
-              }
+            if (count($errors) == 0) {
+                $this->invalidate_paper_cache($paper_id);
             }
+        }
 
-            $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET mark = ?, totalpos = ? WHERE id = ?");
-            $updateLog->bind_param('dii', $mark, $totalpos, $id);
-            $updateLog->execute();
-            $updateLog->close();
-          }
-          $result->free_result();
-          $result->close();
-    	  }
-    	} catch (ValidationException $vex) {
-    	  $errors[] = $vex->getMessage();
-    	}
-
-      if (count($errors) == 0) {
-        $this->invalidate_paper_cache($paper_id);
-      }
+        return $errors;
     }
-
-    return $errors;
-  }
 }

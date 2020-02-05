@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -28,25 +29,25 @@ require_once '../include/errors.php';
 check_var('module', 'REQUEST', true, false, false);
 $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 if (isset($_POST['submit'])) {
-  $content = $texteditorplugin->prepare_text_for_save($_POST['ref_content']);
+    $content = $texteditorplugin->prepare_text_for_save($_POST['ref_content']);
   // Write the reference material
-  $result = $mysqli->prepare("INSERT INTO reference_material VALUES (NULL, ?, ?, ?, NOW(), NULL)");
-  $result->bind_param('sss', $_POST['title'], $content, $_POST['width']);
-  $result->execute();
+    $result = $mysqli->prepare('INSERT INTO reference_material VALUES (NULL, ?, ?, ?, NOW(), NULL)');
+    $result->bind_param('sss', $_POST['title'], $content, $_POST['width']);
+    $result->execute();
   
-  $refID = $mysqli->insert_id;
+    $refID = $mysqli->insert_id;
   
   // Add it to the modules
-  for ($i=0; $i<$_POST['module_no']; $i++) {
-    if (isset($_POST['mod' . $i])) {
-      $result = $mysqli->prepare("INSERT INTO reference_modules VALUES (NULL, ?, ?)");
-      $result->bind_param('ii', $refID, $_POST['mod' . $i]);
-      $result->execute();
+    for ($i = 0; $i < $_POST['module_no']; $i++) {
+        if (isset($_POST['mod' . $i])) {
+            $result = $mysqli->prepare('INSERT INTO reference_modules VALUES (NULL, ?, ?)');
+            $result->bind_param('ii', $refID, $_POST['mod' . $i]);
+            $result->execute();
+        }
     }
-  }
   
-  header("location: list_ref_material.php?module=" . $_POST['module']);
-  exit();  
+    header('location: list_ref_material.php?module=' . $_POST['module']);
+    exit();
 }
 ?>
 <!DOCTYPE html>
@@ -74,10 +75,10 @@ if (isset($_POST['submit'])) {
 <?php
   require '../include/toprightmenu.inc';
 
-	echo draw_toprightmenu();
+    echo draw_toprightmenu();
 ?>
 <div class="head_title" style="font-size:90%">
-	<div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
+    <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="index.php?module=<?php echo $_GET['module'] ?>"><?php echo module_utils::get_moduleid_from_id($_GET['module'], $mysqli); ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="list_ref_material.php?module=<?php echo $_GET['module']; ?>"><?php echo $string['referencematerial']; ?></a></div>
   <div class="page_title"><?php echo $string['newreferencematerial'] ?></div>
 </div>
@@ -87,45 +88,47 @@ if (isset($_POST['submit'])) {
 <table border="0" style="text-align:left; margin-left:auto; margin-right:auto; font-size:80%">
 <tr><td><?php echo $string['name']; ?> <input type="text" name="title" size="40" required autofocus />&nbsp;&nbsp;&nbsp;<?php echo $string['width']; ?> <select name="width"><?php
 $width = 400;
-for ($size=200; $size<850; $size+=50) {
-  if ($width == $size) {
-    echo "<option value=\"$size\" selected>" . $size . "px</option>\n";
-  } else {
-    echo "<option value=\"$size\">" . $size . "px</option>\n";
-  }
+for ($size = 200; $size < 850; $size += 50) {
+    if ($width == $size) {
+        echo "<option value=\"$size\" selected>" . $size . "px</option>\n";
+    } else {
+        echo "<option value=\"$size\">" . $size . "px</option>\n";
+    }
 }
 ?></select></td><td><?php echo $string['modules']; ?></td></tr>
 <tr><td><?php $texteditorplugin->get_textarea('ref_content', 'ref_content', '', plugins\plugins_texteditor::TYPE_STANDARD); ?></td><td style="vertical-align:top">
 <?php
-  echo "<div style=\"margin-top:1px; display:block; width:400px; height:604px; overflow-y:scroll; border:1px solid #909090; font-size:90%\">";
+  echo '<div style="margin-top:1px; display:block; width:400px; height:604px; overflow-y:scroll; border:1px solid #909090; font-size:90%">';
   $modules_array = array();
   $module_array = $userObject->get_staff_accessable_modules();
   
   $module_no = 0;
   $old_school = '';
   $old_schoolcode = '';
-  foreach ($module_array as $modID=>$module) {
+foreach ($module_array as $modID => $module) {
     if (is_null($module['schoolcode'])) {
-      if ($module['school'] != $old_school or !is_null($old_schoolcode)) {
-        echo "<table border=\"0\" class=\"school\"><tr><td><nobr>" . $module['school'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-      }
+        if ($module['school'] != $old_school or !is_null($old_schoolcode)) {
+            echo '<table border="0" class="school"><tr><td><nobr>' . $module['school'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+        }
     } else {
-       if ($module['schoolcode'] != $old_schoolcode) {
-         echo "<table border=\"0\" class=\"school\"><tr><td><nobr>" . $module['schoolcode']  . ' ' . $module['school'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
-       }
+        if ($module['schoolcode'] != $old_schoolcode) {
+            echo '<table border="0" class="school"><tr><td><nobr>' . $module['schoolcode']  . ' ' . $module['school'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n";
+        }
     }
     $match = false;
-    if ($_GET['module'] == $modID) $match = true;
+    if ($_GET['module'] == $modID) {
+        $match = true;
+    }
     
     if ($match == true) {
-      echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\" checked><label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
+        echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\" checked><label for=\"mod$module_no\">" . $module['id'] . ': ' . substr($module['fullname'], 0, 60) . "</label></div>\n";
     } else {
-      echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\"><label for=\"mod$module_no\">" . $module['id'] . ": " . substr($module['fullname'],0,60) . "</label></div>\n";
+        echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\"><label for=\"mod$module_no\">" . $module['id'] . ': ' . substr($module['fullname'], 0, 60) . "</label></div>\n";
     }
     $module_no++;
-    $old_school = $module['school'];  
-    $old_schoolcode = $module['schoolcode'];  
-  }
+    $old_school = $module['school'];
+    $old_schoolcode = $module['schoolcode'];
+}
   echo "<input type=\"hidden\" name=\"module_no\" id=\"module_no\" value=\"$module_no\" /></div>\n";
 ?>
 </td>

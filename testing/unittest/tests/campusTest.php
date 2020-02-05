@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
-class campustest extends unittestdatabase {
+class campustest extends unittestdatabase
+{
     /**
      * @var array Storage for campus data in tests
      */
@@ -34,18 +36,20 @@ class campustest extends unittestdatabase {
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $datagenerator = $this->get_datagenerator('labs', 'core');
-        $this->campus = $datagenerator->create_campus(array('name' => "Test Campus", 'isdefault' => 1));
-        $datagenerator->create_lab(array('name' => "Test lab", 'building' => "Test building", 'room' => 1, 'campus' => $this->campus['name']));
-        $this->campus2 = $datagenerator->create_campus(array('name' => "Test Campus 2", 'isdefault' => 0));
+        $this->campus = $datagenerator->create_campus(array('name' => 'Test Campus', 'isdefault' => 1));
+        $datagenerator->create_lab(array('name' => 'Test lab', 'building' => 'Test building', 'room' => 1, 'campus' => $this->campus['name']));
+        $this->campus2 = $datagenerator->create_campus(array('name' => 'Test Campus 2', 'isdefault' => 0));
     }
 
     /**
      * Test get all campus details function
      * @group campus
      */
-    public function test_get_all_campus_details() {
+    public function test_get_all_campus_details()
+    {
         $campus = new campus($this->db);
         // Test details found success.
         $campusarray = array();
@@ -61,7 +65,8 @@ class campustest extends unittestdatabase {
      * Test get campus details function
      * @group campus
      */
-    public function test_get_campus_details() {
+    public function test_get_campus_details()
+    {
         $campus = new campus($this->db);
         // Test details found success.
         $expected = array('campusid' => $this->campus['id'], 'campusname' => $this->campus['name'], 'isdefault' => $this->campus['isdefault']);
@@ -75,7 +80,8 @@ class campustest extends unittestdatabase {
      * Test check campus name in use function
      * @group campus
      */
-    public function test_check_campus_name_inuse() {
+    public function test_check_campus_name_inuse()
+    {
         $campus = new campus($this->db);
         // Test campus name in use - true.
         $this->assertTrue($campus->check_campus_name_inuse($this->campus['name']));
@@ -87,7 +93,8 @@ class campustest extends unittestdatabase {
      * Test check campus id in use function
      * @group campus
      */
-    public function test_check_campus_in_use() {
+    public function test_check_campus_in_use()
+    {
         $campus = new campus($this->db);
         // Test campus in use - true.
         $this->assertTrue($campus->check_campus_in_use($this->campus['id']));

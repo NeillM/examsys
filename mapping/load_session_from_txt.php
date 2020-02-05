@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,69 +16,68 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
 
-require '../include/staff_auth.inc';  
+require '../include/staff_auth.inc';
 require '../include/errors.php';
 
-ini_set("auto_detect_line_endings", true);
+ini_set('auto_detect_line_endings', true);
 
 $modID = check_var('module', 'REQUEST', true, false, true);
 if (isset($_POST['submit'])) {
-  $session = $_POST['session'];
-  $session_flag = false;
+    $session = $_POST['session'];
+    $session_flag = false;
 
-  if ($_FILES['txtfile']['name'] != 'none' and $_FILES['txtfile']['name'] != '') {
-    if (!move_uploaded_file($_FILES['txtfile']['tmp_name'],  $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_load_objectives.txt'))  {
-      echo uploadError($_FILES['txtfile']['error']);
-      exit;
-    } else {
-      $obj_id = mappingutils::get_objectives_start();
+    if ($_FILES['txtfile']['name'] != 'none' and $_FILES['txtfile']['name'] != '') {
+        if (!move_uploaded_file($_FILES['txtfile']['tmp_name'], $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_load_objectives.txt')) {
+            echo uploadError($_FILES['txtfile']['error']);
+            exit;
+        } else {
+            $obj_id = mappingutils::get_objectives_start();
 
-      $identifier = mappingutils::get_sessions_start();
+            $identifier = mappingutils::get_sessions_start();
       
-      $lines = file($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_load_objectives.txt');
-      foreach ($lines as $separate_line) {
-
-        if (substr($separate_line,0,1) == '#') {   // Sub-heading
-          $title = substr($separate_line,1);
-          $identifier++;
+            $lines = file($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_load_objectives.txt');
+            foreach ($lines as $separate_line) {
+                if (substr($separate_line, 0, 1) == '#') {   // Sub-heading
+                    $title = substr($separate_line, 1);
+                    $identifier++;
      
-          $stmt = $mysqli->prepare("INSERT INTO sessions VALUES (NULL, ?, ?, ?, '', ?, NOW())");
-          $stmt->bind_param('sisi', $identifier, $modID, $title, $session);
-          $stmt->execute();
-          $stmt->close();
-          $session_flag = true;
-        } else {                                   // Objective
-          if ($session_flag == false) {
-            $stmt = $mysqli->prepare("INSERT INTO sessions VALUES (NULL, ?, ?, 'Temp Session Title', '', ?, NOW())");
-            $stmt->bind_param('sis', $identifier, $modID, $session);
-            $stmt->execute();
-            $stmt->close();
-            $session_flag = true;
-          }
+                    $stmt = $mysqli->prepare("INSERT INTO sessions VALUES (NULL, ?, ?, ?, '', ?, NOW())");
+                    $stmt->bind_param('sisi', $identifier, $modID, $title, $session);
+                    $stmt->execute();
+                    $stmt->close();
+                    $session_flag = true;
+                } else {                                   // Objective
+                    if ($session_flag == false) {
+                        $stmt = $mysqli->prepare("INSERT INTO sessions VALUES (NULL, ?, ?, 'Temp Session Title', '', ?, NOW())");
+                        $stmt->bind_param('sis', $identifier, $modID, $session);
+                        $stmt->execute();
+                        $stmt->close();
+                        $session_flag = true;
+                    }
         
-          $stmt = $mysqli->prepare("INSERT INTO objectives VALUES (?, ?, ?, ?, ?, ?)");
-          $stmt->bind_param('isisii', $obj_id, $separate_line, $modID, $identifier, $session, $obj_id);
-          $stmt->execute();
-          $stmt->close();
-          $obj_id++;
+                    $stmt = $mysqli->prepare('INSERT INTO objectives VALUES (?, ?, ?, ?, ?, ?)');
+                    $stmt->bind_param('isisii', $obj_id, $separate_line, $modID, $identifier, $session, $obj_id);
+                    $stmt->execute();
+                    $stmt->close();
+                    $obj_id++;
+                }
+            }
         }
-      }
     }
-  }
   
-  unlink($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_load_objectives.txt');
-  header("location: " . $configObject->get('cfg_root_path') . "/mapping/sessions_list.php?module=" . $modID);
-	exit();
+    unlink($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_load_objectives.txt');
+    header('location: ' . $configObject->get('cfg_root_path') . '/mapping/sessions_list.php?module=' . $modID);
+    exit();
 } else {
   // Display the form
-?>
+    ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -102,12 +102,12 @@ if (isset($_POST['submit'])) {
 </head>
 
 <body>
-<?php
-  require '../include/sessions_options.inc';
-  require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
-?>
+    <?php
+    require '../include/sessions_options.inc';
+    require '../include/toprightmenu.inc';
+    
+    echo draw_toprightmenu();
+    ?>
 <div id="content">
 
 <div class="head_title">
@@ -140,17 +140,17 @@ if (isset($_POST['submit'])) {
 </tr>
 
 <tr>
-<?php
-  $yearutils = new yearutils($mysqli);
-  echo "<td style=\"text-align:right\">" . $string['session'] . "</td><td><select name=\"session\">\n";
-  $startyear = ( date('Y') - 1 );
-  for ($i = 0; $i < 2; $i++) {
-    $tmp_session = ($startyear + $i) . '/' . substr(($startyear + $i + 1),2);
-    $sel = ($tmp_session == $yearutils->get_current_session()) ? ' selected="selected"' : '';
-    echo "<option value=\"$tmp_session\"$sel>$tmp_session</option>\n";
-  }
-  echo "</select></td>\n";
-?>
+    <?php
+    $yearutils = new yearutils($mysqli);
+    echo '<td style="text-align:right">' . $string['session'] . "</td><td><select name=\"session\">\n";
+    $startyear = ( date('Y') - 1 );
+    for ($i = 0; $i < 2; $i++) {
+        $tmp_session = ($startyear + $i) . '/' . substr(($startyear + $i + 1), 2);
+        $sel = ($tmp_session == $yearutils->get_current_session()) ? ' selected="selected"' : '';
+        echo "<option value=\"$tmp_session\"$sel>$tmp_session</option>\n";
+    }
+    echo "</select></td>\n";
+    ?>
 </tr>
 <tr><td colspan="2" style="text-align:center"><input type="submit" class="ok" value="<?php echo $string['import']; ?>" name="submit" /><input class="cancel" type="button" value="<?php echo $string['cancel']; ?>" name="cancel" /></td></tr>
 </form>
@@ -161,7 +161,7 @@ if (isset($_POST['submit'])) {
 
 </div>
 </div>
-<?php	
+    <?php
 }
 // Dataset.
 $render = new render($configObject);
@@ -169,8 +169,8 @@ $miscdataset['name'] = 'dataset';
 $miscdataset['attributes']['module'] = $modID;
 $miscdataset['attributes']['vle'] = $vle_api;
 if ($vle_api != '') {
-  $miscdataset['attributes']['vlename'] = $vle_name;
-  $miscdataset['attributes']['vlehumanname'] = $vle_name_a;
+    $miscdataset['attributes']['vlename'] = $vle_name;
+    $miscdataset['attributes']['vlehumanname'] = $vle_name_a;
 }
 $render->render($miscdataset, array(), 'dataset.html');
 // JS utils dataset.

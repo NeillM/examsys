@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -28,30 +29,30 @@ require_once '../include/errors.php';
 $paper_id = check_var('paperID', 'GET', true, false, true, param::INT);
 $startdate = check_var('startdate', 'GET', true, false, true, param::SQLDATETIME);
 $enddate = check_var('enddate', 'GET', true, false, true, param::SQLDATETIME);
-$get_repyear = param::optional('repyear',null, param::INT, param::FETCH_GET);
-$get_repcourse = param::optional('repcourse','%', param::TEXT, param::FETCH_GET);
-$complete = param::optional('completerpt',null, param::INT, param::FETCH_GET);
+$get_repyear = param::optional('repyear', null, param::INT, param::FETCH_GET);
+$get_repcourse = param::optional('repcourse', '%', param::TEXT, param::FETCH_GET);
+$complete = param::optional('completerpt', null, param::INT, param::FETCH_GET);
 $bind_types = array();
 $queryParams[] = $paper_id;
-$bind_types[] = "i";
+$bind_types[] = 'i';
 if (!empty($get_repyear)) {
-  $repyear_sql= "AND lm.year = ?";
-  $queryParams[] = $repyear;
-  $bind_types[] = "s";
+    $repyear_sql = 'AND lm.year = ?';
+    $queryParams[] = $repyear;
+    $bind_types[] = 's';
 } else {
-  $repyear_sql = "";
+    $repyear_sql = '';
 }
-if ($get_repcourse !== "%") {
-  $repcourse_sql = "AND u.grade = ?";
-  $queryParams[] = $get_repcourse;
-  $bind_types[] = "s";
+if ($get_repcourse !== '%') {
+    $repcourse_sql = 'AND u.grade = ?';
+    $queryParams[] = $get_repcourse;
+    $bind_types[] = 's';
 } else {
-  $repcourse_sql = "";
+    $repcourse_sql = '';
 }
 $queryParams[] = $startdate;
-$bind_types[] = "i";
+$bind_types[] = 'i';
 $queryParams[] = $enddate;
-$bind_types[] = "i";
+$bind_types[] = 'i';
 
 // Capture the paper makeup.
 $paper_buffer = array();
@@ -71,13 +72,13 @@ $result->close();
 
 header('Pragma: public');
 header('Content-type: text/xml');
-header("Content-Disposition: attachment; filename=\"" . \file_handler::make_filename_safe($paper) . ".xml\"");
+header('Content-Disposition: attachment; filename="' . \file_handler::make_filename_safe($paper) . '.xml"');
 
 $log_array = array();
 $hits = 0;
 $exclude = '';
 if ($complete == 1) {
-    $result = $mysqli->prepare("SELECT COUNT(question) AS question_no FROM papers WHERE paper=?");
+    $result = $mysqli->prepare('SELECT COUNT(question) AS question_no FROM papers WHERE paper=?');
     $result->bind_param('i', $paper_id);
     $result->execute();
     $result->bind_result($number_of_questions);
@@ -118,7 +119,7 @@ $bind_values_ref = array();
 foreach ($bind_arr as $key => $value) {
     $bind_values_ref[$key] = &$bind_arr[$key];
 }
-call_user_func_array(array($result, "bind_param"), $bind_values_ref);
+call_user_func_array(array($result, 'bind_param'), $bind_values_ref);
 
 $result->execute();
 $result->bind_result($question_ID, $grade, $started, $year, $surname, $initials, $title, $user_answer, $user_ID);
@@ -143,12 +144,12 @@ foreach ($log_array as $individual) {
     // Write out the raw data.
     echo "<user>\n";
     if ($paper_type < 3) {
-        echo "<title>" . $individual['title'] . "</title>\n";
-        echo "<lastname>" . $individual['surname'] . "</lastname>\n";
-        echo "<initials>" . $individual['initials'] . "</initials>\n";
-        echo "<username>" . $individual['username'] . "</username>\n";
+        echo '<title>' . $individual['title'] . "</title>\n";
+        echo '<lastname>' . $individual['surname'] . "</lastname>\n";
+        echo '<initials>' . $individual['initials'] . "</initials>\n";
+        echo '<username>' . $individual['username'] . "</username>\n";
     }
-    echo "<course>" . $individual['course'] . "</course>\n<year>" . $individual['year'] . "</year>\n<submitted>" . $individual['started'] . "</submitted>\n";
+    echo '<course>' . $individual['course'] . "</course>\n<year>" . $individual['year'] . "</year>\n<submitted>" . $individual['started'] . "</submitted>\n";
     $Qno = 1;
     for ($i = 0; $i < $question_no; $i++) {
         $tmp_question_ID = $paper_buffer[$i]['ID'];
@@ -234,4 +235,3 @@ foreach ($log_array as $individual) {
     $row_written++;
 }
 echo "</document>\n";
-?>

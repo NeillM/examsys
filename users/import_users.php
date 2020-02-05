@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -23,6 +24,7 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
+
 require '../include/admin_auth.inc';
 require '../include/errors.php';
 require '../include/import_users.inc';
@@ -34,13 +36,13 @@ $render = new render($configObject);
 set_time_limit(0);
 ob_start();
 $lang['title'] = $string['importusers'];
-$additionaljs = "";
-$addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/dialog.css\" />
-                <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/list.css\" />
-                <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/breadcrumb.css\" />
-                <style type=\"text/css\">
+$additionaljs = '';
+$addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/dialog.css" />
+                <link rel="stylesheet" type="text/css" href="../css/list.css" />
+                <link rel="stylesheet" type="text/css" href="../css/breadcrumb.css" />
+                <style type="text/css">
                     label.error {display:block; color:#f00}
-                </style>";
+                </style>';
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 ?>
     <?php
@@ -68,18 +70,18 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 
         if (isset($_POST['submit'])) {
             if ($_FILES['csvfile']['name'] != 'none' and $_FILES['csvfile']['name'] != '') {
-                if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . "_new_cohort.csv")) {
+                if (!move_uploaded_file($_FILES['csvfile']['tmp_name'], $configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_new_cohort.csv')) {
                     echo uploadError($_FILES['csvfile']['error']);
                     exit;
                 } else {
                     $users = add_users_from_file($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_new_cohort.csv');
                     unlink($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_new_cohort.csv');
                     if (isset($users['error'])) {
-                        echo "<p>" . $string['followingerrors'] . "</p><ul>";
+                        echo '<p>' . $string['followingerrors'] . '</p><ul>';
                         foreach ($users['error'] as $msg) {
                             echo $msg;
                         }
-                        echo "</ul>";
+                        echo '</ul>';
                     } else {
                         echo $users['html'];
                     }

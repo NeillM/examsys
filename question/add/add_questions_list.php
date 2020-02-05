@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -58,127 +59,131 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
 </head>
 <body>
 <?php
-  if (isset($_GET['display_pos'])) {
+if (isset($_GET['display_pos'])) {
     $display_pos = $_GET['display_pos'];
-  } else {
+} else {
     $display_pos = 1;
-  }
+}
 
-  if (isset($_GET['sortby'])) {
+if (isset($_GET['sortby'])) {
     $sortby = $_GET['sortby'];
     $ordering = $_GET['ordering'];
-  } else {
+} else {
     $sortby = 'leadin';
     $ordering = 'asc';
-  }
+}
   
   $moduleObj = new module();
 
   echo "<form name=\"theform\" autocomplete=\"off\">\n";
-  ?>
+?>
   <input type="hidden" name="screen" value="1" />
   <table class="header">
   <?php
-  switch($_GET['type']) {
-    case 'unused':
-      echo "<tr><th colspan=\"6\" style=\"font-size:160%; font-weight:bold\">&nbsp;" . $string['myunusedquestions'] . "</th></tr>\n";
-      break;
-    case 'all':
-      echo "<tr><th colspan=\"6\" style=\"font-size:160%; font-weight:bold\">&nbsp;" . $string['allmyquestions'] . "</th></tr>\n";
-      break;
-    case 'team':
-      echo "<tr><th colspan=\"6\" style=\"font-size:160%\">&nbsp;<strong>" . $string['team'] . ":&nbsp;</strong>" . $moduleObj->get_moduleid_from_id($_GET['teamID'], $mysqli) . "</th></tr>\n";
-      break;
-    case 'status':
-      echo "<tr><th colspan=\"6\" style=\"font-size:160%\">&nbsp;<strong>" . $string['status'] . ":&nbsp;</strong>" . $status_array[$_GET['status']]->get_name() . "</th></tr>\n";
-      break;
-    case 'keyword':
-      $keyword_ids = '';
-      if (isset($_POST['keyword_no'])) {
-        for ($i=0; $i<$_POST['keyword_no']; $i++) {
-          if (isset($_POST["keyword$i"])) {
-            if ($keyword_ids == '') {
-              $keyword_ids = $_POST["keyword$i"];
+    switch ($_GET['type']) {
+        case 'unused':
+            echo '<tr><th colspan="6" style="font-size:160%; font-weight:bold">&nbsp;' . $string['myunusedquestions'] . "</th></tr>\n";
+            break;
+        case 'all':
+            echo '<tr><th colspan="6" style="font-size:160%; font-weight:bold">&nbsp;' . $string['allmyquestions'] . "</th></tr>\n";
+            break;
+        case 'team':
+            echo '<tr><th colspan="6" style="font-size:160%">&nbsp;<strong>' . $string['team'] . ':&nbsp;</strong>' . $moduleObj->get_moduleid_from_id($_GET['teamID'], $mysqli) . "</th></tr>\n";
+            break;
+        case 'status':
+            echo '<tr><th colspan="6" style="font-size:160%">&nbsp;<strong>' . $string['status'] . ':&nbsp;</strong>' . $status_array[$_GET['status']]->get_name() . "</th></tr>\n";
+            break;
+        case 'keyword':
+            $keyword_ids = '';
+            if (isset($_POST['keyword_no'])) {
+                for ($i = 0; $i < $_POST['keyword_no']; $i++) {
+                    if (isset($_POST["keyword$i"])) {
+                        if ($keyword_ids == '') {
+                              $keyword_ids = $_POST["keyword$i"];
+                        } else {
+                            $keyword_ids .= ',' . $_POST["keyword$i"];
+                        }
+                    }
+                }
+                if ($keyword_ids == '') {
+                    echo "</table>\n</body>\n</html>\n";
+                    exit;
+                }
             } else {
-              $keyword_ids .= ',' . $_POST["keyword$i"];
+                if (isset($_GET['keyword_ids'])) {
+                    $keyword_ids = $_GET['keyword_ids'];
+                } else {
+                    $keyword_ids = 0;
+                }
             }
-          }
-        }
-        if ($keyword_ids == '') {
-          echo "</table>\n</body>\n</html>\n";
-          exit;
-        }
-      } else {
-        if (isset($_GET['keyword_ids'])) {
-          $keyword_ids = $_GET['keyword_ids'];
-        } else {
-          $keyword_ids = 0;
-        }
-      }
-      echo "<tr><th colspan=\"6\" style=\"font-size:160%; font-weight:bold\">&nbsp;" . $string['bykeyword'] . "</th></tr>\n";
-      break;
-  }
-  echo "</table>\n";
-
-  echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:100%\">\n";
-  echo "<thead>\n";
-  echo '<tr>';
-  $table_order = array('#1'=>18, '#2'=>18, $string['question']=>400, $string['type']=>100, $string['modified']=>100, $string['status']=>120);
-  foreach ($table_order as $display => $col_width) {
-    if ($display{0} == '#') {
-      echo "<th style=\"width:" . $col_width . "px\" class=\"vert_div\"></th>\n";
-    } elseif ($display == $string['modified']) {
-      echo "<th style=\"width:" . $col_width . "px\" class=\"{sorter: 'datetime'} vert_div\">$display</th>\n";
-    } else {
-      echo "<th style=\"width:" . $col_width . "px\" class=\"vert_div\">$display</th>\n";
+            echo '<tr><th colspan="6" style="font-size:160%; font-weight:bold">&nbsp;' . $string['bykeyword'] . "</th></tr>\n";
+            break;
     }
-  }
-  ?>
+    echo "</table>\n";
+
+    echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:100%\">\n";
+    echo "<thead>\n";
+    echo '<tr>';
+    $table_order = array('#1' => 18, '#2' => 18, $string['question'] => 400, $string['type'] => 100, $string['modified'] => 100, $string['status'] => 120);
+    foreach ($table_order as $display => $col_width) {
+        if ($display{0} == '#') {
+            echo '<th style="width:' . $col_width . "px\" class=\"vert_div\"></th>\n";
+        } elseif ($display == $string['modified']) {
+            echo '<th style="width:' . $col_width . "px\" class=\"{sorter: 'datetime'} vert_div\">$display</th>\n";
+        } else {
+            echo '<th style="width:' . $col_width . "px\" class=\"vert_div\">$display</th>\n";
+        }
+    }
+    ?>
   </tr>
   </thead>
   
   <tbody>
   <?php
-  $id = 0;
-  if ($sortby == 'leadin') $sortby = 'leadin_plain';
-  if ($sortby == 'q_type') $sortby = 'CAST(q_type AS CHAR)';
+    $id = 0;
+    if ($sortby == 'leadin') {
+        $sortby = 'leadin_plain';
+    }
+    if ($sortby == 'q_type') {
+        $sortby = 'CAST(q_type AS CHAR)';
+    }
 
-  $retired_in = '-1,' . implode(',', QuestionStatus::get_retired_status_ids($status_array));
+    $retired_in = '-1,' . implode(',', QuestionStatus::get_retired_status_ids($status_array));
 
-  switch($_REQUEST['type']) {
-    case 'unused':
-      $result = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_long_date')}') AS display_date, locked, status, name FROM papers RIGHT JOIN (questions, question_statuses) ON papers.question = questions.q_id WHERE questions.status = question_statuses.id AND question IS NULL AND questions.ownerID = ? AND status NOT IN ($retired_in) AND deleted IS NULL ORDER BY $sortby $ordering");
-      $result->bind_param('i', $userObject->get_user_ID());
-      break;
-    case 'all':
-      $result = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_long_date')}') AS display_date, locked, status, name FROM questions, question_statuses WHERE questions.status = question_statuses.id AND ownerID = ? AND status NOT IN ($retired_in) AND deleted IS NULL ORDER BY $sortby $ordering");
-      $result->bind_param('i', $userObject->get_user_ID());
-      break;
-    case 'team':
-      $result = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_long_date')}') AS display_date, locked, status, name FROM (questions, question_statuses, questions_modules) WHERE questions.q_id = questions_modules.q_id AND questions.status = question_statuses.id AND idMod = ? AND deleted IS NULL ORDER BY $sortby $ordering");
-      $result->bind_param('i', $_GET['teamID']);
-      break;
-    case 'status':
-      $teams = $userObject->get_staff_modules();
-      $module_id_list = implode(',', array_keys($teams));
+    switch ($_REQUEST['type']) {
+        case 'unused':
+            $result = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_long_date')}') AS display_date, locked, status, name FROM papers RIGHT JOIN (questions, question_statuses) ON papers.question = questions.q_id WHERE questions.status = question_statuses.id AND question IS NULL AND questions.ownerID = ? AND status NOT IN ($retired_in) AND deleted IS NULL ORDER BY $sortby $ordering");
+            $result->bind_param('i', $userObject->get_user_ID());
+            break;
+        case 'all':
+            $result = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_long_date')}') AS display_date, locked, status, name FROM questions, question_statuses WHERE questions.status = question_statuses.id AND ownerID = ? AND status NOT IN ($retired_in) AND deleted IS NULL ORDER BY $sortby $ordering");
+            $result->bind_param('i', $userObject->get_user_ID());
+            break;
+        case 'team':
+            $result = $mysqli->prepare("SELECT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_long_date')}') AS display_date, locked, status, name FROM (questions, question_statuses, questions_modules) WHERE questions.q_id = questions_modules.q_id AND questions.status = question_statuses.id AND idMod = ? AND deleted IS NULL ORDER BY $sortby $ordering");
+            $result->bind_param('i', $_GET['teamID']);
+            break;
+        case 'status':
+            $teams = $userObject->get_staff_modules();
+            $module_id_list = implode(',', array_keys($teams));
 
-      $sql = "SELECT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_long_date')}') AS display_date, locked, status, name "
-          . "FROM (questions, question_statuses, questions_modules, modules) "
-          . "WHERE questions.q_id = questions_modules.q_id AND questions.status = question_statuses.id AND questions_modules.idMod = modules.id AND status = ? "
-          . "AND (ownerID = ?";
-      if (!empty($module_id_list)) {
-        $sql .= " OR modules.id IN ($module_id_list)";
-      }
-      $sql .= ") AND deleted IS NULL ORDER BY $sortby $ordering";
-      $result = $mysqli->prepare($sql);
-      $result->bind_param('si', $_GET['status'], $userObject->get_user_ID());
-      break;
-    case 'keyword':
-      $teams = $userObject->get_staff_modules();
+            $sql = "SELECT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_long_date')}') AS display_date, locked, status, name "
+            . 'FROM (questions, question_statuses, questions_modules, modules) '
+            . 'WHERE questions.q_id = questions_modules.q_id AND questions.status = question_statuses.id AND questions_modules.idMod = modules.id AND status = ? '
+            . 'AND (ownerID = ?';
+            if (!empty($module_id_list)) {
+                $sql .= " OR modules.id IN ($module_id_list)";
+            }
+            $sql .= ") AND deleted IS NULL ORDER BY $sortby $ordering";
+            $result = $mysqli->prepare($sql);
+            $result->bind_param('si', $_GET['status'], $userObject->get_user_ID());
+            break;
+        case 'keyword':
+            $teams = $userObject->get_staff_modules();
 
-      $retired_in = '-1,' . implode(',', QuestionStatus::get_retired_status_ids($status_array));
-      if (count($teams) == 0) {
-        $sql = "SELECT
+            $retired_in = '-1,' . implode(',', QuestionStatus::get_retired_status_ids($status_array));
+            if (count($teams) == 0) {
+                $sql = "SELECT
                   questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_long_date')}') AS display_date, locked, status, name
                 FROM
                   (questions, question_statuses, keywords_question)
@@ -200,8 +205,8 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
                   deleted IS NULL
                 ORDER BY
                   $sortby $ordering, questions.q_id";
-      } else {
-        $sql = "SELECT
+            } else {
+                $sql = "SELECT
                   questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_long_date')}') AS display_date, locked, status, name
                 FROM
                   (questions, question_statuses)
@@ -215,26 +220,30 @@ $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
                   status NOT IN ($retired_in) AND deleted IS NULL
                 ORDER BY
                   $sortby $ordering, questions.q_id";
-      }
-      $result = $mysqli->prepare($sql);
-      $result->bind_param('i', $userObject->get_user_ID());
+            }
+            $result = $mysqli->prepare($sql);
+            $result->bind_param('i', $userObject->get_user_ID());
     
-      break;
-  }
-  $result->execute();
-  $result->bind_result($q_id, $q_type, $leadin, $display_date, $locked, $status, $status_name);
-  while ($result->fetch()) {
-    $tmp_leadin = QuestionUtils::clean_leadin($leadin);
-    if (trim($tmp_leadin) == '') $tmp_leadin = '<span style="color:#C00000">' . $string['warningnoleadin'] . '</span>';
+            break;
+    }
+    $result->execute();
+    $result->bind_result($q_id, $q_type, $leadin, $display_date, $locked, $status, $status_name);
+    while ($result->fetch()) {
+        $tmp_leadin = QuestionUtils::clean_leadin($leadin);
+        if (trim($tmp_leadin) == '') {
+            $tmp_leadin = '<span style="color:#C00000">' . $string['warningnoleadin'] . '</span>';
+        }
 
-    $status_class = 'status' . $status;
-    echo "<tr class=\"$status_class\"><td>";
-    if ($locked != '') echo '<img src="../../artwork/small_padlock.png" width="18" height="18" alt="' . $string['locked'] . '" />';
-    echo "</td><td><input type=\"checkbox\" id='q$q_id' name=\"$q_id\" value=\"$q_id\" /></td><td class=\"prev viewq\" id=\"prev$q_id\" data-qid='$q_id'>$tmp_leadin</td><td><nobr>&nbsp;" . $string[$q_type] . "</nobr></td><td>" . $display_date . "</td><td>" . $status_name . "</td></tr>\n";
-  }
-  $result->close();
-  $mysqli->close();
-?>
+        $status_class = 'status' . $status;
+        echo "<tr class=\"$status_class\"><td>";
+        if ($locked != '') {
+            echo '<img src="../../artwork/small_padlock.png" width="18" height="18" alt="' . $string['locked'] . '" />';
+        }
+        echo "</td><td><input type=\"checkbox\" id='q$q_id' name=\"$q_id\" value=\"$q_id\" /></td><td class=\"prev viewq\" id=\"prev$q_id\" data-qid='$q_id'>$tmp_leadin</td><td><nobr>&nbsp;" . $string[$q_type] . '</nobr></td><td>' . $display_date . '</td><td>' . $status_name . "</td></tr>\n";
+    }
+    $result->close();
+    $mysqli->close();
+    ?>
 </tbody>
 </table>
 </form>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -45,8 +46,8 @@ require '../include/staff_auth.inc';
 <body>
 <p><?php echo $string['publishmarkscheck'] ?></p>
 <?php
- if ($configObject->get_setting('core', 'cfg_gradebook_enabled')) {
-?>
+if ($configObject->get_setting('core', 'cfg_gradebook_enabled')) {
+    ?>
 <form id="publishform" name="publishform" method="post" action="" autocomplete="off">
 
 <table cellpadding="2" cellspacing="0" border="0" width="100%" style="text-align:left">
@@ -57,12 +58,12 @@ require '../include/staff_auth.inc';
 </tr>
 </table>
 </form>
-<?php
- } else {
-?>
+    <?php
+} else {
+    ?>
 <p><?php echo $string['cannotpublishmarks'] ?></p>
-<?php
- }
+    <?php
+}
 ?>
 </body>
 </html>

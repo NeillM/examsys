@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -28,21 +29,21 @@ require_once '../../include/errors.php';
 
 // Exit if ims not enabled.
 if (!$configObject->get_setting('core', 'cfg_ims_enabled')) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '../../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '../../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 $settings = new ims_enterprise_settings();
 
 if (isset($_POST['submit'])) {
-  $settings->save_ims_settings();
+    $settings->save_ims_settings();
 }
 
 $ims = $settings->get_ims_settings($mysqli);
 
 if (!$ims) {
-  $ims = $settings->get_default_settings();
+    $ims = $settings->get_default_settings();
 }
 $rolemappings = plugins\ims\ims_enterprise_roles::get_role_mappings();
 $coursetags = $settings->get_course_tags();

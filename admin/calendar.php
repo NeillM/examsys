@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -30,90 +31,91 @@ require '../include/year_tabs.inc';
 require_once '../include/timezones.php';
 
 if (isset($_GET['calyear'])) {
-  $current_year = $_GET['calyear'];
+    $current_year = $_GET['calyear'];
 } else {
-  $current_year = date("Y");
+    $current_year = date('Y');
 }
 
-function display_papers($day_no, $subtract, $current_year, $current_month, $paper_details, &$papers, &$cellID, $string, $default_timezone, $userObject, $mysqli) {
-  echo "<table id=\"month_grid\" cellspacing=\"0\" cellpadding=\"2\" style=\"width:100%\">\n";
-  foreach ($paper_details as $paper) {
-    if ($paper['type'] == 'extra_date') {
-      if ($paper['start_day'] == ($day_no - $subtract) and $paper['cal_year'] == $current_year and $paper['month'] == $current_month) {
-        echo '<tr';
-        if ($userObject->has_role('SysAdmin')) {
-          echo ' class="event" data-evid="' . $paper['eventID'] . '"';
-        }
-        echo ' style="background-color:' . $paper['bgcolor'] . '; color:white"><td colspan="2">' . $paper['start_hour'];
-        if ($paper['start_minute'] != 0) {
-          echo ':' . $paper['start_minute'];
-        }
-        echo '&nbsp;' . $paper['am_pm'] . '</td>';
-        echo '<td class="p pe" id="p' . $cellID . '" data-cellid="' . $cellID . '" data-message="' . htmlspecialchars($paper['message']) . '" >' . $paper['title'] . ' (' . ($paper['duration']/60) . ' hrs)</td></tr>';
-        $cellID++;
-      }
-    } else {
-      $problem = false;
-      if ($paper['type'] == '2') {
-        if ($paper['start_time'] == $paper['end_time'] or ($paper['labs'] == '' and $paper['password'] == '') or $paper['duration'] == '') {
-          $problem = true;
-        }
-      } else {
-        if ($paper['start_time'] == $paper['end_time']) {
-          $problem = true;
-        }
-      }
-
-      if ($paper['start_day'] == ($day_no - $subtract) and $paper['cal_year'] == $current_year and $paper['month'] == $current_month) {
-        $papers++;
-        echo '<tr><td class="warn_icon">';
-        if ($problem) {
-          echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" style="margin:2px" alt="' . $string['warning'] . '" title="' . $string['warning'] . '" />';
-        }
-        if ($paper['timezone'] != $default_timezone) {
-          echo '<img src="../artwork/timezone_16.png" width="16" height="16" alt="' . $string['timezone'] . '" title="' . $string['timezone'] . '" />';
-        }
-        if ($paper['password'] != '') {
-          echo '<img src="../artwork/key.png" width="16" height="16" alt="' . $string['password'] . '" title="' . $string['password'] . '"  />';
-        }
-        if ($paper['type'] == '4') {
-          echo '<img src="../artwork/small_osce_icon.png" width="16" height="16" alt="OSCE Station" title="OSCE Station"  />';
-        }
-        $metadata = '';
-        if (isset($paper['metadata'])) {
-          foreach ($paper['metadata'] as $individual_metadata) {
-            if ($metadata != '') {
-              $metadata .= '<br />';
+function display_papers($day_no, $subtract, $current_year, $current_month, $paper_details, &$papers, &$cellID, $string, $default_timezone, $userObject, $mysqli)
+{
+    echo "<table id=\"month_grid\" cellspacing=\"0\" cellpadding=\"2\" style=\"width:100%\">\n";
+    foreach ($paper_details as $paper) {
+        if ($paper['type'] == 'extra_date') {
+            if ($paper['start_day'] == ($day_no - $subtract) and $paper['cal_year'] == $current_year and $paper['month'] == $current_month) {
+                echo '<tr';
+                if ($userObject->has_role('SysAdmin')) {
+                    echo ' class="event" data-evid="' . $paper['eventID'] . '"';
+                }
+                echo ' style="background-color:' . $paper['bgcolor'] . '; color:white"><td colspan="2">' . $paper['start_hour'];
+                if ($paper['start_minute'] != 0) {
+                    echo ':' . $paper['start_minute'];
+                }
+                echo '&nbsp;' . $paper['am_pm'] . '</td>';
+                echo '<td class="p pe" id="p' . $cellID . '" data-cellid="' . $cellID . '" data-message="' . htmlspecialchars($paper['message']) . '" >' . $paper['title'] . ' (' . ($paper['duration'] / 60) . ' hrs)</td></tr>';
+                $cellID++;
             }
-            $metadata .= $individual_metadata['name'] . ': ' . $individual_metadata['value'];
-          }
-        }
-        echo '</td><td>' . $paper['start_hour'];
-        if ($paper['start_minute'] != 0) {
-          echo ':' . $paper['start_minute'];
-        }
-        echo '&nbsp;' . $paper['am_pm'] . '</td>';
-        $properties = PaperProperties::get_paper_properties_by_id($paper['property_id'], $mysqli, $string);
-        $paper['password']  = $properties->get_decrypted_password();
-        echo "<td class=\"p\">
+        } else {
+            $problem = false;
+            if ($paper['type'] == '2') {
+                if ($paper['start_time'] == $paper['end_time'] or ($paper['labs'] == '' and $paper['password'] == '') or $paper['duration'] == '') {
+                    $problem = true;
+                }
+            } else {
+                if ($paper['start_time'] == $paper['end_time']) {
+                    $problem = true;
+                }
+            }
+
+            if ($paper['start_day'] == ($day_no - $subtract) and $paper['cal_year'] == $current_year and $paper['month'] == $current_month) {
+                $papers++;
+                echo '<tr><td class="warn_icon">';
+                if ($problem) {
+                    echo '<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" style="margin:2px" alt="' . $string['warning'] . '" title="' . $string['warning'] . '" />';
+                }
+                if ($paper['timezone'] != $default_timezone) {
+                    echo '<img src="../artwork/timezone_16.png" width="16" height="16" alt="' . $string['timezone'] . '" title="' . $string['timezone'] . '" />';
+                }
+                if ($paper['password'] != '') {
+                    echo '<img src="../artwork/key.png" width="16" height="16" alt="' . $string['password'] . '" title="' . $string['password'] . '"  />';
+                }
+                if ($paper['type'] == '4') {
+                    echo '<img src="../artwork/small_osce_icon.png" width="16" height="16" alt="OSCE Station" title="OSCE Station"  />';
+                }
+                $metadata = '';
+                if (isset($paper['metadata'])) {
+                    foreach ($paper['metadata'] as $individual_metadata) {
+                        if ($metadata != '') {
+                              $metadata .= '<br />';
+                        }
+                        $metadata .= $individual_metadata['name'] . ': ' . $individual_metadata['value'];
+                    }
+                }
+                echo '</td><td>' . $paper['start_hour'];
+                if ($paper['start_minute'] != 0) {
+                    echo ':' . $paper['start_minute'];
+                }
+                echo '&nbsp;' . $paper['am_pm'] . '</td>';
+                $properties = PaperProperties::get_paper_properties_by_id($paper['property_id'], $mysqli, $string);
+                $paper['password']  = $properties->get_decrypted_password();
+                echo "<td class=\"p\">
             <div class=\"pd\"
             data-cellid='$cellID'
-            data-ptype=\"" . $paper['type'] . "\"
-            data-stime=\"" . $paper['start_time'] . "\"
-            data-etime=\"" . $paper['end_time'] . "\"
-            data-duration=\"" . $paper['duration'] . "\"
-            data-labs=\"" . $paper['labs'] . "\"
-            data-pass=\"" . $paper['password'] . "\"
-            data-tz=\"" . $paper['timezone'] . "\"
-            data-meta=\"" . $metadata  . "\">
-                <a id=\"p$cellID\" href=\"../paper/details.php?paperID=" . $paper['property_id'] . "&module=" . $paper['idMod'] . "&folder=\" >" . $paper['paper_title'] . "</a>
+            data-ptype=\"" . $paper['type'] . '"
+            data-stime="' . $paper['start_time'] . '"
+            data-etime="' . $paper['end_time'] . '"
+            data-duration="' . $paper['duration'] . '"
+            data-labs="' . $paper['labs'] . '"
+            data-pass="' . $paper['password'] . '"
+            data-tz="' . $paper['timezone'] . '"
+            data-meta="' . $metadata  . "\">
+                <a id=\"p$cellID\" href=\"../paper/details.php?paperID=" . $paper['property_id'] . '&module=' . $paper['idMod'] . '&folder=" >' . $paper['paper_title'] . '</a>
             </div>
-        </td></tr>";
-        $cellID++;
-      }
+        </td></tr>';
+                $cellID++;
+            }
+        }
     }
-  }
-  echo "</table>";
+    echo '</table>';
 }
 
 $default_timezone = $timezone_array[$configObject->get('cfg_timezone')];
@@ -173,16 +175,16 @@ $stmt->execute();
 $stmt->bind_result($id, $building, $room_no, $campus);
 while ($stmt->fetch()) {
     $lab_details[$campus][$id] = $building . ' - ' . $room_no;
-    $lab_names[$id] = $room_no . " - " . $building;
+    $lab_names[$id] = $room_no . ' - ' . $building;
 }
 $stmt->close();
 // Get faculty and school info
-$schools = array($string['default']=>array('-1'=>$string['allschools']));
-$stmt = $mysqli->prepare("SELECT schools.id, faculty.code, faculty.name, schools.code, school FROM schools, faculty WHERE faculty.id = schools.facultyID AND faculty.deleted IS NULL and schools.deleted IS NULL ORDER BY faculty.name, school");
+$schools = array($string['default'] => array('-1' => $string['allschools']));
+$stmt = $mysqli->prepare('SELECT schools.id, faculty.code, faculty.name, schools.code, school FROM schools, faculty WHERE faculty.id = schools.facultyID AND faculty.deleted IS NULL and schools.deleted IS NULL ORDER BY faculty.name, school');
 $stmt->execute();
 $stmt->bind_result($id, $faculty_code, $faculty, $school_code, $school);
 while ($stmt->fetch()) {
-  $schools[$faculty_code . ' ' . $faculty][$id] = $school_code . ' ' . $school;
+    $schools[$faculty_code . ' ' . $faculty][$id] = $school_code . ' ' . $school;
 }
 $stmt->close();
 ?>
@@ -192,48 +194,52 @@ $stmt->close();
     <tr><th>
         <?php
         if (isset($_GET['module'])) {
-          echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a></div>';
+            echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a></div>';
         } else {
-          if ($userObject->has_role('SysAdmin')) {
-            echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php">' . $string['administrativetools'] . '</a></div>';
-          } else {
-            echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a></div>';
-          }
+            if ($userObject->has_role('SysAdmin')) {
+                echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="./index.php">' . $string['administrativetools'] . '</a></div>';
+            } else {
+                echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a></div>';
+            }
         }
         ?>
         <div class="page_title"><?php echo $string['calendar']; ?>: <span style="font-weight:normal"><?php echo $current_year ?></span></div></th>
       <th style="text-align:right">
         <?php
 
-        echo "<select name=\"lab\" id=\"lab\">";
+        echo '<select name="lab" id="lab">';
         foreach ($lab_details as $campus => $lab) {
-          echo "<optgroup label=\"$campus\">";
-          foreach ($lab as $id => $title) {
-            $selected = '';
-            if (isset($_GET['lab']) and $id == $_GET['lab']) $selected = 'selected ';
-            echo "<option value=\"$id\" $selected>$title</option>";
-          }
-          echo "</optgroup>";
+            echo "<optgroup label=\"$campus\">";
+            foreach ($lab as $id => $title) {
+                $selected = '';
+                if (isset($_GET['lab']) and $id == $_GET['lab']) {
+                    $selected = 'selected ';
+                }
+                echo "<option value=\"$id\" $selected>$title</option>";
+            }
+            echo '</optgroup>';
         }
-        echo "</select>&nbsp;";
+        echo '</select>&nbsp;';
 
-        echo "<select name=\"school\" id=\"school\">";
+        echo '<select name="school" id="school">';
         foreach ($schools as $fac => $sch) {
-          echo "<optgroup label=\"$fac\">";
-          foreach ($sch as $id => $title) {
-            $selected = '';
-            if (isset($_GET['school']) and $id == $_GET['school']) $selected = 'selected ';
-            echo "<option value=\"$id\" $selected>$title</option>";
-          }
-          echo "</optgroup>";
+            echo "<optgroup label=\"$fac\">";
+            foreach ($sch as $id => $title) {
+                $selected = '';
+                if (isset($_GET['school']) and $id == $_GET['school']) {
+                    $selected = 'selected ';
+                }
+                echo "<option value=\"$id\" $selected>$title</option>";
+            }
+            echo '</optgroup>';
         }
-        echo "</select>&nbsp;";
+        echo '</select>&nbsp;';
         echo "<input type=\"hidden\" name=\"calyear\" value=\"$current_year\" /><br />";
 
         if (isset($_GET['module'])) {
-          $extra = '&module=' . $_GET['module'];
+            $extra = '&module=' . $_GET['module'];
         } else {
-          $extra = '';
+            $extra = '';
         }
         ?>
         <div style="text-align:right; vertical-align:bottom"><?php echo drawTabs($current_year, 'calendar', $extra); ?></div>
@@ -242,292 +248,297 @@ $stmt->close();
     <tr><td colspan="2" style="border:0px; background-color:#1E3C7B; height:5px"></td></tr>
   </table>
   <?php
-  if ($userObject->has_role('SysAdmin')) {
-    echo "<div style=\"margin:5px\"><span class=\"extraevents\">" . $string['extraevents'] . "</span></div>\n";
-  } else {
-    echo "<br />\n";
-  }
-
-  function getDayOfWeek($day, $month, $year, $CalendarSystem) {
-    // CalendarSystem = 1 for Gregorian Calendar
-    if ($month < 3) {
-      $month = $month + 12;
-      $year = $year - 1;
+    if ($userObject->has_role('SysAdmin')) {
+        echo '<div style="margin:5px"><span class="extraevents">' . $string['extraevents'] . "</span></div>\n";
+    } else {
+        echo "<br />\n";
     }
-    return ($day + (2 * $month) + intval(6 * ($month + 1) / 10) + $year + intval($year/4) - intval($year/100) + intval($year/400) + $CalendarSystem) % 7;
-  }
 
-  $current_month = 1;
+    function getDayOfWeek($day, $month, $year, $CalendarSystem)
+    {
+      // CalendarSystem = 1 for Gregorian Calendar
+        if ($month < 3) {
+            $month = $month + 12;
+            $year = $year - 1;
+        }
+        return ($day + (2 * $month) + intval(6 * ($month + 1) / 10) + $year + intval($year / 4) - intval($year / 100) + intval($year / 400) + $CalendarSystem) % 7;
+    }
+
+    $current_month = 1;
 
   // Get lab information.
-  $lab_list = array();
-  $stmt = $mysqli->prepare("SELECT id, room_no, name FROM labs");
-  $stmt->execute();
-  $stmt->bind_result($lab_id, $room_no, $name);
-  while ($stmt->fetch()) {
-    $lab_list[$lab_id]['room_no'] = $room_no;
-    $lab_list[$lab_id]['name'] = $name;
-  }
-  $stmt->close();
-
-  //show only exams in a particular school
-  $schools_sql = '';
-  if (isset($_GET['school']) and $_GET['school'] != '') {
-    foreach ($schools as $fac => $sch) {
-      foreach ($sch as $id => $title) {
-        if ($id == $_GET['school']) {
-          $school_name = $title;
-          break 2;
-        }
-      }
-    }
-    // Get the module list
-    $schools_sql = '';
-    $stmt = $mysqli->prepare("SELECT moduleid FROM modules WHERE schoolid = ?");
-    $stmt->bind_param('i', $_GET['school']);
+    $lab_list = array();
+    $stmt = $mysqli->prepare('SELECT id, room_no, name FROM labs');
     $stmt->execute();
-    $stmt->bind_result($moduleid);
+    $stmt->bind_result($lab_id, $room_no, $name);
     while ($stmt->fetch()) {
-      if($schools_sql == '') {
-        $schools_sql = ' AND (';
-      } else {
-        $schools_sql .= ' OR ';
-      }
-      $schools_sql .= " moduleID LIKE '%$moduleid%' ";
+        $lab_list[$lab_id]['room_no'] = $room_no;
+        $lab_list[$lab_id]['name'] = $name;
     }
     $stmt->close();
-    if ($schools_sql != '') $schools_sql .= ')';
-  }
 
-  if (isset($_GET['lab']) and $_GET['lab'] != -1) {
-    $lab_sql = " AND (labs='" . $_GET['lab'] . "' OR labs LIKE '%," . $_GET['lab'] . ",%' OR labs LIKE '" . $_GET['lab'] . ",%' OR labs LIKE '%," . $_GET['lab'] . "')";
-  } else {
-    $lab_sql = '';
-  }
-
-  $max_property_id = 0;
-  $paper_details = array();
-  $paper_ids = array();
-  $property_id = 0;
-  // Get scheduled summative exams
-  if ($schools_sql != '' or !isset($_GET['school']) or (isset($_GET['school']) and ($_GET['school'] == -1 or $_GET['school'] == ''))) {
-    // Get papers running on various dates.
-    $result = $mysqli->prepare("SELECT paper_type, password, exam_duration, DATE_FORMAT(start_date,'%Y/%m/%d') AS date, labs, DATE_FORMAT(start_date,'%H:%i') AS start_time, DATE_FORMAT(start_date,'%l') AS start_hour, DATE_FORMAT(start_date,'%i') AS start_minute, DATE_FORMAT(start_date,'%p') AS am_pm, DATE_FORMAT(end_date,'%H:%i') AS end_time, properties.property_id, paper_title, DATE_FORMAT(start_date,'%c') AS month, DATE_FORMAT(start_date,'%e') AS start_day, DATE_FORMAT(end_date,'%e') AS end_date, idMod, timezone FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idmod = modules.id AND start_date >= " . $current_year . "0101000000 AND end_date <= " . $current_year . "1231235959 AND paper_type IN ('2', '4') AND deleted IS NULL $schools_sql $lab_sql ORDER BY start_date");
-    $result->execute();
-    $result->bind_result($paper_type, $password, $duration, $main_date, $labs, $start_time, $start_hour, $start_minute, $am_pm, $end_time, $property_id, $paper_title, $month, $start_day, $end_date, $idMod, $timezone);
-    while ($result->fetch()) {
-      $paper_details[$property_id]['type']        	= $paper_type;
-      $paper_details[$property_id]['labs']        	= $labs;
-      $paper_details[$property_id]['date']        	= $main_date;
-      $paper_details[$property_id]['start_day']   	= $start_day;
-      $paper_details[$property_id]['start_time']  	= $start_time;
-      $paper_details[$property_id]['am_pm']       	= $am_pm;
-      $paper_details[$property_id]['end_date']    	= $end_date;
-      $paper_details[$property_id]['paper_title'] 	= $paper_title;
-      if (strlen($paper_details[$property_id]['paper_title']) > 30) {
-        $paper_details[$property_id]['paper_title'] = str_replace('_', ' ' , $paper_details[$property_id]['paper_title']);
-      }
-      $paper_details[$property_id]['property_id'] 	= $property_id;
-      $paper_details[$property_id]['month']       	= $month;
-      $paper_details[$property_id]['cal_year']    	= $current_year;
-      $paper_details[$property_id]['start_hour']  	= $start_hour;
-      $paper_details[$property_id]['start_minute'] = $start_minute;
-      $paper_details[$property_id]['end_time']    	= $end_time;
-      $paper_details[$property_id]['idMod']       	= $idMod;
-      $paper_details[$property_id]['password']    	= $password;
-      $paper_details[$property_id]['duration']    	= $duration;
-      if ($timezone == '') {
-        $paper_details[$property_id]['timezone']		= '';
-      } else {
-        $paper_details[$property_id]['timezone']		= $timezone_array[$timezone];
-      }
-      $paper_ids[] = $property_id;
-      if ($property_id > $max_property_id) {
-        $max_property_id = $property_id;
-      }
+  //show only exams in a particular school
+    $schools_sql = '';
+    if (isset($_GET['school']) and $_GET['school'] != '') {
+        foreach ($schools as $fac => $sch) {
+            foreach ($sch as $id => $title) {
+                if ($id == $_GET['school']) {
+                    $school_name = $title;
+                    break 2;
+                }
+            }
+        }
+      // Get the module list
+        $schools_sql = '';
+        $stmt = $mysqli->prepare('SELECT moduleid FROM modules WHERE schoolid = ?');
+        $stmt->bind_param('i', $_GET['school']);
+        $stmt->execute();
+        $stmt->bind_result($moduleid);
+        while ($stmt->fetch()) {
+            if ($schools_sql == '') {
+                $schools_sql = ' AND (';
+            } else {
+                $schools_sql .= ' OR ';
+            }
+            $schools_sql .= " moduleID LIKE '%$moduleid%' ";
+        }
+        $stmt->close();
+        if ($schools_sql != '') {
+            $schools_sql .= ')';
+        }
     }
-    $result->close();
-    // Set the property id to be the maximum value found so that we do not overwrite any of the details retrived in the loop above.
-    $property_id = $max_property_id;
-  }
+
+    if (isset($_GET['lab']) and $_GET['lab'] != -1) {
+        $lab_sql = " AND (labs='" . $_GET['lab'] . "' OR labs LIKE '%," . $_GET['lab'] . ",%' OR labs LIKE '" . $_GET['lab'] . ",%' OR labs LIKE '%," . $_GET['lab'] . "')";
+    } else {
+        $lab_sql = '';
+    }
+
+    $max_property_id = 0;
+    $paper_details = array();
+    $paper_ids = array();
+    $property_id = 0;
+  // Get scheduled summative exams
+    if ($schools_sql != '' or !isset($_GET['school']) or (isset($_GET['school']) and ($_GET['school'] == -1 or $_GET['school'] == ''))) {
+      // Get papers running on various dates.
+        $result = $mysqli->prepare("SELECT paper_type, password, exam_duration, DATE_FORMAT(start_date,'%Y/%m/%d') AS date, labs, DATE_FORMAT(start_date,'%H:%i') AS start_time, DATE_FORMAT(start_date,'%l') AS start_hour, DATE_FORMAT(start_date,'%i') AS start_minute, DATE_FORMAT(start_date,'%p') AS am_pm, DATE_FORMAT(end_date,'%H:%i') AS end_time, properties.property_id, paper_title, DATE_FORMAT(start_date,'%c') AS month, DATE_FORMAT(start_date,'%e') AS start_day, DATE_FORMAT(end_date,'%e') AS end_date, idMod, timezone FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idmod = modules.id AND start_date >= " . $current_year . '0101000000 AND end_date <= ' . $current_year . "1231235959 AND paper_type IN ('2', '4') AND deleted IS NULL $schools_sql $lab_sql ORDER BY start_date");
+        $result->execute();
+        $result->bind_result($paper_type, $password, $duration, $main_date, $labs, $start_time, $start_hour, $start_minute, $am_pm, $end_time, $property_id, $paper_title, $month, $start_day, $end_date, $idMod, $timezone);
+        while ($result->fetch()) {
+            $paper_details[$property_id]['type']          = $paper_type;
+            $paper_details[$property_id]['labs']          = $labs;
+            $paper_details[$property_id]['date']          = $main_date;
+            $paper_details[$property_id]['start_day']     = $start_day;
+            $paper_details[$property_id]['start_time']    = $start_time;
+            $paper_details[$property_id]['am_pm']         = $am_pm;
+            $paper_details[$property_id]['end_date']      = $end_date;
+            $paper_details[$property_id]['paper_title']   = $paper_title;
+            if (strlen($paper_details[$property_id]['paper_title']) > 30) {
+                $paper_details[$property_id]['paper_title'] = str_replace('_', ' ', $paper_details[$property_id]['paper_title']);
+            }
+            $paper_details[$property_id]['property_id']   = $property_id;
+            $paper_details[$property_id]['month']         = $month;
+            $paper_details[$property_id]['cal_year']      = $current_year;
+            $paper_details[$property_id]['start_hour']    = $start_hour;
+            $paper_details[$property_id]['start_minute'] = $start_minute;
+            $paper_details[$property_id]['end_time']      = $end_time;
+            $paper_details[$property_id]['idMod']         = $idMod;
+            $paper_details[$property_id]['password']      = $password;
+            $paper_details[$property_id]['duration']      = $duration;
+            if ($timezone == '') {
+                $paper_details[$property_id]['timezone']        = '';
+            } else {
+                $paper_details[$property_id]['timezone']        = $timezone_array[$timezone];
+            }
+            $paper_ids[] = $property_id;
+            if ($property_id > $max_property_id) {
+                $max_property_id = $property_id;
+            }
+        }
+        $result->close();
+      // Set the property id to be the maximum value found so that we do not overwrite any of the details retrived in the loop above.
+        $property_id = $max_property_id;
+    }
 
   // Get extra calendar events
-  $paper_no = ($property_id + 1);
-  $result = $mysqli->prepare("SELECT id, title, message, duration, bgcolor, DATE_FORMAT(thedate,'%H:%i') AS start_time, DATE_FORMAT(thedate,'%p') AS am_pm, DATE_FORMAT(thedate,'%l') AS start_hour, DATE_FORMAT(thedate,'%i') AS start_minute, DATE_FORMAT(thedate,'%e') AS start_day, DATE_FORMAT(thedate,'%c') AS month FROM extra_cal_dates WHERE thedate >= " . $current_year . "0101000000 AND thedate <= " . $current_year . "1231235959 AND deleted IS NULL");
-  $result->execute();
-  $result->bind_result($eventID, $title, $message, $duration, $bgcolor, $start_time, $am_pm, $start_hour, $start_minute, $start_day, $month);
-  while ($result->fetch()) {
-    $paper_details[$paper_no]['eventID']      = $eventID;
-    $paper_details[$paper_no]['type']         = 'extra_date';
-    $paper_details[$paper_no]['title']        = $title;
-    $paper_details[$paper_no]['message']      = $message;
-    $paper_details[$paper_no]['bgcolor']      = $bgcolor;
-    $paper_details[$paper_no]['start_time']   = $start_time;
-    $paper_details[$paper_no]['am_pm']        = $am_pm;
-    $paper_details[$paper_no]['start_day']    = $start_day;
-    $paper_details[$paper_no]['start_hour']   = $start_hour;
-    $paper_details[$paper_no]['start_minute'] = $start_minute;
-    $paper_details[$paper_no]['month']        = $month;
-    $paper_details[$paper_no]['cal_year']     = $current_year;
-    $paper_details[$paper_no]['duration']     = $duration;
-    $paper_no++;
+    $paper_no = ($property_id + 1);
+    $result = $mysqli->prepare("SELECT id, title, message, duration, bgcolor, DATE_FORMAT(thedate,'%H:%i') AS start_time, DATE_FORMAT(thedate,'%p') AS am_pm, DATE_FORMAT(thedate,'%l') AS start_hour, DATE_FORMAT(thedate,'%i') AS start_minute, DATE_FORMAT(thedate,'%e') AS start_day, DATE_FORMAT(thedate,'%c') AS month FROM extra_cal_dates WHERE thedate >= " . $current_year . '0101000000 AND thedate <= ' . $current_year . '1231235959 AND deleted IS NULL');
+    $result->execute();
+    $result->bind_result($eventID, $title, $message, $duration, $bgcolor, $start_time, $am_pm, $start_hour, $start_minute, $start_day, $month);
+    while ($result->fetch()) {
+        $paper_details[$paper_no]['eventID']      = $eventID;
+        $paper_details[$paper_no]['type']         = 'extra_date';
+        $paper_details[$paper_no]['title']        = $title;
+        $paper_details[$paper_no]['message']      = $message;
+        $paper_details[$paper_no]['bgcolor']      = $bgcolor;
+        $paper_details[$paper_no]['start_time']   = $start_time;
+        $paper_details[$paper_no]['am_pm']        = $am_pm;
+        $paper_details[$paper_no]['start_day']    = $start_day;
+        $paper_details[$paper_no]['start_hour']   = $start_hour;
+        $paper_details[$paper_no]['start_minute'] = $start_minute;
+        $paper_details[$paper_no]['month']        = $month;
+        $paper_details[$paper_no]['cal_year']     = $current_year;
+        $paper_details[$paper_no]['duration']     = $duration;
+        $paper_no++;
 
-    if (intval($start_time) + $duration/60 > 23) {
-      $prev_paper_no = $paper_no - 1;
-      $paper_details[$paper_no]                  = $paper_details[$prev_paper_no];
-      $paper_details[$paper_no]['title']         = $title . ' ' . $string['eventcont'] ;
-      $paper_details[$paper_no]['start_hour']    = '';
-      $paper_details[$paper_no]['start_minute']  = '';
-      $paper_details[$paper_no]['am_pm']         = '';
-      $paper_details[$paper_no]['start_day']     = $start_day+1;
-      $paper_details[$prev_paper_no]['duration'] = 720 - ($start_hour * 60 + $start_minute);
-      $paper_details[$paper_no]['duration']      = $duration - $paper_details[$prev_paper_no]['duration'];
-      $paper_no++;
+        if (intval($start_time) + $duration / 60 > 23) {
+            $prev_paper_no = $paper_no - 1;
+            $paper_details[$paper_no]                  = $paper_details[$prev_paper_no];
+            $paper_details[$paper_no]['title']         = $title . ' ' . $string['eventcont'] ;
+            $paper_details[$paper_no]['start_hour']    = '';
+            $paper_details[$paper_no]['start_minute']  = '';
+            $paper_details[$paper_no]['am_pm']         = '';
+            $paper_details[$paper_no]['start_day']     = $start_day + 1;
+            $paper_details[$prev_paper_no]['duration'] = 720 - ($start_hour * 60 + $start_minute);
+            $paper_details[$paper_no]['duration']      = $duration - $paper_details[$prev_paper_no]['duration'];
+            $paper_no++;
+        }
     }
-  }
 
   // Get metadata security
-  if (count($paper_ids) > 0) {
-    $result = $mysqli->prepare('SELECT paperID, name, value FROM paper_metadata_security WHERE paperID IN (' . implode(',', $paper_ids) . ')');
-    $result->execute();
-    $result->bind_result($property_id, $metadata_name, $metadata_value);
-    while ($result->fetch()) {
-      $paper_details[$property_id]['metadata'][] = array('name'=>$metadata_name, 'value'=>$metadata_value);
+    if (count($paper_ids) > 0) {
+        $result = $mysqli->prepare('SELECT paperID, name, value FROM paper_metadata_security WHERE paperID IN (' . implode(',', $paper_ids) . ')');
+        $result->execute();
+        $result->bind_result($property_id, $metadata_name, $metadata_value);
+        while ($result->fetch()) {
+            $paper_details[$property_id]['metadata'][] = array('name' => $metadata_name, 'value' => $metadata_value);
+        }
+        $result->close();
     }
-    $result->close();
-  }
 
   // Sort all papers correctly by start time
-  $sortby = 'start_time';
-  $ordering = 'asc';
-  $paper_details = \sort::array_csort($paper_details, $sortby, $ordering);
+    $sortby = 'start_time';
+    $ordering = 'asc';
+    $paper_details = \sort::array_csort($paper_details, $sortby, $ordering);
 
-  $cellID = 0;
-  for ($i=1; $i<=12; $i++) {
-    $current_full_month = date("m", mktime(0, 0, 0, $current_month, 1, $current_year));
-    $days_in_month = date("t", mktime(0, 0, 0, $current_month, 1, $current_year));
-    $paper_no = 0;
+    $cellID = 0;
+    for ($i = 1; $i <= 12; $i++) {
+        $current_full_month = date('m', mktime(0, 0, 0, $current_month, 1, $current_year));
+        $days_in_month = date('t', mktime(0, 0, 0, $current_month, 1, $current_year));
+        $paper_no = 0;
 
-    echo "<div>";
-    echo "<table class=\"monthgrid\">\n";
-    $tmp_month = strtolower(date("F", mktime(0, 0, 0, $current_month, 1, $current_year)));
-    echo "<tr><td class=\"month\"><a name=\"$i\"></a>" . $string[$tmp_month] . "</td></tr>\n";
-    echo "<tr><td>";
-    echo "<table style=\"width:100%; font-size:85%; margin-left:auto; margin-right:auto\">\n";
-    echo "<tr><td class=\"dtext\">" . mb_substr($string['monday'],0,3,'UTF-8') . "</td><td class=\"dtext\">" . mb_substr($string['tuesday'],0,3,'UTF-8') . "</td><td class=\"dtext\">" . mb_substr($string['wednesday'],0,3,'UTF-8') . "</td><td class=\"dtext\">" . mb_substr($string['thursday'],0,3,'UTF-8') . "</td><td class=\"dtext\">" . mb_substr($string['friday'],0,3,'UTF-8') . "</td></tr>";
+        echo '<div>';
+        echo "<table class=\"monthgrid\">\n";
+        $tmp_month = strtolower(date('F', mktime(0, 0, 0, $current_month, 1, $current_year)));
+        echo "<tr><td class=\"month\"><a name=\"$i\"></a>" . $string[$tmp_month] . "</td></tr>\n";
+        echo '<tr><td>';
+        echo "<table style=\"width:100%; font-size:85%; margin-left:auto; margin-right:auto\">\n";
+        echo '<tr><td class="dtext">' . mb_substr($string['monday'], 0, 3, 'UTF-8') . '</td><td class="dtext">' . mb_substr($string['tuesday'], 0, 3, 'UTF-8') . '</td><td class="dtext">' . mb_substr($string['wednesday'], 0, 3, 'UTF-8') . '</td><td class="dtext">' . mb_substr($string['thursday'], 0, 3, 'UTF-8') . '</td><td class="dtext">' . mb_substr($string['friday'], 0, 3, 'UTF-8') . '</td></tr>';
 
-    $day_no = 1;
-    $cell_no = 1;
-    $subtract = 0;
-    $start_day = getDayOfWeek(1, $current_month, $current_year, 1);
-    if ($start_day == 6) {
-      $start_day = 1;
-      $day_no = 3;
-    } elseif ($start_day == 0) {
-      $start_day = 1;
-      $day_no = 2;
+        $day_no = 1;
+        $cell_no = 1;
+        $subtract = 0;
+        $start_day = getDayOfWeek(1, $current_month, $current_year, 1);
+        if ($start_day == 6) {
+            $start_day = 1;
+            $day_no = 3;
+        } elseif ($start_day == 0) {
+            $start_day = 1;
+            $day_no = 2;
+        }
+
+        do {
+            $week_no = null;
+            $tmp_day_no = $day_no - $subtract;
+            for ($col = 1; $col <= 5; $col++) {
+                if (($tmp_day_no) <= $days_in_month) {
+                    if ($week_no == null) {
+                        $week_no = date('W', mktime(0, 0, 0, $current_month, $tmp_day_no, $current_year));
+                    }
+                }
+                $tmp_day_no++;
+            }
+            echo "<tr id=\"week$week_no\">\n";
+            for ($col = 1; $col <= 5; $col++) {
+                if (($day_no - $subtract) <= $days_in_month) {
+                    if (($day_no - $subtract) != date('j') or $current_month != date('n') or $current_year != date('Y')) {
+                          // Day in month but not today
+                        if ($week_no == date('W')) {
+                            echo '<td class="dheadthisweek">';
+                        } else {
+                            echo '<td class="dhead">';
+                        }
+                        if ($day_no >= $start_day) {
+                            echo ($day_no - $subtract);
+                        } else {
+                            echo '&nbsp;';
+                            $subtract++;
+                        }
+                        echo '</td>';
+                    } elseif ($day_no >= $start_day) {
+                      // Today
+                        echo '<td class="dheadtoday">' . ($day_no - $subtract) . "</td>\n";
+                    } else {
+                        // Day not in month
+                        echo "<td class=\"dheadnomonth\">&nbsp;</td>\n";
+                        $subtract++;
+                    }
+                } else {
+              // Day not in month
+                    echo "<td class=\"dheadnomonth\">&nbsp;</td>\n";
+                }
+                $day_no++;
+            }
+            echo '</tr>';
+            $day_no -= 5;  // reset day number.
+
+            echo '<tr style="height:80px">';
+            for ($col = 1; $col <= 5; $col++) {
+                if (($day_no - $subtract) < 1 or $day_no < $start_day) {    // Day on grid before start of month.
+                    echo '<td class="daynomonth">&nbsp</td>';
+                } elseif (($day_no - $subtract) <= $days_in_month) {
+                    $dayid = 'd' . ($day_no - $subtract) . '_' . $current_month . '_' . $current_year;
+                    if (($day_no - $subtract) == date('j') and $current_month == date('n') and $current_year == date('Y')) {  // Current day
+                        echo "<td class=\"daycur\" id=\"$dayid\">";
+                    } else {
+                        echo "<td class=\"day\" id=\"$dayid\">";
+                    }
+                    $papers = 0;
+
+                    display_papers($day_no, $subtract, $current_year, $current_month, $paper_details, $papers, $cellID, $string, $default_timezone, $userObject, $mysqli);
+
+                    if ($papers == 0) {
+                        echo '&nbsp;';
+                    }
+
+                    if ($col == 5) {  // Check for Saturday exams.
+                        $saturday_exams = false;
+                        $day_number = '';
+                        foreach ($paper_details as $individual_paper) {
+                            if ($individual_paper['start_day'] == (($day_no + 1) - $subtract) and $individual_paper['cal_year'] == $current_year and $individual_paper['month'] == $current_month) {
+                                $saturday_exams = true;
+                                $day_number = $individual_paper['start_day'];
+                            }
+                        }
+
+                        if ($saturday_exams == true) {
+                            echo '<br /><table style="width:100%">';
+                            if ($day_number == date('j') and $current_month == date('n') and $current_year == date('Y')) {  // Current day
+                                echo "<tr><td class=\"dheadtoday\" style=\"border-left:0px\">$day_number &#8211; " . $string['saturday'] . '</td></tr>';
+                            } else {
+                                echo "<tr><td class=\"dhead\" style=\"border-left:0px\">$day_number &#8211; " . $string['saturday'] . '</td></tr>';
+                            }
+                            echo '</table>';
+                            display_papers($day_no + 1, $subtract, $current_year, $current_month, $paper_details, $papers, $cellID, $string, $default_timezone, $userObject, $mysqli);
+                        }
+                    }
+
+                    echo '</td>';
+                } else {        // Day on grid after end of month.
+                    echo '<td class="daynomonth">&nbsp;</td>';
+                }
+                $day_no++;
+            }
+            echo "</tr>\n";
+
+            $day_no += 2;  // Skip the weekend.
+        } while (($day_no - $subtract) <= $days_in_month);
+        echo "</table>\n</td></tr>\n</table></div><br />\n";
+
+        $current_month++;
     }
-
-    do {
-      $week_no = NULL;
-      $tmp_day_no = $day_no - $subtract;
-      for ($col=1; $col<=5; $col++) {
-        if (($tmp_day_no) <= $days_in_month) {
-          if ($week_no == NULL) {
-            $week_no = date("W", mktime(0, 0, 0, $current_month, $tmp_day_no, $current_year));
-          }
-        }
-        $tmp_day_no++;
-      }
-      echo "<tr id=\"week$week_no\">\n";
-      for ($col=1; $col<=5; $col++) {
-        if (($day_no - $subtract) <= $days_in_month) {
-          if (($day_no - $subtract) != date("j") or $current_month != date("n") or $current_year != date("Y")) {
-            // Day in month but not today
-            if ($week_no == date("W")) {
-              echo '<td class="dheadthisweek">';
-            } else {
-              echo '<td class="dhead">';
-            }
-            if ($day_no >= $start_day) {
-              echo ($day_no-$subtract);
-            } else {
-              echo '&nbsp;';
-              $subtract++;
-            }
-            echo '</td>';
-          } elseif ($day_no >= $start_day) {
-            // Today
-            echo "<td class=\"dheadtoday\">" . ($day_no-$subtract) . "</td>\n";
-          } else {
-            // Day not in month
-            echo "<td class=\"dheadnomonth\">&nbsp;</td>\n";
-            $subtract++;
-          }
-        } else {
-          // Day not in month
-          echo "<td class=\"dheadnomonth\">&nbsp;</td>\n";
-        }
-        $day_no++;
-      }
-      echo '</tr>';
-      $day_no -= 5;  // reset day number.
-
-      echo '<tr style="height:80px">';
-      for ($col=1; $col<=5; $col++) {
-        if (($day_no - $subtract) < 1 or $day_no < $start_day) {    // Day on grid before start of month.
-          echo '<td class="daynomonth">&nbsp</td>';
-        } elseif (($day_no - $subtract) <= $days_in_month) {
-          $dayid = 'd' . ($day_no - $subtract) . '_' . $current_month . '_' .$current_year;
-          if (($day_no - $subtract) == date("j") and $current_month == date("n") and $current_year == date("Y")) {  // Current day
-            echo "<td class=\"daycur\" id=\"$dayid\">";
-          } else {
-            echo "<td class=\"day\" id=\"$dayid\">";
-          }
-          $papers = 0;
-
-          display_papers($day_no, $subtract, $current_year, $current_month, $paper_details, $papers, $cellID, $string, $default_timezone, $userObject, $mysqli);
-
-          if ($papers == 0) echo '&nbsp;';
-
-          if ($col == 5) {  // Check for Saturday exams.
-            $saturday_exams = false;
-            $day_number = '';
-            foreach ($paper_details as $individual_paper) {
-              if ($individual_paper['start_day'] == (($day_no + 1) - $subtract) and $individual_paper['cal_year'] == $current_year and $individual_paper['month'] == $current_month) {
-                $saturday_exams = true;
-                $day_number = $individual_paper['start_day'];
-              }
-            }
-
-            if ($saturday_exams == true) {
-              echo "<br /><table style=\"width:100%\">";
-              if ($day_number == date("j") and $current_month == date("n") and $current_year == date("Y")) {  // Current day
-                echo "<tr><td class=\"dheadtoday\" style=\"border-left:0px\">$day_number &#8211; " . $string['saturday'] . "</td></tr>";
-              } else {
-                echo "<tr><td class=\"dhead\" style=\"border-left:0px\">$day_number &#8211; " . $string['saturday'] . "</td></tr>";
-              }
-              echo "</table>";
-              display_papers($day_no + 1, $subtract, $current_year, $current_month, $paper_details, $papers, $cellID, $string, $default_timezone, $userObject, $mysqli);
-            }
-          }
-
-          echo "</td>";
-        } else {        // Day on grid after end of month.
-          echo '<td class="daynomonth">&nbsp;</td>';
-        }
-        $day_no++;
-      }
-      echo "</tr>\n";
-
-      $day_no += 2;  // Skip the weekend.
-    } while (($day_no-$subtract) <= $days_in_month);
-    echo "</table>\n</td></tr>\n</table></div><br />\n";
-
-    $current_month++;
-  }
-  $mysqli->close();
-  ?>
+    $mysqli->close();
+    ?>
 </form>
 <?php
 $render = new render($configObject);

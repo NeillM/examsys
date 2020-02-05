@@ -16,10 +16,13 @@
 
 /**
  * Validation exception class
- * 
+ *
  * @author Rob Ingram
  * @version 1.0
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package
  */
-class ValidationException extends Exception { }
+class ValidationException extends Exception
+{
+
+}

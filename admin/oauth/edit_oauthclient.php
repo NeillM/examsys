@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -16,7 +17,7 @@
 
 /**
 * Admin screen to edit an oauth client
-* 
+*
 * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 * @copyright Copyright (c) 2015 onwards The University of Nottingham
 */
@@ -71,7 +72,7 @@ if (isset($_POST['submit'])) {
         $oauth->set_permission('assessmentmanagement/schedule', $client, true);
     } else {
         $oauth->set_permission('assessmentmanagement/schedule', $client, false);
-    }  
+    }
     if (isset($_POST['gradebook'])) {
         $oauth->set_permission('gradebook', $client, true);
     } else {
@@ -82,12 +83,12 @@ if (isset($_POST['submit'])) {
     } else {
         $external->delete_external_system_mapping($client);
     }
-    header("location: list_oauthclient.php", true, 303);
+    header('location: list_oauthclient.php', true, 303);
     exit();
 } else {
     $client = check_var('client', 'GET', true, false, true);
     $clients = array();
-    $result = $mysqli->prepare("SELECT client_id, client_secret, redirect_uri, user_id FROM oauth_clients WHERE client_id = ?");
+    $result = $mysqli->prepare('SELECT client_id, client_secret, redirect_uri, user_id FROM oauth_clients WHERE client_id = ?');
     $result->bind_param('s', $client);
     $result->execute();
     $result->bind_result($client_id, $client_secret, $redriect_uri, $user_id);
@@ -97,8 +98,8 @@ if (isset($_POST['submit'])) {
     $result->close();
     
     $clientperms = array();
-    $result = $mysqli->prepare("SELECT p.action, w.access FROM permissions p
-        LEFT JOIN webservice_permissions w ON p.action = w.action and w.client_id = ?");
+    $result = $mysqli->prepare('SELECT p.action, w.access FROM permissions p
+        LEFT JOIN webservice_permissions w ON p.action = w.action and w.client_id = ?');
     $result->bind_param('s', $client);
     $result->execute();
     $result->bind_result($action, $access);
@@ -122,8 +123,8 @@ $lang['title'] = $string['editoauthclient'];
 $lang['create'] = $string['addoauthclient'];
 $lang['view'] = $string['editoauthclient'];
 $lang['delete'] = $string['deleteoauthclient'];
-$additionaljs = "<script type=\"text/javascript\" src=\"js/oauthclientsinit.min.js\"></script>";
-$addtionalcss = "<style type=\"text/css\">
+$additionaljs = '<script type="text/javascript" src="js/oauthclientsinit.min.js"></script>';
+$addtionalcss = '<style type="text/css">
           td {text-align:left}
           .field {text-align:right; padding-right:10px}
           .form-error {
@@ -134,8 +135,8 @@ $addtionalcss = "<style type=\"text/css\">
             color: #800000;
             border: 2px solid #800000;
           }
-        </style>";
-$breadcrumb = array($string['home'] => "../../index.php", $string['administrativetools'] => "../index.php", $string['oauthkeys'] => "list_oauth.php", $string['listoauthclient'] => "list_oauthclient.php" );
+        </style>';
+$breadcrumb = array($string['home'] => '../../index.php', $string['administrativetools'] => '../index.php', $string['oauthkeys'] => 'list_oauth.php', $string['listoauthclient'] => 'list_oauthclient.php' );
 $action = $_SERVER['PHP_SELF'];
 $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 $render->render_admin_options('add_oauthclient.php', 'lti_key_16.png', $lang, $toprightmenu, 'admin/options.html');
@@ -146,36 +147,36 @@ $render->render_admin_content($breadcrumb, $lang);
 <div align="center">
     <form id="theform" name="add_session" method="post" action="<?php echo $_SERVER['PHP_SELF'] ?>" autocomplete="off">
         <table cellpadding="0" cellspacing="2" border="0">
-        <?php 
-            foreach ($clients as $id => $client) {
-                echo "<tr><td class=\"field\">" . $string['secret'] . "</td><td><input type=\"text\" size=\"80\" maxlength=\"80\" id=\"secret\" name=\"secret\" value=\"" . $client[0] . "\" required /></td></tr>";
-                echo "<tr><td class=\"field\">" . $string['uri'] . "</td><td><input type=\"text\" size=\"80\" maxlength=\"80\" id=\"uri\" name=\"uri\" value=\"" . $client[1] . "\" required /></td></tr>";
-                echo "<input type=\"hidden\" name=\"client\" id=\"client\" value=\"" . $id . "\"/>";
-                echo "<input type=\"hidden\" name=\"userid\" id=\"userid\" value=\"" . $client[2] . "\"/>";
-            }
+        <?php
+        foreach ($clients as $id => $client) {
+            echo '<tr><td class="field">' . $string['secret'] . '</td><td><input type="text" size="80" maxlength="80" id="secret" name="secret" value="' . $client[0] . '" required /></td></tr>';
+            echo '<tr><td class="field">' . $string['uri'] . '</td><td><input type="text" size="80" maxlength="80" id="uri" name="uri" value="' . $client[1] . '" required /></td></tr>';
+            echo '<input type="hidden" name="client" id="client" value="' . $id . '"/>';
+            echo '<input type="hidden" name="userid" id="userid" value="' . $client[2] . '"/>';
+        }
         ?>
             <tr><td class="field"><?php echo $string['extsys'] ?></td><td>
             <select name="extsys" id="extsys">
                 <option value=""></option>
                 <?php
-                    foreach ($extsys as $id => $name) {
-                        if ($id === $currentextsys) {
-                            echo "<option value=\"$id\" selected=\"selected\">$name</option>\n";
-                        } else {
-                            echo "<option value=\"$id\">$name</option>\n";
-                        }
+                foreach ($extsys as $id => $name) {
+                    if ($id === $currentextsys) {
+                        echo "<option value=\"$id\" selected=\"selected\">$name</option>\n";
+                    } else {
+                        echo "<option value=\"$id\">$name</option>\n";
                     }
+                }
                 ?>
             </select>
             </td></tr>
         <?php
-            foreach ($clientperms as $action => $access) {
-                if ($access) {
-                    echo "<tr><td class=\"field\">" . $string[$action] . "</td><td><input type=\"checkbox\" name=\"" . $action . "\" checked /></td></tr>";
-                } else {
-                    echo "<tr><td class=\"field\">" . $string[$action] . "</td><td><input type=\"checkbox\" name=\"" . $action . "\"/></td></tr>";
-                }  
+        foreach ($clientperms as $action => $access) {
+            if ($access) {
+                echo '<tr><td class="field">' . $string[$action] . '</td><td><input type="checkbox" name="' . $action . '" checked /></td></tr>';
+            } else {
+                echo '<tr><td class="field">' . $string[$action] . '</td><td><input type="checkbox" name="' . $action . '"/></td></tr>';
             }
+        }
         ?>
         </table>
       <p><input type="submit" class="ok" name="submit" value="<?php echo $string['save'] ?>"><input class="cancel" id="cancel" type="button" name="home" value="<?php echo $string['cancel'] ?>" /></p>

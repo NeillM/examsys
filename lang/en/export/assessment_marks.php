@@ -25,4 +25,3 @@ $string['submitted'] = 'Submitted';
 $string['started'] = 'Started';
 $string['correctanswers'] = 'Correct answers ->';
 $string['nodata'] = 'No students took the exam in the selected date range';
-?>

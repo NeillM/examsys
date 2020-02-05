@@ -21,4 +21,3 @@ $string['editfaculty'] = 'Edit Faculty';
 $string['deletefaculty'] = 'Delete Faculty';
 $string['schoolno'] = 'School No';
 $string['code'] = 'Code';
-?>

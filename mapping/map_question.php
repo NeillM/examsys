@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -30,66 +31,67 @@ require '../include/display_functions.inc';
 $paperID = check_var('paperID', 'REQUEST', true, false, true);
 
 if (file_exists($cfg_web_root . "lang/$language/paper/start.php")) {
-  require $cfg_web_root . "lang/$language/paper/start.php";
-  require $cfg_web_root . "lang/$language/question/edit/index.php";
+    require $cfg_web_root . "lang/$language/paper/start.php";
+    require $cfg_web_root . "lang/$language/question/edit/index.php";
 }
 
-function display_q($configObject, $target_id, $db) {
-  $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes FROM questions LEFT JOIN options ON questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num");
-  $question_data->bind_param('i', $target_id);
-  $question_data->execute();
-  $question_data->store_result();
-  $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes);
-  $num_rows = $question_data->num_rows;
-  echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
-  echo "<col width=\"40\"><col>\n";
-  $old_q_id  = 0;
-  while ($question_data->fetch()) {
-    if ($old_q_id != $q_id) {
-      $question['theme'] = trim($theme);
-      $question['scenario'] = trim($scenario);
-      $question['leadin'] = trim($leadin);
-      $question['notes'] = trim($notes);
-      $question['q_type'] = $q_type;
-      $question['q_id'] = $q_id;
-      $question['score_method'] = $score_method;
-      $question['display_method'] = $display_method;
-      $question['settings'] = $settings;
-      $question['q_media'] = $q_media;
-      $question['q_media_width'] = $q_media_width;
-      $question['q_media_height'] = $q_media_height;
-      $question['dismiss'] = '';
-      $question['assigned_number'] = $_GET['qNo'];
+function display_q($configObject, $target_id, $db)
+{
+    $question_data = $db->prepare("SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect, marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width, q_media_height, o_media, o_media_width, o_media_height, notes FROM questions LEFT JOIN options ON questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num");
+    $question_data->bind_param('i', $target_id);
+    $question_data->execute();
+    $question_data->store_result();
+    $question_data->bind_result($q_type, $q_id, $score_method, $display_method, $settings, $marks_correct, $marks_incorrect, $marks_partial, $theme, $scenario, $leadin, $correct, $option_text, $q_media, $q_media_width, $q_media_height, $o_media, $o_media_width, $o_media_height, $notes);
+    $num_rows = $question_data->num_rows;
+    echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
+    echo "<col width=\"40\"><col>\n";
+    $old_q_id  = 0;
+    while ($question_data->fetch()) {
+        if ($old_q_id != $q_id) {
+            $question['theme'] = trim($theme);
+            $question['scenario'] = trim($scenario);
+            $question['leadin'] = trim($leadin);
+            $question['notes'] = trim($notes);
+            $question['q_type'] = $q_type;
+            $question['q_id'] = $q_id;
+            $question['score_method'] = $score_method;
+            $question['display_method'] = $display_method;
+            $question['settings'] = $settings;
+            $question['q_media'] = $q_media;
+            $question['q_media_width'] = $q_media_width;
+            $question['q_media_height'] = $q_media_height;
+            $question['dismiss'] = '';
+            $question['assigned_number'] = $_GET['qNo'];
+        }
+        $question['options'][] = array('correct' => $correct, 'option_text' => $option_text, 'o_media' => $o_media, 'o_media_width' => $o_media_width, 'o_media_height' => $o_media_height, 'marks_correct' => $marks_correct, 'marks_incorrect' => $marks_incorrect, 'marks_partial' => $marks_partial);
     }
-    $question['options'][] = array('correct'=>$correct, 'option_text'=>$option_text, 'o_media'=>$o_media, 'o_media_width'=>$o_media_width, 'o_media_height'=>$o_media_height, 'marks_correct'=>$marks_correct, 'marks_incorrect'=>$marks_incorrect, 'marks_partial'=>$marks_partial);
-  }
-  $question_data->close();
+    $question_data->close();
 
-  $question_no	= 0;
-  $paper_type		= 0;
-  $unanswered 	= false;
+    $question_no  = 0;
+    $paper_type       = 0;
+    $unanswered   = false;
 
-  $question_offset = $_GET['qNo'];
+    $question_offset = $_GET['qNo'];
 
-  $screen_pre_submitted = 0;
-  $user_answers = array();
+    $screen_pre_submitted = 0;
+    $user_answers = array();
 
-  if ($question['q_type'] == 'enhancedcalc') {
-    $question['screen'] = 1;
-    $question['paper_questions'] = [];
-    require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
-    if (!isset($configObj)) {
-      $configObj = Config::get_instance();
+    if ($question['q_type'] == 'enhancedcalc') {
+        $question['screen'] = 1;
+        $question['paper_questions'] = [];
+        require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
+        if (!isset($configObj)) {
+            $configObj = Config::get_instance();
+        }
+        $question['object'] = new EnhancedCalc($configObj);
+        $question['object']->load($question);
     }
-    $question['object'] = new EnhancedCalc($configObj);
-    $question['object']->load($question);
-  }
 
-  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-  display_question($configObject, $question, $paper_type, 0, 1, '', $question_no, $user_answers, $unanswered, $texteditorplugin);
+    $texteditorplugin = \plugins\plugins_texteditor::get_editor();
+    display_question($configObject, $question, $paper_type, 0, 1, '', $question_no, $user_answers, $unanswered, $texteditorplugin);
 
-  $question_nos[] = $old_q_id;
-  echo "</table>\n";
+    $question_nos[] = $old_q_id;
+    echo "</table>\n";
 }
 ?>
 <html>
@@ -108,7 +110,7 @@ function display_q($configObject, $target_id, $db) {
   <?php
     $texteditorplugin = \plugins\plugins_texteditor::get_editor();
     $texteditorplugin->display_header();
-  ?>
+    ?>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" href="../css/start.css" type="text/css" />
   <link rel="stylesheet" href="../css/mapping_form.css" type="text/css" />
@@ -120,8 +122,8 @@ function display_q($configObject, $target_id, $db) {
   </style>
   <?php
   // Check if any 3d file types are enabled and render js.
-  threed_handler::render_js($string);
-  ?>
+    threed_handler::render_js($string);
+    ?>
 </head>
 <body>
   <div id="maincontent">
@@ -131,21 +133,21 @@ function display_q($configObject, $target_id, $db) {
 
   echo "<div id=\"obj_form\">\n";
   echo "<form id='theform' method=\"post\" autocomplete=\"off\">";
-  try {
+try {
     echo render_objectives_mapping_form($mysqli, $paperID, $string);
-  } catch(Exception $e) {
-  $title = $string['objectives_error'];
-  if (isset($string[$e->getMessage()])) {
-    $message = $string[$e->getMessage()];
-  } else {
-    $message = $e->getMessage();
-  }
-  display_error($title, $message, false);
+} catch (Exception $e) {
+    $title = $string['objectives_error'];
+    if (isset($string[$e->getMessage()])) {
+        $message = $string[$e->getMessage()];
+    } else {
+        $message = $e->getMessage();
+    }
+    display_error($title, $message, false);
 }
-  echo "<br />";
+  echo '<br />';
   echo "<input type=\"hidden\" name=\"paperID\" value=\"$paperID\" />\n";
   echo "<input type=\"hidden\" name=\"questionID\" value=\"{$_GET['q_id']}\" />\n";
-  echo "<div style=\"text-align:center; width:100%\"><input type=\"submit\" name=\"submit\" value=\"" . $string['save'] . "\" class=\"ok\" /><input class=\"cancel\" id=\"cancel\" type=\"button\" value=\"" . $string['cancel'] . "\" /></div>";
+  echo '<div style="text-align:center; width:100%"><input type="submit" name="submit" value="' . $string['save'] . '" class="ok" /><input class="cancel" id="cancel" type="button" value="' . $string['cancel'] . '" /></div>';
 
   echo "</form>\n</div>\n</div>\n";
 ?>

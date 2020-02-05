@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -22,7 +23,6 @@
 * @package
 */
 
-
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
 
@@ -33,4 +33,3 @@ $questions = $properties->get_questions();
 
 $rafObject = new RAF($userObject, $configObject, $mysqli, $string);
 $rafObject->export($questions);
-?>

@@ -24,12 +24,15 @@
  * @package
  */
 
-class UnsupportedMappingLevelException extends Exception { }
+class UnsupportedMappingLevelException extends Exception
+{
+
+}
 
 interface iCMAPI
 {
-  const LEVEL_SESSION = 0;
-  const LEVEL_MODULE = 1;
+    const LEVEL_SESSION = 0;
+    const LEVEL_MODULE = 1;
 
   /**
    * Return objectives from the remote system
@@ -38,7 +41,7 @@ interface iCMAPI
    * @param mysqli $db database connection
    * @return mixed Array of session and objective data in format required by Rogō
    */
-  public function getObjectives($moduleID, $session, $db);
+    public function getObjectives($moduleID, $session, $db);
 
   /**
    * Get a friendly name for the source system, with the indefinite article if required
@@ -46,17 +49,17 @@ interface iCMAPI
    * @param bool $long  Return the long form of the name?
    * @return string     The name in the required format
    */
-  public function getFriendlyName($a = false, $long = false);
+    public function getFriendlyName($a = false, $long = false);
 
   /**
    * Get the levels of mapping that are supported by this class
    * @return array Array of mapping levels supported
    */
-  public function getMappingLevels();
+    public function getMappingLevels();
 
   /**
    * Set the mapping level at which the class should work
    * @param integer $level Mapping level
    */
-  public function setMappingLevel($level);
+    public function setMappingLevel($level);
 }

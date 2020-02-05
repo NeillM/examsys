@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -30,7 +31,7 @@ require '../include/toprightmenu.inc';
 // Instantiate Twig renderer.
 $render = new render($configObject);
 $lang['title'] = $string['bulkmoduleimport'];
-$additionaljs = "<script type=\"text/javascript\" src=\"../js/bulkimportinit.min.js\"></script>";
+$additionaljs = '<script type="text/javascript" src="../js/bulkimportinit.min.js"></script>';
 $addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/dialog.css\" />
                 <link rel=\"stylesheet\" type=\"text/css\" href=\"../css/breadcrumb.css\" />
                 <style type=\"text/css\">
@@ -46,7 +47,7 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
 ?>
 <body>
 <?php
-  require '../include/admin_module_options.inc';  
+  require '../include/admin_module_options.inc';
   echo draw_toprightmenu();
 ?>
 <?php
@@ -59,29 +60,29 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
   $render->render_admin_content($breadcrumb, $lang);
   $data['onclick'] = "window.location='list_modules.php'";
   if (isset($_POST['submit'])) {
-    $default_academic_year_start = $configObject->get_setting('core', 'system_academic_year_start');
-    $tmpfile = $userObject->get_user_ID() . "_module_create.csv";
-    try {
-      \csv\csv_handler::move_upload_to_temp($_FILES['csvfile'], $configObject->get('cfg_tmpdir') . $tmpfile);
+      $default_academic_year_start = $configObject->get_setting('core', 'system_academic_year_start');
+      $tmpfile = $userObject->get_user_ID() . '_module_create.csv';
       try {
-        $csv = new \csv\csv_handler($tmpfile);
-        $import = new \import\import_modules($csv);
-        $import->execute();
-        $data['exists'] = $import->get_exists();
-        $data['added'] = $import->get_added();
-        $data['failed'] = $import->get_failed();
+          \csv\csv_handler::move_upload_to_temp($_FILES['csvfile'], $configObject->get('cfg_tmpdir') . $tmpfile);
+          try {
+              $csv = new \csv\csv_handler($tmpfile);
+              $import = new \import\import_modules($csv);
+              $import->execute();
+              $data['exists'] = $import->get_exists();
+              $data['added'] = $import->get_added();
+              $data['failed'] = $import->get_failed();
+          } catch (\csv\csv_load_exception $e) {
+              $data['failed'] = array($e->getMessage());
+          }
+          $csv->delete_temp_file();
       } catch (\csv\csv_load_exception $e) {
-        $data['failed'] = array($e->getMessage());
+          $data['failed'] = array($e->getMessage());
       }
-      $csv->delete_temp_file();
-    } catch (\csv\csv_load_exception $e) {
-      $data['failed'] = array($e->getMessage());
-    }
-    $render->render($data, $string, 'admin/upload_complete.html');
+      $render->render($data, $string, 'admin/upload_complete.html');
   } else {
-    $data['formaction'] = $_SERVER['PHP_SELF'];
-    $data['required'] = \import\import_modules::REQUIRED;
-    $data['optional'] = \import\import_modules::OPTIONAL;
-    $render->render($data, $string, 'admin/upload.html');
+      $data['formaction'] = $_SERVER['PHP_SELF'];
+      $data['required'] = \import\import_modules::REQUIRED;
+      $data['optional'] = \import\import_modules::OPTIONAL;
+      $render->render($data, $string, 'admin/upload.html');
   }
   $render->render_admin_footer();

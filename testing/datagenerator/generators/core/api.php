@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ namespace testing\datagenerator;
  * @package testing
  * @subpackage datagenerator
  */
-class api extends generator {
+class api extends generator
+{
 
     /**
      * Create a new gradebook paper entry
@@ -35,7 +37,8 @@ class api extends generator {
      * @return array
      * @throws data_error If passed parameter is invalid
      */
-    public function create_client($parameters) {
+    public function create_client($parameters)
+    {
         if (empty($parameters['clientid'])) {
             throw new data_error('clientid must be provided');
         }
@@ -47,7 +50,7 @@ class api extends generator {
         $sql = $this->db->prepare('INSERT INTO oauth_clients (client_id, client_secret, redirect_uri, user_id) VALUES (?, ?, ?, ?)');
         $sql->bind_param('ssss', $parameters['clientid'], $settings['secret'], $settings['redirect'], $parameters['userid']);
         if (!$sql->execute()) {
-            throw new data_error("Create new client failed with parameters: " . $parameters['userid'] . "--" . $parameters['clientid'] . "--" . implode("--", $settings));
+            throw new data_error('Create new client failed with parameters: ' . $parameters['userid'] . '--' . $parameters['clientid'] . '--' . implode('--', $settings));
         }
         $sql->close();
         return $settings;
@@ -61,7 +64,8 @@ class api extends generator {
      * @return array
      * @throws data_error If passed parameter is invalid
      */
-    public function create_external($parameters) {
+    public function create_external($parameters)
+    {
         if (empty($parameters['type'])) {
             throw new data_error('clientid must be provided');
         }
@@ -73,7 +77,7 @@ class api extends generator {
         $sql = $this->db->prepare('INSERT INTO external_systems VALUES (NULL, ?, ?)');
         $sql->bind_param('ss', $name, $type);
         if (!$sql->execute()) {
-            throw new data_error("Create new external system failed with parameters: " . $type . "--" . $name);
+            throw new data_error('Create new external system failed with parameters: ' . $type . '--' . $name);
         }
         $id = $sql->insert_id;
         if (!empty($parameters['clientid'])) {
@@ -81,7 +85,7 @@ class api extends generator {
             $insert = $this->db->prepare('INSERT INTO external_systems_mapping VALUES (?, ?)');
             $insert->bind_param('si', $clientid, $id);
             if (!$insert->execute()) {
-                throw new data_error("Create new external system mapping failed with parameters: " . $clientid . "--" . $id);
+                throw new data_error('Create new external system mapping failed with parameters: ' . $clientid . '--' . $id);
             }
             $insert->close();
         }

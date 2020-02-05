@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,13 +25,15 @@ use testing\unittest\unittest;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class labellingtest extends unittest {
+class labellingtest extends unittest
+{
 
     /**
      * Test question header setter
      * @group question
      */
-    public function test_set_question_head() {
+    public function test_set_question_head()
+    {
         $data = questiondata::get_datastore('labelling');
         $data->set_question_head();
         $this->assertTrue($data->displaydefault);
@@ -48,7 +51,8 @@ class labellingtest extends unittest {
      * Test question option setter
      * @group question
      */
-    public function test_set_option_answer() {
+    public function test_set_option_answer()
+    {
         $data = questiondata::get_datastore('labelling');
         $option['correct'] = '4144959;1;16777215;10;0;100;19;100;92;single;label;0$0$370$173$beetle3.png~80~75|1$0$371$300$earwig3.png~80~92|2$0$5$54$snail3.png~100~47|3$0$537$103$spider|4$0$5$78$ant|5$0$110$78$fruit|6$0$539$472$plants|;';
         $option['markscorrect'] = 1;
@@ -73,7 +77,5 @@ class labellingtest extends unittest {
         $this->assertEquals($useranswer, $data->useranswer);
         $this->assertTrue($data->unanswered);
         $this->assertEquals(4, $data->marks);
-
     }
-
 }

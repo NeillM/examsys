@@ -68,4 +68,3 @@ $string['notickedfields'] = 'You have not ticked any fields to search for';
 $string['notickedstatus'] = 'You have not ticked any status to search for';
 $string['entersearchterm'] = 'Please enter a search term or phrase.';
 $string['quickview'] = 'Quick View';
-?>

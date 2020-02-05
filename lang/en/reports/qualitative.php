@@ -22,4 +22,3 @@ $string['screen'] = 'Screen';
 $string['comments'] = '%d comments.';
 $string['nocomments'] = '&lt;No Comments&gt;';
 $string['occurencesof'] = '%d - occurrences of <strong>%s</strong> in %d comments.';
-?>

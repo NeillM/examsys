@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -46,17 +47,17 @@ require '../include/errors.php';
 <body>
 <?php
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu(237);
+    
+    echo draw_toprightmenu(237);
 
   $keyword_list = array();
   
-  if (isset($_GET['module']) and $_GET['module'] != '') {
+if (isset($_GET['module']) and $_GET['module'] != '') {
     $module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
     if (!$module_code) {
         $contactemail = support::get_email();
-       $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-       $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+        $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+        $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
     }
 
     // Get team keywords
@@ -65,20 +66,20 @@ require '../include/errors.php';
     $result->execute();
     $result->bind_result($keywordID, $keyword);
     while ($result->fetch()) {
-      $keyword_list[$keywordID] = $keyword;
+        $keyword_list[$keywordID] = $keyword;
     }
     $result->close();
-  } else {
+} else {
     // Get personal keywords
     $result = $mysqli->prepare("SELECT id, keyword FROM keywords_user WHERE keyword_type = 'personal' AND userid = ? ORDER BY keyword");
     $result->bind_param('i', $userObject->get_user_ID());
     $result->execute();
     $result->bind_result($keywordID, $keyword);
     while ($result->fetch()) {
-      $keyword_list[$keywordID] = $keyword;
+        $keyword_list[$keywordID] = $keyword;
     }
     $result->close();
-  }
+}
 
   require '../include/folder_keyword_options.inc';
 ?>
@@ -87,21 +88,21 @@ require '../include/errors.php';
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
 <?php
-  if (isset($_GET['module']) and $_GET['module'] != '') {
+if (isset($_GET['module']) and $_GET['module'] != '') {
     $module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
-    echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a><img src=\"../artwork/breadcrumb_arrow.png\" class=\"breadcrumb_arrow\" alt=\"-\" /><a href=\"../module/index.php?module=" . $_GET['module'] . "\">" . $module_code . "</a></div>";
-    echo "<div class=\"page_title\" style=\"font-weight:normal\">" . sprintf($string['modulekeywords'], $module_code) . "</div>\n";
-  } else {
-    echo "<div class=\"breadcrumb\"><a href=\"../index.php\">" . $string['home'] . "</a></div>";
-    echo "<div class=\"page_title\" style=\"font-weight:normal\">" . $string['mypersonalkeywords'] . "</div>\n";
-  }
+    echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . $module_code . '</a></div>';
+    echo '<div class="page_title" style="font-weight:normal">' . sprintf($string['modulekeywords'], $module_code) . "</div>\n";
+} else {
+    echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a></div>';
+    echo '<div class="page_title" style="font-weight:normal">' . $string['mypersonalkeywords'] . "</div>\n";
+}
 ?>
 </div>
   
 <table class="header">
 <?php
 foreach ($keyword_list as $keywordID => $keyword) {
-  echo "<tr class=\"qline\" id=\"link_$keywordID\" data-keywordid=\"$keywordID\"><td colspan=\"2\">&nbsp;$keyword</td></tr>\n";
+    echo "<tr class=\"qline\" id=\"link_$keywordID\" data-keywordid=\"$keywordID\"><td colspan=\"2\">&nbsp;$keyword</td></tr>\n";
 }
 $mysqli->close();
 ?>

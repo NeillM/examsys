@@ -22,34 +22,35 @@
 * @package
 */
 
-function draw_toprightmenu($helpID = 1) {
-  global $string;
+function draw_toprightmenu($helpID = 1)
+{
+    global $string;
 
-  $configObject = Config::get_instance();
-  $userObject		= UserObject::get_instance();
-  $rootpath = $configObject->get('cfg_root_path');
-  $html = "";
-	
-  if ($userObject->is_impersonated()) {
-		$impersonated_name = $userObject->get_title() . ' ' . $userObject->get_initials() . ' ' . $userObject->get_surname();
-		$html .= '<div id="toprightmenu" style="width:250px">';
-		$html .= '<div class="impersonate"><img src="' . $rootpath . '/artwork/agent.png" width="32" height="32" alt="Impersonate" style="float:left; padding-right:6px"/><div style="padding-top:1px; padding-right:1.4em">' . $string['loggedinas'] . ':<br /><strong>' . $impersonated_name . '</strong></div></div>';
-	} else {
-		$html .= '<div id="toprightmenu">';
-	}
+    $configObject = Config::get_instance();
+    $userObject       = UserObject::get_instance();
+    $rootpath = $configObject->get('cfg_root_path');
+    $html = '';
+    
+    if ($userObject->is_impersonated()) {
+        $impersonated_name = $userObject->get_title() . ' ' . $userObject->get_initials() . ' ' . $userObject->get_surname();
+        $html .= '<div id="toprightmenu" style="width:250px">';
+        $html .= '<div class="impersonate"><img src="' . $rootpath . '/artwork/agent.png" width="32" height="32" alt="Impersonate" style="float:left; padding-right:6px"/><div style="padding-top:1px; padding-right:1.4em">' . $string['loggedinas'] . ':<br /><strong>' . $impersonated_name . '</strong></div></div>';
+    } else {
+        $html .= '<div id="toprightmenu">';
+    }
 
-	if ($userObject->has_role('SysAdmin')) {
-    $html .= '<div class="trm_div" id="admintools">' . $string['administrativetools'] . '</div>';
-  }
-  $role = 'student';
-  if ($userObject->has_role(array('Staff'))) {
-    $role = 'staff';
-  } 
-  $html .= "<div class=\"trm_div\" id=\"helplink\" data-role=\"$role\" data-id=\"$helpID\">" . $string['helpsupport'] . "</div>";
-  $html .= '<div class="trm_div" id="signout" style="background-image: url(\'' . $rootpath . '/artwork/logout16.gif\'); background-repeat: no-repeat; background-position: 0 3px">' . $string['signout'] . '</div>';
-  $html .= '<div class="trm_div" id="aboutrogo">' . sprintf($string['aboutrogo'], $configObject->get_setting('core', 'rogo_version')) . '</div>';
+    if ($userObject->has_role('SysAdmin')) {
+        $html .= '<div class="trm_div" id="admintools">' . $string['administrativetools'] . '</div>';
+    }
+    $role = 'student';
+    if ($userObject->has_role(array('Staff'))) {
+        $role = 'staff';
+    }
+    $html .= "<div class=\"trm_div\" id=\"helplink\" data-role=\"$role\" data-id=\"$helpID\">" . $string['helpsupport'] . '</div>';
+    $html .= '<div class="trm_div" id="signout" style="background-image: url(\'' . $rootpath . '/artwork/logout16.gif\'); background-repeat: no-repeat; background-position: 0 3px">' . $string['signout'] . '</div>';
+    $html .= '<div class="trm_div" id="aboutrogo">' . sprintf($string['aboutrogo'], $configObject->get_setting('core', 'rogo_version')) . '</div>';
 
-  $html .= '</div>';
-	
-  return $html;
+    $html .= '</div>';
+    
+    return $html;
 }

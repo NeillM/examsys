@@ -20,10 +20,10 @@
  * @author Neill Magill <neill.magill@nottingham.ac.uk>
  * @copyright Copyright (c) 2019 The University of Nottingham
  */
-if ($updater_utils->check_version("7.1.0")) {
-  if (!$updater_utils->has_updated('rogo_2513')) {
-    $sql = "ALTER TABLE special_needs CHANGE COLUMN extra_time extra_time SMALLINT DEFAULT NULL";
-    $updater_utils->execute_query($sql, false);
-    $updater_utils->record_update('rogo_2513');
-  }
+if ($updater_utils->check_version('7.1.0')) {
+    if (!$updater_utils->has_updated('rogo_2513')) {
+        $sql = 'ALTER TABLE special_needs CHANGE COLUMN extra_time extra_time SMALLINT DEFAULT NULL';
+        $updater_utils->execute_query($sql, false);
+        $updater_utils->record_update('rogo_2513');
+    }
 }

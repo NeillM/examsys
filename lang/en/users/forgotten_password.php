@@ -32,4 +32,3 @@ $string['couldntsendemail'] = 'Could not send mail to <strong>%s</strong>';
 $string['emailsentmsg'] = 'An email has been sent to <em>%s</em> containing a link that will allow you to reset your password. This link will remain valid for <strong>24 hours</strong>.';
 $string['intromsg'] = 'Enter your email address and we will send you an email allowing you to reset your password.';
 $string['send'] = 'Send';
-?>

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,6 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace testing\datagenerator;
+
 use Exception;
 
 /**
@@ -25,8 +27,10 @@ use Exception;
  * @package testing
  * @subpackage datagenerator
  */
-class data_error extends Exception {
-  public function __construct($message) {
-    parent::__construct($message);
-  }
+class data_error extends Exception
+{
+    public function __construct($message)
+    {
+        parent::__construct($message);
+    }
 }

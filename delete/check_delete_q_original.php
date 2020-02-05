@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * Confirm that it is OK to proceed deleting a question in the bank.
 *
 * @author Simon Wilkinson
@@ -52,28 +53,28 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
   // If so we should add those ids to qIDs to be search un the query below.
   $questions = explode(',', $qIDs);
   $questionutils = new QuestionUtils();
-  foreach ($questions as $qid) {
+foreach ($questions as $qid) {
     $random = $questionutils->is_in_random_block($qid, $mysqli);
     if (sizeof($random) > 0) {
-        $qIDs = $qIDs . ", " . implode(',', $random);
+        $qIDs = $qIDs . ', ' . implode(',', $random);
     }
-  }
+}
 
-  foreach ($questions as $qid) {
+foreach ($questions as $qid) {
     $keyword = $questionutils->is_in_keyword_block($qid, $mysqli);
     if (sizeof($keyword) > 0) {
-        $qIDs = $qIDs . ", " . implode(',', $keyword);
+        $qIDs = $qIDs . ', ' . implode(',', $keyword);
     }
-  }
+}
 
   // Search for question usage.
   $result = $mysqli->prepare("SELECT DISTINCT paper_title, paper, paper_type FROM (papers, properties) WHERE papers.paper = properties.property_id AND properties.deleted IS NULL AND question IN ($qIDs)");
-  $result->execute();  
+  $result->execute();
   $result->store_result();
   $result->bind_result($paper_title, $paper, $paper_type);
 
-  if ($result->num_rows == 0) {
-  ?>
+if ($result->num_rows == 0) {
+    ?>
 <p><?php echo $string['msg']; ?></p>
 
 <div class="button_bar">
@@ -83,13 +84,13 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
 </form>
 </div>
     <?php
-  } else {
-    echo "<p>" . $string['warning1'] . "</p>\n<blockquote>\n";
+} else {
+    echo '<p>' . $string['warning1'] . "</p>\n<blockquote>\n";
     while ($result->fetch()) {
-      echo "<img src=\"../artwork/" . $icons[$paper_type] . "_16.gif\" width=\"16\" height=\"16\" alt=\"\" />&nbsp;" . $paper_title . "<br />\n";
+        echo '<img src="../artwork/' . $icons[$paper_type] . '_16.gif" width="16" height="16" alt="" />&nbsp;' . $paper_title . "<br />\n";
     }
     echo "</blockquote>\n";
-  ?>
+    ?>
 <p><?php echo $string['warning2']; ?></p>
 <div style="text-align:right">
 <form action="do_delete_q_original.php" method="post" autocomplete="off">
@@ -98,7 +99,7 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
 </form>
 </div>
     <?php
-  }
+}
   $result->free_result();
   $result->close();
   $mysqli->close();

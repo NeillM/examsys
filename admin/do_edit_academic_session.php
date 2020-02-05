@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -31,23 +32,23 @@ $academic_year = param::required('academic_year', param::TEXT, param::FETCH_POST
 $cal_status = param::optional('cal_status', false, param::BOOLEAN, param::FETCH_POST);
 $stat_status = param::optional('stat_status', false, param::BOOLEAN, param::FETCH_POST);
 
-$result = $mysqli->prepare("SELECT academic_year, cal_status, stat_status FROM academic_year WHERE calendar_year = ?");
+$result = $mysqli->prepare('SELECT academic_year, cal_status, stat_status FROM academic_year WHERE calendar_year = ?');
 $result->bind_param('i', $year);
 $result->execute();
 $result->store_result();
 $result->bind_result($curr_academic_year, $curr_cal_status, $curr_stat_status);
 $result->fetch();
 if ($result->num_rows == 0) {
-  $result->close();
-  echo json_encode('ERROR');
-  exit();
+    $result->close();
+    echo json_encode('ERROR');
+    exit();
 }
 $result->close();
 
 $changed = ($curr_academic_year != $academic_year or $curr_cal_status != $cal_status or $curr_stat_status != $stat_status);
 
 if ($changed) {
-    $result = $mysqli->prepare("UPDATE academic_year SET academic_year = ?, cal_status = ?, stat_status = ? WHERE calendar_year = ?");
+    $result = $mysqli->prepare('UPDATE academic_year SET academic_year = ?, cal_status = ?, stat_status = ? WHERE calendar_year = ?');
     $result->bind_param('siii', $academic_year, $cal_status, $stat_status, $year);
     $result->execute();
     $result->close();
@@ -57,13 +58,13 @@ if ($changed) {
     }
     $logger = new Logger($mysqli);
     if ($curr_academic_year != $academic_year) {
-      $logger->track_change('Academic Session', $year, $userObject->get_user_ID(), $curr_academic_year, $academic_year, $string['academicyear']);
+        $logger->track_change('Academic Session', $year, $userObject->get_user_ID(), $curr_academic_year, $academic_year, $string['academicyear']);
     }
     if ($curr_cal_status != $cal_status) {
-      $logger->track_change('Calendar Status', $year, $userObject->get_user_ID(), $curr_cal_status, $cal_status, $string['calstatus']);
+        $logger->track_change('Calendar Status', $year, $userObject->get_user_ID(), $curr_cal_status, $cal_status, $string['calstatus']);
     }
     if ($curr_stat_status != $stat_status) {
-      $logger->track_change('Statistics Status', $year, $userObject->get_user_ID(), $curr_stat_status, $stat_status, $string['statstatus']);
+        $logger->track_change('Statistics Status', $year, $userObject->get_user_ID(), $curr_stat_status, $stat_status, $string['statstatus']);
     }
 }
 

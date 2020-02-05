@@ -21,13 +21,16 @@
  * @copyright Copyright (c) 2015 The University of Nottingham
  * @package core
  */
-class email_templates extends rogo_directory {
-  public function location() {
-    return $this->base_directory() . 'email_templates' . DIRECTORY_SEPARATOR;
-  }
+class email_templates extends rogo_directory
+{
+    public function location()
+    {
+        return $this->base_directory() . 'email_templates' . DIRECTORY_SEPARATOR;
+    }
 
-  public function cachetime() {
-    // Do not cache.
-    return 0;
-  }
+    public function cachetime()
+    {
+      // Do not cache.
+        return 0;
+    }
 }

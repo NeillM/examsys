@@ -28,4 +28,3 @@ $string['borderline pass'] = 'Borderline pass';
 $string['pass'] = 'Pass';
 $string['good pass'] = 'Good pass';
 $string['honours pass'] = 'Honours PASS';
-?>

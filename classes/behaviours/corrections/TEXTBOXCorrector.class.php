@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,45 +27,47 @@
 
 include_once 'Corrector.class.php';
 
-class TEXTBOXCorrector extends Corrector {
+class TEXTBOXCorrector extends Corrector
+{
   /**
    * Change the correct answer after the question has been locked. Update user marks in summative log table
    * @param integer $new_correct new correct answer
    * @param integer $paper_id
    */
-  public function execute($new_correct, $paper_id, &$changes, $paper_type) {
-    $errors = array();
-    if ($changes) {
-      $first = reset($this->_question->options);
-      $mark_correct = $first->get_marks_correct();
+    public function execute($new_correct, $paper_id, &$changes, $paper_type)
+    {
+        $errors = array();
+        if ($changes) {
+            $first = reset($this->_question->options);
+            $mark_correct = $first->get_marks_correct();
 
-      try {
-    	  if (!$this->_question->save()) {
-    	    $errors[] = $this->_lang_strings['datasaveerror'];
-    	  } else {
-          // Get metadata ID
-          $result = $this->_mysqli->prepare("SELECT id FROM log_metadata WHERE paperID = ?");
-          $result->bind_param('i', $paper_id);
-          $result->execute();
-          $result->bind_result($md_id);
-					$result->fetch();
-					$result->close();
+            try {
+                if (!$this->_question->save()) {
+                    $errors[] = $this->_lang_strings['datasaveerror'];
+                } else {
+            // Get metadata ID
+                    $result = $this->_mysqli->prepare('SELECT id FROM log_metadata WHERE paperID = ?');
+                    $result->bind_param('i', $paper_id);
+                    $result->execute();
+                    $result->bind_result($md_id);
+                    $result->fetch();
+                    $result->close();
 
-          // Set new value for totalpos in log{$paper_type} but don't change student marks
-          $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET totalpos = ? WHERE q_id = ? AND metadataID = ?");
-          $updateLog->bind_param('iii', $mark_correct, $this->_question->id, $md_id);
-          $updateLog->execute();
-          $updateLog->close();
-    	  }
-    	} catch (ValidationException $vex) {
-    	  $errors[] = $vex->getMessage();
-    	}
+            // Set new value for totalpos in log{$paper_type} but don't change student marks
+                    $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET totalpos = ? WHERE q_id = ? AND metadataID = ?");
+                    $updateLog->bind_param('iii', $mark_correct, $this->_question->id, $md_id);
+                    $updateLog->execute();
+                    $updateLog->close();
+                }
+            } catch (ValidationException $vex) {
+                $errors[] = $vex->getMessage();
+            }
 
-      if (count($errors) == 0) {
-        $this->invalidate_paper_cache($paper_id);
-      }
+            if (count($errors) == 0) {
+                $this->invalidate_paper_cache($paper_id);
+            }
+        }
+
+        return $errors;
     }
-
-    return $errors;
-  }
 }

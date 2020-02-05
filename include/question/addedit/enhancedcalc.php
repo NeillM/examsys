@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -36,11 +37,11 @@ $decimal_opts_zero = array('1 dp zero' => '1 ' . $string['decimal'] . ' ' . $str
 $sf_opts = array('1 sf' => '1 ' . $string['sigfigure'], '2 sf' => '2 ' . $str_sigs, '3 sf' => '3 ' . $str_sigs, '4 sf' => '4 ' . $str_sigs, '5 sf' => '5 ' . $str_sigs);
 $labels = $question->get_variable_labels();
 ?>
-				<table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
-					<tbody>
+                <table id="q-details" class="form" summary="<?php echo $string['qeditsummary'] ?>">
+                    <tbody>
 <?php require_once 'details_common.php' ?>
-					</tbody>
-				</table>
+                    </tbody>
+                </table>
 
 <?php
 require_once 'detail_parts/details_marking.php';
@@ -64,21 +65,23 @@ require_once 'detail_parts/details_general_feedback.php';
 <?php
 $index = 1;
 
-$options = array_filter ($question->options, function ($var) { return ($var->get_variable() != ''); } );
+$options = array_filter($question->options, function ($var) {
+    return ($var->get_variable() != '');
+});
 
 foreach ($options as $variable) {
-  include 'options/opt_enhancedcalc.php';
-  $index++;
+    include 'options/opt_enhancedcalc.php';
+    $index++;
 }
 
 for ($index; $index <= count($labels); $index++) {
-  $variable = new OptionENHANCEDCALC($mysqli, $userObject->get_user_ID(), $question, $index, $string, array());
-  $variable->set_variable('$' . $labels[$index-1]);
-  include 'options/opt_enhancedcalc.php';
+    $variable = new OptionENHANCEDCALC($mysqli, $userObject->get_user_ID(), $question, $index, $string, array());
+    $variable->set_variable('$' . $labels[$index - 1]);
+    include 'options/opt_enhancedcalc.php';
 }
 
-if($question->get_locked() == '') {
-?>
+if ($question->get_locked() == '') {
+    ?>
           <tbody class="add-option-holder">
             <tr>
               <th>&nbsp;</th>
@@ -87,7 +90,7 @@ if($question->get_locked() == '') {
               </td>
             </tr>
           </tbody>
-<?php
+    <?php
 }
 ?>
         </table>
@@ -106,15 +109,17 @@ if($question->get_locked() == '') {
           </thead>
 <?php
 $index = 1;
-$all_ans = array_filter ($question->options, function ($var) { return ($var->get_formula() != ''); } );
+$all_ans = array_filter($question->options, function ($var) {
+    return ($var->get_formula() != '');
+});
 foreach ($all_ans as $answer) {
-  include 'options/ans_enhancedcalc.php';
-  $index++;
+    include 'options/ans_enhancedcalc.php';
+    $index++;
 }
 
 for ($index = $num_answers + 1; $index <= $question->max_options; $index++) {
-  $answer = new OptionENHANCEDCALC($mysqli, $userObject->get_user_ID(), $question, $index, $string, array());
-  include 'options/ans_enhancedcalc.php';
+    $answer = new OptionENHANCEDCALC($mysqli, $userObject->get_user_ID(), $question, $index, $string, array());
+    include 'options/ans_enhancedcalc.php';
 }
 ?>
           <tbody class="add-option-holder">

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -53,36 +54,36 @@ $userID = check_var('userID', 'REQUEST', true, false, true);
 
 <?php
   $user_teams = array();
-  $result = $mysqli->prepare("SELECT moduleID, idMod FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID = ?");
+  $result = $mysqli->prepare('SELECT moduleID, idMod FROM modules_staff, modules WHERE modules_staff.idMod = modules.id AND memberID = ?');
   $result->bind_param('i', $userID);
   $result->execute();
   $result->bind_result($moduleID, $idMod);
-  while ($result->fetch()) {
+while ($result->fetch()) {
     $user_modules[$idMod] = $moduleID;
-  }
+}
   $result->close();
 
   $old_school = '';
   $mod_no = 0;
-  echo "<div class=\"content\" id=\"list\">";
+  echo '<div class="content" id="list">';
   
-  $result = $mysqli->prepare("SELECT school, moduleid, fullname, modules.id FROM modules, schools WHERE modules.schoolid = schools.id AND active = 1 AND mod_deleted IS NULL ORDER BY school, moduleid");
+  $result = $mysqli->prepare('SELECT school, moduleid, fullname, modules.id FROM modules, schools WHERE modules.schoolid = schools.id AND active = 1 AND mod_deleted IS NULL ORDER BY school, moduleid');
   $result->execute();
   $result->bind_result($school, $moduleid, $fullname, $idMod);
-  while ($result->fetch()) {
+while ($result->fetch()) {
     if ($old_school != $school) {
-      echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>$school</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\"/></div></div>\n";
+        echo "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr>$school</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\"/></div></div>\n";
     }
    
     if (isset($user_modules[$idMod])) {
-      echo "<div class=\"r2\" id=\"divmod$mod_no\"><input type=\"checkbox\" name=\"mod$mod_no\" id=\"mod$mod_no\" value=\"$idMod\" checked />";
+        echo "<div class=\"r2\" id=\"divmod$mod_no\"><input type=\"checkbox\" name=\"mod$mod_no\" id=\"mod$mod_no\" value=\"$idMod\" checked />";
     } else {
-      echo "<div class=\"r1\" id=\"divmod$mod_no\"><input type=\"checkbox\" name=\"mod$mod_no\" id=\"mod$mod_no\" value=\"$idMod\" />";
+        echo "<div class=\"r1\" id=\"divmod$mod_no\"><input type=\"checkbox\" name=\"mod$mod_no\" id=\"mod$mod_no\" value=\"$idMod\" />";
     }
     echo "<label for=\"mod$mod_no\">$moduleid: $fullname</label></div>\n";
     $old_school = $school;
     $mod_no++;
-  }
+}
   $result->close();
   echo "<input type=\"hidden\" name=\"module_no\" value=\"$mod_no\" /><input type=\"hidden\" id=\"userID\" name=\"userID\" value=\"" . $userID . "\" /></div></td>\n</tr>\n</table>\n";
 ?>

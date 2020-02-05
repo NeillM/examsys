@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -44,279 +45,291 @@ $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $s
 $_SESSION['nav_page'] = $_SERVER['SCRIPT_NAME'];
 $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
 
-function list_externals($reviewer_data, $string) {
-  $html = '<table class="reviewer_list" cellspacing="0" cellpadding="4">';
-  $html .= '<thead><tr><th>' . $string['reviewers'] . '</th><th>' . $string['started'] . '</th><th>' . $string['completed'] . '</th><th style="width:60%">' . $string['generalpapercomments'] . '</th></tr></thead>';
-  foreach ($reviewer_data as $reviewer) {
-    if ($reviewer['started'] == '') $reviewer['started'] = '<span style="color:#C0C0C0">' . $string['na'] . '</span>';
-    if ($reviewer['complete'] == '') $reviewer['complete'] = '<span style="color:#C0C0C0">' . $string['na'] . '</span>';
+function list_externals($reviewer_data, $string)
+{
+    $html = '<table class="reviewer_list" cellspacing="0" cellpadding="4">';
+    $html .= '<thead><tr><th>' . $string['reviewers'] . '</th><th>' . $string['started'] . '</th><th>' . $string['completed'] . '</th><th style="width:60%">' . $string['generalpapercomments'] . '</th></tr></thead>';
+    foreach ($reviewer_data as $reviewer) {
+        if ($reviewer['started'] == '') {
+            $reviewer['started'] = '<span style="color:#C0C0C0">' . $string['na'] . '</span>';
+        }
+        if ($reviewer['complete'] == '') {
+            $reviewer['complete'] = '<span style="color:#C0C0C0">' . $string['na'] . '</span>';
+        }
     
-    $html .= '<tr>';
-    $html .= '<td>' . $reviewer['title'] . ' ' . $reviewer['initials'] . ' ' . $reviewer['surname'] . '</td>';
-    $html .= '<td>' . $reviewer['started'] . '</td>';
-    $html .= '<td>' . $reviewer['complete'] . '</td>';
-    $html .= '<td>' . $reviewer['paper_comment'] . '</td>';
-    $html .= '</tr>';
-  }
-  $html .= '</table>';
+        $html .= '<tr>';
+        $html .= '<td>' . $reviewer['title'] . ' ' . $reviewer['initials'] . ' ' . $reviewer['surname'] . '</td>';
+        $html .= '<td>' . $reviewer['started'] . '</td>';
+        $html .= '<td>' . $reviewer['complete'] . '</td>';
+        $html .= '<td>' . $reviewer['paper_comment'] . '</td>';
+        $html .= '</tr>';
+    }
+    $html .= '</table>';
   
-  return $html;
+    return $html;
 }
 
-function displayRank($rank_position, $string) {
-  if ($rank_position == 1) {
-    $html = '1st';
-  } elseif ($rank_position == 2) {
-    $html = '2nd';
-  } elseif ($rank_position == 3) {
-    $html = '3rd';
-  } elseif ($rank_position == 9990) {
-    $html = $string['na'];
-  } else {
-    $html = $rank_position . 'th';
-  }
-  return $html;
+function displayRank($rank_position, $string)
+{
+    if ($rank_position == 1) {
+        $html = '1st';
+    } elseif ($rank_position == 2) {
+        $html = '2nd';
+    } elseif ($rank_position == 3) {
+        $html = '3rd';
+    } elseif ($rank_position == 9990) {
+        $html = $string['na'];
+    } else {
+        $html = $rank_position . 'th';
+    }
+    return $html;
 }
 
-function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_data, $type, $string, $language) {
+function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_data, $type, $string, $language)
+{
 
-  $html = "<tr><td></td><td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:98%\">\n";
-  $html .= "<tr><td colspan=\"5\"><strong>" . $string[$type . 'comments'] . "$qno</strong>&nbsp;<img class=\"pencil\" data-qid='$questionID' data-qno='$qno'src=\"../artwork/pencil_16.png\" alt=\"" . $string['editquestion'] . "\" /></td></tr>\n";
-  $html .= "<tr><td style=\"width:20px\"><div class=\"reviewbar\">&nbsp;</div></td><td style=\"width:20%\"><div class=\"reviewbar\">" . $string['reviewer'] . "</div></td><td style=\"width:35%\"><div class=\"reviewbar\">" . $string['comment'] . "</div></td><td style=\"width:10%\"><div class=\"reviewbar\">" . $string['action'] . "</div></td><td style=\"width:35%\"><div class=\"reviewbar\">" . $string['response'] . "</div></td></tr>\n";
+    $html = "<tr><td></td><td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:98%\">\n";
+    $html .= '<tr><td colspan="5"><strong>' . $string[$type . 'comments'] . "$qno</strong>&nbsp;<img class=\"pencil\" data-qid='$questionID' data-qno='$qno'src=\"../artwork/pencil_16.png\" alt=\"" . $string['editquestion'] . "\" /></td></tr>\n";
+    $html .= '<tr><td style="width:20px"><div class="reviewbar">&nbsp;</div></td><td style="width:20%"><div class="reviewbar">' . $string['reviewer'] . '</div></td><td style="width:35%"><div class="reviewbar">' . $string['comment'] . '</div></td><td style="width:10%"><div class="reviewbar">' . $string['action'] . '</div></td><td style="width:35%"><div class="reviewbar">' . $string['response'] . "</div></td></tr>\n";
   
-  foreach ($reviewer_data as $reviewerID=>$rev_data) {
-    $image = '';
-    $reviewer_name = $rev_data['title'] . ' ' . $rev_data['initials'] .  ' ' . $rev_data['surname'];
-    $comment = '';
+    foreach ($reviewer_data as $reviewerID => $rev_data) {
+        $image = '';
+        $reviewer_name = $rev_data['title'] . ' ' . $rev_data['initials'] .  ' ' . $rev_data['surname'];
+        $comment = '';
     
-    $comment = nl2br($comments_data[$reviewerID]->get_comment($questionID));
+        $comment = nl2br($comments_data[$reviewerID]->get_comment($questionID));
     
-    if ($comments_data[$reviewerID]->get_category($questionID) === null) {
-      $image = '';
-      $status = '';
-    } else {
-      switch($comments_data[$reviewerID]->get_category($questionID)) {
-        case 1:
-          $image = 'ok_comment.png';
-          $status = 'OK';
-          break;
-        case 2:
-          $image = 'minor_comment.png';
-          $status = 'Minor';
-          break;
-        case 3:
-          $image = 'major_comment.png';
-          $status = 'Major';
-          break;
-        case 4:
-          $image = 'cannot_comment.png';
-          $status = 'Cannot Comment';
-          break;
-      }
+        if ($comments_data[$reviewerID]->get_category($questionID) === null) {
+            $image = '';
+            $status = '';
+        } else {
+            switch ($comments_data[$reviewerID]->get_category($questionID)) {
+                case 1:
+                    $image = 'ok_comment.png';
+                    $status = 'OK';
+                    break;
+                case 2:
+                    $image = 'minor_comment.png';
+                    $status = 'Minor';
+                    break;
+                case 3:
+                    $image = 'major_comment.png';
+                    $status = 'Major';
+                    break;
+                case 4:
+                    $image = 'cannot_comment.png';
+                    $status = 'Cannot Comment';
+                    break;
+            }
+        }
+    
+        if (trim($comment) == '') {
+            if ($comments_data[$reviewerID]->get_category($questionID) == 4) {
+                $comment = '<span style="color:#808080">' . $string['cannotcomment'] . '</span>';
+            } else {
+                $comment = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
+            }
+            $action = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
+            $response = '<span style="color:#808080">' . $string['na'] . '</span>';
+        } else {
+            $action = $comments_data[$reviewerID]->get_action($questionID);
+            $response = nl2br($comments_data[$reviewerID]->get_response($questionID));
+        }
+        $extra = '';
+        if ($image != '') {
+            $image = "<img src=\"../artwork/$image\" class=\"status\" alt=\"$status\" />";
+        } else {
+            $image = '';
+        }
+    
+        $html .= "<tr><td class=\"reviewline$extra\">$image</td><td class=\"reviewline$extra\">$reviewer_name</td><td class=\"reviewline$extra\">$comment</td><td class=\"reviewline$extra\">$action</td><td class=\"reviewline$extra\">$response</td></tr>\n";
     }
-    
-    if (trim($comment) == '') {
-      if ($comments_data[$reviewerID]->get_category($questionID) == 4) {
-        $comment = '<span style="color:#808080">' . $string['cannotcomment'] . '</span>';
-      } else {
-        $comment = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
-      }
-      $action = '<span style="color:#808080">' . $string['nocomment'] . '</span>';
-      $response = '<span style="color:#808080">' . $string['na'] . '</span>';
-    } else {
-      $action = $comments_data[$reviewerID]->get_action($questionID);
-      $response = nl2br($comments_data[$reviewerID]->get_response($questionID));
-    }
-    $extra = '';
-    if ($image != '') {
-      $image = "<img src=\"../artwork/$image\" class=\"status\" alt=\"$status\" />";
-    } else {
-      $image = '';
-    }    
-    
-    $html .= "<tr><td class=\"reviewline$extra\">$image</td><td class=\"reviewline$extra\">$reviewer_name</td><td class=\"reviewline$extra\">$comment</td><td class=\"reviewline$extra\">$action</td><td class=\"reviewline$extra\">$response</td></tr>\n";
-  }
   
-  $html .= "</table></td></tr>\n";
+    $html .= "</table></td></tr>\n";
 
-  return $html;
+    return $html;
 }
 
-function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $settings, $q_media, $q_media_width, $q_media_height, $options, $comments, $correct_buf, $display_method, $score_method, $labelcolor, $themecolor, $std, $reviewer_data, $type, $string, $language) {
-  $configObject = Config::get_instance();
+function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $correct, $settings, $q_media, $q_media_width, $q_media_height, $options, $comments, $correct_buf, $display_method, $score_method, $labelcolor, $themecolor, $std, $reviewer_data, $type, $string, $language)
+{
+    $configObject = Config::get_instance();
 
-  $cfg_root_path = $configObject->get('cfg_root_path');
-  $mediadirectory = rogo_directory::get_directory('media');
-  $questiondata = \questiondata::get_datastore($q_type);
-  $render = new render($configObject);
+    $cfg_root_path = $configObject->get('cfg_root_path');
+    $mediadirectory = rogo_directory::get_directory('media');
+    $questiondata = \questiondata::get_datastore($q_type);
+    $render = new render($configObject);
 
-  if ($theme != '') {
-    echo "<tr><td colspan=\"2\"><h1 style=\"color:$themecolor\">$theme</h1></td></tr>\n";
-  }
-  echo "<tr>\n";
-
-  if ($q_type != 'extmatch' and $q_type != 'matrix') {
-    if ($q_type == 'info') {
-      echo "<td colspan=\"2\" style=\"padding-left:10px; padding-right:10px\">$leadin\n";
-    } elseif ($q_type == 'random') {
-      echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin<br/><br/><div class=\"q_warning\">" . $string['randomwarning'] . "</div></td></tr>";
-    } elseif ($q_type == 'keyword_based') {
-      echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin<br/><br/><div class=\"q_warning\">" . $string['keywordwarning'] . "</div></td></tr>";
-    } else {
-      if ($scenario != '') {
-        echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$scenario<br />\n";
-        echo $leadin;
-        if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'area') {
-          echo "<div class=\"mediadiv\">";
-          $questiondata->set_media($q_media, $q_media_width, $q_media_height, '', true);
-          $render->render($questiondata, $string, 'paper/media.html');
-          echo "</div>\n";
-        }
-        if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'blank') {
-          echo "<p>\n<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"margin-left:30px\">\n";
-        }
-      } else {
-        echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n";
-        if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'area') {
-          echo "<div class=\"mediadiv\">";
-          $questiondata->set_media($q_media, $q_media_width, $q_media_height, '', true);
-          $render->render($questiondata, $string, 'paper/media.html');
-          echo "</div>\n";
-        }
-        if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'blank') {
-          echo "<p>\n<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"margin-left:30px\">\n";
-        }
-      }
+    if ($theme != '') {
+        echo "<tr><td colspan=\"2\"><h1 style=\"color:$themecolor\">$theme</h1></td></tr>\n";
     }
-    switch ($q_type) {
-      case 'area':
-      ?>
+    echo "<tr>\n";
+
+    if ($q_type != 'extmatch' and $q_type != 'matrix') {
+        if ($q_type == 'info') {
+            echo "<td colspan=\"2\" style=\"padding-left:10px; padding-right:10px\">$leadin\n";
+        } elseif ($q_type == 'random') {
+            echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin<br/><br/><div class=\"q_warning\">" . $string['randomwarning'] . '</div></td></tr>';
+        } elseif ($q_type == 'keyword_based') {
+            echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin<br/><br/><div class=\"q_warning\">" . $string['keywordwarning'] . '</div></td></tr>';
+        } else {
+            if ($scenario != '') {
+                echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$scenario<br />\n";
+                echo $leadin;
+                if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'area') {
+                    echo '<div class="mediadiv">';
+                    $questiondata->set_media($q_media, $q_media_width, $q_media_height, '', true);
+                    $render->render($questiondata, $string, 'paper/media.html');
+                    echo "</div>\n";
+                }
+                if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'blank') {
+                    echo "<p>\n<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"margin-left:30px\">\n";
+                }
+            } else {
+                echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n";
+                if ($q_media != '' and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'area') {
+                    echo '<div class="mediadiv">';
+                    $questiondata->set_media($q_media, $q_media_width, $q_media_height, '', true);
+                    $render->render($questiondata, $string, 'paper/media.html');
+                    echo "</div>\n";
+                }
+                if ($q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'blank') {
+                    echo "<p>\n<table cellpadding=\"3\" cellspacing=\"0\" border=\"0\" style=\"margin-left:30px\">\n";
+                }
+            }
+        }
+        switch ($q_type) {
+            case 'area':
+                ?>
       <br />
-			<?php
-    			echo "<canvas class='area' id='canvas" . $q_no . "'
+                <?php
+                echo "<canvas class='area' id='canvas" . $q_no . "'
     			data-qno='" . $q_no . "'
     			data-qmedia='" . $q_media . "'
     			data-qcorrect='" . $correct . "'
     			data-user=''
     			data-marking=''
     			width='" . ($q_media_width + 2) . "' height='" . ($q_media_height + 1) . "'></canvas>\n";
-    			echo "<div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-			?>
+                echo "<div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
+                ?>
       <input type="hidden" name="q<?php echo $q_no; ?>" id="q<?php echo $q_no; ?>" />
-      <?php
-        break;
-      case 'blank':
-        $options[0] = preg_replace("| mark=\"([0-9]{1,3})\"|","",$options[0]);
-        $options[0] = preg_replace("| size=\"([0-9]{1,3})\"|","",$options[0]);
-        $blank_details = array();
-        $blank_details = explode('[blank',$options[0]);
-        $array_size = count($blank_details);
-        $blank_count = 0;
-        while ($blank_count < $array_size) {
-          if (strpos($blank_details[$blank_count],'[/blank]') === false) {
-            echo $blank_details[$blank_count];
-          } else {
-            $end_start_tag = strpos($blank_details[$blank_count],']');
-            $start_end_tag = strpos($blank_details[$blank_count],'[/blank]');
-            $blank_options = substr($blank_details[$blank_count],($end_start_tag+1),($start_end_tag-1));
-            $remainder = substr($blank_details[$blank_count], ($start_end_tag+8));
+                <?php
+                break;
+            case 'blank':
+                $options[0] = preg_replace('| mark="([0-9]{1,3})"|', '', $options[0]);
+                $options[0] = preg_replace('| size="([0-9]{1,3})"|', '', $options[0]);
+                $blank_details = array();
+                $blank_details = explode('[blank', $options[0]);
+                $array_size = count($blank_details);
+                $blank_count = 0;
+                while ($blank_count < $array_size) {
+                    if (strpos($blank_details[$blank_count], '[/blank]') === false) {
+                        echo $blank_details[$blank_count];
+                    } else {
+                        $end_start_tag = strpos($blank_details[$blank_count], ']');
+                        $start_end_tag = strpos($blank_details[$blank_count], '[/blank]');
+                        $blank_options = substr($blank_details[$blank_count], ($end_start_tag + 1), ($start_end_tag - 1));
+                        $remainder = substr($blank_details[$blank_count], ($start_end_tag + 8));
 
-            if ($display_method == 'dropdown') {
-              echo '<select>';
-              $options_array = array();
-              $options_array = explode(',',$blank_options);
-              $i = 0;
-              foreach ($options_array as $individual_blank_option) {
-                $individual_blank_option = trim($individual_blank_option);
-                if ($i == 0) {
-                  echo '<option value="" selected="selected">' . $individual_blank_option . '</option>';
-                } else {
-                  echo '<option value="">' . $individual_blank_option . '</option>';
+                        if ($display_method == 'dropdown') {
+                            echo '<select>';
+                            $options_array = array();
+                            $options_array = explode(',', $blank_options);
+                            $i = 0;
+                            foreach ($options_array as $individual_blank_option) {
+                                $individual_blank_option = trim($individual_blank_option);
+                                if ($i == 0) {
+                                    echo '<option value="" selected="selected">' . $individual_blank_option . '</option>';
+                                } else {
+                                    echo '<option value="">' . $individual_blank_option . '</option>';
+                                }
+                                $i++;
+                            }
+                            echo '</select>';
+                        } else {
+                          // Correct answer.
+                            $correct_options = explode(',', $blank_options);
+                            echo '<input type="text" size="10" value="' . $correct_options[0] . '" />';
+                        }
+                        echo $remainder;
+                    }
+                    $blank_count++;
                 }
-                $i++;
-              }
-              echo '</select>';
-            } else {
-              // Correct answer.
-              $correct_options = explode(',' , $blank_options);
-              echo '<input type="text" size="10" value="' . $correct_options[0] . '" />';
-            }
-            echo $remainder;
-          }
-          $blank_count++;
-        }
-        break;
-      case 'calculation':
-        break;
-      case 'dichotomous':
-        $tmp_std_array = explode(',', $std);
-        $std_part = 0;
-        if ($score_method == 'YN_Positive') {
-          $true_label = 'Yes';
-          $false_label = 'No';
-        } else {
-          $true_label = 'True';
-          $false_label = 'False';
-        }
-        $i = 0;
-        foreach ($options as $individual_option) {
-          $i++;
-          if ($correct_buf[$i-1] == 't') {
-            echo "<tr><td style=\"font-weight:bold\">$true_label</td><td>$individual_option</td></tr>\n";
-          } else {
-            echo "<tr><td style=\"font-weight:bold\">$false_label</td><td>$individual_option</td></tr>\n";
-          }
-        }
-        break;
-      case 'labelling':
-        $tmp_std_array = explode(',',$std);
-        $std_part = 0;
-        $tmp_std_array = explode(',',$std);
-        $std_part = 0;
-        $max_col1 = 0;
-        $max_col2 = 0;
-        $tmp_first_split = explode(';', $correct);
-        $tmp_second_split = explode('|', $tmp_first_split[11]);
-        foreach ($tmp_second_split as $ind_label) {
-          $label_parts = explode('$', $ind_label);
-          if (isset($label_parts[4]) and trim($label_parts[4]) != '') {
-            if ($label_parts[0] < 10) {
-              $max_col1 = $label_parts[0];
-            } else {
-              $max_col2 = $label_parts[0];
-            }
-          }
-        }
-        $max_col2-=10;
+                break;
+            case 'calculation':
+                break;
+            case 'dichotomous':
+                $tmp_std_array = explode(',', $std);
+                $std_part = 0;
+                if ($score_method == 'YN_Positive') {
+                    $true_label = 'Yes';
+                    $false_label = 'No';
+                } else {
+                    $true_label = 'True';
+                    $false_label = 'False';
+                }
+                $i = 0;
+                foreach ($options as $individual_option) {
+                    $i++;
+                    if ($correct_buf[$i - 1] == 't') {
+                        echo "<tr><td style=\"font-weight:bold\">$true_label</td><td>$individual_option</td></tr>\n";
+                    } else {
+                        echo "<tr><td style=\"font-weight:bold\">$false_label</td><td>$individual_option</td></tr>\n";
+                    }
+                }
+                break;
+            case 'labelling':
+                $tmp_std_array = explode(',', $std);
+                $std_part = 0;
+                $tmp_std_array = explode(',', $std);
+                $std_part = 0;
+                $max_col1 = 0;
+                $max_col2 = 0;
+                $tmp_first_split = explode(';', $correct);
+                $tmp_second_split = explode('|', $tmp_first_split[11]);
+                foreach ($tmp_second_split as $ind_label) {
+                    $label_parts = explode('$', $ind_label);
+                    if (isset($label_parts[4]) and trim($label_parts[4]) != '') {
+                        if ($label_parts[0] < 10) {
+                            $max_col1 = $label_parts[0];
+                        } else {
+                            $max_col2 = $label_parts[0];
+                        }
+                    }
+                }
+                $max_col2 -= 10;
 
-        $max_label = max($max_col1, $max_col2);
+                $max_label = max($max_col1, $max_col2);
 
-        $tmp_height = $q_media_height;
-        if ($tmp_height < ($max_label * 55)) $tmp_height = ($max_label * 55);
-        $correct = str_replace('"', '&#034;', $correct);
-        $correct = str_replace("'", '&#039;', $correct);
-?>
+                $tmp_height = $q_media_height;
+                if ($tmp_height < ($max_label * 55)) {
+                    $tmp_height = ($max_label * 55);
+                }
+                $correct = str_replace('"', '&#034;', $correct);
+                $correct = str_replace("'", '&#039;', $correct);
+                ?>
   <div align="center">
-	<?php
-	echo "<canvas class='labelling' id='canvas" . $q_no . "'
+                <?php
+                echo "<canvas class='labelling' id='canvas" . $q_no . "'
 	data-qno='" . $q_no . "'
 	data-qmedia='" . $q_media . "'
 	data-qcorrect='" . trim($correct) . "'
 	data-user=''
 	data-marking=''
 	width='" . ($q_media_width + 220) . "' height='" . $tmp_height . "'></canvas>\n";
-	echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
-    ?>
-	</div>
+                echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
+                ?>
+    </div>
   <br />
-<?php
-        break;
-      case 'hotspot':
-        $tmp_width = ($q_media_width + 301);
-        if ($tmp_width < 375) $tmp_width = 375;
-        $tmp_height = $q_media_height + 30;
-        $tmp_image = $mediadirectory->url($q_media);
-        ?>
+                <?php
+                break;
+            case 'hotspot':
+                $tmp_width = ($q_media_width + 301);
+                if ($tmp_width < 375) {
+                    $tmp_width = 375;
+                }
+                $tmp_height = $q_media_height + 30;
+                $tmp_image = $mediadirectory->url($q_media);
+                ?>
         <div>
 <div
               id="question<?php echo $q_no; ?>"
@@ -331,182 +344,186 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
               data-answer=""
               ></div>
         </div>
-        <?php
-        break;
-      case 'mcq':
+                <?php
+                break;
+            case 'mcq':
+                $i = 0;
+                foreach ($options as $individual_option) {
+                    $i++;
+                    if ($correct == $i) {
+                        echo "<tr><td><input type=\"radio\" checked=\"checked\" /></td><td>$individual_option</td></tr>\n";
+                    } else {
+                        echo "<tr><td><input type=\"radio\" /></td><td>$individual_option</td></tr>\n";
+                    }
+                }
+                break;
+            case 'true_false':
+                if ($correct == 't') {
+                    echo "<tr><td><input type=\"radio\" checked=\"checked\" /></td><td>True</td></tr>\n";
+                    echo "<tr><td><input type=\"radio\" /></td><td>False</td></tr>\n";
+                } else {
+                    echo "<tr><td><input type=\"radio\" /></td><td>True</td></tr>\n";
+                    echo "<tr><td><input type=\"radio\" checked=\"checked\" /></td><td>False</td></tr>\n";
+                }
+                break;
+            case 'mrq':
+                $tmp_std_array = explode(',', $std);
+                $i = 0;
+                $correct_stems = 0;
+                foreach ($options as $individual_option) {
+                    $i++;
+                    if ($correct_buf[$i - 1] == 'y') {
+                        echo "<tr><td><input type=\"checkbox\" checked=\"checked\" /></td><td>$individual_option</td></tr>\n";
+                    } else {
+                        echo "<tr><td><input type=\"checkbox\" /></td><td>$individual_option</td></tr>\n";
+                    }
+                }
+                break;
+            case 'rank':
+                $tmp_std_array = explode(',', $std);
+                $std_part = 0;
+                $rank_no = 0;
+                foreach ($correct_buf as $individual_correct) {
+                    if ($individual_correct > $rank_no and $individual_correct < 9990) {
+                        $rank_no = $individual_correct;
+                    }
+                }
+
+                $i = 0;
+                foreach ($options as $individual_option) {
+                    $i++;
+                    echo '<tr><td><select><option value=""></option>';
+                    for ($a = 1; $a <= $rank_no; $a++) {
+                        if ($correct_buf[$i - 1] == $a) {
+                            echo '<option value="" selected="selected">' . displayRank($a, $string) . '</option>';
+                        } else {
+                            echo '<option value="">' . displayRank($a, $string) . '</option>';
+                        }
+                    }
+                    echo "</select></td><td>$individual_option</td></tr>\n";
+                }
+                break;
+            case 'textbox':
+                $settings = json_decode($settings, true);
+                if (isset($settings['terms'])) {
+                    $correct_answers = explode(';', $settings['terms']);
+                    foreach ($correct_answers as $single_answer) {
+                          $answer_count[$single_answer] = 0;
+                    }
+                }
+                break;
+        }
+        if (!in_array($q_type, array('info', 'keyword_based', 'random', 'blank', 'labelling', 'hotspot'))) {
+            echo "</table></p>\n";
+        }
+    } elseif ($q_type == 'matrix') {
+        $matching_scenarios = explode('|', $scenario);
+        $correct_answers = explode('|', $correct);
+        echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n";
+        echo '<ol type="i">';
         $i = 0;
-        foreach ($options as $individual_option) {
-          $i++;
-          if ($correct == $i) {
-            echo "<tr><td><input type=\"radio\" checked=\"checked\" /></td><td>$individual_option</td></tr>\n";
-          } else {
-            echo "<tr><td><input type=\"radio\" /></td><td>$individual_option</td></tr>\n";
-          }
+        echo '<table cellpadding="2" cellspacing="0" border="1" class="matrix">';
+        echo "<tr>\n<td colspan=\"2\">&nbsp;</td>";
+        foreach ($options as $single_option) {
+            echo '<td>' . $single_option . '</td>';
         }
-        break;
-      case 'true_false':
-        if ($correct == 't') {
-          echo "<tr><td><input type=\"radio\" checked=\"checked\" /></td><td>True</td></tr>\n";
-          echo "<tr><td><input type=\"radio\" /></td><td>False</td></tr>\n";
-        } else {
-          echo "<tr><td><input type=\"radio\" /></td><td>True</td></tr>\n";
-          echo "<tr><td><input type=\"radio\" checked=\"checked\" /></td><td>False</td></tr>\n";
+
+        echo "<tr>\n";
+
+        $row_no = 0;
+        foreach ($matching_scenarios as $single_scenario) {
+            if (trim($single_scenario) != '') {
+                echo "<tr>\n";
+                echo '<td align="right">' . chr(65 + $row_no) . '.</td><td>' . $single_scenario . '</td>';
+                $answer_no = 1;
+                $col_no = 1;
+                foreach ($options as $single_option) {
+                    if ($correct_answers[$row_no] == $col_no) {
+                        echo '<td><div align="center"><input type="radio" name="q' . $q_no . '_' . $row_no . '" value="' . $answer_no . '" checked /></div></td>';
+                    } else {
+                        echo '<td><div align="center"><input type="radio" name="q' . $q_no . '_' . $row_no . '" value="' . $answer_no . '" /></div></td>';
+                    }
+                    $answer_no++;
+                    $col_no++;
+                }
+                echo "</tr>\n";
+                $row_no++;
+            }
         }
-        break;
-      case 'mrq':
-        $tmp_std_array = explode(',',$std);
-        $i = 0;
-        $correct_stems = 0;
-        foreach ($options as $individual_option) {
-          $i++;
-          if ($correct_buf[$i-1] == 'y') {
-            echo "<tr><td><input type=\"checkbox\" checked=\"checked\" /></td><td>$individual_option</td></tr>\n";
-          } else {
-            echo "<tr><td><input type=\"checkbox\" /></td><td>$individual_option</td></tr>\n";
-          }
-        }
-        break;
-      case 'rank':
+        echo '</table>';
+        echo "</ol>\n</td></tr>\n";
+    } elseif ($q_type == 'extmatch') {
+        $matching_scenarios = explode('|', $scenario);
+        $matching_media = explode('|', $q_media);
+        $tmp_media_width_array = explode('|', $q_media_width);
+        $tmp_media_height_array = explode('|', $q_media_height);
+        $tmp_answers_array = explode('|', $correct_buf[0]);
         $tmp_std_array = explode(',', $std);
         $std_part = 0;
-        $rank_no = 0;
-        foreach ($correct_buf as $individual_correct) {
-          if ($individual_correct > $rank_no and $individual_correct < 9990) $rank_no = $individual_correct;
-        }
 
-        $i = 0;
-        foreach ($options as $individual_option) {
-          $i++;
-          echo "<tr><td><select><option value=\"\"></option>";
-          for ($a=1; $a<=$rank_no; $a++) {
-            if ($correct_buf[$i-1] == $a) {
-              echo '<option value="" selected="selected">' . displayRank($a, $string) . '</option>';
-            } else {
-              echo '<option value="">' . displayRank($a, $string) . '</option>';
+        array_unshift($matching_scenarios, '');
+        $max_scenarios = max(count($matching_scenarios), count($matching_media));
+        $scenario_no = 0;
+        for ($part_id = 1; $part_id < $max_scenarios; $part_id++) {
+            if (
+                (isset($matching_scenarios[$part_id]) and trim(strip_tags($matching_scenarios[$part_id], '<img>')) != '')
+                or (isset($matching_media[$part_id]) and $matching_media[$part_id] != '')
+            ) {
+                $scenario_no++;
             }
-          }
-          echo "</select></td><td>$individual_option</td></tr>\n";
         }
-        break;
-      case 'textbox':
-        $settings = json_decode($settings, true);
-        if (isset($settings['terms'])) {
-          $correct_answers = explode(';', $settings['terms']);
-          foreach ($correct_answers as $single_answer) {
-            $answer_count[$single_answer] = 0;
-          }
-        }
-        break;
-    }
-    if (!in_array($q_type, array('info', 'keyword_based', 'random', 'blank', 'labelling', 'hotspot'))) {
-      echo "</table></p>\n";
-    }
-  } elseif ($q_type == 'matrix') {
-    $matching_scenarios = explode('|', $scenario);
-    $correct_answers = explode('|', $correct);
-    echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n";
-    echo '<ol type="i">';
-    $i = 0;
-    echo '<table cellpadding="2" cellspacing="0" border="1" class="matrix">';
-    echo "<tr>\n<td colspan=\"2\">&nbsp;</td>";
-    foreach ($options as $single_option) {
-      echo '<td>' . $single_option . '</td>';
-    }
 
-    echo "<tr>\n";
-
-    $row_no = 0;
-    foreach ($matching_scenarios as $single_scenario) {
-      if (trim($single_scenario) != '') {
-        echo "<tr>\n";
-        echo '<td align="right">' . chr(65 + $row_no) . '.</td><td>' . $single_scenario . '</td>';
-        $answer_no = 1;
-        $col_no = 1;
-        foreach ($options as $single_option) {
-          if ($correct_answers[$row_no] == $col_no) {
-            echo '<td><div align="center"><input type="radio" name="q' . $q_no . '_' . $row_no . '" value="' . $answer_no . '" checked /></div></td>';
-          } else {
-            echo '<td><div align="center"><input type="radio" name="q' . $q_no . '_' . $row_no . '" value="' . $answer_no . '" /></div></td>';
-          }
-          $answer_no++;
-          $col_no++;
+        echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n<ol type=\"A\">";
+        if ($matching_media[0] != '') {
+            echo '<div class="mediadiv">';
+            $questiondata->set_media($matching_media[0], $tmp_media_width_array[0], $tmp_media_height_array[0], '', true);
+            $render->render($questiondata, $string, 'paper/media.html');
+            echo "</div>\n";
         }
-        echo "</tr>\n";
-        $row_no++;
-      }
-    }
-    echo '</table>';
-    echo "</ol>\n</td></tr>\n";
-  } elseif ($q_type == 'extmatch') {
-    $matching_scenarios = explode('|', $scenario);
-    $matching_media = explode('|', $q_media);
-    $tmp_media_width_array = explode('|', $q_media_width);
-    $tmp_media_height_array = explode('|', $q_media_height);
-    $tmp_answers_array = explode('|', $correct_buf[0]);
-    $tmp_std_array = explode(',', $std);
-    $std_part = 0;
-
-    array_unshift($matching_scenarios, '');
-    $max_scenarios = max(count($matching_scenarios), count($matching_media));
-    $scenario_no = 0;
-    for ($part_id = 1; $part_id < $max_scenarios; $part_id++) {
-      if ((isset($matching_scenarios[$part_id]) and trim(strip_tags($matching_scenarios[$part_id], '<img>')) != '')
-              or (isset($matching_media[$part_id]) and $matching_media[$part_id] != '')) {
-        $scenario_no++;
-      }
-    }
-
-    echo "<tr><td class=\"q_no\">$q_no.&nbsp;</td><td>$leadin\n<ol type=\"A\">";
-    if ($matching_media[0] != '') {
-      echo "<div class=\"mediadiv\">";
-      $questiondata->set_media($matching_media[0], $tmp_media_width_array[0], $tmp_media_height_array[0], '', true);
-      $render->render($questiondata, $string, 'paper/media.html');
-      echo "</div>\n";
-    }
-    for ($i = 1; $i <= $scenario_no; $i++) {
-      echo "<li>\n";
-      if (isset($matching_media[$i]) and $matching_media[$i] != '') {
-        echo "<div>";
-        $questiondata->set_media($matching_media[$i], $tmp_media_width_array[$i], $tmp_media_height_array[$i], '', true);
-        $render->render($questiondata, $string, 'paper/media.html');
-        echo "</div>\n";
-      }
-      if ($matching_scenarios[$i]) {
-        echo $matching_scenarios[$i] . '<br />';
-      }
-      $option_no = 1;
-      $specific_answers = array();
-      $specific_answers = explode('$', $tmp_answers_array[$i - 1]);
-      if (count($specific_answers) > 1) {
-        echo '<select multiple="multiple" size="10">';
-      } else {
-        echo '<select>';
-      }
-      foreach ($options as $individual_option) {
-        $answer_match = false;
-        for ($x = 0; $x < count($specific_answers); $x++) {
-          if ($option_no == $specific_answers[$x]) {
-            $answer_match = true;
-          }
+        for ($i = 1; $i <= $scenario_no; $i++) {
+            echo "<li>\n";
+            if (isset($matching_media[$i]) and $matching_media[$i] != '') {
+                echo '<div>';
+                $questiondata->set_media($matching_media[$i], $tmp_media_width_array[$i], $tmp_media_height_array[$i], '', true);
+                $render->render($questiondata, $string, 'paper/media.html');
+                echo "</div>\n";
+            }
+            if ($matching_scenarios[$i]) {
+                echo $matching_scenarios[$i] . '<br />';
+            }
+            $option_no = 1;
+            $specific_answers = array();
+            $specific_answers = explode('$', $tmp_answers_array[$i - 1]);
+            if (count($specific_answers) > 1) {
+                echo '<select multiple="multiple" size="10">';
+            } else {
+                echo '<select>';
+            }
+            foreach ($options as $individual_option) {
+                $answer_match = false;
+                for ($x = 0; $x < count($specific_answers); $x++) {
+                    if ($option_no == $specific_answers[$x]) {
+                        $answer_match = true;
+                    }
+                }
+                if ($answer_match == true) {
+                    echo "<option value=\"\" selected=\"selected\">$individual_option</option>\n";
+                } else {
+                    echo "<option value=\"\">$individual_option</option>\n";
+                }
+                $option_no++;
+            }
+            echo "</select><br />&nbsp;</li>\n";
         }
-        if ($answer_match == true) {
-          echo "<option value=\"\" selected=\"selected\">$individual_option</option>\n";
-        } else {
-          echo "<option value=\"\">$individual_option</option>\n";
-        }
-        $option_no++;
-      }
-      echo "</select><br />&nbsp;</li>\n";
+        echo "</ol>\n";
     }
-    echo "</ol>\n";
-  }
-  echo "</td></tr>\n";
+    echo "</td></tr>\n";
 
   // Display comments here.
-  if (!in_array($q_type, array('info', 'keyword_based', 'random'))) {
-    echo displayComments($q_id, $comments, $q_type, $q_no, $reviewer_data, $type, $string, $language);
-  }
-  echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
+    if (!in_array($q_type, array('info', 'keyword_based', 'random'))) {
+        echo displayComments($q_id, $comments, $q_type, $q_no, $reviewer_data, $type, $string, $language);
+    }
+    echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
 }
 
 // Get some paper properties
@@ -517,9 +534,9 @@ $labelcolor = $propertyObj->get_labelcolor();
 $themecolor = $propertyObj->get_themecolor();
         
 if (!isset($paper)) {
-  $contactemail = support::get_email();
-  $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
-  $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
+    $contactemail = support::get_email();
+    $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
+    $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
 }
 
 $reviewer_data = array();
@@ -528,12 +545,12 @@ $result->bind_param('si', $type, $paperID);
 $result->execute();
 $result->bind_result($id, $title, $initials, $surname, $started, $complete, $paper_comment);
 while ($result->fetch()) {
-  $reviewer_data[$id]['title'] = $title;
-  $reviewer_data[$id]['initials'] = $initials;
-  $reviewer_data[$id]['surname'] = $surname;
-  $reviewer_data[$id]['started'] = $started;
-  $reviewer_data[$id]['complete'] = $complete;
-  $reviewer_data[$id]['paper_comment'] = $paper_comment;
+    $reviewer_data[$id]['title'] = $title;
+    $reviewer_data[$id]['initials'] = $initials;
+    $reviewer_data[$id]['surname'] = $surname;
+    $reviewer_data[$id]['started'] = $started;
+    $reviewer_data[$id]['complete'] = $complete;
+    $reviewer_data[$id]['paper_comment'] = $paper_comment;
 }
 $result->close();
 ?>
@@ -573,11 +590,11 @@ $result->close();
       border-top: 2px solid #808080;
     }
     .reviewbar {
-		  color:white;
-			background-color:#295AAD;
-			width:100%;
+          color:white;
+            background-color:#295AAD;
+            width:100%;
       padding:2px;
-		}
+        }
     .reviewline {
       padding:2px;
       border-bottom:solid 1px #C0C0C0;
@@ -600,7 +617,7 @@ $result->close();
 
   // Check if any 3d file types are enabled and render js.
   threed_handler::render_js($string);
-  ?>
+?>
 </head>
 
 <body>
@@ -611,20 +628,20 @@ $result->close();
 <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
 <?php
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
-  if (isset($_GET['folder']) and $_GET['folder'] != '') {
+if (isset($_GET['folder']) and $_GET['folder'] != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $_GET['folder'] . '">' . folder_utils::get_folder_name($_GET['folder'], $mysqli) . '</a>';
-  } elseif (isset($_GET['module']) and $_GET['module'] != '') {
+} elseif (isset($_GET['module']) and $_GET['module'] != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '</a>';
-  }
+}
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper . '</a></div>';
 
-  echo "<div class=\"page_title\">" . $string[$type . 'report'] . "</div></div>";
+  echo '<div class="page_title">' . $string[$type . 'report'] . '</div></div>';
 
   require '../include/toprightmenu.inc';
 
   echo draw_toprightmenu(30);
 
-  if (count($reviewer_data) == 0) {
+if (count($reviewer_data) == 0) {
     echo $notice->info_strip($string['noreviewers'], 100);
     // JS utils dataset.
     $jsdataset['name'] = 'jsutils';
@@ -634,9 +651,9 @@ $result->close();
     ?>
     </body>
 </html>
-<?php
+    <?php
     exit;
-  }
+}
 ?>
   
 <br />
@@ -650,7 +667,7 @@ $result->close();
 
   // Capture reviewer comments data first.
   $comments_array = array();
-  foreach ($reviewer_data as $reviewerID=>$reviewer_detail) {
+foreach ($reviewer_data as $reviewerID => $reviewer_detail) {
     // Only loads reviews if they exist.
     if (!empty($reviewer_detail['started'])) {
         $comments_array[$reviewerID] = new Review($paperID, $reviewerID, $type, $mysqli);
@@ -659,7 +676,7 @@ $result->close();
         // Un-set the data as the exeternal has not revied yet.
         unset($reviewer_data[$reviewerID]);
     }
-  }
+}
   
   // Capture the paper makeup.
   $question_no = 0;
@@ -668,56 +685,58 @@ $result->close();
   $options_buffer = array();
   $correct_buffer = array();
 
-  $result = $mysqli->prepare("SELECT paper_title, labelcolor, themecolor, screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, score_method, q_media, q_media_width, q_media_height, correct, std, questions.settings FROM (properties, papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.paper = properties.property_id AND papers.question = questions.q_id AND papers.paper = ? ORDER BY screen, display_pos, id_num");
+  $result = $mysqli->prepare('SELECT paper_title, labelcolor, themecolor, screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, score_method, q_media, q_media_width, q_media_height, correct, std, questions.settings FROM (properties, papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.paper = properties.property_id AND papers.question = questions.q_id AND papers.paper = ? ORDER BY screen, display_pos, id_num');
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->store_result();
   $result->bind_result($paper_title, $labelcolor, $themecolor, $screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $display_method, $score_method, $q_media, $q_media_width, $q_media_height, $correct, $std, $settings);
-  while ($result->fetch()) {
+while ($result->fetch()) {
     if ($old_q_id != $q_id and $old_q_id > 0) {   // New question.
-      $question_no++;
-      if ($old_q_type == 'info') $question_no--;
-      displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_settings, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $labelcolor, $themecolor, $old_std, $reviewer_data, $type, $string, $language);
-      $options_buffer = array();
-      $correct_buffer = array();
-      if ($old_screen != $screen) {
-        echo '<tr><td colspan="2"><br /><div class="screenbrk">&nbsp;&nbsp;&nbsp;&nbsp;' . $string['screen'] . '&nbsp;' . $screen . '</div></td></tr>';
-      }
+        $question_no++;
+        if ($old_q_type == 'info') {
+            $question_no--;
+        }
+        displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_settings, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $labelcolor, $themecolor, $old_std, $reviewer_data, $type, $string, $language);
+        $options_buffer = array();
+        $correct_buffer = array();
+        if ($old_screen != $screen) {
+            echo '<tr><td colspan="2"><br /><div class="screenbrk">&nbsp;&nbsp;&nbsp;&nbsp;' . $string['screen'] . '&nbsp;' . $screen . '</div></td></tr>';
+        }
     }
     if ($q_type == 'labelling') {
-      $tmp_first_split = explode(';', $correct);
-      $tmp_second_split = explode('$', $tmp_first_split[11]);
-      for ($label_no = 4; $label_no <= 43; $label_no += 4) {
-        if (array_key_exists($label_no, $tmp_second_split) and substr($tmp_second_split[$label_no],0,1) != '|') {
-          $options_buffer[] = trim(substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|'))) . '|' . $tmp_second_split[$label_no-2] . '|' . ($tmp_second_split[$label_no-1] - 25);
-          if ($tmp_second_split[$label_no-2] > 150) {
-            $correct_buffer[] = $tmp_second_split[$label_no-2] . 'x' . ($tmp_second_split[$label_no-1] - 25);
-          }
+        $tmp_first_split = explode(';', $correct);
+        $tmp_second_split = explode('$', $tmp_first_split[11]);
+        for ($label_no = 4; $label_no <= 43; $label_no += 4) {
+            if (array_key_exists($label_no, $tmp_second_split) and substr($tmp_second_split[$label_no], 0, 1) != '|') {
+                $options_buffer[] = trim(substr($tmp_second_split[$label_no], 0, strpos($tmp_second_split[$label_no], '|'))) . '|' . $tmp_second_split[$label_no - 2] . '|' . ($tmp_second_split[$label_no - 1] - 25);
+                if ($tmp_second_split[$label_no - 2] > 150) {
+                    $correct_buffer[] = $tmp_second_split[$label_no - 2] . 'x' . ($tmp_second_split[$label_no - 1] - 25);
+                }
+            }
         }
-      }
     } elseif ($q_type == 'blank') {
-      $blank_details = explode('[blank',$option_text);
-      $no_answers = count($blank_details) - 1;
-      for ($i=1; $i<=$no_answers; $i++) {
-        $blank_details[$i] = preg_replace("| mark=\"([0-9]{1,3})\"|","",$blank_details[$i]);
-        $blank_details[$i] = preg_replace("| size=\"([0-9]{1,3})\"|","",$blank_details[$i]);
+        $blank_details = explode('[blank', $option_text);
+        $no_answers = count($blank_details) - 1;
+        for ($i = 1; $i <= $no_answers; $i++) {
+            $blank_details[$i] = preg_replace('| mark="([0-9]{1,3})"|', '', $blank_details[$i]);
+            $blank_details[$i] = preg_replace('| size="([0-9]{1,3})"|', '', $blank_details[$i]);
 
-        $blank_details[$i] = substr($blank_details[$i],(strpos($blank_details[$i],']') + 1));
-        $blank_details[$i] = substr($blank_details[$i],0,strpos($blank_details[$i],'[/blank]'));
-        $answer_list = explode(',',$blank_details[$i]);
-        $answer_list[0] = str_replace("[/blank]",'',$answer_list[0]);
-        if ($score_method == 'textboxes') {
-          foreach ($answer_list as $individual_answer) {
-            $correct_buffer[] = html_entity_decode(trim($individual_answer));
-          }
-        } else {
-          $correct_buffer[] = html_entity_decode(trim($answer_list[0]));
+            $blank_details[$i] = substr($blank_details[$i], (strpos($blank_details[$i], ']') + 1));
+            $blank_details[$i] = substr($blank_details[$i], 0, strpos($blank_details[$i], '[/blank]'));
+            $answer_list = explode(',', $blank_details[$i]);
+            $answer_list[0] = str_replace('[/blank]', '', $answer_list[0]);
+            if ($score_method == 'textboxes') {
+                foreach ($answer_list as $individual_answer) {
+                    $correct_buffer[] = html_entity_decode(trim($individual_answer));
+                }
+            } else {
+                $correct_buffer[] = html_entity_decode(trim($answer_list[0]));
+            }
         }
-      }
-      $options_buffer[] = $option_text;
+        $options_buffer[] = $option_text;
     } else {
-      $options_buffer[] = $option_text;
-      $correct_buffer[] = $correct;
+        $options_buffer[] = $option_text;
+        $correct_buffer[] = $correct;
     }
     $old_q_id = $q_id;
     $old_theme = $theme;
@@ -733,10 +752,12 @@ $result->close();
     $old_score_method = $score_method;
     $old_std = $std;
     $old_screen = $screen;
-  }
+}
   $result->close();
   $question_no++;
-  if ($old_q_type == 'info') $question_no--;
+if ($old_q_type == 'info') {
+    $question_no--;
+}
   displayQuestion($question_no, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_settings, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $comments_array, $correct_buffer, $old_display_method, $old_score_method, $labelcolor, $themecolor, $old_std, $reviewer_data, $type, $string, $language);
   $mysqli->close();
 ?>
@@ -755,12 +776,12 @@ $result->close();
   $miscdataset['attributes']['language'] = $language;
   $miscdataset['attributes']['module'] = '';
   $miscdataset['attributes']['folder'] = '';
-  if (isset($_GET['module'])) {
+if (isset($_GET['module'])) {
     $miscdataset['attributes']['module'] = $_GET['module'];
-  }
-  if (isset($_GET['folder'])) {
+}
+if (isset($_GET['folder'])) {
     $miscdataset['attributes']['folder'] = $_GET['folder'];
-  }
+}
   $miscdataset['attributes']['paperid'] = $paperID;
   $miscdataset['attributes']['type'] = $type;
   $miscdataset['attributes']['srcofy'] = $_GET['scrOfY'];

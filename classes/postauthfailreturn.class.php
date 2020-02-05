@@ -22,17 +22,19 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package Authentication
  */
-class postauthfailreturn extends stdClass {
-  public $attempt;
-  public $form;
-  public $url;
-  public $callback;
-  public $stop;
-  public $exit;
+class postauthfailreturn extends stdClass
+{
+    public $attempt;
+    public $form;
+    public $url;
+    public $callback;
+    public $stop;
+    public $exit;
 
-  function __construct() {
-    $this->attempt = $_SESSION['authenticationObj']['attempt'];
-    $this->stop = false;
-    $this->exit = false;
-  }
+    function __construct()
+    {
+        $this->attempt = $_SESSION['authenticationObj']['attempt'];
+        $this->stop = false;
+        $this->exit = false;
+    }
 }

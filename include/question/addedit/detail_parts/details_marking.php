@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -26,14 +27,14 @@ $marks_positive = $configObject->get_setting('core', 'paper_marks_postive');
 $marks_negative = $configObject->get_setting('core', 'paper_marks_negative');
 $marks_partial = $configObject->get_setting('core', 'paper_marks_partial');
 if ($marks_source = $question->get_marks_source()) {
-  $mark_correct = $marks_source->get_marks_correct();
-  $mark_incorrect = $marks_source->get_marks_incorrect();
-  $mark_partial = $marks_source->get_marks_partial();
-  $mark_partial = ($mark_partial != '') ? number_format($mark_partial, 1) : 0;
+    $mark_correct = $marks_source->get_marks_correct();
+    $mark_incorrect = $marks_source->get_marks_incorrect();
+    $mark_partial = $marks_source->get_marks_partial();
+    $mark_partial = ($mark_partial != '') ? number_format($mark_partial, 1) : 0;
 } else {
-  $mark_correct = 1;
-  $mark_incorrect = 0;
-  $mark_partial = 0;
+    $mark_correct = 1;
+    $mark_incorrect = 0;
+    $mark_partial = 0;
 }
 $allow_neg = $question->allow_negative_marks();
 $allow_change_method = ($question->allow_change_marking_method() and $dis_class == '') ? '' : ' disabled="disabled"';
@@ -58,34 +59,34 @@ echo ViewHelper::render_options($marks_positive, $mark_correct, 3);
                 </select>
 
                 <?php
-if ($question->allow_partial_marks()):
-  $show_partial = ($question->get_score_method() == $string['allowpartial']) ? '' : ' hide';
-?>
+                if ($question->allow_partial_marks()) :
+                    $show_partial = ($question->get_score_method() == $string['allowpartial']) ? '' : ' hide';
+                    ?>
                 <span class="marks-partial<?php echo $show_partial ?>">
                   <label for="option_marks_partial" class="heavy"><?php echo $string['markspartial']?></label>
                   <select id="option_marks_partial" name="option_marks_partial" class="spaced-right-large">
-<?php
-echo ViewHelper::render_options($marks_partial, $mark_partial, 3);
-?>
+                    <?php
+                    echo ViewHelper::render_options($marks_partial, $mark_partial, 3);
+                    ?>
                   </select>
                 </span>
-<?php
-endif;
-if ($allow_neg or $mark_incorrect != 0):
-?>
+                    <?php
+                endif;
+                if ($allow_neg or $mark_incorrect != 0) :
+                    ?>
                 <label for="option_marks_incorrect" class="heavy"><?php echo $string['marksincorrect']?></label>
                 <select id="option_marks_incorrect" name="option_marks_incorrect">
-<?php
-echo ViewHelper::render_options($marks_negative, $mark_incorrect, 3);
-?>
+                    <?php
+                    echo ViewHelper::render_options($marks_negative, $mark_incorrect, 3);
+                    ?>
                 </select>
-<?php
-else:
-?>
+                    <?php
+                else :
+                    ?>
                 <input type="hidden" id="option_marks_incorrect" name="option_marks_incorrect" value="<?php echo $mark_incorrect ?>" />
-<?php
-endif;
-?>
+                    <?php
+                endif;
+                ?>
               </td>
             </tr>
           </tbody>

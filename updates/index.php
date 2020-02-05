@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -21,4 +22,5 @@
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2017 The University of Nottingham
  */
-header("location: ../install/index.html", true, 303);
+
+header('location: ../install/index.html', true, 303);

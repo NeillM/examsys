@@ -24,50 +24,54 @@
  * @package
  */
 
-Class OptionEXTMATCH extends OptionEdit {
+class OptionEXTMATCH extends OptionEdit
+{
   
-  protected $all_corrects = array();
-  protected $_fields_compound = array('correct' => 'integer');
+    protected $all_corrects = array();
+    protected $_fields_compound = array('correct' => 'integer');
   
   // ACCESSORS
   
   /**
-   * Get all the correct answers for this option.  Actually the correct answer across the board. Return as an array of array of correct 
+   * Get all the correct answers for this option.  Actually the correct answer across the board. Return as an array of array of correct
    * answers for each 'question'
    * @return string
    */
-  public function get_all_corrects() {
-    $this->get_correct();
-    return $this->all_corrects;
-  }
+    public function get_all_corrects()
+    {
+        $this->get_correct();
+        return $this->all_corrects;
+    }
   
-  public function set_all_corrects($value) {
-    $this->all_corrects = $value;
-    $this->set_correct('dummy');
-  }
+    public function set_all_corrects($value)
+    {
+        $this->all_corrects = $value;
+        $this->set_correct('dummy');
+    }
 
-  public function get_correct() {
-    $stems = explode('|', $this->correct);
-    $this->all_corrects = array();
-    foreach ($stems as $stem) {
-      $this->all_corrects[] = ($stem != '') ? explode('$', $stem) : array();
+    public function get_correct()
+    {
+        $stems = explode('|', $this->correct);
+        $this->all_corrects = array();
+        foreach ($stems as $stem) {
+            $this->all_corrects[] = ($stem != '') ? explode('$', $stem) : array();
+        }
+        return $this->correct;
     }
-    return $this->correct;
-  }
   
-  public function set_correct($value) {
-    $stems = $this->_question->get_all_stems();
-    $media = $this->_question->get_all_medias();
-    $tmp = array();
-    for ($i = 0; $i < count($this->all_corrects); $i++) {
-      // Don't save correct answer if the option is empty
-      if (empty($stems[$i]) and (!isset($media[$i + 1]) or $media[$i + 1] == '')) {
-        $this->all_corrects[$i] = '';
-      }
-      $correct = $this->all_corrects[$i];
-      $tmp[] = (is_array($correct)) ? implode('$', $correct) : '';
+    public function set_correct($value)
+    {
+        $stems = $this->_question->get_all_stems();
+        $media = $this->_question->get_all_medias();
+        $tmp = array();
+        for ($i = 0; $i < count($this->all_corrects); $i++) {
+          // Don't save correct answer if the option is empty
+            if (empty($stems[$i]) and (!isset($media[$i + 1]) or $media[$i + 1] == '')) {
+                $this->all_corrects[$i] = '';
+            }
+            $correct = $this->all_corrects[$i];
+            $tmp[] = (is_array($correct)) ? implode('$', $correct) : '';
+        }
+        $this->correct = implode('|', $tmp);
     }
-    $this->correct = implode('|', $tmp);
-  }
 }
-

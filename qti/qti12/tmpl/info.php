@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
-require("header.php");
+require('header.php');
 ?>
 
-			<?php echo $headertext ?>
-		</presentation>
-	</item>
+            <?php echo $headertext ?>
+        </presentation>
+    </item>

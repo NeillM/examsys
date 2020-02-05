@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -25,41 +26,38 @@
 require '../include/staff_auth.inc';
 require '../include/errors.php';
 require '../lang/' . $language . '/paper/properties.php';
-
 $ref_line = 0;
-
 // Get the current metadata settings for the paper
 $current_settings = array();
-$stmt = $mysqli->prepare("SELECT refID FROM reference_papers WHERE paperID = ?");
+$stmt = $mysqli->prepare('SELECT refID FROM reference_papers WHERE paperID = ?');
 $stmt->bind_param('i', $_GET['paperID']);
 $stmt->execute();
 $stmt->store_result();
 $stmt->bind_result($current_refID);
 while ($stmt->fetch()) {
-  $current_settings[$current_refID] = $current_refID;
+    $current_settings[$current_refID] = $current_refID;
 }
 $stmt->close();
-
 // Get the dropdown list values
 if ($_GET['modules'] != '') {
-  $stmt = $mysqli->prepare("SELECT DISTINCT title, reference_material.id FROM reference_material, reference_modules, modules WHERE reference_material.id = reference_modules.refID AND reference_material.deleted IS NULL AND reference_modules.idMod = modules.id AND modules.id IN (" . $_GET['modules'] . ") GROUP BY reference_material.id");
-  $stmt->execute();
-  $stmt->store_result();
-  $stmt->bind_result($title, $refID);
-  $ref_line = $stmt->num_rows();
-  if ($ref_line > 0) {
-    while ($stmt->fetch()) {
-      if (isset($current_settings[$refID])) {
-        echo "<input type=\"checkbox\" name=\"ref$ref_line\" value=\"$refID\" checked=\"checked\" /> $title<br />";
-      } else {
-        echo "<input type=\"checkbox\" name=\"ref$ref_line\" value=\"$refID\" /> $title<br />";
-      }
-      $ref_line++;
+    $stmt = $mysqli->prepare('SELECT DISTINCT title, reference_material.id FROM reference_material, reference_modules, modules WHERE reference_material.id = reference_modules.refID AND reference_material.deleted IS NULL AND reference_modules.idMod = modules.id AND modules.id IN (' . $_GET['modules'] . ') GROUP BY reference_material.id');
+    $stmt->execute();
+    $stmt->store_result();
+    $stmt->bind_result($title, $refID);
+    $ref_line = $stmt->num_rows();
+    if ($ref_line > 0) {
+        while ($stmt->fetch()) {
+            if (isset($current_settings[$refID])) {
+                echo "<input type=\"checkbox\" name=\"ref$ref_line\" value=\"$refID\" checked=\"checked\" /> $title<br />";
+            } else {
+                echo "<input type=\"checkbox\" name=\"ref$ref_line\" value=\"$refID\" /> $title<br />";
+            }
+            $ref_line++;
+        }
+    } else {
+        echo $string['nomaterials'];
     }
-  } else {
-    echo $string['nomaterials'];
-  }
-  $stmt->close();
+    $stmt->close();
 }
 
 $mysqli->close();

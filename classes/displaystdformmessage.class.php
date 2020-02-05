@@ -22,16 +22,18 @@
  * @copyright Copyright (c) 2014 The University of Nottingham
  * @package Authentication
  */
-class displaystdformmessage extends stdClass {
-	public $pretext;
-	public $posttext;
-	public $cssclass;
-	public $content;
+class displaystdformmessage extends stdClass
+{
+    public $pretext;
+    public $posttext;
+    public $cssclass;
+    public $content;
 
-	function __construct() {
-		$this->pretext = '';
-		$this->posttext = '';
-		$this->csstype = '';
-		$this->content = '';
-	}
+    function __construct()
+    {
+        $this->pretext = '';
+        $this->posttext = '';
+        $this->csstype = '';
+        $this->content = '';
+    }
 }

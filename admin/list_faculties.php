@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -46,8 +47,8 @@
 <?php
   require '../include/faculty_options.inc';
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu();
+    
+    echo draw_toprightmenu();
 ?>
 <div id="content">
 
@@ -68,14 +69,14 @@
 $old_faculty = '';
 $id = 0;
 
-$result = $mysqli->prepare("SELECT faculty.id, faculty.code, faculty.name, (COUNT(school) - COUNT(schools.deleted))
+$result = $mysqli->prepare('SELECT faculty.id, faculty.code, faculty.name, (COUNT(school) - COUNT(schools.deleted))
   FROM faculty LEFT JOIN schools ON schools.facultyID = faculty.id
   WHERE faculty.deleted IS NULL
-  GROUP BY faculty.code, faculty.name, faculty.id");
+  GROUP BY faculty.code, faculty.name, faculty.id');
 $result->execute();
 $result->bind_result($id, $code, $name, $school_no);
 while ($result->fetch()) {
-  echo "<tr id=\"$id\" class=\"l\"><td class=\"col10\">$code</td><td class=\"col10\">$name</td><td class=\"col10\" style=\"text-align:right\">$school_no</td><td></td></tr>\n";
+    echo "<tr id=\"$id\" class=\"l\"><td class=\"col10\">$code</td><td class=\"col10\">$name</td><td class=\"col10\" style=\"text-align:right\">$school_no</td><td></td></tr>\n";
 }
 $result->close();
 

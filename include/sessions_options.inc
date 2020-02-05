@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -21,8 +22,8 @@
 * @copyright Copyright (c) 2014 The University of Nottingham
 * @package
 */
-$idMod = $_GET['module'];
 
+$idMod = $_GET['module'];
 $yearutils = new yearutils($mysqli);
 $session = $yearutils->get_current_session();
 $vle_api_cache = array();
@@ -30,17 +31,16 @@ $vle_api_data = MappingUtils::get_vle_api($idMod, $session, $vle_api_cache, $mys
 $vle_api = $vle_api_data['api'];
 $map_level = $vle_api_data['level'];
 $module_code = module_utils::get_moduleid_from_id($_GET['module'], $mysqli);
-
 if ($vle_api != '') {
-  $vle = CMFactory::GetCMAPI($vle_api);
-  $vle->setMappingLevel($map_level);
-  $objsBySession = $vle->getObjectives($module_code, $session, $mysqli);
-  $vle_name = $vle->getFriendlyName();
-  $vle_name_a = $vle->getFriendlyName(true);
+    $vle = CMFactory::GetCMAPI($vle_api);
+    $vle->setMappingLevel($map_level);
+    $objsBySession = $vle->getObjectives($module_code, $session, $mysqli);
+    $vle_name = $vle->getFriendlyName();
+    $vle_name_a = $vle->getFriendlyName(true);
 } else {
-  require_once '../include/mapping.inc';
-  $modules_array = array($idMod => $module_code);
-  $objsBySession = getObjectives($modules_array, $session, '', '', $mysqli, 'all');
+    require_once '../include/mapping.inc';
+    $modules_array = array($idMod => $module_code);
+    $objsBySession = getObjectives($modules_array, $session, '', '', $mysqli, 'all');
 }
 ?>
 
@@ -51,7 +51,7 @@ if ($vle_api != '') {
 <div class="menuitem addsession"><img class="sidebar_icon" src="../artwork/shortcut_calendar_icon.png" alt="" /><a href="#"><?php echo $string['createsession'] ?></a></div>
 <?php
 if ($vle_api == '') {
-  echo '<div class="menuitem"><a href="load_session_from_txt.php?module=' . $modID . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />' . $string['importfile'] . '</a></div>';
+    echo '<div class="menuitem"><a href="load_session_from_txt.php?module=' . $modID . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />' . $string['importfile'] . '</a></div>';
   //This has not been written yet see ticket #708
   //echo '<div class="menuitem"><a href="export_session_to_txt.php?module=' . $modID . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />Export Sessions</a></div>';
 }
@@ -60,9 +60,9 @@ if ($vle_api == '') {
 <div class="grey menuitem"><img class="sidebar_icon" src="../artwork/red_cross_grey.png" alt="" /><?php echo $string['deletesession'] ?></div>
 <?php
 if ($vle_api == '') {
-	echo '<div class="menuitem cascade show_copy_menu"><a href="#"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="Copy year" />' . $string['copyyear'] . '</a></div>';
+    echo '<div class="menuitem cascade show_copy_menu"><a href="#"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="Copy year" />' . $string['copyyear'] . '</a></div>';
 } else {
-	echo '<div class="menuitem" onclick="alert(\'Copy year is not available for ' . $vle_name . ' modules\'); return false;"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="" /><a href="#" onclick="return false">' . $string['copyyear'] . '</a></div>';
+    echo '<div class="menuitem" onclick="alert(\'Copy year is not available for ' . $vle_name . ' modules\'); return false;"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="" /><a href="#" onclick="return false">' . $string['copyyear'] . '</a></div>';
 }
 ?>
 </div>
@@ -71,7 +71,7 @@ if ($vle_api == '') {
 <div class="menuitem addsession"><img class="sidebar_icon" src="../artwork/shortcut_calendar_icon.png" alt="" /><a href="#"><?php echo $string['createsession']; ?></a></div>
 <?php
 if ($vle_api == '') {
-  echo '<div class="menuitem"><a href="load_session_from_txt.php?module=' . $modID . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />' . $string['importfile'] . '</a></div>';
+    echo '<div class="menuitem"><a href="load_session_from_txt.php?module=' . $modID . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />' . $string['importfile'] . '</a></div>';
   //This has not bee written yet see ticket #708
   //echo '<div class="menuitem"><a href="export_session_to_xml.php?module=' . $modID . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />Export Sessions</a></div>';
 }
@@ -80,10 +80,9 @@ if ($vle_api == '') {
 <div class="menuitem"<a id="delete" href="#"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><?php echo $string['deletesession'] ?></a></div>
 <?php
 if ($vle_api == '') {
-  echo '<div class="menuitem cascade show_copy_menu"><a href="#"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="" />' . $string['copyyear'] . '</a></div>';
-}
-else {
-	echo '<div class="menuitem cascade"><a href="#" onclick="alert(\'Copy year is not available for ' . $vle_name . ' modules\'); return false;"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="" />' . $string['copyyear'] . '</a></div>';
+    echo '<div class="menuitem cascade show_copy_menu"><a href="#"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="" />' . $string['copyyear'] . '</a></div>';
+} else {
+    echo '<div class="menuitem cascade"><a href="#" onclick="alert(\'Copy year is not available for ' . $vle_name . ' modules\'); return false;"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="" />' . $string['copyyear'] . '</a></div>';
 }
 ?>
 </div>
@@ -92,7 +91,7 @@ else {
 <div class="menuitem addsession"><img class="sidebar_icon" src="../artwork/shortcut_calendar_icon.png" alt="" /><a href="#"><?php echo $string['createsession']; ?></a></div>
 <?php
 if ($vle_api == '') {
-  echo '<div class="menuitem"><a href="load_session_from_txt.php?module=' . $modID . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />' . $string['importfile'] . '</a></div>';
+    echo '<div class="menuitem"><a href="load_session_from_txt.php?module=' . $modID . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />' . $string['importfile'] . '</a></div>';
   //This has not been written yet see ticket #708
   //echo '<div class="menuitem"><a href="export_session_to_xml.php?module=' . $modID . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />Export Sessions</a></div>';
 }
@@ -101,10 +100,9 @@ if ($vle_api == '') {
 <div id="deletevle" class="menuitem"><img class="sidebar_icon" src="../artwork/red_cross.png" alt="" /><a href="" onclick="return false"><?php echo $string['deletesession']; ?></a></div>
 <?php
 if ($vle_api == '') {
-  echo '<div class="menuitem cascade show_copy_menu"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="" /><a href="" onclick="return false">' . $string['copyyear'] . '</a></div>';
-}
-else {
-	echo '<div class="menuitem" onclick="alert(\'Copy year is not available for ' . $vle_name . ' modules\')"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="" /><a href="#" onclick="return false">' . $string['copyyear'] . '</a></div>';
+    echo '<div class="menuitem cascade show_copy_menu"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="" /><a href="" onclick="return false">' . $string['copyyear'] . '</a></div>';
+} else {
+    echo '<div class="menuitem" onclick="alert(\'Copy year is not available for ' . $vle_name . ' modules\')"><img class="sidebar_icon" src="../artwork/copy_icon.gif" alt="" /><a href="#" onclick="return false">' . $string['copyyear'] . '</a></div>';
 }
 ?>
 </div>

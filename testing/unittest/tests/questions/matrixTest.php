@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,13 +25,15 @@ use testing\unittest\unittest;
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  * @package tests
  */
-class matrixtest extends unittest {
+class matrixtest extends unittest
+{
 
     /**
      * Test question header setter
      * @group question
      */
-    public function test_set_question_head() {
+    public function test_set_question_head()
+    {
         $data = questiondata::get_datastore('matrix');
         $data->set_question_head();
         $this->assertTrue($data->displaydefault);
@@ -46,9 +49,10 @@ class matrixtest extends unittest {
      * Test question question setter
      * @group question
      */
-    public function test_set_question() {
+    public function test_set_question()
+    {
         $data = questiondata::get_datastore('matrix');
-        $data->scenario = "Word|Excel|PowerPoint|Access5|Publisher|Data File||||";
+        $data->scenario = 'Word|Excel|PowerPoint|Access5|Publisher|Data File||||';
         $useranswer = '3|4|2|5|1|6';
         $scenarios = array('Word', 'Excel', 'PowerPoint', 'Access5', 'Publisher', 'Data File', '', '', '', '');
         $data->set_question(1, $useranswer, '');
@@ -63,7 +67,8 @@ class matrixtest extends unittest {
      * Test question option setter
      * @group question
      */
-    public function test_set_option_answer() {
+    public function test_set_option_answer()
+    {
         $data = questiondata::get_datastore('matrix');
         $data->matchoptions = array(0 => array('option' => '.PUB'));
         $data->set_opt(1, array('optiontext' => '.PUB'));
@@ -80,7 +85,8 @@ class matrixtest extends unittest {
      * Test question additional option setter
      * @group question
      */
-    public function test_process_options() {
+    public function test_process_options()
+    {
         $data = questiondata::get_datastore('matrix');
         $data->matchoptions = array(0 => array('option' => '.PUB'),
             1 => array('option' => '.PPT'),

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,9 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace testing\behat\steps\database;
+
 use Behat\Gherkin\Node\PyStringNode,
+
     Behat\Gherkin\Node\TableNode,
     Behat\Behat\Tester\Exception\PendingException;
 
@@ -27,7 +30,8 @@ use Behat\Gherkin\Node\PyStringNode,
  * @package testing
  * @subpackage behat
  */
-trait datageneration {
+trait datageneration
+{
   /**
    * Maps the types that can be passed to exist to a data generator.
    *
@@ -38,7 +42,7 @@ trait datageneration {
    *
    * @var array
    */
-  protected $datagenerator_map = array(
+    protected $datagenerator_map = array(
     'users' => array('users', 'core', 'create_user'),
     'papers' => array('papers', 'core', 'create_paper'),
     'questions' => array('questions', 'core', 'create_question'),
@@ -49,7 +53,7 @@ trait datageneration {
     'campuses' => array('labs', 'core', 'create_campus'),
     'labs' => array('labs', 'core', 'create_lab'),
     'exam pcs' => array('labs', 'core', 'create_exam_pc'),
-  );
+    );
 
   /**
    * Adds records to the database using an appropriate data generator.
@@ -59,26 +63,27 @@ trait datageneration {
    * @param TableNode $data The data to be loaded
    * @throws PendingException if the type is not mapped, or the generator function does not exist
    */
-  public function the_following_exist($type, TableNode $data) {
-    if (!isset($this->datagenerator_map[$type])) {
-      // The type has not yet been mapped.
-      // We should let the user know that it needs to be implemented.
-      throw new PendingException("Implement a data generator for: $type");
+    public function the_following_exist($type, TableNode $data)
+    {
+        if (!isset($this->datagenerator_map[$type])) {
+          // The type has not yet been mapped.
+          // We should let the user know that it needs to be implemented.
+            throw new PendingException("Implement a data generator for: $type");
+        }
+        $generatorname = $this->datagenerator_map[$type][0];
+        $generatorcomponent = $this->datagenerator_map[$type][1];
+        $createmethod = $this->datagenerator_map[$type][2];
+        $datagenerator = $this->get_datagenerator($generatorname, $generatorcomponent);
+      // Check the creation method exists.
+        if (!method_exists($datagenerator, $createmethod)) {
+            $message = "Implement the {$createmethod} method in the "
+            . "{$generatorcomponent}_{$generatorname} data generator";
+            throw new PendingException($message);
+        }
+      // Convert the data into a form that the data generator can use.
+        foreach ($data->getHash() as $row) {
+          // Pass each row into the generator.
+            $datagenerator->$createmethod($row);
+        }
     }
-    $generatorname = $this->datagenerator_map[$type][0];
-    $generatorcomponent = $this->datagenerator_map[$type][1];
-    $createmethod = $this->datagenerator_map[$type][2];
-    $datagenerator = $this->get_datagenerator($generatorname, $generatorcomponent);
-    // Check the creation method exists.
-    if (!method_exists($datagenerator, $createmethod)) {
-      $message = "Implement the {$createmethod} method in the "
-      . "{$generatorcomponent}_{$generatorname} data generator";
-      throw new PendingException($message);
-    }
-    // Convert the data into a form that the data generator can use.
-    foreach ($data->getHash() as $row) {
-      // Pass each row into the generator.
-      $datagenerator->$createmethod($row);
-    }
-  }
 }

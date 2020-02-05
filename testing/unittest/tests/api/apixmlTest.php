@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -24,7 +25,8 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
-class apixmltest extends unittestdatabase {
+class apixmltest extends unittestdatabase
+{
 
     /**
      * @var array Storage for paper data in tests
@@ -35,17 +37,18 @@ class apixmltest extends unittestdatabase {
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
         $datagenerator->create_academic_year(array('calendar_year' => 2016, 'academic_year' => '2016/17'));
         $datagenerator = $this->get_datagenerator('papers', 'core');
-        $this->pid1 = $datagenerator->create_paper(array('papertitle' => "Test create formative",
+        $this->pid1 = $datagenerator->create_paper(array('papertitle' => 'Test create formative',
             'calendaryear' => 2016,
-            'modulename' => "Training Module",
-            'paperowner' => "admin",
-            'papertype' => "0",
+            'modulename' => 'Training Module',
+            'paperowner' => 'admin',
+            'papertype' => '0',
             'duration' => 60,
-            'labs' => "1"));
+            'labs' => '1'));
     }
 
     /**
@@ -80,7 +83,8 @@ class apixmltest extends unittestdatabase {
      * Test validate faculty - success
      * @group apixml
      */
-    public function test_validate_faculty_success() {
+    public function test_validate_faculty_success()
+    {
         $api = new \api\apixml($this->facultyxml);
         $this->assertEquals(array(), $api->validate('facultymanagement', 'managementrequest'));
     }
@@ -89,7 +93,8 @@ class apixmltest extends unittestdatabase {
      * Test parse faculty - success
      * @group apixml
      */
-    public function test_parse_faculty_success() {
+    public function test_parse_faculty_success()
+    {
         $api = new \api\apixml($this->facultyxml);
         $api->validate('facultymanagement', 'managementrequest');
         $requestobject = new \api\facultymanagement($this->db);
@@ -98,24 +103,24 @@ class apixmltest extends unittestdatabase {
         $perm['create'] = true;
         $create = $api->parse($requestobject, $fields, $actions, $perm, $this->admin['id']);
         $responsearray = array(
-            "statuscode" => 100,
-            "status" => 'OK',
-            "id" => $create[0]['id'],
-            "externalid" => null,
-            "error" => null,
-            "node" => 'create',
-            "nodeid" => 'str1234');
+            'statuscode' => 100,
+            'status' => 'OK',
+            'id' => $create[0]['id'],
+            'externalid' => null,
+            'error' => null,
+            'node' => 'create',
+            'nodeid' => 'str1234');
         $this->assertEquals(array($responsearray), $create);
         $querytable = $this->query(array('columns' => array('name'), 'table' => 'faculty'));
         $expectedtable = array(
             0 => array(
-                'name' => "UNKNOWN Faculty"
+                'name' => 'UNKNOWN Faculty'
             ),
             1 => array(
-                'name' => "Administrative and Support Units"
+                'name' => 'Administrative and Support Units'
             ),
             2 => array(
-                'name' => "abc"
+                'name' => 'abc'
             ),
         );
         $this->assertEquals($expectedtable, $querytable);
@@ -125,7 +130,8 @@ class apixmltest extends unittestdatabase {
      * Test validate assessment - success
      * @group apixml
      */
-    public function test_validate_assessment_success() {
+    public function test_validate_assessment_success()
+    {
         $api = new \api\apixml(sprintf($this->assessmentxml, $this->admin['id']));
         $this->assertEquals(array(), $api->validate('assessmentmanagement', 'managementrequest'));
     }
@@ -134,7 +140,8 @@ class apixmltest extends unittestdatabase {
      * Test parse assessment - success
      * @group apixml
      */
-    public function test_parse_assessment_success() {
+    public function test_parse_assessment_success()
+    {
         $api = new \api\apixml(sprintf($this->assessmentxml, $this->admin['id']));
         $api->validate('assessmentmanagement', 'managementrequest');
         $requestobject = new \api\assessmentmanagement($this->db);
@@ -144,35 +151,35 @@ class apixmltest extends unittestdatabase {
         $perm['create'] = true;
         $create = $api->parse($requestobject, $fields, $actions, $perm, $this->admin['id']);
         $responsearray = array(
-            "statuscode" => 100,
-            "status" => 'OK',
-            "id" => $create[0]['id'],
-            "externalid" => null,
-            "error" => array(),
-            "node" => 'create',
-            "nodeid" => 'str1234');
+            'statuscode' => 100,
+            'status' => 'OK',
+            'id' => $create[0]['id'],
+            'externalid' => null,
+            'error' => array(),
+            'node' => 'create',
+            'nodeid' => 'str1234');
         $this->assertEquals(array($responsearray), $create);
         $querytable = $this->query(array('columns' => array('paper_title', 'exam_duration',
             'calendar_year', 'timezone', 'paper_ownerID', 'labs', 'paper_type'), 'table' => 'properties'));
         $expectedtable = array(
             0 => array(
-                'paper_title' => "Test create formative",
+                'paper_title' => 'Test create formative',
                 'exam_duration' => 60,
                 'calendar_year' => 2016,
-                'timezone' => "Europe/London",
+                'timezone' => 'Europe/London',
                 'paper_ownerID' => $this->admin['id'],
-                'labs' => "1",
-                'paper_type' => "0",
+                'labs' => '1',
+                'paper_type' => '0',
 
             ),
             1 => array(
-                'paper_title' => "Test",
+                'paper_title' => 'Test',
                 'exam_duration' => null,
                 'calendar_year' => 2016,
-                'timezone' => "Europe/London",
+                'timezone' => 'Europe/London',
                 'paper_ownerID' => $this->admin['id'],
-                'labs' => "",
-                'paper_type' => "0",
+                'labs' => '',
+                'paper_type' => '0',
             ),
         );
         $this->assertEquals($expectedtable, $querytable);

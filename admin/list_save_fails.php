@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -83,26 +84,24 @@ $clear_all = param::optional('clear', null, param::TEXT, param::FETCH_GET);
 $clear_a_log = param::optional('log_id', null, param::INT, param::FETCH_GET);
 
 if (isset($clear_all)) {
-  $logs->delete_save_fail_logs();
-  header( 'Location: list_save_fails.php' ) ;
-
+    $logs->delete_save_fail_logs();
+    header('Location: list_save_fails.php') ;
 } elseif (isset($clear_a_log)) {
-  $logs->delete_a_save_fail_log($clear_a_log);
-  header( 'Location: list_save_fails.php' ) ;
-
+    $logs->delete_a_save_fail_log($clear_a_log);
+    header('Location: list_save_fails.php') ;
 } else {
-  foreach ($log_list as $log) {
-    echo "<tr class=\"l\"><td><a href=\"?log_id=" . $log['id'] . "\"><img title=\"".$string['icon_msg']."\" alt=\"".$string['icon_msg']."\" src='../artwork/access_denied_16.gif'></a></td>
-    <td>" . $log['title'] . " " . $log['initials'] . " " . $log['surname'] . "</td>
-    <td><a href=\"../paper/details.php?paperID=" . $log['paperID'] . "\">" . $log['paper_title'] . "</a></td>
-    <td>" . $log['screen'] . "</td>
-    <td>" . $log['ipaddress'] . "</td>
-    <td>" . $log['failed'] . "</td>
-    <td>" . $log['status'] . "</td>
-    <td>" . $log['request'] . "</td>
-    <td>" . $log['response'] . "</td>
+    foreach ($log_list as $log) {
+        echo '<tr class="l"><td><a href="?log_id=' . $log['id'] . '"><img title="' . $string['icon_msg'] . '" alt="' . $string['icon_msg'] . "\" src='../artwork/access_denied_16.gif'></a></td>
+    <td>" . $log['title'] . ' ' . $log['initials'] . ' ' . $log['surname'] . '</td>
+    <td><a href="../paper/details.php?paperID=' . $log['paperID'] . '">' . $log['paper_title'] . '</a></td>
+    <td>' . $log['screen'] . '</td>
+    <td>' . $log['ipaddress'] . '</td>
+    <td>' . $log['failed'] . '</td>
+    <td>' . $log['status'] . '</td>
+    <td>' . $log['request'] . '</td>
+    <td>' . $log['response'] . "</td>
     </tr>\n";
-  }
+    }
 }
 ?>
 </tbody>

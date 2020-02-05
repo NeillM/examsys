@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -37,245 +38,274 @@ header('Pragma: public');
 header('Content-disposition: attachment; filename=report.xml');
 header('Content-type: text/xml');
 
-function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $log, $correct_buf, $screen, $question_number, $candidates) {
-  global $old_likert_scale, $old_display_method, $table_on;
+function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $q_media, $q_media_width, $q_media_height, $options, $log, $correct_buf, $screen, $question_number, $candidates)
+{
+    global $old_likert_scale, $old_display_method, $table_on;
 
   // Remove spaces
-  $theme = str_replace('&nbsp;',' ',$theme);
-  $scenario = str_replace('&nbsp;',' ',$scenario);
-  $leadin = str_replace('&nbsp;',' ',$leadin);
-  $old_likert_scale = str_replace('&nbsp;',' ',$old_likert_scale);
+    $theme = str_replace('&nbsp;', ' ', $theme);
+    $scenario = str_replace('&nbsp;', ' ', $scenario);
+    $leadin = str_replace('&nbsp;', ' ', $leadin);
+    $old_likert_scale = str_replace('&nbsp;', ' ', $old_likert_scale);
 
   // Remove nasty non-utf8 chars
-  $theme = StringUtils::wordToUtf8(strip_tags($theme));
-  $scenario = StringUtils::wordToUtf8(strip_tags($scenario));
-  $leadin = StringUtils::wordToUtf8(strip_tags($leadin));
-	
-  $theme = str_replace('&amp;amp;','&amp;',$theme);
-  $scenario = str_replace('&amp;amp;','&amp;',$scenario);
-  $leadin = str_replace('&amp;amp;','&amp;',$leadin);
-  $old_likert_scale = trim(strip_tags(str_replace('&amp;amp;','&amp;',$old_likert_scale)));
+    $theme = StringUtils::wordToUtf8(strip_tags($theme));
+    $scenario = StringUtils::wordToUtf8(strip_tags($scenario));
+    $leadin = StringUtils::wordToUtf8(strip_tags($leadin));
+    
+    $theme = str_replace('&amp;amp;', '&amp;', $theme);
+    $scenario = str_replace('&amp;amp;', '&amp;', $scenario);
+    $leadin = str_replace('&amp;amp;', '&amp;', $leadin);
+    $old_likert_scale = trim(strip_tags(str_replace('&amp;amp;', '&amp;', $old_likert_scale)));
 
-  if ($theme != '') {
-    if ($table_on == 1) echo '</w:tbl>';
-    echo '<w:p><w:pPr><w:pStyle w:val="Heading2"/></w:pPr><w:r><w:t>' . $theme . '</w:t></w:r></w:p><w:p/>';
-    $table_on = 0;
-  }
-  if ($q_type != 'extmatch') {
-    switch ($q_type) {
-      case 'dichotomous':
-        if ($table_on == 1) echo '</w:tbl>';
-        echo "<w:p><w:r><w:t>$question_number. $leadin</w:t></w:r></w:p><w:p/>";
-        if ($old_display_method == 'YN_Positive' or $old_display_method == 'YN_NegativeAbstain') {
-          echo '<w:p><w:pPr><w:tabs><w:tab w:val="center" w:pos="650"/><w:tab w:val="center" w:pos="1700"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:rPr><w:b/></w:rPr><w:t>Yes</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:rPr><w:b/></w:rPr><w:t>No</w:t></w:r></w:p>';
-        } else {
-          echo '<w:p><w:pPr><w:tabs><w:tab w:val="center" w:pos="600"/><w:tab w:val="center" w:pos="1600"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:rPr><w:b/></w:rPr><w:t>True</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:rPr><w:b/></w:rPr><w:t>False</w:t></w:r></w:p>';
+    if ($theme != '') {
+        if ($table_on == 1) {
+            echo '</w:tbl>';
         }
-        $i = 0;
-        foreach ($options as $individual_option) {
-          $i++;
-          if ($log[$screen][$q_id][$i]['u'] == '') $log[$screen][$q_id][$i]['u'] = 0;
-          if ($log[$screen][$q_id][$i]['t'] == '') $log[$screen][$q_id][$i]['t'] = 0;
-          if ($log[$screen][$q_id][$i]['f'] == '') $log[$screen][$q_id][$i]['f'] = 0;
-          echo '<w:p wsp:rsidR="00E97566" wsp:rsidRDefault="00E97566" wsp:rsidP="00E97566"/><w:p wsp:rsidR="00E97566" wsp:rsidRDefault="00E97566" wsp:rsidP="00E97566"><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="500"/><w:tab w:val="left" w:pos="550"/><w:tab w:val="decimal" w:pos="1450"/><w:tab w:val="left" w:pos="1500"/><w:tab w:val="left" w:pos="2400"/></w:tabs><w:ind w:left="2340" w:hanging="2340"/></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . $log[$screen][$q_id][$i]['t'] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i]['t']/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>' . $log[$screen][$q_id][$i]['f'] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i]['f']/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
-        }
-        echo '<w:p/>';
+        echo '<w:p><w:pPr><w:pStyle w:val="Heading2"/></w:pPr><w:r><w:t>' . $theme . '</w:t></w:r></w:p><w:p/>';
         $table_on = 0;
-        break;
-      case 'mcq':
-        if ($table_on == 1) echo '</w:tbl>';
-        echo "<w:p><w:r><w:t>$question_number. $leadin</w:t></w:r></w:p><w:p/>";
-        $i = 0;
-        foreach ($options as $individual_option) {
-          $i++;
-          if (!isset($log[$screen][$q_id][1][$i]) or $log[$screen][$q_id][1][$i] == '') {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
-          } else {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . $log[$screen][$q_id][1][$i] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][1][$i]/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
-          }
-        }
-        if ($old_display_method == 'vertical_other') {
-          echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . count($log[$screen][$q_id][1]['other']) . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round((count($log[$screen][$q_id][1]['other'])/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>Other:</w:t></w:r></w:p>';
-          foreach ($log[$screen][$q_id][1]['other'] as $other_text) {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="2268"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="900" wx:tlc="none" wx:cTlc="19"/></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/></w:r><w:r><w:tab wx:wTab="1185" wx:tlc="none" wx:cTlc="25"/><w:t>' . StringUtils::wordToUtf8($other_text) . '</w:t></w:r></w:p>';
-          }
-        }
-        if (!isset($log[$screen][$q_id][1]['u'])) {
-          echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:rPr><w:color w:val="999999"/></w:rPr><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>0</w:t></w:r><w:r><w:rPr><w:color w:val="999999"/></w:rPr><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:rPr><w:color w:val="999999"/></w:rPr><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>(unanswered)</w:t></w:r></w:p>';
-        } else {
-          $unanswered = $log[$screen][$q_id][1]['u'];
-          echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:rPr><w:color w:val="999999"/></w:rPr><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . $log[$screen][$q_id][1]['u'] . '</w:t></w:r><w:r><w:rPr><w:color w:val="999999"/></w:rPr><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][1]['u']/$candidates)*100) . '%)</w:t></w:r><w:r><w:rPr><w:color w:val="999999"/></w:rPr><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>(unanswered)</w:t></w:r></w:p>';
-        }
-        echo '<w:p/>';
-        $table_on = 0;
-        break;
-      case 'likert':
-        $unanswered = 0;
-        $old_size = substr_count($old_likert_scale,'|');
-        $current_properties = explode('|',$old_display_method);
-        $new_size = substr_count($old_display_method,'|');
-        $na = $current_properties[$new_size];
-        if ($old_likert_scale != $old_display_method or $table_on == 0) {
-          if ($table_on == 1) echo '</w:tbl>';
-          echo '<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblW w:w="0" w:type="auto"/><w:tblLook w:val="01E0"/></w:tblPr><w:tblGrid><w:gridCol w:w="470"/><w:gridCol w:w="4350"/><w:gridCol w:w="500"/><w:gridCol w:w="780"/><w:gridCol w:w="780"/><w:gridCol w:w="780"/><w:gridCol w:w="1290"/><w:gridCol w:w="780"/></w:tblGrid>';
-          echo '<w:tr><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>No</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>Question</w:t></w:r></w:p></w:tc>';
-          if ($na == 'true') echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>N/A</w:t></w:r></w:p></w:tc>';
-          for ($point=0; $point<$new_size; $point++) {
-            echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>' . str_replace(array('<br>', '<br />'), '</w:t></w:r><w:r><w:br/></w:r><w:r><w:rPr><w:b/></w:rPr><w:t>', strip_tags($current_properties[$point],'<br>,<br />')) . '</w:t></w:r></w:p></w:tc>';
-          }
-          echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>Unanswered</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>Mean</w:t></w:r></w:p></w:tc></w:tr>';
-          $table_on = 1;
-        }
-        echo '<w:tr><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>' . $question_number . '.</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>' . $leadin . '</w:t></w:r></w:p></w:tc>';
-        $i = 0;
-        $sub_total = 0;
-        foreach ($options as $individual_option) {
-          $i++;
-          if ($i > 1 or $na == 'true') {
-            if (!isset($log[$screen][$q_id][1][$individual_option])) {
-              echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>0</w:t></w:r></w:p></w:tc>';
-            } else {
-              echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>' . $log[$screen][$q_id][1][$individual_option] . ' (' . round(($log[$screen][$q_id][1][$individual_option]/$candidates)*100) . '%)</w:t></w:r></w:p></w:tc>';
-            }
-            if ($individual_option >= 1 and $individual_option <= 10) {
-              if (isset($log[$screen][$q_id][1][$individual_option])) {
-                $sub_total += $individual_option * $log[$screen][$q_id][1][$individual_option];
-              }
-            }
-          }
-        }
-        if (isset($log[$screen][$q_id][1]['n/a'])) $unanswered = $log[$screen][$q_id][1]['n/a'];
-        if (!isset($log[$screen][$q_id][1]['u'])) {
-          echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>0</w:t></w:r></w:p></w:tc>';
-        } else {
-          $unanswered += $log[$screen][$q_id][1]['u'];
-          echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>' . $log[$screen][$q_id][1]['u'] . ' (' . round(($log[$screen][$q_id][1]['u']/$candidates)*100) . '%)</w:t></w:r></w:p></w:tc>';
-        }
-        if (($candidates - $unanswered) == 0) {
-          echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>0</w:t></w:r></w:p></w:tc></w:tr>';
-        } else {
-          echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>' . number_format($sub_total/($candidates-$unanswered),1) . '</w:t></w:r></w:p></w:tc></w:tr>';
-        }
-        $old_likert_scale = $old_display_method;
-        break;
-      case 'mrq':
-        if ($table_on == 1) echo '</w:tbl>';
-        echo "<w:p><w:r><w:t>$question_number. $leadin</w:t></w:r></w:p><w:p/>";
-        $i = 0;
-        foreach ($options as $individual_option) {
-          $i++;
-          if ($candidates == 0) {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
-          } else {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . $log[$screen][$q_id][$i]['y'] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i]['y']/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
-          }
-        }
-        if ($old_display_method == 'other') {
-          echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . count($log[$screen][$q_id][1]['other']) . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round((count($log[$screen][$q_id][1]['other'])/$candidates)*100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>Other:</w:t></w:r></w:p>';
-          foreach ($log[$screen][$q_id][1]['other'] as $other_text) {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="2268"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="900" wx:tlc="none" wx:cTlc="19"/></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/></w:r><w:r><w:tab wx:wTab="1185" wx:tlc="none" wx:cTlc="25"/><w:t>' . StringUtils::wordToUtf8($other_text) . '</w:t></w:r></w:p>';
-          }
-        }
-        $table_on = 0;
-        break;
-      case 'rank':
-        if ($table_on == 1) echo '</w:tbl>';
-        echo "<w:p><w:r><w:t>$question_number. $leadin</w:t></w:r></w:p><w:p/>";
-        $rank_no = 0;
-        foreach ($correct_buf as $individual_correct) {
-          if ($individual_correct > $rank_no and $individual_correct < 9990) $rank_no = $individual_correct;
-        }
-        $i = 0;
-        foreach ($options as $individual_option) {
-          echo "<w:p><w:r><w:t>" . StringUtils::wordToUtf8($individual_option) . "</w:t></w:r></w:p><w:p/>";
-          echo '<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblW w:w="0" w:type="auto"/><w:tblLook w:val="01E0"/></w:tblPr><w:tblGrid><w:gridCol w:w="1500"/><w:gridCol w:w="1500"/><w:gridCol w:w="1500"/></w:tblGrid>';
-          for ($rank_position=1; $rank_position<=$rank_no; $rank_position++) {
-            if (!isset($log[$screen][$q_id][$i][$rank_position])) $log[$screen][$q_id][$i][$rank_position] = 0;
-            echo '<w:tr><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>' . $log[$screen][$q_id][$i][$rank_position] . '</w:t></w:r></w:p></w:tc>';
-            echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>(' . number_format(($log[$screen][$q_id][$i][$rank_position]/$candidates)*100,0) . '%)</w:t></w:r></w:p></w:tc>';
-            echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>' . $rank_position;
-            if ($rank_position == 1) {
-              echo 'st';
-            } elseif ($rank_position == 2) {
-              echo 'nd';
-            } elseif ($rank_position == 3) {
-              echo 'rd';
-            } else {
-              echo 'th';
-            }
-            echo '</w:t></w:r></w:p></w:tc></w:tr>';
-          }
-          echo '</w:tbl>';
-          $i++;
-        }
-        $table_on = 0;
-        break;
-      case 'matrix':
-        if ($table_on == 1) echo '</w:tbl>';
-        echo "<w:p><w:r><w:t>$question_number. $leadin</w:t></w:r></w:p><w:p/>";
-        // Define the table grid
-        echo '<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblW w:w="0" w:type="auto"/><w:tblLook w:val="01E0"/></w:tblPr><w:tblGrid><w:gridCol w:w="2500"/>';
-        foreach ($options as $option) {
-          echo '<w:gridCol w:w="1500"/>';
-        }
-        echo '</w:tblGrid>';
-
-        // Write out the header row of the table
-        echo '<w:tr><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:r><w:t></w:t></w:r></w:p></w:tc>';
-        foreach ($options as $option) {
-          echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:r><w:t>' . $option . '</w:t></w:r></w:p></w:tc>';
-        }
-        echo '</w:tr>';
-
-        // Write out the contents of the table
-        $row_data = explode('|',$scenario);
-        $option_no = count($options);
-        $row_no = 0;
-        foreach ($row_data as $row) {
-          echo '<w:tr><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>' . $row . '</w:t></w:r></w:p></w:tc>';
-          for ($i=1; $i<=$option_no; $i++) {
-            if (isset($log[$screen][$q_id][$row_no][$i])) {
-              echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>' . $log[$screen][$q_id][$row_no][$i] . '(' . number_format(($log[$screen][$q_id][$row_no][$i]/$candidates)*100,0) . '%)</w:t></w:r></w:p></w:tc>';
-            } else {
-              echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>0 (0%)</w:t></w:r></w:p></w:tc>';
-            }
-          }
-          echo '</w:tr>';
-          $row_no++;
-        }
-        echo '</w:tbl>';
-        break;
     }
-  } else {
-    $tmp_media_array = explode('|', $q_media);
-    $tmp_media_width_array = explode('|', $q_media_width);
-    $tmp_media_height_array = explode('|', $q_media_height);
-    $tmp_ext_scenarios = explode('|', $scenario);
-    $tmp_answers_array = explode('|', $correct_buf[0]);
-    echo "<w:p><w:r><w:t>$question_number. $leadin</w:t></w:r></w:p><w:p/>";
-    for ($i = 1; $i <= (substr_count($scenario, '|') + 1); $i++) {
-      if ($tmp_ext_scenarios[$i - 1]) {
-        echo "<w:p><w:r><w:t>" . $tmp_ext_scenarios[$i - 1] . "</w:t></w:r></w:p><w:p/>";
-      }
-      $option_no = 1;
-      foreach ($options as $individual_option) {
-        if ($tmp_answers_array[$i - 1] == $option_no) {
-          if ($log[$screen][$q_id][$i][$option_no] == '') {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
-          } else {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>' . $log[$screen][$q_id][$i][$option_no] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i][$option_no] / $candidates) * 100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
-          }
-        } else {
-          if ($log[$screen][$q_id][$i][$option_no] == '') {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
-          } else {
-            echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>' . $log[$screen][$q_id][$i][$option_no] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i][$option_no] / $candidates) * 100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
-          }
+    if ($q_type != 'extmatch') {
+        switch ($q_type) {
+            case 'dichotomous':
+                if ($table_on == 1) {
+                    echo '</w:tbl>';
+                }
+                echo "<w:p><w:r><w:t>$question_number. $leadin</w:t></w:r></w:p><w:p/>";
+                if ($old_display_method == 'YN_Positive' or $old_display_method == 'YN_NegativeAbstain') {
+                    echo '<w:p><w:pPr><w:tabs><w:tab w:val="center" w:pos="650"/><w:tab w:val="center" w:pos="1700"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:rPr><w:b/></w:rPr><w:t>Yes</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:rPr><w:b/></w:rPr><w:t>No</w:t></w:r></w:p>';
+                } else {
+                    echo '<w:p><w:pPr><w:tabs><w:tab w:val="center" w:pos="600"/><w:tab w:val="center" w:pos="1600"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:rPr><w:b/></w:rPr><w:t>True</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:rPr><w:b/></w:rPr><w:t>False</w:t></w:r></w:p>';
+                }
+                $i = 0;
+                foreach ($options as $individual_option) {
+                    $i++;
+                    if ($log[$screen][$q_id][$i]['u'] == '') {
+                        $log[$screen][$q_id][$i]['u'] = 0;
+                    }
+                    if ($log[$screen][$q_id][$i]['t'] == '') {
+                        $log[$screen][$q_id][$i]['t'] = 0;
+                    }
+                    if ($log[$screen][$q_id][$i]['f'] == '') {
+                        $log[$screen][$q_id][$i]['f'] = 0;
+                    }
+                    echo '<w:p wsp:rsidR="00E97566" wsp:rsidRDefault="00E97566" wsp:rsidP="00E97566"/><w:p wsp:rsidR="00E97566" wsp:rsidRDefault="00E97566" wsp:rsidP="00E97566"><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="500"/><w:tab w:val="left" w:pos="550"/><w:tab w:val="decimal" w:pos="1450"/><w:tab w:val="left" w:pos="1500"/><w:tab w:val="left" w:pos="2400"/></w:tabs><w:ind w:left="2340" w:hanging="2340"/></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . $log[$screen][$q_id][$i]['t'] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i]['t'] / $candidates) * 100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>' . $log[$screen][$q_id][$i]['f'] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i]['f'] / $candidates) * 100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
+                }
+                echo '<w:p/>';
+                $table_on = 0;
+                break;
+            case 'mcq':
+                if ($table_on == 1) {
+                    echo '</w:tbl>';
+                }
+                echo "<w:p><w:r><w:t>$question_number. $leadin</w:t></w:r></w:p><w:p/>";
+                $i = 0;
+                foreach ($options as $individual_option) {
+                    $i++;
+                    if (!isset($log[$screen][$q_id][1][$i]) or $log[$screen][$q_id][1][$i] == '') {
+                        echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
+                    } else {
+                        echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . $log[$screen][$q_id][1][$i] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][1][$i] / $candidates) * 100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
+                    }
+                }
+                if ($old_display_method == 'vertical_other') {
+                    echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . count($log[$screen][$q_id][1]['other']) . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round((count($log[$screen][$q_id][1]['other']) / $candidates) * 100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>Other:</w:t></w:r></w:p>';
+                    foreach ($log[$screen][$q_id][1]['other'] as $other_text) {
+                        echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="2268"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="900" wx:tlc="none" wx:cTlc="19"/></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/></w:r><w:r><w:tab wx:wTab="1185" wx:tlc="none" wx:cTlc="25"/><w:t>' . StringUtils::wordToUtf8($other_text) . '</w:t></w:r></w:p>';
+                    }
+                }
+                if (!isset($log[$screen][$q_id][1]['u'])) {
+                    echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:rPr><w:color w:val="999999"/></w:rPr><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>0</w:t></w:r><w:r><w:rPr><w:color w:val="999999"/></w:rPr><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:rPr><w:color w:val="999999"/></w:rPr><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>(unanswered)</w:t></w:r></w:p>';
+                } else {
+                    $unanswered = $log[$screen][$q_id][1]['u'];
+                    echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:rPr><w:color w:val="999999"/></w:rPr><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . $log[$screen][$q_id][1]['u'] . '</w:t></w:r><w:r><w:rPr><w:color w:val="999999"/></w:rPr><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][1]['u'] / $candidates) * 100) . '%)</w:t></w:r><w:r><w:rPr><w:color w:val="999999"/></w:rPr><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>(unanswered)</w:t></w:r></w:p>';
+                }
+                echo '<w:p/>';
+                $table_on = 0;
+                break;
+            case 'likert':
+                $unanswered = 0;
+                $old_size = substr_count($old_likert_scale, '|');
+                $current_properties = explode('|', $old_display_method);
+                $new_size = substr_count($old_display_method, '|');
+                $na = $current_properties[$new_size];
+                if ($old_likert_scale != $old_display_method or $table_on == 0) {
+                    if ($table_on == 1) {
+                        echo '</w:tbl>';
+                    }
+                    echo '<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblW w:w="0" w:type="auto"/><w:tblLook w:val="01E0"/></w:tblPr><w:tblGrid><w:gridCol w:w="470"/><w:gridCol w:w="4350"/><w:gridCol w:w="500"/><w:gridCol w:w="780"/><w:gridCol w:w="780"/><w:gridCol w:w="780"/><w:gridCol w:w="1290"/><w:gridCol w:w="780"/></w:tblGrid>';
+                    echo '<w:tr><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>No</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>Question</w:t></w:r></w:p></w:tc>';
+                    if ($na == 'true') {
+                        echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>N/A</w:t></w:r></w:p></w:tc>';
+                    }
+                    for ($point = 0; $point < $new_size; $point++) {
+                        echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>' . str_replace(array('<br>', '<br />'), '</w:t></w:r><w:r><w:br/></w:r><w:r><w:rPr><w:b/></w:rPr><w:t>', strip_tags($current_properties[$point], '<br>,<br />')) . '</w:t></w:r></w:p></w:tc>';
+                    }
+                    echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>Unanswered</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:pPr><w:jc w:val="center"/><w:rPr><w:b/></w:rPr></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>Mean</w:t></w:r></w:p></w:tc></w:tr>';
+                    $table_on = 1;
+                }
+                echo '<w:tr><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>' . $question_number . '.</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>' . $leadin . '</w:t></w:r></w:p></w:tc>';
+                $i = 0;
+                $sub_total = 0;
+                foreach ($options as $individual_option) {
+                    $i++;
+                    if ($i > 1 or $na == 'true') {
+                        if (!isset($log[$screen][$q_id][1][$individual_option])) {
+                              echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>0</w:t></w:r></w:p></w:tc>';
+                        } else {
+                            echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>' . $log[$screen][$q_id][1][$individual_option] . ' (' . round(($log[$screen][$q_id][1][$individual_option] / $candidates) * 100) . '%)</w:t></w:r></w:p></w:tc>';
+                        }
+                        if ($individual_option >= 1 and $individual_option <= 10) {
+                            if (isset($log[$screen][$q_id][1][$individual_option])) {
+                                $sub_total += $individual_option * $log[$screen][$q_id][1][$individual_option];
+                            }
+                        }
+                    }
+                }
+                if (isset($log[$screen][$q_id][1]['n/a'])) {
+                    $unanswered = $log[$screen][$q_id][1]['n/a'];
+                }
+                if (!isset($log[$screen][$q_id][1]['u'])) {
+                    echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>0</w:t></w:r></w:p></w:tc>';
+                } else {
+                    $unanswered += $log[$screen][$q_id][1]['u'];
+                    echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>' . $log[$screen][$q_id][1]['u'] . ' (' . round(($log[$screen][$q_id][1]['u'] / $candidates) * 100) . '%)</w:t></w:r></w:p></w:tc>';
+                }
+                if (($candidates - $unanswered) == 0) {
+                    echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>0</w:t></w:r></w:p></w:tc></w:tr>';
+                } else {
+                    echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>' . number_format($sub_total / ($candidates - $unanswered), 1) . '</w:t></w:r></w:p></w:tc></w:tr>';
+                }
+                $old_likert_scale = $old_display_method;
+                break;
+            case 'mrq':
+                if ($table_on == 1) {
+                    echo '</w:tbl>';
+                }
+                echo "<w:p><w:r><w:t>$question_number. $leadin</w:t></w:r></w:p><w:p/>";
+                $i = 0;
+                foreach ($options as $individual_option) {
+                    $i++;
+                    if ($candidates == 0) {
+                        echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
+                    } else {
+                        echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . $log[$screen][$q_id][$i]['y'] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i]['y'] / $candidates) * 100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
+                    }
+                }
+                if ($old_display_method == 'other') {
+                    echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1800"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="795" wx:tlc="none" wx:cTlc="17"/><w:t>' . count($log[$screen][$q_id][1]['other']) . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round((count($log[$screen][$q_id][1]['other']) / $candidates) * 100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="720" wx:tlc="none" wx:cTlc="15"/></w:r><w:r><w:t>Other:</w:t></w:r></w:p>';
+                    foreach ($log[$screen][$q_id][1]['other'] as $other_text) {
+                        echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="2268"/></w:tabs></w:pPr><w:r><w:tab wx:wTab="900" wx:tlc="none" wx:cTlc="19"/></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/></w:r><w:r><w:tab wx:wTab="1185" wx:tlc="none" wx:cTlc="25"/><w:t>' . StringUtils::wordToUtf8($other_text) . '</w:t></w:r></w:p>';
+                    }
+                }
+                $table_on = 0;
+                break;
+            case 'rank':
+                if ($table_on == 1) {
+                    echo '</w:tbl>';
+                }
+                echo "<w:p><w:r><w:t>$question_number. $leadin</w:t></w:r></w:p><w:p/>";
+                $rank_no = 0;
+                foreach ($correct_buf as $individual_correct) {
+                    if ($individual_correct > $rank_no and $individual_correct < 9990) {
+                        $rank_no = $individual_correct;
+                    }
+                }
+                $i = 0;
+                foreach ($options as $individual_option) {
+                    echo '<w:p><w:r><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p><w:p/>';
+                    echo '<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblW w:w="0" w:type="auto"/><w:tblLook w:val="01E0"/></w:tblPr><w:tblGrid><w:gridCol w:w="1500"/><w:gridCol w:w="1500"/><w:gridCol w:w="1500"/></w:tblGrid>';
+                    for ($rank_position = 1; $rank_position <= $rank_no; $rank_position++) {
+                        if (!isset($log[$screen][$q_id][$i][$rank_position])) {
+                            $log[$screen][$q_id][$i][$rank_position] = 0;
+                        }
+                        echo '<w:tr><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>' . $log[$screen][$q_id][$i][$rank_position] . '</w:t></w:r></w:p></w:tc>';
+                        echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>(' . number_format(($log[$screen][$q_id][$i][$rank_position] / $candidates) * 100, 0) . '%)</w:t></w:r></w:p></w:tc>';
+                        echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>' . $rank_position;
+                        if ($rank_position == 1) {
+                              echo 'st';
+                        } elseif ($rank_position == 2) {
+                            echo 'nd';
+                        } elseif ($rank_position == 3) {
+                            echo 'rd';
+                        } else {
+                            echo 'th';
+                        }
+                        echo '</w:t></w:r></w:p></w:tc></w:tr>';
+                    }
+                    echo '</w:tbl>';
+                    $i++;
+                }
+                $table_on = 0;
+                break;
+            case 'matrix':
+                if ($table_on == 1) {
+                    echo '</w:tbl>';
+                }
+                echo "<w:p><w:r><w:t>$question_number. $leadin</w:t></w:r></w:p><w:p/>";
+              // Define the table grid
+                echo '<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblW w:w="0" w:type="auto"/><w:tblLook w:val="01E0"/></w:tblPr><w:tblGrid><w:gridCol w:w="2500"/>';
+                foreach ($options as $option) {
+                    echo '<w:gridCol w:w="1500"/>';
+                }
+                echo '</w:tblGrid>';
+
+          // Write out the header row of the table
+                echo '<w:tr><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:r><w:t></w:t></w:r></w:p></w:tc>';
+                foreach ($options as $option) {
+                    echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:r><w:t>' . $option . '</w:t></w:r></w:p></w:tc>';
+                }
+                echo '</w:tr>';
+
+          // Write out the contents of the table
+                $row_data = explode('|', $scenario);
+                $option_no = count($options);
+                $row_no = 0;
+                foreach ($row_data as $row) {
+                    echo '<w:tr><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>' . $row . '</w:t></w:r></w:p></w:tc>';
+                    for ($i = 1; $i <= $option_no; $i++) {
+                        if (isset($log[$screen][$q_id][$row_no][$i])) {
+                            echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>' . $log[$screen][$q_id][$row_no][$i] . '(' . number_format(($log[$screen][$q_id][$row_no][$i] / $candidates) * 100, 0) . '%)</w:t></w:r></w:p></w:tc>';
+                        } else {
+                            echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr><w:p><w:r><w:t>0 (0%)</w:t></w:r></w:p></w:tc>';
+                        }
+                    }
+                    echo '</w:tr>';
+                    $row_no++;
+                }
+                echo '</w:tbl>';
+                break;
         }
-        $option_no++;
-      }
+    } else {
+        $tmp_media_array = explode('|', $q_media);
+        $tmp_media_width_array = explode('|', $q_media_width);
+        $tmp_media_height_array = explode('|', $q_media_height);
+        $tmp_ext_scenarios = explode('|', $scenario);
+        $tmp_answers_array = explode('|', $correct_buf[0]);
+        echo "<w:p><w:r><w:t>$question_number. $leadin</w:t></w:r></w:p><w:p/>";
+        for ($i = 1; $i <= (substr_count($scenario, '|') + 1); $i++) {
+            if ($tmp_ext_scenarios[$i - 1]) {
+                echo '<w:p><w:r><w:t>' . $tmp_ext_scenarios[$i - 1] . '</w:t></w:r></w:p><w:p/>';
+            }
+            $option_no = 1;
+            foreach ($options as $individual_option) {
+                if ($tmp_answers_array[$i - 1] == $option_no) {
+                    if ($log[$screen][$q_id][$i][$option_no] == '') {
+                        echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
+                    } else {
+                        echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>' . $log[$screen][$q_id][$i][$option_no] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i][$option_no] / $candidates) * 100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
+                    }
+                } else {
+                    if ($log[$screen][$q_id][$i][$option_no] == '') {
+                        echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>0</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(0%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
+                    } else {
+                        echo '<w:p><w:pPr><w:tabs><w:tab w:val="decimal" w:pos="900"/><w:tab w:val="left" w:pos="1080"/><w:tab w:val="left" w:pos="1843"/></w:tabs><w:ind w:left="1843" w:hanging="1843"/></w:pPr><w:r><w:tab wx:wTab="585" wx:tlc="none" wx:cTlc="12"/><w:t>' . $log[$screen][$q_id][$i][$option_no] . '</w:t></w:r><w:r><w:tab wx:wTab="180" wx:tlc="none" wx:cTlc="3"/><w:t>(' . round(($log[$screen][$q_id][$i][$option_no] / $candidates) * 100) . '%)</w:t></w:r><w:r><w:tab wx:wTab="270" wx:tlc="none" wx:cTlc="5"/><w:t>' . StringUtils::wordToUtf8($individual_option) . '</w:t></w:r></w:p>';
+                    }
+                }
+                $option_no++;
+            }
+        }
     }
-  }
 }
 
 $exclude = param::optional('complete', false, param::BOOLEAN, param::FETCH_GET);
@@ -289,7 +319,7 @@ echo '<?mso-application progid="Word.Document"?>
 echo $paper;
 $tmp_start = substr($startdate, 6, 2) . '/' . substr($startdate, 4, 2) . '/' . substr($startdate, 0, 4) . ' ' . substr($startdate, 8, 2) . ':' . substr($startdate, 10, 2);
 $tmp_end = substr($enddate, 6, 2) . '/' . substr($enddate, 4, 2) . '/' . substr($enddate, 0, 4) . ' ' . substr($enddate, 8, 2) . ':' . substr($enddate, 10, 2);
-echo '</o:Title><o:Author>Rogo ' . $configObject->get_setting('core', 'rogo_version') . '</o:Author><o:Description>Quantitative report for survey taken between ' . $tmp_start . ' and ' . $tmp_end .'.</o:Description><o:LastAuthor>Rogo ' . $configObject->get_setting('core', 'rogo_version') . '</o:LastAuthor><o:Revision>1</o:Revision><o:TotalTime>0</o:TotalTime><o:Created>';
+echo '</o:Title><o:Author>Rogo ' . $configObject->get_setting('core', 'rogo_version') . '</o:Author><o:Description>Quantitative report for survey taken between ' . $tmp_start . ' and ' . $tmp_end . '.</o:Description><o:LastAuthor>Rogo ' . $configObject->get_setting('core', 'rogo_version') . '</o:LastAuthor><o:Revision>1</o:Revision><o:TotalTime>0</o:TotalTime><o:Created>';
 echo date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z';
 echo '</o:Created><o:LastSaved>';
 echo date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z';
@@ -307,136 +337,149 @@ $table_on = 0;
 
 if ($hits > 0) {
   // Capture the paper makeup.
-  $question_no = 1;
-  $display_respondents = 1;
-  $old_q_id = 0;
-  $respondents = 0;
-  $old_likert_scale = '';
-  $old_screen = 0;
-  $options_buffer = array();
-  $correct_buffer = array();
+    $question_no = 1;
+    $display_respondents = 1;
+    $old_q_id = 0;
+    $respondents = 0;
+    $old_likert_scale = '';
+    $old_screen = 0;
+    $options_buffer = array();
+    $correct_buffer = array();
 
-  $result = $mysqli->prepare("SELECT screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, q_media, q_media_width, q_media_height, correct FROM papers, questions, options WHERE papers.question = questions.q_id AND questions.q_id = options.o_id AND papers.paper = ? ORDER BY screen, display_pos, id_num");
-  $result->bind_param('i', $paperID);
-  $result->execute();
-  $result->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $display_method, $q_media, $q_media_width, $q_media_height, $correct);
-  while ($result->fetch()) {
-    $theme = str_replace('&nbsp;',' ',$theme);
-    $scenario = str_replace('&nbsp;',' ',$scenario);
-    $leadin = str_replace('&nbsp;',' ',$leadin);
-    $option_text = str_replace('&nbsp;',' ',$option_text);
+    $result = $mysqli->prepare('SELECT screen, q_id, q_type, theme, scenario, leadin, option_text, display_method, q_media, q_media_width, q_media_height, correct FROM papers, questions, options WHERE papers.question = questions.q_id AND questions.q_id = options.o_id AND papers.paper = ? ORDER BY screen, display_pos, id_num');
+    $result->bind_param('i', $paperID);
+    $result->execute();
+    $result->bind_result($screen, $q_id, $q_type, $theme, $scenario, $leadin, $option_text, $display_method, $q_media, $q_media_width, $q_media_height, $correct);
+    while ($result->fetch()) {
+        $theme = str_replace('&nbsp;', ' ', $theme);
+        $scenario = str_replace('&nbsp;', ' ', $scenario);
+        $leadin = str_replace('&nbsp;', ' ', $leadin);
+        $option_text = str_replace('&nbsp;', ' ', $option_text);
 
-    // Replace & characters.
-    $theme = str_replace('&','&amp;',$theme);
-    $scenario = str_replace('&','&amp;',$scenario);
-    $leadin = str_replace('&','&amp;',$leadin);
-    $option_text = strip_tags(str_replace('&','&amp;',$option_text));
+      // Replace & characters.
+        $theme = str_replace('&', '&amp;', $theme);
+        $scenario = str_replace('&', '&amp;', $scenario);
+        $leadin = str_replace('&', '&amp;', $leadin);
+        $option_text = strip_tags(str_replace('&', '&amp;', $option_text));
 
-    if ($old_q_id != $q_id and $old_q_id > 0) {   // New question.
-      if ($old_screen < $screen) {
-        if ($table_on == 1) {
-          echo '</w:tbl><w:p/>';
-          $table_on = 0;
+        if ($old_q_id != $q_id and $old_q_id > 0) {   // New question.
+            if ($old_screen < $screen) {
+                if ($table_on == 1) {
+                    echo '</w:tbl><w:p/>';
+                    $table_on = 0;
+                }
+                echo '<w:br w:type="page"/>';
+            }
+            if ($old_q_type == 'likert') {
+                $options_buffer['n/a'] = 'n/a';
+                $likert_properties = explode('|', $old_display_method);
+                for ($i = 1; $i <= substr_count($old_display_method, '|'); $i++) {
+                    $options_buffer[$i] = $i;
+                }
+            }
+            if ($display_respondents == 1 and $old_q_type != 'info') { // Calculate how many candidates.
+                $respondents = 0;
+                $i = 1;
+                foreach ($options_buffer as $individual_option) {
+                    if (isset($log_array[$old_screen][$old_q_id][1][$i])) {
+                        $respondents += $log_array[$old_screen][$old_q_id][1][$i];
+                    }
+                    $i++;
+                }
+                if (isset($log_array[$old_screen][$old_q_id][1]['n/a'])) {
+                    $respondents += $log_array[$old_screen][$old_q_id][1]['n/a'];
+                }
+                if (isset($log_array[$old_screen][$old_q_id][1]['t'])) {
+                    $respondents += $log_array[$old_screen][$old_q_id][1]['t'];
+                }
+                if (isset($log_array[$old_screen][$old_q_id][1]['f'])) {
+                    $respondents += $log_array[$old_screen][$old_q_id][1]['f'];
+                }
+                if (isset($log_array[$old_screen][$old_q_id][1]['u'])) {
+                    $respondents += $log_array[$old_screen][$old_q_id][1]['u'];
+                }
+                if (isset($log_array[$old_screen][$old_q_id][1]['other'])) {
+                    $respondents += count($log_array[$old_screen][$old_q_id][1]['other']);
+                }
+                echo "<w:p><w:r><w:t>($respondents Respondents)</w:t></w:r></w:p>";
+                $display_respondents = 0;
+            }
+            if ($old_q_type != 'info') {
+                displayQuestion($old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $log_array, $correct_buffer, $old_screen, $question_no, $respondents);
+                $question_no++;
+            }
+            if ($old_screen < $screen) {
+                $display_respondents = 1;
+                if ($screen > 1) {
+                    if ($table_on == 1) {
+                        echo '</w:tbl><w:p/>';
+                        $table_on = 0;
+                    }
+                }
+            }
+            $options_buffer = array();
+            $correct_buffer = array();
         }
-        echo '<w:br w:type="page"/>';
-      }
-      if ($old_q_type == 'likert') {
+        if ($q_type == 'labelling') {
+            $tmp_first_split = explode(';', $correct);
+            $tmp_second_split = explode('$', $tmp_first_split[8]);
+            for ($label_no = 4; $label_no <= 43; $label_no += 4) {
+                if (substr($tmp_second_split[$label_no], 0, 1) != '|') {
+                    $options_buffer[] = trim(substr($tmp_second_split[$label_no], 0, strpos($tmp_second_split[$label_no], '|')));
+                    $correct_buffer[] = $tmp_second_split[$label_no - 2] . 'x' . ($tmp_second_split[$label_no - 1] - 25);
+                }
+            }
+        } else {
+            if ($q_type != 'likert') {
+                $options_buffer[] = $option_text;
+            }
+            $correct_buffer[] = $correct;
+        }
+        $old_q_id = $q_id;
+        $old_screen = $screen;
+        $old_theme = $theme;
+        $old_scenario = $scenario;
+        $old_leadin = $leadin;
+        $old_q_type = $q_type;
+        $old_q_media = $q_media;
+        $old_q_media_width = $q_media_width;
+        $old_q_media_height = $q_media_height;
+        $old_correct = $correct;
+        $old_display_method = $display_method;
+    }
+    $result->close();
+
+    if ($old_q_type == 'likert') {
         $options_buffer['n/a'] = 'n/a';
-        $likert_properties = explode('|',$old_display_method);
-        for ($i=1; $i<=substr_count($old_display_method,'|'); $i++) {
-          $options_buffer[$i] = $i;
+        $likert_properties = explode('|', $old_display_method);
+        for ($i = 1; $i <= substr_count($old_display_method, '|'); $i++) {
+            $options_buffer[$i] = $i;
         }
-      }
-      if ($display_respondents == 1 and $old_q_type != 'info') { // Calculate how many candidates.
-        $respondents = 0;
+    }
+    if ($question_no == 1 or $display_respondents == 1) { // Calculate how many candidates.
         $i = 1;
         foreach ($options_buffer as $individual_option) {
-          if (isset($log_array[$old_screen][$old_q_id][1][$i])) {
             $respondents += $log_array[$old_screen][$old_q_id][1][$i];
-          }
-          $i++;
+            $i++;
         }
-        if (isset($log_array[$old_screen][$old_q_id][1]['n/a'])) $respondents += $log_array[$old_screen][$old_q_id][1]['n/a'];
-        if (isset($log_array[$old_screen][$old_q_id][1]['t'])) $respondents += $log_array[$old_screen][$old_q_id][1]['t'];
-        if (isset($log_array[$old_screen][$old_q_id][1]['f'])) $respondents += $log_array[$old_screen][$old_q_id][1]['f'];
-        if (isset($log_array[$old_screen][$old_q_id][1]['u'])) $respondents += $log_array[$old_screen][$old_q_id][1]['u'];
-        if (isset($log_array[$old_screen][$old_q_id][1]['other'])) $respondents += count($log_array[$old_screen][$old_q_id][1]['other']);
-        echo "<w:p><w:r><w:t>($respondents Respondents)</w:t></w:r></w:p>";
-        $display_respondents = 0;
-      }
-      if ($old_q_type != 'info') {
-        displayQuestion($old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $log_array, $correct_buffer, $old_screen, $question_no, $respondents);
-        $question_no++;
-      }
-      if ($old_screen < $screen) {
-        $display_respondents = 1;
-        if ($screen > 1) {
-          if ($table_on == 1) {
-            echo '</w:tbl><w:p/>';
-            $table_on = 0;
-          }
+        $respondents += $log_array[$old_screen][$old_q_id][1]['n/a'];
+        $respondents += $log_array[$old_screen][$old_q_id][1]['t'];
+        $respondents += $log_array[$old_screen][$old_q_id][1]['f'];
+        $respondents += $log_array[$old_screen][$old_q_id][1]['u'];
+        $respondents += count($log_array[$old_screen][$old_q_id][1]['other']);
+        if ($old_screen == 1) {
+            echo "<w:p><w:r><w:t>($respondents Respondents)</w:t></w:r></w:p>";
+        } else {
+            echo "<w:p><w:r><w:br w:type=\"page\"/><w:t>($respondents Respondents)</w:t></w:r></w:p>";
         }
-      }
-      $options_buffer = array();
-      $correct_buffer = array();
     }
-    if ($q_type == 'labelling') {
-      $tmp_first_split = explode(';', $correct);
-      $tmp_second_split = explode('$', $tmp_first_split[8]);
-      for ($label_no = 4; $label_no <= 43; $label_no += 4) {
-        if (substr($tmp_second_split[$label_no],0,1) != '|') {
-          $options_buffer[] = trim(substr($tmp_second_split[$label_no],0,strpos($tmp_second_split[$label_no],'|')));
-          $correct_buffer[] = $tmp_second_split[$label_no-2] . 'x' . ($tmp_second_split[$label_no-1] - 25);
-        }
-      }
-    } else {
-      if ($q_type != 'likert') $options_buffer[] = $option_text;
-      $correct_buffer[] = $correct;
-    }
-    $old_q_id = $q_id;
-    $old_screen = $screen;
-    $old_theme = $theme;
-    $old_scenario = $scenario;
-    $old_leadin = $leadin;
-    $old_q_type = $q_type;
-    $old_q_media = $q_media;
-    $old_q_media_width = $q_media_width;
-    $old_q_media_height = $q_media_height;
-    $old_correct = $correct;
-    $old_display_method = $display_method;
-  }
-  $result->close();
 
-  if ($old_q_type == 'likert') {
-    $options_buffer['n/a'] = 'n/a';
-    $likert_properties = explode('|',$old_display_method);
-    for ($i=1; $i<=substr_count($old_display_method,'|'); $i++) {
-      $options_buffer[$i] = $i;
-    }
-  }
-  if ($question_no == 1 or $display_respondents == 1) { // Calculate how many candidates.
-    $i = 1;
-    foreach ($options_buffer as $individual_option) {
-      $respondents += $log_array[$old_screen][$old_q_id][1][$i];
-      $i++;
-    }
-    $respondents += $log_array[$old_screen][$old_q_id][1]['n/a'];
-    $respondents += $log_array[$old_screen][$old_q_id][1]['t'];
-    $respondents += $log_array[$old_screen][$old_q_id][1]['f'];
-    $respondents += $log_array[$old_screen][$old_q_id][1]['u'];
-    $respondents += count($log_array[$old_screen][$old_q_id][1]['other']);
-    if ($old_screen == 1) {
-      echo "<w:p><w:r><w:t>($respondents Respondents)</w:t></w:r></w:p>";
-    } else {
-      echo "<w:p><w:r><w:br w:type=\"page\"/><w:t>($respondents Respondents)</w:t></w:r></w:p>";
-    }
-  }
-
-  displayQuestion($old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $log_array, $correct_buffer, $old_screen, $question_no, $respondents);
+    displayQuestion($old_q_id, $old_theme, $old_scenario, $old_leadin, $old_q_type, $old_correct, $old_q_media, $old_q_media_width, $old_q_media_height, $options_buffer, $log_array, $correct_buffer, $old_screen, $question_no, $respondents);
 }
 
-if ($table_on == 1) echo '</w:tbl>';
+if ($table_on == 1) {
+    echo '</w:tbl>';
+}
 $dateformat = $configObject->get('cfg_long_date_php');
 echo '<w:sectPr><w:hdr w:type="odd"><w:p><w:pPr><w:pStyle w:val="Header"/><w:tabs><w:tab w:val="clear" w:pos="8306"/><w:tab w:val="right" w:pos="9000"/></w:tabs></w:pPr><w:r><w:t>' . $paper . '</w:t></w:r><w:r><w:tab wx:wTab="1560" wx:tlc="none" wx:cTlc="34"/><w:t>' . date($dateformat) . '</w:t></w:r></w:p></w:hdr><w:ftr w:type="odd"><w:p><w:pPr><w:pStyle w:val="Footer"/><w:jc w:val="center"/></w:pPr><w:r><w:rPr><w:rStyle w:val="PageNumber"/></w:rPr><w:t>- </w:t></w:r><w:r><w:rPr><w:rStyle w:val="PageNumber"/></w:rPr><w:fldChar w:fldCharType="begin"/></w:r><w:r><w:rPr><w:rStyle w:val="PageNumber"/></w:rPr><w:instrText> PAGE </w:instrText></w:r><w:r><w:rPr><w:rStyle w:val="PageNumber"/></w:rPr><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:rPr><w:rStyle w:val="PageNumber"/><w:noProof/></w:rPr><w:t>1</w:t></w:r><w:r><w:rPr><w:rStyle w:val="PageNumber"/></w:rPr><w:fldChar w:fldCharType="end"/></w:r><w:r><w:rPr><w:rStyle w:val="PageNumber"/></w:rPr><w:t> -</w:t></w:r></w:p></w:ftr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1418" w:bottom="1134" w:left="1418" w:header="709" w:footer="709" w:gutter="0"/><w:cols w:space="708"/><w:docGrid w:line-pitch="360"/></w:sectPr></wx:sub-section></wx:sect></w:body></w:wordDocument>';
 $mysqli->close();
-?>

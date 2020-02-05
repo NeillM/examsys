@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -27,7 +28,8 @@ require_once 'LTI/ims-lti/UoN_LTI.php';
  * @copyright Copyright (c) 2016 onwards The University of Nottingham
  * @package tests
  */
-class uonltitest extends unittestdatabase {
+class uonltitest extends unittestdatabase
+{
 
     /**
      * @var array Storage for context in tests
@@ -53,7 +55,8 @@ class uonltitest extends unittestdatabase {
      * Generate data for test.
      * @throws \testing\datagenerator\not_found
      */
-    public function datageneration() : void {
+    public function datageneration(): void
+    {
         $datagenerator = $this->get_datagenerator('lti', 'core');
         $this->key = $datagenerator->create_key(array('name' => 'test lti'));
         // The externalid is the id from an external sys so place holders in this test.
@@ -71,26 +74,28 @@ class uonltitest extends unittestdatabase {
      * Test lti context lookup
      * @group lti
      */
-    public function test_lookup_lti_context() {
+    public function test_lookup_lti_context()
+    {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         // Test context lookup for a student.
         $lookup = $lti->lookup_lti_context($this->context['lti_context_key']);
-        $this->assertEquals("TRAIN", $lookup[0]);
+        $this->assertEquals('TRAIN', $lookup[0]);
         // Test context lookup for a staff memeber.
         $lookup = $lti->lookup_lti_context($this->context2['lti_context_key']);
-        $this->assertEquals("TRAIN", $lookup[0]);
+        $this->assertEquals('TRAIN', $lookup[0]);
     }
 
     /**
      * Test the get_user_by_external_id method.
      * @group lti
      */
-    public function test_get_user_by_external_id() {
+    public function test_get_user_by_external_id()
+    {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $expected = array(
-            $this->student['id'] .'-1' => array(
+            $this->student['id'] . '-1' => array(
                 'id' => $this->student['id'],
                 'title' => 'Dr',
                 'surname' => 'User1',
@@ -107,11 +112,12 @@ class uonltitest extends unittestdatabase {
      * Test the get_links_by_username method
      * @group lti
      */
-    public function test_get_links_by_username() {
+    public function test_get_links_by_username()
+    {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $expected = array(
-            $this->admin['id'] .'-2' => array(
+            $this->admin['id'] . '-2' => array(
                 'id' => $this->admin['id'],
                 'title' => 'Miss',
                 'surname' => 'Administrator',
@@ -128,7 +134,8 @@ class uonltitest extends unittestdatabase {
      * Test the get_lti_key method
      * @group lti
      */
-    public function test_get_lti_key() {
+    public function test_get_lti_key()
+    {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $expected = array(
@@ -145,7 +152,8 @@ class uonltitest extends unittestdatabase {
      * Test the delete_user_link method
      * @group lti
      */
-    public function test_delete_user_link() {
+    public function test_delete_user_link()
+    {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $lti->delete_user_link($this->student['id'], 'test', '1');
@@ -163,7 +171,8 @@ class uonltitest extends unittestdatabase {
      * Test the generate_user_key method
      * @group lti
      */
-    public function test_generate_user_key() {
+    public function test_generate_user_key()
+    {
         $lti = new UoN_LTI();
         $this->assertEquals('test:1', $lti->generate_user_key('test', '1'));
         $this->assertEquals('test:1', $lti->generate_user_key('test', 1));
@@ -175,7 +184,8 @@ class uonltitest extends unittestdatabase {
      * It should use the values in the info array.
      * @group lti
      */
-    public function test_add_lti_context_default() {
+    public function test_add_lti_context_default()
+    {
         $lti = new UoN_LTI();
         // Fake some page parameters, they should be used.
         $lti->info = array(
@@ -195,7 +205,7 @@ class uonltitest extends unittestdatabase {
                 'c_internal_id' =>  $this->context2['c_internal_id'],
             ),
             2 => array(
-                'lti_context_key' => "test:52",
+                'lti_context_key' => 'test:52',
                 'c_internal_id' =>  $this->module,
             )
         );
@@ -207,7 +217,8 @@ class uonltitest extends unittestdatabase {
      * It should ignore the values in the info array.
      * @group lti
      */
-    public function test_add_lti_context_no_default() {
+    public function test_add_lti_context_no_default()
+    {
         $lti = new UoN_LTI();
         // Fake some page parameters, they should be ignored.
         $lti->info = array(
@@ -227,7 +238,7 @@ class uonltitest extends unittestdatabase {
                 'c_internal_id' =>  $this->context2['c_internal_id'],
             ),
             2 => array(
-                'lti_context_key' => "test:9",
+                'lti_context_key' => 'test:9',
                 'c_internal_id' =>  $this->module,
             )
         );
@@ -238,7 +249,8 @@ class uonltitest extends unittestdatabase {
      * Test that add_lti_key() puts a key into the database correctly.
      * @group lti
      */
-    public function test_add_lti_key() {
+    public function test_add_lti_key()
+    {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $lti->add_lti_key('My new system', 'newkey', 'IWillNeverTell');
@@ -246,9 +258,9 @@ class uonltitest extends unittestdatabase {
             'where' => array(array('column' => 'oauth_consumer_key', 'value' => 'newkey'))));
         $expectedtable = array(
             0 => array(
-                'oauth_consumer_key' => "newkey",
-                'secret' =>  "IWillNeverTell",
-                'name' =>  "My new system",
+                'oauth_consumer_key' => 'newkey',
+                'secret' =>  'IWillNeverTell',
+                'name' =>  'My new system',
             )
         );
         $this->assertEquals($expectedtable, $querytable);
@@ -258,7 +270,8 @@ class uonltitest extends unittestdatabase {
      * Test that add_lti_resource() puts a resource into the database correctly.
      * @group lti
      */
-    public function test_add_lti_resource_default_key() {
+    public function test_add_lti_resource_default_key()
+    {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $lti->info = array(
@@ -270,9 +283,9 @@ class uonltitest extends unittestdatabase {
             'where' => array(array('column' => 'internal_id', 'value' => 2))));
         $expectedtable = array(
             0 => array(
-                'lti_resource_key' => "test:15",
-                'internal_id' =>  "2",
-                'internal_type' =>  "paper",
+                'lti_resource_key' => 'test:15',
+                'internal_id' =>  '2',
+                'internal_type' =>  'paper',
             ),
             1 => array(
                 'lti_resource_key' => $this->resource2['lti_resource_key'],
@@ -287,7 +300,8 @@ class uonltitest extends unittestdatabase {
      * Test that add_lti_resource() puts a resource into the database correctly.
      * @group lti
      */
-    public function test_add_lti_resource_no_default() {
+    public function test_add_lti_resource_no_default()
+    {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $lti->info = array(
@@ -299,9 +313,9 @@ class uonltitest extends unittestdatabase {
             'where' => array(array('column' => 'internal_id', 'value' => 2))));
         $expectedtable = array(
             0 => array(
-                'lti_resource_key' => "bandits:16",
-                'internal_id' =>  "2",
-                'internal_type' =>  "paper",
+                'lti_resource_key' => 'bandits:16',
+                'internal_id' =>  '2',
+                'internal_type' =>  'paper',
             ),
             1 => array(
                 'lti_resource_key' => $this->resource2['lti_resource_key'],
@@ -316,7 +330,8 @@ class uonltitest extends unittestdatabase {
      * Test that add_lti_user() puts a resource into the database correctly.
      * @group lti
      */
-    public function test_add_lti_user() {
+    public function test_add_lti_user()
+    {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $lti->info = array(
@@ -328,7 +343,7 @@ class uonltitest extends unittestdatabase {
             'where' => array(array('column' => 'lti_user_equ', 'value' => $this->student['id']))));
         $expectedtable = array(
             0 => array(
-                'lti_user_key' => "blue:169",
+                'lti_user_key' => 'blue:169',
                 'lti_user_equ' =>  $this->student['id'],
             ),
             1 => array(
@@ -343,7 +358,8 @@ class uonltitest extends unittestdatabase {
      * Test that add_lti_user() puts a resource into the database correctly.
      * @group lti
      */
-    public function test_add_lti_user_no_default() {
+    public function test_add_lti_user_no_default()
+    {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $lti->info = array(
@@ -355,7 +371,7 @@ class uonltitest extends unittestdatabase {
             'where' => array(array('column' => 'lti_user_equ', 'value' => $this->student['id']))));
         $expectedtable = array(
             0 => array(
-                'lti_user_key' => "bandits:69",
+                'lti_user_key' => 'bandits:69',
                 'lti_user_equ' =>  $this->student['id'],
             ),
             1 => array(
@@ -370,27 +386,28 @@ class uonltitest extends unittestdatabase {
      * Test that delete_lti_key() removes an lti key safely.
      * @group lti
      */
-    public function test_delete_lti_key() {
+    public function test_delete_lti_key()
+    {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $lti->delete_lti_key($this->key2['id']);
         // Check that the live keys are present.
-        $querytable = $this->query(array('columns' => array('oauth_consumer_key', 'secret', 'name'), 'table' => 'lti_keys', 'where' => array(array('column' => 'deleted', 'value' => NULL, 'operator' => 'IS'))));
+        $querytable = $this->query(array('columns' => array('oauth_consumer_key', 'secret', 'name'), 'table' => 'lti_keys', 'where' => array(array('column' => 'deleted', 'value' => null, 'operator' => 'IS'))));
         $expectedtable = array(
             0 => array(
-                'oauth_consumer_key' => "test",
-                'secret' =>  "testsecret",
-                'name' =>  "test lti",
+                'oauth_consumer_key' => 'test',
+                'secret' =>  'testsecret',
+                'name' =>  'test lti',
             )
         );
         $this->assertEquals($expectedtable, $querytable);
         // Check that the deleted keys been marked as deleted and not removed completely.
-        $querytable = $this->query(array('columns' => array('oauth_consumer_key', 'secret', 'name'), 'table' => 'lti_keys', 'where' => array(array('column' => 'deleted', 'value' => NULL, 'operator' => 'IS NOT'))));
+        $querytable = $this->query(array('columns' => array('oauth_consumer_key', 'secret', 'name'), 'table' => 'lti_keys', 'where' => array(array('column' => 'deleted', 'value' => null, 'operator' => 'IS NOT'))));
         $expectedtable = array(
             0 => array(
-                'oauth_consumer_key' => "test2",
-                'secret' =>  "MyLittleSecret",
-                'name' =>  "test lti 2",
+                'oauth_consumer_key' => 'test2',
+                'secret' =>  'MyLittleSecret',
+                'name' =>  'test lti 2',
             )
         );
         $this->assertEquals($expectedtable, $querytable);
@@ -400,7 +417,8 @@ class uonltitest extends unittestdatabase {
      * Test that lookup_lti_resource() finds keys correctly.
      * @group lti
      */
-    public function test_lookup_lti_resource() {
+    public function test_lookup_lti_resource()
+    {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $expected = array(
@@ -415,7 +433,8 @@ class uonltitest extends unittestdatabase {
      * Test that lookup_lti_resource() finds keys correctly.
      * @group lti
      */
-    public function test_lookup_lti_resource_by_param() {
+    public function test_lookup_lti_resource_by_param()
+    {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $lti->info = array(
@@ -434,7 +453,8 @@ class uonltitest extends unittestdatabase {
      * Test that lookup_lti_resource() returns false when the ket does not exist.
      * @group lti
      */
-    public function test_lookup_lti_resource_no_found() {
+    public function test_lookup_lti_resource_no_found()
+    {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $this->assertFalse($lti->lookup_lti_resource('test:7'));
@@ -445,7 +465,8 @@ class uonltitest extends unittestdatabase {
      * Test that lookup_lti_user() finds keys correctly.
      * @group lti
      */
-    public function test_lookup_lti_user() {
+    public function test_lookup_lti_user()
+    {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $lti->info = array(
@@ -460,7 +481,8 @@ class uonltitest extends unittestdatabase {
      * Test that lookup_lti_user() finds keys correctly.
      * @group lti
      */
-    public function test_lookup_lti_user_no_param() {
+    public function test_lookup_lti_user_no_param()
+    {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $lti->info = array(
@@ -475,7 +497,8 @@ class uonltitest extends unittestdatabase {
      * Test that lookup_lti_user() returns false when the key is not in use.
      * @group lti
      */
-    public function test_lookup_lti_user_not_found() {
+    public function test_lookup_lti_user_not_found()
+    {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $lti->info = array(
@@ -490,7 +513,8 @@ class uonltitest extends unittestdatabase {
      * Test that lti_key_exists() detects the presnce of keys correctly.
      * @group lti
      */
-    public function test_lti_key_exists() {
+    public function test_lti_key_exists()
+    {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $this->assertTrue($lti->lti_key_exists($this->key['id']));
@@ -501,7 +525,8 @@ class uonltitest extends unittestdatabase {
      * Test that update_lti_key() updates the correct key.
      * @group lti
      */
-    public function test_update_lti_key() {
+    public function test_update_lti_key()
+    {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $lti->update_lti_key($this->key['id'], 'New name', 'newconsumerkey', 'DoNotTellAnyone', 'context');
@@ -509,10 +534,10 @@ class uonltitest extends unittestdatabase {
             'where' => array(array('column' => 'id', 'value' => $this->key['id']))));
         $expectedtable = array(
             0 => array(
-                'oauth_consumer_key' => "newconsumerkey",
-                'secret' =>  "DoNotTellAnyone",
-                'name' =>  "New name",
-                'context_id' =>  "context",
+                'oauth_consumer_key' => 'newconsumerkey',
+                'secret' =>  'DoNotTellAnyone',
+                'name' =>  'New name',
+                'context_id' =>  'context',
             )
         );
         $this->assertEquals($expectedtable, $querytable);
@@ -522,7 +547,8 @@ class uonltitest extends unittestdatabase {
      * Test that update_lti_resource() updates the correct key.
      * @group lti
      */
-    public function test_update_lti_resource() {
+    public function test_update_lti_resource()
+    {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $lti->info = array(
@@ -535,8 +561,8 @@ class uonltitest extends unittestdatabase {
         $expectedtable = array(
             0 => array(
                 'lti_resource_key' => $this->resource['lti_resource_key'],
-                'internal_id' =>  "6",
-                'internal_type' =>  "module",
+                'internal_id' =>  '6',
+                'internal_type' =>  'module',
             )
         );
         $this->assertEquals($expectedtable, $querytable);
@@ -546,7 +572,8 @@ class uonltitest extends unittestdatabase {
      * Test that update_lti_resource() updates the correct key.
      * @group lti
      */
-    public function test_update_lti_resource_no_resource_key() {
+    public function test_update_lti_resource_no_resource_key()
+    {
         $lti = new UoN_LTI();
         $lti->init_lti0($this->db);
         $lti->info = array(
@@ -559,8 +586,8 @@ class uonltitest extends unittestdatabase {
         $expectedtable = array(
             0 => array(
                 'lti_resource_key' => $this->resource2['lti_resource_key'],
-                'internal_id' =>  "6",
-                'internal_type' =>  "module",
+                'internal_id' =>  '6',
+                'internal_type' =>  'module',
             )
         );
         $this->assertEquals($expectedtable, $querytable);

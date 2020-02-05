@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -31,18 +32,17 @@ $id = null;
 $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'student', $language, $mysqli);
 
 if (isset($_POST['save_changes'])) {
-		
-	// Update help file record
-	$tmp_body = $_POST['edit1'];
-	$tmp_title = $_POST['title'];
+    // Update help file record
+    $tmp_body = $_POST['edit1'];
+    $tmp_title = $_POST['title'];
 
-  $articleid = $help_system->create_page($tmp_title, $tmp_body);
+    $articleid = $help_system->create_page($tmp_title, $tmp_body);
 
-  $mysqli->close();
-  header("location: index.php?id=$articleid");
-  exit;
+    $mysqli->close();
+    header("location: index.php?id=$articleid");
+    exit;
 } else {
-?>
+    ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -57,11 +57,11 @@ if (isset($_POST['save_changes'])) {
   <script src='../../js/require.js'></script>
   <script src='../../js/main.min.js'></script>
   <script type="text/javascript" src="../../js/helpinit.min.js"></script>
-<?php
-  $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-  $texteditorplugin->display_header();
-  $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::HELP_STAFF);
-?>
+    <?php
+    $texteditorplugin = \plugins\plugins_texteditor::get_editor();
+    $texteditorplugin->display_header();
+    $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::HELP_STAFF);
+    ?>
 </head>
 
 <body>
@@ -82,7 +82,7 @@ if (isset($_POST['save_changes'])) {
   </tr>
   </table>
   <br />
-  <?php echo $texteditorplugin->get_textarea('edit1', 'edit1', '', plugins\plugins_texteditor::TYPE_STANDARD); ?>
+    <?php echo $texteditorplugin->get_textarea('edit1', 'edit1', '', plugins\plugins_texteditor::TYPE_STANDARD); ?>
 
   <div style="text-align:center; padding-top:8px"><input class="ok" type="submit" name="save_changes" value="<?php echo $string['save'] ?>" /><input data-help="studentnew" class="cancel" type="button" name="cancel" value="<?php echo $string['cancel'] ?>" onclick="history.back();" /></div>
 </form>
@@ -90,6 +90,6 @@ if (isset($_POST['save_changes'])) {
 </div>
 </body>
 </html>
-<?php
-  }
+    <?php
+}
 ?>

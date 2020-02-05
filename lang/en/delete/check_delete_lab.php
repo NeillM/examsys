@@ -18,4 +18,3 @@ require '../lang/' . $language . '/delete/delete.php';
 
 $string['msg1'] = 'All IP addresses assigned to this lab will be deleted.';
 $string['msg2'] = 'Are you sure you wish to delete';
-?>

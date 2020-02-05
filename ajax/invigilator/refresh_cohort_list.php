@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -15,7 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* 
+*
 * @author Simon Wilkinson
 * @version 1.0
 * @copyright Copyright (c) 2014 The University of Nottingham
@@ -41,36 +42,35 @@ $properties_list = array();
 $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $mysqli);
 
 foreach ($properties_list as $property_object) {
-	if ($property_object->get_property_id() == $paperID) {
+    if ($property_object->get_property_id() == $paperID) {
     // Get modules for this paper and check if timing is allowed
-    $timed_modules = $all_modules = 0;
-    $sql = 'SELECT m.id, m.timed_exams FROM properties_modules pm INNER JOIN modules m ON pm.idMod = m.id WHERE pm.property_id = ?';
+        $timed_modules = $all_modules = 0;
+        $sql = 'SELECT m.id, m.timed_exams FROM properties_modules pm INNER JOIN modules m ON pm.idMod = m.id WHERE pm.property_id = ?';
 
-    $module_results = $mysqli->prepare($sql);
-    $module_results->bind_param('i', $paperID);
-    $module_results->execute();
-    $module_results->store_result();
-    $module_results->bind_result($moduleID, $timed_exams);
+        $module_results = $mysqli->prepare($sql);
+        $module_results->bind_param('i', $paperID);
+        $module_results->execute();
+        $module_results->store_result();
+        $module_results->bind_result($moduleID, $timed_exams);
 
-    $modules = array();
+        $modules = array();
 
-    while ($module_results->fetch()) {
-      $modules[] = $moduleID;
-      $all_modules++;
-      if ($timed_exams == true) {
-        $timed_modules++;
-      }
-    }
+        while ($module_results->fetch()) {
+            $modules[] = $moduleID;
+            $all_modules++;
+            if ($timed_exams == true) {
+                $timed_modules++;
+            }
+        }
 
-    $allow_timing = ($timed_modules == $all_modules);
-    $log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $property_object, $mysqli);
+        $allow_timing = ($timed_modules == $all_modules);
+        $log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $property_object, $mysqli);
 
-    $modules = implode('\',\'', $modules);
-    $modules = '\'' . $modules . '\'';
+        $modules = implode('\',\'', $modules);
+        $modules = '\'' . $modules . '\'';
         
-    get_students($modules, $property_object, $log_lab_end_time, $allow_timing, $string, $mysqli);
-  }
+        get_students($modules, $property_object, $log_lab_end_time, $allow_timing, $string, $mysqli);
+    }
 }
 
 $mysqli->close();
-?>

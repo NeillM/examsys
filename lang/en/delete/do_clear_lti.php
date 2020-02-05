@@ -16,4 +16,3 @@
 
 $string['title'] = 'LTI Links Cleared';
 $string['msg'] = 'LTI links successfully cleared.';
-?>

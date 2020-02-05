@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -65,33 +66,33 @@ $mediadirectory = rogo_directory::get_directory('media');
 <body>
 <?php
   require '../include/toprightmenu.inc';
-	
-	echo draw_toprightmenu(147);
+    
+    echo draw_toprightmenu(147);
 ?>
 <div id="content">
 <?php
-  if (!isset($_GET['ordering'])) {
+if (!isset($_GET['ordering'])) {
     $ordering = 'screen';
     $direction = 'asc';
-  }
+}
 
   echo "<div class=\"head_title\">\n";
   echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
-  if ($folderID != '') {
+if ($folderID != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folderID . '">' . folder_utils::get_folder_name($folderID, $mysqli) . '</a>';
-  } elseif ($moduleID != '') {
+} elseif ($moduleID != '') {
     $modules = explode(',', $moduleID);
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $modules[0] . '">' . module_utils::get_moduleid_from_id($modules[0], $mysqli) . '</a>';
-  }
+}
   echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?paperID=' . $paperID . '">' . $paper_title . '</a></div>';
-  echo "<div class=\"page_title\">" . $string['mappedobjectives'] . "</div>\n</div>\n";
+  echo '<div class="page_title">' . $string['mappedobjectives'] . "</div>\n</div>\n";
 
   // Get any questions to exclude.
-	$exclusions = new Exclusion($paperID, $mysqli);
-	$exclusions->load();
+    $exclusions = new Exclusion($paperID, $mysqli);
+    $exclusions->load();
 
-  ?>
+?>
   <table class="header">
   <tr><th style="padding-top:1px">
   <table cellpadding="0" cellspacing="0" border="0" style="font-size:90%; width:378px">
@@ -104,173 +105,183 @@ $mediadirectory = rogo_directory::get_directory('media');
   <tr><td colspan="5" style="background-color:#1E3C7B">&nbsp;</td></tr>
   </table>
   <?php
-	$tmp_match = Paper_utils::academic_year_from_title($paper_title);
+    $tmp_match = Paper_utils::academic_year_from_title($paper_title);
 
-	if ($tmp_match !== false and $tmp_match != $session) {
-		echo "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"font-size:90%; width:100%; font-size:100%\">\n";
-		echo "<tr><td class=\"redwarn\" style=\"width:40px\"><img src=\"../artwork/exclamation_red_bg.png\" width=\"32\" height=\"32\" alt=\"Warning\" style=\"margin-bottom:-1px\" /></td><td colspan=\"7\" class=\"redwarn\"><strong>" . $string['warning'] . "</strong>&nbsp;&nbsp;";
-		printf($string['nomatchsession'], $tmp_match, $session);
-		echo "</td></tr>\n</table>\n";
-	}
+    if ($tmp_match !== false and $tmp_match != $session) {
+        echo "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"font-size:90%; width:100%; font-size:100%\">\n";
+        echo '<tr><td class="redwarn" style="width:40px"><img src="../artwork/exclamation_red_bg.png" width="32" height="32" alt="Warning" style="margin-bottom:-1px" /></td><td colspan="7" class="redwarn"><strong>' . $string['warning'] . '</strong>&nbsp;&nbsp;';
+        printf($string['nomatchsession'], $tmp_match, $session);
+        echo "</td></tr>\n</table>\n";
+    }
   
-  echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"  style=\"width:100%\">\n";
-  $old_p_id = 0;
-  $row_no = 0;
-  $temp_array = array();
+    echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"  style=\"width:100%\">\n";
+    $old_p_id = 0;
+    $row_no = 0;
+    $temp_array = array();
 
-  $result = $mysqli->prepare("SELECT random_mark, total_mark, paper_ownerID, ownerID, p_id, q_id, q_type, screen, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,'%d/%m/%y') AS display_last_edited, display_pos FROM (properties, papers, questions) WHERE property_id=? AND paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
-  $result->bind_param('ii', $paperID, $paperID);
-  $result->execute();
-  $result->bind_result($total_random_mark, $total_marks, $paper_ownerID, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $q_media, $q_media_width, $q_media_height, $display_last_edited, $display_pos);
-  while ($result->fetch()) {
-    $row_no++;
-    $temp_array[$row_no]['screen'] = $screen;
-    $temp_array[$row_no]['q_type'] = $q_type;
-    $temp_array[$row_no]['leadin'] = trim(str_replace('&nbsp;',' ',(strip_tags($leadin))));
-    if (strlen($temp_array[$row_no]['leadin']) > 160) $temp_array[$row_no]['leadin'] = substr($temp_array[$row_no]['leadin'],0,160) . "...";
-    $temp_array[$row_no]['p_id'] = $p_id;
-    $temp_array[$row_no]['q_id'] = $q_id;
-    $temp_array[$row_no]['display_last_edited'] = $display_last_edited;
-    $temp_array[$row_no]['q_media'] = $q_media;
-    $temp_array[$row_no]['q_media_width'] = $q_media_width;
-    $temp_array[$row_no]['q_media_height'] = $q_media_height;
-    $temp_array[$row_no]['ownerID'] = $ownerID;
-    $temp_array[$row_no]['display_pos'] = $display_pos;
-    $temp_total_marks = $total_marks;
-  }
-  $result->close();
-
-  $total_random_mark = 0;
-  $total_marks = 0;
-  $correct_no = 0;
-  if ($row_no > 0) {
-    $old_q_id = 0;
-    $old_score_method = '';
-    $old_marks = 0;
-    $row_no2 = 1;
-    $stems = 0;
-    $result = $mysqli->prepare("SELECT q_type, q_id, correct, score_method, q_media_height, q_media_width, option_text FROM (papers, questions, options) WHERE papers.paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, o_id");
-    $result->bind_param('i', $paperID);
+    $result = $mysqli->prepare("SELECT random_mark, total_mark, paper_ownerID, ownerID, p_id, q_id, q_type, screen, leadin, q_media, q_media_width, q_media_height, DATE_FORMAT(last_edited,'%d/%m/%y') AS display_last_edited, display_pos FROM (properties, papers, questions) WHERE property_id=? AND paper=? AND papers.question=questions.q_id ORDER BY screen, display_pos");
+    $result->bind_param('ii', $paperID, $paperID);
     $result->execute();
-    $result->bind_result($q_type, $q_id, $correct, $score_method, $q_media_height, $q_media_width, $option_text);
+    $result->bind_result($total_random_mark, $total_marks, $paper_ownerID, $ownerID, $p_id, $q_id, $q_type, $screen, $leadin, $q_media, $q_media_width, $q_media_height, $display_last_edited, $display_pos);
     while ($result->fetch()) {
-      if ($old_q_id != $q_id and $old_q_id != 0) {
-        $old_marks = $total_marks;
-        $temp_array[$row_no2]['marks'] = $total_marks - $old_marks;
-        $stems = 0;
-        $correct_no = 0;
-        $row_no2++;
-      }
-      $old_q_id = $q_id;
-      $old_q_type = $q_type;
-      $old_score_method = $score_method;
-      $old_correct = $correct;
-      $old_q_media_width = $q_media_width;
-      $old_q_media_height = $q_media_height;
-      $old_option_text = $option_text;
-      if ($q_type == 'mrq') {
-        if ($correct == 'y') $correct_no++;
-      }
-      if ($q_type == 'rank') {
-        if ($correct > 0) $correct_no++;
-      }
-      $stems++;
+        $row_no++;
+        $temp_array[$row_no]['screen'] = $screen;
+        $temp_array[$row_no]['q_type'] = $q_type;
+        $temp_array[$row_no]['leadin'] = trim(str_replace('&nbsp;', ' ', (strip_tags($leadin))));
+        if (strlen($temp_array[$row_no]['leadin']) > 160) {
+            $temp_array[$row_no]['leadin'] = substr($temp_array[$row_no]['leadin'], 0, 160) . '...';
+        }
+        $temp_array[$row_no]['p_id'] = $p_id;
+        $temp_array[$row_no]['q_id'] = $q_id;
+        $temp_array[$row_no]['display_last_edited'] = $display_last_edited;
+        $temp_array[$row_no]['q_media'] = $q_media;
+        $temp_array[$row_no]['q_media_width'] = $q_media_width;
+        $temp_array[$row_no]['q_media_height'] = $q_media_height;
+        $temp_array[$row_no]['ownerID'] = $ownerID;
+        $temp_array[$row_no]['display_pos'] = $display_pos;
+        $temp_total_marks = $total_marks;
     }
     $result->close();
-    $old_marks = $total_marks;
-    $temp_array[$row_no2]['marks'] = $total_marks - $old_marks;
-  }
 
-  $old_screen = 0;
-  $question_number = 0;
-  for ($x=1; $x<=$row_no; $x++) {
-    if ($old_screen != $temp_array[$x]['screen']) {
-      if ($old_screen < ($temp_array[$x]['screen'] - 1)) {
-        for ($missing=1; $missing<($temp_array[$x]['screen'] - $old_screen); $missing++) {
-          echo '<tr><td colspan="3" style="height:10px"></td></tr>';
-          echo '<tr><td></td><td colspan="3" class="divider">Screen ' . ($old_screen + $missing) . '</td></tr>';
-          echo '<tr><td colspan="3" style="height:5px"><img src="../artwork/divider_bar.gif" width="290" height="1" /></td></tr>';
-          echo '<tr><td colspan="3" style="background-color:#FFC0C0; padding:5px"><strong>' . $string['warning'] . ':</strong> ' . $string['noquestiononscreen'] . '</td></tr>';
-        }
-      }
-      echo "<tr><td colspan=\"4\" style=\"padding-left:4px\"><table border=\"0\" style=\"padding-top:6px; padding-bottom:2px; width:100%; color:#1E3287\"><tr><td><nobr>" . $string['screen'] . " " . $temp_array[$x]['screen'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n</td></tr>\n";
-    }
-    $old_screen = $temp_array[$x]['screen'];
-
-    $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
-    $objByModule = getObjectivesByMapping($moduleIDs, $session, $paperID, $temp_array[$x]['q_id'], $mysqli);
-    if ($exclusions->get_exclusions_by_qid($temp_array[$x]['q_id']) != '0000000000000000000000000000000000000000') {
-      $class = 'mapping_exclueded';
-    } else {
-      $class = '';
-    }
-    echo "<tr>";
-
-    if (count($objByModule) > 0 or $temp_array[$x]['q_type'] == 'info') {
-      echo '<td style="width:16px">&nbsp;</td>';
-    } else {
-      echo '<td style="width:16px"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="No Mappings" /></td>';
-    }
-
-    if ($temp_array[$x]['q_type'] == 'info') {
-      echo '<td class="q_no"><img src="../artwork/black_white_info_icon.png" width="6" height="12" alt="Info" />&nbsp;&nbsp;</td>';
-    } else {
-      $question_number++;
-      echo "<td class=\"q_no\">&nbsp;$question_number.&nbsp;</td>";
-    }
-    if ($temp_array[$x]['leadin'] != '') {
-      if (count($objByModule) > 0 or $temp_array[$x]['q_type'] == 'info') {
-        echo '<td class="' . $class . '" valign="middle" style="width:100%">';
-      } else {
-        echo '<td class="' . $class . '" valign="middle" style="color:#C00000; width:100%">';
-      }
-      echo $temp_array[$x]['leadin'] . "&nbsp;&nbsp;";
-      if ($temp_array[$x]['q_type'] != 'info') {
-        echo "<img class=\"mapping\" style=\"cursor: pointer\" data-qno=\"$question_number\" data-pid=\"$paperID\" data-qid=\"" . $temp_array[$x]['q_id'] . "\" data-session=\"$session\" src=\"../artwork/map_question.gif\" width=\"16\" height=\"14\"/></td>";
-      } elseif (strpos($temp_array[$x]['q_media'],'.swf') !== false) {
-        echo "<td><img src=\"../artwork/flash_icon.png\" width=\"48\" height=\"48\" alt=\"Embedded Flash object\" border=\"0\" /></td>";
-        if ($temp_array[$x]['q_type'] != 'info') echo "<img class=\"mapping\" style=\"cursor: pointer\" data-qno=\"$question_number\" data-pid=\"$paperID\" data-qid=\"" . $temp_array[$x]['q_id'] . "\" data-session=\"$session\" src=\"../artwork/map_question.gif\" width=\"16\" height=\"14\"/></td>";
-      } else {
-        echo "<td><img src=\"" . $mediadirectory->url($temp_array[$x]['q_media']) . "\" width=\"" . ($temp_array[$x]['q_media_width'] / 3) . "\" height=\"" . ($temp_array[$x]['q_media_height'] /3) . "\" alt=\"Media file\" border=\"1\" />";
-        if ($temp_array[$x]['q_type'] != 'info') echo "<img class=\"mapping\" style=\"cursor: pointer\" data-qno=\"$question_number\" data-pid=\"$paperID\" data-qid=\"" . $temp_array[$x]['q_id'] . "\" data-session=\"$session\" src=\"../artwork/map_question.gif\" width=\"16\" height=\"14\"/></td>";
-      }
-      echo "</tr>\n";
-
-      //output mappings
-      echo "<tr><td colspan=\"2\">&nbsp;</td><td>\n";
-      $sessiontitle = '';
-      if (count($objByModule) > 0) {
-        if (isset($objByModule['none_of_the_above']['mapped']) and $objByModule['none_of_the_above']['mapped'] == 1) {
-          echo "<ul class=\"$class\" style=\"list-style-type:none; margin-left:10px; padding:0px\">\n<li style=\"padding-left:10px; color:red; background-image:url(../artwork/small_yellow_warning_icon.gif); background-repeat:no-repeat\">&nbsp;" . $string['questiononnotmap'] . "</li></ul>\n";
-        } else {
-          echo "<ul class=\"$class\" style=\"list-style-type:disc; margin-top:5px\">\n";
-          foreach ($objByModule as $module => $mappings) {
-            foreach ($mappings as $id => $mappingData) {
-              if( $mappingData['session']['class_code'] != '') {
-                $sessiondata = $mappingData['session']['class_code'];
-                $sessiontitle = $mappingData['session']['title'];
-                $sessiontitle .= ' ' . $mappingData['session']['occurrance'];
-              } else {
-                $sessiondata = $mappingData['session']['title'];
-              }
-              echo '<li>';
-              if (count($objByModule) > 1) {
-                echo "$module: ";
-              }
-              echo strip_tags($mappingData['content'], '<b><i><strong><em><sub><sup>');
-              echo "&nbsp;&nbsp;&nbsp;<span title=\"$sessiontitle\" class=\"mapping\"><a href=\"" . $mappingData['session']['source_url'] . "\" rel=\"external\" target=\"_blank\"><img src=\"../artwork/small_link.png\" width=\"11\" height=\"11\" /></a>&nbsp;<a href=\"" . $mappingData['session']['source_url'] . "\" rel=\"external\" target=\"_blank\">" . $sessiondata ."</a></span>";
-              echo '</li>';
+    $total_random_mark = 0;
+    $total_marks = 0;
+    $correct_no = 0;
+    if ($row_no > 0) {
+        $old_q_id = 0;
+        $old_score_method = '';
+        $old_marks = 0;
+        $row_no2 = 1;
+        $stems = 0;
+        $result = $mysqli->prepare('SELECT q_type, q_id, correct, score_method, q_media_height, q_media_width, option_text FROM (papers, questions, options) WHERE papers.paper=? AND papers.question=questions.q_id AND questions.q_id=options.o_id ORDER BY display_pos, o_id');
+        $result->bind_param('i', $paperID);
+        $result->execute();
+        $result->bind_result($q_type, $q_id, $correct, $score_method, $q_media_height, $q_media_width, $option_text);
+        while ($result->fetch()) {
+            if ($old_q_id != $q_id and $old_q_id != 0) {
+                $old_marks = $total_marks;
+                $temp_array[$row_no2]['marks'] = $total_marks - $old_marks;
+                $stems = 0;
+                $correct_no = 0;
+                $row_no2++;
             }
-          }
+            $old_q_id = $q_id;
+            $old_q_type = $q_type;
+            $old_score_method = $score_method;
+            $old_correct = $correct;
+            $old_q_media_width = $q_media_width;
+            $old_q_media_height = $q_media_height;
+            $old_option_text = $option_text;
+            if ($q_type == 'mrq') {
+                if ($correct == 'y') {
+                    $correct_no++;
+                }
+            }
+            if ($q_type == 'rank') {
+                if ($correct > 0) {
+                    $correct_no++;
+                }
+            }
+            $stems++;
         }
-        echo "</ul>\n";
-      }
-      echo "<tr></td>\n";
-      echo "<tr><td colspan=\"5\" style=\"height:3px\"></td></tr>\n";
+        $result->close();
+        $old_marks = $total_marks;
+        $temp_array[$row_no2]['marks'] = $total_marks - $old_marks;
     }
-  }
-  $mysqli->close();
-?>
+
+    $old_screen = 0;
+    $question_number = 0;
+    for ($x = 1; $x <= $row_no; $x++) {
+        if ($old_screen != $temp_array[$x]['screen']) {
+            if ($old_screen < ($temp_array[$x]['screen'] - 1)) {
+                for ($missing = 1; $missing < ($temp_array[$x]['screen'] - $old_screen); $missing++) {
+                    echo '<tr><td colspan="3" style="height:10px"></td></tr>';
+                    echo '<tr><td></td><td colspan="3" class="divider">Screen ' . ($old_screen + $missing) . '</td></tr>';
+                    echo '<tr><td colspan="3" style="height:5px"><img src="../artwork/divider_bar.gif" width="290" height="1" /></td></tr>';
+                    echo '<tr><td colspan="3" style="background-color:#FFC0C0; padding:5px"><strong>' . $string['warning'] . ':</strong> ' . $string['noquestiononscreen'] . '</td></tr>';
+                }
+            }
+            echo '<tr><td colspan="4" style="padding-left:4px"><table border="0" style="padding-top:6px; padding-bottom:2px; width:100%; color:#1E3287"><tr><td><nobr>' . $string['screen'] . ' ' . $temp_array[$x]['screen'] . "</nobr></td><td style=\"width:98%\"><hr noshade=\"noshade\" style=\"border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%\" /></td></tr></table>\n</td></tr>\n";
+        }
+        $old_screen = $temp_array[$x]['screen'];
+
+        $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
+        $objByModule = getObjectivesByMapping($moduleIDs, $session, $paperID, $temp_array[$x]['q_id'], $mysqli);
+        if ($exclusions->get_exclusions_by_qid($temp_array[$x]['q_id']) != '0000000000000000000000000000000000000000') {
+            $class = 'mapping_exclueded';
+        } else {
+            $class = '';
+        }
+        echo '<tr>';
+
+        if (count($objByModule) > 0 or $temp_array[$x]['q_type'] == 'info') {
+            echo '<td style="width:16px">&nbsp;</td>';
+        } else {
+            echo '<td style="width:16px"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="No Mappings" /></td>';
+        }
+
+        if ($temp_array[$x]['q_type'] == 'info') {
+            echo '<td class="q_no"><img src="../artwork/black_white_info_icon.png" width="6" height="12" alt="Info" />&nbsp;&nbsp;</td>';
+        } else {
+            $question_number++;
+            echo "<td class=\"q_no\">&nbsp;$question_number.&nbsp;</td>";
+        }
+        if ($temp_array[$x]['leadin'] != '') {
+            if (count($objByModule) > 0 or $temp_array[$x]['q_type'] == 'info') {
+                echo '<td class="' . $class . '" valign="middle" style="width:100%">';
+            } else {
+                echo '<td class="' . $class . '" valign="middle" style="color:#C00000; width:100%">';
+            }
+            echo $temp_array[$x]['leadin'] . '&nbsp;&nbsp;';
+            if ($temp_array[$x]['q_type'] != 'info') {
+                echo "<img class=\"mapping\" style=\"cursor: pointer\" data-qno=\"$question_number\" data-pid=\"$paperID\" data-qid=\"" . $temp_array[$x]['q_id'] . "\" data-session=\"$session\" src=\"../artwork/map_question.gif\" width=\"16\" height=\"14\"/></td>";
+            } elseif (strpos($temp_array[$x]['q_media'], '.swf') !== false) {
+                echo '<td><img src="../artwork/flash_icon.png" width="48" height="48" alt="Embedded Flash object" border="0" /></td>';
+                if ($temp_array[$x]['q_type'] != 'info') {
+                    echo "<img class=\"mapping\" style=\"cursor: pointer\" data-qno=\"$question_number\" data-pid=\"$paperID\" data-qid=\"" . $temp_array[$x]['q_id'] . "\" data-session=\"$session\" src=\"../artwork/map_question.gif\" width=\"16\" height=\"14\"/></td>";
+                }
+            } else {
+                echo '<td><img src="' . $mediadirectory->url($temp_array[$x]['q_media']) . '" width="' . ($temp_array[$x]['q_media_width'] / 3) . '" height="' . ($temp_array[$x]['q_media_height'] / 3) . '" alt="Media file" border="1" />';
+                if ($temp_array[$x]['q_type'] != 'info') {
+                    echo "<img class=\"mapping\" style=\"cursor: pointer\" data-qno=\"$question_number\" data-pid=\"$paperID\" data-qid=\"" . $temp_array[$x]['q_id'] . "\" data-session=\"$session\" src=\"../artwork/map_question.gif\" width=\"16\" height=\"14\"/></td>";
+                }
+            }
+            echo "</tr>\n";
+
+          //output mappings
+            echo "<tr><td colspan=\"2\">&nbsp;</td><td>\n";
+            $sessiontitle = '';
+            if (count($objByModule) > 0) {
+                if (isset($objByModule['none_of_the_above']['mapped']) and $objByModule['none_of_the_above']['mapped'] == 1) {
+                    echo "<ul class=\"$class\" style=\"list-style-type:none; margin-left:10px; padding:0px\">\n<li style=\"padding-left:10px; color:red; background-image:url(../artwork/small_yellow_warning_icon.gif); background-repeat:no-repeat\">&nbsp;" . $string['questiononnotmap'] . "</li></ul>\n";
+                } else {
+                    echo "<ul class=\"$class\" style=\"list-style-type:disc; margin-top:5px\">\n";
+                    foreach ($objByModule as $module => $mappings) {
+                        foreach ($mappings as $id => $mappingData) {
+                            if ($mappingData['session']['class_code'] != '') {
+                                $sessiondata = $mappingData['session']['class_code'];
+                                $sessiontitle = $mappingData['session']['title'];
+                                $sessiontitle .= ' ' . $mappingData['session']['occurrance'];
+                            } else {
+                                $sessiondata = $mappingData['session']['title'];
+                            }
+                            echo '<li>';
+                            if (count($objByModule) > 1) {
+                                echo "$module: ";
+                            }
+                            echo strip_tags($mappingData['content'], '<b><i><strong><em><sub><sup>');
+                            echo "&nbsp;&nbsp;&nbsp;<span title=\"$sessiontitle\" class=\"mapping\"><a href=\"" . $mappingData['session']['source_url'] . '" rel="external" target="_blank"><img src="../artwork/small_link.png" width="11" height="11" /></a>&nbsp;<a href="' . $mappingData['session']['source_url'] . '" rel="external" target="_blank">' . $sessiondata . '</a></span>';
+                            echo '</li>';
+                        }
+                    }
+                }
+                echo "</ul>\n";
+            }
+            echo "<tr></td>\n";
+            echo "<tr><td colspan=\"5\" style=\"height:3px\"></td></tr>\n";
+        }
+    }
+    $mysqli->close();
+    ?>
 </table>
 </div>
 <?php

@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -23,6 +24,7 @@ namespace testing;
  * @copyright Copyright (c) 2015 The University of Nottingham
  * @package testing
  */
-class invalid_rogosingleton_object extends \Exception {
+class invalid_rogosingleton_object extends \Exception
+{
   // Intentionally blank.
 }

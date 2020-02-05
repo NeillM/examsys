@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -16,7 +17,7 @@
 
 /**
 * Admin screen to edit a config settings
-* 
+*
 * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 * @copyright Copyright (c) 2016 onwards The University of Nottingham
 */
@@ -30,30 +31,30 @@ if (isset($_POST['submit'])) {
     foreach ($configObject->get_setting('core') as $setting => $value) {
         $type = $configObject->get_setting_type('core', $setting);
         if ($type === Config::ASSOC) {
-          $new_value = array();
+            $new_value = array();
           // Media types have a boolean value.
-          if ($setting == 'system_mediatypes') {
-            foreach ($value as $name => $oldval) {
-              $enabled = param::optional($setting . '_' . str_replace('.', '_', $name), false, param::BOOLEAN, param::FETCH_POST);
-              if ($enabled) {
-                $new_value[$name] = 1;
-              } else {
-                $new_value[$name] = 0;
-              }
+            if ($setting == 'system_mediatypes') {
+                foreach ($value as $name => $oldval) {
+                    $enabled = param::optional($setting . '_' . str_replace('.', '_', $name), false, param::BOOLEAN, param::FETCH_POST);
+                    if ($enabled) {
+                        $new_value[$name] = 1;
+                    } else {
+                        $new_value[$name] = 0;
+                    }
+                }
+            } else {
+                foreach ($value as $name => $oldval) {
+                    $newval = param::optional($setting . '_' . $name, '', param::TEXT, param::FETCH_POST);
+                    $new_value[$name] = $newval;
+                }
             }
-          } else {
-            foreach ($value as $name => $oldval) {
-              $newval = param::optional($setting . '_' . $name, '', param::TEXT, param::FETCH_POST);
-              $new_value[$name] = $newval;
-            }
-          }
         } else {
             $new_value = param::optional($setting, '', param::RAW, param::FETCH_POST);
             // Timezones are display in a multi selectbox so the post will be an array.
             if ($setting == 'paper_timezones') {
                 $arrayvalue = array();
                 foreach ($new_value as $v) {
-                    $parts = explode("|", $v);
+                    $parts = explode('|', $v);
                     $arrayvalue[$parts[0]] = $parts[1];
                 }
                 $new_value = $arrayvalue;
@@ -70,15 +71,15 @@ if (isset($_POST['submit'])) {
             $configObject->set_setting($setting, $new_value, $type);
         }
     }
-    header("location: config.php", true, 303);
+    header('location: config.php', true, 303);
     exit();
 }
 
 $render = new render($configObject);
 $toprightmenu = draw_toprightmenu();
-$additionaljs = "<script type=\"text/javascript\" src=\"../js/config.min.js\"></script>";
-$addtionalcss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/config.css\"/>";
-$breadcrumb = array($string['home'] => "../index.php", $string['administrativetools'] => "index.php");
+$additionaljs = '<script type="text/javascript" src="../js/config.min.js"></script>';
+$addtionalcss = '<link rel="stylesheet" type="text/css" href="../css/config.css"/>';
+$breadcrumb = array($string['home'] => '../index.php', $string['administrativetools'] => 'index.php');
 $render->render_admin_header($string, $additionaljs, $addtionalcss);
 $render->render_admin_options('', '', $string, $toprightmenu, 'admin/options_empty.html');
 $render->render_admin_content($breadcrumb, $string);
@@ -108,29 +109,29 @@ foreach ($displayconfigs as $area => $conf) {
             $override = false;
         }
         if (!is_null($configObject->get($setting)) and $override) {
-            $data['disabled'] = " disabled";
+            $data['disabled'] = ' disabled';
         } else {
-            $data['disabled'] = "";
+            $data['disabled'] = '';
         }
         if ($type === Config::BOOLEAN) {
             if ($value == true) {
-                $data['checked'] = "checked";
+                $data['checked'] = 'checked';
             } else {
-                $data['checked'] = "";
+                $data['checked'] = '';
             }
             
             $render->render($data, $string, 'admin/config/config_chk.html');
         } elseif ($type === Config::PASSWORD) {
-          $data['value'] = htmlspecialchars($value);
-          $render->render($data, $string, 'admin/config/config_pass.html');
+            $data['value'] = htmlspecialchars($value);
+            $render->render($data, $string, 'admin/config/config_pass.html');
         } elseif ($type === Config::TIMEZONES) {
             // Compare config setting against list of possible timezones.
             $i = 0;
             
             foreach ($timezone_array as $individual_zone => $display_zone) {
-                $selected = "";
+                $selected = '';
                 if (isset($value[$individual_zone])) {
-                    $selected = "selected";
+                    $selected = 'selected';
                 }
                 $data['zone'][$i]['iz'] =  htmlspecialchars($individual_zone);
                 $data['zone'][$i]['dz'] =  htmlspecialchars($display_zone);
@@ -142,21 +143,21 @@ foreach ($displayconfigs as $area => $conf) {
             // Hardcoded list of editors plus mathjax if available
             $editors = array('plain' => $string['editor_plaintext'], 'WYSIWYG' => $string['editor_wysiwyg']);
             if ($configObject->get_setting('core', 'paper_mathjax')) {
-              $editors['mathjax'] = $string['editor_mathjax'];
+                $editors['mathjax'] = $string['editor_mathjax'];
             }
 
             foreach ($editors as $editor => $editor_label) {
-              $data['editors'][$editor] = array('editor_label' => $editor_label, 'editor' => $editor, 'selected' => ($editor == $value)?'selected':'');
+                $data['editors'][$editor] = array('editor_label' => $editor_label, 'editor' => $editor, 'selected' => ($editor == $value) ? 'selected' : '');
             }
 
             $render->render($data, $string, 'admin/config/config_editor.html');
         } elseif ($type === Config::ASSOC) {
             $idx = 0;
             foreach ($value as $i => $v) {
-              $data['item'][$idx]['i'] = htmlspecialchars($i);
-              $data['item'][$idx]['v'] = htmlspecialchars($v);
+                $data['item'][$idx]['i'] = htmlspecialchars($i);
+                $data['item'][$idx]['v'] = htmlspecialchars($v);
 
-              $idx++;
+                $idx++;
             }
             $render->render($data, $string, 'admin/config/config_assoc.html');
         } else {
