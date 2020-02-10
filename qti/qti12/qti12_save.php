@@ -29,7 +29,7 @@ class IE_qti12_Save extends IE_Main
 {
     var $data;
     var $params;
-  // main save function
+    // main save function
     function Save($params, &$data)
     {
         global $string;
@@ -52,10 +52,10 @@ class IE_qti12_Save extends IE_Main
             $this->ll[$i] = $varletter;
         }
 
-      // paper mode
+        // paper mode
         if (count($data->papers) > 0) {
             foreach ($data->papers as & $paper) {
-              //print_p($paper);
+                //print_p($paper);
 
                 $this->output = $this->DoHeader();
                 $this->output .= "\t<assessment title='" . $paper->paper_title . "' ident='" . $paper->load_id . "'>\n";
@@ -80,14 +80,14 @@ class IE_qti12_Save extends IE_Main
 
                 $filename = $params->base_dir . $params->dir . '/paper-' . $paper->load_id . '.xml';
                 file_put_contents($filename, $this->output);
-              //$data->files[$paper->paper_title] = $filename;
+                //$data->files[$paper->paper_title] = $filename;
 
                 $data->files[] = new ST_File('paper-' . $paper->load_id . '.xml', $paper->paper_title, $params->dir);
             }
         } else { // question mode
             $this->output = $this->DoHeader();
 
-          // this needs a lot more work on this function
+            // this needs a lot more work on this function
             foreach ($data->questions as $question) {
                 $this->OutputQuestion($question);
             }
@@ -205,18 +205,18 @@ class IE_qti12_Save extends IE_Main
 
     function SaveBlank(&$question)
     {
-      // format the text for the question
+        // format the text for the question
         list($headertext, $title) = $this->MakeQuestionHeader($question, false);
 
-      //echo "Doing SaveBlank - " . $question->displaymode . "<br>";
+        //echo "Doing SaveBlank - " . $question->displaymode . "<br>";
         $ob = new OB();
         $ob->ClearAndSave();
         if (strtolower($question->displaymode) == 'dropdown') {
-          // export as a Select a Blank so QMP imports correctly
+            // export as a Select a Blank so QMP imports correctly
             $type = 'Select a Blank';
             include 'qti12/tmpl/blank-dropdown.php';
         } else {
-          // export as a Fill in Blanks so QMP imports correctly
+            // export as a Fill in Blanks so QMP imports correctly
             $type = 'Fill in Blanks';
             if (strtolower($question->score_method) == 'mark per question') {
                 include 'qti12/tmpl/blank-textentry-mark-per-question.php';
@@ -228,11 +228,11 @@ class IE_qti12_Save extends IE_Main
         $ob->Restore();
     }
 
-  /**
-   * Save 'calculation' question type to QTI XML
-   * @param ST_Question_Calculation $question Reference to the question object
-   * @author Adam Clarke, Rob Ingram, Simon Atack
-   */
+    /**
+     * Save 'calculation' question type to QTI XML
+     * @param ST_Question_Calculation $question Reference to the question object
+     * @author Adam Clarke, Rob Ingram, Simon Atack
+     */
     function SaveEnhancedCalc(&$question)
     {
 
@@ -246,7 +246,7 @@ class IE_qti12_Save extends IE_Main
         $enhancedcalc->load($question);
 
 
-      // replace all variables in leadin with randomly generated values
+        // replace all variables in leadin with randomly generated values
         $enhancedcalc->generate_variables();
         $real_answer = $enhancedcalc->get_real_answer();
         $enhancedcalc->add_to_useranswer('uans', $real_answer);
@@ -254,13 +254,13 @@ class IE_qti12_Save extends IE_Main
 
 
         $question->origleadin = $question->leadin;
-      // format the text for the question
+        // format the text for the question
         $q_text = $enhancedcalc->replace_leadin(false);
 
         $question->feedback = $enhancedcalc->replace_vars($question->feedback);
 
 
-      //echo $q_text."<BR>";
+        //echo $q_text."<BR>";
 
         $question->leadin = $q_text;
 
@@ -279,15 +279,15 @@ class IE_qti12_Save extends IE_Main
 
     function SaveDichotomous(&$question)
     {
-      // list of score methods:
-      /*
-       TF_NegativeAbstain - True/False/Abstain (Negative Marking -1)
-       TF_NegativeAbstainHalf - True/False/Abstain (Negative Marking -0.5)
-       TF_Positive - True/False
-       YN_NegativeAbstain - Yes/No/Abstain (Negative Marking -1)
-       YN_Positive - Yes/No
-       */
-      // generate the marking and text to be used
+        // list of score methods:
+        /*
+        TF_NegativeAbstain - True/False/Abstain (Negative Marking -1)
+        TF_NegativeAbstainHalf - True/False/Abstain (Negative Marking -0.5)
+        TF_Positive - True/False
+        YN_NegativeAbstain - Yes/No/Abstain (Negative Marking -1)
+        YN_Positive - Yes/No
+        */
+        // generate the marking and text to be used
         $hasab = false;
         $true = 'True';
         $false = 'False';
@@ -295,7 +295,7 @@ class IE_qti12_Save extends IE_Main
         if ($question->display_method == 'TF_NegativeAbstain') {
             $hasab = 1;
         } elseif ($question->display_method == 'TF_Positive') {
-          // default
+            // default
         } elseif ($question->display_method == 'YN_NegativeAbstain') {
             $true = 'Yes';
             $false = 'No';
@@ -305,7 +305,7 @@ class IE_qti12_Save extends IE_Main
             $false = 'No';
         }
 
-      // header stuff
+        // header stuff
         list($headertext, $title) = $this->MakeQuestionHeader($question);
         $type = 'Dichotomous';
 
@@ -329,7 +329,7 @@ class IE_qti12_Save extends IE_Main
 
     function SaveExtMatch(&$question)
     {
-      // format the text for the question
+        // format the text for the question
         $this->AddWarning('QMP Cannot import extended matching questions correctly, it cannot handle the multiple select options', $question->load_id);
 
         list($headertext, $title) = $this->MakeQuestionHeader($question);
@@ -357,16 +357,16 @@ class IE_qti12_Save extends IE_Main
         }
     }
 
-  // TODO
+    // TODO
     function SaveFlash(&$question)
     {
         $this->AddError('Question type ' . $question->type . ' not yet supported', $question->load_id);
     }
 
-  // TODO
+    // TODO
     function SaveHotspot(&$question)
     {
-      // format the text for the question
+        // format the text for the question
         list($headertext, $title) = $this->MakeQuestionHeader($question, true, false);
 
         $type = 'Hotspot';
@@ -379,7 +379,7 @@ class IE_qti12_Save extends IE_Main
 
     function SaveInfo(&$question)
     {
-      // format the text for the question
+        // format the text for the question
         list($headertext, $title) = $this->MakeQuestionHeader($question);
 
         $type = 'Explanation';
@@ -390,10 +390,10 @@ class IE_qti12_Save extends IE_Main
         $ob->Restore();
     }
 
-  // TODO
+    // TODO
     function SaveLabelling(&$question)
     {
-      // format the text for the question
+        // format the text for the question
         list($headertext, $title) = $this->MakeQuestionHeader($question, true, false);
 
         $type = 'Labelling';
@@ -406,7 +406,7 @@ class IE_qti12_Save extends IE_Main
 
     function SaveLikert(&$question)
     {
-      // format the text for the question
+        // format the text for the question
         list($headertext, $title) = $this->MakeQuestionHeader($question);
 
         $type = 'Likert Scale';
@@ -419,9 +419,9 @@ class IE_qti12_Save extends IE_Main
 
     function SaveMatrix(&$question)
     {
-      // NO FEEDBACK ON MATRIX!!!
+        // NO FEEDBACK ON MATRIX!!!
 
-      // format the text for the question
+        // format the text for the question
         list($headertext, $title) = $this->MakeQuestionHeader($question);
         $max_score = count($question->scenarios);
 
@@ -440,10 +440,10 @@ class IE_qti12_Save extends IE_Main
 
     function SaveMcq(&$question)
     {
-      // fairly sure this is exporting correctly, feedback for pos + neg ok,
-      // all options listed ok
+        // fairly sure this is exporting correctly, feedback for pos + neg ok,
+        // all options listed ok
 
-      // format the text for the question
+        // format the text for the question
         list($headertext, $title) = $this->MakeQuestionHeader($question);
 
         $type = 'Multiple Choice';
@@ -462,10 +462,10 @@ class IE_qti12_Save extends IE_Main
 
     function SaveTrueFalse(&$question)
     {
-      // fairly sure this is exporting correctly, feedback for pos + neg ok,
-      // all options listed ok
+        // fairly sure this is exporting correctly, feedback for pos + neg ok,
+        // all options listed ok
 
-      // format the text for the question
+        // format the text for the question
         list($headertext, $title) = $this->MakeQuestionHeader($question);
 
         $type = 'True False';
@@ -484,16 +484,16 @@ class IE_qti12_Save extends IE_Main
 
     function SaveMrq(&$question)
     {
-      // QMP doesnt pay attention
-      // to the maxnumber field in render_choice so allows all options to be checked
-      // spits out valid QTI format, but QMP doesnt read it correctly (or export it
-      // correctly for that matter)
+        // QMP doesnt pay attention
+        // to the maxnumber field in render_choice so allows all options to be checked
+        // spits out valid QTI format, but QMP doesnt read it correctly (or export it
+        // correctly for that matter)
 
         $this->AddWarning('QMP doesnt correctly import the maximum number of options from QTI', $question->load_id);
 
         list($headertext, $title) = $this->MakeQuestionHeader($question);
 
-      // work out how many correct answers we have
+        // work out how many correct answers we have
         $maxanswers = 0;
         $negmarking = false; //is it negativly marked
         foreach ($question->options as $option) {
@@ -505,37 +505,37 @@ class IE_qti12_Save extends IE_Main
             }
         }
 
-      // use different template depending on marking type
-      // current marking types - allnegative, selectedpositive, allitemscorrect
-      // marking type other not currently supported
+        // use different template depending on marking type
+        // current marking types - allnegative, selectedpositive, allitemscorrect
+        // marking type other not currently supported
 
         $ob = new OB();
         $ob->ClearAndSave();
 
-      // 1 mark per correct answer, negative for wrong ones. 4 item question
-      // with 2 correct answers will result in following
-      // 2 correct answers - 4 marks
-      // 2 incorrect answers - -4 marks
+        // 1 mark per correct answer, negative for wrong ones. 4 item question
+        // with 2 correct answers will result in following
+        // 2 correct answers - 4 marks
+        // 2 incorrect answers - -4 marks
         if (strtolower($question->score_method) == 'mark per option' and $negmarking == true) {
             $type = 'Multiple Response - N Mark per Option (with Negative Marking)';
             include 'qti12/tmpl/mrq-mark-per-option-negative.php';
         }
 
-      // multiple marks for question - 1 mark per positive, should only be able to
-      // select same no of options as correct answers but not in QMP as its broken
+        // multiple marks for question - 1 mark per positive, should only be able to
+        // select same no of options as correct answers but not in QMP as its broken
         if (strtolower($question->score_method) == 'mark per option' and $negmarking == false) {
             $type = 'Multiple Response - N Mark per Option (with Negative Marking)';
             include 'qti12/tmpl/mrq-mark-per-option.php';
         }
-      // results and feedback for 1 mark for all items correcte, should only be able to
-      // select same no of options as correct answers but not in QMP as its broken
+        // results and feedback for 1 mark for all items correcte, should only be able to
+        // select same no of options as correct answers but not in QMP as its broken
         if (strtolower($question->score_method) == 'mark per question') {
             $type = 'Multiple Response - All options must be correct';
             include 'qti12/tmpl/mrq-mark-per-question.php';
         }
 
-      // other - 1 mark per correct, no maximum number of items, and other box.
-      // NOT WORKING
+        // other - 1 mark per correct, no maximum number of items, and other box.
+        // NOT WORKING
         if (strtolower($question->score_method) == 'other') {
             $type = 'Multiple Response - 1 mark per True Option with Other';
             include 'qti12/tmpl/mrq-other.php';
@@ -550,13 +550,13 @@ class IE_qti12_Save extends IE_Main
         }
     }
 
-  // DONE
+    // DONE
     function SaveRank(&$question)
     {
-      // format the text for the question
+        // format the text for the question
         list($headertext, $title) = $this->MakeQuestionHeader($question);
 
-      //build list of options
+        //build list of options
         $optlist = array();
 
         foreach ($question->options as $option) {
@@ -570,7 +570,7 @@ class IE_qti12_Save extends IE_Main
 
         $question->optlist = $optlist;
 
-      // different template for each type of marking
+        // different template for each type of marking
         $ob = new OB();
         $ob->ClearAndSave();
 
@@ -597,10 +597,10 @@ class IE_qti12_Save extends IE_Main
         $ob->Restore();
     }
 
-  // DONE
+    // DONE
     function SaveTextBox(&$question)
     {
-      // format the text for the question
+        // format the text for the question
         list($headertext, $title) = $this->MakeQuestionHeader($question);
 
         $this->AddWarning('Terms are not exported to QTI with this question type', $question->load_id);

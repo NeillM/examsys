@@ -15,10 +15,10 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Oauth package
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2015 onwards The University of Nottingham
-*/
+ * Oauth package
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2015 onwards The University of Nottingham
+ */
 
 /**
  * Oauth helper class.
@@ -214,10 +214,10 @@ class oauth
     }
     
      /**
-     * Check if the access/refresh token exists
-     * @param string $id - access/refresh token
-     * @return string|bool token type or false
-     */
+      * Check if the access/refresh token exists
+      * @param string $id - access/refresh token
+      * @return string|bool token type or false
+      */
     public function id_exists($id)
     {
         $result = $this->db->prepare('SELECT count(access_token) FROM oauth_access_tokens WHERE access_token = ?');

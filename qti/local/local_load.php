@@ -52,14 +52,14 @@ class IE_Local_Load extends IE_Main
         echo "<h4>{$string['othherdebug']}</h4>";
 
         $this->params = $params;
-      // store params in class
+        // store params in class
         $this->type = $params->type;
         $this->ids = $params->ids;
 
-      // create storage to put loaded data
+        // create storage to put loaded data
         $result = new ST_Main();
         if ($this->type == 'question') {
-          // for each q in list, load the question
+            // for each q in list, load the question
             foreach ($this->ids as $q_id) {
                 $question = $this->LoadQuestion($q_id);
                 $result->questions[] = $question;
@@ -92,14 +92,14 @@ class IE_Local_Load extends IE_Main
         $paper_row = array();
         $prop_rows = array();
 
-      // retrieve question row from database
+        // retrieve question row from database
         $db = new Database();
         $db->SetTable('properties');
         $db->AddField('*');
         $db->AddWhere('property_id', $p_id, 'i');
         $paper_row = $db->GetSingleRow();
 
-      // retrieve array of options from database
+        // retrieve array of options from database
         $db = new Database();
         $db->SetTable('papers');
         $db->AddField('*');
@@ -133,18 +133,18 @@ class IE_Local_Load extends IE_Main
 
         $userObj = UserObject::get_instance();
 
-      // storage for question data
+        // storage for question data
         $q_row = array();
         $o_rows = array();
 
-      // retrieve question row from database
+        // retrieve question row from database
         $db = new Database();
         $db->SetTable('questions');
         $db->AddField('*');
         $db->AddWhere('q_id', $q_id, 'i');
         $q_row = $db->GetSingleRow();
 
-      // retrieve array of options from database
+        // retrieve array of options from database
         $db = new Database();
         $db->SetTable('options');
         $db->AddField('*');
@@ -152,25 +152,25 @@ class IE_Local_Load extends IE_Main
         $db->AddOrder('id_num');
         $o_rows = $db->GetMultiRow();
 
-      // determine q type and create a storage class for correct type
+        // determine q type and create a storage class for correct type
         $q_type = $q_row['q_type'];
         $q_storage = 'ST_Question_' . $q_type;
 
         $store = new $q_storage();
         $store->type = $q_type;
 
-      // populate base storage fields
+        // populate base storage fields
         $this->LoadQuestionBase($store, $q_row, $o_rows);
 
-      // populate class specific storage fields
+        // populate class specific storage fields
         $funcname = 'LoadQuestion' . $q_type;
         call_user_func(array($this, $funcname), $store, $q_row, $o_rows);
 
-      // display some debug data
+        // display some debug data
         print_p($q_row);
         print_p($o_rows, true, 100);
 
-      // insert track changes record
+        // insert track changes record
         if ($show_debug != true) {
             $track = array();
             $track['type'] = 'QTI Export';
@@ -182,16 +182,16 @@ class IE_Local_Load extends IE_Main
 
             $db->InsertRow('track_changes', 'id', $track);
         }
-      // return question
+        // return question
         return $store;
     }
 
     function LoadQuestionBase($store, $q_row, $o_rows)
     {
-      // store id that we loaded as so can be referenced later
+        // store id that we loaded as so can be referenced later
         $store->load_id = $q_row['q_id'];
 
-      // load in things common to all questions
+        // load in things common to all questions
         $store->leadin = $q_row['leadin'];
         $store->theme = $q_row['theme'];
         $store->notes = $q_row['notes'];
@@ -203,7 +203,7 @@ class IE_Local_Load extends IE_Main
             $store->author = GetAuthorName($q_row['ownerID']);
         }
 
-      // Get keywords for question
+        // Get keywords for question
         $db = new Database();
         $db->SetTable('keywords_user', 'ku');
         $db->AddField('keyword');
@@ -221,7 +221,7 @@ class IE_Local_Load extends IE_Main
 
         $store->keywords = $keywords;
 
-      // standard media, gets cleared for extmatch
+        // standard media, gets cleared for extmatch
         $this->AddMedia($store, $q_row['q_media'], $q_row['q_media_width'], $q_row['q_media_height']);
 
         $store->status = $this->statuses[$q_row['status']];
@@ -229,42 +229,42 @@ class IE_Local_Load extends IE_Main
 
     function LoadQuestionBlank($store, $q_row, $o_rows)
     {
-      // basic things
+        // basic things
         $store->displaymode = $q_row['score_method'];
         $store->feedback = $q_row['correct_fback'];
 
-      // load option text
+        // load option text
         $q = $o_rows[0]['option_text'];
 
         $question = array();
 
-      // parse question into some more meaningful format
+        // parse question into some more meaningful format
         $blankno = 1;
         while (stripos($q, '[blank]') > 0) {
-          // create new indentifier for the blank option
+            // create new indentifier for the blank option
             $blankid = '%BLANK_' . $blankno . '%';
 
-          // locate [blank][/blank] segment
+            // locate [blank][/blank] segment
             $offset = stripos($q, '[blank]');
             $endoffset = stripos($q, '[/blank]');
 
-          // pull out list of options and replace segment with blankid created arlier
+            // pull out list of options and replace segment with blankid created arlier
             $midpart = substr($q, $offset + 7, $endoffset - $offset - 7);
             $question[] = substr($q, 0, $offset);
             $question[] = $blankid;
             $q = substr($q, $endoffset + 8);
 
-          // process the options
+            // process the options
             $optlist = explode(',', $midpart);
 
-          // array to store resulting STQ_Blank_Option classes
+            // array to store resulting STQ_Blank_Option classes
             $options = array();
 
             $optionno = 1;
             foreach ($optlist as $opt) {
                 $opt = trim($opt);
                 if ($opt) {
-                  // create new option
+                    // create new option
                     $curopt = new STQ_Blank_Option();
                     $curopt->display = $opt;
 
@@ -273,7 +273,7 @@ class IE_Local_Load extends IE_Main
                     $curopt->marks_partial = $o_rows[0]['marks_partial'];
 
 
-                  // if display mode is dropdown, only first is correct answer
+                    // if display mode is dropdown, only first is correct answer
                     if ($store->displaymode == 'dropdown') {
                         $curopt->correct = $optionno == 1 ? 1 : 0;
 
@@ -302,7 +302,7 @@ class IE_Local_Load extends IE_Main
 
     function LoadQuestionenhancedcalc($store, $q_row, $o_rows)
     {
-      // fiarly sure this is ok
+        // fiarly sure this is ok
         $store->scenario = $q_row['scenario'];
         $store->feedback = $q_row['correct_fback'];
         $store->q_type = 'enhancedcalc';
@@ -316,7 +316,7 @@ class IE_Local_Load extends IE_Main
     }
     function LoadQuestionCalculation($store, $q_row, $o_rows)
     {
-      // fiarly sure this is ok
+        // fiarly sure this is ok
         $store->scenario = $q_row['scenario'];
         $store->feedback = $q_row['correct_fback'];
         $store->formula = $o_rows[0]['correct'];
@@ -341,13 +341,13 @@ class IE_Local_Load extends IE_Main
 
     function LoadQuestionDichotomous($store, $q_row, $o_rows)
     {
-      // basic stuff
+        // basic stuff
         $store->scenario = $q_row['scenario'];
         $store->feedback = $q_row['correct_fback'];
         $store->score_method = $q_row['score_method'];
         $store->display_method = $q_row['display_method'];
 
-      // for each options, create a STQ_Dic_Options
+        // for each options, create a STQ_Dic_Options
         $optionno = 1;
         foreach ($o_rows as $o_row) {
             $options = new STQ_Dic_Options();
@@ -371,19 +371,19 @@ class IE_Local_Load extends IE_Main
 
     function LoadQuestionExtmatch($store, $q_row, $o_rows)
     {
-      // no question media for this qtype
+        // no question media for this qtype
         $store->media = '';
         $store->media_width = 0;
         $store->media_height = 0;
 
-      // get list of possible answers
+        // get list of possible answers
         $optno = 1;
         foreach ($o_rows as $o_row) {
             $store->optionlist[$optno] = $o_row['option_text'];
             $optno++;
         }
 
-      // split all stuff from q_row into arrays for processing
+        // split all stuff from q_row into arrays for processing
         $feedbacks = explode('|', $q_row['correct_fback']);
         $medias = explode('|', $q_row['q_media']);
         $media_widths = explode('|', $q_row['q_media_width']);
@@ -398,7 +398,7 @@ class IE_Local_Load extends IE_Main
 
         $correct = explode('|', $o_rows[0]['correct']);
 
-      // for all the arrays made, create scenarios
+        // for all the arrays made, create scenarios
         $scenariono = 1;
         for ($i = 0; $i < count($scenarios); $i++) {
             $ems = new STQ_Extm_Scenario();
@@ -424,7 +424,7 @@ class IE_Local_Load extends IE_Main
 
     function LoadQuestionFlash($store, $q_row, $o_rows)
     {
-      // No question media for this question type
+        // No question media for this question type
         $store->media = '';
         $store->media_width = 0;
         $store->media_height = 0;
@@ -442,7 +442,7 @@ class IE_Local_Load extends IE_Main
         $store->marks_partial = $o_rows[0]['marks_partial'];
     }
 
-  // TODO - Does this deal with multi-layered hotspot questions?
+    // TODO - Does this deal with multi-layered hotspot questions?
     function LoadQuestionHotspot($store, $q_row, $o_rows)
     {
 
@@ -484,20 +484,20 @@ class IE_Local_Load extends IE_Main
 
     function LoadQuestionInfo($store, $q_row, $o_rows)
     {
-      // Info type question has no notes!
-      // main info stored in leadin
+        // Info type question has no notes!
+        // main info stored in leadin
     }
 
 
     function LoadQuestionLabelling($store, $q_row, $o_rows)
     {
-      // 1 - 3/4 pt
-      // 2 - 1 pt
-      // 3 - 1 1/4 pt
-      // 4 - 2 1/4 pt
-      // 5 - 3 pt
-      // 6 - 4 1/2 pt
-      // 7 - 6 pt
+        // 1 - 3/4 pt
+        // 2 - 1 pt
+        // 3 - 1 1/4 pt
+        // 4 - 2 1/4 pt
+        // 5 - 3 pt
+        // 6 - 4 1/2 pt
+        // 7 - 6 pt
         $line_thicknesses = array();
         $line_thicknesses[1] = 0.75;
         $line_thicknesses[2] = 1;
@@ -582,16 +582,16 @@ class IE_Local_Load extends IE_Main
     {
         $store->scenario = $q_row['scenario'];
 
-      // options for likert in score method, along with has n/a
+        // options for likert in score method, along with has n/a
         $sm = $q_row['display_method'];
 
-      // extract the last part of the score method and if true has n/a
+        // extract the last part of the score method and if true has n/a
         $store->hasna = strtolower(substr($sm, strrpos($sm, '|') + 1)) == 'true' ? 1 : 0;
 
-      // trim off the last scoremethod as this stored has n/a
+        // trim off the last scoremethod as this stored has n/a
         $sm = substr($sm, 0, strrpos($sm, '|'));
 
-      // store rest of the options in scale
+        // store rest of the options in scale
         $opts = explode('|', $sm);
         $i = 1;
         $store->scale = array();
@@ -602,10 +602,10 @@ class IE_Local_Load extends IE_Main
 
     function LoadQuestionMatrix($store, $q_row, $o_rows)
     {
-      // get list of correct values for each of the questions
+        // get list of correct values for each of the questions
         $correctvalues = explode('|', $o_rows[0]['correct']);
 
-      // build a list of the top row options
+        // build a list of the top row options
         $topvalueno = 1;
         foreach ($o_rows as $o_row) {
             $option = new STQ_Mcq_Option();
@@ -617,14 +617,14 @@ class IE_Local_Load extends IE_Main
             $topvalueno++;
         }
 
-      // for all questions down left, create a STQ_Matrix_Scenario
+        // for all questions down left, create a STQ_Matrix_Scenario
         $scenno = 1;
         $leftvalue = explode('|', $q_row['scenario']);
         foreach ($leftvalue as $left) {
             if ($left != '') {
                 $scenario = new STQ_Matrix_Scenario();
                 $scenario->scenario = $left;
-              // lookup the correct top row option id and store it as the answer
+                // lookup the correct top row option id and store it as the answer
                 $scenario->answer = $correctvalues[$scenno - 1];
 
                 $store->scenarios[$scenno] = $scenario;
@@ -635,7 +635,7 @@ class IE_Local_Load extends IE_Main
 
     function LoadQuestionMcq($store, $q_row, $o_rows)
     {
-      // basic stuff
+        // basic stuff
         $store->scenario = $q_row['scenario'];
         $store->fb_correct = $q_row['correct_fback'];
         $store->fb_incorrect = $q_row['incorrect_fback'];
@@ -644,7 +644,7 @@ class IE_Local_Load extends IE_Main
         }
         $store->correct = $o_rows[0]['correct'];
 
-      // for each of the options create an STQ_Mcq_Option
+        // for each of the options create an STQ_Mcq_Option
         $optionno = 1;
         foreach ($o_rows as $o_row) {
             $option = new STQ_Mcq_Option();
@@ -661,7 +661,7 @@ class IE_Local_Load extends IE_Main
 
     function LoadQuestiontrue_false($store, $q_row, $o_rows)
     {
-      // basic stuff
+        // basic stuff
         $store->scenario = $q_row['scenario'];
         $store->fb_correct = $q_row['correct_fback'];
         $store->fb_incorrect = $q_row['incorrect_fback'];
@@ -670,7 +670,7 @@ class IE_Local_Load extends IE_Main
         }
         $store->correct = $o_rows[0]['correct'];
 
-      // for each of the options create an STQ_Mcq_Option
+        // for each of the options create an STQ_Mcq_Option
         $optionno = 1;
         foreach ($o_rows as $o_row) {
             $option = new STQ_Mcq_Option();
@@ -687,23 +687,23 @@ class IE_Local_Load extends IE_Main
 
     function LoadQuestionMrq($store, $q_row, $o_rows)
     {
-      // basic stuff
+        // basic stuff
         $store->scenario = $q_row['scenario'];
-      // score method oddness, if type is other, the include other then
-      // score method gets set to "1 Mark per True Option"
+        // score method oddness, if type is other, the include other then
+        // score method gets set to "1 Mark per True Option"
         $store->score_method = $q_row['score_method'];
         if ($store->score_method == 'other') {
             $store->include_other = true;
         }
         $store->feedback = $q_row['correct_fback'];
 
-      // get a list of all the options
+        // get a list of all the options
         $optionno = 1;
 
         foreach ($o_rows as $o_row) {
             $option = new STQ_Mrq_Option();
             $option->stem = $o_row['option_text'];
-          // check correct and map to 1/0
+            // check correct and map to 1/0
             $option->is_correct = strtolower($o_row['correct']) == 'y' ? 1 : 0;
             $option->fb_correct = $o_row['feedback_right'];
             $option->fb_incorrect = $o_row['feedback_wrong'];
@@ -723,7 +723,7 @@ class IE_Local_Load extends IE_Main
 
     function LoadQuestionRank($store, $q_row, $o_rows)
     {
-      // basic stuff
+        // basic stuff
         $store->scenario = $q_row['scenario'];
         $store->score_method = $q_row['score_method'];
         $store->fb_correct = $q_row['correct_fback'];
@@ -732,7 +732,7 @@ class IE_Local_Load extends IE_Main
             $store->fb_incorrect = $store->fb_correct;
         }
 
-      // get a list of options and create a STQ_Rank_Options for em
+        // get a list of options and create a STQ_Rank_Options for em
         $optionno = 1;
         foreach ($o_rows as $o_row) {
             $ranking = new STQ_Rank_Options();
@@ -748,10 +748,10 @@ class IE_Local_Load extends IE_Main
 
     function LoadQuestionTextbox($store, $q_row, $o_rows)
     {
-      // basic stuff
+        // basic stuff
         $store->scenario = $q_row['scenario'];
 
-      // size of text box stored as 100x30 in sm
+        // size of text box stored as 100x30 in sm
         $settings = json_decode($q_row['settings']);
         $store->columns = $settings->columns;
         $store->rows = $settings->rows;
@@ -761,8 +761,8 @@ class IE_Local_Load extends IE_Main
         $store->marks_incorrect = $o_rows[0]['marks_incorrect'];
         $store->feedback = $q_row['correct_fback'];
 
-      // create a list of ; separated terms, stripping out any empty ones?
-      // TODO: Should this happen? maybe they want to leave blank ones in?
+        // create a list of ; separated terms, stripping out any empty ones?
+        // TODO: Should this happen? maybe they want to leave blank ones in?
         $store->terms = explode_no_empty(';', $o_rows[0]['correct']);
     }
 

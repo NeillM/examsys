@@ -15,23 +15,23 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Utility class for reference material related functionality
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Utility class for reference material related functionality
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 
 class refmaterials_utils
 {
  
-  /**
-   * See if a reference material ID actually exists.
-   * @return true or false.
-   */
+    /**
+     * See if a reference material ID actually exists.
+     * @return true or false.
+     */
     static function refmaterials_exist($refID, $db)
     {
         $row_no = 0;
@@ -69,13 +69,13 @@ class refmaterials_utils
   
     static function delete($refID, $db)
     {
-      // Update deleted to NOW in reference_material
+        // Update deleted to NOW in reference_material
         $result = $db->prepare('UPDATE reference_material SET deleted = NOW() WHERE id = ?');
         $result->bind_param('i', $refID);
         $result->execute();
         $result->close();
     
-      // Delete any links to the reference material in papers
+        // Delete any links to the reference material in papers
         $result = $db->prepare('DELETE FROM reference_papers WHERE refID = ?');
         $result->bind_param('i', $refID);
         $result->execute();

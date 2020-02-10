@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Displays three main parts of a module: 1) Papers, 2) Question Bank and 3) Users.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Displays three main parts of a module: 1) Papers, 2) Question Bank and 3) Users.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../include/staff_auth.inc';
 require_once '../include/icon_display.inc';
@@ -127,10 +127,10 @@ if (!$userObject->has_role('Standards Setter')) {
     echo "<br clear=\"left\">\n";
     echo "<div class=\"f2\"><div class=\"f_icon\"><a href=\"../paper/search.php?module=$module\"><img src=\"../artwork/search_48.png\" alt=\"Folder\" /></a></div><div class=\"f_details\"><a href=\"../paper/search.php?module=$module\">" . $string['search'] . '</a><br /><span class="grey">' . $string['forpapers'] . "</span></div></div>\n";
     if ($module != 0) {
-      // Don't want new papers created from the Unassigned folder.
+        // Don't want new papers created from the Unassigned folder.
         echo "<div id=\"newpaper\" data-module=\"$module\" class=\"f2\"><div class=\"f_icon\"><a href=\"\" onclick=\"return false;\"><img src=\"../artwork/new_paper_48.png\" alt=\"" . $string['newpaper'] . '" /></a></div><div class="f_details"><a href="" onclick="return false;">' . $string['newpaper'] . "</a></div></div>\n";
     }
-  // Question bank section
+    // Question bank section
     echo "<br clear=\"left\">\n";
     echo '<div class="subsect_table" style="clear:both"><div class="subsect_title"><nobr>' . $string['questionbank'] . "</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
 
@@ -158,7 +158,7 @@ if (!$userObject->has_role('Standards Setter')) {
         echo "<div id=\"newquestion\" data-module=\"$module\" class=\"f2\"><div class=\"f_icon\"><a href=\"#\" onclick=\"return false;\"><img src=\"../artwork/new_question.png\" alt=\"" . $string['newquestion'] . '" /></a></div><div class="f_details"><a href="" onclick="return false;">' . $string['newquestion'] . "</a></div></div>\n";
     }
 
-  // User section
+    // User section
     echo "<br clear=\"left\">\n";
     echo '<div class="subsect_table" style="clear:both"><div class="subsect_title">' . $string['users'] . "</div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
 

@@ -50,15 +50,15 @@ class outline_authentication
     protected $callbackarray;
     protected $impliments_api_auth_version = 0;
 
-  /**
-   * @param $calling_object object its called from
-   * @param $settings array settings options
-   * @param $number int the number this is
-   * @param $name string the name of it
-   * @param $db object a lin kto db
-   * @param $returndata object where data is stored
-   * @param $form object a class with form data in
-   */
+    /**
+     * @param $calling_object object its called from
+     * @param $settings array settings options
+     * @param $number int the number this is
+     * @param $name string the name of it
+     * @param $db object a lin kto db
+     * @param $returndata object where data is stored
+     * @param $form object a class with form data in
+     */
     function __construct($number, $name, $authapiversion)
     {
         $this->authapiversion = $authapiversion;
@@ -66,10 +66,10 @@ class outline_authentication
         $this->number = $number;
     }
 
-  /*
-   * Check the API version of the stack and the plugin are compatible
-   * returns true if it is compatible false otherwise
-   */
+    /*
+    * Check the API version of the stack and the plugin are compatible
+    * returns true if it is compatible false otherwise
+    */
     function apicheck()
     {
 
@@ -105,7 +105,7 @@ class outline_authentication
     {
         $context1 = array();
         if (is_null($context)) {
-        // if no array set get currently define variables in this object
+            // if no array set get currently define variables in this object
                 $context = get_defined_vars($this);
         }
 
@@ -117,36 +117,36 @@ class outline_authentication
     }
 
 
-  // Fake function used in mocking but if things go wrong have an outline here
+    // Fake function used in mocking but if things go wrong have an outline here
     function mock($callingobject, $settings, $number, $name, $db, $returndata, $form)
     {
         return false;
     }
 
 
-  /**
-   * @param $debugmessage string the debug message to store
-   */
+    /**
+     * @param $debugmessage string the debug message to store
+     */
     function savetodebug($debugmessage)
     {
         $this->debug[] = $debugmessage;
     }
 
-  /**
-   * @param $section string the section to get the callback from
-   *
-   * @return mixed
-   */
+    /**
+     * @param $section string the section to get the callback from
+     *
+     * @return mixed
+     */
     function get_callback($section)
     {
         return $this->calling_object->get_callback($section);
     }
 
-  /**
-   * @param $objid int the objectid
-   *
-   * @return mixed
-   */
+    /**
+     * @param $objid int the objectid
+     *
+     * @return mixed
+     */
     function get_new_debug_messages($number = null)
     {
         if (is_null($number)) {
@@ -161,11 +161,11 @@ class outline_authentication
         }
     }
 
-  /**
-   * @param $objid int the objectid
-   *
-   * @return mixed
-   */
+    /**
+     * @param $objid int the objectid
+     *
+     * @return mixed
+     */
     function get_module_authinfo($objid)
     {
         return $this->calling_object->authinfo[$objid];
@@ -174,39 +174,39 @@ class outline_authentication
 
     function register_callback_sections()
     {
-      //this is blank so that classes that dont register anything dont break
+        //this is blank so that classes that dont register anything dont break
         return array();
     }
 
-  /**
-   * @param $callback callback routine
-   * @param $section string section to register callback in
-   * @param $number string the number this object is
-   * @param $name string the name this object is
-   * @param $insert bool to insert rather than append
-   *
-   * @return bool
-   */
+    /**
+     * @param $callback callback routine
+     * @param $section string section to register callback in
+     * @param $number string the number this object is
+     * @param $name string the name this object is
+     * @param $insert bool to insert rather than append
+     *
+     * @return bool
+     */
     function register_callback($callback, $section, $number, $name, $insert = false)
     {
         $this->callbackarray[] = array($callback, $section, $number, $name, $insert);
     }
 
 
-  /**
-   *
-   */
+    /**
+     *
+     */
     function register_callback_routines()
     {
-      //this is blank so that classes that dont register anything dont break
+        //this is blank so that classes that dont register anything dont break
         return array();
     }
 
-  /**
-   * @param $setting string the setting to return or false if it doesnt exist
-   *
-   * @return mixed
-   */
+    /**
+     * @param $setting string the setting to return or false if it doesnt exist
+     *
+     * @return mixed
+     */
     function get_settings($setting)
     {
         if (!isset($this->settings[$setting])) {

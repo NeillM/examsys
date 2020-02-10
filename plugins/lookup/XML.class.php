@@ -44,10 +44,10 @@ class XML_lookup extends outline_lookup
         return $callbackarray;
     }
 
-  //need function to register the extracallback
+    //need function to register the extracallback
     function register_callback_sections()
     {
-      //this is blank so that classes that dont register anything dont break
+        //this is blank so that classes that dont register anything dont break
         return array('userlookupxmltranslate','modulelookupxmltranslate');
     }
 
@@ -62,7 +62,7 @@ class XML_lookup extends outline_lookup
         }
 
         if (isset($this->settings['modulelookup']['mandatoryurlfields'])) {
-  // mandatory fields required!
+            // mandatory fields required!
             foreach ($this->settings['modulelookup']['mandatoryurlfields'] as $index) {
                 $fieldname = $this->settings['modulelookup']['urlfields'][$index];
                 if (!isset($lookupobj->lookupdata->$fieldname)) {
@@ -73,7 +73,7 @@ class XML_lookup extends outline_lookup
             }
         }
 
-      //check if restrict is set
+        //check if restrict is set
         $restrict = $this->get_setting('restrict', 'modulelookup');
         $restrictstop = false;
         if (!is_null($restrict)) {
@@ -83,13 +83,13 @@ class XML_lookup extends outline_lookup
                     $restrictstop = true;
                 } else {
                     if (strpos($value, '|') === false) {
-                    //condition
+                        //condition
                         if (!isset($lookupobj->lookupdata->$key) or (isset($lookupobj->lookupdata->$key) and $lookupobj->lookupdata->$key !== $value)) {
                             $this->savetodebug("Restriction stopped debug key: $key !== $value");
                             $restrictstop = true;
                         }
                     } else {
-                    // OR condition
+                        // OR condition
                           $restrictstop1 = 0;
                         $exp = explode('|', $value);
                         foreach ($exp as $value1) {
@@ -111,7 +111,7 @@ class XML_lookup extends outline_lookup
             return $lookupobj;
         }
 
-      // if the lookup doesnt have these set and the default for the module configuration exist use them
+        // if the lookup doesnt have these set and the default for the module configuration exist use them
         if (!isset($lookupobj->settings->override)) {
             if (isset($this->settings['modulelookup']['override'])) {
                     $overrideset = true;
@@ -149,14 +149,14 @@ class XML_lookup extends outline_lookup
             foreach ($this->settings['modulelookup']['urlfields'] as $urlparam => $index) {
                     //$this->savetodebug('appending url ' . 'urlparam' . ' :: ' . $index);
                 if (isset($lookupobj->lookupdata->$index)) {
-//a field that can be supplied as argument
+                    //a field that can be supplied as argument
                     $url .= '&' . $urlparam . '=' . $lookupobj->lookupdata->$index;
                 }
             }
         }
 
         $this->savetodebug('URL is: ' . $url);
-//setting options for curl retrieval eg username/password or form submission
+        //setting options for curl retrieval eg username/password or form submission
 
         $usefile = true;
         if ($usefile == true) {
@@ -177,10 +177,10 @@ class XML_lookup extends outline_lookup
 
 
         list($callbacklist, $callbackregisterdatalist) = $this->get_callback('modulelookupxmltranslate');
-//  run any appropriate translation callbacks
+        //  run any appropriate translation callbacks
 
         if (is_array(($callbacklist))) {
-  //foreach ($this->calling_object->callbackregister['lookupuser'] as $number => $callback) {
+            //foreach ($this->calling_object->callbackregister['lookupuser'] as $number => $callback) {
             foreach ($callbacklist as $number => $callback) {
                 $xml = call_user_func_array($callback, array($xml));
                 $objid = key($callbackregisterdatalist[$number]);
@@ -222,11 +222,11 @@ class XML_lookup extends outline_lookup
             return $lookupobj;
         }
 
-//    $this->savetodebug('Received data:' . var_export($lookupobj, true));
+        //    $this->savetodebug('Received data:' . var_export($lookupobj, true));
 
 
         if (isset($this->settings['userlookup']['mandatoryurlfields'])) {
-  // mandatory fields required!
+            // mandatory fields required!
             foreach ($this->settings['userlookup']['mandatoryurlfields'] as $index) {
                 $fieldname = $this->settings['userlookup']['urlfields'][$index];
                 if (!isset($lookupobj->lookupdata->$fieldname)) {
@@ -238,7 +238,7 @@ class XML_lookup extends outline_lookup
         }
 
 
-      // if the lookup doesnt have these set and the default for the module configuration exist use them
+        // if the lookup doesnt have these set and the default for the module configuration exist use them
         if (!isset($lookupobj->settings->override)) {
             if (isset($this->settings['userlookup']['override'])) {
                     $overrideset = true;
@@ -274,14 +274,14 @@ class XML_lookup extends outline_lookup
             foreach ($this->settings['userlookup']['urlfields'] as $urlparam => $index) {
                     //$this->savetodebug('appending url ' . 'urlparam' . ' :: ' . $index);
                 if (isset($lookupobj->lookupdata->$index)) {
-//a field that can be supplied as argument
+                    //a field that can be supplied as argument
                     $url .= '&' . $urlparam . '=' . $lookupobj->lookupdata->$index;
                 }
             }
         }
 
         $this->savetodebug('URL is: ' . $url);
-//setting options for curl retrieval eg username/password or form submission
+        //setting options for curl retrieval eg username/password or form submission
 
         $usefile = true;
         if ($usefile == true) {
@@ -299,12 +299,12 @@ class XML_lookup extends outline_lookup
             $this->savetodebug('No valid XML received');
             return $lookupobj;
         }
-      //do translate lookup
+        //do translate lookup
         list($callbacklist, $callbackregisterdatalist) = $this->get_callback('userlookupxmltranslate');
-//  run this when needing to store auth data to session
+        //  run this when needing to store auth data to session
 
         if (is_array(($callbacklist))) {
-  //foreach ($this->calling_object->callbackregister['lookupuser'] as $number => $callback) {
+            //foreach ($this->calling_object->callbackregister['lookupuser'] as $number => $callback) {
             foreach ($callbacklist as $number => $callback) {
                 $xml = call_user_func_array($callback, array($xml));
                 $objid = key($callbackregisterdatalist[$number]);
@@ -362,10 +362,10 @@ class XML_lookup extends outline_lookup
 
                       //multiple filter option use and
                 } else {
-            //single filter option
+                    //single filter option
                     if (count(array_keys($ldap_attributes, $orderitem)) > 0) {
-//searching item exists in ldap attribute so we can search
-              //check if we have any data for this item to actually search for
+                        //searching item exists in ldap attribute so we can search
+                        //check if we have any data for this item to actually search for
                         if (isset($lookupobj->lookupdata->{$orderitem})) {
                             $filter = $this->create_filter($ldap_attributes, $orderitem, $lookupobj->lookupdata->{$orderitem});
                         }
@@ -375,13 +375,13 @@ class XML_lookup extends outline_lookup
                 if ($searchsuccess == true) {
                     break;
                 }
-            //end of searchorder loop
+                //end of searchorder loop
             }
 
-        //TODO ABOVE IS SUSPECT AS STRAIGHT FROM LDAP
+            //TODO ABOVE IS SUSPECT AS STRAIGHT FROM LDAP
 
-        //need to lookup up the xpath info
-        //above block is for creating xpath filter for xml
+            //need to lookup up the xpath info
+            //above block is for creating xpath filter for xml
         } else {
             $filter = '//*/parent::*';
         }
@@ -392,11 +392,11 @@ class XML_lookup extends outline_lookup
         $this->savetodebug("Using search filter: $filter");
         $xmlsearched = $xml->xpath($filter);
         $this->savetodebug('XML IS NOW: ' . var_export($xmlsearched, true));
-//have just the number of simplexmlobjects we are interested in.
+        //have just the number of simplexmlobjects we are interested in.
 
         $count = count($xmlsearched);
         if ($count > 0) {
-        //check items in the record
+            //check items in the record
             if ($count > 1) {
                 $lookupobj->multiple = true;
             }
@@ -404,7 +404,7 @@ class XML_lookup extends outline_lookup
             $attributes = $this->get_setting('xmlfields', $section);
             $rawattributes = $this->get_setting('rawxmlfields', $section);
             $failattributes = $this->get_setting('failfields', $section);
-        //check for fail attributes
+            //check for fail attributes
             $fail = false;
             if (is_array($failattributes) and count($failattributes) > 0) {
                 foreach ($xmlsearched as $xmlbits) {
@@ -418,7 +418,7 @@ class XML_lookup extends outline_lookup
                 }
             }
 
-        //if failure attribute found stop at state why
+            //if failure attribute found stop at state why
             if ($fail !== false) {
                 return $lookupobj;
             }
@@ -426,12 +426,12 @@ class XML_lookup extends outline_lookup
 
             $this->savetodebug("Found $count records");
             if (isset($lookupobj->settings->firstentry) and $lookupobj->settings->firstentry == true) {
-            //only
+                //only
                   $this->savetodebug('Saving First Entry Only');
                 $datablock = $xmlsearched[0];
                 $lookupobj = $this->store_in_data($datablock, $attributes, $lookupobj, $section);
             } elseif (isset($lookupobj->settings->lastentry) and $lookupobj->settings->lastentry == true) {
-            //
+                //
                   $this->savetodebug('Saving Last Entry Only');
                 $datablock = $xmlsearched[$count - 1];
                 $lookupobj = $this->store_in_data($datablock, $attributes, $lookupobj, $section);
@@ -450,7 +450,7 @@ class XML_lookup extends outline_lookup
 
             return $lookupobj;
         } else {
-        //no records found!
+            //no records found!
 
                 $this->savetodebug('No Records Match');
             return $lookupobj;
@@ -502,7 +502,7 @@ class XML_lookup extends outline_lookup
         $datablockstore = array();
         foreach ($datablock as $key => $value) {
             if (!is_int($key)) {
-        //
+                //
 
 
                 if (isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == true) {
@@ -515,7 +515,7 @@ class XML_lookup extends outline_lookup
 
 
                 if (((isset($lookupobj->datablockstore[$prepend . $key])) and ((isset($lookupobj->settings->overrideall) and $lookupobj->settings->overrideall == true) or ((isset($lookupobj->settings->override[$key]) and $lookupobj->settings->override[$key] == true)))) or (!isset($lookupobj->datablockstore[$prepend . $key]))) {
-        // store data to datablock store if not set or if set and ( overrideall or override value set)
+                    // store data to datablock store if not set or if set and ( overrideall or override value set)
                     if ($raw === false) {
                         $lookupobj->datablockstore[$prepend . $key] = (string)$value;
                     } else {

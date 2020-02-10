@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Initial screen of the create new paper dialog box.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Initial screen of the create new paper dialog box.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 $paper_name = param::optional('paper_name', '', param::TEXT, param::FETCH_GET);

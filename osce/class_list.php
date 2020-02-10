@@ -16,16 +16,16 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* This screen presents a list of students assigned to a particular cohort.
-* You click on the student name of interest and the OSCE station marking
-* form comes up.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * This screen presents a list of students assigned to a particular cohort.
+ * You click on the student name of interest and the OSCE station marking
+ * form comes up.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -96,7 +96,7 @@ function quick_links($string)
     } elseif (trim($calendar_year) == '') {
         echo $notice->info_strip($string['error2'], 100);
     } else {
-      // Get the students who are enrolled on the module/session.
+        // Get the students who are enrolled on the module/session.
         $student_no = 0;
         $old_letter = '';
 
@@ -129,12 +129,12 @@ function quick_links($string)
     }
     echo "</table>\n</form>\n";
 
-  // Dataset.
+    // Dataset.
     $render = new render($configObject);
     $miscdataset['name'] = 'dataset';
     $miscdataset['attributes']['id'] = $_GET['id'];
     $render->render($miscdataset, array(), 'dataset.html');
-  // JS utils dataset.
+    // JS utils dataset.
     $jsdataset['name'] = 'jsutils';
     $jsdataset['attributes']['xls'] = json_encode($string);
     $render->render($jsdataset, array(), 'dataset.html');

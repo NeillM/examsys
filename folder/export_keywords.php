@@ -16,19 +16,19 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../include/errors.php';
 header('Content-Type: text/plain');
 header('Content-Disposition: attachment; filename=keywords.txt');
 if ($_GET['module'] != '') {
-// Look up team keywords
+    // Look up team keywords
     $result = $mysqli->prepare("SELECT id, keyword FROM keywords_user WHERE keyword_type='team' AND userID=? ORDER BY keyword");
     $result->bind_param('i', $_GET['module']);
     $result->execute();
@@ -38,7 +38,7 @@ if ($_GET['module'] != '') {
     }
     $result->close();
 } else {
-// Lookup personal keywords
+    // Lookup personal keywords
     $result = $mysqli->prepare("SELECT keyword FROM keywords_user WHERE keyword_type='personal' AND userID=? ORDER BY keyword");
     $result->bind_param('i', $userObject->get_user_ID());
     $result->execute();

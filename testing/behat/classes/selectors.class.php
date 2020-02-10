@@ -29,13 +29,13 @@ use \Behat\Mink\Session;
  */
 class selectors
 {
-  /**
-   * An array of selector types that can be used by behat tests,
-   * unless built into behat directly they should also have an
-   * entry in self::$rogoselectors.
-   *
-   * @var array
-   */
+    /**
+     * An array of selector types that can be used by behat tests,
+     * unless built into behat directly they should also have an
+     * entry in self::$rogoselectors.
+     *
+     * @var array
+     */
     protected static $allowedrogoselectors = array(
     // Built in selectors.
     'id' => 'id',
@@ -74,12 +74,12 @@ class selectors
     'paper_type' => 'paper_type',
     );
 
-  /**
-   * An array containing XPATH selectors for elements of Rogo that behat can select.
-   * The key is the name of the selector, the value the XPATH string describing it.
-   *
-   * @var array
-   */
+    /**
+     * An array containing XPATH selectors for elements of Rogo that behat can select.
+     * The key is the name of the selector, the value the XPATH string describing it.
+     *
+     * @var array
+     */
     protected static $rogoselectors = array(
     'menu_item' => <<<XPATH
 //div[contains(concat(' ', normalize-space(@class), ' '), ' menuitem ') and contains(normalize-space(.) , %locator%)]
@@ -142,12 +142,12 @@ XPATH
 XPATH
     );
 
-  /**
-   * Get the custom Rogo selector list or a selector.
-   *
-   * @param string $selectorname
-   * @return array
-   */
+    /**
+     * Get the custom Rogo selector list or a selector.
+     *
+     * @param string $selectorname
+     * @return array
+     */
     public static function get_selectors($selectorname = null)
     {
         if (empty($selectorname)) {
@@ -157,23 +157,23 @@ XPATH
         }
     }
 
-  /**
-   * Checks if the the named selector is allowed in Rogo behat tests.
-   *
-   * @param string $namesselector
-   * @return boolean
-   */
+    /**
+     * Checks if the the named selector is allowed in Rogo behat tests.
+     *
+     * @param string $namesselector
+     * @return boolean
+     */
     public static function is_allowed_named($namesselector)
     {
         return isset(self::$allowedrogoselectors[$namesselector]);
     }
 
-  /**
-   * Adds the custom Rogo selectors to behat.
-   *
-   * @param \testing\behat\Behat\Mink\Session $session The mink session
-   * @return void
-   */
+    /**
+     * Adds the custom Rogo selectors to behat.
+     *
+     * @param \testing\behat\Behat\Mink\Session $session The mink session
+     * @return void
+     */
     public static function register_rogo_selectors(Session $session)
     {
         foreach (self::get_selectors() as $name => $xpath) {

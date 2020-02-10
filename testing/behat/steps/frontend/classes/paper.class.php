@@ -34,13 +34,13 @@ use Behat\Gherkin\Node\PyStringNode,
  */
 trait paper
 {
-  /**
-   * Creates a new paper when the user is on a module page.
-   *
-   * @Given I create a new :type paper:
-   * @param string $type The type of paper
-   * @param TableNode $data The parameters used to create the paper
-   */
+    /**
+     * Creates a new paper when the user is on a module page.
+     *
+     * @Given I create a new :type paper:
+     * @param string $type The type of paper
+     * @param TableNode $data The parameters used to create the paper
+     */
     public function i_create_a_new_paper($type, TableNode $data)
     {
         $this->i_click('New Paper', 'link');
@@ -76,20 +76,20 @@ trait paper
         $this->i_wait_for_page_to_load();
     }
 
-  /**
-   * Creates a formative paper.
-   *
-   * @param TableNode $data
-   */
+    /**
+     * Creates a formative paper.
+     *
+     * @param TableNode $data
+     */
     protected function create_formative(TableNode $data)
     {
         $fields = $data->getRowsHash();
         $this->paper_basics('Formative Self-Assessment', $fields['name']);
-      // Set the start date.
+        // Set the start date.
         $this->fill_in_date_time('f', $fields['start']);
-      // Set the end date.
+        // Set the end date.
         $this->fill_in_date_time('t', $fields['end']);
-      // Set optional fields.
+        // Set optional fields.
         if (isset($fields['timezone'])) {
             $this->fill_in_timezone($fields['timezone']);
         }
@@ -98,23 +98,23 @@ trait paper
         }
     }
 
-  /**
-   * Creates a offline paper.
-   *
-   * @param TableNode $data
-   */
+    /**
+     * Creates a offline paper.
+     *
+     * @param TableNode $data
+     */
     protected function create_offline(TableNode $data)
     {
         $fields = $data->getRowsHash();
         $this->paper_basics('Offline Paper', $fields['name']);
-      // Set the start date.
+        // Set the start date.
         $this->fill_in_date_time('f', $fields['start']);
-      // Set the end date.
+        // Set the end date.
         $this->fill_in_date_time('t', $fields['end']);
         if (isset($fields['session'])) {
             $this->fill_in_session($fields['session']);
         }
-      // Set optional fields.
+        // Set optional fields.
         if (isset($fields['timezone'])) {
             $this->fill_in_timezone($fields['timezone']);
         }
@@ -123,23 +123,23 @@ trait paper
         }
     }
 
-  /**
-   * Creates a osce paper.
-   *
-   * @param TableNode $data
-   */
+    /**
+     * Creates a osce paper.
+     *
+     * @param TableNode $data
+     */
     protected function create_osce(TableNode $data)
     {
         $fields = $data->getRowsHash();
         $this->paper_basics('OSCE Station', $fields['name']);
-      // Set the start date.
+        // Set the start date.
         $this->fill_in_date_time('f', $fields['start']);
-      // Set the end date.
+        // Set the end date.
         $this->fill_in_date_time('t', $fields['end']);
         if (isset($fields['session'])) {
             $this->fill_in_session($fields['session']);
         }
-      // Set optional fields.
+        // Set optional fields.
         if (isset($fields['timezone'])) {
             $this->fill_in_timezone($fields['timezone']);
         }
@@ -148,20 +148,20 @@ trait paper
         }
     }
 
-  /**
-   * Creates a peer review paper.
-   *
-   * @param TableNode $data
-   */
+    /**
+     * Creates a peer review paper.
+     *
+     * @param TableNode $data
+     */
     protected function create_peer_review(TableNode $data)
     {
         $fields = $data->getRowsHash();
         $this->paper_basics('Peer Review', $fields['name']);
-      // Set the start date.
+        // Set the start date.
         $this->fill_in_date_time('f', $fields['start']);
-      // Set the end date.
+        // Set the end date.
         $this->fill_in_date_time('t', $fields['end']);
-      // Set optional fields.
+        // Set optional fields.
         if (isset($fields['timezone'])) {
             $this->fill_in_timezone($fields['timezone']);
         }
@@ -170,20 +170,20 @@ trait paper
         }
     }
 
-  /**
-   * Creates a progress paper.
-   *
-   * @param TableNode $data
-   */
+    /**
+     * Creates a progress paper.
+     *
+     * @param TableNode $data
+     */
     protected function create_progress(TableNode $data)
     {
         $fields = $data->getRowsHash();
         $this->paper_basics('Progress Test', $fields['name']);
-      // Set the start date.
+        // Set the start date.
         $this->fill_in_date_time('f', $fields['start']);
-      // Set the end date.
+        // Set the end date.
         $this->fill_in_date_time('t', $fields['end']);
-      // Set optional fields.
+        // Set optional fields.
         if (isset($fields['timezone'])) {
             $this->fill_in_timezone($fields['timezone']);
         }
@@ -192,11 +192,11 @@ trait paper
         }
     }
 
-  /**
-   * Creates a summative paper.
-   *
-   * @param TableNode $data
-   */
+    /**
+     * Creates a summative paper.
+     *
+     * @param TableNode $data
+     */
     protected function create_summative(TableNode $data)
     {
         $config = \Config::get_instance();
@@ -215,11 +215,11 @@ trait paper
                 $this->fillField('notes', $fields['notes']);
             }
         } else {
-          // Set the start date.
+            // Set the start date.
             $this->fill_in_date_time('f', $fields['start']);
-          // Set the end date.
+            // Set the end date.
             $this->fill_in_date_time('t', $fields['end']);
-          // Set optional fields.
+            // Set optional fields.
             if (isset($fields['session'])) {
                 $this->fill_in_session($fields['session']);
             }
@@ -227,26 +227,26 @@ trait paper
                 $this->fill_in_timezone($fields['timezone']);
             }
         }
-      // This is present in both forms of summative creation.
+        // This is present in both forms of summative creation.
         if (isset($fields['modules'])) {
             $this->fill_in_modules($fields['modules']);
         }
     }
 
-  /**
-   * Creates a survey.
-   *
-   * @param TableNode $data
-   */
+    /**
+     * Creates a survey.
+     *
+     * @param TableNode $data
+     */
     protected function create_survey(TableNode $data)
     {
         $fields = $data->getRowsHash();
         $this->paper_basics('Survey', $fields['name']);
-      // Set the start date.
+        // Set the start date.
         $this->fill_in_date_time('f', $fields['start']);
-      // Set the end date.
+        // Set the end date.
         $this->fill_in_date_time('t', $fields['end']);
-      // Set optional fields.
+        // Set optional fields.
         if (isset($fields['timezone'])) {
             $this->fill_in_timezone($fields['timezone']);
         }
@@ -255,11 +255,11 @@ trait paper
         }
     }
 
-  /**
-   * Fills in the Date required field.
-   *
-   * @param string $month English month name
-   */
+    /**
+     * Fills in the Date required field.
+     *
+     * @param string $month English month name
+     */
     protected function fill_in_date_required($month)
     {
         $dates = ['January', 'February', 'March', 'April', 'May', 'June',
@@ -267,12 +267,12 @@ trait paper
         $this->fillField('period', array_search($month, $dates));
     }
 
-  /**
-   * Fills in a date time box.
-   *
-   * @param string $prefix The prefix for the datetime fields
-   * @param string $datestring A string that will evaluate to a valid date time object
-   */
+    /**
+     * Fills in a date time box.
+     *
+     * @param string $prefix The prefix for the datetime fields
+     * @param string $datestring A string that will evaluate to a valid date time object
+     */
     protected function fill_in_date_time($prefix, $datestring)
     {
         $date = new \DateTime($datestring);
@@ -282,12 +282,12 @@ trait paper
         $this->fillField("{$prefix}time", $date->format('His'));
     }
 
-  /**
-   * Fills in the duration fields.
-   *
-   * @param string $duration
-   * @throws Exception
-   */
+    /**
+     * Fills in the duration fields.
+     *
+     * @param string $duration
+     * @throws Exception
+     */
     protected function fill_in_duration($duration)
     {
         $duration = explode(':', $duration);
@@ -298,43 +298,43 @@ trait paper
         $this->fillField('duration_mins', $duration[1]);
     }
 
-  /**
-   * Fills in the fields which define which modules the paper is attached to.
-   *
-   * @param string $modules_string Comma separated list of module codes.
-   */
+    /**
+     * Fills in the fields which define which modules the paper is attached to.
+     *
+     * @param string $modules_string Comma separated list of module codes.
+     */
     protected function fill_in_modules($modules_string)
     {
-      // TODO: Refactor form so it will be possible to select the modules for a paper.
+        // TODO: Refactor form so it will be possible to select the modules for a paper.
     }
 
-  /**
-   * Fills in a Academic session field.
-   *
-   * @param type $session
-   */
+    /**
+     * Fills in a Academic session field.
+     *
+     * @param type $session
+     */
     protected function fill_in_session($session)
     {
         $date = new \DateTime($session);
         $this->fillField('session', $date->format('Y'));
     }
 
-  /**
-   * Fills in a timezone field for the paper.
-   *
-   * @param string $timezone
-   */
+    /**
+     * Fills in a timezone field for the paper.
+     *
+     * @param string $timezone
+     */
     protected function fill_in_timezone($timezone)
     {
         $this->fillField('timezone', $timezone);
     }
 
-  /**
-   * Fills in the first page of the paper creation dialogue.
-   *
-   * @param string $type The type of paper to be created.
-   * @param string $name The name of the paper
-   */
+    /**
+     * Fills in the first page of the paper creation dialogue.
+     *
+     * @param string $type The type of paper to be created.
+     * @param string $name The name of the paper
+     */
     protected function paper_basics($type, $name)
     {
         $this->i_click($type, 'paper_type');

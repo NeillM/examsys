@@ -41,13 +41,13 @@ class QuestionTRUE_FALSE extends QuestionEdit
         $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
         $this->_display_methods = array('vertical' => $this->_lang_strings['vertical'], 'horizontal' => $this->_lang_strings['horizontal'], 'dropdown' => $this->_lang_strings['dropdownlist']);
     
-      // 'correct' is not a unified field for True/False questions
+        // 'correct' is not a unified field for True/False questions
         $this->_fields_editable[] = 'correct';
     }
 
-  /**
-   * Get the labels for true/false options. These change depending on the score method
-   */
+    /**
+     * Get the labels for true/false options. These change depending on the score method
+     */
     public function get_tf_labels()
     {
         if (substr($this->get_display_method(), 0, 2) == 'YN') {

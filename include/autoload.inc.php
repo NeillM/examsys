@@ -27,33 +27,33 @@
  */
 class autoloader
 {
-  /**
-   * Sets up autoloading.
-   */
+    /**
+     * Sets up autoloading.
+     */
     public static function init()
     {
         spl_autoload_register(array('autoloader', 'load_class'));
         $vendordirectory = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor';
         if (file_exists($vendordirectory)) {
-          // vendor
+            // vendor
             include_once $vendordirectory . DIRECTORY_SEPARATOR . 'autoload.php';
         }
     }
 
-  /**
-   * The function that does the autoloading.
-   *
-   * @param string $class
-   */
+    /**
+     * The function that does the autoloading.
+     *
+     * @param string $class
+     */
     protected static function load_class($class)
     {
 
-      // non namespaced.
+        // non namespaced.
         $filename = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . strtolower($class) . '.class.php';
         if (file_exists($filename)) {
             include_once $filename;
         } else {
-          // subdir classes (namespaced).
+            // subdir classes (namespaced).
             $folders = explode('\\', $class);
             $classname = strtolower(array_pop($folders));
             $path = implode(DIRECTORY_SEPARATOR, $folders);
@@ -61,7 +61,7 @@ class autoloader
             if (file_exists($filename)) {
                 include_once $filename;
             } else {
-              // Plugins subdir classes.
+                // Plugins subdir classes.
                 $directory = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . '*';
                 $folders = glob($directory, GLOB_ONLYDIR);
                 foreach ($folders as $folder) {

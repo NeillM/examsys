@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
-* @package
-*/
+ *
+ * @author Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2013 The University of Nottingham
+ * @package
+ */
 
 $mandatory_editor = (isset($mandatory_leadin)) ? $mandatory_leadin : true;
 $field_editor = (isset($field_leadin)) ? $field_leadin : 'leadin';

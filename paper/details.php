@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Displays tasks for the papers frame (papers_menu.php).
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Displays tasks for the papers frame (papers_menu.php).
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 // TODO: error handling for AJAX calls
 
@@ -56,14 +56,14 @@ if ($unlock and $userObject->has_role('SysAdmin')) {
     $tmp_start_date = $tmp_date->format('Ymd' . '100000');
     $tmp_end_date = $tmp_date->format('Ymd' . '100000');
 
-  // Update the paper date so that it does not immediately re-lock
+    // Update the paper date so that it does not immediately re-lock
     $update_params = array(
     'start_date' => array('s', $tmp_start_date),
     'end_date' => array('s', $tmp_end_date)
     );
     $assessment->db_update_assessment($paperID, $update_params);
 
-  // Update the questions to take lock off
+    // Update the questions to take lock off
     $editPaper = $mysqli->prepare('UPDATE questions INNER JOIN papers ON questions.q_id = papers.question AND paper = ? SET questions.locked = NULL');
     $editPaper->bind_param('i', $paperID);
     $editPaper->execute();
@@ -76,7 +76,7 @@ $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $st
 // Redirect students to their page.
 if ($userObject->has_role('Student') and !($userObject->has_role(array('Staff', 'Admin', 'SysAdmin')))) {
     if ($properties->get_paper_type() == '2') {
-      // Display 'Page not Found' for summative exams. For these go to the proper summative exam homepage.
+        // Display 'Page not Found' for summative exams. For these go to the proper summative exam homepage.
         $contactemail = support::get_email();
         $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
         $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
@@ -96,7 +96,7 @@ $on_staff_module = false;
 if ($userObject->has_role('SysAdmin') or $paper_ownerID == $userObject->get_user_ID()) {
     $on_staff_module = true;
 } elseif ($userObject->has_role('Standards Setter')) {
-  // Do nothing
+    // Do nothing
 } else {
     $paper_modules = Paper_utils::get_modules($paperID, $mysqli);
     foreach ($paper_modules as $paper_moduleID => $paper_module) {
@@ -206,10 +206,10 @@ function checkProblems($q_type, &$temp_array, $row_no, $q_id, $tmp_excluded, $op
                 if ($has_media) {
                     $media++;
                 }
-          // All scenarions must have either a stem or all scenarios must have a media,
-          // the question will not display correctly if some have one and some the other.
-          // It is valid for them all to have one and others to have other.
-          // The question does not support gaps in the scenarios either.
+                // All scenarions must have either a stem or all scenarios must have a media,
+                // the question will not display correctly if some have one and some the other.
+                // It is valid for them all to have one and others to have other.
+                // The question does not support gaps in the scenarios either.
                 $allstems = ($stems == $part_id);
                 $allmedia = ($media == $part_id);
                 if (($has_stem or $has_media) and !($allstems or $allmedia)) {
@@ -342,7 +342,7 @@ function randomDetails($questionID, $configObject, $db)
             $old_q_media_height = $q_media_height;
         }
 
-      // Write out the last question.
+        // Write out the last question.
         $old_leadin = QuestionUtils::clean_leadin($old_leadin);
         $random_questions[$question_no]['theme'] = $old_theme;
         $random_questions[$question_no]['q_id'] = $old_q_id;
@@ -524,7 +524,7 @@ while ($result->fetch()) {
     }
 
     if ($old_p_id != $p_id or $old_display_pos != $display_pos) {
-      // Check for status that's excluded from marking
+        // Check for status that's excluded from marking
         $do_marking = ($row_no2 > 0 and !$status_array[$temp_array[$row_no2]['status']]->get_exclude_marking());
 
         if ($old_display_pos != -1) {
@@ -592,12 +592,12 @@ while ($result->fetch()) {
             $temp_array[$row_no]['random'] = randomDetails($q_id, $configObject, $mysqli);
         }
 
-      // If summative paper is locked and the question is unlocked
-      // - lock it
+        // If summative paper is locked and the question is unlocked
+        // - lock it
         if ($properties->get_summative_lock() and $locked == '') {
             QuestionUtils::lock_question($q_id, $mysqli);
-        // If summative paper is not locked and the question is locked
-        // - unlock it if it has not been answered by a student
+            // If summative paper is not locked and the question is locked
+            // - unlock it if it has not been answered by a student
         } elseif (!$properties->get_summative_lock() and $locked != '') {
             if (!QuestionUtils::question_answered_in_summative($q_id, $mysqli)) {
                 QuestionUtils::unlock_question($q_id, $mysqli);
@@ -684,7 +684,7 @@ if ($row_no > 0) {
         );
         $assessment->db_update_assessment($paperID, $update_params);
 
-      // Update standard set as marks has changed.
+        // Update standard set as marks has changed.
         $no_reviews = 0;
         $reviews = get_reviews($mysqli, 'index', $paperID, $total_marks, $no_reviews);
         foreach ($reviews as $review) {
@@ -727,7 +727,7 @@ if ($folder) {
     $links[$href] = false === strpos($folderName, ';') ? $folderName : substr($folderName, strrpos($folderName, ';') + 1);
 } else {
     if (is_null($module)) {
-      // Get the modules from paper properties
+        // Get the modules from paper properties
         $modules = Paper_utils::get_modules($paperID, $mysqli);
         $module = key($modules);
     }
@@ -967,7 +967,7 @@ if ($properties->get_retired() == '') {
         echo '</td>';
 
         echo '<td class="t">';
-    // Display position out of sync.
+        // Display position out of sync.
         if ($x <> $temp_array[$x]['display_pos']) {
             $temp_array[$x]['display_pos'] = $x;
             $editPaper = "UPDATE papers SET display_pos = $x WHERE p_id = " . $temp_array[$x]['p_id'];
@@ -1033,7 +1033,7 @@ if ($properties->get_retired() == '') {
         check_duplicates($q_screen, $string);
     }
 
-  // Final paper warnings.
+    // Final paper warnings.
     if ($properties->get_paper_type() == '2') {
         if (isset($paper_warnings['status']) and count($paper_warnings['status']) > 0) {
             $first = true;
@@ -1076,7 +1076,7 @@ if ($properties->get_retired() == '') {
         $dataset['attributes']['recache'] =  true;
     }
     $render->render($dataset, array(), 'dataset.html');
-  // JS utils dataset.
+    // JS utils dataset.
     $jsdataset['name'] = 'jsutils';
     $jsdataset['attributes']['xls'] = json_encode($string);
     $render->render($jsdataset, array(), 'dataset.html');

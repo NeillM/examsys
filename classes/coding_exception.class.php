@@ -24,11 +24,11 @@
  */
 class coding_exception extends Exception
 {
-  /**
-   * Constructor for the exception.
-   *
-   * @param string $message
-   */
+    /**
+     * Constructor for the exception.
+     *
+     * @param string $message
+     */
     public function __construct($message)
     {
         parent::__construct($message);

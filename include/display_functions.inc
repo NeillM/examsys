@@ -15,12 +15,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson, Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson, Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questions, $paperID, $db)
 {
@@ -49,7 +49,7 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
                 } else {
                     $current_answer = '';
                 }
-              // Get the ID of the question array
+                // Get the ID of the question array
                 for ($x = 0; $x < count($questions); $x++) {
                     if ($questions[$x]['q_id'] == $current_q_id) {
                         $questionID = $x;
@@ -195,7 +195,7 @@ function get_unanswered_screens($screen_no, $screen_data, $user_answers, $questi
 function display_question($configObject, &$question, $paper_type, $calculator, $current_screen, $old_q_type, &$question_no, $user_answers, &$unanswered, $texteditorplugin)
 {
     global $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $li_set, $bgcolor, $li_set, $used_questions, $user_dismiss, $user_order, $string, $language, $unanswered_color;
-  // Get the media directory object.
+    // Get the media directory object.
     $mediadirectory = rogo_directory::get_directory('media');
 
     $configObj = Config::get_instance();
@@ -205,7 +205,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     $q_id = $question['q_id'];
     $option_no = count($question['options']);
     
-  // Determine if negative marking is used.
+    // Determine if negative marking is used.
     $neg_marking = false;
     if (isset($question['object']) and method_exists($question['object'], 'is_negative_marked')) {
         $neg_marking = $question['object']->is_negative_marked();
@@ -217,7 +217,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         }
     }
 
-  // Process the order
+    // Process the order
     $question['option_order'] = array();
     if (isset($question['q_option_order']) and ($question['q_option_order'] == 'random' or $question['q_option_order'] == 'alphabetic')) {
         if (!isset($user_order[$current_screen][$q_id]) or $user_order[$current_screen][$q_id] == '') {
@@ -236,24 +236,24 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                     $question['option_order'][] = $key;
                 }
             } else {
-              // Make up the order array in the existing order
+                // Make up the order array in the existing order
                 for ($i = 0; $i < $option_no; $i++) {
                     $question['option_order'][$i] = $i;
                 }
             }
         } else {
-          // Set the order array to what is stored in the users log record
+            // Set the order array to what is stored in the users log record
             $question['option_order'] = explode(',', $user_order[$current_screen][$q_id]);
         }
 
-      // Re-arrange the options array
+        // Re-arrange the options array
         $new_options = array();
         for ($i = 0; $i < $option_no; $i++) {
             $new_options[$i] = $question['options'][$question['option_order'][$i]];
         }
         $question['options'] = $new_options;
     } else {
-      // Make up the order array in the existing order
+        // Make up the order array in the existing order
         for ($i = 0; $i < $option_no; $i++) {
             $question['option_order'][$i] = $i;
         }
@@ -319,7 +319,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         }
     }
     if ($question['q_type'] == 'info') {
-      // Special processing of Information Blocks.
+        // Special processing of Information Blocks.
         if ($li_set == 0) {
             echo '<tr><td colspan="2" style="padding-left:10px; padding-right:10px">';
         }
@@ -341,7 +341,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         $old_likert_label = '';
     }
 
-  // Pre-question processing
+    // Pre-question processing
     switch ($question['q_type']) {
         case 'enhancedcalc':
             if (isset($user_answers[$current_screen][$q_id])) {
@@ -509,7 +509,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             break;
     }
 
-  // Processing for each stem.
+    // Processing for each stem.
     foreach ($question['options'] as $display_option) {
         $part_id++;
         switch ($question['q_type']) {
@@ -609,7 +609,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 $marks += $display_option['marks_correct'];
                 break;
             case 'enhancedcalc':
-              // no options for enhanced calc now stored in settings
+                // no options for enhanced calc now stored in settings
 
                 $extra = array(
                 'num_on_screen' => $question_no,
@@ -963,7 +963,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                     }
                     echo '<p class="stem">' . $blank_details[0] . $screen_output_all . "</p>\n";
                 } else {
-                  // Dropdown lists.
+                    // Dropdown lists.
                     $no_blanks = count($blank_details);
                     echo '<p>' . $blank_details[0];
                     $blank_count = 1;
@@ -977,7 +977,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                         $blank_details[$blank_count] = substr($blank_details[$blank_count], (strpos($blank_details[$blank_count], ']') + 1));
                         $answer_options = explode('[/blank]', $blank_details[$blank_count]);
                         $answer_list = explode(',', $answer_options[0]);
-                      // Ensure that the correct answer is filtered in the same way as the user's answer.
+                        // Ensure that the correct answer is filtered in the same way as the user's answer.
                         $answer_list = param::clean_array($answer_list, param::TEXT);
                         if (isset($blank_user_answers[$part_id - 1]) and $blank_user_answers[$part_id - 1] == 'u' and $screen_pre_submitted == 1) {
                             echo '<select name="q' . $question_no . '_' . $part_id . "\" class=\"unans\">\n";
@@ -1097,7 +1097,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 }
                 $tmp_image = $mediadirectory->url($question['q_media']);
                 if ($unanswered && $tmp_answer == 'u') {
-                  // Highlight all answers as revisiting and no answers added
+                    // Highlight all answers as revisiting and no answers added
                     $tmp_answer = substr(str_repeat('u|', $hotspot_no), 0, -1);
                 }
                 ?>
@@ -1424,7 +1424,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         echo '</table>';
     }
 
-  // Write out the hidden field for the dismiss facility.
+    // Write out the hidden field for the dismiss facility.
     if (in_array($question['q_type'], array('mcq', 'mrq', 'rank'))) {
         if (isset($user_dismiss[$current_screen][$q_id]) and $user_dismiss[$current_screen][$q_id] != '') {
             echo "\n<div><input type=\"hidden\" name=\"dismiss$question_no\" id=\"dismiss$question_no\" value=\"" . $user_dismiss[$current_screen][$q_id] . "\" /></div>\n";
@@ -1433,7 +1433,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         }
     }
 
-  // Display possible marks for question (if not Survey)
+    // Display possible marks for question (if not Survey)
     if (!in_array($question['q_type'], array('hotspot', 'likert', 'info', 'enhancedcalc', 'matrix'))) {
         echo '</blockquote>';
     }

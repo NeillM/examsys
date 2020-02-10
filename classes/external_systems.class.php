@@ -15,10 +15,10 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* External Systems package
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2017 onwards The University of Nottingham
-*/
+ * External Systems package
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2017 onwards The University of Nottingham
+ */
 
 /**
  * External Systems helper class.

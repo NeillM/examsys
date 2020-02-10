@@ -28,14 +28,14 @@ class StandardSetting
 
     private $db;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
@@ -72,13 +72,13 @@ class StandardSetting
         return array('pass_score' => $pass_score, 'distinction_score' => $distinction_score);
     }
 
-  /**
-   * Get standard setting data for a paper
-   *
-   * @param $paper_id int Paper ID
-   *
-   * @return array List of standard setting entries associated with paper
-   */
+    /**
+     * Get standard setting data for a paper
+     *
+     * @param $paper_id int Paper ID
+     *
+     * @return array List of standard setting entries associated with paper
+     */
     public static function get_std_set(int $paper_id)
     {
         $db = Config::get_instance()->db;
@@ -95,19 +95,19 @@ class StandardSetting
         return $results;
     }
 
-  /**
-   * Create new standard setting data for a paper
-   *
-   * @param $paper_id int
-   * @param $setter_id int
-   * @param $std_set string
-   * @param $method string
-   * @param $group_review string
-   * @param $pass_score float
-   * @param $distinction_score float
-   *
-   * @return int New standard settings auto-increment ID
-   */
+    /**
+     * Create new standard setting data for a paper
+     *
+     * @param $paper_id int
+     * @param $setter_id int
+     * @param $std_set string
+     * @param $method string
+     * @param $group_review string
+     * @param $pass_score float
+     * @param $distinction_score float
+     *
+     * @return int New standard settings auto-increment ID
+     */
     public static function new_std_set(int $paper_id, int $setter_id, string $std_set, string $method, string $group_review, float $pass_score, float $distinction_score)
     {
         $db = Config::get_instance()->db;
@@ -119,12 +119,12 @@ class StandardSetting
         return $new_std_id;
     }
 
-  /**
-   * Copy individual question ratings from one standard set to another for the same question IDs
-   *
-   * @param $old_std_id int
-   * @param $new_std_id int
-   */
+    /**
+     * Copy individual question ratings from one standard set to another for the same question IDs
+     *
+     * @param $old_std_id int
+     * @param $new_std_id int
+     */
     protected static function copy_std_set_ratings_linked(int $old_std_id, int $new_std_id)
     {
         $db = Config::get_instance()->db;
@@ -135,12 +135,12 @@ class StandardSetting
         $std_settings_ratings_transfer->close();
     }
 
-  /**
-   * Copy individual question ratings from one standard set to another for different question IDs
-   * @param $old_std_id int
-   * @param $new_std_id int
-   * @param $qid_lookup array key/value array of old question IDs => new question IDs
-   */
+    /**
+     * Copy individual question ratings from one standard set to another for different question IDs
+     * @param $old_std_id int
+     * @param $new_std_id int
+     * @param $qid_lookup array key/value array of old question IDs => new question IDs
+     */
     protected static function copy_std_set_ratings_copied(int $old_std_id, int $new_std_id, array $qid_lookup)
     {
         $db = Config::get_instance()->db;
@@ -165,12 +165,12 @@ class StandardSetting
         $std_settings_ratings_to->close();
     }
 
-  /**
-   * Copy standard settings from one exam to another with linked questions
-   *
-   * @param $old_paper_id int
-   * @param $new_paper_id int
-   */
+    /**
+     * Copy standard settings from one exam to another with linked questions
+     *
+     * @param $old_paper_id int
+     * @param $new_paper_id int
+     */
     public static function copy_std_setting_to_paper_linked(int $old_paper_id, int $new_paper_id)
     {
         $db = Config::get_instance()->db;
@@ -190,19 +190,19 @@ class StandardSetting
         }
     }
   
-  /**
-   * Copy standard settings from one exam to another with copied questions
-   *
-   * @param $old_paper_id int
-   * @param $new_paper_id int
-   * @param $old_qids array
-   * @param $new_qids array
-   */
+    /**
+     * Copy standard settings from one exam to another with copied questions
+     *
+     * @param $old_paper_id int
+     * @param $new_paper_id int
+     * @param $old_qids array
+     * @param $new_qids array
+     */
     public static function copy_std_setting_to_paper_copied(int $old_paper_id, int $new_paper_id, array $old_qids, array $new_qids)
     {
         $std_settings_from = self::get_std_set($old_paper_id);
 
-      // Create QID lookup table
+        // Create QID lookup table
         $qid_lookup = [];
         foreach ($old_qids as $i => $qid) {
             $qid_lookup[$qid] = $new_qids[$i];

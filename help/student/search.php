@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../../include/staff_student_auth.inc';
 
@@ -132,7 +132,7 @@ if (isset($_GET['searchstring'])) {
             if ($link_no > 0) {
                 echo '<tr><td class="row1"><img src="../single_page.png" class="icon16_active" /></td><td class="row2">';
             } else {
-              // Start a new page.
+                // Start a new page.
                 if ($hit_stop > $total_hits) {
                     $hit_stop = $total_hits;
                 }

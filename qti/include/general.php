@@ -78,21 +78,21 @@ function RemoveEmptyHTMLTags($in)
 // will compare $array1 and $array2, and remove any items with a common key and put it in $common. Value that goes in $common will come from $array1
 function RemoveCommonInArray(&$array1, &$array2, &$common)
 {
-  // build a list of common keys
+    // build a list of common keys
     $commonkeys = array();
     foreach ($array1 as $key => $value) {
-      // does key exist in 2?
+        // does key exist in 2?
         if (array_key_exists($key, $array2)) {
             $commonkeys[] = $key;
         }
     }
 
-  // process common keys
+    // process common keys
     foreach ($commonkeys as $key) {
-      // copy into $common
+        // copy into $common
         $common[$key] = $array1[$key];
 
-      // remove from both arrays
+        // remove from both arrays
         unset($array1[$key]);
         unset($array2[$key]);
     }
@@ -128,7 +128,7 @@ function MatchArraySet(&$source_arrays, &$array_to_match, &$extra_value_list = a
         $match = true;
         reset($array_to_match);
         foreach ($source as $sword) {
-          //echo "Comparing source word $sword against dest word " . current($array_to_match)  . "<br>";
+            //echo "Comparing source word $sword against dest word " . current($array_to_match)  . "<br>";
             if (current($array_to_match) != $sword) {
                 $match = false;
                 break;
@@ -136,17 +136,17 @@ function MatchArraySet(&$source_arrays, &$array_to_match, &$extra_value_list = a
             next($array_to_match);
         }
 
-      //echo "Compared source, and has $match<br>";
+        //echo "Compared source, and has $match<br>";
 
-      // still have a match, if count same then return true
+        // still have a match, if count same then return true
         if ($match) {
             if (count($source) == count($array_to_match)) {
-              //echo "Matched on <br>";
-              //print_p($source);
+                //echo "Matched on <br>";
+                //print_p($source);
                 return true;
             }
 
-          // 1 extra item in array to match, compare it agains extra_value_list
+            // 1 extra item in array to match, compare it agains extra_value_list
             if (count($source) + 1 == count($array_to_match)) {
                 $extra_match = end($array_to_match);
 
@@ -162,12 +162,12 @@ function MatchArraySet(&$source_arrays, &$array_to_match, &$extra_value_list = a
         }
     }
 
-  /*echo "No match for : <br>";
-   print_p($array_to_match);
-   echo "In:";
-   print_p($source_arrays);
-   echo "Abstain values:";
-   print_p($extra_value_list);*/
+    /*echo "No match for : <br>";
+    print_p($array_to_match);
+    echo "In:";
+    print_p($source_arrays);
+    echo "Abstain values:";
+    print_p($extra_value_list);*/
 
     return false;
 }
@@ -206,7 +206,7 @@ function LogForQuestion($id)
             echo "<div style='color:#c00000'>" . $error . '</div>';
         }
     } else {
-      // only show warnings if no errors
+        // only show warnings if no errors
         if (count($warnings_load) > 0) {
             echo "<div style='color:#0000ff;font-weight:bold;'>Warning:</div>";
             foreach ($warnings_load as $warn) {
@@ -250,7 +250,7 @@ function FindQuestion(&$questions, $id)
         }
     }
     echo "<H1>Unable to find $id</H1>";
-  //print_p($questions,false);
+    //print_p($questions,false);
 }
 
 function ConvertType($type)
@@ -321,7 +321,7 @@ function for_id($in)
 
 function MakeValidHTML($in, $trim = 0)
 {
-  // remove any closing tags at start just in case
+    // remove any closing tags at start just in case
     if ($trim == 0) {
         $in = trim($in);
     }
@@ -337,7 +337,7 @@ function MakeValidHTML($in, $trim = 0)
 
     $in = $doc->saveHTML();
   
-  // Required specifically for Likert Scales but mostly harmless
+    // Required specifically for Likert Scales but mostly harmless
     $in = str_replace('<br>', '<br />', $in);
 
     $in = substr($in, strpos($in, 'XXX-START-XXX') + 13);
@@ -345,7 +345,7 @@ function MakeValidHTML($in, $trim = 0)
     if ($trim == 0) {
         $in = trim($in);
     }
-  // remove any closing tags at start just in case
+    // remove any closing tags at start just in case
     if (substr($in, 0, 2) == '</') {
         $in = substr($in, strpos($in, '>') + 1);
     }
@@ -355,14 +355,14 @@ function MakeValidHTML($in, $trim = 0)
 
 function RemoveLoneP($in)
 {
-  // some qti files have a lone . at end of <p> or <span> tags, remove it
+    // some qti files have a lone . at end of <p> or <span> tags, remove it
     $append = '';
     if (substr($in, strlen($in) - 2, 2) == '>.') {
         $in = substr($in, 0, strlen($in) - 1);
         $append = '.';
     }
 
-  //echo htmlentities("IN :!$in!")."<br>";
+    //echo htmlentities("IN :!$in!")."<br>";
     $in = trim($in);
     if (substr($in, 0, 1) == '<' && substr($in, strlen($in) - 1, 1) == '>' && strlen($in) > 10) {
         $opentag = strtolower(substr($in, 1, strpos($in, '>') - 1));

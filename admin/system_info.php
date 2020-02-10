@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../include/sysadmin_auth.inc';
 require_once '../include/sidebar_menu.inc';
@@ -251,7 +251,7 @@ if (php_uname('s') != 'Windows NT') {
         echo '<tr><td>' . $string['processor'] . "</td><td>$processor</td></tr>\n";
         echo '<tr><td>' . $string['cores'] . "</td><td>$core_no</td></tr>\n";
     } else {
-      // Try Solaris command
+        // Try Solaris command
         $results = shell_exec('psrinfo -pv');
         $lines = explode('<br />', nl2br($results));
         $physical = 0;
@@ -350,7 +350,7 @@ for ($i = 1; $i < ($row_no - 1); $i++) {
                 echo '<span style="display:block; height:11px; width:' . $bar_width . 'px; background-color:#26A0DA"></span>';  // Blue bar
             }
         }
-      // linux resutls are in kbyte blocks
+        // linux resutls are in kbyte blocks
         if (php_uname('s') != 'Windows NT') {
             $master_array[$i][3] = $master_array[$i][3] * 1024;
             $master_array[$i][1] = $master_array[$i][1] * 1024;

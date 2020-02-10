@@ -16,11 +16,11 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Admin screen to edit a plugin settings
-*
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2016 onwards The University of Nottingham
-*/
+ * Admin screen to edit a plugin settings
+ *
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2016 onwards The University of Nottingham
+ */
 
 require '../../include/sysadmin_auth.inc';
 require_once '../../include/errors.php';

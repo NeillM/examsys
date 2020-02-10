@@ -97,7 +97,7 @@ class ltilogin_auth extends outline_authentication
             return $authobj;
         }
 
-      //TODO check logic in real world situation
+        //TODO check logic in real world situation
         if ((!isset($authobj->manualsignup) or (isset($this->settings['lti_lookup_set_authobj_manualsignup_override']) and $this->settings['lti_lookup_set_authobj_manualsignup_override'] == true)) and (isset($this->settings['lti_lookup_set_authobj_manualsignup']) and $this->settings['lti_lookup_set_authobj_manualsignup'] == true)) {
             $authobj->manualsignup = true;
             $this->savetodebug('Setting the manualsignup to true on authobj');
@@ -152,12 +152,12 @@ class ltilogin_auth extends outline_authentication
         if (isset($this->settings['lti_lookup_skipusesignup']) and $this->settings['lti_lookup_skipusesignup'] == true) {
             $this->session['authenticationobj']['ltilogin']['needsuserlookup'] = false;
         } else {
-        //set session to be needing user lookup later
+            //set session to be needing user lookup later
                 $this->session['authenticationobj']['ltilogin']['needsuserlookup'] = true;
         }
 
-      // lti valid but no user id associated with it.
-      // need to authenticate the user but ignore lti & already logged in etc
+        // lti valid but no user id associated with it.
+        // need to authenticate the user but ignore lti & already logged in etc
 
         return $authobj;
     }

@@ -16,11 +16,11 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Publish marks confirmation page
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @version 1.0
-* @copyright Copyright (c) 2015 The University of Nottingham
-*/
+ * Publish marks confirmation page
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @version 1.0
+ * @copyright Copyright (c) 2015 The University of Nottingham
+ */
 
 require '../include/staff_auth.inc';
 

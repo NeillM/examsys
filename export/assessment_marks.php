@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -91,9 +91,9 @@ $csv = '';
 $row_written = 0;
 foreach ($user_results as $individual) {
     $tmp_user_ID = $individual['username'];
-  // Write out the headings.
+    // Write out the headings.
     if ($row_written == 0) {
-      // Only output personal data if assessment, do not show if survey.
+        // Only output personal data if assessment, do not show if survey.
         if ($paper_type < 3) {
             $csv .= '"' . $string['gender'] . '","' . $string['title'] . '","' . $string['surname'] . '","' . $string['firstnames'] . '","' . $string['studentid'] . '","' . $string['course'] . '","' . $string['year'] . '","' . $string['submitted'] . '"';
         } else {
@@ -103,7 +103,7 @@ foreach ($user_results as $individual) {
         foreach ($paper_buffer as $q_id => $question) {
             $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
       
-          // If a random question, get the first on the associated questions from the block. If none exist, output nothing
+            // If a random question, get the first on the associated questions from the block. If none exist, output nothing
             $skip_random = false;
             if ($question['q_type'] == 'random') {
                 if (isset($paper_buffer[$q_id]['random_questions']) and count($paper_buffer[$q_id]['random_questions']) > 0) {
@@ -171,7 +171,7 @@ foreach ($user_results as $individual) {
         $csv .= "\n";
     }
 
-  // Write out the raw data.
+    // Write out the raw data.
     if ($individual['visible'] == 1) {
         if ($paper_type < 3) {
             $csv .= '"' . $individual['gender'] . '","' . $individual['title'] . '","' . $individual['surname'] . '","' . $individual['first_names'] . '","' . $individual['student_id'] . '","' . $individual['student_grade'] . '","' . $individual['year'] . '","' . $individual['display_started'] . '"';
@@ -181,7 +181,7 @@ foreach ($user_results as $individual) {
         foreach ($paper_buffer as $q_id => $question) {
             $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
 
-          // If a random question, get the one that the user answered, otherwise just get the first and skip if none exist
+            // If a random question, get the one that the user answered, otherwise just get the first and skip if none exist
             $skip_random = false;
             if ($question['q_type'] == 'random') {
                 if (isset($paper_buffer[$q_id]['random_questions']) and count($paper_buffer[$q_id]['random_questions']) > 0) {
@@ -244,7 +244,7 @@ foreach ($user_results as $individual) {
                             }
                         }
                     } else {
-                      //if (!array_key_exists($q_id,$excluded)) $csv .= ',0';
+                        //if (!array_key_exists($q_id,$excluded)) $csv .= ',0';
                         if ($tmp_exclude{0} == '0') {
                             $csv .= ',0';
                         }

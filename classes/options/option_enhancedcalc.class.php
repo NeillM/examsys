@@ -27,7 +27,7 @@
 class OptionENHANCEDCALC extends OptionEdit
 {
 
-  // Option level pseudo-properties for Calculation
+    // Option level pseudo-properties for Calculation
     private $variable = '';
     protected $min = '';
     protected $max = '';
@@ -41,11 +41,11 @@ class OptionENHANCEDCALC extends OptionEdit
     private $_fields_ans = array('formula', 'units');
     protected $_fields_compound = array();
 
-  /**
-   * This option is not directly persisted
-   * @param int $option_number Index of this option
-   * @return boolean
-   */
+    /**
+     * This option is not directly persisted
+     * @param int $option_number Index of this option
+     * @return boolean
+     */
     public function save($option_number = 0)
     {
         $logger = new Logger($this->_mysqli);
@@ -70,67 +70,67 @@ class OptionENHANCEDCALC extends OptionEdit
             $this->clear_mods($this->_fields_ans);
         }
 
-      // Log any remaining changes
+        // Log any remaining changes
         $this->save_changes($logger, $option_number);
 
         return true;
     }
 
-  /**
-   * Is this option blank?
-   * @return boolean
-   */
+    /**
+     * Is this option blank?
+     * @return boolean
+     */
     public function is_blank()
     {
         $this->get_text();
         return ($this->min == '' and $this->max == '' and $this->formula == '' and $this->units = '');
     }
 
-  /**
-   * Check that the minimum set of fields exist in the given data to create a new option
-   * @param array $data
-   * @param array $files expects PHP FILES array
-   * @param integer $index option number
-   * @return boolean
-   */
+    /**
+     * Check that the minimum set of fields exist in the given data to create a new option
+     * @param array $data
+     * @param array $files expects PHP FILES array
+     * @param integer $index option number
+     * @return boolean
+     */
     public function minimum_fields_exist($data, $files, $index)
     {
         return ((isset($data["option_min$index"]) and $data["option_min$index"] != '') or $data["option_formula$index"] != '');
     }
 
-  // ACCESSORS
+    // ACCESSORS
 
-  /**
-   * Get the variable name for the option
-   * @return integer
-   */
+    /**
+     * Get the variable name for the option
+     * @return integer
+     */
     public function get_variable()
     {
         return $this->variable;
     }
 
-  /**
-   * Set the variable for the option
-   * @param string $value
-   */
+    /**
+     * Set the variable for the option
+     * @param string $value
+     */
     public function set_variable($value)
     {
         $this->variable = $value;
     }
 
-  /**
-   * Get the minimum value for the option
-   * @return integer
-   */
+    /**
+     * Get the minimum value for the option
+     * @return integer
+     */
     public function get_min()
     {
         return $this->min;
     }
 
-  /**
-   * Set the minimum value for the option
-   * @param integer $value
-   */
+    /**
+     * Set the minimum value for the option
+     * @param integer $value
+     */
     public function set_min($value)
     {
         if ($value != $this->min) {
@@ -139,19 +139,19 @@ class OptionENHANCEDCALC extends OptionEdit
         }
     }
 
-  /**
-   * Get the maximum value for the option
-   * @return integer
-   */
+    /**
+     * Get the maximum value for the option
+     * @return integer
+     */
     public function get_max()
     {
         return $this->max;
     }
 
-  /**
-   * Set the maximum value for the option
-   * @param integer $value
-   */
+    /**
+     * Set the maximum value for the option
+     * @param integer $value
+     */
     public function set_max($value)
     {
         if ($value != $this->max) {
@@ -160,19 +160,19 @@ class OptionENHANCEDCALC extends OptionEdit
         }
     }
 
-  /**
-   * Get the number of decimal places for the option
-   * @return integer
-   */
+    /**
+     * Get the number of decimal places for the option
+     * @return integer
+     */
     public function get_decimals()
     {
         return $this->decimals;
     }
 
-  /**
-   * Set the number of decimal places for the option
-   * @param integer $value
-   */
+    /**
+     * Set the number of decimal places for the option
+     * @param integer $value
+     */
     public function set_decimals($value)
     {
         if ($value != $this->decimals) {
@@ -181,19 +181,19 @@ class OptionENHANCEDCALC extends OptionEdit
         }
     }
 
-  /**
-   * Get the increment for the option
-   * @return integer
-   */
+    /**
+     * Get the increment for the option
+     * @return integer
+     */
     public function get_increment()
     {
         return $this->increment;
     }
 
-  /**
-   * Set the increment for the option
-   * @param integer $value
-   */
+    /**
+     * Set the increment for the option
+     * @param integer $value
+     */
     public function set_increment($value)
     {
         if ($value != $this->increment) {
@@ -202,19 +202,19 @@ class OptionENHANCEDCALC extends OptionEdit
         }
     }
 
-  /**
-   * Get the formula for the option
-   * @return string
-   */
+    /**
+     * Get the formula for the option
+     * @return string
+     */
     public function get_formula()
     {
         return $this->formula;
     }
 
-  /**
-   * Set the formula for the option
-   * @param string $value
-   */
+    /**
+     * Set the formula for the option
+     * @param string $value
+     */
     public function set_formula($value)
     {
         if ($value != $this->formula) {
@@ -223,19 +223,19 @@ class OptionENHANCEDCALC extends OptionEdit
         }
     }
 
-  /**
-   * Get the units for the option
-   * @return string
-   */
+    /**
+     * Get the units for the option
+     * @return string
+     */
     public function get_units()
     {
         return $this->units;
     }
 
-  /**
-   * Set the units for the option
-   * @param string $value
-   */
+    /**
+     * Set the units for the option
+     * @param string $value
+     */
     public function set_units($value)
     {
         if ($value != $this->units) {
@@ -244,65 +244,65 @@ class OptionENHANCEDCALC extends OptionEdit
         }
     }
 
-  /**
-   * Dummy method for required settings for corrector
-   * @return array
-   */
+    /**
+     * Dummy method for required settings for corrector
+     * @return array
+     */
     public function get_all_corrects()
     {
         return array();
     }
 
-  /**
-   * Dummy method for required settings for corrector
-   */
+    /**
+     * Dummy method for required settings for corrector
+     */
     public function set_all_corrects()
     {
-      // Do nothing
+        // Do nothing
     }
 
-  /**
-   * Dummy method for required settings for corrector
-   * @return string
-   */
+    /**
+     * Dummy method for required settings for corrector
+     * @return string
+     */
     public function get_option_formula()
     {
         return '';
     }
 
-  /**
-   * Dummy method for required settings for corrector
-   */
+    /**
+     * Dummy method for required settings for corrector
+     */
     public function set_option_formula()
     {
-      // Do nothing
+        // Do nothing
     }
 
-  /**
-   * Dummy method for required settings for corrector
-   * @return string
-   */
+    /**
+     * Dummy method for required settings for corrector
+     * @return string
+     */
     public function get_option_units()
     {
         return '';
     }
 
-  /**
-   * Dummy method for required settings for corrector
-   */
+    /**
+     * Dummy method for required settings for corrector
+     */
     public function set_option_units()
     {
-      // Do nothing
+        // Do nothing
     }
 
-  // PRIVATE / PROTECTED METHODS
+    // PRIVATE / PROTECTED METHODS
 
 
-  /**
-   * Track the addition of a new variable.
-   * @param Logger $logger
-   * @param integer $option_number
-   */
+    /**
+     * Track the addition of a new variable.
+     * @param Logger $logger
+     * @param integer $option_number
+     */
     protected function track_new_var($logger, $option_number)
     {
         if ($this->min != '') {
@@ -310,11 +310,11 @@ class OptionENHANCEDCALC extends OptionEdit
         }
     }
 
-  /**
-   * Track the addition of a new answer.
-   * @param Logger $logger
-   * @param integer $option_number
-   */
+    /**
+     * Track the addition of a new answer.
+     * @param Logger $logger
+     * @param integer $option_number
+     */
     protected function track_new_ans($logger, $option_number)
     {
         if ($this->formula != '') {
@@ -322,44 +322,44 @@ class OptionENHANCEDCALC extends OptionEdit
         }
     }
 
-  /**
-   * Track the change of an option.  The message may be different in other question types so allow this method to be overridden
-   * @param Logger $logger
-   * @param integer $option_number
-   * @param mixed $old
-   * @param mixed $new
-   * @param string $field
-   */
+    /**
+     * Track the change of an option.  The message may be different in other question types so allow this method to be overridden
+     * @param Logger $logger
+     * @param integer $option_number
+     * @param mixed $old
+     * @param mixed $new
+     * @param string $field
+     */
     protected function track_change($logger, $option_number, $old, $new, $field)
     {
         $logger->track_change($this->_lang_strings['edit'] . ' ' . ucwords($field), $this->question_id, $this->_user_id, $old, $new, $this->_lang_strings['variable'] . chr(64 + $option_number));
     }
 
-  /**
-   * Track the deletion of an option
-   * @param Logger $logger
-   * @param integer $option_number
-   */
+    /**
+     * Track the deletion of an option
+     * @param Logger $logger
+     * @param integer $option_number
+     */
     protected function track_delete_var($logger, $option_number)
     {
         $logger->track_change($this->_lang_strings['deletedvar'], $this->question_id, $this->_user_id, '', '', $this->_lang_strings['variable'] . chr(64 + $option_number));
     }
 
-  /**
-   * Track the deletion of an option
-   * @param Logger $logger
-   * @param integer $option_number
-   */
+    /**
+     * Track the deletion of an option
+     * @param Logger $logger
+     * @param integer $option_number
+     */
     protected function track_delete_ans($logger, $option_number)
     {
         $logger->track_change($this->_lang_strings['deletedanswer'], $this->question_id, $this->_user_id, '', '', $this->_lang_strings['answer'] . ' ' . $option_number);
     }
 
-  /**
-   * Check if this is a new variable or answer by comparing the old values of the relevant fields
-   * @param array $fields Fields to compare
-   * @return bool
-   */
+    /**
+     * Check if this is a new variable or answer by comparing the old values of the relevant fields
+     * @param array $fields Fields to compare
+     * @return bool
+     */
     private function is_new($fields)
     {
         foreach ($fields as $varfield) {
@@ -371,11 +371,11 @@ class OptionENHANCEDCALC extends OptionEdit
         return true;
     }
 
-  /**
-   * Check if this is a new variable or answer by comparing the old values of the relevant fields
-   * @param array $fields Fields to compare
-   * @return bool
-   */
+    /**
+     * Check if this is a new variable or answer by comparing the old values of the relevant fields
+     * @param array $fields Fields to compare
+     * @return bool
+     */
     private function is_deleted($fields)
     {
         foreach ($fields as $varfield) {
@@ -387,10 +387,10 @@ class OptionENHANCEDCALC extends OptionEdit
         return true;
     }
 
-  /**
-   * Clear the modification records for the given fields. Used when we have a new variable or answer
-   * @param array $fields Fields to clear
-   */
+    /**
+     * Clear the modification records for the given fields. Used when we have a new variable or answer
+     * @param array $fields Fields to clear
+     */
     private function clear_mods($fields)
     {
         foreach ($fields as $varfield) {
@@ -400,18 +400,18 @@ class OptionENHANCEDCALC extends OptionEdit
         }
     }
 
-  /*
-   * Get post parameters for option_min field
-   * @param integer $option_no option number
-   * @return array parsed post data
-   */
+    /*
+    * Get post parameters for option_min field
+    * @param integer $option_no option number
+    * @return array parsed post data
+    */
     public function get_post_min($option_no)
     {
-      // Variable defintion for calculation questions.
-      // Can be a link to another variable i.e. $A,
-      // a floating point or integer number i.e. 10.1,
-      // a link to another questions answer or variable i.e. ans10 or var$A99,
-      // a simple formula using [+,-,*,/] i.e. $A/$B
+        // Variable defintion for calculation questions.
+        // Can be a link to another variable i.e. $A,
+        // a floating point or integer number i.e. 10.1,
+        // a link to another questions answer or variable i.e. ans10 or var$A99,
+        // a simple formula using [+,-,*,/] i.e. $A/$B
         $option['option_min' . $option_no] = param::optional(
             'option_min' . $option_no,
             null,
@@ -426,18 +426,18 @@ class OptionENHANCEDCALC extends OptionEdit
         return $option;
     }
   
-  /*
-   * Get post parameters for option_max field
-   * @param integer $option_no option number
-   * @return array parsed post data
-   */
+    /*
+    * Get post parameters for option_max field
+    * @param integer $option_no option number
+    * @return array parsed post data
+    */
     public function get_post_max($option_no)
     {
-      // Variable defintion for calculation questions.
-      // Can be a link to another variable i.e. $A,
-      // a floating point or integer number i.e. 10.1,
-      // a link to another questions answer or variable i.e. ans10 or var$A99,
-      // a simple formula using [+,-,*,/] i.e. $A/$B
+        // Variable defintion for calculation questions.
+        // Can be a link to another variable i.e. $A,
+        // a floating point or integer number i.e. 10.1,
+        // a link to another questions answer or variable i.e. ans10 or var$A99,
+        // a simple formula using [+,-,*,/] i.e. $A/$B
         $option['option_max' . $option_no] = param::optional(
             'option_max' . $option_no,
             null,
@@ -451,11 +451,11 @@ class OptionENHANCEDCALC extends OptionEdit
         return $option;
     }
   
-  /*
-   * Get post parameters for option_decimals field
-   * @param integer $option_no option number
-   * @return array parsed post data
-   */
+    /*
+    * Get post parameters for option_decimals field
+    * @param integer $option_no option number
+    * @return array parsed post data
+    */
     public function get_post_decimals($option_no)
     {
         $option['option_decimals' . $option_no] = param::optional(
@@ -468,33 +468,33 @@ class OptionENHANCEDCALC extends OptionEdit
         return $option;
     }
   
-  /*
-   * Get post parameters for option_increment field
-   * @param integer $option_no option number
-   * @return array parsed post data
-   */
+    /*
+    * Get post parameters for option_increment field
+    * @param integer $option_no option number
+    * @return array parsed post data
+    */
     public function get_post_increment($option_no)
     {
         $option['option_increment' . $option_no] = param::optional('option_increment' . $option_no, null, param::FLOAT, param::FETCH_POST);
         return $option;
     }
   
-  /*
-   * Get post parameters for option_formula field
-   * @param integer $option_no option number
-   * @return array parsed post data
-   */
+    /*
+    * Get post parameters for option_formula field
+    * @param integer $option_no option number
+    * @return array parsed post data
+    */
     public function get_post_formula($option_no)
     {
         $option['option_formula' . $option_no] = param::optional('option_formula' . $option_no, null, param::TEXT, param::FETCH_POST);
         return $option;
     }
   
-  /*
-   * Get post parameters for option_units field
-   * @param integer $option_no option number
-   * @return array parsed post data
-   */
+    /*
+    * Get post parameters for option_units field
+    * @param integer $option_no option number
+    * @return array parsed post data
+    */
     public function get_post_units($option_no)
     {
         $option['option_units' . $option_no] = param::optional(

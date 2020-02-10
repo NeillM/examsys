@@ -23,34 +23,34 @@
  */
 class PaperPropertiesGetUsersTest extends testing\unittest\unittestdatabase
 {
-  /**
-   * The students used in each test.
-   *
-   * @var array $student1
-   * @var array $student2
-   * @var array $student3
-   */
+    /**
+     * The students used in each test.
+     *
+     * @var array $student1
+     * @var array $student2
+     * @var array $student3
+     */
     protected $student1, $student2, $student3;
 
-  /**
-   * The modules used in tests.
-   *
-   * @var array $module1
-   * @var array $module2
-   */
+    /**
+     * The modules used in tests.
+     *
+     * @var array $module1
+     * @var array $module2
+     */
     protected $module1, $module2;
 
-  /**
-   * The current academic session
-   * @var integer $currentsession
-   */
+    /**
+     * The current academic session
+     * @var integer $currentsession
+     */
     protected $currentsession;
 
-  /**
-   * Generate common data for test.
-   *
-   * @throws \testing\datagenerator\not_found
-   */
+    /**
+     * Generate common data for test.
+     *
+     * @throws \testing\datagenerator\not_found
+     */
     public function datageneration(): void
     {
         $yearutils = new \yearutils($this->db);
@@ -68,11 +68,11 @@ class PaperPropertiesGetUsersTest extends testing\unittest\unittestdatabase
         $modgen->create_enrolment(['moduleid' => $this->module2['id'], 'userid' => $this->student3['id']]);
     }
 
-  /**
-   * Tests users on a single module with a defined year.
-   *
-   * @group paper
-   */
+    /**
+     * Tests users on a single module with a defined year.
+     *
+     * @group paper
+     */
     public function test_basic()
     {
         $admin = $this->get_base_admin();
@@ -91,18 +91,18 @@ class PaperPropertiesGetUsersTest extends testing\unittest\unittestdatabase
         self::assertEquals(2, $userlist->length());
 
         $users = $userlist->get_all();
-      // Students should be returned alphabetically by surname.
+        // Students should be returned alphabetically by surname.
         self::assertEquals($this->student2['id'], $users[0]->id);
         self::assertEquals($this->student1['id'], $users[1]->id);
     }
 
-  /**
-   * Tests a paper on multiple courses with a defined year.
-   *
-   * Some students will be in more than one of the modules, they should only be returned a single time.
-   *
-   * @group paper
-   */
+    /**
+     * Tests a paper on multiple courses with a defined year.
+     *
+     * Some students will be in more than one of the modules, they should only be returned a single time.
+     *
+     * @group paper
+     */
     public function test_multiple_modules()
     {
         $admin = $this->get_base_admin();
@@ -121,27 +121,27 @@ class PaperPropertiesGetUsersTest extends testing\unittest\unittestdatabase
         self::assertEquals(3, $userlist->length());
 
         $users = $userlist->get_all();
-      // Students should be returned alphabetically by surname without duplication.
+        // Students should be returned alphabetically by surname without duplication.
         self::assertEquals($this->student2['id'], $users[0]->id);
         self::assertEquals($this->student3['id'], $users[1]->id);
         self::assertEquals($this->student1['id'], $users[2]->id);
     }
 
-  /**
-   * Tests a paper that requires students with specific meta data.
-   *
-   * @group paper
-   */
+    /**
+     * Tests a paper that requires students with specific meta data.
+     *
+     * @group paper
+     */
     public function test_metadata()
     {
         $datagenerator = $this->get_datagenerator('academic_year', 'core');
         $oldyear = $datagenerator->create_academic_year(array('calendar_year' => 2017, 'academic_year' => '2017/18'));
-      // Create a student with metadata.
+        // Create a student with metadata.
         $usergen = $this->get_datagenerator('users', 'core');
         $student = $usergen->create_user(['roles' => 'Student', 'sid' => '64537', 'surname' => 'Appleton']);
         $modgen = $this->get_datagenerator('modules', 'core');
         $modgen->create_enrolment(['moduleid' => $this->module1['id'], 'userid' => $student['id']]);
-      // Create the paper with meta data.
+        // Create the paper with meta data.
         $admin = $this->get_base_admin();
         $paperparams = [
         'papertitle' => 'Paper 1',
@@ -153,12 +153,12 @@ class PaperPropertiesGetUsersTest extends testing\unittest\unittestdatabase
         $papergen = $this->get_datagenerator('papers', 'core');
         $paper = $papergen->create_paper($paperparams);
         $papergen->create_metadata($paper['id'], ['name' => 'Group', 'value' => 'Theta']);
-      // Add metadata to a student on another module.
+        // Add metadata to a student on another module.
         $metadata = ['type' => 'Group', 'value' => 'Theta', 'calendar_year' => $paper['session']];
         $usergen->create_metadata($student['id'], $this->module1['id'], $metadata);
-      // Student will have matching meta data on another module.
+        // Student will have matching meta data on another module.
         $usergen->create_metadata($this->student2['id'], $this->module2['id'], $metadata);
-      // Student will have matching meta data in another year.
+        // Student will have matching meta data in another year.
         $othermetadata = ['type' => 'Group', 'value' => 'Theta', 'calendar_year' => $oldyear['calendar_year']];
         $usergen->create_metadata($this->student1['id'], $this->module1['id'], $othermetadata);
 

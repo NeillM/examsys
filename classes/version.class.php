@@ -15,10 +15,10 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Rogo version helper functions
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2016 onwards The University of Nottingham
-*/
+ * Rogo version helper functions
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2016 onwards The University of Nottingham
+ */
 
 /**
  * Version class

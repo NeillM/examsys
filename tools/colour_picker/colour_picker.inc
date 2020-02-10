@@ -16,15 +16,15 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Displays the popup DIV which contains colour swatches for selection.
-* Can further call 'more_colours.php' in a new window for event more colours.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Displays the popup DIV which contains colour swatches for selection.
+ * Can further call 'more_colours.php' in a new window for event more colours.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 ?>
 

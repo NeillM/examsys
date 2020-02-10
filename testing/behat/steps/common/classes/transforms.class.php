@@ -32,33 +32,33 @@ use Behat\Gherkin\Node\PyStringNode,
  */
 trait transforms
 {
-  /**
-   * Converts a string that starts with array: and then a comma seperated list of
-   * letters, numbers, underscores and hyphens, closed by a semi-colon into an array.
-   *
-   * For example:
-   *
-   * from:
-   * array:value1,boo;
-   * into:
-   * array('value1', 'boo');
-   *
-   * from:
-   * array: value1, boo;
-   * into:
-   * array('value1', 'boo');
-   *
-   * @Transform /^array:\s?((?:[\w\d-]+(?:,\s?)?)+);$/
-   * @param string $string The value of the capture group from the regular expression.
-   * @return array
-   */
+    /**
+     * Converts a string that starts with array: and then a comma seperated list of
+     * letters, numbers, underscores and hyphens, closed by a semi-colon into an array.
+     *
+     * For example:
+     *
+     * from:
+     * array:value1,boo;
+     * into:
+     * array('value1', 'boo');
+     *
+     * from:
+     * array: value1, boo;
+     * into:
+     * array('value1', 'boo');
+     *
+     * @Transform /^array:\s?((?:[\w\d-]+(?:,\s?)?)+);$/
+     * @param string $string The value of the capture group from the regular expression.
+     * @return array
+     */
     public function cast_to_array($string)
     {
-      // Get rid of array from the start and ; from the end of the string.
+        // Get rid of array from the start and ; from the end of the string.
         $temporary_array = explode(',', $string);
         $return = array();
         foreach ($temporary_array as $value) {
-          // Remove any white space from the front and end.
+            // Remove any white space from the front and end.
             $trimmed = trim($value);
             if ($trimmed === 'null') {
                 // A string of null should be set to be a value of null.

@@ -15,27 +15,27 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Utility class for useful string functions
-*
-* @author Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Utility class for useful string functions
+ *
+ * @author Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 class StringUtils
 {
-  /**
-   * Return true if string $string end with $test
-   *
-   * From mcrumley on StackOverflow
-   * http://stackoverflow.com/questions/619610/whats-the-most-efficient-test-of-whether-a-php-string-ends-with-another-string
-   *
-   * @static
-   * @param $string
-   * @param $test
-   * @return bool
-   */
+    /**
+     * Return true if string $string end with $test
+     *
+     * From mcrumley on StackOverflow
+     * http://stackoverflow.com/questions/619610/whats-the-most-efficient-test-of-whether-a-php-string-ends-with-another-string
+     *
+     * @static
+     * @param $string
+     * @param $test
+     * @return bool
+     */
     public static function ends_with($string, $test)
     {
         $strlen = strlen($string);
@@ -73,11 +73,11 @@ class StringUtils
         return $suffix;
     }
 
-  /**
-   * Remove special characters and trim a string
-   * @param  string $string Subject string
-   * @return string         Cleaned version of the string
-   */
+    /**
+     * Remove special characters and trim a string
+     * @param  string $string Subject string
+     * @return string         Cleaned version of the string
+     */
     public static function clean_and_trim($string)
     {
         $searches = array('&nbsp;');
@@ -88,11 +88,11 @@ class StringUtils
         return trim($string);
     }
 
-  /**
-   * Convert characters in MS Word format to UTF8
-   * @param  string $str Input string
-   * @return string      Input string with Word characters converted to UTF8 equivalent
-   */
+    /**
+     * Convert characters in MS Word format to UTF8
+     * @param  string $str Input string
+     * @return string      Input string with Word characters converted to UTF8 equivalent
+     */
     public static function wordToUtf8($str)
     {
         $wordChr = array(

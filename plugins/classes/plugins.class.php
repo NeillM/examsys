@@ -18,11 +18,11 @@
 namespace plugins;
 
 /**
-* Plugin functionality
-*
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2016 onwards The University of Nottingham
-*/
+ * Plugin functionality
+ *
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2016 onwards The University of Nottingham
+ */
 
 /**
  * Abstract plugin class.
@@ -67,9 +67,9 @@ abstract class plugins
      */
     protected $plugin_type;
      /**
-     * Language pack component.
-     * @var string
-     */
+      * Language pack component.
+      * @var string
+      */
     protected $langcomponent;
     /**
      * Path to plugin.

@@ -15,14 +15,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Utilities for AJAX methods
-*
-* @author Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Utilities for AJAX methods
+ *
+ * @author Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
  
 
 class AJAXUtils

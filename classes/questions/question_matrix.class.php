@@ -40,37 +40,37 @@ class QuestionMATRIX extends QuestionEdit
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
     
-      // 'correct' is not a unified field for Matrix because it is compound
+        // 'correct' is not a unified field for Matrix because it is compound
         $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
     }
 
 
-  // ACCESSORS
+    // ACCESSORS
   
-  /**
-   * Get an array of stems for the compounded scenarios
-   * @return multitype:
-   */
+    /**
+     * Get an array of stems for the compounded scenarios
+     * @return multitype:
+     */
     public function get_all_stems()
     {
         $this->get_scenario();
         return $this->stems;
     }
   
-  /**
-   * Compound the stems into a single string and set as the scenario
-   * @return multitype:
-   */
+    /**
+     * Compound the stems into a single string and set as the scenario
+     * @return multitype:
+     */
     public function set_all_stems($value)
     {
         $this->stems = $value;
         $this->set_scenario('dummy');
     }
   
-  /**
-   * Get the question scenario
-   * @return string
-   */
+    /**
+     * Get the question scenario
+     * @return string
+     */
     public function get_scenario()
     {
         if ($this->scenario != '') {
@@ -79,10 +79,10 @@ class QuestionMATRIX extends QuestionEdit
         return $this->scenario;
     }
 
-  /**
-   * Set the question scenario
-   * @param string $value
-   */
+    /**
+     * Set the question scenario
+     * @param string $value
+     */
     public function set_scenario($value)
     {
         $this->scenario = implode('|', $this->stems);

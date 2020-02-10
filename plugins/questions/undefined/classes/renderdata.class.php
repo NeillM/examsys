@@ -30,18 +30,18 @@ class renderdata extends \questiondata
 {
     use \defaultgetmarks;
 
-  /**
-   * Constructor
-   */
+    /**
+     * Constructor
+     */
     function __construct()
     {
         parent::__construct();
         $this->questiontype = 'undefined';
     }
 
-  /**
-   * Disable/Enable display of question header sections for template rendering
-   */
+    /**
+     * Disable/Enable display of question header sections for template rendering
+     */
     public function set_question_head()
     {
         $this->displayscenario = false;
@@ -51,38 +51,38 @@ class renderdata extends \questiondata
         $this->displayleadin = true;
     }
 
-  /**
-   * Question level settings for template rendering
-   * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   * @param mixed $useranswer user answer
-   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
-   */
+    /**
+     * Question level settings for template rendering
+     * @param boolean $screen_pre_submitted has the user submitted and answer previously
+     * @param mixed $useranswer user answer
+     * @param string $userdismissed list of enable/disable flag for options the user has dismissed
+     */
     public function set_question($screen_pre_submitted, $useranswer, $userdismissed)
     {
-      // Nothing to do.
+        // Nothing to do.
     }
 
-  /**
-   * Option level settings for template rendering
-   * @param integer $part_id part loop id
-   * @param mixed $useranswer user answer
-   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
-   * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   */
+    /**
+     * Option level settings for template rendering
+     * @param integer $part_id part loop id
+     * @param mixed $useranswer user answer
+     * @param string $userdismissed list of enable/disable flag for options the user has dismissed
+     * @param boolean $screen_pre_submitted has the user submitted and answer previously
+     */
     public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
     {
-      // Nothing to do.
+        // Nothing to do.
     }
 
-  /**
-   * Additional option level settings for template rendering
-   * @param integer $part_id part loop id
-   * @param mixed $useranswer user answer
-   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
-   * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   */
+    /**
+     * Additional option level settings for template rendering
+     * @param integer $part_id part loop id
+     * @param mixed $useranswer user answer
+     * @param string $userdismissed list of enable/disable flag for options the user has dismissed
+     * @param boolean $screen_pre_submitted has the user submitted and answer previously
+     */
     public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
     {
-      // Nothing to do.
+        // Nothing to do.
     }
 }

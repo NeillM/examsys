@@ -29,25 +29,25 @@ namespace csv;
 class csv_handler extends \file_handler
 {
 
-  /**
-   * The header that is required by the file.
-   * @var array
-   */
+    /**
+     * The header that is required by the file.
+     * @var array
+     */
     protected $required_header;
 
-  /**
-   * The header of the file.
-   * @var array
-   */
+    /**
+     * The header of the file.
+     * @var array
+     */
     protected $header;
 
-  /**
-   * Move upload file to tmp dir
-   * @param string $from upload file
-   * @param string $to temp file location
-   * @throws csv_load_exception
-   * @return string
-   */
+    /**
+     * Move upload file to tmp dir
+     * @param string $from upload file
+     * @param string $to temp file location
+     * @throws csv_load_exception
+     * @return string
+     */
     public static function move_upload_to_temp($from, $to)
     {
         $langpack = new \langpack();
@@ -82,57 +82,57 @@ class csv_handler extends \file_handler
         return $to;
     }
 
-  /**
-   * Set a header required by the file for it to validate.
-   *
-   * @param array $headers
-   */
+    /**
+     * Set a header required by the file for it to validate.
+     *
+     * @param array $headers
+     */
     public function required_header(array $headers)
     {
         $this->required_header = $headers;
     }
 
-  /**
-   * Opens the file for reading, and verifies the header.
-   *
-   * @throws csv_load_exception
-   */
+    /**
+     * Opens the file for reading, and verifies the header.
+     *
+     * @throws csv_load_exception
+     */
     public function load()
     {
-      // Check the file exists and is readable.
+        // Check the file exists and is readable.
         if (!file_exists($this->file)) {
             throw new csv_load_exception($this->file . $this->string['doesnotexist']);
         }
         if (!is_readable($this->file)) {
             throw new csv_load_exception($this->file . $this->string['cannotberead']);
         }
-      // Open the file.
+        // Open the file.
         $this->read_file_handle = fopen($this->file, 'r');
-      // The first line should be the header of the file.
+        // The first line should be the header of the file.
         $this->header = fgetcsv($this->read_file_handle);
         if (!$this->verify_header()) {
             throw new csv_load_exception($this->file . $this->string['invalidheaders']);
         }
     }
 
-  /**
-   * Gets a line of data from the csv file as an associative
-   * array where the values are keyed by the headers.
-   *
-   * @return array
-   * @throws csv_load_exception
-   */
+    /**
+     * Gets a line of data from the csv file as an associative
+     * array where the values are keyed by the headers.
+     *
+     * @return array
+     * @throws csv_load_exception
+     */
     public function get_line()
     {
         if (!isset($this->read_file_handle)) {
-          // The file has not been opened for reading.
+            // The file has not been opened for reading.
             $this->load();
         }
         $line = fgetcsv($this->read_file_handle);
         $return = array();
         if (!empty($line)) {
-          // Create an associative array of the csv line, where the
-          // keys match the header of their row.
+            // Create an associative array of the csv line, where the
+            // keys match the header of their row.
             foreach ($this->header as $key => $value) {
                 $return[$value] = $line[$key];
             }
@@ -140,18 +140,18 @@ class csv_handler extends \file_handler
         return $return;
     }
 
-  /**
-   * Check that the csv file has a the required headers.
-   *
-   * @return boolean true if the header validates
-   */
+    /**
+     * Check that the csv file has a the required headers.
+     *
+     * @return boolean true if the header validates
+     */
     protected function verify_header()
     {
         if (empty($this->header)) {
-          // No header is set.
+            // No header is set.
             $valid = false;
         } elseif (!isset($this->required_header)) {
-          // A specific header is not required, so any values are great.
+            // A specific header is not required, so any values are great.
             $valid = true;
         } else {
             $found = 0;
@@ -161,23 +161,23 @@ class csv_handler extends \file_handler
                 }
             }
             if ($found === count($this->required_header)) {
-              // The header is as required.
+                // The header is as required.
                 $valid = true;
             } else {
-              // The header is not as required.
+                // The header is not as required.
                 $valid = false;
             }
         }
         return $valid;
     }
 
-  /**
-   * Create the temp csv file with the required header row.
-   * @throws csv_write_exception
-   */
+    /**
+     * Create the temp csv file with the required header row.
+     * @throws csv_write_exception
+     */
     public function create()
     {
-      // We create a temp file so we can check it has been created successfully before allowing the user to download it.
+        // We create a temp file so we can check it has been created successfully before allowing the user to download it.
         if ($this->write_file_handle !== false) {
             if (!empty($this->required_header)) {
                 if (fputcsv($this->write_file_handle, $this->required_header) === false) {
@@ -193,11 +193,11 @@ class csv_handler extends \file_handler
         }
     }
 
-  /**
-   * Writes an array as a line in the temp csv file.
-   * @param array $line
-   * @throws csv_write_exception
-   */
+    /**
+     * Writes an array as a line in the temp csv file.
+     * @param array $line
+     * @throws csv_write_exception
+     */
     public function write_line(array $line)
     {
         if (!isset($this->write_file_handle)) {
@@ -213,9 +213,9 @@ class csv_handler extends \file_handler
         }
     }
 
-  /**
-   * Set csv file headers
-   */
+    /**
+     * Set csv file headers
+     */
     public function set_headers()
     {
         header('Content-Type: text/csv');

@@ -34,32 +34,32 @@ interface iCMAPI
     const LEVEL_SESSION = 0;
     const LEVEL_MODULE = 1;
 
-  /**
-   * Return objectives from the remote system
-   * @param string $moduleID module code
-   * @param integer $session academic session
-   * @param mysqli $db database connection
-   * @return mixed Array of session and objective data in format required by Rogō
-   */
+    /**
+     * Return objectives from the remote system
+     * @param string $moduleID module code
+     * @param integer $session academic session
+     * @param mysqli $db database connection
+     * @return mixed Array of session and objective data in format required by Rogō
+     */
     public function getObjectives($moduleID, $session, $db);
 
-  /**
-   * Get a friendly name for the source system, with the indefinite article if required
-   * @param bool $a     Include the definite article?
-   * @param bool $long  Return the long form of the name?
-   * @return string     The name in the required format
-   */
+    /**
+     * Get a friendly name for the source system, with the indefinite article if required
+     * @param bool $a     Include the definite article?
+     * @param bool $long  Return the long form of the name?
+     * @return string     The name in the required format
+     */
     public function getFriendlyName($a = false, $long = false);
 
-  /**
-   * Get the levels of mapping that are supported by this class
-   * @return array Array of mapping levels supported
-   */
+    /**
+     * Get the levels of mapping that are supported by this class
+     * @return array Array of mapping levels supported
+     */
     public function getMappingLevels();
 
-  /**
-   * Set the mapping level at which the class should work
-   * @param integer $level Mapping level
-   */
+    /**
+     * Set the mapping level at which the class should work
+     * @param integer $level Mapping level
+     */
     public function setMappingLevel($level);
 }

@@ -16,14 +16,14 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* This is the peer review form that students use.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * This is the peer review form that students use.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../include/staff_student_auth.inc';
 require_once '../include/errors.php';
@@ -106,10 +106,10 @@ if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)) {
 }
 
 if ($userObject->has_role('Student')) {
-  // Check time security
+    // Check time security
     check_datetime($start_date, $end_date, $string, $mysqli);
 
-  // Check room security
+    // Check room security
     $paper_type = '6';
     $low_bandwidth = check_labs(
         $paper_type,
@@ -120,7 +120,7 @@ if ($userObject->has_role('Student')) {
         $mysqli
     );
 
-  // Check for additional password on the paper
+    // Check for additional password on the paper
     check_paper_password($propertyObj->get_property_id(), $password, $string, $mysqli, true);
 }
 
@@ -214,7 +214,7 @@ if ($group == '') {
 </head>
 <?php
 if (isset($_POST['submit'])) {
-  // Check for any previously saved records.
+    // Check for any previously saved records.
     $result = $mysqli->prepare('SELECT id, peerID, q_id, rating FROM log6 WHERE reviewerID = ? AND paperID = ?');
     $result->bind_param('ii', $userObject->get_user_ID(), $property_id);
     $result->execute();
@@ -231,7 +231,7 @@ if (isset($_POST['submit'])) {
     $current_time = date('YmdHis');
 
     if ($review == '1') {
-      // Get the other users in the same group.
+        // Get the other users in the same group.
         $result = $mysqli->prepare('SELECT username, title, surname, first_names, users_metadata.userID FROM (users_metadata, users) WHERE users_metadata.userID = users.id AND users_metadata.idMod IN (' . implode(',', array_keys($modules)) . ') AND calendar_year = ? AND type = ? AND value = ?');
         $result->bind_param('sss', $calendar_year, $type, $group);
         $result->execute();
@@ -266,7 +266,7 @@ if (isset($_POST['submit'])) {
         $result->close();
     } else {
         $member_userID = 0;
-      // Get the other users in the same group.
+        // Get the other users in the same group.
         $row_no = 0;
 
         foreach ($questions as $questionID => $details) {
@@ -305,7 +305,7 @@ if (isset($_POST['submit'])) {
     echo '<p style="margin-left:10px">' . $string['The ratings saved'] . '</p>';
     echo '<br/><p style="margin-left:10px"><a href="../students/index.php">' . $string['homepagelink'] . '</a></p>';
 } else {
-  // Get existing values.
+    // Get existing values.
     $saved_results = array();
     $result = $mysqli->prepare('SELECT id, peerID, q_id, rating FROM log6 WHERE reviewerID = ? AND paperID = ?');
     $result->bind_param('ii', $userObject->get_user_ID(), $property_id);
@@ -357,7 +357,7 @@ if (isset($_POST['submit'])) {
     }
 
     if ($review == '1') {
-      // Get the other users in the same group.
+        // Get the other users in the same group.
         $result = $mysqli->prepare('SELECT username, title, surname, first_names, users_metadata.userID FROM (users_metadata, users) WHERE users_metadata.userID=users.id AND idMod IN (' . implode(',', array_keys($modules)) . ') AND calendar_year=? AND type=? AND value=? ORDER BY surname, initials');
         $result->bind_param('sss', $calendar_year, $type, $group);
         $result->execute();
@@ -415,7 +415,7 @@ if (isset($_POST['submit'])) {
     echo "</td></tr>\n";
     echo "</table>\n</form>\n";
 
-  // JS utils dataset.
+    // JS utils dataset.
     $render = new render($configObject);
     $miscdataset['name'] = 'dataset';
     $miscdataset['attributes']['id'] = $_GET['id'];

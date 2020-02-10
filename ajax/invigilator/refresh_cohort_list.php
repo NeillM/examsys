@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../../include/invigilator_auth.inc';
 require_once '../../include/errors.php';
@@ -43,7 +43,7 @@ $properties_list = PaperProperties::get_paper_properties_by_lab($lab_object, $my
 
 foreach ($properties_list as $property_object) {
     if ($property_object->get_property_id() == $paperID) {
-    // Get modules for this paper and check if timing is allowed
+        // Get modules for this paper and check if timing is allowed
         $timed_modules = $all_modules = 0;
         $sql = 'SELECT m.id, m.timed_exams FROM properties_modules pm INNER JOIN modules m ON pm.idMod = m.id WHERE pm.property_id = ?';
 

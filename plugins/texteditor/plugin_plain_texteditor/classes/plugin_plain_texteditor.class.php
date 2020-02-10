@@ -18,50 +18,50 @@
 namespace plugins\texteditor\plugin_plain_texteditor;
 
 /**
-* Text editor plugin helper file
-*
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2017 onwards The University of Nottingham
-*/
+ * Text editor plugin helper file
+ *
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2017 onwards The University of Nottingham
+ */
 
 /**
  * SMS import plugin.
  */
 class plugin_plain_texteditor extends \plugins\plugins_texteditor
 {
-  /**
-   * Name of the plugin;
-   * @var string
-   */
+    /**
+     * Name of the plugin;
+     * @var string
+     */
     protected $plugin = 'plugin_plain_texteditor';
 
-  /**
-   * Language pack component.
-   * @var string
-   */
+    /**
+     * Language pack component.
+     * @var string
+     */
     public $langcomponent = 'plugins/texteditor/plugin_plain_texteditor/plugin_plain_texteditor';
 
-  /**
-   * Constructor
-   */
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         parent::__construct();
     }
 
-  /**
-   * Get text editor base file
-   * @return string
-   */
+    /**
+     * Get text editor base file
+     * @return string
+     */
     public function get_header_file()
     {
         return 'plain.html';
     }
 
-  /**
-   * Get text editor javascript
-   * @param array $configfile config file
-   */
+    /**
+     * Get text editor javascript
+     * @param array $configfile config file
+     */
     public function get_javascript_config($configfile = '')
     {
         $render = new \render($this->config, $this->get_render_paths());
@@ -71,22 +71,22 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor
         }
     }
 
-  /**
-   * Get text editor textarea.
-   * @param string $name editor name
-   * @param string $id editor id
-   * @param string $content editor content
-   * @param string $type type of editor i.e. i.e. standard, simple, etc
-   * @param string $styleoverwrite overwrite base styling
-   */
+    /**
+     * Get text editor textarea.
+     * @param string $name editor name
+     * @param string $id editor id
+     * @param string $content editor content
+     * @param string $type type of editor i.e. i.e. standard, simple, etc
+     * @param string $styleoverwrite overwrite base styling
+     */
     public function get_textarea($name, $id, $content, $type, $styleoverwrite = '')
     {
-      // Reneder mathjax utils.
+        // Reneder mathjax utils.
         $data['editormathjax'] = false;
         if ($this->get_type($type) === 'mathjax') {
             $data['editormathjax'] = true;
         }
-      // Render textarea.
+        // Render textarea.
         $render = new \render($this->config, $this->get_render_paths());
         $data['id'] = $id;
         $data['questionno'] = $id;
@@ -95,11 +95,11 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor
         $render->render($data, $this->get_strings(), 'plain_admin_textarea.html');
     }
 
-  /**
-   * Return editor specific type class
-   * @param string $type generic type
-   * @return string
-   */
+    /**
+     * Return editor specific type class
+     * @param string $type generic type
+     * @return string
+     */
     public function get_type($type)
     {
         if ($type == \plugins\plugins_texteditor::TYPE_MATHJAX and $this->config->get_setting($this->plugin, 'supports_mathjax')) {
@@ -108,53 +108,53 @@ class plugin_plain_texteditor extends \plugins\plugins_texteditor
         return 'plain';
     }
 
-  /**
-   * Leadin clean function check
-   * @param $leadin
-   * @return boolean
-   */
+    /**
+     * Leadin clean function check
+     * @param $leadin
+     * @return boolean
+     */
     public function clean_leadin($leadin)
     {
         return true;
     }
 
-  /**
-   * Plain text editor applies no conversion to stored text
-   * @param string $text from database
-   * @return string
-   */
+    /**
+     * Plain text editor applies no conversion to stored text
+     * @param string $text from database
+     * @return string
+     */
     public function get_text_for_display($text)
     {
         return $text;
     }
 
-  /**
-   * Plain text editor applies no conversion to db text
-   * @param string $text from database
-   * @return string
-   */
+    /**
+     * Plain text editor applies no conversion to db text
+     * @param string $text from database
+     * @return string
+     */
     public function prepare_text_for_save($text)
     {
         return $text;
     }
 
-  /**
-   * Get header data.
-   * @return array
-   */
+    /**
+     * Get header data.
+     * @return array
+     */
     public function get_header_data()
     {
-      // Intentionally empty.
+        // Intentionally empty.
         return array();
     }
 
-  /**
-   * Get text editor base path
-   * @return string
-   */
+    /**
+     * Get text editor base path
+     * @return string
+     */
     public function get_header_path()
     {
-      // Intentionally blank as plain path loaded by core.
+        // Intentionally blank as plain path loaded by core.
         return '';
     }
 }

@@ -28,9 +28,9 @@ class save_fail_logs
     private $db;
     private $logs;
 
-  /**
-   * Uses for save fail logs
-   */
+    /**
+     * Uses for save fail logs
+     */
     public function __construct()
     {
         $configObject = Config::get_instance();
@@ -38,21 +38,21 @@ class save_fail_logs
         $this->logs = array();
     }
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
-  /**
-   * Get all the logs from save fail table
-   * returns associative array of logs
-   */
+    /**
+     * Get all the logs from save fail table
+     * returns associative array of logs
+     */
     public function get_save_fail_logs()
     {
         $this->logs = array();
@@ -79,9 +79,9 @@ class save_fail_logs
         return $this->logs;
     }
 
-  /**
-   * Clear All the logs from the table
-   */
+    /**
+     * Clear All the logs from the table
+     */
     public function delete_save_fail_logs()
     {
         $result = $this->db->prepare('DELETE FROM save_fail_log');
@@ -94,10 +94,10 @@ class save_fail_logs
         }
     }
 
-  /**
-   * Delete a log from the table
-   * @param $log_id
-   */
+    /**
+     * Delete a log from the table
+     * @param $log_id
+     */
     public function delete_a_save_fail_log($log_id)
     {
         $result = $this->db->prepare('DELETE FROM save_fail_log WHERE id = ?');

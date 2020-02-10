@@ -40,18 +40,18 @@ class ldap_lookup extends outline_lookup
         return $callbackarray;
     }
 
-  /**
-   * Searches for a user in LDAP.
-   *
-   * @param stdClass $lookupobj The lookup object.
-   * @return stdClass The lookup object with any results attached to it.
-   */
+    /**
+     * Searches for a user in LDAP.
+     *
+     * @param stdClass $lookupobj The lookup object.
+     * @return stdClass The lookup object with any results attached to it.
+     */
     function userlookup($lookupobj)
     {
         $overrideallset = false;
         $overrideset = false;
         $this->savetodebug('The LDAP userlookup function has been called');
-// if the lookup doesnt have these set and the default for the module configuration exist use them
+        // if the lookup doesnt have these set and the default for the module configuration exist use them
         if (!isset($lookupobj->settings->override) and isset($this->settings['override'])) {
             foreach ($this->settings['override'] as $key => $value) {
                     $lookupobj->settings->override[$key] = $this->settings['override'][$key];
@@ -87,9 +87,9 @@ class ldap_lookup extends outline_lookup
                 foreach ($orderitem as $item) {
                     $this->savetodebug('search order item array contains a search for: ' . $item);
                     if (count(array_keys($ldap_attributes, $item)) > 0) {
-                //searching item exists in ldap attribute so we can search
+                        //searching item exists in ldap attribute so we can search
                         $countcheck++;
-                //check if we have any data for this item to actually search for
+                        //check if we have any data for this item to actually search for
                         if (isset($lookupobj->lookupdata->{$item})) {
                             $countcheck2++;
                             $filter .= $this->create_filter($ldap_attributes, $item, $lookupobj->lookupdata->{$item});
@@ -100,12 +100,12 @@ class ldap_lookup extends outline_lookup
                 if (!(($countcheck == $countcheck2) and ($countcheck == $count))) {
                     $filter = '';
                 }
-          //multiple filter option use and
+                //multiple filter option use and
             } else {
                 $this->savetodebug('search order item is a single item');
-    //single filter option
+                //single filter option
                 if (count(array_keys($ldap_attributes, $orderitem)) > 0) {
-              //searching item exists in ldap attribute so we can search
+                    //searching item exists in ldap attribute so we can search
                         //check if we have any data for this item to actually search for
                     if (isset($lookupobj->lookupdata->{$orderitem})) {
                         $filter = $this->create_filter($ldap_attributes, $orderitem, $lookupobj->lookupdata->{$orderitem});
@@ -114,7 +114,7 @@ class ldap_lookup extends outline_lookup
             }
 
             if (empty($filter)) {
-            // Nothing to search for, trying will disconnect us.
+                // Nothing to search for, trying will disconnect us.
                 continue;
             }
 
@@ -136,7 +136,7 @@ class ldap_lookup extends outline_lookup
                         $datablock = $info[0];
                         $lookupobj = $this->store_in_data($datablock, $ldap_attributes, $lookupobj);
                     } elseif (isset($lookupobj->settings->lastentry) and $lookupobj->settings->lastentry == true) {
-                    //
+                        //
                           $this->savetodebug('Saving Last Entry Only');
                         $datablock = $info[$count - 1];
                         $lookupobj = $this->store_in_data($datablock, $ldap_attributes, $lookupobj);
@@ -155,7 +155,7 @@ class ldap_lookup extends outline_lookup
             if ($searchsuccess == true) {
                 break;
             }
-        //end of searchorder loop
+            //end of searchorder loop
         }
 
         if ($overrideallset == true) {
@@ -168,16 +168,16 @@ class ldap_lookup extends outline_lookup
         return $lookupobj;
     }
 
-  /**
-   * Extracts data from an LDAP result and maps it to the Rogo user fields.
-   *
-   * The first value for a given field will be used unless there is an override for it.
-   *
-   * @param array $datablock A single record from LDAP
-   * @param array $ldap_attributes An array where the keys are an LDAP field name and the values are a Rogo user field.
-   * @param stdClass $lookupobj The lookup object
-   * @return stdClass The modified lookup object.
-   */
+    /**
+     * Extracts data from an LDAP result and maps it to the Rogo user fields.
+     *
+     * The first value for a given field will be used unless there is an override for it.
+     *
+     * @param array $datablock A single record from LDAP
+     * @param array $ldap_attributes An array where the keys are an LDAP field name and the values are a Rogo user field.
+     * @param stdClass $lookupobj The lookup object
+     * @return stdClass The modified lookup object.
+     */
     function store_in_data($datablock, $ldap_attributes, $lookupobj)
     {
         $prepend = '';
@@ -191,11 +191,11 @@ class ldap_lookup extends outline_lookup
             $prepend = $this->settings['storeprepend'];
             $this->savetodebug("Setting prepend to $prepend");
         }
-      // We always overwite with the latest value.
+        // We always overwite with the latest value.
         $overrideany = (isset($lookupobj->settings->overrideall) and $lookupobj->settings->overrideall == true);
-// Store all the values for this LDAP record, even when they are not put into the main lookup record.
+        // Store all the values for this LDAP record, even when they are not put into the main lookup record.
         $lookupdatas = new stdClass();
-// Extract fields related to Rogo.
+        // Extract fields related to Rogo.
         foreach ($ldap_attributes as $key => $value) {
             $keyorig = $key;
             if (isset($this->settings['lowercasecompare']) and $this->settings['lowercasecompare'] == true) {
@@ -203,15 +203,15 @@ class ldap_lookup extends outline_lookup
                     //think this actually needs to change the datablock without changing the original datablock
             }
             $reverse_attribute = $value;
-  // Test we found a value in LDAP.
+            // Test we found a value in LDAP.
             $valuefound = isset($datablock[$key][0]);
-  // We always use the latest value from this LDAP attribute.
+            // We always use the latest value from this LDAP attribute.
             $overrideldapattribute = (isset($lookupobj->settings->override[$key]) and $lookupobj->settings->override[$key] == true);
-  // We always use the latest value for this Rogo field.
+            // We always use the latest value for this Rogo field.
             $overriderogoattribute = (isset($lookupobj->settings->override[$reverse_attribute]) and $lookupobj->settings->override[$reverse_attribute] == true);
-  // We will overwite this value.
+            // We will overwite this value.
             $canoverride = ($overrideany or $overrideldapattribute or $overriderogoattribute);
-  // Test if we already have a value for this Rogo attribute.
+            // Test if we already have a value for this Rogo attribute.
             $isset = isset($lookupobj->lookupdata->$reverse_attribute);
             if ($valuefound and (($isset and $canoverride) or (!$isset))) {
                   // Store data to lookup if ldap_attribute listed and ( not set or if set and ( overrideall or override value or override inverse ldap set))
@@ -223,7 +223,7 @@ class ldap_lookup extends outline_lookup
             }
         }
         $lookupobj->lookupdatas[] = $lookupdatas;
-// Store all the values returned by LDAP event when they are not used by Rogo.
+        // Store all the values returned by LDAP event when they are not used by Rogo.
         $datablockstore = array();
         foreach ($datablock as $key => $value) {
             if (!is_int($key)) {
@@ -236,12 +236,12 @@ class ldap_lookup extends outline_lookup
                 }
 
                 $alreadyset = isset($lookupobj->datablockstore[$prepend . $key]);
-        // We always use the latest value from this LDAP attribute.
+                // We always use the latest value from this LDAP attribute.
                 $overrideldapattribute = (isset($lookupobj->settings->override[$key]) and $lookupobj->settings->override[$key] == true);
-        // We will overwite this value.
+                // We will overwite this value.
                 $canoverride = ($overrideany or $overrideldapattribute);
                 if (($alreadyset and $canoverride) or !$alreadyset) {
-                // Store data to datablock store if not set or if set and ( overrideall or override value set)
+                    // Store data to datablock store if not set or if set and ( overrideall or override value set)
                         $lookupobj->datablockstore[$prepend . $key] = $value;
                 }
 
@@ -252,14 +252,14 @@ class ldap_lookup extends outline_lookup
         return $lookupobj;
     }
 
-  /**
-   * Creates an LDAP query for all fields that could contain a particular Rogo field type.
-   *
-   * @param array $ldap_attributes An array where the keys are an LDAP field name and the values are a Rogo user field.
-   * @param string $reverse_attribute A Rogo user field
-   * @param string $value The value we want to search for in the field
-   * @return string
-   */
+    /**
+     * Creates an LDAP query for all fields that could contain a particular Rogo field type.
+     *
+     * @param array $ldap_attributes An array where the keys are an LDAP field name and the values are a Rogo user field.
+     * @param string $reverse_attribute A Rogo user field
+     * @param string $value The value we want to search for in the field
+     * @return string
+     */
     function create_filter($ldap_attributes, $reverse_attribute, $value)
     {
         $filtergen = array_keys($ldap_attributes, $reverse_attribute);

@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 ?>
 <div id="left-sidebar" style="overflow:visible" class="sidebar">
@@ -31,13 +31,13 @@ if (!$userObject->has_role('Standards Setter')) {
     $add_member = false;
     if ($_GET['module'] != '0') {
         if (strpos($module_details['checklist'], 'mapping') !== false) {
-    // Curriculum mapping switched on for the module
+            // Curriculum mapping switched on for the module
             echo '<div class="menuitem"><a href="../mapping/sessions_list.php?module=' . $module . "\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/module_icon_16.png\" alt=\"modules\" />" . $string['manageobjectives'] . "</a></div>\n";
         }
         echo "<div class=\"menuitem\"><a href=\"../folder/list_keywords.php?module=$module\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/key.png\" alt=\"key\" />" . $string['managekeywords'] . '</a></div>';
         echo "<div class=\"menuitem\"><a href=\"../module/list_ref_material.php?module=$module\"><img class=\"sidebar_icon\" src=\"{$configObject->get('cfg_root_path')}/artwork/ref_16.png\" alt=\"key\" />" . $string['referencematerial'] . '</a></div>';
         echo '<div class="menuitem cascade showmenu" data-popupid="0" data-popuptype="general" data-popupname="search"><a href="#" id="search"><img class="sidebar_icon" src="' . $configObject->get('cfg_root_path') . '/artwork/xmag.png" alt="Search" />' . $string['search'] . '</a></div>';
-    // Get members of current team.
+        // Get members of current team.
         if (!isset($_GET['type']) and $_GET['module'] != '0') {
             $team_members = module_utils::get_staff_members($module, $mysqli);
             $tmp_html = '';

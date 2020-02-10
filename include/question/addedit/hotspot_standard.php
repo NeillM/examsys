@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
-* @package
-*/
+ *
+ * @author Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2013 The University of Nottingham
+ * @package
+ */
 
 $media = $question->get_media();
 $plugin_height = max($media['height'] + 25, 400);
@@ -35,10 +35,10 @@ if (count($question->options) > 0) {
 }
 $imageurl = rogo_directory::get_directory('media')->url($media['filename']);
 if ($question->get_locked() != '') {
-  // The question is locked, limited editing.
+    // The question is locked, limited editing.
     $hotspot_mode = 'correction';
 } else {
-  // Full editing capabilities.
+    // Full editing capabilities.
     $hotspot_mode = 'edit';
 }
 ?>

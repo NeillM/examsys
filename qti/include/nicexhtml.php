@@ -30,22 +30,22 @@ function MakeNiceXHTML($string, $starttag = 'itemBody')
 
     $string = NX_ChangePreSetChars($string);
     $xmlStr = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n<$starttag><p>\n$string\n</p></$starttag>\n";
-  /*echo "<pre>";
-   echo "\n\nINPUT\n\n";
-   echo htmlentities($xmlStr);
-   echo "</pre>";*/
+    /*echo "<pre>";
+    echo "\n\nINPUT\n\n";
+    echo htmlentities($xmlStr);
+    echo "</pre>";*/
 
     $xml = simplexml_load_string($xmlStr);
     $xml = dom_import_simplexml($xml);
 
-  //echo "XML Parsing - <br>";
+    //echo "XML Parsing - <br>";
     while (!NX_ValidateXML($xml)) {
-      /*echo "AFTER PASSE<br>";
-       $Document = new DOMDocument();
-       $Document->appendChild($Document->importNode($xml,true));
-       echo "<pre>";
-       echo htmlentities($Document->saveHTML());
-       echo "</pre>";*/
+        /*echo "AFTER PASSE<br>";
+        $Document = new DOMDocument();
+        $Document->appendChild($Document->importNode($xml,true));
+        echo "<pre>";
+        echo htmlentities($Document->saveHTML());
+        echo "</pre>";*/
     }
 
     $Document = new DOMDocument();
@@ -55,12 +55,12 @@ function MakeNiceXHTML($string, $starttag = 'itemBody')
     $string = str_replace("</$starttag>", '', $string);
     $string = NX_ChangePreSetChars($string);
     $string = str_ireplace('<br>', '<br />', $string);
-  /*echo "<pre>";
-   echo "\nOUTPUT\n\n";
-   echo htmlentities($string);
-   echo "</pre>";*/
+    /*echo "<pre>";
+    echo "\nOUTPUT\n\n";
+    echo htmlentities($string);
+    echo "</pre>";*/
 
-  //$string = NX_StripBadTags($string);
+    //$string = NX_StripBadTags($string);
 
     return $string;
 }
@@ -91,9 +91,9 @@ function NX_IsValidSubnode($type, $node)
 
 function NX_ValidateXML(&$xml)
 {
-  //echo "ITEM : " . $xml->tagName . "<br>ATTRIBUTES:";
+    //echo "ITEM : " . $xml->tagName . "<br>ATTRIBUTES:";
 
-  //strip any invalid attributes
+    //strip any invalid attributes
     if ($xml->hasAttributes()) {
         foreach ($xml->attributes as $attribute) {
             if (!NX_IsValidAttr($xml->tagName, $id)) {
@@ -103,23 +103,23 @@ function NX_ValidateXML(&$xml)
         }
     }
 
-  //echo "<br>CHILDREN<br>";
+    //echo "<br>CHILDREN<br>";
     if (count($xml->childNodes) > 0) {
         foreach ($xml->childNodes as $item) {
             if ($item->tagName == '') {
                 continue;
             }
 
-          //echo "Child node " . $item->tagName . " under element " . $xml->tagName . "<br>";
+            //echo "Child node " . $item->tagName . " under element " . $xml->tagName . "<br>";
             if (NX_IsValidSubnode($xml->tagName, $item->tagName)) {
                 if (!NX_ValidateXML($item)) {
-                  //echo "FASLE<br>";
+                    //echo "FASLE<br>";
                     return false;
                 }
             } else {
-              //echo "Invalid Child node " . $item->tagName . " under element " . $xml->tagName . "<br>";
+                //echo "Invalid Child node " . $item->tagName . " under element " . $xml->tagName . "<br>";
 
-              // attempt to put child node in the parent node if it fits
+                // attempt to put child node in the parent node if it fits
                 $parnode = $item->parentNode;
                 $lastparent = $parnode;
                 $fitted = false;
@@ -134,17 +134,17 @@ function NX_ValidateXML(&$xml)
 
                     //echo "Parent Node : " . $parnode->tagName . "<br>";
                     if (NX_IsValidSubnode($parnode->tagName, $item->tagName)) {
-                      //echo "Child node " . $item->tagName . " can be put under parent node " . $parnode->tagName . " after tag " . $lastparent->tagName . "<br>";
+                        //echo "Child node " . $item->tagName . " can be put under parent node " . $parnode->tagName . " after tag " . $lastparent->tagName . "<br>";
 
-                      /*if($lastparent->nextSibling) {
-                       $parnode->insertBefore($item->cloneNode(true), $lastparent->nextSibling);
-                       } else {
-                       $parnode->appendChild($item->cloneNode(true));
-                       }
+                        /*if($lastparent->nextSibling) {
+                        $parnode->insertBefore($item->cloneNode(true), $lastparent->nextSibling);
+                        } else {
+                        $parnode->appendChild($item->cloneNode(true));
+                        }
 
 
-                       //$parnode->insertBefore($item->cloneNode(true),$lastparent->nextChild);
-                       $xml->removeChild($item);*/
+                        //$parnode->insertBefore($item->cloneNode(true),$lastparent->nextChild);
+                        $xml->removeChild($item);*/
                         $fitted = true;
                     }
 
@@ -159,10 +159,10 @@ function NX_ValidateXML(&$xml)
                     while ($back->previousSibling) {
                         //echo "Moving node before " . $back->previousSibling->tagName . "<br>";
                         if ($before->hasChildNodes()) {
-                          //echo "insertBefore<br>";
+                            //echo "insertBefore<br>";
                             $before->insertBefore($back->previousSibling->cloneNode(true), $before->firstChild);
                         } else {
-                          //echo "appendChild<br>";
+                            //echo "appendChild<br>";
                             $before->appendChild($back->previousSibling->cloneNode(true));
                         }
                         $back = $back->previousSibling;
@@ -170,32 +170,32 @@ function NX_ValidateXML(&$xml)
 
                     $forw = $item;
                     while ($forw->nextSibling) {
-                      //echo "Moving node after " . $forw->nextSibling->tagName . "<br>";
-                      //echo "appendChild<br>";
+                        //echo "Moving node after " . $forw->nextSibling->tagName . "<br>";
+                        //echo "appendChild<br>";
                         $after->appendChild($forw->nextSibling->cloneNode(true));
                         $forw = $forw->nextSibling;
                     }
 
-                  /*echo "BEFORE BAD NODE<br>";
-                   $Document = new DOMDocument();
-                   $Document->appendChild($Document->importNode($before,true));
-                   echo "<pre>";
-                   echo htmlentities($Document->saveHTML());
-                   echo "</pre>";*/
+                    /*echo "BEFORE BAD NODE<br>";
+                    $Document = new DOMDocument();
+                    $Document->appendChild($Document->importNode($before,true));
+                    echo "<pre>";
+                    echo htmlentities($Document->saveHTML());
+                    echo "</pre>";*/
 
-                  /*echo "BAD NODE<br>";
-                   $Document = new DOMDocument();
-                   $Document->appendChild($Document->importNode($item,true));
-                   echo "<pre>";
-                   echo htmlentities($Document->saveHTML());
-                   echo "</pre>";*/
+                    /*echo "BAD NODE<br>";
+                    $Document = new DOMDocument();
+                    $Document->appendChild($Document->importNode($item,true));
+                    echo "<pre>";
+                    echo htmlentities($Document->saveHTML());
+                    echo "</pre>";*/
 
-                  /*echo "AFTER BAD NODE<br>";
-                   $Document = new DOMDocument();
-                   $Document->appendChild($Document->importNode($after,true));
-                   echo "<pre>";
-                   echo htmlentities($Document->saveHTML());
-                   echo "</pre>";*/
+                    /*echo "AFTER BAD NODE<br>";
+                    $Document = new DOMDocument();
+                    $Document->appendChild($Document->importNode($after,true));
+                    echo "<pre>";
+                    echo htmlentities($Document->saveHTML());
+                    echo "</pre>";*/
 
                     $parnode = $xml->parentNode;
                     $parnode->insertBefore($before, $xml);
@@ -203,33 +203,33 @@ function NX_ValidateXML(&$xml)
                     $parnode->insertBefore($after, $xml);
                     $parnode->removeChild($xml);
 
-                  /*echo "FINAL<br>";
-                   $Document = new DOMDocument();
-                   $Document->appendChild($Document->importNode($parnode,true));
-                   echo "<pre>";
-                   echo htmlentities($Document->saveHTML());
-                   echo "</pre>";*/
+                    /*echo "FINAL<br>";
+                    $Document = new DOMDocument();
+                    $Document->appendChild($Document->importNode($parnode,true));
+                    echo "<pre>";
+                    echo htmlentities($Document->saveHTML());
+                    echo "</pre>";*/
 
                     return false;
                 }
 
                 if (!$fitted) {
-                  /*foreach($item->childNodes as $itemchild)
-                   {
-                   //$item->removeChild($itemchild);
-                   //echo "Inserting sub node " . $itemchild->tagName . " (" . $itemchild->wholeText . ")<br>";
-                   $xml->insertBefore($itemchild->cloneNode(true),$item);
-                   }*/
+                    /*foreach($item->childNodes as $itemchild)
+                    {
+                    //$item->removeChild($itemchild);
+                    //echo "Inserting sub node " . $itemchild->tagName . " (" . $itemchild->wholeText . ")<br>";
+                    $xml->insertBefore($itemchild->cloneNode(true),$item);
+                    }*/
 
                     $xml->removeChild($item);
                 }
-              //echo "FASLE<br>";
+                //echo "FASLE<br>";
                 return false;
             }
         }
     }
 
-  //echo "TRUE<br>";
+    //echo "TRUE<br>";
     return true;
 }
 
@@ -618,19 +618,19 @@ function NX_CreateQTI2Tree()
 
     $tree = array();
 
-  // block.ElementGroup
+    // block.ElementGroup
     $block = array('pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'address', 'dl', 'ol', 'hr', 'blockquote', 'ul', 'table', 'div');
 
-  // inline.ElementGroup
+    // inline.ElementGroup
     $inline = array('hottext', 'img', 'br', 'gap', 'em', 'a', 'code', 'span', 'sub', 'acronym', 'big', 'tt', 'kbd', 'q', 'i', 'dfn', 'abbr', 'strong', 'sup', 'var', 'small', 'samp', 'b', 'cite');
 
-  // inlineStatic.ElementGroup
+    // inlineStatic.ElementGroup
     $inlineStatic = array('hottext', 'img', 'br', 'gap', 'em', 'a', 'code', 'span', 'sub', 'acronym', 'big', 'tt', 'kbd', 'q', 'i', 'dfn', 'abbr', 'strong', 'sup', 'var', 'small', 'samp', 'b', 'cite');
 
-  // flow.ElementGroup
+    // flow.ElementGroup
     $flow = array('pre', 'h2', 'h3', 'h1', 'h6', 'h4', 'h5', 'p', 'address', 'dl', 'ol', 'img', 'br', 'ul', 'hr', 'blockquote', 'hottext', 'em', 'a', 'code', 'span', 'sub', 'acronym', 'big', 'tt', 'kbd', 'q', 'i', 'dfn', 'abbr', 'strong', 'sup', 'var', 'small', 'samp', 'b', 'cite', 'table', 'div');
 
-  // bodyElement.AttrGroup
+    // bodyElement.AttrGroup
     $bea = array('id', 'class', 'label');
 
     $tree['itemBody'] = array(

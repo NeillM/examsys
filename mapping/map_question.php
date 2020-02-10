@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../include/question_types.php';
@@ -121,7 +121,7 @@ function display_q($configObject, $target_id, $db)
     .objheading {font-size:150%; font-weight:bold; color:#316AC5; padding-top:10px; border-top:1px solid #C0C0C0}
   </style>
   <?php
-  // Check if any 3d file types are enabled and render js.
+    // Check if any 3d file types are enabled and render js.
     threed_handler::render_js($string);
     ?>
 </head>

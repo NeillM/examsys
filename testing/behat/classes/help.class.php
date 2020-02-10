@@ -27,34 +27,34 @@ namespace testing\behat;
  */
 class help
 {
-  /** The URL to documentation for behat in Rogo. */
+    /** The URL to documentation for behat in Rogo. */
     const DOCUMENTATION = 'https://rogo-eassessment-docs.atlassian.net/wiki/display/ROGO/Automatic+functional+testing';
 
-  /**
-   * The location of the behat execution script.
-   *
-   * @return string
-   */
+    /**
+     * The location of the behat execution script.
+     *
+     * @return string
+     */
     public static function get_behat_location()
     {
         return 'vendor' . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'behat';
     }
 
-  /**
-   * The command a user needs to type to run behat tests from the root of Rogo.
-   *
-   * @return string
-   */
+    /**
+     * The command a user needs to type to run behat tests from the root of Rogo.
+     *
+     * @return string
+     */
     public static function get_test_run_command()
     {
         return self::get_behat_location() . ' --config ' . environment::get_yml_location();
     }
 
-  /**
-   * Returns a help message describing how to run the behat test suit.
-   *
-   * @return string
-   */
+    /**
+     * Returns a help message describing how to run the behat test suit.
+     *
+     * @return string
+     */
     public static function run_help()
     {
         $message = PHP_EOL . 'Behat is now installed and can be run from the root Rogo directory using:'
@@ -62,22 +62,22 @@ class help
         return $message;
     }
 
-  /**
-   * Get a generic error message that states where to get help.
-   *
-   * @return string
-   */
+    /**
+     * Get a generic error message that states where to get help.
+     *
+     * @return string
+     */
     public static function error()
     {
         $message = PHP_EOL . 'For details about Behat testing in Rogo visit: ' . PHP_EOL . self::DOCUMENTATION;
         return $message;
     }
 
-  /**
-   * Help for the behat init script.
-   *
-   * @return string
-   */
+    /**
+     * Help for the behat init script.
+     *
+     * @return string
+     */
     public static function init_help()
     {
         $message = 'Rogo Behat initialisation script options'

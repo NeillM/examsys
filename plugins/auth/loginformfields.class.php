@@ -40,7 +40,7 @@ class loginformfields_auth extends outline_authentication
     function register_callback_routines()
     {
 
-      // maybe need to think of some function that will fail the auth if not received the data in the field?
+        // maybe need to think of some function that will fail the auth if not received the data in the field?
 
         $callbackarray[] = array(array($this, 'loginformfields'), 'displaystdform', $this->number, $this->name);
         if (isset($this->settings['storedata']) and $this->settings['storedata'] === true) {

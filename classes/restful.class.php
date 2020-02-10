@@ -15,10 +15,10 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Restful API package
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2016 onwards The University of Nottingham
-*/
+ * Restful API package
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2016 onwards The University of Nottingham
+ */
 
 /**
  * Restful API helper class.
@@ -40,9 +40,9 @@ class restful
      */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 

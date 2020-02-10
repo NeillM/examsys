@@ -86,7 +86,7 @@ function save_user_responses($paper_type, $metadataID, $screen_no, $response_dat
     $userObject = UserObject::get_instance();
     $save_ok = true;
 
-  // Turn off auto commit and start transaction. If PHP exits or we call rollback the inserts/updates will be rolledback.
+    // Turn off auto commit and start transaction. If PHP exits or we call rollback the inserts/updates will be rolledback.
     $db->autocommit(false);
 
     $log_ids = get_log_ids_and_lock($paper_type, $screen_no, $metadataID, $db);
@@ -94,7 +94,7 @@ function save_user_responses($paper_type, $metadataID, $screen_no, $response_dat
     foreach ($response_data as $response) {
         if (count($log_ids) > 0) {
             $log_id = $log_ids[$response['q_id']];
-          // prepare to update old records
+            // prepare to update old records
             $save_answers = $db->prepare("UPDATE log$paper_type SET mark = ?, adjmark = ?, user_answer = ?, duration = ?, updated = NOW(), dismiss = ? WHERE id = ?");
             $save_answers->bind_param('ddsisi', $response['mark'], $response['mark'], $response['saved_response'], $response['tmp_duration'], $response['dismiss'], $log_id);
         } else {
@@ -102,14 +102,14 @@ function save_user_responses($paper_type, $metadataID, $screen_no, $response_dat
             $save_answers->bind_param('iddisiissidsis', $response['q_id'], $response['mark'], $response['mark'], $response['totalpos'], $response['saved_response'], $response['screen_no'], $response['tmp_duration'], $response['dismiss'], $response['option_order'], $metadataID, $response['mark'], $response['saved_response'], $response['tmp_duration'], $response['dismiss']);
         }
         $res = $save_answers->execute(); // Save to the database.
-      //if ($res === false or $save_answers->affected_rows == 0) {
+        //if ($res === false or $save_answers->affected_rows == 0) {
         if ($res === false) {
             $save_ok = false;
             break;
         }
     }
   
-  // Check for any save fails.
+    // Check for any save fails.
     if ($paper_type == 2) {   // Only log fails on summative exams.
         $ipaddress = NetworkUtils::get_client_address();
         $save_failed = param::optional('save_failed', '', param::RAW, param::FETCH_POST);
@@ -125,18 +125,18 @@ function save_user_responses($paper_type, $metadataID, $screen_no, $response_dat
         }
     }
 
-  //
-  // Did the all the save to log operations succeed?
-  //
+    //
+    // Did the all the save to log operations succeed?
+    //
     if ($save_ok === false) {
         $db->rollback();            // NO - rollback
     } else {
         $db->commit();              // YES - commit the updates to the log tables
     }
-  // Turn auto commit back on so future queries function as before
+    // Turn auto commit back on so future queries function as before
     $db->autocommit(true);
 
-  // Close prepared queries
+    // Close prepared queries
     if (count($response_data) > 0) {      // Could happen on a screen with just an info block
         $save_answers->close();
     }
@@ -160,7 +160,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
     $screen_no = param::required('old_screen', param::INT, param::FETCH_POST);
     $extra_duration = param::required('previous_duration', param::INT, param::FETCH_POST);
 
-  // Load the structure of the paper into a local array.
+    // Load the structure of the paper into a local array.
     $paper_array = array();
     $tmp_question_no = 0;
     $old_q_id = 0;
@@ -249,7 +249,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
     }
     $questions->close();
 
-  // Use the new structure to look for posted responses.
+    // Use the new structure to look for posted responses.
     $old_type = '';
     $old_score_method = '';
     $old_display_method = '';
@@ -275,7 +275,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
     $all_items_abstain = true;
     $dismiss = '';
 
-  // Record posted data for saving later
+    // Record posted data for saving later
     $response_data = array();
 
     foreach ($paper_array as &$row) {
@@ -368,7 +368,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
 
                 break;
             case 'enhancedcalc':
-              //DO NOTHING EXCEPT SAVE DATA
+                //DO NOTHING EXCEPT SAVE DATA
                 require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
                 $mark = null;
 
@@ -472,8 +472,8 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                 }
                 break;
             case 'extmatch':
-              // Individual scenarios are separated by '|' characters.
-              // Separate options are separated by '$' characters.
+                // Individual scenarios are separated by '|' characters.
+                // Separate options are separated by '$' characters.
                 if ($question_part == 1) {
                     $part_no = 0;
                     if ($paper_type == 3) {
@@ -510,7 +510,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                         } else {
                             $correct_answers = array();
                         }
-                  // Can only compare user answer and correct answer if correct answer exists.
+                        // Can only compare user answer and correct answer if correct answer exists.
                         if ($correct_answers !== false) {
                             $execmatch_answers = param::optional($qid, null, param::ALPHANUM, param::FETCH_POST);
                             if (!is_null($execmatch_answers)) {
@@ -571,7 +571,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                 }
                 break;
             case 'matrix':
-              // Individual scenarios are separated by '|' characters.
+                // Individual scenarios are separated by '|' characters.
                 if ($question_part == 1) {
                     $correct_options = explode('|', $correct);
                     $matching_scenarios = explode('|', $scenario);
@@ -656,7 +656,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                         }
                     }
                 } elseif ($score_method == 'Bonus Mark') {
-  // Part answer is not N/A
+                    // Part answer is not N/A
                     if ($part_answer != 0) {
                                 // Mark if correct answer is not N/A
                                 $mark += ($correct != 0) ? $marks_correct : $marks_incorrect;
@@ -665,7 +665,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                             $correct_rank = false;
                         }
                     }
-              // Do not assign bonus mark if part answer is not correct or absention.
+                    // Do not assign bonus mark if part answer is not correct or absention.
                     if (($part_answer == 0 and $correct != 0) or $part_answer == 'u') {
                         $correct_rank = false;
                     }
@@ -719,7 +719,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                 $saved_response = array();
                 for ($i = 1; $i <= $no_answers; $i++) {
                     $qid = 'q' . $question_no . '_' . $i;
-                // If the parameter is not sent for some reason assume the part is unanswered.
+                    // If the parameter is not sent for some reason assume the part is unanswered.
                     $blank_answer = param::optional($qid, 'u', param::TEXT, param::FETCH_POST);
                     if (trim($blank_answer) === '') {
                           // Assume an answer composed only of spaces is unanswered.
@@ -738,14 +738,14 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                         $individual_q_mark = $marks_correct;
                     }
 
-                // Get correct answer.
+                    // Get correct answer.
                     $blank_details[$i] = substr($blank_details[$i], (strpos($blank_details[$i], ']') + 1));
                     $blank_details[$i] = substr($blank_details[$i], 0, strpos($blank_details[$i], '[/blank]'));
                     $answer_list = explode(',', $blank_details[$i]);
 
                     $answer_list[0] = str_replace('[/blank]', '', $answer_list[0]);
-                // Ensure that the answers are filtered to the same level as the user's answers.
-                // This will ensure that they can match correctly.
+                    // Ensure that the answers are filtered to the same level as the user's answers.
+                    // This will ensure that they can match correctly.
                     $answer_list = param::clean_array($answer_list, param::TEXT);
                     if ($display_method == 'textboxes') {
                         if (!is_null($blank_answer) and $blank_answer != 'u' and $blank_answer != '') {
@@ -767,7 +767,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                     }
                 }
 
-              // Recalculate if mark per question
+                // Recalculate if mark per question
                 if ($score_method == 'Mark per Question') {
                     if ($have_answer) {
                         $mark = ($mark == $totalpos) ? $marks_correct : $marks_incorrect;
@@ -790,8 +790,8 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                 $totalpos = $marks_correct;
                 break;
             case 'hotspot':
-              // Marking MUST not be client side.
-              // The hotspot areas are stored in: $option_text
+                // Marking MUST not be client side.
+                // The hotspot areas are stored in: $option_text
                 $qid = 'q' . $question_no;
                 $mark = 0;
                 $all_correct = true;
@@ -828,11 +828,11 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                 break;
             case 'labelling':
                 $qid = 'q' . $question_no;
-              // We cannot clean it fully in one go.
+                // We cannot clean it fully in one go.
                 $saved_response = param::optional($qid, '', param::RAW, param::FETCH_POST);
                 if ($saved_response != '') {
                     $tmp_first_split = explode(';', $saved_response);
-                // Clean the mark and total number of items.
+                    // Clean the mark and total number of items.
                     $tmp_second_split = param::clean_array(explode('$', $tmp_first_split[0]), param::FLOAT);
                     if ($tmp_first_split[1] != '') {
                           $all_items_abstain = false;
@@ -851,7 +851,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
                     }
                     $totalpos = $marks_correct;
                 }
-          // Ensure all values are correct and recombine into a final response.
+                // Ensure all values are correct and recombine into a final response.
                 $user_answer = param::clean_array(explode('$', $tmp_first_split[1]), param::TEXT);
                 $saved_response = implode(
                     ';',
@@ -872,7 +872,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
         }
     } // End of while loop.
 
-  // Log the very last question block.
+    // Log the very last question block.
     if ($old_type == 'rank') {
         finalise_rank($old_score_method, $correct_rank, $old_marks_correct, $old_marks_incorrect, $saved_response, $totalpos, $mark);
     } elseif ($old_type == 'mrq') {
@@ -895,7 +895,7 @@ function record_marks($paper_id, $db, $paper_type, $metadataID, $preview_q_id = 
         $dismiss = '';
     }
 
-  // Save the results to the database
+    // Save the results to the database
     $save_ok = save_user_responses($paper_type, $metadataID, $screen_no, $response_data, $paper_id, $db);
 
     return $save_ok;
@@ -935,7 +935,7 @@ function finalise_rank($old_score_method, $correct_rank, $old_marks_correct, $ol
         }
     } elseif ($old_score_method == 'Mark per Question') {
         $totalpos = $old_marks_correct;
-      // If question is unanswered, $saved_response will be a comma separated list of 'u' so check for other characters
+        // If question is unanswered, $saved_response will be a comma separated list of 'u' so check for other characters
         $answered = preg_match('/[^u,]/', $saved_response);
         if ($correct_rank) {
             $mark = ($answered > 0) ? $old_marks_correct : 0;

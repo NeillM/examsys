@@ -16,12 +16,12 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
   require  '../../../../../../../../include/staff_auth.inc';
 
@@ -91,7 +91,7 @@ tinyMCEPopup.onInit.add(ExampleDialog.init, ExampleDialog);
         <body onload="ExampleDialog.insert();" class="dialog_body">
     <?php
 } else {
-  //defaut state
+    //defaut state
     echo '<body class="dialog_body">';
     showForm('');
     exit;

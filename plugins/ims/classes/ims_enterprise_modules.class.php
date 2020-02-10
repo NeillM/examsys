@@ -27,15 +27,15 @@ namespace plugins\ims;
 class ims_enterprise_modules
 {
 
-  /** @var array IMS group description names */
+    /** @var array IMS group description names */
     private $imsnames;
 
-  /** @var array Rogō module field names */
+    /** @var array Rogō module field names */
     private $moduleattrs;
 
-  /**
-   * Loads default
-   */
+    /**
+     * Loads default
+     */
     public function __construct()
     {
         $this->imsnames = array(
@@ -45,22 +45,22 @@ class ims_enterprise_modules
         $this->moduleattrs = array('moduleid', 'fullname');
     }
 
-  /**
-   * moduleattrs getter
-   * @return array
-   */
+    /**
+     * moduleattrs getter
+     * @return array
+     */
     public function get_moduleattrs()
     {
         return $this->moduleattrs;
     }
 
-  /**
-   * This function is only used when first setting up the plugin, to
-   * decide which name assignments to recommend by default.
-   *
-   * @param string $moduleattr
-   * @return string
-   */
+    /**
+     * This function is only used when first setting up the plugin, to
+     * decide which name assignments to recommend by default.
+     *
+     * @param string $moduleattr
+     * @return string
+     */
     public function determine_default_modulemapping($moduleattr)
     {
         switch ($moduleattr) {

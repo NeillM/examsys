@@ -30,18 +30,18 @@ class renderdata extends \questiondata
 {
     use \defaultgetmarks;
 
-  /**
-   * Constructor
-   */
+    /**
+     * Constructor
+     */
     function __construct()
     {
         parent::__construct();
         $this->questiontype = 'enhancedcalc';
     }
 
-  /**
-   * Disable/Enable display of question header sections for template rendering
-   */
+    /**
+     * Disable/Enable display of question header sections for template rendering
+     */
     public function set_question_head()
     {
         $this->displaydefault = true;
@@ -50,12 +50,12 @@ class renderdata extends \questiondata
         }
     }
 
-  /**
-   * Question level settings for template rendering
-   * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   * @param mixed $useranswer user answer
-   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
-   */
+    /**
+     * Question level settings for template rendering
+     * @param boolean $screen_pre_submitted has the user submitted and answer previously
+     * @param mixed $useranswer user answer
+     * @param string $userdismissed list of enable/disable flag for options the user has dismissed
+     */
     public function set_question($screen_pre_submitted, $useranswer, $userdismissed)
     {
         $question = $this->question;
@@ -68,13 +68,13 @@ class renderdata extends \questiondata
         $question['object']->load_all_user_answers($useranswers);
     }
 
-  /**
-   * Option level settings for template rendering
-   * @param integer $part_id part loop id
-   * @param mixed $useranswer user answer
-   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
-   * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   */
+    /**
+     * Option level settings for template rendering
+     * @param integer $part_id part loop id
+     * @param mixed $useranswer user answer
+     * @param string $userdismissed list of enable/disable flag for options the user has dismissed
+     * @param boolean $screen_pre_submitted has the user submitted and answer previously
+     */
     public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
     {
         $marks = $this->marks;
@@ -85,29 +85,29 @@ class renderdata extends \questiondata
         $this->marks = $marks;
     }
 
-  /**
-   * Additional option level settings for template rendering
-   * @param integer $part_id part loop id
-   * @param mixed $useranswer user answer
-   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
-   * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   */
+    /**
+     * Additional option level settings for template rendering
+     * @param integer $part_id part loop id
+     * @param mixed $useranswer user answer
+     * @param string $userdismissed list of enable/disable flag for options the user has dismissed
+     * @param boolean $screen_pre_submitted has the user submitted and answer previously
+     */
     public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
     {
-      // Nothing to do.
+        // Nothing to do.
     }
 
-  /**
-   * Render the question to screen
-   * Enhanced calculation question override the generic method
-   * @param object $render twig rendering object
-   * @param array $string language strings
-   * @return void
-   */
+    /**
+     * Render the question to screen
+     * Enhanced calculation question override the generic method
+     * @param object $render twig rendering object
+     * @param array $string language strings
+     * @return void
+     */
     public function render_question($render, $string)
     {
         $question = $this->question;
-      // no options for enhanced calc now stored in settings
+        // no options for enhanced calc now stored in settings
         $extra = array(
         'num_on_screen' => $this->questionno,
         'current_question' => $question,

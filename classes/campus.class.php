@@ -15,10 +15,10 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Campus package
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2015 onwards The University of Nottingham
-*/
+ * Campus package
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2015 onwards The University of Nottingham
+ */
 
 /**
  * Campus helper class.
@@ -29,14 +29,14 @@ class campus
     // DB connection
     private $db;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
@@ -116,7 +116,7 @@ class campus
      * Check if the provided campus has labs associated with it
      * @param string $id - id of campus
      * @return bool true labs associated with campus, false otherwise
-    */
+     */
     public function check_campus_in_use($id)
     {
         $result = $this->db->prepare('SELECT NULL FROM labs WHERE campus = ?');

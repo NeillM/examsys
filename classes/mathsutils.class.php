@@ -26,11 +26,11 @@
 
 class MathsUtils
 {
-  /**
-   * Returns the factorial of the passed number
-   * @param int $number
-   * @return int factorial of the given number
-   */
+    /**
+     * Returns the factorial of the passed number
+     * @param int $number
+     * @return int factorial of the given number
+     */
     static function factorial($number)
     {
         $temp = 1;
@@ -40,14 +40,14 @@ class MathsUtils
         return $temp;
     }
   
-  /**
-   * Generate a random number between $min and $max with a specified increment and number of decimal places
-   * @param mixed $min
-   * @param mixed $max
-   * @param mixed $increment
-   * @param int $decimals
-   * @return mixed Random number based on input parameters
-   */
+    /**
+     * Generate a random number between $min and $max with a specified increment and number of decimal places
+     * @param mixed $min
+     * @param mixed $max
+     * @param mixed $increment
+     * @param int $decimals
+     * @return mixed Random number based on input parameters
+     */
     static function gen_random_no($min, $max, $increment, $decimals)
     {
         if ($min === 'ERROR' or $max === 'ERROR') {
@@ -100,11 +100,11 @@ class MathsUtils
         return $number;
     }
   
-  /**
-   * Returns the the median of a list of numbers
-   * @param array set of numbers you wish to find the median from
-   * @return int median of the list
-   */
+    /**
+     * Returns the the median of a list of numbers
+     * @param array set of numbers you wish to find the median from
+     * @return int median of the list
+     */
     static function median($arr)
     {
         sort($arr);
@@ -129,14 +129,14 @@ class MathsUtils
         return $total / $no;
     }
 
-  /**
-   * Returns a percentile from a list of numbers
-   * Not sure what the idea here was as this is not a percentile calculation
-   * see https://www.dummies.com/education/math/statistics/how-to-calculate-percentiles-in-statistics/
-   * @param array set of numbers to base the percentile on
-   * @param float the percentile required
-   * @return float the requested percentile
-   */
+    /**
+     * Returns a percentile from a list of numbers
+     * Not sure what the idea here was as this is not a percentile calculation
+     * see https://www.dummies.com/education/math/statistics/how-to-calculate-percentiles-in-statistics/
+     * @param array set of numbers to base the percentile on
+     * @param float the percentile required
+     * @return float the requested percentile
+     */
     static function percentile($data, $percentile)
     {
         $count = count($data);
@@ -144,7 +144,7 @@ class MathsUtils
             return 0.0;
         }
 
-      // If any of the array elements are not a number we cannot calculate the percentile so return 0.
+        // If any of the array elements are not a number we cannot calculate the percentile so return 0.
         foreach ($data as $idx) {
             if (!is_numeric($idx)) {
                 return 0.0;

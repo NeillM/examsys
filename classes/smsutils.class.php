@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Utility class for Student Management System (SMS) related functions
-*
-* @author Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Utility class for Student Management System (SMS) related functions
+ *
+ * @author Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once(dirname(__DIR__) . '/include/load_config.php');
 

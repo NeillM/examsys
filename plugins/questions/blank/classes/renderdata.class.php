@@ -30,24 +30,24 @@ class renderdata extends \questiondata
 {
     use \defaultgetmarks;
 
-  /**
-   * Blank options
-   * @var array
-   */
+    /**
+     * Blank options
+     * @var array
+     */
     public $blankoptions;
 
-  /**
-   * Constructor
-   */
+    /**
+     * Constructor
+     */
     function __construct()
     {
         parent::__construct();
         $this->questiontype = 'blank';
     }
 
-  /**
-   * Disable/Enable display of question header sections for template rendering
-   */
+    /**
+     * Disable/Enable display of question header sections for template rendering
+     */
     public function set_question_head()
     {
         $this->displaydefault = true;
@@ -63,46 +63,46 @@ class renderdata extends \questiondata
         }
     }
 
-  /**
-   * Question level settings for template rendering
-   * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   * @param mixed $useranswer user answer
-   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
-   */
+    /**
+     * Question level settings for template rendering
+     * @param boolean $screen_pre_submitted has the user submitted and answer previously
+     * @param mixed $useranswer user answer
+     * @param string $userdismissed list of enable/disable flag for options the user has dismissed
+     */
     public function set_question($screen_pre_submitted, $useranswer, $userdismissed)
     {
-      // Noting to do.
+        // Noting to do.
     }
 
-  /**
-   * Option level settings for template rendering
-   * @param integer $part_id part loop id
-   * @param mixed $useranswer user answer
-   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
-   * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   */
+    /**
+     * Option level settings for template rendering
+     * @param integer $part_id part loop id
+     * @param mixed $useranswer user answer
+     * @param string $userdismissed list of enable/disable flag for options the user has dismissed
+     * @param boolean $screen_pre_submitted has the user submitted and answer previously
+     */
     public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
     {
         $option = $this->get_opt($part_id);
         $ans = '';
         $blank_mark = array();
-      // Get possible answers.
+        // Get possible answers.
         $option['optiontext'] = str_replace('&nbsp;', ' ', $option['optiontext']);
-      // Create an array of all blurbs.
+        // Create an array of all blurbs.
         $blurbs = preg_split('/\[blank(\|)*(size="([0-9]{1,3})"\|)*(mark="([0-9]{1,3})"\|)*\](.*?)\[\/blank\]/', $option['optiontext']);
-      // Create an array of all blanks.
+        // Create an array of all blanks.
         preg_match_all('/\[blank(\|)*(size="([0-9]{1,3})"\|)*(mark="([0-9]{1,3})"\|)*\](.*?)\[\/blank\]/', $option['optiontext'], $blankmatch);
         $blanks = $blankmatch[6];
         $sizes = $blankmatch[3];
         $marks = $blankmatch[5];
-      // Decode user answer.
+        // Decode user answer.
         if (!is_null($useranswer)) {
             $useranswer = str_replace('&nbsp;', ' ', $useranswer);
             $blank_user_answers = json_decode($useranswer);
         } else {
             $blank_user_answers = array();
         }
-      // Create options, assign preivous user answers etc.
+        // Create options, assign preivous user answers etc.
         $count = 0;
         $itemcount = 1;
         $j = 0;
@@ -123,7 +123,7 @@ class renderdata extends \questiondata
                         $blank_size[$count] = 15;
                     }
                     $blankoption[$count]['size'] = $blank_size[$count];
-                  // Set question as unanswered if not attempted.
+                    // Set question as unanswered if not attempted.
                     if ((isset($blank_user_answers[$itemcount - 1]) and $blank_user_answers[$itemcount - 1] == 'u') and (isset($screen_pre_submitted) and $screen_pre_submitted == 1)) {
                           $this->unanswered = true;
                           $blankoption[$count]['unans'] = true;
@@ -132,19 +132,19 @@ class renderdata extends \questiondata
                         if (isset($blank_user_answers[$itemcount - 1])) {
                             $ans = $blank_user_answers[$itemcount - 1];
                         }
-                // Encoded user answer for display.
+                        // Encoded user answer for display.
                         $encoded_ans = htmlentities($ans, ENT_COMPAT | ENT_HTML5, \Config::get_instance()->get('cfg_page_charset'), false);
                         $blankoption[$count]['encoded_ans'] = $encoded_ans;
                     }
-              // Drop Down display.
+                    // Drop Down display.
                 } else {
-                // Get list of possible answers.
+                    // Get list of possible answers.
                     $answer_list = explode(',', $blanks[$j]);
-                // Ensure that the correct answer is filtered in the same way as the user's answer.
+                    // Ensure that the correct answer is filtered in the same way as the user's answer.
                     $answer_list = \param::clean_array($answer_list, \param::TEXT);
-                // Shuffle the answers up.
+                    // Shuffle the answers up.
                     shuffle($answer_list);
-                // If question previsouly answered auto select option.
+                    // If question previsouly answered auto select option.
                     for ($i = 0; $i < count($answer_list); $i++) {
                         if (isset($answer_list[$i]) and isset($blank_user_answers[$itemcount - 1]) and html_entity_decode(trim($answer_list[$i])) == html_entity_decode(trim($blank_user_answers[$itemcount - 1]))) {
                             $blankoption[$count]['itemvalue'][] = array('answer' => htmlentities(trim($answer_list[$i]), ENT_COMPAT, 'UTF-8', false), 'selected' => true);
@@ -152,7 +152,7 @@ class renderdata extends \questiondata
                             $blankoption[$count]['itemvalue'][] = array('answer' => htmlentities(trim($answer_list[$i]), ENT_COMPAT, 'UTF-8', false), 'selected' => false);
                         }
                     }
-                // Set question as unanswered if not attempted.
+                    // Set question as unanswered if not attempted.
                     if (isset($blank_user_answers[$itemcount - 1]) and $blank_user_answers[$itemcount - 1] == 'u' and $screen_pre_submitted == 1) {
                         $blankoption[$count]['unans'] = true;
                         $this->unanswered = true;
@@ -160,7 +160,7 @@ class renderdata extends \questiondata
                         $blankoption[$count]['unans'] = false;
                     }
                 }
-            // Mark per blank option.
+                // Mark per blank option.
                 if (!empty($marks[$j])) {
                     $blank_mark[$j] = $marks[$j];
                 } else {
@@ -172,7 +172,7 @@ class renderdata extends \questiondata
         }
         $this->blankoptions = $blankoption;
 
-      // Calculate total marks.
+        // Calculate total marks.
         if ($this->scoremethod == 'Mark per Option') {
             if (count($blank_mark) > 0) {
                 foreach ($blank_mark as $individual_mark) {
@@ -184,15 +184,15 @@ class renderdata extends \questiondata
         }
     }
 
-  /**
-   * Additional option level settings for template rendering
-   * @param integer $part_id part loop id
-   * @param mixed $useranswer user answer
-   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
-   * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   */
+    /**
+     * Additional option level settings for template rendering
+     * @param integer $part_id part loop id
+     * @param mixed $useranswer user answer
+     * @param string $userdismissed list of enable/disable flag for options the user has dismissed
+     * @param boolean $screen_pre_submitted has the user submitted and answer previously
+     */
     public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
     {
-      // Nothing to do.
+        // Nothing to do.
     }
 }

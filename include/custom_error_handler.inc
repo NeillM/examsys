@@ -46,14 +46,14 @@ function exceptionHandler($exception)
     $notice = UserNotices::get_instance();
     $userObject = UserObject::get_instance();
 
-  // these are our templates
+    // these are our templates
     $traceline = '#%s %s(%s): %s(%s)';
     $msg = "Uncaught Exception error:  Uncaught exception '%s' with message '%s' in %s:%s\nStack trace:\n%s\n  thrown in %s on line %s";
 
-  // alter your trace as you please, here
+    // alter your trace as you please, here
     $trace = $exception->getTrace();
 
-  // build your tracelines
+    // build your tracelines
     $result = array();
     foreach ($trace as $key => $stackPoint) {
         if (!isset($stackPoint['file'])) {
@@ -68,22 +68,22 @@ function exceptionHandler($exception)
         if (!isset($stackPoint['args'])) {
             $stackPoint['args'] = 'UNKNOWN';
         }
-      /*$result[] = sprintf(
-      $traceline,
-      $key,
-      $stackPoint['file'],
-      $stackPoint['line'],
-      $stackPoint['function'],
-      implode(', ', $stackPoint['args'])
-      );*/
+        /*$result[] = sprintf(
+        $traceline,
+        $key,
+        $stackPoint['file'],
+        $stackPoint['line'],
+        $stackPoint['function'],
+        implode(', ', $stackPoint['args'])
+        );*/
     }
-  // trace always ends with {main}
+    // trace always ends with {main}
     if (!isset($key)) {
         $key = 0;
     }
     $result[] = '#' . ++$key . ' {main}';
 
-  // write tracelines into main template
+    // write tracelines into main template
     $msg = sprintf(
         $msg,
         get_class($exception),
@@ -95,7 +95,7 @@ function exceptionHandler($exception)
         $exception->getLine()
     );
 
-  // log or echo as you please
+    // log or echo as you please
     error_log($msg);
 
     $paperID = null;
@@ -152,7 +152,7 @@ function exceptionHandler($exception)
 function error_handling($context = null)
 {
     if (is_null($context) or !isset($context)) {
-      // If no array set get currently define variables in this object.
+        // If no array set get currently define variables in this object.
         return 'NOTHING PARSED TO DECODE';
     }
 
@@ -199,7 +199,7 @@ function error_handling($context = null)
                 }
                 $context1[$key] = $tmp;
             } elseif (is_array($value)) {
-              // Just use basic error handling as this was causing endless loops when fed back recursively into this function.
+                // Just use basic error handling as this was causing endless loops when fed back recursively into this function.
                 return $context;
             } else {
                 $context1[$key] = $value;
@@ -225,14 +225,14 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context)
     $dispallerrors = $configObject->get('displayallerrors');
     $logerrors = $configObject->get('logerrors');
 
-  // Log level.
+    // Log level.
     if ($disperrors or $logerrors) {
         error_reporting(E_ALL);
     } else {
         error_reporting(0);
     }
 
-  // Display errors.
+    // Display errors.
     if ($disperrors === true) {
         ini_set('display_errors', 1);
         ini_set('display_startup_errors', 1);
@@ -241,14 +241,14 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context)
         ini_set('display_startup_errors', 0);
     }
 
-  // Log errors.
+    // Log errors.
     if ($logerrors === true) {
         ini_set('log_errors', 1);
     } else {
         ini_set('log_errors', 0);
     }
     if (isset($debug_pagestart)) {
-      // We are in a debug session do not log errors to DB just display them.
+        // We are in a debug session do not log errors to DB just display them.
         return false;
     }
 
@@ -274,7 +274,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context)
             break;
     }
 
-  // Errors we do not want to log.
+    // Errors we do not want to log.
     if ($error_type == 'Warning' and $dispallerrors !== true) {
         if (strpos($errstr, 'mysqli::mysqli()') !== false) {
             return true;
@@ -287,7 +287,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context)
         } elseif (strpos($errstr, 'ldap_search()') !== false) {
             return true;
         } elseif (strpos($errstr, 'simplexml_load_string()') !== false) {
-          //QTI imports with invalid XML cause lots of warnings in the error logs. Filter them out.
+            //QTI imports with invalid XML cause lots of warnings in the error logs. Filter them out.
             return false;
         }
     }
@@ -468,8 +468,8 @@ function log_error($userid, $username, $error_type, $errstr, $errfile, $errline,
     $configObject = Config::get_instance();
     $notice = UserNotices::get_instance();
 
-  // Query may fail if we try to insert while another statement is open.
-  // Since we don't have a handle on the original statement, create another DB link
+    // Query may fail if we try to insert while another statement is open.
+    // Since we don't have a handle on the original statement, create another DB link
     $mysqli2 = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_username'), $configObject->get('cfg_db_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'), $configObject->get('cfg_db_port'));
     $log_error = $mysqli2->prepare('INSERT INTO sys_errors VALUES(NULL, NOW(), ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)');
     $log_error->bind_param('issssssssisss', $userid, $username, $error_type, $errstr, $errfile, $errline, $page, $querystring, $requestmethod, $paperID, $post_data, $variables, $backtrace);

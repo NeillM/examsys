@@ -16,13 +16,13 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Standards Setting report in CSV format.
-*
-* @author Richard Whitefoot (UEA)
-* @version 1.0
-* @package
-*/
+ *
+ * Standards Setting report in CSV format.
+ *
+ * @author Richard Whitefoot (UEA)
+ * @version 1.0
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';

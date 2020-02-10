@@ -28,38 +28,38 @@ use csv\csv_load_exception;
 class import_modules extends importer
 {
 
-  /**
-   * The list of modules where school was not found.
-   * @var array
-   */
+    /**
+     * The list of modules where school was not found.
+     * @var array
+     */
     private $moduleexists;
 
-  /**
-   * The list of modules added.
-   * @var array
-   */
+    /**
+     * The list of modules added.
+     * @var array
+     */
     private $moduleadded;
 
-  /**
-   * The list of modules that failed to add.
-   * @var array
-   */
+    /**
+     * The list of modules that failed to add.
+     * @var array
+     */
     private $modulefailed;
 
-  /**
-   * Required fields
-   * @var array
-   */
+    /**
+     * Required fields
+     * @var array
+     */
     const REQUIRED = array(
     'moduleid',
     'fullname',
     'school',
     );
 
-  /**
-   * Optional feilds
-   * @var array
-   */
+    /**
+     * Optional feilds
+     * @var array
+     */
     const OPTIONAL = array(
     'schoolcode',
     'smsapi',
@@ -78,11 +78,11 @@ class import_modules extends importer
     'externalid',
     );
 
-  /**
-   * Filter true/false responses
-   * @param $value true/false response
-   * @return bool
-   */
+    /**
+     * Filter true/false responses
+     * @param $value true/false response
+     * @return bool
+     */
     private function returnTrueFalse($value)
     {
         $value = strtolower(trim($value));
@@ -93,30 +93,30 @@ class import_modules extends importer
         }
     }
 
-  /**
-   * Do the module import described in the csv file.
-   * @throws csv_load_exception
-   */
+    /**
+     * Do the module import described in the csv file.
+     * @throws csv_load_exception
+     */
     public function execute()
     {
         $this->modulefailed = array();
         $this->moduleadded = array();
         $this->moduleexists = array();
 
-      // Set the required headers.
+        // Set the required headers.
         $this->handler->required_header(self::REQUIRED);
         $default_academic_year_start = $this->config->get_setting('core', 'system_academic_year_start');
         while ($line = $this->handler->get_line()) {
             $line['moduleid'] = trim($line['moduleid']);
             $line['fullname'] = trim($line['fullname']);
-          // Check if school exists.
+            // Check if school exists.
             if (!isset($line['schoolcode'])) {
                 $schools = \schoolutils::school_name_exists(trim($line['school']), $this->config->db);
             } else {
                 $schools = \schoolutils::get_schoolid_by_code(trim($line['schoolcode']), $this->config->db);
             }
             if ($schools === false) {
-              // School not found.
+                // School not found.
                 $this->modulefailed[] = $line['moduleid'];
                 continue;
             } else {
@@ -292,28 +292,28 @@ class import_modules extends importer
         }
     }
 
-  /**
-   * Get failed modules
-   * @return array
-   */
+    /**
+     * Get failed modules
+     * @return array
+     */
     public function get_failed()
     {
         return $this->modulefailed;
     }
 
-  /**
-   * Get added modules
-   * @return array
-   */
+    /**
+     * Get added modules
+     * @return array
+     */
     public function get_added()
     {
         return $this->moduleadded;
     }
 
-  /**
-   * Get modules that already exist
-   * @return array
-   */
+    /**
+     * Get modules that already exist
+     * @return array
+     */
     public function get_exists()
     {
         return $this->moduleexists;

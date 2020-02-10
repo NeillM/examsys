@@ -72,7 +72,7 @@ if ($paper_type == '0') {
 $result->execute();
 $result->bind_result($type, $id, $user_answer);
 while ($result->fetch()) {
-  // Decode user answers into an array of lowercase strings.
+    // Decode user answers into an array of lowercase strings.
     $tmp_answer = json_decode($user_answer);
     foreach ($tmp_answer as &$answer) {
         $answer = strtolower(StringUtils::clean_and_trim($answer));
@@ -88,7 +88,7 @@ $option_list_array = array();
 for ($i = 0; $i < $wordcount; $i++) {
     $postword = param::optional('word' . $i, null, param::TEXT, param::FETCH_POST);
     if (!is_null($postword)) {
-      // Encode commas.
+        // Encode commas.
         $word = str_replace(',', '&#44;', $postword);
         $option_list_array[] = $word;
     }
@@ -146,18 +146,18 @@ foreach ($log_answers as $log_type => $log_data) {
         $mark = 0;
         $have_answer = false;
         $saved_response = '';
-      // Required to shift array indexes.
+        // Required to shift array indexes.
         $blank_details_redo = array();
         $j = 0;
         $blank_details = explode('[blank', $new_option_text);
         for ($i = 1; $i <= $no_answers; $i++) {
-          // Strip out answers from $blank_details
-          // n.b. First item in $blank_details not required
-          // Step 1. get all contents after ]
+            // Strip out answers from $blank_details
+            // n.b. First item in $blank_details not required
+            // Step 1. get all contents after ]
             $blank_details_redo[$j] = substr($blank_details[$i], (strpos($blank_details[$i], ']') + 1));
-          // Step 2. get all contents before [/blank]
+            // Step 2. get all contents before [/blank]
             $blank_details_redo[$j] = substr($blank_details_redo[$j], 0, (strpos($blank_details[$i], '[/blank]') - 1));
-          // $blank_details_redo is now what was between ] and [/blank]
+            // $blank_details_redo is now what was between ] and [/blank]
             $answer_list = explode(',', $blank_details_redo[$j]);
             if ($user_parts[$j] != 'u' and $user_parts[$j] != '') {
                 $have_answer = true;
@@ -172,13 +172,13 @@ foreach ($log_answers as $log_type => $log_data) {
             }
             $j++;
         }
-      // Recalculate if mark per question
+        // Recalculate if mark per question
         if ($score_method == 'Mark per Question') {
             if ($have_answer) {
                 $mark = ($mark == $totalpos) ? $marks_correct : $marks_incorrect;
             }
         }
-      // Update marks in the database
+        // Update marks in the database
         $result = $mysqli->prepare("UPDATE log$log_type SET mark = ? WHERE id = ?");
         $result->bind_param('ii', $mark, $id);
         $result->execute();

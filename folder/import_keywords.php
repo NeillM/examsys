@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 ini_set('auto_detect_line_endings', true);
@@ -33,7 +33,7 @@ function keywords_from_file($fileName, $userObj, $db)
     if ($_GET['module'] == '') {
         $type = 'personal';
         $tmp_userID = $userObj->get_user_ID();
-// Get the existing personal keywords.
+        // Get the existing personal keywords.
         $existing_keywords = array();
         $result = $db->prepare('SELECT keyword FROM keywords_user WHERE userID = ?');
         $result->bind_param('i', $tmp_userID);
@@ -46,7 +46,7 @@ function keywords_from_file($fileName, $userObj, $db)
     } else {
         $type = 'team';
         $tmp_userID = $_GET['module'];
-    // Get the existing team keywords for the folder.
+        // Get the existing team keywords for the folder.
           $existing_keywords = array();
         $result = $db->prepare('SELECT keyword FROM keywords_user WHERE userID = ?');
         $result->bind_param('i', $_GET['module']);
@@ -58,7 +58,7 @@ function keywords_from_file($fileName, $userObj, $db)
         $result->close();
     }
   
-  // Process the file
+    // Process the file
     $lines = file($fileName);
     foreach ($lines as $separate_line) {
         $separate_line = trim($separate_line);

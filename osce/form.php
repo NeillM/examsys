@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../include/errors.php';
@@ -57,16 +57,16 @@ if (isset($_POST) and count($_POST) > 0) {
         save_osce_form($propertyObj, $userID, $_POST, $mysqli);
     }
     if (isset($_GET['dont_redirect']) and $_GET['dont_redirect'] == true) {
-      // Output the randomID so the JavaScript can check for success
+        // Output the randomID so the JavaScript can check for success
         echo $_GET['rnd'];
     } else {
-      // Redirect back to the class list to get the next student.
+        // Redirect back to the class list to get the next student.
         header('location: ' . $configObject->get('cfg_root_path') . '/osce/class_list.php?id=' . $_GET['id']);
     }
 
     exit();
 } else {
-  // Get the module ID and calendar year of the OSCE station.
+    // Get the module ID and calendar year of the OSCE station.
     if (isset($_GET['username']) and $_GET['username'] == 'test') {
         $title = 'Mr';
         $surname = 'Student';
@@ -86,7 +86,7 @@ if (isset($_POST) and count($_POST) > 0) {
         $test = false;
     }
 
-  // Check time security
+    // Check time security
     if ($test == false) {
         if (time() < $start_date or time() > $end_date) {
             $dateformat = $configObject->get('cfg_short_datetime_php');
@@ -178,7 +178,7 @@ if (isset($_POST) and count($_POST) > 0) {
     echo '<td style="vertical-align:top; text-align:left"><div class="osce_title">' . $propertyObj->get_paper_title() . "</div><div class=\"student_name\">$title $surname, <span style=\"color:#808080\">$first_names</span></div><div class=\"student_id\">($student_id)</div></td></table>\n<table cellpadding=\"2\" cellspacing=\"0\" style=\"width:100%\">";
 
     if ($test == false) {
-      // Query Log4 just in case form has already been submitted for this user.
+        // Query Log4 just in case form has already been submitted for this user.
         $stored_results = array();
         $result = $mysqli->prepare('SELECT q_id, rating, q_parts, feedback, overall_rating FROM log4, log4_overall WHERE log4.log4_overallID = log4_overall.id AND q_paper = ? AND userID = ?');
         $result->bind_param('ii', $paperID, $userID);
@@ -191,13 +191,13 @@ if (isset($_POST) and count($_POST) > 0) {
         $result->close();
     }
 
-  // Get the questions.
+    // Get the questions.
     $question_no = 1;
     $max_cols = 0;
     $cell_colors = array('#D99694', '#E5B9B7', '#FFC169', '#C2D69B', '#C2DFFF','#5ea2ef','#4b0082', '#4b00FF','#9400d3','#9400FF');
-  /**
-   * Getting the max column number
-   */
+    /**
+     * Getting the max column number
+     */
     $max_cols_result = $mysqli->prepare("SELECT display_method FROM papers, questions WHERE paper = ? AND papers.question = questions.q_id ORDER BY CHAR_LENGTH(display_method) - CHAR_LENGTH(REPLACE(display_method, '|', '')) desc limit 1");
     $max_cols_result->bind_param('i', $paperID);
     $max_cols_result->execute();
@@ -303,12 +303,12 @@ if (isset($_POST) and count($_POST) > 0) {
     <?php
     $mysqli->close();
 
-  // JS utils dataset.
+    // JS utils dataset.
     $jsdataset['name'] = 'jsutils';
     $jsdataset['attributes']['xls'] = json_encode($string);
     $render = new render($configObject);
     $render->render($jsdataset, array(), 'dataset.html');
-  // Dataset.
+    // Dataset.
     $miscdataset['name'] = 'dataset';
     $miscdataset['attributes']['number_of_qs'] = $number_of_qs;
     $miscdataset['attributes']['marking'] = $marking;

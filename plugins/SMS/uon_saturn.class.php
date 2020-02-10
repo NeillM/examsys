@@ -63,28 +63,28 @@ class UON_SATURN extends SmsUtils
         if (count($user) > 0) {
             return $user;
         } else {
-          //no user found return false
+            //no user found return false
             return false;
         }
     }
 
-  /**
-   * Retrieve the data about the module
-   * @param string $moduleID modulecode
-   * @param mysqli $mysqli db connection
-   * @return bool|string false on error, otherwise module data
-   */
+    /**
+     * Retrieve the data about the module
+     * @param string $moduleID modulecode
+     * @param mysqli $mysqli db connection
+     * @return bool|string false on error, otherwise module data
+     */
     public function get_module($moduleID, $mysqli)
     {
         $users = array();
 
-      // Calculate what the current academic session is.
+        // Calculate what the current academic session is.
         $yearutils = new yearutils($mysqli);
         $session = (isset($_GET['session']) and $_GET['session'] != '') ? $_GET['session'] : $yearutils->get_current_session();
         $replaced_module = str_replace('_UNMC', '', $moduleID);
         $replaced_module = str_replace('_UNNC', '', $replaced_module);
 
-      // If session does not exist we can quit now.
+        // If session does not exist we can quit now.
         if (!$yearutils->check_calendar_year($session)) {
             return false;
         }
@@ -106,12 +106,12 @@ class UON_SATURN extends SmsUtils
         }
     }
 
-  /**
-   * Get info about module eg school and title
-   * @param string $moduleID the modulecode
-   * @param mysqli $mysqli db connection
-   * @return array $moduleID the modulecode, $moduletitle the title of the module, $school the school of the module
-   */
+    /**
+     * Get info about module eg school and title
+     * @param string $moduleID the modulecode
+     * @param mysqli $mysqli db connection
+     * @return array $moduleID the modulecode, $moduletitle the title of the module, $school the school of the module
+     */
     public function get_module_info($moduleID, $mysqli)
     {
         $xml = $this->get_module($moduleID, $mysqli);
@@ -159,7 +159,7 @@ class UON_SATURN extends SmsUtils
         if (count($users) > 0) {
             return $users;
         } else {
-          //no user found return false
+            //no user found return false
             return false;
         }
     }
@@ -222,13 +222,13 @@ class UON_SATURN extends SmsUtils
         $enrolement_details = '';
         $deletion_details = '';
 
-      // UoN code to strip off prefix codes.
-      //------------------------------------
+        // UoN code to strip off prefix codes.
+        //------------------------------------
         $replaced_module = str_replace('_UNMC', '', $module);
         $replaced_module = str_replace('_UNNC', '', $replaced_module);
-      //------------------------------------
+        //------------------------------------
 
-      // Get the currently enrolled students in Rogo for the module.
+        // Get the currently enrolled students in Rogo for the module.
         $current_users = array();
         $student_data = $mysqli->prepare('SELECT modules_student.id, users.id, username, grade, title, surname, first_names, initials, roles, yearofstudy, auto_update, sid.student_id FROM (modules_student, users) LEFT JOIN sid ON users.id = sid.userID WHERE modules_student.userID = users.id AND calendar_year = ? AND idMod = ?');
         $student_data->bind_param('si', $session, $idMod);
@@ -253,7 +253,7 @@ class UON_SATURN extends SmsUtils
 
         $c_u = $current_users;
 
-      // Look up SMS
+        // Look up SMS
         $returned_data = @file_get_contents($sms_api . "&code=$replaced_module&year=" . $session);
         $xml = false;
         if ($returned_data !== false) {
@@ -278,7 +278,7 @@ class UON_SATURN extends SmsUtils
                     if (isset($current_users[$lookup_username]['delete'])) {
                         $current_users[$lookup_username]['delete'] = 0; // Mark as being legitimate
                     } else {
-                  // Student missing from Rogo module
+                        // Student missing from Rogo module
                         $student_data = $mysqli->prepare("SELECT id, yearofstudy, initials, grade, title, surname, first_names, roles, email, COALESCE(sid.student_id,'SID_ERROR') FROM users LEFT JOIN sid ON users.id = sid.userID WHERE username = ? LIMIT 1"); // Do they have a Rogo user record?
                         $student_data->bind_param('s', $lookup_username);
                         $student_data->execute();
@@ -287,7 +287,7 @@ class UON_SATURN extends SmsUtils
                         $student_data->fetch();
 
                         if ($student_data->num_rows == 0) {
-                        // Going to have to create a whole new account for the user
+                            // Going to have to create a whole new account for the user
                             $names = explode(' ', $sms->Forename);
                             $initials = '';
                             foreach ($names as $tmp_name) {
@@ -325,7 +325,7 @@ class UON_SATURN extends SmsUtils
                             $current_users[$lookup_username]['student_id']    = $tmp_student_id;
                             $current_users[$lookup_username]['delete']            = 0;
                         }
-              // Add student onto the module
+                        // Add student onto the module
                         $auto_update = 1; //set auto_update to student module association
                         if (!$demomode) {
                             $success = UserUtils::add_student_to_module($tmp_userID, $idMod, 1, $session, $mysqli, $auto_update);
@@ -342,7 +342,7 @@ class UON_SATURN extends SmsUtils
                         $student_data->close();
                     }
 
-                // Check to see if any details of the user account need updating.
+                    // Check to see if any details of the user account need updating.
                     if (strtoupper(substr($sms->ReasonForLeaving, 0, 3)) == 'W/D') {
                             $new_roles = 'left';
                     } elseif (stripos($sms->ReasonForLeaving, 'not permitted to progress') !== false) {
@@ -383,7 +383,7 @@ class UON_SATURN extends SmsUtils
                                 $result->close();
                     }
 
-              // Check if SID needs updating - rare but could happen
+                    // Check if SID needs updating - rare but could happen
                     if ($current_users[$lookup_username]['student_id'] != $sms->StudentID) {
                         if ($current_users[$lookup_username]['student_id'] == 'SID_ERROR') {
                             $result = $mysqli->prepare('INSERT INTO sid VALUES (?, ?)');
@@ -402,7 +402,7 @@ class UON_SATURN extends SmsUtils
                 }
             }
 
-          // Check for any extra students in Rogo but not in SATURN for module
+            // Check for any extra students in Rogo but not in SATURN for module
             foreach ($current_users as $username => $individual_user) {
                 if ($individual_user['delete'] == 1 and $individual_user['auto_update'] == 1) {
                     $result = $mysqli->prepare('DELETE FROM modules_student WHERE id = ?'); // Delete using primary key of 'modules_student'
@@ -437,7 +437,7 @@ class UON_SATURN extends SmsUtils
 
         $expdata = array();
         if ($demomode) {
-          // Write out to temp
+            // Write out to temp
             $dir = sys_get_temp_dir();
 
             $expdata['status']            = $this->errorinfo;

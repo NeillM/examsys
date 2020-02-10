@@ -25,25 +25,25 @@
  */
 class MappingUtils
 {
-  /**
-   * Get the VLE API that is in effect for the given module and academic year
-   * either from the module itself or from existing relationships
-   * @param  integer $idMod         ID of the module
-   * @param  string  $session       Calendar year in the form YYYY
-   * @param  array   $vle_api_cache List of chached API references
-   * @param  mysqli  $db            DB link
-   * @return string                 Name of the VLE API that is in effect
-   */
+    /**
+     * Get the VLE API that is in effect for the given module and academic year
+     * either from the module itself or from existing relationships
+     * @param  integer $idMod         ID of the module
+     * @param  string  $session       Calendar year in the form YYYY
+     * @param  array   $vle_api_cache List of chached API references
+     * @param  mysqli  $db            DB link
+     * @return string                 Name of the VLE API that is in effect
+     */
     public static function get_vle_api($idMod, $session, &$vle_api_cache, $db)
     {
         if (!isset($vle_api_cache[$idMod][$session])) {
-          // Are there any existing relationships for the module in this session?
+            // Are there any existing relationships for the module in this session?
             $rels = Relationship::find($db, $idMod, $session, -1, '', 1);
             if ($rels !== false and count($rels) > 0) {
                 $vle_api = $rels[0]->get_vle_api();
                 $map_level = $rels[0]->get_map_level();
             } else {
-              // No existing relationships. Use VLE API as defined in the module
+                // No existing relationships. Use VLE API as defined in the module
                 $stmt = $db->prepare('SELECT vle_api, map_level FROM modules WHERE id = ? LIMIT 1');
                 $stmt->bind_param('s', $idMod);
                 $stmt->execute();
@@ -61,10 +61,10 @@ class MappingUtils
         return $vle_api_data;
     }
 
-  /**
-   * Get starting point for objective ID
-   * @return int
-   */
+    /**
+     * Get starting point for objective ID
+     * @return int
+     */
     public static function get_objectives_start()
     {
         $config = Config::get_instance();
@@ -82,10 +82,10 @@ class MappingUtils
         return $obj_id;
     }
 
-  /**
-   * Get highest session identifier
-   * @return int
-   */
+    /**
+     * Get highest session identifier
+     * @return int
+     */
     public static function get_sessions_start()
     {
         $config = Config::get_instance();
@@ -95,7 +95,7 @@ class MappingUtils
         while ($result->fetch()) {
             $identifier = $largest + 1;
         }
-      // Copied this logic from old inline code. Not sure of the point of it.
+        // Copied this logic from old inline code. Not sure of the point of it.
         if ($identifier < 10) {
             $identifier = self::generate_session_identifier();
         }

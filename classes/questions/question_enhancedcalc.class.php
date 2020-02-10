@@ -69,19 +69,19 @@ class QuestionENHANCEDCALC extends QuestionEdit
         $this->_score_methods = array($this->_lang_strings['allowpartial']);
         $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect'], 'marks_partial' => $this->_lang_strings['markspartial']);
 
-      // Convert the max number of options into a list of variables
+        // Convert the max number of options into a list of variables
         $this->variable_labels = range('A', chr(64 + $this->max_options));
         $this->option_order = 'display order';
     }
 
-  /**
-   * Persist the object to the database
-   * @return boolean Success or failure of the save operation
-   * @throws ValidationException
-   */
+    /**
+     * Persist the object to the database
+     * @return boolean Success or failure of the save operation
+     * @throws ValidationException
+     */
     public function save($clear_checkout = true)
     {
-      // Extract options into arrays for JSON encoding
+        // Extract options into arrays for JSON encoding
         $this->extract_answers();
         $this->extract_vars();
         $this->extract_marks();
@@ -97,39 +97,39 @@ class QuestionENHANCEDCALC extends QuestionEdit
         return $status;
     }
 
-  // ACCESSORS
+    // ACCESSORS
 
-  /**
-   * Get the variables for the question
-   * @return integer
-   */
+    /**
+     * Get the variables for the question
+     * @return integer
+     */
     public function get_variables()
     {
         return $this->vars;
     }
 
-  /**
-   * Get the answers for the question
-   * @return integer
-   */
+    /**
+     * Get the answers for the question
+     * @return integer
+     */
     public function get_answers()
     {
         return $this->answers;
     }
 
-  /**
-   * Get the units for the question
-   * @return integer
-   */
+    /**
+     * Get the units for the question
+     * @return integer
+     */
     public function get_units()
     {
         return $this->units;
     }
 
-  /**
-   * Set the units for the question
-   * @param unknown_type $value
-   */
+    /**
+     * Set the units for the question
+     * @param unknown_type $value
+     */
     public function set_units($value)
     {
         if ($value != $this->units) {
@@ -138,17 +138,17 @@ class QuestionENHANCEDCALC extends QuestionEdit
         }
     }
 
-  /**
-   * Get the number of decimal places or significant figures for the question
-   * @return integer
-   */
+    /**
+     * Get the number of decimal places or significant figures for the question
+     * @return integer
+     */
     public function get_answer_precision()
     {
         if ($this->id == -1) {
             return '0 dp';  // Set up the default if a new question
         }
         
-      // If not enforced return blank
+        // If not enforced return blank
         if (!$this->strictdisplay) {
             return '';
         }
@@ -171,10 +171,10 @@ class QuestionENHANCEDCALC extends QuestionEdit
         return $rval . ' ' . $rtype . $rzeros;
     }
 
-  /**
-   * Set the number of decimal places for the question
-   * @param string $value
-   */
+    /**
+     * Set the number of decimal places for the question
+     * @param string $value
+     */
     public function set_answer_precision($value)
     {
         if ($value == '') {
@@ -216,46 +216,46 @@ class QuestionENHANCEDCALC extends QuestionEdit
         }
     }
 
-  /**
-   * Get whether the question requires answers to stricly match the display precision
-   * @return boolean
-   */
+    /**
+     * Get whether the question requires answers to stricly match the display precision
+     * @return boolean
+     */
     public function get_strict_display()
     {
         return $this->strictdisplay;
     }
 
-  /**
-   * Get whether trailing zeros should be taken into account when calculating the display precision
-   * @return boolean
-   */
+    /**
+     * Get whether trailing zeros should be taken into account when calculating the display precision
+     * @return boolean
+     */
     public function get_strict_zeros()
     {
         return $this->strictzeros;
     }
 
-  /**
-   * Get the possible labels for variables
-   * @return arar List of variable labels
-   */
+    /**
+     * Get the possible labels for variables
+     * @return arar List of variable labels
+     */
     public function get_variable_labels()
     {
         return $this->variable_labels;
     }
 
-  /**
-   * Get whether to display units for the question
-   * @return integer
-   */
+    /**
+     * Get whether to display units for the question
+     * @return integer
+     */
     public function get_show_units()
     {
         return $this->show_units;
     }
 
-  /**
-   * Set whether to display units for the question
-   * @param boolean $value
-   */
+    /**
+     * Set whether to display units for the question
+     * @param boolean $value
+     */
     public function set_show_units($value)
     {
         $value = $this->get_checkbox_bool($value);
@@ -265,19 +265,19 @@ class QuestionENHANCEDCALC extends QuestionEdit
         }
     }
 
-  /**
-   * Get the marks adjustment for units for the question
-   * @return integer
-   */
+    /**
+     * Get the marks adjustment for units for the question
+     * @return integer
+     */
     public function get_marks_unit()
     {
         return $this->marks_unit;
     }
 
-  /**
-   * Set the marks adjustment for units for the question
-   * @param mixed $value
-   */
+    /**
+     * Set the marks adjustment for units for the question
+     * @param mixed $value
+     */
     public function set_marks_unit($value)
     {
         if ($value != $this->marks_unit) {
@@ -286,19 +286,19 @@ class QuestionENHANCEDCALC extends QuestionEdit
         }
     }
 
-  /**
-   * Get the question marks for correct answers
-   * @return string
-   */
+    /**
+     * Get the question marks for correct answers
+     * @return string
+     */
     public function get_marks_correct()
     {
         return $this->marks_correct;
     }
 
-  /**
-   * Set the question marks for correct answers
-   * @param string $value
-   */
+    /**
+     * Set the question marks for correct answers
+     * @param string $value
+     */
     public function set_marks_correct($value, $log_change = true)
     {
         if ($log_change and $value != $this->marks_correct) {
@@ -307,19 +307,19 @@ class QuestionENHANCEDCALC extends QuestionEdit
         $this->marks_correct = $value;
     }
 
-  /**
-   * Get the question marks for incorrect answers
-   * @return string
-   */
+    /**
+     * Get the question marks for incorrect answers
+     * @return string
+     */
     public function get_marks_incorrect()
     {
         return $this->marks_incorrect;
     }
 
-  /**
-   * Set the question marks for incorrect answers
-   * @param string $value
-   */
+    /**
+     * Set the question marks for incorrect answers
+     * @param string $value
+     */
     public function set_marks_incorrect($value, $log_change = true)
     {
         if ($log_change and $value != $this->marks_incorrect) {
@@ -329,18 +329,18 @@ class QuestionENHANCEDCALC extends QuestionEdit
     }
 
     /**
-   * Get the question marks for partially correct answers
-   * @return string
-   */
+     * Get the question marks for partially correct answers
+     * @return string
+     */
     public function get_marks_partial()
     {
         return $this->marks_partial;
     }
 
-  /**
-   * Set the question marks for partially correct answers
-   * @param string $value
-   */
+    /**
+     * Set the question marks for partially correct answers
+     * @param string $value
+     */
     public function set_marks_partial($value)
     {
         if ($value != $this->marks_partial) {
@@ -349,10 +349,10 @@ class QuestionENHANCEDCALC extends QuestionEdit
         $this->marks_partial = $value;
     }
 
-  /**
-   * Get the full marks tolerance for the question
-   * @return integer
-   */
+    /**
+     * Get the full marks tolerance for the question
+     * @return integer
+     */
     public function get_tolerance_full()
     {
         if ($this->fulltoltyp == '%') {
@@ -361,19 +361,19 @@ class QuestionENHANCEDCALC extends QuestionEdit
         return $this->tolerance_full;
     }
 
-  /**
-   * Set the full marks tolerance for the question
-   * @param unknown_type $value
-   */
+    /**
+     * Set the full marks tolerance for the question
+     * @param unknown_type $value
+     */
     public function set_tolerance_full($value)
     {
         $this->set_tolerance_value($value, 'tolerance_full', $this->tolerance_full, $this->fulltoltyp);
     }
 
-  /**
-   * Get the partial marks tolerance for the question
-   * @return integer
-   */
+    /**
+     * Get the partial marks tolerance for the question
+     * @return integer
+     */
     public function get_tolerance_partial()
     {
         if ($this->parttoltyp == '%') {
@@ -382,22 +382,22 @@ class QuestionENHANCEDCALC extends QuestionEdit
         return $this->tolerance_partial;
     }
 
-  /**
-   * Set the partial marks tolerance for the question
-   * @param unknown_type $value
-   */
+    /**
+     * Set the partial marks tolerance for the question
+     * @param unknown_type $value
+     */
     public function set_tolerance_partial($value)
     {
         $this->set_tolerance_value($value, 'tolerance_partial', $this->tolerance_partial, $this->parttoltyp);
     }
 
-  /**
-   * Get the source of marks data for this question, usually the first option
-   * @return mixed The source of marks or false if none has yet been defined
-   */
+    /**
+     * Get the source of marks data for this question, usually the first option
+     * @return mixed The source of marks or false if none has yet been defined
+     */
     public function get_marks_source()
     {
-      // For this question type this object will provide the marks data
+        // For this question type this object will provide the marks data
         if ($this->id != -1) {
             return $this;
         } else {
@@ -407,21 +407,21 @@ class QuestionENHANCEDCALC extends QuestionEdit
 
     function get_settings()
     {
-      // Extracting answers temporarily populates answers and vars with the option data
+        // Extracting answers temporarily populates answers and vars with the option data
         $this->extract_answers();
         $this->extract_vars();
         $this->extract_marks();
 
-      // Serialise it into the setting var then extract again to reset answers and vars to option indices
+        // Serialise it into the setting var then extract again to reset answers and vars to option indices
         $this->serialize_settings();
         $this->unserialize_settings();
 
         return $this->settings;
     }
 
-  /**
-   * Unpack JSON string containing extra data into local fields
-   */
+    /**
+     * Unpack JSON string containing extra data into local fields
+     */
     protected function unserialize_settings()
     {
         $extra = json_decode($this->settings, true);
@@ -440,10 +440,10 @@ class QuestionENHANCEDCALC extends QuestionEdit
         $this->unserialize_marks();
     }
 
-  /**
-   * Parse the data for the answers
-   * @param  array $data Data describing the answers in the form of a formula and associated units
-   */
+    /**
+     * Parse the data for the answers
+     * @param  array $data Data describing the answers in the form of a formula and associated units
+     */
     private function unserialize_answers($data)
     {
         $i = 1;
@@ -465,10 +465,10 @@ class QuestionENHANCEDCALC extends QuestionEdit
         }
     }
 
-  /**
-   * Parse the data for the variables
-   * @param  array $data Data describing the variables indexed by the variable label
-   */
+    /**
+     * Parse the data for the variables
+     * @param  array $data Data describing the variables indexed by the variable label
+     */
     private function unserialize_vars($data)
     {
         $i = 1;
@@ -548,10 +548,10 @@ class QuestionENHANCEDCALC extends QuestionEdit
         }
     }
 
-  /**
-   * Set the full marks tolerance for the question
-   * @param unknown_type $value
-   */
+    /**
+     * Set the full marks tolerance for the question
+     * @param unknown_type $value
+     */
     private function set_tolerance_value($value, $type_string, &$val_target, &$type_target)
     {
         if (StringUtils::ends_with($value, '%')) {
@@ -570,17 +570,17 @@ class QuestionENHANCEDCALC extends QuestionEdit
         }
     }
 
-  /**
-   * Validate the question object before saving
-   * @return Mixed <boolean, string>
-   */
+    /**
+     * Validate the question object before saving
+     * @return Mixed <boolean, string>
+     */
     protected function validate()
     {
         $rval = true;
 
-      // If there are errors return an appropriate message
+        // If there are errors return an appropriate message
 
-      // Required fields
+        // Required fields
         $missing_fields = '';
         foreach ($this->_fields_required as $req) {
             if (empty($this->$req)) {
@@ -591,7 +591,7 @@ class QuestionENHANCEDCALC extends QuestionEdit
             $rval = $this->_lang_strings['missingfieldserror'] . ' ' . rtrim($missing_fields, ', ');
         }
 
-      // Number of answers
+        // Number of answers
         $have_formula = false;
         foreach ($this->options as $option) {
             if ($option->get_formula() != '') {

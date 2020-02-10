@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -160,7 +160,7 @@ while ($result->fetch()) {
         $list_on = 1;
     }
     $response = trim(strtolower($user_answer));
-// $match = false;
+    // $match = false;
     if ($response != null and $response != 'n/a' and strlen($response) > 1) {
         $occurrence_comments++;
         echo "<li class=\"response\">$user_answer</li>\n";

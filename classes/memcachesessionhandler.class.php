@@ -22,11 +22,11 @@
  */
 class memcachesessionhandler extends SessionHandler
 {
-  /**
-   * Read session data
-   * @param string $id The session id to read data for.
-   * @return string
-   */
+    /**
+     * Read session data
+     * @param string $id The session id to read data for.
+     * @return string
+     */
     public function read($id)
     {
         $data = parent::read($id);

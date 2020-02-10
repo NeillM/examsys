@@ -28,13 +28,13 @@ function get_students($modules, $property_object, $log_lab_end_time, $allow_timi
 
     $configObject = Config::get_instance();
 
-  //create a caching LogExtraTime gets all the results in one hit
+    //create a caching LogExtraTime gets all the results in one hit
     $log_extra_time = new LogExtraTime($log_lab_end_time, array(), $db, true);
 
-  // Get any student notes.
+    // Get any student notes.
     $notes_array = PaperNotes::get_all_notes_by_paper($paperID, $db);
   
-  // Get any student toilet breaks.
+    // Get any student toilet breaks.
     $toilet_break_array = ToiletBreaks::get_all_breaks_by_paper($paperID, $db);
     ?>
 
@@ -159,7 +159,7 @@ function get_students($modules, $property_object, $log_lab_end_time, $allow_timi
 function process_student_list($log_lab_end_time, $log_extra_time, $student_object, $property_object, $configObject, $notes_array, $toilet_break_array, $allow_timing, $string, $mysqli)
 {
 
-  // Determine when the current exam session will end
+    // Determine when the current exam session will end
 
     $lab_session_end_datetime = $log_lab_end_time->get_session_end_date_datetime();
 
@@ -183,23 +183,23 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
     $lab_session_start_datetime = clone $lab_session_end_datetime;
     $lab_session_start_datetime->sub($exam_duration_interval);
 
-  // Determine when the student's exam session will end
+    // Determine when the student's exam session will end
 
-  //set userID log_extra_time as we are in cached mode
+    //set userID log_extra_time as we are in cached mode
     $log_extra_time->set_student_object($student_object);
 
     $student_end_datetime = $lab_session_end_datetime;
 
-  // Calculate whether student's extended 'end time' is before the current session's start time
-  // Currently unused but could be altered to exit if student's extra end time is before session's start time
+    // Calculate whether student's extended 'end time' is before the current session's start time
+    // Currently unused but could be altered to exit if student's extra end time is before session's start time
 
     $is_student_end_before_session_start = $student_end_datetime < $lab_session_start_datetime;
 
-  // Highlight student's who have gone over time
+    // Highlight student's who have gone over time
 
     $current_datetime = new DateTime();
 
-  // Calculate extra time
+    // Calculate extra time
 
     $extra_time_secs = $log_extra_time->get_extra_time_secs();
     $extra_time_mins = round($extra_time_secs / 60);
@@ -222,7 +222,7 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
         $formatted_end_time = '<strong>' . $formatted_end_time . '</strong>';
     }
 
-  // Get student description
+    // Get student description
     $tmp_userID = $student_object['user_ID'];
     $surname = $student_object['surname'];
     $first_names = $student_object['first_names'];

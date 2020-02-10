@@ -29,7 +29,7 @@ require_once 'staff_student_auth.inc';
 $userObject = UserObject::get_instance();
 
 if (!$userObject->has_role(array('Staff', 'External Examiner', 'SysCron', 'Invigilator', 'Internal Reviewer'))) {
-  // Current user is not Staff, External Examiner or the system cron so display warning and exit.
+    // Current user is not Staff, External Examiner or the system cron so display warning and exit.
     $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '/artwork/exclamation_48.png', '#C00000', true, true);
@@ -149,13 +149,13 @@ $system_id = module_utils::get_idMod('SYSTEM', $mysqli);
 //
 
 if ($userObject->has_role('SysAdmin')) {
-  // SysAdmin can access anything!
+    // SysAdmin can access anything!
 } elseif ($userObject->has_role('External Examiner') or $userObject->has_role('Internal Reviewer') or $userObject->has_role('SysCron') or $userObject->has_role('Invigilator')) {
 } else {
-  // Normal users can access things they own or are on the staff_module of only.
+    // Normal users can access things they own or are on the staff_module of only.
     $on_staff_module = false;
 
-  // Can the user acsess the module?
+    // Can the user acsess the module?
     if (isset($_GET['module']) and $_GET['module'] != '' and $_GET['module'] != '0' and !isset($_GET['paperID'])) {
         $staff_module_match = false;
         $module_list = explode(',', $_GET['module']);
@@ -171,7 +171,7 @@ if ($userObject->has_role('SysAdmin')) {
         }
     }
 
-  // Can the user acsess the paper?
+    // Can the user acsess the paper?
     if ((isset($_REQUEST['paperID']) and !($_REQUEST['paperID'] == '' or  $_REQUEST['paperID'] == '-1') )) {
         $tmp_paperID = $_REQUEST['paperID'];
         if (substr($tmp_paperID, 0, 5) != 'find:' and substr($tmp_paperID, 0, 5) != 'list:') {
@@ -196,7 +196,7 @@ if ($userObject->has_role('SysAdmin')) {
         }
     }
 
-  // Can the user access the question?
+    // Can the user access the question?
     if (isset($_REQUEST['q_id'])) {
         $tmp_q_id = ltrim($_REQUEST['q_id'], ',');
         $q_id_list = explode(',', $tmp_q_id);
@@ -227,7 +227,7 @@ if ($userObject->has_role('SysAdmin')) {
         }
     }
   
-  // Can the user access reference material?
+    // Can the user access reference material?
     if (isset($_REQUEST['refID'])) {
         if (!refmaterials_utils::check_access($userObject, $_REQUEST['refID'], $mysqli)) {
             $contactemail = support::get_email();

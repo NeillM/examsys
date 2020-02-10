@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -167,7 +167,7 @@ if (isset($_POST['submit'])) {
 
   </form>
     <?php
-  // JS utils dataset.
+    // JS utils dataset.
     $render = new render($configObject);
     $miscdataset['name'] = 'dataset';
     $miscdataset['attributes']['paper'] = $paperID;

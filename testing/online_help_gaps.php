@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Using English as a base-language, checks for missing pages in other languages.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Using English as a base-language, checks for missing pages in other languages.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/sysadmin_auth.inc';
 ?>
@@ -199,7 +199,7 @@ function get_languages($db)
     }
     $result->close();
     if (isset($_GET['lang'])) {
-    // Take a language through GET, useful for creating whole new languages.
+        // Take a language through GET, useful for creating whole new languages.
           $languages[] = $_GET['lang'];
     }
   

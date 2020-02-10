@@ -23,102 +23,102 @@
 abstract class file_handler
 {
 
-  /**
-   * Language pack component.
-   */
+    /**
+     * Language pack component.
+     */
     const langcomponent = 'classes/filehandler';
 
-  /**
-   * The path to the file.
-   * @var string
-   */
+    /**
+     * The path to the file.
+     * @var string
+     */
     public $file;
 
-  /**
-   * The name of the file.
-   * @var string
-   */
+    /**
+     * The name of the file.
+     * @var string
+     */
     public $filename;
 
-  /**
-   * Class strings.
-   * @var array
-   */
+    /**
+     * Class strings.
+     * @var array
+     */
     public $string;
 
-  /**
-   * Reading pointer to the file from fopen()
-   * @var resource
-   */
+    /**
+     * Reading pointer to the file from fopen()
+     * @var resource
+     */
     protected $read_file_handle;
 
-  /**
-   * Writing pointer to the file from fopen()
-   * @var resource
-   */
+    /**
+     * Writing pointer to the file from fopen()
+     * @var resource
+     */
     protected $write_file_handle;
 
-  /**
-   * Move upload file to tmp dir
-   * @param string $from upload file
-   * @param string $to temp file location
-   * @throws csv_load_exception
-   * @return string
-   */
+    /**
+     * Move upload file to tmp dir
+     * @param string $from upload file
+     * @param string $to temp file location
+     * @throws csv_load_exception
+     * @return string
+     */
     abstract public static function move_upload_to_temp($from, $to);
 
-  /**
-   * Opens the file for reading..
-   * @throws file_load_exception
-   */
+    /**
+     * Opens the file for reading..
+     * @throws file_load_exception
+     */
     abstract public function load();
 
-  /**
-   * Handler specifc fcuntions to create a file.
-   * @throws file_write_exception
-   */
+    /**
+     * Handler specifc fcuntions to create a file.
+     * @throws file_write_exception
+     */
     abstract protected function create();
 
-  /**
-   * Gets a line of data from the file
-   *
-   * @return array
-   * @throws file_load_exception
-   */
+    /**
+     * Gets a line of data from the file
+     *
+     * @return array
+     * @throws file_load_exception
+     */
     abstract public function get_line();
 
-  /**
-   * Writes an array as a line in the file.
-   * @param array $line
-   * @throws file_write_exception
-   */
+    /**
+     * Writes an array as a line in the file.
+     * @param array $line
+     * @throws file_write_exception
+     */
     abstract public function write_line(array $line);
 
-  /**
-   * Write file header information to file.
-   */
+    /**
+     * Write file header information to file.
+     */
     abstract public function set_headers();
 
-  /**
-   * Generate a unique filename
-   * @return string
-   */
+    /**
+     * Generate a unique filename
+     * @return string
+     */
     private static function unique_filename()
     {
         return bin2hex(random_bytes(40));
     }
 
-  /**
-   * Initialise the handler.
-   * @param string $file The filename of the fiel to be used
-   * @param string $directory The path to the file to be used
-   * @throws file_load_exception
-   */
+    /**
+     * Initialise the handler.
+     * @param string $file The filename of the fiel to be used
+     * @param string $directory The path to the file to be used
+     * @throws file_load_exception
+     */
     public function __construct($file, $directory = '.')
     {
         $configObject = Config::get_instance();
         $file = param::clean($file, param::FILENAME);
-      // If no directory supplied use temp dir.
+        // If no directory supplied use temp dir.
         if ($directory === '.') {
             $directory = $configObject->get('cfg_tmpdir');
         }
@@ -132,10 +132,10 @@ abstract class file_handler
         $this->file = $fullpath . DIRECTORY_SEPARATOR . $this->filename;
     }
 
-  /**
-   * Delete file
-   * @param string $file file to delete
-   */
+    /**
+     * Delete file
+     * @param string $file file to delete
+     */
     public function delete($file)
     {
         if (file_exists($file)) {
@@ -143,9 +143,9 @@ abstract class file_handler
         }
     }
 
-  /**
-   * Delete a file and close handler.
-   */
+    /**
+     * Delete a file and close handler.
+     */
     public function delete_temp_file()
     {
         if (is_resource($this->write_file_handle)) {
@@ -154,9 +154,9 @@ abstract class file_handler
         $this->delete($this->file);
     }
 
-  /**
-   * Sends the file to download.
-   */
+    /**
+     * Sends the file to download.
+     */
     public function send_file()
     {
         if (file_exists($this->file)) {
@@ -166,9 +166,9 @@ abstract class file_handler
         $this->delete_temp_file();
     }
 
-  /**
-   * Create a temp file
-   */
+    /**
+     * Create a temp file
+     */
     public function create_temp_file()
     {
         $configObject = Config::get_instance();
@@ -181,15 +181,15 @@ abstract class file_handler
             }
         }
         $this->write_file_handle = fopen($this->file, 'w');
-      // Use handler specific function to create file.
+        // Use handler specific function to create file.
         $this->create();
     }
 
-  /**
-   * Make filename safe for export
-   * @param string $filename the filename
-   * @return string
-   */
+    /**
+     * Make filename safe for export
+     * @param string $filename the filename
+     * @return string
+     */
     public static function make_filename_safe($filename)
     {
         return str_replace(array(' ', ','), '_', $filename);

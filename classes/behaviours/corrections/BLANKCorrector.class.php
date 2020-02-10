@@ -29,11 +29,11 @@ include_once 'Corrector.class.php';
 
 class BLANKCorrector extends Corrector
 {
-  /**
-   * Change the correct answer after the question has been locked. Update user marks in summative log table
-   * @param integer $new_correct new correct answer
-   * @param integer $paper_id
-   */
+    /**
+     * Change the correct answer after the question has been locked. Update user marks in summative log table
+     * @param integer $new_correct new correct answer
+     * @param integer $paper_id
+     */
     public function execute($new_correct, $paper_id, &$changes, $paper_type)
     {
         $errors = array();
@@ -51,7 +51,7 @@ class BLANKCorrector extends Corrector
                 if (!$this->_question->save()) {
                     $errors[] = $this->_lang_strings['datasaveerror'];
                 } else {
-            // Remark the student's answers in 'log{$paper_type}'.
+                    // Remark the student's answers in 'log{$paper_type}'.
                     $score_method = $this->_question->get_score_method();
 
                     $totalpos = 0;
@@ -72,7 +72,7 @@ class BLANKCorrector extends Corrector
                             $part_marks[] = $mark_correct;
                         }
 
-                // Get correct answer.
+                        // Get correct answer.
                         $blank_details[$i] = substr($blank_details[$i], (strpos($blank_details[$i], ']') + 1));
                         $blank_details[$i] = substr($blank_details[$i], 0, strpos($blank_details[$i], '[/blank]'));
                         $answer_list = explode(',', $blank_details[$i]);
@@ -94,7 +94,7 @@ class BLANKCorrector extends Corrector
                     $result->bind_result($user_answer, $id);
                     while ($result->fetch()) {
                         $user_answers = explode('|', $user_answer);
-                      // Drop first element
+                        // Drop first element
                         array_shift($user_answers);
 
                         $mark = 0;

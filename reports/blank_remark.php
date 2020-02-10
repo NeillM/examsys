@@ -16,16 +16,16 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* This script presents a list of all the unique entries (words) entered for a particular blank in
-* a fill-in-the-blank question with textboxes. The interface allows staff to tick correct alternative
-* spellings and have the system remark student scripts (only works with summative exams).
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * This script presents a list of all the unique entries (words) entered for a particular blank in
+ * a fill-in-the-blank question with textboxes. The interface allows staff to tick correct alternative
+ * spellings and have the system remark student scripts (only works with summative exams).
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../include/errors.php';
@@ -53,7 +53,7 @@ if ($paper_type == '0') {
 $result->execute();
 $result->bind_result($type, $id, $user_answer);
 while ($result->fetch()) {
-// Decode user answers into an array of lowercase strings.
+    // Decode user answers into an array of lowercase strings.
     $tmp_answer = json_decode($user_answer);
     foreach ($tmp_answer as &$answer) {
         $answer = strtolower(StringUtils::clean_and_trim($answer));

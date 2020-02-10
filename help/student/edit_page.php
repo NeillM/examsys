@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../../include/sysadmin_auth.inc';
 require '../../include/errors.php';
@@ -40,7 +40,7 @@ if ($page_details === false) {
 }
 
 if (isset($_POST['save_changes'])) {
-  // Update help file record
+    // Update help file record
     $tmp_body = $_POST['edit1'];
     $tmp_title = $_POST['page_title'];
     $tmp_roles = $_POST['page_roles'];
@@ -51,7 +51,7 @@ if (isset($_POST['save_changes'])) {
     header("location: index.php?id=$pageid");
     exit;
 } elseif (isset($_POST['cancel'])) {
-  // Release authoring lock.
+    // Release authoring lock.
     if ($_POST['checkout_authorID'] == $userObject->get_user_ID()) {
         $help_system->release_edit_lock($_POST['edit_id']);
     }
@@ -103,7 +103,7 @@ if (isset($_POST['save_changes'])) {
     echo '<p style="margin-left:20px"><input type="text" style="color:#295AAD; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold" size="50" name="page_title" value="' . $page_details['title'] . "\" required /></p>\n";
     echo $texteditorplugin->get_textarea('edit1', 'edit1', htmlspecialchars($page_details['body'], ENT_NOQUOTES), plugins\plugins_texteditor::TYPE_STANDARD);
 
-  // Check for lockout.
+    // Check for lockout.
     $current_time = date('YmdHis');
     $disabled = '';
     if ($userObject->get_user_ID() != $page_details['checkout_authorID']) {
@@ -113,7 +113,7 @@ if (isset($_POST['save_changes'])) {
             $checkout_authorID = $page_details['checkout_authorID'];
             $disabled = ' disabled';
         } else {
-          // Set the lock to the current time/author.
+            // Set the lock to the current time/author.
             $help_system->set_edit_lock($edit_id);
 
             $checkout_authorID = $userObject->get_user_ID();
@@ -131,7 +131,7 @@ if (isset($_POST['save_changes'])) {
 </body>
 </html>
     <?php
-  // JS utils dataset.
+    // JS utils dataset.
     $render = new render($configObject);
     $jsdataset['name'] = 'jsutils';
     $jsdataset['attributes']['xls'] = json_encode($string);

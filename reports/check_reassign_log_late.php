@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../include/errors.php';
@@ -90,7 +90,7 @@ if ($propertyObj->is_live()) {
       }
   }
   $result->close();
-// Get any questions which have gone into log_late
+  // Get any questions which have gone into log_late
   $missing = array();
   $missing_no = 0;
   $row_no = 0;

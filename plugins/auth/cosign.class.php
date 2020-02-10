@@ -78,7 +78,7 @@ class cosign_auth extends outline_authentication
             $displaystdformobj->disablerequired = true;
         }
 
-      // Possibility of making button to POST via jquery to the cosign login page with our login data then detect response
+        // Possibility of making button to POST via jquery to the cosign login page with our login data then detect response
         return $displaystdformobj;
     }
 
@@ -97,15 +97,15 @@ class cosign_auth extends outline_authentication
         }
         $this->savetodebug('request string decoded info: ' . var_export($requestmod, true));
 
-      // Run cosing auth if button is enabled and pressed or button always if that mode is enabled or if it receives a query string containing cosign
+        // Run cosing auth if button is enabled and pressed or button always if that mode is enabled or if it receives a query string containing cosign
 
         if ((isset($this->settings['cosign_button']) and $this->settings['cosign_button'] === true and isset($this->request['cosignlogin'])) or ( ((isset($this->settings['cosign_button']) and $this->settings['cosign_button'] === false   ) or (!isset($this->settings['cosign_button'])) )     ) or (strpos($_SERVER['QUERY_STRING'], 'cosign') !== false )) {
-          // Button is enabled
+            // Button is enabled
             $this->savetodebug('starting cosign auth process');
 
             $status = $this->cosign->cosign_auth();
         } else {
-          // Button is disabled
+            // Button is disabled
             $this->savetodebug('conditions for cosign login not met');
             return $authobj;
         }
@@ -119,7 +119,7 @@ class cosign_auth extends outline_authentication
         }
 
         $this->savetodebug('cosign block reports auth as SUCCEEDED');
-      // Bit below looks username up in the rogo table to get an id.
+        // Bit below looks username up in the rogo table to get an id.
 
         extract($this->settings);
 
@@ -154,7 +154,7 @@ class cosign_auth extends outline_authentication
         $result->bind_result($uname, $id);
         $result->fetch();
         if ($result->num_rows() > 1) {
-          // not unique match
+            // not unique match
             $this->savetodebug('Check 2 record number> 1 multiple user found in lookup');
 
             $authobj->fail($this->number);
@@ -162,7 +162,7 @@ class cosign_auth extends outline_authentication
 
             return $authobj;
         } elseif ($result->num_rows() == 0) {
-          // Cosign says OK but no association to Rogo
+            // Cosign says OK but no association to Rogo
 
             $this->savetodebug('cosign authenticated but no local account');
             $data = new stdClass();
@@ -187,7 +187,7 @@ class cosign_auth extends outline_authentication
         if ($result->num_rows() == 1) {
             $this->savetodebug('Successfully authenticated on this module username=' . $username . ' id:' . $id);
 
-          // Sucessfull  authentication
+            // Sucessfull  authentication
             $authobj->success($this->number, $id);
         }
 

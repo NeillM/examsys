@@ -23,10 +23,10 @@
 class media_handler
 {
 
-  /**
-   * Supported media types.
-   * @var array
-   */
+    /**
+     * Supported media types.
+     * @var array
+     */
     const SUPPORTED = array(
     'gif' => questiondata::IMAGE,
     'jpg' => questiondata::IMAGE,
@@ -56,14 +56,14 @@ class media_handler
     'zip' => questiondata::ARCHIVE,
     );
 
-  /**
-   * This is function returns a unique filename so that files are not overwritten on the server.
-   * The filename is initially seeded with the current UNIX time in seconds plus the original
-   * file extension.
-   * @param string $filename
-   * @return string
-   * @throws directory_not_found
-   */
+    /**
+     * This is function returns a unique filename so that files are not overwritten on the server.
+     * The filename is initially seeded with the current UNIX time in seconds plus the original
+     * file extension.
+     * @param string $filename
+     * @return string
+     * @throws directory_not_found
+     */
     public static function unique_filename($filename)
     {
         $mediadirectory = rogo_directory::get_directory('media');
@@ -79,30 +79,30 @@ class media_handler
         return $tmp_filename;
     }
 
-  /**
-   * Uploads a file onto the server from an HTML form and return its width and height.
-   * @param string $fileID
-   * @return array|bool containing new media details as 'filename', 'width', and 'height', false on error
-   * @throws directory_not_found
-   * @throws getid3_exception
-   */
+    /**
+     * Uploads a file onto the server from an HTML form and return its width and height.
+     * @param string $fileID
+     * @return array|bool containing new media details as 'filename', 'width', and 'height', false on error
+     * @throws directory_not_found
+     * @throws getid3_exception
+     */
     public static function uploadFile($fileID)
     {
 
         $file_width = 0;
         $file_height = 0;
 
-      // Check we have a temp file to work with.
+        // Check we have a temp file to work with.
         if (!key_exists($fileID, $_FILES)) {
             return false;
         }
 
-      // Check temp file for Undefined, Multiple Files, Corruption Attack
+        // Check temp file for Undefined, Multiple Files, Corruption Attack
         if (!isset($_FILES[$fileID]['error']) or is_array($_FILES[$fileID]['error'])) {
             return false;
         }
 
-      // Check temp file 'error' property
+        // Check temp file 'error' property
         switch ($_FILES[$fileID]['error']) {
             case UPLOAD_ERR_OK:
                 break;
@@ -110,7 +110,7 @@ class media_handler
                 return false;
         }
 
-      // Check temp file 'size' property against max file size limit set by rogo.
+        // Check temp file 'size' property against max file size limit set by rogo.
         $config = Config::get_instance();
         if ($_FILES[$fileID]['size'] > $config->get_setting('core', 'system_maxmediasize')) {
             return false;
@@ -144,7 +144,7 @@ class media_handler
         $getID3 = new getID3();
         $file_info = $getID3->analyze($fullpath);
 
-      // File type checks.
+        // File type checks.
         switch ($filetype) {
             case questiondata::DOC:
                 $file_width = '100%';
@@ -181,7 +181,7 @@ class media_handler
                 break;
         }
 
-      // MIME specific checks.
+        // MIME specific checks.
         switch ($_FILES[$fileID]['type']) {
             case 'application/msword':
             case 'application/vnd.ms-powerpoint':
@@ -207,11 +207,11 @@ class media_handler
         return array('filename' => $unique_name, 'width' => $file_width, 'height' => $file_height, 'rejected_file' => false);
     }
 
-  /**
-   * @param string $filename file to be deleted
-   * @return bool
-   * @throws directory_not_found
-   */
+    /**
+     * @param string $filename file to be deleted
+     * @return bool
+     * @throws directory_not_found
+     */
     public static function deleteMedia($filename)
     {
         $mediadirectory = rogo_directory::get_directory('media');
@@ -228,7 +228,7 @@ class media_handler
 
         @!unlink($file);
 
-      // If media was an achive file, we should look to delete the extracted directory that contained its contents.
+        // If media was an achive file, we should look to delete the extracted directory that contained its contents.
         if ($filetype === questiondata::ARCHIVE) {
             $info = pathinfo($file);
             $mediadir = $mediadirectory->location() . $info['filename'];
@@ -240,10 +240,10 @@ class media_handler
         return true;
     }
 
-  /**
-   * Get list of permitted file types.
-   * @return array
-   */
+    /**
+     * Get list of permitted file types.
+     * @return array
+     */
     public static function get_permitted()
     {
         $config = Config::get_instance();
@@ -256,12 +256,12 @@ class media_handler
         return $permitted;
     }
 
-  /**
-   * Extract files in archive ignoring files not supported by Rogo.
-   * @param $fullpath path to archive
-   * @return bool
-   * @throws directory_not_found
-   */
+    /**
+     * Extract files in archive ignoring files not supported by Rogo.
+     * @param $fullpath path to archive
+     * @return bool
+     * @throws directory_not_found
+     */
     public static function process_archive($fullpath)
     {
         $config = Config::get_instance();

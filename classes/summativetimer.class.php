@@ -15,54 +15,54 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Class containing the timer logic for summative exams
-* @author Ben Parish
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ * Class containing the timer logic for summative exams
+ * @author Ben Parish
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 class SummativeTimer
 {
 
-  /*
-   * @var LogExtraTime $log_extra_time
-  */
+    /*
+    * @var LogExtraTime $log_extra_time
+    */
 
     private $log_extra_time;
     private $exam_duration;
     private $start_time;
 
-  /*
-   * @param LogExtraTime $log_extra_time
-   */
+    /*
+    * @param LogExtraTime $log_extra_time
+    */
 
     public function __construct(LogExtraTime $log_extra_time)
     {
         $this->log_extra_time = $log_extra_time;
     }
 
-  /*
-   * This takes the end time for the student's exam session and calculates the time remaining by
-   * subtracting the current time stamp from the session end time stamp. It then adds any
-   * special needs allowance
-   *
-   * @return int
-   */
+    /*
+    * This takes the end time for the student's exam session and calculates the time remaining by
+    * subtracting the current time stamp from the session end time stamp. It then adds any
+    * special needs allowance
+    *
+    * @return int
+    */
     public function calculate_remaining_time_secs()
     {
 
-      //has the lab got an end time set?
+        //has the lab got an end time set?
         $session_end_datetime = $this->get_session_end_datetime();
 
         if ($session_end_datetime === false) {
-          // Invigilator hasn't pressed Start - we aren't timing the exam
+            // Invigilator hasn't pressed Start - we aren't timing the exam
             return false;
         }
 
         $session_end_timestamp = $session_end_datetime->getTimestamp();
 
-      //has the student been given extra time?
+        //has the student been given extra time?
         $extra_time = $this->get_extra_time_secs();
         if ($extra_time === false) {
             $extra_time = 0;
@@ -81,25 +81,25 @@ class SummativeTimer
         return ceil($remaining_time_secs);
     }
 
-  /*
-   * @return int
-   */
+    /*
+    * @return int
+    */
     private function get_paper_exam_start_time()
     {
         return $this->log_extra_time->get_paper_exam_start_time();
     }
 
-  /*
-   * @return int
-   */
+    /*
+    * @return int
+    */
     private function get_paper_exam_duration()
     {
         return $this->log_extra_time->get_paper_exam_duration();
     }
 
-  /*
-   * @return int
-   */
+    /*
+    * @return int
+    */
     private function get_extra_time_secs()
     {
         $extra_time = $this->log_extra_time->get_extra_time_secs();
@@ -110,9 +110,9 @@ class SummativeTimer
         return $extra_time;
     }
 
-  /*
-   * @return int
-   */
+    /*
+    * @return int
+    */
     private function calculate_special_needs_secs()
     {
         $students_special_needs_percentage = $this->log_extra_time->get_students_special_needs_percentage();
@@ -121,17 +121,17 @@ class SummativeTimer
         return ( $exam_duration * 60  ) * ( $students_special_needs_percentage / 100 );
     }
 
-  /*
-   * return int
-   */
+    /*
+    * return int
+    */
     private function get_session_end_datetime()
     {
         return $this->log_extra_time->get_session_end_datetime();
     }
 
-  /*
-   * return int
-   */
+    /*
+    * return int
+    */
     private function get_default_session_end_datetime()
     {
         return $this->log_extra_time->get_default_session_end_datetime();

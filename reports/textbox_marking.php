@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson, Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson, Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../include/errors.php';
@@ -119,7 +119,7 @@ echo draw_toprightmenu();
 
 $candidate_no = 0;
 if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
-  // Get how many students took the paper.
+    // Get how many students took the paper.
     $result = $mysqli->prepare('SELECT DISTINCT lm.userID FROM log_metadata lm '
           . 'INNER JOIN users u '
           . 'ON lm.userID = u.id '

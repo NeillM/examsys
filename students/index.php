@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Display a list of the papers that are currently available to a student
-*
-* @author Rob Ingram, Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Display a list of the papers that are currently available to a student
+ *
+ * @author Rob Ingram, Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_student_auth.inc';
 require_once '../include/icon_display.inc';
@@ -68,7 +68,7 @@ if ($userObject->has_role('Student')) {
 
     $current_address = NetworkUtils::get_client_address();
 
-  // Check if our student is in a lab
+    // Check if our student is in a lab
     $lab_info = $mysqli->prepare('SELECT lab FROM client_identifiers WHERE address = ? LIMIT 1');
     $lab_info->bind_param('s', $current_address);
     $lab_info->execute();
@@ -80,7 +80,7 @@ if ($userObject->has_role('Student')) {
     }
     $lab_info->close();
 
-  // Get modules
+    // Get modules
     $modules = array();
     $i = 0;
     if ($stmt = $mysqli->prepare("SELECT DISTINCT idMod, m.moduleid, m.fullname, sm.calendar_year FROM modules m INNER JOIN modules_student sm ON m.id = sm.idMod WHERE sm.userID = ? AND m.active = 1 AND mod_deleted IS NULL AND calendar_year != '' ORDER BY sm.calendar_year ASC, m.moduleid ASC")) {
@@ -97,7 +97,7 @@ if ($userObject->has_role('Student')) {
     }
     $stmt->close();
 
-  // Get papers for this module - types 0, 1, 3, 6 valid for this date
+    // Get papers for this module - types 0, 1, 3, 6 valid for this date
     $papers = 0;
     $papers_query = <<< QUERY
   SELECT p.paper_title, p.paper_type, p.labs, p.start_date, p.end_date, max(pa.screen) AS screens, p.calendar_year, p.crypt_name, p.password FROM (properties p, properties_modules pm)
@@ -124,7 +124,7 @@ QUERY;
                 if (empty($lab_arr) or ($lab != -1 and in_array($lab, $lab_arr))) {
                     $screens = (empty($screens)) ? 0 : $screens;
 
-                  // Don't show if 0 screens
+                    // Don't show if 0 screens
                     if ($screens > 0) {
                         $modules[$i]['papers'][] = array('title' => $paper_title, 'type' => $paper_type, 'original_type' => $paper_type, 'start' => $start_date, 'end' => $end_date, 'screens' => $screens, 'crypt_name' => $crypt_name, 'password' => $password);
                         $papers++;
@@ -139,7 +139,7 @@ QUERY;
         }
     }
 
-  // Get which papers a student has taken (for feedback purposes).
+    // Get which papers a student has taken (for feedback purposes).
     $papers_taken = array();
     $types = array(0, 1, 2, 5);
     foreach ($types as $type) {
@@ -164,7 +164,7 @@ QUERY;
     }
     $stmt->close();
 
-  // Get any question-based or objectives-based feedback released.
+    // Get any question-based or objectives-based feedback released.
     $feedback_query = <<< QUERY
   SELECT paper_id, calendar_year, paper_title, crypt_name, f.type, paper_type, p.start_date, p.password FROM (feedback_release f, properties p, properties_modules pm)
   WHERE f.paper_id = p.property_id
@@ -208,7 +208,7 @@ $paper_utils = Paper_utils::get_instance();
 $textsize = 100;
 $font = 'Arial';
 if ($userObject->is_special_needs()) {
-  // Look up special_needs data
+    // Look up special_needs data
     $textsize = $userObject->get_textsize($textsize);
     $font = $userObject->get_font($font);
 }
@@ -273,7 +273,7 @@ if (!$userObject->has_role('Student')) {
    <p style="margin-left:20px"><?php echo $string['staffmsg']; ?></p>
     <?php
 } else {
-  // Check for any news/announcements
+    // Check for any news/announcements
     $announcements = announcement_utils::get_student_announcements($mysqli);
     foreach ($announcements as $announcement) {
         echo "<div class=\"announcement\"><div style=\"min-height:64px; padding-left:80px; padding-top:5px; background: transparent url('../artwork/" . $announcement['icon'] . "') no-repeat 5px 5px;\"><strong>" . $announcement['title'] . "</strong><br />\n<br />\n" . $announcement['msg'] . "</div></div>\n";

@@ -38,20 +38,20 @@ class QuestionLABELLING extends QuestionEdit
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
 
-      // Convert the max number of options into a list of variables
+        // Convert the max number of options into a list of variables
         $this->option_order = 'display order';
         $this->_fields_editable[] = 'points1';
         $this->_change_field_map['points1'] = 'points';
     }
   
-  /**
-   * Persist the object to the database
-   * @return boolean Success or failure of the save operation
-   * @throws ValidationException
-   */
+    /**
+     * Persist the object to the database
+     * @return boolean Success or failure of the save operation
+     * @throws ValidationException
+     */
     public function save($clear_checkout = true)
     {
-      // Make sure 'correct' value is set for option
+        // Make sure 'correct' value is set for option
         if ((!isset($this->correct) or $this->correct = '') and $this->points1 != '' and count($this->options) > 0) {
             $this->set_points1($this->points1);
         }
@@ -59,7 +59,7 @@ class QuestionLABELLING extends QuestionEdit
     }
   
   
-  // ACCESSORS
+    // ACCESSORS
   
     public function get_points1()
     {
@@ -72,7 +72,7 @@ class QuestionLABELLING extends QuestionEdit
   
     public function set_points1($value)
     {
-      // Correct label locations if too far over.
+        // Correct label locations if too far over.
         $first_split = explode(';', $value);
         $second_split = explode('$', $first_split[8]);
         $tmp_coords = '';
@@ -101,7 +101,7 @@ class QuestionLABELLING extends QuestionEdit
             $tmp_points .= ';' . $first_split[$i];
         }
     
-      // Get labels only
+        // Get labels only
         $option_text = '';
         $s_split = explode('|', $first_split[11]);
         foreach ($s_split as $ind_label) {

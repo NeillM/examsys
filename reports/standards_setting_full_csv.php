@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Richard Whitefoot (UEA)
-* @version 1.0
-* @copyright Copyright (c) 2015
-* @package
-*/
+ *
+ * @author Richard Whitefoot (UEA)
+ * @version 1.0
+ * @copyright Copyright (c) 2015
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -88,7 +88,7 @@ if ($stmt) {
         $ratingColumns = explode(',', $rating);
         $notNullRatingColumns = array_filter($ratingColumns);
 
-      // MRQ and RANK questions have valid ratings with null column values so need a special case
+        // MRQ and RANK questions have valid ratings with null column values so need a special case
         if ($q_type == 'mrq' or $q_type == 'rank') {
             if ($q_type == 'mrq') {
                 $correct_per_option = $mrq_correct_per_option;
@@ -108,13 +108,13 @@ if ($stmt) {
         } elseif ($q_type == 'sct' or $q_type == 'textbox') {
             $rating = $string['noncompatible'] . '[COLUMNS-q_id' . $q_id . ']';
         } else {
-          // Clearly mark incomplete ratings
+            // Clearly mark incomplete ratings
             if (($rating == '') || (substr($rating, -1) == ',') || (substr($rating, 0, 1) == ',') || (preg_match('/,,/', $rating))) {
                 $rating = $string['incomplete'] . '[COLUMNS-q_id' . $q_id . ']';
             }
         }
 
-      // Calculate correct number of spacer columns for incomplete ratings
+        // Calculate correct number of spacer columns for incomplete ratings
         $currentColumnCount = count($ratingColumns);
         if (!isset($ratingColumnCount[$q_id])) {
             $ratingColumnCount[$q_id] = 0;
@@ -129,15 +129,15 @@ if ($stmt) {
             $standard_setter = $string['groupreview'];
         }
 
-      // Check for new row
+        // Check for new row
         if ($ss_id != $prev_ss_id) {
-          // Remove last comma
+            // Remove last comma
             $csv = rtrim($csv, ',');
             $csv .= "\n";
             $csv .= $date . ',' . preg_replace('/,/', ' ', addslashes($standard_setter)) . ',';
         }
 
-      // Add to CSV header
+        // Add to CSV header
         if (!in_array($display_pos, $questions)) {
             $question_number++;
 
@@ -150,7 +150,7 @@ if ($stmt) {
             $csvHeader .= preg_replace('/,/', ' ', addslashes($string[$q_type])) . ')[COLUMNS-q_id' . $q_id . ']';
         }
 
-      // Add ratings markers
+        // Add ratings markers
         $csv .= '[COLSTART_' . $q_id . '_' . $ssq_id . ']' . $rating . '[COLEND_' . $q_id . '_' . $ssq_id . '],';
 
         $questions[] = $display_pos;
@@ -160,14 +160,14 @@ if ($stmt) {
 
     $csv = $csvHeader . $csv;
 
-  // Remove last comma
+    // Remove last comma
     $csv = rtrim($csv, ',');
 
     $additionalCommas = array();
-  // Replace placeholders with correct number of columns
+    // Replace placeholders with correct number of columns
     foreach ($ratingColumnCount as $key => $value) {
         $additionalCommasCurrent = '';
-      // Start count at 1 as there is already a single comma between fields
+        // Start count at 1 as there is already a single comma between fields
         for ($i = 1; $i < $ratingColumnCount[$key]; $i++) {
             $additionalCommasCurrent .= ',';
         }
@@ -176,7 +176,7 @@ if ($stmt) {
         $csv = preg_replace('/\[COLUMNS-q_id' . $key . '\]/', $additionalCommas[$key], $csv);
     }
 
-  // Final check that rating columns match maximum column count
+    // Final check that rating columns match maximum column count
     foreach ($q_id_ssq_id_array as $q_id => $ssq_ids) {
         foreach ($ssq_ids as $ssq_id) {
             $pattern = '/(?<=\[COLSTART_' . $q_id . '_' . $ssq_id . '\])(.*?)(?=\[COLEND_' . $q_id . '_' . $ssq_id . '\])/';
@@ -187,14 +187,14 @@ if ($stmt) {
                     $ratingColumnCount[$q_id] = null;
                 }
                 if ($ratingColumnCount[$q_id] !== (count(explode(',', $ratingColumn[0])))) {
-                  // Something has gone wrong (eg marks available have been changed) so mark column as incomplete
+                    // Something has gone wrong (eg marks available have been changed) so mark column as incomplete
                     $csv = preg_replace($pattern, $string['incomplete'] . $additionalCommas[$q_id], $csv);
                 }
             }
         }
     }
 
-  // Remove ratings markers
+    // Remove ratings markers
     $removeStart = '/(\[COLSTART_)(\d+)_(\d+)(\])/';
     $csv = preg_replace($removeStart, '', $csv);
 

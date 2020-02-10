@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Allows the properties of a paper to be edited.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Allows the properties of a paper to be edited.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -47,12 +47,12 @@ $texteditorplugin = \plugins\plugins_texteditor::get_editor();
  */
 function setup_change_callbacks(&$changed_reviewers, &$changed_labs)
 {
-  // Define a closure to populate past reviewer IDs
+    // Define a closure to populate past reviewer IDs
     $reviewers_cb = function ($old, $new) use (&$changed_reviewers) {
         $old_reviewers = explode(',', $old);
         $new_reviewers = explode(',', $new);
 
-      // Add any reviewers in the current change to the $changed_reviewers array
+        // Add any reviewers in the current change to the $changed_reviewers array
         foreach ($old_reviewers as $reviewer) {
             if ($reviewer != '') {
                 $changed_reviewers[$reviewer] = false;
@@ -65,12 +65,12 @@ function setup_change_callbacks(&$changed_reviewers, &$changed_labs)
         }
     };
 
-  // Define a closure to populate past labs
+    // Define a closure to populate past labs
     $labs_cb = function ($old, $new) use (&$changed_labs) {
         $old_labs = explode(',', $old);
         $new_labs = explode(',', $new);
 
-      // Add any labs in the current change to the $changed_labs array
+        // Add any labs in the current change to the $changed_labs array
         foreach ($old_labs as $lab) {
             if ($lab != '') {
                 $changed_labs[$lab] = false;
@@ -83,7 +83,7 @@ function setup_change_callbacks(&$changed_reviewers, &$changed_labs)
         }
     };
 
-  // Use the closures for changes
+    // Use the closures for changes
     $callbacks = array('externals' => $reviewers_cb, 'internals' => $reviewers_cb, 'labs' => $labs_cb);
 
     return $callbacks;
@@ -315,7 +315,7 @@ function output_labs($labs, $cfg_summative_mgmt, $paper_type, $userObject, &$cha
     $old_campus = '';
     while ($result->fetch()) {
         if ($old_campus != $lab_campus) {
-          //$html .= "<div><img src=\"../artwork/new_lab_16.png\" width=\"16\" height=\"16\" alt=\"lab\" />&nbsp;<strong>$lab_campus</strong></div>\n";
+            //$html .= "<div><img src=\"../artwork/new_lab_16.png\" width=\"16\" height=\"16\" alt=\"lab\" />&nbsp;<strong>$lab_campus</strong></div>\n";
             $html .= "<div class=\"subsect_table\"><div class=\"subsect_title\"><nobr><img src=\"../artwork/new_lab_16.png\" width=\"16\" height=\"16\" alt=\"lab\" /> $lab_campus</nobr></div><div class=\"subsect_hr\"><hr noshade=\"noshade\" /></div></div>\n";
         }
         $match = false;
@@ -783,7 +783,7 @@ if ($properties->get_paper_type() != '4' and $properties->get_paper_type() != '5
             echo '>' . $string['calculatrrandommark'] . '&nbsp;<img src="../artwork/tooltip_icon.gif" class="help_tip" title="' . $string['tooltip_random'] . '" /><br />';
         }
 
-      // Look for any Standard Setting reviews for the paper.
+        // Look for any Standard Setting reviews for the paper.
         $std_set_array = array();
         $i = 0;
 
@@ -1253,7 +1253,7 @@ if ($module_sql != '') {
     if ($q_feedback_enabled and in_array($properties->get_paper_type(), array('1', '2', '4', '5'))) {
         echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
         echo '<tr><td><img src="../artwork/question_release_icon.png" width="48" height="48" />';
-      // Question-based Feedback
+        // Question-based Feedback
         echo '<td><input type="hidden" name="old_questions_report" value="' . $feedback_reports['questions'] . '" />';
         if ($feedback_reports['questions'] === '') {
             echo '<input type="radio" name="questions_report" value="1" />' . $string['on'] . '</td><td><input type="radio" name="questions_report" value="0" checked="checked" />' . $string['off'] . '</td>';
@@ -1270,7 +1270,7 @@ if ($module_sql != '') {
     if (in_array($properties->get_paper_type(), array('2', '4', '5'))) {
         echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
         echo '<tr><td><img src="../artwork/cohort_performance_icon.png" width="48" height="48" />';
-      // Cohort performance-based Feedback
+        // Cohort performance-based Feedback
         echo '<td><input type="hidden" name="old_cohort_performance" value="' . $feedback_reports['cohort_performance'] . '" />';
         if ($feedback_reports['cohort_performance'] === '') {
             echo '<input type="radio" name="cohort_performance" value="1" />' . $string['on'] . '</td><td><input type="radio" name="cohort_performance" value="0" checked="checked" />' . $string['off'] . '</td>';
@@ -1283,7 +1283,7 @@ if ($module_sql != '') {
     if (in_array($properties->get_paper_type(), array('1', '2'))) {
         echo "<tr><td colspan=\"4\">&nbsp;</td></tr>\n";
         echo '<tr><td><img src="../artwork/external_examiner_icon.png" width="48" height="48" />';
-      // External Examiner Feedback
+        // External Examiner Feedback
         echo '<td><input type="hidden" name="old_external_examiner" value="' . $feedback_reports['external_examiner'] . '" />';
         if ($feedback_reports['external_examiner'] === '') {
             echo '<input type="radio" name="external_examiner" value="1" />' . $string['on'] . '</td><td><input type="radio" name="external_examiner" value="0" checked="checked" />' . $string['off'] . '</td>';
@@ -1512,8 +1512,8 @@ for ($i = $start_year; $i < (date('Y') + 2); $i++) {
   <?php
     echo '<tr><td><div style="width:350px; height:468px; overflow-y:scroll; border:1px solid #828790; font-size:90%">';
 
-  // Get all users for teams within the schools of the current user
-  // Also get all admin users for those schools
+    // Get all users for teams within the schools of the current user
+    // Also get all admin users for those schools
     $school_sql = '';
     $admin_school_sql = '';
     $schools = getSchools($staff_modules, $mysqli);
@@ -1533,16 +1533,16 @@ AND user_deleted IS NULL
 SQL;
     }
 
-  // Make sure that current reviewers always appear on the list
+    // Make sure that current reviewers always appear on the list
     $current_internals = $properties->get_internal_reviewers();
     $current_internals_sql = '';
     if (count($properties->get_internal_reviewers()) > 0) {
         $current_internals_sql = 'UNION SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE id IN (' . implode(',', array_keys($current_internals)) . ') AND user_deleted IS NULL';
     }
-  // Add internal reviwers to list.
+    // Add internal reviwers to list.
     $internal_reviwers = 'UNION SELECT DISTINCT id, title, initials, surname, first_names FROM users WHERE roles = "Internal Reviewer" AND user_deleted IS NULL';
 
-  // Dynamically choose tables and join based on role.
+    // Dynamically choose tables and join based on role.
     if ($userObject->has_role('SysAdmin')) {
         $tables = 'users, modules_staff';
         $join = 'users.id = modules_staff.memberID';

@@ -28,5 +28,5 @@
  */
 class file_write_exception extends \Exception
 {
-  // Intentionally empty.
+    // Intentionally empty.
 }

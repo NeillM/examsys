@@ -28,9 +28,9 @@ class access_denied_logs
     private $db;
     private $logs;
 
-  /**
-   * Uses for access denied logs
-   */
+    /**
+     * Uses for access denied logs
+     */
     public function __construct()
     {
         $configObject = Config::get_instance();
@@ -38,21 +38,21 @@ class access_denied_logs
         $this->logs = array();
     }
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
-  /**
-   * Get all the logs from denied access table
-   * returns associative array of logs
-   */
+    /**
+     * Get all the logs from denied access table
+     * returns associative array of logs
+     */
     public function get_access_denied_logs()
     {
         $this->logs = array();
@@ -67,9 +67,9 @@ class access_denied_logs
         return $this->logs;
     }
 
-  /**
-   * Clear All the logs from table
-   */
+    /**
+     * Clear All the logs from table
+     */
     public function delete_access_denied_logs()
     {
         $result = $this->db->prepare('DELETE FROM denied_log');
@@ -82,10 +82,10 @@ class access_denied_logs
         }
     }
 
-  /**
-   * Delete a log from the table
-   * @param $log_id
-   */
+    /**
+     * Delete a log from the table
+     * @param $log_id
+     */
     public function delete_a_access_denied_log($log_id)
     {
         $result = $this->db->prepare('DELETE FROM denied_log WHERE id = ?');

@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Class total report in Excel 2003 XML format.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Class total report in Excel 2003 XML format.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -292,7 +292,7 @@ for ($i = 0; $i < $user_no; $i++) {
             if ($paper_type == '2') {
                 echo '<Cell><Data ss:Type="String">' . $user_results[$i]['room'] . '</Data></Cell>';
             }
-          // Display any associated metadata
+            // Display any associated metadata
             foreach ($metadata_cols as $key => $col) {
                 echo '<Cell><Data ss:Type="String">' . $user_results[$i][$col] . '</Data></Cell>';
             }

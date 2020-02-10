@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Hofstee plot
-*
-* @author Nikodem Miranowicz, Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Hofstee plot
+ *
+ * @author Nikodem Miranowicz, Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -143,7 +143,7 @@ if (isset($_POST['submit'])) {
         $checked = '';
     }
 } else {
-  // Default values no POST and no editing existing review
+    // Default values no POST and no editing existing review
     $checked = '';
   
     $pass_defaults = $configObject->get_setting('core', 'stdset_hofstee_pass');

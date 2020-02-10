@@ -16,14 +16,14 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Allows the properties of a paper to be edited.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Allows the properties of a paper to be edited.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../include/errors.php';

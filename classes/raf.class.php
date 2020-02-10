@@ -15,14 +15,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Rogo Assessment format for import/export of questions.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Rogo Assessment format for import/export of questions.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 class RAF
 {
 
@@ -40,14 +40,14 @@ class RAF
     private $keywords_lookup = null;
     private $raf_company;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
@@ -194,14 +194,14 @@ class RAF
         }
     }
     
-  /**
-   * EXPORT: Split a give string up and check for media - this checks HTML within scenario and lead-in fields.
-   */
+    /**
+     * EXPORT: Split a give string up and check for media - this checks HTML within scenario and lead-in fields.
+     */
     private function getImages_from_html($html)
     {
         $mediadirectory = rogo_directory::get_directory('media');
         $regexp = '#' . $mediadirectory->url('(.*)') . '#';
-      // Make this a regular expression thar will actually match.
+        // Make this a regular expression thar will actually match.
         $regexp = str_replace('&', '&amp;', $regexp);
         $regexp = str_replace('?', '\?', $regexp);
 
@@ -374,7 +374,7 @@ class RAF
 
     /**
      * IMPORT: Insert a single question into the database.
-   * @param array $q - Array holding all the information to create the question.
+     * @param array $q - Array holding all the information to create the question.
      */
     private function write_question($q)
     {
@@ -390,20 +390,20 @@ class RAF
             $q['score_method'] = 'Mark per Option';
         }
 
-      // The file may have been written in a version of Rogo that did not use rogo_directory classes.
-      // So we must check and filter the leadin and scenario to clean them up.
-      //
-      // Regular expression to match the old media directory location.
-      // it will match directories ./media/ or /media/ and grab the filename.
+        // The file may have been written in a version of Rogo that did not use rogo_directory classes.
+        // So we must check and filter the leadin and scenario to clean them up.
+        //
+        // Regular expression to match the old media directory location.
+        // it will match directories ./media/ or /media/ and grab the filename.
         $regexp = '#src=".?\/media\/(.*?)"#';
-      // The substitution will replace the old src tag with a new one that.
+        // The substitution will replace the old src tag with a new one that.
         $webroot = $configObject->get('cfg_root_path');
-      // Ensure there is a trailing slash.
+        // Ensure there is a trailing slash.
         if (substr($webroot, -1) !== '/') {
             $webroot .= '/';
         }
         $substitution = 'src="' . $webroot . 'getfile.php?type=media&amp;filename=$1"';
-      // Fix the leadin and scenario.
+        // Fix the leadin and scenario.
         $q['leadin'] = preg_replace($regexp, $substitution, $q['leadin']);
         $q['scenario'] = preg_replace($regexp, $substitution, $q['scenario']);
 
@@ -463,8 +463,8 @@ class RAF
     
     /**
      * IMPORT: Take the textual keywords of a question, lookup IDs and then insert into the DB.
-   * @param array $keywords - Array of textual keywords
-   * @param int $q_id               - ID of the question the keywords are for.
+     * @param array $keywords - Array of textual keywords
+     * @param int $q_id               - ID of the question the keywords are for.
      */
     private function write_keywords($keywords, $q_id)
     {
@@ -491,7 +491,7 @@ class RAF
      */
     private function get_keyword_ids()
     {
-      // Get any personal keywords.
+        // Get any personal keywords.
         $result = $this->db->prepare("SELECT id, keyword FROM keywords_user WHERE userID = ? AND keyword_type = 'personal'");
         $result->bind_param('i', $this->userID);
         $result->execute();
@@ -501,7 +501,7 @@ class RAF
         }
         $result->close();
         
-      // Get team keywords.
+        // Get team keywords.
         $modules = array_keys($this->properties->get_modules());
 
         $result = $this->db->prepare('SELECT id, keyword FROM keywords_user WHERE userID IN (' . implode(',', $modules) . ") AND keyword_type = 'team'");
@@ -515,8 +515,8 @@ class RAF
 
     /**
      * IMPORT: Insert a single option into the database.
-   * @param array $o    - Array holding all the information to write into the options table.
-   * @param int $q_id - The ID of the question the options belong to.
+     * @param array $o    - Array holding all the information to write into the options table.
+     * @param int $q_id - The ID of the question the options belong to.
      */
     private function write_option($o, $q_id)
     {

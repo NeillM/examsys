@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/survey_quantitative.inc.php';
@@ -42,13 +42,13 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
 {
     global $old_likert_scale, $old_display_method, $table_on;
 
-  // Remove spaces
+    // Remove spaces
     $theme = str_replace('&nbsp;', ' ', $theme);
     $scenario = str_replace('&nbsp;', ' ', $scenario);
     $leadin = str_replace('&nbsp;', ' ', $leadin);
     $old_likert_scale = str_replace('&nbsp;', ' ', $old_likert_scale);
 
-  // Remove nasty non-utf8 chars
+    // Remove nasty non-utf8 chars
     $theme = StringUtils::wordToUtf8(strip_tags($theme));
     $scenario = StringUtils::wordToUtf8(strip_tags($scenario));
     $leadin = StringUtils::wordToUtf8(strip_tags($leadin));
@@ -243,21 +243,21 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
                     echo '</w:tbl>';
                 }
                 echo "<w:p><w:r><w:t>$question_number. $leadin</w:t></w:r></w:p><w:p/>";
-              // Define the table grid
+                // Define the table grid
                 echo '<w:tbl><w:tblPr><w:tblStyle w:val="TableGrid"/><w:tblW w:w="0" w:type="auto"/><w:tblLook w:val="01E0"/></w:tblPr><w:tblGrid><w:gridCol w:w="2500"/>';
                 foreach ($options as $option) {
                     echo '<w:gridCol w:w="1500"/>';
                 }
                 echo '</w:tblGrid>';
 
-          // Write out the header row of the table
+                // Write out the header row of the table
                 echo '<w:tr><w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:r><w:t></w:t></w:r></w:p></w:tc>';
                 foreach ($options as $option) {
                     echo '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/><w:shd w:val="clear" w:color="auto" w:fill="E0E0E0"/></w:tcPr><w:p><w:r><w:t>' . $option . '</w:t></w:r></w:p></w:tc>';
                 }
                 echo '</w:tr>';
 
-          // Write out the contents of the table
+                // Write out the contents of the table
                 $row_data = explode('|', $scenario);
                 $option_no = count($options);
                 $row_no = 0;
@@ -336,7 +336,7 @@ $hits = get_quantitative_log_data($paperID, $_GET['repcourse'], $startdate, $end
 $table_on = 0;
 
 if ($hits > 0) {
-  // Capture the paper makeup.
+    // Capture the paper makeup.
     $question_no = 1;
     $display_respondents = 1;
     $old_q_id = 0;
@@ -356,7 +356,7 @@ if ($hits > 0) {
         $leadin = str_replace('&nbsp;', ' ', $leadin);
         $option_text = str_replace('&nbsp;', ' ', $option_text);
 
-      // Replace & characters.
+        // Replace & characters.
         $theme = str_replace('&', '&amp;', $theme);
         $scenario = str_replace('&', '&amp;', $scenario);
         $leadin = str_replace('&', '&amp;', $leadin);

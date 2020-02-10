@@ -15,26 +15,26 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Utility class for announcement related functionality.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Utility class for announcement related functionality.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 
 class announcement_utils
 {
  
-  /**
-   * See if an announcement ID actually exists.
+    /**
+     * See if an announcement ID actually exists.
      * @param int $announcementID - The ID of the announcement to be located.
      * @param object $db          - Link to mysqli
      *
-   * @return true or false.
-   */
+     * @return true or false.
+     */
     static function announcement_exist($announcementID, $db)
     {
         $row_no = 0;
@@ -67,7 +67,7 @@ class announcement_utils
     /**
      * Gets a list of staff announcements that are live.
      * @param object $db  - Database connection
-   * @return array      - List of announcements
+     * @return array      - List of announcements
      */
     static function get_staff_announcements($db)
     {
@@ -85,10 +85,10 @@ class announcement_utils
         return $announcements;
     }
   
-  /**
+    /**
      * Gets a list of student announcements that are live.
      * @param object $db  - Database connection
-   * @return array      - List of announcements
+     * @return array      - List of announcements
      */
     static function get_student_announcements($db)
     {

@@ -36,17 +36,17 @@ abstract class Corrector
         $this->_question = $question;
     }
 
-  /**
-   * Change the correct answer after the question has been locked. Update user marks in summative log table
-   * @param integer $new_correct new correct answer
-   * @param integer $paper_id
-   */
+    /**
+     * Change the correct answer after the question has been locked. Update user marks in summative log table
+     * @param integer $new_correct new correct answer
+     * @param integer $paper_id
+     */
     abstract function execute($new_correct, $paper_id, &$changes, $paper_type);
 
-  /**
-   * Invalidate the cache for the given paper
-   * @param  integer $paper_id ID of paper for which the cache should be invalidated
-   */
+    /**
+     * Invalidate the cache for the given paper
+     * @param  integer $paper_id ID of paper for which the cache should be invalidated
+     */
     protected function invalidate_paper_cache($paper_id)
     {
         $properties = new PaperProperties($this->_mysqli);

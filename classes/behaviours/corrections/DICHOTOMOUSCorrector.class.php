@@ -29,11 +29,11 @@ include_once 'Corrector.class.php';
 
 class DICHOTOMOUSCorrector extends Corrector
 {
-  /**
-   * Change the correct answer after the question has been locked. Update user marks in summative log table
-   * @param integer $new_correct new correct answer
-   * @param integer $paper_id
-   */
+    /**
+     * Change the correct answer after the question has been locked. Update user marks in summative log table
+     * @param integer $new_correct new correct answer
+     * @param integer $paper_id
+     */
     public function execute($new_correct, $paper_id, &$prev_changes, $paper_type)
     {
         $new_correct_val = $new_correct['option_correct'];
@@ -66,7 +66,7 @@ class DICHOTOMOUSCorrector extends Corrector
                 if (!$this->_question->save()) {
                     $errors[] = $this->_lang_strings['datasaveerror'];
                 } else {
-                // Remark the student's answers in 'log{$paper_type}'.
+                    // Remark the student's answers in 'log{$paper_type}'.
                     $score_method = $this->_question->get_score_method();
 
                     $result = $this->_mysqli->prepare("SELECT l.user_answer, l.id FROM log{$paper_type} l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ?");
@@ -79,10 +79,10 @@ class DICHOTOMOUSCorrector extends Corrector
                         $mark = 0;
 
                         for ($i = 0; $i < count($new_correct_val); $i++) {
-                        // Don't do anything if option is unanswered
+                            // Don't do anything if option is unanswered
                             if ($user_answers[$i] == $this->_question->get_answer_positive() or $user_answers[$i] == $this->_question->get_answer_negative()) {
                                 if ($score_method == 'Mark per Question' and $new_correct_val[$i] == $user_answers[$i]) {
-                              // 'Mark' here is just a count of correct answers
+                                    // 'Mark' here is just a count of correct answers
                                     $mark++;
                                 } else {
                                     $mark += ($new_correct_val[$i] == $user_answers[$i]) ? $mark_correct : $mark_incorrect;

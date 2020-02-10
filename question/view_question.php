@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2013 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../include/question_types.php';
@@ -55,7 +55,7 @@ while ($question_data->fetch()) {
         $question['dismiss'] = '';
         $question['settings'] = $settings;
         $question['screen'] = 1;
-    // Preview questions are always on the first screen.
+        // Preview questions are always on the first screen.
         if ($q_type == 'enhancedcalc') {
             if (!is_array($settings)) {
                 $settings = json_decode($settings, true);
@@ -103,7 +103,7 @@ $texteditorplugin->display_header();
   
   <?php
 
-  // Check if any 3d file types are enabled and render js.
+    // Check if any 3d file types are enabled and render js.
     threed_handler::render_js($string);
     ?>
 </head>

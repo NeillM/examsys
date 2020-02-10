@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/question_types.php';
@@ -42,13 +42,13 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db)
   
     $userObject = UserObject::get_instance();
   
-  // Get properties of the paper.
+    // Get properties of the paper.
     $session = $properties->get_calendar_year();
     $paper_date = $properties->get_raw_start_date();
 
     $moduleIDs = Paper_utils::get_modules($paperID, $db);
 
-  // Get the questions on the paper.
+    // Get the questions on the paper.
     $paper = array();
     $question_no = 0;
     $result = $db->prepare('SELECT question, sum(marks_correct) AS sum FROM papers, options WHERE paper = ? AND papers.question = options.o_id GROUP BY question, screen, display_pos ORDER BY screen, display_pos');
@@ -62,7 +62,7 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db)
     }
     $result->close();
 
-  // Get student data.
+    // Get student data.
     $students = array();
     $modids = implode(',', array_keys($moduleIDs));
     $result = $db->prepare("SELECT users.id, student_id, username, yearofstudy, grade, title, surname, first_names FROM users, sid, modules_student WHERE users.id = sid.userID AND users.id = modules_student.userID AND idMod IN ($modids) AND calendar_year = ?");
@@ -102,7 +102,7 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db)
             $fields = explode(',', $separate_line);
             $sid = trim($fields[0]);
             if (!isset($students[$sid]['username'])) {  // Student is not in class List.
-              // Look up to see if anywhere else in Authentication database.
+                // Look up to see if anywhere else in Authentication database.
                 $result = $db->prepare('SELECT id, student_id, users.username, yearofstudy, grade, title, surname, first_names FROM users, sid WHERE users.id = sid.userID AND sid.student_id = ?');
                 $result->bind_param('s', $sid);
                 $result->execute();
@@ -152,16 +152,16 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db)
                 }
                 $result->close();
 
-              //
-              // did the all the save to log operations succeed?
-              //
+                //
+                // did the all the save to log operations succeed?
+                //
                 if ($save_ok === false) {
-                  //NO - rollback
+                    //NO - rollback
                     $db->rollback();
                     $error = $string['errorsaving'];
                     break;
                 } else {
-                  //YES - commit the updates to the log tables
+                    //YES - commit the updates to the log tables
                     $db->commit();
                 }
 
@@ -217,16 +217,16 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db)
                     echo "</tr>\n";
                 }
 
-              //
-              // did the all the save to log operations succeed?
-              //
+                //
+                // did the all the save to log operations succeed?
+                //
                 if ($save_ok === false) {
-                  //NO - rollback
+                    //NO - rollback
                     $db->rollback();
                     $error = $string['errorsaving'];
                     break;
                 } else {
-                  //YES - commit the updates to the log tables
+                    //YES - commit the updates to the log tables
                     $db->commit();
                 }
             } else {
@@ -236,13 +236,13 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db)
 
         $line_written++;
     }
-  //if ($error != '') {
-  //  echo "<li style=\"color:C00000\">$error</li>";
-  //}
+    //if ($error != '') {
+    //  echo "<li style=\"color:C00000\">$error</li>";
+    //}
 
     echo "</table>\n";
   
-  //turn auto commit back on so future queries function as before
+    //turn auto commit back on so future queries function as before
     $db->autocommit(true);
 }
 ?>
@@ -284,7 +284,7 @@ if ($folderID != '') {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?folder=' . $folderID . '&paperID=' . $paperID . '">' . $properties->get_paper_title() . '</a>';
 } else {
     if (is_null($moduleID)) {
-      // Get the modules from paper properties
+        // Get the modules from paper properties
         $modules = Paper_utils::get_modules($paperID, $mysqli);
         $moduleID = key($modules);
     }

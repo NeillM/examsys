@@ -15,12 +15,12 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 function padDecimals($number, $rounding)
 {
@@ -151,8 +151,8 @@ function parse_group_data($questions, &$user_data)
         if (isset($student['data'])) {
             foreach ($student['data'] as $questionID => $question_data) {
                 if (empty($questions[$questionID]['scale_size'])) {
-                  // Not a valid peer review question type,
-                  // we should not bother trying to analyse it.
+                    // Not a valid peer review question type,
+                    // we should not bother trying to analyse it.
                     continue;
                 }
                 $review_no      = 0;
@@ -200,8 +200,8 @@ function parse_single_data($questions, &$user_data)
         if (isset($student['data'])) {
             foreach ($student['data'] as $questionID => $question_data) {
                 if (empty($questions[$questionID]['scale_size'])) {
-                  // Not a valid peer review question type,
-                  // we should not bother trying to analyse it.
+                    // Not a valid peer review question type,
+                    // we should not bother trying to analyse it.
                     continue;
                 }
                 $review_no = 0;

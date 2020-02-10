@@ -28,9 +28,9 @@ class module_utils extends RogoStaticSingleton
     public static $inst = null;
     public static $class_name = 'module'; //name of the new dynamic class
 
-  /**
-  * constructor
-  */
+    /**
+     * constructor
+     */
     private function __construct()
     {
     }

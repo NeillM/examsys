@@ -41,12 +41,12 @@ class IE_Main
     function Save($params, &$data)
     {
         $this->AddError('This export type is not supported');
-  //  $this->AddError($string['errmsg1']);
+        //  $this->AddError($string['errmsg1']);
     }
 
     function Load($params)
     {
         $this->AddError('This import type is not supported');
-  //  $this->AddError($string['errmsg2']);
+        //  $this->AddError($string['errmsg2']);
     }
 }

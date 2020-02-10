@@ -52,7 +52,7 @@ class ToiletBreaks
     static function get_all_breaks_by_paper($paperID, $db)
     {
         $notes = array();
-      // Query any student toilet breaks for the current paper
+        // Query any student toilet breaks for the current paper
         $result = $db->prepare('SELECT userID, id FROM toilet_breaks WHERE paperID = ? ORDER BY break_taken');
         $result->bind_param('i', $paperID);
         $result->execute();

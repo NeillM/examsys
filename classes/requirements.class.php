@@ -15,20 +15,20 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Requirements package
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2017 onwards The University of Nottingham
-*/
+ * Requirements package
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2017 onwards The University of Nottingham
+ */
 
 /**
  * Requirements helper class.
  */
 class requirements
 {
-  /**
-   * Check php version meets minimum requirements.
-   * @return boolean
-   */
+    /**
+     * Check php version meets minimum requirements.
+     * @return boolean
+     */
     public static function check_php_version()
     {
         $configObject = Config::get_instance();
@@ -40,10 +40,10 @@ class requirements
         return true;
     }
 
-  /**
-   * Check required php extensions are enabled.
-   * @return array
-   */
+    /**
+     * Check required php extensions are enabled.
+     * @return array
+     */
     public static function check_php_extensions()
     {
         $ext = array();
@@ -57,7 +57,7 @@ class requirements
                 $ext[$extension] = true;
             }
         }
-      // Check optional extenstions.
+        // Check optional extenstions.
         $optional_extenstions = $configObject->getxml('php', 'optional_extenstions');
         foreach ($optional_extenstions->extension as $opt) {
             if (!in_array($opt, $phpModules)) {
@@ -69,10 +69,10 @@ class requirements
         return $ext;
     }
 
-  /**
-   * Install composer and update libraries to required versions.
-   * @return mixed
-   */
+    /**
+     * Install composer and update libraries to required versions.
+     * @return mixed
+     */
     public static function composer()
     {
         try {
@@ -85,10 +85,10 @@ class requirements
         return true;
     }
 
-  /**
-   * Update NPM libraries to required versions.
-   * @return mixed
-   */
+    /**
+     * Update NPM libraries to required versions.
+     * @return mixed
+     */
     public static function npm()
     {
         try {
@@ -101,14 +101,14 @@ class requirements
         return true;
     }
 
-  /**
-   * Check db version meets minimum requirements.
-   * @param string $host db host
-   * @param string $user db user
-   * @param string $pass db password
-   * @return boolean
-   * @throws Exception When the database cannot be connected to.
-   */
+    /**
+     * Check db version meets minimum requirements.
+     * @param string $host db host
+     * @param string $user db user
+     * @param string $pass db password
+     * @return boolean
+     * @throws Exception When the database cannot be connected to.
+     */
     public static function check_db($host, $user, $pass)
     {
         $phpModules = get_loaded_extensions();
@@ -130,14 +130,14 @@ class requirements
         return true;
     }
 
-  /**
-  * Check for required components - used by cli installers
-  * @throws Exception
-  */
+    /**
+     * Check for required components - used by cli installers
+     * @throws Exception
+     */
     public static function check()
     {
         $configObject = Config::get_instance();
-      // php.
+        // php.
         if (!self::check_php_version()) {
             $php_min_ver = $configObject->getxml('php', 'min_version');
             throw new Exception('PHP version does not meet minimum requirement - ' . $php_min_ver);

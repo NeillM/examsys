@@ -29,14 +29,14 @@ include_once 'Corrector.class.php';
 
 class MARKSCorrector extends Corrector
 {
-  /**
-   * Change the marks for a question
-   *
-   * WARNING: This behaviour must be followed by an additional corrector that commits changes to the database
-   *
-   * @param integer $new_correct new correct answer
-   * @param integer $paper_id
-   */
+    /**
+     * Change the marks for a question
+     *
+     * WARNING: This behaviour must be followed by an additional corrector that commits changes to the database
+     *
+     * @param integer $new_correct new correct answer
+     * @param integer $paper_id
+     */
     public function execute($new_correct, $paper_id, &$changes, $paper_type)
     {
         $errors = array();

@@ -43,7 +43,7 @@ class internaldb_auth extends outline_authentication
         $callbackarray[] = array(array($this, 'failauth'), 'postauthfail', $this->number, $this->name);
         $callbackarray[] = array(array($this, 'update_password'), 'postauthsuccess', $this->number, $this->name);
         $callbackarray[] = array(array($this, 'lookupuser'), 'lookupuser', $this->number, $this->name);
-//$callbackarray[] = array(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
+        //$callbackarray[] = array(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
 
         return $callbackarray;
     }
@@ -51,7 +51,7 @@ class internaldb_auth extends outline_authentication
     function failauth($postauthfailreturn)
     {
         $this->savetodebug('Fail function run');
-//default behaviour is to display username/password form
+        //default behaviour is to display username/password form
         $postauthfailreturn->form = 'std';
         $postauthfailreturn->exit = true;
         if ((isset($this->settings['displayfailuremessagenumber']) and $postauthfailreturn->attempt >= $this->settings['displayfailuremessagenumber']) or (!isset($this->settings['displayfailuremessagenumber']) and $postauthfailreturn->attempt > 3)) {
@@ -110,7 +110,7 @@ class internaldb_auth extends outline_authentication
         $this->savetodebug('Authing');
         extract($this->settings);
         if (!isset($this->form['std']->username) or !isset($this->form['std']->password) or $this->form['std']->username == '' or $this->form['std']->password == '') {
-        //return not sucessfull do not try
+            //return not sucessfull do not try
                 $this->savetodebug('Check 1 blank entries');
             $this->retdata->fail($this->number);
             $this->retdata->message = 'Not valid entry for username or password';
@@ -124,7 +124,7 @@ class internaldb_auth extends outline_authentication
         $result->store_result();
         $result->bind_result($uname, $pass, $id, $password_expire);
         if ($result->num_rows() !== 1) {
-        // return not sucessfull either no user or multiple matches
+            // return not sucessfull either no user or multiple matches
                 $this->savetodebug('Check 2 record number not = 1 no user or multiple user found');
             $this->retdata->fail($this->number);
             $this->retdata->message = 'Incorrect number of records returned';
@@ -143,13 +143,13 @@ class internaldb_auth extends outline_authentication
         $this->savetodebug('encrypted password strings ' . $encrypt_password . ':::' . $pass);
         if ($encrypt_password == $pass and (time() < $password_expire or $password_expire == '')) {
             if ($old_encrypt_type == 'MD5') {
-        // Re-encrypt MD5 passwords using SHA-512.
+                // Re-encrypt MD5 passwords using SHA-512.
                   $this->savetodebug('Re Encrypting PW');
                 $this->update_password();
             }
             $this->updatable = false;
             $this->savetodebug('Successfully authenticated on this module');
-        //sucessfull internaldb authentication
+            //sucessfull internaldb authentication
             $this->retdata->success($this->number, $id);
             $this->retdata->message = 'Internal DB Correctly Authenticated';
             $this->retdata->postredirect = true;
@@ -172,7 +172,7 @@ class internaldb_auth extends outline_authentication
         if ($this->updatable === true and (!isset($this->settings['donotupdatepassword']) or (isset($this->settings['donotupdatepassword']) and $this->settings['donotupdatepassword'] !== true))) {
             if ($passwordexpire == null) {
                 $days = 30;
-        // If there is no setting in the config file, default to 30 days.
+                // If there is no setting in the config file, default to 30 days.
             } else {
                 $days = $passwordexpire;
             }

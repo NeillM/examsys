@@ -26,5 +26,5 @@ namespace testing;
  */
 class invalid_rogosingleton_object extends \Exception
 {
-  // Intentionally blank.
+    // Intentionally blank.
 }

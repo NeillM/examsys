@@ -30,14 +30,14 @@ class personal_folders
     private $folderlst2;
     private $mysqli;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->mysqli = null;
     }
 
@@ -48,7 +48,7 @@ class personal_folders
 
     function loadpersonalfolders($userID)
     {
-      // -- Display personal folders --------------------------------------
+        // -- Display personal folders --------------------------------------
         if (!isset($teams)) {
             $teams = getUserTeams($userID, $this->mysqli);
         }
@@ -174,7 +174,7 @@ class personal_folders
                 $block_id++;
                 echo '</div>';
             } else {
-              //no subfolders or tests
+                //no subfolders or tests
                 echo "<div class=\"mod\"><img src=\"../artwork/folder_16.png\" width=\"16\" height=\"16\" alt=\"folder\"border=\"0\"   />&nbsp;$name</div>\n";
             }
         }

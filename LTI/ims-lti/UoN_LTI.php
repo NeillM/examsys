@@ -16,12 +16,12 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Atack
-* @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Atack
+ * @version 1.0
+ * @copyright Copyright (c) 2013 The University of Nottingham
+ * @package
+ */
 
 use LTI\OAuthRequest,
 
@@ -37,19 +37,19 @@ class UoN_LTI extends BLTI
 
 
 
-  // following 2 static variables & 2 static functions are from rogostaticsingleton but cant extend that as already extending BLTI class
+    // following 2 static variables & 2 static functions are from rogostaticsingleton but cant extend that as already extending BLTI class
 
     static $inst;
     static $class_name = 'UoN_LTI';
-/** @var string Language component name. */
+    /** @var string Language component name. */
     protected $langcomponent = 'LTI/error';
-/** @var array language strings */
+    /** @var array language strings */
     protected $strings;
   
-  /**
-   * Create and return the Global instance of parent::$class_name for use in
-   * the Local scope.
-   */
+    /**
+     * Create and return the Global instance of parent::$class_name for use in
+     * the Local scope.
+     */
     public static function get_instance()
     {
         if (!is_object(static::$inst)) {
@@ -57,19 +57,19 @@ class UoN_LTI extends BLTI
         }
         return static::$inst;
     }
-  /**
-   * sets the Mock instance to return. ONLY used for unit testing
-   *
-   */
+    /**
+     * sets the Mock instance to return. ONLY used for unit testing
+     *
+     */
     public static function set_mock_instance($obj)
     {
         static::$inst = $obj;
     }
   
     private $db;
-/**
-   * @var array|bool
-   */
+    /**
+     * @var array|bool
+     */
     private $parm = array('dbtype' => 'mysqli', 'table_prefix' => '');
 
 
@@ -85,22 +85,22 @@ class UoN_LTI extends BLTI
         $this->db = $db;
     }
 
-  /**
-   * Function to get context title
-   * @return lti context title
-   */
+    /**
+     * Function to get context title
+     * @return lti context title
+     */
     public function get_context_title()
     {
         $title = $this->info['context_title'];
         return $title;
     }
 
-  /**
-   * Function to initilise the lti class
-   * @param bool $usesession
-   * @param bool $doredirect
-   * @return
-   */
+    /**
+     * Function to initilise the lti class
+     * @param bool $usesession
+     * @param bool $doredirect
+     * @return
+     */
     public function init_lti($usesession = true, $doredirect = false)
     {
         if (!isset($_REQUEST['lti_message_type'])) {
@@ -113,8 +113,8 @@ class UoN_LTI extends BLTI
             $_REQUEST['resource_link_id'] = '';
         }
       
-      // If this request is not an LTI Launch, either
-      // give up or try to retrieve the context from session
+        // If this request is not an LTI Launch, either
+        // give up or try to retrieve the context from session
         if (!is_lti_request()) {
             if ($usesession === false) {
                     return;
@@ -148,15 +148,15 @@ class UoN_LTI extends BLTI
             return;
         }
 
-      // Insure we have a valid launch
+        // Insure we have a valid launch
         if (empty($_REQUEST['oauth_consumer_key'])) {
             $this->message = 'Missing oauth_consumer_key in request';
             unset($_SESSION['_lti_context']);
             return;
         }
         $oauth_consumer_key = $_REQUEST['oauth_consumer_key'];
-// Find the secret - either form the parameter as a string or
-      // look it up in a database from parameters we are given
+        // Find the secret - either form the parameter as a string or
+        // look it up in a database from parameters we are given
         $secret = false;
         $row = false;
         if (is_string($this->parm)) {
@@ -190,7 +190,7 @@ class UoN_LTI extends BLTI
             }
         }
 
-      // Verify the message signature
+        // Verify the message signature
         $store = new TrivialOAuthDataStore();
         $store->add_consumer($oauth_consumer_key, $secret);
         $server = new OAuthServer($store);
@@ -207,7 +207,7 @@ class UoN_LTI extends BLTI
             return;
         }
 
-      // Store the launch information in the session for later
+        // Store the launch information in the session for later
         $newinfo = array();
         foreach ($_POST as $key => $value) {
             if ($key == 'basiclti_submit') {
@@ -242,10 +242,10 @@ class UoN_LTI extends BLTI
         }
     }
 
-  /**
-   * Load LTI integration based on config
-   * @return object LTI integration
-   */
+    /**
+     * Load LTI integration based on config
+     * @return object LTI integration
+     */
     public function load()
     {
         $configObject = Config::get_instance();
@@ -256,14 +256,14 @@ class UoN_LTI extends BLTI
         }
     }
 
-  /**
-   * Gets the user linked to an external id.
-   *
-   * @param string $externalid The id of a user in the external system
-   * @param string $consumer_key The consumer key used to connect to the system
-   * @return array
-   * @throws Exception
-   */
+    /**
+     * Gets the user linked to an external id.
+     *
+     * @param string $externalid The id of a user in the external system
+     * @param string $consumer_key The consumer key used to connect to the system
+     * @return array
+     * @throws Exception
+     */
     public function get_user_by_external_id($externalid, $consumer_key)
     {
         if (!isset($this->db)) {
@@ -293,14 +293,14 @@ class UoN_LTI extends BLTI
         return $return;
     }
 
-  /**
-   * Gets the eternal system ids attached to a Rogo user.
-   *
-   * @param string $username A Rogo user name
-   * @param int $linkid The id of an LTi ket record.
-   * @return array
-   * @throws Exception
-   */
+    /**
+     * Gets the eternal system ids attached to a Rogo user.
+     *
+     * @param string $username A Rogo user name
+     * @param int $linkid The id of an LTi ket record.
+     * @return array
+     * @throws Exception
+     */
     public function get_links_by_username($username, $linkid)
     {
         if (!isset($this->db)) {
@@ -331,20 +331,20 @@ class UoN_LTI extends BLTI
         return $return;
     }
   
-  /**
-   * Get the details of an LTi key by it's ID in an array containing the following keys:
-   * - id
-   * - oauth_consumer_key
-   * - secret
-   * - name
-   * - context_id
-   *
-   * If the passed key is invalid then the values of the keys will all be null.
-   *
-   * @param int $id
-   * @return array
-   * @throws Exception
-   */
+    /**
+     * Get the details of an LTi key by it's ID in an array containing the following keys:
+     * - id
+     * - oauth_consumer_key
+     * - secret
+     * - name
+     * - context_id
+     *
+     * If the passed key is invalid then the values of the keys will all be null.
+     *
+     * @param int $id
+     * @return array
+     * @throws Exception
+     */
     public function get_lti_key($id)
     {
         if (!isset($this->db)) {
@@ -404,14 +404,14 @@ class UoN_LTI extends BLTI
         return $rows > 0;
     }
 
-  /**
-   * Function to update lti key
-   * @param int $ltiid unique id of lti key
-   * @param string $ltiname name field of lti key
-   * @param string $ltikey key field of lti key
-   * @param string $ltisec secret field of lti key
-   * @param string optional lticontext override field of lti key
-   */
+    /**
+     * Function to update lti key
+     * @param int $ltiid unique id of lti key
+     * @param string $ltiname name field of lti key
+     * @param string $ltikey key field of lti key
+     * @param string $ltisec secret field of lti key
+     * @param string optional lticontext override field of lti key
+     */
     function update_lti_key($ltiid, $ltiname, $ltikey, $ltisec, $lticontext = '')
     {
         $db = $this->db;
@@ -424,10 +424,10 @@ class UoN_LTI extends BLTI
         $stmt->close();
     }
 
-  /**
-   * Function to delete lti key
-   * @param int $ltiid the unique id of lti key to delete
-   */
+    /**
+     * Function to delete lti key
+     * @param int $ltiid the unique id of lti key to delete
+     */
     function delete_lti_key($ltiid)
     {
         $db = $this->db;
@@ -440,14 +440,14 @@ class UoN_LTI extends BLTI
         $stmt->close();
     }
   
-  /**
-   * Deletes the link between an user of an external system and Rogo.
-   *
-   * @param int $userid The id of a Rogo user.
-   * @param type $consumer_key The consumer key for an external system.
-   * @param type $externalid The id of the user in the external system.
-   * @throws Exception
-   */
+    /**
+     * Deletes the link between an user of an external system and Rogo.
+     *
+     * @param int $userid The id of a Rogo user.
+     * @param type $consumer_key The consumer key for an external system.
+     * @param type $externalid The id of the user in the external system.
+     * @throws Exception
+     */
     public function delete_user_link($userid, $consumer_key, $externalid)
     {
         if (!isset($this->db)) {
@@ -461,27 +461,27 @@ class UoN_LTI extends BLTI
         $query->execute();
     }
 
-  /**
-   * Generate the user key for the lti_user table.
-   *
-   * @param string $consumer_key the consumer kety for the external system.
-   * @param string $externalid the identifier of a user from the external system.
-   * @return string
-   */
+    /**
+     * Generate the user key for the lti_user table.
+     *
+     * @param string $consumer_key the consumer kety for the external system.
+     * @param string $externalid the identifier of a user from the external system.
+     * @return string
+     */
     public function generate_user_key($consumer_key, $externalid)
     {
         return "$consumer_key:$externalid";
     }
 
-  /**
-   * Function to add new lti key
-   * @param string $ltiname name field of lti key
-   * @param string $ltikey key field of lti key
-   * @param string $ltisec secret field of lti key
-   * @param string $lticontext
-   * @internal param int $ltiid unique id of lti key
-   * @internal param \optional $string lticontext override field of lti key
-   */
+    /**
+     * Function to add new lti key
+     * @param string $ltiname name field of lti key
+     * @param string $ltikey key field of lti key
+     * @param string $ltisec secret field of lti key
+     * @param string $lticontext
+     * @internal param int $ltiid unique id of lti key
+     * @internal param \optional $string lticontext override field of lti key
+     */
     function add_lti_key($ltiname, $ltikey, $ltisec, $lticontext = '')
     {
         $db = $this->db;
@@ -494,11 +494,11 @@ class UoN_LTI extends BLTI
         $stmt->close();
     }
 
-  /**
-   * Function to lookup lti user association
-   * @param bool|string $lti_user_key optional lti user key
-   * @return false if not found else array containing the associated id and last update time
-   */
+    /**
+     * Function to lookup lti user association
+     * @param bool|string $lti_user_key optional lti user key
+     * @return false if not found else array containing the associated id and last update time
+     */
     function lookup_lti_user($lti_user_key = false)
     {
         if ($lti_user_key === false) {
@@ -521,12 +521,12 @@ class UoN_LTI extends BLTI
         return (array($rogo_id, $updated));
     }
 
-  /**
-   * Function to add lti user association
-   * @param string $lti_user_equ the associated id to link to
-   * @param bool|string $lti_user_key optional the lti key to lookup against
-   * @return int of insert id
-   */
+    /**
+     * Function to add lti user association
+     * @param string $lti_user_equ the associated id to link to
+     * @param bool|string $lti_user_key optional the lti key to lookup against
+     * @return int of insert id
+     */
     function add_lti_user($lti_user_equ, $lti_user_key = false)
     {
         if ($lti_user_key === false) {
@@ -540,11 +540,11 @@ class UoN_LTI extends BLTI
         return $ret;
     }
 
-  /**
-   * Function to update lti user association date
-   * @param bool|string $lti_user_key optional key to update
-   * @return
-   */
+    /**
+     * Function to update lti user association date
+     * @param bool|string $lti_user_key optional key to update
+     * @return
+     */
     function update_lti_user($lti_user_key = false)
     {
         if ($lti_user_key === false) {
@@ -560,11 +560,11 @@ class UoN_LTI extends BLTI
         return;
     }
 
-  /**
-   * Function to lookup lti resource association
-   * @param bool|string $lti_resource_key optional resource key
-   * @return false if missing else array of the internal_id, and the internal type plus when it was updated.
-   */
+    /**
+     * Function to lookup lti resource association
+     * @param bool|string $lti_resource_key optional resource key
+     * @return false if missing else array of the internal_id, and the internal type plus when it was updated.
+     */
     function lookup_lti_resource($lti_resource_key = false)
     {
         if ($lti_resource_key === false) {
@@ -584,13 +584,13 @@ class UoN_LTI extends BLTI
         return (array($paperret, $otherret, $updated_on));
     }
 
-  /**
-   * Function to add a new lti resource association
-   * @param string $internal_id is the internal id
-   * @param string $internal_type is the internal type
-   * @param bool|string $lti_resource_key optional is the lti resource key
-   * @return record id
-   */
+    /**
+     * Function to add a new lti resource association
+     * @param string $internal_id is the internal id
+     * @param string $internal_type is the internal type
+     * @param bool|string $lti_resource_key optional is the lti resource key
+     * @return record id
+     */
     function add_lti_resource($internal_id, $internal_type, $lti_resource_key = false)
     {
         if ($lti_resource_key === false) {
@@ -604,13 +604,13 @@ class UoN_LTI extends BLTI
         return $ret;
     }
 
-  /**
-   * Function to update lti resource association
-   * @param string $internal_id is the internal id
-   * @param string $internal_type is the internal type
-   * @param bool|string $lti_resource_key optional is the lti resource key
-   * @return false if not found else number of rows
-   */
+    /**
+     * Function to update lti resource association
+     * @param string $internal_id is the internal id
+     * @param string $internal_type is the internal type
+     * @param bool|string $lti_resource_key optional is the lti resource key
+     * @return false if not found else number of rows
+     */
     function update_lti_resource($internal_id, $internal_type, $lti_resource_key = false)
     {
         if ($lti_resource_key === false) {
@@ -627,12 +627,12 @@ class UoN_LTI extends BLTI
         return false;
     }
 
-  /**
-   * Function to add lti context association
-   * @param string $c_internal_id is the internal context id
-   * @param bool|string $lti_context_key optional is the lti context key
-   * @return new row id
-   */
+    /**
+     * Function to add lti context association
+     * @param string $c_internal_id is the internal context id
+     * @param bool|string $lti_context_key optional is the lti context key
+     * @return new row id
+     */
     function add_lti_context($c_internal_id, $lti_context_key = false)
     {
         if ($lti_context_key === false) {
@@ -651,11 +651,11 @@ class UoN_LTI extends BLTI
         return $ret;
     }
 
-  /**
-   * Function to lookup lti context
-   * @param bool|string $lti_context_key optional the lti context key
-   * @return array|bool if false else array with module shortcode and last lti context updated time
-   */
+    /**
+     * Function to lookup lti context
+     * @param bool|string $lti_context_key optional the lti context key
+     * @return array|bool if false else array with module shortcode and last lti context updated time
+     */
     function lookup_lti_context($lti_context_key = false)
     {
         if ($lti_context_key === false) {
@@ -702,11 +702,11 @@ class UoN_LTI extends BLTI
         return $response;
     }
 
-  /**
-   * Check that paperlink matches that of paper we are viewing
-   * @param string $cryptname crypt name of paper
-   * @return void
-   */
+    /**
+     * Check that paperlink matches that of paper we are viewing
+     * @param string $cryptname crypt name of paper
+     * @return void
+     */
     public function check_paper_link($cryptname)
     {
         if (isset($_SESSION['lti']['paperlink'])) {

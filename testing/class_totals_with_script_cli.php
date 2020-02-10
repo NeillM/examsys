@@ -16,15 +16,15 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* This script is mimics the actions of class_totals_with_script_ajax.php via the command line.
-* We can run this script as a cron job and so not have to remember to go to the site every day to run the test.
-*
-* @author Joseph Baxter
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * This script is mimics the actions of class_totals_with_script_ajax.php via the command line.
+ * We can run this script as a cron job and so not have to remember to go to the site every day to run the test.
+ *
+ * @author Joseph Baxter
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 include_once dirname(__DIR__) . '/include/load_config.php';
 $language = LangUtils::getLang($cfg_web_root);

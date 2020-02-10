@@ -16,11 +16,11 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Text Editor version file
-*
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2017 onwards The University of Nottingham
-*/
+ * Text Editor version file
+ *
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2017 onwards The University of Nottingham
+ */
 
 $this->version = '1.0.0';
 $this->requires = '7.0.0';

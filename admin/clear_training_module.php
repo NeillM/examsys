@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/sysadmin_auth.inc';
 
@@ -61,7 +61,7 @@ while ($result->fetch()) {
     $q_result->store_result();
     $q_result->bind_result($questionID);
     while ($q_result->fetch()) {
-      // Check the question isn't used on any other papers
+        // Check the question isn't used on any other papers
         $check = $mysqli->prepare('SELECT question FROM papers WHERE question=?');
         $check->bind_param('i', $questionID);
         $check->execute();
@@ -69,10 +69,10 @@ while ($result->fetch()) {
         $check->bind_result($questionID);
         $check->fetch();
         if ($check->num_rows == 1) {
-          //delete the question its only on 1 training paper
+            //delete the question its only on 1 training paper
             QuestionUtils::delete_question($questionID, $mysqli);
         } else {
-          //remove from the TRAIN module dont delete ;-) its used elsewhere
+            //remove from the TRAIN module dont delete ;-) its used elsewhere
             QuestionUtils::remove_modules(array($trainIdMod => 'TRAIN'), $questionID, $mysqli);
         }
         $check->close();

@@ -40,82 +40,82 @@ use plugins\ims\ims_enterprise_roles;
  */
 class ims_enterprise
 {
-  /** The orgname tag */
+    /** The orgname tag */
     const SOURCE_ORGNAME = 'orgname';
-  /** The orgunit tag */
+    /** The orgunit tag */
     const SOURCE_ORGUNIT = 'orgunit';
-  /** The relationship tag */
+    /** The relationship tag */
     const SOURCE_RELATIONSHIP = 'relationship';
-  /** Active role status */
+    /** Active role status */
     const ROLE_STATUS_ACTIVE = 1;
-  /** Inactive role status */
+    /** Inactive role status */
     const ROLE_STATUS_INACTIVE = 0;
-  /** Default school ID if none is specified */
+    /** Default school ID if none is specified */
     const DEFAULT_SCHOOLID = 0;
-  /**  The grouptype value for modules */
+    /**  The grouptype value for modules */
     const GROUP_MODULE = 'CLASSES';
-  /** The grouptype value for terms */
+    /** The grouptype value for terms */
     const GROUP_TERM = 'TERM';
-  /** The grouptype value for courses */
+    /** The grouptype value for courses */
     const GROUP_PROGRAMME = 'PROGRAMME';
-  /** The grouptype value for faculties */
+    /** The grouptype value for faculties */
     const GROUP_FACULTY = 'FACULTY';
-  /** The grouptype value for schools */
+    /** The grouptype value for schools */
     const GROUP_SCHOOL = 'SCHOOL';
-  /** The recstatus to delete a record */
+    /** The recstatus to delete a record */
     const RECORD_DELETE = 3;
-  /** The recstatus to create a record */
+    /** The recstatus to create a record */
     const RECORD_CREATE = 1;
-  /** The recstatus to update a record */
+    /** The recstatus to update a record */
     const RECORD_UPDATE = 2;
-  /** The recstatus to update a record */
+    /** The recstatus to update a record */
     const RECORD_UNDEFINED = -1;
-  /** @var bool Whether modulecodes should be trucated or not */
+    /** @var bool Whether modulecodes should be trucated or not */
     protected $truncatemodulecodes;
-  /** @var bool Whether to create new modules or not */
+    /** @var bool Whether to create new modules or not */
     protected $createmodules;
-  /** @var bool Whether to create new schools or not */
+    /** @var bool Whether to create new schools or not */
     protected $createschools;
-  /** @var bool Whether to create new programmes or not */
+    /** @var bool Whether to create new programmes or not */
     protected $createprogrammes;
-  /** @var bool Whether to create new faculties or not */
+    /** @var bool Whether to create new faculties or not */
     protected $createfaculties;
-  /**  @var stdClass @var stdClass */
+    /**  @var stdClass @var stdClass */
     protected $ims_settings;
-  /** @var stdClass IMS settings */
+    /** @var stdClass IMS settings */
     protected $ims;
-  /** @var $logfp resource file pointer for writing log data to. */
+    /** @var $logfp resource file pointer for writing log data to. */
     protected $logfp;
-  /** @var $continueprocessing bool flag to determine if processing should continue. */
+    /** @var $continueprocessing bool flag to determine if processing should continue. */
     protected $continueprocessing;
-  /** @var $validatexml bool Validate XML against local DTD. */
+    /** @var $validatexml bool Validate XML against local DTD. */
     protected $validatexml;
-  /** @var stdClass DB Object */
+    /** @var stdClass DB Object */
     protected $db;
-  /** @var $modulemappings array of mappings between IMS data fields and Rogō module fields. */
+    /** @var $modulemappings array of mappings between IMS data fields and Rogō module fields. */
     protected $modulemappings;
-  /** @var $rolemappings array of mappings between IMS roles and Rogō roles. */
+    /** @var $rolemappings array of mappings between IMS roles and Rogō roles. */
     protected $rolemappings;
-  /** @var string Xml file location */
+    /** @var string Xml file location */
     protected $filename;
-  /** @var array A cache of group relationships */
+    /** @var array A cache of group relationships */
     protected $grouprelationships = array();
-  /** $var string The node to get the moduleid from */
+    /** $var string The node to get the moduleid from */
     protected $mapmoduleid;
-  /** $var string The node to get the module full name from */
+    /** $var string The node to get the module full name from */
     protected $mapfullname;
-  /** $var string||null Only process data if a target is specified */
+    /** $var string||null Only process data if a target is specified */
     protected $restricttarget;
-  /**
-   * Constructor
-   * @param stdClass $mysqli
-   */
+    /**
+     * Constructor
+     * @param stdClass $mysqli
+     */
     public function __construct($mysqli)
     {
         $this->db = $mysqli;
         $settings = new ims_enterprise_settings();
         $this->ims_settings = $settings->get_ims_settings($this->db);
-      // Get configs.
+        // Get configs.
         $this->filename = $this->get_ims_setting('filelocation');
         $this->validatexml = $this->get_ims_setting('validatexml');
         $this->createfaculties = $this->get_ims_setting('createfaculties');
@@ -145,9 +145,9 @@ class ims_enterprise
         $this->restricttarget = $this->get_ims_setting('restricttarget');
     }
 
-  /**
-   * Read in an IMS Enterprise file.
-   */
+    /**
+     * Read in an IMS Enterprise file.
+     */
     public function process()
     {
         $fileisnew = false;
@@ -163,8 +163,8 @@ class ims_enterprise
             $md5 = md5_file($this->filename); // NB We'll write this value back to the database at the end of the cron.
             $filemtime = filemtime($this->filename);
 
-          // Decide if we want to process the file (based on filepath, modification time, and MD5 hash)
-          // This is so we avoid wasting the server's efforts processing a file unnecessarily.
+            // Decide if we want to process the file (based on filepath, modification time, and MD5 hash)
+            // This is so we avoid wasting the server's efforts processing a file unnecessarily.
             if (empty($this->prevpath) || ($this->filename != $this->prevpath)) {
                 $fileisnew = true;
                 $this->log_line('File is new.  Starting to process it!');
@@ -191,7 +191,7 @@ class ims_enterprise
 
                 $timeelapsed = microtime(true) - $starttime;
                 $this->log_line('Process has completed. Time taken: ' . $timeelapsed . ' seconds.');
-              // These variables are stored so we can compare them against the IMS file, next time round.
+                // These variables are stored so we can compare them against the IMS file, next time round.
                 $this->set_prev_configs($filemtime, $this->filename, $md5);
             }
         } else {
@@ -199,14 +199,14 @@ class ims_enterprise
         }
     }
 
-  /**
-   * Check if IMS Enterprise data has been restricted to a specific target
-   *
-   * An IMS Enterprise data file could be intended for multiple "targets" - different LMSes, or different systems
-   * within a school/university. It\'s possible to specify in the Enterprise file that the data is intended for
-   * one or more named target systems, by naming them in <target> tags contained within the <properties> tag
-   * @param string $grouptype
-   */
+    /**
+     * Check if IMS Enterprise data has been restricted to a specific target
+     *
+     * An IMS Enterprise data file could be intended for multiple "targets" - different LMSes, or different systems
+     * within a school/university. It\'s possible to specify in the Enterprise file that the data is intended for
+     * one or more named target systems, by naming them in <target> tags contained within the <properties> tag
+     * @param string $grouptype
+     */
     protected function process_properties_tag()
     {
         if (empty($this->restricttarget)) {
@@ -232,10 +232,10 @@ class ims_enterprise
         . "\nEither change your IMS settings or configure your LMS to specify the correct target");
     }
 
-  /**
-   * Return a new instance of XMLReader based on the IMS file
-   * @return \XMLReader
-   */
+    /**
+     * Return a new instance of XMLReader based on the IMS file
+     * @return \XMLReader
+     */
     protected function get_xml_reader()
     {
         $xml = new \XMLReader();
@@ -246,11 +246,11 @@ class ims_enterprise
         return $xml;
     }
 
-  /**
-   * Get the group type of a group node
-   * @param DOMNode $node
-   * @return boolean|string
-   */
+    /**
+     * Get the group type of a group node
+     * @param DOMNode $node
+     * @return boolean|string
+     */
     protected function get_group_type($node)
     {
         if (property_exists($node, 'grouptype')) {
@@ -260,11 +260,11 @@ class ims_enterprise
         return false;
     }
 
-  /**
-   * Process the FACULTY group nodes
-   * @param string $faculty
-   * @return void|stdClass
-   */
+    /**
+     * Process the FACULTY group nodes
+     * @param string $faculty
+     * @return void|stdClass
+     */
     protected function process_group_faculties()
     {
         $xml = $this->get_xml_reader();
@@ -286,12 +286,12 @@ class ims_enterprise
         $xml->close();
     }
 
-  /**
-   * Get the short description of a node
-   * @param string $nodeid
-   * @param string $type
-   * @return string
-   */
+    /**
+     * Get the short description of a node
+     * @param string $nodeid
+     * @param string $type
+     * @return string
+     */
     protected function get_node_shortname($nodeid, $type)
     {
         $nodename = '';
@@ -318,11 +318,11 @@ class ims_enterprise
         return $nodename;
     }
 
-  /**
-   * Get username based on node id
-   * @param string $nodeid
-   * @return string
-   */
+    /**
+     * Get username based on node id
+     * @param string $nodeid
+     * @return string
+     */
     protected function get_username($nodeid)
     {
         $username = '';
@@ -347,10 +347,10 @@ class ims_enterprise
         return $username;
     }
 
-  /**
-   * Process group nodes of FACULTY group type.
-   * @param stdClass $node
-   */
+    /**
+     * Process group nodes of FACULTY group type.
+     * @param stdClass $node
+     */
     protected function process_group_faculty($node)
     {
         $faculty = (string) $node->description->short;
@@ -361,11 +361,11 @@ class ims_enterprise
         }
     }
 
-  /**
-   * Process group nodes of SCHOOL group type.
-   * @param stdClass $node
-   * @return void
-   */
+    /**
+     * Process group nodes of SCHOOL group type.
+     * @param stdClass $node
+     * @return void
+     */
     protected function process_group_school($node)
     {
         if (!$this->createschools) {
@@ -373,7 +373,7 @@ class ims_enterprise
             return;
         }
         if ($this->schoolsource === self::SOURCE_ORGNAME || $this->schoolsource === self::SOURCE_ORGUNIT) {
-          // We should get the school from the orgname or orgunit in a module so skip this.
+            // We should get the school from the orgname or orgunit in a module so skip this.
             return;
         }
 
@@ -404,10 +404,10 @@ class ims_enterprise
         }
     }
 
-  /**
-   * Process grouptags for a particular group type
-   * @param string $grouptype
-   */
+    /**
+     * Process grouptags for a particular group type
+     * @param string $grouptype
+     */
     protected function process_group_tags($grouptype)
     {
         $this->log_line("Processing $grouptype tag");
@@ -449,11 +449,11 @@ class ims_enterprise
         $xml->close();
     }
 
-  /**
-   * Process group nodes of PROGRAMME group type.
-   * @param stdClass $node
-   * @return void
-   */
+    /**
+     * Process group nodes of PROGRAMME group type.
+     * @param stdClass $node
+     * @return void
+     */
     protected function process_group_programme($node)
     {
         if (!$this->createprogrammes) {
@@ -462,7 +462,7 @@ class ims_enterprise
         }
 
         if ($this->programmesource === self::SOURCE_ORGNAME || $this->programmesource === self::SOURCE_ORGUNIT) {
-          // We should get the programme from the orgname or orgunit in a module so skip this.
+            // We should get the programme from the orgname or orgunit in a module so skip this.
             $this->log_line('We should get the programme from the orgname or orgunit in a module so skipping creating programmes from group nodes.');
             return;
         }
@@ -492,13 +492,13 @@ class ims_enterprise
         }
     }
 
-  /**
-   * Get related node according to configured IMS setting
-   * @param string $source
-   * @param stdClass $node
-   * @param string $grouptype
-   * @return string The node short name
-   */
+    /**
+     * Get related node according to configured IMS setting
+     * @param string $source
+     * @param stdClass $node
+     * @param string $grouptype
+     * @return string The node short name
+     */
     protected function get_related_node_by_setting($source, $node, $grouptype)
     {
         switch ($source) {
@@ -516,14 +516,14 @@ class ims_enterprise
         return $nodename;
     }
 
-  /**
-   * Process group nodes of CLASSES group type.
-   * @param stdClass $node
-   * @return void
-   */
+    /**
+     * Process group nodes of CLASSES group type.
+     * @param stdClass $node
+     * @return void
+     */
     protected function process_group_module($node)
     {
-      // Process tag contents.
+        // Process tag contents.
         $group = new \stdClass();
 
         switch ($this->mapmoduleid) {
@@ -580,7 +580,7 @@ class ims_enterprise
         if (empty($group->modulecode)) {
             $this->log_line('Error: Unable to find module code in \'group\' element.');
         } else {
-          // First, truncate the module code if desired.
+            // First, truncate the module code if desired.
             if (intval($this->truncatemodulecodes) > 0) {
                 $group->modulecode = ($this->truncatemodulecodes > 0) ? substr($group->modulecode, 0, intval($this->truncatemodulecodes)) : $group->modulecode;
             }
@@ -589,10 +589,10 @@ class ims_enterprise
         }
     }
 
-  /**
-   * Process the group tag. This defines a Rogō module.
-   * @param string $domnode The raw contents of the XML element
-   */
+    /**
+     * Process the group tag. This defines a Rogō module.
+     * @param string $domnode The raw contents of the XML element
+     */
     protected function process_group_tag($domnode)
     {
 
@@ -617,12 +617,12 @@ class ims_enterprise
         }
     }
 
-  /**
-   * Create a new school in the specified faculty if the IMS settings allow new school creation
-   * @param int $facultyid
-   * @param string $school
-   * @return int|bool School ID if created.  Otherwise, 0 means creation was disabled, and false an error
-   */
+    /**
+     * Create a new school in the specified faculty if the IMS settings allow new school creation
+     * @param int $facultyid
+     * @param string $school
+     * @return int|bool School ID if created.  Otherwise, 0 means creation was disabled, and false an error
+     */
     protected function create_school($facultyid, $school)
     {
         if ($this->createschools) {
@@ -633,12 +633,12 @@ class ims_enterprise
         return $school;
     }
 
-  /**
-   * Create a new module or update it if it already exists
-   * @param stdClass $group
-   * @param int $recstatus
-   * @return int|void Return moduleid if module was created or updated.  Return void if the module was deleted.
-   */
+    /**
+     * Create a new module or update it if it already exists
+     * @param stdClass $group
+     * @param int $recstatus
+     * @return int|void Return moduleid if module was created or updated.  Return void if the module was deleted.
+     */
     protected function create_module($group, $recstatus)
     {
         $active = 1;
@@ -741,11 +741,11 @@ class ims_enterprise
         }
     }
 
-  /**
-   * Get a SimleXML element from a DOMNode
-   * @param DOMNode $domnode
-   * @return SimpleXMLElement
-   */
+    /**
+     * Get a SimleXML element from a DOMNode
+     * @param DOMNode $domnode
+     * @return SimpleXMLElement
+     */
     protected function get_xml_element($domnode)
     {
         if (empty($domnode)) {
@@ -756,12 +756,12 @@ class ims_enterprise
         return $node;
     }
 
-  /**
-   * Get DOMNodelist via xpath query
-   * @param string $xml
-   * @param string $path
-   * @return DOMNodelist
-   */
+    /**
+     * Get DOMNodelist via xpath query
+     * @param string $xml
+     * @param string $path
+     * @return DOMNodelist
+     */
     protected function get_xpath_nodelist($xml, $path)
     {
         $doc = new \DOMDocument('1.0', 'UTF-8');
@@ -771,22 +771,22 @@ class ims_enterprise
         return $nodelist;
     }
 
-  /**
-   * Get the initials from an IMS person node
-   * @param string $xml
-   * @return string
-   */
+    /**
+     * Get the initials from an IMS person node
+     * @param string $xml
+     * @return string
+     */
     protected function get_person_initials($xml)
     {
         $path = "/person/name/n/partname[@partnametype='Initials']";
         return $this->get_nodelist_value($xml, $path);
     }
 
-  /**
-   * Get the username from an IMS person node
-   * @param string $xml
-   * @return string
-   */
+    /**
+     * Get the username from an IMS person node
+     * @param string $xml
+     * @return string
+     */
     protected function get_username_from_xml($xml)
     {
         $path = "/person/userid[@useridtype='username']";
@@ -802,23 +802,23 @@ class ims_enterprise
         return '';
     }
 
-  /**
-   * Get the Student ID from an IMS person node
-   * @param string $xml
-   * @return string
-   */
+    /**
+     * Get the Student ID from an IMS person node
+     * @param string $xml
+     * @return string
+     */
     protected function get_person_studentid($xml)
     {
         $path = "/person/userid[@useridtype='StudentId']";
         return $this->get_nodelist_value($xml, $path);
     }
 
-  /**
-   * Get the first value in a node list
-   * @param string $xml
-   * @param path $path
-   * @return boolean|string
-   */
+    /**
+     * Get the first value in a node list
+     * @param string $xml
+     * @param path $path
+     * @return boolean|string
+     */
     protected function get_nodelist_value($xml, $path)
     {
         $nodelist = $this->get_xpath_nodelist($xml, $path);
@@ -828,11 +828,11 @@ class ims_enterprise
         return false;
     }
 
-  /**
-   * Get a person's gender based on the gender node
-   * @param int $value
-   * @return string Gender
-   */
+    /**
+     * Get a person's gender based on the gender node
+     * @param int $value
+     * @return string Gender
+     */
     protected function get_person_gender($value)
     {
         switch ($value) {
@@ -848,9 +848,9 @@ class ims_enterprise
         return $gender;
     }
 
-  /**
-   * Process 'person' tags
-   */
+    /**
+     * Process 'person' tags
+     */
     protected function process_persons()
     {
         $this->log_line('Processing persons tag');
@@ -870,21 +870,21 @@ class ims_enterprise
         $xml->close();
     }
 
-  /**
-   * Process the person tag. This defines a Rogō user.
-   *
-   * @param string $node The raw contents of the XML element
-   * @param stdClass $xml
-   * @return void
-   */
+    /**
+     * Process the person tag. This defines a Rogō user.
+     *
+     * @param string $node The raw contents of the XML element
+     * @param stdClass $xml
+     * @return void
+     */
     protected function process_person($node, $xml)
     {
-      // Get plugin configs.
+        // Get plugin configs.
         $person = new \stdClass();
         $person->idnumber = $this->get_person_studentid($xml);
         $firstname = (string) $node->name->n->given;
         $surname = (string) $node->name->n->family;
-      // fn is mandatory in the dtd so use this if n not provided.
+        // fn is mandatory in the dtd so use this if n not provided.
         if (empty($firstname)) {
             $fullname = (string) $node->name->fn;
             $fullnameparts = explode(' ', $fullname);
@@ -902,7 +902,7 @@ class ims_enterprise
         $gender = (int) $node->demographics->gender;
         $person->gender = $this->get_person_gender($gender);
         $person->username = $this->get_username_from_xml($xml);
-      // If username not found fall back to use the sourcedid.
+        // If username not found fall back to use the sourcedid.
         if ($person->username === '' and $this->sourcedidfailback) {
             $person->username = (string) $node->sourcedid->id;
         }
@@ -923,7 +923,7 @@ class ims_enterprise
         $person->grade = (string) $node->extension->course; //TODO We should not use extension nodes unless PeopleSoft can make them available
         $person->yearofstudy = (string) $node->extension->year; //TODO We should not use extension nodes unless PeopleSoft can make them available
 
-      // Fix case of some of the fields if required.
+        // Fix case of some of the fields if required.
         if ($this->fixcaseusernames && isset($person->username)) {
             $person->username = strtolower($person->username);
         }
@@ -938,7 +938,7 @@ class ims_enterprise
 
         $recstatus = $this->detect_recstatus($node);
 
-      // Now if the recstatus is 3, we should delete the user if-and-only-if the setting for delete users is turned on.
+        // Now if the recstatus is 3, we should delete the user if-and-only-if the setting for delete users is turned on.
         if ($recstatus == self::RECORD_DELETE) {
             if ($this->deleteusers) { // If we're allowed to delete user records.
                 $this->delete_user($person);
@@ -946,14 +946,14 @@ class ims_enterprise
                 $this->log_line("Ignoring deletion request for user '$person->username' (ID number $person->idnumber).");
             }
         } else { // Add or update record.
-          // If the user exists (matching sourcedid) then we don't need to do anything.
+            // If the user exists (matching sourcedid) then we don't need to do anything.
             $userid = \UserUtils::username_exists($person->username, $this->db);
             if (!$userid && $this->createusers) {
-              // If they don't exist and haven't a defined username, we log this as a potential problem.
+                // If they don't exist and haven't a defined username, we log this as a potential problem.
                 if ((!isset($person->username)) || (strlen($person->username) == 0)) {
                     $this->log_line("Cannot create new user for ID # $person->idnumber - no username listed in IMS data for this person.");
                 } else {
-                  // If they don't exist and they have a defined username, and $createusers == true, we create them.
+                    // If they don't exist and they have a defined username, and $createusers == true, we create them.
                     $userid = \UserUtils::create_user(
                         $person->username,
                         '',
@@ -989,19 +989,19 @@ class ims_enterprise
                     $this->db,
                     $person->initials
                 );
-              // It is totally wrong to mess with deleted users flag directly in database!!!
-              // There is no official way to undelete user, sorry..
+                // It is totally wrong to mess with deleted users flag directly in database!!!
+                // There is no official way to undelete user, sorry..
             } else {
                 $this->log_line("No user record found for '$person->username' (ID number $person->idnumber).");
             }
         }
     }
 
-  /**
-   * Check whether the recstatus is valid
-   * @param SimpleXMLElement $node xml node
-   * @return string status code
-   */
+    /**
+     * Check whether the recstatus is valid
+     * @param SimpleXMLElement $node xml node
+     * @return string status code
+     */
     protected function detect_recstatus($node)
     {
         if (is_null($node['recstatus'])) {
@@ -1014,10 +1014,10 @@ class ims_enterprise
         return $recstatus;
     }
 
-  /**
-   * Delete a user
-   * @param stdClass $person
-   */
+    /**
+     * Delete a user
+     * @param stdClass $person
+     */
     protected function delete_user($person)
     {
         $userid = \UserUtils::username_exists($person->username, $this->db);
@@ -1037,12 +1037,12 @@ class ims_enterprise
         }
     }
 
-  /**
-   * Process the membership tag. This defines whether the specified Rogō users
-   * should be added/removed as teachers/students.
-   *
-   * @param string $domnode The raw contents of the XML element
-   */
+    /**
+     * Process the membership tag. This defines whether the specified Rogō users
+     * should be added/removed as teachers/students.
+     *
+     * @param string $domnode The raw contents of the XML element
+     */
     protected function process_memberships()
     {
         $this->log_line('Processing memberships');
@@ -1084,15 +1084,15 @@ class ims_enterprise
         $xml->close();
     }
 
-  /**
-   * Process an individual member
-   * @param stdClass $node
-   */
+    /**
+     * Process an individual member
+     * @param stdClass $node
+     */
     protected function process_member($member, $modulecode)
     {
         $studentid = (string) $member->role->userid;
         $username = $this->get_username($studentid);
-      // If username not found fall back to use the sourcedid.
+        // If username not found fall back to use the sourcedid.
         if ($username === '' and $this->sourcedidfailback) {
             $username = (string) $member->sourcedid->id;
         }
@@ -1130,29 +1130,29 @@ class ims_enterprise
         }
     }
 
-  /**
-   * Display logging information.
-   *
-   * @param string $string Text to write (newline will be added automatically)
-   */
+    /**
+     * Display logging information.
+     *
+     * @param string $string Text to write (newline will be added automatically)
+     */
     protected function log_line($string)
     {
         echo $string . "\n";
     }
 
-  /**
-   * Process the INNER contents of a <timeframe> tag, to return beginning/ending dates.
-   *
-   * @param string $string tag to decode.
-   * @return stdClass beginning and/or ending is returned, in unix time, zero indicating not specified.
-   */
+    /**
+     * Process the INNER contents of a <timeframe> tag, to return beginning/ending dates.
+     *
+     * @param string $string tag to decode.
+     * @return stdClass beginning and/or ending is returned, in unix time, zero indicating not specified.
+     */
     protected static function decode_timeframe($string)
     {
         $ret = new \stdClass();
         $ret->begin = $ret->end = 0;
-      // Explanatory note: The matching will ONLY match if the attribute restrict="1"
-      // because otherwise the time markers should be ignored (participation should be
-      // allowed outside the period).
+        // Explanatory note: The matching will ONLY match if the attribute restrict="1"
+        // because otherwise the time markers should be ignored (participation should be
+        // allowed outside the period).
         if (preg_match('{<begin\s+restrict="1">(\d\d\d\d)-(\d\d)-(\d\d)</begin>}is', $string, $matches)) {
             $ret->begin = mktime(0, 0, 0, $matches[2], $matches[3], $matches[1]);
         }
@@ -1162,11 +1162,11 @@ class ims_enterprise
         return $ret;
     }
 
-  /**
-   * Get a particular IMS setting (as stored in the database)
-   * @param string $property
-   * @return string
-   */
+    /**
+     * Get a particular IMS setting (as stored in the database)
+     * @param string $property
+     * @return string
+     */
     protected function get_ims_setting($property)
     {
         if (property_exists($this, 'ims_settings') && is_object($this->ims_settings) && property_exists($this->ims_settings, $property)) {
@@ -1178,12 +1178,12 @@ class ims_enterprise
         return false;
     }
 
-  /**
-   * Store information about the last cron run
-   * @param int $prev_time
-   * @param string $prev_path
-   * @param string $prev_md5
-   */
+    /**
+     * Store information about the last cron run
+     * @param int $prev_time
+     * @param string $prev_path
+     * @param string $prev_md5
+     */
     public function set_prev_configs($prev_time, $prev_path, $prev_md5)
     {
         $configObject = \Config::get_instance();

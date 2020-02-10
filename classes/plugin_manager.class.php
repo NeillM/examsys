@@ -15,11 +15,11 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Plugin manager functionality
-*
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2016 onwards The University of Nottingham
-*/
+ * Plugin manager functionality
+ *
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2016 onwards The University of Nottingham
+ */
 
 /**
  * Plugin manager class.
@@ -43,10 +43,10 @@ class plugin_manager
       array('namespace' => 'plugins\texteditor\plugin_tinymce3_texteditor\plugin_tinymce3_texteditor', 'enabled' => true),
       array('namespace' => 'plugins\texteditor\plugin_plain_texteditor\plugin_plain_texteditor', 'enabled' => false));
 
-    /**
-     * List available plugins.
-     * @return array available plugins (name => namespace)
-     */
+     /**
+      * List available plugins.
+      * @return array available plugins (name => namespace)
+      */
      public static function listplugins()
      {
          $directory = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . '*';
@@ -64,10 +64,10 @@ class plugin_manager
          }
          return $plugins;
      }
-    /**
-     * List available plugin types.
-     * @return array available plugin types
-     */
+     /**
+      * List available plugin types.
+      * @return array available plugin types
+      */
      public static function listplugintypes()
      {
          $directory = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'plugins' . DIRECTORY_SEPARATOR . '*';
@@ -80,10 +80,10 @@ class plugin_manager
          }
          return $plugintype;
      }
-    /**
-     * Get all enabled plugins
-     * @return array list of enabeld plugins
-     */
+     /**
+      * Get all enabled plugins
+      * @return array list of enabeld plugins
+      */
      public static function get_all_enabled_plugins()
      {
          $enabledplugins = array();
@@ -94,11 +94,11 @@ class plugin_manager
          }
          return $enabledplugins;
      }
-    /**
-     * Get the enabeld plugin for this type:
-     * @param string $type type of plugin
-     * @return array list of plugins that are enabled of this type
-     */
+     /**
+      * Get the enabeld plugin for this type:
+      * @param string $type type of plugin
+      * @return array list of plugins that are enabled of this type
+      */
      public static function get_plugin_type_enabled($type)
      {
          $config = Config::get_instance();
@@ -123,11 +123,11 @@ class plugin_manager
          }
          return $newenabled;
      }
-    /**
-     * Is plugin installed.
-     * @param string $plugin name of plugin
-     * @return bool true is installed false otherise.
-     */
+     /**
+      * Is plugin installed.
+      * @param string $plugin name of plugin
+      * @return bool true is installed false otherise.
+      */
      public static function plugin_installed($plugin)
      {
          $config = Config::get_instance();
@@ -139,11 +139,11 @@ class plugin_manager
          }
      }
 
-    /**
-     * Install all core plugins
-     * @param string $db_admin_username db user
-     * @param string $db_admin_passwd password fro db user
-     */
+     /**
+      * Install all core plugins
+      * @param string $db_admin_username db user
+      * @param string $db_admin_passwd password fro db user
+      */
      public static function install_core_plugins($db_admin_username, $db_admin_passwd)
      {
          foreach (self::CORE_PLUGINS as $core) {

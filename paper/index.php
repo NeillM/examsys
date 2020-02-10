@@ -228,7 +228,7 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
     }
     echo "</li>\n</ul>\n<p style=\"margin-left:90px\">" . $string['try'] . ":</p>\n<ul style=\"margin-left:80px\">\n<li>" . $string['f5'] . "</li>\n<li>" . $string['RaiseYourHand '] . "</li>\n</ul>\n";
 
-  // Show staff a list of summative papers in the next 6 weeks with a link to test & preview
+    // Show staff a list of summative papers in the next 6 weeks with a link to test & preview
     if ($userObject->has_role('Staff')) {
         if (!isset($staff_modules)) {
             $staff_modules = $userObject->get_staff_modules();

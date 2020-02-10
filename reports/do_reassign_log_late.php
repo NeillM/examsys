@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 define('AJAX_REQUEST', true);
 require '../include/staff_auth.inc';
@@ -66,13 +66,13 @@ if ($_POST['button_pressed'] == 'Accept') {
     $stmt->bind_result($q_id, $mark, $totalpos, $user_answer, $screen, $duration, $updated, $dismiss, $option_order);
     while ($stmt->fetch()) {
         if (array_key_exists($q_id, $logged_qns)) {
-        // Update the record in the real log table with values from log_late
+            // Update the record in the real log table with values from log_late
               $update = $mysqli->prepare("UPDATE $log_type SET mark = ?, user_answer = ?, duration = ?, updated = ? WHERE id = ?");
             $update->bind_param('isssi', $mark, $user_answer, $duration, $updated, $logged_qns[$q_id]);
             $update->execute();
             $update->close();
         } else {
-        // Insert the records from log_late into the real log table
+            // Insert the records from log_late into the real log table
             $insert = $mysqli->prepare("INSERT INTO $log_type (q_id, mark, totalpos, user_answer, screen, duration, updated, dismiss, option_order, metadataID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $insert->bind_param('idisiisssi', $q_id, $mark, $totalpos, $user_answer, $screen, $duration, $updated, $dismiss, $option_order, $log_metadata_id);
             $insert->execute();

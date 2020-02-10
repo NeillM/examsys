@@ -30,27 +30,27 @@ class renderdata extends \questiondata
 {
     use \mpqgetmarks;
 
-  /**
-   * Question 'other' option selected state
-   * @var boolean
-   */
+    /**
+     * Question 'other' option selected state
+     * @var boolean
+     */
     public $otherselected;
 
-  /**
-   * Question 'abstain' option selected state
-   * @var boolean
-   */
+    /**
+     * Question 'abstain' option selected state
+     * @var boolean
+     */
     public $abstainselected;
 
-  /**
-   * Question options dismissed
-   * @var string
-   */
+    /**
+     * Question options dismissed
+     * @var string
+     */
     public $dismiss;
 
-  /**
-   * Constructor
-   */
+    /**
+     * Constructor
+     */
     function __construct()
     {
         parent::__construct();
@@ -59,9 +59,9 @@ class renderdata extends \questiondata
         $this->abstainselected = false;
     }
 
-  /**
-   * Disable/Enable display of question header sections for template rendering
-   */
+    /**
+     * Disable/Enable display of question header sections for template rendering
+     */
     public function set_question_head()
     {
         if ($this->scenario != '') {
@@ -77,12 +77,12 @@ class renderdata extends \questiondata
         $this->displayleadin = true;
     }
 
-  /**
-   * Question level settings for template rendering
-   * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   * @param mixed $useranswer user answer
-   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
-   */
+    /**
+     * Question level settings for template rendering
+     * @param boolean $screen_pre_submitted has the user submitted and answer previously
+     * @param mixed $useranswer user answer
+     * @param string $userdismissed list of enable/disable flag for options the user has dismissed
+     */
     public function set_question($screen_pre_submitted, $useranswer, $userdismissed)
     {
         if ($useranswer == '0' and $screen_pre_submitted) {
@@ -92,13 +92,13 @@ class renderdata extends \questiondata
         }
     }
 
-  /**
-   * Option level settings for template rendering
-   * @param integer $part_id part loop id
-   * @param mixed $useranswer user answer
-   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
-   * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   */
+    /**
+     * Option level settings for template rendering
+     * @param integer $part_id part loop id
+     * @param mixed $useranswer user answer
+     * @param string $userdismissed list of enable/disable flag for options the user has dismissed
+     * @param boolean $screen_pre_submitted has the user submitted and answer previously
+     */
     public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
     {
         $option = $this->get_opt($part_id);
@@ -126,13 +126,13 @@ class renderdata extends \questiondata
         $this->marks = $option['markscorrect'];
     }
 
-  /**
-   * Additional option level settings for template rendering
-   * @param integer $part_id part loop id
-   * @param mixed $useranswer user answer
-   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
-   * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   */
+    /**
+     * Additional option level settings for template rendering
+     * @param integer $part_id part loop id
+     * @param mixed $useranswer user answer
+     * @param string $userdismissed list of enable/disable flag for options the user has dismissed
+     * @param boolean $screen_pre_submitted has the user submitted and answer previously
+     */
     public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
     {
         $option = $this->get_opt($part_id);
@@ -146,7 +146,7 @@ class renderdata extends \questiondata
         } else {
             $this->negativemarking = false;
         }
-      // other textbox not currently supported by non survey papers.
+        // other textbox not currently supported by non survey papers.
         if ($this->displaymethod === 'vertical_other') {
             if ($this->papertype == 3) {
                 if (substr($useranswer, 0, 5) === 'other') {
@@ -155,7 +155,7 @@ class renderdata extends \questiondata
                 }
             }
         }
-      // Write out the hidden field for the dismiss facility.
+        // Write out the hidden field for the dismiss facility.
         if ($userdismissed != '') {
             $this->dismiss = $userdismissed;
         } else {

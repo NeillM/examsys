@@ -33,24 +33,24 @@ use InstallUtils,
  */
 class database
 {
-  /**
-   * Creates a Rogo database for behat testing.
-   *
-   * @throws Exception
-   */
+    /**
+     * Creates a Rogo database for behat testing.
+     *
+     * @throws Exception
+     */
     public static function install_database()
     {
         $config = Config::get_instance();
         $config->use_behat_site();
         InstallUtils::$cli = true;
         InstallUtils::$behat_install = true;
-      // Check that the php environment is setup correctly.
+        // Check that the php environment is setup correctly.
         try {
             \requirements::check();
         } catch (Exception $e) {
             throw new \Exception($e->getMessage());
         }
-      // Setup the InstallUtils class for installation.
+        // Setup the InstallUtils class for installation.
         InstallUtils::$cfg_db_basename = $config->get('cfg_db_database');
         InstallUtils::$cfg_db_name = $config->get('cfg_db_database');
         InstallUtils::$cfg_web_host = $config->get('cfg_web_host');
@@ -60,13 +60,13 @@ class database
             throw new \Exception('Could not connect to database. Aborting.');
         }
 
-      // Check database version is supported.
+        // Check database version is supported.
         if (!\requirements::check_db($config->get('cfg_db_host'), $config->get('cfg_behat_db_user'), $config->get('cfg_behat_db_password'))) {
             $mysql_min_ver = $config->getxml('database', 'mysql', 'min_version');
             throw new \Exception('MySQL version does not meet minimum requirement - ' . $mysql_min_ver);
         }
 
-      // Preset the database usernames to the details of the live site.
+        // Preset the database usernames to the details of the live site.
         InstallUtils::$cfg_db_username = $config->get('base_database') . '_auth';
         InstallUtils::$cfg_db_student_user = $config->get('base_database') . '_stu';
         InstallUtils::$cfg_db_staff_user = $config->get('base_database') . '_staff';
@@ -78,7 +78,7 @@ class database
         InstallUtils::$cfg_db_internal_user = $config->get('base_database') . '_int';
         InstallUtils::$cfg_cron_user = 'cron';
 
-      // Details of the admin user.
+        // Details of the admin user.
         InstallUtils::$sysadmin_username = 'admin';
         InstallUtils::$sysadmin_password = 'admin';
         InstallUtils::$sysadmin_first = 'Admin';
@@ -86,20 +86,20 @@ class database
         InstallUtils::$sysadmin_title = 'Miss';
         InstallUtils::$sysadmin_email = 'admin@example.com';
 
-      // Ensure that an existing Rogo behat database and users are deleted.
+        // Ensure that an existing Rogo behat database and users are deleted.
         self::drop_db();
 
-      // Start installing the base Rogo database.
+        // Start installing the base Rogo database.
         InstallUtils::checkDBUsers();
         InstallUtils::createDirectories();
         InstallUtils::createDatabase($config->get('cfg_db_database'), $config->get('cfg_db_charset'), $config->get('cfg_db_collation'));
     }
 
-  /**
-   * Gets the database admin username and password.
-   *
-   * @return boolean
-   */
+    /**
+     * Gets the database admin username and password.
+     *
+     * @return boolean
+     */
     public static function get_db_details()
     {
         $config = Config::get_instance();
@@ -110,15 +110,15 @@ class database
         return $connected;
     }
 
-  /**
-   * Drop the behat database and users.
-   */
+    /**
+     * Drop the behat database and users.
+     */
     public static function drop_db()
     {
         $config = Config::get_instance();
         $config->use_behat_site();
         $basedb = $config->get('base_database');
-      // If it exists drop the behat database.
+        // If it exists drop the behat database.
         $dbname = InstallUtils::$cfg_db_name;
         $dbaccesspoint = InstallUtils::$cfg_web_host;
         $res = InstallUtils::$db->prepare("SHOW DATABASES LIKE '$dbname'");
@@ -128,7 +128,7 @@ class database
             InstallUtils::$db->query("DROP DATABASE $dbname");
         }
 
-      // Remove permissions from the DB users.
+        // Remove permissions from the DB users.
         $usernames = array('auth' => 300, 'stu' => 301, 'staff' => 302, 'ext' => 303, 'sys' => 304, 'sct' => 305, 'inv' => 306);
         foreach ($usernames as $username => $err_code) {
             $test_username = $basedb . '_' . $username;
@@ -138,13 +138,13 @@ class database
         }
     }
 
-  /**
-   * Connect to the Rogo database.
-   *
-   * @param string $username
-   * @param string $password
-   * @return boolean
-   */
+    /**
+     * Connect to the Rogo database.
+     *
+     * @param string $username
+     * @param string $password
+     * @return boolean
+     */
     public static function connect_database($username, $password)
     {
         $config = Config::get_instance();

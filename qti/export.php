@@ -57,7 +57,7 @@ if (isset($_GET['debug'])) {
 if ($ids != '') {
     $type = 'paper';
 
-  // get paper properties
+    // get paper properties
     $properties = PaperProperties::get_paper_properties_by_id($_GET['paperID'], $mysqli, $string);
     $paper_title = $properties->get_paper_title();
 } else {

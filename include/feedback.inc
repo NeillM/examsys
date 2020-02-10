@@ -15,12 +15,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $repmodule, $repyear, $paperID, $paper_type, $direction, &$student_no = 0, &$user_total = 0, $percent = 100)
 {
@@ -28,7 +28,7 @@ function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $r
 
     $users_on_modules = '';
 
-  // Get all the users on the module(s) the paper is on.
+    // Get all the users on the module(s) the paper is on.
     if (is_array($moduleIDs)) {
         $moduleIDs_in = implode(',', array_keys($moduleIDs));
         $mod_query = $mysqli->prepare("SELECT userID, moduleid FROM modules_student, modules WHERE modules.id = modules_student.idMod and idMod IN ($moduleIDs_in)");
@@ -52,7 +52,7 @@ function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $r
         $student_modules_sql = " AND log$paper_type.userID IN ($users_on_modules)";
     }
 
-  // Get order of the class.
+    // Get order of the class.
     if ($paper_type == '0') {
         if ($users_on_modules != '') {
             $student_modules_sql1 = " AND userID IN ($users_on_modules)";
@@ -77,7 +77,7 @@ function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $r
     $result->bind_result($tmp_userID, $total_mark);
     $user_total = $result->num_rows;
 
-  //only take the required number of users if $percent is not 100%
+    //only take the required number of users if $percent is not 100%
     $user_limit = ($percent != 100) ? floor($user_total * ($percent / 100)) : $user_total;
 
     while ($result->fetch() and $student_no <= $user_limit) {
@@ -90,7 +90,7 @@ function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $r
     }
     $result->close();
 
-  //get the excluded questions
+    //get the excluded questions
     $excluded = array();
     $result = $mysqli->prepare('SELECT q_id, parts FROM question_exclude WHERE q_paper = ?');
     $result->bind_param('i', $paperID);
@@ -107,7 +107,7 @@ function getCohortData($mysqli, $moduleIDs, $startdate, $enddate, $repcourse, $r
     }
     $result->close();
 
-  //get users log data
+    //get users log data
     $qid_list = '';
     $user_count = 0;
     $question_data = array();

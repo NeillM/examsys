@@ -16,16 +16,16 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Displays an HTML page in a suitable way that it could be printed
-* with the intention of making a student answer booklet (i.e. only
-* questions, no answers).
-*
-* @author Simon Wilkinson, Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Displays an HTML page in a suitable way that it could be printed
+ * with the intention of making a student answer booklet (i.e. only
+ * questions, no answers).
+ *
+ * @author Simon Wilkinson, Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../include/print_functions.inc';

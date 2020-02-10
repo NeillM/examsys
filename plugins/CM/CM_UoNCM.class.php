@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Curriculum Map API, all Curriculum Map related functions go in here
-*
-* @author Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Curriculum Map API, all Curriculum Map related functions go in here
+ *
+ * @author Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once 'CMAPI.if.php';
 
@@ -35,19 +35,19 @@ class CM_UoNCM implements iCMAPI
     private $_mapping_level = self::LEVEL_SESSION;
     private $_moodle_base_url;
 
-  /**
-   * Return objectives from the University of Nottingham Curriculum Mapping system
-   * @param string $moduleID the module code
-   * @param int $session The year the academic year starts in
-   * @param mysqli $db database connection
-   * @return mixed Array of session and objective data in format required by Rogō
-   */
+    /**
+     * Return objectives from the University of Nottingham Curriculum Mapping system
+     * @param string $moduleID the module code
+     * @param int $session The year the academic year starts in
+     * @param mysqli $db database connection
+     * @return mixed Array of session and objective data in format required by Rogō
+     */
     public function getObjectives($moduleID, $session, $db)
     {
         $configObject = Config::get_instance();
         $this->_sess_year = $session;
         $originalmodid = $moduleID;
-      // Map module code if necessary.
+        // Map module code if necessary.
         if ($session < 2018) {
             $moduleID = \plugins\plugins_mapping::do_mapping($db, $moduleID);
         }
@@ -79,30 +79,30 @@ class CM_UoNCM implements iCMAPI
         return $objectives;
     }
 
-  /**
-   * Get a friendly name for the source system, with the indefinite article if required
-   * @param bool $a     Include the definite article?
-   * @param bool $long  Return the long form of the name?
-   * @return string     The name in the required format
-   */
+    /**
+     * Get a friendly name for the source system, with the indefinite article if required
+     * @param bool $a     Include the definite article?
+     * @param bool $long  Return the long form of the name?
+     * @return string     The name in the required format
+     */
     public function getFriendlyName($a = false, $long = false)
     {
         return ($a) ? 'a Curriculum Map' : 'Curriculum Map';
     }
 
-  /**
-   * Get the levels of mapping that are supported by this class
-   * @return array Array of mapping levels supported
-   */
+    /**
+     * Get the levels of mapping that are supported by this class
+     * @return array Array of mapping levels supported
+     */
     public function getMappingLevels()
     {
         return array(self::LEVEL_SESSION, self::LEVEL_MODULE);
     }
 
-  /**
-   * Set the mapping level at which the class should work
-   * @param integer $level Mapping level
-   */
+    /**
+     * Set the mapping level at which the class should work
+     * @param integer $level Mapping level
+     */
     public function setMappingLevel($level)
     {
         if (!in_array($level, $this->getMappingLevels())) {
@@ -111,13 +111,13 @@ class CM_UoNCM implements iCMAPI
         $this->_mapping_level = $level;
     }
 
-  /**
-   * Transform the module level data returned by the Curriculum Map into the format required by Rogō
-   * @param array $input data
-   * @param integer $calendar_year year we are interested in
-   * @param string $originalmodid the orginal (non mapped) module id
-   * @return array data converted to rogo structure
-   */
+    /**
+     * Transform the module level data returned by the Curriculum Map into the format required by Rogō
+     * @param array $input data
+     * @param integer $calendar_year year we are interested in
+     * @param string $originalmodid the orginal (non mapped) module id
+     * @return array data converted to rogo structure
+     */
     private function transformCMResponse($input, $calendar_year, $mod_id)
     {
         if (isset($input['cmapi']['module'])) {
@@ -147,13 +147,13 @@ class CM_UoNCM implements iCMAPI
             return array();
         }
     }
-  /**
-   * Transform the session level data returned by the Curriculum Map into the format required by Rogō
-   * @param array $input data
-   * @param integer $calendar_year year we are interested in
-   * @param string $originalmodid the orginal (non mapped) module id
-   * @return array data converted to rogo structure
-   */
+    /**
+     * Transform the session level data returned by the Curriculum Map into the format required by Rogō
+     * @param array $input data
+     * @param integer $calendar_year year we are interested in
+     * @param string $originalmodid the orginal (non mapped) module id
+     * @return array data converted to rogo structure
+     */
     private function transformCMResponseModule($input, $calendar_year, $mod_id)
     {
         if (isset($input['cmapi']['module'])) {
@@ -175,15 +175,15 @@ class CM_UoNCM implements iCMAPI
         }
     }
 
-  /**
-   * @param $sessions List of sessions with objectives
-   * @param $session The current session
-   * @param $calendar_year
-   * @param $count
-   */
+    /**
+     * @param $sessions List of sessions with objectives
+     * @param $session The current session
+     * @param $calendar_year
+     * @param $count
+     */
     private function process_session(&$sessions, $session, $calendar_year, &$count)
     {
-      // If no objectives don't bother showing the session
+        // If no objectives don't bother showing the session
         if (is_array($session['objectives'])) {
             $sess_data = array(
             'identifier' => $session['@attributes']['id'],
@@ -221,15 +221,15 @@ class CM_UoNCM implements iCMAPI
         }
     }
 
-  /**
-   * @param $sessions List of sessions with objectives
-   * @param $session The current session
-   * @param $calendar_year
-   * @param $count
-   */
+    /**
+     * @param $sessions List of sessions with objectives
+     * @param $session The current session
+     * @param $calendar_year
+     * @param $count
+     */
     private function process_learning_act(&$sessions, $learning_act, $calendar_year, &$count)
     {
-      // If no objectives don't bother showing the session
+        // If no objectives don't bother showing the session
         if (is_array($learning_act['objectives'])) {
             $act_data = array(
             'identifier' => $learning_act['@attributes']['id'],
@@ -239,7 +239,7 @@ class CM_UoNCM implements iCMAPI
             'occurrance' => 'Non-timetabled',
             'calendar_year' => $calendar_year,
             'VLE' => 'UoNCM',
-    //        'source_url' => sprintf($this->_moodle_base_url, $this->_module_id, $this->_sess_year, $learning_act['@attributes']['id']) . '&ses=' . $learning_act['code'],
+            //        'source_url' => sprintf($this->_moodle_base_url, $this->_module_id, $this->_sess_year, $learning_act['@attributes']['id']) . '&ses=' . $learning_act['code'],
             'source_url' => '',
             'mapped' => 0,
             'objectives' => array()
@@ -267,16 +267,16 @@ class CM_UoNCM implements iCMAPI
         }
     }
 
-  /**
-   * Process objective groups for module level mapping
-   * @param  array   $sessions      Sessions extracted from group data
-   * @param  array   $group         Array of outcome groups
-   * @param  string  $calendar_year Academic year in the format YYYY/YY, e.g. 2012/13
-   * @param  integer $count         Count of sessions created
-   */
+    /**
+     * Process objective groups for module level mapping
+     * @param  array   $sessions      Sessions extracted from group data
+     * @param  array   $group         Array of outcome groups
+     * @param  string  $calendar_year Academic year in the format YYYY/YY, e.g. 2012/13
+     * @param  integer $count         Count of sessions created
+     */
     private function process_group(&$sessions, $group, $calendar_year, &$count)
     {
-      // If no objectives don't bother showing the session
+        // If no objectives don't bother showing the session
         if (is_array($group['outcome_module'])) {
             $sess_data = array(
             'identifier' => $group['@attributes']['id'],

@@ -15,14 +15,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Utility class for date related functionality
-*
-* @author Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Utility class for date related functionality
+ *
+ * @author Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 class FormUtils
 {
@@ -179,7 +179,7 @@ class FormUtils
     {
         $cfg = Config::get_instance();
         $domains  = $cfg->get('cfg_institutional_domains');
-      // Institutional domains not set.
+        // Institutional domains not set.
         if (empty($domains)) {
             return false;
         }

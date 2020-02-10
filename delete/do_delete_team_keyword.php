@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Delete a team or personal keyword.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Delete a team or personal keyword.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -45,12 +45,12 @@ if (count($keyword_names) < substr_count($keywordIDs, ',')) {
 
 $keyword_list = explode(',', substr($keywordIDs, 1));
 foreach ($keyword_list as $individualID) {
-// Delete the keyword
+    // Delete the keyword
     $result = $mysqli->prepare('DELETE FROM keywords_user WHERE id = ?');
     $result->bind_param('i', $individualID);
     $result->execute();
     $result->close();
-// Remove the deleted keyword from questions
+    // Remove the deleted keyword from questions
     $result = $mysqli->prepare('DELETE FROM keywords_question WHERE keywordID = ?');
     $result->bind_param('i', $individualID);
     $result->execute();

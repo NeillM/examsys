@@ -71,7 +71,7 @@ if ($bad_addresses > 0) {
     echo json_encode(array('INVALID', $ipInvalid, $ipInUse));
     exit();
 } else {
-  // Update Lab table.
+    // Update Lab table.
     $result = $mysqli->prepare('UPDATE labs SET name = ?, campus = ?, building = ?, room_no = ?, timetabling = ?, it_support = ?, plagarism = ? WHERE id = ?');
     $result->bind_param('sisssssi', $name, $campus, $building, $room_no, $timetabling, $it_support, $plagarism, $labID);
     $result->execute();
@@ -82,13 +82,13 @@ if ($bad_addresses > 0) {
         exit();
     }
 
-  // Delete the existing addresses for the lab first.
+    // Delete the existing addresses for the lab first.
     $result = $mysqli->prepare('DELETE FROM client_identifiers WHERE lab = ?');
     $result->bind_param('i', $labID);
     $result->execute();
     $result->close();
 
-  // Re-insert addresses
+    // Re-insert addresses
     foreach ($addresses as $address) {
         $address = trim($address);
         if ($hostname_lookup) {

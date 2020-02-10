@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../include/errors.php';
@@ -87,7 +87,7 @@ if (!isset($_POST['submit'])) {
     $result->bind_result($property_id, $paper_title, $start_date, $end_date, $paper_type);
     while ($result->fetch()) {
         if (($paper_type == '2' or $paper_type == '4') and $end_date != '' and date('Y-m-d H:i:s') > $end_date) {
-          //echo "<tr><td style=\"width:20px\"><img src=\"../artwork/small_padlock.png\" width=\"18\" height=\"18\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\"><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
+            //echo "<tr><td style=\"width:20px\"><img src=\"../artwork/small_padlock.png\" width=\"18\" height=\"18\" alt=\"" . $string['warning'] . "\" border=\"0\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\"><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
         } elseif ($start_date < date('Y-m-d H:i:s') and $end_date > date('Y-m-d H:i:s')) {
             echo '<tr><td style="width:16px"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['warning'] . "\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\" disabled><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
         } else {
@@ -112,16 +112,16 @@ if (!isset($_POST['submit'])) {
         $vle_api_data = MappingUtils::get_vle_api($_GET['module'], $yearutils->get_current_session(), $vle_api_cache, $mysqli);
     }
 
-  //- Handle paper data first ------------------------------------------------------------------------------------------------------------------------------------
+    //- Handle paper data first ------------------------------------------------------------------------------------------------------------------------------------
 
-  // Get the maximum display position for an existing paper.
+    // Get the maximum display position for an existing paper.
     $display_pos    = ($properties->get_max_display_pos() + 1);
     $screen             = $properties->get_max_screen();
     if ($screen == 0) {
         $screen = 1;
     }
 
-  //- Copy the question(s) ------------------------------------------------------------------------------------------------------------------------------------------
+    //- Copy the question(s) ------------------------------------------------------------------------------------------------------------------------------------------
     $q_IDs = explode(',', $_GET['q_id']);
 
     for ($i = 1; $i < count($q_IDs); $i++) {
@@ -135,10 +135,10 @@ if (!isset($_POST['submit'])) {
 
         $save_ok = true;
 
-      // Get question statuses
+        // Get question statuses
         $default_status = -1;
         $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
-      // Set copies of retired questions to default statuses
+        // Set copies of retired questions to default statuses
         foreach ($status_array as $tmp_status) {
             if ($tmp_status->get_is_default()) {
                 $default_status = $tmp_status->id;
@@ -153,7 +153,7 @@ if (!isset($_POST['submit'])) {
             $o_result->store_result();
             $o_result->bind_result($o_id, $option_text, $o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $id_num, $marks_correct, $marks_incorrect, $marks_partial);
 
-          // Question data
+            // Question data
             if ($q_media != '' and $q_media != 'NULL') {
                 $media_array = array();
                 $media_array = explode('|', $q_media);
@@ -250,30 +250,30 @@ if (!isset($_POST['submit'])) {
             }
 
             if ($save_ok === false) {
-              // NO - rollback
+                // NO - rollback
                 $mysqli->rollback();
             } else {
-              // YES - commit the updates to the tables
+                // YES - commit the updates to the tables
                 $mysqli->commit();
             }
-          // Turn auto commit back on so future queries function as before
+            // Turn auto commit back on so future queries function as before
             $mysqli->autocommit(true);
 
             if ($save_ok) {
-              // Create a track changes record to say where question came from.
+                // Create a track changes record to say where question came from.
                 $question_id = intval($question_id);
                 $success = $logger->track_change('Copied Question', $question_id, $userObject->get_user_ID(), $q_IDs[$i], $question_id, 'Copied Question');
 
-              // Lookup and copy the keywords
+                // Lookup and copy the keywords
                 $keywords = QuestionUtils::get_keywords($q_IDs[$i], $mysqli);
                 QuestionUtils::add_keywords($keywords, $question_id, $mysqli);
 
-              // Lookup modules
+                // Lookup modules
                 $modules = QuestionUtils::get_modules($q_IDs[$i], $mysqli);
                 QuestionUtils::add_modules($modules, $question_id, $mysqli);
 
                 if ($map_outcomes) {
-                  // Make sure that paper is on the module we're copying from
+                    // Make sure that paper is on the module we're copying from
                     $paper_modules = $properties->get_modules();
 
                     if (in_array($_GET['module'], array_keys($paper_modules))) {
@@ -295,7 +295,7 @@ if (!isset($_POST['submit'])) {
                                 }
                             }
                             $mappings->close();
-                        // echo '<br />'.$q_IDs[$i].'<br />';print_r($map_guid);
+                            // echo '<br />'.$q_IDs[$i].'<br />';print_r($map_guid);
                         }
                     } else {
                         echo '<p>' . $string['papernotonmodule'] . '</p>';
@@ -307,14 +307,14 @@ if (!isset($_POST['submit'])) {
         $result->close();
 
         if ($save_ok) {
-          //- Add the question to the paper ------------------------------------------------------------------------------------------------------------------------------
+            //- Add the question to the paper ------------------------------------------------------------------------------------------------------------------------------
             Paper_utils::add_question($property_id, $question_id, $screen, $display_pos, $mysqli);
 
-          // Create a track changes record to say new question added.
+            // Create a track changes record to say new question added.
             $success = $logger->track_change('Paper', $property_id, $userObject->get_user_ID(), '', $question_id, 'Add Question');
 
             if (count($map_guid) > 0) {
-              // Get the mappings for the module in the paper's academic year
+                // Get the mappings for the module in the paper's academic year
                 $calendar_year = $properties->get_calendar_year();
                 $outcomes = $qbank->get_outcomes($calendar_year, $vle_api_data);
         

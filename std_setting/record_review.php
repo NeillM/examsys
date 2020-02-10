@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -169,7 +169,7 @@ while ($result->fetch()) {
     $question_part++;
 
     if ($question_no > 0) {
-      // Default format for $qid
+        // Default format for $qid
         $qid = 'std' . $question_no;
         $qstd = param::optional($qid, '', param::ALPHANUM, param::FETCH_POST);
         switch ($q_type) {
@@ -199,7 +199,7 @@ while ($result->fetch()) {
                         $rating .= ',' . $qstd;
                     }
                 } catch (\MissingParameter $e) {
-                  // Nothing to do.
+                    // Nothing to do.
                 }
                 if ($qstd != '') {
                     $last_question = $question_no;
@@ -260,7 +260,7 @@ while ($result->fetch()) {
                 }
                 break;
             case 'matrix':
-              // Individual scenarios are separated by '|' characters.
+                // Individual scenarios are separated by '|' characters.
                 if ($question_part == 1) {
                     $scenarios = 0;
                     $matching_scenarios = explode('|', $scenario);
@@ -287,15 +287,15 @@ while ($result->fetch()) {
                                 }
                             }
                         } catch (\MissingParameter $e) {
-                          // Nothing to do.
+                            // Nothing to do.
                         }
                         $total_parts++;
                     }
                 }
                 break;
             case 'extmatch':
-              // Multimatching is similar to matching except that the separate
-              // options are separated by '$' characters.
+                // Multimatching is similar to matching except that the separate
+                // options are separated by '$' characters.
                 if ($question_part == 1) {
                     if ($score_method == 'Mark per Question') {
                         $qid = 'std' . $question_no . '_1';
@@ -366,7 +366,7 @@ while ($result->fetch()) {
                 $total_parts++;
                 break;
             case 'textbox':
-              // NOTE: Cannot standards set with Ebel method.
+                // NOTE: Cannot standards set with Ebel method.
                 if ($tmp_method == 'Modified Angoff') {
                     for ($mark_part = $marks_correct; $mark_part > 0; $mark_part--) {
                         $qid = 'std' . $question_no . '_' . $mark_part;
@@ -405,7 +405,7 @@ while ($result->fetch()) {
                             }
                         }
                     } catch (\MissingParameter $e) {
-                      // Nothing to do.
+                        // Nothing to do.
                     }
                     $total_parts++;
                 }
@@ -417,7 +417,7 @@ while ($result->fetch()) {
                     if (substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no - 2] > 200) {
                           $qid = 'std' . $question_no . '_' . $question_part;
                         try {
-                    // Need to ignore if not present.
+                            // Need to ignore if not present.
                             $qstd = param::required($qid, param::ALPHANUM, param::FETCH_POST);
                             if ($rating == '') {
                                       $rating = $qstd;
@@ -431,7 +431,7 @@ while ($result->fetch()) {
                                 }
                             }
                         } catch (\MissingParameter $e) {
-                  // Nothing to do.
+                            // Nothing to do.
                         }
                         $total_parts++;
                         $question_part++;
@@ -549,7 +549,7 @@ $module = (isset($_GET['module'])) ? $_GET['module'] : '';
 $folder = (isset($_GET['folder'])) ? $_GET['folder'] : '';
 
 if (isset($_POST['continue'])) {
-  // Clicking continue does not leave the page, so we need to recalculate the paper marks here.
+    // Clicking continue does not leave the page, so we need to recalculate the paper marks here.
     $no_reviews = 0;
     $total_mark = $propertyObj->get_total_mark();
     $reviews = get_reviews($mysqli, 'index', $paperID, $total_mark, $no_reviews);

@@ -15,29 +15,29 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* A Class to be used as a base class for Rogo Singleton utility classes.
-* Also acts as a static wrapper to dynamic classes to enable unit testing
-* of statistic called code
-*
-* @author Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ * A Class to be used as a base class for Rogo Singleton utility classes.
+ * Also acts as a static wrapper to dynamic classes to enable unit testing
+ * of statistic called code
+ *
+ * @author Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 class RogoStaticSingleton
 {
   
-  /**
-  * Create and return the Global instance of parent::$class_name for use in
-  * the Local scope.
-  */
+    /**
+     * Create and return the Global instance of parent::$class_name for use in
+     * the Local scope.
+     */
 
     public static function get_instance()
     {
-      //some objects are global and need parameters these are constructed using
-      //a stranded constructor and need parameters passing. if they have not been
-      //built and get_instance is call it should return null
+        //some objects are global and need parameters these are constructed using
+        //a stranded constructor and need parameters passing. if they have not been
+        //built and get_instance is call it should return null
         if (isset(static::$dont_construct) and static::$dont_construct == true) {
             if (is_object(static::$inst)) {
                 return static::$inst;
@@ -46,18 +46,18 @@ class RogoStaticSingleton
             }
         }
 
-      //normal behaviour create on demand
+        //normal behaviour create on demand
         if (!is_object(static::$inst)) {
             static::$inst = new static::$class_name();
         }
         return static::$inst;
     }
 
-  /**
-  * Sets the Mock instance to return. ONLY used for behat and unit testing.
-  *
-  * @param object
-  */
+    /**
+     * Sets the Mock instance to return. ONLY used for behat and unit testing.
+     *
+     * @param object
+     */
     public static function set_mock_instance($obj)
     {
         if (!($obj instanceof static::$class_name)) {
@@ -66,10 +66,10 @@ class RogoStaticSingleton
         static::$inst = $obj;
     }
 
-  /**
-  *  Dynamicly map static function calls to dynamic methods the
-  *  class defined in parent::$class_name
-  */
+    /**
+     *  Dynamicly map static function calls to dynamic methods the
+     *  class defined in parent::$class_name
+     */
     public static function __callStatic($name, $args)
     {
         if (!is_object(static::$inst)) {

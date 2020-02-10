@@ -15,14 +15,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Question bank class.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Question bank class.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 class QuestionBank
 {
   
@@ -34,14 +34,14 @@ class QuestionBank
     private $bank_types = null;
     private $stats = null;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
@@ -205,7 +205,7 @@ class QuestionBank
     {
         $this->stats = array();
 
-      // Un-assigned papers should be limited to the owner.
+        // Un-assigned papers should be limited to the owner.
         if ($this->idMod == 0) {
             $userObject = UserObject::get_instance();
             $ownerSQL = 'questions_modules.idMOD IS NULL AND ownerID = ' . $userObject->get_user_ID();
@@ -274,12 +274,12 @@ class QuestionBank
     {
         $outcomes = array();
         $vle_api_cache = array();
-      // Get the VLE API we're using currently
+        // Get the VLE API we're using currently
         if (is_null($vle_api_data)) {
             $vle_api_data = MappingUtils::get_vle_api($this->idMod, $this->yearutils->get_current_session(), $vle_api_cache, $this->db);
         }
 
-      // Get years for which there are mappings for the current mapping source
+        // Get years for which there are mappings for the current mapping source
         if ($ac_year == 'all') {
             $all_years = getYearsForModules($vle_api_data['api'], array($this->idMod => $this->module_id), $this->db);
         } else {
@@ -302,7 +302,7 @@ class QuestionBank
                             }
 
                             if ($uid != '') {
-                          // Build list of IDs but use the latest text
+                                // Build list of IDs but use the latest text
                                 $ids = (isset($outcomes[$uid])) ? $outcomes[$uid]['ids'] : array();
                                 $ids[] = $objective['id'];
                                 $outcomes[$uid] = array('ids' => $ids, 'label' => $objective['content']);
@@ -322,7 +322,7 @@ class QuestionBank
             });
         }
 
-      // Filter local mappings to remove duplicates
+        // Filter local mappings to remove duplicates
         $last_id = -1;
         $last_text = '';
         if ($vle_api_data['api'] == '') {

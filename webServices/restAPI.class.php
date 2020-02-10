@@ -15,12 +15,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 class restAPI
 {
@@ -44,30 +44,30 @@ class restAPI
    
     public function processRequest()
     {
-      //override this for each apication !!! in a drived class
+        //override this for each apication !!! in a drived class
     }
 
     public function sendResponse($status = 200, $body = '', $content_type = 'text/html')
     {
         $status_header = 'HTTP/1.1 ' . $status . ' ' . restAPI::getStatusCodeMessage($status);
-      // set the status
+        // set the status
         header($status_header);
-      // set the content type
+        // set the content type
         header('Content-type: ' . $content_type);
   
-      // pages with body are easy
+        // pages with body are easy
         if ($body != '') {
-          // send the body
+            // send the body
             echo $body;
             exit;
         } else {
-          // we need to create the body if none is passed
-          // create some body messages
+            // we need to create the body if none is passed
+            // create some body messages
             $message = '';
   
-          // this is purely optional, but makes the pages a little nicer to read
-          // for your users.  Since you won't likely send a lot of different status codes,
-          // this also shouldn't be too ponderous to maintain
+            // this is purely optional, but makes the pages a little nicer to read
+            // for your users.  Since you won't likely send a lot of different status codes,
+            // this also shouldn't be too ponderous to maintain
             switch ($status) {
                 case 401:
                     $message = 'You must be authorized to view this page.';
@@ -83,10 +83,10 @@ class restAPI
                     break;
             }
   
-          // servers don't always have a signature turned on (this is an apache directive "ServerSignature On")
-          //$signature = ($_SERVER['SERVER_SIGNATURE'] == '') ? $_SERVER['SERVER_SOFTWARE'] . ' Server at ' . $_SERVER['SERVER_NAME'] . ' Port ' . $_SERVER['SERVER_PORT'] : $_SERVER['SERVER_SIGNATURE'];
+            // servers don't always have a signature turned on (this is an apache directive "ServerSignature On")
+            //$signature = ($_SERVER['SERVER_SIGNATURE'] == '') ? $_SERVER['SERVER_SOFTWARE'] . ' Server at ' . $_SERVER['SERVER_NAME'] . ' Port ' . $_SERVER['SERVER_PORT'] : $_SERVER['SERVER_SIGNATURE'];
             $signature = '';
-          // this should be templatized in a real-world solution
+            // this should be templatized in a real-world solution
             $body = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">  
                     <html>  
                         <head>  

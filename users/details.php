@@ -16,16 +16,16 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Shows information on the currently selected user: name, username, email, etc
-* plus the details of any taken assessment or survey. SysAdmin users also have the ability
-* to edit personal details such as name, username, password, etc.
-*
-* @author Simon Wilkinson, Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Shows information on the currently selected user: name, username, email, etc
+ * plus the details of any taken assessment or survey. SysAdmin users also have the ability
+ * to edit personal details such as name, username, password, etc.
+ *
+ * @author Simon Wilkinson, Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -433,7 +433,7 @@ if ($log_viewable) {
         }
         $stmt->close();
     } else {
-      // Only allow Admin/SysAdmin or current user to view this information
+        // Only allow Admin/SysAdmin or current user to view this information
         $queries = array();
             
         $queries[] = "SELECT DISTINCT crypt_name, paper_title, 0 AS paper_type, paperID, DATE_FORMAT(started,'%Y%m%d%H%i%s') AS started, DATE_FORMAT(started,'{$configObject->get('cfg_long_date_time')}') AS display_started, ipaddress, log_metadata.id FROM properties, log_metadata, log0 WHERE properties.property_id = log_metadata.paperID AND log_metadata.id = log0.metadataID AND log_metadata.userID = ? AND paper_type IN ('0','1') ORDER BY started";
@@ -464,7 +464,7 @@ if ($log_viewable) {
             $stmt->close();
         }
 
-      // Add in feedback
+        // Add in feedback
         $stmt = $mysqli->prepare("SELECT page, ipaddress, DATE_FORMAT(accessed, '%Y%m%d%H%i%s') AS accessed, DATE_FORMAT(accessed,'{$configObject->get('cfg_long_date_time')}') AS display_started, crypt_name, type, paper_title FROM access_log, properties WHERE access_log.page = properties.property_id AND userID = ?");
         $stmt->bind_param('i', $userID);
         $stmt->execute();
@@ -483,7 +483,7 @@ if ($log_viewable) {
         }
         $stmt->close();
 
-      // Add in any access denied warnings
+        // Add in any access denied warnings
         $stmt = $mysqli->prepare("SELECT page, ipaddress, DATE_FORMAT(tried, '%Y%m%d%H%i%s') AS tried, DATE_FORMAT(tried,'{$configObject->get('cfg_long_date_time')}') AS display_started, title FROM denied_log WHERE userID = ?");
         $stmt->bind_param('i', $userID);
         $stmt->execute();

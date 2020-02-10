@@ -28,13 +28,13 @@
 class folder_utils
 {
 
-  /**
-  * Returns the name of a folder from an ID
-  *
-  * @param int $folderID  - ID of the folder to be used
-  * @param object $db     - MySQL object
-  * @return string the name of the folder.
-  */
+    /**
+     * Returns the name of a folder from an ID
+     *
+     * @param int $folderID  - ID of the folder to be used
+     * @param object $db     - MySQL object
+     * @return string the name of the folder.
+     */
     static function get_folder_name($folderID, $db)
     {
         $result = $db->prepare('SELECT name FROM folders WHERE id = ? LIMIT 1');
@@ -71,14 +71,14 @@ class folder_utils
         return $permission;
     }
   
-  /**
-  * Creates a new personal folder for a user.
-  *
-  * @param string $folder_name  - The name of the folder
-  * @param object $userObj      - The userObject of the currently logged in user
-  * @param object $db           - MySQL object
-  * @return string the name of the folder.
-  */
+    /**
+     * Creates a new personal folder for a user.
+     *
+     * @param string $folder_name  - The name of the folder
+     * @param object $userObj      - The userObject of the currently logged in user
+     * @param object $db           - MySQL object
+     * @return string the name of the folder.
+     */
     static function create_folder($folder_name, $userObj, $db)
     {
         if ($folder_query = $db->prepare("INSERT INTO folders VALUES (NULL, ?, ?, NOW(), 'yellow', NULL)")) {
@@ -90,15 +90,15 @@ class folder_utils
         }
     }
   
-  /**
-  * Returns whether a personal staff folder exists or not.
-  *
-  * @param $folder_name The name of the folder
-  * @param $folder_name - The name of the folder to be searched for.
-  * @param $userObj         - Currently logged in user object.
-  * @param $db                  - Mysqli object
-  * @return bool                - True = folder exists, False = it does not exist.
-  */
+    /**
+     * Returns whether a personal staff folder exists or not.
+     *
+     * @param $folder_name The name of the folder
+     * @param $folder_name - The name of the folder to be searched for.
+     * @param $userObj         - Currently logged in user object.
+     * @param $db                  - Mysqli object
+     * @return bool                - True = folder exists, False = it does not exist.
+     */
     static function folder_exists($folder_name, $userObj, $db)
     {
         $result = $db->prepare('SELECT name FROM folders WHERE ownerID = ? AND name = ?');
@@ -115,12 +115,12 @@ class folder_utils
         return $duplicate;
     }
   
-  /**
-  * Returns a list of all folders.
-  *
-  * @param object $db       - MySQL object
-  * @return array   - Array of folders keyed by the ID of the folder in the database.
-  */
+    /**
+     * Returns a list of all folders.
+     *
+     * @param object $db       - MySQL object
+     * @return array   - Array of folders keyed by the ID of the folder in the database.
+     */
     static function get_all_folders($db)
     {
         $folders = array();
@@ -136,13 +136,13 @@ class folder_utils
         return $folders;
     }
   
-  /**
-  * Returns a the userID of a folder.
-  *
-  * @param string $folderID - ID of the folder.
-  * @param object $db       - MySQL object
-  * @return int - ID of the paper owner (false if folder does not exist).
-  */
+    /**
+     * Returns a the userID of a folder.
+     *
+     * @param string $folderID - ID of the folder.
+     * @param object $db       - MySQL object
+     * @return int - ID of the paper owner (false if folder does not exist).
+     */
     static function get_ownerID($folderID, $db)
     {
         $result = $db->prepare('SELECT ownerID FROM folders WHERE id = ? LIMIT 1');
@@ -159,15 +159,15 @@ class folder_utils
         return $ownerID;
     }
   
-  /**
-  * Returns a list of all parents for the current folder. Used to make
-  * a breadcrumb trail at the top of the screen.
-  *
-  * @param string $orig_folder_name - Name of the current folder.
-  * @param object $userObj          - Currently logged in user.
-  * @param object $db               - MySQL object
-  * @return array   - Array of parents of the current folder.
-  */
+    /**
+     * Returns a list of all parents for the current folder. Used to make
+     * a breadcrumb trail at the top of the screen.
+     *
+     * @param string $orig_folder_name - Name of the current folder.
+     * @param object $userObj          - Currently logged in user.
+     * @param object $db               - MySQL object
+     * @return array   - Array of parents of the current folder.
+     */
     static function get_parent_list($orig_folder_name, $userObj, $db)
     {
         $parent_list = array();

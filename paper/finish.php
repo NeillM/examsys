@@ -16,15 +16,15 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Completes final log of the last screen to the 'logX' table and then will display feedback if the paper is in 'formative'
-* mode or will display a confirmation notice to the examinee stating all answers and marks have been successfully recorded.
-*
-* @author Simon Wilkinson, Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Completes final log of the last screen to the 'logX' table and then will display feedback if the paper is in 'formative'
+ * mode or will display a confirmation notice to the examinee stating all answers and marks have been successfully recorded.
+ *
+ * @author Simon Wilkinson, Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_student_auth.inc';
 require_once '../include/marking_functions.inc';
@@ -110,36 +110,36 @@ if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)) {
 $summative_exam_session_started = false;
 $paper_scheduled = ($propertyObj->get_start_date() !== null);
 if ($propertyObj->get_exam_duration() != null and $propertyObj->get_paper_type() == '2') {
-  // Has this lab had an end time set?
+    // Has this lab had an end time set?
     $log_lab_end_time = new LogLabEndTime($lab_id, $propertyObj, $mysqli);
     $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
 }
 
 if ($userObject->has_role(array('External Examiner'))) {
-  // No further security checks.
+    // No further security checks.
     if (!ReviewUtils::is_external_on_paper($userObject->get_user_ID(), $paperID, $mysqli)) {
         $contactemail = support::get_email();
         $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
         $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['accessdenied'], '/artwork/page_not_found.png', '#C00000', true, true);
     }
 } elseif (($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObject)) or $userObject->has_role('SysCron')) {
-  // No further security checks.
+    // No further security checks.
 } else {
     $modIDs = array_keys($moduleID);
 
-  // Check for additional password on the paper
+    // Check for additional password on the paper
     check_paper_password($propertyObj->get_property_id(), $password, $string, $mysqli);
 
-  // Check time security
+    // Check time security
     check_datetime($start_date, $end_date, $string, $mysqli);
 
-  // Check room security
+    // Check room security
     $low_bandwidth = check_labs($paper_type, $labs, $current_address, $password, $string, $mysqli);
 
-  // Get modules if the user is a student and the paper is not formative
+    // Get modules if the user is a student and the paper is not formative
     $attempt = check_modules($userObject, $modIDs, $calendar_year, $string, $mysqli);
 
-  // Check for any metadata security restrictions
+    // Check for any metadata security restrictions
     check_metadata($paperID, $userObject, $modIDs, $string, $mysqli);
 
     if (time() > $end_date and ($paper_type == '1' or ($paper_type == '2' and $paper_scheduled and $summative_exam_session_started === false))) {
@@ -162,7 +162,7 @@ $is_exam_review_mode = ($userObject->has_role(array('Staff', 'External Examiner'
 $is_formative_review = (!empty($metadataid) and $paper_type == '0');
 
 if ($is_exam_review_mode or $is_question_preview_mode or $is_summative_preview_mode) {
-  // Turn on all feedback if staff and a student exam script is being reviewed.
+    // Turn on all feedback if staff and a student exam script is being reviewed.
     $display_correct_answer     = 1;
     $display_question_mark      = 1;
     $display_students_response  = 1;
@@ -190,7 +190,7 @@ if (!empty($metadataid)) {
 }
 
 if (!$is_exam_review_mode and !$is_question_preview_mode and !$is_formative_review) {
-  // Only update log metadata if we are ending an exam.
+    // Only update log metadata if we are ending an exam.
     $log_metadata->set_completed_to_now();
 }
 

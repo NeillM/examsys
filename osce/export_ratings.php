@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Export cohort ratings in CSV format.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Export cohort ratings in CSV format.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -77,7 +77,7 @@ while ($result->fetch()) {
 foreach ($log_array as $individual) {
     $tmp_user_ID = $individual['username'];
     if ($row_written == 0) {
-    // Write out the headings.
+        // Write out the headings.
         echo 'OSCE Station,Examiner,Gender,Title,Surname,Initials,Username,Student ID,Course,Year,Date';
         $i = 1;
         foreach ($questions as $question) {
@@ -93,7 +93,7 @@ foreach ($log_array as $individual) {
     echo $paper_title . ',' . $individual['examiner'] . ',' . $individual['gender'] . ',' . $individual['title'] . ',' . $individual['surname'] . ',' . $individual['initials'] . ',' . $individual['username'] . ',' . $individual['student_id'] . ',' . $individual['course'] . ',' . $individual['year'] . ',' . $individual['started'];
     foreach ($questions as $question) {
         if ($question['type'] != 'info') {
-        // Skip over information block questions.
+            // Skip over information block questions.
                 $tmp_question_ID = $question['q_id'];
             echo ',' . $individual[$tmp_question_ID];
         }

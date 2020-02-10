@@ -39,14 +39,14 @@ class IE_Local_Save extends IE_Main
     var $db;
     var $statuses = array();
 
-  // Rogo save parameters:
-  // for saving questions
-  // ownerID
-  // q_group
-  // keywords
-  // bloom
+    // Rogo save parameters:
+    // for saving questions
+    // ownerID
+    // q_group
+    // keywords
+    // bloom
 
-  // main save function
+    // main save function
     function Save($params, &$data)
     {
         global $mysqli, $string;
@@ -93,7 +93,7 @@ class IE_Local_Save extends IE_Main
             $nextid = $curpos['display_pos'] + 1;
         }
 
-      /*    // Get the actual ID of the module
+        /*    // Get the actual ID of the module
         $this->db->SetTable('modules');
         $this->db->AddField('id');
         // Temp fix - if more than one team just get the first. Avoids error but doesn't fix the problem completely
@@ -102,7 +102,7 @@ class IE_Local_Save extends IE_Main
         }
         $this->db->AddWhere('moduleid', $q_group, 's');
         $module_row = $this->db->GetSingleRow();
-      */
+        */
         $module_id = -1;
 
         $paperutils = Paper_utils::get_instance();
@@ -116,7 +116,7 @@ class IE_Local_Save extends IE_Main
         $q_group = $modutils->get_moduleid_from_id($module_id, $mysqli);
 
         if ($module_id !== false) {
-          // Get a list of the team and user's keywords
+            // Get a list of the team and user's keywords
             $user_keywords = array();
             if (is_array($module_id)) {
                 foreach (array_keys($module_id) as $mod_id) {
@@ -133,10 +133,10 @@ class IE_Local_Save extends IE_Main
             $this->o_row = $this->db->GetBlankTableRow('options');
             $this->o_rows = array();
 
-          // stuff from parameters
+            // stuff from parameters
             $this->q_row['ownerID'] = $ownerid;
 
-          // general stuff that needs to be done for every qtype
+            // general stuff that needs to be done for every qtype
             $this->q_row['creation_date'] = date('Y-m-d H:i:s');
             $this->q_row['last_edited'] = date('Y-m-d H:i:s');
             $this->q_row['q_type'] = $question->type;
@@ -209,7 +209,7 @@ class IE_Local_Save extends IE_Main
                 $this->q_row['scenario'] = '';
             }
 
-          // create plain version of scenario and leadin
+            // create plain version of scenario and leadin
             $this->q_row['scenario_plain'] = (empty($this->q_row['scenario'])) ? '' : trim(strip_tags($this->q_row['scenario']));
             $this->q_row['leadin_plain'] = (empty($this->q_row['leadin'])) ? '' : trim(strip_tags($this->q_row['leadin']));
 
@@ -217,14 +217,14 @@ class IE_Local_Save extends IE_Main
                 $this->q_row['incorrect_fback'] = '';
             }
 
-          // if no o_row, create a blank one
+            // if no o_row, create a blank one
             if (count($this->o_rows) == 0 and $question->type != 'calculation') {
                 $this->o_row['marks_correct'] = 1;
                 $this->o_row['marks_incorrect'] = 0;
                 $this->o_row['marks_partial'] = 0;
                 $this->o_rows[] = $this->o_row;
             }
-          // store question row
+            // store question row
             $this->db->InsertRow('questions', 'q_id', $this->q_row);
             $question->save_id = $this->q_row['q_id'];
 
@@ -253,7 +253,7 @@ class IE_Local_Save extends IE_Main
                 }
             }
 
-          // store option rows
+            // store option rows
             foreach ($this->o_rows as & $o_row) {
                 $o_row['o_id'] = $this->q_row['q_id'];
                 if (!empty($o_row['feedback_right']) && $o_row['feedback_right'] == $o_row['feedback_wrong']) {
@@ -262,7 +262,7 @@ class IE_Local_Save extends IE_Main
                 $this->db->InsertRow('options', 'id_num', $o_row);
             }
 
-          // store additional metadata
+            // store additional metadata
             if ($question->load_id != '') {
                 $meta_row = array('id' => null, 'questionID' => $question->save_id, 'type' => 'QTI Ident', 'value' => $question->load_id);
             }
@@ -286,7 +286,7 @@ class IE_Local_Save extends IE_Main
 
             $db->InsertRow('track_changes', 'id', $track);
 
-          // we have a paper, add this question onto the list of questions for the paper
+            // we have a paper, add this question onto the list of questions for the paper
             if ($paperid && empty($data->papers)) {
                 $p_row = $this->db->GetBlankTableRow('papers');
 
@@ -498,7 +498,7 @@ class IE_Local_Save extends IE_Main
 
         $o_row['correct'] = $hs_text;
 
-      // if rogo->qti->rogo, then use the raw text from the options table to make 1:1
+        // if rogo->qti->rogo, then use the raw text from the options table to make 1:1
         if ($question->raw_option) {
             $o_row['correct'] = $question->raw_option;
         }
@@ -516,13 +516,13 @@ class IE_Local_Save extends IE_Main
 
     function SaveLabelling($question)
     {
-      // 1 - 3/4 pt
-      // 2 - 1 pt
-      // 3 - 1 1/4 pt
-      // 4 - 2 1/4 pt
-      // 5 - 3 pt
-      // 6 - 4 1/2 pt
-      // 7 - 6 pt
+        // 1 - 3/4 pt
+        // 2 - 1 pt
+        // 3 - 1 1/4 pt
+        // 4 - 2 1/4 pt
+        // 5 - 3 pt
+        // 6 - 4 1/2 pt
+        // 7 - 6 pt
         $line_thicknesses = array();
         $line_thicknesses['0.75'] = 1;
         $line_thicknesses['1'] = 2;
@@ -576,7 +576,7 @@ class IE_Local_Save extends IE_Main
             }
         }
 
-      //print_p($base);
+        //print_p($base);
         $data .= implode('|', $base) . '|;';
 
         foreach ($question->arrows as $id => $arrow) {
@@ -747,7 +747,7 @@ class IE_Local_Save extends IE_Main
 
             $this->o_rows[] = $o_row;
         }
-      //$this->AddError("Question type " . $question->type . " not yet supported",$question->load_id);
+        //$this->AddError("Question type " . $question->type . " not yet supported",$question->load_id);
     }
 
     function SaveTextBox($question)
@@ -769,7 +769,7 @@ class IE_Local_Save extends IE_Main
 
     function GetExistingKeywords($module_id)
     {
-      // We'll keep the keywords cached in an array and build it up as we add new keywords
+        // We'll keep the keywords cached in an array and build it up as we add new keywords
         $user_keywords = array();
 
         $this->db->SetTable('keywords_user');
@@ -788,25 +788,25 @@ class IE_Local_Save extends IE_Main
         return $user_keywords;
     }
 
-  /**
-   * Save the keywords for a question in a user's personal keywords
-   * if they don't already exist
-   *
-   * @param int $q_id
-   * @param array $q_keywords
-   * @param int $userID
-   * @param array $user_keywords
-   */
+    /**
+     * Save the keywords for a question in a user's personal keywords
+     * if they don't already exist
+     *
+     * @param int $q_id
+     * @param array $q_keywords
+     * @param int $userID
+     * @param array $user_keywords
+     */
     function SaveKeywords($q_id, $q_keywords, $moduleID, &$user_keywords, &$user_keywords2 = null)
     {
         $new_keywords = array();
         echo 'savekeywrds<br />';
 
-      // Loop through the keywords, saving against the user and question
+        // Loop through the keywords, saving against the user and question
         for ($i = 0; $i < count($q_keywords); $i++) {
             $kw_id = -1;
 
-          // Exclude existing keywords from the list that we want to save
+            // Exclude existing keywords from the list that we want to save
             if (!in_array($q_keywords[$i], array_keys($user_keywords['mod' . $moduleID]))) {
                 // Add keyword to this user's list
                 $ku_row = array('userID' => $moduleID, 'keyword' => $q_keywords[$i], 'keyword_type' => 'team');
@@ -818,11 +818,11 @@ class IE_Local_Save extends IE_Main
                 $kw_id = $user_keywords['mod' . $moduleID][$q_keywords[$i]][0];
             }
 
-          // Add keyword to the keyword question link table
+            // Add keyword to the keyword question link table
             if ($kw_id != -1) {
-             // if(is_array($kw_id))
+                // if(is_array($kw_id))
                 $kq_row = array('q_id' => $q_id, 'keywordID' => $kw_id);
-              //$kq_row=$kq_row[0];
+                //$kq_row=$kq_row[0];
                 $this->db->InsertRow('keywords_question', '', $kq_row);
             }
         }

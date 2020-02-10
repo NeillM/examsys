@@ -31,15 +31,15 @@ use Behat\Gherkin\Node\PyStringNode,
  */
 trait forms
 {
-  /**
-   * Fill in a form field.
-   *
-   * @Given /^I set the field "([^"]*)" to "([^"]*)"$/
-   *
-   * @param string $field The name, id or label of the field
-   * @param string $value The value the field should be set to
-   * @throws PendingException
-   */
+    /**
+     * Fill in a form field.
+     *
+     * @Given /^I set the field "([^"]*)" to "([^"]*)"$/
+     *
+     * @param string $field The name, id or label of the field
+     * @param string $value The value the field should be set to
+     * @throws PendingException
+     */
     public function i_set_field($field, $value)
     {
         $element = $this->find('field', $field);

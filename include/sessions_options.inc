@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 $idMod = $_GET['module'];
 $yearutils = new yearutils($mysqli);
@@ -52,8 +52,8 @@ if ($vle_api != '') {
 <?php
 if ($vle_api == '') {
     echo '<div class="menuitem"><a href="load_session_from_txt.php?module=' . $modID . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />' . $string['importfile'] . '</a></div>';
-  //This has not been written yet see ticket #708
-  //echo '<div class="menuitem"><a href="export_session_to_txt.php?module=' . $modID . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />Export Sessions</a></div>';
+    //This has not been written yet see ticket #708
+    //echo '<div class="menuitem"><a href="export_session_to_txt.php?module=' . $modID . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />Export Sessions</a></div>';
 }
 ?>
 <div class="grey menuitem"><img class="sidebar_icon" src="../artwork/edit_grey.png" alt="" /><?php echo $string['editsession'] ?></div>
@@ -72,8 +72,8 @@ if ($vle_api == '') {
 <?php
 if ($vle_api == '') {
     echo '<div class="menuitem"><a href="load_session_from_txt.php?module=' . $modID . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />' . $string['importfile'] . '</a></div>';
-  //This has not bee written yet see ticket #708
-  //echo '<div class="menuitem"><a href="export_session_to_xml.php?module=' . $modID . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />Export Sessions</a></div>';
+    //This has not bee written yet see ticket #708
+    //echo '<div class="menuitem"><a href="export_session_to_xml.php?module=' . $modID . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />Export Sessions</a></div>';
 }
 ?>
 <div class="menuitem"><a id="edit" href="#"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><?php echo $string['editsession'] ?></a></div>
@@ -92,8 +92,8 @@ if ($vle_api == '') {
 <?php
 if ($vle_api == '') {
     echo '<div class="menuitem"><a href="load_session_from_txt.php?module=' . $modID . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />' . $string['importfile'] . '</a></div>';
-  //This has not been written yet see ticket #708
-  //echo '<div class="menuitem"><a href="export_session_to_xml.php?module=' . $modID . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />Export Sessions</a></div>';
+    //This has not been written yet see ticket #708
+    //echo '<div class="menuitem"><a href="export_session_to_xml.php?module=' . $modID . '"><img class="sidebar_icon" src="../artwork/import_16.gif" alt="" />Export Sessions</a></div>';
 }
 ?>
 <div id="editvle" class="menuitem"><img class="sidebar_icon" src="../artwork/edit.png" alt="" /><a href="" onclick="return false"><?php echo $string['editsession']; ?></a></div>

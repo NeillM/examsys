@@ -15,26 +15,26 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Utility class for search related functionality
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Utility class for search related functionality
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 
 class search_utils
 {
 
-  /**
-   * Get a list of personal and group keywords for the current user.
-   * @param object $db database connection
-   * @param array $teams teams the current user is on
-   * @param integer $user_id ID of the current user
-   * @return array of keywords
-   */
+    /**
+     * Get a list of personal and group keywords for the current user.
+     * @param object $db database connection
+     * @param array $teams teams the current user is on
+     * @param integer $user_id ID of the current user
+     * @return array of keywords
+     */
     static function get_keywords($db, $teams, $user_id)
     {
         $keywords = array('team' => array(), 'personal' => array());
@@ -60,13 +60,13 @@ class search_utils
         return $keywords;
     }
 
-  /**
-   * Display a dropdown list of available teams for the current user.
-   * @param object $userObj - the current user object
-   * @param string $string  - language translations.
-   * @param object $db      - database connection
-   * @return string HTML of the dropdown menu
-   */
+    /**
+     * Display a dropdown list of available teams for the current user.
+     * @param object $userObj - the current user object
+     * @param string $string  - language translations.
+     * @param object $db      - database connection
+     * @return string HTML of the dropdown menu
+     */
     static function display_staff_modules_dropdown($userObj, $string, $db)
     {
         $staff_modules = $userObj->get_staff_accessable_modules();
@@ -103,12 +103,12 @@ class search_utils
         echo "</optgroup>\n</select>\n";
     }
 
-  /**
-   * Get a list of names for people in the current user teams.
-   * @param string $userroles the role(s) of the current user
-   * @param object $db database connection
-   * @return array of name data
-   */
+    /**
+     * Get a list of names for people in the current user teams.
+     * @param string $userroles the role(s) of the current user
+     * @param object $db database connection
+     * @return array of name data
+     */
     static function get_owners($userObj, $db)
     {
         $select = "SELECT DISTINCT id, REPLACE(title,'Professor','Prof') AS title, initials, surname FROM users";
@@ -136,16 +136,16 @@ class search_utils
         return $owners;
     }
 
-  /**
-   * Display a dropdown list of owners in teams available for the current user.
-   * @param object $userObj   - the current user object
-   * @param object $db        - database connection
-   * @param string $type      - used to control wording - whether dealing with papers or questions
-   * @param string $string    - language translations.
-   * @param array $state      - the store state of the interface.
-   * @param string $font_size - size of font to use.
-   * @return string HTML of the dropdown menu
-   */
+    /**
+     * Display a dropdown list of owners in teams available for the current user.
+     * @param object $userObj   - the current user object
+     * @param object $db        - database connection
+     * @param string $type      - used to control wording - whether dealing with papers or questions
+     * @param string $string    - language translations.
+     * @param array $state      - the store state of the interface.
+     * @param string $font_size - size of font to use.
+     * @return string HTML of the dropdown menu
+     */
     static function display_owners_dropdown($userObj, $db, $type, $string, $state, $font_size = 90)
     {
         $owners = self::get_owners($userObj, $db);
@@ -176,12 +176,12 @@ class search_utils
         echo "</optgroup>\n</select>\n";
     }
 
-  /**
-   * Display status options for a question.
-   * @param array $status_array - array of question statuses
-   * @param array $state        - the store state of the interface.
-   * @return string HTML of the status dropdown menu
-   */
+    /**
+     * Display status options for a question.
+     * @param array $status_array - array of question statuses
+     * @param array $state        - the store state of the interface.
+     * @return string HTML of the status dropdown menu
+     */
     static function display_status($status_array, $state)
     {
         $stored_statuses = (isset($state['status'])) ? explode(',', $state['status']) : array();
@@ -206,12 +206,12 @@ STATUS;
         echo $html;
     }
 
-  /**
-   * Display a dropdown menu of Bloom's Taxonomy options for a question.
-   * @param string $string  - language translations.
-   * @param array $state    - the store state of the interface.
-   * @return string HTML of the Bloom's Taxonomy dropdown menu
-   */
+    /**
+     * Display a dropdown menu of Bloom's Taxonomy options for a question.
+     * @param string $string  - language translations.
+     * @param array $state    - the store state of the interface.
+     * @return string HTML of the Bloom's Taxonomy dropdown menu
+     */
     static function display_blooms_dropdown($string, $state)
     {
         echo "<select style=\"width:185px\" class=\"statechange\" data-type=\"bloom\" name=\"bloom\">\n";

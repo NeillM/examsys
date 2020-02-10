@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Confirm that it is OK to proceed deleting an OAuth key.
-*
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @version 1.0
-* @copyright Copyright (c) 2015 onwards The University of Nottingham
-* @package
-*/
+ *
+ * Confirm that it is OK to proceed deleting an OAuth key.
+ *
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @version 1.0
+ * @copyright Copyright (c) 2015 onwards The University of Nottingham
+ * @package
+ */
 
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.php';

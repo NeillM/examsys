@@ -41,7 +41,7 @@ class guestlogin_auth extends outline_authentication
     {
 
         $callbackarray[] = array(array($this, 'loginbutton'), 'displaystdform', $this->number, $this->name);
-//$callbackarray[] = array(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
+        //$callbackarray[] = array(array($this, 'errordisp'), 'displayerrform', $this->number, $this->name);
 
         return $callbackarray;
     }
@@ -65,7 +65,7 @@ class guestlogin_auth extends outline_authentication
         global $string;
         $config = Config::get_instance();
         $this->savetodebug('Button Check');
-// Check client address of current user is in a lab.
+        // Check client address of current user is in a lab.
         $address = NetworkUtils::get_client_address();
         $labfactory = new LabFactory($this->db);
         $lab = false;

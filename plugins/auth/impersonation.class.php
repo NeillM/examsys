@@ -120,10 +120,10 @@ class impersonation_auth extends outline_authentication
             $this->lookupuserobj->found = false;
         }
         list($callbacklist, $callbackregisterdatalist) = $this->get_callback('lookupuser');
-//  if (isset($this->calling_object->callbackregister['lookupuser'])) {
+        //  if (isset($this->calling_object->callbackregister['lookupuser'])) {
 
         if (is_array(($callbacklist))) {
-  //foreach ($this->calling_object->callbackregister['lookupuser'] as $number => $callback) {
+            //foreach ($this->calling_object->callbackregister['lookupuser'] as $number => $callback) {
             foreach ($callbacklist as $number => $callback) {
                 call_user_func_array($callback, array($this->lookupuserobj));
                 $objid = key($callbackregisterdatalist[$number]);
@@ -138,7 +138,7 @@ class impersonation_auth extends outline_authentication
 
         if ($this->lookupuserobj->found === true) {
             $this->active = true;
-  //assuming first lookup is the one we want is check needed for only one id
+            //assuming first lookup is the one we want is check needed for only one id
             $this->newuserid = $this->lookupuserobj->results[0]->userid;
         }
 

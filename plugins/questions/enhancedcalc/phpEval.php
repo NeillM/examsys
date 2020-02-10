@@ -60,7 +60,7 @@ class EnhancedCalc_phpEval
     {
     }
 
-  // from php manual http://php.net/round
+    // from php manual http://php.net/round
     function RoundSigDigs($number, $sigdigs)
     {
         $i = 0;
@@ -145,9 +145,9 @@ class EnhancedCalc_phpEval
 
         $res['tolerance'] = $result[0];
     
-      //
-      // Make sure the min and max are correct tolerances on negative numbers causes problems
-      //
+        //
+        // Make sure the min and max are correct tolerances on negative numbers causes problems
+        //
         if ($result[1] > $result[2]) {
             $res['tolerance_ans'] = $result[1];
             $res['tolerance_ansneg'] = $result[2];
@@ -183,7 +183,7 @@ class EnhancedCalc_phpEval
         }
 
         if ($status === true) {
-          //correct
+            //correct
             return true;
         } else {
             return false;
@@ -197,7 +197,7 @@ class EnhancedCalc_phpEval
             return false;
         }
         if ($this->RoundSigDigs($useranswer, $sf) == $useranswer) {
-          //correct
+            //correct
             return true;
         } else {
             return false;

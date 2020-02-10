@@ -29,11 +29,11 @@ include_once 'Corrector.class.php';
 
 class AREACorrector extends Corrector
 {
-  /**
-   * Change the correct answer after the question has been locked. Update user marks in summative log table
-   * @param integer $new_correct new correct answer
-   * @param integer $paper_id
-   */
+    /**
+     * Change the correct answer after the question has been locked. Update user marks in summative log table
+     * @param integer $new_correct new correct answer
+     * @param integer $paper_id
+     */
     public function execute($new_correct, $paper_id, &$changes, $paper_type)
     {
         $errors = array();
@@ -86,7 +86,7 @@ class AREACorrector extends Corrector
                     $correct_partial = $this->_question->get_correct_partial();
                     $error_partial = $this->_question->get_error_partial();
 
-                // Remark the student's answers in 'log{$paper_type}'.
+                    // Remark the student's answers in 'log{$paper_type}'.
                     $result = $this->_mysqli->prepare("SELECT l.user_answer, l.id, l.mark FROM log{$paper_type} l INNER JOIN log_metadata lm ON l.metadataID = lm.id WHERE l.q_id = ? AND lm.paperID = ?");
                     $result->bind_param('ii', $this->_question->id, $paper_id);
                     $result->execute();

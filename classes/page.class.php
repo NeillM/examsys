@@ -25,30 +25,30 @@
  */
 class page
 {
-  /**
-   * Generates page title given access/install type.
-   * @param string $pagetitle the descriptive page title
-   * @return string
-   */
+    /**
+     * Generates page title given access/install type.
+     * @param string $pagetitle the descriptive page title
+     * @return string
+     */
     public static function title($pagetitle)
     {
         $configObject  = Config::get_instance();
         $userObject = UserObject::get_instance();
         if (!is_null($configObject->db)) {
-          // Install type.
+            // Install type.
             $type = $configObject->get_setting('core', 'system_install_type');
             if (!is_null($type)) {
                 $pagetitle .= ' ' . $type;
             }
         }
-      // Checks for logged in users.
+        // Checks for logged in users.
         if (!is_null($userObject)) {
-          // Demo mode.
+            // Demo mode.
             if ($userObject->is_demo()) {
                 $langpack = new langpack();
                 $pagetitle .= ' (' . $langpack->get_string('classes/page', 'demomode') . ')';
             }
-          // Impersonated user.
+            // Impersonated user.
             if ($userObject->is_impersonated()) {
                 $langpack = new langpack();
                 $pagetitle .= ' ' . $langpack->get_string('classes/page', 'as') . ' ' . $userObject->get_title() . ' ' . $userObject->get_surname();

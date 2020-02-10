@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../include/load_config.php';
 $language = LangUtils::getLang($cfg_web_root);
@@ -35,16 +35,16 @@ $errors = array();
 $form_util = new FormUtils();
 if (isset($_POST['submit']) and $_POST['submit'] == $string['send']) {
     $email = $_POST['email'];
-// Process the form submission
+    // Process the form submission
     $errors = $form_util->check_required(array('email' => $string['emailaddress']));
     if (count($errors) == 0) {
-    // Check if the supplied value is an email address (avoid an unnecessary DB call)
+        // Check if the supplied value is an email address (avoid an unnecessary DB call)
         if (!$form_util->is_email($email)) {
             $errors[] = $string['emailaddressinvalid'];
         } elseif ($form_util->is_email_in_cfg_institutional_domains($email)) {
             $errors[] = $string['emailaddressininstitutionaldomains'];
         } else {
-        // If it is, look for the user in the database
+            // If it is, look for the user in the database
             $stmt = $mysqli->prepare('SELECT id, title, surname FROM users WHERE email = ? ORDER BY id DESC LIMIT 1');
             $stmt->bind_param('s', $email);
             $stmt->execute();
@@ -54,9 +54,9 @@ if (isset($_POST['submit']) and $_POST['submit'] == $string['send']) {
             if ($stmt->num_rows == 0) {
                 $errors[] = $string['emailaddressnotfound'];
             } else {
-            // If they do exist, create a token and send it to them in an email
+                // If they do exist, create a token and send it to them in an email
                   $token = substr(md5(rand(10000000, 99999999)), 0, 15);
-            // Check if there is already a token for the user and update reather than continually adding new ones
+                // Check if there is already a token for the user and update reather than continually adding new ones
                   // if they refresh the browser
                   $stmt = $mysqli->prepare('SELECT id FROM password_tokens WHERE user_id=? ORDER BY id DESC LIMIT 1');
                 $stmt->bind_param('i', $user_id);

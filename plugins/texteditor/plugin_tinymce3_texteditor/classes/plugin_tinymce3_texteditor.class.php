@@ -18,50 +18,50 @@
 namespace plugins\texteditor\plugin_tinymce3_texteditor;
 
 /**
-* Text editor plugin helper file
-*
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2017 onwards The University of Nottingham
-*/
+ * Text editor plugin helper file
+ *
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2017 onwards The University of Nottingham
+ */
 
 /**
  * SMS import plugin.
  */
 class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor
 {
-  /**
-   * Name of the plugin;
-   * @var string
-   */
+    /**
+     * Name of the plugin;
+     * @var string
+     */
     protected $plugin = 'plugin_tinymce3_texteditor';
 
-  /**
-   * Language pack component.
-   * @var string
-   */
+    /**
+     * Language pack component.
+     * @var string
+     */
     public $langcomponent = 'plugins/texteditor/plugin_tinymce3_texteditor/plugin_tinymce3_texteditor';
 
-  /**
-   * Constructor
-   */
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         parent::__construct();
     }
 
-  /**
-   * Get text editor base file
-   * @return string
-   */
+    /**
+     * Get text editor base file
+     * @return string
+     */
     public function get_header_file()
     {
         return 'tinymce3.html';
     }
 
-  /**
-   * Get text editor javascript
-   * @param array $configfile config file
-   */
+    /**
+     * Get text editor javascript
+     * @param array $configfile config file
+     */
     public function get_javascript_config($configfile = '')
     {
         $render = new \render($this->config, $this->get_render_paths());
@@ -71,15 +71,15 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor
         }
     }
 
-  /**
-   * Get text editor textarea.
-   * @param string $name editor name
-   * @param string $id editor id
-   * @param string $content editor content
-   * @param string $type type of editor i.e. standard, simple, etc
-   * @param string $styleoverwrite overwrite base styling
-   * @raturn string
-   */
+    /**
+     * Get text editor textarea.
+     * @param string $name editor name
+     * @param string $id editor id
+     * @param string $content editor content
+     * @param string $type type of editor i.e. standard, simple, etc
+     * @param string $styleoverwrite overwrite base styling
+     * @raturn string
+     */
     public function get_textarea($name, $id, $content, $type, $styleoverwrite = '')
     {
         $type = $this->get_type($type);
@@ -93,11 +93,11 @@ class plugin_tinymce3_texteditor extends \plugins\plugins_texteditor
         $render->render($tinmymcedata, null, 'tinymce3_admin_textarea.html');
     }
 
-  /**
-   * Return editor specific type class
-   * @param string $type generic type
-   * @return string
-   */
+    /**
+     * Return editor specific type class
+     * @param string $type generic type
+     * @return string
+     */
     public function get_type($type)
     {
         switch ($type) {

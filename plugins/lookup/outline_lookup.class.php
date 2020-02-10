@@ -47,26 +47,26 @@ class outline_lookup
     protected $callbackarray;
     protected $impliments_api_lookup_version = 0;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
-  /**
-   * @param $calling_object object its called from
-   * @param $settings array settings options
-   * @param $number int the number this is
-   * @param $name string the name of it
-   * @param $db object a lin kto db
-   * @param $returndata object where data is stored
-   * @param $form object a class with form data in
-   */
+    /**
+     * @param $calling_object object its called from
+     * @param $settings array settings options
+     * @param $number int the number this is
+     * @param $name string the name of it
+     * @param $db object a lin kto db
+     * @param $returndata object where data is stored
+     * @param $form object a class with form data in
+     */
     function __construct($number, $name, $lookupapiversion)
     {
         $this->lookupapiversion = $lookupapiversion;
@@ -99,8 +99,8 @@ class outline_lookup
         $this->db = new mysqli();
         $this->db = & $object->db;
         $this->calling_object = & $object->calling_object;
-//    $this->returndata = & $object->returndata;
-//    $this->retdata = & $this->returndata[$this->number];
+        //    $this->returndata = & $object->returndata;
+        //    $this->retdata = & $this->returndata[$this->number];
         $this->form = & $object->form;
         $this->settings = & $object->settings;
         $this->session = & $object->calling_object->session;
@@ -113,7 +113,7 @@ class outline_lookup
 
         $context1 = array();
         if (is_null($context)) {
-        // if no array set get currently define variables in this object
+            // if no array set get currently define variables in this object
                 $context = get_defined_vars($this);
         }
 
@@ -125,37 +125,37 @@ class outline_lookup
     }
 
 
-//fake function used in mocking but if things go wrong have an outline here
+    //fake function used in mocking but if things go wrong have an outline here
     function mock($callingobject, $settings, $number, $name, $db, $returndata, $form)
     {
         return false;
     }
 
 
-  /**
-   * @param $debugmessage string the debug message to store
-   */
+    /**
+     * @param $debugmessage string the debug message to store
+     */
     function savetodebug($debugmessage)
     {
         $this->debug[] = $debugmessage;
     }
 
-  /**
-   * @param $section string the section to get the callback from
-   *
-   * @return mixed
-   */
+    /**
+     * @param $section string the section to get the callback from
+     *
+     * @return mixed
+     */
     function get_callback($section)
     {
         return $this->calling_object->get_callback($section);
     }
 
-  /**
-   * @param $objid int the objectid
-   *
-   * @return mixed
-   */
-  /*  function get_new_debug_messages($objid) {
+    /**
+     * @param $objid int the objectid
+     *
+     * @return mixed
+     */
+    /*  function get_new_debug_messages($objid) {
       return $this->returndata[$objid]->get_new_debug_messages();
     }*/
     function get_new_debug_messages($number = null)
@@ -172,11 +172,11 @@ class outline_lookup
         }
     }
 
-  /**
-   * @param $objid int the objectid
-   *
-   * @return mixed
-   */
+    /**
+     * @param $objid int the objectid
+     *
+     * @return mixed
+     */
     function get_module_lookupinfo($objid)
     {
         return $this->calling_object->lookupinfo[$objid];
@@ -185,40 +185,40 @@ class outline_lookup
 
     function register_callback_sections()
     {
-      //this is blank so that classes that dont register anything dont break
+        //this is blank so that classes that dont register anything dont break
         return array();
     }
 
-  /**
-   * @param $callback callback routine
-   * @param $section string section to register callback in
-   * @param $number string the number this object is
-   * @param $name string the name this object is
-   * @param $insert bool to insert rather than append
-   *
-   * @return bool
-   */
+    /**
+     * @param $callback callback routine
+     * @param $section string section to register callback in
+     * @param $number string the number this object is
+     * @param $name string the name this object is
+     * @param $insert bool to insert rather than append
+     *
+     * @return bool
+     */
     function register_callback($callback, $section, $number, $name, $insert = false)
     {
-      //return $this->calling_object->register_callback($callback, $section, $number, $name, $insert);
+        //return $this->calling_object->register_callback($callback, $section, $number, $name, $insert);
         $this->callbackarray[] = array($callback, $section, $number, $name, $insert);
     }
 
 
-  /**
-   *
-   */
+    /**
+     *
+     */
     function register_callback_routines()
     {
-      //this is blank so that classes that dont register anything dont break
+        //this is blank so that classes that dont register anything dont break
         return array();
     }
 
-  /**
-   * @param $setting string the setting to return or false if it doesnt exist
-   *
-   * @return mixed
-   */
+    /**
+     * @param $setting string the setting to return or false if it doesnt exist
+     *
+     * @return mixed
+     */
     function get_settings($setting)
     {
         if (!isset($this->settings[$setting])) {

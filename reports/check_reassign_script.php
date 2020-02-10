@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Script is used to change the userID from a reservered temp_user account to a real user account.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Script is used to change the userID from a reservered temp_user account to a real user account.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -43,7 +43,7 @@ function getModules($userID, $mysqlidb, $properties)
 {
 
     $modules = array();
-// The session we get student modules for should be based on that of the year the paper is set for.
+    // The session we get student modules for should be based on that of the year the paper is set for.
     $session = $properties->get_calendar_year();
     $result = $mysqlidb->prepare('SELECT idmod FROM modules_student WHERE calendar_year = ? AND userID = ?');
     $result->bind_param('si', $session, $userID);
@@ -117,7 +117,7 @@ $target_userID = '';
 $target_student = array();
 // Look up the temporary information in 'users'.
 if ($temp_student_id != '') {
-// Try student number lookup.
+    // Try student number lookup.
     $result = $mysqli->prepare('SELECT id, surname, first_names, title, gender FROM users, sid WHERE users.id = sid.userID AND student_id = ?');
     $result->bind_param('i', $temp_student_id);
     $result->execute();
@@ -134,7 +134,7 @@ if ($temp_student_id != '') {
     $result->close();
 }
 if ($target_userID == '') {
-// If no student number try the other details.
+    // If no student number try the other details.
     $first_names = trim($temp_first_names) . '%';
     $temp_surname = trim($temp_surname);
     $temp_title = trim($temp_title);
@@ -161,18 +161,18 @@ echo "</table>\n</form>\n";
 if (count($target_student) == 0) {
     echo '<div>' . $string['msg4'] . ".</div>\n";
 } else {
-// Get the modules for the paper so we can check if the students are enrolled on any of them.
+    // Get the modules for the paper so we can check if the students are enrolled on any of them.
     $paper_modules = $properties->get_modules();
     echo '<br /><div>' . $string['Reassign answers'] . ' ' . str_replace('user', 'Temporary Account ', $temp_username) . ' ' . $string['to following user'] . ":</div>\n<div id=\"userlist\" style=\"height:300px; border:1px solid #7F9DB9; overflow-y:scroll\">\n";
     foreach ($target_student as $individualID => $individual) {
-    // Check if the student eligible to take the paper, if they are not we should highlight this to the user.
+        // Check if the student eligible to take the paper, if they are not we should highlight this to the user.
           $modules_student_is_on = array_intersect($paper_modules, $individual['modules']);
         if (empty($modules_student_is_on)) {
-        // Student is not enrolled on the paper's modules.
+            // Student is not enrolled on the paper's modules.
             $div_class = 'uline ineligible';
             $eligible = false;
         } else {
-        // Student is enrolled on at least one of the paper's modules.
+            // Student is enrolled on at least one of the paper's modules.
             $div_class = 'uline';
             $eligible = true;
         }

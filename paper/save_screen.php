@@ -16,14 +16,14 @@
 // along with Rog?.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* This script can only be called from start.php for AJAX saving.
-*
-* @author Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * This script can only be called from start.php for AJAX saving.
+ *
+ * @author Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 define('AJAX_REQUEST', true);
 require_once '../include/staff_student_auth.inc';
@@ -81,17 +81,17 @@ if ($lab_object = $lab_factory->get_lab_based_on_client($current_address)) {
 }
 $moduleID = $propertyObj->get_modules();
 if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObject)) {
-// No further security checks.
+    // No further security checks.
 } else {
-// Treat as student with extra security checks.
-  // Get the module IDs for this paper
+    // Treat as student with extra security checks.
+    // Get the module IDs for this paper
     $modIDs = array_keys(Paper_utils::get_modules($propertyObj->get_property_id(), $mysqli));
-// Check for additional password on the paper
+    // Check for additional password on the paper
     check_paper_password($propertyObj->get_property_id(), $propertyObj->get_password(), $string, $mysqli);
-// Check time security
+    // Check time security
     check_datetime($propertyObj->get_start_date(), $propertyObj->get_end_date(), $string, $mysqli);
 
-  // Check room security
+    // Check room security
     $low_bandwidth = check_labs(
         $propertyObj->get_paper_type(),
         $propertyObj->get_labs(),
@@ -100,14 +100,14 @@ if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObjec
         $string,
         $mysqli
     );
-// Check modules if the user is a student and the paper is not formative
+    // Check modules if the user is a student and the paper is not formative
     $attempt = check_modules($userObject, $modIDs, $propertyObj->get_calendar_year(), $string, $mysqli);
-// Check for any metadata security restrictions
+    // Check for any metadata security restrictions
     check_metadata($propertyObj->get_property_id(), $userObject, $modIDs, $string, $mysqli);
-// Check if the student has clicked 'Finish'.
+    // Check if the student has clicked 'Finish'.
     check_finished($propertyObj, $userObject, $string, $mysqli);
-// Check current IP address with that of attempt in log.
-  // Warn user they are logged into mulitple devices in this exam.
+    // Check current IP address with that of attempt in log.
+    // Warn user they are logged into mulitple devices in this exam.
     if ($propertyObj->get_paper_type() == '2') {
         check_ipmismatch($propertyObj->get_property_id(), $current_address, $string, $userObject, $mysqli);
     }
@@ -143,7 +143,7 @@ try {
 }
 
 if ($ret === true) {
-// Everthing worked.
+    // Everthing worked.
     echo $random_page_id;
 } else {
     echo 'ERROR';

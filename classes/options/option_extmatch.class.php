@@ -30,13 +30,13 @@ class OptionEXTMATCH extends OptionEdit
     protected $all_corrects = array();
     protected $_fields_compound = array('correct' => 'integer');
   
-  // ACCESSORS
+    // ACCESSORS
   
-  /**
-   * Get all the correct answers for this option.  Actually the correct answer across the board. Return as an array of array of correct
-   * answers for each 'question'
-   * @return string
-   */
+    /**
+     * Get all the correct answers for this option.  Actually the correct answer across the board. Return as an array of array of correct
+     * answers for each 'question'
+     * @return string
+     */
     public function get_all_corrects()
     {
         $this->get_correct();
@@ -65,7 +65,7 @@ class OptionEXTMATCH extends OptionEdit
         $media = $this->_question->get_all_medias();
         $tmp = array();
         for ($i = 0; $i < count($this->all_corrects); $i++) {
-          // Don't save correct answer if the option is empty
+            // Don't save correct answer if the option is empty
             if (empty($stems[$i]) and (!isset($media[$i + 1]) or $media[$i + 1] == '')) {
                 $this->all_corrects[$i] = '';
             }

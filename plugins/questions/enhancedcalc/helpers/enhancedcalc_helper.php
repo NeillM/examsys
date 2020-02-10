@@ -16,14 +16,14 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Marks all Calculation questions for a summative paper.
-*
-* @author Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Marks all Calculation questions for a summative paper.
+ *
+ * @author Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once dirname(__DIR__) . '/enhancedcalc.class.php';
 
@@ -49,7 +49,7 @@ function enhancedcalc_remark($paper_type, $paper_id, $q_id, $settings, $db, $mod
         $status[$returnarray]++;
 
         if ($returnarray !== Q_MARKING_UNMARKED and $returnarray !== Q_MARKING_ERROR) {
-          // Save the extra data back into the log record.
+            // Save the extra data back into the log record.
             $sql = "UPDATE log{$paper_type} set mark = ?, adjmark = ?, totalpos = ?, user_answer = ? WHERE id = ? LIMIT 1";
             $storemark = $db->prepare($sql);
             $new_useranswerstring = $enhancedcalc->useranswer_to_string();
@@ -58,7 +58,7 @@ function enhancedcalc_remark($paper_type, $paper_id, $q_id, $settings, $db, $mod
             $storemark->execute();
         }
 
-      // Log returned state.
+        // Log returned state.
         $sql = "UPDATE log{$paper_type} set errorstate = ? WHERE id = ? LIMIT 1";
         $storeerror = $db->prepare($sql);
         $storeerror->bind_param('ii', $returnarray, $id);

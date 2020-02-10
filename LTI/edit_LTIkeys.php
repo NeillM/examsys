@@ -52,7 +52,7 @@ if (!is_null($submit)) {
   
     $insert_id = $lti->update_lti_key($LTIkeysid, $ltiname, $ltikey, $ltisec, $lticontext);
   
-  // Log changes
+    // Log changes
     $logger = new Logger($mysqli);
     if ($ltis['name'] != $ltiname) {
         $logger->track_change('LTI Key', $LTIkeysid, $userObject->get_user_ID(), $ltis['name'], $ltiname, 'name');

@@ -49,12 +49,12 @@ class UoNSaturnTranslation_lookup extends outline_lookup
     {
 
         $this->savetodebug('Running module translate lookup in UoN Saturn Translate');
-// this is on the search data (also used for 1 record lookup)
+        // this is on the search data (also used for 1 record lookup)
         if (isset($modulelookupobj->lookupdata)) {
             $modulelookupobj->lookupdata = $this->moduletranslate($modulelookupobj->lookupdata);
         }
 
-      //this is for multiple blocks
+        //this is for multiple blocks
         if (isset($modulelookupobj->lookupdatas)) {
             foreach ($modulelookupobj->lookupdatas as $key => $value) {
                     $modulelookupobj->lookupdatas[$key] = $this->moduletranslate($modulelookupobj->lookupdatas[$key]);
@@ -68,7 +68,7 @@ class UoNSaturnTranslation_lookup extends outline_lookup
     {
 
         if (isset($datapart->rawschools)) {
-  //detect raw xml school info
+            //detect raw xml school info
 
             foreach ($datapart->rawschools->School as $v) {
                 if (isset($v->AdministeredBy)) {
@@ -114,9 +114,9 @@ class UoNSaturnTranslation_lookup extends outline_lookup
     {
 
         $this->savetodebug('Running user translate lookup in UoN Saturn Translate');
-// this is on the search data (also used for 1 record lookup)
+        // this is on the search data (also used for 1 record lookup)
         $userlookupobj->lookupdata = $this->usertranslate($userlookupobj->lookupdata);
-//this is for multiple blocks
+        //this is for multiple blocks
         if (isset($userlookupobj->lookupdatas)) {
             foreach ($userlookupobj->lookupdatas as $key => $value) {
                     $userlookupobj->lookupdatas[$key] = $this->usertranslate($userlookupobj->lookupdatas[$key]);

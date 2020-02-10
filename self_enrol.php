@@ -16,20 +16,20 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once './include/staff_student_auth.inc';
 require_once './include/errors.php';
 if (isset($_GET['moduleid'])) {
-// Old format
+    // Old format
     $module = $_GET['moduleid'];
 } elseif (isset($_GET['mod'])) {
-// New shorter format
+    // New shorter format
     $module = $_GET['mod'];
 } else {
     display_error($string['fatalerrormsg0'], $string['fatalerrormsg1'], true);
@@ -48,11 +48,11 @@ if ($mod_details === false) {
 
 if ($mod_details['active'] == 1 and $mod_details['selfenroll'] == 1 and isset($_POST['submit'])) {
     if (!$userObject->has_role('Student')) {
-    // Add role of 'Student' if current user doesn't have it.
-          UserUtils::add_role('Student', $userObject->get_user_ID(), $mysqli);
+        // Add role of 'Student' if current user doesn't have it.
+        UserUtils::add_role('Student', $userObject->get_user_ID(), $mysqli);
     }
   
-  // Insert new module enrollment
+    // Insert new module enrollment
     UserUtils::add_student_to_module($userObject->get_user_ID(), $modID, 1, $_POST['session'], $mysqli);
 }
 

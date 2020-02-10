@@ -16,15 +16,15 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
+ *
  * Looks up the next free temporary account and reserves it for the current user.
  * Use 'class_totals.php' to reassign marks after the exam.
  *
  * @author Simon Wilkinson
  * @version 1.0
  * @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ * @package
+ */
 
 require_once '../include/load_config.php';
 
@@ -68,7 +68,7 @@ if (!$lab) {
 
 <?php
 if (isset($_POST['submit'])) {
-  // Update the temp_user table with the completed student details.
+    // Update the temp_user table with the completed student details.
     $tmp_first_names = trim($_POST['first_names']);
     $tmp_surname = trim($_POST['surname']);
     $tmp_student_id = trim($_POST['student_id']);
@@ -113,14 +113,14 @@ if (isset($_POST['submit'])) {
         }
     }
 
-  // Reserve this free account first.
+    // Reserve this free account first.
     $stmt = $mysqli->prepare('INSERT INTO temp_users VALUES (NULL, NULL, NULL, NULL, NULL, ?, NOW())');
     $stmt->bind_param('s', $free_account);
     $stmt->execute();
     $stmt->close();
     $recordID = $mysqli->insert_id;
 
-  // Get the user ID
+    // Get the user ID
     $stmt = $mysqli->prepare('SELECT id FROM users WHERE username = ?');
     $stmt->bind_param('s', $free_account);
     $stmt->execute();
@@ -128,7 +128,7 @@ if (isset($_POST['submit'])) {
     $stmt->fetch();
     $stmt->close();
 
-  // Reset password on the chosen guest account.
+    // Reset password on the chosen guest account.
     $color = array('blue', 'green', 'orange', 'gold', 'silver', 'purple', 'white', 'black', 'yellow');
     $random_password = $color[rand(0, 4)] . rand(10, 99);
     UserUtils::update_password($free_account, $random_password, $temp_user_id, $mysqli);

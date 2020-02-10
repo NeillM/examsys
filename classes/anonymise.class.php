@@ -15,16 +15,16 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* This class randomises all the names, usernames, student ID and email addresses
-* in the database. This is intended only for use on test/beta servers. The action
-* cannot be undone.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * This class randomises all the names, usernames, student ID and email addresses
+ * in the database. This is intended only for use on test/beta servers. The action
+ * cannot be undone.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 class Anonymise
 {
@@ -39,14 +39,14 @@ class Anonymise
     private $type;
     private $config;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
@@ -66,7 +66,7 @@ class Anonymise
      */
     public function check_security()
     {
-      // Only allow to run the script if the server has test, local, alpha or beta in its name.
+        // Only allow to run the script if the server has test, local, alpha or beta in its name.
         if (strstr(strtolower($_SERVER['HTTP_HOST']), 'test') === false and strstr(strtolower($_SERVER['HTTP_HOST']), 'local') === false and strstr(strtolower($_SERVER['HTTP_HOST']), 'alpha') === false and strstr(strtolower($_SERVER['HTTP_HOST']), 'beta') === false) {
             exit();
         }
@@ -102,7 +102,7 @@ class Anonymise
      */
     public function process_names()
     {
-      // Update the user table (Do NOT update SysAdmin accounts or the temp accounts: user1, user2, etc).
+        // Update the user table (Do NOT update SysAdmin accounts or the temp accounts: user1, user2, etc).
         $result = $this->db->prepare("SELECT id, title, gender FROM users WHERE roles NOT LIKE '%SysAdmin%' AND username NOT LIKE 'user%'");
         $result->execute();
         $result->bind_result($id, $title, $gender);
@@ -155,7 +155,7 @@ class Anonymise
         $result->close();
     }
   
-  /**
+    /**
      * Update all a sid (Student ID) records.
      */
     private function update_sid($userID, $student_id)
@@ -166,10 +166,10 @@ class Anonymise
         $result->close();
     }
   
-  /**
+    /**
      * Select a random first name based on gender.
      * @param string $type - The gender
-   * @return string - The selected first names.
+     * @return string - The selected first names.
      */
     private function pick_first_names($type)
     {
@@ -187,10 +187,10 @@ class Anonymise
         return $first_name;
     }
   
-  /**
+    /**
      * Select a random surname based on gender.
      * @param string $type - The gender
-   * @return string - The selected surname.
+     * @return string - The selected surname.
      */
     private function pick_surname($type)
     {
@@ -208,10 +208,10 @@ class Anonymise
         return $surname;
     }
 
-  /**
+    /**
      * Generate initials from passed in forenames.
      * @param string $forenames - List of user forenames.
-   * @return string - The generated initials.
+     * @return string - The generated initials.
      */
     private function get_initials($fornames)
     {
@@ -227,11 +227,11 @@ class Anonymise
         return $initials;
     }
   
-  /**
+    /**
      * Generate an email address based on first name and surname.
      * @param string $first_names - The first names of the user.
      * @param string $surname     - The surname of the user.
-   * @return string - The generated email address.
+     * @return string - The generated email address.
      */
     private function get_email($first_names, $surname)
     {

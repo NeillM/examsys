@@ -26,28 +26,28 @@
 class PaperUtils
 {
   
-  /**
-  * Records an access to a paper in recent_papers table.
-  *
-  * @param int $userID  - ID of the user accessing the paper.
-  * @param int $paperID - ID of the paper.
-  * @param object $db   - Database object.
-  */
+    /**
+     * Records an access to a paper in recent_papers table.
+     *
+     * @param int $userID  - ID of the user accessing the paper.
+     * @param int $paperID - ID of the paper.
+     * @param object $db   - Database object.
+     */
     public function log_hit($userID, $paperID, $db)
     {
-      // Log the hit in recent_papers.
+        // Log the hit in recent_papers.
         $result = $db->prepare('INSERT INTO recent_papers (userID, paperID, accessed) VALUES (?, ?, NOW()) ON DUPLICATE KEY UPDATE accessed = NOW()');
         $result->bind_param('ii', $userID, $paperID);
         $result->execute();
         $result->close();
     }
 
-  /**
-  * Parses a paper title and returns the academic year if it exists within the title
-  *
-  * @param string $paper_title - The name of the paper.
-  * @return mixed - False = no academic year found in title, string = the academic year that was found.
-  */
+    /**
+     * Parses a paper title and returns the academic year if it exists within the title
+     *
+     * @param string $paper_title - The name of the paper.
+     * @return mixed - False = no academic year found in title, string = the academic year that was found.
+     */
     public function academic_year_from_title($paper_title)
     {
         if (preg_match('/\d{4}[^\d\w]\d{4}/', $paper_title, $matches) == 1) {
@@ -65,13 +65,13 @@ class PaperUtils
         return $tmp_match;
     }
 
-  /**
-  * Checks to see if a non-deleted paper ID exists in the database.
-  *
-  * @param int $paperID         - ID of the paper to be used
-  * @param object $db               -   Database connection
-    * @return bool - True = the paperID exists, False = the paper does not exist.
-  */
+    /**
+     * Checks to see if a non-deleted paper ID exists in the database.
+     *
+     * @param int $paperID         - ID of the paper to be used
+     * @param object $db               -   Database connection
+     * @return bool - True = the paperID exists, False = the paper does not exist.
+     */
     public function paper_exists($paperid, $db)
     {
         $exist = true;
@@ -91,22 +91,22 @@ class PaperUtils
         return $exist;
     }
 
-  /**
-  * Add a question onto a paper
-  *
-  * @param int $paperID         - ID of the paper to be used
-  * @param int $questionID  - ID of the question to be added
-  * @param int $screen_no   - Number of the screen to add to
-  * @param int $display_pos - The display position of the new question
-  * @param object $db               -   Database connection
-  */
+    /**
+     * Add a question onto a paper
+     *
+     * @param int $paperID         - ID of the paper to be used
+     * @param int $questionID  - ID of the question to be added
+     * @param int $screen_no   - Number of the screen to add to
+     * @param int $display_pos - The display position of the new question
+     * @param object $db               -   Database connection
+     */
     public function add_question($paperID, $questionID, $screen_no, $display_pos, $db)
     {
         $display_pos_free = false;
 
         $result = $db->prepare('SELECT p_id FROM papers WHERE paper = ? AND display_pos = ?');
         while (!$display_pos_free) {
-          // Look up the maximum display_pos here for safety.
+            // Look up the maximum display_pos here for safety.
             $result->bind_param('ii', $property_id, $display_pos);
             $result->execute();
             $result->bind_result($p_id);
@@ -126,13 +126,13 @@ class PaperUtils
         $result->close();
     }
 
-  /**
-  * Return the user ID of the paper owner
-  *
-  * @param int $paperID - The id of the paper or property_id
-  * @param object $db   - Database connection
-  * @return integer
-  */
+    /**
+     * Return the user ID of the paper owner
+     *
+     * @param int $paperID - The id of the paper or property_id
+     * @param object $db   - Database connection
+     * @return integer
+     */
     public function get_ownerID($paperID, $db)
     {
         $modules = array();
@@ -165,13 +165,13 @@ class PaperUtils
         return $textual_feedback;
     }
 
-  /**
-  * Return a array of modules assigned to a paper
-  *
-  * @param int $paperID - The id of the paper or property_id
-  * @param object $db       - Database connection
-  * @return array
-  */
+    /**
+     * Return a array of modules assigned to a paper
+     *
+     * @param int $paperID - The id of the paper or property_id
+     * @param object $db       - Database connection
+     * @return array
+     */
     public function get_modules($paperID, $db)
     {
         $modules = array();
@@ -190,13 +190,13 @@ class PaperUtils
         return $modules;
     }
 
-   /**
-   * Function to count the number of un-assigned papers for a user
-   *
-   * @param int $user_id User ID
-   * @param mysqli $db Database link object
-   * @return int $count the number of unassigned papers
-   */
+    /**
+     * Function to count the number of un-assigned papers for a user
+     *
+     * @param int $user_id User ID
+     * @param mysqli $db Database link object
+     * @return int $count the number of unassigned papers
+     */
     public function count_unassigned_papers($user_id, $db)
     {
         $query = $db->prepare('SELECT count(properties.property_id)'
@@ -214,13 +214,13 @@ class PaperUtils
         return $count;
     }
 
-  /**
-   * Function to count the number of un-assigned questions for a user
-   *
-   * @param int $user_id User ID
-   * @param mysqli $db Database link object
-   * @return int $count the number of unassigned questions
-   */
+    /**
+     * Function to count the number of un-assigned questions for a user
+     *
+     * @param int $user_id User ID
+     * @param mysqli $db Database link object
+     * @return int $count the number of unassigned questions
+     */
     public function count_unassigned_questions($user_id, $db)
     {
         $query = $db->prepare('SELECT count(questions.q_id)'
@@ -261,13 +261,13 @@ class PaperUtils
         return $enabled;
     }
 
-  /**
-  * Return a array of metadata pairs assigned to a paper
-  *
-  * @param $paperID the id of the paper or property_id
-  * @param $db Database connection
-  * @return array
-  */
+    /**
+     * Return a array of metadata pairs assigned to a paper
+     *
+     * @param $paperID the id of the paper or property_id
+     * @param $db Database connection
+     * @return array
+     */
     public function get_metadata($paperID, $db)
     {
         $metadata = array();
@@ -285,31 +285,31 @@ class PaperUtils
         return $metadata;
     }
 
-  /**
-  * Updates the modules on a paper. Removes modules if the user has permission to do so and then adds in the new modules.
-  * @param array $paper_modules - An array of modules keyed on idMod
-  * @param int $paperID                 - The id of the paper or property_id
-  * @param object $db                   - Database connection
-  * @param object $userObject   - Currently authenticated user
-  * @return void
-  */
+    /**
+     * Updates the modules on a paper. Removes modules if the user has permission to do so and then adds in the new modules.
+     * @param array $paper_modules - An array of modules keyed on idMod
+     * @param int $paperID                 - The id of the paper or property_id
+     * @param object $db                   - Database connection
+     * @param object $userObject   - Currently authenticated user
+     * @return void
+     */
     public function update_modules($paper_modules, $paperID, $db, $userObject)
     {
         Paper_utils::remove_modules($paper_modules, $paperID, $db, $userObject, 'all');
         Paper_utils::add_modules($paper_modules, $paperID, $db);
     }
 
-  /**
-  * Add/delete internal and external reviewers to a paper
-    *
-  * @param array $old_list  - Array of the old reviewers
-  * @param array $new_list  - Array of the new reviewers
-  * @param string $type         - 'internal' or 'external' review type
-  * @param integer $paperID - ID of the paper or property_id
-  * @param object $db               -  Database connection
-    *
-  * @return bool - True if the list of reviewers has changed
-  */
+    /**
+     * Add/delete internal and external reviewers to a paper
+     *
+     * @param array $old_list  - Array of the old reviewers
+     * @param array $new_list  - Array of the new reviewers
+     * @param string $type         - 'internal' or 'external' review type
+     * @param integer $paperID - ID of the paper or property_id
+     * @param object $db               -  Database connection
+     *
+     * @return bool - True if the list of reviewers has changed
+     */
     public function update_reviewers($old_list, $new_list, $type, $paperID, $db)
     {
         $has_changed = false;
@@ -341,15 +341,15 @@ class PaperUtils
         return $has_changed;
     }
 
-  /**
-  * Add modules to a paper ignoring duplicates
-    *
-  * @param array $paper_modules - An array of modules keyed on idMod
-  * @param int $paperID                 - The id of the paper or property_id
-  * @param object $db                       - Database connection
-    *
-  * @return void
-  */
+    /**
+     * Add modules to a paper ignoring duplicates
+     *
+     * @param array $paper_modules - An array of modules keyed on idMod
+     * @param int $paperID                 - The id of the paper or property_id
+     * @param object $db                       - Database connection
+     *
+     * @return void
+     */
     public function add_modules($paper_modules, $paperID, $db)
     {
         $editProperties = $db->prepare('INSERT INTO properties_modules VALUES(?, ?) ON DUPLICATE KEY UPDATE idMod = idMod');
@@ -360,20 +360,20 @@ class PaperUtils
         $editProperties->close();
     }
 
-  /**
-  * Remove modules from a paper
-  *
-  * @param array $paper_modules - An array of modules keyed on idMod
-  * @param int $paperID - The id of the paper or property_id
-  * @param object $db - Database connection
-  * @param object $userObject - user object
-  * @param strting $modulefilter - 'all' or a specfic module
-  * @return void
-  */
+    /**
+     * Remove modules from a paper
+     *
+     * @param array $paper_modules - An array of modules keyed on idMod
+     * @param int $paperID - The id of the paper or property_id
+     * @param object $db - Database connection
+     * @param object $userObject - user object
+     * @param strting $modulefilter - 'all' or a specfic module
+     * @return void
+     */
     public function remove_modules($paper_modules, $paperID, $db, $userObject, $modulefilter = '')
     {
       
-      // Non sysadmin users can only remove modules if they are on the team. Sysadmins have no restrictions.
+        // Non sysadmin users can only remove modules if they are on the team. Sysadmins have no restrictions.
         if (!$userObject->has_role('SysAdmin')) {
             $staff_modules = $userObject->get_staff_modules();
             if (count($staff_modules) > 0) {
@@ -383,7 +383,7 @@ class PaperUtils
             $permission = '';
         }
     
-      // Are we removing all of the associated modules or a specifc one.
+        // Are we removing all of the associated modules or a specifc one.
         if ($modulefilter == 'all') {
             $modules = '';
         } else {
@@ -403,12 +403,12 @@ class PaperUtils
         $remove->close();
     }
 
-  /**
-  * Determine if a paper title (name) is unique - in the database already.
-  * @param $title the title to be tested
-  * @param $db Database connection
-  * @return $unique true if the name does not already exist
-  */
+    /**
+     * Determine if a paper title (name) is unique - in the database already.
+     * @param $title the title to be tested
+     * @param $db Database connection
+     * @return $unique true if the name does not already exist
+     */
     public function is_paper_title_unique($title, $db)
     {
         $unique = true;
@@ -428,13 +428,13 @@ class PaperUtils
         return $unique;
     }
 
-  /**
-  * Delete a paper (Note: sets the deleted field we don't actuality delete the row form the papers table)
-  * @param $paperID the id of the paper or property_id
-  * @param $owner the owner we want to set the deleted paper to
-  * @param $db Database connection
-  * @return void
-  */
+    /**
+     * Delete a paper (Note: sets the deleted field we don't actuality delete the row form the papers table)
+     * @param $paperID the id of the paper or property_id
+     * @param $owner the owner we want to set the deleted paper to
+     * @param $db Database connection
+     * @return void
+     */
     public function delete_paper($paperID, $owner, $db)
     {
         $configObject = \Config::get_instance();
@@ -527,15 +527,15 @@ class PaperUtils
         return $html;
     }
 
-  /**
-   * Get the details of the papers that are currently available for the current user and lab
-   * @param  array      $paper_display Reference to array in which to build details of available papers
-   * @param  array      $types         Array of paper types to check for
-   * @param  UserObject $userObj       The current user
-   * @param  mysqli     $db            Database reference
-   * @param  string     $exclude       Option ID of a paper to exclude from the check
-   * @return integer                   The number of currently active papers
-   */
+    /**
+     * Get the details of the papers that are currently available for the current user and lab
+     * @param  array      $paper_display Reference to array in which to build details of available papers
+     * @param  array      $types         Array of paper types to check for
+     * @param  UserObject $userObj       The current user
+     * @param  mysqli     $db            Database reference
+     * @param  string     $exclude       Option ID of a paper to exclude from the check
+     * @return integer                   The number of currently active papers
+     */
     public function get_active_papers(&$paper_display, $types, $userObj, $db, $exclude = '')
     {
         $type_sql = '';
@@ -615,14 +615,14 @@ class PaperUtils
         return $paper_no;
     }
   
-  /**
-   * Determins if there is an interactive question (e.g. image hotspot, labelling,
-   * area) on a particular screen of a paper. Speeds system up if not loading
-   * unnecessary HTML5/Flash include files.
-   * @param  array      $screen_data Array of screen/question information
-   * @param  array      $screen      The screen number to check
-   * @return bool       True = HTML5 or Flash neeed, False=no interactive questions found.
-   */
+    /**
+     * Determins if there is an interactive question (e.g. image hotspot, labelling,
+     * area) on a particular screen of a paper. Speeds system up if not loading
+     * unnecessary HTML5/Flash include files.
+     * @param  array      $screen_data Array of screen/question information
+     * @param  array      $screen      The screen number to check
+     * @return bool       True = HTML5 or Flash neeed, False=no interactive questions found.
+     */
     function need_interactiveQ($screen_data, $screen, $db)
     {
         $interactive = false;
@@ -667,12 +667,12 @@ class PaperUtils
         return $interactive;
     }
 
-  /**
-   * Creates a list of the last 10 papers accessed by a member of staff.
-   * @param int $userID - ID of the user we want last 10 papers for.
-   * @param object $db  - Database connection.
-   * @return array      - List of 10 last papers keyed by paperID.
-   */
+    /**
+     * Creates a list of the last 10 papers accessed by a member of staff.
+     * @param int $userID - ID of the user we want last 10 papers for.
+     * @param object $db  - Database connection.
+     * @return array      - List of 10 last papers keyed by paperID.
+     */
     public function get_recent($userID, $db)
     {
         $recent = array();
@@ -690,13 +690,13 @@ class PaperUtils
         return $recent;
     }
 
-  /**
-   * Returns the number of screens in a paper.
-   *
-   * @param int $paperID - id of paper.
-   * @param object $db  - Database connection.
-   * @return int - number of screens in paper.
-   */
+    /**
+     * Returns the number of screens in a paper.
+     *
+     * @param int $paperID - id of paper.
+     * @param object $db  - Database connection.
+     * @return int - number of screens in paper.
+     */
     public function get_num_screens($paperID, $db)
     {
 
@@ -710,12 +710,12 @@ class PaperUtils
         return $maxscreen;
     }
   
-  /**
-  * Check if the paper has been taken
-  * @param integer $id - paper id
-  * @param mysqli $db
-  * @return bool
-  */
+    /**
+     * Check if the paper has been taken
+     * @param integer $id - paper id
+     * @param mysqli $db
+     * @return bool
+     */
     static function paper_taken($id, $db)
     {
         $result = $db->prepare('SELECT NULL FROM log_metadata WHERE paperID = ?
@@ -731,13 +731,13 @@ class PaperUtils
         return false;
     }
   
-  /**
-   * Checks is a paper is available in the specidiced lab
-   * Only Summative and progressive papers checked.
-   * @param integer $lab - lab id
-   * @param mysqli $db
-   * @return bool true if paper available
-   */
+    /**
+     * Checks is a paper is available in the specidiced lab
+     * Only Summative and progressive papers checked.
+     * @param integer $lab - lab id
+     * @param mysqli $db
+     * @return bool true if paper available
+     */
     static function paper_available_in_lab_now($lab, $db)
     {
         $results = $db->prepare("SELECT NULL 
@@ -758,12 +758,12 @@ class PaperUtils
         return false;
     }
 
-  /**
-  * Get the paper type of the paper.
-  * @param integer $id - paper id
-  * @param mysqli $db
-  * @return integer|bool paper type or false on error
-  */
+    /**
+     * Get the paper type of the paper.
+     * @param integer $id - paper id
+     * @param mysqli $db
+     * @return integer|bool paper type or false on error
+     */
     static function get_paper_type($id, $db)
     {
         $result = $db->prepare('SELECT paper_type FROM properties WHERE property_id = ?');
@@ -779,12 +779,12 @@ class PaperUtils
         return $paper_type;
     }
   
-  /**
-   * Delete a paper from the database
-   * @param integer $id paper id
-   * @param mysqli $db
-   * @return bool true on success, false otherwise
-   */
+    /**
+     * Delete a paper from the database
+     * @param integer $id paper id
+     * @param mysqli $db
+     * @return bool true on success, false otherwise
+     */
     static function complete_delete_paper($id, $db)
     {
         $result = $db->prepare('DELETE FROM properties WHERE property_id = ?');
@@ -794,7 +794,7 @@ class PaperUtils
             return false;
         }
         $result->close();
-      // We should also delete any entries in properties_modules otherwise they will be orphaned.
+        // We should also delete any entries in properties_modules otherwise they will be orphaned.
         $result = $db->prepare('DELETE FROM properties_modules WHERE property_id = ?');
         $result->bind_param('i', $id);
         $result->execute();
@@ -805,12 +805,12 @@ class PaperUtils
         return true;
     }
   
-  /**
-   * Get paper properties
-   * @param integer $id paper id
-   * @param mysqli $db
-   * @return array|bool array of paper details or false on error
-   */
+    /**
+     * Get paper properties
+     * @param integer $id paper id
+     * @param mysqli $db
+     * @return array|bool array of paper details or false on error
+     */
     static function get_paper_properties($id, $db)
     {
         $result = $db->prepare('SELECT 
@@ -937,13 +937,13 @@ class PaperUtils
         return $details;
     }
 
-  /**
-   * Get internal rogo properties id from external id
-   * @param string $externalid external system id
-   * @param string $externalsys external system source
-   * @param mysqli $db db connection
-   * @return integer|bool rogo id or false on error
-   */
+    /**
+     * Get internal rogo properties id from external id
+     * @param string $externalid external system id
+     * @param string $externalsys external system source
+     * @param mysqli $db db connection
+     * @return integer|bool rogo id or false on error
+     */
     public static function get_id_from_externalid($externalid, $externalsys, $db)
     {
         $result = $db->prepare('SELECT property_id FROM properties WHERE externalid = ? AND externalsys = ? AND deleted IS NULL');
@@ -961,13 +961,13 @@ class PaperUtils
         return $paperid;
     }
   
-  /**
-   * Get papers running in academic session
-   * @param integer $session academic session
-   * @param string $type paper type
-   * @param mysqli $db db connection
-   * @return array rogo ids
-   */
+    /**
+     * Get papers running in academic session
+     * @param integer $session academic session
+     * @param string $type paper type
+     * @param mysqli $db db connection
+     * @return array rogo ids
+     */
     public static function get_papers_by_session($session, $type, $db)
     {
         $paperids = array();
@@ -983,13 +983,13 @@ class PaperUtils
         return $paperids;
     }
   
-  /**
-   * Get papers finalised in specific year
-   * @param integer $year year
-   * @param string $papertype type of paper
-   * @param mysqli $db db connection
-   * @return array list of ids of papers finialised in supplied year
-   */
+    /**
+     * Get papers finalised in specific year
+     * @param integer $year year
+     * @param string $papertype type of paper
+     * @param mysqli $db db connection
+     * @return array list of ids of papers finialised in supplied year
+     */
     public static function get_finalised_papers($year, $papertype, $db)
     {
         $papers = array();
@@ -1007,19 +1007,19 @@ class PaperUtils
         return $papers;
     }
   
-  /**
-   * Get a list of papers available to the logged in user
-   *
-   * @param object $userObject logged in user object
-   * @param string $order query order string
-   * @param string $direction query order direction string
-   * @param integer $type paper type
-   * @param integer $teamid logged in users team
-   * @return array list of papers available to logged in user
-   */
+    /**
+     * Get a list of papers available to the logged in user
+     *
+     * @param object $userObject logged in user object
+     * @param string $order query order string
+     * @param string $direction query order direction string
+     * @param integer $type paper type
+     * @param integer $teamid logged in users team
+     * @return array list of papers available to logged in user
+     */
     public static function get_available_papers($userObject, $order, $direction, $type = null, $teamid = null)
     {
-      // Return empty list if type and team not provided.
+        // Return empty list if type and team not provided.
         if (is_null($type) and is_null($teamid)) {
             return array();
         }
@@ -1060,13 +1060,13 @@ class PaperUtils
         return $paper_details;
     }
   
-  /**
-   * This function compares the old and the new courses session objectives to see which can be copied.
-   *
-   * @param array $old_course - old course objective information
-   * @param array $new_course - new course objective information
-   * @return array $mappings_copy_objID - objectives to map
-   */
+    /**
+     * This function compares the old and the new courses session objectives to see which can be copied.
+     *
+     * @param array $old_course - old course objective information
+     * @param array $new_course - new course objective information
+     * @return array $mappings_copy_objID - objectives to map
+     */
     public static function copy_between_sessions($old_course, $new_course)
     {
         $mappings_copy_objID = array();
@@ -1097,7 +1097,7 @@ class PaperUtils
                                                 and (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)
                                                 and $new_obj['content'] == $obj['content'])
                                             ) {
-                                            // Build a list of objectives that are still in both sessions
+                                                // Build a list of objectives that are still in both sessions
                                                 $mappings_copy_objID[$old_objID] = $new_obj['id'];
                                                 break;
                                             }
@@ -1108,7 +1108,7 @@ class PaperUtils
                                     if (isset($newsession['objectives'])) {
                                         foreach ($newsession['objectives'] as $new_obj) {
                                             if (array_key_exists('content', $new_obj) and array_key_exists('content', $obj)) {
-                                    // Brefore comparing the contents strip out all no alpha numeric characters and convert to lowecase.
+                                                // Brefore comparing the contents strip out all no alpha numeric characters and convert to lowecase.
                                                 $new_content_check = strtolower($new_obj['content']);
                                                 $new_content_check = preg_replace('/[^a-z0-9]/', '', $new_content_check);
                                                 $old_content_check = strtolower($obj['content']);
@@ -1137,15 +1137,15 @@ class PaperUtils
         }
         return $mappings_copy_objID;
     }
-  /**
-   * Copies the paper properties record.
-   *
-   * @param string $calendar_year - Looks up and updates the academic session - used with learning objectives
-   * @param string $new_calendar_year  - Looks up and updates the academic session - used with learning objectives
-   * @param string $moduleIDs - Looks up and updates the modules the paper is on - used with learning objectives
-   * @param array $postparams - posted parameters to copy
-   * @return array - calendar year of copied paper, calendar year of new paper, modules new paper associated with and the id of the new paper.
-   */
+    /**
+     * Copies the paper properties record.
+     *
+     * @param string $calendar_year - Looks up and updates the academic session - used with learning objectives
+     * @param string $new_calendar_year  - Looks up and updates the academic session - used with learning objectives
+     * @param string $moduleIDs - Looks up and updates the modules the paper is on - used with learning objectives
+     * @param array $postparams - posted parameters to copy
+     * @return array - calendar year of copied paper, calendar year of new paper, modules new paper associated with and the id of the new paper.
+     */
     public static function copyProperties($calendar_year, $new_calendar_year, $moduleIDs, $postparams)
     {
         $configObject = \Config::get_instance();
@@ -1255,7 +1255,7 @@ class PaperUtils
         $update_params = array('crypt_name' => array('s', $new_paper_id . $unixtime . $userID));
         $assessment->db_update_assessment($new_paper_id, $update_params);
 
-      // Get the old reviewers and populate the new paper with.
+        // Get the old reviewers and populate the new paper with.
         $result2 = $db->prepare('SELECT reviewerID, type FROM properties_reviewers WHERE paperID = ?');
         $result2->bind_param('i', $postparams['paperID']);
         $result2->execute();
@@ -1269,7 +1269,7 @@ class PaperUtils
         }
         $result2->close();
 
-      // Set the modules on the new paper
+        // Set the modules on the new paper
         Paper_utils::update_modules($moduleIDs, $new_paper_id, $db, $userObj);
 
         if ($postparams['paper_type'] == $assessment::TYPE_SUMMATIVE and $configObject->get_setting('core', 'cfg_summative_mgmt')) {
@@ -1278,13 +1278,13 @@ class PaperUtils
         return array('calendar_year' => $calendar_year, 'new_calendar_year' => $new_calendar_year, 'moduleIDs' => $moduleIDs, 'new_paper_id' => $new_paper_id);
     }
 
-  /**
-   * Get marking overrides for a user on a paper
-   * @param enum $log_type type of paper
-   * @param integer $temp_userID user id
-   * @param integer $paperID paper id
-   * @return array
-   */
+    /**
+     * Get marking overrides for a user on a paper
+     * @param enum $log_type type of paper
+     * @param integer $temp_userID user id
+     * @param integer $paperID paper id
+     * @return array
+     */
     public function get_marking_overrides($log_type, $temp_userID, $paperID)
     {
         $overrides = array();
@@ -1306,11 +1306,11 @@ class PaperUtils
         return $overrides;
     }
 
-  /**
-   * Get list of question ids for parents of linked questions.
-   * @param $questions questions array from paper
-   * @return array
-   */
+    /**
+     * Get list of question ids for parents of linked questions.
+     * @param $questions questions array from paper
+     * @return array
+     */
     public static function get_linked_question_parents($questions)
     {
         $linked = array();

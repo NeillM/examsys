@@ -27,10 +27,10 @@ use csv\csv_write_exception;
  */
 class export_assessment extends exporter
 {
-  /**
-   * Required fields
-   * @var array
-   */
+    /**
+     * Required fields
+     * @var array
+     */
     const DEFAULT = array(
     'Gender',
     'Title',
@@ -42,11 +42,11 @@ class export_assessment extends exporter
     'Started',
     );
 
-  /**
-   * Convert a string to comma separated HEX numbers to the decimal equivalent
-   * @param $data
-   * @return string
-   */
+    /**
+     * Convert a string to comma separated HEX numbers to the decimal equivalent
+     * @param $data
+     * @return string
+     */
     public static function hex_to_dec($data)
     {
         $items = explode(',', $data);
@@ -59,13 +59,13 @@ class export_assessment extends exporter
         return rtrim($response, ',');
     }
 
-  /**
-   * Swap array indicies
-   * @param $array the array
-   * @param $ix1 index 1
-   * @param $ix2 index 2
-   * @return array
-   */
+    /**
+     * Swap array indicies
+     * @param $array the array
+     * @param $ix1 index 1
+     * @param $ix2 index 2
+     * @return array
+     */
     private static function array_swap($array, $ix1, $ix2)
     {
         $tmp = $array[$ix1];
@@ -75,15 +75,15 @@ class export_assessment extends exporter
         return $array;
     }
 
-  /**
-   * Add standard columns
-   * @param integer $i question number
-   * @param integer $sec section
-   * @param string $csv csv string to update
-   * @param string $col1 string for first column
-   * @param boolean $random random question flag
-   * @param string $subsec sub section
-   */
+    /**
+     * Add standard columns
+     * @param integer $i question number
+     * @param integer $sec section
+     * @param string $csv csv string to update
+     * @param string $col1 string for first column
+     * @param boolean $random random question flag
+     * @param string $subsec sub section
+     */
     private static function add_random_column_standard($i, $sec, &$csv, $col1, $random, $subsec = '')
     {
         if ($random) {
@@ -94,11 +94,11 @@ class export_assessment extends exporter
         }
     }
 
-  /**
-   * Make row safe for csv export.
-   * @param array $data row data
-   * @return array
-   */
+    /**
+     * Make row safe for csv export.
+     * @param array $data row data
+     * @return array
+     */
     private static function make_safe($row)
     {
         $safe = array();
@@ -108,16 +108,16 @@ class export_assessment extends exporter
         return $safe;
     }
 
-  /**
-   * Dymnamically generated header
-   * @var array
-   */
+    /**
+     * Dymnamically generated header
+     * @var array
+     */
     public $dynamic_headers;
 
-  /**
-   * Do the assessment export.
-   * @param array $data csv lines
-   */
+    /**
+     * Do the assessment export.
+     * @param array $data csv lines
+     */
     public function execute($data)
     {
         $header = array_merge(self::DEFAULT, $this->dynamic_headers);
@@ -134,20 +134,20 @@ class export_assessment extends exporter
         $this->handler->send_file();
     }
 
-  /**
-   * Create the dynamic header
-   * @param array $paper paer info
-   * @param \Exclusion $exclusions paper exclusions
-   */
+    /**
+     * Create the dynamic header
+     * @param array $paper paer info
+     * @param \Exclusion $exclusions paper exclusions
+     */
     public function create_dynamic_header($paper, $exclusions)
     {
-      // Write out the headings.
+        // Write out the headings.
         $csvdata = array();
         $numerals = array('i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii', 'xiii', 'xiv', 'xv', 'xvi', 'xvii', 'xviii', 'xix', 'xx');
         for ($i = 0; $i < count($paper); $i++) {
             $tmp_question_ID = $paper[$i]['ID'];
             $tmp_exclude = $exclusions->get_exclusions_by_qid($tmp_question_ID);
-          // If a random question, get the first of the associated questions from the block. If none exist, output nothing
+            // If a random question, get the first of the associated questions from the block. If none exist, output nothing
             $question = $paper[$i];
             $skip_random = false;
             $is_random = false;
@@ -276,15 +276,15 @@ class export_assessment extends exporter
         $this->dynamic_headers = $csvdata;
     }
 
-  /**
-   * Create correct answers row
-   * @param array $paper paer info
-   * @param \Exclusion $exclusions paper exclusions
-   * @param string $mode the display mode
-   * @param array $string the language pack
-   * @param string $language the language in use
-   * @return array
-   */
+    /**
+     * Create correct answers row
+     * @param array $paper paer info
+     * @param \Exclusion $exclusions paper exclusions
+     * @param string $mode the display mode
+     * @param array $string the language pack
+     * @param string $language the language in use
+     * @return array
+     */
     public function create_correct_answer($paper, $exclusions, $mode, $string, $language)
     {
         $csvdata[0][] = $string['correctanswers'];
@@ -299,7 +299,7 @@ class export_assessment extends exporter
         for ($i = 0; $i < count($paper); $i++) {
             $tmp_question_ID = $paper[$i]['ID'];
             $tmp_exclude = $exclusions->get_exclusions_by_qid($tmp_question_ID);
-          // If a random question, get the first of the associated questions from the block. If none exist, output nothing
+            // If a random question, get the first of the associated questions from the block. If none exist, output nothing
             $question = $paper[$i];
             $skip_random = false;
             $is_random = false;
@@ -549,22 +549,22 @@ class export_assessment extends exporter
         return $csvdata;
     }
 
-  /**
-   * Create data row
-   * @param $log_array paper log data
-   * @param array $paper paer info
-   * @param \Exclusion $exclusions paper exclusions
-   * @param string $mode the display mode
-   * @param array $string the language pack
-   * @param string $language the language in use
-   * @return array
-   */
+    /**
+     * Create data row
+     * @param $log_array paper log data
+     * @param array $paper paer info
+     * @param \Exclusion $exclusions paper exclusions
+     * @param string $mode the display mode
+     * @param array $string the language pack
+     * @param string $language the language in use
+     * @return array
+     */
     public function create_data($log_array, $paper, $exclusions, $mode, $string, $language)
     {
         $csvdata = array();
         $j = 1;
         foreach ($log_array as $individual) {
-          // Write out the raw data.
+            // Write out the raw data.
             if (isset($individual['gender'])) {
                 $csvdata[$j][] = $individual['gender'];
             } else {
@@ -609,7 +609,7 @@ class export_assessment extends exporter
                 $tmp_question_ID = $paper[$i]['ID'];
                 $tmp_screen = $paper[$i]['screen'];
                 $tmp_exclude = $exclusions->get_exclusions_by_qid($tmp_question_ID);
-              // If a random question, get the one that the user answered
+                // If a random question, get the one that the user answered
                 $question = $paper[$i];
                 $skip_random = false;
                 $is_random = false;
@@ -622,8 +622,8 @@ class export_assessment extends exporter
                                 if (in_array($tmp_id, $screen_ids)) {
                                     $rnd_found = true;
                                     $question = \QuestionUtils::get_correct_answer($question, $tmp_id, $this->config->db);
-                              // The id returned will either be that of the question the user answered or the id of the random question.
-                              // We are only interested if it is the id of the question the user answered.
+                                    // The id returned will either be that of the question the user answered or the id of the random question.
+                                    // We are only interested if it is the id of the question the user answered.
                                     if ($tmp_id == $question['ID']) {
                                           $is_random = true;
                                           $tmp_question_ID = $tmp_id;
@@ -794,7 +794,7 @@ class export_assessment extends exporter
                             $answer_parts = (isset($individual[$tmp_screen][$tmp_question_ID])) ? explode('|', $individual[$tmp_screen][$tmp_question_ID]) : array_fill(0, count($correct_parts), 'u');
 
                             for ($partID = 0; $partID < count($correct_parts) - 1; $partID++) {
-                              // $correct_parts[0] is always empty
+                                // $correct_parts[0] is always empty
                                 if (substr($tmp_exclude, $partID, 1) == '0' and $correct_parts[$partID + 1] != '') {
                                     if (isset($answer_parts[$partID]) and  $answer_parts[$partID] != '' and  $answer_parts[$partID] != 'u') {
                                         if ($mode == 'numeric') {
@@ -990,8 +990,8 @@ class export_assessment extends exporter
                             }
                             break;
                         case 'random':
-                          // This should only happen if the user answered a question that the user answered has been
-                          // unlinked from the random question.
+                            // This should only happen if the user answered a question that the user answered has been
+                            // unlinked from the random question.
                             $csvdata[$j][] = $string['error_random'];
                             break;
                         default:

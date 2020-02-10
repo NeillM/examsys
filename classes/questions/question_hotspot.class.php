@@ -41,7 +41,7 @@ class QuestionHOTSPOT extends QuestionEdit
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
 
-      // Convert the max number of options into a list of variables
+        // Convert the max number of options into a list of variables
         $this->option_order = 'display order';
         $this->_fields_editable[] = 'points1';
         $this->_change_field_map['points1'] = 'points';
@@ -49,14 +49,14 @@ class QuestionHOTSPOT extends QuestionEdit
     }
 
   
-  /**
-   * Persist the object to the database
-   * @return boolean Success or failure of the save operation
-   * @throws ValidationException
-   */
+    /**
+     * Persist the object to the database
+     * @return boolean Success or failure of the save operation
+     * @throws ValidationException
+     */
     public function save($clear_checkout = true)
     {
-      // Make sure 'correct' value is set for option
+        // Make sure 'correct' value is set for option
         if ((!isset($this->correct) or $this->correct = '') and $this->points1 != '' and count($this->options) > 0) {
             $this->set_points1($this->points1);
         }
@@ -64,7 +64,7 @@ class QuestionHOTSPOT extends QuestionEdit
     }
 
   
-  // ACCESSORS
+    // ACCESSORS
   
     public function get_points1()
     {
@@ -102,10 +102,10 @@ class QuestionHOTSPOT extends QuestionEdit
         }
     }
   
-  /**
-   * Set the question leadin, stripping any carriage returns
-   * @param string $value
-   */
+    /**
+     * Set the question leadin, stripping any carriage returns
+     * @param string $value
+     */
     public function set_leadin($value)
     {
         $value = str_replace("\r\n", ' ', $value);

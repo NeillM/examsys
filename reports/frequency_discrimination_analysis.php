@@ -16,16 +16,16 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* The Frequency & Discimination Analysis is used to look at the number of students that have selected each option in a question
-* and how well it disciminates between the upper and lower 27% of students.  These values help to identify how well the question
-* is working.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * The Frequency & Discimination Analysis is used to look at the number of students that have selected each option in a question
+ * and how well it disciminates between the upper and lower 27% of students.  These values help to identify how well the question
+ * is working.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -185,7 +185,7 @@ function xStats(&$q_type, &$q_id, &$freq_log, &$user_total, $i = null)
                 $unanswered_percent = number_format(($unanswered_count / $user_total) * 100);
                 break;
             } else {
-              // Not handled yet, may use for totals later
+                // Not handled yet, may use for totals later
             }
         default:
             throw new \Exception('Unhandled question type in unanswered stats function ' . $q_type);
@@ -424,7 +424,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
             } else {
                 $count_answer = strlen($answer);
                 if (strpos($answer, 'y') === false) {
-                  // force unanswered on all
+                    // force unanswered on all
                     $answer = str_repeat('u', $count_answer);
                 }
                 for ($i = 0; $i < $count_answer; $i++) {
@@ -576,7 +576,7 @@ if (isset($_POST['submit'])) {
     $old_exclusions = new Exclusion($paperID, $mysqli);
     $old_exclusions->load();
 
-  // Clear the database of any past exclusions from the current paper.
+    // Clear the database of any past exclusions from the current paper.
     $old_exclusions->clear_all_exclusions();
 
     $old_q_id = 0;
@@ -864,7 +864,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
                         $unique_blank_options = array_intersect_key($blank_options, array_unique(array_map('strtolower', $blank_options)));
                         $unique_blank_options = array_map('strtolower', $unique_blank_options);
             
-                      // Merge the same option on its own and with spaces (e.g. 'cat' and ' cat').
+                        // Merge the same option on its own and with spaces (e.g. 'cat' and ' cat').
                         $new_blank_options = array();
                         foreach ($unique_blank_options as $blank_option) {
                             $new_blank_options[] = strtolower(trim($blank_option));
@@ -1151,7 +1151,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
                     $tmp_height = ($max_label * 55);
                 }
 
-          //<!-- ======================== HTML5 part rep disc ================= -->
+                //<!-- ======================== HTML5 part rep disc ================= -->
                 echo "<canvas id='canvas" . $q_no . "' width='" . ($q_media_width + 220) . "' height='" . $tmp_height . "'></canvas>\n";
                 echo "<br /><div style='width:100%;text-align: left;' id='canvasbox'></div>\n";
                 ?>
@@ -1531,7 +1531,7 @@ HTML;
                             if (isset($tmp_std_array[$i])) {
                                 $tmp_std = $tmp_std_array[$i];
                             } elseif (isset($tmp_std_array[0]) and !isset($tmp_std)) {
-                      // This is the first displayed option in a ranking with the Mark per question marking method.
+                                // This is the first displayed option in a ranking with the Mark per question marking method.
                                 $tmp_std = $tmp_std_array[0];
                             } else {
                                 $tmp_std = '';
@@ -2106,7 +2106,7 @@ if ($paper_type == '0') {
   $user_no = round(($result->num_rows / 100) * $cohort_percent);
   $user_total = $result->num_rows;
 if ($user_total == 1) {
-  // If a single user load them into top and bottom cohorts.
+    // If a single user load them into top and bottom cohorts.
     $result->fetch();
     $bottom_cohort[$started][$username] = '';
     $top_cohort[$started][$username] = '';
@@ -2259,11 +2259,11 @@ SQL;
             for ($label_no = 4; $label_no <= 200; $label_no += 4) {
                 if (isset($tmp_second_split[$label_no])) {
                     if (substr($tmp_second_split[$label_no], 0, 1) != '|') {
-                      // The label has text, i.e. is not blank.
-                      // The stored answer coordinates are sometimes floating points, rather than integers.
-                      // We need to round them to ensure they will always matach the coordiantes that are
-                      // stored in the user answers. If we do not do this frequency analysis for the question type
-                      // will sometimes not work. See ROGO-1822.
+                        // The label has text, i.e. is not blank.
+                        // The stored answer coordinates are sometimes floating points, rather than integers.
+                        // We need to round them to ensure they will always matach the coordiantes that are
+                        // stored in the user answers. If we do not do this frequency analysis for the question type
+                        // will sometimes not work. See ROGO-1822.
                         $x_coordinate = round($tmp_second_split[$label_no - 2]);
                         $y_coordiante = round($tmp_second_split[$label_no - 1] - 25);
                         $options_buffer[] = trim(substr($tmp_second_split[$label_no], 0, strpos($tmp_second_split[$label_no], '|'))) . '|' . $x_coordinate . '|' . $y_coordiante;
@@ -2412,8 +2412,8 @@ SQL;
     }
 
     if (isset($pstats['no'])) {
-      // Write records into performance_main
-      //----------------------------------------------------------------------------------------------
+        // Write records into performance_main
+        //----------------------------------------------------------------------------------------------
         $sql = '';
         $params = '';
         $variables = array();
@@ -2443,10 +2443,10 @@ SQL;
         $record->execute();
         $record->close();
 
-      // Write records into performance_details
-      //----------------------------------------------------------------------------------------------
+        // Write records into performance_details
+        //----------------------------------------------------------------------------------------------
         $q_rec_ids = array();
-      // First a quick query to get the IDs from performance_main to use in performance_details
+        // First a quick query to get the IDs from performance_main to use in performance_details
         $result = $mysqli->prepare('SELECT id, q_id FROM performance_main WHERE paperID = ? AND taken = ?');
         $result->bind_param('is', $paperID, $date_started);
         $result->execute();

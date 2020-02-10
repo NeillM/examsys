@@ -65,7 +65,7 @@ class cosign
         @fwrite($this->cosign_log, date('Y-m-d H:i:s ') . $str . "\n");
     }
 
-// configuration is merged from global cosign_config.php, .cosign.php
+    // configuration is merged from global cosign_config.php, .cosign.php
     function cosign_auth($cfg = array(), $obstart = true)
     {
 
@@ -83,7 +83,7 @@ class cosign
         $service_cookie = 'cosign-' . $this->cosign_cfg['CosignService'];
         $rekey_service = false;
         $dest = '';
-      // Cosign v3 validation service
+        // Cosign v3 validation service
         if (
             isset($this->cosign_cfg['CosignValidLocation']) &&
             $_SERVER['SCRIPT_NAME'] == $this->cosign_cfg['CosignValidLocation']
@@ -125,16 +125,16 @@ class cosign
                         $this->cosign_debug("$service: Service cookie not present, redirecting to login");
                         $this->cosign_set_cookie_and_redirect();
             } else {
-          // PHP always URL decodes cookie values, + is changed to space
+                // PHP always URL decodes cookie values, + is changed to space
                 $service_cookie_val = str_replace(' ', '+', $_COOKIE[$service_cookie]);
                 $this->cosign_debug("$service: Service cookie $service_cookie present");
             }
         }
 
-  // check cookie expiration
+        // check cookie expiration
         if (($p = strpos($service_cookie_val, '/')) !== false) {
             $ts = intval(substr($service_cookie_val, $p + 1));
-        // if post, don't redirect, wait for next request
+            // if post, don't redirect, wait for next request
             if (
                 strcasecmp($_SERVER['REQUEST_METHOD'], 'post') != 0 &&
                 $ts + $this->cosign_cfg['CosignCookieExpireTime'] < time()
@@ -161,7 +161,7 @@ class cosign
             $this->cosign_set_cookie_and_redirect();
         }
 
-  // setup cookie cache directory
+        // setup cookie cache directory
         $service_cookie_file = $service_cookie . '=' . $service_cookie_val;
         $dir = $this->cosign_cfg['CosignFilterDB'];
         if (!empty($this->cosign_cfg['CosignFilterHashLength'])) {
@@ -173,12 +173,12 @@ class cosign
         }
 
         $newfile = true;
-  // cookie file exists?
+        // cookie file exists?
         if (!$rekey_service && file_exists($dir . $service_cookie_file)) {
             $newfile = false;
             $this->cosign_debug("$service: Service cookie file exists $service_cookie_file");
             $ts = filemtime($dir . $service_cookie_file);
-        // read cookie file
+            // read cookie file
             $fh = @fopen($dir . $service_cookie_file, 'r');
             if ($fh === false) {
                 $this->cosign_debug("$service: Cannot read cookie file $service_cookie_file");
@@ -200,9 +200,9 @@ class cosign
                 fclose($fh);
             }
 
-    // cookie file still valid?
+            // cookie file still valid?
             if ($ts + $this->settings['IDLE_TIME'] >= time()) {
-            // check client IP address and factors
+                // check client IP address and factors
                 if (
                         $this->cosign_cfg['CosignCheckIP'] == 'always' &&
                     !(strpos($_SERVER['REMOTE_ADDR'], ':') !== false &&
@@ -212,12 +212,12 @@ class cosign
                     strcasecmp($cf['i'], $_SERVER['REMOTE_ADDR']) == 0)
                 ) {
                     $this->cosign_debug("$service: IP address changed from {$cf['i']} to {$_SERVER['REMOTE_ADDR']}, user {$cf['p']}");
-                // falout to cosign netcheck
+                    // falout to cosign netcheck
                 } elseif (
                             !empty($this->cosign_cfg['CosignRequireFactor']) &&
                             !$this->cosign_check_factors($cf['f'])
                 ) {
-                  // falout to cosign netcheck
+                    // falout to cosign netcheck
                 } else {
                     $this->cosign_debug("$service: Service cookie file valid");
                     $_SERVER['REMOTE_REALM'] = $cf['r'];
@@ -228,7 +228,7 @@ class cosign
                     if (isset($cf['k'])) {
                         $_SERVER['KRB5CCNAME'] = $cf['k'];
                     }
-          // flush output buffer if started in our script
+                    // flush output buffer if started in our script
                     if ($obstart) {
                         ob_end_flush();
                     }
@@ -238,12 +238,12 @@ class cosign
                     return true;
                 }
             } else {
-// cookie file expired
+                // cookie file expired
                 $this->cosign_debug("$service: Service cookie file expired, revalidate it");
             }
         }
 
-  // no valid service cookie file and service cookie set
+        // no valid service cookie file and service cookie set
         $context = stream_context_create(array('ssl' => array('local_cert' => $this->cosign_cfg['CosignCryptoLocalCert'], 'capture_peer_cert' => true, 'capture_peer_chain' => true)));
         if (isset($this->cosign_cfg['CosignCryptoVerifyPeer'])) {
             stream_context_set_option($context, 'ssl', 'verify_peer', $this->cosign_cfg['CosignCryptoVerifyPeer']);
@@ -272,7 +272,7 @@ class cosign
                 return false;
             }
             stream_set_timeout($sock, $this->settings['SOCKET_TIMEOUT']);
-    // 220 2 Collaborative Web Single Sign-On [COSIGNv3 REKEY ...]
+            // 220 2 Collaborative Web Single Sign-On [COSIGNv3 REKEY ...]
             $response = trim(stream_get_line($sock, 1024, "\r\n"));
             $this->cosign_debug("$service: Server response: $response");
             if ($response === false || $response === '' || $response[0] != '2') {
@@ -344,7 +344,7 @@ class cosign
             return false;
         }
 
-  // set nonblocking reading from stream for protocol v0
+        // set nonblocking reading from stream for protocol v0
         if ($proto <= 1) {
             stream_set_blocking($sock, false);
             stream_set_timeout($sock, 1);  // 1 second
@@ -361,7 +361,7 @@ class cosign
             stream_set_timeout($sock, $this->settings['SOCKET_TIMEOUT']);
         }
 
-  // check peer certificate
+        // check peer certificate
         $opts = stream_context_get_options($sock);
         if (!isset($opts['ssl']['peer_certificate'])) {
             $this->cosign_debug("$service: No cosign server certificate returned");
@@ -379,7 +379,7 @@ class cosign
             return false;
         }
 
-  // send check request
+        // send check request
         if ($rekey_service) {
             if (!$sup_rekey) {
                 $this->cosign_debug("$service: Cosign server doesn't support REKEY");
@@ -409,7 +409,7 @@ class cosign
             fclose($sock);
             $this->cosign_set_cookie_and_redirect($dest);
         }
-  // XXX proxy
+        // XXX proxy
         $this->cosign_debug("$service: Response from cosign server - cookie valid");
         $code = explode(' ', $response);
         if ($rekey_service) {
@@ -474,7 +474,7 @@ class cosign
             $cf['f'] = '';
         }
 
-  // check client IP address
+        // check client IP address
         if (
             ($this->cosign_cfg['CosignCheckIP'] == 'always' ||
             $newfile && $this->cosign_cfg['CosignCheckIP'] == 'initial') &&
@@ -497,7 +497,7 @@ class cosign
                 $this->cosign_debug("$service: Server doesn't support required factors");
                 return false;
             }
-    // try again?
+            // try again?
             $this->cosign_set_cookie_and_redirect();
         }
         if ($newfile) {
@@ -609,7 +609,7 @@ class cosign
         if (isset($cf['k'])) {
             $_SERVER['KRB5CCNAME'] = $cf['k'];
         }
-  // flush output buffer
+        // flush output buffer
         if ($obstart) {
             ob_end_flush();
         }
@@ -625,7 +625,7 @@ class cosign
 
         if ($url) {
             $this->cosign_debug("CosignFilter: REKEY failed, retry $url");
-        // check POST request expiration
+            // check POST request expiration
         } elseif (
             strcasecmp($_SERVER['REQUEST_METHOD'], 'post') == 0 &&
             isset($this->cosign_cfg['CosignPostErrorRedirect']) and !isset($_POST['cosignlogin'])
@@ -679,7 +679,7 @@ class cosign
         }
         ob_end_clean();
         header('Location: ' . $url);
-  // clean output buffer
+        // clean output buffer
         exit();
     }
 

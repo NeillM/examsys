@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -35,7 +35,7 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string)
 {
     $configObject = Config::get_instance();
 
-  // Get the paper properties
+    // Get the paper properties
     $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $db, $string, false);
     if ($propertyObj == false) {  // No properties found
         unlink($configObject->get('cfg_tmpdir') . $userObj->get_user_ID() . '_osce_marks.csv');
@@ -46,7 +46,7 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string)
     $paper_date = $propertyObj->get_raw_start_date();
     $marking    = $propertyObj->get_marking();
 
-  // Get the questions on the paper.
+    // Get the questions on the paper.
     $paper = array();
     $question_no = 0;
     $result = $db->prepare('SELECT question, marks_correct FROM papers, options WHERE paper = ? AND papers.question = options.o_id ORDER BY screen, display_pos');
@@ -61,7 +61,7 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string)
 
     $moduleIDs = implode(',', array_keys(Paper_utils::get_modules($paperID, $db)));
 
-  // Get student data.
+    // Get student data.
     $students = array();
     $result = $db->prepare("SELECT users.id, student_id, username, yearofstudy, grade FROM users, sid, modules_student WHERE users.id = sid.userID AND users.id = modules_student.userID AND idMod IN ($moduleIDs) AND calendar_year = ?");
     $result->bind_param('s', $session);
@@ -118,7 +118,7 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string)
 
                 echo "<li>$sid -&gt; " . $students[$sid]['username'] . ", $question_no</li>";
 
-              // Record overall student/station details.
+                // Record overall student/station details.
                 $result = $db->prepare('SELECT id FROM users WHERE username = ? LIMIT 1');
                 $fields[$question_no + 1] = trim($fields[$question_no + 1]);
                 $result->bind_param('s', $fields[$question_no + 1]);
@@ -133,7 +133,7 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string)
                     $examinerID = $userObj->get_user_ID();
                 }
 
-              // Create empty overall record
+                // Create empty overall record
                 $result = $db->prepare("INSERT INTO log4_overall VALUES(NULL, ?, ?, ?, 0, 0, '', ?, ?, 'paper', ?)");
                 $result->bind_param('isisii', $students[$sid]['id'], $paper_date, $paperID, $students[$sid]['grade'], $examinerID, $students[$sid]['year']);
                 $res = $result->execute();
@@ -145,7 +145,7 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string)
                 if ($save_ok) {
                     $log4_overall_id = $db->insert_id;
 
-                  // Record individual questions.
+                    // Record individual questions.
                     $numeric_score = 0;
                     $result = $db->prepare('INSERT INTO log4 VALUES(NULL, ?, ?, NULL, ?)');
                     for ($q = 1; $q <= $question_no; $q++) {
@@ -169,7 +169,7 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string)
                                   $cat2no = array('fail' => 1,'borderline fail' => 2,'borderline pass' => 3,'pass' => 4,'good pass' => 5);
                                 break;
                             case '5':
-                              //automatic
+                                //automatic
                                 $cat2no = array('unsatisfactory' => 1,'competent' => 2);
                                 break;
                             case '6':
@@ -202,15 +202,15 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string)
                 }
 
                 if ($save_ok === false) {
-                  // rollback
+                    // rollback
                     $db->rollback();
                     echo "<li style=\"color:C00000\">$sid -&gt; " . sprintf($string['saveerror'], $sid) . '</li>';
                 } else {
-                  // commit the updates to the log tables
+                    // commit the updates to the log tables
                     $db->commit();
                 }
 
-            //turn auto commit back on so future queries function as before
+                //turn auto commit back on so future queries function as before
                 $db->autocommit(true);
             } else {
                 echo "<li style=\"color:#C00000\">$sid -&gt; {$string['usernotfound']}</li>";
@@ -254,14 +254,14 @@ require '../include/paper_options.php';
     <div class="head_title">
         <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
       <?php
-      // Create page breadcrumbs.
+        // Create page breadcrumbs.
         echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
         if ($folderID != '') {
             echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../folder/index.php?folder=' . $folderID . '">' . folder_utils::get_folder_name($folderID, $mysqli) . '</a>';
             echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?folder=' . $folderID . '&paperID=' . $paperID . '">' . $properties->get_paper_title() . '</a>';
         } else {
             if (is_null($moduleID)) {
-              // Get the modules from paper properties
+                // Get the modules from paper properties
                 $modules = Paper_utils::get_modules($paperID, $mysqli);
                 $moduleID = key($modules);
             }
@@ -270,7 +270,7 @@ require '../include/paper_options.php';
             echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../paper/details.php?module=' . $moduleID . '&paperID=' . $paperID . '">' . $properties->get_paper_title() . '</a>';
         }
 
-      // Display page title.
+        // Display page title.
         echo '</div><div class="page_title">' . $string['importoscemarks'] . '</div>';
         ?>
     </div>

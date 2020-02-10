@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../include/errors.php';
@@ -76,7 +76,7 @@ if (isset($_POST['submit'])) {
     header('location: ' . $configObject->get('cfg_root_path') . '/mapping/sessions_list.php?module=' . $modID);
     exit();
 } else {
-  // Display the form
+    // Display the form
     ?>
 <!DOCTYPE html>
 <html>

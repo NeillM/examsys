@@ -15,37 +15,37 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Class to manage logging changes to questions etc.
-*
-* @author Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Class to manage logging changes to questions etc.
+ *
+ * @author Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 class Logger
 {
     private $_mysqli;
 
-  /**
-   * Create a new logger object
-   * @param db_link $mysqli Reference to database connection
-   */
+    /**
+     * Create a new logger object
+     * @param db_link $mysqli Reference to database connection
+     */
     function __construct($mysqli)
     {
         $this->_mysqli = $mysqli;
     }
 
-  /**
-   * Save a change to the change log table
-   * @param string $message Log message describing the change
-   * @param integer $object_id ID of object to which the change applies
-   * @param integer $user_id ID of user making the change
-   * @param string $orig_val Original value of the changed field
-   * @param string $new_val New value of the changed field
-   * @param string $part Scope of change
-   * @return boolean Success or failure of the database operation
-   */
+    /**
+     * Save a change to the change log table
+     * @param string $message Log message describing the change
+     * @param integer $object_id ID of object to which the change applies
+     * @param integer $user_id ID of user making the change
+     * @param string $orig_val Original value of the changed field
+     * @param string $new_val New value of the changed field
+     * @param string $part Scope of change
+     * @return boolean Success or failure of the database operation
+     */
     public function track_change($message, $object_id, $user_id, $orig_val, $new_val, $part)
     {
         $success = true;
@@ -73,17 +73,17 @@ class Logger
         return $success;
     }
 
-  /**
-   * Enter description here ...
-   * @param string $message Log message describing the change
-   * @param integer $object_id ID of object to which the change applies
-   * @param integer $user_id ID of user making the change
-   * @param string $orig_val Original value of the changed field
-   * @param string $new_val New value of the changed field
-   * @param string $part Scope of change
-   * @param boolean $changes Indication of whether there are changes to the system. Set to true if we have logged a change here, otherwise unaltered
-   * @return boolean Success or failure of the database operation
-   */
+    /**
+     * Enter description here ...
+     * @param string $message Log message describing the change
+     * @param integer $object_id ID of object to which the change applies
+     * @param integer $user_id ID of user making the change
+     * @param string $orig_val Original value of the changed field
+     * @param string $new_val New value of the changed field
+     * @param string $part Scope of change
+     * @param boolean $changes Indication of whether there are changes to the system. Set to true if we have logged a change here, otherwise unaltered
+     * @return boolean Success or failure of the database operation
+     */
     public function check_and_track_change($message, $object_id, $user_id, $orig_val, $new_val, $part, &$changes)
     {
         $success = true;
@@ -96,15 +96,15 @@ class Logger
         return $success;
     }
 
-  /**
-   * Get all the changes from the log table for a given type of object
-   * @param  string $type      The type of object we want to examine
-   * @param  integer $typeID   ID of a particular object of type $type
-   * @param  mixed  $callbacks An array of callbacks that may be triggered for a
-   *                           particular 'part' or type of change in the format
-   *                           array(<part name> => <callback>)
-   * @return array             The list of changes
-   */
+    /**
+     * Get all the changes from the log table for a given type of object
+     * @param  string $type      The type of object we want to examine
+     * @param  integer $typeID   ID of a particular object of type $type
+     * @param  mixed  $callbacks An array of callbacks that may be triggered for a
+     *                           particular 'part' or type of change in the format
+     *                           array(<part name> => <callback>)
+     * @return array             The list of changes
+     */
     public function get_changes($type, $typeID, $callbacks = '')
     {
         $change_data = array();
@@ -117,7 +117,7 @@ class Logger
         while ($result->fetch()) {
             $change_data[] = array('title' => $title, 'initials' => $initials, 'surname' => $surname, 'old' => $old, 'new' => $new, 'part' => $part, 'date' => $changed);
 
-          // Fire callback if defined for this part type
+            // Fire callback if defined for this part type
             if (is_array($callbacks) and isset($callbacks[$part])) {
                 call_user_func($callbacks[$part], $old, $new);
             }
@@ -127,13 +127,13 @@ class Logger
         return $change_data;
     }
 
-  /**
-   * Record that a user tried to access a page and tried to was denied access.
-   *
-   * @param int $user_id The internal rogo id of the user
-   * @param string $title The type of error
-   * @param string $msg Details about why the user was denied access
-   */
+    /**
+     * Record that a user tried to access a page and tried to was denied access.
+     *
+     * @param int $user_id The internal rogo id of the user
+     * @param string $title The type of error
+     * @param string $msg Details about why the user was denied access
+     */
     public function record_access_denied($user_id, $title, $msg)
     {
         $current_address = NetworkUtils::get_client_address();
@@ -143,7 +143,7 @@ class Logger
         $path = str_replace($configObject->get('cfg_web_root'), '', $_SERVER['SCRIPT_FILENAME']);
 
         if (isset($_SERVER['QUERY_STRING'])) {
-          // The page has a query part for it's URL.
+            // The page has a query part for it's URL.
             $page = $path . '?' . $_SERVER['QUERY_STRING'];
         }
 
@@ -163,15 +163,15 @@ class Logger
         $result->close();
     }
 
-  /**
-   * Record application warning
-   * @param integer $userid id of user that had the error
-   * @param string $type type of error
-   * @param string $errorstring the error
-   * @param string $errorfile the file
-   * @param integer $errorline the line number
-   * @param array|string $variables variables to log
-   */
+    /**
+     * Record application warning
+     * @param integer $userid id of user that had the error
+     * @param string $type type of error
+     * @param string $errorstring the error
+     * @param string $errorfile the file
+     * @param integer $errorline the line number
+     * @param array|string $variables variables to log
+     */
     public function record_application_warning($userid, $type, $errorstring, $errorfile, $errorline, $variables = '')
     {
         if ($variables != '' and !is_string($variables)) {

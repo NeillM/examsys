@@ -25,10 +25,10 @@
 class OptionRANDOM extends OptionEdit
 {
 
-  /**
-   * Persist the object to the database
-   * @return boolean Success or failure of the save operation
-   */
+    /**
+     * Persist the object to the database
+     * @return boolean Success or failure of the save operation
+     */
     public function save($option_number = 0)
     {
         $success = false;
@@ -40,7 +40,7 @@ class OptionRANDOM extends OptionEdit
         $this->_data[1] = null;
           
         if ($valid === true) {
-          // If $id is -1 we're inserting a new record
+            // If $id is -1 we're inserting a new record
             if ($this->id == -1) {
                 $params = array_merge(array('issiisssddd'), $this->_data);
                 $query = <<< QUERY
@@ -48,7 +48,7 @@ INSERT INTO options(o_id, option_text, o_media, o_media_width, o_media_height, f
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 QUERY;
             } else {
-              // Otherwise we're updating an existing one
+                // Otherwise we're updating an existing one
                 $params = array_merge(array('issiisssdddi'), $this->_data, array(&$this->id));
                 $query = <<< QUERY
 UPDATE options
@@ -66,10 +66,10 @@ QUERY;
                     $this->id = $this->_mysqli->insert_id;
                     $this->track_new($logger, $option_number);
                 } else {
-                  // Log any changes
+                    // Log any changes
                     $this->save_changes($logger, $option_number);
                 }
-              // Insert reference into random_link table not option_text
+                // Insert reference into random_link table not option_text
                 $success = random_utils::insert_random_link($this->_data[0], $randomid, $this->_mysqli);
             }
             $result->close();

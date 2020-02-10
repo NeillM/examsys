@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/sysadmin_auth.inc';
 require '../include/sidebar_menu.inc';
@@ -98,7 +98,7 @@ if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
       
         $parts = explode('<img', $html);
         if (count($parts) > 0) {
-          // Got some images
+            // Got some images
             unset($parts[0]);
             foreach ($parts as $image_line) {
                 $second_split = explode('src="', $image_line);
@@ -125,11 +125,11 @@ if (isset($_POST['submit']) and isset($_POST['deletefiles'])) {
         die("Cannot open $default_dir.");
     }
     while ($file = readdir($dp)) {
-      // Ignore hidden files
+        // Ignore hidden files
         if (substr($file, 0, 1) != '.') {
             $file_array[$file] = 0;
             if (strpos($file, '.flv') !== false) {
-              // Set FLV files to used to protect them as they are indirectly referenced by SWF files.
+                // Set FLV files to used to protect them as they are indirectly referenced by SWF files.
                 $file_array[$file] = 1;
             }
         }

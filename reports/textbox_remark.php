@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../include/errors.php';
@@ -31,7 +31,7 @@ $paperID    = check_var('paperID', 'GET', true, false, true);
 $module = (isset($_GET['module']) and $_GET['module'] != '') ? $_GET['module'] : '';
 
 if (isset($_POST['submit'])) {
-  // Delete any previous remark records
+    // Delete any previous remark records
     $result = $mysqli->prepare('DELETE FROM textbox_remark WHERE paperID = ?');
     $result->bind_param('i', $paperID);
     $result->execute();
@@ -82,7 +82,7 @@ if (isset($_POST['submit'])) {
     
     echo draw_toprightmenu();
 
-  // Get some paper properties
+    // Get some paper properties
     $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
     
     $paper_total = $properties->get_total_mark();

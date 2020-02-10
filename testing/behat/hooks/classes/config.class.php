@@ -39,17 +39,17 @@ use Config as RogoConfig,
  */
 trait config
 {
-  /** @var Config A copy of the Rogo configuration object. */
+    /** @var Config A copy of the Rogo configuration object. */
     private static $rogo_config;
-  /** @var Config A copy of the Rogo configuration object that is not setup for behat. */
+    /** @var Config A copy of the Rogo configuration object that is not setup for behat. */
     private static $default_config;
 
-  /**
-   * Throws an exception if behat is not configured correctly.
-   *
-   * @return void
-   * @throws Exception
-   */
+    /**
+     * Throws an exception if behat is not configured correctly.
+     *
+     * @return void
+     * @throws Exception
+     */
     public static function check_config()
     {
         $config = RogoConfig::get_instance();
@@ -58,26 +58,26 @@ trait config
                 // Behat has not been configured, we should stop!
                 throw new Exception('Behat is not configured');
             }
-          // Checking the initial config of the site.
+            // Checking the initial config of the site.
             return;
         }
-      // Has the behat access url been configured?
+        // Has the behat access url been configured?
         $behatwebsite = $config->get('cfg_behat_website');
         if (empty($behatwebsite)) {
             throw new Exception('Behat website is not configured');
         }
-      // Has the behat database been configured, and is it different to the live database?
+        // Has the behat database been configured, and is it different to the live database?
         $behatdatabase = $config->get('cfg_db_database');
         if (empty($behatdatabase) or $behatdatabase === self::$default_config->get('cfg_db_database')) {
             throw new Exception('Behat database is not configured');
         }
-      // Has a behat data directory been configured?
+        // Has a behat data directory been configured?
         $behatdatadir = $config->get('cfg_rogo_data');
         if (empty($behatdatadir) or $behatdatadir === self::$default_config->get('cfg_rogo_data')) {
             throw new Exception('Behat user data directory is not configured');
         }
-      // We got this far everything is good.
-      // Set db in config.
+        // We got this far everything is good.
+        // Set db in config.
         $config->db = state::get_db();
     }
 }

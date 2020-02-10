@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../include/errors.php';
@@ -76,7 +76,7 @@ if (!isset($_POST['submit'])) {
     $result->bind_result($property_id, $paper_title, $start_date, $end_date, $paper_type);
     while ($result->fetch()) {
         if (($paper_type == '2' or $paper_type == '4') and $end_date != '' and date('Y-m-d H:i:s') > $end_date) {
-          //echo "<tr><td style=\"width:20px\"><img src=\"../artwork/small_padlock.png\" width=\"18\" height=\"18\" alt=\"" . $string['warning'] . "\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\" disabled><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
+            //echo "<tr><td style=\"width:20px\"><img src=\"../artwork/small_padlock.png\" width=\"18\" height=\"18\" alt=\"" . $string['warning'] . "\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\" disabled><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
         } elseif ($start_date < date('Y-m-d H:i:s') and $end_date > date('Y-m-d H:i:s')) {
             echo '<tr><td style="width:20px"><img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" alt="' . $string['warning'] . "\" /></td><td><input type=\"radio\" name=\"property_id\" value=\"$paper_title\" disabled><span style=\"color:#808080\">$paper_title</span></td></tr>\n";
         } else {
@@ -100,7 +100,7 @@ if (!isset($_POST['submit'])) {
         $vle_api_data = MappingUtils::get_vle_api($_GET['module'], $yearutils->get_current_session(), $vle_api_cache, $mysqli);
     }
 
-  // Get the maximum display position for an existing paper.
+    // Get the maximum display position for an existing paper.
     $result = $mysqli->prepare('SELECT MAX(display_pos), MAX(screen) FROM papers WHERE paper = ?');
     $result->bind_param('i', $property_id);
     $result->execute();
@@ -121,7 +121,7 @@ if (!isset($_POST['submit'])) {
         $display_pos++;
 
         if ($map_outcomes) {
-          // Make sure that paper is on the module we're copying from
+            // Make sure that paper is on the module we're copying from
             $paper_modules = $properties->get_modules();
 
             if (in_array($_GET['module'], array_keys($paper_modules))) {
@@ -146,15 +146,15 @@ if (!isset($_POST['submit'])) {
         }
 
         if (count($map_guid) > 0) {
-          // Get the mappings for the module in the paper's academic year
+            // Get the mappings for the module in the paper's academic year
             $calendar_year = $properties->get_calendar_year();
             $outcomes = $qbank->get_outcomes($calendar_year, $vle_api_data);
       
             foreach (array_keys($map_guid) as $guid) {
-              // Get the IDs of the outcomes for the GUIDs we've been passed
+                // Get the IDs of the outcomes for the GUIDs we've been passed
                 if (isset($outcomes[$guid])) {
                     foreach ($outcomes[$guid]['ids'] as $obj_id) {
-                    // Add new relationship records for the paper and question
+                        // Add new relationship records for the paper and question
                         $sql = 'INSERT INTO relationships(idMod, paper_id, question_id, obj_id, calendar_year, vle_api, map_level) VALUES(?, ?, ?, ?, ?, ?, ?)';
                         $addRel = $mysqli->prepare($sql);
                         $addRel->bind_param('iiiissi', $_GET['module'], $property_id, $q_IDs[$i], $obj_id, $calendar_year, $vle_api_data['api'], $vle_api_data['level']);

@@ -34,10 +34,10 @@ $session = param::required('session', param::INT, param::FETCH_POST);
 $userid = param::required('userID', param::INT, param::FETCH_POST);
 
 for ($attempt = 1; $attempt <= 3; $attempt++) {
-  // Clear the student of all modules.
+    // Clear the student of all modules.
     UserUtils::clear_student_modules_by_userID($userid, $session, $attempt, $mysqli);
 
-  // Insert a record for each module.
+    // Insert a record for each module.
     for ($i = 0; $i <= $mod_count; $i++) {
         $postmod = param::optional('mod' . $attempt . '_' . $i, '', param::TEXT, param::FETCH_POST);
         if ($postmod != '') {

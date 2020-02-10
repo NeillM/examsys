@@ -15,10 +15,10 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Question Render package
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2018 onwards The University of Nottingham
-*/
+ * Question Render package
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2018 onwards The University of Nottingham
+ */
 
 /**
  * Question rendering helper class.
@@ -26,28 +26,28 @@
 class questionrender
 {
 
-  /**
-   * Config object
-   * @var object
-   */
+    /**
+     * Config object
+     * @var object
+     */
     protected $config;
 
-  /**
-   * Question data class
-   * @var class
-   */
+    /**
+     * Question data class
+     * @var class
+     */
     public $questiondata;
 
-  /**
-   * Fields to override on rendering
-   * @var mixed[]
-   */
+    /**
+     * Fields to override on rendering
+     * @var mixed[]
+     */
     protected $override_fields;
 
-  /**
-   * Constructor
-   * @param string $qtype question type
-   */
+    /**
+     * Constructor
+     * @param string $qtype question type
+     */
     function __construct($qtype)
     {
         $this->config = Config::get_instance();
@@ -55,41 +55,41 @@ class questionrender
         $this->override_fields = [];
     }
 
-  /**
-   * Add to override list
-   * @param string $field_name Name of field to override in questiondata class
-   * @param mixed $value Value to override
-   */
+    /**
+     * Add to override list
+     * @param string $field_name Name of field to override in questiondata class
+     * @param mixed $value Value to override
+     */
     function add_override($field_name, $value)
     {
         $this->override_fields[$field_name] = $value;
     }
 
-  /**
-   * Remove from override list
-   * @param string $field_name Name of field to remove from overrides
-   * @param mixed $value Value to override
-   */
+    /**
+     * Remove from override list
+     * @param string $field_name Name of field to remove from overrides
+     * @param mixed $value Value to override
+     */
     function remove_override($field_name)
     {
         unset($this->override_fields[$field_name]);
     }
 
-  /**
-   * Render question
-   * @global array $used_questions user log data for questions
-   * @global array $user_dismiss user dismiss data for questions
-   * @global array $user_order the order the user gets the question options
-   * @global string $language system language
-   * @param boolean $screen_pre_submitted has the user been on this screen before
-   * @param integer $q_displayed loop id of question
-   * @param string $string language strings
-   * @param array $question question data
-   * @param integer $pid paper id
-   * @param integer $current_screen current screen id
-   * @param integer $question_no current question number
-   * @param array $user_answers users answers
-   */
+    /**
+     * Render question
+     * @global array $used_questions user log data for questions
+     * @global array $user_dismiss user dismiss data for questions
+     * @global array $user_order the order the user gets the question options
+     * @global string $language system language
+     * @param boolean $screen_pre_submitted has the user been on this screen before
+     * @param integer $q_displayed loop id of question
+     * @param string $string language strings
+     * @param array $question question data
+     * @param integer $pid paper id
+     * @param integer $current_screen current screen id
+     * @param integer $question_no current question number
+     * @param array $user_answers users answers
+     */
     public function display_question($screen_pre_submitted, $q_displayed, $string, &$question, $pid, $current_screen, &$question_no, $user_answers)
     {
 
@@ -114,7 +114,7 @@ class questionrender
             }
         }
         $render->render($this->questiondata, $string, 'paper/question_header.html');
-      // Plugin question use there own templating for question body.
+        // Plugin question use there own templating for question body.
         $this->questiondata->render_question($render, $string);
     }
 }

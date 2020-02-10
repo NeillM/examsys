@@ -76,11 +76,11 @@ $csvdata = array();
 
 if ($student_no > 0) {
     $log_array = $propertyObj->get_paper_assessment_data($repcourse, $startdate, $enddate, $student_list, $studentonly, $demo);
-  // Header.
+    // Header.
     $export->create_dynamic_header($paper_buffer, $exclusions);
-  // Correct answers line.
+    // Correct answers line.
     $csvdata = $export->create_correct_answer($paper_buffer, $exclusions, $mode, $string, $language);
-  // Data lines.
+    // Data lines.
     $csvdata = array_merge($csvdata, $export->create_data($log_array, $paper_buffer, $exclusions, $mode, $string, $language));
 } else {
     $export->dynamic_headers = array();

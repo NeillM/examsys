@@ -15,14 +15,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Set of mapping functions used to map questions to objectives
-*
-* @author Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Set of mapping functions used to map questions to objectives
+ *
+ * @author Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 /**
  * This is function displayObjectivesMappingForm it displays objectives by session
@@ -36,7 +36,7 @@ function render_objectives_mapping_form($db, $paper_id, &$string)
 {
     global $vle_api_cache;
 
-  // Get module and session from paper ID.
+    // Get module and session from paper ID.
     $modules_array = array();
     $query = <<<QUERY
 SELECT DISTINCT m.moduleid, pm.idMod, p.calendar_year, p.paper_type FROM properties p INNER JOIN properties_modules pm ON p.property_id = pm.property_id INNER JOIN modules m ON pm.idMod = m.id WHERE p.property_id = ?
@@ -208,7 +208,7 @@ function save_objective_mappings($db, $modules, $paper_id, $question_id)
                 }
 
                 if ($new_mappings != $old_mappings) {
-                  // prepend the delete
+                    // prepend the delete
                     if ($old_mappings != '') {
                         $delete = "DELETE FROM relationships WHERE idMod = $idMod AND paper_id = $paper_id AND question_id = $question_id AND calendar_year = '$session' AND vle_api= '$vle_api'";
                         if (!$result = $db->query($delete)) {
@@ -272,13 +272,13 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
     }
 
     foreach ($module_list as $thisidMod => $thisModuleid) {
-      // Get which API to use to get the learning objectives
+        // Get which API to use to get the learning objectives
         $vle_api_data = MappingUtils::get_vle_api($thisidMod, $session, $vle_api_cache, $db);
         $vle_api = $vle_api_data['api'];
         $map_level = $vle_api_data['level'];
 
         if ($vle_api != '') {
-          // Get objectives from the Curriculum Map via REST request
+            // Get objectives from the Curriculum Map via REST request
             if (!isset($objsBySession_cache[$thisModuleid]) or !isset($objsBySession_cache[$thisModuleid][$session])) {
                 $vle = CMFactory::GetCMAPI($vle_api);
                 $vle->setMappingLevel($map_level);
@@ -294,7 +294,7 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
                 $objsBySession[$thisModuleid] = $objsBySession_cache[$thisModuleid][$session][$thisModuleid];
             }
         } else {
-          // Use Rogō's internally stored objectves
+            // Use Rogō's internally stored objectves
             if ($scope == 'all') {
                 $sql = "SELECT sess_id, identifier, idMod, title, source_url, calendar_year, DATE_FORMAT(occurrence,' {$configObject->get('cfg_short_date')}') AS occurrence FROM sessions WHERE idMod = ? ORDER BY calendar_year, sess_id";
                 $stmt = $db->prepare($sql);
@@ -324,7 +324,7 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
 
             $stmt->close();
             if (isset($objsBySession[$thisModuleid]) and count($objsBySession[$thisModuleid]) > 0) {
-              // Get internal objectives from Rogo.
+                // Get internal objectives from Rogo.
                 $sql = 'SELECT obj_id, objective, sequence FROM objectives WHERE identifier=? AND calendar_year = ? ORDER BY sequence';
                 $stmt = $db->prepare($sql);
                 foreach ($objsBySession[$thisModuleid] as $identifier => $sess) {
@@ -345,7 +345,7 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
         }
     }
 
-  //START:: get the currently mapped objectives in Rogo.
+    //START:: get the currently mapped objectives in Rogo.
     $mapped = array();
     if ($questionID != '') {
         $rels = Relationship::find($db, array_keys($original_thisModuleid), $session, $paperID, explode(',', $questionID));
@@ -357,9 +357,9 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
             echo 'Error: ' . $db->error;
         }
     }
-  //END:: get the currently mapped objetives in Rogo
+    //END:: get the currently mapped objetives in Rogo
 
-  // Get all the objetives
+    // Get all the objetives
     foreach ($objsBySession as $moduleid => $sessions) {
         if (!empty($sessions)) {
             foreach ($sessions as $identifier => $tmp_session) {
@@ -377,7 +377,7 @@ function getObjectives($thisModuleid, $session, $paperID, $questionID, $db, $sco
         }
     }
 
-  // Check for none of the above
+    // Check for none of the above
     if (isset($mapped[-1])) {
         $objsBySession['none_of_the_above']['mapped'] = 1;
     }
@@ -448,13 +448,13 @@ function copyObjectives($objectives, $idMod, $module, $dest_session, $db)
             throw new Exception($err);
         }
 
-    // Get starting point for objective ID
+        // Get starting point for objective ID
         $obj_id = mappingutils::get_objectives_start();
 
-    // Loop through the objectives for the original session
+        // Loop through the objectives for the original session
         if (isset($session['objectives'])) {
             foreach ($session['objectives'] as $objective) {
-            // Save them against the new session identifier
+                // Save them against the new session identifier
                 $stmt = $db->prepare('INSERT INTO objectives(obj_id, objective, idMod, identifier, calendar_year, sequence) VALUES (?, ?, ?, ?, ?, ?)');
                 $stmt->bind_param('isissi', $obj_id, $objective['content'], $idMod, $identifier, $dest_session, $objective['sequence']);
                 $stmt->execute();

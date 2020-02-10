@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* function used by the add question scripts
-*
-* @author Simon Wilkinson, Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * function used by the add question scripts
+ *
+ * @author Simon Wilkinson, Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once 'errors.php';
 
@@ -43,7 +43,7 @@ function clearMSOtags($sHTML)
             $allowedTags = '<div><b><i><strong><em><sup><sub><table><tr><td><tbody><th>';
             $sHTML = strip_tags($sHTML, $allowedTags);
         }
-      // Further processing.
+        // Further processing.
         $sHTML = str_ireplace('PADDING-TOP: 0cm', '', $sHTML);
         $sHTML = str_ireplace('PADDING-BOTTOM: 0cm', '', $sHTML);
         $sHTML = str_ireplace('BACKGROUND-COLOR: transparent;', '', $sHTML);
@@ -51,12 +51,12 @@ function clearMSOtags($sHTML)
         $sHTML = str_ireplace('<strong></strong>', '', $sHTML);
         $sHTML = str_ireplace('COLOR: black', '', $sHTML);
 
-      // Convert strange codes.
+        // Convert strange codes.
         $sHTML = str_ireplace('%u2013', '-', $sHTML);
         $sHTML = str_ireplace('%u2018', "'", $sHTML);
         $sHTML = str_ireplace('%u2019', "'", $sHTML);
 
-      // Some regular expressions
+        // Some regular expressions
         $sHTML = preg_replace('/FONT-SIZE: [0-9]+pt/', '', $sHTML);
         $sHTML = preg_replace('/FONT-FAMILY: [\'a-zA-Z 0-9,]*/', '', $sHTML);
         $sHTML = preg_replace('/FONT: [0-9]+pt/', '', $sHTML);
@@ -65,7 +65,7 @@ function clearMSOtags($sHTML)
         $sHTML = preg_replace('/lang="[\-A-Za-z]*"/', '', $sHTML);
         $sHTML = preg_replace('/mso-[\-A-Za-z]+: [_\. \'#\-A-Za-z0-9,]+/', '', $sHTML);
 
-      // Do at end.
+        // Do at end.
         $sHTML = str_ireplace('  ', ' ', $sHTML);
         $sHTML = str_ireplace(' ;', '', $sHTML);
         $sHTML = str_ireplace('style="; ', 'style="', $sHTML);
@@ -181,7 +181,7 @@ HTML;
 
 HTML;
     } else {
-      // Shouldn't happen if we're recording question creation as a change
+        // Shouldn't happen if we're recording question creation as a change
         $html = <<< HTML
         <p>{$string['nochangesrecorded']}</p>
 

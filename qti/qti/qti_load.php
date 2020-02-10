@@ -37,7 +37,7 @@ class IE_qti_Load extends IE_Main
 
         $xml_files = array();
 
-      //print_p($params);
+        //print_p($params);
         $this->params = $params;
         $import_directory = $params->base_dir . $params->dir . '/';
 
@@ -125,7 +125,7 @@ class IE_qti_Load extends IE_Main
         $result = new stdClass();
         $result->questions = array();
 
-      // process qti 1.2 files
+        // process qti 1.2 files
         foreach ($files['qti12'] as $filename => $fullpath) {
             $qti12 = new IE_QTI12_Load();
 

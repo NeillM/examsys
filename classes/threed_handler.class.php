@@ -23,10 +23,10 @@
 class threed_handler extends media_handler
 {
 
-  /**
-   * Render three js files
-   * @param $string translation array
-   */
+    /**
+     * Render three js files
+     * @param $string translation array
+     */
     public static function render_js($string)
     {
         $configObject = Config::get_instance();
@@ -35,10 +35,10 @@ class threed_handler extends media_handler
         $render->render($data, $string, 'threejs.html');
     }
 
-  /**
-   * Get the js files required to load 3D images.
-   * @return array
-   */
+    /**
+     * Get the js files required to load 3D images.
+     * @return array
+     */
     public static function get_js()
     {
         $js = array(
@@ -47,10 +47,10 @@ class threed_handler extends media_handler
         return $js;
     }
 
-  /**
-   * Get the css files required to load 3D images.
-   * @return array
-   */
+    /**
+     * Get the css files required to load 3D images.
+     * @return array
+     */
     public static function get_css()
     {
         return array('/css/three.css');

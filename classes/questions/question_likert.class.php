@@ -55,31 +55,31 @@ class QuestionLIKERT extends QuestionEdit
         $this->get_all_custom_scales();
     }
   
-  // ACCESSORS
+    // ACCESSORS
   
-  /**
-   * Get the range of available scale types for the question
-   * @return multitype
-   */
+    /**
+     * Get the range of available scale types for the question
+     * @return multitype
+     */
     public function get_scale_types()
     {
         return $this->_scale_types;
     }
   
-  /**
-   * Get the question scale type
-   * @return string
-   */
+    /**
+     * Get the question scale type
+     * @return string
+     */
     public function get_scale_type()
     {
         $this->get_display_method();
         return $this->scale_type;
     }
 
-  /**
-   * Set the scale type for the question
-   * @param unknown_type $value
-   */
+    /**
+     * Set the scale type for the question
+     * @param unknown_type $value
+     */
     public function set_scale_type($value)
     {
         if ($value != $this->get_scale_type()) {
@@ -89,20 +89,20 @@ class QuestionLIKERT extends QuestionEdit
         $this->set_display_method('dummy');
     }
   
-  /**
-   * Get whether 'not applicable' should be applied to scales for this question
-   * @return string
-   */
+    /**
+     * Get whether 'not applicable' should be applied to scales for this question
+     * @return string
+     */
     public function get_not_applicable()
     {
         $this->get_display_method();
         return $this->not_applicable;
     }
 
-  /**
-   * Set whether 'not applicable' should be applied to scales for this question
-   * @param unknown_type $value
-   */
+    /**
+     * Set whether 'not applicable' should be applied to scales for this question
+     * @param unknown_type $value
+     */
     public function set_not_applicable($value)
     {
         $value = ($value === 'on') ? 'true' : 'false';
@@ -113,11 +113,11 @@ class QuestionLIKERT extends QuestionEdit
         $this->set_display_method('dummy');
     }
   
-  /**
-   * Get the custom scale values for this question. This is the same as scale_type if set. Compound field is required to
-   * allow values to be saved using the same model as other question types
-   * @return multitype:string
-   */
+    /**
+     * Get the custom scale values for this question. This is the same as scale_type if set. Compound field is required to
+     * allow values to be saved using the same model as other question types
+     * @return multitype:string
+     */
     public function get_all_custom_scales()
     {
         $scale = $this->get_scale_type();
@@ -128,10 +128,10 @@ class QuestionLIKERT extends QuestionEdit
         return $this->custom_scales;
     }
   
-  /**
-   * Compound the scale items into a string and set as scale type (and hence display method)
-   * @return multitype:
-   */
+    /**
+     * Compound the scale items into a string and set as scale type (and hence display method)
+     * @return multitype:
+     */
     public function set_all_custom_scales($value)
     {
         $scale = $this->get_scale_type();
@@ -141,10 +141,10 @@ class QuestionLIKERT extends QuestionEdit
         }
     }
   
-  /**
-   * Get the question display method, populating pseudo-properties as we go
-   * @return string
-   */
+    /**
+     * Get the question display method, populating pseudo-properties as we go
+     * @return string
+     */
     public function get_display_method()
     {
         if ($this->display_method != '') {
@@ -155,10 +155,10 @@ class QuestionLIKERT extends QuestionEdit
         return $this->display_method;
     }
   
-  /**
-   * Set the display method for the question - this is a composite of decimals, tolerance and units
-   * @param unknown_type $value
-   */
+    /**
+     * Set the display method for the question - this is a composite of decimals, tolerance and units
+     * @param unknown_type $value
+     */
     public function set_display_method($value)
     {
         $this->display_method = $this->scale_type . '|' . $this->not_applicable;
@@ -189,7 +189,7 @@ class QuestionLIKERT extends QuestionEdit
         return false;
     }
 
-  // PRIVATE FUNCTIONS
+    // PRIVATE FUNCTIONS
   
     private function array_trim($input)
     {

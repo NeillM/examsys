@@ -15,34 +15,34 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* A Class to hold functions designed to display notices to users. Including
-* access denied messages.
-*
-* @author Anthony Brown, Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ * A Class to hold functions designed to display notices to users. Including
+ * access denied messages.
+ *
+ * @author Anthony Brown, Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 class user_notices extends RogoStaticSingleton
 {
 
-  /**
-  * constructor
-  */
+    /**
+     * constructor
+     */
     public function __construct()
     {
     }
 
-  /**
-   * Displays a wide information bar with a yellow bar at the top.
+    /**
+     * Displays a wide information bar with a yellow bar at the top.
      * Used to display to the user that no questions were found in a
      * search, for example.
-   *
-   * @param string $msg    - The message to convey.
-   * @param int $font-size - An optional font size to use for the message.
+     *
+     * @param string $msg    - The message to convey.
+     * @param int $font-size - An optional font size to use for the message.
      * @return string - HTML to be echoed to the screen.
      *
-   */
+     */
     public function info_strip($msg, $font_size = 85)
     {
         $configObject = Config::get_instance();
@@ -55,16 +55,16 @@ class user_notices extends RogoStaticSingleton
         return $html;
     }
 
-  /**
-   * This function will output a message to the user
-   *
-   * @param string $title       - title to display
-   * @param string $msg         - string the message
-   * @param string $icon        - name of the icon image file
-   * @param string $title_color - color of the tile text
-   * @param bool $output_header - if true output opening HTML tags
-   * @param bool $output_footer - if true output closing HTML tags
-   */
+    /**
+     * This function will output a message to the user
+     *
+     * @param string $title       - title to display
+     * @param string $msg         - string the message
+     * @param string $icon        - name of the icon image file
+     * @param string $title_color - color of the tile text
+     * @param bool $output_header - if true output opening HTML tags
+     * @param bool $output_footer - if true output closing HTML tags
+     */
     public function display_notice($title, $msg, $icon, $title_color = 'black', $output_header = true, $output_footer = true)
     {
         $configObject = Config::get_instance();
@@ -98,32 +98,32 @@ class user_notices extends RogoStaticSingleton
         }
     }
 
-  /**
-   * This function will output an ajax response
-   *
-   * @param object $db database object
-   * @param string $title title to display
-   * @param string $msg string the message
-   */
+    /**
+     * This function will output an ajax response
+     *
+     * @param object $db database object
+     * @param string $title title to display
+     * @param string $msg string the message
+     */
     public function ajax_notice($title, $msg)
     {
         header('HTTP/1.1 403 Forbidden');
         echo '<b>' . $title . '</b><br/>' . $msg;
     }
 
-  /**
-   * This function will output a message to the user and exit php;
-   *
-   * @param mysqli|null $mysqli - gloable database object for add log data into database, if null, exception message will only be displayed then exit
-   * @param string $title       - string title to display
-   * @param string $msg         - string the message displayed on screen
-   * @param string $reason      - string the message displayed in the database
-   * @param string $icon        - name of the icon image file
-   * @param string $title_color - color of the tile text
-   * @param bool $output_header - if true output opening HTML tags
-   * @param bool $output_footer - if true output closing HTML tags
-   *
-   */
+    /**
+     * This function will output a message to the user and exit php;
+     *
+     * @param mysqli|null $mysqli - gloable database object for add log data into database, if null, exception message will only be displayed then exit
+     * @param string $title       - string title to display
+     * @param string $msg         - string the message displayed on screen
+     * @param string $reason      - string the message displayed in the database
+     * @param string $icon        - name of the icon image file
+     * @param string $title_color - color of the tile text
+     * @param bool $output_header - if true output opening HTML tags
+     * @param bool $output_footer - if true output closing HTML tags
+     *
+     */
     public function display_notice_and_exit($mysqli, $title, $msg, $reason, $icon, $title_color = 'black', $output_header = true, $output_footer = true)
     {
         if (!is_null($mysqli)) {
@@ -144,21 +144,21 @@ class user_notices extends RogoStaticSingleton
         exit;
     }
 
-  /**
-   * This function will exit php without notice.
-   */
+    /**
+     * This function will exit php without notice.
+     */
     public function exit_php()
     {
         exit;
     }
-  /**
-   * This function will output an access denied warning and terminate script
-   * execution
-   *
-   * @param string $message       - message to display
-   * @param string $output_header - if true output 401 headers
-   *
-   */
+    /**
+     * This function will output an access denied warning and terminate script
+     * execution
+     *
+     * @param string $message       - message to display
+     * @param string $output_header - if true output 401 headers
+     *
+     */
     public function access_denied($db, $string, $message, $output_header = false, $output_footer = true)
     {
         $this->display_notice_and_exit($db, $string['accessdenied'], $message, $message, '/artwork/access_denied.png', '#C00000', $output_header, $output_footer);

@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Creates a new user (staff or student).
-*
-* @author Simon Wilkinson / Richard Whitefoot (UEA)
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Creates a new user (staff or student).
+ *
+ * @author Simon Wilkinson / Richard Whitefoot (UEA)
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../include/admin_auth.inc';
 require_once '../include/mb_string.inc.php';
@@ -66,7 +66,7 @@ if ($submit) {
     $new_gender = check_var('new_gender', 'POST', false, false, true, param::ALPHANUM);
     $new_welcome = check_var('new_welcome', 'POST', false, false, true, param::BOOLEAN);
 
-  // Check for valid and unique username
+    // Check for valid and unique username
     $unique_username = UserUtils::username_is_valid($new_username) && !UserUtils::username_exists($new_username, $mysqli);
 }
 
@@ -77,7 +77,7 @@ if ($submit and $unique_username) {
     } else {
         $new_userID = UserUtils::create_user($new_username, $new_password, $new_users_title, $new_first_names, $new_surname, $new_email, $new_grade, $new_gender, $new_year, $new_roles, $new_sid, $mysqli);
 
-      // Send out email welcome.
+        // Send out email welcome.
         if (isset($new_welcome) and $new_welcome != '') {
             $result = $mysqli->prepare('SELECT email FROM users WHERE username = ?');
             $result->bind_param('s', $userObject->get_username());

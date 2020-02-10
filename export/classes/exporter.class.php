@@ -31,31 +31,31 @@ namespace export;
  */
 abstract class exporter
 {
-  /**
-   * The handler for the file
-   * @var object
-   */
+    /**
+     * The handler for the file
+     * @var object
+     */
     protected $handler;
 
-  /**
-   * The config object
-   * @var object
-   */
+    /**
+     * The config object
+     * @var object
+     */
     protected $config;
 
-  /**
-   * The constructor
-   * @param \file_handler $handler
-   */
+    /**
+     * The constructor
+     * @param \file_handler $handler
+     */
     public function __construct($handler)
     {
         $this->config = \Config::get_instance();
         $this->handler = $handler;
     }
 
-  /**
-   * Perform the export
-   * @param array $data export data
-   */
+    /**
+     * Perform the export
+     * @param array $data export data
+     */
     abstract public function execute($data);
 }

@@ -15,27 +15,27 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Class for the timer logic
-* @author Ben Parish
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ * Class for the timer logic
+ * @author Ben Parish
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 class Timer
 {
 
-  /** @var LogMetadata */
+    /** @var LogMetadata */
     private $log_start_time;
 
     private $exam_duration;
     private $start_datetime;
     private $special_needs_percentage;
 
-  /**
-   * @param LogStartTime $log_start_time
-   * @param int $exam_duration
-   */
+    /**
+     * @param LogStartTime $log_start_time
+     * @param int $exam_duration
+     */
     public function __construct($log_metadata, $exam_duration, $special_needs_percentage)
     {
         $this->log_start_time = $log_metadata;
@@ -43,38 +43,38 @@ class Timer
         $this->special_needs_percentage  = $special_needs_percentage;
     }
 
-  /**
-   * @return void
-   */
+    /**
+     * @return void
+     */
     public function start()
     {
         $metdataid = $this->log_start_time->get_metadata_id();
         $this->log_start_time->get_record($metadataID, true);
     }
 
-  /**
-   * @return bool
-   */
+    /**
+     * @return bool
+     */
     public function is_started()
     {
         return ($this->get_start_datetime() !== null);
     }
 
 
-  /**
-   * This never seems to be used.
-   *
-   * @deprecated since version 7.1.0
-   */
+    /**
+     * This never seems to be used.
+     *
+     * @deprecated since version 7.1.0
+     */
     public function reset()
     {
         $this->log_start_time->set_started_to_null();
         $this->start_datetime = null;
     }
 
-  /**
-   * @return int
-   */
+    /**
+     * @return int
+     */
     public function calculate_remaining_time()
     {
 
@@ -85,7 +85,7 @@ class Timer
             $exam_duration_secs += $exam_duration_secs * $this->special_needs_percentage / 100;
         }
 
-      // get existing start time or create a new one
+        // get existing start time or create a new one
         $start_datetime = $this->get_start_datetime();
 
         if ($start_datetime === null or $start_datetime === false) {
@@ -105,9 +105,9 @@ class Timer
         return ceil($remaining_time_secs);
     }
 
-  /**
-   * @return DateTime
-   */
+    /**
+     * @return DateTime
+     */
     public function get_start_datetime()
     {
 

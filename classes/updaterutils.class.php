@@ -15,14 +15,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Utility class for updater related functionality
-*
-* @author Ben Parish, Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Utility class for updater related functionality
+ *
+ * @author Ben Parish, Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 class UpdaterUtils
 {
@@ -30,19 +30,19 @@ class UpdaterUtils
     private $mysqli;
     private $db_name;
 
-  /** @var string Language component name. */
+    /** @var string Language component name. */
     protected $langcomponent = 'classes/updaterutils';
-  /** @var array language strings */
+    /** @var array language strings */
     protected $langstrings;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->mysqli = null;
     }
 
@@ -54,11 +54,11 @@ class UpdaterUtils
         $this->langstrings = $langpack->get_all_strings($this->langcomponent);
     }
   
-  /**
-   * Records a fix in the sys_updates table. This is the new system
-   * instead of the old stop files.
-   * @param string $name - The name of update to be inserted.
-   */
+    /**
+     * Records a fix in the sys_updates table. This is the new system
+     * instead of the old stop files.
+     * @param string $name - The name of update to be inserted.
+     */
     public function record_update($name)
     {
         $result  = $this->mysqli->prepare('INSERT INTO sys_updates VALUES (?, NOW())');
@@ -67,12 +67,12 @@ class UpdaterUtils
         $result->close();
     }
 
-  /**
-   * Determines if an update has already been applied to the system.
-   *
-   * @param string $name - The name of update to be tested.
-   * @return bool - True = fix has been applied, False = it hasn't.
-   */
+    /**
+     * Determines if an update has already been applied to the system.
+     *
+     * @param string $name - The name of update to be tested.
+     * @return bool - True = fix has been applied, False = it hasn't.
+     */
     public function has_updated($name)
     {
         $result  = $this->mysqli->prepare('SELECT name FROM sys_updates WHERE name = ?');
@@ -99,13 +99,13 @@ class UpdaterUtils
         return $num_rows;
     }
   
-  /**
-   * Determines if a table exists in the database.
-   *
-   * @param string $table_name - The name of the table to be tested.
-   *
-   * @return bool - True = table exists, False = table does not exist.
-   */
+    /**
+     * Determines if a table exists in the database.
+     *
+     * @param string $table_name - The name of the table to be tested.
+     *
+     * @return bool - True = table exists, False = table does not exist.
+     */
     public function does_table_exist($table_name)
     {
         $result  = $this->mysqli->prepare('SELECT table_name FROM information_schema.tables WHERE table_schema = ? AND table_name = ?');
@@ -123,15 +123,15 @@ class UpdaterUtils
         return true;
     }
 
-  /**
-   * Determines if a table, field and field type all exist in the database.
-   *
-   * @param string $table_name              - The name of the table to be tested.
-   * @param string $column_name             - The name of the field to be tested.
-   * @param string $column_type_value - The type of the field to be tested.
-   *
-   * @return bool - True = the table, field and field type are all match in the database.
-   */
+    /**
+     * Determines if a table, field and field type all exist in the database.
+     *
+     * @param string $table_name              - The name of the table to be tested.
+     * @param string $column_name             - The name of the field to be tested.
+     * @param string $column_type_value - The type of the field to be tested.
+     *
+     * @return bool - True = the table, field and field type are all match in the database.
+     */
     public function does_column_type_value_exist($table_name, $column_name, $column_type_value)
     {
         $result = $this->mysqli->prepare('SELECT column_type FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = ? AND column_type = ?');
@@ -165,14 +165,14 @@ class UpdaterUtils
         }
     }
 
-  /**
-   * Determines if a table and field exist in the database.
-   *
-   * @param string $table_name  - The name of the table to be tested.
-   * @param string $column_name - The name of the field to be tested.
-   *
-   * @return bool - True = the table/field exists in the database.
-   */
+    /**
+     * Determines if a table and field exist in the database.
+     *
+     * @param string $table_name  - The name of the table to be tested.
+     * @param string $column_name - The name of the field to be tested.
+     *
+     * @return bool - True = the table/field exists in the database.
+     */
     public function does_column_exist($table_name, $column_name)
     {
         $result = $this->mysqli->prepare('SELECT column_name FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = ?');
@@ -190,14 +190,14 @@ class UpdaterUtils
         return true;
     }
 
-  /**
-   * Determines if an index exists for a given table.
-   *
-   * @param string $table_name - The name of the table to be tested.
-   * @param string $index_name - The name of the index to be tested.
-   *
-   * @return bool - True = the index exists.
-   */
+    /**
+     * Determines if an index exists for a given table.
+     *
+     * @param string $table_name - The name of the table to be tested.
+     * @param string $index_name - The name of the index to be tested.
+     *
+     * @return bool - True = the index exists.
+     */
     public function does_index_exist($table_name, $index_name)
     {
         $result = $this->mysqli->prepare("SHOW INDEXES IN $table_name WHERE key_name = ?");
@@ -215,16 +215,16 @@ class UpdaterUtils
         return true;
     }
 
-  /**
-   * Determines if an index exists for a given table.
-   *
-   * @param string $table_name   - The name of the table to be tested.
-   * @param string $index_name   - The name of the index to be tested.
-   * @param string $index_column - Name of the column being indexed.
-   * @param int $index_sequence  - The column sequence number in the index (optional).
-   *
-   * @return bool - True = the index exists.
-   */
+    /**
+     * Determines if an index exists for a given table.
+     *
+     * @param string $table_name   - The name of the table to be tested.
+     * @param string $index_name   - The name of the index to be tested.
+     * @param string $index_column - Name of the column being indexed.
+     * @param int $index_sequence  - The column sequence number in the index (optional).
+     *
+     * @return bool - True = the index exists.
+     */
     public function does_index_column_exist($table_name, $index_name, $index_column, $index_sequence = null)
     {
         if (!is_null($index_sequence)) {
@@ -247,16 +247,16 @@ class UpdaterUtils
         return true;
     }
 
-  /**
-   * Checks if a particular DB user has a grant on a named table.
-   *
-   * @param string $user  - The database user.
-   * @param string $grant - The grant to be tested.
-   * @param string $table - The database table.
-   * @param string $host  - The database host name.
-   *
-   * @return bool - True = the grant exists for that user on the specified table.
-   */
+    /**
+     * Checks if a particular DB user has a grant on a named table.
+     *
+     * @param string $user  - The database user.
+     * @param string $grant - The grant to be tested.
+     * @param string $table - The database table.
+     * @param string $host  - The database host name.
+     *
+     * @return bool - True = the grant exists for that user on the specified table.
+     */
     public function has_grant($user, $grant, $table, $host)
     {
         $found_grant = '';
@@ -287,12 +287,12 @@ class UpdaterUtils
         }
     }
 
-  /**
-   * Runs an SQL statement against the database.
-   *
-   * @param string $sql                     - The SQL statement to run.
-   * @param bool $update_display    - If true then echo the SQL to the screen.
-   */
+    /**
+     * Runs an SQL statement against the database.
+     *
+     * @param string $sql                     - The SQL statement to run.
+     * @param bool $update_display    - If true then echo the SQL to the screen.
+     */
     public function execute_query($sql, $update_display)
     {
         $insertID = false;
@@ -339,12 +339,12 @@ class UpdaterUtils
         return $insertID;
     }
 
-  /**
-   * Check if update should be run againt installed version.
-   *
-   * @param string $version
-   * @return bool true if update should be run
-   */
+    /**
+     * Check if update should be run againt installed version.
+     *
+     * @param string $version
+     * @return bool true if update should be run
+     */
     public function check_version($version)
     {
         $configObject = Config::get_instance();
@@ -354,28 +354,28 @@ class UpdaterUtils
 
         $checkcode = (version::is_version_higher($code_version, $version) or $code_version == $version);
         if ($dev_system) {
-          // A dev system may need to upgrade even if the config file has been updated.
+            // A dev system may need to upgrade even if the config file has been updated.
             $checkcfg = (version::is_version_higher($version, $cfg_version) or $cfg_version == $version);
         } else {
-          // Production systems should not run update files for versions that were built if the config file is
-          // for that version of Rogo, as they should have already been run.
+            // Production systems should not run update files for versions that were built if the config file is
+            // for that version of Rogo, as they should have already been run.
             $checkcfg = version::is_version_higher($version, $cfg_version);
         }
         $run_update = ($checkcfg and $checkcode);
         return $run_update;
     }
 
-  /**
-   * Adds a new line to /config/config.inc.php if not already there.
-   *
-   * @param string $string              - Language translations.
-   * @param string $search              - A string to look for to see if the new lines already exist
-   * @param array $new_lines        - An array of new lines to insert.
-   * @param int $default_line       - Default line number to add to if no $target_line is found. Use -1 for end-of-file.
-   * @param string $cfg_web_root    - Path to the root of Rogo.
-   * @param string $target_line     - A string to find on a target line to act as a location for the new lines
-   * @param int $offset                     - A plus or negative offset from $target_line to insert the new lines
-   */
+    /**
+     * Adds a new line to /config/config.inc.php if not already there.
+     *
+     * @param string $string              - Language translations.
+     * @param string $search              - A string to look for to see if the new lines already exist
+     * @param array $new_lines        - An array of new lines to insert.
+     * @param int $default_line       - Default line number to add to if no $target_line is found. Use -1 for end-of-file.
+     * @param string $cfg_web_root    - Path to the root of Rogo.
+     * @param string $target_line     - A string to find on a target line to act as a location for the new lines
+     * @param int $offset                     - A plus or negative offset from $target_line to insert the new lines
+     */
     public function add_line($string, $search, $new_lines, $default_line, $cfg_web_root, $target_line = '', $offset = 1)
     {
         $file_path = $cfg_web_root . 'config/config.inc.php';
@@ -409,14 +409,14 @@ class UpdaterUtils
         }
     }
 
-  /**
-   * replaces a line in /config/config.inc.php if found.
-   *
-   * @param string $string              - Language translations.
-   * @param string $replace             - A string to replace
-   * @param string $new_line        - A  new line to insert.
-   * @param string $cfg_web_root    - Path to the root of Rogo.
-   */
+    /**
+     * replaces a line in /config/config.inc.php if found.
+     *
+     * @param string $string              - Language translations.
+     * @param string $replace             - A string to replace
+     * @param string $new_line        - A  new line to insert.
+     * @param string $cfg_web_root    - Path to the root of Rogo.
+     */
     public function replace_line($string, $replace, $new_line, $cfg_web_root)
     {
         $file_path = $cfg_web_root . 'config/config.inc.php';
@@ -442,12 +442,12 @@ class UpdaterUtils
         }
     }
 
-  /**
-   * Takes a backup of the configuration file.
-   *
-   * @param string $cfg_web_root    - Path to the root of Rogo.
-   * @param string $old_version     - Uses the old version of Rogo to make the backup filename.
-   */
+    /**
+     * Takes a backup of the configuration file.
+     *
+     * @param string $cfg_web_root    - Path to the root of Rogo.
+     * @param string $old_version     - Uses the old version of Rogo to make the backup filename.
+     */
     public function backup_file($cfg_web_root, $old_version)
     {
         if (file_exists($cfg_web_root . 'config/config.inc.php')) {
@@ -455,14 +455,14 @@ class UpdaterUtils
         }
     }
 
- /**
-  * Removes closing PHP tags from config.inc.php.
-  * There's little reason there should be any in there, as there's no output.
-  * Safety checks in place in case there is other closing tag usage.
-  *
-  * @param string $string               - Language translations.
-  * @param string $cfg_web_root     - Path to the root of Rogo.
-  */
+    /**
+     * Removes closing PHP tags from config.inc.php.
+     * There's little reason there should be any in there, as there's no output.
+     * Safety checks in place in case there is other closing tag usage.
+     *
+     * @param string $string               - Language translations.
+     * @param string $cfg_web_root     - Path to the root of Rogo.
+     */
     public function clean_php_closing_tag($string, $cfg_web_root)
     {
         if (file_exists($cfg_web_root . 'config/config.inc.php')) {

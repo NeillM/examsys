@@ -16,15 +16,15 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-*   Work out if a question is set to be a killer question or not and then
-* set or unset accordingly.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ *   Work out if a question is set to be a killer question or not and then
+ * set or unset accordingly.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../../include/staff_auth.inc';
 require '../../include/errors.php';

@@ -15,12 +15,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson, Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson, Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 /**
  * Returns the number of marks the question is out of.
@@ -115,22 +115,22 @@ function qMarks($question_type, $tmp_exclude, $question_marks, $option_text, $co
             break;
         case 'likert':
             $marks = 0;
-          // Old marking scale left for backwards compatibility when display old papers.
+            // Old marking scale left for backwards compatibility when display old papers.
             if ($display_method == 'Fail|Borderline|Pass|false' or $display_method == 'Fail|Borderline|Pass|true') {
                 $marks = 2;
             } else {
-              // OSCE stations are integer based so search for max integer.
+                // OSCE stations are integer based so search for max integer.
                 $scores = explode('|', $display_method);
-              // Ignore n/a index.
+                // Ignore n/a index.
                 $scores = array_slice($scores, 0, count($scores) - 1);
                 sort($scores);
                 $max_score = $scores[count($scores) - 1];
-              // Check if max index value is an integer.
+                // Check if max index value is an integer.
                 if (filter_var($max_score, FILTER_VALIDATE_INT)) {
                     $marks = $max_score;
                 }
             }
-          // Other types are not marked per se so we can leave as 0.
+            // Other types are not marked per se so we can leave as 0.
             break;
         case 'mcq':
         case 'true_false':
@@ -424,7 +424,7 @@ function qRandomMarks($question_type, $tmp_exclude, $marks_correct, $option_text
             break;
         case 'blank':
             if ($display_method == 'textboxes') {
-              // No random mark adjustment needed.
+                // No random mark adjustment needed.
                 break;
             }
             $blank_details = explode('[blank', $option_text[0]);

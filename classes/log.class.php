@@ -15,10 +15,10 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Log package
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2018 onwards The University of Nottingham
-*/
+ * Log package
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2018 onwards The University of Nottingham
+ */
 
 /**
  * Log helper class.
@@ -26,68 +26,68 @@
 abstract class log
 {
 
-  /**
-   *  DB connection
-   * @var mysqli
-   */
+    /**
+     *  DB connection
+     * @var mysqli
+     */
     protected $db;
 
-  /**
-   * Unique identifier of paper/user entry in log
-   * @var integer
-   */
+    /**
+     * Unique identifier of paper/user entry in log
+     * @var integer
+     */
     protected $metadataid;
 
-  /**
-   * Does this paper type allow multiple attempts
-   * @var boolean
-   */
+    /**
+     * Does this paper type allow multiple attempts
+     * @var boolean
+     */
     protected $dorestart;
 
-  /**
-   * What screen is the user on
-   * @var integer
-   */
+    /**
+     * What screen is the user on
+     * @var integer
+     */
     protected $currentscreen;
 
-  /**
-   * Paper type
-   * @var string
-   */
+    /**
+     * Paper type
+     * @var string
+     */
     protected $papertype;
 
-  /**
-   * Screen duration
-   * @var integer
-   */
+    /**
+     * Screen duration
+     * @var integer
+     */
     protected $previousduration;
 
-  /**
-   * Screen previously submitted
-   * @var boolean
-   */
+    /**
+     * Screen previously submitted
+     * @var boolean
+     */
     protected $screenpresubmitted;
 
-  /**
-   * Flag to indicate if paper type uses log late table
-   * @var boolean
-   */
+    /**
+     * Flag to indicate if paper type uses log late table
+     * @var boolean
+     */
     protected $late;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
-  /**
-   * Constructor
-   */
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         $configObj = Config::get_instance();
@@ -95,14 +95,14 @@ abstract class log
         $this->late = false;
     }
 
-  /**
-   * Get previous answers for a paper/user in log - used to load exam script
-   * @param integer $metadataID unique identifier of paper/user entry in log
-   * @param boolean $do_restart does this paper type allow multiple attempts
-   * @param integer $current_screen what screen is the user on
-   * @param boolean so we need to check the log late table
-   * @return array
-   */
+    /**
+     * Get previous answers for a paper/user in log - used to load exam script
+     * @param integer $metadataID unique identifier of paper/user entry in log
+     * @param boolean $do_restart does this paper type allow multiple attempts
+     * @param integer $current_screen what screen is the user on
+     * @param boolean so we need to check the log late table
+     * @return array
+     */
     public function get_previous_answers($metadataID, $do_restart, $current_screen, $check_log_late = false)
     {
         $this->previousduration = 0;
@@ -111,18 +111,18 @@ abstract class log
         $this->currentscreen = $current_screen;
         $this->metadataid = $metadataID;
         if ($check_log_late and $this->late) {
-          // If we are after the deadline check for answers in original_paper_type_log - these will be over written below by new answers in log_late below.
+            // If we are after the deadline check for answers in original_paper_type_log - these will be over written below by new answers in log_late below.
             return $this->get_log_late();
         } else {
-          // Get user answers from whichever log is pointed to by log$paper_type
+            // Get user answers from whichever log is pointed to by log$paper_type
             return $this->get_log();
         }
     }
 
-  /**
-   * Get entries from paper type log table and ovewrite with the log late table
-   * @return array
-   */
+    /**
+     * Get entries from paper type log table and ovewrite with the log late table
+     * @return array
+     */
     public function get_log_late()
     {
         $log = $this->get_log();
@@ -140,7 +140,7 @@ abstract class log
             $user_dismiss[$log_screen][$log_q_id] = $current_dismiss;
             $user_order[$log_screen][$log_q_id] = $option_order;
             $used_questions[$log_q_id] = $log_q_id;
-          // Bump up the current screen if restarting
+            // Bump up the current screen if restarting
             if ($this->dorestart and $log_screen > $this->currentscreen) {
                 $this->currentscreen = $log_screen;
             }
@@ -159,14 +159,14 @@ abstract class log
         'current_screen' => $this->currentscreen);
     }
 
-  /**
-   * Update screen variables to keep track of user journey
-   * @param integer $log_screen screen identifier
-   * @param integer $log_duration time in seconds spent on screen
-   */
+    /**
+     * Update screen variables to keep track of user journey
+     * @param integer $log_screen screen identifier
+     * @param integer $log_duration time in seconds spent on screen
+     */
     public function process_screen_variables($log_screen, $log_duration)
     {
-      // Bump up the current screen if restarting
+        // Bump up the current screen if restarting
         if ($this->dorestart and $log_screen > $this->currentscreen) {
             $this->currentscreen = $log_screen;
         }
@@ -176,15 +176,15 @@ abstract class log
         }
     }
 
-  /**
-   * Get list of users that have taken the exam order by total mark ascending.
-   * @param integer $paperid paper id
-   * @param string $startdate start datetime for filter
-   * @param string $enddate end datetime for filter
-   * @param string $userlist user filter
-   * @param boolean $studentonly flag to set student only filter
-   * @return array
-   */
+    /**
+     * Get list of users that have taken the exam order by total mark ascending.
+     * @param integer $paperid paper id
+     * @param string $startdate start datetime for filter
+     * @param string $enddate end datetime for filter
+     * @param string $userlist user filter
+     * @param boolean $studentonly flag to set student only filter
+     * @return array
+     */
     public function get_log_users($paperid, $startdate, $enddate, $userlist, $studentonly = false)
     {
         $user_list = array();
@@ -228,17 +228,17 @@ abstract class log
         return $user_list;
     }
 
-  /**
-   * Get list of users that have taken the exam order by total mark ascending.
-   * Formative results inclused progressive results, as progressive papers can be converted into a formative
-   * @param integer $paperid paper id
-   * @param string $startdate start datetime for filter
-   * @param string $enddate end datetime for filter
-   * @param string $userlist list of users to filter
-   * @param string $course course filter
-   * @param boolean $studentonly flag to set student only filter
-   * @return array
-   */
+    /**
+     * Get list of users that have taken the exam order by total mark ascending.
+     * Formative results inclused progressive results, as progressive papers can be converted into a formative
+     * @param integer $paperid paper id
+     * @param string $startdate start datetime for filter
+     * @param string $enddate end datetime for filter
+     * @param string $userlist list of users to filter
+     * @param string $course course filter
+     * @param boolean $studentonly flag to set student only filter
+     * @return array
+     */
     public function get_assessment_data($paperid, $startdate, $enddate, $userlist, $course = '%', $studentonly = false)
     {
         $data = array();
@@ -303,25 +303,25 @@ abstract class log
         return $data;
     }
 
-  /**
-   * Paper type accessor method
-   * @return string
-   */
+    /**
+     * Paper type accessor method
+     * @return string
+     */
     public function get_papertype()
     {
         return $this->papertype;
     }
 
-  /**
-   * Get paper logs
-   */
+    /**
+     * Get paper logs
+     */
     abstract public function get_log();
 
-  /**
-   * Get paper log class
-   * @param string $papertype paper type
-   * @return class
-   */
+    /**
+     * Get paper log class
+     * @param string $papertype paper type
+     * @return class
+     */
     public static function get_paperlog($papertype)
     {
         switch ($papertype) {
@@ -353,20 +353,20 @@ abstract class log
         return new $paperpluginns();
     }
 
-  /**
-   * Retrieve student only sql filter.
-   * @return string
-   */
+    /**
+     * Retrieve student only sql filter.
+     * @return string
+     */
     public static function get_student_only()
     {
         return " AND (users.roles LIKE '%Student%' OR users.roles = 'graduate')";
     }
 
-  /**
-   * Retrieve user sql filter.
-   * @param array $userlist list of users
-   * @return string
-   */
+    /**
+     * Retrieve user sql filter.
+     * @param array $userlist list of users
+     * @return string
+     */
     public static function get_user_filter($userlist)
     {
         if (!is_array($userlist)) {
@@ -376,7 +376,7 @@ abstract class log
         } elseif (count($userlist) > 0) {
             $userfilter = 'AND userID IN (' . implode(',', $userlist) . ')';
         } else {
-          // No users found? So ensure query returns 0 rows.
+            // No users found? So ensure query returns 0 rows.
             $userfilter = 'AND userID = 0';
         }
         return $userfilter;

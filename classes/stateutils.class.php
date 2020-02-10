@@ -15,30 +15,30 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Class to load and save user interface state information from the database.
-* This circumvents problems associated with using cookies (e.g. need visitor
-* consent and are machine specific).
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Class to load and save user interface state information from the database.
+ * This circumvents problems associated with using cookies (e.g. need visitor
+ * consent and are machine specific).
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 class StateUtils
 {
     private $db;
     private $userID;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
@@ -48,11 +48,11 @@ class StateUtils
         $this->userID = $userID;
     }
   
-  /**
-  * Obtains all state information for a given page.
-  * @param string $page - The page to get the state for. If left blank the current page is used.
-  * @return array       - Array of state content keyed by state name.
-  */
+    /**
+     * Obtains all state information for a given page.
+     * @param string $page - The page to get the state for. If left blank the current page is used.
+     * @return array       - Array of state content keyed by state name.
+     */
     public function getState($page = '')
     {
         $state_array = array();
@@ -72,12 +72,12 @@ class StateUtils
         return $state_array;
     }
 
-  /**
-  * Saves state information for a given page.
-  * @param string $state_name - The name of the interface object we are saving state for.
-  * @param string $content    - What the current state of the interface object is.
-  * @param string $page       - The page in the system we are saving state for.
-  */
+    /**
+     * Saves state information for a given page.
+     * @param string $state_name - The name of the interface object we are saving state for.
+     * @param string $content    - What the current state of the interface object is.
+     * @param string $page       - The page in the system we are saving state for.
+     */
     public function setState($state_name, $content, $page)
     {
         $result = $this->db->prepare('REPLACE INTO state (userID, state_name, content, page) VALUES (?, ?, ?, ?)');

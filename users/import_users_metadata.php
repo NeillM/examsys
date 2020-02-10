@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Import student module registrations form SMS export
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Import student module registrations form SMS export
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../include/staff_auth.inc';
 require_once '../include/sidebar_menu.inc';
@@ -91,7 +91,7 @@ if (isset($_POST['submit'])) {
             echo uploadError($_FILES['csvfile']['error']);
             exit();
         } else {
-        // Load the IDs for all students in the module
+            // Load the IDs for all students in the module
                   $student_id_array = array();
             $student_data     = array();
             $stmt = $mysqli->prepare('SELECT users.id, username, student_id, users.title, surname, first_names FROM (users, modules_student, modules) LEFT JOIN sid ON users.id = sid.userID WHERE users.id = modules_student.userID AND modules_student.idMod = modules.id AND idMod = ? AND calendar_year = ? ORDER BY username');
@@ -100,9 +100,9 @@ if (isset($_POST['submit'])) {
             $stmt->bind_result($id, $username, $student_id, $title, $surname, $first_names);
             while ($stmt->fetch()) {
                 $student_id_array[$username]    = $id;
-        // Reference by Username
+                // Reference by Username
                 $student_id_array[$student_id]  = $id;
-        // Reference by Student ID
+                // Reference by Student ID
           
                 $student_data[$id]['title']       = $title;
                 $student_data[$id]['surname']     = $surname;
@@ -121,7 +121,7 @@ if (isset($_POST['submit'])) {
             foreach ($lines as $separate_line) {
                 $cols = explode(',', $separate_line);
                 if ($line_no == 0) {
-                // Read the header row
+                    // Read the header row
                       $heading = $cols;
                     $col_no = count($cols);
                     echo '<tr><th></th><th>Username</th><th colspan="3">Student Name</th>';
@@ -132,9 +132,9 @@ if (isset($_POST['submit'])) {
                     }
                       echo "</tr>\n";
                 } else {
-                // 'username' can be either the real username or sid
+                    // 'username' can be either the real username or sid
                       $username = trim($cols[0]);
-                // Check see if user was found
+                    // Check see if user was found
                     if (!isset($student_id_array[$username])) {
                         if (UserUtils::userid_exists($username, $mysqli) or UserUtils::username_exists($username, $mysqli)) {
                             echo "<tr><td><img src=\"../artwork/red_cross_16.png\" wodth=\"16\" height=\"16\" alt=\"Failed\" /></td><td class=\"failed\">$username</td><td colspan=\"" . (3 + $col_no) . '" class="failed" style="text-align:center">&lt;user not registered on ' . module_utils::get_moduleid_from_id($_GET['module'], $mysqli) . '&gt;</td>';

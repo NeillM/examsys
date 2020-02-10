@@ -16,11 +16,11 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Admin screen to edit a config settings
-*
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2016 onwards The University of Nottingham
-*/
+ * Admin screen to edit a config settings
+ *
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2016 onwards The University of Nottingham
+ */
 
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.php';
@@ -32,7 +32,7 @@ if (isset($_POST['submit'])) {
         $type = $configObject->get_setting_type('core', $setting);
         if ($type === Config::ASSOC) {
             $new_value = array();
-          // Media types have a boolean value.
+            // Media types have a boolean value.
             if ($setting == 'system_mediatypes') {
                 foreach ($value as $name => $oldval) {
                     $enabled = param::optional($setting . '_' . str_replace('.', '_', $name), false, param::BOOLEAN, param::FETCH_POST);

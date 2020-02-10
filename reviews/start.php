@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require './display_functions.inc';
@@ -239,7 +239,7 @@ echo '" autocomplete="off">';   // Warning message only in linear navigation mod
     echo "<table cellpadding=\"4\" cellspacing=\"0\" border=\"0\" width=\"100%\" style=\"table-layout:fixed\">\n";
     echo "<col width=\"40\"><col>\n";
   
-  // Random / Keyword questions.
+    // Random / Keyword questions.
     $tmp_questions_array = array();
     $tmp_q_no = 0;
     foreach ($questions_array as &$question) {
@@ -256,7 +256,7 @@ echo '" autocomplete="off">';   // Warning message only in linear navigation mod
     }
     unset($questions_array);
 
-  // Display the questions
+    // Display the questions
     foreach ($tmp_questions_array as &$question) {
         if ($question['q_type'] == 'enhancedcalc') {
             require_once '../plugins/questions/enhancedcalc/enhancedcalc.class.php';

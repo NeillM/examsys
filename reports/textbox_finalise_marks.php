@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -105,7 +105,7 @@ if (isset($_POST['submit'])) {
     $startdate  = check_var('startdate', 'GET', true, false, true);
     $enddate    = check_var('enddate', 'GET', true, false, true);
 
-  // Check the question exists.
+    // Check the question exists.
     if (!QuestionUtils::question_exists($q_id, $mysqli)) {
         $contactemail = support::get_email();
         $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
@@ -160,7 +160,7 @@ if (isset($_POST['submit'])) {
     echo '<tr><td colspan="4"><img src="../artwork/tooltip_icon.gif" />' . $string['comments'] . '</td></tr>';
     $student_no = 0;
 
-  // Get student answers
+    // Get student answers
     if ($paper_type == '0') {
         $sql = <<< SQL
 SELECT 0 AS logtype, l.id, lm.userID, l.user_answer, l.mark
@@ -246,7 +246,7 @@ SQL;
                 echo '<td class="override">' . displayMarks($student_no, $marks_correct, $override, $user_mark);
             }
         } else {
-        // User answer is blank.
+            // User answer is blank.
             echo "<tr class=\"l\"><td class=\"studentno\">$student_no</td><td class=\"ans\" style=\"color: #C00000\"><img src=\"../artwork/small_yellow_warning_icon.gif\" width=\"12\" height=\"11\" alt=\"!\" />&nbsp;" . $string['noanswer'] . '<br />&nbsp;</td>';
             if (isset($primary_marks[$log_id]['mark'])) {
                 echo '<td class="primary noans">' . $primary_marks[$log_id]['mark'] . "<input class=\"primarychk\" type=\"radio\" name=\"mark$student_no\" id=\"mark$student_no\" value=\"" . $primary_marks[$log_id]['mark'] . "\" $primary_checked/></td>";

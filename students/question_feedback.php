@@ -16,15 +16,15 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Completes final log of the last screen to the 'logX' table and then will display feedback if the paper is in 'formative'
-* mode or will display a confirmation notice to the examinee stating all answers and marks have been successfully recorded.
-*
-* @author Simon Wilkinson, Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Completes final log of the last screen to the 'logX' table and then will display feedback if the paper is in 'formative'
+ * mode or will display a confirmation notice to the examinee stating all answers and marks have been successfully recorded.
+ *
+ * @author Simon Wilkinson, Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_student_auth.inc';
 require_once '../include/calculate_marks.inc';
@@ -82,7 +82,7 @@ $preview_q_id = (isset($_GET['q_id'])) ? $_GET['q_id'] : null;
 $moduleID = Paper_utils::get_modules($paperID, $mysqli);
 
 if ($userObject->has_role('Student')) {
-  // Check for additional password on the paper
+    // Check for additional password on the paper
     check_paper_password($propertyObj->get_property_id(), $propertyObj->get_password(), $string, $mysqli, true);
   
     $display_correct_answer     = 1;

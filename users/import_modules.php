@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Bulk student module enrolement
-*
-* @author Anthony Brown, Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Bulk student module enrolement
+ *
+ * @author Anthony Brown, Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../include/admin_auth.inc';
 require '../include/toprightmenu.inc';
@@ -72,7 +72,7 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
         <td class="dialog_body">
 
               <?php
-            // Get a list of modules held by Rogo.
+                // Get a list of modules held by Rogo.
                 $module_list = array();
                 $result = $mysqli->prepare('SELECT DISTINCT id, moduleid FROM modules');
                 $result->execute();
@@ -87,7 +87,7 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
                 $unknow_ModuleID = array();
                 $lines = file($configObject->get('cfg_tmpdir') . $userObject->get_user_ID() . '_cohort_update.csv');
 
-            // Build an array of unique student names.
+                // Build an array of unique student names.
                 $students = array();
                 foreach ($lines as $separate_line) {
                     if (trim($separate_line) != '') {
@@ -95,7 +95,7 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
             
                         $sid = trim($fields[0]);
                         $session = trim($fields[2]);
-                      // Modules will be added later.
+                        // Modules will be added later.
             
                         $students[$sid]['sid'] = $sid;
                         $students[$sid]['session'] = $session;
@@ -103,7 +103,7 @@ $render->render_admin_header($lang, $additionaljs, $addtionalcss);
                     }
                 }
 
-            // Query the modules for each student
+                // Query the modules for each student
                 foreach ($students as $student) {
                     $student_databaseID = UserUtils::studentid_exists($student['sid'], $mysqli);
           

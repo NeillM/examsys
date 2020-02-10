@@ -15,12 +15,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 class InstallUtils
 {
@@ -46,7 +46,7 @@ class InstallUtils
     public static $cfg_tmpdir;
     public static $cfg_tablesorter_date_time;
 
-  //database config options
+    //database config options
     public static $cfg_db_host;
     public static $cfg_db_port;
     public static $cfg_db_username;
@@ -113,39 +113,39 @@ class InstallUtils
     public static $cfg_support_email;
     public static $emergency_support_numbers;
 
-  /** @var bool Stores if this is a behat installation. */
+    /** @var bool Stores if this is a behat installation. */
     public static $behat_install = false;
 
-  /** @var bool Stores if this is a phpunit installation. */
+    /** @var bool Stores if this is a phpunit installation. */
     public static $phpunit_install = false;
 
-  /** @var string The username of the admin account. */
+    /** @var string The username of the admin account. */
     public static $sysadmin_username;
-  /** @var string The password for the admin account. */
+    /** @var string The password for the admin account. */
     public static $sysadmin_password;
-  /** @var string The title of the admin user. */
+    /** @var string The title of the admin user. */
     public static $sysadmin_title;
-  /** @var string The first name of the admin user. */
+    /** @var string The first name of the admin user. */
     public static $sysadmin_first;
-  /** @var string The last name of the admin user. */
+    /** @var string The last name of the admin user. */
     public static $sysadmin_last;
-  /** @var string The e-mail address for the admin user. */
+    /** @var string The e-mail address for the admin user. */
     public static $sysadmin_email;
 
-  /** Stores if the install is being done via cli. */
+    /** Stores if the install is being done via cli. */
     public static $cli = false;
 
-  /** Stores if the settings for cli install. */
+    /** Stores if the settings for cli install. */
     private static $settings;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
@@ -171,13 +171,13 @@ class InstallUtils
         $render->render($data, $string, '/install/form.html');
     }
 
-  /**
-   * Determines if a database user already exists.
-   *
-   * @param string $username - The name of the user to be tested.
-   *
-   * @return bool - True = user exists, False = user does not exist.
-   */
+    /**
+     * Determines if a database user already exists.
+     *
+     * @param string $username - The name of the user to be tested.
+     *
+     * @return bool - True = user exists, False = user does not exist.
+     */
     static function does_user_exist($username)
     {
         $result = self::$db->prepare('SELECT User FROM mysql.user WHERE user = ?');
@@ -195,24 +195,24 @@ class InstallUtils
         return true;
     }
 
-  /**
-   * Load and verify settings file.
-   */
+    /**
+     * Load and verify settings file.
+     */
     static function loadSettings()
     {
         self::$settings = json_encode(simplexml_load_file(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'settings.xml', 'SimpleXMLElement', LIBXML_NOCDATA));
     }
 
-  /**
-   * Get settings.
-   *
-   * @param integer $type parameter type
-   * @param boolean $required is parameter required
-   * @param string $parent name of xml node
-   * @param string $child xml child node name
-   * @param string $grandchild xml grandchild node name
-   * @return value of xml node
-   */
+    /**
+     * Get settings.
+     *
+     * @param integer $type parameter type
+     * @param boolean $required is parameter required
+     * @param string $parent name of xml node
+     * @param string $child xml child node name
+     * @param string $grandchild xml grandchild node name
+     * @return value of xml node
+     */
     static function getSettings($type, $required, $parent, $child = '', $grandchild = '')
     {
         $setting = $parent . '//' . $child . '//' . $grandchild;
@@ -235,15 +235,15 @@ class InstallUtils
         return self::check_setting(null, $type, $required, $setting);
     }
 
-  /**
-   * Check and clean a setting
-   *
-   * @param string $value value of setting
-   * @param integer $type type of setting
-   * @param boolean $required is setting required
-   * @param string $setting xml path of setting
-   * @return cleaned settings
-   */
+    /**
+     * Check and clean a setting
+     *
+     * @param string $value value of setting
+     * @param integer $type type of setting
+     * @param boolean $required is setting required
+     * @param string $setting xml path of setting
+     * @return cleaned settings
+     */
     private static function check_setting($value, $type, $required, $setting)
     {
         global $string;
@@ -294,14 +294,14 @@ class InstallUtils
             self::$db_admin_passwd = param::clean($args['mysql_admin_pass'], param::TEXT);
         }
 
-      // Check mysql version.
+        // Check mysql version.
         try {
             if (!requirements::check_db(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd)) {
                 $mysql_min_ver = $configObject->getxml('database', 'mysql', 'min_version');
                 self::displayError(array('002' => sprintf($string['errors17'], $mysql_min_ver)), true);
             }
         } catch (Exception $e) {
-          // Could not connect to the database.
+            // Could not connect to the database.
             self::displayError(array('005' => sprintf($string['errors20'], $e->getMessage())), true);
         }
 
@@ -320,7 +320,7 @@ class InstallUtils
         }
         self::createDirectories();
 
-      // On windows we must escape the slashes.
+        // On windows we must escape the slashes.
         self::$cfg_rogo_data = str_replace('\\', '\\\\', self::$cfg_rogo_data);
 
         if (!self::$cli) {
@@ -363,7 +363,7 @@ class InstallUtils
         } else {
             self::$cfg_tablesorter_date_time = 'us';
         }
-      //Authentication
+        //Authentication
         if (!self::$cli) {
             self::$cfg_auth_lti = param::optional('useLti', false, param::BOOLEAN, param::FETCH_POST);
             self::$cfg_auth_internal = param::optional('useInternal', false, param::BOOLEAN, param::FETCH_POST);
@@ -378,7 +378,7 @@ class InstallUtils
             self::$cfg_auth_ldap = self::getSettings(param::BOOLEAN, false, 'authentication', 'ldap');
         }
 
-      //LDAP
+        //LDAP
         if (!self::$cli) {
             self::$cfg_ldap_server = param::optional('ldap_server', null, param::TEXT, param::FETCH_POST);
             self::$cfg_ldap_search_dn = param::optional('ldap_search_dn', null, param::TEXT, param::FETCH_POST);
@@ -393,7 +393,7 @@ class InstallUtils
             self::$cfg_ldap_user_prefix = self::getSettings(param::TEXT, false, 'ldap', 'prefix');
         }
 
-      //LDAP for lookup
+        //LDAP for lookup
         if (!self::$cli) {
             self::$cfg_uselookupLdap = param::optional('uselookupLdap', null, param::BOOLEAN, param::FETCH_POST);
             self::$cfg_lookup_ldap_server = param::optional('ldap_lookup_server', null, param::TEXT, param::FETCH_POST);
@@ -409,13 +409,13 @@ class InstallUtils
             self::$cfg_lookup_ldap_bind_password = self::getSettings(param::TEXT, false, 'ldap', 'password');
             self::$cfg_lookup_ldap_user_prefix = self::getSettings(param::TEXT, false, 'ldap', 'prefix');
         }
-      // XML for lookup.
+        // XML for lookup.
         if (!self::$cli) {
             self::$cfg_uselookupXML = param::optional('uselookupXML', null, param::BOOLEAN, param::FETCH_POST);
         } else {
             self::$cfg_uselookupXML = self::getSettings(param::BOOLEAN, false, 'lookup', 'xml');
         }
-      //ASSISTANCE
+        //ASSISTANCE
         if (!self::$cli) {
             self::$cfg_support_email = param::required('support_email', param::TEXT, param::FETCH_POST);
         } else {
@@ -436,13 +436,13 @@ class InstallUtils
                 }
             }
         }
-      //Other settings
+        //Other settings
         if (!self::$cli) {
             self::$cfg_labsecuritytype = param::optional('labsecurity', false, param::TEXT, param::FETCH_POST);
         } else {
             self::$cfg_labsecuritytype = self::getSettings(param::TEXT, true, 'labsecurity', 'type');
         }
-      // Check we can write to the config file first if not passwords will be lost!
+        // Check we can write to the config file first if not passwords will be lost!
         self::$rogo_path = dirname(__DIR__);
         if (file_exists(self::$rogo_path . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.inc.php')) {
             if (!is_writable(self::$rogo_path . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.inc.php')) {
@@ -452,19 +452,19 @@ class InstallUtils
             self::displayError(array(300 => 'Could not write config file!'));
         }
 
-      //CREATE and populate DB
+        //CREATE and populate DB
         self::$db = new mysqli(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd, '', self::$cfg_db_port);
 
         if (mysqli_connect_error()) {
             self::displayError(array('001' => mysqli_connect_error()));
         }
 
-      // Enforce utf8mb4
+        // Enforce utf8mb4
         self::$cfg_db_charset = 'utf8mb4';
         self::$cfg_db_collation = 'utf8mb4_unicode_ci';
         self::$db->set_charset(self::$cfg_db_charset);
 
-      //create salt as this is needed to generate the passwords that are created in the next function rather than created during config file settings
+        //create salt as this is needed to generate the passwords that are created in the next function rather than created during config file settings
         $salt = '';
         $characters = 'abcdefghijklmnopqrstuvwxzyABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         for ($i = 0; $i < 16; $i++) {
@@ -481,22 +481,22 @@ class InstallUtils
 
         self::createDatabase(self::$cfg_db_name, self::$cfg_db_charset, self::$cfg_db_collation, self::$cfg_db_engine, self::$cfg_db_help_engine);
 
-      // Create constraints.
+        // Create constraints.
         self::createConstraints();
 
-      // Load default data
+        // Load default data
         self::loadData();
 
-      // Load default plugins.
+        // Load default plugins.
         $configObject->set('cfg_db_host', self::$cfg_db_host);
         $configObject->set('cfg_db_database', self::$cfg_db_name);
         $configObject->set('dbclass', 'mysqli');
         plugin_manager::install_core_plugins(self::$db_admin_username, self::$db_admin_passwd);
 
-      // Update sys_updates table.
+        // Update sys_updates table.
         self::updateSysUpdates();
 
-      // Get Help and lang pack parameters.
+        // Get Help and lang pack parameters.
         if (!self::$cli) {
             $load_help = param::optional('loadHelp', false, param::BOOLEAN, param::FETCH_POST);
             $download_lang = param::optional('loadtranslations', false, param::BOOLEAN, param::FETCH_POST);
@@ -506,11 +506,11 @@ class InstallUtils
             $download_lang = self::getSettings(param::BOOLEAN, false, 'translations');
         }
 
-      //LOAD help if requested
+        //LOAD help if requested
         if ($load_help) {
             self::loadHelp();
         }
-      // Download language packs and install.
+        // Download language packs and install.
         if ($download_lang) {
             try {
                 self::download_langpacks();
@@ -528,7 +528,7 @@ class InstallUtils
             }
         }
 
-      //Write out the config file
+        //Write out the config file
         self::writeConfigFile();
 
         if (!is_array(self::$warnings)) {
@@ -545,9 +545,9 @@ class InstallUtils
         }
     }
 
-  /**
-   * Download and install language packs.
-   */
+    /**
+     * Download and install language packs.
+     */
     public static function download_langpacks()
     {
         $configObject = Config::get_instance();
@@ -556,26 +556,26 @@ class InstallUtils
         if (!is_null($url)) {
             $workingdir = getcwd();
             chdir(dirname(__DIR__));
-          // Download supported languages xml.
+            // Download supported languages xml.
             $url = $configObject->getxml('translations', 'url');
             $fullurl = $url . '/' . $version . '/languages.xml';
             $file = @file_get_contents($fullurl);
             if ($file === false or file_put_contents('languages.xml', $file) === false) {
                 throw new Exception('CANNOT_DOWNLOAD_XML');
             }
-          // Download language packs.
+            // Download language packs.
             $fullurl = $url . '/' . $version . '/rogo.zip';
             $file = @file_get_contents($fullurl);
             if ($file === false or file_put_contents('translations.zip', $file) === false) {
                 throw new Exception('CANNOT_DOWNLOAD_ZIP');
             } else {
-              // Unzip archive.
+                // Unzip archive.
                 $zip = new ZipArchive();
                 $res = $zip->open('translations.zip');
                 if ($res === true) {
                     $zip->extractTo(getcwd());
                     $zip->close();
-                  // Remove zip and temporary directories.
+                    // Remove zip and temporary directories.
                     unlink('translations.zip');
                 } else {
                     throw new Exception('CANNOT_EXTRACT');
@@ -585,21 +585,21 @@ class InstallUtils
         }
     }
 
-  /**
-  * Load the Help databases
-  *
-  */
+    /**
+     * Load the Help databases
+     *
+     */
     static function loadHelp()
     {
         global $string;
-      // Set db object in config.
+        // Set db object in config.
         @$mysqli = new mysqli(self::$cfg_db_host, self::$db_admin_username, self::$db_admin_passwd, self::$cfg_db_name, self::$cfg_db_port);
         if ($mysqli->connect_error == '') {
             $mysqli->set_charset(self::$cfg_db_charset);
         }
         $configObject = Config::get_instance();
         $configObject->set_db_object($mysqli);
-      // Staff help files.
+        // Staff help files.
         try {
             OnlineHelp::load_staff_help();
         } catch (Exception $ex) {
@@ -609,7 +609,7 @@ class InstallUtils
                 self::logWarning(array('501' => $string['logwarning1']));
             }
         }
-      // Student help files.
+        // Student help files.
         try {
             OnlineHelp::load_student_help();
         } catch (Exception $ex) {
@@ -621,9 +621,9 @@ class InstallUtils
         }
     }
 
-  /**
-   * Create constraints to maintain database referential integrity
-   */
+    /**
+     * Create constraints to maintain database referential integrity
+     */
     static function createConstraints()
     {
         $alter = array();
@@ -661,13 +661,13 @@ class InstallUtils
         }
     }
 
-  /**
-   * Load default data needed for rogo to function
-   */
+    /**
+     * Load default data needed for rogo to function
+     */
     static function loadData()
     {
         global $string, $timezone_array;
-      // Add 3 academic sessions to the the new user started.
+        // Add 3 academic sessions to the the new user started.
         $calendaryear = date('Y');
         $previouscalendaryear = date('Y') - 1;
         $nextcalendaryear = date('Y') + 1;
@@ -681,7 +681,7 @@ class InstallUtils
         $insert->bind_param('isisis', $previouscalendaryear, $previousacademicyear, $calendaryear, $academicyear, $nextcalendaryear, $nextacademicyear);
         $insert->execute();
         $insert->close();
-      // Add user psermissions.
+        // Add user psermissions.
         $permissions = array('assessmentmanagement/create',
         'assessmentmanagement/update',
         'assessmentmanagement/delete',
@@ -710,11 +710,11 @@ class InstallUtils
             $insert->execute();
             $insert->close();
         }
-      // Add default campus
+        // Add default campus
         $insert = self::$db->prepare("INSERT INTO campus (name, isdefault) VALUES ('Main Campus', 1)");
         $insert->execute();
         $insert->close();
-      // Save json encoded list of timezones.
+        // Save json encoded list of timezones.
         $timezones = $timezone_array;
         $cohorts = array('<whole cohort>', '0-10', '11-20', '21-30', '31-40', '41-50', '51-75', '76-100', '101-150', '151-200', '201-300',
         '301-400', '401-500');
@@ -802,7 +802,7 @@ class InstallUtils
         $configObject->set_setting('paper_hide_repeat_scenario', 0, Config::BOOLEAN);
         $filetypes = array();
         foreach (media_handler::SUPPORTED as $name => $type) {
-          // Threejs and old multimedia types disabled by default.
+            // Threejs and old multimedia types disabled by default.
             $defaultdisabled = array(questiondata::THREED, questiondata::ARCHIVE, questiondata::MOVIE, questiondata::AUDIO);
             if (in_array($type, $defaultdisabled)) {
                 $filetypes[$name] = 0;
@@ -816,13 +816,13 @@ class InstallUtils
         $unit = preg_replace('/[^bkmgtpezy]/i', '', $maxsize);
         $maxsize = preg_replace('/[^0-9\.]/', '', $maxsize);
         if ($unit) {
-          // Find the position of the unit in the ordered string which is the power of magnitude to multiply a kilobyte by.
+            // Find the position of the unit in the ordered string which is the power of magnitude to multiply a kilobyte by.
             $maxsize = round($maxsize * pow(1024, stripos('bkmgtpezy', $unit[0])));
         } else {
             $maxsize = round($maxsize);
         }
         $configObject->set_setting('system_maxmediasize', $maxsize, Config::INTEGER);
-      // Add external systems.
+        // Add external systems.
         $insert = self::$db->prepare("INSERT INTO external_systems (name, type) values ('ims_enterprise', 'plugin')");
         $insert->execute();
         $insert->close();
@@ -831,12 +831,12 @@ class InstallUtils
         self::createQuestionStatuses();
     }
 
-  /**
-   * Update the sys updates table as we just did a clean install and do not want the update process
-   * running these updates again.
-   *
-   * This list should not be added to as all new updates should be tied to a release.
-   */
+    /**
+     * Update the sys updates table as we just did a clean install and do not want the update process
+     * running these updates again.
+     *
+     * This list should not be added to as all new updates should be tied to a release.
+     */
     static function updateSysUpdates()
     {
         $current_datetime = date('Y-m-d H:i:s');
@@ -863,12 +863,12 @@ class InstallUtils
         }
     }
 
-  /**
-   * This function prevents the username being set again if it has already been set one time.
-   *
-   * @param string $uservariable The name of the variable to set
-   * @param string $name The username value to set.
-   */
+    /**
+     * This function prevents the username being set again if it has already been set one time.
+     *
+     * @param string $uservariable The name of the variable to set
+     * @param string $name The username value to set.
+     */
     public static function generateUserName($uservariable, $name)
     {
         if (empty(self::$$uservariable)) {
@@ -876,9 +876,9 @@ class InstallUtils
         }
     }
 
-  /**
-   * Ensure that the admin details are filled in.
-   */
+    /**
+     * Ensure that the admin details are filled in.
+     */
     protected static function get_sysadmin_details()
     {
         if (empty(self::$sysadmin_username)) {
@@ -925,10 +925,10 @@ class InstallUtils
         }
     }
 
-  /**
-  * create the database and users if they do not exist
-  *
-  */
+    /**
+     * create the database and users if they do not exist
+     *
+     */
     static function createDatabase($dbname, $dbcharset, $dbcollation, $dbengine = 'InnoDB', $dbhelpengine = 'MyISAM')
     {
         global $string;
@@ -949,10 +949,10 @@ class InstallUtils
             self::displayError(array('011' => $string['displayerror2']));
         }
 
-      //select the newly created database
+        //select the newly created database
         self::$db->change_user(self::$db_admin_username, self::$db_admin_passwd, self::$cfg_db_name);
 
-      //create tables
+        //create tables
         $tables = new databaseTables($dbcharset, $dbengine, $dbhelpengine);
         self::$db->autocommit(false);
         while ($sql = $tables->next()) {
@@ -1000,12 +1000,12 @@ class InstallUtils
         self::$cfg_cron_passwd = $generated_password['password'];
 
         $priv_SQL = array();
-      //create 'database user authentication user' and grant permissions
+        //create 'database user authentication user' and grant permissions
         self::$db->query("CREATE USER '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_password . "'");
         if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
             self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_username . $string['wnotcreated'] . ' ' . self::$db->error ));
         }
-      //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
+        //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".admin_access TO '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT ON ' . $dbname . ".courses TO '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".client_identifiers TO '" . self::$cfg_db_username . "'@'" . self::$cfg_web_host . "'";
@@ -1041,12 +1041,12 @@ class InstallUtils
 
 
         $priv_SQL = array();
-      //create 'database user student user' and grant permissions
+        //create 'database user student user' and grant permissions
         self::$db->query("CREATE USER  '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_student_passwd . "'");
         if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
             self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_student_user . $string['wnotcreated'] . ' ' . self::$db->error ));
         }
-     //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
+        //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_student_user . "'@'". self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".announcements TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".cache_median_question_marks TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".cache_paper_stats TO '" . self::$cfg_db_student_user . "'@'" . self::$cfg_web_host . "'";
@@ -1124,12 +1124,12 @@ class InstallUtils
         }
         self::$db->commit();
         $priv_SQL = array();
-      //create 'database user external user' and grant permissions
+        //create 'database user external user' and grant permissions
         self::$db->query("CREATE USER  '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_external_passwd . "'");
         if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
             self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_external_user . $string['wnotcreated'] . ' ' . self::$db->error ));
         }
-      //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
+        //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_external_user . "'@'". self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT ON ' . $dbname . ".help_log TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT ON ' . $dbname . ".help_searches TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".keywords_question TO '" . self::$cfg_db_external_user . "'@'" . self::$cfg_web_host . "'";
@@ -1202,12 +1202,12 @@ class InstallUtils
         self::$db->commit();
 
         $priv_SQL = array();
-      //create 'database user internal user' and grant permissions
+        //create 'database user internal user' and grant permissions
         self::$db->query("CREATE USER  '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_internal_passwd . "'");
         if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
             self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_internal_user . $string['wnotcreated'] . ' ' . self::$db->error ));
         }
-      //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
+        //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_internal_user . "'@'". self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT ON ' . $dbname . ".help_log TO '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT ON ' . $dbname . ".help_searches TO '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".keywords_question TO '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "'";
@@ -1245,12 +1245,12 @@ class InstallUtils
         self::$db->commit();
 
         $priv_SQL = array();
-      //create 'database user staff user' and grant permissions
+        //create 'database user staff user' and grant permissions
         self::$db->query("CREATE USER  '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_staff_passwd . "'");
         if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
             self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_staff_user . $string['wnotcreated'] . ' ' . self::$db->error ));
         }
-      //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
+        //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_staff_user . "'@'". self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".* TO '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $dbname . ".cache_median_question_marks TO '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE, DELETE ON ' . $dbname . ".cache_paper_stats TO '" . self::$cfg_db_staff_user . "'@'" . self::$cfg_web_host . "'";
@@ -1345,12 +1345,12 @@ class InstallUtils
         self::$db->commit();
 
         $priv_SQL = array();
-      //create 'database user SCT user' and grant permissions
+        //create 'database user SCT user' and grant permissions
         self::$db->query("CREATE USER  '" . self::$cfg_db_sct_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_sct_passwd . "'");
         if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
             self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_sct_user . $string['wnotcreated'] . ' ' . self::$db->error ));
         }
-      //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_sct_user . "'@'". self::$cfg_web_host . "'";
+        //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_sct_user . "'@'". self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".options TO '" . self::$cfg_db_sct_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".paper_metadata_security TO '" . self::$cfg_db_sct_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".paper_notes TO '" . self::$cfg_db_sct_user . "'@'" . self::$cfg_web_host . "'";
@@ -1373,12 +1373,12 @@ class InstallUtils
         self::$db->commit();
 
         $priv_SQL = array();
-      //create 'database user Invigilator user' and grant permissions
+        //create 'database user Invigilator user' and grant permissions
         self::$db->query("CREATE USER  '" . self::$cfg_db_inv_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_inv_passwd . "'");
         if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
             self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_inv_user . $string['wnotcreated'] . ' ' . self::$db->error ));
         }
-      //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
+        //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_inv_user . "'@'". self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".exam_announcements TO '" . self::$cfg_db_inv_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".client_identifiers TO '" . self::$cfg_db_inv_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".labs TO '" . self::$cfg_db_inv_user . "'@'" . self::$cfg_web_host . "'";
@@ -1421,14 +1421,14 @@ class InstallUtils
         self::$db->commit();
 
         $priv_SQL = array();
-      //create 'database user sysadmin user' and grant permissions
+        //create 'database user sysadmin user' and grant permissions
         self::$db->query("CREATE USER  '" . self::$cfg_db_sysadmin_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_sysadmin_passwd . "'");
         if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
             self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_sysadmin_user . $string['wnotcreated'] . ' ' . self::$db->error ));
         }
-      //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_sysadmin_user . "'@'". self::$cfg_web_host . "'";
+        //$priv_SQL[] = "REVOKE ALL PRIVILEGES ON $dbname.* FROM '". self::$cfg_db_sysadmin_user . "'@'". self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT, INSERT, UPDATE, DELETE, ALTER, DROP  ON ' . $dbname . ".* TO '" . self::$cfg_db_sysadmin_user . "'@'" . self::$cfg_web_host . "'";
-      //create 'database user webservice user' and grant permissions
+        //create 'database user webservice user' and grant permissions
         self::$db->query("CREATE USER  '" . self::$cfg_db_webservice_user . "'@'" . self::$cfg_web_host . "' IDENTIFIED BY '" . self::$cfg_db_webservice_passwd . "'");
         if (self::$db->errno != 0 && !self::$behat_install && !self::$phpunit_install) {
             self::displayError(array('013' => $string['wdatabaseuser'] . self::$cfg_db_webservice_user . $string['wnotcreated'] . ' ' . self::$db->error ));
@@ -1460,7 +1460,7 @@ class InstallUtils
         }
         self::$db->commit();
 
-      //FLUSH PRIVILEGES
+        //FLUSH PRIVILEGES
         self::$db->query('FLUSH PRIVILEGES');
         if (self::$db->errno != 0) {
             self::logWarning(array('014' => $string['logwarning20']));
@@ -1469,14 +1469,14 @@ class InstallUtils
         self::$db->autocommit(false);
     }
 
-  /**
-   * Creates the default set of faculties, schools and modules in the Rogo database.
-   *
-   * @return void
-   */
+    /**
+     * Creates the default set of faculties, schools and modules in the Rogo database.
+     *
+     * @return void
+     */
     protected static function createDefaultFacultiesSchoolsModules()
     {
-      // Add unknown school & faculty
+        // Add unknown school & faculty
         $facultyID = FacultyUtils::add_faculty(
             'UNKNOWN Faculty',
             self::$db
@@ -1488,7 +1488,7 @@ class InstallUtils
             self::$db
         );
 
-       //add traing school
+        //add traing school
         $facultyID = FacultyUtils::add_faculty(
             'Administrative and Support Units',
             self::$db
@@ -1500,7 +1500,7 @@ class InstallUtils
             self::$db
         );
 
-       //create special modules
+        //create special modules
         module_utils::add_modules(
             'TRAIN',
             'Training Module',
@@ -1547,17 +1547,17 @@ class InstallUtils
         self::$db->commit();
     }
 
-  /**
-   * Creates the deafult Rogo users in the database:
-   * - The system admin
-   * - The cron user
-   * - 100 guest accounts
-   *
-   * @return void
-   */
+    /**
+     * Creates the deafult Rogo users in the database:
+     * - The system admin
+     * - The cron user
+     * - 100 guest accounts
+     *
+     * @return void
+     */
     protected static function createDefaultUsers()
     {
-      //create sysadmin user
+        //create sysadmin user
         self::get_sysadmin_details();
         UserUtils::create_user(
             self::$sysadmin_username,
@@ -1574,7 +1574,7 @@ class InstallUtils
             self::$db
         );
 
-      //create cron user
+        //create cron user
         UserUtils::create_user(
             self::$cfg_cron_user,
             self::$cfg_cron_passwd,
@@ -1590,10 +1590,10 @@ class InstallUtils
             self::$db
         );
 
-      //create 100 guest accounts
+        //create 100 guest accounts
         for ($i = 1; $i <= 100; $i++) {
-          // In the behat site guest users should have a password that matches their username.
-          // If it is live site install the guest should have a random password generated.
+            // In the behat site guest users should have a password that matches their username.
+            // If it is live site install the guest should have a random password generated.
             $guestpassword = (self::$behat_install) ? 'user' . $i : '';
             UserUtils::create_user(
                 'user' . $i,
@@ -1615,10 +1615,10 @@ class InstallUtils
         self::$db->commit();
     }
 
-  /**
-  * Check that we do not have a config file and display error if we do.
-  *
-  */
+    /**
+     * Check that we do not have a config file and display error if we do.
+     *
+     */
     static function configFile()
     {
         global $string;
@@ -1629,10 +1629,10 @@ class InstallUtils
         }
     }
 
-  /**
-   * Does the config file exist.
-   * @return boolean
-   */
+    /**
+     * Does the config file exist.
+     * @return boolean
+     */
     static function config_exists()
     {
         $rogo_path = dirname(__DIR__);
@@ -1642,10 +1642,10 @@ class InstallUtils
         return false;
     }
   
-  /**
-  * Check that  config file is writeable
-  *
-  */
+    /**
+     * Check that  config file is writeable
+     *
+     */
     static function configFileIsWriteable()
     {
         if (is_writable(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.inc.php')) {
@@ -1655,10 +1655,10 @@ class InstallUtils
         }
     }
 
-  /**
-  * Check that we write to the /config/ dir
-  *
-  */
+    /**
+     * Check that we write to the /config/ dir
+     *
+     */
     static function configPathIsWriteable()
     {
         if (is_writable(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config')) {
@@ -1668,16 +1668,16 @@ class InstallUtils
         }
     }
 
-  /**
-   * Create the default question statuses.
-   *
-   * @global type $string Language strings
-   */
+    /**
+     * Create the default question statuses.
+     *
+     * @global type $string Language strings
+     */
     protected static function createQuestionStatuses()
     {
         global $string;
 
-      // Create default question statuses
+        // Create default question statuses
         $statuses = array(
         array('name' => 'Normal', 'exclude_marking' => false, 'retired' => false, 'is_default' => true, 'change_locked' => true, 'validate' => true, 'display_warning' => 0, 'colour' => '#000000', 'display_order' => 0),
         array('name' => 'Retired', 'exclude_marking' => false, 'retired' => true, 'is_default' => false, 'change_locked' => true, 'validate' => false, 'display_warning' => 1, 'colour' => '#808080', 'display_order' => 1),
@@ -1692,58 +1692,58 @@ class InstallUtils
         }
     }
 
-  /**
-   * Ensures that the rogo user directories are created.
-   */
+    /**
+     * Ensures that the rogo user directories are created.
+     */
     public static function createDirectories()
     {
         global $string;
         $errors = array();
-      //media
+        //media
         $mediadirectory = rogo_directory::get_directory('media');
         $mediadirectory->create();
         if (!$mediadirectory->check_permissions()) {
             $errors['102'] = sprintf($string['errors3'], $mediadirectory->location());
         }
-      //qti imports
+        //qti imports
         $qtiimportdirectory = rogo_directory::get_directory('qti_import');
         $qtiimportdirectory->create();
         if (!$qtiimportdirectory->check_permissions()) {
             $errors['103'] = sprintf($string['errors3'], $qtiimportdirectory->location());
         }
-      //qti exports
+        //qti exports
         $qtiexportdirectory = rogo_directory::get_directory('qti_export');
         $qtiexportdirectory->create();
         if (!$qtiexportdirectory->check_permissions()) {
             $errors['104'] = sprintf($string['errors3'], $qtiexportdirectory->location());
         }
-      // email_templates.
+        // email_templates.
         $emailtemplatesdirectory = rogo_directory::get_directory('email_templates');
         $emailtemplatesdirectory->create();
         if (!$emailtemplatesdirectory->check_permissions()) {
             $errors['105'] = sprintf($string['errors3'], $emailtemplatesdirectory->location());
         }
-      // user photos.
+        // user photos.
         $photodirectory = rogo_directory::get_directory('user_photo');
         $photodirectory->create();
         if (!$photodirectory->check_permissions()) {
             $errors['106'] = sprintf($string['errors3'], $photodirectory->location());
         }
-      // Student help images.
+        // Student help images.
         $studenthelp = rogo_directory::get_directory('help_student');
         $studenthelp->create();
         $studenthelp->copy_from_default();
         if (!$studenthelp->check_permissions()) {
             $errors['107'] = sprintf($string['errors3'], $studenthelp->location());
         }
-      // Staff help images.
+        // Staff help images.
         $staffhelp = rogo_directory::get_directory('help_staff');
         $staffhelp->create();
         $staffhelp->copy_from_default();
         if (!$staffhelp->check_permissions()) {
             $errors['108'] = sprintf($string['errors3'], $staffhelp->location());
         }
-      //theme
+        //theme
         $themedirectory = rogo_directory::get_directory('theme');
         $themedirectory->create();
         $themedirectory->copy_from_default();
@@ -1755,9 +1755,9 @@ class InstallUtils
         }
     }
 
-  /**
-  * Check Apache can write to the required directories.
-  */
+    /**
+     * Check Apache can write to the required directories.
+     */
     static function checkDirPermissionsPre()
     {
         global $string;
@@ -1774,10 +1774,10 @@ class InstallUtils
         }
     }
 
-  /**
-  * Check Apache can write to the required directories
-  *
-  */
+    /**
+     * Check Apache can write to the required directories
+     *
+     */
     static function checkDirPermissionsPost()
     {
         global $string;
@@ -1787,7 +1787,7 @@ class InstallUtils
         } else {
             $tmp = self::getSettings(param::TEXT, true, 'server', 'temp');
         }
-      //tmp
+        //tmp
         if (!is_writable($tmp)) {
             $errors['100'] = sprintf($string['errors3'], $tmp);
         }
@@ -1813,12 +1813,12 @@ class InstallUtils
         }
     }
 
-  /**
-   * Display errors with a nice message
-   * @param string|array $error error message(s)
-   * @param boolean $fatal is error fatal
-   *
-   */
+    /**
+     * Display errors with a nice message
+     * @param string|array $error error message(s)
+     * @param boolean $fatal is error fatal
+     *
+     */
     static function displayError($error = '', $fatal = true)
     {
         global $string;
@@ -1851,10 +1851,10 @@ class InstallUtils
         }
     }
 
-  /**
-  * Log warnings with a nice message
-  *
-  */
+    /**
+     * Log warnings with a nice message
+     *
+     */
     static function logWarning($warning = '')
     {
         if (is_array($warning)) {
@@ -1864,10 +1864,10 @@ class InstallUtils
         }
     }
 
-  /**
-  * Display header
-  *
-  */
+    /**
+     * Display header
+     *
+     */
     static function displayHeader()
     {
         global $string;
@@ -1890,7 +1890,7 @@ class InstallUtils
         $data['version'] = $configObject->getxml('version');
         require_once dirname(__DIR__) . '/include/path_functions.inc.php';
         $cfg_web_root = get_root_path();
-      // Ensure there is a trailing slash.
+        // Ensure there is a trailing slash.
         if (substr($cfg_web_root, -1) !== '/') {
             $cfg_web_root .= '/';
         }
@@ -1900,10 +1900,10 @@ class InstallUtils
         $render->render($data, $lang, '/install/header.html');
     }
 
-  /**
-  * Display footer
-  *
-  */
+    /**
+     * Display footer
+     *
+     */
     static function displayfooter()
     {
         $configObject = Config::get_instance();
@@ -2032,7 +2032,7 @@ if(!isset(\$_SERVER['HTTP_HOST'])) {
 CONFIG;
 
         $cfg_web_root = get_root_path();
-      // Ensure there is a trailing slash.
+        // Ensure there is a trailing slash.
         if (substr($cfg_web_root, -1) !== '/') {
             $cfg_web_root .= '/';
         }

@@ -23,84 +23,84 @@
  */
 abstract class rogo_directory
 {
-  /** @var string Path relative to the Rogo root directory used to download files. */
+    /** @var string Path relative to the Rogo root directory used to download files. */
     protected $downloadfile = 'getfile.php';
 
-  /** @var int The file permissions to be used by the directory. */
+    /** @var int The file permissions to be used by the directory. */
     protected $filepermissions = 0744;
 
-  /**
-   * An array of rogo_directory objects, the key should match the type
-   * that would cause it to be loaded.
-   *
-   * This array should only be accessed via the get_directory() method.
-   *
-   * @var rogo_directory[]
-   */
+    /**
+     * An array of rogo_directory objects, the key should match the type
+     * that would cause it to be loaded.
+     *
+     * This array should only be accessed via the get_directory() method.
+     *
+     * @var rogo_directory[]
+     */
     protected static $loaded = array();
   
-  /**
-   * Language pack component.
-   */
+    /**
+     * Language pack component.
+     */
     private $langcomponent = 'classes/rogodirectory';
 
-  /**
-   * Is the user required to be authenticated to access files in the directory.
-   *
-   * @return boolean
-   */
+    /**
+     * Is the user required to be authenticated to access files in the directory.
+     *
+     * @return boolean
+     */
     public function authentication_required()
     {
         return true;
     }
 
-  /**
-   * Gets the configured Rogo data directory.
-   *
-   * @return string A path to the Rogo data directory, including a trailing slash.
-   * @throws directory_not_found
-   */
+    /**
+     * Gets the configured Rogo data directory.
+     *
+     * @return string A path to the Rogo data directory, including a trailing slash.
+     * @throws directory_not_found
+     */
     protected function base_directory()
     {
         if (!empty(InstallUtils::$cfg_rogo_data)) {
-          // Rogo is being installed. We should take the settings from InstallUtills
+            // Rogo is being installed. We should take the settings from InstallUtills
             $rogodata = InstallUtils::$cfg_rogo_data;
         } else {
             $config = Config::get_instance();
-          // This will be null if the user has not configured it.
+            // This will be null if the user has not configured it.
             $rogodata = $config->get('cfg_rogo_data');
         }
 
         if (!empty($rogodata)) {
-          // Data driectory configured and should be used.
+            // Data driectory configured and should be used.
             if (!is_writable($rogodata) and !self::is_read_only()) {
-              // Huston we have a problem.
+                // Huston we have a problem.
                 throw new directory_not_found('rogo_data');
             }
-          // Ensure the directory has a trailing slash.
+            // Ensure the directory has a trailing slash.
             if (substr($rogodata, -1) != DIRECTORY_SEPARATOR) {
                 $rogodata .= DIRECTORY_SEPARATOR;
             }
             $path = $rogodata;
         } else {
-          // Data directory not configured.
-          // We should return the root Rogo path.
+            // Data directory not configured.
+            // We should return the root Rogo path.
             $path = $this->default_base_directory();
         }
         return $path;
     }
 
-  /**
-   * Get the amount of time in seconds that files in the directory should be cached for.
-   *
-   * @return int
-   */
+    /**
+     * Get the amount of time in seconds that files in the directory should be cached for.
+     *
+     * @return int
+     */
     abstract public function cachetime();
 
-  /**
-   * Check if the directory has the correct permissions.
-   * @return boolean true on correct, false otherwise.
-   */
+    /**
+     * Check if the directory has the correct permissions.
+     * @return boolean true on correct, false otherwise.
+     */
     public function check_permissions()
     {
         $location = $this->location();
@@ -118,48 +118,48 @@ abstract class rogo_directory
         return false;
     }
   
-  /**
-   * Delete the contents of the directory.
-   * This should probably only be used by automatic test setup/teardown functions.
-   *
-   * @return boolean true if all the contents were deleted, false otherwise.
-   */
+    /**
+     * Delete the contents of the directory.
+     * This should probably only be used by automatic test setup/teardown functions.
+     *
+     * @return boolean true if all the contents were deleted, false otherwise.
+     */
     public function clear()
     {
         return $this->recursive_delete($this->location());
     }
 
-  /**
-   * Delete the contents of a sub directory.
-   * @param string subdir sub directory to delete
-   * @return boolean true if all the contents were deleted, false otherwise.
-   */
+    /**
+     * Delete the contents of a sub directory.
+     * @param string subdir sub directory to delete
+     * @return boolean true if all the contents were deleted, false otherwise.
+     */
     public function clear_subdir($subdir)
     {
         $path = $this->location() . DIRECTORY_SEPARATOR . $subdir;
-      // Ensure this is a vaild subdir before deleting.
+        // Ensure this is a vaild subdir before deleting.
         if ($this->valid_path($path)) {
             return $this->recursive_delete($path);
         }
         return false;
     }
 
-  /**
-   * Copy files from the default location into the configured location.
-   *
-   * @return void
-   */
+    /**
+     * Copy files from the default location into the configured location.
+     *
+     * @return void
+     */
     public function copy_from_default()
     {
         $datadir = $this->base_directory();
         $default_datadir = $this->default_base_directory();
         if ($datadir === $default_datadir) {
-          // Directory in the default location do nothing.
+            // Directory in the default location do nothing.
             return;
         }
         $location = $this->location();
         $default_location = str_replace($datadir, $default_datadir, $location);
-      // Get all the files in the default directory (this is not recursive)
+        // Get all the files in the default directory (this is not recursive)
         $files = glob("$default_location*.*");
         foreach ($files as $file) {
             $filename = basename($file);
@@ -167,9 +167,9 @@ abstract class rogo_directory
         }
     }
 
-  /**
-   * Create the directory if it does not exist.
-   */
+    /**
+     * Create the directory if it does not exist.
+     */
     public function create()
     {
         $directory = $this->location();
@@ -178,89 +178,89 @@ abstract class rogo_directory
         }
     }
 
-  /**
-   * Returns the default location of the Rogo data directory.
-   *
-   * @return string
-   */
+    /**
+     * Returns the default location of the Rogo data directory.
+     *
+     * @return string
+     */
     protected function default_base_directory()
     {
         return dirname(__DIR__) . DIRECTORY_SEPARATOR;
     }
 
-  /**
-   * Deletes the contents of a directory recursively, or delete a file.
-   *
-   * @param string $location The location to the directory.
-   * @return boolean true if all the contents were deleted, false otherwise.
-   */
+    /**
+     * Deletes the contents of a directory recursively, or delete a file.
+     *
+     * @param string $location The location to the directory.
+     * @return boolean true if all the contents were deleted, false otherwise.
+     */
     protected function recursive_delete($location)
     {
         if (!is_writable($location) or self::is_read_only()) {
-          // We cannot do any deletion.
+            // We cannot do any deletion.
             return false;
         }
         if (!is_dir($location)) {
-          // A file has been passed, delete it.
+            // A file has been passed, delete it.
             return unlink($location);
         }
-      // A directory has been passed, delete its contents.
+        // A directory has been passed, delete its contents.
         $success = true;
-      // If the directory has no trailing slash add one.
+        // If the directory has no trailing slash add one.
         if (substr($location, -1) !== DIRECTORY_SEPARATOR) {
             $location .= DIRECTORY_SEPARATOR;
         }
         $directory = dir($location);
         $entry = $directory->read();
-      // Loop through all the entries in the directory.
+        // Loop through all the entries in the directory.
         while ($entry !== false) {
             if ($entry == '.' || $entry == '..') {
-              // We should not try to delete the current and parent directory links.
+                // We should not try to delete the current and parent directory links.
                 $entry = $directory->read();
                 continue;
             }
             $deleted = $this->recursive_delete($location . $entry);
             $success = $success && $deleted;
             if ($deleted && is_dir($location . $entry)) {
-              // Delete the directory now as its contents have been removed.
+                // Delete the directory now as its contents have been removed.
                 $diredeleted = rmdir($location . $entry);
                 $success = $success && $diredeleted;
             }
-          // Get the next entry.
+            // Get the next entry.
             $entry = $directory->read();
         }
         $directory->close();
         return $success;
     }
 
-  /**
-   * Get the full OS dependant path to the specified file.
-   *
-   * @param string $filename
-   * @return string
-   */
+    /**
+     * Get the full OS dependant path to the specified file.
+     *
+     * @param string $filename
+     * @return string
+     */
     public function fullpath($filename)
     {
         return $this->location() . $filename;
     }
 
-  /**
-   * Get an instance of a specific type of rogo_directory class.
-   * The instanciated class is cached in the loaded array.
-   *
-   * @param string $type A type of Rogo directory that should be loaded.
-   * @return rogo_directory
-   * @throws directory_not_found
-   */
+    /**
+     * Get an instance of a specific type of rogo_directory class.
+     * The instanciated class is cached in the loaded array.
+     *
+     * @param string $type A type of Rogo directory that should be loaded.
+     * @return rogo_directory
+     * @throws directory_not_found
+     */
     public static function get_directory($type)
     {
-      // Check if we have already loaded the directory type.
+        // Check if we have already loaded the directory type.
         if (empty(self::$loaded[$type])) {
-          // Try to find the directory class.
+            // Try to find the directory class.
             if (!class_exists($type)) {
                 throw new directory_not_found($type);
             }
-          // Check that it is a valid directory class.
+            // Check that it is a valid directory class.
             $directory = new $type();
             if (!($directory instanceof rogo_directory)) {
                 throw new directory_not_found($type);
@@ -270,26 +270,26 @@ abstract class rogo_directory
         return self::$loaded[$type];
     }
 
-  /**
-   * Get the file system location of the directory, including a trailing slash.
-   *
-   * @return string
-   */
+    /**
+     * Get the file system location of the directory, including a trailing slash.
+     *
+     * @return string
+     */
     abstract public function location();
 
-  /**
-   * Sends the specified file to the users browser then terminates the script.
-   *
-   * @param string $filename The name of the file in the directory.
-   * @param boolean $forcedownload When false the user will be prompted to save the file.
-   * @return void
-   * @throws file_not_found
-   */
+    /**
+     * Sends the specified file to the users browser then terminates the script.
+     *
+     * @param string $filename The name of the file in the directory.
+     * @param boolean $forcedownload When false the user will be prompted to save the file.
+     * @return void
+     * @throws file_not_found
+     */
     public function send_file($filename, $forcedownload = false)
     {
         $this->verify_file($filename);
         $fullpath = $this->fullpath($filename);
-      // Start sending headers.
+        // Start sending headers.
         if (!empty($forcedownload)) {
             header('Content-Disposition: attachment; filename="' . $filename . '"');
         } else {
@@ -298,17 +298,17 @@ abstract class rogo_directory
 
         if ($this->cachetime() > 0) {
             if ($this->authentication_required()) {
-              // Only cache on the browser.
+                // Only cache on the browser.
                 $cachelevel = ' private,';
             } else {
-              // Proxies may cache the file.
+                // Proxies may cache the file.
                 $cachelevel = ' public,';
             }
             header('Cache-Control:' . $cachelevel . ' max-age=' . $this->cachetime() . ', no-transform');
             header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $this->cachetime()) . ' GMT');
             header('Pragma: ');
         } else {
-          // No caching anywhere!
+            // No caching anywhere!
             header('Cache-Control: private, must-revalidate, pre-check=0, post-check=0, max-age=0, no-transform');
             header('Expires: ' . gmdate('D, d M Y H:i:s', 0) . ' GMT');
             header('Pragma: no-cache');
@@ -317,24 +317,24 @@ abstract class rogo_directory
         header('Content-Type: ' . $fileinfo->file($fullpath));
         header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($fullpath)) . ' GMT');
         header('Content-Length: ' . filesize($fullpath));
-      // Send the file.
+        // Send the file.
         readfile($fullpath);
-      // Kill the script.
+        // Kill the script.
         exit;
     }
 
-  /**
-   * Get the url for a file in the directory.
-   *
-   * If the filename specified does not exist an exception should be thrown.
-   *
-   * @param string $filename The name of a file inside the directory.
-   * @param boolean $forcedownload Specify if an exception should be thrown if the file does not exist.
-   * @param boolean $verifyfile Specify if an exception should be thrown if the file does not exist.
-   * @param boolean $escaped Should the url to the file be escaped.
-   * @return string
-   * @thows file_not_found
-   */
+    /**
+     * Get the url for a file in the directory.
+     *
+     * If the filename specified does not exist an exception should be thrown.
+     *
+     * @param string $filename The name of a file inside the directory.
+     * @param boolean $forcedownload Specify if an exception should be thrown if the file does not exist.
+     * @param boolean $verifyfile Specify if an exception should be thrown if the file does not exist.
+     * @param boolean $escaped Should the url to the file be escaped.
+     * @return string
+     * @thows file_not_found
+     */
     public function url($filename, $forcedownload = false, $verifyfile = false, $escaped = false)
     {
         if ($verifyfile) {
@@ -342,17 +342,17 @@ abstract class rogo_directory
         }
         $config = Config::get_instance();
         $webroot = $config->get('cfg_root_path');
-      // Ensure there is a trailing slash.
+        // Ensure there is a trailing slash.
         if (substr($webroot, -1) !== '/') {
             $webroot .= '/';
         }
-      // Build the parameters for the url.
+        // Build the parameters for the url.
         $get = '?type=' . get_called_class();
         $get .= '&filename=' . $filename;
         if ($forcedownload) {
             $get .= '&forcedownload=1';
         }
-      // Generate and return the url.
+        // Generate and return the url.
         $url = $webroot . $this->downloadfile . $get;
         if ($escaped) {
             $url = htmlentities($url, ENT_HTML5);
@@ -360,12 +360,12 @@ abstract class rogo_directory
         return $url;
     }
 
-  /**
-   * Check if the specified file exists.
-   *
-   * @param string $filename
-   * @throws file_not_found|invalid_file_path
-   */
+    /**
+     * Check if the specified file exists.
+     *
+     * @param string $filename
+     * @throws file_not_found|invalid_file_path
+     */
     public function verify_file($filename)
     {
         $config = Config::get_instance();
@@ -374,22 +374,22 @@ abstract class rogo_directory
         $logger = new Logger($config->db);
         $fullpath = $this->fullpath($filename);
         if (empty($filename) || !file_exists($fullpath) || !is_readable($fullpath)) {
-          // The file cannot be retrived for the user.
+            // The file cannot be retrived for the user.
             $logger->record_access_denied($userObject->get_user_ID(), $_SERVER['PHP_SELF'], $langpack->get_string($this->langcomponent, 'mediapathnotfound'));
             throw new file_not_found($fullpath);
         }
         if (!$this->valid_path($fullpath)) {
-          // Log error in denied access log.
+            // Log error in denied access log.
             $logger->record_access_denied($userObject->get_user_ID(), $_SERVER['PHP_SELF'], $langpack->get_string($this->langcomponent, 'incorrectmediapath'));
             throw new invalid_file_path();
         }
     }
 
-  /**
-   * Check real path of file is in the real path of the directory.
-   * @param string $fullpath path to file
-   * @return boolean true on valid path
-   */
+    /**
+     * Check real path of file is in the real path of the directory.
+     * @param string $fullpath path to file
+     * @return boolean true on valid path
+     */
     public function valid_path($fullpath)
     {
         $realfullpath = realpath($fullpath);
@@ -400,10 +400,10 @@ abstract class rogo_directory
         return true;
     }
 
-  /**
-   * Check if server is set to be read only
-   * @return boolean true if readonly server, false otherwise
-   */
+    /**
+     * Check if server is set to be read only
+     * @return boolean true if readonly server, false otherwise
+     */
     public static function is_read_only()
     {
         $config = Config::get_instance();

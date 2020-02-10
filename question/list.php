@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2013 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../lang/' . $language . '/include/question_types.php';
@@ -170,7 +170,7 @@ if ($module != '') {
         $staff_modules_sql = " AND ((questions_modules.idMod IN ($staff_modules_list)";
         $staff_modules_sql .= ') OR users.id=' . $userObject->get_user_ID() . ') ';
     } else {
-      // Reset to just look for current owners paper if not on any teams.
+        // Reset to just look for current owners paper if not on any teams.
         $staff_modules_sql .= 'AND users.id=' . $userObject->get_user_ID() . ' ';
     }
 }
@@ -354,7 +354,7 @@ foreach ($table_order as $display => $col_width) {
         if (trim($theme) != '') {
             echo '<span class="t">' . $theme . '</span><br />&nbsp;&nbsp;&nbsp;&nbsp;';
         }
-      //sl change this from echo $leadin to below
+        //sl change this from echo $leadin to below
     
         echo QuestionUtils::clean_leadin($leadin, $leadinlength) . '</td>';
         echo '<td class="nobr">' . $string[$q_type] . '</td>';

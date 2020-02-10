@@ -23,25 +23,25 @@
  */
 class html5_helper extends RogoStaticSingleton
 {
-  /**
-   * The active instance of this class.
-   *
-   * @var html5_helper
-   */
+    /**
+     * The active instance of this class.
+     *
+     * @var html5_helper
+     */
     protected static $inst;
 
-  /**
-   * The name of the class that is instantiated as the singleton.
-   *
-   * @var string
-   */
+    /**
+     * The name of the class that is instantiated as the singleton.
+     *
+     * @var string
+     */
     protected static $class_name = 'html5_helper';
 
-  /**
-   * Get an array of language strings used by html5 questions.
-   *
-   * @return array
-   */
+    /**
+     * Get an array of language strings used by html5 questions.
+     *
+     * @return array
+     */
     public function get_lang_strings()
     {
         $hotspot_strings = hotspot_helper::get_instance()->get_lang_strings();

@@ -32,30 +32,30 @@ use Config,
  */
 class state
 {
-  /** @var mysqli A Rogo database connection. */
+    /** @var mysqli A Rogo database connection. */
     private static $db;
-  /** @var array Stores an array of tables per named transaction that can be used to detect changes if a transaction fails. */
+    /** @var array Stores an array of tables per named transaction that can be used to detect changes if a transaction fails. */
     private static $tablestates = array();
-  /** @var array Stores a list of temporary tables we have created to backup Rogo data in. */
+    /** @var array Stores a list of temporary tables we have created to backup Rogo data in. */
     private static $temptables = array();
-  /** @var string Stores the database schema we connect to. */
+    /** @var string Stores the database schema we connect to. */
     private static $schema;
 
-  /** The name of the transaction used for a scenario. */
+    /** The name of the transaction used for a scenario. */
     const TRANSACTION_SCENARIO = 'behatscenario';
-  /** The name of the transaction used for the suite. */
+    /** The name of the transaction used for the suite. */
     const TRANSACTION_SUITE = 'behatsuite';
-  /** The name of the transaction used for the feature. */
+    /** The name of the transaction used for the feature. */
     const TRANSACTION_FEATURE = 'behatfeature';
 
-  /**
-   * Connects to a Rogo database.
-   *
-   * @param Config $config
-   */
+    /**
+     * Connects to a Rogo database.
+     *
+     * @param Config $config
+     */
     public static function connect(Config $config)
     {
-      // Create a database connection.
+        // Create a database connection.
         $host = $config->get('cfg_db_host');
         $username = $config->get('cfg_behat_db_user');
         $password = $config->get('cfg_behat_db_password');
@@ -64,57 +64,57 @@ class state
         self::$db = new mysqli($host, $username, $password, self::$schema, $port);
     }
 
-  /**
-   * Returns the database connection object.
-   *
-   * @return mysqli
-   */
+    /**
+     * Returns the database connection object.
+     *
+     * @return mysqli
+     */
     public static function get_db()
     {
         return self::$db;
     }
 
-  /**
-   * Closes the database connection stored by this class.
-   */
+    /**
+     * Closes the database connection stored by this class.
+     */
     public static function close_db()
     {
         self::$db->close();
         self::$db = null;
     }
 
-  /**
-   * Save the state of the Rogo database so we can rollback any changes.
-   *
-   * @param string $name
-   * @throws Exception
-   */
+    /**
+     * Save the state of the Rogo database so we can rollback any changes.
+     *
+     * @param string $name
+     * @throws Exception
+     */
     public static function save_database_state($name)
     {
-      // Check the transaction has not been started already. We would not want to overwrite the save state.
+        // Check the transaction has not been started already. We would not want to overwrite the save state.
         if (isset(self::$tablestates[$name])) {
             throw new Exception("A state called $name has already been saved.");
         }
-      // Get and store the state of all the tables in the database.
-      // We can use this for comparisons to ensure that nothing has been changed later.
+        // Get and store the state of all the tables in the database.
+        // We can use this for comparisons to ensure that nothing has been changed later.
         self::$tablestates[$name] = self::get_table_statuses();
         foreach (self::$tablestates[$name] as $status) {
             self::save_table_state($name, $status);
         }
-      // We cannot use database transactions because Rogo will be accessed by a browser during the tests.
+        // We cannot use database transactions because Rogo will be accessed by a browser during the tests.
     }
 
-  /**
-   * Backs up the data in a table so we can roll back any changes on it.
-   *
-   * @param string $statename the name of the state that we are saving the table for.
-   * @param array $status a set of results from the self::get_table_statuses() function
-   * @return void
-   */
+    /**
+     * Backs up the data in a table so we can roll back any changes on it.
+     *
+     * @param string $statename the name of the state that we are saving the table for.
+     * @param array $status a set of results from the self::get_table_statuses() function
+     * @return void
+     */
     private static function save_table_state($statename, array $status)
     {
         if ($status['rows'] == 0) {
-          // The table has no data we need to save.
+            // The table has no data we need to save.
             return;
         }
         $temptablename = $statename . '_' . $status['name'];
@@ -126,62 +126,62 @@ class state
         self::$temptables[$statename][$originaltable] = $temptablename;
     }
 
-  /**
-   * Both parameters must be a row from an array generated by self::get_table_statuses()
-   * The function will attempt to undo any changes made to the database between the
-   * original state and the new state.
-   *
-   * @param string $statename the name of the state that we are saving the table for.
-   * @param array $originalstate
-   * @param array $newstate
-   * @return void
-   */
+    /**
+     * Both parameters must be a row from an array generated by self::get_table_statuses()
+     * The function will attempt to undo any changes made to the database between the
+     * original state and the new state.
+     *
+     * @param string $statename the name of the state that we are saving the table for.
+     * @param array $originalstate
+     * @param array $newstate
+     * @return void
+     */
     private static function reset_table($statename, array $originalstate, array $newstate)
     {
         if (empty($originalstate['name']) or empty($newstate['name']) or $originalstate['name'] !== $newstate['name']) {
-          // The states are not for the same table... something is really borked!
+            // The states are not for the same table... something is really borked!
             throw new Exception('The states passed are not for the same table');
         }
         if ($originalstate['created'] !== $newstate['created']) {
-          // The table was deleted and re-created!
+            // The table was deleted and re-created!
         }
 
         if ($originalstate['rows'] == 0 and $newstate['rows'] == 0) {
             self::reset_autoincrement($originalstate['name'], $originalstate['auto_increment'], $newstate['auto_increment']);
-          // The table should be reset now.
+            // The table should be reset now.
             return;
         }
 
         self::truncate_table($originalstate['name']);
 
         if ($originalstate['rows'] == 0) {
-          // The original table had no data, so the reset is done now.
+            // The original table had no data, so the reset is done now.
             return;
         }
-      // Put the stored data back into the the table.
+        // Put the stored data back into the the table.
         $repopulatesql = 'INSERT INTO ' . $originalstate['name'] .
         ' SELECT * FROM ' . self::$temptables[$statename][$originalstate['name']];
         self::$db->query($repopulatesql);
         self::exception_if_query_error();
         self::reset_autoincrement($originalstate['name'], $originalstate['auto_increment'], $newstate['auto_increment']);
-      // Drop the temporay table.
+        // Drop the temporay table.
         $dropsql = 'DROP TEMPORARY TABLE ' . self::$temptables[$statename][$originalstate['name']];
         self::$db->query($dropsql);
         self::exception_if_query_error();
         unset(self::$temptables[$statename][$originalstate['name']]);
     }
 
-  /**
-   * Sets the autoincrement of a table to its original value if it has been modified.
-   *
-   * @param string $table The name of a mysql
-   * @param int $originalincrement The value that we expect the table to have
-   * @param int $currentincrement The value the table currently has
-   */
+    /**
+     * Sets the autoincrement of a table to its original value if it has been modified.
+     *
+     * @param string $table The name of a mysql
+     * @param int $originalincrement The value that we expect the table to have
+     * @param int $currentincrement The value the table currently has
+     */
     private static function reset_autoincrement($table, $originalincrement, $currentincrement)
     {
         if ($originalincrement != $currentincrement) {
-          // Change the auto increment value, reset it.
+            // Change the auto increment value, reset it.
             $incrementsql = 'ALTER TABLE ' . $table . " AUTO_INCREMENT = $originalincrement";
             $incrementquery = self::$db->prepare($incrementsql);
             self::exception_if_query_error();
@@ -190,12 +190,12 @@ class state
         }
     }
 
-  /**
-   * Undo any database changes made since the state was saved.
-   *
-   * @param string $name The name of a saved database state.
-   * @throws Exception
-   */
+    /**
+     * Undo any database changes made since the state was saved.
+     *
+     * @param string $name The name of a saved database state.
+     * @throws Exception
+     */
     public static function rollback_database_state($name)
     {
         if (!isset(self::$tablestates[$name])) {
@@ -205,20 +205,20 @@ class state
         $deletedtables = 0;
         foreach (self::$tablestates[$name] as $table => $status) {
             if (!isset($currentstate[$table])) {
-              // The table has been deleted.
+                // The table has been deleted.
                 $deletedtables++;
                 continue;
             }
             self::reset_table($name, $status, $currentstate[$table]);
         }
 
-      // Check the sizes of both arrays match.
+        // Check the sizes of both arrays match.
         if (count($currentstate) !== (count(self::$tablestates[$name]) - $deletedtables)) {
-          // Tables got added, we should find and delete them.
+            // Tables got added, we should find and delete them.
             throw new Exception("Tables mismatch from $name");
         }
         if (!empty(self::$temptables[$name])) {
-          // A table was not reset properly.
+            // A table was not reset properly.
             throw new Exception("Tables not reset correctly in $name");
         }
         if (!empty($deletedtables)) {
@@ -227,11 +227,11 @@ class state
         unset(self::$tablestates[$name]);
     }
 
-  /**
-   * Gets the full table status information for all the tables in Rogo and returns them as an associative array.
-   *
-   * @return array
-   */
+    /**
+     * Gets the full table status information for all the tables in Rogo and returns them as an associative array.
+     *
+     * @return array
+     */
     private static function get_table_statuses()
     {
         $sql = 'SELECT TABLE_NAME, AUTO_INCREMENT, CREATE_TIME '
@@ -250,7 +250,7 @@ class state
             );
         }
         $query->close();
-      // Row counts in the information schema seem to be inaccurate so we need to count on each table ourselves.
+        // Row counts in the information schema seem to be inaccurate so we need to count on each table ourselves.
         foreach ($return as $table => &$record) {
             $rowcount = "SELECT COUNT(*) AS count FROM $table";
             $cquery = self::$db->query($rowcount);
@@ -263,12 +263,12 @@ class state
         return $return;
     }
 
-  /**
-   * Start a database transaction using a defined name.
-   *
-   * @param string $name the name of the database transaction.
-   * @throws Exception
-   */
+    /**
+     * Start a database transaction using a defined name.
+     *
+     * @param string $name the name of the database transaction.
+     * @throws Exception
+     */
     public static function start_transaction($name)
     {
         $started = self::$db->savepoint($name);
@@ -277,12 +277,12 @@ class state
         }
     }
 
-  /**
-   * Rollback the database to a savepoint, or entirely if no prameters are passed.
-   *
-   * @param string $name the name of the savepoint to rollback to (optional)
-   * @throws Exception
-   */
+    /**
+     * Rollback the database to a savepoint, or entirely if no prameters are passed.
+     *
+     * @param string $name the name of the savepoint to rollback to (optional)
+     * @throws Exception
+     */
     public static function rollback_transaction($name = null)
     {
         $rolledback = self::$db->rollback(null, $name);
@@ -291,9 +291,9 @@ class state
         }
     }
 
-  /**
-   * Truncate all the tables in the database.
-   */
+    /**
+     * Truncate all the tables in the database.
+     */
     public static function sanatise_tables()
     {
         $tables = self::table_list();
@@ -302,11 +302,11 @@ class state
         }
     }
 
-  /**
-   * Truncate an individual table.
-   *
-   * @param string $table the name of a table
-   */
+    /**
+     * Truncate an individual table.
+     *
+     * @param string $table the name of a table
+     */
     protected static function truncate_table($table)
     {
         $sql = "TRUNCATE TABLE $table";
@@ -314,11 +314,11 @@ class state
         self::exception_if_query_error();
     }
 
-  /**
-   * Throws an exception if the last run query had an error.
-   *
-   * @throws Exception
-   */
+    /**
+     * Throws an exception if the last run query had an error.
+     *
+     * @throws Exception
+     */
     protected static function exception_if_query_error()
     {
         if (self::$db->errno != 0) {
@@ -326,11 +326,11 @@ class state
         }
     }
 
-  /**
-   * Returns an array of all the tables in the database.
-   *
-   * @return array
-   */
+    /**
+     * Returns an array of all the tables in the database.
+     *
+     * @return array
+     */
     public static function table_list()
     {
         $tablelist = self::$db->query('SHOW TABLES');

@@ -43,7 +43,7 @@ $longoptions = array(
 $optionslist = getopt($options, $longoptions);
 
 if (isset($optionslist['h']) or isset($optionslist['help'])) {
-  // Display some help information.
+    // Display some help information.
     cli_utils::prompt(help::init_help());
     exit(0);
 }
@@ -61,7 +61,7 @@ if (isset($optionslist['update'])) {
 try {
     $config = Config::get_instance();
     if (!$config->is_behat_configured()) {
-      // Stop if behat is not configured correctly.
+        // Stop if behat is not configured correctly.
         throw new Exception('Behat not configured correctly.');
     }
     $config->use_behat_site();
@@ -79,23 +79,23 @@ if (function_exists('opcache_reset')) {
 chdir(__DIR__);
 
 try {
-  // Ensure composer and it's dependancies are installed and upto date.
+    // Ensure composer and it's dependancies are installed and upto date.
     composer_utils::setup($composer_method);
-  // Ensure npm and it's dependancies are installed and upto date.
+    // Ensure npm and it's dependancies are installed and upto date.
     npm_utils::setup($npm_method);
-  // The composer autoloader may not have been generated before this point so we should ensure it is.
+    // The composer autoloader may not have been generated before this point so we should ensure it is.
     autoloader::init();
-  // Create the behat.yml file.
+    // Create the behat.yml file.
     environment::build_config();
-  // Create the database.
+    // Create the database.
     if (isset($optionslist['clean']) or environment::upgrade_needed()) {
         database::install_database();
-      // Store the version of Rogo that behat is initialised for.
+        // Store the version of Rogo that behat is initialised for.
         environment::save_version();
     } else {
         cli_utils::prompt('Database does not need updating.');
     }
-  // Display the command to run tests.
+    // Display the command to run tests.
     cli_utils::prompt(help::run_help());
 } catch (Exception $e) {
     cli_utils::prompt($e->getMessage());

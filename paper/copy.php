@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Copies a paper (e.g. properties table) and possibly the questions on the paper.
-*
-* @author Simon Wilkinson, Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Copies a paper (e.g. properties table) and possibly the questions on the paper.
+ *
+ * @author Simon Wilkinson, Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -80,7 +80,7 @@ $update = param::optional('copyfrompaper', false, param::BOOLEAN, param::FETCH_P
 
 // Only copy properties if new paper created.
 if ($update === false) {
-  // Copy the properties (properties table)
+    // Copy the properties (properties table)
     $postparams['paperID'] = $paperid;
     $postparams['paper_type'] = param::required('paper_type', param::INT, param::FETCH_POST);      // Override the paper type with what is posted.
     $postparams['duration_hours'] = param::optional('duration_hours', 0, param::INT, param::FETCH_POST);
@@ -115,7 +115,7 @@ if ($update === false) {
 //Killer question object
 $KillerQuestionsObj = new Killer_Question($paperid, $mysqli);
 if ($copytype == 'paperonly') {        // Copy the paper only!
-  // Copy the question pointers (papers table)
+    // Copy the question pointers (papers table)
     $result = $mysqli->prepare('SELECT question, screen, display_pos FROM papers WHERE paper = ?');
     $result->bind_param('i', $paperid);
     $result->execute();
@@ -128,7 +128,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
     }
     $result->close();
 
-  // If we are copying in the same session we can copy the objectives
+    // If we are copying in the same session we can copy the objectives
     if (count($qids) > 0) {
         $qids = implode(',', $qids);
         if ($new_calendar_year == $calendar_year) {
@@ -154,20 +154,20 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
             }
         }
     }
-  // Copying all the killer questions
+    // Copying all the killer questions
     $KillerQuestionsObj->copy_killer_questions($new_paper_id);
 
-  // If option set, copy standard settings from old to new paper
+    // If option set, copy standard settings from old to new paper
     if (param::optional('copy_std_setting', false, param::BOOLEAN, param::FETCH_POST)) {
         StandardSetting::copy_std_setting_to_paper_linked($paperid, $new_paper_id, $mysqli);
     }
 } else {    // Copy the paper and the questions.
     $mediadirectory = rogo_directory::get_directory('media');
 
-  // Get question statuses
+    // Get question statuses
     $default_status = -1;
     $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
-  // Set copies of retired questions to default statuses
+    // Set copies of retired questions to default statuses
     foreach ($status_array as $tmp_status) {
         if ($tmp_status->get_is_default()) {
             $default_status = $tmp_status->id;
@@ -175,7 +175,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
         }
     }
 
-  // Copy the question and option data (questions and options tables)
+    // Copy the question and option data (questions and options tables)
     $old_qids = array();
     $new_qids = array();
     $q_no = 0;
@@ -195,7 +195,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
             if (!in_array($question, $old_qids)) {
                 $old_qids[] = $question;
             }
-          // Question data
+            // Question data
             if ($line == 0) {
                 if ($q_type != 'info') {
                     $q_no++;
@@ -213,7 +213,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
                                 if (file_exists($mediadirectory->fullpath($individual_media))) {
                                     if (!copy($mediadirectory->fullpath($individual_media), $mediadirectory->fullpath($new_media_name))) {
                                         $error[] = sprintf($string['copyerror'], $individual_media);
-                                  // If the image is missing dont put the file name in the new question
+                                        // If the image is missing dont put the file name in the new question
                                         $new_media_name = '';
                                     }
                                 } else {
@@ -233,7 +233,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
                 }
             }
 
-          // Option data
+            // Option data
             if (trim($o_media) != '') {
                 $media_array = array();
                 $media_array = explode('|', $o_media);
@@ -284,7 +284,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
                 $addQuestion->bind_param('ssssssssisssssssissss', $q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $userObject->get_user_ID(), $new_q_media, $q_media_width, $q_media_height, $bloom, $scenario_plain, $leadin_plain, $std, $new_status, $q_option_order, $score_method, $settings, $guid);
                 $addQuestion->execute();
                 $new_qids[] = $question_id = $mysqli->insert_id;
-            //making duplicate question a killer question
+                //making duplicate question a killer question
                 if ($KillerQuestionsObj->is_killer_question($question)) {
                     $copyKillerQuestion = new Killer_Question($new_paper_id, $mysqli);
                     $copyKillerQuestion->set_question($question_id);
@@ -295,16 +295,16 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
                 }
                 $addQuestion->close();
 
-            // Add in a record to the papers table.
+                // Add in a record to the papers table.
                 Paper_utils::add_question($new_paper_id, $question_id, $screen, $display_pos, $mysqli);
 
-            // Create a track changes record to say where question was copied from.
+                // Create a track changes record to say where question was copied from.
                 $logger = new Logger($mysqli);
                 $logger->track_change('Copied Question', $question_id, $userObject->get_user_ID(), $question, $question_id, 'Copied Question');
-            // Create a track changes record to say new question added to paper.
+                // Create a track changes record to say new question added to paper.
                 $logger->track_change('Paper', $new_paper_id, $userObject->get_user_ID(), '', $question_id, 'Add Question');
 
-            // Lookup and copy the keywords
+                // Lookup and copy the keywords
                 $keyword_result = $mysqli->prepare('SELECT keywordID FROM keywords_question WHERE q_id = ?');
                 $keyword_result->bind_param('i', $question);
                 $keyword_result->execute();
@@ -319,7 +319,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
                 $keyword_result->close();
             }
       
-        // Look for and fix links in linked enhancedcalc questions
+            // Look for and fix links in linked enhancedcalc questions
             if ($q_type == 'enhancedcalc') {
                 require_once('../plugins/questions/enhancedcalc/enhancedcalc.class.php');
                 if (!isset($configObj)) {
@@ -407,7 +407,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
     $result->free_result();
     $result->close();
 
-  // If we are copying in the same session we can copy the objectives
+    // If we are copying in the same session we can copy the objectives
     if ($new_calendar_year == $calendar_year) {
         $i = 0;
         foreach ($old_qids as $old_id) {
@@ -420,7 +420,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
             $i++;
         }
     } else {
-      // We are copying between sessions we need to check for changed sessions/objectives
+        // We are copying between sessions we need to check for changed sessions/objectives
         $old_course = getObjectives($moduleIDs, $calendar_year, $paperid, '', $mysqli);
         $new_course = getObjectives($moduleIDs, $new_calendar_year, $paperid, '', $mysqli);
         if (count($old_course) > 0 and count($new_course) > 0) {
@@ -461,7 +461,7 @@ if ($copytype == 'paperonly') {        // Copy the paper only!
         }
     }
 
-  // If option set, copy standard settings from old to new paper
+    // If option set, copy standard settings from old to new paper
     if (param::optional('copy_std_setting', false, param::BOOLEAN, param::FETCH_POST)) {
         StandardSetting::copy_std_setting_to_paper_copied($paperid, $new_paper_id, $old_qids, $new_qids, $mysqli);
     }

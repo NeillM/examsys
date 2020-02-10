@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* This script allows staff to manually override the marks for Calculation type questions.
-*
-* @author Rob Ingram, Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * This script allows staff to manually override the marks for Calculation type questions.
+ *
+ * @author Rob Ingram, Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -71,7 +71,7 @@ while ($result->fetch()) {
             $dist = 9999999;
         }
 
-      // Don't include absolutely correct answers in the list.
+        // Don't include absolutely correct answers in the list.
         if (!$answer_obj->is_user_ans_correct()) {
             $log_answers[] = array('paper_type' => $type, 'id' => $id, 'answer_obj' => $answer_obj, 'mark' => strval($mark), 'user_id' => $user_id, 'distance' => $dist);
         }
@@ -179,13 +179,13 @@ krsort($log_answers2, SORT_NUMERIC);
 foreach ($log_answers2 as $innerans) {
     foreach ($innerans as $answerin2) {
         $answer = $log_answers[$answerin2];
-      // If distance not available set to 9999999.
+        // If distance not available set to 9999999.
         if (!isset($answer['distance'])) {
             $answer['distance'] = 9999999;
-        // Else if distance is Inf or -Inf set to 0.
+            // Else if distance is Inf or -Inf set to 0.
         } elseif ($answer['distance'] == 'Inf' or $answer['distance'] == '-Inf') {
             $answer['distance'] = 0;
-        // Else if distance not a number set to 9999999.
+            // Else if distance not a number set to 9999999.
         } elseif (!is_numeric($answer['distance'])) {
             $answer['distance'] = 9999999;
         }
@@ -204,7 +204,7 @@ foreach ($log_answers2 as $innerans) {
             $reason = $overrides[$answer['id']]['reason'];
             $or_class = ' class="overridden"';
         } else {
-          // Populate with existing mark type
+            // Populate with existing mark type
             if (isset($q_marks[$answer['mark']])) {
                 $new_type = $q_marks[$answer['mark']];
             }

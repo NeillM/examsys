@@ -16,10 +16,10 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Text editor plugin
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2017 onwards The University of Nottingham
-*/
+ * Text editor plugin
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2017 onwards The University of Nottingham
+ */
 
 namespace plugins;
 
@@ -249,7 +249,7 @@ abstract class plugins_texteditor extends \plugins\plugins
      */
     public function disable_plugin()
     {
-      // Nothing to do as only one module text editor plugin is enable at a time enable_plugin handles everything.
+        // Nothing to do as only one module text editor plugin is enable at a time enable_plugin handles everything.
     }
 
     /**
@@ -297,7 +297,7 @@ abstract class plugins_texteditor extends \plugins\plugins
     public function get_render_paths()
     {
         $renderpath = array($this->get_header_path());
-      // Always get plain text editor.
+        // Always get plain text editor.
         $renderpath[] = dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'templates' . DIRECTORY_SEPARATOR . 'texteditor';
         return $renderpath;
     }
@@ -310,7 +310,7 @@ abstract class plugins_texteditor extends \plugins\plugins
     {
         $langpack = new \langpack();
         $strings = $langpack->get_all_strings($this->langcomponent);
-      // Always get plain text editor.
+        // Always get plain text editor.
         $strings = array_merge($strings, $langpack->get_all_strings('/texteditor'));
         return $strings;
     }

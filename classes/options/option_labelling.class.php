@@ -27,22 +27,22 @@
 class OptionLABELLING extends OptionEdit
 {
     
-  /**
-   * Is this option blank?
-   * @return boolean
-   */
+    /**
+     * Is this option blank?
+     * @return boolean
+     */
     public function is_blank()
     {
         return ($this->correct == '');
     }
   
-  /**
-   * Check that the minimum set of fields exist in the given data to create a new option
-   * @param array $data
-   * @param array $files expects PHP FILES array
-   * @param integer $index option number
-   * @return boolean
-   */
+    /**
+     * Check that the minimum set of fields exist in the given data to create a new option
+     * @param array $data
+     * @param array $files expects PHP FILES array
+     * @param integer $index option number
+     * @return boolean
+     */
     public function minimum_fields_exist($data, $files, $index)
     {
         return true;

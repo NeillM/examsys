@@ -49,20 +49,20 @@ class ldap_auth extends outline_authentication
         return $callbackarray;
     }
 
-  /**
-   * Creates a new entry in a the user table specified in the plugin configuration if enabled.
-   *
-   * The enable_fudgeuser must be set to true. This should not be done if the core users table is configured,
-   * but should if a custom user table is used.
-   *
-   * The object passed will have 3 parameters:
-   * - authobj This is the object passed to the authentication callbacks
-   * - postauthobj This is the object passed to the postathentication callbacks
-   * - userid The Rogo id of the user.
-   *
-   * @param stdClass $postauthsuccessobj
-   * @return stdClass The object passed, with any modifications.
-   */
+    /**
+     * Creates a new entry in a the user table specified in the plugin configuration if enabled.
+     *
+     * The enable_fudgeuser must be set to true. This should not be done if the core users table is configured,
+     * but should if a custom user table is used.
+     *
+     * The object passed will have 3 parameters:
+     * - authobj This is the object passed to the authentication callbacks
+     * - postauthobj This is the object passed to the postathentication callbacks
+     * - userid The Rogo id of the user.
+     *
+     * @param stdClass $postauthsuccessobj
+     * @return stdClass The object passed, with any modifications.
+     */
     function createnewuserassociation($postauthsuccessobj)
     {
         if ($this->createnewuserassociation !== true) {
@@ -72,8 +72,8 @@ class ldap_auth extends outline_authentication
             return $postauthsuccessobj;
         }
 
-      // To get here an account would not have been found in the initial authentication,
-      // but then have been created during the lookup phase of authentication.
+        // To get here an account would not have been found in the initial authentication,
+        // but then have been created during the lookup phase of authentication.
         $username_col = $this->settings['username_col'];
         $id_col = $this->settings['id_col'];
         $table = $this->settings['table'];
@@ -92,20 +92,20 @@ class ldap_auth extends outline_authentication
         return $displayerrformobj;
     }
 
-  /**
-   * Called if authentication fails.
-   *
-   * The object passed will have 2 parameters:
-   * - authobj This is the object passed to the authentication callbacks
-   * - postauthobj This is the object passed to the postathentication callbacks
-   *
-   * @param stdClass $postauthfailreturn
-   * @return stdClass The object passed, with any modifications.
-   */
+    /**
+     * Called if authentication fails.
+     *
+     * The object passed will have 2 parameters:
+     * - authobj This is the object passed to the authentication callbacks
+     * - postauthobj This is the object passed to the postathentication callbacks
+     *
+     * @param stdClass $postauthfailreturn
+     * @return stdClass The object passed, with any modifications.
+     */
     function failauth($postauthfailreturn)
     {
         $this->savetodebug('Fail function passed ' . var_export($postauthfailreturn, true));
-//default behaviour is to display username/password form
+        //default behaviour is to display username/password form
         $postauthfailreturn->form = 'std';
         $postauthfailreturn->exit = true;
         if ((isset($this->settings['displayfailuremessagenumber']) and $postauthfailreturn->attempt >= $this->settings['displayfailuremessagenumber']) or (!isset($this->settings['displayfailuremessagenumber']) and $postauthfailreturn->attempt > 3)) {
@@ -123,13 +123,13 @@ class ldap_auth extends outline_authentication
         return $postauthfailreturn;
     }
 
-  /**
-   * Checks if the user is valid.
-   *
-   * @global string[] $string The language strings for the Rogo page.
-   * @param authobjreturn $authobj
-   * @return authobjreturn
-   */
+    /**
+     * Checks if the user is valid.
+     *
+     * @global string[] $string The language strings for the Rogo page.
+     * @param authobjreturn $authobj
+     * @return authobjreturn
+     */
     function auth($authobj)
     {
         global $string;
@@ -137,7 +137,7 @@ class ldap_auth extends outline_authentication
         $this->savetodebug('Authing');
         extract($this->settings);
         if (!isset($this->form['std']->username) or !isset($this->form['std']->username) or $this->form['std']->username == '' or $this->form['std']->password == '') {
-        //return not sucessfull do not try
+            //return not sucessfull do not try
                 $this->savetodebug('Check 1 blank entries');
             $authobj->fail($this->number);
             $authobj->message = 'Not valid entry for username or password';
@@ -175,7 +175,7 @@ class ldap_auth extends outline_authentication
             } else {
                   $ldapconn = $ldap;
             }
-        // Build the LDAP query to search for the user.
+            // Build the LDAP query to search for the user.
             $search = $ldap_user_prefix . $this->form['std']->username;
             if (isset($ldap_user_postfix)) {
                 $search .= $ldap_user_postfix;
@@ -188,7 +188,7 @@ class ldap_auth extends outline_authentication
                 $info = ldap_get_entries($ldap, $search);
                 if ($info['count'] == 1) {
                     $this->savetodebug('Found user in ldap');
-          // Get the identifier we need to use to test the users password.
+                    // Get the identifier we need to use to test the users password.
                     $dn = $info[0]['dn'];
                 } else {
                     $this->savetodebug('<strong>' . $string['noldapaccount'] . '</strong>');
@@ -215,7 +215,7 @@ class ldap_auth extends outline_authentication
                 $result->fetch();
                 $this->savetodebug('uname:' . $uname . ' id:' . $id);
                 if ($result->num_rows() > 1) {
-        // not unique match
+                    // not unique match
                     $this->savetodebug('Check 2 record number not = 1 no user or multiple user found in lookup');
                     $authobj->fail($this->number);
                     $authobj->message = 'Incorrect number of records returned';
@@ -223,18 +223,18 @@ class ldap_auth extends outline_authentication
                 }
 
                 if ($result->num_rows() == 0) {
-                //lookup ok but no association to rogo
+                    //lookup ok but no association to rogo
 
                     $this->savetodebug('LDAP Record found but no local account');
                     $data = new stdClass();
                     if (!isset($this->settings['search_field'])) {
                         $this->settings['search_field'] = 'username';
                     }
-                // This will be used by the Lookup plugin to search for the user if we allow auto creation of users.
-                // The search_field setting must match a type of field configured in the lookup plugin.
+                    // This will be used by the Lookup plugin to search for the user if we allow auto creation of users.
+                    // The search_field setting must match a type of field configured in the lookup plugin.
                     $data->{$this->settings['search_field']} = $this->form['std']->username;
                     if (isset($this->settings['enable_fudgecreateuser']) and $this->settings['enable_fudgecreateuser'] == true) {
-    // The enable_fudgecreateuser setting should be set only when the core user table is not used by the plugin.
+                        // The enable_fudgecreateuser setting should be set only when the core user table is not used by the plugin.
                         $this->createnewuserassociation = true;
                     }
 
@@ -249,7 +249,7 @@ class ldap_auth extends outline_authentication
                 }
 
                 $this->savetodebug('Successfully authenticated on this module username=' . $this->form['std']->username . ' id:' . $id);
-  //sucessfull internaldb authentication
+                //sucessfull internaldb authentication
                 $authobj->success($this->number, $id);
                 return $authobj;
             } else {

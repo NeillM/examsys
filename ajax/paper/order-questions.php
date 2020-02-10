@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Re-order questions based on AJAX call from drag and drop list from paper.details.php
-*
-* @author Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Re-order questions based on AJAX call from drag and drop list from paper.details.php
+ *
+ * @author Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../../include/staff_auth.inc';
 
@@ -73,7 +73,7 @@ if (isset($_GET['paperID']) and $_GET['paperID'] != '' and isset($_GET['link']) 
 
     if (($decs = count($screen_dec)) > 0) {
         $dec_list = '';
-      // Make list of IDs of questions to decrement
+        // Make list of IDs of questions to decrement
         for ($i = 0; $i < $decs; $i++) {
             if ($i > 0) {
                 $dec_list .= ',';
@@ -92,7 +92,7 @@ if (isset($_GET['paperID']) and $_GET['paperID'] != '' and isset($_GET['link']) 
 
     if ($ok and ($incs = count($screen_inc)) > 0) {
         $inc_list = '';
-      // Make list of IDs of questions to increment
+        // Make list of IDs of questions to increment
         for ($i = 0; $i < $incs; $i++) {
             if ($i > 0) {
                 $inc_list .= ',';
@@ -126,7 +126,7 @@ if (isset($_GET['paperID']) and $_GET['paperID'] != '' and isset($_GET['link']) 
 
     if ($ok and ($decs = count($position_dec)) > 0) {
         $dec_list = '';
-      // Make list of IDs of questions to decrement
+        // Make list of IDs of questions to decrement
         for ($i = 0; $i < $decs; $i++) {
             if ($i > 0) {
                 $dec_list .= ',';
@@ -145,7 +145,7 @@ if (isset($_GET['paperID']) and $_GET['paperID'] != '' and isset($_GET['link']) 
 
     if ($ok and ($incs = count($position_inc)) > 0) {
         $inc_list = '';
-      // Make list of IDs of questions to increment
+        // Make list of IDs of questions to increment
         for ($i = 0; $i < $incs; $i++) {
             if ($i > 0) {
                 $inc_list .= ',';

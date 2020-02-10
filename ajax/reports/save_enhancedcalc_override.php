@@ -16,14 +16,14 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Save marks for individual Calculation questions.
-*
-* @author Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Save marks for individual Calculation questions.
+ *
+ * @author Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../../include/staff_auth.inc';
 require_once '../../include/errors.php';
@@ -58,7 +58,7 @@ $q_marks = $question_obj->get_question_marks();
 //$q_marks_rev = array_flip($q_marks);
 
 if ($q_marks !== false) {
-  // Get user's current mark
+    // Get user's current mark
     $sql = "SELECT mark FROM log$log WHERE id = ?";
     $result = $mysqli->prepare($sql);
     $result->bind_param('i', $log_id);
@@ -91,7 +91,7 @@ QUERY;
             if ($status == 'OK') {
                 $or_id = $mysqli->insert_id;
 
-              // Update the mark mark
+                // Update the mark mark
                 $sql = "UPDATE log{$log} SET mark = ?, adjmark = ? WHERE id = ? AND q_id = ?";
                 $result = $mysqli->prepare($sql);
                 if ($result) {
@@ -101,7 +101,7 @@ QUERY;
                     if ($result2 == false) {
                         $status = 'ERROR';
                     } else {
-                      // Invalidate the cache so it will get rebuilt with new mark
+                        // Invalidate the cache so it will get rebuilt with new mark
                         $assessment = new assessment($mysqli, $configObject);
                         $update_params = array(
                         'recache_marks' => array('i', 1)

@@ -30,69 +30,69 @@ class renderdata extends \questiondata
 {
     use \mpqgetmarks;
 
-  /**
-   * Media state of extmatch question
-   * @var boolean
-   */
+    /**
+     * Media state of extmatch question
+     * @var boolean
+     */
     public $extmatchdisplaymedia;
 
-  /**
-   * Matching scenarios
-   * @var array
-   */
+    /**
+     * Matching scenarios
+     * @var array
+     */
     public $scenarios;
 
-  /**
-   * Matching media
-   * @var array
-   */
+    /**
+     * Matching media
+     * @var array
+     */
     public $media;
 
-  /**
-   * Matching media width
-   * @var array
-   */
+    /**
+     * Matching media width
+     * @var array
+     */
     public $mediawidth;
 
-  /**
-   * Matching media height
-   * @var array
-   */
+    /**
+     * Matching media height
+     * @var array
+     */
     public $mediaheight;
 
-  /**
-   * Matching user answers
-   * @var array
-   */
+    /**
+     * Matching user answers
+     * @var array
+     */
     public $usersanswers;
 
-  /**
-   * Matching options
-   * @var array
-   */
+    /**
+     * Matching options
+     * @var array
+     */
     public $matchoptions;
 
-  /**
-   * Number of matching options
-   * @var integer
-   */
+    /**
+     * Number of matching options
+     * @var integer
+     */
     public $matchoptionsno;
 
-  /**
-   * Display split position
-   * @var integer
-   */
+    /**
+     * Display split position
+     * @var integer
+     */
     public $split;
 
-  /**
-   * Match stems
-   * @var integer
-   */
+    /**
+     * Match stems
+     * @var integer
+     */
     public $matchstem;
 
-  /**
-   * Constructor
-   */
+    /**
+     * Constructor
+     */
     function __construct()
     {
         parent::__construct();
@@ -100,9 +100,9 @@ class renderdata extends \questiondata
         $this->extmatchdisplaymedia = false;
     }
 
-  /**
-   * Disable/Enable display of question header sections for template rendering
-   */
+    /**
+     * Disable/Enable display of question header sections for template rendering
+     */
     public function set_question_head()
     {
         $this->displaydefault = true;
@@ -112,12 +112,12 @@ class renderdata extends \questiondata
         $this->displayleadin = true;
     }
 
-  /**
-   * Question level settings for template rendering
-   * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   * @param mixed $useranswer user answer
-   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
-   */
+    /**
+     * Question level settings for template rendering
+     * @param boolean $screen_pre_submitted has the user submitted and answer previously
+     * @param mixed $useranswer user answer
+     * @param string $userdismissed list of enable/disable flag for options the user has dismissed
+     */
     public function set_question($screen_pre_submitted, $useranswer, $userdismissed)
     {
         $this->scenarios = explode('|', $this->scenario);
@@ -131,13 +131,13 @@ class renderdata extends \questiondata
         }
     }
 
-  /**
-   * Option level settings for template rendering
-   * @param integer $part_id part loop id
-   * @param mixed $useranswer user answer
-   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
-   * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   */
+    /**
+     * Option level settings for template rendering
+     * @param integer $part_id part loop id
+     * @param mixed $useranswer user answer
+     * @param string $userdismissed list of enable/disable flag for options the user has dismissed
+     * @param boolean $screen_pre_submitted has the user submitted and answer previously
+     */
     public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
     {
         $option = $this->get_opt($part_id);
@@ -145,13 +145,13 @@ class renderdata extends \questiondata
         $this->matchoptions[] = $option['optiontext'];
     }
 
-  /**
-   * Additional option level settings for template rendering
-   * @param integer $part_id part loop id
-   * @param mixed $useranswer user answer
-   * @param string $userdismissed list of enable/disable flag for options the user has dismissed
-   * @param boolean $screen_pre_submitted has the user submitted and answer previously
-   */
+    /**
+     * Additional option level settings for template rendering
+     * @param integer $part_id part loop id
+     * @param mixed $useranswer user answer
+     * @param string $userdismissed list of enable/disable flag for options the user has dismissed
+     * @param boolean $screen_pre_submitted has the user submitted and answer previously
+     */
     public function process_options($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
     {
         $option = $this->get_opt($part_id);

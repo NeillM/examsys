@@ -99,7 +99,7 @@ class alreadyloggedin_auth extends outline_authentication
         }
 
         list($callbacklist, $callbackregisterdatalist) = $this->get_callback('sessionstore');
-//  run this when needing to store auth data to session
+        //  run this when needing to store auth data to session
 
         if (is_array(($callbacklist))) {
             foreach ($callbacklist as $number => $callback) {

@@ -108,7 +108,7 @@ echo '<div class="page_title">' . $string['exporttoqti'] . '</div>';
 echo '</div>';
 
 if (!isset($qtiexportdirectory)) {
-  // Just in case the file is included from pages where this is not set.
+    // Just in case the file is included from pages where this is not set.
     $qtiexportdirectory = rogo_directory::get_directory('qti_export');
 }
 ?>

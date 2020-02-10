@@ -39,13 +39,13 @@ class QuestionMRQ extends QuestionEdit
     
         $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect']);
     
-      // 'correct' is not a unified field for MRQ
+        // 'correct' is not a unified field for MRQ
         $this->_fields_editable[] = 'correct';
     }
 
     public function convert_to_mcq($correct_answer)
     {
-      // TODO: update question and get new MCQ object based on it
+        // TODO: update question and get new MCQ object based on it
         $this->set_type('mcq');
         $this->set_display_method('vertical');
 
@@ -60,21 +60,21 @@ class QuestionMRQ extends QuestionEdit
     }
 
 
-  // ACCESSORS
+    // ACCESSORS
   
-  /**
-   * Get the question display method
-   * @return string
-   */
+    /**
+     * Get the question display method
+     * @return string
+     */
     public function get_display_method()
     {
         return $this->display_method;
     }
   
-  /**
-   * Set the question display method
-   * @param string $value
-   */
+    /**
+     * Set the question display method
+     * @param string $value
+     */
     public function set_display_method($value)
     {
         if ($value == $this->_answer_negative) {

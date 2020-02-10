@@ -29,11 +29,11 @@ include_once 'Corrector.class.php';
 
 class EXTMATCHCorrector extends Corrector
 {
-  /**
-   * Change the correct answer after the question has been locked. Update user marks in summative log table
-   * @param integer $new_correct new correct answer
-   * @param integer $paper_id
-   */
+    /**
+     * Change the correct answer after the question has been locked. Update user marks in summative log table
+     * @param integer $new_correct new correct answer
+     * @param integer $paper_id
+     */
     public function execute($new_correct, $paper_id, &$prev_changes, $paper_type)
     {
         $new_correct_val = $new_correct['option_correct'];
@@ -74,7 +74,7 @@ class EXTMATCHCorrector extends Corrector
                 if (!$this->_question->save()) {
                     $errors[] = $this->_lang_strings['datasaveerror'];
                 } else {
-                // Remark the student's answers in 'log{$paper_type}'.
+                    // Remark the student's answers in 'log{$paper_type}'.
                     $score_method = $this->_question->get_score_method();
 
                     $totalpos = ($score_method == 'Mark per Question') ? $mark_correct : $mark_correct * $correct_count;

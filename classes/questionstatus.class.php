@@ -44,15 +44,15 @@ class QuestionStatus
         $this->_db = $db;
         $this->_lang_strings = $lang_strings;
 
-      // Check the type of $data
+        // Check the type of $data
         if (is_array($data)) {
-          // If it is an array, assume an associative array of fields for creating a new object (but not
-          // saving it to the database)
+            // If it is an array, assume an associative array of fields for creating a new object (but not
+            // saving it to the database)
             foreach ($data as $field => $val) {
                 $this->$field = $val;
             }
         } elseif (ctype_digit($data)) {
-          // If it is an int use it as an ID for the database lookup
+            // If it is an int use it as an ID for the database lookup
             $this->id = $data;
             if (!$this->get_question_status()) {
                 throw new DatabaseException('Error loading question status');
@@ -62,10 +62,10 @@ class QuestionStatus
         }
     }
 
-  /**
-   * Persist the object to the database
-   * @return boolean True if object was saved
-   */
+    /**
+     * Persist the object to the database
+     * @return boolean True if object was saved
+     */
     public function save()
     {
         $success = false;
@@ -124,16 +124,16 @@ class QuestionStatus
 
         $this->_db->autocommit(true);
 
-      // Ensure we have a default set
+        // Ensure we have a default set
         $this->reset_default();
 
         return $success;
     }
 
-  /**
-   * Load question status data from the database
-   * @return boolean True if status was loaded
-   */
+    /**
+     * Load question status data from the database
+     * @return boolean True if status was loaded
+     */
     private function get_question_status()
     {
         $success = false;
@@ -153,15 +153,15 @@ class QuestionStatus
         return $success;
     }
 
-  /**
-   * Remove a status from the database
-   * @return boolean True if status was successfully deleted
-   */
+    /**
+     * Remove a status from the database
+     * @return boolean True if status was successfully deleted
+     */
     public function delete()
     {
         $success = false;
 
-      // Close any gaps in the display order
+        // Close any gaps in the display order
         $sql = 'UPDATE question_statuses SET display_order = display_order - 1 WHERE display_order > ?';
         $result = $this->_db->prepare($sql);
         $result->bind_param('i', $this->display_order);
@@ -178,7 +178,7 @@ class QuestionStatus
         }
         $result->close();
 
-      // Make the first status default if this object was previously
+        // Make the first status default if this object was previously
         if ($success and $this->is_default) {
             if (!$this->reset_default()) {
                 $success = false;
@@ -188,138 +188,138 @@ class QuestionStatus
         return $success;
     }
 
-  /**
-   * @param string $name
-   */
+    /**
+     * @param string $name
+     */
     public function set_name($name)
     {
         $this->name = $name;
     }
 
-  /**
-   * @return string
-   */
+    /**
+     * @return string
+     */
     public function get_name()
     {
         return $this->name;
     }
 
-  /**
-   * @param boolean $exclude_marking
-   */
+    /**
+     * @param boolean $exclude_marking
+     */
     public function set_exclude_marking($exclude_marking)
     {
         $this->exclude_marking = $exclude_marking;
     }
 
-  /**
-   * @return boolean
-   */
+    /**
+     * @return boolean
+     */
     public function get_exclude_marking()
     {
         return $this->exclude_marking;
     }
 
-  /**
-   * @param boolean $retired
-   */
+    /**
+     * @param boolean $retired
+     */
     public function set_retired($retired)
     {
         $this->retired = $retired;
     }
 
-  /**
-   * @return boolean
-   */
+    /**
+     * @return boolean
+     */
     public function get_retired()
     {
         return $this->retired;
     }
 
-  /**
-   * @param boolean $is_default
-   */
+    /**
+     * @param boolean $is_default
+     */
     public function set_is_default($is_default)
     {
         $this->is_default = $is_default;
     }
 
-  /**
-   * @return boolean
-   */
+    /**
+     * @return boolean
+     */
     public function get_is_default()
     {
         return $this->is_default;
     }
 
-  /**
-   * @param boolean $change_locked
-   */
+    /**
+     * @param boolean $change_locked
+     */
     public function set_change_locked($change_locked)
     {
         $this->change_locked = $change_locked;
     }
 
-  /**
-   * @return boolean
-   */
+    /**
+     * @return boolean
+     */
     public function get_change_locked()
     {
         return $this->change_locked;
     }
 
-  /**
-   * @param boolean $validate
-   */
+    /**
+     * @param boolean $validate
+     */
     public function set_validate($validate)
     {
         $this->validate = $validate;
     }
 
-  /**
-   * @return boolean
-   */
+    /**
+     * @return boolean
+     */
     public function get_validate()
     {
         return $this->validate;
     }
 
-  /**
-   * @param boolean $display_warning
-   */
+    /**
+     * @param boolean $display_warning
+     */
     public function set_display_warning($display_warning)
     {
         $this->display_warning = $display_warning;
     }
 
-  /**
-   * @return boolean
-   */
+    /**
+     * @return boolean
+     */
     public function get_display_warning()
     {
         return $this->display_warning;
     }
 
-  /**
-   * @param string $colour
-   */
+    /**
+     * @param string $colour
+     */
     public function set_colour($colour)
     {
         $this->colour = $colour;
     }
 
-  /**
-   * @return string
-   */
+    /**
+     * @return string
+     */
     public function get_colour()
     {
         return $this->colour;
     }
 
-  /**
-   * Reset the default status to be the first in the database if none set
-   * @return bool True if update was successful
-   */
+    /**
+     * Reset the default status to be the first in the database if none set
+     * @return bool True if update was successful
+     */
     private function reset_default()
     {
         $success = false;
@@ -349,12 +349,12 @@ class QuestionStatus
         return $success;
     }
 
-  /**
-   * Get an array containing all existing statuses
-   * @param  mysqli $db             Database link
-   * @param  array $lang_strings    Language Strings
-   * @return array[QuestionStatus]  Existing statuses
-   */
+    /**
+     * Get an array containing all existing statuses
+     * @param  mysqli $db             Database link
+     * @param  array $lang_strings    Language Strings
+     * @return array[QuestionStatus]  Existing statuses
+     */
     private static function get_all_statuses_by_type($db, $lang_strings, $type)
     {
         $statuses = array();
@@ -393,11 +393,11 @@ class QuestionStatus
         return QuestionStatus::get_all_statuses_by_type($db, $lang_strings, 'name');
     }
 
-  /**
-   * Generate a CSS string for the colours for all status contained in array
-   * @param  array[mixed] $statuses Statuses
-   * @return string                 CSS for colour definitions for statuses
-   */
+    /**
+     * Generate a CSS string for the colours for all status contained in array
+     * @param  array[mixed] $statuses Statuses
+     * @return string                 CSS for colour definitions for statuses
+     */
     public static function generate_status_css($statuses)
     {
         $css = '';
@@ -423,11 +423,11 @@ CSS;
     }
     */
 
-  /**
-   * Get the IDs of all statuses that are flagged as 'retired'
-   * @param  array $statuses       An array of the existing statuses
-   * @return array[integer]        Array of status IDs
-   */
+    /**
+     * Get the IDs of all statuses that are flagged as 'retired'
+     * @param  array $statuses       An array of the existing statuses
+     * @return array[integer]        Array of status IDs
+     */
     public static function get_retired_status_ids($statuses)
     {
         $retired_in = array();

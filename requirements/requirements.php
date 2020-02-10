@@ -31,7 +31,7 @@ if (is_null($configObject->get('cfg_web_root'))) {
     $cfg_web_root = get_root_path() . '/';
     $configObject->set('cfg_web_root', $cfg_web_root);
 } elseif (!file_exists($configObject->get('cfg_web_root'))) {
-  // A configuration file exists, but the configured web root does not exist.
+    // A configuration file exists, but the configured web root does not exist.
     require_once '../include/path_functions.inc.php';
     $cfg_web_root = get_root_path() . '/';
     $configObject->set('cfg_web_root', $cfg_web_root);
@@ -53,14 +53,14 @@ if (!LangUtils::langPackInstalled($language)) {
 LangUtils::loadlangfile(str_replace($cfg_web_root, '', str_replace('\\', '/', ($_SERVER['SCRIPT_FILENAME']))));
 
 if (!isset($string)) {
-  // The language files were not loaded. This means that either it is not configured for the Rogo root directory,
-  // or there is a differnece in case on a system that is not case sensitive.
+    // The language files were not loaded. This means that either it is not configured for the Rogo root directory,
+    // or there is a differnece in case on a system that is not case sensitive.
     InstallUtils::displayError(['91' => 'Could not load language files. Please check the case of the cfg_web_root setting.']);
     die();
 }
 
 if (isset($badconfigfile)) {
-  // The cfg_web_root setting directory does not exist.
+    // The cfg_web_root setting directory does not exist.
     InstallUtils::displayError(['92' => $string['invalidconfig']]);
     die();
 }
@@ -102,7 +102,7 @@ if (InstallUtils::config_exists()) {
         $info['dbversion'] = array(sprintf($string['dbconnection'], $e->getMessage()), false);
     }
 } else {
-  // On install skip check here as done in insall process.
+    // On install skip check here as done in insall process.
     $dbversion = true;
 }
 // php extensions.

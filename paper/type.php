@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Displays a list of papers.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Displays a list of papers.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../include/staff_auth.inc';
 require_once '../include/icon_display.inc';
@@ -113,7 +113,7 @@ if (isset($state['showretired']) and $state['showretired'] == 'true') {
 
 <?php
 if (!$userObject->has_role('Standards Setter') && $module != 0) {
-  // Don't want new papers created from the Unassigned folder.
+    // Don't want new papers created from the Unassigned folder.
     echo '<br /><div class="f newpaper"><div class="f_icon"><a href=""><img src="../artwork/new_paper_48.png" alt="' . $string['newpaper'] . '" /></a></div><div class="f_details"><a href="">' . $string['newpaper'] . "</a></div></div>\n";
 }
 

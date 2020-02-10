@@ -16,10 +16,10 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Survey package
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2018 onwards The University of Nottingham
-*/
+ * Survey package
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2018 onwards The University of Nottingham
+ */
 
 namespace plugins\papers\survey;
 
@@ -29,19 +29,19 @@ namespace plugins\papers\survey;
 class log extends \log
 {
 
-  /**
-   * Constructor
-   */
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         parent::__construct();
         $this->papertype = '3';
     }
 
-  /**
-   * Get survey logs
-   * @return array
-   */
+    /**
+     * Get survey logs
+     * @return array
+     */
     public function get_log()
     {
         $user_answers = array();
@@ -70,35 +70,35 @@ class log extends \log
         'current_screen' => $this->currentscreen);
     }
 
-  /**
-   * Get list of users that have taken the exam order by total mark ascending.
-   * @param integer $paperid paper id
-   * @param string $startdate start datetime for filter
-   * @param string $enddate end datetime for filter
-   * @param string $userlist user filter
-   * @param boolean $studentonly flag to set student only filter
-   * @return array
-   */
+    /**
+     * Get list of users that have taken the exam order by total mark ascending.
+     * @param integer $paperid paper id
+     * @param string $startdate start datetime for filter
+     * @param string $enddate end datetime for filter
+     * @param string $userlist user filter
+     * @param boolean $studentonly flag to set student only filter
+     * @return array
+     */
     public function get_log_users($paperid, $startdate, $enddate, $userlist, $studentonly = false)
     {
-      // Intentionally blank.
+        // Intentionally blank.
         return array();
     }
 
-  /**
-   * Get list of users that have taken the exam order by total mark ascending.
-   * Formative results inclused progressive results, as progressive papers can be converted into a formative
-   * @param integer $paperid paper id
-   * @param string $startdate start datetime for filter
-   * @param string $enddate end datetime for filter
-   * @param string $user_list list of users to filter
-   * @param string $course course filter
-   * @param boolean $studentonly flag to set student only filter
-   * @return array
-   */
+    /**
+     * Get list of users that have taken the exam order by total mark ascending.
+     * Formative results inclused progressive results, as progressive papers can be converted into a formative
+     * @param integer $paperid paper id
+     * @param string $startdate start datetime for filter
+     * @param string $enddate end datetime for filter
+     * @param string $user_list list of users to filter
+     * @param string $course course filter
+     * @param boolean $studentonly flag to set student only filter
+     * @return array
+     */
     public function get_assessment_data($paperid, $startdate, $enddate, $user_list, $course = '%', $studentonly = false)
     {
-      // Intentionally blank.
+        // Intentionally blank.
         return array();
     }
 }

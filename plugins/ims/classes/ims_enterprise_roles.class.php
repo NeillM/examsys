@@ -28,28 +28,28 @@ namespace plugins\ims;
 class ims_enterprise_roles
 {
 
-  /** @var imscode => ims role name. Role name mapping. */
+    /** @var imscode => ims role name. Role name mapping. */
     private $imsroles;
-  /** $var The code for the Learner role as defined by the IMS Enterprise specification */
+    /** $var The code for the Learner role as defined by the IMS Enterprise specification */
     const ROLE_LEARNER = '01';
-  /** $var The code for the Instructor role as defined by the IMS Enterprise specification */
+    /** $var The code for the Instructor role as defined by the IMS Enterprise specification */
     const ROLE_INSTRUCTOR = '02';
-  /** $var The code for the Content Developer role as defined by the IMS Enterprise specification */
+    /** $var The code for the Content Developer role as defined by the IMS Enterprise specification */
     const ROLE_CONTENT_DEVELOPER = '03';
-  /** $var The code for the Member role as defined by the IMS Enterprise specification */
+    /** $var The code for the Member role as defined by the IMS Enterprise specification */
     const ROLE_MEMBER = '04';
-  /** $var The code for the Manager role as defined by the IMS Enterprise specification */
+    /** $var The code for the Manager role as defined by the IMS Enterprise specification */
     const ROLE_MANAGER = '05';
-  /** $var The code for the Mentor role as defined by the IMS Enterprise specification */
+    /** $var The code for the Mentor role as defined by the IMS Enterprise specification */
     const ROLE_MENTOR = '06';
-  /** $var The code for the Administrator role as defined by the IMS Enterprise specification */
+    /** $var The code for the Administrator role as defined by the IMS Enterprise specification */
     const ROLE_ADMINISTRATOR = '07';
-  /** $var The code for the TeachingAssistant role as defined by the IMS Enterprise specification */
+    /** $var The code for the TeachingAssistant role as defined by the IMS Enterprise specification */
     const ROLE_TEACHINGASSISTANT = '08';
 
-  /**
-   * Constructor.
-   */
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->imsroles = array(
@@ -62,27 +62,27 @@ class ims_enterprise_roles
         self::ROLE_ADMINISTRATOR => 'Administrator',
         self::ROLE_TEACHINGASSISTANT => 'TeachingAssistant'
         );
-      // PLEASE NOTE: It may seem odd that "Content Developer" has a space in it
-      // but "TeachingAssistant" doesn't. That's what the spec says though!!!
+        // PLEASE NOTE: It may seem odd that "Content Developer" has a space in it
+        // but "TeachingAssistant" doesn't. That's what the spec says though!!!
     }
 
-  /**
-   * Returns the mapped roles
-   *
-   * @return array of IMS roles indexed by IMS code.
-   */
+    /**
+     * Returns the mapped roles
+     *
+     * @return array of IMS roles indexed by IMS code.
+     */
     public function get_imsroles()
     {
         return $this->imsroles;
     }
 
-  /**
-   * This function is only used when first setting up the plugin, to
-   * decide which role assignments to recommend by default.
-   * For example, IMS role '01' is 'Learner', so may map to 'Student' in Rogō.
-   *
-   * @param string $imscode
-   */
+    /**
+     * This function is only used when first setting up the plugin, to
+     * decide which role assignments to recommend by default.
+     * For example, IMS role '01' is 'Learner', so may map to 'Student' in Rogō.
+     *
+     * @param string $imscode
+     */
     public function get_default_rolemapping($imscode)
     {
         switch ($imscode) {
@@ -104,11 +104,11 @@ class ims_enterprise_roles
         return $role;
     }
 
-  /**
-   * Check if we are allowed to create a user with this role
-   * @param string $role
-   * @return boolean
-   */
+    /**
+     * Check if we are allowed to create a user with this role
+     * @param string $role
+     * @return boolean
+     */
     public static function validate_role($role)
     {
         $allowedroles = array('student', 'staff', 'invigilator', 'external examiner');
@@ -118,10 +118,10 @@ class ims_enterprise_roles
         return false;
     }
 
-  /**
-   * Get role mappings options
-   * @return array Array of role mapping options
-   */
+    /**
+     * Get role mappings options
+     * @return array Array of role mapping options
+     */
     public static function get_role_mappings()
     {
         global $string;

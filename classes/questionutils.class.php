@@ -15,25 +15,25 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Utility class for question related functions
-*
-* @author Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Utility class for question related functions
+ *
+ * @author Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 
 class QuestionUtils
 {
 
-  /**
-   * Does a given Question ID exist in the question bank.
-   * @param integer $q_id the question ID to be searched for.
-   * @param resource $db the database connection.
-   * @return string The leadin
-   */
+    /**
+     * Does a given Question ID exist in the question bank.
+     * @param integer $q_id the question ID to be searched for.
+     * @param resource $db the database connection.
+     * @return string The leadin
+     */
     static function question_exists($q_id, $db)
     {
         $stmt = $db->prepare('SELECT q_id FROM questions WHERE q_id = ? AND deleted IS NULL LIMIT 1');
@@ -48,13 +48,13 @@ class QuestionUtils
         return $exists;
     }
 
-  /**
-   * Does a given Question ID exist on a specific paper.
-   * @param integer $q_id the question ID to be searched for.
-   * @param integer $paperID the paper ID to be searched for.
-   * @param resource $db the database connection.
-   * @return string The leadin
-   */
+    /**
+     * Does a given Question ID exist on a specific paper.
+     * @param integer $q_id the question ID to be searched for.
+     * @param integer $paperID the paper ID to be searched for.
+     * @param resource $db the database connection.
+     * @return string The leadin
+     */
     static function question_exists_on_paper($q_id, $paperID, $db)
     {
         $stmt = $db->prepare('SELECT q_id FROM questions, papers WHERE papers.question = questions.q_id AND paper = ? AND q_id = ? LIMIT 1');
@@ -69,12 +69,12 @@ class QuestionUtils
         return $exists;
     }
 
-  /**
-   * Get the owner ID for a particular question.
-   * @param integer $q_id the question ID to be looked up.
-   * @param resource $db the database connection.
-   * @return string The leadin
-   */
+    /**
+     * Get the owner ID for a particular question.
+     * @param integer $q_id the question ID to be looked up.
+     * @param resource $db the database connection.
+     * @return string The leadin
+     */
     static function get_ownerID($q_id, $db)
     {
         $stmt = $db->prepare('SELECT ownerID FROM questions WHERE q_id = ? LIMIT 1');
@@ -88,12 +88,12 @@ class QuestionUtils
         return $ownerID;
     }
 
-  /**
-   * Get the leading for a give question ID
-   * @param integer $q_id the question ID to be looked up.
-   * @param resource $db the database connection.
-   * @return string The leadin
-   */
+    /**
+     * Get the leading for a give question ID
+     * @param integer $q_id the question ID to be looked up.
+     * @param resource $db the database connection.
+     * @return string The leadin
+     */
     static function get_leadin($q_id, $db)
     {
         $stmt = $db->prepare('SELECT leadin FROM questions WHERE q_id = ? LIMIT 1');
@@ -108,16 +108,16 @@ class QuestionUtils
         return $leadin;
     }
 
-  /**
-   * Strip tags from the leading string (if it doesn't contain equations) and trim length
-   * @param $leadin
-   * @param $limit - character limit
-   * @return string
-   */
+    /**
+     * Strip tags from the leading string (if it doesn't contain equations) and trim length
+     * @param $leadin
+     * @param $limit - character limit
+     * @return string
+     */
     static function clean_leadin($leadin, $limit = 160)
     {
         $texteditorplugin = \plugins\plugins_texteditor::get_editor();
-      // Check if editor has clean rule i.e. for equations.
+        // Check if editor has clean rule i.e. for equations.
         if ($texteditorplugin->clean_leadin($leadin)) {
             $leadin = strip_tags($leadin);
             if (mb_strlen($leadin) > $limit and $limit != 0) {
@@ -131,12 +131,12 @@ class QuestionUtils
         return $leadin;
     }
 
-  /**
-   * returns an array of id/keywords that the question is on
-   * @param intager $q_id the id of the questions
-   * @param resource $db the database connection.
-   * @return array of keywords
-   */
+    /**
+     * returns an array of id/keywords that the question is on
+     * @param intager $q_id the id of the questions
+     * @param resource $db the database connection.
+     * @return array of keywords
+     */
     static function get_keywords($q_id, $db)
     {
         $keywords = array();
@@ -153,12 +153,12 @@ class QuestionUtils
         return $keywords;
     }
 
-  /**
-   * returns an array of question IDs/module IDs
-   * @param array $q_ids list of questions to check
-   * @param resource $db the database connection.
-   * @return array of modules keyed on q_id
-   */
+    /**
+     * returns an array of question IDs/module IDs
+     * @param array $q_ids list of questions to check
+     * @param resource $db the database connection.
+     * @return array of modules keyed on q_id
+     */
     static function multi_get_modules($q_ids, $db)
     {
         $modules = array();
@@ -174,12 +174,12 @@ class QuestionUtils
         return $modules;
     }
 
-  /**
-   * returns an array of modules/teams that the question is on
-   * @param integer $q_id the id of the questions
-   * @param resource $db the database connection.
-   * @return array of modules keyed on idMod
-   */
+    /**
+     * returns an array of modules/teams that the question is on
+     * @param integer $q_id the id of the questions
+     * @param resource $db the database connection.
+     * @return array of modules keyed on idMod
+     */
     static function get_modules($q_id, $db)
     {
         $modules = array();
@@ -196,12 +196,12 @@ class QuestionUtils
         return $modules;
     }
 
-  /**
-  * Update the modules for a question bast on the modules that the papers it is part of are on
-  * @param integer $q_id the id of the questions.
-    * @param resource $db the database connection.
-  * @return void
-  */
+    /**
+     * Update the modules for a question bast on the modules that the papers it is part of are on
+     * @param integer $q_id the id of the questions.
+     * @param resource $db the database connection.
+     * @return void
+     */
     static function update_modules_from_papers($q_id, $db)
     {
 
@@ -223,7 +223,7 @@ SQL;
         }
         $update->close();
 
-      // Questions may be on modules the current users is not in - should we exclude these from the delete
+        // Questions may be on modules the current users is not in - should we exclude these from the delete
         $update = $db->prepare('DELETE FROM questions_modules WHERE q_id = ?');
         $update->bind_param('i', $q_id);
         $update->execute();
@@ -232,14 +232,14 @@ SQL;
         QuestionUtils::add_modules($on_idMod, $q_id, $db);
     }
 
-  /**
-  * Updates the modules on a question removes modules if the user has permission to do so and then adds in the new modules
-  * @param $modules an array of modules keyed on idMod
-  * @param $q_id the id of the question
-    * @param resource $db the database connection.
-    * @param object $userObj the currently authenticated user object.
-  * @return void
-  */
+    /**
+     * Updates the modules on a question removes modules if the user has permission to do so and then adds in the new modules
+     * @param $modules an array of modules keyed on idMod
+     * @param $q_id the id of the question
+     * @param resource $db the database connection.
+     * @param object $userObj the currently authenticated user object.
+     * @return void
+     */
     static function update_modules($modules, $q_id, $db, $userObj)
     {
         $user_can_delete = '';
@@ -258,13 +258,13 @@ SQL;
         QuestionUtils::add_modules($modules, $q_id, $db);
     }
 
-  /**
-  * Add modules to a question ignoring any duplicates
-  * @param $modules an array of modules keyed on idMod
-  * @param $q_id the id of the question
-    * @param resource $db the database connection.
-  * @return void
-  */
+    /**
+     * Add modules to a question ignoring any duplicates
+     * @param $modules an array of modules keyed on idMod
+     * @param $q_id the id of the question
+     * @param resource $db the database connection.
+     * @return void
+     */
     static function add_modules($modules, $q_id, $db)
     {
         $update = $db->prepare('INSERT INTO questions_modules VALUES(?, ?) ON DUPLICATE KEY UPDATE idMod = idMod');
@@ -275,13 +275,13 @@ SQL;
         $update->close();
     }
 
-  /**
-  * add keywords to a question
-  * @param $keywords an array of keywords keyed on IDs
-  * @param $q_id the id of the question
-    * @param resource $db the database connection.
-  * @return void
-  */
+    /**
+     * add keywords to a question
+     * @param $keywords an array of keywords keyed on IDs
+     * @param $q_id the id of the question
+     * @param resource $db the database connection.
+     * @return void
+     */
     static function add_keywords($keywords, $q_id, $db)
     {
         $update = $db->prepare('INSERT INTO keywords_question VALUES (?, ?)');
@@ -292,13 +292,13 @@ SQL;
         $update->close();
     }
 
-  /**
-  * remove a module from a question
-  * @param $idMod an array of modules to remove keyed on idMod
-  * @param $q_id the id of the question or property_id
-    * @param resource $db the database connection.
-  * @return void
-  */
+    /**
+     * remove a module from a question
+     * @param $idMod an array of modules to remove keyed on idMod
+     * @param $q_id the id of the question or property_id
+     * @param resource $db the database connection.
+     * @return void
+     */
     static function remove_modules($modules, $q_id, $db)
     {
         $update = $db->prepare('DELETE FROM questions_modules WHERE q_id = ? AND idMod = ?');
@@ -309,14 +309,14 @@ SQL;
         $update->close();
     }
 
-/**
-  * remove a question from rogo
-  * Normal Questions - sets the deleted field we don't actuality delete the row form the questions table
-  * Random Questions - deletes the rows in random_link to ensure random questions cannot use the deleted question
-  * @param $q_id the id of the question or property_id
-    * @param resource $db the database connection.
-  * @return void
-  */
+    /**
+     * remove a question from rogo
+     * Normal Questions - sets the deleted field we don't actuality delete the row form the questions table
+     * Random Questions - deletes the rows in random_link to ensure random questions cannot use the deleted question
+     * @param $q_id the id of the question or property_id
+     * @param resource $db the database connection.
+     * @return void
+     */
     static function delete_question($q_id, $db)
     {
         $delete = $db->prepare('UPDATE questions SET deleted = NOW() WHERE q_id = ?');
@@ -338,11 +338,11 @@ SQL;
         $lock->close();
     }
 
-  /**
-   * Unlock a question
-   * @param integer $q_id question id
-   * @param mysqli $db database connection
-   */
+    /**
+     * Unlock a question
+     * @param integer $q_id question id
+     * @param mysqli $db database connection
+     */
     static function unlock_question($q_id, $db)
     {
         $lock = $db->prepare('UPDATE questions SET locked = NULL WHERE q_id = ?');
@@ -351,12 +351,12 @@ SQL;
         $lock->close();
     }
   
-  /**
-   * Check if a question has been answered in a summative exam by a student
-   * @param integer $q_id question id
-   * @param mysqli $db database connection
-   * @return bool true if answered, false otherwise
-   */
+    /**
+     * Check if a question has been answered in a summative exam by a student
+     * @param integer $q_id question id
+     * @param mysqli $db database connection
+     * @return bool true if answered, false otherwise
+     */
     static function question_answered_in_summative($q_id, $db)
     {
         $result = $db->prepare("SELECT TRUE FROM log2 l, log_metadata m, users u
@@ -374,12 +374,12 @@ SQL;
         return false;
     }
   
-  /**
-   * Get the number of questions assigned to a given status
-   * @param  integer $status_id Status ID
-   * @param  mysqli $db        DB link
-   * @return integer           Number of questions assigned to the status
-   */
+    /**
+     * Get the number of questions assigned to a given status
+     * @param  integer $status_id Status ID
+     * @param  mysqli $db        DB link
+     * @return integer           Number of questions assigned to the status
+     */
     static function get_question_count_by_status($status_id, $db)
     {
         $query = $db->prepare('SELECT count(q_id) FROM questions WHERE status = ?');
@@ -392,13 +392,13 @@ SQL;
         return $count;
     }
 
-  /**
-   * Function to get available options text for question
-   *
-   * @param int $qid question identifier
-   * @param mysqli $db
-   * @return array option_text for supplied option
-   */
+    /**
+     * Function to get available options text for question
+     *
+     * @param int $qid question identifier
+     * @param mysqli $db
+     * @return array option_text for supplied option
+     */
     static function get_options_text($qid, $db)
     {
         $options = $db->prepare('SELECT option_text FROM options WHERE o_id = ?');
@@ -414,13 +414,13 @@ SQL;
         return $optionsarray;
     }
 
-  /**
-   * Function to get type of question
-   *
-   * @param int $qid question identifier
-   * @param mysqli $db
-   * @return string question type
-   */
+    /**
+     * Function to get type of question
+     *
+     * @param int $qid question identifier
+     * @param mysqli $db
+     * @return string question type
+     */
     static function get_question_type($qid, $db)
     {
         $type = $db->prepare('SELECT q_type FROM questions WHERE q_id = ?');
@@ -432,13 +432,13 @@ SQL;
         return $qtype;
     }
 
-   /**
-    * Based on the parent random block id get the possible questions based on type.
-    *
-    * @param int $q_id question
-    * @param string $q_type question type
-    * @return array $possible list of possible questions
-    */
+    /**
+     * Based on the parent random block id get the possible questions based on type.
+     *
+     * @param int $q_id question
+     * @param string $q_type question type
+     * @return array $possible list of possible questions
+     */
     static function get_random_question($q_id, $q_type)
     {
         $configObject = Config::get_instance();
@@ -454,13 +454,13 @@ SQL;
         return $possible;
     }
 
-   /**
-    * Based on the parent keyword block id get the possible questions based on type.
-    *
-    * @param int $q_id question
-    * @param string $q_type question type
-    * @return array $possible list of possible questions
-    */
+    /**
+     * Based on the parent keyword block id get the possible questions based on type.
+     *
+     * @param int $q_id question
+     * @param string $q_type question type
+     * @return array $possible list of possible questions
+     */
     static function get_keyword_question($q_id, $q_type)
     {
         $configObject = Config::get_instance();

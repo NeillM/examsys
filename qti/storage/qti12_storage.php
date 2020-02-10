@@ -25,12 +25,12 @@ class ST_QTI12_Question // <item
 
 
     var $wct_questiontype;
-  // itemmetadata stuff
+    // itemmetadata stuff
     var $qmd_itemtype; // <itemmetadata><qmd_itemtype>
     var $qmd_status = 'Normal'; // <itemmetadata><qmd_status>
     var $qmd_toolvendor; // <itemmetadata><qmd_toolvendor>
 
-  // counted stuff
+    // counted stuff
     var $counts = array(
     'lid' => 0,
     'str' => 0,
@@ -50,43 +50,43 @@ class ST_QTI12_Question // <item
 
     );
 
-  // calculate cardinaltiy, if all of lid are ismulti then Multi, if some are ismulti then varies (for extmatch i think)
+    // calculate cardinaltiy, if all of lid are ismulti then Multi, if some are ismulti then varies (for extmatch i think)
     var $cardinality = 'Single';
 
-  // label sets - do all sets of labels for each of the responses have the same values in or not??
-  // this needs to be 1 for most question type, the only question type that allows multiple sets of answers is blank
+    // label sets - do all sets of labels for each of the responses have the same values in or not??
+    // this needs to be 1 for most question type, the only question type that allows multiple sets of answers is blank
     var $labelsets = 1;
 
-  // <presentation>
-  // do we have flow data?
+    // <presentation>
+    // do we have flow data?
     var $hasflow = 0;
 
-  // general question material
-  // <material>
-  // array of QT_QTI12_Material, as some questions have multiple material sections
-  // $questionmats - OBSOLETE!!! REPLACED BY $material
+    // general question material
+    // <material>
+    // array of QT_QTI12_Material, as some questions have multiple material sections
+    // $questionmats - OBSOLETE!!! REPLACED BY $material
     var $material;
 
-  // <response_lid>
-  // array of ST_QTI12_Response
-  // key on <response_lid ident=
+    // <response_lid>
+    // array of ST_QTI12_Response
+    // key on <response_lid ident=
     var $responses = array();
 
     var $presentation;
-  // </presentation>
+    // </presentation>
 
-  // <resprocessing>
+    // <resprocessing>
 
-  // <respcondition>
-  // array of ST_QTI12_RespCondition
-  // key by numbe
+    // <respcondition>
+    // array of ST_QTI12_RespCondition
+    // key by numbe
     var $respconditions = array();
 
-  // <resprocessing>
+    // <resprocessing>
 
-  // <itemfeedback>
-  // array of ST_QTI12_Itemfeedback
-  // key by <itemfeedback ident=
+    // <itemfeedback>
+    // array of ST_QTI12_Itemfeedback
+    // key by <itemfeedback ident=
     var $itemfeedback = array();
 
     var $comments = array();
@@ -102,7 +102,7 @@ class ST_QTI12_Question // <item
         $this->load_id = (string) $xml->attributes()->ident;
         $this->material = new ST_QTI12_Material();
 
-      // load item meta data
+        // load item meta data
         if ($xml->itemmetadata) {
             foreach ($xml->itemmetadata as $th) {
                 foreach ($th as $rg) {
@@ -204,15 +204,15 @@ class ST_QTI12_Question // <item
             }
         }
 
-      // load all the feedback options
+        // load all the feedback options
         foreach ($xml->itemfeedback as $itemfeedback) {
             $fb = new ST_QTI12_Itemfeedback($itemfeedback);
             $this->itemfeedback[$fb->id] = $fb;
         }
 
-      // QMP FIX:
-      // need to validate all id in ST_QTI12_CondVar against the correct ST_QTI12_Response object,
-      // if the id isnt found attempt to look it up from the value
+        // QMP FIX:
+        // need to validate all id in ST_QTI12_CondVar against the correct ST_QTI12_Response object,
+        // if the id isnt found attempt to look it up from the value
 
         foreach ($this->respconditions as & $respcondition) {
             foreach ($respcondition->conditions as $condition) {
@@ -246,7 +246,7 @@ class ST_QTI12_Question // <item
                     $bits = explode(':', $com, 2);
                     $param = strtoupper($bits[0]);
 
-                  // parameter already exists
+                    // parameter already exists
                     if (array_key_exists($param, $this->params)) {
                         // if its not an array, make it one
                         if (!is_array($this->params[$param])) {
@@ -265,7 +265,7 @@ class ST_QTI12_Question // <item
         }
     }
 
-  // <presentation> only 1 per <item>
+    // <presentation> only 1 per <item>
     function LoadPresentation($xml)
     {
         if ($xml->flow) {
@@ -279,12 +279,12 @@ class ST_QTI12_Question // <item
         foreach ($xml->children() as $child) {
             $name = $child->getName();
 
-          // if there is question material, load it
+            // if there is question material, load it
             if ($name == 'material') {
                 $this->material->add($child, $elementno);
             }
 
-          // load all response_lid elements, followed by all other types
+            // load all response_lid elements, followed by all other types
             if ($name == 'response_lid') {
                 $resp = new ST_QTI12_Response('lid', $child);
                 $resp->order = $elementno;
@@ -331,7 +331,7 @@ class ST_QTI12_Question // <item
 
         $this->counts['material'] = $this->material->count;
 
-      // work out cardinality
+        // work out cardinality
         $count_multi = 0;
         foreach ($this->responses as $res) {
             if ($res->ismulti) {
@@ -345,18 +345,18 @@ class ST_QTI12_Question // <item
             $this->cardinality = 'Varies';
         }
 
-      // are all the sets of labels the same for stuff like matrixes etc
+        // are all the sets of labels the same for stuff like matrixes etc
         $this->CompareLabels();
     }
 
-  // verify all sets of lables for each lid are same or not
+    // verify all sets of lables for each lid are same or not
     function CompareLabels()
     {
         if ($this->counts['response'] > 1) {
             $allsame = 1;
             $first = true;
 
-          // for all responses compare against the first one
+            // for all responses compare against the first one
             foreach ($this->responses as $res) {
                 // find first set of responses as a baseline, and dont compare as its gonna be the same
                 if ($first) {
@@ -377,13 +377,13 @@ class ST_QTI12_Question // <item
                 // if count is same, then all items must match or not all same
 
                 foreach ($itemlabels as $id => $itemlabel) {
-                  // array key missing means option aint there!
+                    // array key missing means option aint there!
                     if (!array_key_exists($id, $baselabels)) {
                         $allsame = 0;
                         break;
                     }
 
-                  // compare the data to see if the same
+                    // compare the data to see if the same
                     if ($baselabels[$id]->material->GetText() != $itemlabel->material->GetText()) {
                         $allsame = 0;
                         break;
@@ -406,7 +406,7 @@ class ST_QTI12_Response // <response_
 {
     var $id; // <response_lid ident=
 
-  // type of the response_ object
+    // type of the response_ object
     var $type = 'lid';
 
     var $material; // <material>
@@ -415,25 +415,25 @@ class ST_QTI12_Response // <response_
     var $render = 'choice';
     var $flow = 0;
 
-  // attributes for rebder_choice
+    // attributes for rebder_choice
     var $shuffle = 0; // <render_choice shuffle="No"
     var $minnumber = 0; // <render_choice minnumber=
     var $maxnumber = 0; // <render_choice maxnumber=
 
-  // attributes for render_fib
+    // attributes for render_fib
     var $fibtype = '';
     var $prompt = '';
     var $rows = 0;
     var $cols = 0;
 
     var $orderid = 0;
-  // attributes for render_slider
+    // attributes for render_slider
 
-  // attributes for render_hotspot
+    // attributes for render_hotspot
 
-  // <render_choice><response_label
-  // ST_QTI12_Label
-  // key by <response_label ident=
+    // <render_choice><response_label
+    // ST_QTI12_Label
+    // key by <response_label ident=
     var $labels = array();
 
     function __construct($type, $xml)
@@ -441,16 +441,16 @@ class ST_QTI12_Response // <response_
 
         $this->id = (string) $xml->attributes()->ident;
         $this->type = $type;
-      // should we allow multiple answers, ie check instead of radio
+        // should we allow multiple answers, ie check instead of radio
         $this->ismulti = strtolower($xml->attributes()->rcardinality) == 'multiple' ? 1 : 0;
 
         $this->material = new ST_QTI12_Material();
-      // get material if available
+        // get material if available
         if ($xml->material) {
             $this->material->add($xml->material);
         }
 
-      // as far as i can tell only ever 1 choice for each response_lid
+        // as far as i can tell only ever 1 choice for each response_lid
         if ($xml->render_choice) {
             $render = 'choice';
             $this->shuffle = strtolower($xml->render_choice->attributes()->shuffle) == 'no' ? 0 : 1;
@@ -479,7 +479,7 @@ class ST_QTI12_Response // <response_
         }
     }
 
-  // load <render_ segment, only ever 1 per <response_
+    // load <render_ segment, only ever 1 per <response_
     function LoadRender($xml) // <render_choice etc
     {
         if ($xml->material) {
@@ -549,7 +549,7 @@ class ST_QTI12_Label // <response_label
         }
 
         $this->material = new ST_QTI12_Material();
-      // get material if available
+        // get material if available
         if ($xml->material) {
             $this->material->add($xml->material);
         }
@@ -576,11 +576,11 @@ class ST_QTI12_RespCondition // <respcondition>
     var $other = 0; // if final match, matching any other tags
     var $used = 0;
     var $type = 'and';
-  // not is in the individual condition as can have an and with some nots in it for mrq type questions
+    // not is in the individual condition as can have an and with some nots in it for mrq type questions
 
-  // <conditionvar>
-  // ST_QTI12_CondVar
-  // no key
+    // <conditionvar>
+    // ST_QTI12_CondVar
+    // no key
     var $conditions = array();
 
     var $sortedout;
@@ -612,7 +612,7 @@ class ST_QTI12_RespCondition // <respcondition>
             }
         }
 
-      // add all OR
+        // add all OR
 
         if ($xml->conditionvar->or) {
             $this->type = 'or';
@@ -621,7 +621,7 @@ class ST_QTI12_RespCondition // <respcondition>
             $this->LoadConditionVar($xml->conditionvar);
         }
 
-      // feedback?
+        // feedback?
         if ($xml->displayfeedback) {
             $this->feedback = (string) $xml->displayfeedback->attributes()->linkrefid;
         }
@@ -634,7 +634,7 @@ class ST_QTI12_RespCondition // <respcondition>
             return;
         }
 
-      // add all conditions
+        // add all conditions
 
         foreach ($xml->children() as $child) {
             if ($child->getName() == 'not') {
@@ -643,8 +643,8 @@ class ST_QTI12_RespCondition // <respcondition>
             $this->conditions[] = new ST_QTI12_CondVar($child);
         }
 
-      // add all NOT stuff
-      // add all var equals
+        // add all NOT stuff
+        // add all var equals
         foreach ($xml->not as $condition) {
             if ($condition->varequal) {
                 $cv = new ST_QTI12_CondVar($condition->varequal);
@@ -679,7 +679,7 @@ class ST_QTI12_CondVar // <conditionvar>
     var $type = 'varequal';
     var $areatype = '';
 
-  // should be passed a varequal
+    // should be passed a varequal
     function __construct($xml)
     {
         $this->respident = (string) $xml->attributes()->respident;
@@ -710,7 +710,7 @@ class ST_QTI12_Itemfeedback // <itemfeedback>
         $this->id = (string) $xml->attributes()->ident;
 
         $this->material = new ST_QTI12_Material();
-      // get material if available
+        // get material if available
 
         if ($xml->material) {
             $this->material->add($xml->material);
@@ -806,7 +806,7 @@ class ST_QTI12_Material // <material>
             } else {
                 $this->chunks[] = $chunk;
             }
-          // load any images here
+            // load any images here
             if ($xml->matimage) {
                 $this->addImage((string) $xml->matimage->attributes()->uri, (string) $xml->matimage->attributes()->width, (string) $xml->matimage->attributes()->height, (string)$xml->matimage);
             }
@@ -829,7 +829,7 @@ class ST_QTI12_Material // <material>
         }
 
         echo "Adding image $image<br>";
-      // download any http images etc here and put location in $imagefile as a LOCAL file
+        // download any http images etc here and put location in $imagefile as a LOCAL file
         $basename = basename($image);
         $imagefile = FindFile($import_directory, $basename);
         echo "Converted \"$image\" to base name \"$imagefile\"<br>";
@@ -848,7 +848,7 @@ class ST_QTI12_Material // <material>
             $this->media_width = $identifier_size[0];
             $this->media_height = $identifier_size[1];
 
-          // if size different, then resize the image
+            // if size different, then resize the image
             if ($width > 0 && $height > 0 && ($width != $this->media_width || $height != $this->media_height)) {
                 $image = new SimpleImage();
                 $image->load($imagefile);
@@ -894,7 +894,7 @@ class ST_QTI12_Material // <material>
 
                     $output .= $pre;
 
-                  // we have a src tag?
+                    // we have a src tag?
                     if (stripos($imgtag, 'src') > 0) {
                         $data = parseHtml($imgtag);
                         $src = $data['IMG'][0]['src'];
@@ -909,7 +909,7 @@ class ST_QTI12_Material // <material>
                             copy($import_directory . '/' . $filename, $fullpath);
               
                             $data['IMG'][0]['src'] = '/media/' . $basename;
-                        // recreate img tag
+                            // recreate img tag
                             $imgtag = '<img ';
                             foreach ($src = $data['IMG'][0] as $tag => $value) {
                                   $imgtag .= "$tag=\"$value\" ";
@@ -1082,26 +1082,26 @@ function parseHtml($s_str)
     $s_tagOption = '';
     $i_arrayCounter = 0;
     $a_html = array();
-  // Search for a tag in string
+    // Search for a tag in string
     while (is_int(($i_indicatorL = strpos($s_str, '<', $i_indicatorR)))) {
-      // Get everything into tag...
+        // Get everything into tag...
         $i_indicatorL++;
         $i_indicatorR = strpos($s_str, '>', $i_indicatorL);
         $s_temp = substr($s_str, $i_indicatorL, ($i_indicatorR - $i_indicatorL));
         $a_tag = explode(' ', $s_temp);
-      // Here we get the tag's name
+        // Here we get the tag's name
         list(, $s_tagName, , ) = $a_tag[0];
         $s_tagName = strtoupper($s_tagName);
-      // Well, I am not interesting in <br>, </font> or anything else like that...
-      // So, this is false for tags without options.
+        // Well, I am not interesting in <br>, </font> or anything else like that...
+        // So, this is false for tags without options.
         $b_boolOptions = is_array(($s_tagOption = $a_tag[1])) && $s_tagOption[1];
         if ($b_boolOptions) {
-          // Without this, we will mess up the array
+            // Without this, we will mess up the array
             $i_arrayCounter = 0;
             if (isset($a_html[$s_tagName])) {
                 $i_arrayCounter = (int) count($a_html[$s_tagName]);
             }
-          // get the tag options, like src="htt://". Here, s_tagTokOption is 'src' and s_tagTokValue is '"http://"'
+            // get the tag options, like src="htt://". Here, s_tagTokOption is 'src' and s_tagTokValue is '"http://"'
             $tagcount = 2;
             do {
                 $s_tagTokOption = strtolower(strtok($s_tagOption[1], '='));

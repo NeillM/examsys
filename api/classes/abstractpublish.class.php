@@ -16,11 +16,11 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Abstract API publish functionality
-*
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2015 onwards The University of Nottingham
-*/
+ * Abstract API publish functionality
+ *
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2015 onwards The University of Nottingham
+ */
 
 namespace api;
 

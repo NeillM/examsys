@@ -16,19 +16,19 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* This script can only be called from a paper in 'summative' mode from one of the four green fire exit icons displayed in 'start.php'.
-*  It does three main things:
-*        1) record the current screen data to the 'log' table,
-*        2) blank the screen to prevent plagiarism among evacuating examinees, and
-*        3) has a 'continue' button at the bottom of the screen with passes the correct parameters back to 'start.php' if the
-*           examinees are allowed to re-enter the building.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * This script can only be called from a paper in 'summative' mode from one of the four green fire exit icons displayed in 'start.php'.
+ *  It does three main things:
+ *        1) record the current screen data to the 'log' table,
+ *        2) blank the screen to prevent plagiarism among evacuating examinees, and
+ *        3) has a 'continue' button at the bottom of the screen with passes the correct parameters back to 'start.php' if the
+ *           examinees are allowed to re-enter the building.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_student_auth.inc';
 require_once '../include/marking_functions.inc';
@@ -85,15 +85,15 @@ $current_address = NetworkUtils::get_client_address();
 $moduleID = $propertyObj->get_modules();
 
 if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObject)) {
-  // No further security checks.
+    // No further security checks.
 } else {    // Treat as student with extra security checks.
-  // Check for additional password on the paper
+    // Check for additional password on the paper
     check_paper_password($propertyObj->get_property_id(), $password, $string, $mysqli);
 
-  // Check time security
+    // Check time security
     check_datetime($start_date, $end_date, $string, $mysqli);
 
-  // Check room security
+    // Check room security
     $low_bandwidth = check_labs(
         $propertyObj->get_paper_type(),
         $propertyObj->get_labs(),
@@ -103,10 +103,10 @@ if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObjec
         $mysqli
     );
 
-  // Get modules if the user is a student and the paper is not formative
+    // Get modules if the user is a student and the paper is not formative
     $attempt = check_modules($userObject, $modIDs, $calendar_year, $string, $mysqli);
 
-  // Check for any metadata security restrictions
+    // Check for any metadata security restrictions
     check_metadata($property_id, $userObject, $modIDs, $string, $mysqli);
 }
 

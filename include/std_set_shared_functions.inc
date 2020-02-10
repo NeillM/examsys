@@ -15,12 +15,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 function updateDB($review, $db)
 {
@@ -97,10 +97,10 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0)
  
     $no_reviews = count($reviews);
     for ($i = 0; $i < $no_reviews; $i++) {
-      // Get any questions to exclude.
+        // Get any questions to exclude.
         $exclude = array();
 
-      // TODO: use exlcude class.
+        // TODO: use exlcude class.
         $exclude_result = $mysqli->prepare('SELECT q_id, parts FROM question_exclude WHERE q_paper = ?');
         $exclude_result->bind_param('i', $paperID);
         $exclude_result->execute();
@@ -111,7 +111,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0)
         }
         $exclude_result->close();
   
-      // Calculate marks for the current paper.
+        // Calculate marks for the current paper.
         $marks_array = array();
         ss_get_marks_correct($mysqli, $paperID, $exclude, $marks_array);
     
@@ -775,7 +775,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
                     }
                 }
             } else {
-              // Dropdown lists.
+                // Dropdown lists.
                 $blank_details = explode('[blank', $display_option['option_text']);
                 $no_blanks = count($blank_details);
                 echo '<p>' . $blank_details[0];
@@ -930,7 +930,7 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
     $review_string = '';
     $valid = true;
   
-  // Process the passed values for group reviews
+    // Process the passed values for group reviews
     if ($is_group) {
         $review_string = ($value['string'] === 0 or !empty($value['string'])) ? $value['string'] : '';
         $mean = (isset($value['raw_mean'])) ? $value['raw_mean'] : 0;
@@ -1038,7 +1038,7 @@ function get_review($q_type, $method, $q_id, $part_no, $prev_reviews, $is_group 
                 if (isset($ratings_parts[$part_no - 1])) {
                     $this_rating = $ratings_parts[count($ratings_parts) - $part_no];
                 } else {
-                  // This is bad missing data, maybe as the result of changes to the question.  Fill in missing values with 0 temporarily
+                    // This is bad missing data, maybe as the result of changes to the question.  Fill in missing values with 0 temporarily
                     $this_rating = 0;
                     $individual_rater[$q_id] .= ',0';
                 }
@@ -1060,10 +1060,10 @@ function get_review($q_type, $method, $q_id, $part_no, $prev_reviews, $is_group 
             }
         }
         $raw_mean = round($rating_total / count($ratings_array));
-      // Round mean to nearest 5 to match values in scale
+        // Round mean to nearest 5 to match values in scale
         $review_mean = round(($rating_total / count($ratings_array)) / 5) * 5;
     
-      // Return previous group review value if it exists
+        // Return previous group review value if it exists
         if (isset($prev_reviews[$q_id])) {
             $prev_review = $current_review;
         }

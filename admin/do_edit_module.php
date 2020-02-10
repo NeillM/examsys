@@ -42,7 +42,7 @@ if ($module === false) {
 
 $moduleid_in_use = false;
 if ($modulecode != $oldmodulecode) {
-  // Check for unique moduleid
+    // Check for unique moduleid
     $moduleid_in_use = module_utils::module_exists($modulecode, $mysqli);
 }
 if ($moduleid_in_use == false) {
@@ -69,7 +69,7 @@ if ($moduleid_in_use == false) {
     }
 
 
-  // Update the properties of the module.
+    // Update the properties of the module.
     $module['moduleid'] = $modulecode;
     $module['fullname'] = param::optional('fullname', '', param::TEXT, param::FETCH_POST);
     $module['timed_exams'] = param::optional('timed_exams', false, param::BOOLEAN, param::FETCH_POST);

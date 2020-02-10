@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Authentication routine which permits SysAdmin, Admin and Invigilator only access.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Authentication routine which permits SysAdmin, Admin and Invigilator only access.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once 'staff_student_auth.inc';
 if (!$userObject->has_role(array('SysAdmin', 'Admin', 'Invigilator'))) {

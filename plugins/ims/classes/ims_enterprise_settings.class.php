@@ -35,11 +35,11 @@ namespace plugins\ims;
 class ims_enterprise_settings
 {
 
-  /**
-   * Get IMS settings
-   *
-   * @return stdClass Object containing IMS settings as properties and property values
-   */
+    /**
+     * Get IMS settings
+     *
+     * @return stdClass Object containing IMS settings as properties and property values
+     */
     public function get_ims_settings($mysqli)
     {
         $configObject = \Config::get_instance();
@@ -54,9 +54,9 @@ class ims_enterprise_settings
         return $defaultsettings;
     }
 
-  /**
-   * Save IMS settings
-   */
+    /**
+     * Save IMS settings
+     */
     public function save_ims_settings()
     {
 
@@ -66,10 +66,10 @@ class ims_enterprise_settings
         }
     }
 
-  /**
-   * Update settings
-   * @return boolean True if successful, otherwise False
-   */
+    /**
+     * Update settings
+     * @return boolean True if successful, otherwise False
+     */
     protected function insert_settings()
     {
         global $mysqli;
@@ -111,7 +111,7 @@ class ims_enterprise_settings
 
         if (isset($_POST['submit'])) {
             $component = 'plugin_ims';
-          // Edit IMS Settings.
+            // Edit IMS Settings.
             foreach ($settings as $setting => $value) {
                 $result = $mysqli->prepare('INSERT INTO config (component, setting, value) VALUE (?, ?, ?)');
                 $result->bind_param('sss', $component, $setting, $value);
@@ -121,10 +121,10 @@ class ims_enterprise_settings
         }
     }
 
-  /**
-   * Insert a IMS settings row (Should be updated immediately by update_settings()
-   * @return boolean
-   */
+    /**
+     * Insert a IMS settings row (Should be updated immediately by update_settings()
+     * @return boolean
+     */
     private function delete_settings()
     {
         global $mysqli;
@@ -134,9 +134,9 @@ class ims_enterprise_settings
         $result->close();
     }
 
-  /**
-   * Save cron run details
-   */
+    /**
+     * Save cron run details
+     */
     public function save_cron_run()
     {
         global $mysqli;
@@ -149,7 +149,7 @@ class ims_enterprise_settings
         $cron['prevpath'] = $prevpath;
         $cron['prevmd5'] = $prevmd5;
       
-      // Edit IMS Settings.
+        // Edit IMS Settings.
         $result = $mysqli->prepare("UPDATE ims_settings SET
         prevtime = ?,
         prevpath = ?,
@@ -162,10 +162,10 @@ class ims_enterprise_settings
         }
     }
 
-  /**
-   * Get course tag options
-   * @return array
-   */
+    /**
+     * Get course tag options
+     * @return array
+     */
     public function get_course_tags()
     {
         $tags = array();
@@ -176,10 +176,10 @@ class ims_enterprise_settings
         return $tags;
     }
 
-  /**
-   * Get hierarchy creation options
-   * @return array
-   */
+    /**
+     * Get hierarchy creation options
+     * @return array
+     */
     public function get_hierarchy_creation_options()
     {
         global $string;
@@ -190,10 +190,10 @@ class ims_enterprise_settings
         return $options;
     }
 
-  /**
-   * Get default settings
-   * @return \stdClass Object containing IMS settings as properties
-   */
+    /**
+     * Get default settings
+     * @return \stdClass Object containing IMS settings as properties
+     */
     public function get_default_settings()
     {
         $ims = new \stdClass();

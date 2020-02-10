@@ -16,16 +16,16 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* This is a homepage for External Examiners to land on.
-* It looks up and presents only papers that they have been
-* selected to review and are in the future.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * This is a homepage for External Examiners to land on.
+ * It looks up and presents only papers that they have been
+ * selected to review and are in the future.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../config/index.inc';  // Get the logo

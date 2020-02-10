@@ -41,8 +41,8 @@ class BLTI
 
     function __construct($parm = false, $usesession = true, $doredirect = true)
     {
-    // If this request is not an LTI Launch, either
-    // give up or try to retrieve the context from session
+        // If this request is not an LTI Launch, either
+        // give up or try to retrieve the context from session
         if (!is_lti_request()) {
             if ($usesession === false) {
                 return;
@@ -69,15 +69,15 @@ class BLTI
             return;
         }
 
-    // Insure we have a valid launch
+        // Insure we have a valid launch
         if (empty($_REQUEST['oauth_consumer_key'])) {
             $this->message = 'Missing oauth_consumer_key in request';
             return;
         }
         $oauth_consumer_key = $_REQUEST['oauth_consumer_key'];
 
-    // Find the secret - either form the parameter as a string or
-    // look it up in a database from parameters we are given
+        // Find the secret - either form the parameter as a string or
+        // look it up in a database from parameters we are given
         $secret = false;
         $row = false;
         if (is_string($parm)) {
@@ -115,7 +115,7 @@ class BLTI
             }
         }
 
-    // Verify the message signature
+        // Verify the message signature
         $store = new TrivialOAuthDataStore();
         $store->add_consumer($oauth_consumer_key, $secret);
 
@@ -135,7 +135,7 @@ class BLTI
             return;
         }
 
-    // Store the launch information in the session for later
+        // Store the launch information in the session for later
         $newinfo = array();
         foreach ($_POST as $key => $value) {
             if ($key == 'basiclti_submit') {
@@ -548,7 +548,7 @@ function sendXmlOverPost($url, $xml, $header)
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
 
-  // For xml, change the content-type.
+    // For xml, change the content-type.
     curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 
     curl_setopt($ch, CURLOPT_POST, 1);
@@ -558,7 +558,7 @@ function sendXmlOverPost($url, $xml, $header)
     curl_setopt($ch, CURLOPT_TIMEOUT, 10);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $configObject->get_setting('core', 'lti_ssl_verifypeer'));
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $configObject->get_setting('core', 'lti_ssl_verifyhost'));
-  // Send to remote and return data to caller.
+    // Send to remote and return data to caller.
     $response['result'] = curl_exec($ch);
     $response['error'] = curl_error($ch);
     curl_close($ch);

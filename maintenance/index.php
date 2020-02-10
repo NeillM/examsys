@@ -22,7 +22,7 @@
  * @version 2.0
  * @copyright Copyright (c) 2017 The University of Nottingham
  * @package
-*/
+ */
 
 header('HTTP/1.1 503 Service Temporarily Unavailable');
 header('Status: 503 Service Temporarily Unavailable');

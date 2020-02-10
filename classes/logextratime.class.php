@@ -26,41 +26,41 @@
 class LogExtraTime
 {
 
-  /**
-   * @var LogLabEndTime $log_lab_end_time
-   */
+    /**
+     * @var LogLabEndTime $log_lab_end_time
+     */
     private $log_lab_end_time;
 
-  /**
-   * @var UserObject $student_object
-   */
+    /**
+     * @var UserObject $student_object
+     */
     private $student_object;
 
-  /**
-   * @var mysqli $db
-   */
+    /**
+     * @var mysqli $db
+     */
     private $db;
     private $msg;
 
     private $log_extra_time_cache;
     private $use_cache = false;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
-  /**
-   * @return LogLabEndTime $log_lab_end_time
-   * @return array    $student_object
-   * @return mysqli        $db
-   */
+    /**
+     * @return LogLabEndTime $log_lab_end_time
+     * @return array    $student_object
+     * @return mysqli        $db
+     */
     public function __construct(LogLabEndTime $log_lab_end_time, $student_object, mysqli $db, $cached = false)
     {
 
@@ -74,9 +74,9 @@ class LogExtraTime
         }
     }
 
-  /**
-   * Retrieve and store all records in the extra time log for the paper to avoid large number of queries
-   */
+    /**
+     * Retrieve and store all records in the extra time log for the paper to avoid large number of queries
+     */
     private function populate_cache()
     {
 
@@ -96,9 +96,9 @@ class LogExtraTime
         $stmt->close();
     }
 
-  /**
-   * @return int
-   */
+    /**
+     * @return int
+     */
     public function get_extra_time_secs()
     {
 
@@ -135,10 +135,10 @@ class LogExtraTime
         return $extra_time_secs;
     }
 
-  /**
-   * @param int $invigilator_id
-   * @param int $extra_time_minutes
-   */
+    /**
+     * @param int $invigilator_id
+     * @param int $extra_time_minutes
+     */
     public function save($invigilator_id, $extra_time_minutes)
     {
 
@@ -180,9 +180,9 @@ class LogExtraTime
         $stmt->close();
     }
 
-  /**
-   * @return int
-   */
+    /**
+     * @return int
+     */
     public function get_paper_exam_duration()
     {
         return $this->log_lab_end_time->get_paper_exam_duration();
@@ -193,73 +193,73 @@ class LogExtraTime
         return $this->log_lab_end_time->get_paper_start_datetime();
     }
 
-  /**
-   * @return int
-   */
+    /**
+     * @return int
+     */
     private function get_paper_id()
     {
         return $this->log_lab_end_time->get_paper_id();
     }
 
-  /**
-   * @return int
-   */
+    /**
+     * @return int
+     */
     private function get_lab_id()
     {
         return $this->log_lab_end_time->get_lab_id();
     }
 
-  /**
-   * @return int
-   */
+    /**
+     * @return int
+     */
     private function get_student_id()
     {
         return $this->student_object['user_ID'];
     }
 
-  /**
-   * @return int
-   */
+    /**
+     * @return int
+     */
     private function get_user_id()
     {
         return $this->student_object['get_user_ID'];
     }
 
-  /**
-   * used in cached mode to change the student of intrest
-   */
+    /**
+     * used in cached mode to change the student of intrest
+     */
     public function set_student_object($student_object)
     {
         $this->student_object = $student_object;
     }
 
-  /**
-   * @return int
-   */
+    /**
+     * @return int
+     */
     public function get_students_special_needs_percentage()
     {
         return $this->student_object['special_needs_percentage'];
     }
 
-  /**
-   * @return int
-   */
+    /**
+     * @return int
+     */
     private function get_paper_end_timestamp()
     {
         return $this->log_lab_end_time->get_paper_end_timestamp();
     }
 
-  /**
-   * @return int
-   */
+    /**
+     * @return int
+     */
     public function get_session_end_datetime()
     {
         return $this->log_lab_end_time->get_session_end_date_datetime();
     }
 
-  /**
-   * @return int
-   */
+    /**
+     * @return int
+     */
     public function get_default_session_end_datetime()
     {
         return $this->log_lab_end_time->calculate_default_session_end_datetime();

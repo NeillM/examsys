@@ -29,11 +29,11 @@ include_once 'Corrector.class.php';
 
 class TEXTBOXCorrector extends Corrector
 {
-  /**
-   * Change the correct answer after the question has been locked. Update user marks in summative log table
-   * @param integer $new_correct new correct answer
-   * @param integer $paper_id
-   */
+    /**
+     * Change the correct answer after the question has been locked. Update user marks in summative log table
+     * @param integer $new_correct new correct answer
+     * @param integer $paper_id
+     */
     public function execute($new_correct, $paper_id, &$changes, $paper_type)
     {
         $errors = array();
@@ -45,7 +45,7 @@ class TEXTBOXCorrector extends Corrector
                 if (!$this->_question->save()) {
                     $errors[] = $this->_lang_strings['datasaveerror'];
                 } else {
-            // Get metadata ID
+                    // Get metadata ID
                     $result = $this->_mysqli->prepare('SELECT id FROM log_metadata WHERE paperID = ?');
                     $result->bind_param('i', $paper_id);
                     $result->execute();
@@ -53,7 +53,7 @@ class TEXTBOXCorrector extends Corrector
                     $result->fetch();
                     $result->close();
 
-            // Set new value for totalpos in log{$paper_type} but don't change student marks
+                    // Set new value for totalpos in log{$paper_type} but don't change student marks
                     $updateLog = $this->_mysqli->prepare("UPDATE log{$paper_type} SET totalpos = ? WHERE q_id = ? AND metadataID = ?");
                     $updateLog->bind_param('iii', $mark_correct, $this->_question->id, $md_id);
                     $updateLog->execute();

@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Remove the link between a question an a paper.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Remove the link between a question an a paper.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../include/errors.php';
@@ -67,7 +67,7 @@ for ($i = 0; $i < count($tmp_pIDs); $i++) {
             $result->close();
         }
 
-      // Create a track changes record to say new question added.
+        // Create a track changes record to say new question added.
         $logger = new Logger($mysqli);
         $logger->track_change('Paper', $tmp_paperID, $userObject->get_user_ID(), $tmp_questionIDs[$i], '', 'Delete Question');
     } else {

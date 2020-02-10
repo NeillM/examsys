@@ -16,14 +16,14 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Save marks for individual textbox questions
-*
-* @author Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Save marks for individual textbox questions
+ *
+ * @author Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../../include/staff_auth.inc';
 require '../../include/errors.php';
@@ -60,7 +60,7 @@ QUERY;
             $result->close();
         }
     } catch (exception $ex) {
-      // No need to do anything
+        // No need to do anything
     }
 } else {
     $status = 'OK';

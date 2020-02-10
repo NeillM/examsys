@@ -14,7 +14,7 @@ function rogo2272_mdecrypt_password($encpassword)
 
 if ($updater_utils->check_version('6.5.0')) {
     if (!$updater_utils->has_updated('rogo2272')) {
-      // Update paper passwords.
+        // Update paper passwords.
         $result = $mysqli->prepare("SELECT property_id, password from properties WHERE password is not null and password != ''");
         $result->execute();
         $result->store_result();
@@ -34,7 +34,7 @@ if ($updater_utils->check_version('6.5.0')) {
         $result->close();
         $update->close();
 
-      // Update plugin passwords
+        // Update plugin passwords
         $result2 = $mysqli->prepare("SELECT component, setting, value from config WHERE type = 'password' and value != ''");
         $result2->execute();
         $result2->store_result();

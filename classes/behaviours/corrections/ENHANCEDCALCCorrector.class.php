@@ -30,14 +30,14 @@ require_once dirname(dirname(dirname(__DIR__))) . '/plugins/questions/enhancedca
 class ENHANCEDCALCCorrector extends Corrector
 {
 
-  /**
-   * Change the correct answer after the question has been locked. Update user marks in summative log table
-   * @param mixed $new_correct Array of new values for fields that can be corrected
-   * @param integer $paper_id
-   * @param boolean $changes True if changes have been made by a previous corrector
-   * @param integer $paper_type Integer index for type of paper
-   * @return array[$string] Any errors encountered in the correction process
-   */
+    /**
+     * Change the correct answer after the question has been locked. Update user marks in summative log table
+     * @param mixed $new_correct Array of new values for fields that can be corrected
+     * @param integer $paper_id
+     * @param boolean $changes True if changes have been made by a previous corrector
+     * @param integer $paper_type Integer index for type of paper
+     * @return array[$string] Any errors encountered in the correction process
+     */
     public function execute($new_correct, $paper_id, &$changes, $paper_type)
     {
         $errors = array();
@@ -71,7 +71,7 @@ class ENHANCEDCALCCorrector extends Corrector
         }
 
         $strict_zeros = $this->_question->get_strict_zeros();
-      // Need to be careful of how the correction code builds the values for check boxes
+        // Need to be careful of how the correction code builds the values for check boxes
         if (isset($new_correct['strict_zeros'])) {
             $new_strict_zeros = (is_array($new_correct['strict_zeros'])) ? $new_correct['strict_zeros'][0] : $new_correct['strict_display'];
         } else {
@@ -85,7 +85,7 @@ class ENHANCEDCALCCorrector extends Corrector
         }
 
 
-      // Parse answers
+        // Parse answers
         $opts = $this->_question->options;
         for ($i = 1; $i <= $this->_question->max_options; $i++) {
             if (isset($opts[$i])) {
@@ -121,7 +121,7 @@ class ENHANCEDCALCCorrector extends Corrector
                     }
                 }
             } elseif ($new_correct['option_formula'][$i - 1] != '') {
-              // Complete new answer
+                // Complete new answer
                 $changes = true;
                 $userObj = UserObject::get_instance();
                 $this->_question->options[$i] = new OptionENHANCEDCALC($this->_mysqli, $userObj->get_user_ID(), $this->_question, $i, $this->_lang_strings, array('formula' => $new_correct['option_formula'][$i - 1], 'units' => $new_correct['option_units'][$i - 1]));

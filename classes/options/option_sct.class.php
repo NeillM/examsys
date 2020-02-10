@@ -38,10 +38,10 @@ class OptionSCT extends OptionEdit
         return parent::save($option_number);
     }
 
-  /**
-   * Set the option correct answer
-   * @param string $value
-   */
+    /**
+     * Set the option correct answer
+     * @param string $value
+     */
     public function set_correct($value)
     {
         if ($value != $this->correct and !in_array('correct', array_keys($this->_question->get_unified_fields()))) {
@@ -49,10 +49,10 @@ class OptionSCT extends OptionEdit
         }
         $this->correct = $value;
     }
-  /**
-   * Set the option marks for correct answers
-   * @param string $value
-   */
+    /**
+     * Set the option marks for correct answers
+     * @param string $value
+     */
     public function set_marks_correct($value, $log_change = true)
     {
         $this->marks_correct = $value;

@@ -60,7 +60,7 @@ $help = 'Rogo initialisation script options'
         . PHP_EOL . PHP_EOL . "-l, --langpacks, \tLoad language packs (0/1, default 0)";
 
 if (isset($optionslist['h']) or isset($optionslist['help'])) {
-  // Display some help information.
+    // Display some help information.
     cli_utils::prompt($help);
     exit(0);
 }

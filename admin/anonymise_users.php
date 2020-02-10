@@ -16,16 +16,16 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* This script will jumble up names in the user table. This is useful to anonymise
-* live data if taking Rogo, for example, on a laptop to a conference. Under no
-* circumstances run this on a live installation.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * This script will jumble up names in the user table. This is useful to anonymise
+ * live data if taking Rogo, for example, on a laptop to a conference. Under no
+ * circumstances run this on a live installation.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/sysadmin_auth.inc';
 

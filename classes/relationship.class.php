@@ -41,15 +41,15 @@ class Relationship
     {
         $this->_db = $mysqli;
 
-      // Check the type of $data
+        // Check the type of $data
         if (is_array($data)) {
-          // If it is an array, assume an associative array of fields for creating a new object (but not
-          // saving it to the database)
+            // If it is an array, assume an associative array of fields for creating a new object (but not
+            // saving it to the database)
             foreach ($data as $field => $val) {
                 $this->$field = $val;
             }
         } elseif (ctype_digit($data)) {
-          // If it is an int use it as an ID for the database lookup
+            // If it is an int use it as an ID for the database lookup
             $this->id = $data;
             if (!$this->get_relationship()) {
                 throw new DatabaseException('Error loading relationship from databse');
@@ -59,10 +59,10 @@ class Relationship
         }
     }
 
-  /**
-   * Load a relationship from the database
-   * @return boolean  True if the relationship was loaded successfully
-   */
+    /**
+     * Load a relationship from the database
+     * @return boolean  True if the relationship was loaded successfully
+     */
     private function get_relationship()
     {
         $success = false;
@@ -110,88 +110,88 @@ QUERY;
         return true;
     }
 
-  /**
-   * @return int
-   */
+    /**
+     * @return int
+     */
     public function get_id()
     {
         return $this->id;
     }
 
-  /**
-   * @return integer
-   */
+    /**
+     * @return integer
+     */
     public function get_idMod()
     {
         return $this->idMod;
     }
 
-  /**
-   * @return integer
-   */
+    /**
+     * @return integer
+     */
     public function get_paper_id()
     {
         return $this->paper_id;
     }
 
-  /**
-   * @return integer
-   */
+    /**
+     * @return integer
+     */
     public function get_question_id()
     {
         return $this->question_id;
     }
 
-  /**
-   * @return integer
-   */
+    /**
+     * @return integer
+     */
     public function get_objective_id()
     {
         return $this->objective_id;
     }
 
-  /**
-   * @return string
-   */
+    /**
+     * @return string
+     */
     public function get_calendar_year()
     {
         return $this->calendar_year;
     }
 
-  /**
-   * @return string
-   */
+    /**
+     * @return string
+     */
     public function get_vle_api()
     {
         return $this->vle_api;
     }
 
-  /**
-   * @return integer
-   */
+    /**
+     * @return integer
+     */
     public function get_map_level()
     {
         return $this->map_level;
     }
 
-  /**
-   * @return string
-   */
+    /**
+     * @return string
+     */
     public function get_db_error()
     {
         return $this->_db_error;
     }
 
-  /**
-   * Get an array of Relationship objects matching the given search criteria
-   * @param  mysqli   $db             Database link
-   * @param  mixed    $idMod          Module idMod or array of module idMods to search for
-   * @param  string   $calendar_year  Academic year string in the form YYYY/YY (e.g. '2012/13')
-   * @param  integer  $paper_id       ID of paper to search for
-   * @param  mixed    $question_id    Question ID or array of question IDs to search for
-   * @param  string   $limit          Maximum number of records to return. 0 = infinite
-   * @return array                    Array of Relationship objects
-   */
+    /**
+     * Get an array of Relationship objects matching the given search criteria
+     * @param  mysqli   $db             Database link
+     * @param  mixed    $idMod          Module idMod or array of module idMods to search for
+     * @param  string   $calendar_year  Academic year string in the form YYYY/YY (e.g. '2012/13')
+     * @param  integer  $paper_id       ID of paper to search for
+     * @param  mixed    $question_id    Question ID or array of question IDs to search for
+     * @param  string   $limit          Maximum number of records to return. 0 = infinite
+     * @return array                    Array of Relationship objects
+     */
     public static function find($db, $idMod = '', $calendar_year = '', $paper_id = -1, $question_id = '', $limit = 0)
     {
         $sql = 'SELECT rel_id, idMod, paper_id, question_id, obj_id, calendar_year, vle_api, map_level FROM relationships';

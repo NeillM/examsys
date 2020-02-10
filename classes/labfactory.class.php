@@ -27,19 +27,19 @@
 class LabFactory
 {
 
-  /**
-   * @var mysqli $db
-   */
+    /**
+     * @var mysqli $db
+     */
     private $db;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
@@ -48,10 +48,10 @@ class LabFactory
         $this->db = $db;
     }
 
-  /**
-   * @param int $address - IP address of a machine in the required lab
-   * @return Lab         - Lab object for specified IP address or false if not found
-   */
+    /**
+     * @param int $address - IP address of a machine in the required lab
+     * @return Lab         - Lab object for specified IP address or false if not found
+     */
     public function get_lab_based_on_client($address)
     {
         $sql = 'SELECT lab, name FROM client_identifiers, labs WHERE client_identifiers.lab = labs.id AND address = ?';
@@ -78,11 +78,11 @@ class LabFactory
         return $lab_object;
     }
   
-  /**
-   * Get lab id from ip address
-   * @param string $address ip address
-   * @return integer|bool lab id or false on error
-   */
+    /**
+     * Get lab id from ip address
+     * @param string $address ip address
+     * @return integer|bool lab id or false on error
+     */
     public function get_lab_from_address($address)
     {
         $lab_results = $this->db->prepare('SELECT lab FROM client_identifiers WHERE address = ?');
@@ -98,11 +98,11 @@ class LabFactory
         $lab_results->close();
     }
   
-  /**
-   * Get the lab id
-   * @param string $name lab name
-   * @return int|bool id of lab or false
-  */
+    /**
+     * Get the lab id
+     * @param string $name lab name
+     * @return int|bool id of lab or false
+     */
     public function get_lab_id($name)
     {
         $result = $this->db->prepare('SELECT id FROM labs WHERE name = ?');

@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -34,7 +34,7 @@ if (empty($_POST['source_y']) or empty($_POST['dest_y']) or empty($_POST['module
 } elseif ($_POST['source_y'] == $_POST['dest_y']) {
     $errors[] = 'Source and destination years cannot be the same';
 } else {
-  // Get the sessions for the source year
+    // Get the sessions for the source year
 
     $module_code = module_utils::get_moduleid_from_id($_POST['moduleID'], $mysqli);
     $modules_array = array($_POST['moduleID'] => $module_code);

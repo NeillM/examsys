@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../include/std_set_functions.inc';
@@ -223,7 +223,7 @@ while ($stmt->fetch()) {
         echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
     }
     if ($old_q_id != $q_id) {          // New Question
-      // Print the options of the previous question
+        // Print the options of the previous question
         $li_set = 0;
         if ($old_leadin != '') {
             if ($li_set == 1) {

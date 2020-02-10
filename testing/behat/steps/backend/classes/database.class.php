@@ -34,17 +34,17 @@ use testing\behat\helpers\database\state;
  */
 trait database
 {
-  /** @var string The name of the database state used by database steps. */
+    /** @var string The name of the database state used by database steps. */
     private $db_state_name = 'databaseteststate';
 
-  /**
-   * Checks that there are an expected number of rows in a database table.
-   *
-   * @Given /^there are "([^"]*)" records in the "([^"]*)" table$/
-   * @param int $count The expected number of records
-   * @param string $table The name odf the table to check
-   * @throws Exception
-   */
+    /**
+     * Checks that there are an expected number of rows in a database table.
+     *
+     * @Given /^there are "([^"]*)" records in the "([^"]*)" table$/
+     * @param int $count The expected number of records
+     * @param string $table The name odf the table to check
+     * @throws Exception
+     */
     public function there_are_records_in_the_table($count, $table)
     {
         $sql = "SELECT COUNT(*) AS count FROM $table";
@@ -57,24 +57,24 @@ trait database
         $this->assertEquals($count, $row->count);
     }
 
-  /**
-   * Saves the database state using the testing\behat\helpers\database\state class.
-   * This step cannot be called twice without "I reset the database state" being
-   * used between the calls.
-   *
-   * @given I store the database state
-   */
+    /**
+     * Saves the database state using the testing\behat\helpers\database\state class.
+     * This step cannot be called twice without "I reset the database state" being
+     * used between the calls.
+     *
+     * @given I store the database state
+     */
     public function i_store_the_database_state()
     {
         state::save_database_state($this->db_state_name);
     }
 
-  /**
-   * Resets the database state using the testing\behat\helpers\database\state class
-   * The "I store the database state" step must previously have been called.
-   *
-   * @given I reset the database state
-   */
+    /**
+     * Resets the database state using the testing\behat\helpers\database\state class
+     * The "I store the database state" step must previously have been called.
+     *
+     * @given I reset the database state
+     */
     public function i_reset_the_database_state()
     {
         state::rollback_database_state($this->db_state_name);

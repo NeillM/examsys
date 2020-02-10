@@ -77,7 +77,7 @@ echo "</div><div class=\"page_title\">$paper_title</div>";
 echo '</div>';
 
 if (!isset($qtiimportdirectory)) {
-  // Just in case the file is included from pages where this is not set.
+    // Just in case the file is included from pages where this is not set.
     $qtiimportdirectory = rogo_directory::get_directory('qti_import');
 }
 ?>

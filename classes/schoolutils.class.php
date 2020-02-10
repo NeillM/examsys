@@ -15,14 +15,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Utility class for functionality related to schools
-*
-* @author Anthony Brown, Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Utility class for functionality related to schools
+ *
+ * @author Anthony Brown, Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 
 class SchoolUtils
@@ -112,7 +112,7 @@ class SchoolUtils
      * @param object $db database connection
      *
      * @return int|bool id of school or false
-    */
+     */
     static function get_schoolid_from_externalid($externalid, $externalsys, $db)
     {
         $result = $db->prepare('SELECT id FROM schools WHERE externalid = ? AND externalsys = ?  AND deleted IS NULL');
@@ -306,7 +306,7 @@ class SchoolUtils
         }
         if (is_null($code)) {
             $schoolID = SchoolUtils::school_name_exists($school, $db);
-          // Do not update if school name is in use, unless we are updating that school.
+            // Do not update if school name is in use, unless we are updating that school.
             if ($schoolID !== false and $schoolID != $id) {
                 return false;
             }
@@ -323,12 +323,12 @@ class SchoolUtils
         return true;
     }
     
-  /**
-   * Get factulty details
-   * @param integer $id
-   * @param mysqli $db
-   * @return array details
-   */
+    /**
+     * Get factulty details
+     * @param integer $id
+     * @param mysqli $db
+     * @return array details
+     */
     static function get_school_details_by_id($id, $db)
     {
         $result = $db->prepare('SELECT school, code, facultyID, externalid, externalsys FROM schools WHERE id = ?');
@@ -342,12 +342,12 @@ class SchoolUtils
         return array('name' => $name, 'faculty' => $faculty, 'code' => $code, 'externalid' => $externalid, 'externalsys' => $externalsys);
     }
   
-  /**
-   * Check if school contains modules or courses
-   * @param integer $id school id
-   * @param mysqli $db
-   * @return bool true if school is in use
-   */
+    /**
+     * Check if school contains modules or courses
+     * @param integer $id school id
+     * @param mysqli $db
+     * @return bool true if school is in use
+     */
     static function school_in_use($id, $db)
     {
         $result = $db->prepare('SELECT NULL FROM courses WHERE schoolid = ? AND deleted is NULL
@@ -363,13 +363,13 @@ class SchoolUtils
         return false;
     }
   
-  /**
-   * Generate a school id based on name and faculty.
-   * @param string $school - school name
-   * @param string $faculty - faculty name
-   * @param mysqli $db
-   * @return integer|bool - new school id or false on error
-  */
+    /**
+     * Generate a school id based on name and faculty.
+     * @param string $school - school name
+     * @param string $faculty - faculty name
+     * @param mysqli $db
+     * @return integer|bool - new school id or false on error
+     */
     static function generate_school_id($school, $faculty, $db)
     {
         $facultyid = FacultyUtils::facultyid_by_name($faculty, $db);
@@ -377,7 +377,7 @@ class SchoolUtils
             // Add new faculty.
             $facultyid = FacultyUtils::add_faculty($faculty, $db);
         }
-      // Add new school to faculty.
+        // Add new school to faculty.
         if ($facultyid) {
             $schoolid = SchoolUtils::add_school($facultyid, $school, $db);
         } else {
@@ -386,13 +386,13 @@ class SchoolUtils
         return $schoolid;
     }
   
-  /**
-   * Compare the schools in the external system and rogo
-   * @param array $external list of external system schools
-   * @param string $sms list external system syncing schools
-   * @param mysqli $db db connection
-   * @return array list of schools in rogo but not in external system
-   */
+    /**
+     * Compare the schools in the external system and rogo
+     * @param array $external list of external system schools
+     * @param string $sms list external system syncing schools
+     * @param mysqli $db db connection
+     * @return array list of schools in rogo but not in external system
+     */
     static function diff_external_schools_to_internal_schools($external, $sms, $db)
     {
         $result = $db->prepare('SELECT id, externalid, deleted FROM schools WHERE externalid IS NOT NULL and externalsys = ?');
@@ -402,11 +402,11 @@ class SchoolUtils
         $result->bind_result($id, $externalid, $deleted);
         $diff = array();
         while ($result->fetch()) {
-          // Mark for delete if not found in external list.
+            // Mark for delete if not found in external list.
             if (!in_array($externalid, $external)) {
                 $diff[] = $externalid;
             } else {
-              // Restore if deleted in Rogo but found in external list.
+                // Restore if deleted in Rogo but found in external list.
                 if (!is_null($deleted)) {
                     self::restore_school($db, $id);
                 }
@@ -415,12 +415,12 @@ class SchoolUtils
         $result->close();
         return $diff;
     }
-  /**
-   * Restore school from recycle bin
-   * @param mysqli $db db connection
-   * @param integer $id rogo id of school
-   * @return boolean true on success, false otherwise
-   */
+    /**
+     * Restore school from recycle bin
+     * @param mysqli $db db connection
+     * @param integer $id rogo id of school
+     * @return boolean true on success, false otherwise
+     */
     static function restore_school($db, $id)
     {
         $result = $db->prepare('UPDATE schools set deleted = NULL where id = ?');

@@ -15,29 +15,29 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Support package
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2017 onwards The University of Nottingham
-*/
+ * Support package
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2017 onwards The University of Nottingham
+ */
 
 /**
  * Support helper class.
  */
 class support
 {
-  /**
-   * Get support email addresses
-   * @return string
-   */
+    /**
+     * Get support email addresses
+     * @return string
+     */
     public static function get_email()
     {
         $configObj = Config::get_instance();
         return implode(';', $configObj->get_setting('core', 'support_contact_email'));
     }
-  /**
-   * Get primary support email address
-   * @return string
-   */
+    /**
+     * Get primary support email address
+     * @return string
+     */
     public static function get_primary_email()
     {
         $configObj = Config::get_instance();

@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../include/load_config.php';
 
@@ -100,20 +100,20 @@ function display_question($question, &$question_no, $answers, $string)
 if (isset($_POST['submit'])) {
     $question_no = 1;
 
-  // Clear previous ratings for current reviewer and current paper
+    // Clear previous ratings for current reviewer and current paper
     $stmt = $mysqli->prepare('DELETE FROM sct_reviews WHERE paperID=? AND reviewer_name = ? AND reviewer_email = ?');
     $stmt->bind_param('iss', $paperID, $reviewer_name, $reviewer_email);
     $stmt->execute();
     $stmt->close();
 
-  // Loop through the structure of the paper
+    // Loop through the structure of the paper
     $stmt = $mysqli->prepare("SELECT q_id FROM (papers, questions) WHERE papers.paper=? AND papers.question = questions.q_id AND q_type = 'sct' ORDER BY display_pos");
     $stmt->bind_param('i', $paperID);
     $stmt->execute();
     $stmt->store_result();
     $stmt->bind_result($q_id);
     while ($stmt->fetch()) {
-      // Store experts' reviews in sct_reviews table
+        // Store experts' reviews in sct_reviews table
         $update = $mysqli->prepare('INSERT INTO sct_reviews VALUES (NULL, ?, ?, ?, ?, ?, ?)');
         $update->bind_param('ssiiis', $reviewer_name, $reviewer_email, $paperID, $q_id, $_POST['q' . $question_no], $_POST['reason' . $question_no]);
         $update->execute();

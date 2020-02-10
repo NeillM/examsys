@@ -15,30 +15,30 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Helper method for display templates
-*
-* @author Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Helper method for display templates
+ *
+ * @author Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 class ViewHelper
 {
   
-  /**
-   * Render the options for a select box
-   * @param array $options options as $value => $text associative array
-   * @param string $selected the value to be selected in the options
-   * @param int $tablevel number of tab characters to use at the start of the option string
-   * @param string $css_class a CSS class to be applied to ALL options or an array of classes to be applied to each option individually
-   */
+    /**
+     * Render the options for a select box
+     * @param array $options options as $value => $text associative array
+     * @param string $selected the value to be selected in the options
+     * @param int $tablevel number of tab characters to use at the start of the option string
+     * @param string $css_class a CSS class to be applied to ALL options or an array of classes to be applied to each option individually
+     */
     public static function render_options($options, $selected = '', $tablevel = 0, $force_assoc = false, $css_class = '', $label_prefix = '', $label_postfix = '')
     {
         $html = '';
     
-      // Handle both associative and indexed arrays as $options
+        // Handle both associative and indexed arrays as $options
         if ($force_assoc or self::is_assoc($options)) {
             $values = array_keys($options);
             $texts = array_values($options);
@@ -68,11 +68,11 @@ class ViewHelper
         return $html;
     }
   
-  /**
-   * Determine if an array is associative. It does this by camparing array_keys($a) with array_keys(array_keys($a)), which will always be 0,1,2 etc.
-   * @param unknown_type $a
-   * @return boolean
-   */
+    /**
+     * Determine if an array is associative. It does this by camparing array_keys($a) with array_keys(array_keys($a)), which will always be 0,1,2 etc.
+     * @param unknown_type $a
+     * @return boolean
+     */
     private static function is_assoc(array $a)
     {
         return (array_keys($a) !== array_keys(array_keys($a)));

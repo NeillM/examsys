@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../../include/staff_auth.inc';
 require '../../include/errors.php';
@@ -30,7 +30,7 @@ $userID  = check_var('userID', 'GET', true, false, true);
 $paperID = check_var('paperID', 'GET', true, false, true);
 
 if ($userObject->has_role('External Examiner')) {
-  // Security: Check the external can access this paper.
+    // Security: Check the external can access this paper.
     if (!ReviewUtils::is_external_on_paper($userObject->get_user_ID(), $paperID, $mysqli)) {
         echo '<div style="padding:10px">' . $string['pagenotfound'] . "</div>\n";
         $mysqli->close();

@@ -16,19 +16,19 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Class total reports, included functions used in:
-*
-*    class_totals.php
-*    class_totals_csv.php
-*    class_totals_xml.php
-*    assessment_marks.php
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Class total reports, included functions used in:
+ *
+ *    class_totals.php
+ *    class_totals_csv.php
+ *    class_totals_xml.php
+ *    assessment_marks.php
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once dirname(__DIR__) . '/include/calculate_marks.inc';
 
@@ -83,14 +83,14 @@ class ClassTotals
     private $unmarked_textbox = false;
     private $gradebook_enabled;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
@@ -299,8 +299,8 @@ class ClassTotals
     }
 
     /**
-    * Works out if marks need scaling (monkey mark or standards setting) and will apply necessary conversions.
-    */
+     * Works out if marks need scaling (monkey mark or standards setting) and will apply necessary conversions.
+     */
     private function adjust_marks()
     {
         $user_no = count($this->user_results);
@@ -393,7 +393,7 @@ class ClassTotals
                 $old_q_media_height   = $q_media_height;
             }
 
-          // Write out the last question.
+            // Write out the last question.
             $old_leadin = trim(str_replace('&nbsp;', ' ', (strip_tags($old_leadin))));
             $random_questions[$old_q_id]['q_id']            = $old_q_id;
             $random_questions[$old_q_id]['q_type']          = $old_q_type;
@@ -571,7 +571,7 @@ class ClassTotals
         $this->user_results[$user_number]['marking_complete'] = $marking_comp;
         $this->user_results[$user_number]['visible']          = true;    // Default to visible unless switched off below.
 
-      // Add metadata
+        // Add metadata
         $userID = $this->user_results[$user_number]['userID'];
         if (!empty($this->metadata_array['types'])) {
             foreach ($this->metadata_array['types'] as $type) {
@@ -583,7 +583,7 @@ class ClassTotals
             }
         }
 
-      // Check metadata exclusions
+        // Check metadata exclusions
         $i = 1;
         while (isset($_GET["meta$i"])) {
             $meta_parts = explode('=', $_GET["meta$i"]);
@@ -637,8 +637,8 @@ class ClassTotals
 
             $answer_list = explode(',', $blank_details[$i]);
             $answer_list[0] = str_replace('[/blank]', '', $answer_list[0]);
-          // Ensure that the answers are filtered to the same level as the user's answers.
-          // This will ensure that they can match correctly.
+            // Ensure that the answers are filtered to the same level as the user's answers.
+            // This will ensure that they can match correctly.
             $answer_list = param::clean_array($answer_list, param::TEXT);
             foreach ($answer_list as $individual_answer) {
                 $correct[$i - 1][] = html_entity_decode(StringUtils::clean_and_trim($individual_answer));
@@ -713,7 +713,7 @@ class ClassTotals
                             for ($c = 0; $c < $count_sub_paper_answers; $c++) {
                                 if (isset($tmp_exclude{$section}) and $tmp_exclude{$section} == '0') {
                                     if (!isset($sub_user_answers[$c]) or $sub_user_answers[$c] == '' or $sub_user_answers[$c] == 'u') {
-                                      // Do nothing
+                                        // Do nothing
                                     } elseif (in_array($sub_user_answers[$c], $sub_paper_answers)) {
                                         $answers_correct++;
                                     } else {
@@ -726,7 +726,7 @@ class ClassTotals
 
                             $section_mark = ($answers_correct * $question['marks_correct']) + ($answers_incorrect * $question['marks_incorrect']);
                             $tmp_mark += $section_mark;
-                    // This is excluding whole question parts (not answers/marks).
+                            // This is excluding whole question parts (not answers/marks).
                             if ($exclude_on == false) {
                                       $tmp_user_mark_array[$q_id][] = $section_mark;
                             }
@@ -753,7 +753,7 @@ class ClassTotals
                         // Ensure that the students answer is encoded in the same way as the correct answers.
                         $student_answer = html_entity_decode(StringUtils::clean_and_trim($user_answers[$a]));
                         if ($question['display_method'] == 'dropdown') {
-                        // In a drop down list the correct answer is always the first one entered; all the others are incorrect alternatives.
+                            // In a drop down list the correct answer is always the first one entered; all the others are incorrect alternatives.
                             $correct_answer = $question['correct'][$a][0];
                             if ($student_answer == $correct_answer) {
                                 $tmp_mark += $question['marks_correct'];
@@ -870,7 +870,7 @@ class ClassTotals
                     }
                 }
 
-              // Strip out width and height for graphical labels.
+                // Strip out width and height for graphical labels.
                 $i = 0;
                 foreach ($correct_labels as $key => $value) {
                     $tmp_parts = explode('~', $value);
@@ -914,7 +914,7 @@ class ClassTotals
                 if (isset($tmp_user_mark_array[$q_id])) {
                     ksort($tmp_user_mark_array[$q_id]);
                 }
-              //create shortened array
+                //create shortened array
                 $i = 0;
                 $correct_labels_exc = array();
                 foreach ($correct_labels as $cli => $clv) {
@@ -922,7 +922,7 @@ class ClassTotals
                         $correct_labels_exc[$cli] = $clv;
                     }
                 }
-              // If the user has not answered the question pad out with zero marks.
+                // If the user has not answered the question pad out with zero marks.
                 if (isset($tmp_user_mark_array[$q_id])) {
                     $user_answer_no = count($tmp_user_mark_array[$q_id]);
                 } else {
@@ -937,7 +937,7 @@ class ClassTotals
                 $this->paper_buffer[$q_id]['correct_labels'] = $correct_labels_exc;
             }
         } else {
-          // Marking per Question, or all other question types, simply return the original mark.
+            // Marking per Question, or all other question types, simply return the original mark.
             if ($tmp_exclude{0} == '0') {
                 $round_tmp_user_mark = round($tmp_user_mark, 2);
                 $tmp_mark += $round_tmp_user_mark;
@@ -991,12 +991,12 @@ class ClassTotals
         return $timestring;
     }
 
-  /**
-   * Check if a record exists in the student cohort array created when showing absent candidates. If found, remove the entry
-   * @param array $student_cohort - All (remaining) students in the cohort
-   * @param string $username      - Username to look for
-   * @return array                - Cohort array with current user removed if found
-   */
+    /**
+     * Check if a record exists in the student cohort array created when showing absent candidates. If found, remove the entry
+     * @param array $student_cohort - All (remaining) students in the cohort
+     * @param string $username      - Username to look for
+     * @return array                - Cohort array with current user removed if found
+     */
     private function check_and_clear_cohort($username)
     {
         $tmp_cohort_size = count($this->student_cohort);
@@ -1009,10 +1009,10 @@ class ClassTotals
         $this->student_cohort = array_values($this->student_cohort);
     }
 
-  /**
-   * Creates an array called 'paper_buffer' which contains all the questions on the paper.
-   * @return bool - If no questions are found will return FALSE.
-   */
+    /**
+     * Creates an array called 'paper_buffer' which contains all the questions on the paper.
+     * @return bool - If no questions are found will return FALSE.
+     */
     public function load_answers()
     {
         $question_no      = 0;
@@ -1026,7 +1026,7 @@ class ClassTotals
         $this->display_excluded = '';
         $this->display_experimental = array();
 
-      // Load the correct answers into 'paper_buffer' array.
+        // Load the correct answers into 'paper_buffer' array.
         $result = $this->db->prepare("SELECT q_id, marks_correct, marks_incorrect, display_method, score_method, q_media_height, q_media_width, q_type, correct, score_method, option_text, status, display_pos, settings FROM (papers, questions) LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.question = questions.q_id AND papers.paper = ? AND q_type != 'info' ORDER BY screen, display_pos, id_num");
         $result->bind_param('i', $this->paperID);
         $result->execute();
@@ -1141,12 +1141,12 @@ class ClassTotals
         $this->question_no = $question_no;
     }
 
-  /**
-   * Build up an array of any users with records in log_late. Used later to display warnings to staff through the UI.
-   */
+    /**
+     * Build up an array of any users with records in log_late. Used later to display warnings to staff through the UI.
+     */
     private function set_log_late()
     {
-      // Check log_late for any records
+        // Check log_late for any records
         $late_ts = strtotime($this->enddate) + 7200;
         $late_end = date('Y-m-d H:i:s', $late_ts);
 
@@ -1165,13 +1165,13 @@ class ClassTotals
         $result->close();
     }
 
-  /**
-   * Work out which students are on the module of the paper but who have not take it.
-   */
+    /**
+     * Work out which students are on the module of the paper but who have not take it.
+     */
     private function load_absent()
     {
         if ($this->absent == 1) {
-          // Get students in the cohort.
+            // Get students in the cohort.
 
             $this->student_cohort = array();
             $i = 0;
@@ -1229,9 +1229,9 @@ class ClassTotals
         }
     }
 
-  /**
-   * Get all the users on the module(s) the paper is on.
-   */
+    /**
+     * Get all the users on the module(s) the paper is on.
+     */
     private function find_users()
     {
         $this->user_modules = array();
@@ -1256,9 +1256,9 @@ class ClassTotals
         $mod_query->close();
     }
 
-  /**
-   * Load user (student) metadata which will be output on-screen later.
-   */
+    /**
+     * Load user (student) metadata which will be output on-screen later.
+     */
     private function load_metadata()
     {
         $this->metadata_array = array();
@@ -1278,9 +1278,9 @@ class ClassTotals
         $stmt->close();
     }
 
-  /**
-   * Load marking overrides (for example, Calculation question).
-   */
+    /**
+     * Load marking overrides (for example, Calculation question).
+     */
     private function load_overrides()
     {
         $result = $this->db->prepare('SELECT q_id, user_id, new_mark_type FROM marking_override WHERE paper_id = ?');
@@ -1293,10 +1293,10 @@ class ClassTotals
         $result->close();
     }
 
-  /**
-   * Load user data from the log tables and store.
+    /**
+     * Load user data from the log tables and store.
      * Calls 'writeUserResults' to write into an array.
-   */
+     */
     private function load_results()
     {
         if ($this->studentsonly == 0) {
@@ -1308,7 +1308,7 @@ class ClassTotals
         $data_array = array();
         $metadataids = array();
 
-      // Load started records from 'log_metadata'.
+        // Load started records from 'log_metadata'.
         if ($this->paper_type == '2') {
             $time_int = 2;
         } else {
@@ -1356,7 +1356,7 @@ class ClassTotals
             if (isset($this->user_modules[$userID]['idMod'])) {
                 $module = $this->user_modules[$userID]['idMod'];
             } else {
-              // No module details set for this user.  Perhaps it is an unassigned guest user account.
+                // No module details set for this user.  Perhaps it is an unassigned guest user account.
                 $module = '';
             }
             $tmp_name = trim(str_replace("'", '', $surname) . ',' . $first_names);
@@ -1423,7 +1423,7 @@ class ClassTotals
         $log_data             = array();
         $tmp_array            = array();
 
-      // Load 'logX' data.
+        // Load 'logX' data.
         if ($this->paper_type == '0' or $this->paper_type == '1') {
             $result = $this->db->prepare('(SELECT log0.id, metadataID, 0 AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark FROM log0, questions WHERE log0.q_id = questions.q_id AND metadataID IN (' . implode(',', $metadataids) . ')) UNION ALL (SELECT log1.id, metadataID, 1 AS paper_type, questions.q_id, screen, duration, user_answer, q_type, mark FROM log1, questions WHERE log1.q_id = questions.q_id AND metadataID IN (' . implode(',', $metadataids) . ')) ORDER BY metadataID, screen');
         } elseif ($this->paper_type == '5') {
@@ -1436,14 +1436,14 @@ class ClassTotals
 
         while ($result->fetch()) {
             $userID = $this->user_results[$metadataID]['userID'];
-          // We have passed the check this students should be displayed.
+            // We have passed the check this students should be displayed.
             $this->user_results[$metadataID]['visible'] =  true;
 
             if ($old_screen != $screen or $old_metadataID != $metadataID) {
                 $user_duration += $old_duration;
             }
             if ($old_metadataID != $metadataID and $old_metadataID != 0) {
-              // Write the user results for the user that was iterated over previously using $old_metadataID
+                // Write the user results for the user that was iterated over previously using $old_metadataID
                 $this->writeUserResults($old_metadataID, $tmp_mark, $tmp_user_mark_array, $user_duration, $marking_complete);
                 $tmp_mark = 0;
                 $tmp_user_mark_array = array();
@@ -1482,7 +1482,7 @@ class ClassTotals
             }
         }
 
-      // Re-index the array.
+        // Re-index the array.
         $tmp_array = $this->user_results;
         unset($this->user_results);
         $i = 0;
@@ -1510,9 +1510,9 @@ class ClassTotals
         }
     }
 
-  /**
-   * Add rank (position in cohort) to the 'user_results' array.
-   */
+    /**
+     * Add rank (position in cohort) to the 'user_results' array.
+     */
     private function add_rank()
     {
         $result_no = count($this->user_results);
@@ -1520,7 +1520,7 @@ class ClassTotals
             return;
         }
 
-      // Put the whole array in marks order.
+        // Put the whole array in marks order.
         $sortby = 'mark';
         $ordering = 'desc';
         $this->user_results = \sort::array_csort($this->user_results, $sortby, $ordering, SORT_NUMERIC);
@@ -1539,11 +1539,11 @@ class ClassTotals
         }
     }
 
-  /**
-   * When dealing with certain percentages of the cohort, for example top 33%,
+    /**
+     * When dealing with certain percentages of the cohort, for example top 33%,
      * then this function will set 'visible' flags on the 'user_results' array
      * to control which elements are displayed in the final report.
-   */
+     */
     private function flag_subpart()
     {
         $user_no = count($this->user_results);
@@ -1553,12 +1553,12 @@ class ClassTotals
         }
 
         if ($this->percent < 100) {
-          // Sort by mark order.
+            // Sort by mark order.
             $sortby = 'mark';
             $this->user_results = \sort::array_csort($this->user_results, $sortby, $this->ordering, SORT_NUMERIC);
             $this->cohort_size = round(($user_no / 100) * $this->percent);
 
-          // Set visible/invisible flag where necessary.
+            // Set visible/invisible flag where necessary.
             for ($i = 0; $i < $user_no; $i++) {
                 if ($i >= $this->cohort_size) {
                     $this->user_results[$i]['visible'] = false;
@@ -1569,9 +1569,9 @@ class ClassTotals
         }
     }
 
-  /**
-   * Add in students in cohort who haven't taken the exam.
-   */
+    /**
+     * Add in students in cohort who haven't taken the exam.
+     */
     private function add_absent_students()
     {
         if ($this->absent == 1) {
@@ -1611,15 +1611,15 @@ class ClassTotals
         }
     }
 
-  /**
-   * Translates from internal numerical module IDs to institution module codes for display.
-   */
+    /**
+     * Translates from internal numerical module IDs to institution module codes for display.
+     */
     private function convert_moduleIDs()
     {
         $result_no = count($this->user_results);
         $moduleIDs = array();
 
-      // Build up an array of IDs to module codes.
+        // Build up an array of IDs to module codes.
         for ($i = 0; $i < $result_no; $i++) {
             $id = $this->user_results[$i]['module'];
             if ($id != '') {
@@ -1629,7 +1629,7 @@ class ClassTotals
             }
         }
 
-      // Loop around the results array and convert to codes.
+        // Loop around the results array and convert to codes.
         for ($i = 0; $i < $result_no; $i++) {
             if (isset($moduleIDs[$this->user_results[$i]['module']])) {
                 $this->user_results[$i]['module'] = $moduleIDs[$this->user_results[$i]['module']];
@@ -1637,36 +1637,36 @@ class ClassTotals
         }
     }
 
-  /**
-   * Count how many user elements we have.
-   */
+    /**
+     * Count how many user elements we have.
+     */
     private function set_user_no()
     {
         $this->user_no = count($this->user_results);
     }
 
-  /**
-   * Returns true of false whether there are any unmarked Textbox question answers on the paper.
-   */
+    /**
+     * Returns true of false whether there are any unmarked Textbox question answers on the paper.
+     */
     public function unmarked_textbox()
     {
         return $this->unmarked_textbox;
     }
 
-  /**
-   * Returns true of false whether there are any unmarked Calculation question answers on the paper.
-   */
+    /**
+     * Returns true of false whether there are any unmarked Calculation question answers on the paper.
+     */
     public function unmarked_enhancedcalc()
     {
         return $this->unmarked_enhancedcalc;
     }
 
-  /**
-   * Creates an array of basic statistics on the cohort performance.
-   */
+    /**
+     * Creates an array of basic statistics on the cohort performance.
+     */
     public function generate_stats()
     {
-      // Generate summary statistics.
+        // Generate summary statistics.
         $this->set_user_no();
         $mark_total    = 0;
         $percent_total = 0;
@@ -1781,9 +1781,9 @@ class ClassTotals
         }
     }
 
-  /**
-   * Adds decile information to each student in the 'user_results' array.
-   */
+    /**
+     * Adds decile information to each student in the 'user_results' array.
+     */
     private function add_deciles()
     {
         for ($student = 0; $student < $this->user_no; $student++) {
@@ -1797,9 +1797,9 @@ class ClassTotals
         }
     }
 
-  /**
-   * Used to sort the main 'user_results' array by various columns.
-   */
+    /**
+     * Used to sort the main 'user_results' array by various columns.
+     */
     public function sort_results()
     {
         if (count($this->user_results) == 0) {
@@ -1821,13 +1821,13 @@ class ClassTotals
         $this->user_results = \sort::array_csort($this->user_results, $tmp_sort, $this->ordering, $method);
     }
 
-  /**
-   * Get possible marks for the question (marks correct). May come from options or settings.
-   * @param string $q_type                  - Type of question
-   * @param integer $marks_correct  - Marks correct if available in an option
-   * @param string $settings                - JSON encoding settings for the question. Assumed to contain the correct marks if not available in an option
-   * @return mixed
-   */
+    /**
+     * Get possible marks for the question (marks correct). May come from options or settings.
+     * @param string $q_type                  - Type of question
+     * @param integer $marks_correct  - Marks correct if available in an option
+     * @param string $settings                - JSON encoding settings for the question. Assumed to contain the correct marks if not available in an option
+     * @return mixed
+     */
     protected function get_marks_correct($q_type, $marks_correct, $settings)
     {
         switch ($q_type) {
@@ -1844,12 +1844,12 @@ class ClassTotals
         return $mc;
     }
 
-  /**
-   * Loads special needs for all users in the current cohort.
-   */
+    /**
+     * Loads special needs for all users in the current cohort.
+     */
     private function load_special_needs()
     {
-      // Query any student special needs for the current paper
+        // Query any student special needs for the current paper
         $this->special_needs = array();
         $users_in = array();
         foreach ($this->user_results as $u) {
@@ -1867,10 +1867,10 @@ class ClassTotals
         }
     }
   
-  /**
-   * @brief Store exam grades
-   * @return bool true on success
-   */
+    /**
+     * @brief Store exam grades
+     * @return bool true on success
+     */
     public function create_gradebook()
     {
         if ($this->gradebook_enabled) {
@@ -1880,10 +1880,10 @@ class ClassTotals
         return false;
     }
   
-  /**
-   * @brief Store exam grades
-   * @return void
-   */
+    /**
+     * @brief Store exam grades
+     * @return void
+     */
     public function store_grades()
     {
         if ($this->gradebook_enabled) {
@@ -1898,19 +1898,19 @@ class ClassTotals
         }
     }
   
-  /**
-   * @brief Check if paper already graded
-   * @return bool true if graded
-   */
+    /**
+     * @brief Check if paper already graded
+     * @return bool true if graded
+     */
     public function paper_graded()
     {
         $gradebook = new gradebook($this->db);
         return $gradebook->paper_graded($this->paperID);
     }
 
-  /**
-   * Returns true or false if a given user has special needs.
-   */
+    /**
+     * Returns true or false if a given user has special needs.
+     */
     public function has_special_need($userID)
     {
         if (isset($this->special_needs[$userID]) and $this->special_needs[$userID] == 'y') {
@@ -1920,9 +1920,9 @@ class ClassTotals
         }
     }
 
-  /**
-   * Checks and displays if necessary a late submissions warning banner at the top of the screen.
-   */
+    /**
+     * Checks and displays if necessary a late submissions warning banner at the top of the screen.
+     */
     public function check_late_submission_warnings()
     {
         if (count($this->log_late) > 0) {
@@ -1937,9 +1937,9 @@ class ClassTotals
         }
     }
 
-  /**
-   * Checks and displays if necessary an unmark textbox warning banner at the top of the screen.
-   */
+    /**
+     * Checks and displays if necessary an unmark textbox warning banner at the top of the screen.
+     */
     public function check_unmarked_textbox_warnings()
     {
         if ($this->unmarked_textbox()) {
@@ -1954,9 +1954,9 @@ class ClassTotals
         }
     }
 
-  /**
-   * Checks and displays if necessary a numarked calculation question warning banner at the top of the screen.
-   */
+    /**
+     * Checks and displays if necessary a numarked calculation question warning banner at the top of the screen.
+     */
     public function check_unmarked_enhancedcalc_warnings()
     {
         if ($this->unmarked_enhancedcalc()) {
@@ -1971,12 +1971,12 @@ class ClassTotals
         }
     }
 
-  /**
-   * Checks and displays if necessary a temporary account warning banner at the top of the screen.
-   */
+    /**
+     * Checks and displays if necessary a temporary account warning banner at the top of the screen.
+     */
     public function check_temp_account_warnings()
     {
-      // Check for any temporary accounts and if so display warning banner
+        // Check for any temporary accounts and if so display warning banner
         $temp_user_no = 0;
         $user_no = count($this->user_results);
         for ($i = 0; $i < $user_no; $i++) {

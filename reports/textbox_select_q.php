@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -130,7 +130,7 @@ if (isset($_GET['folder']) and trim($_GET['folder']) != '') {
 while ($result->fetch()) {
     if ($q_type == 'textbox') {
         if (($paper_type == '0' or $paper_type == '1' or $paper_type == '2') and isset($_GET['phase'])) {
-          // Check how many candidates are marked for this question.
+            // Check how many candidates are marked for this question.
             $candidates_marked = 0;
             $marked = $mysqli->prepare('SELECT mark FROM textbox_marking WHERE paperID = ? AND q_id = ? AND logtype = ? AND phase = ?');
             $marked->bind_param('iiii', $paperID, $q_id, $paper_type, $_GET['phase']);
@@ -144,7 +144,7 @@ while ($result->fetch()) {
             $marked->close();
         } elseif ($_GET['action'] == 'finalise') {
             $candidates_marked = 0;
-          // Check how many candidates are marked for this question.
+            // Check how many candidates are marked for this question.
             $marked = $mysqli->prepare("SELECT mark FROM log$paper_type, log_metadata, users WHERE log$paper_type.metadataID = log_metadata.id AND log_metadata.userID = users.id AND (roles LIKE '%Student%' OR roles = 'graduate') AND paperID = ? AND q_id = ?");
             $marked->bind_param('ii', $paperID, $q_id);
             $marked->execute();

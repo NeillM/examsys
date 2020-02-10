@@ -15,23 +15,23 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Utility class for keyword related functionality
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Utility class for keyword related functionality
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 
 class keyword_utils
 {
  
-  /**
-   * See if a reference material ID actually exists.
-   * @return true or false.
-   */
+    /**
+     * See if a reference material ID actually exists.
+     * @return true or false.
+     */
     static function refmaterials_exist($idMod, $db)
     {
         $row_no = 0;
@@ -65,13 +65,13 @@ class keyword_utils
         return $keyword;
     }
 
-  /**
-   * Function to get questions from keyword
-   *
-   * @param int $kid keyword identifier
-   * @param mysqli $db
-   * @return array question identifiers
-   */
+    /**
+     * Function to get questions from keyword
+     *
+     * @param int $kid keyword identifier
+     * @param mysqli $db
+     * @return array question identifiers
+     */
     static function get_keyword_questions($kid, $db)
     {
         $keyword = $db->prepare('SELECT q_id FROM keywords_question WHERE keywordID = ?');
@@ -87,12 +87,12 @@ class keyword_utils
         return $keywordarray;
     }
   
-  /**
-   * Function to get the keyword id based on the question id
-   * @param integer $q_id question id
-   * @param mysqli $db db connection
-   * @return integer|bool keyword id or false is non found
-   */
+    /**
+     * Function to get the keyword id based on the question id
+     * @param integer $q_id question id
+     * @param mysqli $db db connection
+     * @return integer|bool keyword id or false is non found
+     */
     public static function get_keywordid_for_question($q_id, $db)
     {
         $keyword = $db->prepare('SELECT keyword_id FROM keywords_link WHERE q_id = ?');
@@ -109,13 +109,13 @@ class keyword_utils
         return $keyword_id;
     }
   
-  /**
-   * Insert keyword/question reference row
-   * @param integer $q_id question id
-   * @param integer $keyword_id keyword id
-   * @param mysqli $db db connection
-   * @return bool true on success, false otherwise
-   */
+    /**
+     * Insert keyword/question reference row
+     * @param integer $q_id question id
+     * @param integer $keyword_id keyword id
+     * @param mysqli $db db connection
+     * @return bool true on success, false otherwise
+     */
     public static function insert_keyword_link($q_id, $keyword_id, $db)
     {
         $sql = $db->prepare('INSERT INTO keywords_link (q_id, keyword_id) VALUES (?, ?)');
@@ -128,12 +128,12 @@ class keyword_utils
         return true;
     }
   
-  /**
-   * Delete keyword/question reference row
-   * @param integer $q_id question id
-   * @param mysqli $db db connection
-   * @return bool true on success, false otherwise
-   */
+    /**
+     * Delete keyword/question reference row
+     * @param integer $q_id question id
+     * @param mysqli $db db connection
+     * @return bool true on success, false otherwise
+     */
     public static function delete_keyword_link($q_id, $db)
     {
         $sql = $db->prepare('DELETE FROM keywords_link WHERE q_id = ?');

@@ -124,7 +124,7 @@ if (($paper_type == '2' and $unmarked and !$propertyObj->is_active()) or (in_arr
   <input type="hidden" id="enddate" value="<?php echo $enddate; ?>" />
   <input type="hidden" id="markall" value="1" />
     <?php
-  // JS utils dataset.
+    // JS utils dataset.
     $render = new render($configObject);
     $jsdataset['name'] = 'jsutils';
     $jsdataset['attributes']['xls'] = json_encode($string);
@@ -217,7 +217,7 @@ echo draw_toprightmenu(30);
     <div class="popup_title"><?php echo $string['reassigntouser']; ?></div>
   </div>
   <?php
-  // Allow reset of timer for progressive exams.
+    // Allow reset of timer for progressive exams.
     if ($paper_type == '1') {
         $class = 'popup_row';
     } else {
@@ -347,7 +347,7 @@ for ($i = 0; $i < $user_no; $i++) {
         }
 
         if ($user_results[$i]['display_started'] == '') {
-        // Setup the row for an absent user.
+            // Setup the row for an absent user.
             $bg_color = '#FFC0C0';
             $late_submissions = '';
             $class = '';
@@ -356,7 +356,7 @@ for ($i = 0; $i < $user_no; $i++) {
 <tr class="nonattend" id="res<?php echo $i + 1 ?>" data-metadataid="" data-paperid="<?php echo $paperID ?>" data-cryptname="<?php echo $propertyObj->get_crypt_name() ?>" data-userid="<?php echo $userID; ?>" data-papertype="<?php echo $paper_type; ?>" data-reassign="<?php echo $reassign ?>" data-late="<?php echo $late_submissions ?>" data-percent="<?php echo $percent; ?>"><td>&nbsp;</td>
             <?php
         } else {
-      // Setup the row for a user who took the exam.
+            // Setup the row for a user who took the exam.
             if (isset($log_late[$user_results[$i]['metadataID']])) {
                 $late_submissions = 'y';
             } else {
@@ -406,7 +406,7 @@ for ($i = 0; $i < $user_no; $i++) {
             echo "><td class=\"$class $role_css\"><img src=\"../artwork/$icon\" title=\"$alt\" alt=\"$alt\" class=\"picon\" /></td>";
         }
 
-  // Display the student names and any relevant note and icons.
+        // Display the student names and any relevant note and icons.
         if (strpos($user_results[$i]['username'], 'user') === 0) {
             echo "<td class=\"$class tmpacc $role_css\">Mr</td>";
             echo "<td class=\"$class tmpacc $role_css\">Guest</td>";
@@ -448,12 +448,12 @@ for ($i = 0; $i < $user_no; $i++) {
         }
         echo "<td class=\"$class $role_css\">" . $user_results[$i]['student_grade'] . '</td>';
 
-  // Display result information.
+        // Display result information.
         if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.
             echo '<td colspan="' . (9 + count($metadata_cols)) . '" style="text-align:center">&lt;' . $string['noattendance'] . "&gt;</td></tr>\n";
             $absent_no++;
         } else {
-        //$user_results[$i]['mark'] += 1;   // Use for testing the Class Totals/Exam Script checking script.
+            //$user_results[$i]['mark'] += 1;   // Use for testing the Class Totals/Exam Script checking script.
 
             if ($user_results[$i]['classification'] == 'Fail') {
                 echo "<td class=\"mk $class fail r $role_css\">";
@@ -479,13 +479,13 @@ for ($i = 0; $i < $user_no; $i++) {
                     echo "<td class=\"$class r $role_css\">" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "%</td><td class=\"$class $role_css\">&nbsp;" . $string['pass'] . '</td>';
                 }
             }
-    // Rank column
+            // Rank column
                 echo "<td class=\"$class r $role_css\">" . $user_results[$i]['rank'] . '</td>';
-    // Decile column
+            // Decile column
                 echo "<td class=\"$class r $role_css\">" . $user_results[$i]['decile'] . '</td>';
-    // Start Time column
+            // Start Time column
                 echo "<td class=\"$class $role_css\">" . $user_results[$i]['display_started'] . '</td>';
-    // Duration column
+            // Duration column
                 echo "<td class=\"$class $role_css\">" . $report->formatsec($user_results[$i]['duration']);
             if ($late_submissions == 'y') {
                 echo '&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" title="' . $string['markingnotcomplete'] . '" alt="' . $string['markingnotcomplete'] . '"  width="12" height="11" />';
@@ -497,7 +497,7 @@ for ($i = 0; $i < $user_no; $i++) {
                 echo "<td class=\"$class $role_css\">" . $user_results[$i]['room'] . '</td>';
             }
 
-    // Display any associated metadata
+            // Display any associated metadata
             if (count($metadata_cols) > 0) {
                 foreach ($metadata_cols as $type) {
                     if (isset($user_results[$i][$type])) {
@@ -700,7 +700,7 @@ if ($user_no > 0) {
     $emailtemplatedir = rogo_directory::get_directory('email_templates');
     // Email Class -----------------------------------------------------------------------------------------
     if ($paper_type < 2 and isset($_POST['emailclass']) and $_POST['emailclass'] == 'yes') {
-      // Save the latest template to disk.
+        // Save the latest template to disk.
         $file = fopen($emailtemplatedir->fullpath($userObject->get_user_ID() . '.txt'), 'w');
         fwrite($file, $userObject->get_email() . "\n");
         fwrite($file, $_POST['ccaddress'] . "\n");
@@ -740,7 +740,7 @@ if ($user_no > 0) {
                     ob_flush();
             }
 
-          // Perform replacement.
+            // Perform replacement.
             $message = "<!doctype html public \"-//w3c//dtd html 4.0 transitional//en\">\n<html><head>\n<title>$paper</title>\n<style type=\"text/css\">\nbody {font-family: Arial,sans-serif; background-color: white; color:black}</style>\n</head>\n<body>";
             $message .= $_POST['emailtemplate'];
             $message = str_replace('{student-title}', $user_results[$i]['title'], $message);

@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Restores an item in the recycle bin (i.e. set the deleted time/date to NULL).
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Restores an item in the recycle bin (i.e. set the deleted time/date to NULL).
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../include/errors.php';
@@ -36,7 +36,7 @@ for (
     $type = substr($items[$i], 0, 1);
     $item_id = substr($items[$i], 1);
     if ($type == 'p') {
-    // Papers
+        // Papers
           // Get the paper title of the restored paper.
           $result = $mysqli->prepare('SELECT paper_title FROM properties WHERE property_id = ?');
         $result->bind_param('i', $item_id);
@@ -44,7 +44,7 @@ for (
         $result->bind_result($deleted_paper_title);
         $result->fetch();
         $result->close();
-    // Check to see if the original paper name has been reused by any active papers.
+        // Check to see if the original paper name has been reused by any active papers.
           $split_title = explode('[deleted', $deleted_paper_title);
         $tmp_title = trim($split_title[0]);
         $result = $mysqli->prepare('SELECT paper_title FROM properties WHERE paper_title = ? and property_id != ?');
@@ -72,7 +72,7 @@ for (
         $result->bind_result($question, $deleted);
         while ($result->fetch()) {
             if ($deleted != '') {
-            // If the question has been deleted in the question bank then remove from the paper.
+                // If the question has been deleted in the question bank then remove from the paper.
                   $deleteQuery = $mysqli->prepare('DELETE FROM papers WHERE paper = ? AND question = ?');
                 $deleteQuery->bind_param('ii', $item_id, $question);
                 $deleteQuery->execute();
@@ -80,7 +80,7 @@ for (
             }
         }
     } elseif ($type == 'f') {
-    // Folders
+        // Folders
           // Get the name of the restored folder;
           $result = $mysqli->prepare('SELECT name FROM folders WHERE id = ?');
         $result->bind_param('i', $item_id);
@@ -88,7 +88,7 @@ for (
         $result->bind_result($deleted_folder_title);
         $result->fetch();
         $result->close();
-    // Check to see if the original folder name has been reused.
+        // Check to see if the original folder name has been reused.
           $split_title = explode('[deleted', $deleted_folder_title);
         $tmp_title = trim($split_title[0]);
         $result = $mysqli->prepare('SELECT name FROM folders WHERE name = ? and id != ?');
@@ -108,37 +108,37 @@ for (
         $restore->execute();
         $restore->close();
     } elseif ($type == 'a') {
-    // Academic Session
+        // Academic Session
           $restore = $mysqli->prepare('UPDATE academic_year SET deleted = NULL, deletedby = NULL WHERE calendar_year = ?');
         $restore->bind_param('i', $item_id);
         $restore->execute();
         $restore->close();
     } elseif ($type == 'q') {
-    // Questions
+        // Questions
           $restore = $mysqli->prepare('UPDATE questions SET deleted = NULL WHERE q_id = ?');
         $restore->bind_param('i', $item_id);
         $restore->execute();
         $restore->close();
     } elseif ($type == 'm') {
-    // Modules
+        // Modules
           $restore = $mysqli->prepare('UPDATE modules SET mod_deleted = NULL WHERE id = ?');
         $restore->bind_param('i', $item_id);
         $restore->execute();
         $restore->close();
     } elseif ($type == 'c') {
-    // Courses
+        // Courses
           $restore = $mysqli->prepare('UPDATE courses SET deleted = NULL WHERE id = ?');
         $restore->bind_param('i', $item_id);
         $restore->execute();
         $restore->close();
     } elseif ($type == 's') {
-    // schools
+        // schools
           $restore = $mysqli->prepare('UPDATE schools SET deleted = NULL WHERE id = ?');
         $restore->bind_param('i', $item_id);
         $restore->execute();
         $restore->close();
     } elseif ($type == 'u') {
-    // schools
+        // schools
           $restore = $mysqli->prepare('UPDATE faculty SET deleted = NULL WHERE id = ?');
         $restore->bind_param('i', $item_id);
         $restore->execute();

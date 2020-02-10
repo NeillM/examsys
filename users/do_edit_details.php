@@ -45,7 +45,7 @@ $username = param::optional('username', null, param::ALPHANUM, param::FETCH_POST
 $prev_username = param::optional('prev_username', null, param::ALPHANUM, param::FETCH_POST);
 
 if ($username != $prev_username) {
-  // Check new username is valid and is not already used. Overwriting usernames could screw up other accounts.
+    // Check new username is valid and is not already used. Overwriting usernames could screw up other accounts.
     if (!UserUtils::username_is_valid($username)) {
         $errors = $string['usernameinvalid'];
     } elseif (UserUtils::username_exists($username, $mysqli)) {
@@ -58,17 +58,17 @@ if (!$errors) {
 
     if (!empty($_FILES['photofile']['name'])) {
         $photodirectory = rogo_directory::get_directory('user_photo');
-      // First check if the user has an image already, if they do delete it.
-      // This stops an image type of a different type blocking the display of the uploaded image.
+        // First check if the user has an image already, if they do delete it.
+        // This stops an image type of a different type blocking the display of the uploaded image.
         $student_photo = UserUtils::student_photo_exist($username);
         if ($student_photo !== false) {
             unlink($photodirectory->fullpath($student_photo));
         }
-      // Add the file.
+        // Add the file.
         $filename = $_FILES['photofile']['name'];
         $explode = explode('.', $filename);
         $count = count($explode) - 1;
-      // Ensure the file extenstion is lower case or it will not load on some Operating systems.
+        // Ensure the file extenstion is lower case or it will not load on some Operating systems.
         $file_ext = strtolower($explode[$count]);
 
         if (!move_uploaded_file($_FILES['photofile']['tmp_name'], $photodirectory->fullpath($username . '.' . $file_ext))) {
@@ -82,7 +82,7 @@ if (!$errors) {
     foreach ($first_names_array as $individual_name) {
         $initials .= trim(substr($individual_name, 0, 1));
     }
-  // Update 'users' table.
+    // Update 'users' table.
     $tmp_roles = param::optional('roles', null, param::TEXT, param::FETCH_POST);
 
     $gender = param::optional('gender', null, param::TEXT, param::FETCH_POST);
@@ -100,12 +100,12 @@ if (!$errors) {
     if (false === UserUtils::update_user($userID, $username, '', $title, $first_names, $surname, $email, $grade, $gender, $year, $tmp_roles, $sid, $mysqli, $initials)) {
         $errors = $string['unabletosaveuserdetails'];
     } else {
-      // Remove from teams if 'left'.
+        // Remove from teams if 'left'.
         if (strtolower($tmp_roles) == 'left') {
             UserUtils::clear_staff_modules_by_userID($userID, $mysqli);
         }
 
-      // Remove from admin access if role changed from Admin
+        // Remove from admin access if role changed from Admin
         $prev_roles = param::required('prev_roles', param::TEXT, param::FETCH_POST);
         if ($userObject->has_role('SysAdmin')) {
             if ($tmp_roles != $prev_roles and $prev_roles == 'Staff,Admin') {

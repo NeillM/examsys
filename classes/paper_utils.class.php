@@ -27,9 +27,9 @@ class Paper_utils extends RogoStaticSingleton
     public static $inst = null;
     public static $class_name = 'PaperUtils';
 
-  /**
-  * constructor
-  */
+    /**
+     * constructor
+     */
     private function __construct()
     {
     }

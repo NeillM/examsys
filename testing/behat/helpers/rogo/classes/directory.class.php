@@ -29,9 +29,9 @@ use rogo_directory;
  */
 class directory
 {
-  /**
-   * Clear the contents of the Rogo directories.
-   */
+    /**
+     * Clear the contents of the Rogo directories.
+     */
     public static function reset_directories()
     {
         $mediadirectory = rogo_directory::get_directory('media');

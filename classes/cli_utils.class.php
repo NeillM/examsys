@@ -19,16 +19,16 @@
  */
 class cli_utils
 {
-  /**
-   * Ask the user for a response.
-   *
-   * If expected responses are set then only the values in the passed array will be accepted.
-   * The user will be reprompted until they enter one of the expected responses.
-   *
-   * @param string $message the message to be displayed to the user.
-   * @param array $expected valid responses (optional)
-   * @return string
-   */
+    /**
+     * Ask the user for a response.
+     *
+     * If expected responses are set then only the values in the passed array will be accepted.
+     * The user will be reprompted until they enter one of the expected responses.
+     *
+     * @param string $message the message to be displayed to the user.
+     * @param array $expected valid responses (optional)
+     * @return string
+     */
     public static function user_response($message, $expected = null)
     {
         self::prompt($message, ' ');
@@ -40,11 +40,11 @@ class cli_utils
         return $response;
     }
 
-  /**
-   * Get a response from the command line.
-   *
-   * @return string
-   */
+    /**
+     * Get a response from the command line.
+     *
+     * @return string
+     */
     protected static function get_response()
     {
         $handle = fopen('php://stdin', 'r');
@@ -52,29 +52,29 @@ class cli_utils
         return trim($response);
     }
 
-  /**
-   * Get the user to give a specific response.
-   *
-   * @param array $expected
-   * @return string
-   */
+    /**
+     * Get the user to give a specific response.
+     *
+     * @param array $expected
+     * @return string
+     */
     protected static function get_expected_response(array $expected)
     {
         self::prompt('(' . implode(', ', $expected) . ')');
         $response = self::get_response();
         if (!in_array($response, $expected)) {
-          // We will just keep prompting until the user gives us an expexted value!
+            // We will just keep prompting until the user gives us an expexted value!
             $response = self::get_expected_response($expected);
         }
         return $response;
     }
 
-  /**
-   * Display a message to the user.
-   *
-   * @param string $message The message to be displayed.
-   * @param string $terminator The way the line should be ended
-   */
+    /**
+     * Display a message to the user.
+     *
+     * @param string $message The message to be displayed.
+     * @param string $terminator The way the line should be ended
+     */
     public static function prompt($message, $terminator = PHP_EOL)
     {
         echo "$message$terminator";

@@ -136,7 +136,7 @@ if (!$title_unique) {
         $properties->set_bidirectional($_POST['bidirectional']);
     }
 
-  // External system details;
+    // External system details;
     $extid = check_var('externalid', 'POST', false, false, true);
     $extsys = check_var('externalsys', 'POST', false, false, true);
     if (!is_null($extid)) {
@@ -242,7 +242,7 @@ if (!$title_unique) {
             $properties->set_calendar_year($calendar_year);
         }
 
-      // Set exam duration (in minutes).
+        // Set exam duration (in minutes).
         $exam_duration = $exam_duration_hours * 60;
         $exam_duration += $exam_duration_mins;
 
@@ -326,7 +326,7 @@ if (!$title_unique) {
     }
 
     if (!isset($_POST['marking']) and $properties->get_paper_type() == 4) {
-      // Do nothing, the marking method is locked.
+        // Do nothing, the marking method is locked.
     } elseif (!isset($_POST['marking']) or $_POST['marking'] == '') {
         $properties->set_marking(MARK_NO_ADJUSTMENT);
     } elseif ($_POST['marking'] == MARK_STD_SET) {
@@ -373,7 +373,7 @@ if (!$title_unique) {
         $properties->set_recache_marks(1);
     }
 
-  // Save any adjusted properties to the database.
+    // Save any adjusted properties to the database.
     $properties->save();
 
     if (!$locked or $userObject->has_role(array('SysAdmin', 'Admin'))) {
@@ -398,7 +398,7 @@ if (!$title_unique) {
         }
     }
 
-  // Release objectives-based feedback
+    // Release objectives-based feedback
     if (isset($_POST['old_objectives_report']) and $_POST['old_objectives_report'] != '' and isset($_POST['objectives_report']) and $_POST['objectives_report'] == '0') {
         $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id = ? AND type = 'objectives'");
         $editProperties->bind_param('i', $paperID);
@@ -415,7 +415,7 @@ if (!$title_unique) {
         $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), '', 'Objectives-based Feedback', 'feedback');
     }
 
-  // Release question-based feedback
+    // Release question-based feedback
     if (isset($_POST['old_questions_report']) and $_POST['old_questions_report'] != '' and isset($_POST['questions_report']) and $_POST['questions_report'] == '0') {
         $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id = ? AND type = 'questions'");
         $editProperties->bind_param('i', $paperID);
@@ -424,8 +424,8 @@ if (!$title_unique) {
 
         $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), 'Question-based Feedback', '', 'feedback');
 
-      // Include check to $q_feedback_enabled to see if question-based feedback
-      // is switched on at the module level.
+        // Include check to $q_feedback_enabled to see if question-based feedback
+        // is switched on at the module level.
     } elseif ($q_feedback_enabled and isset($_POST['old_questions_report']) and $_POST['old_questions_report'] == '' and isset($_POST['questions_report']) and $_POST['questions_report'] == '1') {
         $editProperties = $mysqli->prepare("INSERT INTO feedback_release VALUES (NULL, ?, NOW(), 'questions')");
         $editProperties->bind_param('i', $paperID);
@@ -435,7 +435,7 @@ if (!$title_unique) {
         $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), '', 'Question-based Feedback', 'feedback');
     }
 
-  // Release cohort performance feedback
+    // Release cohort performance feedback
     if (isset($_POST['old_cohort_performance']) and $_POST['old_cohort_performance'] != '' and isset($_POST['cohort_performance']) and $_POST['cohort_performance'] == '0') {
         $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id = ? AND type = 'cohort_performance'");
         $editProperties->bind_param('i', $paperID);
@@ -452,7 +452,7 @@ if (!$title_unique) {
         $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), '', 'Cohort Performance Feedback', 'feedback');
     }
 
-  // Release external examiner feedback
+    // Release external examiner feedback
     if (isset($_POST['old_external_examiner']) and $_POST['old_external_examiner'] != '' and isset($_POST['external_examiner']) and $_POST['external_examiner'] == '0') {
         $editProperties = $mysqli->prepare("DELETE FROM feedback_release WHERE paper_id = ? AND type = 'external_examiner'");
         $editProperties->bind_param('i', $paperID);
@@ -470,7 +470,7 @@ if (!$title_unique) {
     }
 
     if ($properties->get_paper_type() != '2' and $properties->get_paper_type() != '4') {    // Update textual feedback if not a summative paper or OSCE station.
-      // Get old settings
+        // Get old settings
         $old_textual_feedback = Paper_utils::get_textual_feedback($paperID, $mysqli);
         for ($i = 1; $i < 10; $i++) {
             if (!isset($old_textual_feedback[$i]['msg'])) {
@@ -479,7 +479,7 @@ if (!$title_unique) {
             }
         }
 
-      // Get new settings
+        // Get new settings
         $textual_feedback = array();
         for ($i = 1; $i < 10; $i++) {
             if (isset($_POST["feedback_msg$i"]) and trim($_POST["feedback_msg$i"]) != '') {
@@ -505,13 +505,13 @@ if (!$title_unique) {
             $editProperties->close();
 
             if ($old_textual_feedback[$i]['msg'] != $_POST["feedback_msg$i"] or $old_textual_feedback[$i]['boundary'] != $_POST["feedback_value$i"]) {
-              // log a change
+                // log a change
                 $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_textual_feedback[$i]['boundary'] . '%&nbsp;' . $old_textual_feedback[$i]['msg'], $textual_feedback[$i]['boundary'] . '%&nbsp;' . $textual_feedback[$i]['msg'], 'textualfeedback');
             }
         }
     }
 
-  // Get the current (old) metadata security settings from the database.
+    // Get the current (old) metadata security settings from the database.
     $old_meta = '';
     $result = $mysqli->prepare('SELECT name, value FROM paper_metadata_security WHERE paperID = ? ORDER BY name');
     $result->bind_param('i', $paperID);
@@ -527,7 +527,7 @@ if (!$title_unique) {
     }
     $result->close();
 
-  // Loop around the POST fields to get the new metadata security settings.
+    // Loop around the POST fields to get the new metadata security settings.
     $new_meta = '';
     for ($i = 0; $i < $_POST['meta_dropdown_no']; $i++) {
         $meta_type = $_POST['meta_type' . $i];
@@ -543,7 +543,7 @@ if (!$title_unique) {
     }
 
     if ($old_meta != $new_meta) {
-      // The metadata security settings have changed - update the database.
+        // The metadata security settings have changed - update the database.
         $logger->track_change('Paper', $paperID, $userObject->get_user_ID(), $old_meta, $new_meta, 'restricttometadata');
 
         $editProperties = $mysqli->prepare('DELETE FROM paper_metadata_security WHERE paperID = ?');
@@ -564,7 +564,7 @@ if (!$title_unique) {
         }
     }
 
-  // Get existing Reference Materials
+    // Get existing Reference Materials
     $existing_refs = array();
     $result = $mysqli->prepare('SELECT refID FROM reference_papers WHERE paperID = ?');
     $result->bind_param('i', $paperID);

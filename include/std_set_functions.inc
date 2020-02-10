@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once $cfg_web_root . 'include/std_set_shared_functions.inc';
 
@@ -51,8 +51,8 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
         $old_likert_label = '';
     }
 
-  // Determine if negative marking is used.
-  // NOTE: Enhanced calc handled separately below
+    // Determine if negative marking is used.
+    // NOTE: Enhanced calc handled separately below
     $neg_marking = false;
     foreach ($options as $tmp_option) {
         if ($tmp_option['marks_incorrect'] < 0) {
@@ -206,7 +206,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
 
             $marks = $question['object']->calculate_question_mark();
 
-          // Negative marked?
+            // Negative marked?
             $neg_marking = $question['object']->is_negative_marked();
 
             break;
@@ -386,7 +386,7 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
             }
             echo '</ol>';
             if ($options[0]['score_method'] == 'Mark per Question') {
-              //$stdID = 1;
+                //$stdID = 1;
                 $review_val = get_review($options[0]['q_type'], $std_method, $q_id, 1, $tmp_reviews, $is_group);
                 echo reviewScale($question_no, 1, $options[0]['marks_correct'], $std_method, substr($tmp_exclude, 0, 1), $review_val, $stdID, $std_excluded, $is_group);
                 $marks += $options[0]['marks_correct'];
@@ -495,9 +495,9 @@ function display_options($screen, $options, $q_id, $current_theme, $current_scen
             }
             break;
     }
-  // Already rendered marks for question type using template.
+    // Already rendered marks for question type using template.
     if ($options[0]['q_type'] != 'enhancedcalc') {
-      // Display possible marks for question (if not Survey)
+        // Display possible marks for question (if not Survey)
         if ($options[0]['q_type'] != 'hotspot' and $options[0]['q_type'] != 'likert' and $options[0]['q_type'] != 'mcq' and $options[0]['q_type'] != 'dichotomous') {
             echo '</blockquote>';
         }

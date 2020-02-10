@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Nikodem Miranowicz, Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Nikodem Miranowicz, Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 set_time_limit(0);
 
@@ -148,7 +148,7 @@ if ($student_no > 0) {
     $log_array = array();
     $hits = 0;
     $rowID = 0;
-  // Capture the log data.
+    // Capture the log data.
     if ($paper_type == '0') {
         $result = $mysqli->prepare("(SELECT DISTINCT username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, log0.q_id, user_answer, q_type, screen, settings FROM (log0, log_metadata, questions, users) WHERE log0.metadataID = log_metadata.id AND log0.q_id = questions.q_id AND log_metadata.userID IN ($student_list) AND paperID = ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND grade LIKE ? AND started >= ? AND started <= ?) UNION ALL (SELECT DISTINCT username, log_metadata.userID, title, surname, first_names, grade, gender, year, started, log1.q_id, user_answer, q_type, screen, settings FROM (log1, log_metadata, questions, users) WHERE log1.metadataID = log_metadata.id AND log1.q_id = questions.q_id AND log_metadata.userID IN ($student_list) AND paperID = ? AND users.id = log_metadata.userID AND (users.roles='Student' OR users.roles='graduate') AND grade LIKE ? AND started >= ? AND started <= ?) ORDER BY surname, first_names, started, userID");
         $result->bind_param('isssisss', $paperID, $_GET['repcourse'], $startdate, $enddate, $paperID, $_GET['repcourse'], $startdate, $enddate);
@@ -185,7 +185,7 @@ if ($student_no > 0) {
     }
     $result->close();
 
-  // Get student ids.
+    // Get student ids.
     if (count($users) > 0) {
         $users_list = implode(',', array_keys($users));
         $result = $mysqli->prepare("SELECT student_id, userID FROM sid WHERE userID IN ($users_list)");
@@ -208,7 +208,7 @@ if ($student_no > 0) {
     $log_array = \sort::array_csort($log_array, $sortby, $ordering);
 
 
-//********************************
+    //********************************
 
     $exclusions = new Exclusion($paperID, $mysqli);
     $exclusions->load();                                   // Get any questions to exclude.
@@ -216,9 +216,9 @@ if ($student_no > 0) {
     $row_written = 0;
     foreach ($user_results as $individual) {
         $tmp_user_ID = $individual['username'];
-      // Write out the headings.
+        // Write out the headings.
         if ($row_written == 0) {
-        // Only output personal data if assessment, do not show if survey.
+            // Only output personal data if assessment, do not show if survey.
             if ($paper_type < 3) {
                 $csv .= '"' . $string['gender'] . '","' . $string['title'] . '","' . $string['surname'] . '","' . $string['firstnames'] . '","' . $string['studentid'] . '","' . $string['course'] . '","' . $string['year'] . '","' . $string['submitted'] . '"';
             } else {
@@ -228,7 +228,7 @@ if ($student_no > 0) {
         
             foreach ($paper_buffer as $q_id => $question) {
                 $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
-              // If a random question, get the first on the associated questions from the block. If none exist, output nothing
+                // If a random question, get the first on the associated questions from the block. If none exist, output nothing
                 $skip_random = false;
                 if ($question['q_type'] == 'random') {
                     if (isset($paper_buffer[$q_id]['random_questions']) and count($paper_buffer[$q_id]['random_questions']) > 0) {
@@ -314,7 +314,7 @@ if ($student_no > 0) {
             $csv .= "\n";
         }
 
-      // Write out the raw data.
+        // Write out the raw data.
         if ($individual['visible']) {
             if ($paper_type < 3) {
                 $csv .= '"' . $individual['gender'] . '","' . $individual['title'] . '","' . $individual['surname'] . '","' . $individual['first_names'] . '","' . $individual['student_id'] . '","' . $individual['student_grade'] . '","' . $individual['year'] . '","' . $individual['display_started'] . '"';
@@ -325,7 +325,7 @@ if ($student_no > 0) {
             foreach ($paper_buffer as $q_id => $question) {
                 $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
 
-              // If a random question, get the one that the user answered, otherwise just get the first and skip if none exist
+                // If a random question, get the one that the user answered, otherwise just get the first and skip if none exist
                 $skip_random = false;
                 if ($question['q_type'] == 'random') {
                     if (isset($paper_buffer[$q_id]['random_questions']) and count($paper_buffer[$q_id]['random_questions']) > 0) {

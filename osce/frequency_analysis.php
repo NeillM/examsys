@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Displays Frequency Analysis report for an OSCE station.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Displays Frequency Analysis report for an OSCE station.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -124,7 +124,7 @@ if ($user_no == 0) {
     $result->bind_result($q_id, $q_type, $theme, $notes, $scenario, $leadin, $display_method);
     while ($result->fetch()) {
         if ($question_no == 1) {
-          // Header row
+            // Header row
             $cols = substr_count($display_method, '|');
             $headings = explode('|', $display_method);
             echo '<tr><td></td>';

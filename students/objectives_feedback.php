@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Anthony Brown, Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Anthony Brown, Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_student_auth.inc';
 require_once '../include/paper_security.php';
@@ -138,7 +138,7 @@ $student_name = $title . ' ' . \demo::demo_replace($initials, $demo) . ' ' . \de
 $textsize = 100;
 $font = 'Arial';
 if ($userObject->is_special_needs()) {
-  // Look up special_needs data
+    // Look up special_needs data
     $textsize = $userObject->get_textsize($textsize);
     $font = $userObject->get_font($font);
 }
@@ -200,12 +200,12 @@ $textsize -= 10;
         echo '<tr><td class="yellowwarn"><div style="margin-left:10px">' . $string['staffmsg'] . "</div></td></tr>\n";
     }
 
-  // Get Cohort Data
+    // Get Cohort Data
     $tmp_start_date  = DateTime::createFromFormat('U', $start_date);
     $tmp_end_date    = DateTime::createFromFormat('U', $end_date);
     $chort_question_data = getCohortData($mysqli, $moduleID, $tmp_start_date->format('YmdHis'), $tmp_end_date->format('YmdHis'), '%', '%', '%', $paperID, $paper_type, '');
 
-  // Get users log data excluding exclued questions
+    // Get users log data excluding exclued questions
     $qid_list = '';
     $question_data = array();
 
@@ -293,7 +293,7 @@ $textsize -= 10;
                     }
                     $objectives[$id]['session']['sessiontitle'] = $sessiontitle;
 
-          // Just in case the is no cohort data because the paper has not been sat, set zeros to stop errors further down.
+                    // Just in case the is no cohort data because the paper has not been sat, set zeros to stop errors further down.
                     if (!isset($chort_question_data[$q_id]['totalpos'])) {
                         $chort_question_data[$q_id]['totalpos'] = 0;
                     }
@@ -334,7 +334,7 @@ $textsize -= 10;
     }
     echo "</table>\n";
 
-  // Display the feedback
+    // Display the feedback
     ?>
     <br />
   <h1><?php echo $string['learningobjectives']; ?></h1>
@@ -357,7 +357,7 @@ $textsize -= 10;
             $obj_data['mark_sum'] = 0;
         }
 
-      // Cohort performance comparison
+        // Cohort performance comparison
         if ($objectives[$id]['chort_totalpos_sum'] == 0) {
             $comparison = 0;
         } else {
@@ -380,7 +380,7 @@ $textsize -= 10;
     echo '<tr><td class="sum_field">' . $string['papertitle'] . "</td><td>$paper_title</td></tr>\n";
     echo '<tr><td class="sum_field">' . $string['startedat'] . "</td><td>$started</td></tr>\n";
 
-  // Display student marks
+    // Display student marks
     if ($paper_type < '3') {
         echo '<tr><td class="sum_field">' . $string['examlength'] . '</td><td>' . formatsec($exam_duration * 60) . "</td></tr>\n";
         echo '<tr><td class="sum_field">' . $string['timespent'] . '</td><td>' . formatsec($time_spent) . "</td></tr>\n";

@@ -21,12 +21,12 @@
  */
 trait mpqgetmarks
 {
-  /**
-   * Get total marks for question
-   * Apply marks per question if applicable
-   * @param $markscorrect
-   * @return float
-   */
+    /**
+     * Get total marks for question
+     * Apply marks per question if applicable
+     * @param $markscorrect
+     * @return float
+     */
     public function get_marks($markscorrect)
     {
         $marks = $this->marks;

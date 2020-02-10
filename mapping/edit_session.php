@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Anthony Brown, Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Anthony Brown, Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../include/errors.php';
@@ -65,10 +65,10 @@ if (count($sess) == 0) {
 
 
 if (isset($_POST['Edit'])) {
-  //save session
+    //save session
     $occurrence = $_POST['year'] . $_POST['month'] . $_POST['day'] . $_POST['time'];
 
-  //update session
+    //update session
     $stmt = $mysqli->prepare('UPDATE sessions SET title = ?,source_url = ?, occurrence = ? WHERE identifier = ? AND idMod = ? AND identifier = ? AND calendar_year = ?');
     $stmt->bind_param('ssssiss', $_POST['session_title'], $_POST['url'], $occurrence, $identifier, $modID, $identifier, $calendar_year);
     $stmt->execute();
@@ -86,7 +86,7 @@ if (isset($_POST['Edit'])) {
             $objId = '';
         }
         switch ($type) {
-          //deal with old objs
+            //deal with old objs
             case 'obj':
                 if ($value == '') {
                     //delete objs and mappings
@@ -101,21 +101,21 @@ if (isset($_POST['Edit'])) {
                     $stmt->close();
                 } else {
                     $sequence++;
-                  //update obj
+                    //update obj
                     $stmt = $mysqli->prepare('UPDATE objectives SET objective = ?, sequence = ? WHERE obj_id = ? AND idMod = ? AND identifier = ? AND calendar_year = ?');
                     $stmt->bind_param('sisiss', $value, $sequence, $objId, $modID, $identifier, $_POST['session']);
                     $stmt->execute();
                     $stmt->close();
                 }
                 break;
-          //deal with new objs
+            //deal with new objs
             case 'objnew':
                 if ($maxID == 0) {
                     $maxID =  mappingutils::get_objectives_start();
                 }
                 if ($value != '' and $value != 'Type New Objective here...') {
                     $sequence++;
-                  //insert new obj
+                    //insert new obj
                     $stmt = $mysqli->prepare('INSERT INTO objectives VALUES (?, ?, ?, ?, ?, ?)');
                     $stmt->bind_param('issssi', $maxID, $value, $modID, $identifier, $calendar_year, $sequence);
                     $stmt->execute();
@@ -126,14 +126,14 @@ if (isset($_POST['Edit'])) {
         }
     }
 
-  //redirect to list sessions
+    //redirect to list sessions
     header('Location: ./sessions_list.php?module=' . $modID . '&folder=' . $folder);
     exit();
 } elseif (isset($_POST['cancel'])) {
     header('Location: ./sessions_list.php?module=' . $modID . '&folder=' . $folder);
     exit();
 } else {
-  //display form
+    //display form
     ?>
 <!DOCTYPE html>
   <html>
@@ -192,7 +192,7 @@ if (isset($_POST['Edit'])) {
 
     echo '<tr><td class="field">' . $string['date'] . '</td><td>';
 
-// Day
+    // Day
     if (isset($d)) {
         $currentday = $d;
     } else {
@@ -210,7 +210,7 @@ if (isset($_POST['Edit'])) {
     $validfrom .= '</select>&nbsp;';
     echo $validfrom;
 
-// Month
+    // Month
     if (isset($m)) {
         $currentmonth = $m;
     } else {
@@ -229,7 +229,7 @@ if (isset($_POST['Edit'])) {
     $validfrom .= '</select>&nbsp;';
     echo $validfrom;
 
-// Year
+    // Year
     $startyear = ( date('Y') - 1 );
     if (isset($y)) {
         $currentyear = $y;
@@ -246,7 +246,7 @@ if (isset($_POST['Edit'])) {
     echo $validfrom;
 
     echo "</select>\n<select name=\"time\">\n";
-// Available from Hour
+    // Available from Hour
     if (isset($time)) {
         $now = str_replace(':', '', $time);
     } else {
@@ -277,7 +277,7 @@ if (isset($_POST['Edit'])) {
     echo '<input id="new" style="margin:0.5em; margin-left:6em; width: 80px" type="button" value="' . $string['new'] . '" >';
 
 
-//add the save buttens
+    //add the save buttens
     echo '<ul style="margin-left:0px; list-style-type:none; width:100%">';
     echo '<li style="margin: 0.5em; margin-left: 0.5em; text-align: center">';
     echo '<input name="Edit" class="ok" type="submit" value="' . $string['save'] . '" ><input name="cancel" class="cancel" type="submit" value="' . $string['cancel'] . '">';
@@ -290,13 +290,13 @@ if (isset($_POST['Edit'])) {
     ?>
 </div>
     <?php
-// Dataset.
+    // Dataset.
     $render = new render($configObject);
     $miscdataset['name'] = 'dataset';
     $miscdataset['attributes']['folder'] = $folder;
     $miscdataset['attributes']['module'] = $modID;
     $render->render($miscdataset, array(), 'dataset.html');
-// JS utils dataset.
+    // JS utils dataset.
     $jsdataset['name'] = 'jsutils';
     $jsdataset['attributes']['xls'] = json_encode($string);
     $render->render($jsdataset, array(), 'dataset.html');

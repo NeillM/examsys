@@ -11,7 +11,7 @@ if ($updater_utils->check_version('7.1.0')) {
             if (isset($oldsettings['terms'])) {
                 $oldterms = explode(';', $oldsettings['terms']);
                 if (is_array($oldterms)) {
-                  // JSON encode instead of ; seperated.
+                    // JSON encode instead of ; seperated.
                     $oldsettings['terms'] = json_encode($oldterms);
                     $newsettings = json_encode($oldsettings, true);
                     $updatesql->bind_param('si', $newsettings, $q_id);

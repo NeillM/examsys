@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* View internal and external reviewers comments
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * View internal and external reviewers comments
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -246,7 +246,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                             }
                             echo '</select>';
                         } else {
-                          // Correct answer.
+                            // Correct answer.
                             $correct_options = explode(',', $blank_options);
                             echo '<input type="text" size="10" value="' . $correct_options[0] . '" />';
                         }
@@ -519,7 +519,7 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
     }
     echo "</td></tr>\n";
 
-  // Display comments here.
+    // Display comments here.
     if (!in_array($q_type, array('info', 'keyword_based', 'random'))) {
         echo displayComments($q_id, $comments, $q_type, $q_no, $reviewer_data, $type, $string, $language);
     }

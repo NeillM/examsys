@@ -15,12 +15,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 /**
  * Save OSCE form data back to the database.
@@ -82,7 +82,7 @@ function save_osce_form($propertyObj, $userID, $postdata, $db)
             $numeric_score += ($postdata['q' . $question . '_val'] - 1);
         }
 
-    // Update Log4_overall with the overall score.
+        // Update Log4_overall with the overall score.
         if ($marking == '5') {
             if ($total_mark == 0) {
                 $user_percent = 0;

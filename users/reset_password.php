@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../include/load_config.php';
 $language = LangUtils::getLang($cfg_web_root);
@@ -39,7 +39,7 @@ $token = (isset($_GET['token']) and $_GET['token'] != '') ? $_GET['token'] : ((!
 if ($token == '') {
     $critical_errors[] = $string['notokensupplied'];
 } else {
-// Check if the token exists and has not expired
+    // Check if the token exists and has not expired
     $stmt = $mysqli->prepare('SELECT id, user_id FROM password_tokens WHERE token = ? AND time > DATE_ADD(NOW(), INTERVAL -1 DAY) ORDER BY id DESC LIMIT 1');
     $stmt->bind_param('s', $token);
     $stmt->execute();
@@ -53,7 +53,7 @@ if ($token == '') {
 }
 
 if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] != '') {
-// Process form submission
+    // Process form submission
     $errors = $form_util->check_required(array('email' => $string['emailaddress'], 'password' => $string['password'], 'password_confirm' => $string['passwordconfirm']));
     if (!$form_util->is_email($_POST['email'])) {
         $email = $_POST['email'];
@@ -66,7 +66,7 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
     if (count($errors) == 0) {
         $email = $_POST['email'];
         $password = $_POST['password'];
-// Check if email address matches that of the user in the token record
+        // Check if email address matches that of the user in the token record
         $stmt = $mysqli->prepare('SELECT username, email, roles FROM users WHERE id = ?');
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
@@ -79,12 +79,12 @@ if (count($critical_errors) == 0 and isset($_POST['token']) and $_POST['token'] 
             if ($email != $existing_email) {
                 $errors[] = $string['incorrectemail'];
             } else {
-    // Update user's password
+                // Update user's password
                 $success = UserUtils::update_password($username, $password, $user_id, $mysqli);
                 if (!$success) {
                     $errors[] = $string['databaseupdateerror'];
                 } else {
-                // Delete password token entry for this user
+                    // Delete password token entry for this user
                     $delete = $mysqli->prepare('DELETE FROM password_tokens WHERE user_id = ?');
                     $delete->bind_param('i', $user_id);
                     $delete->execute();

@@ -46,12 +46,12 @@ class IE_qti12_Load extends IE_Main
     {
         global $string;
 
-      // some values for abstaining and not applicable
+        // some values for abstaining and not applicable
         $this->abstainvalues = explode('|', strtolower($string['na_abstain']));
 
-      // values for likert scales
+        // values for likert scales
 
-      // from Rogo
+        // from Rogo
         ExplodeToArray($this->likert_values, $string['failpass3']);
         ExplodeToArray($this->likert_values, $string['disagre3']);
 
@@ -62,7 +62,7 @@ class IE_qti12_Load extends IE_Main
         ExplodeToArray($this->likert_values, $string['disagre5b']);
         ExplodeToArray($this->likert_values, $string['disagre5c']);
 
-      // from QMP
+        // from QMP
         ExplodeToArray($this->likert_values, $string['qmpagree3']);
         ExplodeToArray($this->likert_values, $string['qmplike3']);
         ExplodeToArray($this->likert_values, $string['qmplikeme3']);
@@ -78,7 +78,7 @@ class IE_qti12_Load extends IE_Main
         ExplodeToArray($this->likert_values, $string['qmplikeme5']);
         ExplodeToArray($this->likert_values, $string['qmpsatisfied5']);
 
-      // values for dichotomous
+        // values for dichotomous
         ExplodeToArray($this->dich_values, $string['qmptf']);
         ExplodeToArray($this->dich_values, $string['qmpyn']);
     }
@@ -101,33 +101,33 @@ class IE_qti12_Load extends IE_Main
         }
         $rt = '';
 
-      // detector for jumbled sentance
+        // detector for jumbled sentance
         $pos = strpos($xmlStr, 'wct_questiontype');
 
 
         $numb = 0;
 
 
-      // single assessment object possible
+        // single assessment object possible
         if ($xml->assessment) {
             $this->LoadAssessment($xml->assessment);
         }
 
-      // multiple xml section objects possible
+        // multiple xml section objects possible
         if ($xml->section) {
             foreach ($xml->section as $section) {
                 $this->LoadSection($section);
             }
         }
 
-      // multiple xml item objects possible
+        // multiple xml item objects possible
         if ($xml->item) {
             foreach ($xml->item as $item) {
                 $this->LoadItem($item);
             }
         }
 
-      //print_p($this->result,false);
+        //print_p($this->result,false);
 
         return $this->result;
     }
@@ -243,7 +243,7 @@ class IE_qti12_Load extends IE_Main
             $question = $this->LoadUnknown($q_imp);
             $this->AddError(sprintf($string['qunsupported'], $type), $q_imp->load_id);
         }
-      // DEBUGDEBUG add if WCTJUMB SENTANCE DETECT AND OVERWRITE $question->$question
+        // DEBUGDEBUG add if WCTJUMB SENTANCE DETECT AND OVERWRITE $question->$question
 
         if ($q_imp->wct_questiontype == 'WCT_JumbledSentence') {
             if ($q_imp->options2['%BLANK_1%'][0] == null) {
@@ -295,7 +295,7 @@ class IE_qti12_Load extends IE_Main
             $question->media_height = $q_imp->material->media_height;
         }
 
-      // load taxinomy and keywords
+        // load taxinomy and keywords
         if (array_key_exists('BLOOMS', $q_imp->params)) {
             $question->bloom = $q_imp->params['BLOOMS'];
         }
@@ -318,7 +318,7 @@ class IE_qti12_Load extends IE_Main
             $this->result->questions[] = '';
         }
 
-      // any warnings that have been put under question 99999 should be moved to proper question id
+        // any warnings that have been put under question 99999 should be moved to proper question id
 
         unset($q_imp->raw_xml);
         unset($q_imp->presentation);
@@ -340,7 +340,7 @@ class IE_qti12_Load extends IE_Main
     {
         global $string;
 
-      // no input stuff so this is an info question
+        // no input stuff so this is an info question
         if (empty($question->counts['response'])) {
             return 'info';
         }
@@ -380,9 +380,9 @@ class IE_qti12_Load extends IE_Main
             return 'mrq';
         }
 
-      // do we have differing labels for each part of the question?? if so only thing we can possibly import as is 'blank'
+        // do we have differing labels for each part of the question?? if so only thing we can possibly import as is 'blank'
         if (!$question->labelsets) {
-          // if we dont have single cardinality, then we cant import a blank with dropdowns
+            // if we dont have single cardinality, then we cant import a blank with dropdowns
             if ($question->cardinality != 'Single') {
                 $this->AddError($string['nomultiplecard'], $question->load_id);
                 return 'error';
@@ -391,12 +391,12 @@ class IE_qti12_Load extends IE_Main
             return 'blank';
         }
 
-      // if we have multiple materials in our question, things are all odd, so process seperatly, 'blank' only i think
-      // if a blank question has single material followed by single lid then will get imported as something else
-      /*if ($question->counts['material'] > 1)
-       return "blank";*/
+        // if we have multiple materials in our question, things are all odd, so process seperatly, 'blank' only i think
+        // if a blank question has single material followed by single lid then will get imported as something else
+        /*if ($question->counts['material'] > 1)
+        return "blank";*/
 
-      // single field entry
+        // single field entry
         if ($question->counts['fib'] == 1) {
             $rows = 0;
             $responses = $this->GetResponses($question, '', 'fib');
@@ -411,7 +411,7 @@ class IE_qti12_Load extends IE_Main
                 return 'textbox';
             }
 
-          // check for any correct responses, if 1 then we are a fill in the blank
+            // check for any correct responses, if 1 then we are a fill in the blank
             if ($question->counts['num'] == 1) {
                 return 'calculation';
             }
@@ -425,18 +425,18 @@ class IE_qti12_Load extends IE_Main
             return 'calculation';
         }
 
-      // single material in question, good for all qmp exported things except 'blank'
+        // single material in question, good for all qmp exported things except 'blank'
 
-      // single response lid, possible are mrq, dichotomous, likert, mcq
+        // single response lid, possible are mrq, dichotomous, likert, mcq
         if ($question->counts['lid'] == 1) {
-          // check cardinality
-          // cant be varies as only single lid
+            // check cardinality
+            // cant be varies as only single lid
             if ($question->cardinality == 'Multi') {
                 return 'mrq';
             }
 
-          // either dichotomous, likert or mcq
-          // need to match options to one of our know lists
+            // either dichotomous, likert or mcq
+            // need to match options to one of our know lists
 
             $response_list = $this->GetResponseLabelList($question);
 
@@ -458,12 +458,12 @@ class IE_qti12_Load extends IE_Main
                 return 'likert';
             }
 
-          // hack to ensure Rogo fill in the blanks are imported as such
+            // hack to ensure Rogo fill in the blanks are imported as such
             if ($question->qmd_itemtype == 'Select a Blank' || $question->qmd_itemtype == 'Select a Blank') {
                 return 'blank';
             }
 
-          // hack to ensure Rogo likert are imported as such
+            // hack to ensure Rogo likert are imported as such
             if ($question->qmd_itemtype == 'Likert Scale') {
                 return 'likert';
             }
@@ -471,28 +471,28 @@ class IE_qti12_Load extends IE_Main
             return 'mcq';
         }
 
-      // multiple lid, possible are extmatching, ranking, matrix, dichotomous
+        // multiple lid, possible are extmatching, ranking, matrix, dichotomous
         if ($question->counts['lid'] > 1) {
-          // should be checking to see if each of the sets of answers are the same
+            // should be checking to see if each of the sets of answers are the same
             if (!$question->labelsets) {
-              // label sets are not the same
+                // label sets are not the same
                 $this->AddError($string['labelsetserror'], $question->load_id);
                 return 'blank';
             }
 
-          // check cardinality
-          // if single then ranking or matrix
+            // check cardinality
+            // if single then ranking or matrix
 
             if ($question->cardinality == 'Single') {
                 $response_list = $this->GetResponseLabelList($question);
 
-              //print_p($response_list);
-              // need to check values to see if dichotomous
+                //print_p($response_list);
+                // need to check values to see if dichotomous
                 if (MatchArraySet($this->dich_values, $response_list, $this->abstainvalues)) {
                     return 'dichotomous';
                 }
 
-              // need to check values to see if ranking
+                // need to check values to see if ranking
                 if ($this->IsRankingQuestion($response_list)) {
                     return 'rank';
                 }
@@ -508,16 +508,16 @@ class IE_qti12_Load extends IE_Main
                 return 'matrix';
             }
 
-          // more than one response, and cardinality not single
+            // more than one response, and cardinality not single
             return 'extmatch';
         }
 
-      // single num calculation,
+        // single num calculation,
         if ($question->counts['num'] == 1) {
             return 'calculation';
         }
 
-      // multiple numeric, not supported
+        // multiple numeric, not supported
         if ($question->counts['num'] > 1) {
             $this->AddError($string['nomultiinputs'], $question->load_id);
             return 'error';
@@ -526,14 +526,14 @@ class IE_qti12_Load extends IE_Main
         if ($question->counts['str'] > 0) {
             return 'blank';
         }
-      // multiple string, but only 1 material, could this be a blank question??
+        // multiple string, but only 1 material, could this be a blank question??
         if ($question->counts['str'] > 1) {
             return 'blank';
         }
 
-      // hotspot, labelling
+        // hotspot, labelling
         if ($question->counts['xy'] > 0) {
-          // either hotspot or labelling, not sure how to pick yet
+            // either hotspot or labelling, not sure how to pick yet
         }
 
         return 'unknown';
@@ -545,7 +545,7 @@ class IE_qti12_Load extends IE_Main
             return false;
         }
 
-      // check for all but 2 of the items matching 1st/2nd/3rd etc
+        // check for all but 2 of the items matching 1st/2nd/3rd etc
         $match_str = array();
         $match_num = array();
         for ($i = 1; $i < count($response_list) - 1; $i++) {
@@ -612,11 +612,11 @@ class IE_qti12_Load extends IE_Main
     {
         $scn = NX_ChangePreSetCharsToRaw($scn);
 
-      // parse scenario into xml chunks
+        // parse scenario into xml chunks
         $bits = explode('<', $scn);
 
         $to_remove = array();
-      // for each chunk
+        // for each chunk
         $newtitle = '';
         $removed_count = 0;
         foreach ($bits as $bit) {
@@ -632,12 +632,12 @@ class IE_qti12_Load extends IE_Main
                 $bit = substr($bit, strpos($bit, '>') + 1);
             }
 
-          // if it fits into title and is longer then X character
+            // if it fits into title and is longer then X character
             if (strlen($bit) < 5) {
                 continue;
             }
 
-          //echo "CHUNK : " . htmlentities($bit) . "<br>";
+            //echo "CHUNK : " . htmlentities($bit) . "<br>";
 
             if (stripos(' ' . $title, $bit) > 0) {
                 $to_remove[] = $bit;
@@ -645,18 +645,18 @@ class IE_qti12_Load extends IE_Main
                 $newtitle .= $bit . ' ';
                 if ($removed_count > 10) {
                     $title = trim($newtitle);
-                  //echo "Breaking as chunk !$bit! due to more than 10 characters<br>";
+                    //echo "Breaking as chunk !$bit! due to more than 10 characters<br>";
                     break;
                 }
             } elseif (strlen($bit) > 3) {
-              // force title to be regenerated if we found a chunk that isnt in it
+                // force title to be regenerated if we found a chunk that isnt in it
                 $title = trim($newtitle);
                 break;
             }
         }
 
         foreach ($to_remove as $remove) {
-          // bodge to limit title to around 50 characters. Once we have removed 50 characters worth of cunks, replace the title
+            // bodge to limit title to around 50 characters. Once we have removed 50 characters worth of cunks, replace the title
             $scn = str_ireplace($remove, '', $scn);
         }
 
@@ -680,15 +680,15 @@ class IE_qti12_Load extends IE_Main
         return $scn;
     }
 
-  //////////////////////////////////
-  // SPECIFIC QUESTION TYPE LOADS //
-  //////////////////////////////////
+    //////////////////////////////////
+    // SPECIFIC QUESTION TYPE LOADS //
+    //////////////////////////////////
 
     function LoadBlank(&$source)
     {
         global $string;
 
-      // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in Rogo so goes the way of the dinosar
         $dest = new ST_Question_Blank();
 
         $dest->load_id = $source->load_id;
@@ -704,7 +704,7 @@ class IE_qti12_Load extends IE_Main
             }
         }
 
-      // determine if strings or if dropdowns and call appropriate function
+        // determine if strings or if dropdowns and call appropriate function
         if ($source->counts['lid'] > 0) {
             $this->BlankDropdowns($dest, $source);
         } elseif ($source->counts['fib'] > 0) {
@@ -813,7 +813,7 @@ class IE_qti12_Load extends IE_Main
                                   $blankoptions[] = $blank;
                             }
 
-                        // need to work out if this label is correct or not
+                            // need to work out if this label is correct or not
                         }
 
                         $dest->options[$blankid] = $blankoptions;
@@ -833,7 +833,7 @@ class IE_qti12_Load extends IE_Main
                                 $text = $material->GetHTML();
                                 $qtext_i[] = $text;
                             } elseif ($subname == 'response_label') {
-                      // create a new blank for the label
+                                // create a new blank for the label
 
                                 $blankid = '%' . sprintf('BLANK_%d', $optionid) . '%';
 
@@ -908,7 +908,7 @@ class IE_qti12_Load extends IE_Main
 
                 $blankoptions = array();
 
-              // get all conditions that are related to this response
+                // get all conditions that are related to this response
                 $conds = $this->GetRespConditions($source, 1, $response->id);
 
                 foreach ($response->labels as $id => $label) {
@@ -946,7 +946,7 @@ class IE_qti12_Load extends IE_Main
         $dest->displaymode = 'dropdown';
     }
 
-  // DONE
+    // DONE
     function LoadCalculation(&$source)
     {
 
@@ -973,7 +973,7 @@ class IE_qti12_Load extends IE_Main
             $dest->score_method = 'Mark per Question';
         }
 
-      // get positive marked outcomes
+        // get positive marked outcomes
         $respconds = $this->GetRespConditions($source, 5);
         $lessthan = '';
         $morethan = '';
@@ -990,7 +990,7 @@ class IE_qti12_Load extends IE_Main
                 }
             }
 
-          //if ($dest->formula) break;
+            //if ($dest->formula) break;
         }
         if (!$dest->formula) {
             if ($lessthan != '' && $morethan != '') {
@@ -1001,7 +1001,7 @@ class IE_qti12_Load extends IE_Main
         $feedback = $this->GetAllFeedbacks($source);
         $dest->feedback = $this->GetFeedbackFromArray($source, $feedback);
 
-      // if we have question metadata containing variables and formula, then load em
+        // if we have question metadata containing variables and formula, then load em
         if (array_key_exists('VARIABLE', $source->params) && array_key_exists('FORMULA', $source->params) && array_key_exists('QUESTION', $source->params)) {
             echo 'Calculation importing variables<br>';
             foreach ($source->params['VARIABLE'] as $var) {
@@ -1078,7 +1078,7 @@ class IE_qti12_Load extends IE_Main
     {
         global $string;
 
-      // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in Rogo so goes the way of the dinosar
         $dest = new ST_Question_Dichotomous();
 
         $dest->load_id = $source->load_id;
@@ -1096,7 +1096,7 @@ class IE_qti12_Load extends IE_Main
         $mark_abstain = false;
         $mark_negative = false;
 
-      // do we have a N/A value?
+        // do we have a N/A value?
         foreach ($responses_clean as $rid => $resp) {
             if (ItemInArray($this->abstainvalues, $resp)) {
                 unset($responses_clean[$rid]);
@@ -1104,13 +1104,13 @@ class IE_qti12_Load extends IE_Main
             }
         }
 
-      // work out true/false or yes/no
+        // work out true/false or yes/no
         $scale = implode('|', $responses_clean);
         if ($scale == 'true|false') {
             $mark_tf = true;
         }
 
-      // count up response conditions
+        // count up response conditions
         list($positive, $zero, $negative) = $this->GetRespConditionMarkCounts($source);
         if ($negative > 0) {
             $mark_negative = true;
@@ -1118,7 +1118,7 @@ class IE_qti12_Load extends IE_Main
 
         list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
 
-      // set the display type
+        // set the display type
         if ($mark_tf) {
             if (!$mark_abstain) {
                 $dest->display_method = 'TF_Positive';
@@ -1133,7 +1133,7 @@ class IE_qti12_Load extends IE_Main
             }
         }
 
-      //set the score method
+        //set the score method
         $dest->score_method = 'Mark per Option';
 
         if ($mark_abstain) {
@@ -1141,7 +1141,7 @@ class IE_qti12_Load extends IE_Main
                 $dest->score_method = $source->params['MARKING'];
             }
         }
-      // load all options into the dest
+        // load all options into the dest
         $optionid = 1;
         foreach ($source->responses as $response) {
             $option = new STQ_Dic_Options();
@@ -1172,7 +1172,7 @@ class IE_qti12_Load extends IE_Main
             $optionid++;
         }
 
-      // attempt to work out the correct answers
+        // attempt to work out the correct answers
         $conds = $this->GetRespConditions($source, 1);
         foreach ($conds as $condition) {
             if (count($condition->conditions) == 0) {
@@ -1185,7 +1185,7 @@ class IE_qti12_Load extends IE_Main
                 $correctvalue = $condition->conditions[0]->value;
                 $id = $condition->conditions[0]->respident;
 
-              //echo "Response $id - correct value is $correctvalue<br>";
+                //echo "Response $id - correct value is $correctvalue<br>";
                 foreach ($dest->options as & $option) {
                     if ($option->response_id != $id) {
                         continue;
@@ -1198,26 +1198,26 @@ class IE_qti12_Load extends IE_Main
             }
         }
 
-      // sort out feedback
+        // sort out feedback
 
         $generalfb = array();
 
-      // for each answer
+        // for each answer
         foreach ($dest->options as & $option) {
-          // get list of feedbacks for when correct
+            // get list of feedbacks for when correct
             $correctfb1 = $this->GetFeedbacks($source, $option->response_id, $option->value_true, $option->iscorrect);
             $incorrectfb1 = $this->GetFeedbacks($source, $option->response_id, $option->value_true, !$option->iscorrect);
 
-          // get list of feedbacks for when incorrect
+            // get list of feedbacks for when incorrect
             $correctfb2 = $this->GetFeedbacks($source, $option->response_id, $option->value_false, !$option->iscorrect);
             $incorrectfb2 = $this->GetFeedbacks($source, $option->response_id, $option->value_false, $option->iscorrect);
 
-          // merge arrays
+            // merge arrays
             $incorrectfb = array_merge($incorrectfb1, $incorrectfb2);
             $correctfb = array_merge($correctfb1, $correctfb2);
 
-          // get list of feedbacks common to both outcomes and add to general feedback array
-          // remove common ones from the list
+            // get list of feedbacks common to both outcomes and add to general feedback array
+            // remove common ones from the list
             RemoveCommonInArray($correctfb, $incorrectfb, $generalfb);
 
             $option->fb_correct = $this->GetFeedbackFromArray($source, $correctfb);
@@ -1229,10 +1229,10 @@ class IE_qti12_Load extends IE_Main
         return $dest;
     }
 
-  // DONE
+    // DONE
     function LoadExtmatch(&$source)
     {
-      // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in Rogo so goes the way of the dinosar
         $dest = new ST_Question_Extmatch();
 
         $dest->load_id = $source->load_id;
@@ -1245,13 +1245,13 @@ class IE_qti12_Load extends IE_Main
             }
         }
         if ($shuf == 1) {
-          //  if ($source->responses[1]->shuffle == 1) {
+            //  if ($source->responses[1]->shuffle == 1) {
             $dest->q_option_order = 'random';
         }
 
         $this->GenerateQuestionInfo($dest, $source->material, $source->title);
 
-    // load option list
+        // load option list
 
         $optionlist = $this->GetResponseLabelList($source, false, $lablk, $lablkd);
         $optid = 1;
@@ -1267,7 +1267,7 @@ class IE_qti12_Load extends IE_Main
         $optid = 1;
 
 
-    // load all stems
+        // load all stems
         $stemid = 1;
         $respcond = $this->GetRespConditions($source, 1);
         print_p($respcond);
@@ -1292,7 +1292,7 @@ class IE_qti12_Load extends IE_Main
             $correct = array();
             foreach ($respcond as $cond) {
                 foreach ($cond->conditions as $condvar) {
-                // 1 mark per correct answer so skip ones that have a diff respident and mark correct rest
+                    // 1 mark per correct answer so skip ones that have a diff respident and mark correct rest
                     if ($condvar->respident != $rid) {
                         continue;
                     }
@@ -1308,7 +1308,7 @@ class IE_qti12_Load extends IE_Main
             $dest->marks_incorrect = $marks_incorrect;
             $dest->marks_partial = $marks_partial;
 
-          // work out correct answers for this stem
+            // work out correct answers for this stem
 
             $correct_mapped = array();
             foreach ($correct as $answer) {
@@ -1326,7 +1326,7 @@ class IE_qti12_Load extends IE_Main
                 }
             }
 
-          // get feedback for this stem
+            // get feedback for this stem
             $fb = $this->GetFeedbacks($source, $rid);
 
             $stem->feedback = $this->GetFeedbackFromArray($source, $fb);
@@ -1335,10 +1335,10 @@ class IE_qti12_Load extends IE_Main
         return $dest;
     }
 
-  // NEW
+    // NEW
     function LoadFlash(&$source)
     {
-      // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in Rogo so goes the way of the dinosar
         $dest = new ST_Question_Flash();
 
         $dest->load_id = $source->load_id;
@@ -1351,10 +1351,10 @@ class IE_qti12_Load extends IE_Main
         return $dest;
     }
 
-  // NEW
+    // NEW
     function LoadHotspot(&$source)
     {
-      // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in Rogo so goes the way of the dinosar
         $dest = new ST_Question_Hotspot();
 
         $dest->load_id = $source->load_id;
@@ -1376,8 +1376,8 @@ class IE_qti12_Load extends IE_Main
             $dest->media_height = $response->material->media_height;
         }
 
-      // need to find all coordinates that are in the results
-      // get back the single positive response for the question
+        // need to find all coordinates that are in the results
+        // get back the single positive response for the question
         $dest->hotspots[0] = 1;
         $conds = $this->GetRespConditions($source, 1);
         foreach ($conds as & $conds) {
@@ -1397,23 +1397,23 @@ class IE_qti12_Load extends IE_Main
         }
         unset($dest->hotspots[0]);
 
-      // load in any raw option data when a Rogo export
+        // load in any raw option data when a Rogo export
         if (array_key_exists('RAW_HOTSPOT', $source->params)) {
             $dest->hotspots = array();
             $dest->raw_option = $source->params['RAW_HOTSPOT'];
         }
 
-      // get feedback
+        // get feedback
         $fb = $this->GetAllFeedbacks($source);
         $dest->feedback = $this->GetFeedbackFromArray($source, $fb);
 
         return $dest;
     }
 
-  // DONE
+    // DONE
     function LoadInfo(&$source)
     {
-      // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in Rogo so goes the way of the dinosar
         $dest = new ST_Question_Info();
 
         $dest->load_id = $source->load_id;
@@ -1430,7 +1430,7 @@ class IE_qti12_Load extends IE_Main
     {
         global $string;
 
-      // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in Rogo so goes the way of the dinosar
         $dest = new ST_Question_Labelling();
 
         $dest->load_id = $source->load_id;
@@ -1450,14 +1450,14 @@ class IE_qti12_Load extends IE_Main
         $max_width = 0;
         $max_height = 0;
 
-      // get main image for question
+        // get main image for question
         if (!empty($response->material->media)) {
             $dest->media = $response->material->media;
             $dest->media_width = $response->material->media_width;
             $dest->media_height = $response->material->media_height;
         }
 
-      // build a list of all the labels and their coordinates
+        // build a list of all the labels and their coordinates
         foreach ($source->responses as $response) {
             foreach ($response->labels as $label) {
                 $mylabel = new stdClass();
@@ -1497,7 +1497,7 @@ class IE_qti12_Load extends IE_Main
             }
         }
 
-      // work out box size
+        // work out box size
         if ($max_height == 0) {
             $max_height = 35;
         }
@@ -1511,7 +1511,7 @@ class IE_qti12_Load extends IE_Main
         $dest->height = round($max_height * $response->material->y_scale);
 
         $label_match = 0;
-      // remap coordinates to top left
+        // remap coordinates to top left
         foreach ($labels as & $label) {
             if (empty($label->coords)) {
                 $label->left = -1;
@@ -1533,13 +1533,13 @@ class IE_qti12_Load extends IE_Main
             $dest->labels[] = $destlabel;
         }
 
-      // load in any raw option data when a Rogo export
+        // load in any raw option data when a Rogo export
         if (array_key_exists('RAW_LABELLING', $source->params)) {
             unset($dest->labels);
             $dest->raw_option = $source->params['RAW_LABELLING'];
         }
 
-      // get feedback
+        // get feedback
         $fb = $this->GetAllFeedbacks($source);
         $dest->feedback = $this->GetFeedbackFromArray($source, $fb);
 
@@ -1555,7 +1555,7 @@ class IE_qti12_Load extends IE_Main
     {
         global $string;
 
-      // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in Rogo so goes the way of the dinosar
         $dest = new ST_Question_Likert();
 
         $dest->load_id = $source->load_id;
@@ -1572,7 +1572,7 @@ class IE_qti12_Load extends IE_Main
             $this->AddWarning($string['nolikertfeedback'], $source->load_id);
         }
 
-      // do we have a N/A value?
+        // do we have a N/A value?
         foreach ($responses_clean as $key => $isna) {
             if (ItemInArray($this->abstainvalues, $isna)) {
                 $dest->hasna = 1;
@@ -1580,7 +1580,7 @@ class IE_qti12_Load extends IE_Main
             }
         }
 
-      // build up scale
+        // build up scale
         foreach ($responses_html as $response) {
             $dest->scale[] = $response;
         }
@@ -1590,7 +1590,7 @@ class IE_qti12_Load extends IE_Main
         return $dest;
     }
 
-  // DONE
+    // DONE
     function LoadMatrix(&$source)
     {
 
@@ -1613,7 +1613,7 @@ class IE_qti12_Load extends IE_Main
 
         $optionmapping = array();
 
-      // build option list
+        // build option list
 
         $oid = 1;
         foreach ($source->responses as $response) {
@@ -1625,13 +1625,13 @@ class IE_qti12_Load extends IE_Main
             break;
         }
 
-      // build stem list
+        // build stem list
         $scnid = 1;
         foreach ($source->responses as $response) {
             $qr = new STQ_Matrix_Scenario();
             $qr->scenario = $response->material->GetText();
 
-          // work out correct answers
+            // work out correct answers
             foreach ($source->respconditions as $condition) {
                 if (count($condition->conditions) < 1) {
                     continue;
@@ -1652,7 +1652,7 @@ class IE_qti12_Load extends IE_Main
             $scnid++;
         }
 
-      // get feedback
+        // get feedback
         $fb = $this->GetAllFeedbacks($source);
         $dest->feedback = $this->GetFeedbackFromArray($source, $fb);
         $dest->marks = count($dest->scenarios);
@@ -1675,7 +1675,7 @@ class IE_qti12_Load extends IE_Main
             $dest->q_option_order = 'random';
         }
 
-      // should only be 1 response, so get it
+        // should only be 1 response, so get it
         $response = reset($source->responses);
         $this->GenerateQuestionInfo($dest, $source->material, $source->title, $response->material);
 
@@ -1700,7 +1700,7 @@ class IE_qti12_Load extends IE_Main
             $choiceno++;
         }
 
-      // count up response conditions
+        // count up response conditions
         list($positive, $zero, $negative) = $this->GetRespConditionMarkCounts($source);
 
         if ($positive == 0) {
@@ -1709,13 +1709,13 @@ class IE_qti12_Load extends IE_Main
             $this->AddWarning($string['multipleconds'], $source->load_id);
         }
 
-      // get back the single positive response for the question
+        // get back the single positive response for the question
         $conds = $this->GetRespConditions($source, 1);
 
-      // get first and only response condition
+        // get first and only response condition
         $conds = reset($conds);
 
-      // find correct answer (first and only value (hopefully)
+        // find correct answer (first and only value (hopefully)
         $corid = '';
         if (count($conds->conditions) > 0) {
             $corid = reset($conds->conditions)->value;
@@ -1728,30 +1728,30 @@ class IE_qti12_Load extends IE_Main
             }
         }
 
-      // SW amendment 16/11/2010
+        // SW amendment 16/11/2010
         foreach ($dest->options as & $option) {
             $correctfb = $this->GetFeedbacks($source, 1, $option->base_id, 1);
             $incorrectfb = explode('<br />', $this->GetFeedbackFromArray($source, $correctfb));
 
-          // get list of feedbacks common to both outcomes and add to general feedback array
-          // remove common ones from the list
+            // get list of feedbacks common to both outcomes and add to general feedback array
+            // remove common ones from the list
             RemoveCommonInArray($correctfb, $incorrectfb, $generalfb);
 
             $option->fb_correct = $this->GetFeedbackFromArray($source, $correctfb);
             $option->fb_incorrect = $this->GetFeedbackFromArray($source, $incorrectfb);
         }
-      // SW amendment
+        // SW amendment
 
-      //$dest->feedback = $this->GetFeedbackFromArray($source,$generalfb);
+        //$dest->feedback = $this->GetFeedbackFromArray($source,$generalfb);
 
-      // get list of feedbacks for when correct
+        // get list of feedbacks for when correct
         $correctfb = $this->GetFeedbacks($source, 1, $corid, 1);
 
-      // get list of feedbacks for when incorrect
+        // get list of feedbacks for when incorrect
         $incorrectfb = $this->GetFeedbacks($source, 1, $corid, 0);
 
-      // get list of feedbacks common to both outcomes and add to general feedback array
-      // remove common ones from the list
+        // get list of feedbacks common to both outcomes and add to general feedback array
+        // remove common ones from the list
         RemoveCommonInArray($correctfb, $incorrectfb, $generalfb);
 
         if ($this->GetFeedbackFromArray($source, $correctfb) == $this->GetFeedbackFromArray($source, $incorrectfb)) {
@@ -1762,7 +1762,7 @@ class IE_qti12_Load extends IE_Main
             unset($incorrectfb);
             $incorrectfb = array();
         }
-  // fix so that if no common feedback you dont get an error message
+        // fix so that if no common feedback you dont get an error message
         if (is_null($generalfb)) {
             $generalfb = array();
         }
@@ -1774,7 +1774,7 @@ class IE_qti12_Load extends IE_Main
         $dest->fb_correct = $this->GetFeedbackFromArray($source, $correctfb);
         $dest->fb_incorrect = $this->GetFeedbackFromArray($source, $incorrectfb);
 
-      // load presentation type from comments field if it was specified
+        // load presentation type from comments field if it was specified
         if (array_key_exists('DISPLAY', $source->params)) {
             $dest->presentation = $source->params['DISPLAY'];
         }
@@ -1798,7 +1798,7 @@ class IE_qti12_Load extends IE_Main
             $dest->q_option_order = 'random';
         }
 
-      // should only be 1 response, so get it
+        // should only be 1 response, so get it
         $response = reset($source->responses);
         $this->GenerateQuestionInfo($dest, $source->material, $source->title, $response->material);
 
@@ -1839,7 +1839,7 @@ class IE_qti12_Load extends IE_Main
             $choiceno++;
         }
 
-      // count up response conditions
+        // count up response conditions
         list($positive, $zero, $negative) = $this->GetRespConditionMarkCounts($source);
 
         if ($positive == 0) {
@@ -1848,13 +1848,13 @@ class IE_qti12_Load extends IE_Main
             $this->AddWarning($string['multipleconds'], $source->load_id);
         }
 
-      // get back the single positive response for the question
+        // get back the single positive response for the question
         $conds = $this->GetRespConditions($source, 1);
 
-      // get first and only response condition
+        // get first and only response condition
         $conds = reset($conds);
 
-      // find correct answer (first and only value (hopefully)
+        // find correct answer (first and only value (hopefully)
         $corid = '';
         if (count($conds->conditions) > 0) {
             $corid = reset($conds->conditions)->value;
@@ -1867,31 +1867,31 @@ class IE_qti12_Load extends IE_Main
             }
         }
 
-      // SW amendment 16/11/2010
+        // SW amendment 16/11/2010
         foreach ($dest->options as & $option) {
             $correctfb = $this->GetFeedbacks($source, 1, $option->base_id, 1);
             $incorrectfb = explode('<br />', $this->GetFeedbackFromArray($source, $correctfb));
 
-          // get list of feedbacks common to both outcomes and add to general feedback array
-          // remove common ones from the list
+            // get list of feedbacks common to both outcomes and add to general feedback array
+            // remove common ones from the list
             RemoveCommonInArray($correctfb, $incorrectfb, $generalfb);
 
             $option->fb_correct = $this->GetFeedbackFromArray($source, $correctfb);
             $option->fb_incorrect = $this->GetFeedbackFromArray($source, $incorrectfb);
         }
-      // SW amendment
+        // SW amendment
 
-      //$dest->feedback = $this->GetFeedbackFromArray($source,$generalfb);
+        //$dest->feedback = $this->GetFeedbackFromArray($source,$generalfb);
 
-      // get list of feedbacks for when correct
+        // get list of feedbacks for when correct
         $correctfb = $this->GetFeedbacks($source, 1, $corid, 1);
 
-      // get list of feedbacks for when incorrect
+        // get list of feedbacks for when incorrect
         $incorrectfb = $this->GetFeedbacks($source, 1, $corid, 0);
 
-      // get list of feedbacks common to both outcomes and add to general feedback array
-      // remove common ones from the list
-      //RemoveCommonInArray($correctfb,$incorrectfb,$generalfb);
+        // get list of feedbacks common to both outcomes and add to general feedback array
+        // remove common ones from the list
+        //RemoveCommonInArray($correctfb,$incorrectfb,$generalfb);
 
         $dest->fb_correct = $this->GetFeedbackFromArray($source, $correctfb);
         $dest->fb_incorrect = $this->GetFeedbackFromArray($source, $incorrectfb);
@@ -1911,7 +1911,7 @@ class IE_qti12_Load extends IE_Main
             }
         }
 
-      // load presentation type from comments field if it was specified
+        // load presentation type from comments field if it was specified
         if (array_key_exists('DISPLAY', $source->params)) {
             $dest->presentation = $source->params['DISPLAY'];
         }
@@ -1923,7 +1923,7 @@ class IE_qti12_Load extends IE_Main
     {
         global $string;
 
-      // count up response conditions
+        // count up response conditions
         list($positive, $zero, $negative) = $this->GetRespConditionMarkCounts($source);
         list($marks_incorrect,$marks_partial, $marks_correct) = $this->getMarksFromRespConditions($source);
 
@@ -1940,8 +1940,8 @@ class IE_qti12_Load extends IE_Main
         $response = reset($source->responses);
         $this->GenerateQuestionInfo($dest, $source->material, $source->title, $response->material);
 
-      // load option list into dest
-      // should only be 1
+        // load option list into dest
+        // should only be 1
         $choiceno = 1;
         foreach ($source->responses as $response) {
             if (!$response->ismulti) {
@@ -1965,37 +1965,37 @@ class IE_qti12_Load extends IE_Main
             }
         }
 
-      // work out marking type, and which items are correct
-      // allnegative / selectedpositive / allitemscorrect
-      // single positive answer
+        // work out marking type, and which items are correct
+        // allnegative / selectedpositive / allitemscorrect
+        // single positive answer
         if ($positive == 1) {
             $this->MRQ_GetCorrect_allitemscorrect($dest, $source);
         } else { // multiple positive answers, no negatives, so assume 1 mark per correct option
             $this->MRQ_GetCorrect_selectedpositive($dest, $source);
         }
 
-      //////////////////////////
-      // work out all feedbacks
-      //////////////////////////
+        //////////////////////////
+        // work out all feedbacks
+        //////////////////////////
 
         $generalfb = array();
 
-      // for each answer
+        // for each answer
         foreach ($dest->options as & $option) {
-          // get list of feedbacks for when correct
+            // get list of feedbacks for when correct
             $correctfb = $this->GetFeedbacks($source, 1, $option->base_id, $option->is_correct);
 
-          // get list of feedbacks for when incorrect
+            // get list of feedbacks for when incorrect
             $incorrectfb = $this->GetFeedbacks($source, 1, $option->base_id, !$option->is_correct);
 
-          // get list of feedbacks common to both outcomes and add to general feedback array
-          // remove common ones from the list
+            // get list of feedbacks common to both outcomes and add to general feedback array
+            // remove common ones from the list
             RemoveCommonInArray($correctfb, $incorrectfb, $generalfb);
 
             $option->fb_correct = $this->GetFeedbackFromArray($source, $correctfb);
             $option->fb_incorrect = $this->GetFeedbackFromArray($source, $incorrectfb);
         }
-      // store list of general feedbacks into general feedback
+        // store list of general feedbacks into general feedback
 
         $dest->feedback = $this->GetFeedbackFromArray($source, $generalfb);
 
@@ -2023,12 +2023,12 @@ class IE_qti12_Load extends IE_Main
 
             $value = $cond->conditions[0]->value;
 
-          // skip not values as they arent correct
+            // skip not values as they arent correct
             if ($cond->conditions[0]->not == 1) {
                 continue;
             }
 
-          // find the option and mark it as correct
+            // find the option and mark it as correct
             foreach ($dest->options as & $option) {
                 if ($option->base_id == $value) {
                     $option->is_correct = true;
@@ -2039,7 +2039,7 @@ class IE_qti12_Load extends IE_Main
         $dest->marks = count($dest->options);
     }
 
-  // DONE
+    // DONE
     function MRQ_GetCorrect_selectedpositive(&$dest, &$source)
     {
         global $string;
@@ -2063,7 +2063,7 @@ class IE_qti12_Load extends IE_Main
 
             $value = $cond->conditions[0]->value;
 
-          // find the option and mark it as correct
+            // find the option and mark it as correct
             foreach ($dest->options as & $option) {
                 if ($option->base_id == $value) {
                     $option->is_correct = true;
@@ -2073,16 +2073,16 @@ class IE_qti12_Load extends IE_Main
         }
     }
 
-  // DONE
+    // DONE
     function MRQ_GetCorrect_allitemscorrect(&$dest, &$source)
     {
         $dest->score_method = 'AllItemsCorrect';
         $conds = $this->GetRespConditions($source, 1);
         $conds = $conds[0];
-      // can work out the correct answers from $resps;
+        // can work out the correct answers from $resps;
 
         foreach ($conds->conditions as $cond) {
-          // if condition not is 1, this item should be unchecked to be correct
+            // if condition not is 1, this item should be unchecked to be correct
             if ($cond->not == 0) { // item should be checked to be correct
                 $value = $cond->value;
 
@@ -2096,10 +2096,10 @@ class IE_qti12_Load extends IE_Main
         }
     }
 
-  // DONE
+    // DONE
     function LoadRank(&$source)
     {
-      // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in Rogo so goes the way of the dinosar
         $dest = new ST_Question_Rank();
 
         $dest->load_id = $source->load_id;
@@ -2118,7 +2118,7 @@ class IE_qti12_Load extends IE_Main
         $dest->marks_incorrect = $marks_incorrect;
         $dest->marks_partial = $marks_partial;
 
-      // build option list
+        // build option list
         $optionmapping = array();
 
         $oid = 1;
@@ -2136,7 +2136,7 @@ class IE_qti12_Load extends IE_Main
             $rankopt->stem = $response->material->GetText();
 
             $value = '';
-          // work out correct answers
+            // work out correct answers
             foreach ($source->respconditions as $condition) {
                 if (count($condition->conditions) < 1) {
                     continue;
@@ -2157,7 +2157,7 @@ class IE_qti12_Load extends IE_Main
             $dest->options[$optid++] = $rankopt;
         }
 
-      // dig out feedbacks
+        // dig out feedbacks
         foreach ($source->respconditions as $condition) {
             if (count($condition->conditions) > 1) {
                 if ($condition->conditions[0]->not) {
@@ -2168,7 +2168,7 @@ class IE_qti12_Load extends IE_Main
             }
         }
 
-      // decide if 1 per correct or 1 for all
+        // decide if 1 per correct or 1 for all
         list($positive, $zero, $negative) = $this->GetRespConditionMarkCounts($source);
 
         if ($positive == 1) {
@@ -2180,19 +2180,19 @@ class IE_qti12_Load extends IE_Main
         return $dest;
     }
 
-  // DONE
+    // DONE
     function LoadTextbox(&$source)
     {
         global $string;
 
-      // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in Rogo so goes the way of the dinosar
         $dest = new ST_Question_Textbox();
 
         $dest->load_id = $source->load_id;
         $dest->status = $source->qmd_status;
         $dest->type = 'textbox';
 
-      // there should only be a single response fib available
+        // there should only be a single response fib available
         $response = $this->GetResponses($source, '', 'fib');
         $response = reset($response);
 
@@ -2201,7 +2201,7 @@ class IE_qti12_Load extends IE_Main
 
         $this->GenerateQuestionInfo($dest, $source->material, $source->title, $response->material);
 
-      // get any positive marks that are terms to match
+        // get any positive marks that are terms to match
         $conditions = $this->GetRespConditions($source, 1);
 
         if (count($conditions) > 0) {
@@ -2220,11 +2220,11 @@ class IE_qti12_Load extends IE_Main
         $dest->marks_correct = $marks_correct;
         $dest->marks_incorrect = $marks_incorrect;
 
-      // sort out feedback
+        // sort out feedback
         $fb = $this->GetAllFeedbacks($source);
         $dest->feedback = $this->GetFeedbackFromArray($source, $fb);
 
-      // load taxinomy and keywords
+        // load taxinomy and keywords
         if (array_key_exists('EDITOR', $source->params)) {
             $dest->editor = $source->params['EDITOR'];
         }
@@ -2234,7 +2234,7 @@ class IE_qti12_Load extends IE_Main
 
     function LoadUnknown(&$source)
     {
-      // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in Rogo so goes the way of the dinosar
         $dest = new ST_Question();
 
         $dest->load_id = $source->load_id;
@@ -2248,7 +2248,7 @@ class IE_qti12_Load extends IE_Main
 
     function LoadError(&$source)
     {
-      // easy to do, no feedback in Rogo so goes the way of the dinosar
+        // easy to do, no feedback in Rogo so goes the way of the dinosar
         $dest = new ST_Question();
 
         $dest->load_id = $source->load_id;
@@ -2260,11 +2260,11 @@ class IE_qti12_Load extends IE_Main
         return $dest;
     }
 
-  ///////////////////////////////////////////////
-  // GENERAL FUNCTIONS SPECIFIC TO QTI LOADING //
-  ///////////////////////////////////////////////
+    ///////////////////////////////////////////////
+    // GENERAL FUNCTIONS SPECIFIC TO QTI LOADING //
+    ///////////////////////////////////////////////
 
-  // gets a list of the possible responses in the question and returns it as an array
+    // gets a list of the possible responses in the question and returns it as an array
     function GetResponseLabelList(&$question, $clean = true, &$lablk = array(), &$lablkd = array())
     {
         $resplist = array();
@@ -2297,7 +2297,7 @@ class IE_qti12_Load extends IE_Main
         return $resplist;
     }
 
-  // gets a list of the possible responses in the question and returns it as an array based on response id
+    // gets a list of the possible responses in the question and returns it as an array based on response id
     function GetResponseLabelListByID(&$question, $rid, $clean = true)
     {
         $resplist = array();
@@ -2321,8 +2321,8 @@ class IE_qti12_Load extends IE_Main
         return $resplist;
     }
 
-  // get counts of each type of response ident
-  // return array($positive,$zero,$negative)
+    // get counts of each type of response ident
+    // return array($positive,$zero,$negative)
     function GetRespConditionMarkCounts(&$data)
     {
         $positive = 0;
@@ -2342,11 +2342,11 @@ class IE_qti12_Load extends IE_Main
         return array($positive, $zero, $negative);
     }
 
-  // 2nd parameter is type of round to apply.  1 for correct marks, 2 for parital marks, 3 for incorrect marks
+    // 2nd parameter is type of round to apply.  1 for correct marks, 2 for parital marks, 3 for incorrect marks
     function RoundFunction($number, $type = 1)
     {
         if ($type == 1) {
-          //correct marks
+            //correct marks
             if ($number < 1) {
                 $number = 1;
             } elseif ($number > 20) {
@@ -2355,7 +2355,7 @@ class IE_qti12_Load extends IE_Main
                 $number = round($number);
             }
         } elseif ($type == 2) {
-          //partial marks
+            //partial marks
             if ($number < 0) {
                 $number = 0;
             } elseif ($number > 0 and $number < 1) {
@@ -2366,7 +2366,7 @@ class IE_qti12_Load extends IE_Main
                 $number = round($number);
             }
         } else {
-          //incorrect marks
+            //incorrect marks
             if ($number > 0) {
                 $number = 0;
             } elseif ($number > -0.125 and $number < 0) {
@@ -2385,10 +2385,10 @@ class IE_qti12_Load extends IE_Main
         return $number;
     }
 
-  // returns the Max and Min mark for a question
-  //
-  //  as an array (min,max)
-  //
+    // returns the Max and Min mark for a question
+    //
+    //  as an array (min,max)
+    //
     function getMarksFromRespConditions(&$data)
     {
         $max = 0;
@@ -2409,14 +2409,14 @@ class IE_qti12_Load extends IE_Main
             }
         }
 
-      // Fix for webCT output where it gives output as a percentage and as this is upto 100 and and doesnt include the
-      // question mark and rogo doesnt support above 20 fix it to 1 to allow user editing
+        // Fix for webCT output where it gives output as a percentage and as this is upto 100 and and doesnt include the
+        // question mark and rogo doesnt support above 20 fix it to 1 to allow user editing
 
-      //$max=round($max);
-      //$min=round($min); // min can be fractional marks so dont round (especially when negative)
-      //$part=round($part); // partial marks can be fractional especially when max marks is 1!
+        //$max=round($max);
+        //$min=round($min); // min can be fractional marks so dont round (especially when negative)
+        //$part=round($part); // partial marks can be fractional especially when max marks is 1!
 
-      //webct fix as it gives percentages!! just fix so they display
+        //webct fix as it gives percentages!! just fix so they display
         if ($max > 20) {
             $max = 1;
         }
@@ -2434,31 +2434,31 @@ class IE_qti12_Load extends IE_Main
         return array($min,$part,$max);
     }
 
-  // return array of conditions based on mark
-  // mark = 0 returns all with mark as 0
-  // mark = 1 returns all with positive marks
-  // mark = -1 return all with negatvie marks
+    // return array of conditions based on mark
+    // mark = 0 returns all with mark as 0
+    // mark = 1 returns all with positive marks
+    // mark = -1 return all with negatvie marks
     function GetRespConditions(&$data, $mark = '', $respident = '')
     {
-      //echo "<strong>Processing respconditions for $mark and $respident</strong><br>";
+        //echo "<strong>Processing respconditions for $mark and $respident</strong><br>";
         $resps = array();
         foreach ($data->respconditions as & $condition) {
-          //print_p($condition);
+            //print_p($condition);
             if ($mark == 0 && $condition->mark != 0) {
                 //echo "Skipping Respcondition - MARK NOT 0 : " . $condition->__toString() . "<br>";
                 continue;
             }
 
             if ($mark == 1 && $condition->mark < 1) {
-              //echo "Skipping Respcondition - MARK < 1 : " . $condition->__toString() . "<br>";
+                //echo "Skipping Respcondition - MARK < 1 : " . $condition->__toString() . "<br>";
                 continue;
             }
 
             if ($mark == - 1 && $condition->mark > -1) {
-              //echo "Skipping Respcondition - MARK > -1 : " . $condition->__toString() . "<br>";
+                //echo "Skipping Respcondition - MARK > -1 : " . $condition->__toString() . "<br>";
                 continue;
             }
-          // check respident for - to get responses only with no sub ids
+            // check respident for - to get responses only with no sub ids
             if ($respident == '-') {
                 $valid = true;
                 foreach ($condition->conditions as $cond) {
@@ -2488,9 +2488,9 @@ class IE_qti12_Load extends IE_Main
         return $resps;
     }
 
-  // return array of responses based on type
-  // type returns conditions with specific type (lid / str / num / xy)
-  // render returns conditions with sepecific render type (choice / hotspot / slider / fib )
+    // return array of responses based on type
+    // type returns conditions with specific type (lid / str / num / xy)
+    // render returns conditions with sepecific render type (choice / hotspot / slider / fib )
     function GetResponses(&$data, $type = '', $render = '')
     {
         $resps = array();
@@ -2507,13 +2507,13 @@ class IE_qti12_Load extends IE_Main
         return $resps;
     }
 
-  // return array of feedbacks depending on conditions
-  // respident = id of the input
-  // value = value to calculate for
-  // match - if 0, then will only match items with <not>
+    // return array of feedbacks depending on conditions
+    // respident = id of the input
+    // value = value to calculate for
+    // match - if 0, then will only match items with <not>
     function GetFeedbacks(&$source, $respident, $value = '', $match = 1)
     {
-      //echo "Getting feedback list for $respident - $value - $match<br>";
+        //echo "Getting feedback list for $respident - $value - $match<br>";
 
         $feedbacks = array();
 
@@ -2522,8 +2522,8 @@ class IE_qti12_Load extends IE_Main
                 continue;
             }
 
-          //print_p($respcondition);
-          // no value provided so just output feedback
+            //print_p($respcondition);
+            // no value provided so just output feedback
             if ($value == '') {
                 if ($respcondition->feedback) {
                     $feedbacks[$respcondition->feedback] = $respcondition->feedback;
@@ -2533,9 +2533,9 @@ class IE_qti12_Load extends IE_Main
 
             $is_match = true;
 
-          // if its an empty condition, output the feedback
+            // if its an empty condition, output the feedback
             if (count($respcondition->conditions) == 0) {
-              //echo "Count is 0<br>";
+                //echo "Count is 0<br>";
                 if ($respcondition->feedback) {
                     $feedbacks[$respcondition->feedback] = $respcondition->feedback;
                 }
@@ -2551,7 +2551,7 @@ class IE_qti12_Load extends IE_Main
                 }
             }
 
-          // do we have a matching condition?
+            // do we have a matching condition?
             if ($is_match) {
                 if ($respcondition->feedback) {
                     $feedbacks[$respcondition->feedback] = $respcondition->feedback;
@@ -2566,7 +2566,7 @@ class IE_qti12_Load extends IE_Main
         return $feedbacks;
     }
 
-  // return array of all used feedbacks
+    // return array of all used feedbacks
     function GetAllFeedbacks(&$source)
     {
         $feedbacks = array();
@@ -2578,7 +2578,7 @@ class IE_qti12_Load extends IE_Main
         return $feedbacks;
     }
 
-  // returns html feedback based on an array of feedback ids passed in
+    // returns html feedback based on an array of feedback ids passed in
     function GetFeedbackFromArray(&$source, &$feedbacks)
     {
         $output = array();

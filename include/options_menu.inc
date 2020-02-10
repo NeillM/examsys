@@ -16,14 +16,14 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Sidebar menu of the Rogō homepage
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Sidebar menu of the Rogō homepage
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 ?><div id="left-sidebar" class="sidebar" style="overflow:hidden">
 <?php
@@ -42,7 +42,7 @@ if (!$userObject->has_role('Standards Setter')) {
   <div class="menuitem cascade showmenu" data-popupid="0" data-popuptype="general" data-popupname="search"><a href="#" id="search"><img class="sidebar_icon" src="<?php echo $configObject->get('cfg_root_path') ?>/artwork/xmag.png" alt="Search" /><?php echo $string['search'] ?></a></div>
 </div>
     <?php
-  // -- Display top 10 recent papers ----------------------------------
+    // -- Display top 10 recent papers ----------------------------------
     $recent_papers = Paper_utils::get_recent($userObject->get_user_ID(), $mysqli);
     if (count($recent_papers) > 0) {
         echo '<div style="font-size:180%; padding-top:40px" id="papertasks">' . $string['recent'] . '</div>';

@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once 'add_edit.inc';
 
@@ -47,7 +47,7 @@ function check_fullSave($q_id, $mysqli)
 
 function redirect($userObj, $q_id, $configObj, $db)
 {
-  // Release the users lock.
+    // Release the users lock.
     if ($_POST['checkout_author'] == $userObj->get_user_ID()) {
         $result = $db->prepare('UPDATE questions SET checkout_time = NULL, checkout_authorID = NULL WHERE q_id = ? AND checkout_authorID = ?');
         $result->bind_param('ii', $q_id, $userObj->get_user_ID());
@@ -59,7 +59,7 @@ function redirect($userObj, $q_id, $configObj, $db)
     $paperID = param::optional('paperID', null, param::INT, param::FETCH_POST);
     $scrOfY = param::optional('scrOfY', null, param::FLOAT, param::FETCH_POST);
     if ($calling == 'paper' && !is_null($paperID) && $paperID != '-1') {
-      // Redirect back to paper the question was edited from
+        // Redirect back to paper the question was edited from
         $param_array = array(
         'paperID' => $paperID
         );
@@ -69,7 +69,7 @@ function redirect($userObj, $q_id, $configObj, $db)
         $url = $configObj->get('cfg_root_path') . '/paper/details.php?' . http_build_query($param_array);
         header('Location: ' . $url, 303);
     } elseif (isset($_SESSION['nav_page'])) {
-      // Replace scrOfY with POST param if set, otherwise remove cleanly
+        // Replace scrOfY with POST param if set, otherwise remove cleanly
         parse_str($_SESSION['nav_query'], $param_array);
         if (!is_null($scrOfY)) {
             $param_array['scrOfY'] = $scrOfY;
@@ -88,7 +88,7 @@ function redirect($userObj, $q_id, $configObj, $db)
 
 function save_external_responses($dblink, $question, $ids, $actions, $responses, $paper_id = -1)
 {
-  // Record responses to external examiner comments.
+    // Record responses to external examiner comments.
     $comments = $question->get_comments($paper_id);
     $changed = false;
 
@@ -134,7 +134,7 @@ function check_lock_status($checkout_authorID, $checkout_authorName, $checkout_t
 {
     global $string;
 
-  // Check for lockout.
+    // Check for lockout.
     $current_time = time();
     if ($disabled == '' and $userObject->get_user_ID() != $checkout_authorID) {
         if ($checkout_time != '' and $current_time - $checkout_time < 3600) {
@@ -146,7 +146,7 @@ function check_lock_status($checkout_authorID, $checkout_authorName, $checkout_t
             $checkout_authorID = check_out_paper($dblink, $questionID, $userObject->get_user_ID());
         }
     } elseif ($disabled == '' and $userObject->get_user_ID() == $checkout_authorID) {
-      // Set the lock to the current time/author.
+        // Set the lock to the current time/author.
         $editLock = $dblink->prepare('UPDATE questions SET checkout_time = NOW(), checkout_authorID = ? WHERE q_id = ?');
         $editLock->bind_param('ii', $userObject->get_user_ID(), $questionID);
         $editLock->execute();
@@ -290,7 +290,7 @@ function insert_into_papers($p_id, $q_id, $db)
         $screen++;
     }
 
-  // Force random mark to recalculate.
+    // Force random mark to recalculate.
     $assessment = new assessment($db, $configObject);
     $update_params = array(
     'random_mark' => array('d', null),

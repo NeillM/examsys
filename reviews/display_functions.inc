@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 $configObject          = Config::get_instance();
 
@@ -57,7 +57,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     $questiondata = \questiondata::get_datastore($question['q_type']);
     $render = new render($configObj);
 
-  // Determine if negative marking is used.
+    // Determine if negative marking is used.
     $neg_marking = false;
     if (isset($question['object']) and method_exists($question['object'], 'is_negative_marked')) {
         $neg_marking = $question['object']->is_negative_marked();
@@ -69,7 +69,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         }
     }
 
-  // Process the order
+    // Process the order
     $question['option_order'] = array();
     if (isset($question['q_option_order']) and ($question['q_option_order'] == 'random' or $question['q_option_order'] == 'alphabetic')) {
         if (!isset($user_order[$current_screen][$q_id]) or $user_order[$current_screen][$q_id] == '') {
@@ -88,24 +88,24 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                     $question['option_order'][] = $key;
                 }
             } else {
-              // Make up the order array in the existing order
+                // Make up the order array in the existing order
                 for ($i = 0; $i < $option_no; $i++) {
                     $question['option_order'][$i] = $i;
                 }
             }
         } else {
-          // Set the order array to what is stored in the users log record
+            // Set the order array to what is stored in the users log record
             $question['option_order'] = explode(',', $user_order[$current_screen][$q_id]);
         }
 
-      // Re-arrange the options array
+        // Re-arrange the options array
         $new_options = array();
         for ($i = 0; $i < $option_no; $i++) {
             $new_options[$i] = $question['options'][$question['option_order'][$i]];
         }
         $question['options'] = $new_options;
     } else {
-      // Make up the order array in the existing order
+        // Make up the order array in the existing order
         for ($i = 0; $i < $option_no; $i++) {
             $question['option_order'][$i] = $i;
         }
@@ -169,7 +169,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         }
     }
     if ($question['q_type'] == 'info') {
-      // Special processing of Information Blocks.
+        // Special processing of Information Blocks.
         if ($li_set == 0) {
             echo '<tr><td colspan="2" style="padding-left:10px; padding-right:10px">';
         }
@@ -200,7 +200,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         $qst_order[$value] = $key;
     }
 
-  // Pre-question processing
+    // Pre-question processing
     switch ($question['q_type']) {
         case 'dichotomous':
             echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
@@ -381,7 +381,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     }
 
     $textboxes_seen = array();
-  // Processing for each stem.
+    // Processing for each stem.
     foreach ($question['options'] as $display_option) {
         $part_id++;
         switch ($question['q_type']) {
@@ -428,7 +428,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 } elseif ($question['options'][$part_id - 1]['correct'] == 'f') {
                     echo '<input type="radio" name="q' . $question_no . '_' . $part_id . '" value="t" /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="f" checked /></td>';
                 } else {
-                  // No correct answer set
+                    // No correct answer set
                     echo '<input type="radio" name="q' . $question_no . '_' . $part_id . '" value="t" /></td><td align="center"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="f" /></td>';
                 }
                 if ($abstain == true) {
@@ -453,7 +453,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 }
                 break;
             case 'enhancedcalc':
-              // Load old question data from the session (NB reviewer screens).
+                // Load old question data from the session (NB reviewer screens).
                 $question['object']->load_all_user_answers($_SESSION['allans']);
 
                 $extra = array('num_on_screen' => $question_no, 'reviewers' => true);
@@ -697,7 +697,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                     }
                     echo '<p class="stem">' . $blank_details[0] . $screen_output_all . "</p>\n";
                 } else {
-              // Dropdown lists.
+                    // Dropdown lists.
                     $no_blanks = count($blank_details);
                     echo "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
                     echo '<tr><td>';
@@ -780,7 +780,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 }
                 break;
             case 'hotspot':
-              // Adjust the height of the hotspot canvas based on the number of options available.
+                // Adjust the height of the hotspot canvas based on the number of options available.
                 $hotspot_no = substr_count($question['options'][0]['correct'], \hotspot_helper::LAYER_SEPARATOR) + 1;
                 $tmp_height = $question['q_media_height'] + 30;
                 if ($tmp_height < (($hotspot_no * 36) + 25)) {
@@ -975,7 +975,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     } elseif ($question['q_type'] == 'enhancedcalc') {
         $settings = json_decode($question['settings'], true);
         $answer_equation = $question['options'][0]['correct'];
-      // Put the calculated answer in the session for use in linked calculation questions (N.B only for reviewers screen!!)
+        // Put the calculated answer in the session for use in linked calculation questions (N.B only for reviewers screen!!)
         $_SESSION['allans'][$current_screen][$question['q_id']] = $question['object']->useranswer;
     
         echo '<tr><td></td><td>';
@@ -1169,7 +1169,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         echo '</table>';
     }
 
-  // Display possible marks for question (if not Survey)
+    // Display possible marks for question (if not Survey)
     if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'likert' and $question['q_type'] != 'info' and $question['q_type'] != 'calculation') {
         echo '</blockquote>';
     }

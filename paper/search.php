@@ -16,19 +16,19 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Displays the results of a paper search.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Displays the results of a paper search.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 
 if (isset($_POST['formative']) and isset($_POST['progress']) and isset($_POST['summative']) and isset($_POST['survey']) and isset($_POST['osce']) and isset($_POST['offline']) and isset($_POST['peerreview'])) {
-  // All types are selected so don't build into query.
+    // All types are selected so don't build into query.
     $type = '';
     $type_problem = false;
 } else {
@@ -147,7 +147,7 @@ if (!isset($_POST['submit'])) {
 
 if (isset($_POST['submit'])) {
     if (!$userObject->has_role('SysAdmin') and empty($staff_modules)) {
-      // The user cannot see any papers if they are not on any teams and they are not a SysAdmin.
+        // The user cannot see any papers if they are not on any teams and they are not a SysAdmin.
         $title = $string['notonmodules'];
         $message = $string['notonmodulesmessage'];
         $icon = '/artwork/exclamation_red_bg.png';

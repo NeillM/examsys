@@ -16,19 +16,19 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* This script is designed to compare marks between the Class Totals report and students' actual exam scripts (finish.php).
-* It works by:
-*   1. Get summative exam papers in the require date range.
-*   2. For each paper call class_totals.php and parse for student IDs and marks.
-*   3. For each student call finish.php and compare the mark.
-*   4. Echo errors for any which do not match.
-*
-* @author Simon Wilkinson and Joseph Baxter
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * This script is designed to compare marks between the Class Totals report and students' actual exam scripts (finish.php).
+ * It works by:
+ *   1. Get summative exam papers in the require date range.
+ *   2. For each paper call class_totals.php and parse for student IDs and marks.
+ *   3. For each student call finish.php and compare the mark.
+ *   4. Echo errors for any which do not match.
+ *
+ * @author Simon Wilkinson and Joseph Baxter
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require dirname(__DIR__) . '/include/sysadmin_auth.inc';
 include_once dirname(__DIR__) . '/include/load_config.php';

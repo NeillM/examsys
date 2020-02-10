@@ -15,12 +15,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson, Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson, Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2013 The University of Nottingham
+ * @package
+ */
 
 /**
  * Get quantitative data for survey reports
@@ -65,7 +65,7 @@ function get_quantitative_log_data($paper_id, $course, $start_date, $end_date, $
         }
     }
     $hits = 0;
-  // Capture the log data first.
+    // Capture the log data first.
     $sql = <<< SQL
 SELECT DISTINCT lm.userID, l.q_id, l.user_answer, q.q_type, l.screen, q.score_method
 FROM log3 l INNER JOIN log_metadata lm ON l.metadataID = lm.id

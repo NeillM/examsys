@@ -60,14 +60,14 @@ class EnhancedCalc_Rrserve
         $this->reset_error();
     
         if (is_null(self::$cnx)) {
-          // Connection failed!
+            // Connection failed!
             $this->set_error('Can Not Connect');
             return false;
         }
     
         if (self::$cnx === false) {
             try {
-              // if the box isnt on this timeout is ignored and is likely to be different
+                // if the box isnt on this timeout is ignored and is likely to be different
                 if (!isset($this->config['timeout'])) {
                     $timeoutarray = array('seconds' => 5, 'milliseconds' => 1);
                 } else {
@@ -83,7 +83,7 @@ class EnhancedCalc_Rrserve
             $this->setup_R();
             return true;
         } else {
-          // We are connected
+            // We are connected
             return true;
         }
     }
@@ -153,7 +153,7 @@ class EnhancedCalc_Rrserve
         try {
             $res = $this->eval_string("abs(excel_round((abs($useranswer - $correctanswer)/$correctanswer * 100),3))");
         } catch (Exception $e) {
-          // There is an error it can't be correct
+            // There is an error it can't be correct
             return 'ERROR';
         }
 
@@ -169,9 +169,9 @@ class EnhancedCalc_Rrserve
         $result = $this->eval_string_multi($cmd);
         $res['tolerance'] = $result[0];
     
-      //
-      // Make sure the min and max are correct tolerances on negative numbers causes problems
-      //
+        //
+        // Make sure the min and max are correct tolerances on negative numbers causes problems
+        //
         if ($result[1] > $result[2]) {
             $res['tolerance_ans'] = $result[1];
             $res['tolerance_ansneg'] = $result[2];
@@ -207,13 +207,13 @@ class EnhancedCalc_Rrserve
         try {
             $status = $this->eval_string("$useranswer <= $max & $useranswer >= $min");
         } catch (Exception $e) {
-          // There is an error it can't be correct
+            // There is an error it can't be correct
             return false;
         }
     
     
         if ($status === true) {
-          // Correct
+            // Correct
             return true;
         } else {
             return false;
@@ -229,7 +229,7 @@ class EnhancedCalc_Rrserve
     
         $status = $this->eval_string("signif($useranswer," . $sf . ") ==  $useranswer");
         if ($status === true) {
-          // Correct
+            // Correct
             return true;
         } else {
             return false;

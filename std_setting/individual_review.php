@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../include/staff_auth.inc';
 require_once '../include/std_set_functions.inc';
@@ -94,7 +94,7 @@ function check_ebel_distinction_type($reviewID, $db)
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <title><?php echo page::title('Rog&#333;: ' . $string['standardssetting']); ?></title>
   <?php
-  // Get any questions to exclude.
+    // Get any questions to exclude.
     $exclusions = new Exclusion($paperID, $mysqli);
     $exclusions->load();
   
@@ -250,7 +250,7 @@ while ($result->fetch()) {
         echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
     }
     if ($old_q_id != $q_id) {          // New Question
-      // Print the options of the previous question
+        // Print the options of the previous question
         $li_set = 0;
         if ($old_leadin != '') {
             if ($li_set == 1) {
@@ -360,7 +360,7 @@ if ($_GET['method'] == 'ebel') {
 
     if (empty($ebel)) {
         $templateID = '';
-      // If empty look to see if there is a default grid to load
+        // If empty look to see if there is a default grid to load
         $result = $mysqli->prepare('SELECT ebel_grid_template FROM modules WHERE id = ?');
         $result->bind_param('i', $_GET['module']);
         $result->execute();
@@ -377,7 +377,7 @@ if ($_GET['method'] == 'ebel') {
             $result->fetch();
             $result->close();
 
-          // Foreach
+            // Foreach
             foreach ($ebel as $key => $value) {
                 $ebel[$key] = round($value / 100, 2);
             }

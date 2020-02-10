@@ -574,7 +574,7 @@ class EnhancedCalc extends Question implements questionInterface
 
         foreach ($postdata as $key => $value) {
             if ($key == 'uans') {
-              // Clean the answer value.
+                // Clean the answer value.
                 $data[$key] = param::clean(
                     $value,
                     param::REGEXP,
@@ -584,7 +584,7 @@ class EnhancedCalc extends Question implements questionInterface
                     )
                 );
             } elseif ($key == 'uansunit') {
-              // Clean the unit value.
+                // Clean the unit value.
                 $data[$key] = param::clean(
                     $value,
                     param::REGEXP,

@@ -16,13 +16,13 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 $menuNo = 0;
 
@@ -30,7 +30,7 @@ function makeMenu($options)
 {
 
     global $menuNo, $configObject;
-// Work out the width of the menu
+    // Work out the width of the menu
     $longest_string = 0;
     foreach ($options as $title => $url) {
         if (strlen($title) > $longest_string) {

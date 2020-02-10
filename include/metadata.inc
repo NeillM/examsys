@@ -15,12 +15,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 function render_metadata($db, $question, $bloom_on, $module, $disabled, &$string, $userObj)
 {
@@ -106,7 +106,7 @@ META;
 
     // Team keyword lists by module
     if (count($module) == 0) {
-      // No teams passed in, use all teams the current user is on.
+        // No teams passed in, use all teams the current user is on.
         $module = $staff_modules;
     }
 
@@ -241,7 +241,7 @@ HEADING;
             }
         }
 
-      // Selected if: in existing teams for the question OR we have a module ID passed and the user is on that team (or is sysadmin)
+        // Selected if: in existing teams for the question OR we have a module ID passed and the user is on that team (or is sysadmin)
         $checked = $on = '';
         if (in_array($team_id, $current_teams) or in_array($team_id, $module)) {
             $checked = ' checked="checked"';
@@ -327,7 +327,7 @@ function save_keywords($question, $userID, $edit, $db, &$string)
     }
 
     if ($edit == true) {
-      // Next go through the list of old keywords looking for ones to delete.
+        // Next go through the list of old keywords looking for ones to delete.
         foreach ($existing_list as $existing) {
             if (!in_array($existing, $updated_list) and $existing != '') {
                 $query = $db->prepare('DELETE FROM keywords_question WHERE q_id=? AND keywordID=?');

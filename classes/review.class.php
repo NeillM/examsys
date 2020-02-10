@@ -15,12 +15,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 class Review
 {
 
@@ -30,14 +30,14 @@ class Review
     private $review_type;
     private $metadataID;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
@@ -90,26 +90,26 @@ class Review
         $this->metadataID = $reviewID;
     }
 
-  /**
-   * Get and save the comments made for a page of the review screen.
-   *
-   * @param int $screen_no The screen number that should be saved.
-   */
+    /**
+     * Get and save the comments made for a page of the review screen.
+     *
+     * @param int $screen_no The screen number that should be saved.
+     */
     public function record_comments($screen_no)
     {
         $question_no = 0;
         $old_q_id = null;
         $submit_time = date('YmdHis', time());
     
-      // Get page post variables.
+        // Get page post variables.
         $previous_duration = param::required('previous_duration', param::INT, param::FETCH_POST);
         $pagestart = param::required('page_start', param::ALPHANUM, param::FETCH_POST);
 
-      // Get the questions, along with details of any stored comments.
-      // This query needs to work in the following circumstances:
-      // * No users have submitted comments to any of the questions on the paper.
-      // * The user has submitted some comments for a question on the screen.
-      // * Another user has submitted comments for the paper.
+        // Get the questions, along with details of any stored comments.
+        // This query needs to work in the following circumstances:
+        // * No users have submitted comments to any of the questions on the paper.
+        // * The user has submitted some comments for a question on the screen.
+        // * Another user has submitted comments for the paper.
         $sql = <<<SQL
 SELECT q.q_id, q.q_type, rc.id AS r_id
 FROM questions q
@@ -125,14 +125,14 @@ SQL;
         $stmt->bind_result($q_id, $q_type, $commentid);
         $stmt->store_result();
     
-      // Calculate the duration, while it is stored against each comment, it seems to be calculated on a per page basis.
+        // Calculate the duration, while it is stored against each comment, it seems to be calculated on a per page basis.
         $tmp_duration = $this->time_to_seconds($submit_time) - $this->time_to_seconds($pagestart);
         if ($tmp_duration < 0) {
             $tmp_duration += 86400;
         }
         $tmp_duration += $previous_duration;
     
-      // Prepare the queries that will be used in the loop, we might need to insert or update so prepare both.
+        // Prepare the queries that will be used in the loop, we might need to insert or update so prepare both.
         $insertsql = <<<SQL
 INSERT INTO review_comments
 VALUES (NULL, ?, ?, ?, 'Not actioned', '', ?, ?, ?)
@@ -149,7 +149,7 @@ SQL;
 
         while ($stmt->fetch()) {
             if ($old_q_id != $q_id) {
-              // Record external examiner comments.
+                // Record external examiner comments.
                 if ($q_type != 'info') {
                     $question_no++;
                     // Get the post variables for the question.

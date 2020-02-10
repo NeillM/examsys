@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Anthony Brown, Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Anthony Brown, Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -35,7 +35,7 @@ if (!module_utils::get_moduleid_from_id($modID, $mysqli)) {
 }
 
 if (isset($_POST['Save'])) {
-  //save session
+    //save session
     $occurrence = $_POST['session_year'] . '-' . $_POST['session_month'] . '-' . $_POST['session_day'] . ' ' . $_POST['session_time'];
 
     $stmt = $mysqli->prepare('INSERT INTO sessions VALUES (NULL, ?, ?, ?, ?, ?, ?)');
@@ -61,7 +61,7 @@ if (isset($_POST['Save'])) {
         }
     }
 
-  //redirect to list sessions
+    //redirect to list sessions
     header('Location: ./sessions_list.php?module=' . $_GET['module'] . '&folder=' . $_GET['folder']);
     exit();
 } elseif (isset($_POST['cancel']) and $_POST['cancel'] == 'Cancel') {

@@ -19,33 +19,33 @@
  */
 class composer_utils
 {
-  /** Composer should install dependancies respecting the lock file. */
+    /** Composer should install dependancies respecting the lock file. */
     const INSTALL = 1;
 
-  /** Composer should get the laest versions of the depedencies and update the lock file. */
+    /** Composer should get the laest versions of the depedencies and update the lock file. */
     const UPDATE = 2;
 
-  /** Composer should install dependancies respecting the lock file, skipping dev packages. */
+    /** Composer should install dependancies respecting the lock file, skipping dev packages. */
     const INSTALL_NODEV = 3;
 
-  /** Composer should get the laest versions of the depedencies and update the lock file, skipping dev packages. */
+    /** Composer should get the laest versions of the depedencies and update the lock file, skipping dev packages. */
     const UPDATE_NODEV = 4;
   
-  /**
-   * Language pack component.
-   */
+    /**
+     * Language pack component.
+     */
     const langcomponent = 'classes/composerutils';
   
-  /**
-   * Ensures that composer is installed, uptodate and has installed all the projects dependancies.
-   *
-   * @return void
-   */
+    /**
+     * Ensures that composer is installed, uptodate and has installed all the projects dependancies.
+     *
+     * @return void
+     */
     public static function setup($method = self::INSTALL)
     {
-      // We are going to chage the working directory and want to reset it later.
+        // We are going to chage the working directory and want to reset it later.
         $workingdir = getcwd();
-      // Change to the root Rogo directory.
+        // Change to the root Rogo directory.
         chdir(__DIR__ . '/..');
         self::install_update();
         if ($method === self::UPDATE or $method === self::UPDATE_NODEV) {
@@ -56,22 +56,22 @@ class composer_utils
         chdir($workingdir);
     }
 
-  /**
-   * Ensures composer is installed and upto date.
-   *
-   * @return void
-   */
+    /**
+     * Ensures composer is installed and upto date.
+     *
+     * @return void
+     */
     protected static function install_update()
     {
         $langpack = new langpack();
         if (!file_exists(__DIR__ . '/../composer.phar')) {
-          // Composer needs to be installed.
+            // Composer needs to be installed.
             passthru('curl http://getcomposer.org/installer | php', $statuscode);
             if ($statuscode != 0) {
                 throw new Exception($langpack->get_string(self::langcomponent, 'cannotinstall'));
             }
         } else {
-          // Composer needs to be updated.
+            // Composer needs to be updated.
             passthru('php composer.phar self-update', $statuscode);
             if ($statuscode != 0) {
                 throw new Exception($langpack->get_string(self::langcomponent, 'cannotupdate'));
@@ -79,11 +79,11 @@ class composer_utils
         }
     }
 
-  /**
-   * Downloads and installs all the files required by the composer.lock file for the project.
-   * @param integer $method install method
-   * @return void
-   */
+    /**
+     * Downloads and installs all the files required by the composer.lock file for the project.
+     * @param integer $method install method
+     * @return void
+     */
     protected static function fetch_dependancies($method)
     {
         $langpack = new langpack();
@@ -97,11 +97,11 @@ class composer_utils
         }
     }
 
-  /**
-   * Downloads and installs all the files required by the composer.json file for the project.
-   * @param integer $method update method
-   * @return void
-   */
+    /**
+     * Downloads and installs all the files required by the composer.json file for the project.
+     * @param integer $method update method
+     * @return void
+     */
     protected static function update_dependancies($method)
     {
         $langpack = new langpack();

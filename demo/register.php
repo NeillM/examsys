@@ -34,7 +34,7 @@ $notice = UserNotices::get_instance();
 $mysqli = DBUtils::get_mysqli_link($configObject->get('cfg_db_host'), $configObject->get('cfg_db_sysadmin_user'), $configObject->get('cfg_db_sysadmin_passwd'), $configObject->get('cfg_db_database'), $configObject->get('cfg_db_charset'), $notice, $configObject->get('dbclass'));
 $configObject->set_db_object($mysqli);
 if ($configObject->get_setting('core', 'system_install_type') !== 'demo') {
-// If the installation type is not set to 'demo' then exit.
+    // If the installation type is not set to 'demo' then exit.
     header('HTTP/1.0 404 Not Found');
     exit();
 }
@@ -74,7 +74,7 @@ if (isset($_POST['submit'])) {
         }
     }
     $new_moduleid = $new_moduleid . $maxmodid;
-// Check for unique username
+    // Check for unique username
     if (UserUtils::username_exists($_POST['new_username'], $mysqli) or UserUtils::username_exists($_POST['new_username'] . '-stu', $mysqli)) {
         $unique_username = false;
     } else {
@@ -82,10 +82,10 @@ if (isset($_POST['submit'])) {
     }
  
     $schoolID = SchoolUtils::add_school(1, 'School of Practice', $mysqli);
-// Make sure the 'School of Practice' school exists.
+    // Make sure the 'School of Practice' school exists.
 
     CourseUtils::add_course($schoolID, 'A10DEMO', 'Demonstration BSc', null, null, $mysqli);
-// Make sure demo course exists.
+    // Make sure demo course exists.
   
     $new_modid = module_utils::add_modules($new_moduleid, $_POST['new_grade2'], 1, $schoolID, null, null, true, true, true, false, false, true, false, $mysqli, 0, 0, 1, 1, '07/01');
     if ($unique_username == true) {
@@ -97,9 +97,9 @@ if (isset($_POST['submit'])) {
         $new_username = trim($_POST['new_username']);
         $useridstf = adduser('Staff', 'Staff', $new_username, $mysqli);
         UserUtils::add_staff_to_module_by_modulecode($useridstf, $new_moduleid, $mysqli);
-    // Add staff to the new module
+        // Add staff to the new module
           UserUtils::add_staff_to_module_by_modulecode($useridstf, 'DEMO', $mysqli);
-    // Add staff to the general DEMO module
+        // Add staff to the general DEMO module
     
         // Add student account
           $max_sid = 0;
@@ -116,12 +116,12 @@ if (isset($_POST['submit'])) {
         $result->execute();
         $result->close();
         UserUtils::add_student_to_module_by_name($userid, $new_moduleid, 1, $session, $mysqli);
-    // Add student to the new module
+        // Add student to the new module
           UserUtils::add_student_to_module_by_name($userid, 'A10DEMO', 1, $session, $mysqli);
-    // Add student to the demo module
+        // Add student to the demo module
     }
  
-  // Send out email welcome.
+    // Send out email welcome.
     $mailerror = false;
     if (isset($_POST['new_welcome']) and $_POST['new_welcome'] != '') {
         $tmp_email = trim($_POST['new_email']);

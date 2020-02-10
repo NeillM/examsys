@@ -65,7 +65,7 @@ function listtreemodules($mysqli, $moduleid, $block_id, $plk, $flat = false, $ex
         echo '</div>';
         $block_id++;
     } else {
-      // no papers
+        // no papers
     }
     $results2->close();
 
@@ -87,8 +87,8 @@ if (!$lti->valid) {
 
 list($lti_user, $user_updated) = $lti->lookup_lti_user();
 if ($lti_user !== $userObject->get_user_ID()) {
-  // The LTi request is not for the logged in user or the user has not had their external account properly connected to Rogo,
-  // so force a logout and display a message.
+    // The LTi request is not for the logged in user or the user has not had their external account properly connected to Rogo,
+    // so force a logout and display a message.
     session_unset();
     session_destroy();
     session_write_close();
@@ -113,14 +113,14 @@ unset($_SESSION['postlookup']);
 
 $returned = $lti->lookup_lti_resource();
 if (!$lti->isInstructor()) {
-  //student
+    //student
     if ($returned === false) {
-      // no data selected for this
+        // no data selected for this
         UserNotices::display_notice($string['warning'], $string['ltinotconfigured'], '../artwork/access_denied.png', $title_color = '#C00000');
         echo "\n</body>\n</html>\n";
         exit();
     } else {
-      //valid data
+        //valid data
         $returned2 = $lti->lookup_lti_context();
         if ($returned2 === false) {
             $data = $lti_i->module_code_translate($mysqli, $lti->getCourseName(), $lti->get_context_title());
@@ -138,7 +138,7 @@ if (!$lti->isInstructor()) {
 
         foreach ($data as $moduleinfo) {
             $returned_check = module_utils::get_full_details_by_name($moduleinfo[1], $mysqli);
-          // User not on module, have user details and LTI allows student self reg - enrol student.
+            // User not on module, have user details and LTI allows student self reg - enrol student.
             if (!UserUtils::is_user_on_module_by_name($userObject->get_user_ID(), $moduleinfo[1], $session, $mysqli) and $returned_check !== false and $lti_i->allow_module_self_reg()) {
                 if ($returned_check['active'] == 1 and $returned_check['selfenroll'] == 1) {
                     // Insert new module enrollment
@@ -153,18 +153,18 @@ if (!$lti->isInstructor()) {
         exit();
     }
 } else {
-  //staff
+    //staff
 
     if ($returned !== false) {
-      // goto link
+        // goto link
 
         $returned2 = $lti->lookup_lti_context();
         $mod = $returned2[0];
-      // Staff user not on module and LTi allowed to enroll staff users and this is a staff user - enrol.
+        // Staff user not on module and LTi allowed to enroll staff users and this is a staff user - enrol.
         if (!$userObject->is_staff_user_on_module($mod) and $lti_i->allow_staff_module_register() and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
             UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $mod, $mysqli);
-        // Staff user not on module and LTi NOT allowed to enroll staff users and this is a staff user - display notice.
         } elseif (!$userObject->is_staff_user_on_module($mod) and !$lti_i->allow_staff_module_register() and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
+            // Staff user not on module and LTi NOT allowed to enroll staff users and this is a staff user - display notice.
             UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $mod, '../artwork/exclamation_64.png', '#C00000');
             echo "\n</body>\n</html>\n";
             exit();
@@ -177,11 +177,11 @@ if (!$lti->isInstructor()) {
             echo sprintf($string['redirectmessage'], $href);
             exit();
         } else {
-          // allow editing of the stored link
-          //TODO NO SUPPORT YET IMPLIMENTED
+            // allow editing of the stored link
+            //TODO NO SUPPORT YET IMPLIMENTED
         }
     } else {
-      // no existing stored link so need to create one
+        // no existing stored link so need to create one
         if (!$userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
             UserNotices::display_notice($string['NoModCreateTitle2'], $string['NoModCreate2'], '../artwork/exclamation_64.png', '#C00000');
             echo "\n</body>\n</html>\n";
@@ -191,7 +191,7 @@ if (!$lti->isInstructor()) {
 
         if ($returned2 === false) {
             $modid = -1;
-          //no context
+            //no context
             $data = $lti_i->module_code_translate($mysqli, $lti->getCourseName(), $lti->get_context_title());
             if ($data === false) {
                 $contactemail = support::get_email();
@@ -201,10 +201,10 @@ if (!$lti->isInstructor()) {
             }
             foreach ($data as $moduleinfo) {
                 $problem = false;
-              // Module exists and staff user is enrolled on it - get module id.
+                // Module exists and staff user is enrolled on it - get module id.
                 if (module_utils::module_exists($moduleinfo[1], $mysqli) and $userObject->is_staff_user_on_module($moduleinfo[1])) {
                     $modid = module_utils::get_idMod($moduleinfo[1], $mysqli);
-                // Module does not exist and LTI allowed to create modules - create module.
+                    // Module does not exist and LTI allowed to create modules - create module.
                 } elseif (!module_utils::module_exists($moduleinfo[1], $mysqli) and $lti_i->allow_module_create()) {
                     if (!$userObject->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
                         UserNotices::display_notice($string['NoModCreateTitle2'], $string['NoModCreate2'] . $moduleinfo[1], '../artwork/exclamation_64.png', '#C00000');
@@ -239,23 +239,23 @@ if (!$lti->isInstructor()) {
                     if ($modid === false) {
                         $problem = true;
                     }
-                // Module does not exist and LTI NOT allowed to create modules - display notice.
+                    // Module does not exist and LTI NOT allowed to create modules - display notice.
                 } elseif (!module_utils::module_exists($moduleinfo[1], $mysqli) and !$lti_i->allow_module_create()) {
                     UserNotices::display_notice($string['NoModCreateTitle'], $string['NoModCreate'] . $moduleinfo[1], '../artwork/exclamation_64.png', '#C00000');
                     echo "\n</body>\n</html>\n";
                     exit();
                 }
-              // User not a staff member on the module and LTI allowed to enrol staff and user is staff and module allows addition of team members - add staff to module.
+                // User not a staff member on the module and LTI allowed to enrol staff and user is staff and module allows addition of team members - add staff to module.
                 if (!$userObject->is_staff_user_on_module($moduleinfo[1]) and $lti_i->allow_staff_module_register() and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and module_utils::is_allowed_add_team_members_by_name($moduleinfo[1], $mysqli)) {
                     UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $moduleinfo[1], $mysqli);
                     $modid = module_utils::get_idMod($moduleinfo[1], $mysqli);
-                // User not a staff memeber on the module and LTI NOT allowed to enrol staff - display notice.
+                    // User not a staff memeber on the module and LTI NOT allowed to enrol staff - display notice.
                 } elseif (!$userObject->is_staff_user_on_module($moduleinfo[1]) and !$lti_i->allow_staff_module_register()) {
                     UserNotices::display_notice($string['NotAddedToModuleTitle'], $string['NotAddedToModule'] . $moduleinfo[1], '../artwork/exclamation_64.png', '#C00000');
                     echo "\n</body>\n</html>\n";
                     exit();
                 }
-              // Only add context if not a metamodule (i.e. only one module to link to) and no issues have occured.
+                // Only add context if not a metamodule (i.e. only one module to link to) and no issues have occured.
                 if (count($data) == 1 and $problem === false and $modid != -1) {
                     $lti->add_lti_context($modid);
                 }
@@ -263,7 +263,7 @@ if (!$lti->isInstructor()) {
         } else {
             $data = array(array('', $returned2[0]));
             foreach ($data as $moduleinfo) {
-            // User not a staff member on the module and LTI allowed to enrol staff and user is staff and module allows addition of team members - add staff to module.
+                // User not a staff member on the module and LTI allowed to enrol staff and user is staff and module allows addition of team members - add staff to module.
                 if (!$userObject->is_staff_user_on_module($moduleinfo[1]) and $lti_i->allow_staff_module_register() and $userObject->has_role(array('Staff', 'Admin', 'SysAdmin')) and module_utils::is_allowed_add_team_members_by_name($moduleinfo[1], $mysqli)) {
                       UserUtils::add_staff_to_module_by_modulecode($userObject->get_user_ID(), $moduleinfo[1], $mysqli);
                     // User not a staff memeber on the module and LTI NOT allowed to enrol staff - display notice.
@@ -307,7 +307,7 @@ END;
         @ob_flush();
         @ob_start();
     
-      // If there is a context and therefore a course already selected display that.
+        // If there is a context and therefore a course already selected display that.
         $modules = '';
         $exit = 0;
 

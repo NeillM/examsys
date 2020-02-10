@@ -1,6 +1,6 @@
 <?php
 if (isset($low_bandwidth) and $low_bandwidth == 1) {
-  // Lowbandwidth
+    // Lowbandwidth
     ob_start('ob_gzhandler');   // enable compression
 }
 $top_table_html = '<table cellpadding="4" cellspacing="0" border="0" style="width:100%; background-color:#5590CF">';

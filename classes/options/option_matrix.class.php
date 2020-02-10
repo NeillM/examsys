@@ -30,13 +30,13 @@ class OptionMATRIX extends OptionEdit
     protected $all_corrects = array();
     protected $_fields_compound = array('correct' => 'raw');
   
-  // ACCESSORS
+    // ACCESSORS
   
-  /**
-   * Get all the correct answers for this option.  Actually the correct answer across the board. Return as an array of array of correct
-   * answers for each 'question'
-   * @return string
-   */
+    /**
+     * Get all the correct answers for this option.  Actually the correct answer across the board. Return as an array of array of correct
+     * answers for each 'question'
+     * @return string
+     */
     public function get_all_corrects()
     {
         $this->get_correct();

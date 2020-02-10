@@ -16,14 +16,14 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Displays an overview of summative and offline reports for a student
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Displays an overview of summative and offline reports for a student
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_student_auth.inc';
 require_once '../include/errors.php';
@@ -64,7 +64,7 @@ function get_taken_papers($userID, $db)
 
     $i = 0;
   
-  // Query for Summative and Offline papers
+    // Query for Summative and Offline papers
     $result = $db->prepare("SELECT DISTINCT log_metadata.id, paperID, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release, type FROM log_metadata, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log_metadata.paperID = properties.property_id AND paper_type IN ('2', '5') AND userID = ? AND feedback_release.type = 'cohort_performance' ORDER BY calendar_year DESC");
     $result->bind_param('i', $userID);
     $result->execute();
@@ -88,7 +88,7 @@ function get_taken_papers($userID, $db)
     }
     $result->close();
   
-  // Query for OSCE stations
+    // Query for OSCE stations
     $result = $db->prepare("SELECT DISTINCT log4_overall.id, q_paper, paper_title, paper_type, pass_mark, calendar_year, started, crypt_name, idfeedback_release, type FROM log4_overall, properties LEFT JOIN feedback_release ON properties.property_id = feedback_release.paper_id WHERE log4_overall.q_paper = properties.property_id AND paper_type IN ('4') AND userID = ? AND feedback_release.type = 'cohort_performance' ORDER BY calendar_year DESC");
     $result->bind_param('i', $userID);
     $result->execute();
@@ -236,7 +236,7 @@ foreach ($papers as $paper) {
 
     if ($display_paper) {
         if ($old_calendar_year != $paper['calendar_year']) {
-          //echo '<a name="' . $paper['calendar_year'] . '"></a><table border="0" class="subsect"><tr><td><nobr>' . $paper['calendar_year'] . '</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table>';
+            //echo '<a name="' . $paper['calendar_year'] . '"></a><table border="0" class="subsect"><tr><td><nobr>' . $paper['calendar_year'] . '</nobr></td><td style="width:98%"><hr noshade="noshade" style="border:0px; height:1px; color:#E5E5E5; background-color:#E5E5E5; width:100%" /></td></tr></table>';
             echo '<a name="' . $paper['calendar_year'] . '"></a><div class="subsect_table"><div class="subsect_title"><nobr>' . $paper['calendar_year'] . '</nobr></div><div class="subsect_hr"><hr noshade="noshade" /></div></div>';
             $col = 0;
         }

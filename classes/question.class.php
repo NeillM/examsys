@@ -55,7 +55,7 @@ class Question
     protected $settings = '';
     public $options = array();
 
-  // Below are for support in question display etc
+    // Below are for support in question display etc
 
     public $error;
     public $useranswer = null;
@@ -142,7 +142,7 @@ class Question
         }
 
         if (!is_array($this->options)) {
-          // Convert to objects!
+            // Convert to objects!
         }
     }
   

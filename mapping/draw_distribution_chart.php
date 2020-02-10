@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
   $mydata = array();
   $mydata = unserialize(urldecode($_GET['disdata']));
@@ -142,11 +142,11 @@ for ($label = $label_inc; $label <= $points; $label += $label_inc) {
 
 for ($i = 1; $i <= 100; $i++) {
     if ($mydata[$i] > 0) {
-      //if ($i < $_GET['pmk']) {
-      //  ImageFilledRectangle($Image, ($i * 7) + 38 - $reduction_factor, 250 - ($mydata[$i] * $gap), ($i * 7) + 43 - $reduction_factor, 250, $red);
-      //} else {
+        //if ($i < $_GET['pmk']) {
+        //  ImageFilledRectangle($Image, ($i * 7) + 38 - $reduction_factor, 250 - ($mydata[$i] * $gap), ($i * 7) + 43 - $reduction_factor, 250, $red);
+        //} else {
         ImageFilledRectangle($Image, ($i * 7) + 38 - $reduction_factor, 250 - ($mydata[$i] * $gap), ($i * 7) + 43 - $reduction_factor, 250, $dkgreen);
-      //}
+        //}
     }
 }
 if (isset($_GET['plotuser'])) {

@@ -48,7 +48,7 @@ class QuestionAREA extends QuestionEdit
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
 
-      // Convert the max number of options into a list of variables
+        // Convert the max number of options into a list of variables
         $this->option_order = 'display order';
         $this->_fields_change = array('option_marks_correct', 'option_marks_partial', 'option_marks_incorrect', 'correct_full', 'error_full', 'correct_partial', 'error_partial');
         $this->_fields_unified = array('correct' => $this->_lang_strings['correctanswer'], 'marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect'], 'marks_partial' => $this->_lang_strings['markspartial']);
@@ -56,14 +56,14 @@ class QuestionAREA extends QuestionEdit
     }
 
 
-  /**
-   * Persist the object to the database
-   * @return boolean Success or failure of the save operation
-   * @throws ValidationException
-   */
+    /**
+     * Persist the object to the database
+     * @return boolean Success or failure of the save operation
+     * @throws ValidationException
+     */
     public function save($clear_checkout = true)
     {
-      // Make sure 'correct' value is set for option
+        // Make sure 'correct' value is set for option
         if ((!isset($this->correct) or $this->correct = '') and $this->points1 != '' and count($this->options) > 0) {
             $this->set_points1($this->points1);
         }
@@ -71,11 +71,11 @@ class QuestionAREA extends QuestionEdit
     }
 
 
-  // ACCESSORS
-  /**
-   * Set the question leadin, stripping any carriage returns
-   * @param string $value
-   */
+    // ACCESSORS
+    /**
+     * Set the question leadin, stripping any carriage returns
+     * @param string $value
+     */
     public function set_leadin($value)
     {
         $value = str_replace("\r\n", ' ', $value);
@@ -85,9 +85,9 @@ class QuestionAREA extends QuestionEdit
         }
     }
 
-  /**
-   * @param $correct_full
-   */
+    /**
+     * @param $correct_full
+     */
     public function set_correct_full($value)
     {
         if ($value != $this->correct_full) {
@@ -96,17 +96,17 @@ class QuestionAREA extends QuestionEdit
         }
     }
 
-  /**
-   * @return mixed
-   */
+    /**
+     * @return mixed
+     */
     public function get_correct_full()
     {
         return $this->correct_full;
     }
 
-  /**
-   * @param $correct_partial
-   */
+    /**
+     * @param $correct_partial
+     */
     public function set_correct_partial($value)
     {
         if ($value != $this->correct_partial) {
@@ -115,17 +115,17 @@ class QuestionAREA extends QuestionEdit
         }
     }
 
-  /**
-   * @return mixed
-   */
+    /**
+     * @return mixed
+     */
     public function get_correct_partial()
     {
         return $this->correct_partial;
     }
 
-  /**
-   * @param $error_full
-   */
+    /**
+     * @param $error_full
+     */
     public function set_error_full($value)
     {
         if ($value != $this->error_full) {
@@ -134,17 +134,17 @@ class QuestionAREA extends QuestionEdit
         }
     }
 
-  /**
-   * @return mixed
-   */
+    /**
+     * @return mixed
+     */
     public function get_error_full()
     {
         return $this->error_full;
     }
 
-  /**
-   * @param $error_partial
-   */
+    /**
+     * @param $error_partial
+     */
     public function set_error_partial($value)
     {
         if ($value != $this->error_partial) {
@@ -153,9 +153,9 @@ class QuestionAREA extends QuestionEdit
         }
     }
 
-  /**
-   * @return mixed
-   */
+    /**
+     * @return mixed
+     */
     public function get_error_partial()
     {
         return $this->error_partial;

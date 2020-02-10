@@ -32,14 +32,14 @@ class OnlineHelp
     private $language;
     private $db;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
@@ -183,7 +183,7 @@ class OnlineHelp
     /**
      * Loads details of a help page and returns them in an array.
      * @param int $articleid - The ID of the help page to return.
-   * @return array of page details.
+     * @return array of page details.
      */
     public function get_page_details($articleid)
     {
@@ -228,13 +228,13 @@ class OnlineHelp
         $body_plain = strip_tags($body);
     
         if ($articleid == $pointerid) {
-          // Editing normal page.
+            // Editing normal page.
             $result = $this->db->prepare('UPDATE staff_help SET title = ?, body = ?, body_plain = ?, checkout_time = NULL, checkout_authorID = NULL, roles = ? WHERE articleid = ? AND language = ?');
             $result->bind_param('ssssis', $title, $body, $body_plain, $roles, $articleid, $this->language);
             $result->execute();
             $result->close();
         } else {
-          // Editing a page pointed to.
+            // Editing a page pointed to.
             $result = $this->db->prepare('UPDATE staff_help SET title = ? WHERE articleid = ? AND language = ?');
             $result->bind_param('sis', $title, $articleid, $this->language);
             $result->execute();
@@ -258,13 +258,13 @@ class OnlineHelp
     {
         $body_plain = strip_tags($body);
         if ($articleid == $pointerid) {
-          // Editing normal page.
+            // Editing normal page.
             $result = $this->db->prepare('UPDATE student_help SET title = ?, body = ?, body_plain = ?, checkout_time = NULL, checkout_authorID = NULL WHERE articleid = ? AND language = ?');
             $result->bind_param('sssis', $title, $body, $body_plain, $articleid, $this->language);
             $result->execute();
             $result->close();
         } else {
-          // Editing a page pointed to.
+            // Editing a page pointed to.
             $result = $this->db->prepare('UPDATE student_help SET title = ? WHERE articleid = ? AND language = ?');
             $result->bind_param('sis', $title, $articleid, $this->language);
             $result->execute();
@@ -282,7 +282,7 @@ class OnlineHelp
      * @param string $title     - The title of the help page.
      * @param string $body      - The main contents of the help page.
      * @param string $roles     - The roles of users allowed to view the page.
-   * @param string $articleid - The ID of the help page being saved.
+     * @param string $articleid - The ID of the help page being saved.
      * @param string $pointerid - The ID of the pointer page.
      */
     public function save_page($title, $body, $roles, $articleid, $pointerid)
@@ -353,7 +353,7 @@ class OnlineHelp
 
         $this->display_header($id, $page_details['title']);
 
-      // Perform replacement on certain strings.
+        // Perform replacement on certain strings.
         $page_details['body'] = str_replace('$support_email', '<a href="mailto:' . $contactemail . '">' . $contactemail . '</a>', $page_details['body']);
         $page_details['body'] = str_replace('$local_server', NetworkUtils::get_protocol() . $_SERVER['HTTP_HOST'], $page_details['body']);
 
@@ -388,7 +388,7 @@ class OnlineHelp
     private function display_header($id, $title)
     {
         if ($id == 1) {
-          // ID 1 is for the homepage.
+            // ID 1 is for the homepage.
             echo "<div>\n";
         } else {
             echo '<div class="help_title">' . str_replace('/', ': ', $title) . '<img class="flag" src="../' . $this->language . ".png\" /></div>\n";
@@ -447,7 +447,7 @@ class OnlineHelp
      * @param string $title - The title of the new help page.
      * @param string $body  - The main content of the help page.
      * @param string $roles - Which roles are allowed to view the page.
-   * @return int the ID of the newly created page.
+     * @return int the ID of the newly created page.
      */
     public function create_page($title, $body, $roles = '')
     {
@@ -468,7 +468,7 @@ class OnlineHelp
     
         $articleid = $this->db->insert_id;
     
-      // Update the articleid to match the new id field.
+        // Update the articleid to match the new id field.
         $result = $this->db->prepare('UPDATE ' . $this->type . '_help SET articleid = ? WHERE id = ?');
         $result->bind_param('ii', $articleid, $articleid);
         $result->execute();
@@ -481,7 +481,7 @@ class OnlineHelp
      * Creates a new help pointer in the database.
      * @param string $title   - The title of the new pointer page.
      * @param string $pageID  - The ID of the page to point to.
-   * @return int the ID of the newly created pointer page.
+     * @return int the ID of the newly created pointer page.
      */
     public function create_pointer($title, $pageID)
     {
@@ -499,7 +499,7 @@ class OnlineHelp
     
         $articleid = $this->db->insert_id;
     
-      // Update the articleid to match the new id field.
+        // Update the articleid to match the new id field.
         $result = $this->db->prepare('UPDATE ' . $this->type . '_help SET articleid = ? WHERE id = ?');
         $result->bind_param('ii', $articleid, $articleid);
         $result->execute();
@@ -559,7 +559,7 @@ class OnlineHelp
         $page_details = $this->get_page_details($originalID);
 
         if ($page_details['page_type'] == 'page') {
-          // Search for any pointers to the current page.
+            // Search for any pointers to the current page.
             $sql = 'SELECT articleid, body FROM ' . $this->type . "_help WHERE type = 'pointer' AND articleid != ? AND body = ? AND language = ?";
       
             $result = $this->db->prepare($sql);
@@ -593,32 +593,32 @@ class OnlineHelp
     /**
      * Performs a full-text search on the help database.
      * @param string $searchstring - The search term to use for the search.
-   * @return array of search results.
+     * @return array of search results.
      */
     public function find($searchstring)
     {
         $search_results = array();
 
         if ($this->type == 'student') {
-          // Check if the database is using a non-standard table type that does not support full text indexing.
+            // Check if the database is using a non-standard table type that does not support full text indexing.
             if (DBUtils::supports_fulltext_search('student_help')) {
                 $searchtext_student = 'MATCH (title, body_plain) AGAINST (?) AS relevance FROM student_help WHERE MATCH (title, body_plain) AGAINST (? IN BOOLEAN MODE)';
             } else {
                 $searchstring = '%' . $searchstring . '%';
-              // Relevance has no meaning here so just set to 1.0 for all.
+                // Relevance has no meaning here so just set to 1.0 for all.
                 $searchtext_student = '1.0 AS relevance FROM student_help WHERE (LOWER(title) LIKE LOWER(?) OR LOWER(body_plain) LIKE LOWER(?))';
             }
             $result = $this->db->prepare('SELECT articleid, title, ' . $searchtext_student . ' AND deleted IS NULL AND language = ? ORDER BY relevance DESC');
         } else {
-          // Check if the database is using a non-standard table type that does not support full text indexing.
+            // Check if the database is using a non-standard table type that does not support full text indexing.
             if (DBUtils::supports_fulltext_search('staff_help')) {
                 $searchtext_staff = 'MATCH (title, body_plain) AGAINST (?) AS relevance FROM staff_help WHERE MATCH (title, body_plain) AGAINST (? IN BOOLEAN MODE)';
             } else {
                 $searchstring = '%' . $searchstring . '%';
-              // Relevance has no meaning here so just set to 1.0 for all.
+                // Relevance has no meaning here so just set to 1.0 for all.
                 $searchtext_staff = '1.0 AS relevance FROM staff_help WHERE (LOWER(title) LIKE LOWER(?) OR LOWER(body_plain) LIKE LOWER(?))';
             }
-          // Return only types of pages related to the type of staff.
+            // Return only types of pages related to the type of staff.
             if ($this->userObject->has_role('SysAdmin')) {
                 $roles_check = 'AND roles IN ("SysAdmin","Admin","Staff")';
             } elseif ($this->userObject->has_role('Admin')) {
@@ -636,7 +636,7 @@ class OnlineHelp
         }
         $result->close();
     
-      // Log the search in the database.
+        // Log the search in the database.
         if (!$this->userObject->has_role('SysAdmin')) {   // Don't record SysAdmin searches.
             $total_hits = count($search_results);
             $this->record_in_search_log($searchstring, $total_hits);
@@ -645,10 +645,10 @@ class OnlineHelp
         return $search_results;
     }
   
-  /**
-   * Load staff help into database
-   * @throws exception
-   */
+    /**
+     * Load staff help into database
+     * @throws exception
+     */
     public static function load_staff_help()
     {
         $staff_help = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'staff_help.sql';
@@ -666,17 +666,17 @@ class OnlineHelp
         while ($configObject->db->more_results()) {
             $configObject->db->next_result();
         }
-      // Ensure all help images are in the correct location.
+        // Ensure all help images are in the correct location.
         $staffhelp = rogo_directory::get_directory('help_staff');
         $staffhelp->create();
         $staffhelp->copy_from_default();
-      // Fix path of help file images as may not be in root web dir.
+        // Fix path of help file images as may not be in root web dir.
         self::correct_staff_path();
     }
-  /**
-   * Load student help into database
-   * @throws exception
-   */
+    /**
+     * Load student help into database
+     * @throws exception
+     */
     public static function load_student_help()
     {
         $student_help = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'student_help.sql';
@@ -694,32 +694,32 @@ class OnlineHelp
         while ($configObject->db->more_results()) {
             $configObject->db->next_result();
         }
-      // Ensure all help images are in the correct location.
+        // Ensure all help images are in the correct location.
         $studenthelp = rogo_directory::get_directory('help_student');
         $studenthelp->create();
         $studenthelp->copy_from_default();
-      // Fix path of help file images as may not be in root web dir.
+        // Fix path of help file images as may not be in root web dir.
         self::correct_student_path();
     }
 
-  /**
-   * Correct path of staff help file images as may not be in root web server directory.
-   */
+    /**
+     * Correct path of staff help file images as may not be in root web server directory.
+     */
     private static function correct_staff_path()
     {
         set_time_limit(0);
         $configObject = Config::get_instance();
         $webroot = $configObject->get('cfg_root_path');
-      // Ensure there is a trailing slash.
+        // Ensure there is a trailing slash.
         if (substr($webroot, -1) !== '/') {
             $webroot .= '/';
         }
-      // Strip out double forward slash.
+        // Strip out double forward slash.
         $webroot = preg_replace('#/+#', '/', $webroot);
-      // The substitution will replace the old src tag with a new one that.
+        // The substitution will replace the old src tag with a new one that.
         $regexp = '#src="\/getfile\.php\?type\=help_staff&amp;filename\=(.*?)"#';
         $substitution = 'src="' . $webroot . 'getfile.php?type=help_staff&amp;filename=$1"';
-      // If we find any images in help files update them.
+        // If we find any images in help files update them.
         $result = $configObject->db->prepare("SELECT id, body FROM staff_help WHERE body LIKE '%<img%'");
         $result->execute();
         $result->store_result();
@@ -727,7 +727,7 @@ class OnlineHelp
         while ($result->fetch()) {
             $newbody = preg_replace($regexp, $substitution, $body);
             if ($newbody != $body) {
-              // There was a change, so update the record.
+                // There was a change, so update the record.
                 $update = $configObject->db->prepare('UPDATE staff_help SET body = ? WHERE id = ?');
                 $update->bind_param('si', $newbody, $id);
                 $update->execute();
@@ -737,24 +737,24 @@ class OnlineHelp
         $result->close();
     }
 
-  /**
-   * Correct path of student help file images as may not be in root web server directory.
-   */
+    /**
+     * Correct path of student help file images as may not be in root web server directory.
+     */
     private static function correct_student_path()
     {
         set_time_limit(0);
         $configObject = Config::get_instance();
         $webroot = $configObject->get('cfg_root_path');
-      // Ensure there is a trailing slash.
+        // Ensure there is a trailing slash.
         if (substr($webroot, -1) !== '/') {
             $webroot .= '/';
         }
-      // Strip out double forward slash.
+        // Strip out double forward slash.
         $webroot = preg_replace('#/+#', '/', $webroot);
-      // The substitution will replace the old src tag with a new one that.
+        // The substitution will replace the old src tag with a new one that.
         $regexp = '#src="\/getfile\.php\?type\=help_student&amp;filename\=(.*?)"#';
         $substitution = 'src="' . $webroot . 'getfile.php?type=help_student&amp;filename=$1"';
-      // If we find any images in help files update them.
+        // If we find any images in help files update them.
         $result = $configObject->db->prepare("SELECT id, body FROM student_help WHERE body LIKE '%<img%'");
         $result->execute();
         $result->store_result();
@@ -762,7 +762,7 @@ class OnlineHelp
         while ($result->fetch()) {
             $newbody = preg_replace($regexp, $substitution, $body);
             if ($newbody != $body) {
-              // There was a change, so update the record.
+                // There was a change, so update the record.
                 $update = $configObject->db->prepare('UPDATE student_help SET body = ? WHERE id = ?');
                 $update->bind_param('si', $newbody, $id);
                 $update->execute();

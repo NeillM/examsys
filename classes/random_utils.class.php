@@ -15,41 +15,41 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Utility class for radnom block related functionality
-*
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2016 The University of Nottingham
-*/
+ *
+ * Utility class for radnom block related functionality
+ *
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2016 The University of Nottingham
+ */
 
 
 class random_utils
 {
 
-  /**
-   * Generate a random question id from the random block
-   * @param integer $id id of the random block
-   * @param mysqli $db db connection
-   * @return integer|false random question id or false on error
-   */
+    /**
+     * Generate a random question id from the random block
+     * @param integer $id id of the random block
+     * @param mysqli $db db connection
+     * @return integer|false random question id or false on error
+     */
     public static function generate_random_qid_from_block($id, $db)
     {
-      // Get list of questions.
+        // Get list of questions.
         $randomids = self::get_random_qids_for_question($id, $db);
         if (count($randomids) == 0) {
             return false;
         }
-      //  Get random question.
+        //  Get random question.
         $random_q_no = count($randomids);
         $selected_no = rand(0, $random_q_no - 1);
         return $randomids[$selected_no];
     }
-  /**
-   * Function to get the random question ids based on the parent question id
-   * @param integer $id question id
-   * @param mysqli $db db connection
-   * @return array random question ids
-   */
+    /**
+     * Function to get the random question ids based on the parent question id
+     * @param integer $id question id
+     * @param mysqli $db db connection
+     * @return array random question ids
+     */
     public static function get_random_qids_for_question($id, $db)
     {
         $random = $db->prepare('SELECT q_id FROM random_link WHERE id = ?');
@@ -65,13 +65,13 @@ class random_utils
         return $qids;
     }
   
-  /**
-   * Insert random question reference row
-   * @param integer $id parent question id
-   * @param integer $q_id child question id
-   * @param mysqli $db db connection
-   * @return bool true on success, false otherwise
-   */
+    /**
+     * Insert random question reference row
+     * @param integer $id parent question id
+     * @param integer $q_id child question id
+     * @param mysqli $db db connection
+     * @return bool true on success, false otherwise
+     */
     public static function insert_random_link($id, $q_id, $db)
     {
         $sql = $db->prepare('INSERT INTO random_link (id, q_id) VALUES (?, ?)');
@@ -84,12 +84,12 @@ class random_utils
         return true;
     }
   
-  /**
-   * Delete random question references for random block
-   * @param integer $id parent question id
-   * @param mysqli $db db connection
-   * @return bool true on success, false otherwise
-   */
+    /**
+     * Delete random question references for random block
+     * @param integer $id parent question id
+     * @param mysqli $db db connection
+     * @return bool true on success, false otherwise
+     */
     public static function delete_random_links($id, $db)
     {
         $sql = $db->prepare('DELETE FROM random_link  WHERE id = ?');

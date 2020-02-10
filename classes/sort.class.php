@@ -22,14 +22,14 @@
  */
 class sort
 {
-  /**
-   * Sort a multi-dimensional array
-   * @param $marray array to sort
-   * @param string $sort_by which column to sort by
-   * @param string $sort_order which order to sort by asc/desc
-   * @param int $sort_method sorting method
-   * @return array
-   */
+    /**
+     * Sort a multi-dimensional array
+     * @param $marray array to sort
+     * @param string $sort_by which column to sort by
+     * @param string $sort_order which order to sort by asc/desc
+     * @param int $sort_method sorting method
+     * @return array
+     */
     public static function array_csort($marray, $sort_by, $sort_order, $sort_method = SORT_STRING)
     {
         $sortarr = array();

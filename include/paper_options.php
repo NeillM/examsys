@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Sidebar menu for papers.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Sidebar menu for papers.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once $cfg_web_root . 'include/sidebar_menu.inc';
 require_once $cfg_web_root . 'include/sidebar_functions.inc';
@@ -296,28 +296,28 @@ if ($properties->get_paper_type() == '2') {
     <td style="font-size:120%; font-weight:bold; padding-bottom:6px" colspan="3"><?php echo $string['summativechecklist'] ?></td>
   </tr>
     <?php
-  // Session
+    // Session
     $tmp_match = Paper_utils::academic_year_from_title($properties->get_paper_title());
     
     if ($tmp_match !== false and $tmp_match != $properties->get_calendar_year()) {
         echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['session'] . '</a></td><td>' . $string['mismatch'] . "</td></tr>\n";
     }
-  // Times
+    // Times
     if (date('His', $properties->get_start_date()) == date('His', $properties->get_end_date()) or date('His', $properties->get_start_date()) == '000000' or date('His', $properties->get_start_date()) == '000000') {
         echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['examtime'] . '</a></td><td>' . $string['incorrect'] . "</td></tr>\n";
     }
 
-  // Duration
+    // Duration
     if ($properties->get_exam_duration() == '') {
         echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['duration'] . '</a></td><td>' . $string['unset'] . "</td></tr>\n";
     }
 
-  // Computer labs
+    // Computer labs
     if ($properties->get_labs() == '') {
         echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['computerlabs'] . '</a></td><td>' . $string['unset'] . "</td></tr>\n";
     }
 
-  // Internal Peer review
+    // Internal Peer review
     if (strpos($checklist, 'peer') !== false) {
         if (count($properties->get_internal_reviewers()) == 0) {
             echo "<tr><td><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['peerreviewes'] . '</a></td><td>' . $string['unset'] . "</td></tr>\n";
@@ -356,7 +356,7 @@ if ($properties->get_paper_type() == '2') {
         }
     }
 
-  // External examiners
+    // External examiners
     if (strpos($checklist, 'external') !== false) {
         if (count($properties->get_externals()) == 0) {
             echo "<tr><td style=\"height:16px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/checklist_exclamation.png\" width=\"16\" height=\"16\" alt=\"" . $string['warning'] . '" /></td><td><a href="" class="checklist properties">' . $string['externalreviews'] . '</td><td>' . $string['unset'] . "</td></tr>\n";
@@ -387,7 +387,7 @@ if ($properties->get_paper_type() == '2') {
         }
     }
 
-  // Standards Set
+    // Standards Set
     $standard_set = 0;
     $standards_set = 0;
     if (strpos($checklist, 'stdset') !== false) {
@@ -419,7 +419,7 @@ if ($properties->get_paper_type() == '2') {
         }
     }
 
-  // Mapped
+    // Mapped
     if (strpos($checklist, 'mapping') !== false) {
         $mappings_complete = 0;
         $tmp_session = $properties->get_calendar_year();

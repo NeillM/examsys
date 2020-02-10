@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Displays the results of a question search.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Displays the results of a question search.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 set_time_limit(0);
@@ -203,7 +203,7 @@ if (isset($_GET['submit'])) {
         $variables[] = $_GET['owner'];
         $params .= 'i';
     } else {
-    // If no specific owner set lock down by team (apart from SysAdmin).
+        // If no specific owner set lock down by team (apart from SysAdmin).
         if (count($staff_modules) > 0 and $_GET['module'] == '') {
             $user_string = implode(',', array_keys($staff_modules));
             $user_string = " AND (idMod IN ($user_string) OR users.id={$userObject->get_user_ID()})";

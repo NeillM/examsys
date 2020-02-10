@@ -34,13 +34,13 @@ use Behat\Gherkin\Node\PyStringNode,
 trait menu
 {
 
-  /**
-   * Check for menu items.
-   *
-   * @Then /^I should see menu with following items:$/
-   * @param TableNode $menuitems The menu's items
-   * @throws Exception
-   */
+    /**
+     * Check for menu items.
+     *
+     * @Then /^I should see menu with following items:$/
+     * @param TableNode $menuitems The menu's items
+     * @throws Exception
+     */
     public function i_should_see_menu_with_following_item(TableNode $menuitems)
     {
 
@@ -56,14 +56,14 @@ trait menu
         }
     }
 
-   /**
-   * Check for menu section items.
-   *
-   * @Then I should see :menu_section menu section with following items
-   * @param string $menu_section section title
-   * @param TableNode $menuitems The menu's items
-   * @throws Exception
-   */
+    /**
+     * Check for menu section items.
+     *
+     * @Then I should see :menu_section menu section with following items
+     * @param string $menu_section section title
+     * @param TableNode $menuitems The menu's items
+     * @throws Exception
+     */
   
     public function i_should_see_menu_section_with_following_item($menu_section, TableNode $menuitems)
     {
@@ -72,7 +72,7 @@ trait menu
         }
         foreach ($menuitems->getHash() as $menuitem) {
             $title = $menuitem['items'];
-          //$element = $this->find('sub_menu', $title);
+            //$element = $this->find('sub_menu', $title);
             $menuitem = $this->find('xpath', "//div[contains(concat(' ', normalize-space(@class), ' '), ' submenuheading ') and contains(normalize-space(.) , '" . $menu_section . "')]/following-sibling::div/div[contains(concat(' ', normalize-space(@class), ' '), ' menuitem ') and contains(normalize-space(.) , '" . $title  . "')]");
             if (empty($menuitem)) {
                 throw new Exception('menu section item is not exist in the submenu');
@@ -80,13 +80,13 @@ trait menu
         }
     }
    
-   /**
-   * Check for submenu items.
-   *
-   * @Then /^I should see submenu with following items:$/
-   * @param TableNode $menuitems The menu's items
-   * @throws Exception
-   */
+    /**
+     * Check for submenu items.
+     *
+     * @Then /^I should see submenu with following items:$/
+     * @param TableNode $menuitems The menu's items
+     * @throws Exception
+     */
     public function i_should_see_submenu_with_following_item(TableNode $menuitems)
     {
 
@@ -103,11 +103,11 @@ trait menu
     }
   
   
-  /**
-   * Checks if topright menu is hiden.
-   *
-   * @Then /^(?:|I )should not see main menu$/
-   */
+    /**
+     * Checks if topright menu is hiden.
+     *
+     * @Then /^(?:|I )should not see main menu$/
+     */
     public function i_not_see_main_menu()
     {
         $node = null;
@@ -119,11 +119,11 @@ trait menu
         }
     }
 
-  /**
-   * Toggle the main menu.
-   *
-   * @Then /^(?:|I )toggle the main menu$/
-   */
+    /**
+     * Toggle the main menu.
+     *
+     * @Then /^(?:|I )toggle the main menu$/
+     */
     public function toggle_main_menu()
     {
         $node = null;
@@ -133,13 +133,13 @@ trait menu
         $node->click();
     }
 
-  /**
-   * Checks for main menu items.
-   *
-   * @Then /^I should see main menu with following items:$/
-   * @param TableNode $menuitems The menu's items
-   * @throws Exception
-   */
+    /**
+     * Checks for main menu items.
+     *
+     * @Then /^I should see main menu with following items:$/
+     * @param TableNode $menuitems The menu's items
+     * @throws Exception
+     */
     public function i_see_main_menu(TableNode $menuitems)
     {
         if (empty($menuitems)) {
@@ -160,13 +160,13 @@ trait menu
         }
     }
 
-  /**
-   * Checks for popup search menu items.
-   *
-   * @Then /^I should see popup search menu with following items:$/
-   * @param TableNode $menuitems The menu's items
-   * @throws Exception
-   */
+    /**
+     * Checks for popup search menu items.
+     *
+     * @Then /^I should see popup search menu with following items:$/
+     * @param TableNode $menuitems The menu's items
+     * @throws Exception
+     */
     public function i_see_search_menu(TableNode $menuitems)
     {
         if (empty($menuitems)) {

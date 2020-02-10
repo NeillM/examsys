@@ -17,12 +17,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../include/question_types.php';
@@ -54,7 +54,7 @@ function getPaper($paperID)
     }
     $result->close();
 
- // Get any questions to exclude.
+    // Get any questions to exclude.
     $excluded = array();
     $result = $mysqli->prepare('SELECT q_id, parts FROM question_exclude WHERE q_paper = ?');
     $result->bind_param('i', $paperID);

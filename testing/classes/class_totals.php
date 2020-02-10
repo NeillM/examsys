@@ -16,13 +16,13 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-*
-* @author Joseph Baxter
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ *
+ * @author Joseph Baxter
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once dirname(dirname(__DIR__)) . '/include/finish_functions.inc';
 require_once dirname(dirname(__DIR__)) . '/plugins/questions/enhancedcalc/helpers/enhancedcalc_helper.php';
@@ -33,12 +33,12 @@ require_once dirname(dirname(__DIR__)) . '/plugins/questions/enhancedcalc/helper
 class class_totals
 {
 
-  /**
-   * Function to parse marks in display_feedback
-   *
-   * @param string $data - html from function
-   * @return float $mark
-   */
+    /**
+     * Function to parse marks in display_feedback
+     *
+     * @param string $data - html from function
+     * @return float $mark
+     */
     function parseScript($data)
     {
         if (empty($data)) {
@@ -61,21 +61,21 @@ class class_totals
         return $mark;
     }
 
-  /**
-   * Function to get all papers completed in time frame to scrape for marks, and then compare the class_totals and finish reports.
-   *
-   * @param type $mysqli - database object
-   * @param type $username - user for db access
-   * @param type $password - the users password
-   * @param type $rootpath - root path of site
-   * @param type $userid - the user running the script
-   * @param type $start_dateSQL - start date range of papers checked
-   * @param type $end_dateSQL - end date range of papers checked
-   * @param type $server - the server we are checking
-   * @param array $string - translation strings
-   * @param object $userObject logged in user object
-   * @param type $paperid - the papers we want to check (optional, all if not supplied)
-   */
+    /**
+     * Function to get all papers completed in time frame to scrape for marks, and then compare the class_totals and finish reports.
+     *
+     * @param type $mysqli - database object
+     * @param type $username - user for db access
+     * @param type $password - the users password
+     * @param type $rootpath - root path of site
+     * @param type $userid - the user running the script
+     * @param type $start_dateSQL - start date range of papers checked
+     * @param type $end_dateSQL - end date range of papers checked
+     * @param type $server - the server we are checking
+     * @param array $string - translation strings
+     * @param object $userObject logged in user object
+     * @param type $paperid - the papers we want to check (optional, all if not supplied)
+     */
     public function process_papers($mysqli, $username, $password, $rootpath, $userid, $start_dateSQL, $end_dateSQL, $server, $string, $userObject, $paperid = '')
     {
         global $display_correct_answer, $display_students_response, $display_feedback, $display_question_mark;
@@ -105,14 +105,14 @@ class class_totals
     
         $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
         $paper_utils = Paper_utils::get_instance();
-      // Turn on all feedback if staff and a student exam script is being reviewed.
+        // Turn on all feedback if staff and a student exam script is being reviewed.
         $display_correct_answer     = 1;
         $display_question_mark      = 1;
         $display_students_response  = 1;
         $display_feedback           = 1;
         foreach ($papers as $paper) {
             $propertyObj = PaperProperties::get_paper_properties_by_crypt_name($paper['crypt_name'], $mysqli, $string, true);
-          // Mark calculation questions.
+            // Mark calculation questions.
             if ($propertyObj->unmarked_enhancedcalc(1)) {
                 $qids = $propertyObj->get_enhancedcalc_questions(1);
                 foreach ($qids as $qid) {

@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Class total report in CSV format.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Class total report in CSV format.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -83,7 +83,7 @@ if ($cohort_size > 0) {
 
     $total_time = 0;
 
-  //output table heading
+    //output table heading
     $table_order = array($string['title'] => 'title', $string['surname'] => 'Surname', $string['firstnames'] => 'First_Names', $string['studentid'] => 'student_id', $string['course'] => 'student_grade', $string['module'] => 'module', $string['mark'] => 'mark', $marking_label => $marking_key, $string['classification'] => 'mark', $string['rank'] => 'rank', $string['decile'] => 'decile', $string['starttime'] => 'started', $string['duration'] => 'duration', $string['ipaddress'] => 'ipaddress');
     $table_order['room'] = 'room';
     $metadata_cols = array();
@@ -114,7 +114,7 @@ if ($cohort_size > 0) {
             if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.
                 $csv .= $user_results[$i]['student_grade'] . ',' . $user_results[$i]['module'] . ",,,,No Attendance,,,,\n";
             } else {
-              // If room is unknown then it will contain HTML that we want to discard
+                // If room is unknown then it will contain HTML that we want to discard
                 $user_results[$i]['room'] = (strpos($user_results[$i]['room'], 'unknown') !== false) ? 'unknown' : $user_results[$i]['room'];
 
                 $csv .= $user_results[$i]['student_grade'] . ',"' . $user_results[$i]['module'] . '",' . $user_results[$i]['mark'] . ',' . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . '%,';
@@ -130,7 +130,7 @@ if ($cohort_size > 0) {
                 }
                 $csv .= $user_results[$i]['rank'] . ',' . $user_results[$i]['decile'] . ',' . $user_results[$i]['display_started'] . ',' . $report->formatsec($user_results[$i]['duration']) . ',' . $user_results[$i]['ipaddress'] . ',"' . $user_results[$i]['room'] . '"';
 
-              // Display any associated metadata
+                // Display any associated metadata
                 if (count($metadata_cols) > 0) {
                     foreach ($metadata_cols as $type) {
                         $csv .= ',' . $user_results[$i][$type];

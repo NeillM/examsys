@@ -55,7 +55,7 @@ class UserObject extends RogoStaticSingleton
     private $db;
     private $configObj;
 
-  // Special needs variables
+    // Special needs variables
     private $background;
     private $foreground;
     private $textsize;
@@ -69,30 +69,30 @@ class UserObject extends RogoStaticSingleton
 
     private $impersonateduser;
   
-  /** @var string Language component name. */
+    /** @var string Language component name. */
     protected $langcomponent = 'classes/userobject';
-  /** @var array language strings */
+    /** @var array language strings */
     protected $langstrings;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
-  /**
-   * constructor
-   *
-   * @param $db is a mysqli link to db
-   * @param $configObject a Rogo config object populated from config.inc
-   *
-   * @return none
-   */
+    /**
+     * constructor
+     *
+     * @param $db is a mysqli link to db
+     * @param $configObject a Rogo config object populated from config.inc
+     *
+     * @return none
+     */
     function __construct($configObject, $db)
     {
         if (is_object(self::$inst)) {
@@ -105,11 +105,11 @@ class UserObject extends RogoStaticSingleton
         $langpack = new \langpack();
         $this->langstrings = $langpack->get_all_strings($this->langcomponent);
     }
- /**
-  * Destory UserObject
-  *
-  * Useful in unit tests.
-  */
+    /**
+     * Destory UserObject
+     *
+     * Useful in unit tests.
+     */
     public function destory()
     {
         self::$inst = null;
@@ -201,14 +201,14 @@ class UserObject extends RogoStaticSingleton
         return $this->dismiss;
     }
 
-  /**
-   * checks if user has role(s) specified
-   *
-   * @param $roles either a string or an array of strings
-   * @param $exclusive if this should only have this role
-   *
-   * @return true if has role(s)
-   */
+    /**
+     * checks if user has role(s) specified
+     *
+     * @param $roles either a string or an array of strings
+     * @param $exclusive if this should only have this role
+     *
+     * @return true if has role(s)
+     */
     public function has_role($roles, $exclusive = 0)
     {
         if (is_string($roles)) {
@@ -218,7 +218,7 @@ class UserObject extends RogoStaticSingleton
                 }
             }
         } else {
-          // assume array
+            // assume array
             if ($exclusive == 0 or ($exclusive == 1 and count($this->roles) == count($roles))) {
                 foreach ($roles as $role) {
                     if (isset($this->roles[$role])) {
@@ -233,7 +233,7 @@ class UserObject extends RogoStaticSingleton
 
     public function is_temporary_account()
     {
-      // Look for 'user' followed by one or more digits.
+        // Look for 'user' followed by one or more digits.
         return preg_match('/^user[0-9]+/', $this->username);
     }
 
@@ -252,41 +252,41 @@ class UserObject extends RogoStaticSingleton
         $this->roles['Demo'] = 1;
     }
 
-  /**
-   * list the users roles
-   *
-   * @return array of the users roles
-   */
+    /**
+     * list the users roles
+     *
+     * @return array of the users roles
+     */
     public function list_user_roles()
     {
         return array_keys($this->roles);
     }
 
-  /**
-   * returns the year of the user
-   *
-   * @return the year of the user
-   */
+    /**
+     * returns the year of the user
+     *
+     * @return the year of the user
+     */
     public function get_year()
     {
         return $this->year;
     }
 
-  /**
-   * returns the userID
-   *
-   * @return userID
-   */
+    /**
+     * returns the userID
+     *
+     * @return userID
+     */
     public function &get_user_ID()
     {
         return $this->userID;
     }
 
-  /**
-   * @param string userID
-   *
-   * @return UserObject
-   */
+    /**
+     * @param string userID
+     *
+     * @return UserObject
+     */
     public function set_user_ID($user_id)
     {
         $this->userID = $user_id;
@@ -294,16 +294,16 @@ class UserObject extends RogoStaticSingleton
         return $this;
     }
 
-  /**
-   * get the staff modules
-   *
-   * @return false if not staff else an array of the modules by id & CODE
-   */
+    /**
+     * get the staff modules
+     *
+     * @return false if not staff else an array of the modules by id & CODE
+     */
     public function get_staff_modules()
     {
 
         if (!$this->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
-          //this is not a staff user so it cant be on any modules
+            //this is not a staff user so it cant be on any modules
             return false;
         }
 
@@ -314,18 +314,18 @@ class UserObject extends RogoStaticSingleton
         return $this->staffModules;
     }
   
-  /**
-   * get the staff members teams only (not a list of all modules thay can access
-   * just their temas) used in /staff/index.php
-   *
-   * @return false if not staff else an array of the modules by id with idMod
-   *         and fullName
-   */
+    /**
+     * get the staff members teams only (not a list of all modules thay can access
+     * just their temas) used in /staff/index.php
+     *
+     * @return false if not staff else an array of the modules by id with idMod
+     *         and fullName
+     */
     public function get_staff_team_modules()
     {
 
         if (!$this->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
-          //this is not a staff user so it cant be on any modules
+            //this is not a staff user so it cant be on any modules
             return false;
         }
 
@@ -355,16 +355,16 @@ class UserObject extends RogoStaticSingleton
         return $has_data;
     }
 
-  /**
-   * @param string $moduleID an array of modules keyed on idMod
-   *
-   * @return bool true if staff member is on a module
-   */
+    /**
+     * @param string $moduleID an array of modules keyed on idMod
+     *
+     * @return bool true if staff member is on a module
+     */
     public function is_staff_user_on_module($moduleID)
     {
 
         if (!$this->has_role(array('Staff', 'Admin', 'SysAdmin'))) {
-          //this is not a staff user so it cant be on any modules
+            //this is not a staff user so it cant be on any modules
             return false;
         }
 
@@ -398,11 +398,11 @@ class UserObject extends RogoStaticSingleton
         return false;
     }
 
-  /**
-   * loads the staff modules
-   *
-   * @return the staff module list //TODO probably dont need the return
-   */
+    /**
+     * loads the staff modules
+     *
+     * @return the staff module list //TODO probably dont need the return
+     */
     public function load_staff_modules()
     {
         $this->staffModules = array();
@@ -435,19 +435,19 @@ class UserObject extends RogoStaticSingleton
         return $this->staffModules;
     }
   
-  /**
-   * loads the modules a staff member is explicitly on the team for
-   * used in /staff/index.php
-   *
-   * @return array the staff module list
-   */
+    /**
+     * loads the modules a staff member is explicitly on the team for
+     * used in /staff/index.php
+     *
+     * @return array the staff module list
+     */
     public function load_staff_team_modules()
     {
         $this->staffTeamModules = array();
 
         $standards_setter_sql = '';
 
-      // Standards Setter should only see modules that allow standard setting
+        // Standards Setter should only see modules that allow standard setting
         if ($this->has_role('Standards Setter')) {
             $standards_setter_sql = "AND modules.checklist LIKE '%stdset%'";
         }
@@ -467,11 +467,11 @@ class UserObject extends RogoStaticSingleton
         return $this->staffTeamModules;
     }
 
-  /**
-   * checks if user has special needs
-   *
-   * @return true if has special needs
-   */
+    /**
+     * checks if user has special needs
+     *
+     * @return true if has special needs
+     */
     public function is_special_needs()
     {
         if ($this->special_needs != 0) {
@@ -481,21 +481,21 @@ class UserObject extends RogoStaticSingleton
         return false;
     }
 
-  /**
-   * returns the grade of the user
-   *
-   * @return string grade
-   */
+    /**
+     * returns the grade of the user
+     *
+     * @return string grade
+     */
     public function get_grade()
     {
         return $this->grade;
     }
 
-  /**
-   * Return the user's title
-   *
-   * @return string Title
-   */
+    /**
+     * Return the user's title
+     *
+     * @return string Title
+     */
     public function get_title()
     {
         return $this->title;
@@ -506,21 +506,21 @@ class UserObject extends RogoStaticSingleton
         return $this->temp_title;
     }
 
-  /**
-   * Return the user's initials
-   *
-   * @return string Initials
-   */
+    /**
+     * Return the user's initials
+     *
+     * @return string Initials
+     */
     public function get_initials()
     {
         return $this->initials;
     }
 
-  /**
-   *  Return the user's first names
-   *
-   * @return string first_names
-   */
+    /**
+     *  Return the user's first names
+     *
+     * @return string first_names
+     */
     public function get_first_names()
     {
         return $this->first_names;
@@ -533,11 +533,11 @@ class UserObject extends RogoStaticSingleton
         return $parts[0];
     }
 
-  /**
-   * Return the user's surname
-   *
-   * @return string Surname
-   */
+    /**
+     * Return the user's surname
+     *
+     * @return string Surname
+     */
     public function get_surname()
     {
         return $this->surname;
@@ -548,61 +548,61 @@ class UserObject extends RogoStaticSingleton
         return $this->temp_surname;
     }
 
-  /**
-   * Return the user's username
-   *
-   * @return string username
-   */
+    /**
+     * Return the user's username
+     *
+     * @return string username
+     */
     public function &get_username()
     {
         return $this->username;
     }
 
-  /**
-   * Return the user's password
-   *
-   * @return string password
-   */
+    /**
+     * Return the user's password
+     *
+     * @return string password
+     */
     public function get_password()
     {
         return $this->password;
     }
 
-  /**
-   * Return the user's email address
-   *
-   * @return string email
-   */
+    /**
+     * Return the user's email address
+     *
+     * @return string email
+     */
     public function get_email()
     {
         return $this->email;
     }
 
-  /**
-   * Return the user's special needs
-   *
-   * @return string password
-   */
+    /**
+     * Return the user's special needs
+     *
+     * @return string password
+     */
     public function get_special_needs()
     {
         return $this->special_needs;
     }
 
-  /**
-   * Return the user's special needs percentage
-   *
-   * @return string password
-   */
+    /**
+     * Return the user's special needs percentage
+     *
+     * @return string password
+     */
     public function get_special_needs_percentage()
     {
         return $this->extra_time;
     }
 
-  /**
-   * Get a list of modules the current user has access to.
-   *
-   * @return array of staff module that this user has access to.
-   */
+    /**
+     * Get a list of modules the current user has access to.
+     *
+     * @return array of staff module that this user has access to.
+     */
     public function get_staff_accessable_modules($additional_mods = array())
     {
         $staff_modules_list = array();
@@ -623,7 +623,7 @@ class UserObject extends RogoStaticSingleton
                 } elseif ($staff_modules_sql != '') {
                     $sql = "SELECT DISTINCT modules.id, moduleid, fullname, schools.code, school FROM modules, schools WHERE modules.schoolid = schools.id AND modules.id IN ($staff_modules_sql) AND active = 1 AND mod_deleted IS NULL ORDER BY school, moduleID";
                 } else {
-                  // Admin is not on any Schools or Modules.
+                    // Admin is not on any Schools or Modules.
                     return $staff_modules_list;
                 }
             } else {
@@ -648,16 +648,16 @@ class UserObject extends RogoStaticSingleton
         return $staff_modules_list;
     }
 
-  /**
-   * loads the student modules
-   *
-   * @return array the student module list //TODO probably dont need the return
-   */
+    /**
+     * loads the student modules
+     *
+     * @return array the student module list //TODO probably dont need the return
+     */
     public function load_student_modules()
     {
         $this->studentModules = array();
 
-      // studentmodule year -> module ->decode
+        // studentmodule year -> module ->decode
         $result = $this->db->prepare('SELECT idMod, moduleID, calendar_year FROM modules_student, modules WHERE modules_student.idMod = modules.id AND userID = ? AND modules.moduleID IS NOT NULL AND mod_deleted IS NULL ORDER BY modules.moduleID'); //SELECT userID FROM modules_student WHERE userID=? AND idMod=? AND calendar_year=?");
         $result->bind_param('i', $this->get_user_ID());
         $result->execute();
@@ -671,19 +671,19 @@ class UserObject extends RogoStaticSingleton
         return $this->studentModules;
     }
 
-  /**
-   * checks to see is user is on a student module
-   *
-   * @param $moduleID an integer or string of a module
-   * @param $calendar_year the calendar year being looked for
-   *
-   * @return bool true if student member is on a module
-   */
+    /**
+     * checks to see is user is on a student module
+     *
+     * @param $moduleID an integer or string of a module
+     * @param $calendar_year the calendar year being looked for
+     *
+     * @return bool true if student member is on a module
+     */
     public function is_student_user_on_module($moduleID, $calendar_year)
     {
 
         if (!$this->has_role('Student')) {
-          //this is not a staff user so it cant be on any modules
+            //this is not a staff user so it cant be on any modules
             return false;
         }
 
@@ -719,25 +719,25 @@ class UserObject extends RogoStaticSingleton
         return false;
     }
 
-  /**
-   * Enrole the student on a module.
-   *
-   * @param $idMod moduleID of module
-   * @param $attempt
-   * @param $session session of module
-   * @param int $auto_update if system add
-   *
-   * @return bool return true if successful.
-   */
+    /**
+     * Enrole the student on a module.
+     *
+     * @param $idMod moduleID of module
+     * @param $attempt
+     * @param $session session of module
+     * @param int $auto_update if system add
+     *
+     * @return bool return true if successful.
+     */
     public function add_student_to_module($idMod, $attempt, $session, $auto_update = 0)
     {
-      // need to check its a self reg module
+        // need to check its a self reg module
 
         if (module_utils::get_full_details_by_ID($idMod, $this->db) === false) {
             return false;
         }
         if (UserUtils::is_user_on_module($this, $idMod, $session, $this->db)) {
-          //don't add a user to a module multiple times
+            //don't add a user to a module multiple times
             return true;
         }
         $return = UserUtils::add_student_to_module($this->get_user_ID(), $idMod, $attempt, $session, $auto_update);
@@ -748,11 +748,11 @@ class UserObject extends RogoStaticSingleton
     }
 
 
-  /**
-   * add current user to module as staff
-   *
-   * @param $idMod
-   */
+    /**
+     * add current user to module as staff
+     *
+     * @param $idMod
+     */
     public function add_staff_to_module($idMod)
     {
         $return = UserUtils::add_staff_to_module($this->get_user_ID(), $idMod, $this->db);
@@ -761,14 +761,14 @@ class UserObject extends RogoStaticSingleton
         return $return;
     }
 
-  /**
-   * remove current user to module as staff //not implimented
-   *
-   * @param $idMod
-   */
+    /**
+     * remove current user to module as staff //not implimented
+     *
+     * @param $idMod
+     */
     public function remove_staff_from_module($idMod)
     {
-      // not implimented
+        // not implimented
         trigger_error('remove_staff_from_module not yet implimented', E_USER_WARNING);
     }
 
@@ -834,7 +834,7 @@ class UserObject extends RogoStaticSingleton
             return false;
         }
 
-      // Add additional special needs data.
+        // Add additional special needs data.
         if ($this->special_needs == 1) {
             $stmt = $this->db->prepare('SELECT background, foreground, textsize, extra_time, marks_color, themecolor, labelcolor, font, unanswered, dismiss FROM special_needs WHERE userID = ?');
             $stmt->bind_param('i', $userID);
@@ -845,7 +845,7 @@ class UserObject extends RogoStaticSingleton
             $stmt->close();
         }
     
-      // Add temporary account data.
+        // Add temporary account data.
         if ($this->is_temporary_account()) {
             $stmt = $this->db->prepare('SELECT title, first_names, surname FROM temp_users WHERE assigned_account = ?');
             $stmt->bind_param('s', $this->get_username());
@@ -876,7 +876,7 @@ class UserObject extends RogoStaticSingleton
             ${$k} = $v;
         }
 
-      // Select the aproprate database user
+        // Select the aproprate database user
         if ($this->has_role('SysAdmin')) {
             $result = $this->db->change_user($cfg_db_sysadmin_user, $cfg_db_sysadmin_passwd, $cfg_db_database);
         } elseif ($this->has_role(array('Staff', 'Admin'))) { // Process staff first to get higher priority than students
@@ -892,7 +892,7 @@ class UserObject extends RogoStaticSingleton
         } else {
             $result = false;
             
-          // new security routine
+            // new security routine
             $notice = UserNotices::get_instance();
             if (!is_array($this->roles) or (isset($this->roles['']) and $this->roles[''] == 1)) {
                 $notice->access_denied($this->db, $string, '', true, true);
@@ -918,11 +918,11 @@ class UserObject extends RogoStaticSingleton
         }
     }
   
-  /**
-  * Check if the user has completed a paper
-  * @param integer $id - paper id
-  * @return bool true if user has completed the paper
-  */
+    /**
+     * Check if the user has completed a paper
+     * @param integer $id - paper id
+     * @return bool true if user has completed the paper
+     */
     public function user_completed_paper($id)
     {
         $result = $this->db->prepare('SELECT NULL FROM log_metadata WHERE userID = ? and paperID = ? and completed IS NOT null');

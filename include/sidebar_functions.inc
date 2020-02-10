@@ -15,14 +15,14 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Functions to get data for the sub-menus used in /staff/index.php, /paper/details.php and /question/list.php.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Functions to get data for the sub-menus used in /staff/index.php, /paper/details.php and /question/list.php.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 /**
  * Get a list of personal folders for the current user.
@@ -90,7 +90,7 @@ function get_modules($teams, $my_folders_array, &$modules_array, $db)
         if (count($modules_array) > 0) {
             $full_modules_array += $divider + $modules_array;
         } else {
-          //$full_modules_array = $modules_array;
+            //$full_modules_array = $modules_array;
         }
     } else {
         $full_modules_array = $modules_array;

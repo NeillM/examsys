@@ -15,11 +15,11 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Render package for use during installation, before the database is setup.
+ * Render package for use during installation, before the database is setup.
  *
-* @author Neill Magill <neill.magill@nottingham.ac.uk>
-* @copyright Copyright (c) 2019 onwards The University of Nottingham
-*/
+ * @author Neill Magill <neill.magill@nottingham.ac.uk>
+ * @copyright Copyright (c) 2019 onwards The University of Nottingham
+ */
 
 /**
  * This class should override any methods in the render class that require a configured database

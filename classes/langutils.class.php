@@ -35,13 +35,13 @@ class LangUtils
         if (isset($_SESSION['ROGO_language'])) {
             $langs[] = $_SESSION['ROGO_language'];
         } elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-          // Check this is set as some webservices do not have this data.
+            // Check this is set as some webservices do not have this data.
             $langs = explode(',', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
         }
     
         if (isset($langs) and is_array($langs)) {
             $i = 0;
-          // Use first supported language found.
+            // Use first supported language found.
             while ($i < count($langs) and $language == '') {
                 $parts = explode(';', $langs[$i]);
                 $test_lang = $parts[0];
@@ -52,7 +52,7 @@ class LangUtils
                 $i++;
             }
         }
-      // Default to English language not supplied.
+        // Default to English language not supplied.
         if ($language == '') {
             $language = 'en';
         }
@@ -73,7 +73,7 @@ class LangUtils
         if (file_exists($lang_path)) {
             require $lang_path;
         } elseif ($language != 'en') {
-          // Revert to english if lang pack file not installed.
+            // Revert to english if lang pack file not installed.
             $lang_path = $cfg_web_root . 'lang/en/' . $file;
             if (file_exists($lang_path)) {
                 require $lang_path;
@@ -82,11 +82,11 @@ class LangUtils
         return $string;
     }
   
-  /**
-   * Check if language is supported
-   * @param string $lang lang code
-   * @return boolean
-   */
+    /**
+     * Check if language is supported
+     * @param string $lang lang code
+     * @return boolean
+     */
     static function supportedLang($lang)
     {
         $file = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'languages.xml';
@@ -102,11 +102,11 @@ class LangUtils
         return false;
     }
 
-  /**
-   * Check if language pack is installed
-   * @param string $lang lang code
-   * @return boolean
-   */
+    /**
+     * Check if language pack is installed
+     * @param string $lang lang code
+     * @return boolean
+     */
     static function langPackInstalled($lang)
     {
         $configObject = Config::get_instance();

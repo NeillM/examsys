@@ -16,12 +16,12 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -50,7 +50,7 @@ if ($calendar_year == '') {
     display_error('Error', 'No Academic Session is set.', false, true);
 }
 if ($type == '') {
-// What metadata field to use.
+    // What metadata field to use.
     display_error('Error', 'No field in the metadata set for groups.', false, true);
 }
 
@@ -166,7 +166,7 @@ if ($review_type == '1') {
     $result->bind_result($member_username, $member_title, $member_surname, $member_first_names, $member_userID);
     while ($result->fetch()) {
         if ($member_userID != $userObject->get_user_ID()) {
-        // Make sure current user cannot peer review themself.
+            // Make sure current user cannot peer review themself.
             display_user($review_type, $q_type, $questions, $saved_results, $cfg_web_root, $member_userID, $member_username, $member_title, $member_first_names, $member_surname, $display_photos, $columns, $parts, $marking, $demo);
         }
     }

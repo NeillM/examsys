@@ -24,11 +24,11 @@
 class demo
 {
 
-  /**
-   * Is this a demo login
-   * @param \userobject $userObj  logged in user object
-   * @return bool
-   */
+    /**
+     * Is this a demo login
+     * @param \userobject $userObj  logged in user object
+     * @return bool
+     */
     public static function is_demo($userObj)
     {
         if ($userObj->has_role('Demo')) {
@@ -39,15 +39,15 @@ class demo
         return $demo;
     }
 
-  /**
-   * This is function demo_replace takes a string and obscures it. Useful for demonstrating Rogo
-   * at conferences and other meetings.
-   *
-   * @param string $text the string to be obscured
-   * @param string $demo_on whether demo mode is on or off
-   * @return the string obscured as 'Abcde' for as long as the original string was
-   *
-   */
+    /**
+     * This is function demo_replace takes a string and obscures it. Useful for demonstrating Rogo
+     * at conferences and other meetings.
+     *
+     * @param string $text the string to be obscured
+     * @param string $demo_on whether demo mode is on or off
+     * @return the string obscured as 'Abcde' for as long as the original string was
+     *
+     */
     public static function demo_replace($text, $demo_on = true, $capitalise = true, $start_on = 'a')
     {
         if ($demo_on) {
@@ -84,15 +84,15 @@ class demo
         }
     }
 
-  /**
-   * This is function demo_replace_number takes a number and obscures it. Useful for
-   * demonstrating Rogo at conferences and other meetings.
-   *
-   * @param integer $number the number to be obscured
-   * @param string $demo_on whether demo mode is on or off
-   * @return the number obscured as '12345678'
-   *
-   */
+    /**
+     * This is function demo_replace_number takes a number and obscures it. Useful for
+     * demonstrating Rogo at conferences and other meetings.
+     *
+     * @param integer $number the number to be obscured
+     * @param string $demo_on whether demo mode is on or off
+     * @return the number obscured as '12345678'
+     *
+     */
     public static function demo_replace_number($number, $demo_on = true)
     {
         if ($demo_on) {
@@ -102,15 +102,15 @@ class demo
         }
     }
 
-  /**
-   * This is function demo_replace_username takes a username and obscures by replacing characters with hashes.
-   * Useful for demonstrating Rogo at conferences and other meetings.
-   *
-   * @param string $username the username to be obscured
-   * @param string $demo_on whether demo mode is on or off
-   * @return the string obscured as a number of hashes
-   *
-   */
+    /**
+     * This is function demo_replace_username takes a username and obscures by replacing characters with hashes.
+     * Useful for demonstrating Rogo at conferences and other meetings.
+     *
+     * @param string $username the username to be obscured
+     * @param string $demo_on whether demo mode is on or off
+     * @return the string obscured as a number of hashes
+     *
+     */
     public static function demo_replace_username($username, $demo_on = true)
     {
         if ($demo_on) {
@@ -124,14 +124,14 @@ class demo
         return $username;
     }
 
-  /**
-   * This is function demo_replace_name returns generic names so that real ones can be hidden.
-   * Useful for demonstrating Rogo at conferences and other meetings.
-   *
-   * @param string $no the array element number to select for the name
-   * @return the string selected name is returned for display
-   *
-   */
+    /**
+     * This is function demo_replace_name returns generic names so that real ones can be hidden.
+     * Useful for demonstrating Rogo at conferences and other meetings.
+     *
+     * @param string $no the array element number to select for the name
+     * @return the string selected name is returned for display
+     *
+     */
     public static function demo_replace_name($no)
     {
         $names = array('Bloggs, J. Dr', 'Plinge, W. Dr', 'Frost, J. Mr', 'Doe, J. Dr', 'Smith, J. Dr', 'Nordmann, O. Dr', 'Jobs, S. Mr', 'Shmoe, J. Dr', 'Atkins, T. Mr', 'Bloggs, F. Mr', 'Gates, B. Mr', 'Berners-Lee, T. Mr', 'Andreessen, M. Mr', 'Ellison, L. Mr', 'Bush, V. Prof', 'Gosling, J. Mr', 'Torvalds, L. Mr', 'Clark, A. Mr');

@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2013 The University of Nottingham
-* @package
-*/
+ *
+ * @author Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2013 The University of Nottingham
+ * @package
+ */
 
 $mandatory = (isset($mandatory_editor) and $mandatory_editor) ? '<span class="mandatory">*</span> ' : '';
 $field_editor = (isset($field_editor)) ? $field_editor : 'scenario';

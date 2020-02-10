@@ -160,7 +160,7 @@ if (!$lab_object) {
 
             echo "<div class=\"rubric\" id=\"rubric_$property_id\"><div class=\"rubrictitle\">" . $string['examrubric'] . "<img id='close_rubric' data-id=\"rubric_$property_id\" src=\"../artwork/lrg_close.png\" class=\"rubricclose\" alt=\"Close\" /></div><div class=\"rubric_txt\">$rubric</div>\n</div>\n";
 
-      // Get modules for this paper and check if timing is allowed
+            // Get modules for this paper and check if timing is allowed
             $timed_modules = $all_modules = 0;
             $sql = 'SELECT m.id, m.timed_exams FROM properties_modules pm INNER JOIN modules m ON pm.idMod = m.id WHERE pm.property_id = ?';
 
@@ -184,7 +184,7 @@ if (!$lab_object) {
 
             $exam_started = false;
 
-      // Has 'Start' button been submitted
+            // Has 'Start' button been submitted
 
             $log_lab_end_time = new LogLabEndTime($lab_object->get_id(), $property_object, $mysqli);
 
@@ -203,7 +203,7 @@ if (!$lab_object) {
             if ($allow_timing and isset($_POST['start_exam_form'])) {
                 $paper_id = (int)$_POST['paper_id'];
 
-              // Does the submitted paperID correspond it to the currently iterated paper?
+                // Does the submitted paperID correspond it to the currently iterated paper?
                 if ($paper_id == (int)$property_id) {
                     $invigilator_id = $userObject->get_user_ID();
                     $end_datetime = $log_lab_end_time->save($invigilator_id);
@@ -216,7 +216,7 @@ if (!$lab_object) {
             if ($allow_timing and isset($_POST['end_exam_form'])) {
                 $paper_id = (int)$_POST['paper_id'];
 
-              // Does the submitted paperID correspond it to the currently iterated paper?
+                // Does the submitted paperID correspond it to the currently iterated paper?
 
                 if ($paper_id == (int)$property_id) {
                     $end_timestamp = get_timestamp_from_time($_POST['hour'], $_POST['minute'], $disptimezone);

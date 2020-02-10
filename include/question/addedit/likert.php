@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 $scales = $question->get_scale_types();
 if ($mode == 'Add' and isset($state['likert_format'])) {
@@ -59,7 +59,7 @@ foreach ($scales as $scale_group => $scale) :
             $sel = '';
         }
 
-      // Stop the 'Fail, Borderline, Pass' scale being selected by new questions. It is currently borked.
+        // Stop the 'Fail, Borderline, Pass' scale being selected by new questions. It is currently borked.
         if ($value == 'Fail|Borderline|Pass' or $value == 'Neuspěl|Na hraně|Uspěl' or $value == 'Nie zdany|Na granicy|Zdany') {
             $sel .= ' disabled="disabled"';
         }

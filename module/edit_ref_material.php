@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../include/errors.php';
@@ -36,12 +36,12 @@ if (!refmaterials_utils::refmaterials_exist($refID, $mysqli)) {
 
 if (isset($_POST['submit'])) {
     $content = $texteditorplugin->prepare_text_for_save($_POST['ref_content']);
-  // Write the reference material
+    // Write the reference material
     $result = $mysqli->prepare('UPDATE reference_material SET title = ?, content = ?, width = ? WHERE id = ?');
     $result->bind_param('sssi', $_POST['title'], $content, $_POST['width'], $_GET['refID']);
     $result->execute();
   
-  // Add it to the modules
+    // Add it to the modules
     $result = $mysqli->prepare('DELETE FROM reference_modules WHERE refID = ?');
     $result->bind_param('i', $_GET['refID']);
     $result->execute();

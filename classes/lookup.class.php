@@ -47,22 +47,22 @@ class Lookup extends RogoStaticSingleton
 
     public $initobj, $lookupuserobj, $preauthobj, $userlookupobj, $postauthobj, $postauthsuccesobj, $postauthfailobj, $displaystdformobj, $displayerrformobj, $getauthobj, $sessionstoreobj;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
     static function get_instance($config = null, $db = null)
     {
-      //some objects are global and need parameters these are constructed using
-      //a stranded constructor and need parameters passing. if they have not been
-      //built and get_instance is call it should return null
+        //some objects are global and need parameters these are constructed using
+        //a stranded constructor and need parameters passing. if they have not been
+        //built and get_instance is call it should return null
         if (isset(static::$dont_construct) and static::$dont_construct == true) {
             if (is_object(static::$inst)) {
                 return static::$inst;
@@ -71,7 +71,7 @@ class Lookup extends RogoStaticSingleton
             }
         }
 
-      //normal behaviour create on demand
+        //normal behaviour create on demand
         if (!is_object(static::$inst) and $config != null and $db != null) {
             static::$inst = new static::$class_name($config, $db);
         }
@@ -82,7 +82,7 @@ class Lookup extends RogoStaticSingleton
         return static::$inst;
     }
 
-// constructor
+    // constructor
     function __construct(&$configObj, &$db)
     {
         $this->db = & $db;
@@ -145,9 +145,9 @@ class Lookup extends RogoStaticSingleton
         }
     }
 
-  /**
-   * error handling function
-   */
+    /**
+     * error handling function
+     */
     function error_handling($context = null)
     {
         $context1 = array();
@@ -158,9 +158,9 @@ class Lookup extends RogoStaticSingleton
         return $context1;
     }
 
-  /**
-   * CLoads the config
-   */
+    /**
+     * CLoads the config
+     */
     function load_config()
     {
         $notice = UserNotices::get_instance();
@@ -175,10 +175,10 @@ class Lookup extends RogoStaticSingleton
         $this->debug[] = 'Loaded Config for lookup';
     }
 
-  /**looks up module info Checks if a faculty ID already exists.
-   * @param object  $data - an object containing the elements searchorder for searching order, lookupdata the data to lookup and where the data is stored and settings that stores certain settings for this search
-   * @return object             - the data object
-   */
+    /**looks up module info Checks if a faculty ID already exists.
+     * @param object  $data - an object containing the elements searchorder for searching order, lookupdata the data to lookup and where the data is stored and settings that stores certain settings for this search
+     * @return object             - the data object
+     */
     function modulelookup($data)
     {
         if (!isset($data->searchorder)) {
@@ -279,10 +279,10 @@ class Lookup extends RogoStaticSingleton
         return $modulelookupobj;
     }
 
-  /**looks up user info Checks if a faculty ID already exists.
-   * @param object  $data - an object containing the elements searchorder for searching order, lookupdata the data to lookup and where the data is stored and settings that stores certain settings for this search
-   * @return object             - the data object
-   */
+    /**looks up user info Checks if a faculty ID already exists.
+     * @param object  $data - an object containing the elements searchorder for searching order, lookupdata the data to lookup and where the data is stored and settings that stores certain settings for this search
+     * @return object             - the data object
+     */
     function userlookup($data)
     {
         if (!isset($data->searchorder)) {
@@ -391,19 +391,19 @@ class Lookup extends RogoStaticSingleton
         }
     }
 
-  /**registers callbacks from plugins.
-   * @param object  $callback the callback object/array
-   * @param string $section  the section it is associated with
-   * @param int $number the id number for the plugin
-   * @param string $name the  name of the plugin
-   * @param bool $insert optional if set insert at beginning of list
-   *    * @return bool             - false if failed
-   */
+    /**registers callbacks from plugins.
+     * @param object  $callback the callback object/array
+     * @param string $section  the section it is associated with
+     * @param int $number the id number for the plugin
+     * @param string $name the  name of the plugin
+     * @param bool $insert optional if set insert at beginning of list
+     *    * @return bool             - false if failed
+     */
     function register_callback($callback, $section, $number, $name, $insert = false)
     {
         if (!in_array($section, $this->callbacktypes) or !is_callable($callback)) {
-          //attempting to register callback to invalid section
-          //maybe log name of function as well?
+            //attempting to register callback to invalid section
+            //maybe log name of function as well?
             $this->debug[] = 'register_callback FAILED ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,true);
             $this->lookupPluginObj[$number]->set_error("Failed to register callback for section ($section) with function ($callback[1])");
 
@@ -483,7 +483,7 @@ class Lookup extends RogoStaticSingleton
             return $data;
         }
         if ($advanced == false) {
-          //basic view
+            //basic view
 
             $return_data = '';
             $error = false;
@@ -500,7 +500,7 @@ class Lookup extends RogoStaticSingleton
                 $return_data = '<div style="background-color: #cc0000;">' . $return_data . '</div>';
             }
         } else {
-          //advanced view
+            //advanced view
         }
 
         return $return_data;

@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../include/question_types.php';
@@ -206,7 +206,7 @@ while ($result->fetch()) {
                             }
                             echo'</span></li>';
                         } else {
-                          // Could display unmapped objective here!
+                            // Could display unmapped objective here!
                             echo '<li class="unmapped">' . strip_tags($objectives['content'], '<b><i><strong><em><sub><sup>') . '</li>';
                         }
                     }

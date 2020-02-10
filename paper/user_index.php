@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Displays a summary of a particular paper. Initial screen called by a VLE and is used to launch start.php.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Displays a summary of a particular paper. Initial screen called by a VLE and is used to launch start.php.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../include/staff_student_auth.inc';
 require_once '../include/errors.php';
@@ -57,7 +57,7 @@ function load_attempts($test_type, $paperID, $userObj, $db)
     $result->close();
     
     if ($test_type == '0') {
-      // If type is Formative query the Progress Test log table as well and add into array if max screen is not blank.
+        // If type is Formative query the Progress Test log table as well and add into array if max screen is not blank.
         $result = $db->prepare('SELECT lm.id, MAX(l.screen) AS screen, SUM(l.mark) AS mark, DATE_FORMAT(lm.started,"%Y%m%d%H%i%s") AS started, 1 AS paper_type,
       DATE_FORMAT(lm.started,"%d/%m/%Y %H:%i") AS temp_date
       FROM log_metadata lm LEFT JOIN log1 l ON l.metadataID = lm.id
@@ -161,7 +161,7 @@ $textsize = 100;
 $font = 'Arial';
 
 if ($userObject->is_special_needs()) {
-  // Look up special_needs data
+    // Look up special_needs data
     $special_needs_percentage = $userObject->get_special_needs_percentage();
     $textsize = $userObject->get_textsize($textsize);
     $font = $userObject->get_font($font);
@@ -238,10 +238,10 @@ $previously_submitted = 0;
 
 $low_bandwidth = 0;
 if ($userObject->has_role('Student')) {
-  // Check for additional password on the paper
+    // Check for additional password on the paper
     check_paper_password($propertyObj->get_property_id(), $password, $string, $mysqli, true);
 
-  //Check this PC is registered for this exam
+    //Check this PC is registered for this exam
     $low_bandwidth = check_labs($test_type, $labs, $current_address, $password, $string, $mysqli);
 
     $attempt = check_modules($userObject, $modIDs, $calendar_year, $string, $mysqli);
@@ -282,8 +282,8 @@ if ($exam_duration !== null) {
                 $display_remaining_time = false;
             }
         }
-      // Check current IP address with that of attempt in log.
-      // Warn user that they need to log out if they are logged into mulitple devices in this exam.
+        // Check current IP address with that of attempt in log.
+        // Warn user that they need to log out if they are logged into mulitple devices in this exam.
         if ($current_address !== $log_metadata->get_ipaddress()) {
             if (!is_null($log_metadata->get_ipaddress())) {
                 $ipmismatch = true;
@@ -393,7 +393,7 @@ if ($test_type != '2') {
         $html = ' class="warn"';
     }
     if (empty($paper_start) or empty($paper_end)) {
-      // The start / end date has not been set yet so display Availability: Not set to the user.
+        // The start / end date has not been set yet so display Availability: Not set to the user.
         echo '<tr><td class="f"><nobr>' . $string['availability'] . '</nobr></td><td colspan="3"' . $html . '>' . $string['notset'];
     } else {
         echo '<tr><td class="f"><nobr>' . $string['availability'] . '</nobr></td><td colspan="3"' . $html . '>' . $display_start_date . ' ' . $string['to'] . ' ' . $display_end_date;

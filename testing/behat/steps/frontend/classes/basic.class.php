@@ -34,14 +34,14 @@ use Behat\Gherkin\Node\PyStringNode,
  */
 trait basic
 {
-  /**
-   * Click on an element on the page.
-   *
-   * @Given /^I click "([^"]*)" "([^"]*)"$/
-   * @param string $name The value to be searched for
-   * @param string $selector The type of selector
-   * @throws Exception
-   */
+    /**
+     * Click on an element on the page.
+     *
+     * @Given /^I click "([^"]*)" "([^"]*)"$/
+     * @param string $name The value to be searched for
+     * @param string $selector The type of selector
+     * @throws Exception
+     */
     public function i_click($name, $selector)
     {
         $element = $this->find($selector, $name);
@@ -51,14 +51,14 @@ trait basic
         $element->click();
     }
 
-  /**
-   * Checks for the presense of text.
-   *
-   * @Then /^I should see "([^"]*)" "([^"]*)"$/
-   * @param string $content
-   * @param string $selector
-   * @throws Exception
-   */
+    /**
+     * Checks for the presense of text.
+     *
+     * @Then /^I should see "([^"]*)" "([^"]*)"$/
+     * @param string $content
+     * @param string $selector
+     * @throws Exception
+     */
     public function i_should_see($content, $selector)
     {
         $element = $this->find($selector, $content);
@@ -70,47 +70,47 @@ trait basic
         }
     }
 
-  /**
-   * Checks that text is not visible to the user
-   *
-   * @Then /^I should not see "([^"]*)" "([^"]*)"$/
-   * @param string $content
-   * @param string $selector
-   * @return void
-   * @throws Exception
-   */
+    /**
+     * Checks that text is not visible to the user
+     *
+     * @Then /^I should not see "([^"]*)" "([^"]*)"$/
+     * @param string $content
+     * @param string $selector
+     * @return void
+     * @throws Exception
+     */
     public function i_should_not_see($content, $selector)
     {
         $element = $this->find($selector, $content);
         if (is_null($element)) {
-          // Element is not present at all so all is good.
+            // Element is not present at all so all is good.
             return;
         }
         if ($this->running_javascript() and !$element->isVisible()) {
-          // The element is present but hidden from the user.
+            // The element is present but hidden from the user.
             return;
         }
         throw new \Exception("The \"$selector\" with the value of \"$content\" is visibile");
     }
     
-  /**
-   * Keep browser live, for debuging
-   *
-   * @Given /^I pause "(?P<seconds_number>\d+)" seconds$/
-   * @param int $seconds
-   */
+    /**
+     * Keep browser live, for debuging
+     *
+     * @Given /^I pause "(?P<seconds_number>\d+)" seconds$/
+     * @param int $seconds
+     */
     public function i_wait_seconds($seconds)
     {
         $this->getSession()->wait($seconds * 1000, false);
     }
 
-  /**
-   * Sets focus to the names popup window.
-   *
-   * @And I focus :name popup
-   * @param string $name
-   * @return void
-   */
+    /**
+     * Sets focus to the names popup window.
+     *
+     * @And I focus :name popup
+     * @param string $name
+     * @return void
+     */
     public function i_focus_popup($name)
     {
         $session = $this->getSession();
@@ -126,11 +126,11 @@ trait basic
         throw new Exception("Popup '$name' not found");
     }
 
-  /**
-   * Sets the focus to the main Rogo screen away from any popups.
-   *
-   * @And I focus main window
-   */
+    /**
+     * Sets the focus to the main Rogo screen away from any popups.
+     *
+     * @And I focus main window
+     */
     public function i_focus_main_window()
     {
         $session = $this->getSession();
@@ -140,13 +140,13 @@ trait basic
         $session->switchToWindow($this->mainwindow);
     }
   
-  /**
-   * Check there is a popup present.
-   *
-   * @Then I should see popup page with title :title
-   * @param String $title The page title
-   * @throws Exception
-   */
+    /**
+     * Check there is a popup present.
+     *
+     * @Then I should see popup page with title :title
+     * @param String $title The page title
+     * @throws Exception
+     */
     public function i_see_popup_page($title)
     {
         $session = $this->getSession();
@@ -165,12 +165,12 @@ trait basic
         });
     }
 
-  /**
-   * Tests that only the main window is open.
-   *
-   * @And only main window should be open
-   * @throws Exception
-   */
+    /**
+     * Tests that only the main window is open.
+     *
+     * @And only main window should be open
+     * @throws Exception
+     */
     public function only_main_window()
     {
         $session = $this->getSession();
@@ -183,12 +183,12 @@ trait basic
         });
     }
 
-  /**
-   * Checks a popup was not found.
-   *
-   * @And I should not see popup page with title :title
-   * @param type $title
-   */
+    /**
+     * Checks a popup was not found.
+     *
+     * @And I should not see popup page with title :title
+     * @param type $title
+     */
     public function i_should_not_see_popup($title)
     {
         $session = $this->getSession();
@@ -207,12 +207,12 @@ trait basic
         });
     }
   
-  /**
-   * Close popup window back to main window
-   *
-   * @Then I close popup window :title
-   * @throws Exception
-   */
+    /**
+     * Close popup window back to main window
+     *
+     * @Then I close popup window :title
+     * @throws Exception
+     */
     public function i_close_popup_window($title)
     {
         $session = $this->getSession();
@@ -240,13 +240,13 @@ trait basic
     }
   
   
-  /**
-   * Check the page
-   *
-   * @Then /^I should see page with title "([^"]*)"$/
-   * @param String $title The page title
-   * @throws Exception
-   */
+    /**
+     * Check the page
+     *
+     * @Then /^I should see page with title "([^"]*)"$/
+     * @param String $title The page title
+     * @throws Exception
+     */
     public function i_see_page_title($title)
     {
         $pagetitle = $this->find('xpath', "//div[@class='page_title']")->getText();
@@ -255,20 +255,20 @@ trait basic
         }
     }
 
-  /**
-   * Check table content
-   *
-   * @Then /^I should see table with:$/
-   *
-   * Asserts that a table exists with specified values.
-   * The table header needs to have the number of the column to which the values belong,
-   * all the other text is optional, normaly using 'Column' for easier understanding:
-   *
-   *      | Column 1 | Column 2 | Column 4 |
-   *      | Value A  | Value B  | Value D  |
-   *      ...
-   *      | Value I  | Value J  | Value L  |
-   */
+    /**
+     * Check table content
+     *
+     * @Then /^I should see table with:$/
+     *
+     * Asserts that a table exists with specified values.
+     * The table header needs to have the number of the column to which the values belong,
+     * all the other text is optional, normaly using 'Column' for easier understanding:
+     *
+     *      | Column 1 | Column 2 | Column 4 |
+     *      | Value A  | Value B  | Value D  |
+     *      ...
+     *      | Value I  | Value J  | Value L  |
+     */
     public function i_see_table_with(TableNode $table)
     {
         $rows = $table->getRows();
@@ -285,18 +285,18 @@ trait basic
         }
     }
 
-  /**
-   * Find a(all) table row(s) that match the column text
-   *
-   * @param string        $text       Text to be found
-   * @param int           $columnnumber     In which column the text should be found
-   * @param string        $tableXpath If there is a specific table
-   *
-   * @return \Behat\Mink\Element\NodeElement[]
-   */
+    /**
+     * Find a(all) table row(s) that match the column text
+     *
+     * @param string        $text       Text to be found
+     * @param int           $columnnumber     In which column the text should be found
+     * @param string        $tableXpath If there is a specific table
+     *
+     * @return \Behat\Mink\Element\NodeElement[]
+     */
     public function get_table_row($text, $columnnumber, $tableXpath)
     {
-      // check column
+        // check column
         if (!empty($columnnumber)) {
             if (is_integer($columnnumber)) {
                 $column = "[$columnnumber]";
@@ -315,30 +315,30 @@ trait basic
         return false;
     }
 
-  /**
-   * Click on an admin tool.
-   *
-   * @When /^I click admin tool "([^"]*)"$/
-   * @param string $name The value to be searched for
-   * @throws Exception
-   */
+    /**
+     * Click on an admin tool.
+     *
+     * @When /^I click admin tool "([^"]*)"$/
+     * @param string $name The value to be searched for
+     * @throws Exception
+     */
     public function i_click_admin_tool($name)
     {
         $elements = $this->find_all('xpath', "//div[@class='container' and contains(text(), '$name')]");
         $elements[0]->click();
     }
 
-  /**
-   * Waits for the Rogo page in the focused window to load.
-   *
-   * @And I wait for page to load
-   */
+    /**
+     * Waits for the Rogo page in the focused window to load.
+     *
+     * @And I wait for page to load
+     */
     public function i_wait_for_page_to_load()
     {
         $session = $this->getSession();
         $this->spin(function (rogo_test $context) use ($session) {
             try {
-              // Now try testing via Javascript if the page is in a loaded state.
+                // Now try testing via Javascript if the page is in a loaded state.
                 $js = <<<JS
 return document.readyState === 'complete'
 JS;
@@ -347,16 +347,16 @@ JS;
                     return true;
                 }
             } catch (UnsupportedDriverActionException $ex) {
-              // Javascript evaluation is not supported so try looking at the last http status code.
+                // Javascript evaluation is not supported so try looking at the last http status code.
                 try {
-                  // Try testing for a response code of 200 (Any other code is not loaded)
+                    // Try testing for a response code of 200 (Any other code is not loaded)
                     if ($session->getStatusCode() === 200) {
                         // The status code indicates the page returned content successfully.
                         return true;
                     }
                 } catch (UnsupportedDriverActionException $ex) {
-                  // All methods of determining if the page is fully loaded are not supported,
-                  //  so we must assume it is and hope for the best.
+                    // All methods of determining if the page is fully loaded are not supported,
+                    //  so we must assume it is and hope for the best.
                     return true;
                 }
             }
@@ -364,35 +364,35 @@ JS;
         });
     }
 
-  /**
-   * Check javascript popup message
-   *
-   * @Then /^(?:|I )should see "([^"]*)" in popup$/
-   *
-   * @param string $message The message.
-   *
-   * @return bool
-   */
+    /**
+     * Check javascript popup message
+     *
+     * @Then /^(?:|I )should see "([^"]*)" in popup$/
+     *
+     * @param string $message The message.
+     *
+     * @return bool
+     */
     public function assert_popup_message($message)
     {
         return $message == $this->getSession()->getDriver()->getWebDriverSession()->getAlert_text();
     }
 
-  /**
-   * Confirm a javascript popup window, click OK/Yes button
-   *
-   * @Then /^(?:|I )confirm the popup$/
-   */
+    /**
+     * Confirm a javascript popup window, click OK/Yes button
+     *
+     * @Then /^(?:|I )confirm the popup$/
+     */
     public function confirm_popup()
     {
         $this->getSession()->getDriver()->getWebDriverSession()->accept_alert();
     }
 
-  /**
-   * Cancel a javascript popup window, click No/Cancel button
-   *
-   * @Then /^(?:|I )cancel the popup$/
-   */
+    /**
+     * Cancel a javascript popup window, click No/Cancel button
+     *
+     * @Then /^(?:|I )cancel the popup$/
+     */
     public function cancel_popup()
     {
         $this->getSession()->getDriver()->getWebDriverSession()->dismiss_alert();

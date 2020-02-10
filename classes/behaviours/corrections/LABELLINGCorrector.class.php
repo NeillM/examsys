@@ -29,11 +29,11 @@ include_once 'Corrector.class.php';
 
 class LABELLINGCorrector extends Corrector
 {
-  /**
-   * Change the correct answer after the question has been locked. Update user marks in summative log table
-   * @param integer $new_correct new correct answer
-   * @param integer $paper_id
-   */
+    /**
+     * Change the correct answer after the question has been locked. Update user marks in summative log table
+     * @param integer $new_correct new correct answer
+     * @param integer $paper_id
+     */
     public function execute($new_correct, $paper_id, &$changes, $paper_type)
     {
         $errors = array();
@@ -48,10 +48,10 @@ class LABELLINGCorrector extends Corrector
                 if (!$this->_question->save()) {
                     $errors[] = $this->_lang_strings['datasaveerror'];
                 } else {
-          // Remark the student's answers in 'log{$paper_type}'.
+                    // Remark the student's answers in 'log{$paper_type}'.
                     $label_details = $option->get_correct();
 
-          // Calculate how many correct labels - are they on the canvas (x > 219px)
+                    // Calculate how many correct labels - are they on the canvas (x > 219px)
                     $correct_labels = array();
                     $tmp_first_split = explode(';', $label_details);
                     $tmp_second_split = explode('|', $tmp_first_split[11]);

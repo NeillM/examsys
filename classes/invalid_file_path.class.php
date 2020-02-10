@@ -23,11 +23,11 @@
  */
 class invalid_file_path extends Exception
 {
-  /**
-   * Constructor for the exception.
-   *
-   * @param string $file path for the file that was not found.
-   */
+    /**
+     * Constructor for the exception.
+     *
+     * @param string $file path for the file that was not found.
+     */
     public function __construct()
     {
         $strings = LangUtils::loadlangfile('exceptions/messages.php', array());

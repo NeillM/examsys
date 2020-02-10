@@ -30,7 +30,7 @@ class theme extends rogo_directory
 
     public function cachetime()
     {
-      // Cache for 24 hours.
+        // Cache for 24 hours.
         return 86400;
     }
 

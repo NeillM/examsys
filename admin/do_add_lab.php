@@ -67,7 +67,7 @@ if ($bad_addresses > 0) {
     echo json_encode(array('INVALID', $ipInvalid, $ipInUse));
     exit();
 } else {
-  // Insert into Lab table.
+    // Insert into Lab table.
     $result = $mysqli->prepare('INSERT INTO labs (name, campus, building, room_no, timetabling, it_support, plagarism) VALUES (?, ?, ?, ?, ?, ?, ?)');
     $result->bind_param('sisssss', $lab_name, $campus, $building, $room_no, $timetabling, $it_support, $plagarism);
     $result->execute();

@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require $cfg_web_root . 'lang/' . $language . '/include/errors.php';
 
@@ -125,7 +125,7 @@ function check_var($var_name, $method, $mandatory, $headers, $return_var, $type 
             }
         }
         if ($return_var) {
-          // Ensure that the value is sanitised.
+            // Ensure that the value is sanitised.
             return param::clean($method[$var_name], $type);
         } else {
             return;
@@ -147,7 +147,7 @@ function check_var($var_name, $method, $mandatory, $headers, $return_var, $type 
         try {
             $output = param::required($var_name, $type, $from);
         } catch (MissingParameter $e) {
-          // Only catch exceptions for missing parameters.
+            // Only catch exceptions for missing parameters.
             switch ($method) {
                 case 'GET':
                     display_error($string['fatalerrormsg0'], $string['fatalerrormsg1'], $headers);
@@ -160,12 +160,12 @@ function check_var($var_name, $method, $mandatory, $headers, $return_var, $type 
             }
         }
     } else {
-      // The parameter is not required, we may need to return null.
+        // The parameter is not required, we may need to return null.
         $output = param::optional($var_name, null, $type, $from);
     }
-  // Check if we should return the value.
+    // Check if we should return the value.
     if ($return_var) {
         return $output;
     }
-  // We should not return anything.
+    // We should not return anything.
 }

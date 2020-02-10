@@ -74,7 +74,7 @@ if ($unique_moduleid == true) {
         exit();
     }
 
-  // New sytle SMS enrolments.
+    // New sytle SMS enrolments.
     if (!is_null($externalid)) {
         $yearutils = new yearutils($mysqli);
         $session = $yearutils->get_current_session();

@@ -16,16 +16,16 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Shows information on the currently selected user: name, username, email, etc
-* plus the details of any taken assessment or survey. SysAdmin users also have the ability
-* to edit personal details such as name, username, password, etc.
-*
-* @author Simon Wilkinson, Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Shows information on the currently selected user: name, username, email, etc
+ * plus the details of any taken assessment or survey. SysAdmin users also have the ability
+ * to edit personal details such as name, username, password, etc.
+ *
+ * @author Simon Wilkinson, Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../include/sysadmin_auth.inc';
 require_once '../include/errors.php';
@@ -181,7 +181,7 @@ foreach ($roles_array as $value) {
     <div style="margin-top:24px; text-align:center"><input type="submit" name="submit" value="<?php echo $string['ok'] ?>" class="ok" /><input class="cancel" type="button" id="cancel" name="cancel" value="<?php echo $string['cancel'] ?>" /></div>
   </form>
   <?php
-  // JS utils dataset.
+    // JS utils dataset.
     $render = new render($configObject);
     $jsdataset['name'] = 'jsutils';
     $jsdataset['attributes']['xls'] = json_encode($string);

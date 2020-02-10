@@ -93,25 +93,25 @@ function print_p($elem, $expandfirst = true, $trim = 100, $max_level = 10, $prin
             return;
         }
         $max_level--;
-      //echo "<table border=0 cellspacing=0 cellpadding=3 width=100%>";
+        //echo "<table border=0 cellspacing=0 cellpadding=3 width=100%>";
 
         $title = '';
         $isarray = false;
         if (is_array($elem)) {
             $title = "<img src='$base_dir/qti/artwork/array.png' width='16' height='16'> Array (" . count($elem) . ')';
             $isarray = true;
-          //echo '<tr><td colspan=2 style="background-color:#333333;"><strong><font color=white>ARRAY</font></strong></td></tr>';
+            //echo '<tr><td colspan=2 style="background-color:#333333;"><strong><font color=white>ARRAY</font></strong></td></tr>';
         } else {
-        //echo '<tr><td colspan=2 style="background-color:#333333;"><strong>';
-        //echo '<font color=white>+ * - OBJECT Type: '.get_class($elem).'</font></strong></td></tr>';
+            //echo '<tr><td colspan=2 style="background-color:#333333;"><strong>';
+            //echo '<font color=white>+ * - OBJECT Type: '.get_class($elem).'</font></strong></td></tr>';
             $title = "<img src='$base_dir/qti/artwork/class.png' width='16' height='16'> Object Type: " . get_class($elem);
 
-        //            if (is_callable(array(get_class($elem),"__toString")))
+            //            if (is_callable(array(get_class($elem),"__toString")))
             if (is_callable(array($elem, '__toString'))) {
-              //if (get_class($elem) == "ST_QTI12_Material")
-              //{
+                //if (get_class($elem) == "ST_QTI12_Material")
+                //{
                 $title .= ' (' . trim(substr($elem->__toString(), 0, 125)) . ')';
-              //}
+                //}
             }
         }
         echo "<div class='print_cont'>";
@@ -141,7 +141,7 @@ function print_p($elem, $expandfirst = true, $trim = 100, $max_level = 10, $prin
                 } else {
                     $rgb = ($color++ % 2) ? '#DDDDFF' : '#EEEEFF';
                 }
-          //$rgb = '#FFFFFF';
+                //$rgb = '#FFFFFF';
                 echo '<tr bgcolor="' . $rgb . '"><td valign="top" class="print_label" nowrap width="0%">';
                 echo $k;
                 echo '</td><td class="print_variable" width="100%">';

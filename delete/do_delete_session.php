@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Delete a session in the internal list of objectives.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Delete a session in the internal list of objectives.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/sysadmin_auth.inc';
 
@@ -34,7 +34,7 @@ $obj_data->execute();
 $obj_data->store_result();
 $obj_data->bind_result($obj_id);
 while ($obj_data->fetch()) {
-  // Delete from 'relationships' table.
+    // Delete from 'relationships' table.
     $result = $mysqli->prepare("DELETE FROM relationships WHERE obj_id = ? AND idMod = ? AND calendar_year = ? AND vle_api = ''");
     $result->bind_param('iis', $obj_id, $_POST['moduleID'], $_POST['session']);
     $result->execute();

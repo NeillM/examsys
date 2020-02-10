@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -143,14 +143,14 @@ while ($result->fetch()) {
     $leadin = StringUtils::wordToUtf8(StringUtils::clean_and_trim(strip_tags($leadin)));
        
     $leadin = parse_leadin_word_2003($leadin, $q_parts);
-// Lead-in
+    // Lead-in
     echo '<w:tr wsp:rsidR="00A11D0F" wsp:rsidRPr="00A11D0F" wsp:rsidTr="00A11D0F">';
     echo '<w:tc>';
     echo '<w:tcPr><w:tcW w:w="8755" w:type="dxa"/></w:tcPr><w:p>' . $leadin;
     echo '</w:p>';
     echo '</w:tc>';
     $old_feedback = $feedback;
-// Rating score
+    // Rating score
     echo '<w:tc>';
     echo '<w:tcPr><w:tcW w:w="487" w:type="dxa"/></w:tcPr><w:p wsp:rsidR="00A11D0F" wsp:rsidRPr="00A11D0F" wsp:rsidRDefault="00A11D0F" wsp:rsidP="00A11D0F"><w:pPr><w:spacing w:after="0" w:line="240" w:line-rule="auto"/><w:rPr><w:rFonts w:ascii="Calibri" w:h-ansi="Calibri"/></w:rPr></w:pPr><w:r wsp:rsidRPr="00A11D0F"><w:rPr><w:rFonts w:ascii="Calibri" w:h-ansi="Calibri"/></w:rPr><w:t>' . $rating . '</w:t></w:r></w:p>';
     echo '</w:tc>';

@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Anthony Brown, Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Anthony Brown, Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 $root = str_replace('/include', '/', str_replace('\\', '/', dirname(__FILE__)));
 $root = "$root/../";
@@ -41,7 +41,7 @@ if (!isset($_GET['url'])) {
     }
 }
 if ($action == 'getModulePaperList') {
-  // Force a staff DB connection for getModulePaperList
+    // Force a staff DB connection for getModulePaperList
   
     $mysqli = DBUtils::get_mysqli_link(
         $configObject->get('cfg_db_host'),
@@ -156,7 +156,7 @@ class webServiceRestAPI extends restAPI
     
         switch ($action) {
             case 'getAvailableFeedback':
-              // Process URL
+                // Process URL
                 $username = '';
                 $module = '';
                 $tmp = explode('/', $parms);
@@ -169,7 +169,7 @@ class webServiceRestAPI extends restAPI
                 if ($username == '') {
                     $this->sendResponse(400, '', '');
                 } else {
-                  // Return the module Available Feedback
+                    // Return the module Available Feedback
                     $this->data = $this->getAvailableFeedback($username, $module);
                     if ($this->data == '') {
                         $this->sendResponse(400, '', '');
@@ -261,7 +261,7 @@ class webServiceRestAPI extends restAPI
                 }
                 break;
             default:
-              // If we get here the action is unsupported so give a HTTP 405 bad request
+                // If we get here the action is unsupported so give a HTTP 405 bad request
                 $this->sendResponse(405, '', '');
                 break;
         }
@@ -413,7 +413,7 @@ class webServiceRestAPI extends restAPI
         } elseif ($userObject->has_role('Staff')) {
             $allowaccess = true;
         } elseif ($userObject->has_role('Student') and $tmp_userID == $userObject->get_user_ID()) {
-          // Students can only list their own feedabck
+            // Students can only list their own feedabck
             $allowaccess = true;
         }
     
@@ -481,7 +481,7 @@ class webServiceRestAPI extends restAPI
     
         while ($res->fetch()) {
             if ($is_live < time()) {
-              // Have they sat the paper?
+                // Have they sat the paper?
                 $log = $this->db->prepare('SELECT userID FROM log_metadata WHERE userID=? AND paperID=? LIMIT 1');
                 $log->bind_param('ii', $tmp_userID, $paperID);
                 $log->execute();
@@ -530,7 +530,7 @@ class webServiceRestAPI extends restAPI
         } elseif ($userObject->has_role('Staff') and $tmp_userID == $userObject->get_user_ID()) {
             $allowaccess = true;
         } elseif ($userObject->has_role('Student')) {
-          // Students can not access this function
+            // Students can not access this function
             $allowaccess = false;
         }
     
@@ -544,7 +544,7 @@ class webServiceRestAPI extends restAPI
     
         $staff_modules = UserUtils::list_staff_modules_by_userID($tmp_userID, $this->db);
         if (count($staff_modules) == 0) {
-          // User is not on any teams. stop!!
+            // User is not on any teams. stop!!
             return array();
         }
         $staff_modules_ids_str = ' OR idMod IN (' . implode(',', array_keys($staff_modules)) . ') ';

@@ -16,10 +16,10 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* Progressive package
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2018 onwards The University of Nottingham
-*/
+ * Progressive package
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2018 onwards The University of Nottingham
+ */
 
 namespace plugins\papers\progressive;
 
@@ -29,9 +29,9 @@ namespace plugins\papers\progressive;
 class log extends \log
 {
 
-  /**
-   * Constructor
-   */
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         parent::__construct();
@@ -39,10 +39,10 @@ class log extends \log
         $this->late = true;
     }
 
-  /**
-   * Get progressive logs
-   * @return array
-   */
+    /**
+     * Get progressive logs
+     * @return array
+     */
     public function get_log()
     {
         $user_answers = array();

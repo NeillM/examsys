@@ -59,14 +59,14 @@ class Authentication
 
     public $initobj, $lookupuserobj, $preauthobj, $authobj, $postauthobj, $postauthsuccesobj, $postauthfailobj, $displaystdformobj, $displayerrformobj, $getauthobj, $sessionstoreobj;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
@@ -89,16 +89,16 @@ class Authentication
         $this->debug = array();
 
         if ($this->load_config()) {
-          //if the config is ok setup the auth stack
+            //if the config is ok setup the auth stack
             $this->setup();
         }
     }
 
-  /*
-   * Verify the config file contains vlaid authentication settings.
-   *
-   * @return bool
-   */
+    /*
+     * Verify the config file contains vlaid authentication settings.
+     *
+     * @return bool
+     */
     private function load_config()
     {
         $config_ok = true;
@@ -118,9 +118,9 @@ class Authentication
         return $config_ok;
     }
 
-  /*
-   *  Parse the config and register the relevant callbacks in the auth plugins.
-   */
+    /*
+     *  Parse the config and register the relevant callbacks in the auth plugins.
+     */
     private function setup()
     {
         $notfound = true;
@@ -135,7 +135,7 @@ class Authentication
             array_unshift($this->config, array('alreadyloggedin', array('timeout' => 0), 'Internal Authentication'));     // Add in 'already logged in' plugin so don't re-authenticate every page.
         }
 
-      // get form data here?
+        // get form data here?
         $this->form['std'] = new stdClass();
         if (isset($this->request['rogo-login-form-std'])) {
             $this->form['std']->username = $this->request['ROGO_USER'];
@@ -155,7 +155,7 @@ class Authentication
             $settings = $auth[1];
             $name = $auth[2];
 
-          //TODO this knackers unit testing ERROR Nesting level too deep -  recursive dependency?
+            //TODO this knackers unit testing ERROR Nesting level too deep -  recursive dependency?
             $this->returndata[$number] = new authtypereturn();
             $this->authinfo[$number] = array($name => $authtype);
 
@@ -202,10 +202,10 @@ class Authentication
         }
     }
 
-  /*
-   * Add extra callbacks sections.
-   * @param array $section - Array of callback types.
-   */
+    /*
+     * Add extra callbacks sections.
+     * @param array $section - Array of callback types.
+     */
     function register_callback_section($section)
     {
         foreach ($section as $addition) {
@@ -215,20 +215,20 @@ class Authentication
         }
     }
 
-  /*
-   * Registers a single callback.
-   * @param callable $callback  - Contains function to run.
+    /*
+     * Registers a single callback.
+     * @param callable $callback  - Contains function to run.
      * @param string $section           - Which section to register itself into.
      * @param int $number                   - Internal identifier for the plugin.
      * @param string $name              - Internal name of the plugin.
      * @param bool $insert              - True  = insert at the top of the list, False = append to the end.
-   */
+     */
     function register_callback($callback, $section, $number, $name, $insert = false)
     {
         global $string;
         if (!in_array($section, $this->callbacktypes) or !is_callable($callback)) {
-          //attempting to register callback to invalid section
-          //maybe log name of function as well?
+            //attempting to register callback to invalid section
+            //maybe log name of function as well?
             $this->debug[] = 'register_callback FAILED ' . $section . ' from ' . get_class($callback[0]) . ' id:' . $number . ' with name:' . $name; // . var_export($callback,true);
             $this->authPluginObj[$number]->set_error($string['Authentication_callback_failure1'] . "($section)" . $string['Authentication_callback_failure2'] . " ($callback[1])");
 
@@ -248,19 +248,19 @@ class Authentication
         return true;
     }
 
-  /*
-   * Get a list of available callbacks for the section.
+    /*
+     * Get a list of available callbacks for the section.
      * @param string $section   - Name of the section.
-   */
+     */
     function get_callback($section)
     {
         return array(&$this->callbackregister[$section], &$this->callbackregisterdata[$section]);
     }
 
-  /*
-   * Disply the standard Rogo login form
+    /*
+     * Disply the standard Rogo login form
      * @param string $string    - Language strings.
-   */
+     */
     function display_std_form($string)
     {
         $displaystdformobj = new stdClass();
@@ -282,10 +282,10 @@ class Authentication
         }
     }
 
-  /*
-   * Display the standard Rogo login form
+    /*
+     * Display the standard Rogo login form
      * @param bool $display - True = display form after failing to log in, False = no form displayed but still runs callback routines.
-   */
+     */
     function display_error_form($display = true)
     {
         $override = $this->configObj->get('cfg_web_root') . '/config/login_error_form.php';
@@ -313,21 +313,21 @@ class Authentication
     }
 
 
-  /**
-   * Custom error handler
+    /**
+     * Custom error handler
      * @param array $context    - Unused.
      * @return array                    - List of the current object's variables.
-   */
+     */
     function error_handling($context = null)
     {
         return error_handling($this);
     }
 
 
-  /**
+    /**
      * @param string $string    - Language strings.
-   * @return bool if authentication was successful
-   */
+     * @return bool if authentication was successful
+     */
     function do_authentication($string)
     {
         $this->success = false;
@@ -361,10 +361,10 @@ class Authentication
                 } elseif ($authobj->returned === ROGO_AUTH_OBJ_LOOKUPONLY) {
                     $this->debug[] = '* User authenticated but no matching rogo id found, attempting to lookup the user with info supplied from module *';
 
-                  //lookupuser
+                    //lookupuser
                     $lookup = Lookup::get_instance($this->configObj, $this->db);
 
-                  //$authobj->data contains lookup info;
+                    //$authobj->data contains lookup info;
                     $data = new stdClass();
                     $data->lookupdata = clone $authobj->data;
                     $info = $lookup->userlookup($data);
@@ -374,7 +374,7 @@ class Authentication
                         $this->debug[] = 'Lookup Debug: ' . $line;
                     }
 
-                  //minimum fields to create an new user username
+                    //minimum fields to create an new user username
                     $createuser = true;
                     $authentication_fields_required_to_create_user = $this->configObj->get('authentication_fields_required_to_create_user');
                     if (!is_null($authentication_fields_required_to_create_user)) {
@@ -394,14 +394,14 @@ class Authentication
                     }
 
                     if ($createuser and !empty($info->lookupdata->username)) {
-                      // The authentication plugin may not use the main Rogo users table, so we should check if the user already has an account.
+                        // The authentication plugin may not use the main Rogo users table, so we should check if the user already has an account.
                         $existinguserid = UserUtils::username_exists($info->lookupdata->username, $this->db);
                     } else {
                         $existinguserid = false;
                     }
 
                     if ($existinguserid !== false) {
-                      // The user already exists in Rogo, but it was not in the table used by the authentication plugin.
+                        // The user already exists in Rogo, but it was not in the table used by the authentication plugin.
                         $this->debug[] = 'Matching user account found in Rogo';
                         $authobj->success($objid, $existinguserid);
                         $this->success = true;
@@ -418,14 +418,14 @@ class Authentication
 
                         $newuserid = UserUtils::create_extended_user($info->lookupdata->username, $info->lookupdata->title, $info->lookupdata->firstname, $info->lookupdata->surname, $info->lookupdata->email, $info->lookupdata->coursecode, $info->lookupdata->gender, $info->lookupdata->yearofstudy, $info->lookupdata->role, $info->lookupdata->studentID, $this->db, $info->lookupdata->school, $info->lookupdata->coursetitle, $info->lookupdata->initials, $this->form['std']->password);
                         if ($newuserid !== false) {
-                          //new account created
+                            //new account created
                             $authobj->success($objid, $newuserid);
                             $this->success = true;
                             $this->userid = $authobj->rogoid;
                             $this->debug[] = '******* Rogo ID is:: ' . $this->userid . " after a user lookup from object $objid:" . $this->callbackregisterdata['auth'][$number][$objid] . ' *******';
                         }
                     } else {
-                      // Log not creating user and why
+                        // Log not creating user and why
                         $username = 'UNKNOWN';
                         if (isset($this->form['std']->username)) {
                             $username = $this->form['std']->username;
@@ -456,7 +456,7 @@ class Authentication
         }
 
         if ($this->success === false) {
-          //failed
+            //failed
             $postauthfailobj = new postauthfailreturn();
             $postauthfailobj->authobj = $authobj;
             $postauthfailobj->postauthobj = $postauthobj;
@@ -520,7 +520,7 @@ class Authentication
                     }
                 }
 
-              //failed but no callbacks or callbacks finished
+                //failed but no callbacks or callbacks finished
                 $notice = UserNotices::get_instance();
                 if (!is_null($this->configObj->get('display_auth_debug')) and $this->configObj->get('display_auth_debug') == true) {
                     $msg = $string['Authentication_issue2'];
@@ -546,11 +546,11 @@ class Authentication
         if ($this->success !== true) {
             $this->debug[] = 'Success is not TRUE or FALSE';
 
-          //something went very wrong;
+            //something went very wrong;
             return false;
         }
 
-      // the auth has succeeded as above will stop it if its not true
+        // the auth has succeeded as above will stop it if its not true
         $postauthsuccessobj = new stdClass();
         $postauthsuccessobj->authobj = $authobj;
         $postauthsuccessobj->postauthobj = $postauthobj;
@@ -565,19 +565,19 @@ class Authentication
             }
         }
 
-      // need to save some data for allready logged in authentication
+        // need to save some data for allready logged in authentication
         $this->store_data_in_session();
 
-      // If redirect is set, redirect user to same page but with GET
+        // If redirect is set, redirect user to same page but with GET
         if ($authobj->postredirect) {
             header('Location: ' . $_SERVER['REQUEST_URI'], true, 303);
             exit();
         }
     }
 
-  /**
-   * Stores data in the session
-   */
+    /**
+     * Stores data in the session
+     */
     function store_data_in_session()
     {
         $this->session['authenticationObj']['loggedin']['userid'] = $this->get_userid();
@@ -585,25 +585,25 @@ class Authentication
         $this->session['authenticationObj']['attempt'] = 0;
     }
 
-  /**
-   * Return the user ID.
-   */
+    /**
+     * Return the user ID.
+     */
     function get_userid()
     {
         return $this->userid;
     }
 
-  /**
-   * Return the password as entered by the user.
-   */
+    /**
+     * Return the password as entered by the user.
+     */
     function get_password()
     {
         return $this->form['std']->password;
     }
 
-  /**
-   * Return the username as entered by the user.
-   */
+    /**
+     * Return the username as entered by the user.
+     */
     function get_username()
     {
         if (isset($this->username) and $this->username != '') {
@@ -612,11 +612,11 @@ class Authentication
         return false;
     }
 
-  /**
-   * Adds information to debugging log.
+    /**
+     * Adds information to debugging log.
      * @param int $number       - Internal plugin identifier.
      * @param string $desc  - Description of the internal plugin.
-   */
+     */
     function append_auth_object_debug($number, $desc = '')
     {
         $new_messages = $this->authPluginObj[$number]->get_new_debug_messages();
@@ -627,28 +627,28 @@ class Authentication
         }
     }
 
-  /**
-   * Display debugging log.
-   */
+    /**
+     * Display debugging log.
+     */
     function display_debug()
     {
         var_dump($this->debug);
     }
 
-  /**
-   * Return debugging log.
+    /**
+     * Return debugging log.
      * @return string - Debugging log.
-   */
+     */
     function debug_to_string()
     {
         return implode('<br />', $this->debug);
     }
 
-  /**
-   * Returns a user object.
+    /**
+     * Returns a user object.
      * @param object $getauth - Normally empty auth_obj but can be used to request a specific user.
      * @return object - User object.
-   */
+     */
     function get_auth_obj(&$getauth)
     {
         global $string;
@@ -660,7 +660,7 @@ class Authentication
             $getauthobj = & $getauth;
             
             if (!isset($getauthobj->userObj)) {
-            // Serious error - we have no user object.
+                // Serious error - we have no user object.
                 $getauthobj->userObj = new UserObject($this->configObj, $this->db);
             }
             if ($this->get_userid() < 1) {
@@ -699,30 +699,30 @@ class Authentication
         return $getauthobj->userObj;
     }
 
-  /**
-   * Clears the config object.
-   */
+    /**
+     * Clears the config object.
+     */
     function clear_configObj()
     {
         $this->config = 'Config Object: removed for security';
         $this->configObj = 'Config Object: removed for security';
     }
 
-  /**
-   * Clears the config object.
-   */
+    /**
+     * Clears the config object.
+     */
     function __Clone()
     {
         $this->config = 'Config Object: removed for security';
         $this->configObj = 'Config Object: removed for security';
     }
     
-  /**
-   * Returns information about all the authentication plugins.
+    /**
+     * Returns information about all the authentication plugins.
      * @param bool $formatted - True = return HTML formated data, False = array of data.
      * @param bool $advanced    - Not yet written.
      * @return array/string     - Information about the plugins.
-   */
+     */
     function version_info($formatted = false, $advanced = false)
     {
         $data = new stdClass();
@@ -750,7 +750,7 @@ class Authentication
             return $data;
         }
         if ($advanced == false) {
-          //basic view
+            //basic view
 
             $return_data = '';
             $error = false;
@@ -767,17 +767,17 @@ class Authentication
                 $return_data = '<div style="background-color: #cc0000;">' . $return_data . '</div>';
             }
         } else {
-          //advanced view - Not yet written.
+            //advanced view - Not yet written.
         }
 
         return $return_data;
     }
 
-  /**
-   * Check if the authentication stack is using a plugin of a given type
-   * @param string $type - The class name of the plugin for which to check
-   * @return boolean     - True if the plugin is loaded in the current authentication stack
-   */
+    /**
+     * Check if the authentication stack is using a plugin of a given type
+     * @param string $type - The class name of the plugin for which to check
+     * @return boolean     - True if the plugin is loaded in the current authentication stack
+     */
     function has_plugin_type($type)
     {
         $found = false;

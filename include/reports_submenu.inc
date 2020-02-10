@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 ?>
 <div class="popup" style="top:60px" id="stats_menu">
@@ -213,7 +213,7 @@ foreach ($metadata as $meta_type => $value_array) {
   echo "</table><input type=\"hidden\" name=\"meta_no\" id=\"meta_no\" value=\"$meta_no\" /><input type=\"hidden\" name=\"paperID\" id=\"paperID\" value=\"" . $_GET['paperID'] . '" />';
 echo "<table style=\"width:100%; padding: 0px 10px 10px 10px\"><tr><td style=\"vertical-align:top; width:45%; padding-right:6px\">\n";
 if ($properties->get_paper_type() == '0' or $properties->get_paper_type() == '1' or $properties->get_paper_type() == '2' or $properties->get_paper_type() == '5') {
-// display Assessment stats options
+    // display Assessment stats options
 
     echo '<div class="reports_header">' . $string['reviews'] . "</div>\n";
     echo "<div class=\"bullet\"><a href=\"#\" class='reports' data-url='../reports/review_comments.php?type=internal&scrOfY=0&'>" . $string['internalpeerreview'] . "</a></div>\n";

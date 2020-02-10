@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require '../include/mapping.inc';
@@ -247,7 +247,7 @@ if ($folderID != '') {
             }
             echo "</tr>\n";
 
-          //output mappings
+            //output mappings
             echo "<tr><td colspan=\"2\">&nbsp;</td><td>\n";
             $sessiontitle = '';
             if (count($objByModule) > 0) {

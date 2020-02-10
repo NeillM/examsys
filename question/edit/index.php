@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Rob Ingram
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Rob Ingram
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../../include/staff_auth.inc';
 require_once '../../include/edit.inc';
@@ -61,7 +61,7 @@ function get_post_params($part_names, $option, $option_no)
     if (count($postparams) === 0) {
         $postparams = $option->get_post_default();
     } elseif (count($postparams) !== count($part_names)) {
-    // Catch coding error if not all get_post functions defined.
+        // Catch coding error if not all get_post functions defined.
           throw new Exception('CODING_ERROR');
     }
     return $postparams;
@@ -95,25 +95,25 @@ function save_options($question, $userObject, $db)
             }
         }
         if ($check) {
-  // Editing existing option
+            // Editing existing option
             $part_names = $option->get_editable_fields();
             try {
                     $postparams = get_post_params($part_names, $option, $option_no);
             } catch (\Exception $e) {
                   return $e->getMessage();
             }
-        // Build arrays for compound fields
+            // Build arrays for compound fields
             $compound_fields = $option->get_compound_fields();
             if (!isset($existing_values)) {
                 $existing_values = array();
             }
             $option->populate_compound(array_keys($compound_fields), $_POST, $existing_values, 'option_');
-  // Save editable fields that aren't unified
+            // Save editable fields that aren't unified
             $option->populate($part_names, $option_no, $postparams, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
-  // Save fields that are the same across options
+            // Save fields that are the same across options
             $option->populate_unified($unified_part_names, $_POST, array_keys($compound_fields), 'option_');
         } else {
-        // Create new option if have required data
+            // Create new option if have required data
                 $option = OptionEdit::option_factory($db, $userObject->get_user_ID(), $question, $option_no, $string, array('marks' => 1));
             if ($option->minimum_fields_exist($_POST, $_FILES, $option_no)) {
                 $part_names = $option->get_editable_fields();
@@ -123,22 +123,22 @@ function save_options($question, $userObject, $db)
                     return $e->getMessage();
                 }
 
-          // Build arrays for compound fields
+                // Build arrays for compound fields
                 $compound_fields = $option->get_compound_fields();
                 if (!isset($existing_values)) {
                     $existing_values = array();
                 }
                 $option->populate_compound(array_keys($compound_fields), $_POST, $existing_values, 'option_');
-        // Save editable fields that aren't unified
+                // Save editable fields that aren't unified
                 $option->populate($part_names, $option_no, $postparams, array_merge(array_keys($unified_part_names), array_keys($compound_fields)), 'option_');
-        // Save fields that are the same across options
+                // Save fields that are the same across options
                 $option->populate_unified($unified_part_names, $_POST, array_keys($compound_fields), 'option_', false);
                 $question->options[] = $option;
             }
         }
 
         if ($option != null and !in_array('media', $question->get_compound_fields())) {
-  // Handle changes in media
+            // Handle changes in media
             $old_media = $option->get_media();
             if (isset($_FILES["option_media$option_no"]) and $_FILES["option_media$option_no"]['name'] != $old_media['filename'] and ($_FILES["option_media$option_no"]['name'] != 'none' and $_FILES["option_media$option_no"]['name'] != '')) {
                 if ($old_media['filename'] != '') {
@@ -151,7 +151,7 @@ function save_options($question, $userObject, $db)
                     return $string['mediauploaderror'];
                 }
             } else {
-            // Delete existing media if asked
+                // Delete existing media if asked
                 if (isset($_POST["delete_media$option_no"]) and $_POST["delete_media$option_no"] == 'on') {
                     media_handler::deleteMedia($old_media['filename']);
                     $option->set_media(array('filename' => '', 'width' => 0, 'height' => 0));
@@ -168,7 +168,7 @@ $q_no = '';
 $q_type_full = '';
 $errors = array();
 if (!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
-// We're adding a new question
+    // We're adding a new question
     $mode = $string['add'];
     if (!isset($_GET['type'])) {
         $critical_error = $string['typeundefined'];
@@ -183,7 +183,7 @@ if (!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
                 // Adding directly to a paper.
                     $modules = Paper_utils::get_modules($paper_id, $mysqli);
             } else {
-            // Adding via a module.
+                // Adding via a module.
                   $modules = array($module => module_utils::get_instance()->get_moduleid_from_id($module, $mysqli));
             }
             $question->set_teams($modules);
@@ -192,7 +192,7 @@ if (!isset($_REQUEST['q_id']) or $_REQUEST['q_id'] == -1) {
         }
     }
 } else {
-// We're editing an existing question
+    // We're editing an existing question
     $mode = $string['edit'];
     try {
         $question = QuestionEdit::question_factory($mysqli, $userObject, $string, $_REQUEST['q_id']);
@@ -216,8 +216,8 @@ if ($critical_error == '' and $question->requires_media() and (isset($_POST['sub
         $critical_error = $string['mediauploaderror'];
     }
 
-  // Handle label images for Labelling questions. These never really hit the question object as items in their own right
-  // but are used in parameters to the Flash setup JS function
+    // Handle label images for Labelling questions. These never really hit the question object as items in their own right
+    // but are used in parameters to the Flash setup JS function
     if ($question->get_type() == 'labelling') {
         $label_images = array();
         for (
@@ -241,11 +241,11 @@ if ($critical_error == '') {
         } else {
             $q_no = $question->get_question_number($paper_id);
         }
-      // If existing question, check how many summative papers it is on
+        // If existing question, check how many summative papers it is on
         $paper_count = $question->get_other_summative_count($paper_id);
     }
 
-  // Get any existing media
+    // Get any existing media
     $current_media = $question->get_media();
     
     $do_save = false;
@@ -261,7 +261,7 @@ if ($critical_error == '') {
             $save_individual = in_array('correct', array_keys($unified_part_names));
            
             if ($save_individual) {
-    // Calculation, MCQ
+                // Calculation, MCQ
                 $part_names = $question->get_change_fields();
                 $fields = array();
                 foreach ($part_names as $field) {
@@ -278,7 +278,7 @@ if ($critical_error == '') {
                     $question->$call($value);
                 }
             } else {
-            // Dichotomous, MRQ, Ranking, extmatch, matrix, textbox
+                // Dichotomous, MRQ, Ranking, extmatch, matrix, textbox
                 $first = reset($question->options);
                 $compound_part_names = $first->get_compound_fields();
                 if (is_array($compound_part_names) and in_array('correct', array_keys($compound_part_names))) {
@@ -315,7 +315,7 @@ if ($critical_error == '') {
                 }
             }
             $question->set_teams($question_teams);
-        // Save metadata
+            // Save metadata
             $part_names = array('bloom', 'status', 'correct_fback', 'incorrect_fback');
             if (!isset($_POST['teams'])) {
                 $_POST['teams'] = array();
@@ -337,29 +337,29 @@ if ($critical_error == '') {
             $do_save = true;
         }
     } elseif ((isset($_POST['submit']) and $_POST['submit'] == $string['save']) or isset($_POST['addbank']) or isset($_POST['addpaper'])) {
-    // Save data
+        // Save data
         if ($question->id == -1 or check_fullSave($question->id, $mysqli)) {
             $part_names = $question->get_editable_fields();
             $compound_fields = $question->get_compound_fields();
             $question->populate($part_names, $_POST, $compound_fields);
-// Handle changes in media if not a compound field
+            // Handle changes in media if not a compound field
             if (!in_array('media', $question->get_compound_fields())) {
                 $question->populate_media('q_media', $_FILES, $_POST);
             }
 
-        // Save compound fields
+            // Save compound fields
             $question->populate_compound($compound_fields, $_POST, array('media'), $prefix = 'question_');
-// Handle changes in media for compound fields
+            // Handle changes in media for compound fields
             if (in_array('media', $compound_fields)) {
                 $question->populate_compound_media($_FILES, $_POST, 'q_media', 'question_media');
             }
 
-        // Strip MS Office HTML.
+            // Strip MS Office HTML.
             $question->set_scenario(clearMSOtags($question->get_scenario()));
             $question->set_leadin(clearMSOtags($question->get_leadin()));
             $question_teams = array();
             if (isset($_POST['teams'])) {
-            //$question_teams = array_combine($_POST['teams'], $_POST['teams']);
+                //$question_teams = array_combine($_POST['teams'], $_POST['teams']);
                 foreach ($_POST['teams'] as $idMod) {
                     $question_teams[$idMod] = module_utils::get_moduleid_from_id($idMod, $mysqli);
                 }
@@ -376,13 +376,13 @@ if ($critical_error == '') {
     }
 
     if ($do_save) {
-// If not errored then save the question
+        // If not errored then save the question
         if (count($errors) == 0) {
             try {
                 if (!$question->save()) {
                     $errors[] = $string['datasaveerror'];
                 } else {
-// Possibility that we might be converting a MRQ to MCQ
+                    // Possibility that we might be converting a MRQ to MCQ
                     if (isset($_POST['mcqconvert']) and $_POST['mcqconvert'] == '1') {
                         $i = 1;
                         $correct_option = 0;
@@ -396,15 +396,15 @@ if ($critical_error == '') {
                         $question = $question->convert_to_mcq($correct_option);
                     }
 
-          // Insert into Papers
+                    // Insert into Papers
                     if (isset($_POST['addpaper'])) {
                         insert_into_papers($paper_id, $question->id, $mysqli);
                         $logger->track_change('Paper', $paper_id, $userObject->get_user_ID(), '', $question->id, 'Add Question');
                     }
 
-          // Stuff not to do on correction/limited save
+                    // Stuff not to do on correction/limited save
                     if (!isset($_POST['submit']) or $_POST['submit'] != $string['correct']) {
-            // Save review comments and responses
+                        // Save review comments and responses
                         if (isset($_POST['comment_ids']) and isset($_POST['actions']) and isset($_POST['responses'])) {
                             save_external_responses($mysqli, $question, $_POST['comment_ids'], $_POST['actions'], $_POST['responses'], $paper_id);
                         }
@@ -426,16 +426,16 @@ if ($critical_error == '') {
     }
 
     if ((count($errors) == 0) and ($do_save or $show_correction_intermediate)) {
-// Ensure keywords and objectives are not lost during a limited saves with an intermediate step.
+        // Ensure keywords and objectives are not lost during a limited saves with an intermediate step.
         save_keywords($question, $userObject->get_user_ID(), true, $mysqli, $string);
         if (!empty($objective_modules)) {
-        // Write out curriculum mapping.
+            // Write out curriculum mapping.
                 save_objective_mappings($mysqli, $objective_modules, $paper_id, $question->id);
         }
     }
 
     if ($do_save and (count($errors) == 0)) {
-// Redirect if the save is a success.
+        // Redirect if the save is a success.
         redirect($userObject, $question->id, $configObject, $mysqli);
     }
 
@@ -449,11 +449,11 @@ if ($critical_error == '') {
         $q_type_display .= "&nbsp;</strong>$q_type_full";
     }
 
-  // Set come classes and attributes that we're going to use to disable fields that aren't editable when locked
+    // Set come classes and attributes that we're going to use to disable fields that aren't editable when locked
     $dis_class = $dis_readonly = '';
     disable_locked($question, $dis_class, $dis_readonly);
 } else {
-// Bad things have happened
+    // Bad things have happened
     $q_type_display = '';
     $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
@@ -566,7 +566,7 @@ if ($critical_error == '') {
 
 <?php
 if ($critical_error != '') {
-// We have a major error so won't even display a form
+    // We have a major error so won't even display a form
     ?>
   <div id="major-error" class="edit-spacer">
     <div id="major-error-inner">

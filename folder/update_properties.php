@@ -78,7 +78,7 @@ if (strtolower($new_folder) != strtolower($oldfolder)) {
         echo json_encode('DUPLICATE');
         exit();
     } else {
-      // Alter the name of the folder in the 'folders' table first.
+        // Alter the name of the folder in the 'folders' table first.
         $editProperties = $mysqli->prepare('UPDATE folders SET name = ?, color = ? WHERE id = ? AND ownerID = ?');
         $editProperties->bind_param('sssi', $new_folder, $color, $folderID, $userObject->get_user_ID());
         $editProperties->execute();
@@ -92,13 +92,13 @@ if (strtolower($new_folder) != strtolower($oldfolder)) {
         $result2->execute();
         $result2->close();
 
-      // Alter the prefix of any child folders.
+        // Alter the prefix of any child folders.
         if ($mysqli->error) {
             echo json_encode('ERROR');
             exit();
         }
 
-      // Next update the folder name in the 'properties' table (moves papers).
+        // Next update the folder name in the 'properties' table (moves papers).
         $editProperties = $mysqli->prepare('UPDATE properties SET folder = ? WHERE folder = ? AND paper_ownerID = ?');
         $editProperties->bind_param('ssi', $new_folder, $oldfolder, $userObject->get_user_ID());
         $editProperties->execute();
@@ -114,7 +114,7 @@ if (strtolower($new_folder) != strtolower($oldfolder)) {
 }
 
 if (count($module_array) > 0) {
-  //set the folder staff_modules
+    //set the folder staff_modules
     $editProperties = $mysqli->prepare('DELETE FROM folders_modules_staff WHERE folders_id = ?');
     $editProperties->bind_param('i', $folderID);
     $editProperties->execute();

@@ -30,7 +30,7 @@ class user_photo extends rogo_directory
 
     public function cachetime()
     {
-      // Cache for 1 hour.
+        // Cache for 1 hour.
         return 3600;
     }
 }

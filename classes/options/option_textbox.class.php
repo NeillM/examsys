@@ -27,13 +27,13 @@
 class OptionTEXTBOX extends OptionEdit
 {
   
-  /**
-   * Check that the minimum set of fields exist in the given data to create a new option
-   * @param array $data
-   * @param array $files expects PHP FILES array
-   * @param integer $index option number
-   * @return boolean
-   */
+    /**
+     * Check that the minimum set of fields exist in the given data to create a new option
+     * @param array $data
+     * @param array $files expects PHP FILES array
+     * @param integer $index option number
+     * @return boolean
+     */
     public function minimum_fields_exist($data, $files, $index)
     {
         $exist = ((isset($data["option_text$index"]) and $data["option_text$index"] != '') or (isset($data["option_correct$index"]) and $data["option_correct$index"] != ''));
@@ -41,10 +41,10 @@ class OptionTEXTBOX extends OptionEdit
     }
 
 
-  /**
-   * Is this option blank?
-   * @return boolean
-   */
+    /**
+     * Is this option blank?
+     * @return boolean
+     */
     public function is_blank()
     {
         return ($this->text == '' and $this->correct == '');

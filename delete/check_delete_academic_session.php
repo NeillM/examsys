@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Confirm that it is OK to proceed deleting an academic sessions.
-*
-* @author Dr Joseph Baxter
-* @copyright Copyright (c) 2015 The University of Nottingham
-*/
+ *
+ * Confirm that it is OK to proceed deleting an academic sessions.
+ *
+ * @author Dr Joseph Baxter
+ * @copyright Copyright (c) 2015 The University of Nottingham
+ */
 
 require '../include/sysadmin_auth.inc';
 require_once '../include/errors.php';

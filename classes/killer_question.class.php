@@ -30,14 +30,14 @@ class Killer_Question
     private $paperID;
     private $questions;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
@@ -128,10 +128,10 @@ class Killer_Question
         unset($this->questions[$q_id]);
     }
 
-  /**
-   * return all the killer question by paper
-   * @return mixed
-   */
+    /**
+     * return all the killer question by paper
+     * @return mixed
+     */
     public function get_questions()
     {
 
@@ -149,9 +149,9 @@ class Killer_Question
         return $this->questions;
     }
 
-  /**
-   * Copy Killer questions from one paper to another
-   */
+    /**
+     * Copy Killer questions from one paper to another
+     */
     public function copy_killer_questions($newPaper)
     {
         $killerQuestionresult = $this->db->prepare('SELECT q_id FROM killer_questions WHERE paperID = ?');

@@ -15,14 +15,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Utility class for mid-exam announcement related functionality.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Utility class for mid-exam announcement related functionality.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 class ExamAnnouncements
 {
@@ -31,22 +31,22 @@ class ExamAnnouncements
     private $paperID;
     private $string;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
-  /**
-   * @param int $paperID    - ID of the exam paper we are dealing with
-   * @param object $db      - Link to mysqli
-   * @param string $string  - Language translations
-   */
+    /**
+     * @param int $paperID    - ID of the exam paper we are dealing with
+     * @param object $db      - Link to mysqli
+     * @param string $string  - Language translations
+     */
     public function __construct($paperID, $db, $string)
     {
         $this->db = $db;
@@ -54,11 +54,11 @@ class ExamAnnouncements
         $this->string = $string;
     }
 
-  /**
-   * Return an array of the mid-exam announcements for the current paper.
-   *
-   * @return array         - Array of announcments keyed on Q_ID.
-   */
+    /**
+     * Return an array of the mid-exam announcements for the current paper.
+     *
+     * @return array         - Array of announcments keyed on Q_ID.
+     */
     public function get_announcements()
     {
         $configObject = Config::get_instance();
@@ -77,13 +77,13 @@ class ExamAnnouncements
         return $announcements;
     }
 
-  /**
-   * Add or update a mid-exam announcement for a particular question ID.
-   * @param int $q_id      - The ID of question the announcment pertains to.
-   * @param int $q_number  - The number of the question on the paper.
-   * @param int $screen    - The number of the screen the question belongs to.
-   * @param string $msg    - The content of the announcement message.
-   */
+    /**
+     * Add or update a mid-exam announcement for a particular question ID.
+     * @param int $q_id      - The ID of question the announcment pertains to.
+     * @param int $q_number  - The number of the question on the paper.
+     * @param int $screen    - The number of the screen the question belongs to.
+     * @param string $msg    - The content of the announcement message.
+     */
     public function replace_announcement($q_id, $q_number, $screen, $msg)
     {
         if ($msg == '') {
@@ -95,9 +95,9 @@ class ExamAnnouncements
         $result->execute();
     }
   
-  /**
-   * Output HTML for mid-exam announcements for the current paper.
-   */
+    /**
+     * Output HTML for mid-exam announcements for the current paper.
+     */
     public function display_student_announcements()
     {
         $exam_announcements = $this->get_announcements();

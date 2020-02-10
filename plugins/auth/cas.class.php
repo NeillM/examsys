@@ -74,8 +74,8 @@ class cas_auth extends outline_authentication
         return $postauthfailreturn;
     }
   
-  /*
-  function loginbutton($displaystdformobj) {
+    /*
+    function loginbutton($displaystdformobj) {
     if (isset($this->settings['cas_button']) and $this->settings['cas_button'] === true) {
       $this->savetodebug('Login Button for cas login enabled');
 
@@ -92,8 +92,8 @@ class cas_auth extends outline_authentication
 
     // Possibility of making button to POST via jquery to the cas login page with our login data then detect response
     return $displaystdformobj;
-  }
-  */
+    }
+    */
 
     function auth($authobj)
     {

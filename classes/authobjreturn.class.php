@@ -46,10 +46,10 @@ class authobjreturn
         $this->datas            = array();
     }
 
-  /*
-   * set the authobjreturn objet to fail state
+    /*
+     * set the authobjreturn objet to fail state
      * @param int $number - Internal ID of the plugin in the stack.
-   */
+     */
     function fail($number)
     {
         $this->returned = ROGO_AUTH_OBJ_FAILED;
@@ -58,11 +58,11 @@ class authobjreturn
         $this->rogoid = 0;
     }
 
-  /*
-   * Set the authobjreturn object to success state
+    /*
+     * Set the authobjreturn object to success state
      * @param int $number - Internal ID of the plugin in the stack.
      * @param int $rogoid - User ID of the successful user.
-   */
+     */
     function success($number, $rogoid)
     {
         $this->rogoid = $rogoid;
@@ -72,11 +72,11 @@ class authobjreturn
         $this->statuses[$number] = $this->returned;
     }
 
-  /*
-   * Set the authobjreturn object to lookup state
+    /*
+     * Set the authobjreturn object to lookup state
      * @param int $number  - Internal ID of the plugin in the stack.
      * @param object $data - Data for user to be looked up.
-   */
+     */
     function lookupmissing($number, $data)
     {
         $this->rogoid = 0;

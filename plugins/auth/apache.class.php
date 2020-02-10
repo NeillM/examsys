@@ -77,7 +77,7 @@ class apache_auth extends outline_authentication
         $result->bind_result($uname, $id);
         $result->fetch();
         if ($result->num_rows() > 1) {
-          // not unique match
+            // not unique match
             $this->savetodebug('Check 2 record number> 1 multiple user found in lookup');
 
             $authobj->fail($this->number);
@@ -85,7 +85,7 @@ class apache_auth extends outline_authentication
 
             return $authobj;
         } elseif ($result->num_rows() == 0) {
-          //apache says ok but no association to rogo
+            //apache says ok but no association to rogo
 
             $this->savetodebug('Apache authenticated but no local account');
             $data = new stdClass();
@@ -111,7 +111,7 @@ class apache_auth extends outline_authentication
         if ($result->num_rows() == 1) {
             $this->savetodebug('Successfully authenticated on this module username=' . $username . ' id:' . $id);
 
-          //sucessfull  authentication
+            //sucessfull  authentication
             $authobj->success($this->number, $id);
         }
 

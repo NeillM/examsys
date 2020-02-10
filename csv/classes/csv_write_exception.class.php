@@ -31,5 +31,5 @@ namespace csv;
  */
 class csv_write_exception extends \file_write_exception
 {
-  // Intentionally empty.
+    // Intentionally empty.
 }

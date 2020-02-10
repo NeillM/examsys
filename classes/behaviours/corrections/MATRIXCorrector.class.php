@@ -29,14 +29,14 @@ include_once 'Corrector.class.php';
 
 class MATRIXCorrector extends Corrector
 {
-  /**
-   * Change the correct answer after the question has been locked. Update user marks in summative log table
-   * @param array $new_correct fields that are relevant for post-exam corrections
-   * @param integer $paper_id paper identifier
-   * @param boolean $prev_changes have there been previous changes
-   * @param string $paper_type type of paper
-   * @return array
-   */
+    /**
+     * Change the correct answer after the question has been locked. Update user marks in summative log table
+     * @param array $new_correct fields that are relevant for post-exam corrections
+     * @param integer $paper_id paper identifier
+     * @param boolean $prev_changes have there been previous changes
+     * @param string $paper_type type of paper
+     * @return array
+     */
     public function execute($new_correct, $paper_id, &$prev_changes, $paper_type)
     {
         $new_correct_val = $new_correct['option_correct'];
@@ -74,7 +74,7 @@ class MATRIXCorrector extends Corrector
                 if (!$this->_question->save()) {
                     $errors[] = $this->_lang_strings['datasaveerror'];
                 } else {
-                // Remark the student's answers in 'log{$paper_type}'.
+                    // Remark the student's answers in 'log{$paper_type}'.
                     $score_method = $this->_question->get_score_method();
 
                     $totalpos = ($score_method == 'Mark per Question') ? $mark_correct : $mark_correct * $correct_count;

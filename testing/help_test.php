@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/sysadmin_auth.inc';
 ?>
@@ -116,7 +116,7 @@ foreach ($help_toc as $help_item) {
             array_push($help_img[$code], array($help_item['id'], $width, $height));
         }
     } else {
-      //search for background-image: url
+        //search for background-image: url
         $test = explode(' url(', $help_item['body']);
         if (count($test) > 1) {
             for ($i = 1; $i < count($test); $i++) {

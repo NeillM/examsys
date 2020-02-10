@@ -117,12 +117,12 @@ if (!isset($_POST['update'])) {
         exit;
     }
 
-  // Set db object in config.
+    // Set db object in config.
     $configObject->set_db_object($update_mysqli);
     $updater_utils = new UpdaterUtils($update_mysqli, $configObject->get('cfg_db_database'));
-// Backup the config file before proceeding.
+    // Backup the config file before proceeding.
     $updater_utils->backup_file($cfg_web_root, $old_version);
-// Avoid repeated method calls
+    // Avoid repeated method calls
     $cfg_db_database      = $configObject->get('cfg_db_database');
     $cfg_db_student_user  = $configObject->get('cfg_db_student_user');
     $cfg_db_staff_user    = $configObject->get('cfg_db_staff_user');
@@ -139,7 +139,7 @@ if (!isset($_POST['update'])) {
     $lang['startingupdate'] = $string['startingupdate'];
     $lang['startingat'] = sprintf($string['startingat'], date($configObject->get('cfg_long_time_php')));
     $update_mysqli->autocommit(false);
-// Run individual update files
+    // Run individual update files
     $files = scandir('scripts');
     foreach ($files as $file) {
         if (StringUtils::ends_with($file, '.php')) {
@@ -148,7 +148,7 @@ if (!isset($_POST['update'])) {
         }
     }
 
-  // Update the online staff help files.
+    // Update the online staff help files.
     $update_staff_help = param::optional('update_staff_help', false, param::BOOLEAN, param::FETCH_POST);
     $lang['staffloaded'] = '';
     if ($update_staff_help) {
@@ -164,7 +164,7 @@ if (!isset($_POST['update'])) {
             $data['staffhelperror'] = true;
         }
     }
-  // Update the online student help files.
+    // Update the online student help files.
     $update_student_help = param::optional('update_student_help', false, param::BOOLEAN, param::FETCH_POST);
     $lang['stuloaded'] = '';
     if ($update_student_help) {
@@ -181,7 +181,7 @@ if (!isset($_POST['update'])) {
         }
     }
     $update_mysqli->commit();
-// Update language packs.
+    // Update language packs.
     $update_translationpack = param::optional('update_translationpack', false, param::BOOLEAN, param::FETCH_POST);
     $lang['langsuccess'] = '';
     if ($update_translationpack) {
@@ -205,7 +205,7 @@ if (!isset($_POST['update'])) {
         }
     }
 
-  // Final housekeeping activities.
+    // Final housekeeping activities.
     $update_mysqli->autocommit(true);
     $configObject->set_setting('rogo_version', $version, Config::VERSION);
     $updater_utils->execute_query('FLUSH PRIVILEGES', false);

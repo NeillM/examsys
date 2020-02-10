@@ -30,7 +30,7 @@ class email_templates extends rogo_directory
 
     public function cachetime()
     {
-      // Do not cache.
+        // Do not cache.
         return 0;
     }
 }

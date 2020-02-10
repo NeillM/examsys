@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Class Totals (for externals) report.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Class Totals (for externals) report.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 set_time_limit(0);
 
@@ -286,7 +286,7 @@ for ($i = 0; $i < $user_no; $i++) {
             if ($report->has_special_need($user_results[$i]['userID']) or isset($notes[$user_results[$i]['userID']]) and $notes[$user_results[$i]['userID']] == 'y') {
                 echo '&nbsp;';
             }
-          // Add icons
+            // Add icons
             if (isset($notes[$user_results[$i]['userID']]) and $notes[$user_results[$i]['userID']] == 'y') {
                 echo '<img src="../artwork/notes_icon.gif" alt="Notes" class="note" data-id="' . $user_results[$i]['userID'] . '" />';
             }
@@ -321,13 +321,13 @@ for ($i = 0; $i < $user_no; $i++) {
                     echo "<td class=\"$class r $role_css\">" . MathsUtils::formatNumber($user_results[$i]['percent'], $percent_decimals) . "%</td><td class=\"$class $role_css\">&nbsp;" . $string['pass'] . '</td>';
                 }
             }
-          // Rank column
+            // Rank column
             echo "<td class=\"$class r $role_css\">" . $user_results[$i]['rank'] . '</td>';
-          // Decile column
+            // Decile column
             echo "<td class=\"$class r $role_css\">" . $user_results[$i]['decile'] . '</td>';
-          // Start Time column
+            // Start Time column
             echo "<td class=\"$class $role_css\">" . $user_results[$i]['display_started'] . '</td>';
-          // Duration column
+            // Duration column
             echo "<td class=\"$class $role_css\">" . $report->formatsec($user_results[$i]['duration']);
             if ($late_submissions == 'y') {
                 echo '&nbsp;<img src="../artwork/small_yellow_warning_icon.gif" width="12" height="11" />';
@@ -339,7 +339,7 @@ for ($i = 0; $i < $user_no; $i++) {
                 echo "<td class=\"$class $role_css\">" . $user_results[$i]['room'] . '</td>';
             }
 
-          // Display any associated metadata
+            // Display any associated metadata
             if (count($metadata_cols) > 0) {
                 foreach ($metadata_cols as $type) {
                     if (isset($user_results[$i][$type])) {

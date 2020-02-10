@@ -216,7 +216,7 @@ class Database
             $this->_BuildQueryReplace();
         }
 
-      //echo "<br>" . $this->query . "<br>";
+        //echo "<br>" . $this->query . "<br>";
     }
 
     function _BuildQuerySelect()
@@ -338,26 +338,26 @@ class Database
                 }
             }
         }
-      /*      foreach ($this->wheres as $where)
-       {
-       if ($where['wheretype'] == "=")
-       {
-       $params[1] .= $where['type'];
+        /*      foreach ($this->wheres as $where)
+        {
+        if ($where['wheretype'] == "=")
+        {
+        $params[1] .= $where['type'];
 
-       // Params to mysqli_stmt_bind_param now need to be reference
-       //$params[] = &($this->wheres[$where]['value']);
+        // Params to mysqli_stmt_bind_param now need to be reference
+        //$params[] = &($this->wheres[$where]['value']);
 
-       $params[] = &$where['value'];
-       } else if ($where['wheretype'] == "IN")
-       {
-       foreach ($where['value'] as $value)
-       {
-       $params[1] .= $where['type'];
-       $params[] = $value;
-       }
-       }
-       }
-       */
+        $params[] = &$where['value'];
+        } else if ($where['wheretype'] == "IN")
+        {
+        foreach ($where['value'] as $value)
+        {
+        $params[1] .= $where['type'];
+        $params[] = $value;
+        }
+        }
+        }
+        */
 
         @call_user_func_array('mysqli_stmt_bind_param', $params);
     }
@@ -380,7 +380,7 @@ class Database
 
         $this->_BuildQuery();
 
-      //echo "QRY : " . $this->query . "<BR>";
+        //echo "QRY : " . $this->query . "<BR>";
         $stmt = $mysqli->prepare($this->query);
 
         $this->_BindWhere($stmt);
@@ -413,7 +413,7 @@ class Database
 
         $this->_BuildQuery();
 
-      //echo "QRY : " . $this->query . "<BR>";
+        //echo "QRY : " . $this->query . "<BR>";
         $stmt = $mysqli->prepare($this->query);
 
         $this->_BindWhere($stmt);

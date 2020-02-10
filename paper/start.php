@@ -16,16 +16,16 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Handles paper display and the recording of marks to the 'logX' tables.
-* Start.php continues calling itself while there are further screens to be displayed and then calls 'finish.php'
-* to end.
-*
-* @author Simon Wilkinson, Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Handles paper display and the recording of marks to the 'logX' tables.
+ * Start.php continues calling itself while there are further screens to be displayed and then calls 'finish.php'
+ * to end.
+ *
+ * @author Simon Wilkinson, Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require_once '../include/staff_student_auth.inc';
 require_once '../include/paper_security.php';
@@ -117,15 +117,15 @@ $modIDs = array_keys(Paper_utils::get_modules($paperID, $mysqli));
 $moduleID = $propertyObj->get_modules();
 
 if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObject)) {
-  // No further security checks.
+    // No further security checks.
 } else {    // Treat as student with extra security checks.
-  // Check for additional password on the paper.
+    // Check for additional password on the paper.
     check_paper_password($propertyObj->get_property_id(), $propertyObj->get_password(), $string, $mysqli);
 
-  // Check time security.
+    // Check time security.
     check_datetime($propertyObj->get_start_date(), $propertyObj->get_end_date(), $string, $mysqli, $is_first_launch);
 
-  //Check room security.
+    //Check room security.
     $low_bandwidth = check_labs(
         $papertype,
         $propertyObj->get_labs(),
@@ -135,18 +135,18 @@ if ($userObject->has_role('Staff') and check_staff_modules($moduleID, $userObjec
         $mysqli
     );
 
-  // Check modules if the user is a student and the paper is not formative.
+    // Check modules if the user is a student and the paper is not formative.
     $attempt = check_modules($userObject, $modIDs, $propertyObj->get_calendar_year(), $string, $mysqli);
 
-  // Check for any metadata security restrictions.
+    // Check for any metadata security restrictions.
     check_metadata($paperID, $userObject, $modIDs, $string, $mysqli);
 
-  // Check if the student has clicked 'Finish'.
+    // Check if the student has clicked 'Finish'.
     check_finished($propertyObj, $userObject, $string, $mysqli);
 
     if ($papertype == '2') {
-      // Check current IP address with that of attempt in log.
-      // Warn user they are logged into mulitple devices in this exam and log them out.
+        // Check current IP address with that of attempt in log.
+        // Warn user they are logged into mulitple devices in this exam and log them out.
         check_ipmismatch($paperID, $current_address, $string, $userObject, $mysqli);
     }
 }
@@ -186,12 +186,12 @@ if (!$is_first_launch) {
 $log_metadata = new LogMetadata($userObject->get_user_ID(), $paperID, $mysqli);
 
 if ($is_preview_mode_first_launch == true or ($is_first_launch and !$do_restart)) {
-  //in preview mode or for non-restartable papers always start a new session if we have relaunched the window
+    //in preview mode or for non-restartable papers always start a new session if we have relaunched the window
     $log_metadata->create_new_record($current_address, $userObject->get_grade(), $userObject->get_year(), $attempt, $lab_name);
 } elseif ($log_metadata->get_record() == false) { //load the data and check for no records
-  // Check the time again, just in case the user realised they can add a post screen check to get around the first launch check.
+    // Check the time again, just in case the user realised they can add a post screen check to get around the first launch check.
     check_datetime($propertyObj->get_start_date(), $propertyObj->get_end_date(), $string, $mysqli, true);
-  //we have no log_metadata record so make one
+    //we have no log_metadata record so make one
     $log_metadata->create_new_record($current_address, $userObject->get_grade(), $userObject->get_year(), $attempt, $lab_name);
 }
 $metadataID = $log_metadata->get_metadata_id();
@@ -206,7 +206,7 @@ $allow_timing = $propertyObj->display_timer();
 */
 $paper_scheduled = ($propertyObj->get_start_date() !== null);
 if ($propertyObj->get_exam_duration() != null and $papertype == '2' and !$is_question_preview_mode) {
-  // Has this lab had an end time set?
+    // Has this lab had an end time set?
     $log_lab_end_time = new LogLabEndTime($lab_id, $propertyObj, $mysqli);
     $summative_exam_session_started = $log_lab_end_time->get_session_end_date_datetime();
 }
@@ -256,7 +256,7 @@ if ($propertyObj->get_bidirectional() == 0 and $do_restart) {   // Linear
 list($reference_materials, $max_ref_width) = $propertyObj->load_reference_materials();
 
 if (isset($low_bandwidth) and $low_bandwidth == 1) {
-  // Lowbandwidth
+    // Lowbandwidth
     ob_start('ob_gzhandler');   // enable compression
 }
 
@@ -361,12 +361,12 @@ if ($allow_timing and $propertyObj->get_exam_duration() != null) {
     $timed = true;
     // Summative type. Time is only active in live.
     if (($papertype == '2') and $is_preview_mode === false) {
-      // Has the student been allotted extra time by an invigilator?
+        // Has the student been allotted extra time by an invigilator?
         $student_object['user_ID'] = $userObject->get_user_ID();
         $student_object['special_needs_percentage'] = $special_needs_percentage;
         $log_extra_time = new LogExtraTime($log_lab_end_time, $student_object, $mysqli);
 
-      // Do not time the exam if the invigilator has not clicked on the 'Start' button
+        // Do not time the exam if the invigilator has not clicked on the 'Start' button
         if ($summative_exam_session_started !== false) {
             $summative_timer  = new SummativeTimer($log_extra_time);
             $remaining_time   = $summative_timer->calculate_remaining_time_secs();

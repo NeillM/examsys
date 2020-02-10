@@ -66,7 +66,7 @@ $help = 'Rogo initialisation script options'
         . PHP_EOL . PHP_EOL . "-n, --name, \tDatabase name";
 
 if (isset($optionslist['h']) or isset($optionslist['help'])) {
-  // Display some help information.
+    // Display some help information.
     cli_utils::prompt($help);
     exit(0);
 }
@@ -84,21 +84,21 @@ if (function_exists('opcache_reset')) {
 
 try {
     InstallUtils::$cli = true;
-  // Check if already installed.
+    // Check if already installed.
     InstallUtils::checkDirPermissionsPre();
     InstallUtils::configFile();
     $configObject = Config::get_instance();
     $version = $configObject->getxml('version');
-  // Load an verifiy settings.xml
+    // Load an verifiy settings.xml
     InstallUtils::loadSettings();
-  // Check pre-requisites.
+    // Check pre-requisites.
     try {
         requirements::check();
     } catch (Exception $e) {
         cli_utils::prompt($e->getMessage());
         exit(0);
     }
-  // Install.
+    // Install.
     InstallUtils::checkDirPermissionsPost();
     $args = array(
     'mysql_admin_user' => $databaseuser,

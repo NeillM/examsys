@@ -16,10 +16,10 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-* SMS plugin functions
-* @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
-* @copyright Copyright (c) 2016 onwards The University of Nottingham
-*/
+ * SMS plugin functions
+ * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+ * @copyright Copyright (c) 2016 onwards The University of Nottingham
+ */
 
 namespace plugins;
 
@@ -82,13 +82,13 @@ abstract class plugins_sms extends \plugins\plugins
         return $success;
     }
 
-   /**
-    * Render module sync options
-    * @param array $moduleimport module import data from plugin
-    * @param integer $moduleid internal id for module
-    * @param string $externalid external id for module
-    * @return bool
-    */
+    /**
+     * Render module sync options
+     * @param array $moduleimport module import data from plugin
+     * @param integer $moduleid internal id for module
+     * @param string $externalid external id for module
+     * @return bool
+     */
     public static function render_module_sync_options($moduleimport, $moduleid, $externalid)
     {
         $configObject = \Config::get_instance();

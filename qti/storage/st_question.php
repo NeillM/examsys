@@ -175,7 +175,7 @@ class ST_Question_Extmatch extends ST_Question
 
 class ST_Question_Flash extends ST_Question
 {
-  // NO SCENARIO
+    // NO SCENARIO
     var $question_swf = '';
     var $question_swf_width = '';
     var $question_swf_height = '';
@@ -201,13 +201,13 @@ class ST_Question_Hotspot extends ST_Question
     var $scenario = '';
     var $feedback = '';
     var $hotspots = array(); // array of STQ_Hotspot_Spot
-  // raw labeling option text for rogo->qti->rogo
+    // raw labeling option text for rogo->qti->rogo
     var $raw_option = '';
 }
 
 class ST_Question_Info extends ST_Question
 {
-  // nothing in this question type
+    // nothing in this question type
 }
 
 class STQ_Labelling_Label
@@ -243,13 +243,13 @@ class ST_Question_Labelling extends ST_Question
 
     var $line_color = '0x000000';
     var $line_thickness = 0.75;
-  // 1 - 3/4 pt
-  // 2 - 1 pt
-  // 3 - 1 1/4 pt
-  // 4 - 2 1/4 pt
-  // 5 - 3 pt
-  // 6 - 4 1/2 pt
-  // 7 - 6 pt
+    // 1 - 3/4 pt
+    // 2 - 1 pt
+    // 3 - 1 1/4 pt
+    // 4 - 2 1/4 pt
+    // 5 - 3 pt
+    // 6 - 4 1/2 pt
+    // 7 - 6 pt
     var $box_color = '0xc6c6c6';
     var $font_size = 10;
     var $font_color = '0x000000';
@@ -260,9 +260,9 @@ class ST_Question_Labelling extends ST_Question
     var $arrows = array(); // array of STQ_Labelling_Arrow
     var $labels = array();
 
-  // raw labeling option text for rogo->qti->rogo
+    // raw labeling option text for rogo->qti->rogo
     var $raw_option = '';
-  // STORE LABELING INFO IN HERE!!!!
+    // STORE LABELING INFO IN HERE!!!!
 }
 
 class ST_Question_Likert extends ST_Question
@@ -286,7 +286,7 @@ class STQ_Matrix_Scenario
 class ST_Question_Matrix extends ST_Question
 {
     var $options = array();
-  // Store matrix as $matrix[TOP][LEFT] = T/F
+    // Store matrix as $matrix[TOP][LEFT] = T/F
     var $scenarios = array(); // array of STQ_Matrix_Scenario, key as row
 }
 
@@ -372,7 +372,7 @@ class STQ_Rank_Options
     var $marks_incorrect;
     var $marks_partial;
   
-  // order - 1-15, or 0 as blank, and 9990 as N/A
+    // order - 1-15, or 0 as blank, and 9990 as N/A
 
     function __toString()
     {
@@ -402,17 +402,17 @@ class ST_Question_Textbox extends ST_Question
 
 class ST_Question_Sct extends ST_Question
 {
-  // NO EXTENSIONS
+    // NO EXTENSIONS
 }
 
 class ST_Question_Random extends ST_Question
 {
-  // NO EXTENSIONS
+    // NO EXTENSIONS
 }
 
 class ST_Question_keyword_based extends ST_Question
 {
-  // NO EXTENSIONS
+    // NO EXTENSIONS
 }
 
 class ST_Question_true_false extends ST_Question

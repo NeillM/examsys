@@ -38,7 +38,7 @@ class QuestionRANK extends QuestionEdit
         $this->_score_methods = array($this->_lang_strings['markperquestion'], $this->_lang_strings['markperoption'], $this->_lang_strings['allowpartial'], $this->_lang_strings['bonusmark']);
         $this->_fields_unified = array('marks_correct' => $this->_lang_strings['markscorrect'], 'marks_incorrect' => $this->_lang_strings['marksincorrect'], 'marks_partial' => $this->_lang_strings['markspartial']);
     
-      // 'correct' is not a unified field for Rank questions
+        // 'correct' is not a unified field for Rank questions
         $this->_fields_editable[] = 'correct';
     }
 

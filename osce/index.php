@@ -16,14 +16,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* This is the homepage a member of staff logs into to take an online OSCE.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * This is the homepage a member of staff logs into to take an online OSCE.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 
@@ -42,14 +42,14 @@ while ($result->fetch()) {
 $result->close();
 
 if ($paper_no == 1) {
-  // There is only one paper live, just redirect.
+    // There is only one paper live, just redirect.
     header('location: ' . $configObject->get('cfg_root_path') . '/osce/class_list.php?id=' . $paper_display[0]['id']);
     exit();
 } elseif ($paper_no == 0) {
-  // No live OSCE stations can be found.
+    // No live OSCE stations can be found.
     $notice->display_notice_and_exit($mysqli, $string['warning'], $string['cannotfind'], $string['cannotfind'], '../artwork/exclamation_48.png', '#C00000', true, true);
 } else {
-  // Multiple OSCE stations are found, present a list of choices to the user.
+    // Multiple OSCE stations are found, present a list of choices to the user.
     echo "<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html;charset={$configObject->get('cfg_page_charset')}\" />\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<title>" . $string['exams'] . "</title>\n</head>\n<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/body.css\" />\n<link rel=\"stylesheet\" type=\"text/css\" href=\"../css/osce_list.css\" />\n<body>\n";
   
     echo '<div class="title">' . $string['multiplestations'] . "</div>\n";

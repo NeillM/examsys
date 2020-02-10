@@ -256,7 +256,7 @@ $stmt->close();
 
     function getDayOfWeek($day, $month, $year, $CalendarSystem)
     {
-      // CalendarSystem = 1 for Gregorian Calendar
+        // CalendarSystem = 1 for Gregorian Calendar
         if ($month < 3) {
             $month = $month + 12;
             $year = $year - 1;
@@ -266,7 +266,7 @@ $stmt->close();
 
     $current_month = 1;
 
-  // Get lab information.
+    // Get lab information.
     $lab_list = array();
     $stmt = $mysqli->prepare('SELECT id, room_no, name FROM labs');
     $stmt->execute();
@@ -277,7 +277,7 @@ $stmt->close();
     }
     $stmt->close();
 
-  //show only exams in a particular school
+    //show only exams in a particular school
     $schools_sql = '';
     if (isset($_GET['school']) and $_GET['school'] != '') {
         foreach ($schools as $fac => $sch) {
@@ -288,7 +288,7 @@ $stmt->close();
                 }
             }
         }
-      // Get the module list
+        // Get the module list
         $schools_sql = '';
         $stmt = $mysqli->prepare('SELECT moduleid FROM modules WHERE schoolid = ?');
         $stmt->bind_param('i', $_GET['school']);
@@ -318,9 +318,9 @@ $stmt->close();
     $paper_details = array();
     $paper_ids = array();
     $property_id = 0;
-  // Get scheduled summative exams
+    // Get scheduled summative exams
     if ($schools_sql != '' or !isset($_GET['school']) or (isset($_GET['school']) and ($_GET['school'] == -1 or $_GET['school'] == ''))) {
-      // Get papers running on various dates.
+        // Get papers running on various dates.
         $result = $mysqli->prepare("SELECT paper_type, password, exam_duration, DATE_FORMAT(start_date,'%Y/%m/%d') AS date, labs, DATE_FORMAT(start_date,'%H:%i') AS start_time, DATE_FORMAT(start_date,'%l') AS start_hour, DATE_FORMAT(start_date,'%i') AS start_minute, DATE_FORMAT(start_date,'%p') AS am_pm, DATE_FORMAT(end_date,'%H:%i') AS end_time, properties.property_id, paper_title, DATE_FORMAT(start_date,'%c') AS month, DATE_FORMAT(start_date,'%e') AS start_day, DATE_FORMAT(end_date,'%e') AS end_date, idMod, timezone FROM properties, properties_modules, modules WHERE properties.property_id = properties_modules.property_id AND properties_modules.idmod = modules.id AND start_date >= " . $current_year . '0101000000 AND end_date <= ' . $current_year . "1231235959 AND paper_type IN ('2', '4') AND deleted IS NULL $schools_sql $lab_sql ORDER BY start_date");
         $result->execute();
         $result->bind_result($paper_type, $password, $duration, $main_date, $labs, $start_time, $start_hour, $start_minute, $am_pm, $end_time, $property_id, $paper_title, $month, $start_day, $end_date, $idMod, $timezone);
@@ -356,11 +356,11 @@ $stmt->close();
             }
         }
         $result->close();
-      // Set the property id to be the maximum value found so that we do not overwrite any of the details retrived in the loop above.
+        // Set the property id to be the maximum value found so that we do not overwrite any of the details retrived in the loop above.
         $property_id = $max_property_id;
     }
 
-  // Get extra calendar events
+    // Get extra calendar events
     $paper_no = ($property_id + 1);
     $result = $mysqli->prepare("SELECT id, title, message, duration, bgcolor, DATE_FORMAT(thedate,'%H:%i') AS start_time, DATE_FORMAT(thedate,'%p') AS am_pm, DATE_FORMAT(thedate,'%l') AS start_hour, DATE_FORMAT(thedate,'%i') AS start_minute, DATE_FORMAT(thedate,'%e') AS start_day, DATE_FORMAT(thedate,'%c') AS month FROM extra_cal_dates WHERE thedate >= " . $current_year . '0101000000 AND thedate <= ' . $current_year . '1231235959 AND deleted IS NULL');
     $result->execute();
@@ -395,7 +395,7 @@ $stmt->close();
         }
     }
 
-  // Get metadata security
+    // Get metadata security
     if (count($paper_ids) > 0) {
         $result = $mysqli->prepare('SELECT paperID, name, value FROM paper_metadata_security WHERE paperID IN (' . implode(',', $paper_ids) . ')');
         $result->execute();
@@ -406,7 +406,7 @@ $stmt->close();
         $result->close();
     }
 
-  // Sort all papers correctly by start time
+    // Sort all papers correctly by start time
     $sortby = 'start_time';
     $ordering = 'asc';
     $paper_details = \sort::array_csort($paper_details, $sortby, $ordering);
@@ -466,7 +466,7 @@ $stmt->close();
                         }
                         echo '</td>';
                     } elseif ($day_no >= $start_day) {
-                      // Today
+                        // Today
                         echo '<td class="dheadtoday">' . ($day_no - $subtract) . "</td>\n";
                     } else {
                         // Day not in month
@@ -474,7 +474,7 @@ $stmt->close();
                         $subtract++;
                     }
                 } else {
-              // Day not in month
+                    // Day not in month
                     echo "<td class=\"dheadnomonth\">&nbsp;</td>\n";
                 }
                 $day_no++;

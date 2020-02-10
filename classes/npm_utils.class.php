@@ -19,30 +19,30 @@
  */
 class npm_utils
 {
-  /** Npm should install dependancies respecting the package.json file. */
+    /** Npm should install dependancies respecting the package.json file. */
     const INSTALL = 1;
 
-  /** Npm should get the laest versions of the depedencies. */
+    /** Npm should get the laest versions of the depedencies. */
     const UPDATE = 2;
 
-  /** Npm should install dependancies respecting the package.json, skipping dev packages. */
+    /** Npm should install dependancies respecting the package.json, skipping dev packages. */
     const INSTALL_NODEV = 3;
 
-  /**
-   * Language pack component.
-   */
+    /**
+     * Language pack component.
+     */
     const langcomponent = 'classes/npmutils';
   
-  /**
-   * Ensures that npm is installed, uptodate and has installed all the projects dependancies.
-   *
-   * @return void
-   */
+    /**
+     * Ensures that npm is installed, uptodate and has installed all the projects dependancies.
+     *
+     * @return void
+     */
     public static function setup($method = self::INSTALL)
     {
-      // We are going to chage the working directory and want to reset it later.
+        // We are going to chage the working directory and want to reset it later.
         $workingdir = getcwd();
-      // Change to the root Rogo directory.
+        // Change to the root Rogo directory.
         chdir(__DIR__ . '/..');
         self::check_for_npm();
         if ($method === self::UPDATE) {
@@ -53,11 +53,11 @@ class npm_utils
         chdir($workingdir);
     }
 
-  /**
-   * Ensures npm is installed.
-   *
-   * @return void
-   */
+    /**
+     * Ensures npm is installed.
+     *
+     * @return void
+     */
     protected static function check_for_npm()
     {
         $langpack = new langpack();
@@ -67,11 +67,11 @@ class npm_utils
         }
     }
 
-  /**
-   * Downloads and installs all the files required by the package.json file for the project.
-   * @param integer $method install method
-   * @return void
-   */
+    /**
+     * Downloads and installs all the files required by the package.json file for the project.
+     * @param integer $method install method
+     * @return void
+     */
     protected static function fetch_dependancies($method)
     {
         $langpack = new langpack();
@@ -85,11 +85,11 @@ class npm_utils
         }
     }
 
-  /**
-   * Downloads and installs all the files required by the package.json file for the project.
-   * @param integer $method update method
-   * @return void
-   */
+    /**
+     * Downloads and installs all the files required by the package.json file for the project.
+     * @param integer $method update method
+     * @return void
+     */
     protected static function update_dependancies()
     {
         $langpack = new langpack();

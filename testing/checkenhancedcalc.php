@@ -95,7 +95,7 @@ foreach ($data as $individual) {
                 //correct
                 echo "<li STYLE=\"background: #00FF00;\">$varlist $formula = $ans</li>";
             } else {
-              //incorrect
+                //incorrect
                 echo "<li STYLE=\"background: #FF0000;\">$varlist $formula = $ans  Correct Answer Listed as: $cans</li>";
             }
         } else {

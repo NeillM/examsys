@@ -21,11 +21,11 @@
  */
 trait defaultgetmarks
 {
-  /**
-   * Get total marks for question
-   * @param $markscorrect
-   * @return float
-   */
+    /**
+     * Get total marks for question
+     * @param $markscorrect
+     * @return float
+     */
     public function get_marks($markscorrect)
     {
         return $this->marks;

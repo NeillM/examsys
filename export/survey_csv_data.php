@@ -114,7 +114,7 @@ if ($complete == 1) {
     $stmt->bind_result($uID, $answer_no); //TODO replaced $userID with $uID
     while ($stmt->fetch()) {
         if ($answer_no < $number_of_questions or $answer_no > $number_of_questions) {
-          // log_metadata aliased as lm in queries below for brevity
+            // log_metadata aliased as lm in queries below for brevity
             $exclude .= " AND lm.userID != $uID";
         }
     }
@@ -164,9 +164,9 @@ $stmt->close();
 $row_written = 0;
 foreach ($log_array as $individual) {
     $tmp_user_ID = $individual['username'];
-  // Write out the headings.
+    // Write out the headings.
     if ($row_written == 0) {
-      // Only output personal data if assessment, do not show if survey.
+        // Only output personal data if assessment, do not show if survey.
         echo 'Gender,Student ID,Course,Year,Submitted,';
         for ($i = 0; $i < $question_no; $i++) {
             $tmp_question_ID = $paper_buffer[$i]['ID'];
@@ -239,7 +239,7 @@ foreach ($log_array as $individual) {
         }
         echo "\n";
     }
-  // Write out the raw data.
+    // Write out the raw data.
     echo $individual['gender'] . ',' . $individual['student_id'] . ',' . $individual['course'] . ',' . $individual['year'] . ',' . $individual['started'] . ',';
     for ($i = 0; $i < $question_no; $i++) {
         $tmp_question_ID = $paper_buffer[$i]['ID'];

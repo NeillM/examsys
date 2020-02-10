@@ -27,14 +27,14 @@ class ResultsCache
 
     private $db;
 
-  /**
-   * Called when the object is unserialised.
-   */
+    /**
+     * Called when the object is unserialised.
+     */
     public function __wakeup()
     {
-      // The serialised database object will be invalid,
-      // this object should only be serialised during an error report,
-      // so adding the current database connect seems like a waste of time.
+        // The serialised database object will be invalid,
+        // this object should only be serialised during an error report,
+        // so adding the current database connect seems like a waste of time.
         $this->db = null;
     }
 
@@ -48,7 +48,7 @@ class ResultsCache
      * @param object $propertyObj - Paper properties object.
      * @param int $percent              - The passed in percentage into Class Totals.
      * @param int $absent               - Whether absent students are included in Class Totals report.
-   *
+     *
      * @return bool               - True = paper should be re-cached, False = it does not.
      */
     public function should_cache($propertyObj, $percent, $absent)
@@ -57,12 +57,12 @@ class ResultsCache
         $paper_type = $propertyObj->get_paper_type();
         $end_date   = $propertyObj->get_end_date();
 
-      /** Do NOT cache if:
-       *    - $percentage is not 100
-       *    - $absent students is on
-       *    - %paper_type is not 2 (e.g. summative exam)
-       *    - current date/time is less than paper end date/time
-       */
+        /** Do NOT cache if:
+         *    - $percentage is not 100
+         *    - $absent students is on
+         *    - %paper_type is not 2 (e.g. summative exam)
+         *    - current date/time is less than paper end date/time
+         */
         if ($percent != 100 or $absent == 1 or $paper_type == 0 or $paper_type == 1 or $paper_type == 3 or date('U') < $end_date) {
             return false;
         }
@@ -85,7 +85,7 @@ class ResultsCache
     /**
      * Loads basic statistics about a paper into an array.
      * @param int $paperID - The ID of the paper you need statistics for.
-   *
+     *
      * @return array       - Set of basic stats for a given paper.
      */
     public function get_paper_cache($paperID)
@@ -105,7 +105,7 @@ class ResultsCache
     /**
      * Loads paper pecentage scores for a given student.
      * @param int $userID - The ID of the user you need statistics for.
-   *
+     *
      * @return array       - Set of percentage scores keyed by paper ID.
      */
     public function get_paper_marks_by_student($userID)
@@ -127,7 +127,7 @@ class ResultsCache
     /**
      * Loads median marks for all questions on a given paper.
      * @param int $paperID - The ID of the paper you need statistics for.
-   *
+     *
      * @return array       - Set of medians keyed by question ID.
      */
     public function get_median_question_marks_by_paper($paperID)
@@ -151,7 +151,7 @@ class ResultsCache
      * @param int $userID       - The ID of the user you need statistics for.
      * @param string $tog_type  - The type of the assessment (e.g. which log table to use).
      * @param int $paperID      - The ID of the paper you need statistics for.
-   *
+     *
      * @return array            - Set of question marks keyed by question ID.
      */
     public function get_student_question_marks_by_paper($userID, $log_type, $paperID)
@@ -178,7 +178,7 @@ class ResultsCache
      * Loads user percentage scores for a given paper.
      * @param int $paperID    - The ID of the paper you need statistics for.
      * @param bool $sort_date - True = sort in percentage order.
-   *
+     *
      * @return array          - Set of paper percentage marks keyed by user ID.
      */
     public function get_paper_marks_by_paper($paperID, $sort_data = false)

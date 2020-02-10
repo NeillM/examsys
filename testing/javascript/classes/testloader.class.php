@@ -27,22 +27,22 @@ namespace testing\javascript;
  */
 class TestLoader
 {
-  /** @var array An array of all the Javascript unit tests. */
+    /** @var array An array of all the Javascript unit tests. */
     public $tests = array();
   
-  /** @var \stdClass The configuration for the suite. */
+    /** @var \stdClass The configuration for the suite. */
     public $config;
 
-  /**
-   * Find all tests and adds their location to the $tests property.
-   *
-   * @param string $suite The name of a suite to get the javascript tests for.
-   * @return bool Flags if the suite was loaded correctly.
-   */
+    /**
+     * Find all tests and adds their location to the $tests property.
+     *
+     * @param string $suite The name of a suite to get the javascript tests for.
+     * @return bool Flags if the suite was loaded correctly.
+     */
     public function locate($suite)
     {
         $test_location = SuiteLoader::get_base_directory() . $suite . DIRECTORY_SEPARATOR;
-      // Get and load the configuration file for the suite.
+        // Get and load the configuration file for the suite.
         $setup = new \stdClass();
         $configfile = $test_location . 'config.php';
         if (file_exists($configfile)) {
@@ -52,12 +52,12 @@ class TestLoader
             return false;
         }
         $this->config = $setup;
-      // Get the root location of Rogo.
+        // Get the root location of Rogo.
         $config = \Config::get_instance();
         $rootpath = $config->get('cfg_web_root');
-      // Get the test files.
+        // Get the test files.
         $files = glob($test_location . '*.js');
-      // Add the relative location of the files to the tests array.
+        // Add the relative location of the files to the tests array.
         foreach ($files as $file) {
             $path_parts = pathinfo($file);
             $directory = str_replace('\\', '/', $path_parts['dirname']);

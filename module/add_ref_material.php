@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../include/staff_auth.inc';
 require_once '../include/errors.php';
@@ -30,14 +30,14 @@ check_var('module', 'REQUEST', true, false, false);
 $texteditorplugin = \plugins\plugins_texteditor::get_editor();
 if (isset($_POST['submit'])) {
     $content = $texteditorplugin->prepare_text_for_save($_POST['ref_content']);
-  // Write the reference material
+    // Write the reference material
     $result = $mysqli->prepare('INSERT INTO reference_material VALUES (NULL, ?, ?, ?, NOW(), NULL)');
     $result->bind_param('sss', $_POST['title'], $content, $_POST['width']);
     $result->execute();
   
     $refID = $mysqli->insert_id;
   
-  // Add it to the modules
+    // Add it to the modules
     for ($i = 0; $i < $_POST['module_no']; $i++) {
         if (isset($_POST['mod' . $i])) {
             $result = $mysqli->prepare('INSERT INTO reference_modules VALUES (NULL, ?, ?)');

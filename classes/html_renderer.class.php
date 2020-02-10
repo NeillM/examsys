@@ -24,20 +24,20 @@
 class html_renderer
 {
 
-  /**
-   * Render a select input element
-   *
-   * @param array $options
-   * @param string $selectid
-   * @param string $selectname
-   * @param string $selectedid
-   * @param string $label
-   * @param string $default_description
-   * @param string $tooltip
-   * @param bool $return Whether to return (true) or echo (false) the HTML
-   * @param bool $intable Whether the element should be rendered as a table row or using divs
-   * @return string|void Return html or echo depending on $return parameter
-   */
+    /**
+     * Render a select input element
+     *
+     * @param array $options
+     * @param string $selectid
+     * @param string $selectname
+     * @param string $selectedid
+     * @param string $label
+     * @param string $default_description
+     * @param string $tooltip
+     * @param bool $return Whether to return (true) or echo (false) the HTML
+     * @param bool $intable Whether the element should be rendered as a table row or using divs
+     * @return string|void Return html or echo depending on $return parameter
+     */
     public function select($options, $selectid, $selectname, $selectedid, $label, $default_description, $tooltip = '', $return = false, $intable = false)
     {
 
@@ -76,15 +76,15 @@ class html_renderer
         echo "\n" . $html;
     }
 
-  /**
-   * Generate a select element for the select renderer
-   *
-   * @param string $selectid
-   * @param string $selectname
-   * @param array $options
-   * @param string $selectedid
-   * @return string
-   */
+    /**
+     * Generate a select element for the select renderer
+     *
+     * @param string $selectid
+     * @param string $selectname
+     * @param array $options
+     * @param string $selectedid
+     * @return string
+     */
     private function generate_select_element($selectid, $selectname, $options, $selectedid)
     {
         $html = '<select id="' . $selectid . '" name="' . $selectname . '">';
@@ -100,19 +100,19 @@ class html_renderer
         return $html;
     }
 
-  /**
-   * Render a text input form element
-   *
-   * @param string $name
-   * @param string $id
-   * @param string $label
-   * @param string $default
-   * @param string $default_description
-   * @param string $tooltip
-   * @param bool $return Whether to return (true) or echo (false) the HTML
-   * @param bool $intable Whether the element should be rendered as a table row or using divs
-   * @return string|void Return html or echo depending on $return parameter
-   */
+    /**
+     * Render a text input form element
+     *
+     * @param string $name
+     * @param string $id
+     * @param string $label
+     * @param string $default
+     * @param string $default_description
+     * @param string $tooltip
+     * @param bool $return Whether to return (true) or echo (false) the HTML
+     * @param bool $intable Whether the element should be rendered as a table row or using divs
+     * @return string|void Return html or echo depending on $return parameter
+     */
     public function text_input($name, $id, $label, $default, $default_description, $tooltip = '', $return = false, $intable = false)
     {
         if ($intable) {
@@ -156,19 +156,19 @@ class html_renderer
         echo $input;
     }
 
-  /**
-   * Render a checkbox input form element
-   *
-   * @param string $name
-   * @param string $id
-   * @param string $label
-   * @param string $default
-   * @param string $default_description
-   * @param string $tooltip
-   * @param bool $return Whether to return (true) or echo (false) the HTML
-   * @param bool $intable Whether the element should be rendered as a table row or using divs
-   * @return string|void Return html or echo depending on $return parameter
-   */
+    /**
+     * Render a checkbox input form element
+     *
+     * @param string $name
+     * @param string $id
+     * @param string $label
+     * @param string $default
+     * @param string $default_description
+     * @param string $tooltip
+     * @param bool $return Whether to return (true) or echo (false) the HTML
+     * @param bool $intable Whether the element should be rendered as a table row or using divs
+     * @return string|void Return html or echo depending on $return parameter
+     */
     public function checkbox_input($name, $id, $label, $default, $default_description, $tooltip = '', $return = false, $intable = false)
     {
         $checked = '';
@@ -218,13 +218,13 @@ class html_renderer
         echo $input;
     }
 
-  /**
-   * Render a tooltip
-   *
-   * @param string $text
-   * @param bool $return Whether to return (true) or echo (false) the HTML
-   * @return string|void Return html or echo depending on $return parameter
-   */
+    /**
+     * Render a tooltip
+     *
+     * @param string $text
+     * @param bool $return Whether to return (true) or echo (false) the HTML
+     * @return string|void Return html or echo depending on $return parameter
+     */
     public function tooltip($text, $return = false, $div = true)
     {
         $tag = 'div';
@@ -241,16 +241,16 @@ class html_renderer
         echo "\n" . $html;
     }
 
-  /**
-   * Render an html tag with text, class and attibutes.
-   *
-   * @param string $tag
-   * @param string $text
-   * @param string $class
-   * @param array $attributes
-   * @param bool $return Whether to return (true) or echo (false) the HTML
-   * @return string|void Return html or echo depending on $return parameter
-   */
+    /**
+     * Render an html tag with text, class and attibutes.
+     *
+     * @param string $tag
+     * @param string $text
+     * @param string $class
+     * @param array $attributes
+     * @param bool $return Whether to return (true) or echo (false) the HTML
+     * @return string|void Return html or echo depending on $return parameter
+     */
     public function tag($tag, $text, $class = '', $attributes = null, $return = false)
     {
 
@@ -276,14 +276,14 @@ class html_renderer
         echo "\n" . $html;
     }
 
-  /**
-   * Render a start div tag
-   *
-   * @param string $class
-   * @param bool $return Whether to return (true) or echo (false) the HTML
-   * @param bool $intable Whether the element should be rendered as a table row or using divs
-   * @return string|void Return html or echo depending on $return parameter
-   */
+    /**
+     * Render a start div tag
+     *
+     * @param string $class
+     * @param bool $return Whether to return (true) or echo (false) the HTML
+     * @param bool $intable Whether the element should be rendered as a table row or using divs
+     * @return string|void Return html or echo depending on $return parameter
+     */
     public function start_div($class = '', $return = false, $intable = false)
     {
 
@@ -300,11 +300,11 @@ class html_renderer
         echo "\n" . $html;
     }
 
-  /**
-   * Render a closing div tag
-   * @param bool $return
-   * @return string|void
-   */
+    /**
+     * Render a closing div tag
+     * @param bool $return
+     * @return string|void
+     */
     public function end_div($return = false)
     {
         $html = '</div>';
@@ -314,16 +314,16 @@ class html_renderer
         echo "\n" . $html;
     }
 
-  /**
-   * Render a heading with optional tooltip
-   *
-   * @param string $tag
-   * @param string $text
-   * @param string $tooltip
-   * @param bool $return Whether to return (true) or echo (false) the HTML
-   * @param bool $intable Whether the element should be rendered as a table row or using divs
-   * @return string|void Return html or echo depending on $return parameter
-   */
+    /**
+     * Render a heading with optional tooltip
+     *
+     * @param string $tag
+     * @param string $text
+     * @param string $tooltip
+     * @param bool $return Whether to return (true) or echo (false) the HTML
+     * @param bool $intable Whether the element should be rendered as a table row or using divs
+     * @return string|void Return html or echo depending on $return parameter
+     */
     public function heading($tag, $text, $tooltip = '', $return = false, $intable = false)
     {
         if ($intable) {

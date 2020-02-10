@@ -32,7 +32,7 @@ class qti_export extends rogo_directory
 
     public function cachetime()
     {
-      // Cache for 2 minutes.
+        // Cache for 2 minutes.
         return 120;
     }
 }

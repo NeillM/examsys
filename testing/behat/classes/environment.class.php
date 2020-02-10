@@ -31,16 +31,16 @@ use Symfony\Component\Yaml\Yaml,
  */
 class environment
 {
-  /** The default values for the website that behat will use for testing. */
+    /** The default values for the website that behat will use for testing. */
     const DEFAULT_WEBSITE = 'http://localhost:8000';
 
-  /**
-   * Builds the behat.yml file in testing/behat/config
-   *
-   * This function should be modified if we wish to change the config that is used.
-   *
-   * @throws Exception
-   */
+    /**
+     * Builds the behat.yml file in testing/behat/config
+     *
+     * This function should be modified if we wish to change the config that is used.
+     *
+     * @throws Exception
+     */
     public static function build_config()
     {
         $basedir = self::get_basedir();
@@ -98,42 +98,42 @@ class environment
         }
     }
 
-  /**
-   * Gets the website defined for the behat site in the config file or uses the default.
-   *
-   * @return string
-   */
+    /**
+     * Gets the website defined for the behat site in the config file or uses the default.
+     *
+     * @return string
+     */
     public static function get_behat_website()
     {
         $behatwebsite = Config::get_instance()->get('cfg_behat_website');
         return $behatwebsite;
     }
 
-  /**
-   * Get the fully qualified path of the testing/behat directory.
-   *
-   * @return string
-   */
+    /**
+     * Get the fully qualified path of the testing/behat directory.
+     *
+     * @return string
+     */
     protected static function get_basedir()
     {
         return self::get_rogo_basedir() . DIRECTORY_SEPARATOR . 'testing' . DIRECTORY_SEPARATOR . 'behat';
     }
   
-  /**
-   * Get the full path to the behat.yml file.
-   *
-   * @return string
-   */
+    /**
+     * Get the full path to the behat.yml file.
+     *
+     * @return string
+     */
     public static function get_yml_location()
     {
         return self::get_basedir() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'behat.yml';
     }
 
-  /**
-   * Check if the behat web server instance is running.
-   *
-   * @return boolean
-   */
+    /**
+     * Check if the behat web server instance is running.
+     *
+     * @return boolean
+     */
     public static function is_server_running()
     {
         $return = false;
@@ -148,11 +148,11 @@ class environment
         return $return;
     }
 
-  /**
-   * Check if the behat database needs refreshing.
-   *
-   * @return boolean
-   */
+    /**
+     * Check if the behat database needs refreshing.
+     *
+     * @return boolean
+     */
     public static function upgrade_needed()
     {
         $config = Config::get_instance();
@@ -162,21 +162,21 @@ class environment
         return false;
     }
 
-  /**
-   * Gets the location of the file that stores the version of code that behat is setup to run.
-   *
-   * @return string
-   */
+    /**
+     * Gets the location of the file that stores the version of code that behat is setup to run.
+     *
+     * @return string
+     */
     public static function get_version_location()
     {
         return self::get_basedir() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'version.php';
     }
 
-  /**
-   * Writes a file that contains the version number of the Rogo code.
-   *
-   * @return void
-   */
+    /**
+     * Writes a file that contains the version number of the Rogo code.
+     *
+     * @return void
+     */
     public static function save_version()
     {
         $codeversion = Config::get_instance()->getxml('version');
@@ -186,11 +186,11 @@ class environment
         }
     }
 
-  /**
-   * Get the version of Rogo that behat is initialised for.
-   *
-   * @return string
-   */
+    /**
+     * Get the version of Rogo that behat is initialised for.
+     *
+     * @return string
+     */
     public static function rogo_behat_version()
     {
         $file = self::get_version_location();
@@ -202,11 +202,11 @@ class environment
         return $version;
     }
 
-  /**
-   * Returns the directory that Rogo is installed in.
-   *
-   * @return string
-   */
+    /**
+     * Returns the directory that Rogo is installed in.
+     *
+     * @return string
+     */
     protected static function get_rogo_basedir()
     {
         return dirname(dirname(dirname(__DIR__)));

@@ -15,12 +15,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens, $paper_title, $start_date, $display_start_date, $display_end_date, $exam_duration, $title, $initials, $surname, $retired, $password, $userObj)
 {
@@ -45,7 +45,7 @@ function display_paper_icon($paper_ownerID, $property_id, $paper_type, $screens,
         $title_class = 'greylink';
     }
 
-  // Take Standards Setter straight to Standards Setter section
+    // Take Standards Setter straight to Standards Setter section
     if ($userObj->has_role('Standards Setter')) {
         $href = '../std_setting/index.php?paperID=' . $property_id . "&folder=$folder&module=$module";
     } else {

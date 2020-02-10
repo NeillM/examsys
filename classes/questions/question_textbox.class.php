@@ -35,7 +35,7 @@ class QuestionTEXTBOX extends QuestionEdit
     protected $_allow_change_marking_method = false;
     protected $_answer_negative = '';
 
-  // Textbox is a rare example of a question type that will allow option editing
+    // Textbox is a rare example of a question type that will allow option editing
     protected $_allow_option_edit = true;
 
 
@@ -44,7 +44,7 @@ class QuestionTEXTBOX extends QuestionEdit
 
     function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
-      // Get default text editor first, allow to be overridden
+        // Get default text editor first, allow to be overridden
         $configObject = Config::get_instance();
         $this->editor = $configObject->get_setting('core', 'paper_textbox_editor_default');
     
@@ -53,21 +53,21 @@ class QuestionTEXTBOX extends QuestionEdit
     }
 
 
-  // ACCESSORS
+    // ACCESSORS
 
-  /**
-   * Get the columns for the question
-   * @return integer
-   */
+    /**
+     * Get the columns for the question
+     * @return integer
+     */
     public function get_columns()
     {
         return $this->columns;
     }
 
-  /**
-   * Set the columns for the question
-   * @param integer $value
-   */
+    /**
+     * Set the columns for the question
+     * @param integer $value
+     */
     public function set_columns($value)
     {
         if ($value != $this->columns) {
@@ -76,19 +76,19 @@ class QuestionTEXTBOX extends QuestionEdit
         }
     }
 
-  /**
-   * Get the rows for the question
-   * @return integer
-   */
+    /**
+     * Get the rows for the question
+     * @return integer
+     */
     public function get_rows()
     {
         return $this->rows;
     }
 
-  /**
-   * Set the rows for the question
-   * @param integer $value
-   */
+    /**
+     * Set the rows for the question
+     * @param integer $value
+     */
     public function set_rows($value)
     {
         if ($value != $this->rows) {
@@ -97,19 +97,19 @@ class QuestionTEXTBOX extends QuestionEdit
         }
     }
 
-  /**
-   * Get the editor for the question
-   * @return string
-   */
+    /**
+     * Get the editor for the question
+     * @return string
+     */
     public function get_editor()
     {
         return $this->editor;
     }
 
-  /**
-   * Set the editor for the question
-   * @param string $value
-   */
+    /**
+     * Set the editor for the question
+     * @param string $value
+     */
     public function set_editor($value)
     {
         if ($value != $this->editor) {
@@ -118,19 +118,19 @@ class QuestionTEXTBOX extends QuestionEdit
         }
     }
 
-  /**
-   * Get the terms for the question
-   * @return string
-   */
+    /**
+     * Get the terms for the question
+     * @return string
+     */
     public function get_terms()
     {
         return $this->terms;
     }
 
-  /**
-   * Set the terms for the question
-   * @param string $value
-   */
+    /**
+     * Set the terms for the question
+     * @param string $value
+     */
     public function set_terms($value)
     {
         if ($value != $this->terms) {

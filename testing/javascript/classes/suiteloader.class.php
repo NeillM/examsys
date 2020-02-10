@@ -27,31 +27,31 @@ namespace testing\javascript;
  */
 class SuiteLoader
 {
-  /** @var array An array of all the Javascript unit tests. */
+    /** @var array An array of all the Javascript unit tests. */
     public $suites = array();
 
-  /**
-   * Find all tests and adds their location to the $tests property.
-   */
+    /**
+     * Find all tests and adds their location to the $tests property.
+     */
     public function locate_all()
     {
-      // Get the root location of Rogo.
+        // Get the root location of Rogo.
         $config = \Config::get_instance();
         $rootpath = $config->get('cfg_web_root');
-      // Get the test files.
+        // Get the test files.
         $test_location = self::get_base_directory() . '*';
         $suites = glob($test_location, GLOB_ONLYDIR);
-      // Add the name of the suite to the array.
+        // Add the name of the suite to the array.
         foreach ($suites as $suite) {
             $this->suites[] = basename($suite);
         }
     }
 
-  /**
-   * Get the base directory all Javascript based tests are located in.
-   *
-   * @return string
-   */
+    /**
+     * Get the base directory all Javascript based tests are located in.
+     *
+     * @return string
+     */
     public static function get_base_directory()
     {
         return dirname(__DIR__) . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR;

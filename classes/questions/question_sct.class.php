@@ -57,27 +57,27 @@ class QuestionSCT extends QuestionEdit
             $i++;
         }
     
-      // 'correct' is not a unified field for SCT questions
+        // 'correct' is not a unified field for SCT questions
         $this->_fields_unified = array();
         $this->_fields_editable[] = 'correct';
     }
   
   
-  // ACCESSORS
+    // ACCESSORS
   
-  /**
-   * Get the 'types' of SCT available - alters the label of the initial information and option texts
-   * @return array
-   */
+    /**
+     * Get the 'types' of SCT available - alters the label of the initial information and option texts
+     * @return array
+     */
     public function get_sct_types()
     {
         return $this->sct_types;
     }
   
-  /**
-   * Get the total number of experts used on this question.  This is a total of all the experts ('correct' value) on all the options
-   * @return number
-   */
+    /**
+     * Get the total number of experts used on this question.  This is a total of all the experts ('correct' value) on all the options
+     * @return number
+     */
     public function get_max_experts()
     {
         $total = 0;
@@ -89,20 +89,20 @@ class QuestionSCT extends QuestionEdit
         return $total;
     }
   
-  /**
-   * Get the hypothesis for the question
-   * @return integer
-   */
+    /**
+     * Get the hypothesis for the question
+     * @return integer
+     */
     public function get_hypothesis()
     {
         $this->get_leadin();
         return $this->hypothesis;
     }
   
-  /**
-   * Set the hypothesis for the question
-   * @param string $value
-   */
+    /**
+     * Set the hypothesis for the question
+     * @param string $value
+     */
     public function set_hypothesis($value)
     {
         if ($value != $this->get_hypothesis()) {
@@ -112,20 +112,20 @@ class QuestionSCT extends QuestionEdit
         }
     }
 
-  /**
-   * Get the new information for the question
-   * @return integer
-   */
+    /**
+     * Get the new information for the question
+     * @return integer
+     */
     public function get_new_information()
     {
         $this->get_leadin();
         return $this->new_information;
     }
   
-  /**
-   * Set the new information for the question
-   * @param string $value
-   */
+    /**
+     * Set the new information for the question
+     * @param string $value
+     */
     public function set_new_information($value)
     {
         if ($value != $this->get_new_information()) {
@@ -135,10 +135,10 @@ class QuestionSCT extends QuestionEdit
         }
     }
 
-  /**
-   * Get the question leadin
-   * @return string
-   */
+    /**
+     * Get the question leadin
+     * @return string
+     */
     public function get_leadin()
     {
         if ($this->leadin != '') {
@@ -149,10 +149,10 @@ class QuestionSCT extends QuestionEdit
         return $this->leadin;
     }
   
-  /**
-   * Set the question leadin
-   * @param string $value
-   */
+    /**
+     * Set the question leadin
+     * @param string $value
+     */
     public function set_leadin($value)
     {
         $this->leadin =  $this->hypothesis . '~' . $this->new_information;

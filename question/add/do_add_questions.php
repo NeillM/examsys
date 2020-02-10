@@ -16,12 +16,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 require '../../include/staff_auth.inc';
 
@@ -34,7 +34,7 @@ if ($_POST['questions_to_add'] != '') {
         Paper_utils::add_question($_GET['paperID'], $item, $_POST['screen'], $display_pos, $mysqli);
         $display_pos++;
 
-      // Create a track changes record to say new question added.
+        // Create a track changes record to say new question added.
         $tmp_paperID = intval($_GET['paperID']);
         $success = $logger->track_change('Paper', $tmp_paperID, $userObject->get_user_ID(), '', $item, 'Add Question');
     }

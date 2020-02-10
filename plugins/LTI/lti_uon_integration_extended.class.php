@@ -50,13 +50,13 @@ class lti_uon_integration_extended extends lti_integration
     'AM' => 'Music', 'ZN' => 'Ningbo', 'SHS' => 'Nursing', 'PA' => 'Pharmacy', 'AP' => 'Philosophy', 'PP' => 'Physics',
     'LD' => 'Politics', 'LP' => 'Psychology', 'AV' => 'Slavonic Studies', 'AT' => 'Theology', 'SV' => 'Vet School');
 
-  /**
-   * Process module information from saturn based naming convnetion
-   * @param mysqli $mysqlidb connection
-   * @param string $moduleshortcode module shortcode from VLE
-   * @param string $course_title module title from VLE
-   * @return array rogo module information
-   */
+    /**
+     * Process module information from saturn based naming convnetion
+     * @param mysqli $mysqlidb connection
+     * @param string $moduleshortcode module shortcode from VLE
+     * @param string $course_title module title from VLE
+     * @return array rogo module information
+     */
     private function process_cs_naming_convention($mysqli, $moduleshortcode, $course_title = ' ')
     {
         $data = array();
@@ -68,13 +68,13 @@ class lti_uon_integration_extended extends lti_integration
         if ($course_title == ' ') {
             $course_title = 'MISSING COURSE TITLE';
         }
-      // Meta modules not supported.
+        // Meta modules not supported.
         if (preg_match(self::CS_META_MODULE_CHECK, $moduleshortcode)) {
             return $data;
         }
-      // Module name space.
-      // Regular expression to match XXXXYYYY-Z-AAAA-BBB-CCCC occurences in module shortcode where XXXXYYYY is the module code, Z is the offering,
-      // AAAA is the campus. B is the semester and CCCC the academic year. We only care about the module code and campus.
+        // Module name space.
+        // Regular expression to match XXXXYYYY-Z-AAAA-BBB-CCCC occurences in module shortcode where XXXXYYYY is the module code, Z is the offering,
+        // AAAA is the campus. B is the semester and CCCC the academic year. We only care about the module code and campus.
         preg_match(self::CS_MODULE_SPACE, $moduleshortcode, $info);
         if (count($info) > 0) {
             $i = 0;
@@ -84,9 +84,9 @@ class lti_uon_integration_extended extends lti_integration
             $data[] = array('SMS', $info['module'] , $info['campus'], 'UNKNOWN School', 0, $course_title, 'Campus Solutions');
         }
         if (count($data) == 0) {
-          // Non module name space.
-          // Regeular expression to match ZZZ-XXXX-YYYYYYYYYYYYYYYYYYYYYYYYYYYYY-AAAA-BBBB occurences in module shortcode where XXXX-YYYY is the module code,
-          // AAAA is the campus. BBBB is the academic year. ZZZ is the school (this is optional). We only care about the school, module code and campus.
+            // Non module name space.
+            // Regeular expression to match ZZZ-XXXX-YYYYYYYYYYYYYYYYYYYYYYYYYYYYY-AAAA-BBBB occurences in module shortcode where XXXX-YYYY is the module code,
+            // AAAA is the campus. BBBB is the academic year. ZZZ is the school (this is optional). We only care about the school, module code and campus.
             preg_match(self::CS_NON_MODULE_SPACE, $moduleshortcode, $info);
             if (count($info) > 0) {
                 if ($info['campus'] != 'UNUK' and $info['campus'] != 'UK') {
@@ -100,7 +100,7 @@ class lti_uon_integration_extended extends lti_integration
                 } else {
                     $info['campus'] = 'UNUK';
                 }
-              // Try to place the module in a school.
+                // Try to place the module in a school.
                 $schoolname = 'UNKNOWN School';
                 if (!empty($info['school'])) {
                     if (isset($this->dept_code[$info['school']])) {
@@ -114,19 +114,19 @@ class lti_uon_integration_extended extends lti_integration
         return $data;
     }
 
-  /**
-   * Process module information from saturn based naming convnetion
-   * @param mysqli $mysqlidb connection
-   * @param string $moduleshortcode module shortcode from VLE
-   * @param string $course_title module title from VLE
-   * @return array|bool rogo module information or false on invalid module short code
-   */
+    /**
+     * Process module information from saturn based naming convnetion
+     * @param mysqli $mysqlidb connection
+     * @param string $moduleshortcode module shortcode from VLE
+     * @param string $course_title module title from VLE
+     * @return array|bool rogo module information or false on invalid module short code
+     */
     private function process_saturn_naming_convention($mysqli, $moduleshortcode, $course_title = ' ')
     {
-      // only get the shortname through  (courseID is only probably accessible via specific moodle webservices api
-      // shortname for real module try XXXXXX-YY-ZZZWWWW  WHERE XXXXXX is saturn code YY is country rest we dont care about.
-      // shortname for non module VV-XXXXX-XXXXX-YY-WWWW WHERE XXXXXXXXXX is the fake 'module code'  YYY is country VV is DEPT 2 letter code
-      // shortname for metamodules is XXXXXX-YY-XXXXXX-YY-XXXXXXX-YYY-ZZZWWWWW where the set of XXXXXX, YY are unknown
+        // only get the shortname through  (courseID is only probably accessible via specific moodle webservices api
+        // shortname for real module try XXXXXX-YY-ZZZWWWW  WHERE XXXXXX is saturn code YY is country rest we dont care about.
+        // shortname for non module VV-XXXXX-XXXXX-YY-WWWW WHERE XXXXXXXXXX is the fake 'module code'  YYY is country VV is DEPT 2 letter code
+        // shortname for metamodules is XXXXXX-YY-XXXXXX-YY-XXXXXXX-YYY-ZZZWWWWW where the set of XXXXXX, YY are unknown
         $exploded = explode('-', $moduleshortcode);
         $length = strlen($exploded[0]);
         $fin = strlen($course_title);
@@ -136,9 +136,9 @@ class lti_uon_integration_extended extends lti_integration
         }
         $course_title = substr($course_title, 0, $fin);
         if ($length < 6) {
-          //not saturn code
+            //not saturn code
             $campus = '';
-          //this should mean its a fake course
+            //this should mean its a fake course
             $modcode = '';
             for ($a = 1; $a < count($exploded); $a++) {
                 if (in_array(strtoupper($exploded[$a]), array('UK', 'MY', 'CN'))) {
@@ -169,7 +169,7 @@ class lti_uon_integration_extended extends lti_integration
 
                     $data[$b++] = array('SMS', $exploded[$a], 'CampusMissing', 'UNKNOWN School', $selfreg, "MISSING:$course_title");
                 } elseif (strlen($exploded[$a]) == 2) {
-                  // probably campus check
+                    // probably campus check
                     if (in_array(strtoupper($exploded[$a]), array('UK', 'MY', 'CN'))) {
                         for ($c = 0; $c < $b; $c++) {
                             if ($data[$c][2] == 'CampusMissing') {
@@ -215,11 +215,11 @@ class lti_uon_integration_extended extends lti_integration
         return $data;
     }
 
-  /**
-   * Check last time logged in and decide if re-authentication should be done
-   * @param string $time last time logged in
-   * @return bool true if user require re-authentication
-   */
+    /**
+     * Check last time logged in and decide if re-authentication should be done
+     * @param string $time last time logged in
+     * @return bool true if user require re-authentication
+     */
     public function user_time_check($time)
     {
         $time1 = strtotime($time);
@@ -231,22 +231,22 @@ class lti_uon_integration_extended extends lti_integration
         return false;
     }
 
-  /**
-   * Returns the sms url appropriate for the item element, will insert an error into the sys log if SMS is not set up correctly.
-   * @param array $data module data from module_code_translate
-   * @return string|bool SMS url or false on exception
-   */
+    /**
+     * Returns the sms url appropriate for the item element, will insert an error into the sys log if SMS is not set up correctly.
+     * @param array $data module data from module_code_translate
+     * @return string|bool SMS url or false on exception
+     */
     public function sms_api($data)
     {
-      // Non module space modules.
+        // Non module space modules.
         if ($data[0] != 'SMS') {
             return '';
         }
-      // Old SMS plugins define a url.
+        // Old SMS plugins define a url.
         if (count($data) != 7) {
             $SMS = SmsUtils::GetSmsUtils();
             if ($SMS === false) {
-              // Attempting to create a module not via the SMS - exception.
+                // Attempting to create a module not via the SMS - exception.
                 return false;
             } else {
                 $SMS->set_module($data[2]);
@@ -254,20 +254,20 @@ class lti_uon_integration_extended extends lti_integration
                 return $SMS->url;
             }
         } else {
-          // New SMS plugins define a placeholder.
+            // New SMS plugins define a placeholder.
             return $data[6];
         }
     }
 
-  /**
-   * Translate source id in rogo external id.
-   * @param string $sourceid source id from VLE
-   * @return mixed module external id or null
-   */
+    /**
+     * Translate source id in rogo external id.
+     * @param string $sourceid source id from VLE
+     * @return mixed module external id or null
+     */
     public function module_id_translate($sourceid)
     {
-      // Regular expression to match XXXXXX_Y_ZZZZ occurences in course id where XXXXXX is the module id, Y is the offering,
-      // ZZZZ is the term. We only care about the module id.
+        // Regular expression to match XXXXXX_Y_ZZZZ occurences in course id where XXXXXX is the module id, Y is the offering,
+        // ZZZZ is the term. We only care about the module id.
         preg_match(self::CS_COURSE_ID, $sourceid, $info);
         if (count($info) > 0) {
             return $info['id'];
@@ -275,13 +275,13 @@ class lti_uon_integration_extended extends lti_integration
         return null;
     }
   
-  /**
-   * Convert VLE module shortcode into Rogo moduleid
-   * @param mysqli $mysqli db connection
-   * @param string $moduleshortcode VLE module shortcode
-   * @param string $course_title VLE module title
-   * @return array rogo module information or false on invalid module short code
-   */
+    /**
+     * Convert VLE module shortcode into Rogo moduleid
+     * @param mysqli $mysqli db connection
+     * @param string $moduleshortcode VLE module shortcode
+     * @param string $course_title VLE module title
+     * @return array rogo module information or false on invalid module short code
+     */
     public function module_code_translate($mysqli, $moduleshortcode, $course_title = ' ')
     {
 
@@ -289,27 +289,27 @@ class lti_uon_integration_extended extends lti_integration
             return false;
         }
     
-      // Different process depending on naming convention.
+        // Different process depending on naming convention.
         if (
             preg_match(self::CS_MODULE_SPACE, $moduleshortcode) or preg_match(self::CS_NON_MODULE_SPACE, $moduleshortcode)
             or preg_match(self::CS_META_MODULE_CHECK, $moduleshortcode)
         ) {
-          // CS naming convention.
+            // CS naming convention.
             $data = $this->process_cs_naming_convention($mysqli, $moduleshortcode, $course_title);
         } else {
-          // Saturn naming convention.
+            // Saturn naming convention.
             $data = $this->process_saturn_naming_convention($mysqli, $moduleshortcode, $course_title);
         }
     
-      // return the data
-      // returning an array containing an array, description of inner array
-      // first is 'Manual' or 'SMS' indicating if its not or it is a manual add or a live SMS based module
-      // second is the module code
-      // third is campus
-      // fourth is School it belongs to as text
-      // fifth is if its self registration module
-      // sixth is the module title.  if it starts MISSING: then there is need for manual intervention to complete this correctly
-      // seventh is optional. The SMS placeholder stored against a module instead of a URL by new SMS plugins.
+        // return the data
+        // returning an array containing an array, description of inner array
+        // first is 'Manual' or 'SMS' indicating if its not or it is a manual add or a live SMS based module
+        // second is the module code
+        // third is campus
+        // fourth is School it belongs to as text
+        // fifth is if its self registration module
+        // sixth is the module title.  if it starts MISSING: then there is need for manual intervention to complete this correctly
+        // seventh is optional. The SMS placeholder stored against a module instead of a URL by new SMS plugins.
         if (count($data) === 0) {
             return false;
         }

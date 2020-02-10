@@ -32,15 +32,15 @@ use Behat\Gherkin\Node\PyStringNode,
  */
 trait authentication
 {
-  /**
-   * Log into Rogo.
-   *
-   * @Given /^I login as "([^"]*)"$/
-   * @param $username The username to be logged in.
-   */
+    /**
+     * Log into Rogo.
+     *
+     * @Given /^I login as "([^"]*)"$/
+     * @param $username The username to be logged in.
+     */
     public function i_login_as($username)
     {
-      // Goto the base Rogo path.
+        // Goto the base Rogo path.
         $this->getSession()->visit($this->locatePath('/'));
         $this->i_set_field('ROGO_USER', $username);
         $this->i_set_field('ROGO_PW', $username);
@@ -49,17 +49,17 @@ trait authentication
         try {
             $this->i_should_not_see('rogo-login-form-std', 'button');
         } catch (\Exception $e) {
-          // We are still on the login page, so lets give a reasonable message.
+            // We are still on the login page, so lets give a reasonable message.
             throw new \Exception("Login failed for $username");
         }
     }
   
-  /**
-   * Log out Rogo.
-   *
-   * @Then /^I log out$/
-   * @param $username The username to be logged in.
-   */
+    /**
+     * Log out Rogo.
+     *
+     * @Then /^I log out$/
+     * @param $username The username to be logged in.
+     */
     public function i_log_out()
     {
         $this->toggle_main_menu();

@@ -15,16 +15,16 @@
 // along with Rogo.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* Collection of functions which handle the different aspects of paper security.
-* Used in start.php, finish.php, save_screen.php and fire_evacuation.php amongst
-* others.
-*
-* @author Simon Wilkinson
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * Collection of functions which handle the different aspects of paper security.
+ * Used in start.php, finish.php, save_screen.php and fire_evacuation.php amongst
+ * others.
+ *
+ * @author Simon Wilkinson
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 /**
  * Check that the current IP address of the user is in one of the allowed
@@ -57,7 +57,7 @@ function check_labs($paper_type, $lab_needed, $address, $pword, $string, $db)
         }
         $stmt->close();
     } else {
-      // Exit if a summative exam is on no labs and no password. There has to be some for of security.
+        // Exit if a summative exam is on no labs and no password. There has to be some for of security.
         if ($paper_type == '2' and trim($pword) == '') {
             $notice->access_denied($db, $string, $string['specificpassword'], true, true);
         }
@@ -116,10 +116,10 @@ function check_datetime($start_date, $end_date, $string, $db, $first_start = fal
     $notice = UserNotices::get_instance();
     $end_comparison = time();
     if (!$first_start) {
-      // If the exam has already been started allow access for 60 minutes after the end of the exam.
+        // If the exam has already been started allow access for 60 minutes after the end of the exam.
         $end_comparison -= 3600;
     }
-  // Allow 1 minute before the start time of the assessment.
+    // Allow 1 minute before the start time of the assessment.
     if ((time() + 60) < $start_date or $end_comparison > $end_date) {
         $configObject = Config::get_instance();
         $format = $configObject->get('cfg_short_datetime_php');
@@ -270,7 +270,7 @@ function check_ipmismatch($paperid, $current_address, $string, $userObj, $db)
 {
     $log_metadata = new LogMetadata($userObj->get_user_ID(), $paperid, $db);
     $log_metadata->get_record('', false);
-  // Warn user they are logged into mulitple devices in this exam and log them out.
+    // Warn user they are logged into mulitple devices in this exam and log them out.
     if (!is_null($log_metadata->get_ipaddress()) and $current_address !== $log_metadata->get_ipaddress()) {
         $msg = sprintf($string['ipmismatchblurb'], $userObj->get_first_names(), $userObj->get_surname(), $userObj->get_username(), $log_metadata->get_ipaddress());
         $notice = UserNotices::get_instance();

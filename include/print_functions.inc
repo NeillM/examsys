@@ -15,12 +15,12 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
-*
-* @author Simon Wilkinson, Anthony Brown
-* @version 1.0
-* @copyright Copyright (c) 2014 The University of Nottingham
-* @package
-*/
+ *
+ * @author Simon Wilkinson, Anthony Brown
+ * @version 1.0
+ * @copyright Copyright (c) 2014 The University of Nottingham
+ * @package
+ */
 
 function display_question(&$question, $paper_type, $current_screen, $old_q_type, &$question_no, &$question_offset, $user_answers)
 {
@@ -32,7 +32,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
     $configObj = Config::get_instance();
     $questiondata = \questiondata::get_datastore($question['q_type']);
     $render = new render($configObj);
-  // Determine if negative marking is used.
+    // Determine if negative marking is used.
     $neg_marking = false;
     if (isset($question['object']) and method_exists($question['object'], 'is_negative_marked')) {
         $neg_marking = $question['object']->is_negative_marked();
@@ -44,7 +44,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
     }
 
-  // Process the order
+    // Process the order
     $question['option_order'] = array();
     if (isset($question['q_option_order']) and ($question['q_option_order'] == 'random' or $question['q_option_order'] == 'alphabetic')) {
         if (!isset($user_order[$current_screen][$q_id]) or $user_order[$current_screen][$q_id] == '') {
@@ -63,24 +63,24 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
                     $question['option_order'][] = $key;
                 }
             } else {
-              // Make up the order array in the existing order
+                // Make up the order array in the existing order
                 for ($i = 0; $i < $option_no; $i++) {
                     $question['option_order'][$i] = $i;
                 }
             }
         } else {
-          // Set the order array to what is stored in the users log record
+            // Set the order array to what is stored in the users log record
             $question['option_order'] = explode(',', $user_order[$current_screen][$q_id]);
         }
 
-      // Re-arrange the options array
+        // Re-arrange the options array
         $new_options = array();
         for ($i = 0; $i < $option_no; $i++) {
             $new_options[$i] = $question['options'][$question['option_order'][$i]];
         }
         $question['options'] = $new_options;
     } else {
-      // Make up the order array in the existing order
+        // Make up the order array in the existing order
         for ($i = 0; $i < $option_no; $i++) {
             $question['option_order'][$i] = $i;
         }
@@ -135,7 +135,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         }
     }
     if ($question['q_type'] == 'info') {
-      // Special processing of Information Blocks.
+        // Special processing of Information Blocks.
         if ($li_set == 0) {
             echo '<tr><td colspan="2" style="padding-left:10px; padding-right:10px">';
         }
@@ -156,7 +156,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
         $old_likert_label = '';
     }
 
-  // Pre-question processing
+    // Pre-question processing
     switch ($question['q_type']) {
         case 'enhancedcalc':
             $A = $B = $C = $D = $E = $F = $G = $H = $I = $J = '';    // Reset all variables initially
@@ -305,7 +305,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
             break;
     }
 
-  // Processing for each stem.
+    // Processing for each stem.
     foreach ($question['options'] as $display_option) {
         $part_id++;
         switch ($question['q_type']) {
@@ -524,7 +524,7 @@ function display_question(&$question, $paper_type, $current_screen, $old_q_type,
                     }
                     echo '<p class="stem">' . $blank_details[0] . $screen_output_all . "</p>\n";
                 } else {
-                  // Dropdown lists.
+                    // Dropdown lists.
                     $no_blanks = count($blank_details);
                     echo '<p>' . $blank_details[0];
                     $blank_count = 1;
@@ -851,7 +851,7 @@ HTML;
         echo '</table>';
     }
 
-  // Display possible marks for question (if not Survey)
+    // Display possible marks for question (if not Survey)
     if ($question['q_type'] != 'hotspot' and $question['q_type'] != 'likert' and $question['q_type'] != 'info' and $question['q_type'] != 'enhancedcalc') {
         echo '</blockquote>';
     }
