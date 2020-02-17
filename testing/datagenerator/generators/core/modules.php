@@ -17,10 +17,9 @@
 
 namespace testing\datagenerator;
 
-use \module_utils,
-
-    \yearutils,
-    UserUtils;
+use module_utils;
+use yearutils;
+use UserUtils;
 
 /**
  * Generates Rogo module.

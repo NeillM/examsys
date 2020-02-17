@@ -17,7 +17,7 @@
 
 namespace testing\behat;
 
-use \Behat\Mink\Session;
+use Behat\Mink\Session;
 
 /**
  * Used to define things that behat can select in Rogo

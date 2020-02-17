@@ -17,10 +17,9 @@
 
 namespace testing\behat\hooks;
 
-use Config as RogoConfig,
-
-    Exception,
-    testing\behat\helpers\database\state;
+use Config as RogoConfig;
+use Exception;
+use testing\behat\helpers\database\state;
 
 /**
  * This class should define all the pre and post hooks for Rogo backend behat tests.

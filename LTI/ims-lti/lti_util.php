@@ -1,11 +1,10 @@
 <?php
 
-use LTI\OAuthConsumer,
-
-    LTI\OAuthRequest,
-    LTI\OAuthServer,
-    LTI\OAuthSignatureMethod_HMAC_SHA1,
-    LTI\TrivialOAuthDataStore;
+use LTI\OAuthConsumer;
+use LTI\OAuthRequest;
+use LTI\OAuthServer;
+use LTI\OAuthSignatureMethod_HMAC_SHA1;
+use LTI\TrivialOAuthDataStore;
 
 $OAuth_last_computed_siguature = false;
 

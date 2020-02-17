@@ -17,11 +17,10 @@
 
 namespace testing\datagenerator;
 
-use \Exception,
-
-    \UserUtils,
-    \QuestionUtils,
-    \random_utils;
+use Exception;
+use UserUtils;
+use QuestionUtils;
+use random_utils;
 
 /**
  * Generates Rogo paper.

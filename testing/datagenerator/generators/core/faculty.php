@@ -17,7 +17,7 @@
 
 namespace testing\datagenerator;
 
-use \FacultyUtils;
+use FacultyUtils;
 
 /**
  * Generates Rogo faculty.

@@ -17,12 +17,11 @@
 
 namespace testing\behat;
 
-use Behat\Behat\Context\Context,
-
-    Behat\Behat\Tester\Exception\PendingException;
+use Behat\Behat\Context\Context;
+use Behat\Behat\Tester\Exception\PendingException;
 use testing\datagenerator\loader;
-use coding_exception,
-    Exception;
+use coding_exception;
+use Exception;
 
 /**
  * All Rogo behat test definitions should extend this class if they wish to do PHP Unit based tests.

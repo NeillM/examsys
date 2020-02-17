@@ -170,7 +170,6 @@ class apixmltest extends unittestdatabase
                 'paper_ownerID' => $this->admin['id'],
                 'labs' => '1',
                 'paper_type' => '0',
-
             ),
             1 => array(
                 'paper_title' => 'Test',

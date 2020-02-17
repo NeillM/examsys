@@ -17,9 +17,8 @@
 
 namespace testing\behat;
 
-use Symfony\Component\Yaml\Yaml,
-
-    Config;
+use Symfony\Component\Yaml\Yaml;
+use Config;
 
 /**
  * This class is used to install and update behat in Rogo.

@@ -17,11 +17,10 @@
 
 namespace testing\behat;
 
-use InstallUtils,
-
-    Config,
-    cli_utils,
-    mysqli;
+use InstallUtils;
+use Config;
+use cli_utils;
+use mysqli;
 
 /**
  * This class is used to manage the database used for Rogo behat testing.

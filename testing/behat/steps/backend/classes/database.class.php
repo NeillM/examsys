@@ -17,11 +17,9 @@
 
 namespace testing\behat\steps\backend;
 
-use Behat\Gherkin\Node\PyStringNode,
-
-    Behat\Gherkin\Node\TableNode,
-    Behat\Behat\Tester\Exception\PendingException;
-
+use Behat\Gherkin\Node\PyStringNode;
+use Behat\Gherkin\Node\TableNode;
+use Behat\Behat\Tester\Exception\PendingException;
 use testing\behat\helpers\database\state;
 
 /**

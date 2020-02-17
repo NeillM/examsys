@@ -17,11 +17,10 @@
 
 namespace testing\datagenerator;
 
-use \Config,
-
-    \yearutils,
-    \assessment,
-    \UserUtils;
+use Config;
+use yearutils;
+use assessment;
+use UserUtils;
 
 /**
  * Generates Rogo paper.

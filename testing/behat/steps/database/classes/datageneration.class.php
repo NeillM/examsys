@@ -17,10 +17,9 @@
 
 namespace testing\behat\steps\database;
 
-use Behat\Gherkin\Node\PyStringNode,
-
-    Behat\Gherkin\Node\TableNode,
-    Behat\Behat\Tester\Exception\PendingException;
+use Behat\Gherkin\Node\PyStringNode;
+use Behat\Gherkin\Node\TableNode;
+use Behat\Behat\Tester\Exception\PendingException;
 
 /**
  * Core steps that add data into the Rogo database.

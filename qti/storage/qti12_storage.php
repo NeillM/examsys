@@ -32,22 +32,18 @@ class ST_QTI12_Question // <item
 
     // counted stuff
     var $counts = array(
-    'lid' => 0,
-    'str' => 0,
-    'num' => 0,
-    'xy' => 0,
-    'grp' => 0,
-
-    'choice' => 0,
-    'hotspot' => 0,
-    'slider' => 0,
-    'fib' => 0,
-
-    'extension' => 0,
-
-    'response' => 0,
-    'material' => 0
-
+        'lid' => 0,
+        'str' => 0,
+        'num' => 0,
+        'xy' => 0,
+        'grp' => 0,
+        'choice' => 0,
+        'hotspot' => 0,
+        'slider' => 0,
+        'fib' => 0,
+        'extension' => 0,
+        'response' => 0,
+        'material' => 0
     );
 
     // calculate cardinaltiy, if all of lid are ismulti then Multi, if some are ismulti then varies (for extmatch i think)

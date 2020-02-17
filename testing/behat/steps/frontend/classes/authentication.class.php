@@ -17,10 +17,9 @@
 
 namespace testing\behat\steps\frontend;
 
-use Behat\Gherkin\Node\PyStringNode,
-
-    Behat\Behat\Definition\Call\Given as Given,
-    Behat\Gherkin\Node\TableNode;
+use Behat\Gherkin\Node\PyStringNode;
+use Behat\Behat\Definition\Call\Given as Given;
+use Behat\Gherkin\Node\TableNode;
 
 /**
  * Authentication step definitions.

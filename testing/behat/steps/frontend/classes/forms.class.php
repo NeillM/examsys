@@ -17,9 +17,8 @@
 
 namespace testing\behat\steps\frontend;
 
-use Behat\Gherkin\Node\PyStringNode,
-
-    Behat\Gherkin\Node\TableNode;
+use Behat\Gherkin\Node\PyStringNode;
+use Behat\Gherkin\Node\TableNode;
 
 /**
  * Step definitions for interacting with web forms.

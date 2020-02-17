@@ -17,7 +17,7 @@
 
 namespace testing\datagenerator;
 
-use \yearutils;
+use yearutils;
 
 /**
  * Generates Rogo lti.

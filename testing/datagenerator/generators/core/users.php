@@ -17,7 +17,7 @@
 
 namespace testing\datagenerator;
 
-use \UserUtils;
+use UserUtils;
 
 /**
  * Generates Rogo users.

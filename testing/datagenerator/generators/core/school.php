@@ -17,7 +17,7 @@
 
 namespace testing\datagenerator;
 
-use \SchoolUtils;
+use SchoolUtils;
 
 /**
  * Generates Rogo school.

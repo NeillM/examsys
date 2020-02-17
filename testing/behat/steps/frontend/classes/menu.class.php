@@ -17,11 +17,10 @@
 
 namespace testing\behat\steps\frontend;
 
-use Behat\Gherkin\Node\PyStringNode,
-
-    Behat\Gherkin\Node\TableNode,
-    testing\behat\selectors,
-    Exception;
+use Behat\Gherkin\Node\PyStringNode;
+use Behat\Gherkin\Node\TableNode;
+use testing\behat\selectors;
+use Exception;
 
 /**
  * Basic core step definitions.

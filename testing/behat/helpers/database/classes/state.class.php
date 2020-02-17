@@ -17,10 +17,9 @@
 
 namespace testing\behat\helpers\database;
 
-use Config,
-
-    mysqli,
-    Exception;
+use Config;
+use mysqli;
+use Exception;
 
 /**
  * Helpers for resetting the Rogo database state during behat tests.

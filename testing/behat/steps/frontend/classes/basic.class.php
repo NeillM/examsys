@@ -17,12 +17,11 @@
 
 namespace testing\behat\steps\frontend;
 
-use Behat\Gherkin\Node\PyStringNode,
-
-    Behat\Gherkin\Node\TableNode,
-    testing\behat\rogo_test,
-    Behat\Mink\Exception\UnsupportedDriverActionException,
-    Exception;
+use Behat\Gherkin\Node\PyStringNode;
+use Behat\Gherkin\Node\TableNode;
+use testing\behat\rogo_test;
+use Behat\Mink\Exception\UnsupportedDriverActionException;
+use Exception;
 
 /**
  * Basic core step definitions.

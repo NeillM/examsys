@@ -17,7 +17,7 @@
 
 namespace testing\datagenerator;
 
-use \CourseUtils;
+use CourseUtils;
 
 /**
  * Generates Rogo course.

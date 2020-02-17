@@ -17,12 +17,11 @@
 
 namespace testing\behat;
 
-use Behat\MinkExtension\Context\MinkContext,
-
-    Behat\Behat\Tester\Exception\PendingException;
+use Behat\MinkExtension\Context\MinkContext;
+use Behat\Behat\Tester\Exception\PendingException;
 use testing\datagenerator\loader;
-use coding_exception,
-    Exception;
+use coding_exception;
+use Exception;
 
 /**
  * All Rogo behat test definitions should extend this class if they wish to do browser based tests.

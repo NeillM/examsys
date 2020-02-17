@@ -17,12 +17,11 @@
 
 namespace testing\behat\steps\frontend;
 
-use Behat\Gherkin\Node\PyStringNode,
-
-    Behat\Gherkin\Node\TableNode,
-    Behat\Behat\Tester\Exception\PendingException,
-    testing\behat\selectors,
-    Exception;
+use Behat\Gherkin\Node\PyStringNode;
+use Behat\Gherkin\Node\TableNode;
+use Behat\Behat\Tester\Exception\PendingException;
+use testing\behat\selectors;
+use Exception;
 
 /**
  * Paper creation and manipulation step definitions.

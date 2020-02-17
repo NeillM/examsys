@@ -17,9 +17,8 @@
 
 namespace testing\datagenerator;
 
-use \yearutils,
-
-    \mappingutils;
+use yearutils;
+use mappingutils;
 
 /**
  * Generates Rogo objective.

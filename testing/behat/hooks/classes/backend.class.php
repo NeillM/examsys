@@ -17,22 +17,21 @@
 
 namespace testing\behat\hooks;
 
-use Behat\Testwork\Hook\Scope\AfterSuiteScope,
-
-    Behat\Testwork\Hook\Scope\BeforeSuiteScope,
-    Behat\Behat\Hook\Scope\AfterFeatureScope,
-    Behat\Behat\Hook\Scope\BeforeFeatureScope,
-    Behat\Behat\Hook\Scope\AfterScenarioScope,
-    Behat\Behat\Hook\Scope\BeforeScenarioScope;
-use testing\behat\environment,
-    testing\behat\help,
-    testing\behat\selectors;
+use Behat\Testwork\Hook\Scope\AfterSuiteScope;
+use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use Behat\Behat\Hook\Scope\AfterFeatureScope;
+use Behat\Behat\Hook\Scope\BeforeFeatureScope;
+use Behat\Behat\Hook\Scope\AfterScenarioScope;
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use testing\behat\environment;
+use testing\behat\help;
+use testing\behat\selectors;
 use testing\datagenerator\loader;
-use testing\behat\helpers\rogo\directory,
-    testing\behat\helpers\database\state,
-    testing\behat\helpers\database\Default_Loader;
-use Config as RogoConfig,
-    Exception;
+use testing\behat\helpers\rogo\directory;
+use testing\behat\helpers\database\state;
+use testing\behat\helpers\database\Default_Loader;
+use Config as RogoConfig;
+use Exception;
 
 /**
  * This class should define all the pre and post hooks for Rogo backend behat tests.
