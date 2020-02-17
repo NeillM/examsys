@@ -329,17 +329,19 @@ class ClassTotals
     }
 
     /**
-     * Load question data for a random question.
-     * @param int $questionID - Question ID of the random question to be loaded.
-     * @return int                      - Question ID of the 'original' or parent random question.
+     * Load question data from a question block (random or keyword)
+     *
+     * @param  int $questionID - Question ID of the question block to be loaded.
+     * @param  string $parent_q_type - question type i.e. random or keyword_based
+     * @return int - Question ID of the 'original' or parent question.
      */
-    private function getRandomDetails($questionID)
+    private function getRandomDetails(int $questionID, string $parent_q_type): int
     {
         $this->random_q_ids[] = $questionID;
 
         $this->question_no  = 0;
         $random_questions   = array();
-        $old_q_id           = '';
+        $old_q_id           = 0;
         $old_score_method   = '';
         $old_q_media_width  = '';
         $old_q_media_height = '';
@@ -351,14 +353,44 @@ class ClassTotals
         $old_type           = '';
         $old_score_method   = '';
 
-        $result = $this->db->prepare('SELECT options1.q_id, leadin, scenario, q_media_width, q_media_height, options2.correct, options2.marks_correct, options2.marks_incorrect, options2.option_text, q_type, display_method, score_method, status, settings FROM random_link AS options1, questions LEFT JOIN options AS options2 ON questions.q_id = options2.o_id WHERE options1.q_id = questions.q_id AND options1.id = ?');
+        if ($parent_q_type == 'random') {
+            $result = $this->db->prepare('
+                SELECT
+                    random_link.q_id, leadin, scenario, q_media_width, q_media_height, options.correct,
+                    options.marks_correct, options.marks_incorrect, options.option_text, q_type,
+                    display_method, score_method, status, settings
+                FROM
+                    random_link, questions
+                LEFT JOIN
+                    options ON questions.q_id = options.o_id
+                WHERE
+                    random_link.q_id = questions.q_id AND random_link.id = ?
+             ');
+        } elseif ($parent_q_type == 'keyword_based') {
+            $result = $this->db->prepare('
+                SELECT
+                    keywords_question.q_id, leadin, scenario, q_media_width, q_media_height, options.correct,
+                    options.marks_correct, options.marks_incorrect, options.option_text, q_type,
+                    display_method, score_method, status, settings
+                FROM
+                    keywords_link, questions, keywords_question
+                LEFT JOIN
+                    options ON keywords_question.q_id = options.o_id
+                WHERE
+                    keywords_question.q_id = questions.q_id AND keywords_question.keywordID = keywords_link.keyword_id
+                    AND keywords_link.q_id = ?
+             ');
+        } else {
+            // Not a known question block so return id.
+            return $questionID;
+        }
         $result->bind_param('i', $questionID);
         $result->execute();
         $result->store_result();
         if ($result->num_rows > 0) {
             $result->bind_result($q_id, $leadin, $scenario, $q_media_width, $q_media_height, $correct, $marks_correct, $marks_incorrect, $option_text, $q_type, $display_method, $score_method, $status, $settings);
             while ($result->fetch()) {
-                if ($old_q_id != $q_id and $old_q_id != '') {
+                if ($old_q_id != $q_id and $old_q_id != 0) {
                     $old_leadin = trim(str_replace('&nbsp;', ' ', (strip_tags($old_leadin))));
                     $random_questions[$old_q_id]['q_id']            = $old_q_id;
                     $random_questions[$old_q_id]['q_type']          = $old_q_type;
@@ -1040,8 +1072,8 @@ class ClassTotals
                     if (!$old_status_obj->get_exclude_marking()) {
                         $tmp_exclude = $this->exclusions->get_exclusions_by_qid($old_q_id);
 
-                        if ($old_q_type == 'random') {
-                            $tmp_id = $this->getRandomDetails($old_q_id);
+                        if ($old_q_type == 'random' or $old_q_type == 'keyword_based') {
+                            $tmp_id = $this->getRandomDetails($old_q_id, $old_q_type);
 
                             $last_random = $this->paper_buffer[$old_q_id]['random_questions'][$tmp_id];
 
@@ -1112,9 +1144,8 @@ class ClassTotals
         $old_status_obj = $this->question_statuses[$old_status];
         if (!$old_status_obj->get_exclude_marking()) {
             $tmp_exclude = $this->exclusions->get_exclusions_by_qid($old_q_id);
-
-            if ($old_q_type == 'random') {
-                $tmp_id = $this->getRandomDetails($old_q_id);
+            if ($old_q_type == 'random' or $old_q_type == 'keyword_based') {
+                $tmp_id = $this->getRandomDetails($old_q_id, $old_q_type);
 
                 $last_random = $this->paper_buffer[$old_q_id]['random_questions'][$tmp_id];
 
