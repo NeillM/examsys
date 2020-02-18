@@ -213,6 +213,7 @@ requirejs.config({
         mejs_pl: "node_modules/mediaelement/build/lang/pl",
         mejs_sk: "node_modules/mediaelement/build/lang/sk",
         media: "js/modules/media.min",
+        polyfill: "js/modules/polyfill.min",
     },
     shim: {
         // Mathjax configration.
@@ -283,4 +284,9 @@ requirejs(['toprightmenu'], function (MENU) {
 requirejs(['ui'], function (UI) {
     var ui = new UI();
     ui.init();
+});
+
+requirejs(['polyfill'], function (Polyfill) {
+    var polyfill = new Polyfill();
+    polyfill.init();
 });
