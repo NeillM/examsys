@@ -23,8 +23,11 @@
  * @package
  */
 
-// Query log2 table for existing student answers.
+$points1 = param::optional('points1', '', param::TEXT, param::FETCH_POST);
+
+// Get student data for display.
 $fix_data = '';
+$current_data = '';
 $result = $mysqli->prepare('SELECT id, user_answer FROM log2 WHERE q_id = ?');
 $result->bind_param('i', $question->id);
 $result->execute();
@@ -34,14 +37,19 @@ while ($result->fetch()) {
         $tmp_user_answer = '';
         $layers = explode('|', $user_answer);
         foreach ($layers as $layer) {
-            $sub_parts = explode(',', $layer);
-            if ($tmp_user_answer == '') {
-                $tmp_user_answer = $sub_parts[1] . ',' . $sub_parts[2];
-            } else {
-                $tmp_user_answer .= '|' . $sub_parts[1] . ',' . $sub_parts[2];
+            if ($tmp_user_answer != '') {
+                $tmp_user_answer .= '|';
+            }
+            $layeranswer = hotspot_helper::get_instance()->layer_answer_strip_correct_information($layer);
+            // Nothing to add if layer unaswered.
+            if ($layeranswer != hotspot_helper::UNSWERED_QUESTION) {
+                $tmp_user_answer .= $layeranswer;
             }
         }
         $fix_data .= ';' . $id . ',' . $tmp_user_answer;
+        // Temp Mark the students answers based on the new hotspots.
+        $correct = hotspot_helper::get_instance()->mark($tmp_user_answer, $points1);
+        $current_data .= ';' . $correct;
     }
 }
 $result->close();
@@ -49,25 +57,17 @@ $fix_data = substr($fix_data, 1);
   
 $media = $question->get_media();
 $plugin_height = max($media['height'] + 25, 380);
-if (count($question->options) > 0) {
-    $option = reset($question->options);
-    $correct = $option->get_correct();
-    $option_id = $option->id;
-} else {
-    $correct = '';
-    $option_id = -1;
-}
 $imageurl = rogo_directory::get_directory('media')->url($media['filename']);
-?>  
+?>
 
         <div class="form">
-          <h3>Correction mode</h3>
+          <h3><?php echo $string['correctionmode']; ?></h3>
         </div>
         
         <table class="form" summary="Hotspot flash movie">
           <thead>
             <tr>
-              <th class="align-left"><span class="mandatory">*</span> Image</th>
+              <th class="align-left"><span class="mandatory">*</span> <?php echo $string['image']; ?></th>
             </tr>
           </thead>
           <tbody>
@@ -82,10 +82,10 @@ $imageurl = rogo_directory::get_directory('media')->url($media['filename']);
                     data-image="<?php echo $imageurl; ?>"
                     data-image-width="<?php echo $media['width']; ?>"
                     data-image-height="<?php echo $media['height']; ?>"
-                    data-setup="<?php echo htmlentities(trim($_POST['points1'])); ?>"
-                    data-answers="<?php echo $fix_data; ?>"
+                    data-setup="<?php echo htmlentities(trim($points1)); ?>"
+                    data-answers="<?php echo $current_data; ?>"
                 ></div>
-                <input type="hidden" name="option_correct1" id="option_correct1" value="" />
+                <input type="hidden" name="option_correct1" id="option_correct1" value="<?php echo $fix_data; ?>" />
                 <input type="hidden" name="option_marks_correct" id="option_marks_correct" value="<?php echo $_POST['option_marks_correct']; ?>" />
                 <input type="hidden" name="option_marks_incorrect" id="option_marks_incorrect" value="<?php echo $_POST['option_marks_incorrect']; ?>" />
                 <input type="hidden" name="corrected" value="OK" />
@@ -94,19 +94,19 @@ $imageurl = rogo_directory::get_directory('media')->url($media['filename']);
                 <input type="hidden" name="calling" value="<?php echo $_POST['calling']; ?>" />
                 <input type="hidden" name="folder" value="<?php echo $_POST['folder']; ?>" />
                 <input type="hidden" name="scrOfY" value="<?php echo $_POST['scrOfY']; ?>" />
-                <input type="hidden" name="points" value="<?php if (isset($points)) {
-                    echo $points;
-                                                          } ?>" />
-                <input type="hidden" name="points1" value="<?php echo $_POST['points1']; ?>" />
-                <input type="hidden" name="correctedpoints" value="" />
-                <input type="hidden" name="checkout_author" value="<?php if (isset($_POST['checkout_author'])) {
+                <input type="hidden" name="points1" value="<?php echo $points1; ?>" />
+                <input type="hidden" name="checkout_author" value="
+                <?php
+                if (isset($_POST['checkout_author'])) {
                     echo $_POST['checkout_author'];
-                                                                   } ?>" />
+                }
+                ?>
+                " />
               </td>
             </tr>
             <tr>
               <td class="align-centre">
-                The green dots show students answers which have now been marked as correct.<br />If you need to make further corrections please click 'OK' and then re-edit the question.
+                <?php echo $string['hotspotcorrection']; ?>
               </td>
             </tr>
           </tbody>
