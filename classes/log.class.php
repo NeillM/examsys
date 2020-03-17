@@ -259,7 +259,8 @@ abstract class log
         started,
         log$this->papertype.q_id,
         user_answer,
-        screen
+        screen,
+        log_metadata.id as metaid
       FROM 
         log$this->papertype,
         log_metadata,
@@ -278,11 +279,12 @@ abstract class log
         surname,
         first_names,
         started,
-        userID";
+        userID,
+        metaid DESC";
         $result = $this->db->prepare($sql);
         $result->bind_param('isss', $paperid, $course, $startdate, $enddate);
         $result->execute();
-        $result->bind_result($username, $uID, $title, $surname, $first_names, $grade, $gender, $year, $started, $question_ID, $user_answer, $screen);
+        $result->bind_result($username, $uID, $title, $surname, $first_names, $grade, $gender, $year, $started, $question_ID, $user_answer, $screen, $metaid);
         $i = 0;
         while ($result->fetch()) {
             $data[$i]['username'] = $username;

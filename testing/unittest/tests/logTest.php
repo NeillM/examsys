@@ -430,10 +430,10 @@ class logtest extends unittestdatabase
         $expected[2]['grade'] = $this->user2['grade'];
         $expected[2]['gender'] = $this->user2['gender'];
         $expected[2]['year'] = $this->user2['yearofstudy'];
-        $expected[2]['started'] = '2016-01-01 00:00:00';
+        $expected[2]['started'] = $this->meta7['started'];
         $expected[2]['question_ID'] = $this->question['id'];
-        $expected[2]['user_answer'] = '4';
-        $expected[2]['screen'] = 1;
+        $expected[2]['user_answer'] = $this->log13['user_answer'];
+        $expected[2]['screen'] = $this->log13['screen'];
         $expected[3]['username'] = $this->user2['username'];
         $expected[3]['uID'] = $this->user2['id'];
         $expected[3]['title'] = $this->user2['title'];
@@ -442,10 +442,10 @@ class logtest extends unittestdatabase
         $expected[3]['grade'] = $this->user2['grade'];
         $expected[3]['gender'] = $this->user2['gender'];
         $expected[3]['year'] = $this->user2['yearofstudy'];
-        $expected[3]['started'] = '2016-01-01 00:00:00';
+        $expected[3]['started'] = $this->meta6['started'];
         $expected[3]['question_ID'] = $this->question['id'];
-        $expected[3]['user_answer'] = '3';
-        $expected[3]['screen'] = 1;
+        $expected[3]['user_answer'] = $this->log10['user_answer'];
+        $expected[3]['screen'] = $this->log10['screen'];
         $this->assertEquals($expected, $log->get_assessment_data($this->pid3['id'], '2016-01-01 00:00:00', '2018-01-05 01:00:00', $userstring));
     }
 }
