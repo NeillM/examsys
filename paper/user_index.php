@@ -47,7 +47,7 @@ function load_attempts($test_type, $paperID, $userObj, $db)
     DATE_FORMAT(lm.started,\"%d/%m/%Y %H:%i\") AS temp_date
     FROM log_metadata lm LEFT JOIN log$test_type l ON l.metadataID = lm.id
     WHERE started IS NOT NULL AND lm.paperID = ? AND lm.userID = ? AND screen IS NOT NULL
-    GROUP BY lm.started, lm.id DESC");
+    GROUP BY started, lm.id ORDER BY lm.id");
     $result->bind_param('iii', $test_type, $paperID, $userObj->get_user_ID());
     $result->execute();
     $result->bind_result($metadataID, $log_max_screen, $log_mark, $log_started, $log_paper_type, $log_temp_date);
@@ -62,7 +62,7 @@ function load_attempts($test_type, $paperID, $userObj, $db)
       DATE_FORMAT(lm.started,"%d/%m/%Y %H:%i") AS temp_date
       FROM log_metadata lm LEFT JOIN log1 l ON l.metadataID = lm.id
       WHERE started IS NOT NULL AND lm.paperID = ? AND lm.userID = ? AND screen IS NOT NULL
-      GROUP BY lm.started, lm.id DESC');
+      GROUP BY started, lm.id ORDER BY lm.id');
         $result->bind_param('ii', $paperID, $userObj->get_user_ID());
         $result->execute();
         $result->bind_result($metadataID, $log_max_screen, $log_mark, $log_started, $log_paper_type, $log_temp_date);
