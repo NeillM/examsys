@@ -168,9 +168,9 @@ if (isset($_GET['sortby'])) {
             $module_id_list = implode(',', array_keys($teams));
 
             $sql = "SELECT questions.q_id, q_type, leadin, DATE_FORMAT(last_edited,' {$configObject->get('cfg_long_date')}') AS display_date, locked, status, name "
-            . 'FROM (questions, question_statuses, questions_modules, modules) '
-            . 'WHERE questions.q_id = questions_modules.q_id AND questions.status = question_statuses.id AND questions_modules.idMod = modules.id AND status = ? '
-            . 'AND (ownerID = ?';
+                . 'FROM (questions, question_statuses, questions_modules, modules) '
+                . 'WHERE questions.q_id = questions_modules.q_id AND questions.status = question_statuses.id AND questions_modules.idMod = modules.id AND status = ? '
+                . 'AND (ownerID = ?';
             if (!empty($module_id_list)) {
                 $sql .= " OR modules.id IN ($module_id_list)";
             }

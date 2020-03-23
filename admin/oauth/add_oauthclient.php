@@ -88,7 +88,7 @@ if (isset($_POST['submit'])) {
 } else {
     $users = array();
     $result = $mysqli->prepare('SELECT id, username FROM users'
-            . " WHERE roles like 'Staff%'");
+        . " WHERE roles like 'Staff%'");
     $result->execute();
     $result->bind_result($id, $username);
     while ($result->fetch()) {

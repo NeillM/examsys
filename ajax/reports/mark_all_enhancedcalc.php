@@ -84,7 +84,7 @@ $keyword->close();
 if (count($possible) > 0) {
     $possible_string = implode(',', array_keys($possible));
     $check_possible = $mysqli->prepare("SELECT q_id from log$paper_type, log_metadata where metadataID = log_metadata.id "
-      . "AND q_id in ($possible_string) AND paperID = ? AND started BETWEEN ? AND ?");
+        . "AND q_id in ($possible_string) AND paperID = ? AND started BETWEEN ? AND ?");
     $check_possible->bind_param('iss', $paperID, $startdate, $enddate);
     $check_possible->execute();
     $check_possible->bind_result($possible_id);

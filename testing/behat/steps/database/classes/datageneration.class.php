@@ -76,7 +76,7 @@ trait datageneration
         // Check the creation method exists.
         if (!method_exists($datagenerator, $createmethod)) {
             $message = "Implement the {$createmethod} method in the "
-            . "{$generatorcomponent}_{$generatorname} data generator";
+                . "{$generatorcomponent}_{$generatorname} data generator";
             throw new PendingException($message);
         }
         // Convert the data into a form that the data generator can use.

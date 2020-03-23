@@ -83,7 +83,7 @@ class StandardSetting
     {
         $db = Config::get_instance()->db;
         $std_settings_from = $db->prepare('SELECT id, setterID, std_set, method, group_review, pass_score, distinction_score'
-        . ' FROM std_set WHERE paperID = ?');
+            . ' FROM std_set WHERE paperID = ?');
         $std_settings_from->bind_param('i', $paper_id);
         $std_settings_from->execute();
         $std_settings_from->store_result();
@@ -112,7 +112,7 @@ class StandardSetting
     {
         $db = Config::get_instance()->db;
         $std_settings_to = $db->prepare('INSERT INTO std_set (setterID, paperID, std_set, method, group_review, pass_score,'
-        . ' distinction_score) VALUES (?, ?, ?, ?, ?, ?, ?)');
+            . ' distinction_score) VALUES (?, ?, ?, ?, ?, ?, ?)');
         $std_settings_to->bind_param('iisssdd', $setter_id, $paper_id, $std_set, $method, $group_review, $pass_score, $distinction_score);
         $std_settings_to->execute();
         $new_std_id = $db->insert_id;
@@ -129,7 +129,7 @@ class StandardSetting
     {
         $db = Config::get_instance()->db;
         $std_settings_ratings_transfer = $db->prepare('INSERT INTO std_set_questions (std_setID, questionID, rating)'
-        . ' SELECT ?, questionID, rating FROM std_set_questions WHERE std_setID = ?');
+            . ' SELECT ?, questionID, rating FROM std_set_questions WHERE std_setID = ?');
         $std_settings_ratings_transfer->bind_param('ii', $new_std_id, $old_std_id);
         $std_settings_ratings_transfer->execute();
         $std_settings_ratings_transfer->close();

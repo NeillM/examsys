@@ -285,24 +285,24 @@ if (isset($_GET['submit'])) {
 
     if ($keywordsSQL == '') {
         $sql = 'SELECT DISTINCT title, initials, surname, q_type,'
-        . ' questions.q_id, theme, leadin, leadin_plain,'
-        . " DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited,"
-        . ' ownerID, locked, status, name FROM (questions, question_statuses, users)'
-        . ' LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id'
-        . ' LEFT OUTER JOIN options ON options.o_id = questions.q_id'
-        . ' WHERE questions.status = question_statuses.id'
-        . " AND questions.ownerID = users.id $search_string $module_string $user_string $status_string $locked_string $correct_string $last_edited $q_type $bloom"
-        . ' AND deleted IS NULL ORDER BY leadin_plain';
+            . ' questions.q_id, theme, leadin, leadin_plain,'
+            . " DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited,"
+            . ' ownerID, locked, status, name FROM (questions, question_statuses, users)'
+            . ' LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id'
+            . ' LEFT OUTER JOIN options ON options.o_id = questions.q_id'
+            . ' WHERE questions.status = question_statuses.id'
+            . " AND questions.ownerID = users.id $search_string $module_string $user_string $status_string $locked_string $correct_string $last_edited $q_type $bloom"
+            . ' AND deleted IS NULL ORDER BY leadin_plain';
     } else {
         $sql = 'SELECT DISTINCT title, initials, surname, q_type,'
-        . " questions.q_id, theme, leadin, leadin_plain, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited,"
-        . ' ownerID, locked, status, name FROM (questions, question_statuses, users, keywords_question)'
-        . ' LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id'
-        . ' LEFT OUTER JOIN options ON options.o_id = questions.q_id'
-        . ' WHERE questions.status = question_statuses.id'
-        . " AND questions.q_id = keywords_question.q_id $keywordsSQL"
-        . " AND questions.ownerID = users.id $search_string $module_string $user_string $status_string $locked_string $correct_string $last_edited $q_type $bloom"
-        . ' AND deleted IS NULL ORDER BY leadin_plain, questions.q_id';
+            . " questions.q_id, theme, leadin, leadin_plain, DATE_FORMAT(last_edited,' {$configObject->get('cfg_short_date')}') AS last_edited,"
+            . ' ownerID, locked, status, name FROM (questions, question_statuses, users, keywords_question)'
+            . ' LEFT JOIN questions_modules ON questions.q_id = questions_modules.q_id'
+            . ' LEFT OUTER JOIN options ON options.o_id = questions.q_id'
+            . ' WHERE questions.status = question_statuses.id'
+            . " AND questions.q_id = keywords_question.q_id $keywordsSQL"
+            . " AND questions.ownerID = users.id $search_string $module_string $user_string $status_string $locked_string $correct_string $last_edited $q_type $bloom"
+            . ' AND deleted IS NULL ORDER BY leadin_plain, questions.q_id';
     }
 
     $result = $mysqli->prepare($sql);

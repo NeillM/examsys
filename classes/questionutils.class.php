@@ -466,7 +466,7 @@ SQL;
         $configObject = Config::get_instance();
         $possible = array();
         $random = $configObject->db->prepare('SELECT q_id FROM questions WHERE q_type = ? AND q_id in ('
-           . 'SELECT keywords_question.q_id FROM keywords_question, keywords_link WHERE keywordID = keyword_id AND keywords_link.q_id = ?)');
+            . 'SELECT keywords_question.q_id FROM keywords_question, keywords_link WHERE keywordID = keyword_id AND keywords_link.q_id = ?)');
         $random->bind_param('is', $q_id, $q_type);
         $random->execute();
         $random->bind_result($random_id);
@@ -488,7 +488,7 @@ SQL;
         $questions = array();
         // We are checking the question is on a paper in order to display the list of papers to the end user.
         $query = $db->prepare('SELECT question FROM questions, random_link, papers WHERE question = questions.q_id AND '
-          . "questions.q_id = random_link.id AND q_type ='random' AND random_link.q_id = ?");
+            . "questions.q_id = random_link.id AND q_type ='random' AND random_link.q_id = ?");
         $query->bind_param('i', $q_id);
         $query->execute();
         $query->bind_result($question);
@@ -510,7 +510,7 @@ SQL;
         $questions = array();
         // We are checking the question is on a paper in order to display the list of papers to the end user.
         $query = $db->prepare('SELECT question FROM keywords_question, keywords_link, papers WHERE question = keywords_link.q_id AND '
-          . 'keywordID = keyword_id AND keywords_question.q_id = ?');
+            . 'keywordID = keyword_id AND keywords_question.q_id = ?');
         $query->bind_param('i', $q_id);
         $query->execute();
         $query->bind_result($question);

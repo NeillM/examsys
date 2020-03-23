@@ -217,34 +217,34 @@ class QuestionBank
             case 'all':
             case 'type':
                 $sql = 'SELECT COUNT(questions.q_id), q_type'
-                . ' FROM questions LEFT JOIN questions_modules'
-                . ' ON questions.q_id = questions_modules.q_id'
-                . ' WHERE ' . $ownerSQL
-                . ' AND deleted IS NULL AND status != -1 GROUP BY q_type';
+                    . ' FROM questions LEFT JOIN questions_modules'
+                    . ' ON questions.q_id = questions_modules.q_id'
+                    . ' WHERE ' . $ownerSQL
+                    . ' AND deleted IS NULL AND status != -1 GROUP BY q_type';
                 break;
             case 'status':
                 $sql = 'SELECT COUNT(questions.q_id), name'
-                . ' FROM (questions, question_statuses) LEFT JOIN questions_modules'
-                . ' ON questions.q_id = questions_modules.q_id'
-                . ' WHERE questions.status = question_statuses.id'
-                . ' AND ' . $ownerSQL
-                . ' AND deleted IS NULL GROUP BY status';
+                    . ' FROM (questions, question_statuses) LEFT JOIN questions_modules'
+                    . ' ON questions.q_id = questions_modules.q_id'
+                    . ' WHERE questions.status = question_statuses.id'
+                    . ' AND ' . $ownerSQL
+                    . ' AND deleted IS NULL GROUP BY status';
                 break;
             case 'bloom':
                 $sql = 'SELECT COUNT(questions.q_id), bloom'
-                . ' FROM questions LEFT JOIN questions_modules'
-                . ' ON questions.q_id = questions_modules.q_id'
-                . ' WHERE ' . $ownerSQL
-                . ' AND deleted IS NULL AND status != -1 GROUP BY bloom';
+                    . ' FROM questions LEFT JOIN questions_modules'
+                    . ' ON questions.q_id = questions_modules.q_id'
+                    . ' WHERE ' . $ownerSQL
+                    . ' AND deleted IS NULL AND status != -1 GROUP BY bloom';
                 break;
             case 'keyword':
                 $sql = 'SELECT COUNT(questions.q_id), keywordID'
-                . ' FROM (questions, keywords_question, keywords_user) LEFT JOIN questions_modules'
-                . ' ON questions.q_id = questions_modules.q_id'
-                . ' WHERE keywords_question.keywordID = keywords_user.id'
-                . ' AND ' . $ownerSQL
-                . ' AND questions.q_id = keywords_question.q_id'
-                . ' AND deleted IS NULL AND status != -1 GROUP BY keywordID';
+                    . ' FROM (questions, keywords_question, keywords_user) LEFT JOIN questions_modules'
+                    . ' ON questions.q_id = questions_modules.q_id'
+                    . ' WHERE keywords_question.keywordID = keywords_user.id'
+                    . ' AND ' . $ownerSQL
+                    . ' AND questions.q_id = keywords_question.q_id'
+                    . ' AND deleted IS NULL AND status != -1 GROUP BY keywordID';
                 break;
             case 'objective':
                 $vle_api_data = MappingUtils::get_vle_api($this->idMod, $this->yearutils->get_current_session(), $vle_api_cache, $this->db);
@@ -252,12 +252,12 @@ class QuestionBank
                 $all_years = implode("','", $all_years);
         
                 $sql = 'SELECT COUNT(questions.q_id), relationships.obj_id'
-                . ' FROM (questions, relationships) LEFT JOIN questions_modules'
-                . ' ON questions.q_id = questions_modules.q_id'
-                . ' WHERE questions.q_id = relationships.question_id'
-                . " AND $ownerSQL "
-                . " AND calendar_year IN ('{$all_years}')"
-                . ' AND deleted IS NULL AND status != -1 GROUP BY relationships.obj_id';
+                    . ' FROM (questions, relationships) LEFT JOIN questions_modules'
+                    . ' ON questions.q_id = questions_modules.q_id'
+                    . ' WHERE questions.q_id = relationships.question_id'
+                    . " AND $ownerSQL "
+                    . " AND calendar_year IN ('{$all_years}')"
+                    . ' AND deleted IS NULL AND status != -1 GROUP BY relationships.obj_id';
                 break;
         }
     

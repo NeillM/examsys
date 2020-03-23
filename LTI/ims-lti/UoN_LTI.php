@@ -271,9 +271,9 @@ class UoN_LTI extends BLTI
         }
         $return = array();
         $sql = 'SELECT u.id, u.title, u.surname, u.first_names, u.initials, u.username '
-        . 'FROM ' . $this->parm['table_prefix'] . 'lti_user lu '
-        . 'JOIN users u ON lu.lti_user_equ = u.id '
-        . 'WHERE lu.lti_user_key = ?';
+            . 'FROM ' . $this->parm['table_prefix'] . 'lti_user lu '
+            . 'JOIN users u ON lu.lti_user_equ = u.id '
+            . 'WHERE lu.lti_user_key = ?';
         $result = $this->db->prepare($sql);
         $key = $this->generate_user_key($consumer_key, $externalid);
         $result->bind_param('s', $key);
@@ -308,10 +308,10 @@ class UoN_LTI extends BLTI
         }
         $return = array();
         $sql = 'SELECT u.id, u.title, u.surname, u.first_names, u.initials, u.username, lu.lti_user_key, k.oauth_consumer_key '
-        . 'FROM ' . $this->parm['table_prefix'] . 'lti_user lu '
-        . 'JOIN users u ON lu.lti_user_equ = u.id '
-        . 'JOIN ' . $this->parm['table_prefix'] . "lti_keys k ON lu.lti_user_key LIKE CONCAT(k.oauth_consumer_key, ':%') "
-        . 'WHERE u.username = ? AND k.id = ?';
+            . 'FROM ' . $this->parm['table_prefix'] . 'lti_user lu '
+            . 'JOIN users u ON lu.lti_user_equ = u.id '
+            . 'JOIN ' . $this->parm['table_prefix'] . "lti_keys k ON lu.lti_user_key LIKE CONCAT(k.oauth_consumer_key, ':%') "
+            . 'WHERE u.username = ? AND k.id = ?';
         $result = $this->db->prepare($sql);
         $result->bind_param('si', $username, $linkid);
         $result->execute();
@@ -352,8 +352,8 @@ class UoN_LTI extends BLTI
         }
         $return = array();
         $sql = 'SELECT id, oauth_consumer_key, secret, name, context_id '
-        . 'FROM ' . $this->parm['table_prefix'] . 'lti_keys WHERE id = ? '
-        . 'AND deleted IS NULL LIMIT 1';
+            . 'FROM ' . $this->parm['table_prefix'] . 'lti_keys WHERE id = ? '
+            . 'AND deleted IS NULL LIMIT 1';
         $result = $this->db->prepare($sql);
         $result->bind_param('i', $id);
         $result->execute();
@@ -454,7 +454,7 @@ class UoN_LTI extends BLTI
             throw new Exception('lti_no_database');
         }
         $sql = 'DELETE FROM ' . $this->parm['table_prefix'] . 'lti_user '
-        . 'WHERE lti_user_equ = ? AND lti_user_key = ?';
+            . 'WHERE lti_user_equ = ? AND lti_user_key = ?';
         $query = $this->db->prepare($sql);
         $key = $this->generate_user_key($consumer_key, $externalid);
         $query->bind_param('is', $userid, $key);

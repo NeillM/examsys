@@ -330,12 +330,12 @@ class yearutils
     {
 
         $result = $this->mysqli->prepare('(SELECT calendar_year FROM modules_student WHERE calendar_year = ?) '
-          . 'UNION (SELECT calendar_year FROM objectives WHERE calendar_year = ?) '
-          . 'UNION (SELECT calendar_year FROM properties WHERE calendar_year = ?) '
-          . 'UNION (SELECT calendar_year FROM relationships WHERE calendar_year = ?) '
-          . 'UNION (SELECT calendar_year FROM sessions WHERE calendar_year = ?) '
-          . 'UNION (SELECT academic_year FROM sms_imports WHERE academic_year = ?) '
-          . 'UNION (SELECT calendar_year FROM users_metadata WHERE calendar_year = ?) LIMIT 1');
+            . 'UNION (SELECT calendar_year FROM objectives WHERE calendar_year = ?) '
+            . 'UNION (SELECT calendar_year FROM properties WHERE calendar_year = ?) '
+            . 'UNION (SELECT calendar_year FROM relationships WHERE calendar_year = ?) '
+            . 'UNION (SELECT calendar_year FROM sessions WHERE calendar_year = ?) '
+            . 'UNION (SELECT academic_year FROM sms_imports WHERE academic_year = ?) '
+            . 'UNION (SELECT calendar_year FROM users_metadata WHERE calendar_year = ?) LIMIT 1');
         $result->bind_param('iiiiiii', $calendar_year, $calendar_year, $calendar_year, $calendar_year, $calendar_year, $calendar_year, $calendar_year);
         $result->execute();
         $result->store_result();

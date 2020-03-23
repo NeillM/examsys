@@ -166,7 +166,7 @@ function marks_from_file($fileName, $paperID, $string, $properties, $db)
                 }
 
                 $result = $db->prepare('INSERT INTO log_metadata (userID, paperID, started, ipaddress, student_grade, year, attempt) '
-                . 'VALUES (?, ?, ?, ?, ?, ?, ?)');
+                    . 'VALUES (?, ?, ?, ?, ?, ?, ?)');
                 $ip = '127.0.0.1';
                 $attempt = 1;
                 $result->bind_param(

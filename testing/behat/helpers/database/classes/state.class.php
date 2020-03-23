@@ -234,7 +234,7 @@ class state
     private static function get_table_statuses()
     {
         $sql = 'SELECT TABLE_NAME, AUTO_INCREMENT, CREATE_TIME '
-        . "FROM information_schema.tables WHERE TABLE_SCHEMA = ?  AND TABLE_TYPE = 'BASE TABLE'";
+            . "FROM information_schema.tables WHERE TABLE_SCHEMA = ?  AND TABLE_TYPE = 'BASE TABLE'";
         $query = self::$db->prepare($sql);
         $query->bind_param('s', self::$schema);
         $query->execute();

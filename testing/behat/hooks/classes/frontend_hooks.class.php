@@ -88,8 +88,8 @@ trait frontend_hooks
         // Test that the website is running.
         if (!environment::is_server_running()) {
             $message = environment::get_behat_website() . ' is not available. '
-            . 'Please ensure that the correct url is configured and the server is running.'
-            . PHP_EOL . 'See ' . help::DOCUMENTATION . ' for mor information.';
+                . 'Please ensure that the correct url is configured and the server is running.'
+                . PHP_EOL . 'See ' . help::DOCUMENTATION . ' for mor information.';
             throw new Exception($message);
         }
 

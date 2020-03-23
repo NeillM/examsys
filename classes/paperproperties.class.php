@@ -1974,8 +1974,8 @@ class PaperProperties
                 $rolesql = '';
             }
             $result = $this->db->prepare("SELECT distinct log$paperType.q_id FROM log$paperType, log_metadata, users WHERE log$paperType.metadataID = log_metadata.id "
-              . 'AND users.id = log_metadata.userID AND q_id IN (' . implode(',', $enhancedcalc_ids) . ') AND paperID = ? AND mark IS NULL and errorstate not in ('
-              . implode(',', $skiperrorstates) . ") $rolesql ORDER BY 1");
+                . 'AND users.id = log_metadata.userID AND q_id IN (' . implode(',', $enhancedcalc_ids) . ') AND paperID = ? AND mark IS NULL and errorstate not in ('
+                . implode(',', $skiperrorstates) . ") $rolesql ORDER BY 1");
             $result->bind_param('i', $paperID);
             $result->execute();
             $result->store_result();
@@ -2107,7 +2107,7 @@ class PaperProperties
                 $rolesql = '';
             }
             $result = $this->db->prepare("SELECT log$paperType.id FROM log$paperType, log_metadata, users WHERE log$paperType.metadataID = log_metadata.id "
-              . 'AND users.id = log_metadata.userID AND q_id IN (' . implode(',', $textbox_ids) . ") AND paperID = ? AND mark IS NULL $rolesql LIMIT 1");
+                . 'AND users.id = log_metadata.userID AND q_id IN (' . implode(',', $textbox_ids) . ") AND paperID = ? AND mark IS NULL $rolesql LIMIT 1");
             $result->bind_param('i', $paperID);
             $result->execute();
             $result->store_result();
@@ -2445,9 +2445,9 @@ class PaperProperties
         if ($unique) {
             // Look up selected question and overwrite data.
             $question_data = $this->db->prepare('SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect,'
-            . " marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width,"
-            . ' q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions LEFT JOIN options'
-            . ' ON questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num');
+                . " marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width,"
+                . ' q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions LEFT JOIN options'
+                . ' ON questions.q_id = options.o_id WHERE q_id = ? ORDER BY id_num');
             $question_data->bind_param('i', $selected_q_id);
             $question_data->execute();
             $question_data->store_result();
@@ -2565,7 +2565,7 @@ class PaperProperties
             // Generate a random question ID from keywords.
             $question_ids = array();
             $question_data = $this->db->prepare('SELECT DISTINCT k.q_id FROM keywords_question k, questions q WHERE k.q_id = q.q_id AND'
-            . ' k.keywordID = ? AND q.deleted is NULL');
+                . ' k.keywordID = ? AND q.deleted is NULL');
             $question_data->bind_param('i', $keyword_id);
             $question_data->execute();
             $question_data->bind_result($q_id);
@@ -2590,9 +2590,9 @@ class PaperProperties
         if ($unique) {
             // Look up selected question and overwrite the question data.
             $question_data = $this->db->prepare('SELECT q_type, q_id, score_method, display_method, settings, marks_correct, marks_incorrect,'
-            . " marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width,"
-            . ' q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions LEFT JOIN options ON'
-            . ' questions.q_id = options.o_id  WHERE q_id = ? ORDER BY id_num');
+                . " marks_partial, theme, scenario, leadin, correct, REPLACE(option_text,'\t','') AS option_text, q_media, q_media_width,"
+                . ' q_media_height, o_media, o_media_width, o_media_height, notes, q_option_order FROM questions LEFT JOIN options ON'
+                . ' questions.q_id = options.o_id  WHERE q_id = ? ORDER BY id_num');
             $question_data->bind_param('i', $selected_q_id);
             $question_data->execute();
             $question_data->store_result();

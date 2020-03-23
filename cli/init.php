@@ -58,12 +58,12 @@ $longoptions = array(
 $optionslist = getopt($options, $longoptions);
 
 $help = 'Rogo initialisation script options'
-        . PHP_EOL . PHP_EOL . "-h, --help \tDisplay help"
-        . PHP_EOL . PHP_EOL . "-u, --user, \tDatabase username"
-        . PHP_EOL . PHP_EOL . "-p, --passwd, \tDatabase password"
-        . PHP_EOL . PHP_EOL . "-s, --host, \tDatabase host"
-        . PHP_EOL . PHP_EOL . "-t, --port, \tDatabase port"
-        . PHP_EOL . PHP_EOL . "-n, --name, \tDatabase name";
+    . PHP_EOL . PHP_EOL . "-h, --help \tDisplay help"
+    . PHP_EOL . PHP_EOL . "-u, --user, \tDatabase username"
+    . PHP_EOL . PHP_EOL . "-p, --passwd, \tDatabase password"
+    . PHP_EOL . PHP_EOL . "-s, --host, \tDatabase host"
+    . PHP_EOL . PHP_EOL . "-t, --port, \tDatabase port"
+    . PHP_EOL . PHP_EOL . "-n, --name, \tDatabase name";
 
 if (isset($optionslist['h']) or isset($optionslist['help'])) {
     // Display some help information.

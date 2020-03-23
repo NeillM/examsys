@@ -118,9 +118,9 @@ if ($users != '' and $questionids != '') {
     $reviewers = array();
 
     $review_sql = 'SELECT reviewerID, peerID, q_id, rating '
-      . 'FROM log6 '
-      . "WHERE reviewerID IN ($users) AND q_id IN($questionids) "
-      . 'AND paperID = ? AND started > ? AND started < ? ORDER BY started';
+        . 'FROM log6 '
+        . "WHERE reviewerID IN ($users) AND q_id IN($questionids) "
+        . 'AND paperID = ? AND started > ? AND started < ? ORDER BY started';
     $result = $mysqli->prepare($review_sql);
     $result->bind_param('iss', $paperID, $startdate, $enddate);
     $result->execute();

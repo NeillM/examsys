@@ -163,8 +163,8 @@ class question_info
 
         //get performace data from all papers this question has appered on
         $result = $db->prepare("SELECT paperID, cohort_size, DATE_FORMAT(taken,\" {$configObject->get('cfg_short_date')}\"), part_no, p, d "
-        . 'FROM performance_main, performance_details, properties '
-        . 'WHERE properties.property_id = paperID AND performance_main.id = performance_details.perform_id AND q_id = ? AND properties.deleted IS NULL');
+            . 'FROM performance_main, performance_details, properties '
+            . 'WHERE properties.property_id = paperID AND performance_main.id = performance_details.perform_id AND q_id = ? AND properties.deleted IS NULL');
         $result->bind_param('i', $q_id);
         $result->execute();
         $result->bind_result($paperID, $cohort_size, $taken, $part_no, $p, $d);

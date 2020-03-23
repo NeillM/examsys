@@ -121,12 +121,12 @@ $candidate_no = 0;
 if ($paper_type == '0' or $paper_type == '1' or $paper_type == '2') {
     // Get how many students took the paper.
     $result = $mysqli->prepare('SELECT DISTINCT lm.userID FROM log_metadata lm '
-          . 'INNER JOIN users u '
-          . 'ON lm.userID = u.id '
-          . 'WHERE lm.paperID = ? AND '
-          . 'DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? '
-          . 'AND lm.started <= ? '
-          . "AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')");
+        . 'INNER JOIN users u '
+        . 'ON lm.userID = u.id '
+        . 'WHERE lm.paperID = ? AND '
+        . 'DATE_ADD(lm.started, INTERVAL 2 MINUTE) >= ? '
+        . 'AND lm.started <= ? '
+        . "AND (u.roles LIKE '%Student%' OR u.roles = 'graduate')");
     $result->bind_param('iss', $paperID, $startdate, $enddate);
     $result->execute();
     $result->bind_result($tmp_userID);

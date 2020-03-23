@@ -200,11 +200,11 @@ class PaperUtils
     public function count_unassigned_papers($user_id, $db)
     {
         $query = $db->prepare('SELECT count(properties.property_id)'
-        . ' FROM properties'
-        . ' LEFT JOIN properties_modules ON properties.property_id=properties_modules.property_id'
-        . ' WHERE paper_ownerID = ?'
-        . ' AND idMod is NULL'
-        . ' AND deleted IS NULL');
+            . ' FROM properties'
+            . ' LEFT JOIN properties_modules ON properties.property_id=properties_modules.property_id'
+            . ' WHERE paper_ownerID = ?'
+            . ' AND idMod is NULL'
+            . ' AND deleted IS NULL');
         $query->bind_param('i', $user_id);
         $query->execute();
         $query->bind_result($count);
@@ -224,11 +224,11 @@ class PaperUtils
     public function count_unassigned_questions($user_id, $db)
     {
         $query = $db->prepare('SELECT count(questions.q_id)'
-        . ' FROM questions'
-        . ' LEFT JOIN questions_modules ON questions.q_id=questions_modules.q_id'
-        . ' WHERE questions.ownerID = ?'
-        . ' AND questions_modules.idMod is NULL'
-        . ' AND questions.deleted IS NULL');
+            . ' FROM questions'
+            . ' LEFT JOIN questions_modules ON questions.q_id=questions_modules.q_id'
+            . ' WHERE questions.ownerID = ?'
+            . ' AND questions_modules.idMod is NULL'
+            . ' AND questions.deleted IS NULL');
         $query->bind_param('i', $user_id);
         $query->execute();
         $query->bind_result($count);

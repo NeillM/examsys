@@ -79,7 +79,7 @@ if ($propertyObj->is_live()) {
   // Check for Random questions , and assign question number.
   // Note that we can only handle one instance of a Random question per paper, subsequent instances will refer to the firsts position.
   $result = $mysqli->prepare('SELECT q_id, option_text FROM papers, questions, options WHERE papers.question = questions.q_id'
-            . " AND questions.q_id = options.o_id AND paper = ? AND q_type = 'random' ORDER BY screen, display_pos");
+      . " AND questions.q_id = options.o_id AND paper = ? AND q_type = 'random' ORDER BY screen, display_pos");
   $result->bind_param('i', $paperID);
   $result->execute();
   $result->bind_result($random_question, $random_option);
