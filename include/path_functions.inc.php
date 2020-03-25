@@ -30,6 +30,45 @@ function get_root_path()
     return normalise_path($path_parts['dirname']);
 }
 
+/**
+ * Gets the relative path from the currently executing script to the root directory.
+ *
+ * @return string
+ */
+function get_relative_path_to_root()
+{
+    // First find the part of the file path that extend the root path.
+    $diff = str_replace(get_root_path(), '', get_file_path());
+    $trimmed = trim($diff, '/');
+
+    // Build a relative path to the root directory.
+    if (empty($trimmed)) {
+        $relative = './';
+    } else {
+        $pathdepth = count(explode('/', $trimmed));
+
+        $relative = '';
+        for ($i = 0; $i < $pathdepth; $i++) {
+            $relative .= '../';
+        }
+    }
+
+    return $relative;
+}
+
+/**
+ * Gets the path to the file that the user executed in this call.
+ *
+ * @return string
+ */
+function get_file_path()
+{
+    // Ensure we have the full path, even if used in a CLI script.
+    $filepath = realpath($_SERVER['SCRIPT_FILENAME']);
+    $path_parts = pathinfo($filepath);
+    return normalise_path($path_parts['dirname']);
+}
+
 function normalise_path($path)
 {
     return str_replace('\\', '/', $path);

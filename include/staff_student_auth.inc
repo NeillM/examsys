@@ -31,9 +31,8 @@ require_once __DIR__ . '/load_config.php';
 
 if (!InstallUtils::config_exists()) {
     require_once __DIR__  . '/path_functions.inc.php';
-    $cfg_web_root = get_root_path() . '/';
-    $root = rtrim('/' . trim(str_replace(normalise_path($_SERVER['DOCUMENT_ROOT']), '', $cfg_web_root), '/'), '/');
-    header('location: ' . $root . '/install/index.html', true, 303);
+    $root = get_relative_path_to_root();
+    header('location: ' . $root . 'install/index.html', true, 303);
     exit();
 }
 
