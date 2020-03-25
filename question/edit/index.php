@@ -91,10 +91,10 @@ function save_options($question, $userObject, $db)
         } else {
             if (isset($_POST["optionid$option_no"]) and $_POST["optionid$option_no"] != -1) {
                 $check = true;
-                $option = $question->options[$_POST["optionid$option_no"]];
+                $option = $question->options[$_POST["optionid$option_no"]] ?? null;
             }
         }
-        if ($check) {
+        if ($check && !is_null($option)) {
             // Editing existing option
             $part_names = $option->get_editable_fields();
             try {
