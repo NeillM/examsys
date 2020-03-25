@@ -79,7 +79,7 @@ if ($configObject->get('cfg_secure_connection')) {
           (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) and $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') )
     ) {
         $msg = $string['secureconnectionmsg'] . ' <a href="https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '">https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '</a>.';
-        $notice->display_notice_and_exit($mysqli, $string['secureconnection'], $msg, $string['secureconnection'], '../artwork/secure_connection.png', $title_color = '#C00000', true, true);
+        $notice->display_notice_and_exit($mysqli, $string['secureconnection'], $msg, $string['secureconnection'], '/artwork/secure_connection.png', $title_color = '#C00000', true, true);
     }
 }
 
