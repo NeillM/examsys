@@ -39,44 +39,6 @@ if ($userObject->has_role('Invigilator')) {
 $id = check_var('id', 'GET', true, false, true, param::ALPHANUM);
 $mode = param::optional('mode', '', param::ALPHA, param::FETCH_GET);
 
-function load_attempts($test_type, $paperID, $userObj, $db)
-{
-    $prev_attempts = array();
-
-    $result = $db->prepare("SELECT lm.id, MAX(l.screen) AS screen, SUM(l.mark) AS mark, DATE_FORMAT(lm.started,\"%Y%m%d%H%i%s\") AS started, ? AS paper_type,
-    DATE_FORMAT(lm.started,\"%d/%m/%Y %H:%i\") AS temp_date
-    FROM log_metadata lm LEFT JOIN log$test_type l ON l.metadataID = lm.id
-    WHERE started IS NOT NULL AND lm.paperID = ? AND lm.userID = ? AND screen IS NOT NULL
-    GROUP BY started, lm.id ORDER BY lm.id");
-    $result->bind_param('iii', $test_type, $paperID, $userObj->get_user_ID());
-    $result->execute();
-    $result->bind_result($metadataID, $log_max_screen, $log_mark, $log_started, $log_paper_type, $log_temp_date);
-    while ($result->fetch()) {
-        $prev_attempts[$log_started] = array('metadataID' => $metadataID, 'max_screen' => $log_max_screen, 'max_mark' => $log_mark, 'paper_type' => $log_paper_type, 'temp_date' => $log_temp_date);
-    }
-    $result->close();
-    
-    if ($test_type == '0') {
-        // If type is Formative query the Progress Test log table as well and add into array if max screen is not blank.
-        $result = $db->prepare('SELECT lm.id, MAX(l.screen) AS screen, SUM(l.mark) AS mark, DATE_FORMAT(lm.started,"%Y%m%d%H%i%s") AS started, 1 AS paper_type,
-      DATE_FORMAT(lm.started,"%d/%m/%Y %H:%i") AS temp_date
-      FROM log_metadata lm LEFT JOIN log1 l ON l.metadataID = lm.id
-      WHERE started IS NOT NULL AND lm.paperID = ? AND lm.userID = ? AND screen IS NOT NULL
-      GROUP BY started, lm.id ORDER BY lm.id');
-        $result->bind_param('ii', $paperID, $userObj->get_user_ID());
-        $result->execute();
-        $result->bind_result($metadataID, $log_max_screen, $log_mark, $log_started, $log_paper_type, $log_temp_date);
-        while ($result->fetch()) {
-            if ($log_max_screen > 0) {
-                $prev_attempts[$log_started] = array('metadataID' => $metadataID, 'max_screen' => $log_max_screen, 'max_mark' => $log_mark, 'paper_type' => $log_paper_type, 'temp_date' => $log_temp_date);
-            }
-        }
-        $result->close();
-    }
-
-    return $prev_attempts;
-}
-
 function is_timedate_ok($startdate, $enddate)
 {
     if (time() < $startdate or time() > $enddate) {
@@ -112,15 +74,6 @@ function has_time_remaining($propertyObj, $remaining_time)
     return true;
 }
 
-function have_previously_started($attempts)
-{
-    if (count($attempts) == 0) {
-        return false;
-    } else {
-        return true;
-    }
-}
-
 function calculate_duration($normal, $extra_time_mins, $special_needs_percentage)
 {
     $mins = $normal;
@@ -131,29 +84,6 @@ function calculate_duration($normal, $extra_time_mins, $special_needs_percentage
         $mins += ($normal / 100) * $special_needs_percentage;
     }
     return $mins;
-}
-
-function displayPrevTake($markTotal, $totalRandomMark, $marking_style, $disDate, $type, $metadataID)
-{
-    global $total_marks, $low_bandwidth;
-
-    if ($low_bandwidth == 0) {
-        echo "<tr><td class='previous' data-metaid='$metadataID' data-type='$type'><img src=\"../artwork/bullet_outline.gif\" class=\"bullet\" alt=\"bullet\" /><a href=\"\">$disDate</a></td><td style=\"text-align:right\" width=\"70\">";
-    } else {
-        echo "<tr><td class='previous' data-metaid='$metadataID' data-type='$type'><a href=\"\">$disDate</a></td><td style=\"text-align:right\" width=\"70\">";
-    }
-    if ($total_marks > 0) {
-        if ($marking_style == 1) {
-            $adjPercent = number_format((($markTotal - $totalRandomMark) / ($total_marks - $totalRandomMark)) * 100, 1, '.', ',');
-            if ($adjPercent < 0) {
-                $adjPercent = 0;
-            }
-            echo $adjPercent . '%';
-        } else {
-            echo number_format(($markTotal / $total_marks) * 100, 1, '.', ',') . '%';
-        }
-    }
-    echo '</td></tr>';
 }
 
 $special_needs_percentage = 0;
@@ -483,9 +413,7 @@ if ($sound_demo == '1') {
     echo "</td></tr>\n";
 }
 
-  $prev_attempts = load_attempts($test_type, $property_id, $userObject, $mysqli);
-
-  $start_label = $string['start'];
+$start_label = $string['start'];
 if ($userObject->has_role(array('Staff', 'Admin', 'SysAdmin', 'External Examiner'))) {
     $start_available      = true;
     $remaining_available  = true;
@@ -535,7 +463,7 @@ if ($test_type == 2) {
     }
 }
 
-  $display_date = '';
+$display_date = '';
 
 if ($start_available and $remaining_available and $metadata_security) {
     echo '<input type="button" class="ok" style="width:' . $button_width . "px; font-weight:bold\" value=\"$start_label\" name=\"start\" id=\"start\" />\n";
@@ -543,45 +471,16 @@ if ($start_available and $remaining_available and $metadata_security) {
     echo '<input type="button" class="notok" style="width:' . $button_width . 'px" value="' . $string['start'] . "\" name=\"start\" disabled />\n";
 }
 
-  echo '<br />&nbsp;';
+echo '<br />&nbsp;';
 
 if ($test_type != '2') {
     // Display previous attempts
-    if (count($prev_attempts) > 0) {
-        $old_started = '';
-        $old_screen = 0;
-        $temp_no = 0;
-        $mark_total = 0;
-
-            echo '<hr />';
-            echo '<table cellpadding="0" cellspacing="0" border="0" align="center">';
-            echo '<tr><td colspan="4" style="text-align:center; padding-bottom:0.5em"><strong>' . $string['previouscompletions'] . '</strong></td></tr>';
-            
-        foreach ($prev_attempts as $log_started => $prev_details) {
-            $log_max_screen = $prev_details['max_screen'];
-            $log_mark       = $prev_details['max_mark'];
-            $log_paper_type = $prev_details['paper_type'];
-            $log_temp_date  = $prev_details['temp_date'];
-                $metadataID         = $prev_details['metadataID'];
-                
-            if ($test_type == 0) {
-                displayPrevTake($log_mark, $total_random_mark, $marking, $log_temp_date, $log_paper_type, $metadataID);
-            } else {
-                if ($low_bandwidth == 0) {
-                    echo "<tr><td><img src=\"../artwork/bullet_outline.gif\" width=\"16\" height=\"16\" alt=\"bullet\" />&nbsp;&nbsp;<span style=\"color:#808080\">$log_temp_date</span></td><td>&nbsp;</td></tr>\n";
-                } else {
-                    echo "<tr><td><span style=\"color:#808080\">$log_temp_date</span></td><td>&nbsp;</td></tr>\n";
-                }
-            }
-                $mark_total = 0;
-        }
-
-        echo '</table><br />';
+    if (log::hasPreviousAttempts($property_id, $userObject->get_user_ID())) {
+        echo '<hr /><a href="' . $configObject->get('cfg_root_path') . '/users/previous.php?id=' . $id . '" target="_blank">' . $string['previouscompletions'] . '</a></br>';
     } else {
         echo '<hr />' . $string['nottakenpaper'] . '</p><br />';
     }
 }
-  $mysqli->close();
 ?></td></tr></table>
 </form>
 <div class="powered"><i>powered by</i> Rog&#333; <?php echo $configObject->get_setting('core', 'rogo_version'); ?></div>
@@ -595,6 +494,7 @@ if ($test_type != '2') {
     </div>
 </div>
 <?php
+$mysqli->close();
 // JS utils dataset.
 $render = new render($configObject);
 $jsdataset['name'] = 'jsutils';

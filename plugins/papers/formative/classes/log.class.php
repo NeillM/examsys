@@ -23,6 +23,8 @@
 
 namespace plugins\papers\formative;
 
+use users\PaperList;
+
 /**
  * Formative helper class.
  */
@@ -240,5 +242,59 @@ class log extends \log
         }
         $result->close();
         return $data;
+    }
+
+    /**
+     * Load previous attempts for user on this assessment
+     *
+     * @param integer $paperID the test idendifier
+     * @param integer $userID the user identifier
+     * @param int $marking_style the marking style of the paper
+     * @param float $total_marks the total marks of the paper
+     * @param float $total_random_mark the total monkey mark for the paper
+     * @return PaperList
+     */
+    public function loadAttempts($paperID, $userID, $marking_style, $total_marks, $total_random_mark): PaperList
+    {
+        $prev_attempts = parent::loadAttempts($paperID, $userID, $marking_style, $total_marks, $total_random_mark);
+
+        // If type is Formative query the Progress Test log table as well and add into array if max screen is not blank.
+        $result = $this->db->prepare('SELECT lm.id, MAX(l.screen) AS screen, SUM(l.mark) AS mark,'
+            . ' DATE_FORMAT(lm.started,"%Y%m%d%H%i%s") AS started, 1 AS paper_type,'
+            . ' DATE_FORMAT(lm.started,"%d/%m/%Y %H:%i") AS temp_date'
+            . ' FROM log_metadata lm LEFT JOIN log1 l ON l.metadataID = lm.id'
+            . ' WHERE started IS NOT NULL AND lm.paperID = ? AND lm.userID = ? AND screen IS NOT NULL'
+            . ' GROUP BY started, lm.id ORDER BY lm.id');
+        $result->bind_param('ii', $paperID, $userID);
+        $result->execute();
+        $result->bind_result($metadataID, $log_max_screen, $log_mark, $log_started, $log_paper_type, $log_temp_date);
+        while ($result->fetch()) {
+            if ($log_max_screen > 0) {
+                $paper = new \users\Paper();
+                $paper->log_started = $log_started;
+                $paper->metadataID = $metadataID;
+                $paper->max_screen = $log_max_screen;
+                $paper->max_mark = $log_mark;
+                $paper->paper_type = $log_paper_type;
+                $paper->human_log_started = $log_temp_date;
+
+                if ($total_marks > 0) {
+                    if ($marking_style == 1) {
+                        $adjPercent = number_format((($log_mark - $total_random_mark) / ($total_marks - $total_random_mark)) * 100, 1, '.', ',');
+                        if ($adjPercent < 0) {
+                            $adjPercent = 0;
+                        }
+                        $paper->percent  = $adjPercent . '%';
+                    } else {
+                        $paper->percent  =  number_format(($log_mark / $total_marks) * 100, 1, '.', ',') . '%';
+                    }
+                }
+
+                $prev_attempts->add($paper);
+            }
+        }
+        $result->close();
+
+        return $prev_attempts;
     }
 }

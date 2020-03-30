@@ -18,7 +18,7 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-define(['jquery'], function($) {
+define(['rogoconfig', 'jquery'], function(config, $) {
     return function () {
         /**
          * Start the paper.
@@ -46,7 +46,7 @@ define(['jquery'], function($) {
          * @param integer type type of paper
          */
         this.reviewPaper = function(metadataID, type) {
-            var exam = window.open("finish.php?id=" + $('#dataset').attr('data-id') + "&metadataID="+metadataID+"&log_type="+type+"","paper","fullscreen=" + this.fullscreen + ",width="+(screen.width-80)+",height="+(screen.height-80)+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
+            var exam = window.open(config.cfgrootpath + "/paper/finish.php?id=" + $('#dataset').attr('data-id') + "&metadataID="+metadataID+"&log_type="+type+"","paper","fullscreen=" + this.fullscreen + ",width="+(screen.width-80)+",height="+(screen.height-80)+",left=30,top=20,scrollbars=yes,toolbar=no,location=no,directories=no,status=no,menubar=no,resizable");
             if (window.focus) {
                 exam.focus();
             }

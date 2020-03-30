@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Rogō
 //
 // Rogō is free software: you can redistribute it and/or modify
@@ -19,6 +20,8 @@
  * @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2018 onwards The University of Nottingham
  */
+
+use users\PaperList;
 
 /**
  * Log helper class.
@@ -382,5 +385,80 @@ abstract class log
             $userfilter = 'AND userID = 0';
         }
         return $userfilter;
+    }
+
+    /**
+     * Check if user has previous attempts on ths paper.
+     *
+     * @param int $paperid the paper identifier
+     * @param int $userid the user identifier
+     * @return bool
+     */
+    public static function hasPreviousAttempts(int $paperid, int $userid): bool
+    {
+        $configObj = Config::get_instance();
+        $found = false;
+        $result = $configObj->db->prepare('SELECT NULL FROM log_metadata WHERE paperID = ? AND userID = ? LIMIT 1');
+        $result->bind_param('ii', $paperid, $userid);
+        $result->execute();
+        $result->store_result();
+        if ($result->num_rows > 0) {
+            $found = true;
+        }
+        $result->close();
+        return $found;
+    }
+
+    /**
+     * Load previous attempts for user on this assessment
+     *
+     * @param integer $paperID the test idendifier
+     * @param integer $userID the user identifier
+     * @param int $marking_style the marking style of the paper
+     * @param float $total_marks the total marks of the paper
+     * @param float $total_random_mark the total monkey mark for the paper
+     * @return PaperList
+     */
+    public function loadAttempts($paperID, $userID, $marking_style, $total_marks, $total_random_mark): PaperList
+    {
+        $prev_attempts = new PaperList();
+
+        $result = $this->db->prepare('SELECT lm.id, MAX(l.screen) AS screen, SUM(l.mark) AS mark,'
+            . ' DATE_FORMAT(lm.started,"%Y%m%d%H%i%s") AS started, ? AS paper_type,'
+            . ' DATE_FORMAT(lm.started,"%d/%m/%Y %H:%i") AS temp_date'
+            . ' FROM log_metadata lm LEFT JOIN log' . $this->papertype . ' l ON l.metadataID = lm.id'
+            . ' WHERE started IS NOT NULL AND lm.paperID = ? AND lm.userID = ? AND screen IS NOT NULL'
+            . ' GROUP BY started, lm.id ORDER BY lm.id');
+        $result->bind_param('iii', $this->papertype, $paperID, $userID);
+        $result->execute();
+        $result->bind_result($metadataID, $log_max_screen, $log_mark, $log_started, $log_paper_type, $log_temp_date);
+        while ($result->fetch()) {
+            $paper = new \users\Paper();
+            $paper->log_started = $log_started;
+            $paper->metadataID = $metadataID;
+            $paper->max_screen = $log_max_screen;
+            $paper->max_mark = $log_mark;
+            $paper->paper_type = $log_paper_type;
+            $paper->human_log_started = $log_temp_date;
+            if ($log_paper_type == '0') {
+                if ($total_marks > 0) {
+                    if ($marking_style == 1) {
+                        $adjPercent = number_format((($log_mark - $total_random_mark) / ($total_marks - $total_random_mark)) * 100, 1, '.', ',');
+                        if ($adjPercent < 0) {
+                            $adjPercent = 0;
+                        }
+                        $paper->percent  = $adjPercent . '%';
+                    } else {
+                        $paper->percent  =  number_format(($log_mark / $total_marks) * 100, 1, '.', ',') . '%';
+                    }
+                }
+            } else {
+                $paper->percent = '';
+            }
+            $prev_attempts->add($paper);
+        }
+        $result->close();
+
+        return $prev_attempts;
     }
 }

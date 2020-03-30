@@ -16,6 +16,7 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 use testing\unittest\unittestdatabase;
+use users\PaperList;
 
 /**
  * Test assessment class
@@ -447,5 +448,179 @@ class logtest extends unittestdatabase
         $expected[3]['user_answer'] = $this->log10['user_answer'];
         $expected[3]['screen'] = $this->log10['screen'];
         $this->assertEquals($expected, $log->get_assessment_data($this->pid3['id'], '2016-01-01 00:00:00', '2018-01-05 01:00:00', $userstring));
+    }
+
+    /**
+     * Test previous assessment check
+     * @group log
+     */
+    public function testHasPreviousAttempts()
+    {
+        // Has some previous attempts.
+        $this->assertTrue(\log::hasPreviousAttempts($this->pid3['id'], $this->student['id']));
+        // Does not have any previous attempts.
+        $this->assertFalse(\log::hasPreviousAttempts($this->pid['id'], $this->user2['id']));
+    }
+
+    /**
+     * Test load previous assessments - Does not have any previous attempts.
+     * @group log
+     */
+    public function testLoadAttemptsNoAttempts()
+    {
+        $log = log::get_paperlog($this->pid['papertype']);
+        $paperlist = new PaperList();
+        $this->assertEquals(
+            $paperlist,
+            $log->loadAttempts(
+                $this->pid['id'],
+                $this->user2['id'],
+                1,
+                10,
+                5
+            )
+        );
+    }
+
+    /**
+     * Test load previous assessments - Has previous attempts - summative do not show percent.
+     * @group log
+     */
+    public function testLoadAttemptsSummative()
+    {
+        $log = log::get_paperlog($this->pid2['papertype']);
+        $paperlist = new PaperList();
+        $paper = new \users\Paper();
+        $date = date_create($this->meta2['started']);
+        $paper->log_started = date_format($date, 'YmdHis');
+        $paper->metadataID = $this->meta2['id'];
+        $paper->max_screen = $this->log5['screen'];
+        $paper->max_mark = round($this->log4['mark'] + $this->log5['mark'], 1);
+        $paper->paper_type = $this->pid2['papertype'];
+        $paper->human_log_started = date_format($date, 'd/m/Y H:i');
+        $paper->percent = '';
+        $paperlist->add($paper);
+        $this->assertEquals(
+            $paperlist,
+            $log->loadAttempts(
+                $this->pid2['id'],
+                $this->student['id'],
+                1,
+                10,
+                5
+            )
+        );
+    }
+
+    /**
+     * Test load previous assessments -  Has previous attempts - formative show percent
+     * @group log
+     */
+    public function testLoadAttemptsFormative()
+    {
+        $log = log::get_paperlog($this->pid3['papertype']);
+        $paperlist = new PaperList();
+        $paper = new \users\Paper();
+        $date = date_create($this->meta4['started']);
+        $paper->log_started = date_format($date, 'YmdHis');
+        $paper->metadataID = $this->meta4['id'];
+        $paper->max_screen = $this->log12['screen'];
+        $paper->max_mark = round($this->log12['mark'], 1);
+        $paper->paper_type = $this->pid3['papertype'];
+        $paper->human_log_started = date_format($date, 'd/m/Y H:i');
+        $paper->percent = number_format(
+            ($this->log12['mark']) / 10 * 100,
+            1,
+            '.',
+            ','
+        );
+        $paper->percent .= '%';
+        $paperlist->add($paper);
+        $paper = new \users\Paper();
+        $date = date_create($this->meta5['started']);
+        $paper->log_started = date_format($date, 'YmdHis');
+        $paper->metadataID = $this->meta5['id'];
+        $paper->max_screen = $this->log9['screen'];
+        $paper->max_mark = round($this->log9['mark'], 1);
+        // Progress turned formative.
+        $paper->paper_type = 1;
+        $paper->human_log_started = date_format($date, 'd/m/Y H:i');
+        $paper->percent = number_format(
+            ($this->log9['mark'] / 10) * 100,
+            1,
+            '.',
+            ','
+        );
+        $paper->percent .= '%';
+        $paperlist->add($paper);
+        $this->assertEquals(
+            $paperlist,
+            $log->loadAttempts(
+                $this->pid3['id'],
+                $this->student['id'],
+                0,
+                10,
+                5
+            )
+        );
+    }
+
+    /**
+     * Test load previous assessments - same as above with adjusted marking scheme
+     * @group log
+     */
+    public function testLoadAttemptsFormativeAdjusted()
+    {
+        $log = log::get_paperlog($this->pid3['papertype']);
+        $paperlist = new PaperList();
+        $paper = new \users\Paper();
+        $date = date_create($this->meta4['started']);
+        $paper->log_started = date_format($date, 'YmdHis');
+        $paper->metadataID = $this->meta4['id'];
+        $paper->max_screen = $this->log12['screen'];
+        $paper->max_mark = round($this->log12['mark'], 1);
+        $paper->paper_type = $this->pid3['papertype'];
+        $paper->human_log_started = date_format($date, 'd/m/Y H:i');
+        $adjusted = number_format(
+            (($this->log12['mark'] - 5 ) / 5) * 100,
+            1,
+            '.',
+            ','
+        );
+        if ($adjusted < 0) {
+            $adjusted = 0;
+        }
+        $paper->percent = $adjusted . '%';
+        $paperlist->add($paper);
+        $paper = new \users\Paper();
+        $date = date_create($this->meta5['started']);
+        $paper->log_started = date_format($date, 'YmdHis');
+        $paper->metadataID = $this->meta5['id'];
+        $paper->max_screen = $this->log9['screen'];
+        $paper->max_mark = round($this->log9['mark'], 1);
+        // Progress turned formative.
+        $paper->paper_type = 1;
+        $paper->human_log_started = date_format($date, 'd/m/Y H:i');
+        $adjusted = number_format(
+            (($this->log9['mark'] - 5 ) / 5) * 100,
+            1,
+            '.',
+            ','
+        );
+        if ($adjusted < 0) {
+            $adjusted = 0;
+        }
+        $paper->percent = $adjusted . '%';
+        $paperlist->add($paper);
+        $this->assertEquals(
+            $paperlist,
+            $log->loadAttempts(
+                $this->pid3['id'],
+                $this->student['id'],
+                1,
+                10,
+                5
+            )
+        );
     }
 }

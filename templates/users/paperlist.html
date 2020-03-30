@@ -1,0 +1,59 @@
+{#This file is part of Rogō
+
+Rogō is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Rogō is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{#
+This template is for displaying a /users/PaperList object.
+
+author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
+copyright 2020 onwards The University of Nottingham
+
+Required variables -
+data - /users/PaperList object
+
+Required localised strings -
+lang.title - Page title
+lang.nottakenpaper - Blurb for no attempts
+#}
+
+<div id="content" class="content">
+    <div class="head_title">
+        <div class="page_title">
+            {{lang.title}}
+        </div>
+    </div>
+    <table id="userlist" class="header" cellspacing="0" cellpadding="0" border="0">
+        <thead>
+            <tr>
+                <th class="col">{{lang.attempt}}</th>
+                <th class="col">{{lang.mark}}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for id, paper in data %}
+        <tr class='l{% if paper.paper_type == 0 %} previous{% endif %}' data-metaid='{{paper.metadataID}}' data-type='{{paper.paper_type}}'>
+            <td>{{paper.human_log_started}}</td>
+            {% if paper.paper_type == 0 %}
+                <td>{{paper.percent}}</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% if data.length == 0 %}
+    <div class="yellowwarn">{{lang.nottakenpaper}}</div>
+    {% endif %}
+</div>

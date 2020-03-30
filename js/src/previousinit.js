@@ -18,28 +18,10 @@
 // @author Dr Joseph Baxter <joseph.baxter@nottingham.ac.uk>
 // @copyright Copyright (c) 2019 The University of Nottingham
 //
-requirejs(['userindex', 'jsxls', 'jquery'], function (USER, jsxls, $) {
+
+requirejs(['userindex', 'jquery'], function (USER, $) {
     var user = new USER();
-
-    $("#overlay").hide();
-
-    $("#info_dialog_ok").click(function() {
-        $("#info_overlay").hide();
-    });
-
-    if ($('#dataset').attr('data-ipmismatch')) {
-        $("#info_overlay").show();
-        $("#info_submit_dialog_title").html(jsxls.lang_string['ipmismatchtitle']);
-        $("#info_submit_dialog_msg").html(jsxls.lang_string['ipmismatchblurb']);
-        $("#info_submit_dialog").css('left', (($(window).width() / 2) - 250) + 'px');
-        $("#info_submit_dialog").css('top', (($(window).height() / 2) - 100) + 'px');
-    }
-
-    $("#start").click(function() {
-        user.startPaper();
-    });
-
-    $("#start").keypress(function() {
-        user.startPaper();
+    $(".previous").click(function () {
+        user.reviewPaper($(this).attr('data-metaid'), $(this).attr('data-type'));
     });
 });
