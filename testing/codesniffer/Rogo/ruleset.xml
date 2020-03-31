@@ -43,6 +43,10 @@
     </rule>
     <!-- Warning if commented out code detected - set by default at 35% valid code-->
     <rule ref="Squiz.PHP.CommentedOutCode"/>
+    <!-- Warning if php file contains HTML-->
+    <rule ref="Generic.Files.InlineHTML">
+        <type>warning</type>
+    </rule>
     <!-- Rogo specific coding standards warning for now as lots to fix -->
     <rule ref="Rogo.Operators.ValidBooleanOperators">
         <type>warning</type>
