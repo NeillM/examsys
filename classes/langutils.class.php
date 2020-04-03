@@ -38,7 +38,7 @@ class LangUtils
             // Check this is set as some webservices do not have this data.
             $langs = explode(',', strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']));
         }
-    
+
         if (isset($langs) and is_array($langs)) {
             $i = 0;
             // Use first supported language found.
@@ -74,6 +74,7 @@ class LangUtils
             require $lang_path;
         } elseif ($language != 'en') {
             // Revert to english if lang pack file not installed.
+            $language = 'en';
             $lang_path = $cfg_web_root . 'lang/en/' . $file;
             if (file_exists($lang_path)) {
                 require $lang_path;
@@ -81,7 +82,7 @@ class LangUtils
         }
         return $string;
     }
-  
+
     /**
      * Check if language is supported
      * @param string $lang lang code
@@ -94,7 +95,7 @@ class LangUtils
             $xmldata = simplexml_load_file($file, 'SimpleXMLElement', LIBXML_NOCDATA);
             $languages = $xmldata->languages;
             foreach ($languages->lang as $supported) {
-                if ($lang === (string) $supported) {
+                if ($lang === (string) $supported and self::langPackInstalled($supported)) {
                     return true;
                 }
             }
