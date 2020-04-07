@@ -81,10 +81,10 @@ $next_academic_year = $yearutils->get_academic_session($next_session);
             $moduleimport = $smsplugin->supports_module_import();
             if ($moduleimport !== false) {
                 $url = url::fromGlobals();
-                if ($url->getPath() === '/admin/edit_module.php') {
+                if ($url->getRogoPath() === '/admin/edit_module.php') {
                     $moduleid = param::required('moduleid', param::INT, param::FETCH_GET);
                     \plugins\plugins_sms::render_module_sync_options($moduleimport, $moduleid, $module['externalid']);
-                } elseif ($url->getPath() === '/admin/list_modules.php') {
+                } elseif ($url->getRogoPath() === '/admin/list_modules.php') {
                     \plugins\plugins_sms::render_module_sync_options($moduleimport, 0, '');
                 }
             }

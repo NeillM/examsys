@@ -39,6 +39,9 @@ class Url
     const QUERY = 'query';
     const FRAGMENT = 'fragment';
 
+    /** The path relative to the base of Rogo. */
+    public const ROGOPATH = 'rogo';
+
     /**
      * @var string
      */
@@ -100,6 +103,17 @@ class Url
     protected function parse()
     {
         $this->parts = parse_url($this->url);
+
+        // Get the base url with no trailing space.
+        $base = rtrim(Config::get_instance()->get('cfg_root_path'), '/');
+
+        // Calculate the URL relative to the base of Rogo.
+        if (!empty($base) and strpos($this->parts[static::PATH], $base) === 0) {
+            // Rogo is in a sub directory.
+            $this->parts[self::ROGOPATH] = substr($this->parts[static::PATH], strlen($base));
+        } else {
+            $this->parts[self::ROGOPATH] = $this->parts[static::PATH];
+        }
     }
 
     /**
@@ -176,6 +190,16 @@ class Url
     public function getPath()
     {
         return $this->getPart(static::PATH, '/');
+    }
+
+    /**
+     * Get URL path relative to the Rogo base path.
+     *
+     * @return string
+     */
+    public function getRogoPath()
+    {
+        return $this->getPart(static::ROGOPATH, '/');
     }
 
     /**

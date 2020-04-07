@@ -131,4 +131,33 @@ class UrlTest extends UnitTest
         $url->setQueryValues($values);
         $this->assertSame('foo=baz&amp=' . urlencode($values['amp']), $url->getQuery());
     }
+
+    /**
+     * Tests that the Rogo path of a page is detected correctly.
+     *
+     * @dataProvider dataGetRogoPath
+     * @param string $input The URL to be parsed
+     * @param string $rogobase The rogo base path in config
+     * @param string $expected The expected result
+     */
+    public function testGetRogoPath(string $input, string $rogobase, string $expected)
+    {
+        Config::get_instance()->set('cfg_root_path', $rogobase);
+        $url = new Url($input);
+        self::assertEquals($expected, $url->getRogoPath());
+    }
+
+    /**
+     * Data provider for testGetRogoPath.
+     *
+     * @return array
+     */
+    public function dataGetRogoPath(): array
+    {
+        return [
+            'Not in sub dir' => ['http://localhost/path/', '/', '/path/'],
+            'In sub dir (trailing)' => ['http://localhost/sub/path/', '/sub/', '/path/'],
+            'In sub dir (not trailing)' => ['http://localhost/sub/path/', '/sub', '/path/'],
+        ];
+    }
 }
