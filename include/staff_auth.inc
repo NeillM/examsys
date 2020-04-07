@@ -39,7 +39,7 @@ if (!$userObject->has_role(array('Staff', 'External Examiner', 'SysCron', 'Invig
 // $external_allowed_pages is an array that contains the set of scripts that External Examiners
 // CAN access all other pages should redirect to the /reviews/ section
 $url = Url::fromGlobals();
-$path = $url->getPath();
+$path = $url->getRogoPath();
 $external_allowed_pages = array(
                               '/help/staff/index.php' => 1,
                               '/help/staff/search.php' => 1,
