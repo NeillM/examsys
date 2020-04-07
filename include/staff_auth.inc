@@ -176,7 +176,7 @@ if ($userObject->has_role('SysAdmin')) {
         $tmp_paperID = $_REQUEST['paperID'];
         if (substr($tmp_paperID, 0, 5) != 'find:' and substr($tmp_paperID, 0, 5) != 'list:') {
             $paper_ownerID = Paper_utils::get_ownerID($tmp_paperID, $mysqli);
-    
+
             if ($paper_ownerID == $userObject->get_user_ID()) {
                 $on_staff_module = true;
             } else {
@@ -203,9 +203,9 @@ if ($userObject->has_role('SysAdmin')) {
         foreach ($q_id_list as $tmp_q_id) {
             if ($tmp_q_id != -1) {
                 $access = false;
-        
+
                 $ownerID = QuestionUtils::get_ownerID($tmp_q_id, $mysqli);
-        
+
                 if ($ownerID == $userObject->get_user_ID()) {
                     $access = true;
                 } else {
@@ -226,7 +226,7 @@ if ($userObject->has_role('SysAdmin')) {
             }
         }
     }
-  
+
     // Can the user access reference material?
     if (isset($_REQUEST['refID'])) {
         if (!refmaterials_utils::check_access($userObject, $_REQUEST['refID'], $mysqli)) {
