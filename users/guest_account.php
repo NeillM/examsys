@@ -81,6 +81,18 @@ if (isset($_POST['submit'])) {
         $notice->display_notice_and_exit($mysqli, $string['error'], $string['mandatory'], $string['error'], '/artwork/exclamation_red_bg.png', '#C00000', false, true);
     }
 
+    // Check the reservation is still valid.
+    $stmt = $mysqli->prepare('SELECT id FROM temp_users WHERE id = ? AND reserved > DATE_SUB(NOW() AND surname IS NULL, INTERVAL 30 MINUTE)');
+    $stmt->bind_param('s', $recordID);
+    $stmt->execute();
+    $stmt->bind_result($has_record);
+    $stmt->fetch();
+    $stmt->close();
+
+    if (is_null($has_record)) {
+        $notice->display_notice_and_exit(null, $string['reservationexpired'], $string['reservationexpiredmessage'], $string['reservationexpired'], '/artwork/exclamation_red_bg.png', '#C00000', false, true);
+    }
+
     $stmt = $mysqli->prepare('UPDATE temp_users SET first_names = ?, surname = ?, title = ?, student_id = ? WHERE id = ?');
     $stmt->bind_param('ssssi', $tmp_first_names, $tmp_surname, $title, $tmp_student_id, $recordID);
     $stmt->execute();
@@ -101,17 +113,19 @@ if (isset($_POST['submit'])) {
 } else {
     $used_accounts = array();
 
-    $results = $mysqli->prepare('SELECT assigned_account FROM temp_users');
+    // Reservations last 30 minutes without the full details being saved.
+    // Return the id of the record if the reservation has expired, otherwise 0.
+    $results = $mysqli->prepare('SELECT assigned_account, IF((reserved > DATE_SUB(NOW(), INTERVAL 30 MINUTE) OR surname IS NOT NULL), 0, id) FROM temp_users');
     $results->execute();
-    $results->bind_result($assigned_account);
+    $results->bind_result($assigned_account, $reserved);
     while ($results->fetch()) {
-        $used_accounts[$assigned_account] = true;
+        $used_accounts[$assigned_account] = $reserved;
     }
     $results->close();
 
     $free_account = '';
     for ($i = 1; $i <= 100; $i++) {
-        if (!isset($used_accounts['user' . $i])) {
+        if (!isset($used_accounts['user' . $i]) or $used_accounts['user' . $i] != 0) {
             $free_account = 'user' . $i;
             break;
         }
@@ -122,11 +136,19 @@ if (isset($_POST['submit'])) {
     }
 
     // Reserve this free account first.
-    $stmt = $mysqli->prepare('INSERT INTO temp_users VALUES (NULL, NULL, NULL, NULL, NULL, ?, NOW())');
-    $stmt->bind_param('s', $free_account);
-    $stmt->execute();
-    $stmt->close();
-    $recordID = $mysqli->insert_id;
+    if (!isset($used_accounts[$free_account])) {
+        $stmt = $mysqli->prepare('INSERT INTO temp_users VALUES (NULL, NULL, NULL, NULL, NULL, ?, NOW())');
+        $stmt->bind_param('s', $free_account);
+        $stmt->execute();
+        $stmt->close();
+        $recordID = $mysqli->insert_id;
+    } else {
+        $stmt = $mysqli->prepare('UPDATE temp_users SET reserved = NOW() WHERE id = ?');
+        $stmt->bind_param('s', $used_accounts[$free_account]);
+        $stmt->execute();
+        $stmt->close();
+        $recordID = $used_accounts[$free_account];
+    }
 
     // Get the user ID
     $stmt = $mysqli->prepare('SELECT id FROM users WHERE username = ?');
