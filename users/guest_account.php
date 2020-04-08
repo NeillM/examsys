@@ -81,22 +81,11 @@ if (isset($_POST['submit'])) {
         $notice->display_notice_and_exit($mysqli, $string['error'], $string['mandatory'], $string['error'], '/artwork/exclamation_red_bg.png', '#C00000', false, true);
     }
 
-    // Check the reservation is still valid.
-    $stmt = $mysqli->prepare('SELECT id FROM temp_users WHERE id = ? AND reserved > DATE_SUB(NOW() AND surname IS NULL, INTERVAL 30 MINUTE)');
-    $stmt->bind_param('s', $recordID);
-    $stmt->execute();
-    $stmt->bind_result($has_record);
-    $stmt->fetch();
-    $stmt->close();
-
-    if (is_null($has_record)) {
+    if (!GuestAccountManager::isReservationValid($recordID)) {
         $notice->display_notice_and_exit(null, $string['reservationexpired'], $string['reservationexpiredmessage'], $string['reservationexpired'], '/artwork/exclamation_red_bg.png', '#C00000', false, true);
     }
 
-    $stmt = $mysqli->prepare('UPDATE temp_users SET first_names = ?, surname = ?, title = ?, student_id = ? WHERE id = ?');
-    $stmt->bind_param('ssssi', $tmp_first_names, $tmp_surname, $title, $tmp_student_id, $recordID);
-    $stmt->execute();
-    $stmt->close();
+    GuestAccountManager::setDetails($tmp_first_names, $tmp_surname, $tmp_student_id, $title, $recordID);
 
     echo '<form method="post" action="' . $configObject->get('cfg_root_path') . '/paper/index.php" autocomplete="off">';
     echo '<input type="hidden" name="ROGO_USER" value="' . $username . '" />';
@@ -111,58 +100,11 @@ if (isset($_POST['submit'])) {
     echo '<tr><td><td>&nbsp;</td></tr>';
     echo '</table></td></tr></table></div></form>';
 } else {
-    $used_accounts = array();
-
-    // Reservations last 30 minutes without the full details being saved.
-    // Return the id of the record if the reservation has expired, otherwise 0.
-    $results = $mysqli->prepare('SELECT assigned_account, IF((reserved > DATE_SUB(NOW(), INTERVAL 30 MINUTE) OR surname IS NOT NULL), 0, id) FROM temp_users');
-    $results->execute();
-    $results->bind_result($assigned_account, $reserved);
-    while ($results->fetch()) {
-        $used_accounts[$assigned_account] = $reserved;
-    }
-    $results->close();
-
-    $free_account = '';
-    for ($i = 1; $i <= 100; $i++) {
-        if (!isset($used_accounts['user' . $i]) or $used_accounts['user' . $i] != 0) {
-            $free_account = 'user' . $i;
-            break;
-        }
-    }
-
-    if (empty($free_account)) {
+    try {
+        $account = GuestAccountManager::reserve();
+    } catch (NoFreeGuestAccounts $e) {
         $notice->display_notice_and_exit(null, $string['nofreeaccounts'], $string['nofreeaccountsmessage'], $string['nofreeaccounts'], '/artwork/exclamation_red_bg.png', '#C00000', false, true);
     }
-
-    // Reserve this free account first.
-    if (!isset($used_accounts[$free_account])) {
-        $stmt = $mysqli->prepare('INSERT INTO temp_users VALUES (NULL, NULL, NULL, NULL, NULL, ?, NOW())');
-        $stmt->bind_param('s', $free_account);
-        $stmt->execute();
-        $stmt->close();
-        $recordID = $mysqli->insert_id;
-    } else {
-        $stmt = $mysqli->prepare('UPDATE temp_users SET reserved = NOW() WHERE id = ?');
-        $stmt->bind_param('s', $used_accounts[$free_account]);
-        $stmt->execute();
-        $stmt->close();
-        $recordID = $used_accounts[$free_account];
-    }
-
-    // Get the user ID
-    $stmt = $mysqli->prepare('SELECT id FROM users WHERE username = ?');
-    $stmt->bind_param('s', $free_account);
-    $stmt->execute();
-    $stmt->bind_result($temp_user_id);
-    $stmt->fetch();
-    $stmt->close();
-
-    // Reset password on the chosen guest account.
-    $color = array('blue', 'green', 'orange', 'gold', 'silver', 'purple', 'white', 'black', 'yellow');
-    $random_password = $color[rand(0, 4)] . rand(10, 99);
-    UserUtils::update_password($free_account, $random_password, $temp_user_id, $mysqli);
-
     ?>
 <!DOCTYPE html>
 <html>
@@ -199,9 +141,9 @@ if (isset($_POST['submit'])) {
 </table>
 
 </div>
-<input type="hidden" name="recordID" value="<?php echo $recordID; ?>" />
-<input type="hidden" name="username" value="user<?php echo $i; ?>" />
-<input type="hidden" name="password" value="<?php echo $random_password; ?>" />
+<input type="hidden" name="recordID" value="<?php echo $account->reservationid; ?>" />
+<input type="hidden" name="username" value="<?php echo $account->username; ?>" />
+<input type="hidden" name="password" value="<?php echo $account->password; ?>" />
 </form>
 </body>
 </html>
