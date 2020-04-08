@@ -36,6 +36,12 @@ if ($userObject->has_role('Invigilator')) {
     exit();
 }
 
+// Redirect Internal Reviewers to their own area.
+if ($userObject->has_role('Internal Reviewer')) {
+    header('location: ../reviews/');
+    exit();
+}
+
 $id = check_var('id', 'GET', true, false, true, param::ALPHANUM);
 $mode = param::optional('mode', '', param::ALPHA, param::FETCH_GET);
 
