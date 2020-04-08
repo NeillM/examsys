@@ -69,27 +69,31 @@ if (!$lab) {
 <?php
 if (isset($_POST['submit'])) {
     // Update the temp_user table with the completed student details.
-    $tmp_first_names = trim($_POST['first_names']);
-    $tmp_surname = trim($_POST['surname']);
-    $tmp_student_id = trim($_POST['student_id']);
-    
+    $tmp_first_names = trim(param::optional('first_names', '', param::TEXT));
+    $tmp_surname = trim(param::optional('surname', '', param::TEXT));
+    $tmp_student_id = trim(param::optional('student_id', '', param::ALPHANUM));
+    $recordID = param::optional('recordID', 0, param::INT);
+    $username = param::optional('username', '', param::TEXT);
+    $password = param::optional('password', '', param::TEXT);
+    $title = param::optional('title', '', param::TEXT);
+
     if ($tmp_first_names == '' or $tmp_surname == '') {
         $notice->display_notice_and_exit($mysqli, $string['error'], $string['mandatory'], $string['error'], '/artwork/exclamation_red_bg.png', '#C00000', false, true);
     }
 
     $stmt = $mysqli->prepare('UPDATE temp_users SET first_names = ?, surname = ?, title = ?, student_id = ? WHERE id = ?');
-    $stmt->bind_param('ssssi', $tmp_first_names, $tmp_surname, $_POST['title'], $tmp_student_id, $_POST['recordID']);
+    $stmt->bind_param('ssssi', $tmp_first_names, $tmp_surname, $title, $tmp_student_id, $recordID);
     $stmt->execute();
     $stmt->close();
 
     echo '<form method="post" action="' . $configObject->get('cfg_root_path') . '/paper/index.php" autocomplete="off">';
-    echo '<input type="hidden" name="ROGO_USER" value="' . $_POST['username'] . '" />';
-    echo '<input type="hidden" name="ROGO_PW" value="' . $_POST['password'] . '" />';
+    echo '<input type="hidden" name="ROGO_USER" value="' . $username . '" />';
+    echo '<input type="hidden" name="ROGO_PW" value="' . $password . '" />';
     echo '<div align="center"><table cellpadding="0" cellspacing="0" style="text-align:left; width:450px; border:1px #7F9DB9 solid; background-color:#EEF4FF">';
     echo '<tr><td class="topbar" style="padding-left:6px; width:60px"><img src="../artwork/guest_account.png" width="48" height="48" /></td><td class="topbar" style="width:390px">' . $string['allocatedaccount'] . '</td></tr>';
     echo '<tr><td colspan="2" style="padding:8px">' . $string['msg'] . '</td></tr>';
-    echo '<tr><td colspan="2"><table style="width:100%; text-align:left"><tr><td style="padding:6px">' . $string['username'] . '</td><td><tt>' . $_POST['username'] . '</tt></td></tr>';
-    echo '<tr><td style="padding:6px">' . $string['password'] . '</td><td><tt>' . $_POST['password'] . '</tt></td></tr>';
+    echo '<tr><td colspan="2"><table style="width:100%; text-align:left"><tr><td style="padding:6px">' . $string['username'] . '</td><td><tt>' .$username . '</tt></td></tr>';
+    echo '<tr><td style="padding:6px">' . $string['password'] . '</td><td><tt>' . $password . '</tt></td></tr>';
     echo '<tr><td colspan="2"><td>&nbsp;</td></tr>';
     echo '<tr><td style="text-align:center"><td><input type="submit" name="rogo-login-form-std" value="' . $string['login'] . '" class="ok" /></td></tr>';
     echo '<tr><td><td>&nbsp;</td></tr>';
