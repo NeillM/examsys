@@ -74,7 +74,7 @@ if (isset($_POST['submit'])) {
     $tmp_student_id = trim($_POST['student_id']);
     
     if ($tmp_first_names == '' or $tmp_surname == '') {
-        $notice->display_notice_and_exit($mysqli, $string['error'], $string['mandatory'], $string['error'], '../artwork/exclamation_red_bg.png', '#C00000', false, true);
+        $notice->display_notice_and_exit($mysqli, $string['error'], $string['mandatory'], $string['error'], '/artwork/exclamation_red_bg.png', '#C00000', false, true);
     }
 
     $stmt = $mysqli->prepare('UPDATE temp_users SET first_names = ?, surname = ?, title = ?, student_id = ? WHERE id = ?');
