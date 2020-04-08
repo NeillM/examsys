@@ -113,6 +113,10 @@ if (isset($_POST['submit'])) {
         }
     }
 
+    if (empty($free_account)) {
+        $notice->display_notice_and_exit(null, $string['nofreeaccounts'], $string['nofreeaccountsmessage'], $string['nofreeaccounts'], '/artwork/exclamation_red_bg.png', '#C00000', false, true);
+    }
+
     // Reserve this free account first.
     $stmt = $mysqli->prepare('INSERT INTO temp_users VALUES (NULL, NULL, NULL, NULL, NULL, ?, NOW())');
     $stmt->bind_param('s', $free_account);
