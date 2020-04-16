@@ -269,7 +269,7 @@ $headerdata = array(
   'css' => array(
     '/css/start.css',
     '/css/html5.css',
-    '../node_modules/mediaelement/build/mediaelementplayer.min.css',
+    '/node_modules/mediaelement/build/mediaelementplayer.min.css',
   ),
   'scripts' => array(
     '/js/startinit.min.js',
