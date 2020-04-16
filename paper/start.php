@@ -387,7 +387,7 @@ if ($allow_timing and $propertyObj->get_exam_duration() != null) {
 if ($propertyObj->get_calculator()) {
     $render->render(null, null, 'jcalc98.html');
 }
-  
+
 if ($current_screen < $no_screens) {
     $contentdata['action'] = Url::fromGlobals();
 } else {
@@ -462,7 +462,7 @@ if (in_array('students', $midexam_clarification)) {
 
   // Get linked question parents.
   $linked = PaperUtils::get_linked_question_parents($questions_array);
-  
+
   // Display each question
   $unanswered = false;
 
