@@ -24,7 +24,7 @@ use testing\unittest\unittestdatabase;
  * @copyright Copyright (c) 2020 The University of Nottingham
  * @package tests
  *
- * @group wip
+ * @group guest_account
  */
 class guestaccountmanagertest extends unittestdatabase
 {
