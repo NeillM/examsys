@@ -33,3 +33,7 @@ $string['enterfirstname'] = 'Please enter your first name.';
 $string['entersurname'] = 'Please enter your surname.';
 $string['error'] = 'Error';
 $string['mandatory'] = 'Mandatory data missing.';
+$string['nofreeaccounts'] = 'No free guest accounts';
+$string['nofreeaccountsmessage'] = 'A new guest account cannot be assigned because they are all in use right now.';
+$string['reservationexpired'] = 'Your reservation has expired';
+$string['reservationexpiredmessage'] = 'You must create your guest account within 30 minutes, please try again.';
