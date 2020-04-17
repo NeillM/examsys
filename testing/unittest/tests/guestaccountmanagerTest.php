@@ -60,9 +60,9 @@ class guestaccountmanagertest extends unittestdatabase
         $datagenerator = $this->get_datagenerator('guest_account_reservation');
         $hourago = time() - 3600;
         // Fully reserved user.
-        $datagenerator->create_reservation(['assigned_account' => 'user1', 'reserved' => $hourago, 'surname' => 'Bob']);
+        $datagenerator->createReservation(['assigned_account' => 'user1', 'reserved' => $hourago, 'surname' => 'Bob']);
         // Reservation not complete.
-        $datagenerator->create_reservation(['assigned_account' => 'user2', 'reserved' => $hourago]);
+        $datagenerator->createReservation(['assigned_account' => 'user2', 'reserved' => $hourago]);
         $account = GuestAccountManager::reserve();
 
         $this->assertInstanceOf(GuestAccount::class, $account);
@@ -92,7 +92,7 @@ class guestaccountmanagertest extends unittestdatabase
     public function testIsReservationValid(array $reservation, $expected)
     {
         $datagenerator = $this->get_datagenerator('guest_account_reservation');
-        $record = $datagenerator->create_reservation($reservation);
+        $record = $datagenerator->createReservation($reservation);
         $this->assertEquals($expected, GuestAccountManager::isReservationValid($record['id']));
     }
 
@@ -119,7 +119,7 @@ class guestaccountmanagertest extends unittestdatabase
     public function testSetDetails()
     {
         $datagenerator = $this->get_datagenerator('guest_account_reservation');
-        $record = $datagenerator->create_reservation(['assigned_account' => 'user1', 'reserved' => time()]);
+        $record = $datagenerator->createReservation(['assigned_account' => 'user1', 'reserved' => time()]);
         GuestAccountManager::setDetails('Jessica', 'Jones', '123456789', 'Ms', $record['id']);
         $query = [
             'table' => 'temp_users',

@@ -40,7 +40,8 @@ class guest_account_reservation extends generator {
      * @param array|stadClass $parameters
      * @return array
      */
-    public function create_reservation($parameters): array {
+    public function createReservation($parameters): array
+    {
         // If an object is passed convert it into an array.
         if (is_object($parameters)) {
             $parameters = (array)$parameters;
@@ -73,11 +74,12 @@ class guest_account_reservation extends generator {
         );
         $values = $this->set_defaults_and_clean($defaults, $parameters);
 
-        $values['id'] = $this->insert_reservation($values);
+        $values['id'] = $this->insertReservation($values);
         return $values;
     }
 
-    protected function insert_reservation($values) {
+    protected function insertReservation($values)
+    {
         $sql = 'INSERT INTO temp_users '
             . '(first_names, surname, title, student_id, assigned_account, reserved)'
             . ' VALUES (?, ?, ?, ?, ?, ?)';
