@@ -56,12 +56,10 @@ class guest_account_reservation extends generator {
             throw new data_error('The assigned account must be set');
         }
 
-        // The format stored in the database.
-        $dateformat = 'Y-m-d H:i:s';
-
-        if (isset($parameters['reserved']) and is_numeric($parameters['reserved'])) {
-            // Assume passed value is a unix timestamp.
-            $parameters['reserved'] = date($dateformat, $parameters['reserved']);
+        if (isset($parameters['reserved']) and !is_numeric($parameters['reserved'])) {
+            // Convert the human readable date into a timestamp.
+            $date = new \DateTime($parameters['reserved']);
+            $parameters['reserved'] = $date->getTimestamp();
         }
 
         $defaults = array(
@@ -70,7 +68,7 @@ class guest_account_reservation extends generator {
                 'title' => null,
                 'student_id' => null,
                 'assigned_account' => null,
-                'reserved' => date($dateformat),
+                'reserved' => time(),
         );
         $values = $this->set_defaults_and_clean($defaults, $parameters);
 
@@ -82,7 +80,7 @@ class guest_account_reservation extends generator {
     {
         $sql = 'INSERT INTO temp_users '
             . '(first_names, surname, title, student_id, assigned_account, reserved)'
-            . ' VALUES (?, ?, ?, ?, ?, ?)';
+            . ' VALUES (?, ?, ?, ?, ?, FROM_UNIXTIME(?))';
         $query = $this->db->prepare($sql);
         $query->bind_param(
             'ssssss',
