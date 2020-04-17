@@ -89,7 +89,7 @@ if ($_GET['module'] != '0') {
   require '../include/toprightmenu.inc';
 
     echo draw_toprightmenu();
-  
+
 if (isset($state['showretired']) and $state['showretired'] == 'true') {
     $types_used = module_utils::paper_types($module, true, $mysqli);
 } else {
@@ -97,7 +97,7 @@ if (isset($state['showretired']) and $state['showretired'] == 'true') {
 }
 ?>
 <div id="content">
-        
+
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
 <?php
@@ -108,7 +108,7 @@ if (isset($state['showretired']) and $state['showretired'] == 'true') {
   echo ' />' . $string['showretired'] . "</label></div>\n";
 ?>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=<?php echo $module ?>"><?php echo $module_details['moduleid'] ?></a></div>
-  <div class="page_title"><?php echo $string['papers'] ?>: <span style="font-weight:normal"><?php echo $string[strtolower($types_array[$type])] ?> (<span id="paper_count"><?php echo $types_used[$type] ?></span>)</div>
+  <div class="page_title"><?php echo $string['papers'] ?>: <span style="font-weight:normal"><?php echo $string[mb_strtolower($types_array[$type])] ?> (<span id="paper_count"><?php echo $types_used[$type] ?></span>)</div>
 </div>
 
 <?php
@@ -154,7 +154,7 @@ if ($results->num_rows > 0) {
                 echo '<br clear="left" />';
             }
             $sent_clear_all = true;
-      
+
             if ($calendar_year == '') {
                 $display_calendar_year = $string['unspecifiedsession'];
             } else {

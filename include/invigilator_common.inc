@@ -33,7 +33,7 @@ function get_students($modules, $property_object, $log_lab_end_time, $allow_timi
 
     // Get any student notes.
     $notes_array = PaperNotes::get_all_notes_by_paper($paperID, $db);
-  
+
     // Get any student toilet breaks.
     $toilet_break_array = ToiletBreaks::get_all_breaks_by_paper($paperID, $db);
     ?>
@@ -80,7 +80,7 @@ function get_students($modules, $property_object, $log_lab_end_time, $allow_timi
         $guest_accounts[$assigned_account] = array('title' => $title, 'first_names' => $first_names, 'surname' => $surname);
     }
     $results->close();
-    
+
     // Get all students who should are able to access this paper
     $sql = 'SELECT DISTINCT extra_time, medical, breaks, modules_student.userID, surname, first_names, title FROM modules_student, users LEFT JOIN special_needs ON users.id = special_needs.userID WHERE idMod IN ( ' . $modules . ') AND calendar_year = ? AND modules_student.userID = users.id';
     $results = $db->prepare($sql);
@@ -111,8 +111,8 @@ function get_students($modules, $property_object, $log_lab_end_time, $allow_timi
     $results->bind_result($extra_time_percentage, $medical, $breaks, $userID, $surname, $first_names, $title);
     while ($results->fetch()) {
         if ($first_names == 'Temporary Account') {
-            $username = strtolower($surname);
-        
+            $username = mb_strtolower($surname);
+
             $student_object[$userID]['user_ID'] = $userID;
             $student_object[$userID]['surname'] = $guest_accounts[$username]['surname'];
             $student_object[$userID]['first_names'] = $guest_accounts[$username]['first_names'];
@@ -250,7 +250,7 @@ function process_student_list($log_lab_end_time, $log_extra_time, $student_objec
     }
     ?>
   </td>
-  
+
   <td><?php echo $title ?></td>
   <td><?php echo $surname ?></td>
   <td><?php echo $first_names ?></td>

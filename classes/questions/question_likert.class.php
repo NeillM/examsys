@@ -26,21 +26,21 @@
 
 class QuestionLIKERT extends QuestionEdit
 {
-  
+
     protected $scale_type = '';
     protected $not_applicable = 'false';
     protected $custom_scales = array();
     public $max_options = 1;
     public $max_stems = 10;
     protected $_allow_correction = false;
-  
+
     protected $_fields_editable = array('theme', 'scenario', 'leadin', 'notes', 'correct_fback', 'incorrect_fback', 'scale_type', 'not_applicable', 'option_order', 'bloom', 'status');
     protected $_fields_compound = array('custom_scale');
     protected $_fields_force = array('not_applicable');
-  
-  
+
+
     protected $_scale_types;
-  
+
     function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
@@ -51,12 +51,12 @@ class QuestionLIKERT extends QuestionEdit
         '4 ' . $this->_lang_strings['pointscales'] => array($this->_lang_strings['lowhigh4'] => $this->_lang_strings['lowhigh'], $this->_lang_strings['neveralways4'] => $this->_lang_strings['neveralways'], $this->_lang_strings['disagre4'] => $this->_lang_strings['disagre4point']),
         '5 ' . $this->_lang_strings['pointscales'] => array($this->_lang_strings['lowhigh5'] => $this->_lang_strings['lowhigh'], $this->_lang_strings['neveralways5'] => $this->_lang_strings['neveralways'], $this->_lang_strings['disagre5a'] => $this->_lang_strings['disagre5pointneither'], $this->_lang_strings['disagre5b'] => $this->_lang_strings['disagre5pointuncertain'], $this->_lang_strings['disagre5c'] => $this->_lang_strings['disagre5pointneutral'])
         );
-    
+
         $this->get_all_custom_scales();
     }
-  
+
     // ACCESSORS
-  
+
     /**
      * Get the range of available scale types for the question
      * @return multitype
@@ -65,7 +65,7 @@ class QuestionLIKERT extends QuestionEdit
     {
         return $this->_scale_types;
     }
-  
+
     /**
      * Get the question scale type
      * @return string
@@ -88,7 +88,7 @@ class QuestionLIKERT extends QuestionEdit
         }
         $this->set_display_method('dummy');
     }
-  
+
     /**
      * Get whether 'not applicable' should be applied to scales for this question
      * @return string
@@ -112,7 +112,7 @@ class QuestionLIKERT extends QuestionEdit
         }
         $this->set_display_method('dummy');
     }
-  
+
     /**
      * Get the custom scale values for this question. This is the same as scale_type if set. Compound field is required to
      * allow values to be saved using the same model as other question types
@@ -127,7 +127,7 @@ class QuestionLIKERT extends QuestionEdit
         }
         return $this->custom_scales;
     }
-  
+
     /**
      * Compound the scale items into a string and set as scale type (and hence display method)
      * @return multitype:
@@ -140,7 +140,7 @@ class QuestionLIKERT extends QuestionEdit
             $this->set_scale_type(implode('|', $this->custom_scales));
         }
     }
-  
+
     /**
      * Get the question display method, populating pseudo-properties as we go
      * @return string
@@ -148,13 +148,13 @@ class QuestionLIKERT extends QuestionEdit
     public function get_display_method()
     {
         if ($this->display_method != '') {
-            $pos = strrpos($this->display_method, '|');
-            $this->scale_type = substr($this->display_method, 0, $pos);
-            $this->not_applicable = substr($this->display_method, $pos + 1);
+            $pos = mb_strrpos($this->display_method, '|');
+            $this->scale_type = mb_substr($this->display_method, 0, $pos);
+            $this->not_applicable = mb_substr($this->display_method, $pos + 1);
         }
         return $this->display_method;
     }
-  
+
     /**
      * Set the display method for the question - this is a composite of decimals, tolerance and units
      * @param unknown_type $value
@@ -177,7 +177,7 @@ class QuestionLIKERT extends QuestionEdit
             if ($needle == $key) {
                 return true;
             }
-       
+
             if (is_array($value)) {
                 if ($this->multi_array_key_exists($needle, $value) == true) {
                     return true;
@@ -190,13 +190,13 @@ class QuestionLIKERT extends QuestionEdit
     }
 
     // PRIVATE FUNCTIONS
-  
+
     private function array_trim($input)
     {
         $adding = false;
         $input_rev = array_reverse($input);
         $new_array = array();
-    
+
         foreach ($input_rev as $value) {
             if (!$adding and !empty($value)) {
                 $adding = true;

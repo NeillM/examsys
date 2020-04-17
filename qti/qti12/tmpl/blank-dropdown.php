@@ -15,14 +15,14 @@
 // along with Rogō.  If not, see <http://www.gnu.org/licenses/>.
 
 require('header.php');
-?>  
+?>
 
             <?php echo $headertext ?>
-            
+
 <?php $respid = 1; ?>
 <?php foreach ($question->question as & $q) : ?>
     <?php // do we have a blank to output? ?>
-    <?php if (substr($q, 0, 1) == '%') : ?>
+    <?php if (mb_substr($q, 0, 1) == '%') : ?>
             <response_lid ident="<?php echo $respid++ ?>">
                 <render_choice shuffle="Yes">
         <?php // get the options set for this blank ?>
@@ -47,7 +47,7 @@ require('header.php');
     <?php endif; ?>
 <?php endforeach; ?>
         </presentation>
-        
+
         <resprocessing>
             <outcomes>
                 <decvar/>
@@ -83,7 +83,7 @@ require('header.php');
     <?php $respid++; ?>
 <?php endforeach; ?>
         </resprocessing>
-        
+
         <!-- only 1 feedback for dropdown questions -->
         <itemfeedback ident="General" view="Candidate">
             <material>
@@ -91,4 +91,3 @@ require('header.php');
             </material>
         </itemfeedback>
     </item>
-    

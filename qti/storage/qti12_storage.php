@@ -222,7 +222,7 @@ class ST_QTI12_Question // <item
 
                 if (!array_key_exists($value, $response->labels)) {
                     foreach ($response->labels as $label) {
-                        if (strtolower($label->material->GetText()) == strtolower($value)) {
+                        if (mb_strtolower($label->material->GetText()) == mb_strtolower($value)) {
                             $condition->value = $label->id;
                         }
                     }
@@ -238,9 +238,9 @@ class ST_QTI12_Question // <item
             if ($name == 'qticomment') {
                 $com = (string) $child;
                 $this->comments[] = $com;
-                if (strpos($com, ':') > 0) {
+                if (mb_strpos($com, ':') > 0) {
                     $bits = explode(':', $com, 2);
-                    $param = strtoupper($bits[0]);
+                    $param = mb_strtoupper($bits[0]);
 
                     // parameter already exists
                     if (array_key_exists($param, $this->params)) {
@@ -438,7 +438,7 @@ class ST_QTI12_Response // <response_
         $this->id = (string) $xml->attributes()->ident;
         $this->type = $type;
         // should we allow multiple answers, ie check instead of radio
-        $this->ismulti = strtolower($xml->attributes()->rcardinality) == 'multiple' ? 1 : 0;
+        $this->ismulti = mb_strtolower($xml->attributes()->rcardinality) == 'multiple' ? 1 : 0;
 
         $this->material = new ST_QTI12_Material();
         // get material if available
@@ -449,7 +449,7 @@ class ST_QTI12_Response // <response_
         // as far as i can tell only ever 1 choice for each response_lid
         if ($xml->render_choice) {
             $render = 'choice';
-            $this->shuffle = strtolower($xml->render_choice->attributes()->shuffle) == 'no' ? 0 : 1;
+            $this->shuffle = mb_strtolower($xml->render_choice->attributes()->shuffle) == 'no' ? 0 : 1;
             $this->minnumber = (string) $xml->render_choice->attributes()->minnumber;
             $this->maxnumber = (string) $xml->render_choice->attributes()->maxnumber;
 
@@ -539,7 +539,7 @@ class ST_QTI12_Label // <response_label
     function __construct($xml)
     {
         $this->id = (string) $xml->attributes()->ident;
-        $this->shuffle = strtolower($xml->attributes()->shuffle) == 'no' ? 0 : 1;
+        $this->shuffle = mb_strtolower($xml->attributes()->shuffle) == 'no' ? 0 : 1;
         if ($xml->attributes()->orderid) {
             $this->orderid = (int)$xml->attributes()->orderid;
         }
@@ -598,11 +598,11 @@ class ST_QTI12_RespCondition // <respcondition>
             }
         }
 
-        $this->continue = strtolower($xml->attributes()->continue) == 'yes' ? 1 : 0;
+        $this->continue = mb_strtolower($xml->attributes()->continue) == 'yes' ? 1 : 0;
         if ($xml->setvar) {
             $this->action = (string) $xml->setvar->attributes()->action;
             $this->mark = (string) $xml->setvar;
-            if (strtolower($this->action) == 'subtract') {
+            if (mb_strtolower($this->action) == 'subtract') {
                 $this->action = 'Add';
                 $this->mark = -$this->mark;
             }
@@ -738,7 +738,7 @@ class ST_QTI12_Material_Inner
     {
         $text = implode('', $this->data) . "\n";
 
-        while (strpos($text, '  ') > 0) {
+        while (mb_strpos($text, '  ') > 0) {
             $text = str_replace('  ', ' ', $text);
         }
 
@@ -839,7 +839,7 @@ class ST_QTI12_Material // <material>
             $imagefile = $import_directory . $imagefile;
         }
 
-        if (strlen($imagefile) > strlen($import_directory) and file_exists($imagefile)) {
+        if (mb_strlen($imagefile) > mb_strlen($import_directory) and file_exists($imagefile)) {
             $identifier_size = GetImageSize($imagefile);
             $this->media_width = $identifier_size[0];
             $this->media_height = $identifier_size[1];
@@ -877,21 +877,21 @@ class ST_QTI12_Material // <material>
         global $q_errors;
 
         $mediadirectory = rogo_directory::get_directory('media');
-    
-        if (stripos(' ' . $text, '<img') > 0) {
+
+        if (mb_stripos(' ' . $text, '<img') > 0) {
             $output = '';
             while ($text) {
-                if (stripos(' ' . $text, '<img') > 0) {
-                    $pre = substr($text, 0, stripos($text, '<img'));
-                    $imgtag = substr($text, stripos($text, '<img'));
-                    $imgtag = substr($imgtag, 0, stripos($imgtag, '>') + 1);
-                    $rest = substr($text, stripos($text, '<img'));
-                    $rest = substr($rest, stripos($rest, '>') + 1);
+                if (mb_stripos(' ' . $text, '<img') > 0) {
+                    $pre = mb_substr($text, 0, mb_stripos($text, '<img'));
+                    $imgtag = mb_substr($text, mb_stripos($text, '<img'));
+                    $imgtag = mb_substr($imgtag, 0, mb_stripos($imgtag, '>') + 1);
+                    $rest = mb_substr($text, mb_stripos($text, '<img'));
+                    $rest = mb_substr($rest, mb_stripos($rest, '>') + 1);
 
                     $output .= $pre;
 
                     // we have a src tag?
-                    if (stripos($imgtag, 'src') > 0) {
+                    if (mb_stripos($imgtag, 'src') > 0) {
                         $data = parseHtml($imgtag);
                         $src = $data['IMG'][0]['src'];
                         $basename = basename($src);
@@ -903,7 +903,7 @@ class ST_QTI12_Material // <material>
                             $fullpath = $mediadirectory->fullpath($uniqueFilename);
 
                             copy($import_directory . '/' . $filename, $fullpath);
-              
+
                             $data['IMG'][0]['src'] = '/media/' . $basename;
                             // recreate img tag
                             $imgtag = '<img ';
@@ -917,7 +917,7 @@ class ST_QTI12_Material // <material>
                     }
 
                     $output .= $imgtag;
-          
+
                     $text = $rest;
                 } else {
                     $output .= $text;
@@ -964,7 +964,7 @@ class ST_QTI12_Material // <material>
                 }
             }
         }
-    
+
         return $output;
     }
 
@@ -975,7 +975,7 @@ class ST_QTI12_Material // <material>
             $text .= implode('', $chunk->data) . "\n";
         }
 
-        while (strpos($text, '  ') > 0) {
+        while (mb_strpos($text, '  ') > 0) {
             $text = str_replace('  ', ' ', $text);
         }
         if ($notrim == 1) {
@@ -1029,7 +1029,7 @@ function FindFileSub2($basedir, $dir, $filename)
             if ($res != '') {
                 return $res;
             }
-        } elseif (fnmatch(strtolower($filename), strtolower($entry))) {
+        } elseif (fnmatch(mb_strtolower($filename), mb_strtolower($entry))) {
             if ($dir) {
                 return $dir . '/' . $entry;
             } else {
@@ -1059,7 +1059,7 @@ function FindFileSub($basedir, $dir, $filename)
             if ($res != '') {
                 return $res;
             }
-        } elseif (strtolower($entry) == strtolower($filename)) {
+        } elseif (mb_strtolower($entry) == mb_strtolower($filename)) {
             if ($dir) {
                 return $dir . '/' . $entry;
             } else {
@@ -1079,15 +1079,15 @@ function parseHtml($s_str)
     $i_arrayCounter = 0;
     $a_html = array();
     // Search for a tag in string
-    while (is_int(($i_indicatorL = strpos($s_str, '<', $i_indicatorR)))) {
+    while (is_int(($i_indicatorL = mb_strpos($s_str, '<', $i_indicatorR)))) {
         // Get everything into tag...
         $i_indicatorL++;
-        $i_indicatorR = strpos($s_str, '>', $i_indicatorL);
-        $s_temp = substr($s_str, $i_indicatorL, ($i_indicatorR - $i_indicatorL));
+        $i_indicatorR = mb_strpos($s_str, '>', $i_indicatorL);
+        $s_temp = mb_substr($s_str, $i_indicatorL, ($i_indicatorR - $i_indicatorL));
         $a_tag = explode(' ', $s_temp);
         // Here we get the tag's name
         list(, $s_tagName, , ) = $a_tag[0];
-        $s_tagName = strtoupper($s_tagName);
+        $s_tagName = mb_strtoupper($s_tagName);
         // Well, I am not interesting in <br>, </font> or anything else like that...
         // So, this is false for tags without options.
         $b_boolOptions = is_array(($s_tagOption = $a_tag[1])) && $s_tagOption[1];
@@ -1100,13 +1100,13 @@ function parseHtml($s_str)
             // get the tag options, like src="htt://". Here, s_tagTokOption is 'src' and s_tagTokValue is '"http://"'
             $tagcount = 2;
             do {
-                $s_tagTokOption = strtolower(strtok($s_tagOption[1], '='));
+                $s_tagTokOption = mb_strtolower(strtok($s_tagOption[1], '='));
                 $s_tagTokValue = trim(strtok('='));
-                if (substr($s_tagTokValue, 0, 1) == '"' && substr($s_tagTokValue, strlen($s_tagTokValue) - 1, 1) == '"') {
-                    $s_tagTokValue = substr($s_tagTokValue, 1, strlen($s_tagTokValue) - 2);
+                if (mb_substr($s_tagTokValue, 0, 1) == '"' && mb_substr($s_tagTokValue, mb_strlen($s_tagTokValue) - 1, 1) == '"') {
+                    $s_tagTokValue = mb_substr($s_tagTokValue, 1, mb_strlen($s_tagTokValue) - 2);
                 }
-                if (substr($s_tagTokValue, 0, 1) == "'" && substr($s_tagTokValue, strlen($s_tagTokValue) - 1, 1) == "'") {
-                    $s_tagTokValue = substr($s_tagTokValue, 1, strlen($s_tagTokValue) - 2);
+                if (mb_substr($s_tagTokValue, 0, 1) == "'" && mb_substr($s_tagTokValue, mb_strlen($s_tagTokValue) - 1, 1) == "'") {
+                    $s_tagTokValue = mb_substr($s_tagTokValue, 1, mb_strlen($s_tagTokValue) - 2);
                 }
                 $a_html[$s_tagName][$i_arrayCounter][$s_tagTokOption] = $s_tagTokValue;
                 $b_boolOptions = is_array(($s_tagOption = $a_tag[$tagcount])) && $s_tagOption[1];

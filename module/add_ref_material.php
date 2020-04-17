@@ -34,9 +34,9 @@ if (isset($_POST['submit'])) {
     $result = $mysqli->prepare('INSERT INTO reference_material VALUES (NULL, ?, ?, ?, NOW(), NULL)');
     $result->bind_param('sss', $_POST['title'], $content, $_POST['width']);
     $result->execute();
-  
+
     $refID = $mysqli->insert_id;
-  
+
     // Add it to the modules
     for ($i = 0; $i < $_POST['module_no']; $i++) {
         if (isset($_POST['mod' . $i])) {
@@ -45,7 +45,7 @@ if (isset($_POST['submit'])) {
             $result->execute();
         }
     }
-  
+
     header('location: list_ref_material.php?module=' . $_POST['module']);
     exit();
 }
@@ -56,7 +56,7 @@ if (isset($_POST['submit'])) {
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title><?php echo page::title('Rog&#333;: ' . $string['newreferencematerial']); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/header.css" />
   <link rel="stylesheet" type="text/css" href="../css/refmaterial.css" />
@@ -101,7 +101,7 @@ for ($size = 200; $size < 850; $size += 50) {
   echo '<div style="margin-top:1px; display:block; width:400px; height:604px; overflow-y:scroll; border:1px solid #909090; font-size:90%">';
   $modules_array = array();
   $module_array = $userObject->get_staff_accessable_modules();
-  
+
   $module_no = 0;
   $old_school = '';
   $old_schoolcode = '';
@@ -119,11 +119,11 @@ foreach ($module_array as $modID => $module) {
     if ($_GET['module'] == $modID) {
         $match = true;
     }
-    
+
     if ($match == true) {
-        echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\" checked><label for=\"mod$module_no\">" . $module['id'] . ': ' . substr($module['fullname'], 0, 60) . "</label></div>\n";
+        echo "<div class=\"r2\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\" checked><label for=\"mod$module_no\">" . $module['id'] . ': ' . mb_substr($module['fullname'], 0, 60) . "</label></div>\n";
     } else {
-        echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\"><label for=\"mod$module_no\">" . $module['id'] . ': ' . substr($module['fullname'], 0, 60) . "</label></div>\n";
+        echo "<div class=\"r1\" id=\"divmod$module_no\"><input type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"$modID\"><label for=\"mod$module_no\">" . $module['id'] . ': ' . mb_substr($module['fullname'], 0, 60) . "</label></div>\n";
     }
     $module_no++;
     $old_school = $module['school'];

@@ -300,7 +300,7 @@ class IE_Local_Save extends IE_Main
         }
 
         $logger = new Logger($mysqli);
-    
+
         if (!empty($data->papers)) {
             foreach ($data->papers as & $paper) {
                 foreach ($paper->screens as & $screen) {
@@ -314,7 +314,7 @@ class IE_Local_Save extends IE_Main
                         $p_row['screen'] = $nextscreen;
                         $p_row['display_pos'] = $nextid++;
                         $this->db->InsertRow('papers', 'p_id', $p_row);
-            
+
                         $logger->track_change('Paper', $paperid, $userID, '', $q_id, 'Add Question (from QTI)');
                     }
                     $nextscreen++;
@@ -331,7 +331,7 @@ class IE_Local_Save extends IE_Main
 
         $q_text = '';
         foreach ($question->question as $part) {
-            if (substr($part, 0, 1) == '%') {
+            if (mb_substr($part, 0, 1) == '%') {
                 $q_text .= '[blank]';
 
                 $blankbit = $question->options[$part];
@@ -429,9 +429,9 @@ class IE_Local_Save extends IE_Main
             $count++;
         }
 
-        $scenario_text = substr($scenario_text, 0, strlen($scenario_text) - 1);
-        $feedback = substr($feedback, 0, strlen($feedback) - 1);
-        $answer_text = substr($answer_text, 0, strlen($answer_text) - 1);
+        $scenario_text = mb_substr($scenario_text, 0, mb_strlen($scenario_text) - 1);
+        $feedback = mb_substr($feedback, 0, mb_strlen($feedback) - 1);
+        $answer_text = mb_substr($answer_text, 0, mb_strlen($answer_text) - 1);
 
         for ($i = $count; $i < 10; $i++) {
             $media .= '|';
@@ -618,8 +618,8 @@ class IE_Local_Save extends IE_Main
             $answer_text .= $scenario->answer . '|';
         }
 
-        $scenario_text = substr($scenario_text, 0, strlen($scenario_text) - 1);
-        $answer_text = substr($answer_text, 0, strlen($answer_text) - 1);
+        $scenario_text = mb_substr($scenario_text, 0, mb_strlen($scenario_text) - 1);
+        $answer_text = mb_substr($answer_text, 0, mb_strlen($answer_text) - 1);
 
         $this->q_row['scenario'] = $scenario_text;
 

@@ -47,11 +47,11 @@ if (!$userObject->has_role('Standards Setter')) {
     if (count($recent_papers) > 0) {
         echo '<div style="font-size:180%; padding-top:40px" id="papertasks">' . $string['recent'] . '</div>';
     }
-  
+
     echo '<ul type="square">';
     foreach ($recent_papers as $paperID => $paper_title) {
         echo '<li class="recent"><a ';
-        if (strpos($paper_title, '[deleted') !== false) {
+        if (mb_strpos($paper_title, '[deleted') !== false) {
             echo ' style="color:#808080"';
         }
         echo 'href="' . $configObject->get('cfg_root_path') . "/paper/details.php?paperID=$paperID\">$paper_title</a></li>\n";

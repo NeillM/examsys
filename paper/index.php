@@ -41,7 +41,7 @@ if ($userObject->has_role('External Examiner') or $userObject->has_role('Interna
 function displayHead($string)
 {
     $html = '';
-    
+
     $html .= '<table cellpadding="0" cellspacing="0" border="0" class="header">';
     $html .= '<tr>';
     $html .= '  <th style="padding-left:16px; padding-top:5px">';
@@ -52,7 +52,7 @@ function displayHead($string)
     $html .= '  <th style="text-align:right; vertical-align:top"><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></th>';
     $html .= '</tr>';
     $html .= '</table>';
-    
+
     return $html;
 }
 
@@ -145,9 +145,9 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
 <body>
     <?php
     echo draw_toprightmenu();
-    
+
     echo displayHead($string);
-    
+
     echo "<div style=\"font-size:90%; padding-top:20px\">\n";
     echo "<div style=\"float:left; padding-left:16px; padding-top:16px\"><img src=\"{$configObject->get('cfg_root_path')}/artwork/exclamation_48.png\" width=\"48\" height=\"48\" /></div>\n";
     echo '<h1 style="margin-left:90px; color:#C00000; font-weight:bold">' . $string['noexamsfound'] . "</h1>\n";
@@ -214,13 +214,13 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
         if ($ur != 'Student') {
             $ur = str_replace('Demo', '', $ur);
             if ($ur != '') {
-                echo '<span style="color:#C00000">' . $string[strtolower($ur)] . '</span>';
+                echo '<span style="color:#C00000">' . $string[mb_strtolower($ur)] . '</span>';
                 if ($key < count($userRolesArray) - 1) {
                     echo ', ';
                 }
             }
         } else {
-            echo $string[strtolower($ur)];
+            echo $string[mb_strtolower($ur)];
             if ($key < count($userRolesArray) - 1) {
                 echo ', ';
             }
@@ -267,7 +267,7 @@ if ($paper_no == 1 and $paper_display[0]['password'] == '') {
                 foreach ($paper_list as $paper) {
                     $warnings = array();
                     $screen_plural = ($paper['screens'] > 1) ? 'screens' : 'screen';
-                    $start_hour = substr($paper['start_date'], 11, 2);
+                    $start_hour = mb_substr($paper['start_date'], 11, 2);
                     if (intval($start_hour) < $hourwarning) {
                         $warnings[] = sprintf($string['startwarning'], $hourwarning);
                     }

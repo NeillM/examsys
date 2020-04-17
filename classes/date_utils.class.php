@@ -39,11 +39,11 @@ class date_utils
      */
     static function timedate_select($prefix, $imput_date, $split_time, $start_year, $end_year, $string)
     {
-        $split_year = substr($imput_date, 0, 4);
-        $split_month = substr($imput_date, 4, 2);
-        $split_day = substr($imput_date, 6, 2);
-        $split_hour = substr($imput_date, 8, 2);
-        $split_minute = substr($imput_date, 10, 2);
+        $split_year = mb_substr($imput_date, 0, 4);
+        $split_month = mb_substr($imput_date, 4, 2);
+        $split_day = mb_substr($imput_date, 6, 2);
+        $split_hour = mb_substr($imput_date, 8, 2);
+        $split_minute = mb_substr($imput_date, 10, 2);
 
         $html = '';
 

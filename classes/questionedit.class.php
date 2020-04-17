@@ -345,7 +345,7 @@ class QuestionEdit extends RogoObject
             if ($this->bloom == '') {
                 $this->bloom = null;
             }
-            
+
             // If $id is -1 we're inserting a new record
             if ($this->id == -1) {
                 $this->created = date('Y-m-d H:i:s');
@@ -538,7 +538,7 @@ QUERY;
 
         if ($this->allow_correction()) {
             $classdetails[] = array('file' => $file_base . 'MARKSCorrector.class.php', 'name' => 'MARKSCorrector');
-            $type = strtoupper($this->get_type());
+            $type = mb_strtoupper($this->get_type());
             $classdetails[] = array('file' => $file_base . $type . 'Corrector.class.php', 'name' => $type . 'Corrector');
         } else {
             $classdetails[] = array('file' => $file_base . 'NullCorrector.class.php', 'name' => 'NullCorrector');
@@ -670,7 +670,7 @@ QUERY;
             }
             $result->close();
         }
-    
+
         return $this->_allow_negative_marks;
     }
 
@@ -1087,7 +1087,7 @@ QUERY;
             $this->set_modified_field('bloom', array_search($this->bloom, $this->_blooms_db));
             $this->bloom = $value_en;
         }
-        
+
         if ($this->bloom == '') {
             $this->bloom = null;
         }
@@ -1518,8 +1518,8 @@ QUERY;
 
             if ($result->fetch()) {
                 $result->close();
-                $classname = 'Question' . strtoupper($type);
-                $classfile = 'questions/question_' . strtolower($type) . '.class.php';
+                $classname = 'Question' . mb_strtoupper($type);
+                $classfile = 'questions/question_' . mb_strtolower($type) . '.class.php';
 
                 try {
                     include $classfile;
@@ -1532,8 +1532,8 @@ QUERY;
                 throw new RecordNotFoundException(sprintf($lang_strings['norecorderror'], $data));
             }
         } else {
-            $classname = 'Question' . strtoupper($data);
-            $classfile = 'questions/question_' . strtolower($data) . '.class.php';
+            $classname = 'Question' . mb_strtoupper($data);
+            $classfile = 'questions/question_' . mb_strtolower($data) . '.class.php';
             try {
                 include $classfile;
                 $object = new $classname($mysqli, $user_id, $lang_strings);

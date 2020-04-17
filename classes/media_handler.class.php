@@ -68,7 +68,7 @@ class media_handler
     {
         $mediadirectory = rogo_directory::get_directory('media');
 
-        $ext = substr($filename, strrpos($filename, '.'));
+        $ext = mb_substr($filename, mb_strrpos($filename, '.'));
         $fileno = date('U');
 
         do {
@@ -118,14 +118,14 @@ class media_handler
 
         $bad_file = true;   // Default safe.
         $mediadirectory = rogo_directory::get_directory('media');
-        $filename = strtolower($_FILES[$fileID]['name']);
+        $filename = mb_strtolower($_FILES[$fileID]['name']);
         $unique_name = self::unique_filename($filename);
         $fullpath = $mediadirectory->fullpath($unique_name);
 
         $permitted = self::get_permitted();
 
         $filetype = questiondata::FILE;
-        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        $ext = mb_strtolower(pathinfo($filename, PATHINFO_EXTENSION));
         if (key_exists($ext, $permitted)) {
             $bad_file = false;
             $filetype = self::SUPPORTED[$ext];
@@ -216,7 +216,7 @@ class media_handler
     {
         $mediadirectory = rogo_directory::get_directory('media');
         $filetype = questiondata::FILE;
-        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+        $ext = mb_strtolower(pathinfo($filename, PATHINFO_EXTENSION));
         if (key_exists($ext, self::SUPPORTED)) {
             $filetype = self::SUPPORTED[$ext];
         }
@@ -278,7 +278,7 @@ class media_handler
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $stat = $zip->statIndex($i);
                 $filename = $stat['name'];
-                $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+                $ext = mb_strtolower(pathinfo($filename, PATHINFO_EXTENSION));
                 if (key_exists($ext, $permitted)) {
                     copy($tmpdirectory . DIRECTORY_SEPARATOR . $filename, $mediadirectory->location() . $unique . DIRECTORY_SEPARATOR . $filename);
                 }

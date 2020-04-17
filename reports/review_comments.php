@@ -56,7 +56,7 @@ function list_externals($reviewer_data, $string)
         if ($reviewer['complete'] == '') {
             $reviewer['complete'] = '<span style="color:#C0C0C0">' . $string['na'] . '</span>';
         }
-    
+
         $html .= '<tr>';
         $html .= '<td>' . $reviewer['title'] . ' ' . $reviewer['initials'] . ' ' . $reviewer['surname'] . '</td>';
         $html .= '<td>' . $reviewer['started'] . '</td>';
@@ -65,7 +65,7 @@ function list_externals($reviewer_data, $string)
         $html .= '</tr>';
     }
     $html .= '</table>';
-  
+
     return $html;
 }
 
@@ -91,14 +91,14 @@ function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_da
     $html = "<tr><td></td><td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:98%\">\n";
     $html .= '<tr><td colspan="5"><strong>' . $string[$type . 'comments'] . "$qno</strong>&nbsp;<img class=\"pencil\" data-qid='$questionID' data-qno='$qno'src=\"../artwork/pencil_16.png\" alt=\"" . $string['editquestion'] . "\" /></td></tr>\n";
     $html .= '<tr><td style="width:20px"><div class="reviewbar">&nbsp;</div></td><td style="width:20%"><div class="reviewbar">' . $string['reviewer'] . '</div></td><td style="width:35%"><div class="reviewbar">' . $string['comment'] . '</div></td><td style="width:10%"><div class="reviewbar">' . $string['action'] . '</div></td><td style="width:35%"><div class="reviewbar">' . $string['response'] . "</div></td></tr>\n";
-  
+
     foreach ($reviewer_data as $reviewerID => $rev_data) {
         $image = '';
         $reviewer_name = $rev_data['title'] . ' ' . $rev_data['initials'] .  ' ' . $rev_data['surname'];
         $comment = '';
-    
+
         $comment = nl2br($comments_data[$reviewerID]->get_comment($questionID));
-    
+
         if ($comments_data[$reviewerID]->get_category($questionID) === null) {
             $image = '';
             $status = '';
@@ -122,7 +122,7 @@ function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_da
                     break;
             }
         }
-    
+
         if (trim($comment) == '') {
             if ($comments_data[$reviewerID]->get_category($questionID) == 4) {
                 $comment = '<span style="color:#808080">' . $string['cannotcomment'] . '</span>';
@@ -141,10 +141,10 @@ function displayComments($questionID, $comments_data, $qtype, $qno, $reviewer_da
         } else {
             $image = '';
         }
-    
+
         $html .= "<tr><td class=\"reviewline$extra\">$image</td><td class=\"reviewline$extra\">$reviewer_name</td><td class=\"reviewline$extra\">$comment</td><td class=\"reviewline$extra\">$action</td><td class=\"reviewline$extra\">$response</td></tr>\n";
     }
-  
+
     $html .= "</table></td></tr>\n";
 
     return $html;
@@ -222,13 +222,13 @@ function displayQuestion($q_no, $q_id, $theme, $scenario, $leadin, $q_type, $cor
                 $array_size = count($blank_details);
                 $blank_count = 0;
                 while ($blank_count < $array_size) {
-                    if (strpos($blank_details[$blank_count], '[/blank]') === false) {
+                    if (mb_strpos($blank_details[$blank_count], '[/blank]') === false) {
                         echo $blank_details[$blank_count];
                     } else {
-                        $end_start_tag = strpos($blank_details[$blank_count], ']');
-                        $start_end_tag = strpos($blank_details[$blank_count], '[/blank]');
-                        $blank_options = substr($blank_details[$blank_count], ($end_start_tag + 1), ($start_end_tag - 1));
-                        $remainder = substr($blank_details[$blank_count], ($start_end_tag + 8));
+                        $end_start_tag = mb_strpos($blank_details[$blank_count], ']');
+                        $start_end_tag = mb_strpos($blank_details[$blank_count], '[/blank]');
+                        $blank_options = mb_substr($blank_details[$blank_count], ($end_start_tag + 1), ($start_end_tag - 1));
+                        $remainder = mb_substr($blank_details[$blank_count], ($start_end_tag + 8));
 
                         if ($display_method == 'dropdown') {
                             echo '<select>';
@@ -532,7 +532,7 @@ $marking    = $propertyObj->get_marking();
 $paper_type = $propertyObj->get_paper_type();
 $labelcolor = $propertyObj->get_labelcolor();
 $themecolor = $propertyObj->get_themecolor();
-        
+
 if (!isset($paper)) {
     $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
@@ -655,7 +655,7 @@ if (count($reviewer_data) == 0) {
     exit;
 }
 ?>
-  
+
 <br />
 
 <?php
@@ -677,7 +677,7 @@ foreach ($reviewer_data as $reviewerID => $reviewer_detail) {
         unset($reviewer_data[$reviewerID]);
     }
 }
-  
+
   // Capture the paper makeup.
   $question_no = 0;
   $old_q_id = 0;
@@ -707,8 +707,8 @@ while ($result->fetch()) {
         $tmp_first_split = explode(';', $correct);
         $tmp_second_split = explode('$', $tmp_first_split[11]);
         for ($label_no = 4; $label_no <= 43; $label_no += 4) {
-            if (array_key_exists($label_no, $tmp_second_split) and substr($tmp_second_split[$label_no], 0, 1) != '|') {
-                $options_buffer[] = trim(substr($tmp_second_split[$label_no], 0, strpos($tmp_second_split[$label_no], '|'))) . '|' . $tmp_second_split[$label_no - 2] . '|' . ($tmp_second_split[$label_no - 1] - 25);
+            if (array_key_exists($label_no, $tmp_second_split) and mb_substr($tmp_second_split[$label_no], 0, 1) != '|') {
+                $options_buffer[] = trim(mb_substr($tmp_second_split[$label_no], 0, mb_strpos($tmp_second_split[$label_no], '|'))) . '|' . $tmp_second_split[$label_no - 2] . '|' . ($tmp_second_split[$label_no - 1] - 25);
                 if ($tmp_second_split[$label_no - 2] > 150) {
                     $correct_buffer[] = $tmp_second_split[$label_no - 2] . 'x' . ($tmp_second_split[$label_no - 1] - 25);
                 }
@@ -721,8 +721,8 @@ while ($result->fetch()) {
             $blank_details[$i] = preg_replace('| mark="([0-9]{1,3})"|', '', $blank_details[$i]);
             $blank_details[$i] = preg_replace('| size="([0-9]{1,3})"|', '', $blank_details[$i]);
 
-            $blank_details[$i] = substr($blank_details[$i], (strpos($blank_details[$i], ']') + 1));
-            $blank_details[$i] = substr($blank_details[$i], 0, strpos($blank_details[$i], '[/blank]'));
+            $blank_details[$i] = mb_substr($blank_details[$i], (mb_strpos($blank_details[$i], ']') + 1));
+            $blank_details[$i] = mb_substr($blank_details[$i], 0, mb_strpos($blank_details[$i], '[/blank]'));
             $answer_list = explode(',', $blank_details[$i]);
             $answer_list[0] = str_replace('[/blank]', '', $answer_list[0]);
             if ($score_method == 'textboxes') {

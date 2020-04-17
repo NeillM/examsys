@@ -65,7 +65,7 @@ class Exclusion
         }
         $result->close();
     }
-  
+
     /**
      * Clear the database of any past exclusions from the current paper.
      */
@@ -79,7 +79,7 @@ class Exclusion
             display_error('Question_exclude Delete Error', $this->db->error);
         }
     }
-  
+
     /**
      * Insert a question exclusion record into the database.
      */
@@ -95,7 +95,7 @@ class Exclusion
             display_error('Question_exclude Insert Error 1', $this->db->error);
         }
     }
-  
+
     /**
      * Get an exclusion for a specific question ID.
      * @param int $q_id - Question ID to look up
@@ -120,10 +120,10 @@ class Exclusion
         if (!isset($this->excluded[$q_id])) {
             return '0';       // No exclusions set, return blank zeros.
         } else {
-            return substr($this->excluded[$q_id], $part, 1);
+            return mb_substr($this->excluded[$q_id], $part, 1);
         }
     }
-  
+
     /**
      * Works out if a question is excluded or not.
      * @param int $q_id - Question ID to look up
@@ -131,7 +131,7 @@ class Exclusion
      */
     public function is_question_excluded($q_id)
     {
-        if (isset($this->excluded[$q_id]) and strpos($this->excluded[$q_id], '1') !== false) {
+        if (isset($this->excluded[$q_id]) and mb_strpos($this->excluded[$q_id], '1') !== false) {
             return true;
         } else {
             return false;
@@ -145,13 +145,13 @@ class Exclusion
      */
     public function is_question_part_excluded($q_id, $part)
     {
-        if (isset($this->excluded[$q_id]) and substr($this->excluded[$q_id], $part, 1) === '1') {
+        if (isset($this->excluded[$q_id]) and mb_substr($this->excluded[$q_id], $part, 1) === '1') {
             return true;
         } else {
             return false;
         }
     }
-  
+
     /**
      * Counts how many questions (not items) have been excluded.
      * @return int - count of how many questions are excluded.

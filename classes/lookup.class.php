@@ -495,7 +495,7 @@ class Lookup extends RogoStaticSingleton
                     $return_data .= ',  <b>' . $number . '</b> ' . $item->name . ' <i>(' . $item->classname . ')</i>';
                 }
             }
-            $return_data = substr($return_data, 3);
+            $return_data = mb_substr($return_data, 3);
             if ($error) {
                 $return_data = '<div style="background-color: #cc0000;">' . $return_data . '</div>';
             }

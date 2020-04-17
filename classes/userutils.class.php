@@ -72,15 +72,15 @@ class UserUtils
             return false;
         }
 
-        if (!self::username_exists($username, $db) and self::username_is_valid($username, $guest) and stristr('ps_', $username) === false) {
+        if (!self::username_exists($username, $db) and self::username_is_valid($username, $guest) and mb_stristr('ps_', $username) === false) {
             // Force re-build of initials off forenames.
             if ($initials == '') {
                 $initial = explode(' ', $forname);
                 $initials = '';
                 foreach ($initial as $name) {
-                    $initials .= substr($name, 0, 1);
+                    $initials .= mb_substr($name, 0, 1);
                 }
-                $initials = strtoupper($initials);
+                $initials = mb_strtoupper($initials);
             }
 
             $surname = self::my_ucwords($surname);
@@ -96,7 +96,7 @@ class UserUtils
 
             // Force valid value for gender or default to NULL
             $genders = array('male', 'female', 'other');
-            if (!in_array(strtolower($gender), $genders)) {
+            if (!in_array(mb_strtolower($gender), $genders)) {
                 $gender = null;
             }
 
@@ -185,9 +185,9 @@ class UserUtils
                 $initial = explode(' ', $forname);
                 $initials = '';
                 foreach ($initial as $name) {
-                    $initials .= substr($name, 0, 1);
+                    $initials .= mb_substr($name, 0, 1);
                 }
-                $initials = strtoupper($initials);
+                $initials = mb_strtoupper($initials);
             }
         }
 
@@ -213,7 +213,7 @@ class UserUtils
         // If updating the gender. Force valid value for gender or default to NULL
         if ($current['gender'] != $gender) {
             $genders = array('male', 'female', 'other');
-            if (!in_array(strtolower($gender), $genders)) {
+            if (!in_array(mb_strtolower($gender), $genders)) {
                 $gender = null;
             }
         }
@@ -294,7 +294,7 @@ class UserUtils
      */
     static function username_is_valid($username, $guest = false)
     {
-        $is_guest_name = (substr(strtolower($username), 0, 4) == 'user' and is_numeric(substr($username, 4)));
+        $is_guest_name = (mb_substr(mb_strtolower($username), 0, 4) == 'user' and is_numeric(mb_substr($username, 4)));
 
         if (trim($username) == '' or ($is_guest_name and !$guest)) {
             return false;
@@ -317,7 +317,7 @@ class UserUtils
         if ($username == '') {
             return false;
         }
-        $username = substr($username, 0, 60);
+        $username = mb_substr($username, 0, 60);
         $stmt = $db->prepare('SELECT id FROM users WHERE username = ? AND user_deleted IS NULL');
         $stmt->bind_param('s', $username);
         $stmt->execute();
@@ -708,7 +708,7 @@ class UserUtils
             return self::add_student_to_module($tmp_userID, $moduleid, $attempt, $session, $db, $auto_update);
         }
     }
-  
+
     /**
      * Un-enrole a student on a module.
      * @param int $tmp_userID ID of the student to be un-enroled.
@@ -748,7 +748,7 @@ class UserUtils
         if (!module_utils::get_moduleid_from_id($idMod, $db)) {
             return false;
         }
-    
+
         $userObject = UserObject::get_instance();
 
         if (self::is_user_on_module($tmp_userID, $idMod, $session, $db)) {
@@ -866,12 +866,12 @@ class UserUtils
 
         $word = ucfirst($word);
 
-        if (substr($word, 1, 1) == "'") {
-            if (substr($word, 0, 1) == 'D') {
-                $word = strtolower($word);
+        if (mb_substr($word, 1, 1) == "'") {
+            if (mb_substr($word, 0, 1) == 'D') {
+                $word = mb_strtolower($word);
             }
-            $next = substr($word, 2, 1);
-            $next = strtoupper($next);
+            $next = mb_substr($word, 2, 1);
+            $next = mb_strtoupper($next);
             $word = substr_replace($word, $next, 2, 1);
         }
 

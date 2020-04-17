@@ -85,7 +85,7 @@ class import_modules extends importer
      */
     private function returnTrueFalse($value)
     {
-        $value = strtolower(trim($value));
+        $value = mb_strtolower(trim($value));
         if ($value == 'yes' or $value == 'y' or $value == 'true') {
             return true;
         } else {
@@ -157,7 +157,7 @@ class import_modules extends importer
                     $checked = true;
                 }
                 if ($checked) {
-                    $updateData['checklist'] = substr($checklist, 1);
+                    $updateData['checklist'] = mb_substr($checklist, 1);
                 }
                 if (isset($line['active'])) {
                     $updateData['active'] = $this->returnTrueFalse($line['active']);

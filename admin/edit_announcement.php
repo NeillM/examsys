@@ -66,7 +66,7 @@ $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::ANNOUNCEME
 <?php
   require '../include/announcement_options.inc';
 require '../include/toprightmenu.inc';
-  
+
     echo draw_toprightmenu();
 ?>
 <div id="content">
@@ -94,8 +94,8 @@ for (
     }
 }
 
-if (substr($startdate, 0, 4) < date('Y')) {
-    $start_year = substr($startdate, 0, 4);
+if (mb_substr($startdate, 0, 4) < date('Y')) {
+    $start_year = mb_substr($startdate, 0, 4);
 } else {
     $start_year = date('Y');
 }
@@ -126,7 +126,7 @@ if (substr($startdate, 0, 4) < date('Y')) {
 <input type="hidden" name="announcementid" value="<?php echo $announcementid ?>" />
 </form>
 </div>
-  
+
 </body>
 <?php
 // JS utils dataset.

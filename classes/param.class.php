@@ -30,41 +30,41 @@ class param
 
     /** A string consiting only of letters and numbers. */
     const ALPHANUM = 2;
-  
+
     /**
      * A boolean value, "1", "true", "on" and "yes" are treated as true,
      * "0", "false", "off", "no", and "", and null are treated as false.
      * All other values are invalid.
      */
     const BOOLEAN = 3;
-  
+
     /** An e-mail address. */
     const EMAIL = 4;
-  
+
     /** Floating point number, i.e. 2.5 */
     const FLOAT = 5;
-  
+
     /** HTML. */
     const HTML = 6;
-  
+
     /** An octal, decimal or hexidecimal integer, i.e. 017, 14, 0xFF. */
     const INT = 7;
-  
+
     /** A IPv4 or IPv6 address. */
     const IP_ADDRESS = 8;
-  
+
     /** A url for the current Rogo site. */
     const LOCAL_URL = 6;
-  
+
     /** Any input is valid. */
     const RAW = 10;
-  
+
     /** Plain text. HTML will be stripped. */
     const TEXT = 11;
-  
+
     /** A RFC-2396 URL. */
     const URL = 12;
-  
+
     /** A regular expression. */
     const REGEXP = 13;
 
@@ -76,13 +76,13 @@ class param
 
     /** Find the named variable in the Get array. */
     const FETCH_GET = '_GET';
-  
+
     /** Find the named variable in the Post array. */
     const FETCH_POST = '_POST';
-  
+
     /** Find the named variable in the Request array. */
     const FETCH_REQUEST = '_REQUEST';
-  
+
     /**
      * Ensures that the value is of the correct type.
      *
@@ -272,7 +272,7 @@ class param
             return $text;
         }
         $postfix = '';
-        if (substr($text, -1) === '<') {
+        if (mb_substr($text, -1) === '<') {
             // strip_tags will remove a less than if it is the final character. We wish to leave it in.
             $postfix = '<';
         }
@@ -321,7 +321,7 @@ class param
         }
         return $clean;
     }
-  
+
     /**
      * Gets the named parameter, if it is invalid or does not exisit an error is generated.
      *

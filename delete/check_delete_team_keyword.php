@@ -29,14 +29,14 @@ require '../include/staff_auth.inc';
 require_once '../include/errors.php';
 $keywordIDs = check_var('keywordID', 'GET', true, false, true);
 $keyword_names = array();
-$result = $mysqli->prepare('SELECT keyword FROM keywords_user WHERE id IN (' . substr($keywordIDs, 1) . ')');
+$result = $mysqli->prepare('SELECT keyword FROM keywords_user WHERE id IN (' . mb_substr($keywordIDs, 1) . ')');
 $result->execute();
 $result->bind_result($keyword);
 while ($result->fetch()) {
     $keyword_names[] = $keyword;
 }
 $result->close();
-if (count($keyword_names) < substr_count($keywordIDs, ',')) {
+if (count($keyword_names) < mb_substr_count($keywordIDs, ',')) {
     $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);

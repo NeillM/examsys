@@ -38,8 +38,8 @@ class StringUtils
      */
     public static function ends_with($string, $test)
     {
-        $strlen = strlen($string);
-        $testlen = strlen($test);
+        $strlen = mb_strlen($string);
+        $testlen = mb_strlen($test);
         if ($testlen > $strlen) {
             return false;
         }
@@ -132,19 +132,19 @@ class StringUtils
         $str = str_replace($wordChr, $utf8Chr, $str);
         return $str;
     }
-    
+
     public static function my_ucwords($s)
     {
         $s = preg_replace_callback("/(?:^|-|\pZ|')([\pL]+)/su", 'StringUtils::fixcase_callback', $s);
         return $s;
     }
-  
+
     public static function mb_ucfirst($string, $encoding)
     {
         $strlen = mb_strlen($string, $encoding);
         $firstChar = mb_substr($string, 0, 1, $encoding);
         $then = mb_substr($string, 1, $strlen - 1, $encoding);
-    
+
         return mb_strtoupper($firstChar, $encoding) . $then;
     }
 
@@ -169,7 +169,7 @@ class StringUtils
         }
         return $word;
     }
-  
+
     public static function nice_duration($mins, $string)
     {
         if ($mins < 60) {
@@ -177,7 +177,7 @@ class StringUtils
         } else {
             $hours = floor($mins / 60);
             $remainder = $mins - ($hours * 60);
-      
+
 
             if ($hours == 1) {
                 $display_duration = $hours . ' ' . $string['hour'];

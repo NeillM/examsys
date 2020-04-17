@@ -44,7 +44,7 @@ class CM_NLE implements iCMAPI
         $originalmodid = $moduleID;
         // To create nle year paramerter. End year must be 2 digit.
         $endyear = $session + 1;
-        $endyear = substr((string)$endyear, -2);
+        $endyear = mb_substr((string)$endyear, -2);
         $nle_year = (string)$session . '/' . $endyear;
         // Map module code if necessary.
         $moduleID = \plugins\plugins_mapping::do_mapping($db, $moduleID);
@@ -93,7 +93,7 @@ class CM_NLE implements iCMAPI
         // Ignore anything passed in, we only support session level mapping
         $this->_mapping_level = self::LEVEL_SESSION;
     }
-  
+
     /**
      * Map new type modules codes to the old modules codes in NLE response
      * @param string $response data from NLE

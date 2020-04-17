@@ -59,7 +59,7 @@ class RAF
         $this->string           = $string;
         $this->notice           = new user_notices();
     }
-    
+
     /**
      * EXPORT: Creates and outputs a ZIP file containing all the questions on the current paper.
      * @param array $questions - An array of questions to be exported.
@@ -67,9 +67,9 @@ class RAF
     public function export($questions)
     {
         $this->status_array = QuestionStatus::get_all_statuses($this->db, $this->string, true);
-        
+
         $raf_data = $this->create_export_array($questions);
-        
+
         $this->write_file();
 
         $this->write_zip_file();
@@ -89,7 +89,7 @@ class RAF
 
         unlink($filepath . $this->zip_filename);
     }
-    
+
     /**
      * EXPORT: Create an array of data to export. This will be JSON encoded later.
      * @param array $questions - An array of questions to be exported.
@@ -100,17 +100,17 @@ class RAF
         $this->data['metadata']['export_date']  = date($this->configObj->get('cfg_long_datetime_php'));
         $this->data['metadata']['company']          = $this->configObj->get_setting('core', 'misc_company');
         $this->data['items'] = array();
-        
+
         $item_no = 0;
 
         foreach ($questions as $question) {
             $this->data['items'][$item_no]['question'] = $this->get_question($question);
-            
+
             $this->getImages_from_html($this->data['items'][$item_no]['question']['scenario']);   // Parse out any images in the question scenario.
             $this->getImages_from_html($this->data['items'][$item_no]['question']['leadin']);     // Parse out any images in the question leadin.
-            
+
             $this->data['items'][$item_no]['options'] = $this->get_options($question['q_id']);
-            
+
             $this->data['items'][$item_no]['keywords'] = $this->get_keywords($question['q_id']);
 
             $item_no++;
@@ -129,11 +129,11 @@ class RAF
         $result->bind_result($q_type, $theme, $scenario, $leadin, $correct_fback, $incorrect_fback, $display_method, $notes, $ownerID, $q_media, $q_media_width, $q_media_height, $creation_date, $last_edited, $bloom, $scenario_plain, $leadin_plain, $checkout_time, $checkout_authorID, $deleted, $locked, $std, $status, $q_option_order, $score_method, $settings, $guid, $title, $first_names, $surname);
         $result->fetch();
         $result->close();
-        
+
         $this->check_media($q_media);
-        
+
         $status = $this->status_array[$status]->get_name();
-        
+
         return array('screen' => $question['screen'], 'q_id' => $question['q_id'], 'q_type' => $q_type, 'theme' => $theme, 'scenario' => $scenario, 'leadin' => $leadin, 'correct_fback' => $correct_fback, 'incorrect_fback' => $incorrect_fback, 'display_method' => $display_method, 'notes' => $notes, 'ownerID' => $ownerID, 'q_media' => $q_media, 'q_media_width' => $q_media_width, 'q_media_height' => $q_media_height, 'creation_date' => $creation_date, 'last_edited' => $last_edited, 'bloom' => $bloom, 'scenario_plain' => $scenario_plain, 'leadin_plain' => $leadin_plain, 'std' => $std, 'status' => $status, 'q_option_order' => $q_option_order, 'score_method' => $score_method, 'settings' => $settings, 'guid' => $guid, 'owner' => array('title' => $title, 'first_names' => $first_names, 'surname' => $surname));
     }
 
@@ -155,10 +155,10 @@ class RAF
             $this->check_media($o_media);
         }
         $result->close();
-        
+
         return $options;
     }
-    
+
     /**
      * EXPORT: Retrieve keywords (as text) associated with a question for export.
      * @param int $q_id - ID for a question to be look up keywords.
@@ -175,7 +175,7 @@ class RAF
             $keywords[$id] = $keyword;
         }
         $result->close();
-        
+
         return $keywords;
     }
 
@@ -193,7 +193,7 @@ class RAF
             }
         }
     }
-    
+
     /**
      * EXPORT: Split a give string up and check for media - this checks HTML within scenario and lead-in fields.
      */
@@ -255,7 +255,7 @@ class RAF
         }
         $zip->close();
     }
-    
+
     /**
      * IMPORT: Loads a ZIP file, parses and adds contents to the database.
      */
@@ -267,12 +267,12 @@ class RAF
         }
         $this->logger = new Logger($this->db);
         $this->status_array = QuestionStatus::get_all_statuses_by_name($this->db, $this->string);
-    
+
         $this->get_keyword_ids();
-        
+
         $this->zip_filename = $this->userID . '_raf.zip';
         $tmp_path = $this->configObj->get('cfg_tmpdir');
-        
+
         if (!move_uploaded_file($_FILES['raffile']['tmp_name'], $tmp_path . $this->zip_filename)) {
             echo uploadError($_FILES['raffile']['error']);
             exit();
@@ -282,11 +282,11 @@ class RAF
         if (!file_exists($dest_dir)) {
             mkdir($dest_dir, 0700);
         }
-            
+
         $zip = new ZipArchive();
         if ($zip->open($tmp_path . $this->zip_filename) === true) {
             $zip->extractTo($dest_dir);
-            
+
             if (file_exists($dest_dir . '/raf.json')) {
                 $this->data = file_get_contents($dest_dir . '/raf.json');
             } else {
@@ -297,9 +297,9 @@ class RAF
 
 
             $this->copy_images($dest_dir, $tmp_path);
-            
+
             $this->load_raf_data();
-            
+
             unlink($dest_dir . '/raf.json');
 
             $zip->close();
@@ -308,7 +308,7 @@ class RAF
             $this->notice->display_notice_and_exit($this->db, $this->string['invalidzip'], $msg, $this->string['invalidzip'], '../artwork/exclamation_48.png', '#C00000', true, true);
         }
     }
-    
+
     /**
      * IMPORT: Copy a file from the temportary directory to the /media directory.
      */
@@ -339,13 +339,13 @@ class RAF
         $this->raf_company = $data_array['metadata']['company'];
         foreach ($data_array['items'] as $item) {
             $q_id = $this->write_question($item['question']);
-            
+
             $this->write_keywords($item['keywords'], $q_id);
-            
+
             foreach ($item['options'] as $options) {
                 $this->write_option($options, $q_id);
             }
-            
+
             if (is_object($this->properties)) {
                 $paperID = $this->properties->get_property_id();
                 $screen_no = $item['question']['screen'];
@@ -354,7 +354,7 @@ class RAF
             $display_pos++;
         }
     }
-    
+
     /**
      * IMPORT: If a status (string) does not match the local installations set of statuses,
      * lookup and return the default status.
@@ -362,13 +362,13 @@ class RAF
     private function get_default_statusID()
     {
         $defaultID = false;
-        
+
         foreach ($this->status_array as $status) {
             if ($status->get_is_default()) {
                 $defaultID = $status->id;
             }
         }
-        
+
         return $defaultID;
     }
 
@@ -399,7 +399,7 @@ class RAF
         // The substitution will replace the old src tag with a new one that.
         $webroot = $configObject->get('cfg_root_path');
         // Ensure there is a trailing slash.
-        if (substr($webroot, -1) !== '/') {
+        if (mb_substr($webroot, -1) !== '/') {
             $webroot .= '/';
         }
         $substitution = 'src="' . $webroot . 'getfile.php?type=media&amp;filename=$1"';
@@ -421,29 +421,29 @@ class RAF
                 $q['status'] = 1;  // Can't find a valid default, hardwire onto 1.
             }
         }
-        
+
         $result = $this->db->prepare('INSERT INTO questions VALUE (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, ?, ?, ?, ?, ?, ?)');
         $result->bind_param('ssssssssisssssssissss', $q['q_type'], $q['theme'], $q['scenario'], $q['leadin'], $q['correct_fback'], $q['incorrect_fback'], $q['display_method'], $q['notes'], $this->userID, $q['q_media'], $q['q_media_width'], $q['q_media_height'], $q['bloom'], $q['scenario_plain'], $q['leadin_plain'], $q['std'], $q['status'], $q['q_option_order'], $q['score_method'], $q['settings'], $guid);
         $result->execute();
         $q_id =  $this->db->insert_id;
         $result->close();
-        
-        
+
+
         $date_format = $this->configObj->get('cfg_short_datetime_php');
-        
+
         if ($this->raf_company == $this->configObj->get_setting('core', 'misc_company')) {  // The import file company is the same as the current installation. Use the same IDs.
             $old_q_id = $this->getQID_GUID($q['guid']);
-        
+
             if ($old_q_id !== false) {
                 $this->logger->track_change('Paper', $q_id, $this->userID, $old_q_id, $q_id, 'Add Question (from RAF)');        // Log as a copied file
             }
         } else {
             $this->logger->track_change('Paper', $q_id, $this->userID, '', $q_id, 'Add Question (from RAF)');                                       // Log as a new file that has been imported
         }
-        
+
         return $q_id;
     }
-    
+
     private function getQID_GUID($guid)
     {
         $result = $this->db->prepare('SELECT q_id FROM questions WHERE guid = ?');
@@ -457,10 +457,10 @@ class RAF
             $q_id = false;
         }
         $result->close();
-        
+
         return $q_id;
     }
-    
+
     /**
      * IMPORT: Take the textual keywords of a question, lookup IDs and then insert into the DB.
      * @param array $keywords - Array of textual keywords
@@ -479,12 +479,12 @@ class RAF
                 }
             }
         }
-        
+
         if (count($keywordIDs) > 0) {
             QuestionUtils::add_keywords($keywordIDs, $q_id, $this->db);
         }
     }
-    
+
     /**
      * IMPORT: Load all personal keywords and keywords belonging to the team(s) of the current paper.
      * Creates a lookup array for translating the text of a keyword into IDs for insertion into the DB.
@@ -500,7 +500,7 @@ class RAF
             $this->keywords_lookup[$keyword] = $id;
         }
         $result->close();
-        
+
         // Get team keywords.
         $modules = array_keys($this->properties->get_modules());
 

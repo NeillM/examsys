@@ -28,7 +28,7 @@ class UON_SATURN extends SmsUtils
 {
     private $enrolement_no;
     private $deletion_no;
-  
+
     public $campus;
     public $url;
 
@@ -211,7 +211,7 @@ class UON_SATURN extends SmsUtils
     {
 
         $configObject = Config::get_instance();
-    
+
         $yearutils = new yearutils($mysqli);
         if ($session == 'NOTSET') {
             $session = $yearutils->get_current_session();
@@ -343,16 +343,16 @@ class UON_SATURN extends SmsUtils
                     }
 
                     // Check to see if any details of the user account need updating.
-                    if (strtoupper(substr($sms->ReasonForLeaving, 0, 3)) == 'W/D') {
+                    if (mb_strtoupper(mb_substr($sms->ReasonForLeaving, 0, 3)) == 'W/D') {
                             $new_roles = 'left';
-                    } elseif (stripos($sms->ReasonForLeaving, 'not permitted to progress') !== false) {
+                    } elseif (mb_stripos($sms->ReasonForLeaving, 'not permitted to progress') !== false) {
                         $new_roles = 'left';
                     } elseif ($sms->ReasonForLeaving == 'Successfully completed course') {
                         $new_roles = 'graduate';
                     } else {
                         $new_roles = $current_users[$lookup_username]['roles'];             // Keep the roles same as they were.
-                        
-                        if ($new_roles != 'left' and $new_roles != 'graduate' and strpos($new_roles, 'Student') === false) {
+
+                        if ($new_roles != 'left' and $new_roles != 'graduate' and mb_strpos($new_roles, 'Student') === false) {
                             $new_roles .= ',Student';           // Add in 'student' role if missing.
                         }
                     }
@@ -431,7 +431,7 @@ class UON_SATURN extends SmsUtils
             }
             module_utils::log_sms_imports($idMod, $enrolements, $enrolement_details, $deletions, $deletion_details, $import_type, $session, $mysqli);
         }
-    
+
         $this->set_enrolement_no($enrolements, $module);
         $this->set_deletion_no($deletions, $module);
 
@@ -449,22 +449,22 @@ class UON_SATURN extends SmsUtils
             file_put_contents($dir . '/' . 'sum-uon-' . $module . '.txt', "$enrolements, $deletions\r\n$import_type\r\n$enrolement_details\r\n$deletion_details\r\n");
         }
     }
-  
+
     private function set_enrolement_no($number, $module)
     {
         $this->enrolement_no[$module] = $number;
     }
-  
+
     public function get_enrolement_no($module)
     {
         return $this->enrolement_no[$module];
     }
-  
+
     private function set_deletion_no($number, $module)
     {
         $this->deletion_no[$module] = $number;
     }
-  
+
     public function get_deletion_no($module)
     {
         return $this->deletion_no[$module];

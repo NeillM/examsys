@@ -30,7 +30,7 @@ class module
     protected $langcomponent = 'classes/module';
     /** @var array language strings */
     protected $langstrings;
-  
+
     /**
      * constructor
      */
@@ -147,7 +147,7 @@ class module
             $checklist .= ',mapping';
         }
         if ($checklist != '') {
-            $tmp_checklist = substr($checklist, 1);
+            $tmp_checklist = mb_substr($checklist, 1);
         }
 
         $result = $db->prepare('INSERT INTO modules VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)');
@@ -164,7 +164,7 @@ class module
         if ($externalid == '') {
             $smsurl = $configObject->get_setting('core', 'cfg_sms_url');
             // If sms import enabled on module and sms_api matches sms integration update enrolements.
-            if ($sms_import == 1 and substr($sms_api, 0, strlen($smsurl)) === $smsurl) {
+            if ($sms_import == 1 and mb_substr($sms_api, 0, mb_strlen($smsurl)) === $smsurl) {
                 $SMS = SmsUtils::GetSmsUtils();
                 $SMS->update_module_enrolement($moduleid, $idMod, $sms_api, $db);
             }
@@ -200,7 +200,7 @@ class module
 
         $changed = false;
         foreach ($updateData as $key => $val) {
-            $key = strtolower($key);
+            $key = mb_strtolower($key);
             if ($key == 'idmod') {
                 //never change the id :-)
                 continue;
@@ -310,7 +310,7 @@ class module
             if (!is_null($userObject)) {
                 $logger = new Logger($db);
                 foreach ($modinfo as $key => $val) {
-                      $key = strtolower($key);
+                      $key = mb_strtolower($key);
                     if ($key == 'idmod') {
                         continue;
                     }
@@ -743,7 +743,7 @@ class module
 
         return $paper_types;
     }
-  
+
     /**
      * Update module based on id
      * @param integer $id
@@ -768,14 +768,14 @@ class module
         $result = $db->prepare($sql);
         $result->bind_param('sssisi', $code, $name, $sms, $schoolid, $externalid, $id);
         $res = $result->execute();
-    
+
         if ($db->errno != 0) {
             return false;
         }
 
         return true;
     }
-  
+
     /**
      * Check if papers or enrolements exist on this module
      * @param integer $id module us
@@ -796,7 +796,7 @@ class module
         $result->close();
         return false;
     }
-  
+
     /**
      * Get the module id given external id
      *
@@ -822,7 +822,7 @@ class module
         $result->close();
         return $modid;
     }
-  
+
     /**
      * Compare the modules in the external system and rogo
      * @param array $external list of external system modules
@@ -852,7 +852,7 @@ class module
         $result->close();
         return $diff;
     }
-  
+
     /**
      * Log enrolments and unenrolments into sms_imports table
      * Note: the table amalgamates data on a daily basis
@@ -872,7 +872,7 @@ class module
         $result->execute();
         $result->close();
     }
-  
+
     /**
      * Restore module from recycle bin
      * @param mysqli $db db connection
@@ -890,7 +890,7 @@ class module
         }
         return true;
     }
-  
+
     /**
      * Get the modules whose final grade for a student is affected by a paper
      * @param integer $paperid paper identifier

@@ -63,7 +63,7 @@ function StripForTitle($in)
     $in = str_ireplace("\n", ' ', $in);
     $in = str_ireplace("\r", ' ', $in);
     $in = str_ireplace("\t", ' ', $in);
-    while (strpos($in, '  ') > 0) {
+    while (mb_strpos($in, '  ') > 0) {
         $in = str_replace('  ', ' ', $in);
     }
 
@@ -113,7 +113,7 @@ function ExplodeToArray(&$array, $string, $delim = '|')
     $output = array();
     $arr = explode($delim, $string);
     foreach ($arr as $value) {
-        $value = strtolower($value);
+        $value = mb_strtolower($value);
         $output[] = $value;
     }
 
@@ -303,7 +303,7 @@ function ConvertType($type)
 
 function GenerateMediaType($filename)
 {
-    $ext = strtolower(substr($filename, strrpos($filename, '.') + 1));
+    $ext = mb_strtolower(mb_substr($filename, mb_strrpos($filename, '.') + 1));
 
     return 'image/' . $ext;
 }
@@ -315,7 +315,7 @@ function for_id($in)
     $in = str_replace('"', '_', $in);
     $in = str_replace("'", '_', $in);
     $in = str_replace('’', '_', $in);
-  
+
     return $in;
 }
 
@@ -325,8 +325,8 @@ function MakeValidHTML($in, $trim = 0)
     if ($trim == 0) {
         $in = trim($in);
     }
-    if (substr($in, 0, 2) == '</') {
-        $in = substr($in, strpos($in, '>') + 1);
+    if (mb_substr($in, 0, 2) == '</') {
+        $in = mb_substr($in, mb_strpos($in, '>') + 1);
     }
 
     $in = '<div>XXX-START-XXX' . $in . 'XXX-END-XXX</div>';
@@ -336,18 +336,18 @@ function MakeValidHTML($in, $trim = 0)
     $doc->loadHTML(mb_convert_encoding($in, 'HTML-ENTITIES', 'UTF-8'));
 
     $in = $doc->saveHTML();
-  
+
     // Required specifically for Likert Scales but mostly harmless
     $in = str_replace('<br>', '<br />', $in);
 
-    $in = substr($in, strpos($in, 'XXX-START-XXX') + 13);
-    $in = substr($in, 0, strpos($in, 'XXX-END-XXX'));
+    $in = mb_substr($in, mb_strpos($in, 'XXX-START-XXX') + 13);
+    $in = mb_substr($in, 0, mb_strpos($in, 'XXX-END-XXX'));
     if ($trim == 0) {
         $in = trim($in);
     }
     // remove any closing tags at start just in case
-    if (substr($in, 0, 2) == '</') {
-        $in = substr($in, strpos($in, '>') + 1);
+    if (mb_substr($in, 0, 2) == '</') {
+        $in = mb_substr($in, mb_strpos($in, '>') + 1);
     }
 
     return $in;
@@ -357,18 +357,18 @@ function RemoveLoneP($in)
 {
     // some qti files have a lone . at end of <p> or <span> tags, remove it
     $append = '';
-    if (substr($in, strlen($in) - 2, 2) == '>.') {
-        $in = substr($in, 0, strlen($in) - 1);
+    if (mb_substr($in, mb_strlen($in) - 2, 2) == '>.') {
+        $in = mb_substr($in, 0, mb_strlen($in) - 1);
         $append = '.';
     }
 
     //echo htmlentities("IN :!$in!")."<br>";
     $in = trim($in);
-    if (substr($in, 0, 1) == '<' && substr($in, strlen($in) - 1, 1) == '>' && strlen($in) > 10) {
-        $opentag = strtolower(substr($in, 1, strpos($in, '>') - 1));
-        $opentag = trim(substr($opentag, 0, strpos($opentag, ' ')));
-        $closetag = substr($in, strrpos($in, '<') + 2);
-        $closetag = strtolower(substr($closetag, 0, strlen($closetag) - 1));
+    if (mb_substr($in, 0, 1) == '<' && mb_substr($in, mb_strlen($in) - 1, 1) == '>' && mb_strlen($in) > 10) {
+        $opentag = mb_strtolower(mb_substr($in, 1, mb_strpos($in, '>') - 1));
+        $opentag = trim(mb_substr($opentag, 0, mb_strpos($opentag, ' ')));
+        $closetag = mb_substr($in, mb_strrpos($in, '<') + 2);
+        $closetag = mb_strtolower(mb_substr($closetag, 0, mb_strlen($closetag) - 1));
 
         if ($opentag != $closetag) {
             return $in . $append;
@@ -378,10 +378,10 @@ function RemoveLoneP($in)
             return $in . $append;
         }
 
-        $middletext = substr($in, strpos($in, '>') + 1);
-        $middletext = substr($middletext, 0, strrpos($middletext, '<'));
+        $middletext = mb_substr($in, mb_strpos($in, '>') + 1);
+        $middletext = mb_substr($middletext, 0, mb_strrpos($middletext, '<'));
 
-        if (strpos(' ' . $middletext, '<' . $opentag . '>') > 0) {
+        if (mb_strpos(' ' . $middletext, '<' . $opentag . '>') > 0) {
             return $in . $append;
         }
 
@@ -411,7 +411,7 @@ function OrderToStr($no)
 
 function RemoveStNdRd($in)
 {
-    $in = strtolower(trim($in));
+    $in = mb_strtolower(trim($in));
 
     if ($in == 'na' || $in == 'n/a') {
         return 9990;
@@ -431,7 +431,7 @@ function RemoveStNdRd($in)
 
 function MonthToNumeric($month)
 {
-    $month = strtolower(substr($month, 0, 3));
+    $month = mb_strtolower(mb_substr($month, 0, 3));
     if ($month == 'jan') {
         return 1;
     }
@@ -495,7 +495,7 @@ function IsAdminUser($userid)
     $db->AddWhere('id', $userid, 'i');
     $user = $db->GetSingleRow();
 
-    if (strpos(' ' . $user['roles'], 'SysAdmin') > 0) {
+    if (mb_strpos(' ' . $user['roles'], 'SysAdmin') > 0) {
         return true;
     }
 

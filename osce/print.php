@@ -46,7 +46,7 @@ $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $s
     ul {margin-top:0px; margin-bottom:0px}
   </style>
   </head>
-  
+
   <body>
   <h1><?php echo $propertyObj->get_paper_title(); ?></h1>
   <table cellpadding="2" cellspacing="0" border="0" style="width:100%">
@@ -55,9 +55,9 @@ $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $s
   <td style="text-align:left"><strong><?php echo $string['examiner']; ?></strong></td>
   </tr>
   </table>
-  
+
   <br />
-  
+
   <table cellpadding="2" cellspacing="0" border="0">
 <?php
 
@@ -71,7 +71,7 @@ $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $s
 while ($result->fetch()) {
     if ($question_no == 1) {
         // Header row
-        $cols = substr_count($display_method, '|');
+        $cols = mb_substr_count($display_method, '|');
         $headings = explode('|', $display_method);
         echo '<tr><td></td>';
         for ($i = 0; $i < $cols; $i++) {
@@ -94,9 +94,9 @@ while ($result->fetch()) {
     $question_no++;
 }
   $result->close();
-?>  
+?>
   </table>
-  
+
   <br /><div><strong><?php echo $string['overallclassification']; ?></strong></div>
   <br />
   <div><?php echo $string['msg']; ?></div>

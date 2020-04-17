@@ -71,7 +71,7 @@ if ($submit) {
 }
 
 if ($submit and $unique_username) {
-    $username_problem = ($new_username == '' or strpos($new_username, '_') !== false);
+    $username_problem = ($new_username == '' or mb_strpos($new_username, '_') !== false);
     if ($username_problem or $new_surname == '' or $new_email == '' or $new_first_names == '' or $new_roles == '' or $new_grade == '') {
         $problem = true;
     } else {
@@ -110,9 +110,9 @@ h2 {font-size:120%}
 {$string['password']}: {$new_password}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style=\"color:#808080\">{$string['casesensitive']}</span></p>
 MESSAGE;
 
-            if (strpos($new_roles, 'Staff') !== false) {
+            if (mb_strpos($new_roles, 'Staff') !== false) {
                 $message .= '<p>' . $string['email2'] . " <a href=\"https://{$host}/staff/\">https://{$host}/students/</a></p>";
-            } elseif (strpos($new_roles, 'Student') !== false) {
+            } elseif (mb_strpos($new_roles, 'Student') !== false) {
                 $message .= '<p>' . $string['email2'] . " <a href=\"https://{$host}/students/\">https://{$host}/students/</a></p>";
             } else {
                 $message .= '<p>' . $string['email2'] . " <a href=\"https://{$host}/\"></a>https://{$host}/students/</p>";
@@ -192,7 +192,7 @@ if (!$submit or !$unique_username or $problem) {
         <?php
     }
     ?>
-<tr><td class="field"><?php echo $string['username'] ?></td><td><input<?php if (isset($new_username) and ($new_username == '' or strpos($new_username, '_') !== false or !$unique_username)) {
+<tr><td class="field"><?php echo $string['username'] ?></td><td><input<?php if (isset($new_username) and ($new_username == '' or mb_strpos($new_username, '_') !== false or !$unique_username)) {
     echo ' class="required errfield"';
                       } ?> type="text" id="new_username" name="new_username" size="12" maxlength="15" value="<?php if (isset($new_username)) {
                       echo $new_username;
@@ -258,18 +258,18 @@ if (isset($new_password)) {
     $roles_array[] = 'Staff,Student';
 
     foreach ($roles_array as $value) {
-        if (substr($value, 0, 1) == '#') {
-            $parentRole = substr($value, 1);
+        if (mb_substr($value, 0, 1) == '#') {
+            $parentRole = mb_substr($value, 1);
             echo '<optgroup label="' . $string[$parentRole] . "\">\n";
         } else {
             $display_val = str_replace(' ', '', $value);
             $display_val = str_replace(',', '', $display_val);
-            $display_val = $string[strtolower($display_val)];
+            $display_val = $string[mb_strtolower($display_val)];
             $default = (isset($new_roles) && $new_roles == $value) ? 'selected="selected"' : '';
             echo "<option value=\"$value\" data-parent=\"$parentRole\" $default>$display_val</option>";
         }
 
-        if (substr($value, 0, 1) == '#') {
+        if (mb_substr($value, 0, 1) == '#') {
             $old_optgroup = $value;
             if ($old_optgroup != $value) {
                 echo "</optgroup>\n";
@@ -283,7 +283,7 @@ if (isset($new_password)) {
 <select name="new_grade" id="new_grade" size="1" style="width:350px" data-prev-parent="" required>
     <?php
     echo '<option label="" value=""> </option>';
-  
+
     $old_school = '';
     $result = $mysqli->prepare("SELECT DISTINCT c.name, c.description, s.school FROM courses c INNER JOIN schools s ON c.schoolid=s.id WHERE s.school NOT IN ('university','NHS','N/A') ORDER BY s.school, c.name");
     $result->execute();
@@ -295,15 +295,15 @@ if (isset($new_password)) {
 
         $default = (isset($new_grade) && $new_grade == $name) ? 'selected="selected"' : '';
         echo "<option value=\"$name\" $default>$name: $description</option>\n";
-    
+
         $old_school = $school;
-    
+
         if ($old_school != $school) {
             echo '</optgroup>';
         }
     }
     $result->close();
-  
+
     echo "\n";
     ?>
 <optgroup data-role="Staff" label="<?php echo $string['universitystaff']; ?>">
@@ -315,7 +315,7 @@ if (isset($new_password)) {
 </optgroup>
 <optgroup data-role="Staff" label="<?php echo $string['externalstaff'] ?>">
     <?php
-    if (strpos($_SERVER['HTTP_HOST'], '.uk') !== false) {
+    if (mb_strpos($_SERVER['HTTP_HOST'], '.uk') !== false) {
         $nhslectturerdefault = (isset($new_grade) && $new_grade == 'NHS Lecturer') ? 'selected="selected"' : '';
         echo "<option value=\"NHS Lecturer\" $nhslectturerdefault>" . $string['nhslecturer'] . "</option>\n";
         $nhsadmindefault = (isset($new_grade) && $new_grade == 'NHS Admin') ? 'selected="selected"' : '';

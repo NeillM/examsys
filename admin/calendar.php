@@ -333,7 +333,7 @@ $stmt->close();
             $paper_details[$property_id]['am_pm']         = $am_pm;
             $paper_details[$property_id]['end_date']      = $end_date;
             $paper_details[$property_id]['paper_title']   = $paper_title;
-            if (strlen($paper_details[$property_id]['paper_title']) > 30) {
+            if (mb_strlen($paper_details[$property_id]['paper_title']) > 30) {
                 $paper_details[$property_id]['paper_title'] = str_replace('_', ' ', $paper_details[$property_id]['paper_title']);
             }
             $paper_details[$property_id]['property_id']   = $property_id;
@@ -419,7 +419,7 @@ $stmt->close();
 
         echo '<div>';
         echo "<table class=\"monthgrid\">\n";
-        $tmp_month = strtolower(date('F', mktime(0, 0, 0, $current_month, 1, $current_year)));
+        $tmp_month = mb_strtolower(date('F', mktime(0, 0, 0, $current_month, 1, $current_year)));
         echo "<tr><td class=\"month\"><a name=\"$i\"></a>" . $string[$tmp_month] . "</td></tr>\n";
         echo '<tr><td>';
         echo "<table style=\"width:100%; font-size:85%; margin-left:auto; margin-right:auto\">\n";

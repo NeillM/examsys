@@ -78,7 +78,7 @@ class NetworkUtils
         global $email;
 
         if ($output !== true) {
-            $output = (substr($email, (strlen($domain) * -1)) == $domain);
+            $output = (mb_substr($email, (mb_strlen($domain) * -1)) == $domain);
         }
         return $output;
     }

@@ -109,7 +109,7 @@ if ($stmt) {
             $rating = $string['noncompatible'] . '[COLUMNS-q_id' . $q_id . ']';
         } else {
             // Clearly mark incomplete ratings
-            if (($rating == '') || (substr($rating, -1) == ',') || (substr($rating, 0, 1) == ',') || (preg_match('/,,/', $rating))) {
+            if (($rating == '') || (mb_substr($rating, -1) == ',') || (mb_substr($rating, 0, 1) == ',') || (preg_match('/,,/', $rating))) {
                 $rating = $string['incomplete'] . '[COLUMNS-q_id' . $q_id . ']';
             }
         }
@@ -142,11 +142,11 @@ if ($stmt) {
             $question_number++;
 
             $csvHeader .= ',' . $question_number . ' (' . preg_replace('/,/', ' ', addslashes($method)) . ';';
-        
+
             if ($theme) {
                 $csvHeader .= preg_replace('/,/', ' ', addslashes($theme)) . ';';
             }
-        
+
             $csvHeader .= preg_replace('/,/', ' ', addslashes($string[$q_type])) . ')[COLUMNS-q_id' . $q_id . ']';
         }
 

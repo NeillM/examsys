@@ -240,19 +240,19 @@ class IE_Local_Load extends IE_Main
 
         // parse question into some more meaningful format
         $blankno = 1;
-        while (stripos($q, '[blank]') > 0) {
+        while (mb_stripos($q, '[blank]') > 0) {
             // create new indentifier for the blank option
             $blankid = '%BLANK_' . $blankno . '%';
 
             // locate [blank][/blank] segment
-            $offset = stripos($q, '[blank]');
-            $endoffset = stripos($q, '[/blank]');
+            $offset = mb_stripos($q, '[blank]');
+            $endoffset = mb_stripos($q, '[/blank]');
 
             // pull out list of options and replace segment with blankid created arlier
-            $midpart = substr($q, $offset + 7, $endoffset - $offset - 7);
-            $question[] = substr($q, 0, $offset);
+            $midpart = mb_substr($q, $offset + 7, $endoffset - $offset - 7);
+            $question[] = mb_substr($q, 0, $offset);
             $question[] = $blankid;
-            $q = substr($q, $endoffset + 8);
+            $q = mb_substr($q, $endoffset + 8);
 
             // process the options
             $optlist = explode(',', $midpart);
@@ -352,7 +352,7 @@ class IE_Local_Load extends IE_Main
         foreach ($o_rows as $o_row) {
             $options = new STQ_Dic_Options();
             $options->text = $o_row['option_text'];
-            $options->iscorrect = strtolower($o_row['correct']) == 't' ? 1 : 0;
+            $options->iscorrect = mb_strtolower($o_row['correct']) == 't' ? 1 : 0;
             $options->fb_correct = $o_row['feedback_right'];
             $options->fb_incorrect = $o_row['feedback_wrong'];
             if (!$options->fb_incorrect) {
@@ -586,10 +586,10 @@ class IE_Local_Load extends IE_Main
         $sm = $q_row['display_method'];
 
         // extract the last part of the score method and if true has n/a
-        $store->hasna = strtolower(substr($sm, strrpos($sm, '|') + 1)) == 'true' ? 1 : 0;
+        $store->hasna = mb_strtolower(mb_substr($sm, mb_strrpos($sm, '|') + 1)) == 'true' ? 1 : 0;
 
         // trim off the last scoremethod as this stored has n/a
-        $sm = substr($sm, 0, strrpos($sm, '|'));
+        $sm = mb_substr($sm, 0, mb_strrpos($sm, '|'));
 
         // store rest of the options in scale
         $opts = explode('|', $sm);
@@ -704,7 +704,7 @@ class IE_Local_Load extends IE_Main
             $option = new STQ_Mrq_Option();
             $option->stem = $o_row['option_text'];
             // check correct and map to 1/0
-            $option->is_correct = strtolower($o_row['correct']) == 'y' ? 1 : 0;
+            $option->is_correct = mb_strtolower($o_row['correct']) == 'y' ? 1 : 0;
             $option->fb_correct = $o_row['feedback_right'];
             $option->fb_incorrect = $o_row['feedback_wrong'];
             if ($option->fb_incorrect == '') {

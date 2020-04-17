@@ -88,7 +88,7 @@ class Url
             }
         }
 
-        $url = (isset($server['HTTPS']) && $server['HTTPS'] && !in_array(strtolower($server['HTTPS']), array('off', 'no'))) ? 'https' : 'http';
+        $url = (isset($server['HTTPS']) && $server['HTTPS'] && !in_array(mb_strtolower($server['HTTPS']), array('off', 'no'))) ? 'https' : 'http';
         $url .= '://' . $server['HTTP_HOST'];
         $url .= $server['REQUEST_URI'];
 
@@ -108,9 +108,9 @@ class Url
         $base = rtrim(Config::get_instance()->get('cfg_root_path'), '/');
 
         // Calculate the URL relative to the base of Rogo.
-        if (!empty($base) and strpos($this->parts[static::PATH], $base) === 0) {
+        if (!empty($base) and mb_strpos($this->parts[static::PATH], $base) === 0) {
             // Rogo is in a sub directory.
-            $this->parts[self::ROGOPATH] = substr($this->parts[static::PATH], strlen($base));
+            $this->parts[self::ROGOPATH] = mb_substr($this->parts[static::PATH], mb_strlen($base));
         } else {
             $this->parts[self::ROGOPATH] = $this->parts[static::PATH];
         }

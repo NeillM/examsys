@@ -134,14 +134,14 @@ if ($keyword != '%' and $keyword != '') {
 } elseif ($_GET['type'] != '%') {
     $bank_type = ': ' . $string[$_GET['type']];
 }
-  
+
   echo "<div class=\"head_title\">\n";
   echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
-  
+
   echo '<div class="breadcrumb"><a href="../index.php">' . $string['home'] . '</a>';
 if (isset($_GET['module'])) {
     echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=' . $_GET['module'] . '">' . $module_code . '</a>';
-    
+
     if ($_GET['type'] == 'type') {
         echo '<img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../question/bank.php?type=type&module=' . $_GET['module'] . '">' . $string['questiontype'] . '</a>';
     } elseif ($_GET['type'] == 'bloom') {
@@ -156,11 +156,11 @@ if (isset($_GET['module'])) {
 }
   echo '</div><div class="page_title">' . $string['questionbank'] . "&nbsp;<span id=\"q_count\"></span><span style=\"font-weight:normal\">$bank_type</span></div>";
   echo "</div>\n";
-if ($module != 0 and strpos($module_details['checklist'], 'mapping') === false and $_GET['type'] == 'objective') {
+if ($module != 0 and mb_strpos($module_details['checklist'], 'mapping') === false and $_GET['type'] == 'objective') {
     echo $notice->info_strip($string['modulenomappings'], 100) . "\n</div>\n</body>\n</html>";
     exit;
 }
- 
+
   $staff_modules_sql = '';
 if ($module != '') {
     $module_sql = 'questions_modules.idMod = ' . $_GET['module'];
@@ -188,9 +188,9 @@ if ($keyword != '%' and $keyword != '') {
   $display_no = 0;
 
   $retired_in = '-1,' . implode(',', QuestionStatus::get_retired_status_ids($status_array));
-    
+
     $questions = array();
-        
+
 if (isset($_GET['sortby'])) {
     $sortby = $_GET['sortby'];
 } else {
@@ -200,7 +200,7 @@ if (isset($_GET['sortby'])) {
         $sortby = 'leadin';
     }
 }
-    
+
 if (isset($_GET['ordering'])) {
     $ordering = $_GET['ordering'];
 } else {
@@ -210,7 +210,7 @@ if (isset($_GET['ordering'])) {
         $ordering = 'asc';
     }
 }
-    
+
 if ($sortby == 'modified') {
     $tmp_sortby = 'last_edited';
 } else {
@@ -239,7 +239,7 @@ if ($_GET['module'] == '0') {
         $sql .= " AND status NOT IN ($retired_in)";
     }
 }
-  
+
   $search_results = $mysqli->prepare($sql);
   $search_results->execute();
   $search_results->bind_result($extra_field, $p, $d, $q_id, $theme, $leadin, $q_type, $last_edited, $modified, $locked, $status, $bloom);
@@ -259,7 +259,7 @@ if (isset($_GET['type']) and $_GET['type'] == 'all' and $search_results->num_row
     echo $notice->info_strip($string['noquestions'], 100) . "\n</div>\n</body>\n</html>";
     exit;
 }
-  
+
   $params = '';
 if (isset($_GET['type'])) {
     $params .= '&type=' . $_GET['type'];
@@ -270,7 +270,7 @@ if (isset($_GET['module'])) {
 if (isset($_GET['keyword'])) {
     $params .= '&keyword=' . $_GET['keyword'];
 }
-    
+
   echo "<table id=\"maindata\" class=\"header tablesorter\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:100%\">\n";
   echo "<thead>\n";
 foreach ($table_order as $display => $col_width) {
@@ -297,7 +297,7 @@ foreach ($table_order as $display => $col_width) {
         } elseif ($_GET['type'] == 'keyword') {
             echo ' ' . $p;
         } elseif ($_GET['type'] == 'bloom' and $bloom != '') {
-            echo ' ' . strtolower($bloom);
+            echo ' ' . mb_strtolower($bloom);
         } elseif ($_GET['type'] == 'performance') {
             if ($p >= 80 and $p <= 100) {
                 echo ' veryeasy';     // Very Easy
@@ -327,9 +327,9 @@ foreach ($table_order as $display => $col_width) {
             echo ' lock';
         }
         echo '"';
-    
+
         echo ' id="l' . $q_id . '_' . $display_no . '">';
-    
+
         if ($q_type == 'sct') {
             $parts = explode('~', $leadin);
             $leadin = $parts[0];
@@ -346,7 +346,7 @@ foreach ($table_order as $display => $col_width) {
         } else {
             echo '<td class="l';
         }
-        if (strlen($leadin) > $leadinlength) {
+        if (mb_strlen($leadin) > $leadinlength) {
             $fullText = QuestionUtils::clean_leadin($leadin, 0);
             echo ' extended-leadin" data-extended-leadin="' . htmlspecialchars($fullText);
         }
@@ -355,7 +355,7 @@ foreach ($table_order as $display => $col_width) {
             echo '<span class="t">' . $theme . '</span><br />&nbsp;&nbsp;&nbsp;&nbsp;';
         }
         //sl change this from echo $leadin to below
-    
+
         echo QuestionUtils::clean_leadin($leadin, $leadinlength) . '</td>';
         echo '<td class="nobr">' . $string[$q_type] . '</td>';
         if ($type == 'keyword' or $type == 'bloom') {
@@ -377,7 +377,7 @@ foreach ($table_order as $display => $col_width) {
     if (isset($_GET['ordering'])) {
         $stateutil->setState($userObject->get_user_ID(), 'ordering', $_GET['ordering'], $_SERVER['PHP_SELF'], $mysqli);
     }
-  
+
     $mysqli->close();
     ?>
 </tbody>

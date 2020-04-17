@@ -75,24 +75,24 @@ if (!$userObject->has_role(array('SysAdmin', 'Admin'))) {
   $old_letter = '';
 
   $tmp_role = 'Staff%';
-  
+
   $result = $mysqli->prepare("SELECT DISTINCT id, surname, initials, first_names, title FROM users WHERE surname != '' AND roles LIKE ? AND grade != 'left' AND user_deleted IS NULL ORDER BY surname, initials");
   $result->bind_param('s', $tmp_role);
   $result->execute();
   $result->store_result();
   $result->bind_result($tmp_id, $tmp_surname, $tmp_initials, $tmp_first_names, $tmp_title);
 while ($result->fetch()) {
-    if ($old_letter != strtoupper(substr($tmp_surname, 0, 1))) {
-        echo '<div class="subsect_table"><div class="subsect_title"><nobr>' . strtoupper(substr($tmp_surname, 0, 1)) . '</nobr></div><div class="subsect_hr"><hr noshade="noshade" /></div></div>';
+    if ($old_letter != mb_strtoupper(mb_substr($tmp_surname, 0, 1))) {
+        echo '<div class="subsect_table"><div class="subsect_title"><nobr>' . mb_strtoupper(mb_substr($tmp_surname, 0, 1)) . '</nobr></div><div class="subsect_hr"><hr noshade="noshade" /></div></div>';
     }
-  
+
     $match = false;
     foreach ($team_members as $member) {
         if ($member == $tmp_id) {
             $match = true;
         }
     }
-   
+
     if ($match == true) {
         echo "<div class=\"r2\" id=\"divstaff$staff_no\"><input type=\"checkbox\" name=\"staff$staff_no\" id=\"staff$staff_no\" value=\"" . $tmp_id . '" checked="checked" />';
     } else {
@@ -105,7 +105,7 @@ while ($result->fetch()) {
         $display_text = $tmp_initials;
     }
     echo $tmp_surname . '<span class="g">, ' . $display_text . '. ' . $tmp_title . "</span></label></div>\n";
-    $old_letter = strtoupper(substr($tmp_surname, 0, 1));
+    $old_letter = mb_strtoupper(mb_substr($tmp_surname, 0, 1));
     $staff_no++;
 }
   $result->close();

@@ -84,7 +84,7 @@ $moduleID = Paper_utils::get_modules($paperID, $mysqli);
 if ($userObject->has_role('Student')) {
     // Check for additional password on the paper
     check_paper_password($propertyObj->get_property_id(), $propertyObj->get_password(), $string, $mysqli, true);
-  
+
     $display_correct_answer     = 1;
     $display_question_mark      = 1;
     $display_students_response  = 1;
@@ -132,7 +132,7 @@ if (($bgcolor != '#FFFFFF' and $bgcolor != 'white') or ($fgcolor != '#000000' an
     $css .= ".staffview {\nbackground: -moz-linear-gradient(top, #FF8282, $bgcolor);\nbackground: -webkit-linear-gradient(top, #FF8282, $bgcolor);\nbackground-image: -ms-linear-gradient(top, #FF8282 0%, $bgcolor 100%);\nfilter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF8282', endColorstr='$bgcolor');\n}\n";
 }
 if ($font != 'Arial') {
-    if (strpos($font, ' ') === false) {
+    if (mb_strpos($font, ' ') === false) {
         $css .= "body {font-family:$font,sans-serif}\n";
         $css .= "pre {font-family:$font,sans-serif}\n";
     } else {
@@ -184,15 +184,15 @@ if (isset($_GET['userID'])) {
 } else {
     $userID = $userObject->get_user_ID();
 }
-  
+
   $old_q_id = 0;
   $old_screen = 0;
-  
+
   echo $top_table_html;
   echo '<tr><td><div class="paper">' . $propertyObj->get_paper_title() . '</div></td>';
   echo $logo_html;
   echo '</table>';
-  
+
   // Get any marking override for the paper
   $overrides = array();
   $sql = "SELECT m.q_id, title, surname, date_marked, new_mark_type, adjmark
@@ -208,7 +208,7 @@ while ($result->fetch()) {
     $overrides[$o_q_id] = array('q_id' => $o_q_id, 'title' => $o_title, 'surname' => $o_surname, 'date_marked' => $o_date_marked, 'new_mark_type' => $o_new_mark_type, 'adjmark' => $o_adjmark);
 }
   $result->close();
-  
+
   $status_array = QuestionStatus::get_all_statuses($mysqli, $string, true);
   display_feedback($propertyObj, $userID, $log_type, $userObject, $log_metadata, $mysqli, $status_array, $overrides, $preview_q_id);
 

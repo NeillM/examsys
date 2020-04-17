@@ -78,8 +78,8 @@ function getPaper($paperID)
         $temp_array['questions'][$q_id]['screen'] = $screen;
         $temp_array['questions'][$q_id]['q_type'] = $q_type;
         $temp_array['questions'][$q_id]['leadin'] = trim(str_replace('&nbsp;', ' ', (strip_tags($leadin))));
-        if (strlen($temp_array['questions'][$q_id]['leadin']) > 160) {
-            $temp_array['questions'][$q_id]['leadin'] = substr($temp_array['questions'][$q_id]['leadin'], 0, 160) . '...';
+        if (mb_strlen($temp_array['questions'][$q_id]['leadin']) > 160) {
+            $temp_array['questions'][$q_id]['leadin'] = mb_substr($temp_array['questions'][$q_id]['leadin'], 0, 160) . '...';
         }
         $temp_array['questions'][$q_id]['p_id'] = $p_id;
         $temp_array['questions'][$q_id]['q_id'] = $q_id;
@@ -101,7 +101,7 @@ function getPaper($paperID)
         $temp_array['questionID'] .= $q_id . ',';
     }
     $result->close();
-    $temp_array['questionID'] = substr($temp_array['questionID'], 0, -1);
+    $temp_array['questionID'] = mb_substr($temp_array['questionID'], 0, -1);
     return $temp_array;
 }
 
@@ -127,7 +127,7 @@ function getPaper($paperID)
 <body>
 <?php
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu(147);
 ?>
 <div id="content">

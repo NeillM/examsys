@@ -74,7 +74,7 @@ function check_ebel_distinction_type($reviewID, $db)
     $result->bind_result($distinction_score);
     $result->fetch();
     $result->close();
-    
+
     if (is_null($distinction_score)) {
         $type = 'dna';
     } elseif ($distinction_score === '0.000000') {
@@ -97,7 +97,7 @@ function check_ebel_distinction_type($reviewID, $db)
     // Get any questions to exclude.
     $exclusions = new Exclusion($paperID, $mysqli);
     $exclusions->load();
-  
+
     $current_screen = 1;
     ?>
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
@@ -145,7 +145,7 @@ if (isset($_GET['folder'])) {
 
   echo "<body>\n";
   echo "<div id=\"maincontent\">\n";
-    
+
   require '../include/toprightmenu.inc';
 
 if ($_GET['method'] == 'modified_angoff') {
@@ -157,7 +157,7 @@ if ($_GET['method'] == 'modified_angoff') {
   echo "<form method=\"post\" name=\"questions\" action=\"record_review.php?paperID=$paperID&method=" . $_GET['method'] . "&module=$module&folder=$folder\" autocomplete=\"off\">\n";
 
   $reviews = array();
-  
+
 if (isset($_GET['std_setID'])) {
     $standard_setting = new StandardSetting($mysqli);
     $reviews = $standard_setting->get_ratings_by_question($_GET['std_setID']);
@@ -287,7 +287,7 @@ while ($result->fetch()) {
             $li_set = 1;
         }
         if ($q_media != '' and $q_media != null and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'flash' and $q_type != 'extmatch' and $q_type != 'area') {
-            if (substr($q_media, -4) == '.gif' or substr($q_media, -4) == '.jpg' or substr($q_media, -4) == 'jpeg' or substr($q_media, -4) == '.png') {
+            if (mb_substr($q_media, -4) == '.gif' or mb_substr($q_media, -4) == '.jpg' or mb_substr($q_media, -4) == 'jpeg' or mb_substr($q_media, -4) == '.png') {
                 if ($li_set == 0) {
                     echo '<tr><a name="' . $question_no . '"></a><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
                 }

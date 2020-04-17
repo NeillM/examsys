@@ -75,7 +75,7 @@ function display_lab_stats($lab_count, $string, $db)
         }
     }
     $result->close();
-  
+
     echo "</table>\n";
 }
 
@@ -100,14 +100,14 @@ function display_lab_stats($lab_count, $string, $db)
 <body>
 <?php
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu();
 ?>
 <div id="content">
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../admin/index.php"><?php echo $string['administrativetools']; ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../statistics/index.php"><?php echo $string['statistics']; ?></a></div>
-  <div class="page_title"><?php echo $string['summativeexamstats']; ?>: <span style="font-weight:normal"><?php echo $_GET['calyear']; ?>/<?php echo (substr($_GET['calyear'], 2, 2) + 1); ?></span></div>
+  <div class="page_title"><?php echo $string['summativeexamstats']; ?>: <span style="font-weight:normal"><?php echo $_GET['calyear']; ?>/<?php echo (mb_substr($_GET['calyear'], 2, 2) + 1); ?></span></div>
 </div>
 
 <table class="header" style="font-size:90%">
@@ -141,9 +141,9 @@ $result->store_result();
 $result->bind_result($property_id, $paper_title, $month, $start_date, $end_date, $labs);
 while ($result->fetch()) {
     $paper_count = 0;
-  
+
     count_labs($labs, $lab_count);
-  
+
     $paper_data = $mysqli->prepare("SELECT DISTINCT userid FROM log_metadata, users WHERE log_metadata.userID = users.ID AND roles IN ('Student', 'graduate') AND paperID = ? AND DATE_ADD(started, INTERVAL 2 MINUTE) >= ? AND started <= ?");
     $paper_data->bind_param('iss', $property_id, $start_date, $end_date);
     $paper_data->execute();
@@ -159,7 +159,7 @@ while ($result->fetch()) {
         }
     }
     $paper_data->close();
-  
+
     if ($old_month != $month) {
         if ($old_month != '') {
             display_row($old_month, $string, $month_paper_no, $month_papers_unused, $month_student_no, $month_min, $month_max, $current_year);
@@ -170,7 +170,7 @@ while ($result->fetch()) {
         $month_max = 0;
         $month_papers_unused = 0;
     }
-  
+
     if ($paper_count > 0) {
         $total_paper_no++;
         $total_student_no += $paper_count;
@@ -203,6 +203,6 @@ $result->close();
 ?>
 </blockquote>
 </div>
-  
+
 </body>
 </html>

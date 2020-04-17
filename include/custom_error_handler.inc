@@ -215,7 +215,7 @@ function error_handling($context = null)
 function customErrorHandler($errno, $errstr, $errfile, $errline, $context)
 {
     global $debug_pagestart, $mysqli;
-    
+
     $variables = '';
     $configObject = Config::get_instance();
     $notice = UserNotices::get_instance();
@@ -276,17 +276,17 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context)
 
     // Errors we do not want to log.
     if ($error_type == 'Warning' and $dispallerrors !== true) {
-        if (strpos($errstr, 'mysqli::mysqli()') !== false) {
+        if (mb_strpos($errstr, 'mysqli::mysqli()') !== false) {
             return true;
-        } elseif (strpos($errstr, 'The device is not ready.') !== false) {
+        } elseif (mb_strpos($errstr, 'The device is not ready.') !== false) {
             return true;
-        } elseif (strpos($errstr, 'Access is denied.') !== false) {
+        } elseif (mb_strpos($errstr, 'Access is denied.') !== false) {
             return true;
-        } elseif (strpos($errstr, 'ldap_bind()') !== false) {
+        } elseif (mb_strpos($errstr, 'ldap_bind()') !== false) {
             return true;
-        } elseif (strpos($errstr, 'ldap_search()') !== false) {
+        } elseif (mb_strpos($errstr, 'ldap_search()') !== false) {
             return true;
-        } elseif (strpos($errstr, 'simplexml_load_string()') !== false) {
+        } elseif (mb_strpos($errstr, 'simplexml_load_string()') !== false) {
             //QTI imports with invalid XML cause lots of warnings in the error logs. Filter them out.
             return false;
         }
@@ -294,7 +294,7 @@ function customErrorHandler($errno, $errstr, $errfile, $errline, $context)
 
 
     if ($dispallerrors === true or $error_type != 'Notice') { // Record errors that are not notices.
-        if (strpos($errstr, 'customErrorHandler') !== false and strpos($errstr, "Couldn't fetch mysqli") !== false) {
+        if (mb_strpos($errstr, 'customErrorHandler') !== false and mb_strpos($errstr, "Couldn't fetch mysqli") !== false) {
             return true; // DO NOT REMOVE THIS STOPS mysqli error when retreiving mysqli->error in some situations
         }
 
@@ -504,7 +504,7 @@ function DebugBackTraceDisplay($obj)
         }
     }
     $str = $str . '<br />';
-    $str = substr($str, 6);
+    $str = mb_substr($str, 6);
 
     return $str;
 }

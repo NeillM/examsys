@@ -47,15 +47,15 @@ class Review
         $this->paperID          = $paperID;
         $this->reviewerID       = $reviewerID;
         $this->review_type  = $review_type;
-        
+
         $this->get_metadataID();
     }
-  
+
     private function time_to_seconds($seconds)
     {
-        $hr = intval(substr($seconds, 8, 2));
-        $min = intval(substr($seconds, 10, 2));
-        $sec = intval(substr($seconds, 12, 2));
+        $hr = intval(mb_substr($seconds, 8, 2));
+        $min = intval(mb_substr($seconds, 10, 2));
+        $sec = intval(mb_substr($seconds, 12, 2));
 
         return ($hr * 3600) + ($min * 60) + $sec;
     }
@@ -100,7 +100,7 @@ class Review
         $question_no = 0;
         $old_q_id = null;
         $submit_time = date('YmdHis', time());
-    
+
         // Get page post variables.
         $previous_duration = param::required('previous_duration', param::INT, param::FETCH_POST);
         $pagestart = param::required('page_start', param::ALPHANUM, param::FETCH_POST);
@@ -124,14 +124,14 @@ SQL;
         $stmt->execute();
         $stmt->bind_result($q_id, $q_type, $commentid);
         $stmt->store_result();
-    
+
         // Calculate the duration, while it is stored against each comment, it seems to be calculated on a per page basis.
         $tmp_duration = $this->time_to_seconds($submit_time) - $this->time_to_seconds($pagestart);
         if ($tmp_duration < 0) {
             $tmp_duration += 86400;
         }
         $tmp_duration += $previous_duration;
-    
+
         // Prepare the queries that will be used in the loop, we might need to insert or update so prepare both.
         $insertsql = <<<SQL
 INSERT INTO review_comments
@@ -212,7 +212,7 @@ SQL;
         }
         $result->close();
     }
-  
+
     public function get_category($q_id)
     {
         if (isset($this->reviews_array[$q_id]['category'])) {

@@ -179,8 +179,8 @@ function marks_from_file($notice, $userObj, $paperID, $fileName, $db, $string)
                                 $cat2no = ['fail' => 1, 'pass' => 2];
                                 break;
                         }
-                        if (isset($cat2no[strtolower(trim($fields[$question_no + 2]))])) {
-                            $overall_rating = $cat2no[strtolower(trim($fields[$question_no + 2]))];
+                        if (isset($cat2no[mb_strtolower(trim($fields[$question_no + 2]))])) {
+                            $overall_rating = $cat2no[mb_strtolower(trim($fields[$question_no + 2]))];
                         } else {
                             $overall_rating = 'ERROR';
                         }

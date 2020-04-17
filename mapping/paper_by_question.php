@@ -66,7 +66,7 @@ $mediadirectory = rogo_directory::get_directory('media');
 <body>
 <?php
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu(147);
 ?>
 <div id="content">
@@ -113,7 +113,7 @@ if ($folderID != '') {
         printf($string['nomatchsession'], $tmp_match, $session);
         echo "</td></tr>\n</table>\n";
     }
-  
+
     echo "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\"  style=\"width:100%\">\n";
     $old_p_id = 0;
     $row_no = 0;
@@ -128,8 +128,8 @@ if ($folderID != '') {
         $temp_array[$row_no]['screen'] = $screen;
         $temp_array[$row_no]['q_type'] = $q_type;
         $temp_array[$row_no]['leadin'] = trim(str_replace('&nbsp;', ' ', (strip_tags($leadin))));
-        if (strlen($temp_array[$row_no]['leadin']) > 160) {
-            $temp_array[$row_no]['leadin'] = substr($temp_array[$row_no]['leadin'], 0, 160) . '...';
+        if (mb_strlen($temp_array[$row_no]['leadin']) > 160) {
+            $temp_array[$row_no]['leadin'] = mb_substr($temp_array[$row_no]['leadin'], 0, 160) . '...';
         }
         $temp_array[$row_no]['p_id'] = $p_id;
         $temp_array[$row_no]['q_id'] = $q_id;
@@ -234,7 +234,7 @@ if ($folderID != '') {
             echo $temp_array[$x]['leadin'] . '&nbsp;&nbsp;';
             if ($temp_array[$x]['q_type'] != 'info') {
                 echo "<img class=\"mapping\" style=\"cursor: pointer\" data-qno=\"$question_number\" data-pid=\"$paperID\" data-qid=\"" . $temp_array[$x]['q_id'] . "\" data-session=\"$session\" src=\"../artwork/map_question.gif\" width=\"16\" height=\"14\"/></td>";
-            } elseif (strpos($temp_array[$x]['q_media'], '.swf') !== false) {
+            } elseif (mb_strpos($temp_array[$x]['q_media'], '.swf') !== false) {
                 echo '<td><img src="../artwork/flash_icon.png" width="48" height="48" alt="Embedded Flash object" border="0" /></td>';
                 if ($temp_array[$x]['q_type'] != 'info') {
                     echo "<img class=\"mapping\" style=\"cursor: pointer\" data-qno=\"$question_number\" data-pid=\"$paperID\" data-qid=\"" . $temp_array[$x]['q_id'] . "\" data-session=\"$session\" src=\"../artwork/map_question.gif\" width=\"16\" height=\"14\"/></td>";

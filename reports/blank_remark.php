@@ -56,7 +56,7 @@ while ($result->fetch()) {
     // Decode user answers into an array of lowercase strings.
     $tmp_answer = json_decode($user_answer);
     foreach ($tmp_answer as &$answer) {
-        $answer = strtolower(StringUtils::clean_and_trim($answer));
+        $answer = mb_strtolower(StringUtils::clean_and_trim($answer));
     }
     $log_answers[$type][$id] = $tmp_answer;
 }
@@ -65,9 +65,9 @@ $blank_details = explode('[blank', $option_text);
 for (
     $i = 1; $i < count($blank_details); $i++
 ) {
-    $end_start_tag = strpos($blank_details[$i], ']');
-    $start_end_tag = strpos($blank_details[$i], '[/blank]');
-    $blank_options = substr($blank_details[$i], ($end_start_tag + 1), ($start_end_tag - 1));
+    $end_start_tag = mb_strpos($blank_details[$i], ']');
+    $start_end_tag = mb_strpos($blank_details[$i], '[/blank]');
+    $blank_options = mb_substr($blank_details[$i], ($end_start_tag + 1), ($start_end_tag - 1));
     if ($i == $_GET['blank'] && $blank_options !== '') {
         $blanks = explode(',', $blank_options);
     }
@@ -76,7 +76,7 @@ for (
 // Merge the same option on its own and with spaces (e.g. 'cat' and ' cat').
 $new_blanks = array();
 foreach ($blanks as $blank) {
-    $new_blanks[] = strtolower(trim($blank));
+    $new_blanks[] = mb_strtolower(trim($blank));
 }
 $blanks = array_unique($new_blanks);
 ?>
@@ -145,7 +145,7 @@ ksort($unique_list);
 foreach ($unique_list as $word => $occurrance) {
     $match = false;
     foreach ($blanks as $blank) {
-        if (strtolower($word) == strtolower($blank)) {
+        if (mb_strtolower($word) == mb_strtolower($blank)) {
             $match = true;
             $word = $blank;
         }

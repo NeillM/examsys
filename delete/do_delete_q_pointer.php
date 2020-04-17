@@ -39,8 +39,8 @@ if ($properties->get_summative_lock()) {
     exit;
 }
 
-$tmp_pIDs = explode(',', substr($_POST['pID'], 1));
-$tmp_questionIDs = explode(',', substr($_POST['questionID'], 1));
+$tmp_pIDs = explode(',', mb_substr($_POST['pID'], 1));
+$tmp_questionIDs = explode(',', mb_substr($_POST['questionID'], 1));
 
 for ($i = 0; $i < count($tmp_pIDs); $i++) {
     if ($result = $mysqli->prepare('DELETE FROM papers WHERE p_id = ?')) {

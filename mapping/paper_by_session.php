@@ -64,7 +64,7 @@ $paper_type  = $propertyObj->get_paper_type();
 <body>
 <?php
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu(147);
 ?>
 <div id="content">
@@ -138,12 +138,12 @@ while ($result->fetch()) {
   </tr>
   <tr><td colspan="2" style="background-color:#1E3C7B">&nbsp;</td></tr>
   <?php
-    $questionID_list = substr($questionID_list, 0, -1);
+    $questionID_list = mb_substr($questionID_list, 0, -1);
     $total_random_mark = 0;
     $total_marks = 0;
     if ($row_no > 0) {
         $tmp_match = Paper_utils::academic_year_from_title($paper_title);
-        
+
         if ($tmp_match !== false and $tmp_match != $session) {
             echo "<tr><td colspan=\"4\" style=\"padding: 0\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; font-size:100%\">\n";
             echo '<tr><td class="redwarn" style="width:40px"><img src="../artwork/exclamation_red_bg.png" width="32" height="32" alt="Warning" style="margin-bottom:-1px" /></td><td colspan="7" class="redwarn"><strong>' . $string['warning'] . '</strong>&nbsp;&nbsp;';

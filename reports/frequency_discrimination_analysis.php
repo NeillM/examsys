@@ -50,7 +50,7 @@ set_time_limit(0);
 $propertyObj = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
 $gradebook = new gradebook($mysqli);
 $graded = $gradebook->paper_graded($paperID);
-    
+
 $stop_words = array('-' => '-','a' => 'a','about' => 'about','above' => 'above','across' => 'across','after' => 'after','again' => 'again','against' => 'against','all' => 'all','almost' => 'almost','alone' => 'alone','along' => 'along','already' => 'already','also' => 'also','although' => 'although','always' => 'always','among' => 'among','an' => 'an','and' => 'and','another' => 'another','any' => 'any','anybody' => 'anybody','anyone' => 'anyone','anything' => 'anything','anywhere' => 'anywhere','are' => 'are','area' => 'area','areas' => 'areas','around' => 'around','as' => 'as','ask' => 'ask','asked' => 'asked','asking' => 'asking','asks' => 'asks','at' => 'at','away' => 'away','b' => 'b','back' => 'back','backed' => 'backed','backing' => 'backing','backs' => 'backs','be' => 'be','became' => 'became','because' => 'because','become' => 'become','becomes' => 'becomes','been' => 'been','before' => 'before','began' => 'began','behind' => 'behind','being' => 'being','beings' => 'beings','best' => 'best','better' => 'better','between' => 'between','big' => 'big','both' => 'both','but' => 'but','by' => 'by','c' => 'c','came' => 'came','can' => 'can','cannot' => 'cannot','case' => 'case','cases' => 'cases','certain' => 'certain','certainly' => 'certainly','clear' => 'clear','clearly' => 'clearly','come' => 'come','could' => 'could','d' => 'd','did' => 'did','differ' => 'differ','different' => 'different','differently' => 'differently','do' => 'do','does' => 'does','done' => 'done','down' => 'down','downed' => 'downed','downing' => 'downing','downs' => 'downs','during' => 'during','e' => 'e','each' => 'each','early' => 'early','either' => 'either','end' => 'end','ended' => 'ended','ending' => 'ending','ends' => 'ends','enough' => 'enough','even' => 'even','evenly' => 'evenly','ever' => 'ever','every' => 'every','everybody' => 'everybody','everyone' => 'everyone','everything' => 'everything','everywhere' => 'everywhere','f' => 'f','face' => 'face','faces' => 'faces','fact' => 'fact','facts' => 'facts','far' => 'far','felt' => 'felt','few' => 'few','find' => 'find','finds' => 'finds','first' => 'first','for' => 'for','four' => 'four','from' => 'from','full' => 'full','fully' => 'fully','further' => 'further','furthered' => 'furthered','furthering' => 'furthering','furthers' => 'furthers','g' => 'g','gave' => 'gave','general' => 'general','generally' => 'generally','get' => 'get','gets' => 'gets','give' => 'give','given' => 'given','gives' => 'gives','go' => 'go','going' => 'going','good' => 'good','goods' => 'goods','got' => 'got','great' => 'great','greater' => 'greater','greatest' => 'greatest','group' => 'group','grouped' => 'grouped','grouping' => 'grouping','groups' => 'groups','h' => 'h','had' => 'had','has' => 'has','have' => 'have','having' => 'having','he' => 'he','her' => 'her','here' => 'here','herself' => 'herself','high' => 'high','higher' => 'higher','highest' => 'highest','him' => 'him','himself' => 'himself','his' => 'his','how' => 'how','however' => 'however','i' => 'i','if' => 'if','important' => 'important','in' => 'in','interest' => 'interest','interested' => 'interested','interesting' => 'interesting','interests' => 'interests','into' => 'into','is' => 'is','it' => 'it','its' => 'its','itself' => 'itself','j' => 'j','just' => 'just','k' => 'k','keep' => 'keep','keeps' => 'keeps','kind' => 'kind','knew' => 'knew','know' => 'know','known' => 'known','knows' => 'knows','l' => 'l','large' => 'large','largely' => 'largely','last' => 'last','later' => 'later','latest' => 'latest','least' => 'least','less' => 'less','let' => 'let','lets' => 'lets','like' => 'like','likely' => 'likely','long' => 'long','longer' => 'longer','longest' => 'longest','m' => 'm','made' => 'made','make' => 'make','making' => 'making','man' => 'man','many' => 'many','may' => 'may','me' => 'me','member' => 'member','members' => 'members','men' => 'men','might' => 'might','more' => 'more','most' => 'most','mostly' => 'mostly','mr' => 'mr','mrs' => 'mrs','much' => 'much','must' => 'must','my' => 'my','myself' => 'myself','n' => 'n','necessary' => 'necessary','need' => 'need','needed' => 'needed','needing' => 'needing','needs' => 'needs','never' => 'never','new' => 'new','newer' => 'newer','newest' => 'newest','next' => 'next','no' => 'no','nobody' => 'nobody','non' => 'non','noone' => 'noone','not' => 'not','nothing' => 'nothing','now' => 'now','nowhere' => 'nowhere','number' => 'number','numbers' => 'numbers','of' => 'o','of' => 'of','off' => 'off','often' => 'often','old' => 'old','older' => 'older','oldest' => 'oldest','on' => 'on','once' => 'once','one' => 'one','only' => 'only','open' => 'open','opened' => 'opened','opening' => 'opening','opens' => 'opens','or' => 'or','order' => 'order','ordered' => 'ordered','ordering' => 'ordering','orders' => 'orders','other' => 'other','others' => 'others','our' => 'our','out' => 'out','over' => 'over','p' => 'p','part' => 'part','parted' => 'parted','parting' => 'parting','parts' => 'parts','per' => 'per','perhaps' => 'perhaps','place' => 'place','places' => 'places','point' => 'point','pointed' => 'pointed','pointing' => 'pointing','points' => 'points','possible' => 'possible','present' => 'present','presented' => 'presented','presenting' => 'presenting','presents' => 'presents','problem' => 'problem','problems' => 'problems','put' => 'put','puts' => 'puts','q' => 'q','quite' => 'quite','r' => 'r','rather' => 'rather','really' => 'really','right' => 'right','room' => 'room','rooms' => 'rooms','s' => 's','said' => 'said','same' => 'same','saw' => 'saw','say' => 'say','says' => 'says','second' => 'second','seconds' => 'seconds','see' => 'see','seem' => 'seem','seemed' => 'seemed','seeming' => 'seeming','seems' => 'seems','sees' => 'sees','several' => 'several','shall' => 'shall','she' => 'she','should' => 'should','show' => 'show','showed' => 'showed','showing' => 'showing','shows' => 'shows','side' => 'side','sides' => 'sides','since' => 'since','small' => 'small','smaller' => 'smaller','smallest' => 'smallest','so' => 'so','some' => 'some','somebody' => 'somebody','someone' => 'someone','something' => 'something','somewhere' => 'somewhere','state' => 'state','states' => 'states','still' => 'still','such' => 'such','sure' => 'sure','t' => 't','take' => 'take','taken' => 'taken','than' => 'than','that' => 'that','the' => 'the','their' => 'their','them' => 'them','then' => 'then','there' => 'there','therefore' => 'therefore','these' => 'these','they' => 'they','thing' => 'thing','things' => 'things','think' => 'think','thinks' => 'thinks','this' => 'this','those' => 'those','though' => 'though','thought' => 'thought','thoughts' => 'thoughts','three' => 'three','through' => 'through','thus' => 'thus','to' => 'to','today' => 'today','together' => 'together','too' => 'too','took' => 'took','toward' => 'toward','turn' => 'turn','turned' => 'turned','turning' => 'turning','turns' => 'turns','two' => 'two','u' => 'u','under' => 'under','until' => 'until','up' => 'up','upon' => 'upon','us' => 'us','use' => 'use','used' => 'used','uses' => 'uses','v' => 'v','very' => 'very','w' => 'w','want' => 'want','wanted' => 'wanted','wanting' => 'wanting','wants' => 'wants','was' => 'was','way' => 'way','ways' => 'ways','we' => 'we','well' => 'well','wells' => 'wells','went' => 'went','were' => 'were','what' => 'what','when' => 'when','where' => 'where','whether' => 'whether','which' => 'which','while' => 'while','who' => 'who','whole' => 'whole','whose' => 'whose','why' => 'why','will' => 'will','with' => 'with','within' => 'within','without' => 'without','work' => 'work','worked' => 'worked','working' => 'working','works' => 'works','would' => 'would','x' => 'x','y' => 'y','year' => 'year','years' => 'years','yet' => 'yet','you' => 'you','young' => 'young','younger' => 'younger','youngest' => 'youngest','your' => 'your','yours' => 'yours','z' => 'z');
 $pstats_array = array();
 $dstats_array = array();
@@ -264,7 +264,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
             }
             $log_array[$qID]['mark'] += $mark;
             $log_array[$qID]['totalpos'] += $totalpos;
-            if (substr($answer, -1) == ';') {
+            if (mb_substr($answer, -1) == ';') {
                 if (isset($log_array[$qID]['u'])) {
                     $log_array[$qID]['u']++;
                 } else {
@@ -277,7 +277,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
             $tmp_answer_parts = json_decode($answer);
             $i = 0;
             foreach ($tmp_answer_parts as $tmp_individual_answer) {
-                $tmp_individual_answer = strtolower(trim($tmp_individual_answer));
+                $tmp_individual_answer = mb_strtolower(trim($tmp_individual_answer));
                 $i++;
                 if ($tmp_individual_answer == 'u') {
                     if (isset($log_array[$qID][$i]['u'])) {
@@ -299,7 +299,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
             $calc = new enhancedcalc($configObj);
             $calc->set_settings($settings);
             $calc->set_useranswer($answer);
-            
+
             if ($calc->is_user_ans_correct() or $calc->is_user_ans_within_fullmark_tolerance()) {
                 if (isset($log_array[$qID][1]['correct'])) {
                     $log_array[$qID][1]['correct']++;
@@ -307,7 +307,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
                     $log_array[$qID][1]['correct'] = 1;
                 }
             }
- 
+
             if (trim($calc->get_user_answer_raw()) == '') {
                 if (isset($log_array[$qID]['u'])) {
                       $log_array[$qID]['u']++;
@@ -364,7 +364,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
 
                 $layer = 1;
                 foreach ($layer_answers as $layer_answer) {
-                    $layer_answer_index = substr($layer_answer, 0, 1);
+                    $layer_answer_index = mb_substr($layer_answer, 0, 1);
                     if ($layer_answer_index == '0' or $layer_answer_index == '1') {
                         if ($layer_answer_index == '1') {
                             if (isset($log_array[$qID][$layer]['1'])) {
@@ -415,7 +415,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
                 } else {
                     $log_array[$qID]['a'] = 1;
                 }
-            } elseif (strpos($answer, 'y') === false) {
+            } elseif (mb_strpos($answer, 'y') === false) {
                 if (isset($log_array[$qID]['u'])) {
                     $log_array[$qID]['u']++;
                 } else {
@@ -531,7 +531,7 @@ function storeData(&$log_array, $qID, $answer, $q_type, $display, $settings, $ma
             if ($analysis_type == 'top' or $analysis_type == 'bottom') {
                 $user_words = str_word_count($answer, 1);
                 foreach ($user_words as $word) {
-                    $word = strtolower($word);
+                    $word = mb_strtolower($word);
                     if (!isset($stop_words[$word])) {
                         if (isset($log_array[$qID]['words'][$word])) {
                             $log_array[$qID]['words'][$word]++;
@@ -587,7 +587,7 @@ if (isset($_POST['submit'])) {
     for ($i = 1; $i <= $_POST['question_no']; $i++) {
         $current_id = $_POST['id_' . $i];
         if ($current_id != $old_q_id) {
-            if (strpos($old_status, '1') !== false) {
+            if (mb_strpos($old_status, '1') !== false) {
                 $new_exclusions->add_exclusion($old_q_id, $old_status);
             }
             $old_status = '';
@@ -595,17 +595,17 @@ if (isset($_POST['submit'])) {
         $old_status .= $_POST['status_' . $i];
         $old_q_id = $_POST['id_' . $i];
     }
-    if (strpos($old_status, '1') !== false) {
+    if (mb_strpos($old_status, '1') !== false) {
         $new_exclusions->add_exclusion($old_q_id, $old_status);
     }
 
     $new_exclusions->load();
-  
+
     if ($old_exclusions->excluded !== $new_exclusions->excluded) {
         $propertyObj->set_recache_marks(1);
         $propertyObj->save();
     }
-  
+
     header('location: ../paper/details.php?paperID=' . $paperID . '&module=' . $_GET['module'] . '&folder=' . $_GET['folder']);
     exit();
 }
@@ -613,7 +613,7 @@ if (isset($_POST['submit'])) {
 function excludeButton(&$buttonID, $question_id, $status, $parts, $marks)
 {
     $buttonID++;
-    if (strpos($status, '1') !== false) {
+    if (mb_strpos($status, '1') !== false) {
         $html = '<input type="hidden" name="status_' . $buttonID . '" id="status_' . $buttonID . '" value="';
         for (
             $i = 0; $i < $marks; $i++
@@ -795,16 +795,16 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
 
                 $options[0] = preg_replace('| mark="([0-9]{1,3})"|', '', $options[0]);
                 $options[0] = preg_replace('| size="([0-9]{1,3})"|', '', $options[0]);
-        
+
                 $blank_count = 0;
                 echo $blank_details[0];
                 while ($blank_count < $array_size) {
-                    if (strpos($blank_details[$blank_count], '[/blank]') !== false) {
-                        $end_start_tag = strpos($blank_details[$blank_count], ']');
-                        $start_end_tag = strpos($blank_details[$blank_count], '[/blank]');
+                    if (mb_strpos($blank_details[$blank_count], '[/blank]') !== false) {
+                        $end_start_tag = mb_strpos($blank_details[$blank_count], ']');
+                        $start_end_tag = mb_strpos($blank_details[$blank_count], '[/blank]');
                         $cut_length = $start_end_tag - $end_start_tag - 1;
-                        $blank_options = substr($blank_details[$blank_count], ($end_start_tag + 1), $cut_length);
-                        $remainder = substr($blank_details[$blank_count], ($start_end_tag + 8));
+                        $blank_options = mb_substr($blank_details[$blank_count], ($end_start_tag + 1), $cut_length);
+                        $remainder = mb_substr($blank_details[$blank_count], ($start_end_tag + 8));
                         if ($exclusions->is_question_excluded($q_id)) {
                             $tmp_exclude = $exclusions->get_exclusion_part_by_qid($q_id, $blank_count - 1);
                         } else {
@@ -836,10 +836,10 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
 
                 echo "<table cellspacing=\"0\" cellpadding=\"4\" border=\"0\" style=\"margin-left:20px\">\n";
                 for ($i = 1; $i < count($blank_details); $i++) {
-                    $end_start_tag = strpos($blank_details[$i], ']');
-                    $start_end_tag = strpos($blank_details[$i], '[/blank]');
+                    $end_start_tag = mb_strpos($blank_details[$i], ']');
+                    $start_end_tag = mb_strpos($blank_details[$i], '[/blank]');
                     $cut_length = $start_end_tag - $end_start_tag - 1;
-                    $blank_options = substr($blank_details[$i], ($end_start_tag + 1), $cut_length);
+                    $blank_options = mb_substr($blank_details[$i], ($end_start_tag + 1), $cut_length);
 
                     $blank_options = explode(',', $blank_options);
 
@@ -848,7 +848,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
                     $tmp_bottom_no = 0;
 
                     if ($display_method == 'dropdown') {
-                        $blank_word = strtolower(trim($blank_options[0]));
+                        $blank_word = mb_strtolower(trim($blank_options[0]));
                         if (isset($freq_log[$q_id][$i][$blank_word])) {
                             $tmp_correct_no += $freq_log[$q_id][$i][$blank_word];
                         }
@@ -863,11 +863,11 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
                     } else {
                         $unique_blank_options = array_intersect_key($blank_options, array_unique(array_map('strtolower', $blank_options)));
                         $unique_blank_options = array_map('strtolower', $unique_blank_options);
-            
+
                         // Merge the same option on its own and with spaces (e.g. 'cat' and ' cat').
                         $new_blank_options = array();
                         foreach ($unique_blank_options as $blank_option) {
-                            $new_blank_options[] = strtolower(trim($blank_option));
+                            $new_blank_options[] = mb_strtolower(trim($blank_option));
                         }
                         $unique_blank_options = array_unique($new_blank_options);
 
@@ -885,7 +885,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
                         $d = calcDiscrimination($candidate_no, $top_log[$q_id], $bottom_log[$q_id], $i, $unique_blank_options);
                     }
                     $t = ($user_total != 0) ? number_format(($tmp_correct_no / $user_total) * 100, 0) : 0;
-          
+
                     $d_no++;
                     $d_total += $d;
                     $html = '';
@@ -1197,7 +1197,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
                                   echo '<td></td><td>' . pStats($p, $q_id, $i) . '</td><td>' . dStats($d, $q_id, $i) . '</td><td>t=' . number_format($p * 100, 0) . '%</td><td>u=' . number_format(($ptop) * 100, 0) . '%</td><td>l=' . number_format($pbottom * 100, 0) . '%</td><td>' . xStats($q_type, $q_id, $freq_log, $user_total, $individual_option) . "</td><td><span class=\"std\">$std_rating</span></td><td";
                             }
                             echo '>';
-                            if (strpos(strtolower($individual_option), '.jpg') !== false or strpos(strtolower($individual_option), '.jpeg') !== false or strpos(strtolower($individual_option), '.gif') !== false or strpos(strtolower($individual_option), '.png') !== false) {
+                            if (mb_strpos(mb_strtolower($individual_option), '.jpg') !== false or mb_strpos(mb_strtolower($individual_option), '.jpeg') !== false or mb_strpos(mb_strtolower($individual_option), '.gif') !== false or mb_strpos(mb_strtolower($individual_option), '.png') !== false) {
                                           $image_parts = explode('~', $individual_option);
                                           echo '<img src="' . $mediadirectory->url($image_parts[0]) . '" width="' . $image_parts[1] . '" height="' . $image_parts[2] . '" alt="" border="1" />';
                             } else {
@@ -1267,7 +1267,7 @@ function displayQuestion($exclusions, $q_no, $q_id, $theme, $scenario, $leadin, 
                 $tmp_correct = htmlentities(preg_replace('/\r\n/', '', $tmp_correct));
 
                 $configObject          = Config::get_instance();
-        
+
                 $tmp_image = $mediadirectory->url($q_media);
                 echo <<<HTML
    <div
@@ -1286,7 +1286,7 @@ HTML;
                 echo "<p><table cellpadding=\"4\" cellspacing=\"0\" border=\"0\">\n";
                 for ($i = 1; $i <= count($layers); $i++) {
                     echo '<tr><td>' . chr($i + 64) . '.</td>';
-                    $label = substr($layers[$i - 1], 0, strpos($layers[$i - 1], '~'));
+                    $label = mb_substr($layers[$i - 1], 0, mb_strpos($layers[$i - 1], '~'));
 
                     $std_rating = (isset($std_parts[$i - 1])) ? $std_parts[$i - 1] : '';
 
@@ -1387,7 +1387,7 @@ HTML;
                     }
                     echo "</td></tr>\n";
                 }
-                
+
                 if (isset($freq_log[$q_id][1]['a']) and $user_total != 0) {
                     $t = number_format(($freq_log[$q_id][1]['a'] / $user_total) * 100, 0);
                 } else {
@@ -1404,7 +1404,7 @@ HTML;
                     $l = 0;
                 }
                 echo '<tr><td class="grey">t=' . $t . '%</td><td class="grey">u=' . $u . '%</td><td class="grey">l=' . $l . "%</td><td></td><td style=\"color:#C00000\">&lt;abstain&gt;</td></tr>\n";
-                    
+
                 echo "<tr><td colspan=\"3\">&nbsp;</td></tr>\n";
                 $p = ($user_total != 0) ? $tmp_correct_no / $user_total : 0;
                 echo '<tr><td>' . pStats($p, $q_id, 1) . '</td><td>' . dStats($d, $q_id, 1) . '</td><td>' . xStats($q_type, $q_id, $freq_log, $user_total) . "</td></tr>\n";
@@ -1464,7 +1464,7 @@ HTML;
                     }
                     echo "</td></tr>\n";
                 }
-                
+
                 // Abstain
                 if (isset($freq_log[$q_id]['a']) and $user_total != 0) {
                           $t = number_format(($freq_log[$q_id]['a'] / $user_total) * 100, 0);
@@ -1482,7 +1482,7 @@ HTML;
                     $l = 0;
                 }
                 echo '<tr><td class="grey">t=' . $t . '%</td><td class="grey">u=' . $t . '%</td><td class="grey">l=' . $l . '%</td><td></td><td id="q_' . $ex_no . '_abstain"><span style="color:#C00000">&lt;' . $string['abstain'] . "&gt;</span></td></tr>\n";
-                
+
                 if (empty($top_log[$q_id]['totalpos']) or empty($bottom_log[$q_id]['totalpos'])) {
                     $d = 0;
                 } else {
@@ -1746,7 +1746,7 @@ HTML;
             echo '<td>' . $options[$i] . '</td>';
         }
         echo "</tr>\n";
-        for ($i = 1; $i <= (substr_count($scenario, '|') + 1); $i++) {
+        for ($i = 1; $i <= (mb_substr_count($scenario, '|') + 1); $i++) {
             if ($tmp_ext_scenarios[$i - 1] != '') {
                 echo "<tr>\n";
                 $option_no = 1;
@@ -2030,7 +2030,7 @@ HTML;
 <body>
 <?php
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu(154);
 ?>
 <div id="content">
@@ -2045,7 +2045,7 @@ HTML;
   $pass_mark = $propertyObj->get_pass_mark();
 
   $moduleIDs = Paper_utils::get_modules($paperID, $mysqli);
-  
+
   $exclusions = new Exclusion($paperID, $mysqli);
   $exclusions->load();
 
@@ -2124,7 +2124,7 @@ if ($user_total == 1) {
     }
 }
   $result->close();
-    
+
   // Capture the log data first.
   $freq_array       = array();
   $bottom_log_array = array();
@@ -2150,7 +2150,7 @@ while ($result->fetch()) {
     }
 }
   $result->close();
-  
+
 if ($user_total == 0) {
     // No one has taken the paper yet.
     echo '<div class="head_title">';
@@ -2258,7 +2258,7 @@ SQL;
             $tmp_second_split = explode('$', $tmp_first_split[11]);
             for ($label_no = 4; $label_no <= 200; $label_no += 4) {
                 if (isset($tmp_second_split[$label_no])) {
-                    if (substr($tmp_second_split[$label_no], 0, 1) != '|') {
+                    if (mb_substr($tmp_second_split[$label_no], 0, 1) != '|') {
                         // The label has text, i.e. is not blank.
                         // The stored answer coordinates are sometimes floating points, rather than integers.
                         // We need to round them to ensure they will always matach the coordiantes that are
@@ -2266,7 +2266,7 @@ SQL;
                         // will sometimes not work. See ROGO-1822.
                         $x_coordinate = round($tmp_second_split[$label_no - 2]);
                         $y_coordiante = round($tmp_second_split[$label_no - 1] - 25);
-                        $options_buffer[] = trim(substr($tmp_second_split[$label_no], 0, strpos($tmp_second_split[$label_no], '|'))) . '|' . $x_coordinate . '|' . $y_coordiante;
+                        $options_buffer[] = trim(mb_substr($tmp_second_split[$label_no], 0, mb_strpos($tmp_second_split[$label_no], '|'))) . '|' . $x_coordinate . '|' . $y_coordiante;
                         if ($x_coordinate >= 220) {
                             $correct_buffer[] = $x_coordinate . 'x' . $y_coordiante;
                         }
@@ -2282,8 +2282,8 @@ SQL;
                 $blank_details[$i] = preg_replace('| mark="([0-9]{1,3})"|', '', $blank_details[$i]);
                 $blank_details[$i] = preg_replace('| size="([0-9]{1,3})"|', '', $blank_details[$i]);
 
-                $blank_details[$i] = substr($blank_details[$i], (strpos($blank_details[$i], ']') + 1));
-                $blank_details[$i] = substr($blank_details[$i], 0, strpos($blank_details[$i], '[/blank]'));
+                $blank_details[$i] = mb_substr($blank_details[$i], (mb_strpos($blank_details[$i], ']') + 1));
+                $blank_details[$i] = mb_substr($blank_details[$i], 0, mb_strpos($blank_details[$i], '[/blank]'));
                 $answer_list = explode(',', $blank_details[$i]);
                 $answer_list[0] = str_replace('[/blank]', '', $answer_list[0]);
                 if ($score_method == 'textboxes') {
@@ -2336,8 +2336,8 @@ SQL;
   <br />
 
   <div class="subsect_table"><div class="subsect_title"><?php echo $string['summary'] ?></div><div class="subsect_hr"><hr noshade="noshade" /></div></div>
-  
-  
+
+
   <table cellpadding="0" cellspacing="0" style="width:650px; margin-left:40px">
   <tr><td colspan="2" style="padding-left:4px"><?php echo $string['msg']; ?></td></tr>
   <tr>
@@ -2379,7 +2379,7 @@ SQL;
     // Clear previous performance stats
     $id_list = array();
     $result = $mysqli->prepare('SELECT id FROM performance_main WHERE paperID = ?');
-    
+
     if ($mysqli->error) {
         echo $string['showerror'] . '<br >';
     }
@@ -2392,7 +2392,7 @@ SQL;
     $result->close();
 
     // Remove records from performance_main
-    $date_started = substr($started, 0, 10);
+    $date_started = mb_substr($started, 0, 10);
     $remove = $mysqli->prepare('DELETE FROM performance_main WHERE paperID = ? AND taken = ?');
     $remove->bind_param('is', $paperID, $date_started);
     $remove->execute();

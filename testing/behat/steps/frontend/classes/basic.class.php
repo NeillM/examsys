@@ -91,7 +91,7 @@ trait basic
         }
         throw new \Exception("The \"$selector\" with the value of \"$content\" is visibile");
     }
-    
+
     /**
      * Keep browser live, for debuging
      *
@@ -138,7 +138,7 @@ trait basic
         }
         $session->switchToWindow($this->mainwindow);
     }
-  
+
     /**
      * Check there is a popup present.
      *
@@ -205,7 +205,7 @@ trait basic
             return true;
         });
     }
-  
+
     /**
      * Close popup window back to main window
      *
@@ -237,8 +237,8 @@ trait basic
         }
         $this->getSession()->switchToWindow($windows[0]);
     }
-  
-  
+
+
     /**
      * Check the page
      *
@@ -249,7 +249,7 @@ trait basic
     public function i_see_page_title($title)
     {
         $pagetitle = $this->find('xpath', "//div[@class='page_title']")->getText();
-        if (strpos($pagetitle, $title) === false) {
+        if (mb_strpos($pagetitle, $title) === false) {
             throw new Exception('The page could not be found');
         }
     }

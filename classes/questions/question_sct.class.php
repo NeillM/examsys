@@ -26,18 +26,18 @@
 
 class QuestionSCT extends QuestionEdit
 {
-  
+
     protected $hypothesis = '';
     protected $new_information = '';
     public $max_options = 5;
     protected $_allow_change_marking_method = false;
     protected $_allow_correction = false;
-  
+
     protected $sct_types;
-  
+
     protected $_fields_editable = array('theme', 'scenario', 'hypothesis', 'new_information', 'notes', 'correct_fback', 'incorrect_fback', 'display_method', 'option_order', 'bloom', 'status');
     protected $_fields_required = array('type', 'leadin', 'display_method', 'owner_id', 'status');
-  
+
     function __construct($mysqli, $userObj, $lang_strings, $data = null)
     {
         parent::__construct($mysqli, $userObj, $lang_strings, $data);
@@ -49,22 +49,22 @@ class QuestionSCT extends QuestionEdit
         array($this->_lang_strings['intervention'], $this->_lang_strings['contraindicated'], $this->_lang_strings['lessindicated'], $this->_lang_strings['neithernorindicated'], $this->_lang_strings['indicated'], $this->_lang_strings['stronglyindicated']),
         array($this->_lang_strings['treatment'], $this->_lang_strings['contraindicated'], $this->_lang_strings['lessindicated'], $this->_lang_strings['neithernorindicated'], $this->_lang_strings['indicated'], $this->_lang_strings['stronglyindicated'])
         );
-  
-  
+
+
         $i = 1;
         foreach ($this->sct_types as $type) {
-            $this->_display_methods[$i] = $this->_lang_strings['this'] . ' ' . strtolower($type[0]) . ' ' . $this->_lang_strings['becomes'];
+            $this->_display_methods[$i] = $this->_lang_strings['this'] . ' ' . mb_strtolower($type[0]) . ' ' . $this->_lang_strings['becomes'];
             $i++;
         }
-    
+
         // 'correct' is not a unified field for SCT questions
         $this->_fields_unified = array();
         $this->_fields_editable[] = 'correct';
     }
-  
-  
+
+
     // ACCESSORS
-  
+
     /**
      * Get the 'types' of SCT available - alters the label of the initial information and option texts
      * @return array
@@ -73,7 +73,7 @@ class QuestionSCT extends QuestionEdit
     {
         return $this->sct_types;
     }
-  
+
     /**
      * Get the total number of experts used on this question.  This is a total of all the experts ('correct' value) on all the options
      * @return number
@@ -88,7 +88,7 @@ class QuestionSCT extends QuestionEdit
         }
         return $total;
     }
-  
+
     /**
      * Get the hypothesis for the question
      * @return integer
@@ -98,7 +98,7 @@ class QuestionSCT extends QuestionEdit
         $this->get_leadin();
         return $this->hypothesis;
     }
-  
+
     /**
      * Set the hypothesis for the question
      * @param string $value
@@ -121,7 +121,7 @@ class QuestionSCT extends QuestionEdit
         $this->get_leadin();
         return $this->new_information;
     }
-  
+
     /**
      * Set the new information for the question
      * @param string $value
@@ -148,7 +148,7 @@ class QuestionSCT extends QuestionEdit
         }
         return $this->leadin;
     }
-  
+
     /**
      * Set the question leadin
      * @param string $value

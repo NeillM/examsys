@@ -38,7 +38,7 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['confirmdelete']; ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
@@ -47,7 +47,7 @@ $icons = array('formative', 'progress', 'summative', 'survey', 'osce', 'offline'
 <body>
 
 <?php
-  $qIDs = substr($_GET['q_id'], 1);
+  $qIDs = mb_substr($_GET['q_id'], 1);
 
   // We need to check if the question is in a random block or a keyword block.
   // If so we should add those ids to qIDs to be search un the query below.

@@ -49,7 +49,7 @@ function display_std($std_value, $inline = 1)
 function display_question($configObject, &$question, $paper_type, $calculator, $current_screen, $old_q_type, &$question_no, &$question_offset, $start_of_day_ts, $texteditorplugin)
 {
     global $external_review_deadline, $review, $labelcolor, $old_likert_label, $old_likert_cols, $screen_pre_submitted, $A, $B, $C, $D, $E, $F, $G, $H, $I, $J, $A_min, $B_min, $C_min, $D_min, $E_min, $F_min, $G_min, $H_min, $I_min, $J_min, $A_max, $B_max, $C_max, $D_max, $E_max, $F_max, $G_max, $H_max, $I_max, $J_max, $li_set, $bgcolor, $li_set, $used_questions, $user_dismiss, $string, $language, $configObject;
-  
+
     $q_id = $question['q_id'];
     $option_no = count($question['options']);
     $mediadirectory = rogo_directory::get_directory('media');
@@ -204,12 +204,12 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
     switch ($question['q_type']) {
         case 'dichotomous':
             echo '<blockquote><table cellpadding="2" cellspacing="0" border="0">';
-            if (substr($question['display_method'], 0, 2) == 'TF') {
+            if (mb_substr($question['display_method'], 0, 2) == 'TF') {
                 echo "<tr><td></td><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">" . $string['true'] . "</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor;font-size:90%\">" . $string['false'] . '</td>';
             } else {
                 echo "<tr><td></td><td align=\"center\" width=\"40\" style=\"color:$labelcolor; font-size:90%\">" . $string['yes'] . "</td><td width=\"40\" align=\"center\" style=\"color:$labelcolor;font-size:90%\">" . $string['no'] . '</td>';
             }
-            if (strpos($question['score_method'], 'Abstain') !== false) {
+            if (mb_strpos($question['score_method'], 'Abstain') !== false) {
                 echo "<td width=\"40\" align=\"center\" style=\"color:$labelcolor; font-size:90%\">" . $string['abstain'] . '</td><td>&nbsp;</td>';
             }
             echo "</tr>\n";
@@ -246,8 +246,8 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         case 'likert':
             $str = $question['score_method'];
             $likert_display = explode('|', $str);
-            $likert_col_no = substr_count($question['score_method'], '|');
-            if (strtolower($old_likert_label) != strtolower($str) or $current_theme != '') {
+            $likert_col_no = mb_substr_count($question['score_method'], '|');
+            if (mb_strtolower($old_likert_label) != mb_strtolower($str) or $current_theme != '') {
                 if ($likert_col_no != $old_likert_cols) {
                     echo '</table><table cellpadding="4" cellspacing="0" border="0"><col width="40"><col>';
                 }
@@ -268,7 +268,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                     echo "<td valign=\"bottom\" style=\"text-align:center; color:$labelcolor; font-size:80%\">" . $string['na'] . '</td>';
                 }
                 echo "<td valign=\"bottom\" style=\"text-align:center; color:$labelcolor; font-size:80%\">$likert_display[0]</td>";
-                $temp_end = substr_count($question['score_method'], '|') - 1;
+                $temp_end = mb_substr_count($question['score_method'], '|') - 1;
                 for ($i = 1; $i <= $temp_end; $i++) {
                     echo "<td valign=\"bottom\" style=\"text-align:center; color:$labelcolor; font-size:80%\">$likert_display[$i]</td>\n";
                 }
@@ -389,7 +389,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 if (isset($user_answers[$current_screen][$q_id])) {
                     $tmp_user_answer = $user_answers[$current_screen][$q_id];
                     $answer_parts = explode(';', $tmp_user_answer);
-                    $tmp_user_answer = substr($answer_parts[1], 0, -2);
+                    $tmp_user_answer = mb_substr($answer_parts[1], 0, -2);
                 } else {
                     $tmp_user_answer = '';
                 }
@@ -457,17 +457,17 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 $question['object']->load_all_user_answers($_SESSION['allans']);
 
                 $extra = array('num_on_screen' => $question_no, 'reviewers' => true);
-      
+
                 echo '<tr><td class="q_no">' . ($question_no + $question_offset) . '.&nbsp;</td><td>';
                 $question['object']->render_paper($extra);
                 echo '</td>';
-        
+
                 $marks += $question['object']->calculate_question_mark();
                 break;
             case 'likert':
                 echo '<tr>';
                 echo '<td class="q_no">' . (($question_no + $question_offset) - 1) . '.&nbsp;</td><td>' . $question['leadin'] . '</td>';
-                $scale_size = substr_count($question['score_method'], '|');
+                $scale_size = mb_substr_count($question['score_method'], '|');
                 if ($likert_display[$scale_size] == 'true') {
                     echo '<td style="background-color:#FFC0C0; text-align:center; width:40px; vertical-align:top"><input type="radio" name="q' . $question_no . '_' . $part_id . '" value="n/a" /></td>';
                 }
@@ -648,7 +648,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
             case 'sct':
                 $tmp_part_id = $question['option_order'][$part_id - 1] + 1;
                 echo '<tr><td><input type="radio" name="q' . $question_no . "\" value=\"$tmp_part_id\" /></td><td>";
-                if (substr($user_dismiss[$current_screen][$q_id], $tmp_part_id - 1, 1) == '1') {
+                if (mb_substr($user_dismiss[$current_screen][$q_id], $tmp_part_id - 1, 1) == '1') {
                     $class_type = 'inact';
                 } else {
                     $class_type = 'act';
@@ -714,7 +714,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                         } else {
                             $blank_mark[$blank_count] = 1;
                         }
-                        $blank_details[$blank_count] = substr($blank_details[$blank_count], (strpos($blank_details[$blank_count], ']') + 1));
+                        $blank_details[$blank_count] = mb_substr($blank_details[$blank_count], (mb_strpos($blank_details[$blank_count], ']') + 1));
                         $answer_options = explode('[/blank]', $blank_details[$blank_count]);
                         $answer_list = explode(',', $answer_options[0]);
                         $correct_answer = $answer_list[0];
@@ -781,7 +781,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 break;
             case 'hotspot':
                 // Adjust the height of the hotspot canvas based on the number of options available.
-                $hotspot_no = substr_count($question['options'][0]['correct'], \hotspot_helper::LAYER_SEPARATOR) + 1;
+                $hotspot_no = mb_substr_count($question['options'][0]['correct'], \hotspot_helper::LAYER_SEPARATOR) + 1;
                 $tmp_height = $question['q_media_height'] + 30;
                 if ($tmp_height < (($hotspot_no * 36) + 25)) {
                     $tmp_height = (($hotspot_no * 36) + 25);
@@ -835,7 +835,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
                 if ($question['score_method'] == 'Mark per Question') {
                     $marks = $display_option['marks_correct'];
                 } else {
-                    $marks = (substr_count($question['options'][0]['correct'], '|') + 1) * $display_option['marks_correct'];
+                    $marks = (mb_substr_count($question['options'][0]['correct'], '|') + 1) * $display_option['marks_correct'];
                 }
                 break;
             case 'labelling':
@@ -977,9 +977,9 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         $answer_equation = $question['options'][0]['correct'];
         // Put the calculated answer in the session for use in linked calculation questions (N.B only for reviewers screen!!)
         $_SESSION['allans'][$current_screen][$question['q_id']] = $question['object']->useranswer;
-    
+
         echo '<tr><td></td><td>';
-    
+
         $question['leadin'] = str_replace('$A', '<span style="background-color:#FFFF80">&nbsp;<strong>$A</strong>&nbsp;</span>' . $A, $question['leadin']);
         $question['leadin'] = str_replace('$B', '<span style="background-color:#FFFF80">&nbsp;<strong>$B</strong>&nbsp;</span>' . $B, $question['leadin']);
         $question['leadin'] = str_replace('$C', '<span style="background-color:#FFFF80">&nbsp;<strong>$C</strong>&nbsp;</span>' . $C, $question['leadin']);
@@ -1045,8 +1045,8 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
         echo '<ol class="extmatch">';
         $part_std_offset = 0;
         for ($part_id = 1; $part_id <= $scenario_no; $part_id++) {
-            $answer_no = substr_count($matching_answers[$part_id - 1], '$') + 1;
-            $marks += (substr_count($matching_answers[$part_id - 1], '$') + 1) * $display_option['marks_correct'];
+            $answer_no = mb_substr_count($matching_answers[$part_id - 1], '$') + 1;
+            $marks += (mb_substr_count($matching_answers[$part_id - 1], '$') + 1) * $display_option['marks_correct'];
 
             echo '<li>';
             if (isset($matching_scenarios[$part_id]) and $matching_scenarios[$part_id] != '') {
@@ -1201,7 +1201,7 @@ function display_question($configObject, &$question, $paper_type, $calculator, $
 
         echo '<table cellspacing="0" cellpadding="0" border="0" style="width:700px; font-size:100%">';
         echo '<tr><td style="width:300px; font-weight:bold">' . sprintf($string['qcomments'], ($question_no + $question_offset)) . '</td>';
-    
+
         $categories = array('ok_comment' => $string['questionok'], 'minor_comment' => $string['minorproblems'], 'major_comment' => $string['majorproblems'], 'cannot_comment' => $string['cannotcomment']);
 
         $value_no = 0;

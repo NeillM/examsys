@@ -27,12 +27,12 @@
  */
 class lti_uon_integration_extended extends lti_integration
 {
-    
+
     const CS_MODULE_SPACE = '/(?P<module>[A-Z]{4}[F1-5][0-9]{3})-(?P<offering>[0-9]{1,2})-(?P<campus>UNNC|UNUK|UNMC)-(?P<semster>[A-Z]{3})-(?P<year>[0-9]{4})$/';
     const CS_NON_MODULE_SPACE = '/^((?P<school>[A-Z]{2,4})-)?(?P<module>[0-9A-Z-]{1,25})-(?P<campus>UNNC|UNUK|UNMC|CN|MY|UK)-(?P<year>[0-9]{4})$/';
     const CS_META_MODULE_CHECK = '/^!((?P<school>[A-Z]{2,4})-)?(?P<module>[0-9A-Z-]{1,25})-(?P<campus>UNNC|UNUK|UNMC|CN|MY|UK)-(?P<year>[0-9]{4})$/';
     const CS_COURSE_ID = '/^(?P<id>[0-9]{6})_(?P<offering>[0-9]{1,2})_(?P<term>[0-9]{4})$/';
-  
+
     private $dept_code = array('MS' => 'Surgery', 'CC' => 'ACS', 'AA' => 'American & Canadian Studies',
     'AC' => 'Archaeology', 'LA' => 'Urban Planning', 'AD' => 'Art History', 'MB' => 'Physiology & Pharmacology',
     'ST' => 'Biosciences', 'AL' => 'CELE', 'EC' => 'Chemical Engineering', 'EN' => 'Mining Engineering',
@@ -60,11 +60,11 @@ class lti_uon_integration_extended extends lti_integration
     private function process_cs_naming_convention($mysqli, $moduleshortcode, $course_title = ' ')
     {
         $data = array();
-        $fin = strlen($course_title);
-        if (strpos($course_title, '(') !== false) {
-            $fin = strpos($course_title, '(') - 1;
+        $fin = mb_strlen($course_title);
+        if (mb_strpos($course_title, '(') !== false) {
+            $fin = mb_strpos($course_title, '(') - 1;
         }
-        $course_title = substr($course_title, 0, $fin);
+        $course_title = mb_substr($course_title, 0, $fin);
         if ($course_title == ' ') {
             $course_title = 'MISSING COURSE TITLE';
         }
@@ -110,7 +110,7 @@ class lti_uon_integration_extended extends lti_integration
                 $data[] = array('Manual', $info['module'] , $info['campus'], $schoolname, 1, $course_title);
             }
         }
- 
+
         return $data;
     }
 
@@ -128,26 +128,26 @@ class lti_uon_integration_extended extends lti_integration
         // shortname for non module VV-XXXXX-XXXXX-YY-WWWW WHERE XXXXXXXXXX is the fake 'module code'  YYY is country VV is DEPT 2 letter code
         // shortname for metamodules is XXXXXX-YY-XXXXXX-YY-XXXXXXX-YYY-ZZZWWWWW where the set of XXXXXX, YY are unknown
         $exploded = explode('-', $moduleshortcode);
-        $length = strlen($exploded[0]);
-        $fin = strlen($course_title);
+        $length = mb_strlen($exploded[0]);
+        $fin = mb_strlen($course_title);
 
-        if (strpos($course_title, '(') !== false) {
-            $fin = strpos($course_title, '(') - 1;
+        if (mb_strpos($course_title, '(') !== false) {
+            $fin = mb_strpos($course_title, '(') - 1;
         }
-        $course_title = substr($course_title, 0, $fin);
+        $course_title = mb_substr($course_title, 0, $fin);
         if ($length < 6) {
             //not saturn code
             $campus = '';
             //this should mean its a fake course
             $modcode = '';
             for ($a = 1; $a < count($exploded); $a++) {
-                if (in_array(strtoupper($exploded[$a]), array('UK', 'MY', 'CN'))) {
-                    $campus = strtoupper($exploded[$a]);
+                if (in_array(mb_strtoupper($exploded[$a]), array('UK', 'MY', 'CN'))) {
+                    $campus = mb_strtoupper($exploded[$a]);
                     break;
                 }
                 $modcode = $modcode . '-' . $exploded[$a];
             }
-            $modcode = substr($modcode, 1);
+            $modcode = mb_substr($modcode, 1);
             $schoolname = 'UNKNOWN School';
             if (isset($this->dept_code[$exploded[0]])) {
                 $schoolname = $this->dept_code[$exploded[0]];
@@ -163,17 +163,17 @@ class lti_uon_integration_extended extends lti_integration
             $data = array();
             $selfreg = 0;
             while (isset($exploded[$a])) {
-                if (strlen($exploded[$a]) == 6) {
+                if (mb_strlen($exploded[$a]) == 6) {
                     //saturn codes are 6 chars
                     // data is
 
                     $data[$b++] = array('SMS', $exploded[$a], 'CampusMissing', 'UNKNOWN School', $selfreg, "MISSING:$course_title");
-                } elseif (strlen($exploded[$a]) == 2) {
+                } elseif (mb_strlen($exploded[$a]) == 2) {
                     // probably campus check
-                    if (in_array(strtoupper($exploded[$a]), array('UK', 'MY', 'CN'))) {
+                    if (in_array(mb_strtoupper($exploded[$a]), array('UK', 'MY', 'CN'))) {
                         for ($c = 0; $c < $b; $c++) {
                             if ($data[$c][2] == 'CampusMissing') {
-                                $data[$c][2] = strtoupper($exploded[$a]);
+                                $data[$c][2] = mb_strtoupper($exploded[$a]);
                             }
                         }
                     }
@@ -183,7 +183,7 @@ class lti_uon_integration_extended extends lti_integration
         }
 
         foreach ($data as $k => $v) {
-            if (substr($v[5], 0, 8) == 'MISSING:' and $v[0] == 'SMS') {
+            if (mb_substr($v[5], 0, 8) == 'MISSING:' and $v[0] == 'SMS') {
                 $sms = SmsUtils::GetSmsUtils();
                 if ($sms === false) {
                     $data[$k][5] = 'SATURN ' . $data[$k][5];
@@ -209,8 +209,8 @@ class lti_uon_integration_extended extends lti_integration
                 $data[$k][1] = $data[$k][1] . '_UNNC';
             }
         }
-        if (count($data) == 1 and substr($data[0][5], 0, 8) == 'MISSING:' and strlen($data[0][5]) > 9) {
-            $data[0][5] = substr($data[0][5], 8);
+        if (count($data) == 1 and mb_substr($data[0][5], 0, 8) == 'MISSING:' and mb_strlen($data[0][5]) > 9) {
+            $data[0][5] = mb_substr($data[0][5], 8);
         }
         return $data;
     }
@@ -274,7 +274,7 @@ class lti_uon_integration_extended extends lti_integration
         }
         return null;
     }
-  
+
     /**
      * Convert VLE module shortcode into Rogo moduleid
      * @param mysqli $mysqli db connection
@@ -285,10 +285,10 @@ class lti_uon_integration_extended extends lti_integration
     public function module_code_translate($mysqli, $moduleshortcode, $course_title = ' ')
     {
 
-        if (stripos($moduleshortcode, ' ') !== false) {
+        if (mb_stripos($moduleshortcode, ' ') !== false) {
             return false;
         }
-    
+
         // Different process depending on naming convention.
         if (
             preg_match(self::CS_MODULE_SPACE, $moduleshortcode) or preg_match(self::CS_NON_MODULE_SPACE, $moduleshortcode)
@@ -300,7 +300,7 @@ class lti_uon_integration_extended extends lti_integration
             // Saturn naming convention.
             $data = $this->process_saturn_naming_convention($mysqli, $moduleshortcode, $course_title);
         }
-    
+
         // return the data
         // returning an array containing an array, description of inner array
         // first is 'Manual' or 'SMS' indicating if its not or it is a manual add or a live SMS based module

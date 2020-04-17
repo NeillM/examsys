@@ -20,7 +20,7 @@
  * @author Joseph Baxter <joseph.baxter@nottingham.ac.uk>
  * @copyright Copyright (c) 2017 The University of Nottingham
  */
- 
+
 // Only run from the command line!
 if (PHP_SAPI != 'cli') {
     die("Please run this script from the CLI!\n");
@@ -43,7 +43,7 @@ $language = 'en';
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'include' . DIRECTORY_SEPARATOR . 'path_functions.inc.php';
 $cfg_web_root = get_root_path();
 // Ensure there is a trailing slash.
-if (substr($cfg_web_root, -1) !== '/') {
+if (mb_substr($cfg_web_root, -1) !== '/') {
     $cfg_web_root .= '/';
 }
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $language . DIRECTORY_SEPARATOR . 'install' . DIRECTORY_SEPARATOR . 'install.php';

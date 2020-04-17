@@ -260,7 +260,7 @@ for ($i = 0; $i < $user_no; $i++) {
 
     $labels = get_labels($propertyObj);
     foreach ($labels as $i => $label) {
-        echo '<tr><td align="right">' . $string[strtolower($label)] . '</td><td style="text-align:right">' . $classifications[$i] . "</td></tr>\n";
+        echo '<tr><td align="right">' . $string[mb_strtolower($label)] . '</td><td style="text-align:right">' . $classifications[$i] . "</td></tr>\n";
     }
     echo "</table>\n";
 

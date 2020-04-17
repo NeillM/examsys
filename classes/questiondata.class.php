@@ -101,7 +101,7 @@ abstract class questiondata
      * @var json
      */
     public $settings;
-  
+
     /**
      * Calculator state of question
      * @var boolean
@@ -353,7 +353,7 @@ abstract class questiondata
      * @var string
      */
     public $scoremethod;
-  
+
     /**
      * Question bonus type
      * @var string
@@ -365,7 +365,7 @@ abstract class questiondata
      * @var float
      */
     public $marks;
-  
+
     /**
      * Order of question options
      * @var string
@@ -543,7 +543,7 @@ abstract class questiondata
         global $used_questions, $user_dismiss, $user_order, $language;
 
         $paper_properties = PaperUtils::get_paper_properties($pid, $this->db);
-    
+
         // Attempt to display paper prolog
         if ($q_displayed == 0 and $current_screen == 1 and $paper_properties['paper_prologue'] != '') {
             $this->prologue = $paper_properties['paper_prologue'];
@@ -578,7 +578,7 @@ abstract class questiondata
                 } elseif ($question['q_option_order'] == 'alphabetic') {
                     $tmp_order_array = array();
                     for ($i = 0; $i < $option_no; $i++) {
-                        $tmp_order_array[$i] = strtolower($question['options'][$i]['option_text']);
+                        $tmp_order_array[$i] = mb_strtolower($question['options'][$i]['option_text']);
                     }
                     asort($tmp_order_array);
                     foreach ($tmp_order_array as $key => $value) {
@@ -667,7 +667,7 @@ abstract class questiondata
         // Processing for each stem.
         $this->options = array();
         $this->marks = $this->get_base_marks();
-    
+
         foreach ($question['options'] as $display_option) {
             $part_id++;
             $this->partid = $part_id;
@@ -735,7 +735,7 @@ abstract class questiondata
         if (!array_key_exists('extension', $fn_parts)) {
             $mediatype = self::FILE;
         } else {
-            $ext = strtolower($fn_parts['extension']);
+            $ext = mb_strtolower($fn_parts['extension']);
             if (key_exists($ext, \media_handler::SUPPORTED)) {
                 // Supported types.
                 $mediatype = \media_handler::SUPPORTED[$ext];
@@ -756,7 +756,7 @@ abstract class questiondata
                     break;
                 case self::HTML5AUDIO:
                     // Display filename if add or edit script
-                    if (strpos(Url::fromGlobals(), '/edit/') !== false or strpos(Url::fromGlobals(), '/add/') !== false) {
+                    if (mb_strpos(Url::fromGlobals(), '/edit/') !== false or mb_strpos(Url::fromGlobals(), '/add/') !== false) {
                         $mediaedit = true;
                     }
                     break;
@@ -781,7 +781,7 @@ abstract class questiondata
                     $foundmtl = false;
                     foreach ($dir as $fileinfo) {
                         $filename = $fileinfo->getFilename();
-                        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+                        $ext = mb_strtolower(pathinfo($filename, PATHINFO_EXTENSION));
                         if ($ext === 'obj' and $foundobj === false) {
                               $width = 640;
                               $height = 480;

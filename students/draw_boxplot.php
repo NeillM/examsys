@@ -49,7 +49,7 @@ function find_break($text)
             }
         }
     }
-  
+
     return $break;
 }
 
@@ -82,10 +82,10 @@ if ($scale == '1') {   // Scale mode
     ImageLine($Image, 45, 10, 50, 10, $dkgrey);
     imagettftext($Image, 10, 0, 35, 255, $black, $font, '0');
     ImageLine($Image, 45, 250, 50, 250, $dkgrey);
-  
+
     ImageLine($Image, 50, 10, 50, 257, $dkgrey);
     imagettftext($Image, 12, 90, 12, 132, $black, $bold_font, $string['percent']);
-  
+
     for ($label = 0; $label <= 10; $label++) {
         ImageLine($Image, 51, 250 - ($label * $gap), 70, 250 - ($label * $gap), $ltgrey);
     }

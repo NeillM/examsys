@@ -53,7 +53,7 @@ class UpdaterUtils
         $langpack = new \langpack();
         $this->langstrings = $langpack->get_all_strings($this->langcomponent);
     }
-  
+
     /**
      * Records a fix in the sys_updates table. This is the new system
      * instead of the old stop files.
@@ -98,7 +98,7 @@ class UpdaterUtils
 
         return $num_rows;
     }
-  
+
     /**
      * Determines if a table exists in the database.
      *
@@ -148,7 +148,7 @@ class UpdaterUtils
 
         return true;
     }
-  
+
     public function is_column_nullable($table_name, $column_name)
     {
         $result = $this->mysqli->prepare('SELECT IS_NULLABLE FROM information_schema.columns WHERE table_schema = ? AND table_name = ? AND column_name = ?');
@@ -296,7 +296,7 @@ class UpdaterUtils
     public function execute_query($sql, $update_display)
     {
         $insertID = false;
-    
+
         if ($update_display) {
             echo "<li>$sql&hellip;";
             ob_flush();
@@ -383,10 +383,10 @@ class UpdaterUtils
         $found = false;
         $line_no = 0;
         foreach ($cfg as $line) {
-            if (strpos($line, $search) !== false) {
+            if (mb_strpos($line, $search) !== false) {
                 $found = true;
             }
-            if ($target_line != '' and strpos($line, $target_line) !== false) {
+            if ($target_line != '' and mb_strpos($line, $target_line) !== false) {
                 $default_line = $line_no + $offset;
             }
             $line_no++;
@@ -424,7 +424,7 @@ class UpdaterUtils
         $found = false;
         $line_no = 0;
         foreach ($cfg as $key => $line) {
-            if (strpos($line, $replace) !== false) {
+            if (mb_strpos($line, $replace) !== false) {
                 $found = true;
                 $founndloc = $line_no;
             }

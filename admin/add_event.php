@@ -28,7 +28,7 @@ require '../include/sysadmin_auth.inc';
 $default = param::optional('default', null, param::TEXT, param::FETCH_GET);
 
 if (!is_null($default)) {
-    $parts = explode('_', substr($default, 1));
+    $parts = explode('_', mb_substr($default, 1));
     $day = $parts[0];
     if ($day < 10) {
         $day = '0' . $day;
@@ -48,9 +48,9 @@ if (!is_null($default)) {
   <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title><?php echo $string['addevent'] ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../css/dialog.css" />
   <link rel="stylesheet" type="text/css" href="../css/event.css" />
@@ -67,7 +67,7 @@ $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::ANNOUNCEME
 <body>
   <div class="dialog_header"><?php echo $string['addevent'] ?></div>
   <form id="theform" name="theform" method="post" action="" style="padding:10px" autocomplete="off">
-    
+
   <table style="width:99%">
     <tr>
       <td><?php echo $string['title'] ?></td>
@@ -123,7 +123,7 @@ $texteditorplugin->get_javascript_config(\plugins\plugins_texteditor::ANNOUNCEME
       <td colspan="2" style="padding-top:20px; text-align:center"><input type="submit" name="submit" value="<?php echo $string['ok'] ?>" class="ok" /><input type="button" name="cancel" id="cancel" value="<?php echo $string['cancel'] ?>" class="cancel" /></td>
     </tr>
   </table>
-    
+
   </form>
 </body>
 </html>

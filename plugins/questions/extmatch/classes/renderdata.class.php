@@ -187,8 +187,8 @@ class renderdata extends \questiondata
         $marks = $this->marks;
         for ($id = 1; $id <= $scenario_no; $id++) {
             if (isset($matching_answers[$id - 1])) {
-                $answer_no = substr_count($matching_answers[$id - 1], '$') + 1;
-                $marks += (substr_count($matching_answers[$id - 1], '$') + 1) * $option['markscorrect'];
+                $answer_no = mb_substr_count($matching_answers[$id - 1], '$') + 1;
+                $marks += (mb_substr_count($matching_answers[$id - 1], '$') + 1) * $option['markscorrect'];
             } else {
                 $answer_no = 0;
             }

@@ -30,7 +30,7 @@ require '../include/errors.php';
 
 $qIDs = check_var('q_id', 'POST', true, false, true);
 if ($qIDs{0} == ',') {
-    $qIDs = substr($qIDs, 1);
+    $qIDs = mb_substr($qIDs, 1);
 }
 
 $tmp_q_ids = explode(',', $_POST['q_id']);

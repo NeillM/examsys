@@ -123,8 +123,8 @@ if ($result->num_rows == 0) {
 }
 $result->close();
 
-$start_seconds  = (substr($started, 0, 2) * 60 * 60) + (substr($started, 3, 2) * 60) + substr($started, 6, 2);
-$updated        = (substr($updated, 0, 2) * 60 * 60) + (substr($updated, 3, 2) * 60) + substr($updated, 6, 2);
+$start_seconds  = (mb_substr($started, 0, 2) * 60 * 60) + (mb_substr($started, 3, 2) * 60) + mb_substr($started, 6, 2);
+$updated        = (mb_substr($updated, 0, 2) * 60 * 60) + (mb_substr($updated, 3, 2) * 60) + mb_substr($updated, 6, 2);
 $time_spent     = $updated - $start_seconds;
 
 $result = $mysqli->prepare('SELECT username, title, initials, surname FROM users WHERE id = ?');
@@ -261,7 +261,7 @@ $textsize -= 10;
     }
 
     $objectives = array();
-    $qid_list = substr($qid_list, 0, -1);
+    $qid_list = mb_substr($qid_list, 0, -1);
     $objByModule = getObjectivesByMapping($moduleID, $session, $paperID, $qid_list, $mysqli);
 
     unset($objByModule['none_of_the_above']);

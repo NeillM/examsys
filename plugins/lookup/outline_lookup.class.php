@@ -88,7 +88,7 @@ class outline_lookup
 
     function set_error($msg)
     {
-        if (strlen($this->error) > 0) {
+        if (mb_strlen($this->error) > 0) {
             $this->error .= '<br>';
         }
         $this->error .= $msg;
@@ -234,7 +234,7 @@ class outline_lookup
         $data->name = $this->name;
         $data->number = $this->number;
         $data->classname = get_class($this);
-        $data->classname = substr($data->classname, 0, strpos($data->classname, '_auth'));
+        $data->classname = mb_substr($data->classname, 0, mb_strpos($data->classname, '_auth'));
         $data->version = $this->version;
         $data->settings = $this->settings;
         $data->api_implimented = $this->impliments_api_lookup_version;

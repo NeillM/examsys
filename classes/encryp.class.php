@@ -89,14 +89,14 @@ class encryp
         if ($action == 'encrypt') {
             // Generate a random string for $iv
             $str = bin2hex(openssl_random_pseudo_bytes(10));
-            $iv = substr($str, 0, 16);
+            $iv = mb_substr($str, 0, 16);
             $output = openssl_encrypt($password, $encryption_method, $key, 0, $iv);
             $output = base64_encode($output);
             $output = $iv . $output;
         } else {
             if ($action == 'decrypt') {
-                $iv = substr($password, 0, 16);
-                $password = substr($password, 16);
+                $iv = mb_substr($password, 0, 16);
+                $password = mb_substr($password, 16);
                 $output = openssl_decrypt(base64_decode($password), $encryption_method, $key, 0, $iv);
             }
         }
@@ -119,9 +119,9 @@ class encryp
         if ($type == 'SHA-512') {
             $full_salt = '$6$' . $salt . '$'; // SHA-512
             $new_password = crypt($p, $full_salt);
-            $new_password = '$6$' . substr($new_password, strlen($full_salt));
+            $new_password = '$6$' . mb_substr($new_password, mb_strlen($full_salt));
         } else {
-            $full_salt = '$1$' . substr(md5($u), 0, 8) . '$'; // Simple MD5, for backwards compatibility
+            $full_salt = '$1$' . mb_substr(md5($u), 0, 8) . '$'; // Simple MD5, for backwards compatibility
             $new_password = crypt($p, $full_salt);
         }
 
@@ -152,9 +152,9 @@ class encryp
             $chars = array($lower, $lower, $lower, $special, $num, $num, $upper, $upper);
             for ($i = 0; $i < $len; $i++) {
                 if ($i < 7) {
-                    $pass .= substr($chars[$i], rand(0, 51), 1);
+                    $pass .= mb_substr($chars[$i], rand(0, 51), 1);
                 } else {
-                    $pass .= substr($chars[rand(2, 6)], rand(0, 51), 1);
+                    $pass .= mb_substr($chars[rand(2, 6)], rand(0, 51), 1);
                 }
             }
             return array('password' => $pass, 'display_password' => $pass);
@@ -170,7 +170,7 @@ class encryp
 
         return array('password' => $pass, 'display_password' => rtrim($disppass));
     }
-    
+
     /**
      * Check if readable passwords in use.
      * @return bool

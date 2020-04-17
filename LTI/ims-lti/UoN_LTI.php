@@ -45,7 +45,7 @@ class UoN_LTI extends BLTI
     protected $langcomponent = 'LTI/error';
     /** @var array language strings */
     protected $strings;
-  
+
     /**
      * Create and return the Global instance of parent::$class_name for use in
      * the Local scope.
@@ -65,7 +65,7 @@ class UoN_LTI extends BLTI
     {
         static::$inst = $obj;
     }
-  
+
     private $db;
     /**
      * @var array|bool
@@ -112,18 +112,18 @@ class UoN_LTI extends BLTI
         if (!isset($_REQUEST['resource_link_id'])) {
             $_REQUEST['resource_link_id'] = '';
         }
-      
+
         // If this request is not an LTI Launch, either
         // give up or try to retrieve the context from session
         if (!is_lti_request()) {
             if ($usesession === false) {
                     return;
             }
-            if (strlen(session_id()) > 0) {
+            if (mb_strlen(session_id()) > 0) {
                 if (isset($_SESSION['_lti_row'])) {
                         $row = $_SESSION['_lti_row'];
                 }
-          
+
                 if (isset($row)) {
                     $this->row = $row;
                 }
@@ -213,7 +213,7 @@ class UoN_LTI extends BLTI
             if ($key == 'basiclti_submit') {
                 continue;
             }
-            if (strpos($key, 'oauth_') === false) {
+            if (mb_strpos($key, 'oauth_') === false) {
                 $newinfo[$key] = $value;
                 continue;
             }
@@ -224,7 +224,7 @@ class UoN_LTI extends BLTI
         }
         $newinfo['oauth_consumer_secret'] = $secret;
         $this->info = $newinfo;
-        if ($usesession == true and strlen(session_id()) > 0) {
+        if ($usesession == true and mb_strlen(session_id()) > 0) {
             $_SESSION['_lti_context'] = $this->info;
             unset($_SESSION['_lti_row']);
             unset($_SESSION['_lti_context_id']);
@@ -317,7 +317,7 @@ class UoN_LTI extends BLTI
         $result->execute();
         $result->bind_result($id, $title, $surname, $firstnames, $initials, $username, $rawexternalid, $consumer_key);
         while ($result->fetch()) {
-            $externalid = substr($rawexternalid, strlen("$consumer_key:"));
+            $externalid = mb_substr($rawexternalid, mb_strlen("$consumer_key:"));
             $return["$id-$externalid"] = array(
                   'id' => $id,
                   'title' => $title,
@@ -330,7 +330,7 @@ class UoN_LTI extends BLTI
         }
         return $return;
     }
-  
+
     /**
      * Get the details of an LTi key by it's ID in an array containing the following keys:
      * - id
@@ -362,7 +362,7 @@ class UoN_LTI extends BLTI
         $result->close();
         return $return;
     }
-  
+
     function get_lti_keys($deleted = false)
     {
         $dataret = array();
@@ -439,7 +439,7 @@ class UoN_LTI extends BLTI
         $stmt->execute();
         $stmt->close();
     }
-  
+
     /**
      * Deletes the link between an user of an external system and Rogo.
      *

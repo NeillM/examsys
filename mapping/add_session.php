@@ -132,7 +132,7 @@ if (isset($_POST['Save'])) {
     $validfrom = '<select name="session">' . "\n";
     $startyear = ( date('Y') - 1 );
     for ($i = 0; $i < 2; $i++) {
-        $tmp_session = ($startyear + $i) . '/' . substr(($startyear + $i + 1), 2);
+        $tmp_session = ($startyear + $i) . '/' . mb_substr(($startyear + $i + 1), 2);
         $tmp_calyear = $startyear + $i;
         if ($tmp_session == $session) {
             $validfrom .= '<option value="' . $tmp_calyear . '" selected>' . $tmp_session . '</option>';

@@ -38,7 +38,7 @@ class textbox_marking_utils
     static function get_remark_users($paperID, $db)
     {
         $remark_array = array();
-    
+
         $result = $db->prepare('SELECT userID FROM textbox_remark WHERE paperID = ?');
         $result->bind_param('i', $paperID);
         $result->execute();
@@ -47,10 +47,10 @@ class textbox_marking_utils
             $remark_array[$userID] = true;
         }
         $result->close();
-    
+
         return $remark_array;
     }
-    
+
     /**
      * Converts a time/date from 20140301103059 into 01/03/2014 10:30.
      * @param string $original - The date that needs to be convered.
@@ -58,7 +58,7 @@ class textbox_marking_utils
      */
     static function nicedate($original)
     {
-        return substr($original, 6, 2) . '/' . substr($original, 4, 2) . '/' . substr($original, 0, 4) . ' ' . substr($original, 8, 2) . ':' . substr($original, 10, 2);
+        return mb_substr($original, 6, 2) . '/' . mb_substr($original, 4, 2) . '/' . mb_substr($original, 0, 4) . ' ' . mb_substr($original, 8, 2) . ':' . mb_substr($original, 10, 2);
     }
 
     /**

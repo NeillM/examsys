@@ -74,11 +74,11 @@ function get_correct_labels($question, $tmp_exclude)
     $i = 0;
     $excluded_no = 0;
     for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
-        if (substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no - 2] > 219) {
-            if (substr($tmp_exclude, $i, 1) == '0') {
+        if (mb_substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no - 2] > 219) {
+            if (mb_substr($tmp_exclude, $i, 1) == '0') {
                 $x = $tmp_second_split[$label_no - 2];
                 $y = $tmp_second_split[$label_no - 1] - 25;
-                $correct_labels[$x . 'x' . $y] = substr($tmp_second_split[$label_no], 0, strpos($tmp_second_split[$label_no], '|'));
+                $correct_labels[$x . 'x' . $y] = mb_substr($tmp_second_split[$label_no], 0, mb_strpos($tmp_second_split[$label_no], '|'));
             } else {
                 $excluded_no++;
             }
@@ -225,7 +225,7 @@ if ($student_no > 0) {
                 $csv .= '"' . $string['gender'] . '","' . $string['course'] . '","' . $string['year'] . '","' . $string['submitted'] . '"';
             }
             $q_no = 1;
-        
+
             foreach ($paper_buffer as $q_id => $question) {
                 $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
                 // If a random question, get the first on the associated questions from the block. If none exist, output nothing
@@ -245,14 +245,14 @@ if ($student_no > 0) {
                         $skip_random = true;
                     }
                 }
-      
+
                 if (!$skip_random) {
                     if ($question['q_type'] == 'extmatch' and $question['score_method'] == 'Mark per Option') {
                         $sub_parts = 0;
                         $paper_answers = explode('|', $question['correct'][0]);
                         for ($a = 0; $a < count($paper_answers); $a++) {
-                            $sub_parts += substr_count($paper_answers[$a], '$');
-                            if ($paper_answers[$a] != '' and substr($tmp_exclude, $a + $sub_parts, 1) == '0') {
+                            $sub_parts += mb_substr_count($paper_answers[$a], '$');
+                            if ($paper_answers[$a] != '' and mb_substr($tmp_exclude, $a + $sub_parts, 1) == '0') {
                                 $num_ix = 0;
                                 $correct_subparts = explode('$', $paper_answers[$a]);
                                 foreach ($correct_subparts as $subpart) {
@@ -265,9 +265,9 @@ if ($student_no > 0) {
                         $sub_parts = 0;
                         $paper_answers = explode('|', $question['correct'][0]);
                         for ($a = 0; $a < count($paper_answers); $a++) {
-                            $sub_parts += substr_count($paper_answers[$a], '$');
+                            $sub_parts += mb_substr_count($paper_answers[$a], '$');
 
-                            if ($paper_answers[$a] != '' and substr($tmp_exclude, $a + $sub_parts, 1) == '0') {
+                            if ($paper_answers[$a] != '' and mb_substr($tmp_exclude, $a + $sub_parts, 1) == '0') {
                                 $csv .= ',Q' . $q_no . chr($a + 65);
                             }
                         }
@@ -291,7 +291,7 @@ if ($student_no > 0) {
                             }
                         }
                     } elseif ($question['q_type'] == 'labelling' and $question['score_method'] == 'Mark per Option') {
-                        for ($a = 0; $a < (count($question['correct_labels']) + substr_count($tmp_exclude, '1')); $a++) {
+                        for ($a = 0; $a < (count($question['correct_labels']) + mb_substr_count($tmp_exclude, '1')); $a++) {
                             if ($tmp_exclude{$a} == '0') {
                                 $csv .= ',Q' . $q_no . chr($a + 65);
                             }
@@ -321,7 +321,7 @@ if ($student_no > 0) {
             } else {
                 $csv .= '"' . $individual['gender'] . '","' . $individual['student_grade'] . '","' . $individual['year'] . '","' . $individual['display_started'] . '"';
             }
-    
+
             foreach ($paper_buffer as $q_id => $question) {
                 $tmp_exclude = $exclusions->get_exclusions_by_qid($q_id);
 
@@ -355,9 +355,9 @@ if ($student_no > 0) {
                                 $parts_test_fail = true;
                                 if ($question['q_type'] == 'extmatch' and isset($log_array[$row_written])) {
                                     $extmatch_parts = explode('|', $question['correct'][0]);
-                                    if (strpos($extmatch_parts[$mi], '$') !== false) {
+                                    if (mb_strpos($extmatch_parts[$mi], '$') !== false) {
                                         $parts_test_fail = false;
-                                    
+
                                         $answer = '';
                                         foreach ($log_array[$row_written] as $kb => $vb) {
                                             if (is_array($vb)) {
@@ -369,10 +369,10 @@ if ($student_no > 0) {
                                             }
                                         }
                                         $answer_parts = explode('|', $answer);
-                                    
+
                                         $extmatch_parts_correct = explode('$', $extmatch_parts[$mi]);
                                         $answer_subparts = explode('$', $answer_parts[$mi]);
-                                    
+
                                         foreach ($extmatch_parts_correct as $qi => $question_part) {
                                             if (in_array($question_part, $answer_subparts)) {
                                                 $csv .= ',1';
@@ -382,7 +382,7 @@ if ($student_no > 0) {
                                         }
                                     }
                                 }
-                                if ($question['q_type'] == 'enhancedcalc' and substr($tmp_exclude, $mi, 1) == '0') {
+                                if ($question['q_type'] == 'enhancedcalc' and mb_substr($tmp_exclude, $mi, 1) == '0') {
                                     if ($tmp_mark === null) {
                                         $csv .= ',unmarked';
                                     } elseif ($tmp_mark == 0) {
@@ -390,7 +390,7 @@ if ($student_no > 0) {
                                     } else {
                                         $csv .= ',1';
                                     }
-                                } elseif ($question['q_type'] != 'labelling' or substr($tmp_exclude, $mi, 1) == '0') {
+                                } elseif ($question['q_type'] != 'labelling' or mb_substr($tmp_exclude, $mi, 1) == '0') {
                                     if ($parts_test_fail) {
                                         $csv .= ',' . (($tmp_mark > 0) ? 1 : 0);
                                     }
@@ -440,7 +440,7 @@ if ($student_no > 0) {
 
                               $paper_answers = explode('|', $question['correct'][0]);
                             for ($a = 0; $a < count($paper_answers); $a++) {
-                                if ($paper_answers[$a] != '' and substr($tmp_exclude, $a + $sub_parts, 1) == '0') {
+                                if ($paper_answers[$a] != '' and mb_substr($tmp_exclude, $a + $sub_parts, 1) == '0') {
                                     $csv .= '0';
                                 }
                             }

@@ -38,7 +38,7 @@ abstract class rogo_directory
      * @var rogo_directory[]
      */
     protected static $loaded = array();
-  
+
     /**
      * Language pack component.
      */
@@ -78,7 +78,7 @@ abstract class rogo_directory
                 throw new directory_not_found('rogo_data');
             }
             // Ensure the directory has a trailing slash.
-            if (substr($rogodata, -1) != DIRECTORY_SEPARATOR) {
+            if (mb_substr($rogodata, -1) != DIRECTORY_SEPARATOR) {
                 $rogodata .= DIRECTORY_SEPARATOR;
             }
             $path = $rogodata;
@@ -117,7 +117,7 @@ abstract class rogo_directory
         }
         return false;
     }
-  
+
     /**
      * Delete the contents of the directory.
      * This should probably only be used by automatic test setup/teardown functions.
@@ -207,7 +207,7 @@ abstract class rogo_directory
         // A directory has been passed, delete its contents.
         $success = true;
         // If the directory has no trailing slash add one.
-        if (substr($location, -1) !== DIRECTORY_SEPARATOR) {
+        if (mb_substr($location, -1) !== DIRECTORY_SEPARATOR) {
             $location .= DIRECTORY_SEPARATOR;
         }
         $directory = dir($location);
@@ -343,7 +343,7 @@ abstract class rogo_directory
         $config = Config::get_instance();
         $webroot = $config->get('cfg_root_path');
         // Ensure there is a trailing slash.
-        if (substr($webroot, -1) !== '/') {
+        if (mb_substr($webroot, -1) !== '/') {
             $webroot .= '/';
         }
         // Build the parameters for the url.
@@ -394,7 +394,7 @@ abstract class rogo_directory
     {
         $realfullpath = realpath($fullpath);
         $realdirpath = realpath($this->location());
-        if (strpos($realfullpath, $realdirpath) !== 0) {
+        if (mb_strpos($realfullpath, $realdirpath) !== 0) {
             return false;
         }
         return true;

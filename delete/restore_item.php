@@ -33,8 +33,8 @@ $items = explode(',', $_GET['item_id']);
 for (
     $i = 0; $i < count($items); $i++
 ) {
-    $type = substr($items[$i], 0, 1);
-    $item_id = substr($items[$i], 1);
+    $type = mb_substr($items[$i], 0, 1);
+    $item_id = mb_substr($items[$i], 1);
     if ($type == 'p') {
         // Papers
           // Get the paper title of the restored paper.

@@ -176,7 +176,7 @@ foreach ($log_array as $individual) {
             }
             switch ($paper_buffer[$i]['type']) {
                 case 'blank':
-                    $sections = substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], '|');
+                    $sections = mb_substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], '|');
                     for ($sec = 1; $sec <= $sections; $sec++) {
                         if ($sec > 1) {
                             echo ',';
@@ -185,7 +185,7 @@ foreach ($log_array as $individual) {
                     }
                     break;
                 case 'extmatch':
-                    $sections = substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], '|') + 1;
+                    $sections = mb_substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], '|') + 1;
                     for ($sec = 1; $sec <= $sections; $sec++) {
                         if ($sec > 1) {
                                 echo ',';
@@ -194,7 +194,7 @@ foreach ($log_array as $individual) {
                     }
                     break;
                 case 'matrix':
-                    $sections = substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], '|') + 1;
+                    $sections = mb_substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], '|') + 1;
                     for ($sec = 1; $sec <= $sections; $sec++) {
                         if ($sec > 1) {
                             echo ',';
@@ -203,7 +203,7 @@ foreach ($log_array as $individual) {
                     }
                     break;
                 case 'rank':
-                    $sections = substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], ',') + 1;
+                    $sections = mb_substr_count($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], ',') + 1;
                     for ($sec = 1; $sec <= $sections; $sec++) {
                         if ($sec > 1) {
                             echo ',';
@@ -212,7 +212,7 @@ foreach ($log_array as $individual) {
                     }
                     break;
                 case 'dichotomous':
-                    $sections = strlen($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID]);
+                    $sections = mb_strlen($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID]);
                     for ($sec = 1; $sec <= $sections; $sec++) {
                         if ($sec > 1) {
                             echo ',';
@@ -252,7 +252,7 @@ foreach ($log_array as $individual) {
                 case 'blank':
                     $log_array[$tmp_user_ID][$tmp_question_ID] = $log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID];
                     $tmp_answers = str_replace('|', ',', $log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID]);
-                    echo substr($tmp_answers, 1);
+                    echo mb_substr($tmp_answers, 1);
                     break;
                 case 'extmatch':
                     $log_array[$tmp_user_ID][$tmp_question_ID] = $log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID];
@@ -260,7 +260,7 @@ foreach ($log_array as $individual) {
                     echo $tmp_answers;
                     break;
                 case 'matrix':
-                    $log_array[$tmp_user_ID][$tmp_question_ID] = substr($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], 1);
+                    $log_array[$tmp_user_ID][$tmp_question_ID] = mb_substr($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], 1);
                     $tmp_answers = str_replace('|', ',', $log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID]);
                     echo $tmp_answers;
                     break;
@@ -280,13 +280,13 @@ foreach ($log_array as $individual) {
                         if ($char_pos > 0) {
                             echo ',';
                         }
-                        echo substr($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], $char_pos, 1);
+                        echo mb_substr($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], $char_pos, 1);
                     }
                     if ($paper_buffer[$i]['score_method'] == 'other') {
-                        if (substr($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], $char_pos, 1) == 'n') {
+                        if (mb_substr($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], $char_pos, 1) == 'n') {
                             echo ',n';
                         } else {
-                            echo ',' . substr($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], $char_pos + 1);
+                            echo ',' . mb_substr($log_array[$tmp_user_ID][$tmp_screen][$tmp_question_ID], $char_pos + 1);
                         }
                     }
                     break;
@@ -295,8 +295,8 @@ foreach ($log_array as $individual) {
                     $tmp_data = preg_replace("/(\r\n|\n|\r)/", '', $tmp_data);
                     $tmp_data = str_replace('"', "'", $tmp_data);
 
-                    if (substr($tmp_data, 0, 1) == '-') {
-                        $tmp_data = trim(substr($tmp_data, 1));
+                    if (mb_substr($tmp_data, 0, 1) == '-') {
+                        $tmp_data = trim(mb_substr($tmp_data, 1));
                     }
                     echo '"' . $tmp_data . '"';
                     break;

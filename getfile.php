@@ -50,7 +50,7 @@ try {
  */
 function send_404()
 {
-    if (substr(php_sapi_name(), 0, 3) == 'cgi') {
+    if (mb_substr(php_sapi_name(), 0, 3) == 'cgi') {
         header('Status: 404 Not Found');
     } else {
         header('HTTP/1.0 404 not found');

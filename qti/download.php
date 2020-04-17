@@ -45,7 +45,7 @@ if ($userObject->get_user_ID() != $xml->owner) {
 }
 
 $xmlfile = $base_dir . $path . '/' . $file;
-$ext = strtolower(substr($file, strrpos($file, '.') + 1));
+$ext = mb_strtolower(mb_substr($file, mb_strrpos($file, '.') + 1));
 $filename = $file;
 if ($title) {
     $filename = CleanFileName($title) . '.' . $ext;

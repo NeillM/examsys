@@ -70,7 +70,7 @@ if ($user_details['gender'] == 'Male') {
     <tr><td style="border-bottom:1px solid #CCD9EA; width:50px"><img src="<?php echo $generic_icon ?>" width="48" height="48" /></td><td class="dkblue_header" style="background-color:white; font-size:160%; border-bottom:1px solid #CCD9EA; font-weight:bold"><?php echo $string['edituserdetails'] ?></td></tr>
   </table>
   <br />
-  
+
   <form id="myform" name="myform" action="" method="post" enctype="multipart/form-data" autocomplete="off">
   <table cellspacing="0" cellpadding="2" border="0" style="width:100%; border:12px solid #EEF4FF">
 <?php
@@ -153,17 +153,17 @@ if ($userObject->has_role('SysAdmin')) {
   $roles_array[] = 'Locked';
 
 foreach ($roles_array as $value) {
-    if (substr($value, 0, 1) == '#') {
+    if (mb_substr($value, 0, 1) == '#') {
         if ($old_optgroup != '') {
             echo "</optgroup>\n";
         }
-        echo '<optgroup label="' . $string[substr($value, 1)] . "\">\n";
+        echo '<optgroup label="' . $string[mb_substr($value, 1)] . "\">\n";
         $old_optgroup = $value;
     } else {
         $display_val = str_replace(' ', '', $value);
         $display_val = str_replace(',', '', $display_val);
-        $display_val = $string[strtolower($display_val)];
-        if (strtolower($value) == strtolower($user_details['roles'])) {
+        $display_val = $string[mb_strtolower($display_val)];
+        if (mb_strtolower($value) == mb_strtolower($user_details['roles'])) {
             echo "<option value=\"$value\" selected>$display_val</option>";
         } else {
             echo "<option value=\"$value\">$display_val</option>";

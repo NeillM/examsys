@@ -64,9 +64,9 @@ class LABELLINGCorrector extends Corrector
                                 $x = $tmp_third_split[2];
                                 $y = $tmp_third_split[3] - 25;
                                 $correct_labels[$x . 'x' . $y] = $tmp_third_split[4];
-                                $tmp_pos = strpos($correct_labels[$x . 'x' . $y], '~');
+                                $tmp_pos = mb_strpos($correct_labels[$x . 'x' . $y], '~');
                                 if ($tmp_pos !== false) {
-                                    $correct_labels[$x . 'x' . $y] = substr($correct_labels[$x . 'x' . $y], 0, $tmp_pos);
+                                    $correct_labels[$x . 'x' . $y] = mb_substr($correct_labels[$x . 'x' . $y], 0, $tmp_pos);
                                 }
                             }
                         }

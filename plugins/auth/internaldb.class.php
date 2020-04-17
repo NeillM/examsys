@@ -69,7 +69,7 @@ class internaldb_auth extends outline_authentication
 
         return $postauthfailreturn;
     }
-  
+
     function errordisp($displayerrformobj)
     {
         global $string;
@@ -78,7 +78,7 @@ class internaldb_auth extends outline_authentication
         $displayerrformobj->li[] = '<a href="' . $cfg->get('cfg_root_path') . '/users/forgotten_password.php">' . $string['forgottenpassword'] . '</a>' ;
         return $displayerrformobj;
     }
-  
+
     function lookupuser($lookupuserobj)
     {
 
@@ -131,7 +131,7 @@ class internaldb_auth extends outline_authentication
             return $authobj;
         }
         $result->fetch();
-        if (substr($pass, 0, 3) == '$1$') {
+        if (mb_substr($pass, 0, 3) == '$1$') {
             $old_encrypt_type = 'MD5';
             $this->savetodebug('Using old encryption');
         } else {

@@ -31,9 +31,9 @@ $help_system = new OnlineHelp($userObject, $configObject, $string, $notice, 'stu
 if (isset($_POST['submit'])) {
     $title = $_POST['title'];
     $pageID = $_POST['pageid'];
-  
+
     $articleid = $help_system->create_pointer($title, $pageID);
-  
+
     $mysqli->close();
     header("location: index.php?id=$articleid");
     exit;
@@ -46,7 +46,7 @@ if (isset($_POST['submit'])) {
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title><?php echo page::title('Rog&#333;: ' . $string['help']); ?></title>
-  
+
   <link rel="stylesheet" type="text/css" href="../../css/body.css" />
   <link rel="stylesheet" type="text/css" href="../../css/help.css" />
 
@@ -65,9 +65,9 @@ if (isset($_POST['submit'])) {
     <?php $help_system->display_toc($id); ?>
   </div>
   <div id="contents">
-    
+
     <p style="margin-left:20px" class="key"><?php echo $string['msg'] ?></p>
-    
+
 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post" autocomplete="off">
 <p style="margin-left:20px"><input type="text" style="color:#295AAD; font-size:160%; border: 1px solid #C0C0C0; font-weight:bold" size="50" name="title" value="" placeholder="Page Title..." required /></p>
 
@@ -81,7 +81,7 @@ if (isset($_POST['submit'])) {
     $old_parent = '';
     $help_toc = array();
     $help_toc_titles = array();
-    
+
     $help_section = 0;
     $result = $mysqli->prepare($sql);
     $result->bind_param('s', $language);
@@ -94,16 +94,16 @@ if (isset($_POST['submit'])) {
         $help_section++;
     }
     $result->close();
-    
+
     for ($i = 0; $i < $help_section; $i++) {
         $id = $help_toc[$i]['id'];
-        $slash_pos = strpos($help_toc[$i]['title'], '/');
+        $slash_pos = mb_strpos($help_toc[$i]['title'], '/');
         if ($slash_pos !== false) {
-            $parent = substr($help_toc[$i]['title'], 0, $slash_pos);
+            $parent = mb_substr($help_toc[$i]['title'], 0, $slash_pos);
             if ($old_parent != '' and $parent != $old_parent) {
                 echo "</div>\n";
             }
-            $tmp_title = substr($help_toc[$i]['title'], ($slash_pos + 1));
+            $tmp_title = mb_substr($help_toc[$i]['title'], ($slash_pos + 1));
 
             if ($parent != $old_parent) {
                 $icon = 'closed_book.png';

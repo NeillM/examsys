@@ -70,7 +70,7 @@ class AutoloadFilenameSniff implements Sniff
             return;
         }
         $directory = dirname($phpcsFile->getFilename());
-        $file_dir_name = substr($directory, strlen(dirname($directory)) + 1);
+        $file_dir_name = mb_substr($directory, mb_strlen(dirname($directory)) + 1);
         if ($file_dir_name !== 'classes') {
             // Files will only autoload if they are in the classes directory.
             return;
@@ -79,7 +79,7 @@ class AutoloadFilenameSniff implements Sniff
 
         $classnametoken =  $phpcsFile->findNext(T_STRING, $stackPtr);
         $classname = $tokens[$classnametoken]['content'];
-        $expectedname = strtolower($classname) . '.class.php';
+        $expectedname = mb_strtolower($classname) . '.class.php';
         if ($filename === $expectedname) {
             // The file is named correctly for auto loading.
             return;

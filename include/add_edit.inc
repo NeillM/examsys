@@ -39,7 +39,7 @@ function clearMSOtags($sHTML)
     if (trim($sHTML) == '<p>&nbsp;</p>' or trim($sHTML) == '<p></p>' or trim($sHTML) == '<div>&nbsp;</div>' or trim($sHTML) == '<div></div>' or trim($sHTML) == '<br />') {
         $sHTML = '';
     } else {
-        if (strpos($sHTML, 'mso-') !== false or strpos($sHTML, 'MsoNormal') !== false or strpos($sHTML, '<o:p>') !== false) {
+        if (mb_strpos($sHTML, 'mso-') !== false or mb_strpos($sHTML, 'MsoNormal') !== false or mb_strpos($sHTML, '<o:p>') !== false) {
             $allowedTags = '<div><b><i><strong><em><sup><sub><table><tr><td><tbody><th>';
             $sHTML = strip_tags($sHTML, $allowedTags);
         }
@@ -102,10 +102,10 @@ function option_order($selected = '')
 
     $html = "<select id=\"option_order\" name=\"option_order\">\n";
     foreach ($items as $item) {
-        if ($selected == strtolower($item)) {
-            $html .= '<option value="' . strtolower($item) . "\" selected>$item</option>\n";
+        if ($selected == mb_strtolower($item)) {
+            $html .= '<option value="' . mb_strtolower($item) . "\" selected>$item</option>\n";
         } else {
-            $html .= '<option value="' . strtolower($item) . "\">$item</option>\n";
+            $html .= '<option value="' . mb_strtolower($item) . "\">$item</option>\n";
         }
     }
     $html .= "</select>\n";
@@ -146,16 +146,16 @@ HTML;
             $change_old_more = '';
             $change_new = $change['new'];
             $change_new_more = '';
-            if (strlen($change['old']) > $cutoff) {
-                $split_pos = strrpos(substr($change['old'], 0, $cutoff), ' ');
-                $change_old = substr($change['old'], 0, $split_pos);
-                $change_old_more = substr($change['old'], $split_pos);
+            if (mb_strlen($change['old']) > $cutoff) {
+                $split_pos = mb_strrpos(mb_substr($change['old'], 0, $cutoff), ' ');
+                $change_old = mb_substr($change['old'], 0, $split_pos);
+                $change_old_more = mb_substr($change['old'], $split_pos);
                 $change_old_more = "<span class=\"more-ellip\">&hellip;</span><span class=\"more-text\">{$change_old_more}</span><br /><a href=\"#\" class=\"more\">{$string['showmore']}</a>";
             }
-            if (strlen($change['new']) > $cutoff) {
-                $split_pos = strrpos(substr($change['new'], 0, $cutoff), ' ');
-                $change_new = substr($change['new'], 0, $split_pos);
-                $change_new_more = substr($change['new'], $split_pos);
+            if (mb_strlen($change['new']) > $cutoff) {
+                $split_pos = mb_strrpos(mb_substr($change['new'], 0, $cutoff), ' ');
+                $change_new = mb_substr($change['new'], 0, $split_pos);
+                $change_new_more = mb_substr($change['new'], $split_pos);
                 $change_new_more = "<span class=\"more-ellip\">&hellip;</span><span class=\"more-text\">{$change_new_more}</span><br /><a href=\"#\" class=\"more\">{$string['showmore']}</a>";
             }
             if ($change['section'] == $string['markscorrect'] or $change['section'] == $string['marksincorrect'] or $change['section'] == $string['markspartial']) {
@@ -229,7 +229,7 @@ HTML;
 
             $alt = ($i % 2 == 0) ? ' class="alt"' : '';
             $comment_str = ($comment['comment'] == '') ? $string['nocomments'] : nl2br($comment['comment']);
-            $type_translated = $string[strtolower($comment['type'])];
+            $type_translated = $string[mb_strtolower($comment['type'])];
 
             $html .= <<< HTML
   					<tr{$alt}>

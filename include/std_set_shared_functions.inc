@@ -43,14 +43,14 @@ function load_ebel_percents($id, $mysqli)
         $percents[$category] = round($percentage, 2);
     }
     $result->close();
-  
+
     return $percents;
 }
 
 function load_question_ratings($id, $mysqli)
 {
     $ratings = array();
-  
+
     $result = $mysqli->prepare('SELECT q_type, questionID, rating FROM std_set_questions, questions WHERE std_set_questions.questionID = questions.q_id AND std_setID = ?');
     $result->bind_param('i', $id);
     $result->execute();
@@ -60,19 +60,19 @@ function load_question_ratings($id, $mysqli)
         $ratings[] = array('q_type' => $q_type, 'questionID' => $questionID, 'rating' => $rating);
     }
     $result->close();
-  
+
     return $ratings;
 }
 
 function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0)
 {
     $configObject = Config::get_instance();
-  
+
     $configObject->get('cfg_long_date_time');
     $reviews = array();
-  
+
     $standard_setting = new StandardSetting($mysqli);
-  
+
     $result = $mysqli->prepare("SELECT std_set.id, DATE_FORMAT(std_set,'%Y%m%d%H%i%s') AS std_set, DATE_FORMAT(std_set,'{$configObject->get('cfg_long_date_time')}') AS display_date, method, group_review, title, initials, surname, setterID, distinction_score FROM std_set, users WHERE std_set.setterID = users.id AND paperID = ? ORDER BY std_set");
     $result->bind_param('i', $paperID);
     $result->execute();
@@ -94,7 +94,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0)
         'name' => "$title $initials $surname");
     }
     $result->close();
- 
+
     $no_reviews = count($reviews);
     for ($i = 0; $i < $no_reviews; $i++) {
         // Get any questions to exclude.
@@ -110,29 +110,29 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0)
             $exclude[$q_id] = $parts;
         }
         $exclude_result->close();
-  
+
         // Calculate marks for the current paper.
         $marks_array = array();
         ss_get_marks_correct($mysqli, $paperID, $exclude, $marks_array);
-    
+
         if ($reviews[$i]['method'] == 'Ebel') {
             $ebel_percents = load_ebel_percents($reviews[$i]['std_setID'], $mysqli);
         }
-    
+
         $angoff_review_marks = 0;
         $std_total = 0;
         $question_no = 0;
         $ebel_marks = array('EE' => 0, 'EI' => 0, 'EN' => 0, 'ME' => 0, 'MI' => 0, 'MN' => 0, 'HE' => 0, 'HI' => 0, 'HN' => 0, 'EE2' => 0, 'EI2' => 0, 'EN2' => 0, 'ME2' => 0, 'MI2' => 0, 'MN2' => 0, 'HE2' => 0, 'HI2' => 0, 'HN2' => 0, 'exclude_EE' => 0, 'exclude_EI' => 0, 'exclude_EN' => 0, 'exclude_ME' => 0, 'exclude_MI' => 0, 'exclude_MN' => 0, 'exclude_HE' => 0, 'exclude_HI' => 0, 'exclude_HN' => 0);
-    
+
         $ratings = load_question_ratings($reviews[$i]['std_setID'], $mysqli);
         $rating_no = count($ratings);
-        
+
         if ($reviews[$i]['method'] == 'Modified Angoff' or $reviews[$i]['method'] == 'Ebel') {
             for ($x = 0; $x < $rating_no; $x++) {  // Loop around the questions
                 $questionID = $ratings[$x]['questionID'];
                 $rating = $ratings[$x]['rating'];
                 $q_type = $ratings[$x]['q_type'];
-      
+
                 if (array_key_exists($questionID, $exclude)) {
                     $tmp_exclude = $exclude[$questionID];
                 } else {
@@ -142,7 +142,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0)
 
                 if ($rating != '') {
                     $rating_array = explode(',', $rating);
-          
+
                     foreach ($rating_array as $individual_rating) {
                         if (isset($marks_array[$questionID][$partID]) and $individual_rating != '') {
                             if (isset($ebel_marks[$individual_rating])) {
@@ -155,12 +155,12 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0)
                         }
                         $partID++;
                     }
-    
+
                     if ($reviews[$i]['method'] == 'Modified Angoff') {
                         $tmp_part = 0;
                         foreach ($rating_array as $individual_rating) {
                             if (isset($marks_array[$questionID][$tmp_part]) and $individual_rating != '') {
-                                if (substr($tmp_exclude, $tmp_part, 1) == '0') {
+                                if (mb_substr($tmp_exclude, $tmp_part, 1) == '0') {
                                     if ($q_type == 'textbox') {
                                           $textbox_marks = $marks_array[$questionID][0];
                                         for ($a = 0; $a < $textbox_marks; $a++) {
@@ -182,7 +182,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0)
                 }
             }
         }
-    
+
         if ($reviews[$i]['method'] == 'Modified Angoff') {
             $reviews[$i]['pass_score'] = ($question_no > 0) ? round($std_total / $angoff_review_marks) : 0;
             $reviews[$i]['review_total'] = $angoff_review_marks;
@@ -218,7 +218,7 @@ function get_reviews($mysqli, $mode, $paperID, $total_marks, &$no_reviews = 0)
             $cut_marks2 += $ebel_marks['HE'] * $ebel_percents['HE2'] * 100;
             $cut_marks2 += $ebel_marks['HI'] * $ebel_percents['HI2'] * 100;
             $cut_marks2 += $ebel_marks['HN'] * $ebel_percents['HN2'] * 100;
-      
+
             if ($reviews[$i]['distinction_score'] > 0) {
                 $distinction_score = ($total_marks == 0) ? $total_marks : (($cut_marks2 / ($total_marks * 100)) * 100);
                 $reviews[$i]['distinction_score'] = round($distinction_score, 1);
@@ -237,7 +237,7 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array)
     $stems = 0;
     $correct_no = 0;
     $old_score_method = '';
-  
+
     $result = $mysqli->prepare("SELECT q_type, q_id, marks_correct, marks_incorrect, correct, score_method, option_text, settings FROM papers, questions LEFT JOIN options ON questions.q_id = options.o_id WHERE papers.paper = ? AND papers.question = questions.q_id AND q_type not in ('info', 'keyword_based', 'random') ORDER BY q_id, o_id, id_num");
     $result->bind_param('i', $paper_id);
     $result->execute();
@@ -246,7 +246,7 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array)
     while ($result->fetch()) {
         if ($old_q_id != $q_id and $old_q_id != 0) {
             if ($old_q_type == 'rank' and $old_score_method == 'Bonus Mark') {
-                if (isset($exclude[$old_q_id]) and strpos($exclude[$old_q_id], '1') !== false) {
+                if (isset($exclude[$old_q_id]) and mb_strpos($exclude[$old_q_id], '1') !== false) {
                     $marks_array[$old_q_id][$partID] = 0;
                 } else {
                     $marks_array[$old_q_id][$partID] = $old_marks_correct;
@@ -262,24 +262,24 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array)
         if (!isset($exclude[$old_q_id])) { // If no record exists set to zero (i.e. included)
             $exclude[$old_q_id] = '00000000000000000000000000000';
         }
-    
+
         if (!is_null($settings) and !is_array($settings)) {
             $settings = json_decode($settings, true);
         }
 
         switch ($q_type) {
             case 'area':
-                if (substr($exclude[$old_q_id], $partID, 1) == '0') {
+                if (mb_substr($exclude[$old_q_id], $partID, 1) == '0') {
                     $marks_array[$old_q_id][$partID] = $marks_correct;
                 }
                 break;
             case 'textbox':
-                if (substr($exclude[$old_q_id], $partID, 1) == '0') {
+                if (mb_substr($exclude[$old_q_id], $partID, 1) == '0') {
                     $marks_array[$old_q_id][$partID] = $marks_correct;
                 }
                 break;
             case 'dichotomous':
-                if (substr($exclude[$old_q_id], $partID, 1) == '0') {
+                if (mb_substr($exclude[$old_q_id], $partID, 1) == '0') {
                     if ($score_method == 'Mark per Option') {
                         $marks_array[$old_q_id][$partID] = $marks_correct;
                     } elseif ($score_method == 'Mark per Question') {
@@ -289,19 +289,19 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array)
                 $partID++;
                 break;
             case 'enhancedcalc':
-                if (substr($exclude[$old_q_id], $partID, 1) == '0') {
+                if (mb_substr($exclude[$old_q_id], $partID, 1) == '0') {
                     $marks_array[$old_q_id][$partID] = $settings['marks_correct'];
                 }
                 break;
             case 'true_false':
-                if (substr($exclude[$old_q_id], $partID, 1) == '0') {
+                if (mb_substr($exclude[$old_q_id], $partID, 1) == '0') {
                     $marks_array[$old_q_id][$partID] = $marks_correct;
                 }
                 break;
             case 'hotspot':
                 $tmp_first_split = explode('|', $correct);
                 for ($i = 0; $i < count($tmp_first_split); $i++) {
-                    if (substr($exclude[$old_q_id], $i, 1) == '0') {
+                    if (mb_substr($exclude[$old_q_id], $i, 1) == '0') {
                         $marks_array[$old_q_id][$i] = $marks_correct;
                     } else {
                         $marks_array[$old_q_id][$i] = 0;
@@ -309,9 +309,9 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array)
                 }
                 break;
             case 'blank':
-                $no_blanks = substr_count($option_text, '[blank');
+                $no_blanks = mb_substr_count($option_text, '[blank');
                 for ($i = 0; $i < $no_blanks; $i++) {
-                    if (substr($exclude[$old_q_id], $i, 1) == '0') {
+                    if (mb_substr($exclude[$old_q_id], $i, 1) == '0') {
                         $marks_array[$old_q_id][$i] = $marks_correct;
                     }
                 }
@@ -321,7 +321,7 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array)
                 $matching_correct = explode('|', $correct);
                 for ($part_id = 0; $part_id < count($matching_correct); $part_id++) {
                     if (trim($matching_correct[$part_id]) != '') {
-                        if (substr($exclude[$old_q_id], $part_id, 1) == '0') {
+                        if (mb_substr($exclude[$old_q_id], $part_id, 1) == '0') {
                             $marks_array[$old_q_id][$tmp_part] = $marks_correct;
                         }
                         $tmp_part++;
@@ -334,7 +334,7 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array)
                 for ($part_id = 0; $part_id < count($matching_correct); $part_id++) {
                     $sub_array = explode('$', $matching_correct[$part_id]);
                     for ($sub_part_id = 0; $sub_part_id < count($sub_array); $sub_part_id++) {
-                        if (substr($exclude[$old_q_id], $tmp_part, 1) == '0') {
+                        if (mb_substr($exclude[$old_q_id], $tmp_part, 1) == '0') {
                             $marks_array[$old_q_id][$tmp_part] = $marks_correct;
                         } else {
                             $marks_array[$old_q_id][$tmp_part] = 0;
@@ -344,12 +344,12 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array)
                 }
                 break;
             case 'flash':
-                if (substr($exclude[$old_q_id], 0, 1) == '0') {
+                if (mb_substr($exclude[$old_q_id], 0, 1) == '0') {
                     $marks_array[$old_q_id][0] = $marks_correct;
                 }
                 break;
             case 'mcq':
-                if (substr($exclude[$old_q_id], $partID, 1) == '0') {
+                if (mb_substr($exclude[$old_q_id], $partID, 1) == '0') {
                     if ($correct == $partID + 1) {
                         $marks_array[$old_q_id][0] = $marks_correct;
                     }
@@ -357,7 +357,7 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array)
                 }
                 break;
             case 'mrq':
-                if (substr($exclude[$old_q_id], $partID, 1) == '0') {
+                if (mb_substr($exclude[$old_q_id], $partID, 1) == '0') {
                     if ($score_method == 'Mark per Option') {
                         if ($correct == 'y') {
                             $marks_array[$old_q_id][$partID] = $marks_correct;
@@ -373,7 +373,7 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array)
                 break;
             case 'rank':
                 if ($correct < 9990) {
-                    if (strpos($exclude[$old_q_id], '1') === false) {
+                    if (mb_strpos($exclude[$old_q_id], '1') === false) {
                         $marks_array[$old_q_id][$partID] = $marks_correct;
                     } else {
                         $marks_array[$old_q_id][$partID] = 0;
@@ -385,8 +385,8 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array)
                 $tmp_first_split = explode(';', $correct);
                 $tmp_second_split = explode('$', $tmp_first_split[11]);
                 for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
-                    if (substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no - 2] > 219) {
-                        if (substr($exclude[$old_q_id], $partID, 1) == '0') {
+                    if (mb_substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no - 2] > 219) {
+                        if (mb_substr($exclude[$old_q_id], $partID, 1) == '0') {
                             $marks_array[$old_q_id][$partID] = $marks_correct;
                         } else {
                             $marks_array[$old_q_id][$partID] = 0;
@@ -418,7 +418,7 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array)
     $result->close();
 
     if ($old_q_type == 'rank' and $old_score_method == 'Bonus Mark') {
-        if (isset($exclude[$old_q_id]) and strpos($exclude[$old_q_id], '1') !== false) {
+        if (isset($exclude[$old_q_id]) and mb_strpos($exclude[$old_q_id], '1') !== false) {
             $marks_array[$old_q_id][$partID] = 0;
         } else {
             $marks_array[$old_q_id][$partID] = $marks_array[$old_q_id][$partID - 1];
@@ -429,13 +429,13 @@ function ss_get_marks_correct($mysqli, $paper_id, $exclude, &$marks_array)
 function display_option($firstoption, $q_id, $question_no, &$part_id, $display_option, $std_method, $is_group, &$marks, $exclude, $review_val, &$matching_options, $review_mean, $tmp_reviews, $option_no, &$stdID, &$std_excluded, $total_rank_no, $require_na, $bgcolor, $feedback)
 {
     global $string, $language, $configObject;
-  
+
     $configObject->get('cfg_root_path');
     $qn_excluded = ($exclude == '1');
     $mediadirectory = rogo_directory::get_directory('media');
     $questiondata = \questiondata::get_datastore($firstoption['q_type']);
     $render = new render($configObject);
-  
+
     switch ($firstoption['q_type']) {
         case 'area':
             if ($display_option['scenario'] == '') {
@@ -459,7 +459,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
             echo '<blockquote><textarea cols="' . $settings['columns'] . '" rows="' . $settings['rows'] . "\"></textarea></blockquote>\n";
             echo '<pre style="width:90%; font-style:italic; color:#C00000">' . wordwrap($feedback, 150) . '</pre>';
             $marks = $display_option['marks_correct'];
-      
+
             $plural = 's';
             if ($std_method == 'modified_angoff') {
                 for ($mark_part = $marks; $mark_part > 0; $mark_part--) {
@@ -626,7 +626,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
             break;
         case 'mrq':
             $excl_string = '';
-            if (substr($exclude, 0, 1) == '1') {
+            if (mb_substr($exclude, 0, 1) == '1') {
                 $excl_string = ' style="color:red; text-decoration:line-through"';
             }
             if ($display_option['option_text'] != '' and $display_option['o_media'] == '') {        // Text and No image
@@ -706,11 +706,11 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
             }
             echo '</select></td>';
             echo '<td';
-            if (substr($exclude, 0, 1) == '1') {
+            if (mb_substr($exclude, 0, 1) == '1') {
                 echo ' style="color:red; text-decoration:line-through"';
             }
             echo '>' . $display_option['option_text'] . "</td><td>&nbsp;</td>\n";
-      
+
             if (($display_option['correct'] != 0 or $display_option['score_method'] == 'Mark per Option') and $display_option['score_method'] != 'Mark per Question') {
                 echo '<td>';
                 echo reviewScale($question_no, $part_id, $display_option['marks_correct'], $std_method, $qn_excluded, $review_val, $stdID, $std_excluded, $is_group);
@@ -719,7 +719,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
                 echo "<td></td>\n";
             }
             echo "</tr>\n";
-       
+
             if ($display_option['score_method'] == 'Mark per Question') {
                 if ($part_id == 1) {
                     $marks += $display_option['marks_correct'];
@@ -755,10 +755,10 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
                     }
                     if ($display_option['score_method'] == 'Mark per Option') {
                           $review_val = get_review('blank', $std_method, $q_id, $blank_count, $tmp_reviews, $is_group);
-                          $reviewScale .= reviewScale($question_no, $blank_count, $display_option['marks_correct'], $std_method, substr($exclude, $blank_count - 1, 1), $review_val, $stdID, $std_excluded, $is_group);
+                          $reviewScale .= reviewScale($question_no, $blank_count, $display_option['marks_correct'], $std_method, mb_substr($exclude, $blank_count - 1, 1), $review_val, $stdID, $std_excluded, $is_group);
                     }
                     $exclude_str = '';
-                    if (substr($exclude, $blank_count - 1, 1) == '1') {
+                    if (mb_substr($exclude, $blank_count - 1, 1) == '1') {
                         $exclude_str =  ' style="background-color:#FFC0C0; color:#800000"';
                     }
                     $screen_output[$blank_count] = '<input type="text" name="q' . $question_no . '_' . $blank_count . '" value="' . $blank_parts[0] . "\" size=\"$blank_size[$blank_count]\"$exclude_str />" . $reviewScale . $blank_parts[1];
@@ -787,12 +787,12 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
                     } else {
                         $blank_mark[$blank_count] = $display_option['marks_correct'];
                     }
-                    $blank_details[$blank_count] = substr($blank_details[$blank_count], (strpos($blank_details[$blank_count], ']') + 1));
+                    $blank_details[$blank_count] = mb_substr($blank_details[$blank_count], (mb_strpos($blank_details[$blank_count], ']') + 1));
                     $answer_options = explode('[/blank]', $blank_details[$blank_count]);
                     $answer_list = explode(',', $answer_options[0]);
                     $answer_list = param::clean_array($answer_list, param::TEXT);
                     echo '<select name="q' . $question_no . '_' . $part_id . '"';
-                    if (substr($exclude, $blank_count - 1, 1) == '1') {
+                    if (mb_substr($exclude, $blank_count - 1, 1) == '1') {
                         echo ' style="background-color: rgb(255, 192, 192); color: rgb(128, 0, 0);"';
                     }
                     echo ">\n";
@@ -809,7 +809,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
                     echo '</select> ';
                     if ($display_option['score_method'] == 'Mark per Option') {
                         $review_val = get_review('blank', $std_method, $q_id, $blank_count, $tmp_reviews, $is_group);
-                        echo reviewScale($question_no, $part_id, $display_option['marks_correct'], $std_method, substr($exclude, $blank_count - 1, 1), $review_val, $stdID, $std_excluded, $is_group);
+                        echo reviewScale($question_no, $part_id, $display_option['marks_correct'], $std_method, mb_substr($exclude, $blank_count - 1, 1), $review_val, $stdID, $std_excluded, $is_group);
                     }
                     echo $answer_options[1]; // Bit after the closing [/blank] tag.
                     $blank_count++;
@@ -846,7 +846,7 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
             <?php
             $layers = explode('|', $firstoption['correct']);
             for ($i = 1; $i <= count($layers); $i++) {
-                $matching_options[] = substr($layers[$i - 1], 0, strpos($layers[$i - 1], '~'));
+                $matching_options[] = mb_substr($layers[$i - 1], 0, mb_strpos($layers[$i - 1], '~'));
             }
             echo '<input type="hidden" name="q' . $question_no . "\" value=\"u\" />\n";
             break;
@@ -872,11 +872,11 @@ function display_option($firstoption, $q_id, $question_no, &$part_id, $display_o
             echo "</div>\n";
             echo '<div align="center" style="color:#808080">' . $string['mousereveal'] . '</div>';
             for ($label_no = 4; $label_no <= count($tmp_second_split); $label_no += 4) {
-                if (substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no - 2] > 200) {
-                    $matching_options[] = substr($tmp_second_split[$label_no], 0, strpos($tmp_second_split[$label_no], '|'));
+                if (mb_substr($tmp_second_split[$label_no], 0, 1) != '|' and $tmp_second_split[$label_no - 2] > 200) {
+                    $matching_options[] = mb_substr($tmp_second_split[$label_no], 0, mb_strpos($tmp_second_split[$label_no], '|'));
                 }
             }
-      
+
             echo '<input type="hidden" name="q' . $question_no . '" value="0$' . $marks . ";\" />\n";
             break;
         case 'flash':
@@ -929,7 +929,7 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
     $html = '';
     $review_string = '';
     $valid = true;
-  
+
     // Process the passed values for group reviews
     if ($is_group) {
         $review_string = ($value['string'] === 0 or !empty($value['string'])) ? $value['string'] : '';
@@ -947,7 +947,7 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
         }
         $value = $tmp_value;
     }
-  
+
     $extra = '';
     if ($excluded) {
         $dropdown_class = 'dropdown_excluded';
@@ -992,7 +992,7 @@ function reviewScale($q_no, $part_no, $marks, $method, $excluded, $value, &$stdI
 function get_review($q_type, $method, $q_id, $part_no, $prev_reviews, $is_group = false)
 {
     $current_review = '';
-  
+
     if (!$is_group or isset($prev_reviews[$q_id])) {
         switch ($method) {
             case 'modified_angoff':
@@ -1002,11 +1002,11 @@ function get_review($q_type, $method, $q_id, $part_no, $prev_reviews, $is_group 
                     $sub_reviews = array('','','','','','','','','','','','','','','');
                 }
                 if ($q_type == 'mrq' or $q_type == 'dichotomous' or $q_type == 'rank' or $q_type == 'extmatch' or $q_type == 'matrix' or $q_type == 'blank' or $q_type == 'labelling' or $q_type == 'hotspot') {
-                    $current_review = (strlen($sub_reviews[$part_no - 1]) > 0) ? $sub_reviews[$part_no - 1] : '';
+                    $current_review = (mb_strlen($sub_reviews[$part_no - 1]) > 0) ? $sub_reviews[$part_no - 1] : '';
                 } elseif ($q_type == 'textbox') {
-                    $current_review = (strlen($sub_reviews[count($sub_reviews) - $part_no]) > 0) ? $sub_reviews[count($sub_reviews) - $part_no] : '';
+                    $current_review = (mb_strlen($sub_reviews[count($sub_reviews) - $part_no]) > 0) ? $sub_reviews[count($sub_reviews) - $part_no] : '';
                 } else {
-                    $current_review = (strlen($prev_reviews[$q_id]) > 0) ? $prev_reviews[$q_id] : '';
+                    $current_review = (mb_strlen($prev_reviews[$q_id]) > 0) ? $prev_reviews[$q_id] : '';
                 }
                 break;
             case 'ebel':
@@ -1062,15 +1062,15 @@ function get_review($q_type, $method, $q_id, $part_no, $prev_reviews, $is_group 
         $raw_mean = round($rating_total / count($ratings_array));
         // Round mean to nearest 5 to match values in scale
         $review_mean = round(($rating_total / count($ratings_array)) / 5) * 5;
-    
+
         // Return previous group review value if it exists
         if (isset($prev_reviews[$q_id])) {
             $prev_review = $current_review;
         }
-    
+
         $current_review = array('raw_mean' => $raw_mean, 'mean' => $review_mean, 'prev_review' => $prev_review, 'string' => $rating_string, 'valid' => ($max <= $min + 10));
     }
-  
+
     return $current_review;
 }
 

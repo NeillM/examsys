@@ -43,19 +43,19 @@ class folder_utils
         $result->bind_result($name);
         $result->fetch();
         $result->close();
-    
+
         return $name;
     }
-  
+
     static function has_permission($folderID, $userObj, $db)
     {
         $permission = false;
-    
+
         $folder_owner = folder_utils::get_ownerID($folderID, $db);
         if ($folder_owner == $userObj->get_user_ID()) {
             return true;
         }
-    
+
         $result = $db->prepare('SELECT idMod FROM folders_modules_staff WHERE folders_id = ?');
         $result->bind_param('i', $folderID);
         $result->execute();
@@ -67,10 +67,10 @@ class folder_utils
             }
         }
         $result->close();
-    
+
         return $permission;
     }
-  
+
     /**
      * Creates a new personal folder for a user.
      *
@@ -89,7 +89,7 @@ class folder_utils
             display_error('New Folder Error', $db->error);
         }
     }
-  
+
     /**
      * Returns whether a personal staff folder exists or not.
      *
@@ -111,10 +111,10 @@ class folder_utils
             $duplicate = true;
         }
         $result->close();
-    
+
         return $duplicate;
     }
-  
+
     /**
      * Returns a list of all folders.
      *
@@ -124,7 +124,7 @@ class folder_utils
     static function get_all_folders($db)
     {
         $folders = array();
-  
+
         $result = $db->prepare('SELECT id, name FROM folders');
         $result->execute();
         $result->bind_result($id, $name);
@@ -132,10 +132,10 @@ class folder_utils
             $folders[$id] = $name;
         }
         $result->close();
-    
+
         return $folders;
     }
-  
+
     /**
      * Returns a the userID of a folder.
      *
@@ -155,10 +155,10 @@ class folder_utils
             $ownerID = false;
         }
         $result->close();
-    
+
         return $ownerID;
     }
-  
+
     /**
      * Returns a list of all parents for the current folder. Used to make
      * a breadcrumb trail at the top of the screen.
@@ -171,9 +171,9 @@ class folder_utils
     static function get_parent_list($orig_folder_name, $userObj, $db)
     {
         $parent_list = array();
-        if (substr_count($orig_folder_name, ';') > 0) {
-            $last_semicolon = strrpos($orig_folder_name, ';');
-            $path = substr($orig_folder_name, 0, $last_semicolon);
+        if (mb_substr_count($orig_folder_name, ';') > 0) {
+            $last_semicolon = mb_strrpos($orig_folder_name, ';');
+            $path = mb_substr($orig_folder_name, 0, $last_semicolon);
             $parts = explode(';', $path);
             $part_sql = '';
             foreach ($parts as $part) {
@@ -188,11 +188,11 @@ class folder_utils
                 $parent_results->bind_result($parent_id, $parent_name);
                 $parent_results->fetch();
                 $parent_results->close();
-        
+
                 $parent_list[$parent_id] = $parent_name;
             }
         }
-    
+
         return $parent_list;
     }
 }

@@ -30,9 +30,9 @@ require '../include/sysadmin_auth.inc';
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>Help pages internal consistency test</title>
-  
+
 </head>
 <body>
 
@@ -80,11 +80,11 @@ foreach ($help_toc as $help_item) {
     $test = explode('?id=', $help_item['body']);
     if (count($test) > 1) {
         for ($i = 1; $i < count($test); $i++) {
-            $pos1 = strpos($test[$i], '"');
-            $pos2 = strpos($test[$i], '>', $pos1) + 1;
-            $pos3 = strpos($test[$i], '</a>', $pos1);
-            $link = substr($test[$i], 0, $pos1);
-            $text = substr($test[$i], $pos2, $pos3 - $pos2);
+            $pos1 = mb_strpos($test[$i], '"');
+            $pos2 = mb_strpos($test[$i], '>', $pos1) + 1;
+            $pos3 = mb_strpos($test[$i], '</a>', $pos1);
+            $link = mb_substr($test[$i], 0, $pos1);
+            $text = mb_substr($test[$i], $pos2, $pos3 - $pos2);
             if (isset($help_toc[$link])) {
                 $help_toc[$link]['links'] .= $help_item['id'] . ',';
             } else {
@@ -200,7 +200,7 @@ if (count($result_array_3) == 0 && count($result_array_2) == 0) {
 foreach ($help_img as $img_item => $img_ids) {
     $avail_images[$img_item] = 2;
 }
-  
+
 foreach ($avail_images as $img_item => $img_use) {
     $img_items = preg_replace('/_/', '\\_', $img_item);
     $sql = 'SELECT id, deleted FROM ' . $targettable . " WHERE body LIKE '%$img_items%'; "; //COLLATE latin1_general_cs
@@ -223,7 +223,7 @@ foreach ($avail_images as $img_item => $img_use) {
 
   $img_count = 0;
 foreach ($help_img as $img_item => $img_ids) {
-    if (strpos($img_item, 'images') > -1) {
+    if (mb_strpos($img_item, 'images') > -1) {
         $img_count++;
     }
 }

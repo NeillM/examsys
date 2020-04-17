@@ -66,7 +66,7 @@ $gap2 = ($g_x2 - $g_x1) / $step;
 for ($label = 0; $label <= $step; $label++) {
     $this_x = $g_x1 + $gap2 * $label;
     $this_label = $label * $this_interval;
-        
+
     if ($total_possible_mark - $this_label < $this_interval) {
         $this_x = $g_x2;
         $this_label = $total_possible_mark;
@@ -88,7 +88,7 @@ $gap4 = ($g_y2 - $g_y1 + $gap3) / 2;
 $student_mark = round($student_mark, 1);
 ImageFilledRectangle($Image, $g_x1, $g_y1 + $gap3, $g_x1 + $gap1 * $student_mark, $g_y1 + $gap4 - $gap3, $amber);
 ImageRectangle($Image, $g_x1, $g_y1 + $gap3, $g_x1 + $gap1 * $student_mark, $g_y1 + $gap4 - $gap3, $black);
-if (strlen($student_mark) > 2) {
+if (mb_strlen($student_mark) > 2) {
     imagettftext($Image, 10, 0, $g_x1 + ($gap1 * $student_mark) - 20, $g_y1 + 15, $color, $bold_font, $student_mark);
 } elseif ($student_mark > 0) {
     imagettftext($Image, 10, 0, $g_x1 + ($gap1 * $student_mark) - 10, $g_y1 + 15, $color, $bold_font, $student_mark);
@@ -99,7 +99,7 @@ $median = round($median, 1);
 ImageFilledRectangle($Image, $g_x1, $g_y1 + $gap4, $g_x1 + $gap1 * $median, $g_y2 - $gap3, $color);
 ImageRectangle($Image, $g_x1, $g_y1 + $gap4, $g_x1 + $gap1 * $median, $g_y2 - $gap3, $black);
 
-if (strlen($median) > 2) {
+if (mb_strlen($median) > 2) {
     imagettftext($Image, 10, 0, $g_x1 + ($gap1 * $median) - 19, $g_y1 + 37, $black, $font, $median);
 } elseif ($median > 0) {
     imagettftext($Image, 10, 0, $g_x1 + ($gap1 * $median) - 9, $g_y1 + 37, $black, $font, $median);

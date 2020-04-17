@@ -45,7 +45,7 @@ $review_string = '';
 if (isset($_GET['reviewers'])) {
     $module = (isset($_GET['module'])) ? $_GET['module'] : '';
     $folder = (isset($_GET['folder'])) ? $_GET['folder'] : '';
-  
+
     $review_string = $_GET['reviewers'];
 } else {
     $module = (empty($_POST['module'])) ? '' : $_POST['module'];
@@ -145,13 +145,13 @@ $paper_prologue = $propertyObj->get_paper_prologue();
 <body>
 <?php
   require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu(98);
 
 ?>
   <div id="maincontent">
     <form method="post" name="questions" action="record_review.php?group=true" autocomplete="off">
- 
+
   <?php
     echo "\n<div class=\"head_title\">\n";
     echo "<div><img src=\"../artwork/toprightmenu.gif\" id=\"toprightmenu_icon\" /></div>\n";
@@ -218,7 +218,7 @@ while ($stmt->fetch()) {
         echo '<tr><td colspan="2" style="padding:20px; text-align:justify">' . $paper_prologue . '</td></tr>';
         $prologue_show = 0;
     }
-  
+
     if ($question_no == 0) {
         echo "<tr><td colspan=\"2\">&nbsp;</td></tr>\n";
     }
@@ -231,7 +231,7 @@ while ($stmt->fetch()) {
             }
             $excluded = $exclusions->get_exclusions_by_qid($old_q_id);
             display_options($old_screen, $options_array, $old_q_id, $old_theme, $old_scenario, $old_leadin, $old_notes, $paper_type, 'modified_angoff', $reviews, $excluded, true);
-      
+
             if ($old_screen != $screen) {
                 echo '<tr><td colspan="2">';
                 echo '<div class="screenbrk"><span class="scr_no">' . $string['screen'] . '&nbsp;' . $screen . '</span></div>';
@@ -259,7 +259,7 @@ while ($stmt->fetch()) {
             $li_set = 1;
         }
         if ($q_media != '' and $q_media != null and $q_type != 'hotspot' and $q_type != 'labelling' and $q_type != 'flash' and $q_type != 'extmatch') {
-            if (substr($q_media, -4) == '.gif' or substr($q_media, -4) == '.jpg' or substr($q_media, -4) == 'jpeg' or substr($q_media, -4) == '.png') {
+            if (mb_substr($q_media, -4) == '.gif' or mb_substr($q_media, -4) == '.jpg' or mb_substr($q_media, -4) == 'jpeg' or mb_substr($q_media, -4) == '.png') {
                 if ($li_set == 0) {
                     echo '<tr><td class="q_no">' . $question_no . '.&nbsp;</td><td>';
                 }
@@ -293,7 +293,7 @@ while ($stmt->fetch()) {
             $li_set = 1;
             $question_no--;
         }
-  
+
         $old_leadin     = $leadin;
         $old_scenario   = $scenario;
         $old_notes      = $notes;

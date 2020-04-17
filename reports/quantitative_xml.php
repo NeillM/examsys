@@ -52,7 +52,7 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
     $theme = StringUtils::wordToUtf8(strip_tags($theme));
     $scenario = StringUtils::wordToUtf8(strip_tags($scenario));
     $leadin = StringUtils::wordToUtf8(strip_tags($leadin));
-    
+
     $theme = str_replace('&amp;amp;', '&amp;', $theme);
     $scenario = str_replace('&amp;amp;', '&amp;', $scenario);
     $leadin = str_replace('&amp;amp;', '&amp;', $leadin);
@@ -125,9 +125,9 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
                 break;
             case 'likert':
                 $unanswered = 0;
-                $old_size = substr_count($old_likert_scale, '|');
+                $old_size = mb_substr_count($old_likert_scale, '|');
                 $current_properties = explode('|', $old_display_method);
-                $new_size = substr_count($old_display_method, '|');
+                $new_size = mb_substr_count($old_display_method, '|');
                 $na = $current_properties[$new_size];
                 if ($old_likert_scale != $old_display_method or $table_on == 0) {
                     if ($table_on == 1) {
@@ -283,7 +283,7 @@ function displayQuestion($q_id, $theme, $scenario, $leadin, $q_type, $correct, $
         $tmp_ext_scenarios = explode('|', $scenario);
         $tmp_answers_array = explode('|', $correct_buf[0]);
         echo "<w:p><w:r><w:t>$question_number. $leadin</w:t></w:r></w:p><w:p/>";
-        for ($i = 1; $i <= (substr_count($scenario, '|') + 1); $i++) {
+        for ($i = 1; $i <= (mb_substr_count($scenario, '|') + 1); $i++) {
             if ($tmp_ext_scenarios[$i - 1]) {
                 echo '<w:p><w:r><w:t>' . $tmp_ext_scenarios[$i - 1] . '</w:t></w:r></w:p><w:p/>';
             }
@@ -317,8 +317,8 @@ echo '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
 echo '<?mso-application progid="Word.Document"?>
 <w:wordDocument xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:sl="http://schemas.microsoft.com/schemaLibrary/2003/core" xmlns:aml="http://schemas.microsoft.com/aml/2001/core" xmlns:wx="http://schemas.microsoft.com/office/word/2003/auxHint" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882" xmlns:st1="urn:schemas-microsoft-com:office:smarttags" xmlns:wsp="http://schemas.microsoft.com/office/word/2003/wordml/sp2" w:macrosPresent="no" w:embeddedObjPresent="no" w:ocxPresent="no" xml:space="preserve"><o:SmartTagType o:namespaceuri="urn:schemas-microsoft-com:office:smarttags" o:name="City"/><o:SmartTagType o:namespaceuri="urn:schemas-microsoft-com:office:smarttags" o:name="place"/><o:DocumentProperties><o:Title>';
 echo $paper;
-$tmp_start = substr($startdate, 6, 2) . '/' . substr($startdate, 4, 2) . '/' . substr($startdate, 0, 4) . ' ' . substr($startdate, 8, 2) . ':' . substr($startdate, 10, 2);
-$tmp_end = substr($enddate, 6, 2) . '/' . substr($enddate, 4, 2) . '/' . substr($enddate, 0, 4) . ' ' . substr($enddate, 8, 2) . ':' . substr($enddate, 10, 2);
+$tmp_start = mb_substr($startdate, 6, 2) . '/' . mb_substr($startdate, 4, 2) . '/' . mb_substr($startdate, 0, 4) . ' ' . mb_substr($startdate, 8, 2) . ':' . mb_substr($startdate, 10, 2);
+$tmp_end = mb_substr($enddate, 6, 2) . '/' . mb_substr($enddate, 4, 2) . '/' . mb_substr($enddate, 0, 4) . ' ' . mb_substr($enddate, 8, 2) . ':' . mb_substr($enddate, 10, 2);
 echo '</o:Title><o:Author>Rogo ' . $configObject->get_setting('core', 'rogo_version') . '</o:Author><o:Description>Quantitative report for survey taken between ' . $tmp_start . ' and ' . $tmp_end . '.</o:Description><o:LastAuthor>Rogo ' . $configObject->get_setting('core', 'rogo_version') . '</o:LastAuthor><o:Revision>1</o:Revision><o:TotalTime>0</o:TotalTime><o:Created>';
 echo date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z';
 echo '</o:Created><o:LastSaved>';
@@ -373,7 +373,7 @@ if ($hits > 0) {
             if ($old_q_type == 'likert') {
                 $options_buffer['n/a'] = 'n/a';
                 $likert_properties = explode('|', $old_display_method);
-                for ($i = 1; $i <= substr_count($old_display_method, '|'); $i++) {
+                for ($i = 1; $i <= mb_substr_count($old_display_method, '|'); $i++) {
                     $options_buffer[$i] = $i;
                 }
             }
@@ -424,8 +424,8 @@ if ($hits > 0) {
             $tmp_first_split = explode(';', $correct);
             $tmp_second_split = explode('$', $tmp_first_split[8]);
             for ($label_no = 4; $label_no <= 43; $label_no += 4) {
-                if (substr($tmp_second_split[$label_no], 0, 1) != '|') {
-                    $options_buffer[] = trim(substr($tmp_second_split[$label_no], 0, strpos($tmp_second_split[$label_no], '|')));
+                if (mb_substr($tmp_second_split[$label_no], 0, 1) != '|') {
+                    $options_buffer[] = trim(mb_substr($tmp_second_split[$label_no], 0, mb_strpos($tmp_second_split[$label_no], '|')));
                     $correct_buffer[] = $tmp_second_split[$label_no - 2] . 'x' . ($tmp_second_split[$label_no - 1] - 25);
                 }
             }
@@ -452,7 +452,7 @@ if ($hits > 0) {
     if ($old_q_type == 'likert') {
         $options_buffer['n/a'] = 'n/a';
         $likert_properties = explode('|', $old_display_method);
-        for ($i = 1; $i <= substr_count($old_display_method, '|'); $i++) {
+        for ($i = 1; $i <= mb_substr_count($old_display_method, '|'); $i++) {
             $options_buffer[$i] = $i;
         }
     }

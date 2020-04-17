@@ -40,8 +40,8 @@ foreach ($questions as $item) {
 
         $leadin = trim(strip_tags($leadin));
         $leadin = preg_replace('/\r\n/', ' ', $leadin);
-        if (strlen($leadin) > 160) {
-            $leadin = substr($leadin, 0, 160) . '...';
+        if (mb_strlen($leadin) > 160) {
+            $leadin = mb_substr($leadin, 0, 160) . '...';
         }
         $questionsarray[$item] = addslashes($leadin);
     }

@@ -46,7 +46,7 @@ if ($module == 0) {
     $module_details = module_utils::get_full_details_by_ID($module, $mysqli);
 }
 
-if ($module != 0 and strpos($module_details['checklist'], 'mapping') === false and $_GET['type'] == 'objective') {
+if ($module != 0 and mb_strpos($module_details['checklist'], 'mapping') === false and $_GET['type'] == 'objective') {
     $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
@@ -94,7 +94,7 @@ $_SESSION['nav_query'] = $_SERVER['QUERY_STRING'];
   require '../include/toprightmenu.inc';
 
     echo draw_toprightmenu();
-  
+
 if ($type == 'type') {
     $display_type = $string['bytype'];
     $zero_warning = $string['noquestions'];
@@ -116,7 +116,7 @@ if ($type == 'type') {
 }
 ?>
 <div id="content">
-  
+
 <div class="head_title">
   <div><img src="../artwork/toprightmenu.gif" id="toprightmenu_icon" /></div>
   <div class="breadcrumb"><a href="../index.php"><?php echo $string['home'] ?></a><img src="../artwork/breadcrumb_arrow.png" class="breadcrumb_arrow" alt="-" /><a href="../module/index.php?module=<?php echo $module ?>"><?php echo $module_details['moduleid'] ?></a></div>
@@ -143,7 +143,7 @@ $old_section = '';
 foreach ($bank_types as $id => $type_name) {
     $grey_text = '';
     $url = 'list.php?type=' . $type . '&subtype=' . $id . '&module=' . $module;
-  
+
     if ($type == 'keyword') {
         if ($old_section != $type_name{0}) {
             echo "<br clear=\"all\" />\n";
@@ -171,7 +171,7 @@ foreach ($bank_types as $id => $type_name) {
     } else {
         $class = 'f2';
     }
-  
+
     if (isset($stats[$id])) {
         if (($type != 'objective' and $type != 'performance') or $stats[$id] > 0) {
             $grey_text = number_of_questions($stats[$id], $string);

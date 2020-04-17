@@ -291,9 +291,9 @@ foreach ($module_array as $module) {
         }
     }
     if (isset($_POST['module']) and $_POST['module'] == $module['idMod']) {
-        echo "<div class=\"r2\" id=\"div$module_no\"><input data-mod=\"$module_no\" type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" checked /><label for=\"mod$module_no\">" . $module['id'] . ' - ' . substr($module['fullname'], 0, 60) . "</label></div>\n";
+        echo "<div class=\"r2\" id=\"div$module_no\"><input data-mod=\"$module_no\" type=\"checkbox\" name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" checked /><label for=\"mod$module_no\">" . $module['id'] . ' - ' . mb_substr($module['fullname'], 0, 60) . "</label></div>\n";
     } else {
-        echo "<div class=\"r1\" id=\"div$module_no\"><input data-mod=\"$module_no\" type=\"checkbox\"  name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" /><label for=\"mod$module_no\">" . $module['id'] . ' - ' . substr($module['fullname'], 0, 60) . "</label></div>\n";
+        echo "<div class=\"r1\" id=\"div$module_no\"><input data-mod=\"$module_no\" type=\"checkbox\"  name=\"mod$module_no\" id=\"mod$module_no\" value=\"" . $module['idMod'] . "\" /><label for=\"mod$module_no\">" . $module['id'] . ' - ' . mb_substr($module['fullname'], 0, 60) . "</label></div>\n";
     }
     $module_no++;
     $old_schoolcode = $module['schoolcode'];

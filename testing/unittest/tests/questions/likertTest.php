@@ -85,7 +85,7 @@ class likerttest extends unittest
     {
         $data = questiondata::get_datastore('likert');
         $data->displaymethod = '0|1|2|3|4|true';
-        $data->scale_size = substr_count($data->displaymethod, '|');
+        $data->scale_size = mb_substr_count($data->displaymethod, '|');
         $data->questionno = '1';
         $data->displayna = true;
         $data->set_option_answer(0, '4', '', 1);
@@ -102,7 +102,7 @@ class likerttest extends unittest
     {
         $data = questiondata::get_datastore('likert');
         $data->displaymethod = '0|1|2|3|4|true';
-        $data->scale_size = substr_count($data->displaymethod, '|');
+        $data->scale_size = mb_substr_count($data->displaymethod, '|');
         $data->questionno = '1';
         $data->displayna = true;
         $data->set_option_answer(0, 'n/a', '', 1);
@@ -119,7 +119,7 @@ class likerttest extends unittest
         $data->questionno = '1';
         $data->displayna = false;
         $data->displaymethod = '0|1|2|3|4|false';
-        $data->scale_size = substr_count($data->displaymethod, '|');
+        $data->scale_size = mb_substr_count($data->displaymethod, '|');
         $data->set_option_answer(0, 'u', '', 1);
         $this->assertTrue($data->unanswered);
         $this->assertEquals(array(1 => false, 2 => false, 3 => false, 4 => false, 5 => false), $data->scaleopt);

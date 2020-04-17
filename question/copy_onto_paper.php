@@ -30,7 +30,7 @@ require_once '../classes/questionbank.class.php';
 
 check_var('q_id', 'GET', true, false, false);
 
-if (!QuestionUtils::question_exists(substr($_GET['q_id'], 1), $mysqli)) {
+if (!QuestionUtils::question_exists(mb_substr($_GET['q_id'], 1), $mysqli)) {
     $contactemail = support::get_email();
     $msg = sprintf($string['furtherassistance'], $contactemail, $contactemail);
     $notice->display_notice_and_exit($mysqli, $string['pagenotfound'], $msg, $string['pagenotfound'], '../artwork/page_not_found.png', '#C00000', true, true);
@@ -178,7 +178,7 @@ if (!isset($_POST['submit'])) {
             } else {
                 $new_q_media = '';
             }
-      
+
             if ($q_type == 'extmatch') { // Above foreach loop remove empty q_media value, which is needed for mapping scenarios and its medias when display/editing a extmatch question.
                 $new_q_media = $q_media; // So here need its original value.
             }
@@ -238,7 +238,7 @@ if (!isset($_POST['submit'])) {
                         }
                     }
                 }
-                
+
 
                 $addOption = $mysqli->prepare('INSERT INTO options VALUES(?, ?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?)');
                 $addOption->bind_param('isssssssddd', $question_id, $option_text, $new_o_media, $o_media_width, $o_media_height, $feedback_right, $feedback_wrong, $correct, $marks_correct, $marks_incorrect, $marks_partial);
@@ -317,7 +317,7 @@ if (!isset($_POST['submit'])) {
                 // Get the mappings for the module in the paper's academic year
                 $calendar_year = $properties->get_calendar_year();
                 $outcomes = $qbank->get_outcomes($calendar_year, $vle_api_data);
-        
+
                 foreach (array_keys($map_guid) as $guid) {
                     // get the IDs of the outcomes for the GUIDs we've been passed
                     if (isset($outcomes[$guid])) {

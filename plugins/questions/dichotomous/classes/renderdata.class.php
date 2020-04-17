@@ -89,7 +89,7 @@ class renderdata extends \questiondata
     public function set_option_answer($part_id, $useranswer, $userdismissed, $screen_pre_submitted)
     {
         $option = $this->get_opt($part_id);
-        $option['useranswer'] = substr($useranswer, $option['position'] - 1, 1);
+        $option['useranswer'] = mb_substr($useranswer, $option['position'] - 1, 1);
         if ($option['useranswer'] == 'u' and $screen_pre_submitted == 1) {
             $this->unanswered = true;
             $option['unanswered'] = true;

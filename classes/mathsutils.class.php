@@ -39,7 +39,7 @@ class MathsUtils
         }
         return $temp;
     }
-  
+
     /**
      * Generate a random number between $min and $max with a specified increment and number of decimal places
      * @param mixed $min
@@ -62,7 +62,7 @@ class MathsUtils
             $increment = $increment * (10 * $decimals);
         }
         if ($increment == 1 or $increment == 0 or $increment == '') {
-            if (strpos($min, 'var') !== false or strpos($min, 'ans') !== false or strpos($max, 'var') !== false or strpos($max, 'ans') !== false) {
+            if (mb_strpos($min, 'var') !== false or mb_strpos($min, 'ans') !== false or mb_strpos($max, 'var') !== false or mb_strpos($max, 'ans') !== false) {
                 $gen_no = 0;
             } else {
                 $gen_no = rand(intval($min), intval($max));
@@ -78,17 +78,17 @@ class MathsUtils
         }
         return $gen_no;
     }
-  
+
     static function formatNumber($number, $decimals = 2)
     {
         $number = (string) round($number, $decimals);
-    
+
         $number = round($number, $decimals);
-    
+
         if ($decimals > 0) {
-            $strlength = strlen($number);
-            $decimal_pos = strpos($number, '.');
-      
+            $strlength = mb_strlen($number);
+            $decimal_pos = mb_strpos($number, '.');
+
             if ($decimal_pos === false) {
                 $number .= '.' . str_repeat('0', $decimals);
             } elseif (($strlength - $decimal_pos  - 1) < $decimals) {
@@ -96,10 +96,10 @@ class MathsUtils
                 $number = str_pad($number, $target_length, '0');
             }
         }
-    
+
         return $number;
     }
-  
+
     /**
      * Returns the the median of a list of numbers
      * @param array set of numbers you wish to find the median from
@@ -117,15 +117,15 @@ class MathsUtils
             $high   = $arr[$middleval + 1];
             $median = (($low + $high) / 2);
         }
-    
+
         return $median;
     }
-  
+
     static function mean($arr)
     {
         $total = array_sum($arr);
         $no = count($arr);
-    
+
         return $total / $no;
     }
 
@@ -161,9 +161,9 @@ class MathsUtils
         $allindex     = ($count - 1) * $p;
         $intvalindex  = intval($allindex);
         $floatval     = $allindex - $intvalindex;
-    
+
         rsort($data);
-   
+
         if (!is_float($floatval)) {
             $result = $data[$intvalindex];
         } else {
@@ -173,7 +173,7 @@ class MathsUtils
                 $result = $data[$intvalindex];
             }
         }
-    
+
         return $result;
     }
 }
