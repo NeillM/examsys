@@ -32,7 +32,8 @@ class GuestAccountManager
      * @param int $reservationid
      * @return bool
      */
-    public static function isReservationValid(int $reservationid): bool {
+    public static function isReservationValid(int $reservationid): bool
+    {
         // Check the reservation is still valid.
         $minutes = static::RESERVATION_TIME;
         $sql = "SELECT id FROM temp_users WHERE id = ? AND reserved > DATE_SUB(NOW(), INTERVAL {$minutes} MINUTE) AND surname IS NULL";
