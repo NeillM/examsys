@@ -42,8 +42,8 @@ $cfg_root_path = $configObject->get('cfg_root_path');
     }
     ?>
     <script id="rogoconfig" data-root="<?php echo $configObject->get('cfg_root_path'); ?>"></script>
-    <script src='../js/require.js'></script>
-    <script src='../js/main.min.js'></script>
+    <script src='<?php echo $cfg_root_path ?>/js/require.js'></script>
+    <script src='<?php echo $cfg_root_path ?>/js/main.min.js'></script>
     <script src="<?php echo $cfg_root_path ?>/js/logininit.min.js"></script>
   <?php
     if (isset($displaystdformobj->scripts)) {
@@ -167,7 +167,7 @@ HTML;
             }
         }
         ?>
-        
+
         <div class="versionno">Rog&#333; <?php echo $this->configObj->get_setting('core', 'rogo_version') ?></div>
 
     </div>
