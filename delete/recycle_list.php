@@ -29,7 +29,7 @@ require '../include/staff_auth.inc';
 
 function dateDisplay($tmp_date)
 {
-    return mb_substr($tmp_date, 6, 2) . '/' . mb_substr($tmp_date, 4, 2) . '/' . mb_substr($tmp_date, 0, 4) . ' ' . mb_substr($tmp_date, 8, 2) . ':' . mb_substr($tmp_date, 10, 2);
+    return date_utils::rogoToDisplay($tmp_date);
 }
 
 if (isset($_GET['module'])) {

@@ -58,7 +58,7 @@ class textbox_marking_utils
      */
     static function nicedate($original)
     {
-        return mb_substr($original, 6, 2) . '/' . mb_substr($original, 4, 2) . '/' . mb_substr($original, 0, 4) . ' ' . mb_substr($original, 8, 2) . ':' . mb_substr($original, 10, 2);
+        return date_utils::rogoToDisplay($original);
     }
 
     /**

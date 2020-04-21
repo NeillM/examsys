@@ -144,4 +144,20 @@ class date_utils
 
         return $html;
     }
+
+    /**
+     * Converts a time/date from 20140301103059 into 01/03/2014 10:30.
+     *
+     * @param string $original - The date that needs to be convered.
+     * @return string
+     */
+    public static function rogoToDisplay(string $original): string
+    {
+        $day = mb_substr($original, 6, 2);
+        $month = mb_substr($original, 4, 2);
+        $year = mb_substr($original, 0, 4);
+        $hours = mb_substr($original, 8, 2);
+        $minutes = mb_substr($original, 10, 2);
+        return "$day/$month/$year $hours:$minutes";
+    }
 }
