@@ -231,7 +231,7 @@ echo '<div class="page_title">' . $phase_description . '</div>';
 echo "</div>\n";
 
 if ($candidate_no == 0) {
-    $msg = sprintf($string['noattempts'], textbox_marking_utils::nicedate($startdate), textbox_marking_utils::nicedate($enddate));
+    $msg = sprintf($string['noattempts'], date_utils::rogoToDisplay($startdate), date_utils::rogoToDisplay($enddate));
     echo $notice->info_strip($msg, 100);
     echo "</form>\n</body>\n</html>\n";
     exit();

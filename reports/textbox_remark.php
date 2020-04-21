@@ -59,7 +59,7 @@ if (isset($_POST['submit'])) {
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="content-type" content="text/html;charset=<?php echo $configObject->get('cfg_page_charset') ?>" />
-  
+
   <title>Rog&#333;: <?php echo $string['secondmark'] ?></title>
 
   <link rel="stylesheet" type="text/css" href="../css/body.css" />
@@ -79,18 +79,18 @@ if (isset($_POST['submit'])) {
 <body>
     <?php
     require '../include/toprightmenu.inc';
-    
+
     echo draw_toprightmenu();
 
     // Get some paper properties
     $properties = PaperProperties::get_paper_properties_by_id($paperID, $mysqli, $string);
-    
+
     $paper_total = $properties->get_total_mark();
     $pass_mark = $properties->get_pass_mark();
     $paper_type = $properties->get_paper_type();
     ?>
   <div id="content">
-    
+
     <?php
     echo '<form action="' . $_SERVER['PHP_SELF'] . '?paperID=' . $paperID . '&module=' . $module . '&folder=' . $_GET['folder'] . "\" method=\"post\" autocomplete=\"off\">\n";
     echo '<div class="head_title">';
@@ -106,7 +106,7 @@ if (isset($_POST['submit'])) {
   <div class="page_title"><?php echo $string['secondmarkselection'] ?></div>
   <div style="padding-left:42px"><input type="checkbox" name="selectall" id="selectall" /> <strong><?php echo $string['selectall'] ?></strong></div>
   </div>
-  
+
   <table>
     <?php
 
@@ -115,16 +115,16 @@ if (isset($_POST['submit'])) {
     } else {
         $time_int = 0;
     }
-    
+
     // Get any previous remark settings.
     $remark_array = textbox_marking_utils::get_remark_users($paperID, $mysqli);
-  
+
     if (count($remark_array) > 0) {
         $prev_remark = true;
     } else {
         $prev_remark = false;
     }
-    
+
     // Get back total marks for the paper excluding all textboxes.
     $marks_array = array();
     if ($paper_type == '0') {
@@ -206,7 +206,7 @@ SQL;
     $result->close();
 
     $percent_decimals = $configObject->get_setting('core', 'rpt_percent_decimals');
-        
+
     $student_no = 0;
     foreach ($marks_array as $userID => $user_data) {
         $student_no++;
@@ -214,7 +214,7 @@ SQL;
         $username = $user_data['username'];
         $total_mark = $user_data['total'];
         $recordID = $user_data['userID'];
-    
+
         $checked = '';
         if ($prev_remark) {
             if (isset($remark_array[$recordID])) {
@@ -225,7 +225,7 @@ SQL;
                 $checked = ' checked';
             }
         }
-        
+
         if (round(($total_mark / $paper_total) * 100) < $pass_mark) {
             echo "<tr style=\"color:#C00000\"><td class=\"pad\"><input type=\"checkbox\" class=\"check\" name=\"student$student_no\" value=\"$recordID\"$checked /></td><td>$username</td><td>$student_id</td><td style=\"text-align:right\">$total_mark</td><td class=\"pad\">" . MathsUtils::formatNumber(($total_mark / $paper_total) * 100, $percent_decimals) . "%</td><td>&nbsp;</td></tr>\n";
         } else {
@@ -237,7 +237,7 @@ SQL;
 </table>
     <?php
     if ($student_no == 0) {
-        $msg = sprintf($string['noattempts'], textbox_marking_utils::nicedate($startdate), textbox_marking_utils::nicedate($enddate));
+        $msg = sprintf($string['noattempts'], date_utils::rogoToDisplay($startdate), date_utils::rogoToDisplay($enddate));
         echo $notice->info_strip($msg, 100);
     } else {
         ?>
