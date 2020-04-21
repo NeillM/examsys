@@ -1232,6 +1232,8 @@ class InstallUtils
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".keywords_link TO '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".random_link TO '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".config TO '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "'";
+        $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".std_set TO '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "'";
+        $priv_SQL[] = 'GRANT SELECT ON ' . $dbname . ".std_set_questions TO '" . self::$cfg_db_internal_user . "'@'" . self::$cfg_web_host . "'";
         $priv_SQL[] = 'FLUSH PRIVILEGES';
         foreach ($priv_SQL as $sql) {
             self::$db->query($sql);
