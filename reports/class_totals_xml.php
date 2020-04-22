@@ -104,7 +104,7 @@ echo '  <Title>' . $paper . '</Title>';
 echo '  <Author>Rogo ' . $configObject->get_setting('core', 'rogo_version') . '</Author>';
 $tmp_start = date_utils::rogoToDisplay($_GET['startdate']);
 $tmp_end = date_utils::rogoToDisplay($_GET['enddate']);
-echo '  <Description>Class totals for assessment taken between ' . $tmp_start . ' and ' . $tmp_end . '.</Description>';
+echo '  <Description>' . sprintf($string['period'], $tmp_start, $tmp_end) . '</Description>';
 echo '  <LastAuthor>Rogo ' . $configObject->get_setting('core', 'rogo_version') . '</LastAuthor>';
 echo '  <Created>' . date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z</Created>';
 echo '  <Company>' . $configObject->get_setting('core', 'misc_company') . '</Company>';

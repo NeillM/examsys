@@ -25,3 +25,4 @@ $string['false'] = 'False';
 $string['yes'] = 'Yes';
 $string['no'] = 'No';
 $string['abstain'] = 'Abstain';
+$strings['period'] = 'Quantitative report for survey taken between %s and %s.';

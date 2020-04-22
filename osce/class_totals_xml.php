@@ -107,7 +107,7 @@ echo '  <Title>' . $paper . '</Title>';
 echo '  <Author>Rogo</Author>';
 $tmp_start = date_utils::rogoToDisplay($_GET['startdate']);
 $tmp_end = date_utils::rogoToDisplay($_GET['enddate']);
-echo '  <Description>Class totals for assessment taken between ' . $tmp_start . ' and ' . $tmp_end . '.</Description>';
+echo '  <Description>' . sprintf($string['period'], $tmp_start, $tmp_end) . '</Description>';
 echo '  <LastAuthor>Rogo</LastAuthor>';
 echo '  <Created>' . date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z</Created>';
 echo '  <Company>' . $configObject->get_setting('core', 'misc_company') . '</Company>';
@@ -223,7 +223,7 @@ for ($i = 0; $i < $user_no; $i++) {
     if ($user_results[$i]['display_started'] == '') {  // Student did not take exam.{
         echo '<Cell/>';
         echo '<Cell/>';
-        echo '<Cell><Data ss:Type="String">No Attendance</Data></Cell>';
+        echo '<Cell><Data ss:Type="String">' . $string['noattendance'] .'</Data></Cell>';
         echo '<Cell/>';
         echo '</Row>';
         $absent_no++;

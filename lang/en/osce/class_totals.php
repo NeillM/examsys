@@ -56,3 +56,4 @@ $string['marking7'] = array('Fail', 'Pass');
 $string['publishmarks'] = 'Publish Marks';
 $string['gradepublish'] = 'Marks Published';
 $string['osce'] = 'OSCE paper';
+$string['period'] = 'Class totals for assessment taken between %s and %s.';
