@@ -5,4 +5,5 @@
   <db_user></db_user>
   <db_password></db_password>
   <data></data>
+  <faildump></faildump>
 </rogo>

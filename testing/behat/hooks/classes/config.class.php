@@ -38,9 +38,9 @@ use testing\behat\helpers\database\state;
  */
 trait config
 {
-    /** @var Config A copy of the Rogo configuration object. */
+    /** @var \Config A copy of the Rogo configuration object. */
     private static $rogo_config;
-    /** @var Config A copy of the Rogo configuration object that is not setup for behat. */
+    /** @var \Config A copy of the Rogo configuration object that is not setup for behat. */
     private static $default_config;
 
     /**

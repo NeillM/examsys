@@ -17,12 +17,15 @@
 
 namespace testing\behat\hooks;
 
+use Behat\Mink\Exception\DriverException;
 use Behat\Testwork\Hook\Scope\AfterSuiteScope;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use Behat\Behat\Hook\Scope\AfterFeatureScope;
 use Behat\Behat\Hook\Scope\BeforeFeatureScope;
 use Behat\Behat\Hook\Scope\AfterScenarioScope;
+use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Testwork\Tester\Result\TestResult;
 use testing\behat\environment;
 use testing\behat\help;
 use testing\behat\selectors;
@@ -58,6 +61,9 @@ trait frontend_hooks
     /** @var string the name of the main Rogo window. */
     protected $mainwindow;
 
+    /** @var int The timestamp when the suite started running. */
+    protected static $starttime;
+
     /**
      * Actions to perform before the suite is run.
      *
@@ -76,6 +82,8 @@ trait frontend_hooks
         self::$default_config = clone($config);
         $config->use_behat_site();
         self::$rogo_config = clone($config);
+
+        self::$starttime = time();
 
         state::connect($config);
         state::sanatise_tables();
@@ -144,6 +152,40 @@ trait frontend_hooks
     }
 
     /**
+     * Handles failures in a step.
+     *
+     * @param \Behat\Behat\Hook\Scope\AfterStepScope $event
+     * @AfterStep
+     */
+    public function after_step(AfterStepScope $event)
+    {
+        if ($event->getTestResult()->getResultCode() == TestResult::FAILED) {
+            // The step failed.
+            $faildir = self::$default_config->get('cfg_behat_faildump');
+            if (!empty($faildir) and is_dir($faildir)) {
+                $faildir .= '/' . self::$starttime;
+                if (!is_dir($faildir)) {
+                    mkdir($faildir);
+                }
+                $feature = basename($event->getFeature()->getFile(), '.feature');
+                $line = $event->getStep()->getLine();
+                $filename = "$feature-$line";
+
+                // Dump the page.
+                $page = $this->getSession()->getPage();
+                file_put_contents("$faildir/$filename.html", $page->getContent());
+
+                try {
+                    // Screenshot the failure.
+                    $this->saveScreenshot("$filename.png", $faildir);
+                } catch (DriverException $e) {
+                    // Screenshots are not supported for this step.
+                }
+            }
+        }
+    }
+
+    /**
      * Cleanup up Rogo after a scenario has been run.
      *
      * @AfterScenario
@@ -163,6 +205,7 @@ trait frontend_hooks
             }
             // Set focus to the main window.
             $session->switchToWindow($this->mainwindow);
+
         } catch (\Behat\Mink\Exception\UnsupportedDriverActionException $e) {
             // The current driver does not support window switching.
         }
@@ -189,7 +232,7 @@ trait frontend_hooks
         // Ensure the directories are empty.
         directory::reset_directories();
     }
-  
+
     /**
      * Clean up Rogo after the suite has finished running.
      *
