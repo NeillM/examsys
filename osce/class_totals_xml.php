@@ -110,7 +110,7 @@ $tmp_end = date_utils::rogoToDisplay($_GET['enddate']);
 echo '  <Description>Class totals for assessment taken between ' . $tmp_start . ' and ' . $tmp_end . '.</Description>';
 echo '  <LastAuthor>Rogo</LastAuthor>';
 echo '  <Created>' . date('Y-m-d', time()) . 'T' . date('H:i:s') . 'Z</Created>';
-echo '  <Company>The University of Nottingham</Company>';
+echo '  <Company>' . $configObject->get_setting('core', 'misc_company') . '</Company>';
 echo '  <Version>11.6408</Version>';
 echo ' </DocumentProperties>';
 echo ' <OfficeDocumentSettings xmlns="urn:schemas-microsoft-com:office:office">';
