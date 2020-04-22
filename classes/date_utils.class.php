@@ -146,7 +146,7 @@ class date_utils
     }
 
     /**
-     * Converts a time/date from 20140301103059 into 01/03/2014 10:30.
+     * Converts a time/date from 20140301103059 into a localised date.
      *
      * @param string $original - The date that needs to be convered.
      * @return string
@@ -158,6 +158,9 @@ class date_utils
         $year = mb_substr($original, 0, 4);
         $hours = mb_substr($original, 8, 2);
         $minutes = mb_substr($original, 10, 2);
-        return "$day/$month/$year $hours:$minutes";
+        $date = new \DateTime();
+        $date->setDate($year, $month, $day);
+        $date->setTime($hours, $minutes, 0);
+        return $date->format(Config::get_instance()->get('cfg_short_datetime_php'));
     }
 }
